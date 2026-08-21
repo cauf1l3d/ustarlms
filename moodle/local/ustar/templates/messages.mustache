@@ -1,0 +1,68 @@
+<div class="u-product-page">
+    <header class="u-product-head">
+        <div><p class="u-page-kicker">Communication</p><h1>Сообщения</h1><p>Рабочие диалоги на Moodle messaging — внутри интерфейса USTAR.</p></div>
+        {{{messageicon}}}
+    </header>
+
+    <div class="u-messenger">
+        <aside class="u-messenger-list">
+            <form class="u-messenger-search" method="get">
+                {{{searchicon}}}<input type="search" name="q" value="{{searchq}}" placeholder="Найти сотрудника..." aria-label="Найти сотрудника">
+            </form>
+
+            {{#searched}}
+            <div class="u-messenger-search-results">
+                <small>Начать диалог</small>
+                {{#searchresults}}
+                <form method="post">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="action" value="start">
+                    <input type="hidden" name="userid" value="{{id}}">
+                    <button type="submit" class="u-search-person"><span>{{initials}}</span><strong>{{fullname}}</strong></button>
+                </form>
+                {{/searchresults}}
+                {{^hassearchresults}}<p>Совпадений нет.</p>{{/hassearchresults}}
+            </div>
+            {{/searched}}
+
+            <div class="u-conversation-list">
+                {{#conversations}}
+                <a href="{{url}}" class="u-conversation-row {{#hasunread}}has-unread{{/hasunread}}">
+                    <div><strong>{{title}}</strong><span>{{preview}}</span></div>
+                    <div><time>{{time}}</time>{{#hasunread}}<b>{{unread}}</b>{{/hasunread}}</div>
+                </a>
+                {{/conversations}}
+                {{^hasconversations}}<div class="u-empty-mini">Диалогов пока нет. Найдите сотрудника выше.</div>{{/hasconversations}}
+            </div>
+        </aside>
+
+        <section class="u-messenger-thread">
+            {{#hascurrent}}
+            {{#current}}
+            <header class="u-thread-head"><div><p class="u-page-kicker">Диалог</p><h2>{{title}}</h2></div></header>
+            <div class="u-thread-messages">
+                {{#messages}}
+                <article class="u-message-bubble {{#mine}}is-mine{{/mine}}">
+                    <small>{{sender}}</small><div>{{{text}}}</div><time>{{time}}</time>
+                </article>
+                {{/messages}}
+                {{^hasmessages}}<div class="u-empty-mini">Напишите первое сообщение.</div>{{/hasmessages}}
+            </div>
+            {{#cansend}}
+            <form method="post" class="u-message-compose">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="send">
+                <input type="hidden" name="conversationid" value="{{id}}">
+                <textarea name="message" rows="2" maxlength="4000" required placeholder="Написать сообщение..."></textarea>
+                <button class="u-btn u-btn--primary" type="submit">Отправить</button>
+            </form>
+            {{/cansend}}
+            {{^cansend}}<div class="u-inline-notice"><div><strong>Отправка недоступна</strong><p>Диалог доступен для чтения, но текущие настройки Moodle не разрешают отправку сообщений этому получателю.</p></div></div>{{/cansend}}
+            {{/current}}
+            {{/hascurrent}}
+            {{^hascurrent}}
+            <div class="u-thread-empty">{{{messageicon}}}<h2>Выберите диалог</h2><p>Или найдите сотрудника слева, чтобы начать новый.</p></div>
+            {{/hascurrent}}
+        </section>
+    </div>
+</div>

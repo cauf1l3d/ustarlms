@@ -1,0 +1,52 @@
+<div class="u-product-page u-workspace-page">
+    <header class="u-product-head">
+        <div><p class="u-page-kicker">Структура компании</p><h1>Оргпространство</h1><p>Живая карта подразделений и штатной разметки Moodle. Перетаскивайте полотно, масштабируйте и сворачивайте подразделения.</p></div>
+        {{{workspaceicon}}}
+    </header>
+
+    <div class="u-workspace-toolbar">
+        <form method="get">
+            <input type="search" name="q" value="{{q}}" placeholder="Найти сотрудника или должность..." aria-label="Поиск по оргпространству">
+            <button class="u-btn" type="submit">Найти</button>
+        </form>
+        <div>
+            <span>{{peoplecount}} людей</span><span>{{positioncount}} должностей</span><span>{{departmentcount}} подразделений</span>
+            <div class="u-workspace-controls" role="group" aria-label="Масштаб оргпространства">
+                <button class="u-btn u-btn--small" type="button" data-u-workspace="minus" aria-label="Уменьшить">−</button>
+                <span class="u-workspace-zoom" id="u-workspace-zoom">100%</span>
+                <button class="u-btn u-btn--small" type="button" data-u-workspace="plus" aria-label="Увеличить">+</button>
+                <button class="u-btn u-btn--small" type="button" data-u-workspace="fit">Вписать</button>
+                <button class="u-btn u-btn--small" type="button" data-u-workspace="reset">100%</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="u-org-board" id="u-org-board" tabindex="0" aria-label="Организационная карта">
+        <div class="u-org-board__canvas" id="u-org-canvas">
+            {{#departments}}
+            <section class="u-org-lane" data-lane="{{laneid}}">
+                <header>
+                    <strong>{{name}}</strong><span>{{peoplecount}}</span>
+                    <button type="button" data-u-collapse aria-label="Свернуть {{name}}" aria-expanded="true">−</button>
+                </header>
+                <div class="u-org-people">
+                    {{#people}}
+                    <a class="u-org-person {{#suspended}}is-suspended{{/suspended}}" href="{{personurl}}">
+                        <span class="u-org-avatar">{{initials}}</span>
+                        <div><strong>{{fullname}}</strong><small>{{positionlabel}} · {{lastaccesslabel}}</small></div>
+                        <b>{{statuslabel}}</b>
+                    </a>
+                    {{/people}}
+                    {{^haspeople}}<div class="u-empty-mini">Нет сотрудников в текущем фильтре.</div>{{/haspeople}}
+                </div>
+            </section>
+            {{/departments}}
+        </div>
+    </div>
+
+    <div class="u-product-footer-action">
+        <a href="{{peopleurl}}">Редактировать сотрудников →</a>
+        <a href="{{positionsurl}}">Модели должностей →</a>
+        {{#hasroutes}}<a href="{{routesurl}}">Маршруты обучения →</a>{{/hasroutes}}
+    </div>
+</div>

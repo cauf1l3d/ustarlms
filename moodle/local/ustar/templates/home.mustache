@@ -1,0 +1,1405 @@
+
+{{! ==========================================================
+    EMPLOYEE HOME
+    ========================================================== }}
+
+{{#viewhome}}
+
+<section class="u-home-hero">
+    <div class="u-home-hero__brand">
+        <img src="{{homebannerurl}}" alt="USTAR Академия">
+    </div>
+    <div class="u-home-hero__welcome">
+        <p class="u-pagehead__eyebrow">Личное пространство</p>
+        <h1>Добро пожаловать, {{firstname}}</h1>
+        <p>Ваше обучение, рабочие знания и развитие — в одном пространстве.</p>
+        <a href="{{profileurl}}">Открыть личный кабинет →</a>
+    </div>
+</section>
+
+
+{{#hashomenext}}
+{{#homenext}}
+
+<section class="u-next-card u-next-card--real">
+
+    <div class="u-next-card__body">
+
+        <p class="u-next-card__label">
+            Следующее действие
+        </p>
+
+        <h2>
+            {{name}}
+        </h2>
+
+
+        {{#hasnextactivity}}
+
+        <p class="u-next-card__focus">
+            Дальше · {{nextactivityname}}
+        </p>
+
+        {{/hasnextactivity}}
+
+
+        <div class="u-next-card__meta">
+
+            {{#hasprogress}}
+
+            <div class="u-progressline">
+
+                <div class="u-progressline__top">
+
+                    <span>
+                        {{stepslabel}}
+                    </span>
+
+                    <strong>
+                        {{progress}}%
+                    </strong>
+
+                </div>
+
+                <div
+                    class="u-progressbar"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="{{progress}}"
+                >
+                    <span
+                        style="width: {{progress}}%"
+                    ></span>
+                </div>
+
+            </div>
+
+            {{/hasprogress}}
+
+
+            {{^hasprogress}}
+
+            <p class="u-course-muted">
+                {{stepslabel}}
+            </p>
+
+            {{/hasprogress}}
+
+        </div>
+
+
+        <a
+            class="u-primary-action"
+            href="{{actionurl}}"
+        >
+            {{actionlabel}}
+        </a>
+
+    </div>
+
+    <div class="u-next-card__media"><img src="{{coverurl}}" alt="Обложка курса {{name}}"></div>
+
+
+</section>
+
+{{/homenext}}
+{{/hashomenext}}
+
+
+{{^hashomenext}}
+
+<section class="u-empty-state">
+
+    <p class="u-empty-state__eyebrow">
+        Обучение
+    </p>
+
+    <h2>
+        Пока нет следующего действия
+    </h2>
+
+    <p>
+        Когда появится назначенный курс или учебный путь,
+        он будет показан здесь.
+    </p>
+
+</section>
+
+{{/hashomenext}}
+
+
+<div class="u-home-grid">
+
+    <a
+        class="u-home-tile u-home-tile--icon"
+        href="{{learningurl}}"
+    >
+
+        {{{bookicon}}}
+
+        <span class="u-home-tile__label">
+            Обучение
+        </span>
+
+        <strong>
+            Мой учебный путь
+        </strong>
+
+        <p>
+            Продолжайте назначенные курсы и возвращайтесь
+            к незавершённым материалам.
+        </p>
+
+        <span class="u-home-tile__footer">
+            Learning
+        </span>
+
+    </a>
+
+
+    <a
+        class="u-home-tile u-home-tile--icon"
+        href="{{knowledgeurl}}"
+    >
+
+        {{{knowledgeicon}}}
+
+        <span class="u-home-tile__label">
+            Рабочие знания
+        </span>
+
+        <strong>
+            База знаний
+        </strong>
+
+        <p>
+            Инструкции, стандарты, продукты
+            и быстрый поиск ответа в работе.
+        </p>
+
+        <span class="u-home-tile__footer">
+            Knowledge Market
+        </span>
+
+    </a>
+
+
+    <a
+        class="u-home-tile u-home-tile--icon"
+        href="{{careerurl}}"
+    >
+
+        {{{sparkicon}}}
+
+        <span class="u-home-tile__label">
+            Развитие
+        </span>
+
+        <strong>
+            Навыки и карьера
+        </strong>
+
+        <p>
+            Требования должности, уровень развития
+            и следующий карьерный шаг.
+        </p>
+
+        <span class="u-home-tile__footer">
+            Skills · Career
+        </span>
+
+    </a>
+
+    <a class="u-home-tile u-home-tile--icon" href="{{profileurl}}">
+        {{{profileicon}}}
+        <span class="u-home-tile__label">Личный кабинет</span>
+        <strong>Мой профиль</strong>
+        <p>Прогресс, навыки, награды, сообщения и личные настройки.</p>
+        <span class="u-home-tile__footer">Profile</span>
+    </a>
+
+</div>
+
+{{/viewhome}}
+
+
+
+{{! ==========================================================
+    EMPLOYEE LEARNING
+    ========================================================== }}
+
+{{#viewlearning}}
+
+{{! USTAR_GUIDED_LEARNING_SLOT }}
+
+{{#guidedlearning}}
+
+{{{guidedlearninghtml}}}
+
+{{/guidedlearning}}
+
+
+{{^guidedlearning}}
+
+
+<div class="u-pagehead u-learning-head">
+
+    <div>
+
+        <p class="u-pagehead__eyebrow">
+            Обучение
+        </p>
+
+        <h1>
+            Мой учебный путь
+        </h1>
+
+        <p class="u-pagehead__sub">
+            Здесь только то, что действительно назначено
+            вам в Moodle или связано с вашим развитием.
+        </p>
+
+    </div>
+
+
+    <div class="u-learning-stats">
+
+        <span class="u-stat-chip">
+            Все · {{learningcount}}
+        </span>
+
+        <span class="u-stat-chip">
+            В работе · {{activecount}}
+        </span>
+
+        <span class="u-stat-chip">
+            Новые · {{newcount}}
+        </span>
+
+        <span class="u-stat-chip">
+            Завершено · {{donecount}}
+        </span>
+
+    </div>
+
+</div>
+
+
+
+{{#hasnextcourse}}
+{{#nextcourse}}
+
+<section class="u-learning-focus">
+
+    <div class="u-learning-focus__main">
+
+        <p class="u-learning-focus__eyebrow">
+            Продолжить
+        </p>
+
+        <h2>
+            {{name}}
+        </h2>
+
+
+        {{#hascategory}}
+
+        <p class="u-learning-focus__category">
+            {{category}}
+        </p>
+
+        {{/hascategory}}
+
+
+        {{#hasnextactivity}}
+
+        <div class="u-next-activity">
+
+            <span>
+                Следующий шаг
+            </span>
+
+            <strong>
+                {{nextactivityname}}
+            </strong>
+
+        </div>
+
+        {{/hasnextactivity}}
+
+
+        {{#hasprogress}}
+
+        <div class="u-progressline">
+
+            <div class="u-progressline__top">
+
+                <span>
+                    {{stepslabel}}
+                </span>
+
+                <strong>
+                    {{progress}}%
+                </strong>
+
+            </div>
+
+            <div
+                class="u-progressbar"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="{{progress}}"
+            >
+                <span
+                    style="width: {{progress}}%"
+                ></span>
+            </div>
+
+        </div>
+
+        {{/hasprogress}}
+
+
+        {{^hasprogress}}
+
+        <p class="u-course-muted">
+            {{stepslabel}}
+        </p>
+
+        {{/hasprogress}}
+
+
+        <a
+            class="u-primary-action"
+            href="{{actionurl}}"
+        >
+            {{actionlabel}}
+        </a>
+
+    </div>
+
+
+    <div
+        class="u-learning-focus__number"
+        aria-hidden="true"
+    >
+        {{progress}}
+    </div>
+
+</section>
+
+{{/nextcourse}}
+{{/hasnextcourse}}
+
+
+
+{{^haslearning}}
+
+<section class="u-empty-state">
+
+    <p class="u-empty-state__eyebrow">
+        Учебный путь
+    </p>
+
+    <h2>
+        Пока ничего не назначено
+    </h2>
+
+    <p>
+        Здесь появятся реальные Moodle-курсы,
+        когда сотруднику будет назначено обучение.
+    </p>
+
+</section>
+
+{{/haslearning}}
+
+
+
+{{#hasactive}}
+
+<section class="u-learning-section">
+
+    <header class="u-sectionhead">
+
+        <div>
+
+            <p class="u-sectionhead__eyebrow">
+                Сейчас
+            </p>
+
+            <h2>
+                В работе
+            </h2>
+
+        </div>
+
+        <span>
+            {{activecount}}
+        </span>
+
+    </header>
+
+
+    <div class="u-course-grid">
+
+        {{#activecourses}}
+
+        <article class="u-course-card">
+
+            <div class="u-course-card__top">
+
+                <span
+                    class="u-course-status
+                           u-course-status--active"
+                >
+                    {{statuslabel}}
+                </span>
+
+
+                {{#hidden}}
+
+                <span class="u-course-hidden">
+                    {{hiddenlabel}}
+                </span>
+
+                {{/hidden}}
+
+            </div>
+
+
+            <h3>
+                {{name}}
+            </h3>
+
+
+            {{#hascategory}}
+
+            <p class="u-course-category">
+                {{category}}
+            </p>
+
+            {{/hascategory}}
+
+
+            {{#hasskills}}
+
+            <div class="u-skill-chips">
+
+                {{#skills}}
+
+                <span>
+                    {{name}}
+                </span>
+
+                {{/skills}}
+
+            </div>
+
+            {{/hasskills}}
+
+
+            <div class="u-course-card__progress">
+
+                {{#hasprogress}}
+
+                <div class="u-progressline">
+
+                    <div class="u-progressline__top">
+
+                        <span>
+                            {{stepslabel}}
+                        </span>
+
+                        <strong>
+                            {{progress}}%
+                        </strong>
+
+                    </div>
+
+                    <div
+                        class="u-progressbar"
+                        role="progressbar"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="{{progress}}"
+                    >
+                        <span
+                            style="width: {{progress}}%"
+                        ></span>
+                    </div>
+
+                </div>
+
+                {{/hasprogress}}
+
+
+                {{^hasprogress}}
+
+                <p class="u-course-muted">
+                    {{stepslabel}}
+                </p>
+
+                {{/hasprogress}}
+
+            </div>
+
+
+            {{#hasnextactivity}}
+
+            <p class="u-course-next">
+                Дальше · {{nextactivityname}}
+            </p>
+
+            {{/hasnextactivity}}
+
+
+            <a
+                class="u-course-link"
+                href="{{actionurl}}"
+            >
+                Продолжить
+                <span aria-hidden="true">→</span>
+            </a>
+
+        </article>
+
+        {{/activecourses}}
+
+    </div>
+
+</section>
+
+{{/hasactive}}
+
+
+
+{{#hasnew}}
+
+<section class="u-learning-section">
+
+    <header class="u-sectionhead">
+
+        <div>
+
+            <p class="u-sectionhead__eyebrow">
+                Дальше
+            </p>
+
+            <h2>
+                Новое обучение
+            </h2>
+
+        </div>
+
+        <span>
+            {{newcount}}
+        </span>
+
+    </header>
+
+
+    <div class="u-course-grid">
+
+        {{#newcourses}}
+
+        <article class="u-course-card">
+
+            <div class="u-course-card__top">
+
+                <span
+                    class="u-course-status
+                           u-course-status--new"
+                >
+                    {{statuslabel}}
+                </span>
+
+
+                {{#hidden}}
+
+                <span class="u-course-hidden">
+                    {{hiddenlabel}}
+                </span>
+
+                {{/hidden}}
+
+            </div>
+
+
+            <h3>
+                {{name}}
+            </h3>
+
+
+            {{#hascategory}}
+
+            <p class="u-course-category">
+                {{category}}
+            </p>
+
+            {{/hascategory}}
+
+
+            {{#hasskills}}
+
+            <div class="u-skill-chips">
+
+                {{#skills}}
+
+                <span>
+                    {{name}}
+                </span>
+
+                {{/skills}}
+
+            </div>
+
+            {{/hasskills}}
+
+
+            {{#hasprogress}}
+
+            <div class="u-progressline">
+
+                <div class="u-progressline__top">
+
+                    <span>
+                        {{stepslabel}}
+                    </span>
+
+                    <strong>
+                        {{progress}}%
+                    </strong>
+
+                </div>
+
+                <div
+                    class="u-progressbar"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="{{progress}}"
+                >
+                    <span
+                        style="width: {{progress}}%"
+                    ></span>
+                </div>
+
+            </div>
+
+            {{/hasprogress}}
+
+
+            {{^hasprogress}}
+
+            <p class="u-course-muted">
+                {{stepslabel}}
+            </p>
+
+            {{/hasprogress}}
+
+
+            <a
+                class="u-course-link"
+                href="{{actionurl}}"
+            >
+                Начать
+                <span aria-hidden="true">→</span>
+            </a>
+
+        </article>
+
+        {{/newcourses}}
+
+    </div>
+
+</section>
+
+{{/hasnew}}
+
+
+
+{{#hasdone}}
+
+<section class="u-learning-section">
+
+    <header class="u-sectionhead">
+
+        <div>
+
+            <p class="u-sectionhead__eyebrow">
+                Архив
+            </p>
+
+            <h2>
+                Завершено
+            </h2>
+
+        </div>
+
+        <span>
+            {{donecount}}
+        </span>
+
+    </header>
+
+
+    <div class="u-course-grid">
+
+        {{#donecourses}}
+
+        <article
+            class="u-course-card
+                   u-course-card--done"
+        >
+
+            <div class="u-course-card__top">
+
+                <span
+                    class="u-course-status
+                           u-course-status--done"
+                >
+                    Завершено
+                </span>
+
+            </div>
+
+
+            <h3>
+                {{name}}
+            </h3>
+
+
+            {{#hascategory}}
+
+            <p class="u-course-category">
+                {{category}}
+            </p>
+
+            {{/hascategory}}
+
+
+            <p class="u-course-muted">
+                {{stepslabel}}
+            </p>
+
+
+            <a
+                class="u-course-link"
+                href="{{courseurl}}"
+            >
+                Открыть
+                <span aria-hidden="true">→</span>
+            </a>
+
+        </article>
+
+        {{/donecourses}}
+
+    </div>
+
+</section>
+
+{{/hasdone}}
+
+{{/guidedlearning}}
+
+{{/viewlearning}}
+
+
+
+{{! ==========================================================
+    KNOWLEDGE — NEXT IMPLEMENTATION PASS
+    ========================================================== }}
+
+{{#viewknowledge}}
+
+<div class="u-pagehead">
+
+    <div>
+
+        <p class="u-pagehead__eyebrow">
+            Знания
+        </p>
+
+        <h1>
+            База знаний
+        </h1>
+
+        <p class="u-pagehead__sub">
+            Следующий продуктовый блок —
+            Knowledge Market на реальных Moodle-материалах.
+        </p>
+
+    </div>
+
+</div>
+
+{{/viewknowledge}}
+
+
+
+{{! ==========================================================
+    DEVELOPMENT — NEXT IMPLEMENTATION PASS
+    ========================================================== }}
+
+
+{{#viewcareer}}
+
+{{#development}}
+
+<div class="u-pagehead u-development-head">
+
+    <div>
+
+        <p class="u-pagehead__eyebrow">
+            Развитие
+        </p>
+
+        <h1>
+            Мой профиль развития
+        </h1>
+
+        <p class="u-pagehead__sub">
+            Требования роли, учебное покрытие
+            и карьерный маршрут.
+        </p>
+
+    </div>
+
+</div>
+
+<div class="u-development-tools">
+    <a class="u-feature-card" href="{{profileurl}}">{{{profileicon}}}<div><strong>Личный кабинет</strong><span>Весь личный прогресс</span></div><b>→</b></a>
+    <a class="u-feature-card" href="{{gamesurl}}">{{{gameicon}}}<div><strong>Игровые задания</strong><span>Микрообучение и XP</span></div><b>→</b></a>
+    <a class="u-feature-card" href="{{achievementsurl}}">{{{trophyicon}}}<div><strong>Достижения</strong><span>Уровни и награды</span></div><b>→</b></a>
+    <a class="u-feature-card" href="{{checklistsurl}}">{{{checkicon}}}<div><strong>Чек-листы</strong><span>Рабочие evidence</span></div><b>→</b></a>
+    {{#hasteam}}<a class="u-feature-card" href="{{teamurl}}">{{{teamicon}}}<div><strong>Моя команда</strong><span>Прогресс руководителя</span></div><b>→</b></a>{{/hasteam}}
+    {{#hasexecutive}}<a class="u-feature-card" href="{{executiveurl}}">{{{executiveicon}}}<div><strong>Руководство</strong><span>Готовность компании</span></div><b>→</b></a>{{/hasexecutive}}
+</div>
+
+
+{{#hasposition}}
+
+<section class="u-role-card">
+
+    <div class="u-role-card__identity">
+
+        <p class="u-role-card__eyebrow">
+            Текущая роль
+        </p>
+
+        <h2>
+            {{positionname}}
+        </h2>
+
+        {{#hasdepartment}}
+        <p class="u-role-card__department">
+            {{departmentname}}
+        </p>
+        {{/hasdepartment}}
+
+    </div>
+
+
+    <div class="u-role-card__meta">
+
+        <div>
+
+            <span>
+                Ступень
+            </span>
+
+            <strong>
+                {{positionlevel}}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Требований
+            </span>
+
+            <strong>
+                {{skillcount}}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Обучение связано
+            </span>
+
+            <strong>
+                {{configuredskillcount}} / {{skillcount}}
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+{{#haslearningcoverage}}
+
+<section class="u-development-coverage">
+
+    <div>
+
+        <p class="u-development-coverage__eyebrow">
+            Покрытие обучения
+        </p>
+
+        <h2>
+            {{learningcoverage}}%
+        </h2>
+
+        <p>
+            По тем требованиям роли, для которых
+            уже настроено и назначено обучение.
+        </p>
+
+    </div>
+
+    <div
+        class="u-development-ring"
+        style="--u-value: {{learningcoverage}}"
+        aria-label="Покрытие обучения {{learningcoverage}}%"
+    >
+        <span>
+            {{learningcoverage}}
+        </span>
+    </div>
+
+</section>
+
+{{/haslearningcoverage}}
+
+
+
+{{^haslearningcoverage}}
+
+<section class="u-development-note">
+
+    <div class="u-development-note__icon">
+        !
+    </div>
+
+    <div>
+
+        <strong>
+            Навыки роли уже определены
+        </strong>
+
+        <p>
+            Но связанное обучение ещё не полностью
+            настроено в Moodle. Поэтому мы не показываем
+            искусственную оценку готовности.
+        </p>
+
+    </div>
+
+</section>
+
+{{/haslearningcoverage}}
+
+
+
+{{#hasskills}}
+
+<section class="u-development-section">
+
+    <header class="u-sectionhead">
+
+        <div>
+
+            <p class="u-sectionhead__eyebrow">
+                Требования роли
+            </p>
+
+            <h2>
+                Ключевые навыки
+            </h2>
+
+        </div>
+
+        <span>
+            {{skillcount}}
+        </span>
+
+    </header>
+
+
+    <div class="u-development-skills">
+
+        {{#skills}}
+
+        <article
+            class="u-skill-card
+                   u-skill-card--{{statecode}}"
+        >
+
+            <div class="u-skill-card__head">
+
+                <div>
+
+                    {{#hascategory}}
+
+                    <p class="u-skill-card__category">
+                        {{category}}
+                    </p>
+
+                    {{/hascategory}}
+
+                    <h3>
+                        {{name}}
+                    </h3>
+
+                </div>
+
+                <span class="u-skill-level">
+                    {{requiredlabel}}
+                </span>
+
+            </div>
+
+
+            {{#evidenceconfigured}}
+
+            <div class="u-skill-evidence">
+
+                <div class="u-skill-evidence__summary">
+
+                    <span>
+                        Подтверждение
+                    </span>
+
+                    <strong>
+                        {{evidenceprogress}}%
+                    </strong>
+
+                </div>
+
+
+                {{#evidenceitems}}
+
+                <div
+                    class="
+                        u-evidence-row
+                        {{#satisfied}}is-done{{/satisfied}}
+                        {{#failed}}is-failed{{/failed}}
+                    "
+                >
+
+                    <div class="u-evidence-row__marker">
+
+                        {{#satisfied}}
+                        ✓
+                        {{/satisfied}}
+
+                        {{^satisfied}}
+                        {{#failed}}
+                        !
+                        {{/failed}}
+
+                        {{^failed}}
+                        ·
+                        {{/failed}}
+                        {{/satisfied}}
+
+                    </div>
+
+
+                    <div class="u-evidence-row__body">
+
+                        <div class="u-evidence-row__top">
+
+                            <strong>
+                                {{typelabel}}
+                            </strong>
+
+                            <span>
+                                {{statuslabel}}
+                            </span>
+
+                        </div>
+
+
+                        {{#hasactivity}}
+
+                        <p>
+                            {{activityname}}
+                        </p>
+
+                        {{/hasactivity}}
+
+
+                        {{#hasvalidity}}
+
+                        <small>
+                            Период подтверждения:
+                            {{validdays}} дн.
+                        </small>
+
+                        {{/hasvalidity}}
+
+                    </div>
+
+                </div>
+
+                {{/evidenceitems}}
+
+            </div>
+
+            {{/evidenceconfigured}}
+
+
+            {{^evidenceconfigured}}
+
+            <div class="u-skill-evidence-empty">
+
+                <span></span>
+
+                <p>
+                    Подтверждение навыка
+                    пока не настроено
+                </p>
+
+            </div>
+
+            {{/evidenceconfigured}}
+
+
+            {{#measurable}}
+
+            <div class="u-skill-measure">
+
+                <div class="u-skill-measure__levels">
+
+                    <span>
+                        Учебное покрытие
+                    </span>
+
+                    <strong>
+                        {{currentlearninglevel}}
+                        /
+                        {{requiredlevel}}
+                    </strong>
+
+                </div>
+
+                <div
+                    class="u-progressbar"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="{{learningprogress}}"
+                >
+                    <span
+                        style="width: {{learningprogress}}%"
+                    ></span>
+                </div>
+
+                <div class="u-skill-measure__percent">
+                    {{learningprogress}}%
+                </div>
+
+            </div>
+
+            {{/measurable}}
+
+
+            {{^measurable}}
+
+            <div class="u-skill-unmeasured">
+
+                <span class="u-skill-unmeasured__dot"></span>
+
+                <p>
+                    {{state}}
+                </p>
+
+            </div>
+
+            {{/measurable}}
+
+        </article>
+
+        {{/skills}}
+
+    </div>
+
+</section>
+
+{{/hasskills}}
+
+
+
+{{#hascareer}}
+
+<section class="u-development-section">
+
+    <header class="u-sectionhead">
+
+        <div>
+
+            <p class="u-sectionhead__eyebrow">
+                Карьера
+            </p>
+
+            <h2>
+                Мой маршрут
+            </h2>
+
+        </div>
+
+    </header>
+
+
+    <div class="u-career-track">
+
+        {{#careersteps}}
+
+        <div
+            class="u-career-step
+                   {{#ispast}}is-past{{/ispast}}
+                   {{#iscurrent}}is-current{{/iscurrent}}
+                   {{#isfuture}}is-future{{/isfuture}}"
+        >
+
+            <div class="u-career-step__marker">
+
+                {{#ispast}}
+                    ✓
+                {{/ispast}}
+
+                {{#iscurrent}}
+                    {{level}}
+                {{/iscurrent}}
+
+                {{#isfuture}}
+                    {{level}}
+                {{/isfuture}}
+
+            </div>
+
+            <div class="u-career-step__body">
+
+                {{#iscurrent}}
+                <span>
+                    Вы здесь
+                </span>
+                {{/iscurrent}}
+
+                {{#ispast}}
+                <span>
+                    Пройденная ступень
+                </span>
+                {{/ispast}}
+
+                {{#isfuture}}
+                <span>
+                    Следующая ступень
+                </span>
+                {{/isfuture}}
+
+                <strong>
+                    {{name}}
+                </strong>
+
+            </div>
+
+        </div>
+
+        {{#connector}}
+
+        <div
+            class="u-career-connector"
+            aria-hidden="true"
+        ></div>
+
+        {{/connector}}
+
+        {{/careersteps}}
+
+    </div>
+
+
+    {{#hasnextposition}}
+
+    <div class="u-career-next">
+
+        <p>
+            Следующая роль
+        </p>
+
+        <strong>
+            {{nextpositionname}}
+        </strong>
+
+    </div>
+
+    {{/hasnextposition}}
+
+
+    {{#istopposition}}
+
+    <div class="u-career-top">
+
+        <span aria-hidden="true">
+            ◆
+        </span>
+
+        <p>
+            Вы на текущей верхней ступени
+            этого карьерного маршрута.
+        </p>
+
+    </div>
+
+    {{/istopposition}}
+
+</section>
+
+{{/hascareer}}
+
+
+{{/hasposition}}
+
+
+
+{{^hasposition}}
+
+<section class="u-empty-state">
+
+    <p class="u-empty-state__eyebrow">
+        Развитие
+    </p>
+
+    <h2>
+        Должность пока не назначена
+    </h2>
+
+    <p>
+        После назначения позиции здесь появятся
+        требования роли, навыки и карьерный маршрут.
+    </p>
+
+</section>
+
+{{/hasposition}}
+
+{{/development}}
+
+{{/viewcareer}}
+

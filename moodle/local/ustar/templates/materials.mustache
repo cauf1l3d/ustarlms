@@ -1,0 +1,1224 @@
+<div class="u-materials">
+
+    <header class="u-materials-head">
+
+        <div>
+            <p class="u-pagehead__eyebrow">
+                Центр управления
+            </p>
+
+            <h1>
+                Материалы
+            </h1>
+
+            <p>
+                Единый каталог документов, страниц, тестов,
+                SCORM и других материалов.
+            </p>
+        </div>
+
+        {{#canmanage}}
+
+        <div class="u-materials-head__actions">
+
+            <a
+                class="u-btn"
+                href="{{bulkurl}}"
+            >
+                Массовая загрузка
+            </a>
+
+            <details class="u-materials-folder-create">
+                <summary class="u-btn">+ Папка</summary>
+                <form method="post" class="u-materials-folder-create__form">
+                    <input type="hidden" name="action" value="createfolder">
+                    <input type="hidden" name="parent" value="{{currentparentid}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="text" name="foldertitle" maxlength="255" placeholder="Название папки" required>
+                    <button class="u-btn u-btn--primary" type="submit">Создать</button>
+                </form>
+            </details>
+
+            <a
+                class="u-btn u-btn--primary u-materials-create-btn"
+                href="{{createurl}}"
+            >
+                + Создать материал
+            </a>
+
+        </div>
+
+        {{/canmanage}}
+
+
+        <div class="u-materials-head__metric">
+            <strong>{{total}}</strong>
+            <span>в каталоге</span>
+        </div>
+
+    </header>
+
+
+    <form
+        class="u-materials-search"
+        method="get"
+        action=""
+    >
+
+        <input
+            type="search"
+            name="q"
+            value="{{q}}"
+            placeholder="Найти материал, регламент, тест..."
+            autocomplete="off"
+        >
+
+        <input
+            type="hidden"
+            name="type"
+            value="{{currenttype}}"
+        >
+
+        <input type="hidden" name="parent" value="{{currentparentid}}">
+
+
+        <select name="status">
+
+            {{#statusoptions}}
+            <option
+                value="{{id}}"
+                {{#selected}}selected{{/selected}}
+            >
+                {{label}}
+            </option>
+            {{/statusoptions}}
+
+        </select>
+
+        <button
+            class="u-btn"
+            type="submit"
+        >
+            Найти
+        </button>
+
+    </form>
+
+
+    <nav class="u-materials-types">
+
+        {{#typefilters}}
+
+        <a
+            href="{{url}}"
+            class="
+                u-materials-type
+                {{#selected}}is-active{{/selected}}
+            "
+        >
+            <span>{{label}}</span>
+            <strong>{{count}}</strong>
+        </a>
+
+        {{/typefilters}}
+
+    </nav>
+
+    <div class="u-materials-breadcrumbs" aria-label="Папки">
+        <a href="?">Материалы</a>
+        {{#breadcrumbs}}<span>›</span><a href="{{url}}">{{title}}</a>{{/breadcrumbs}}
+    </div>
+
+
+    <div class="u-materials-workspace">
+
+        <section class="u-materials-catalog">
+
+            <header class="u-materials-catalog__head">
+                <div>
+                    <span>Папка</span>
+                    <strong>{{currentfolder}}</strong>
+                </div>
+                <div class="u-materials-catalog__count">
+                    {{#hasparent}}<a class="u-btn u-btn--quiet" href="{{parenturl}}">← На уровень выше</a>{{/hasparent}}
+                    <span>Объектов</span>
+                    <strong>{{visiblecount}}</strong>
+                </div>
+            </header>
+
+
+            {{#hasmaterials}}
+
+            <div class="u-materials-list">
+
+                {{#materials}}
+
+                <a
+                    href="{{url}}"
+                    class="
+                        u-material-row
+                        {{#selected}}is-selected{{/selected}}
+                    "
+                >
+
+                    <div class="u-material-row__icon {{#isfolder}}u-material-row__icon--folder{{/isfolder}}">
+                        {{#isfolder}}📁{{/isfolder}}
+                        {{^isfolder}}{{#modname}}{{modname}}{{/modname}}{{^modname}}FILE{{/modname}}{{/isfolder}}
+                    </div>
+
+
+                    <div class="u-material-row__body">
+
+                        <div class="u-material-row__meta">
+
+                            <span>
+                                {{typelabel}}
+                            </span>
+
+                            <span>
+                                {{statuslabel}}
+                            </span>
+
+                            {{#needsreview}}
+                            <span class="u-material-flag">
+                                Проверить
+                            </span>
+                            {{/needsreview}}
+
+                        </div>
+
+
+                        <strong>
+                            {{title}}
+                        </strong>
+
+
+                        {{#ismoodle}}
+                        <small>
+                            {{coursename}}
+                        </small>
+                        {{/ismoodle}}
+
+
+                        <div class="u-material-row__flags">
+
+                            {{#duplicate}}
+                            <span>
+                                Возможный дубль
+                            </span>
+                            {{/duplicate}}
+
+                            {{#coursehidden}}
+                            <span>
+                                Курс скрыт
+                            </span>
+                            {{/coursehidden}}
+
+                            {{#activityhidden}}
+                            <span>
+                                Активность скрыта
+                            </span>
+                            {{/activityhidden}}
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+                {{/materials}}
+
+            </div>
+
+            {{/hasmaterials}}
+
+
+            {{^hasmaterials}}
+
+            <div class="u-materials-empty">
+                По этим фильтрам материалов нет.
+            </div>
+
+            {{/hasmaterials}}
+
+        </section>
+
+
+        <aside class="u-material-detail">
+
+            {{#hasdetail}}
+            {{#detail}}
+
+            <div class="u-material-detail__top">
+
+                <div>
+                    <p class="u-sectionhead__eyebrow">
+                        {{typelabel}}
+                    </p>
+
+                    <h2>{{title}}</h2>
+                </div>
+
+                <span
+                    class="
+                        u-state
+                        {{#ispublished}}u-state--ok{{/ispublished}}
+                    "
+                >
+                    {{statuslabel}}
+                </span>
+
+            </div>
+
+
+            <div class="u-material-source">
+
+                <div>
+                    <span>Версия</span>
+                    <strong>
+                        {{versionlabel}} · {{versionstatus}}
+                    </strong>
+                </div>
+
+                {{#ismoodle}}
+
+                <div>
+                    <span>Источник</span>
+                    <strong>
+                        {{modname}} · CMID {{cmid}}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Moodle-контейнер</span>
+                    <strong>{{coursename}}</strong>
+                </div>
+
+                {{/ismoodle}}
+
+            </div>
+
+
+
+            {{#isustarfile}}
+
+            <section class="u-material-versions">
+
+                <header class="u-material-versions__head">
+
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Версии
+                        </p>
+
+                        <h3>
+                            История материала
+                        </h3>
+                    </div>
+
+
+                    {{#cannewversion}}
+
+                    <a
+                        href="{{newversionurl}}"
+                        class="u-btn"
+                    >
+                        + Новая версия
+                    </a>
+
+                    {{/cannewversion}}
+
+                </header>
+
+
+                {{#hasdraftversion}}
+
+                <div class="u-material-version-draft">
+
+                    <div>
+
+                        <span>
+                            Новая версия
+                        </span>
+
+                        <strong>
+                            {{draftversionlabel}}
+                        </strong>
+
+                        <small>
+                            Черновик · сотрудники продолжают
+                            видеть текущую опубликованную версию.
+                        </small>
+
+                    </div>
+
+
+                    <div class="u-material-version-draft__actions">
+
+                        <form
+                            method="post"
+                            action="{{versionactionurl}}"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="action"
+                                value="publish"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="versionid"
+                                value="{{draftversionid}}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="sesskey"
+                                value="{{sesskey}}"
+                            >
+
+                            <button
+                                type="submit"
+                                class="u-btn u-btn--primary"
+                            >
+                                Опубликовать {{draftversionlabel}}
+                            </button>
+
+                        </form>
+
+
+                        <form
+                            method="post"
+                            action="{{versionactionurl}}"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="action"
+                                value="discard"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="versionid"
+                                value="{{draftversionid}}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="sesskey"
+                                value="{{sesskey}}"
+                            >
+
+                            <button
+                                type="submit"
+                                class="u-btn"
+                            >
+                                Удалить черновик
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                {{/hasdraftversion}}
+
+
+                {{#hasversions}}
+
+                <div class="u-material-version-list">
+
+                    {{#versionhistory}}
+
+                    <div class="u-material-version-row">
+
+                        <div>
+
+                            <strong>
+                                {{label}}
+                            </strong>
+
+                            {{#current}}
+                            <span class="u-material-version-current">
+                                Текущая
+                            </span>
+                            {{/current}}
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                {{statuslabel}}
+                            </span>
+
+                            {{#haschangenote}}
+                            <small>
+                                {{changenote}}
+                            </small>
+                            {{/haschangenote}}
+
+                            <small>
+                                {{creator}} · {{created}}
+                            </small>
+
+                            {{#hasfile}}
+                            <a
+                                class="u-material-version-file"
+                                href="{{fileurl}}"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                {{filename}} ↗
+                            </a>
+                            {{/hasfile}}
+
+                        </div>
+
+                    </div>
+
+                    {{/versionhistory}}
+
+                </div>
+
+                {{/hasversions}}
+
+            </section>
+
+            {{/isustarfile}}
+
+
+            {{#ackrequired}}
+
+            <section class="u-material-compliance">
+
+                <header class="u-material-compliance__head">
+
+                    <div>
+
+                        <p class="u-sectionhead__eyebrow">
+                            Ознакомление
+                        </p>
+
+                        <h3>
+                            Контроль исполнения
+                        </h3>
+
+                        {{#hasackreport}}
+                        <span class="u-material-compliance__version">
+                            Текущая версия · {{ackreportversion}}
+                        </span>
+                        {{/hasackreport}}
+
+                    </div>
+
+
+                    {{#hasackreport}}
+
+                    <div class="u-material-compliance__head-actions">
+                        <a
+                            class="u-btn u-btn--quiet"
+                            href="{{ackcsvurl}}"
+                        >
+                            Скачать журнал CSV
+                        </a>
+
+                        <div class="u-material-compliance__score">
+                            <strong>{{ackpercent}}%</strong>
+                            <span>ознакомились</span>
+                        </div>
+                    </div>
+
+                    {{/hasackreport}}
+
+                </header>
+
+
+                {{#hasackreport}}
+
+                <div class="u-material-compliance__metrics">
+
+                    <div>
+
+                        <strong>
+                            {{ackacknowledged}} / {{acktotal}}
+                        </strong>
+
+                        <span>
+                            подтверждений
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            {{ackpending}}
+                        </strong>
+
+                        <span>
+                            ожидают
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            {{ackreportversion}}
+                        </strong>
+
+                        <span>
+                            текущая версия
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <progress
+                    class="u-material-compliance__progress"
+                    value="{{ackpercent}}"
+                    max="100"
+                    aria-label="Ознакомились {{ackpercent}} процентов"
+                >
+                    {{ackpercent}}%
+                </progress>
+
+
+                {{^hasackpeople}}
+
+                <div class="u-material-compliance__empty">
+
+                    <strong>
+                        В аудитории пока нет сотрудников
+                    </strong>
+
+                    <span>
+                        Проверьте правила доступа материала
+                        и назначенные должности.
+                    </span>
+
+                </div>
+
+                {{/hasackpeople}}
+
+
+                {{#hasackpeople}}
+
+                <div class="u-material-compliance__groups">
+
+
+                    {{#hasackpending}}
+
+                    <section class="u-material-compliance-group">
+
+                        <header class="u-material-compliance-group__head">
+
+                            <div>
+
+                                <span
+                                    class="u-compliance-dot"
+                                    aria-hidden="true"
+                                ></span>
+
+                                <strong>
+                                    Ожидают
+                                </strong>
+
+                            </div>
+
+                            <span class="u-material-compliance-group__count">
+                                {{ackpending}}
+                            </span>
+
+                        </header>
+
+
+                        <div class="u-material-compliance-list">
+
+                            {{#ackpendingpeople}}
+
+                            <div class="u-material-compliance-person">
+
+                                <div class="u-material-compliance-person__main">
+
+                                    <strong>
+                                        {{fullname}}
+                                    </strong>
+
+                                    <span>
+                                        {{position}}
+                                    </span>
+
+                                    {{#hasdepartment}}
+                                    <small>
+                                        {{department}}
+                                    </small>
+                                    {{/hasdepartment}}
+
+                                </div>
+
+
+                                <div class="u-material-compliance-person__state">
+
+                                    <span class="u-state">
+                                        Ожидает
+                                    </span>
+
+                                    <small>
+                                        {{username}}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                            {{/ackpendingpeople}}
+
+                        </div>
+
+                    </section>
+
+                    {{/hasackpending}}
+
+
+                    {{#hasackdone}}
+
+                    <section class="u-material-compliance-group">
+
+                        <header class="u-material-compliance-group__head">
+
+                            <div>
+
+                                <span
+                                    class="
+                                        u-compliance-dot
+                                        u-compliance-dot--done
+                                    "
+                                    aria-hidden="true"
+                                ></span>
+
+                                <strong>
+                                    Ознакомились
+                                </strong>
+
+                            </div>
+
+                            <span class="u-material-compliance-group__count">
+                                {{ackacknowledged}}
+                            </span>
+
+                        </header>
+
+
+                        <div class="u-material-compliance-list">
+
+                            {{#ackdonepeople}}
+
+                            <div class="u-material-compliance-person">
+
+                                <div class="u-material-compliance-person__main">
+
+                                    <strong>
+                                        {{fullname}}
+                                    </strong>
+
+                                    <span>
+                                        {{position}}
+                                    </span>
+
+                                    {{#hasdepartment}}
+                                    <small>
+                                        {{department}}
+                                    </small>
+                                    {{/hasdepartment}}
+
+                                </div>
+
+
+                                <div class="u-material-compliance-person__state">
+
+                                    <span class="u-state u-state--ok">
+                                        Ознакомлен
+                                    </span>
+
+                                    {{#hasacktime}}
+                                    <small>
+                                        {{acktimeformatted}}
+                                    </small>
+                                    {{/hasacktime}}
+
+                                </div>
+
+                            </div>
+
+                            {{/ackdonepeople}}
+
+                        </div>
+
+                    </section>
+
+                    {{/hasackdone}}
+
+                </div>
+
+                {{/hasackpeople}}
+
+                {{/hasackreport}}
+
+            </section>
+
+            {{/ackrequired}}
+
+
+            <div class="u-material-detail__warnings">
+
+                {{#duplicate}}
+                <div>
+                    Возможный дубль: есть материал такого же
+                    типа с тем же названием.
+                </div>
+                {{/duplicate}}
+
+                {{#coursehidden}}
+                <div>
+                    Исходный Moodle-курс скрыт.
+                    Публикация будет заблокирована.
+                </div>
+                {{/coursehidden}}
+
+                {{#activityhidden}}
+                <div>
+                    Исходная Moodle-активность скрыта.
+                    Публикация будет заблокирована.
+                </div>
+                {{/activityhidden}}
+
+            </div>
+
+
+            {{#canmanage}}
+
+            <form
+                class="u-material-editor"
+                method="post"
+            >
+
+                <input
+                    type="hidden"
+                    name="action"
+                    value="save"
+                >
+
+                <input
+                    type="hidden"
+                    name="contentid"
+                    value="{{id}}"
+                >
+
+                <input
+                    type="hidden"
+                    name="sesskey"
+                    value="{{sesskey}}"
+                >
+
+
+                <section class="u-material-editor__section">
+
+                    <header>
+                        <p>ОСНОВНОЕ</p>
+                        <h3>Карточка материала</h3>
+                    </header>
+
+
+                    <label class="u-material-field">
+
+                        <span>Название</span>
+
+                        <input
+                            type="text"
+                            name="title"
+                            value="{{title}}"
+                            maxlength="255"
+                            required
+                        >
+
+                    </label>
+
+
+                    <label class="u-material-field">
+
+                        <span>Описание</span>
+
+                        <textarea
+                            name="summary"
+                            rows="3"
+                            placeholder="Коротко: что это и когда использовать"
+                        >{{summary}}</textarea>
+
+                    </label>
+
+
+                    <label class="u-material-field">
+
+                        <span>Категория</span>
+
+                        <select name="category">
+
+                            {{#categoryoptions}}
+                            <option
+                                value="{{id}}"
+                                {{#selected}}selected{{/selected}}
+                            >
+                                {{name}}
+                            </option>
+                            {{/categoryoptions}}
+
+                        </select>
+
+                    </label>
+
+                    <label class="u-material-field">
+                        <span>Папка</span>
+                        <select name="parentid">
+                            {{#folderoptions}}
+                            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                            {{/folderoptions}}
+                        </select>
+                    </label>
+
+                </section>
+
+
+                <section class="u-material-editor__section">
+
+                    <header>
+                        <p>ДОСТУП</p>
+                        <h3>Кому показывать</h3>
+                    </header>
+
+
+                    <div class="u-material-access-mode">
+
+                        <label>
+
+                            <input
+                                type="radio"
+                                name="accessmode"
+                                value="all"
+                                {{#accessall}}checked{{/accessall}}
+                            >
+
+                            <span>
+                                <strong>Вся компания</strong>
+                                <small>
+                                    Материал доступен всем сотрудникам
+                                </small>
+                            </span>
+
+                        </label>
+
+
+                        <label>
+
+                            <input
+                                type="radio"
+                                name="accessmode"
+                                value="custom"
+                                {{#accesscustom}}checked{{/accesscustom}}
+                            >
+
+                            <span>
+                                <strong>По роли</strong>
+                                <small>
+                                    Выбранные подразделения и должности
+                                </small>
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="u-material-scope">
+
+                        <h4>Подразделения</h4>
+
+                        <div class="u-material-scope-grid">
+
+                            {{#departmentoptions}}
+
+                            <label class="u-material-scope-item">
+
+                                <input
+                                    type="checkbox"
+                                    name="departments[]"
+                                    value="{{id}}"
+                                    {{#selected}}checked{{/selected}}
+                                >
+
+                                <span>{{name}}</span>
+
+                            </label>
+
+                            {{/departmentoptions}}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="u-material-scope">
+
+                        <h4>Должности</h4>
+
+                        <div
+                            class="
+                                u-material-scope-grid
+                                u-material-scope-grid--positions
+                            "
+                        >
+
+                            {{#positionoptions}}
+
+                            <label class="u-material-scope-item">
+
+                                <input
+                                    type="checkbox"
+                                    name="positions[]"
+                                    value="{{id}}"
+                                    {{#selected}}checked{{/selected}}
+                                >
+
+                                <span>
+
+                                    <strong>{{name}}</strong>
+
+                                    <small>
+                                        {{department}}
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+                            {{/positionoptions}}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="u-material-editor__section">
+
+                    <header>
+                        <p>ОЗНАКОМЛЕНИЕ</p>
+                        <h3>Подтверждение сотрудником</h3>
+                    </header>
+
+
+                    <label class="u-material-ack">
+
+                        <input
+                            type="checkbox"
+                            name="ackrequired"
+                            value="1"
+                            {{#ackrequired}}checked{{/ackrequired}}
+                        >
+
+                        <span>
+
+                            <strong>
+                                Требовать подтверждение ознакомления
+                            </strong>
+
+                            <small>
+                                Факт будет сохранён для текущей версии
+                                материала.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </section>
+
+
+                <div class="u-material-editor__save">
+
+                    <button
+                        class="u-btn u-btn--primary"
+                        type="submit"
+                    >
+                        Сохранить настройки
+                    </button>
+
+                    <span>
+                        Сохранение не публикует материал автоматически.
+                    </span>
+
+                </div>
+
+            </form>
+
+
+            <div class="u-material-publish">
+
+                <div>
+
+                    <p class="u-sectionhead__eyebrow">
+                        Публикация
+                    </p>
+
+                    {{#isdraft}}
+                    <strong>Материал пока скрыт от сотрудников</strong>
+                    {{/isdraft}}
+
+                    {{#ispublished}}
+                    <strong>Материал опубликован</strong>
+                    {{/ispublished}}
+
+                    {{#isarchived}}
+                    <strong>Материал находится в архиве</strong>
+                    {{/isarchived}}
+
+                </div>
+
+
+                {{#isdraft}}
+
+                <form method="post">
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="publish"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="contentid"
+                        value="{{id}}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="sesskey"
+                        value="{{sesskey}}"
+                    >
+
+                    <button
+                        class="u-btn u-btn--primary"
+                        type="submit"
+                    >
+                        Опубликовать
+                    </button>
+
+                </form>
+
+                {{/isdraft}}
+
+
+                {{#ispublished}}
+
+                <form method="post">
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="unpublish"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="contentid"
+                        value="{{id}}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="sesskey"
+                        value="{{sesskey}}"
+                    >
+
+                    <button
+                        class="u-btn"
+                        type="submit"
+                    >
+                        Снять с публикации
+                    </button>
+
+                </form>
+
+                <form method="post">
+                    <input type="hidden" name="action" value="archive">
+                    <input type="hidden" name="contentid" value="{{id}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <button class="u-btn u-btn--quiet" type="submit">
+                        В архив
+                    </button>
+                </form>
+
+                {{/ispublished}}
+
+
+                {{#isarchived}}
+                <form method="post">
+                    <input type="hidden" name="action" value="restore">
+                    <input type="hidden" name="contentid" value="{{id}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <button class="u-btn u-btn--primary" type="submit">
+                        Восстановить публикацию
+                    </button>
+                </form>
+                {{/isarchived}}
+
+            </div>
+
+            {{/canmanage}}
+
+
+            <div class="u-material-detail__actions">
+
+                {{#canopen}}
+
+                <a
+                    class="u-material-source-link"
+                    href="{{openurl}}"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Открыть исходный материал ↗
+                </a>
+
+                {{/canopen}}
+
+            </div>
+
+            {{/detail}}
+            {{/hasdetail}}
+
+
+            {{^hasdetail}}
+
+            <div class="u-materials-empty">
+                Выберите материал.
+            </div>
+
+            {{/hasdetail}}
+
+        </aside>
+
+    </div>
+
+</div>

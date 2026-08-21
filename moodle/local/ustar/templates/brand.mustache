@@ -1,0 +1,64 @@
+<div class="u-product-page u-brand-studio">
+    <header class="u-product-head">
+        <div><p class="u-page-kicker">Оформление</p><h1>Оформление Академии</h1><p>Готовые согласованные палитры или свой органичный набор. Изменения применяются ко всему USTAR, но не меняют Moodle core.</p></div>
+        {{{paletteicon}}}
+    </header>
+
+    {{#saved}}<div class="u-inline-notice u-inline-notice--success"><strong>Оформление сохранено</strong><span>Палитра уже применяется к USTAR. Если вкладка была открыта давно — обновите её.</span></div>{{/saved}}
+    {{#contrasterror}}<div class="u-inline-notice"><div><strong>Палитра не сохранена</strong><p>Для основного и вторичного текста нужен контраст не ниже 4.5:1. Исправьте отмеченные сочетания в предпросмотре.</p></div></div>{{/contrasterror}}
+
+    <section class="u-panel">
+        <header class="u-panel-title"><div><p class="u-page-kicker">Presets</p><h2>Готовые варианты</h2><p>Шесть цельных вариантов вместо случайного выбора одного accent-color.</p></div><span>6 наборов</span></header>
+        <div class="u-theme-preset-grid">
+            {{#presets}}
+            <form method="post" class="u-theme-preset {{#selected}}is-selected{{/selected}}" style="--preview-accent:{{accent}};--preview-bg:{{canvas}};--preview-surface:{{surface}};--preview-text:{{text}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="preset"><input type="hidden" name="preset" value="{{id}}">
+                <div class="u-theme-preview" aria-hidden="true"><span></span><i></i><b></b></div>
+                <div><strong>{{name}}</strong><p>{{description}}</p></div>
+                <button class="u-btn {{#selected}}u-btn--primary{{/selected}}" type="submit">{{#selected}}Используется{{/selected}}{{^selected}}Применить{{/selected}}</button>
+            </form>
+            {{/presets}}
+        </div>
+    </section>
+
+    <section class="u-panel">
+        <header class="u-panel-title"><div><p class="u-page-kicker">Custom palette</p><h2>Свой набор</h2><p>Предпросмотр обновляется сразу. Контраст текста проверяется до сохранения.</p></div>{{#iscustom}}<span>Custom</span>{{/iscustom}}</header>
+        {{#current}}
+        <form method="post" class="u-custom-theme-form" id="u-custom-theme-form">
+            <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="custom">
+
+            <div class="u-theme-live-preview" id="u-theme-live-preview">
+                <div class="u-theme-live-card"><span>USTAR</span><h3>Органичный набор</h3><p>Так будут сочетаться фон, поверхность, текст и фирменный акцент.</p></div>
+                <aside class="u-theme-contrast" aria-live="polite">
+                    <div><span>Текст / фон</span><b id="u-contrast-canvas">—</b></div>
+                    <div><span>Текст / поверхность</span><b id="u-contrast-surface">—</b></div>
+                    <div><span>Вторичный / поверхность</span><b id="u-contrast-secondary">—</b></div>
+                    <div><span>Dark текст / фон</span><b id="u-contrast-dark-canvas">—</b></div>
+                    <div><span>Dark вторичный / поверхность</span><b id="u-contrast-dark-secondary">—</b></div>
+                    <small>AA для обычного текста: 4.5:1. Светлая и тёмная палитры валидируются на сервере.</small>
+                </aside>
+            </div>
+
+            <div class="u-color-fields">
+                <label><span>Акцент</span><input type="color" name="accent" value="{{accent}}" data-theme-color><code>{{accent}}</code></label>
+                <label><span>Акцент тёмный</span><input type="color" name="accentStrong" value="{{accentStrong}}" data-theme-color><code>{{accentStrong}}</code></label>
+                <label><span>Фон</span><input type="color" name="canvas" value="{{canvas}}" data-theme-color><code>{{canvas}}</code></label>
+                <label><span>Поверхность</span><input type="color" name="surface" value="{{surface}}" data-theme-color><code>{{surface}}</code></label>
+                <label><span>Мягкая поверхность</span><input type="color" name="surfaceMuted" value="{{surfaceMuted}}" data-theme-color><code>{{surfaceMuted}}</code></label>
+                <label><span>Основной текст</span><input type="color" name="text" value="{{text}}" data-theme-color><code>{{text}}</code></label>
+                <label><span>Вторичный текст</span><input type="color" name="textSecondary" value="{{textSecondary}}" data-theme-color><code>{{textSecondary}}</code></label>
+                <label><span>Dark фон</span><input type="color" name="darkCanvas" value="{{darkCanvas}}" data-theme-color><code>{{darkCanvas}}</code></label>
+                <label><span>Dark поверхность</span><input type="color" name="darkSurface" value="{{darkSurface}}" data-theme-color><code>{{darkSurface}}</code></label>
+                <label><span>Dark основной текст</span><input type="color" name="darkText" value="{{darkText}}" data-theme-color><code>{{darkText}}</code></label>
+                <label><span>Dark вторичный текст</span><input type="color" name="darkTextSecondary" value="{{darkTextSecondary}}" data-theme-color><code>{{darkTextSecondary}}</code></label>
+            </div>
+            <button class="u-btn u-btn--primary u-btn--large" type="submit">Сохранить свой набор</button>
+        </form>
+        {{/current}}
+    </section>
+
+    <section class="u-panel u-banner-preview">
+        <header class="u-panel-title"><div><p class="u-page-kicker">Home brand</p><h2>Баннер Главной</h2><p>Используется переданный фирменный USTAR-баннер.</p></div><span>Включён в 1.4</span></header>
+        <img src="{{bannerurl}}" alt="USTAR Академия">
+    </section>
+</div>

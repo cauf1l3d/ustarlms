@@ -1,0 +1,34 @@
+<div class="u-product-page u-game-play">
+    <a class="u-back-link" href="{{backurl}}">← Игровые задания</a>
+
+    {{#hasresult}}
+    {{#result}}
+    <section class="u-game-result {{#correct}}is-correct{{/correct}}">
+        <div class="u-game-result__icon">{{{gameicon}}}</div>
+        {{#correct}}<h2>Верно</h2>{{/correct}}{{^correct}}<h2>Нужно закрепить</h2>{{/correct}}
+        <p>{{explanation}}</p>
+        <strong>+{{xpEarned}} XP · всего {{totalGameXp}} Game XP</strong>
+    </section>
+    {{/result}}
+    {{/hasresult}}
+
+    {{#hasquestion}}
+    {{#question}}
+    <section class="u-game-question">
+        <header><div><p class="u-page-kicker">Следующий вопрос</p><h1>{{gameTitle}}</h1></div><span>+{{xpReward}} XP</span></header>
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="" class="u-game-question__image">{{/imageUrl}}
+        <h2>{{text}}</h2>
+        <form method="post" class="u-game-options">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="questionid" value="{{id}}">
+            {{#options}}
+            <label class="u-game-option"><input type="radio" name="option" value="{{index}}" required><span>{{label}}</span></label>
+            {{/options}}
+            <button class="u-btn u-btn--primary u-btn--large" type="submit">Проверить ответ</button>
+        </form>
+    </section>
+    {{/question}}
+    {{/hasquestion}}
+
+    {{^hasquestion}}<div class="u-empty-state u-empty-state--product">{{{gameicon}}}<h2>В этой игре пока нет активных вопросов</h2><a class="u-btn" href="{{backurl}}">Вернуться в Игровые задания</a></div>{{/hasquestion}}
+</div>

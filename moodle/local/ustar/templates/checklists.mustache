@@ -1,0 +1,33 @@
+<div class="u-product-page">
+    <header class="u-product-head"><div><p class="u-page-kicker">Operational evidence</p><h1>Чек-листы</h1><p>Рабочие действия, которые фиксируются отдельно от курсов и остаются в журнале USTAR.</p></div>{{{checkicon}}}</header>
+    {{#hasresult}}{{#result}}<div class="u-inline-notice u-inline-notice--success"><strong>Сохранено: {{done}} / {{total}}</strong><span>результат {{score}}%</span></div>{{/result}}{{/hasresult}}
+
+    <div class="u-checklist-layout">
+        <aside class="u-checklist-nav">
+            {{#checklists}}
+            <a href="{{url}}" class="u-checklist-nav__item {{#complete}}is-complete{{/complete}}">
+                <div><strong>{{title}}</strong><small>{{today.done}} / {{today.total}} · {{today.status}}</small></div>
+                <span>{{progress}}%</span>
+            </a>
+            {{/checklists}}
+        </aside>
+        <section class="u-checklist-sheet">
+            {{#hascurrent}}{{#current}}
+            <header><p class="u-page-kicker">{{recurrence}}</p><h2>{{title}}</h2><p>{{description}}</p></header>
+            <form method="post">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="checklistid" value="{{id}}">
+                {{#sections}}
+                <fieldset class="u-check-section"><legend>{{title}}</legend>
+                    {{#items}}
+                    <label class="u-check-item"><input type="checkbox" name="done_{{fieldid}}" value="1" {{#checked}}checked{{/checked}}><span>{{title}}</span></label>
+                    {{/items}}
+                </fieldset>
+                {{/sections}}
+                <label class="u-field"><span>Комментарий к выполнению</span><textarea name="comment" rows="3" placeholder="Необязательно">{{todaycomment}}</textarea></label>
+                <button class="u-btn u-btn--primary u-btn--large" type="submit">Сохранить выполнение</button>
+            </form>
+            {{/current}}{{/hascurrent}}
+            {{^hascurrent}}<div class="u-empty-mini">Нет назначенных чек-листов на сегодня.</div>{{/hascurrent}}
+        </section>
+    </div>
+</div>

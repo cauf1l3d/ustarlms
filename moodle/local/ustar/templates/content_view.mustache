@@ -1,0 +1,260 @@
+<div class="u-content-view">
+
+    <header class="u-content-view__head">
+
+        <div>
+
+            <a
+                class="u-content-view__back"
+                href="{{returnurl}}"
+            >
+                ← Назад
+            </a>
+
+            <p class="u-pagehead__eyebrow">
+                USTAR Content
+            </p>
+
+            <h1>
+                {{title}}
+            </h1>
+
+            <div class="u-content-view__meta">
+
+                <span>
+                    {{versionlabel}}
+                </span>
+
+                <span>
+                    {{filename}}
+                </span>
+
+                <span>
+                    {{filesize}}
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main class="u-content-view__body">
+
+
+        {{#ishtml}}
+
+        <div class="u-content-view__interactive">
+
+            <div class="u-content-view__notice">
+
+                <span>
+                    Интерактивный материал
+                </span>
+
+                <small>
+                    Запущен в изолированной среде USTAR.
+                </small>
+
+            </div>
+
+
+            <iframe
+                class="u-content-view__frame"
+                src="{{fileurl}}"
+                title="{{title}}"
+                sandbox="allow-scripts"
+                referrerpolicy="no-referrer"
+                loading="eager"
+            ></iframe>
+
+        </div>
+
+        {{/ishtml}}
+
+
+        {{#ispdf}}
+
+        <iframe
+            class="
+                u-content-view__frame
+                u-content-view__frame--document
+            "
+            src="{{fileurl}}"
+            title="{{title}}"
+        ></iframe>
+
+        {{/ispdf}}
+
+
+        {{#isimage}}
+
+        <div class="u-content-view__image">
+
+            <img
+                src="{{fileurl}}"
+                alt="{{title}}"
+            >
+
+        </div>
+
+        {{/isimage}}
+
+
+        {{#isvideo}}
+
+        <div class="u-content-view__video">
+
+            <video
+                src="{{fileurl}}"
+                controls
+                preload="metadata"
+            ></video>
+
+        </div>
+
+        {{/isvideo}}
+
+
+        {{#isgeneric}}
+
+        <div class="u-content-view__generic">
+
+            <strong>
+                {{filename}}
+            </strong>
+
+            <span>
+                {{mimetype}} · {{filesize}}
+            </span>
+
+            <a
+                class="u-btn u-btn--primary"
+                href="{{fileurl}}"
+                target="_blank"
+                rel="noopener"
+            >
+                Открыть файл
+            </a>
+
+        </div>
+
+        {{/isgeneric}}
+
+
+    </main>
+
+
+
+    {{#ackrequired}}
+
+    <section
+        class="
+            u-content-ack
+            {{#acked}}is-acked{{/acked}}
+        "
+    >
+
+        <div class="u-content-ack__body">
+
+            <p class="u-sectionhead__eyebrow">
+                Ознакомление
+            </p>
+
+
+            {{#needsack}}
+
+            <h2>
+                Подтвердите ознакомление
+            </h2>
+
+            <p>
+                Подтверждение будет сохранено именно
+                для версии {{versionlabel}} этого материала.
+            </p>
+
+            {{/needsack}}
+
+
+            {{#acked}}
+
+            <h2>
+                Ознакомление подтверждено
+            </h2>
+
+            <p>
+                Версия {{versionlabel}} ·
+                {{acktimeformatted}}
+            </p>
+
+            {{/acked}}
+
+        </div>
+
+
+        {{#needsack}}
+
+        <form
+            method="post"
+            class="u-content-ack__action"
+        >
+
+            <input
+                type="hidden"
+                name="action"
+                value="acknowledge"
+            >
+
+            <input
+                type="hidden"
+                name="contentid"
+                value="{{id}}"
+            >
+
+            <input
+                type="hidden"
+                name="sesskey"
+                value="{{sesskey}}"
+            >
+
+
+            <label class="u-content-ack__confirm">
+
+                <input
+                    type="checkbox"
+                    required
+                >
+
+                <span>
+                    Я ознакомился с материалом
+                </span>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="u-btn u-btn--primary"
+            >
+                Подтвердить ознакомление
+            </button>
+
+        </form>
+
+        {{/needsack}}
+
+
+        {{#acked}}
+
+        <div class="u-content-ack__status">
+            ✓
+        </div>
+
+        {{/acked}}
+
+    </section>
+
+    {{/ackrequired}}
+
+</div>

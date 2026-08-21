@@ -1,0 +1,63 @@
+/* ============================================================
+   USTAR Academy — Foundation
+   Minimal production-safe layer.
+   No page redesign here yet.
+   ============================================================ */
+
+html,
+body {
+    font-family: var(--u-font-ui);
+}
+
+body {
+    color: var(--u-text-primary);
+    background: var(--u-canvas);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--u-font-display);
+    color: var(--u-text-primary);
+}
+
+a {
+    text-underline-offset: 3px;
+}
+
+:focus-visible {
+    outline: 3px solid var(--u-brand);
+    outline-offset: 2px;
+}
+
+[hidden] {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Moodle baseline surface adaptation.
+   Conservative on purpose: no layout overrides yet. */
+#page {
+    background: var(--u-canvas);
+}
+
+.card,
+.course-info-container,
+.block {
+    border-color: var(--u-border);
+}
+
+/* Reduced motion contract. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

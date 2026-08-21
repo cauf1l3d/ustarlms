@@ -1,0 +1,63 @@
+<div class="u-knowledge">
+    <header class="u-knowledge-head">
+        <div>
+            <p class="u-pagehead__eyebrow">USTAR Knowledge</p>
+            <h1>База знаний</h1>
+            <p>Регламенты, инструкции и рабочие материалы, доступные именно вам.</p>
+        </div>
+        <div class="u-knowledge-count"><strong>{{total}}</strong><span>доступно</span></div>
+    </header>
+
+    <section class="u-knowledge-cockpit" aria-label="Сводка базы знаний">
+        <article class="u-knowledge-metric">{{{knowledgeicon}}}<div><strong>{{total}}</strong><span>доступных материалов</span></div></article>
+        <article class="u-knowledge-metric">{{{checkicon}}}<div><strong>{{needsactioncount}}</strong><span>нужно ознакомиться</span></div></article>
+        <article class="u-knowledge-metric">{{{clockicon}}}<div><strong>{{recentcount}}</strong><span>обновлено недавно</span></div></article>
+        <article class="u-knowledge-metric">{{{searchicon}}}<div><strong>{{categorycount}}</strong><span>категорий в доступе</span></div></article>
+    </section>
+
+    <form class="u-knowledge-search" method="get">
+        <input type="hidden" name="view" value="knowledge">
+        <input type="search" name="q" value="{{q}}" placeholder="Найти регламент, инструкцию, материал..." aria-label="Поиск по базе знаний" autocomplete="off">
+        <button class="u-btn u-btn--primary" type="submit">Найти</button>
+    </form>
+
+    {{#hascategoryshortcuts}}
+    <nav class="u-knowledge-category-shortcuts" aria-label="Популярные категории">
+        {{#categoryshortcuts}}<a href="{{url}}"><strong>{{label}}</strong><span>{{count}} материалов</span></a>{{/categoryshortcuts}}
+    </nav>
+    {{/hascategoryshortcuts}}
+
+    <div class="u-knowledge-filter-stack">
+        <nav class="u-knowledge-filters" aria-label="Тип материала">
+            {{#typefilters}}<a href="{{url}}" class="u-knowledge-filter {{#selected}}is-active{{/selected}}"><span>{{label}}</span><strong>{{count}}</strong></a>{{/typefilters}}
+        </nav>
+        <nav class="u-knowledge-filters u-knowledge-filters--categories" aria-label="Категория">
+            {{#categoryfilters}}<a href="{{url}}" class="u-knowledge-filter {{#selected}}is-active{{/selected}}"><span>{{label}}</span><strong>{{count}}</strong></a>{{/categoryfilters}}
+        </nav>
+    </div>
+
+    {{#hasactionmaterials}}
+    <section class="u-knowledge-action-zone">
+        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Требует внимания</p><h2>Нужно ознакомиться</h2></div><strong>{{needsactioncount}}</strong></header>
+        <div class="u-knowledge-grid">{{#actionmaterials}}{{> local_ustar/knowledge_card }}{{/actionmaterials}}</div>
+    </section>
+    {{/hasactionmaterials}}
+
+    {{#hasrecentmaterials}}
+    <section class="u-knowledge-recent-zone">
+        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Fresh</p><h2>Недавно обновлено</h2></div><strong>{{recentcount}}</strong></header>
+        <div class="u-knowledge-grid">{{#recentmaterials}}{{> local_ustar/knowledge_card }}{{/recentmaterials}}</div>
+    </section>
+    {{/hasrecentmaterials}}
+
+    {{#hasregularmaterials}}
+    <section class="u-knowledge-library-zone">
+        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Для вашей роли</p><h2>Вся база</h2></div></header>
+        <div class="u-knowledge-grid">{{#regularmaterials}}{{> local_ustar/knowledge_card }}{{/regularmaterials}}</div>
+    </section>
+    {{/hasregularmaterials}}
+
+    {{^hasmaterials}}
+    <div class="u-knowledge-empty"><strong>По текущим фильтрам ничего не найдено</strong><p>Доступ к материалам определяется вашими правилами доступа, должностью и подразделением.</p></div>
+    {{/hasmaterials}}
+</div>

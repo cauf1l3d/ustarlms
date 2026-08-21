@@ -1,0 +1,162 @@
+/* ============================================================
+   USTAR Activity Runtime
+   ============================================================ */
+
+.u-activity-context {
+    margin: 0 0 28px;
+    padding: 8px 0 22px;
+
+    border-bottom:
+        1px solid
+        var(--u-border);
+}
+
+
+.u-activity-context__back {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 16px;
+
+    color: var(--u-text-secondary);
+
+    font-size: 11px;
+    font-weight: 620;
+
+    text-decoration: none;
+}
+
+
+.u-activity-context__back:hover {
+    color: var(--u-text-primary);
+
+    text-decoration: none;
+}
+
+
+.u-activity-context__back span {
+    font-size: 15px;
+    line-height: 1;
+}
+
+
+.u-activity-context__row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 24px;
+}
+
+
+.u-activity-context__main {
+    min-width: 0;
+}
+
+
+.u-activity-context__course {
+    margin: 0 0 6px;
+
+    color: var(--u-text-muted);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+
+.u-activity-context h1 {
+    max-width: 880px;
+
+    margin: 0;
+
+    color: var(--u-text-primary);
+
+    font-family: var(--u-font-display);
+
+    font-size:
+        clamp(
+            24px,
+            3vw,
+            36px
+        );
+
+    font-weight: 640;
+
+    letter-spacing: -.025em;
+
+    line-height: 1.08;
+}
+
+
+.u-activity-context__type {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 27px;
+
+    flex: 0 0 auto;
+
+    padding: 0 10px;
+
+    color: var(--u-text-secondary);
+    background: var(--u-surface-muted);
+
+    border: 1px solid var(--u-border);
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: .06em;
+
+    text-transform: uppercase;
+}
+
+
+/*
+ * The Moodle activity itself must remain functional and roomy.
+ * USTAR only controls the surrounding product shell.
+ */
+
+.u-activity-runtime .u-main > .u-container {
+    max-width: 1320px;
+}
+
+
+.u-activity-runtime #region-main,
+.u-activity-runtime [role="main"] {
+    min-width: 0;
+}
+
+
+/*
+ * Remove excessive top whitespace left by layouts/components
+ * which expected the classic Moodle course header.
+ */
+
+.u-activity-runtime .activity-header {
+    margin-top: 0;
+}
+
+
+@media (max-width: 767px) {
+
+    .u-activity-context {
+        margin-bottom: 20px;
+        padding-bottom: 17px;
+    }
+
+    .u-activity-context__row {
+        display: block;
+    }
+
+    .u-activity-context__type {
+        margin-top: 12px;
+    }
+}

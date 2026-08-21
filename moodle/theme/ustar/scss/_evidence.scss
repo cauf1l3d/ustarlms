@@ -1,0 +1,218 @@
+
+/* ============================================================
+   USTAR Development — Evidence layer
+   ============================================================ */
+
+.u-skill-evidence {
+    margin-top: 18px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid
+        var(--u-border);
+}
+
+
+.u-skill-evidence__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 11px;
+}
+
+
+.u-skill-evidence__summary span {
+    color: var(--u-text-muted);
+
+    font-size: 9px;
+    font-weight: 680;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+
+.u-skill-evidence__summary strong {
+    color: var(--u-text-primary);
+
+    font-size: 12px;
+    font-weight: 720;
+}
+
+
+.u-evidence-row {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 9px;
+
+    padding: 9px 0;
+}
+
+
+.u-evidence-row + .u-evidence-row {
+    border-top:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--u-border)
+            70%,
+            transparent
+        );
+}
+
+
+.u-evidence-row__marker {
+    width: 20px;
+    height: 20px;
+
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 20px;
+
+    color: var(--u-text-muted);
+    background: var(--u-surface-muted);
+
+    border:
+        1px solid
+        var(--u-border);
+
+    border-radius: 50%;
+
+    font-size: 11px;
+    font-weight: 750;
+}
+
+
+.u-evidence-row.is-done
+.u-evidence-row__marker {
+    color: var(--u-text-on-brand);
+    background: var(--u-success);
+
+    border-color: var(--u-success);
+}
+
+
+.u-evidence-row.is-failed
+.u-evidence-row__marker {
+    color: #fff;
+    background: #b94b42;
+
+    border-color: #b94b42;
+}
+
+
+.u-evidence-row__body {
+    min-width: 0;
+    flex: 1;
+}
+
+
+.u-evidence-row__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.u-evidence-row__top strong {
+    color: var(--u-text-primary);
+
+    font-size: 11px;
+    font-weight: 650;
+}
+
+
+.u-evidence-row__top span {
+    color: var(--u-text-muted);
+
+    font-size: 9px;
+    white-space: nowrap;
+}
+
+
+.u-evidence-row__body p {
+    margin: 3px 0 0;
+
+    color: var(--u-text-secondary);
+
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+
+.u-evidence-row__body small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--u-text-muted);
+
+    font-size: 9px;
+}
+
+
+.u-skill-evidence-empty {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+
+.u-skill-evidence-empty > span {
+    width: 7px;
+    height: 7px;
+
+    flex: 0 0 7px;
+
+    background: var(--u-text-muted);
+
+    border-radius: 50%;
+
+    opacity: .55;
+}
+
+
+.u-skill-evidence-empty p {
+    margin: 0;
+
+    color: var(--u-text-muted);
+
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+
+/*
+ * Once normalized evidence exists, hide the old synthetic
+ * course-measure block from the card.
+ */
+.u-skill-card:has(.u-skill-evidence)
+.u-skill-measure,
+.u-skill-card:has(.u-skill-evidence)
+.u-skill-unmeasured {
+    display: none;
+}
+
+
+@media (max-width: 767px) {
+
+    .u-evidence-row__top {
+        align-items: flex-start;
+    }
+
+    .u-evidence-row__top span {
+        white-space: normal;
+        text-align: right;
+    }
+}

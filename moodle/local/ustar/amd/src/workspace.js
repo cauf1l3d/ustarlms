@@ -1,0 +1,87 @@
+export const init = () => {
+    const board = document.getElementById('u-org-board');
+    const canvas = document.getElementById('u-org-canvas');
+    const indicator = document.getElementById('u-workspace-zoom');
+    if (!board || !canvas) {
+        return;
+    }
+
+    let scale = 1;
+    let panning = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+    const apply = () => {
+        scale = clamp(scale, 0.55, 1.4);
+        board.style.setProperty('--u-workspace-scale', String(scale));
+        if (indicator) {
+            indicator.textContent = `${Math.round(scale * 100)}%`;
+        }
+    };
+
+    document.querySelectorAll('[data-u-workspace]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const action = button.dataset.uWorkspace;
+            if (action === 'plus') {
+                scale += 0.1;
+            } else if (action === 'minus') {
+                scale -= 0.1;
+            } else if (action === 'reset') {
+                scale = 1;
+                board.scrollTo({left: 0, top: 0, behavior: 'smooth'});
+            } else if (action === 'fit') {
+                const width = canvas.scrollWidth || canvas.getBoundingClientRect().width;
+                const available = Math.max(1, board.clientWidth - 34);
+                scale = clamp(available / Math.max(1, width), 0.55, 1);
+                board.scrollTo({left: 0, top: 0, behavior: 'smooth'});
+            }
+            apply();
+        });
+    });
+
+    board.querySelectorAll('[data-u-collapse]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const lane = button.closest('.u-org-lane');
+            if (!lane) {
+                return;
+            }
+            const collapsed = lane.classList.toggle('is-collapsed');
+            button.textContent = collapsed ? '+' : '−';
+            button.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        });
+    });
+
+    board.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0 || event.target.closest('a, button, input')) {
+            return;
+        }
+        panning = true;
+        startX = event.clientX;
+        startY = event.clientY;
+        startLeft = board.scrollLeft;
+        startTop = board.scrollTop;
+        board.classList.add('is-panning');
+        board.setPointerCapture(event.pointerId);
+    });
+
+    board.addEventListener('pointermove', (event) => {
+        if (!panning) {
+            return;
+        }
+        board.scrollLeft = startLeft - (event.clientX - startX);
+        board.scrollTop = startTop - (event.clientY - startY);
+    });
+
+    const stop = () => {
+        panning = false;
+        board.classList.remove('is-panning');
+    };
+    board.addEventListener('pointerup', stop);
+    board.addEventListener('pointercancel', stop);
+
+    apply();
+};

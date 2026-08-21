@@ -1,0 +1,3 @@
+DGMJS upstream dependency
+Repository: https://github.com/dgmjs/dgmjs.git
+Pinned commit: 0885bfbf27eaca1821b34828c4287a100cfc6677

@@ -1,0 +1,81 @@
+<div class="u-product-page u-content-studio">
+    <header class="u-product-head"><div><p class="u-page-kicker">Game Content Studio</p><h1>Игры</h1><p>Редактор Game Hub. Проверка ответов и XP остаются серверными; здесь управляется только контент и доступность.</p></div>{{{gameicon}}}</header>
+    {{#saved}}<div class="u-inline-notice u-inline-notice--success"><strong>Игра сохранена</strong><span>Изменения уже используются Game Hub.</span></div>{{/saved}}
+    {{#haserrors}}
+    <div class="u-inline-notice" role="alert">
+        <div><strong>Игра не сохранена</strong><span>Исправьте поля ниже и повторите сохранение.</span></div>
+        <ul>{{#formerrors}}<li>{{message}}</li>{{/formerrors}}</ul>
+    </div>
+    {{/haserrors}}
+
+    <div class="u-studio-layout">
+        <aside class="u-studio-list">
+            <a class="u-btn u-btn--primary" href="{{newurl}}">+ Новая игра</a>
+            {{#games}}<a href="{{url}}" class="u-studio-list__row {{#selected}}is-selected{{/selected}}"><div><strong>{{title}}</strong><small>{{code}} · {{questioncount}} вопросов</small></div><span>{{statuslabel}}</span></a>{{/games}}
+            {{^hasgames}}<div class="u-empty-mini">Игр пока нет.</div>{{/hasgames}}
+        </aside>
+
+        <section class="u-studio-editor">
+            {{#current}}
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="id" value="{{id}}"><input type="hidden" name="formslotcount" value="{{formslotcount}}">
+                <div class="u-game-savebar">
+                    <div><strong>{{#isnew}}Новая игра{{/isnew}}{{^isnew}}Редактирование игры{{/isnew}}</strong><small>Изменения применяются только после сохранения.</small></div>
+                    <button class="u-btn u-btn--primary" type="submit">Сохранить изменения</button>
+                </div>
+                <div class="u-studio-form-grid">
+                    <label class="u-field"><span>Название</span><input type="text" name="title" value="{{title}}" required></label>
+                    <label class="u-field"><span>Код</span><input type="text" name="code" value="{{code}}" placeholder="sales_quiz"><small>Можно оставить пустым — безопасный уникальный код создастся автоматически.</small></label>
+                    <label class="u-field"><span>Тип</span><select name="type">{{#typeoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/typeoptions}}</select></label>
+                    <label class="u-field"><span>Аудитория</span><select name="department">{{#departmentoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/departmentoptions}}</select></label>
+                    <label class="u-field"><span>Сложность 1–5</span><input type="number" name="difficulty" min="1" max="5" value="{{difficulty}}"></label>
+                    <label class="u-switch-field"><input type="checkbox" name="active" value="1" {{#active}}checked{{/active}}><span>Игра активна</span></label>
+                </div>
+                <label class="u-field"><span>Описание</span><textarea name="description" rows="3">{{description}}</textarea></label>
+
+                <header class="u-panel-title"><div><p class="u-page-kicker">Questions</p><h2>Вопросы</h2><p>Все заполненные карточки сохраняются одним действием. У каждого вопроса должно быть четыре непустых варианта ответа. Пустые новые карточки игнорируются; очищенный старый вопрос будет снят с публикации без удаления истории.</p></div>{{#hasplayurl}}<a href="{{playurl}}" target="_blank" rel="noopener">Тестировать игру ↗</a>{{/hasplayurl}}</header>
+
+                <div class="u-question-editor-list">
+                    {{#questionslots}}
+                    <fieldset class="u-question-editor">
+                        <legend>Вопрос {{number}}{{^existing}} · новый{{/existing}}</legend>
+                        <input type="hidden" name="q_id_{{index}}" value="{{id}}">
+                        <label class="u-field"><span>Текст вопроса</span><textarea name="q_text_{{index}}" rows="2">{{text}}</textarea></label>
+                        <div class="u-game-image-editor">
+                            <label class="u-field">
+                                <span>Фото с компьютера</span>
+                                <input type="file" name="q_imagefile_{{index}}" accept="image/jpeg,image/png,image/webp,image/gif">
+                                <small>JPG, PNG, WEBP или GIF · до 5 МБ. Новый файл заменит текущее изображение.</small>
+                            </label>
+                            <label class="u-field">
+                                <span>Или URL изображения</span>
+                                <input type="url" name="q_image_{{index}}" value="{{imageUrl}}" placeholder="https://...">
+                            </label>
+                            {{#hasImage}}
+                            <div class="u-game-image-current">
+                                <img src="{{imageUrl}}" alt="">
+                                <label class="u-switch-field"><input type="checkbox" name="q_image_delete_{{index}}" value="1"><span>Удалить текущее изображение</span></label>
+                            </div>
+                            {{/hasImage}}
+                        </div>
+                        <div class="u-option-editor-grid">
+                            <label><span>A</span><input type="text" name="q_o0_{{index}}" value="{{o0}}"></label>
+                            <label><span>B</span><input type="text" name="q_o1_{{index}}" value="{{o1}}"></label>
+                            <label><span>C</span><input type="text" name="q_o2_{{index}}" value="{{o2}}"></label>
+                            <label><span>D</span><input type="text" name="q_o3_{{index}}" value="{{o3}}"></label>
+                        </div>
+                        <div class="u-studio-form-grid">
+                            <label class="u-field"><span>Правильный вариант</span><select name="q_correct_{{index}}"><option value="0" {{#correct0}}selected{{/correct0}}>A</option><option value="1" {{#correct1}}selected{{/correct1}}>B</option><option value="2" {{#correct2}}selected{{/correct2}}>C</option><option value="3" {{#correct3}}selected{{/correct3}}>D</option></select></label>
+                            <label class="u-field"><span>XP</span><input type="number" name="q_xp_{{index}}" min="0" max="500" value="{{xpReward}}"></label>
+                            <label class="u-switch-field"><input type="checkbox" name="q_active_{{index}}" value="1" {{#active}}checked{{/active}}><span>Вопрос активен</span></label>
+                        </div>
+                        <label class="u-field"><span>Пояснение после ответа</span><textarea name="q_explanation_{{index}}" rows="2">{{explanation}}</textarea></label>
+                    </fieldset>
+                    {{/questionslots}}
+                </div>
+                <div class="u-route-actions"><button class="u-btn u-btn--primary u-btn--large" type="submit">Сохранить игру</button><small>Сервер не начисляет XP повторно за уже освоенный вопрос.</small></div>
+            </form>
+            {{/current}}
+        </section>
+    </div>
+</div>

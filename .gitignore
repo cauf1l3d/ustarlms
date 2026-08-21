@@ -1,0 +1,39 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+
+# JavaScript runtime/build cache
+**/node_modules/
+/frontend/.next/
+/frontend/out/
+/frontend/.turbo/
+
+# Python runtime
+**/__pycache__/
+*.pyc
+**/venv/
+**/.venv/
+
+# Logs and temporary files
+*.log
+*.bak
+*.bak_*
+*~
+.DS_Store
+Thumbs.db
+
+# Backup / database artifacts
+*.dump
+*.tar
+*.tar.gz
+*.tar.zst
+*.gpg
+
+# Production staff/import data
+moodle/local/ustar/data/staff_position_map_*.csv
+moodle/local/ustar/data/structure_staffmap_*.json

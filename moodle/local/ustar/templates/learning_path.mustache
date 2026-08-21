@@ -1,0 +1,362 @@
+<div class="u-guided">
+
+    <a
+        class="u-guided__back"
+        href="{{backurl}}"
+    >
+        ← Обучение
+    </a>
+
+    {{#path}}
+
+    <header class="u-guided-head">
+
+        <div class="u-guided-head__main">
+
+            <p class="u-pagehead__eyebrow">
+                Мой учебный маршрут
+            </p>
+
+            <h1>
+                {{name}}
+            </h1>
+
+            <div class="u-guided-head__meta">
+
+                {{#published}}
+                <span class="u-path-state u-path-state--published">
+                    Опубликован
+                </span>
+                {{/published}}
+
+                {{#draft}}
+                <span class="u-path-state u-path-state--draft">
+                    Черновик
+                </span>
+                {{/draft}}
+
+                {{#hassteps}}
+                <span>
+                    {{done}} из {{total}} этапов
+                </span>
+                {{/hassteps}}
+
+            </div>
+
+        </div>
+
+
+        {{#hassteps}}
+
+        <div class="u-guided-head__progress">
+
+            <strong>
+                {{progress}}%
+            </strong>
+
+            <span>
+                выполнено
+            </span>
+
+        </div>
+
+        {{/hassteps}}
+
+    </header>
+
+
+    {{#hassteps}}
+
+    <div
+        class="u-progressbar u-guided-progress"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="{{progress}}"
+    >
+        <span style="width: {{progress}}%"></span>
+    </div>
+
+    {{/hassteps}}
+
+
+    {{#draft}}
+
+    <section class="u-path-draft">
+
+        <div class="u-path-draft__icon">
+            !
+        </div>
+
+        <div>
+
+            <strong>
+                Маршрут пока не опубликован
+            </strong>
+
+            <p>
+                Структуру курса уже можно проверить,
+                но сотрудники не должны начинать обучение
+                до его публикации.
+            </p>
+
+        </div>
+
+    </section>
+
+    {{/draft}}
+
+
+    {{#fallback}}
+
+    <section class="u-path-draft">
+
+        <div class="u-path-draft__icon">
+            !
+        </div>
+
+        <div>
+
+            <strong>
+                Не настроено отслеживание завершения
+            </strong>
+
+            <p>
+                Активности курса доступны, но USTAR пока
+                не может использовать их как подтверждённую
+                последовательность прохождения.
+            </p>
+
+        </div>
+
+    </section>
+
+    {{/fallback}}
+
+
+    <div class="u-guided-layout">
+
+        <main class="u-path">
+
+            <header class="u-sectionhead">
+
+                <div>
+
+                    <p class="u-sectionhead__eyebrow">
+                        Последовательность
+                    </p>
+
+                    <h2>
+                        Этапы обучения
+                    </h2>
+
+                </div>
+
+                <span>
+                    {{total}}
+                </span>
+
+            </header>
+
+
+            {{#hassteps}}
+
+            <div class="u-path-list">
+
+                {{#steps}}
+
+                <article
+                    class="
+                        u-path-step
+                        u-path-step--{{status}}
+                    "
+                >
+
+                    <div class="u-path-step__rail">
+
+                        <div class="u-path-step__marker">
+
+                            {{#done}}
+                            ✓
+                            {{/done}}
+
+                            {{#failed}}
+                            !
+                            {{/failed}}
+
+                            {{^done}}
+                                {{^failed}}
+                                {{number}}
+                                {{/failed}}
+                            {{/done}}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="u-path-step__content">
+
+                        {{#hassection}}
+
+                        <p class="u-path-step__section">
+                            {{sectionname}}
+                        </p>
+
+                        {{/hassection}}
+
+
+                        <div class="u-path-step__title">
+
+                            <h3>
+                                {{name}}
+                            </h3>
+
+                            <span class="u-path-step__status">
+                                {{statuslabel}}
+                            </span>
+
+                        </div>
+
+
+                        <p class="u-path-step__type">
+                            {{modname}}
+                        </p>
+
+                    </div>
+
+                </article>
+
+                {{/steps}}
+
+            </div>
+
+            {{/hassteps}}
+
+
+            {{^hassteps}}
+
+            <div class="u-empty-state">
+
+                <h2>
+                    В маршруте пока нет этапов
+                </h2>
+
+                <p>
+                    После добавления учебных активностей
+                    они появятся здесь автоматически.
+                </p>
+
+            </div>
+
+            {{/hassteps}}
+
+        </main>
+
+
+        <aside class="u-next-panel">
+
+            {{#completed}}
+
+            <p class="u-next-panel__eyebrow">
+                Маршрут завершён
+            </p>
+
+            <h2>
+                Обучение завершено
+            </h2>
+
+            <p class="u-next-panel__section">
+                Все обязательные этапы этого маршрута
+                успешно завершены.
+            </p>
+
+            <div class="u-next-panel__complete">
+                ✓
+            </div>
+
+            {{/completed}}
+
+
+            {{^completed}}
+
+                {{#hasnext}}
+
+                    {{#next}}
+
+                    <p class="u-next-panel__eyebrow">
+                        Следующий шаг
+                    </p>
+
+                    <h2>
+                        {{name}}
+                    </h2>
+
+                    {{#hassection}}
+
+                    <p class="u-next-panel__section">
+                        {{sectionname}}
+                    </p>
+
+                    {{/hassection}}
+
+                    {{/next}}
+
+
+                    {{#canlaunch}}
+
+                        {{#next}}
+
+                        <a
+                            class="u-btn u-btn--primary u-next-panel__cta"
+                            href="{{url}}"
+                        >
+                            Продолжить обучение
+                        </a>
+
+                        {{/next}}
+
+                    {{/canlaunch}}
+
+
+                    {{^canlaunch}}
+
+                    <button
+                        class="u-btn u-btn--primary u-next-panel__cta"
+                        type="button"
+                        disabled
+                    >
+                        Маршрут не опубликован
+                    </button>
+
+                    {{/canlaunch}}
+
+                {{/hasnext}}
+
+
+                {{^hasnext}}
+
+                <p class="u-next-panel__eyebrow">
+                    Учебный маршрут
+                </p>
+
+                <h2>
+                    Нет следующего этапа
+                </h2>
+
+                <p class="u-next-panel__section">
+                    В курсе пока не определён следующий
+                    обязательный шаг.
+                </p>
+
+                {{/hasnext}}
+
+            {{/completed}}
+
+        </aside>
+
+    </div>
+
+    {{/path}}
+
+</div>

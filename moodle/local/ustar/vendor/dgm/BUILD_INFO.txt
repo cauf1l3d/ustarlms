@@ -1,0 +1,8 @@
+USTAR DGM runtime RC8.1
+Built: 2026-08-20T09:11:34+00:00
+@dgmjs/core 1.5.5
+@dgmjs/react 1.5.2
+@dgmjs/export 1.1.0
+@dgmjs/pdf REMOVED_FROM_BROWSER_RUNTIME
+NODE_ENV browser compatibility replacement: production
+Runtime source: /home/adu/moodle-project/USTAR_1.5.0_DGM_RUNTIME_FIX_RC8_1/frontend

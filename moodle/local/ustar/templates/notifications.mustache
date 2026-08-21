@@ -1,0 +1,31 @@
+<div class="u-product-page u-notifications-page">
+    <header class="u-product-head">
+        <div><p class="u-page-kicker">Notification Center</p><h1>Уведомления</h1><p>Учебные, системные и рабочие события Moodle в одном центре.</p></div>
+        <div class="u-product-head__actions">
+            {{{bellicon}}}
+            {{#hasunread}}
+            <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="all"><button class="u-btn" type="submit">Прочитать всё · {{unread}}</button></form>
+            {{/hasunread}}
+        </div>
+    </header>
+
+    <div class="u-notification-list">
+        {{#notifications}}
+        <article class="u-notification-card {{#unread}}is-unread{{/unread}}">
+            <div class="u-notification-dot"></div>
+            <div class="u-notification-body">
+                <div class="u-notification-meta"><span>{{component}}{{#eventtype}} · {{eventtype}}{{/eventtype}}</span><time>{{time}}</time></div>
+                <h2>{{subject}}</h2>
+                <p>{{message}}</p>
+                <div class="u-notification-actions">
+                    {{#hasurl}}<a class="u-btn u-btn--small" href="{{url}}">{{urlname}} →</a>{{/hasurl}}
+                    {{#unread}}
+                    <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="read"><input type="hidden" name="id" value="{{id}}"><button class="u-btn u-btn--quiet u-btn--small" type="submit">Отметить прочитанным</button></form>
+                    {{/unread}}
+                </div>
+            </div>
+        </article>
+        {{/notifications}}
+        {{^hasnotifications}}<div class="u-empty-state u-empty-state--product">{{{bellicon}}}<h2>Пока тихо</h2><p>Новые уведомления появятся здесь.</p></div>{{/hasnotifications}}
+    </div>
+</div>

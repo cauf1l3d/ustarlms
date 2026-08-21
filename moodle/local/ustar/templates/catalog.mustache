@@ -1,0 +1,83 @@
+<div class="u-product-page u-catalog-page">
+<header class="u-product-head">
+  <div>
+    <p class="u-page-kicker">Товарные знания</p>
+    <h1>{{title}}</h1>
+    <p>{{subtitle}}</p>
+  </div>
+  {{{catalogicon}}}
+</header>
+
+<form class="u-catalog-search" method="get" action="{{rooturl}}">
+  <input type="search" name="q" value="{{q}}" placeholder="Найти товар, SKU или характеристику..." aria-label="Поиск товара">
+  <button class="u-btn u-btn--primary" type="submit">Найти</button>
+</form>
+
+<div class="u-meta-row" style="margin-bottom:18px">
+  <span class="u-status-pill">Разделов: {{stats.groups}}</span>
+  <span class="u-status-pill">Категорий: {{stats.subgroups}}</span>
+  <span class="u-status-pill">Товаров: {{stats.products}}</span>
+  <span class="u-status-pill">Карточек знаний: {{stats.cards}}</span>
+  {{#stats.assessments}}<span class="u-status-pill">Проверок знаний: {{stats.assessments}}</span>{{/stats.assessments}}
+</div>
+
+{{#hasbreadcrumbs}}
+<nav class="u-breadcrumbs" aria-label="Навигация каталога" style="margin-bottom:16px">
+  <a href="{{rooturl}}">Каталог товаров</a>
+  {{#breadcrumbs}}<span> / </span><a href="{{url}}">{{title}}</a>{{/breadcrumbs}}
+</nav>
+{{/hasbreadcrumbs}}
+
+{{#hasdetail}}
+<section class="u-catalog-detail u-panel">
+  <div class="u-catalog-detail__image">
+    {{#detail.hasimage}}<img src="{{detail.imageurl}}" alt="{{detail.title}}">{{/detail.hasimage}}
+    {{^detail.hasimage}}<img src="{{fallbackimage}}" alt="USTAR">{{/detail.hasimage}}
+  </div>
+  <div>
+    <p class="u-page-kicker">{{detail.typelabel}}</p>
+    <h2>{{detail.title}}</h2>
+    {{#detail.sku}}<span class="u-status-pill">SKU {{detail.sku}}</span>{{/detail.sku}}
+    {{#detail.summary}}<p>{{detail.summary}}</p>{{/detail.summary}}
+    {{#detail.descriptionhtml}}<div class="u-richtext">{{{detail.descriptionhtml}}}</div>{{/detail.descriptionhtml}}
+    {{#detail.hasattrs}}
+      <h3 style="margin-top:20px">Характеристики</h3>
+      {{#detail.attrs}}<div class="u-catalog-attr"><b>{{name}}</b><span>{{value}}</span></div>{{/detail.attrs}}
+    {{/detail.hasattrs}}
+    {{#detail.hassource}}
+      <div style="margin-top:20px">
+        <a class="u-btn u-btn--secondary" href="{{detail.sourceurl}}">Открыть исходный материал</a>
+        {{#detail.sourcefilename}}<small style="display:block;margin-top:8px">{{detail.sourcefilename}}</small>{{/detail.sourcefilename}}
+      </div>
+    {{/detail.hassource}}
+  </div>
+</section>
+{{/hasdetail}}
+
+{{#searching}}<p class="u-page-kicker">Результаты поиска</p>{{/searching}}
+{{#hasitems}}
+<div class="u-catalog-grid">
+  {{#items}}
+  <a class="u-catalog-card" href="{{#isfolder}}{{url}}{{/isfolder}}{{^isfolder}}{{detailurl}}{{/isfolder}}">
+    <div class="u-catalog-card__image">
+      {{#hasimage}}<img src="{{imageurl}}" alt="{{title}}">{{/hasimage}}
+      {{^hasimage}}<img src="{{fallbackimage}}" alt="USTAR">{{/hasimage}}
+    </div>
+    <div>
+      <span>{{typelabel}}</span>
+      <strong>{{title}}</strong>
+      {{#sku}}<small>SKU {{sku}}</small>{{/sku}}
+      {{#summary}}<p>{{summary}}</p>{{/summary}}
+    </div>
+  </a>
+  {{/items}}
+</div>
+{{/hasitems}}
+{{^hasitems}}
+<div class="u-empty-state u-empty-state--product">
+  <h2>Ничего не найдено</h2>
+  <p>Измени запрос или вернись в корень каталога.</p>
+  <a class="u-btn u-btn--secondary" href="{{rooturl}}">Весь каталог</a>
+</div>
+{{/hasitems}}
+</div>

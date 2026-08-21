@@ -1,0 +1,795 @@
+<div class="u-hr">
+
+    <header class="u-hr-head">
+
+        <div>
+            <p class="u-pagehead__eyebrow">
+                Центр управления USTAR
+            </p>
+
+            <h1>
+                Сотрудники
+            </h1>
+
+            <p>
+                Люди, должности и автоматические назначения обучения.
+            </p>
+        </div>
+
+        <a
+            class="u-btn u-btn--primary"
+            href="{{newurl}}"
+        >
+            + Новый сотрудник
+        </a>
+
+    </header>
+
+
+    <form
+        class="u-hr-filters"
+        method="get"
+        action=""
+    >
+
+        <label class="u-hr-search">
+
+            <span>
+                Поиск
+            </span>
+
+            <input
+                type="search"
+                name="q"
+                value="{{query}}"
+                placeholder="Имя, логин или email"
+            >
+
+        </label>
+
+
+        <label>
+
+            <span>
+                Подразделение
+            </span>
+
+            <select name="department">
+
+                {{#departmentoptions}}
+                <option
+                    value="{{id}}"
+                    {{#selected}}selected{{/selected}}
+                >
+                    {{name}}
+                </option>
+                {{/departmentoptions}}
+
+            </select>
+
+        </label>
+
+
+        <label>
+
+            <span>
+                Должность
+            </span>
+
+            <select name="position">
+
+                {{#positionoptions}}
+                <option
+                    value="{{id}}"
+                    {{#selected}}selected{{/selected}}
+                >
+                    {{name}}
+                </option>
+                {{/positionoptions}}
+
+            </select>
+
+        </label>
+
+
+        <label>
+
+            <span>
+                Статус
+            </span>
+
+            <select name="status">
+
+                {{#statusoptions}}
+                <option
+                    value="{{id}}"
+                    {{#selected}}selected{{/selected}}
+                >
+                    {{name}}
+                </option>
+                {{/statusoptions}}
+
+            </select>
+
+        </label>
+
+
+        <button
+            class="u-btn"
+            type="submit"
+        >
+            Показать
+        </button>
+
+    </form>
+
+
+    <div class="u-hr-layout">
+
+        <section class="u-people-panel">
+
+            <header class="u-panel-head">
+
+                <div>
+                    <p class="u-sectionhead__eyebrow">
+                        Команда
+                    </p>
+
+                    <h2>
+                        Сотрудники
+                    </h2>
+                </div>
+
+                <span>
+                    {{peoplecount}}
+                </span>
+
+            </header>
+
+
+            {{#haspeople}}
+
+            <div class="u-people-list" tabindex="0" role="region" aria-label="Список сотрудников">
+
+                {{#people}}
+
+                <a
+                    class="
+                        u-person-row
+                        {{#selected}}is-selected{{/selected}}
+                    "
+                    href="{{url}}"
+                >
+
+                    <div class="u-person-row__main">
+
+                        <strong>
+                            {{fullname}}
+                        </strong>
+
+                        <span>
+                            {{position}}
+                        </span>
+
+                        {{#hasdepartment}}
+                        <small>
+                            {{department}}
+                        </small>
+                        {{/hasdepartment}}
+
+                    </div>
+
+
+                    <div class="u-person-row__meta">
+
+                        {{#active}}
+                        <span class="u-state u-state--ok">
+                            Активен
+                        </span>
+                        {{/active}}
+
+                        {{#suspended}}
+                        <span class="u-state">
+                            Приостановлен
+                        </span>
+                        {{/suspended}}
+
+                        {{#protected}}
+                        <small>
+                            Защищён
+                        </small>
+                        {{/protected}}
+
+                    </div>
+
+                </a>
+
+                {{/people}}
+
+            </div>
+
+            {{/haspeople}}
+
+
+            {{^haspeople}}
+
+            <div class="u-empty-state">
+                <h3>
+                    Ничего не найдено
+                </h3>
+
+                <p>
+                    Измените фильтры или создайте сотрудника.
+                </p>
+            </div>
+
+            {{/haspeople}}
+
+        </section>
+
+
+        <section class="u-person-editor" tabindex="0" aria-label="Карточка сотрудника">
+
+            {{#haseditor}}
+            {{#editor}}
+
+            <header class="u-panel-head">
+
+                <div>
+
+                    <p class="u-sectionhead__eyebrow">
+
+                        {{#isnew}}
+                        Новый сотрудник
+                        {{/isnew}}
+
+                        {{#isedit}}
+                        Карточка сотрудника
+                        {{/isedit}}
+
+                    </p>
+
+                    <h2>
+
+                        {{#isnew}}
+                        Создание
+                        {{/isnew}}
+
+                        {{#isedit}}
+                        {{user.firstname}} {{user.lastname}}
+                        {{/isedit}}
+
+                    </h2>
+
+                </div>
+
+            </header>
+
+
+            {{#protected}}
+
+            <div class="u-hr-notice">
+                Этот аккаунт защищён от изменений через HR.
+            </div>
+
+            {{/protected}}
+
+
+            <form
+                class="u-person-form"
+                method="post"
+                action=""
+            >
+
+                <input
+                    type="hidden"
+                    name="action"
+                    value="saveperson"
+                >
+
+                <input
+                    type="hidden"
+                    name="sesskey"
+                    value="{{sesskey}}"
+                >
+
+                <input
+                    type="hidden"
+                    name="userid"
+                    value="{{user.userid}}"
+                >
+
+
+                <div class="u-form-grid">
+
+                    <label>
+                        <span>
+                            Имя
+                        </span>
+
+                        <input
+                            name="firstname"
+                            value="{{user.firstname}}"
+                            required
+                            {{^canedit}}disabled{{/canedit}}
+                        >
+                    </label>
+
+
+                    <label>
+                        <span>
+                            Фамилия
+                        </span>
+
+                        <input
+                            name="lastname"
+                            value="{{user.lastname}}"
+                            required
+                            {{^canedit}}disabled{{/canedit}}
+                        >
+                    </label>
+
+
+                    <label>
+                        <span>
+                            Логин
+                        </span>
+
+                        <input
+                            name="username"
+                            value="{{user.username}}"
+                            required
+                            {{^canedit}}disabled{{/canedit}}
+                        >
+                    </label>
+
+
+                    <label>
+                        <span>
+                            Email
+                        </span>
+
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{user.email}}"
+                            required
+                            {{^canedit}}disabled{{/canedit}}
+                        >
+                    </label>
+
+                </div>
+
+
+                <label class="u-form-full">
+
+                    <span>
+                        Должность
+                    </span>
+
+                    <select
+                        name="positionid"
+                        {{^canedit}}disabled{{/canedit}}
+                    >
+
+                        {{#positionoptions}}
+
+                        <option
+                            value="{{id}}"
+                            {{#selected}}selected{{/selected}}
+                        >
+                            {{name}}
+                        </option>
+
+                        {{/positionoptions}}
+
+                    </select>
+
+                    <small>
+                        Подразделение и обязательное обучение
+                        определяются должностью автоматически.
+                    </small>
+
+                </label>
+
+
+                <label class="u-form-full">
+
+                    <span>
+                        Тип учётной записи
+                    </span>
+
+                    <select
+                        name="accounttype"
+                        {{^canedit}}disabled{{/canedit}}
+                    >
+                        {{#accounttypeoptions}}
+                        <option
+                            value="{{id}}"
+                            {{#selected}}selected{{/selected}}
+                        >
+                            {{name}}
+                        </option>
+                        {{/accounttypeoptions}}
+                    </select>
+
+                    <small>
+                        Только тип «Сотрудник» участвует в HR, compliance
+                        и readiness-показателях. Права доступа не меняются.
+                    </small>
+
+                </label>
+
+
+                {{#isnew}}
+
+                <label class="u-form-full">
+
+                    <span>
+                        Временный пароль
+                    </span>
+
+                    <input
+                        type="password"
+                        name="password"
+                        autocomplete="new-password"
+                        {{#canedit}}required{{/canedit}}
+                        {{^canedit}}disabled{{/canedit}}
+                    >
+
+                    <small>
+                        При первом входе Moodle потребует сменить пароль.
+                    </small>
+
+                </label>
+
+                {{/isnew}}
+
+
+                <label class="u-checkrow">
+
+                    <input
+                        type="checkbox"
+                        name="suspended"
+                        value="1"
+                        {{#user.suspended}}checked{{/user.suspended}}
+                        {{^canedit}}disabled{{/canedit}}
+                    >
+
+                    <span>
+                        Приостановить доступ сотрудника
+                    </span>
+
+                </label>
+
+
+                {{#canedit}}
+
+                <button
+                    class="u-btn u-btn--primary"
+                    type="submit"
+                >
+                    Сохранить
+                </button>
+
+                {{/canedit}}
+
+            </form>
+
+
+            {{#isedit}}
+
+            {{#hasprofile}}
+            {{#profile}}
+
+            <section class="u-hr-profile-overview">
+
+                <header class="u-panel-head u-panel-head--small">
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Операционный профиль
+                        </p>
+                        <h3>
+                            Готовность сотрудника
+                        </h3>
+                    </div>
+                    <span class="u-hr-profile-account">
+                        {{identity.accounttypelabel}}
+                    </span>
+                </header>
+
+                <div class="u-hr-profile-metrics">
+                    <article>
+                        <strong>{{learning.completed}} / {{learning.assigned}}</strong>
+                        <span>обучение завершено</span>
+                    </article>
+                    <article>
+                        <strong>{{knowledge.acknowledged}} / {{knowledge.assigned}}</strong>
+                        <span>документы подтверждены</span>
+                    </article>
+                    <article>
+                        <strong>{{skills.confirmed}} / {{skills.required}}</strong>
+                        <span>компетенции подтверждены</span>
+                    </article>
+                    <article>
+                        <strong>{{readiness.percent}}%</strong>
+                        <span>готовность по evidence</span>
+                    </article>
+                </div>
+
+                {{^identity.participates}}
+                <div class="u-hr-notice">
+                    Эта учётная запись не участвует в кадровых KPI.
+                    Назначения и права доступа при этом не изменяются.
+                </div>
+                {{/identity.participates}}
+
+            </section>
+
+            {{/profile}}
+            {{/hasprofile}}
+
+
+            <section class="u-hr-subsection">
+
+                <header class="u-panel-head u-panel-head--small">
+
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Автоматические назначения
+                        </p>
+
+                        <h3>
+                            Обучение
+                        </h3>
+                    </div>
+
+                </header>
+
+
+                {{#hasassignments}}
+
+                <div class="u-assignment-list">
+
+                    {{#assignmentcourses}}
+
+                    <article class="u-assignment-card">
+
+                        <div class="u-assignment-card__head">
+
+                            <strong>
+                                {{name}}
+                            </strong>
+
+                            <span>
+                                {{progress}}%
+                            </span>
+
+                        </div>
+
+
+                        <div class="u-mini-progress">
+                            <span style="width: {{progress}}%"></span>
+                        </div>
+
+
+                        {{#published}}
+                        <small>
+                            Опубликован
+                        </small>
+                        {{/published}}
+
+                        {{#draft}}
+                        <small>
+                            Черновик
+                        </small>
+                        {{/draft}}
+
+
+                        {{#hasnext}}
+                        <p>
+                            Следующий этап:
+                            <strong>{{nextname}}</strong>
+                        </p>
+                        {{/hasnext}}
+
+
+                        <a href="{{pathurl}}">
+                            Открыть маршрут
+                        </a>
+
+                    </article>
+
+                    {{/assignmentcourses}}
+
+                </div>
+
+                {{/hasassignments}}
+
+
+                {{^hasassignments}}
+
+                <div class="u-hr-empty">
+                    Для текущей должности ещё не настроено
+                    обязательное обучение.
+                </div>
+
+                {{/hasassignments}}
+
+            </section>
+
+
+            {{#hasprofile}}
+            {{#profile}}
+
+            <section class="u-hr-subsection">
+
+                <header class="u-panel-head u-panel-head--small">
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Knowledge / Compliance
+                        </p>
+                        <h3>Обязательные документы</h3>
+                    </div>
+                    <span>{{knowledge.pending}} ожидают</span>
+                </header>
+
+                {{#knowledge.items}}
+                <article class="u-hr-compliance-row">
+                    <div>
+                        <strong>{{title}}</strong>
+                        <span>{{versionlabel}}</span>
+                    </div>
+                    {{#acked}}
+                    <div class="u-state u-state--ok">
+                        Ознакомлен{{#hasacktime}} · {{acktimeformatted}}{{/hasacktime}}
+                    </div>
+                    {{/acked}}
+                    {{#pending}}
+                    <div class="u-state">Ожидает</div>
+                    {{/pending}}
+                    {{#url}}
+                    <a href="{{url}}" target="_blank" rel="noopener">Открыть ↗</a>
+                    {{/url}}
+                </article>
+                {{/knowledge.items}}
+
+                {{^knowledge.assigned}}
+                <div class="u-hr-empty">
+                    Для текущей должности нет обязательных опубликованных документов.
+                </div>
+                {{/knowledge.assigned}}
+
+            </section>
+
+
+            <section class="u-hr-subsection">
+
+                <header class="u-panel-head u-panel-head--small">
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Навыки / подтверждения
+                        </p>
+                        <h3>Требования должности</h3>
+                    </div>
+                    <span>{{skills.confirmed}} / {{skills.required}}</span>
+                </header>
+
+                {{#skills.items}}
+                <article class="u-hr-skill-row">
+                    <div>
+                        <strong>{{name}}</strong>
+                        <span>Целевой уровень · {{targetlevel}}</span>
+                    </div>
+                    {{#satisfied}}
+                    <div class="u-state u-state--ok">Подтверждено</div>
+                    {{/satisfied}}
+                    {{#gap}}
+                    <div class="u-state">Gap</div>
+                    {{/gap}}
+                    {{#hassources}}
+                    <div class="u-hr-skill-sources">
+                        {{#sources}}
+                        <small>{{label}} · {{status}}</small>
+                        {{/sources}}
+                    </div>
+                    {{/hassources}}
+                </article>
+                {{/skills.items}}
+
+                {{^skills.required}}
+                <div class="u-hr-empty">
+                    Для должности пока не задана матрица обязательных навыков.
+                </div>
+                {{/skills.required}}
+
+            </section>
+
+            {{/profile}}
+            {{/hasprofile}}
+
+
+            <section class="u-hr-subsection">
+
+                <header class="u-panel-head u-panel-head--small">
+
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Аудит
+                        </p>
+
+                        <h3>
+                            История изменений
+                        </h3>
+                    </div>
+
+                </header>
+
+
+                {{#hashistory}}
+
+                <div class="u-history">
+
+                    {{#history}}
+
+                    <div class="u-history__row">
+
+                        <span>
+                            {{label}}
+                        </span>
+
+                        <time>
+                            {{time}}
+                        </time>
+
+                    </div>
+
+                    {{/history}}
+
+                </div>
+
+                {{/hashistory}}
+
+
+                {{^hashistory}}
+
+                <div class="u-hr-empty">
+                    История пока пуста.
+                </div>
+
+                {{/hashistory}}
+
+            </section>
+
+            {{/isedit}}
+
+            {{/editor}}
+            {{/haseditor}}
+
+
+            {{^haseditor}}
+
+            <div class="u-person-editor__empty">
+
+                <p class="u-pagehead__eyebrow">
+                    Карточка сотрудника
+                </p>
+
+                <h2>
+                    Выберите сотрудника
+                </h2>
+
+                <p>
+                    Здесь появятся профиль, должность,
+                    автоматические назначения и история.
+                </p>
+
+            </div>
+
+            {{/haseditor}}
+
+        </section>
+
+    </div>
+
+</div>

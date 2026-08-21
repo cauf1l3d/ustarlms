@@ -1,0 +1,44 @@
+{{! Moodle-native USTAR login. Authentication and form rendering remain owned by Moodle core. }}
+{{> theme_boost/head }}
+<body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
+<style>{{{runtimebrandcss}}}</style>
+<div id="page-wrapper" class="u-login-page">
+    {{{ output.standard_top_of_body_html }}}
+    <main id="page" class="u-login-shell" aria-label="Вход в USTAR Academy">
+        <section class="u-login-brand" aria-label="USTAR Academy">
+            <div class="u-login-brand__top">
+                <span class="u-login-brand__kicker">Корпоративная академия</span>
+                <img src="{{bannerurl}}" alt="USTAR Академия" class="u-login-brand__banner">
+            </div>
+            <div class="u-login-brand__copy">
+                <p>Обучение · Знания · Развитие</p>
+                <h1>Рабочее пространство, которое ведёт сотрудника от первого дня до следующего профессионального уровня.</h1>
+                <div class="u-login-brand__chips" aria-hidden="true">
+                    <span>Маршрут обучения</span><span>База знаний</span><span>Достижения</span>
+                </div>
+            </div>
+        </section>
+        <section class="u-login-auth">
+            <div class="u-login-auth__card">
+                <div class="u-login-auth__heading">
+                    <span class="u-login-mark" aria-hidden="true">U</span>
+                    <div><small>USTAR Academy</small><strong>Вход в личный кабинет</strong></div>
+                </div>
+                <div id="region-main" class="u-login-core">
+                    {{{ output.main_content }}}
+                </div>
+                <p class="u-login-auth__note">Используйте корпоративную учётную запись Moodle. Пароль и авторизация остаются защищёнными штатными механизмами LMS.</p>
+            </div>
+        </section>
+    </main>
+    {{> theme_boost/footer }}
+</div>
+</body>
+</html>
+{{#js}}
+M.util.js_pending('theme_boost/loader');
+require(['theme_boost/loader'], function() {
+    M.util.js_complete('theme_boost/loader');
+});
+{{/js}}

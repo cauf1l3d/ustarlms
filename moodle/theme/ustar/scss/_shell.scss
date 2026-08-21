@@ -1,0 +1,915 @@
+/* ============================================================
+   USTAR Academy — Product Shell
+   Visual direction: approved Fable UX/UI v1.0 baseline.
+   ============================================================ */
+
+body.u-shell-page {
+    margin: 0;
+    overflow-x: hidden;
+    color: var(--u-text-primary);
+    background: var(--u-canvas);
+}
+
+.u-page-wrapper {
+    min-height: 100vh;
+}
+
+.u-app-shell {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            900px 480px at 88% -10%,
+            var(--u-brand-soft),
+            transparent 64%
+        ),
+        var(--u-canvas);
+}
+
+/* ---------- TOPBAR ---------- */
+
+.u-topbar {
+    position: fixed;
+    z-index: 1040;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    padding: 0 28px;
+
+    background: rgba(255,255,255,.82);
+    border-bottom: 1px solid var(--u-border-subtle);
+
+    backdrop-filter:
+        var(--u-glass-filter);
+
+    -webkit-backdrop-filter:
+        var(--u-glass-filter);
+}
+
+.u-brand {
+    min-width: 205px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: var(--u-text-primary);
+    text-decoration: none;
+}
+
+.u-brand:hover {
+    color: var(--u-text-primary);
+    text-decoration: none;
+}
+
+.u-brand__word {
+    font-family: var(--u-font-display);
+    font-size: 20px;
+    font-weight: 750;
+    letter-spacing: -.04em;
+}
+
+.u-brand__dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+    background: var(--u-brand);
+
+    box-shadow: 0 0 0 4px var(--u-brand-soft);
+}
+
+.u-brand__product {
+    color: var(--u-text-muted);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.u-topbar__context {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.18;
+}
+
+.u-topbar__context strong {
+    overflow: hidden;
+
+    color: var(--u-text-primary);
+    font-size: 14px;
+    font-weight: 650;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.u-topbar__eyebrow {
+    margin-bottom: 2px;
+
+    color: var(--u-text-muted);
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.u-topbar__actions {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.u-topbar-action {
+    min-height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 0 14px;
+
+    color: var(--u-text-secondary);
+    border-radius: var(--u-r-sm);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.u-topbar-action:hover {
+    color: var(--u-text-primary);
+    background: var(--u-surface-muted);
+    text-decoration: none;
+}
+
+.u-user-chip {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 5px 9px 5px 5px;
+
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-full);
+
+    background: var(--u-surface-glass);
+}
+
+.u-user-chip__avatar {
+    width: 32px;
+    height: 32px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--u-text-on-brand);
+    background: var(--u-brand);
+
+    border-radius: 50%;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .02em;
+}
+
+.u-user-chip__name {
+    max-width: 180px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: var(--u-text-primary);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ---------- BODY ---------- */
+
+.u-shell-body {
+    min-height: 100vh;
+    display: flex;
+
+    padding-top: 72px;
+}
+
+/* ---------- RAIL ---------- */
+
+.u-rail {
+    position: fixed;
+    z-index: 1020;
+
+    top: 72px;
+    bottom: 0;
+    left: 0;
+
+    width: 232px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 22px 14px 18px;
+
+    background: rgba(255,255,255,.62);
+    border-right: 1px solid var(--u-border-subtle);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.u-rail__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.u-navitem {
+    position: relative;
+
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 0 13px;
+
+    color: var(--u-text-secondary);
+
+    border-radius: var(--u-r-sm);
+
+    font-size: 14px;
+    font-weight: 570;
+
+    text-decoration: none;
+
+    transition:
+        background var(--u-dur-fast) var(--u-ease-out),
+        color var(--u-dur-fast) var(--u-ease-out),
+        transform var(--u-dur-fast) var(--u-ease-out);
+}
+
+.u-navitem:hover {
+    color: var(--u-text-primary);
+    background: rgba(255,255,255,.72);
+    text-decoration: none;
+}
+
+.u-navitem.is-active {
+    color: var(--u-text-primary);
+    background: var(--u-surface-raised);
+
+    box-shadow: var(--u-e-1);
+
+    font-weight: 680;
+}
+
+.u-navitem__mark {
+    width: 7px;
+    height: 7px;
+
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+    background: var(--u-border-strong);
+}
+
+.u-navitem.is-active .u-navitem__mark {
+    background: var(--u-brand);
+
+    box-shadow:
+        0 0 0 4px var(--u-brand-soft);
+}
+
+.u-rail__footer {
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.u-navitem--quiet {
+    min-height: 38px;
+
+    color: var(--u-text-muted);
+    font-size: 12px;
+    font-weight: 550;
+}
+
+.u-preview-label {
+    display: block;
+
+    padding: 0 12px;
+
+    color: var(--u-text-muted);
+
+    font-size: 9px;
+    font-weight: 650;
+
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+/* ---------- CONTENT ---------- */
+
+.u-product-main {
+    width: 100%;
+    min-width: 0;
+
+    margin-left: 232px;
+
+    padding: 42px 48px 72px;
+}
+
+.u-product-region {
+    width: min(1160px, 100%);
+    margin: 0 auto;
+}
+
+/* Moodle should not add its old card shell around our product page. */
+
+body.u-shell-page #region-main {
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+body.u-shell-page #page {
+    background: transparent;
+}
+
+/* ---------- FABLE PRODUCT PRIMITIVES ---------- */
+
+.u-pagehead {
+    margin-bottom: 28px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.u-pagehead__eyebrow {
+    margin: 0 0 7px;
+
+    color: var(--u-text-muted);
+
+    font-size: 11px;
+    font-weight: 750;
+
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.u-pagehead h1 {
+    margin: 0;
+
+    color: var(--u-text-primary);
+
+    font-family: var(--u-font-display);
+    font-size: clamp(30px, 4vw, 48px);
+    font-weight: 720;
+
+    line-height: 1.02;
+    letter-spacing: -.035em;
+}
+
+.u-pagehead__sub {
+    max-width: 640px;
+
+    margin: 10px 0 0;
+
+    color: var(--u-text-secondary);
+
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.u-next-card {
+    position: relative;
+    overflow: hidden;
+
+    padding: 28px;
+
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-lg);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--u-surface-raised),
+            rgba(251,197,2,.08)
+        );
+
+    box-shadow: var(--u-e-2);
+}
+
+.u-next-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: -90px;
+    top: -100px;
+
+    border-radius: 50%;
+    background: var(--u-brand-soft);
+
+    filter: blur(2px);
+}
+
+.u-next-card__label {
+    position: relative;
+    z-index: 1;
+
+    margin: 0 0 8px;
+
+    color: var(--u-text-muted);
+
+    font-size: 11px;
+    font-weight: 750;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.u-next-card h2 {
+    color: var(--u-text-primary);
+    position: relative;
+    z-index: 1;
+
+    max-width: 650px;
+
+    margin: 0;
+
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 680;
+    letter-spacing: -.025em;
+}
+
+.u-next-card p {
+    position: relative;
+    z-index: 1;
+
+    max-width: 620px;
+
+    margin: 10px 0 22px;
+
+    color: var(--u-text-secondary);
+}
+
+.u-primary-action {
+    position: relative;
+    z-index: 1;
+
+    min-height: 46px;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 0 20px;
+
+    color: var(--u-text-on-brand);
+    background: var(--u-brand);
+
+    border: 1px solid rgba(40,39,39,.08);
+    border-radius: var(--u-r-sm);
+
+    box-shadow: 0 4px 18px rgba(235,197,0,.18);
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.u-primary-action:hover {
+    color: var(--u-text-on-brand);
+    background: var(--u-brand-strong);
+    text-decoration: none;
+}
+
+.u-home-grid {
+    margin-top: 24px;
+
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.u-home-tile {
+    min-height: 170px;
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    color: var(--u-text-primary);
+
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-md);
+
+    background: var(--u-surface-raised);
+
+    box-shadow: var(--u-e-1);
+
+    text-decoration: none;
+}
+
+.u-home-tile:hover {
+    color: var(--u-text-primary);
+    border-color: var(--u-border-strong);
+    text-decoration: none;
+
+    transform: translateY(-1px);
+}
+
+.u-home-tile__label {
+    color: var(--u-text-muted);
+
+    font-size: 10px;
+    font-weight: 750;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.u-home-tile strong {
+    margin-top: 8px;
+
+    font-family: var(--u-font-display);
+    font-size: 20px;
+}
+
+.u-home-tile p {
+    margin: 8px 0 0;
+
+    color: var(--u-text-secondary);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.u-home-tile__footer {
+    margin-top: auto;
+
+    color: var(--u-text-muted);
+    font-size: 11px;
+}
+
+/* ---------- MOBILE ---------- */
+
+.u-mobile-nav {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .u-topbar {
+        height: 62px;
+        padding: 0 16px;
+    }
+
+    .u-brand {
+        min-width: 0;
+    }
+
+    .u-brand__product,
+    .u-topbar__context,
+    .u-topbar-action,
+    .u-user-chip__name {
+        display: none;
+    }
+
+    .u-shell-body {
+        padding-top: 62px;
+    }
+
+    .u-rail {
+        display: none;
+    }
+
+    .u-product-main {
+        margin-left: 0;
+
+        padding:
+            26px 18px
+            calc(88px + env(safe-area-inset-bottom));
+    }
+
+    .u-home-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .u-mobile-nav {
+        position: fixed;
+        z-index: 1050;
+
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        left: 12px;
+
+        min-height: 60px;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+
+        padding: 5px;
+
+        border: 1px solid var(--u-border);
+        border-radius: 18px;
+
+        background: rgba(255,255,255,.88);
+
+        box-shadow: var(--u-e-3);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .u-mobile-nav__item {
+        min-height: 50px;
+
+        display: grid;
+        place-items: center;
+
+        color: var(--u-text-muted);
+
+        border-radius: 13px;
+
+        font-size: 11px;
+        font-weight: 650;
+
+        text-decoration: none;
+    }
+
+    .u-mobile-nav__item.is-active {
+        color: var(--u-text-primary);
+        background: var(--u-surface-raised);
+    }
+}
+
+@media (max-width: 520px) {
+    .u-product-main {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .u-pagehead h1 {
+        font-size: 32px;
+    }
+
+    .u-next-card {
+        padding: 22px;
+    }
+}
+
+/* ============================================================
+   USTAR product layout isolation
+   The USTAR application shell does not use inherited Moodle
+   drawer mechanics.
+   ============================================================ */
+
+body.u-shell-page .drawer-backdrop,
+body.u-shell-page [data-region="drawer-backdrop"] {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+body.u-shell-page.drawer-open-left,
+body.u-shell-page.drawer-open-right {
+    overflow: auto !important;
+}
+
+body.u-shell-page #page-wrapper {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.u-shell-body {
+    display: block;
+}
+
+.u-product-main {
+    width: auto;
+    min-width: 0;
+    min-height: calc(100vh - 72px);
+
+    margin-left: 232px;
+
+    box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+    .u-product-main {
+        width: auto;
+        margin-left: 0;
+        min-height: calc(100vh - 62px);
+    }
+}
+
+
+/* ============================================================
+   USTAR shell geometry v2
+   Own layout geometry, independent from Moodle drawer/page IDs.
+   ============================================================ */
+
+:root {
+    --u-rail-open-width: 232px;
+    --u-rail-closed-width: 72px;
+}
+
+/* Explicit light product canvas. Dark mode is opt-in through
+   data-ustar-theme="dark". */
+
+.u-app-shell {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    color: var(--u-text-primary);
+    background:
+        radial-gradient(
+            900px 480px at 88% -10%,
+            var(--u-brand-soft),
+            transparent 64%
+        ),
+        var(--u-canvas);
+}
+
+/* ---------- Rail toggle ---------- */
+
+.u-rail-toggle-input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.u-rail-toggle {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    display: grid;
+    place-items: center;
+
+    margin-right: 2px;
+
+    color: var(--u-text-secondary);
+    background: var(--u-surface-glass);
+
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-sm);
+
+    cursor: pointer;
+
+    transition:
+        background var(--u-dur-fast) var(--u-ease-out),
+        color var(--u-dur-fast) var(--u-ease-out);
+}
+
+.u-rail-toggle:hover {
+    color: var(--u-text-primary);
+    background: var(--u-surface-raised);
+}
+
+.u-rail-toggle__icon {
+    width: 16px;
+    height: 2px;
+
+    display: block;
+
+    border-radius: 999px;
+    background: currentColor;
+
+    box-shadow:
+        0 -5px 0 currentColor,
+        0 5px 0 currentColor;
+}
+
+/* ---------- Desktop geometry ---------- */
+
+.u-shell-body {
+    display: block;
+    min-height: calc(100vh - 72px);
+}
+
+.u-rail {
+    width: var(--u-rail-open-width);
+
+    transition:
+        width var(--u-dur-medium) var(--u-ease-out);
+}
+
+.u-product-main {
+    width: auto;
+    min-width: 0;
+
+    min-height: calc(100vh - 72px);
+
+    margin-left: var(--u-rail-open-width);
+
+    padding: 42px 48px 72px;
+
+    box-sizing: border-box;
+
+    transition:
+        margin-left var(--u-dur-medium) var(--u-ease-out);
+}
+
+.u-product-region {
+    width: min(1160px, 100%);
+    margin: 0 auto;
+}
+
+/* ---------- Collapsed desktop rail ---------- */
+
+.u-rail-toggle-input:checked
+~ .u-shell-body
+.u-rail {
+    width: var(--u-rail-closed-width);
+}
+
+.u-rail-toggle-input:checked
+~ .u-shell-body
+.u-product-main {
+    margin-left: var(--u-rail-closed-width);
+}
+
+.u-rail-toggle-input:checked
+~ .u-shell-body
+.u-navitem {
+    justify-content: center;
+
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.u-rail-toggle-input:checked
+~ .u-shell-body
+.u-navitem > span:last-child {
+    display: none;
+}
+
+.u-rail-toggle-input:checked
+~ .u-shell-body
+.u-rail__footer .u-navitem--quiet,
+
+.u-rail-toggle-input:checked
+~ .u-shell-body
+.u-preview-label {
+    display: none;
+}
+
+/* No inherited Moodle drawer overlay inside product shell. */
+
+body.u-shell-page .drawer-backdrop,
+body.u-shell-page [data-region="drawer-backdrop"] {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 900px) {
+    .u-rail-toggle {
+        display: none;
+    }
+
+    .u-rail {
+        display: none;
+    }
+
+    .u-product-main,
+    .u-rail-toggle-input:checked
+    ~ .u-shell-body
+    .u-product-main {
+        width: auto;
+
+        min-height: calc(100vh - 62px);
+
+        margin-left: 0;
+
+        padding:
+            26px 18px
+            calc(88px + env(safe-area-inset-bottom));
+    }
+}
+

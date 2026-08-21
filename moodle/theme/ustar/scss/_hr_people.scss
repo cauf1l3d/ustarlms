@@ -1,0 +1,771 @@
+/* ============================================================
+   USTAR Control Center — People
+   ============================================================ */
+
+.u-hr {
+    max-width: 1480px;
+    margin: 0 auto;
+}
+
+.u-hr-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.u-hr-head h1 {
+    margin: 2px 0 5px;
+    font-size: clamp(30px, 4vw, 46px);
+    letter-spacing: -.04em;
+}
+
+.u-hr-head p:last-child {
+    margin: 0;
+    color: var(--u-text-secondary);
+}
+
+.u-hr-filters {
+    display: grid;
+    grid-template-columns:
+        minmax(220px, 1.5fr)
+        minmax(160px, 1fr)
+        minmax(200px, 1fr)
+        minmax(130px, .6fr)
+        auto;
+    gap: 10px;
+    align-items: end;
+
+    padding: 14px;
+    margin-bottom: 18px;
+
+    background: var(--u-surface-raised);
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-lg);
+}
+
+.u-hr-filters label,
+.u-person-form label {
+    display: grid;
+    gap: 6px;
+}
+
+.u-hr-filters label > span,
+.u-person-form label > span {
+    color: var(--u-text-muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.u-hr-filters input,
+.u-hr-filters select,
+.u-person-form input,
+.u-person-form select {
+    min-height: 39px;
+    padding: 0 11px;
+
+    color: var(--u-text-primary);
+    background: var(--u-surface);
+
+    border: 1px solid var(--u-border);
+    border-radius: 9px;
+}
+
+.u-hr-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(320px, .82fr)
+        minmax(480px, 1.45fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.u-people-panel,
+.u-person-editor {
+    background: var(--u-surface-raised);
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-lg);
+    box-shadow: var(--u-e-1);
+}
+
+.u-people-panel {
+    overflow: hidden;
+}
+
+.u-person-editor {
+    padding: 22px;
+}
+
+.u-panel-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px 14px;
+}
+
+.u-person-editor > .u-panel-head {
+    padding: 0 0 18px;
+}
+
+.u-panel-head h2,
+.u-panel-head h3 {
+    margin: 2px 0 0;
+}
+
+.u-panel-head > span {
+    color: var(--u-text-muted);
+    font-size: 12px;
+}
+
+.u-panel-head--small {
+    padding: 0 0 12px;
+}
+
+.u-people-list {
+    border-top: 1px solid var(--u-border);
+}
+
+.u-person-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    min-height: 82px;
+    padding: 13px 18px;
+
+    color: inherit;
+    text-decoration: none;
+
+    border-bottom: 1px solid var(--u-border);
+}
+
+.u-person-row:hover,
+.u-person-row.is-selected {
+    background: var(--u-surface-muted);
+    text-decoration: none;
+}
+
+.u-person-row.is-selected {
+    box-shadow: inset 3px 0 0 var(--u-brand);
+}
+
+.u-person-row__main {
+    min-width: 0;
+    display: grid;
+    gap: 3px;
+}
+
+.u-person-row__main strong {
+    color: var(--u-text-primary);
+}
+
+.u-person-row__main span,
+.u-person-row__main small {
+    color: var(--u-text-secondary);
+    font-size: 10px;
+}
+
+.u-person-row__main small {
+    color: var(--u-text-muted);
+}
+
+.u-person-row__meta {
+    display: grid;
+    justify-items: end;
+    gap: 4px;
+}
+
+.u-state {
+    padding: 4px 7px;
+    color: var(--u-text-muted);
+    background: var(--u-surface-muted);
+    border-radius: 999px;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.u-state--ok {
+    color: var(--u-success);
+}
+
+.u-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+}
+
+.u-form-full {
+    margin-top: 13px;
+}
+
+.u-person-form small {
+    color: var(--u-text-muted);
+    font-size: 9px;
+}
+
+.u-checkrow {
+    display: flex !important;
+    align-items: center;
+    grid-template-columns: auto 1fr;
+    margin: 17px 0;
+}
+
+.u-checkrow input {
+    min-height: auto;
+}
+
+.u-checkrow span {
+    color: var(--u-text-secondary) !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 11px !important;
+}
+
+.u-hr-notice,
+.u-hr-empty {
+    padding: 12px 14px;
+    color: var(--u-text-secondary);
+    background: var(--u-surface-muted);
+    border: 1px solid var(--u-border);
+    border-radius: 10px;
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+.u-hr-notice {
+    margin-bottom: 16px;
+}
+
+.u-hr-subsection {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--u-border);
+}
+
+.u-assignment-list {
+    display: grid;
+    gap: 10px;
+}
+
+.u-assignment-card {
+    padding: 14px;
+
+    background: var(--u-surface-muted);
+    border: 1px solid var(--u-border);
+    border-radius: 12px;
+}
+
+.u-assignment-card__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.u-mini-progress {
+    height: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+    background: var(--u-border);
+    border-radius: 999px;
+}
+
+.u-mini-progress span {
+    display: block;
+    height: 100%;
+    background: var(--u-brand);
+}
+
+.u-assignment-card p,
+.u-assignment-card small,
+.u-assignment-card a {
+    font-size: 10px;
+}
+
+.u-history {
+    display: grid;
+}
+
+.u-history__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--u-border);
+    font-size: 10px;
+}
+
+.u-history__row time {
+    flex: 0 0 auto;
+    color: var(--u-text-muted);
+}
+
+.u-person-editor__empty {
+    min-height: 300px;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    padding: 30px;
+}
+
+.u-person-editor__empty h2 {
+    margin: 4px 0;
+}
+
+.u-person-editor__empty p:last-child {
+    max-width: 420px;
+    color: var(--u-text-secondary);
+}
+
+
+@media (max-width: 1100px) {
+
+    .u-hr-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .u-hr-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 680px) {
+
+    .u-hr-head {
+        display: block;
+    }
+
+    .u-hr-head .u-btn {
+        margin-top: 16px;
+    }
+
+    .u-hr-filters,
+    .u-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   USTAR Control Center — People polish
+   ============================================================ */
+
+/* Filters must never overlap. */
+.u-hr-filters {
+    grid-template-columns:
+        minmax(230px, 1.4fr)
+        minmax(190px, 1fr)
+        minmax(210px, 1.1fr)
+        minmax(150px, .7fr)
+        auto;
+
+    column-gap: 12px;
+}
+
+.u-hr-filters > * {
+    min-width: 0;
+}
+
+.u-hr-filters input,
+.u-hr-filters select {
+    width: 100%;
+}
+
+
+/* Native buttons inside HR should look like USTAR actions. */
+.u-hr .u-btn {
+    min-height: 39px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 0 14px;
+
+    color: var(--u-text-primary);
+    background: var(--u-surface-raised);
+
+    border: 1px solid var(--u-border-strong);
+    border-radius: 9px;
+
+    font: inherit;
+    font-size: 11px;
+    font-weight: 650;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    appearance: none;
+}
+
+.u-hr .u-btn:hover {
+    background: var(--u-surface-muted);
+    text-decoration: none;
+}
+
+.u-hr .u-btn--primary {
+    color: var(--u-text-primary);
+
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(
+                in srgb,
+                var(--u-brand) 86%,
+                white
+            ),
+            var(--u-brand)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--u-brand) 74%,
+            var(--u-border-strong)
+        );
+
+    box-shadow:
+        0 5px 16px
+        color-mix(
+            in srgb,
+            var(--u-brand) 15%,
+            transparent
+        );
+}
+
+.u-hr .u-btn--primary:hover {
+    filter: brightness(.985);
+}
+
+
+/* Main create action. */
+.u-hr-head > .u-btn {
+    flex: 0 0 auto;
+}
+
+
+/* Cleaner editor fields. */
+.u-person-form input,
+.u-person-form select,
+.u-hr-filters input,
+.u-hr-filters select {
+    outline: none;
+
+    transition:
+        border-color .14s ease,
+        box-shadow .14s ease,
+        background .14s ease;
+}
+
+.u-person-form input:focus,
+.u-person-form select:focus,
+.u-hr-filters input:focus,
+.u-hr-filters select:focus {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--u-brand) 58%,
+            var(--u-border-strong)
+        );
+
+    box-shadow:
+        0 0 0 3px
+        color-mix(
+            in srgb,
+            var(--u-brand) 9%,
+            transparent
+        );
+}
+
+
+/* More obvious current person. */
+.u-person-row.is-selected {
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 5%,
+            var(--u-surface-muted)
+        );
+
+    box-shadow:
+        inset 3px 0 0 var(--u-brand);
+}
+
+
+/* Editor save action should stand on its own. */
+.u-person-form > .u-btn--primary {
+    min-width: 130px;
+    margin-top: 2px;
+}
+
+
+/* Prevent native button/select collision at medium widths. */
+@media (max-width: 1260px) {
+
+    .u-hr-filters {
+        grid-template-columns:
+            1.2fr
+            1fr
+            1fr;
+    }
+
+    .u-hr-filters .u-btn {
+        justify-self: start;
+    }
+}
+
+
+@media (max-width: 760px) {
+
+    .u-hr-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .u-hr-filters .u-btn {
+        width: 100%;
+    }
+
+    .u-hr .u-btn--primary {
+        width: 100%;
+    }
+}
+
+/* ============================================================
+   USTAR Control Center — People workspace scrolling
+   ============================================================ */
+
+/*
+ * Desktop HR workspace:
+ * the employee list scrolls independently while the profile
+ * remains visible.
+ */
+@media (min-width: 1101px) {
+
+    .u-hr-layout {
+        align-items: start;
+    }
+
+
+    .u-people-panel {
+        display: flex;
+        flex-direction: column;
+
+        max-height:
+            calc(
+                100vh
+                - 250px
+            );
+
+        min-height: 520px;
+
+        overflow: hidden;
+    }
+
+
+    .u-people-panel > .u-panel-head {
+        flex: 0 0 auto;
+    }
+
+
+    .u-people-list {
+        min-height: 0;
+
+        flex: 1 1 auto;
+
+        overflow-y: auto;
+        overscroll-behavior: contain;
+
+        scrollbar-width: thin;
+    }
+
+
+    .u-person-editor {
+        position: sticky;
+
+        top: 84px;
+
+        max-height:
+            calc(
+                100vh
+                - 105px
+            );
+
+        overflow-y: auto;
+
+        overscroll-behavior: contain;
+
+        scrollbar-width: thin;
+    }
+}
+
+
+/*
+ * Keep selected employee clearly visible.
+ */
+.u-person-row.is-selected {
+    position: relative;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 7%,
+            var(--u-surface-muted)
+        );
+}
+
+
+.u-person-row.is-selected::before {
+    content: "";
+
+    position: absolute;
+
+    inset:
+        0 auto 0 0;
+
+    width: 3px;
+
+    background: var(--u-brand);
+}
+
+
+/*
+ * Slightly compact rows: 80+ employees should remain easy
+ * to scan without becoming dense.
+ */
+.u-person-row {
+    min-height: 74px;
+}
+
+
+/*
+ * Mobile/tablet keeps normal document flow.
+ */
+@media (max-width: 1100px) {
+
+    .u-people-panel,
+    .u-person-editor {
+        max-height: none;
+        min-height: 0;
+
+        overflow: visible;
+
+        position: static;
+    }
+}
+
+/* ============================================================
+   USTAR Core 1.3 — operational employee profile
+   ============================================================ */
+
+.u-hr-profile-overview {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid var(--u-border);
+    border-radius: 16px;
+    background: var(--u-surface-raised);
+}
+
+.u-hr-profile-account {
+    padding: 5px 9px;
+    border: 1px solid var(--u-border);
+    border-radius: 999px;
+    color: var(--u-text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.u-hr-profile-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.u-hr-profile-metrics article {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--u-border);
+    border-radius: 12px;
+    background: var(--u-surface-muted);
+}
+
+.u-hr-profile-metrics strong {
+    font-size: 19px;
+    letter-spacing: -.03em;
+}
+
+.u-hr-profile-metrics span {
+    color: var(--u-text-muted);
+    font-size: 10px;
+}
+
+.u-hr-compliance-row,
+.u-hr-skill-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 16px;
+    align-items: center;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--u-border);
+}
+
+.u-hr-compliance-row:last-child,
+.u-hr-skill-row:last-child {
+    border-bottom: 0;
+}
+
+.u-hr-compliance-row > div:first-child,
+.u-hr-skill-row > div:first-child {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.u-hr-compliance-row > div:first-child span,
+.u-hr-skill-row > div:first-child span {
+    color: var(--u-text-muted);
+    font-size: 10px;
+}
+
+.u-hr-compliance-row > a {
+    grid-column: 1 / -1;
+    width: max-content;
+    font-size: 10px;
+}
+
+.u-hr-skill-sources {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 10px;
+    color: var(--u-text-muted);
+}
+
+@media (max-width: 900px) {
+    .u-hr-profile-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .u-hr-profile-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .u-hr-compliance-row,
+    .u-hr-skill-row {
+        grid-template-columns: 1fr;
+    }
+}

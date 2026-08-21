@@ -1,0 +1,12 @@
+<article class="u-knowledge-card {{#needsack}}u-knowledge-card--action{{/needsack}}">
+    <div class="u-knowledge-card__meta">
+        <span>{{typelabel}}</span>
+        {{#hascategory}}<span>{{categorylabel}}</span>{{/hascategory}}
+        {{#fresh}}<span class="u-knowledge-card__fresh">Новое / обновлено</span>{{/fresh}}
+        {{#needsack}}<span class="u-knowledge-card__required">Нужно ознакомиться</span>{{/needsack}}
+        {{#acked}}<span class="u-knowledge-card__done">Ознакомлено</span>{{/acked}}
+    </div>
+    <div class="u-knowledge-card__titleline">{{{icon}}}<h2>{{title}}</h2></div>
+    {{#hassummary}}<p class="u-knowledge-card__summary">{{summary}}</p>{{/hassummary}}
+    <footer><small>Текущая версия · {{versionlabel}}{{#updatedlabel}} · {{updatedlabel}}{{/updatedlabel}}</small><a class="u-btn u-btn--primary" href="{{url}}">{{actionlabel}}</a></footer>
+</article>

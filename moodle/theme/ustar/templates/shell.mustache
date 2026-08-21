@@ -1,0 +1,341 @@
+{{{ output.doctype }}}
+<html {{{ output.htmlattributes }}} data-ustar-theme="light" data-ustar-preset="{{preset}}">
+<head>
+    <title>{{{ output.page_title }}}</title>
+
+    {{! USTAR PRE-PAINT STATE }}
+    <script>
+    (function () {
+        try {
+            var theme =
+                window.localStorage.getItem(
+                    'ustar-theme'
+                );
+
+            if (
+                theme === 'dark'
+                ||
+                theme === 'light'
+            ) {
+                document.documentElement
+                    .setAttribute(
+                        'data-ustar-theme',
+                        theme
+                    );
+            }
+
+            var preset = window.localStorage.getItem('ustar-preset');
+            if (['yellow','graphite','ocean','forest','berry','sand'].indexOf(preset) !== -1) {
+                document.documentElement.setAttribute('data-ustar-preset', preset);
+            }
+
+            var rail =
+                window.localStorage.getItem(
+                    'ustar-rail'
+                );
+
+            if (
+                rail === 'mini'
+                ||
+                rail === 'full'
+            ) {
+                document.documentElement
+                    .setAttribute(
+                        'data-ustar-rail',
+                        rail
+                    );
+            }
+        } catch (e) {
+            /*
+             * Storage may be unavailable in a restricted browser.
+             * The normal USTAR shell bootstrap will still run.
+             */
+        }
+    }());
+    </script>
+
+    {{{ output.standard_head_html }}}
+    {{#brandcss}}<style id="u-brand-runtime">{{{brandcss}}}</style>{{/brandcss}}
+
+    <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+</head>
+
+<body {{{ bodyattributes }}}>
+
+<a class="u-skiplink" href="#u-main">
+    К основному содержанию
+</a>
+
+<div class="u-app">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    <header class="u-topbar u-glass">
+
+        <div class="u-topbar__brand">
+
+            <a
+                class="u-brandmark"
+                href="{{homeurl}}"
+                aria-label="USTAR — {{productname}}, на главную"
+            >
+                <span class="u-brandtext" aria-label="USTAR">USTAR</span>
+                <span class="u-brandmark__sep" aria-hidden="true"></span>
+                <span class="u-brandmark__product">{{productname}}</span>
+            </a>
+
+            <span class="u-topbar__sub">
+                {{pagelabel}}
+            </span>
+
+        </div>
+
+        <div class="u-topbar__spacer"></div>
+
+        <span class="u-context-label">
+            {{rolelabel}}
+        </span>
+
+        <div class="u-topbar__actions">
+
+            <button
+                class="u-searchtrigger"
+                id="u-search-trigger"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="u-search-panel"
+                aria-label="Поиск по Академии"
+                title="Поиск · Ctrl+K"
+            >
+                {{{searchicon}}}
+
+                <span class="u-searchtrigger__label">
+                    Найти в Академии
+                </span>
+
+                <kbd class="u-kbd">
+                    Ctrl K
+                </kbd>
+            </button>
+
+            <button class="u-iconbtn" id="u-preset-trigger" type="button" aria-label="Выбрать цветовое оформление" title="Оформление">◐</button>
+
+            <button
+                class="u-iconbtn"
+                id="u-theme-toggle"
+                type="button"
+                aria-label="Включить тёмную тему"
+                aria-pressed="false"
+                title="Сменить тему"
+            ></button>
+
+            <a
+                class="u-iconbtn u-iconbtn--counter"
+                href="{{messagesurl}}"
+                aria-label="Сообщения{{#hasmessagecount}}: {{messagecount}} непрочитанных диалогов{{/hasmessagecount}}"
+                title="Сообщения"
+            >
+                {{{messageicon}}}
+                {{#hasmessagecount}}<span class="u-top-count">{{messagecount}}</span>{{/hasmessagecount}}
+            </a>
+
+            <a
+                class="u-iconbtn u-iconbtn--counter"
+                href="{{notificationsurl}}"
+                aria-label="Уведомления{{#hasnotificationcount}}: {{notificationcount}} непрочитанных{{/hasnotificationcount}}"
+                title="Уведомления"
+            >
+                {{{bellicon}}}
+                {{#hasnotificationcount}}<span class="u-top-count">{{notificationcount}}</span>{{/hasnotificationcount}}
+            </a>
+
+            <a
+                class="u-avatar"
+                href="{{profileurl}}"
+                aria-label="Профиль: {{fullname}}"
+                title="{{fullname}}"
+            >
+                {{initials}}
+            </a>
+
+        </div>
+    </header>
+
+    <div class="u-search-panel" id="u-search-panel" hidden data-api="{{searchapiurl}}">
+        <div class="u-search-dialog" role="dialog" aria-modal="true" aria-label="Глобальный поиск">
+            <div class="u-search-dialog__top">{{{searchicon}}}<input id="u-global-search-input" type="search" placeholder="Курс, товар, инструкция, навык…" autocomplete="off"><button id="u-search-close" type="button" aria-label="Закрыть">×</button></div>
+            <div id="u-global-search-results" class="u-global-search-results"><p>Начните вводить минимум 2 символа.</p></div>
+        </div>
+    </div>
+
+    <div class="u-preset-panel" id="u-preset-panel" hidden data-pref-url="{{prefurl}}" data-sesskey="{{sesskey}}">
+        <strong>Цветовое оформление</strong>
+        <div class="u-preset-grid">
+            <button type="button" data-u-preset="yellow">USTAR</button>
+            <button type="button" data-u-preset="graphite">Графит</button>
+            <button type="button" data-u-preset="ocean">Океан</button>
+            <button type="button" data-u-preset="forest">Лес</button>
+            <button type="button" data-u-preset="berry">Ягода</button>
+            <button type="button" data-u-preset="sand">Песок</button>
+        </div>
+        <small>Настройка сохраняется только для вашего аккаунта.</small>
+    </div>
+
+
+    {{#viewasactive}}<div class="u-viewas-banner"><strong>Режим просмотра:</strong><span>{{viewasposition}}</span><a href="{{viewasurl}}">Изменить / выйти</a></div>{{/viewasactive}}
+
+    <div class="u-body-wrap">
+
+        <nav
+            class="u-rail"
+            aria-label="Основная навигация"
+        >
+
+            <div class="u-rail__group">
+
+                {{#navitems}}
+                <a
+                    class="u-navitem"
+                    href="{{url}}"
+                    {{#active}}aria-current="page"{{/active}}
+                    title="{{label}}"
+                >
+                    {{{icon}}}
+
+                    <span class="u-navitem__label">
+                        {{label}}
+                    </span>
+                </a>
+                {{/navitems}}
+
+            </div>
+
+            <div class="u-rail__foot">
+
+                {{#canviewas}}<a class="u-navitem u-navitem--quiet" href="{{viewasurl}}" title="Просмотр как должность"><span class="u-navitem__icon">◉</span><span class="u-navitem__label">Просмотр как</span></a>{{/canviewas}}
+                {{#canlegacy}}<a class="u-navitem u-navitem--quiet" href="{{legacyurl}}" title="Резервный интерфейс"><span class="u-navitem__icon">↶</span><span class="u-navitem__label">Legacy UI</span></a>{{/canlegacy}}
+
+                {{#isadmin}}
+                <a
+                    class="u-navitem u-navitem--quiet"
+                    href="{{adminurl}}"
+                    title="Администрирование Moodle"
+                >
+                    {{{adminicon}}}
+
+                    <span class="u-navitem__label">
+                        Moodle admin
+                    </span>
+                </a>
+                {{/isadmin}}
+
+                <button
+                    class="u-navitem u-navitem--quiet"
+                    id="u-rail-toggle"
+                    type="button"
+                    aria-label="Свернуть навигацию"
+                    aria-pressed="false"
+                    title="Свернуть навигацию"
+                >
+                    {{{collapseicon}}}
+
+                    <span class="u-navitem__label">
+                        Свернуть
+                    </span>
+                </button>
+
+            </div>
+
+        </nav>
+
+
+        <main
+            class="u-main"
+            id="u-main"
+            tabindex="-1"
+        >
+            <div class="u-container">
+
+                {{#activityruntime}}
+
+                <section
+                    class="u-activity-context"
+                    aria-label="Текущий этап обучения"
+                >
+
+                    <a
+                        class="u-activity-context__back"
+                        href="{{activitybackurl}}"
+                    >
+                        <span aria-hidden="true">←</span>
+                        К учебному маршруту
+                    </a>
+
+                    <div class="u-activity-context__row">
+
+                        <div class="u-activity-context__main">
+
+                            <p class="u-activity-context__course">
+                                {{activitycourse}}
+                            </p>
+
+                            <h1>
+                                {{activitytitle}}
+                            </h1>
+
+                        </div>
+
+                        <span class="u-activity-context__type">
+                            {{activitytype}}
+                        </span>
+
+                    </div>
+
+                </section>
+
+                {{/activityruntime}}
+
+
+                {{{ output.course_content_header }}}
+
+                {{{ output.main_content }}}
+
+                {{{ output.activity_navigation }}}
+                {{{ output.course_content_footer }}}
+
+            </div>
+        </main>
+
+    </div>
+
+
+    <nav
+        class="u-bottomnav u-glass"
+        aria-label="Основная навигация"
+    >
+        <div class="u-bottomnav__inner">
+
+            {{#mobilenavitems}}
+            <a
+                class="u-bnavitem"
+                href="{{url}}"
+                {{#active}}aria-current="page"{{/active}}
+            >
+                {{{icon}}}
+
+                <span>{{short}}</span>
+            </a>
+            {{/mobilenavitems}}
+
+        </div>
+    </nav>
+
+</div>
+
+{{{ output.standard_end_of_body_html }}}
+
+</body>
+</html>

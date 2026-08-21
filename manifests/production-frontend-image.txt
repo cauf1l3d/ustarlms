@@ -1,0 +1,1 @@
+IMAGE_TAG=ustar_frontend:1.1.5-executive-r3 IMAGE_ID=sha256:6d4f15a90e394fb84f9f6456d3534feb327a3920f35c3de80c9881d2affaddd6

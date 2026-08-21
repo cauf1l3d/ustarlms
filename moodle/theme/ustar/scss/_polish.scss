@@ -1,0 +1,790 @@
+/* ============================================================
+   USTAR brand + Learning visual polish
+   ============================================================ */
+
+
+/* ---------- canonical brand artwork ---------- */
+
+.u-brandmark__image {
+    display: block;
+
+    width: 126px;
+    height: 34px;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 3px;
+
+    flex: 0 0 auto;
+}
+
+
+/*
+ * Source artwork is a wide branded composition.
+ * We use a compact crop in the topbar, not the full hero aspect.
+ */
+.u-brandmark {
+    overflow: hidden;
+}
+
+
+/* ---------- topbar refinement ---------- */
+
+.u-topbar {
+    border-bottom:
+        1px solid
+        var(--u-border-subtle);
+}
+
+[data-ustar-theme="dark"] .u-topbar {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(28, 27, 26, .96),
+            rgba(23, 22, 21, .93)
+        );
+
+    box-shadow:
+        0 1px 0 rgba(255,255,255,.04),
+        0 8px 28px rgba(0,0,0,.18);
+}
+
+
+/* ---------- Learning focus ---------- */
+
+.u-learning-focus {
+    isolation: isolate;
+}
+
+.u-learning-focus::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255,255,255,.10),
+            transparent 38%
+        );
+}
+
+[data-ustar-theme="dark"] .u-learning-focus {
+    background:
+        radial-gradient(
+            520px 300px
+            at 100% 0,
+            rgba(235,197,0,.14),
+            transparent 72%
+        ),
+        linear-gradient(
+            145deg,
+            #302F2D,
+            #292826
+        );
+
+    border-color:
+        rgba(255,255,255,.13);
+
+    box-shadow:
+        0 18px 50px -28px
+        rgba(0,0,0,.75);
+}
+
+[data-ustar-theme="light"] .u-learning-focus {
+    box-shadow:
+        0 18px 48px -34px
+        rgba(40,39,39,.34);
+}
+
+
+/* ---------- course cards ---------- */
+
+[data-ustar-theme="dark"] .u-course-card {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(48,47,45,.98),
+            rgba(44,43,41,.98)
+        );
+
+    border-color:
+        rgba(255,255,255,.10);
+
+    box-shadow:
+        0 10px 30px -24px
+        rgba(0,0,0,.75);
+}
+
+[data-ustar-theme="dark"] .u-course-card:hover {
+    border-color:
+        rgba(235,197,0,.34);
+
+    box-shadow:
+        0 16px 40px -24px
+        rgba(0,0,0,.80);
+}
+
+[data-ustar-theme="light"] .u-course-card {
+    box-shadow:
+        0 10px 28px -25px
+        rgba(40,39,39,.30);
+}
+
+
+/* ---------- progress ---------- */
+
+[data-ustar-theme="dark"] .u-progressbar {
+    background:
+        rgba(255,255,255,.08);
+
+    border-color:
+        rgba(255,255,255,.08);
+}
+
+.u-progressbar > span {
+    box-shadow:
+        0 0 12px
+        rgba(235,197,0,.18);
+}
+
+
+/* ---------- status chips ---------- */
+
+[data-ustar-theme="dark"] .u-course-status--active {
+    background:
+        rgba(235,197,0,.11);
+
+    border-color:
+        rgba(235,197,0,.30);
+}
+
+[data-ustar-theme="dark"] .u-course-status--new {
+    background:
+        rgba(255,255,255,.06);
+
+    border-color:
+        rgba(255,255,255,.10);
+}
+
+
+/* ---------- rail polish ---------- */
+
+[data-ustar-theme="dark"] .u-rail {
+    background:
+        linear-gradient(
+            180deg,
+            #1C1B1A,
+            #191817
+        );
+
+    border-right-color:
+        rgba(255,255,255,.08);
+}
+
+[data-ustar-theme="dark"] .u-navitem.is-active {
+    background:
+        rgba(255,255,255,.08);
+}
+
+
+/* ---------- responsive brand ---------- */
+
+@media (max-width: 767px) {
+    .u-brandmark__image {
+        width: 104px;
+        height: 30px;
+    }
+}
+
+/* ============================================================
+   USTAR dynamic brand artwork
+   ============================================================ */
+
+:root,
+[data-ustar-theme="light"] {
+    --u-banner-accent: #EBC500;
+    --u-banner-accent-glow: rgba(235, 197, 0, .18);
+}
+
+[data-ustar-theme="dark"] {
+    --u-banner-accent: #DDBA00;
+    --u-banner-accent-glow: rgba(221, 186, 0, .14);
+}
+
+
+.u-brandart {
+    position: relative;
+
+    width: 132px;
+    height: 34px;
+
+    display: block;
+    flex: 0 0 auto;
+
+    overflow: hidden;
+
+    border-radius: 4px;
+
+    background: #242424;
+
+    box-shadow:
+        0 0 0 1px rgba(40, 39, 39, .08),
+        0 3px 10px -7px rgba(40, 39, 39, .45);
+
+    isolation: isolate;
+}
+
+
+.u-brandart__base,
+.u-brandart__accent {
+    position: absolute;
+    inset: 0;
+
+    display: block;
+
+    pointer-events: none;
+}
+
+
+.u-brandart__base {
+    background-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-neutral.png");
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+
+/*
+ * Only the approved upper brand stripe receives colour.
+ * Mascots, USTAR letters, clothing and bolt stay untouched.
+ */
+.u-brandart__accent {
+    z-index: 2;
+
+    background:
+        var(--u-banner-accent);
+
+    -webkit-mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+
+    -webkit-mask-repeat:
+        no-repeat;
+
+    -webkit-mask-position:
+        center;
+
+    -webkit-mask-size:
+        cover;
+
+    mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+
+    mask-repeat:
+        no-repeat;
+
+    mask-position:
+        center;
+
+    mask-size:
+        cover;
+
+    /*
+     * Neutral base provides luminosity/detail.
+     * Color mode supplies only hue/saturation.
+     */
+    mix-blend-mode: color;
+
+    filter:
+        drop-shadow(
+            0 0 5px
+            var(--u-banner-accent-glow)
+        );
+}
+
+
+/* Slightly richer brand treatment in dark mode. */
+
+[data-ustar-theme="dark"] .u-brandart {
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.07),
+        0 5px 15px -9px rgba(0,0,0,.90);
+}
+
+
+/* Do not let the old image rule interfere. */
+
+.u-brandmark__image {
+    display: none !important;
+}
+
+
+@media (max-width: 767px) {
+
+    .u-brandart {
+        width: 108px;
+        height: 30px;
+    }
+}
+
+/* ============================================================
+   USTAR brand artwork — final topbar fit
+   Full composition, no destructive crop.
+   ============================================================ */
+
+.u-brandart {
+    width: 238px;
+    height: 42px;
+
+    border-radius: 5px;
+
+    background: #242424;
+
+    overflow: hidden;
+}
+
+
+/*
+ * IMPORTANT:
+ * Keep the full approved composition visible.
+ * The source asset is already physically cropped vertically,
+ * so we do not need "cover".
+ */
+.u-brandart__base {
+    background-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-neutral.png");
+
+    background-repeat: no-repeat;
+
+    background-position:
+        center center;
+
+    background-size:
+        100% 100%;
+}
+
+
+.u-brandart__accent {
+    background:
+        var(--u-banner-accent);
+
+    -webkit-mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+
+    -webkit-mask-repeat:
+        no-repeat;
+
+    -webkit-mask-position:
+        center center;
+
+    -webkit-mask-size:
+        100% 100%;
+
+    mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+
+    mask-repeat:
+        no-repeat;
+
+    mask-position:
+        center center;
+
+    mask-size:
+        100% 100%;
+
+    mix-blend-mode: color;
+}
+
+
+/* Slightly softer frame in light mode. */
+[data-ustar-theme="light"] .u-brandart {
+    box-shadow:
+        0 0 0 1px
+        rgba(40,39,39,.08);
+}
+
+
+/* Dark mode should feel embedded into the graphite topbar. */
+[data-ustar-theme="dark"] .u-brandart {
+    box-shadow:
+        0 0 0 1px
+        rgba(255,255,255,.06);
+}
+
+
+/*
+ * Product name already sits to the right:
+ *
+ * [ USTAR artwork ] | Академия
+ *
+ * so keep some breathing room.
+ */
+.u-brandmark {
+    gap: 11px;
+}
+
+
+/* Tablet */
+@media (max-width: 1100px) {
+
+    .u-brandart {
+        width: 190px;
+        height: 36px;
+    }
+}
+
+
+/* Mobile */
+@media (max-width: 767px) {
+
+    .u-brandart {
+        width: 154px;
+        height: 32px;
+    }
+
+    /*
+     * On a narrow screen the artwork has priority.
+     * Product context remains available elsewhere in the shell.
+     */
+    .u-brandmark__product,
+    .u-brandmark__sep {
+        display: none;
+    }
+}
+
+
+/* ============================================================
+   USTAR brand — rail aligned + true theme-aware accent
+   ============================================================ */
+
+/*
+ * The artwork itself must stay inside the left navigation column.
+ * The "Академия / page context" continues to the right separately.
+ */
+.u-brandart {
+    width: 174px;
+    height: 34px;
+
+    flex: 0 0 174px;
+
+    overflow: hidden;
+
+    border-radius: 4px;
+
+    background: #262524;
+
+    box-shadow:
+        0 0 0 1px rgba(40,39,39,.09);
+
+    isolation: isolate;
+}
+
+
+/* Full approved composition remains visible. */
+.u-brandart__base {
+    z-index: 1;
+
+    background-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-neutral.png");
+
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    /*
+     * No cover — it was destroying the composition.
+     */
+    background-size: 100% 100%;
+}
+
+
+/*
+ * Exact colour replacement of the upper stripe.
+ * No mix-blend-mode: the selected theme colour is now deterministic.
+ */
+.u-brandart__accent {
+    z-index: 2;
+
+    background: var(--u-banner-accent);
+
+    -webkit-mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: 100% 100%;
+
+    mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 100% 100%;
+
+    /*
+     * Important: do NOT blend into the original yellow.
+     */
+    mix-blend-mode: normal;
+
+    opacity: .96;
+}
+
+
+/* ---------- LIGHT ---------- */
+
+:root,
+[data-ustar-theme="light"] {
+    /*
+     * Clean USTAR corporate gold.
+     */
+    --u-banner-accent: #EBC500;
+}
+
+[data-ustar-theme="light"] .u-brandart {
+    background: #2B2B2B;
+
+    box-shadow:
+        0 0 0 1px rgba(40,39,39,.10),
+        0 3px 10px -8px rgba(40,39,39,.35);
+}
+
+
+/* ---------- DARK ---------- */
+
+[data-ustar-theme="dark"] {
+    /*
+     * Deliberately deeper than light.
+     * This must be visibly different, not +2% brightness.
+     */
+    --u-banner-accent: #9D8500;
+}
+
+[data-ustar-theme="dark"] .u-brandart {
+    background: #181817;
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.08),
+        0 5px 14px -9px rgba(0,0,0,.95);
+}
+
+[data-ustar-theme="dark"] .u-brandart__base {
+    /*
+     * Artwork itself becomes slightly calmer in dark mode.
+     * Mascots and metal USTAR remain recognizable.
+     */
+    filter:
+        brightness(.86)
+        contrast(1.05);
+}
+
+
+/* ---------- BRAND / CONTEXT ALIGNMENT ---------- */
+
+.u-brandmark {
+    gap: 10px;
+
+    /*
+     * Prevent the brand artwork from stretching because of surrounding
+     * Moodle/topbar flex behaviour.
+     */
+    min-width: 0;
+}
+
+.u-brandmark__sep {
+    flex: 0 0 auto;
+}
+
+
+/* ---------- TABLET ---------- */
+
+@media (max-width: 1100px) {
+
+    .u-brandart {
+        width: 158px;
+        height: 32px;
+
+        flex-basis: 158px;
+    }
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 767px) {
+
+    .u-brandart {
+        width: 132px;
+        height: 29px;
+
+        flex-basis: 132px;
+    }
+
+    .u-brandmark__sep,
+    .u-brandmark__product {
+        display: none;
+    }
+}
+
+
+/* ============================================================
+   USTAR BRAND — FINAL COLOUR TREATMENT
+   Preserve original artwork. Theme only tones the upper stripe.
+   ============================================================ */
+
+
+/* Geometry stays inside the rail. */
+
+.u-brandart {
+    width: 174px;
+    height: 34px;
+
+    flex: 0 0 174px;
+
+    overflow: hidden;
+
+    background: #252525;
+
+    border-radius: 4px;
+
+    isolation: isolate;
+}
+
+
+/*
+ * IMPORTANT:
+ * Use the ORIGINAL cropped artwork again.
+ * No grayscale / neutralised base.
+ */
+.u-brandart__base {
+    z-index: 1;
+
+    background-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-base.png");
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+
+    filter: none !important;
+}
+
+
+/*
+ * Theme tint only.
+ *
+ * The original yellow stripe remains underneath, so this layer
+ * should be subtle — not a full colour replacement.
+ */
+.u-brandart__accent {
+    z-index: 2;
+
+    background: var(--u-banner-tint);
+
+    -webkit-mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: 100% 100%;
+
+    mask-image:
+        url("/theme/ustar/pix/brand/ustar-topbar-accent-mask.png");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 100% 100%;
+
+    /*
+     * Kill all previous aggressive effects.
+     */
+    mix-blend-mode: multiply !important;
+    filter: none !important;
+
+    opacity: var(--u-banner-tint-opacity);
+}
+
+
+/* ---------- LIGHT ---------- */
+
+/*
+ * Almost untouched corporate original.
+ */
+:root,
+[data-ustar-theme="light"] {
+    --u-banner-tint: #F7D31A;
+    --u-banner-tint-opacity: .08;
+}
+
+
+/* ---------- DARK ---------- */
+
+/*
+ * Same artwork, but the yellow stripe becomes a little deeper
+ * and less luminous against graphite.
+ */
+[data-ustar-theme="dark"] {
+    --u-banner-tint: #786600;
+    --u-banner-tint-opacity: .30;
+}
+
+
+/* Do not dim the artwork itself in dark mode. */
+[data-ustar-theme="dark"] .u-brandart__base {
+    filter: none !important;
+}
+
+
+/* Remove old glow regardless of previously declared rules. */
+.u-brandart__accent {
+    box-shadow: none !important;
+}
+
+
+/* Responsive. */
+
+@media (max-width: 1100px) {
+    .u-brandart {
+        width: 158px;
+        height: 32px;
+
+        flex-basis: 158px;
+    }
+}
+
+@media (max-width: 767px) {
+    .u-brandart {
+        width: 132px;
+        height: 29px;
+
+        flex-basis: 132px;
+    }
+}
+
+
+/* ============================================================
+   Development v1 — remove legacy duplicate state
+   ============================================================ */
+
+/*
+ * When the normalized evidence layer is shown,
+ * hide legacy synthetic course-link status.
+ */
+.u-skill-card:has(.u-skill-evidence-empty)
+.u-skill-unmeasured {
+    display: none !important;
+}
+
+/*
+ * Keep cards visually balanced after removing
+ * the duplicated legacy state.
+ */
+.u-skill-card:has(.u-skill-evidence-empty) {
+    min-height: 150px;
+}
+
+.u-skill-evidence-empty {
+    margin-top: auto;
+}

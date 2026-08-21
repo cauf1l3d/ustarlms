@@ -1,0 +1,87 @@
+<div class="u-route2-page">
+    <header class="u-route2-hero">
+        <div>
+            <p class="u-page-kicker">Постоянный учебный маршрут</p>
+            {{#hasroute}}<h1>{{route.name}}</h1>{{/hasroute}}
+            {{^hasroute}}<h1>Учебный маршрут</h1>{{/hasroute}}
+            <p>Маршрут закреплён за должностью навсегда. Обновляются версии отдельных точек, а история уже пройденного обучения сохраняется.</p>
+        </div>
+        <div class="u-route2-hero__actions">
+            <a class="u-btn" href="{{coursesurl}}">Все мои курсы</a>
+            {{#iselevated}}{{#hasposition}}<a class="u-btn u-btn--primary" href="{{studio}}">Редактор маршрута</a>{{/hasposition}}{{/iselevated}}
+        </div>
+    </header>
+
+    {{#iselevated}}
+    <form class="u-route2-preview" method="get">
+        <label><span>Просмотр маршрута должности</span><select name="position" onchange="this.form.submit()">{{#positions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/positions}}</select></label>
+        <noscript><button class="u-btn" type="submit">Открыть</button></noscript>
+    </form>
+    {{/iselevated}}
+
+    {{#hasroute}}
+    {{#route}}
+    <section class="u-route2-metrics">
+        <article><span>Адаптация</span><strong>{{adaptationprogress}}%</strong><small>{{adaptationdone}} из {{adaptationtotal}} обязательных точек</small></article>
+        <article><span>Квалификация</span>{{#admitted}}<strong class="is-ok">Допуск есть</strong><small>Адаптация и обязательные проверки закрыты</small>{{/admitted}}{{#notadmitted}}<strong>В процессе</strong><small>До допуска остаются обязательные точки</small>{{/notadmitted}}</article>
+        <article><span>Актуальные задачи</span><strong>{{continuouspending}}</strong><small>Точки постоянного обучения, которые требуют внимания</small></article>
+        <article><span>Актуальность</span><strong>{{freshness}}%</strong><small>Не является «процентом завершения» бесконечного маршрута</small></article>
+    </section>
+
+    {{#hascurrentpoint}}
+    {{#currentpoint}}
+    <section class="u-route2-now">
+        <div><p class="u-page-kicker">Сейчас</p><h2>{{title}}</h2><p>{{phaselabel}} · {{versionlabel}}</p></div>
+        {{#canlaunch}}<a class="u-btn u-btn--primary u-btn--large" href="{{launchurl}}">Продолжить</a>{{/canlaunch}}
+    </section>
+    {{/currentpoint}}
+    {{/hascurrentpoint}}
+
+    <div class="u-route2-sections">
+        <section class="u-panel">
+            <header class="u-panel-title"><div><p class="u-page-kicker">Обязательная часть</p><h2>Адаптация и допуск</h2></div><span>{{adaptationdone}} / {{adaptationtotal}}</span></header>
+            <div class="u-route2-list">
+                {{#points}}{{^continuous}}
+                <article class="u-route2-point is-{{status}}">
+                    <div class="u-route2-point__marker">{{#done}}✓{{/done}}{{^done}}{{number}}{{/done}}</div>
+                    <div class="u-route2-point__body">
+                        <div class="u-route2-point__head"><div><span>{{phaselabel}} · {{versionlabel}}</span><h3>{{title}}</h3></div><b>{{statuslabel}}</b></div>
+                        {{#hassummary}}<p>{{summary}}</p>{{/hassummary}}
+                        {{#inherited}}<small class="u-route2-inherited">Результат перенесён с предыдущей версии точки</small>{{/inherited}}
+                        {{#requirements}}<div class="u-route2-req {{#satisfied}}is-ok{{/satisfied}}{{#failed}}is-fail{{/failed}}"><span>{{label}}</span><small>{{detail}}</small></div>{{/requirements}}
+                        {{#canlaunch}}<a class="u-route2-link" href="{{launchurl}}">Открыть текущий материал →</a>{{/canlaunch}}
+                    </div>
+                </article>
+                {{/continuous}}{{/points}}
+            </div>
+        </section>
+
+        <section class="u-panel">
+            <header class="u-panel-title"><div><p class="u-page-kicker">После допуска</p><h2>Постоянное обучение</h2><p>Новые стандарты, ассортимент, сезонные задачи и переаттестации добавляются сюда без создания нового маршрута.</p></div><span>{{#admitted}}{{continuouspending}} актуально{{/admitted}}{{#notadmitted}}{{continuousfuture}} после допуска{{/notadmitted}}</span></header>
+            <div class="u-route2-list">
+                {{#points}}{{#continuous}}
+                <article class="u-route2-point is-{{status}}">
+                    <div class="u-route2-point__marker">{{#done}}✓{{/done}}{{^done}}•{{/done}}</div>
+                    <div class="u-route2-point__body">
+                        <div class="u-route2-point__head"><div><span>{{versionlabel}} · {{policylabel}}</span><h3>{{title}}</h3></div><b>{{statuslabel}}</b></div>
+                        {{#hassummary}}<p>{{summary}}</p>{{/hassummary}}
+                        {{#canlaunch}}<a class="u-route2-link" href="{{launchurl}}">Открыть →</a>{{/canlaunch}}
+                    </div>
+                </article>
+                {{/continuous}}{{/points}}
+                {{^continuoustotal}}<div class="u-empty-state"><h3>Постоянных точек пока нет</h3><p>Маршрут останется тем же — новые точки будут добавляться сюда по мере изменения стандартов и ассортимента.</p></div>{{/continuoustotal}}
+            </div>
+        </section>
+    </div>
+    {{/route}}
+    {{/hasroute}}
+
+    {{#noroute}}
+    <section class="u-empty-state u-route2-empty">
+        {{#hasposition}}<h2>Для должности ещё не создан постоянный маршрут</h2><p>Существующие Moodle-курсы и история не удалены. Администратор может создать маршрут 2.0 и перенести текущий порядок как первую версию точек.</p>{{/hasposition}}
+        {{^hasposition}}<h2>У пользователя не определена должность</h2><p>Назначьте USTAR-должность, чтобы система могла выбрать единый учебный маршрут.</p>{{/hasposition}}
+        {{#iselevated}}{{#hasposition}}<a class="u-btn u-btn--primary" href="{{studio}}">Открыть редактор</a>{{/hasposition}}{{/iselevated}}
+        <a class="u-btn" href="{{coursesurl}}">Открыть текущие курсы</a>
+    </section>
+    {{/noroute}}
+</div>

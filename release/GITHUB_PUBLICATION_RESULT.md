@@ -21,15 +21,17 @@
 | GitHub review gate for containment payload | `success` — run `32644520489` |
 | Workflow/Communication CURRENT audit commit | `a64eb5a1ff91b64d252c9180f1063791ddc1d784` |
 | GitHub review gate for workflow payload | `success` — run `32645801655` |
-| Bundle manifest | `110` files — `PASS` |
+| Evidence/Checklists/Gate integrity audit commit | `d3fd2eea1a0972994467ab0894346e96368ee6ea` |
+| GitHub review gate for Evidence/Checklists/Gate payload | `success` — run `32647307232` |
+| Bundle manifest | `117` files — `PASS` |
 | Push mode | New branch, non-force |
 | Production release | Not authorized / not performed |
 
-Remote verification after the Workflow/Communication audit push, before this record-only annotation:
+Remote verification after the Evidence/Checklists/Gate audit push, before this record-only annotation:
 
 ```text
 refs/heads/main                       5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
-refs/heads/ustar-final-audit-release  a64eb5a1ff91b64d252c9180f1063791ddc1d784
+refs/heads/ustar-final-audit-release  d3fd2eea1a0972994467ab0894346e96368ee6ea
 ```
 
 The review branch is based directly on canonical `main` and includes these major logical payloads:
@@ -48,8 +50,9 @@ The review branch is based directly on canonical `main` and includes these major
 12. `7c9d154` — isolated Boards ACL/lifecycle audit and deterministic 24-worker race: all 24 expected-version saves returned success, final version remained 2 and 23 documents were silently lost; exact two-row fixture cleanup restored the seven-board baseline.
 13. `a08968a` — minimal transactional row-lock containment for Boards save, explicit rollback/rethrow, validation/ACL regression, exact 24-worker `1 success / 23 conflicts`, seven-row cleanup and old→new rollback roundtrip; installed only in isolated.
 14. `a64eb5a` — PII-free Workflow/Communication aggregate, synthetic notification/conversation/goal/review ACL, Checklist Design source audit, exact cleanup and isolated unknown-goal-action rejection with rollback proof; B086–B091 remains owner-decided.
+15. `d3fd2ee` — PII-free Evidence/Checklists/Gate inventory and Constitution trace; fail-closed assessment/type/catalog guards; employee/HR ACL; exact synthetic cleanup; candidate→old→candidate rollback proof. Gate policy remains owner-decided.
 
-Static GitHub gate: [USTAR review gate run 32645801655](https://github.com/cauf1l3d/ustarlms/actions/runs/32645801655) — `success` for exact workflow-audit head `a64eb5a1ff91b64d252c9180f1063791ddc1d784`.
+Static GitHub gate: [USTAR review gate run 32647307232](https://github.com/cauf1l3d/ustarlms/actions/runs/32647307232) — `success` for exact Evidence/Checklists/Gate head `d3fd2eea1a0972994467ab0894346e96368ee6ea`.
 
 The browser evidence also includes a same-driver minimal native HTML5 control. It emitted zero `dragstart`, `dragover` and `drop` events, isolating the automated native-drag gap to the browser driver rather than the USTAR application. Context-menu move, permission boundaries and the audited server-side move path remain proven.
 

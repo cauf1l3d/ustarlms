@@ -1,0 +1,84 @@
+# USTAR — решения владельца, необходимые для продолжения
+
+Дата: 2026-08-23
+
+Текущий статус: **production NO-GO**. Этот файл не является разрешением на релиз, пока владелец не заполнит и явно не отправит выбранные пункты.
+
+## 1. Канонический GitHub repository
+
+Заполнить:
+
+```text
+CANONICAL_GITHUB_URL =
+ALLOW_ADD_OR_UPDATE_REMOTE = YES / NO
+ALLOW_PUSH_BRANCH_USTAR_FINAL_AUDIT_RELEASE = YES / NO
+```
+
+Подготовленный handoff commit: `18fc2af8312968d2426642bdf9cb39030d57eaa6`.
+
+Историческая ссылка `github.com/cauf1l3d/expflow_academy_clean` не подтверждена и автоматически использоваться не будет.
+
+## 2. Точный production scope
+
+Для каждого блока выбрать `APPROVE`, `DEFER` или `REJECT`.
+
+| Блок | Выбор владельца | Что изменится | Основной gate |
+|---|---|---|---|
+| Isolated login polish | `UNDECIDED` | Responsive shell вокруг неизменённой native Moodle form | Canonical auth/session decision; rollback theme files |
+| Academy feature icons | `UNDECIDED` | 12 decorative card/feature PNG; actions/navigation остаются SVG | Licence/provenance и file-size optimisation |
+| Game same-origin media fix | `UNDECIDED` | Question images генерируются через current-host Moodle File API | Fresh snapshot; game E2E after deploy |
+| Hide active games with 0 active questions | `UNDECIDED` | Draft/empty game не показывается learner catalog | Editor/catalog regression |
+| Default user-role remediation | `UNDECIDED` | Удаление четырёх risky extras и возврат одной capability к archetype | Явное capability-by-capability approval; session/API regression |
+| Moodle/Next.js upgrades | `UNDECIDED` | Supported security versions | Separate compatibility, migration and rollback plan |
+| AI tenancy remediation | `UNDECIDED` | Новый tenant source/default либо disable AI manager | TARGET owner/privacy decision; не использовать HR `institution` как tenant |
+| HR/HRD separation | `UNDECIDED` | Раздельные access profiles и approval lifecycle | TARGET role contract and data-scope tests |
+
+Уже выполненные отдельно разрешённые production-блоки повторять не нужно:
+
+- public HR mappings containment: anonymous 200 → 404;
+- `config.php` и USTAR code permission hardening с rollback manifest.
+
+## 3. TARGET-решения, которые нельзя вывести из CURRENT
+
+Для каждого пункта нужен короткий ответ владельца либо решение через Architecture Studio.
+
+1. **Identity/auth:** Moodle login является canonical, Next redirect/decommission или утверждённый SSO?
+2. **Organization source:** USTAR, Bitrix/HR master или отдельная система?
+3. **Manager relation:** где хранится versioned reporting chain и кто её утверждает?
+4. **HR vs HRD:** какие действия относятся только к HRD?
+5. **Learning assignment:** какая business entity является назначением, а Moodle enrol/course/completion остаются technical-only projection?
+6. **Evidence/gate:** какие типы допуска требуют практического evidence, reviewer, expiry и revocation?
+7. **XP/USCOIN:** разрешён ли conversion; какие отдельные ledgers, reversal и anti-abuse rules?
+8. **Leaderboard:** season, league/team scope, privacy и fairness policy?
+9. **Content governance:** owner, source of truth, review period и obsolete/version lifecycle?
+10. **Tasks/notifications:** owner, channels, acknowledgement, retry и escalation lifecycle?
+11. **AI tenancy:** dedicated tenant identifier, single default tenant или отключение до готовности?
+12. **Final TARGET:** кто подтверждает B001–B109 traceability и Final Review?
+
+## 4. Production release confirmation
+
+Заполняется только после выбора точного scope выше.
+
+```text
+I APPROVE PRODUCTION RELEASE = YES / NO
+
+APPROVED BLOCKS =
+EXCLUDED BLOCKS =
+MAINTENANCE WINDOW (Europe/Moscow) =
+AUTHORIZED APPROVER NAME/ROLE =
+ROLLBACK TRIGGER ACCEPTED = YES / NO
+POST-RELEASE OBSERVATION WINDOW =
+```
+
+Фраза «продолжай», «делай всё» или согласование аудита не трактуется как production approval. Разрешение должно перечислять конкретные блоки.
+
+## 5. Минимальный ответ для возобновления Git-публикации без production
+
+```text
+CANONICAL_GITHUB_URL = <точный URL>
+ALLOW_ADD_OR_UPDATE_REMOTE = YES
+ALLOW_PUSH_BRANCH_USTAR_FINAL_AUDIT_RELEASE = YES
+PRODUCTION RELEASE = NO
+```
+
+Такой ответ разрешит только публикацию подготовленной ветки и не разрешит deployment на сервер.

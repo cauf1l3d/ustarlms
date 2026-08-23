@@ -1,0 +1,51 @@
+# USTAR final audit release bundle
+
+Branch: `ustar-final-audit-release`  
+Status: isolated-test validated; production release not authorized
+
+This bundle contains only reviewed deltas and repeatable audit/test helpers. It does not contain production data, database dumps, secrets or personal data.
+
+## Theme delta
+
+- `theme_ustar/lib.php` — registers the final login and Academy icon SCSS layers.
+- `theme_ustar/scss/_login.scss` — responsive/login polish while keeping Moodle-native authentication.
+- `theme_ustar/scss/_academy_icons.scss` — feature-illustration sizing, restrained shadows and reduced-motion-safe hover.
+- `local_ustar/classes/ui.php` — strict semantic Academy feature-icon registry; navigation/actions retain SVG.
+- `local_ustar/pix/academy/` — 12 selected unchanged source PNGs from the supplied 29-asset pack.
+- `local_ustar/classes/game_media.php` and game providers — current-host Moodle File API resolution instead of persisted host-bound question media.
+- `local_ustar/classes/external/get_games.php` and `templates/games.mustache` — prevent learner-facing dead `0 / 0` game links and correct the empty-state copy.
+
+Login was validated at desktop 1440×900, tablet 768×1024 and mobile 390×844. Academy icons were browser-validated on Achievements, Games, Knowledge and Profile, including dark theme and lazy loading. Production asset use still requires licence/provenance confirmation.
+
+## Operations helpers
+
+- `p0_containment.sh` — checksum-guarded P0 isolation of the two historical public HR mappings.
+- `create_isolated_test_env.sh` — isolated restore environment with no public route.
+- `audit_default_user_role.php` — read-only archetype diff.
+- `reset_default_user_role_test.php` — guarded test-only reset.
+- `create_synthetic_test_users.php` — guarded test-only role fixtures; password must be supplied through `USTAR_AUDIT_PASSWORD`.
+- `deploy_login_polish_to_test.sh` — checksum-guarded test deployment helper.
+- `deploy_academy_icons_to_test.sh` — checksum-guarded Academy icon deployment to the exact isolated environment.
+- `deploy_game_media_fix_to_test.sh` — checksum-guarded same-origin game media fix for isolated validation.
+- `deploy_game_catalog_fix_to_test.sh` — checksum-guarded learner catalog filtering for empty game drafts.
+- `harden_moodle_code_test.sh` — isolated permission-hardening rehearsal.
+- `p0_harden_moodle_code.sh` — production permission hardening; included for review only and requires a separate exact approval.
+- `restore_moodle_permissions.sh` — manifest-guarded rollback for that permission change.
+- `test_role_boundaries.php` — isolated five-persona capability matrix plus reversible role-revocation rehearsal.
+- `test_page_denial.php` / `run_page_denials_test.sh` — guarded protected-entry denial tests.
+- `test_page_allow.php` / `run_page_allows_test.sh` — guarded read-only positive entry tests.
+- `toggle_test_manager_role.php` / `revoke_test_user_sessions.php` — isolated active-session revocation fixtures.
+- `create_isolated_dr_snapshot.sh` / `restore_isolated_dr_snapshot.sh` — checksum-verified full test-only snapshot and independent restore drill.
+- `restore_isolated_release_candidate.sh` — second independent final-candidate restore on loopback `18082`, retaining the earlier DR evidence.
+
+The operational scripts record the exact 2026-08-23 audit paths/hashes. Role fixtures and entry tests allow only the explicit isolated roots `18080`, `18081` and `18082`. Review and update their guards for any later snapshot; never bypass a mismatch.
+
+## Release gate
+
+No file in this bundle authorizes production deployment. Production requires a separate owner confirmation, a fresh snapshot and final production rollback rehearsal. Isolated negative/positive capability tests and full isolated DR restore have passed.
+
+The branch is local only: this control repository has no configured Git remote. A canonical GitHub repository and explicit publication instruction are required before push.
+
+The production permission script was executed only after a narrower explicit approval: `config.php` is `root:www-data|640`, and exactly `public/local/ustar` plus `public/theme/ustar` were normalised to deploy-owner read-only code. This permission containment did not deploy the login or icon deltas.
+
+Requirement-by-requirement closure is in `reports/MASTER_TASK_COMPLETION_MATRIX.md`. Detailed evidence is in `reports/UX_UI_AUDIT.md`, `reports/ICON_DESIGN_MAPPING.md`, `reports/GAME_RUNTIME_VALIDATION.md`, `reports/HEALTH_CHECK_DIAGNOSIS.md`, `reports/ROLE_TEST_REPORT.md`, `reports/BACKUP_INFO.md` and `reports/FINAL_STATUS.md`.

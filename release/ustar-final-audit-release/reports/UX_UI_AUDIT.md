@@ -291,3 +291,60 @@ UX requirement: прогресс должен считаться не по за�
 | 🔴 | **Accessibility in contribution guidelines — Ensuring accessibility requirements are part of the component contribution checklist** | В локальном control-repo не найден обязательный contribution checklist для accessibility. |
 
 Главный вывод Checklist Design: isolated polish устраняет конкретные login/grid/icon/game-empty дефекты, но production release нельзя считать визуально завершённым до формальной accessibility baseline, error-state system, asset licence и полных business journeys.
+
+## 16. Materials / Personal Library — source audit после owner supplement
+
+Проверены `materials.mustache`, `knowledge.mustache`, `materials.js`, `_materials.scss` и server-rendered POST/notification flow. Это **source audit**: структура и предусмотренные состояния видны, но визуальный размер, контраст, фактическое позиционирование menu и mobile touch-поведение должны быть подтверждены authenticated screenshots.
+
+### Breadcrumb
+
+Проверено по [Breadcrumb checklist (Design system)](https://www.checklist.design/design-system/breadcrumb).
+
+| | Item | Why |
+|---|---|---|
+| 🟢 | **Current location — The current page shown as the final item in the trail, visually distinct from the preceding levels, typically not a link** | Текущая папка теперь выводится как `span[aria-current=page]`, а не как повторная ссылка; для неё есть отдельный visual state. |
+| 🟢 | **Level links — All preceding levels rendered as active links, each one navigating directly to that level rather than requiring back-button presses** | Корень и все предыдущие папки остаются прямыми ссылками; отдельная кнопка «На уровень выше» сохраняет привычный Explorer-путь. |
+| 🟢 | **Separator character — A consistent visual separator between levels (a slash, chevron, or arrow) distinguishing hierarchy from a list of links** | Между элементами CSS добавляет единый chevron `›`. |
+| 🟡 | **Truncation for long paths — Deep hierarchies collapsed with an ellipsis, preserving the root and current page while hiding intermediate levels behind a toggle** | Trail не переносится и прокручивается горизонтально, но автоматического ellipsis/toggle для глубокой структуры ещё нет. Проверить реальную глубину каталогов и добавить collapse при необходимости. |
+
+### Context action
+
+Проверено по [Dropdown Menu checklist (Design system)](https://www.checklist.design/design-system/dropdown-menu).
+
+| | Item | Why |
+|---|---|---|
+| 🟢 | **Trigger affordance — The element that opens the menu: an overflow icon, chevron button, or right-click target** | У каждой перемещаемой строки есть overflow-trigger `•••` с accessible name, поэтому drag & drop не является единственным способом. |
+| 🟡 | **Menu item anatomy — The structure of each action: label, optional leading icon, optional trailing shortcut, optional destructive styling** | Единственная операция подписана «Переместить в» и заканчивается явной кнопкой, но это компактная form внутри menu, а не унифицированный список action items. |
+| ⚪ | **Section dividers and groups — Dividers and/or labels that break related actions into sections once the menu gets large** | В текущем menu ровно одна операция; группировка добавила бы шум. |
+| ⚪ | **Destructive item styling — Visual differentiation — typically the danger colour — for actions that cannot be undone** | Перемещение обратимо; delete/archive actions в этот context menu не включены. |
+| ⚪ | **Nested submenu — A secondary menu triggered by a parent item, used for grouping related but distinct actions** | Для одной операции вложенность не нужна. |
+| 🟡 | **Disabled items — Menu items that are visible but cannot be triggered, indicating an unavailable action** | Текущая папка и сам перемещаемый folder исключены из списка, placeholder disabled; descendant-cycle destinations пока отклоняются сервером после submit, а не объясняются заранее. |
+| 🟡 | **Positioning and overflow — The menu's placement relative to its trigger, repositioning automatically to stay within the viewport** | Menu привязан справа, ограничен `80vw` и получил vertical max-height/scroll; автоматический flip у нижней границы viewport визуально не доказан. |
+| ⚪ | **Keyboard shortcut display — Shortcut hints aligned to the trailing edge of the item label** | Продукт не устанавливал keyboard shortcuts для файловых операций; keyboard fallback — native details/select/button. |
+
+### Empty State
+
+Проверено по [Empty State checklist (Web app)](https://www.checklist.design/web-app/empty-state).
+
+| | Item | Why |
+|---|---|---|
+| 🟢 | **Illustration or icon — A visual that signals the empty state and gives the screen some personality, rather than feeling broken** | Materials использует contextual folder icon, Personal Library — semantic Knowledge illustration. |
+| 🟢 | **Clear heading — A short, plain-language title naming what's missing** | Раздельные headings: «Папка пока пуста», «Ничего не найдено» и «В личной библиотеке пока ничего нет». |
+| 🟢 | **Supporting description — A brief explanation of what belongs in this space, most useful for first-time users** | Описания объясняют, что появится в папке и почему Library пополняется только после route learning event. |
+| 🟢 | **Primary action — A CTA pointing toward the next step: creating, importing, connecting etc** | Filtered state сбрасывает фильтры; manager создаёт material; сотрудник переходит к своему маршруту. |
+| 🟢 | **Zero state vs. no-results state — A distinction between a screen that is empty because nothing has been created versus one that returned no search or filter results** | Server context теперь явно разделяет pristine zero state и active search/type/status/category filters. |
+| 🟡 | **Error state variant — A separate variant for when content failed to load, as opposed to genuinely being empty** | POST errors идут через Moodle error notification и не маскируются под empty state; отдельный full-page content-load error/retry state не реализован. |
+
+### Saving changes
+
+Проверено по [Saving changes checklist (Flows)](https://www.checklist.design/flows/saving-changes).
+
+| | Item | Why |
+|---|---|---|
+| 🟢 | **Show action that enables change — There should be an action to enable information to be updated. It may be automatically editable, but that can be riskier for some software. If it is read-only by default, then a button can trigger the editable version to then update and save.** | Материал открывается read-only; context menu и editor дают явные change actions, drag дополнительно ускоряет move. |
+| 🟢 | **Disable save action until changes are made — An action should be visible as a source of confirming changes to be saved - this is usually a button. Initially, the action can be disabled. It indicates no changes have been made, and there is nothing to save. A common location for this action is in the navigation above the fold, so it's always visible over the content. Another option is after all the content that's editable.** | Context Move открывается с disabled button и обязательным placeholder; текущий parent из destinations исключён. |
+| 🟢 | **State changes to active once a change is made — In the example, we've changed the email address, which means a change is waiting to be saved. Changing the button state to active brings the user's attention to the action.** | Выбор новой destination включает Move button; drag target получает отдельный active outline. |
+| 🟢 | **Action changes to loading state when pressed — Now that the changes are being saved, you want to show that action is in progress. You can do so with a loading spinner in the action, as the user's view will be on that element.** | Context button блокируется и меняет текст на «Перемещаем…»; drag move ставит workspace в `is-moving`, `aria-busy` и live-status. |
+| 🟢 | **Notify changes have been saved — The page will reload or update, and this is the critical part. The user should now be informed that their changes have been saved. They can now safely leave the page, knowing the details are locked in until they choose to change them again.** | Успешный move завершает POST/redirect и показывает Moodle success notification «Объект перемещён»; ошибки выводятся отдельно. |
+
+Source-аудит повлиял на код review-ветки: workspace снял ограничение `1480px`, breadcrumb получил корректную current-location семантику, empty/no-results разделены, появились actionable CTA и assistive move status. Эти изменения остаются **TEST IMPLEMENTATION** до authenticated desktop/mobile capture.

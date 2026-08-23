@@ -61,10 +61,16 @@ jobs:
           grep -q '\$plugin->version   = 2026082301;' moodle/local/ustar/version.php
           grep -q 'route_material_opened' moodle/local/ustar/classes/learning_events.php
           grep -q 'data-u-move-form' moodle/local/ustar/templates/materials.mustache
+          grep -q 'aria-current="page"' moodle/local/ustar/templates/materials.mustache
+          grep -q 'data-u-context-move-submit' moodle/local/ustar/templates/materials.mustache
+          grep -q 'hasactivefilters' moodle/local/ustar/templates/knowledge.mustache
+          grep -q 'data-u-move-status' moodle/local/ustar/amd/src/materials.js
+          grep -q 'max-width: none;' moodle/theme/ustar/scss/_materials.scss
           grep -q 'REFUSING_NON_ISOLATED_MOODLE' moodle/local/ustar/cli/materials_library_ui_fixture.php
           grep -q "\['create', 'unlock', 'cleanup'\]" moodle/local/ustar/cli/materials_library_ui_fixture.php
           grep -q 'CURRENT != TARGET' release/ustar-final-audit-release/reports/MATERIALS_LIBRARY_IMPLEMENTATION.md
           grep -q 'OWNER OVERRIDES RECOVERED / APPLY BLOCKED' release/ustar-final-audit-release/reports/HR_TARGET_MIGRATION_DRY_RUN.md
+          grep -q 'Materials / Personal Library — source audit' release/ustar-final-audit-release/reports/UX_UI_AUDIT.md
 
       - name: Release bundle integrity
         run: |

@@ -697,6 +697,26 @@ $data = [
     'hasmaterials' =>
         !empty($materials),
 
+    'hasactivefilters' =>
+        $q !== ''
+        || $type !== 'all'
+        || $categoryfilter !== 'all',
+
+    'reseturl' =>
+        (
+            new moodle_url(
+                '/local/ustar/knowledge.php'
+            )
+        )->out(false),
+
+    'learningurl' =>
+        (
+            new moodle_url(
+                '/local/ustar/home.php',
+                ['view' => 'learning']
+            )
+        )->out(false),
+
     'materials' =>
         $materials,
 

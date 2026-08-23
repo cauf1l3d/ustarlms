@@ -180,7 +180,7 @@ if (
         if ($action === 'move') {
             $targetparentid = optional_param('targetparentid', 0, PARAM_INT);
             $expectedmodified = required_param('expectedmodified', PARAM_INT);
-            \local_ustar\content_admin::move(
+            $moveresult = \local_ustar\content_admin::move(
                 $postedcontentid,
                 $targetparentid,
                 $expectedmodified,
@@ -188,9 +188,13 @@ if (
             );
             redirect(
                 new moodle_url('/local/ustar/materials.php', ['parent' => $targetparentid]),
-                'Объект перемещён',
+                $moveresult['changed']
+                    ? 'Объект перемещён'
+                    : 'Объект уже находится в выбранной папке',
                 null,
-                \core\output\notification::NOTIFY_SUCCESS
+                $moveresult['changed']
+                    ? \core\output\notification::NOTIFY_SUCCESS
+                    : \core\output\notification::NOTIFY_INFO
             );
         }
 
@@ -776,7 +780,9 @@ foreach ($records as $record) {
         'folderoptions' =>
             array_values(array_filter(
                 $movefolders,
-                static fn(array $folder): bool => (int)$folder['id'] !== (int)$record->id
+                static fn(array $folder): bool =>
+                    (int)$folder['id'] !== (int)$record->id
+                    && (int)$folder['id'] !== $parentid
             )),
 
         'title' =>
@@ -1723,11 +1729,13 @@ if ($parentid > 0) {
         $next = (int)($cursor->parentid ?? 0);
         $cursor = $next > 0 ? $DB->get_record('local_ustar_content', ['id' => $next, 'type' => 'folder'], 'id,parentid,title') : false;
     }
-    foreach ($chain as $folder) {
+    $lastbreadcrumb = count($chain) - 1;
+    foreach ($chain as $index => $folder) {
         $breadcrumbs[] = [
             'id' => (int)$folder->id,
             'title' => format_string($folder->title),
             'url' => (new moodle_url('/local/ustar/materials.php', ['parent' => (int)$folder->id]))->out(false),
+            'iscurrent' => $index === $lastbreadcrumb,
         ];
     }
     $current = end($chain);
@@ -1825,6 +1833,19 @@ $data = [
 
     'currentstatus' =>
         $status,
+
+    'hasactivefilters' =>
+        $q !== ''
+        || $type !== 'all'
+        || $status !== 'all',
+
+    'reseturl' =>
+        (
+            new moodle_url(
+                '/local/ustar/materials.php',
+                $parentid > 0 ? ['parent' => $parentid] : []
+            )
+        )->out(false),
 
     'typefilters' =>
         $typefilters,

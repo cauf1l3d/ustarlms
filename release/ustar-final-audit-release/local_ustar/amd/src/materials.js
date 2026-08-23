@@ -4,6 +4,35 @@ export const init = () => {
         return;
     }
 
+    const status = document.querySelector('[data-u-move-status]');
+    const workspace = document.querySelector('.u-materials-workspace');
+    const submitMove = () => {
+        form.setAttribute('aria-busy', 'true');
+        if (workspace) {
+            workspace.classList.add('is-moving');
+        }
+        if (status) {
+            status.textContent = 'Перемещаем объект…';
+        }
+        form.submit();
+    };
+
+    document.querySelectorAll('.u-material-row-menu form').forEach((contextForm) => {
+        const target = contextForm.querySelector('[data-u-context-move-target]');
+        const submit = contextForm.querySelector('[data-u-context-move-submit]');
+        if (!target || !submit) {
+            return;
+        }
+        target.addEventListener('change', () => {
+            submit.disabled = target.value === '';
+        });
+        contextForm.addEventListener('submit', () => {
+            submit.disabled = true;
+            submit.textContent = 'Перемещаем…';
+            contextForm.setAttribute('aria-busy', 'true');
+        });
+    });
+
     let dragged = null;
 
     document.querySelectorAll('[data-u-drag-content]').forEach((row) => {
@@ -42,7 +71,7 @@ export const init = () => {
             form.elements.contentid.value = dragged.id;
             form.elements.targetparentid.value = target.dataset.uDropFolder;
             form.elements.expectedmodified.value = dragged.expected;
-            form.submit();
+            submitMove();
         });
     });
 };

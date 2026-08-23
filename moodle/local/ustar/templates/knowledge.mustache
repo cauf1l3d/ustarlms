@@ -58,6 +58,18 @@
     {{/hasregularmaterials}}
 
     {{^hasmaterials}}
-    <div class="u-knowledge-empty"><strong>В личной библиотеке пока ничего нет</strong><p>Откройте материал из доступной точки маршрута — после learning event он появится здесь. Прямой доступ по роли библиотеку не пополняет.</p></div>
+    <div class="u-knowledge-empty" role="status">
+        {{{knowledgeicon}}}
+        {{#hasactivefilters}}
+        <strong>Ничего не найдено</strong>
+        <p>В личной библиотеке нет материалов, соответствующих поиску или выбранным фильтрам.</p>
+        <a class="u-btn" href="{{reseturl}}">Сбросить поиск и фильтры</a>
+        {{/hasactivefilters}}
+        {{^hasactivefilters}}
+        <strong>В личной библиотеке пока ничего нет</strong>
+        <p>Откройте материал из доступной точки маршрута — после learning event он появится здесь. Прямой доступ по роли библиотеку не пополняет.</p>
+        <a class="u-btn u-btn--primary" href="{{learningurl}}">Перейти к моему маршруту</a>
+        {{/hasactivefilters}}
+    </div>
     {{/hasmaterials}}
 </div>

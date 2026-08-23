@@ -11,6 +11,10 @@ Owner supplement: `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md`
 - `Materials` remains a full-workspace file manager with folders, breadcrumbs and editor.
 - Files and folders can be moved by drag & drop onto a folder/breadcrumb.
 - Every row also has an explicit context action, so moving works without a mouse.
+- The workspace uses the full available width; it no longer stops at a `1480px` content cap.
+- Breadcrumbs expose the current folder through `aria-current`, keep every ancestor directly reachable and preserve the explicit one-level-up action.
+- Empty folder, filtered no-results and empty Personal Library are separate states with the next valid action.
+- Drag move exposes `aria-busy`, a live status and an in-progress workspace state before the server redirect.
 - Move writes use `timemodified` optimistic locking and reject stale forms.
 - Folder cycles, self-parenting and nonexistent targets are rejected server-side.
 - Successful moves create an immutable `content_moved` event.
@@ -61,6 +65,7 @@ The following visual checks still require authenticated synthetic browser access
 1. Capture HR/admin Materials before/after screenshots and exercise context move plus drag & drop.
 2. Capture employee personal Library before/after route unlock.
 3. Confirm 390×844 mobile layout keeps context actions available; drag & drop remains optional enhancement.
+4. Confirm deep breadcrumbs, menu positioning near the viewport edge, empty/no-results CTA and move success/error feedback in the rendered theme.
 
 Server-side equivalents for ACL, stale writes, cycles, gateway ordering, idempotency, `open`/`ack` and direct-ACL negative behavior have already passed as listed above.
 
@@ -69,3 +74,15 @@ Server-side equivalents for ACL, stale writes, cycles, gateway ordering, idempot
 Rollback requires the pre-deployment database and Moodle-code backup. Reverting code alone is insufficient after learning events have been written. Before rollback, export both new tables for audit preservation. The migration intentionally performs no destructive backfill or mutation of existing content, users, roles, routes or acknowledgements.
 
 Production deployment remains blocked until the owner separately authorizes it and the remaining authenticated browser/mobile screenshots pass.
+
+## Files changed by the final UX acceptance pass
+
+- `local_ustar/materials.php`
+- `local_ustar/knowledge.php`
+- `local_ustar/templates/materials.mustache`
+- `local_ustar/templates/knowledge.mustache`
+- `local_ustar/amd/src/materials.js`
+- `local_ustar/amd/build/materials.min.js`
+- `theme_ustar/scss/_materials.scss`
+
+The Checklist Design source audit is recorded item-by-item in `UX_UI_AUDIT.md`. It does not substitute for the pending authenticated browser evidence.

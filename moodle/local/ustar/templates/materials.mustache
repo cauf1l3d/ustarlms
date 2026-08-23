@@ -124,10 +124,20 @@
 
     </nav>
 
-    <div class="u-materials-breadcrumbs" aria-label="Папки">
-        <a href="?" data-u-drop-folder="0">Материалы</a>
-        {{#breadcrumbs}}<span>›</span><a href="{{url}}" data-u-drop-folder="{{id}}">{{title}}</a>{{/breadcrumbs}}
-    </div>
+    <nav class="u-materials-breadcrumbs" aria-label="Путь к папке">
+        <ol>
+            <li>
+                {{#hasparent}}<a href="?" data-u-drop-folder="0">Материалы</a>{{/hasparent}}
+                {{^hasparent}}<span aria-current="page">Материалы</span>{{/hasparent}}
+            </li>
+            {{#breadcrumbs}}
+            <li>
+                {{#iscurrent}}<span aria-current="page">{{title}}</span>{{/iscurrent}}
+                {{^iscurrent}}<a href="{{url}}" data-u-drop-folder="{{id}}">{{title}}</a>{{/iscurrent}}
+            </li>
+            {{/breadcrumbs}}
+        </ol>
+    </nav>
 
 
     <div class="u-materials-workspace">
@@ -244,11 +254,12 @@
                         <input type="hidden" name="sesskey" value="{{sesskey}}">
                         <label>
                             <span>Переместить в</span>
-                            <select name="targetparentid">
+                            <select name="targetparentid" required data-u-context-move-target>
+                                <option value="" selected disabled>Выберите папку</option>
                                 {{#folderoptions}}<option value="{{id}}">{{name}}</option>{{/folderoptions}}
                             </select>
                         </label>
-                        <button class="u-btn u-btn--small" type="submit">Переместить</button>
+                        <button class="u-btn u-btn--small" type="submit" disabled data-u-context-move-submit>Переместить</button>
                     </form>
                 </details>
                 {{/canmove}}
@@ -264,8 +275,18 @@
 
             {{^hasmaterials}}
 
-            <div class="u-materials-empty">
-                По этим фильтрам материалов нет.
+            <div class="u-materials-empty" role="status">
+                <span class="u-materials-empty__icon" aria-hidden="true">📂</span>
+                {{#hasactivefilters}}
+                <strong>Ничего не найдено</strong>
+                <p>В этой папке нет объектов, соответствующих выбранным фильтрам.</p>
+                <a class="u-btn" href="{{reseturl}}">Сбросить фильтры</a>
+                {{/hasactivefilters}}
+                {{^hasactivefilters}}
+                <strong>Папка пока пуста</strong>
+                <p>Здесь появятся созданные или перемещённые материалы и папки.</p>
+                {{#canmanage}}<a class="u-btn u-btn--primary" href="{{createurl}}">Создать материал</a>{{/canmanage}}
+                {{/hasactivefilters}}
             </div>
 
             {{/hasmaterials}}
@@ -1247,7 +1268,9 @@
             {{^hasdetail}}
 
             <div class="u-materials-empty">
-                Выберите материал.
+                <span class="u-materials-empty__icon" aria-hidden="true">↖</span>
+                <strong>Выберите материал</strong>
+                <p>Сведения, версии и действия откроются в этой области.</p>
             </div>
 
             {{/hasdetail}}
@@ -1266,4 +1289,5 @@
     <input type="hidden" name="expectedmodified" value="">
     <input type="hidden" name="sesskey" value="{{sesskey}}">
 </form>
+<p class="sr-only" role="status" aria-live="polite" data-u-move-status></p>
 {{/canmanage}}

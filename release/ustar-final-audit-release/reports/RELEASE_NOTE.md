@@ -191,3 +191,4 @@ Production release: **not authorized / not performed**
 - Probe cleanup restored reporting rows `0`, exact empty fingerprint and account type `employee`; sessions `1 -> 0`; tunnel closed.
 - Durable isolated old-file rollback copy: `release-backups/organization-reporting-before-2026-08-23_15-33-27`; explicit five-file manifest `5/5 OK`.
 - Candidate→CURRENT→candidate rollback roundtrip PASS. Production was not changed. Staff place/assignment/versioning and direct-report versus department responsibility scope remain owner decisions.
+- Review publication: code/audit commit `3ba63c95e43c608c94d4e9d6cbe2e975e3eb56ef`; GitHub push gate `32649280735` success; bundle manifest `128` files.

@@ -127,3 +127,10 @@ CURRENT `get_team` still uses department scope for a head and company scope for 
 - `release/ustar-final-audit-release/ops/verify_organization_reporting_guard_roundtrip.sh`
 
 The bundle mirrors the five runtime files under `release/ustar-final-audit-release/local_ustar/`. No deployment script in the bundle authorizes production.
+
+## 8. Review publication
+
+- Code/audit commit: `3ba63c95e43c608c94d4e9d6cbe2e975e3eb56ef`.
+- GitHub push review gate: run `32649280735`, conclusion `success`.
+- Release bundle manifest: `128` staged Git blobs verified before publication.
+- Branch: `ustar-final-audit-release`; default branch and production unchanged.

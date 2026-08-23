@@ -23,6 +23,12 @@ class get_games extends base {
                 continue;
             }
             $questioncount = (int)$DB->count_records('local_ustar_questions', ['gameid' => $game->id, 'active' => 1]);
+            // An active shell without active questions is an editor draft, not
+            // a playable employee experience. Keep it visible in Game Studio,
+            // but do not publish a dead "Играть" link to learners.
+            if ($questioncount < 1) {
+                continue;
+            }
             $attempts = (int)$DB->count_records('local_ustar_game_attempts', ['userid' => $USER->id, 'gameid' => $game->id]);
             $correct = (int)$DB->count_records('local_ustar_game_mastery', ['userid' => $USER->id, 'gameid' => $game->id]);
             $xp = (int)$DB->get_field_sql(

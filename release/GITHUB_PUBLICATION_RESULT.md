@@ -11,17 +11,18 @@
 | Remote branch | `ustar-final-audit-release` |
 | Base `main` | `5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff` |
 | Initial published payload | `c30a2aa496bd51cac3ca827208b24527e80a7376` |
-| Verified Materials/Library implementation commit | `4c84b52d80bf5778dd2398750ef5f6d1037086ee` |
-| GitHub review gate | `success` — run `32634532402` |
-| Bundle manifest | `84` files — `PASS` |
+| Verified Materials UX code commit | `db6095cc9ce78fbaea60dd25b26ae77a809a4361` |
+| Authenticated role/mobile evidence commit | `112fa3f16c287184bd67d3277193c2edfa54dfbf` |
+| GitHub review gate for evidence payload | `success` — run `32640270786` |
+| Bundle manifest | `96` files — `PASS` |
 | Push mode | New branch, non-force |
 | Production release | Not authorized / not performed |
 
-Remote verification after the implementation push, before this record-only annotation:
+Remote verification after the authenticated evidence push, before this record-only annotation:
 
 ```text
 refs/heads/main                       5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
-refs/heads/ustar-final-audit-release  4c84b52d80bf5778dd2398750ef5f6d1037086ee
+refs/heads/ustar-final-audit-release  112fa3f16c287184bd67d3277193c2edfa54dfbf
 ```
 
 The review branch is based directly on canonical `main` and includes these major logical payloads:
@@ -32,9 +33,11 @@ The review branch is based directly on canonical `main` and includes these major
 4. `c30a2aa` — audit evidence, test/rollback helpers and release reports.
 5. publication evidence and refreshed bundle manifests;
 6. `01bff25` — mandatory HR/Materials owner supplement integrated into the release gate;
-7. `4c84b52` — route-gated Personal Library and audited Explorer-style Materials workflow.
+7. `4c84b52` — route-gated Personal Library and audited Explorer-style Materials workflow;
+8. `db6095c` — final full-width Materials UX, breadcrumb, empty-state and move-feedback polish;
+9. `112fa3f` — eight authenticated synthetic desktop/mobile screenshots, role boundaries, Personal Library `0 → 1` and cleanup evidence.
 
-Static GitHub gate: [USTAR review gate run 32634532402](https://github.com/cauf1l3d/ustarlms/actions/runs/32634532402) — `success` for exact head `4c84b52d80bf5778dd2398750ef5f6d1037086ee`.
+Static GitHub gate: [USTAR review gate run 32640270786](https://github.com/cauf1l3d/ustarlms/actions/runs/32640270786) — `success` for exact evidence head `112fa3f16c287184bd67d3277193c2edfa54dfbf`.
 
 The final remote branch ref is also recorded in the external handoff copy of this report; embedding a commit's own hash inside that same commit is intentionally avoided.
 

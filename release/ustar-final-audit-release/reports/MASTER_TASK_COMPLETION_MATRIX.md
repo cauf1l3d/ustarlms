@@ -70,8 +70,8 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Live search dialog/dropdown | PROVEN технически | Два символа дают inline results; Escape/focus return проверены; отдельная search page не требуется |
 | Search ACL/relevance/privacy | OWNER DECISION | TARGET sources и disclosure policy не утверждены |
 | Команда: CEO → директор → manager → я; CEO full tree | OWNER DECISION | `reporting=0`; canonical manager relation отсутствует |
-| Материалы workspace | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Full-width каталог, semantic breadcrumb, separate zero/no-results, drag/drop + keyboard context move и disabled→active→loading feedback находятся в `db6095c`; GitHub gate `32638327627`, exact isolated overlay hashes, schema, hierarchy lock, stale/cycle, employee deny/admin allow, immutable audit, cleanup и rollback archive PASS. Нужны authenticated before/after и 390×844 screenshots |
-| Personal Library rule | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Route `open/ack`, guarded gateway, idempotent event, personal read model, direct-ACL negative и no-backfill PASS в synthetic isolated smoke 15/15 после final UX overlay; fresh locked before-state recreated. Нужны визуальные employee Library before/after screenshots |
+| Материалы workspace | ISOLATED RUNTIME + AUTHENTICATED CONTEXT MOVE PROVEN | Full-width каталог, semantic breadcrumb, separate zero/no-results and move feedback are in `db6095c`; exact overlay, schema, hierarchy lock, stale/cycle, employee deny/HR allow, immutable audit, cleanup and rollback PASS. Desktop/mobile screenshots and context move PASS; native drag remains unproven by the browser driver. |
+| Personal Library rule | ISOLATED RUNTIME + AUTHENTICATED BROWSER PROVEN | Route `open/ack`, guarded event and per-user read model PASS. Employee screenshot sequence proves `0 → 1`; DB boundary is employee `1`, HR `0`, superadmin `0`; 390×844 capture and cleanup PASS. |
 | Игры для ролей | PARTIAL | Employee/manager/HR/CEO surfaces доступны; empty active game обнаружена и скрыта test-only |
 | DGMJS/media/progress | PROVEN в isolated | Same-origin media resolver, wrong/correct, 2 attempts, mastery, 25 XP и idempotent +5 USCOIN PASS |
 | Game fix в production | NOT AUTHORIZED | Production CURRENT по-прежнему содержит host-bound media URL и пустую active game |
@@ -133,7 +133,7 @@ Skill уже установлен в проекте, поэтому повтор
 | `MASTER_TASK_COMPLETION_MATRIX.md` | PROVEN, этот документ |
 | `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` | PROVEN, owner-approved gated scope reconciled from Google Drive |
 | `HR_TARGET_MIGRATION_DRY_RUN.md` | PROVEN recovery/digest/reconciliation and explicit apply blockers; private ID-level package kept outside Git |
-| `MATERIALS_LIBRARY_IMPLEMENTATION.md` | PROVEN source scope, isolated runtime, permissions, cleanup and rollback; authenticated browser/mobile evidence pending |
+| `MATERIALS_LIBRARY_IMPLEMENTATION.md` | PROVEN source scope, isolated runtime, permissions, authenticated desktop/mobile evidence, cleanup and rollback; native drag browser automation remains explicitly unproven |
 
 ## 9. Точные остающиеся решения и запреты
 

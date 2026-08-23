@@ -119,5 +119,8 @@ Production release: **not authorized / not performed**
 - Seven-file isolated overlay hash match, PHP/schema/login/log health and service smoke 15/15 PASS.
 - Rollback archive `materials-ux-before-db6095c/files-before.tar.gz` pinned; fresh locked screenshot fixture recreated.
 - Rollback round-trip PASS: previous files restored/linted, `db6095c` automatically reapplied, seven hashes + schema + login verified; locked fixture remained intact with no unlock event.
-- Authenticated desktop/mobile before/after evidence is still required and has not been simulated.
+- Authenticated synthetic evidence completed: eight desktop/mobile PNGs cover HR Materials before/after context move, 390×844 context menu, employee Library `0 → 1`, route material card and mobile Library.
+- Employee direct access to Materials denied; HR allowed. Cross-user Library check: employee `1`, HR `0`, superadmin `0`.
+- Temporary credentials were randomised, sessions changed `1 → 0`, fixture cleanup removed `1` route point + `4` content objects and final synthetic content/points/events/Library counts were `0/0/0/0`.
+- Native HTML5 drag could not be marked browser-PASS through the in-app driver; context move is browser-PASS and the drag endpoint/audit/stale/cycle behavior remains covered by the 15/15 isolated service verifier.
 - Production was not changed by this block.

@@ -294,7 +294,7 @@ UX requirement: прогресс должен считаться не по за�
 
 ## 16. Materials / Personal Library — source audit после owner supplement
 
-Проверены `materials.mustache`, `knowledge.mustache`, `materials.js`, `_materials.scss` и server-rendered POST/notification flow. Это **source audit**: структура и предусмотренные состояния видны, но визуальный размер, контраст, фактическое позиционирование menu и mobile touch-поведение должны быть подтверждены authenticated screenshots.
+Проверены `materials.mustache`, `knowledge.mustache`, `materials.js`, `_materials.scss`, server-rendered POST/notification flow и authenticated synthetic rendering в loopback isolated Moodle. Desktop и 390×844 screenshots подтверждают визуальный размер, контекстное меню, breadcrumb, empty state и Personal Library before/after.
 
 ### Breadcrumb
 
@@ -347,4 +347,18 @@ UX requirement: прогресс должен считаться не по за�
 | 🟢 | **Action changes to loading state when pressed — Now that the changes are being saved, you want to show that action is in progress. You can do so with a loading spinner in the action, as the user's view will be on that element.** | Context button блокируется и меняет текст на «Перемещаем…»; drag move ставит workspace в `is-moving`, `aria-busy` и live-status. |
 | 🟢 | **Notify changes have been saved — The page will reload or update, and this is the critical part. The user should now be informed that their changes have been saved. They can now safely leave the page, knowing the details are locked in until they choose to change them again.** | Успешный move завершает POST/redirect и показывает Moodle success notification «Объект перемещён»; ошибки выводятся отдельно. |
 
-Source-аудит повлиял на код review-ветки: workspace снял ограничение `1480px`, breadcrumb получил корректную current-location семантику, empty/no-results разделены, появились actionable CTA и assistive move status. Эти изменения остаются **TEST IMPLEMENTATION** до authenticated desktop/mobile capture.
+Source-аудит повлиял на код review-ветки: workspace снял ограничение `1480px`, breadcrumb получил корректную current-location семантику, empty/no-results разделены, появились actionable CTA и assistive move status. Authenticated desktop/mobile capture подтверждён восемью PNG в `evidence/materials-library/`. Это всё ещё **CURRENT / TEST IMPLEMENTATION**, не автоматически принятый TARGET.
+
+## 17. Materials / Personal Library — authenticated rendered result
+
+| Check | Result | Evidence |
+|---|---|---|
+| HR editor allowed; employee denied | PASS | HR workspace renders; employee direct URL returns Moodle no-permission page. |
+| Context move state and result | PASS | Disabled before target, enabled after selection, success notification and destination breadcrumb after POST/redirect. |
+| Mobile context action 390×844 | PASS | Context menu, destination select and bottom navigation remain available. |
+| Personal Library rule | PASS in isolated fixture | Employee Library `0 → 1` only after guarded route-open learning event. |
+| Cross-user Library isolation | PASS | Employee `1`; HR `0`; superadmin `0`. |
+| Native HTML5 drag | NOT PROVEN by browser driver | Two CUA drag attempts produced no move; server move/audit/stale/cycle verifier remains 15/15 PASS. |
+| Cleanup | PASS | Passwords randomised, sessions `1 → 0`, fixture point/content removed, final synthetic counts `0/0/0/0`. |
+
+The evidence folder is intentionally synthetic and contains no real employee data or credentials.

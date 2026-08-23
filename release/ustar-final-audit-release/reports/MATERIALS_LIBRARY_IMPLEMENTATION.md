@@ -65,27 +65,30 @@ Deployment target was restricted to `/opt/ustar/test-env/ustar-final-audit-relea
 - Pre-overlay isolated rollback archive: `/opt/ustar/test-env/ustar-final-audit-release/release-backups/materials-ux-before-db6095c/files-before.tar.gz`, SHA-256 `3b4557e3e0019eb7a39cbab97fdae1851a1b7ebb3b438ceb4dbe6d442b34cb2e`.
 - Post-overlay PHP lint: PASS; route/schema verifiers: PASS; login HTTP `200`; recent container fatal/parse/unhandled scan: NONE.
 - The first service run correctly exposed fixture interference: the prepared visual before-state and the service verifier both own a synthetic route for the same synthetic employee. The guarded UI fixture was cleaned, service smoke passed **15/15**, and a fresh before-state was recreated (`content 90–93`, route point/version `17`). No real account or production data participated.
-- Fresh before-state has no unlock event; it is reserved for the pending employee Library before/after capture.
+- Fresh before-state had no unlock event and was used for the authenticated employee Library before/after capture.
 - Overlay rollback round-trip: previous seven files restored from the pinned archive and linted, then `db6095c` reapplied under an emergency recovery trap; all seven final hashes, schema and login HTTP `200` PASS. The locked screenshot fixture remained `4` content rows + `1` route point with `0` events and `0` Library rows. **MATERIALS_UX_ROLLBACK_ROUNDTRIP=PASS**.
 
-The executable synthetic verifier is `local_ustar/cli/test_materials_library.php`; it refuses non-loopback/non-isolated Moodle and deletes every test fixture in `finally`. Authenticated visual evidence uses `local_ustar/cli/materials_library_ui_fixture.php` with explicit `create`, `unlock` and `cleanup` actions; the current isolated state is intentionally the fresh `create` state and must be cleaned after screenshots.
+The executable synthetic verifier is `local_ustar/cli/test_materials_library.php`; it refuses non-loopback/non-isolated Moodle and deletes every test fixture in `finally`. Authenticated visual evidence used `local_ustar/cli/materials_library_ui_fixture.php` with explicit `create`, `unlock` and `cleanup` actions. The fixture is now cleaned.
 
-## Remaining browser verification
+## Authenticated browser verification
 
-The following visual checks still require authenticated synthetic browser access:
+Completed in the loopback isolated Moodle with synthetic accounts only:
 
-1. Capture HR/admin Materials before/after screenshots and exercise context move plus drag & drop.
-2. Capture employee personal Library before/after route unlock.
-3. Confirm 390×844 mobile layout keeps context actions available; drag & drop remains optional enhancement.
-4. Confirm deep breadcrumbs, menu positioning near the viewport edge, empty/no-results CTA and move success/error feedback in the rendered theme.
+1. HR Materials desktop before/after context move: PASS. The action changed disabled → enabled after destination selection, POST/redirect succeeded and the success notification appeared.
+2. Breadcrumb current location and one-level-up action after move: PASS.
+3. Employee Materials denial and HR allow: PASS.
+4. Employee Personal Library before `0` → after route-open event `1`: PASS.
+5. Cross-user isolation: PASS (`audit_employee=1`, `audit_hr=0`, `audit_superadmin=0`).
+6. 390×844 Materials and Personal Library captures: PASS; the mobile context menu remains reachable.
+7. Native HTML5 drag through the in-app browser driver: **NOT PROVEN**. Two coordinate-driven attempts produced no move, so no false browser-PASS is recorded. Context move is browser-PASS; drag endpoint/audit/stale/cycle behavior remains service-PASS in the 15/15 isolated verifier.
 
-Server-side equivalents for ACL, stale writes, cycles, gateway ordering, idempotency, `open`/`ack` and direct-ACL negative behavior have already passed as listed above.
+Eight PNGs plus the executed matrix and cleanup record are stored under `evidence/materials-library/`. After capture, temporary credentials were randomised, sessions changed `1 → 0`, browser reload returned to login, fixture cleanup removed `1` point + `4` content rows, and final synthetic content/points/events/Library counts were `0/0/0/0`.
 
 ## Rollback boundary
 
 Rollback requires the pre-deployment database and Moodle-code backup. Reverting code alone is insufficient after learning events have been written. Before rollback, export both new tables for audit preservation. The migration intentionally performs no destructive backfill or mutation of existing content, users, roles, routes or acknowledgements.
 
-Production deployment remains blocked until the owner separately authorizes it and the remaining authenticated browser/mobile screenshots pass.
+Production deployment remains blocked until the owner separately authorizes it. Browser/mobile screenshot gates are complete except for native drag automation, which remains explicitly unproven rather than inferred.
 
 ## Files changed by the final UX acceptance pass
 
@@ -97,4 +100,4 @@ Production deployment remains blocked until the owner separately authorizes it a
 - `local_ustar/amd/build/materials.min.js`
 - `theme_ustar/scss/_materials.scss`
 
-The Checklist Design source audit is recorded item-by-item in `UX_UI_AUDIT.md`. It does not substitute for the pending authenticated browser evidence.
+The Checklist Design source audit is recorded item-by-item in `UX_UI_AUDIT.md`; authenticated rendered evidence is now attached under `evidence/materials-library/`.

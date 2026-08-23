@@ -24,9 +24,10 @@ This bundle contains only reviewed deltas and repeatable audit/test helpers. It 
 - `local_ustar/cli/check_materials_library_schema.php` — isolated post-upgrade schema/invariant verifier.
 - `local_ustar/cli/test_materials_library.php` — self-cleaning, isolated-only 15-check service/ACL/idempotency/stale/cycle smoke.
 - `review-gate/ustar-review-gate.yml` — copy of the GitHub review-only static gate; it contains no deployment job.
-- `reports/MATERIALS_LIBRARY_IMPLEMENTATION.md` — exact source scope, pending runtime checks and rollback boundary.
+- `reports/MATERIALS_LIBRARY_IMPLEMENTATION.md` — exact source scope, authenticated runtime checks, cleanup and rollback boundary.
+- `evidence/materials-library/` — eight synthetic desktop/mobile PNGs plus the executed role, Library and cleanup matrix.
 
-This delta passed local static gates and isolated Moodle upgrade/schema, 15/15 synthetic service checks, role allow/deny, cleanup and independent rollback restore. Authenticated browser/mobile screenshots remain pending; the delta is not production-authorized.
+This delta passed local static gates and isolated Moodle upgrade/schema, 15/15 synthetic service checks, role allow/deny, authenticated desktop/mobile context move and Personal Library `0 → 1`, cleanup and independent rollback restore. Native HTML5 drag remains unproven by the in-app driver; the delta is not production-authorized.
 
 Login was validated at desktop 1440×900, tablet 768×1024 and mobile 390×844. Academy icons were browser-validated on Achievements, Games, Knowledge and Profile, including dark theme and lazy loading. Production asset use still requires licence/provenance confirmation.
 

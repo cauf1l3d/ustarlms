@@ -166,3 +166,12 @@ Revocation lifecycle:
 5. После теста manager assignment отсутствует, все synthetic passwords рандомизированы, все synthetic sessions удалены.
 
 Подтверждённый CURRENT conflict: роли `ustar_hrd` не существует, а `ustar_hr` одновременно содержит read-capability `hr` и write-capability `hrmanage`. Это нельзя исправлять автоматически до TARGET-решения о HR/HRD separation.
+
+## 9. Materials / Personal Library role boundary — authenticated browser
+
+- `audit_hr` opened the full Materials workspace and completed a synthetic context move.
+- `audit_employee` direct access to `/local/ustar/materials.php` returned the expected no-permission page for the HR capability boundary.
+- After a guarded route-open event, the per-user Library read model contained `audit_employee=1`, `audit_hr=0`, `audit_superadmin=0`; no cross-user row was created.
+- Mobile 390×844 checks covered both HR context actions and the employee Library.
+- Cleanup randomised temporary credentials, killed all guarded sessions (`1 → 0`) and returned the claimed browser tab to login.
+- Only synthetic isolated identities were used; production accounts and production permissions were unchanged.

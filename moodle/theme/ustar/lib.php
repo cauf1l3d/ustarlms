@@ -43,6 +43,7 @@ function theme_ustar_get_extra_scss($theme) {
         __DIR__ . '/scss/_product_parity.scss',
         __DIR__ . '/scss/_v15.scss',
         __DIR__ . '/scss/_login.scss',
+        __DIR__ . '/scss/_academy_icons.scss',
     ];
 
     $scss = '';

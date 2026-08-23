@@ -124,3 +124,13 @@ Production release: **not authorized / not performed**
 - Temporary credentials were randomised, sessions changed `1 → 0`, fixture cleanup removed `1` route point + `4` content objects and final synthetic content/points/events/Library counts were `0/0/0/0`.
 - Native HTML5 drag could not be marked browser-PASS through the in-app driver; context move is browser-PASS and the drag endpoint/audit/stale/cycle behavior remains covered by the 15/15 isolated service verifier.
 - Production was not changed by this block.
+
+## Block 14 — USCOIN CURRENT runtime and abuse audit
+
+- Loopback isolated ledger baseline: 8 rows, 8 unique keys, total +40, all `game_mastery`; no commerce/store tables.
+- `sync_uscoin.php --dry-run`: PASS with 2 pending historical awards, proving reconciliation is not automatic/complete.
+- Twelve concurrent manual posts with one exact key: 1 posted, 11 duplicates, 1 persisted row. Idempotency/race containment PASS.
+- The manual row had `actorid=NULL`; operator identity is not preserved by the CLI audit path.
+- Temporary `-9999` probe was accepted and produced balance `-9994`; atomic debit/non-negative balance guard is absent.
+- Exact race and overspend keys were deleted; baseline restored to 8 rows / +40 and synthetic employee balance 5.
+- Store, explicit reversal chain, approval/caps/anomaly rules and XP→USCOIN policy remain TARGET owner decisions. Production was unchanged.

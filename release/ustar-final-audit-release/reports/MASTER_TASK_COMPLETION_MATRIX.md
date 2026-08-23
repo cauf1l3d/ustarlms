@@ -75,7 +75,7 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Игры для ролей | PARTIAL | Employee/manager/HR/CEO surfaces доступны; empty active game обнаружена и скрыта test-only |
 | DGMJS/media/progress | PROVEN в isolated | Same-origin media resolver, wrong/correct, 2 attempts, mastery, 25 XP и idempotent +5 USCOIN PASS |
 | Game fix в production | NOT AUTHORIZED | Production CURRENT по-прежнему содержит host-bound media URL и пустую active game |
-| USCOIN | PARTIAL | Ledger/balance posting подтверждены; store, reversal, full audit и abuse/load scenarios не закрыты |
+| USCOIN | CURRENT RUNTIME / ABUSE AUDITED; TARGET OWNER DECISION | Isolated ledger snapshot, 12-way duplicate race, dry-run reconciliation and negative-balance probe documented. Idempotency PASS; store absent, manual actor null, overspend accepted, reversal/approval/caps absent. |
 | Leaderboard | OWNER DECISION | Seasons, leagues, team scope, privacy и fairness policy отсутствуют |
 | Theme light/dark | PROVEN технически | Toggle и persistence между страницами проверены; preset ownership/access policy остаётся TARGET-решением |
 | Tasks/notifications | OWNER DECISION | Конституционные B086–B091 не представлены first-class entities и E2E delivery/ack/retry |
@@ -134,6 +134,7 @@ Skill уже установлен в проекте, поэтому повтор
 | `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` | PROVEN, owner-approved gated scope reconciled from Google Drive |
 | `HR_TARGET_MIGRATION_DRY_RUN.md` | PROVEN recovery/digest/reconciliation and explicit apply blockers; private ID-level package kept outside Git |
 | `MATERIALS_LIBRARY_IMPLEMENTATION.md` | PROVEN source scope, isolated runtime, permissions, authenticated desktop/mobile evidence, cleanup and rollback; native drag browser automation remains explicitly unproven |
+| `USCOIN_CURRENT_RUNTIME_AUDIT.md` | PROVEN CURRENT ledger/race/overspend/store/reversal audit and cleanup; TARGET economy policy remains owner decision |
 
 ## 9. Точные остающиеся решения и запреты
 

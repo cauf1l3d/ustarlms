@@ -358,7 +358,7 @@ Source-аудит повлиял на код review-ветки: workspace сня
 | Mobile context action 390×844 | PASS | Context menu, destination select and bottom navigation remain available. |
 | Personal Library rule | PASS in isolated fixture | Employee Library `0 → 1` only after guarded route-open learning event. |
 | Cross-user Library isolation | PASS | Employee `1`; HR `0`; superadmin `0`. |
-| Native HTML5 drag | NOT PROVEN by browser driver | Two CUA drag attempts produced no move; server move/audit/stale/cycle verifier remains 15/15 PASS. |
+| Native HTML5 drag | NOT PROVEN by browser driver | Two USTAR attempts and a minimal standard HTML5 control produced no drag events; this isolates a driver limitation. Server move/audit/stale/cycle verifier remains 15/15 PASS. |
 | Cleanup | PASS | Passwords randomised, sessions `1 → 0`, fixture point/content removed, final synthetic counts `0/0/0/0`. |
 
 The evidence folder is intentionally synthetic and contains no real employee data or credentials.

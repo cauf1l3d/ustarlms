@@ -27,7 +27,7 @@ Classification: **CURRENT / TEST IMPLEMENTATION — NOT TARGET, NOT PRODUCTION**
 - At 390×844, Materials search, filters, catalog, bottom navigation and the context move menu remained usable without a desktop-only control.
 - Personal Library started at 0. The guarded isolated fixture then executed the same route assertion and learning-event service used by the gateway (`eventid=14`, synthetic `contentid=93`); the employee Library changed to 1 and rendered only that route material.
 - Cross-user read-model check after unlock: `audit_employee=1`, `audit_hr=0`, `audit_superadmin=0`.
-- HTML5 drag-and-drop could not be truthfully marked as browser-PASS: two coordinate-driven native drag attempts in the in-app browser driver produced no move. The underlying move endpoint, immutable audit, stale-write rejection and cycle rejection remain covered by the isolated 15/15 service smoke; keyboard/context move is browser-PASS. This automation boundary remains explicit.
+- HTML5 drag-and-drop could not be truthfully marked as browser-PASS: two coordinate-driven native drag attempts in the in-app browser driver produced no move. A separate no-auth control page with a standard `draggable="true"` source, `dataTransfer`, `dragover` and `drop` listeners then received **zero** `dragstart/dragover/drop` events from the same driver. This isolates the result to the automation surface rather than proving an USTAR defect. The underlying move endpoint, immutable audit, stale-write rejection and cycle rejection remain covered by the isolated 15/15 service smoke; keyboard/context move is browser-PASS.
 
 ## Cleanup and credential containment
 

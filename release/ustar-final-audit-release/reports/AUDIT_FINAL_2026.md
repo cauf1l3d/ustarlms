@@ -31,7 +31,7 @@
 - Одновременно действуют Moodle enrolment и USTAR routes, включая fallback на legacy JSON. Единого назначения обучения нет.
 - 52 должности объявлены в `structure.json`, 33 кода реально используются в custom field, маршрутов только 3.
 - Dashboard/role journeys не выведены из TARGET: generated model содержит `roles: 0`.
-- Экономика смешивает XP и USCOIN, а leaderboard глобально раскрывает ФИО и позиции и не реализует честные сезоны/группы.
+- Экономика смешивает XP и USCOIN. Isolated abuse audit подтвердил idempotency race guard, но также отсутствие store/reversal, `actorid=NULL` для manual CLI и возможность отрицательного баланса; leaderboard глобально раскрывает ФИО/позиции и не реализует честные сезоны/группы.
 - Игровое изображение вопроса хранится с absolute URL прежнего host и ломается при другом authenticated host; одна active game опубликована с 0 active questions. Isolated fix проверен, production unchanged.
 - Кнопка завершения материала и универсальные тесты с выбором ответа не обеспечивают риск-ориентированное evidence.
 - Источники истины, владельцы и lifecycle для сущностей TARGET не заполнены.

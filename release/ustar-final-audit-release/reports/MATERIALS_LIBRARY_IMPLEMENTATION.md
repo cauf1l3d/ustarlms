@@ -80,7 +80,7 @@ Completed in the loopback isolated Moodle with synthetic accounts only:
 4. Employee Personal Library before `0` → after route-open event `1`: PASS.
 5. Cross-user isolation: PASS (`audit_employee=1`, `audit_hr=0`, `audit_superadmin=0`).
 6. 390×844 Materials and Personal Library captures: PASS; the mobile context menu remains reachable.
-7. Native HTML5 drag through the in-app browser driver: **NOT PROVEN**. Two coordinate-driven attempts produced no move, so no false browser-PASS is recorded. Context move is browser-PASS; drag endpoint/audit/stale/cycle behavior remains service-PASS in the 15/15 isolated verifier.
+7. Native HTML5 drag through the in-app browser driver: **NOT PROVEN**. Two USTAR attempts produced no move; a minimal no-auth standard HTML5 control fixture also received zero `dragstart/dragover/drop` events from the same driver. This proves a driver coverage boundary, not an application failure. Context move is browser-PASS; drag endpoint/audit/stale/cycle behavior remains service-PASS in the 15/15 isolated verifier.
 
 Eight PNGs plus the executed matrix and cleanup record are stored under `evidence/materials-library/`. After capture, temporary credentials were randomised, sessions changed `1 → 0`, browser reload returned to login, fixture cleanup removed `1` point + `4` content rows, and final synthetic content/points/events/Library counts were `0/0/0/0`.
 

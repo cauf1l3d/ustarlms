@@ -79,7 +79,7 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Leaderboard | CURRENT RUNTIME / PRIVACY / FAIRNESS AUDITED; TARGET OWNER DECISION | Isolated payload: 90 participants, synthetic employee can receive 89 other names/positions/balances, 87 people are in XP ties but get distinct ranks, `reporting=0`, team current-rank uses global place, competition/season tables=0. Separate score/audience/season/fairness policy absent. |
 | Boards | CURRENT AUDITED; ISOLATED CONTAINMENT PROVEN; PRODUCTION P1 + TARGET OWNER DECISION | Production CURRENT race reproduces 24 successes/0 conflicts and 23 silent lost updates. Review candidate uses transactional row lock and passes exact 1/23, validation/ACL, cleanup and rollback→reapply. Sharing UI, collaborator policy, history/audit/archive/quota remain absent and undecided. |
 | Theme light/dark | PROVEN технически | Toggle и persistence между страницами проверены; preset ownership/access policy остаётся TARGET-решением |
-| Tasks/notifications | OWNER DECISION | Конституционные B086–B091 не представлены first-class entities и E2E delivery/ack/retry |
+| Tasks/notifications | CURRENT RUNTIME / ACL / UX AUDITED; TARGET OWNER DECISION | 70 Moodle alerts/48 unread/13 recipients, but 0 USTAR notifications/providers; no official/personal task, notification-rule, delivery or escalation tables; only enrolment sync scheduled. Synthetic notification/conversation/goal/review ACL and exact cleanup PASS. Goal unknown-action false-success is contained only in isolated with rollback. |
 
 ## 5. Фаза 7: Git
 
@@ -138,6 +138,7 @@ Skill уже установлен в проекте, поэтому повтор
 | `USCOIN_CURRENT_RUNTIME_AUDIT.md` | PROVEN CURRENT ledger/race/overspend/store/reversal audit and cleanup; TARGET economy policy remains owner decision |
 | `LEADERBOARD_CURRENT_RUNTIME_AUDIT.md` | PROVEN CURRENT audience/ranking/tie/team/season audit with zero DB mutations and temp cleanup; TARGET competition policy remains owner decision |
 | `BOARDS_CURRENT_RUNTIME_AUDIT.md` | PROVEN CURRENT ACL/lifecycle/24-worker lost-update audit; exact fixture cleanup and baseline restoration; TARGET collaboration policy remains owner decision |
+| `WORKFLOW_COMMUNICATION_CURRENT_RUNTIME_AUDIT.md` | PROVEN CURRENT notifications/messages/goals/reviews/HR-actions/task-runtime inventory, ACL, source-only Checklist Design audit, exact cleanup and isolated goal API guard rollback; TARGET workflow remains owner decision |
 
 ## 9. Точные остающиеся решения и запреты
 

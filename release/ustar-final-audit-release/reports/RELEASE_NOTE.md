@@ -159,3 +159,13 @@ Production release: **not authorized / not performed**
 - ACL, invalid JSON, >10 MiB, valid-after-rollback, 7→7 fixture cleanup, PHP lint, HTTP 200 and zero new critical log lines PASS.
 - Rollback roundtrip PASS: old SHA `f1b203e3…7c09d` reproduced 24/0; reapply SHA `678dea8f…95df1` restored 1/23.
 - Production was not changed. Board type, audience, history, retention and collaboration UX remain owner decisions.
+
+## Block 18 — Workflow/Communication CURRENT audit and goal API guard
+
+- Read-only isolated aggregate: 70 Moodle notifications, 48 unread, 13 recipients, 0 `local_ustar` notifications/providers; 11 messages/20 conversations; 2 completed goals; 1 review; 176 HR action rows.
+- No official/personal task, notification-rule, delivery-attempt or escalation table; no Bitrix processor/provider; only enrolment reconciliation is scheduled.
+- Synthetic owner/peer/HR runtime matrix PASS for notifications, foreign conversation, personal goals and HR reviews/audit action.
+- Exact cleanup restored notifications/USTAR notifications/goals/reviews/HR actions to `70/0/2/1/176`.
+- Old goal service falsely returned success for an unknown action. Isolated allowlist candidate rejects it; rollback to old SHA reproduced acceptance, reapply restored rejection.
+- Source-only Checklist Design audit recorded for Notifications and Chat. Authenticated visual evidence was not claimed because prior synthetic credentials/sessions were intentionally revoked.
+- Production was not changed. B086–B091 entities and channel/escalation policy remain owner decisions.

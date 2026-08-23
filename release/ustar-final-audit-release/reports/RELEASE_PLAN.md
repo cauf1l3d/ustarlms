@@ -84,7 +84,7 @@ Acceptance: dependency scan clean по согласованному threshold; n
 4. Skill / Level / Requirement / KPI / Development.
 5. Content ownership/version lifecycle.
 6. Learning Assignment / Route / Step / Evidence / Gate.
-7. Mentor / Goals / Reviews / Tasks / Notifications.
+7. Mentor / Goals / Reviews / Tasks / Notifications. CURRENT aggregate/ACL/UX audit is complete and isolated goal action guard is proven; TARGET entities, authority, delivery/Bitrix/retry/escalation and review lifecycle still require owner decisions.
 8. XP / USCOIN / Season / League / Ranking.
 9. Boards / Reporting / Integrations. Atomic expected-version save already passes isolated 24-worker `1 success / 23 conflicts` plus rollback; production deployment still needs approval, and audience/history/lifecycle semantics still need owner decisions.
 10. Role interfaces and journeys.

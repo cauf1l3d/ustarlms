@@ -57,6 +57,7 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 | USCOIN TARGET economy/store | `UNDECIDED` | Store, atomic debit, reversal, operator audit, caps/alerts or explicit non-spendable model | B049–B053 owner policy; CURRENT accepts overspend and manual actor is null |
 | Leaderboard / competitions | `UNDECIDED` | Separate competition score, versioned season/rules, comparable audience, privacy, ties, close/archive/reward lifecycle | B054–B057/B074–B085; CURRENT exposes global people/balances, assigns distinct ranks to ties and has no season entity |
 | Boards / collaboration | `UNDECIDED` | Personal vs official type, audience/editor rights, immutable versions/audit, retention/transfer/archive | Production CURRENT still loses 23/24 concurrent writes. Atomic row-lock containment is proven only in isolated (`1/23`, rollback/reapply PASS); all 7 current boards private and share UI absent |
+| Tasks / notifications / messaging | `UNDECIDED` | Separate official and personal tasks; USTAR notification severity/outbox; channel, Bitrix, retry/receipt/escalation; Moodle chat boundary | CURRENT has 70 Moodle alerts but 0 `local_ustar` notifications/providers, no task/rule/delivery/escalation tables and only enrolment sync. Goal API guard is isolated-PASS; business workflow is absent |
 
 Уже выполненные отдельно разрешённые production-блоки повторять не нужно:
 
@@ -77,7 +78,7 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 8. **Leaderboard:** persistent XP отдельно от competition score; season/rule version; comparable league/team scope and team-size/newcomer/transfer formula; tie timestamp/shared place; audience and visible fields (including USCOIN); creator/HRD approval; close/archive/reward/correction lifecycle? CURRENT isolated audit: 90 participants, 89 others disclosed to employee, 87 people in ties receive distinct ranks, `reporting=0`, season tables=0.
 9. **Boards:** personal scratchpad, team artifact or official record; direct-team/department/named audience; viewer/editor/share/transfer/archive rights; immutable history/audit/retention/quota/import policy; simultaneous editing or explicit conflict workflow? The technical lost-update containment is isolated-PASS but not deployed; sharing still has no UI.
 10. **Content governance:** owner, source of truth, review period и obsolete/version lifecycle?
-11. **Tasks/notifications:** owner, channels, acknowledgement, retry и escalation lifecycle?
+11. **Tasks/notifications:** official Task and separate Personal Task fields/lifecycle; allowed creators and organisational scope; notification normal/action-required/critical rules; Moodle chat boundary; channels, Bitrix, acknowledgement, receipt, retry, dead-letter and escalation? CURRENT isolated audit: 70 Moodle alerts, 0 USTAR alerts/providers, no task/rule/delivery/escalation tables.
 12. **AI tenancy:** dedicated tenant identifier, single default tenant или отключение до готовности?
 12. **Final TARGET:** кто подтверждает B001–B109 traceability и Final Review?
 

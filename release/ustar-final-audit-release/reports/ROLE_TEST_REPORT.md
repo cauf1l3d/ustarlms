@@ -201,3 +201,16 @@ Isolated evidence in `BOARDS_CURRENT_RUNTIME_AUDIT.md` proves:
 - two synthetic rows deleted and exact seven-row baseline restored.
 
 Result: CURRENT read/write ACL is technically bounded. The isolated candidate now passes exact 1/23 atomic-save acceptance and rollback→reapply, but production still has the old unsafe path; team semantics and conflict UX are not approved.
+
+## 12. Workflow/Communication ownership boundaries
+
+Self-cleaning isolated evidence in `WORKFLOW_COMMUNICATION_CURRENT_RUNTIME_AUDIT.md` proves:
+
+- an employee notification list excludes a peer's notification;
+- an employee cannot mark a peer notification read but can mark the employee's own row;
+- a foreign Moodle conversation is denied by core membership;
+- a personal goal can be created/completed/deleted only by its owner; peer write is denied;
+- an employee cannot create an HR review, invalid score is denied, HR can create one, and one matching HR action is written;
+- all synthetic rows were deleted and counters returned exactly to notifications/USTAR notifications/goals/reviews/HR actions `70/0/2/1/176`.
+
+The old goal service falsely accepted an unknown action; the isolated candidate now rejects it, and rollback→reapply reproduced both behaviours. These checks prove technical ACL only. No official/personal Task entity, manager authority scope, USTAR notification provider, Bitrix delivery, acknowledgement, retry or escalation exists.

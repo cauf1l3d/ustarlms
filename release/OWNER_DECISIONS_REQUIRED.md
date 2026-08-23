@@ -56,6 +56,7 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 | Materials / Personal Library | `UNDECIDED` | Explorer workspace, route-only learning event и персональная Library read model | Browser/context/mobile evidence PASS; native drag manual check, fresh backup, DB migration and post-deploy role/rollback gate |
 | USCOIN TARGET economy/store | `UNDECIDED` | Store, atomic debit, reversal, operator audit, caps/alerts or explicit non-spendable model | B049–B053 owner policy; CURRENT accepts overspend and manual actor is null |
 | Leaderboard / competitions | `UNDECIDED` | Separate competition score, versioned season/rules, comparable audience, privacy, ties, close/archive/reward lifecycle | B054–B057/B074–B085; CURRENT exposes global people/balances, assigns distinct ranks to ties and has no season entity |
+| Boards / collaboration | `UNDECIDED` | Personal vs official type, audience/editor rights, atomic saves, immutable versions/audit, retention/transfer/archive | CURRENT 24-way race: 24 success responses, final version 2, 23 silent lost updates; all 7 current boards private and share UI absent |
 
 Уже выполненные отдельно разрешённые production-блоки повторять не нужно:
 
@@ -74,9 +75,10 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 6. **Evidence/gate:** какие типы допуска требуют практического evidence, reviewer, expiry и revocation?
 7. **XP/USCOIN:** разрешён ли conversion; является ли USCOIN spendable; запрещён ли отрицательный баланс для purchase; какие store, price/stock/fulfilment, reversal, operator approval, caps и anomaly rules? CURRENT race-idempotency PASS, но manual actor null и overspend accepted.
 8. **Leaderboard:** persistent XP отдельно от competition score; season/rule version; comparable league/team scope and team-size/newcomer/transfer formula; tie timestamp/shared place; audience and visible fields (including USCOIN); creator/HRD approval; close/archive/reward/correction lifecycle? CURRENT isolated audit: 90 participants, 89 others disclosed to employee, 87 people in ties receive distinct ranks, `reporting=0`, season tables=0.
-9. **Content governance:** owner, source of truth, review period и obsolete/version lifecycle?
-10. **Tasks/notifications:** owner, channels, acknowledgement, retry и escalation lifecycle?
-11. **AI tenancy:** dedicated tenant identifier, single default tenant или отключение до готовности?
+9. **Boards:** personal scratchpad, team artifact or official record; direct-team/department/named audience; viewer/editor/share/transfer/archive rights; version/audit/retention/quota/import policy; simultaneous editing or single-editor lock? CURRENT atomic save fails 24-way race and sharing has no UI.
+10. **Content governance:** owner, source of truth, review period и obsolete/version lifecycle?
+11. **Tasks/notifications:** owner, channels, acknowledgement, retry и escalation lifecycle?
+12. **AI tenancy:** dedicated tenant identifier, single default tenant или отключение до готовности?
 12. **Final TARGET:** кто подтверждает B001–B109 traceability и Final Review?
 
 ## 4. Production release confirmation

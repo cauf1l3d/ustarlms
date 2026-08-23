@@ -126,6 +126,7 @@ UX requirement: прогресс должен считаться не по за�
 | Сохранение game progress | Wrong + correct attempts, mastery, XP and USCOIN ledger verified; unique mastery/ledger indexes present | Isolated PASS / business conflict | Concurrency/load test; approve or remove XP→USCOIN TARGET rule |
 | USCOIN balance/journal/store | First mastery posted one idempotent +5 ledger event; balance screen exists | Частично | Separate economy policy, store, reversal/audit and abuse E2E |
 | Leaderboard seasons/fairness/teams | Isolated: 90 participants; employee payload exposes 89 others/29 positions/coin fields; 87 tied people get distinct ranks; team card can show global `#10` instead of local `#2`; reporting and season tables empty | Не соответствует TARGET | Separate score; season/rule version; comparable audience; privacy fields; tie/team/newcomer/transfer/close policy |
+| Boards collaboration | 7 current boards are private; page says “Мои и командные”, but no share/read-only audience/delete/rename/history controls. 24 concurrent saves all report success while 23 documents are lost | Data-integrity FAIL / TARGET undecided | Atomic conflict UX; board type/owner/audience/editor; version recovery; archive/transfer/quota/import policy |
 | Theme colors/presets для пользователей | Light/dark toggle and Academy cards проверены; selected theme persists across pages | Частично | Preset access policy, contrast matrix and preference ownership |
 
 ## 8. Набор иконок

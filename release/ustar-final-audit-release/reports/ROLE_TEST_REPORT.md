@@ -188,3 +188,16 @@ Read-only isolated runtime evidence is recorded in `LEADERBOARD_CURRENT_RUNTIME_
 - probe mutations were zero and production identities were not used.
 
 Result: technical page access is proven, while TARGET privacy, comparable group and fair-rank semantics fail and remain owner decisions.
+
+## 11. Boards owner/team/write and concurrency boundaries
+
+Isolated evidence in `BOARDS_CURRENT_RUNTIME_AUDIT.md` proves:
+
+- private owner read PASS; same-department peer private read denied;
+- synthetic `sharedteam=1` same-department read PASS; cross-department HR and technical USTAR superadmin denied;
+- shared viewer write denied; only owner can save;
+- sequential stale save, invalid JSON and >10 MiB rejected;
+- critical concurrency FAIL: 24 workers using expected version 1 all received success, while final version stayed 2 and only one JSON document survived;
+- two synthetic rows deleted and exact seven-row baseline restored.
+
+Result: CURRENT read/write ACL is technically bounded, but team semantics are not approved and the non-atomic write path is unsafe for release.

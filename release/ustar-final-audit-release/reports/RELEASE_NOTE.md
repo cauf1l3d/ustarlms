@@ -142,3 +142,11 @@ Production release: **not authorized / not performed**
 - `reporting=0`; `Моя команда` falls back to same-position peers. Synthetic employee global rank `#10` remained in the current-rank card although the filtered team rank was `#2`.
 - No competition/season/league/ranking table exists. Calendar month uses operational completion/mastery timestamps; mandatory course/module completion automatically affects rank.
 - Probe mutations `0`; temporary files removed; post-probe USCOIN baseline remains 8 rows / +40. Production was unchanged.
+
+## Block 16 — Boards CURRENT ACL, lifecycle and concurrency audit
+
+- Baseline: 7 boards, 3 owners, 0 shared, 0 deleted, all JSON valid; exact baseline restored after probes.
+- Owner/private, same-department shared read, cross-department deny and shared-viewer write deny boundaries PASS. Invalid JSON and >10 MiB payload guards PASS.
+- Product has no checked share/delete/rename/transfer/history UI; arbitrary syntactically valid JSON is accepted without DGM schema validation.
+- Sequential stale version is rejected, but a row-lock barrier let 24 workers read version 1: all 24 returned success, final version was 2 and only one document remained. Silent lost update reproduced.
+- Two exact synthetic rows were deleted, remaining fixture rows 0; temporary files removed. Production was unchanged.

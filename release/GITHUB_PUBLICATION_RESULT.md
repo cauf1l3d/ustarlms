@@ -17,15 +17,17 @@
 | Leaderboard CURRENT privacy/fairness audit commit | `0c757f41872d8c14510a4a328d2ad3212fdae37f` |
 | Boards CURRENT lost-update audit commit | `7c9d15437dde87163d4e8ac9338699ce345a88dd` |
 | GitHub review gate for Boards audit payload | `success` — run `32643164685` |
-| Bundle manifest | `99` files — `PASS` |
+| Boards atomic-save isolated containment commit | `a08968a898730a25991d73f6e27b9a54d5e5fba9` |
+| GitHub review gate for containment payload | `success` — run `32644520489` |
+| Bundle manifest | `104` files — `PASS` |
 | Push mode | New branch, non-force |
 | Production release | Not authorized / not performed |
 
-Remote verification after the Boards audit push, before this record-only annotation:
+Remote verification after the Boards containment push, before this record-only annotation:
 
 ```text
 refs/heads/main                       5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
-refs/heads/ustar-final-audit-release  7c9d15437dde87163d4e8ac9338699ce345a88dd
+refs/heads/ustar-final-audit-release  a08968a898730a25991d73f6e27b9a54d5e5fba9
 ```
 
 The review branch is based directly on canonical `main` and includes these major logical payloads:
@@ -42,8 +44,9 @@ The review branch is based directly on canonical `main` and includes these major
 10. `3c8f884` — isolated USCOIN runtime/abuse audit: 12 concurrent duplicate submissions persisted once, while an overspend probe proved the missing non-negative balance invariant; all synthetic ledger rows were removed.
 11. `0c757f4` — read-only isolated Leaderboard privacy/fairness audit: 90 participants, 89 other identities/positions/coin fields visible to employee scope, 87 tied people split into distinct ranks, team-rank mismatch and no season entities; probe mutations zero.
 12. `7c9d154` — isolated Boards ACL/lifecycle audit and deterministic 24-worker race: all 24 expected-version saves returned success, final version remained 2 and 23 documents were silently lost; exact two-row fixture cleanup restored the seven-board baseline.
+13. `a08968a` — minimal transactional row-lock containment for Boards save, explicit rollback/rethrow, validation/ACL regression, exact 24-worker `1 success / 23 conflicts`, seven-row cleanup and old→new rollback roundtrip; installed only in isolated.
 
-Static GitHub gate: [USTAR review gate run 32643164685](https://github.com/cauf1l3d/ustarlms/actions/runs/32643164685) — `success` for exact audit head `7c9d15437dde87163d4e8ac9338699ce345a88dd`.
+Static GitHub gate: [USTAR review gate run 32644520489](https://github.com/cauf1l3d/ustarlms/actions/runs/32644520489) — `success` for exact containment head `a08968a898730a25991d73f6e27b9a54d5e5fba9`.
 
 The browser evidence also includes a same-driver minimal native HTML5 control. It emitted zero `dragstart`, `dragover` and `drop` events, isolating the automated native-drag gap to the browser driver rather than the USTAR application. Context-menu move, permission boundaries and the audited server-side move path remain proven.
 

@@ -22,10 +22,11 @@ This bundle contains only reviewed deltas and repeatable audit/test helpers. It 
 - `local_ustar/materials.php`, `material_bulk.php`, `classes/content_admin.php`, templates, AMD and `_materials.scss` — Explorer-style move with hierarchy lock, optimistic stale-write rejection, cycle protection, drag & drop and accessible context action.
 - `local_ustar/knowledge.php` and `templates/knowledge.mustache` — personal history only; CURRENT ACL/ack rows are not silently treated as TARGET learning evidence.
 - `local_ustar/cli/check_materials_library_schema.php` — isolated post-upgrade schema/invariant verifier.
+- `local_ustar/cli/test_materials_library.php` — self-cleaning, isolated-only 15-check service/ACL/idempotency/stale/cycle smoke.
 - `review-gate/ustar-review-gate.yml` — copy of the GitHub review-only static gate; it contains no deployment job.
 - `reports/MATERIALS_LIBRARY_IMPLEMENTATION.md` — exact source scope, pending runtime checks and rollback boundary.
 
-This delta passed local PHP/JavaScript/XMLDB/Mustache/SCSS static checks. It has **not** yet passed the required isolated Moodle upgrade, role/browser/mobile/screenshot and rollback verification, and is not production-authorized.
+This delta passed local static gates and isolated Moodle upgrade/schema, 15/15 synthetic service checks, role allow/deny, cleanup and independent rollback restore. Authenticated browser/mobile screenshots remain pending; the delta is not production-authorized.
 
 Login was validated at desktop 1440×900, tablet 768×1024 and mobile 390×844. Academy icons were browser-validated on Achievements, Games, Knowledge and Profile, including dark theme and lazy loading. Production asset use still requires licence/provenance confirmation.
 

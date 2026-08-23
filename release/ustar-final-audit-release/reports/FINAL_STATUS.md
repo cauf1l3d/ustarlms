@@ -36,7 +36,7 @@ Release status: **NO-GO / production approval not granted**
 - Final post-change isolated snapshot `2026-08-23_01-00-56` and independent RC restore on `18082` PASS; exact login/icon/game hashes, 12 assets, schema/login/HR-404 and all 52 role entry tests verified. RC containers stopped; data retained.
 - Requirement-by-requirement closure recorded in `MASTER_TASK_COMPLETION_MATRIX.md`; Checklist Design review expanded across login, search, empty states, icons and accessibility.
 - Owner supplement `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` reconciled from Google Drive and added as mandatory gated scope for HR TARGET migration and Materials/Library UX.
-- Materials/Personal Library source implementation completed in the review branch only: route-gated learning events, personal read model, `open`/`ack` content requirements, audited drag/drop and context move with hierarchy lock/stale-write/cycle protection. Static gates PASS; isolated Moodle runtime evidence remains pending.
+- Materials/Personal Library implementation deployed only to loopback isolated Moodle: migration/schema PASS, 15/15 synthetic service checks PASS, role allow/deny PASS, cleanup PASS, login/schema health PASS and independent pre-change rollback restore PASS. Authenticated browser/mobile before/after screenshots remain pending.
 
 ## Blocked / pending
 
@@ -47,7 +47,7 @@ Release status: **NO-GO / production approval not granted**
 - TARGET decision for AI tenancy: `institution` is a position field, not a valid tenant source; automatic repair would alter access semantics. `core_publicpaths` direct disclosure was disproved (308→404), though optional check-noise cleanup remains.
 - TARGET decision and implementation for missing HRD/HR separation.
 - Exact versioned account action list (`KEEP / MERGE / DISABLE / DELETE`) and CURRENT → TARGET mapping for `employee`, `manager`, `retail_manager`, `hr`, `hrd`, `ceo`, `system_admin`; no real account mutation is authorised yet.
-- Isolated runtime verification of the review-only Materials/Library implementation: upgrade/schema CLI, employee/HR permissions, mobile/browser screenshots, stale/cycle/guessed-URL negative tests and rollback restore. Source/static implementation is complete; production deployment is not authorised.
+- Authenticated isolated browser verification of Materials/Library: HR context/drag move screenshots, employee Library before/after route unlock and 390×844 mobile capture. Server-side migration, permissions, negative tests, cleanup and rollback restore have passed; production deployment is not authorised.
 - Production-grade sealed/offsite backup, RPO/RTO measurement and production rollback rehearsal.
 - Moodle/Next.js security upgrades.
 - TARGET confirmation and complete B001–B109 traceability.

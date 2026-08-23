@@ -35,20 +35,36 @@ php local/ustar/cli/check_learning_route_v2_schema.php
 php local/ustar/cli/check_materials_library_schema.php
 ```
 
-Role/browser verification still required in the isolated environment:
+## Executed isolated verification — 2026-08-23
 
-1. HR/HRD/system admin can move a file through context action and drag & drop.
-2. Employee cannot call the move POST action.
-3. A stale move form is rejected and does not write an audit event.
-4. A folder cannot be moved into itself or a descendant.
-5. A locked/later route point cannot unlock a material through a guessed gateway URL.
-6. `open` unlocks the material once and creates one idempotent event.
-7. `ack` unlocks on open but completes the route requirement only after version-specific acknowledgement.
-8. Direct Knowledge/ACL access cannot populate the Library.
-9. Mobile layout keeps context actions available; drag & drop is optional enhancement.
+Deployment target was restricted to `/opt/ustar/test-env/ustar-final-audit-release`, mounted only by `ustar_audit_moodle` on server loopback `127.0.0.1:18080`.
+
+- Pre-change code + DB backup: `release-backups/materials-library-before-2026-08-23_13-54-24/`; both SHA-256 checks PASS.
+- Review archive SHA-256: `167662d4b26597eafaf93106d7e336bdad51f36afd69b531cc5b4e06cea0bcab`.
+- Moodle upgrade to plugin/schema `2026082301`: PASS.
+- Moodle database schema, Route v2 schema and Materials/Library schema verifiers: PASS.
+- Initial event/library counts: `0 / 0`; no CURRENT backfill occurred.
+- Synthetic service smoke: **15/15 PASS** — current-point gateway, idempotent open event, personal unlock, direct-ACL negative, acknowledgement separation, employee move denial, admin move, immutable audit, stale-write rejection and cycle rejection.
+- Cleanup after smoke: content events `0`, library rows `0`, synthetic route points `0`, synthetic content rows `0`.
+- Entry-point roles: `audit_hr` Materials allow PASS; `audit_superadmin` bulk allow PASS; `audit_employee` Materials and bulk denial PASS.
+- Cache purge, maintenance disable, login HTTP `200` and final Moodle schema: PASS; recent container log contained no PHP fatal/error from this block.
+- Independent rollback restore root: `/opt/ustar/test-env/ustar-materials-rollback-verify-2026-08-23_13-54-24`.
+- Restored code version `2026082002`; `learning_events.php` absent; restored DB version `2026082002`; both new tables absent. Rollback PostgreSQL container stopped with retained root/volume. **ROLLBACK_REHEARSAL=PASS**.
+
+The executable synthetic verifier is `local_ustar/cli/test_materials_library.php`; it refuses non-loopback/non-isolated Moodle and deletes every test fixture in `finally`.
+
+## Remaining browser verification
+
+The following visual checks still require authenticated synthetic browser access:
+
+1. Capture HR/admin Materials before/after screenshots and exercise context move plus drag & drop.
+2. Capture employee personal Library before/after route unlock.
+3. Confirm 390×844 mobile layout keeps context actions available; drag & drop remains optional enhancement.
+
+Server-side equivalents for ACL, stale writes, cycles, gateway ordering, idempotency, `open`/`ack` and direct-ACL negative behavior have already passed as listed above.
 
 ## Rollback boundary
 
 Rollback requires the pre-deployment database and Moodle-code backup. Reverting code alone is insufficient after learning events have been written. Before rollback, export both new tables for audit preservation. The migration intentionally performs no destructive backfill or mutation of existing content, users, roles, routes or acknowledgements.
 
-Production deployment remains blocked until the owner separately authorizes it and the isolated checks above pass with before/after screenshots.
+Production deployment remains blocked until the owner separately authorizes it and the remaining authenticated browser/mobile screenshots pass.

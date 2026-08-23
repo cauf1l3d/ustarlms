@@ -70,8 +70,8 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Live search dialog/dropdown | PROVEN технически | Два символа дают inline results; Escape/focus return проверены; отдельная search page не требуется |
 | Search ACL/relevance/privacy | OWNER DECISION | TARGET sources и disclosure policy не утверждены |
 | Команда: CEO → директор → manager → я; CEO full tree | OWNER DECISION | `reporting=0`; canonical manager relation отсутствует |
-| Материалы workspace | REVIEW SOURCE IMPLEMENTED / RUNTIME PENDING | Полноэкранный каталог, folders/breadcrumbs/back/open/edit дополнены drag & drop и context move; server-side capability, hierarchy lock, stale-write/cycle checks и immutable move audit реализованы в review-ветке. Isolated role/mobile/screenshots/rollback ещё не выполнены |
-| Personal Library rule | REVIEW SOURCE IMPLEMENTED / RUNTIME PENDING | Route content requirements `open/ack`, guarded gateway, immutable idempotent events и personal Library read model реализованы без CURRENT backfill. Isolated upgrade, guessed-URL/ACL/idempotency/version tests и rollback evidence ещё обязательны |
+| Материалы workspace | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Полноэкранный каталог дополнен drag/drop + context move; schema, hierarchy lock, stale/cycle, employee deny/admin allow, immutable audit, cleanup и independent rollback restore PASS. Нужны authenticated before/after и 390×844 screenshots |
+| Personal Library rule | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Route `open/ack`, guarded gateway, idempotent event, personal read model, direct-ACL negative и no-backfill PASS в synthetic isolated smoke 15/15. Нужны визуальные employee Library before/after screenshots |
 | Игры для ролей | PARTIAL | Employee/manager/HR/CEO surfaces доступны; empty active game обнаружена и скрыта test-only |
 | DGMJS/media/progress | PROVEN в isolated | Same-origin media resolver, wrong/correct, 2 attempts, mastery, 25 XP и idempotent +5 USCOIN PASS |
 | Game fix в production | NOT AUTHORIZED | Production CURRENT по-прежнему содержит host-bound media URL и пустую active game |

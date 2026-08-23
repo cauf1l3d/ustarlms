@@ -19,15 +19,17 @@
 | GitHub review gate for Boards audit payload | `success` — run `32643164685` |
 | Boards atomic-save isolated containment commit | `a08968a898730a25991d73f6e27b9a54d5e5fba9` |
 | GitHub review gate for containment payload | `success` — run `32644520489` |
-| Bundle manifest | `104` files — `PASS` |
+| Workflow/Communication CURRENT audit commit | `a64eb5a1ff91b64d252c9180f1063791ddc1d784` |
+| GitHub review gate for workflow payload | `success` — run `32645801655` |
+| Bundle manifest | `110` files — `PASS` |
 | Push mode | New branch, non-force |
 | Production release | Not authorized / not performed |
 
-Remote verification after the Boards containment push, before this record-only annotation:
+Remote verification after the Workflow/Communication audit push, before this record-only annotation:
 
 ```text
 refs/heads/main                       5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
-refs/heads/ustar-final-audit-release  a08968a898730a25991d73f6e27b9a54d5e5fba9
+refs/heads/ustar-final-audit-release  a64eb5a1ff91b64d252c9180f1063791ddc1d784
 ```
 
 The review branch is based directly on canonical `main` and includes these major logical payloads:
@@ -45,8 +47,9 @@ The review branch is based directly on canonical `main` and includes these major
 11. `0c757f4` — read-only isolated Leaderboard privacy/fairness audit: 90 participants, 89 other identities/positions/coin fields visible to employee scope, 87 tied people split into distinct ranks, team-rank mismatch and no season entities; probe mutations zero.
 12. `7c9d154` — isolated Boards ACL/lifecycle audit and deterministic 24-worker race: all 24 expected-version saves returned success, final version remained 2 and 23 documents were silently lost; exact two-row fixture cleanup restored the seven-board baseline.
 13. `a08968a` — minimal transactional row-lock containment for Boards save, explicit rollback/rethrow, validation/ACL regression, exact 24-worker `1 success / 23 conflicts`, seven-row cleanup and old→new rollback roundtrip; installed only in isolated.
+14. `a64eb5a` — PII-free Workflow/Communication aggregate, synthetic notification/conversation/goal/review ACL, Checklist Design source audit, exact cleanup and isolated unknown-goal-action rejection with rollback proof; B086–B091 remains owner-decided.
 
-Static GitHub gate: [USTAR review gate run 32644520489](https://github.com/cauf1l3d/ustarlms/actions/runs/32644520489) — `success` for exact containment head `a08968a898730a25991d73f6e27b9a54d5e5fba9`.
+Static GitHub gate: [USTAR review gate run 32645801655](https://github.com/cauf1l3d/ustarlms/actions/runs/32645801655) — `success` for exact workflow-audit head `a64eb5a1ff91b64d252c9180f1063791ddc1d784`.
 
 The browser evidence also includes a same-driver minimal native HTML5 control. It emitted zero `dragstart`, `dragover` and `drop` events, isolating the automated native-drag gap to the browser driver rather than the USTAR application. Context-menu move, permission boundaries and the audited server-side move path remain proven.
 

@@ -13,10 +13,7 @@ class get_team extends base {
         return new external_function_parameters([]);
     }
 
-    /**
-     * Head sees ONLY own department members (hierarchical visibility).
-     * Superadmin sees everyone. Employees get 403 (capability check).
-     */
+    /** Managers see explicit direct reports; superadmin sees the company projection. */
     public static function execute(): array {
         global $USER, $DB;
         self::guard();
@@ -25,15 +22,12 @@ class get_team extends base {
         $resolved = structure::resolve_user($USER->id);
         $st = $resolved['structure'];
         $role = $resolved['role'];
-        $mydept = $resolved['position']['department'] ?? null;
-
-        if ($role !== 'head' && $role !== 'superadmin') {
-            throw new \required_capability_exception(
-                \context_system::instance(),
-                'local/ustar:viewteam',
-                'nopermissions',
-                ''
-            );
+        $allowedids = null;
+        if ($role !== 'superadmin') {
+            $allowedids = [];
+            foreach (\local_ustar\org::direct_reports((int)$USER->id) as $report) {
+                $allowedids[(int)$report['id']] = true;
+            }
         }
 
         // Users whose profile field ustar_position belongs to visible departments.
@@ -59,8 +53,8 @@ class get_team extends base {
             if (!$pos) {
                 continue;
             }
-            if ($role !== 'superadmin' && $pos['department'] !== $mydept) {
-                continue; // Hierarchical visibility boundary.
+            if (is_array($allowedids) && !isset($allowedids[(int)$rec->userid])) {
+                continue;
             }
             $courses = self::user_courses((int)$rec->userid);
             $sum = 0;
@@ -79,7 +73,7 @@ class get_team extends base {
         }
         usort($team, fn($a, $b) => $b['avgProgress'] <=> $a['avgProgress']);
 
-        return ['json' => json_encode(['team' => $team, 'scope' => $role === 'superadmin' ? 'company' : 'department'],
+        return ['json' => json_encode(['team' => $team, 'scope' => $role === 'superadmin' ? 'company' : 'direct_reports'],
             JSON_UNESCAPED_UNICODE)];
     }
 

@@ -1454,6 +1454,17 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082301, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082302) {
+        $dbman = $DB->get_manager();
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026082302, 'local', 'ustar');
+    }
+
 
     return true;
 }

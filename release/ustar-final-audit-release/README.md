@@ -67,6 +67,10 @@ Login was validated at desktop 1440×900, tablet 768×1024 and mobile 390×844. 
 - `deploy_evidence_checklist_guard_isolated.sh` — exact isolated candidate→old→candidate verifier with backup hashes and runtime probes.
 - `organization_reporting_runtime_probe.php` — PII-free inventory plus self-cleaning reporting/access/account-type boundary probe.
 - `deploy_organization_reporting_guard_isolated.sh` / `verify_organization_reporting_guard_roundtrip.sh` — isolated-only guarded install and exact CURRENT→candidate rollback proof for Organization/Team integrity.
+- `target_core_runtime_probe.php` — self-cleaning A+B+C TARGET runtime matrix for direct-report ACL, Evidence/Gate/Checklist history, separate task types and canonical notifications.
+- `deploy_target_core_isolated.sh` / `verify_target_core_roundtrip.sh` — full isolated DB/file backup, schema upgrade and exact pre-Core→candidate rollback proof.
+- `employee_lifecycle_runtime_probe.php` — self-cleaning HR import/bulk-position access synchronization boundary matrix.
+- `deploy_employee_lifecycle_guard_isolated.sh` / `verify_employee_lifecycle_guard_roundtrip.sh` — isolated CURRENT→candidate lifecycle guard proof.
 
 The operational scripts record the exact 2026-08-23 audit paths/hashes. Role fixtures and entry tests allow only the explicit isolated roots `18080`, `18081` and `18082`. Review and update their guards for any later snapshot; never bypass a mismatch.
 

@@ -37,10 +37,15 @@ jobs:
           import xml.etree.ElementTree as ET
 
           root = ET.parse('moodle/local/ustar/db/install.xml').getroot()
-          assert root.attrib['VERSION'] == '2026082301'
+          assert root.attrib['VERSION'] == '2026082302'
           names = [table.attrib['NAME'] for table in root.find('TABLES')]
           assert len(names) == len(set(names))
-          assert {'local_ustar_content_events', 'local_ustar_library'} <= set(names)
+          assert {
+              'local_ustar_content_events', 'local_ustar_library',
+              'local_ustar_evidence_rec', 'local_ustar_gate_decisions',
+              'local_ustar_official_tasks', 'local_ustar_personal_tasks',
+              'local_ustar_notifications', 'local_ustar_notify_delivery',
+          } <= set(names)
 
           for path in pathlib.Path('moodle/local/ustar/templates').glob('*.mustache'):
               stack = []
@@ -58,7 +63,13 @@ jobs:
 
       - name: Review-branch invariants
         run: |
-          grep -q '\$plugin->version   = 2026082301;' moodle/local/ustar/version.php
+          grep -q '\$plugin->version   = 2026082302;' moodle/local/ustar/version.php
+          grep -q 'function record_evidence' moodle/local/ustar/classes/target_core.php
+          grep -q 'function decide_gate' moodle/local/ustar/classes/target_core.php
+          grep -q 'function create_official_task' moodle/local/ustar/classes/target_core.php
+          grep -q 'function save_personal_task' moodle/local/ustar/classes/target_core.php
+          grep -q 'function notify' moodle/local/ustar/classes/target_core.php
+          grep -q "'scope' => \$role === 'superadmin' ? 'company' : 'direct_reports'" moodle/local/ustar/classes/external/get_team.php
           grep -q 'route_material_opened' moodle/local/ustar/classes/learning_events.php
           grep -q 'data-u-move-form' moodle/local/ustar/templates/materials.mustache
           grep -q 'aria-current="page"' moodle/local/ustar/templates/materials.mustache

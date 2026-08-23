@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026082301" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026082302" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -368,6 +368,206 @@
         <INDEX NAME="user_content_uix" UNIQUE="true" FIELDS="userid, contentid" />
         <INDEX NAME="user_access_idx" UNIQUE="false" FIELDS="userid, lastaccessedat" />
         <INDEX NAME="content_idx" UNIQUE="false" FIELDS="contentid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_evidence_rec" COMMENT="Immutable TARGET evidence records">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="skillid" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="evidencetype" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sourcekind" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sourceid" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="outcome" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="valid" SEQUENCE="false" />
+        <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="detailsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="recordedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="idempotencykey" />
+        <INDEX NAME="user_status_exp_idx" UNIQUE="false" FIELDS="userid, status, expiresat" />
+        <INDEX NAME="skill_position_idx" UNIQUE="false" FIELDS="skillid, positionid, status" />
+        <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcekind, sourceid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_evidence_evt" COMMENT="Immutable evidence corrections and revocations">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="evidenceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="eventtype" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="reason" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="replacementid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="evidence_time_idx" UNIQUE="false" FIELDS="evidenceid, timecreated" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_gate_defs" COMMENT="Versioned critical-operation gate definitions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="code" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="operationkey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="riskclass" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="policyjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
+        <FIELD NAME="effectivedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="code_version_uix" UNIQUE="true" FIELDS="code, versionno" />
+        <INDEX NAME="operation_status_idx" UNIQUE="false" FIELDS="operationkey, status, effectivedate" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_gate_decisions" COMMENT="Immutable human gate decisions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="gateid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="decision" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="reason" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="evidencejson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="supersedesid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="decidedby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="user_gate_time_idx" UNIQUE="false" FIELDS="userid, gateid, timecreated" />
+        <INDEX NAME="assignment_idx" UNIQUE="false" FIELDS="assignmentid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_check_submits" COMMENT="Immutable mirrored checklist submissions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="checklistkey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="definitionversion" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="perspective" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="workdate" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="answersjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="issuesjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="correctionofid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="submittedby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="user_check_date_idx" UNIQUE="false" FIELDS="userid, checklistkey, workdate" />
+        <INDEX NAME="assignment_date_idx" UNIQUE="false" FIELDS="assignmentid, workdate" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_official_tasks" COMMENT="Official learning and development obligations">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="sourcekind" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sourceid" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="category" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="completionjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="open" SEQUENCE="false" />
+        <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="dueat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="completedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="archivedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="user_status_due_idx" UNIQUE="false" FIELDS="userid, status, dueat" />
+        <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcekind, sourceid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_personal_tasks" COMMENT="Private personal self-organisation tasks">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="open" SEQUENCE="false" />
+        <FIELD NAME="dueat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="sharedwithjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="user_status_due_idx" UNIQUE="false" FIELDS="userid, status, dueat" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_workflow_events" COMMENT="Immutable task and workflow history">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="entitytype" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="entityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="eventtype" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="detailsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="entity_time_idx" UNIQUE="false" FIELDS="entitytype, entityid, timecreated" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_notifications" COMMENT="Canonical actionable USTAR notifications">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="severity" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="normal" SEQUENCE="false" />
+        <FIELD NAME="eventtype" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="actionurl" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="dueat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="unread" SEQUENCE="false" />
+        <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ackat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="idempotencykey" />
+        <INDEX NAME="user_status_time_idx" UNIQUE="false" FIELDS="userid, status, timecreated" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_notify_delivery" COMMENT="Bitrix and local notification delivery attempts">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="notificationid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="channel" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" />
+        <FIELD NAME="attempts" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="nextattempt" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="providerref" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="lasterror" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="notification_channel_uix" UNIQUE="true" FIELDS="notificationid, channel" />
+        <INDEX NAME="status_next_idx" UNIQUE="false" FIELDS="status, nextattempt" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_coin_ledger" COMMENT="USCOIN immutable transaction ledger">

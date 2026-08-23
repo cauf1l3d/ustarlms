@@ -59,6 +59,7 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 | Boards / collaboration | `UNDECIDED` | Personal vs official type, audience/editor rights, immutable versions/audit, retention/transfer/archive | Production CURRENT still loses 23/24 concurrent writes. Atomic row-lock containment is proven only in isolated (`1/23`, rollback/reapply PASS); all 7 current boards private and share UI absent |
 | Tasks / notifications / messaging | `UNDECIDED` | Separate official and personal tasks; USTAR notification severity/outbox; channel, Bitrix, retry/receipt/escalation; Moodle chat boundary | CURRENT has 70 Moodle alerts but 0 `local_ustar` notifications/providers, no task/rule/delivery/escalation tables and only enrolment sync. Goal API guard is isolated-PASS; business workflow is absent |
 | Evidence / Checklists / Gate | `UNDECIDED` | Risk-based Evidence policy, mirrored adaptation checklists, reviewer authority and scoped Gate decision/expiry/revocation/history | CURRENT has 12 activity mappings, 2 checklist definitions and one automatic `previous_adaptation` gate. Fail-closed Evidence/catalog guards are isolated-PASS; business admission lifecycle is absent |
+| Organization / Reporting / Team | `UNDECIDED` | Canonical staff-place/assignment/reporting model; effective dates, vacancy/temp assignment, approval/history; direct-report vs department/named scope; CEO drill-down | CURRENT declares 16 departments/52 positions but has 0 reporting lines. Isolated truth/access/integrity guard and rollback PASS; it does not approve CURRENT org catalogs as TARGET |
 
 Уже выполненные отдельно разрешённые production-блоки повторять не нужно:
 
@@ -81,7 +82,8 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 10. **Content governance:** owner, source of truth, review period и obsolete/version lifecycle?
 11. **Tasks/notifications:** official Task and separate Personal Task fields/lifecycle; allowed creators and organisational scope; notification normal/action-required/critical rules; Moodle chat boundary; channels, Bitrix, acknowledgement, receipt, retry, dead-letter and escalation? CURRENT isolated audit: 70 Moodle alerts, 0 USTAR alerts/providers, no task/rule/delivery/escalation tables.
 12. **AI tenancy:** dedicated tenant identifier, single default tenant или отключение до готовности?
-12. **Final TARGET:** кто подтверждает B001–B109 traceability и Final Review?
+13. **Organization/Team scope:** manager Team means direct reports, department, named responsibility scope or an approved composition; what may CEO drill into by default?
+14. **Final TARGET:** кто подтверждает B001–B109 traceability и Final Review?
 
 ## 4. Production release confirmation
 

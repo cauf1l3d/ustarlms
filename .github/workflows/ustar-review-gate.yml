@@ -76,6 +76,15 @@ jobs:
           grep -q 'Checklist item ids must be non-empty and unique' moodle/local/ustar/classes/external/hr_save_checklists.php
           grep -q 'Checklist catalog changed; reload it before publishing' moodle/local/ustar/classes/external/hr_save_checklists.php
           grep -q 'CURRENT runtime audit' release/ustar-final-audit-release/reports/EVIDENCE_CHECKLIST_GATE_CURRENT_RUNTIME_AUDIT.md
+          grep -q 'function reporting_configured' moodle/local/ustar/classes/org.php
+          grep -q "require_capability('local/ustar:viewteam'" moodle/local/ustar/classes/external/get_team.php
+          grep -q 'accounts::participates' moodle/local/ustar/classes/external/get_team.php
+          grep -q 'ORGANIZATION_REPORTING_GUARD_ROLLBACK_ROUNDTRIP=PASS' release/ustar-final-audit-release/reports/ORGANIZATION_REPORTING_TEAM_CURRENT_RUNTIME_AUDIT.md
+          cmp moodle/local/ustar/classes/org.php release/ustar-final-audit-release/local_ustar/classes/org.php
+          cmp moodle/local/ustar/classes/external/get_team.php release/ustar-final-audit-release/local_ustar/classes/external/get_team.php
+          cmp moodle/local/ustar/team.php release/ustar-final-audit-release/local_ustar/team.php
+          cmp moodle/local/ustar/executive.php release/ustar-final-audit-release/local_ustar/executive.php
+          cmp moodle/local/ustar/templates/executive.mustache release/ustar-final-audit-release/local_ustar/templates/executive.mustache
           python3 - <<'PY'
           from pathlib import Path
 

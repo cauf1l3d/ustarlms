@@ -19,7 +19,7 @@ Architecture Studio сохранил полезные продуктовые н�
 |---|---|---|---|---|
 | B001–B003 | Человек, учётная запись, создание | `person`, `account-type`, `lifecycle` | Частично | Self-registration + игры до HRD approval не согласованы с назначением сотрудника на штатное место и контролем доступа |
 | B004–B010 | Карьера, уровни, следующая должность | `career`, `position`, `requirements` | Частично | Решение career формально resolved, но текст «нужно определиться»; нет модели перехода и истории |
-| B011 | Руководитель/подчинение | `management` | Не реализовано | reporting=0; owner/manager chain отсутствует |
+| B011 | Руководитель/подчинение | `management` | Частично / конфликт | reporting table exists but rows=0; isolated guard now tells the truth and enforces explicit `viewteam`, while direct-report versus department Team scope remains an owner decision |
 | B012–B020 | Навыки, уровни, KPI, development | `skill`, `skill-level`, `requirements`, `hr` | Частично | KPI и индивидуальный development plan не являются first-class entities |
 | B021–B024 | Материалы, владелец, актуальность, версии | `materials` | Частично | owner/sourceOfTruth пусты; нет обязательного review lifecycle |
 | B025–B031 | Курсы, активности, completion | `courses=REMOVE`, `activities`, `completion` | Конфликт | Удаление courses допустимо только из пользовательского языка; Moodle course остаётся техническим контейнером. Кнопка «завершить» недостаточна для risk evidence |
@@ -30,8 +30,8 @@ Architecture Studio сохранил полезные продуктовые н�
 | B069–B077 | Goals и progress | `hr`, `reporting`, `lifecycle` | Частично | Goals представлены 2 строками current; ownership, cadence и linkage не определены |
 | B078–B085 | Competition, league, ranking fairness | `games`, `economy`, `boards` | Конфликт | Isolated: 90 participants, 89 others disclosed, 87 tied people split into distinct ranks, same-position team fallback, global rank in team card; competition/season/league tables=0 |
 | B086–B091 | Notifications и tasks | 70 Moodle alerts, 0 USTAR alerts/providers; Moodle messages; 2 personal goal rows; no official/personal task, rule, delivery or escalation tables | Не смоделировано | Moodle projection ≠ USTAR Notification; Goal/Checklist/Chat ≠ Task. Approve entities, authority, event/severity/channel/Bitrix/receipt/retry/escalation lifecycle |
-| B092–B095 | Role dashboards | `role-ui` | Не сгенерировано | TARGET model `roles: 0`; role journey и interface contract отсутствуют |
-| B096–B101 | Org, staff place, vacancy, assignment | `organization`, `department`, `position`, `management` | Частично/конфликт | Список людей подменяет оргмодель; нет staff place/vacancy/temp assignment/versioned structure |
+| B092–B095 | Role dashboards | `role-ui` | Частично / не сгенерировано как TARGET | CURRENT employee/manager/CEO screens exist and isolated capability boundaries are proven, but TARGET model `roles: 0`; role journey and interface contract remain absent |
+| B096–B101 | Org, staff place, vacancy, assignment | `organization`, `department`, `position`, `management` | Частично/конфликт | 16 departments / 52 positions / reporting=0; flat people-as-hierarchy is now blocked only in isolated candidate. No staff place/vacancy/temp assignment/versioned structure; department Team ≠ direct reports remains unresolved |
 | B102–B103 | Access и lifecycle | `access-profile`, `account-type`, `lifecycle` | Конфликт | HR-доступ наследуется от отдела; 82 аккаунта получают employee default; least privilege не доказан |
 | B104–B106 | Library/reporting/integrations | `materials`, `reporting` | Частично | Нет канонической библиотеки, reporting chain и управляемого integration inventory |
 | B107–B109 | Governance, source of truth, consistency | `final` | Не выполнено | owner/sourceOfTruth пусты; B-traceability отсутствует; Final Review не подтверждён |
@@ -60,6 +60,7 @@ Architecture Studio сохранил полезные продуктовые н�
 | `person` | Self-registration, HRD approval, ранний доступ к играм | Неясна связь с штатным местом и доступом | Person создаётся/приглашается по управляемому lifecycle; prehire access отделён |
 | `account-type` | Роли и типы смешаны | Business identity ≠ access profile | Разделить account lifecycle, business role, position и technical access |
 | `management` | «наследовать смысл» | Фактической цепочки нет | Ввести versioned assignment manager relation |
+| `team-scope` | CURRENT manager payload = department; direct reports are a separate empty relation | Department, direct reports and responsibility scope are different concepts | Owner must choose direct-report / department / named-scope composition and visibility; do not infer from `ishead` |
 | `career` | Resolved, но «нужно определиться» | Ложно-положительный resolved | Вернуть в `requires_decision` |
 | `access-profile` | Убрать native Moodle, использовать positions | Position не должна напрямую равняться правам | Access profile вычисляется из ответственности и override, с audit trail |
 | `courses=REMOVE` | Удалить Course | Moodle course нужен как technical container | Скрыть термин от пользователя, но сохранить техническую сущность при необходимости |

@@ -180,3 +180,14 @@ Production release: **not authorized / not performed**
 - Synthetic probe cleanup restored exact `12/2/10/5`, checklist version `1` and SHA-256 `1415da27…21ca` after every run.
 - Candidate → old → candidate roundtrip PASS; 4/4 backup checksums and PHP lints PASS; final source/isolated hashes exact; login and fatal-log checks PASS.
 - Production was not changed. Risk classes, reviewer authority, Gate scope/expiry/revocation and immutable checklist history remain owner decisions.
+
+## Block 20 — Organization / Reporting / Team integrity audit
+
+- Isolated CURRENT inventory: 16 declared departments, 52 positions, reporting table present but 0 rows / 0 managers. This is CURRENT / TEST IMPLEMENTATION, not TARGET.
+- Old runtime reproduced four defects: table-exists was treated as reporting-configured; HR without `viewteam` received department Team data through `position.ishead`; test/service accounts appeared in Team; nonexistent manager IDs were accepted.
+- Candidate uses a valid participating reporting line as the configured truth signal, requires explicit `local/ustar:viewteam`, filters `accounts::participates()` and validates employee/manager references.
+- Synthetic employee/manager/HR/CEO/superadmin API matrix PASS. CEO Team remains allowed because the current CEO role explicitly has `viewteam`; CEO Executive requires `executive`.
+- Browser: CEO missing-reporting warning `1`, flat org nodes `0`; manager warning `1`. Evidence contains aggregate/synthetic data only; the manager screenshot is cropped before storage.
+- Probe cleanup restored reporting rows `0`, exact empty fingerprint and account type `employee`; sessions `1 -> 0`; tunnel closed.
+- Durable isolated old-file rollback copy: `release-backups/organization-reporting-before-2026-08-23_15-33-27`; explicit five-file manifest `5/5 OK`.
+- Candidate→CURRENT→candidate rollback roundtrip PASS. Production was not changed. Staff place/assignment/versioning and direct-report versus department responsibility scope remain owner decisions.

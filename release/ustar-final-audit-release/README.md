@@ -27,7 +27,7 @@ This bundle contains only reviewed deltas and repeatable audit/test helpers. It 
 - `reports/MATERIALS_LIBRARY_IMPLEMENTATION.md` — exact source scope, authenticated runtime checks, cleanup and rollback boundary.
 - `reports/USCOIN_CURRENT_RUNTIME_AUDIT.md` — isolated ledger, concurrency/idempotency, overspend, store/reversal and cleanup evidence.
 - `reports/LEADERBOARD_CURRENT_RUNTIME_AUDIT.md` — isolated audience, score, tie, team-rank, season/fairness and cleanup evidence.
-- `reports/BOARDS_CURRENT_RUNTIME_AUDIT.md` — isolated ACL, sharing, JSON/size guards, 24-worker lost-update race and exact cleanup evidence.
+- `reports/BOARDS_CURRENT_RUNTIME_AUDIT.md` — production-CURRENT lost-update reproduction plus isolated atomic-save containment, validation/ACL, exact 1/23 acceptance and rollback roundtrip evidence.
 - `evidence/materials-library/` — eight synthetic desktop/mobile PNGs plus the executed role, Library and cleanup matrix.
 
 This delta passed local static gates and isolated Moodle upgrade/schema, 15/15 synthetic service checks, role allow/deny, authenticated desktop/mobile context move and Personal Library `0 → 1`, cleanup and independent rollback restore. Native HTML5 drag remains unproven by the in-app driver; the delta is not production-authorized.
@@ -54,6 +54,9 @@ Login was validated at desktop 1440×900, tablet 768×1024 and mobile 390×844. 
 - `toggle_test_manager_role.php` / `revoke_test_user_sessions.php` — isolated active-session revocation fixtures.
 - `create_isolated_dr_snapshot.sh` / `restore_isolated_dr_snapshot.sh` — checksum-verified full test-only snapshot and independent restore drill.
 - `restore_isolated_release_candidate.sh` — second independent final-candidate restore on loopback `18082`, retaining the earlier DR evidence.
+- `deploy_boards_atomic_isolated.sh` — hard-allowlisted isolated installation of the transactional Boards save path with automatic failure rollback.
+- `test_boards_atomic_save.sh` / `boards_atomic_probe.php` — self-cleaning validation, ACL and deterministic 24-worker concurrency acceptance.
+- `verify_boards_atomic_roundtrip.sh` — restores the exact old class, reproduces 24/0, reapplies the candidate and requires 1/23; isolated containers only.
 
 The operational scripts record the exact 2026-08-23 audit paths/hashes. Role fixtures and entry tests allow only the explicit isolated roots `18080`, `18081` and `18082`. Review and update their guards for any later snapshot; never bypass a mismatch.
 

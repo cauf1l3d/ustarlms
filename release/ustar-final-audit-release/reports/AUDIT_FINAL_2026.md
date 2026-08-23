@@ -32,7 +32,7 @@
 - 52 должности объявлены в `structure.json`, 33 кода реально используются в custom field, маршрутов только 3.
 - Dashboard/role journeys не выведены из TARGET: generated model содержит `roles: 0`.
 - Экономика смешивает XP и USCOIN. Isolated abuse audit подтвердил idempotency race guard, но также отсутствие store/reversal, `actorid=NULL` для manual CLI и возможность отрицательного баланса. Отдельный Leaderboard runtime audit: 90 participants, employee payload по 89 другим людям/29 позициям, 87 tied people получают distinct ranks, team card использует global rank, season entities отсутствуют.
-- Boards сохраняют mutable JSON без истории. Isolated 24-worker barrier race дал 24 success responses при final version 2 и одном документе: optimistic locking теряет 23 обновления молча. Все 7 baseline boards private; share/delete/rename/history UI отсутствует.
+- Boards сохраняют mutable JSON без истории. Production CURRENT-class в isolated дал 24 success при final version 2: 23 silent lost updates. Review candidate containment отдельно прошёл 1 success/23 conflicts и rollback→reapply, но production не изменён; все 7 baseline boards private, а share/delete/rename/history UI отсутствует.
 - Игровое изображение вопроса хранится с absolute URL прежнего host и ломается при другом authenticated host; одна active game опубликована с 0 active questions. Isolated fix проверен, production unchanged.
 - Кнопка завершения материала и универсальные тесты с выбором ответа не обеспечивают риск-ориентированное evidence.
 - Источники истины, владельцы и lifecycle для сущностей TARGET не заполнены.
@@ -234,7 +234,7 @@ Canonical state на сервере:
 | External service без explicit users | P1 | Moodle service config | Ограничить users/functions/IP и провести token inventory |
 | Upload без явного allowlist в frontend | P2 | Frontend source | MIME/extension/signature policy и malware scanning |
 | Global leaderboard disclosure and unfair rank semantics | P1 | Economy implementation; isolated runtime: 89 others/29 positions visible, 87 ties split, `reporting=0` | Separate competition score; scoped audience/privacy; tie/team/newcomer/season/close rules |
-| Boards silent lost update | P1 | `boards::save()` checks version before an unconstrained update; isolated 24/24 success, final version 2 | Atomic compare-and-swap/row lock + conflict UX; repeat 24-way acceptance as 1/23 |
+| Boards silent lost update | P1 production / contained in isolated RC | Production CURRENT-class: 24/24 success, final version 2. Isolated transactional row-lock candidate: exact 1/23, rollback roundtrip PASS | Separate production approval; then conflict UX. TARGET audience/history/lifecycle still owner-decided |
 | PHP errors/password policy | P1 | Moodle security check warnings | `display_errors=off`, password/MFA policy согласно threat model |
 | AI tenant configuration | P1 | `institution` содержит HR-должности, но используется как Latin-only AI tenant; 70 active values invalid | Выбрать single default, dedicated tenant mapping или удалить неутверждённый AI component; не менять HR data |
 | Public-path configuration | P2 check-noise | Five directory probes 308→404; every file and redirect target 404; arbitrary slash paths behave identically | Optional Caddy pre-normalisation 404 rule after isolated rehearsal |

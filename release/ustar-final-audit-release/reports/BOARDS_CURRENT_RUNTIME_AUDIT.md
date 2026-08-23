@@ -2,7 +2,7 @@
 
 Date: 2026-08-23
 
-Status: **CURRENT / TEST IMPLEMENTATION — NOT TARGET, NOT PRODUCTION**
+Status: **CURRENT / TEST IMPLEMENTATION — production defect retained; isolated containment proven; NOT TARGET**
 
 Constitution scope: B102, B107–B109 and the ten-point constitutional test for a new function. The Constitution does not define `Board` as an approved business entity, so the CURRENT mechanism cannot become TARGET implicitly.
 
@@ -123,6 +123,29 @@ Even before TARGET collaboration decisions, the save path must use an atomic com
 
 Do not add this containment to production without a separately approved release scope, backup and rollback. The current audit records the defect; it does not silently choose the final Board architecture.
 
+## Isolated release-candidate containment — PASS
+
+The review candidate now wraps the expected-version read and update in one delegated database transaction and locks the owned, non-deleted board row with `SELECT ... FOR UPDATE`. Every exception explicitly rolls the transaction back and is rethrown. This is a technical data-integrity invariant only: it does not change board type, sharing audience, viewer/editor rights, schema, JSON shape or lifecycle.
+
+Exact isolated acceptance on `ustar_audit_moodle`:
+
+```text
+before class SHA-256: f1b203e3c017337e4c9ee7f1484820ab0b300050d51ad5bdd2aa89ba1377c09d
+candidate SHA-256:    678dea8f620e73abd914344fa2a33b5d0348d442971daa219371e33630495df1
+attempts=24
+posted=1
+conflicts=23
+final_version=2
+persisted_rows=1
+single_document=1
+```
+
+Regression checks also passed: private peer deny, same-department shared read, cross-department deny, shared-viewer write deny, invalid JSON reject, payload >10 MiB reject and a valid save immediately after both validation rollbacks. Baseline remained `7 → 7` board rows, isolated login returned HTTP `200`, and the final ten-minute log scan contained `0` new critical lines.
+
+Rollback was exercised, not inferred: restoring the exact old SHA reproduced `24 successes / 0 conflicts`; reapplying the candidate SHA restored `1 success / 23 conflicts`. Both legs passed PHP lint, ACL/validation checks and exact fixture cleanup. The guarded deployment and verification artifacts are `deploy_boards_atomic_isolated.sh`, `verify_boards_atomic_roundtrip.sh`, `test_boards_atomic_save.sh` and `boards_atomic_probe.php`.
+
+Production code and data remain unchanged. Deploying this containment to production still requires the separately prohibited production-release approval and the normal backup/gate sequence.
+
 ## TARGET decisions required
 
 - Are Boards personal scratch documents, team collaboration artifacts, official records, or several explicitly different types?
@@ -134,4 +157,4 @@ Do not add this containment to production without a separately approved release 
 - What quotas, content policy, export/import controls and sensitive-data warnings apply?
 - Is simultaneous editing required, or is explicit single-editor locking sufficient?
 
-Until these decisions and the lost-update containment are approved and implemented, Boards remain a CURRENT experimental tool and must not be treated as a safe TARGET collaboration mechanism.
+Until TARGET decisions are approved and this already-proven containment is separately approved and deployed to production, Boards remain a CURRENT experimental tool and must not be treated as a safe TARGET collaboration mechanism.

@@ -68,7 +68,7 @@ Architecture Studio сохранил полезные продуктовые н�
 | `hr` | Все тесты multiple-choice | Нельзя доказать практическую компетентность | Тип assessment выбирается по риску и skill |
 | `route` | Belbin и оргигра обязательны | Не универсальный инвариант | Паттерн/опциональный блок, если подтверждён бизнесом |
 | `economy` | XP exchange в USCOIN | Смешивает mastery и денежную мотивацию | Раздельные ledgers; conversion только по утверждённой policy |
-| `boards` | Тонкая видимость и совместная работа | Baseline 7 private boards; `sharedteam` = same-department but has no checked UI; owner-only writes; no history/archive; 24 concurrent saves all succeed and silently overwrite | First decide personal/team/official artifact; atomic CAS; audience/editor/owner/transfer/version/audit/retention policy |
+| `boards` | Тонкая видимость и совместная работа | Baseline 7 private boards; `sharedteam` = same-department but has no checked UI; owner-only writes; no history/archive. Production CURRENT loses 23/24 concurrent updates; isolated row-lock containment passes 1/23 and rollback | First decide personal/team/official artifact and audience/editor/owner/transfer/version/audit/retention policy; deploy proven invariant only with separate approval |
 | `reporting` | Эскалации | Нет manager hierarchy | Сначала canonical reporting relation и ownership |
 | `role-ui` | Resolved | `roles: 0` в output | Сгенерировать роль, задачи, права, интерфейс, journey и тест |
 | `final` | Производное | Не может быть resolved при незакрытых зависимостях | Автоматически блокировать confirm до consistency checks |

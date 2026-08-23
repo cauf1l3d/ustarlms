@@ -200,4 +200,4 @@ Isolated evidence in `BOARDS_CURRENT_RUNTIME_AUDIT.md` proves:
 - critical concurrency FAIL: 24 workers using expected version 1 all received success, while final version stayed 2 and only one JSON document survived;
 - two synthetic rows deleted and exact seven-row baseline restored.
 
-Result: CURRENT read/write ACL is technically bounded, but team semantics are not approved and the non-atomic write path is unsafe for release.
+Result: CURRENT read/write ACL is technically bounded. The isolated candidate now passes exact 1/23 atomic-save acceptance and rollback→reapply, but production still has the old unsafe path; team semantics and conflict UX are not approved.

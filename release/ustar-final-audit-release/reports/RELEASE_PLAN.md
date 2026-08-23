@@ -86,7 +86,7 @@ Acceptance: dependency scan clean по согласованному threshold; n
 6. Learning Assignment / Route / Step / Evidence / Gate.
 7. Mentor / Goals / Reviews / Tasks / Notifications.
 8. XP / USCOIN / Season / League / Ranking.
-9. Boards / Reporting / Integrations. Boards are blocked until atomic expected-version save passes a 24-worker `1 success / 23 conflicts` test and owner approves audience/history/lifecycle semantics.
+9. Boards / Reporting / Integrations. Atomic expected-version save already passes isolated 24-worker `1 success / 23 conflicts` plus rollback; production deployment still needs approval, and audience/history/lifecycle semantics still need owner decisions.
 10. Role interfaces and journeys.
 
 Для Moodle определить technical-only projection: cohort/enrol/course/module/completion и правила синхронизации. Не удалять Moodle entities только потому, что они скрыты в business UI.

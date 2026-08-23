@@ -150,3 +150,12 @@ Production release: **not authorized / not performed**
 - Product has no checked share/delete/rename/transfer/history UI; arbitrary syntactically valid JSON is accepted without DGM schema validation.
 - Sequential stale version is rejected, but a row-lock barrier let 24 workers read version 1: all 24 returned success, final version was 2 and only one document remained. Silent lost update reproduced.
 - Two exact synthetic rows were deleted, remaining fixture rows 0; temporary files removed. Production was unchanged.
+
+## Block 17 — Boards atomic-save containment (isolated only)
+
+- Added a delegated transaction plus owned-row `FOR UPDATE` around version check and update; all exception paths explicitly rollback/rethrow. No sharing, audience, schema or lifecycle semantics changed.
+- Old class reconfirmed the deterministic defect: 24 workers → 24 successes / 0 conflicts, final version 2.
+- Candidate acceptance: 24 workers → exactly 1 success / 23 conflicts, final version 2, one persisted document.
+- ACL, invalid JSON, >10 MiB, valid-after-rollback, 7→7 fixture cleanup, PHP lint, HTTP 200 and zero new critical log lines PASS.
+- Rollback roundtrip PASS: old SHA `f1b203e3…7c09d` reproduced 24/0; reapply SHA `678dea8f…95df1` restored 1/23.
+- Production was not changed. Board type, audience, history, retention and collaboration UX remain owner decisions.

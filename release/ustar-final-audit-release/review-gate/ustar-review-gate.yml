@@ -71,6 +71,24 @@ jobs:
           grep -q 'CURRENT != TARGET' release/ustar-final-audit-release/reports/MATERIALS_LIBRARY_IMPLEMENTATION.md
           grep -q 'OWNER OVERRIDES RECOVERED / APPLY BLOCKED' release/ustar-final-audit-release/reports/HR_TARGET_MIGRATION_DRY_RUN.md
           grep -q 'Materials / Personal Library — source audit' release/ustar-final-audit-release/reports/UX_UI_AUDIT.md
+          grep -q "unsupported_type" moodle/local/ustar/classes/evidence.php
+          grep -q "unsupported_source" moodle/local/ustar/classes/evidence.php
+          grep -q 'Checklist item ids must be non-empty and unique' moodle/local/ustar/classes/external/hr_save_checklists.php
+          grep -q 'Checklist catalog changed; reload it before publishing' moodle/local/ustar/classes/external/hr_save_checklists.php
+          grep -q 'CURRENT runtime audit' release/ustar-final-audit-release/reports/EVIDENCE_CHECKLIST_GATE_CURRENT_RUNTIME_AUDIT.md
+          python3 - <<'PY'
+          from pathlib import Path
+
+          evidence = Path('moodle/local/ustar/classes/evidence.php').read_text(encoding='utf-8')
+          ungraded = evidence[evidence.index("State 1 only proves"):evidence.index("Learning evidence is satisfied")]
+          assert "$result['satisfied'] = false;" in ungraded
+
+          positions = Path('moodle/local/ustar/positions.php').read_text(encoding='utf-8')
+          options = positions[positions.index('$typeoptions = ['):positions.index('/*\n * ------------------------------------------------------------\n * CURRENT POSITION VIEW MODEL')]
+          for unsupported in ['practice', 'manager_review', 'checklist', 'certification']:
+              assert unsupported not in options
+          print('EVIDENCE_CHECKLIST_GUARDS=OK')
+          PY
 
       - name: Release bundle integrity
         run: |

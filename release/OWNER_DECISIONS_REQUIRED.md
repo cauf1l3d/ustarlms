@@ -58,6 +58,7 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 | Leaderboard / competitions | `UNDECIDED` | Separate competition score, versioned season/rules, comparable audience, privacy, ties, close/archive/reward lifecycle | B054–B057/B074–B085; CURRENT exposes global people/balances, assigns distinct ranks to ties and has no season entity |
 | Boards / collaboration | `UNDECIDED` | Personal vs official type, audience/editor rights, immutable versions/audit, retention/transfer/archive | Production CURRENT still loses 23/24 concurrent writes. Atomic row-lock containment is proven only in isolated (`1/23`, rollback/reapply PASS); all 7 current boards private and share UI absent |
 | Tasks / notifications / messaging | `UNDECIDED` | Separate official and personal tasks; USTAR notification severity/outbox; channel, Bitrix, retry/receipt/escalation; Moodle chat boundary | CURRENT has 70 Moodle alerts but 0 `local_ustar` notifications/providers, no task/rule/delivery/escalation tables and only enrolment sync. Goal API guard is isolated-PASS; business workflow is absent |
+| Evidence / Checklists / Gate | `UNDECIDED` | Risk-based Evidence policy, mirrored adaptation checklists, reviewer authority and scoped Gate decision/expiry/revocation/history | CURRENT has 12 activity mappings, 2 checklist definitions and one automatic `previous_adaptation` gate. Fail-closed Evidence/catalog guards are isolated-PASS; business admission lifecycle is absent |
 
 Уже выполненные отдельно разрешённые production-блоки повторять не нужно:
 

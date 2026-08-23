@@ -29,6 +29,7 @@ This bundle contains only reviewed deltas and repeatable audit/test helpers. It 
 - `reports/LEADERBOARD_CURRENT_RUNTIME_AUDIT.md` — isolated audience, score, tie, team-rank, season/fairness and cleanup evidence.
 - `reports/BOARDS_CURRENT_RUNTIME_AUDIT.md` — production-CURRENT lost-update reproduction plus isolated atomic-save containment, validation/ACL, exact 1/23 acceptance and rollback roundtrip evidence.
 - `reports/WORKFLOW_COMMUNICATION_CURRENT_RUNTIME_AUDIT.md` — Moodle notifications/messages, USTAR goals/reviews/HR actions and task-lifecycle aggregate/ACL/Checklist Design evidence plus exact cleanup.
+- `reports/EVIDENCE_CHECKLIST_GATE_CURRENT_RUNTIME_AUDIT.md` — Evidence semantics, checklist definition/history integrity, current Gate lifecycle, isolated fail-closed containment and rollback roundtrip.
 - `evidence/materials-library/` — eight synthetic desktop/mobile PNGs plus the executed role, Library and cleanup matrix.
 
 This delta passed local static gates and isolated Moodle upgrade/schema, 15/15 synthetic service checks, role allow/deny, authenticated desktop/mobile context move and Personal Library `0 → 1`, cleanup and independent rollback restore. Native HTML5 drag remains unproven by the in-app driver; the delta is not production-authorized.
@@ -60,6 +61,8 @@ Login was validated at desktop 1440×900, tablet 768×1024 and mobile 390×844. 
 - `verify_boards_atomic_roundtrip.sh` — restores the exact old class, reproduces 24/0, reapplies the candidate and requires 1/23; isolated containers only.
 - `workflow_communication_probe.php` / `workflow_communication_runtime_probe.php` — PII-free aggregate snapshot and self-cleaning synthetic notification/conversation/goal/review boundary verifier.
 - `deploy_workflow_goal_guard_isolated.sh` / `verify_workflow_goal_guard_roundtrip.sh` — guarded isolated unknown-action rejection and old→new rollback proof for the personal goal service.
+- `evidence_checklist_gate_runtime_probe.php` — PII-free inventory plus self-cleaning assessment/checklist/ACL/Gate boundary probe.
+- `deploy_evidence_checklist_guard_isolated.sh` — exact isolated candidate→old→candidate verifier with backup hashes and runtime probes.
 
 The operational scripts record the exact 2026-08-23 audit paths/hashes. Role fixtures and entry tests allow only the explicit isolated roots `18080`, `18081` and `18082`. Review and update their guards for any later snapshot; never bypass a mismatch.
 

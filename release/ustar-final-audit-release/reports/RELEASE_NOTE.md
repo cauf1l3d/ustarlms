@@ -169,3 +169,14 @@ Production release: **not authorized / not performed**
 - Old goal service falsely returned success for an unknown action. Isolated allowlist candidate rejects it; rollback to old SHA reproduced acceptance, reapply restored rejection.
 - Source-only Checklist Design audit recorded for Notifications and Chat. Authenticated visual evidence was not claimed because prior synthetic credentials/sessions were intentionally revoked.
 - Production was not changed. B086–B091 entities and channel/escalation policy remain owner decisions.
+
+## Block 19 — Evidence / Checklists / Gate integrity audit
+
+- Isolated inventory: 12 Evidence definitions across 3 skills; 2 checklist definitions / 27 items / 2 runs / 10 answers; 3 routes / 9 points / 1 published gate / 5 progress snapshots.
+- CURRENT gate is an automatic `previous_adaptation` route condition with no reviewer, critical-operation scope, expiry, decision or revocation table. It remains CURRENT / TEST IMPLEMENTATION, not TARGET.
+- Old runtime reproduced three unsafe boundaries: ungraded assessment satisfied Evidence; unsupported manager-review label satisfied from ordinary Moodle completion; duplicate/stale checklist catalogs were accepted.
+- Isolated fail-closed candidate: state `1` is completed but not satisfied; unsupported Evidence types/source fail closed and are not offered for creation; duplicate/empty checklist identities and stale catalog writes are rejected.
+- Employee HR publish and unassigned checklist submit denials PASS.
+- Synthetic probe cleanup restored exact `12/2/10/5`, checklist version `1` and SHA-256 `1415da27…21ca` after every run.
+- Candidate → old → candidate roundtrip PASS; 4/4 backup checksums and PHP lints PASS; final source/isolated hashes exact; login and fatal-log checks PASS.
+- Production was not changed. Risk classes, reviewer authority, Gate scope/expiry/revocation and immutable checklist history remain owner decisions.

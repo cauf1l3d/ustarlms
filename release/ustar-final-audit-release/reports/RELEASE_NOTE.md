@@ -134,3 +134,11 @@ Production release: **not authorized / not performed**
 - Temporary `-9999` probe was accepted and produced balance `-9994`; atomic debit/non-negative balance guard is absent.
 - Exact race and overspend keys were deleted; baseline restored to 8 rows / +40 and synthetic employee balance 5.
 - Store, explicit reversal chain, approval/caps/anomaly rules and XP→USCOIN policy remain TARGET owner decisions. Production was unchanged.
+
+## Block 15 — Leaderboard CURRENT runtime, privacy and fairness audit
+
+- Read-only isolated probe: 90 participants; a synthetic employee payload contains 89 other full names, positions, XP and coin fields across 29 positions.
+- 87 people belong to an equal-XP group, but every row receives a distinct rank; global ties are broken alphabetically rather than by time/shared place.
+- `reporting=0`; `Моя команда` falls back to same-position peers. Synthetic employee global rank `#10` remained in the current-rank card although the filtered team rank was `#2`.
+- No competition/season/league/ranking table exists. Calendar month uses operational completion/mastery timestamps; mandatory course/module completion automatically affects rank.
+- Probe mutations `0`; temporary files removed; post-probe USCOIN baseline remains 8 rows / +40. Production was unchanged.

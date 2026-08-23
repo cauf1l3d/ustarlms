@@ -55,6 +55,7 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 | HR/HRD separation | `UNDECIDED` | Раздельные access profiles и approval lifecycle | TARGET role contract and data-scope tests |
 | Materials / Personal Library | `UNDECIDED` | Explorer workspace, route-only learning event и персональная Library read model | Browser/context/mobile evidence PASS; native drag manual check, fresh backup, DB migration and post-deploy role/rollback gate |
 | USCOIN TARGET economy/store | `UNDECIDED` | Store, atomic debit, reversal, operator audit, caps/alerts or explicit non-spendable model | B049–B053 owner policy; CURRENT accepts overspend and manual actor is null |
+| Leaderboard / competitions | `UNDECIDED` | Separate competition score, versioned season/rules, comparable audience, privacy, ties, close/archive/reward lifecycle | B054–B057/B074–B085; CURRENT exposes global people/balances, assigns distinct ranks to ties and has no season entity |
 
 Уже выполненные отдельно разрешённые production-блоки повторять не нужно:
 
@@ -72,7 +73,7 @@ MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE = commit 112fa3f / 8 PNG / employee 0→1 
 5. **Learning assignment:** какая business entity является назначением, а Moodle enrol/course/completion остаются technical-only projection?
 6. **Evidence/gate:** какие типы допуска требуют практического evidence, reviewer, expiry и revocation?
 7. **XP/USCOIN:** разрешён ли conversion; является ли USCOIN spendable; запрещён ли отрицательный баланс для purchase; какие store, price/stock/fulfilment, reversal, operator approval, caps и anomaly rules? CURRENT race-idempotency PASS, но manual actor null и overspend accepted.
-8. **Leaderboard:** season, league/team scope, privacy и fairness policy?
+8. **Leaderboard:** persistent XP отдельно от competition score; season/rule version; comparable league/team scope and team-size/newcomer/transfer formula; tie timestamp/shared place; audience and visible fields (including USCOIN); creator/HRD approval; close/archive/reward/correction lifecycle? CURRENT isolated audit: 90 participants, 89 others disclosed to employee, 87 people in ties receive distinct ranks, `reporting=0`, season tables=0.
 9. **Content governance:** owner, source of truth, review period и obsolete/version lifecycle?
 10. **Tasks/notifications:** owner, channels, acknowledgement, retry и escalation lifecycle?
 11. **AI tenancy:** dedicated tenant identifier, single default tenant или отключение до готовности?

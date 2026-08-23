@@ -26,6 +26,7 @@ This bundle contains only reviewed deltas and repeatable audit/test helpers. It 
 - `review-gate/ustar-review-gate.yml` — copy of the GitHub review-only static gate; it contains no deployment job.
 - `reports/MATERIALS_LIBRARY_IMPLEMENTATION.md` — exact source scope, authenticated runtime checks, cleanup and rollback boundary.
 - `reports/USCOIN_CURRENT_RUNTIME_AUDIT.md` — isolated ledger, concurrency/idempotency, overspend, store/reversal and cleanup evidence.
+- `reports/LEADERBOARD_CURRENT_RUNTIME_AUDIT.md` — isolated audience, score, tie, team-rank, season/fairness and cleanup evidence.
 - `evidence/materials-library/` — eight synthetic desktop/mobile PNGs plus the executed role, Library and cleanup matrix.
 
 This delta passed local static gates and isolated Moodle upgrade/schema, 15/15 synthetic service checks, role allow/deny, authenticated desktop/mobile context move and Personal Library `0 → 1`, cleanup and independent rollback restore. Native HTML5 drag remains unproven by the in-app driver; the delta is not production-authorized.

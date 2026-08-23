@@ -175,3 +175,16 @@ Revocation lifecycle:
 - Mobile 390×844 checks covered both HR context actions and the employee Library.
 - Cleanup randomised temporary credentials, killed all guarded sessions (`1 → 0`) and returned the claimed browser tab to login.
 - Only synthetic isolated identities were used; production accounts and production permissions were unchanged.
+
+## 10. Leaderboard employee disclosure and team-rank boundary
+
+Read-only isolated runtime evidence is recorded in `LEADERBOARD_CURRENT_RUNTIME_AUDIT.md`:
+
+- a synthetic employee with common `local/ustar:use` can receive 89 other full-name/position/XP/coin rows;
+- 87 of 90 participants belong to an equal-XP group but receive distinct ranks;
+- no reporting row or competition/season/league table exists;
+- `Моя команда` falls back to same-position peers;
+- the synthetic employee's team-local rank was `#2`, but the page current-rank value remained global `#10`;
+- probe mutations were zero and production identities were not used.
+
+Result: technical page access is proven, while TARGET privacy, comparable group and fair-rank semantics fail and remain owner decisions.

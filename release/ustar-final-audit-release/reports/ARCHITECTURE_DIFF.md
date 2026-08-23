@@ -28,7 +28,7 @@ Architecture Studio сохранил полезные продуктовые н�
 | B047–B057 | XP, USCOIN, store, seasons | `games`, `economy`, `boards` | Конфликт | Studio предлагает XP→USCOIN; current leaderboard не имеет честного season/group scope; экономики смешаны |
 | B058–B068 | Наставник, feedback, review/history | `hr`, `checklists`, `reporting` | Недостаточно | Mentor не first-class; reporting empty; нет полной неизменяемой истории решений |
 | B069–B077 | Goals и progress | `hr`, `reporting`, `lifecycle` | Частично | Goals представлены 2 строками current; ownership, cadence и linkage не определены |
-| B078–B085 | Competition, league, ranking fairness | `games`, `economy`, `boards` | Конфликт | Current ranking глобален и раскрывает людей; сезоны/лиги/группы/анти-манипуляция отсутствуют |
+| B078–B085 | Competition, league, ranking fairness | `games`, `economy`, `boards` | Конфликт | Isolated: 90 participants, 89 others disclosed, 87 tied people split into distinct ranks, same-position team fallback, global rank in team card; competition/season/league tables=0 |
 | B086–B091 | Notifications и tasks | Только текст внутри `checklists`/`reporting` | Не смоделировано | Нет сущностей Notification, Task, Escalation, channel policy, delivery/ack state |
 | B092–B095 | Role dashboards | `role-ui` | Не сгенерировано | TARGET model `roles: 0`; role journey и interface contract отсутствуют |
 | B096–B101 | Org, staff place, vacancy, assignment | `organization`, `department`, `position`, `management` | Частично/конфликт | Список людей подменяет оргмодель; нет staff place/vacancy/temp assignment/versioned structure |
@@ -49,7 +49,7 @@ Architecture Studio сохранил полезные продуктовые н�
 | Навыки/KPI | B012–B020 | 23 skills в structure; skill matrix; KPI entity отсутствует | Completion/course progress используется как proxy skill | Ввести evidence-based skill result и отдельный KPI lifecycle |
 | Игры | B047–B048, B054–B057 | 2 games, 32 attempts, 8 mastery | Игра реализована как quiz-like mechanism; season/fairness неполны | Привязать game mechanics к утверждённым rules и abuse tests |
 | USCOIN | B049–B053 | Isolated snapshot: 8 ledger rows, idempotency race PASS; 2 dry-run awards pending; no store/reversal; overspend accepted; manual actor null | Mastery и экономическая награда смешиваются; ledger нельзя считать безопасным purchase model | Утвердить economy policy; atomic debit, reversal chain, operator audit, limits and store lifecycle only after owner decision |
-| Leaderboard | B078–B085 | Global names/positions; календарный month вместо season | Privacy, group fairness, league и anti-manipulation не выполнены | Season/league/audience/ranking policy, затем тест на честность |
+| Leaderboard | B054–B057, B074–B085 | 90 global participants; 89 other identities/29 positions/coin fields exposed; 87 tied people get distinct ranks; `reporting=0`; calendar month, no season tables | Separate competition points, privacy, comparable group, tie, team size/newcomer/transfer, immutable close/history not implemented | Approve Competition/Season/RuleVersion/Audience/ScoreEvent/Result/Reward model, then fairness and privacy acceptance tests |
 | Tasks/notifications | B086–B091 | Есть тексты про Bitrix escalation, нет first-class model | Нельзя доказать delivery/ack/retry/ownership | Ввести Task/Notification/Escalation/Delivery и integration health |
 | Governance | B107–B109 | Final Review не подтверждён; links на B-rules отсутствуют | Generated TARGET нельзя считать эталоном | Закрыть owner/SoT/orphans/contradictions и подтвердить revision |
 

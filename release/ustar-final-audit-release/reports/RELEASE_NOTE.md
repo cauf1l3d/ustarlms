@@ -118,5 +118,6 @@ Production release: **not authorized / not performed**
 - GitHub review gate `32638327627`: PASS across PHP, JavaScript, XMLDB/Mustache, UX invariants and 87-file manifest.
 - Seven-file isolated overlay hash match, PHP/schema/login/log health and service smoke 15/15 PASS.
 - Rollback archive `materials-ux-before-db6095c/files-before.tar.gz` pinned; fresh locked screenshot fixture recreated.
+- Rollback round-trip PASS: previous files restored/linted, `db6095c` automatically reapplied, seven hashes + schema + login verified; locked fixture remained intact with no unlock event.
 - Authenticated desktop/mobile before/after evidence is still required and has not been simulated.
 - Production was not changed by this block.

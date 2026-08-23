@@ -66,6 +66,7 @@ Deployment target was restricted to `/opt/ustar/test-env/ustar-final-audit-relea
 - Post-overlay PHP lint: PASS; route/schema verifiers: PASS; login HTTP `200`; recent container fatal/parse/unhandled scan: NONE.
 - The first service run correctly exposed fixture interference: the prepared visual before-state and the service verifier both own a synthetic route for the same synthetic employee. The guarded UI fixture was cleaned, service smoke passed **15/15**, and a fresh before-state was recreated (`content 90–93`, route point/version `17`). No real account or production data participated.
 - Fresh before-state has no unlock event; it is reserved for the pending employee Library before/after capture.
+- Overlay rollback round-trip: previous seven files restored from the pinned archive and linted, then `db6095c` reapplied under an emergency recovery trap; all seven final hashes, schema and login HTTP `200` PASS. The locked screenshot fixture remained `4` content rows + `1` route point with `0` events and `0` Library rows. **MATERIALS_UX_ROLLBACK_ROUNDTRIP=PASS**.
 
 The executable synthetic verifier is `local_ustar/cli/test_materials_library.php`; it refuses non-loopback/non-isolated Moodle and deletes every test fixture in `finally`. Authenticated visual evidence uses `local_ustar/cli/materials_library_ui_fixture.php` with explicit `create`, `unlock` and `cleanup` actions; the current isolated state is intentionally the fresh `create` state and must be cleaned after screenshots.
 

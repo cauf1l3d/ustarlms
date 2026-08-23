@@ -1,0 +1,63 @@
+name: USTAR review gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ustar-final-audit-release
+    paths:
+      - 'moodle/local/ustar/**'
+      - 'moodle/theme/ustar/**'
+      - '.github/workflows/ustar-review-gate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  static-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP syntax
+        run: find moodle/local/ustar moodle/theme/ustar -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: JavaScript syntax
+        run: |
+          node --check moodle/local/ustar/amd/src/materials.js
+          node --check moodle/local/ustar/amd/build/materials.min.js
+
+      - name: XMLDB and Mustache structure
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          import re
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse('moodle/local/ustar/db/install.xml').getroot()
+          assert root.attrib['VERSION'] == '2026082301'
+          names = [table.attrib['NAME'] for table in root.find('TABLES')]
+          assert len(names) == len(set(names))
+          assert {'local_ustar_content_events', 'local_ustar_library'} <= set(names)
+
+          for path in pathlib.Path('moodle/local/ustar/templates').glob('*.mustache'):
+              stack = []
+              source = path.read_text(encoding='utf-8')
+              for match in re.finditer(r'{{([#^/])\s*([\w.]+)\s*}}', source):
+                  operation, name = match.groups()
+                  if operation in '#^':
+                      stack.append(name)
+                  else:
+                      assert stack and stack[-1] == name, f'{path}: mismatched {name}'
+                      stack.pop()
+              assert not stack, f'{path}: unclosed {stack}'
+          print('XMLDB_AND_MUSTACHE=OK')
+          PY
+
+      - name: Review-branch invariants
+        run: |
+          grep -q '\$plugin->version   = 2026082301;' moodle/local/ustar/version.php
+          grep -q 'route_material_opened' moodle/local/ustar/classes/learning_events.php
+          grep -q 'data-u-move-form' moodle/local/ustar/templates/materials.mustache
+          grep -q 'CURRENT != TARGET' release/ustar-final-audit-release/reports/MATERIALS_LIBRARY_IMPLEMENTATION.md

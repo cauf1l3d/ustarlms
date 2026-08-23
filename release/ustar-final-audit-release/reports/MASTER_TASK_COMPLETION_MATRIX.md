@@ -70,8 +70,8 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Live search dialog/dropdown | PROVEN технически | Два символа дают inline results; Escape/focus return проверены; отдельная search page не требуется |
 | Search ACL/relevance/privacy | OWNER DECISION | TARGET sources и disclosure policy не утверждены |
 | Команда: CEO → директор → manager → я; CEO full tree | OWNER DECISION | `reporting=0`; canonical manager relation отсутствует |
-| Материалы workspace | OWNER TARGET / NOT IMPLEMENTED | Маленький CURRENT file block не TARGET; требуется полноэкранный Explorer-like UX с folders, breadcrumbs/back, open/edit, drag & drop, move/root и context actions |
-| Personal Library rule | OWNER TARGET / NOT IMPLEMENTED | Принята цепочка Route → material studied → Learning event → personal Library unlock; event/idempotency/revoke/version/ACL реализация отсутствует |
+| Материалы workspace | REVIEW SOURCE IMPLEMENTED / RUNTIME PENDING | Полноэкранный каталог, folders/breadcrumbs/back/open/edit дополнены drag & drop и context move; server-side capability, hierarchy lock, stale-write/cycle checks и immutable move audit реализованы в review-ветке. Isolated role/mobile/screenshots/rollback ещё не выполнены |
+| Personal Library rule | REVIEW SOURCE IMPLEMENTED / RUNTIME PENDING | Route content requirements `open/ack`, guarded gateway, immutable idempotent events и personal Library read model реализованы без CURRENT backfill. Isolated upgrade, guessed-URL/ACL/idempotency/version tests и rollback evidence ещё обязательны |
 | Игры для ролей | PARTIAL | Employee/manager/HR/CEO surfaces доступны; empty active game обнаружена и скрыта test-only |
 | DGMJS/media/progress | PROVEN в isolated | Same-origin media resolver, wrong/correct, 2 attempts, mastery, 25 XP и idempotent +5 USCOIN PASS |
 | Game fix в production | NOT AUTHORIZED | Production CURRENT по-прежнему содержит host-bound media URL и пустую active game |
@@ -132,6 +132,7 @@ Skill уже установлен в проекте, поэтому повтор
 | `FINAL_STATUS.md` | PROVEN, NO-GO |
 | `MASTER_TASK_COMPLETION_MATRIX.md` | PROVEN, этот документ |
 | `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` | PROVEN, owner-approved gated scope reconciled from Google Drive |
+| `MATERIALS_LIBRARY_IMPLEMENTATION.md` | PROVEN source scope/verification/rollback boundary; runtime evidence pending |
 
 ## 9. Точные остающиеся решения и запреты
 

@@ -1,0 +1,48 @@
+export const init = () => {
+    const form = document.querySelector('[data-u-move-form]');
+    if (!form) {
+        return;
+    }
+
+    let dragged = null;
+
+    document.querySelectorAll('[data-u-drag-content]').forEach((row) => {
+        row.addEventListener('dragstart', (event) => {
+            dragged = {
+                id: row.dataset.uDragContent,
+                expected: row.dataset.uExpectedModified,
+            };
+            row.classList.add('is-dragging');
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', dragged.id);
+        });
+        row.addEventListener('dragend', () => {
+            row.classList.remove('is-dragging');
+            document.querySelectorAll('.is-drop-target').forEach((target) => target.classList.remove('is-drop-target'));
+            dragged = null;
+        });
+    });
+
+    document.querySelectorAll('[data-u-drop-folder]').forEach((target) => {
+        target.addEventListener('dragover', (event) => {
+            if (!dragged || target.dataset.uDropFolder === dragged.id) {
+                return;
+            }
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            target.classList.add('is-drop-target');
+        });
+        target.addEventListener('dragleave', () => target.classList.remove('is-drop-target'));
+        target.addEventListener('drop', (event) => {
+            event.preventDefault();
+            target.classList.remove('is-drop-target');
+            if (!dragged || target.dataset.uDropFolder === dragged.id) {
+                return;
+            }
+            form.elements.contentid.value = dragged.id;
+            form.elements.targetparentid.value = target.dataset.uDropFolder;
+            form.elements.expectedmodified.value = dragged.expected;
+            form.submit();
+        });
+    });
+};

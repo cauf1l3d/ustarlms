@@ -15,6 +15,18 @@ This bundle contains only reviewed deltas and repeatable audit/test helpers. It 
 - `local_ustar/classes/game_media.php` and game providers — current-host Moodle File API resolution instead of persisted host-bound question media.
 - `local_ustar/classes/external/get_games.php` and `templates/games.mustache` — prevent learner-facing dead `0 / 0` game links and correct the empty-state copy.
 
+## Materials / Personal Library review delta
+
+- `local_ustar/classes/learning_events.php` and schema `2026082301` — immutable route material/admin events plus rebuildable personal Library read model.
+- `local_ustar/open.php` and `classes/route_model.php` — guarded route-only material launch and explicit `open` / `ack` requirements.
+- `local_ustar/materials.php`, `material_bulk.php`, `classes/content_admin.php`, templates, AMD and `_materials.scss` — Explorer-style move with hierarchy lock, optimistic stale-write rejection, cycle protection, drag & drop and accessible context action.
+- `local_ustar/knowledge.php` and `templates/knowledge.mustache` — personal history only; CURRENT ACL/ack rows are not silently treated as TARGET learning evidence.
+- `local_ustar/cli/check_materials_library_schema.php` — isolated post-upgrade schema/invariant verifier.
+- `review-gate/ustar-review-gate.yml` — copy of the GitHub review-only static gate; it contains no deployment job.
+- `reports/MATERIALS_LIBRARY_IMPLEMENTATION.md` — exact source scope, pending runtime checks and rollback boundary.
+
+This delta passed local PHP/JavaScript/XMLDB/Mustache/SCSS static checks. It has **not** yet passed the required isolated Moodle upgrade, role/browser/mobile/screenshot and rollback verification, and is not production-authorized.
+
 Login was validated at desktop 1440×900, tablet 768×1024 and mobile 390×844. Academy icons were browser-validated on Achievements, Games, Knowledge and Profile, including dark theme and lazy loading. Production asset use still requires licence/provenance confirmation.
 
 ## Operations helpers
@@ -44,7 +56,7 @@ The operational scripts record the exact 2026-08-23 audit paths/hashes. Role fix
 
 No file in this bundle authorizes production deployment. Production requires a separate owner confirmation, a fresh snapshot and final production rollback rehearsal. Isolated negative/positive capability tests and full isolated DR restore have passed.
 
-The branch is local only: this control repository has no configured Git remote. A canonical GitHub repository and explicit publication instruction are required before push.
+The canonical private repository is `https://github.com/cauf1l3d/ustarlms`; this bundle is published only on the review branch `ustar-final-audit-release`. The default branch and production deployment remain outside this publication.
 
 The production permission script was executed only after a narrower explicit approval: `config.php` is `root:www-data|640`, and exactly `public/local/ustar` plus `public/theme/ustar` were normalised to deploy-owner read-only code. This permission containment did not deploy the login or icon deltas.
 

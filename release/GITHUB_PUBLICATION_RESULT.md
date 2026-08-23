@@ -13,16 +13,17 @@
 | Initial published payload | `c30a2aa496bd51cac3ca827208b24527e80a7376` |
 | Verified Materials UX code commit | `db6095cc9ce78fbaea60dd25b26ae77a809a4361` |
 | Authenticated role/mobile evidence commit | `112fa3f16c287184bd67d3277193c2edfa54dfbf` |
-| GitHub review gate for evidence payload | `success` — run `32640270786` |
-| Bundle manifest | `96` files — `PASS` |
+| USCOIN CURRENT abuse-boundary audit commit | `3c8f8846278206230563c2049e108faa84a5ec78` |
+| GitHub review gate for USCOIN audit payload | `success` — run `32641404005` |
+| Bundle manifest | `97` files — `PASS` |
 | Push mode | New branch, non-force |
 | Production release | Not authorized / not performed |
 
-Remote verification after the authenticated evidence push, before this record-only annotation:
+Remote verification after the USCOIN audit push, before this record-only annotation:
 
 ```text
 refs/heads/main                       5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
-refs/heads/ustar-final-audit-release  112fa3f16c287184bd67d3277193c2edfa54dfbf
+refs/heads/ustar-final-audit-release  3c8f8846278206230563c2049e108faa84a5ec78
 ```
 
 The review branch is based directly on canonical `main` and includes these major logical payloads:
@@ -36,8 +37,11 @@ The review branch is based directly on canonical `main` and includes these major
 7. `4c84b52` — route-gated Personal Library and audited Explorer-style Materials workflow;
 8. `db6095c` — final full-width Materials UX, breadcrumb, empty-state and move-feedback polish;
 9. `112fa3f` — eight authenticated synthetic desktop/mobile screenshots, role boundaries, Personal Library `0 → 1` and cleanup evidence.
+10. `3c8f884` — isolated USCOIN runtime/abuse audit: 12 concurrent duplicate submissions persisted once, while an overspend probe proved the missing non-negative balance invariant; all synthetic ledger rows were removed.
 
-Static GitHub gate: [USTAR review gate run 32640270786](https://github.com/cauf1l3d/ustarlms/actions/runs/32640270786) — `success` for exact evidence head `112fa3f16c287184bd67d3277193c2edfa54dfbf`.
+Static GitHub gate: [USTAR review gate run 32641404005](https://github.com/cauf1l3d/ustarlms/actions/runs/32641404005) — `success` for exact audit head `3c8f8846278206230563c2049e108faa84a5ec78`.
+
+The browser evidence also includes a same-driver minimal native HTML5 control. It emitted zero `dragstart`, `dragover` and `drop` events, isolating the automated native-drag gap to the browser driver rather than the USTAR application. Context-menu move, permission boundaries and the audited server-side move path remain proven.
 
 The final remote branch ref is also recorded in the external handoff copy of this report; embedding a commit's own hash inside that same commit is intentionally avoided.
 

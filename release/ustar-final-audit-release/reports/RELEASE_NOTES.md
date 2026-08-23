@@ -25,4 +25,4 @@ Production-релиз не выполнялся. Production DB, пользова
 
 Финальный post-change isolated snapshot `2026-08-23_01-00-56` (445 MB) прошёл все checksum checks и восстановлен в независимый RC stack на loopback `18082`. В restored stack подтверждены schema/login/HR-404, exact login/icon/game hashes, 12 Academy assets, capability matrix, 34 denial и 18 allow tests. После проверки RC containers остановлены; production не менялся.
 
-Ветка `ustar-final-audit-release` содержит логические commits локально. GitHub push не выполнялся: `git remote -v` пуст, canonical remote не указан. Это отдельный owner/repository gate, а не доказательство опубликованного релиза.
+Canonical private repository подтверждён как `https://github.com/cauf1l3d/ustarlms`. Ветка `ustar-final-audit-release` построена от `main` и опубликована non-force; initial payload commit `c30a2aa` удалённо подтверждён, а `main` остался на `5443bf5`. Это публикация review-ветки, не production release.

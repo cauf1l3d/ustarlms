@@ -47,7 +47,7 @@ Release status: **NO-GO / production approval not granted**
 - Production-grade sealed/offsite backup, RPO/RTO measurement and production rollback rehearsal.
 - Moodle/Next.js security upgrades.
 - TARGET confirmation and complete B001–B109 traceability.
-- GitHub publication: the local control-repo has no configured remote (`git remote -v` is empty), so the correct repository must be selected before any push.
+- GitHub publication: canonical private repository confirmed as `https://github.com/cauf1l3d/ustarlms`; review branch `ustar-final-audit-release` published and remotely verified at initial payload commit `c30a2aa`. The separate local control-repo still has no remote by design.
 - Production implementation, release and post-release verification; only the explicitly approved containment/permission blocks have been applied.
 
 ## Integrity statement

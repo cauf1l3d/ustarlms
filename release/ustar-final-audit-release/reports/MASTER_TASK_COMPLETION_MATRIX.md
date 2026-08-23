@@ -82,8 +82,8 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 |---|---|---|
 | Ветка `ustar-final-audit-release` | PROVEN локально | Ветка активна; commits разделены по audit/security/login/icons/UX/release |
 | Не смешивать пользовательские каталоги | PROVEN | Untracked `moodle/`, `readandwork/`, `ustarfronref/`, `Академия - все сразу/` не добавлялись и не менялись |
-| GitHub repository | NOT PROVEN | `git remote -v` пуст: у локального control-repo нет настроенного remote |
-| Push / remote branch | OWNER DECISION | Нужен точный GitHub repository и разрешение на добавление remote/push; историческое имя репозитория не принято как факт |
+| GitHub repository | PROVEN | Canonical private repository подтверждён: `https://github.com/cauf1l3d/ustarlms`; default branch `main` |
+| Push / remote branch | PROVEN | `ustar-final-audit-release` опубликована non-force; initial payload commit `c30a2aa`, remote `main` остался `5443bf5` |
 
 ## 6. Фаза 8: Checklist Design
 
@@ -132,4 +132,4 @@ Skill уже установлен в проекте, поэтому повтор
 
 Production остаётся **NO-GO** до отдельного подтверждения. Даже после такого подтверждения scope должен явно перечислять, что именно выпускается. Сейчас необходимы решения владельца по canonical auth, org/manager relation, HR/HRD, AI tenancy, route/evidence/gates, XP↔USCOIN, leaderboard privacy/fairness, content ownership, задачам/уведомлениям и окончательному TARGET B001–B109.
 
-Отдельно до публикации нужны: GitHub remote, лицензия icon pack, production default-role remediation, dependency upgrades, sealed/offsite backup и rollback/RPO/RTO gate. Ни один из этих пунктов не был молча принят за TARGET или выполнен в production.
+До production нужны: лицензия icon pack, production default-role remediation, dependency upgrades, sealed/offsite backup и rollback/RPO/RTO gate. GitHub review-ветка опубликована, но это не production approval. Ни один из оставшихся пунктов не был молча принят за TARGET или выполнен в production.

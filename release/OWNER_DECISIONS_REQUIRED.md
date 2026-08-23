@@ -4,19 +4,38 @@
 
 Текущий статус: **production NO-GO**. Этот файл не является разрешением на релиз, пока владелец не заполнит и явно не отправит выбранные пункты.
 
-## 1. Канонический GitHub repository
+## 1. Канонический GitHub repository — закрыто
 
-Заполнить:
+Подтверждено владельцем:
 
 ```text
-CANONICAL_GITHUB_URL =
-ALLOW_ADD_OR_UPDATE_REMOTE = YES / NO
-ALLOW_PUSH_BRANCH_USTAR_FINAL_AUDIT_RELEASE = YES / NO
+CANONICAL_GITHUB_URL = https://github.com/cauf1l3d/ustarlms
+ALLOW_ADD_OR_UPDATE_REMOTE = YES
+ALLOW_PUSH_BRANCH_USTAR_FINAL_AUDIT_RELEASE = YES
 ```
 
-Подготовленный handoff commit: `18fc2af8312968d2426642bdf9cb39030d57eaa6`.
+Remote review branch опубликована; production release этим не разрешён.
 
-Историческая ссылка `github.com/cauf1l3d/expflow_academy_clean` не подтверждена и автоматически использоваться не будет.
+## 1.1 Обязательное owner supplement — принято в release scope
+
+`CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` принят владельцем как обязательный gated release block.
+
+Зафиксированы TARGET access roles: `employee`, `manager`, `retail_manager`, `hr`, `hrd`, `ceo`, `system_admin`.
+
+До изменения production всё ещё нужны:
+
+```text
+ACCOUNT_ACTION_LIST_VERSION =
+KEEP_USER_IDS =
+MERGE_PAIRS_SURVIVOR_ID <- SOURCE_ID =
+DISABLE_USER_IDS =
+DELETE_USER_IDS =
+CURRENT_TO_TARGET_MAPPING_DIGEST =
+HR_MIGRATION_ROLLBACK_VERIFIED = YES / NO
+MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE =
+```
+
+ФИО, email, CURRENT role/cohort/position или прежнее текстовое упоминание не заменяют точный ID-level action list. До него реальные аккаунты не изменяются.
 
 ## 2. Точный production scope
 
@@ -72,7 +91,7 @@ POST-RELEASE OBSERVATION WINDOW =
 
 Фраза «продолжай», «делай всё» или согласование аудита не трактуется как production approval. Разрешение должно перечислять конкретные блоки.
 
-## 5. Минимальный ответ для возобновления Git-публикации без production
+## 5. Git-публикация без production — закрыто
 
 ```text
 CANONICAL_GITHUB_URL = <точный URL>
@@ -81,4 +100,4 @@ ALLOW_PUSH_BRANCH_USTAR_FINAL_AUDIT_RELEASE = YES
 PRODUCTION RELEASE = NO
 ```
 
-Такой ответ разрешит только публикацию подготовленной ветки и не разрешит deployment на сервер.
+Этот ответ уже получен и использован только для публикации review-ветки. Deployment на сервер по-прежнему не разрешён.

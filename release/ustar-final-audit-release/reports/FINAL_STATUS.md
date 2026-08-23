@@ -35,6 +35,7 @@ Release status: **NO-GO / production approval not granted**
 - Game runtime tested beyond smoke: broken absolute-host question media repaired in isolated, playable image/answer/persistence/XP/USCOIN flow PASS, and empty `0 / 0` game shell removed from learner catalog.
 - Final post-change isolated snapshot `2026-08-23_01-00-56` and independent RC restore on `18082` PASS; exact login/icon/game hashes, 12 assets, schema/login/HR-404 and all 52 role entry tests verified. RC containers stopped; data retained.
 - Requirement-by-requirement closure recorded in `MASTER_TASK_COMPLETION_MATRIX.md`; Checklist Design review expanded across login, search, empty states, icons and accessibility.
+- Owner supplement `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` reconciled from Google Drive and added as mandatory gated scope for HR TARGET migration and Materials/Library UX.
 
 ## Blocked / pending
 
@@ -44,6 +45,8 @@ Release status: **NO-GO / production approval not granted**
 - Production remediation of Moodle CRITICAL default-role check.
 - TARGET decision for AI tenancy: `institution` is a position field, not a valid tenant source; automatic repair would alter access semantics. `core_publicpaths` direct disclosure was disproved (308→404), though optional check-noise cleanup remains.
 - TARGET decision and implementation for missing HRD/HR separation.
+- Exact versioned account action list (`KEEP / MERGE / DISABLE / DELETE`) and CURRENT → TARGET mapping for `employee`, `manager`, `retail_manager`, `hr`, `hrd`, `ceo`, `system_admin`; no real account mutation is authorised yet.
+- Full-width Materials file-manager implementation and personal event-driven Library (`Route → studied → Learning event → unlock`) with permission, mobile, screenshot and rollback evidence.
 - Production-grade sealed/offsite backup, RPO/RTO measurement and production rollback rehearsal.
 - Moodle/Next.js security upgrades.
 - TARGET confirmation and complete B001–B109 traceability.
@@ -52,4 +55,4 @@ Release status: **NO-GO / production approval not granted**
 
 ## Integrity statement
 
-Ни один CURRENT вывод не превращён в TARGET. Состояние Architecture Studio не объявлено утверждённым. Test-only role reset и login polish не опубликованы в production. Выполнены только отдельно разрешённые P0 containment-изменения; production release не симулирован и не отмечен завершённым.
+Ни один CURRENT вывод не превращён в TARGET. Целевые access-role names и обязательный Materials/Library UX приняты из owner supplement, но конкретные account mappings, org/position model, permissions и lifecycle всё ещё требуют безопасной реализации и проверки. Состояние Architecture Studio не объявлено утверждённым. Test-only role reset и login polish не опубликованы в production. Выполнены только отдельно разрешённые P0 containment-изменения; production release не симулирован и не отмечен завершённым.

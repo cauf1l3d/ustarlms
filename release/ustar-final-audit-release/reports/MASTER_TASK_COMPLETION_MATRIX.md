@@ -15,6 +15,8 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | PROVEN | Есть проверяемый файл, runtime-тест, checksum или серверное доказательство |
 | PARTIAL | Часть сценария подтверждена, но критерий целиком не закрыт |
 | OWNER DECISION | Нужен выбор владельца TARGET; безопасно угадать его нельзя |
+| OWNER TARGET / NOT IMPLEMENTED | Направление TARGET утверждено владельцем, но код, миграция и acceptance evidence отсутствуют |
+| OWNER SCOPE / NOT IMPLEMENTED | Блок обязателен для release execution, но точные объектные mappings и реализация ещё не выполнены |
 | NOT AUTHORIZED | Действие запрещено текущим объёмом разрешения |
 | NOT PROVEN | Доказательств недостаточно либо проверка не выполнялась |
 
@@ -48,6 +50,7 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Negative permission tests | PROVEN | Capability matrix PASS; 34/34 ожидаемых запрета и 18/18 разрешения PASS на source, DR и final RC restore |
 | Удаление роли и отзыв сессии | PROVEN | Активная сессия сразу потеряла manager shell; штатный session kill привёл на login |
 | Реальные production identities | NOT PROVEN | Намеренно не использовались: тесты выполнены synthetic users в isolated restore без изменения production людей |
+| HR TARGET account migration | OWNER SCOPE / NOT IMPLEMENTED | Целевые access roles приняты: employee, manager, retail_manager, hr, hrd, ceo, system_admin; точный ID-level KEEP/MERGE/DISABLE/DELETE mapping, migration dry-run и rollback ещё не выполнены |
 | Полный employee lifecycle | PARTIAL | Первый вход и role surfaces проверены; prehire → HRD approval → route → evidence → gate → development не существует как единая подтверждённая цепочка |
 
 ## 4. Фазы 4–6: login, иконки и запланированный UX
@@ -67,7 +70,8 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Live search dialog/dropdown | PROVEN технически | Два символа дают inline results; Escape/focus return проверены; отдельная search page не требуется |
 | Search ACL/relevance/privacy | OWNER DECISION | TARGET sources и disclosure policy не утверждены |
 | Команда: CEO → директор → manager → я; CEO full tree | OWNER DECISION | `reporting=0`; canonical manager relation отсутствует |
-| Материалы marketplace | PARTIAL | Search, type/category filters, cards и empty state есть; subcategories, ownership/access fixtures и непустой employee E2E не закрыты |
+| Материалы workspace | OWNER TARGET / NOT IMPLEMENTED | Маленький CURRENT file block не TARGET; требуется полноэкранный Explorer-like UX с folders, breadcrumbs/back, open/edit, drag & drop, move/root и context actions |
+| Personal Library rule | OWNER TARGET / NOT IMPLEMENTED | Принята цепочка Route → material studied → Learning event → personal Library unlock; event/idempotency/revoke/version/ACL реализация отсутствует |
 | Игры для ролей | PARTIAL | Employee/manager/HR/CEO surfaces доступны; empty active game обнаружена и скрыта test-only |
 | DGMJS/media/progress | PROVEN в isolated | Same-origin media resolver, wrong/correct, 2 attempts, mastery, 25 XP и idempotent +5 USCOIN PASS |
 | Game fix в production | NOT AUTHORIZED | Production CURRENT по-прежнему содержит host-bound media URL и пустую active game |
@@ -127,9 +131,10 @@ Skill уже установлен в проекте, поэтому повтор
 | `BACKUP_INFO.md` | PROVEN |
 | `FINAL_STATUS.md` | PROVEN, NO-GO |
 | `MASTER_TASK_COMPLETION_MATRIX.md` | PROVEN, этот документ |
+| `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` | PROVEN, owner-approved gated scope reconciled from Google Drive |
 
 ## 9. Точные остающиеся решения и запреты
 
-Production остаётся **NO-GO** до отдельного подтверждения. Даже после такого подтверждения scope должен явно перечислять, что именно выпускается. Сейчас необходимы решения владельца по canonical auth, org/manager relation, HR/HRD, AI tenancy, route/evidence/gates, XP↔USCOIN, leaderboard privacy/fairness, content ownership, задачам/уведомлениям и окончательному TARGET B001–B109.
+Production остаётся **NO-GO** до отдельного подтверждения. Даже после такого подтверждения scope должен явно перечислять, что именно выпускается. HR TARGET role names и Materials/Library direction приняты, но ещё нужны ID-level account actions/mappings, canonical auth, org/manager relation, HR/HRD permissions, AI tenancy, route/evidence/gates, XP↔USCOIN, leaderboard privacy/fairness, content ownership, задачам/уведомлениям и окончательному TARGET B001–B109.
 
 До production нужны: лицензия icon pack, production default-role remediation, dependency upgrades, sealed/offsite backup и rollback/RPO/RTO gate. GitHub review-ветка опубликована, но это не production approval. Ни один из оставшихся пунктов не был молча принят за TARGET или выполнен в production.

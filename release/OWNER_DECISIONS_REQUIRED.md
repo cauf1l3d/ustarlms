@@ -22,15 +22,17 @@ Remote review branch опубликована; production release этим не 
 
 Зафиксированы TARGET access roles: `employee`, `manager`, `retail_manager`, `hr`, `hrd`, `ceo`, `system_admin`.
 
+Canonical Studio read-only reconciliation восстановил 37 person overrides и точные object IDs. Их source SHA-256 и конфликтный dry-run описаны в `reports/HR_TARGET_MIGRATION_DRY_RUN.md`; private ID-level package намеренно хранится вне Git. Это не снимает обязательные gates ниже: Final Review не подтверждён, action list неполон и противоречив.
+
 До изменения production всё ещё нужны:
 
 ```text
-ACCOUNT_ACTION_LIST_VERSION =
-KEEP_USER_IDS =
-MERGE_PAIRS_SURVIVOR_ID <- SOURCE_ID =
-DISABLE_USER_IDS =
-DELETE_USER_IDS =
-CURRENT_TO_TARGET_MAPPING_DIGEST =
+ACCOUNT_ACTION_LIST_VERSION = studio-2026-08-22T13:38:37Z / NEEDS FINAL REVIEW
+KEEP_USER_IDS = REQUIRED FOR 54 UNMAPPED CURRENT ACCOUNTS
+MERGE_PAIRS_SURVIVOR_ID <- SOURCE_ID = OWNER MUST CONFIRM DIRECTION
+DISABLE_USER_IDS = REQUIRED WHERE REMOVE MUST PRESERVE HISTORY
+DELETE_USER_IDS = RECOVERED OWNER OVERRIDES / NOT YET APPLY-AUTHORIZED
+CURRENT_TO_TARGET_MAPPING_DIGEST = PRIVATE PACKAGE SHA256 17794cc109072db69ba0818180796bdf43fd187afbcbfe6b29e30c04964b84e3
 HR_MIGRATION_ROLLBACK_VERIFIED = YES / NO
 MATERIALS_LIBRARY_ACCEPTANCE_EVIDENCE =
 ```

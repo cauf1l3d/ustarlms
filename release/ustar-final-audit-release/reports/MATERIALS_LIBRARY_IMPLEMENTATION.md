@@ -45,13 +45,14 @@ Deployment target was restricted to `/opt/ustar/test-env/ustar-final-audit-relea
 - Moodle database schema, Route v2 schema and Materials/Library schema verifiers: PASS.
 - Initial event/library counts: `0 / 0`; no CURRENT backfill occurred.
 - Synthetic service smoke: **15/15 PASS** — current-point gateway, idempotent open event, personal unlock, direct-ACL negative, acknowledgement separation, employee move denial, admin move, immutable audit, stale-write rejection and cycle rejection.
+- Reproducible screenshot fixture lifecycle: create PASS, route unlock PASS, cleanup PASS (`1` route point + `4` content objects removed), then a fresh before-state recreated in the same isolated stack. The fixture CLI refuses non-loopback/non-isolated Moodle.
 - Cleanup after smoke: content events `0`, library rows `0`, synthetic route points `0`, synthetic content rows `0`.
 - Entry-point roles: `audit_hr` Materials allow PASS; `audit_superadmin` bulk allow PASS; `audit_employee` Materials and bulk denial PASS.
 - Cache purge, maintenance disable, login HTTP `200` and final Moodle schema: PASS; recent container log contained no PHP fatal/error from this block.
 - Independent rollback restore root: `/opt/ustar/test-env/ustar-materials-rollback-verify-2026-08-23_13-54-24`.
 - Restored code version `2026082002`; `learning_events.php` absent; restored DB version `2026082002`; both new tables absent. Rollback PostgreSQL container stopped with retained root/volume. **ROLLBACK_REHEARSAL=PASS**.
 
-The executable synthetic verifier is `local_ustar/cli/test_materials_library.php`; it refuses non-loopback/non-isolated Moodle and deletes every test fixture in `finally`.
+The executable synthetic verifier is `local_ustar/cli/test_materials_library.php`; it refuses non-loopback/non-isolated Moodle and deletes every test fixture in `finally`. Authenticated visual evidence uses `local_ustar/cli/materials_library_ui_fixture.php` with explicit `create`, `unlock` and `cleanup` actions; the current isolated state is intentionally the fresh `create` state and must be cleaned after screenshots.
 
 ## Remaining browser verification
 

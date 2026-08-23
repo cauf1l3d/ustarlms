@@ -60,4 +60,11 @@ jobs:
           grep -q '\$plugin->version   = 2026082301;' moodle/local/ustar/version.php
           grep -q 'route_material_opened' moodle/local/ustar/classes/learning_events.php
           grep -q 'data-u-move-form' moodle/local/ustar/templates/materials.mustache
+          grep -q 'REFUSING_NON_ISOLATED_MOODLE' moodle/local/ustar/cli/materials_library_ui_fixture.php
+          grep -q "\['create', 'unlock', 'cleanup'\]" moodle/local/ustar/cli/materials_library_ui_fixture.php
           grep -q 'CURRENT != TARGET' release/ustar-final-audit-release/reports/MATERIALS_LIBRARY_IMPLEMENTATION.md
+          grep -q 'OWNER OVERRIDES RECOVERED / APPLY BLOCKED' release/ustar-final-audit-release/reports/HR_TARGET_MIGRATION_DRY_RUN.md
+
+      - name: Release bundle integrity
+        working-directory: release/ustar-final-audit-release
+        run: sha256sum -c MANIFEST.sha256

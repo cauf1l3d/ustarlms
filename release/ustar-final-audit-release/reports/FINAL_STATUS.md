@@ -36,6 +36,7 @@ Release status: **NO-GO / production approval not granted**
 - Final post-change isolated snapshot `2026-08-23_01-00-56` and independent RC restore on `18082` PASS; exact login/icon/game hashes, 12 assets, schema/login/HR-404 and all 52 role entry tests verified. RC containers stopped; data retained.
 - Requirement-by-requirement closure recorded in `MASTER_TASK_COMPLETION_MATRIX.md`; Checklist Design review expanded across login, search, empty states, icons and accessibility.
 - Owner supplement `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` reconciled from Google Drive and added as mandatory gated scope for HR TARGET migration and Materials/Library UX.
+- Canonical server-side Architecture Studio decisions recovered read-only and reconciled with CURRENT inventory: 37 person overrides (26 REMOVE, 8 CHANGE, 2 MERGE, 1 UNDECIDED), source digest pinned, private ID-level dry-run package created outside Git, and 11 apply-blocking conflict groups documented in `HR_TARGET_MIGRATION_DRY_RUN.md`. No account write was performed.
 - Materials/Personal Library implementation deployed only to loopback isolated Moodle: migration/schema PASS, 15/15 synthetic service checks PASS, role allow/deny PASS, cleanup PASS, login/schema health PASS and independent pre-change rollback restore PASS. Authenticated browser/mobile before/after screenshots remain pending.
 
 ## Blocked / pending
@@ -46,7 +47,7 @@ Release status: **NO-GO / production approval not granted**
 - Production remediation of Moodle CRITICAL default-role check.
 - TARGET decision for AI tenancy: `institution` is a position field, not a valid tenant source; automatic repair would alter access semantics. `core_publicpaths` direct disclosure was disproved (308→404), though optional check-noise cleanup remains.
 - TARGET decision and implementation for missing HRD/HR separation.
-- Exact versioned account action list (`KEEP / MERGE / DISABLE / DELETE`) and CURRENT → TARGET mapping for `employee`, `manager`, `retail_manager`, `hr`, `hrd`, `ceo`, `system_admin`; no real account mutation is authorised yet.
+- HR owner overrides are recovered, but the apply-ready action list remains blocked: 54 undeleted accounts have no explicit KEEP/action, merge direction is not structured, one cross-entity decision conflicts, one account remains UNDECIDED, core Guest/role semantics cannot be treated as ordinary deletes, and per-user department/position/access-profile plus history-collision policy are incomplete. No real account mutation is authorised.
 - Authenticated isolated browser verification of Materials/Library: HR context/drag move screenshots, employee Library before/after route unlock and 390×844 mobile capture. Server-side migration, permissions, negative tests, cleanup and rollback restore have passed; production deployment is not authorised.
 - Production-grade sealed/offsite backup, RPO/RTO measurement and production rollback rehearsal.
 - Moodle/Next.js security upgrades.
@@ -56,4 +57,4 @@ Release status: **NO-GO / production approval not granted**
 
 ## Integrity statement
 
-Ни один CURRENT вывод не превращён в TARGET. Целевые access-role names и обязательный Materials/Library UX приняты из owner supplement, но конкретные account mappings, org/position model, permissions и lifecycle всё ещё требуют безопасной реализации и проверки. Состояние Architecture Studio не объявлено утверждённым. Test-only role reset и login polish не опубликованы в production. Выполнены только отдельно разрешённые P0 containment-изменения; production release не симулирован и не отмечен завершённым.
+Ни один CURRENT вывод не превращён в TARGET. Целевые access-role names, owner account overrides и обязательный Materials/Library UX приняты из canonical Studio/supplement, но конфликтующие и неявные account mappings, org/position model, permissions и lifecycle всё ещё требуют owner Final Review, безопасной реализации и проверки. Состояние Architecture Studio не объявлено утверждённым. Test-only role reset и login polish не опубликованы в production. Выполнены только отдельно разрешённые P0 containment-изменения; production release не симулирован и не отмечен завершённым.

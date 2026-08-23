@@ -50,7 +50,7 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Negative permission tests | PROVEN | Capability matrix PASS; 34/34 ожидаемых запрета и 18/18 разрешения PASS на source, DR и final RC restore |
 | Удаление роли и отзыв сессии | PROVEN | Активная сессия сразу потеряла manager shell; штатный session kill привёл на login |
 | Реальные production identities | NOT PROVEN | Намеренно не использовались: тесты выполнены synthetic users в isolated restore без изменения production людей |
-| HR TARGET account migration | OWNER SCOPE / NOT IMPLEMENTED | Целевые access roles приняты: employee, manager, retail_manager, hr, hrd, ceo, system_admin; точный ID-level KEEP/MERGE/DISABLE/DELETE mapping, migration dry-run и rollback ещё не выполнены |
+| HR TARGET account migration | OWNER OVERRIDES RECOVERED / APPLY BLOCKED | Canonical Studio read-only reconciliation восстановил 37 person overrides и source digest; private ID-level dry-run package создан вне Git. Apply блокируют 54 accounts без explicit KEEP/action, неявное merge direction, cross-entity conflict, UNDECIDED, core Guest/role semantics и отсутствие normalized org/position/access/history policy. Реальные accounts не менялись |
 | Полный employee lifecycle | PARTIAL | Первый вход и role surfaces проверены; prehire → HRD approval → route → evidence → gate → development не существует как единая подтверждённая цепочка |
 
 ## 4. Фазы 4–6: login, иконки и запланированный UX
@@ -132,10 +132,11 @@ Skill уже установлен в проекте, поэтому повтор
 | `FINAL_STATUS.md` | PROVEN, NO-GO |
 | `MASTER_TASK_COMPLETION_MATRIX.md` | PROVEN, этот документ |
 | `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` | PROVEN, owner-approved gated scope reconciled from Google Drive |
-| `MATERIALS_LIBRARY_IMPLEMENTATION.md` | PROVEN source scope/verification/rollback boundary; runtime evidence pending |
+| `HR_TARGET_MIGRATION_DRY_RUN.md` | PROVEN recovery/digest/reconciliation and explicit apply blockers; private ID-level package kept outside Git |
+| `MATERIALS_LIBRARY_IMPLEMENTATION.md` | PROVEN source scope, isolated runtime, permissions, cleanup and rollback; authenticated browser/mobile evidence pending |
 
 ## 9. Точные остающиеся решения и запреты
 
-Production остаётся **NO-GO** до отдельного подтверждения. Даже после такого подтверждения scope должен явно перечислять, что именно выпускается. HR TARGET role names и Materials/Library direction приняты, но ещё нужны ID-level account actions/mappings, canonical auth, org/manager relation, HR/HRD permissions, AI tenancy, route/evidence/gates, XP↔USCOIN, leaderboard privacy/fairness, content ownership, задачам/уведомлениям и окончательному TARGET B001–B109.
+Production остаётся **NO-GO** до отдельного подтверждения. Даже после такого подтверждения scope должен явно перечислять, что именно выпускается. HR TARGET role names, person overrides и Materials/Library direction приняты, но person overrides ещё не являются apply-ready migration: нужны explicit action для всех remaining accounts, conflict/merge resolution, normalized mappings, canonical auth, org/manager relation, HR/HRD permissions, AI tenancy, route/evidence/gates, XP↔USCOIN, leaderboard privacy/fairness, content ownership, задачам/уведомлениям и окончательному TARGET B001–B109.
 
 До production нужны: лицензия icon pack, production default-role remediation, dependency upgrades, sealed/offsite backup и rollback/RPO/RTO gate. GitHub review-ветка опубликована, но это не production approval. Ни один из оставшихся пунктов не был молча принят за TARGET или выполнен в production.

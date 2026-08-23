@@ -8,6 +8,7 @@ on:
     paths:
       - 'moodle/local/ustar/**'
       - 'moodle/theme/ustar/**'
+      - 'release/ustar-final-audit-release/**'
       - '.github/workflows/ustar-review-gate.yml'
 
 permissions:
@@ -66,5 +67,28 @@ jobs:
           grep -q 'OWNER OVERRIDES RECOVERED / APPLY BLOCKED' release/ustar-final-audit-release/reports/HR_TARGET_MIGRATION_DRY_RUN.md
 
       - name: Release bundle integrity
-        working-directory: release/ustar-final-audit-release
-        run: sha256sum -c MANIFEST.sha256
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import pathlib
+          import subprocess
+
+          root = pathlib.PurePosixPath('release/ustar-final-audit-release')
+          manifest = pathlib.Path(root, 'MANIFEST.sha256')
+          failures = []
+          checked = 0
+          for raw in manifest.read_text(encoding='utf-8').splitlines():
+              if not raw.strip():
+                  continue
+              expected, relative = raw.split(None, 1)
+              relative = relative.strip()
+              blob = subprocess.check_output([
+                  'git', 'cat-file', 'blob', f'HEAD:{root / relative}'
+              ])
+              actual = hashlib.sha256(blob).hexdigest()
+              checked += 1
+              if actual != expected:
+                  failures.append(relative)
+          assert not failures, f'bundle blob mismatch: {failures}'
+          print(f'RELEASE_BUNDLE_GIT_BLOBS=OK files={checked}')
+          PY

@@ -38,6 +38,7 @@ Release status: **NO-GO / production approval not granted**
 - Owner supplement `CODEX_RELEASE_SUPPLEMENT_HR_MATERIALS_UX_FINAL.md` reconciled from Google Drive and added as mandatory gated scope for HR TARGET migration and Materials/Library UX.
 - Canonical server-side Architecture Studio decisions recovered read-only and reconciled with CURRENT inventory: 37 person overrides (26 REMOVE, 8 CHANGE, 2 MERGE, 1 UNDECIDED), source digest pinned, private ID-level dry-run package created outside Git, and 11 apply-blocking conflict groups documented in `HR_TARGET_MIGRATION_DRY_RUN.md`. No account write was performed.
 - Materials/Personal Library implementation deployed only to loopback isolated Moodle: migration/schema PASS, 15/15 synthetic service checks PASS, role allow/deny PASS, cleanup PASS, login/schema health PASS and independent pre-change rollback restore PASS. Authenticated browser/mobile before/after screenshots remain pending.
+- Final Materials UX acceptance pass (`db6095c`) removes the workspace width cap, adds semantic breadcrumbs, separate zero/no-results states, actionable Library/Materials CTAs and disabled→active→loading move feedback. GitHub gate `32638327627` PASS; exact seven-file isolated overlay hashes, PHP/schema/login/log health and a fresh 15/15 smoke PASS; rollback archive pinned. Fresh visual before-state was recreated without unlock. Authenticated rendering remains pending.
 
 ## Blocked / pending
 
@@ -52,7 +53,7 @@ Release status: **NO-GO / production approval not granted**
 - Production-grade sealed/offsite backup, RPO/RTO measurement and production rollback rehearsal.
 - Moodle/Next.js security upgrades.
 - TARGET confirmation and complete B001–B109 traceability.
-- GitHub publication: canonical private repository confirmed as `https://github.com/cauf1l3d/ustarlms`; review branch `ustar-final-audit-release` published and remotely verified at initial payload commit `c30a2aa`. The separate local control-repo still has no remote by design.
+- GitHub publication: canonical private repository confirmed as `https://github.com/cauf1l3d/ustarlms`; review branch `ustar-final-audit-release` includes verified Materials UX payload `db6095c` with successful run `32638327627`. The separate local control-repo still has no remote by design.
 - Production implementation, release and post-release verification; only the explicitly approved containment/permission blocks have been applied.
 
 ## Integrity statement

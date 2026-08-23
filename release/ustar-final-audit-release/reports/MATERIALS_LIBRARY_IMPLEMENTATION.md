@@ -56,6 +56,17 @@ Deployment target was restricted to `/opt/ustar/test-env/ustar-final-audit-relea
 - Independent rollback restore root: `/opt/ustar/test-env/ustar-materials-rollback-verify-2026-08-23_13-54-24`.
 - Restored code version `2026082002`; `learning_events.php` absent; restored DB version `2026082002`; both new tables absent. Rollback PostgreSQL container stopped with retained root/volume. **ROLLBACK_REHEARSAL=PASS**.
 
+### Final UX acceptance overlay — review commit `db6095c`
+
+- GitHub review gate run `32638327627`: PHP, JavaScript, XMLDB/Mustache, UX invariants and 87-file Git-blob manifest all PASS.
+- Overlay archive: `materials-ux-db6095c.tar.gz`, SHA-256 `cea7baac9950fe851df16b3e44c87872f441250dc796e74a8d09b111bb64f120`.
+- Destination was revalidated as the isolated mount only: `/opt/ustar/test-env/ustar-final-audit-release/moodle/public`; production code was not targeted.
+- Seven deployed hashes exactly matched the local review sources: `materials.php`, `knowledge.php`, two Mustache templates, AMD source/build and `_materials.scss`.
+- Pre-overlay isolated rollback archive: `/opt/ustar/test-env/ustar-final-audit-release/release-backups/materials-ux-before-db6095c/files-before.tar.gz`, SHA-256 `3b4557e3e0019eb7a39cbab97fdae1851a1b7ebb3b438ceb4dbe6d442b34cb2e`.
+- Post-overlay PHP lint: PASS; route/schema verifiers: PASS; login HTTP `200`; recent container fatal/parse/unhandled scan: NONE.
+- The first service run correctly exposed fixture interference: the prepared visual before-state and the service verifier both own a synthetic route for the same synthetic employee. The guarded UI fixture was cleaned, service smoke passed **15/15**, and a fresh before-state was recreated (`content 90–93`, route point/version `17`). No real account or production data participated.
+- Fresh before-state has no unlock event; it is reserved for the pending employee Library before/after capture.
+
 The executable synthetic verifier is `local_ustar/cli/test_materials_library.php`; it refuses non-loopback/non-isolated Moodle and deletes every test fixture in `finally`. Authenticated visual evidence uses `local_ustar/cli/materials_library_ui_fixture.php` with explicit `create`, `unlock` and `cleanup` actions; the current isolated state is intentionally the fresh `create` state and must be cleaned after screenshots.
 
 ## Remaining browser verification

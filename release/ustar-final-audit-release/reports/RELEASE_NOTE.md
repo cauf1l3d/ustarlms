@@ -111,3 +111,12 @@ Production release: **not authorized / not performed**
 - Exact login/icon/game hashes and all 12 Academy assets verified inside restored container.
 - Capability matrix plus 34 denial and 18 allow tests PASS on the final restored code/data.
 - RC containers stopped after validation; data retained. One interrupted no-manifest snapshot was quarantined under `failed-snapshots` and cannot pass the restore guard.
+
+## Block 13 — Materials / Personal Library final UX acceptance
+
+- Review payload `db6095c`: full-width workspace, accessible current-location breadcrumb, separate zero/no-results states, actionable CTA and move disabled/active/loading feedback.
+- GitHub review gate `32638327627`: PASS across PHP, JavaScript, XMLDB/Mustache, UX invariants and 87-file manifest.
+- Seven-file isolated overlay hash match, PHP/schema/login/log health and service smoke 15/15 PASS.
+- Rollback archive `materials-ux-before-db6095c/files-before.tar.gz` pinned; fresh locked screenshot fixture recreated.
+- Authenticated desktop/mobile before/after evidence is still required and has not been simulated.
+- Production was not changed by this block.

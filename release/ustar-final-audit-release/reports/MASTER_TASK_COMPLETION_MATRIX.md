@@ -70,8 +70,8 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Live search dialog/dropdown | PROVEN технически | Два символа дают inline results; Escape/focus return проверены; отдельная search page не требуется |
 | Search ACL/relevance/privacy | OWNER DECISION | TARGET sources и disclosure policy не утверждены |
 | Команда: CEO → директор → manager → я; CEO full tree | OWNER DECISION | `reporting=0`; canonical manager relation отсутствует |
-| Материалы workspace | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Полноэкранный каталог дополнен drag/drop + context move; schema, hierarchy lock, stale/cycle, employee deny/admin allow, immutable audit, cleanup и independent rollback restore PASS. Нужны authenticated before/after и 390×844 screenshots |
-| Personal Library rule | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Route `open/ack`, guarded gateway, idempotent event, personal read model, direct-ACL negative и no-backfill PASS в synthetic isolated smoke 15/15. Нужны визуальные employee Library before/after screenshots |
+| Материалы workspace | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Full-width каталог, semantic breadcrumb, separate zero/no-results, drag/drop + keyboard context move и disabled→active→loading feedback находятся в `db6095c`; GitHub gate `32638327627`, exact isolated overlay hashes, schema, hierarchy lock, stale/cycle, employee deny/admin allow, immutable audit, cleanup и rollback archive PASS. Нужны authenticated before/after и 390×844 screenshots |
+| Personal Library rule | ISOLATED RUNTIME PROVEN / BROWSER PENDING | Route `open/ack`, guarded gateway, idempotent event, personal read model, direct-ACL negative и no-backfill PASS в synthetic isolated smoke 15/15 после final UX overlay; fresh locked before-state recreated. Нужны визуальные employee Library before/after screenshots |
 | Игры для ролей | PARTIAL | Employee/manager/HR/CEO surfaces доступны; empty active game обнаружена и скрыта test-only |
 | DGMJS/media/progress | PROVEN в isolated | Same-origin media resolver, wrong/correct, 2 attempts, mastery, 25 XP и idempotent +5 USCOIN PASS |
 | Game fix в production | NOT AUTHORIZED | Production CURRENT по-прежнему содержит host-bound media URL и пустую active game |
@@ -87,7 +87,7 @@ Production release: **НЕ РАЗРЕШЁН / НЕ ВЫПОЛНЕН**
 | Ветка `ustar-final-audit-release` | PROVEN локально | Ветка активна; commits разделены по audit/security/login/icons/UX/release |
 | Не смешивать пользовательские каталоги | PROVEN | Untracked `moodle/`, `readandwork/`, `ustarfronref/`, `Академия - все сразу/` не добавлялись и не менялись |
 | GitHub repository | PROVEN | Canonical private repository подтверждён: `https://github.com/cauf1l3d/ustarlms`; default branch `main` |
-| Push / remote branch | PROVEN | `ustar-final-audit-release` опубликована non-force; initial payload commit `c30a2aa`, remote `main` остался `5443bf5` |
+| Push / remote branch | PROVEN | `ustar-final-audit-release` опубликована non-force; Materials UX payload `db6095c` прошёл GitHub gate `32638327627`, remote `main` остался `5443bf5` |
 
 ## 6. Фаза 8: Checklist Design
 

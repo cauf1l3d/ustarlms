@@ -294,9 +294,9 @@
         </section>
 
 
-        <aside class="u-material-detail">
+        {{#hasdetail}}
+        <section class="u-material-detail" aria-label="Сведения о материале">
 
-            {{#hasdetail}}
             {{#detail}}
 
             <div class="u-material-detail__top">
@@ -1262,20 +1262,8 @@
             </div>
 
             {{/detail}}
-            {{/hasdetail}}
-
-
-            {{^hasdetail}}
-
-            <div class="u-materials-empty">
-                <span class="u-materials-empty__icon" aria-hidden="true">↖</span>
-                <strong>Выберите материал</strong>
-                <p>Сведения, версии и действия откроются в этой области.</p>
-            </div>
-
-            {{/hasdetail}}
-
-        </aside>
+        </section>
+        {{/hasdetail}}
 
     </div>
 

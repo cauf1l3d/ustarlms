@@ -172,6 +172,14 @@ body.u-shell-page .u-next-card--real { display:grid !important; grid-template-co
     .u-materials-folder-create__form { right:auto; left:0; grid-template-columns:1fr; }
     .u-material-detail { position:static; max-height:none; }
 }
+
+/* 1.6 Materials Explorer: one continuous canvas, with details opened below. */
+.u-materials-workspace { display:block !important; }
+.u-materials-catalog { width:100%; }
+.u-materials-list { max-height:none !important; min-height:0 !important; }
+.u-material-detail { position:static !important; max-height:none !important; margin-top:18px; }
+.u-material-detail[aria-hidden="true"] { display:none; }
+
 .u-skill-level-help { margin:0 0 14px; padding:10px 12px; border:1px solid var(--u-border-subtle); border-radius:12px; background:var(--u-surface-muted); }
 .u-skill-level-help summary { cursor:pointer; font-weight:800; color:var(--u-text-primary); }
 .u-skill-level-help > div { display:grid; gap:5px; margin-top:10px; }

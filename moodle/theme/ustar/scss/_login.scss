@@ -1,185 +1,44 @@
-/*
- * USTAR login shell.
- *
- * Authentication, validation, recovery and policy flows remain owned by
- * Moodle core. This layer fixes only layout, hierarchy and responsive polish.
- */
-body.pagelayout-login.u-login-body #page-wrapper #page.u-login-shell {
-    display: grid;
-    grid-template-columns: minmax(0, 58fr) minmax(420px, 42fr);
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-}
-
-.u-login-brand {
-    min-height: 100vh;
-    padding: clamp(28px, 4vw, 64px);
-}
-
-.u-login-brand__banner {
-    width: min(100%, 620px);
-}
-
-.u-login-brand__copy {
-    margin-top: clamp(36px, 7vh, 68px);
-}
-
-.u-login-auth {
-    min-width: 0;
-    padding: clamp(28px, 3.5vw, 52px);
-}
-
-.u-login-auth__card {
-    width: min(100%, 440px);
-}
-
-body.pagelayout-login.u-login-body #page-wrapper #page-footer {
-    display: none;
-}
-
-.u-login-core .login-heading {
-    margin-bottom: 24px;
-    font-size: clamp(28px, 2.4vw, 38px);
-    line-height: 1.08;
-    letter-spacing: -.025em;
-}
-
-.u-login-core .login-form-username,
-.u-login-core .login-form-password,
-.u-login-core .login-form-submit,
-.u-login-core .form-control,
-.u-login-core #username,
-.u-login-core #password {
-    width: 100%;
-}
-
-.u-login-core .form-control {
-    min-height: 50px;
-    padding-inline: 16px;
-}
-
-.u-login-core .toggle-sensitive-wrapper {
-    display: flex;
-    width: 100%;
-}
-
-.u-login-core .toggle-sensitive-wrapper #password {
-    flex: 1 1 0;
-    width: 1%;
-}
-
-.u-login-core .toggle-sensitive-wrapper.small-screens-only.input-group:not(.has-validation) > .toggle-sensitive-btn,
-.u-login-core .toggle-sensitive-btn {
-    display: grid;
-    flex: 0 0 50px;
-    width: 50px;
-    min-height: 50px;
-    place-items: center;
-    border-color: var(--u-border, rgba(40,39,39,.16));
-    border-radius: 0 11px 11px 0;
-    background: var(--u-surface, #fff);
-    color: var(--u-text-secondary, #5B5855);
-}
-
-.u-login-core .toggle-sensitive-btn .icon {
-    margin: 0;
-}
-
-.u-login-core .login-form-submit .btn-primary {
-    width: 100%;
-    min-height: 50px;
-}
-
-.u-login-core .login-form-forgotpassword {
-    margin-top: -2px;
-}
-
-.u-login-core .login-identityproviders,
-.u-login-core .login-divider,
-.u-login-core .login-signup,
-.u-login-core .login-languagemenu,
-.u-login-core .login-guest {
-    margin-top: 20px;
-}
-
-.u-login-core .alert {
-    border-radius: 12px;
-}
-
-@media (max-width: 1040px) {
-    body.pagelayout-login.u-login-body #page-wrapper #page.u-login-shell {
-        grid-template-columns: minmax(0, 1fr) minmax(390px, .9fr);
-    }
-
-    .u-login-brand__copy h1 {
-        font-size: clamp(30px, 4vw, 42px);
-    }
-}
-
-@media (max-width: 820px) {
-    body.pagelayout-login.u-login-body #page-wrapper #page.u-login-shell {
-        grid-template-columns: 1fr;
-    }
-
-    .u-login-brand {
-        min-height: 360px;
-        padding: 28px;
-    }
-
-    .u-login-brand__banner {
-        width: min(100%, 380px);
-    }
-
-    .u-login-brand__copy {
-        margin-top: 28px;
-    }
-
-    .u-login-auth {
-        padding: 38px 24px 56px;
-    }
-}
-
-@media (max-width: 560px) {
-    .u-login-brand {
-        min-height: 230px;
-        padding: 22px;
-    }
-
-    .u-login-brand__kicker {
-        margin-bottom: 12px;
-    }
-
-    .u-login-brand__banner {
-        width: min(100%, 300px);
-    }
-
-    .u-login-brand__copy {
-        margin-top: 20px;
-    }
-
-    .u-login-brand__copy h1,
-    .u-login-brand__chips {
-        display: none;
-    }
-
-    .u-login-auth {
-        place-items: start stretch;
-        padding: 30px 18px 48px;
-    }
-
-    .u-login-core .login-heading {
-        font-size: 28px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .u-login-shell *,
-    .u-login-shell *::before,
-    .u-login-shell *::after {
-        scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-    }
-}
+/* USTAR login: faithful visual layer; Moodle owns every authentication action. */
+body.pagelayout-login.u-login-body { background:#f8f7f4; }
+body.pagelayout-login.u-login-body #page-wrapper,
+body.pagelayout-login.u-login-body #page-wrapper #page.u-login-shell { min-height:100vh; margin:0; padding:0; }
+body.pagelayout-login.u-login-body #page.u-login-shell { display:grid; grid-template-columns:minmax(500px,1.08fr) minmax(440px,.92fr); gap:clamp(34px,6vw,110px); align-items:center; max-width:1480px; margin-inline:auto !important; padding:clamp(28px,5.8vw,92px) clamp(24px,5vw,76px) !important; }
+body.pagelayout-login.u-login-body #page-footer { display:none; }
+.u-login-brand { min-width:0; }
+.u-login-brand__poster { position:relative; display:grid; justify-items:center; min-height:min(76vh,790px); padding:clamp(32px,5vw,68px) clamp(28px,5vw,76px) 30px; overflow:hidden; border:7px solid #f0ad00; border-radius:40px; background:linear-gradient(145deg,#d7c8a4 0%,#c9b890 100%); box-shadow:0 24px 58px rgba(48,39,20,.17); text-align:center; }
+.u-login-brand__poster::after { content:""; position:absolute; inset:auto -18% -42% auto; width:310px; height:310px; border-radius:50%; background:radial-gradient(circle,rgba(255,230,112,.34),rgba(255,230,112,0) 68%); pointer-events:none; }
+.u-login-brand__kicker { display:block; color:rgba(255,255,255,.86); font-size:clamp(22px,2.6vw,38px); font-weight:650; letter-spacing:.38em; line-height:1; text-transform:uppercase; text-shadow:0 2px 3px rgba(62,52,30,.24); }
+.u-login-brand__mark { width:min(100%,440px); margin-top:34px; mix-blend-mode:multiply; }
+.u-login-brand__promise { max-width:610px; margin:26px 0 8px; color:#fffdf5; font-size:clamp(15px,1.45vw,23px); font-weight:800; line-height:1.05; letter-spacing:.035em; }
+.u-login-brand__mascot { width:clamp(140px,19vw,252px); margin:18px 0 8px; filter:drop-shadow(0 11px 8px rgba(48,38,17,.22)); }
+.u-login-brand__description { max-width:650px; margin:auto 0 18px; color:#fff5cf; font-size:clamp(13px,1.08vw,18px); font-style:italic; font-weight:650; line-height:1.18; text-align:left; }
+.u-login-brand__partners { display:flex; width:100%; align-items:end; justify-content:space-between; gap:20px; color:#f6d44a; font-size:12px; font-weight:900; line-height:.92; text-align:left; }
+.u-login-brand__partners img { width:clamp(130px,19vw,235px); height:52px; object-fit:cover; object-position:center; border-radius:5px; opacity:.8; }
+.u-login-auth { display:grid; min-width:0; align-content:center; justify-items:center; padding:14px 0; }
+.u-login-auth__motto { margin:0 0 32px; padding:5px 20px; background:#7c7a76; color:#fffdf7; font-size:clamp(21px,2.15vw,34px); font-weight:650; letter-spacing:.02em; line-height:1.1; }
+.u-login-auth__card { width:min(100%,620px); padding:clamp(22px,3vw,38px); background:#f3eee5; }
+.u-login-auth__heading { display:flex; align-items:center; gap:15px; width:max-content; margin:0 auto 26px; padding:13px 18px; background:#faf9f6; }
+.u-login-auth__heading > div { display:grid; gap:4px; }
+.u-login-auth__heading small { color:#6b6965; font-size:12px; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
+.u-login-auth__heading strong { color:#1b1a17; font-size:24px; line-height:1; }
+.u-login-mark { display:grid; width:68px; height:68px; place-items:center; border-radius:18px; background:#f3bc1d; color:#1c1a15; font-size:32px; font-weight:950; }
+.u-login-core .login-heading { display:none; }
+.u-login-core .login-container,.u-login-core .loginform,.u-login-core .loginform > .login-form { width:100%; max-width:none; padding:0; border:0; background:transparent; box-shadow:none; }
+.u-login-core .login-form-username,.u-login-core .login-form-password,.u-login-core .login-form-submit,.u-login-core .form-control,.u-login-core #username,.u-login-core #password { width:100%; }
+.u-login-core .form-control { min-height:62px; padding-inline:20px; border:1px solid rgba(40,38,34,.14); border-radius:15px; background:#fffdfa; color:#2b2926; font-size:19px; box-shadow:0 1px 2px rgba(32,29,22,.05); }
+.u-login-core .toggle-sensitive-wrapper { display:flex; width:100%; }
+.u-login-core .toggle-sensitive-wrapper #password { flex:1 1 0; width:1%; }
+.u-login-core .toggle-sensitive-btn { display:grid; width:62px; min-height:62px; place-items:center; border:1px solid rgba(40,38,34,.14); border-left:0; border-radius:0 15px 15px 0; background:#fffdfa; color:#8d7540; }
+.u-login-core .login-form-submit .btn-primary { width:100%; min-height:62px; border:0; border-radius:15px; background:#f1bd22; color:#171611; font-size:20px; font-weight:900; transition:transform 160ms cubic-bezier(.2,.8,.2,1),background-color 160ms ease; }
+@media (hover:hover) { .u-login-core .login-form-submit .btn-primary:hover { background:#dfa600; transform:translateY(-1px); } }
+.u-login-core .login-form-submit .btn-primary:active { transform:translateY(1px) scale(.995); }
+.u-login-core .login-form-forgotpassword { margin-top:19px; }
+.u-login-core a { color:#534b3c; font-size:16px; text-decoration:none; }
+.u-login-auth__footer { display:grid; grid-template-columns:auto minmax(0,1fr); width:min(100%,620px); margin-top:76px; padding-top:20px; border-top:1px solid rgba(42,38,31,.13); color:#aaa8a4; column-gap:12px; }
+.u-login-auth__footer > span { grid-row:span 2; display:grid; width:36px; height:36px; place-items:center; border:1px solid #c9c7c2; color:#a29f98; font-size:24px; }
+.u-login-auth__footer p { margin:0; font-size:12px; line-height:1.35; }
+.u-login-auth__footer strong { grid-column:1 / -1; justify-self:center; margin-top:28px; color:#a4a1a0; font-size:clamp(36px,4vw,64px); font-weight:750; letter-spacing:.18em; }
+.u-login-auth__footer small { grid-column:1 / -1; justify-self:center; margin-top:10px; color:#47443f; font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+@media (max-width:950px) { body.pagelayout-login.u-login-body #page.u-login-shell { grid-template-columns:1fr; gap:32px; padding:28px 20px 42px !important; } .u-login-brand__poster { min-height:500px; } .u-login-auth__footer { margin-top:34px; } }
+@media (max-width:560px) { .u-login-brand__poster { min-height:390px; border-width:5px; border-radius:28px; } .u-login-brand__description { text-align:center; } .u-login-brand__partners img { display:none; } .u-login-auth__card { padding:20px 16px; } .u-login-auth__heading { margin-bottom:18px; } .u-login-auth__motto { margin-bottom:20px; } .u-login-core .form-control,.u-login-core .login-form-submit .btn-primary,.u-login-core .toggle-sensitive-btn { min-height:54px; } .u-login-auth__footer strong { font-size:38px; } }
+@media (prefers-reduced-motion:reduce) { .u-login-shell * { transition-duration:.01ms !important; animation-duration:.01ms !important; } }

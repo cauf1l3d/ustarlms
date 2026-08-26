@@ -7,29 +7,30 @@
     {{{ output.standard_top_of_body_html }}}
     <main id="page" class="u-login-shell" aria-label="Вход в USTAR Academy">
         <section class="u-login-brand" aria-label="USTAR Academy">
-            <div class="u-login-brand__top">
-                <span class="u-login-brand__kicker">Корпоративная академия</span>
-                <img src="{{bannerurl}}" alt="USTAR Академия" class="u-login-brand__banner">
-            </div>
-            <div class="u-login-brand__copy">
-                <p>Обучение · Знания · Развитие</p>
-                <h1>Рабочее пространство, которое ведёт сотрудника от первого дня до следующего профессионального уровня.</h1>
-                <div class="u-login-brand__chips" aria-hidden="true">
-                    <span>Маршрут обучения</span><span>База знаний</span><span>Достижения</span>
+            <div class="u-login-brand__poster">
+                <span class="u-login-brand__kicker">Академия</span>
+                <img src="{{brandmarkurl}}" alt="USTAR" class="u-login-brand__mark">
+                <p class="u-login-brand__promise">Обучение, навыки, твоя карьера, игры и развитие — в одном рабочем пространстве.</p>
+                <img src="{{mascoturl}}" alt="" class="u-login-brand__mascot" aria-hidden="true">
+                <p class="u-login-brand__description">Корпоративная обучающая платформа для развития сотрудника как профессионала, руководителя и части сильной команды.</p>
+                <div class="u-login-brand__partners" aria-label="Партнёры USTAR Academy">
+                    <span>EXPRESS<br>MARKET</span>
+                    <img src="{{academybannerurl}}" alt="USTAR Академия">
                 </div>
             </div>
         </section>
         <section class="u-login-auth">
-            <div class="u-login-auth__card">
+            <p class="u-login-auth__motto">Тут растут эксперты</p>
+            <div class="u-login-auth__card" aria-label="Форма входа">
                 <div class="u-login-auth__heading">
                     <span class="u-login-mark" aria-hidden="true">U</span>
-                    <div><small>USTAR Academy</small><strong>Вход в личный кабинет</strong></div>
+                    <div><small>USTAR Академия</small><strong>Вход</strong></div>
                 </div>
                 <div id="region-main" class="u-login-core">
                     {{{ output.main_content }}}
                 </div>
-                <p class="u-login-auth__note">Используйте корпоративную учётную запись Moodle. Пароль и авторизация остаются защищёнными штатными механизмами LMS.</p>
             </div>
+            <div class="u-login-auth__footer"><span aria-hidden="true">ϟ</span><p>USTAR Академия использует авторские технологии и собственные разработанные сервисы обучения на основе ядра Moodle.</p><strong>USTAR</strong><small>© USTAR Академия. 2026 Все права защищены</small></div>
         </section>
     </main>
     {{> theme_boost/footer }}

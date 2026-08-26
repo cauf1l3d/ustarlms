@@ -505,7 +505,7 @@ foreach ($graphpositionids as $graphpositionid) {
                 continue;
             }
             $contentid = (int)($requirement['sourceid'] ?? 0);
-            if ($contentid <= 0 || isset($graphmaterialseen[$contentid])) {
+            if ($contentid <= 0) {
                 continue;
             }
             $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type,status', IGNORE_MISSING);
@@ -518,6 +518,16 @@ foreach ($graphpositionids as $graphpositionid) {
             foreach ($pointskillids as $pointskillid) {
                 $materialskillnames[] = (string)($skillmap[$pointskillid]['name'] ?? $pointskillid);
             }
+            if (isset($graphmaterialseen[$contentid])) {
+                $existingindex = $graphmaterialseen[$contentid];
+                $existingpositions = array_filter(array_map('trim', explode(', ', (string)$graphmaterialrows[$existingindex]['positionname'])));
+                $existingpositions[] = (string)($positionmap[$graphpositionid]['name'] ?? $graphpositionid);
+                $graphmaterialrows[$existingindex]['positionname'] = implode(', ', array_values(array_unique($existingpositions)));
+                $existingmaterialskills = array_filter(array_map('trim', explode(', ', (string)$graphmaterialrows[$existingindex]['skills'])));
+                $graphmaterialrows[$existingindex]['skills'] = implode(', ', array_values(array_unique(array_merge($existingmaterialskills, $materialskillnames))));
+                $graphmaterialrows[$existingindex]['hasskills'] = $graphmaterialrows[$existingindex]['hasskills'] || !empty($materialskillnames);
+                continue;
+            }
             $graphmaterialrows[] = [
                 'id' => $contentid,
                 'name' => format_string((string)$content->title),
@@ -528,7 +538,7 @@ foreach ($graphpositionids as $graphpositionid) {
                 'url' => $materialurl->out(false),
                 'routeurl' => $routeurl->out(false),
             ];
-            $graphmaterialseen[$contentid] = true;
+            $graphmaterialseen[$contentid] = count($graphmaterialrows) - 1;
         }
     }
 }

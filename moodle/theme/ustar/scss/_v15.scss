@@ -221,6 +221,10 @@ body.u-shell-page .u-next-card--real { display:grid !important; grid-template-co
 .u-position-graph__card--dark:hover { color:#fff; }
 .u-position-graph__card strong { overflow:hidden; font-size:13px; line-height:1.25; text-overflow:ellipsis; }
 .u-position-graph__card span,.u-position-graph__card small { overflow:hidden; color:var(--u-text-secondary); font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.u-position-graph__card-link { display:grid; gap:3px; min-width:0; color:inherit; text-decoration:none; }
+.u-position-graph__card-link:hover { color:inherit; text-decoration:none; }
+.u-position-graph__route-link { margin-top:6px; padding-top:6px; border-top:1px solid var(--u-border-subtle); color:var(--u-text-secondary); font-size:10px; font-weight:800; text-decoration:none; }
+.u-position-graph__route-link:hover { color:var(--u-text-primary); text-decoration:underline; }
 .u-position-graph__card--dark span,.u-position-graph__card--dark small { color:#bbb9b2; }
 .u-position-graph__connector { position:relative; display:grid; align-content:start; justify-items:center; padding-top:37px; color:var(--u-text-muted); font-size:9px; text-align:center; }
 .u-position-graph__connector::before { content:''; position:absolute; top:57px; left:0; right:0; border-top:1px solid color-mix(in srgb,var(--u-brand) 58%,var(--u-border)); }

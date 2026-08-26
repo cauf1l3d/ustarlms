@@ -14,5 +14,4 @@ Scope: P1 login, P2 Materials Explorer, P3 Positions workspace
 | Skill/material impact | PASS static | graph rows aggregate affected positions and route content |
 | Motion/accessibility | PASS static | reduced-motion override retained |
 
-No screenshot is presented as a live production proof. The only untracked browser capture is a failed network error page and is intentionally excluded from the release manifest.
-
+No screenshot is presented as a live production proof. The browser capture in `evidence/login-reference/` is a failed network error page retained only as a diagnostic record; it is not counted as visual acceptance evidence.

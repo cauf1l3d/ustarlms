@@ -1,6 +1,6 @@
 PHASE: DELIVERY / TARGET UX BLOCK P0-P3
 BRANCH: canonical-release
-COMMIT: 1f158b3
+COMMIT: 38cd365 (release package; checkpoint metadata follows)
 IMPLEMENTED: Isolated-only candidate changes; no production deployment step executed.
 TEST_CONTAINER: Existing isolated USTAR test environment and local Studio test server.
 TESTS: Production smoke intentionally not run.

@@ -1,6 +1,6 @@
 PHASE: DELIVERY / TARGET UX BLOCK P0-P3
 BRANCH: canonical-release
-COMMIT: 1f158b3
+COMMIT: 38cd365 (release package; checkpoint metadata follows)
 IMPLEMENTED: Route Studio content upload/attach; reference-aligned Moodle login; full-width Materials Explorer; Positions ladder plus skill/material impact graph; release source mirrors and RC reports.
 TEST_CONTAINER: Isolated Route Studio runtime probe and prior isolated Moodle evidence; remote visual re-check pending external review capacity.
 TESTS: PASS — Route Studio 10/10; Studio test:studio; test:server; test:http on local production server; Studio build; git diff --check; static Mustache balance. Studio lint: FAIL on pre-existing explicit-any/hooks rules (66 errors, 2 warnings).

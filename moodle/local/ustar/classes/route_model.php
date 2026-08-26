@@ -349,6 +349,84 @@ final class route_model {
         return $DB->get_record('local_ustar_route_versions', ['id' => $id], '*', MUST_EXIST);
     }
 
+    /**
+     * Attach a freshly published USTAR Content item to one existing point.
+     *
+     * This is deliberately a human workflow boundary: the editor selects a
+     * point, uploads through the native Content engine, and returns to one
+     * new published route version. No source key or database identifier is
+     * exposed in the normal UI.
+     */
+    public static function attach_published_content(
+        int $routeid,
+        int $pointid,
+        int $contentid,
+        int $actorid,
+        int $expectedmodified = 0
+    ): \stdClass {
+        global $DB;
+
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+        $lock = $factory->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.');
+        }
+
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            $point = $DB->get_record_sql(
+                'SELECT * FROM {local_ustar_route_points} WHERE id = :id AND routeid = :routeid FOR UPDATE',
+                ['id' => $pointid, 'routeid' => $routeid],
+                MUST_EXIST
+            );
+            if ($expectedmodified > 0 && (int)$point->timemodified !== $expectedmodified) {
+                $transaction->rollback(new \moodle_exception('Точка маршрута уже изменена в другой сессии. Материал сохранён в USTAR Content, но не был привязан автоматически. Обновите маршрут и добавьте его из списка материалов.'));
+            }
+
+            $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,status,ackrequired', MUST_EXIST);
+            if ((string)$content->status !== content::STATUS_PUBLISHED) {
+                $transaction->rollback(new \moodle_exception('В маршрут можно автоматически добавить только опубликованный материал.'));
+            }
+
+            $latest = self::latest_version((int)$point->id);
+            if (!$latest) {
+                $transaction->rollback(new \moodle_exception('Сначала создайте первую версию точки маршрута, затем загрузите в неё файл.'));
+            }
+
+            $requirements = self::requirements_for_version($latest);
+            foreach ($requirements as $requirement) {
+                if (($requirement['type'] ?? '') === 'content' && (int)($requirement['sourceid'] ?? 0) === $contentid) {
+                    $transaction->allow_commit();
+                    return $latest;
+                }
+            }
+            $requirements[] = [
+                'type' => 'content',
+                'sourceid' => $contentid,
+                'completionmode' => !empty($content->ackrequired) ? 'ack' : 'open',
+                'required' => true,
+                'label' => (string)$content->title,
+            ];
+
+            $point->timemodified = max(time(), (int)$point->timemodified + 1);
+            $point->usermodified = $actorid;
+            $DB->update_record('local_ustar_route_points', $point);
+            $version = self::create_version((int)$point->id, [
+                'title' => (string)$latest->title,
+                'summary' => (string)$latest->summary,
+                'requirements' => $requirements,
+                'renewalpolicy' => (string)$latest->renewalpolicy,
+                'validdays' => (int)$latest->validdays,
+                'status' => self::STATUS_PUBLISHED,
+                'effectivedate' => time(),
+            ], $actorid);
+            $transaction->allow_commit();
+            return $version;
+        } finally {
+            $lock->release();
+        }
+    }
+
     public static function reorder(int $routeid, array $pointids, int $actorid, string $expectedrevision = ''): void {
         global $DB;
         $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');

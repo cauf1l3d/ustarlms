@@ -13,9 +13,11 @@ $context =
  * narrow and explicit; this never accepts an arbitrary redirect URL. */
 $returnto = optional_param('returnto', '', PARAM_ALPHANUMEXT);
 $returnposition = optional_param('position', '', PARAM_ALPHANUMEXT);
+$returnpointid = optional_param('routepoint', 0, PARAM_INT);
+$returnpointmodified = optional_param('pointmodified', 0, PARAM_INT);
 $returnurl = new moodle_url('/local/ustar/materials.php', ['theme' => 'ustar']);
 if ($returnto === 'route_studio' && $returnposition !== '') {
-    $returnurl = new moodle_url('/local/ustar/route_studio.php', ['position' => $returnposition]);
+    $returnurl = new moodle_url('/local/ustar/route_studio.php', ['position' => $returnposition, 'point' => $returnpointid]);
 }
 
 
@@ -52,7 +54,7 @@ $PAGE->set_context(
 $PAGE->set_url(
     new moodle_url(
         '/local/ustar/material_create.php',
-        ['returnto' => $returnto, 'position' => $returnposition]
+        ['returnto' => $returnto, 'position' => $returnposition, 'routepoint' => $returnpointid, 'pointmodified' => $returnpointmodified]
     )
 );
 
@@ -87,6 +89,7 @@ if ($mform->is_cancelled()) {
 if ($data = $mform->get_data()) {
 
     $created = null;
+    $routepublished = false;
 
 
     try {
@@ -147,12 +150,43 @@ if ($data = $mform->get_data()) {
             (int)$USER->id
         );
 
+        /* When this form was opened from an existing route point, complete
+         * the full editor promise: give the file the position's narrow ACL,
+         * publish it, then create a new published point version containing it. */
+        if ($returnto === 'route_studio' && $returnposition !== '' && $returnpointid > 0) {
+            $route = \local_ustar\route_model::get_route($returnposition);
+            if (!$route) {
+                throw new moodle_exception('Маршрут для выбранной должности больше не существует. Материал сохранён как черновик.');
+            }
+            $content = $DB->get_record('local_ustar_content', ['id' => (int)$created['contentid']], '*', MUST_EXIST);
+            \local_ustar\content_admin::save((int)$created['contentid'], [
+                'title' => (string)$content->title,
+                'summary' => (string)$content->summary,
+                'category' => (string)$content->category,
+                'ackrequired' => !empty($content->ackrequired),
+                'parentid' => (int)($content->parentid ?? 0),
+                'accessmode' => 'custom',
+                'positions' => [$returnposition],
+                'departments' => [],
+                'expectedmodified' => (int)$content->timemodified,
+            ], (int)$USER->id);
+            \local_ustar\content_admin::publish((int)$created['contentid'], (int)$USER->id);
+            $routepublished = true;
+            \local_ustar\route_model::attach_published_content(
+                (int)$route->id,
+                $returnpointid,
+                (int)$created['contentid'],
+                (int)$USER->id,
+                $returnpointmodified
+            );
+        }
+
 
         redirect(
             $returnto === 'route_studio'
-                ? new moodle_url('/local/ustar/route_studio.php', ['position' => $returnposition, 'newcontent' => (int)$created['contentid']])
+                ? new moodle_url('/local/ustar/route_studio.php', ['position' => $returnposition, 'point' => $returnpointid, 'newcontent' => (int)$created['contentid'], 'attached' => $returnpointid > 0 ? 1 : 0])
                 : new moodle_url('/local/ustar/materials.php', ['contentid' => (int)$created['contentid'], 'status' => 'all', 'theme' => 'ustar']),
-            'Материал создан как черновик',
+            $routepublished ? 'Материал опубликован и автоматически добавлен в новую версию точки маршрута' : 'Материал создан как черновик',
             null,
             \core\output\notification::NOTIFY_SUCCESS
         );
@@ -162,6 +196,7 @@ if ($data = $mform->get_data()) {
 
         if (
             $created
+            && !$routepublished
             &&
             !empty(
                 $created['contentid']

@@ -59,5 +59,21 @@ $assert($stale, 'stale_reorder_rejected');
 $staleupdate = false;
 try { \local_ustar\route_model::update_point((int)$route->id, (int)$point->id, \local_ustar\route_model::PHASE_GATE, true, $actorid, (int)$freshpoint->timemodified); } catch (Throwable $ignored) { $staleupdate = true; }
 $assert($staleupdate, 'stale_point_update_rejected');
+$now = time();
+$contentid = (int)$DB->insert_record('local_ustar_content', (object)[
+    'type' => 'document', 'title' => 'Файл из Route Studio', 'summary' => 'Проверка автоматической привязки',
+    'category' => null, 'status' => 'published', 'sourcekind' => 'ustar_file', 'courseid' => null,
+    'cmid' => null, 'externalurl' => null, 'owneruserid' => $actorid, 'ackrequired' => 1,
+    'publishedat' => $now, 'sortorder' => 0, 'timecreated' => $now, 'timemodified' => $now, 'usermodified' => $actorid,
+]);
+$DB->insert_record('local_ustar_content_access', (object)[
+    'contentid' => $contentid, 'scopetype' => 'position', 'scopeid' => $positionid, 'active' => 1,
+    'timecreated' => $now, 'createdby' => $actorid,
+]);
+$attachpoint = $DB->get_record('local_ustar_route_points', ['id' => $point->id], '*', MUST_EXIST);
+$v3 = \local_ustar\route_model::attach_published_content((int)$route->id, (int)$point->id, $contentid, $actorid, (int)$attachpoint->timemodified);
+$attachedrequirements = \local_ustar\route_model::requirements_for_version($v3);
+$attached = array_values(array_filter($attachedrequirements, static fn(array $item): bool => ($item['type'] ?? '') === 'content' && (int)($item['sourceid'] ?? 0) === $contentid));
+$assert((int)$v3->versionno === 3 && (string)$v3->status === 'published' && count($attached) === 1 && ($attached[0]['completionmode'] ?? '') === 'ack', 'uploaded_content_auto_attaches_as_published_version');
 $assert($before !== \local_ustar\route_model::revision((int)$route->id), 'route_revision_changes_after_edit');
 echo 'ROUTE_STUDIO_RUNTIME=PASS checks=' . count($checks) . PHP_EOL;

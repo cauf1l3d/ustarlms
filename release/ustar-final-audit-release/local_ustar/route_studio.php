@@ -180,6 +180,12 @@ if ($routeexists) {
         $point['skilloptions'] = []; $point['primaryskills'] = [];
         foreach ($skillmap as $id => $name) { $point['skilloptions'][] = ['id' => $id, 'name' => $name, 'selected' => in_array($id, $selectedskills, true)]; $point['primaryskills'][] = ['id' => $id, 'name' => $name, 'selected' => $id === $primaryskill]; }
         $point['previouschecked'] = $previous ? 'checked' : '';
+        $point['uploadurl'] = (new moodle_url('/local/ustar/material_create.php', [
+            'returnto' => 'route_studio',
+            'position' => $positionid,
+            'routepoint' => (int)$point['id'],
+            'pointmodified' => (int)$point['expectedmodified'],
+        ]))->out(false);
     }
     unset($point);
 }
@@ -196,7 +202,7 @@ $PAGE->set_url(new moodle_url('/local/ustar/route_studio.php', ['position' => $p
 $PAGE->set_pagelayout('ustar'); $PAGE->set_title('Конструктор маршрутов | USTAR'); $PAGE->set_heading('Центр управления USTAR');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_v2.css')); $PAGE->requires->js_call_amd('local_ustar/route_studio', 'init');
 $data = ['positionid' => $positionid, 'positions' => $positionoptions, 'route' => $routeexists ? $route : null, 'routeexists' => $routeexists,
-    'noroute' => !$routeexists, 'saved' => optional_param('saved', 0, PARAM_BOOL), 'sesskey' => sesskey(),
+    'noroute' => !$routeexists, 'saved' => optional_param('saved', 0, PARAM_BOOL), 'attached' => optional_param('attached', 0, PARAM_BOOL), 'sesskey' => sesskey(),
     'revision' => $routeexists ? \local_ustar\route_model::revision((int)$route['routeid']) : '',
     'previewurl' => (new moodle_url('/local/ustar/route.php', ['position' => $positionid]))->out(false),
     'materialsurl' => (new moodle_url('/local/ustar/materials.php'))->out(false),

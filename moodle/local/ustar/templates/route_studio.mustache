@@ -1,78 +1,59 @@
-<div class="u-product-page u-route-studio u-route2-studio">
-    <header class="u-product-head">
-        <div><p class="u-page-kicker">Learning Route 2.0</p><h1>Постоянные учебные маршруты</h1><p>Правило: одна должность — один маршрут на весь срок существования должности. Меняются версии отдельных точек, а не сам маршрут.</p></div>
-    </header>
+<div class="u-product-page u-route-studio u-route-editor">
+  <header class="u-route-editor__head">
+    <div><p class="u-page-kicker">Учебный маршрут</p><h1>Конструктор маршрутов</h1><p>Здесь настраивается путь сотрудника для одной должности: что изучить, подтвердить и когда открыть следующий шаг. Сам маршрут постоянный; при изменении создаётся новая версия точки, поэтому история не теряется.</p></div>
+    {{#routeexists}}<a class="u-btn" href="{{previewurl}}">Посмотреть как сотрудник</a>{{/routeexists}}
+  </header>
 
-    <div class="u-route2-studio-note"><strong>Формат имени фиксирован:</strong> ПОДРАЗДЕЛЕНИЕ: ДОЛЖНОСТЬ. Старый порядок Moodle-курсов остаётся в структуре как fallback и не удаляется миграцией.</div>
+  {{#saved}}<div class="u-inline-notice u-inline-notice--success"><strong>Изменения сохранены</strong><span>Опубликованные версии и уже пройденное обучение остались в истории.</span></div>{{/saved}}
 
-    {{#saved}}<div class="u-inline-notice u-inline-notice--success"><strong>Изменения сохранены</strong><span>История старых версий и пройденных точек не удалена.</span></div>{{/saved}}
+  <form class="u-route-editor__position" method="get">
+    <label><span>Должность</span><select name="position" aria-label="Выберите должность" onchange="this.form.submit()">{{#positions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/positions}}</select></label>
+    <noscript><button class="u-btn" type="submit">Открыть</button></noscript>
+    <a href="{{materialsurl}}" class="u-btn">Открыть материалы</a>
+  </form>
 
-    <form class="u-route-selector" method="get">
-        <label><span>Должность</span><select name="position" onchange="this.form.submit()">{{#positions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/positions}}</select></label>
-        <noscript><button class="u-btn" type="submit">Открыть</button></noscript>
-        <a class="u-btn" href="{{positionsurl}}">Навыки и подтверждения</a>
-        {{#routeexists}}<a class="u-btn" href="{{previewurl}}">Просмотр сотрудника →</a>{{/routeexists}}
-    </form>
+  {{#noroute}}
+  <section class="u-panel u-route-editor__empty"><h2>Для этой должности маршрут ещё не создан</h2><p>Можно начать с чистого маршрута или перенести текущие обязательные Moodle-курсы как первые версии точек. Старые данные не удаляются.</p><form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="ensure"><button class="u-btn u-btn--primary" type="submit">Создать маршрут из текущего обучения</button></form></section>
+  {{/noroute}}
 
-    {{#noroute}}
-    <section class="u-panel">
-        <div class="u-empty-state u-empty-state--product">
-            <h2>Для этой должности ещё нет маршрута 2.0</h2>
-            <p>Создание не удалит старый маршрут: текущие обязательные курсы будут перенесены как первые опубликованные версии точек.</p>
-            <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="ensure"><button class="u-btn u-btn--primary" type="submit">Создать постоянный маршрут</button></form>
+  {{#routeexists}}{{#route}}
+  <section class="u-route-editor__overview"><div><p class="u-page-kicker">Маршрут должности</p><h2>{{name}}</h2><p>{{pointcount}} точек. После публикации новая версия сразу действует для всех сотрудников с этой должностью — вручную назначать её каждому не нужно.</p></div><span class="u-route-editor__badge">Постоянный маршрут</span></section>
+
+  {{#haspoints}}
+  <form id="u-route-order" method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="reorder"><input type="hidden" name="revision" value="{{revision}}"></form>
+  <section class="u-route-editor__canvas" aria-label="Точки маршрута"><div class="u-route-editor__canvas-head"><div><h2>Маршрут сейчас</h2><p>Перетаскивайте точки или пользуйтесь стрелками. Сохранение порядка защищено от одновременного редактирования.</p></div><button class="u-btn" form="u-route-order" type="submit">Сохранить порядок</button></div>
+    <div id="u-route-list" class="u-route-editor__list">
+    {{#points}}
+      <article id="point-{{id}}" class="u-route-editor__point {{#editing}}is-editing{{/editing}}" draggable="true" tabindex="0">
+        <input form="u-route-order" type="hidden" name="pointids[]" value="{{id}}">
+        <div class="u-route-editor__point-order"><span class="u-route-item__order">{{sortorder}}</span><span class="u-route-editor__line"></span></div>
+        <div class="u-route-editor__point-main"><div class="u-route-editor__point-meta"><span>{{phaselabel}}</span>{{#latest}}<span>{{versionlabel}}</span><span>{{#published}}Опубликовано{{/published}}{{#draft}}Черновик{{/draft}}{{#archived}}Архив{{/archived}}</span>{{/latest}}</div><h3>{{#latest}}{{title}}{{/latest}}</h3>{{#latest}}{{#hassummary}}<p>{{summary}}</p>{{/hassummary}}{{/latest}}
+          {{#latest}}{{#hasrequirements}}<div class="u-route-editor__chips">{{#requirements}}<span>{{label}}</span>{{/requirements}}</div>{{/hasrequirements}}{{/latest}}
+          {{^latest}}<p class="u-route-editor__muted">У точки ещё нет версии с учебным содержанием.</p>{{/latest}}
+          <div class="u-route-editor__actions"><a class="u-btn u-btn--small" href="?position={{positionid}}&point={{id}}#point-{{id}}">Редактировать</a><button type="button" class="u-btn u-btn--small" data-u-move="up" aria-label="Поднять точку">↑</button><button type="button" class="u-btn u-btn--small" data-u-move="down" aria-label="Опустить точку">↓</button></div>
         </div>
-    </section>
-    {{/noroute}}
+        {{#editing}}
+        <div class="u-route-editor__edit"><div class="u-route-editor__edit-head"><div><h3>Новая версия точки</h3><p>Старую опубликованную версию не меняем: сохраняем новое содержание отдельной версией.</p></div></div>
+          <form method="post" class="u-route-editor__form"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="save_version"><input type="hidden" name="pointid" value="{{id}}"><input type="hidden" name="expectedmodified" value="{{expectedmodified}}">
+            <div class="u-route-editor__grid"><label><span>Название</span><input name="title" value="{{formtitle}}" required></label><label><span>Раздел</span><select name="phase"><option value="adaptation" {{#adaptationselected}}selected{{/adaptationselected}}>Адаптация</option><option value="gate" {{#gateselected}}selected{{/gateselected}}>Допуск</option><option value="continuous" {{#continuousselected}}selected{{/continuousselected}}>Постоянное обучение</option></select></label><label class="u-route-editor__wide"><span>Описание</span><textarea name="summary" rows="3" placeholder="Что сотрудник должен сделать и зачем">{{formsummary}}</textarea></label></div>
+            <fieldset><legend>Обучение</legend><p>Выберите уже созданные материалы, курс или активность. В интерфейсе сотрудника будут видны только понятные названия.</p><label><span>Материалы, файлы и видео</span><select name="contentids[]" multiple size="5">{{#contentoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}} — {{meta}}</option>{{/contentoptions}}</select></label><a href="{{uploadurl}}" class="u-route-editor__link">Загрузить новый файл или видео</a><div class="u-route-editor__grid"><label><span>Moodle-курс</span><select name="courseid"><option value="0">Не добавлять курс</option>{{#courseoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/courseoptions}}</select></label><label><span>Учебная активность или тест</span><select name="cmid"><option value="0">Не добавлять активность</option>{{#activityoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/activityoptions}}</select></label></div></fieldset>
+            <fieldset><legend>Навыки</legend><p>Укажите требуемые навыки. Основной навык нужен для понятной связи «обучение → навык»; дополнительные используются только как поддерживающие.</p><div class="u-route-editor__grid"><label><span>Требуемые навыки</span><select name="skillids[]" multiple size="5">{{#skilloptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/skilloptions}}</select></label><label><span>Основной навык</span><select name="primaryskillid"><option value="">Не указан</option>{{#primaryskills}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/primaryskills}}</select></label></div></fieldset>
+            <fieldset><legend>Завершение и публикация</legend><div class="u-route-editor__grid"><label><span>Как учитывать материал</span><select name="completionmode"><option value="open">После открытия из маршрута</option><option value="ack">После подтверждения ознакомления</option></select></label><label><span>Повторное прохождение</span><select name="renewalpolicy"><option value="keep" {{#keepselected}}selected{{/keepselected}}>Сохранить прошлый результат</option><option value="all" {{#allselected}}selected{{/allselected}}>Отправить всех на повторное прохождение</option><option value="expiry" {{#expiryselected}}selected{{/expiryselected}}>Повторять после срока действия</option><option value="manual" {{#manualselected}}selected{{/manualselected}}>Назначать повтор вручную</option></select></label><label><span>Срок действия, дней</span><input type="number" min="0" max="3650" name="validdays" value="{{formvaliddays}}"></label><label><span>Статус</span><select name="status"><option value="draft">Черновик</option><option value="published">Опубликовать для сотрудников</option></select></label></div><label class="u-route-editor__check"><input type="checkbox" name="required" value="1" checked> Обязательно для завершения точки</label><label class="u-route-editor__check"><input type="checkbox" name="previousadaptation" value="1" {{previouschecked}}> Сначала завершить предыдущие обязательные точки</label><label class="u-route-editor__check"><input type="checkbox" name="active" value="1" {{activechecked}}> Точка активна в маршруте</label></fieldset>
+            <div class="u-route-editor__save"><button class="u-btn u-btn--primary" type="submit">Сохранить как новую версию</button><a class="u-btn" href="?position={{positionid}}#point-{{id}}">Отмена</a></div>
+          </form>
+        </div>
+        {{/editing}}
+      </article>
+    {{/points}}
+    </div>
+  </section>
+  {{/haspoints}}
 
-    {{#routeexists}}{{#route}}
-    <section class="u-panel">
-        <header class="u-panel-title"><div><p class="u-page-kicker">Единый маршрут должности</p><h2>{{name}}</h2><p>{{pointcount}} точек. Точка остаётся стабильной, а её содержание развивается через v1 → v2 → v3.</p></div><span>Permanent</span></header>
-
-        {{#haspoints}}
-        <form method="post" id="u-route-form"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="reorder"></form>
-            <div id="u-route-list">
-                {{#points}}
-                <article class="u-route-item u-route2-admin-point" draggable="true">
-                    <input form="u-route-form" type="hidden" name="pointids[]" value="{{id}}">
-                    <div class="u-route2-admin-point__top">
-                        <span class="u-route-item__order">{{sortorder}}</span>
-                        <div><small>{{phaselabel}} · {{pointkey}}</small><h3>{{#latest}}{{title}}{{/latest}}</h3></div>
-                        <div class="u-route-item__moves"><button type="button" class="u-btn u-btn--small" data-u-move="up">↑</button><button type="button" class="u-btn u-btn--small" data-u-move="down">↓</button></div>
-                    </div>
-
-                    {{#versions}}
-                    <div class="u-route2-version">
-                        <div class="u-route2-version__head"><strong>{{versionlabel}} · {{title}}</strong><span>{{policylabel}} · {{status}}</span></div>
-                        {{#hassummary}}<p>{{summary}}</p>{{/hassummary}}
-                        {{#hasrequirements}}<div class="u-route2-version__reqs">{{#requirements}}<span>{{label}}</span>{{/requirements}}</div>{{/hasrequirements}}
-                    </div>
-                    {{/versions}}
-
-                    <div class="u-route2-inline-form">
-                        <label><span>Название новой версии</span><input form="u-version-{{id}}" name="title" value="{{formtitle}}" required></label>
-                        <label><span>Политика обновления</span><select form="u-version-{{id}}" name="renewalpolicy">{{#policies}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/policies}}</select></label>
-                        <label><span>Срок действия, дней</span><input form="u-version-{{id}}" type="number" min="0" max="3650" name="validdays" value="{{formvaliddays}}"></label>
-                        <button form="u-version-{{id}}" class="u-btn u-btn--primary" type="submit">Создать версию</button>
-                    </div>
-                    <form id="u-version-{{id}}" method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="new_version"><input type="hidden" name="pointid" value="{{id}}"><input type="hidden" name="status" value="published"><input type="hidden" name="summary" value="{{formsummary}}"></form>
-                </article>
-                {{/points}}
-            </div>
-            <div class="u-route-actions"><button form="u-route-form" class="u-btn" type="submit">Сохранить порядок точек</button></div>
-        {{/haspoints}}
-    </section>
-
-    <section class="u-panel">
-        <header class="u-panel-title"><div><p class="u-page-kicker">Новая точка</p><h2>Добавить в существующий маршрут</h2><p>Новый маршрут не создаётся. Добавляется очередная стабильная точка с первой версией.</p></div></header>
-        <form class="u-route2-add-form" method="post">
-            <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="add_point">
-            <label><span>Название</span><input name="title" required placeholder="Например: Новый ассортимент осень 2026"></label>
-            <label><span>Раздел</span><select name="phase"><option value="adaptation">Адаптация</option><option value="gate">Допуск</option><option value="continuous">Постоянное обучение</option></select></label>
-            <label><span>Источник</span><select name="requirementtype"><option value="">Пока без источника</option><option value="course">Moodle course ID</option><option value="cm">Moodle activity CMID</option><option value="content">USTAR material ID</option><option value="skill">USTAR skill ID</option><option value="previous_adaptation">Все предыдущие точки</option></select></label>
-            <label><span>ID / ключ источника</span><input name="source" placeholder="10 / 37 / material ID / skill_id"></label>
-            <label><span>Когда материал считается изученным</span><select name="completionmode"><option value="open">После открытия из маршрута</option><option value="ack">После подтверждения ознакомления</option></select></label>
-            <button class="u-btn u-btn--primary" type="submit">Добавить точку</button>
-        </form>
-    </section>
-    {{/route}}{{/routeexists}}
+  <section class="u-route-editor__add"><header><p class="u-page-kicker">Новая точка</p><h2>Добавить обучение в маршрут</h2><p>Создаётся стабильная точка и её первая версия. Технические ключи и идентификаторы не требуются.</p></header>
+    <form method="post" class="u-route-editor__form"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="position" value="{{positionid}}"><input type="hidden" name="action" value="add_point"><div class="u-route-editor__grid"><label><span>Название</span><input name="title" required placeholder="Например: Работа с ассортиментом"></label><label><span>Раздел</span><select name="phase"><option value="adaptation">Адаптация</option><option value="gate">Допуск</option><option value="continuous">Постоянное обучение</option></select></label><label class="u-route-editor__wide"><span>Описание</span><textarea name="summary" rows="3" placeholder="Что сотрудник получит от этой точки"></textarea></label></div>
+      <fieldset><legend>Добавить обучение</legend><label><span>Материалы, файлы и видео</span><select name="contentids[]" multiple size="5">{{#addcontentoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}} — {{meta}}</option>{{/addcontentoptions}}</select></label><a href="{{uploadurl}}" class="u-route-editor__link">Загрузить новый файл или видео</a><div class="u-route-editor__grid"><label><span>Moodle-курс</span><select name="courseid"><option value="0">Не добавлять курс</option>{{#courseoptions}}<option value="{{id}}">{{name}}</option>{{/courseoptions}}</select></label><label><span>Учебная активность или тест</span><select name="cmid"><option value="0">Не добавлять активность</option>{{#activityoptions}}<option value="{{id}}">{{name}}</option>{{/activityoptions}}</select></label></div></fieldset>
+      <fieldset><legend>Навыки и правила</legend><div class="u-route-editor__grid"><label><span>Требуемые навыки</span><select name="skillids[]" multiple size="5">{{#skilloptions}}<option value="{{id}}">{{name}}</option>{{/skilloptions}}</select></label><label><span>Основной навык</span><select name="primaryskillid"><option value="">Не указан</option>{{#primaryskills}}<option value="{{id}}">{{name}}</option>{{/primaryskills}}</select></label><label><span>Как учитывать материал</span><select name="completionmode"><option value="open">После открытия из маршрута</option><option value="ack">После подтверждения ознакомления</option></select></label><label><span>Повторное прохождение</span><select name="renewalpolicy"><option value="keep">Сохранить прошлый результат</option><option value="all">Отправить всех на повторное прохождение</option><option value="expiry">Повторять после срока действия</option><option value="manual">Назначать повтор вручную</option></select></label><label><span>Срок действия, дней</span><input type="number" min="0" max="3650" name="validdays" value="0"></label><label><span>Статус</span><select name="status"><option value="draft">Черновик</option><option value="published">Опубликовать для сотрудников</option></select></label></div><label class="u-route-editor__check"><input type="checkbox" name="required" value="1" checked> Обязательно для завершения точки</label><label class="u-route-editor__check"><input type="checkbox" name="previousadaptation" value="1"> Сначала завершить предыдущие обязательные точки</label></fieldset><button class="u-btn u-btn--primary" type="submit">Добавить точку</button>
+    </form>
+  </section>
+  {{/route}}{{/routeexists}}
 </div>

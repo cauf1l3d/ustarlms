@@ -183,6 +183,7 @@ final class route_model {
 
     public static function normalize_requirements(array $requirements): array {
         $out = [];
+        $hasprimaryskill = false;
         foreach ($requirements as $requirement) {
             if (!is_array($requirement)) {
                 continue;
@@ -209,6 +210,10 @@ final class route_model {
                 if ($item['sourcekey'] === '') {
                     continue;
                 }
+                // A learning point may have supporting skills, but only one
+                // explicit primary skill. This remains a versioned requirement.
+                $item['primary'] = !empty($requirement['primary']) && !$hasprimaryskill;
+                $hasprimaryskill = $hasprimaryskill || $item['primary'];
             }
             if (!empty($requirement['label'])) {
                 $item['label'] = clean_param((string)$requirement['label'], PARAM_TEXT);
@@ -216,6 +221,42 @@ final class route_model {
             $out[] = $item;
         }
         return $out;
+    }
+
+    /** Stable, user-facing route order cannot be silently overwritten. */
+    public static function revision(int $routeid): string {
+        $parts = [];
+        foreach (self::points($routeid) as $point) {
+            $parts[] = (int)$point->id . ':' . (int)$point->sortorder . ':' . (int)$point->timemodified;
+        }
+        return sha1(implode('|', $parts));
+    }
+
+    /** Update current point metadata without ever changing its historical versions. */
+    public static function update_point(
+        int $routeid,
+        int $pointid,
+        string $phase,
+        bool $active,
+        int $actorid,
+        int $expectedmodified = 0
+    ): \stdClass {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
+        $point = $DB->get_record_sql(
+            'SELECT * FROM {local_ustar_route_points} WHERE id = :id AND routeid = :routeid FOR UPDATE',
+            ['id' => $pointid, 'routeid' => $routeid], MUST_EXIST
+        );
+        if ($expectedmodified > 0 && (int)$point->timemodified !== $expectedmodified) {
+            $transaction->rollback(new \moodle_exception('Точка уже изменена в другой сессии. Обновите маршрут и повторите действие.'));
+        }
+        $point->phase = self::clean_phase($phase);
+        $point->active = $active ? 1 : 0;
+        $point->timemodified = max(time(), (int)$point->timemodified + 1);
+        $point->usermodified = $actorid;
+        $DB->update_record('local_ustar_route_points', $point);
+        $transaction->allow_commit();
+        return $point;
     }
 
     public static function add_point(
@@ -308,22 +349,25 @@ final class route_model {
         return $DB->get_record('local_ustar_route_versions', ['id' => $id], '*', MUST_EXIST);
     }
 
-    public static function reorder(int $routeid, array $pointids, int $actorid): void {
+    public static function reorder(int $routeid, array $pointids, int $actorid, string $expectedrevision = ''): void {
         global $DB;
+        if ($expectedrevision !== '' && !hash_equals(self::revision($routeid), $expectedrevision)) {
+            throw new \moodle_exception('Порядок точек уже изменён в другой сессии. Обновите маршрут и повторите действие.');
+        }
         $allowed = [];
         foreach (self::points($routeid) as $point) {
             $allowed[(int)$point->id] = true;
         }
         $seen = [];
         $sort = 10;
-        $now = time();
         foreach ($pointids as $pointid) {
             $pointid = (int)$pointid;
             if ($pointid <= 0 || empty($allowed[$pointid]) || isset($seen[$pointid])) {
                 continue;
             }
+            $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], 'id,timemodified', MUST_EXIST);
             $DB->set_field('local_ustar_route_points', 'sortorder', $sort, ['id' => $pointid, 'routeid' => $routeid]);
-            $DB->set_field('local_ustar_route_points', 'timemodified', $now, ['id' => $pointid]);
+            $DB->set_field('local_ustar_route_points', 'timemodified', max(time(), (int)$point->timemodified + 1), ['id' => $pointid]);
             $DB->set_field('local_ustar_route_points', 'usermodified', $actorid, ['id' => $pointid]);
             $seen[$pointid] = true;
             $sort += 10;
@@ -332,11 +376,8 @@ final class route_model {
 
     public static function archive_point(int $routeid, int $pointid, int $actorid): void {
         global $DB;
-        $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], '*', MUST_EXIST);
-        $point->active = 0;
-        $point->timemodified = time();
-        $point->usermodified = $actorid;
-        $DB->update_record('local_ustar_route_points', $point);
+        $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], 'id,phase', MUST_EXIST);
+        self::update_point($routeid, $pointid, (string)$point->phase, false, $actorid);
     }
 
     public static function seed_from_required_courses(string $positionid, int $actorid): array {
@@ -383,9 +424,13 @@ final class route_model {
         ]) ?: null;
     }
 
-    private static function requirements(\stdClass $version): array {
+    public static function requirements_for_version(\stdClass $version): array {
         $decoded = json_decode((string)$version->requirementsjson, true);
         return is_array($decoded) ? self::normalize_requirements($decoded) : [];
+    }
+
+    private static function requirements(\stdClass $version): array {
+        return self::requirements_for_version($version);
     }
 
     private static function activity_info(int $cmid): ?array {
@@ -676,7 +721,10 @@ final class route_model {
             $latestcompletion = max($latestcompletion, (int)($fact['completedat'] ?? 0));
         }
 
-        $satisfied = $requiredcount > 0 && $requiredcount === $requiredsatisfied;
+        // A point with only optional resources must never block an employee.
+        // Published empty points are rejected by Route Studio, so this cannot
+        // convert an unconfigured learning step into a completion.
+        $satisfied = $requiredcount === 0 ? !empty($requirements) : $requiredcount === $requiredsatisfied;
         $expiresat = 0;
         if ($satisfied && (int)$version->validdays > 0) {
             $base = $latestcompletion > 0 ? $latestcompletion : time();

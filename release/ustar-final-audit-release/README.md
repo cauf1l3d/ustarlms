@@ -78,6 +78,10 @@ The operational scripts record the exact 2026-08-23 audit paths/hashes. Role fix
 
 No file in this bundle authorizes production deployment. Production requires a separate owner confirmation, a fresh snapshot and final production rollback rehearsal. Isolated negative/positive capability tests and full isolated DR restore have passed.
 
+## 2026-08-27 candidate checkpoint
+
+The candidate now includes the P0–P3 delivery slice: Route Studio content upload/attach, reference-aligned login, full-width Materials Explorer and the Positions ladder/skill/material graph. The implementation and test status is recorded in `reports/IMPLEMENTATION_SUMMARY.md`, `reports/TEST_REPORT.md` and `reports/UX_UI_IMPLEMENTATION_REVIEW.md`. The synchronized worktree checkpoint is under `.codex/checkpoints/`.
+
 The canonical private repository is `https://github.com/cauf1l3d/ustarlms`; this bundle is published only on the review branch `ustar-final-audit-release`. The default branch and production deployment remain outside this publication.
 
 The production permission script was executed only after a narrower explicit approval: `config.php` is `root:www-data|640`, and exactly `public/local/ustar` plus `public/theme/ustar` were normalised to deploy-owner read-only code. This permission containment did not deploy the login or icon deltas.

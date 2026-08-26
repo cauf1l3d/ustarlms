@@ -399,6 +399,187 @@ $required =
     $structure['matrix'][$positionid]
     ?? [];
 
+$selectedskillid = optional_param('skillid', '', PARAM_ALPHANUMEXT);
+$skillmap = [];
+foreach ($skills as $skill) {
+    $skillid = clean_param((string)($skill['id'] ?? ''), PARAM_ALPHANUMEXT);
+    if ($skillid !== '') {
+        $skillmap[$skillid] = $skill;
+    }
+}
+if ($selectedskillid !== '' && !isset($skillmap[$selectedskillid])) {
+    $selectedskillid = '';
+}
+
+/*
+ * ------------------------------------------------------------
+ * POSITION / SKILL / MATERIAL GRAPH AND CAREER LADDER
+ * ------------------------------------------------------------
+ * The graph is a read model assembled from the canonical structure matrix
+ * and currently published route versions. It never creates a second source
+ * of truth and deliberately exposes human labels in the normal UI.
+ */
+
+$graphpositionrows = [];
+$positionsrequiringselectedskill = [];
+foreach ($positions as $position) {
+    $positionrequired = $structure['matrix'][$position['id']] ?? [];
+    if ($selectedskillid !== '' && array_key_exists($selectedskillid, $positionrequired)) {
+        $positionsrequiringselectedskill[$position['id']] = true;
+    }
+}
+foreach ($positions as $position) {
+    $positionidvalue = (string)$position['id'];
+    $department = $departmentmap[$position['department'] ?? ''] ?? [];
+    $positionrequired = $structure['matrix'][$positionidvalue] ?? [];
+    $graphurl = new moodle_url('/local/ustar/positions.php', ['positionid' => $positionidvalue]);
+    if ($selectedskillid !== '') {
+        $graphurl->param('skillid', $selectedskillid);
+    }
+    $graphpositionrows[] = [
+        'id' => $positionidvalue,
+        'name' => (string)($position['name'] ?? $positionidvalue),
+        'department' => (string)($department['name'] ?? ($position['department'] ?? '')),
+        'level' => (int)($position['level'] ?? 0),
+        'selected' => $positionidvalue === $positionid,
+        'connected' => $selectedskillid === '' || array_key_exists($selectedskillid, $positionrequired),
+        'skillcount' => count($positionrequired),
+        'url' => $graphurl->out(false),
+    ];
+}
+
+$graphskillrows = [];
+foreach ($skills as $skill) {
+    $skillid = (string)($skill['id'] ?? '');
+    if ($skillid === '' || ($selectedskillid === '' && !array_key_exists($skillid, $required))) {
+        continue;
+    }
+    $skillurl = new moodle_url('/local/ustar/positions.php', [
+        'positionid' => $positionid,
+        'skillid' => $skillid,
+    ]);
+    $affectedcount = 0;
+    foreach ($structure['matrix'] ?? [] as $matrix) {
+        if (array_key_exists($skillid, $matrix)) {
+            $affectedcount++;
+        }
+    }
+    $graphskillrows[] = [
+        'id' => $skillid,
+        'name' => (string)($skill['name'] ?? $skillid),
+        'category' => (string)($skill['category'] ?? 'Навык'),
+        'level' => (int)($required[$skillid] ?? 0),
+        'required' => array_key_exists($skillid, $required),
+        'selected' => $skillid === $selectedskillid,
+        'affectedcount' => $affectedcount,
+        'url' => $skillurl->out(false),
+    ];
+}
+
+$graphmaterialrows = [];
+$graphmaterialseen = [];
+$graphpositionids = $selectedskillid !== ''
+    ? array_keys($positionsrequiringselectedskill)
+    : [$positionid];
+foreach ($graphpositionids as $graphpositionid) {
+    $route = \local_ustar\route_model::get_route((string)$graphpositionid);
+    if (!$route) {
+        continue;
+    }
+    foreach (\local_ustar\route_model::points((int)$route->id) as $point) {
+        $version = \local_ustar\route_model::current_published_version((int)$point->id);
+        if (!$version) {
+            continue;
+        }
+        $pointskillids = [];
+        foreach (\local_ustar\route_model::requirements_for_version($version) as $requirement) {
+            if (($requirement['type'] ?? '') === 'skill') {
+                $pointskillids[] = (string)($requirement['sourcekey'] ?? '');
+            }
+        }
+        if ($selectedskillid !== '' && !in_array($selectedskillid, $pointskillids, true)) {
+            continue;
+        }
+        foreach (\local_ustar\route_model::requirements_for_version($version) as $requirement) {
+            if (($requirement['type'] ?? '') !== 'content') {
+                continue;
+            }
+            $contentid = (int)($requirement['sourceid'] ?? 0);
+            if ($contentid <= 0 || isset($graphmaterialseen[$contentid])) {
+                continue;
+            }
+            $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type,status', IGNORE_MISSING);
+            if (!$content || (string)$content->status !== 'published') {
+                continue;
+            }
+            $materialurl = new moodle_url('/local/ustar/materials.php', ['contentid' => $contentid]);
+            $routeurl = new moodle_url('/local/ustar/route_studio.php', ['position' => $graphpositionid]);
+            $materialskillnames = [];
+            foreach ($pointskillids as $pointskillid) {
+                $materialskillnames[] = (string)($skillmap[$pointskillid]['name'] ?? $pointskillid);
+            }
+            $graphmaterialrows[] = [
+                'id' => $contentid,
+                'name' => format_string((string)$content->title),
+                'typelabel' => (string)$content->type === 'video' ? 'Видео' : 'Материал',
+                'positionname' => (string)($positionmap[$graphpositionid]['name'] ?? $graphpositionid),
+                'skills' => implode(', ', array_values(array_unique($materialskillnames))),
+                'hasskills' => !empty($materialskillnames),
+                'url' => $materialurl->out(false),
+                'routeurl' => $routeurl->out(false),
+            ];
+            $graphmaterialseen[$contentid] = true;
+        }
+    }
+}
+
+$nextpositionmap = [];
+$previouspositionmap = [];
+foreach ($positions as $position) {
+    $positionkey = (string)$position['id'];
+    $nextkey = trim((string)($position['next'] ?? ''));
+    if ($nextkey !== '' && isset($positionmap[$nextkey])) {
+        $nextpositionmap[$positionkey] = $nextkey;
+        $previouspositionmap[$nextkey] = $positionkey;
+    }
+}
+$ladderroot = $positionid;
+$ladderguard = [];
+while (isset($previouspositionmap[$ladderroot]) && !isset($ladderguard[$ladderroot])) {
+    $ladderguard[$ladderroot] = true;
+    $ladderroot = $previouspositionmap[$ladderroot];
+}
+$ladderrows = [];
+$laddercursor = $ladderroot;
+$ladderguard = [];
+while (isset($positionmap[$laddercursor]) && !isset($ladderguard[$laddercursor])) {
+    $ladderguard[$laddercursor] = true;
+    $ladderposition = $positionmap[$laddercursor];
+    $ladderdepartment = $departmentmap[$ladderposition['department'] ?? ''] ?? [];
+    $ladderrequired = $structure['matrix'][$laddercursor] ?? [];
+    $ladderskills = [];
+    foreach (array_keys($ladderrequired) as $ladderskillid) {
+        $ladderskills[] = (string)($skillmap[$ladderskillid]['name'] ?? $ladderskillid);
+    }
+    $ladderrows[] = [
+        'id' => $laddercursor,
+        'name' => (string)($ladderposition['name'] ?? $laddercursor),
+        'department' => (string)($ladderdepartment['name'] ?? ($ladderposition['department'] ?? '')),
+        'level' => (int)($ladderposition['level'] ?? 0),
+        'periodlabel' => 'Уровень ' . (int)($ladderposition['level'] ?? 0),
+        'selected' => $laddercursor === $positionid,
+        'skills' => implode(', ', $ladderskills),
+        'hasskills' => !empty($ladderskills),
+        'nextname' => isset($nextpositionmap[$laddercursor]) ? (string)($positionmap[$nextpositionmap[$laddercursor]]['name'] ?? '') : '',
+        'hasnext' => isset($nextpositionmap[$laddercursor]),
+        'url' => (new moodle_url('/local/ustar/positions.php', ['positionid' => $laddercursor]))->out(false),
+    ];
+    if (!isset($nextpositionmap[$laddercursor])) {
+        break;
+    }
+    $laddercursor = $nextpositionmap[$laddercursor];
+}
+
 $skillrows = [];
 
 foreach ($skills as $skill) {
@@ -894,6 +1075,21 @@ $data = [
                 $required
             ),
     ],
+
+    'graphpositions' => $graphpositionrows,
+    'graphpositioncount' => count($graphpositionrows),
+    'graphskills' => $graphskillrows,
+    'graphskillcount' => count($graphskillrows),
+    'graphmaterials' => $graphmaterialrows,
+    'graphmaterialcount' => count($graphmaterialrows),
+    'hasgraphmaterials' => !empty($graphmaterialrows),
+    'selectedskillid' => $selectedskillid,
+    'selectedskillname' => $selectedskillid !== ''
+        ? (string)($skillmap[$selectedskillid]['name'] ?? $selectedskillid)
+        : '',
+    'hasselectedskill' => $selectedskillid !== '',
+    'ladder' => $ladderrows,
+    'hasladder' => !empty($ladderrows),
 
     'skills' =>
         $skillrows,

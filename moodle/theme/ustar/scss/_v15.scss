@@ -185,3 +185,50 @@ body.u-shell-page .u-next-card--real { display:grid !important; grid-template-co
 .u-skill-level-help > div { display:grid; gap:5px; margin-top:10px; }
 .u-skill-level-help p { margin:0; color:var(--u-text-secondary); font-size:12px; }
 .u-skill-level-help small { margin-top:5px; color:var(--u-text-muted); line-height:1.55; }
+
+/* 1.7 Position Studio: reference-style ladder and real three-column graph. */
+.u-position-studio { display:grid; gap:18px; margin-bottom:22px; }
+.u-position-studio__head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; padding:20px; border:1px solid var(--u-border); border-radius:18px; background:var(--u-surface-raised); box-shadow:var(--u-e-1); }
+.u-position-studio__head h2 { margin:4px 0 7px; font-size:clamp(24px,3vw,38px); letter-spacing:-.04em; line-height:1.05; }
+.u-position-studio__head p:last-child { max-width:720px; margin:0; color:var(--u-text-secondary); line-height:1.5; }
+.u-position-studio__selector { display:grid; flex:0 0 min(360px,100%); gap:6px; }
+.u-position-studio__selector label,.u-position-studio__sectionhead span { color:var(--u-text-muted); font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.u-position-studio__selector select { min-height:46px; padding:0 12px; border:1px solid var(--u-border-strong); border-radius:11px; background:var(--u-canvas); color:var(--u-text-primary); font:inherit; }
+.u-position-studio__sectionhead { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:12px; }
+.u-position-studio__sectionhead h3 { margin:3px 0 0; font-size:20px; letter-spacing:-.02em; }
+.u-position-studio__sectionhead p { margin:0; }
+.u-position-ladder,.u-position-graph { padding:18px; border:1px solid var(--u-border); border-radius:18px; background:var(--u-surface-raised); box-shadow:var(--u-e-1); }
+.u-position-ladder__track { display:flex; align-items:stretch; gap:12px; overflow-x:auto; padding:8px 3px 12px; }
+.u-position-ladder__step { position:relative; display:grid; flex:0 0 min(252px,76vw); align-content:start; gap:5px; min-height:184px; padding:16px; border:1px solid #171717; border-radius:12px; background:linear-gradient(160deg,#2b2b2b,#171717); color:#f5f3ed; text-decoration:none; box-shadow:0 8px 18px rgba(0,0,0,.12); transition:transform 160ms cubic-bezier(.2,.8,.2,1),box-shadow 160ms ease; }
+.u-position-ladder__step:hover { color:#fff; text-decoration:none; transform:translateY(-2px); box-shadow:0 13px 25px rgba(0,0,0,.18); }
+.u-position-ladder__step.is-selected { outline:3px solid var(--u-brand); outline-offset:2px; }
+.u-position-ladder__step:not(:last-child)::after { content:'→'; position:absolute; right:-17px; top:50%; z-index:1; color:var(--u-brand); font-size:22px; font-weight:900; }
+.u-position-ladder__level { color:var(--u-brand); font-size:31px; font-weight:950; line-height:1; }
+.u-position-ladder__step strong { font-size:16px; line-height:1.2; }
+.u-position-ladder__step small { color:#c7c5be; font-size:11px; }
+.u-position-ladder__skills { margin-top:8px; color:#e5c933; font-size:11px; line-height:1.4; }
+.u-position-ladder__step em { align-self:end; margin-top:auto; padding-top:9px; border-top:1px solid #454545; color:#dbd9d2; font-size:11px; font-style:normal; }
+.u-position-graph__columns { display:grid; grid-template-columns:minmax(180px,1fr) 52px minmax(180px,1fr) 52px minmax(210px,1.12fr); gap:10px; align-items:stretch; }
+.u-position-graph__column { min-width:0; }
+.u-position-graph__column h4 { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 10px; color:var(--u-text-muted); font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+.u-position-graph__column h4 small { display:grid; min-width:24px; min-height:22px; place-items:center; border-radius:999px; background:var(--u-brand-soft); color:var(--u-text-primary); font-size:10px; letter-spacing:0; }
+.u-position-graph__items { display:grid; align-content:start; gap:7px; }
+.u-position-graph__card { display:grid; gap:3px; min-width:0; padding:10px 11px; border:1px solid var(--u-border); border-radius:11px; background:var(--u-surface-muted); color:var(--u-text-primary); text-decoration:none; transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease; }
+.u-position-graph__card:hover { color:var(--u-text-primary); text-decoration:none; transform:translateY(-1px); border-color:var(--u-border-strong); box-shadow:var(--u-e-1); }
+.u-position-graph__card.is-selected { border-color:var(--u-brand-strong); outline:2px solid color-mix(in srgb,var(--u-brand) 56%,transparent); }
+.u-position-graph__card.is-dim { opacity:.32; filter:saturate(.45); }
+.u-position-graph__card--dark { background:#292929; border-color:#171717; color:#f5f3ed; }
+.u-position-graph__card--dark:hover { color:#fff; }
+.u-position-graph__card strong { overflow:hidden; font-size:13px; line-height:1.25; text-overflow:ellipsis; }
+.u-position-graph__card span,.u-position-graph__card small { overflow:hidden; color:var(--u-text-secondary); font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.u-position-graph__card--dark span,.u-position-graph__card--dark small { color:#bbb9b2; }
+.u-position-graph__connector { position:relative; display:grid; align-content:start; justify-items:center; padding-top:37px; color:var(--u-text-muted); font-size:9px; text-align:center; }
+.u-position-graph__connector::before { content:''; position:absolute; top:57px; left:0; right:0; border-top:1px solid color-mix(in srgb,var(--u-brand) 58%,var(--u-border)); }
+.u-position-graph__connector span { position:relative; z-index:1; padding:3px 4px; background:var(--u-surface-raised); }
+.u-position-graph__empty { margin:0; padding:13px; border:1px dashed var(--u-border); border-radius:11px; color:var(--u-text-secondary); font-size:12px; line-height:1.45; }
+.u-position-graph__empty a { color:var(--u-text-primary); font-weight:800; }
+.u-position-studio + .u-pos-layout { display:block; }
+.u-position-studio + .u-pos-layout > .u-pos-list { display:none; }
+.u-position-studio + .u-pos-layout > .u-pos-editor { width:100%; }
+@media (max-width:980px) { .u-position-studio__head { align-items:stretch; flex-direction:column; } .u-position-studio__selector { flex-basis:auto; } .u-position-graph__columns { grid-template-columns:1fr; } .u-position-graph__connector { min-height:30px; padding:0; align-content:center; } .u-position-graph__connector::before { top:50%; } }
+@media (max-width:640px) { .u-position-ladder,.u-position-graph { padding:13px; } .u-position-ladder__step { flex-basis:240px; min-height:165px; } .u-position-studio__head h2 { font-size:25px; } }

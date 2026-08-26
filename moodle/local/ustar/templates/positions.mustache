@@ -19,6 +19,88 @@
     </header>
 
 
+    <section class="u-position-studio" aria-labelledby="position-studio-title">
+        <header class="u-position-studio__head">
+            <div>
+                <p class="u-pagehead__eyebrow">Архитектура должности</p>
+                <h2 id="position-studio-title">Должность → навыки → материалы</h2>
+                <p>Живая карта строится из текущей структуры, матрицы навыков и опубликованных точек маршрута. Это текущая реализация, а не согласованный бизнес-эталон.</p>
+            </div>
+            <form method="get" class="u-position-studio__selector">
+                <label for="position-studio-position">Должность</label>
+                <select id="position-studio-position" name="positionid" onchange="this.form.submit()">
+                    {{#positions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{department}} — {{name}}</option>{{/positions}}
+                </select>
+                {{#hasselectedskill}}<input type="hidden" name="skillid" value="{{selectedskillid}}">{{/hasselectedskill}}
+            </form>
+        </header>
+
+        {{#hasladder}}
+        <section class="u-position-ladder" aria-labelledby="position-ladder-title">
+            <div class="u-position-studio__sectionhead">
+                <div><p class="u-sectionhead__eyebrow">Лестница развития</p><h3 id="position-ladder-title">Путь должности</h3></div>
+                <span>Переходы взяты из поля «следующая должность» текущей структуры</span>
+            </div>
+            <div class="u-position-ladder__track">
+                {{#ladder}}
+                <a class="u-position-ladder__step {{#selected}}is-selected{{/selected}}" href="{{url}}">
+                    <span class="u-position-ladder__level">{{level}}</span>
+                    <strong>{{name}}</strong>
+                    <small>{{department}} · {{periodlabel}}</small>
+                    {{#hasskills}}<span class="u-position-ladder__skills">Навыки: {{skills}}</span>{{/hasskills}}
+                    {{#hasnext}}<em>Дальше: {{nextname}} →</em>{{/hasnext}}
+                    {{^hasnext}}<em>Финальная ступень</em>{{/hasnext}}
+                </a>
+                {{/ladder}}
+            </div>
+        </section>
+        {{/hasladder}}
+
+        <section class="u-position-graph" aria-labelledby="position-graph-title">
+            <div class="u-position-studio__sectionhead">
+                <div><p class="u-sectionhead__eyebrow">Связи текущей модели</p><h3 id="position-graph-title">Позиции ↔ навыки ↔ материалы</h3></div>
+                <span>Нажмите на карточку, чтобы увидеть связанные объекты</span>
+            </div>
+            <div class="u-position-graph__columns">
+                <section class="u-position-graph__column">
+                    <h4>Должности <small>{{graphpositioncount}}</small></h4>
+                    <div class="u-position-graph__items">
+                        {{#graphpositions}}
+                        <a class="u-position-graph__card u-position-graph__card--dark {{#selected}}is-selected{{/selected}} {{^connected}}is-dim{{/connected}}" href="{{url}}">
+                            <strong>{{name}}</strong><span>{{department}}</span><small>Уровень {{level}} · {{skillcount}} навыков</small>
+                        </a>
+                        {{/graphpositions}}
+                    </div>
+                </section>
+                <div class="u-position-graph__connector" aria-hidden="true"><span>требует</span></div>
+                <section class="u-position-graph__column">
+                    <h4>Требуемые навыки <small>{{graphskillcount}}</small></h4>
+                    <div class="u-position-graph__items">
+                        {{#graphskills}}
+                        <a class="u-position-graph__card {{#selected}}is-selected{{/selected}}" href="{{url}}">
+                            <strong>{{name}}</strong><span>{{category}}</span><small>{{#required}}Уровень {{level}} · {{/required}}{{affectedcount}} должн.</small>
+                        </a>
+                        {{/graphskills}}
+                        {{^graphskills}}<p class="u-position-graph__empty">Для этой должности навыки пока не заданы.</p>{{/graphskills}}
+                    </div>
+                </section>
+                <div class="u-position-graph__connector" aria-hidden="true"><span>поддерживает</span></div>
+                <section class="u-position-graph__column">
+                    <h4>Материалы <small>{{graphmaterialcount}}</small></h4>
+                    <div class="u-position-graph__items">
+                        {{#graphmaterials}}
+                        <a class="u-position-graph__card" href="{{url}}">
+                            <strong>{{name}}</strong><span>{{typelabel}} · {{positionname}}</span>{{#hasskills}}<small>Навыки: {{skills}}</small>{{/hasskills}}
+                        </a>
+                        {{/graphmaterials}}
+                        {{^hasgraphmaterials}}<p class="u-position-graph__empty">Опубликованных материалов в маршруте пока нет. <a href="{{routestudiourl}}">Открыть Route Studio →</a></p>{{/hasgraphmaterials}}
+                    </div>
+                </section>
+            </div>
+        </section>
+    </section>
+
+
     <div class="u-pos-layout">
 
         <aside class="u-pos-list">

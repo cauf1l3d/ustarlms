@@ -351,26 +351,37 @@ final class route_model {
 
     public static function reorder(int $routeid, array $pointids, int $actorid, string $expectedrevision = ''): void {
         global $DB;
-        if ($expectedrevision !== '' && !hash_equals(self::revision($routeid), $expectedrevision)) {
-            throw new \moodle_exception('Порядок точек уже изменён в другой сессии. Обновите маршрут и повторите действие.');
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+        $lock = $factory->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.');
         }
-        $allowed = [];
-        foreach (self::points($routeid) as $point) {
-            $allowed[(int)$point->id] = true;
-        }
-        $seen = [];
-        $sort = 10;
-        foreach ($pointids as $pointid) {
-            $pointid = (int)$pointid;
-            if ($pointid <= 0 || empty($allowed[$pointid]) || isset($seen[$pointid])) {
-                continue;
+        try {
+            if ($expectedrevision !== '' && !hash_equals(self::revision($routeid), $expectedrevision)) {
+                throw new \moodle_exception('Порядок точек уже изменён в другой сессии. Обновите маршрут и повторите действие.');
             }
-            $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], 'id,timemodified', MUST_EXIST);
-            $DB->set_field('local_ustar_route_points', 'sortorder', $sort, ['id' => $pointid, 'routeid' => $routeid]);
-            $DB->set_field('local_ustar_route_points', 'timemodified', max(time(), (int)$point->timemodified + 1), ['id' => $pointid]);
-            $DB->set_field('local_ustar_route_points', 'usermodified', $actorid, ['id' => $pointid]);
-            $seen[$pointid] = true;
-            $sort += 10;
+            $allowed = [];
+            foreach (self::points($routeid) as $point) {
+                $allowed[(int)$point->id] = true;
+            }
+            $seen = [];
+            $sort = 10;
+            $transaction = $DB->start_delegated_transaction();
+            foreach ($pointids as $pointid) {
+                $pointid = (int)$pointid;
+                if ($pointid <= 0 || empty($allowed[$pointid]) || isset($seen[$pointid])) {
+                    continue;
+                }
+                $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], 'id,timemodified', MUST_EXIST);
+                $DB->set_field('local_ustar_route_points', 'sortorder', $sort, ['id' => $pointid, 'routeid' => $routeid]);
+                $DB->set_field('local_ustar_route_points', 'timemodified', max(time(), (int)$point->timemodified + 1), ['id' => $pointid]);
+                $DB->set_field('local_ustar_route_points', 'usermodified', $actorid, ['id' => $pointid]);
+                $seen[$pointid] = true;
+                $sort += 10;
+            }
+            $transaction->allow_commit();
+        } finally {
+            $lock->release();
         }
     }
 

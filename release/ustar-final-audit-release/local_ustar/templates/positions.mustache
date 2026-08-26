@@ -1,0 +1,737 @@
+<div class="u-pos">
+
+    <header class="u-pos-head">
+
+        <div>
+            <p class="u-pagehead__eyebrow">
+                Центр управления USTAR
+            </p>
+
+            <h1>
+                Должности и развитие
+            </h1>
+
+            <p>
+                Навыки, обязательное обучение и подтверждения по должности.
+            </p>
+        </div>
+
+    </header>
+
+
+    <section class="u-position-studio" aria-labelledby="position-studio-title">
+        <header class="u-position-studio__head">
+            <div>
+                <p class="u-pagehead__eyebrow">Архитектура должности</p>
+                <h2 id="position-studio-title">Должность → навыки → материалы</h2>
+                <p>Живая карта строится из текущей структуры, матрицы навыков и опубликованных точек маршрута. Это текущая реализация, а не согласованный бизнес-эталон.</p>
+            </div>
+            <form method="get" class="u-position-studio__selector">
+                <label for="position-studio-position">Должность</label>
+                <select id="position-studio-position" name="positionid" onchange="this.form.submit()">
+                    {{#positions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{department}} — {{name}}</option>{{/positions}}
+                </select>
+                {{#hasselectedskill}}<input type="hidden" name="skillid" value="{{selectedskillid}}">{{/hasselectedskill}}
+            </form>
+        </header>
+
+        {{#hasladder}}
+        <section class="u-position-ladder" aria-labelledby="position-ladder-title">
+            <div class="u-position-studio__sectionhead">
+                <div><p class="u-sectionhead__eyebrow">Лестница развития</p><h3 id="position-ladder-title">Путь должности</h3></div>
+                <span>Переходы взяты из поля «следующая должность» текущей структуры</span>
+            </div>
+            <div class="u-position-ladder__track">
+                {{#ladder}}
+                <a class="u-position-ladder__step {{#selected}}is-selected{{/selected}}" href="{{url}}">
+                    <span class="u-position-ladder__level">{{level}}</span>
+                    <strong>{{name}}</strong>
+                    <small>{{department}} · {{periodlabel}}</small>
+                    {{#hasskills}}<span class="u-position-ladder__skills">Навыки: {{skills}}</span>{{/hasskills}}
+                    {{#hasnext}}<em>Дальше: {{nextname}} →</em>{{/hasnext}}
+                    {{^hasnext}}<em>Финальная ступень</em>{{/hasnext}}
+                </a>
+                {{/ladder}}
+            </div>
+        </section>
+        {{/hasladder}}
+
+        <section class="u-position-graph" aria-labelledby="position-graph-title">
+            <div class="u-position-studio__sectionhead">
+                <div><p class="u-sectionhead__eyebrow">Связи текущей модели</p><h3 id="position-graph-title">Позиции ↔ навыки ↔ материалы</h3></div>
+                <span>Нажмите на карточку, чтобы увидеть связанные объекты</span>
+            </div>
+            <div class="u-position-graph__columns">
+                <section class="u-position-graph__column">
+                    <h4>Должности <small>{{graphpositioncount}}</small></h4>
+                    <div class="u-position-graph__items">
+                        {{#graphpositions}}
+                        <a class="u-position-graph__card u-position-graph__card--dark {{#selected}}is-selected{{/selected}} {{^connected}}is-dim{{/connected}}" href="{{url}}">
+                            <strong>{{name}}</strong><span>{{department}}</span><small>Уровень {{level}} · {{skillcount}} навыков</small>
+                        </a>
+                        {{/graphpositions}}
+                    </div>
+                </section>
+                <div class="u-position-graph__connector" aria-hidden="true"><span>требует</span></div>
+                <section class="u-position-graph__column">
+                    <h4>Требуемые навыки <small>{{graphskillcount}}</small></h4>
+                    <div class="u-position-graph__items">
+                        {{#graphskills}}
+                        <a class="u-position-graph__card {{#selected}}is-selected{{/selected}}" href="{{url}}">
+                            <strong>{{name}}</strong><span>{{category}}</span><small>{{#required}}Уровень {{level}} · {{/required}}{{affectedcount}} должн.</small>
+                        </a>
+                        {{/graphskills}}
+                        {{^graphskills}}<p class="u-position-graph__empty">Для этой должности навыки пока не заданы.</p>{{/graphskills}}
+                    </div>
+                </section>
+                <div class="u-position-graph__connector" aria-hidden="true"><span>поддерживает</span></div>
+                <section class="u-position-graph__column">
+                    <h4>Материалы <small>{{graphmaterialcount}}</small></h4>
+                    <div class="u-position-graph__items">
+                        {{#graphmaterials}}
+                        <div class="u-position-graph__card">
+                            <a class="u-position-graph__card-link" href="{{url}}"><strong>{{name}}</strong><span>{{typelabel}} · {{positionname}}</span>{{#hasskills}}<small>Навыки: {{skills}}</small>{{/hasskills}}</a>
+                            <a class="u-position-graph__route-link" href="{{routeurl}}">Открыть маршрут →</a>
+                        </div>
+                        {{/graphmaterials}}
+                        {{^hasgraphmaterials}}<p class="u-position-graph__empty">Опубликованных материалов в маршруте пока нет. <a href="{{routestudiourl}}">Открыть Route Studio →</a></p>{{/hasgraphmaterials}}
+                    </div>
+                </section>
+            </div>
+        </section>
+    </section>
+
+
+    <div class="u-pos-layout">
+
+        <aside class="u-pos-list">
+
+            <header>
+                <span>
+                    Должности
+                </span>
+
+            </header>
+
+            <div class="u-pos-list__scroll">
+
+                {{#positions}}
+
+                <a
+                    class="
+                        u-pos-row
+                        {{#selected}}is-selected{{/selected}}
+                    "
+                    href="{{url}}"
+                >
+                    <strong>
+                        {{name}}
+                    </strong>
+
+                    <span>
+                        {{department}}
+                    </span>
+
+                    <small>
+                        {{peoplecount}} сотрудников
+                    </small>
+                </a>
+
+                {{/positions}}
+
+            </div>
+
+        </aside>
+
+
+        <main class="u-pos-editor">
+
+            {{#position}}
+
+            <section class="u-pos-hero">
+
+                <div>
+
+                    <p class="u-sectionhead__eyebrow">
+                        {{department}}
+                    </p>
+
+                    <h2>
+                        {{name}}
+                    </h2>
+
+                </div>
+
+                <div class="u-pos-metrics">
+
+                    <div>
+                        <span>Ступень</span>
+                        <strong>{{level}}</strong>
+                    </div>
+
+                    <div>
+                        <span>Сотрудников</span>
+                        <strong>{{peoplecount}}</strong>
+                    </div>
+
+                    <div>
+                        <span>Навыков</span>
+                        <strong>{{skillcount}}</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+            {{/position}}
+
+
+            <section class="u-pos-section">
+
+                <header class="u-pos-section__head">
+
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Требования
+                        </p>
+
+                        <h3>
+                            Навыки должности
+                        </h3>
+                    </div>
+
+                    <p>
+                        Выберите обязательные навыки и требуемый уровень.
+                    </p>
+
+                </header>
+
+                <details class="u-skill-level-help">
+                    <summary>Что означают уровни и как они работают?</summary>
+                    <div>
+                        <p><strong>0 — не требуется.</strong> Навык не входит в требования должности.</p>
+                        <p><strong>1 — ознакомительный.</strong> Сотрудник знает терминологию и базовые правила.</p>
+                        <p><strong>2 — базовый.</strong> Может выполнять задачу по инструкции.</p>
+                        <p><strong>3 — самостоятельный.</strong> Стабильно работает без постоянной помощи.</p>
+                        <p><strong>4 — продвинутый.</strong> Решает сложные и нестандартные ситуации.</p>
+                        <p><strong>5 — эксперт.</strong> Может обучать и оценивать других.</p>
+                        <small>Само число ничего не начисляет. Требование связывается со способами подтверждения ниже: курсом, тестом, практикой или сертификацией. USTAR считает навык подтверждённым только когда выполнены обязательные условия; для подтверждений со сроком действия система также учитывает переаттестацию.</small>
+                    </div>
+                </details>
+
+
+                <form method="post">
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="savematrix"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="positionid"
+                        value="{{position.id}}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="sesskey"
+                        value="{{sesskey}}"
+                    >
+
+
+                    <div class="u-skill-editor">
+
+                        {{#skills}}
+
+                        <label
+                            class="
+                                u-skill-edit-row
+                                {{#required}}is-required{{/required}}
+                            "
+                        >
+
+                            <div class="u-skill-edit-row__check">
+
+                                <input
+                                    type="checkbox"
+                                    name="skills[]"
+                                    value="{{id}}"
+                                    {{#required}}checked{{/required}}
+                                    {{^canmanage}}disabled{{/canmanage}}
+                                >
+
+                            </div>
+
+
+                            <div class="u-skill-edit-row__main">
+
+                                <small>
+                                    {{category}}
+                                </small>
+
+                                <strong>
+                                    {{name}}
+                                </strong>
+
+                            </div>
+
+
+                            <select
+                                name="level_{{id}}"
+                                aria-label="Требуемый уровень: {{name}}"
+                                {{^canmanage}}disabled{{/canmanage}}
+                            >
+                                {{#leveloptions}}
+                                <option
+                                    value="{{value}}"
+                                    {{#selected}}selected{{/selected}}
+                                >
+                                    {{value}} — {{label}}
+                                </option>
+                                {{/leveloptions}}
+                            </select>
+
+                        </label>
+
+                        {{/skills}}
+
+                    </div>
+
+
+                    {{#canmanage}}
+
+                    <button
+                        class="u-btn u-btn--primary"
+                        type="submit"
+                    >
+                        Сохранить требования
+                    </button>
+
+                    {{/canmanage}}
+
+                </form>
+
+            </section>
+
+
+            <section class="u-pos-section">
+
+                <header class="u-pos-section__head">
+
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Назначение обучения
+                        </p>
+
+                        <h3>
+                            Обязательное обучение
+                        </h3>
+                    </div>
+
+                    <div class="u-pos-section__actions">
+                        <p>
+                            Состав рассчитывается из требований навыков и настроенных способов подтверждения.
+                        </p>
+                        {{#canmanage}}<a class="u-btn u-btn--small" href="{{routestudiourl}}">Редактировать порядок →</a>{{/canmanage}}
+                    </div>
+
+                </header>
+
+
+                {{#haslearning}}
+
+                <div class="u-pos-learning">
+
+                    {{#learningcourses}}
+
+                    <article>
+
+                        <div>
+
+                            <strong>
+                                {{name}}
+                            </strong>
+
+                            {{#published}}
+                            <span class="u-state u-state--ok">
+                                Опубликован
+                            </span>
+                            {{/published}}
+
+                            {{#draft}}
+                            <span class="u-state">
+                                Черновик
+                            </span>
+                            {{/draft}}
+
+                        </div>
+
+                        <a href="{{url}}">
+                            Открыть маршрут
+                        </a>
+
+                    </article>
+
+                    {{/learningcourses}}
+
+                </div>
+
+                {{/haslearning}}
+
+
+                {{^haslearning}}
+
+                <div class="u-hr-empty">
+                    Для должности ещё нет реального Moodle-обучения,
+                    связанного через evidence.
+                </div>
+
+                {{/haslearning}}
+
+            </section>
+
+
+            <section class="u-pos-section">
+
+                <header class="u-pos-section__head">
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Назначение материалов
+                        </p>
+                        <h3>
+                            Обязательные документы
+                        </h3>
+                    </div>
+                    <p>
+                        Рассчитываются из опубликованных материалов
+                        и текущих правил доступа должности.
+                    </p>
+                </header>
+
+                {{#hasknowledge}}
+                <div class="u-pos-learning">
+                    {{#mandatoryknowledge}}
+                    <article>
+                        <div>
+                            <strong>{{title}}</strong>
+                            <span class="u-state u-state--ok">
+                                {{versionlabel}}
+                            </span>
+                        </div>
+                        <a href="{{url}}">
+                            Открыть материал
+                        </a>
+                    </article>
+                    {{/mandatoryknowledge}}
+                </div>
+                {{/hasknowledge}}
+
+                {{^hasknowledge}}
+                <div class="u-hr-empty">
+                    Для должности нет опубликованных обязательных
+                    материалов с подходящими правилами доступа.
+                </div>
+                {{/hasknowledge}}
+
+            </section>
+
+
+            <section class="u-pos-section" id="u-position-evidence">
+
+                <header class="u-pos-section__head">
+
+                    <div>
+                        <p class="u-sectionhead__eyebrow">
+                            Подтверждение навыка
+                        </p>
+
+                        <h3>
+                            Подтверждения навыков
+                        </h3>
+                    </div>
+
+                    <p>
+                        Обучение, аттестации, практика и сертификация.
+                    </p>
+
+                </header>
+
+
+                {{#hasevidence}}
+
+                <div class="u-evidence-editor-list">
+
+                    {{#evidence}}
+
+                    <article class="u-evidence-edit-row">
+
+                        <div class="u-evidence-edit-row__main">
+
+                            <small>
+                                {{skillname}} · {{type}}
+                            </small>
+
+                            <strong>
+                                {{activityname}}
+                            </strong>
+
+                            <span>
+                                {{modname}}
+                                · путь {{pathkey}}
+                                · вес {{weight}}%
+
+                                {{#required}}
+                                · обязательно
+                                {{/required}}
+
+                                {{#hasvalidity}}
+                                · {{validdays}} дней
+                                {{/hasvalidity}}
+                            </span>
+
+                        </div>
+
+
+                        {{#shared}}
+
+                        <span class="u-state">
+                            Общее
+                        </span>
+
+                        {{/shared}}
+
+
+                        {{#specific}}
+                        {{#canmanage}}
+
+                        <form method="post">
+
+                            <input
+                                type="hidden"
+                                name="action"
+                                value="deleteevidence"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="positionid"
+                                value="{{position.id}}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="evidenceid"
+                                value="{{id}}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="sesskey"
+                                value="{{sesskey}}"
+                            >
+
+                            <button
+                                class="u-btn u-btn--quiet"
+                                type="submit"
+                            >
+                                Убрать
+                            </button>
+
+                        </form>
+
+                        {{/canmanage}}
+                        {{/specific}}
+
+                    </article>
+
+                    {{/evidence}}
+
+                </div>
+
+                {{/hasevidence}}
+
+
+                {{^hasevidence}}
+
+                <div class="u-hr-empty">
+                    Подтверждения для требований этой должности
+                    пока не настроены.
+                </div>
+
+                {{/hasevidence}}
+
+
+                {{#canmanage}}
+                {{#hasrequiredskills}}
+
+                <form
+                    class="u-add-evidence"
+                    method="post"
+                >
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="addevidence"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="positionid"
+                        value="{{position.id}}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="sesskey"
+                        value="{{sesskey}}"
+                    >
+
+
+                    <h4>
+                        Добавить подтверждение
+                    </h4>
+
+
+                    <label>
+
+                        <span>
+                            Навык
+                        </span>
+
+                        <select name="skillid" required>
+
+                            {{#requiredskilloptions}}
+                            <option value="{{id}}">
+                                {{name}}
+                            </option>
+                            {{/requiredskilloptions}}
+
+                        </select>
+
+                    </label>
+
+
+                    <label class="u-add-evidence__source">
+
+                        <span>
+                            Moodle activity
+                        </span>
+
+                        <select name="source" required>
+
+                            {{#sourceoptions}}
+                            <option value="{{value}}">
+                                {{name}}
+                            </option>
+                            {{/sourceoptions}}
+
+                        </select>
+
+                    </label>
+
+
+                    <label>
+
+                        <span>
+                            Тип
+                        </span>
+
+                        <select name="evidencetype">
+
+                            {{#typeoptions}}
+                            <option value="{{id}}">
+                                {{name}}
+                            </option>
+                            {{/typeoptions}}
+
+                        </select>
+
+                    </label>
+
+
+                    <label>
+
+                        <span>
+                            Вес %
+                        </span>
+
+                        <input
+                            type="number"
+                            name="weight"
+                            min="1"
+                            max="100"
+                            value="100"
+                        >
+
+                    </label>
+
+
+                    <label>
+
+                        <span>
+                            Срок, дней
+                        </span>
+
+                        <input
+                            type="number"
+                            name="validdays"
+                            min="0"
+                            max="3650"
+                            value="0"
+                        >
+
+                    </label>
+
+
+                    <label>
+
+                        <span>
+                            Путь
+                        </span>
+
+                        <input
+                            name="pathkey"
+                            value="main"
+                        >
+
+                    </label>
+
+
+                    <label class="u-add-evidence__required">
+
+                        <input
+                            type="checkbox"
+                            name="required"
+                            value="1"
+                            checked
+                        >
+
+                        <span>
+                            Обязательное подтверждение
+                        </span>
+
+                    </label>
+
+
+                    <button
+                        class="u-btn u-btn--primary"
+                        type="submit"
+                    >
+                        Добавить
+                    </button>
+
+                </form>
+
+                {{/hasrequiredskills}}
+                {{/canmanage}}
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>

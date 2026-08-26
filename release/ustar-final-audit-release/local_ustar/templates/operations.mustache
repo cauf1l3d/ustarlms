@@ -1,0 +1,121 @@
+<div class="u-ops">
+    <header class="u-ops-head">
+        <div>
+            <p class="u-pagehead__eyebrow">Центр управления USTAR</p>
+            <h1>Контроль</h1>
+            <p>Реальные операционные сигналы по сотрудникам, обучению, документам и evidence.</p>
+        </div>
+        <small>Обновлено {{generated}}</small>
+    </header>
+
+    <nav class="u-feature-grid u-ops-shortcuts" aria-label="Инструменты Control Center">
+        <a class="u-feature-card" href="{{workspaceurl}}">{{{workspaceicon}}}<div><strong>Оргпространство</strong><span>Карта структуры и сотрудников</span></div><b>→</b></a>
+        <a class="u-feature-card" href="{{positionsurl}}">{{{routeicon}}}<div><strong>Должности и развитие</strong><span>Лестницы, навыки и обучение</span></div><b>→</b></a>
+        <a class="u-feature-card" href="{{materialsurl}}">{{{knowledgeicon}}}<div><strong>Материалы</strong><span>Контент и нормативная база</span></div><b>→</b></a>
+        {{#hasroutes}}<a class="u-feature-card" href="{{routesurl}}">{{{routeicon}}}<div><strong>Маршруты обучения</strong><span>Порядок курсов по должностям</span></div><b>→</b></a>{{/hasroutes}}
+        {{#hasbrand}}<a class="u-feature-card" href="{{brandurl}}">{{{paletteicon}}}<div><strong>Оформление</strong><span>Пресеты и свой цветовой набор</span></div><b>→</b></a>{{/hasbrand}}
+        {{#hasgamestudio}}<a class="u-feature-card" href="{{gamestudiourl}}">{{{gameicon}}}<div><strong>Редактор игр</strong><span>Игры, вопросы и XP-контент</span></div><b>→</b></a>{{/hasgamestudio}}
+        {{#hascheckliststudio}}<a class="u-feature-card" href="{{checkliststudiourl}}">{{{checkicon}}}<div><strong>Редактор чек-листов</strong><span>Шаблоны и журнал выполнения</span></div><b>→</b></a>{{/hascheckliststudio}}
+    </nav>
+
+    <section class="u-ops-kpis" aria-label="Операционные показатели">
+        <article>
+            <span>Сотрудники</span>
+            <strong>{{employees}}</strong>
+            <small>активные workforce-аккаунты с должностью</small>
+        </article>
+        <article>
+            <span>Документы</span>
+            <strong>{{compliancepending}}</strong>
+            <small>{{compliancepeoplecount}} сотрудников ожидают ознакомления</small>
+        </article>
+        <article>
+            <span>Обучение</span>
+            <strong>{{learningnotstarted}}</strong>
+            <small>не начато · {{learninginprogress}} в процессе</small>
+        </article>
+        <article>
+            <span>Компетенции</span>
+            <strong>{{skillgaps}}</strong>
+            <small>{{skillpeoplecount}} сотрудников имеют evidence-gap</small>
+        </article>
+    </section>
+
+    <div class="u-ops-grid">
+        <section class="u-ops-panel">
+            <header>
+                <div>
+                    <p class="u-sectionhead__eyebrow">Compliance</p>
+                    <h2>Ожидают ознакомления</h2>
+                </div>
+                <strong>{{compliancepending}}</strong>
+            </header>
+
+            {{#hascompliancepeople}}
+            <div class="u-ops-list">
+                {{#compliancepeople}}
+                <a href="{{url}}">
+                    <div><strong>{{fullname}}</strong><span>{{position}}</span></div>
+                    <b>{{count}}</b>
+                </a>
+                {{/compliancepeople}}
+            </div>
+            {{/hascompliancepeople}}
+            {{^hascompliancepeople}}
+            <div class="u-hr-empty">Нет ожидающих подтверждения документов.</div>
+            {{/hascompliancepeople}}
+        </section>
+
+        <section class="u-ops-panel">
+            <header>
+                <div>
+                    <p class="u-sectionhead__eyebrow">Learning</p>
+                    <h2>Требует внимания</h2>
+                </div>
+                <strong>{{learningnotstarted}}</strong>
+            </header>
+
+            {{#haslearningpeople}}
+            <div class="u-ops-list">
+                {{#learningpeople}}
+                <a href="{{url}}">
+                    <div><strong>{{fullname}}</strong><span>{{position}}</span></div>
+                    <b>{{notstarted}} / {{inprogress}}</b>
+                </a>
+                {{/learningpeople}}
+            </div>
+            {{/haslearningpeople}}
+            {{^haslearningpeople}}
+            <div class="u-hr-empty">Нет незавершённых обязательных назначений.</div>
+            {{/haslearningpeople}}
+        </section>
+
+        <section class="u-ops-panel">
+            <header>
+                <div>
+                    <p class="u-sectionhead__eyebrow">Навыки / подтверждения</p>
+                    <h2>Разрывы компетенций</h2>
+                </div>
+                <strong>{{skillgaps}}</strong>
+            </header>
+
+            {{#hasskillpeople}}
+            <div class="u-ops-list">
+                {{#skillpeople}}
+                <a href="{{url}}">
+                    <div><strong>{{fullname}}</strong><span>{{position}}</span></div>
+                    <b>{{confirmed}} / {{required}}</b>
+                </a>
+                {{/skillpeople}}
+            </div>
+            {{/hasskillpeople}}
+            {{^hasskillpeople}}
+            <div class="u-hr-empty">По настроенным evidence нет разрывов.</div>
+            {{/hasskillpeople}}
+        </section>
+    </div>
+
+    <p class="u-ops-note">
+        USTAR не показывает «просрочено», пока в модели данных нет реального срока исполнения.
+    </p>
+</div>

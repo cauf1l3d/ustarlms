@@ -29,6 +29,7 @@ body.pagelayout-login.u-login-body #page-footer { display:none; }
 .u-login-core .toggle-sensitive-wrapper { display:flex; width:100%; }
 .u-login-core .toggle-sensitive-wrapper #password { flex:1 1 0; width:1%; }
 .u-login-core .toggle-sensitive-btn { display:grid; width:62px; min-height:62px; place-items:center; border:1px solid rgba(40,38,34,.14); border-left:0; border-radius:0 15px 15px 0; background:#fffdfa; color:#8d7540; }
+.u-login-core .form-control:focus-visible,.u-login-core .toggle-sensitive-btn:focus-visible,.u-login-core .btn:focus-visible,.u-login-core a:focus-visible { outline:3px solid #8a6500; outline-offset:3px; box-shadow:0 0 0 2px #fffdfa; }
 .u-login-core .login-form-submit .btn-primary { width:100%; min-height:62px; border:0; border-radius:15px; background:#f1bd22; color:#171611; font-size:20px; font-weight:900; transition:transform 160ms cubic-bezier(.2,.8,.2,1),background-color 160ms ease; }
 @media (hover:hover) { .u-login-core .login-form-submit .btn-primary:hover { background:#dfa600; transform:translateY(-1px); } }
 .u-login-core .login-form-submit .btn-primary:active { transform:translateY(1px) scale(.995); }

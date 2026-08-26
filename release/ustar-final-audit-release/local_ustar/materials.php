@@ -874,39 +874,8 @@ foreach ($records as $record) {
 
 
 /*
- * If nothing is explicitly selected,
- * use the first row.
- */
-
-if (
-    !$selectedrecord
-    &&
-    $records
-) {
-
-    foreach ($records as $candidate) {
-        if ((string)$candidate->type !== 'folder') {
-            $selectedrecord = $candidate;
-            break;
-        }
-    }
-
-    $contentid = $selectedrecord ? (int)$selectedrecord->id : 0;
-
-    foreach ($rows as &$row) {
-        $row['selected'] =
-            $row['id']
-            ===
-            $contentid;
-    }
-
-    unset($row);
-}
-
-
-/*
  * ------------------------------------------------------------
- * DETAIL PANEL
+ * DETAIL VIEW (opened deliberately by selecting a material)
  * ------------------------------------------------------------
  */
 

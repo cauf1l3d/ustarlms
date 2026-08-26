@@ -1,0 +1,45 @@
+{{! Moodle-native USTAR login. Authentication and form rendering remain owned by Moodle core. }}
+{{> theme_boost/head }}
+<body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
+<style>{{{runtimebrandcss}}}</style>
+<div id="page-wrapper" class="u-login-page">
+    {{{ output.standard_top_of_body_html }}}
+    <main id="page" class="u-login-shell" aria-label="Вход в USTAR Academy">
+        <section class="u-login-brand" aria-label="USTAR Academy">
+            <div class="u-login-brand__poster">
+                <span class="u-login-brand__kicker">Академия</span>
+                <img src="{{brandmarkurl}}" alt="USTAR" class="u-login-brand__mark">
+                <p class="u-login-brand__promise">Обучение, навыки, твоя карьера, игры и развитие — в одном рабочем пространстве.</p>
+                <img src="{{mascoturl}}" alt="" class="u-login-brand__mascot" aria-hidden="true">
+                <p class="u-login-brand__description">Корпоративная обучающая платформа для развития сотрудника как профессионала, руководителя и части сильной команды.</p>
+                <div class="u-login-brand__partners" aria-label="Партнёры USTAR Academy">
+                    <span>EXPRESS<br>MARKET</span>
+                    <img src="{{academybannerurl}}" alt="USTAR Академия">
+                </div>
+            </div>
+        </section>
+        <section class="u-login-auth">
+            <p class="u-login-auth__motto">Тут растут эксперты</p>
+            <div class="u-login-auth__card" aria-label="Форма входа">
+                <div class="u-login-auth__heading">
+                    <span class="u-login-mark" aria-hidden="true">U</span>
+                    <div><small>USTAR Академия</small><strong>Вход</strong></div>
+                </div>
+                <div id="region-main" class="u-login-core">
+                    {{{ output.main_content }}}
+                </div>
+            </div>
+            <div class="u-login-auth__footer"><span aria-hidden="true">ϟ</span><p>USTAR Академия использует авторские технологии и собственные разработанные сервисы обучения на основе ядра Moodle.</p><strong>USTAR</strong><small>© USTAR Академия. 2026 Все права защищены</small></div>
+        </section>
+    </main>
+    {{> theme_boost/footer }}
+</div>
+</body>
+</html>
+{{#js}}
+M.util.js_pending('theme_boost/loader');
+require(['theme_boost/loader'], function() {
+    M.util.js_complete('theme_boost/loader');
+});
+{{/js}}

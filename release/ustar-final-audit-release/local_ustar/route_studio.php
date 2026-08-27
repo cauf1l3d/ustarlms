@@ -59,6 +59,19 @@ $requirements_from_request = static function() use ($DB, $skillmap): array {
         $requirements[] = ['type' => 'cm', 'sourceid' => (int)$module->id, 'required' => $required,
             'label' => (string)$module->fullname . ' — ' . $activityname];
     }
+    $assessmentkey = optional_param('assessmentkey', '', PARAM_ALPHANUMEXT);
+    if ($assessmentkey !== '') {
+        $assessment = \local_ustar\development_assessment::published($assessmentkey);
+        if (!$assessment) {
+            throw new invalid_parameter_exception('Выбранный развивающий профиль больше не опубликован. Обновите форму.');
+        }
+        $requirements[] = [
+            'type' => 'assessment',
+            'sourcekey' => $assessmentkey,
+            'required' => $required,
+            'label' => (string)$assessment['assessment']->title,
+        ];
+    }
     $primaryskillid = optional_param('primaryskillid', '', PARAM_ALPHANUMEXT);
     $skillids = optional_param_array('skillids', [], PARAM_ALPHANUMEXT);
     if ($primaryskillid !== '' && !in_array($primaryskillid, $skillids, true)) { $skillids[] = $primaryskillid; }
@@ -148,16 +161,25 @@ foreach ($DB->get_records_sql($activitysql) as $activity) {
     }
     $activityoptions[(int)$activity->id] = ['id' => (int)$activity->id, 'name' => (string)$activity->fullname . ' — ' . $activityname];
 }
+$assessmentoptions = [];
+foreach (\local_ustar\development_assessment::catalog() as $assessment) {
+    $assessmentoptions[(string)$assessment['key']] = [
+        'id' => (string)$assessment['key'],
+        'name' => (string)$assessment['title'],
+        'meta' => 'Личный развивающий профиль',
+    ];
+}
 
 if ($routeexists) {
     foreach ($route['points'] as &$point) {
         $latest = \local_ustar\route_model::latest_version((int)$point['id']);
         $requirements = $latest ? \local_ustar\route_model::requirements_for_version($latest) : [];
-        $selectedcontents = []; $selectedskills = []; $primaryskill = ''; $selectedcourse = 0; $selectedcm = 0; $previous = false;
+        $selectedcontents = []; $selectedskills = []; $primaryskill = ''; $selectedcourse = 0; $selectedcm = 0; $selectedassessment = ''; $previous = false;
         foreach ($requirements as $requirement) {
             if (($requirement['type'] ?? '') === 'content') { $selectedcontents[] = (int)$requirement['sourceid']; }
             if (($requirement['type'] ?? '') === 'course') { $selectedcourse = (int)$requirement['sourceid']; }
             if (($requirement['type'] ?? '') === 'cm') { $selectedcm = (int)$requirement['sourceid']; }
+            if (($requirement['type'] ?? '') === 'assessment') { $selectedassessment = (string)($requirement['sourcekey'] ?? ''); }
             if (($requirement['type'] ?? '') === 'skill') { $selectedskills[] = (string)$requirement['sourcekey']; if (!empty($requirement['primary'])) { $primaryskill = (string)$requirement['sourcekey']; } }
             $previous = $previous || (($requirement['type'] ?? '') === 'previous_adaptation');
         }
@@ -177,6 +199,7 @@ if ($routeexists) {
         $point['contentoptions'] = array_values(array_map(static function(array $item) use ($selectedcontents, $newcontentid): array { $item['selected'] = in_array((int)$item['id'], $selectedcontents, true) || (int)$item['id'] === $newcontentid; return $item; }, $contentoptions));
         $point['courseoptions'] = array_values(array_map(static function(array $item) use ($selectedcourse): array { $item['selected'] = (int)$item['id'] === $selectedcourse; return $item; }, $courseoptions));
         $point['activityoptions'] = array_values(array_map(static function(array $item) use ($selectedcm): array { $item['selected'] = (int)$item['id'] === $selectedcm; return $item; }, $activityoptions));
+        $point['assessmentoptions'] = array_values(array_map(static function(array $item) use ($selectedassessment): array { $item['selected'] = (string)$item['id'] === $selectedassessment; return $item; }, $assessmentoptions));
         $point['skilloptions'] = []; $point['primaryskills'] = [];
         foreach ($skillmap as $id => $name) { $point['skilloptions'][] = ['id' => $id, 'name' => $name, 'selected' => in_array($id, $selectedskills, true)]; $point['primaryskills'][] = ['id' => $id, 'name' => $name, 'selected' => $id === $primaryskill]; }
         $point['previouschecked'] = $previous ? 'checked' : '';
@@ -195,6 +218,7 @@ foreach ($positions as $position) {
     $positionoptions[] = ['id' => (string)$position['id'], 'name' => ($departmentname !== '' ? $departmentname . ' — ' : '') . (string)$position['name'], 'selected' => (string)$position['id'] === $positionid];
 }
 $addcontentoptions = array_values(array_map(static function(array $item) use ($newcontentid): array { $item['selected'] = (int)$item['id'] === $newcontentid; return $item; }, $contentoptions));
+$addassessmentoptions = array_values($assessmentoptions);
 $addskilloptions = []; foreach ($skillmap as $id => $name) { $addskilloptions[] = ['id' => $id, 'name' => $name]; }
 
 $PAGE->set_context($context);
@@ -207,6 +231,6 @@ $data = ['positionid' => $positionid, 'positions' => $positionoptions, 'route' =
     'previewurl' => (new moodle_url('/local/ustar/route.php', ['position' => $positionid]))->out(false),
     'materialsurl' => (new moodle_url('/local/ustar/materials.php'))->out(false),
     'uploadurl' => (new moodle_url('/local/ustar/material_create.php', ['returnto' => 'route_studio', 'position' => $positionid]))->out(false),
-    'addcontentoptions' => $addcontentoptions, 'courseoptions' => array_values($courseoptions), 'activityoptions' => array_values($activityoptions),
+    'addcontentoptions' => $addcontentoptions, 'courseoptions' => array_values($courseoptions), 'activityoptions' => array_values($activityoptions), 'assessmentoptions' => $addassessmentoptions,
     'skilloptions' => $addskilloptions, 'primaryskills' => $addskilloptions];
 $output = $PAGE->get_renderer('local_ustar'); echo $output->header(); echo $output->render_from_template('local_ustar/route_studio', $data); echo $output->footer();

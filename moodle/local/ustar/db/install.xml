@@ -746,5 +746,54 @@
         <INDEX NAME="point_version_idx" UNIQUE="false" FIELDS="pointid, versionid" />
       </INDEXES>
     </TABLE>
+    <TABLE NAME="local_ustar_dev_assess" COMMENT="Private USTAR development assessment catalog">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="assessmentkey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="summary" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="sensitivity" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="private" SEQUENCE="false" />
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="assessmentkey_uix" UNIQUE="true" FIELDS="assessmentkey" /><INDEX NAME="active_idx" UNIQUE="false" FIELDS="active" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_dev_assess_ver" COMMENT="Immutable USTAR development assessment versions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="assessmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="questionsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="resultsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="assessment_version_uix" UNIQUE="true" FIELDS="assessmentid, versionno" /><INDEX NAME="assessment_status_idx" UNIQUE="false" FIELDS="assessmentid, status" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_dev_assess_try" COMMENT="Private employee development assessment attempts">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="assessmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="submitted" SEQUENCE="false" />
+        <FIELD NAME="answersjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="resultjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="startedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="submittedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="userid, idempotencykey" /><INDEX NAME="user_assessment_time_idx" UNIQUE="false" FIELDS="userid, assessmentid, submittedat" /><INDEX NAME="user_version_time_idx" UNIQUE="false" FIELDS="userid, versionid, submittedat" /></INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

@@ -6,3 +6,9 @@ Existing isolated role/capability evidence is retained in `ROLE_TEST_REPORT.md`,
 
 Production accounts and permissions were not changed.
 
+## Development Center candidate boundary
+
+- **PASS (isolated):** `USTAR HRD` receives `local/ustar:developmentanalytics` at system context.
+- **PASS (isolated):** `USTAR HR` does not receive that protected capability.
+- **PASS (implementation):** a profile result is private to its employee by default; only an authenticated HRD (or Moodle site admin) can open another employee's result. HR and managers do not receive a default bypass.
+- **NOT YET EXECUTED:** final browser journeys for employee/HRD/HR on the exact RC remain part of the final cross-domain E2E gate.

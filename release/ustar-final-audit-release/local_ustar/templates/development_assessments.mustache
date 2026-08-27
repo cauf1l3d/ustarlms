@@ -1,0 +1,4 @@
+<main class="u-product-page u-development-assessment">
+  <header class="u-development-assessment__head"><p class="u-page-kicker">Только HRD</p><h1>{{title}}</h1><p>Последний личный развивающий результат каждого сотрудника. Здесь нет ответов на вопросы и числового ранжирования.</p><a class="u-btn" href="{{homeurl}}">Вернуться к развитию</a></header>
+  <section class="u-development-assessment__form-card"><h2>Результаты: {{count}}</h2>{{#haspeople}}<div class="u-development-assessment__people">{{#people}}<a href="{{url}}"><strong>{{name}}</strong><span>{{profile}}</span><p>{{recommendation}}</p><small>{{date}}</small></a>{{/people}}</div>{{/haspeople}}{{^haspeople}}<p>Пока нет завершённых личных саморефлексий.</p>{{/haspeople}}</section>
+</main>

@@ -1465,6 +1465,64 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082302, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082701) {
+        $dbman = $DB->get_manager();
+        // Moodle stores capabilities separately from access.php. Register the
+        // new protected capability before granting it to the newly created role.
+        update_capabilities('local_ustar');
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::development_assessment_definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+
+        // The initial profile is original USTAR content. It must never be
+        // represented as licensed Belbin material or used as a personnel verdict.
+        require_once(__DIR__ . '/../classes/development_assessment.php');
+        \local_ustar\development_assessment::ensure_team_profile(0);
+
+        // HRD may view aggregated/private development outcomes. USTAR HR does
+        // not gain this capability, and no account is assigned automatically.
+        $syscontext = context_system::instance();
+        $roleid = (int)$DB->get_field('role', 'id', ['shortname' => 'ustar_hrd']);
+        if (!$roleid) {
+            $roleid = create_role(
+                'USTAR HRD',
+                'ustar_hrd',
+                'Development leadership: people administration plus protected development analytics.'
+            );
+            set_role_contextlevels($roleid, [CONTEXT_SYSTEM]);
+        }
+        foreach (['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:developmentanalytics'] as $capability) {
+            assign_capability($capability, CAP_ALLOW, $roleid, $syscontext->id, true);
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026082701, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082702) {
+        // Repeat the role grant in its own idempotent upgrade point. This
+        // protects a recovered instance where 2026082701 created the role but
+        // was interrupted before Moodle persisted its capability assignment.
+        update_capabilities('local_ustar');
+        $syscontext = context_system::instance();
+        $roleid = (int)$DB->get_field('role', 'id', ['shortname' => 'ustar_hrd']);
+        if (!$roleid) {
+            $roleid = create_role(
+                'USTAR HRD',
+                'ustar_hrd',
+                'Development leadership: people administration plus protected development analytics.'
+            );
+            set_role_contextlevels($roleid, [CONTEXT_SYSTEM]);
+        }
+        foreach (['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:developmentanalytics'] as $capability) {
+            assign_capability($capability, CAP_ALLOW, $roleid, $syscontext->id, true);
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026082702, 'local', 'ustar');
+    }
+
 
     return true;
 }

@@ -143,4 +143,63 @@ final class target_schema {
         }
         return $tables;
     }
+
+    /** @return array<int,\xmldb_table> Private, versioned development-profile data. */
+    public static function development_assessment_definitions(): array {
+        $i = XMLDB_TYPE_INTEGER;
+        $c = XMLDB_TYPE_CHAR;
+        $t = XMLDB_TYPE_TEXT;
+        $specs = [
+            'local_ustar_dev_assess' => [
+                'fields' => [
+                    ['id', $i, '10', true, true], ['assessmentkey', $c, '64', true],
+                    ['title', $c, '255', true], ['summary', $t], ['sensitivity', $c, '16', true, false, 'private'],
+                    ['active', $i, '1', true, false, '1'], ['timecreated', $i, '10', true, false, '0'],
+                    ['timemodified', $i, '10', true, false, '0'], ['usermodified', $i, '10', true, false, '0'],
+                ],
+                'indexes' => [['assessmentkey_uix', true, ['assessmentkey']], ['active_idx', false, ['active']]],
+            ],
+            'local_ustar_dev_assess_ver' => [
+                'fields' => [
+                    ['id', $i, '10', true, true], ['assessmentid', $i, '10', true], ['versionno', $i, '10', true, false, '1'],
+                    ['intro', $t], ['questionsjson', $t, null, true], ['resultsjson', $t, null, true],
+                    ['status', $c, '16', true, false, 'draft'], ['timecreated', $i, '10', true, false, '0'],
+                    ['timemodified', $i, '10', true, false, '0'], ['usermodified', $i, '10', true, false, '0'],
+                ],
+                'indexes' => [
+                    ['assessment_version_uix', true, ['assessmentid', 'versionno']],
+                    ['assessment_status_idx', false, ['assessmentid', 'status']],
+                ],
+            ],
+            'local_ustar_dev_assess_try' => [
+                'fields' => [
+                    ['id', $i, '10', true, true], ['assessmentid', $i, '10', true], ['versionid', $i, '10', true],
+                    ['userid', $i, '10', true], ['idempotencykey', $c, '128', true], ['status', $c, '16', true, false, 'submitted'],
+                    ['answersjson', $t, null, true], ['resultjson', $t, null, true], ['startedat', $i, '10', true, false, '0'],
+                    ['submittedat', $i, '10', true, false, '0'], ['timecreated', $i, '10', true, false, '0'],
+                    ['timemodified', $i, '10', true, false, '0'],
+                ],
+                'indexes' => [
+                    ['idempotency_uix', true, ['userid', 'idempotencykey']],
+                    ['user_assessment_time_idx', false, ['userid', 'assessmentid', 'submittedat']],
+                    ['user_version_time_idx', false, ['userid', 'versionid', 'submittedat']],
+                ],
+            ],
+        ];
+        $tables = [];
+        foreach ($specs as $name => $spec) {
+            $table = new \xmldb_table($name);
+            foreach ($spec['fields'] as $field) {
+                [$fname, $type, $length] = $field;
+                $table->add_field($fname, $type, $length, null, !empty($field[3]) ? XMLDB_NOTNULL : null,
+                    !empty($field[4]) ? XMLDB_SEQUENCE : null, $field[5] ?? null);
+            }
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            foreach ($spec['indexes'] as [$iname, $unique, $fields]) {
+                $table->add_index($iname, $unique ? XMLDB_INDEX_UNIQUE : XMLDB_INDEX_NOTUNIQUE, $fields);
+            }
+            $tables[] = $table;
+        }
+        return $tables;
+    }
 }

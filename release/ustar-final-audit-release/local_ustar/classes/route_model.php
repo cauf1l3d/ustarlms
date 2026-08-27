@@ -189,7 +189,7 @@ final class route_model {
                 continue;
             }
             $type = clean_param((string)($requirement['type'] ?? ''), PARAM_ALPHANUMEXT);
-            if (!in_array($type, ['course', 'cm', 'content', 'skill', 'previous_adaptation'], true)) {
+            if (!in_array($type, ['course', 'cm', 'content', 'assessment', 'skill', 'previous_adaptation'], true)) {
                 continue;
             }
             $item = [
@@ -204,6 +204,11 @@ final class route_model {
                 if ($type === 'content') {
                     $mode = (string)($requirement['completionmode'] ?? 'open');
                     $item['completionmode'] = in_array($mode, ['open', 'ack'], true) ? $mode : 'open';
+                }
+            } else if ($type === 'assessment') {
+                $item['sourcekey'] = clean_param((string)($requirement['sourcekey'] ?? ''), PARAM_ALPHANUMEXT);
+                if ($item['sourcekey'] === '') {
+                    continue;
                 }
             } else if ($type === 'skill') {
                 $item['sourcekey'] = clean_param((string)($requirement['sourcekey'] ?? ''), PARAM_ALPHANUMEXT);
@@ -650,6 +655,25 @@ final class route_model {
             $result['detail'] = $mode === 'ack'
                 ? ($result['satisfied'] ? 'Ознакомление подтверждено' : 'Откройте и подтвердите ознакомление')
                 : ($result['satisfied'] ? 'Материал открыт из маршрута' : 'Откройте материал из маршрута');
+        } else if ($type === 'assessment') {
+            $assessmentkey = (string)$requirement['sourcekey'];
+            $definition = development_assessment::published($assessmentkey);
+            if (!$definition) {
+                $result['configured'] = false;
+                $result['detail'] = 'Развивающий профиль USTAR не найден или не опубликован';
+                return $result;
+            }
+            $result['label'] = $result['label'] ?: format_string((string)$definition['assessment']->title);
+            $result['url'] = (new \moodle_url('/local/ustar/development_assessment.php', [
+                'assessment' => $assessmentkey,
+                'fromroute' => 1,
+            ]))->out(false);
+            $attempt = development_assessment::completion_for_user($assessmentkey, $userid);
+            $result['satisfied'] = !empty($attempt);
+            $result['completedat'] = $attempt ? (int)$attempt->submittedat : 0;
+            $result['detail'] = $attempt
+                ? 'Личная саморефлексия завершена'
+                : 'Пройдите короткую личную саморефлексию';
         } else if ($type === 'skill') {
             $skillid = (string)$requirement['sourcekey'];
             $fact = evidence::evaluate_skill($skillid, $positionid, $userid);

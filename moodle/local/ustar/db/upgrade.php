@@ -1573,5 +1573,25 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
     }
 
 
-    return true;
+
+    if ($oldversion < 2026082704) {
+        $dbman = $DB->get_manager();
+
+        // TARGET transition: one permanent route belongs directly to one position.
+        // The obsolete route_positions table was only a compatibility mapping.
+        //
+        // IMPORTANT: do not delete route/point/version/progress records here.
+        // They are historical learning state and completion evidence.
+        $legacyroutepositions = new xmldb_table('local_ustar_route_positions');
+        if ($dbman->table_exists($legacyroutepositions)) {
+            $dbman->drop_table($legacyroutepositions);
+        }
+
+        // Legacy local_ustar_test_* tables are intentionally retained and
+        // declared in install.xml as historical Development Center evidence.
+        // Active TARGET runtime uses local_ustar_dev_assess*.
+
+        upgrade_plugin_savepoint(true, 2026082704, 'local', 'ustar');
+    }
+return true;
 }

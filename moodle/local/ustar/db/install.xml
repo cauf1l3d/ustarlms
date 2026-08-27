@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026082302" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026082704" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -797,5 +797,92 @@
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
       <INDEXES><INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="userid, idempotencykey" /><INDEX NAME="user_assessment_time_idx" UNIQUE="false" FIELDS="userid, assessmentid, submittedat" /><INDEX NAME="user_version_time_idx" UNIQUE="false" FIELDS="userid, versionid, submittedat" /></INDEXES>
     </TABLE>
+    <TABLE NAME="local_ustar_test_defs" COMMENT="LEGACY HISTORY - Versioned definitions for USTAR development assessments">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="testcode" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+            <FIELD NAME="kind" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="development_profile" SEQUENCE="false" />
+            <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="subtitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="definitionjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="definitionhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+            <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+          <INDEXES>
+            <INDEX NAME="test_version_uix" UNIQUE="true" FIELDS="testcode, versionno" />
+            <INDEX NAME="test_active_idx" UNIQUE="false" FIELDS="testcode, active, versionno" />
+          </INDEXES>
+        </TABLE>
+    <TABLE NAME="local_ustar_test_attempts" COMMENT="LEGACY HISTORY - Immutable assessment attempts bound to a test definition version">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="testdefid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="started" SEQUENCE="false" />
+            <FIELD NAME="definitionhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="consentat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="startedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="submittedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="testdefid_fk" TYPE="foreign" FIELDS="testdefid" REFTABLE="local_ustar_test_defs" REFFIELDS="id" />
+            <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+          </KEYS>
+          <INDEXES>
+            <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status" />
+            <INDEX NAME="def_status_idx" UNIQUE="false" FIELDS="testdefid, status" />
+          </INDEXES>
+        </TABLE>
+    <TABLE NAME="local_ustar_test_answers" COMMENT="LEGACY HISTORY - Answers for a version-bound USTAR assessment attempt">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="questionkey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="optionkey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="answerjson" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="attemptid_fk" TYPE="foreign" FIELDS="attemptid" REFTABLE="local_ustar_test_attempts" REFFIELDS="id" />
+          </KEYS>
+          <INDEXES><INDEX NAME="attempt_question_uix" UNIQUE="true" FIELDS="attemptid, questionkey" /></INDEXES>
+        </TABLE>
+    <TABLE NAME="local_ustar_test_results" COMMENT="LEGACY HISTORY - Versioned USTAR development assessment results">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="testcode" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="testversion" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+            <FIELD NAME="primarydimension" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="dimensionsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="strengths" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="development" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="managerrecommendation" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="hrdjson" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="attemptid_fk" TYPE="foreign" FIELDS="attemptid" REFTABLE="local_ustar_test_attempts" REFFIELDS="id" />
+            <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+          </KEYS>
+          <INDEXES>
+            <INDEX NAME="attempt_uix" UNIQUE="true" FIELDS="attemptid" />
+            <INDEX NAME="user_test_time_idx" UNIQUE="false" FIELDS="userid, testcode, timecreated" />
+            <INDEX NAME="test_time_idx" UNIQUE="false" FIELDS="testcode, timecreated" />
+          </INDEXES>
+        </TABLE>
   </TABLES>
 </XMLDB>

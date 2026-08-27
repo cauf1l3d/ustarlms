@@ -1,12 +1,12 @@
-PHASE: DELIVERY / DEVELOPMENT CENTER + TRADING-FLOOR ROUTE
+PHASE: DELIVERY / TARGET CORE INTEGRATION
 BRANCH: canonical-release
-COMMIT: 1534f88
-IMPLEMENTED: Isolated-only candidate implementation and rehearsal.
-TEST_CONTAINER: Isolated USTAR Moodle/Postgres environment with rollback snapshot at release-backups/development-profile-before-2026-08-27.
-TESTS: Production smoke intentionally not run.
-ROLE_E2E: No production accounts, roles, permissions or content assignments changed.
-ROLLBACK: Production rollback not applicable; isolated rollback was verified.
-GITHUB_GATE: Current candidate awaits its meaningful integration gate.
+COMMIT: 7b9434a
+IMPLEMENTED: Isolated-only TARGET Core integration verification; no production release action.
+TEST_CONTAINER: Isolated USTAR Moodle/Postgres environment with source/DB rollback snapshots.
+TESTS: Production smoke intentionally not run; integrated isolated probes PASS.
+ROLE_E2E: No production accounts, roles, permissions, content assignments or enrolments changed.
+ROLLBACK: Production rollback not applicable; isolated data baseline restoration and an earlier source/DB restore rehearsal PASS.
+GITHUB_GATE: Meaningful integration checkpoint ready for the approved candidate branch gate.
 PROD_CHANGED: NO
-KNOWN_GAPS: Production backup, migration rehearsal against the final exact RC, deployment, production smoke and final owner confirmation remain separate gates.
-NEXT: Keep production untouched until the integrated RC is green and owner gives explicit production approval.
+KNOWN_GAPS: Production backup, exact-RC migration rehearsal, deployment, production smoke and final owner confirmation remain separate release gates.
+NEXT: Keep production untouched; proceed only through the isolated candidate/GitHub gate.

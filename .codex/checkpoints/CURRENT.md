@@ -1,12 +1,12 @@
-PHASE: DELIVERY / DEVELOPMENT CENTER + TRADING-FLOOR ROUTE
+PHASE: DELIVERY / TARGET CORE INTEGRATION
 BRANCH: canonical-release
-COMMIT: 1534f88
-IMPLEMENTED: Private versioned USTAR development profile; employee Development Center; HRD-only analytics boundary; Route Studio human profile selector; retail_seller route starts with the profile; release source mirror and manifest refreshed.
+COMMIT: 7b9434a
+IMPLEMENTED: Canonical USTAR notification coverage aligned in the workflow probe; integrated validation completed for Organization/Reporting, Evidence/Checklist/Gates and Workflow/Communication, plus employee lifecycle access projection.
 TEST_CONTAINER: Isolated ustar_audit_moodle + ustar_audit_postgres only.
-TESTS: PASS — PHP syntax; Moodle upgrade to 2026082702; 12-question/4-style profile smoke; idempotency/history/completion probe with cleanup; route bootstrap and first-step smoke; protected-page loopback redirects; XML, Mustache and manifest checks.
-ROLE_E2E: PASS — USTAR HRD allowed protected development analytics; ordinary USTAR HR denied. Final browser role suite remains pending RC gate.
-ROLLBACK: PASS — isolated source and DB backup created; isolated DB was restored from that backup after an interrupted candidate migration, then upgraded successfully.
-GITHUB_GATE: P0 gate 33021246359 SUCCESS; commit 1534f88 has not yet been pushed or gated.
+TESTS: PASS — target-core, organization/reporting, evidence/checklist/gate, workflow/communication and employee-lifecycle isolated runtime probes. Each probe restored its baseline; workflow covers the canonical local notification store.
+ROLE_E2E: PASS — employee, manager, HR, HRD and CEO capability boundaries exercised by integrated probes; final authenticated browser role journeys remain pending RC gate.
+ROLLBACK: PASS — all integrated probes self-cleaned; isolated source and DB backup remain available from the prior migration rehearsal.
+GITHUB_GATE: Existing P0 gate 33021246359 SUCCESS; this meaningful integration checkpoint is ready for the approved candidate push and GitHub gate.
 PROD_CHANGED: NO
-KNOWN_GAPS: Two required post-attestation trading-floor videos lack approved owner files and remain unpublished; in-app browser cannot reach tailnet-only test service; final cross-domain E2E remains pending.
-NEXT: Complete the next integrated TARGET batch, then run the one final isolated RC suite and GitHub gate.
+KNOWN_GAPS: Two post-attestation trading-floor videos require owner-provided approved files; in-app browser cannot reach the tailnet-only isolated service; final cross-domain browser E2E and exact-RC migration rehearsal remain pending.
+NEXT: Push this integration checkpoint to the authorized candidate branch/GitHub gate, then implement the Game Economy batch.

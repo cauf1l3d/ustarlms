@@ -9,4 +9,4 @@ ROLLBACK: Production rollback not applicable; no production backup or migration 
 GITHUB_GATE: Not run for 8e55778; prior 33053549426 PASS on 60d20cc.
 PROD_CHANGED: NO
 KNOWN_GAPS: Isolated runtime gate and final RC gate remain; production backup, migration, smoke, rollback and owner confirmation are separate future gates.
-NEXT: Retry isolated deployment only after explicit re-approval following the tool-limit blocker.
+NEXT: Restore GitHub credentials and obtain explicit re-approval before retrying isolated deployment; production remains untouched.

@@ -8,5 +8,5 @@ ROLE_E2E: Static only; operator capability and pseudonymous payload paths are im
 ROLLBACK: No new runtime change to roll back; prior isolated restore rehearsal remains valid.
 GITHUB_GATE: Not run for 8e55778; prior 33053549426 PASS remains the last candidate gate.
 PROD_CHANGED: NO
-KNOWN_GAPS: Tool usage-limit review blocked the external isolated deployment attempt; no claim of runtime PASS is made.
+KNOWN_GAPS: Tool usage-limit review blocked the external isolated deployment attempt and GitHub push returned SEC_E_NO_CREDENTIALS; no claim of runtime PASS is made.
 NEXT: After explicit re-approval, deploy only to isolated, run the self-cleaning economy probe, capture rollback and then gate Phase 3.

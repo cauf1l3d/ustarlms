@@ -1,12 +1,12 @@
-PHASE: DELIVERY / TARGET UX BLOCK P0-P3
+PHASE: DELIVERY / DEVELOPMENT CENTER + TRADING-FLOOR ROUTE
 BRANCH: canonical-release
-COMMIT: 38cd365 (release package; checkpoint metadata follows)
-IMPLEMENTED: Route Studio content upload/attach; reference-aligned Moodle login; full-width Materials Explorer; Positions ladder plus skill/material impact graph; release source mirrors and RC reports.
-TEST_CONTAINER: Isolated Route Studio runtime probe and prior isolated Moodle evidence; remote visual re-check pending external review capacity.
-TESTS: PASS — Route Studio 10/10; Studio test:studio; test:server; test:http on local production server; Studio build; git diff --check; static Mustache balance. Studio lint: FAIL on pre-existing explicit-any/hooks rules (66 errors, 2 warnings).
-ROLE_E2E: Existing isolated role evidence retained; final synthetic role E2E still pending RC gate.
-ROLLBACK: PASS for prior isolated materials/core/route evidence; this block made no production migration.
-GITHUB_GATE: P0 gate 33021246359 SUCCESS; current local commits not yet pushed/gated.
+COMMIT: 1534f88
+IMPLEMENTED: Private versioned USTAR development profile; employee Development Center; HRD-only analytics boundary; Route Studio human profile selector; retail_seller route starts with the profile; release source mirror and manifest refreshed.
+TEST_CONTAINER: Isolated ustar_audit_moodle + ustar_audit_postgres only.
+TESTS: PASS — PHP syntax; Moodle upgrade to 2026082702; 12-question/4-style profile smoke; idempotency/history/completion probe with cleanup; route bootstrap and first-step smoke; protected-page loopback redirects; XML, Mustache and manifest checks.
+ROLE_E2E: PASS — USTAR HRD allowed protected development analytics; ordinary USTAR HR denied. Final browser role suite remains pending RC gate.
+ROLLBACK: PASS — isolated source and DB backup created; isolated DB was restored from that backup after an interrupted candidate migration, then upgraded successfully.
+GITHUB_GATE: P0 gate 33021246359 SUCCESS; commit 1534f88 has not yet been pushed or gated.
 PROD_CHANGED: NO
-KNOWN_GAPS: In-app browser cannot reach tailnet-only isolated service; no public Funnel enabled. Frontend dependency lint baseline is noisy and requires a separate cleanup batch.
-NEXT: Finish integrated RC evidence, update manifest, run final local checks, then request/execute one meaningful GitHub gate when external review capacity returns.
+KNOWN_GAPS: Two required post-attestation trading-floor videos lack approved owner files and remain unpublished; in-app browser cannot reach tailnet-only test service; final cross-domain E2E remains pending.
+NEXT: Complete the next integrated TARGET batch, then run the one final isolated RC suite and GitHub gate.

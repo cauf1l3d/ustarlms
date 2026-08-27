@@ -37,7 +37,7 @@ jobs:
           import xml.etree.ElementTree as ET
 
           root = ET.parse('moodle/local/ustar/db/install.xml').getroot()
-          assert root.attrib['VERSION'] == '2026082704'
+          assert root.attrib['VERSION'] == '2026082705'
           names = [table.attrib['NAME'] for table in root.find('TABLES')]
           assert len(names) == len(set(names))
           assert {
@@ -63,7 +63,7 @@ jobs:
 
       - name: Review-branch invariants
         run: |
-          grep -q '\$plugin->version   = 2026082704;' moodle/local/ustar/version.php
+          grep -q '\$plugin->version   = 2026082705;' moodle/local/ustar/version.php
           grep -q 'function record_evidence' moodle/local/ustar/classes/target_core.php
           grep -q 'function decide_gate' moodle/local/ustar/classes/target_core.php
           grep -q 'function create_official_task' moodle/local/ustar/classes/target_core.php

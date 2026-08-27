@@ -1593,5 +1593,65 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
 
         upgrade_plugin_savepoint(true, 2026082704, 'local', 'ustar');
     }
+
+    if ($oldversion < 2026082705) {
+        $dbman = $DB->get_manager();
+        require_once(__DIR__ . '/../classes/target_schema.php');
+
+        // Production reconciliation: the previous release already had an older
+        // competition schema under the same table names. The conflicting tables
+        // are safe to replace only while they contain no business records.
+        foreach (['local_ustar_competitions', 'local_ustar_comp_results', 'local_ustar_comp_scores'] as $tablename) {
+            $table = new xmldb_table($tablename);
+            if ($dbman->table_exists($table) && $DB->count_records($tablename) > 0) {
+                throw new coding_exception('USTAR 2705 refuses to replace non-empty legacy competition table: ' . $tablename);
+            }
+        }
+
+        // Drop dependent empty legacy tables before replacing competitions.
+        foreach (['local_ustar_comp_scores', 'local_ustar_comp_results', 'local_ustar_competitions'] as $tablename) {
+            $table = new xmldb_table($tablename);
+            if ($dbman->table_exists($table)) {
+                $dbman->drop_table($table);
+            }
+        }
+
+        // Create/retain the active TARGET competition and USCOIN projection tables.
+        foreach (\local_ustar\target_schema::competition_economy_definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+
+        // Retain the old immutable score-event table as an explicit legacy/history
+        // table. Production currently has no records in it, but keeping the schema
+        // avoids destructive assumptions and makes historical restores interpretable.
+        $table = new xmldb_table('local_ustar_comp_scores');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('competitionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('points', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('idempotencykey', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('sourcekind', XMLDB_TYPE_CHAR, '32', null, null, null, null);
+        $table->add_field('sourceid', XMLDB_TYPE_CHAR, '64', null, null, null, null);
+        $table->add_field('actorid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('competitionid_fk', XMLDB_KEY_FOREIGN, ['competitionid'], 'local_ustar_competitions', ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_index('idempotency_uix', XMLDB_INDEX_UNIQUE, ['idempotencykey']);
+        $table->add_index('comp_user_time_idx', XMLDB_INDEX_NOTUNIQUE, ['competitionid', 'userid', 'timecreated']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // The following production tables contain historical workforce/economy
+        // state and are intentionally retained unchanged:
+        // local_ustar_coin_accounts, local_ustar_staff_places, local_ustar_assignments.
+        // The legacy coin_ledger.cycle field/index is also retained; current runtime
+        // ignores it while immutable ledger history remains fully interpretable.
+
+        upgrade_plugin_savepoint(true, 2026082705, 'local', 'ustar');
+    }
 return true;
 }

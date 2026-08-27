@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026082704" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026082705" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -94,6 +94,7 @@
       <INDEXES>
         <INDEX NAME="user_game_idx" UNIQUE="false" FIELDS="userid, gameid" />
         <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated" />
+        <INDEX NAME="user_cycle_time_idx" UNIQUE="false" FIELDS="userid, cycle, timecreated" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_hr_actions" COMMENT="Audit trail for HR mutations performed in USTAR">
@@ -194,6 +195,7 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated" />
+        <INDEX NAME="user_cycle_time_idx" UNIQUE="false" FIELDS="userid, cycle, timecreated" />
         <INDEX NAME="reviewer_time_idx" UNIQUE="false" FIELDS="reviewerid, timecreated" />
       </INDEXES>
     </TABLE>
@@ -581,6 +583,7 @@
         <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="comment" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="cycle" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
         <FIELD NAME="reversalofid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
       </FIELDS>
@@ -592,6 +595,7 @@
       <INDEXES>
         <INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="idempotencykey" />
         <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated" />
+        <INDEX NAME="user_cycle_time_idx" UNIQUE="false" FIELDS="userid, cycle, timecreated" />
         <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcekind, sourceid" />
         <INDEX NAME="reversal_uix" UNIQUE="true" FIELDS="reversalofid" />
       </INDEXES>
@@ -884,5 +888,201 @@
             <INDEX NAME="test_time_idx" UNIQUE="false" FIELDS="testcode, timecreated" />
           </INDEXES>
         </TABLE>
+    <TABLE NAME="local_ustar_coin_accounts" COMMENT="LEGACY HISTORY - Current USCOIN account state; immutable history stays in ledger">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="cycle" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+            <FIELD NAME="balance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="archivedbalance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="active" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+          </KEYS>
+          <INDEXES>
+            <INDEX NAME="userid_uix" UNIQUE="true" FIELDS="userid" />
+            <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status" />
+          </INDEXES>
+        </TABLE>
+    <TABLE NAME="local_ustar_staff_places" COMMENT="LEGACY HISTORY - Versioned staff places independent from employee assignments">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="placecode" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="departmentid" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="managerplaceid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+            <FIELD NAME="effectivefrom" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="effectiveto" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+          <INDEXES>
+            <INDEX NAME="placecode_uix" UNIQUE="true" FIELDS="placecode" />
+            <INDEX NAME="manager_active_idx" UNIQUE="false" FIELDS="managerplaceid, active" />
+            <INDEX NAME="department_active_idx" UNIQUE="false" FIELDS="departmentid, active" />
+          </INDEXES>
+        </TABLE>
+    <TABLE NAME="local_ustar_assignments" COMMENT="LEGACY HISTORY - Effective-dated employee assignments to staff places">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="staffplaceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="assignmenttype" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="primary" SEQUENCE="false" />
+            <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="active" SEQUENCE="false" />
+            <FIELD NAME="effectivefrom" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="effectiveto" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="staffplaceid_fk" TYPE="foreign" FIELDS="staffplaceid" REFTABLE="local_ustar_staff_places" REFFIELDS="id" />
+            <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+          </KEYS>
+          <INDEXES>
+            <INDEX NAME="user_type_status_idx" UNIQUE="false" FIELDS="userid, assignmenttype, status" />
+            <INDEX NAME="place_status_idx" UNIQUE="false" FIELDS="staffplaceid, status" />
+            <INDEX NAME="effective_idx" UNIQUE="false" FIELDS="effectivefrom, effectiveto" />
+          </INDEXES>
+        </TABLE>
+    <TABLE NAME="local_ustar_comp_scores" COMMENT="LEGACY HISTORY - Immutable competition score events, separate from XP and USCOIN">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="competitionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="points" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+            <FIELD NAME="sourcekind" TYPE="char" LENGTH="32" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="sourceid" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="competitionid_fk" TYPE="foreign" FIELDS="competitionid" REFTABLE="local_ustar_competitions" REFFIELDS="id" />
+            <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+          </KEYS>
+          <INDEXES>
+            <INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="idempotencykey" />
+            <INDEX NAME="comp_user_time_idx" UNIQUE="false" FIELDS="competitionid, userid, timecreated" />
+          </INDEXES>
+        </TABLE>
+<TABLE NAME="local_ustar_coin_balance" COMMENT="TARGET USCOIN atomic non-negative balance projection">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="balance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="userid_uix" UNIQUE="true" FIELDS="userid" /></INDEXES>
+    </TABLE>
+<TABLE NAME="local_ustar_competitions" COMMENT="TARGET versioned competition seasons">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="code" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
+        <FIELD NAME="audiencekind" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="department" SEQUENCE="false" />
+        <FIELD NAME="audiencevalue" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="privacy" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="pseudonymous" SEQUENCE="false" />
+        <FIELD NAME="tiepolicy" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="shared_place" SEQUENCE="false" />
+        <FIELD NAME="startat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="endat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="activeversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="code_uix" UNIQUE="true" FIELDS="code" />
+        <INDEX NAME="status_window_idx" UNIQUE="false" FIELDS="status, startat, endat" />
+        <INDEX NAME="audience_status_idx" UNIQUE="false" FIELDS="audiencekind, audiencevalue, status" />
+      </INDEXES>
+    </TABLE>
+<TABLE NAME="local_ustar_comp_rules" COMMENT="TARGET immutable competition rule versions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="competitionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="rulesjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="competition_version_uix" UNIQUE="true" FIELDS="competitionid, versionno" />
+        <INDEX NAME="competition_status_idx" UNIQUE="false" FIELDS="competitionid, status" />
+      </INDEXES>
+    </TABLE>
+<TABLE NAME="local_ustar_comp_participants" COMMENT="TARGET frozen competition audience snapshot">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="competitionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="publiclabel" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="audiencekey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="active" SEQUENCE="false" />
+        <FIELD NAME="joinedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="leftat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="competition_user_uix" UNIQUE="true" FIELDS="competitionid, userid" />
+        <INDEX NAME="competition_status_idx" UNIQUE="false" FIELDS="competitionid, status" />
+        <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status" />
+      </INDEXES>
+    </TABLE>
+<TABLE NAME="local_ustar_comp_score_events" COMMENT="TARGET immutable competition score events">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="competitionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="participantid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ruleversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="eventtype" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="points" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sourcekind" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sourceid" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="occurredat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="idempotencykey" />
+        <INDEX NAME="competition_participant_idx" UNIQUE="false" FIELDS="competitionid, participantid, occurredat" />
+        <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcekind, sourceid" />
+      </INDEXES>
+    </TABLE>
+<TABLE NAME="local_ustar_comp_results" COMMENT="TARGET immutable closed competition result snapshot">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="competitionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="participantid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ruleversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="rankno" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="points" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="tiekey" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="final" SEQUENCE="false" />
+        <FIELD NAME="finalizedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="competition_participant_uix" UNIQUE="true" FIELDS="competitionid, participantid" />
+        <INDEX NAME="competition_rank_idx" UNIQUE="false" FIELDS="competitionid, rankno" />
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

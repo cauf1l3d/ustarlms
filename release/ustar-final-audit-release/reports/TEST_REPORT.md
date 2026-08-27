@@ -15,6 +15,11 @@
 - `cli/bootstrap_trading_floor_route.php --apply` and `cli/check_learning_route_v2.php`: **PASS** — required profile is the first route step; real tracked Moodle content and attestation remain connected.
 - Isolated loopback access smoke: **PASS** — protected Development Center, HRD analytics, career and Route Studio endpoints return the expected authentication redirect, not an application error.
 - Source and test-DB rollback: **PASS** — the isolated database was restored from the just-created pre-upgrade dump after a rejected migration run, then migration was re-run successfully.
+- Integrated TARGET Core runtime probes: **PASS** — idempotent evidence, self-gate denial, manager decision, immutable checklist, private personal data, notification/outbox and append-only evidence-revocation boundaries; probe cleanup restored the baseline.
+- Organization / reporting runtime probe: **PASS** — invalid reporting links (self, cycle and dangling manager) are rejected; retail manager sees direct reports, HR does not receive team scope, CEO retains executive scope; probe cleanup restored the baseline.
+- Evidence / checklist / gate runtime probe: **PASS** — no pre-completion admission, duplicate/stale checklist decisions rejected, employee cannot publish HR evidence and unassigned employee cannot complete a protected requirement; probe cleanup restored the baseline.
+- Workflow / communication runtime probe: **PASS** — updated to exercise the canonical `local_ustar_notifications` path, including owner-only listing/mark-read, cross-user denial, goal and HR-review boundaries; probe cleanup restored the baseline.
+- Employee lifecycle runtime probe: **PASS** — HR cannot self-import; a position change atomically adds/removes the manager access projection; isolated roles, position and audit rows restored after the scenario.
 
 ## NOT RUN / BLOCKED
 

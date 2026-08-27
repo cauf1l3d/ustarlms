@@ -3,6 +3,10 @@ define('CLI_SCRIPT', true);
 require('/var/www/html/public/config.php');
 
 global $CFG, $DB, $USER;
+set_exception_handler(static function(\Throwable $e): void {
+    fwrite(STDERR, get_class($e) . ': ' . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n");
+    exit(1);
+});
 
 if (!in_array($CFG->wwwroot, [
     'http://127.0.0.1:18080',
@@ -29,8 +33,8 @@ $reviewid = 0;
 $actionids = [];
 
 $baseline = [
-    'notifications' => $DB->count_records('notifications'),
-    'ustar_notifications' => $DB->count_records('notifications', ['component' => 'local_ustar']),
+    'local_notifications' => $DB->count_records('local_ustar_notifications'),
+    'notification_deliveries' => $DB->count_records('local_ustar_notify_delivery'),
     'goals' => $DB->count_records('local_ustar_goals'),
     'reviews' => $DB->count_records('local_ustar_reviews'),
     'hr_actions' => $DB->count_records('local_ustar_hr_actions'),
@@ -55,29 +59,20 @@ $result = [
     'review_audit_row_created' => false,
 ];
 
-function insert_audit_notification(int $from, int $to, string $suffix): int {
-    global $DB;
-    return (int)$DB->insert_record('notifications', (object)[
-        'useridfrom' => $from,
-        'useridto' => $to,
-        'subject' => '__audit_workflow_notification_' . $suffix . '__',
-        'fullmessage' => '__audit_workflow_notification__',
-        'fullmessageformat' => FORMAT_PLAIN,
-        'fullmessagehtml' => '',
-        'smallmessage' => '__audit_workflow_notification__',
-        'component' => 'local_ustar',
+function insert_audit_notification(int $to, string $suffix): int {
+    return \local_ustar\target_core::notify([
+        'userid' => $to,
+        'severity' => 'normal',
         'eventtype' => 'audit_workflow',
-        'contexturl' => '',
-        'contexturlname' => '',
-        'customdata' => null,
-        'timecreated' => time(),
-        'timeread' => null,
+        'subject' => '__audit_workflow_notification_' . $suffix . '__',
+        'message' => '__audit_workflow_notification__',
+        'idempotencykey' => 'audit-workflow-' . $suffix . '-' . time() . '-' . bin2hex(random_bytes(6)),
     ]);
 }
 
 try {
-    $employeeNotification = insert_audit_notification((int)$hr->id, (int)$employee->id, 'employee');
-    $peerNotification = insert_audit_notification((int)$hr->id, (int)$peer->id, 'peer');
+    $employeeNotification = insert_audit_notification((int)$employee->id, 'employee');
+    $peerNotification = insert_audit_notification((int)$peer->id, 'peer');
     $notificationids = [$employeeNotification, $peerNotification];
 
     $employeeRows = \local_ustar\communication::notifications((int)$employee->id, 200);
@@ -93,12 +88,12 @@ try {
     }
 
     \local_ustar\communication::mark_notification((int)$employee->id, $employeeNotification);
-    $result['notification_owner_mark_read'] = (int)$DB->get_field(
-        'notifications',
-        'timeread',
-        ['id' => $employeeNotification, 'useridto' => (int)$employee->id],
+    $result['notification_owner_mark_read'] = (string)$DB->get_field(
+        'local_ustar_notifications',
+        'status',
+        ['id' => $employeeNotification, 'userid' => (int)$employee->id],
         MUST_EXIST
-    ) > 0;
+    ) === 'read';
 
     $foreignconversation = $DB->get_field_sql(
         'SELECT c.id
@@ -203,7 +198,8 @@ try {
 } finally {
     \core\session\manager::set_user($originaluser);
     foreach ($notificationids as $id) {
-        $DB->delete_records('notifications', ['id' => $id, 'component' => 'local_ustar', 'eventtype' => 'audit_workflow']);
+        $DB->delete_records('local_ustar_notify_delivery', ['notificationid' => $id]);
+        $DB->delete_records('local_ustar_notifications', ['id' => $id, 'eventtype' => 'audit_workflow']);
     }
     if ($goalid > 0) {
         $DB->delete_records('local_ustar_goals', ['id' => $goalid, 'userid' => (int)$employee->id]);
@@ -217,8 +213,8 @@ try {
 }
 
 $final = [
-    'notifications' => $DB->count_records('notifications'),
-    'ustar_notifications' => $DB->count_records('notifications', ['component' => 'local_ustar']),
+    'local_notifications' => $DB->count_records('local_ustar_notifications'),
+    'notification_deliveries' => $DB->count_records('local_ustar_notify_delivery'),
     'goals' => $DB->count_records('local_ustar_goals'),
     'reviews' => $DB->count_records('local_ustar_reviews'),
     'hr_actions' => $DB->count_records('local_ustar_hr_actions'),

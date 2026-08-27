@@ -63,7 +63,7 @@ jobs:
 
       - name: Review-branch invariants
         run: |
-          grep -q '\$plugin->version   = 2026082302;' moodle/local/ustar/version.php
+          grep -q '\$plugin->version   = 2026082702;' moodle/local/ustar/version.php
           grep -q 'function record_evidence' moodle/local/ustar/classes/target_core.php
           grep -q 'function decide_gate' moodle/local/ustar/classes/target_core.php
           grep -q 'function create_official_task' moodle/local/ustar/classes/target_core.php

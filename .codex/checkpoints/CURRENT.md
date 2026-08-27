@@ -1,12 +1,12 @@
-PHASE: DELIVERY / TARGET CORE INTEGRATION + GITHUB GATE
+PHASE: DELIVERY / GAME ECONOMY IMPLEMENTATION
 BRANCH: canonical-release
-COMMIT: 60d20cc
-IMPLEMENTED: Canonical USTAR notification coverage aligned in the workflow probe; integrated validation completed for Organization/Reporting, Evidence/Checklist/Gates and Workflow/Communication, plus employee lifecycle access projection. Review gate tracks the current plugin version and the regenerated release manifest.
-TEST_CONTAINER: Isolated ustar_audit_moodle + ustar_audit_postgres only.
-TESTS: PASS — target-core, organization/reporting, evidence/checklist/gate, workflow/communication and employee-lifecycle isolated runtime probes. Each probe restored its baseline; workflow covers the canonical local notification store.
-ROLE_E2E: PASS — employee, manager, HR, HRD and CEO capability boundaries exercised by integrated probes; final authenticated browser role journeys remain pending RC gate.
-ROLLBACK: PASS — all integrated probes self-cleaned; isolated source and DB backup remain available from the prior migration rehearsal.
-GITHUB_GATE: PASS — USTAR review gate 33053549426 on candidate head 60d20cc (PHP, JavaScript, XMLDB/Mustache, invariants and release-bundle Git blobs).
+COMMIT: 8e55778
+IMPLEMENTED: Competition seasons with versioned rules, frozen participant snapshots, pseudonymous privacy, shared-place ties and immutable close results; separate competition score and locked non-negative USCOIN ledger with idempotency, atomic spend and reversal; Competition Studio operator UI; implicit XP/course-to-USCOIN awards removed.
+TEST_CONTAINER: Isolated ustar_audit_moodle + ustar_audit_postgres only; this block is not deployed yet.
+TESTS: PASS — XMLDB structure, Mustache inventory, JavaScript syntax, source-mirror hashes and 188-file staged release manifest. Isolated Game Economy runtime probe is pending.
+ROLE_E2E: Static capability boundary present for competition operator and coin adjustment; isolated employee/operator/privacy matrix pending.
+ROLLBACK: Previous isolated source/DB rollback rehearsal remains valid; no new Game Economy backup or runtime rollback was executed.
+GITHUB_GATE: Previous gate 33053549426 PASS on 60d20cc; 8e55778 not pushed/gated yet because external execution was stopped by tool usage-limit review.
 PROD_CHANGED: NO
-KNOWN_GAPS: Two post-attestation trading-floor videos require owner-provided approved files; in-app browser cannot reach the tailnet-only isolated service; final cross-domain browser E2E and exact-RC migration rehearsal remain pending.
-NEXT: Implement the Game Economy batch: competition score/season/rules/privacy/tie policy and atomic USCOIN ledger.
+KNOWN_GAPS: Isolated migration/runtime probe, final cross-domain browser E2E and exact-RC rollback remain pending; HR account apply remains blocked by unresolved owner mappings; two owner-approved trading-floor videos are still missing.
+NEXT: Obtain explicit re-approval before retrying isolated deployment, run game_economy_runtime_probe.php, then continue Phase 3 people/roles integration.

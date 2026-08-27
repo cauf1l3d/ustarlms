@@ -202,4 +202,96 @@ final class target_schema {
         }
         return $tables;
     }
+
+    /** @return array<int,\xmldb_table> Economy and competition TARGET tables. */
+    public static function competition_economy_definitions(): array {
+        $i = XMLDB_TYPE_INTEGER;
+        $c = XMLDB_TYPE_CHAR;
+        $t = XMLDB_TYPE_TEXT;
+        $specs = [
+            'local_ustar_coin_balance' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['userid',$i,'10',true], ['balance',$i,'10',true,false,'0'],
+                    ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [['userid_uix',true,['userid']]],
+            ],
+            'local_ustar_competitions' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['code',$c,'64',true], ['title',$c,'255',true],
+                    ['status',$c,'16',true,false,'draft'], ['audiencekind',$c,'16',true,false,'department'],
+                    ['audiencevalue',$c,'64',true], ['privacy',$c,'16',true,false,'pseudonymous'],
+                    ['tiepolicy',$c,'16',true,false,'shared_place'], ['startat',$i,'10',true,false,'0'],
+                    ['endat',$i,'10',true,false,'0'], ['activeversionid',$i,'10'], ['ownerid',$i,'10',true,false,'0'],
+                    ['timecreated',$i,'10',true,false,'0'], ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['code_uix',true,['code']], ['status_window_idx',false,['status','startat','endat']],
+                    ['audience_status_idx',false,['audiencekind','audiencevalue','status']],
+                ],
+            ],
+            'local_ustar_comp_rules' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['competitionid',$i,'10',true], ['versionno',$i,'10',true,false,'1'],
+                    ['rulesjson',$t,null,true], ['status',$c,'16',true,false,'draft'], ['createdby',$i,'10',true,false,'0'],
+                    ['timecreated',$i,'10',true,false,'0'], ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['competition_version_uix',true,['competitionid','versionno']],
+                    ['competition_status_idx',false,['competitionid','status']],
+                ],
+            ],
+            'local_ustar_comp_participants' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['competitionid',$i,'10',true], ['userid',$i,'10',true],
+                    ['publiclabel',$c,'64',true], ['audiencekey',$c,'64',true], ['status',$c,'16',true,false,'active'],
+                    ['joinedat',$i,'10',true,false,'0'], ['leftat',$i,'10'], ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['competition_user_uix',true,['competitionid','userid']],
+                    ['competition_status_idx',false,['competitionid','status']], ['user_status_idx',false,['userid','status']],
+                ],
+            ],
+            'local_ustar_comp_score_events' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['competitionid',$i,'10',true], ['participantid',$i,'10',true],
+                    ['ruleversionid',$i,'10',true], ['eventtype',$c,'32',true], ['points',$i,'10',true],
+                    ['sourcekind',$c,'32',true], ['sourceid',$c,'128',true], ['idempotencykey',$c,'128',true],
+                    ['occurredat',$i,'10',true,false,'0'], ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['idempotency_uix',true,['idempotencykey']],
+                    ['competition_participant_idx',false,['competitionid','participantid','occurredat']],
+                    ['source_idx',false,['sourcekind','sourceid']],
+                ],
+            ],
+            'local_ustar_comp_results' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['competitionid',$i,'10',true], ['participantid',$i,'10',true],
+                    ['ruleversionid',$i,'10',true], ['rankno',$i,'10',true], ['points',$i,'10',true],
+                    ['tiekey',$c,'32',true], ['status',$c,'16',true,false,'final'], ['finalizedat',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['competition_participant_uix',true,['competitionid','participantid']],
+                    ['competition_rank_idx',false,['competitionid','rankno']],
+                ],
+            ],
+        ];
+
+        $tables = [];
+        foreach ($specs as $name => $spec) {
+            $table = new \xmldb_table($name);
+            foreach ($spec['fields'] as $field) {
+                [$fname, $type, $length] = $field;
+                $table->add_field($fname, $type, $length, null, !empty($field[3]) ? XMLDB_NOTNULL : null,
+                    !empty($field[4]) ? XMLDB_SEQUENCE : null, $field[5] ?? null);
+            }
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            foreach ($spec['indexes'] as [$iname, $unique, $fields]) {
+                $table->add_index($iname, $unique ? XMLDB_INDEX_UNIQUE : XMLDB_INDEX_NOTUNIQUE, $fields);
+            }
+            $tables[] = $table;
+        }
+        return $tables;
+    }
 }

@@ -581,6 +581,7 @@
         <FIELD NAME="idempotencykey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="comment" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="reversalofid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
       </FIELDS>
       <KEYS>
@@ -592,6 +593,7 @@
         <INDEX NAME="idempotency_uix" UNIQUE="true" FIELDS="idempotencykey" />
         <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated" />
         <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcekind, sourceid" />
+        <INDEX NAME="reversal_uix" UNIQUE="true" FIELDS="reversalofid" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_reporting" COMMENT="Explicit employee reporting lines">

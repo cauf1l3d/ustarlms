@@ -27,6 +27,7 @@ This bundle contains only reviewed deltas and repeatable audit/test helpers. It 
 - `reports/MATERIALS_LIBRARY_IMPLEMENTATION.md` — exact source scope, authenticated runtime checks, cleanup and rollback boundary.
 - `reports/USCOIN_CURRENT_RUNTIME_AUDIT.md` — isolated ledger, concurrency/idempotency, overspend, store/reversal and cleanup evidence.
 - `reports/LEADERBOARD_CURRENT_RUNTIME_AUDIT.md` — isolated audience, score, tie, team-rank, season/fairness and cleanup evidence.
+- `reports/GAME_ECONOMY_TARGET_IMPLEMENTATION.md` — candidate competition seasons/rules, pseudonymous ranking and atomic non-negative USCOIN ledger.
 - `reports/BOARDS_CURRENT_RUNTIME_AUDIT.md` — production-CURRENT lost-update reproduction plus isolated atomic-save containment, validation/ACL, exact 1/23 acceptance and rollback roundtrip evidence.
 - `reports/WORKFLOW_COMMUNICATION_CURRENT_RUNTIME_AUDIT.md` — Moodle notifications/messages, USTAR goals/reviews/HR actions and task-lifecycle aggregate/ACL/Checklist Design evidence plus exact cleanup.
 - `reports/EVIDENCE_CHECKLIST_GATE_CURRENT_RUNTIME_AUDIT.md` — Evidence semantics, checklist definition/history integrity, current Gate lifecycle, isolated fail-closed containment and rollback roundtrip.

@@ -55,6 +55,12 @@ $capabilities = [
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => [],
     ],
+    'local/ustar:managecompetition' => [
+        'riskbitmask'  => RISK_PERSONAL | RISK_DATALOSS,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [],
+    ],
     // Private development-profile results never become ordinary HR data.
     // This capability is deliberately separate from local/ustar:hr and
     // local/ustar:hrmanage so the HRD boundary can be assigned explicitly.

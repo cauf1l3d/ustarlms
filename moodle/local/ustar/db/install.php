@@ -5,9 +5,17 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_ustar_install(): void {
     global $DB;
 
+    require_once(__DIR__ . '/../classes/target_schema.php');
+    $dbman = $DB->get_manager();
+    foreach (\local_ustar\target_schema::competition_economy_definitions() as $table) {
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+    }
+
     $syscontext = context_system::instance();
     $roles = [
-        'ustar_superadmin' => ['USTAR Superadmin', ['local/ustar:use', 'local/ustar:admin', 'local/ustar:viewteam']],
+        'ustar_superadmin' => ['USTAR Superadmin', ['local/ustar:use', 'local/ustar:admin', 'local/ustar:viewteam', 'local/ustar:managecompetition', 'local/ustar:adjustcoin']],
         'ustar_hr' => ['USTAR HR', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage']],
         'ustar_hrd' => ['USTAR HRD', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:developmentanalytics']],
         'ustar_executive' => ['USTAR Executive', ['local/ustar:use', 'local/ustar:executive']],

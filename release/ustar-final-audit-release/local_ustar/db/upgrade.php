@@ -1523,6 +1523,55 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082702, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082703) {
+        $dbman = $DB->get_manager();
+        update_capabilities('local_ustar');
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::competition_economy_definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+
+        // The legacy ledger is preserved verbatim. A balance projection is
+        // established once so all future debits can lock one deterministic
+        // row and refuse to create a negative balance.
+        $ledger = new xmldb_table('local_ustar_coin_ledger');
+        $reversal = new xmldb_field('reversalofid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'actorid');
+        if (!$dbman->field_exists($ledger, $reversal)) {
+            $dbman->add_field($ledger, $reversal);
+        }
+        $reversalindex = new xmldb_index('reversal_uix', XMLDB_INDEX_UNIQUE, ['reversalofid']);
+        if (!$dbman->index_exists($ledger, $reversalindex)) {
+            $dbman->add_index($ledger, $reversalindex);
+        }
+
+        foreach ($DB->get_records_sql(
+            'SELECT userid, COALESCE(SUM(amount), 0) AS balance FROM {local_ustar_coin_ledger} GROUP BY userid'
+        ) as $row) {
+            if ((int)$row->balance < 0) {
+                throw new moodle_exception('USTAR USCOIN migration refused: existing balance is negative for user ' . (int)$row->userid);
+            }
+            if (!$DB->record_exists('local_ustar_coin_balance', ['userid' => (int)$row->userid])) {
+                $DB->insert_record('local_ustar_coin_balance', (object)[
+                    'userid' => (int)$row->userid,
+                    'balance' => (int)$row->balance,
+                    'timemodified' => time(),
+                ]);
+            }
+        }
+
+        $syscontext = context_system::instance();
+        $roleid = (int)$DB->get_field('role', 'id', ['shortname' => 'ustar_superadmin']);
+        if ($roleid) {
+            foreach (['local/ustar:managecompetition', 'local/ustar:adjustcoin'] as $capability) {
+                assign_capability($capability, CAP_ALLOW, $roleid, $syscontext->id, true);
+            }
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026082703, 'local', 'ustar');
+    }
+
 
     return true;
 }

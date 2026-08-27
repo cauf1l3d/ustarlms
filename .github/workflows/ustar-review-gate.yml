@@ -63,12 +63,17 @@ jobs:
 
       - name: Review-branch invariants
         run: |
-          grep -q '\$plugin->version   = 2026082702;' moodle/local/ustar/version.php
+          grep -q '\$plugin->version   = 2026082703;' moodle/local/ustar/version.php
           grep -q 'function record_evidence' moodle/local/ustar/classes/target_core.php
           grep -q 'function decide_gate' moodle/local/ustar/classes/target_core.php
           grep -q 'function create_official_task' moodle/local/ustar/classes/target_core.php
           grep -q 'function save_personal_task' moodle/local/ustar/classes/target_core.php
           grep -q 'function notify' moodle/local/ustar/classes/target_core.php
+          grep -q 'function spend' moodle/local/ustar/classes/economy.php
+          grep -q 'function record_game_mastery' moodle/local/ustar/classes/competition.php
+          grep -q 'shared_place' moodle/local/ustar/classes/competition.php
+          grep -q 'USCOIN_SYNC=REPORT_ONLY' moodle/local/ustar/cli/sync_uscoin.php
+          grep -q 'competition_studio.php' moodle/local/ustar/operations.php
           grep -q "'scope' => \$role === 'superadmin' ? 'company' : 'direct_reports'" moodle/local/ustar/classes/external/get_team.php
           grep -q 'route_material_opened' moodle/local/ustar/classes/learning_events.php
           grep -q 'data-u-move-form' moodle/local/ustar/templates/materials.mustache
@@ -96,6 +101,9 @@ jobs:
           cmp moodle/local/ustar/team.php release/ustar-final-audit-release/local_ustar/team.php
           cmp moodle/local/ustar/executive.php release/ustar-final-audit-release/local_ustar/executive.php
           cmp moodle/local/ustar/templates/executive.mustache release/ustar-final-audit-release/local_ustar/templates/executive.mustache
+          cmp moodle/local/ustar/classes/economy.php release/ustar-final-audit-release/local_ustar/classes/economy.php
+          cmp moodle/local/ustar/classes/competition.php release/ustar-final-audit-release/local_ustar/classes/competition.php
+          cmp moodle/local/ustar/achievements.php release/ustar-final-audit-release/local_ustar/achievements.php
           python3 - <<'PY'
           from pathlib import Path
 

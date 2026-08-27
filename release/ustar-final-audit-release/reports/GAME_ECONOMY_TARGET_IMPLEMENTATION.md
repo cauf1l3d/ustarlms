@@ -24,3 +24,5 @@
 ## Remaining gate
 
 Изолированный runtime probe должен подтвердить migration, duplicate/idempotency, overspend, reversal, pseudonymous audience, shared place, close и baseline rollback. Production не менялся; XP→USCOIN автоматически не считается TARGET-правилом.
+
+Локальная фиксация: `8e55778` (checkpoint `fe40e5b`). Push review-ветки в GitHub из этой среды не выполнен: Git credential helper вернул `SEC_E_NO_CREDENTIALS`; production release не запускался.

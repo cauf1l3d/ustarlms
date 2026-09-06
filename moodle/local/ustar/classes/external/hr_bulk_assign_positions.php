@@ -55,7 +55,7 @@ class hr_bulk_assign_positions extends base {
                 $errors[] = ['index' => $index, 'userid' => $userid, 'message' => 'User not found'];
                 continue;
             }
-            if (is_siteadmin($target) || $target->id == $USER->id || has_capability('local/ustar:admin', $context, $target->id)) {
+            if (!\local_ustar\accounts::is_business_account($userid) || is_siteadmin($target) || $target->id == $USER->id || has_capability('local/ustar:admin', $context, $target->id)) {
                 $skipped++;
                 continue;
             }

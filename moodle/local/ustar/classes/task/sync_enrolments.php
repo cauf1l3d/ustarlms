@@ -51,6 +51,10 @@ class sync_enrolments extends \core\task\scheduled_task {
 
         foreach ($users as $user) {
 
+            if (!\local_ustar\accounts::learning_enabled((int)$user->id)) {
+                continue;
+            }
+
             try {
 
                 $result =

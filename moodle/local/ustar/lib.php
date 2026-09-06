@@ -387,3 +387,22 @@ function local_ustar_pluginfile(
 
     return true;
 }
+
+/** Render a persistent fixed banner on every page in the isolated Route Tester session. */
+function local_ustar_before_footer_original(): string {
+    try {
+        if (class_exists('\\local_ustar\\route_tester') && \local_ustar\route_tester::active()) {
+            return \local_ustar\route_tester::banner_html();
+        }
+    } catch (\Throwable $e) {
+        // Never break a Moodle page because the optional developer banner failed.
+    }
+    return '';
+}
+
+/**
+ * Existing footer output + route sequential navigation.
+ */
+function local_ustar_before_footer(): string {
+    return local_ustar_before_footer_original();
+}

@@ -1,0 +1,178 @@
+<div class="u-product-page u-native-route">
+
+<header class="u-native-route__hero">
+    <div>
+        <p class="u-page-kicker">
+            Маршрут · 03 · Проверка
+        </p>
+
+        <h1>Кто есть кто?</h1>
+
+        <p>
+            Теперь без схемы перед глазами.
+            Определите должности людей,
+            с которыми вы работаете в USTAR.
+        </p>
+    </div>
+
+    <span class="u-native-route__chip">
+        80% для прохождения
+    </span>
+</header>
+
+
+{{#submitted}}
+
+{{#passed}}
+<div class="u-native-result is-success">
+    <strong>Проверка пройдена · {{percent}}%</strong>
+
+    {{#recorded}}
+    <span>
+        Результат сохранён. Шаг маршрута можно завершить.
+    </span>
+    {{/recorded}}
+
+    {{#previewmode}}
+    <span>
+        Результат верный. Сейчас точка находится
+        в режиме подготовки, поэтому прогресс маршрута
+        ещё не записывается.
+    </span>
+    {{/previewmode}}
+</div>
+{{/passed}}
+
+{{#notpassed}}
+<div class="u-native-result">
+    <strong>
+        Пока {{percent}}%
+    </strong>
+
+    <span>
+        Для прохождения нужно 80%.
+        Можно вернуться к структуре,
+        а затем попробовать ещё раз.
+    </span>
+</div>
+{{/notpassed}}
+
+{{/submitted}}
+
+
+<section class="u-native-quiz u-native-quiz--standalone">
+
+    <header>
+        <div>
+            <p class="u-page-kicker">
+                Проверка
+            </p>
+
+            <h2>
+                Сотрудник → должность
+            </h2>
+        </div>
+
+        {{#submitted}}
+        <strong class="u-native-quiz__score">
+            {{score}} / {{total}}
+        </strong>
+        {{/submitted}}
+    </header>
+
+
+    {{#hasquestions}}
+    <form method="post">
+
+        <input
+            type="hidden"
+            name="sesskey"
+            value="{{sesskey}}"
+        >
+
+        <div class="u-native-quiz__questions">
+
+            {{#questions}}
+            <article
+                class="u-native-question
+                {{#correct}}is-correct{{/correct}}
+                {{#incorrect}}is-incorrect{{/incorrect}}"
+            >
+
+                <div class="u-native-question__person">
+
+                    <div class="u-team-avatar">
+                        {{#avatarurl}}
+                        <img src="{{avatarurl}}" alt="">
+                        {{/avatarurl}}
+
+                        {{^avatarurl}}
+                        <span>{{initials}}</span>
+                        {{/avatarurl}}
+                    </div>
+
+                    <div>
+                        <small>
+                            Вопрос {{number}}
+                        </small>
+
+                        <strong>
+                            {{fullname}}
+                        </strong>
+                    </div>
+
+                </div>
+
+                <label>
+                    <span>Должность</span>
+
+                    <select
+                        name="{{input}}"
+                        required
+                    >
+                        <option value="">
+                            Выберите ответ
+                        </option>
+
+                        {{#options}}
+                        <option
+                            value="{{id}}"
+                            {{#selected}}selected{{/selected}}
+                        >
+                            {{name}}
+                        </option>
+                        {{/options}}
+                    </select>
+                </label>
+
+            </article>
+            {{/questions}}
+
+        </div>
+
+        <button
+            class="u-btn u-btn--primary"
+            type="submit"
+        >
+            Проверить ответы
+        </button>
+
+    </form>
+    {{/hasquestions}}
+
+</section>
+
+
+<footer class="u-native-route__footer">
+
+    <a class="u-btn" href="{{studyurl}}">
+        ← Посмотреть структуру ещё раз
+    </a>
+
+    <a class="u-btn" href="{{routeurl}}">
+        Вернуться в маршрут
+    </a>
+
+</footer>
+
+</div>

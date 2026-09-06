@@ -464,6 +464,21 @@ class assignment {
             );
 
 
+        if (!accounts::learning_enabled($userid)) {
+            return [
+                'ok' => true,
+                'userid' => $userid,
+                'positionid' => people::position_id($userid),
+                'status' => 'account_not_learning',
+                'required' => [],
+                'skills' => [],
+                'alreadyEnrolled' => [],
+                'toEnrol' => [],
+                'missingManualInstance' => [],
+            ];
+        }
+
+
         $positionid =
             people::position_id(
                 $userid

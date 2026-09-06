@@ -1,0 +1,185 @@
+/* ============================================================
+   USTAR — Dedicated material management page
+   ============================================================ */
+
+.u-material-manage {
+    width: 100%;
+    max-width: none;
+
+    display: grid;
+    gap: 14px;
+}
+
+.u-material-manage__bar {
+    position: sticky;
+    top: 64px;
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 11px 14px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--u-surface-raised) 94%,
+            transparent
+        );
+
+    border: 1px solid var(--u-border);
+    border-radius: 12px;
+
+    box-shadow: var(--u-e-1);
+    backdrop-filter: blur(10px);
+}
+
+.u-material-manage__back {
+    color: var(--u-text-primary);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.u-material-manage__back:hover {
+    color: var(--u-brand);
+    text-decoration: none;
+}
+
+
+/* The old inline panel is now a real page. */
+.u-material-manage .u-material-detail {
+    width: 100%;
+    max-width: none;
+
+    margin: 0 !important;
+    padding: 24px !important;
+
+    border: 1px solid var(--u-border);
+    border-radius: 16px;
+
+    background: var(--u-surface-raised);
+    box-shadow: var(--u-e-1);
+}
+
+
+/* Main material identity. */
+.u-material-manage .u-material-detail__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+
+    padding-bottom: 20px;
+    margin-bottom: 18px;
+
+    border-bottom: 1px solid var(--u-border);
+}
+
+.u-material-manage .u-material-detail__top h2 {
+    margin: 4px 0 0;
+
+    font-size: clamp(30px, 3vw, 46px);
+    letter-spacing: -.035em;
+}
+
+
+/* Version/source facts become compact dashboard cells. */
+.u-material-manage .u-material-source {
+    display: grid !important;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+.u-material-manage .u-material-source > div {
+    padding: 13px 14px;
+
+    background: var(--u-surface-muted);
+
+    border: 1px solid var(--u-border);
+    border-radius: 10px;
+}
+
+.u-material-manage .u-material-source span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--u-text-muted);
+
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+
+/* Every functional area is visually separate. */
+.u-material-manage .u-material-versions,
+.u-material-manage .u-material-compliance,
+.u-material-manage .u-material-editor {
+    margin-top: 18px;
+
+    padding: 18px;
+
+    background: var(--u-surface-muted);
+
+    border: 1px solid var(--u-border);
+    border-radius: 13px;
+}
+
+
+/* Editor itself no longer feels like a long continuation of the catalog. */
+.u-material-manage .u-material-editor__section {
+    background: var(--u-surface-raised);
+
+    border: 1px solid var(--u-border);
+    border-radius: 11px;
+
+    padding: 16px;
+}
+
+
+/* Wider, more readable forms. */
+.u-material-manage .u-material-field input,
+.u-material-manage .u-material-field textarea,
+.u-material-manage .u-material-field select {
+    width: 100%;
+}
+
+
+/* Version history rows. */
+.u-material-manage .u-material-version-row {
+    border-radius: 9px;
+}
+
+
+/* Dark mode uses the theme variables rather than hard-coded white. */
+html[data-ustar-theme="dark"] .u-material-manage__bar,
+html[data-ustar-theme="dark"] .u-material-manage .u-material-detail,
+html[data-ustar-theme="dark"] .u-material-manage .u-material-editor__section {
+    background: var(--u-surface-raised);
+    color: var(--u-text-primary);
+}
+
+
+@media (max-width: 760px) {
+    .u-material-manage__bar {
+        position: static;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .u-material-manage .u-material-detail {
+        padding: 15px !important;
+    }
+
+    .u-material-manage .u-material-detail__top {
+        flex-direction: column;
+    }
+}

@@ -437,6 +437,10 @@ class position_model {
 
         foreach ($users as $user) {
 
+            if (!accounts::learning_enabled((int)$user->id)) {
+                continue;
+            }
+
             try {
 
                 $sync =

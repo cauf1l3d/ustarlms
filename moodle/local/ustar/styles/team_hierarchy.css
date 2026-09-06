@@ -1,0 +1,443 @@
+
+/* USTAR canonical team hierarchy — 2712B
+ *
+ * IMPORTANT:
+ * This component does not own a light/dark palette.
+ * It consumes the same USTAR design tokens as the shell,
+ * presets and Appearance switch.
+ */
+
+.u-team-hierarchy {
+    display: grid;
+    gap: 0;
+    margin: 22px 0;
+    color: var(--u-text-primary);
+}
+
+.u-team-hierarchy h2,
+.u-team-hierarchy strong {
+    color: var(--u-text-primary);
+}
+
+.u-team-tier {
+    padding: 22px;
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-md, 20px);
+    background: var(--u-surface-raised);
+    color: var(--u-text-primary);
+    box-shadow: var(--u-e-1);
+}
+
+.u-team-tier--current {
+    background:
+        linear-gradient(
+            135deg,
+            color-mix(
+                in srgb,
+                var(--u-brand) 8%,
+                var(--u-surface-raised)
+            ),
+            var(--u-surface-raised)
+        );
+}
+
+.u-team-tier__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.u-team-tier__head h2 {
+    margin: 2px 0 0;
+    font-size: 24px;
+    line-height: 1.15;
+}
+
+.u-team-context {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 5px 10px;
+    border: 1px solid var(--u-border-subtle);
+    border-radius: 999px;
+    background: var(--u-surface-muted);
+    color: var(--u-text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.u-team-connector {
+    width: 2px;
+    height: 28px;
+    margin: 0 auto;
+    background:
+        linear-gradient(
+            to bottom,
+            var(--u-border),
+            var(--u-brand)
+        );
+}
+
+.u-team-cards {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+}
+
+.u-team-cards--leaders {
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.u-team-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+    min-height: 90px;
+    padding: 14px;
+
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-sm, 14px);
+
+    background: var(--u-surface-muted);
+    color: var(--u-text-primary);
+
+    box-shadow: none;
+
+    transition:
+        border-color 120ms ease,
+        background 120ms ease,
+        transform 120ms ease;
+}
+
+.u-team-card:hover {
+    border-color: var(--u-border-strong);
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 5%,
+            var(--u-surface-muted)
+        );
+}
+
+.u-team-card--leader {
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 4%,
+            var(--u-surface-muted)
+        );
+}
+
+.u-team-card--me {
+    flex: 0 0 240px;
+    min-height: 96px;
+
+    border: 2px solid var(--u-brand);
+
+    background:
+        linear-gradient(
+            135deg,
+            color-mix(
+                in srgb,
+                var(--u-brand) 13%,
+                var(--u-surface-raised)
+            ),
+            var(--u-surface-raised)
+        );
+
+    color: var(--u-text-primary);
+
+    box-shadow:
+        0 0 0 3px var(--u-brand-soft),
+        var(--u-e-1);
+}
+
+.u-team-card--me .u-team-card__body strong {
+    color: var(--u-text-primary);
+}
+
+.u-team-card--me .u-team-card__body span {
+    color: var(--u-text-secondary);
+}
+
+.u-team-card--me .u-team-card__body small {
+    color: var(--u-text-muted);
+}
+
+.u-team-card__badge {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+
+    padding: 4px 7px;
+
+    border-radius: 999px;
+
+    background: var(--u-brand);
+    color: var(--u-text-on-brand);
+
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .04em;
+}
+
+.u-team-avatar {
+    flex: 0 0 52px;
+
+    width: 52px;
+    height: 52px;
+
+    overflow: hidden;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid var(--u-border-subtle);
+    border-radius: 14px;
+
+    background: var(--u-brand-soft);
+    color: var(--u-text-primary);
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.u-team-avatar--me {
+    flex-basis: 60px;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+}
+
+.u-team-avatar--small {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+}
+
+.u-team-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.u-team-card__body {
+    min-width: 0;
+
+    display: grid;
+    gap: 3px;
+}
+
+.u-team-card__body strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: var(--u-text-primary);
+
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.u-team-card__body span {
+    color: var(--u-text-secondary);
+    font-size: 11px;
+}
+
+.u-team-card__body small {
+    color: var(--u-text-muted);
+    font-size: 10px;
+}
+
+.u-team-current-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 14px;
+}
+
+.u-team-peers {
+    flex: 1 1 auto;
+
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(175px, 1fr));
+    gap: 10px;
+}
+
+.u-team-card--peer {
+    min-height: 90px;
+}
+
+.u-team-empty {
+    margin: 14px 0 0;
+
+    text-align: center;
+
+    color: var(--u-text-muted);
+}
+
+.u-team-learning {
+    margin-top: 24px;
+}
+
+.u-team-route-intro,
+.u-team-route-next {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+
+    margin: 18px 0;
+    padding: 18px 20px;
+
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-r-md, 18px);
+
+    background: var(--u-surface-raised);
+    color: var(--u-text-primary);
+
+    box-shadow: var(--u-e-1);
+}
+
+.u-team-route-intro {
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 7%,
+            var(--u-surface-raised)
+        );
+}
+
+.u-team-route-intro span,
+.u-team-route-next p {
+    color: var(--u-text-secondary);
+}
+
+.u-profile-avatar-wrap {
+    display: grid;
+    justify-items: center;
+    gap: 9px;
+}
+
+.u-profile-avatar.u-profile-avatar--photo {
+    overflow: hidden;
+
+    background: var(--u-surface-muted);
+    color: var(--u-text-primary);
+
+    border: 1px solid var(--u-border);
+}
+
+.u-profile-avatar.u-profile-avatar--photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.u-profile-photo-edit {
+    color: var(--u-brand);
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.u-profile-photo-edit:hover {
+    color: var(--u-brand-strong);
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .u-team-tier {
+        padding: 17px;
+    }
+
+    .u-team-tier__head,
+    .u-team-route-intro,
+    .u-team-route-next {
+        display: grid;
+    }
+
+    .u-team-current-row {
+        display: grid;
+    }
+
+    .u-team-card--me {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .u-team-peers,
+    .u-team-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* USTAR 2712C — glass badge fix for "Вы здесь" */
+.u-team-card--me {
+    padding: 16px 112px 16px 16px;
+}
+
+.u-team-card--me .u-team-card__body {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.u-team-card--me .u-team-card__body strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.u-team-card--me .u-team-card__badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 28px;
+    padding: 6px 10px;
+
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--u-brand) 45%, var(--u-border));
+
+    background: color-mix(in srgb, var(--u-surface-raised) 72%, transparent);
+    color: var(--u-text-primary);
+
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--u-brand) 18%, transparent);
+}
+
+@media (max-width: 640px) {
+    .u-team-card--me {
+        padding: 16px 16px 52px 16px;
+    }
+
+    .u-team-card--me .u-team-card__badge {
+        top: auto;
+        right: 12px;
+        bottom: 10px;
+    }
+}
+

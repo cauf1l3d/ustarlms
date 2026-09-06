@@ -20,15 +20,27 @@ class hr_get_checklists extends base {
         $defs = checklists::get();
         $st = structure::get(structure::NAME_STRUCTURE);
         $today = userdate(time(), '%Y-%m-%d');
-        $todayruns = $DB->get_records('local_ustar_check_runs', ['datekey' => $today], 'timemodified DESC');
+        $todayrunsraw = $DB->get_records('local_ustar_check_runs', ['datekey' => $today], 'timemodified DESC');
+        $todayruns = [];
         $completed = 0;
-        foreach ($todayruns as $r) { if ($r->status === 'completed') $completed++; }
+        foreach ($todayrunsraw as $r) {
+            if (!\local_ustar\accounts::is_business_account((int)$r->userid)) {
+                continue;
+            }
+            $todayruns[] = $r;
+            if ($r->status === 'completed') {
+                $completed++;
+            }
+        }
         $recent = [];
         $sql = "SELECT r.*, u.firstname, u.lastname
                   FROM {local_ustar_check_runs} r
                   JOIN {user} u ON u.id = r.userid
               ORDER BY r.timemodified DESC";
-        foreach (array_slice(array_values($DB->get_records_sql($sql, [], 0, 30)), 0, 30) as $r) {
+        foreach ($DB->get_records_sql($sql, [], 0, 120) as $r) {
+            if (!\local_ustar\accounts::is_business_account((int)$r->userid)) {
+                continue;
+            }
             $recent[] = [
                 'id' => (int)$r->id, 'checklistid' => $r->checklistkey, 'userid' => (int)$r->userid,
                 'fullname' => trim($r->firstname . ' ' . $r->lastname), 'positionid' => $r->positionid,
@@ -36,6 +48,9 @@ class hr_get_checklists extends base {
                 'total' => (int)$r->totalitems, 'score' => (int)$r->score, 'comment' => (string)$r->comment,
                 'completedAt' => (int)$r->completedat,
             ];
+            if (count($recent) >= 30) {
+                break;
+            }
         }
         return ['json' => json_encode([
             'definitions' => $defs,

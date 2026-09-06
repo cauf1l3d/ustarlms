@@ -5,6 +5,38 @@ require_login();
 $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 
+if (!\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
+    $PAGE->set_context($context);
+    $PAGE->set_url(new moodle_url('/local/ustar/catalog.php'));
+    $PAGE->set_pagelayout('ustar');
+    $PAGE->set_title('Каталог товаров | USTAR Academy');
+    $PAGE->set_heading('USTAR Academy');
+
+    $output = $PAGE->get_renderer('local_ustar');
+
+    echo $output->header();
+
+    echo $output->render_from_template(
+        'local_ustar/catalog_locked',
+        [
+            'learningurl' => (
+                new moodle_url(
+                    '/local/ustar/home.php',
+                    ['view' => 'learning']
+                )
+            )->out(false),
+            'examurl' => (
+                new moodle_url(
+                    '/local/ustar/route.php'
+                )
+            )->out(false),
+        ]
+    );
+
+    echo $output->footer();
+    exit;
+}
+
 $parent = optional_param('parent', 0, PARAM_INT);
 $product = optional_param('product', 0, PARAM_INT);
 $q = trim(optional_param('q', '', PARAM_TEXT));

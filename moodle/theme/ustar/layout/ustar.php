@@ -1,7 +1,7 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
 
-global $SITE, $USER, $CFG;
+global $SITE, $USER, $CFG, $SESSION;
 
 $context = context_system::instance();
 
@@ -110,6 +110,18 @@ if (in_array($pagepath, $productgrowthpages, true)) {
 
 if ($pagepath === '/local/ustar/games.php' || $pagepath === '/local/ustar/game.php') { $view = 'games'; }
 if ($pagepath === '/local/ustar/catalog.php') { $view = 'catalog'; }
+
+$catalogunlocked =
+    class_exists('\\local_ustar\\catalog_mastery')
+    && \local_ustar\catalog_mastery::has_access(
+        (int)$USER->id
+    );
+
+$cataloglabel =
+    $catalogunlocked
+        ? 'Каталог'
+        : 'Каталог · закрыт';
+
 if ($pagepath === '/local/ustar/team.php' || $pagepath === '/local/ustar/executive.php') { $view = 'team'; }
 if ($pagepath === '/local/ustar/achievements.php') { $view = 'achievements'; }
 if ($pagepath === '/local/ustar/boards.php') { $view = 'tools'; }
@@ -294,7 +306,7 @@ if ($ishrworkspace) {
         ['label'=>'Обучение','short'=>'Учёба','url'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),'icon'=>$icons['learning'],'active'=>$view==='learning'],
         ['label'=>'Игры','short'=>'Игры','url'=>(new moodle_url('/local/ustar/games.php'))->out(false),'icon'=>$icons['game'],'active'=>$view==='games','mobile'=>false],
         ['label'=>'База знаний','short'=>'Знания','url'=>(new moodle_url('/local/ustar/knowledge.php',['view'=>'knowledge']))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='knowledge'],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
         ['label'=>'Инструменты','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
@@ -454,7 +466,8 @@ if (!$canadmin && $canhr) {
         ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)],
         ['label'=>'Материалы','short'=>'Материалы','url'=>(new moodle_url('/local/ustar/materials.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>in_array($pagepath,$materialpages,true)],
         ['label'=>'Контроль','short'=>'Контроль','url'=>(new moodle_url('/local/ustar/operations.php'))->out(false),'icon'=>$icons['growth'],'active'=>in_array($pagepath,$operationpages,true)],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>'Проверка аттестаций','short'=>'Проверка','url'=>(new moodle_url('/local/ustar/hr_quiz_grading.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,['/local/ustar/hr_quiz_grading.php','/local/ustar/hr_quiz_attempt.php'],true)],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
     ];
 }
 
@@ -465,7 +478,7 @@ if (!$canadmin && !$canhr && $canexec) {
     $navitems = [
         ['label'=>'Компания','short'=>'Компания','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>$pagepath==='/local/ustar/executive.php'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team' && $pagepath!=='/local/ustar/executive.php'],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
         ['label'=>'Доска','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
     ];
@@ -479,7 +492,7 @@ if (!$canadmin && !$canhr && !$canexec && $canmanager) {
         ['label'=>'Моя команда','short'=>'Команда','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>$view==='team'],
         ['label'=>'Обучение','short'=>'Учёба','url'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),'icon'=>$icons['learning'],'active'=>$view==='learning'],
         ['label'=>'Игры','short'=>'Игры','url'=>(new moodle_url('/local/ustar/games.php'))->out(false),'icon'=>$icons['game'],'active'=>$view==='games','mobile'=>false],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
         ['label'=>'База знаний','short'=>'Знания','url'=>(new moodle_url('/local/ustar/knowledge.php',['view'=>'knowledge']))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='knowledge'],
         ['label'=>'Доска','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
@@ -573,6 +586,87 @@ if ($activityruntime) {
 }
 
 
+
+/*
+ * ------------------------------------------------------------
+ * USTAR SCORM ROUTE CONTINUATION
+ * ------------------------------------------------------------
+ */
+$ustarscormroute = false;
+$ustarscormcmid = 0;
+
+if (
+    $pagepath === '/mod/scorm/view.php'
+    &&
+    !empty($PAGE->cm)
+    &&
+    (string)$PAGE->cm->modname === 'scorm'
+    &&
+    optional_param(
+        'ustarroute',
+        0,
+        PARAM_BOOL
+    )
+) {
+
+    $SESSION->ustar_scorm_route = [
+        'cmid' =>
+            (int)$PAGE->cm->id,
+
+        'pointid' =>
+            optional_param(
+                'ustarpoint',
+                0,
+                PARAM_INT
+            ),
+
+        'versionid' =>
+            optional_param(
+                'ustarversion',
+                0,
+                PARAM_INT
+            ),
+
+        'startedat' =>
+            time(),
+    ];
+}
+
+if (
+    $pagepath === '/mod/scorm/player.php'
+    &&
+    !empty($SESSION->ustar_scorm_route)
+    &&
+    (int)($SESSION->ustar_scorm_route['cmid'] ?? 0) > 0
+) {
+
+    /*
+     * player.php does not reliably expose $PAGE->cm at the
+     * point where the USTAR layout is built. The route launcher
+     * already stored the authoritative cmid in the session.
+     */
+    $ustarscormroute = true;
+    $ustarscormcmid =
+        (int)$SESSION->ustar_scorm_route['cmid'];
+
+    $scormroutejs =
+        $CFG->dirroot
+        . '/local/ustar/scorm_route_return.js';
+
+    $PAGE->requires->js(
+        new moodle_url(
+            '/local/ustar/scorm_route_return.js',
+            [
+                'v' =>
+                    is_readable($scormroutejs)
+                        ? filemtime($scormroutejs)
+                        : time(),
+            ]
+        )
+    );
+}
+
+
 $brandcss = '';
 if (class_exists('\local_ustar\branding')) {
     try {
@@ -619,16 +713,41 @@ $mobilenavitems = array_slice($mobilenavitems, 0, 5);
 $templatecontext = [
     'output' => $OUTPUT,
 
-    'bodyattributes' => $OUTPUT->body_attributes(
-        $activityruntime
-            ? [
-                'u-shell-page',
-                'u-activity-runtime',
-            ]
-            : [
-                'u-shell-page',
-            ]
-    ),
+    'bodyattributes' =>
+        $OUTPUT->body_attributes(
+            $activityruntime
+                ? [
+                    'u-shell-page',
+                    'u-activity-runtime',
+                ]
+                : [
+                    'u-shell-page',
+                ]
+        )
+        .
+        (
+            $ustarscormroute
+                ? ' data-ustar-scorm-cmid="' . $ustarscormcmid . '"'
+                    . ' data-ustar-scorm-status-url="'
+                    . s(
+                        (
+                            new moodle_url(
+                                '/local/ustar/scorm_route_status.php'
+                            )
+                        )->out(false)
+                    )
+                    . '"'
+                    . ' data-ustar-route-url="'
+                    . s(
+                        (
+                            new moodle_url(
+                                '/local/ustar/route.php'
+                            )
+                        )->out(false)
+                    )
+                    . '"'
+                : ''
+        ),
 
     'brandname' => $brandname,
     'productname' => $productname,

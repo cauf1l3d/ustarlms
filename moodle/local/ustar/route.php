@@ -38,6 +38,19 @@ if ($iselevated) {
     usort($positions, static fn(array $a, array $b): int => strcasecmp($a['name'], $b['name']));
 }
 
+$adaptation = null;
+$previewing = $iselevated && $requestedposition !== '';
+if (!$previewing) {
+    try { $adaptation = \local_ustar\adaptation_service::route_card((int)$USER->id); } catch (\Throwable $e) { $adaptation = null; }
+}
+if ($adaptation && !empty($adaptation['blocked']) && !empty($route['ok'])) {
+    if (!empty($route['currentpoint'])) { $route['currentpoint']['canlaunch'] = false; }
+    if (!empty($route['points'])) {
+        foreach ($route['points'] as &$routepoint) { $routepoint['canlaunch'] = false; }
+        unset($routepoint);
+    }
+}
+
 $data = [
     'route' => !empty($route['ok']) ? $route : null,
     'hasroute' => !empty($route['ok']),
@@ -46,6 +59,8 @@ $data = [
     'positionid' => $positionid,
     'iselevated' => $iselevated,
     'positions' => $positions,
+    'hasadaptation' => !empty($adaptation),
+    'adaptation' => $adaptation,
     'studio' => (new moodle_url('/local/ustar/route_studio.php', ['position' => $positionid]))->out(false),
     'coursesurl' => (new moodle_url('/local/ustar/home.php', ['view' => 'learning']))->out(false),
     'homeurl' => (new moodle_url('/local/ustar/home.php'))->out(false),

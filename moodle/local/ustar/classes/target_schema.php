@@ -57,17 +57,34 @@ final class target_schema {
                     ['user_gate_time_idx',false,['userid','gateid','timecreated']], ['assignment_idx',false,['assignmentid']],
                 ],
             ],
+            'local_ustar_adaptations' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['staffingrequestid',$i,'10',true],
+                    ['userid',$i,'10',true], ['managerid',$i,'10',true], ['assignmentid',$i,'10',true],
+                    ['positionid',$c,'64',true], ['checklistkey',$c,'64',true,false,'adaptation_standard'],
+                    ['definitionversion',$i,'10',true,false,'1'], ['startdate',$c,'10',true],
+                    ['plannedworkdays',$i,'3',true,false,'10'], ['status',$c,'16',true,false,'active'],
+                    ['rulesjson',$t], ['createdby',$i,'10',true], ['timecreated',$i,'10',true,false,'0'],
+                    ['timemodified',$i,'10',true,false,'0'], ['completedat',$i,'10'],
+                ],
+                'indexes' => [
+                    ['staffing_request_uix',true,['staffingrequestid']],
+                    ['user_status_idx',false,['userid','status']],
+                    ['manager_status_idx',false,['managerid','status']],
+                    ['assignment_idx',false,['assignmentid']],
+                ],
+            ],
             'local_ustar_check_submits' => [
                 'fields' => [
                     ['id',$i,'10',true,true], ['checklistkey',$c,'64',true],
-                    ['definitionversion',$i,'10',true,false,'1'], ['userid',$i,'10',true], ['assignmentid',$i,'10'],
+                    ['definitionversion',$i,'10',true,false,'1'], ['userid',$i,'10',true], ['assignmentid',$i,'10'], ['adaptationid',$i,'10'],
                     ['perspective',$c,'16',true], ['workdate',$c,'10',true], ['status',$c,'16',true],
                     ['answersjson',$t,null,true], ['issuesjson',$t,null,true], ['correctionofid',$i,'10'],
                     ['submittedby',$i,'10',true], ['timecreated',$i,'10',true,false,'0'],
                 ],
                 'indexes' => [
                     ['user_check_date_idx',false,['userid','checklistkey','workdate']],
-                    ['assignment_date_idx',false,['assignmentid','workdate']],
+                    ['assignment_date_idx',false,['assignmentid','workdate']], ['adaptation_date_idx',false,['adaptationid','workdate']],
                 ],
             ],
             'local_ustar_official_tasks' => [

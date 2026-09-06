@@ -38,3 +38,30 @@ desktop.ini
 # Production staff/import data
 moodle/local/ustar/data/staff_position_map_*.csv
 moodle/local/ustar/data/structure_staffmap_*.json
+
+# USTAR developer backup artifacts
+*.bak*
+*.before*
+*.pre*
+*.failed*
+*new
+
+# USTAR timestamped developer copies
+*.backup_*
+*.bak_*
+*.before_*
+*.pre-*
+*.failed_*
+*.hf*
+*.2713final
+*.2714b
+*.2712new
+*.2713new
+*.2714new
+*.2715new
+*.2716new
+*.2717new
+*.2718new
+*.2720new
+*.2721new
+*.2722new

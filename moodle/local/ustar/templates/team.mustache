@@ -1,8 +1,174 @@
 <div class="u-product-page u-team-page">
-<header class="u-product-head"><div><p class="u-page-kicker">Организация</p><h1>Моя команда</h1><p>Кто ваш руководитель, с кем вы работаете на одном уровне и за какую часть структуры отвечаете.</p></div><div class="u-product-head__actions">{{{teamicon}}}{{#hasexecutive}}<a class="u-btn u-btn--primary" href="{{executiveurl}}">Вся компания</a>{{/hasexecutive}}</div></header>
-{{^hasreporting}}<div class="u-inline-notice"><strong>Цепочки подчинения ещё не импортированы</strong><span>USTAR показывает должностной горизонт. Для точной вертикали загрузите reporting-lines CSV из релиза.</span></div>{{/hasreporting}}
-{{#haschain}}<section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Вертикаль</p><h2>Моя цепочка управления</h2></div></header><div class="u-org-chain">{{#chain}}<article><div class="u-person-dot">{{initials}}</div><div><strong>{{fullname}}</strong><span>{{position}}</span><small>{{department}}</small></div></article>{{/chain}}</div></section>{{/haschain}}
-<div class="u-team-layout"><section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Горизонт</p><h2>Коллеги моего уровня</h2></div><span>{{me.position}}</span></header>{{#hashorizon}}<div class="u-team-people-grid">{{#horizon}}<article class="u-team-person {{#current}}is-current{{/current}}"><div class="u-person-dot">{{initials}}</div><strong>{{fullname}}</strong><span>{{position}}</span><small>{{department}}</small></article>{{/horizon}}</div>{{/hashorizon}}{{^hashorizon}}<div class="u-empty-mini">Коллеги не найдены.</div>{{/hashorizon}}</section>
-<section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Ответственность</p><h2>Мои прямые сотрудники</h2></div></header>{{#hasreports}}<div class="u-team-people-grid">{{#reports}}<article class="u-team-person"><div class="u-person-dot">{{initials}}</div><strong>{{fullname}}</strong><span>{{position}}</span><small>{{department}}</small></article>{{/reports}}</div>{{/hasreports}}{{^hasreports}}<div class="u-empty-mini">Прямых подчинённых нет или reporting lines ещё не настроены.</div>{{/hasreports}}</section></div>
-{{#hasmanaged}}<section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Обучение команды</p><h2>Кому требуется внимание</h2></div><span>Средний прогресс {{avg}}%</span></header><div class="u-team-table">{{#managed}}<article class="u-team-row"><div class="u-person-dot">{{initials}}</div><div><strong>{{fullname}}</strong><small>{{position}}</small></div><div><span>{{courseCount}} курсов</span></div><div class="u-team-progress"><div class="u-progress"><span style="width:{{avgProgress}}%"></span></div><b>{{avgProgress}}%</b></div></article>{{/managed}}</div></section>{{/hasmanaged}}
+
+<header class="u-product-head">
+    <div>
+        <p class="u-page-kicker">Организация</p>
+        <h1>Моя команда</h1>
+        <p>
+            Ваше место в компании: руководство,
+            коллеги и ваша рабочая команда.
+        </p>
+    </div>
+
+    <div class="u-product-head__actions">
+          {{{teamicon}}}
+
+          {{#ishead}}
+          <a class="u-btn u-btn--primary" href="{{staffingurl}}">Заявки на персонал</a>
+          {{/ishead}}
+
+        {{#hasexecutive}}
+        <a
+            class="u-btn u-btn--primary"
+            href="{{executiveurl}}"
+        >
+            Вся компания
+        </a>
+        {{/hasexecutive}}
+    </div>
+</header>
+
+{{> local_ustar/team_hierarchy}}
+
+{{#hasassessmentalerts}}
+<section class="u-assess-team-alerts">
+    <header class="u-assess-team-alerts__head">
+        <div>
+            <p class="u-page-kicker">Аттестации команды</p>
+            <h2>Требуют внимания</h2>
+            <p>Здесь появляются только исчерпанные пакеты попыток. Первые неудачные попытки руководителю не показываются.</p>
+        </div>
+        <strong>{{assessmentalertcount}}</strong>
+    </header>
+
+    <div class="u-assess-team-alerts__list">
+        {{#assessmentalerts}}
+        <article class="u-assess-team-alert is-{{statuskey}}">
+            <div class="u-assess-team-alert__person">
+                <strong>{{fullname}}</strong>
+                <span>{{position}}</span>
+            </div>
+            <div class="u-assess-team-alert__exam">
+                <small>Аттестация</small>
+                <strong>{{assessment}}</strong>
+                <span>{{attempts}} / {{attemptlimit}} попыток · лучший результат {{bestscore}} / {{maxscore}} · проходной {{passscore}}</span>
+            </div>
+            <span class="u-assess-team-alert__status is-{{statuskey}}">{{statuslabel}}</span>
+            <div class="u-assess-team-alert__actions">
+                <a class="u-btn" href="{{detailurl}}">Результаты</a>
+                {{#canmanagerauthorize}}
+                <form method="post" action="/local/ustar/assessment_remediation_authorize.php">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="runtimeid" value="{{runtimeid}}">
+                    <button class="u-btn u-btn--primary" type="submit">Отправить на переобучение</button>
+                </form>
+                {{/canmanagerauthorize}}
+            </div>
+        </article>
+        {{/assessmentalerts}}
+    </div>
+</section>
+{{/hasassessmentalerts}}
+
+{{#canviewdepartmentlearning}}
+<section class="u-dept-learning">
+
+    <header class="u-dept-learning__head">
+        <div>
+            <p class="u-page-kicker">
+                Обучение моего подразделения
+            </p>
+
+            <h2>{{learningdepartment}}</h2>
+
+            <p>
+                Текущий маршрут каждого сотрудника
+                и фактически сохранённый прогресс.
+            </p>
+        </div>
+    </header>
+
+    <div class="u-dept-learning__metrics">
+
+        <article>
+            <span>Сотрудников</span>
+            <strong>{{learningtotal}}</strong>
+        </article>
+
+        <article>
+            <span>В процессе</span>
+            <strong>{{learninginprogress}}</strong>
+        </article>
+
+        <article>
+            <span>Не начинали</span>
+            <strong>{{learningnotstarted}}</strong>
+        </article>
+
+        <article>
+            <span>Всё актуально</span>
+            <strong>{{learningcomplete}}</strong>
+        </article>
+
+        {{#learningnoroute}}
+        <article>
+            <span>Без маршрута</span>
+            <strong>{{learningnoroute}}</strong>
+        </article>
+        {{/learningnoroute}}
+
+    </div>
+
+    {{#haslearningpeople}}
+    <div class="u-dept-learning__table">
+
+        <div class="u-dept-learning__table-head">
+            <span>Сотрудник</span>
+            <span>Статус</span>
+            <span>Сейчас</span>
+            <span>Маршрут</span>
+            <span>Активность</span>
+        </div>
+
+        {{#learningpeople}}
+        <a
+            class="u-dept-learning__row"
+            href="{{detailurl}}"
+        >
+            <div class="u-dept-learning__person">
+                <div class="u-team-avatar u-team-avatar--small">
+                    {{#avatarurl}}
+                    <img src="{{avatarurl}}" alt="">
+                    {{/avatarurl}}
+                </div>
+
+                <div>
+                    <strong>{{fullname}}</strong>
+                    <small>{{position}}</small>
+                </div>
+            </div>
+
+            <span class="u-learning-state is-{{state}}">
+                {{statelabel}}
+            </span>
+
+            <span class="u-dept-learning__current">
+                {{currenttitle}}
+            </span>
+
+            <span>
+                {{donepoints}} / {{totalpoints}}
+                · {{progress}}%
+            </span>
+
+            <small>{{lastactivity}}</small>
+        </a>
+        {{/learningpeople}}
+
+    </div>
+    {{/haslearningpeople}}
+
+</section>
+{{/canviewdepartmentlearning}}
+
 </div>

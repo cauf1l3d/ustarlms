@@ -326,6 +326,10 @@ $people = [];
 
 foreach ($records as $person) {
 
+    if (!\local_ustar\accounts::is_business_account((int)$person->id)) {
+        continue;
+    }
+
     $positionid =
         trim(
             (string)$person->positionid
@@ -1033,6 +1037,9 @@ $data = [
 
     'statusoptions' =>
         $statusoptions,
+
+      'staffingurl' =>
+          (new moodle_url('/local/ustar/staffing.php'))->out(false),
 
     'newurl' =>
         (

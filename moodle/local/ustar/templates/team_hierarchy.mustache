@@ -1,0 +1,186 @@
+<div class="u-team-hierarchy">
+
+    {{#hasleaders}}
+    <section class="u-team-tier u-team-tier--leaders">
+        <header class="u-team-tier__head">
+            <div>
+                <p class="u-page-kicker">Выше</p>
+                <h2>{{leaderslabel}}</h2>
+            </div>
+
+            {{#leadersfallback}}
+            <span class="u-team-context">
+                По штатной структуре
+            </span>
+            {{/leadersfallback}}
+        </header>
+
+        <div class="u-team-cards u-team-cards--leaders">
+            {{#leaders}}
+            <article class="u-team-card u-team-card--leader">
+                <div class="u-team-avatar">
+                    {{#hasavatar}}
+                    <img src="{{avatarurl}}" alt="">
+                    {{/hasavatar}}
+                    {{^hasavatar}}
+                    <span>{{initials}}</span>
+                    {{/hasavatar}}
+                </div>
+
+                <div class="u-team-card__body">
+                    <strong>{{fullname}}</strong>
+                    <span>{{position}}</span>
+                    <small>{{department}}</small>
+                </div>
+            </article>
+            {{/leaders}}
+        </div>
+    </section>
+
+    <div class="u-team-connector" aria-hidden="true"></div>
+    {{/hasleaders}}
+
+
+    <section class="u-team-tier u-team-tier--current">
+        <header class="u-team-tier__head">
+            <div>
+                <p class="u-page-kicker">Мой уровень</p>
+                <h2>Я и мои коллеги</h2>
+            </div>
+        </header>
+
+        <div class="u-team-current-row">
+
+            {{#haspeers}}
+            <div class="u-team-peers u-team-peers--before">
+                {{#peers}}
+                <article class="u-team-card u-team-card--peer">
+                    <div class="u-team-avatar">
+                        {{#hasavatar}}
+                        <img src="{{avatarurl}}" alt="">
+                        {{/hasavatar}}
+                        {{^hasavatar}}
+                        <span>{{initials}}</span>
+                        {{/hasavatar}}
+                    </div>
+
+                    <div class="u-team-card__body">
+                        <strong>{{fullname}}</strong>
+                        <span>{{position}}</span>
+                        <small>{{department}}</small>
+                    </div>
+                </article>
+                {{/peers}}
+            </div>
+            {{/haspeers}}
+
+
+            {{#me}}
+            <article class="u-team-card u-team-card--me">
+                <div class="u-team-card__badge">
+                    ВЫ ЗДЕСЬ
+                </div>
+
+                <div class="u-team-avatar u-team-avatar--me">
+                    {{#hasavatar}}
+                    <img src="{{avatarurl}}" alt="">
+                    {{/hasavatar}}
+                    {{^hasavatar}}
+                    <span>{{initials}}</span>
+                    {{/hasavatar}}
+                </div>
+
+                <div class="u-team-card__body">
+                    <strong>{{fullname}}</strong>
+                    <span>{{position}}</span>
+                    <small>{{department}}</small>
+                </div>
+            </article>
+            {{/me}}
+
+        </div>
+
+        {{^haspeers}}
+        <p class="u-team-empty">
+            На вашей должности сейчас нет других активных сотрудников.
+        </p>
+        {{/haspeers}}
+    </section>
+
+
+    {{#hasreports}}
+    <div class="u-team-connector" aria-hidden="true"></div>
+
+    <section class="u-team-tier u-team-tier--reports">
+        <header class="u-team-tier__head">
+            <div>
+                <p class="u-page-kicker">Ответственность</p>
+                <h2>Мои прямые сотрудники</h2>
+            </div>
+
+
+        </header>
+
+        <div class="u-team-cards">
+            {{#reports}}
+            <article class="u-team-card">
+                <div class="u-team-avatar">
+                    {{#hasavatar}}
+                    <img src="{{avatarurl}}" alt="">
+                    {{/hasavatar}}
+                    {{^hasavatar}}
+                    <span>{{initials}}</span>
+                    {{/hasavatar}}
+                </div>
+
+                <div class="u-team-card__body">
+                    <strong>{{fullname}}</strong>
+                    <span>{{position}}</span>
+                    <small>{{department}}</small>
+                </div>
+            </article>
+            {{/reports}}
+        </div>
+    </section>
+    {{/hasreports}}
+
+
+    {{^hasreports}}
+    {{#hasdepartmentpeople}}
+    <div class="u-team-connector" aria-hidden="true"></div>
+
+    <section class="u-team-tier u-team-tier--reports">
+        <header class="u-team-tier__head">
+            <div>
+                <p class="u-page-kicker">Подразделение</p>
+                <h2>Сотрудники моего подразделения</h2>
+            </div>
+
+
+        </header>
+
+        <div class="u-team-cards">
+            {{#departmentpeople}}
+            <article class="u-team-card">
+                <div class="u-team-avatar">
+                    {{#hasavatar}}
+                    <img src="{{avatarurl}}" alt="">
+                    {{/hasavatar}}
+                    {{^hasavatar}}
+                    <span>{{initials}}</span>
+                    {{/hasavatar}}
+                </div>
+
+                <div class="u-team-card__body">
+                    <strong>{{fullname}}</strong>
+                    <span>{{position}}</span>
+                    <small>{{department}}</small>
+                </div>
+            </article>
+            {{/departmentpeople}}
+        </div>
+    </section>
+    {{/hasdepartmentpeople}}
+    {{/hasreports}}
+
+</div>

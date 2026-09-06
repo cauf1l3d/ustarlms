@@ -121,7 +121,6 @@
                 </kbd>
             </button>
 
-            <button class="u-iconbtn" id="u-preset-trigger" type="button" aria-label="Выбрать цветовое оформление" title="Оформление">◐</button>
 
             <button
                 class="u-iconbtn"
@@ -214,6 +213,17 @@
             </div>
 
             <div class="u-rail__foot">
+
+                <button
+                    class="u-navitem u-navitem--quiet u-navitem--preset"
+                    id="u-preset-trigger"
+                    type="button"
+                    aria-label="Выбрать цветовое оформление"
+                    title="Оформление"
+                >
+                    <span class="u-navitem__icon u-preset-navicon" aria-hidden="true">◐</span>
+                    <span class="u-navitem__label">Оформление</span>
+                </button>
 
                 {{#canviewas}}<a class="u-navitem u-navitem--quiet" href="{{viewasurl}}" title="Просмотр как должность"><span class="u-navitem__icon">◉</span><span class="u-navitem__label">Просмотр как</span></a>{{/canviewas}}
                 {{#canlegacy}}<a class="u-navitem u-navitem--quiet" href="{{legacyurl}}" title="Резервный интерфейс"><span class="u-navitem__icon">↶</span><span class="u-navitem__label">Legacy UI</span></a>{{/canlegacy}}

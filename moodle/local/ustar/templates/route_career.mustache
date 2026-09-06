@@ -1,0 +1,301 @@
+<div class="u-product-page u-native-route">
+
+<header class="u-native-route__hero">
+    <div>
+        <p class="u-page-kicker">
+            Маршрут · 04
+        </p>
+
+        <h1>Моя должность и развитие</h1>
+
+        <p>
+            Что от вас ожидается сейчас,
+            какие навыки определяют вашу роль
+            и куда может вести следующий карьерный шаг.
+        </p>
+    </div>
+
+    <span class="u-native-route__chip">
+        Career · Skills
+    </span>
+</header>
+
+
+{{#hasposition}}
+
+<section class="u-career-native">
+
+    <header class="u-career-native__head">
+        <div>
+            <p class="u-page-kicker">
+                Карьерная лестница
+            </p>
+
+            <h2>Мой путь</h2>
+
+            <p>{{department}}</p>
+        </div>
+
+        <div class="u-career-readiness">
+            <span>Подтверждено навыков</span>
+            <strong>
+                {{confirmedskills}} из {{requiredskills}}
+            </strong>
+        </div>
+    </header>
+
+
+    <div class="u-career-stairs">
+
+        {{#hasprevious}}
+        <article class="u-career-step is-past">
+            <small>Предыдущая ступень</small>
+            <strong>{{previousname}}</strong>
+        </article>
+
+        <div class="u-career-arrow">→</div>
+        {{/hasprevious}}
+
+
+        <article class="u-career-step is-current">
+            <span>ВЫ ЗДЕСЬ</span>
+            <small>Текущая должность</small>
+            <strong>{{currentname}}</strong>
+            <b>Уровень {{currentlevel}}</b>
+        </article>
+
+
+        {{#hasnext}}
+        <div class="u-career-arrow">→</div>
+
+        <article class="u-career-step is-next">
+            <small>Следующая утверждённая ступень</small>
+            <strong>{{nextname}}</strong>
+        </article>
+        {{/hasnext}}
+
+
+        {{#nextpending}}
+        <div class="u-career-arrow is-muted">→</div>
+
+        <article class="u-career-step is-pending">
+            <small>Следующая ступень</small>
+            <strong>
+                Пока не утверждена HRD
+            </strong>
+
+            <p>
+                Это не ошибка системы.
+                Для этой должности карьерный переход
+                ещё не зафиксирован в штатной модели.
+            </p>
+        </article>
+        {{/nextpending}}
+
+    </div>
+
+</section>
+
+
+<section class="u-role-snapshot">
+
+    <article>
+        <span>Навыков требуется</span>
+        <strong>{{requiredskills}}</strong>
+    </article>
+
+    <article>
+        <span>Подтверждено</span>
+        <strong>{{confirmedskills}}</strong>
+    </article>
+
+    <article>
+        <span>Нужно развить</span>
+        <strong>{{skillgaps}}</strong>
+    </article>
+
+</section>
+
+
+<section class="u-role-graph">
+
+    <header>
+        <p class="u-page-kicker">
+            Должность ↔ Навыки ↔ Обучение
+        </p>
+
+        <h2>
+            Что формирует мою готовность
+        </h2>
+    </header>
+
+
+    {{#hasskills}}
+    <div class="u-role-graph__rows">
+
+        {{#skills}}
+        <article class="u-role-graph__row">
+
+            <div class="u-role-node is-role">
+                <small>Должность</small>
+                <strong>{{currentname}}</strong>
+            </div>
+
+            <div class="u-role-connector">→</div>
+
+            <div
+                class="u-role-node is-skill
+                {{#satisfied}}is-ok{{/satisfied}}"
+            >
+                <small>{{category}}</small>
+                <strong>{{name}}</strong>
+                <span>
+                    {{targetlabel}} · {{statuslabel}}
+                </span>
+            </div>
+
+            <div class="u-role-connector">→</div>
+
+            <div class="u-role-node is-learning">
+                <small>Обучение / подтверждение</small>
+
+                {{#hassources}}
+                <div class="u-role-sources">
+                    {{#sources}}
+                    <span
+                        class="{{#satisfied}}is-ok{{/satisfied}}"
+                    >
+                        {{label}}
+                    </span>
+                    {{/sources}}
+                </div>
+                {{/hassources}}
+
+                {{^hassources}}
+                <span>
+                    Материал пока не связан.
+                </span>
+                {{/hassources}}
+            </div>
+
+        </article>
+        {{/skills}}
+
+    </div>
+    {{/hasskills}}
+
+
+    {{^hasskills}}
+    <div class="u-native-empty">
+        Для этой должности матрица навыков
+        пока не заполнена HRD.
+    </div>
+    {{/hasskills}}
+
+</section>
+
+
+{{#hasnextskills}}
+<section class="u-next-role-skills">
+    <p class="u-page-kicker">
+        Следующая ступень
+    </p>
+
+    <h2>
+        Что потребуется для {{nextname}}
+    </h2>
+
+    <div>
+        {{#nextskills}}
+        <span>
+            <strong>{{name}}</strong>
+            {{label}}
+        </span>
+        {{/nextskills}}
+    </div>
+</section>
+{{/hasnextskills}}
+
+
+<section class="u-team-study-complete">
+
+    <div>
+        <p class="u-page-kicker">
+            Завершение шага
+        </p>
+
+        <h2>Понятно, продолжить</h2>
+
+        <p>
+            Подтвердите, что вы ознакомились
+            со своей текущей должностью,
+            требованиями навыков и моделью развития.
+        </p>
+
+        {{#recorded}}
+        <div class="u-native-result is-success">
+            <strong>Изучено.</strong>
+            <span>
+                Результат сохранён в маршруте.
+            </span>
+        </div>
+        {{/recorded}}
+
+        {{#previewmode}}
+        <div class="u-native-result">
+            <strong>Предпросмотр.</strong>
+            <span>
+                Экран работает, но точка ещё не опубликована,
+                поэтому прогресс пока не записывается.
+            </span>
+        </div>
+        {{/previewmode}}
+    </div>
+
+    <form method="post">
+        <input
+            type="hidden"
+            name="sesskey"
+            value="{{sesskey}}"
+        >
+
+        <input
+            type="hidden"
+            name="confirmrole"
+            value="1"
+        >
+
+        <button
+            type="submit"
+            class="u-btn u-btn--primary"
+        >
+            Понятно, продолжить →
+        </button>
+    </form>
+
+</section>
+
+{{/hasposition}}
+
+
+{{^hasposition}}
+<div class="u-native-empty">
+    Должность сотрудника ещё не назначена.
+    После назначения здесь появится
+    карьерная модель и требования роли.
+</div>
+{{/hasposition}}
+
+
+<footer class="u-native-route__footer">
+    <a class="u-btn" href="{{routeurl}}">
+        ← Вернуться в маршрут
+    </a>
+
+    <span>
+        Следующий карьерный переход показывается
+        только если он утверждён в структуре USTAR.
+    </span>
+</footer>
+
+</div>

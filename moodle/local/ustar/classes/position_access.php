@@ -121,6 +121,13 @@ final class position_access {
         $context = \context_system::instance();
         $position = self::position_for_user($userid);
         $target = self::target_role_for_position($position);
+        if (
+            $target === ''
+            && class_exists('\\local_ustar\\organization_model')
+            && organization_model::is_manager($userid)
+        ) {
+            $target = self::ROLE_MANAGER;
+        }
 
         foreach ([self::ROLE_MANAGER, self::ROLE_HR] as $shortname) {
             $roleid = (int)($roles[$shortname] ?? 0);

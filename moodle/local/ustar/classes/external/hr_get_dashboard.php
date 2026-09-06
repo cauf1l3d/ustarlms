@@ -23,7 +23,13 @@ class hr_get_dashboard extends base {
             $posmap[$p['id']] = $p;
         }
 
-        $activeusers = (int)$DB->count_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1');
+        $activeusers = 0;
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id') as $u) {
+            if (\local_ustar\accounts::participates((int)$u->id)) {
+                $activeusers++;
+            }
+        }
+
         $sql = "SELECT d.userid, TRIM(d.data) AS positionid
                   FROM {user_info_data} d
                   JOIN {user_info_field} f ON f.id = d.fieldid AND f.shortname = 'ustar_position'
@@ -34,7 +40,10 @@ class hr_get_dashboard extends base {
         $heads = 0;
         $bydept = [];
         foreach ($assignedrecords as $rec) {
-            $p = $posmap[trim($rec->positionid)] ?? null;
+            if (!\local_ustar\accounts::participates((int)$rec->userid)) {
+                continue;
+            }
+            $p = $posmap[trim((string)$rec->positionid)] ?? null;
             if (!$p) {
                 continue;
             }
@@ -46,46 +55,108 @@ class hr_get_dashboard extends base {
         }
 
         $since = time() - 30 * DAYSECS;
-        $activelearners = (int)$DB->count_records_sql(
-            "SELECT COUNT(DISTINCT userid) FROM {course_modules_completion} WHERE timemodified >= :since",
+
+        $activelearners = 0;
+        $learnerids = $DB->get_records_sql(
+            "SELECT userid, MAX(timemodified) AS lastmodified
+               FROM {course_modules_completion}
+              WHERE timemodified >= :since
+           GROUP BY userid",
             ['since' => $since]
         );
-        $coursecompletions30 = (int)$DB->count_records_select('course_completions', 'timecompleted IS NOT NULL AND timecompleted >= :since', ['since' => $since]);
+        foreach ($learnerids as $row) {
+            if (\local_ustar\accounts::participates((int)$row->userid)) {
+                $activelearners++;
+            }
+        }
+
+        $coursecompletions30 = 0;
+        foreach ($DB->get_records_select(
+            'course_completions',
+            'timecompleted IS NOT NULL AND timecompleted >= :since',
+            ['since' => $since],
+            '',
+            'id,userid'
+        ) as $row) {
+            if (\local_ustar\accounts::participates((int)$row->userid)) {
+                $coursecompletions30++;
+            }
+        }
+
         $gameattempts30 = 0;
+        $gamecorrect30 = 0;
         $gameaccuracy = 0;
         if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_game_attempts'))) {
-            $gameattempts30 = (int)$DB->count_records_select('local_ustar_game_attempts', 'timecreated >= :since', ['since' => $since]);
+            foreach ($DB->get_records_select(
+                'local_ustar_game_attempts',
+                'timecreated >= :since',
+                ['since' => $since],
+                '',
+                'id,userid,iscorrect'
+            ) as $row) {
+                if (!\local_ustar\accounts::participates((int)$row->userid)) {
+                    continue;
+                }
+                $gameattempts30++;
+                if (!empty($row->iscorrect)) {
+                    $gamecorrect30++;
+                }
+            }
             if ($gameattempts30 > 0) {
-                $correct = (int)$DB->count_records_select('local_ustar_game_attempts', 'timecreated >= :since AND iscorrect = 1', ['since' => $since]);
-                $gameaccuracy = (int)round($correct / $gameattempts30 * 100);
+                $gameaccuracy = (int)round($gamecorrect30 / $gameattempts30 * 100);
             }
         }
 
         $reviews30 = 0;
+        $reviewsum = 0.0;
         $avgreviewscore = 0;
         if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reviews'))) {
-            $reviews30 = (int)$DB->count_records_select('local_ustar_reviews', 'timecreated >= :since', ['since' => $since]);
-            $avgvalue = $DB->get_field_sql('SELECT AVG(score) FROM {local_ustar_reviews} WHERE timecreated >= :since', ['since' => $since]);
-            $avgreviewscore = $avgvalue === false || $avgvalue === null ? 0 : round((float)$avgvalue, 1);
+            foreach ($DB->get_records_select(
+                'local_ustar_reviews',
+                'timecreated >= :since',
+                ['since' => $since],
+                '',
+                'id,userid,score'
+            ) as $row) {
+                if (!\local_ustar\accounts::participates((int)$row->userid)) {
+                    continue;
+                }
+                $reviews30++;
+                $reviewsum += (float)$row->score;
+            }
+            if ($reviews30 > 0) {
+                $avgreviewscore = round($reviewsum / $reviews30, 1);
+            }
         }
 
         $recentactions = [];
         if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_hr_actions'))) {
-            $sql = "SELECT a.id, a.action, a.timecreated,
+            $sql = "SELECT a.id, a.action, a.timecreated, a.actorid, a.targetuserid,
                            actor.firstname AS actorfirstname, actor.lastname AS actorlastname,
                            target.firstname AS targetfirstname, target.lastname AS targetlastname
                       FROM {local_ustar_hr_actions} a
                       JOIN {user} actor ON actor.id = a.actorid
                  LEFT JOIN {user} target ON target.id = a.targetuserid
                   ORDER BY a.timecreated DESC";
-            foreach ($DB->get_records_sql($sql, [], 0, 8) as $action) {
+            foreach ($DB->get_records_sql($sql, [], 0, 80) as $action) {
+                $targetid = (int)($action->targetuserid ?? 0);
+                if ($targetid > 0 && !\local_ustar\accounts::is_business_account($targetid)) {
+                    continue;
+                }
+                $actorid = (int)$action->actorid;
+                $actor = \local_ustar\accounts::is_business_account($actorid)
+                    ? trim($action->actorfirstname . ' ' . $action->actorlastname)
+                    : 'Система USTAR';
                 $recentactions[] = [
                     'id' => (int)$action->id,
                     'action' => $action->action,
-                    'actor' => trim($action->actorfirstname . ' ' . $action->actorlastname),
+                    'actor' => $actor,
                     'target' => trim((string)$action->targetfirstname . ' ' . (string)$action->targetlastname),
                     'timecreated' => (int)$action->timecreated,
                 ];
+                if (count($recentactions) >= 8) {
+                    break;
+                }
             }
         }
 

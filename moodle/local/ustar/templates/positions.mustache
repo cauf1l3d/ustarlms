@@ -56,48 +56,165 @@
         </section>
         {{/hasladder}}
 
-        <section class="u-position-graph" aria-labelledby="position-graph-title">
-            <div class="u-position-studio__sectionhead">
-                <div><p class="u-sectionhead__eyebrow">Связи текущей модели</p><h3 id="position-graph-title">Позиции ↔ навыки ↔ материалы</h3></div>
-                <span>Нажмите на карточку, чтобы увидеть связанные объекты</span>
+        <section
+            id="u-position-workspace"
+            class="u-position-workspace"
+            aria-labelledby="u-position-workspace-title"
+        >
+            <header class="u-position-workspace__head">
+                <div>
+                    <p class="u-sectionhead__eyebrow">
+                        Живая модель компании
+                    </p>
+
+                    <h3 id="u-position-workspace-title">
+                        Сотрудники ↔ должности ↔ навыки ↔ материалы
+                    </h3>
+
+                    <p>
+                        Нажмите на любую карточку — USTAR мгновенно покажет всю связанную цепочку.
+                    </p>
+                </div>
+            </header>
+
+            <div class="u-position-workspace__toolbar">
+
+                <label class="u-position-workspace__search">
+                    <span>Поиск</span>
+                    <input
+                        type="search"
+                        data-workspace-search
+                        placeholder="ФИО, должность, навык или материал"
+                        autocomplete="off"
+                    >
+                </label>
+
+                <label>
+                    <span>Подразделение</span>
+                    <select
+                        data-workspace-department
+                        aria-label="Фильтр по подразделению"
+                    >
+                        <option value="">Все подразделения</option>
+                    </select>
+                </label>
+
+                <button
+                    type="button"
+                    class="u-position-workspace__reset"
+                    data-workspace-reset
+                >
+                    Сбросить выделение
+                </button>
+
             </div>
-            <div class="u-position-graph__columns">
-                <section class="u-position-graph__column">
-                    <h4>Должности <small>{{graphpositioncount}}</small></h4>
-                    <div class="u-position-graph__items">
-                        {{#graphpositions}}
-                        <a class="u-position-graph__card u-position-graph__card--dark {{#selected}}is-selected{{/selected}} {{^connected}}is-dim{{/connected}}" href="{{url}}">
-                            <strong>{{name}}</strong><span>{{department}}</span><small>Уровень {{level}} · {{skillcount}} навыков</small>
-                        </a>
-                        {{/graphpositions}}
-                    </div>
-                </section>
-                <div class="u-position-graph__connector" aria-hidden="true"><span>требует</span></div>
-                <section class="u-position-graph__column">
-                    <h4>Требуемые навыки <small>{{graphskillcount}}</small></h4>
-                    <div class="u-position-graph__items">
-                        {{#graphskills}}
-                        <a class="u-position-graph__card {{#selected}}is-selected{{/selected}}" href="{{url}}">
-                            <strong>{{name}}</strong><span>{{category}}</span><small>{{#required}}Уровень {{level}} · {{/required}}{{affectedcount}} должн.</small>
-                        </a>
-                        {{/graphskills}}
-                        {{^graphskills}}<p class="u-position-graph__empty">Для этой должности навыки пока не заданы.</p>{{/graphskills}}
-                    </div>
-                </section>
-                <div class="u-position-graph__connector" aria-hidden="true"><span>поддерживает</span></div>
-                <section class="u-position-graph__column">
-                    <h4>Материалы <small>{{graphmaterialcount}}</small></h4>
-                    <div class="u-position-graph__items">
-                        {{#graphmaterials}}
-                        <div class="u-position-graph__card">
-                            <a class="u-position-graph__card-link" href="{{url}}"><strong>{{name}}</strong><span>{{typelabel}} · {{positionname}}</span>{{#hasskills}}<small>Навыки: {{skills}}</small>{{/hasskills}}</a>
-                            <a class="u-position-graph__route-link" href="{{routeurl}}">Открыть маршрут →</a>
-                        </div>
-                        {{/graphmaterials}}
-                        {{^hasgraphmaterials}}<p class="u-position-graph__empty">Опубликованных материалов в маршруте пока нет. <a href="{{routestudiourl}}">Открыть Route Studio →</a></p>{{/hasgraphmaterials}}
-                    </div>
-                </section>
+
+            <div class="u-position-workspace__status">
+                <span data-workspace-hint>
+                    Выберите сотрудника, должность, навык или материал
+                </span>
+
+                <small>
+                    Обычный клик — показать связи. Ссылки внутри карточек — открыть объект.
+                </small>
             </div>
+
+            <div
+                class="u-position-workspace__canvas"
+                data-workspace-canvas
+            >
+                <svg
+                    class="u-position-workspace__lines"
+                    data-workspace-lines
+                    aria-hidden="true"
+                ></svg>
+
+                <div class="u-position-workspace__columns">
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="people"
+                    >
+                        <h4>
+                            <span>Сотрудники</span>
+                            <small data-people-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-people
+                        ></div>
+                    </section>
+
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="positions"
+                    >
+                        <h4>
+                            <span>Должности</span>
+                            <small data-position-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-positions
+                        ></div>
+                    </section>
+
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="skills"
+                    >
+                        <h4>
+                            <span>Требуемые навыки</span>
+                            <small data-skill-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-skills
+                        ></div>
+                    </section>
+
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="materials"
+                    >
+                        <h4>
+                            <span>Материалы</span>
+                            <small data-material-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-materials
+                        ></div>
+                    </section>
+
+                </div>
+            </div>
+
+            <footer class="u-position-workspace__legend">
+
+                <span>
+                    <i class="is-direct"></i>
+                    текущая связь
+                </span>
+
+                <span>
+                    <i class="is-learning"></i>
+                    обучение / материал
+                </span>
+
+                <span>
+                    <i class="is-gap"></i>
+                    связь требует настройки
+                </span>
+
+            </footer>
         </section>
     </section>
 

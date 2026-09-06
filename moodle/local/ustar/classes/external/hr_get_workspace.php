@@ -49,6 +49,9 @@ class hr_get_workspace extends base {
             $occupancy[$p['id']] = 0;
         }
         foreach ($records as $u) {
+            if (!\local_ustar\accounts::is_business_account((int)$u->id)) {
+                continue;
+            }
             $positionid = trim((string)$u->positionid);
             $p = $posmap[$positionid] ?? null;
             if ($p) {

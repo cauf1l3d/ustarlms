@@ -1,0 +1,820 @@
+body.u-materials-fullwidth-page .u-main > .u-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+body.u-materials-fullwidth-page .u-main {
+    width: auto !important;
+    max-width: none !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+}
+
+body.u-materials-fullwidth-page .u-materials,
+body.u-materials-fullwidth-page .u-materials-workspace,
+body.u-materials-fullwidth-page .u-materials-catalog {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+
+/* ============================================================
+   USTAR 2706 — MATERIALS / WINDOWS EXPLORER CARDS
+   ============================================================ */
+
+body.u-materials-fullwidth-page .u-materials-list {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(205px, 1fr)
+        ) !important;
+
+    gap: 14px !important;
+
+    align-items: stretch;
+}
+
+
+/* One catalog object = one compact tile. */
+body.u-materials-fullwidth-page .u-material-row-shell {
+    position: relative !important;
+
+    display: block !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+/* Remove old horizontal row geometry. */
+body.u-materials-fullwidth-page .u-material-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 148px !important;
+
+    padding: 13px 14px !important;
+
+    gap: 9px !important;
+
+    color: var(--u-text-primary) !important;
+
+    background: #f7f9fc !important;
+
+    border:
+        1px solid
+        #d9dee6 !important;
+
+    border-radius: 10px !important;
+
+    text-decoration: none !important;
+
+    box-shadow:
+        0 1px 2px
+        rgba(20, 32, 48, .035);
+
+    transition:
+        border-color .12s ease,
+        background .12s ease,
+        box-shadow .12s ease,
+        transform .12s ease;
+}
+
+body.u-materials-fullwidth-page .u-material-row:hover {
+    transform: translateY(-1px);
+
+    background: #ffffff !important;
+
+    border-color: #aebbc9 !important;
+
+    box-shadow:
+        0 5px 14px
+        rgba(20, 32, 48, .08);
+}
+
+body.u-materials-fullwidth-page .u-material-row.is-selected {
+    border-color: var(--u-brand) !important;
+
+    box-shadow:
+        0 0 0 2px
+        color-mix(
+            in srgb,
+            var(--u-brand) 65%,
+            transparent
+        );
+}
+
+
+/* ============================================================
+   ICON AREA
+   ============================================================ */
+
+body.u-materials-fullwidth-page .u-material-row__icon {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+
+    width: auto !important;
+    height: 58px !important;
+    min-width: 0 !important;
+
+    padding: 0 !important;
+
+    background: none !important;
+    border: 0 !important;
+}
+
+
+/* ---------------- WINDOWS FOLDER ---------------- */
+
+.u-win-folder {
+    position: relative;
+
+    display: block;
+
+    width: 66px;
+    height: 46px;
+
+    margin-top: 8px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffd969 0%,
+            #f5bd38 100%
+        );
+
+    border:
+        1px solid
+        #d6a22c;
+
+    border-radius:
+        4px 5px 5px 5px;
+
+    box-shadow:
+        inset 0 1px
+        rgba(255,255,255,.65),
+        0 2px 4px
+        rgba(45,50,60,.10);
+}
+
+.u-win-folder__tab {
+    position: absolute;
+
+    left: 5px;
+    top: -7px;
+
+    width: 27px;
+    height: 10px;
+
+    background: #f6c64b;
+
+    border:
+        1px solid
+        #d6a22c;
+
+    border-bottom: 0;
+
+    border-radius:
+        4px 5px 0 0;
+}
+
+.u-win-folder::after {
+    content: "";
+
+    position: absolute;
+
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+
+    height: 32px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffdf78,
+            #f8c849
+        );
+
+    border:
+        1px solid
+        #d6a22c;
+
+    border-radius:
+        4px 4px 5px 5px;
+
+    transform:
+        skewX(-5deg);
+
+    transform-origin:
+        bottom left;
+}
+
+
+/* ---------------- WINDOWS FILE ---------------- */
+
+.u-win-file {
+    --u-file-accent: #4b98b6;
+
+    position: relative;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    width: 50px;
+    height: 58px;
+
+    padding:
+        0 4px 7px;
+
+    overflow: hidden;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #fafafa 65%,
+            var(--u-file-accent) 66%,
+            var(--u-file-accent) 100%
+        );
+
+    border:
+        1px solid
+        #cbd2da;
+
+    border-radius:
+        2px;
+
+    box-shadow:
+        0 2px 4px
+        rgba(30,40,55,.08);
+}
+
+.u-win-file__fold {
+    position: absolute;
+
+    top: -1px;
+    right: -1px;
+
+    width: 15px;
+    height: 15px;
+
+    background:
+        linear-gradient(
+            225deg,
+            #f2f2f2 0 47%,
+            #cbd2da 48% 52%,
+            #fff 53%
+        );
+}
+
+.u-win-file strong {
+    position: relative;
+    z-index: 2;
+
+    max-width: 43px;
+
+    overflow: hidden;
+
+    color: #fff !important;
+
+    font-size: 7px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+
+    letter-spacing: .02em;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   FILE-TYPE COLORS
+   ============================================================ */
+
+.u-win-file--pdf {
+    --u-file-accent: #d64242;
+}
+
+.u-win-file--doc {
+    --u-file-accent: #2e6fc4;
+}
+
+.u-win-file--xls {
+    --u-file-accent: #25824d;
+}
+
+.u-win-file--ppt {
+    --u-file-accent: #d66b32;
+}
+
+.u-win-file--archive {
+    --u-file-accent: #8260a7;
+}
+
+.u-win-file--image {
+    --u-file-accent: #3a91a1;
+}
+
+.u-win-file--video {
+    --u-file-accent: #7a51b3;
+}
+
+.u-win-file--audio {
+    --u-file-accent: #b04f85;
+}
+
+.u-win-file--scorm {
+    --u-file-accent: #7757bd;
+}
+
+.u-win-file--quiz {
+    --u-file-accent: #d19d18;
+}
+
+.u-win-file--page,
+.u-win-file--text {
+    --u-file-accent: #657789;
+}
+
+.u-win-file--link,
+.u-win-file--web {
+    --u-file-accent: #388ba6;
+}
+
+.u-win-file--data {
+    --u-file-accent: #476e88;
+}
+
+.u-win-file--assignment {
+    --u-file-accent: #9b663b;
+}
+
+.u-win-file--interactive {
+    --u-file-accent: #6b62bb;
+}
+
+
+/* ============================================================
+   CARD CONTENT
+   ============================================================ */
+
+body.u-materials-fullwidth-page .u-material-row__body {
+    display: flex !important;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    width: 100% !important;
+    min-width: 0 !important;
+
+    padding: 0 !important;
+}
+
+body.u-materials-fullwidth-page .u-material-row__meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+
+    margin-bottom: 5px;
+}
+
+body.u-materials-fullwidth-page .u-material-row__meta span {
+    font-size: 7px !important;
+    line-height: 1.2;
+
+    text-transform: uppercase;
+
+    color: var(--u-text-muted);
+}
+
+body.u-materials-fullwidth-page .u-material-row__type {
+    font-weight: 900 !important;
+
+    color:
+        var(--u-text-secondary)
+        !important;
+}
+
+body.u-materials-fullwidth-page .u-material-row__title {
+    display: -webkit-box;
+
+    margin: 0 !important;
+
+    overflow: hidden;
+
+    color: var(--u-text-primary);
+
+    font-size: 11px !important;
+    font-weight: 760 !important;
+    line-height: 1.28 !important;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+body.u-materials-fullwidth-page .u-material-row__filename {
+    display: block;
+
+    max-width: 100%;
+
+    margin-top: 5px;
+
+    overflow: hidden;
+
+    color: var(--u-text-muted);
+
+    font-size: 7px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* Moodle source/course line. */
+body.u-materials-fullwidth-page
+.u-material-row__body > small:not(.u-material-row__filename) {
+    margin-top: 5px;
+
+    color: var(--u-text-muted);
+
+    font-size: 7px;
+}
+
+
+/* ============================================================
+   FOLDER CARDS ARE VISUALLY DISTINCT
+   ============================================================ */
+
+body.u-materials-fullwidth-page
+.u-material-row-shell--folder
+.u-material-row {
+    background:
+        linear-gradient(
+            180deg,
+            #fffdf7 0%,
+            #fff9e8 100%
+        ) !important;
+
+    border-color:
+        #ead9aa !important;
+}
+
+body.u-materials-fullwidth-page
+.u-material-row-shell--folder
+.u-material-row:hover {
+    background:
+        #fffdf6 !important;
+
+    border-color:
+        #d4b65f !important;
+}
+
+
+/* ============================================================
+   THREE-DOT MENU NO LONGER CONSUMES A GRID COLUMN
+   ============================================================ */
+
+body.u-materials-fullwidth-page .u-material-row-menu {
+    position: absolute !important;
+
+    top: 7px;
+    right: 7px;
+
+    z-index: 10;
+
+    width: auto !important;
+    height: auto !important;
+
+    margin: 0 !important;
+}
+
+body.u-materials-fullwidth-page
+.u-material-row-menu > summary {
+    display: grid;
+    place-items: center;
+
+    width: 27px;
+    height: 27px;
+
+    padding: 0;
+
+    cursor: pointer;
+
+    color: #495563;
+    background:
+        rgba(255,255,255,.92);
+
+    border:
+        1px solid
+        #d7dce3;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    list-style: none;
+}
+
+body.u-materials-fullwidth-page
+.u-material-row-menu > summary::-webkit-details-marker {
+    display: none;
+}
+
+
+/* ============================================================
+   FLAGS: keep diagnostic information but don't inflate tiles.
+   ============================================================ */
+
+body.u-materials-fullwidth-page .u-material-row__flags {
+    margin-top: auto;
+    padding-top: 5px;
+}
+
+body.u-materials-fullwidth-page .u-material-row__flags span,
+body.u-materials-fullwidth-page .u-material-flag {
+    font-size: 6px !important;
+}
+
+
+/* ============================================================
+   RESPONSIVE DENSITY
+   ============================================================ */
+
+@media (min-width: 1600px) {
+    body.u-materials-fullwidth-page .u-materials-list {
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(210px, 1fr)
+            ) !important;
+    }
+}
+
+@media (max-width: 900px) {
+    body.u-materials-fullwidth-page .u-materials-list {
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(165px, 1fr)
+            ) !important;
+
+        gap: 10px !important;
+    }
+
+    body.u-materials-fullwidth-page .u-material-row {
+        min-height: 136px !important;
+    }
+}
+
+
+
+/* ============================================================
+   USTAR 2706 — MATERIAL EXPLORER DARK MODE
+   ============================================================ */
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row {
+    color: #eef4fa !important;
+
+    background:
+        #1b2733 !important;
+
+    border-color:
+        #344657 !important;
+
+    box-shadow:
+        0 1px 3px
+        rgba(0, 0, 0, .25);
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row:hover {
+    color: #ffffff !important;
+
+    background:
+        #223241 !important;
+
+    border-color:
+        #58738a !important;
+
+    box-shadow:
+        0 7px 18px
+        rgba(0, 0, 0, .30);
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row__title {
+    color:
+        #f4f8fb !important;
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row__meta span {
+    color:
+        #9fb0bf !important;
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row__type {
+    color:
+        #d9e4ed !important;
+
+    font-weight: 900 !important;
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row__semantic {
+    color:
+        #b9c8d4 !important;
+
+    font-weight: 750 !important;
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row__filename,
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row__body > small {
+    color:
+        #8295a6 !important;
+}
+
+
+/* Folder remains recognisable as a folder,
+   but no longer becomes a blinding white/yellow card. */
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row-shell--folder
+.u-material-row {
+    color:
+        #fff4cf !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            #30291b 0%,
+            #282318 100%
+        ) !important;
+
+    border-color:
+        #665426 !important;
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row-shell--folder
+.u-material-row:hover {
+    background:
+        #39301c !important;
+
+    border-color:
+        #aa8732 !important;
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row-shell--folder
+.u-material-row__title {
+    color:
+        #fff4cf !important;
+}
+
+
+/* Three-dot action button */
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row-menu > summary {
+    color:
+        #d9e5ed;
+
+    background:
+        #263746;
+
+    border-color:
+        #42576a;
+}
+
+
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row-menu > summary:hover {
+    background:
+        #304557;
+}
+
+
+/* Selected item */
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-material-row.is-selected {
+    border-color:
+        var(--u-brand) !important;
+
+    box-shadow:
+        0 0 0 2px
+        color-mix(
+            in srgb,
+            var(--u-brand) 76%,
+            transparent
+        );
+}
+
+
+/* Keep the Windows file sheet itself light,
+   exactly like an OS file icon. */
+html[data-ustar-theme="dark"]
+body.u-materials-fullwidth-page
+.u-win-file {
+    background:
+        linear-gradient(
+            180deg,
+            #f8fafc 0%,
+            #edf1f5 65%,
+            var(--u-file-accent) 66%,
+            var(--u-file-accent) 100%
+        );
+}
+
+
+/* Human-readable semantic type. */
+body.u-materials-fullwidth-page
+.u-material-row__semantic::before {
+    content: "·";
+    margin-right: 6px;
+}
+
+
+/* ============================================================
+   More explicit technical-file colours
+   ============================================================ */
+
+.u-win-file--image {
+    --u-file-accent: #3093a6;
+}
+
+.u-win-file--video {
+    --u-file-accent: #7952b3;
+}
+
+.u-win-file--audio {
+    --u-file-accent: #b14f86;
+}
+
+.u-win-file--doc {
+    --u-file-accent: #2b6ec9;
+}
+
+.u-win-file--xls {
+    --u-file-accent: #21834d;
+}
+
+.u-win-file--ppt {
+    --u-file-accent: #d56b31;
+}
+
+.u-win-file--pdf {
+    --u-file-accent: #d34242;
+}
+
+.u-win-file--archive {
+    --u-file-accent: #78589a;
+}
+
+.u-win-file--scorm {
+    --u-file-accent: #704abd;
+}
+
+.u-win-file--quiz {
+    --u-file-accent: #c99512;
+}
+

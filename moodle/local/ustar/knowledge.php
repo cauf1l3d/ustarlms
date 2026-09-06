@@ -668,6 +668,19 @@ $PAGE->set_pagelayout(
     'ustar'
 );
 
+$knowledgeherocss =
+    __DIR__ . '/knowledge_hero_2706.css';
+
+$PAGE->requires->css(
+    new moodle_url(
+        '/local/ustar/knowledge_hero_2706.css',
+        [
+            'v' => filemtime($knowledgeherocss),
+        ]
+    )
+);
+
+
 $PAGE->set_title(
     'Знания | USTAR Academy'
 );

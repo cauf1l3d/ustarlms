@@ -19,6 +19,15 @@ if (!\local_ustar\development_assessment::can_view_private_result((int)$USER->id
 $isself = $subjectid === (int)$USER->id;
 $subject = $DB->get_record('user', ['id' => $subjectid, 'deleted' => 0], 'id,firstname,lastname', MUST_EXIST);
 $sessionkey = 'ustar_dev_assessment_' . $assessmentkey . '_nonce';
+$routeflowkey = $sessionkey . '_routeflow';
+$fromroute = optional_param('fromroute', 0, PARAM_BOOL);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    if ($isself && $fromroute) {
+        $SESSION->{$routeflowkey} = 1;
+    } else {
+        unset($SESSION->{$routeflowkey});
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
@@ -32,6 +41,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $answers = optional_param_array('answer', [], PARAM_ALPHANUMEXT);
     \local_ustar\development_assessment::submit($assessmentkey, (int)$USER->id, $answers, $nonce, time());
     unset($SESSION->{$sessionkey});
+    $routeflow = !empty($SESSION->{$routeflowkey});
+    unset($SESSION->{$routeflowkey});
+    if ($routeflow) {
+        redirect(
+            new moodle_url('/local/ustar/route.php'),
+            'Результат сохранён. Ты увидишь его позже по маршруту.',
+            0,
+            \core\output\notification::NOTIFY_SUCCESS
+        );
+    }
     redirect(new moodle_url('/local/ustar/development_assessment.php', ['assessment' => $assessmentkey, 'saved' => 1]));
 }
 

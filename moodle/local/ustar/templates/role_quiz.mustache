@@ -1,0 +1,260 @@
+<div class="u-product-page u-native-route">
+
+<header class="u-native-route__hero">
+    <div>
+        <p class="u-page-kicker">
+            Маршрут · 05 · Проверка
+        </p>
+
+        <h1>Моя должность и навыки</h1>
+
+        {{#hasposition}}
+        <p>
+            Проверьте, насколько хорошо вы понимаете
+            требования своей роли:
+            <strong>{{positionname}}</strong>.
+        </p>
+        {{/hasposition}}
+    </div>
+
+    <span class="u-native-route__chip">
+        80% для прохождения
+    </span>
+</header>
+
+
+{{^hasposition}}
+<div class="u-native-empty">
+    Должность пока не назначена.
+    Проверка станет доступна после назначения
+    должности HRD.
+</div>
+{{/hasposition}}
+
+
+{{#hasposition}}
+
+{{^hasmatrix}}
+<div class="u-native-empty">
+    Для должности «{{positionname}}»
+    пока не утверждена матрица навыков.
+    Проверка не может быть завершена,
+    пока HRD не настроит требования роли.
+</div>
+{{/hasmatrix}}
+
+
+{{#hasmatrix}}
+
+{{#submitted}}
+
+{{#passed}}
+<div class="u-native-result is-success">
+    <strong>
+        Проверка пройдена · {{percent}}%
+    </strong>
+
+    {{#recorded}}
+    <span>
+        Результат сохранён в маршруте.
+    </span>
+    {{/recorded}}
+
+    {{#previewmode}}
+    <span>
+        Ответы верные. Сейчас точка находится
+        в режиме подготовки, поэтому маршрутный
+        прогресс ещё не записывается.
+    </span>
+    {{/previewmode}}
+</div>
+{{/passed}}
+
+
+{{#notpassed}}
+<div class="u-native-result">
+    <strong>
+        Пока {{percent}}%
+    </strong>
+
+    <span>
+        Для прохождения требуется не менее 80%.
+        Вернитесь к своей роли и требованиям,
+        затем попробуйте ещё раз.
+    </span>
+</div>
+{{/notpassed}}
+
+{{/submitted}}
+
+
+<form method="post">
+
+    <input
+        type="hidden"
+        name="sesskey"
+        value="{{sesskey}}"
+    >
+
+
+    <section class="u-native-quiz u-native-quiz--standalone">
+
+        <header>
+            <div>
+                <p class="u-page-kicker">
+                    Часть 1
+                </p>
+
+                <h2>
+                    Какие навыки обязательны
+                    для моей должности?
+                </h2>
+
+                <p>
+                    Выберите все подходящие варианты.
+                </p>
+            </div>
+
+            {{#submitted}}
+            <strong class="u-native-quiz__score">
+                {{#setcorrect}}✓{{/setcorrect}}
+                {{#setincorrect}}×{{/setincorrect}}
+            </strong>
+            {{/submitted}}
+        </header>
+
+
+        <div
+            class="u-skill-choice-grid
+            {{#setcorrect}}is-correct{{/setcorrect}}
+            {{#setincorrect}}is-incorrect{{/setincorrect}}"
+        >
+
+            {{#skillchoices}}
+            <label class="u-skill-choice">
+                <input
+                    type="checkbox"
+                    name="skills[]"
+                    value="{{id}}"
+                    {{#selected}}checked{{/selected}}
+                >
+
+                <span>{{name}}</span>
+            </label>
+            {{/skillchoices}}
+
+        </div>
+
+    </section>
+
+
+    <section class="u-native-quiz u-native-quiz--standalone">
+
+        <header>
+            <div>
+                <p class="u-page-kicker">
+                    Часть 2
+                </p>
+
+                <h2>
+                    Какой уровень требуется?
+                </h2>
+
+                <p>
+                    Для каждого обязательного навыка
+                    выберите уровень, установленный
+                    для вашей должности.
+                </p>
+            </div>
+        </header>
+
+
+        <div class="u-native-quiz__questions">
+
+            {{#levelquestions}}
+            <article
+                class="u-native-question
+                {{#correct}}is-correct{{/correct}}
+                {{#incorrect}}is-incorrect{{/incorrect}}"
+            >
+
+                <div>
+                    <small>{{category}}</small>
+                    <strong>{{name}}</strong>
+                </div>
+
+                <label>
+                    <span>
+                        Требуемый уровень
+                    </span>
+
+                    <select
+                        name="{{input}}"
+                        required
+                    >
+                        <option value="">
+                            Выберите уровень
+                        </option>
+
+                        {{#options}}
+                        <option
+                            value="{{value}}"
+                            {{#selected}}selected{{/selected}}
+                        >
+                            {{label}}
+                        </option>
+                        {{/options}}
+
+                    </select>
+                </label>
+
+            </article>
+            {{/levelquestions}}
+
+        </div>
+
+    </section>
+
+
+    <div class="u-native-submit-row">
+
+        <button
+            type="submit"
+            class="u-btn u-btn--primary"
+        >
+            Проверить ответы
+        </button>
+
+        {{#submitted}}
+        <strong>
+            {{score}} / {{total}} · {{percent}}%
+        </strong>
+        {{/submitted}}
+
+    </div>
+
+</form>
+
+{{/hasmatrix}}
+{{/hasposition}}
+
+
+<footer class="u-native-route__footer">
+
+    <a
+        class="u-btn"
+        href="{{careerurl}}"
+    >
+        ← Посмотреть свою должность
+    </a>
+
+    <a
+        class="u-btn"
+        href="{{routeurl}}"
+    >
+        Вернуться в маршрут
+    </a>
+
+</footer>
+
+</div>

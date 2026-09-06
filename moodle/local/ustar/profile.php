@@ -8,6 +8,8 @@ global $USER, $DB;
 $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 
+$PAGE->set_context($context);
+
 $profile = \local_ustar\employee_profile::build((int)$USER->id);
 $dashboard = \local_ustar\native_data::dashboard();
 $identity = $profile['identity'];
@@ -29,6 +31,8 @@ $data = [
     'fullname' => $identity['fullname'],
     'email' => $identity['email'],
     'initials' => \local_ustar\ui::initials($identity['firstname'], $identity['lastname']),
+    'avatarurl' => \local_ustar\team_presenter::avatar_url((int)$USER->id, 160),
+    'photoediturl' => (new moodle_url('/user/edit.php', ['id' => $USER->id]))->out(false),
     'hasposition' => $identity['positionid'] !== '',
     'position' => $identity['position'] ?: 'Должность пока не назначена',
     'department' => $identity['department'] ?: 'Без подразделения',
@@ -73,11 +77,14 @@ $data = [
     'settingsicon' => \local_ustar\ui::icon('settings', 'u-feature-icon'),
 ];
 
-$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/profile.php'));
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Личный кабинет | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
+
+$PAGE->requires->css(
+    new moodle_url('/local/ustar/styles/team_hierarchy.css')
+);
 
 $output = $PAGE->get_renderer('local_ustar');
 echo $output->header();

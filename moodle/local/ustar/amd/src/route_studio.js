@@ -24,7 +24,12 @@ export const init = () => {
     };
 
     list.querySelectorAll('.u-route-editor__point').forEach((item) => {
-        item.addEventListener('dragstart', () => {
+        item.addEventListener('dragstart', (event) => {
+            if (item.dataset.uDraggable !== '1') {
+                event.preventDefault();
+                return;
+            }
+
             dragged = item;
             item.classList.add('is-dragging');
         });
@@ -37,7 +42,11 @@ export const init = () => {
 
         item.addEventListener('dragover', (event) => {
             event.preventDefault();
-            if (!dragged || dragged === item) {
+            if (
+                !dragged
+                || dragged === item
+                || item.dataset.uDraggable !== '1'
+            ) {
                 return;
             }
             const rect = item.getBoundingClientRect();

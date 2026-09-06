@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026082705" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026082729" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -94,7 +94,6 @@
       <INDEXES>
         <INDEX NAME="user_game_idx" UNIQUE="false" FIELDS="userid, gameid" />
         <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated" />
-        <INDEX NAME="user_cycle_time_idx" UNIQUE="false" FIELDS="userid, cycle, timecreated" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_hr_actions" COMMENT="Audit trail for HR mutations performed in USTAR">
@@ -195,7 +194,6 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated" />
-        <INDEX NAME="user_cycle_time_idx" UNIQUE="false" FIELDS="userid, cycle, timecreated" />
         <INDEX NAME="reviewer_time_idx" UNIQUE="false" FIELDS="reviewerid, timecreated" />
       </INDEXES>
     </TABLE>
@@ -461,6 +459,7 @@
         <FIELD NAME="definitionversion" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="adaptationid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="perspective" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="workdate" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
@@ -474,6 +473,7 @@
       <INDEXES>
         <INDEX NAME="user_check_date_idx" UNIQUE="false" FIELDS="userid, checklistkey, workdate" />
         <INDEX NAME="assignment_date_idx" UNIQUE="false" FIELDS="assignmentid, workdate" />
+              <INDEX NAME="adaptation_date_idx" UNIQUE="false" FIELDS="adaptationid, workdate" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_official_tasks" COMMENT="Official learning and development obligations">
@@ -666,11 +666,33 @@
         <INDEX NAME="shared_idx" UNIQUE="false" FIELDS="sharedteam, deleted" />
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_ustar_routes" COMMENT="Permanent one-per-position USTAR learning routes">
+    <TABLE NAME="local_ustar_route_families" COMMENT="USTAR route families with one common parent route and position children">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="familykey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="departmentid" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="parentrouteid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="familykey_uix" UNIQUE="true" FIELDS="familykey" />
+        <INDEX NAME="dept_active_idx" UNIQUE="false" FIELDS="departmentid, active" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_routes" COMMENT="USTAR family parent, position child and standalone learning routes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="departmentid" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="familyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="routekind" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="position" SEQUENCE="false" />
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
@@ -683,6 +705,7 @@
       <INDEXES>
         <INDEX NAME="position_uix" UNIQUE="true" FIELDS="positionid" />
         <INDEX NAME="dept_active_idx" UNIQUE="false" FIELDS="departmentid, active" />
+        <INDEX NAME="family_kind_idx" UNIQUE="false" FIELDS="familyid, routekind, active" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_route_points" COMMENT="Stable checkpoints inside permanent learning routes">
@@ -690,6 +713,9 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="routeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="pointkey" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sourcepointid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="inheritstate" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="local" SEQUENCE="false" />
+        <FIELD NAME="sourceversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="phase" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="adaptation" SEQUENCE="false" />
         <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
@@ -703,8 +729,32 @@
       <INDEXES>
         <INDEX NAME="route_key_uix" UNIQUE="true" FIELDS="routeid, pointkey" />
         <INDEX NAME="route_sort_idx" UNIQUE="false" FIELDS="routeid, active, sortorder" />
+        <INDEX NAME="source_point_idx" UNIQUE="false" FIELDS="sourcepointid, inheritstate" />
       </INDEXES>
     </TABLE>
+    <TABLE NAME="local_ustar_route_scope" COMMENT="Position applicability for points in one USTAR family route">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="pointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="scopeid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="confirmed" SEQUENCE="false"/>
+        <FIELD NAME="sourcekind" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="manual" SEQUENCE="false"/>
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="pointid_fk" TYPE="foreign" FIELDS="pointid" REFTABLE="local_ustar_route_points" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="point_scope_uix" UNIQUE="true" FIELDS="pointid,scopeid"/>
+        <INDEX NAME="scope_state_idx" UNIQUE="false" FIELDS="scopeid,state,active"/>
+      </INDEXES>
+    </TABLE>
+
     <TABLE NAME="local_ustar_route_versions" COMMENT="Version history for learning route checkpoints">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -750,6 +800,72 @@
         <INDEX NAME="user_point_version_uix" UNIQUE="true" FIELDS="userid, pointid, versionid" />
         <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status, completedat" />
         <INDEX NAME="point_version_idx" UNIQUE="false" FIELDS="pointid, versionid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_assess_policy" COMMENT="Versioned assessment lifecycle policy for route checkpoint versions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="pointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="providerkind" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="providerref" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="attemptspercycle" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="3" SEQUENCE="false" />
+        <FIELD NAME="maxcycles" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="2" SEQUENCE="false" />
+        <FIELD NAME="remediationpointid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="cycle1escalation" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="direct_manager" SEQUENCE="false" />
+        <FIELD NAME="cycle2escalation" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="hrd" SEQUENCE="false" />
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="pointid_fk" TYPE="foreign" FIELDS="pointid" REFTABLE="local_ustar_route_points" REFFIELDS="id" />
+        <KEY NAME="versionid_fk" TYPE="foreign-unique" FIELDS="versionid" REFTABLE="local_ustar_route_versions" REFFIELDS="id" />
+        <KEY NAME="remediationpointid_fk" TYPE="foreign" FIELDS="remediationpointid" REFTABLE="local_ustar_route_points" REFFIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="point_active_idx" UNIQUE="false" FIELDS="pointid,active" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_assess_runtime" COMMENT="Current employee assessment cycle/remediation/escalation state">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="pointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="policyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="cycle" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="attemptsused" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="active" SEQUENCE="false" />
+        <FIELD NAME="failurecutoff" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="remediationpointid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="remediationversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="remediationstartedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="remediationcompletedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="unlockedattemptlimit" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="managerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="managerescalatedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="hrdescalatedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="lastattemptid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="pointid_fk" TYPE="foreign" FIELDS="pointid" REFTABLE="local_ustar_route_points" REFFIELDS="id" />
+        <KEY NAME="versionid_fk" TYPE="foreign" FIELDS="versionid" REFTABLE="local_ustar_route_versions" REFFIELDS="id" />
+        <KEY NAME="policyid_fk" TYPE="foreign" FIELDS="policyid" REFTABLE="local_ustar_assess_policy" REFFIELDS="id" />
+        <KEY NAME="remediationpointid_fk" TYPE="foreign" FIELDS="remediationpointid" REFTABLE="local_ustar_route_points" REFFIELDS="id" />
+        <KEY NAME="remediationversionid_fk" TYPE="foreign" FIELDS="remediationversionid" REFTABLE="local_ustar_route_versions" REFFIELDS="id" />
+        <KEY NAME="managerid_fk" TYPE="foreign" FIELDS="managerid" REFTABLE="user" REFFIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_point_version_uix" UNIQUE="true" FIELDS="userid,pointid,versionid" />
+        <INDEX NAME="manager_status_idx" UNIQUE="false" FIELDS="managerid,status,timemodified" />
+        <INDEX NAME="status_time_idx" UNIQUE="false" FIELDS="status,timemodified" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_dev_assess" COMMENT="Private USTAR development assessment catalog">
@@ -941,6 +1057,7 @@
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
             <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+            <FIELD NAME="autorenew" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
           </FIELDS>
           <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1082,6 +1199,108 @@
       <INDEXES>
         <INDEX NAME="competition_participant_uix" UNIQUE="true" FIELDS="competitionid, participantid" />
         <INDEX NAME="competition_rank_idx" UNIQUE="false" FIELDS="competitionid, rankno" />
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="local_ustar_staff_requests" COMMENT="TARGET department-head staffing requests reviewed by HRD">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="requesttype" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="departmentid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="employeeid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="firstname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="lastname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="requesteddate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="comment" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" />
+        <FIELD NAME="requestedby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="reviewedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="reviewcomment" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="createduserid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="reviewedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="employeeid_fk" TYPE="foreign" FIELDS="employeeid" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="requestedby_fk" TYPE="foreign" FIELDS="requestedby" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="reviewedby_fk" TYPE="foreign" FIELDS="reviewedby" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="createduserid_fk" TYPE="foreign" FIELDS="createduserid" REFTABLE="user" REFFIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="status_time_idx" UNIQUE="false" FIELDS="status, timecreated" />
+        <INDEX NAME="dept_status_idx" UNIQUE="false" FIELDS="departmentid, status" />
+        <INDEX NAME="requester_status_idx" UNIQUE="false" FIELDS="requestedby, status" />
+        <INDEX NAME="employee_status_idx" UNIQUE="false" FIELDS="employeeid, status" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_route_testers" COMMENT="Isolated Route Tester sandbox identities per site administrator">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sandboxuserid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
+        <FIELD NAME="lastreset" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="actorid_fk" TYPE="foreign-unique" FIELDS="actorid" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="sandboxuserid_fk" TYPE="foreign-unique" FIELDS="sandboxuserid" REFTABLE="user" REFFIELDS="id" />
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_ustar_route_test_tokens" COMMENT="Short-lived one-time Route Tester bridge tokens">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="tokenhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="sandboxuserid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="usedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="actorid_fk" TYPE="foreign" FIELDS="actorid" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="sandboxuserid_fk" TYPE="foreign" FIELDS="sandboxuserid" REFTABLE="user" REFFIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="tokenhash_uix" UNIQUE="true" FIELDS="tokenhash" />
+        <INDEX NAME="expires_idx" UNIQUE="false" FIELDS="expiresat, usedat" />
+        <INDEX NAME="actor_idx" UNIQUE="false" FIELDS="actorid, timecreated" />
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="local_ustar_adaptations" COMMENT="Assigned employee adaptation lifecycle">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="staffingrequestid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="managerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="checklistkey" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT="adaptation_standard" SEQUENCE="false" />
+        <FIELD NAME="definitionversion" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="startdate" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="plannedworkdays" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="10" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="active" SEQUENCE="false" />
+        <FIELD NAME="rulesjson" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="completedat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="staffing_request_uix" UNIQUE="true" FIELDS="staffingrequestid" />
+        <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status" />
+        <INDEX NAME="manager_status_idx" UNIQUE="false" FIELDS="managerid, status" />
+        <INDEX NAME="assignment_idx" UNIQUE="false" FIELDS="assignmentid" />
       </INDEXES>
     </TABLE>
   </TABLES>

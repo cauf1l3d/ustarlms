@@ -209,6 +209,7 @@ final class target_core {
         return (int)$DB->insert_record('local_ustar_check_submits', (object)[
             'checklistkey' => $checklistkey, 'definitionversion' => max(1, (int)($data['definitionversion'] ?? 1)),
             'userid' => $userid, 'assignmentid' => !empty($data['assignmentid']) ? (int)$data['assignmentid'] : null,
+            'adaptationid' => !empty($data['adaptationid']) ? (int)$data['adaptationid'] : null,
             'perspective' => $perspective, 'workdate' => $workdate,
             'status' => self::clean_code((string)($data['status'] ?? 'submitted'), 16) ?: 'submitted',
             'answersjson' => self::json($data['answers'] ?? []),

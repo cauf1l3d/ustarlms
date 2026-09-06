@@ -1,0 +1,158 @@
+<div class="u-product-page u-staffing-page">
+    <header class="u-product-head">
+        <div>
+            <p class="u-page-kicker">Кадровый цикл</p>
+            <h1>Заявки на персонал</h1>
+            <p>Руководитель создаёт заявку своего подразделения. HRD согласовывает и исполняет её.</p>
+        </div>
+        <div class="u-product-head__actions">
+            {{#ismanager}}<a class="u-btn" href="{{teamurl}}">Моя команда</a>{{/ismanager}}
+            {{#ishr}}<a class="u-btn" href="{{hrurl}}">Сотрудники</a>{{/ishr}}
+        </div>
+    </header>
+
+    {{#ismanager}}
+    <section class="u-staffing-manager">
+        <header class="u-staffing-section-head">
+            <div>
+                <p class="u-page-kicker">Моё подразделение</p>
+                <h2>{{department}}</h2>
+            </div>
+        </header>
+
+        <div class="u-staffing-form-grid">
+            <form class="u-staffing-card" method="post">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="createhire">
+                <div>
+                    <p class="u-page-kicker">Найм</p>
+                    <h3>Принять сотрудника</h3>
+                </div>
+                <label>Фамилия<input name="lastname" required autocomplete="off"></label>
+                <label>Имя / отчество<input name="firstname" required autocomplete="off"></label>
+                <label>Должность
+                    <select name="positionid" required>
+                        <option value="">Выберите должность</option>
+                        {{#positions}}<option value="{{id}}">{{name}}</option>{{/positions}}
+                    </select>
+                </label>
+                <label>Дата выхода<input type="date" name="requesteddate" min="{{today}}" value="{{today}}" required></label>
+                <label>Комментарий<textarea name="comment" rows="3" placeholder="Что важно знать HRD"></textarea></label>
+                <button class="u-btn u-btn--primary" type="submit">Отправить HRD</button>
+            </form>
+
+            <form class="u-staffing-card" method="post">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="createterminate">
+                <div>
+                    <p class="u-page-kicker">Завершение работы</p>
+                    <h3>Уволить сотрудника</h3>
+                </div>
+                {{#hasemployees}}
+                <label>Сотрудник
+                    <select name="employeeid" required>
+                        <option value="">Выберите сотрудника</option>
+                        {{#employees}}<option value="{{id}}">{{fullname}} — {{position}}</option>{{/employees}}
+                    </select>
+                </label>
+                <label>Последний рабочий день<input type="date" name="requesteddate" min="{{today}}" value="{{today}}" required></label>
+                <label>Причина<textarea name="reason" rows="3" required></textarea></label>
+                <label>Комментарий<textarea name="comment" rows="2"></textarea></label>
+                <button class="u-btn" type="submit">Отправить HRD</button>
+                {{/hasemployees}}
+                {{^hasemployees}}<div class="u-empty-state"><p>В подразделении нет доступных сотрудников для этой операции.</p></div>{{/hasemployees}}
+            </form>
+        </div>
+    </section>
+    {{/ismanager}}
+
+    <section class="u-staffing-queue">
+        <header class="u-staffing-section-head">
+            <div>
+                <p class="u-page-kicker">Workflow</p>
+                <h2>{{#ishr}}Очередь HRD{{/ishr}}{{^ishr}}Мои кадровые заявки{{/ishr}}</h2>
+                <p>{{#ishr}}Сначала обработайте заявки со статусом «На согласовании».{{/ishr}}{{^ishr}}Здесь виден статус решения HRD.{{/ishr}}</p>
+            </div>
+        </header>
+
+        {{#hasrequests}}
+        <div class="u-staffing-list">
+            {{#requests}}
+            <article class="u-staffing-request is-{{status}}">
+                <div class="u-staffing-request__top">
+                    <div>
+                        <span class="u-staffing-type">{{typelabel}}</span>
+                        <h3>{{fullname}}</h3>
+                        <p>{{department}} · {{position}}</p>
+                    </div>
+                    <span class="u-staffing-status is-{{status}}">{{statuslabel}}</span>
+                </div>
+
+                <dl class="u-staffing-meta">
+                    <div><dt>{{#ishire}}Дата выхода{{/ishire}}{{#isterminate}}Последний день{{/isterminate}}</dt><dd>{{requesteddate}}</dd></div>
+                    <div><dt>Инициатор</dt><dd>{{requester}}</dd></div>
+                    <div><dt>Создано</dt><dd>{{timecreated}}</dd></div>
+                </dl>
+                {{#hasreason}}<p><strong>Причина:</strong> {{reason}}</p>{{/hasreason}}
+                {{#hascomment}}<p><strong>Комментарий:</strong> {{comment}}</p>{{/hascomment}}
+                {{#hasreviewer}}<p class="u-staffing-review"><strong>HRD:</strong> {{reviewer}}</p>{{/hasreviewer}}
+                {{#hasreviewcomment}}<p class="u-staffing-review">{{reviewcomment}}</p>{{/hasreviewcomment}}
+
+                {{#canassignadaptation}}
+                <section class="u-staffing-adaptation">
+                    <div><p class="u-page-kicker">Адаптация</p><strong>Не назначена</strong><small>Руководитель задаёт срок после согласования HRD.</small></div>
+                    <details>
+                        <summary class="u-btn u-btn--primary">Назначить адаптационный чек</summary>
+                        <form method="post" class="u-staffing-adaptation-form">
+                            <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="requestid" value="{{id}}"><input type="hidden" name="action" value="assignadaptation">
+                            <label>Дата начала<input type="date" name="startdate" min="{{requesteddateiso}}" value="{{requesteddateiso}}" required></label>
+                            <label>Срок, рабочих дней<input type="number" name="plannedworkdays" min="1" max="180" value="10" required></label>
+                            <button class="u-btn u-btn--primary" type="submit">Назначить</button>
+                        </form>
+                    </details>
+                </section>
+                {{/canassignadaptation}}
+
+                {{#hasadaptation}}{{#adaptation}}
+                <section class="u-staffing-adaptation">
+                    <div><p class="u-page-kicker">Адаптация</p><strong>{{statuslabel}} · день {{daynumber}} из {{plannedworkdays}}</strong><small>Начало {{startdate}} · рабочая дата {{workdate}}</small></div>
+                    <div class="u-staffing-adaptation-status"><span>Сотрудник: <b>{{employeestatus}}</b></span><span>Руководитель: <b>{{managerstatus}}</b></span></div>
+                    {{#canmanagerfill}}<a class="u-btn u-btn--primary" href="{{managerformurl}}">Заполнить чек-лист руководителя</a>{{/canmanagerfill}}
+                    {{#awaitingfinal}}<div class="u-staffing-adaptation-status"><span>Итог сотрудника: <b>{{employeefinalstatus}}</b></span><span>Итог руководителя: <b>{{managerfinalstatus}}</b></span></div>{{/awaitingfinal}}
+                    {{#canfinalfill}}<a class="u-btn u-btn--primary" href="{{finalformurl}}">Заполнить итоговый отчёт руководителя</a>{{/canfinalfill}}
+                    {{#canfinaldecide}}<a class="u-btn u-btn--primary" href="{{finalformurl}}">Принять итоговое решение</a>{{/canfinaldecide}}
+                    {{#awaitingfinal}}<p class="u-staffing-adaptation-note">После двух независимых итоговых отчётов руководитель завершает, продлевает адаптацию или передаёт её HRD.</p>{{/awaitingfinal}}
+                    {{#escalated}}<p class="u-staffing-adaptation-note"><strong>Передано HRD.</strong> Итоговое решение находится в HRD → Контроль → Адаптация.</p>{{/escalated}}
+                </section>
+                {{/adaptation}}{{/hasadaptation}}
+
+                {{#ishr}}{{#pending}}
+                <div class="u-staffing-review-grid">
+                    <form method="post" class="u-staffing-review-form">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="requestid" value="{{id}}">
+                        <input type="hidden" name="action" value="approve">
+                        {{#ishire}}
+                        <label>Логин<input name="username" required autocomplete="off"></label>
+                        <label>Email<input type="email" name="email" required autocomplete="off"></label>
+                        <label>Временный пароль<input type="password" name="password" required autocomplete="new-password"></label>
+                        {{/ishire}}
+                        <label>Комментарий HRD<textarea name="reviewcomment" rows="2"></textarea></label>
+                        <button class="u-btn u-btn--primary" type="submit">Одобрить и исполнить</button>
+                    </form>
+                    <form method="post" class="u-staffing-review-form u-staffing-review-form--reject">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="requestid" value="{{id}}">
+                        <input type="hidden" name="action" value="reject">
+                        <label>Причина отказа<textarea name="reviewcomment" rows="3" required></textarea></label>
+                        <button class="u-btn" type="submit">Отклонить</button>
+                    </form>
+                </div>
+                {{/pending}}{{/ishr}}
+            </article>
+            {{/requests}}
+        </div>
+        {{/hasrequests}}
+        {{^hasrequests}}<div class="u-empty-state"><h3>Заявок пока нет</h3><p>Новая заявка появится здесь сразу после отправки руководителем.</p></div>{{/hasrequests}}
+    </section>
+</div>

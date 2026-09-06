@@ -307,8 +307,8 @@ $occupancy = [];
 
 $sql = "
     SELECT
-        TRIM(d.data) AS positionid,
-        COUNT(u.id) AS peoplecount
+        u.id,
+        TRIM(d.data) AS positionid
       FROM {user_info_data} d
       JOIN {user_info_field} f
         ON f.id = d.fieldid
@@ -316,16 +316,18 @@ $sql = "
       JOIN {user} u
         ON u.id = d.userid
        AND u.deleted = 0
-     GROUP BY TRIM(d.data)
+       AND u.suspended = 0
 ";
 
-foreach (
-    $DB->get_records_sql($sql)
-    as $row
-) {
-    $occupancy[
-        $row->positionid
-    ] = (int)$row->peoplecount;
+foreach ($DB->get_records_sql($sql) as $row) {
+    if (!\local_ustar\accounts::participates((int)$row->id)) {
+        continue;
+    }
+    $positionid = trim((string)$row->positionid);
+    if ($positionid === '') {
+        continue;
+    }
+    $occupancy[$positionid] = ($occupancy[$positionid] ?? 0) + 1;
 }
 
 
@@ -542,6 +544,414 @@ foreach ($graphpositionids as $graphpositionid) {
         }
     }
 }
+
+
+/*
+ * ============================================================
+ * USTAR 2706 FOUR COLUMN WORKSPACE READ MODEL
+ * ============================================================
+ *
+ * Canonical read model:
+ *
+ * employee -> current position -> required skills
+ *          -> published Route Studio materials
+ *
+ * No second source of truth is created here.
+ */
+
+$workspacepeople = [];
+
+$workspacepeoplesql = "
+    SELECT
+        u.id,
+        u.firstname,
+        u.lastname,
+        u.middlename,
+        TRIM(d.data) AS positionid
+      FROM {user_info_data} d
+      JOIN {user_info_field} f
+        ON f.id = d.fieldid
+       AND f.shortname = 'ustar_position'
+      JOIN {user} u
+        ON u.id = d.userid
+       AND u.deleted = 0
+       AND u.suspended = 0
+     WHERE TRIM(COALESCE(d.data, '')) <> ''
+     ORDER BY
+        u.lastname,
+        u.firstname,
+        u.id
+";
+
+foreach ($DB->get_records_sql($workspacepeoplesql) as $workspaceperson) {
+
+    if (!\local_ustar\accounts::participates((int)$workspaceperson->id)) {
+        continue;
+    }
+
+    $workspacepersonpositionid =
+        trim((string)$workspaceperson->positionid);
+
+    $workspacepersonposition =
+        $positionmap[$workspacepersonpositionid]
+        ?? null;
+
+    $workspacepersondepartment = [];
+
+    if ($workspacepersonposition) {
+        $workspacepersondepartment =
+            $departmentmap[
+                $workspacepersonposition['department']
+                ?? ''
+            ] ?? [];
+    }
+
+    $workspacepersonname =
+        trim(
+            (string)$workspaceperson->firstname
+            .
+            ' '
+            .
+            (string)$workspaceperson->lastname
+        );
+
+    if ($workspacepersonname === '') {
+        $workspacepersonname =
+            'Сотрудник #' . (int)$workspaceperson->id;
+    }
+
+    $workspacepeople[] = [
+        'id' => (int)$workspaceperson->id,
+        'name' => $workspacepersonname,
+        'positionid' => $workspacepersonpositionid,
+        'positionknown' => !empty($workspacepersonposition),
+        'positionname' => $workspacepersonposition
+            ? (string)($workspacepersonposition['name'] ?? $workspacepersonpositionid)
+            : 'Должность не сопоставлена',
+        'departmentid' => $workspacepersonposition
+            ? (string)($workspacepersonposition['department'] ?? '')
+            : '',
+        'department' => $workspacepersonposition
+            ? (string)($workspacepersondepartment['name'] ?? '')
+            : '',
+    ];
+}
+
+
+$workspacepositions = [];
+
+foreach ($positions as $workspaceposition) {
+
+    $workspacepositionid =
+        (string)($workspaceposition['id'] ?? '');
+
+    if ($workspacepositionid === '') {
+        continue;
+    }
+
+    $workspacedepartment =
+        $departmentmap[
+            $workspaceposition['department']
+            ?? ''
+        ] ?? [];
+
+    $workspacerequired =
+        $structure['matrix'][$workspacepositionid]
+        ?? [];
+
+    if (!is_array($workspacerequired)) {
+        $workspacerequired = [];
+    }
+
+    $workspaceskillrefs = [];
+
+    foreach ($workspacerequired as $workspaceskillid => $workspacelevel) {
+        $workspaceskillrefs[] = [
+            'id' => (string)$workspaceskillid,
+            'level' => (int)$workspacelevel,
+        ];
+    }
+
+    $workspacepositions[] = [
+        'id' => $workspacepositionid,
+        'name' => (string)($workspaceposition['name'] ?? $workspacepositionid),
+        'departmentid' => (string)($workspaceposition['department'] ?? ''),
+        'department' => (string)($workspacedepartment['name'] ?? ''),
+        'level' => (int)($workspaceposition['level'] ?? 0),
+        'peoplecount' => (int)($occupancy[$workspacepositionid] ?? 0),
+        'skillcount' => count($workspacerequired),
+        'skills' => $workspaceskillrefs,
+        'editurl' => (
+            new moodle_url(
+                '/local/ustar/positions.php',
+                ['positionid' => $workspacepositionid]
+            )
+        )->out(false),
+        'routeurl' => (
+            new moodle_url(
+                '/local/ustar/route_studio.php',
+                ['position' => $workspacepositionid]
+            )
+        )->out(false),
+    ];
+}
+
+
+$workspaceskills = [];
+
+foreach ($skills as $workspaceskill) {
+
+    $workspaceskillid =
+        (string)($workspaceskill['id'] ?? '');
+
+    if ($workspaceskillid === '') {
+        continue;
+    }
+
+    $workspaceaffected = 0;
+
+    foreach ($structure['matrix'] ?? [] as $workspacematrix) {
+        if (
+            is_array($workspacematrix)
+            &&
+            array_key_exists(
+                $workspaceskillid,
+                $workspacematrix
+            )
+        ) {
+            $workspaceaffected++;
+        }
+    }
+
+    $workspaceskills[] = [
+        'id' => $workspaceskillid,
+        'name' => (string)($workspaceskill['name'] ?? $workspaceskillid),
+        'category' => (string)($workspaceskill['category'] ?? 'Навык'),
+        'affectedcount' => $workspaceaffected,
+    ];
+}
+
+
+/*
+ * Published material relations from the permanent Route Studio route.
+ *
+ * A material with no skill requirement is preserved and marked unlinked.
+ * This is intentional: the workspace must expose modelling gaps, not hide them.
+ */
+$workspacematerials = [];
+$workspacematerialkeys = [];
+
+foreach ($positions as $workspaceposition) {
+
+    $workspacepositionid =
+        (string)($workspaceposition['id'] ?? '');
+
+    if ($workspacepositionid === '') {
+        continue;
+    }
+
+    $workspaceroute =
+        \local_ustar\route_model::get_route(
+            $workspacepositionid
+        );
+
+    if (!$workspaceroute) {
+        continue;
+    }
+
+    foreach (
+        \local_ustar\route_model::points(
+            (int)$workspaceroute->id
+        )
+        as $workspacepoint
+    ) {
+
+        $workspaceversion =
+            \local_ustar\route_model::current_published_version(
+                (int)$workspacepoint->id
+            );
+
+        if (!$workspaceversion) {
+            continue;
+        }
+
+        $workspacerequirements =
+            \local_ustar\route_model::requirements_for_version(
+                $workspaceversion
+            );
+
+        $workspacepointskills = [];
+
+        foreach ($workspacerequirements as $workspacerequirement) {
+
+            if (
+                (string)($workspacerequirement['type'] ?? '')
+                !== 'skill'
+            ) {
+                continue;
+            }
+
+            $workspaceskillkey =
+                trim(
+                    (string)(
+                        $workspacerequirement['sourcekey']
+                        ?? ''
+                    )
+                );
+
+            if ($workspaceskillkey !== '') {
+                $workspacepointskills[] =
+                    $workspaceskillkey;
+            }
+        }
+
+        $workspacepointskills =
+            array_values(
+                array_unique(
+                    $workspacepointskills
+                )
+            );
+
+        foreach ($workspacerequirements as $workspacerequirement) {
+
+            if (
+                (string)($workspacerequirement['type'] ?? '')
+                !== 'content'
+            ) {
+                continue;
+            }
+
+            $workspacecontentid =
+                (int)(
+                    $workspacerequirement['sourceid']
+                    ?? 0
+                );
+
+            if ($workspacecontentid <= 0) {
+                continue;
+            }
+
+            $workspacecontent =
+                $DB->get_record(
+                    'local_ustar_content',
+                    ['id' => $workspacecontentid],
+                    'id,title,type,status',
+                    IGNORE_MISSING
+                );
+
+            if (
+                !$workspacecontent
+                ||
+                (string)$workspacecontent->status
+                !== 'published'
+            ) {
+                continue;
+            }
+
+            /*
+             * Same content may legitimately occur in several routes.
+             * Keep each position relation independently addressable.
+             */
+            $workspacematerialkey =
+                $workspacepositionid
+                .
+                ':'
+                .
+                (int)$workspacepoint->id
+                .
+                ':'
+                .
+                $workspacecontentid;
+
+            if (isset($workspacematerialkeys[$workspacematerialkey])) {
+                continue;
+            }
+
+            $workspacematerialkeys[$workspacematerialkey] = true;
+
+            $workspacematerials[] = [
+                'key' => $workspacematerialkey,
+                'id' => $workspacecontentid,
+                'positionid' => $workspacepositionid,
+                'routeid' => (int)$workspaceroute->id,
+                'pointid' => (int)$workspacepoint->id,
+                'versionid' => (int)$workspaceversion->id,
+                'name' => format_string(
+                    (string)$workspacecontent->title
+                ),
+                'type' => (string)$workspacecontent->type,
+                'typelabel' =>
+                    (string)$workspacecontent->type === 'video'
+                        ? 'Видео'
+                        : 'Материал',
+                'skillids' => $workspacepointskills,
+                'unlinked' => empty($workspacepointskills),
+                'url' => (
+                    new moodle_url(
+                        '/local/ustar/materials.php',
+                        ['contentid' => $workspacecontentid]
+                    )
+                )->out(false),
+                'routeurl' => (
+                    new moodle_url(
+                        '/local/ustar/route_studio.php',
+                        ['position' => $workspacepositionid]
+                    )
+                )->out(false),
+            ];
+        }
+    }
+}
+
+
+$workspacedepartments = [];
+
+foreach ($structure['departments'] ?? [] as $workspacedepartment) {
+
+    $workspacedepartmentid =
+        (string)($workspacedepartment['id'] ?? '');
+
+    if ($workspacedepartmentid === '') {
+        continue;
+    }
+
+    $workspacedepartments[] = [
+        'id' => $workspacedepartmentid,
+        'name' => (string)($workspacedepartment['name'] ?? $workspacedepartmentid),
+    ];
+}
+
+
+$workspacepayload = [
+    'people' => $workspacepeople,
+    'positions' => $workspacepositions,
+    'skills' => $workspaceskills,
+    'materials' => $workspacematerials,
+    'departments' => $workspacedepartments,
+];
+
+$workspacejson =
+    json_encode(
+        $workspacepayload,
+        JSON_UNESCAPED_UNICODE
+        |
+        JSON_UNESCAPED_SLASHES
+        |
+        JSON_HEX_TAG
+        |
+        JSON_HEX_AMP
+        |
+        JSON_HEX_APOS
+        |
+        JSON_HEX_QUOT
+    );
+
+if ($workspacejson === false) {
+    throw new \coding_exception(
+        'Не удалось сформировать USTAR position workspace JSON'
+    );
+}
+
 
 $nextpositionmap = [];
 $previouspositionmap = [];
@@ -1036,6 +1446,46 @@ $PAGE->set_title(
 
 $PAGE->set_heading(
     'Центр управления USTAR'
+);
+
+
+/*
+ * Four-column workspace runtime.
+ */
+$PAGE->requires->js_init_code(
+    'window.USTAR_POSITION_WORKSPACE_DATA='
+    .
+    $workspacejson
+    .
+    ';'
+);
+
+$workspacecssfile =
+    __DIR__ . '/positions_workspace.css';
+
+$workspacejsfile =
+    __DIR__ . '/positions_workspace.js';
+
+$PAGE->requires->css(
+    new moodle_url(
+        '/local/ustar/positions_workspace.css',
+        [
+            'v' => file_exists($workspacecssfile)
+                ? filemtime($workspacecssfile)
+                : time(),
+        ]
+    )
+);
+
+$PAGE->requires->js(
+    new moodle_url(
+        '/local/ustar/positions_workspace.js',
+        [
+            'v' => file_exists($workspacejsfile)
+                ? filemtime($workspacejsfile)
+                : time(),
+        ]
+    )
 );
 
 $output =

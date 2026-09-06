@@ -1,6 +1,12 @@
 <div class="u-product-page u-profile-page">
     <header class="u-profile-hero">
-        <div class="u-profile-avatar">{{initials}}</div>
+        <div class="u-profile-avatar-wrap">
+        <div class="u-profile-avatar u-profile-avatar--photo">
+            {{#avatarurl}}<img src="{{avatarurl}}" alt="Фото профиля">{{/avatarurl}}
+            {{^avatarurl}}{{initials}}{{/avatarurl}}
+        </div>
+        <a class="u-profile-photo-edit" href="{{photoediturl}}">Изменить фото</a>
+    </div>
         <div class="u-profile-hero__body">
             <p class="u-page-kicker">Личный кабинет</p>
             <h1>{{fullname}}</h1>

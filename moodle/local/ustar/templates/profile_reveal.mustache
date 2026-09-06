@@ -1,0 +1,221 @@
+<div class="u-product-page u-native-route">
+
+<header class="u-native-route__hero">
+    <div>
+        <p class="u-page-kicker">
+            Маршрут · 06
+        </p>
+
+        <h1>Познай себя</h1>
+
+        <p>
+            Теперь можно вернуться к ответам,
+            которые вы дали в начале маршрута,
+            и посмотреть свой рабочий профиль
+            командного взаимодействия.
+        </p>
+    </div>
+
+    <span class="u-native-route__chip">
+        Личный результат
+    </span>
+</header>
+
+
+{{#notreachable}}
+<div class="u-native-empty">
+    <strong>Результат откроется чуть позже.</strong>
+    <p>
+        Сначала завершите предыдущие шаги маршрута.
+        Это часть сценария: профиль показывается
+        не сразу после анкеты.
+    </p>
+</div>
+{{/notreachable}}
+
+
+{{#reachable}}
+
+{{#noresult}}
+<div class="u-native-empty">
+    <strong>Профиль ещё не завершён.</strong>
+
+    <p>
+        Сначала пройдите экспресс-профиль
+        командного взаимодействия из начала маршрута.
+    </p>
+
+    <a
+        class="u-btn u-btn--primary"
+        href="{{assessmenturl}}"
+    >
+        Пройти профиль
+    </a>
+</div>
+{{/noresult}}
+
+
+{{#hasresult}}
+
+<section class="u-profile-reveal">
+
+    <div class="u-profile-reveal__primary">
+
+        <p class="u-page-kicker">
+            Ваш ведущий рабочий паттерн
+        </p>
+
+        <h2>{{primarytitle}}</h2>
+
+        <p class="u-profile-reveal__summary">
+            {{primarysummary}}
+        </p>
+
+        {{#secondarytitle}}
+        <div class="u-profile-secondary">
+            <span>Дополняющий паттерн</span>
+            <strong>{{secondarytitle}}</strong>
+        </div>
+        {{/secondarytitle}}
+
+    </div>
+
+
+    <aside class="u-profile-reveal__action">
+
+        <p class="u-page-kicker">
+            Что попробовать в работе
+        </p>
+
+        <p>{{recommendation}}</p>
+
+        {{#submittedlabel}}
+        <small>
+            Профиль заполнен {{submittedlabel}}
+        </small>
+        {{/submittedlabel}}
+
+    </aside>
+
+</section>
+
+
+{{#hasscores}}
+<section class="u-profile-spectrum">
+
+    <header>
+        <p class="u-page-kicker">
+            Ваш профиль
+        </p>
+
+        <h2>Как распределились ответы</h2>
+    </header>
+
+    <div class="u-profile-spectrum__list">
+
+        {{#scoreitems}}
+        <article>
+
+            <div>
+                <strong>{{title}}</strong>
+                <span>{{score}}</span>
+            </div>
+
+            <div class="u-profile-spectrum__track">
+                <span style="width:{{percent}}%"></span>
+            </div>
+
+        </article>
+        {{/scoreitems}}
+
+    </div>
+
+</section>
+{{/hasscores}}
+
+
+<section class="u-profile-disclaimer">
+    <strong>Важно</strong>
+    <span>{{disclaimer}}</span>
+</section>
+
+
+<section class="u-team-study-complete">
+
+    <div>
+        <p class="u-page-kicker">
+            Познай себя
+        </p>
+
+        <h2>Сохранить результат шага</h2>
+
+        <p>
+            Подтвердите, что вы ознакомились
+            со своим личным развивающим профилем.
+        </p>
+
+        {{#recorded}}
+        <div class="u-native-result is-success">
+            <strong>Готово.</strong>
+            <span>
+                Шаг завершён.
+            </span>
+        </div>
+        {{/recorded}}
+
+        {{#previewmode}}
+        <div class="u-native-result">
+            <strong>Предпросмотр.</strong>
+            <span>
+                Результат показан корректно,
+                но точка ещё draft, поэтому
+                маршрутный прогресс не записывается.
+            </span>
+        </div>
+        {{/previewmode}}
+
+    </div>
+
+    <form method="post">
+
+        <input
+            type="hidden"
+            name="sesskey"
+            value="{{sesskey}}"
+        >
+
+        <input
+            type="hidden"
+            name="confirmreveal"
+            value="1"
+        >
+
+        <button
+            type="submit"
+            class="u-btn u-btn--primary"
+        >
+            Изучено, продолжить →
+        </button>
+
+    </form>
+
+</section>
+
+{{/hasresult}}
+{{/reachable}}
+
+
+<footer class="u-native-route__footer">
+
+    <a class="u-btn" href="{{routeurl}}">
+        ← Вернуться в маршрут
+    </a>
+
+    <span>
+        Этот результат видите вы.
+        Он не является кадровой оценкой.
+    </span>
+
+</footer>
+
+</div>

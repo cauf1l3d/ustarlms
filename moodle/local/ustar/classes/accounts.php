@@ -71,7 +71,33 @@ class accounts {
     }
 
     /**
-     * Whether an account participates in workforce/compliance metrics.
+     * Whether this identity belongs to the business workforce domain.
+     * Suspended employees remain business identities for HR/history, while
+     * siteadmin/service/test accounts never become HR-visible employees.
+     */
+    public static function is_business_account(int $userid): bool {
+        global $DB;
+
+        if ($userid <= 0 || is_siteadmin($userid)) {
+            return false;
+        }
+
+        $user = $DB->get_record(
+            'user',
+            ['id' => $userid],
+            'id,deleted',
+            IGNORE_MISSING
+        );
+
+        if (!$user || !empty($user->deleted)) {
+            return false;
+        }
+
+        return self::type_of($userid) === self::TYPE_EMPLOYEE;
+    }
+
+    /**
+     * Whether an account participates in active workforce/compliance metrics.
      * This intentionally does not modify access permissions.
      */
     public static function participates(int $userid): bool {
@@ -92,7 +118,46 @@ class accounts {
             return false;
         }
 
-        return self::type_of($userid) === self::TYPE_EMPLOYEE;
+        return self::is_business_account($userid);
+    }
+
+    /**
+     * Whether an account is allowed to receive/execute learner access.
+     *
+     * Employees and isolated TYPE_TEST sandbox users may learn. Service
+     * accounts and site administrators must never receive workforce learning
+     * assignments automatically.
+     */
+    public static function learning_enabled(int $userid): bool {
+        global $DB;
+
+        if ($userid <= 0 || is_siteadmin($userid)) {
+            return false;
+        }
+
+        $user = $DB->get_record(
+            'user',
+            ['id' => $userid],
+            'id,deleted,suspended',
+            IGNORE_MISSING
+        );
+
+        if (!$user || !empty($user->deleted) || !empty($user->suspended)) {
+            return false;
+        }
+
+        return in_array(
+            self::type_of($userid),
+            [self::TYPE_EMPLOYEE, self::TYPE_TEST],
+            true
+        );
+    }
+
+    /**
+     * Whether a user must be invisible to workforce/HR/business views.
+     */
+    public static function hidden_from_business(int $userid): bool {
+        return !self::is_business_account($userid);
     }
 
     /**

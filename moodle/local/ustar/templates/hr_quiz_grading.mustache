@@ -1,0 +1,185 @@
+<div class="u-product-page u-hr-grade">
+<style>
+.u-hr-grade .u-hr-grade__result-main{font-weight:800;color:#172333;white-space:nowrap}
+.u-hr-grade .u-hr-grade__result-sub{display:block;margin-top:3px;font-size:12px;color:#667085;white-space:nowrap}
+.u-hr-grade .u-hr-grade__manual{font-weight:800}
+.u-hr-grade .u-hr-grade__history{margin-top:8px}
+.u-hr-grade .u-hr-grade__history summary{cursor:pointer;font-weight:800;color:#526174;list-style:none}
+.u-hr-grade .u-hr-grade__history summary::-webkit-details-marker{display:none}
+.u-hr-grade .u-hr-grade__history-list{margin-top:8px;display:grid;gap:6px;min-width:310px}
+.u-hr-grade .u-hr-grade__history-row{display:grid;grid-template-columns:86px 1fr auto auto;align-items:center;gap:10px;padding:8px 10px;border:1px solid #e5e9ef;border-radius:10px;background:#f8fafc;font-size:12px}
+.u-hr-grade .u-hr-grade__history-row a{font-weight:800;white-space:nowrap}
+.u-hr-grade .u-hr-grade__status{display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:850;white-space:nowrap}
+.u-hr-grade .u-hr-grade__status.is-passed{background:#dff4e7;color:#17623f;border:1px solid #b8e5ca}
+.u-hr-grade .u-hr-grade__status.is-failed{background:#f9dfdd;color:#9d2925;border:1px solid #f0b8b3}
+.u-hr-grade .u-hr-grade__status.is-pending{background:#fff0c2;color:#845c00;border:1px solid #efd780}
+.u-hr-grade .u-hr-grade__table tbody tr.is-passed>td{background:color-mix(in srgb,#26855b 4%,transparent)}
+.u-hr-grade .u-hr-grade__table tbody tr.is-failed>td{background:color-mix(in srgb,#b42318 4%,transparent)}
+.u-hr-grade .u-hr-grade__table tbody tr.is-pending>td{background:color-mix(in srgb,#d79a00 4%,transparent)}
+</style>
+
+<header class="u-native-route__hero">
+    <div>
+        <p class="u-page-kicker">HR · АКАДЕМИЯ</p>
+        <h1>Проверка аттестаций</h1>
+        <p>
+            Одна строка — один сотрудник и одна актуальная аттестация.
+            История отдельных попыток доступна внутри строки.
+        </p>
+    </div>
+</header>
+
+{{#hasassessmentescalations}}
+<style>
+.u-hrd-escalations{margin:28px 0 32px;padding:22px;border:1px solid #eadfd6;border-radius:22px;background:linear-gradient(180deg,#fffdf8 0%,#fff 100%)}
+.u-hrd-escalations__head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}
+.u-hrd-escalations__head h2{margin:3px 0 5px}
+.u-hrd-escalations__count{display:inline-flex;min-width:42px;height:42px;padding:0 13px;align-items:center;justify-content:center;border-radius:14px;background:#f8e6e3;color:#a7332b;font-weight:900;font-size:18px}
+.u-hrd-case{display:grid;grid-template-columns:minmax(190px,1.1fr) minmax(260px,1.7fr) auto;gap:18px;align-items:center;padding:18px;border:1px solid #eee5dd;border-left:4px solid #c9483f;border-radius:17px;background:#fff}
+.u-hrd-case__person strong,.u-hrd-case__assessment strong{display:block;font-size:16px;color:#172333}
+.u-hrd-case__person span,.u-hrd-case__assessment small{display:block;color:#77808d;margin-top:3px}
+.u-hrd-case__metrics{display:grid;grid-template-columns:repeat(3,minmax(92px,1fr));gap:8px;margin-top:10px}
+.u-hrd-case__metric{padding:9px 11px;border-radius:11px;background:#f6f7f9}
+.u-hrd-case__metric small{display:block;color:#7b8490;font-size:11px}
+.u-hrd-case__metric strong{display:block;margin-top:2px;font-size:15px;color:#172333}
+.u-hrd-case__next{margin:10px 0 0;color:#596574;font-size:13px}
+.u-hrd-case__side{display:grid;justify-items:end;gap:10px}
+.u-hrd-case__status{display:inline-flex;padding:7px 10px;border-radius:999px;background:#fce8e6;color:#b42318;font-size:12px;font-weight:850}
+.u-hrd-case__time{font-size:11px;color:#8b929c}
+@media(max-width:1000px){.u-hrd-case{grid-template-columns:1fr}.u-hrd-case__side{justify-items:start}.u-hrd-case__metrics{grid-template-columns:repeat(3,1fr)}}
+</style>
+<section class="u-hrd-escalations">
+    <header class="u-hrd-escalations__head">
+        <div>
+            <p class="u-page-kicker">Эскалации аттестаций</p>
+            <h2>Требуют решения HRD</h2>
+            <p>Два пакета попыток исчерпаны. Руководитель видит результат, но открыть третий цикл может только HRD.</p>
+        </div>
+        <span class="u-hrd-escalations__count">{{assessmentescalationcount}}</span>
+    </header>
+    {{#assessmentescalations}}
+    <article class="u-hrd-case">
+        <div class="u-hrd-case__person">
+            <strong>{{fullname}}</strong>
+            <span>{{position}}</span>
+            <div class="u-hrd-case__metrics">
+                <div class="u-hrd-case__metric"><small>Попытки</small><strong>{{attempts}} / {{attemptlimit}}</strong></div>
+                <div class="u-hrd-case__metric"><small>Лучший</small><strong>{{bestscore}} / {{maxscore}}</strong></div>
+                <div class="u-hrd-case__metric"><small>Проходной</small><strong>{{passscore}}</strong></div>
+            </div>
+        </div>
+        <div class="u-hrd-case__assessment">
+            <small>Аттестация</small>
+            <strong>{{assessment}}</strong>
+            <p class="u-hrd-case__next">Текущий цикл: {{cycle}}. После решения HRD сотрудник повторит материал; затем откроются попытки {{nextattemptstart}}–{{nextattemptend}}.</p>
+        </div>
+        <div class="u-hrd-case__side">
+            <span class="u-hrd-case__status">{{statuslabel}}</span>
+            <span class="u-hrd-case__time">Эскалация: {{escalatedat}}</span>
+            {{#canhrdauthorize}}
+            <form method="post" action="/local/ustar/assessment_remediation_authorize.php">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="runtimeid" value="{{runtimeid}}">
+                <button class="u-btn u-btn--primary" type="submit">Назначить переобучение</button>
+            </form>
+            {{/canhrdauthorize}}
+        </div>
+    </article>
+    {{/assessmentescalations}}
+</section>
+{{/hasassessmentescalations}}
+
+<section class="u-hr-grade__stats">
+    <div>
+        <span>Ждут проверки</span>
+        <strong>{{pending}}</strong>
+    </div>
+    <div>
+        <span>Проверено сегодня</span>
+        <strong>{{checkedtoday}}</strong>
+    </div>
+    <div>
+        <span>Сдали</span>
+        <strong>{{passed}}</strong>
+    </div>
+    <div>
+        <span>Не сдали</span>
+        <strong>{{failed}}</strong>
+    </div>
+</section>
+
+{{#hasassessments}}
+<div class="u-hr-grade__table-wrap">
+<table class="u-hr-grade__table">
+    <thead>
+        <tr>
+            <th>Сотрудник</th>
+            <th>Должность</th>
+            <th>Аттестация</th>
+            <th>Попыток</th>
+            <th>Результат</th>
+            <th>Ручных</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#assessments}}
+        <tr class="is-{{statuskey}}">
+            <td>
+                <strong>{{employee}}</strong>
+                <small>{{finished}}</small>
+            </td>
+            <td>{{position}}</td>
+            <td>
+                <strong>{{quizname}}</strong>
+                <details class="u-hr-grade__history">
+                    <summary>История · {{historycount}}</summary>
+                    <div class="u-hr-grade__history-list">
+                    {{#history}}
+                        <div class="u-hr-grade__history-row">
+                            <strong>Попытка {{attemptno}}</strong>
+                            <span>{{grade}} / {{maxgrade}}</span>
+                            <span class="u-hr-grade__status is-{{statuskey}}">{{status}}</span>
+                            <a href="{{url}}">Открыть →</a>
+                        </div>
+                    {{/history}}
+                    </div>
+                </details>
+            </td>
+            <td>{{attemptno}} / {{maxattempts}}</td>
+            <td>
+                {{#ispending}}
+                    <span class="u-hr-grade__result-main">{{autograde}} / {{automax}}</span>
+                    <span class="u-hr-grade__result-sub">автотест · итог после ручной проверки / {{maxgrade}}</span>
+                {{/ispending}}
+                {{^ispending}}
+                    <span class="u-hr-grade__result-main">{{grade}} / {{maxgrade}}</span>
+                    <span class="u-hr-grade__result-sub">лучший результат {{bestgrade}} / {{maxgrade}}</span>
+                {{/ispending}}
+            </td>
+            <td>
+                <span class="u-hr-grade__manual">{{pending}}</span> / {{manualcount}}
+            </td>
+            <td>
+                <span class="u-hr-grade__status is-{{statuskey}}">{{status}}</span>
+            </td>
+            <td>
+                <a class="u-btn" href="{{url}}">
+                    {{#ispending}}Проверить →{{/ispending}}
+                    {{^ispending}}Открыть →{{/ispending}}
+                </a>
+            </td>
+        </tr>
+    {{/assessments}}
+    </tbody>
+</table>
+</div>
+{{/hasassessments}}
+
+{{^hasassessments}}
+<section class="u-native-empty">
+    Пока нет аттестаций из опубликованных маршрутов USTAR.
+</section>
+{{/hasassessments}}
+</div>

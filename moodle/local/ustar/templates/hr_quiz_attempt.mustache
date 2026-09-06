@@ -1,0 +1,158 @@
+<div class="u-product-page u-hr-grade u-hr-grade--attempt">
+<style>
+.u-hr-grade--attempt .u-hr-grade__summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 24px}
+.u-hr-grade--attempt .u-hr-grade__summary>div{border:1px solid #d9dee7;border-radius:14px;background:#fff;padding:14px 16px}
+.u-hr-grade--attempt .u-hr-grade__summary span{display:block;font-size:12px;color:#667085;margin-bottom:5px}
+.u-hr-grade--attempt .u-hr-grade__summary strong{font-size:20px;color:#172333}
+.u-hr-grade--attempt .u-hr-grade__section{margin-top:26px}
+.u-hr-grade--attempt .u-hr-grade__section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:12px}
+.u-hr-grade--attempt .u-hr-grade__section-head h2{margin:0;font-size:24px}
+.u-hr-grade--attempt .u-hr-grade__section-head p{margin:4px 0 0;color:#667085}
+.u-hr-grade--attempt .u-hr-grade__question{border:1px solid #d9dee7;border-left:5px solid #c7ced8;border-radius:14px;background:#fff;padding:18px;margin:12px 0}
+.u-hr-grade--attempt .u-hr-grade__question.is-correct{border-left-color:#218a5a;background:#f4fbf7}
+.u-hr-grade--attempt .u-hr-grade__question.is-wrong{border-left-color:#c73732;background:#fff5f4}
+.u-hr-grade--attempt .u-hr-grade__question.is-partial{border-left-color:#d79a00;background:#fffaf0}
+.u-hr-grade--attempt .u-hr-grade__question.is-pending{border-left-color:#e0a800;background:#fffaf0}
+.u-hr-grade--attempt .u-hr-grade__question.is-manual{border-left-color:#3b6fc4;background:#f6f9ff}
+.u-hr-grade--attempt .u-hr-grade__question-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.u-hr-grade--attempt .u-hr-grade__question-top small{color:#667085}
+.u-hr-grade--attempt .u-grade-result{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;white-space:nowrap}
+.u-hr-grade--attempt .u-grade-result.is-correct{background:#dff4e7;color:#17623f}
+.u-hr-grade--attempt .u-grade-result.is-wrong{background:#f9dfdd;color:#9d2925}
+.u-hr-grade--attempt .u-grade-result.is-partial{background:#fff0c2;color:#845c00}
+.u-hr-grade--attempt .u-grade-result.is-pending{background:#fff0c2;color:#845c00}
+.u-hr-grade--attempt .u-grade-result.is-manual{background:#e4ecfb;color:#28549a}
+.u-hr-grade--attempt .u-hr-grade__answer{margin-top:12px;border-radius:12px;background:#e9eef4;padding:12px 14px}
+.u-hr-grade--attempt .u-hr-grade__answer small{display:block;color:#667085;margin-bottom:5px}
+.u-hr-grade--attempt .u-hr-grade__markline{margin-top:9px;color:#667085;font-size:12px}
+.u-hr-grade--attempt .u-hr-grade__manual-fields{display:grid;grid-template-columns:180px minmax(0,1fr);gap:14px;margin-top:16px;padding-top:16px;border-top:1px solid #e1e5eb}
+.u-hr-grade--attempt .u-hr-grade__manual-fields label{display:flex;flex-direction:column;gap:7px;font-weight:700}
+.u-hr-grade--attempt .u-hr-grade__manual-fields input,.u-hr-grade--attempt .u-hr-grade__manual-fields textarea{width:100%;border:1px solid #cfd6df;border-radius:10px;padding:10px;background:#fff;color:#172333}
+.u-hr-grade--attempt .u-hr-grade__manual-fields textarea{min-height:84px;resize:vertical}
+.u-hr-grade--attempt .u-hr-grade__savebar{position:sticky;bottom:12px;z-index:5;margin:24px 0 10px;padding:12px;border:1px solid #e5b900;border-radius:14px;background:rgba(255,250,232,.96);box-shadow:0 8px 24px rgba(20,30,45,.12)}
+.u-hr-grade--attempt .u-hr-grade__savebar button{width:100%;min-height:52px;border:0;border-radius:10px;background:#f5be00;color:#172333;font-weight:900;font-size:15px;cursor:pointer}
+.u-hr-grade--attempt .u-hr-grade__notice{margin:14px 0;border-radius:12px;padding:12px 14px;background:#dff2eb;color:#205d45;font-weight:700}
+@media(max-width:900px){.u-hr-grade--attempt .u-hr-grade__summary{grid-template-columns:repeat(2,minmax(0,1fr))}.u-hr-grade--attempt .u-hr-grade__manual-fields{grid-template-columns:1fr}}
+</style>
+
+<a class="u-btn u-btn--quiet" href="{{backurl}}">← Все аттестации</a>
+
+<header class="u-native-route__hero" style="margin-top:14px">
+    <div>
+        <p class="u-page-kicker">HR · РУЧНАЯ ПРОВЕРКА</p>
+        <h1>{{employee}}</h1>
+        <p>{{position}} · {{quizname}} · попытка {{attemptno}} / {{maxattempts}}</p>
+    </div>
+</header>
+
+{{#graded}}
+<div class="u-hr-grade__notice">Оценки сохранены в Moodle и итог попытки пересчитан.</div>
+{{/graded}}
+
+<section class="u-hr-grade__summary">
+    <div><span>Автотест</span><strong>{{autograde}} / {{automax}}</strong></div>
+    <div><span>Ручная часть</span><strong>{{manualgrade}} / {{manualmax}}</strong></div>
+    <div><span>Проходной результат</span><strong>{{passgrade}} / {{maxgrade}}</strong></div>
+    <div><span>Ждут ручной проверки</span><strong>{{pending}}</strong></div>
+</section>
+
+<section class="u-hr-grade__section">
+    <div class="u-hr-grade__section-head">
+        <div>
+            <p class="u-page-kicker">АВТОМАТИЧЕСКАЯ ЧАСТЬ</p>
+            <h2>Результаты теста</h2>
+            <p>Верные и неверные ответы выделены цветом; балл оставлен вторичным индикатором.</p>
+        </div>
+    </div>
+
+    {{#questions}}
+    {{#isautograded}}
+    <article class="u-hr-grade__question {{#autocorrect}}is-correct{{/autocorrect}}{{#autowrong}}is-wrong{{/autowrong}}{{#autopartial}}is-partial{{/autopartial}}">
+        <div class="u-hr-grade__question-top">
+            <small>Вопрос {{number}}</small>
+            {{#autocorrect}}<span class="u-grade-result is-correct">✓ Верно</span>{{/autocorrect}}
+            {{#autowrong}}<span class="u-grade-result is-wrong">✕ Неверно</span>{{/autowrong}}
+            {{#autopartial}}<span class="u-grade-result is-partial">◐ Частично</span>{{/autopartial}}
+        </div>
+        <h3>{{name}}</h3>
+        <div>{{{questionhtml}}}</div>
+        <div class="u-hr-grade__answer">
+            <small>Ответ сотрудника</small>
+            <div>{{{responsehtml}}}</div>
+        </div>
+        <div class="u-hr-grade__markline">Балл: {{mark}} / {{maxmark}}</div>
+    </article>
+    {{/isautograded}}
+    {{/questions}}
+</section>
+
+<form method="post">
+    <input type="hidden" name="sesskey" value="{{sesskey}}">
+    <input type="hidden" name="action" value="gradebatch">
+
+    <section class="u-hr-grade__section">
+        <div class="u-hr-grade__section-head">
+            <div>
+                <p class="u-page-kicker">РУЧНАЯ ЧАСТЬ</p>
+                <h2>Кейсы</h2>
+                <p>Выставьте оценки всем ожидающим кейсам и сохраните их одной операцией.</p>
+            </div>
+        </div>
+
+        {{#questions}}
+        {{#needgrading}}
+        <article class="u-hr-grade__question is-pending">
+            <div class="u-hr-grade__question-top">
+                <small>Вопрос {{number}}</small>
+                <span class="u-grade-result is-pending">● Ждёт проверки</span>
+            </div>
+            <h3>{{name}}</h3>
+            <div>{{{questionhtml}}}</div>
+            <div class="u-hr-grade__answer">
+                <small>Ответ сотрудника</small>
+                <div>{{{responsehtml}}}</div>
+            </div>
+            <div class="u-hr-grade__manual-fields">
+                <label>
+                    <span>Оценка</span>
+                    <input type="number" name="mark[{{slot}}]" min="0" max="{{maxmark}}" step="0.01" required placeholder="0–{{maxmark}}">
+                </label>
+                <label>
+                    <span>Комментарий</span>
+                    <textarea name="comment[{{slot}}]" placeholder="Коротко поясните решение"></textarea>
+                </label>
+            </div>
+        </article>
+        {{/needgrading}}
+
+        {{#ismanuallygraded}}
+        <article class="u-hr-grade__question is-manual">
+            <div class="u-hr-grade__question-top">
+                <small>Вопрос {{number}}</small>
+                <span class="u-grade-result is-manual">✓ Проверено вручную</span>
+            </div>
+            <h3>{{name}}</h3>
+            <div>{{{questionhtml}}}</div>
+            <div class="u-hr-grade__answer">
+                <small>Ответ сотрудника</small>
+                <div>{{{responsehtml}}}</div>
+            </div>
+            <div class="u-hr-grade__markline">Балл: {{mark}} / {{maxmark}}</div>
+        </article>
+        {{/ismanuallygraded}}
+        {{/questions}}
+    </section>
+
+    {{#haspending}}
+    <div class="u-hr-grade__savebar">
+        <button type="submit">Сохранить все оценки и пересчитать аттестацию</button>
+    </div>
+    {{/haspending}}
+</form>
+
+{{^haspending}}
+<section class="u-native-empty">
+    Ручная проверка завершена. Итог: <strong>{{grade}} / {{maxgrade}}</strong> · {{status}}.
+</section>
+{{/haspending}}
+</div>

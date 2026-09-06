@@ -93,6 +93,12 @@ class hr_people {
             );
         }
 
+        if ($accounttype !== accounts::TYPE_EMPLOYEE) {
+            throw new \invalid_parameter_exception(
+                'HR может создавать и изменять только кадровые учётные записи сотрудников'
+            );
+        }
+
 
         if (
             $username === ''
@@ -225,6 +231,8 @@ class hr_people {
              * themselves, or protected USTAR admins.
              */
             if (
+                !accounts::is_business_account($userid)
+                ||
                 is_siteadmin($target)
                 ||
                 $target->id === $actorid

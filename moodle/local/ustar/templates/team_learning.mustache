@@ -1,0 +1,110 @@
+<div class="u-product-page">
+
+<a class="u-backlink" href="{{teamurl}}">
+    ← Моя команда
+</a>
+
+{{#person}}
+<header class="u-learning-profile-head">
+    <div class="u-team-avatar u-learning-profile-head__avatar">
+        {{#avatarurl}}
+        <img src="{{avatarurl}}" alt="">
+        {{/avatarurl}}
+    </div>
+
+    <div>
+        <p class="u-page-kicker">
+            Обучение сотрудника
+        </p>
+
+        <h1>{{fullname}}</h1>
+
+        <p>
+            {{position}} · {{department}}
+        </p>
+
+        <small>
+            Последний вход: {{lastaccess}}
+        </small>
+    </div>
+</header>
+{{/person}}
+
+{{#snapshot}}
+<section class="u-learning-profile-summary">
+    <article>
+        <span>Прогресс маршрута</span>
+        <strong>{{progress}}%</strong>
+    </article>
+
+    <article>
+        <span>Пройдено</span>
+        <strong>{{donepoints}} / {{totalpoints}}</strong>
+    </article>
+
+    <article>
+        <span>Осталось</span>
+        <strong>{{remaining}}</strong>
+    </article>
+</section>
+{{/snapshot}}
+
+{{#hascurrent}}
+{{#current}}
+<section class="u-learning-current-card">
+    <p class="u-page-kicker">Сейчас</p>
+    <h2>{{title}}</h2>
+    <span>Текущий доступный шаг маршрута</span>
+</section>
+{{/current}}
+{{/hascurrent}}
+
+<section class="u-learning-history">
+    <header>
+        <p class="u-page-kicker">История</p>
+        <h2>Пройдено</h2>
+    </header>
+
+    {{#haspassed}}
+    <div class="u-learning-history__list">
+        {{#passed}}
+        <article>
+            <span class="u-learning-check">✓</span>
+            <div>
+                <strong>{{title}}</strong>
+                <small>{{completedlabel}}</small>
+            </div>
+        </article>
+        {{/passed}}
+    </div>
+    {{/haspassed}}
+
+    {{^haspassed}}
+    <div class="u-empty-mini">
+        Завершённых шагов пока нет.
+    </div>
+    {{/haspassed}}
+</section>
+
+{{#hasfuture}}
+<section class="u-learning-history">
+    <header>
+        <p class="u-page-kicker">Дальше</p>
+        <h2>Следующие шаги</h2>
+    </header>
+
+    <div class="u-learning-history__list">
+        {{#future}}
+        <article>
+            <span class="u-learning-lock">○</span>
+            <div>
+                <strong>{{title}}</strong>
+                <small>Откроется последовательно</small>
+            </div>
+        </article>
+        {{/future}}
+    </div>
+</section>
+{{/hasfuture}}
+
+</div>

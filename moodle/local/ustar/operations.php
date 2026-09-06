@@ -52,6 +52,8 @@ $data = [
         ? (new moodle_url('/local/ustar/checklist_studio.php'))->out(false)
         : '',
     'hascheckliststudio' => has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context),
+    'hasadaptationcontrol' => \local_ustar\adaptation_service::is_hrd_actor((int)$USER->id),
+    'adaptationcontrolurl' => (new moodle_url('/local/ustar/adaptation_control.php'))->out(false),
     'workspaceicon' => \local_ustar\ui::icon('workspace', 'u-feature-icon'),
     'routeicon' => \local_ustar\ui::icon('route', 'u-feature-icon'),
     'knowledgeicon' => \local_ustar\ui::icon('knowledge', 'u-feature-icon'),

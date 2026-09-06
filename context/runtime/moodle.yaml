@@ -1,0 +1,16 @@
+moodle:
+
+root:
+  /opt/ustar/data/moodle/public
+
+plugin:
+  local/ustar
+
+theme:
+  theme/ustar
+
+database:
+  PostgreSQL 16
+
+deployment:
+  Docker

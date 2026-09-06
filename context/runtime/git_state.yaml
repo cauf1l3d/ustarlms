@@ -1,0 +1,13 @@
+git:
+
+branch:
+  prod-sync-20260906_210811
+
+commit:
+  f016d2c301c31730925e589d77d1977a689fe14a
+
+tag:
+  v1.7.0-prod-baseline
+
+remote:
+  origin	git@github.com:cauf1l3d/ustarlms.git (fetch)

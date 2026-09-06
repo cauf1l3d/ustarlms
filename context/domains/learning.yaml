@@ -1,0 +1,39 @@
+domain: learning
+
+purpose:
+  Обучение сотрудников через маршруты.
+
+
+canonical_model:
+
+  route:
+    description:
+      Полный путь развития сотрудника
+
+
+  route_point:
+    description:
+      Отдельный шаг маршрута
+
+
+  route_version:
+    description:
+      Версия содержимого маршрута
+
+
+  route_progress:
+    description:
+      Фактическое прохождение пользователем
+
+
+flow:
+
+  employee:
+    ->
+      route
+    ->
+      points
+    ->
+      evidence
+    ->
+      qualification

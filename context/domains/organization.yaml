@@ -1,0 +1,56 @@
+domain: organization
+
+purpose:
+  Управление структурой компании и привязкой сотрудников.
+
+canonical_model:
+
+  entities:
+
+    department:
+      meaning:
+        Подразделение компании
+
+
+    position:
+      meaning:
+        Должность
+
+
+    skill:
+      meaning:
+        Компетенция или требование должности
+
+
+    staff_place:
+      meaning:
+        Штатная единица
+
+
+    assignment:
+      meaning:
+        Назначение пользователя на штатную единицу
+
+
+relations:
+
+  department:
+    has:
+      - positions
+
+
+  position:
+    requires:
+      - skills
+
+
+  employee:
+    receives:
+      - assignment
+
+
+legacy:
+
+  structure_json:
+    status:
+      migration_required

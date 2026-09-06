@@ -1,3 +1,7 @@
+#!/bin/bash
+
+docker exec -i ustar_moodle php <<'PHP'
+
 <<'PHP'
 <?php
 

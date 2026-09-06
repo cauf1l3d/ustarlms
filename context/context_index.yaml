@@ -1,0 +1,35 @@
+project: USTAR LMS
+
+context_version: 2
+
+purpose:
+  description: >
+    Dynamic AI context layer for USTAR development agents.
+    Contains architecture, decisions, runtime state,
+    active tasks and historical memory.
+
+read_order:
+  - AGENTS.md
+  - context/project.yaml
+  - context/constraints.yaml
+  - context/runtime/
+  - context/architecture/
+  - context/state/
+  - context/tasks/
+  - context/memory/
+
+rules:
+  source_of_truth:
+    - git repository
+    - production snapshot
+    - ADR decisions
+
+  before_change:
+    - inspect existing architecture
+    - inspect active tasks
+    - check previous failures
+
+  after_change:
+    - update state
+    - update memory
+    - create commit

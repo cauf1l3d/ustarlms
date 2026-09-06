@@ -1,0 +1,65 @@
+platform:
+  framework: Moodle
+  custom_plugin: local/ustar
+
+backend_root:
+  moodle/local/ustar
+
+
+entry_points:
+
+  route_studio:
+    file: moodle/local/ustar/route_studio.php
+    purpose:
+      - управление маршрутами
+      - studio интерфейс
+      - создание и изменение точек
+
+
+  materials:
+    file: moodle/local/ustar/materials.php
+    purpose:
+      - учебные материалы
+      - каталог обучения
+
+
+  team:
+    file: moodle/local/ustar/team.php
+    purpose:
+      - организационная структура
+      - команда
+
+
+core_classes:
+
+  route_model:
+    file:
+      moodle/local/ustar/classes/route_model.php
+    domain:
+      routes
+
+  route_family:
+    file:
+      moodle/local/ustar/classes/route_family.php
+    domain:
+      routes
+
+  route_scope:
+    file:
+      moodle/local/ustar/classes/route_scope.php
+    domain:
+      routes
+
+
+  organization_model:
+    file:
+      moodle/local/ustar/classes/organization_model.php
+    domain:
+      organization
+
+
+  adaptation_service:
+    file:
+      moodle/local/ustar/classes/adaptation_service.php
+    domain:
+      adaptation

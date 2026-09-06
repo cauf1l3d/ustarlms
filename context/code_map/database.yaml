@@ -1,0 +1,53 @@
+database:
+
+engine:
+  PostgreSQL 16
+
+
+source:
+  Moodle install.xml
+  upgrade.php
+
+
+ustar_tables:
+
+
+  local_ustar_routes:
+    meaning:
+      Маршруты обучения
+
+
+  local_ustar_route_points:
+    meaning:
+      Физические точки маршрута
+
+    relations:
+
+      routeid:
+        table:
+          local_ustar_routes
+
+
+      sourcepointid:
+        meaning:
+          связь override с родителем
+
+
+  local_ustar_route_scope:
+    meaning:
+      область применимости точки
+
+    used_for:
+      - должности
+      - подразделения
+      - scoped routes
+
+
+  local_ustar_evidence:
+    meaning:
+      доказательства прохождения
+
+
+  local_ustar_uscoin:
+    meaning:
+      игровая экономика

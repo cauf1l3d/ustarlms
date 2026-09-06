@@ -1,0 +1,104 @@
+# Classes
+- moodle/local/ustar/classes/external/base.php:abstract class base extends external_api {
+- moodle/local/ustar/classes/external/get_checklists.php:class get_checklists extends base {
+- moodle/local/ustar/classes/external/get_dashboard.php:class get_dashboard extends base {
+- moodle/local/ustar/classes/external/hr_bulk_assign_positions.php:class hr_bulk_assign_positions extends base {
+- moodle/local/ustar/classes/external/get_games.php:class get_games extends base {
+- moodle/local/ustar/classes/external/get_ladder.php:class get_ladder extends base {
+- moodle/local/ustar/classes/external/hr_get_dashboard.php:class hr_get_dashboard extends base {
+- moodle/local/ustar/classes/external/hr_get_people.php:class hr_get_people extends base {
+- moodle/local/ustar/classes/external/hr_get_person.php:class hr_get_person extends base {
+- moodle/local/ustar/classes/external/get_workspace.php:class get_workspace extends base {
+- moodle/local/ustar/classes/external/hr_import_people.php:class hr_import_people extends base {
+- moodle/local/ustar/classes/external/save_goal.php:class save_goal extends base {
+- moodle/local/ustar/classes/external/hr_get_workspace.php:class hr_get_workspace extends base {
+- moodle/local/ustar/classes/external/hr_save_person.php:class hr_save_person extends base {
+- moodle/local/ustar/classes/external/submit_checklist.php:class submit_checklist extends base {
+- moodle/local/ustar/classes/external/admin_get_games.php:class admin_get_games extends base {
+- moodle/local/ustar/classes/external/get_skills.php:class get_skills extends base {
+- moodle/local/ustar/classes/external/hr_save_learning.php:class hr_save_learning extends base {
+- moodle/local/ustar/classes/external/get_team.php:class get_team extends base {
+- moodle/local/ustar/classes/external/hr_save_review.php:class hr_save_review extends base {
+- moodle/local/ustar/classes/external/get_game_question.php:class get_game_question extends base {
+- moodle/local/ustar/classes/external/get_matrix.php:class get_matrix extends base {
+- moodle/local/ustar/classes/external/hr_get_checklists.php:class hr_get_checklists extends base {
+- moodle/local/ustar/classes/external/hr_save_checklists.php:class hr_save_checklists extends base {
+- moodle/local/ustar/classes/external/admin_save_game.php:class admin_save_game extends base {
+- moodle/local/ustar/classes/external/submit_game_answer.php:class submit_game_answer extends base {
+- moodle/local/ustar/classes/external/save_prefs.php:class save_prefs extends base {
+- moodle/local/ustar/classes/external/executive_get_dashboard.php:class executive_get_dashboard extends base {
+- moodle/local/ustar/classes/external/admin_get_structure.php:class admin_get_structure extends base {
+- moodle/local/ustar/classes/external/admin_save_structure.php:class admin_save_structure extends base {
+- moodle/local/ustar/classes/external/admin_upload_brand_asset.php:class admin_upload_brand_asset extends base {
+- moodle/local/ustar/classes/task/renew_acting_assignments.php:final class renew_acting_assignments extends \core\task\scheduled_task {
+- moodle/local/ustar/classes/task/sync_enrolments.php:class sync_enrolments extends \core\task\scheduled_task {
+- moodle/local/ustar/classes/catalog_mastery.php:final class catalog_mastery {
+- moodle/local/ustar/classes/form/material_create.php:class material_create extends \moodleform {
+- moodle/local/ustar/classes/form/material_bulk.php:class material_bulk extends \moodleform {
+- moodle/local/ustar/classes/form/user_history_reset_form.php:final class user_history_reset_form extends \moodleform {
+- moodle/local/ustar/classes/form/material_version.php:class material_version extends \moodleform {
+- moodle/local/ustar/classes/route_scope.php:final class route_scope {
+- moodle/local/ustar/classes/route_continue.php:final class route_continue {
+- moodle/local/ustar/classes/product_quiz.php:final class product_quiz {
+- moodle/local/ustar/classes/assignment.php:class assignment {
+- moodle/local/ustar/classes/native_data.php:final class native_data {
+- moodle/local/ustar/classes/route_point_evidence_provider.php:final class route_point_evidence_provider {
+- moodle/local/ustar/classes/department_learning.php:final class department_learning {
+- moodle/local/ustar/classes/accounts.php: * Identity remains owned by Moodle. This class only classifies whether an
+- moodle/local/ustar/classes/accounts.php:class accounts {
+- moodle/local/ustar/classes/position_model.php:class position_model {
+- moodle/local/ustar/classes/checklists.php:class checklists {
+- moodle/local/ustar/classes/staffing_requests.php:final class staffing_requests {
+- moodle/local/ustar/classes/economy.php:final class economy {
+- moodle/local/ustar/classes/learning_path.php:class learning_path {
+- moodle/local/ustar/classes/knowledge_index.php:class knowledge_index {
+- moodle/local/ustar/classes/output/renderer.php:class renderer extends \plugin_renderer_base {
+- moodle/local/ustar/classes/content.php:class content {
+- moodle/local/ustar/classes/route_model.php:final class route_model {
+- moodle/local/ustar/classes/hr_people.php:class hr_people {
+- moodle/local/ustar/classes/learning_route.php:final class learning_route {
+- moodle/local/ustar/classes/native_learning.php:final class native_learning {
+- moodle/local/ustar/classes/development_assessment.php:final class development_assessment {
+- moodle/local/ustar/classes/position_access.php:final class position_access {
+- moodle/local/ustar/classes/route_family.php:final class route_family {
+- moodle/local/ustar/classes/assessment_provider_factory.php:final class assessment_provider_factory {
+- moodle/local/ustar/classes/global_search.php:final class global_search {
+- moodle/local/ustar/classes/moodle_quiz_assessment_provider.php:final class moodle_quiz_assessment_provider implements assessment_provider {
+- moodle/local/ustar/classes/branding.php:final class branding {
+- moodle/local/ustar/classes/catalog.php:final class catalog {
+- moodle/local/ustar/classes/evidence.php:class evidence {
+- moodle/local/ustar/classes/team_presenter.php:final class team_presenter {
+- moodle/local/ustar/classes/target_core.php:final class target_core {
+- moodle/local/ustar/classes/analytics.php:final class analytics {
+- moodle/local/ustar/classes/route_quiz_grading.php:final class route_quiz_attempt extends \mod_quiz\quiz_attempt {
+- moodle/local/ustar/classes/route_quiz_grading.php:final class route_quiz_grading {
+- moodle/local/ustar/classes/competition.php:final class competition {
+- moodle/local/ustar/classes/learning_events.php:final class learning_events {
+- moodle/local/ustar/classes/content_ack_report.php:class content_ack_report {
+- moodle/local/ustar/classes/assessment_lifecycle.php:final class assessment_lifecycle {
+- moodle/local/ustar/classes/moodle_activity_bridge.php:final class moodle_activity_bridge {
+- moodle/local/ustar/classes/route_tester.php:final class route_tester {
+- moodle/local/ustar/classes/user_history_reset.php:final class user_history_reset {
+- moodle/local/ustar/classes/structure.php:class structure {
+- moodle/local/ustar/classes/ui.php:final class ui {
+- moodle/local/ustar/classes/ui.php:    public static function icon(string $name, string $class = 'u-icon'): string {
+- moodle/local/ustar/classes/ui.php:        if ($class !== 'u-icon' && isset(self::ILLUSTRATIONS[$name])) {
+- moodle/local/ustar/classes/ui.php:                'class' => trim($class . ' u-academy-illustration'),
+- moodle/local/ustar/classes/organization_model.php:final class organization_model {
+- moodle/local/ustar/classes/event/legacy_ui_toggled.php:final class legacy_ui_toggled extends \core\event\base {
+- moodle/local/ustar/classes/view_as.php:final class view_as {
+- moodle/local/ustar/classes/content_admin.php:class content_admin {
+- moodle/local/ustar/classes/observer.php:final class observer {
+- moodle/local/ustar/classes/company_hierarchy.php: * This class renders the approved staffing structure without
+- moodle/local/ustar/classes/company_hierarchy.php:final class company_hierarchy {
+- moodle/local/ustar/classes/communication.php:final class communication {
+- moodle/local/ustar/classes/employee_profile.php:class employee_profile {
+- moodle/local/ustar/classes/target_schema.php:final class target_schema {
+- moodle/local/ustar/classes/hook_callbacks.php:final class hook_callbacks {
+- moodle/local/ustar/classes/org.php:final class org {
+- moodle/local/ustar/classes/compliance.php:class compliance {
+- moodle/local/ustar/classes/boards.php:final class boards {
+- moodle/local/ustar/classes/hr_operations.php:class hr_operations {
+- moodle/local/ustar/classes/adaptation_service.php:final class adaptation_service {
+- moodle/local/ustar/classes/game_media.php:final class game_media {
+- moodle/local/ustar/classes/people.php:class people {

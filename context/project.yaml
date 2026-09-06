@@ -1,0 +1,14 @@
+project:
+  name: USTAR Academy
+  stage: migration_refactoring
+
+stack:
+  platform: Moodle 5.1
+  language: PHP 8.2
+  database: PostgreSQL 16
+  deployment: Docker
+
+components:
+  - moodle
+  - local/ustar
+  - theme/ustar

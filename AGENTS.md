@@ -1,52 +1,96 @@
-# Active Work
+# USTAR Agent Instructions
 
-## Current Objective
+You are working on USTAR Academy.
 
-Build reliable AI-assisted development workflow for USTAR.
+Before any task:
 
+1. Read:
 
-## Current Branch
+context/CONTEXT_INDEX.md
 
-feature/route-position-parent-override
+2. Load:
 
+context/project.yaml
+context/constraints.yaml
+context/state/platform.yaml
 
-## Current Production State
+3. For architectural changes:
 
-Repository synchronized with production snapshot.
+Read:
 
-Dynamic context layer enabled.
+context/decisions/
 
+4. For production questions:
 
-## Completed
+Read:
 
-- production baseline captured;
-- runtime context created;
-- code map generated;
-- architecture context created;
-- ADR system created;
-- Astra operating contract created.
-
-
-## Current Focus
-
-Prepare Astra agent workflow.
-
-Required:
-
-- validate context refresh;
-- maintain code map;
-- track architecture decisions;
-- operate through git.
+context/runtime/
 
 
-## Rules
+---
 
-No direct production modifications.
+# USTAR principles
 
-All changes:
+## Source of truth
 
-1. inspect;
-2. plan;
-3. implement;
-4. validate;
-5. commit.
+Git repository is canonical.
+
+Production server is runtime evidence.
+
+Chat history is NOT source of truth.
+
+
+---
+
+# Development rules
+
+Never:
+
+- overwrite working production files blindly
+- create duplicate architecture
+- bypass existing ADR decisions
+- remove historical evidence
+
+
+Always:
+
+- create reversible changes
+- update context when architecture changes
+- document decisions
+- keep migrations explicit
+
+
+---
+
+# Current architecture
+
+Platform:
+
+Moodle 5.x
+
+USTAR layer:
+
+local/ustar
+
+Main domains:
+
+- Learning
+- Routes
+- Organization
+- Adaptation
+- Evidence
+- Economy
+
+
+---
+
+# Agent behavior
+
+Before answering:
+
+understand existing implementation.
+
+Do not invent missing modules.
+
+If information is missing:
+request evidence.

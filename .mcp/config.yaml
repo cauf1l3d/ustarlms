@@ -1,0 +1,23 @@
+mcp:
+
+  servers:
+
+    github:
+      purpose:
+        - repository
+        - history
+        - pull_requests
+
+
+    ustar-context:
+      purpose:
+        - architecture
+        - runtime
+        - decisions
+        - code_map
+
+
+    notion:
+      purpose:
+        - human_documentation
+        - roadmap

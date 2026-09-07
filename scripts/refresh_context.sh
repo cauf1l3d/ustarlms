@@ -105,6 +105,17 @@ else
 
 fi
 
+echo "[6/6] Context index"
+
+if [ -f scripts/build_context_index.py ]; then
+
+    python3 scripts/build_context_index.py
+
+else
+
+    echo "WARNING: build_context_index.py missing"
+
+fi
 
 cat > context/runtime/context_refresh_report.md <<EOF
 # USTAR Context Refresh Report

@@ -67,6 +67,28 @@ def get_code_map():
 
     return result
 
+@server.tool()
+def get_context_index():
+    return read_text(
+        CONTEXT / "index" / "context_index.json"
+    )
+
+
+@server.tool()
+def get_context_file(path: str):
+    target = ROOT / path
+
+    if not target.exists():
+        return {
+            "error": "file_not_found",
+            "path": path
+        }
+
+    return {
+        "path": path,
+        "content": read_text(target)
+    }
+
 
 @server.tool()
 def get_active_tasks():
@@ -114,6 +136,12 @@ def get_health():
         "context": str(CONTEXT),
         "exists": CONTEXT.exists()
     }
+
+@server.tool()
+def get_recent_context_changes():
+    return read_text(
+        CONTEXT / "memory" / "decisions.log.md"
+    )
 
 
 if __name__ == "__main__":

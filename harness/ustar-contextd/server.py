@@ -106,6 +106,15 @@ def search_context(query: str):
 
     return hits
 
+@server.tool()
+def get_health():
+    return {
+        "service": "ustar-contextd",
+        "status": "ok",
+        "context": str(CONTEXT),
+        "exists": CONTEXT.exists()
+    }
+
 
 if __name__ == "__main__":
     server.run()

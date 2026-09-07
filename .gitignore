@@ -65,3 +65,4 @@ moodle/local/ustar/data/structure_staffmap_*.json
 *.2720new
 *.2721new
 *.2722new
+harness/*/.venv/

@@ -1,11 +1,13 @@
 server:
-  hostname: server1.example.com
+
+  hostname:
+    server1.example.com
 
   os:
     Ubuntu 24.04.4 LTS
 
-paths:
-  project: /opt/ustar/git/ustarlms
-  moodle: /opt/ustar/data/moodle/public
+  kernel:
+    6.8.0-138-generic
 
-containers:
+  refreshed:
+    "2026-09-07 07:05:45"

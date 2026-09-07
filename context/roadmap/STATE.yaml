@@ -1,0 +1,76 @@
+schema_version: 1
+updated_at: '2026-09-07'
+project: USTAR Academy
+stage: S0
+stage_label: Сверка релизной базы и стабилизация
+current_activity: Roadmap опубликован; реализация следующих задач ещё не начата в рамках этого аудита.
+next_task: R00
+ready_tasks:
+- R00
+- R01
+- R04
+- R16
+code_baseline:
+  branch: feature/route-position-parent-override
+  commit: e71bca2856bc0f80e39cb9ed1cee6098934e232a
+  kind: source_audited
+  production_equivalence: not_verified
+main_at_audit_start: 5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
+canonical_roadmap_branch: main
+user_priorities:
+- Инженерный порядок и пошаговый рефакторинг
+- Работоспособность и удобство production
+- Награда и обратная связь за каждое новое подтверждённое прохождение точки
+- Консистентная студия маршрутов
+- Рабочие игры и достижения
+production:
+  status: used_by_employees_but_exact_release_unverified
+  measured_in_this_audit: false
+  user_session_evidence:
+    container: ustar_moodle
+    host_mount_source: /opt/ustar/data/moodle/public
+    container_mount_destination: /var/www/html
+    host_moodle_root: /opt/ustar/data/moodle/public/public
+    container_moodle_root: /var/www/html/public
+    source: Показанные пользователем docker inspect и ls в этой сессии, 2026-09-07
+    recheck_before_release: true
+  unknown:
+  - Точный полный file/schema manifest установленного кода
+  - Текущий cron и backup restore
+  - Наличие подготовленных поздних UI-патчей в prod
+  - PHP/DB/browser acceptance для audited SHA
+prior_deliveries:
+- name: Executive tree 20260907
+  status: user_confirmed_applied
+  evidence: Пользователь показал CHECK_OK/APPLY_OK и cache purge; это не manifest всего plugin.
+- name: Executive employee links
+  status: user_reported_success
+  evidence: Подтверждение в переписке; точные production hashes сверить в R00.
+- name: Team department cards/filter
+  status: user_reported_applied_with_ui_defects
+  evidence: Скриншоты после установки показывают дерево; пользователь запросил другое оформление.
+- name: USTAR_POSITIONS_MATERIALS_FIX_20260907.zip
+  status: user_confirmed_not_applied
+  evidence: Пользователь явно указал, что materials patch не применял.
+- name: USTAR_ORG_UNIFIED_20260907.zip
+  status: prepared_not_confirmed_deployed
+  evidence: Единый пакет подготовлен в предыдущей работе; подтверждение применения отсутствует. Не считать частью
+    audited Git SHA.
+non_goals:
+- Изменение application code или production при публикации roadmap
+- Большое переписывание Moodle/SPA
+- Удаление исторических таблиц/миграций
+- Автоматическая кадровая миграция из прежних private owner overrides
+- Заморозка маршрутных наград и достижений
+next_agent_read:
+- START_HERE.md
+- context/roadmap/STATE.yaml
+- context/tasks/ACTIVE.md
+- context/roadmap/BACKLOG.yaml
+- context/roadmap/AGENT_PROTOCOL.md
+release_gates:
+- Baseline и drift известны
+- Критические CI/DB/browser проверки exact SHA
+- Install/upgrade path проверен
+- Артефакт/manifest/backup/rollback готовы
+- Production deployment подтверждён отдельно runtime evidence

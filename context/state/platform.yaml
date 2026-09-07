@@ -1,0 +1,38 @@
+platform:
+
+production:
+  repository:
+    canonical: github.com/cauf1l3d/ustarlms
+
+  runtime:
+    docker:
+      - ustar_moodle
+      - ustar_postgres
+
+  framework:
+    Moodle
+
+
+domains:
+
+  routes:
+    status: active
+
+  organization:
+    status: active
+
+  adaptation:
+    status: active
+
+  learning:
+    status: active
+
+  economy:
+    status: implemented
+
+
+pending_work:
+
+  - route position override validation
+  - AI context automation
+  - RAG assistants

@@ -1,3 +1,16 @@
+# Current roadmap — 2026-09-07
+
+Canonical plan and task status are maintained in main:
+
+- [START_HERE](https://github.com/cauf1l3d/ustarlms/blob/main/START_HERE.md)
+- [STATE](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/STATE.yaml)
+- [BACKLOG](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/BACKLOG.yaml)
+- [Agent protocol](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/AGENT_PROTOCOL.md)
+
+Read these first. This branch contains the audited application/context baseline; its historical task list is not the current roadmap. Follow existing ADRs below and distinguish source code, tested runtime and deployed release. Do not create a second independent task-status copy.
+
+---
+
 # USTAR Agent Instructions
 
 You are working on USTAR Academy.

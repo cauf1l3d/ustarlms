@@ -1,49 +1,52 @@
-# USTAR Academy — AI Agent Instructions
+# Active Work
 
-Before any change read:
+## Current Objective
 
-- context/project.yaml
-- context/architecture.yaml
-- context/migration_state.yaml
-- context/constraints.yaml
-- context/decisions/
+Build reliable AI-assisted development workflow for USTAR.
 
-Git is the source of truth.
 
-Do not:
-- edit production directly
-- modify Moodle core
-- create *.bak *.new *.final files
-- create parallel models
+## Current Branch
 
-USTAR stack:
+feature/route-position-parent-override
 
-- Moodle 5.1
-- PHP 8.2
-- PostgreSQL 16
-- Docker
-- local/ustar domain plugin
 
-Current phase:
+## Current Production State
 
-migration + refactoring
+Repository synchronized with production snapshot.
 
-Canonical domains:
+Dynamic context layer enabled.
 
-Organization:
-- departments
-- positions
-- skills
-- staff_places
-- assignments
 
-Learning:
-- routes
-- route_points
-- route_versions
-- route_progress
+## Completed
 
-Evidence:
-- evidence_rec
+- production baseline captured;
+- runtime context created;
+- code map generated;
+- architecture context created;
+- ADR system created;
+- Astra operating contract created.
 
-Legacy systems must be migrated gradually.
+
+## Current Focus
+
+Prepare Astra agent workflow.
+
+Required:
+
+- validate context refresh;
+- maintain code map;
+- track architecture decisions;
+- operate through git.
+
+
+## Rules
+
+No direct production modifications.
+
+All changes:
+
+1. inspect;
+2. plan;
+3. implement;
+4. validate;
+5. commit.

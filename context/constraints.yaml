@@ -1,0 +1,16 @@
+constraints:
+
+  - id: C001
+    rule: Git is source of truth
+
+  - id: C002
+    rule: Production changes only through release
+
+  - id: C003
+    rule: Moodle core modification forbidden
+
+  - id: C004
+    rule: Legacy models require migration
+
+  - id: C005
+    rule: No business logic in controllers

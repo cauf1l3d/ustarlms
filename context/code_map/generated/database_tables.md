@@ -1,0 +1,797 @@
+# Database tables
+- moodle/local/ustar/admin_user_history_reset.php:admin_externalpage_setup('local_ustar_user_history_reset');
+- moodle/local/ustar/assessment_remediation_launch.php:    $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid, 'userid' => (int)$USER->id], '*', MUST_EXIST);
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_scope.php:            'local_ustar_routes',
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_scope.php:                'local_ustar_route_scope',
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_scope.php:            'local_ustar_route_scope',
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_scope.php:            new \xmldb_table('local_ustar_route_scope')
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:        $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type', IGNORE_MISSING);
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:        $point['activechecked'] = !empty($DB->get_field('local_ustar_route_points', 'active', ['id' => (int)$point['id']])) ? 'checked' : '';
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:        $point['expectedmodified'] = (int)$DB->get_field('local_ustar_route_points', 'timemodified', ['id' => (int)$point['id']], MUST_EXIST);
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:foreach ($DB->get_records_select('local_ustar_content', 'type <> :folder AND status <> :archived', ['folder' => 'folder', 'archived' => 'archived'], 'title ASC', 'id,title,type,status') as $item) {
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:        'local_ustar_route_families',
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:                    'local_ustar_route_points',
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:                'local_ustar_route_points',
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:                'local_ustar_routes',
+- moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php:                'local_ustar_route_scope',
+- moodle/local/ustar/checklists.php:        $run = $DB->get_record('local_ustar_check_runs', [
+- moodle/local/ustar/checklists.php:            foreach ($DB->get_records('local_ustar_check_answers', ['runid' => (int)$run->id]) as $answer) {
+- moodle/local/ustar/classes/adaptation_service.php:        $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/adaptation_service.php:        $adaptations = $DB->get_records('local_ustar_adaptations', [], 'id DESC');
+- moodle/local/ustar/classes/adaptation_service.php:        $DB->update_record('local_ustar_adaptations', $adaptation);
+- moodle/local/ustar/classes/adaptation_service.php:        $id = (int)$DB->insert_record('local_ustar_adaptations', (object)[
+- moodle/local/ustar/classes/adaptation_service.php:        $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/adaptation_service.php:        $row = $DB->get_record('local_ustar_check_submits', ['id' => $submissionid, 'adaptationid' => $adaptationid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/adaptation_service.php:            'activecount' => $DB->count_records('local_ustar_adaptations', ['status' => self::STATUS_ACTIVE]),
+- moodle/local/ustar/classes/adaptation_service.php:            'local_ustar_check_submits',
+- moodle/local/ustar/classes/adaptation_service.php:        return $DB->get_record('local_ustar_adaptations', ['staffingrequestid' => $requestid]) ?: null;
+- moodle/local/ustar/classes/adaptation_service.php:        return array_values($DB->get_records('local_ustar_workflow_events', [
+- moodle/local/ustar/classes/adaptation_service.php:        return (int)$DB->insert_record('local_ustar_workflow_events', (object)[
+- moodle/local/ustar/classes/adaptation_service.php:            "SELECT * FROM {local_ustar_adaptations}
+- moodle/local/ustar/classes/adaptation_service.php:            "SELECT * FROM {local_ustar_assignments}
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $allpolicies = $DB->get_records('local_ustar_assess_policy', ['active' => 1], 'id ASC');
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $DB->insert_record('local_ustar_assess_policy', (object)[
+- moodle/local/ustar/classes/assessment_lifecycle.php:            && $dbman->table_exists(new \xmldb_table('local_ustar_assess_runtime'));
+- moodle/local/ustar/classes/assessment_lifecycle.php:            $DB->update_record('local_ustar_assess_runtime', $runtime);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $DB->update_record('local_ustar_assess_runtime', $runtime);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $existing = $DB->get_records('local_ustar_assess_runtime', [], 'id ASC');
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $oldpolicy = $DB->get_record('local_ustar_assess_policy', [
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $point = $DB->get_record('local_ustar_route_points', ['id' => (int)$policy->pointid, 'active' => 1], 'id,routeid', IGNORE_MISSING);
+- moodle/local/ustar/classes/assessment_lifecycle.php:            $policy = $DB->get_record('local_ustar_assess_policy', [
+- moodle/local/ustar/classes/assessment_lifecycle.php:            $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid, 'active' => 1], '*', IGNORE_MISSING);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid, 'active' => 1], '*', MUST_EXIST);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $reports = $DB->get_records('local_ustar_reporting', ['managerid' => $managerid], 'userid ASC');
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $route = $DB->get_record('local_ustar_routes', ['id' => (int)$point->routeid, 'active' => 1], '*', IGNORE_MISSING);
+- moodle/local/ustar/classes/assessment_lifecycle.php:            $runtime = $DB->get_record('local_ustar_assess_runtime', [
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $runtime = $DB->get_record('local_ustar_assess_runtime', [
+- moodle/local/ustar/classes/assessment_lifecycle.php:                $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid, 'userid' => $userid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/assessment_lifecycle.php:                $runtimeid = (int)$DB->insert_record('local_ustar_assess_runtime', (object)[
+- moodle/local/ustar/classes/assessment_lifecycle.php:            $version = $DB->get_record('local_ustar_route_versions', [
+- moodle/local/ustar/classes/assessment_lifecycle.php:            $version = $DB->get_record('local_ustar_route_versions', ['id' => (int)$runtime->versionid], 'id,title', IGNORE_MISSING);
+- moodle/local/ustar/classes/assessment_lifecycle.php:                   FROM {local_ustar_assess_policy} p
+- moodle/local/ustar/classes/assessment_lifecycle.php:        if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reporting'))) {
+- moodle/local/ustar/classes/assessment_lifecycle.php:        if ($DB->record_exists('local_ustar_assess_policy', ['versionid' => (int)$created->id])) {
+- moodle/local/ustar/classes/assessment_lifecycle.php:                   JOIN {local_ustar_route_versions} v ON v.id = p.versionid
+- moodle/local/ustar/classes/assessment_lifecycle.php:            'local_ustar_assess_runtime',
+- moodle/local/ustar/classes/assessment_lifecycle.php:                'local_ustar_route_points',
+- moodle/local/ustar/classes/assessment_lifecycle.php:            'local_ustar_route_points',
+- moodle/local/ustar/classes/assessment_lifecycle.php:        return $DB->get_record('local_ustar_assess_policy', [
+- moodle/local/ustar/classes/assessment_lifecycle.php:            return $DB->get_record('local_ustar_assess_runtime', ['id' => (int)$runtime->id], '*', MUST_EXIST);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        return $DB->get_record('local_ustar_assess_runtime', ['id' => (int)$runtime->id], '*', MUST_EXIST);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        return $dbman->table_exists(new \xmldb_table('local_ustar_assess_policy'))
+- moodle/local/ustar/classes/assessment_lifecycle.php:        return (int)($DB->get_field('local_ustar_reporting', 'managerid', ['userid' => $userid]) ?: 0);
+- moodle/local/ustar/classes/assessment_lifecycle.php:        return (int)$DB->insert_record('local_ustar_workflow_events', (object)[
+- moodle/local/ustar/classes/boards.php:            $DB->update_record('local_ustar_boards', $record);
+- moodle/local/ustar/classes/boards.php:        $record = $DB->get_record('local_ustar_boards', ['id' => $id, 'deleted' => 0]);
+- moodle/local/ustar/classes/boards.php:        $sql = 'SELECT * FROM {local_ustar_boards}
+- moodle/local/ustar/classes/boards.php:                   FROM {local_ustar_boards}
+- moodle/local/ustar/classes/boards.php:        return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_boards'));
+- moodle/local/ustar/classes/boards.php:        return (int)$DB->insert_record('local_ustar_boards', (object)[
+- moodle/local/ustar/classes/catalog_mastery.php: * - active local_ustar_catalog data;
+- moodle/local/ustar/classes/catalog_mastery.php:                'local_ustar_catalog',
+- moodle/local/ustar/classes/catalog_mastery.php:                'local_ustar_route_progress',
+- moodle/local/ustar/classes/catalog_mastery.php:            'local_ustar_route_versions',
+- moodle/local/ustar/classes/catalog_mastery.php:                        'local_ustar_workflow_events',
+- moodle/local/ustar/classes/catalog_mastery.php:                    'local_ustar_workflow_events',
+- moodle/local/ustar/classes/catalog_mastery.php:                'local_ustar_workflow_events',
+- moodle/local/ustar/classes/catalog_mastery.php:            'local_ustar_workflow_events',
+- moodle/local/ustar/classes/catalog.php:            'assessments' => (int)$DB->count_records('local_ustar_catalog', ['active' => 1, 'itemtype' => self::TYPE_ASSESSMENT]),
+- moodle/local/ustar/classes/catalog.php:            'cards' => (int)$DB->count_records_select('local_ustar_catalog', 'active = :active AND itemtype <> :g AND itemtype <> :s', $active + ['g' => self::TYPE_GROUP, 's' => self::TYPE_SUBGROUP]),
+- moodle/local/ustar/classes/catalog.php:        foreach ($DB->get_records_select('local_ustar_catalog', $where, $params, 'sortorder ASC, title ASC') as $record) {
+- moodle/local/ustar/classes/catalog.php:            'groups' => (int)$DB->count_records('local_ustar_catalog', ['active' => 1, 'itemtype' => self::TYPE_GROUP]),
+- moodle/local/ustar/classes/catalog.php:            'products' => (int)$DB->count_records('local_ustar_catalog', ['active' => 1, 'itemtype' => self::TYPE_PRODUCT]),
+- moodle/local/ustar/classes/catalog.php:        return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_catalog'));
+- moodle/local/ustar/classes/catalog.php:        return $DB->get_record('local_ustar_catalog', ['id' => $id, 'active' => 1]) ?: null;
+- moodle/local/ustar/classes/catalog.php:            'subgroups' => (int)$DB->count_records('local_ustar_catalog', ['active' => 1, 'itemtype' => self::TYPE_SUBGROUP]),
+- moodle/local/ustar/classes/checklists.php:        $rec = $DB->get_record('local_ustar_structure', ['name' => self::NAME]);
+- moodle/local/ustar/classes/communication.php:                $DB->update_record('local_ustar_notifications', $record);
+- moodle/local/ustar/classes/communication.php:            $record = $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/communication.php:        $targettable = $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'));
+- moodle/local/ustar/classes/communication.php:        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
+- moodle/local/ustar/classes/communication.php:            ? (int)$DB->count_records('local_ustar_notifications', ['userid' => $userid, 'status' => 'unread'])
+- moodle/local/ustar/classes/communication.php:                'local_ustar_notifications', 'status', 'read', 'userid = :userid AND status = :status',
+- moodle/local/ustar/classes/communication.php:                'local_ustar_notifications', 'timemodified', time(), 'userid = :userid AND status = :status',
+- moodle/local/ustar/classes/communication.php:                'local_ustar_notifications', ['userid' => $userid], 'timecreated DESC', '*', 0, max(1, min(200, $limit))
+- moodle/local/ustar/classes/competition.php:        $competition = $DB->get_record('local_ustar_competitions', ['id' => $competitionid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/competition.php:        $competitionid = (int)$DB->insert_record('local_ustar_competitions', (object)[
+- moodle/local/ustar/classes/competition.php:                $DB->insert_record('local_ustar_comp_participants', (object)[
+- moodle/local/ustar/classes/competition.php:                    $DB->insert_record('local_ustar_comp_results', (object)[
+- moodle/local/ustar/classes/competition.php:                $DB->insert_record('local_ustar_comp_score_events', (object)[
+- moodle/local/ustar/classes/competition.php:                $DB->update_record('local_ustar_competitions', $competition);
+- moodle/local/ustar/classes/competition.php:            $DB->update_record('local_ustar_competitions', $competition);
+- moodle/local/ustar/classes/competition.php:            $DB->update_record('local_ustar_comp_rules', $rule);
+- moodle/local/ustar/classes/competition.php:            $participant = $DB->get_record('local_ustar_comp_participants', [
+- moodle/local/ustar/classes/competition.php:        $rule = $DB->get_record('local_ustar_comp_rules', ['competitionid' => $competitionid, 'status' => 'draft'], '*', MUST_EXIST);
+- moodle/local/ustar/classes/competition.php:            $rule = $DB->get_record('local_ustar_comp_rules', ['id' => $competition->activeversionid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/competition.php:        $rule = $DB->get_record('local_ustar_comp_rules', ['id' => $participant->activeversionid], 'versionno', MUST_EXIST);
+- moodle/local/ustar/classes/competition.php:        $ruleid = (int)$DB->insert_record('local_ustar_comp_rules', (object)[
+- moodle/local/ustar/classes/competition.php:        foreach ($DB->get_records('local_ustar_competitions', null, 'timecreated DESC') as $competition) {
+- moodle/local/ustar/classes/competition.php:               FROM {local_ustar_comp_participants} p
+- moodle/local/ustar/classes/competition.php:                if ($DB->record_exists('local_ustar_comp_results', ['competitionid' => $competitionid])) {
+- moodle/local/ustar/classes/competition.php:                if (!$DB->record_exists('local_ustar_comp_score_events', ['idempotencykey' => $key])) {
+- moodle/local/ustar/classes/competition.php:               JOIN {local_ustar_competitions} c ON c.id = p.competitionid
+- moodle/local/ustar/classes/competition.php:          LEFT JOIN {local_ustar_comp_score_events} e
+- moodle/local/ustar/classes/competition.php:            'local_ustar_competitions',
+- moodle/local/ustar/classes/competition.php:                'participants' => (int)$DB->count_records('local_ustar_comp_participants', ['competitionid' => $competition->id]),
+- moodle/local/ustar/classes/competition.php:        return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_competitions'));
+- moodle/local/ustar/classes/compliance.php:            'local_ustar_content',
+- moodle/local/ustar/classes/compliance.php:                'local_ustar_content_access',
+- moodle/local/ustar/classes/compliance.php:            'local_ustar_content_access',
+- moodle/local/ustar/classes/compliance.php:                'local_ustar_content_ack',
+- moodle/local/ustar/classes/compliance.php:            'local_ustar_content_versions',
+- moodle/local/ustar/classes/content_ack_report.php:                'local_ustar_content',
+- moodle/local/ustar/classes/content_ack_report.php:                'local_ustar_content_access',
+- moodle/local/ustar/classes/content_ack_report.php:                'local_ustar_content_ack',
+- moodle/local/ustar/classes/content_admin.php:                        ? $DB->get_record('local_ustar_content', ['id' => $nextid, 'type' => 'folder'], 'id,parentid,type')
+- moodle/local/ustar/classes/content_admin.php:        $DB->update_record('local_ustar_content', $record);
+- moodle/local/ustar/classes/content_admin.php:        $freshrecord = $DB->get_record('local_ustar_content', ['id' => $contentid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/content_admin.php:        $lockfactory = \core\lock\lock_config::get_lock_factory('local_ustar_content');
+- moodle/local/ustar/classes/content_admin.php:        $record = $DB->get_record('local_ustar_content', ['id' => $contentid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/content_admin.php:                   FROM {local_ustar_content}
+- moodle/local/ustar/classes/content_admin.php:               FROM {local_ustar_content}
+- moodle/local/ustar/classes/content_admin.php:                      FROM {local_ustar_content_versions}
+- moodle/local/ustar/classes/content_admin.php:                   FROM {local_ustar_content_versions}
+- moodle/local/ustar/classes/content_admin.php:                'local_ustar_content',
+- moodle/local/ustar/classes/content_admin.php:            'local_ustar_content',
+- moodle/local/ustar/classes/content_admin.php:                'local_ustar_content_access',
+- moodle/local/ustar/classes/content_admin.php:            'local_ustar_content_access',
+- moodle/local/ustar/classes/content_admin.php:            'local_ustar_content_ack',
+- moodle/local/ustar/classes/content_admin.php:                'local_ustar_content_versions',
+- moodle/local/ustar/classes/content_admin.php:            'local_ustar_content_versions',
+- moodle/local/ustar/classes/content.php:              FROM {local_ustar_content_versions}
+- moodle/local/ustar/classes/content.php:                'local_ustar_content',
+- moodle/local/ustar/classes/content.php:                'local_ustar_content_access',
+- moodle/local/ustar/classes/content.php:                        'local_ustar_content_ack',
+- moodle/local/ustar/classes/content.php:                'local_ustar_content_ack',
+- moodle/local/ustar/classes/content.php:            'local_ustar_content_ack',
+- moodle/local/ustar/classes/content.php:                'local_ustar_content_versions',
+- moodle/local/ustar/classes/content.php:            'local_ustar_content_versions',
+- moodle/local/ustar/classes/development_assessment.php:        $assessment = $DB->get_record('local_ustar_dev_assess', [
+- moodle/local/ustar/classes/development_assessment.php:        $assessmentid = (int)$DB->insert_record('local_ustar_dev_assess', (object)[
+- moodle/local/ustar/classes/development_assessment.php:            $attemptid = (int)$DB->insert_record('local_ustar_dev_assess_try', (object)[
+- moodle/local/ustar/classes/development_assessment.php:        $DB->insert_record('local_ustar_dev_assess_ver', (object)[
+- moodle/local/ustar/classes/development_assessment.php:        $existing = $DB->get_record('local_ustar_dev_assess', ['assessmentkey' => self::TEAM_PROFILE_KEY]);
+- moodle/local/ustar/classes/development_assessment.php:            $existing = $DB->get_record('local_ustar_dev_assess_try', ['userid' => $userid, 'idempotencykey' => $idempotencykey]);
+- moodle/local/ustar/classes/development_assessment.php:        $existing = $DB->get_record('local_ustar_dev_assess_try', ['userid' => $userid, 'idempotencykey' => $idempotencykey]);
+- moodle/local/ustar/classes/development_assessment.php:        foreach ($DB->get_records('local_ustar_dev_assess', ['active' => 1], 'title ASC') as $assessment) {
+- moodle/local/ustar/classes/development_assessment.php:               FROM {local_ustar_dev_assess_ver}
+- moodle/local/ustar/classes/development_assessment.php:        if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_dev_assess'))) {
+- moodle/local/ustar/classes/development_assessment.php:            'local_ustar_dev_assess_try',
+- moodle/local/ustar/classes/development_assessment.php:            'local_ustar_dev_assess_ver',
+- moodle/local/ustar/classes/development_assessment.php:        return $DB->get_record('local_ustar_dev_assess', ['id' => $assessmentid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/development_assessment.php:        return self::attempt_result($DB->get_record('local_ustar_dev_assess_try', ['id' => $attemptid], '*', MUST_EXIST));
+- moodle/local/ustar/classes/economy.php:        $balance = $DB->get_field('local_ustar_coin_balance', 'balance', ['userid' => $userid]);
+- moodle/local/ustar/classes/economy.php:            $DB->insert_record('local_ustar_coin_balance', (object)[
+- moodle/local/ustar/classes/economy.php:                $DB->insert_record('local_ustar_coin_ledger', (object)[
+- moodle/local/ustar/classes/economy.php:            && $dbman->table_exists(new \xmldb_table('local_ustar_coin_balance'));
+- moodle/local/ustar/classes/economy.php:                $DB->update_record('local_ustar_coin_balance', $balance);
+- moodle/local/ustar/classes/economy.php:        $original = $DB->get_record('local_ustar_coin_ledger', ['id' => $ledgerid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/economy.php:        $record = $DB->get_record('local_ustar_coin_balance', ['userid' => $userid]);
+- moodle/local/ustar/classes/economy.php:        foreach ($DB->get_records('local_ustar_coin_ledger', ['userid' => $userid], 'timecreated DESC', '*', 0, max(1, min(100, $limit))) as $row) {
+- moodle/local/ustar/classes/economy.php:               FROM {local_ustar_coin_ledger}
+- moodle/local/ustar/classes/economy.php:                if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey' => $idempotencykey])) {
+- moodle/local/ustar/classes/economy.php:            if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey' => $idempotencykey])) {
+- moodle/local/ustar/classes/economy.php:        if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey' => $idempotencykey])) {
+- moodle/local/ustar/classes/economy.php:            if ($DB->record_exists('local_ustar_coin_ledger', ['reversalofid' => $ledgerid])) {
+- moodle/local/ustar/classes/economy.php:        if ($DB->record_exists('local_ustar_coin_ledger', ['reversalofid' => $ledgerid])) {
+- moodle/local/ustar/classes/economy.php:        return $dbman->table_exists(new \xmldb_table('local_ustar_coin_ledger'))
+- moodle/local/ustar/classes/economy.php:                'SELECT COALESCE(SUM(amount), 0) FROM {local_ustar_coin_ledger} WHERE userid = :userid',
+- moodle/local/ustar/classes/economy.php:            'SELECT COALESCE(SUM(amount), 0) FROM {local_ustar_coin_ledger} WHERE userid = :userid',
+- moodle/local/ustar/classes/economy.php:            'SELECT * FROM {local_ustar_coin_balance} WHERE userid = :userid FOR UPDATE',
+- moodle/local/ustar/classes/economy.php: * The immutable ledger is the audit history. local_ustar_coin_balance is a
+- moodle/local/ustar/classes/employee_profile.php:        if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_hr_actions'))) {
+- moodle/local/ustar/classes/employee_profile.php:            'local_ustar_hr_actions',
+- moodle/local/ustar/classes/evidence.php: * Definitions live in local_ustar_skill_evidence.
+- moodle/local/ustar/classes/evidence.php:                'local_ustar_skill_evidence',
+- moodle/local/ustar/classes/external/admin_get_games.php:        foreach ($DB->get_records('local_ustar_games', null, 'title ASC') as $game) {
+- moodle/local/ustar/classes/external/admin_get_games.php:            foreach ($DB->get_records('local_ustar_questions', ['gameid' => $game->id], 'sortorder ASC') as $q) {
+- moodle/local/ustar/classes/external/admin_save_game.php:                $DB->set_field('local_ustar_questions', 'active', 0, ['id' => $existing->id]);
+- moodle/local/ustar/classes/external/admin_save_game.php:            $DB->update_record('local_ustar_games', $record);
+- moodle/local/ustar/classes/external/admin_save_game.php:                $DB->update_record('local_ustar_questions', $qrecord);
+- moodle/local/ustar/classes/external/admin_save_game.php:        $duplicate = $DB->get_record('local_ustar_games', ['code' => $code]);
+- moodle/local/ustar/classes/external/admin_save_game.php:            $gameid = (int)$DB->insert_record('local_ustar_games', $record);
+- moodle/local/ustar/classes/external/admin_save_game.php:                $qid = (int)$DB->insert_record('local_ustar_questions', $qrecord);
+- moodle/local/ustar/classes/external/admin_save_game.php:        foreach ($DB->get_records('local_ustar_questions', ['gameid' => $gameid]) as $existing) {
+- moodle/local/ustar/classes/external/admin_save_game.php:        if ($gameid && !$DB->record_exists('local_ustar_games', ['id' => $gameid])) {
+- moodle/local/ustar/classes/external/admin_save_game.php:            if ($qid && $DB->record_exists('local_ustar_questions', ['id' => $qid, 'gameid' => $gameid])) {
+- moodle/local/ustar/classes/external/executive_get_dashboard.php:            $avgvalue = $DB->get_field_sql('SELECT AVG(score) FROM {local_ustar_reviews} WHERE timecreated >= :since', ['since' => $since]);
+- moodle/local/ustar/classes/external/executive_get_dashboard.php:            $reviews30 = (int)$DB->count_records_select('local_ustar_reviews', 'timecreated >= :since', ['since' => $since]);
+- moodle/local/ustar/classes/external/executive_get_dashboard.php:        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reviews'))) {
+- moodle/local/ustar/classes/external/get_checklists.php:            $run = $DB->get_record('local_ustar_check_runs', [
+- moodle/local/ustar/classes/external/get_dashboard.php:        foreach ($DB->get_records('local_ustar_goals', ['userid' => $USER->id], 'timecreated DESC') as $g) {
+- moodle/local/ustar/classes/external/get_dashboard.php:        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_game_mastery'))) {
+- moodle/local/ustar/classes/external/get_dashboard.php:                'SELECT COALESCE(SUM(xpearned), 0) FROM {local_ustar_game_mastery} WHERE userid = :uid',
+- moodle/local/ustar/classes/external/get_game_question.php:        $game = $DB->get_record('local_ustar_games', ['id' => $gameid, 'active' => 1], '*', MUST_EXIST);
+- moodle/local/ustar/classes/external/get_game_question.php:            $mastered = $DB->record_exists('local_ustar_game_mastery', [
+- moodle/local/ustar/classes/external/get_game_question.php:        $questions = array_values($DB->get_records('local_ustar_questions', ['gameid' => $gameid, 'active' => 1], 'sortorder ASC'));
+- moodle/local/ustar/classes/external/get_games.php:            $attempts = (int)$DB->count_records('local_ustar_game_attempts', ['userid' => $USER->id, 'gameid' => $game->id]);
+- moodle/local/ustar/classes/external/get_games.php:            $correct = (int)$DB->count_records('local_ustar_game_mastery', ['userid' => $USER->id, 'gameid' => $game->id]);
+- moodle/local/ustar/classes/external/get_games.php:            $questioncount = (int)$DB->count_records('local_ustar_questions', ['gameid' => $game->id, 'active' => 1]);
+- moodle/local/ustar/classes/external/get_games.php:        foreach ($DB->get_records('local_ustar_games', ['active' => 1], 'title ASC') as $game) {
+- moodle/local/ustar/classes/external/get_games.php:                'SELECT COALESCE(SUM(xpearned), 0) FROM {local_ustar_game_mastery} WHERE userid = :uid AND gameid = :gid',
+- moodle/local/ustar/classes/external/get_games.php:            'SELECT COALESCE(SUM(xpearned), 0) FROM {local_ustar_game_mastery} WHERE userid = :uid', ['uid' => $USER->id]
+- moodle/local/ustar/classes/external/get_workspace.php:        $prefs = json_decode(get_user_preferences('local_ustar_prefs', '{}'), true) ?: new \stdClass();
+- moodle/local/ustar/classes/external/hr_get_checklists.php:        $todayrunsraw = $DB->get_records('local_ustar_check_runs', ['datekey' => $today], 'timemodified DESC');
+- moodle/local/ustar/classes/external/hr_get_checklists.php:                  FROM {local_ustar_check_runs} r
+- moodle/local/ustar/classes/external/hr_get_dashboard.php:                      FROM {local_ustar_hr_actions} a
+- moodle/local/ustar/classes/external/hr_get_dashboard.php:        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_game_attempts'))) {
+- moodle/local/ustar/classes/external/hr_get_dashboard.php:        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_hr_actions'))) {
+- moodle/local/ustar/classes/external/hr_get_dashboard.php:        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reviews'))) {
+- moodle/local/ustar/classes/external/hr_get_dashboard.php:                'local_ustar_game_attempts',
+- moodle/local/ustar/classes/external/hr_get_dashboard.php:                'local_ustar_reviews',
+- moodle/local/ustar/classes/external/hr_get_person.php:                  FROM {local_ustar_reviews} r
+- moodle/local/ustar/classes/external/hr_get_workspace.php:                $attempts30 = (int)$DB->count_records_select('local_ustar_game_attempts', 'timecreated >= :since', ['since' => $since]);
+- moodle/local/ustar/classes/external/hr_get_workspace.php:                $correct30 = (int)$DB->count_records_select('local_ustar_game_attempts', 'timecreated >= :since AND iscorrect = 1', ['since' => $since]);
+- moodle/local/ustar/classes/external/hr_get_workspace.php:            $gamerecords = $DB->get_records('local_ustar_games', null, 'title ASC');
+- moodle/local/ustar/classes/external/hr_get_workspace.php:                $qcount = (int)$DB->count_records('local_ustar_questions', ['gameid' => $game->id, 'active' => 1]);
+- moodle/local/ustar/classes/external/hr_get_workspace.php:            if ($dbman->table_exists(new \xmldb_table('local_ustar_game_attempts'))) {
+- moodle/local/ustar/classes/external/hr_get_workspace.php:        if ($dbman->table_exists(new \xmldb_table('local_ustar_games'))) {
+- moodle/local/ustar/classes/external/hr_save_review.php:        $id = (int)$DB->insert_record('local_ustar_reviews', (object)[
+- moodle/local/ustar/classes/external/save_goal.php:            $DB->delete_records('local_ustar_goals', ['id' => $goal->id]);
+- moodle/local/ustar/classes/external/save_goal.php:            $DB->update_record('local_ustar_goals', $goal);
+- moodle/local/ustar/classes/external/save_goal.php:        $goal = $DB->get_record('local_ustar_goals',
+- moodle/local/ustar/classes/external/save_goal.php:            $newid = $DB->insert_record('local_ustar_goals', (object)[
+- moodle/local/ustar/classes/external/save_prefs.php:        set_user_preference('local_ustar_prefs', json_encode($clean));
+- moodle/local/ustar/classes/external/submit_checklist.php:            $DB->delete_records('local_ustar_check_answers', ['runid' => $run->id]);
+- moodle/local/ustar/classes/external/submit_checklist.php:            $DB->insert_record('local_ustar_check_answers', (object)[
+- moodle/local/ustar/classes/external/submit_checklist.php:            $DB->update_record('local_ustar_check_runs', $run);
+- moodle/local/ustar/classes/external/submit_checklist.php:        $run = $DB->get_record('local_ustar_check_runs', ['checklistkey' => $checklist['id'], 'userid' => $USER->id, 'datekey' => $today]);
+- moodle/local/ustar/classes/external/submit_checklist.php:            $run->id = $DB->insert_record('local_ustar_check_runs', $run);
+- moodle/local/ustar/classes/external/submit_game_answer.php:        $alreadymastered = $DB->record_exists('local_ustar_game_mastery', [
+- moodle/local/ustar/classes/external/submit_game_answer.php:        $DB->insert_record('local_ustar_game_attempts', (object)[
+- moodle/local/ustar/classes/external/submit_game_answer.php:        $game = $DB->get_record('local_ustar_games', ['id' => $question->gameid, 'active' => 1], '*', MUST_EXIST);
+- moodle/local/ustar/classes/external/submit_game_answer.php:                $masteryid = (int)$DB->insert_record('local_ustar_game_mastery', (object)[
+- moodle/local/ustar/classes/external/submit_game_answer.php:        $question = $DB->get_record('local_ustar_questions', ['id' => $params['questionid'], 'active' => 1], '*', MUST_EXIST);
+- moodle/local/ustar/classes/external/submit_game_answer.php:            'SELECT COALESCE(SUM(xpearned), 0) FROM {local_ustar_game_mastery} WHERE userid = :uid',
+- moodle/local/ustar/classes/global_search.php:        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_content'))) {
+- moodle/local/ustar/classes/global_search.php:                'local_ustar_content',
+- moodle/local/ustar/classes/knowledge_index.php:            'local_ustar_content',
+- moodle/local/ustar/classes/knowledge_index.php:            'local_ustar_content_access',
+- moodle/local/ustar/classes/learning_events.php:        $content = $DB->get_record('local_ustar_content', ['id' => $contentid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/learning_events.php:                $DB->insert_record('local_ustar_library', (object)[
+- moodle/local/ustar/classes/learning_events.php:            $DB->update_record('local_ustar_library', $library);
+- moodle/local/ustar/classes/learning_events.php:            $existing = $DB->get_field('local_ustar_content_events', 'id', ['idempotencykey' => $key]);
+- moodle/local/ustar/classes/learning_events.php:        $existing = $DB->get_field('local_ustar_content_events', 'id', ['idempotencykey' => $key]);
+- moodle/local/ustar/classes/learning_events.php:        $library = $DB->get_record('local_ustar_library', ['userid' => $userid, 'contentid' => $contentid]);
+- moodle/local/ustar/classes/learning_events.php:        $opened = $DB->get_record('local_ustar_content_events', [
+- moodle/local/ustar/classes/learning_events.php:        $rows = $DB->get_records('local_ustar_library', ['userid' => $userid], 'lastaccessedat DESC, id DESC');
+- moodle/local/ustar/classes/learning_events.php:                if (!$DB->record_exists('local_ustar_library', ['userid' => $userid, 'contentid' => $contentid])) {
+- moodle/local/ustar/classes/learning_events.php:        return $DB->get_record('local_ustar_content_events', [
+- moodle/local/ustar/classes/learning_events.php:            return (int)$DB->insert_record('local_ustar_content_events', (object)[
+- moodle/local/ustar/classes/learning_route.php:            $table = new \xmldb_table('local_ustar_routes');
+- moodle/local/ustar/classes/native_learning.php: * Does not write local_ustar_route_progress directly.
+- moodle/local/ustar/classes/native_learning.php:               FROM {local_ustar_route_versions}
+- moodle/local/ustar/classes/native_learning.php:                'local_ustar_native_learning'
+- moodle/local/ustar/classes/native_learning.php:            'local_ustar_route_points',
+- moodle/local/ustar/classes/native_learning.php:                'local_ustar_workflow_events',
+- moodle/local/ustar/classes/native_learning.php:            'local_ustar_workflow_events',
+- moodle/local/ustar/classes/native_learning.php: * Uses the existing local_ustar_workflow_events event store.
+- moodle/local/ustar/classes/organization_model.php:                $DB->delete_records('local_ustar_reporting',['id'=>(int)$row->id]);
+- moodle/local/ustar/classes/organization_model.php:        $DB->insert_record('local_ustar_assignments',(object)[
+- moodle/local/ustar/classes/organization_model.php:            $DB->insert_record('local_ustar_reporting',(object)[
+- moodle/local/ustar/classes/organization_model.php:            && $dbman->table_exists(new \xmldb_table('local_ustar_assignments'));
+- moodle/local/ustar/classes/organization_model.php:            $DB->update_record('local_ustar_assignments',$a);
+- moodle/local/ustar/classes/organization_model.php:                $DB->update_record('local_ustar_reporting',$row);
+- moodle/local/ustar/classes/organization_model.php:            $place->id=(int)$DB->insert_record('local_ustar_staff_places',$place);
+- moodle/local/ustar/classes/organization_model.php:        foreach($DB->get_records('local_ustar_reporting') as $row){
+- moodle/local/ustar/classes/organization_model.php:            foreach($DB->get_records('local_ustar_staff_places',['managerplaceid'=>$parent,'active'=>1],'id ASC') as $child){
+- moodle/local/ustar/classes/organization_model.php:        foreach($DB->get_records('local_ustar_staff_places',['positionid'=>$positionid,'active'=>1],'id ASC') as $place){
+- moodle/local/ustar/classes/organization_model.php:        if(!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reporting')))
+- moodle/local/ustar/classes/organization_model.php:            'local_ustar_assignments',
+- moodle/local/ustar/classes/organization_model.php:            'local_ustar_staff_places',
+- moodle/local/ustar/classes/organization_model.php:        return $dbman->table_exists(new \xmldb_table('local_ustar_staff_places'))
+- moodle/local/ustar/classes/organization_model.php:        return ['ok'=>true,'count'=>$DB->count_records('local_ustar_reporting')];
+- moodle/local/ustar/classes/organization_model.php:        return self::available() && $DB->record_exists('local_ustar_staff_places',[
+- moodle/local/ustar/classes/org.php:            $DB->insert_record('local_ustar_reporting',(object)[
+- moodle/local/ustar/classes/org.php:            $DB->update_record('local_ustar_reporting',$r);
+- moodle/local/ustar/classes/org.php:        $r=$DB->get_record('local_ustar_reporting',['userid'=>$userid]);
+- moodle/local/ustar/classes/org.php:        foreach ($DB->get_records('local_ustar_reporting',['managerid'=>$managerid],'userid ASC') as $r) {
+- moodle/local/ustar/classes/org.php:            'local_ustar_reporting',
+- moodle/local/ustar/classes/org.php:        return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reporting'));
+- moodle/local/ustar/classes/org.php:        return (int)$DB->get_field('local_ustar_reporting','managerid',['userid'=>$userid]);
+- moodle/local/ustar/classes/people.php:        $DB->insert_record('local_ustar_hr_actions', (object)[
+- moodle/local/ustar/classes/people.php:        if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_hr_actions'))) {
+- moodle/local/ustar/classes/position_model.php:                    FROM {local_ustar_skill_evidence}
+- moodle/local/ustar/classes/position_model.php:                'local_ustar_skill_evidence',
+- moodle/local/ustar/classes/position_model.php:            'local_ustar_skill_evidence',
+- moodle/local/ustar/classes/position_model.php: * local_ustar_skill_evidence remains source of truth for:
+- moodle/local/ustar/classes/product_quiz.php:                'local_ustar_workflow_events',
+- moodle/local/ustar/classes/route_continue.php:            'local_ustar_route_versions',
+- moodle/local/ustar/classes/route_family.php:               FROM {local_ustar_route_families} f
+- moodle/local/ustar/classes/route_family.php:                   FROM {local_ustar_route_points}
+- moodle/local/ustar/classes/route_family.php:               JOIN {local_ustar_routes} r
+- moodle/local/ustar/classes/route_family.php:            'local_ustar_route_families',
+- moodle/local/ustar/classes/route_family.php:                    'local_ustar_route_points',
+- moodle/local/ustar/classes/route_family.php:            'local_ustar_route_points',
+- moodle/local/ustar/classes/route_family.php:                'local_ustar_routes',
+- moodle/local/ustar/classes/route_family.php:            'local_ustar_routes',
+- moodle/local/ustar/classes/route_model.php:            $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,status,ackrequired', MUST_EXIST);
+- moodle/local/ustar/classes/route_model.php:            $DB->insert_record('local_ustar_route_progress', (object)[
+- moodle/local/ustar/classes/route_model.php:                $DB->set_field('local_ustar_route_points', 'sortorder', $sort, ['id' => $pointid, 'routeid' => $routeid]);
+- moodle/local/ustar/classes/route_model.php:                $DB->set_field('local_ustar_route_points', 'timemodified', max(time(), (int)$point->timemodified + 1), ['id' => $pointid]);
+- moodle/local/ustar/classes/route_model.php:                $DB->set_field('local_ustar_route_points', 'usermodified', $actorid, ['id' => $pointid]);
+- moodle/local/ustar/classes/route_model.php:                $DB->update_record('local_ustar_route_points', $existing);
+- moodle/local/ustar/classes/route_model.php:            $DB->update_record('local_ustar_route_points', $point);
+- moodle/local/ustar/classes/route_model.php:        $DB->update_record('local_ustar_route_points', $point);
+- moodle/local/ustar/classes/route_model.php:                $DB->update_record('local_ustar_routes', $current);
+- moodle/local/ustar/classes/route_model.php:        $existing = $DB->get_record('local_ustar_route_points', [
+- moodle/local/ustar/classes/route_model.php:        $existing = $DB->get_record('local_ustar_route_progress', [
+- moodle/local/ustar/classes/route_model.php:        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+- moodle/local/ustar/classes/route_model.php:        $id = (int)$DB->insert_record('local_ustar_routes', (object)[
+- moodle/local/ustar/classes/route_model.php:        $id = (int)$DB->insert_record('local_ustar_route_versions', (object)[
+- moodle/local/ustar/classes/route_model.php:            $item = $DB->get_record('local_ustar_content', ['id' => $contentid]);
+- moodle/local/ustar/classes/route_model.php:        $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/route_model.php:        $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], 'id,phase', MUST_EXIST);
+- moodle/local/ustar/classes/route_model.php:                $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], 'id,timemodified', MUST_EXIST);
+- moodle/local/ustar/classes/route_model.php:        $pointid = (int)$DB->insert_record('local_ustar_route_points', (object)[
+- moodle/local/ustar/classes/route_model.php:        $route = $DB->get_record('local_ustar_routes', ['id' => $routeid, 'active' => 1], '*', MUST_EXIST);
+- moodle/local/ustar/classes/route_model.php:               FROM {local_ustar_route_versions}
+- moodle/local/ustar/classes/route_model.php:            if (!$DB->record_exists('local_ustar_route_progress', [
+- moodle/local/ustar/classes/route_model.php:        if ($DB->record_exists('local_ustar_route_progress', [
+- moodle/local/ustar/classes/route_model.php: * in local_ustar_route_progress so a new checkpoint version can deliberately
+- moodle/local/ustar/classes/route_model.php:                        'local_ustar_content',
+- moodle/local/ustar/classes/route_model.php:                    'local_ustar_content',
+- moodle/local/ustar/classes/route_model.php:                    'local_ustar_content_access',
+- moodle/local/ustar/classes/route_model.php:                'local_ustar_content_access',
+- moodle/local/ustar/classes/route_model.php:            'local_ustar_route_points',
+- moodle/local/ustar/classes/route_model.php:                    'local_ustar_route_progress',
+- moodle/local/ustar/classes/route_model.php:                'local_ustar_route_progress',
+- moodle/local/ustar/classes/route_model.php:            'local_ustar_route_progress',
+- moodle/local/ustar/classes/route_model.php:                'local_ustar_routes',
+- moodle/local/ustar/classes/route_model.php:            'local_ustar_routes',
+- moodle/local/ustar/classes/route_model.php:            'local_ustar_route_versions',
+- moodle/local/ustar/classes/route_model.php:        return $DB->get_record('local_ustar_route_points', [
+- moodle/local/ustar/classes/route_model.php:        return $DB->get_record('local_ustar_route_points', ['id' => $pointid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/route_model.php:        return $DB->get_record('local_ustar_routes', [
+- moodle/local/ustar/classes/route_model.php:        return $DB->get_record('local_ustar_routes', ['id' => $id], '*', MUST_EXIST);
+- moodle/local/ustar/classes/route_model.php:                'SELECT * FROM {local_ustar_route_points} WHERE id = :id AND routeid = :routeid FOR UPDATE',
+- moodle/local/ustar/classes/route_model.php:            'SELECT * FROM {local_ustar_route_points} WHERE id = :id AND routeid = :routeid FOR UPDATE',
+- moodle/local/ustar/classes/route_model.php:            'SELECT * FROM {local_ustar_route_versions} WHERE pointid = :pointid ORDER BY versionno DESC, id DESC',
+- moodle/local/ustar/classes/route_point_evidence_provider.php:        $assessmentpoint = $DB->get_record('local_ustar_route_points', ['id' => (int)$policy->pointid], 'id,routeid', MUST_EXIST);
+- moodle/local/ustar/classes/route_point_evidence_provider.php:            $content = $DB->get_record('local_ustar_content', ['id' => $contentid], '*', IGNORE_MISSING);
+- moodle/local/ustar/classes/route_point_evidence_provider.php:            $events = $DB->get_records('local_ustar_workflow_events', [
+- moodle/local/ustar/classes/route_point_evidence_provider.php:        $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'active' => 1], '*', IGNORE_MISSING);
+- moodle/local/ustar/classes/route_point_evidence_provider.php:        $version = $DB->get_record('local_ustar_route_versions', ['id' => $versionid, 'pointid' => $pointid], '*', IGNORE_MISSING);
+- moodle/local/ustar/classes/route_quiz_grading.php:            $runtime = $DB->get_record('local_ustar_assess_runtime', [
+- moodle/local/ustar/classes/route_quiz_grading.php:            'local_ustar_route_points',
+- moodle/local/ustar/classes/route_quiz_grading.php:                    'local_ustar_workflow_events',
+- moodle/local/ustar/classes/route_scope.php:            'local_ustar_routes',
+- moodle/local/ustar/classes/route_scope.php:                'local_ustar_route_scope',
+- moodle/local/ustar/classes/route_scope.php:            'local_ustar_route_scope',
+- moodle/local/ustar/classes/route_scope.php:            new \xmldb_table('local_ustar_route_scope')
+- moodle/local/ustar/classes/route_tester.php:        $attemptids = self::table_exists('local_ustar_test_attempts')
+- moodle/local/ustar/classes/route_tester.php:            $DB->insert_record('local_ustar_route_testers', (object)[
+- moodle/local/ustar/classes/route_tester.php:        $DB->insert_record('local_ustar_route_test_tokens', (object)[
+- moodle/local/ustar/classes/route_tester.php:            $DB->update_record('local_ustar_route_testers', $map);
+- moodle/local/ustar/classes/route_tester.php:        $DB->update_record('local_ustar_route_testers', $map);
+- moodle/local/ustar/classes/route_tester.php:        $DB->update_record('local_ustar_route_test_tokens', $row);
+- moodle/local/ustar/classes/route_tester.php:        $map = $DB->get_record('local_ustar_route_testers', ['actorid' => $actorid], '*', IGNORE_MISSING);
+- moodle/local/ustar/classes/route_tester.php:        $map = $DB->get_record('local_ustar_route_testers', ['actorid' => $actorid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/route_tester.php:        $notificationids = self::table_exists('local_ustar_notifications')
+- moodle/local/ustar/classes/route_tester.php:        $participantids = self::table_exists('local_ustar_comp_participants')
+- moodle/local/ustar/classes/route_tester.php:        $row = $DB->get_record('local_ustar_route_test_tokens', ['tokenhash' => $hash], '*', MUST_EXIST);
+- moodle/local/ustar/classes/route_tester.php:        $runids = self::table_exists('local_ustar_check_runs')
+- moodle/local/ustar/classes/route_tester.php:            ? array_keys($DB->get_records('local_ustar_check_runs', ['userid' => $userid], '', 'id')) : [];
+- moodle/local/ustar/classes/route_tester.php:            ? array_keys($DB->get_records('local_ustar_comp_participants', ['userid' => $userid], '', 'id')) : [];
+- moodle/local/ustar/classes/route_tester.php:            ? array_keys($DB->get_records('local_ustar_notifications', ['userid' => $userid], '', 'id')) : [];
+- moodle/local/ustar/classes/route_tester.php:            ? array_keys($DB->get_records('local_ustar_test_attempts', ['userid' => $userid], '', 'id')) : [];
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_check_submits', 'local_ustar_official_tasks', 'local_ustar_personal_tasks',
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_coin_ledger' => ['userid', 'actorid'],
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_comp_scores', 'local_ustar_comp_participants',
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_content_events' => ['userid', 'actorid'],
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_game_mastery', 'local_ustar_check_runs', 'local_ustar_content_ack',
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_hr_actions' => ['targetuserid', 'actorid'],
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_library', 'local_ustar_evidence_rec', 'local_ustar_gate_decisions',
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_notifications', 'local_ustar_dev_assess_try', 'local_ustar_test_attempts',
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_reviews' => ['userid', 'reviewerid'],
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_route_progress', 'local_ustar_goals', 'local_ustar_game_attempts',
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_route_test_tokens',
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_route_test_tokens' => ['sandboxuserid'],
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_staff_requests' => ['employeeid', 'requestedby', 'reviewedby', 'createduserid'],
+- moodle/local/ustar/classes/route_tester.php:            'local_ustar_test_results', 'local_ustar_coin_accounts', 'local_ustar_coin_balance',
+- moodle/local/ustar/classes/route_tester.php:        self::delete_children('local_ustar_check_answers', 'runid', $runids);
+- moodle/local/ustar/classes/route_tester.php:        self::delete_children('local_ustar_comp_results', 'participantid', $participantids);
+- moodle/local/ustar/classes/route_tester.php:        self::delete_children('local_ustar_comp_score_events', 'participantid', $participantids);
+- moodle/local/ustar/classes/route_tester.php:        self::delete_children('local_ustar_notify_delivery', 'notificationid', $notificationids);
+- moodle/local/ustar/classes/route_tester.php:        self::delete_children('local_ustar_test_answers', 'attemptid', $attemptids);
+- moodle/local/ustar/classes/staffing_requests.php:        $DB->update_record('local_ustar_staff_requests', $request);
+- moodle/local/ustar/classes/staffing_requests.php:        $id = (int)$DB->insert_record('local_ustar_staff_requests', $request);
+- moodle/local/ustar/classes/staffing_requests.php:            $records = $DB->get_records('local_ustar_staff_requests', [
+- moodle/local/ustar/classes/staffing_requests.php:            $records = $DB->get_records('local_ustar_staff_requests', [], 'timecreated DESC');
+- moodle/local/ustar/classes/staffing_requests.php:        $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/structure.php:            $DB->insert_record('local_ustar_structure', (object)[
+- moodle/local/ustar/classes/structure.php:            $DB->update_record('local_ustar_structure', $rec);
+- moodle/local/ustar/classes/structure.php:        $rec = $DB->get_record('local_ustar_structure', ['name' => $name]);
+- moodle/local/ustar/classes/structure.php: * Stored as JSON in local_ustar_structure (name = 'structure').
+- moodle/local/ustar/classes/target_core.php:                    $DB->insert_record('local_ustar_notify_delivery', (object)[
+- moodle/local/ustar/classes/target_core.php:                $DB->insert_record('local_ustar_notify_delivery', (object)[
+- moodle/local/ustar/classes/target_core.php:            $DB->update_record('local_ustar_notifications', $notification);
+- moodle/local/ustar/classes/target_core.php:        $DB->update_record('local_ustar_official_tasks', $task);
+- moodle/local/ustar/classes/target_core.php:            $DB->update_record('local_ustar_personal_tasks', $task);
+- moodle/local/ustar/classes/target_core.php:        $evidence = $DB->get_record('local_ustar_evidence_rec', ['id' => $evidenceid], '*', IGNORE_MISSING);
+- moodle/local/ustar/classes/target_core.php:        $evidence = $DB->get_record('local_ustar_evidence_rec', ['id' => $evidenceid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:            $existing = $DB->get_field('local_ustar_evidence_rec', 'id', ['idempotencykey' => $key]);
+- moodle/local/ustar/classes/target_core.php:        $gate = $DB->get_record('local_ustar_gate_defs', ['id' => $gateid, 'status' => 'published'], '*', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:                $id = (int)$DB->insert_record('local_ustar_notifications', (object)[
+- moodle/local/ustar/classes/target_core.php:        $id = (int)$DB->insert_record('local_ustar_official_tasks', (object)[
+- moodle/local/ustar/classes/target_core.php:        $id = (int)$DB->insert_record('local_ustar_personal_tasks', (object)[
+- moodle/local/ustar/classes/target_core.php:        $notification = $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:            $old = $DB->get_record('local_ustar_check_submits', ['id' => $correctionof], '*', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:            $record = $DB->get_record('local_ustar_evidence_rec', ['id' => $evidenceid], 'id,userid', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:            $replacement = $DB->get_record('local_ustar_evidence_rec', ['id' => $replacementid], 'id,userid', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:        $task = $DB->get_record('local_ustar_official_tasks', ['id' => $taskid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:            $task = $DB->get_record('local_ustar_personal_tasks', ['id' => $id, 'userid' => $userid], '*', MUST_EXIST);
+- moodle/local/ustar/classes/target_core.php:        if ($existing = $DB->get_field('local_ustar_evidence_rec', 'id', ['idempotencykey' => $key])) {
+- moodle/local/ustar/classes/target_core.php:            if ($existing = $DB->get_field('local_ustar_notifications', 'id', ['idempotencykey' => $key])) return (int)$existing;
+- moodle/local/ustar/classes/target_core.php:        if ($existing = $DB->get_field('local_ustar_notifications', 'id', ['idempotencykey' => $key])) return (int)$existing;
+- moodle/local/ustar/classes/target_core.php:        if ($existing = $DB->get_record('local_ustar_official_tasks', [
+- moodle/local/ustar/classes/target_core.php:            'local_ustar_evidence_evt', 'evidenceid = :id AND eventtype IN (:revoked,:corrected)',
+- moodle/local/ustar/classes/target_core.php:        return (int)$DB->insert_record('local_ustar_check_submits', (object)[
+- moodle/local/ustar/classes/target_core.php:        return (int)$DB->insert_record('local_ustar_evidence_evt', (object)[
+- moodle/local/ustar/classes/target_core.php:            return (int)$DB->insert_record('local_ustar_evidence_rec', $record);
+- moodle/local/ustar/classes/target_core.php:        return (int)$DB->insert_record('local_ustar_gate_decisions', (object)[
+- moodle/local/ustar/classes/target_core.php:        return (int)$DB->insert_record('local_ustar_workflow_events', (object)[
+- moodle/local/ustar/classes/target_core.php:            'SELECT * FROM {local_ustar_gate_decisions} WHERE gateid = :gateid AND userid = :userid ORDER BY timecreated DESC, id DESC',
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_adaptations' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_check_submits' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_coin_balance' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_competitions' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_comp_participants' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_comp_results' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_comp_rules' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_comp_score_events' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_dev_assess' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_dev_assess_try' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_dev_assess_ver' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_evidence_evt' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_evidence_rec' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_gate_decisions' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_gate_defs' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_notifications' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_notify_delivery' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_official_tasks' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_personal_tasks' => [
+- moodle/local/ustar/classes/target_schema.php:            'local_ustar_workflow_events' => [
+- moodle/local/ustar/classes/task/renew_acting_assignments.php:            $DB->update_record('local_ustar_assignments',$row);
+- moodle/local/ustar/classes/task/renew_acting_assignments.php:            'local_ustar_assignments',
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->delete_records('local_ustar_assess_runtime', ['userid' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->delete_records('local_ustar_content_ack', ['userid' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->delete_records('local_ustar_content_events', ['userid' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->delete_records('local_ustar_dev_assess_try', ['userid' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:                $DB->delete_records('local_ustar_gate_decisions', ['userid' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->delete_records('local_ustar_route_progress', ['userid' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->delete_records('local_ustar_workflow_events', ['entitytype' => 'route_native', 'actorid' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->delete_records_select('local_ustar_library', 'userid = :u AND routepointid IS NOT NULL', ['u' => $userid]);
+- moodle/local/ustar/classes/user_history_reset.php:                $DB->delete_records_select('local_ustar_workflow_events', "entitytype = :etype AND entityid {$insql}", $params);
+- moodle/local/ustar/classes/user_history_reset.php:            $DB->insert_record('local_ustar_workflow_events', (object)[
+- moodle/local/ustar/classes/user_history_reset.php:            $runtimeids = array_keys($DB->get_records('local_ustar_assess_runtime', ['userid' => $userid], '', 'id'));
+- moodle/local/ustar/classes/user_history_reset.php:        $runtimeids = array_keys($DB->get_records('local_ustar_assess_runtime', ['userid' => $userid], '', 'id'));
+- moodle/local/ustar/classes/user_history_reset.php:            $workflowevents = $DB->count_records_select('local_ustar_workflow_events', "entitytype = :etype AND entityid {$insql}", $params);
+- moodle/local/ustar/classes/user_history_reset.php:            'contentack' => $DB->count_records('local_ustar_content_ack', ['userid' => $userid]),
+- moodle/local/ustar/classes/user_history_reset.php:            'contentevents' => $DB->count_records('local_ustar_content_events', ['userid' => $userid]),
+- moodle/local/ustar/classes/user_history_reset.php:            'devassesstry' => $DB->count_records('local_ustar_dev_assess_try', ['userid' => $userid]),
+- moodle/local/ustar/classes/user_history_reset.php:            'gatedecisions' => $DB->get_manager()->table_exists('local_ustar_gate_decisions') ? $DB->count_records('local_ustar_gate_decisions', ['userid' => $userid]) : 0,
+- moodle/local/ustar/classes/user_history_reset.php:            if ($DB->get_manager()->table_exists('local_ustar_gate_decisions')) {
+- moodle/local/ustar/classes/user_history_reset.php:            'libraryroute' => $DB->count_records_select('local_ustar_library', 'userid = :u AND routepointid IS NOT NULL', ['u' => $userid]),
+- moodle/local/ustar/classes/user_history_reset.php:            'routeprogress' => $DB->count_records('local_ustar_route_progress', ['userid' => $userid]),
+- moodle/local/ustar/cli/assessment_lifecycle_probe.php:    $point = $DB->get_record('local_ustar_route_points', ['id' => (int)$runtime->pointid], 'id,pointkey,routeid', MUST_EXIST);
+- moodle/local/ustar/cli/assessment_lifecycle_probe.php:$policies = $DB->get_records('local_ustar_assess_policy', ['active' => 1], 'pointid ASC,versionid ASC');
+- moodle/local/ustar/cli/assessment_lifecycle_probe.php:    $version = $DB->get_record('local_ustar_route_versions', ['id' => (int)$runtime->versionid], 'id,versionno,title', MUST_EXIST);
+- moodle/local/ustar/cli/assessment_lifecycle_probe.php:            'local_ustar_route_versions',
+- moodle/local/ustar/cli/check_catalog_archobuch.php:$groups = $DB->get_records('local_ustar_catalog', ['active' => 1, 'itemtype' => 'group']);
+- moodle/local/ustar/cli/check_catalog_archobuch.php:$rows = $DB->get_records('local_ustar_catalog', ['active' => 1]);
+- moodle/local/ustar/cli/check_development_assessment.php:$tables = ['local_ustar_dev_assess', 'local_ustar_dev_assess_ver', 'local_ustar_dev_assess_try'];
+- moodle/local/ustar/cli/check_learning_route_v2.php:    'local_ustar_route_points',
+- moodle/local/ustar/cli/check_learning_route_v2.php:    'local_ustar_route_progress',
+- moodle/local/ustar/cli/check_learning_route_v2.php:    'local_ustar_routes',
+- moodle/local/ustar/cli/check_learning_route_v2.php:    'local_ustar_route_versions',
+- moodle/local/ustar/cli/check_learning_route_v2_schema.php:    'local_ustar_route_points',
+- moodle/local/ustar/cli/check_learning_route_v2_schema.php:    'local_ustar_route_progress',
+- moodle/local/ustar/cli/check_learning_route_v2_schema.php:    'local_ustar_routes',
+- moodle/local/ustar/cli/check_learning_route_v2_schema.php:    'local_ustar_route_versions',
+- moodle/local/ustar/cli/check_materials_library_schema.php:$eventcount = $DB->count_records('local_ustar_content_events');
+- moodle/local/ustar/cli/check_materials_library_schema.php:$librarycount = $DB->count_records('local_ustar_library');
+- moodle/local/ustar/cli/check_materials_library_schema.php:    'local_ustar_content_events' => [
+- moodle/local/ustar/cli/check_materials_library_schema.php:    'local_ustar_library' => [
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $acting=(int)$DB->count_records('local_ustar_assignments',['status'=>'active','assignmenttype'=>'acting']);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $assign=$DB->count_records('local_ustar_assignments',['status'=>'active']);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $DB->delete_records('local_ustar_assignments',['userid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $DB->delete_records('local_ustar_check_runs',['userid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $DB->delete_records('local_ustar_check_submits',['userid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $DB->delete_records('local_ustar_evidence_rec',['userid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $DB->delete_records('local_ustar_notifications',['userid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $DB->delete_records('local_ustar_test_attempts',['userid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $DB->delete_records('local_ustar_test_results',['userid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->delete_records('local_ustar_workflow_events',['actorid'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->delete_records_select('local_ustar_coin_ledger','userid=:u OR actorid=:a',['u'=>$uid,'a'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->delete_records_select('local_ustar_comp_scores','userid=:u OR actorid=:a',['u'=>$uid,'a'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->delete_records_select('local_ustar_hr_actions','targetuserid=:u OR actorid=:a',['u'=>$uid,'a'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->delete_records_select('local_ustar_reporting','userid=:u OR managerid=:m',['u'=>$uid,'m'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->insert_record('local_ustar_assignments',(object)[
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->update_record('local_ustar_assignments',$a);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:            $DB->update_record('local_ustar_staff_places',$place);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $DB->update_record('local_ustar_staff_places',$place);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $evids=$DB->get_fieldset_select('local_ustar_evidence_rec','id','userid=:u',['u'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:            $id=(int)$DB->insert_record('local_ustar_staff_places',(object)[
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $notids=$DB->get_fieldset_select('local_ustar_notifications','id','userid=:u',['u'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $p=[];foreach($DB->get_records('local_ustar_route_points',null,'id ASC') as $x)$p[]=[(int)$x->id,(int)$x->routeid,(string)$x->pointkey,(string)$x->phase,(int)$x->sortorder,(int)$x->active];
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        $place=$DB->get_record('local_ustar_staff_places',['id'=>$seatids[$s['seatkey']]],'*',MUST_EXIST);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:            $place=$DB->get_record('local_ustar_staff_places',['id'=>(int)$s['staffplaceid']],'*',MUST_EXIST);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $places=$DB->count_records('local_ustar_staff_places',['active'=>1]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $r=[];foreach($DB->get_records('local_ustar_routes',null,'id ASC') as $x)$r[]=[(int)$x->id,(string)$x->positionid,(string)$x->departmentid,(int)$x->active,(string)$x->name];
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $runids=$DB->get_fieldset_select('local_ustar_check_runs','id','userid=:u',['u'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $s=[];foreach($DB->get_records('local_ustar_route_scope',null,'id ASC') as $x)$s[]=[(int)$x->id,(int)$x->pointid,(string)$x->scopeid,(string)$x->state,(int)$x->active];
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $ta=$DB->get_fieldset_select('local_ustar_test_attempts','id','userid=:u',['u'=>$uid]);
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $unique=(int)$DB->get_field_sql("SELECT COUNT(DISTINCT userid) FROM {local_ustar_assignments} WHERE status='active'");
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    $v=[];foreach($DB->get_records('local_ustar_route_versions',null,'id ASC') as $x)$v[]=[(int)$x->id,(int)$x->pointid,(int)$x->versionno,(string)$x->status,(string)$x->title,(string)$x->requirementsjson,(string)$x->renewalpolicy];
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    foreach($DB->get_records('local_ustar_assignments',['status'=>'active']) as $a){
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_coin_ledger')))
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_comp_scores')))
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_hr_actions')))
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reporting')))
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_workflow_events')))
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($evids){[$in,$p]=$DB->get_in_or_equal(array_map('intval',$evids),SQL_PARAMS_NAMED,'e');$DB->delete_records_select('local_ustar_evidence_evt','evidenceid '.$in,$p);}
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($notids){[$in,$p]=$DB->get_in_or_equal(array_map('intval',$notids),SQL_PARAMS_NAMED,'n');$DB->delete_records_select('local_ustar_notify_delivery','notificationid '.$in,$p);}
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($runids){[$in,$p]=$DB->get_in_or_equal(array_map('intval',$runids),SQL_PARAMS_NAMED,'r');$DB->delete_records_select('local_ustar_check_answers','runid '.$in,$p);}
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:    if($ta){[$in,$p]=$DB->get_in_or_equal(array_map('intval',$ta),SQL_PARAMS_NAMED,'t');$DB->delete_records_select('local_ustar_test_answers','attemptid '.$in,$p);$DB->delete_records_select('local_ustar_test_results','attemptid '.$in,$p);}
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        'local_ustar_coin_accounts','local_ustar_coin_balance','local_ustar_comp_participants',
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        'local_ustar_content_events','local_ustar_game_attempts','local_ustar_game_mastery',
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        'local_ustar_goals','local_ustar_library','local_ustar_official_tasks',
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        'local_ustar_personal_tasks','local_ustar_reviews','local_ustar_gate_decisions'
+- moodle/local/ustar/cli/hr_canonical_2724_apply.php:        'local_ustar_route_progress','local_ustar_dev_assess_try','local_ustar_content_ack',
+- moodle/local/ustar/cli/import_catalog_manifest.php:        $DB->update_record('local_ustar_catalog', $record);
+- moodle/local/ustar/cli/import_catalog_manifest.php:        $existing = $DB->get_record('local_ustar_catalog', [
+- moodle/local/ustar/cli/import_catalog_manifest.php:    $existing = $DB->get_record('local_ustar_catalog', ['slug' => $slug], '*', IGNORE_MISSING);
+- moodle/local/ustar/cli/import_catalog_manifest.php:    $existing = $DB->get_record_select('local_ustar_catalog', $select, $params, '*', IGNORE_MISSING);
+- moodle/local/ustar/cli/import_catalog_manifest.php:    $id = $DB->insert_record('local_ustar_catalog', (object)[
+- moodle/local/ustar/cli/import_catalog_manifest.php:        $id = (int)$DB->insert_record('local_ustar_catalog', $record);
+- moodle/local/ustar/cli/import_catalog.php:        $existing = $DB->get_record('local_ustar_catalog', ['itemtype'=>'product','parentid'=>$parentid,'title'=>$item['title']], '*', IGNORE_MISSING);
+- moodle/local/ustar/cli/import_catalog.php:        $existing = $DB->get_record('local_ustar_catalog', ['itemtype'=>'product','sku'=>$item['sku']], '*', IGNORE_MISSING);
+- moodle/local/ustar/cli/import_catalog.php:    $existing = $DB->get_record_select('local_ustar_catalog', $select, $params, 'id');
+- moodle/local/ustar/cli/import_catalog.php:    $id = $DB->insert_record('local_ustar_catalog', (object)[
+- moodle/local/ustar/cli/import_catalog.php:    else { $DB->insert_record('local_ustar_catalog', $record); $created++; }
+- moodle/local/ustar/cli/import_catalog.php:    if ($existing) { $DB->update_record('local_ustar_catalog', $record); $updated++; }
+- moodle/local/ustar/cli/import_reporting.php:    foreach ($DB->get_records('local_ustar_reporting') as $r) {
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:    $content = $DB->get_record('local_ustar_content', [
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:    $contentid = (int)$DB->insert_record('local_ustar_content', (object)[
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_content_access', 'contentid', $contentids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_content_ack', 'contentid', $contentids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_content_events', 'contentid', $contentids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_content', 'id', $contentids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_content_versions', 'contentid', $contentids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_library', 'contentid', $contentids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_route_points', 'id', $pointids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_route_progress', 'pointid', $pointids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->delete_records_list('local_ustar_route_versions', 'pointid', $pointids);
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $DB->insert_record('local_ustar_content_access', (object)[
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:    $point = $DB->get_record('local_ustar_route_points', [
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        $versionid = (int)$DB->insert_record('local_ustar_content_versions', (object)[
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:            'local_ustar_content',
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        'local_ustar_content',
+- moodle/local/ustar/cli/materials_library_ui_fixture.php:        'local_ustar_route_points',
+- moodle/local/ustar/cli/probe_development_assessment.php:        $DB->delete_records('local_ustar_dev_assess_try', ['id' => $attemptid]);
+- moodle/local/ustar/cli/reconcile_assessment_runtime.php:    $DB->insert_record('local_ustar_workflow_events', (object)[
+- moodle/local/ustar/cli/reconcile_assessment_runtime.php:    $exists = $DB->record_exists('local_ustar_workflow_events', [
+- moodle/local/ustar/cli/reconcile_assessment_runtime.php:    $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid]);
+- moodle/local/ustar/cli/reconcile_assessment_runtime.php:$runtimes = $DB->get_records('local_ustar_assess_runtime', [], 'id ASC');
+- moodle/local/ustar/cli/sync_uscoin.php:    foreach ($DB->get_records('local_ustar_game_mastery', [], 'id ASC') as $m) {
+- moodle/local/ustar/cli/sync_uscoin.php:if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_game_mastery'))) {
+- moodle/local/ustar/cli/sync_uscoin.php:        if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey'=>$key])) continue;
+- moodle/local/ustar/cli/sync_uscoin.php:    if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey'=>$key])) continue;
+- moodle/local/ustar/cli/test_materials_library.php:    $after = $DB->count_records('local_ustar_content_events', [
+- moodle/local/ustar/cli/test_materials_library.php:    $assert($DB->record_exists('local_ustar_content_events', [
+- moodle/local/ustar/cli/test_materials_library.php:    $assert($DB->record_exists('local_ustar_library', [
+- moodle/local/ustar/cli/test_materials_library.php:    $assert((int)$DB->get_field('local_ustar_content', 'parentid', [
+- moodle/local/ustar/cli/test_materials_library.php:    $before = $DB->count_records('local_ustar_content_events', [
+- moodle/local/ustar/cli/test_materials_library.php:    $contentid = (int)$DB->insert_record('local_ustar_content', (object)[
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_content_access', 'contentid', $contentids);
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_content_ack', 'contentid', $contentids);
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_content_events', 'contentid', $contentids);
+- moodle/local/ustar/cli/test_materials_library.php:            $DB->delete_records_list('local_ustar_content', 'id', $folderids);
+- moodle/local/ustar/cli/test_materials_library.php:            $DB->delete_records_list('local_ustar_content', 'id', $nonfolders);
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_content_versions', 'contentid', $contentids);
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_library', 'contentid', $contentids);
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_route_points', 'id', $pointids);
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_route_progress', 'pointid', $pointids);
+- moodle/local/ustar/cli/test_materials_library.php:        $DB->delete_records_list('local_ustar_route_versions', 'pointid', $pointids);
+- moodle/local/ustar/cli/test_materials_library.php:    $DB->insert_record('local_ustar_content_access', (object)[
+- moodle/local/ustar/cli/test_materials_library.php:            $DB->set_field('local_ustar_content', 'parentid', null, ['id' => $folderid]);
+- moodle/local/ustar/cli/test_materials_library.php:    $freshb = (int)$DB->get_field('local_ustar_content', 'timemodified', [
+- moodle/local/ustar/cli/test_materials_library.php:    $versionid = (int)$DB->insert_record('local_ustar_content_versions', (object)[
+- moodle/local/ustar/cli/validate_2725.php:$check($DB->count_records('local_ustar_assignments', ['userid' => $uid, 'status' => 'active']) === 0, 'U2_NO_ACTIVE_ASSIGNMENT');
+- moodle/local/ustar/cli/validate_2725.php:$check($DB->count_records('local_ustar_reporting', ['managerid' => $uid]) === 0, 'U2_NOT_REPORTING_MANAGER');
+- moodle/local/ustar/cli/validate_2725.php:$check($DB->count_records('local_ustar_reporting', ['userid' => $uid]) === 0, 'U2_NOT_REPORTING_EMPLOYEE');
+- moodle/local/ustar/cli/validate_2725.php:echo 'ACTIVE_ASSIGNMENTS=' . $DB->count_records('local_ustar_assignments', ['status' => 'active']) . PHP_EOL;
+- moodle/local/ustar/cli/validate_2725.php:echo 'ACTIVE_STAFF_PLACES=' . $DB->count_records('local_ustar_staff_places', ['active' => 1]) . PHP_EOL;
+- moodle/local/ustar/cli/validate_2725.php:echo 'REPORTING_LINES=' . $DB->count_records('local_ustar_reporting') . PHP_EOL;
+- moodle/local/ustar/cli/validate_2725.php:echo 'UNIQUE_ACTIVE_PEOPLE=' . $DB->get_field_sql("SELECT COUNT(DISTINCT userid) FROM {local_ustar_assignments} WHERE status = :status", ['status' => 'active']) . PHP_EOL;
+- moodle/local/ustar/cli/validate_2726.php:rtcheck('ACTIVE_ASSIGNMENTS_75', $DB->count_records('local_ustar_assignments', ['status' => 'active']) === 75, (string)$DB->count_records('local_ustar_assignments', ['status' => 'active']));
+- moodle/local/ustar/cli/validate_2726.php:rtcheck('ACTIVE_STAFF_PLACES_89', $DB->count_records('local_ustar_staff_places', ['active' => 1]) === 89, (string)$DB->count_records('local_ustar_staff_places', ['active' => 1]));
+- moodle/local/ustar/cli/validate_2726.php:rtcheck('REPORTING_73', $DB->count_records('local_ustar_reporting') === 73, (string)$DB->count_records('local_ustar_reporting'));
+- moodle/local/ustar/cli/validate_2726.php:rtcheck('ROUTE_TESTERS_TABLE', $DB->get_manager()->table_exists(new xmldb_table('local_ustar_route_testers')));
+- moodle/local/ustar/cli/validate_2726.php:rtcheck('ROUTE_TEST_TOKENS_TABLE', $DB->get_manager()->table_exists(new xmldb_table('local_ustar_route_test_tokens')));
+- moodle/local/ustar/cli/validate_2726.php:rtcheck('U2_NO_ACTIVE_ASSIGNMENT', !$DB->record_exists('local_ustar_assignments', ['userid' => $uid, 'status' => 'active']));
+- moodle/local/ustar/db/install.php:        $DB->insert_record('local_ustar_games', (object)[
+- moodle/local/ustar/db/install.php:        $DB->insert_record('local_ustar_structure', (object)[
+- moodle/local/ustar/db/install.php:function xmldb_local_ustar_install(): void {
+- moodle/local/ustar/db/install.php:    if (!$DB->record_exists('local_ustar_games', ['code' => 'guess_tool'])) {
+- moodle/local/ustar/db/install.php:    if (!$DB->record_exists('local_ustar_structure', ['name' => 'checklists'])) {
+- moodle/local/ustar/db/services.php:    'local_ustar_admin_get_games' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_admin_get_structure' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_admin_save_game' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_admin_save_structure' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_admin_upload_brand_asset' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_executive_get_dashboard' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_checklists' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_dashboard' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_game_question' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_games' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_ladder' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_matrix' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_skills' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_team' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_get_workspace' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_bulk_assign_positions' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_get_checklists' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_get_dashboard' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_get_people' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_get_person' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_get_workspace' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_import_people' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_save_checklists' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_save_learning' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_save_person' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_hr_save_review' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_save_goal' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_save_prefs' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_submit_checklist' => [
+- moodle/local/ustar/db/services.php:    'local_ustar_submit_game_answer' => [
+- moodle/local/ustar/db/upgrade.php:        $assessmentpoints = $DB->get_records('local_ustar_route_points', [
+- moodle/local/ustar/db/upgrade.php:        $boards = new xmldb_table('local_ustar_boards');
+- moodle/local/ustar/db/upgrade.php:        $catalog->add_key('parentid_fk', XMLDB_KEY_FOREIGN, ['parentid'], 'local_ustar_catalog', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $catalog = new xmldb_table('local_ustar_catalog');
+- moodle/local/ustar/db/upgrade.php:        $content = new xmldb_table('local_ustar_content');
+- moodle/local/ustar/db/upgrade.php:            $DB->insert_record('local_ustar_assess_policy', (object)[
+- moodle/local/ustar/db/upgrade.php:                $DB->insert_record('local_ustar_coin_balance', (object)[
+- moodle/local/ustar/db/upgrade.php:                $DB->insert_record('local_ustar_content', (object)[
+- moodle/local/ustar/db/upgrade.php:            $DB->insert_record('local_ustar_games', (object)[
+- moodle/local/ustar/db/upgrade.php:            $DB->insert_record('local_ustar_structure', (object)[
+- moodle/local/ustar/db/upgrade.php:        $events = new xmldb_table('local_ustar_content_events');
+- moodle/local/ustar/db/upgrade.php:        $familytable = new xmldb_table('local_ustar_route_families');
+- moodle/local/ustar/db/upgrade.php:        $ledger = new xmldb_table('local_ustar_coin_ledger');
+- moodle/local/ustar/db/upgrade.php:        $legacyroutepositions = new xmldb_table('local_ustar_route_positions');
+- moodle/local/ustar/db/upgrade.php:        $library = new xmldb_table('local_ustar_library');
+- moodle/local/ustar/db/upgrade.php:        $points = new xmldb_table('local_ustar_route_points');
+- moodle/local/ustar/db/upgrade.php:        $progress = new xmldb_table('local_ustar_route_progress');
+- moodle/local/ustar/db/upgrade.php:        $reporting = new xmldb_table('local_ustar_reporting');
+- moodle/local/ustar/db/upgrade.php:        $routes = new xmldb_table('local_ustar_routes');
+- moodle/local/ustar/db/upgrade.php:        $submits = new xmldb_table('local_ustar_check_submits');
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('competitionid_fk', XMLDB_KEY_FOREIGN, ['competitionid'], 'local_ustar_competitions', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('gameid_fk', XMLDB_KEY_FOREIGN, ['gameid'], 'local_ustar_games', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('pointid_fk', XMLDB_KEY_FOREIGN, ['pointid'], 'local_ustar_route_points', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('policyid_fk', XMLDB_KEY_FOREIGN, ['policyid'], 'local_ustar_assess_policy', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('questionid_fk', XMLDB_KEY_FOREIGN, ['questionid'], 'local_ustar_questions', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('remediationpointid_fk', XMLDB_KEY_FOREIGN, ['remediationpointid'], 'local_ustar_route_points', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('remediationversionid_fk', XMLDB_KEY_FOREIGN, ['remediationversionid'], 'local_ustar_route_versions', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('runid_fk', XMLDB_KEY_FOREIGN, ['runid'], 'local_ustar_check_runs', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('versionid_fk', XMLDB_KEY_FOREIGN_UNIQUE, ['versionid'], 'local_ustar_route_versions', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table->add_key('versionid_fk', XMLDB_KEY_FOREIGN, ['versionid'], 'local_ustar_route_versions', ['id']);
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_adaptations');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_assess_policy');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_assess_runtime');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_assignments');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_check_answers');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_check_runs');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_comp_scores');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_game_attempts');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_game_mastery');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_games');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_hr_actions');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_questions');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_reviews');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_route_scope');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_route_testers');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_route_test_tokens');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_skill_evidence');
+- moodle/local/ustar/db/upgrade.php:        $table = new xmldb_table('local_ustar_staff_requests');
+- moodle/local/ustar/db/upgrade.php:        $versions = new xmldb_table('local_ustar_route_versions');
+- moodle/local/ustar/db/upgrade.php:        // Active TARGET runtime uses local_ustar_dev_assess*.
+- moodle/local/ustar/db/upgrade.php:        foreach (['local_ustar_competitions', 'local_ustar_comp_results', 'local_ustar_comp_scores'] as $tablename) {
+- moodle/local/ustar/db/upgrade.php:        foreach (['local_ustar_comp_scores', 'local_ustar_comp_results', 'local_ustar_competitions'] as $tablename) {
+- moodle/local/ustar/db/upgrade.php:                  FROM {local_ustar_route_points} p
+- moodle/local/ustar/db/upgrade.php:                       FROM {local_ustar_route_versions}
+- moodle/local/ustar/db/upgrade.php:                   FROM {local_ustar_route_versions}
+- moodle/local/ustar/db/upgrade.php:function xmldb_local_ustar_upgrade($oldversion): bool {
+- moodle/local/ustar/db/upgrade.php:            if (!$assessmentversion || $DB->record_exists('local_ustar_assess_policy', ['versionid' => (int)$assessmentversion->id])) {
+- moodle/local/ustar/db/upgrade.php:        if ($DB->get_manager()->table_exists($content) && !$DB->record_exists('local_ustar_content', ['type' => 'folder'])) {
+- moodle/local/ustar/db/upgrade.php:            if (!$DB->record_exists('local_ustar_coin_balance', ['userid' => (int)$row->userid])) {
+- moodle/local/ustar/db/upgrade.php:        if (!$DB->record_exists('local_ustar_games', ['code' => 'guess_tool'])) {
+- moodle/local/ustar/db/upgrade.php:        if (!$DB->record_exists('local_ustar_structure', ['name' => 'checklists'])) {
+- moodle/local/ustar/db/upgrade.php:                  JOIN {local_ustar_routes} r
+- moodle/local/ustar/db/upgrade.php:        // Legacy local_ustar_test_* tables are intentionally retained and
+- moodle/local/ustar/db/upgrade.php:        // local_ustar_coin_accounts, local_ustar_staff_places, local_ustar_assignments.
+- moodle/local/ustar/db/upgrade.php:                    'local_ustar_content',
+- moodle/local/ustar/db/upgrade.php:                'local_ustar_content',
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_content'
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_content',
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_content_access'
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_content_ack'
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_content_versions'
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_content_versions',
+- moodle/local/ustar/db/upgrade.php:        // local_ustar_library is a rebuildable read model. Existing ACL rows,
+- moodle/local/ustar/db/upgrade.php:                    'local_ustar_route_families',
+- moodle/local/ustar/db/upgrade.php:                'local_ustar_route_families',
+- moodle/local/ustar/db/upgrade.php:                        'local_ustar_route_points',
+- moodle/local/ustar/db/upgrade.php:                    'local_ustar_route_points',
+- moodle/local/ustar/db/upgrade.php:                'local_ustar_route_points',
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_route_points'
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_route_points',
+- moodle/local/ustar/db/upgrade.php:                        'local_ustar_route_progress',
+- moodle/local/ustar/db/upgrade.php:                    'local_ustar_routes',
+- moodle/local/ustar/db/upgrade.php:                'local_ustar_routes',
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_routes',
+- moodle/local/ustar/db/upgrade.php:                        'local_ustar_route_scope',
+- moodle/local/ustar/db/upgrade.php:                    'local_ustar_route_scope',
+- moodle/local/ustar/db/upgrade.php:                        'local_ustar_route_versions',
+- moodle/local/ustar/db/upgrade.php:                    'local_ustar_route_versions',
+- moodle/local/ustar/db/upgrade.php:            'local_ustar_skill_evidence'
+- moodle/local/ustar/db/upgrade.php:                'parentid_fk', XMLDB_KEY_FOREIGN, ['parentid'], 'local_ustar_content', ['id']
+- moodle/local/ustar/db/upgrade.php:        // Production checklist executions. Definitions remain versioned JSON in local_ustar_structure.
+- moodle/local/ustar/db/upgrade.php:            'SELECT userid, COALESCE(SUM(amount), 0) AS balance FROM {local_ustar_coin_ledger} GROUP BY userid'
+- moodle/local/ustar/db/upgrade.php:        // versioned JSON in local_ustar_structure.
+- moodle/local/ustar/development_assessments.php:    'local_ustar_dev_assess_try',
+- moodle/local/ustar/game_studio.php:        $duplicate = $DB->get_record('local_ustar_games', ['code' => $code], 'id,code');
+- moodle/local/ustar/game_studio.php:                        'local_ustar_questions',
+- moodle/local/ustar/home.php:function local_ustar_course_cover_url(int $courseid, $output): string {
+- moodle/local/ustar/home.php:            local_ustar_course_cover_url($courseid, $OUTPUT),
+- moodle/local/ustar/hr.php:                        'local_ustar_hr_actions'
+- moodle/local/ustar/hr.php:                    'local_ustar_hr_actions',
+- moodle/local/ustar/hr_quiz_grading.php:       FROM {local_ustar_workflow_events}
+- moodle/local/ustar/lib.php:        $game = $DB->get_record('local_ustar_games', ['id' => $question->gameid]);
+- moodle/local/ustar/lib.php:        $question = $DB->get_record('local_ustar_questions', ['id' => $questionid]);
+- moodle/local/ustar/lib.php:function local_ustar_before_footer_original(): string {
+- moodle/local/ustar/lib.php:function local_ustar_before_footer(): string {
+- moodle/local/ustar/lib.php:function local_ustar_pluginfile(
+- moodle/local/ustar/lib.php:    return local_ustar_before_footer_original();
+- moodle/local/ustar/material_ack_export.php:    'local_ustar_content',
+- moodle/local/ustar/material_bulk.php:                        'local_ustar_content',
+- moodle/local/ustar/material_bulk.php:                'local_ustar_content',
+- moodle/local/ustar/material_create.php:            $content = $DB->get_record('local_ustar_content', ['id' => (int)$created['contentid']], '*', MUST_EXIST);
+- moodle/local/ustar/material.php:    'local_ustar_content',
+- moodle/local/ustar/materials.php:    $cursor = $DB->get_record('local_ustar_content', ['id' => $parentid, 'type' => 'folder'], 'id,parentid,title');
+- moodle/local/ustar/materials.php:        $cursor = $next > 0 ? $DB->get_record('local_ustar_content', ['id' => $next, 'type' => 'folder'], 'id,parentid,title') : false;
+- moodle/local/ustar/materials.php:            $newfolderid = $DB->insert_record('local_ustar_content', (object)[
+- moodle/local/ustar/materials.php:    $parentrecord = $DB->get_record('local_ustar_content', ['id' => $parentid, 'type' => 'folder'], 'id,parentid,title,type');
+- moodle/local/ustar/materials.php:    foreach ($DB->get_records('local_ustar_content', ['type' => 'folder'], 'title ASC', 'id,parentid,title') as $folder) {
+- moodle/local/ustar/materials.php:foreach ($DB->get_records('local_ustar_content', ['type' => 'folder'], 'title ASC', 'id,title') as $folder) {
+- moodle/local/ustar/materials.php:      FROM {local_ustar_content}
+- moodle/local/ustar/materials.php:      FROM {local_ustar_content} uc
+- moodle/local/ustar/materials.php:            if ($folderparent > 0 && !$DB->record_exists('local_ustar_content', ['id' => $folderparent, 'type' => 'folder'])) {
+- moodle/local/ustar/materials.php:        'local_ustar_content'
+- moodle/local/ustar/materials.php:        'local_ustar_content',
+- moodle/local/ustar/materials.php:            'local_ustar_content_access',
+- moodle/local/ustar/materials.php:            'local_ustar_content_versions',
+- moodle/local/ustar/material_version_action.php:        'local_ustar_content_versions',
+- moodle/local/ustar/material_version.php:        'local_ustar_content',
+- moodle/local/ustar/positions.php:            $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type,status', IGNORE_MISSING);
+- moodle/local/ustar/positions.php:          FROM {local_ustar_skill_evidence}
+- moodle/local/ustar/positions.php:                    'local_ustar_content',
+- moodle/local/ustar/route_profile_reveal.php:        'local_ustar_route_versions',
+- moodle/local/ustar/route_studio.php:        $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type', IGNORE_MISSING);
+- moodle/local/ustar/route_studio.php:        $point['activechecked'] = !empty($DB->get_field('local_ustar_route_points', 'active', ['id' => (int)$point['id']])) ? 'checked' : '';
+- moodle/local/ustar/route_studio.php:        $point['expectedmodified'] = (int)$DB->get_field('local_ustar_route_points', 'timemodified', ['id' => (int)$point['id']], MUST_EXIST);
+- moodle/local/ustar/route_studio.php:foreach ($DB->get_records_select('local_ustar_content', 'type <> :folder AND status <> :archived', ['folder' => 'folder', 'archived' => 'archived'], 'title ASC', 'id,title,type,status') as $item) {
+- moodle/local/ustar/route_studio.php:        'local_ustar_route_families',
+- moodle/local/ustar/route_studio.php:                    'local_ustar_route_points',
+- moodle/local/ustar/route_studio.php:                'local_ustar_route_points',
+- moodle/local/ustar/route_studio.php:                'local_ustar_routes',
+- moodle/local/ustar/route_studio.php:                'local_ustar_route_scope',
+- moodle/local/ustar/settings.php:        'local_ustar_user_history_reset',
+- moodle/local/ustar/user_prefs.php:set_user_preference('local_ustar_preset',$preset,$USER->id);
+- moodle/local/ustar/view.php:function local_ustar_docx_preview_2706(
+- moodle/local/ustar/view.php:        'local_ustar_content',
+- moodle/local/ustar/view.php:            'local_ustar_content_ack',
+- moodle/local/ustar/view.php:        ? local_ustar_docx_preview_2706(

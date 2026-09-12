@@ -1,0 +1,22 @@
+status: superseded_by_canonical_roadmap
+canonical_branch: main
+canonical_path: context/roadmap/BACKLOG.yaml
+canonical_url: https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/BACKLOG.yaml
+updated_at: '2026-09-07'
+legacy_snapshot:
+  tasks:
+
+    - id: TASK-0001
+      title: Dynamic AI Context Layer
+      status: active
+      priority: critical
+
+    - id: TASK-0002
+      title: Route Position Override
+      status: pending
+      priority: high
+
+    - id: TASK-0003
+      title: AI assistants with RAG
+      status: planned
+      priority: medium

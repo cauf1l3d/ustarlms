@@ -1,0 +1,23 @@
+domain: economy
+
+
+purpose:
+  Игровая экономика и мотивация.
+
+
+canonical:
+
+  coin_ledger
+
+
+principles:
+
+  balance:
+    derived_state
+
+
+events:
+
+  - achievement
+  - learning_completion
+  - competition_result

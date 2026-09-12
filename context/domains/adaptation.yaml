@@ -1,0 +1,28 @@
+domain: adaptation
+
+purpose:
+  Первичный ввод сотрудника в должность.
+
+
+lifecycle:
+
+  employee:
+    ->
+      adaptation_route
+    ->
+      checkpoints
+    ->
+      admission
+
+
+current:
+
+  status:
+    migration_in_progress
+
+
+integrations:
+
+  - learning
+  - evidence
+  - organization

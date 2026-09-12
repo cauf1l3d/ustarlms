@@ -17,3 +17,7 @@
 ## Шаблон следующей записи
 
 Дата; ticket ID; owner; branch/code SHA; что изменено; какие acceptance проверены и где; not-run и причина; migration/rollback; deployment evidence или «не установлен»; следующий ticket/blocker. Не включать персональные данные/секреты и не заменять результаты тестов общим словом PASS.
+
+## 2026-09-12 — R00 source consolidation and GitHub synchronization
+
+Code: `89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb`. Published verified patch payloads on integration/ustar-20260912; updated canonical context and harness separately on main. Application code on main is unchanged. See release publication scope for four source-only exclusions. Validation and separate deployment evidence: [release](../../release/20260912/README.md), [runtime](../runtime/20260912_release.md). R00 is review, not done: full production manifest and broader smoke remain outstanding. No deployment, schema mutation or history rewrite during repository synchronization.

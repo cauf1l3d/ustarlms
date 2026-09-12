@@ -1,0 +1,21 @@
+moodle:
+
+  container:
+    name: ustar_moodle
+
+  filesystem:
+    host: /opt/ustar/data/moodle/public
+    container: /var/www/html/public
+
+  plugin:
+    local/ustar
+
+  theme:
+    theme/ustar
+
+  database:
+    engine: PostgreSQL
+    version: 16
+
+  refreshed:
+    2026-09-07 08:01:30

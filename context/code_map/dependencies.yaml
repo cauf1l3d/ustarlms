@@ -1,0 +1,38 @@
+dependencies:
+
+  routes:
+    entry:
+      - moodle/local/ustar/route_studio.php
+
+    core:
+      - classes/route_model.php
+      - classes/route_family.php
+      - classes/route_scope.php
+
+    consumers:
+      - adaptation_service.php
+      - route_runtime.php
+
+
+  organization:
+    entry:
+      - team.php
+
+    core:
+      - classes/organization_model.php
+      - classes/team_presenter.php
+
+
+  learning:
+    entry:
+      - materials.php
+
+    core:
+      - classes/native_learning.php
+      - classes/catalog_mastery.php
+
+
+  economy:
+    core:
+      - classes/uscoin.php
+      - classes/competition.php

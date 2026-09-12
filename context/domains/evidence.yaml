@@ -1,0 +1,22 @@
+domain: evidence
+
+
+purpose:
+  Реестр подтвержденных результатов обучения.
+
+
+canonical:
+
+  evidence_rec
+
+
+legacy:
+
+  skill_evidence
+
+  assessment_records
+
+
+rule:
+
+  Any qualification claim must have evidence.

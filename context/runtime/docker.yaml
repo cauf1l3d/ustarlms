@@ -1,0 +1,9 @@
+docker:
+  refreshed: "2026-09-07 08:01:30"
+  containers:
+    - name: "ustar_moodle"
+      image: "stack-moodle"
+      ports: "127.0.0.1:8082->80/tcp"
+    - name: "ustar_postgres"
+      image: "postgres:16"
+      ports: "5432/tcp"

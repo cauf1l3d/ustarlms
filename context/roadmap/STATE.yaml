@@ -1,9 +1,10 @@
 schema_version: 1
-updated_at: '2026-09-07'
+updated_at: '2026-09-12'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Roadmap опубликован; реализация следующих задач ещё не начата в рамках этого аудита.
+current_activity: Исходники и патчи 11–12 сентября сведены в integration/ustar-20260912; R00 review, полный
+  production manifest ещё не получен.
 next_task: R00
 ready_tasks:
 - R00
@@ -11,10 +12,10 @@ ready_tasks:
 - R04
 - R16
 code_baseline:
-  branch: feature/route-position-parent-override
-  commit: e71bca2856bc0f80e39cb9ed1cee6098934e232a
-  kind: source_audited
-  production_equivalence: not_verified
+  branch: integration/ustar-20260912
+  commit: 89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb
+  kind: consolidated_source_with_local_tests
+  production_equivalence: latest_scorm_user_reported_working_full_manifest_not_verified
 main_at_audit_start: 5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
 canonical_roadmap_branch: main
 user_priorities:
@@ -24,7 +25,7 @@ user_priorities:
 - Консистентная студия маршрутов
 - Рабочие игры и достижения
 production:
-  status: used_by_employees_but_exact_release_unverified
+  status: latest_patch_user_reported_working_full_release_unverified
   measured_in_this_audit: false
   user_session_evidence:
     container: ustar_moodle
@@ -35,27 +36,42 @@ production:
     source: Показанные пользователем docker inspect и ls в этой сессии, 2026-09-07
     recheck_before_release: true
   unknown:
-  - Точный полный file/schema manifest установленного кода
-  - Текущий cron и backup restore
-  - Наличие подготовленных поздних UI-патчей в prod
-  - PHP/DB/browser acceptance для audited SHA
+  - Полный актуальный production file/schema manifest после последнего патча
+  - Полный smoke всех исходных шести сценариев
+  - Текущие cron, транспорт сообщений и backup restore
+  latest_observation:
+    date: '2026-09-12'
+    source: user conversation after USTAR_SCORM_HEIGHT_20260912
+    quote: отлично вроде работает
+    independently_measured: false
+    details: context/runtime/20260912_release.md
 prior_deliveries:
 - name: Executive tree 20260907
   status: user_confirmed_applied
-  evidence: Пользователь показал CHECK_OK/APPLY_OK и cache purge; это не manifest всего plugin.
+  evidence: Пользователь показал CHECK_OK/APPLY_OK и cache purge; это не manifest
+    всего plugin.
 - name: Executive employee links
   status: user_reported_success
   evidence: Подтверждение в переписке; точные production hashes сверить в R00.
 - name: Team department cards/filter
   status: user_reported_applied_with_ui_defects
-  evidence: Скриншоты после установки показывают дерево; пользователь запросил другое оформление.
+  evidence: Скриншоты после установки показывают дерево; пользователь запросил другое
+    оформление.
 - name: USTAR_POSITIONS_MATERIALS_FIX_20260907.zip
   status: user_confirmed_not_applied
   evidence: Пользователь явно указал, что materials patch не применял.
 - name: USTAR_ORG_UNIFIED_20260907.zip
   status: prepared_not_confirmed_deployed
-  evidence: Единый пакет подготовлен в предыдущей работе; подтверждение применения отсутствует. Не считать частью
-    audited Git SHA.
+  evidence: Единый пакет подготовлен в предыдущей работе; подтверждение применения
+    отсутствует. Не считать частью audited Git SHA.
+- name: UX RC1 20260909
+  status: user_confirmed_installed
+  evidence: Пользователь назвал установленной базой; исходники реконструированы в
+    82e8d37 (local reconstruction, not a published baseline).
+- name: 20260911-12 consolidated patches
+  status: latest_scorm_user_reported_working
+  evidence: release/20260912/README.md; per-delivery manifests retained; full production
+    equivalence not measured.
 non_goals:
 - Изменение application code или production при публикации roadmap
 - Большое переписывание Moodle/SPA

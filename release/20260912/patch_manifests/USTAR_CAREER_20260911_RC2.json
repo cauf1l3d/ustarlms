@@ -1,0 +1,86 @@
+{
+  "package": "USTAR_CAREER_20260911_RC2",
+  "baseline": "Installed USTAR_ROUTE_FLOW_20260911_RC1",
+  "files": [
+    {
+      "target": "local/ustar/classes/career_learning.php",
+      "source": "files/moodle/local/ustar/classes/career_learning.php",
+      "before": [
+        "f0254d4d10ccebb3d35fadd158509f3558817105468ae1011a697e6607ad1213"
+      ],
+      "after": "c3e8854f61481c9bbc7578b08b9b4d8915abdaa64176ebc825d10c0afcf56c6d"
+    },
+    {
+      "target": "local/ustar/classes/consultant_career.php",
+      "source": "files/moodle/local/ustar/classes/consultant_career.php",
+      "before": [
+        null
+      ],
+      "after": "c20a5b4592921b723f158ba50480f1ceb58865d89e88412b6f85b7129dc4aad6"
+    },
+    {
+      "target": "local/ustar/classes/evidence.php",
+      "source": "files/moodle/local/ustar/classes/evidence.php",
+      "before": [
+        "6df90db46f5eface1e2da3ff88b84ceef675712282d6f38b924e5ca5369b670e"
+      ],
+      "after": "2d84f66b32f1b66671e09c1c6c6d66a4c3c07f69fdf7a590d72a0ca8f7e3b4f6"
+    },
+    {
+      "target": "local/ustar/route_career.php",
+      "source": "files/moodle/local/ustar/route_career.php",
+      "before": [
+        "88da4f593202a27ec5eb86a265e895e99adf448eef55f16c2c0928eee382ab56"
+      ],
+      "after": "a71c751e31a65158563eaf0ffb00bf1da04841302e3bd4315c0bb46863a866a6"
+    },
+    {
+      "target": "local/ustar/styles/consultant_career.css",
+      "source": "files/moodle/local/ustar/styles/consultant_career.css",
+      "before": [
+        null
+      ],
+      "after": "0f8e5c3513a0c42a4e528cd7873c137628c116f0934998064f5c175935698dcd"
+    },
+    {
+      "target": "local/ustar/templates/route_career.mustache",
+      "source": "files/moodle/local/ustar/templates/route_career.mustache",
+      "before": [
+        "4341903a6edd0de76c453fe84522328407526ea95f0329aab2fc75270c4f1a17"
+      ],
+      "after": "5fa13cbddcb122d2de9e44970e9ab187e1aed3ed92ceaf3a715d8b3cd9be0988"
+    }
+  ],
+  "guards": [
+    {
+      "target": "local/ustar/version.php",
+      "before": "3b202b49c07cd39f41fe92112a8a22ed6ae763dacfac0d3d92ee4521620a1a83"
+    },
+    {
+      "target": "local/ustar/classes/route_model.php",
+      "before": "7808b5d89adb8fcf7fef19a032aae5bb39a464b232c35670355903751cb2fe53"
+    },
+    {
+      "target": "local/ustar/classes/route_scope.php",
+      "before": "6a79679c00dbf6010099b09b0c7eee4ab93311a6b53cab823eaf750eb08bcfcd"
+    },
+    {
+      "target": "local/ustar/classes/employee_profile.php",
+      "before": "7d97ee56adeaa452e1763541fdc39c66ed8d69deda3377b30974760ae22d4dfc"
+    },
+    {
+      "target": "local/ustar/classes/route_continue.php",
+      "before": "ada68a86c580a238d7f3014274eca7011ce49c5df2b41fe464548a3ba78bdf3e"
+    },
+    {
+      "target": "theme/ustar/config.php",
+      "before": "e39f3033da4aedf1b1871bc11d5dd9b87fd59b941414c01d98b0832ce7f159bf"
+    }
+  ],
+  "tests": {
+    "tests/flow-dom.cjs": "d6d62d51bc40b748978c4135e6b0d64d72873caa68829abc42300308a4671dd5",
+    "tests/test_install_flow.py": "e1a5e2b1e27f6c55407033c6b272550993e8bab7db48f1bf4b4daadff88067b9",
+    "tests/package.json": "4a99a1b9f99ef4fe0a4a3038a7cae37a29fca6d798419af6efbd592912dc4a96",
+    "tests/domain.php": "1d81adee2aa839191e1db33d5403f7382d73721fe98b502e77251780b7ed45f4"
+  }
+}

@@ -1,16 +1,16 @@
 schema_version: 1
-updated_at: '2026-09-07'
+updated_at: '2026-09-12'
 canonical_branch: main
 canonical_path: context/roadmap/BACKLOG.yaml
 status_protocol: AGENT_PROTOCOL.md
-source_baseline: e71bca2856bc0f80e39cb9ed1cee6098934e232a
+source_baseline: 89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb
 tasks:
 - id: R00
   title: Зафиксировать проверяемую базу Git/release/runtime
   priority: P0
   stage: S0
-  status: ready
-  owner: null
+  status: review
+  owner: Codex / 20260912 repository synchronization
   depends_on: []
   findings:
   - F05
@@ -22,26 +22,36 @@ tasks:
   - context/roadmap/STATE.yaml
   - release/
   actions:
-  - Сравнить main, audited feature SHA, prod-sync и фактические файлы; отдельно учесть UI-пакеты этой сессии.
-  - Получить read-only manifest code/theme/AMD, версию Moodle/plugin/DB schema, docker mounts и git dirty state
-    без config.php/секретов.
-  - Перенести подтверждённые hotfix в reviewable Git-коммиты. Подготовить путь интеграции актуального кода в release/default
-    branch без слепого merge.
-  - 'Установить release manifest: commit, file hashes, assets, schema prerequisites, тесты, backup/rollback; обновить
-    pointers и статус.'
+  - Сравнить main, audited feature SHA, prod-sync и фактические файлы; отдельно учесть
+    UI-пакеты этой сессии.
+  - Получить read-only manifest code/theme/AMD, версию Moodle/plugin/DB schema, docker
+    mounts и git dirty state без config.php/секретов.
+  - Перенести подтверждённые hotfix в reviewable Git-коммиты. Подготовить путь интеграции
+    актуального кода в release/default branch без слепого merge.
+  - 'Установить release manifest: commit, file hashes, assets, schema prerequisites,
+    тесты, backup/rollback; обновить pointers и статус.'
   acceptance:
-  - Каждый установленный или ожидающий патч имеет точные файлы/sha и отдельный статус; unknown не превращён в deployed.
+  - Каждый установленный или ожидающий патч имеет точные файлы/sha и отдельный статус;
+    unknown не превращён в deployed.
   - Новый AI по корню repo находит правильный код, ADR, current stage и next task.
-  - Разница Git↔runtime либо нулевая, либо каждое исключение объяснено и внесено в task; список не содержит секретов.
-  - Выбранный release можно собрать по SHA, проверить на stage и откатить; runtime completion требует реальных подтверждений.
-  production_benefit: Исключает случайную установку старой копии и потерю рабочих правок.
+  - Разница Git↔runtime либо нулевая, либо каждое исключение объяснено и внесено в
+    task; список не содержит секретов.
+  - Выбранный release можно собрать по SHA, проверить на stage и откатить; runtime
+    completion требует реальных подтверждений.
+  production_benefit: Исключает случайную установку старой копии и потерю рабочих
+    правок.
   effort_hint: 1–2 дня + runtime evidence
   blockers:
-  - Для завершения нужен актуальный read-only production manifest; подготовка по Git доступна сейчас.
-  implementation_commit: null
-  validation_evidence: []
-  deployment_evidence: []
-  updated_at: '2026-09-07'
+  - Для полного закрытия R00 нужен read-only file/schema manifest production после
+    последнего патча и оставшиеся smoke-сценарии.
+  implementation_commit: 89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb
+  validation_evidence:
+  - 'release/20260912/README.md: 17 PHP lint files; 31+18 PHP assertions; 14+41 DOM
+    assertions; effective hashes match packaged files.'
+  deployment_evidence:
+  - User confirmed automatic SCORM transition and tentatively accepted the latest
+    height fix; full server manifest not measured.
+  updated_at: '2026-09-12'
 - id: R01
   title: Сделать CI и критические DB-тесты обязательными для текущего кода
   priority: P0
@@ -58,17 +68,19 @@ tasks:
   - moodle/local/ustar/amd/src/
   - moodle/local/ustar/amd/build/
   actions:
-  - На audited branch создать generator и Moodle advanced_testcase для scope/route lifecycle, ledger и read-only
-    snapshot; расширять suite с R02–R08.
-  - Поднять изолированный Moodle/PHP/PostgreSQL bootstrap совместимых версий; не считать plugin отдельным Composer-приложением.
-  - Настроить PR/push trigger на согласованную integration ветку; удалить hardcoded assertion старой версии и stale
-    cmp к историческому bundle.
-  - Проверять PHP, изменённые JS/AMD build, XMLDB install/upgrade, тесты; lint/static-analysis legacy baseline допустим,
-    новые ошибки blocking.
+  - На audited branch создать generator и Moodle advanced_testcase для scope/route
+    lifecycle, ledger и read-only snapshot; расширять suite с R02–R08.
+  - Поднять изолированный Moodle/PHP/PostgreSQL bootstrap совместимых версий; не считать
+    plugin отдельным Composer-приложением.
+  - Настроить PR/push trigger на согласованную integration ветку; удалить hardcoded
+    assertion старой версии и stale cmp к историческому bundle.
+  - Проверять PHP, изменённые JS/AMD build, XMLDB install/upgrade, тесты; lint/static-analysis
+    legacy baseline допустим, новые ошибки blocking.
   acceptance:
-  - PR с намеренно сломанной проверкой завершается failure; PR правильного audited кода реально запускает suite.
-  - Есть DB tests completion/keep/expiry, scope isolation, duplicate/overspend/reversal, snapshot без writes; каждый
-    публикует результаты.
+  - PR с намеренно сломанной проверкой завершается failure; PR правильного audited
+    кода реально запускает suite.
+  - Есть DB tests completion/keep/expiry, scope isolation, duplicate/overspend/reversal,
+    snapshot без writes; каждый публикует результаты.
   - Ни один required step не использует || true/continue-on-error для маскировки ошибки.
   - Артефакт содержит собранный AMD, source/asset hashes и exact code SHA.
   production_benefit: Позволяет менять ядро и UI без повторения известных регрессий.
@@ -95,16 +107,22 @@ tasks:
   - moodle/local/ustar/route_studio.php
   - moodle/local/ustar/templates/route_studio.mustache
   actions:
-  - Один resolver parent/local/override для studio preview, employee runtime, launch guard и management snapshot.
-  - Команды unique edit / common override / revert реализуют scope states и sourcepointid; старую materialisation
-    не активировать как новый workflow.
-  - Предотвратить fallback отменённого override во все должности; proposed никогда не даёт доступ.
-  - Сохранить logical identity/history для R05; при необходимости добавить только явные XMLDB constraints.
+  - Один resolver parent/local/override для studio preview, employee runtime, launch
+    guard и management snapshot.
+  - Команды unique edit / common override / revert реализуют scope states и sourcepointid;
+    старую materialisation не активировать как новый workflow.
+  - Предотвратить fallback отменённого override во все должности; proposed никогда
+    не даёт доступ.
+  - Сохранить logical identity/history для R05; при необходимости добавить только
+    явные XMLDB constraints.
   acceptance:
-  - ST02–ST08, ST14–ST18 из ROUTE_STUDIO_ACCEPTANCE проходят на двух должностях и соседней семье.
-  - Для должности не отображаются одновременно parent и его override; revert не удаляет историю.
+  - ST02–ST08, ST14–ST18 из ROUTE_STUDIO_ACCEPTANCE проходят на двух должностях и
+    соседней семье.
+  - Для должности не отображаются одновременно parent и его override; revert не удаляет
+    историю.
   - Общие изменения не перезаписывают локальную версию; прямой POST не обходит ограничения.
-  production_benefit: HR может безопасно вести общий маршрут и исключения; сотрудник получает нужный вариант.
+  production_benefit: HR может безопасно вести общий маршрут и исключения; сотрудник
+    получает нужный вариант.
   effort_hint: 3–5 дней
   blockers: []
   implementation_commit: null
@@ -128,11 +146,14 @@ tasks:
   - moodle/local/ustar/amd/src/route_studio.js
   - moodle/local/ustar/templates/route_studio.mustache
   actions:
-  - Вынести save/publish в application command с per-point lock и одной транзакцией metadata/version/обязательной
-    policy/scope.
-  - Перенести required validation из UI в общий сервис, включить expected revision в каждую mutation.
-  - При ошибке наследования обязательной assessment-policy не публиковать частично готовую версию.
-  - Дать явный draft/published diff, конфликт двух редакторов и сохранение введённой формы; rebuild AMD.
+  - Вынести save/publish в application command с per-point lock и одной транзакцией
+    metadata/version/обязательной policy/scope.
+  - Перенести required validation из UI в общий сервис, включить expected revision
+    в каждую mutation.
+  - При ошибке наследования обязательной assessment-policy не публиковать частично
+    готовую версию.
+  - Дать явный draft/published diff, конфликт двух редакторов и сохранение введённой
+    формы; rebuild AMD.
   acceptance:
   - ST01, ST09–ST13, ST16, ST19–ST20 проходят.
   - Инъекция отказа version/policy оставляет прежнюю опубликованную точку целиком.
@@ -162,18 +183,20 @@ tasks:
   - moodle/local/ustar/classes/target_core.php
   - moodle/local/ustar/db/install.xml
   actions:
-  - Оформить design record о completion identity/renewal cycle и reward rule version; user requirement каждой точки
-    уже задан.
-  - Зафиксировать пилотные тарифы, владельца/дату правила, допустимые события и безопасный переход исторического
-    XP.
-  - Отделить eligibility, XP, USCOIN, достижения и competition; описать regrant/backfill/reversal, не удаляя legacy
-    history.
-  - В студии ввести отображение условия и обещанной награды; publish не допускает невыполнимую или пустую награждаемую
-    точку.
+  - Оформить design record о completion identity/renewal cycle и reward rule version;
+    user requirement каждой точки уже задан.
+  - Зафиксировать пилотные тарифы, владельца/дату правила, допустимые события и безопасный
+    переход исторического XP.
+  - Отделить eligibility, XP, USCOIN, достижения и competition; описать regrant/backfill/reversal,
+    не удаляя legacy history.
+  - В студии ввести отображение условия и обещанной награды; publish не допускает
+    невыполнимую или пустую награждаемую точку.
   acceptance:
-  - Все активные типы point имеют completion и reward rule; inherited/refresh не считаются новым прохождением.
+  - Все активные типы point имеют completion и reward rule; inherited/refresh не считаются
+    новым прохождением.
   - Rule version immutable, тариф не берётся из запроса сотрудника.
-  - Зафиксированы сценарии новой реальной пересдачи той же версии, parent/override equivalence и исторического XP.
+  - Зафиксированы сценарии новой реальной пересдачи той же версии, parent/override
+    equivalence и исторического XP.
   - Существующие ADR не заменены новой конкурирующей моделью фактов/баланса.
   production_benefit: Даёт понятную одинаковую мотивацию и предотвращает двойные начисления.
   effort_hint: 1–2 дня
@@ -206,21 +229,26 @@ tasks:
   - moodle/local/ustar/db/tasks.php
   - moodle/local/ustar/db/upgrade.php
   actions:
-  - Выделить pure evaluation и explicit reconciliation/complete command; охватить evaluated, assessment_lifecycle
-    и repeat-cycle, не только Moodle course.
-  - Факт, entitlement и durable retry записываются согласованно; ledger использует существующий atomic apply со
-    стабильным ключом.
-  - Привязать все поддерживаемые providers из REWARD_CONTRACT; научить cron восстанавливать пропущенные grants.
-  - Snapshot/preview/view-as не вызывают эту запись; закрыть trusted-system entrypoints и исключить test/service
-    accounts из реальных наград.
-  - Добавить reversible upgrade для identity/цикла, сохранив progress и evidence; никакого автоматического массового
-    backfill.
+  - Выделить pure evaluation и explicit reconciliation/complete command; охватить
+    evaluated, assessment_lifecycle и repeat-cycle, не только Moodle course.
+  - Факт, entitlement и durable retry записываются согласованно; ledger использует
+    существующий atomic apply со стабильным ключом.
+  - Привязать все поддерживаемые providers из REWARD_CONTRACT; научить cron восстанавливать
+    пропущенные grants.
+  - Snapshot/preview/view-as не вызывают эту запись; закрыть trusted-system entrypoints
+    и исключить test/service accounts из реальных наград.
+  - Добавить reversible upgrade для identity/цикла, сохранив progress и evidence;
+    никакого автоматического массового backfill.
   acceptance:
   - Вся приёмка REWARD_CONTRACT (1–9) проходит на изолированной PostgreSQL DB.
-  - 20 concurrent deliveries дают один grant; crash/retry до и после ledger не теряют и не удваивают награду.
-  - Повторное обучение одной version после expiry создаёт новый eligible cycle; keep новой version — нет.
-  - Источник каждого начисления и rule version проверяемы; все eligible completion награждены.
-  production_benefit: Каждое реальное прохождение точки приносит награду даже при повторных запросах и сбоях.
+  - 20 concurrent deliveries дают один grant; crash/retry до и после ledger не теряют
+    и не удваивают награду.
+  - Повторное обучение одной version после expiry создаёт новый eligible cycle; keep
+    новой version — нет.
+  - Источник каждого начисления и rule version проверяемы; все eligible completion
+    награждены.
+  production_benefit: Каждое реальное прохождение точки приносит награду даже при
+    повторных запросах и сбоях.
   effort_hint: 5–8 дней
   blockers: []
   implementation_commit: null
@@ -246,14 +274,19 @@ tasks:
   - moodle/local/ustar/templates/route.mustache
   - moodle/local/ustar/amd/src/
   actions:
-  - Перевести отображение XP на согласованный источник, сохранив старый прогресс по плану перехода.
-  - Показать обещанную/полученную награду, pending/retry, следующий шаг и persisted wallet history.
-  - Реализовать первую точку, завершённый маршрут и успешную аттестацию как проверяемые достижения, используя Moodle
-    badges где подходят.
-  - Сделать reduced-motion, keyboard/screen reader, mobile и light/dark; не вознаграждать психометрический тип.
+  - Перевести отображение XP на согласованный источник, сохранив старый прогресс по
+    плану перехода.
+  - Показать обещанную/полученную награду, pending/retry, следующий шаг и persisted
+    wallet history.
+  - Реализовать первую точку, завершённый маршрут и успешную аттестацию как проверяемые
+    достижения, используя Moodle badges где подходят.
+  - Сделать reduced-motion, keyboard/screen reader, mobile и light/dark; не вознаграждать
+    психометрический тип.
   acceptance:
-  - После refresh XP/coins/achievement совпадают с серверными facts, повторная карточка не создаёт grant.
-  - 'Achievements не пустая декорация: criteria, award date и evidence есть; повтор выдачи невозможен.'
+  - После refresh XP/coins/achievement совпадают с серверными facts, повторная карточка
+    не создаёт grant.
+  - 'Achievements не пустая декорация: criteria, award date и evidence есть; повтор
+    выдачи невозможен.'
   - Старые XP/USCOIN не пропали/не удвоились; totals на home и achievements совпадают.
   - Браузерный smoke после каждого типа completion и async retry приложен.
   production_benefit: Сотрудник замечает пользу каждого шага и видит свой рост.
@@ -283,21 +316,28 @@ tasks:
   - moodle/local/ustar/classes/company_hierarchy.php
   - moodle/local/ustar/templates/
   actions:
-  - Исправить shadowing $positionid в occupancy; проверить dropdown/ladder/skills/materials одного selection.
-  - Сопоставить подготовленные UI-пакеты с установленными; перенести ровно нужные изменения в Git.
-  - Читаемые размеры текста/поверхности материалов, кэширование CSS по версии; проверить light/dark и zoom.
-  - 'Единая связанная оргсхема без папок: генеральный → коммерческий/операционный/финансовый/логистика; отделы раскрываются
-    в руководителя и людей.'
-  - Сохранить ссылки team_learning.php?userid=<actual id>; department filter меняет таблицу и все totals только
-    внутри allowed scope. Не менять reporting по одному лишь UI grouping.
+  - Исправить shadowing $positionid в occupancy; проверить dropdown/ladder/skills/materials
+    одного selection.
+  - Сопоставить подготовленные UI-пакеты с установленными; перенести ровно нужные
+    изменения в Git.
+  - Читаемые размеры текста/поверхности материалов, кэширование CSS по версии; проверить
+    light/dark и zoom.
+  - 'Единая связанная оргсхема без папок: генеральный → коммерческий/операционный/финансовый/логистика;
+    отделы раскрываются в руководителя и людей.'
+  - Сохранить ссылки team_learning.php?userid=<actual id>; department filter меняет
+    таблицу и все totals только внутри allowed scope. Не менять reporting по одному
+    лишь UI grouping.
   acceptance:
   - Выбор любых двух различных должностей меняет ladder/title/skills согласованно.
-  - Материалы читаемы при 100% и 200% zoom; нет серого перекрытия и 7–9px основного текста.
-  - Оргструктура соответствует запросу владельца; логистика соединена напрямую с генеральным, коммерческий блок
-    показывает своего руководителя.
-  - Фильтр all/department/empty/invalid сохраняет доступ и согласованные totals; карточки ведут к нужному сотруднику.
+  - Материалы читаемы при 100% и 200% zoom; нет серого перекрытия и 7–9px основного
+    текста.
+  - Оргструктура соответствует запросу владельца; логистика соединена напрямую с генеральным,
+    коммерческий блок показывает своего руководителя.
+  - Фильтр all/department/empty/invalid сохраняет доступ и согласованные totals; карточки
+    ведут к нужному сотруднику.
   - Архив не считается применённым без manifest и screenshots после cache purge.
-  production_benefit: Сразу устраняет показанные пользователем дефекты и делает команду удобной.
+  production_benefit: Сразу устраняет показанные пользователем дефекты и делает команду
+    удобной.
   effort_hint: 2–4 дня
   blockers: []
   implementation_commit: null
@@ -322,18 +362,23 @@ tasks:
   - moodle/local/ustar/classes/competition.php
   - moodle/local/ustar/classes/game_media.php
   actions:
-  - Пройти полный draft→questions/media→publish→employee→answer→mastery flow; empty game нельзя публиковать как
-    playable.
-  - Зафиксировать validation ответа/options/media и scope, game revision и критерии выдачи achievement.
-  - Разделить duplicate handling и реальные DB errors; обеспечить retry scoring уже сохранённого mastery.
-  - Сохранить participant snapshot, shared-place ties, immutable closed season; новые route score events только
-    по явному rule.
+  - Пройти полный draft→questions/media→publish→employee→answer→mastery flow; empty
+    game нельзя публиковать как playable.
+  - Зафиксировать validation ответа/options/media и scope, game revision и критерии
+    выдачи achievement.
+  - Разделить duplicate handling и реальные DB errors; обеспечить retry scoring уже
+    сохранённого mastery.
+  - Сохранить participant snapshot, shared-place ties, immutable closed season; новые
+    route score events только по явному rule.
   acceptance:
-  - Первая правильная попытка даёт XP один раз; неверный/повтор/чужая игра не обходят права.
+  - Первая правильная попытка даёт XP один раз; неверный/повтор/чужая игра не обходят
+    права.
   - Ошибка scoring между mastery и событием восстанавливается при retry/reconcile.
-  - Картинки File API работают на stage host; активная игра с нулём вопросов не является dead card.
+  - Картинки File API работают на stage host; активная игра с нулём вопросов не является
+    dead card.
   - Season audience/ties/close и отделение USCOIN подтверждены DB-тестами.
-  production_benefit: Игры работают от автора до игрока, а заработанный результат не теряется.
+  production_benefit: Игры работают от автора до игрока, а заработанный результат
+    не теряется.
   effort_hint: 2–4 дня
   blockers: []
   implementation_commit: null
@@ -356,19 +401,24 @@ tasks:
   - moodle/local/ustar/version.php
   - moodle/local/ustar/cli/
   actions:
-  - Составить матрицу поддерживаемых старых версий и data migrations; отметить жёсткие route/point/family/department
-    references.
-  - Проверить clean install и upgrade как минимум audited prior baseline и обезличенной копии current schema.
-  - Разделить schema upgrade и owner-specific data cutover через preflight/mapping/restartable batches; historical
-    savepoints сохранить.
-  - Добавить schema comparator полей/index/constraints; фиксировать dry-run, отказ на неизвестных mapping и rollback
-    rehearsal.
+  - Составить матрицу поддерживаемых старых версий и data migrations; отметить жёсткие
+    route/point/family/department references.
+  - Проверить clean install и upgrade как минимум audited prior baseline и обезличенной
+    копии current schema.
+  - Разделить schema upgrade и owner-specific data cutover через preflight/mapping/restartable
+    batches; historical savepoints сохранить.
+  - Добавить schema comparator полей/index/constraints; фиксировать dry-run, отказ
+    на неизвестных mapping и rollback rehearsal.
   acceptance:
-  - Clean install и каждый заявленный upgrade path получают одинаковую XMLDB схему; повтор upgrade безопасен.
-  - Неподходящая старая DB получает понятный preflight отказ до изменений, а не половину cutover.
+  - Clean install и каждый заявленный upgrade path получают одинаковую XMLDB схему;
+    повтор upgrade безопасен.
+  - Неподходящая старая DB получает понятный preflight отказ до изменений, а не половину
+    cutover.
   - Новые миграции не используют случайные production numeric IDs и не теряют историю.
-  - Версия plugin и release manifest соответствуют migrations; полная копия Moodle core доступна на стенде.
-  production_benefit: Стенд и выпуск можно повторить; обновления не ломаются на другой копии БД.
+  - Версия plugin и release manifest соответствуют migrations; полная копия Moodle
+    core доступна на стенде.
+  production_benefit: Стенд и выпуск можно повторить; обновления не ломаются на другой
+    копии БД.
   effort_hint: 3–5 дней
   blockers: []
   implementation_commit: null
@@ -394,15 +444,22 @@ tasks:
   - moodle/local/ustar/classes/development_assessment.php
   - moodle/local/ustar/db/access.php
   actions:
-  - Описать direct/team/full subtree для employee/manager/acting/HR/HRD/CEO/admin, не вводя новую role model.
-  - Сверить API и страницы с одним scope resolver; все drilldown и filters повторно проверяют userid.
-  - Психометрические детали выдавать только текущим разрешённым ролям; view-as остаётся read-only.
-  - Source-to-sink проверить JSON/HTML конкретных форм; не заменять все triple braces механически.
+  - Описать direct/team/full subtree для employee/manager/acting/HR/HRD/CEO/admin,
+    не вводя новую role model.
+  - Сверить API и страницы с одним scope resolver; все drilldown и filters повторно
+    проверяют userid.
+  - Психометрические детали выдавать только текущим разрешённым ролям; view-as остаётся
+    read-only.
+  - Source-to-sink проверить JSON/HTML конкретных форм; не заменять все triple braces
+    механически.
   acceptance:
-  - Role fixture показывает разрешённые действия и отказы на чужие userid/department; API и page согласованы.
+  - Role fixture показывает разрешённые действия и отказы на чужие userid/department;
+    API и page согласованы.
   - ACTING получает ровно временную область, после expiry доступ прекращается.
-  - Нет несанкционированного просмотра психометрии или записи через view-as; safe rich text продолжает работать.
-  production_benefit: Руководитель видит нужную команду, приватные данные не раскрываются соседним ролям.
+  - Нет несанкционированного просмотра психометрии или записи через view-as; safe
+    rich text продолжает работать.
+  production_benefit: Руководитель видит нужную команду, приватные данные не раскрываются
+    соседним ролям.
   effort_hint: 3–5 дней
   blockers: []
   implementation_commit: null
@@ -428,13 +485,19 @@ tasks:
   - moodle/local/ustar/classes/catalog_mastery.php
   - moodle/local/ustar/classes/route_model.php
   actions:
-  - Разделить definitions skill_evidence и immutable факты evidence_rec; составить producer/consumer map.
-  - Извлечь evaluator результатов без writes и фасад record/revoke/expire; сохранить старые сигнатуры как адаптеры.
-  - Сверять старое и новое чтение без второго независимого писателя; migration только после dry-run и parity.
-  - Убрать N+1 в текущем use case батчами после query baseline; не вводить универсальный ORM.
+  - Разделить definitions skill_evidence и immutable факты evidence_rec; составить
+    producer/consumer map.
+  - Извлечь evaluator результатов без writes и фасад record/revoke/expire; сохранить
+    старые сигнатуры как адаптеры.
+  - Сверять старое и новое чтение без второго независимого писателя; migration только
+    после dry-run и parity.
+  - Убрать N+1 в текущем use case батчами после query baseline; не вводить универсальный
+    ORM.
   acceptance:
-  - Learning/assessment/unsupported/revoked/expired дают одинаково правильный результат всем потребителям.
-  - Каждый qualification claim имеет traceable evidence; материалы open не выдаются за практическую компетенцию.
+  - Learning/assessment/unsupported/revoked/expired дают одинаково правильный результат
+    всем потребителям.
+  - Каждый qualification claim имеет traceable evidence; материалы open не выдаются
+    за практическую компетенцию.
   - Рефакторинг проходит reward/studio/role regression, history counts/digests сохранены.
   production_benefit: Маршрут, аттестация и руководитель опираются на одинаковые подтверждения.
   effort_hint: 4–7 дней
@@ -464,18 +527,22 @@ tasks:
   - moodle/local/ustar/db/upgrade.php
   - context/migration_state.yaml
   actions:
-  - Подтвердить ownership каталогов должностей/отделов/навыков, staffplaces и assignments; read models не считать
-    отдельными владельцами.
-  - Разработать stable-ID mapping JSON→target, аудит orphan/conflict и одного писателя с read-through адаптером.
-  - Сохранить ручные reporting decisions и историю; бизнес-блоки UI мигрировать в authority model только отдельным
-    подтверждённым mapping.
-  - Сначала dry-run и compare, затем переключение consumers маленькими PR; никакой автоматической default position
-    для неизвестного ID.
+  - Подтвердить ownership каталогов должностей/отделов/навыков, staffplaces и assignments;
+    read models не считать отдельными владельцами.
+  - Разработать stable-ID mapping JSON→target, аудит orphan/conflict и одного писателя
+    с read-through адаптером.
+  - Сохранить ручные reporting decisions и историю; бизнес-блоки UI мигрировать в
+    authority model только отдельным подтверждённым mapping.
+  - Сначала dry-run и compare, затем переключение consumers маленькими PR; никакой
+    автоматической default position для неизвестного ID.
   acceptance:
-  - Все текущие position keys и route/evidence links сохранены; unknown mapping блокирует mutation.
+  - Все текущие position keys и route/evidence links сохранены; unknown mapping блокирует
+    mutation.
   - Менеджеры, PRIMARY/ACTING и scopes до/после совпадают с утверждённым mapping.
-  - Нет двусторонней бесконтрольной JSON↔DB синхронизации; legacy retirement имеет явный gate и восстановление.
-  production_benefit: Снижает расхождения оргданных без риска потерять назначения и маршруты.
+  - Нет двусторонней бесконтрольной JSON↔DB синхронизации; legacy retirement имеет
+    явный gate и восстановление.
+  production_benefit: Снижает расхождения оргданных без риска потерять назначения
+    и маршруты.
   effort_hint: 5–10 дней
   blockers: []
   implementation_commit: null
@@ -501,17 +568,20 @@ tasks:
   - moodle/local/ustar/db/install.xml
   - moodle/local/ustar/db/upgrade.php
   actions:
-  - Проверить concurrent approve одной заявки, выбор одного свободного места и несколько активных PRIMARY в пересекающемся
-    интервале.
-  - Добавить бизнесовые locks/invariants, idempotency операций и необходимые XMLDB-compatible ограничения после
-    аудита дублей.
-  - Проверить daily→final→extension→HRD переходы, max attempts/remediation и события; извлечь команды из большого
-    сервиса постепенно.
-  - Транзакции дополнять там, где требуются атомарные state+event изменения; не переписывать уже защищённые пути.
+  - Проверить concurrent approve одной заявки, выбор одного свободного места и несколько
+    активных PRIMARY в пересекающемся интервале.
+  - Добавить бизнесовые locks/invariants, idempotency операций и необходимые XMLDB-compatible
+    ограничения после аудита дублей.
+  - Проверить daily→final→extension→HRD переходы, max attempts/remediation и события;
+    извлечь команды из большого сервиса постепенно.
+  - Транзакции дополнять там, где требуются атомарные state+event изменения; не переписывать
+    уже защищённые пути.
   acceptance:
   - Повтор/гонка approve даёт один бизнес-результат и одну аудируемую историю.
-  - Пересекающиеся PRIMARY/занятие места запрещены по утверждённой политике; ACTING не заменяет PRIMARY.
-  - Два противоположных final decision не оставляют несовместимое состояние; повтор не дублирует события.
+  - Пересекающиеся PRIMARY/занятие места запрещены по утверждённой политике; ACTING
+    не заменяет PRIMARY.
+  - Два противоположных final decision не оставляют несовместимое состояние; повтор
+    не дублирует события.
   - Старые исторические назначения/оценки/дневные листы сохранены.
   production_benefit: Предотвращает двойной найм/назначения и сломанные согласования.
   effort_hint: 3–5 дней
@@ -538,16 +608,19 @@ tasks:
   - moodle/local/ustar/classes/user_history_reset.php
   - moodle/local/ustar/lang/
   actions:
-  - Составить PII table/field/context/retention inventory, затем provider metadata/export/delete с согласованными
-    исключениями audit history.
-  - 'Проверить все reset/tester entrypoints: admin capability, test-account ownership, запрещённые реальные аккаунты
-    и изолированная среда.'
-  - Stage использует обезличенные/синтетические данные, отдельные credentials и отключённые исходящие уведомления.
+  - Составить PII table/field/context/retention inventory, затем provider metadata/export/delete
+    с согласованными исключениями audit history.
+  - 'Проверить все reset/tester entrypoints: admin capability, test-account ownership,
+    запрещённые реальные аккаунты и изолированная среда.'
+  - Stage использует обезличенные/синтетические данные, отдельные credentials и отключённые
+    исходящие уведомления.
   - Не обещать юридическое соответствие только наличием provider.
   acceptance:
   - Privacy export/delete проверены на DB fixture; данные другого сотрудника не затрагиваются.
-  - Политика хранения evidence/ledger задокументирована и не использует тихое удаление истории.
-  - Все destructive test команды отвергают реального сотрудника и неиспользуемую test identity.
+  - Политика хранения evidence/ledger задокументирована и не использует тихое удаление
+    истории.
+  - Все destructive test команды отвергают реального сотрудника и неиспользуемую test
+    identity.
   production_benefit: Управляемое обращение с персональными данными и безопасная диагностика.
   effort_hint: 3–6 дней
   blockers: []
@@ -572,16 +645,20 @@ tasks:
   - moodle/local/ustar/db/tasks.php
   - moodle/local/ustar/classes/task/
   actions:
-  - Снять фактические health/cron lag/disk/DB baseline без установки лишнего стека мониторинга.
-  - Описать однозначный backup manifest и восстановление одной выбранной копии в отдельную DB/moodledata; outbound
-    off.
-  - 'Release preflight: roots/mounts, code SHA, image, DB prerequisites, assets, cache purge, post-deploy smoke,
-    rollback.'
-  - Добавить метрики failed/pending reward delivery и reconciliation lag при R05; алерты на 5xx/cron/disk.
+  - Снять фактические health/cron lag/disk/DB baseline без установки лишнего стека
+    мониторинга.
+  - Описать однозначный backup manifest и восстановление одной выбранной копии в отдельную
+    DB/moodledata; outbound off.
+  - 'Release preflight: roots/mounts, code SHA, image, DB prerequisites, assets, cache
+    purge, post-deploy smoke, rollback.'
+  - Добавить метрики failed/pending reward delivery и reconciliation lag при R05;
+    алерты на 5xx/cron/disk.
   acceptance:
   - Restore rehearsal выбранного backup подтверждён, code+DB+moodledata согласованы.
-  - Есть ответственный/канал обработки алерта и реально проверенный test alert; отправки в каналы согласуются отдельно.
-  - Выпуск не запускает тестовый sync на real user без явной операции; prod/stage данные и endpoints разделены.
+  - Есть ответственный/канал обработки алерта и реально проверенный test alert; отправки
+    в каналы согласуются отдельно.
+  - Выпуск не запускает тестовый sync на real user без явной операции; prod/stage
+    данные и endpoints разделены.
   - Для S2 delivery lag и пропуски наград измеряются, повторная обработка проверена.
   production_benefit: Сбои обнаруживаются до жалобы сотрудников; релиз и откат воспроизводимы.
   effort_hint: 2–4 дня + доступ
@@ -603,15 +680,18 @@ tasks:
   - harness/ustar-contextd/server.py
   - harness/ustar-contextd/requirements.txt
   actions:
-  - Ограничить get_context_file разрешённым canonical root/allowlist, reject absolute/traversal/symlink escape,
-    limit size/type.
-  - Добавить тесты на синтетических файлах; определить транспорт и авторизацию существующего запуска.
+  - Ограничить get_context_file разрешённым canonical root/allowlist, reject absolute/traversal/symlink
+    escape, limit size/type.
+  - Добавить тесты на синтетических файлах; определить транспорт и авторизацию существующего
+    запуска.
   - Не читать чувствительные файлы ради проверки; не открывать новый сетевой endpoint.
   acceptance:
   - Разрешённый context-файл читается; все выходы за разрешённый root отвергаются.
   - Проверены symlink, отсутствие файла, directory, oversized/non-text input.
-  - Runtime экспозиция имеет измеренное состояние; этот source defect не объявлен интернет-инцидентом без evidence.
-  production_benefit: ИИ-контекст не становится средством чтения произвольных файлов процесса.
+  - Runtime экспозиция имеет измеренное состояние; этот source defect не объявлен
+    интернет-инцидентом без evidence.
+  production_benefit: ИИ-контекст не становится средством чтения произвольных файлов
+    процесса.
   effort_hint: 0.5–1 день
   blockers: []
   implementation_commit: null
@@ -637,16 +717,22 @@ tasks:
   - context/agents/astra.md
   - context/roadmap/
   actions:
-  - Генерировать inventory схемы из XMLDB, файлы/классы из Git tree; проверять path existence и source SHA.
-  - Определять фактический runtime root по mount/проверке, не hardcode; отделить observed fact от suggested architecture.
-  - Исключить index output из собственного hash, параметризовать repo root и добавить deterministic validation.
-  - Связать task updates/release evidence с каноническим roadmap; поправить несовместимые исторические source-priority
-    формулировки.
+  - Генерировать inventory схемы из XMLDB, файлы/классы из Git tree; проверять path
+    existence и source SHA.
+  - Определять фактический runtime root по mount/проверке, не hardcode; отделить observed
+    fact от suggested architecture.
+  - Исключить index output из собственного hash, параметризовать repo root и добавить
+    deterministic validation.
+  - Связать task updates/release evidence с каноническим roadmap; поправить несовместимые
+    исторические source-priority формулировки.
   acceptance:
-  - Все code map paths существуют либо явно proposed; повтор generation без изменений не создаёт semantic drift.
-  - STATE/task statuses/next task/dependencies валидны и ссылки доступны из main и feature.
+  - Все code map paths существуют либо явно proposed; повтор generation без изменений
+    не создаёт semantic drift.
+  - STATE/task statuses/next task/dependencies валидны и ссылки доступны из main и
+    feature.
   - Runtime snapshot не объявляет Git SHA deployed без file/schema manifest.
-  production_benefit: Следующий ИИ продолжает с действительного этапа и не повторяет уже закрытое.
+  production_benefit: Следующий ИИ продолжает с действительного этапа и не повторяет
+    уже закрытое.
   effort_hint: 1–3 дня
   blockers: []
   implementation_commit: null
@@ -669,9 +755,12 @@ tasks:
   - moodle/local/ustar/achievements.php
   - context/decisions/
   actions:
-  - Выбрать небольшой каталог утверждённых привилегий с владельцем исполнения; цены/лимиты версионируются.
-  - Purchase/reserve/fulfil/cancel вызывают существующие spend/reverse; выдача привилегии аудируется.
-  - Не разрешать клиенту задавать цену, не списывать остаток без заказа и не смешивать это с leaderboard.
+  - Выбрать небольшой каталог утверждённых привилегий с владельцем исполнения; цены/лимиты
+    версионируются.
+  - Purchase/reserve/fulfil/cancel вызывают существующие spend/reverse; выдача привилегии
+    аудируется.
+  - Не разрешать клиенту задавать цену, не списывать остаток без заказа и не смешивать
+    это с leaderboard.
   acceptance:
   - Покупка, повтор запроса, insufficient balance, отмена и выдача подтверждены end-to-end.
   - Баланс/ledger/заказ согласованы; дубль не резервирует/списывает дважды.
@@ -704,15 +793,20 @@ tasks:
   - moodle/local/ustar/home.php
   - moodle/local/ustar/materials.php
   actions:
-  - Измерить requests/SQL count/p50/p95 на согласованном пилотном объёме, отдельно холодный/тёплый cache.
-  - Батчить чтение progress/versions/evidence на команду; кешировать только с проверенной invalidation и scope.
+  - Измерить requests/SQL count/p50/p95 на согласованном пилотном объёме, отдельно
+    холодный/тёплый cache.
+  - Батчить чтение progress/versions/evidence на команду; кешировать только с проверенной
+    invalidation и scope.
   - Выделить presenters/read services, сохранив route/ACL/economy semantics.
-  - Убирать повторные theme/inline CSS правила при касании страницы, с проверкой каскада и assets.
+  - Убирать повторные theme/inline CSS правила при касании страницы, с проверкой каскада
+    и assets.
   acceptance:
-  - Есть baseline и after на одном dataset/hardware profile; SQL-count не растёт на каждую точку каждого сотрудника
-    без необходимости.
-  - Нет потери актуальности после publish/scope/assignment change; права не кэшируются между пользователями.
-  - Все critical tests проходят; улучшение подтверждено измерением, не количеством новых классов.
+  - Есть baseline и after на одном dataset/hardware profile; SQL-count не растёт на
+    каждую точку каждого сотрудника без необходимости.
+  - Нет потери актуальности после publish/scope/assignment change; права не кэшируются
+    между пользователями.
+  - Все critical tests проходят; улучшение подтверждено измерением, не количеством
+    новых классов.
   production_benefit: Команда и маршрут открываются быстрее без устаревших статусов.
   effort_hint: 3–5 дней
   blockers: []
@@ -740,17 +834,23 @@ tasks:
   - moodle/local/ustar/executive.php
   - context/decisions/
   actions:
-  - Role Standard сначала как согласованная проекция position→skills→requirements→route→evidence, без схлопывания
-    разных доменов.
-  - 'Кабинет руководителя: риск адаптации, нужные подтверждения/пересдачи и одно действие на проблему.'
-  - Метрики CEO считать только из определённых событий; work evidence, ZUP/SSO, внешние допуски и Telegram имеют
-    отдельные design/ownership/API задачи.
-  - Не включать новые RAG/boards/multitenancy/форматы игр в текущие S0–S2; существующую геймификацию поддерживать.
+  - Role Standard сначала как согласованная проекция position→skills→requirements→route→evidence,
+    без схлопывания разных доменов.
+  - 'Кабинет руководителя: риск адаптации, нужные подтверждения/пересдачи и одно действие
+    на проблему.'
+  - Метрики CEO считать только из определённых событий; work evidence, ZUP/SSO, внешние
+    допуски и Telegram имеют отдельные design/ownership/API задачи.
+  - Не включать новые RAG/boards/multitenancy/форматы игр в текущие S0–S2; существующую
+    геймификацию поддерживать.
   acceptance:
-  - Профиль должности показывает реальные gaps и evidence; manager action проходит существующий ACL/workflow.
-  - Каждая CEO метрика имеет определение, источник, временное окно и missing-data поведение.
-  - Интеграции не получают прямого произвольного доступа к БД и не объявляются внедрёнными по наличию плана.
-  production_benefit: Управление развитием становится одним понятным процессом поверх надёжного ядра.
+  - Профиль должности показывает реальные gaps и evidence; manager action проходит
+    существующий ACL/workflow.
+  - Каждая CEO метрика имеет определение, источник, временное окно и missing-data
+    поведение.
+  - Интеграции не получают прямого произвольного доступа к БД и не объявляются внедрёнными
+    по наличию плана.
+  production_benefit: Управление развитием становится одним понятным процессом поверх
+    надёжного ядра.
   effort_hint: Декомпозиция после S2/S3
   blockers: []
   implementation_commit: null

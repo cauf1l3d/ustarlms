@@ -1,0 +1,34 @@
+frontend:
+
+theme:
+
+  path:
+    moodle/theme/ustar
+
+  responsibility:
+    - внешний интерфейс
+    - branding
+    - layout
+
+
+templates:
+
+  path:
+    moodle/local/ustar/templates
+
+  responsibility:
+    - mustache views
+    - component rendering
+
+
+assets:
+
+  paths:
+
+    - assets/
+    - frontend/
+
+  responsibility:
+    - JS
+    - CSS
+    - frontend components

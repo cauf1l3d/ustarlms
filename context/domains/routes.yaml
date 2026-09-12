@@ -1,0 +1,62 @@
+domain: routes
+
+
+purpose:
+  Движок маршрутов обучения и переобучения.
+
+
+entities:
+
+  route:
+    contains:
+      - route_points
+
+
+  route_point:
+    contains:
+      - materials
+      - assessments
+      - evidence_rules
+
+
+versioning:
+
+  route_version:
+    immutable_after_publish: true
+
+
+assessment_bridge:
+
+
+  rule:
+
+    Assessment failure:
+      creates:
+        remediation_requirement
+
+
+  example:
+
+    assessment:
+      code: CM40
+      version: 95
+
+
+    remediation:
+
+      route_point_id:
+        28
+
+      route_version_id:
+        94
+
+
+important:
+
+  CM40 does_not_replace CM37
+
+  CM40:
+    validates
+
+  CM37:
+    remediation_learning

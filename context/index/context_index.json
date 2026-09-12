@@ -1,0 +1,286 @@
+{
+  "generated": "2026-09-07T08:01:30.554398+00:00",
+  "root": "/opt/ustar/git/ustarlms/context",
+  "files": [
+    {
+      "path": "context/CONTEXT_INDEX.md",
+      "domain": "root",
+      "size": 1253,
+      "modified": "2026-09-07T07:16:22.411728+00:00",
+      "sha256": "fb17ddeaf57225dbcd0b71c7b03759e7258d693ddca7e065edffb4354075e7a1"
+    },
+    {
+      "path": "context/agents/astra.md",
+      "domain": "agents",
+      "size": 557,
+      "modified": "2026-09-07T07:17:12.848835+00:00",
+      "sha256": "3a51f8d32693d914abd993b75927db009ccfe9c5ff399cc4ebe5103a46fbc589"
+    },
+    {
+      "path": "context/architecture/boundaries.md",
+      "domain": "architecture",
+      "size": 552,
+      "modified": "2026-09-06T22:27:37.024931+00:00",
+      "sha256": "1142986b547596dfc81c860d848ef1ab013cfa71e52f54bbf8d1a0c29ad6867e"
+    },
+    {
+      "path": "context/architecture/overview.md",
+      "domain": "architecture",
+      "size": 480,
+      "modified": "2026-09-06T22:19:23.619907+00:00",
+      "sha256": "d1489a6e6d9fdbda653aca27e742edb39fa9aace980e7684ef7be3e1d9681f9d"
+    },
+    {
+      "path": "context/code_map/README.md",
+      "domain": "code_map",
+      "size": 522,
+      "modified": "2026-09-06T22:22:49.469313+00:00",
+      "sha256": "81db2b00013a09bb3a2c56b597081c9dc7044105f2c151f829fc2940041a27fa"
+    },
+    {
+      "path": "context/code_map/backend.yaml",
+      "domain": "code_map",
+      "size": 1182,
+      "modified": "2026-09-06T22:23:11.261362+00:00",
+      "sha256": "d9de4e9d6ef50c23eafb350563543121d3d2393bb1e182c86d718b10e9ed69b5"
+    },
+    {
+      "path": "context/code_map/database.yaml",
+      "domain": "code_map",
+      "size": 811,
+      "modified": "2026-09-06T22:23:56.590462+00:00",
+      "sha256": "72b0164e5afec3ba7f3d5fe277a7df009ac4f2f79fbfccef156187d879ae0968"
+    },
+    {
+      "path": "context/code_map/dependencies.yaml",
+      "domain": "code_map",
+      "size": 604,
+      "modified": "2026-09-06T22:26:54.215842+00:00",
+      "sha256": "d6f480857169b23e243f1d1a150a80022950b4026b2f10555382911a1d7f6bed"
+    },
+    {
+      "path": "context/code_map/frontend.yaml",
+      "domain": "code_map",
+      "size": 373,
+      "modified": "2026-09-06T22:23:27.590398+00:00",
+      "sha256": "55fcc18cb4096887ff3ed50a54a4a2f4b2652aa19452699734e39ded77f163ca"
+    },
+    {
+      "path": "context/code_map/generated/classes.md",
+      "domain": "code_map",
+      "size": 8870,
+      "modified": "2026-09-07T08:01:30.498898+00:00",
+      "sha256": "a54d79ddbb9d770ed5b0143b39ee34afe56f44cd7daca02b0fa5f0749875a663"
+    },
+    {
+      "path": "context/code_map/generated/database_tables.md",
+      "domain": "code_map",
+      "size": 99780,
+      "modified": "2026-09-07T08:01:30.520898+00:00",
+      "sha256": "fa82c28cd03b522ce365703cea56ad5e4396a8e2882c2131066f882d92b1be49"
+    },
+    {
+      "path": "context/code_map/generated/generated_at.txt",
+      "domain": "code_map",
+      "size": 33,
+      "modified": "2026-09-07T08:01:30.522898+00:00",
+      "sha256": "c2bb16bdd3bf6da4dacc10a7d18e99c75d47457f2b1e6eb36e0504c34dc4e441"
+    },
+    {
+      "path": "context/code_map/generated/git_commit.txt",
+      "domain": "code_map",
+      "size": 41,
+      "modified": "2026-09-07T08:01:30.524898+00:00",
+      "sha256": "7aecc8c4a36497690f05c3e623b8cc6a6ae13b03b9b51e0b64d6d25c96ab585b"
+    },
+    {
+      "path": "context/code_map/generated/php_files.md",
+      "domain": "code_map",
+      "size": 9080,
+      "modified": "2026-09-07T08:01:30.494898+00:00",
+      "sha256": "44f113ea91ee5ed2569711f9b860707d29668d1dafdd1cf5484b35df9c13686d"
+    },
+    {
+      "path": "context/constraints.yaml",
+      "domain": "root",
+      "size": 296,
+      "modified": "2026-09-06T21:37:39.083376+00:00",
+      "sha256": "3a7fcd9ae19ac61e137785f714022a667ab92d2c36e3080ffca957c1b9176594"
+    },
+    {
+      "path": "context/context_index.yaml",
+      "domain": "root",
+      "size": 685,
+      "modified": "2026-09-06T22:19:07.114879+00:00",
+      "sha256": "7035e4f6f9e9e7a704f7e813749834e0a96e7058cd5dc9786d23ca153060542f"
+    },
+    {
+      "path": "context/decisions/ADR-0001-git-source-of-truth.md",
+      "domain": "decisions",
+      "size": 156,
+      "modified": "2026-09-06T21:37:39.084376+00:00",
+      "sha256": "d244505d53d019573401bfaa5bce85094fbd0b391626d9f86b5f78d5a9669f06"
+    },
+    {
+      "path": "context/decisions/ADR-0002-unified-org-domain.md",
+      "domain": "decisions",
+      "size": 155,
+      "modified": "2026-09-06T21:37:39.084376+00:00",
+      "sha256": "9421988468a4b9efcc2acbbac536a366b190df6b9f4d4d5ec3ae68d61b66e74a"
+    },
+    {
+      "path": "context/decisions/ADR-0003-evidence-canonical-model.md",
+      "domain": "decisions",
+      "size": 103,
+      "modified": "2026-09-06T21:37:39.085376+00:00",
+      "sha256": "58436957bffd375bfc740696586ca9e29df9be59281f93827eac6b3a11982cc0"
+    },
+    {
+      "path": "context/decisions/ADR-0004-route-position-overrides.md",
+      "domain": "decisions",
+      "size": 1904,
+      "modified": "2026-09-06T21:54:26.764167+00:00",
+      "sha256": "dad105cc67e5834d67f31930aedcc00e1f14a72d92d5b03eb6ecb4fd779e3596"
+    },
+    {
+      "path": "context/domains/adaptation.yaml",
+      "domain": "domains",
+      "size": 315,
+      "modified": "2026-09-06T21:46:28.210215+00:00",
+      "sha256": "f42bdf42059d654aa2e7b025af74d8009864b552c5344390e500f8bfbb053681"
+    },
+    {
+      "path": "context/domains/economy.yaml",
+      "domain": "domains",
+      "size": 232,
+      "modified": "2026-09-06T21:48:56.482524+00:00",
+      "sha256": "df0a6259e1f52a474339cfa148ce167a203b1fe110c2616f03c2b7813df9a075"
+    },
+    {
+      "path": "context/domains/evidence.yaml",
+      "domain": "domains",
+      "size": 247,
+      "modified": "2026-09-06T21:48:48.346508+00:00",
+      "sha256": "fdf25ca15eff305afcd1e72fef39e963815af02e3f35853c97f3ce486b972684"
+    },
+    {
+      "path": "context/domains/learning.yaml",
+      "domain": "domains",
+      "size": 613,
+      "modified": "2026-09-06T21:46:12.993183+00:00",
+      "sha256": "dfa9cd9950e0d02a1b5ca1c037a1ecda934898cc60843c985965ec45f9627b75"
+    },
+    {
+      "path": "context/domains/organization.yaml",
+      "domain": "domains",
+      "size": 822,
+      "modified": "2026-09-06T21:46:06.729170+00:00",
+      "sha256": "4d2d3f025b6044e9fd4d5b5e468d1cdc5c3871acdf2b7664a18cd19957885d58"
+    },
+    {
+      "path": "context/domains/routes.yaml",
+      "domain": "domains",
+      "size": 678,
+      "modified": "2026-09-06T21:46:21.778202+00:00",
+      "sha256": "74887c2fb4db2390fa3955fa6225adcf25aa2c468433384c1a71c37084778973"
+    },
+    {
+      "path": "context/index/context_index.json",
+      "domain": "index",
+      "size": 9744,
+      "modified": "2026-09-07T07:58:50.127580+00:00",
+      "sha256": "17290f5a21519c5acf8e928dd5cd47b58a23e928f109f3b2d1ca5f64031c6981"
+    },
+    {
+      "path": "context/memory/decisions.log.md",
+      "domain": "memory",
+      "size": 263,
+      "modified": "2026-09-06T22:20:18.091996+00:00",
+      "sha256": "557b73803a91144278b31dc620ebf8156321d7fb298e236368d02157efe36b5d"
+    },
+    {
+      "path": "context/memory/failures.log.md",
+      "domain": "memory",
+      "size": 314,
+      "modified": "2026-09-06T22:20:04.491974+00:00",
+      "sha256": "13c65c25979624904bbc76c17cd4ba50b09b93a296e8538eb3ffcc178ef62d60"
+    },
+    {
+      "path": "context/migration_state.yaml",
+      "domain": "root",
+      "size": 340,
+      "modified": "2026-09-06T21:37:39.082376+00:00",
+      "sha256": "392f6dcb3893b1536351d1276f280d9ab7c027be84cded630d9bc367184c60b9"
+    },
+    {
+      "path": "context/project.yaml",
+      "domain": "root",
+      "size": 216,
+      "modified": "2026-09-06T21:37:39.083376+00:00",
+      "sha256": "43e32969f62d0498127ce179fc02c904d8d9973c97a6ece70afc709ae96492c6"
+    },
+    {
+      "path": "context/runtime/context_refresh_report.md",
+      "domain": "runtime",
+      "size": 350,
+      "modified": "2026-09-07T07:05:45.238403+00:00",
+      "sha256": "8e90b257e44cb30bdc8ccdc2dbd26e1a7f93cb0194930a9ed2cf1c998dba6f01"
+    },
+    {
+      "path": "context/runtime/docker.yaml",
+      "domain": "runtime",
+      "size": 230,
+      "modified": "2026-09-07T08:01:30.478898+00:00",
+      "sha256": "0f8eefd3062772de1c5f059824aef594e116b6a556ef9968ae427f6e4b12bc59"
+    },
+    {
+      "path": "context/runtime/git_state.yaml",
+      "domain": "runtime",
+      "size": 219,
+      "modified": "2026-09-07T08:01:30.447898+00:00",
+      "sha256": "651bc0b16ae3a0e27957cc95d81b458c52c9ea39c59b85dc106679f6f4b9d701"
+    },
+    {
+      "path": "context/runtime/moodle.yaml",
+      "domain": "runtime",
+      "size": 279,
+      "modified": "2026-09-07T08:01:30.479898+00:00",
+      "sha256": "debed9ebb1dee3a86edab59ae0993422974136e1807f72547da4cf242ffd351c"
+    },
+    {
+      "path": "context/runtime/production_snapshot.md",
+      "domain": "runtime",
+      "size": 405,
+      "modified": "2026-09-06T21:44:55.368047+00:00",
+      "sha256": "8158c553215fdf30fede0ddf4fa6f468f8933d403b28dbf6d12f1e532abf9727"
+    },
+    {
+      "path": "context/runtime/server.yaml",
+      "domain": "runtime",
+      "size": 148,
+      "modified": "2026-09-07T08:01:30.488898+00:00",
+      "sha256": "acf2bdf113ad30556767d81a662f07b1dea4fad297c318491bba716c7ffa6347"
+    },
+    {
+      "path": "context/state/platform.yaml",
+      "domain": "state",
+      "size": 454,
+      "modified": "2026-09-06T22:27:20.920897+00:00",
+      "sha256": "58ead0c99f283a498bb38a010acb20af033c1096c246f964efc59932dba3f9e0"
+    },
+    {
+      "path": "context/tasks/ACTIVE.md",
+      "domain": "tasks",
+      "size": 344,
+      "modified": "2026-09-06T22:19:42.466938+00:00",
+      "sha256": "8e03258940a24e16f76771b0ca2241efc47febcb9e35bb4867522cba4bb6264d"
+    },
+    {
+      "path": "context/tasks/backlog.yaml",
+      "domain": "tasks",
+      "size": 291,
+      "modified": "2026-09-06T22:20:51.237049+00:00",
+      "sha256": "3b405cf5fb6eba9f96840d7525dd76c8959c3af42dfbe8bab77f902e2d7c19cc"
+    }
+  ]
+}

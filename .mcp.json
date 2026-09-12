@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ustar-contextd": {
+      "command": "/opt/ustar/git/ustarlms/harness/ustar-contextd/.venv/bin/python",
+      "args": [
+        "/opt/ustar/git/ustarlms/harness/ustar-contextd/server.py"
+      ]
+    }
+  }
+}

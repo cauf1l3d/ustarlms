@@ -1,0 +1,226 @@
+{
+  "package": "USTAR_ROUTE_FLOW_20260911_RC1",
+  "baseline": "Supplied runtime + USTAR_UX_20260909_RC1, reconstructed commit 82e8d37 (local reconstruction, not a published baseline)",
+  "files": [
+    {
+      "target": "local/ustar/assessment_remediation_launch.php",
+      "source": "files/moodle/local/ustar/assessment_remediation_launch.php",
+      "before": [
+        "bb2ad26cdafd8cd52746214cd0f5319307fa1976c86d1a9ef132d821aa593a77"
+      ],
+      "after": "eaa7e27f60edf98ca97e5982c0e16b75b06dbcaec84a43c1856ec67cf377a38b"
+    },
+    {
+      "target": "local/ustar/classes/career_learning.php",
+      "source": "files/moodle/local/ustar/classes/career_learning.php",
+      "before": [
+        null
+      ],
+      "after": "f0254d4d10ccebb3d35fadd158509f3558817105468ae1011a697e6607ad1213"
+    },
+    {
+      "target": "local/ustar/classes/grading_commit.php",
+      "source": "files/moodle/local/ustar/classes/grading_commit.php",
+      "before": [
+        null
+      ],
+      "after": "59d709d60d53e12e58a867013eaa43692116592fb4d11bf173d76aa5786b01fa"
+    },
+    {
+      "target": "local/ustar/classes/route_continue.php",
+      "source": "files/moodle/local/ustar/classes/route_continue.php",
+      "before": [
+        "9345e8e0cec306f89831685f037bfe4e06063dcc217fd5f23a574f0954e93de1"
+      ],
+      "after": "ada68a86c580a238d7f3014274eca7011ce49c5df2b41fe464548a3ba78bdf3e"
+    },
+    {
+      "target": "local/ustar/classes/route_quiz_grading.php",
+      "source": "files/moodle/local/ustar/classes/route_quiz_grading.php",
+      "before": [
+        "e36dcb8c73b5f7525a8b9813302d151198b13f11f41329061a8e498d526a0ece"
+      ],
+      "after": "cd19828ba6a00127be134c41c5def68d902f0257157eef2e4bca63620f2c3753"
+    },
+    {
+      "target": "local/ustar/continue.php",
+      "source": "files/moodle/local/ustar/continue.php",
+      "before": [
+        "39a4a956208bed0e43e8cc9c2bc277665b152774f97b2f676f3d9712820bf1eb"
+      ],
+      "after": "c6ab788fdd3fea296d69fab435dc97ab0c6f6299b06467c28c92963f279aa307"
+    },
+    {
+      "target": "local/ustar/hr_quiz_attempt.php",
+      "source": "files/moodle/local/ustar/hr_quiz_attempt.php",
+      "before": [
+        "406372762a44b445a54dba703c6add7e90e9b83a9367778c6f01004331fa1289"
+      ],
+      "after": "618c6a7aa7186f1b15a58c3ce0dfdc083f10922f7f94721b7ba8182ccc64ab49"
+    },
+    {
+      "target": "local/ustar/route_career.php",
+      "source": "files/moodle/local/ustar/route_career.php",
+      "before": [
+        "82a0c50227a5c4f00a4fc4a2dd9490ea240c655c070b81fa107cac9b9c120946"
+      ],
+      "after": "88da4f593202a27ec5eb86a265e895e99adf448eef55f16c2c0928eee382ab56"
+    },
+    {
+      "target": "local/ustar/route_continue.js",
+      "source": "files/moodle/local/ustar/route_continue.js",
+      "before": [
+        null
+      ],
+      "after": "392631225ba70d43bfebb149df6ff6ad87f33f7ef7001136bce85a75b7955d5e"
+    },
+    {
+      "target": "local/ustar/route_next.php",
+      "source": "files/moodle/local/ustar/route_next.php",
+      "before": [
+        "4ec91f617135d0e7d46fa3dd1fa41a8991218ffbc739c20287eb3bb4ffca572d"
+      ],
+      "after": "31a2e1bff9693a11bd448486fcf58ab32b1796922a489bdca5af680af69cd1a2"
+    },
+    {
+      "target": "local/ustar/route_profile_reveal.php",
+      "source": "files/moodle/local/ustar/route_profile_reveal.php",
+      "before": [
+        "e90b1592fdff2a5a870d057a13807a371b97e4eff5c26c44cf2b0b5fa74e4b74"
+      ],
+      "after": "698490afbd529d2b7f4cd2ce9b177aa4d07356b067afafcaa0085bb1fafb03e4"
+    },
+    {
+      "target": "local/ustar/route_team_quiz.php",
+      "source": "files/moodle/local/ustar/route_team_quiz.php",
+      "before": [
+        "8276240ee04c6717894e5e0efb25562c6186d1cbdcfb6213c2033b041151e5ff"
+      ],
+      "after": "d87a06a5173f8e2abbbe933cc78ce93c2e70ec618b87530b1ec2c8678fdcd205"
+    },
+    {
+      "target": "local/ustar/scorm_launch.php",
+      "source": "files/moodle/local/ustar/scorm_launch.php",
+      "before": [
+        "fe58b2cd0bb4c6b4b3f27cc246bc720b2015307956a02fff616292371ae031e1"
+      ],
+      "after": "57ef152753aaf3a0be0778f83ef5e1927d6a8e8f54968fe5e74b0927f31689d7"
+    },
+    {
+      "target": "local/ustar/scorm_route_return.js",
+      "source": "files/moodle/local/ustar/scorm_route_return.js",
+      "before": [
+        "ee9baa237ff68d3e4926bec82c44f093549f8aa5856b91806807957c41f128e3"
+      ],
+      "after": "1e7e94ef3e3705e6682e2d4d8ce6af019b5e94e016a40528ffb32c07637d4433"
+    },
+    {
+      "target": "local/ustar/scorm_route_status.php",
+      "source": "files/moodle/local/ustar/scorm_route_status.php",
+      "before": [
+        "a9111f17d96ba2743b0911170a1af62e92cad971a46fef5ede12e8f470c841e8"
+      ],
+      "after": "85b556234b9a8c8b7fb8ae7b5e07464ae1ad636bcb9074df30cf1fd101f0b5f2"
+    },
+    {
+      "target": "local/ustar/styles/route_flow.css",
+      "source": "files/moodle/local/ustar/styles/route_flow.css",
+      "before": [
+        null
+      ],
+      "after": "86d3f4488b40e13673d1bf6fbaccda132645c54e4b19684e7ff3b49c954dd37f"
+    },
+    {
+      "target": "local/ustar/templates/hr_quiz_attempt.mustache",
+      "source": "files/moodle/local/ustar/templates/hr_quiz_attempt.mustache",
+      "before": [
+        "26ac7208d3d3b4af61845c96153b23467675de4b71c24544987fec67d3368d48"
+      ],
+      "after": "7024f0d0946432a5de46f56de7b7abbdbc080e8ad891b1b1d35045cb9a0904bf"
+    },
+    {
+      "target": "local/ustar/templates/profile_reveal.mustache",
+      "source": "files/moodle/local/ustar/templates/profile_reveal.mustache",
+      "before": [
+        "9c13c55fc9007e9e9edbf4261297812bf040d589092f58306db92bb9c3901265"
+      ],
+      "after": "1abdc8794384831899b0b14d04a0fc70194a36eee9a673c1d0624a1dcbe5c0a6"
+    },
+    {
+      "target": "local/ustar/templates/route_career.mustache",
+      "source": "files/moodle/local/ustar/templates/route_career.mustache",
+      "before": [
+        "61e5fe46c99edf9109a12263b346434e3398065b513946957ad1fb42c5d7b61a"
+      ],
+      "after": "4341903a6edd0de76c453fe84522328407526ea95f0329aab2fc75270c4f1a17"
+    },
+    {
+      "target": "theme/ustar/classes/output/qtype_truefalse_renderer.php",
+      "source": "files/moodle/theme/ustar/classes/output/qtype_truefalse_renderer.php",
+      "before": [
+        null
+      ],
+      "after": "c8d999ebcd170da3d971d463f06e68c772de3d96f883487032eba6641ca1b47f"
+    },
+    {
+      "target": "theme/ustar/layout/ustar.php",
+      "source": "files/moodle/theme/ustar/layout/ustar.php",
+      "before": [
+        "7010ea9e0da174faab8a7d06e422deeef9233341f8ef6087a2689ba2f6150322"
+      ],
+      "after": "253c0e862156eb5a76c43d0f9549bc2f72ddb92c54f1df5828e35c99ed3f5835"
+    },
+    {
+      "target": "theme/ustar/templates/shell.mustache",
+      "source": "files/moodle/theme/ustar/templates/shell.mustache",
+      "before": [
+        "d8378697c17007d94a23d664e03ee0c81609da150e770dc7c0c20b77e32d8706"
+      ],
+      "after": "74769502ae8ec4ea016ff3206cc19e364fdaa4f799ad2cb087e9bc59dbd6b717"
+    }
+  ],
+  "guards": [
+    {
+      "target": "local/ustar/version.php",
+      "before": "3b202b49c07cd39f41fe92112a8a22ed6ae763dacfac0d3d92ee4521620a1a83"
+    },
+    {
+      "target": "theme/ustar/config.php",
+      "before": "e39f3033da4aedf1b1871bc11d5dd9b87fd59b941414c01d98b0832ce7f159bf"
+    },
+    {
+      "target": "local/ustar/classes/native_learning.php",
+      "before": "a2f4bed6ad7a351a76801c172c5866dd5a87d0e93e521d4ce02c714d1a7f5318"
+    },
+    {
+      "target": "local/ustar/classes/route_model.php",
+      "before": "7808b5d89adb8fcf7fef19a032aae5bb39a464b232c35670355903751cb2fe53"
+    },
+    {
+      "target": "local/ustar/classes/route_scope.php",
+      "before": "6a79679c00dbf6010099b09b0c7eee4ab93311a6b53cab823eaf750eb08bcfcd"
+    },
+    {
+      "target": "local/ustar/classes/adaptation_service.php",
+      "before": "fc80b08f51c7d3bf87b12a11fd475e7244db5e6e552d4c69965198703b708d7c"
+    },
+    {
+      "target": "local/ustar/classes/assessment_lifecycle.php",
+      "before": "339a54484f46e8e328426cda70cffeabb2bb5a10e7218c6be84619570e0b8d38"
+    },
+    {
+      "target": "local/ustar/classes/position_access.php",
+      "before": "891df9c17da63c4329bbfa246f307f59b5b3d459ae6b9a1e024147308920ab32"
+    },
+    {
+      "target": "local/ustar/classes/view_as.php",
+      "before": "531248ad928ef0377fc01f8a860bde55247152bd025b0189bf829af07b51d363"
+    }
+  ],
+  "tests": {
+    "tests/test_install_flow.py": "e1a5e2b1e27f6c55407033c6b272550993e8bab7db48f1bf4b4daadff88067b9",
+    "tests/flow-dom.cjs": "bf03cfdae0adc95125afaeeb1917124b594e01e43bba7f96729932f3835ce01e",
+    "tests/domain.php": "582c7313acf530689fdfc267b648d15d88a5d19b36266d6d557335957e7f16e7",
+    "tests/package.json": "4a99a1b9f99ef4fe0a4a3038a7cae37a29fca6d798419af6efbd592912dc4a96"
+  }
+}

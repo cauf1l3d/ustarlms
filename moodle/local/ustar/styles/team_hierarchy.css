@@ -441,3 +441,213 @@
     }
 }
 
+
+/* USTAR team department tree — presentation only, 2026-09-07. */
+.u-team-page .u-org-tree {
+    --tree-surface: var(--u-surface-raised, #fff);
+    --tree-text: var(--u-text-primary, #232323);
+    --tree-muted: var(--u-text-secondary, #60615b);
+    --tree-line: var(--u-border, #d8d8ce);
+    --tree-accent: var(--u-brand, #b7a000);
+    background: var(--tree-surface);
+    color: var(--tree-text);
+    padding: 24px;
+    overflow: hidden;
+}
+.u-org-tree *, .u-org-tree *::before, .u-org-tree *::after { box-sizing: border-box; }
+.u-org-tree .u-company-map__head { margin-bottom: 24px; }
+.u-org-tree__root {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: max-content;
+    max-width: 100%;
+    min-height: 72px;
+    padding: 12px 20px;
+    border: 1px solid var(--tree-accent);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--tree-accent) 7%, var(--tree-surface));
+}
+.u-org-tree__root-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--tree-text);
+    color: var(--tree-surface);
+    font-size: 24px;
+    font-weight: 900;
+}
+.u-org-tree__root > div { display: grid; gap: 3px; min-width: 0; }
+.u-org-tree__root strong { font-size: 18px; color: var(--tree-text); }
+.u-org-tree__root > div > span { font-size: 12px; color: var(--tree-muted); }
+.u-org-tree .u-org-tree__branches {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 28px;
+    padding: 24px 0 0 26px;
+    margin: 0 0 0 39px;
+    border-left: 2px solid var(--tree-line);
+}
+.u-org-tree__branch {
+    position: relative;
+    min-width: 0;
+    margin: 0;
+    padding: 0 0 18px;
+    list-style: none;
+}
+.u-org-tree__branch::before {
+    content: "";
+    position: absolute;
+    top: 37px;
+    left: -28px;
+    width: 28px;
+    border-top: 2px solid var(--tree-line);
+}
+.u-org-tree__branch:nth-child(even)::before {
+    /* Continue the row branch behind the adjacent card to the main trunk. */
+    width: calc(100% + 56px);
+    left: calc(-100% - 56px);
+}
+.u-org-tree__department {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--tree-line);
+    border-radius: 14px;
+    background: var(--tree-surface);
+    color: var(--tree-text);
+    box-shadow: 0 2px 5px rgb(0 0 0 / 3%);
+}
+.u-org-tree__department[open] { border-color: var(--tree-accent); }
+.u-org-tree__department > .u-org-tree__summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 76px;
+    padding: 15px;
+    margin: 0;
+    border-radius: 13px;
+    list-style: none;
+    cursor: pointer;
+    background: var(--tree-surface);
+    color: var(--tree-text);
+}
+.u-org-tree__summary::-webkit-details-marker { display: none; }
+.u-org-tree__summary::marker { content: ""; }
+.u-org-tree__summary::before, .u-org-tree__summary::after { display: none; }
+.u-org-tree__department > .u-org-tree__summary:hover {
+    background: color-mix(in srgb, var(--tree-accent) 6%, var(--tree-surface));
+}
+.u-org-tree__summary:focus-visible { outline: 3px solid var(--tree-text); outline-offset: 3px; }
+.u-org-tree__folder {
+    display: grid;
+    place-items: center;
+    flex: 0 0 40px;
+    height: 40px;
+    border: 1px solid var(--tree-line);
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--tree-accent) 10%, var(--tree-surface));
+    color: var(--tree-text);
+}
+.u-org-tree__label { display: grid; flex: 1; min-width: 0; gap: 4px; }
+.u-org-tree__label strong { font-size: 15px; line-height: 1.35; color: var(--tree-text); overflow-wrap: anywhere; }
+.u-org-tree__label > span { font-size: 12px; color: var(--tree-muted); }
+.u-org-tree__chevron {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    margin: 0 4px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
+}
+.u-org-tree__department[open] > summary .u-org-tree__chevron { transform: rotate(45deg); }
+.u-org-tree__content { padding: 4px 15px 16px; }
+.u-org-tree__department:not([open]) > .u-org-tree__content { display: none; }
+.u-org-tree__group { margin: 14px 0 0; padding: 0; }
+.u-org-tree__group h3 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0 0 9px;
+    color: var(--tree-muted);
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+.u-org-tree__count { flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.u-org-tree .u-org-tree__people {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    margin: 0 0 0 6px;
+    padding: 0 0 0 13px;
+    border-left: 1px solid var(--tree-line);
+}
+.u-org-tree__person {
+    display: flex;
+    position: relative;
+    align-items: center;
+    min-width: 0;
+    gap: 10px;
+    margin: 0;
+    padding: 10px;
+    border: 1px solid var(--tree-line);
+    border-radius: 10px;
+    background: var(--tree-surface);
+}
+.u-org-tree__person::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    left: -14px;
+    top: 30px;
+    border-top: 1px solid var(--tree-line);
+}
+.u-org-tree__person--head { border-left: 3px solid var(--tree-accent); }
+.u-org-tree__avatar {
+    display: grid;
+    place-items: center;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    color: var(--tree-muted);
+    background: color-mix(in srgb, var(--tree-text) 6%, var(--tree-surface));
+}
+.u-org-tree__avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.u-org-tree__person-label { display: grid; min-width: 0; gap: 4px; }
+.u-org-tree__person-label strong { font-size: 13px; line-height: 1.4; font-weight: 600; color: var(--tree-text); white-space: normal; overflow-wrap: anywhere; }
+.u-org-tree__person-label > span { font-size: 12px; line-height: 1.4; color: var(--tree-muted); overflow-wrap: anywhere; }
+.u-org-tree__note { margin: 12px 0 0; font-size: 13px; line-height: 1.5; color: var(--tree-muted); }
+@media (max-width: 1100px) {
+    .u-org-tree .u-org-tree__branches { grid-template-columns: minmax(0, 1fr); }
+    .u-org-tree__branch:nth-child(even)::before { width: 28px; left: -28px; }
+}
+@media (max-width: 640px) {
+    .u-team-page .u-org-tree { padding: 16px; }
+    .u-org-tree .u-org-tree__branches { margin-left: 19px; padding-left: 16px; }
+    .u-org-tree__branch::before, .u-org-tree__branch:nth-child(even)::before { width: 18px; left: -18px; }
+    .u-org-tree__department > .u-org-tree__summary { padding: 12px; gap: 9px; }
+    .u-org-tree__folder { flex-basis: 30px; height: 34px; }
+    .u-org-tree__content { padding: 0 10px 12px; }
+}
+
+/* Team card links and server-side department filter. */
+.u-team-page .u-org-tree__people > li { min-width:0; margin:0; padding:0; list-style:none; }
+.u-team-page a.u-org-tree__person { height:100%; color:var(--tree-text); text-decoration:none; }
+.u-team-page a.u-org-tree__person:hover { border-color:var(--tree-accent); background:color-mix(in srgb,var(--tree-accent) 8%,var(--tree-surface)); text-decoration:none; }
+.u-team-page a.u-org-tree__person:focus-visible { outline:3px solid var(--tree-text); outline-offset:3px; }
+.u-team-page .u-team-department-filter { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:20px 0; }
+.u-team-page .u-team-department-filter label { margin:0; font-weight:600; color:var(--u-text-primary); }
+.u-team-page .u-team-department-filter select { flex:1 1 240px; min-width:0; max-width:520px; min-height:42px; padding:9px 12px; border:1px solid var(--u-border); border-radius:10px; background:var(--u-surface-raised); color:var(--u-text-primary); font:inherit; }
+.u-team-page .u-team-department-filter select:focus-visible { outline:2px solid var(--u-text-primary); outline-offset:2px; }
+.u-team-page #team-learning { scroll-margin-top:90px; }
+@media(max-width:640px) { .u-team-page .u-team-department-filter { align-items:stretch; } .u-team-page .u-team-department-filter label { flex-basis:100%; } }

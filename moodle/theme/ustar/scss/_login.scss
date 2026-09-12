@@ -1,9 +1,9 @@
 /* Canonical Drive reference, isolated from signed-in theme and runtime colour presets. */
 body.pagelayout-login.u-login-body { background:#fff; color:#25231f; }
 body.pagelayout-login.u-login-body #page-wrapper { margin:0; padding:0; min-height:100vh; }
-body.pagelayout-login.u-login-body #page.u-login-shell {
-    display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
-    align-items:stretch; gap:clamp(28px,4vw,56px); box-sizing:border-box;
+#page-wrapper #page.u-login-shell {
+    display:grid !important; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    align-items:start; gap:clamp(28px,4vw,56px); box-sizing:border-box;
     width:calc(100% - 64px); max-width:1240px; min-height:0;
     margin:clamp(28px,7vh,96px) auto !important; padding:0 !important;
     background:#f8f7f4;
@@ -43,9 +43,76 @@ body.pagelayout-login.u-login-body #page-footer { display:none; }
 .u-login-shell .u-login-auth__footer strong { margin-top:30px; padding:0 12px; background:#838078; color:#eee5cf; font-size:clamp(20px,2vw,30px); font-weight:700; line-height:1.3; }
 .u-login-shell .u-login-auth__footer small { margin-top:12px; color:#48463e; font-size:10px; line-height:1.5; letter-spacing:.06em; text-transform:uppercase; }
 @media (max-width:760px) {
-    body.pagelayout-login.u-login-body #page.u-login-shell { grid-template-columns:1fr; width:calc(100% - 32px); max-width:480px; margin:24px auto !important; gap:28px; background:#f8f7f4; }
+    #page-wrapper #page.u-login-shell { grid-template-columns:1fr; width:calc(100% - 32px); max-width:480px; margin:24px auto !important; gap:28px; background:#f8f7f4; }
     .u-login-shell .u-login-auth { grid-row:1; padding:24px 16px; }
     .u-login-shell .u-login-start { margin:28px auto 22px; }
     .u-login-shell .u-login-auth__footer { padding-top:26px; }
     .u-login-shell .u-login-brand { grid-row:2; }
+}
+
+/* USTAR_LOGIN_SCALE_V2 */
+#page-wrapper #page.u-login-shell {
+ display:grid !important;
+ grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+ align-items:stretch !important;
+ width:calc(100% - 80px) !important;
+ max-width:1560px !important;
+ gap:32px !important;
+ margin:32px auto 100px !important;
+ padding:0 !important;
+ background:transparent !important;
+ height:auto !important;
+ min-height:0 !important;
+}
+#page.u-login-shell > .u-login-brand {
+ display:flex !important;
+ align-items:flex-start !important;
+ width:100% !important;
+ max-width:none !important;
+ padding:0 !important;
+ margin:0 !important;
+ background:transparent !important;
+}
+#page.u-login-shell .u-login-poster {
+ width:100% !important;
+ max-width:none !important;
+ height:auto !important;
+ margin:0 !important;
+ padding:0 !important;
+ object-fit:contain !important;
+ align-self:flex-start !important;
+}
+#page.u-login-shell > .u-login-auth {
+ display:flex !important;
+ flex-direction:column !important;
+ box-sizing:border-box !important;
+ width:100% !important;
+ max-width:none !important;
+ margin:0 !important;
+ padding:32px !important;
+ background:#f8f7f4 !important;
+ border-radius:28px;
+ align-self:stretch !important;
+}
+#page.u-login-shell .u-login-wordmark {
+ width:72%; max-width:440px;
+}
+#page.u-login-shell .u-login-start {
+ width:100%; margin:40px auto 28px;
+}
+#page.u-login-shell .u-login-auth__footer {
+ margin-top:auto; padding-top:28px;
+}
+@media(max-width:900px) {
+ #page-wrapper #page.u-login-shell {
+  grid-template-columns:minmax(0,1fr) !important;
+  width:calc(100% - 32px) !important;
+  max-width:620px !important;
+  margin:20px auto 100px !important;
+  gap:24px !important;
+ }
+ #page.u-login-shell > .u-login-auth {
+  grid-row:1; padding:24px !important;
+ }
+ #page.u-login-shell > .u-login-brand { grid-row:2; }
 }

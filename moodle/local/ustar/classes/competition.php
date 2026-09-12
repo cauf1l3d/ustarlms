@@ -105,8 +105,8 @@ final class competition {
         }
         foreach ($DB->get_records_select(
             'local_ustar_competitions',
-            'status = :status AND startat <= :now AND endat >= :now',
-            ['status' => 'published', 'now' => $occurredat]
+            'status = :status AND startat <= :now AND endat >= :endnow',
+            ['status' => 'published', 'now' => $occurredat, 'endnow' => $occurredat]
         ) as $competition) {
             $participant = $DB->get_record('local_ustar_comp_participants', [
                 'competitionid' => $competition->id, 'userid' => $userid, 'status' => 'active',
@@ -145,9 +145,9 @@ final class competition {
                FROM {local_ustar_comp_participants} p
                JOIN {local_ustar_competitions} c ON c.id = p.competitionid
               WHERE p.userid = :userid AND p.status = :participantstatus AND c.status = :competitionstatus
-                AND c.startat <= :now AND c.endat >= :now
+                AND c.startat <= :now AND c.endat >= :endnow
            ORDER BY c.endat ASC',
-            ['userid' => $userid, 'participantstatus' => 'active', 'competitionstatus' => 'published', 'now' => $now],
+            ['userid' => $userid, 'participantstatus' => 'active', 'competitionstatus' => 'published', 'now' => $now, 'endnow' => $now],
             IGNORE_MULTIPLE
         );
         if (!$participant) {

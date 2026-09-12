@@ -631,3 +631,26 @@
     .u-org-tree__folder { flex-basis: 30px; height: 34px; }
     .u-org-tree__content { padding: 0 10px 12px; }
 }
+
+/* Clickable employee cards in the executive tree. */
+.u-org-tree .u-org-tree__people > li {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.u-org-tree a.u-org-tree__person {
+    height: 100%;
+    color: var(--tree-text);
+    text-decoration: none;
+    cursor: pointer;
+}
+.u-org-tree a.u-org-tree__person:hover {
+    border-color: var(--tree-accent);
+    background: color-mix(in srgb, var(--tree-accent) 8%, var(--tree-surface));
+    text-decoration: none;
+}
+.u-org-tree a.u-org-tree__person:focus-visible {
+    outline: 3px solid var(--tree-text);
+    outline-offset: 3px;
+}

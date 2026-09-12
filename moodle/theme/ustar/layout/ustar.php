@@ -658,9 +658,6 @@ if (!in_array($preset, ['yellow','graphite','ocean','forest','berry','sand'], tr
 
 $PAGE->requires->js_call_amd('theme_ustar/shell', 'init');
 
-
-
-
 $viewasactive = class_exists('\local_ustar\view_as') && \local_ustar\view_as::active();
 $viewasposition = '';
 if ($viewasactive) {
@@ -684,10 +681,20 @@ if ($ustarscormroute) {
     $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_flow.css', ['v' => '20260911']));
 }
 
+$guiderole = \local_ustar\academy_guide::role();
+if ($guiderole !== '') {
+    $guidecss = $CFG->dirroot . '/local/ustar/styles/academy_guide.css';
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/academy_guide.css', [
+        'v' => is_readable($guidecss) ? filemtime($guidecss) : '20260912',
+    ]));
+}
+
 $templatecontext = [
     'routecontinue' => $routecontinue,
     'profilesettingsurl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
     'logouturl' => (new moodle_url('/login/logout.php', ['sesskey' => sesskey()]))->out(false),
+    'guiderole' => $guiderole,
+    'guideurl' => (new moodle_url('/local/ustar/guide.php'))->out(false),
     'output' => $OUTPUT,
 
     'bodyattributes' =>
@@ -802,6 +809,13 @@ $templatecontext = [
     'collapseicon' => $icons['collapse'],
     'adminicon' => $icons['admin'],
 ];
+
+// The custom shell does not render Moodle's standard user navigation where
+// tool_usertours normally bootstraps itself. Keep the native engine and start
+// its normal AMD bootstrap explicitly once for eligible USTAR users.
+if ($guiderole !== '' && class_exists('\\tool_usertours\\helper')) {
+    \tool_usertours\helper::bootstrap();
+}
 
 echo $OUTPUT->render_from_template(
     'theme_ustar/shell',

@@ -404,5 +404,6 @@ function local_ustar_before_footer_original(): string {
  * Existing footer output + route sequential navigation.
  */
 function local_ustar_before_footer(): string {
-    return local_ustar_before_footer_original();
+    return local_ustar_before_footer_original() . \local_ustar\route_continue::footer_button();
 }
+

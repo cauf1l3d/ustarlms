@@ -157,7 +157,9 @@ final class route_point_evidence_provider {
                 'coursemoduleid' => $cmid,
                 'userid' => $userid,
             ], 'completionstate,timemodified', IGNORE_MISSING);
-            if ($completion && (int)$completion->completionstate > 0) {
+            // Moodle completion: 1 = complete, 2 = passed, 3 = failed.
+            // A fresh failure must not unlock a new assessment attempt.
+            if ($completion && in_array((int)$completion->completionstate, [1, 2], true)) {
                 $base['completedat'] = (int)$completion->timemodified;
             }
 

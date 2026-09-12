@@ -5,6 +5,8 @@ define('AJAX_SCRIPT', true);
 require_once(__DIR__ . '/../../config.php');
 
 require_login();
+require_capability('local/ustar:use', context_system::instance());
+header('Cache-Control: no-store, private');
 
 global $DB, $SESSION, $USER;
 
@@ -27,6 +29,11 @@ $response = [
 try {
     $cmid = required_param('cmid', PARAM_INT);
     $confirm = optional_param('confirm', 0, PARAM_BOOL);
+    if ($confirm) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { throw new invalid_parameter_exception('POST required'); }
+        require_sesskey();
+        \local_ustar\view_as::assert_writable();
+    }
 
     $context =
         $SESSION->ustar_scorm_route ?? null;
@@ -40,7 +47,25 @@ try {
         die;
     }
 
+    $launchid = optional_param('launchid', '', PARAM_ALPHANUM);
+    if (empty($context['launchid']) || !hash_equals((string)$context['launchid'], $launchid)) {
+        echo json_encode($response);
+        die;
+    }
+    if ($confirm && !optional_param('acknowledged', 0, PARAM_BOOL)) {
+        throw new invalid_parameter_exception('Explicit acknowledgement required');
+    }
+    if (!empty(\local_ustar\adaptation_service::route_card((int)$USER->id)['blocked'])) {
+        echo json_encode($response);
+        die;
+    }
     $response['active'] = true;
+    // Keep a confirmed result in this launch context: retrying a lost response is harmless.
+    if (!empty($context['confirmedresponse'])) {
+        echo json_encode($context['confirmedresponse']);
+        die;
+    }
+    if (!$confirm) { \core\session\manager::write_close(); }
 
     $pointid =
         (int)($context['pointid'] ?? 0);
@@ -84,6 +109,14 @@ try {
         die;
     }
 
+    if (!$remediationmode) {
+        $published = \local_ustar\route_model::current_published_version($pointid);
+        if (!$published || (int)$published->id !== (int)($context['versionid'] ?? 0)) {
+            $response['active'] = false;
+            echo json_encode($response);
+            die;
+        }
+    }
     $route = null;
     $current = null;
 
@@ -94,7 +127,7 @@ try {
         );
     } else {
         $route =
-            \local_ustar\route_model::for_user(
+            \local_ustar\route_model::read_only_snapshot(
                 $positionid,
                 (int)$USER->id
             );
@@ -107,11 +140,11 @@ try {
          * is actually the employee's current route point. Assessment
          * remediation is separately authorised by its lifecycle runtime.
          */
-        if (
-            !$current
-            ||
-            (int)($current['id'] ?? 0) !== $pointid
-        ) {
+        $reachable = false;
+        foreach ($route['points'] ?? [] as $point) {
+            if ((int)$point['id'] === $pointid && empty($point['locked'])) { $reachable = true; }
+        }
+        if (!$reachable) {
             echo json_encode($response);
             die;
         }
@@ -133,7 +166,7 @@ try {
 
     $freshattempt =
         $attempt
-        && (int)$attempt->attempt > $attemptbefore;
+        && ($remediationmode ? (int)$attempt->attempt > $attemptbefore : (int)$attempt->attempt >= $attemptbefore);
 
     $freshstatus = false;
     $completedat = 0;
@@ -159,7 +192,7 @@ try {
                 IGNORE_MULTIPLE
             );
 
-        if ($track) {
+        if ($track && (int)$track->timemodified >= $startedat) {
             $freshstatus = true;
             $completedat = (int)$track->timemodified;
         }
@@ -234,11 +267,21 @@ try {
             $response['targeturl'] = $response['routeurl'];
         }
 
-        unset($SESSION->ustar_scorm_route);
+        $SESSION->ustar_scorm_route['confirmedresponse'] = $response;
         echo json_encode($response);
         die;
     }
 
+    // A generic SCORM course must not write the hard-coded product point 69.
+    // Preserve its existing ACK only when this version explicitly requires it.
+    $requiresack = false;
+    foreach (\local_ustar\route_model::requirements_for_version($published) as $requirement) {
+        if (($requirement['type'] ?? '') === 'native'
+                && ($requirement['sourcekey'] ?? '') === \local_ustar\native_learning::PRODUCT_SCORM_ACK) {
+            $requiresack = true;
+        }
+    }
+    if ($requiresack) {
     $eventid =
         \local_ustar\native_learning::record(
             (int)$USER->id,
@@ -262,6 +305,8 @@ try {
         );
     }
 
+    }
+
     $route =
         \local_ustar\route_model::for_user(
             $positionid,
@@ -270,32 +315,18 @@ try {
 
     $response['confirmed'] = true;
 
-    $current =
-        $route['currentpoint'] ?? null;
+    $target = \local_ustar\route_continue::destination($route, '', $cmid);
+    $response['targeturl'] = $target->out(false);
+    $response['hasnext'] = $target->get_path() !== '/local/ustar/route.php';
 
-    if (
-        $current
-        &&
-        (int)($current['id'] ?? 0) !== $pointid
-        &&
-        !empty($current['canlaunch'])
-        &&
-        !empty($current['launchurl'])
-    ) {
-        $response['hasnext'] = true;
-        $response['targeturl'] =
-            (string)$current['launchurl'];
-    } else {
-        $response['targeturl'] =
-            $response['routeurl'];
-    }
-
-    unset($SESSION->ustar_scorm_route);
+    $SESSION->ustar_scorm_route['confirmedresponse'] = $response;
 
 } catch (\Throwable $e) {
+    debugging('USTAR SCORM continuation: ' . $e->getMessage(), DEBUG_DEVELOPER);
     $response['error'] = true;
     $response['message'] =
         'Не удалось подтвердить завершение. Попробуйте ещё раз.';
 }
 
 echo json_encode($response);
+

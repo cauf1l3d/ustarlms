@@ -63,7 +63,7 @@ final class route_continue {
     public static function footer_button(): string {
         global $DB, $PAGE, $USER;
 
-        if (self::$rendered || !isloggedin() || isguestuser() || empty($USER->id)) {
+        if (self::$rendered || view_as::active() || !isloggedin() || isguestuser() || empty($USER->id)) {
             return '';
         }
 
@@ -102,59 +102,82 @@ final class route_continue {
             ['id' => (int)$cm->module]
         );
 
-        // Only passive/view-only resources get this UI.
-        if (!in_array($modname, ['page', 'resource', 'book', 'folder'], true)) {
+        $quizreview = $modname === 'quiz' && $PAGE->url->get_path() === '/mod/quiz/review.php';
+        // Quiz review continues only after Moodle confirms a passing result; no grade is forced.
+        if (!$quizreview && !in_array($modname, ['page', 'resource', 'book', 'folder'], true)) {
             return '';
         }
 
         // Moodle core: completion=2 automatic; completionview=1 view required.
-        if ((int)$cm->completion !== 2 || empty($cm->completionview)) {
+        if (!$quizreview && ((int)$cm->completion !== 2 || empty($cm->completionview))) {
             return '';
         }
 
         self::$rendered = true;
 
-        $url = new \moodle_url('/local/ustar/continue.php', [
-            'cmid' => $cmid,
-            'sesskey' => sesskey(),
-        ]);
+        $url = new \moodle_url('/local/ustar/continue.php');
+        $form = \html_writer::start_tag('form', ['method' => 'post', 'action' => $url->out(false)])
+            . \html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'cmid', 'value' => $cmid])
+            . \html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()])
+            . \html_writer::tag('button', $quizreview ? 'Проверить результат и продолжить →' : 'Изучено, продолжить →',
+                ['type' => 'submit', 'class' => 'btn btn-primary ustar-route-continue-button'])
+            . \html_writer::end_tag('form');
+        return \html_writer::div($form, 'ustar-route-continue-wrap', [
+            'data-ustar-route-continue' => 'post-v1',
+            'data-cmid' => $cmid,
+            'style' => 'display:flex;justify-content:flex-end;margin:24px 0;'
+        ]) . \html_writer::tag('script', '', ['src' => (new \moodle_url('/local/ustar/route_continue.js',
+            ['v' => '20260911']))->out(false)]);
+    }
 
-        $button = \html_writer::link(
-            $url,
-            'Завершить просмотр и продолжить →',
-            [
-                'class' => 'btn ustar-route-continue-button',
-                'style' =>
-                    'display:inline-flex;' .
-                    'align-items:center;' .
-                    'justify-content:center;' .
-                    'min-height:54px;' .
-                    'padding:0 32px;' .
-                    'border:1px solid #e3aa00;' .
-                    'border-radius:12px;' .
-                    'background:#f5b800;' .
-                    'color:#172333;' .
-                    'font-size:16px;' .
-                    'font-weight:700;' .
-                    'line-height:1.2;' .
-                    'text-decoration:none;' .
-                    'box-shadow:0 4px 12px rgba(0,0,0,.08);'
-            ]
-        );
+    /** One authoritative route destination, also when a point contains several materials. */
+    public static function next_url(int $userid, string $avoidpath = '', int $avoidcmid = 0): \moodle_url {
+        $fallback = new \moodle_url('/local/ustar/route.php');
+        view_as::assert_writable();
+        $resolved = structure::resolve_user($userid);
+        $positionid = (string)($resolved['position']['id'] ?? '');
+        if ($positionid === '' || !empty(adaptation_service::route_card($userid)['blocked'])) {
+            return $fallback;
+        }
+        return self::destination(route_model::for_user($positionid, $userid), $avoidpath, $avoidcmid);
+    }
 
-        return \html_writer::div(
-            $button,
-            'ustar-route-continue-wrap',
-            [
-                'data-ustar-route-continue' => 'hook-v2',
-                'style' =>
-                    'max-width:1000px;' .
-                    'margin:28px auto 40px;' .
-                    'padding:24px 16px 4px;' .
-                    'border-top:1px solid #e5e7eb;' .
-                    'text-align:center;'
-            ]
-        );
+    /** Validate a native POST against the same published route used for navigation. */
+    public static function assert_native_reachable(int $userid, string $factkey): void {
+        view_as::assert_writable();
+        $resolved = structure::resolve_user($userid);
+        $positionid = (string)($resolved['position']['id'] ?? '');
+        if ($positionid === '' || !empty(adaptation_service::route_card($userid)['blocked'])) {
+            throw new \moodle_exception('Сначала завершите предыдущие шаги маршрута.');
+        }
+        $route = route_model::read_only_snapshot($positionid, $userid);
+        foreach ($route['points'] ?? [] as $point) {
+            if (!empty($point['locked'])) { continue; }
+            $version = route_model::current_published_version((int)$point['id']);
+            if (!$version) { continue; }
+            foreach (route_model::requirements_for_version($version) as $requirement) {
+                if (($requirement['type'] ?? '') === 'native' && ($requirement['sourcekey'] ?? '') === $factkey) {
+                    return;
+                }
+            }
+        }
+        throw new \moodle_exception('Этот шаг ещё недоступен в вашем маршруте.');
+    }
+
+    public static function destination(array $route, string $avoidpath = '', int $avoidcmid = 0): \moodle_url {
+        $fallback = new \moodle_url('/local/ustar/route.php');
+        $point = $route['currentpoint'] ?? null;
+        if (!$point || empty($point['canlaunch']) || empty($point['launchurl'])) { return $fallback; }
+        $url = new \moodle_url((string)$point['launchurl']);
+        if ($avoidpath !== '' && $url->get_path() === $avoidpath) {
+            return new \moodle_url('/local/ustar/route.php', ['continueerror' => 1]);
+        }
+        $cmid = (int)($url->get_param('cmid') ?? $url->get_param('id') ?? 0);
+        if ($avoidcmid > 0 && $cmid === $avoidcmid
+                && preg_match('~/(mod/[^/]+/view|local/ustar/(activity|scorm)_launch)\.php$~', $url->get_path())) {
+            return new \moodle_url('/local/ustar/route.php', ['continueerror' => 1]);
+        }
+        return $url;
     }
 
     /**
@@ -210,3 +233,4 @@ final class route_continue {
 
 
 }
+

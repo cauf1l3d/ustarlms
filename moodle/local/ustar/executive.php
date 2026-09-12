@@ -109,6 +109,10 @@ $data = [
     'hastopgaps' =>
         !empty($qualification['topgaps']),
 
+    'orgchart' => \local_ustar\company_hierarchy::business_view(
+        $company['departments'], (int)$USER->id
+    ),
+
     'companydepartments' =>
         $company['departments'],
 
@@ -148,6 +152,11 @@ $PAGE->requires->css(
     new moodle_url(
         '/local/ustar/styles/executive_2713.css'
     )
+);
+
+$PAGE->requires->css(
+    new moodle_url('/local/ustar/styles/business_orgchart.css',
+        ['v' => hash_file('sha256', __DIR__ . '/styles/business_orgchart.css')])
 );
 
 $output =

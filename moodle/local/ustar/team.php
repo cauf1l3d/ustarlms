@@ -50,8 +50,18 @@ if (!empty($hierarchy['ishead'])) {
     }
 }
 
+$departmentview = \local_ustar\team_presenter::department_view(
+    (int)$USER->id,
+    $hierarchy,
+    $learning,
+    optional_param('department', '', PARAM_TEXT)
+);
+$learning = $departmentview['learning'];
+unset($departmentview['learning']);
+
 $data = array_merge(
     $hierarchy,
+    $departmentview,
     [
         'teamicon' =>
             \local_ustar\ui::icon(
@@ -143,14 +153,21 @@ $data = array_merge(
 
 $PAGE->requires->css(
     new moodle_url(
-        '/local/ustar/styles/team_hierarchy.css'
+        '/local/ustar/styles/team_hierarchy.css',
+        ['v' => hash_file('sha256', __DIR__ . '/styles/team_hierarchy.css')]
     )
 );
 
 $PAGE->requires->css(
     new moodle_url(
-        '/local/ustar/styles/department_learning.css'
+        '/local/ustar/styles/department_learning.css',
+        ['v' => hash_file('sha256', __DIR__ . '/styles/department_learning.css')]
     )
+);
+
+$PAGE->requires->css(
+    new moodle_url('/local/ustar/styles/business_orgchart.css',
+        ['v' => hash_file('sha256', __DIR__ . '/styles/business_orgchart.css')])
 );
 
 $output =

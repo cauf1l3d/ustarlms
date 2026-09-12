@@ -28,7 +28,7 @@
     </div>
 </header>
 
-{{> local_ustar/team_hierarchy}}
+{{> local_ustar/business_orgchart}}
 
 {{#hasassessmentalerts}}
 <section class="u-assess-team-alerts">
@@ -71,12 +71,12 @@
 {{/hasassessmentalerts}}
 
 {{#canviewdepartmentlearning}}
-<section class="u-dept-learning">
+<section class="u-dept-learning" id="team-learning">
 
     <header class="u-dept-learning__head">
         <div>
             <p class="u-page-kicker">
-                Обучение моего подразделения
+                Сводка по обучению команды
             </p>
 
             <h2>{{learningdepartment}}</h2>
@@ -87,6 +87,18 @@
             </p>
         </div>
     </header>
+
+    <form class="u-team-department-filter" method="get" action="{{teamfilterurl}}#team-learning">
+        <label for="u-team-learning-department">Подразделение</label>
+        <select id="u-team-learning-department" name="department">
+            <option value="" {{#learningallselected}}selected{{/learningallselected}}>Все доступные подразделения</option>
+            {{#learningfilters}}
+            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}} — {{count}}</option>
+            {{/learningfilters}}
+        </select>
+        <button class="u-btn u-btn--primary" type="submit">Показать</button>
+        {{#learningfilteractive}}<a class="u-btn" href="{{teamfilterurl}}#team-learning">Сбросить</a>{{/learningfilteractive}}
+    </form>
 
     <div class="u-dept-learning__metrics">
 
@@ -110,12 +122,10 @@
             <strong>{{learningcomplete}}</strong>
         </article>
 
-        {{#learningnoroute}}
         <article>
             <span>Без маршрута</span>
             <strong>{{learningnoroute}}</strong>
         </article>
-        {{/learningnoroute}}
 
     </div>
 
@@ -167,6 +177,7 @@
 
     </div>
     {{/haslearningpeople}}
+    {{^haslearningpeople}}<p class="u-orgchart__note">Нет сотрудников для отображения.</p>{{/haslearningpeople}}
 
 </section>
 {{/canviewdepartmentlearning}}

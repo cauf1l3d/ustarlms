@@ -23,6 +23,7 @@
 
 {{#hasposition}}
 
+{{^retailgrades}}
 <section class="u-career-native">
 
     <header class="u-career-native__head">
@@ -75,26 +76,48 @@
         {{/hasnext}}
 
 
-        {{#nextpending}}
-        <div class="u-career-arrow is-muted">→</div>
 
-        <article class="u-career-step is-pending">
-            <small>Следующая ступень</small>
-            <strong>
-                Пока не утверждена HRD
-            </strong>
-
-            <p>
-                Это не ошибка системы.
-                Для этой должности карьерный переход
-                ещё не зафиксирован в штатной модели.
-            </p>
-        </article>
-        {{/nextpending}}
 
     </div>
 
 </section>
+
+
+{{/retailgrades}}
+
+{{#retailgrades}}
+<section class="u-career-native u-consultant-career" aria-labelledby="consultant-career-title">
+    <header class="u-career-native__head">
+        <div><p class="u-page-kicker">Карьерная лестница · Консультантские грейды</p>
+        <h2 id="consultant-career-title">Мой путь</h2><p>{{department}} · {{currentname}}</p></div>
+        <div class="u-career-readiness"><span>Подтверждено навыков</span><strong>{{confirmedskills}} из {{requiredskills}}</strong></div>
+    </header>
+    {{#consultantcurrent}}<p class="u-consultant-career__role">Ваша должность <strong>{{currentname}}</strong> соответствует роли <strong>консультанта</strong>.</p>{{/consultantcurrent}}
+    <ol class="u-consultant-ladder">
+<li class="u-consultant-grade">
+<span class="u-consultant-grade__number">Грейд 01</span><h3>Стажёр-консультант</h3>
+<p class="u-consultant-grade__pay"><small>Оплата по карьерной карте</small><strong>25 000 ₽</strong></p>
+<details><summary>Критерии и условия</summary><ul><li>Знает технику продаж.</li><li>Знает товары основных брендов компании на 40%: что это.</li><li>Знает товары своего отдела на 30%: что это.</li><li>Знает основные положения корпоративной культуры.</li></ul></details></li>
+<li class="u-consultant-grade">
+<span class="u-consultant-grade__number">Грейд 02</span><h3>Младший консультант</h3>
+<p class="u-consultant-grade__pay"><small>Оплата по карьерной карте</small><strong>30 000 ₽</strong></p>
+<details><summary>Критерии и условия</summary><ul><li>Владеет техникой продаж.</li><li>Знает товары основных брендов компании на 70%: что это и как применять.</li><li>Знает товары своего отдела на 70%: что это и как применять.</li><li>Знает основные правила мерчендайзинга.</li><li>Соблюдает основные положения корпоративной культуры.</li></ul></details></li>
+<li class="u-consultant-grade{{#consultantcurrent}} is-current{{/consultantcurrent}}">
+{{#consultantcurrent}}<span class="u-consultant-grade__current">Вы здесь · ваш грейд</span>{{/consultantcurrent}}
+<span class="u-consultant-grade__number">Грейд 03</span><h3>Консультант</h3>
+<p class="u-consultant-grade__pay"><small>Оплата по карьерной карте</small><strong>42 000 ₽</strong></p>
+<details open><summary>Критерии и условия</summary><ul><li>Владеет различными техниками продаж.</li><li>Знает товары основных брендов компании на 90%: состав, применение, аналоги.</li><li>Знает товары своего отдела на 100%: состав, применение, аналоги.</li><li>Знает ассортимент сферы деятельности компании на 60%: состав, применение, аналоги.</li><li>Знает и управляет ТОП-ами продаж своего отдела.</li><li>Знает основные правила мерчендайзинга и делает выкладку в своём отделе.</li><li>Знает по именам 10 своих ключевых клиентов и может охарактеризовать их.</li><li>Принимает звонки и ведёт онлайн-клиентов.</li></ul></details></li>
+<li class="u-consultant-grade">
+<span class="u-consultant-grade__number">Грейд 04</span><h3>Старший консультант</h3>
+<p class="u-consultant-grade__pay"><small>Оплата по карьерной карте</small><strong>50 000 ₽</strong></p>
+<details><summary>Критерии и условия</summary><ul><li>В совершенстве владеет техниками продаж и корректирует работу младших сотрудников.</li><li>Знает товары основных брендов компании на 100%.</li><li>Знает товары сферы деятельности компании на 100%.</li><li>Знает ТОП-ы продаж отделов младших сотрудников.</li><li>Курирует мерчендайзинг в отделах младших сотрудников.</li><li>Ведёт ключевых клиентов и формирует дополнительные продажи.</li><li>Пропагандирует корпоративную культуру.</li><li>Работает над имиджем компании: отзывы на Яндекс, Google, 2ГИС и других площадках.</li><li>Обучает младших сотрудников в полном объёме.</li><li>Обучает сотрудников новинкам товаров сферы деятельности компании.</li></ul></details></li>
+<li class="u-consultant-grade">
+<span class="u-consultant-grade__number">Грейд 05</span><h3>Менеджер</h3>
+<p class="u-consultant-grade__pay"><small>Оплата по карьерной карте</small><strong>20 000 ₽ + % от продаж</strong></p>
+<details><summary>Критерии и условия</summary><ul><li>Новые проекты и направления: процент от продаж направления.</li><li>Оплачиваемый отпуск 7–14 дней.</li></ul></details></li>
+    </ol>
+</section>
+{{/retailgrades}}
 
 
 <section class="u-role-snapshot">
@@ -165,7 +188,8 @@
                     <span
                         class="{{#satisfied}}is-ok{{/satisfied}}"
                     >
-                        {{label}}
+                        {{#url}}<a href="{{url}}">{{label}}</a>{{/url}}
+                        {{^url}}{{label}}{{/url}}
                     </span>
                     {{/sources}}
                 </div>
@@ -173,7 +197,7 @@
 
                 {{^hassources}}
                 <span>
-                    Материал пока не связан.
+                    Обучение по опубликованному маршруту — ниже.
                 </span>
                 {{/hassources}}
             </div>
@@ -216,6 +240,23 @@
 </section>
 {{/hasnextskills}}
 
+
+{{#haslearningpoints}}
+<section class="u-role-graph">
+    <p class="u-page-kicker">Материалы вашей должности</p>
+    <h2>Обучение в моём маршруте</h2>
+    <div class="u-role-graph__rows">
+    {{#learningpoints}}
+        <article class="u-role-node">
+            <h3>{{number}} · {{title}}</h3>
+            <ul>{{#materials}}<li>{{label}}</li>{{/materials}}</ul>
+            <span>{{statuslabel}}</span>
+            {{#url}}<a class="u-btn" href="{{url}}">Открыть доступный материал →</a>{{/url}}
+        </article>
+    {{/learningpoints}}
+    </div>
+</section>
+{{/haslearningpoints}}
 
 <section class="u-team-study-complete">
 
@@ -269,7 +310,7 @@
             type="submit"
             class="u-btn u-btn--primary"
         >
-            Понятно, продолжить →
+            Изучено, продолжить →
         </button>
     </form>
 
@@ -293,8 +334,7 @@
     </a>
 
     <span>
-        Следующий карьерный переход показывается
-        только если он утверждён в структуре USTAR.
+        Материалы открываются по порядку вашего маршрута.
     </span>
 </footer>
 

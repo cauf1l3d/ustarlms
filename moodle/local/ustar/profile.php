@@ -32,7 +32,7 @@ $data = [
     'email' => $identity['email'],
     'initials' => \local_ustar\ui::initials($identity['firstname'], $identity['lastname']),
     'avatarurl' => \local_ustar\team_presenter::avatar_url((int)$USER->id, 160),
-    'photoediturl' => (new moodle_url('/user/edit.php', ['id' => $USER->id]))->out(false),
+    'photoediturl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
     'hasposition' => $identity['positionid'] !== '',
     'position' => $identity['position'] ?: 'Должность пока не назначена',
     'department' => $identity['department'] ?: 'Без подразделения',
@@ -67,7 +67,7 @@ $data = [
     'knowledgeurl' => (new moodle_url('/local/ustar/knowledge.php', ['view' => 'knowledge']))->out(false),
     'achievementsurl' => (new moodle_url('/local/ustar/achievements.php'))->out(false),
     'messagesurl' => (new moodle_url('/local/ustar/messages.php'))->out(false),
-    'preferencesurl' => (new moodle_url('/user/preferences.php', ['userid' => $USER->id]))->out(false),
+    'preferencesurl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
 
     'profileicon' => \local_ustar\ui::icon('profile', 'u-feature-icon'),
     'bookicon' => \local_ustar\ui::icon('book', 'u-feature-icon'),

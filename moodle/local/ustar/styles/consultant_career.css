@@ -1,0 +1,19 @@
+.u-consultant-ladder { list-style:none; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); align-items:start; gap:12px; padding:0; margin:24px 0; }
+.u-consultant-ladder > .u-consultant-grade { list-style:none; min-width:0; padding:16px; border:1px solid var(--u-border,#d1dcd7); border-top:5px solid #719389; border-radius:12px; background:var(--u-surface,#f4f7f5); }
+.u-consultant-ladder > li:nth-child(1) { margin-top:96px; }
+.u-consultant-ladder > li:nth-child(2) { margin-top:72px; }
+.u-consultant-ladder > li:nth-child(3) { margin-top:48px; }
+.u-consultant-ladder > li:nth-child(4) { margin-top:24px; }
+.u-consultant-ladder > .is-current { border-color:#2998c7; background:var(--u-surface-raised,#eef8fc); box-shadow:0 0 0 1px #2998c7; }
+.u-consultant-grade h3 { font-size:18px; line-height:1.35; margin:8px 0 16px; overflow-wrap:break-word; }
+.u-consultant-grade__number { display:block; font-size:12px; letter-spacing:.06em; font-weight:700; }
+.u-consultant-grade__current { display:inline-block; padding:5px 9px; margin-bottom:12px; border-radius:16px; background:#c7edfc; color:#153c4d; font-size:12px; font-weight:700; }
+.u-consultant-grade__pay { display:grid; gap:6px; margin:0 0 16px; }
+.u-consultant-grade__pay small { font-size:11px; line-height:1.4; }
+.u-consultant-grade__pay strong { font-size:18px; line-height:1.4; }
+.u-consultant-grade summary { cursor:pointer; font-size:13px; font-weight:700; line-height:1.5; }
+.u-consultant-grade details ul { padding-left:18px; margin:12px 0 0; font-size:13px; line-height:1.6; }
+.u-consultant-grade details li + li { margin-top:8px; }
+.u-consultant-career__note { font-size:13px; line-height:1.6; opacity:.8; }
+@media(max-width:1100px) { .u-consultant-ladder { grid-template-columns:repeat(2,minmax(0,1fr)); } .u-consultant-ladder > li:nth-child(n) { margin-top:0; } }
+@media(max-width:600px) { .u-consultant-ladder { grid-template-columns:minmax(0,1fr); } .u-consultant-grade h3 { font-size:20px; } }

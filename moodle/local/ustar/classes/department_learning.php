@@ -28,6 +28,12 @@ final class department_learning {
         );
 
         $people = [];
+        if (!$alloweduserids) {
+            return ['allowed' => true, 'departmentid' => (string)($scope['departmentid'] ?? ''),
+                'department' => (string)($scope['department'] ?? ''), 'people' => [], 'haspeople' => false,
+                'summary' => ['total' => 0, 'complete' => 0, 'inprogress' => 0, 'notstarted' => 0, 'noroute' => 0]];
+        }
+        [$usersql, $userparams] = $DB->get_in_or_equal(array_keys($alloweduserids), SQL_PARAMS_NAMED, 'teamuser');
 
         $sql =
             "SELECT u.id,u.firstname,u.lastname,
@@ -40,9 +46,9 @@ final class department_learning {
                 AND f.shortname='ustar_position'
               WHERE u.deleted=0
                 AND u.suspended=0
-                AND u.id>1";
+                AND u.id>1 AND u.id {$usersql}";
 
-        foreach ($DB->get_records_sql($sql) as $u) {
+        foreach ($DB->get_records_sql($sql, $userparams) as $u) {
             if ((int)$u->id === $managerid) {
                 continue;
             }
@@ -331,6 +337,6 @@ final class department_learning {
     private static function manager_scope(
         int $managerid
     ): array {
-        return organization_model::manager_scope($managerid);
+        return team_access::learning_scope($managerid);
     }
 }

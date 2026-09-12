@@ -46,6 +46,13 @@
     </section>
     {{/adaptation}}{{/hasadaptation}}
 
+    {{#continueerror}}<div class="alert alert-info" role="status">Условия точки ещё не выполнены. Проверьте обязательные задания ниже; результаты теста могут ожидать проверки.</div>{{/continueerror}}
+    {{#previewing}}<div class="alert alert-info">Предпросмотр: показаны сохранённые результаты. Обучение и награды здесь не изменяются.</div>{{/previewing}}
+    {{#rewardsenabled}}<section class="u-route-rewards" aria-label="Награды маршрута">
+        <strong>За новый подтверждённый шаг: +10 XP и +1 USCOIN</strong>
+        <span>Получено за маршрут: {{routerewards.xp}} XP · {{routerewards.coins}} USCOIN</span>
+        <a href="achievements.php">Мои достижения →</a>
+    </section>{{/rewardsenabled}}
     {{#hasroute}}
     {{#route}}
 
@@ -222,3 +229,4 @@
     </section>
     {{/noroute}}
 </div>
+

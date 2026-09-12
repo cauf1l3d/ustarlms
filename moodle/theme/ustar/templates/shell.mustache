@@ -151,6 +151,12 @@
                 {{#hasnotificationcount}}<span class="u-top-count">{{notificationcount}}</span>{{/hasnotificationcount}}
             </a>
 
+            <a class="u-iconbtn" href="{{profilesettingsurl}}" aria-label="Настройки профиля" title="Настройки профиля">
+                <svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6M16 14v6"/></svg>
+            </a>
+            <a class="u-iconbtn" href="{{logouturl}}" aria-label="Выйти из аккаунта" title="Выйти из аккаунта">
+                <svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H4v16h6M10 12h11M17 8l4 4-4 4"/></svg>
+            </a>
             <a
                 class="u-avatar"
                 href="{{profileurl}}"
@@ -312,6 +318,7 @@
                 {{{ output.course_content_header }}}
 
                 {{{ output.main_content }}}
+                {{{ routecontinue }}}
 
                 {{{ output.activity_navigation }}}
                 {{{ output.course_content_footer }}}

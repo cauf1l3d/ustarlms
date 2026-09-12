@@ -101,6 +101,7 @@ $previewmode = false;
 
 if ($submitted) {
     require_sesskey();
+    \local_ustar\view_as::assert_writable();
 
     if (!$reachable) {
         throw new \moodle_exception(
@@ -122,6 +123,7 @@ if ($submitted) {
         );
 
     if ($confirm) {
+        \local_ustar\route_continue::assert_native_reachable((int)$USER->id, \local_ustar\native_learning::TEAM_PROFILE_REVEAL);
         $eventid =
             \local_ustar\native_learning::record(
                 (int)$USER->id,
@@ -145,6 +147,9 @@ if ($submitted) {
                 ]
             );
 
+        if ($eventid > 0) {
+            redirect(\local_ustar\route_continue::next_url((int)$USER->id, '/local/ustar/route_profile_reveal.php'));
+        }
         $recorded = $eventid > 0;
         $previewmode = !$recorded;
     }
@@ -268,6 +273,7 @@ $data = [
             )
         )->out(false),
 
+    'nextpointurl' => (new moodle_url('/local/ustar/route_next.php', ['sesskey' => sesskey()]))->out(false),
     'routeurl' =>
         (
             new moodle_url(
@@ -305,3 +311,4 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
+

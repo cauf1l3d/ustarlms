@@ -76,6 +76,7 @@ $levelnames = [
     5 => 'Эксперт',
 ];
 
+$careerlearning = \local_ustar\career_learning::build($currentid, (int)$USER->id);
 $skillrows = [];
 
 foreach (($profile['skills']['items'] ?? []) as $skill) {
@@ -88,6 +89,15 @@ foreach (($profile['skills']['items'] ?? []) as $skill) {
             'satisfied' =>
                 !empty($source['satisfied']),
         ];
+    }
+
+    foreach ($careerlearning['skills'][(string)($skill['skillid'] ?? '')] ?? [] as $source) {
+        $sources[] = $source;
+    }
+
+    if (($skill['skillid'] ?? '') === 'product_know' && !empty($careerlearning['skills']['product_know'])) {
+        // Display the employee's route material; achievement still comes from Evidence.
+        $sources = $careerlearning['skills']['product_know'];
     }
 
     $targetlevel =
@@ -162,6 +172,7 @@ $previewmode = false;
 
 if ($submitted) {
     require_sesskey();
+    \local_ustar\view_as::assert_writable();
 
     $confirm =
         optional_param(
@@ -171,6 +182,7 @@ if ($submitted) {
         );
 
     if ($confirm) {
+        \local_ustar\route_continue::assert_native_reachable((int)$USER->id, \local_ustar\native_learning::ROLE_DEVELOPMENT);
         $eventid =
             \local_ustar\native_learning::record(
                 (int)$USER->id,
@@ -184,12 +196,19 @@ if ($submitted) {
                 ]
             );
 
+        if ($eventid > 0) {
+            redirect(\local_ustar\route_continue::next_url((int)$USER->id, '/local/ustar/route_career.php'));
+        }
         $recorded = $eventid > 0;
         $previewmode = !$recorded;
     }
 }
 
 $data = [
+    'consultantcurrent' => \local_ustar\consultant_career::is_consultant((string)($current['name'] ?? '')),
+    'retailgrades' => \local_ustar\career_learning::retail((string)$identity['department'], (string)($current['name'] ?? '')),
+    'learningpoints' => $careerlearning['points'],
+    'haslearningpoints' => !empty($careerlearning['points']),
     'fullname' =>
         (string)$identity['fullname'],
 
@@ -256,6 +275,7 @@ $data = [
     'nextskills' => $nextskills,
     'hasnextskills' => !empty($nextskills),
 
+    'nextpointurl' => (new moodle_url('/local/ustar/route_next.php', ['sesskey' => sesskey()]))->out(false),
     'routeurl' =>
         (
             new moodle_url(
@@ -276,6 +296,8 @@ $PAGE->set_title(
 );
 $PAGE->set_heading('USTAR Academy');
 
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v' => '20260911-2']));
+
 $PAGE->requires->css(
     new moodle_url(
         '/local/ustar/styles/route_native.css'
@@ -293,3 +315,4 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
+

@@ -41,7 +41,14 @@ if ($conversationid > 0) {
     $current = \local_ustar\communication::conversation((int)$USER->id, $conversationid);
 }
 
-$searchresults = $q !== '' ? \local_ustar\communication::search_users((int)$USER->id, $q) : [];
+$searchresults = [];
+$searcherror = '';
+try {
+    $searchresults = $q !== '' ? \local_ustar\communication::search_users((int)$USER->id, $q) : [];
+} catch (\Throwable $e) {
+    $searcherror = 'Поиск сейчас недоступен. Повторите попытку или обратитесь к администратору.';
+    debugging('USTAR message search failed: ' . get_class($e), DEBUG_DEVELOPER);
+}
 foreach ($searchresults as &$result) {
     $result['sesskey'] = sesskey();
 }
@@ -52,7 +59,8 @@ $data = [
     'hasconversations' => !empty($conversations),
     'current' => $current,
     'hascurrent' => $current !== null,
-    'searchq' => s($q),
+    'searchq' => $q,
+    'searcherror' => $searcherror,
     'searchresults' => $searchresults,
     'hassearchresults' => !empty($searchresults),
     'searched' => $q !== '',

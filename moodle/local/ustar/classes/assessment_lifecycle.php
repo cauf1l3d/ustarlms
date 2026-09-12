@@ -284,12 +284,20 @@ final class assessment_lifecycle {
     public static function route_view(\stdClass $runtime, \stdClass $policy, string $positionid): array {
         $provider = assessment_provider_factory::for_policy($policy);
         $state = $provider->inspect((int)$runtime->userid, $policy);
+        $verifiedcompletedat = 0;
+        foreach ($state['finalized'] ?? [] as $attempt) {
+            if ((float)($attempt['score'] ?? 0) + 0.000001 >= (float)$state['passscore']) {
+                $at = (int)($attempt['finalizedat'] ?? $attempt['timefinish'] ?? 0);
+                if ($at > 0 && ($verifiedcompletedat === 0 || $at < $verifiedcompletedat)) { $verifiedcompletedat = $at; }
+            }
+        }
         $status = (string)$runtime->status;
         $percycle = max(1, (int)$policy->attemptspercycle);
         $cycle = max(1, (int)$runtime->cycle);
         $currentlimit = $cycle * $percycle;
         $view = [
             'managed' => true,
+            'verifiedcompletedat' => $verifiedcompletedat,
             'status' => $status,
             'statuslabel' => 'Сейчас',
             'launchurl' => $provider->launch_url($policy),
@@ -959,3 +967,4 @@ final class assessment_lifecycle {
         return number_format($value, $decimals, ',', '');
     }
 }
+

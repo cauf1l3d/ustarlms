@@ -181,7 +181,14 @@ final class staffing_requests {
             throw new \invalid_parameter_exception('Неизвестное решение');
         }
 
+        view_as::assert_writable();
+        global $USER;
+        if ($actorid !== (int)$USER->id) { throw new \invalid_parameter_exception('Неверный автор решения'); }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('staffing-review', 10);
+        if (!$lock) { throw new \moodle_exception('Кадровая операция уже выполняется. Повторите попытку.'); }
+        try {
         $transaction = $DB->start_delegated_transaction();
+        try {
         $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid], '*', MUST_EXIST);
         if ((string)$request->status !== self::STATUS_PENDING) {
             throw new \invalid_parameter_exception('Заявка уже обработана');
@@ -288,6 +295,8 @@ final class staffing_requests {
             'userid' => $targetuserid,
             'createduserid' => $createduserid,
         ];
+        } catch (\Throwable $e) { $transaction->rollback($e); }
+        } finally { $lock->release(); }
     }
 
     public static function list_for(int $viewerid): array {
@@ -371,3 +380,4 @@ final class staffing_requests {
         return $rows;
     }
 }
+

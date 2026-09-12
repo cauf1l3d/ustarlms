@@ -15,6 +15,9 @@ try {
 }
 
 $templatecontext = [
+    'loginposterurl' => $OUTPUT->image_url('brand/login-poster', 'theme_ustar')->out(false),
+    'loginwordmarkurl' => $OUTPUT->image_url('brand/login-wordmark', 'theme_ustar')->out(false),
+    'loginstarturl' => $OUTPUT->image_url('brand/login-start', 'theme_ustar')->out(false),
     'sitename' => format_string(
         $SITE->shortname,
         true,
@@ -29,3 +32,4 @@ $templatecontext = [
 ];
 
 echo $OUTPUT->render_from_template('theme_ustar/login', $templatecontext);
+

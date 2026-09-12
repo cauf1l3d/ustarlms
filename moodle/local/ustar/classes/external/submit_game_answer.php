@@ -36,46 +36,34 @@ class submit_game_answer extends base {
         }
         $correct = $params['option'] === (int)$question->correctoption;
 
-        // Unique mastery row is the XP source of truth. The database unique index closes the parallel-request race.
-        $alreadymastered = $DB->record_exists('local_ustar_game_mastery', [
-            'userid' => $USER->id,
-            'questionid' => $question->id,
-        ]);
-        $xpearned = 0;
-        if ($correct && !$alreadymastered) {
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock(
+            'game-answer:' . (int)$USER->id . ':' . (int)$question->id, 10);
+        if (!$lock) { throw new \moodle_exception('Ответ ещё сохраняется. Повторите попытку.'); }
+        try {
+            $transaction = $DB->start_delegated_transaction();
             try {
-                $masteryid = (int)$DB->insert_record('local_ustar_game_mastery', (object)[
-                    'userid' => $USER->id,
-                    'gameid' => $question->gameid,
-                    'questionid' => $question->id,
-                    'xpearned' => (int)$question->xpreward,
-                    'timecreated' => time(),
-                ]);
-                $xpearned = (int)$question->xpreward;
-                // A mastered game may score only an active, versioned
-                // competition. It never changes a spendable USCOIN balance.
-                \local_ustar\competition::record_game_mastery(
-                    (int)$USER->id,
-                    $masteryid,
-                    $xpearned,
-                    time()
-                );
-            } catch (\dml_write_exception $e) {
-                // Another parallel correct submission may have won the unique key race.
-                $alreadymastered = true;
+                $mastery = $DB->get_record('local_ustar_game_mastery', ['userid' => $USER->id, 'questionid' => $question->id]);
+                $alreadymastered = (bool)$mastery;
                 $xpearned = 0;
-            }
-        }
-
-        $DB->insert_record('local_ustar_game_attempts', (object)[
-            'userid' => $USER->id,
-            'gameid' => $question->gameid,
-            'questionid' => $question->id,
-            'selectedoption' => $params['option'],
-            'iscorrect' => $correct ? 1 : 0,
-            'xpearned' => $xpearned,
-            'timecreated' => time(),
-        ]);
+                if ($correct) {
+                    if (!$mastery) {
+                        $xpearned = max(0, (int)$question->xpreward);
+                        $mastery = (object)['userid' => $USER->id, 'gameid' => $question->gameid,
+                            'questionid' => $question->id, 'xpearned' => $xpearned, 'timecreated' => time()];
+                        $mastery->id = $DB->insert_record('local_ustar_game_mastery', $mastery);
+                    }
+                    // Idempotent retry also repairs a mastery saved before this release whose scoring failed.
+                    \local_ustar\competition::record_game_mastery((int)$USER->id, (int)$mastery->id,
+                        (int)$mastery->xpearned, (int)$mastery->timecreated);
+                }
+                $DB->insert_record('local_ustar_game_attempts', (object)[
+                    'userid' => $USER->id, 'gameid' => $question->gameid, 'questionid' => $question->id,
+                    'selectedoption' => $params['option'], 'iscorrect' => $correct ? 1 : 0,
+                    'xpearned' => $xpearned, 'timecreated' => time(),
+                ]);
+                $transaction->allow_commit();
+            } catch (\Throwable $e) { $transaction->rollback($e); }
+        } finally { $lock->release(); }
 
         $totalxp = (int)$DB->get_field_sql(
             'SELECT COALESCE(SUM(xpearned), 0) FROM {local_ustar_game_mastery} WHERE userid = :uid',
@@ -95,3 +83,4 @@ class submit_game_answer extends base {
         return new \core_external\external_single_structure(['json' => new external_value(PARAM_RAW, 'Answer JSON')]);
     }
 }
+

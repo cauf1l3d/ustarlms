@@ -15,7 +15,11 @@ class hr_people {
         array $input,
         int $actorid
     ): array {
-        global $DB, $CFG;
+        global $DB, $CFG, $USER;
+        view_as::assert_writable();
+        if ($actorid <= 0 || $actorid !== (int)$USER->id) {
+            throw new \invalid_parameter_exception('Неверный автор кадровой операции');
+        }
 
         $context =
             \context_system::instance();
@@ -209,6 +213,8 @@ class hr_people {
         );
 
 
+        $transaction = $DB->start_delegated_transaction();
+        try {
         if ($userid > 0) {
 
             $target =
@@ -235,7 +241,7 @@ class hr_people {
                 ||
                 is_siteadmin($target)
                 ||
-                $target->id === $actorid
+                (int)$target->id === $actorid
                 ||
                 has_capability(
                     'local/ustar:admin',
@@ -443,16 +449,14 @@ class hr_people {
                 ]
             );
         } catch (\Throwable $e) {
-            people::log_action(
-                $actorid,
-                $savedid,
-                'position_access_sync_failed',
-                [
-                    'positionid' => $positionid,
-                    'message' => $e->getMessage(),
-                ]
-            );
+            // Workspace access is mandatory: never commit a new position with stale privileges.
+            throw $e;
         }
+        $transaction->allow_commit();
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+
 
 
         /*

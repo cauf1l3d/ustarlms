@@ -1,0 +1,81 @@
+/* Shared team/company presentation. All colours follow the active USTAR theme. */
+.u-orgchart { --u-chart-line:var(--u-border-strong, #706d6a); margin:28px 0; padding:24px; border:1px solid var(--u-border); border-radius:18px; background:var(--u-surface-raised); color:var(--u-text-primary); min-width:0; font-size:15px; line-height:1.5; }
+.u-orgchart__header { margin-bottom:24px; }
+.u-orgchart__header h2 { margin:4px 0 8px; font-size:28px; line-height:1.25; }
+.u-orgchart__header p { margin:0; color:var(--u-text-secondary); font-size:14px; }
+.u-orgchart__header .u-page-kicker { font-size:12px; }
+.u-orgchart__root { width:100%; max-width:520px; padding:16px; border:2px solid var(--u-brand); border-radius:14px; background:var(--u-surface-raised); box-shadow:var(--u-e-1); }
+.u-orgchart__root h3 { margin:0 0 10px; font-size:17px; font-weight:700; }
+.u-orgchart__branches, .u-orgchart__departments { list-style:none; margin:0; padding:0; }
+.u-orgchart__branches { position:relative; margin-left:28px; padding-top:24px; }
+.u-orgchart__branches::before { content:""; position:absolute; top:0; left:0; height:24px; border-left:2px solid var(--u-chart-line); }
+.u-orgchart__branch { position:relative; padding:0 0 22px 32px; margin:0; }
+.u-orgchart__branch::before, .u-orgchart__department-branch::before { content:""; position:absolute; top:0; bottom:0; left:0; border-left:2px solid var(--u-chart-line); }
+.u-orgchart__branch::after { content:""; position:absolute; top:34px; left:0; width:32px; border-top:2px solid var(--u-chart-line); }
+.u-orgchart__branch:last-child { padding-bottom:0; }
+.u-orgchart__branch:last-child::before { height:34px; bottom:auto; }
+.u-orgchart__block { padding:0; margin:0; border:1px solid var(--u-border); border-radius:14px; background:var(--u-surface-raised); box-shadow:var(--u-e-1); overflow:visible; }
+.u-orgchart__block-title, .u-orgchart__department-title { display:flex; align-items:center; gap:14px; list-style:none; cursor:pointer; color:var(--u-text-primary); background:transparent; }
+.u-orgchart__block-title { min-height:68px; padding:16px 20px; border-radius:14px; }
+.u-orgchart__block-title::-webkit-details-marker, .u-orgchart__department-title::-webkit-details-marker { display:none; }
+.u-orgchart__block-title::marker, .u-orgchart__department-title::marker { content:""; }
+.u-orgchart__block-title > span:first-child { min-width:0; flex:1; display:grid; gap:2px; }
+.u-orgchart__block-title strong { font-size:18px; line-height:1.35; }
+.u-orgchart__block-title small { font-size:14px; color:var(--u-text-secondary); }
+.u-orgchart__count { flex:0 0 auto; color:var(--u-text-secondary); font-size:13px; font-weight:500; }
+.u-orgchart__chevron { flex:0 0 auto; width:8px; height:8px; margin:0 3px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg); }
+.u-orgchart__block[open] > summary .u-orgchart__chevron, .u-orgchart__department[open] > summary .u-orgchart__chevron { transform:rotate(45deg); }
+.u-orgchart__block-title:hover, .u-orgchart__department-title:hover { box-shadow:inset 3px 0 var(--u-brand); }
+.u-orgchart__block-body { padding:0 20px 20px; }
+.u-orgchart__leaders { display:grid; gap:10px; max-width:520px; margin:0 0 16px; }
+.u-orgchart__departments { margin-left:14px; }
+.u-orgchart__leaders + .u-orgchart__departments { position:relative; }
+.u-orgchart__leaders + .u-orgchart__departments::before { content:""; position:absolute; top:-16px; left:0; height:16px; border-left:2px solid var(--u-chart-line); }
+.u-orgchart__department-branch { position:relative; padding:0 0 12px 24px; margin:0; }
+.u-orgchart__department-branch::after { content:""; position:absolute; top:27px; left:0; width:24px; border-top:2px solid var(--u-chart-line); }
+.u-orgchart__department-branch:last-child { padding-bottom:0; }
+.u-orgchart__department-branch:last-child::before { height:27px; bottom:auto; }
+.u-orgchart__department { padding:0; margin:0; border:1px solid var(--u-border); border-radius:10px; background:var(--u-surface-raised); }
+.u-orgchart__department-title { min-height:54px; padding:13px 15px; border-radius:10px; }
+.u-orgchart__department-title > strong { flex:1; min-width:0; font-size:15px; line-height:1.4; overflow-wrap:anywhere; }
+.u-orgchart__department-body { padding:0 15px 16px; }
+.u-orgchart__department-body h4 { margin:16px 0 8px; font-size:13px; font-weight:600; color:var(--u-text-secondary); }
+.u-orgchart__people { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap:10px; }
+.u-orgchart .u-orgchart__person { display:flex; align-items:center; gap:12px; min-width:0; margin:0; padding:12px; border:1px solid var(--u-border); border-radius:10px; background:var(--u-surface-raised); color:var(--u-text-primary); text-decoration:none; }
+.u-orgchart .u-orgchart__person--head, .u-orgchart__leaders .u-orgchart__person { border-left:3px solid var(--u-brand); }
+.u-orgchart a.u-orgchart__person:hover { border-color:var(--u-brand); color:var(--u-text-primary); box-shadow:var(--u-e-1); text-decoration:none; }
+.u-orgchart__avatar { display:grid; place-items:center; width:44px; height:44px; flex:0 0 44px; border-radius:10px; overflow:hidden; background:var(--u-brand-soft); font-size:14px; font-weight:700; }
+.u-orgchart__avatar img { width:100%; height:100%; object-fit:cover; }
+.u-orgchart__person-label { display:grid; gap:3px; min-width:0; }
+.u-orgchart__person-label strong { color:var(--u-text-primary); font-size:15px; line-height:1.4; overflow-wrap:anywhere; }
+.u-orgchart__person-label > span { font-size:13px; line-height:1.4; color:var(--u-text-secondary); overflow-wrap:anywhere; }
+.u-orgchart .u-orgchart__note { margin:8px 0 14px; color:var(--u-text-secondary); font-size:13px; line-height:1.5; }
+.u-orgchart a:focus-visible, .u-orgchart summary:focus-visible { outline:2px solid var(--u-text-primary); outline-offset:3px; }
+.u-team-page .u-team-department-filter { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:20px 0; }
+.u-team-page .u-team-department-filter label { margin:0; font-weight:600; color:var(--u-text-primary); }
+.u-team-page .u-team-department-filter select { flex:1 1 240px; min-width:0; max-width:520px; min-height:42px; padding:9px 12px; border:1px solid var(--u-border); border-radius:10px; background:var(--u-surface-raised); color:var(--u-text-primary); font:inherit; }
+.u-team-page .u-team-department-filter select:focus-visible { outline:2px solid var(--u-text-primary); outline-offset:2px; }
+.u-team-page #team-learning { scroll-margin-top:90px; }
+@media (max-width:640px) {
+    .u-orgchart { padding:14px; }
+    .u-orgchart__header h2 { font-size:23px; }
+    .u-orgchart__branches { margin-left:12px; }
+    .u-orgchart__branch { padding-left:18px; }
+    .u-orgchart__branch::after { width:18px; }
+    .u-orgchart__block-title { padding:14px 12px; gap:8px; flex-wrap:wrap; }
+    .u-orgchart__block-title > span:first-child { flex-basis:calc(100% - 28px); }
+    .u-orgchart__block-title > .u-orgchart__count { order:3; flex-basis:100%; }
+    .u-orgchart__block-title strong { font-size:16px; }
+    .u-orgchart__block-body { padding:0 10px 14px; }
+    .u-orgchart__departments { margin-left:0; }
+    .u-orgchart__department-branch { padding-left:12px; }
+    .u-orgchart__department-branch::after { width:12px; }
+    .u-orgchart__department-title { padding:12px 10px; gap:8px; }
+    .u-orgchart__department-body { padding:0 8px 12px; }
+    .u-orgchart__people { grid-template-columns:minmax(0, 1fr); }
+    .u-orgchart .u-orgchart__person { padding:10px; gap:8px; }
+}
+
+/* Separate final element, after all company blocks. */
+.u-orgchart__assistant { position:relative; margin:28px auto 0; max-width:480px; padding-top:24px; }
+.u-orgchart__assistant::before { content:""; position:absolute; top:0; left:50%; height:24px; border-left:2px solid var(--u-border); }

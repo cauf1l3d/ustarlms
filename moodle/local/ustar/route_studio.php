@@ -301,8 +301,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    $positionediting = $familyid > 0 && $viewmode === 'position';
+    if ($positionediting) {
+        // The membership was checked above. All writes now target the same physical parent.
+        $route = \local_ustar\route_family::parent_route($familyid);
+        if (!$route) { throw new invalid_parameter_exception('Нет родительского маршрута'); }
+        if (!in_array($action, ['save_version', 'make_override', 'revert_parent'], true)) {
+            throw new invalid_parameter_exception('Это действие выполняется в общем маршруте');
+        }
+    }
+
+    $commandlock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('route-studio:' . (int)$route->id, 10);
+    if (!$commandlock) { throw new moodle_exception('Маршрут занят другим сохранением. Повторите попытку.'); }
+    try {
+    $commandtransaction = $DB->start_delegated_transaction();
+    try {
     $anchor = '';
     $editafter = 0;
+    if ($positionediting && $action === 'save_version') {
+        $editingpointid = required_param('pointid', PARAM_INT);
+        if (!\local_ustar\route_scope::exclusive_to($editingpointid, $positionid)
+                || !\local_ustar\route_scope::point_applies($editingpointid, $positionid, true)) {
+            throw new invalid_parameter_exception('Общий шаг нельзя менять для всех из вкладки должности');
+        }
+    }
+
 
     if ($action === 'ensure') {
 
@@ -511,6 +534,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
             }
 
+            if ($positionediting && !empty($point->sourcepointid)) {
+                \local_ustar\route_scope::assert_replaceable((int)$point->sourcepointid);
+            }
+
             \local_ustar\route_model::update_point(
                 (int)$route->id,
                 $pointid,
@@ -556,17 +583,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 MUST_EXIST
             );
 
-        \local_ustar\route_family::make_override(
-            (int)$point->id,
-            $actorid
+        if (!$positionediting) { throw new invalid_parameter_exception('Выберите должность'); }
+        $editafter = \local_ustar\route_scope::create_override(
+            (int)$route->id, $pointid, $positionid, $actorid
         );
-
-        $anchor =
-            '#point-'
-            . $pointid;
-
-        $editafter =
-            $pointid;
+        $anchor = '#point-' . $editafter;
 
     } else if ($action === 'revert_parent') {
         $pointid =
@@ -586,14 +607,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 MUST_EXIST
             );
 
-        \local_ustar\route_family::revert_to_parent(
-            (int)$point->id,
-            $actorid
+        if (!$positionediting) { throw new invalid_parameter_exception('Выберите должность'); }
+        $sourceid = \local_ustar\route_scope::revert_override(
+            (int)$route->id, $pointid, $positionid, $actorid
         );
-
-        $anchor =
-            '#point-'
-            . $pointid;
+        $anchor = '#point-' . $sourceid;
 
     } else if ($action === 'archive_point') {
         $pointid =
@@ -669,6 +687,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
     }
 
+    $commandtransaction->allow_commit();
+    } catch (\Throwable $e) { $commandtransaction->rollback($e); }
+    } finally { $commandlock->release(); }
+
     redirect($redirecturl);
 }
 
@@ -704,7 +726,7 @@ if ($selectedroute) {
                         static function(array $point) use ($positionid): bool {
                             return \local_ustar\route_scope::point_applies(
                                 (int)$point['id'],
-                                $positionid
+                                $positionid, true
                             );
                         }
                     )
@@ -736,6 +758,13 @@ if ($selectedroute) {
 
 } else {
     $route = null;
+}
+
+if ($route && !$resolvedview && $selectedfamily) {
+    $route['points'] = array_values(array_filter($route['points'] ?? [],
+        static fn(array $p): bool => ($p['inheritstate'] ?? '') !== 'override'));
+    $route['pointcount'] = count($route['points']);
+    $route['haspoints'] = !empty($route['points']);
 }
 
 $routeexists = !empty($route['ok']);
@@ -820,11 +849,11 @@ if ($routeexists) {
 
     if ($resolvedview) {
         $route['canreorder'] = false;
-        $route['routekicker'] = 'Просмотр маршрута должности';
+        $route['routekicker'] = 'Редактирование маршрута должности';
         $route['routebadge'] = 'Итоговый маршрут';
         $route['routedescription'] =
-            'Это вычисляемый маршрут сотрудника: общий маршрут семьи '
-            . 'с учётом только подтверждённой применимости шагов для выбранной должности.';
+            'Личные шаги редактируются напрямую, общие — через «Изменить для этой должности». '
+            . 'Черновик переопределения заменит общий шаг для сотрудника после публикации.';
 
     } else if ($selectedfamily) {
         $route['canreorder'] = true;
@@ -971,13 +1000,15 @@ if ($routeexists) {
                 . ' · требуется подтверждение HR'
             : '';
 
-        $point['canedit'] = !$resolvedview;
-
-        // Legacy materialised inheritance actions are retired.
-        // Scope/override controls will be added on top of the one
-        // physical parent point in the next Studio step.
-        $point['canoverride'] = false;
-        $point['canrevert'] = false;
+        $exclusive = $resolvedview && \local_ustar\route_scope::exclusive_to((int)$point['id'], $positionid);
+        $point['canedit'] = !$resolvedview || $exclusive;
+        $point['canoverride'] = $resolvedview && !$exclusive && empty($point['sourcepointid']);
+        $point['canrevert'] = $resolvedview && $exclusive && !empty($point['sourcepointid'])
+            && ($point['inheritstate'] ?? '') === 'override';
+        if ($resolvedview) {
+            $point['inheritancelabel'] = $point['canrevert'] ? 'Изменён для этой должности'
+                : ($exclusive ? 'Только для этой должности' : 'Общий шаг');
+        }
 
         $point['canmove'] =
             !$resolvedview
@@ -1374,3 +1405,4 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
+

@@ -18,3 +18,4 @@ final class hook_callbacks {
         $hook->add_html(route_continue::footer_button());
     }
 }
+

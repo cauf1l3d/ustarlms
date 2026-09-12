@@ -13,7 +13,7 @@ class get_team extends base {
         return new external_function_parameters([]);
     }
 
-    /** Managers see explicit direct reports; superadmin sees the company projection. */
+    /** Managers use the canonical managed subtree; authorized administrators see the company. */
     public static function execute(): array {
         global $USER, $DB;
         self::guard();
@@ -21,12 +21,15 @@ class get_team extends base {
 
         $resolved = structure::resolve_user($USER->id);
         $st = $resolved['structure'];
-        $role = $resolved['role'];
+        $companyaccess = is_siteadmin((int)$USER->id)
+            || has_capability('local/ustar:admin', \context_system::instance(), (int)$USER->id);
         $allowedids = null;
-        if ($role !== 'superadmin') {
-            $allowedids = [];
-            foreach (\local_ustar\org::direct_reports((int)$USER->id) as $report) {
-                $allowedids[(int)$report['id']] = true;
+        if (!$companyaccess) {
+            $scope = \local_ustar\organization_model::manager_scope((int)$USER->id);
+            $allowedids = !empty($scope['allowed'])
+                ? array_fill_keys(array_map('intval', $scope['userids'] ?? []), true) : [];
+            if (!$allowedids) {
+                return ['json' => json_encode(['team' => [], 'scope' => 'managed_subtree'], JSON_UNESCAPED_UNICODE)];
             }
         }
 
@@ -42,7 +45,12 @@ class get_team extends base {
                   JOIN {user_info_field} f ON f.id = d.fieldid AND f.shortname = 'ustar_position'
                   JOIN {user} u ON u.id = d.userid
                  WHERE u.deleted = 0 AND u.suspended = 0";
-        $records = $DB->get_records_sql($sql);
+        $params = [];
+        if (is_array($allowedids)) {
+            [$insql, $params] = $DB->get_in_or_equal(array_keys($allowedids), SQL_PARAMS_NAMED, 'teamuser');
+            $sql .= " AND u.id {$insql}";
+        }
+        $records = $DB->get_records_sql($sql, $params);
 
         $team = [];
         foreach ($records as $rec) {
@@ -73,7 +81,7 @@ class get_team extends base {
         }
         usort($team, fn($a, $b) => $b['avgProgress'] <=> $a['avgProgress']);
 
-        return ['json' => json_encode(['team' => $team, 'scope' => $role === 'superadmin' ? 'company' : 'direct_reports'],
+        return ['json' => json_encode(['team' => $team, 'scope' => $companyaccess ? 'company' : 'managed_subtree'],
             JSON_UNESCAPED_UNICODE)];
     }
 

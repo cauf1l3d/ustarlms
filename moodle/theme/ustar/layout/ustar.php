@@ -77,6 +77,7 @@ $positionpages = [
 ];
 
 $materialpages = [
+    '/local/ustar/assessment_studio.php',
     '/local/ustar/materials.php',
     '/local/ustar/material_create.php',
     '/local/ustar/material_bulk.php',
@@ -463,6 +464,7 @@ if (!$canadmin && $canhr) {
     $homeurl = new moodle_url('/local/ustar/hr.php');
     $navitems = [
         ['label'=>'Панель HR','short'=>'HR','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>in_array($pagepath,$hrpages,true)],
+        ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)],
         ['label'=>'Материалы','short'=>'Материалы','url'=>(new moodle_url('/local/ustar/materials.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>in_array($pagepath,$materialpages,true)],
         ['label'=>'Контроль','short'=>'Контроль','url'=>(new moodle_url('/local/ustar/operations.php'))->out(false),'icon'=>$icons['growth'],'active'=>in_array($pagepath,$operationpages,true)],
@@ -596,43 +598,6 @@ $ustarscormroute = false;
 $ustarscormcmid = 0;
 
 if (
-    $pagepath === '/mod/scorm/view.php'
-    &&
-    !empty($PAGE->cm)
-    &&
-    (string)$PAGE->cm->modname === 'scorm'
-    &&
-    optional_param(
-        'ustarroute',
-        0,
-        PARAM_BOOL
-    )
-) {
-
-    $SESSION->ustar_scorm_route = [
-        'cmid' =>
-            (int)$PAGE->cm->id,
-
-        'pointid' =>
-            optional_param(
-                'ustarpoint',
-                0,
-                PARAM_INT
-            ),
-
-        'versionid' =>
-            optional_param(
-                'ustarversion',
-                0,
-                PARAM_INT
-            ),
-
-        'startedat' =>
-            time(),
-    ];
-}
-
-if (
     $pagepath === '/mod/scorm/player.php'
     &&
     !empty($SESSION->ustar_scorm_route)
@@ -710,7 +675,19 @@ $mobilenavitems = array_values(array_filter($navitems, static function(array $it
 }));
 $mobilenavitems = array_slice($mobilenavitems, 0, 5);
 
+// Render the plugin's navigation presenter: this shell omits standard_footer_html.
+$routecontinue = \local_ustar\route_continue::footer_button();
+if (in_array($pagepath, ['/mod/page/view.php', '/mod/book/view.php', '/mod/resource/view.php', '/mod/folder/view.php'], true)) {
+    $PAGE->requires->js(new moodle_url('/local/ustar/route_continue.js', ['v' => '20260911']));
+}
+if ($ustarscormroute) {
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_flow.css', ['v' => '20260911']));
+}
+
 $templatecontext = [
+    'routecontinue' => $routecontinue,
+    'profilesettingsurl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
+    'logouturl' => (new moodle_url('/login/logout.php', ['sesskey' => sesskey()]))->out(false),
     'output' => $OUTPUT,
 
     'bodyattributes' =>
@@ -728,6 +705,7 @@ $templatecontext = [
         (
             $ustarscormroute
                 ? ' data-ustar-scorm-cmid="' . $ustarscormcmid . '"'
+                    . ' data-ustar-scorm-launch="' . s((string)($SESSION->ustar_scorm_route['launchid'] ?? '')) . '"'
                     . ' data-ustar-scorm-status-url="'
                     . s(
                         (

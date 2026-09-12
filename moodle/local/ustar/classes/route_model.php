@@ -443,6 +443,20 @@ final class route_model {
 
     public static function create_version(int $pointid, array $data, int $actorid): \stdClass {
         global $DB;
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('route-version:' . $pointid, 10);
+        if (!$lock) { throw new \moodle_exception('Точка занята другим сохранением. Повторите попытку.'); }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $created = self::create_version_locked($pointid, $data, $actorid);
+                $transaction->allow_commit();
+                return $created;
+            } catch (\Throwable $e) { $transaction->rollback($e); }
+        } finally { $lock->release(); }
+    }
+
+    private static function create_version_locked(int $pointid, array $data, int $actorid): \stdClass {
+        global $DB;
         $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid], '*', MUST_EXIST);
         $latest = self::latest_version($pointid);
         $versionno = $latest ? ((int)$latest->versionno + 1) : 1;
@@ -555,18 +569,9 @@ final class route_model {
         // version. Preserve business policy across ordinary edits while letting
         // the provider adapter refresh its technical reference (e.g. new Quiz CM).
         if (class_exists('\\local_ustar\\assessment_lifecycle')) {
-            try {
-                \local_ustar\assessment_lifecycle::inherit_policy_for_version(
-                    $latest ?: null,
-                    $created,
-                    $actorid
-                );
-            } catch (\Throwable $e) {
-                debugging(
-                    'USTAR assessment policy inheritance failed: ' . $e->getMessage(),
-                    DEBUG_DEVELOPER
-                );
-            }
+            \local_ustar\assessment_lifecycle::inherit_policy_for_version(
+                $latest ?: null, $created, $actorid
+            );
         }
 
         if (
@@ -1234,6 +1239,7 @@ final class route_model {
             'pointid' => (int)$point->id,
             'versionid' => (int)$version->id,
         ])) {
+            route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
             return;
         }
         $now = time();
@@ -1260,6 +1266,7 @@ final class route_model {
                 throw $e;
             }
         }
+        route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
     }
 
     private static function evaluate_point(\stdClass $point, \stdClass $version, int $userid, string $positionid, array $priorstates): array {
@@ -2009,6 +2016,7 @@ final class route_model {
                             $version,
                             [
                                 'mode' => 'assessment_lifecycle',
+                                'verifiedcompletedat' => (int)($assessmentview['verifiedcompletedat'] ?? 0),
                                 'status' => 'passed',
                                 'attempts' => (int)($assessmentview['attemptsused'] ?? 0),
                                 'bestscore' => (float)($assessmentview['bestscore'] ?? 0),
@@ -2470,3 +2478,4 @@ final class route_model {
         return array_values(array_unique(array_filter($courseids)));
     }
 }
+

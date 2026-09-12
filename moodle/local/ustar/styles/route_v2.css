@@ -92,3 +92,9 @@
 }
 
 .u-adaptation-route-card{margin:18px 0;padding:18px 20px;border:1px solid var(--u-border,#e4e7ec);border-radius:18px;background:var(--u-surface-raised,#fff);display:flex;align-items:center;justify-content:space-between;gap:20px}.u-adaptation-route-card h2{margin:3px 0 5px}.u-adaptation-route-card p{margin:4px 0}.u-adaptation-route-status{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:13px}.u-adaptation-route-card.is-blocked{border-color:#f79009;background:#fffaeb}.u-adaptation-route-alert{font-weight:800;color:#b54708}.u-adaptation-route-note{color:var(--u-text-secondary,#667085)}@media(max-width:700px){.u-adaptation-route-card{align-items:flex-start;flex-direction:column}}
+
+
+/* Route rewards: local scope, visible at normal browser zoom. */
+.u-route-rewards {display:flex; flex-wrap:wrap; gap:12px 24px; align-items:center; padding:20px; margin:20px 0; border:1px solid #c5a900; border-radius:16px; background:#fffbea; color:#26251f; font-size:15px;}
+.u-route-rewards span {flex:1 1 250px;}
+.u-route-rewards a {color:#625200; text-decoration:underline;}

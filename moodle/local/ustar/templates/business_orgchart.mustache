@@ -1,0 +1,71 @@
+{{#orgchart}}
+<section class="u-orgchart" aria-labelledby="u-orgchart-title">
+    <header class="u-orgchart__header">
+        <p class="u-page-kicker">Компания</p>
+        <h2 id="u-orgchart-title">Организационная структура</h2>
+        <p>{{description}}</p>
+    </header>
+    <div class="u-orgchart__root">
+        <h3>Генеральный директор</h3>
+        {{#executives}}{{> local_ustar/business_orgchart_person}}{{/executives}}
+        {{^hasexecutives}}<p class="u-orgchart__note">Руководитель не указан в доступном составе.</p>{{/hasexecutives}}
+    </div>
+    <ul class="u-orgchart__branches" aria-label="Блоки компании">
+        {{#blocks}}
+        <li class="u-orgchart__branch">
+            <details class="u-orgchart__block" open>
+                <summary class="u-orgchart__block-title">
+                    <span><strong>{{name}}</strong>{{#hasleaders}}<small>{{leadernames}}</small>{{/hasleaders}}</span>
+                    <span class="u-orgchart__count">В схеме: {{people}}</span>
+                    <span class="u-orgchart__chevron" aria-hidden="true"></span>
+                </summary>
+                <div class="u-orgchart__block-body">
+                    {{#islogistics}}<p class="u-orgchart__note">Прямое подчинение генеральному директору</p>{{/islogistics}}
+                    {{#hasleaders}}
+                    <div class="u-orgchart__leaders">
+                        {{#leaders}}{{> local_ustar/business_orgchart_person}}{{/leaders}}
+                    </div>
+                    {{/hasleaders}}
+                    {{#hasdepartments}}
+                    <ul class="u-orgchart__departments" aria-label="Подразделения: {{name}}">
+                        {{#departments}}
+                        <li class="u-orgchart__department-branch">
+                            <details class="u-orgchart__department" {{#expanded}}open{{/expanded}}>
+                                <summary class="u-orgchart__department-title">
+                                    <strong>{{name}}</strong>
+                                    <span class="u-orgchart__count">{{people}}</span>
+                                    <span class="u-orgchart__chevron" aria-hidden="true"></span>
+                                </summary>
+                                <div class="u-orgchart__department-body">
+                                    {{#hasheads}}
+                                    <h4>Руководство подразделения</h4>
+                                    <div class="u-orgchart__people">
+                                        {{#heads}}{{> local_ustar/business_orgchart_person}}{{/heads}}
+                                    </div>
+                                    {{/hasheads}}
+                                    {{#hasmembers}}
+                                    <h4>Сотрудники</h4>
+                                    <div class="u-orgchart__people">
+                                        {{#members}}{{> local_ustar/business_orgchart_person}}{{/members}}
+                                    </div>
+                                    {{/hasmembers}}
+                                    {{#empty}}<p class="u-orgchart__note">Нет сотрудников в доступном составе.</p>{{/empty}}
+                                </div>
+                            </details>
+                        </li>
+                        {{/departments}}
+                    </ul>
+                    {{/hasdepartments}}
+                    {{^hasdepartments}}{{^hasleaders}}<p class="u-orgchart__note">Нет подразделений в доступном составе.</p>{{/hasleaders}}{{/hasdepartments}}
+                </div>
+            </details>
+        </li>
+        {{/blocks}}
+    </ul>
+    {{#hasassistants}}
+    <div class="u-orgchart__assistant" aria-label="Ассистент генерального директора">
+        {{#assistants}}{{> local_ustar/business_orgchart_person}}{{/assistants}}
+    </div>
+    {{/hasassistants}}
+</section>
+{{/orgchart}}

@@ -352,6 +352,7 @@ $data = [
             )
         )->out(false),
 
+    'nextpointurl' => (new moodle_url('/local/ustar/route_next.php', ['sesskey' => sesskey()]))->out(false),
     'routeurl' =>
         (
             new moodle_url(
@@ -389,3 +390,4 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
+

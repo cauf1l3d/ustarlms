@@ -1,0 +1,12 @@
+{{#canlearn}}<a class="u-orgchart__person {{#ishead}}u-orgchart__person--head{{/ishead}}" href="{{detailurl}}" aria-label="Обученность: {{fullname}}">{{/canlearn}}
+{{^canlearn}}<div class="u-orgchart__person {{#ishead}}u-orgchart__person--head{{/ishead}}">{{/canlearn}}
+    <span class="u-orgchart__avatar" aria-hidden="true">
+        {{#avatarurl}}<img src="{{avatarurl}}" alt="" loading="lazy" width="44" height="44">{{/avatarurl}}
+        {{^avatarurl}}{{initials}}{{/avatarurl}}
+    </span>
+    <span class="u-orgchart__person-label">
+        <strong>{{fullname}}{{#isme}} · Это вы{{/isme}}</strong>
+        <span>{{position}}</span>
+    </span>
+{{#canlearn}}</a>{{/canlearn}}
+{{^canlearn}}</div>{{/canlearn}}

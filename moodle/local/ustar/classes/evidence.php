@@ -68,7 +68,7 @@ class evidence {
             ";
         }
 
-        return array_values(
+        $definitions = array_values(
             $DB->get_records_select(
                 'local_ustar_skill_evidence',
                 $where,
@@ -76,6 +76,11 @@ class evidence {
                 'sortorder ASC, id ASC'
             )
         );
+        // Explicit position/global definitions always take precedence.
+        if (!$definitions && $skillid === 'product_know' && !empty($positionid)) {
+            return consultant_career::product_definitions($positionid);
+        }
+        return $definitions;
     }
 
 

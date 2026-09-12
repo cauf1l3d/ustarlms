@@ -41,6 +41,8 @@ class sync_enrolments extends \core\task\scheduled_task {
             ORDER BY u.id
         ";
 
+        // Bounded recovery of saved progress whose reward could not be committed.
+        \local_ustar\route_rewards::reconcile(200);
         $users = $DB->get_records_sql($sql);
 
         $processed = 0;
@@ -122,3 +124,4 @@ class sync_enrolments extends \core\task\scheduled_task {
         );
     }
 }
+

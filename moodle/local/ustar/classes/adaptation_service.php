@@ -299,7 +299,7 @@ final class adaptation_service {
                 continue;
             }
             $perspective = (string)($details['perspective'] ?? '');
-            if (isset($reports[$perspective])) {
+            if (array_key_exists($perspective, $reports)) {
                 $reports[$perspective] = ['event' => $event, 'details' => $details];
             }
         }

@@ -3,6 +3,8 @@
 require_once(__DIR__ . '/../../config.php');
 
 require_login();
+require_capability('local/ustar:use', context_system::instance());
+\local_ustar\view_as::assert_writable();
 
 global $DB, $SESSION, $USER;
 
@@ -49,17 +51,20 @@ if (
     redirect(new moodle_url('/local/ustar/route.php'));
 }
 
-if ($versionid <= 0) {
-    $latest =
-        \local_ustar\route_model::latest_version(
-            $pointid
-        );
-
-    $versionid =
-        $latest
-            ? (int)$latest->id
-            : 0;
+$published = \local_ustar\route_model::current_published_version($pointid);
+if (!$published || ($versionid > 0 && $versionid !== (int)$published->id)) {
+    throw new moodle_exception('Версия точки изменилась. Откройте маршрут заново.');
 }
+$versionid = (int)$published->id;
+$matches = false;
+foreach (\local_ustar\route_model::requirements_for_version($published) as $requirement) {
+    if (($requirement['type'] ?? '') === 'cm' && (int)($requirement['sourceid'] ?? 0) === $cmid) { $matches = true; }
+}
+if (!$matches || empty($current['canlaunch'])) { throw new moodle_exception('Материал не относится к доступной точке.'); }
+$course = get_course((int)$cm->course);
+require_login($course, false, $cm);
+$info = get_fast_modinfo($course, (int)$USER->id)->get_cm($cmid);
+if (!$info->uservisible) { throw new moodle_exception('Материал сейчас недоступен.'); }
 
 $scormid = (int)$cm->instance;
 
@@ -76,6 +81,7 @@ $attemptbefore =
     );
 
 $SESSION->ustar_scorm_route = [
+    'launchid' => bin2hex(random_bytes(16)),
     'cmid' => $cmid,
     'scormid' => $scormid,
     'pointid' => $pointid,
@@ -90,3 +96,4 @@ redirect(
         ['id' => $cmid]
     )
 );
+

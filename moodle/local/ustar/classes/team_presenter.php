@@ -31,7 +31,7 @@ final class team_presenter {
             ?? [];
 
         $ishead =
-            !empty($myposition['ishead'])
+            team_access::company($userid) || !empty($myposition['ishead'])
             || (
                 class_exists('\\local_ustar\\organization_model')
                 && organization_model::is_manager($userid)
@@ -80,7 +80,10 @@ final class team_presenter {
          */
         $peers = [];
 
-        foreach (org::horizon($userid) as $person) {
+        $peerlist = !$ishead
+            ? self::department_people((string)($me['departmentid'] ?? ''), $userid, true)
+            : org::horizon($userid);
+        foreach ($peerlist as $person) {
             if ((int)$person['id'] === $userid) {
                 continue;
             }
@@ -140,6 +143,118 @@ final class team_presenter {
             'haslower' =>
                 !empty($reports)
                 || !empty($departmentpeople),
+        ];
+    }
+
+    /** Presentation of already-visible people; does not expand organizational access. */
+    public static function department_view(
+        int $viewerid,
+        array $hierarchy,
+        array $learning,
+        string $filter = ''
+    ): array {
+        $structure = structure::get(structure::NAME_STRUCTURE);
+        $positions = people::position_map($structure);
+        $departments = people::department_map($structure);
+        $learningpeople = !empty($learning['allowed']) ? ($learning['people'] ?? []) : [];
+        $learningids = array_fill_keys(array_map(
+            static fn(array $person): int => (int)$person['id'], $learningpeople
+        ), true);
+
+        $visible = [];
+        $lists = [$hierarchy['leaders'] ?? [], $hierarchy['peers'] ?? [],
+            $hierarchy['reports'] ?? [], $hierarchy['departmentpeople'] ?? [], $learningpeople];
+        if (!empty($hierarchy['me'])) {
+            $lists[] = [$hierarchy['me']];
+        }
+        foreach ($lists as $list) {
+            foreach ($list as $person) {
+                $id = (int)($person['id'] ?? 0);
+                if ($id > 0) {
+                    $visible[$id] = array_merge($visible[$id] ?? [], $person);
+                }
+            }
+        }
+
+        $rows = [];
+        $admin = is_siteadmin($viewerid);
+        foreach ($visible as $id => $person) {
+            $departmentid = (string)($person['departmentid'] ?? '');
+            $key = 'department:' . $departmentid;
+            if (!isset($rows[$key])) {
+                $rows[$key] = [
+                    'id' => $key,
+                    'name' => (string)($departments[$departmentid]['name']
+                        ?? (($person['department'] ?? '') ?: 'Без подразделения')),
+                    'heads' => [], 'members' => [], 'people' => 0,
+                ];
+            }
+            $person['isme'] = $id === $viewerid;
+            $person['canlearn'] = $admin || isset($learningids[$id]);
+            $person['detailurl'] = $person['canlearn']
+                ? (new \moodle_url('/local/ustar/team_learning.php', ['userid' => $id]))->out(false)
+                : '';
+            $position = $positions[(string)($person['positionid'] ?? '')] ?? [];
+            $bucket = !empty($position['ishead']) ? 'heads' : 'members';
+            $rows[$key][$bucket][] = $person;
+            $rows[$key]['people']++;
+        }
+        foreach ($rows as &$row) {
+            foreach (['heads', 'members'] as $bucket) {
+                usort($row[$bucket], static fn(array $a, array $b): int =>
+                    strnatcasecmp((string)$a['fullname'], (string)$b['fullname']));
+            }
+            $row['hasheads'] = !empty($row['heads']);
+            $row['hasmembers'] = !empty($row['members']);
+        }
+        unset($row);
+        uasort($rows, static fn(array $a, array $b): int =>
+            strnatcasecmp($a['name'], $b['name']));
+
+        // Filter options are derived only from the existing authorized learning list.
+        $options = [];
+        foreach ($learningpeople as $person) {
+            $key = 'department:' . (string)($person['departmentid'] ?? '');
+            if (!isset($options[$key])) {
+                $options[$key] = ['value' => $key, 'name' => $rows[$key]['name'], 'count' => 0];
+            }
+            $options[$key]['count']++;
+        }
+        uasort($options, static fn(array $a, array $b): int =>
+            strnatcasecmp($a['name'], $b['name']));
+        if ($filter !== '' && !isset($options[$filter])) {
+            throw new \invalid_parameter_exception('Подразделение недоступно в сводке обучения.');
+        }
+        foreach ($options as &$option) {
+            $option['selected'] = $filter === $option['value'];
+        }
+        unset($option);
+        $filtered = array_values(array_filter($learningpeople,
+            static fn(array $person): bool => $filter === ''
+                || 'department:' . (string)($person['departmentid'] ?? '') === $filter));
+        $summary = ['total' => count($filtered), 'complete' => 0,
+            'inprogress' => 0, 'notstarted' => 0, 'noroute' => 0];
+        foreach ($filtered as $person) {
+            $state = (string)($person['state'] ?? '');
+            if (in_array($state, ['complete', 'inprogress', 'notstarted', 'noroute'], true)) {
+                $summary[$state]++;
+            }
+        }
+        $learning['people'] = $filtered;
+        $learning['haspeople'] = !empty($filtered);
+        $learning['summary'] = $summary;
+        if ($filter !== '') {
+            $learning['department'] = $options[$filter]['name'];
+        }
+        return [
+            'orgchart' => company_hierarchy::business_view(company_hierarchy::build()['departments'], $viewerid),
+            'teamdepartments' => array_values($rows),
+            'hasteamdepartments' => !empty($rows),
+            'learningfilters' => array_values($options),
+            'learningallselected' => $filter === '',
+            'learningfilteractive' => $filter !== '',
+            'teamfilterurl' => (new \moodle_url('/local/ustar/team.php'))->out(false),
+            'learning' => $learning,
         ];
     }
 

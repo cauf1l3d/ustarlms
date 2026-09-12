@@ -46,6 +46,7 @@ if ($kind === 'scorm') {
 
     $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid, 'userid' => (int)$USER->id], '*', MUST_EXIST);
     $SESSION->ustar_scorm_route = [
+    'launchid' => bin2hex(random_bytes(16)),
         'mode' => 'assessment_remediation',
         'runtimeid' => $runtimeid,
         'cmid' => (int)$cm->id,

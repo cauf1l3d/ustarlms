@@ -238,13 +238,9 @@ final class communication {
             return [];
         }
 
-        try {
-            // Moodle returns [contacts, noncontacts]. Both sets have already
-            // passed core visibility checks; canmessage is still respected below.
-            $sets = \core_message\api::message_search_users($userid, $query, 0, 20);
-        } catch (\Throwable $e) {
-            return [];
-        }
+        // Core search omits privacy details: canmessage is normally null.
+        // Visibility comes from search; send permission must be checked separately.
+        $sets = \core_message\api::message_search_users($userid, $query, 0, 20);
 
         $found = [];
         foreach ($sets as $set) {
@@ -256,7 +252,8 @@ final class communication {
                     continue;
                 }
                 $id = (int)$item->id;
-                if ($id !== $userid && !empty($item->canmessage)) {
+                if ($id !== $userid && !isset($found[$id])
+                        && \core_message\api::can_send_message($id, $userid)) {
                     $found[$id] = $item;
                 }
             }

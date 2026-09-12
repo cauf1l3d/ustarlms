@@ -56,6 +56,25 @@
         </section>
         {{/hasladder}}
 
+        {{#canmanage}}
+        <details class="u-panel" style="padding:20px;margin:20px 0">
+            <summary>Настроить следующую карьерную ступень</summary>
+            <form method="post" style="margin-top:16px">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="savecareer">
+                <input type="hidden" name="positionid" value="{{careerpositionid}}">
+                <input type="hidden" name="careerexpected" value="{{careerexpected}}">
+                <label for="career-next">Следующая должность</label>
+                <select id="career-next" name="nextpositionid" class="custom-select">
+                    <option value="">Финальная ступень — переход не задан</option>
+                    {{#careertargets}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/careertargets}}
+                </select>
+                <p>Сотрудник увидит следующую должность и её требования в шаге развития. Для следующих ступеней откройте выбранную должность и задайте её переход. Назначение сотрудника и допуски оформляются отдельно.</p>
+                <button type="submit" class="u-btn u-btn--primary">Сохранить переход</button>
+            </form>
+        </details>
+        {{/canmanage}}
+
         <section
             id="u-position-workspace"
             class="u-position-workspace"

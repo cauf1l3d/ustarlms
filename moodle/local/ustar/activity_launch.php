@@ -3,6 +3,8 @@
 require_once(__DIR__ . '/../../config.php');
 
 require_login();
+require_capability('local/ustar:use', context_system::instance());
+\local_ustar\view_as::assert_writable();
 
 global $DB, $PAGE, $USER;
 
@@ -33,7 +35,7 @@ if ($positionid === '') {
  */
 $route = \local_ustar\route_model::for_user($positionid, (int)$USER->id);
 $current = $route['currentpoint'] ?? null;
-if (!$current || (int)($current['id'] ?? 0) !== $pointid) {
+if (!$current || (int)($current['id'] ?? 0) !== $pointid || empty($current['canlaunch'])) {
     redirect(new moodle_url('/local/ustar/route.php'));
 }
 
@@ -76,9 +78,10 @@ try {
 } catch (\Throwable $e) {
     debugging('USTAR activity bridge failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
     throw new moodle_exception(
-        'Не удалось открыть активность из маршрута USTAR. Legacy-курс не используется как fallback. ' . $e->getMessage()
+        'Не удалось открыть учебный материал. Вернитесь в маршрут и повторите попытку.'
     );
 }
 
 // The legacy course is only a backend container; this launcher only targets the authorised activity.
 redirect(new moodle_url((string)$prepared['targeturl']));
+

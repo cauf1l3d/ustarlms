@@ -80,6 +80,9 @@ final class route_quiz_attempt extends \mod_quiz\quiz_attempt {
  * final grade and activity completion. USTAR supplies the HR/HRD workflow UI.
  */
 final class route_quiz_grading {
+    private static bool $notificationfailed = false;
+    public static function notification_failed(): bool { return self::$notificationfailed; }
+
 
     private static function bootstrap(): void {
         global $CFG;
@@ -647,6 +650,9 @@ final class route_quiz_grading {
         global $DB;
 
         self::bootstrap();
+        require_capability('local/ustar:hrmanage', \context_system::instance());
+        view_as::assert_writable();
+        self::$notificationfailed = false;
 
         if (!$grades) {
             throw new \invalid_parameter_exception(
@@ -687,6 +693,26 @@ final class route_quiz_grading {
                 }
             }
 
+            $replayed = false;
+            // A lost HTTP response can be retried. Accept only exactly the already
+            // persisted marks/comments; a different stale submission remains an error.
+            if (!$pending && $grades) {
+                $already = true;
+                foreach ($grades as $slot => $grade) {
+                    if (!in_array((int)$slot, array_map('intval', $attemptobj->get_slots()), true)) {
+                        $already = false; break;
+                    }
+                    $qa = $attemptobj->get_question_attempt((int)$slot);
+                    $comment = $qa->get_manual_comment();
+                    if ($qa->get_state()->get_summary_state() !== 'manuallygraded'
+                            || abs((float)$qa->get_mark() - (float)$grade['mark']) > 0.000001
+                            || trim((string)($comment[0] ?? '')) !== trim((string)($grade['comment'] ?? ''))) {
+                        $already = false; break;
+                    }
+                }
+                $replayed = $already;
+            }
+
             if ($requireall) {
                 foreach (array_keys($pending) as $slot) {
                     if (!array_key_exists($slot, $grades)) {
@@ -703,7 +729,7 @@ final class route_quiz_grading {
             foreach ($grades as $slot => $grade) {
                 $slot = (int)$slot;
 
-                if (!isset($pending[$slot])) {
+                if (!isset($pending[$slot]) && !$replayed) {
                     throw new \moodle_exception(
                         'Один из вопросов уже оценён или не требует ручной проверки.'
                     );
@@ -725,6 +751,7 @@ final class route_quiz_grading {
                     'comment' => $comment,
                 ];
 
+                if (!$replayed) {
                 $events[$slot] = \mod_quiz\event\question_manually_graded::create([
                     'objectid' => $qa->get_question_id(),
                     'courseid' => $attemptobj->get_courseid(),
@@ -735,18 +762,28 @@ final class route_quiz_grading {
                         'slot' => $slot,
                     ],
                 ]);
+                }
             }
 
             // Canonical grade persistence comes first. Moodle remains the source
             // of truth for question state, marks and the final quiz grade.
-            $attemptobj->apply_manual_grades($normalized);
+            $gradetransaction = $DB->start_delegated_transaction();
+            if (!$replayed) { $attemptobj->apply_manual_grades($normalized); }
 
             // USTAR audit must not depend on optional event observers/message
             // delivery. The previous order triggered Moodle events before this
             // block, so an observer exception could leave the grade persisted
             // while USTAR audit/lifecycle stayed stale.
             $now = time();
+            $auditedslots = [];
+            foreach ($DB->get_records('local_ustar_workflow_events', [
+                    'entitytype' => 'quiz_manual_grade', 'entityid' => $attemptid,
+                    'eventtype' => 'route_quiz_manual_grade']) as $eventrow) {
+                $detail = json_decode((string)$eventrow->detailsjson, true) ?: [];
+                $auditedslots[(int)($detail['slot'] ?? 0)] = true;
+            }
             foreach ($normalized as $slot => $grade) {
+                if (isset($auditedslots[(int)$slot])) { continue; }
                 $qa = $attemptobj->get_question_attempt((int)$slot);
                 $DB->insert_record(
                     'local_ustar_workflow_events',
@@ -773,6 +810,23 @@ final class route_quiz_grading {
                     ]
                 );
             }
+
+            // Keep the canonical grade and USTAR audit in the SAME transaction.
+            // Moodle dispatches buffered messages only after the outer COMMIT.
+            self::$notificationfailed = grading_commit::finish($gradetransaction,
+                static function() use ($attemptid, $normalized, $DB): bool {
+                    $freshattempt = route_quiz_attempt::from_attemptid($attemptid);
+                    foreach ($normalized as $slot => $grade) {
+                        $qa = $freshattempt->get_question_attempt((int)$slot);
+                        if ($qa->get_state()->get_summary_state() !== 'manuallygraded'
+                                || abs((float)$qa->get_mark() - (float)$grade['mark']) > 0.000001) {
+                            return false;
+                        }
+                    }
+                    return $DB->record_exists('local_ustar_workflow_events', [
+                        'entitytype' => 'quiz_manual_grade', 'entityid' => $attemptid,
+                        'eventtype' => 'route_quiz_manual_grade']);
+                });
 
             // Completion is a derived Moodle projection. Keep it best-effort so
             // a completion observer cannot invalidate an already persisted grade

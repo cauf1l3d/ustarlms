@@ -16,10 +16,13 @@ if ($iselevated && $requestedposition !== '') {
     $positionid = $requestedposition;
 }
 
+$previewing = ($iselevated && $requestedposition !== '') || \local_ustar\view_as::active();
 $route = null;
 if ($positionid !== '') {
     try {
-        $route = \local_ustar\route_model::for_user($positionid, (int)$USER->id);
+        $route = $previewing
+            ? \local_ustar\route_model::read_only_snapshot($positionid, (int)$USER->id)
+            : \local_ustar\route_model::for_user($positionid, (int)$USER->id);
     } catch (\Throwable $e) {
         $route = ['ok' => false, 'reason' => 'runtime_error'];
     }
@@ -39,7 +42,7 @@ if ($iselevated) {
 }
 
 $adaptation = null;
-$previewing = $iselevated && $requestedposition !== '';
+
 if (!$previewing) {
     try { $adaptation = \local_ustar\adaptation_service::route_card((int)$USER->id); } catch (\Throwable $e) { $adaptation = null; }
 }
@@ -51,7 +54,12 @@ if ($adaptation && !empty($adaptation['blocked']) && !empty($route['ok'])) {
     }
 }
 
+$rewards = \local_ustar\route_rewards::summary((int)$USER->id);
 $data = [
+    'previewing' => $previewing,
+    'continueerror' => optional_param('continueerror', 0, PARAM_BOOL),
+    'routerewards' => $rewards,
+    'rewardsenabled' => !$previewing && \local_ustar\route_rewards::enabled(),
     'route' => !empty($route['ok']) ? $route : null,
     'hasroute' => !empty($route['ok']),
     'noroute' => empty($route['ok']),
@@ -77,3 +85,4 @@ $output = $PAGE->get_renderer('local_ustar');
 echo $output->header();
 echo $output->render_from_template('local_ustar/route', $data);
 echo $output->footer();
+

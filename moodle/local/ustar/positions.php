@@ -124,6 +124,14 @@ if (
 
     try {
 
+        if ($action === 'savecareer') {
+            \local_ustar\career_path::save($positionid,
+                optional_param('nextpositionid', '', PARAM_ALPHANUMEXT),
+                required_param('careerexpected', PARAM_ALPHANUMEXT));
+            redirect(new moodle_url('/local/ustar/positions.php', ['positionid'=>$positionid]),
+                'Карьерный переход сохранён', null, \core\output\notification::NOTIFY_SUCCESS);
+        }
+
         if ($action === 'savematrix') {
 
             $selected =
@@ -323,11 +331,11 @@ foreach ($DB->get_records_sql($sql) as $row) {
     if (!\local_ustar\accounts::participates((int)$row->id)) {
         continue;
     }
-    $positionid = trim((string)$row->positionid);
-    if ($positionid === '') {
+    $occupancypositionid = trim((string)$row->positionid);
+    if ($occupancypositionid === '') {
         continue;
     }
-    $occupancy[$positionid] = ($occupancy[$positionid] ?? 0) + 1;
+    $occupancy[$occupancypositionid] = ($occupancy[$occupancypositionid] ?? 0) + 1;
 }
 
 
@@ -1494,7 +1502,17 @@ $output =
     );
 
 
+$careertargets = [];
+foreach ($positions as $candidate) {
+    if ((string)$candidate['id'] === $positionid) {continue;}
+    $careertargets[] = ['id'=>(string)$candidate['id'],
+        'label'=>(string)($departmentmap[$candidate['department'] ?? '']['name'] ?? '').' — '.(string)$candidate['name'],
+        'selected'=>(string)($positionmap[$positionid]['next'] ?? '') === (string)$candidate['id']];
+}
 $data = [
+    'careertargets' => $careertargets,
+    'careerpositionid' => $positionid,
+    'careerexpected' => \local_ustar\career_path::fingerprint($structure),
 
     'positions' =>
         $positionrows,

@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [
                     'attemptid' => $attemptid,
                     'graded' => 1,
+                    'notificationpending' => (int)\local_ustar\route_quiz_grading::notification_failed(),
                 ]
             )
         );
@@ -98,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [
                     'attemptid' => $attemptid,
                     'graded' => 1,
+                    'notificationpending' => (int)\local_ustar\route_quiz_grading::notification_failed(),
                 ]
             )
         );
@@ -110,6 +112,7 @@ $data['backurl'] = (
     new moodle_url('/local/ustar/hr_quiz_grading.php')
 )->out(false);
 $data['graded'] = optional_param('graded', 0, PARAM_BOOL);
+$data['notificationpending'] = optional_param('notificationpending', 0, PARAM_BOOL);
 
 $output = $PAGE->get_renderer('local_ustar');
 

@@ -21,3 +21,7 @@
 ## 2026-09-12 — R00 source consolidation and GitHub synchronization
 
 Code: `89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb`. Published verified patch payloads on integration/ustar-20260912; updated canonical context and harness separately on main. Application code on main is unchanged. See release publication scope for four source-only exclusions. Validation and separate deployment evidence: [release](../../release/20260912/README.md), [runtime](../runtime/20260912_release.md). R00 is review, not done: full production manifest and broader smoke remain outstanding. No deployment, schema mutation or history rewrite during repository synchronization.
+
+## 2026-09-12 — verified source and snapshot publication
+
+Source `48326c6a011f58b985d251cb0462835bc1d37a16`. User approved public publication of R16, tours, four production differences and reviewed dated context. 367 source files verified including separate theme config. R16 server installation and 21 tests supplied by user; daemon not started. R00 review; schema and live tour acceptance outstanding. No backups or private diffs published. No production files changed by Git publication.

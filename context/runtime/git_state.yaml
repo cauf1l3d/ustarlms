@@ -1,6 +1,6 @@
-git:
-  branch: "feature/route-position-parent-override"
-  commit: "109b94b5e9a2c2a7d7f1fa1dd7cf9168f99de0d4"
-  commit_short: "109b94b"
-  remote: "git@github.com:cauf1l3d/ustarlms.git"
-  refreshed: "2026-09-07 08:01:30"
+kind: observed_server_git_checkout
+measured_at: '2026-09-12T20:48:24.575590+00:00'
+commit: 23243f3de9b0392aded2635f84291dd8702e4920
+branch: integration/ustar-20260912
+dirty: true
+published_source_commit: 48326c6a011f58b985d251cb0462835bc1d37a16

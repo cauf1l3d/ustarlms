@@ -44,10 +44,13 @@ tasks:
   blockers:
   - Для полного закрытия R00 нужен read-only file/schema manifest production после
     последнего патча и оставшиеся smoke-сценарии.
-  implementation_commit: 89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb
+  implementation_commit: 48326c6a011f58b985d251cb0462835bc1d37a16
   validation_evidence:
   - 'release/20260912/README.md: 17 PHP lint files; 31+18 PHP assertions; 14+41 DOM
     assertions; effective hashes match packaged files.'
+  - 366 inventoried source files reconciled plus separate theme config match; dated
+    snapshot in context/runtime/snapshots/20260912T204824Z. Schema/backup/browser
+    acceptance remains open.
   deployment_evidence:
   - User confirmed automatic SCORM transition and tentatively accepted the latest
     height fix; full server manifest not measured.
@@ -671,7 +674,7 @@ tasks:
   title: Ограничить файловое чтение contextd
   priority: P0
   stage: S0
-  status: ready
+  status: released
   owner: null
   depends_on: []
   findings:
@@ -694,10 +697,14 @@ tasks:
     процесса.
   effort_hint: 0.5–1 день
   blockers: []
-  implementation_commit: null
-  validation_evidence: []
-  deployment_evidence: []
-  updated_at: '2026-09-07'
+  implementation_commit: 48326c6a011f58b985d251cb0462835bc1d37a16
+  validation_evidence:
+  - 21 local harness/generator tests, 5 installer tests; user terminal confirms 21
+    server tests passed
+  deployment_evidence:
+  - 'User terminal: APPLY_OK, backup 20260912T204335142620Z; runtime snapshot 20260912T204824Z;
+    daemon not running'
+  updated_at: '2026-09-12'
 - id: R17
   title: Контекст без устаревающих путей и вымышленных ссылок
   priority: P1

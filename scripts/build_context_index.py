@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
+import argparse
 from pathlib import Path
 import hashlib
 import json
 from datetime import datetime, timezone
 
 
-ROOT = Path("/opt/ustar/git/ustarlms")
+ROOT = Path(__file__).resolve().parents[1]
 CONTEXT = ROOT / "context"
 INDEX_DIR = CONTEXT / "index"
 INDEX_FILE = INDEX_DIR / "context_index.json"
@@ -41,6 +42,16 @@ def classify(path):
 
 
 def main():
+    global ROOT, CONTEXT, INDEX_DIR, INDEX_FILE
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, default=ROOT)
+    args = parser.parse_args()
+    ROOT = args.root.resolve()
+    CONTEXT = ROOT / "context"
+    INDEX_DIR = CONTEXT / "index"
+    INDEX_FILE = INDEX_DIR / "context_index.json"
+    if any(p.is_symlink() for p in [CONTEXT, INDEX_DIR, INDEX_FILE]):
+        raise ValueError("symlink_output_forbidden")
 
     INDEX_DIR.mkdir(
         parents=True,
@@ -51,12 +62,15 @@ def main():
 
     for path in CONTEXT.rglob("*"):
 
-        if not path.is_file():
+        if path == INDEX_FILE or any(p.is_symlink() for p in [path, *path.parents]) or not path.is_file():
+            continue
+
+        if path.suffix.lower() not in {".md", ".txt", ".json", ".yaml", ".yml"} or path.stat().st_size > 512 * 1024:
             continue
 
         if any(
-            x in path.parts
-            for x in IGNORE
+            x in IGNORE or x.startswith(".")
+            for x in path.relative_to(CONTEXT).parts
         ):
             continue
 

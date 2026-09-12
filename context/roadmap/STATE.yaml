@@ -3,19 +3,19 @@ updated_at: '2026-09-12'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Исходники и патчи 11–12 сентября сведены в integration/ustar-20260912; R00 review, полный
-  production manifest ещё не получен.
+current_activity: R16 installed and server tests passed; tours RC2 and production
+  source reconciled. R00 remains review.
 next_task: R00
 ready_tasks:
 - R00
 - R01
 - R04
-- R16
 code_baseline:
   branch: integration/ustar-20260912
-  commit: 89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb
+  commit: 48326c6a011f58b985d251cb0462835bc1d37a16
   kind: consolidated_source_with_local_tests
-  production_equivalence: latest_scorm_user_reported_working_full_manifest_not_verified
+  production_equivalence: 367_source_files_verified_including_separate_theme_config_check;
+    backups/schema/browser_acceptance_outstanding
 main_at_audit_start: 5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
 canonical_roadmap_branch: main
 user_priorities:
@@ -25,7 +25,7 @@ user_priorities:
 - Консистентная студия маршрутов
 - Рабочие игры и достижения
 production:
-  status: latest_patch_user_reported_working_full_release_unverified
+  status: dated_source_inventory_reconciled
   measured_in_this_audit: false
   user_session_evidence:
     container: ustar_moodle
@@ -36,15 +36,15 @@ production:
     source: Показанные пользователем docker inspect и ls в этой сессии, 2026-09-07
     recheck_before_release: true
   unknown:
-  - Полный актуальный production file/schema manifest после последнего патча
-  - Полный smoke всех исходных шести сценариев
-  - Текущие cron, транспорт сообщений и backup restore
+  - Full schema and browser acceptance
+  - Remaining excluded/backup paths
+  - Native tours DB records and visual acceptance
+  - contextd unit enablement/active state
   latest_observation:
     date: '2026-09-12'
-    source: user conversation after USTAR_SCORM_HEIGHT_20260912
-    quote: отлично вроде работает
+    source: user-supplied runtime audit and R16 test output
+    snapshot: context/runtime/snapshots/20260912T204824Z
     independently_measured: false
-    details: context/runtime/20260912_release.md
 prior_deliveries:
 - name: Executive tree 20260907
   status: user_confirmed_applied

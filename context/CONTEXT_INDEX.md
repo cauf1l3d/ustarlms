@@ -1,3 +1,5 @@
+Current source: `48326c6a011f58b985d251cb0462835bc1d37a16`. Read [STATE](roadmap/STATE.yaml), [ACTIVE](tasks/ACTIVE.md), and [dated snapshot](runtime/snapshots/20260912T204824Z/README.md).
+
 # Current entrypoint — 2026-09-12
 
 Read [START_HERE](../START_HERE.md), [STATE](roadmap/STATE.yaml) and [ACTIVE](tasks/ACTIVE.md). Main contains canonical context and harness; current patch code is on integration/ustar-20260912. [Latest source/deployment evidence](runtime/20260912_release.md). Historical runtime snapshots are not a current server manifest.

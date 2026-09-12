@@ -1,0 +1,81 @@
+{
+  "measured_at": "2026-09-12T20:48:24.575590+00:00",
+  "git_source": {
+    "commit": "23243f3de9b0392aded2635f84291dd8702e4920",
+    "branch": "integration/ustar-20260912",
+    "dirty": true
+  },
+  "server": {
+    "hostname": "server1.example.com",
+    "kernel": "6.8.0-139-generic"
+  },
+  "production_runtime": {
+    "moodle": {
+      "name": "/ustar_moodle",
+      "image": "stack-moodle",
+      "image_id": "sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/opt/ustar/data/moodle/public",
+          "Destination": "/var/www/html",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/opt/ustar/data/moodle/moodledata",
+          "Destination": "/var/www/moodledata",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "started_at": "2026-09-11T11:25:25.106904757Z",
+      "restart_count": 0,
+      "health": "not_configured",
+      "uptime_seconds": 120179
+    },
+    "postgres": {
+      "name": "/ustar_postgres",
+      "image": "postgres:16",
+      "image_id": "sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/opt/ustar/data/postgres",
+          "Destination": "/var/lib/postgresql/data",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "started_at": "2026-09-11T11:25:25.08403604Z",
+      "restart_count": 0,
+      "health": "not_configured",
+      "uptime_seconds": 120179
+    }
+  },
+  "errors": [],
+  "moodle_versions": {
+    "dirroot": "/var/www/html/public",
+    "php": "8.3.33",
+    "moodle_db": "2025100601.03",
+    "moodle_disk": "2025100601.03",
+    "moodle_release": "5.1.1+ (Build: 20251219)",
+    "ustar_db": "2026082730",
+    "ustar_disk": "2026082730",
+    "postgres": "16.15 (Debian 16.15-1.pgdg13+2)",
+    "host_root": "/opt/ustar/data/moodle/public/public",
+    "ustar_db_matches_disk": true
+  },
+  "contextd_units": [
+    "ustar-contextd.service"
+  ],
+  "contextd_pids": []
+}

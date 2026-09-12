@@ -1,0 +1,21 @@
+const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+const {JSDOM}=require('jsdom'),Mustache=require('mustache');
+const root=process.argv[2]||path.join(__dirname,'../../moodle/local/ustar');
+const source=fs.readFileSync(path.join(root,'templates/route_career.mustache'),'utf8');
+let n=0;function check(ok,s){assert.ok(ok,s);n++;}
+const base={hasposition:true,retailgrades:true,consultantcurrent:true,currentname:'Продавец-кассир',confirmedskills:0,requiredskills:4};
+const html=Mustache.render(source,base),dom=new JSDOM(html),d=dom.window.document;
+check(d.querySelectorAll('.u-consultant-grade').length===5,'five grades');
+check(d.querySelectorAll('.u-consultant-grade.is-current').length===1,'one current grade');
+check(d.querySelector('.u-consultant-grade.is-current h3').textContent==='Консультант','cashier is consultant');
+check(!d.querySelector('.u-career-stairs'),'no duplicate staff ladder for retail');
+check(d.querySelectorAll('button[type=submit]').length===1,'single continuation retained');
+for(const text of ['Мотивационные грейды в документе','Грейды для консультантов.docx','назначение на следующую должность оформляет HR','Ступени, критерии и оплата приведены'])check(!html.includes(text),'removed explanation: '+text);
+check(html.includes('90%')&&html.includes('60%')&&html.includes('40%'),'updated photograph criteria');
+check(html.includes('42 000 ₽')&&html.includes('20 000 ₽ + % от продаж'),'photo compensation');
+const other=new JSDOM(Mustache.render(source,{...base,retailgrades:false,consultantcurrent:false}));
+check(!other.window.document.querySelector('.u-consultant-ladder'),'unrelated roles retain existing ladder');
+check(!!other.window.document.querySelector('.u-career-stairs'),'existing nonretail ladder retained');
+const senior=new JSDOM(Mustache.render(source,{...base,consultantcurrent:false}));
+check(!senior.window.document.querySelector('.is-current'),'no invented personal grade on unrelated retail role');
+console.log('PASS DOM assertions='+n);

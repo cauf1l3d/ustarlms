@@ -1,0 +1,32 @@
+{
+  "package": "USTAR_SCORM_FLUSH_20260912",
+  "files": [
+    {
+      "target": "local/ustar/scorm_route_return.js",
+      "source": "files/moodle/local/ustar/scorm_route_return.js",
+      "before": [
+        "ae667a2306138a66806dc03828a0986e539d26bbac4d4107b12f202fbb83ad37"
+      ],
+      "after": "f13909cdc072af855578aadc6067554c43e9004da3372f08dc40925e19296563"
+    }
+  ],
+  "guards": [
+    {
+      "target": "local/ustar/version.php",
+      "before": "3b202b49c07cd39f41fe92112a8a22ed6ae763dacfac0d3d92ee4521620a1a83"
+    },
+    {
+      "target": "local/ustar/scorm_route_status.php",
+      "before": "85b556234b9a8c8b7fb8ae7b5e07464ae1ad636bcb9074df30cf1fd101f0b5f2"
+    },
+    {
+      "target": "theme/ustar/layout/ustar.php",
+      "before": "253c0e862156eb5a76c43d0f9549bc2f72ddb92c54f1df5828e35c99ed3f5835"
+    }
+  ],
+  "tests": {
+    "tests/test_install_flow.py": "90bbc2a5f9b5da73985296a93feb02ec9a5eb288b929cd869dfd85c5d2493ef0",
+    "tests/package.json": "53793505b2cc0f77211fe033d2575ff683f3150b68533b13fef0659e54869933",
+    "tests/inline.cjs": "226d8906e783644914ef1a9191bbd5ab5ccc35cc5457cb54d2716f98628018a9"
+  }
+}

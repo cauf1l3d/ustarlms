@@ -1,0 +1,38 @@
+[
+  {
+    "package": "USTAR_ROUTE_FLOW_20260911_RC1",
+    "archive_sha256": "5362e4178e13384d220229025758826485ec8b8fca25fe1de3388a68b69f19e8",
+    "status": "delivered",
+    "manifest": "patch_manifests/USTAR_ROUTE_FLOW_20260911_RC1.json"
+  },
+  {
+    "package": "USTAR_CAREER_20260911_RC2",
+    "archive_sha256": "b92d31898ce02ee13e7ca484b953fe67eda28c2bdf1af693a79acb9e29ead00e",
+    "status": "delivered",
+    "manifest": "patch_manifests/USTAR_CAREER_20260911_RC2.json"
+  },
+  {
+    "package": "USTAR_SCORM_BELOW_20260912",
+    "archive_sha256": "b6687bb90bf4bf3d1f04251b6cfa539d0fe3ca9783ed55ed0f31b3f88c82bdc8",
+    "status": "superseded_by_next_patch",
+    "manifest": "patch_manifests/USTAR_SCORM_BELOW_20260912.json"
+  },
+  {
+    "package": "USTAR_SCORM_INLINE_20260912",
+    "archive_sha256": "af7f7211dc5f795f44a4a1c607108865ff789ac48bb74b4ecbe4f9045c898669",
+    "status": "superseded_by_next_patch",
+    "manifest": "patch_manifests/USTAR_SCORM_INLINE_20260912.json"
+  },
+  {
+    "package": "USTAR_SCORM_FLUSH_20260912",
+    "archive_sha256": "9658edfd58f3e43a35aba2e6772773da6a21623655699da323f1068e642ea81e",
+    "status": "superseded_by_next_patch",
+    "manifest": "patch_manifests/USTAR_SCORM_FLUSH_20260912.json"
+  },
+  {
+    "package": "USTAR_SCORM_HEIGHT_20260912",
+    "archive_sha256": "bd26de949c1ebb7bd918bc92f6c17fd34dd7851b60b1535bb4d699f2e9ec1ab7",
+    "status": "delivered",
+    "manifest": "patch_manifests/USTAR_SCORM_HEIGHT_20260912.json"
+  }
+]

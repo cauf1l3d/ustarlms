@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "node career-dom.cjs && node scorm.cjs"
+  },
+  "dependencies": {
+    "jsdom": "30.0.1",
+    "mustache": "4.2.0"
+  }
+}

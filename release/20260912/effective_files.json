@@ -1,0 +1,31 @@
+{
+  "baseline_commit": "82e8d37 (local reconstruction, not a published baseline)",
+  "scope": "files changed by the 20260911-12 patch series; not a complete production manifest",
+  "files": {
+    "local/ustar/assessment_remediation_launch.php": "eaa7e27f60edf98ca97e5982c0e16b75b06dbcaec84a43c1856ec67cf377a38b",
+    "local/ustar/classes/career_learning.php": "c3e8854f61481c9bbc7578b08b9b4d8915abdaa64176ebc825d10c0afcf56c6d",
+    "local/ustar/classes/consultant_career.php": "c20a5b4592921b723f158ba50480f1ceb58865d89e88412b6f85b7129dc4aad6",
+    "local/ustar/classes/evidence.php": "2d84f66b32f1b66671e09c1c6c6d66a4c3c07f69fdf7a590d72a0ca8f7e3b4f6",
+    "local/ustar/classes/grading_commit.php": "59d709d60d53e12e58a867013eaa43692116592fb4d11bf173d76aa5786b01fa",
+    "local/ustar/classes/route_continue.php": "ada68a86c580a238d7f3014274eca7011ce49c5df2b41fe464548a3ba78bdf3e",
+    "local/ustar/classes/route_quiz_grading.php": "cd19828ba6a00127be134c41c5def68d902f0257157eef2e4bca63620f2c3753",
+    "local/ustar/continue.php": "c6ab788fdd3fea296d69fab435dc97ab0c6f6299b06467c28c92963f279aa307",
+    "local/ustar/hr_quiz_attempt.php": "618c6a7aa7186f1b15a58c3ce0dfdc083f10922f7f94721b7ba8182ccc64ab49",
+    "local/ustar/route_career.php": "a71c751e31a65158563eaf0ffb00bf1da04841302e3bd4315c0bb46863a866a6",
+    "local/ustar/route_continue.js": "392631225ba70d43bfebb149df6ff6ad87f33f7ef7001136bce85a75b7955d5e",
+    "local/ustar/route_next.php": "31a2e1bff9693a11bd448486fcf58ab32b1796922a489bdca5af680af69cd1a2",
+    "local/ustar/route_profile_reveal.php": "698490afbd529d2b7f4cd2ce9b177aa4d07356b067afafcaa0085bb1fafb03e4",
+    "local/ustar/route_team_quiz.php": "d87a06a5173f8e2abbbe933cc78ce93c2e70ec618b87530b1ec2c8678fdcd205",
+    "local/ustar/scorm_launch.php": "57ef152753aaf3a0be0778f83ef5e1927d6a8e8f54968fe5e74b0927f31689d7",
+    "local/ustar/scorm_route_return.js": "631c3281ab4d7b174bc927d0dc597dc208baf140b79fd1d149d7036db0ea1864",
+    "local/ustar/scorm_route_status.php": "85b556234b9a8c8b7fb8ae7b5e07464ae1ad636bcb9074df30cf1fd101f0b5f2",
+    "local/ustar/styles/consultant_career.css": "0f8e5c3513a0c42a4e528cd7873c137628c116f0934998064f5c175935698dcd",
+    "local/ustar/styles/route_flow.css": "da70d1c81a529697b63314b89dbc5d03ec80d8dd31bc46e7167086929f64d1a9",
+    "local/ustar/templates/hr_quiz_attempt.mustache": "7024f0d0946432a5de46f56de7b7abbdbc080e8ad891b1b1d35045cb9a0904bf",
+    "local/ustar/templates/profile_reveal.mustache": "1abdc8794384831899b0b14d04a0fc70194a36eee9a673c1d0624a1dcbe5c0a6",
+    "local/ustar/templates/route_career.mustache": "5fa13cbddcb122d2de9e44970e9ab187e1aed3ed92ceaf3a715d8b3cd9be0988",
+    "theme/ustar/classes/output/qtype_truefalse_renderer.php": "c8d999ebcd170da3d971d463f06e68c772de3d96f883487032eba6641ca1b47f",
+    "theme/ustar/layout/ustar.php": "253c0e862156eb5a76c43d0f9549bc2f72ddb92c54f1df5828e35c99ed3f5835",
+    "theme/ustar/templates/shell.mustache": "74769502ae8ec4ea016ff3206cc19e364fdaa4f799ad2cb087e9bc59dbd6b717"
+  }
+}

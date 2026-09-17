@@ -4,12 +4,11 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Manual forced retraining workflow.
+ * Manual forced retraining that reuses USTAR remediation evidence/providers.
  *
- * Automatic assessment escalation remains owned by assessment_lifecycle. Manual
- * assignments are immutable workflow events and reuse the same route evidence
- * and assessment providers with a new cutoff so historical completions do not
- * satisfy a new assignment.
+ * Assignments are immutable workflow events. Historical route completion and
+ * assessment passes remain intact; a manual cycle uses a new cutoff and only
+ * fresh material + a later fresh passing assessment can close it.
  */
 final class forced_retraining {
     private const ENTITY = 'forced_retraining';
@@ -30,10 +29,10 @@ final class forced_retraining {
         }
         try {
             $scope = self::management_scope($actorid);
+            return !empty($scope['allowed']) && !empty($scope['userids']);
         } catch (\Throwable $e) {
             return false;
         }
-        return !empty($scope['allowed']) && !empty($scope['userids']);
     }
 
     /** @return array<int,array<string,mixed>> */
@@ -45,8 +44,16 @@ final class forced_retraining {
         if (!$ids) {
             return [];
         }
+
         [$insql, $params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'fru');
-        $users = $DB->get_records_select('user', "id {$insql} AND deleted=0 AND suspended=0", $params, 'lastname ASC, firstname ASC', 'id,firstname,lastname');
+        $users = $DB->get_records_select(
+            'user',
+            "id {$insql} AND deleted=0 AND suspended=0",
+            $params,
+            'lastname ASC, firstname ASC',
+            'id,firstname,lastname'
+        );
+
         $out = [];
         foreach ($users as $user) {
             if (!accounts::participates((int)$user->id)) {
@@ -72,13 +79,18 @@ final class forced_retraining {
         if ($positionid === '') {
             return [];
         }
-        $activepolicyids = [];
+
+        $blockedpolicyids = [];
         foreach (self::active_assignments($userid, false) as $assignment) {
-            $activepolicyids[(int)$assignment['policyid']] = true;
+            $blockedpolicyids[(int)$assignment['policyid']] = true;
         }
+        foreach (self::automatic_retraining_policy_ids($userid) as $policyid) {
+            $blockedpolicyids[$policyid] = true;
+        }
+
         $out = [];
         foreach ($DB->get_records('local_ustar_assess_policy', ['active' => 1], 'id ASC') as $policy) {
-            if (isset($activepolicyids[(int)$policy->id])) {
+            if (isset($blockedpolicyids[(int)$policy->id])) {
                 continue;
             }
             $topic = self::topic_for_policy($policy, $positionid);
@@ -112,55 +124,68 @@ final class forced_retraining {
             throw new \moodle_exception('У сотрудника не определена должность USTAR.');
         }
 
-        $alreadyactive = [];
-        foreach (self::active_assignments($userid, false) as $assignment) {
-            $alreadyactive[(int)$assignment['policyid']] = true;
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
+        $lock = $factory->get_lock('forced-retraining-assign:' . $userid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку назначения переобучения.');
         }
 
-        $now = time();
-        $ids = [];
-        $transaction = $DB->start_delegated_transaction();
-        foreach ($policyids as $policyid) {
-            if (isset($alreadyactive[$policyid])) {
-                continue;
+        try {
+            $blockedpolicyids = [];
+            foreach (self::active_assignments($userid, false) as $assignment) {
+                $blockedpolicyids[(int)$assignment['policyid']] = true;
             }
-            $policy = $DB->get_record('local_ustar_assess_policy', ['id' => $policyid, 'active' => 1], '*', MUST_EXIST);
-            $topic = self::topic_for_policy($policy, $positionid);
-            if (!$topic) {
-                throw new \moodle_exception('Одна из выбранных тем не относится к текущей должности сотрудника.');
+            foreach (self::automatic_retraining_policy_ids($userid) as $policyid) {
+                $blockedpolicyids[$policyid] = true;
             }
-            $provider = assessment_provider_factory::for_policy($policy);
-            $assessment = $provider->inspect($userid, $policy);
-            $details = [
-                'policyid' => (int)$policy->id,
-                'assessmentpointid' => (int)$policy->pointid,
-                'assessmentversionid' => (int)$policy->versionid,
-                'remediationpointid' => (int)$topic['remediationpointid'],
-                'remediationversionid' => (int)$topic['remediationversionid'],
-                'positionid' => $positionid,
-                'cutoff' => $now,
-                'baselineattempts' => (int)($assessment['totalattempts'] ?? 0),
-                'attemptspercycle' => max(1, (int)$policy->attemptspercycle),
-                'materialtitle' => (string)$topic['materialtitle'],
-                'assessmenttitle' => (string)$topic['assessmenttitle'],
-                'source' => 'manual',
-            ];
-            $id = (int)$DB->insert_record('local_ustar_workflow_events', (object)[
-                'entitytype' => self::ENTITY,
-                'entityid' => $userid,
-                'eventtype' => self::EVENT_ASSIGNED,
-                'actorid' => $actorid,
-                'reason' => $reason,
-                'detailsjson' => self::json($details),
-                'timecreated' => $now,
-            ]);
-            $ids[] = $id;
+
+            $now = time();
+            $ids = [];
+            $transaction = $DB->start_delegated_transaction();
+            foreach ($policyids as $policyid) {
+                if (isset($blockedpolicyids[$policyid])) {
+                    continue;
+                }
+                $policy = $DB->get_record('local_ustar_assess_policy', ['id' => $policyid, 'active' => 1], '*', MUST_EXIST);
+                $topic = self::topic_for_policy($policy, $positionid);
+                if (!$topic) {
+                    throw new \moodle_exception('Одна из выбранных тем не относится к текущей должности сотрудника.');
+                }
+                $provider = assessment_provider_factory::for_policy($policy);
+                $assessment = $provider->inspect($userid, $policy);
+                $details = [
+                    'policyid' => (int)$policy->id,
+                    'assessmentpointid' => (int)$policy->pointid,
+                    'assessmentversionid' => (int)$policy->versionid,
+                    'remediationpointid' => (int)$topic['remediationpointid'],
+                    'remediationversionid' => (int)$topic['remediationversionid'],
+                    'positionid' => $positionid,
+                    'cutoff' => $now,
+                    'baselineattempts' => (int)($assessment['totalattempts'] ?? 0),
+                    'attemptspercycle' => max(1, (int)$policy->attemptspercycle),
+                    'materialtitle' => (string)$topic['materialtitle'],
+                    'assessmenttitle' => (string)$topic['assessmenttitle'],
+                    'source' => 'manual',
+                ];
+                $ids[] = (int)$DB->insert_record('local_ustar_workflow_events', (object)[
+                    'entitytype' => self::ENTITY,
+                    'entityid' => $userid,
+                    'eventtype' => self::EVENT_ASSIGNED,
+                    'actorid' => $actorid,
+                    'reason' => $reason,
+                    'detailsjson' => self::json($details),
+                    'timecreated' => $now,
+                ]);
+                $blockedpolicyids[$policyid] = true;
+            }
+            $transaction->allow_commit();
+            if (!$ids) {
+                throw new \moodle_exception('Выбранные темы уже находятся в ручном или автоматическом переобучении.');
+            }
+            return $ids;
+        } finally {
+            $lock->release();
         }
-        $transaction->allow_commit();
-        if (!$ids) {
-            throw new \moodle_exception('Все выбранные темы уже находятся в активном принудительном переобучении.');
-        }
-        return $ids;
     }
 
     /** @return array<int,array<string,mixed>> */
@@ -170,14 +195,11 @@ final class forced_retraining {
         $cards = [];
         foreach (self::active_assignments($userid, true) as $assignment) {
             $state = self::state($assignment, $positionid, true);
-            if (!empty($state['completed'])) {
-                continue;
+            if (empty($state['completed'])) {
+                $cards[] = $state;
             }
-            $cards[] = $state;
         }
-        usort($cards, static function(array $a, array $b): int {
-            return ((int)$a['assignedat'] <=> (int)$b['assignedat']) ?: ((int)$a['id'] <=> (int)$b['id']);
-        });
+        usort($cards, static fn(array $a, array $b): int => ((int)$a['assignedat'] <=> (int)$b['assignedat']) ?: ((int)$a['id'] <=> (int)$b['id']));
         return $cards;
     }
 
@@ -203,6 +225,7 @@ final class forced_retraining {
         if (!empty($assignment['closed'])) {
             return ['kind' => 'url', 'url' => (new \moodle_url('/local/ustar/route.php'))->out(false)];
         }
+
         $positionid = (string)($assignment['positionid'] ?? '');
         $state = self::state($assignment, $positionid, true);
         if (!empty($state['completed'])) {
@@ -211,8 +234,12 @@ final class forced_retraining {
 
         $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$assignment['policyid']], '*', MUST_EXIST);
         if (empty($state['materialdone'])) {
-            $runtime = self::evidence_runtime($assignment);
-            $evidence = route_point_evidence_provider::state($runtime, $policy, $positionid, self::ENTITY);
+            $evidence = route_point_evidence_provider::state(
+                self::evidence_runtime($assignment),
+                $policy,
+                $positionid,
+                self::ENTITY
+            );
             if (empty($evidence['configured']) || empty($evidence['next'])) {
                 throw new \moodle_exception('Для выбранной темы нет доступного обязательного материала.');
             }
@@ -226,9 +253,14 @@ final class forced_retraining {
                     (int)$assignment['remediationversionid']
                 );
                 if ((string)($next['completionmode'] ?? 'open') === 'open') {
-                    self::event($assignmentid, $userid, 'assess_content_opened', $userid, 'Материал принудительного переобучения открыт', [
-                        'contentid' => $contentid,
-                    ]);
+                    self::event(
+                        $assignmentid,
+                        $userid,
+                        'assess_content_opened',
+                        $userid,
+                        'Материал принудительного переобучения открыт',
+                        ['contentid' => $contentid]
+                    );
                 }
                 $url = content::open_url($contentid, $userid);
                 if (!$url) {
@@ -251,11 +283,7 @@ final class forced_retraining {
         if ($cmid <= 0) {
             throw new \moodle_exception('Не удалось определить аттестацию для переобучения.');
         }
-        return [
-            'kind' => 'assessment',
-            'cmid' => $cmid,
-            'url' => (new \moodle_url('/mod/quiz/view.php', ['id' => $cmid]))->out(false),
-        ];
+        return ['kind' => 'assessment', 'cmid' => $cmid];
     }
 
     /** @return array<string,mixed> */
@@ -266,20 +294,32 @@ final class forced_retraining {
             return self::broken_state($assignment, 'Политика аттестации больше недоступна.');
         }
 
-        $runtime = self::evidence_runtime($assignment);
-        $evidence = route_point_evidence_provider::state($runtime, $policy, $positionid, self::ENTITY);
+        $evidence = route_point_evidence_provider::state(
+            self::evidence_runtime($assignment),
+            $policy,
+            $positionid,
+            self::ENTITY
+        );
+        $materialdone = !empty($evidence['satisfied']);
+        $materialcompletedat = (int)($evidence['completedat'] ?? 0);
+
         $provider = assessment_provider_factory::for_policy($policy);
         $assessment = $provider->inspect((int)$assignment['userid'], $policy);
         $cutoff = (int)$assignment['cutoff'];
+        $assessmentcutoff = max($cutoff, $materialcompletedat);
         $passedat = 0;
         $passedattemptid = 0;
         $freshfinalized = 0;
+
         foreach ($assessment['finalized'] ?? [] as $attempt) {
             $finalizedat = (int)($attempt['finalizedat'] ?? $attempt['timefinish'] ?? 0);
             if ($finalizedat <= $cutoff) {
                 continue;
             }
             $freshfinalized++;
+            if (!$materialdone || $finalizedat <= $assessmentcutoff) {
+                continue;
+            }
             if ((float)($attempt['score'] ?? 0) + 0.000001 >= (float)($assessment['passscore'] ?? 0)) {
                 if ($passedat === 0 || $finalizedat < $passedat) {
                     $passedat = $finalizedat;
@@ -288,7 +328,7 @@ final class forced_retraining {
             }
         }
 
-        if ($passedat > 0) {
+        if ($materialdone && $passedat > 0) {
             if ($reconcile) {
                 self::complete_once($assignment, $passedat, $passedattemptid);
             }
@@ -302,7 +342,6 @@ final class forced_retraining {
             ]);
         }
 
-        $materialdone = !empty($evidence['satisfied']);
         $newattempts = max(0, (int)($assessment['totalattempts'] ?? 0) - (int)$assignment['baselineattempts']);
         $percycle = max(1, (int)$assignment['attemptspercycle']);
         $pending = (int)($assessment['pendingattempts'] ?? 0) > 0 && $newattempts > $freshfinalized;
@@ -338,7 +377,9 @@ final class forced_retraining {
             'statuslabel' => $statuslabel,
             'actionlabel' => $actionlabel,
             'canlaunch' => $canlaunch,
-            'launchurl' => $canlaunch ? (new \moodle_url('/local/ustar/forced_retraining_launch.php', ['id' => (int)$assignment['id']]))->out(false) : '',
+            'launchurl' => $canlaunch
+                ? (new \moodle_url('/local/ustar/forced_retraining_launch.php', ['id' => (int)$assignment['id']]))->out(false)
+                : '',
             'attemptsused' => $newattempts,
             'attemptslimit' => $percycle,
             'attemptsexhausted' => $exhausted,
@@ -347,6 +388,30 @@ final class forced_retraining {
             'maxscore' => self::score((float)($assessment['maxscore'] ?? 0)),
             'materialtitle' => (string)($evidence['title'] ?: $assignment['materialtitle']),
         ]);
+    }
+
+    /** @return int[] */
+    private static function automatic_retraining_policy_ids(int $userid): array {
+        global $DB;
+        if (!assessment_lifecycle::available()) {
+            return [];
+        }
+        $statuses = [
+            assessment_lifecycle::STATUS_MANAGER_REVIEW_REQUIRED,
+            assessment_lifecycle::STATUS_HRD_REVIEW_REQUIRED,
+            assessment_lifecycle::STATUS_REMEDIATION_REQUIRED,
+            assessment_lifecycle::STATUS_REMEDIATION_PROGRESS,
+            assessment_lifecycle::STATUS_REOPENED,
+            assessment_lifecycle::STATUS_EXHAUSTED,
+        ];
+        [$insql, $params] = $DB->get_in_or_equal($statuses, SQL_PARAMS_NAMED, 'frs');
+        $params['fruserid'] = $userid;
+        return array_values(array_unique(array_map('intval', $DB->get_fieldset_select(
+            'local_ustar_assess_runtime',
+            'policyid',
+            "userid=:fruserid AND status {$insql}",
+            $params
+        ))));
     }
 
     /** @return array<int,array<string,mixed>> */
@@ -362,9 +427,7 @@ final class forced_retraining {
         $items = [];
         foreach ($events as $event) {
             $details = json_decode((string)$event->detailsjson, true);
-            if (!is_array($details)) {
-                $details = [];
-            }
+            $details = is_array($details) ? $details : [];
             if ((string)$event->eventtype === self::EVENT_ASSIGNED) {
                 $items[(int)$event->id] = array_merge($details, [
                     'id' => (int)$event->id,
@@ -416,11 +479,10 @@ final class forced_retraining {
         if ($remediationpointid <= 0) {
             return null;
         }
-        if (route_scope::available()) {
-            if (!route_scope::point_applies((int)$policy->pointid, $positionid)
-                || !route_scope::point_applies($remediationpointid, $positionid)) {
-                return null;
-            }
+        if (route_scope::available()
+            && (!route_scope::point_applies((int)$policy->pointid, $positionid)
+                || !route_scope::point_applies($remediationpointid, $positionid))) {
+            return null;
         }
         $remediationversion = route_model::current_published_version($remediationpointid);
         if (!$remediationversion) {
@@ -446,8 +508,7 @@ final class forced_retraining {
             throw new \moodle_exception('Недопустимый сотрудник для назначения переобучения.');
         }
         $scope = self::management_scope($actorid);
-        $ids = array_map('intval', $scope['userids'] ?? []);
-        if (!in_array($userid, $ids, true)) {
+        if (!in_array($userid, array_map('intval', $scope['userids'] ?? []), true)) {
             throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
         }
     }
@@ -458,11 +519,15 @@ final class forced_retraining {
             throw new \moodle_exception('Механика принудительного переобучения недоступна.');
         }
         $context = \context_system::instance();
+        // executive is intentionally granted this one scoped mutation by the
+        // product requirement; this does not make the role a general HR writer.
         $companywrite = is_siteadmin($actorid)
             || has_capability('local/ustar:admin', $context, $actorid)
             || has_capability('local/ustar:hrmanage', $context, $actorid)
             || has_capability('local/ustar:executive', $context, $actorid);
-        $scope = $companywrite ? team_access::learning_scope($actorid) : organization_model::manager_scope($actorid);
+        $scope = $companywrite
+            ? team_access::learning_scope($actorid)
+            : organization_model::manager_scope($actorid);
         if (empty($scope['allowed'])) {
             throw new \required_capability_exception($context, 'local/ustar:viewteam', 'nopermissions', '');
         }
@@ -482,21 +547,34 @@ final class forced_retraining {
     private static function complete_once(array $assignment, int $completedat, int $attemptid): void {
         global $DB;
         $assignmentid = (int)$assignment['id'];
-        $events = $DB->get_records('local_ustar_workflow_events', [
-            'entitytype' => self::ENTITY,
-            'entityid' => (int)$assignment['userid'],
-            'eventtype' => self::EVENT_COMPLETED,
-        ], 'id ASC');
-        foreach ($events as $event) {
-            $details = json_decode((string)$event->detailsjson, true);
-            if ((int)($details['assignmentid'] ?? 0) === $assignmentid) {
-                return;
-            }
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
+        $lock = $factory->get_lock('forced-retraining-complete:' . $assignmentid, 10);
+        if (!$lock) {
+            return;
         }
-        self::event($assignmentid, (int)$assignment['userid'], self::EVENT_COMPLETED, (int)$assignment['userid'], 'Принудительное переобучение подтверждено новой успешной аттестацией', [
-            'completedat' => $completedat,
-            'attemptid' => $attemptid,
-        ]);
+        try {
+            $events = $DB->get_records('local_ustar_workflow_events', [
+                'entitytype' => self::ENTITY,
+                'entityid' => (int)$assignment['userid'],
+                'eventtype' => self::EVENT_COMPLETED,
+            ], 'id ASC');
+            foreach ($events as $event) {
+                $details = json_decode((string)$event->detailsjson, true);
+                if ((int)($details['assignmentid'] ?? 0) === $assignmentid) {
+                    return;
+                }
+            }
+            self::event(
+                $assignmentid,
+                (int)$assignment['userid'],
+                self::EVENT_COMPLETED,
+                (int)$assignment['userid'],
+                'Принудительное переобучение подтверждено новым материалом и новой успешной аттестацией',
+                ['completedat' => $completedat, 'attemptid' => $attemptid]
+            );
+        } finally {
+            $lock->release();
+        }
     }
 
     /** @param array<string,mixed> $details */
@@ -521,6 +599,7 @@ final class forced_retraining {
             'materialdone' => false,
             'statuskey' => 'broken',
             'statuslabel' => $message,
+            'actionlabel' => 'Недоступно',
             'canlaunch' => false,
             'launchurl' => '',
             'attemptsused' => 0,
@@ -534,7 +613,9 @@ final class forced_retraining {
 
     private static function score(float $score): string {
         $rounded = round($score, 1);
-        return abs($rounded - round($rounded)) < 0.000001 ? (string)(int)round($rounded) : number_format($rounded, 1, '.', '');
+        return abs($rounded - round($rounded)) < 0.000001
+            ? (string)(int)round($rounded)
+            : number_format($rounded, 1, '.', '');
     }
 
     /** @param array<string,mixed> $data */

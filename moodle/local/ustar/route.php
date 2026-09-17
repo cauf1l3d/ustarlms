@@ -87,6 +87,7 @@ $data = [
     'rewardsenabled' => !$previewing && \local_ustar\route_rewards::enabled(),
     'forcedretraining' => $forcedretraining,
     'hasforcedretraining' => !empty($forcedretraining),
+    'forcedretrainingcount' => count($forcedretraining),
     'route' => !empty($route['ok']) ? $route : null,
     'hasroute' => !empty($route['ok']),
     'noroute' => empty($route['ok']),

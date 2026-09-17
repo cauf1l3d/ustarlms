@@ -29,6 +29,37 @@
     </form>
     {{/iselevated}}
 
+    {{#hasforcedretraining}}
+    <section class="u-forced-priority" aria-label="Обязательное переобучение">
+        <header class="u-forced-priority__head">
+            <div>
+                <p class="u-page-kicker">Приоритет №1</p>
+                <h2>Обязательное переобучение</h2>
+                <p>Эти темы назначены руководителем или HRD. Сначала повторите материал, затем подтвердите знания новой аттестацией.</p>
+            </div>
+            <strong>{{forcedretraining.length}}</strong>
+        </header>
+
+        <div class="u-forced-priority__list">
+            {{#forcedretraining}}
+            <article class="u-forced-priority__card is-{{statuskey}}">
+                <div class="u-forced-priority__copy">
+                    <span class="u-forced-priority__status">{{statuslabel}}</span>
+                    <h3>{{materialtitle}}</h3>
+                    <p>После материала: <strong>{{assessmenttitle}}</strong></p>
+                    <small>Назначено {{assigneddate}} · причина: {{reason}}</small>
+                    {{#materialdone}}<small>Материал повторно подтверждён. Требуется новая аттестация.</small>{{/materialdone}}
+                    {{#attemptsexhausted}}<small>Дополнительный пакет попыток исчерпан. Обратитесь к руководителю или HRD.</small>{{/attemptsexhausted}}
+                </div>
+                <div class="u-forced-priority__action">
+                    <span>Новых попыток: {{attemptsused}} / {{attemptslimit}}</span>
+                    {{#canlaunch}}<a class="u-btn u-btn--primary u-btn--large" href="{{launchurl}}">{{actionlabel}}</a>{{/canlaunch}}
+                </div>
+            </article>
+            {{/forcedretraining}}
+        </div>
+    </section>
+    {{/hasforcedretraining}}
 
     {{#hasadaptation}}{{#adaptation}}
     <section class="u-adaptation-route-card {{#blocked}}is-blocked{{/blocked}}">
@@ -229,4 +260,3 @@
     </section>
     {{/noroute}}
 </div>
-

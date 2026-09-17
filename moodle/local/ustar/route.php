@@ -42,14 +42,39 @@ if ($iselevated) {
 }
 
 $adaptation = null;
+$forcedretraining = [];
 
 if (!$previewing) {
-    try { $adaptation = \local_ustar\adaptation_service::route_card((int)$USER->id); } catch (\Throwable $e) { $adaptation = null; }
+    try {
+        $adaptation = \local_ustar\adaptation_service::route_card((int)$USER->id);
+    } catch (\Throwable $e) {
+        $adaptation = null;
+    }
+
+    try {
+        if (\local_ustar\forced_retraining::available()) {
+            $forcedretraining = \local_ustar\forced_retraining::cards_for_user((int)$USER->id);
+            foreach ($forcedretraining as &$forceditem) {
+                $forceditem['assigneddate'] = userdate(
+                    (int)$forceditem['assignedat'],
+                    get_string('strftimedatetimeshort', 'langconfig')
+                );
+            }
+            unset($forceditem);
+        }
+    } catch (\Throwable $e) {
+        $forcedretraining = [];
+    }
 }
+
 if ($adaptation && !empty($adaptation['blocked']) && !empty($route['ok'])) {
-    if (!empty($route['currentpoint'])) { $route['currentpoint']['canlaunch'] = false; }
+    if (!empty($route['currentpoint'])) {
+        $route['currentpoint']['canlaunch'] = false;
+    }
     if (!empty($route['points'])) {
-        foreach ($route['points'] as &$routepoint) { $routepoint['canlaunch'] = false; }
+        foreach ($route['points'] as &$routepoint) {
+            $routepoint['canlaunch'] = false;
+        }
         unset($routepoint);
     }
 }
@@ -60,6 +85,8 @@ $data = [
     'continueerror' => optional_param('continueerror', 0, PARAM_BOOL),
     'routerewards' => $rewards,
     'rewardsenabled' => !$previewing && \local_ustar\route_rewards::enabled(),
+    'forcedretraining' => $forcedretraining,
+    'hasforcedretraining' => !empty($forcedretraining),
     'route' => !empty($route['ok']) ? $route : null,
     'hasroute' => !empty($route['ok']),
     'noroute' => empty($route['ok']),
@@ -80,9 +107,9 @@ $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Мой учебный маршрут | USTAR');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_v2.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/forced_retraining.css'));
 
 $output = $PAGE->get_renderer('local_ustar');
 echo $output->header();
 echo $output->render_from_template('local_ustar/route', $data);
 echo $output->footer();
-

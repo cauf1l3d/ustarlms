@@ -59,6 +59,8 @@ $departmentview = \local_ustar\team_presenter::department_view(
 $learning = $departmentview['learning'];
 unset($departmentview['learning']);
 
+$canforceretraining = \local_ustar\forced_retraining::can_manage((int)$USER->id);
+
 $data = array_merge(
     $hierarchy,
     $departmentview,
@@ -87,10 +89,15 @@ $data = array_merge(
             )->out(false)
             : '',
 
-          'staffingurl' =>
-              !empty($hierarchy['ishead'])
-              ? (new moodle_url('/local/ustar/staffing.php'))->out(false)
-              : '',
+        'staffingurl' =>
+            !empty($hierarchy['ishead'])
+            ? (new moodle_url('/local/ustar/staffing.php'))->out(false)
+            : '',
+
+        'canforceretraining' => $canforceretraining,
+        'forcedretrainingurl' => $canforceretraining
+            ? (new moodle_url('/local/ustar/forced_retraining.php'))->out(false)
+            : '',
 
         'hasassessmentalerts' =>
             !empty($assessmentalerts['alerts']),

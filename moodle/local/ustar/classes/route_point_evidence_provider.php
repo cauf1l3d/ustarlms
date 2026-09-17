@@ -12,7 +12,12 @@ defined('MOODLE_INTERNAL') || die();
 final class route_point_evidence_provider {
 
     /** @return array<string,mixed> */
-    public static function state(\stdClass $runtime, \stdClass $policy, string $positionid): array {
+    public static function state(
+        \stdClass $runtime,
+        \stdClass $policy,
+        string $positionid,
+        string $evententitytype = 'assessment_runtime'
+    ): array {
         global $DB;
 
         $pointid = (int)$runtime->remediationpointid;
@@ -87,7 +92,8 @@ final class route_point_evidence_provider {
                 $pointid,
                 $versionid,
                 (int)$runtime->id,
-                $positionid
+                $positionid,
+                $evententitytype
             );
             $evidence['fresh'] = !empty($evidence['configured'])
                 && (int)$evidence['completedat'] > $cutoff;
@@ -117,7 +123,8 @@ final class route_point_evidence_provider {
         int $pointid,
         int $versionid,
         int $runtimeid,
-        string $positionid
+        string $positionid,
+        string $evententitytype
     ): array {
         global $DB;
 
@@ -241,7 +248,7 @@ final class route_point_evidence_provider {
             }
             $base['label'] = $label !== '' ? $label : format_string((string)$content->title);
             $events = $DB->get_records('local_ustar_workflow_events', [
-                'entitytype' => 'assessment_runtime',
+                'entitytype' => $evententitytype,
                 'entityid' => $runtimeid,
                 'eventtype' => 'assess_content_opened',
             ], 'timecreated DESC');

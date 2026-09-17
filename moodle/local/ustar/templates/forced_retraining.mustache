@@ -1,0 +1,114 @@
+<div class="u-product-page u-forced-retraining-page">
+    <header class="u-product-head">
+        <div>
+            <p class="u-page-kicker">Моя команда</p>
+            <h1>Принудительное переобучение</h1>
+            <p>Назначьте сотруднику конкретные темы повторного обучения. Старые прохождения и результаты сохраняются, но новый цикл требует повторного материала и новой успешной аттестации.</p>
+        </div>
+        <div class="u-product-head__actions">
+            <a class="u-btn" href="{{teamurl}}">← Моя команда</a>
+        </div>
+    </header>
+
+    {{#assignedok}}
+    <div class="alert alert-success" role="status">Назначено тем: {{assigned}}. Они уже приоритетно отображаются в маршруте сотрудника.</div>
+    {{/assignedok}}
+
+    {{#hastargets}}
+    <section class="u-fr-panel">
+        <header>
+            <p class="u-page-kicker">01 · Сотрудник</p>
+            <h2>Кого отправить на переобучение</h2>
+        </header>
+        <form class="u-fr-person-select" method="get" action="{{selfurl}}">
+            <label for="u-fr-user">Сотрудник</label>
+            <select id="u-fr-user" name="userid" onchange="this.form.submit()">
+                {{#targets}}
+                <option value="{{id}}" {{#selected}}selected{{/selected}}>{{fullname}} · {{position}}{{#department}} · {{department}}{{/department}}</option>
+                {{/targets}}
+            </select>
+            <noscript><button class="u-btn u-btn--primary" type="submit">Выбрать</button></noscript>
+        </form>
+    </section>
+
+    {{#hasselected}}
+    <section class="u-fr-panel">
+        <header>
+            <p class="u-page-kicker">02 · Темы</p>
+            <h2>{{selected.fullname}}</h2>
+            <p>{{selected.position}}{{#selected.department}} · {{selected.department}}{{/selected.department}}</p>
+        </header>
+
+        <form method="post" action="{{selfurl}}?userid={{selected.id}}" class="u-fr-form">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="action" value="assign">
+            <input type="hidden" name="targetuserid" value="{{selected.id}}">
+
+            {{#hastopics}}
+            <div class="u-fr-topics">
+                {{#topics}}
+                <label class="u-fr-topic">
+                    <input type="checkbox" name="policyids[]" value="{{policyid}}">
+                    <span>
+                        <strong>{{materialtitle}}</strong>
+                        <small>После материала: {{assessmenttitle}}</small>
+                    </span>
+                </label>
+                {{/topics}}
+            </div>
+
+            <label class="u-fr-reason">
+                <span>Причина назначения</span>
+                <textarea name="reason" rows="4" required maxlength="1000" placeholder="Например: нарушение регламента, ошибка в работе, повторное подтверждение знаний после инцидента"></textarea>
+            </label>
+
+            <div class="u-fr-submit">
+                <p>После назначения выбранные темы станут приоритетными в маршруте сотрудника. Предыдущее успешное прохождение не закроет новый цикл.</p>
+                <button class="u-btn u-btn--primary u-btn--large" type="submit">Назначить переобучение</button>
+            </div>
+            {{/hastopics}}
+
+            {{^hastopics}}
+            <div class="u-empty-state">
+                <h3>Нет доступных тем для нового назначения</h3>
+                <p>Либо все настроенные темы уже назначены, либо для должности нет опубликованной связки «материал → аттестация».</p>
+            </div>
+            {{/hastopics}}
+        </form>
+    </section>
+
+    <section class="u-fr-panel">
+        <header>
+            <p class="u-page-kicker">Активные назначения</p>
+            <h2>Что сотрудник должен пройти сейчас</h2>
+        </header>
+        {{#hasactive}}
+        <div class="u-fr-active-list">
+            {{#active}}
+            <article class="u-fr-active is-{{statuskey}}">
+                <div>
+                    <strong>{{materialtitle}}</strong>
+                    <span>→ {{assessmenttitle}}</span>
+                    <small>{{assigneddate}} · {{reason}}</small>
+                </div>
+                <div class="u-fr-active__status">
+                    <b>{{statuslabel}}</b>
+                    <small>Новых попыток: {{attemptsused}} / {{attemptslimit}}</small>
+                </div>
+            </article>
+            {{/active}}
+        </div>
+        {{/hasactive}}
+        {{^hasactive}}<p class="u-orgchart__note">Активных принудительных переобучений нет.</p>{{/hasactive}}
+    </section>
+    {{/hasselected}}
+    {{/hastargets}}
+
+    {{^hastargets}}
+    <section class="u-empty-state">
+        <h2>Нет сотрудников в доступной области управления</h2>
+        <p>Руководитель может назначать переобучение только своей команде; HRD и генеральный директор — сотрудникам компании.</p>
+        <a class="u-btn" href="{{teamurl}}">← Моя команда</a>
+    </section>
+    {{/hastargets}}
+</div>

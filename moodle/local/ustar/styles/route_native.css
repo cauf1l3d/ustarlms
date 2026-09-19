@@ -345,6 +345,34 @@
     background: var(--u-surface-raised);
 }
 
+/* Material names must be as legible as the adjacent skill names. */
+.u-role-node.is-learning > span,
+.u-role-node.is-learning .u-role-sources span {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--u-text-primary, #24352b);
+    overflow-wrap: anywhere;
+}
+
+.u-role-node.is-learning .u-role-sources {
+    gap: 8px;
+    min-width: 0;
+}
+
+.u-role-node.is-learning .u-role-sources span {
+    max-width: 100%;
+    padding: 8px 12px;
+    font-weight: 600;
+}
+
+.u-role-node.is-learning .u-role-sources a {
+    display: inline-block;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
 .u-role-sources span.is-ok {
     background:
         color-mix(
@@ -1118,3 +1146,29 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* USTAR_ROUTE_NEXT_ALIGN_20260917
+   Presentation only. route_next.php logic/href/sesskey are untouched. */
+a[href*="/local/ustar/route_next.php"] {
+    display: flex !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+
+/* USTAR QUIZ NEXT BUTTON ALIGN FIX 20260917 */
+
+body:has(.u-route-role-quiz) .u-route-actions,
+body:has(.u-route-team-quiz) .u-route-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+}
+
+body:has(.u-route-role-quiz) a[href*="route_next"],
+body:has(.u-route-team-quiz) a[href*="route_next"] {
+    margin-left: auto !important;
+}
+

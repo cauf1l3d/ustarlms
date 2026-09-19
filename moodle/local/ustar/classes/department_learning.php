@@ -279,6 +279,8 @@ final class department_learning {
                 $userid
             );
 
+        $assessments = assessment_summary::for_employee($managerid, $userid, $snapshot['points'] ?? []);
+
         $passed = [];
         $future = [];
 
@@ -294,6 +296,8 @@ final class department_learning {
         }
 
         return [
+            'assessments' => $assessments,
+            'hasassessments' => !empty($assessments),
             'person' => $person,
             'snapshot' => $snapshot,
             'current' =>

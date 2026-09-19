@@ -124,6 +124,13 @@ if (
 
     try {
 
+        if ($action === 'savegrade') {
+            \local_ustar\career_grades::save($positionid,
+                required_param('careergrade', PARAM_ALPHANUMEXT),
+                required_param('gradeexpected', PARAM_ALPHANUMEXT));
+            redirect(new moodle_url('/local/ustar/positions.php', ['positionid'=>$positionid]));
+        }
+
         if ($action === 'savecareer') {
             \local_ustar\career_path::save($positionid,
                 optional_param('nextpositionid', '', PARAM_ALPHANUMEXT),
@@ -492,64 +499,13 @@ $graphpositionids = $selectedskillid !== ''
     ? array_keys($positionsrequiringselectedskill)
     : [$positionid];
 foreach ($graphpositionids as $graphpositionid) {
-    $route = \local_ustar\route_model::get_route((string)$graphpositionid);
-    if (!$route) {
-        continue;
-    }
-    foreach (\local_ustar\route_model::points((int)$route->id) as $point) {
-        $version = \local_ustar\route_model::current_published_version((int)$point->id);
-        if (!$version) {
-            continue;
-        }
-        $pointskillids = [];
-        foreach (\local_ustar\route_model::requirements_for_version($version) as $requirement) {
-            if (($requirement['type'] ?? '') === 'skill') {
-                $pointskillids[] = (string)($requirement['sourcekey'] ?? '');
-            }
-        }
-        if ($selectedskillid !== '' && !in_array($selectedskillid, $pointskillids, true)) {
-            continue;
-        }
-        foreach (\local_ustar\route_model::requirements_for_version($version) as $requirement) {
-            if (($requirement['type'] ?? '') !== 'content') {
-                continue;
-            }
-            $contentid = (int)($requirement['sourceid'] ?? 0);
-            if ($contentid <= 0) {
-                continue;
-            }
-            $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type,status', IGNORE_MISSING);
-            if (!$content || (string)$content->status !== 'published') {
-                continue;
-            }
-            $materialurl = new moodle_url('/local/ustar/materials.php', ['contentid' => $contentid]);
-            $routeurl = new moodle_url('/local/ustar/route_studio.php', ['position' => $graphpositionid]);
-            $materialskillnames = [];
-            foreach ($pointskillids as $pointskillid) {
-                $materialskillnames[] = (string)($skillmap[$pointskillid]['name'] ?? $pointskillid);
-            }
-            if (isset($graphmaterialseen[$contentid])) {
-                $existingindex = $graphmaterialseen[$contentid];
-                $existingpositions = array_filter(array_map('trim', explode(', ', (string)$graphmaterialrows[$existingindex]['positionname'])));
-                $existingpositions[] = (string)($positionmap[$graphpositionid]['name'] ?? $graphpositionid);
-                $graphmaterialrows[$existingindex]['positionname'] = implode(', ', array_values(array_unique($existingpositions)));
-                $existingmaterialskills = array_filter(array_map('trim', explode(', ', (string)$graphmaterialrows[$existingindex]['skills'])));
-                $graphmaterialrows[$existingindex]['skills'] = implode(', ', array_values(array_unique(array_merge($existingmaterialskills, $materialskillnames))));
-                $graphmaterialrows[$existingindex]['hasskills'] = $graphmaterialrows[$existingindex]['hasskills'] || !empty($materialskillnames);
-                continue;
-            }
-            $graphmaterialrows[] = [
-                'id' => $contentid,
-                'name' => format_string((string)$content->title),
-                'typelabel' => (string)$content->type === 'video' ? 'Видео' : 'Материал',
-                'positionname' => (string)($positionmap[$graphpositionid]['name'] ?? $graphpositionid),
-                'skills' => implode(', ', array_values(array_unique($materialskillnames))),
-                'hasskills' => !empty($materialskillnames),
-                'url' => $materialurl->out(false),
-                'routeurl' => $routeurl->out(false),
-            ];
-            $graphmaterialseen[$contentid] = count($graphmaterialrows) - 1;
-        }
+    foreach (\local_ustar\career_learning::position_materials((string)$graphpositionid) as $material) {
+        if ($selectedskillid !== '' && !in_array($selectedskillid, $material['skillids'], true)) { continue; }
+        $names = [];
+        foreach ($material['skillids'] as $id) { $names[] = (string)($skillmap[$id]['name'] ?? $id); }
+        $graphmaterialrows[] = $material + [
+            'positionname'=>(string)($positionmap[$graphpositionid]['name'] ?? $graphpositionid),
+            'skills'=>implode(', ', $names), 'hasskills'=>(bool)$names];
     }
 }
 
@@ -747,170 +703,11 @@ foreach ($skills as $workspaceskill) {
  * This is intentional: the workspace must expose modelling gaps, not hide them.
  */
 $workspacematerials = [];
-$workspacematerialkeys = [];
-
 foreach ($positions as $workspaceposition) {
-
-    $workspacepositionid =
-        (string)($workspaceposition['id'] ?? '');
-
-    if ($workspacepositionid === '') {
-        continue;
-    }
-
-    $workspaceroute =
-        \local_ustar\route_model::get_route(
-            $workspacepositionid
-        );
-
-    if (!$workspaceroute) {
-        continue;
-    }
-
-    foreach (
-        \local_ustar\route_model::points(
-            (int)$workspaceroute->id
-        )
-        as $workspacepoint
-    ) {
-
-        $workspaceversion =
-            \local_ustar\route_model::current_published_version(
-                (int)$workspacepoint->id
-            );
-
-        if (!$workspaceversion) {
-            continue;
-        }
-
-        $workspacerequirements =
-            \local_ustar\route_model::requirements_for_version(
-                $workspaceversion
-            );
-
-        $workspacepointskills = [];
-
-        foreach ($workspacerequirements as $workspacerequirement) {
-
-            if (
-                (string)($workspacerequirement['type'] ?? '')
-                !== 'skill'
-            ) {
-                continue;
-            }
-
-            $workspaceskillkey =
-                trim(
-                    (string)(
-                        $workspacerequirement['sourcekey']
-                        ?? ''
-                    )
-                );
-
-            if ($workspaceskillkey !== '') {
-                $workspacepointskills[] =
-                    $workspaceskillkey;
-            }
-        }
-
-        $workspacepointskills =
-            array_values(
-                array_unique(
-                    $workspacepointskills
-                )
-            );
-
-        foreach ($workspacerequirements as $workspacerequirement) {
-
-            if (
-                (string)($workspacerequirement['type'] ?? '')
-                !== 'content'
-            ) {
-                continue;
-            }
-
-            $workspacecontentid =
-                (int)(
-                    $workspacerequirement['sourceid']
-                    ?? 0
-                );
-
-            if ($workspacecontentid <= 0) {
-                continue;
-            }
-
-            $workspacecontent =
-                $DB->get_record(
-                    'local_ustar_content',
-                    ['id' => $workspacecontentid],
-                    'id,title,type,status',
-                    IGNORE_MISSING
-                );
-
-            if (
-                !$workspacecontent
-                ||
-                (string)$workspacecontent->status
-                !== 'published'
-            ) {
-                continue;
-            }
-
-            /*
-             * Same content may legitimately occur in several routes.
-             * Keep each position relation independently addressable.
-             */
-            $workspacematerialkey =
-                $workspacepositionid
-                .
-                ':'
-                .
-                (int)$workspacepoint->id
-                .
-                ':'
-                .
-                $workspacecontentid;
-
-            if (isset($workspacematerialkeys[$workspacematerialkey])) {
-                continue;
-            }
-
-            $workspacematerialkeys[$workspacematerialkey] = true;
-
-            $workspacematerials[] = [
-                'key' => $workspacematerialkey,
-                'id' => $workspacecontentid,
-                'positionid' => $workspacepositionid,
-                'routeid' => (int)$workspaceroute->id,
-                'pointid' => (int)$workspacepoint->id,
-                'versionid' => (int)$workspaceversion->id,
-                'name' => format_string(
-                    (string)$workspacecontent->title
-                ),
-                'type' => (string)$workspacecontent->type,
-                'typelabel' =>
-                    (string)$workspacecontent->type === 'video'
-                        ? 'Видео'
-                        : 'Материал',
-                'skillids' => $workspacepointskills,
-                'unlinked' => empty($workspacepointskills),
-                'url' => (
-                    new moodle_url(
-                        '/local/ustar/materials.php',
-                        ['contentid' => $workspacecontentid]
-                    )
-                )->out(false),
-                'routeurl' => (
-                    new moodle_url(
-                        '/local/ustar/route_studio.php',
-                        ['position' => $workspacepositionid]
-                    )
-                )->out(false),
-            ];
-        }
+    foreach (\local_ustar\career_learning::position_materials((string)$workspaceposition['id']) as $material) {
+        $workspacematerials[] = $material;
     }
 }
-
 
 $workspacedepartments = [];
 
@@ -1509,7 +1306,12 @@ foreach ($positions as $candidate) {
         'label'=>(string)($departmentmap[$candidate['department'] ?? '']['name'] ?? '').' — '.(string)$candidate['name'],
         'selected'=>(string)($positionmap[$positionid]['next'] ?? '') === (string)$candidate['id']];
 }
+$gradeview = \local_ustar\career_grades::view($currentposition);
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v'=>'20260914-1']));
 $data = [
+    'careergrades' => $gradeview,
+    'gradeexpected' => \local_ustar\career_grades::fingerprint($currentposition),
+
     'careertargets' => $careertargets,
     'careerpositionid' => $positionid,
     'careerexpected' => \local_ustar\career_path::fingerprint($structure),

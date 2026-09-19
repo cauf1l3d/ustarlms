@@ -34,6 +34,17 @@ class people {
 
     public static function set_position_id(int $userid, string $positionid): void {
         global $DB;
+        $primary = organization_model::primary_assignment($userid);
+        if ($primary) {
+            $place = organization_model::staff_place((int)$primary->staffplaceid);
+            if (!$place || (string)$place->positionid !== $positionid) {
+                throw new \invalid_parameter_exception(
+                    'Должность отличается от основного штатного назначения. Сначала оформите кадровый перевод; временное и.о. не меняет основную должность.'
+                );
+            }
+        }
+        $transaction = $DB->start_delegated_transaction();
+        try {
         $field = $DB->get_record('user_info_field', ['shortname' => 'ustar_position'], '*', MUST_EXIST);
         $record = $DB->get_record('user_info_data', ['userid' => $userid, 'fieldid' => $field->id]);
         if ($record) {
@@ -47,6 +58,11 @@ class people {
                 'data' => $positionid,
                 'dataformat' => 0,
             ]);
+        }
+        position_access::sync_user($userid);
+        $transaction->allow_commit();
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
         }
     }
 

@@ -206,7 +206,8 @@ if ($submitted) {
 
 $data = [
     'consultantcurrent' => \local_ustar\consultant_career::is_consultant((string)($current['name'] ?? '')),
-    'retailgrades' => \local_ustar\career_learning::retail((string)$identity['department'], (string)($current['name'] ?? '')),
+    'retailgrades' => !empty($profile['careergrades']['hasgrade']),
+    'careergrades' => $profile['careergrades'],
     'learningpoints' => $careerlearning['points'],
     'haslearningpoints' => !empty($careerlearning['points']),
     'fullname' =>
@@ -296,11 +297,11 @@ $PAGE->set_title(
 );
 $PAGE->set_heading('USTAR Academy');
 
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v' => '20260911-2']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v' => '20260914-1']));
 
 $PAGE->requires->css(
     new moodle_url(
-        '/local/ustar/styles/route_native.css'
+        '/local/ustar/styles/route_native.css', ['v' => '20260914-1']
     )
 );
 

@@ -70,7 +70,9 @@ final class position_access {
 
     /** Return the live USTAR position record for a user, if one is assigned. */
     public static function position_for_user(int $userid): ?array {
-        $positionid = people::position_id($userid);
+        $primary = organization_model::primary_assignment($userid);
+        $place = $primary ? organization_model::staff_place((int)$primary->staffplaceid) : null;
+        $positionid = $primary ? (string)($place->positionid ?? '') : people::position_id($userid);
         if ($positionid === '') {
             return null;
         }
@@ -120,9 +122,10 @@ final class position_access {
         $roles = self::ensure_roles();
         $context = \context_system::instance();
         $position = self::position_for_user($userid);
-        $target = self::target_role_for_position($position);
+        $target = !empty($user->suspended) ? '' : self::target_role_for_position($position);
         if (
             $target === ''
+            && empty($user->suspended)
             && class_exists('\\local_ustar\\organization_model')
             && organization_model::is_manager($userid)
         ) {

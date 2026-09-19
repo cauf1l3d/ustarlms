@@ -59,6 +59,37 @@
 {{/current}}
 {{/hascurrent}}
 
+<section class="u-learning-history u-assessment-results">
+    <header><p class="u-page-kicker">Проверка знаний</p><h2>Результаты аттестаций</h2></header>
+    {{#assessments}}
+    <article class="u-assessment-result">
+        <h3>{{title}}</h3><p>{{quizname}} · {{versionlabel}}</p>
+        <strong class="u-assessment-result__status">{{statuslabel}}</strong>
+        {{^error}}
+        <dl class="u-assessment-result__facts">
+            <div><dt>Последний результат</dt><dd>{{lastscore}}</dd></div>
+            <div><dt>Дата последней попытки</dt><dd>{{lastdate}}</dd></div>
+            <div><dt>Лучший учитываемый результат</dt><dd>{{bestscore}}</dd></div>
+            <div><dt>Проходной балл</dt><dd>{{passscore}}</dd></div>
+        </dl>
+        <p>{{attemptslabel}}</p>
+        {{#workflow}}<p class="u-assessment-result__workflow">{{workflow}}</p>{{/workflow}}
+        {{#cutofflabel}}<small>{{cutofflabel}}</small>{{/cutofflabel}}
+        {{#hashistory}}
+        <details><summary>История попыток</summary>
+            <div class="u-assessment-result__scroll"><table>
+                <thead><tr><th>Попытка Moodle</th><th>Дата</th><th>Балл</th><th>Результат</th></tr></thead>
+                <tbody>{{#history}}<tr><td>{{number}}</td><td>{{date}}</td><td>{{score}}</td><td>{{result}}</td></tr>{{/history}}</tbody>
+            </table></div>
+            {{#historylimited}}<small>Показаны последние 50 завершённых попыток.</small>{{/historylimited}}
+        </details>
+        {{/hashistory}}
+        {{/error}}
+    </article>
+    {{/assessments}}
+    {{^hasassessments}}<div class="u-empty-mini">В текущем маршруте нет аттестаций Moodle Quiz.</div>{{/hasassessments}}
+</section>
+
 <section class="u-learning-history">
     <header>
         <p class="u-page-kicker">История</p>

@@ -45,9 +45,13 @@ final class company_hierarchy {
             'operations' => 'Операционный блок',
             'finance' => 'Финансовый блок',
             'logistics' => 'Блок «Логистика»',
+            'administrative' => 'Административный блок',
         ] as $key => $name) {
             $blocks[$key] = ['key' => $key, 'name' => $name, 'leaders' => [],
-                'departments' => [], 'people' => 0, 'islogistics' => $key === 'logistics'];
+                'members' => [], 'departments' => [], 'people' => 0,
+                'islogistics' => $key === 'logistics',
+                'isadministrative' => $key === 'administrative',
+                'isdirect' => in_array($key, ['logistics', 'administrative'], true)];
         }
         $executives = [];
         $assistants = [];
@@ -104,7 +108,11 @@ final class company_hierarchy {
                         ['руководитель', 'руководство', 'администрация'], true);
                     if ($leadership && (str_contains($role, 'ассистент')
                             || str_contains($role, 'помощник'))) {
-                        if ($mode === 'full') { $assistants[] = $person; }
+                        if ($mode === 'full' || $ownblock === 'administrative') {
+                            $person['ishead'] = false;
+                            $blocks['administrative']['members'][] = $person;
+                            $blocks['administrative']['people']++;
+                        }
                         continue;
                     }
                     if ($mode === 'leaders' && $bucket !== 'heads') { continue; }
@@ -135,13 +143,16 @@ final class company_hierarchy {
                 strnatcasecmp($a['name'], $b['name']));
             usort($block['leaders'], static fn(array $a, array $b): int =>
                 strnatcasecmp((string)$a['fullname'], (string)$b['fullname']));
+            usort($block['members'], static fn(array $a, array $b): int =>
+                strnatcasecmp((string)$a['fullname'], (string)$b['fullname']));
             $block['hasleaders'] = !empty($block['leaders']);
+            $block['hasmembers'] = !empty($block['members']);
             $block['hasdepartments'] = !empty($block['departments']);
             $block['leadernames'] = implode(', ', array_column($block['leaders'], 'fullname'));
         }
         unset($block);
         $blocks = array_filter($blocks, static fn(array $b): bool =>
-            $b['hasleaders'] || $b['hasdepartments']);
+            $b['hasleaders'] || $b['hasmembers'] || $b['hasdepartments']);
         $count = count($executives) + count($assistants) + array_sum(array_column($blocks, 'people'));
         return ['assistants' => $assistants, 'hasassistants' => !empty($assistants),
             'description' => $mode === 'full' ? 'Подразделения, руководители и сотрудники компании.'
@@ -159,6 +170,9 @@ final class company_hierarchy {
     /** Department labels are aliases of existing records, not new departments. */
     private static function business_block(string $name): string {
         $name = self::business_label($name);
+        if (in_array($name, ['руководитель', 'руководство', 'администрация'], true)) {
+            return 'administrative';
+        }
         if (str_contains($name, 'логист') || str_contains($name, 'склад')) {
             return 'logistics';
         }
@@ -272,6 +286,23 @@ final class company_hierarchy {
 
             $groupkey = $positionid;
 
+            if ($departmentid === 'dept_bd305b8b27fb3a') {
+
+                $userid = (int)$u->id;
+
+                if ($userid === 62) {
+                    $groupkey = 'active_supervisor_team1';
+                }
+
+                if ($positionid === 'pos_4ae1d264291a9901') {
+                    $groupkey = 'active_team1';
+                }
+
+                if ($positionid === 'pos_9e43fe3808d709f4') {
+                    $groupkey = 'active_team2';
+                }
+            }
+
             if (
                 !isset(
                     $rows[
@@ -283,11 +314,23 @@ final class company_hierarchy {
                     $departmentid
                 ]['groupsmap'][$groupkey] = [
                     'positionid' => $positionid,
-                    'name' =>
-                        (string)(
-                            $position['name']
-                            ?? $positionid
-                        ),
+                    'name' => match ($groupkey) {
+
+                        'active_supervisor_team1'
+                            => 'Супервайзер команды 1',
+
+                        'active_team1'
+                            => 'Команда 1',
+
+                        'active_team2'
+                            => 'Команда 2',
+
+                        default
+                            => (string)(
+                                $position['name']
+                                ?? $positionid
+                            ),
+                    },
                     'people' => [],
                     'count' => 0,
                 ];

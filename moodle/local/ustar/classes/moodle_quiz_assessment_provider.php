@@ -43,20 +43,27 @@ final class moodle_quiz_assessment_provider implements assessment_provider {
         $passraw = $DB->get_field(
             'grade_items',
             'gradepass',
-            ['itemmodule' => 'quiz', 'iteminstance' => (int)$quiz->id]
+            ['itemtype' => 'mod', 'itemmodule' => 'quiz', 'iteminstance' => (int)$quiz->id, 'itemnumber' => 0]
         );
         $passscore = $passraw === false ? 0.0 : (float)$passraw;
         $scale = (float)$quiz->sumgrades > 0
             ? (float)$quiz->grade / (float)$quiz->sumgrades
             : 0.0;
 
+        $version = !empty($policy->versionid) ? $DB->get_record(
+            'local_ustar_route_versions', ['id' => (int)$policy->versionid], '*', MUST_EXIST
+        ) : null;
+        $cutoff = $version && (string)$version->renewalpolicy === route_model::RENEW_ALL
+            ? max(0, (int)$version->effectivedate) : 0;
+        $configured = $passraw !== false && $passscore > 0
+            && (float)$quiz->grade > 0 && (float)$quiz->sumgrades > 0
+            && $passscore <= (float)$quiz->grade;
         $attempts = $DB->get_records(
             'quiz_attempts',
             [
                 'quiz' => (int)$quiz->id,
                 'userid' => $userid,
                 'preview' => 0,
-                'state' => 'finished',
             ],
             'attempt ASC, id ASC'
         );
@@ -70,7 +77,24 @@ final class moodle_quiz_assessment_provider implements assessment_provider {
         $lastattemptno = 0;
         $lastattemptat = 0;
 
+        $offset = 0;
+        $inprogress = 0;
+        $history = [];
         foreach ($attempts as $attempt) {
+            $startedat = (int)($attempt->timestart ?? 0);
+            $eligible = $cutoff <= 0 || $startedat >= $cutoff;
+            if (!$eligible) { $offset = max($offset, (int)$attempt->attempt); }
+            if ((string)$attempt->state !== 'finished') {
+                if ($eligible && in_array((string)$attempt->state, ['inprogress', 'overdue'], true)) { $inprogress++; }
+                continue;
+            }
+            $history[] = [
+                'attemptno' => (int)$attempt->attempt,
+                'timefinish' => (int)$attempt->timefinish,
+                'score' => $attempt->sumgrades === null ? null : (float)$attempt->sumgrades * $scale,
+                'eligible' => $eligible,
+            ];
+            if (!$eligible) { continue; }
             $total++;
             $lastattemptid = (int)$attempt->id;
             $lastattemptno = (int)$attempt->attempt;
@@ -90,7 +114,7 @@ final class moodle_quiz_assessment_provider implements assessment_provider {
 
             $score = (float)$attempt->sumgrades * $scale;
             $best = max($best, $score);
-            if ($score + 0.000001 >= $passscore) {
+            if ($configured && $score + 0.000001 >= $passscore) {
                 $passed = true;
             }
 
@@ -98,7 +122,7 @@ final class moodle_quiz_assessment_provider implements assessment_provider {
                 (int)$attempt->timefinish,
                 (int)($attempt->timemodified ?? 0)
             );
-            $finalized[(int)$attempt->attempt] = [
+            $finalized[$total] = [
                 'attemptid' => (int)$attempt->id,
                 'attemptno' => (int)$attempt->attempt,
                 'score' => $score,
@@ -112,6 +136,11 @@ final class moodle_quiz_assessment_provider implements assessment_provider {
 
         return [
             'provider' => 'moodle_quiz',
+            'configured' => $configured,
+            'attemptoffset' => $offset,
+            'cutoff' => $cutoff,
+            'history' => $history,
+            'inprogressattempts' => $inprogress,
             'cmid' => (int)$cm->id,
             'quizid' => (int)$quiz->id,
             'totalattempts' => $total,
@@ -131,7 +160,8 @@ final class moodle_quiz_assessment_provider implements assessment_provider {
 
     public function unlock_attempt_limit(int $userid, \stdClass $policy, int $limit): void {
         global $DB;
-        $limit = max(1, $limit);
+        $state = $this->inspect($userid, $policy);
+        $limit = max(1, $limit) + (int)($state['attemptoffset'] ?? 0);
         $data = self::quiz_data($policy);
         $cm = $data['cm'];
         $quiz = $data['quiz'];

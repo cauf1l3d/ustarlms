@@ -104,6 +104,8 @@ final class assessment_lifecycle {
         }
 
         try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
             $providerstate = $provider->inspect($userid, $policy);
             $runtime = $DB->get_record('local_ustar_assess_runtime', [
                 'userid' => $userid,
@@ -137,6 +139,12 @@ final class assessment_lifecycle {
                 $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid], '*', MUST_EXIST);
             }
 
+            if ((int)($providerstate['attemptoffset'] ?? 0) > 0
+                    && !empty($providerstate['configured'])
+                    && in_array((string)$runtime->status, [self::STATUS_ACTIVE, self::STATUS_REOPENED], true)) {
+                $provider->unlock_attempt_limit($userid, $policy,
+                    max(1, (int)$runtime->cycle) * max(1, (int)$policy->attemptspercycle));
+            }
             $changed = false;
             $now = time();
             $runtime->attemptsused = (int)$providerstate['totalattempts'];
@@ -155,7 +163,9 @@ final class assessment_lifecycle {
             }
 
             // A pass always wins, including a pass after remediation.
-            if (!empty($providerstate['passed'])) {
+            if (array_key_exists('configured', $providerstate) && !$providerstate['configured']) {
+                $runtime->status = 'configuration_error';
+            } else if (!empty($providerstate['passed'])) {
                 if ((string)$runtime->status !== self::STATUS_PASSED) {
                     $runtime->status = self::STATUS_PASSED;
                     $runtime->remediationcompletedat = $runtime->remediationcompletedat ?: null;
@@ -274,7 +284,12 @@ final class assessment_lifecycle {
             // attemptsused/lastattempt are also canonical runtime projections;
             // persist them even when no state transition happened.
             $DB->update_record('local_ustar_assess_runtime', $runtime);
-            return $DB->get_record('local_ustar_assess_runtime', ['id' => (int)$runtime->id], '*', MUST_EXIST);
+            $result = $DB->get_record('local_ustar_assess_runtime', ['id' => (int)$runtime->id], '*', MUST_EXIST);
+            $transaction->allow_commit();
+            return $result;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
         } finally {
             $lock->release();
         }
@@ -323,7 +338,12 @@ final class assessment_lifecycle {
             'hrdreview' => false,
         ];
 
-        if ($status === self::STATUS_AWAITING) {
+        if ($status === 'configuration_error') {
+            $view['statuslabel'] = 'Проверьте настройки аттестации';
+            $view['canlaunch'] = false;
+            $view['launchurl'] = '';
+            $view['awaiting'] = true;
+        } else if ($status === self::STATUS_AWAITING) {
             $view['statuslabel'] = 'Ожидает проверки';
             $view['canlaunch'] = false;
             $view['launchurl'] = '';

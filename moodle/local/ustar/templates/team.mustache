@@ -13,6 +13,10 @@
     <div class="u-product-head__actions">
           {{{teamicon}}}
 
+          {{#canforceretraining}}
+          <a class="u-btn u-btn--primary" href="{{forcedretrainingurl}}">Принудительное переобучение</a>
+          {{/canforceretraining}}
+
           {{#ishead}}
           <a class="u-btn u-btn--primary" href="{{staffingurl}}">Заявки на персонал</a>
           {{/ishead}}

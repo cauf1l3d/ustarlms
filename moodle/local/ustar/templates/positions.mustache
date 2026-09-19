@@ -35,6 +35,26 @@
             </form>
         </header>
 
+        {{#careergrades}}{{#hasgrade}}{{> local_ustar/career_grades}}{{/hasgrade}}{{/careergrades}}
+        {{#canmanage}}
+        <details class="u-panel" style="padding:20px;margin:20px 0">
+            <summary>Грейд должности в Академии и HR</summary>
+            <form method="post">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="savegrade">
+                <input type="hidden" name="positionid" value="{{careerpositionid}}">
+                <input type="hidden" name="gradeexpected" value="{{gradeexpected}}">
+                <label for="career-grade">Консультантский грейд</label>
+                <select id="career-grade" name="careergrade" class="custom-select">
+                    <option value="none" {{#careergrades}}{{^hasgrade}}selected{{/hasgrade}}{{/careergrades}}>Не относится к консультантским грейдам</option>
+                    {{#careergrades}}{{#grades}}<option value="{{id}}" {{#current}}selected{{/current}}>{{number}} · {{name}}</option>{{/grades}}{{/careergrades}}
+                </select>
+                <p>Одинаковые требования и условия будут показаны в модели должности, HR-профиле и шаге 04. Это не кадровый перевод и не изменение прав доступа.</p>
+                <button type="submit" class="u-btn u-btn--primary">Сохранить грейд</button>
+            </form>
+        </details>
+        {{/canmanage}}
+
         {{#hasladder}}
         <section class="u-position-ladder" aria-labelledby="position-ladder-title">
             <div class="u-position-studio__sectionhead">

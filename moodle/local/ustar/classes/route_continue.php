@@ -120,14 +120,14 @@ final class route_continue {
             . \html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'cmid', 'value' => $cmid])
             . \html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()])
             . \html_writer::tag('button', $quizreview ? 'Проверить результат и продолжить →' : 'Изучено, продолжить →',
-                ['type' => 'submit', 'class' => 'btn btn-primary ustar-route-continue-button'])
+                ['type' => 'submit', 'class' => 'u-btn u-btn--primary u-btn--large ustar-route-continue-button'])
             . \html_writer::end_tag('form');
         return \html_writer::div($form, 'ustar-route-continue-wrap', [
             'data-ustar-route-continue' => 'post-v1',
             'data-cmid' => $cmid,
             'style' => 'display:flex;justify-content:flex-end;margin:24px 0;'
         ]) . \html_writer::tag('script', '', ['src' => (new \moodle_url('/local/ustar/route_continue.js',
-            ['v' => '20260911']))->out(false)]);
+            ['v' => '20260917-visual2']))->out(false)]);
     }
 
     /** One authoritative route destination, also when a point contains several materials. */

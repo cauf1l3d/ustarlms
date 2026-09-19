@@ -3,7 +3,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $SITE;
 
-$bodyattributes = $OUTPUT->body_attributes(['u-login-body']);
+$bodyattributes = $OUTPUT->body_attributes(['ustar-auth-body']);
 $runtimecss = '';
 try {
     if (class_exists('\\local_ustar\\branding')) {
@@ -15,6 +15,7 @@ try {
 }
 
 $templatecontext = [
+    'loginreferenceurl' => $OUTPUT->image_url('brand/login-original-recovery-20260914', 'theme_ustar')->out(false),
     'loginposterurl' => $OUTPUT->image_url('brand/login-poster', 'theme_ustar')->out(false),
     'loginwordmarkurl' => $OUTPUT->image_url('brand/login-wordmark', 'theme_ustar')->out(false),
     'loginstarturl' => $OUTPUT->image_url('brand/login-start', 'theme_ustar')->out(false),

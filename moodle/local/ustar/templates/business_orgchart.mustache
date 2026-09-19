@@ -20,12 +20,17 @@
                     <span class="u-orgchart__chevron" aria-hidden="true"></span>
                 </summary>
                 <div class="u-orgchart__block-body">
-                    {{#islogistics}}<p class="u-orgchart__note">Прямое подчинение генеральному директору</p>{{/islogistics}}
+                    {{#isdirect}}<p class="u-orgchart__note">Прямое подчинение генеральному директору</p>{{/isdirect}}
                     {{#hasleaders}}
                     <div class="u-orgchart__leaders">
                         {{#leaders}}{{> local_ustar/business_orgchart_person}}{{/leaders}}
                     </div>
                     {{/hasleaders}}
+                    {{#hasmembers}}
+                    <div class="u-orgchart__people u-orgchart__direct-people">
+                        {{#members}}{{> local_ustar/business_orgchart_person}}{{/members}}
+                    </div>
+                    {{/hasmembers}}
                     {{#hasdepartments}}
                     <ul class="u-orgchart__departments" aria-label="Подразделения: {{name}}">
                         {{#departments}}
@@ -56,7 +61,7 @@
                         {{/departments}}
                     </ul>
                     {{/hasdepartments}}
-                    {{^hasdepartments}}{{^hasleaders}}<p class="u-orgchart__note">Нет подразделений в доступном составе.</p>{{/hasleaders}}{{/hasdepartments}}
+                    {{^hasdepartments}}{{^hasleaders}}{{^hasmembers}}<p class="u-orgchart__note">Нет подразделений в доступном составе.</p>{{/hasmembers}}{{/hasleaders}}{{/hasdepartments}}
                 </div>
             </details>
         </li>

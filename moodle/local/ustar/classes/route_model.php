@@ -1234,11 +1234,30 @@ final class route_model {
 
     private static function record_completion(int $userid, \stdClass $point, \stdClass $version, array $evidence, int $completedat = 0, int $expiresat = 0): void {
         global $DB;
-        if ($DB->record_exists('local_ustar_route_progress', [
-            'userid' => $userid,
-            'pointid' => (int)$point->id,
-            'versionid' => (int)$version->id,
-        ])) {
+        $existing = $DB->get_record('local_ustar_route_progress', [
+            'userid' => $userid, 'pointid' => (int)$point->id, 'versionid' => (int)$version->id,
+        ]);
+        if ($existing) {
+            // Only a new verified result after expiry can renew the same version.
+            if ((string)$existing->status === 'complete' && !empty($existing->expiresat)
+                    && (int)$existing->expiresat < time() && $completedat > (int)$existing->expiresat
+                    && $completedat > (int)$existing->completedat
+                    && ($expiresat === 0 || $expiresat >= time())) {
+                $previous = json_decode((string)$existing->evidencejson, true) ?: [];
+                $history = $previous['renewalhistory'] ?? [];
+                unset($previous['renewalhistory']);
+                $history[] = ['completedat' => (int)$existing->completedat,
+                    'expiresat' => (int)$existing->expiresat, 'evidence' => $previous];
+                $evidence['renewalhistory'] = $history;
+                $DB->execute("UPDATE {local_ustar_route_progress}
+                    SET completedat=:completed, expiresat=:expiry, evidencejson=:evidence, timemodified=:modified
+                    WHERE id=:id AND completedat=:oldcompleted AND expiresat=:oldexpiry", [
+                    'completed' => $completedat, 'expiry' => $expiresat > 0 ? $expiresat : null,
+                    'evidence' => json_encode($evidence, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'modified' => time(), 'id' => (int)$existing->id,
+                    'oldcompleted' => (int)$existing->completedat, 'oldexpiry' => (int)$existing->expiresat,
+                ]);
+            }
             route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
             return;
         }
@@ -1269,8 +1288,21 @@ final class route_model {
         route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
     }
 
+    /** An invalid managed assessment must not be completed through a stale Moodle completion row. */
+    private static function assessment_configuration_valid(\stdClass $version, int $userid): bool {
+        if (!class_exists('\\local_ustar\\assessment_lifecycle')) { return true; }
+        $policy = assessment_lifecycle::policy_for_version((int)$version->id);
+        if (!$policy) { return true; }
+        $state = assessment_provider_factory::for_policy($policy)->inspect($userid, $policy);
+        return !array_key_exists('configured', $state) || !empty($state['configured']);
+    }
+
     private static function evaluate_point(\stdClass $point, \stdClass $version, int $userid, string $positionid, array $priorstates): array {
         global $DB;
+        if (!self::assessment_configuration_valid($version, $userid)) {
+            return ['satisfied' => false, 'inherited' => false, 'completedat' => 0,
+                'expiresat' => 0, 'requirements' => [], 'launchurl' => '', 'failed' => false];
+        }
         $existing = $DB->get_record('local_ustar_route_progress', [
             'userid' => $userid,
             'pointid' => (int)$point->id,
@@ -1667,8 +1699,7 @@ final class route_model {
             if (
                 !$complete
                 &&
-                (string)$version->renewalpolicy
-                    !== self::RENEW_ALL
+                in_array((string)$version->renewalpolicy, [self::RENEW_KEEP, self::RENEW_EXPIRY], true)
             ) {
                 $prior = $DB->get_records(
                     'local_ustar_route_progress',
@@ -1681,12 +1712,13 @@ final class route_model {
                 );
 
                 foreach ($prior as $progress) {
-                    if (
-                        !empty($progress->expiresat)
-                        &&
-                        (int)$progress->expiresat < time()
-                    ) {
-                        continue;
+                    if ((int)$progress->versionid === (int)$version->id) { continue; }
+                    $expiresat = (int)($progress->expiresat ?? 0);
+                    if ((string)$version->renewalpolicy === self::RENEW_EXPIRY) {
+                        if ($expiresat <= 0 && (int)$version->validdays > 0) {
+                            $expiresat = (int)$progress->completedat + (int)$version->validdays * DAYSECS;
+                        }
+                        if ($expiresat > 0 && $expiresat < time()) { continue; }
                     }
 
                     $complete = true;
@@ -1695,6 +1727,11 @@ final class route_model {
 
                     break;
                 }
+            }
+
+            if (!self::assessment_configuration_valid($version, $userid)) {
+                $complete = false;
+                $completedat = 0;
             }
 
             if ($complete) {
@@ -1717,6 +1754,7 @@ final class route_model {
 
             $row = [
                 'id' => (int)$point->id,
+                'versionid' => (int)$version->id,
                 'title' =>
                     format_string(
                         (string)$version->title

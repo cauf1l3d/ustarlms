@@ -484,6 +484,12 @@
 
             {{#hasprofile}}
             {{#profile}}
+            {{#careergrades}}{{#hasgrade}}
+            <details class="u-panel" style="padding:16px;margin:16px 0"><summary>Грейд должности: {{gradename}}</summary>
+            {{> local_ustar/career_grades}}
+            </details>
+            {{/hasgrade}}{{/careergrades}}
+
 
             <section class="u-hr-profile-overview">
 

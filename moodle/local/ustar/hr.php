@@ -1057,6 +1057,8 @@ $data = [
 ];
 
 
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v'=>'20260914-1']));
+
 echo $output->header();
 
 echo $output->render_from_template(

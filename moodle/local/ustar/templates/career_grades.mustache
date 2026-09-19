@@ -1,0 +1,19 @@
+<section class="u-career-native u-consultant-career" aria-label="Консультантские грейды">
+<header><p class="u-page-kicker">Карьерная лестница · Консультантские грейды</p>
+<h2>Путь развития</h2>
+{{#hasgrade}}<p>Должность <strong>{{gradepositionname}}</strong> · грейд <strong>{{gradename}}</strong></p>{{/hasgrade}}
+{{^hasgrade}}<p>Грейд для этой должности не назначен.</p>{{/hasgrade}}
+</header>
+<ol class="u-consultant-ladder">
+{{#grades}}<li class="u-consultant-grade{{#current}} is-current{{/current}}">
+{{#current}}<span class="u-consultant-grade__current">Текущий грейд должности</span>{{/current}}
+<span class="u-consultant-grade__number">Грейд {{number}}</span><h3>{{name}}</h3>
+<p class="u-consultant-grade__pay"><small>По документу грейдов</small><strong>{{pay}}</strong></p>
+<details><summary>Критерии и условия</summary><p>{{period}}</p>
+<ul>{{#criteria}}<li>{{text}}</li>{{/criteria}}</ul>
+{{#haskpi}}<h4>Премия по KPI</h4><ul>{{#kpi}}<li>{{text}}</li>{{/kpi}}</ul>{{/haskpi}}
+{{#note}}<p>{{note}}</p>{{/note}}
+</details></li>{{/grades}}
+</ol>
+<p class="u-consultant-career__note">Основание: «Грейды для консультантов». Грейд описывает модель должности; повышение и условия оплаты оформляются отдельно.</p>
+</section>

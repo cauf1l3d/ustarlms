@@ -2,20 +2,21 @@
 {{> theme_boost/head }}
 <body {{{ bodyattributes }}}>
 {{> core/local/toast/wrapper}}
-<div id="page-wrapper" class="u-login-page">
+<div id="page-wrapper" class="ustar-auth-page">
     {{{ output.standard_top_of_body_html }}}
-    <main id="page" class="u-login-shell" aria-label="Вход в USTAR Академию">
-        <section class="u-login-brand" aria-label="Академия USTAR">
-            <img src="{{loginposterurl}}" width="468" height="530" class="u-login-poster"
-                alt="Академия USTAR. Обучение, навыки, твоя карьера, игры и развитие — в одном рабочем пространстве. Экспресс Маркет и Хозмагия.">
+    <main id="page" class="ustar-auth-shell" aria-label="Вход в USTAR Академию">
+        <section class="ustar-auth-brand" aria-label="Академия USTAR">
+            <svg class="ustar-auth-artwork" viewBox="155 50 711 836" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR: обучение, навыки, карьера, игры. Развивайся, строй карьеру, участвуй в играх, будь частью команды.">
+                <image href="{{loginreferenceurl}}" x="0" y="0" width="1672" height="941" />
+            </svg>
         </section>
-        <section class="u-login-auth" aria-label="Авторизация">
-            <img src="{{loginwordmarkurl}}" width="273" height="42" class="u-login-wordmark" alt="USTAR">
-            <h1 class="u-login-start"><img src="{{loginstarturl}}" width="333" height="33" alt="Начни с входа"></h1>
-            <div class="u-login-auth__card">
-                <div id="region-main" class="u-login-core">{{{ output.main_content }}}</div>
+        <section class="ustar-auth-auth" aria-label="Авторизация">
+            <svg class="ustar-auth-logo" viewBox="1055 85 287 100" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR Академия"><image href="{{loginreferenceurl}}" x="0" y="0" width="1672" height="941" /></svg>
+            <h1 class="ustar-auth-start">Начни с входа</h1>
+            <div class="ustar-auth-auth__card">
+                <div id="region-main" class="ustar-auth-core">{{{ output.main_content }}}</div>
             </div>
-            <footer class="u-login-auth__footer">
+            <footer class="ustar-auth-auth__footer">
                 <p>USTAR Академия использует авторские технологии и собственные разработанные сервисы обучения на основе ядра Moodle.</p>
                 <strong>Тут растут эксперты</strong>
                 <small>© USTAR Академия. 2026 Все права защищены</small>

@@ -41,6 +41,23 @@ class sync_enrolments extends \core\task\scheduled_task {
             ORDER BY u.id
         ";
 
+        // Effective manager occupancy can change when ACTING expires.
+        $reportingtx = $DB->start_delegated_transaction();
+        try {
+            \local_ustar\organization_model::rebuild_reporting();
+            $reportingtx->allow_commit();
+        } catch (\Throwable $e) {
+            $reportingtx->rollback($e);
+        }
+        // Reconcile effective PRIMARY/ACTING roles, including users with empty legacy profiles.
+        $roleusers = $DB->get_records_select('user', 'deleted=0 AND id>1', [], 'id ASC', 'id');
+        foreach ($roleusers as $roleuser) {
+            try { \local_ustar\position_access::sync_user((int)$roleuser->id); }
+            catch (\Throwable $e) {
+                mtrace('USTAR role reconciliation failed userid='.(int)$roleuser->id.' type='.get_class($e));
+            }
+        }
+
         // Bounded recovery of saved progress whose reward could not be committed.
         \local_ustar\route_rewards::reconcile(200);
         $users = $DB->get_records_sql($sql);

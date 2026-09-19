@@ -1,21 +1,25 @@
 schema_version: 1
-updated_at: '2026-09-12'
+updated_at: '2026-09-19'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: R16 installed and server tests passed; tours RC2 and production
-  source reconciled. R00 remains review.
+current_activity: Production application source reconciled to exact Git commit
+  378d397152a8c83f8b0d046e2e561ab2732d6b02; 381 publishable source files verified
+  byte-for-byte. R00 remains review for schema/browser/DR acceptance.
 next_task: R00
 ready_tasks:
 - R00
 - R01
 - R04
 code_baseline:
-  branch: integration/ustar-20260912
-  commit: 48326c6a011f58b985d251cb0462835bc1d37a16
-  kind: consolidated_source_with_local_tests
-  production_equivalence: 367_source_files_verified_including_separate_theme_config_check;
-    backups/schema/browser_acceptance_outstanding
+  branch: integration/ustar-20260919
+  commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
+  kind: production_source_snapshot_verified
+  previous_branch: integration/ustar-20260912
+  previous_commit: 48326c6a011f58b985d251cb0462835bc1d37a16
+  production_equivalence: 381_publishable_source_files_byte_verified;
+    33_gitignored_runtime_backup_artifacts_recorded; database_moodledata_runtime_not_in_git;
+    schema_browser_clean_restore_acceptance_outstanding
 main_at_audit_start: 5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
 canonical_roadmap_branch: main
 user_priorities:
@@ -25,68 +29,84 @@ user_priorities:
 - Консистентная студия маршрутов
 - Рабочие игры и достижения
 production:
-  status: dated_source_inventory_reconciled
+  status: production_source_reconciled_20260919
   measured_in_this_audit: false
   user_session_evidence:
     container: ustar_moodle
+    database_container: ustar_postgres
     host_mount_source: /opt/ustar/data/moodle/public
     container_mount_destination: /var/www/html
     host_moodle_root: /opt/ustar/data/moodle/public/public
     container_moodle_root: /var/www/html/public
-    source: Показанные пользователем docker inspect и ls в этой сессии, 2026-09-07
+    source: User-executed production reconciliation script, 2026-09-19
+    source_verification: INDEX_SOURCE_BYTE_MATCH_OK
+    publishable_local_ustar_files: 328
+    publishable_theme_ustar_files: 53
+    ignored_runtime_artifacts: 33
+    production_inventory_files: 414
     recheck_before_release: true
+  recovery:
+    archive: USTAR_FULL_CURRENT_20260919_113924.tar.gz
+    sha256: 598177f211333d7d036abc025b9d21c3c7c3eb4cfb0bc10d004ff0fcff473f41
+    stored_in_git: false
+    clean_server_restore_tested: false
   unknown:
-  - Full schema and browser acceptance
-  - Remaining excluded/backup paths
-  - Native tours DB records and visual acceptance
-  - contextd unit enablement/active state
+  - Full database schema and upgrade-path acceptance against exact code SHA
+  - Full browser smoke/acceptance against exact code SHA
+  - Native tour DB records and visual acceptance
+  - Clean-server disaster-recovery restore acceptance
+  - Whether all 33 ignored production remnants may be deleted from runtime
   latest_observation:
-    date: '2026-09-12'
-    source: user-supplied runtime audit and R16 test output
-    snapshot: context/runtime/snapshots/20260912T204824Z
+    date: '2026-09-19'
+    source: user-executed source reconciliation and recovery snapshot creation
+    source_commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
+    runtime_evidence: context/runtime/20260919_prod_sync.md
     independently_measured: false
 prior_deliveries:
+- name: Production source reconciliation 20260919
+  status: source_verified_and_published
+  evidence: release/20260919/README.md; exact Git source commit
+    378d397152a8c83f8b0d046e2e561ab2732d6b02; 381 publishable source files
+    verified byte-for-byte before push.
 - name: Executive tree 20260907
   status: user_confirmed_applied
   evidence: Пользователь показал CHECK_OK/APPLY_OK и cache purge; это не manifest
     всего plugin.
 - name: Executive employee links
   status: user_reported_success
-  evidence: Подтверждение в переписке; точные production hashes сверить в R00.
+  evidence: Подтверждение в переписке; историческая поставка включена в текущий production source.
 - name: Team department cards/filter
   status: user_reported_applied_with_ui_defects
-  evidence: Скриншоты после установки показывают дерево; пользователь запросил другое
-    оформление.
+  evidence: Исторический статус; текущий source зафиксирован 19.09.
 - name: USTAR_POSITIONS_MATERIALS_FIX_20260907.zip
   status: user_confirmed_not_applied
   evidence: Пользователь явно указал, что materials patch не применял.
 - name: USTAR_ORG_UNIFIED_20260907.zip
   status: prepared_not_confirmed_deployed
-  evidence: Единый пакет подготовлен в предыдущей работе; подтверждение применения
-    отсутствует. Не считать частью audited Git SHA.
+  evidence: Историческая поставка; не использовать как текущий baseline.
 - name: UX RC1 20260909
-  status: user_confirmed_installed
-  evidence: Пользователь назвал установленной базой; исходники реконструированы в
-    82e8d37 (local reconstruction, not a published baseline).
+  status: superseded_by_20260919_production_source
+  evidence: Текущая фактическая версия входит в production source commit 378d397.
 - name: 20260911-12 consolidated patches
-  status: latest_scorm_user_reported_working
-  evidence: release/20260912/README.md; per-delivery manifests retained; full production
-    equivalence not measured.
+  status: superseded_as_current_baseline
+  evidence: release/20260912 retained for provenance; current source is release/20260919.
 non_goals:
-- Изменение application code или production при публикации roadmap
 - Большое переписывание Moodle/SPA
-- Удаление исторических таблиц/миграций
+- Удаление исторических таблиц/миграций без отдельного решения
 - Автоматическая кадровая миграция из прежних private owner overrides
 - Заморозка маршрутных наград и достижений
+- Хранение production database, moodledata или secrets в Git
 next_agent_read:
 - START_HERE.md
 - context/roadmap/STATE.yaml
 - context/tasks/ACTIVE.md
 - context/roadmap/BACKLOG.yaml
 - context/roadmap/AGENT_PROTOCOL.md
+- release/20260919/README.md
 release_gates:
-- Baseline и drift известны
+- Baseline и source drift известны
 - Критические CI/DB/browser проверки exact SHA
 - Install/upgrade path проверен
 - Артефакт/manifest/backup/rollback готовы
+- Clean-server recovery acceptance выполнен
 - Production deployment подтверждён отдельно runtime evidence

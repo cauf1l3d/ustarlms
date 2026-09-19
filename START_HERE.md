@@ -1,25 +1,72 @@
-> Обновление 12.09: R16 установлен и прошёл серверные тесты; код тура RC2 и четыре изменения production сохранены. Датированный [снимок и границы сверки](context/runtime/snapshots/20260912T204824Z/README.md). Текущие статусы — STATE и ACTIVE; более ранние наблюдения ниже исторические.
+> Обновление 19.09: фактический source production сведен в GitHub и проверен побайтно для publishable source. Канонический код: `integration/ustar-20260919@378d397152a8c83f8b0d046e2e561ab2732d6b02`. Полный recovery snapshot сохранён отдельно и не публикуется в Git.
 
 # USTAR — начать здесь
 
-Обновлено: **2026-09-12**. **Актуальный код патчей находится в integration/ustar-20260912**, каталог `moodle/`. Кодовая поставка: `48326c6a011f58b985d251cb0462835bc1d37a16`; последующие изменения контекста не меняют этот код.
+Обновлено: **2026-09-19**.
 
-1. [STATE.yaml](context/roadmap/STATE.yaml) — точная база и отдельно production evidence.
+**Текущий канонический application source находится в `integration/ustar-20260919`, каталог `moodle/`.**
+
+Точный commit:
+
+`378d397152a8c83f8b0d046e2e561ab2732d6b02`
+
+Этот commit создан из фактически работающего production source:
+
+- `/opt/ustar/data/moodle/public/public/local/ustar`
+- `/opt/ustar/data/moodle/public/public/theme/ustar`
+
+Publishable source был проверен byte-for-byte перед commit:
+
+- `local/ustar`: 328 файлов
+- `theme/ustar`: 53 файла
+- всего: 381 Git-source файл
+- 33 production backup/runtime remnants классифицированы существующим `.gitignore` и не включены как активный source
+
+1. [STATE.yaml](context/roadmap/STATE.yaml) — текущая кодовая база и границы подтверждения.
 2. [ACTIVE.md](context/tasks/ACTIVE.md) — ближайшие действия.
 3. [BACKLOG.yaml](context/roadmap/BACKLOG.yaml) и [протокол](context/roadmap/AGENT_PROTOCOL.md).
-4. [Сводка поставки](release/20260912/README.md), [итоговые хэши патчей](release/20260912/effective_files.json), [runtime evidence](context/runtime/20260912_release.md).
+4. [Production sync 2026-09-19](release/20260919/README.md) и [runtime evidence](context/runtime/20260919_prod_sync.md).
 5. [Индекс контекста](context/CONTEXT_INDEX.md), [project](context/project.yaml), [constraints](context/constraints.yaml), [architecture](context/architecture/), [ADR](context/decisions/), [domains](context/domains/), [code map](context/code_map/), [agent](context/agents/astra.md).
 
-## Что актуализировано
+## Что считается текущей базой
 
-Восстановлена база из предоставленных исходников/runtime и установленного UX RC1; затем сведены Page/native переходы, командный тест, карьерная лестница, профиль, сохранение HRD-оценок и итоговый SCORM. Использовать последний код: промежуточные BELOW/FLUSH-варианты superseded. В финальном SCORM нет внешней плашки; переход после «Изучено» и подтверждения Moodle; высота плеера задаётся в пикселях под навбаром.
+Для любых последующих изменений сначала использовать:
 
-Пользователь сообщил: «отлично вроде работает». Это предварительная пользовательская проверка финального результата, **не полный измеренный manifest сервера**. R00 остаётся review: код сведён, независимая сверка всех production-файлов/схемы и полный smoke ещё нужны. Не запускать старые ZIP поверх текущего кода.
+`integration/ustar-20260919@378d397152a8c83f8b0d046e2e561ab2732d6b02`
 
-## История и границы
+Не брать `integration/ustar-20260912` как текущий application baseline и не накатывать поверх production старые ZIP/RC-пакеты.
 
-Исходный аудит 07.09: `e71bca2856bc0f80e39cb9ed1cee6098934e232a`, прежняя feature `feature/route-position-parent-override`. Сохранены история ветки, ADR и датированные runtime-снимки. Базовый [аудит](context/roadmap/AUDIT_2026-09-07.md) описывает состояние на свою дату, а не повторную проверку сегодняшнего кода.
+Commit 19.09 включает фактические изменения production после 12.09, в том числе текущие версии route flow, assessment lifecycle, career/grades, organization/team presentation, forced retraining и login theme source.
 
-Не создавать второй Org/Evidence/Economy-домен, не менять Moodle core, не удалять историю и не подделывать completion. Рабочая студия, надёжное прохождение, награды за новые подтверждённые точки, геймификация и достижения остаются приоритетами. Дальнейшие задачи не считаются выполненными только из-за синхронизации репозитория.
+## Recovery
 
-Границы публикации и исключения: [PUBLICATION_SCOPE](release/20260912/PUBLICATION_SCOPE.md). Перед изменением кода переключитесь на интеграционную ветку. Генерируемые code map и исторические runtime-снимки имеют собственные даты; они не являются измерением текущего production.
+Полный disaster-recovery snapshot:
+
+`USTAR_FULL_CURRENT_20260919_113924.tar.gz`
+
+SHA256:
+
+`598177f211333d7d036abc025b9d21c3c7c3eb4cfb0bc10d004ff0fcff473f41`
+
+Recovery archive содержит runtime state, PostgreSQL, moodledata и Docker images и **не хранится в GitHub**.
+
+## Границы подтверждения
+
+Source synchronization подтверждена на уровне Git source и manifest. Это не означает автоматическую полную приёмку:
+
+- database/schema upgrade path;
+- всех browser-сценариев;
+- native tour DB records;
+- полного clean-server DR restore.
+
+Поэтому R00 остаётся review до закрытия этих проверок.
+
+## История
+
+Предыдущая кодовая база:
+
+`integration/ustar-20260912@48326c6a011f58b985d251cb0462835bc1d37a16`
+
+сохраняется как историческая точка. Датированные runtime snapshots и старые release manifests не являются текущим source baseline.
+
+Не создавать второй Org/Evidence/Economy-домен, не менять Moodle core без отдельного решения, не удалять исторические ADR и не подделывать completion/evidence.

@@ -1,9 +1,43 @@
-# Активная работа — 2026-09-12
+# Активная работа — 2026-09-19
 
-Код: integration/ustar-20260912@48326c6a011f58b985d251cb0462835bc1d37a16. Канонический статус — main/context/roadmap/STATE.yaml.
+Канонический application source:
 
-R16: released по подтверждённой пользователем установке и 21 серверному тесту. Daemon не запущен. Не включать его автоматически.
+`integration/ustar-20260919@378d397152a8c83f8b0d046e2e561ab2732d6b02`
 
-R00: review. 366 файлов сверены с production manifest, config.php темы совпал отдельно. 155 резервных/промежуточных файлов не импортированы и не удалены. Снимок: ../runtime/snapshots/20260912T204824Z/README.md.
+Канонический статус:
 
-Тур RC2 сохранён, шесть файлов совпадают с установленным пакетом. Следующее действие: read-only проверка native tour records, браузерная приёмка гида и оставшихся маршрутных сценариев; отдельная проверка схемы и резервных файлов. R01/R04/R17 не считаются завершёнными.
+`main/context/roadmap/STATE.yaml`
+
+## R00 — review
+
+Production source reconciliation выполнена.
+
+Подтверждено пользовательским запуском reconciliation script:
+
+- 328 файлов `moodle/local/ustar`;
+- 53 файла `moodle/theme/ustar`;
+- 381 publishable source файл проверен byte-for-byte перед commit;
+- `INDEX_SOURCE_BYTE_MATCH_OK`;
+- remote branch и local commit совпали;
+- 33 runtime/developer backup artifact классифицированы существующим `.gitignore` и не опубликованы как активный source;
+- полный inventory после cleanup pass: 414 файлов.
+
+Recovery snapshot:
+
+`USTAR_FULL_CURRENT_20260919_113924.tar.gz`
+
+SHA256:
+
+`598177f211333d7d036abc025b9d21c3c7c3eb4cfb0bc10d004ff0fcff473f41`
+
+Следующее действие R00:
+
+1. read-only проверка DB schema / plugin versions / upgrade-path против exact SHA `378d397...`;
+2. browser smoke текущего production по критическим маршрутам;
+3. native tour records/visual acceptance;
+4. отдельный clean-server DR restore test созданного recovery snapshot;
+5. после приёмки решить, удалять ли 33 ignored runtime remnants с production.
+
+R01/R04/R17 не считать автоматически завершёнными из-за source synchronization.
+
+Старую `integration/ustar-20260912` и старые ZIP/RC использовать только как исторический provenance, не как текущую базу.

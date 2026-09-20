@@ -922,11 +922,7 @@ final class assessment_lifecycle {
     }
 
     private static function direct_manager_id(int $userid): int {
-        global $DB;
-        if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reporting'))) {
-            return 0;
-        }
-        return (int)($DB->get_field('local_ustar_reporting', 'managerid', ['userid' => $userid]) ?: 0);
+        return org::manager_id($userid);
     }
 
     /** @param array<string,mixed> $providerstate */

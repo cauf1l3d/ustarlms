@@ -149,13 +149,7 @@ class structure {
 
         $structure = self::get(self::NAME_STRUCTURE);
 
-        $positionid = '';
-        if (class_exists('\\local_ustar\\view_as') && isset($GLOBALS['USER']) && (int)$GLOBALS['USER']->id === $userid && view_as::active()) {
-            $positionid = view_as::position_id();
-        } else {
-            $sql = "SELECT d.data FROM {user_info_data} d JOIN {user_info_field} f ON f.id = d.fieldid WHERE d.userid = :uid AND f.shortname = 'ustar_position'";
-            if ($rec = $DB->get_record_sql($sql, ['uid' => $userid])) { $positionid = trim($rec->data); }
-        }
+        $positionid = people::position_id($userid);
 
         $position = null;
         foreach ($structure['positions'] as $p) {
@@ -170,7 +164,8 @@ class structure {
             $role = ($position && !empty($position['ishead'])) ? 'head' : 'employee';
         } else if (has_capability('local/ustar:admin', $context, $userid)) {
             $role = 'superadmin';
-        } else if ($position && !empty($position['ishead'])) {
+        } else if (has_capability('local/ustar:viewteam', $context, $userid)
+                && organization_model::is_manager($userid)) {
             $role = 'head';
         } else {
             $role = 'employee';

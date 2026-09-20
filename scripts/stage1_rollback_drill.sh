@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+set -x
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMPOSE="$ROOT/tests/stage/rollback-compose.yaml"
@@ -7,6 +8,13 @@ ART="$ROOT/artifacts/rollback-drill"
 STAGE_INPUT="$ROOT/.stage-input"
 
 cd "$ROOT"
+
+mkdir -p "$ART"
+exec > >(tee "$ART/rollback-runner.log") 2>&1
+
+echo "ROLLBACK_DEBUG_START"
+docker version || true
+docker compose version || true
 
 test -f "$COMPOSE" || { echo "Missing $COMPOSE" >&2; exit 1; }
 test -d "$ROOT/.git" || { echo "Run from a Git checkout" >&2; exit 1; }
@@ -16,7 +24,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-rm -rf "$STAGE_INPUT" "$ART"
+rm -rf "$STAGE_INPUT"
 mkdir -p "$ART"
 
 python3 scripts/ci/prepare_stage.py
@@ -33,7 +41,11 @@ if grep -Eq '^[[:space:]]*ports:' "$ART/compose-resolved.yaml"; then
 fi
 
 docker compose -f "$COMPOSE" build --pull
-docker compose -f "$COMPOSE" up --abort-on-container-exit --exit-code-from runner
+docker compose -f "$COMPOSE" up --abort-on-container-exit --exit-code-from runner || {
+    docker compose -f "$COMPOSE" ps -a || true
+    docker compose -f "$COMPOSE" logs --no-color || true
+    exit 255
+}
 docker image ls --digests --no-trunc > "$ART/host-images.txt"
 
 grep -qx 'ROLLBACK_DRILL=PASS' "$ART/result.txt"

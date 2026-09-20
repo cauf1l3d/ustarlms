@@ -63,7 +63,7 @@ class hr_get_people extends base {
             if (!\local_ustar\accounts::is_business_account((int)$u->id)) {
                 continue;
             }
-            $p = $posmap[trim((string)$u->positionid)] ?? null;
+            $p = $posmap[\local_ustar\organization_identity::resolve((int)$u->id)['positionid']] ?? null;
             if ($department !== '' && (!$p || $p['department'] !== $department)) {
                 continue;
             }

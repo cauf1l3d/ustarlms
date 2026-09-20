@@ -22,6 +22,7 @@ final class staffing_requests {
     }
 
     private static function require_manager(int $actorid): array {
+        self::assert_actor($actorid);
         $context = \context_system::instance();
         require_capability('local/ustar:viewteam', $context);
         $scope = self::manager_scope($actorid);
@@ -34,6 +35,14 @@ final class staffing_requests {
             );
         }
         return $scope;
+    }
+
+    private static function assert_actor(int $actorid): void {
+        global $USER;
+        if ((int)$USER->id !== $actorid || !team_access::active_actor($actorid)) {
+            throw new \invalid_parameter_exception('Кадровое действие требует действующего текущего пользователя');
+        }
+        view_as::assert_writable();
     }
 
     public static function create_hire(int $actorid, array $input): int {
@@ -174,6 +183,7 @@ final class staffing_requests {
      * during HR approval and are never persisted in the request table.
      */
     public static function review(int $requestid, string $decision, int $actorid, array $input = []): array {
+        self::assert_actor($actorid);
         global $DB, $CFG;
 
         require_capability('local/ustar:hrmanage', \context_system::instance());
@@ -380,4 +390,3 @@ final class staffing_requests {
         return $rows;
     }
 }
-

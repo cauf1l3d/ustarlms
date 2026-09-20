@@ -70,9 +70,7 @@ final class position_access {
 
     /** Return the live USTAR position record for a user, if one is assigned. */
     public static function position_for_user(int $userid): ?array {
-        $primary = organization_model::primary_assignment($userid);
-        $place = $primary ? organization_model::staff_place((int)$primary->staffplaceid) : null;
-        $positionid = $primary ? (string)($place->positionid ?? '') : people::position_id($userid);
+        $positionid = organization_identity::resolve($userid)['positionid'];
         if ($positionid === '') {
             return null;
         }

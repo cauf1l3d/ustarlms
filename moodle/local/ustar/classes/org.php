@@ -30,8 +30,16 @@ final class org {
 
     public static function manager_id(int $userid): int {
         global $DB;
+        if (!accounts::participates($userid)) return 0;
+        $identity = organization_identity::resolve($userid);
+        if ($identity['source'] === 'assignment') {
+            if ($identity['conflicts']) return 0;
+            $managerid = organization_model::manager_user_for_place($identity['staffplaceid']);
+            return $managerid !== $userid ? $managerid : 0;
+        }
         if (!self::reporting_available()) return 0;
-        return (int)$DB->get_field('local_ustar_reporting','managerid',['userid'=>$userid]);
+        $managerid = (int)$DB->get_field('local_ustar_reporting', 'managerid', ['userid' => $userid]);
+        return $managerid !== $userid && accounts::participates($managerid) ? $managerid : 0;
     }
 
     public static function set_manager(int $userid, int $managerid, string $source='manual'): void {
@@ -67,7 +75,7 @@ final class org {
             if (isset($seen[$cur])) return true;
             $seen[$cur]=true; $cur=self::manager_id($cur);
         }
-        return false;
+        return $cur > 0;
     }
 
     public static function chain(int $userid): array {

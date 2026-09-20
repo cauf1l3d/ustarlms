@@ -16,10 +16,10 @@ final class organization_model {
             && $dbman->table_exists(new \xmldb_table('local_ustar_assignments'));
     }
 
-    private static function active_sql(string $alias='a'): string {
+    private static function active_sql(): string {
         return "status='active'
             AND (effectivefrom=0 OR effectivefrom<=:nowfrom)
-            AND (effectiveto IS NULL OR effectiveto=0 OR effectiveto>=:nowto)";
+            AND (effectiveto IS NULL OR effectiveto=0 OR effectiveto>:nowto)";
     }
 
     public static function active_assignments(int $userid, ?int $now=null): array {
@@ -28,48 +28,58 @@ final class organization_model {
         $now=$now??time();
         return array_values($DB->get_records_select(
             'local_ustar_assignments',
-            'userid=:uid AND '.self::active_sql('a'),
+            'userid=:uid AND '.self::active_sql(),
             ['uid'=>$userid,'nowfrom'=>$now,'nowto'=>$now],
             "CASE assignmenttype WHEN 'acting' THEN 0 WHEN 'primary' THEN 1 ELSE 2 END,id ASC"
         ));
     }
 
     public static function primary_assignment(int $userid, ?int $now=null): ?\stdClass {
-        foreach (self::active_assignments($userid,$now) as $a) {
-            if ((string)$a->assignmenttype==='primary') return $a;
-        }
-        return null;
+        $primary = array_values(array_filter(self::active_assignments($userid, $now),
+            static fn($a) => (string)$a->assignmenttype === 'primary'));
+        return count($primary) === 1 ? $primary[0] : null;
     }
 
-    public static function staff_place(int $staffplaceid): ?\stdClass {
+    public static function staff_place(int $staffplaceid, ?int $now = null): ?\stdClass {
         global $DB;
         if (!self::available() || $staffplaceid<=0) return null;
-        return $DB->get_record(
+        $place = $DB->get_record(
             'local_ustar_staff_places',
             ['id'=>$staffplaceid,'active'=>1],
             '*',
             IGNORE_MISSING
-        ) ?: null;
+        );
+        $now = $now ?? time();
+        if (!$place || (int)$place->effectivefrom > $now
+                || (!empty($place->effectiveto) && (int)$place->effectiveto <= $now)) {
+            return null;
+        }
+        return $place;
     }
 
     public static function occupant_for_place(int $staffplaceid, ?int $now=null): int {
         global $DB;
         if (!self::available() || $staffplaceid<=0) return 0;
         $now=$now??time();
+        if (!self::staff_place($staffplaceid, $now)) return 0;
         $rows=$DB->get_records_select(
             'local_ustar_assignments',
-            'staffplaceid=:sp AND '.self::active_sql('a'),
+            'staffplaceid=:sp AND '.self::active_sql(),
             ['sp'=>$staffplaceid,'nowfrom'=>$now,'nowto'=>$now],
             "CASE assignmenttype WHEN 'acting' THEN 0 WHEN 'primary' THEN 1 ELSE 2 END,id ASC",
             'id,userid,assignmenttype'
         );
+        $occupants = ['acting' => [], 'primary' => []];
         foreach ($rows as $row) {
             $uid=(int)$row->userid;
             $u=$DB->get_record('user',['id'=>$uid,'deleted'=>0,'suspended'=>0],'id',IGNORE_MISSING);
             if (!$u || is_siteadmin($uid) || !accounts::participates($uid)) continue;
-            return $uid;
+            if (isset($occupants[$row->assignmenttype])) {
+                $occupants[$row->assignmenttype][] = $uid;
+            }
         }
-        return 0;
+        $selected = $occupants['acting'] ?: $occupants['primary'];
+        return count($selected) === 1 ? $selected[0] : 0;
     }
 
     private static function position_map(): array {
@@ -88,12 +98,17 @@ final class organization_model {
     }
 
     public static function manager_places(int $userid, ?int $now=null): array {
-        if (is_siteadmin($userid)) return [];
+        if (!accounts::participates($userid)) return [];
+        $now = $now ?? time();
+        if (organization_identity::resolve($userid, $now)['conflicts']) return [];
         $positions=self::position_map();
         $out=[];
         foreach (self::active_assignments($userid,$now) as $a) {
-            $place=self::staff_place((int)$a->staffplaceid);
+            $place=self::staff_place((int)$a->staffplaceid, $now);
             if (!$place) continue;
+            if (!self::valid_place_chain((int)$place->id, $now)) continue;
+            if (!in_array($a->assignmenttype, ['primary', 'acting'], true)
+                    || self::occupant_for_place((int)$place->id, $now) !== $userid) continue;
             $position=$positions[(string)$place->positionid]??null;
             if (self::has_children((int)$place->id) || ($position && !empty($position['ishead']))) {
                 $out[(int)$place->id]=$place;
@@ -116,6 +131,7 @@ final class organization_model {
             $parent=(int)$queue[$i];
             foreach($DB->get_records('local_ustar_staff_places',['managerplaceid'=>$parent,'active'=>1],'id ASC') as $child){
                 $cid=(int)$child->id;
+                if (!self::staff_place($cid)) continue;
                 if(isset($seen[$cid])) continue;
                 $seen[$cid]=true; $desc[$cid]=$cid; $queue[]=$cid;
             }
@@ -189,6 +205,7 @@ final class organization_model {
     }
 
     public static function manager_user_for_place(int $staffplaceid): int {
+        if (!self::valid_place_chain($staffplaceid)) return 0;
         $place=self::staff_place($staffplaceid);
         $seen=[];
         for($i=0;$place && $i<100;$i++){
@@ -200,6 +217,19 @@ final class organization_model {
             $place=self::staff_place($mid);
         }
         return 0;
+    }
+
+    /** Validate the entire ancestry before granting authority to any occupant. */
+    public static function valid_place_chain(int $staffplaceid, ?int $now = null): bool {
+        $seen = [];
+        while ($staffplaceid > 0) {
+            if (isset($seen[$staffplaceid])) return false;
+            $seen[$staffplaceid] = true;
+            $place = self::staff_place($staffplaceid, $now);
+            if (!$place) return false;
+            $staffplaceid = (int)($place->managerplaceid ?? 0);
+        }
+        return true;
     }
 
     public static function rebuild_reporting(): array {
@@ -246,7 +276,7 @@ final class organization_model {
         $now=time();
         return $DB->record_exists_select(
             'local_ustar_assignments',
-            'staffplaceid=:sp AND '.self::active_sql('a'),
+            'staffplaceid=:sp AND '.self::active_sql(),
             ['sp'=>$staffplaceid,'nowfrom'=>$now,'nowto'=>$now]
         );
     }

@@ -29,11 +29,6 @@ class employee_profile {
         $departments = people::department_map($structure);
 
         $positionid = people::position_id($userid);
-        $primary = organization_model::primary_assignment($userid);
-        if ($primary) {
-            $place = organization_model::staff_place((int)$primary->staffplaceid);
-            if ($place) { $positionid = (string)$place->positionid; }
-        }
         $position = $positions[$positionid] ?? null;
         $departmentid = $position
             ? trim((string)($position['department'] ?? ''))

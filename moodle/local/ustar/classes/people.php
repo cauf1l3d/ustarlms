@@ -24,12 +24,7 @@ class people {
     public static function position_id(int $userid): string {
         global $DB, $USER;
         if ((int)$USER->id === $userid && class_exists('\\local_ustar\\view_as') && view_as::active()) { return view_as::position_id(); }
-        $sql = "SELECT d.data
-                  FROM {user_info_data} d
-                  JOIN {user_info_field} f ON f.id = d.fieldid
-                 WHERE d.userid = :uid AND f.shortname = 'ustar_position'";
-        $value = $DB->get_field_sql($sql, ['uid' => $userid]);
-        return trim((string)$value);
+        return organization_identity::resolve($userid)['positionid'];
     }
 
     public static function set_position_id(int $userid, string $positionid): void {

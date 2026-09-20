@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 git config --global --add safe.directory /source
 ART=/artifacts/rollback-drill
 SNAP=/stage/snapshot
 MOODLE=/stage/moodle
 DATA=/stage/data/stage_
 BASE=/source/.stage-input/baseline/moodle
+
+on_error() {
+    local failure_status="$1" failure_line="$2" failure_command="$3"
+    echo "ROLLBACK_RUNNER_FAILED exit=$failure_status line=$failure_line command=$failure_command" >&2
+    tail -n 80 "$ART"/[0-9]*.log 2>/dev/null || true
+    exit "$failure_status"
+}
+trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 
 fail() {
     echo "ROLLBACK_DRILL_FAIL: $*" >&2
@@ -20,17 +28,15 @@ test -d /source/moodle/theme/ustar || fail "candidate theme missing"
 test ! -e /opt/ustar || fail "production-style /opt/ustar path must not exist in drill runner"
 
 mkdir -p "$ART" "$SNAP" "$DATA"
+exec > >(tee "$ART/rollback-runner-inner.log") 2>&1
 cp -a /opt/moodle "$MOODLE"
 cp /source/tests/stage/config.php "$MOODLE/config.php"
 
 BASELINE_SHA="$(php -r 'echo json_decode(file_get_contents("/source/tests/stage/runtime.json"), true)["upgrade_from_commit"];')"
 CANDIDATE_SHA="$(git -C /source rev-parse HEAD)"
-BASELINE_VERSION="$(php -r 'define("MOODLE_INTERNAL", true); $plugin=new stdClass(); require "/source/.stage-input/baseline/moodle/local/ustar/version.php"; echo $plugin->version;')"
-CANDIDATE_VERSION="$(php -r 'define("MOODLE_INTERNAL", true); $plugin=new stdClass(); require "/source/moodle/local/ustar/version.php"; echo $plugin->version;')"
 
 test "$BASELINE_SHA" = "378d397152a8c83f8b0d046e2e561ab2732d6b02" || fail "unexpected baseline SHA: $BASELINE_SHA"
 test "$CANDIDATE_SHA" != "$BASELINE_SHA" || fail "candidate must differ from baseline"
-test "$BASELINE_VERSION" != "$CANDIDATE_VERSION" || fail "candidate plugin version must differ from baseline"
 
 install_sources() {
     local src="$1"
@@ -53,6 +59,15 @@ php admin/cli/install_database.php --agree-license \
     --fullname='USTAR rollback stage' \
     --shortname=ustar-rollback > "$ART/01-install-core.log" 2>&1
 
+# version.php uses Moodle maturity constants: load core before reading metadata.
+plugin_version() {
+    php -r 'define("CLI_SCRIPT", true); require "/stage/moodle/config.php"; $plugin=new stdClass(); require $argv[1]; echo $plugin->version;' "$1"
+}
+BASELINE_VERSION="$(plugin_version "$BASE/local/ustar/version.php")"
+CANDIDATE_VERSION="$(plugin_version /source/moodle/local/ustar/version.php)"
+[[ "$BASELINE_VERSION" =~ ^[0-9]+$ && "$CANDIDATE_VERSION" =~ ^[0-9]+$ ]] || fail "invalid plugin version metadata"
+test "$BASELINE_VERSION" != "$CANDIDATE_VERSION" || fail "candidate plugin version must differ from baseline"
+
 install_sources "$BASE"
 php /source/tests/stage/register_baseline_capabilities.php > "$ART/02-baseline-preparation.log" 2>&1
 php admin/cli/upgrade.php --non-interactive > "$ART/03-baseline-upgrade.log" 2>&1
@@ -71,6 +86,8 @@ cp "$MOODLE/config.php" "$SNAP/config.php"
     echo "baseline_plugin_version=$BASELINE_VERSION"
     echo "candidate_plugin_version=$CANDIDATE_VERSION"
     php -r 'echo "php=" . PHP_VERSION . PHP_EOL;'
+    pg_dump --version
+    pg_restore --version
     psql -h db -U ustar_fixture -d ustar_stage1 -Atc 'SELECT version();'
 } > "$SNAP/runtime.txt"
 sha256sum "$SNAP/database.dump" "$SNAP/moodledata.tar.gz" "$SNAP/source.tar.gz" "$SNAP/config.php" "$SNAP/runtime.txt" \

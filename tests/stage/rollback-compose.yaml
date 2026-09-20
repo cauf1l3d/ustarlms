@@ -1,5 +1,4 @@
 name: ustar-stage1-rollback
-version: "3.9"
 
 services:
   db:
@@ -24,12 +23,7 @@ services:
       dockerfile: tests/stage/Dockerfile
     entrypoint:
       - bash
-      - -c
-      - |
-          set -Eeuo pipefail
-          trap 'code=$?; echo "ROLLBACK_RUNNER_FAILED exit=$code line=$LINENO" >&2; ls -la /artifacts || true; tail -100 /artifacts/*.log 2>/dev/null || true; exit $code' ERR
-          git config --global --add safe.directory /source
-          bash -x /source/tests/stage/rollback_drill.sh 2>&1 | tee /artifacts/rollback-runner.log
+      - /source/tests/stage/rollback_drill.sh
     depends_on:
       db:
         condition: service_healthy

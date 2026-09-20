@@ -29,7 +29,7 @@ docker version || true
 docker compose version || true
 
 test -f "$COMPOSE"
-test -d "$ROOT/.git"
+git rev-parse --is-inside-work-tree >/dev/null
 
 rm -rf "$STAGE_INPUT"
 python3 scripts/ci/prepare_stage.py

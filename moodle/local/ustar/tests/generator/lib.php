@@ -2,7 +2,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /** Synthetic, stable-ID fixtures. Never uses production numeric identifiers. */
-final class local_ustar_generator extends component_generator {
+final class local_ustar_generator extends component_generator_base {
     public function create_route(array $data = []): stdClass {
         return $this->insert('local_ustar_routes', $data + [
             'positionid' => 'fixture_' . random_string(10), 'name' => 'Fixture route',

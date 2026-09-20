@@ -33,7 +33,7 @@ final class stage1_test extends \advanced_testcase {
         structure::save(structure::NAME_STRUCTURE, ['positions' => [['id' => $position, 'name' => 'Fixture']], 'skills' => [], 'matrix' => []]);
         $field = $DB->get_record('user_info_field', ['shortname' => 'ustar_position']);
         if (!$field) {
-            $field = $this->getDataGenerator()->create_custom_profile_field(['shortname' => 'ustar_position', 'datatype' => 'text']);
+            $field = $this->getDataGenerator()->create_custom_profile_field(['shortname' => 'ustar_position', 'name' => 'USTAR position', 'datatype' => 'text']);
         }
         $user = $this->getDataGenerator()->create_user();
         $DB->insert_record('user_info_data', (object)['userid' => $user->id, 'fieldid' => $field->id, 'data' => $position, 'dataformat' => 0]);

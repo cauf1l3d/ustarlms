@@ -1,9 +1,9 @@
 schema_version: 1
-updated_at: '2026-09-12'
+updated_at: '2026-09-20'
 canonical_branch: main
 canonical_path: context/roadmap/BACKLOG.yaml
 status_protocol: AGENT_PROTOCOL.md
-source_baseline: 89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb
+source_baseline: 378d397152a8c83f8b0d046e2e561ab2732d6b02
 tasks:
 - id: R00
   title: Зафиксировать проверяемую базу Git/release/runtime
@@ -59,8 +59,10 @@ tasks:
   title: Сделать CI и критические DB-тесты обязательными для текущего кода
   priority: P0
   stage: S0
-  status: ready
-  owner: null
+  status: review
+  owner: Codex / refactor stage 1 / 20260920
+  branch: codex/refactor-stage-1-20260920
+  started_at: '2026-09-20'
   depends_on: []
   findings:
   - F06
@@ -88,11 +90,15 @@ tasks:
   - Артефакт содержит собранный AMD, source/asset hashes и exact code SHA.
   production_benefit: Позволяет менять ядро и UI без повторения известных регрессий.
   effort_hint: 2–4 дня
-  blockers: []
-  implementation_commit: null
-  validation_evidence: []
+  blockers:
+  - Required-check enforcement in GitHub branch protection is not verified.
+  implementation_commit: e657cda7dc29750511535b94eee85b22ca7fdb86
+  code_pr: https://github.com/cauf1l3d/ustarlms/pull/2
+  validation_evidence:
+  - context/runtime/20260920_stage1_ci.md
+  - https://github.com/cauf1l3d/ustarlms/actions/runs/35527954308
   deployment_evidence: []
-  updated_at: '2026-09-07'
+  updated_at: '2026-09-20'
 - id: R02
   title: Завершить scope/override/revert по ADR-0004
   priority: P0

@@ -1,5 +1,29 @@
 # Журнал выполнения roadmap
 
+## 2026-09-20 — первый этап рефакторинга, R01 review
+
+Владелец: Codex. Код: `e657cda7dc29750511535b94eee85b22ca7fdb86`,
+[PR #2](https://github.com/cauf1l3d/ustarlms/pull/2) к `integration/ustar-20260919`.
+Приняты шесть последовательных этапов, описанных в `context/architecture/refactor_20260920.md`.
+
+Реализованы текущий PR CI и отдельные DB/rollback стенды, генераторы данных, preview/reset/reward guards,
+корректный статус пустого стандарта, защита frontend и manifest/preflight. Исправлен реальный дефект
+чистой установки capabilities. В rollback устранены отсутствие Moodle bootstrap при чтении версии,
+подстановка ERR-переменных Compose и несовместимый pg_dump.
+
+[Run 35527954308](https://github.com/cauf1l3d/ustarlms/actions/runs/35527954308):
+source, frontend, moodle-db, rollback и gate — success.
+Тестируемый merge SHA `e3ae87c5a9df1071f80d4aeff730b572965f002d`.
+10 DB tests / 36 assertions (1 notice), 21 Python tests, 49 isolated PHP assertions,
+88 DOM assertions, 4 frontend security tests и HTTP smoke собранного Next.
+Полный синтетический restore DB/moodledata/source/config — PASS.
+Подробности и артефакты: `context/runtime/20260920_stage1_ci.md`.
+
+Production не менялся. Схема metadata нормализована без изменения эффективной структуры;
+rollback восстанавливает весь согласованный комплект, а не только PHP-файлы.
+R01 остаётся review: branch protection enforcement не подтверждён. R00 production browser/DR acceptance открыт.
+Следующее действие: принять PR и required gate; дальнейшие изменения — модель сотрудника/организации второго этапа.
+
 ## 2026-09-07 — опубликован исходный roadmap
 
 **Тип поставки:** документация и статический аудит. Реализация R00–R20 ещё не выполнена этой поставкой.

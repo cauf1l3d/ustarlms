@@ -1,4 +1,13 @@
-# Активная работа — 2026-09-19
+# Активная работа — 2026-09-20
+
+## Первый этап рефакторинга — review
+
+[PR #2](https://github.com/cauf1l3d/ustarlms/pull/2): актуальный CI, изолированный Moodle/PostgreSQL,
+regression tests, preview/reset/квалификация, защита frontend, manifest/preflight и rollback drill.
+Владелец: Codex, ветка `codex/refactor-stage-1-20260920`.
+[Доказательства и ограничения](../runtime/20260920_stage1_ci.md).
+[Все шесть этапов](../architecture/refactor_20260920.md).
+R00 сохраняет review; production и кадровые данные не менялись. Новая регистрация и HR-пульт — следующие этапы.
 
 Канонический application source:
 

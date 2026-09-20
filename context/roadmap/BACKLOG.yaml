@@ -438,8 +438,11 @@ tasks:
   title: Единый контракт доступа к команде и подтверждениям
   priority: P1
   stage: S3
-  status: planned
-  owner: null
+  status: in_progress
+  owner: Codex / refactor stage 2 / 20260920
+  branch: codex/refactor-stage-2-20260920
+  code_pr: https://github.com/cauf1l3d/ustarlms/pull/4
+  implementation_scope: First read-only organization resolver and team-scope package; full task remains open.
   depends_on:
   - R01
   findings:
@@ -471,10 +474,11 @@ tasks:
     соседним ролям.
   effort_hint: 3–5 дней
   blockers: []
-  implementation_commit: null
-  validation_evidence: []
+  implementation_commit: 2502281af5e687a7bcb094b2bad8593d480304d7
+  validation_evidence:
+  - context/runtime/20260920_stage2_org.md
   deployment_evidence: []
-  updated_at: '2026-09-07'
+  updated_at: '2026-09-20'
 - id: R11
   title: Единый evidence-фасад и разделение вычисления/записи
   priority: P1
@@ -519,8 +523,11 @@ tasks:
   title: Пошаговая консолидация Org по ADR-0002
   priority: P1
   stage: S3
-  status: planned
-  owner: null
+  status: in_progress
+  owner: Codex / refactor stage 2 / 20260920
+  branch: codex/refactor-stage-2-20260920
+  code_pr: https://github.com/cauf1l3d/ustarlms/pull/4
+  implementation_scope: First read-only organization resolver and team-scope package; full task remains open.
   depends_on:
   - R09
   - R10
@@ -554,10 +561,11 @@ tasks:
     и маршруты.
   effort_hint: 5–10 дней
   blockers: []
-  implementation_commit: null
-  validation_evidence: []
+  implementation_commit: 2502281af5e687a7bcb094b2bad8593d480304d7
+  validation_evidence:
+  - context/runtime/20260920_stage2_org.md
   deployment_evidence: []
-  updated_at: '2026-09-07'
+  updated_at: '2026-09-20'
 - id: R13
   title: Защитить кадровые/адаптационные переходы от повторов и гонок
   priority: P1

@@ -3,10 +3,11 @@ updated_at: '2026-09-20'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Stage 1 of 6 refactor implemented in PR 2 from source 378d397;
-  current-code CI, isolated Moodle/PostgreSQL and safety guards under review.
+current_activity: Stage 1 source and isolated CI/rollback are under review in PR 2.
+  Stage 2 organization/assignment resolution and team-scope package is in PR 4,
+  stacked on PR 2. R10/R12 in progress; full employment/role migration remains open.
   Production unchanged; R00 browser/DR acceptance remains open.
-next_task: R01
+next_task: R10
 ready_tasks:
 - R00
 - R04

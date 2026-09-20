@@ -13,6 +13,7 @@ RUN printf 'max_input_vars=5000\nmemory_limit=512M\n' > /usr/local/etc/php/conf.
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN git clone --depth 1 --branch v5.1.1 https://github.com/moodle/moodle.git /opt/moodle \
     && test "$(git -C /opt/moodle rev-parse HEAD)" = "$(php -r 'echo json_decode(file_get_contents("/opt/ustar-runtime.json"), true)["moodle_commit"];')" \
+    && cp /usr/local/bin/composer /opt/moodle/composer.phar \
     && cd /opt/moodle && composer install --no-interaction --prefer-dist --no-progress
 WORKDIR /stage
 ENTRYPOINT ["bash", "/source/tests/stage/run.sh"]

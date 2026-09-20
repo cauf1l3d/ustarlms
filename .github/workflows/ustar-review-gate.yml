@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main, 'integration/**']
   push:
-    branches: ['integration/**', 'codex/refactor-stage-1-20260920']
+    branches: ['integration/**']
 
 permissions:
   contents: read
@@ -64,6 +64,7 @@ jobs:
       - run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
+      - run: node tests/http-smoke.mjs
 
   moodle-db:
     runs-on: ubuntu-24.04

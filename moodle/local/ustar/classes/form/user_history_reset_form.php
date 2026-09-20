@@ -23,7 +23,7 @@ final class user_history_reset_form extends \moodleform {
         $mform->addElement('autocomplete', 'userid', 'Тестовая учётная запись', $options, ['multiple' => false]);
         $mform->setType('userid', PARAM_INT);
         $mform->addRule('userid', 'Выберите тестовую учётную запись', 'required', null, 'client');
-        $mform->addElement('static', 'warning', 'Что будет удалено', 'Вся учебная история сотрудника: Quiz/SCORM попытки, completion, маршрутный прогресс USTAR, lifecycle аттестаций, переобучение и связанные workflow-события. <strong>Не удаляются:</strong> аккаунт, профиль, должность, staff place, руководитель, назначения, оргструктура, маршруты, контент, вопросы, политики, монеты, задачи и отзывы.');
+        $mform->addElement('static', 'warning', 'Что будет удалено', 'Учебная история вашей тестовой учётной записи: Quiz/SCORM попытки, completion, маршрутный прогресс USTAR, lifecycle аттестаций, переобучение и связанные workflow-события. <strong>Не удаляются:</strong> аккаунт, профиль, должность, staff place, руководитель, назначения, оргструктура, маршруты, контент, вопросы, политики, монеты, задачи и отзывы.');
         $mform->addElement('advcheckbox', 'confirmreset', 'Подтверждение', 'Я понимаю, что учебная история моей тестовой учётной записи будет удалена.');
         $mform->setType('confirmreset', PARAM_BOOL);
         $this->add_action_buttons(false, 'Очистить учебную историю');

@@ -34,7 +34,7 @@ final class company_hierarchy {
                     ? 'leaders' : 'branch');
         }
         if ($viewerid !== null && !$admin) {
-            $scope = organization_model::manager_scope($viewerid);
+            $scope = team_access::learning_scope($viewerid);
             if (!empty($scope['allowed'])) {
                 $allowed = array_fill_keys(array_map('intval', $scope['userids'] ?? []), true);
             }

@@ -74,6 +74,7 @@ final class organization_model {
             $uid=(int)$row->userid;
             $u=$DB->get_record('user',['id'=>$uid,'deleted'=>0,'suspended'=>0],'id',IGNORE_MISSING);
             if (!$u || is_siteadmin($uid) || !accounts::participates($uid)) continue;
+            if (organization_identity::resolve($uid, $now)['conflicts']) continue;
             if (isset($occupants[$row->assignmenttype])) {
                 $occupants[$row->assignmenttype][] = $uid;
             }
@@ -249,6 +250,11 @@ final class organization_model {
 
         foreach($DB->get_records('local_ustar_reporting') as $row){
             $uid=(int)$row->userid;
+            // Manual decisions are migration input, never a disposable projection.
+            if ((string)$row->source !== 'staffplace') {
+                unset($desired[$uid]);
+                continue;
+            }
             if(!isset($desired[$uid])){
                 $DB->delete_records('local_ustar_reporting',['id'=>(int)$row->id]);
                 continue;

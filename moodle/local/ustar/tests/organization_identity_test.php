@@ -120,6 +120,8 @@ final class organization_identity_test extends \advanced_testcase {
         $this->grant($head->id, ['local/ustar:viewteam', 'local/ustar:use']);
         $this->assertEquals([$employee->id], team_access::learning_scope($head->id)['userids']);
         $this->assertSame((int)$head->id, org::manager_id($employee->id));
+        $this->assertEquals([$employee->id], array_column(org::direct_reports($head->id), 'id'));
+        $this->assertTrue(org::reporting_configured());
         $this->setUser($head);
         $result = json_decode(external\get_team::execute()['json'], true);
         $this->assertEquals([$employee->id], array_column($result['team'], 'id'));
@@ -153,6 +155,25 @@ final class organization_identity_test extends \advanced_testcase {
         $user = $this->employee();
         $this->expectException(\invalid_parameter_exception::class);
         staffing_requests::create_hire($user->id, []);
+    }
+
+    public function test_reporting_rebuild_preserves_manual_decisions(): void {
+        global $DB;
+        $user = $this->employee();
+        $manager = $this->employee('retail_head');
+        org::set_manager($user->id, $manager->id);
+        $before = $DB->get_record('local_ustar_reporting', ['userid' => $user->id]);
+        organization_model::rebuild_reporting();
+        $this->assertEquals($before, $DB->get_record('local_ustar_reporting', ['userid' => $user->id]));
+    }
+
+    public function test_department_colleagues_include_different_positions(): void {
+        $seller = $this->employee();
+        $senior = $this->employee('retail_senior');
+        $outside = $this->employee('opt_manager');
+        $ids = array_column(org::horizon($seller->id), 'id');
+        $this->assertContains((int)$senior->id, $ids);
+        $this->assertNotContains((int)$outside->id, $ids);
     }
 
     public function test_reconciliation_is_repeatable_and_read_only(): void {

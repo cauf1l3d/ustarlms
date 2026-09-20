@@ -13,17 +13,8 @@ final class org {
     /** Whether at least one reporting line can participate in the rendered active-company tree. */
     public static function reporting_configured(): bool {
         global $DB;
-        if (!self::reporting_available()) return false;
-        foreach ($DB->get_records_select(
-            'local_ustar_reporting',
-            'managerid IS NOT NULL AND managerid > 0 AND managerid <> userid',
-            [],
-            '',
-            'id,userid,managerid'
-        ) as $line) {
-            if (accounts::participates((int)$line->userid) && accounts::participates((int)$line->managerid)) {
-                return true;
-            }
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id') as $user) {
+            if (self::manager_id((int)$user->id) > 0) return true;
         }
         return false;
     }
@@ -111,21 +102,21 @@ final class org {
         global $DB;
         $me=self::person($userid); $pid=$me['positionid']; $did=$me['departmentid'];
         $out=[];
-        $sql="SELECT u.id,u.firstname,u.lastname,d.data positionid FROM {user} u JOIN {user_info_data} d ON d.userid=u.id JOIN {user_info_field} f ON f.id=d.fieldid AND f.shortname='ustar_position' WHERE u.deleted=0 AND u.suspended=0";
-        foreach ($DB->get_records_sql($sql) as $u) {
+        if ($did === '') return [];
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id,firstname,lastname') as $u) {
             if (!accounts::participates((int)$u->id)) continue;
-            $p=self::person((int)$u->id,$u->firstname.' '.$u->lastname);
-            if ($p['positionid']===$pid || ($pid==='' && $p['departmentid']===$did)) $out[]=$p;
+            $p = self::person((int)$u->id, $u->firstname . ' ' . $u->lastname);
+            if ($p['departmentid'] === $did) $out[] = $p;
         }
         return $out;
     }
 
     public static function direct_reports(int $managerid): array {
         global $DB;
-        if (!self::reporting_available()) return [];
-        $out=[];
-        foreach ($DB->get_records('local_ustar_reporting',['managerid'=>$managerid],'userid ASC') as $r) {
-            if (accounts::participates((int)$r->userid)) $out[]=self::person((int)$r->userid);
+        $out = [];
+        if (!accounts::participates($managerid)) return $out;
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], 'id', 'id') as $user) {
+            if (self::manager_id((int)$user->id) === $managerid) $out[] = self::person((int)$user->id);
         }
         return $out;
     }

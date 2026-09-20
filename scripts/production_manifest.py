@@ -9,7 +9,6 @@ import stat
 import subprocess
 from datetime import datetime, timezone
 
-BASELINE = '23243f3de9b0392aded2635f84291dd8702e4920'
 SCOPES = ('local/ustar', 'theme/ustar')
 
 
@@ -127,8 +126,12 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[1])
     p.add_argument('--moodle-root', type=Path, required=True)
-    p.add_argument('--commit', default=BASELINE)
+    p.add_argument('--commit', required=True, help='Exact expected source commit; no historical default')
+    p.add_argument('--require-match', action='store_true', help='Fail preflight on any source drift')
     p.add_argument('--output-dir', type=Path, required=True)
     a = p.parse_args()
     result = audit(a.repo, a.moodle_root, a.commit, a.output_dir)
-    raise SystemExit(0 if result['complete'] else 2)
+    if not result['complete']:
+        raise SystemExit(2)
+    drift = any(result['comparison'][k] for k in ('changed', 'production_only', 'git_only'))
+    raise SystemExit(3 if a.require_match and drift else 0)

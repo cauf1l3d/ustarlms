@@ -3,6 +3,22 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 final class user_history_reset {
+    /** Destructive resets are restricted to the caller's registered tester identity. */
+    public static function assert_allowed(int $userid, int $actorid): void {
+        global $DB, $USER;
+        require_capability('moodle/site:config', \context_system::instance());
+        view_as::assert_writable();
+        if ($actorid !== (int)$USER->id || !is_siteadmin($actorid)) {
+            throw new \required_capability_exception(\context_system::instance(), 'moodle/site:config', 'nopermissions', '');
+        }
+        $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], 'id,username', MUST_EXIST);
+        $tester = $DB->get_record('local_ustar_route_testers', ['actorid' => $actorid, 'sandboxuserid' => $userid]);
+        if (!$tester || is_siteadmin($userid) || accounts::type_of($userid) !== accounts::TYPE_TEST
+                || (string)$user->username !== route_tester::USERNAME_PREFIX . $actorid) {
+            throw new \moodle_exception('Сброс разрешён только для вашей тестовой учётной записи Route Tester. Историю сотрудников удалять нельзя.');
+        }
+    }
+
     public static function preview(int $userid): array {
         global $DB;
         $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], 'id,username,firstname,lastname', MUST_EXIST);
@@ -35,6 +51,7 @@ final class user_history_reset {
 
     public static function execute(int $userid, int $actorid): array {
         global $CFG, $DB;
+        self::assert_allowed($userid, $actorid);
         $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
         $DB->get_record('user', ['id' => $actorid, 'deleted' => 0], 'id', MUST_EXIST);
 
@@ -47,6 +64,7 @@ final class user_history_reset {
         $before = self::preview($userid);
         $transaction = $DB->start_delegated_transaction();
         try {
+            self::assert_allowed($userid, $actorid);
             require_once($CFG->dirroot . '/mod/quiz/locallib.php');
             require_once($CFG->dirroot . '/mod/scorm/locallib.php');
             require_once($CFG->dirroot . '/mod/scorm/lib.php');

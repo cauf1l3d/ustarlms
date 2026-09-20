@@ -1,0 +1,12 @@
+{
+  "moodle_repository": "https://github.com/moodle/moodle.git",
+  "moodle_tag": "v5.1.1",
+  "moodle_commit": "a3a086d670fc08507853c594042f266b2dd6f613",
+  "moodle_purpose": "isolated compatibility reference, not a production core upgrade",
+  "php_image": "php:8.2.30-cli-bookworm",
+  "composer_image": "composer:2.8.12",
+  "postgres_image": "postgres:16.10-bookworm",
+  "upgrade_from_commit": "378d397152a8c83f8b0d046e2e561ab2732d6b02",
+  "outbound_at_runtime": "blocked by internal Docker network",
+  "data": "synthetic only"
+}

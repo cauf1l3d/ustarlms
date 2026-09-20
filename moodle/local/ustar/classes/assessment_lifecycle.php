@@ -82,13 +82,19 @@ final class assessment_lifecycle {
             return null;
         }
 
-        $provider = assessment_provider_factory::for_policy($policy);
-        $prestate = $provider->inspect($userid, $policy);
         $runtime = $DB->get_record('local_ustar_assess_runtime', [
             'userid' => $userid,
             'pointid' => (int)$policy->pointid,
             'versionid' => (int)$policy->versionid,
         ]);
+
+        // Manager cards also call this method. Preview may read existing state,
+        // but cannot inspect/unlock a provider or create/update a runtime.
+        if (view_as::active()) {
+            return $runtime ?: null;
+        }
+        $provider = assessment_provider_factory::for_policy($policy);
+        $prestate = $provider->inspect($userid, $policy);
 
         if (!$runtime && !$createifempty && (int)$prestate['totalattempts'] <= 0) {
             return null;
@@ -394,6 +400,7 @@ final class assessment_lifecycle {
 
     public static function authorize_remediation(int $actorid, int $runtimeid): \stdClass {
         global $DB;
+        view_as::assert_writable();
 
         $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid], '*', MUST_EXIST);
         $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid, 'active' => 1], '*', MUST_EXIST);
@@ -455,6 +462,7 @@ final class assessment_lifecycle {
     /** @return array<string,mixed> */
     public static function start_remediation(int $userid, int $runtimeid): array {
         global $DB;
+        view_as::assert_writable();
         $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid, 'userid' => $userid], '*', MUST_EXIST);
         $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid, 'active' => 1], '*', MUST_EXIST);
         $resolved = structure::resolve_user($userid);
@@ -987,4 +995,3 @@ final class assessment_lifecycle {
         return number_format($value, $decimals, ',', '');
     }
 }
-

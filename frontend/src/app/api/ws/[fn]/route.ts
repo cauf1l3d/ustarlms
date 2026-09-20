@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionToken } from "@/lib/session";
 import { ustarCall } from "@/lib/moodle";
+import { assertSameOrigin, readJsonObject, RequestError } from "@/lib/request-security";
 
 // Whitelist: the browser may call ONLY these Moodle functions.
 // Role scoping is enforced inside Moodle (capabilities), so even a
@@ -41,27 +42,25 @@ const ALLOWED: Record<string, string> = {
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { fn: string } }
+  { params }: { params: Promise<{ fn: string }> }
 ) {
-  const token = getSessionToken();
+  try {
+  assertSameOrigin(req);
+  const token = await getSessionToken();
   if (!token) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const wsfn = ALLOWED[params.fn];
+  const wsfn = ALLOWED[(await params).fn];
   if (!wsfn) {
     return NextResponse.json({ error: "forbidden function" }, { status: 403 });
   }
-  let body: Record<string, any> = {};
-  try {
-    body = await req.json();
-  } catch {}
-  try {
+  const body = await readJsonObject(req);
     const data = await ustarCall(token, wsfn, body);
     return NextResponse.json(data);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Moodle API error" },
-      { status: 502 }
+      { status: e instanceof RequestError ? e.status : 502 }
     );
   }
 }

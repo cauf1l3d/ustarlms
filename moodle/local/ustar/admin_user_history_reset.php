@@ -6,7 +6,7 @@ $context = context_system::instance();
 require_capability('moodle/site:config', $context);
 $PAGE->set_url(new moodle_url('/local/ustar/admin_user_history_reset.php'));
 $PAGE->set_title('Очистка учебной истории');
-$PAGE->set_heading('USTAR · Очистка учебной истории сотрудника');
+$PAGE->set_heading('USTAR · Очистка тестовой учебной истории');
 $form = new \local_ustar\form\user_history_reset_form();
 if ($data = $form->get_data()) {
     $result = \local_ustar\user_history_reset::execute((int)$data->userid, (int)$USER->id);
@@ -15,6 +15,6 @@ if ($data = $form->get_data()) {
     redirect(new moodle_url('/local/ustar/admin_user_history_reset.php'), $message, null, \core\output\notification::NOTIFY_SUCCESS);
 }
 echo $OUTPUT->header();
-echo $OUTPUT->notification('Административный инструмент полного сброса учебного следа выбранного сотрудника. Профиль и оргструктура сохраняются.', \core\output\notification::NOTIFY_INFO);
+echo $OUTPUT->notification('Сброс доступен только для вашей учётной записи Route Tester. История реальных сотрудников защищена от удаления.', \core\output\notification::NOTIFY_INFO);
 $form->display();
 echo $OUTPUT->footer();

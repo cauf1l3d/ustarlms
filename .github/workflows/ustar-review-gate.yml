@@ -2,145 +2,105 @@ name: USTAR review gate
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main, 'integration/**']
   push:
-    branches:
-      - ustar-final-audit-release
-    paths:
-      - 'moodle/local/ustar/**'
-      - 'moodle/theme/ustar/**'
-      - 'release/ustar-final-audit-release/**'
-      - '.github/workflows/ustar-review-gate.yml'
+    branches: ['integration/**', 'codex/refactor-stage-1-20260920']
 
 permissions:
   contents: read
+concurrency:
+  group: ustar-review-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  static-review:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.2'
+          coverage: none
+      - run: python scripts/ci/source_checks.py
+      - run: pip install -r tests/stage/python-requirements.txt
+      - run: python -m unittest discover -s tests/r16 -v
+      - run: php tests/release_20260912/route_flow.php
+      - run: php tests/release_20260912/career.php
+      - run: npm ci --prefix tests/release_20260912
+      - run: npm test --prefix tests/release_20260912
+      - run: python scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: source-manifest
+          path: artifacts/
 
-      - name: PHP syntax
-        run: find moodle/local/ustar moodle/theme/ustar -name '*.php' -print0 | xargs -0 -n1 php -l
+  frontend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=moderate
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
 
-      - name: JavaScript syntax
+  moodle-db:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Export baseline from immutable commit
         run: |
-          node --check moodle/local/ustar/amd/src/materials.js
-          node --check moodle/local/ustar/amd/build/materials.min.js
+          python3 scripts/ci/prepare_stage.py
+          mkdir -p artifacts
+          cp .stage-input/baseline.json artifacts/baseline.json
+      - name: Build isolated test runtime
+        run: docker compose -f tests/stage/compose.yaml build --pull
+      - name: Fresh install, upgrade, repeat upgrade and Moodle database tests
+        run: docker compose -f tests/stage/compose.yaml up --abort-on-container-exit --exit-code-from runner
+      - name: Capture runtime image identity
+        if: always()
+        run: docker image ls --digests --no-trunc > artifacts/images.txt
+      - name: Upload test evidence, including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moodle-db-evidence
+          path: artifacts/
+      - name: Dispose only the isolated stage project
+        if: always()
+        run: docker compose -f tests/stage/compose.yaml down --volumes
 
-      - name: XMLDB and Mustache structure
-        run: |
-          python3 - <<'PY'
-          import pathlib
-          import re
-          import xml.etree.ElementTree as ET
-
-          root = ET.parse('moodle/local/ustar/db/install.xml').getroot()
-          assert root.attrib['VERSION'] == '2026082705'
-          names = [table.attrib['NAME'] for table in root.find('TABLES')]
-          assert len(names) == len(set(names))
-          assert {
-              'local_ustar_content_events', 'local_ustar_library',
-              'local_ustar_evidence_rec', 'local_ustar_gate_decisions',
-              'local_ustar_official_tasks', 'local_ustar_personal_tasks',
-              'local_ustar_notifications', 'local_ustar_notify_delivery',
-          } <= set(names)
-
-          for path in pathlib.Path('moodle/local/ustar/templates').glob('*.mustache'):
-              stack = []
-              source = path.read_text(encoding='utf-8')
-              for match in re.finditer(r'{{([#^/])\s*([\w.]+)\s*}}', source):
-                  operation, name = match.groups()
-                  if operation in '#^':
-                      stack.append(name)
-                  else:
-                      assert stack and stack[-1] == name, f'{path}: mismatched {name}'
-                      stack.pop()
-              assert not stack, f'{path}: unclosed {stack}'
-          print('XMLDB_AND_MUSTACHE=OK')
-          PY
-
-      - name: Review-branch invariants
-        run: |
-          grep -q '\$plugin->version   = 2026082705;' moodle/local/ustar/version.php
-          grep -q 'function record_evidence' moodle/local/ustar/classes/target_core.php
-          grep -q 'function decide_gate' moodle/local/ustar/classes/target_core.php
-          grep -q 'function create_official_task' moodle/local/ustar/classes/target_core.php
-          grep -q 'function save_personal_task' moodle/local/ustar/classes/target_core.php
-          grep -q 'function notify' moodle/local/ustar/classes/target_core.php
-          grep -q 'function spend' moodle/local/ustar/classes/economy.php
-          grep -q 'function record_game_mastery' moodle/local/ustar/classes/competition.php
-          grep -q 'shared_place' moodle/local/ustar/classes/competition.php
-          grep -q 'USCOIN_SYNC=REPORT_ONLY' moodle/local/ustar/cli/sync_uscoin.php
-          grep -q 'competition_studio.php' moodle/local/ustar/operations.php
-          grep -q "'scope' => \$role === 'superadmin' ? 'company' : 'direct_reports'" moodle/local/ustar/classes/external/get_team.php
-          grep -q 'route_material_opened' moodle/local/ustar/classes/learning_events.php
-          grep -q 'data-u-move-form' moodle/local/ustar/templates/materials.mustache
-          grep -q 'aria-current="page"' moodle/local/ustar/templates/materials.mustache
-          grep -q 'data-u-context-move-submit' moodle/local/ustar/templates/materials.mustache
-          grep -q 'hasactivefilters' moodle/local/ustar/templates/knowledge.mustache
-          grep -q 'data-u-move-status' moodle/local/ustar/amd/src/materials.js
-          grep -q 'max-width: none;' moodle/theme/ustar/scss/_materials.scss
-          grep -q 'REFUSING_NON_ISOLATED_MOODLE' moodle/local/ustar/cli/materials_library_ui_fixture.php
-          grep -q "\['create', 'unlock', 'cleanup'\]" moodle/local/ustar/cli/materials_library_ui_fixture.php
-          grep -q 'CURRENT != TARGET' release/ustar-final-audit-release/reports/MATERIALS_LIBRARY_IMPLEMENTATION.md
-          grep -q 'OWNER OVERRIDES RECOVERED / APPLY BLOCKED' release/ustar-final-audit-release/reports/HR_TARGET_MIGRATION_DRY_RUN.md
-          grep -q 'Materials / Personal Library — source audit' release/ustar-final-audit-release/reports/UX_UI_AUDIT.md
-          grep -q "unsupported_type" moodle/local/ustar/classes/evidence.php
-          grep -q "unsupported_source" moodle/local/ustar/classes/evidence.php
-          grep -q 'Checklist item ids must be non-empty and unique' moodle/local/ustar/classes/external/hr_save_checklists.php
-          grep -q 'Checklist catalog changed; reload it before publishing' moodle/local/ustar/classes/external/hr_save_checklists.php
-          grep -q 'CURRENT runtime audit' release/ustar-final-audit-release/reports/EVIDENCE_CHECKLIST_GATE_CURRENT_RUNTIME_AUDIT.md
-          grep -q 'function reporting_configured' moodle/local/ustar/classes/org.php
-          grep -q "require_capability('local/ustar:viewteam'" moodle/local/ustar/classes/external/get_team.php
-          grep -q 'accounts::participates' moodle/local/ustar/classes/external/get_team.php
-          grep -q 'ORGANIZATION_REPORTING_GUARD_ROLLBACK_ROUNDTRIP=PASS' release/ustar-final-audit-release/reports/ORGANIZATION_REPORTING_TEAM_CURRENT_RUNTIME_AUDIT.md
-          cmp moodle/local/ustar/classes/org.php release/ustar-final-audit-release/local_ustar/classes/org.php
-          cmp moodle/local/ustar/classes/external/get_team.php release/ustar-final-audit-release/local_ustar/classes/external/get_team.php
-          cmp moodle/local/ustar/team.php release/ustar-final-audit-release/local_ustar/team.php
-          cmp moodle/local/ustar/executive.php release/ustar-final-audit-release/local_ustar/executive.php
-          cmp moodle/local/ustar/templates/executive.mustache release/ustar-final-audit-release/local_ustar/templates/executive.mustache
-          cmp moodle/local/ustar/classes/economy.php release/ustar-final-audit-release/local_ustar/classes/economy.php
-          cmp moodle/local/ustar/classes/competition.php release/ustar-final-audit-release/local_ustar/classes/competition.php
-          cmp moodle/local/ustar/achievements.php release/ustar-final-audit-release/local_ustar/achievements.php
-          python3 - <<'PY'
-          from pathlib import Path
-
-          evidence = Path('moodle/local/ustar/classes/evidence.php').read_text(encoding='utf-8')
-          ungraded = evidence[evidence.index("State 1 only proves"):evidence.index("Learning evidence is satisfied")]
-          assert "$result['satisfied'] = false;" in ungraded
-
-          positions = Path('moodle/local/ustar/positions.php').read_text(encoding='utf-8')
-          options = positions[positions.index('$typeoptions = ['):positions.index('/*\n * ------------------------------------------------------------\n * CURRENT POSITION VIEW MODEL')]
-          for unsupported in ['practice', 'manager_review', 'checklist', 'certification']:
-              assert unsupported not in options
-          print('EVIDENCE_CHECKLIST_GUARDS=OK')
-          PY
-
-      - name: Release bundle integrity
-        run: |
-          python3 - <<'PY'
-          import hashlib
-          import pathlib
-          import subprocess
-
-          root = pathlib.PurePosixPath('release/ustar-final-audit-release')
-          manifest = pathlib.Path(root, 'MANIFEST.sha256')
-          failures = []
-          checked = 0
-          for raw in manifest.read_text(encoding='utf-8').splitlines():
-              if not raw.strip():
-                  continue
-              expected, relative = raw.split(None, 1)
-              relative = relative.strip()
-              blob = subprocess.check_output([
-                  'git', 'cat-file', 'blob', f'HEAD:{root / relative}'
-              ])
-              actual = hashlib.sha256(blob).hexdigest()
-              checked += 1
-              if actual != expected:
-                  failures.append(relative)
-          assert not failures, f'bundle blob mismatch: {failures}'
-          print(f'RELEASE_BUNDLE_GIT_BLOBS=OK files={checked}')
-          PY
+  gate:
+    if: always()
+    needs: [source, frontend, moodle-db]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require every check to pass
+        env:
+          SOURCE: ${{ needs.source.result }}
+          FRONTEND: ${{ needs.frontend.result }}
+          MOODLE: ${{ needs.moodle-db.result }}
+        run: test "$SOURCE" = success && test "$FRONTEND" = success && test "$MOODLE" = success

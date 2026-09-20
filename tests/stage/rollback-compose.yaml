@@ -19,7 +19,12 @@ services:
     build:
       context: ../..
       dockerfile: tests/stage/Dockerfile
-    entrypoint: ["bash", "/source/tests/stage/rollback_drill.sh"]
+    entrypoint:
+  - bash
+  - -c
+  - |
+      git config --global --add safe.directory /source
+      bash /source/tests/stage/rollback_drill.sh
     depends_on:
       db:
         condition: service_healthy

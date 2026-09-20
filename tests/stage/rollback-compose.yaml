@@ -12,19 +12,21 @@ services:
       interval: 2s
       timeout: 5s
       retries: 30
-    networks: [isolated]
-    tmpfs: [/var/lib/postgresql/data]
+    networks:
+      - isolated
+    tmpfs:
+      - /var/lib/postgresql/data
 
   runner:
     build:
       context: ../..
       dockerfile: tests/stage/Dockerfile
     entrypoint:
-  - bash
-  - -c
-  - |
-      git config --global --add safe.directory /source
-      bash /source/tests/stage/rollback_drill.sh
+      - bash
+      - -c
+      - |
+          git config --global --add safe.directory /source
+          bash /source/tests/stage/rollback_drill.sh
     depends_on:
       db:
         condition: service_healthy
@@ -33,8 +35,10 @@ services:
     volumes:
       - ../..:/source:ro
       - ../../artifacts:/artifacts
-    networks: [isolated]
-    tmpfs: [/stage]
+    networks:
+      - isolated
+    tmpfs:
+      - /stage
 
 networks:
   isolated:

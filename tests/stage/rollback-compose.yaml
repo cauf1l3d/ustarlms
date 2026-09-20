@@ -1,4 +1,5 @@
 name: ustar-stage1-rollback
+version: "3.9"
 
 services:
   db:

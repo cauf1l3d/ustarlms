@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
+git config --global --add safe.directory /source
 ART=/artifacts/rollback-drill
 SNAP=/stage/snapshot
 MOODLE=/stage/moodle

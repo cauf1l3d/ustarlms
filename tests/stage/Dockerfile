@@ -1,7 +1,7 @@
 FROM composer:2.8.12 AS composer
 FROM php:8.2.30-cli-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git unzip libicu-dev libzip-dev libpq-dev libpng-dev libjpeg62-turbo-dev \
+    git unzip locales-all libicu-dev libzip-dev libpq-dev libpng-dev libjpeg62-turbo-dev \
     libfreetype6-dev libxml2-dev libsodium-dev libcurl4-openssl-dev libonig-dev postgresql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && missing_extensions="$(php -r 'foreach (["intl","zip","pgsql","gd","soap","exif","sodium","Zend OPcache","curl","mbstring","dom","xml","xmlreader"] as $ext) { if (!extension_loaded($ext)) echo ($ext === "Zend OPcache" ? "opcache" : $ext) . " "; }')" \

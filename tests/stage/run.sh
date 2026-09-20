@@ -36,7 +36,12 @@ USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/install-fresh.log 2>&1
 USTAR_STAGE_PREFIX=fresh_ php /source/tests/stage/schema_snapshot.php > /artifacts/schema-fresh.json
 cmp /artifacts/schema-upgraded.json /artifacts/schema-fresh.json
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/phpunit-init.log 2>&1
-vendor/bin/phpunit --testsuite local_ustar_testsuite --log-junit /artifacts/phpunit.xml | tee /artifacts/phpunit.log
+# /stage is disposable tmpfs. Invoke Composer's PHP proxy explicitly so the
+# test gate does not depend on the executable bit / mount exec policy.
+php vendor/bin/phpunit \
+    --testsuite local_ustar_testsuite \
+    --log-junit /artifacts/phpunit.xml \
+    2>&1 | tee /artifacts/phpunit.log
 php -r 'echo "PHP=" . PHP_VERSION . PHP_EOL;' > /artifacts/runtime.txt
 git rev-parse HEAD >> /artifacts/runtime.txt
 psql -h db -U ustar_fixture -d ustar_stage1 -Atc 'SELECT version();' >> /artifacts/runtime.txt

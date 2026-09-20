@@ -42,7 +42,7 @@ final class organization_identity_test extends \advanced_testcase {
 
     private function grant(int $userid, array $capabilities): void {
         $context = \context_system::instance();
-        $role = create_role('Fixture', 'fixture_' . random_string(8));
+        $role = create_role('Fixture', 'fixture_' . random_string(8), 'Synthetic organization test');
         foreach ($capabilities as $capability) assign_capability($capability, CAP_ALLOW, $role, $context->id);
         role_assign($role, $userid, $context->id);
         accesslib_clear_all_caches(true);
@@ -101,7 +101,7 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assign($acting->id, $this->place());
         $this->assign($other->id, $this->place());
         $this->assign($acting->id, $head, ['assignmenttype' => 'acting', 'effectiveto' => 200]);
-        $this->assertSame($acting->id, organization_model::occupant_for_place($head, 199));
+        $this->assertSame((int)$acting->id, organization_model::occupant_for_place($head, 199));
         $this->assertSame(0, organization_model::occupant_for_place($head, 200));
         $this->assertSame('retail_seller', organization_identity::resolve($acting->id, 199)['positionid']);
         $this->assign($other->id, $head, ['assignmenttype' => 'acting', 'effectiveto' => 200]);

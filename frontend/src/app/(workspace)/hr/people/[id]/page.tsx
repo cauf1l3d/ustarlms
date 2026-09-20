@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { ArrowLeft, BookOpen, ClipboardCheck, Save, ShieldAlert, Star, Target, UserRoundX } from "lucide-react";
 import { ws } from "@/lib/wsclient";
@@ -17,7 +18,8 @@ interface PersonData {
   reviews:Review[]; positions:Position[];
 }
 
-export default function PersonPage({ params }: { params: { id: string } }) {
+export default function PersonPage() {
+  const params = useParams<{ id: string }>();
   const { wsData } = useWorkspace();
   const [d, setD] = useState<PersonData|null>(null);
   const [saving,setSaving]=useState(false);

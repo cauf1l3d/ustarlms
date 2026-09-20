@@ -103,6 +103,8 @@ $data = [
     'qualcoverage' =>
         (int)$qualification['coverage'],
 
+    'unconfiguredstandards' => (int)$qualification['unconfigured'],
+
     'topgaps' =>
         $qualification['topgaps'],
 

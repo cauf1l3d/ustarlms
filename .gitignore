@@ -66,3 +66,6 @@ moodle/local/ustar/data/structure_staffmap_*.json
 *.2721new
 *.2722new
 harness/*/.venv/
+.stage-input/
+artifacts/
+*.tsbuildinfo

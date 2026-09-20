@@ -163,6 +163,9 @@ class Generator(unittest.TestCase):
             (prod/'local/ustar/changed.php').write_text('new')
             (repo/'moodle/local/ustar/git.php').write_text('git')
             (prod/'local/ustar/prod.php').write_text('prod')
+            for relative in ('theme/ustar/config.php', 'local/ustar/.org-roles-install.lock'):
+                (repo/'moodle'/relative).write_text('VERSIONED_APPLICATION_FIXTURE')
+                (prod/relative).write_text('VERSIONED_APPLICATION_FIXTURE')
             g('add','.');g('commit','-qm','fixture')
             before={str(p):p.read_bytes() for p in prod.rglob('*') if p.is_file()}
             result=pm.audit(repo,prod,'HEAD',base/'report')
@@ -170,6 +173,11 @@ class Generator(unittest.TestCase):
             self.assertEqual(result['comparison']['git_only'],['local/ustar/git.php'])
             self.assertEqual(result['comparison']['production_only'],['local/ustar/prod.php'])
             self.assertTrue(result['complete'])
+            self.assertIn('theme/ustar/config.php', result['comparison']['matching'])
+            cli = subprocess.run([sys.executable, str(ROOT/'scripts/production_manifest.py'),
+                '--repo', str(repo), '--moodle-root', str(prod), '--commit', 'HEAD',
+                '--require-match', '--output-dir', str(base/'preflight')], capture_output=True)
+            self.assertEqual(3, cli.returncode, cli.stderr.decode())
             self.assertEqual(before,{str(p):p.read_bytes() for p in prod.rglob('*') if p.is_file()})
             (prod/'local/ustar/link.php').symlink_to(repo/'moodle/local/ustar/git.php')
             (prod/'local/ustar/config.php').write_text('DO_NOT_HASH')

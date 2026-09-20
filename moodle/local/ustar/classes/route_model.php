@@ -1942,6 +1942,11 @@ final class route_model {
         string $positionid,
         int $userid
     ): array {
+        // Preview must never enrol, reconcile completion or advance assessment.
+        // Keep the existing persisted snapshot as the single preview read path.
+        if (view_as::active()) {
+            return self::read_only_snapshot($positionid, $userid);
+        }
         $route = null;
 
         if (\local_ustar\route_scope::available()) {
@@ -2516,4 +2521,3 @@ final class route_model {
         return array_values(array_unique(array_filter($courseids)));
     }
 }
-

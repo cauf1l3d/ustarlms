@@ -39,7 +39,7 @@ jobs:
       - run: npm ci --prefix tests/release_20260912
       - run: npm test --prefix tests/release_20260912
       - run: python scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
-      - run: git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle
+      - run: git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle frontend
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: source-manifest

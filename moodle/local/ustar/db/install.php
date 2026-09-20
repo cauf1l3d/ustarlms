@@ -13,6 +13,9 @@ function xmldb_local_ustar_install(): void {
         }
     }
 
+    // Core registers component capabilities after the install callback.
+    // Register them before this callback assigns the initial USTAR roles.
+    update_capabilities('local_ustar');
     $syscontext = context_system::instance();
     $roles = [
         'ustar_superadmin' => ['USTAR Superadmin', ['local/ustar:use', 'local/ustar:admin', 'local/ustar:viewteam', 'local/ustar:managecompetition', 'local/ustar:adjustcoin']],

@@ -50,7 +50,8 @@ export async function POST(
   if (!token) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const wsfn = ALLOWED[(await params).fn];
+  const { fn } = await params;
+  const wsfn = Object.hasOwn(ALLOWED, fn) ? ALLOWED[fn] : undefined;
   if (!wsfn) {
     return NextResponse.json({ error: "forbidden function" }, { status: 403 });
   }

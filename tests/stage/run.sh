@@ -18,9 +18,14 @@ install_site() {
     php admin/cli/install_database.php --agree-license --adminpass='Fixture-Only-Password1!' \
         --adminemail=stage@example.invalid --fullname='USTAR synthetic stage' --shortname=ustar-stage
 }
-install_sources /source/.stage-input/baseline/moodle
 cd /stage/moodle
-install_site > /artifacts/install-baseline.log 2>&1
+install_site > /artifacts/install-core.log 2>&1
+install_sources /source/.stage-input/baseline/moodle
+# The historical baseline cannot fresh-install before capabilities exist.
+# Explicit fixture preparation models an already-installed production system.
+# The candidate fresh-install below does NOT use this preparation.
+php /source/tests/stage/register_baseline_capabilities.php > /artifacts/baseline-preparation.log 2>&1
+php admin/cli/upgrade.php --non-interactive > /artifacts/install-baseline.log 2>&1
 install_sources /source/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/upgrade.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/schema-upgraded.json

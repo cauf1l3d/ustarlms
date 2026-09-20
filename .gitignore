@@ -68,3 +68,4 @@ moodle/local/ustar/data/structure_staffmap_*.json
 harness/*/.venv/
 .stage-input/
 artifacts/
+*.tsbuildinfo

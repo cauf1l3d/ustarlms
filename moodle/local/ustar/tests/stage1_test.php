@@ -141,7 +141,7 @@ final class stage1_test extends \advanced_testcase {
         global $DB, $USER;
         $user = $this->getDataGenerator()->create_user(['username' => route_tester::USERNAME_PREFIX . $USER->id]);
         accounts::set_type($user->id, accounts::TYPE_TEST);
-        $DB->insert_record('local_ustar_route_testers', (object)['actorid' => $USER->id, 'sandboxuserid' => $user->id]);
+        $DB->insert_record('local_ustar_route_testers', (object)['actorid' => $USER->id, 'sandboxuserid' => $user->id, 'positionid' => 'fixture_position']);
         user_history_reset::assert_allowed($user->id, $USER->id);
         $this->expectException(\moodle_exception::class);
         user_history_reset::assert_allowed($user->id, $USER->id + 1);

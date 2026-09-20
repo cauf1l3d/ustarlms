@@ -17,13 +17,27 @@ def build(commit):
     sha, files, skipped = git_files(ROOT, commit)
     if skipped:
         raise ValueError('Non-regular application source must be reviewed')
+    frontend = {}
+    entries = subprocess.check_output(['git', 'ls-tree', '-r', '-z', sha, '--', 'frontend'], cwd=ROOT)
+    for entry in entries.split(b'\0'):
+        if not entry:
+            continue
+        meta, path = entry.split(b'\t', 1)
+        mode, kind, oid = meta.decode().split()
+        path = path.decode()
+        if kind != 'blob' or mode not in ('100644', '100755'):
+            raise ValueError('Non-regular frontend entry: ' + path)
+        if Path(path).name.startswith('.env') and Path(path).name != '.env.example':
+            raise ValueError('Runtime environment must not be in a release: ' + path)
+        frontend[path] = hashlib.sha256(subprocess.check_output(['git', 'cat-file', 'blob', oid], cwd=ROOT)).hexdigest()
     runtime = json.loads(subprocess.check_output(['git', 'show', sha + ':tests/stage/runtime.json'], cwd=ROOT))
     locks = {}
     for path in ('frontend/package-lock.json', 'tests/release_20260912/package-lock.json', 'tests/stage/python-requirements.txt'):
         blob = subprocess.check_output(['git', 'show', sha + ':' + path], cwd=ROOT)
         locks[path] = hashlib.sha256(blob).hexdigest()
     return {'format': 1, 'source_commit': sha, 'created_at': datetime.now(timezone.utc).isoformat(),
-            'runtime_reference': runtime, 'source_files': files, 'dependency_lock_sha256': locks,
+            'runtime_reference': runtime, 'source_files': files, 'frontend_source_files': frontend,
+            'dependency_lock_sha256': locks,
             'deployment_status': 'not_deployed', 'production_restore': 'not_verified',
             'preflight': 'Compare installed source to upgrade_from_commit before any release apply'}
 

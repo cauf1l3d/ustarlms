@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+trap 'code=$?; if [ "$code" -ne 0 ]; then tail -n 60 /artifacts/*.log 2>/dev/null || true; fi; exit "$code"' EXIT
 test "$PWD" = /stage
 test -d /source/.stage-input/baseline/moodle/local/ustar
 test ! -e /stage/moodle
@@ -29,7 +30,7 @@ cmp /artifacts/schema-upgraded.json /artifacts/schema-repeat.json
 USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/install-fresh.log 2>&1
 USTAR_STAGE_PREFIX=fresh_ php /source/tests/stage/schema_snapshot.php > /artifacts/schema-fresh.json
 cmp /artifacts/schema-upgraded.json /artifacts/schema-fresh.json
-php public/admin/tool/phpunit/cli/init.php > /artifacts/phpunit-init.log 2>&1
+php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/phpunit-init.log 2>&1
 vendor/bin/phpunit --testsuite local_ustar_testsuite --log-junit /artifacts/phpunit.xml | tee /artifacts/phpunit.log
 php -r 'echo "PHP=" . PHP_VERSION . PHP_EOL;' > /artifacts/runtime.txt
 git rev-parse HEAD >> /artifacts/runtime.txt

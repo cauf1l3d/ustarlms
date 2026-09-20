@@ -4,7 +4,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git unzip libicu-dev libzip-dev libpq-dev libpng-dev libjpeg62-turbo-dev \
     libfreetype6-dev libxml2-dev libsodium-dev libcurl4-openssl-dev libonig-dev postgresql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j2 intl zip pgsql gd soap exif sodium opcache curl mbstring dom xml xmlreader \
+    && missing_extensions="$(php -r 'foreach (["intl","zip","pgsql","gd","soap","exif","sodium","Zend OPcache","curl","mbstring","dom","xml","xmlreader"] as $ext) { if (!extension_loaded($ext)) echo ($ext === "Zend OPcache" ? "opcache" : $ext) . " "; }')" \
+    && if [ -n "$missing_extensions" ]; then docker-php-ext-install -j2 $missing_extensions; fi \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY tests/stage/runtime.json /opt/ustar-runtime.json

@@ -17,6 +17,9 @@ def git(repo, *args):
 
 
 def excluded(path):
+    # These are versioned application files, not Moodle's root credentials.
+    if Path(path).as_posix() in {'theme/ustar/config.php', 'local/ustar/.org-roles-install.lock'}:
+        return False
     return any(p.startswith('.') for p in Path(path).parts) or Path(path).name.lower() in {'config.php', 'config-local.php'}
 
 

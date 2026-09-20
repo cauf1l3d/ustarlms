@@ -1,15 +1,15 @@
 schema_version: 1
-updated_at: '2026-09-19'
+updated_at: '2026-09-20'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Production application source reconciled to exact Git commit
-  378d397152a8c83f8b0d046e2e561ab2732d6b02; 381 publishable source files verified
-  byte-for-byte. R00 remains review for schema/browser/DR acceptance.
-next_task: R00
+current_activity: Stage 1 source and isolated CI/rollback are under review in PR 2.
+  Stage 2 organization/assignment resolution and team-scope package is in PR 4,
+  stacked on PR 2. R10/R12 in progress; full employment/role migration remains open.
+  Production unchanged; R00 browser/DR acceptance remains open.
+next_task: R10
 ready_tasks:
 - R00
-- R01
 - R04
 code_baseline:
   branch: integration/ustar-20260919

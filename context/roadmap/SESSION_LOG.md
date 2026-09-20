@@ -1,5 +1,29 @@
 # Журнал выполнения roadmap
 
+## 2026-09-20 — первый этап рефакторинга, R01 review
+
+Владелец: Codex. Код: `e657cda7dc29750511535b94eee85b22ca7fdb86`,
+[PR #2](https://github.com/cauf1l3d/ustarlms/pull/2) к `integration/ustar-20260919`.
+Приняты шесть последовательных этапов, описанных в `context/architecture/refactor_20260920.md`.
+
+Реализованы текущий PR CI и отдельные DB/rollback стенды, генераторы данных, preview/reset/reward guards,
+корректный статус пустого стандарта, защита frontend и manifest/preflight. Исправлен реальный дефект
+чистой установки capabilities. В rollback устранены отсутствие Moodle bootstrap при чтении версии,
+подстановка ERR-переменных Compose и несовместимый pg_dump.
+
+[Run 35527954308](https://github.com/cauf1l3d/ustarlms/actions/runs/35527954308):
+source, frontend, moodle-db, rollback и gate — success.
+Тестируемый merge SHA `e3ae87c5a9df1071f80d4aeff730b572965f002d`.
+10 DB tests / 36 assertions (1 notice), 21 Python tests, 49 isolated PHP assertions,
+88 DOM assertions, 4 frontend security tests и HTTP smoke собранного Next.
+Полный синтетический restore DB/moodledata/source/config — PASS.
+Подробности и артефакты: `context/runtime/20260920_stage1_ci.md`.
+
+Production не менялся. Схема metadata нормализована без изменения эффективной структуры;
+rollback восстанавливает весь согласованный комплект, а не только PHP-файлы.
+R01 остаётся review: branch protection enforcement не подтверждён. R00 production browser/DR acceptance открыт.
+Следующее действие: принять PR и required gate; дальнейшие изменения — модель сотрудника/организации второго этапа.
+
 ## 2026-09-07 — опубликован исходный roadmap
 
 **Тип поставки:** документация и статический аудит. Реализация R00–R20 ещё не выполнена этой поставкой.
@@ -25,3 +49,15 @@ Code: `89ba18b2130040fbdf7f0ca02bef4999d5ef1fdb`. Published verified patch paylo
 ## 2026-09-12 — verified source and snapshot publication
 
 Source `48326c6a011f58b985d251cb0462835bc1d37a16`. User approved public publication of R16, tours, four production differences and reviewed dated context. 367 source files verified including separate theme config. R16 server installation and 21 tests supplied by user; daemon not started. R00 review; schema and live tour acceptance outstanding. No backups or private diffs published. No production files changed by Git publication.
+
+
+## 2026-09-20 — второй этап, пакет организации и доступа
+
+[PR #4](https://github.com/cauf1l3d/ustarlms/pull/4), head `2502281af5e687a7bcb094b2bad8593d480304d7`,
+stacked на PR #2. Единое разрешение должности/подчинения, временные назначения,
+конфликты, границы команды, сохранение ручных reporting decisions и read-only dry-run.
+Native CI run `35544164856`: все пять jobs SUCCESS; Moodle 24 tests / 89 assertions /
+3 notices, install/upgrade/repeat/schema parity и полный synthetic rollback проходят.
+R10/R12 остаются in progress; employment state, explicit role migration и полный
+consumer/writer переход ещё впереди. Production не менялся.
+Доказательства: `context/runtime/20260920_stage2_org.md`.

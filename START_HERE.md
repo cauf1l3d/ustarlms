@@ -2,7 +2,13 @@
 
 # USTAR — начать здесь
 
-Обновлено: **2026-09-19**.
+Обновлено: **2026-09-20**.
+
+Начат [рефакторинг в шесть этапов](context/architecture/refactor_20260920.md).
+Первый кодовый пакет: [PR #2](https://github.com/cauf1l3d/ustarlms/pull/2).
+Второй этап начат: [PR #4](https://github.com/cauf1l3d/ustarlms/pull/4), оргданные и границы команды; R10/R12 остаются in progress.
+[Проверки и ограничения](context/runtime/20260920_stage1_ci.md) относятся к изолированному CI;
+production source ниже сохраняется до отдельного принятия и выпуска.
 
 **Текущий канонический application source находится в `integration/ustar-20260919`, каталог `moodle/`.**
 

@@ -165,6 +165,13 @@ final class organization_identity_test extends \advanced_testcase {
         $before = $DB->get_record('local_ustar_reporting', ['userid' => $user->id]);
         organization_model::rebuild_reporting();
         $this->assertEquals($before, $DB->get_record('local_ustar_reporting', ['userid' => $user->id]));
+        $actual = $this->employee('retail_head');
+        $place = $this->place('retail_head');
+        $this->assign($actual->id, $place);
+        $this->assign($user->id, $this->place('retail_seller', $place));
+        organization_model::rebuild_reporting();
+        $this->assertEquals($before, $DB->get_record('local_ustar_reporting', ['userid' => $user->id]));
+        $this->assertSame((int)$actual->id, org::manager_id($user->id));
     }
 
     public function test_department_colleagues_include_different_positions(): void {
@@ -174,6 +181,25 @@ final class organization_identity_test extends \advanced_testcase {
         $ids = array_column(org::horizon($seller->id), 'id');
         $this->assertContains((int)$senior->id, $ids);
         $this->assertNotContains((int)$outside->id, $ids);
+    }
+
+    public function test_team_api_rejects_employee_without_management_permission(): void {
+        $user = $this->employee('retail_head');
+        $this->assign($user->id, $this->place('retail_head'));
+        $this->setUser($user);
+        $this->expectException(\required_capability_exception::class);
+        external\get_team::execute();
+    }
+
+    public function test_service_and_test_identities_never_become_team_occupants(): void {
+        foreach ([accounts::TYPE_SERVICE, accounts::TYPE_TEST] as $type) {
+            $user = $this->employee('retail_head');
+            $place = $this->place('retail_head');
+            $this->assign($user->id, $place);
+            accounts::set_type($user->id, $type);
+            $this->assertSame(0, organization_model::occupant_for_place($place));
+            $this->assertFalse(organization_model::is_manager($user->id));
+        }
     }
 
     public function test_reconciliation_is_repeatable_and_read_only(): void {

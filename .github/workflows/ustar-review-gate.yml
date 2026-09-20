@@ -95,9 +95,28 @@ jobs:
         if: always()
         run: docker compose -f tests/stage/compose.yaml down --volumes
 
+  rollback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Run isolated full rollback and restore drill
+        run: bash scripts/stage1_rollback_drill.sh
+      - name: Upload rollback evidence, including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: rollback-drill-evidence
+          path: artifacts/rollback-drill/
+      - name: Dispose only the isolated rollback project
+        if: always()
+        run: docker compose -f tests/stage/rollback-compose.yaml down --volumes
+
   gate:
     if: always()
-    needs: [source, frontend, moodle-db]
+    needs: [source, frontend, moodle-db, rollback]
     runs-on: ubuntu-24.04
     steps:
       - name: Require every check to pass
@@ -105,4 +124,9 @@ jobs:
           SOURCE: ${{ needs.source.result }}
           FRONTEND: ${{ needs.frontend.result }}
           MOODLE: ${{ needs.moodle-db.result }}
-        run: test "$SOURCE" = success && test "$FRONTEND" = success && test "$MOODLE" = success
+          ROLLBACK: ${{ needs.rollback.result }}
+        run: |
+          test "$SOURCE" = success
+          test "$FRONTEND" = success
+          test "$MOODLE" = success
+          test "$ROLLBACK" = success

@@ -1,0 +1,36 @@
+name: ustar-stage1-rollback
+
+services:
+  db:
+    image: postgres:16.10-bookworm
+    environment:
+      POSTGRES_DB: ustar_stage1
+      POSTGRES_USER: ustar_fixture
+      POSTGRES_PASSWORD: fixture-only-not-a-production-secret
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ustar_fixture -d ustar_stage1"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    networks: [isolated]
+    tmpfs: [/var/lib/postgresql/data]
+
+  runner:
+    build:
+      context: ../..
+      dockerfile: tests/stage/Dockerfile
+    entrypoint: ["bash", "/source/tests/stage/rollback_drill.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: fixture-only-not-a-production-secret
+    volumes:
+      - ../..:/source:ro
+      - ../../artifacts:/artifacts
+    networks: [isolated]
+    tmpfs: [/stage]
+
+networks:
+  isolated:
+    internal: true

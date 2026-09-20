@@ -29,9 +29,15 @@ docker compose -f tests/stage/compose.yaml down --volumes
 
 Для upgrade-fixture сначала устанавливается Moodle core, затем регистрируются capabilities старого plugin и устанавливается неизменённый baseline. Это явная подготовка старой системы, а не успешная чистая установка исторического SHA: её дефект воспроизведён в CI run 35512180537. Кандидат проходит отдельную чистую установку без подготовки capabilities; его `db/install.php` обязан работать самостоятельно.
 
+## Rollback drill
+
+Автоматизированный изолированный restore drill описан в [ROLLBACK_DRILL.md](ROLLBACK_DRILL.md). Он сохраняет согласованный DB+moodledata+source+config snapshot baseline, применяет candidate, создаёт candidate-only состояние, полностью восстанавливает snapshot и доказывает возврат source/DB/files к baseline. Workflow `gate` теперь требует зелёный job `rollback`.
+
+Это не заменяет отдельный R00 clean-server DR restore полного production recovery archive.
+
 ## Выпуск и откат
 
-1. Дождаться зелёного `USTAR review gate / gate`, проверить DB-логи и manifest конкретного SHA. Назначение required check в настройках GitHub отдельно; сам workflow не меняет branch protection.
+1. Дождаться зелёного `USTAR review gate / gate`, включая `rollback`, проверить DB/rollback logs, artifacts и manifest конкретного SHA. Назначение required check в настройках GitHub отдельно; сам workflow не меняет branch protection.
 2. На production выполнить только read-only preflight:
    `python3 scripts/production_manifest.py --repo REPO --moodle-root MOODLE_PUBLIC --commit 378d397152a8c83f8b0d046e2e561ab2732d6b02 --require-match --output-dir NEW_AUDIT_DIR`.
    Код 2: неполный снимок; 3: расхождения; оба останавливают автоматическое применение. Остаточные файлы разбираются явно, не удаляются автоматически.

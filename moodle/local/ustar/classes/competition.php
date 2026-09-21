@@ -100,7 +100,7 @@ final class competition {
     /** Record only an allowed event for a frozen participant in a live season. */
     public static function record_game_mastery(int $userid, int $masteryid, int $xp, int $occurredat): void {
         global $DB;
-        if (!self::available() || $userid <= 0 || $masteryid <= 0 || $xp <= 0) {
+        if (!self::available() || !accounts::participates($userid) || $masteryid <= 0 || $xp <= 0) {
             return;
         }
         foreach ($DB->get_records_select(
@@ -136,7 +136,7 @@ final class competition {
     /** Return a pseudonymous, comparable leaderboard only to a participant. */
     public static function current_for_user(int $userid): ?array {
         global $DB;
-        if (!self::available()) {
+        if (!self::available() || !accounts::participates($userid)) {
             return null;
         }
         $now = time();
@@ -249,6 +249,9 @@ final class competition {
         $previous = null;
         $rank = 0;
         foreach (array_values($records) as $index => $record) {
+            if (!accounts::participates((int)$record->userid)) {
+                continue;
+            }
             $points = (int)$record->points;
             if ($previous === null || $points !== $previous) {
                 $rank = $index + 1;

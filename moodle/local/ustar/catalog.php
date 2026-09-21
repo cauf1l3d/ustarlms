@@ -11,6 +11,7 @@ if (!$canmanage) {
 $notice = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
+    \local_ustar\view_as::assert_writable();
     if (!$canmanage) {
         throw new required_capability_exception($context, 'local/ustar:managecatalog', 'nopermissions', '');
     }

@@ -11,6 +11,21 @@ final class target_schema {
         $c = XMLDB_TYPE_CHAR;
         $t = XMLDB_TYPE_TEXT;
         $specs = [
+            'local_ustar_completion_cycle' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['userid',$i,'10',true],
+                    ['pointid',$i,'10',true], ['versionid',$i,'10',true],
+                    ['logicalpointid',$i,'10',true], ['cyclekey',$c,'128',true],
+                    ['status',$c,'16',true,false,'confirmed'], ['completedat',$i,'10',true,false,'0'],
+                    ['expiresat',$i,'10'], ['evidencejson',$t,null,true],
+                    ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['cyclekey_uix',true,['cyclekey']],
+                    ['user_point_time_idx',false,['userid','logicalpointid','completedat']],
+                    ['user_status_idx',false,['userid','status','completedat']],
+                ],
+            ],
             'local_ustar_standards' => [
                 'fields' => [
                     ['id',$i,'10',true,true], ['code',$c,'64',true], ['title',$c,'255',true],

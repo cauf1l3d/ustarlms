@@ -181,7 +181,7 @@ final class product_quiz {
                     IGNORE_MISSING
                 );
 
-            if (!$user) {
+            if (!$user || !accounts::participates((int)$attempt->userid)) {
                 continue;
             }
 

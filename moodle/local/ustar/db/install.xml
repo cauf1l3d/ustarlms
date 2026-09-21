@@ -1324,7 +1324,28 @@
         <INDEX NAME="assignment_idx" UNIQUE="false" FIELDS="assignmentid" />
       </INDEXES>
     </TABLE>
-      <TABLE NAME="local_ustar_standards" COMMENT="Explicit stable standard identities">
+    <TABLE NAME="local_ustar_completion_cycle" COMMENT="Immutable confirmed learning completion cycles">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="pointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="logicalpointid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="cyclekey" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="confirmed" SEQUENCE="false" />
+        <FIELD NAME="completedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="evidencejson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="cyclekey_uix" UNIQUE="true" FIELDS="cyclekey" />
+        <INDEX NAME="user_point_time_idx" UNIQUE="false" FIELDS="userid, logicalpointid, completedat" />
+        <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status, completedat" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_standards" COMMENT="Explicit stable standard identities">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="code" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />

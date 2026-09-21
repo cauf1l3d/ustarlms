@@ -4225,5 +4225,18 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082741, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082742) {
+        // Stage 5 begins with an immutable identity for each independently
+        // verified completion cycle. Existing progress/history is untouched;
+        // cycles are created only by new reconciliations after this upgrade.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026082742, 'local', 'ustar');
+    }
+
 return true;
 }

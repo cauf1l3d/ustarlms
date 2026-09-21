@@ -1699,6 +1699,14 @@ final class route_model {
                     'oldcompleted' => (int)$existing->completedat, 'oldexpiry' => (int)$existing->expiresat,
                 ]);
             }
+            completion_cycle::confirm(
+                $userid,
+                (int)$point->id,
+                (int)$version->id,
+                $completedat > 0 ? $completedat : (int)$existing->completedat,
+                $expiresat > 0 ? $expiresat : (int)($existing->expiresat ?? 0),
+                $evidence
+            );
             route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
             return;
         }
@@ -1726,6 +1734,14 @@ final class route_model {
                 throw $e;
             }
         }
+        completion_cycle::confirm(
+            $userid,
+            (int)$point->id,
+            (int)$version->id,
+            $completedat > 0 ? $completedat : $now,
+            $expiresat,
+            $evidence
+        );
         route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
     }
 

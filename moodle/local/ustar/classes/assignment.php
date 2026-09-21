@@ -464,7 +464,7 @@ class assignment {
             );
 
 
-        if (!accounts::learning_enabled($userid)) {
+        if (!employment::learning_allowed($userid)) {
             return [
                 'ok' => true,
                 'userid' => $userid,

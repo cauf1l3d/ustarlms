@@ -29,6 +29,30 @@ final class completion_cycle {
         return $pointid;
     }
 
+
+    /**
+     * Latest confirmed completion of the same logical route point. Expiration
+     * does not erase a historical completion; revoked/error states never match.
+     */
+    public static function latest_confirmed(int $userid, int $pointid): ?\stdClass {
+        global $DB;
+        if ($userid <= 0 || $pointid <= 0
+                || !$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_completion_cycle'))) {
+            return null;
+        }
+        $logicalpointid = self::logical_point($pointid);
+        return $DB->get_record_sql(
+            'SELECT *
+               FROM {local_ustar_completion_cycle}
+              WHERE userid = :userid
+                AND logicalpointid = :logicalpointid
+                AND status = :status
+           ORDER BY completedat DESC, id DESC',
+            ['userid' => $userid, 'logicalpointid' => $logicalpointid, 'status' => 'confirmed'],
+            IGNORE_MULTIPLE
+        ) ?: null;
+    }
+
     /** Restore or create the cycle represented by the current progress projection. */
     public static function for_progress(\stdClass $progress): ?\stdClass {
         $evidence = json_decode((string)$progress->evidencejson, true);

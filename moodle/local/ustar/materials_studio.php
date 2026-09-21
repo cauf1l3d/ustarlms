@@ -59,6 +59,7 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/materials_studio.php', ['id' => (int)$editing['id']]));
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Студия материалов | USTAR Academy');
+$PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 $PAGE->set_heading('USTAR Academy');
 echo $OUTPUT->header();
 echo $OUTPUT->heading('Студия материалов');

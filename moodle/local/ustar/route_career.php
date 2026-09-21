@@ -216,6 +216,9 @@ if (!empty($stage6grade['enabled'])) {
     }
     unset($grade);
 }
+$careergradeview['gradesurl'] = (new moodle_url('/local/ustar/grades.php'))->out(false);
+$careergradeview['gradeeligible'] = !empty($stage6eligibility['eligible']);
+$careergradeview['nextgradename'] = (string)($stage6eligibility['nextlabel'] ?? '');
 
 $data = [
     'consultantcurrent' => \local_ustar\consultant_career::is_consultant((string)($current['name'] ?? '')),

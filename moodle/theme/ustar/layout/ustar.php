@@ -84,6 +84,7 @@ $materialpages = [
     '/local/ustar/material_version.php',
     '/local/ustar/material_version_action.php',
     '/local/ustar/material_ack_export.php',
+    '/local/ustar/materials_studio.php',
 ];
 
 $operationpages = [
@@ -102,7 +103,9 @@ $productgrowthpages = [
     '/local/ustar/team.php',
     '/local/ustar/executive.php',
     '/local/ustar/catalog.php',
-    '/local/ustar/boards.php',
+    '/local/ustar/tasks.php',
+    '/local/ustar/grades.php',
+    '/local/ustar/board_archive.php',
 ];
 
 if (in_array($pagepath, $productgrowthpages, true)) {
@@ -125,7 +128,8 @@ $cataloglabel =
 
 if ($pagepath === '/local/ustar/team.php' || $pagepath === '/local/ustar/executive.php') { $view = 'team'; }
 if ($pagepath === '/local/ustar/achievements.php') { $view = 'achievements'; }
-if ($pagepath === '/local/ustar/boards.php') { $view = 'tools'; }
+if ($pagepath === '/local/ustar/tasks.php') { $view = 'tasks'; }
+if ($pagepath === '/local/ustar/grades.php') { $view = 'career'; }
 
 if (in_array($pagepath, [
     '/local/ustar/profile.php',
@@ -310,7 +314,8 @@ if ($ishrworkspace) {
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
-        ['label'=>'Инструменты','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 
@@ -323,7 +328,7 @@ $pagelabels = [
     'catalog' => 'Каталог',
     'team' => 'Команда',
     'achievements' => 'Достижения',
-    'tools' => 'Инструменты',
+    'tasks' => 'Задачи',
 ];
 
 $controlpagelabels = [
@@ -337,6 +342,8 @@ $controlpagelabels = [
     '/local/ustar/material_version.php' => 'Новая версия',
     '/local/ustar/material_version_action.php' => 'Версии',
     '/local/ustar/material_ack_export.php' => 'Журнал ознакомления',
+    '/local/ustar/materials_studio.php' => 'Курсы, SCORM и аттестации',
+    '/local/ustar/material_player.php' => 'Материал',
     '/local/ustar/operations.php' => 'Контроль',
     '/local/ustar/brand.php' => 'Оформление',
     '/local/ustar/game_studio.php' => 'Игровые задания',
@@ -349,7 +356,9 @@ $controlpagelabels = [
     '/local/ustar/team.php' => 'Команда',
     '/local/ustar/executive.php' => 'Руководство',
     '/local/ustar/catalog.php' => 'Каталог',
-    '/local/ustar/boards.php' => 'Доска',
+    '/local/ustar/tasks.php' => 'Задачи',
+    '/local/ustar/grades.php' => 'Грейды',
+    '/local/ustar/board_archive.php' => 'Архив досок',
     '/local/ustar/view_as.php' => 'Просмотр как',
     '/local/ustar/legacy.php' => 'Legacy UI',
     '/local/ustar/profile.php' => 'Личный кабинет',
@@ -470,6 +479,7 @@ if (!$canadmin && $canhr) {
         ['label'=>'Контроль','short'=>'Контроль','url'=>(new moodle_url('/local/ustar/operations.php'))->out(false),'icon'=>$icons['growth'],'active'=>in_array($pagepath,$operationpages,true)],
         ['label'=>'Проверка аттестаций','short'=>'Проверка','url'=>(new moodle_url('/local/ustar/hr_quiz_grading.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,['/local/ustar/hr_quiz_grading.php','/local/ustar/hr_quiz_attempt.php'],true)],
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 
@@ -482,7 +492,7 @@ if (!$canadmin && !$canhr && $canexec) {
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team' && $pagepath!=='/local/ustar/executive.php'],
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
-        ['label'=>'Доска','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 

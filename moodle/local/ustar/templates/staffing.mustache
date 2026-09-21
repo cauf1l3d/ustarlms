@@ -126,7 +126,7 @@
                 </section>
                 {{/adaptation}}{{/hasadaptation}}
 
-                {{#ishr}}{{#pending}}
+                {{#canreview}}
                 <div class="u-staffing-review-grid">
                     <form method="post" class="u-staffing-review-form">
                         <input type="hidden" name="sesskey" value="{{sesskey}}">
@@ -148,7 +148,7 @@
                         <button class="u-btn" type="submit">Отклонить</button>
                     </form>
                 </div>
-                {{/pending}}{{/ishr}}
+                {{/canreview}}
             </article>
             {{/requests}}
         </div>

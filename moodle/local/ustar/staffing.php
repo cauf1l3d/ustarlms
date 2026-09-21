@@ -68,9 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== '') {
         }
 
         if ($action === 'approve' || $action === 'reject') {
-            if (!$ishr) {
-                throw new required_capability_exception($context, 'local/ustar:hrmanage', 'nopermissions', '');
-            }
             \local_ustar\staffing_requests::review(
                 required_param('requestid', PARAM_INT),
                 $action === 'approve'

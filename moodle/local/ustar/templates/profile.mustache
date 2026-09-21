@@ -19,6 +19,30 @@
         </div>
     </header>
 
+    {{#employmentpending}}
+    <section class="u-panel u-registration-panel">
+        <header class="u-panel-title"><div><p class="u-page-kicker">Регистрация</p><h2>Подтверждение должности</h2></div></header>
+        {{#registrationrequested}}
+        <div class="u-inline-notice u-inline-notice--info"><div><strong>Заявка отправлена</strong>
+            <p>Руководитель подразделения проверит должность. До решения профиль доступен, а обучение и награды отключены.</p></div></div>
+        {{/registrationrequested}}
+        {{^registrationrequested}}
+        {{#registrationrejected}}<div class="u-inline-notice"><div><strong>Предыдущая заявка отклонена</strong><p>{{registrationreviewcomment}}</p></div></div>{{/registrationrejected}}
+        <form method="post" class="u-staffing-card">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="action" value="registrationrequest">
+            <label>Ваша должность
+                <select name="positionid" required>
+                    <option value="">Выберите должность</option>
+                    {{#registrationpositions}}<option value="{{id}}">{{name}}</option>{{/registrationpositions}}
+                </select>
+            </label>
+            <button class="u-btn u-btn--primary" type="submit">Отправить на подтверждение</button>
+        </form>
+        {{/registrationrequested}}
+    </section>
+    {{/employmentpending}}
+
     {{^hasposition}}
     <div class="u-inline-notice u-inline-notice--info">
         {{{profileicon}}}

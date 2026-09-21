@@ -3,7 +3,13 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/ustar:use', $context);
+$canhrworkspace = is_siteadmin((int)$USER->id)
+    || has_capability('local/ustar:admin', $context)
+    || has_capability('local/ustar:hr', $context)
+    || has_capability('local/ustar:hrmanage', $context);
+if (!$canhrworkspace) {
+    require_capability('local/ustar:use', $context);
+}
 $tab = optional_param('tab', 'assigned', PARAM_ALPHA);
 if (!in_array($tab, ['checklists', 'notebook', 'assigned', 'outgoing'], true)) {
     $tab = 'assigned';

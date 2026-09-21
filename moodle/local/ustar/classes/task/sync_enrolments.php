@@ -70,7 +70,7 @@ class sync_enrolments extends \core\task\scheduled_task {
 
         foreach ($users as $user) {
 
-            if (!\local_ustar\accounts::learning_enabled((int)$user->id)) {
+            if (!\local_ustar\employment::learning_allowed((int)$user->id)) {
                 continue;
             }
 
@@ -141,4 +141,3 @@ class sync_enrolments extends \core\task\scheduled_task {
         );
     }
 }
-

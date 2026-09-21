@@ -495,7 +495,7 @@ final class forced_retraining {
         // A retraining assignment is a repeat, never a first delivery. Accept
         // only preserved confirmed completion of this logical route material;
         // viewing, failed attempts, revoked facts and pending work are excluded.
-        $prior = self::prior_confirmed_material_completion($userid, $remediationpointid);
+        $prior = self::prior_confirmed_material_completion($userid, $remediationpointid, (int)$remediationversion->id);
         if (!$prior) {
             return null;
         }
@@ -523,11 +523,11 @@ final class forced_retraining {
      * completion-cycle identity is authoritative; legacy immutable progress is
      * accepted only when it is explicitly complete for the same route point.
      */
-    private static function prior_confirmed_material_completion(int $userid, int $pointid): ?\stdClass {
+    private static function prior_confirmed_material_completion(int $userid, int $pointid, int $versionid): ?\stdClass {
         global $DB;
         if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_completion_cycle'))) {
             $cycle = completion_cycle::latest_confirmed($userid, $pointid);
-            if ($cycle) {
+            if ($cycle && (int)$cycle->versionid === $versionid) {
                 return (object)[
                     'id' => (int)$cycle->id,
                     'completedat' => (int)$cycle->completedat,
@@ -540,9 +540,10 @@ final class forced_retraining {
                FROM {local_ustar_route_progress}
               WHERE userid = :userid
                 AND pointid = :pointid
+                AND versionid = :versionid
                 AND status = :status
            ORDER BY completedat DESC, id DESC',
-            ['userid' => $userid, 'pointid' => $pointid, 'status' => 'complete'],
+            ['userid' => $userid, 'pointid' => $pointid, 'versionid' => $versionid, 'status' => 'complete'],
             IGNORE_MULTIPLE
         );
         if (!$progress || (int)$progress->completedat <= 0) {

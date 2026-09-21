@@ -5,6 +5,7 @@ defined('MOODLE_INTERNAL') || die();
 #[\PHPUnit\Framework\Attributes\CoversClass(organization_identity::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(organization_model::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(team_access::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(employment::class)]
 final class organization_identity_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -149,6 +150,37 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertFalse(team_access::company($user->id));
         $this->assertFalse(team_access::learning_scope($user->id)['allowed']);
         $this->assertFalse(organization_model::is_manager($user->id));
+    }
+
+    public function test_explicit_pending_employment_blocks_learning_and_authority(): void {
+        $user = $this->employee('retail_head');
+        $place = $this->place('retail_head');
+        $this->assign($user->id, $place);
+        $this->grant($user->id, ['local/ustar:hr', 'local/ustar:viewteam']);
+
+        $this->assertSame('legacy', employment::resolve($user->id)['source']);
+        $this->assertTrue(employment::learning_allowed($user->id));
+        employment::set_status($user->id, employment::PENDING, (int)get_admin()->id, 'registration');
+
+        $this->assertSame(employment::PENDING, employment::resolve($user->id)['status']);
+        $this->assertFalse(employment::learning_allowed($user->id));
+        $this->assertFalse(team_access::company($user->id));
+        $this->assertFalse(organization_model::is_manager($user->id));
+    }
+
+    public function test_explicit_approval_is_independent_from_moodle_confirmation(): void {
+        global $DB;
+        $user = $this->employee();
+        $adminid = (int)get_admin()->id;
+        $DB->set_field('user', 'confirmed', 0, ['id' => $user->id]);
+
+        employment::set_status($user->id, employment::ACTIVE, $adminid, 'reviewed_migration');
+        $state = employment::resolve($user->id);
+
+        $this->assertTrue($state['explicit']);
+        $this->assertSame(employment::ACTIVE, $state['status']);
+        $this->assertSame($adminid, $state['approvedby']);
+        $this->assertTrue(employment::learning_allowed($user->id));
     }
 
     public function test_staffing_command_rejects_forged_actor(): void {

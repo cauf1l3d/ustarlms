@@ -327,7 +327,7 @@ final class catalog {
         return $out;
     }
 
-    private static function slug(string $slug, string $title): string {
+    private static function slug(string $slug, string $title): ?string {
         $slug = trim(clean_param($slug, PARAM_ALPHANUMEXT));
         if ($slug !== '') { return $slug; }
         $slug = core_text::strtolower($title);

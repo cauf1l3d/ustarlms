@@ -116,10 +116,11 @@ if ($pagepath === '/local/ustar/games.php' || $pagepath === '/local/ustar/game.p
 if ($pagepath === '/local/ustar/catalog.php') { $view = 'catalog'; }
 
 $catalogunlocked =
-    class_exists('\\local_ustar\\catalog_mastery')
-    && \local_ustar\catalog_mastery::has_access(
-        (int)$USER->id
-    );
+    (class_exists('\\local_ustar\\catalog')
+        && \local_ustar\catalog::can_manage((int)$USER->id))
+    ||
+    (class_exists('\\local_ustar\\catalog_mastery')
+        && \local_ustar\catalog_mastery::has_access((int)$USER->id));
 
 $cataloglabel =
     $catalogunlocked

@@ -1,4 +1,4 @@
-# Stage 4 — стандарты и маршруты: первый кодовый пакет
+# Stage 4 — стандарты и маршруты
 
 Дата: 2026-09-21
 
@@ -52,12 +52,35 @@ CLI/API-вызов не может обойти атомарность HTTP-ст
 переопределения остаётся идемпотентным, возврат переводит scope в `reverted`,
 отключает только локальную физическую точку и сохраняет её версии/факты.
 
-## Что ещё не закрыто этапом 4
+## Четвёртый пакет — lifecycle evidence
 
-- browser acceptance Route Studio и drag-and-drop на интегрированном host;
-- renewal/revert для всех видов evidence;
-- перенос remaining controller logic и explicit standard entity после проверки
-  фактической production-схемы.
+Все шесть типов evidence (`learning`, `assessment`, `practice`,
+`manager_review`, `checklist`, `certification`) используют один
+immutable lifecycle. Продление создаёт новый факт с отдельным idempotency key и
+связывает его с прежним событием `renewed`. Отзыв и восстановление добавляют
+`revoked/restored` в журнал, не удаляя и не переписывая исходные факты.
+Текущее состояние выводится по последнему событию с дополнительной проверкой
+`validfrom/expiresat`.
 
-Проверки этого пакета должны ссылаться на точный commit и CI; наличие класса или
-локальный lint не считается production deployment.
+## Пятый пакет — явная сущность стандарта
+
+Добавлены `local_ustar_standards` и `local_ustar_standard_ver`. Стабильный
+код и название стандарта отделены от immutable requirement-версий. Публикация
+атомарно архивирует прошлую версию и переключает `activeversionid`; повторная
+публикация идемпотентна. Требования нормализуются по поддерживаемым типам evidence,
+а маршруты остаются независимым presentation/order-слоем.
+
+## Шестой пакет — browser acceptance Route Studio
+
+CI запускает Route Studio в jsdom и проверяет пользовательский контракт:
+перемещение стрелками и drag lifecycle, перенумерацию, фактический порядок
+`pointids[]`, блокировку крайних кнопок, revision/expectedmodified, а также
+формы create override и revert. Полный DB job отдельно проверяет команды,
+транзакции, install/upgrade/repeat-upgrade и PostgreSQL.
+
+## Статус этапа 4
+
+Все шесть пакетов собраны в PR #7. Production не менялся; deployment возможен
+только после review, merge и отдельного подтверждённого выпуска. Проверки должны
+ссылаться на точный commit и CI; наличие класса или локальный lint не считается
+production deployment.

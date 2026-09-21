@@ -153,7 +153,7 @@ final class grade_promotion {
                 'requirementsjson' => json_encode($eligible['requirements'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'managerid' => $managerid,
                 'status' => self::STATUS_PENDING,
-                'requestkey' => 'grade-v1:' . $fingerprint,
+                'requestkey' => 'grade-v1:' . $fingerprint . ':' . random_string(12),
                 'requestedat' => $now,
                 'decidedat' => null,
                 'decisionby' => null,
@@ -284,7 +284,7 @@ final class grade_promotion {
         if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_completion_cycle'))) {
             try {
                 $cycle = completion_cycle::latest_confirmed($userid, $pointid);
-                if ($cycle) { return true; }
+                if ($cycle && (int)$cycle->versionid === $versionid) { return true; }
             } catch (\Throwable $e) {
                 // The legacy projection remains a conservative fallback.
             }

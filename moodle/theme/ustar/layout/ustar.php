@@ -316,7 +316,6 @@ if ($ishrworkspace) {
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
         ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
-        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 

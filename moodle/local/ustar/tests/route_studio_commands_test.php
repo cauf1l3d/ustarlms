@@ -308,14 +308,17 @@ final class route_studio_commands_test extends \advanced_testcase {
         $this->assertNotSame((int)$point->id, $overrideid);
         $this->assertSame(
             [$overrideid],
-            array_column(
-                route_scope::points_for_position(
-                    (int)$route->id,
-                    (string)$route->positionid,
-                    false,
-                    true
-                ),
-                'id'
+            array_map(
+                'intval',
+                array_column(
+                    route_scope::points_for_position(
+                        (int)$route->id,
+                        (string)$route->positionid,
+                        false,
+                        true
+                    ),
+                    'id'
+                )
             )
         );
 
@@ -336,12 +339,15 @@ final class route_studio_commands_test extends \advanced_testcase {
         $this->assertSame((int)$point->id, $sourceid);
         $this->assertSame(
             [$point->id],
-            array_column(
-                route_scope::points_for_position(
-                    (int)$route->id,
-                    (string)$route->positionid
-                ),
-                'id'
+            array_map(
+                'intval',
+                array_column(
+                    route_scope::points_for_position(
+                        (int)$route->id,
+                        (string)$route->positionid
+                    ),
+                    'id'
+                )
             )
         );
         $this->assertSame(

@@ -89,8 +89,26 @@ final class completion_cycle_test extends \advanced_testcase {
             (int)$version->id,
             2000,
             0,
-            ['mode' => 'assessment_lifecycle', 'status' => 'passed']
+            ['mode' => 'assessment_lifecycle', 'status' => 'passed', 'cycle' => 1, 'verifiedcompletedat' => 2000]
         );
         $this->assertSame((int)$parent->id, (int)$cycle->logicalpointid);
+    }
+
+    public function test_assessment_cycle_rejects_unverified_or_stale_completion(): void {
+        $generator = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $user = $this->getDataGenerator()->create_user();
+        $route = $generator->create_route();
+        $point = $generator->create_point($route);
+        $version = $generator->create_version($point);
+
+        $this->expectException(\invalid_parameter_exception::class);
+        completion_cycle::confirm(
+            (int)$user->id,
+            (int)$point->id,
+            (int)$version->id,
+            2000,
+            0,
+            ['mode' => 'assessment_lifecycle', 'status' => 'passed', 'cycle' => 1, 'verifiedcompletedat' => 1999]
+        );
     }
 }

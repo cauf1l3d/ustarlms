@@ -11,6 +11,7 @@ $notice = '';
 $editingid = optional_param('id', 0, PARAM_INT);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
+    \local_ustar\view_as::assert_writable();
     $action = required_param('action', PARAM_ALPHANUMEXT);
     try {
         if ($action === 'save') {

@@ -143,6 +143,26 @@ function local_ustar_pluginfile(
     }
 
 
+    if ($filearea === 'material_scorm_package') {
+        if (!$args) {
+            return false;
+        }
+        $blueprintid = (int)array_shift($args);
+        if ($blueprintid <= 0 || !$args) {
+            return false;
+        }
+        $file = \local_ustar\material_studio::package_file($blueprintid, (int)$USER->id);
+        $filename = array_pop($args);
+        if (!$file || $file->is_directory() || $filename !== $file->get_filename()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header('Content-Security-Policy: sandbox; default-src \'none\';');
+        send_stored_file($file, 0, 0, true, $options);
+        return true;
+    }
+
+
     if (
         $filearea
         !==

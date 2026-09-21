@@ -154,6 +154,221 @@ final class catalog {
         return (string)reset($files)->get_filename();
     }
 
+    /** HR authors may edit the catalog even before learner mastery is granted. */
+    public static function can_manage(int $userid): bool {
+        $context = \context_system::instance();
+        return $userid > 0 && (is_siteadmin($userid)
+            || has_capability('local/ustar:admin', $context, $userid)
+            || has_capability('local/ustar:hr', $context, $userid)
+            || has_capability('local/ustar:hrmanage', $context, $userid)
+            || has_capability('local/ustar:managecatalog', $context, $userid));
+    }
+
+    /** @return array<int,\stdClass> */
+    public static function editor_records(int $userid): array {
+        global $DB;
+        self::assert_manage($userid);
+        if (!self::available()) { return []; }
+        return array_values($DB->get_records('local_ustar_catalog', [], 'parentid ASC, sortorder ASC, title ASC'));
+    }
+
+    /** @param array<string,mixed> $input */
+    public static function save(int $id, array $input, int $actorid): \stdClass {
+        global $DB;
+        self::assert_manage($actorid);
+        if (!self::available()) {
+            throw new \moodle_exception('Каталог будет доступен после обновления базы данных.');
+        }
+        $type = clean_param((string)($input['itemtype'] ?? self::TYPE_PRODUCT), PARAM_ALPHA);
+        $types = [self::TYPE_GROUP, self::TYPE_SUBGROUP, self::TYPE_PRODUCT, self::TYPE_MATERIAL, self::TYPE_ASSESSMENT];
+        if (!in_array($type, $types, true)) {
+            throw new \invalid_parameter_exception('Неизвестный тип карточки каталога.');
+        }
+        $title = trim(clean_param((string)($input['title'] ?? ''), PARAM_TEXT));
+        if ($title === '') {
+            throw new \invalid_parameter_exception('Укажите название карточки.');
+        }
+        $parentid = (int)($input['parentid'] ?? 0);
+        $expected = (int)($input['expectedmodified'] ?? 0);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('catalog:' . ($id ?: 'new'), 10);
+        if (!$lock) {
+            throw new \moodle_exception('Карточка каталога редактируется в другой сессии. Повторите попытку.');
+        }
+        try {
+            $tx = $DB->start_delegated_transaction();
+            self::assert_parent($parentid, $type, $id);
+            $now = time();
+            $record = null;
+            if ($id > 0) {
+                $record = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_catalog} WHERE id = :id FOR UPDATE', ['id' => $id], MUST_EXIST
+                );
+                if ($expected <= 0 || (int)$record->timemodified !== $expected) {
+                    throw new \moodle_exception('Карточка уже изменилась. Обновите страницу.');
+                }
+                self::snapshot($record, $actorid);
+            } else {
+                $record = (object)['timecreated' => $now, 'active' => 1];
+            }
+            $record->parentid = $parentid > 0 ? $parentid : null;
+            $record->itemtype = $type;
+            $record->title = $title;
+            $record->slug = self::slug((string)($input['slug'] ?? ''), $title);
+            $record->sku = trim(clean_param((string)($input['sku'] ?? ''), PARAM_TEXT)) ?: null;
+            $record->summary = trim(clean_param((string)($input['summary'] ?? ''), PARAM_TEXT)) ?: null;
+            $record->description = clean_text((string)($input['description'] ?? ''), FORMAT_HTML) ?: null;
+            $record->imageurl = trim(clean_param((string)($input['imageurl'] ?? ''), PARAM_URL)) ?: null;
+            $record->attributesjson = json_encode(self::attributes((string)($input['attributes'] ?? '')),
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $record->sortorder = (int)($input['sortorder'] ?? 0);
+            $record->active = !isset($input['active']) || !empty($input['active']) ? 1 : 0;
+            $record->timemodified = $now;
+            $record->usermodified = $actorid;
+            if ($id > 0) {
+                $DB->update_record('local_ustar_catalog', $record);
+            } else {
+                $record->id = (int)$DB->insert_record('local_ustar_catalog', $record);
+            }
+            self::snapshot($record, $actorid);
+            self::audit((int)$record->id, 'catalog_saved', $actorid, ['itemtype' => $type]);
+            $tx->allow_commit();
+            return $record;
+        } finally {
+            $lock->release();
+        }
+    }
+
+    public static function archive(int $id, int $actorid, int $expectedmodified): void {
+        global $DB;
+        self::assert_manage($actorid);
+        $record = $DB->get_record('local_ustar_catalog', ['id' => $id], '*', MUST_EXIST);
+        if ($expectedmodified <= 0 || (int)$record->timemodified !== $expectedmodified) {
+            throw new \moodle_exception('Карточка уже изменилась. Обновите страницу.');
+        }
+        if ($DB->record_exists('local_ustar_catalog', ['parentid' => $id, 'active' => 1])) {
+            throw new \moodle_exception('Сначала перенесите или архивируйте вложенные карточки.');
+        }
+        self::snapshot($record, $actorid);
+        $record->active = 0;
+        $record->timemodified = time();
+        $record->usermodified = $actorid;
+        $DB->update_record('local_ustar_catalog', $record);
+        self::snapshot($record, $actorid);
+        self::audit($id, 'catalog_archived', $actorid, []);
+    }
+
+    /** @param array<string,mixed> $upload */
+    public static function upload_file(int $id, int $actorid, string $filearea, array $upload): void {
+        self::assert_manage($actorid);
+        if (!in_array($filearea, [self::FILEAREA_IMAGE, self::FILEAREA_SOURCE], true)) {
+            throw new \invalid_parameter_exception('Недопустимый тип файла каталога.');
+        }
+        if (empty($upload['tmp_name']) || !is_uploaded_file((string)$upload['tmp_name'])) {
+            return;
+        }
+        $record = self::get_any($id);
+        if (!$record) { throw new \moodle_exception('Карточка каталога не найдена.'); }
+        $filename = clean_param((string)($upload['name'] ?? ''), PARAM_FILE);
+        if ($filename === '') { throw new \invalid_parameter_exception('У файла нет имени.'); }
+        $mimetype = (string)($upload['type'] ?? '');
+        if ($filearea === self::FILEAREA_IMAGE
+                && !in_array($mimetype, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true)) {
+            throw new \invalid_parameter_exception('Для карточки разрешены JPEG, PNG, WEBP и GIF.');
+        }
+        $fs = get_file_storage();
+        $context = \context_system::instance();
+        $fs->delete_area_files($context->id, 'local_ustar', $filearea, $id);
+        $fs->create_file_from_pathname((object)[
+            'contextid' => $context->id, 'component' => 'local_ustar', 'filearea' => $filearea,
+            'itemid' => $id, 'filepath' => '/', 'filename' => $filename, 'userid' => $actorid,
+            'mimetype' => $mimetype ?: null,
+        ], (string)$upload['tmp_name']);
+        self::audit($id, 'catalog_file_uploaded', $actorid, ['filearea' => $filearea, 'filename' => $filename]);
+    }
+
+    private static function get_any(int $id): ?\stdClass {
+        global $DB;
+        return $id > 0 ? ($DB->get_record('local_ustar_catalog', ['id' => $id]) ?: null) : null;
+    }
+
+    private static function assert_parent(int $parentid, string $type, int $selfid): void {
+        global $DB;
+        if ($parentid <= 0) {
+            if ($type !== self::TYPE_GROUP) {
+                throw new \invalid_parameter_exception('В корне каталога можно создать только раздел.');
+            }
+            return;
+        }
+        if ($parentid === $selfid) {
+            throw new \invalid_parameter_exception('Карточка не может быть родителем самой себе.');
+        }
+        $parent = $DB->get_record('local_ustar_catalog', ['id' => $parentid, 'active' => 1], 'id,itemtype', MUST_EXIST);
+        if ($type === self::TYPE_SUBGROUP && (string)$parent->itemtype === self::TYPE_GROUP) { return; }
+        if (in_array($type, [self::TYPE_PRODUCT, self::TYPE_MATERIAL, self::TYPE_ASSESSMENT], true)
+                && (string)$parent->itemtype === self::TYPE_SUBGROUP) { return; }
+        throw new \invalid_parameter_exception('Нарушена иерархия: раздел → категория → карточка.');
+    }
+
+    /** @return array<string,string> */
+    private static function attributes(string $raw): array {
+        $raw = trim($raw);
+        if ($raw === '') { return []; }
+        $decoded = json_decode($raw, true);
+        if (is_array($decoded) && !array_is_list($decoded)) {
+            return array_filter($decoded, static fn($value, $key): bool => !str_starts_with((string)$key, '_')
+                && is_scalar($value), ARRAY_FILTER_USE_BOTH);
+        }
+        $out = [];
+        foreach (preg_split('/\r\n|\r|\n/', $raw) as $line) {
+            [$key, $value] = array_pad(explode(':', $line, 2), 2, '');
+            $key = trim(clean_param($key, PARAM_TEXT));
+            $value = trim(clean_param($value, PARAM_TEXT));
+            if ($key !== '' && $value !== '') { $out[$key] = $value; }
+        }
+        return $out;
+    }
+
+    private static function slug(string $slug, string $title): ?string {
+        $slug = trim(clean_param($slug, PARAM_ALPHANUMEXT));
+        if ($slug !== '') { return $slug; }
+        $slug = \core_text::strtolower($title);
+        $slug = preg_replace('/[^a-z0-9а-яё]+/ui', '-', $slug);
+        return trim((string)$slug, '-') ?: null;
+    }
+
+    private static function snapshot(\stdClass $record, int $actorid): void {
+        global $DB;
+        if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_catalog_versions'))) { return; }
+        $version = (int)$DB->get_field_sql(
+            'SELECT COALESCE(MAX(versionno), 0) FROM {local_ustar_catalog_versions} WHERE catalogid = :id',
+            ['id' => (int)$record->id]
+        ) + 1;
+        $DB->insert_record('local_ustar_catalog_versions', (object)[
+            'catalogid' => (int)$record->id, 'versionno' => $version,
+            'snapshotjson' => json_encode(get_object_vars($record), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'actorid' => $actorid, 'timecreated' => time(),
+        ]);
+    }
+
+    /** @param array<string,mixed> $data */
+    private static function audit(int $id, string $event, int $actorid, array $data): void {
+        global $DB;
+        if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_workflow_events'))) { return; }
+        $DB->insert_record('local_ustar_workflow_events', (object)[
+            'entitytype' => 'catalog', 'entityid' => $id, 'eventtype' => $event, 'actorid' => $actorid,
+            'reason' => null, 'detailsjson' => json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'timecreated' => time(),
+        ]);
+    }
+
+    private static function assert_manage(int $userid): void {
+        if (!self::can_manage($userid)) {
+            throw new \required_capability_exception(
+                \context_system::instance(), 'local/ustar:managecatalog', 'nopermissions', ''
+            );
+        }
+    }
+
     private static function view_record(\stdClass $record): array {
         $attrs = json_decode((string)$record->attributesjson, true);
         $attrs = is_array($attrs) ? $attrs : [];

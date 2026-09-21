@@ -379,6 +379,21 @@ if (
         }
 
 
+        if ($action === 'delete') {
+            \local_ustar\content_admin::delete(
+                $postedcontentid,
+                (int)$USER->id,
+                optional_param('reason', '', PARAM_TEXT)
+            );
+            redirect(
+                new moodle_url('/local/ustar/materials.php', ['status' => 'all', 'parent' => $parentid]),
+                'Материал удалён из рабочего каталога. История сохранена.',
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
+        }
+
+
         if ($action === 'archive') {
 
             \local_ustar\content_admin::archive(
@@ -2137,6 +2152,7 @@ $output =
 
 $data = [
     'assessmentstudiourl' => (new moodle_url('/local/ustar/assessment_studio.php'))->out(false),
+    'studiourl' => (new moodle_url('/local/ustar/materials_studio.php'))->out(false),
 
     'canmanage' =>
         $canmanage,

@@ -4238,5 +4238,20 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082742, 'local', 'ustar');
     }
 
+
+    if ($oldversion < 2026082744) {
+        // Stage 6 introduces only additive tables. Existing learning facts,
+        // catalog cards and board documents remain preserved.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::stage6_definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        require_once(__DIR__ . '/../classes/board_retirement.php');
+        \local_ustar\board_retirement::archive_live_boards(0);
+        upgrade_plugin_savepoint(true, 2026082744, 'local', 'ustar');
+    }
+
 return true;
 }

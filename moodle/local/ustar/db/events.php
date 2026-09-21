@@ -5,7 +5,7 @@ $observers = [
         'eventname' => '\\core\\event\\user_created',
         'callback' => '\\local_ustar\\observer::user_created',
         'includefile' => null,
-        'internal' => false,
+        'internal' => true,
         'priority' => 1000,
     ],
     [

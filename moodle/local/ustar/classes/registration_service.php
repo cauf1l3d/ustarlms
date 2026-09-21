@@ -16,6 +16,9 @@ final class registration_service {
 
     public static function submit(int $userid, string $positionid): int {
         global $DB, $USER;
+        // A few import/test paths create users without dispatching observers;
+        // email-auth users are still safely lowered before accepting a request.
+        self::initialize($userid);
         if ((int)$USER->id !== $userid || $userid <= 1 || !accounts::is_business_account($userid)) {
             throw new \invalid_parameter_exception('Заявку можно отправить только из своего профиля.');
         }

@@ -50,7 +50,7 @@ final class route_rewards {
         global $DB;
         $evidence = json_decode((string)$progress->evidencejson, true) ?: [];
         if (!self::eligible($progress, $evidence, (int)get_config('local_ustar', 'route_rewards_startedat'))) { return; }
-        if (!accounts::learning_enabled((int)$progress->userid)
+        if (!employment::learning_allowed((int)$progress->userid)
                 || accounts::type_of((int)$progress->userid) !== accounts::TYPE_EMPLOYEE) { return; }
         $version = $DB->get_record('local_ustar_route_versions', ['id' => $progress->versionid], '*', MUST_EXIST);
         $point = $DB->get_record('local_ustar_route_points', ['id' => $progress->pointid], '*', MUST_EXIST);

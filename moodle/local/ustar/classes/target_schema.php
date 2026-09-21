@@ -11,6 +11,32 @@ final class target_schema {
         $c = XMLDB_TYPE_CHAR;
         $t = XMLDB_TYPE_TEXT;
         $specs = [
+            'local_ustar_standards' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['code',$c,'64',true], ['title',$c,'255',true],
+                    ['description',$t], ['status',$c,'16',true,false,'draft'], ['activeversionid',$i,'10'],
+                    ['ownerid',$i,'10',true,false,'0'], ['timecreated',$i,'10',true,false,'0'],
+                    ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['code_uix',true,['code']], ['status_idx',false,['status']],
+                    ['activeversion_idx',false,['activeversionid']],
+                ],
+            ],
+            'local_ustar_standard_ver' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['standardid',$i,'10',true],
+                    ['versionno',$i,'10',true,false,'1'], ['requirementsjson',$t,null,true],
+                    ['renewalpolicy',$c,'16',true,false,'keep'], ['validdays',$i,'10',true,false,'0'],
+                    ['status',$c,'16',true,false,'draft'], ['effectivedate',$i,'10'],
+                    ['createdby',$i,'10',true,false,'0'], ['timecreated',$i,'10',true,false,'0'],
+                    ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['standard_version_uix',true,['standardid','versionno']],
+                    ['standard_status_idx',false,['standardid','status','effectivedate']],
+                ],
+            ],
             'local_ustar_evidence_rec' => [
                 'fields' => [
                     ['id',$i,'10',true,true], ['userid',$i,'10',true], ['assignmentid',$i,'10'],

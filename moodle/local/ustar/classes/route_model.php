@@ -144,6 +144,162 @@ final class route_model {
         return $record ?: null;
     }
 
+    /** Return the newest unpublished version without exposing archived history. */
+    public static function latest_draft_version(int $pointid): ?\stdClass {
+        global $DB;
+        $record = $DB->get_record_sql(
+            'SELECT *
+               FROM {local_ustar_route_versions}
+              WHERE pointid = :pointid
+                AND status = :status
+           ORDER BY versionno DESC, id DESC',
+            [
+                'pointid' => $pointid,
+                'status' => self::STATUS_DRAFT,
+            ],
+            IGNORE_MULTIPLE
+        );
+        return $record ?: null;
+    }
+
+    /**
+     * Build a presentation-neutral diff between the current publication and a draft.
+     *
+     * Version payloads are immutable. This helper deliberately returns only changed
+     * fields and requirement additions/removals so the studio can render a diff without
+     * reimplementing version semantics or exposing source IDs as an editing API.
+     *
+     * @return array<string,mixed>
+     */
+    public static function version_diff(?\stdClass $published, ?\stdClass $draft): array {
+        $empty = [
+            'available' => false,
+            'haschanges' => false,
+            'publishedversion' => 0,
+            'draftversion' => 0,
+            'rows' => [],
+            'requirementsadded' => [],
+            'requirementsremoved' => [],
+            'hasrequirementsadded' => false,
+            'hasrequirementsremoved' => false,
+        ];
+        if (!$draft) {
+            return $empty;
+        }
+
+        $publishedvalue = static function(?\stdClass $version, string $field, string $fallback = ''): string {
+            if (!$version) {
+                return '';
+            }
+            return (string)($version->{$field} ?? $fallback);
+        };
+        $displaydays = static function(string $value): string {
+            $days = max(0, (int)$value);
+            return $days > 0 ? $days . ' дн.' : 'Без срока';
+        };
+        $fields = [
+            [
+                'label' => 'Название',
+                'published' => $publishedvalue($published, 'title'),
+                'draft' => $publishedvalue($draft, 'title'),
+            ],
+            [
+                'label' => 'Описание',
+                'published' => $publishedvalue($published, 'summary'),
+                'draft' => $publishedvalue($draft, 'summary'),
+            ],
+            [
+                'label' => 'Повторное прохождение',
+                'published' => $published
+                    ? self::policy_label((string)$published->renewalpolicy)
+                    : '',
+                'draft' => self::policy_label((string)$draft->renewalpolicy),
+            ],
+            [
+                'label' => 'Срок действия',
+                'published' => $published
+                    ? $displaydays((string)$published->validdays)
+                    : '',
+                'draft' => $displaydays((string)$draft->validdays),
+            ],
+        ];
+        $rows = [];
+        foreach ($fields as $field) {
+            if ($published && $field['published'] === $field['draft']) {
+                continue;
+            }
+            $rows[] = [
+                'label' => $field['label'],
+                'published' => $field['published'] !== ''
+                    ? $field['published']
+                    : 'Нет опубликованной версии',
+                'draft' => $field['draft'] !== '' ? $field['draft'] : '—',
+            ];
+        }
+
+        $requirementkey = static function(array $requirement): string {
+            return (string)json_encode([
+                'type' => (string)($requirement['type'] ?? ''),
+                'sourceid' => (int)($requirement['sourceid'] ?? 0),
+                'sourcekey' => (string)($requirement['sourcekey'] ?? ''),
+                'completionmode' => (string)($requirement['completionmode'] ?? ''),
+                'required' => !empty($requirement['required']),
+                'primary' => !empty($requirement['primary']),
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        };
+        $requirementlabel = static function(array $requirement): string {
+            $label = trim((string)($requirement['label'] ?? ''));
+            if ($label === '') {
+                $label = match ((string)($requirement['type'] ?? '')) {
+                    'course' => 'Moodle-курс',
+                    'cm' => 'Учебная активность',
+                    'content' => 'Материал',
+                    'assessment' => 'Развивающий профиль',
+                    'native' => 'Системное условие',
+                    'skill' => 'Навык',
+                    default => 'Предыдущие обязательные шаги',
+                };
+            }
+            $notes = [];
+            if (!empty($requirement['required'])) {
+                $notes[] = 'обязательно';
+            }
+            if (($requirement['type'] ?? '') === 'content'
+                    && ($requirement['completionmode'] ?? 'open') === 'ack') {
+                $notes[] = 'подтверждение ознакомления';
+            }
+            if (($requirement['type'] ?? '') === 'skill' && !empty($requirement['primary'])) {
+                $notes[] = 'главный навык';
+            }
+            return $notes ? $label . ' · ' . implode(', ', $notes) : $label;
+        };
+
+        $publishedrequirements = $published ? self::requirements_for_version($published) : [];
+        $draftrequirements = self::requirements_for_version($draft);
+        $publishedmap = [];
+        foreach ($publishedrequirements as $requirement) {
+            $publishedmap[$requirementkey($requirement)] = $requirementlabel($requirement);
+        }
+        $draftmap = [];
+        foreach ($draftrequirements as $requirement) {
+            $draftmap[$requirementkey($requirement)] = $requirementlabel($requirement);
+        }
+        $added = array_values(array_diff_key($draftmap, $publishedmap));
+        $removed = array_values(array_diff_key($publishedmap, $draftmap));
+
+        return [
+            'available' => true,
+            'haschanges' => !empty($rows) || !empty($added) || !empty($removed),
+            'publishedversion' => $published ? (int)$published->versionno : 0,
+            'draftversion' => (int)$draft->versionno,
+            'rows' => $rows,
+            'requirementsadded' => $added,
+            'requirementsremoved' => $removed,
+            'hasrequirementsadded' => !empty($added),
+            'hasrequirementsremoved' => !empty($removed),
+        ];
+    }
+
     public static function current_published_version(int $pointid, ?int $at = null): ?\stdClass {
         global $DB;
         $at = $at ?? time();

@@ -31,6 +31,63 @@ final class route_studio_commands_test extends \advanced_testcase {
         return [$generator, $user, $route, $point, $version];
     }
 
+    public function test_version_diff_reports_payload_and_requirement_changes(): void {
+        $published = (object)[
+            'versionno' => 3,
+            'title' => 'Старый шаг',
+            'summary' => 'Прежнее описание',
+            'renewalpolicy' => route_model::RENEW_KEEP,
+            'validdays' => 0,
+            'requirementsjson' => json_encode([
+                ['type' => 'content', 'sourceid' => 10, 'label' => 'Видео', 'required' => true],
+                ['type' => 'native', 'sourcekey' => 'legacy_gate', 'label' => 'Старое условие', 'required' => false],
+            ]),
+        ];
+        $draft = (object)[
+            'versionno' => 4,
+            'title' => 'Новый шаг',
+            'summary' => 'Обновлённое описание',
+            'renewalpolicy' => route_model::RENEW_EXPIRY,
+            'validdays' => 30,
+            'requirementsjson' => json_encode([
+                ['type' => 'content', 'sourceid' => 10, 'label' => 'Видео', 'required' => true],
+                ['type' => 'course', 'sourceid' => 20, 'label' => 'Курс', 'required' => true],
+            ]),
+        ];
+
+        $diff = route_model::version_diff($published, $draft);
+
+        $this->assertTrue($diff['available']);
+        $this->assertTrue($diff['haschanges']);
+        $this->assertSame(3, $diff['publishedversion']);
+        $this->assertSame(4, $diff['draftversion']);
+        $this->assertSame(
+            ['Название', 'Описание', 'Повторное прохождение', 'Срок действия'],
+            array_column($diff['rows'], 'label')
+        );
+        $this->assertSame(['Курс · обязательно'], $diff['requirementsadded']);
+        $this->assertSame(['Старое условие'], $diff['requirementsremoved']);
+        $this->assertTrue($diff['hasrequirementsadded']);
+        $this->assertTrue($diff['hasrequirementsremoved']);
+    }
+
+    public function test_version_diff_without_draft_does_not_invent_changes(): void {
+        $published = (object)[
+            'versionno' => 1,
+            'title' => 'Опубликовано',
+            'summary' => '',
+            'renewalpolicy' => route_model::RENEW_KEEP,
+            'validdays' => 0,
+            'requirementsjson' => '[]',
+        ];
+
+        $diff = route_model::version_diff($published, null);
+
+        $this->assertFalse($diff['available']);
+        $this->assertFalse($diff['haschanges']);
+        $this->assertSame([], $diff['rows']);
+    }
+
     public function test_failed_publish_rolls_back_point_metadata_and_version(): void {
         global $DB, $USER;
         [, , $route, $point, $version] = $this->fixture();

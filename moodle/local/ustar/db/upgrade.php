@@ -4189,5 +4189,11 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082736, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082737) {
+        // Stage 4 version diff is presentation/application code only. No route,
+        // scope, evidence or completion rows are changed during upgrade.
+        upgrade_plugin_savepoint(true, 2026082737, 'local', 'ustar');
+    }
+
 return true;
 }

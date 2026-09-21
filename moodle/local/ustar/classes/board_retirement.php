@@ -11,14 +11,15 @@ final class board_retirement {
     public static function available(): bool {
         global $DB;
         $manager = $DB->get_manager();
-        return $manager->table_exists(new \xmldb_table('local_ustar_boards'))
-            && $manager->table_exists(new \xmldb_table('local_ustar_board_archive'));
+        return $manager->table_exists(new \xmldb_table('local_ustar_board_archive'));
     }
 
     /** @return array{archived:int,already:int} */
     public static function archive_live_boards(int $actorid = 0): array {
         global $DB;
-        if (!self::available()) { return ['archived' => 0, 'already' => 0]; }
+        if (!self::available() || !$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_boards'))) {
+            return ['archived' => 0, 'already' => 0];
+        }
         $archived = 0;
         $already = 0;
         $rows = $DB->get_records('local_ustar_boards', ['deleted' => 0], 'id ASC');

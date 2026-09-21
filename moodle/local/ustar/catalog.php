@@ -45,7 +45,8 @@ if (!$canmanage && !\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
     $PAGE->set_url(new moodle_url('/local/ustar/catalog.php'));
     $PAGE->set_pagelayout('ustar');
     $PAGE->set_title('Каталог товаров | USTAR Academy');
-    $PAGE->set_heading('USTAR Academy');
+    $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
+$PAGE->set_heading('USTAR Academy');
     $output = $PAGE->get_renderer('local_ustar');
     echo $output->header();
     echo $output->render_from_template('local_ustar/catalog_locked', [

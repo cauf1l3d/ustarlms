@@ -437,7 +437,7 @@ class position_model {
 
         foreach ($users as $user) {
 
-            if (!accounts::learning_enabled((int)$user->id)) {
+            if (!employment::learning_allowed((int)$user->id)) {
                 continue;
             }
 

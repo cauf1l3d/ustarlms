@@ -24,6 +24,7 @@ final class route_model {
     public const RENEW_ALL = 'all';
     public const RENEW_EXPIRY = 'expiry';
     public const RENEW_MANUAL = 'manual';
+    public const LOCAL_POINT = 'local';
 
     private static function position_context(string $positionid): array {
         $structure = structure::get(structure::NAME_STRUCTURE);
@@ -232,7 +233,14 @@ final class route_model {
     public static function revision(int $routeid): string {
         $parts = [];
         foreach (self::points($routeid) as $point) {
-            $parts[] = (int)$point->id . ':' . (int)$point->sortorder . ':' . (int)$point->timemodified;
+            $parts[] = implode(':', [
+                (int)$point->id,
+                (int)$point->sortorder,
+                (int)$point->timemodified,
+                (int)$point->active,
+                (int)($point->sourcepointid ?? 0),
+                (string)($point->inheritstate ?? self::LOCAL_POINT),
+            ]);
         }
         return sha1(implode('|', $parts));
     }
@@ -276,6 +284,257 @@ final class route_model {
         }
 
         return $point;
+    }
+
+    /**
+     * Atomically save point metadata and its next immutable version.
+     *
+     * Route Studio used to update the point and then create the version in
+     * separate transactions. A validation failure (for example an unpublished
+     * material) could therefore leave the point changed without its matching
+     * version. This command owns the route lock, optimistic revision check and
+     * transaction for both writes.
+     */
+    public static function save_point_version(
+        int $routeid,
+        int $pointid,
+        string $phase,
+        bool $active,
+        array $versiondata,
+        int $actorid,
+        int $expectedmodified = 0
+    ): \stdClass {
+        global $DB;
+
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+        $lock = $factory->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception(
+                'Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.'
+            );
+        }
+
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $DB->get_record(
+                    'local_ustar_routes',
+                    ['id' => $routeid, 'active' => 1],
+                    '*',
+                    MUST_EXIST
+                );
+
+                $point = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_route_points}
+                      WHERE id = :id AND routeid = :routeid
+                      FOR UPDATE',
+                    ['id' => $pointid, 'routeid' => $routeid],
+                    MUST_EXIST
+                );
+
+                if ($expectedmodified > 0
+                        && (int)$point->timemodified !== $expectedmodified) {
+                    throw new \moodle_exception(
+                        'Точка уже изменена в другой сессии. Обновите маршрут и повторите действие.'
+                    );
+                }
+
+                if ((string)($point->inheritstate ?? self::LOCAL_POINT)
+                        === \local_ustar\route_family::INHERITED) {
+                    throw new \moodle_exception(
+                        'Наследуемый общий шаг нельзя редактировать напрямую.'
+                    );
+                }
+
+                $status = self::clean_status(
+                    (string)($versiondata['status'] ?? self::STATUS_DRAFT)
+                );
+                $requirements = self::normalize_requirements(
+                    is_array($versiondata['requirements'] ?? null)
+                        ? $versiondata['requirements']
+                        : []
+                );
+
+                if ($status === self::STATUS_PUBLISHED && !$requirements) {
+                    throw new \moodle_exception(
+                        'Нельзя опубликовать шаг без обучения или условия завершения'
+                    );
+                }
+
+                $point->phase = self::clean_phase($phase);
+                $point->active = $active ? 1 : 0;
+                $point->timemodified = max(
+                    time(),
+                    (int)$point->timemodified + 1
+                );
+                $point->usermodified = $actorid;
+                $DB->update_record('local_ustar_route_points', $point);
+
+                $versiondata['requirements'] = $requirements;
+                $versiondata['status'] = $status;
+                if ($status === self::STATUS_PUBLISHED
+                        && empty($versiondata['effectivedate'])) {
+                    $versiondata['effectivedate'] = time();
+                }
+
+                $created = self::create_version_locked(
+                    $pointid,
+                    $versiondata,
+                    $actorid
+                );
+
+                if ($status === self::STATUS_PUBLISHED) {
+                    $DB->execute(
+                        "UPDATE {local_ustar_route_versions}
+                            SET status = :archived,
+                                timemodified = :modified,
+                                usermodified = :actorid
+                          WHERE pointid = :pointid
+                            AND status = :published
+                            AND id <> :id",
+                        [
+                            'archived' => self::STATUS_ARCHIVED,
+                            'modified' => time(),
+                            'actorid' => $actorid,
+                            'pointid' => $pointid,
+                            'published' => self::STATUS_PUBLISHED,
+                            'id' => (int)$created->id,
+                        ]
+                    );
+                }
+
+                $transaction->allow_commit();
+                return $created;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+
+        throw new \coding_exception('Не удалось сохранить версию точки маршрута');
+    }
+
+    /**
+     * Publish an existing draft without rewriting its historical payload.
+     * Repeated publication of the same version is idempotent.
+     */
+    public static function publish_version(
+        int $routeid,
+        int $pointid,
+        int $versionid,
+        int $actorid,
+        int $expectedmodified = 0
+    ): \stdClass {
+        global $DB;
+
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+        $lock = $factory->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception(
+                'Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.'
+            );
+        }
+
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $route = $DB->get_record(
+                    'local_ustar_routes',
+                    ['id' => $routeid, 'active' => 1],
+                    '*',
+                    MUST_EXIST
+                );
+                $point = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_route_points}
+                      WHERE id = :id AND routeid = :routeid
+                      FOR UPDATE',
+                    ['id' => $pointid, 'routeid' => $routeid],
+                    MUST_EXIST
+                );
+                $version = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_route_versions}
+                      WHERE id = :id AND pointid = :pointid
+                      FOR UPDATE',
+                    ['id' => $versionid, 'pointid' => $pointid],
+                    MUST_EXIST
+                );
+
+                if ($expectedmodified > 0
+                        && (int)$point->timemodified !== $expectedmodified) {
+                    throw new \moodle_exception(
+                        'Точка уже изменена в другой сессии. Обновите маршрут и повторите действие.'
+                    );
+                }
+
+                if ((string)$version->status === self::STATUS_PUBLISHED) {
+                    $transaction->allow_commit();
+                    return $version;
+                }
+                if ((string)$version->status !== self::STATUS_DRAFT) {
+                    throw new \moodle_exception(
+                        'Архивную версию нельзя опубликовать повторно. Создайте новую версию.'
+                    );
+                }
+
+                $requirements = self::requirements_for_version($version);
+                if (!$requirements) {
+                    throw new \moodle_exception(
+                        'Нельзя опубликовать шаг без обучения или условия завершения'
+                    );
+                }
+
+                self::assert_publishable_requirements(
+                    $route,
+                    $requirements,
+                    $actorid
+                );
+
+                $now = time();
+                $version->status = self::STATUS_PUBLISHED;
+                $version->effectivedate = $now;
+                $version->timemodified = max(
+                    $now,
+                    (int)$version->timemodified + 1
+                );
+                $version->usermodified = $actorid;
+                $DB->update_record('local_ustar_route_versions', $version);
+
+                $DB->execute(
+                    "UPDATE {local_ustar_route_versions}
+                        SET status = :archived,
+                            timemodified = :modified,
+                            usermodified = :actorid
+                      WHERE pointid = :pointid
+                        AND status = :published
+                        AND id <> :id",
+                    [
+                        'archived' => self::STATUS_ARCHIVED,
+                        'modified' => $now,
+                        'actorid' => $actorid,
+                        'pointid' => $pointid,
+                        'published' => self::STATUS_PUBLISHED,
+                        'id' => $versionid,
+                    ]
+                );
+
+                $point->timemodified = max(
+                    $now,
+                    (int)$point->timemodified + 1
+                );
+                $point->usermodified = $actorid;
+                $DB->update_record('local_ustar_route_points', $point);
+
+                $transaction->allow_commit();
+                return $version;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+
+        throw new \coding_exception('Не удалось опубликовать версию точки маршрута');
     }
 
     public static function add_point(
@@ -440,6 +699,53 @@ final class route_model {
         }
     }
 
+    /** Validate all content requirements before a version becomes visible. */
+    private static function assert_publishable_requirements(
+        \stdClass $route,
+        array $requirements,
+        int $actorid
+    ): void {
+        global $DB;
+
+        if (!$requirements) {
+            throw new \moodle_exception(
+                'Нельзя опубликовать шаг без обучения или условия завершения'
+            );
+        }
+
+        if ((string)$route->routekind === \local_ustar\route_family::KIND_PARENT) {
+            foreach ($requirements as $requirement) {
+                if ((string)($requirement['type'] ?? '') !== 'content') {
+                    continue;
+                }
+
+                $contentid = (int)($requirement['sourceid'] ?? 0);
+                if ($contentid <= 0) {
+                    continue;
+                }
+
+                $contentstatus = (string)$DB->get_field(
+                    'local_ustar_content',
+                    'status',
+                    ['id' => $contentid],
+                    MUST_EXIST
+                );
+                if ($contentstatus !== \local_ustar\content::STATUS_PUBLISHED) {
+                    throw new \moodle_exception(
+                        'Общий шаг нельзя опубликовать: сначала опубликуйте выбранный материал'
+                    );
+                }
+            }
+            return;
+        }
+
+        self::ensure_route_content_access(
+            (int)$route->id,
+            $requirements,
+            $actorid
+        );
+    }
+
 
     public static function create_version(int $pointid, array $data, int $actorid): \stdClass {
         global $DB;
@@ -485,55 +791,9 @@ final class route_model {
             MUST_EXIST
         );
 
-        if (
-            $status === self::STATUS_PUBLISHED
-            &&
-            (string)$ownerroute->routekind ===
-                \local_ustar\route_family::KIND_PARENT
-        ) {
-            foreach ($requirements as $requirement) {
-                if (
-                    (string)($requirement['type'] ?? '')
-                    !== 'content'
-                ) {
-                    continue;
-                }
-
-                $contentid =
-                    (int)($requirement['sourceid'] ?? 0);
-
-                if ($contentid <= 0) {
-                    continue;
-                }
-
-                $contentstatus =
-                    (string)$DB->get_field(
-                        'local_ustar_content',
-                        'status',
-                        ['id' => $contentid],
-                        MUST_EXIST
-                    );
-
-                if (
-                    $contentstatus
-                    !== \local_ustar\content::STATUS_PUBLISHED
-                ) {
-                    throw new \moodle_exception(
-                        'Общий шаг нельзя опубликовать: '
-                        . 'сначала опубликуйте выбранный материал'
-                    );
-                }
-            }
-        }
-
-        if (
-            $status === self::STATUS_PUBLISHED
-            &&
-            (string)$ownerroute->routekind !==
-                \local_ustar\route_family::KIND_PARENT
-        ) {
-            self::ensure_route_content_access(
-                (int)$point->routeid,
+        if ($status === self::STATUS_PUBLISHED) {
+            self::assert_publishable_requirements(
+                $ownerroute,
                 $requirements,
                 $actorid
             );
@@ -682,6 +942,18 @@ final class route_model {
             $allowed = [];
             foreach (self::points($routeid) as $point) {
                 $allowed[(int)$point->id] = true;
+            }
+            $submittedids = array_values(array_unique(array_map(
+                'intval',
+                array_filter($pointids, static fn($pointid): bool => (int)$pointid > 0)
+            )));
+            $expectedids = array_keys($allowed);
+            sort($submittedids, SORT_NUMERIC);
+            sort($expectedids, SORT_NUMERIC);
+            if ($submittedids !== $expectedids) {
+                throw new \invalid_parameter_exception(
+                    'Для сохранения порядка нужен полный список активных шагов маршрута.'
+                );
             }
             $seen = [];
             $sort = 10;

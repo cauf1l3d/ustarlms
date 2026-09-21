@@ -370,7 +370,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
         }
 
-        \local_ustar\route_model::reorder(
+        \local_ustar\route_commands::reorder(
             (int)$route->id,
             optional_param_array(
                 'pointids',
@@ -538,27 +538,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 \local_ustar\route_scope::assert_replaceable((int)$point->sourcepointid);
             }
 
-            \local_ustar\route_model::update_point(
-                (int)$route->id,
-                $pointid,
-                $phase,
-                optional_param(
-                    'active',
-                    0,
-                    PARAM_BOOL
-                ),
-                $actorid,
-                required_param(
-                    'expectedmodified',
-                    PARAM_INT
-                )
-            );
-
-            \local_ustar\route_model::create_version(
-                $pointid,
-                $versiondata,
-                $actorid
-            );
+            \local_ustar\route_commands::save_version([
+                'routeid' => (int)$route->id,
+                'pointid' => $pointid,
+                'positionid' => $positionid,
+                'positionediting' => $positionediting,
+                'phase' => $phase,
+                'active' => optional_param('active', 0, PARAM_BOOL),
+                'versiondata' => $versiondata,
+                'actorid' => $actorid,
+                'expectedmodified' => required_param('expectedmodified', PARAM_INT),
+            ]);
 
             $anchor =
                 '#point-'
@@ -584,7 +574,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
         if (!$positionediting) { throw new invalid_parameter_exception('Выберите должность'); }
-        $editafter = \local_ustar\route_scope::create_override(
+        $editafter = \local_ustar\route_commands::create_override(
             (int)$route->id, $pointid, $positionid, $actorid
         );
         $anchor = '#point-' . $editafter;
@@ -608,7 +598,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
         if (!$positionediting) { throw new invalid_parameter_exception('Выберите должность'); }
-        $sourceid = \local_ustar\route_scope::revert_override(
+        $sourceid = \local_ustar\route_commands::revert_override(
             (int)$route->id, $pointid, $positionid, $actorid
         );
         $anchor = '#point-' . $sourceid;
@@ -1405,4 +1395,3 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
-

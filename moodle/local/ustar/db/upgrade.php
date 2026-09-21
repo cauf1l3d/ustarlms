@@ -4182,5 +4182,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082735, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082736) {
+        // Stage 4 route commands are application-code changes. The savepoint
+        // makes the new command boundary available after a normal Moodle
+        // upgrade without changing existing route or evidence rows.
+        upgrade_plugin_savepoint(true, 2026082736, 'local', 'ustar');
+    }
+
 return true;
 }

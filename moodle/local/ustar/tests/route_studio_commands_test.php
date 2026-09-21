@@ -311,7 +311,9 @@ final class route_studio_commands_test extends \advanced_testcase {
             array_column(
                 route_scope::points_for_position(
                     (int)$route->id,
-                    (string)$route->positionid
+                    (string)$route->positionid,
+                    false,
+                    true
                 ),
                 'id'
             )

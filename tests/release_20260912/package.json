@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "test": "node career-dom.cjs && node scorm.cjs"
+    "test": "node career-dom.cjs && node scorm.cjs && node route_studio_dom.cjs"
   },
   "dependencies": {
     "jsdom": "30.0.1",

@@ -37,6 +37,17 @@
         <div class="u-route-editor__point-order"><span class="u-route-item__order">{{sortorder}}</span><span class="u-route-editor__line"></span></div>
         <div class="u-route-editor__point-main"><div class="u-route-editor__point-meta"><span class="u-route-editor__inheritance">{{inheritancelabel}}</span>{{#hasscopeproposal}}<span class="u-route-editor__inheritance">{{scopeproposal}}</span>{{/hasscopeproposal}}{{#latest}}<span>{{versionlabel}}</span><span>{{#published}}Опубликовано{{/published}}{{#draft}}Черновик{{/draft}}{{#archived}}Архив{{/archived}}</span>{{/latest}}</div><h3>{{#latest}}{{title}}{{/latest}}</h3>{{#latest}}{{#hassummary}}<p>{{summary}}</p>{{/hassummary}}{{/latest}}
           {{#latest}}{{#hasrequirements}}<div class="u-route-editor__chips">{{#requirements}}<span>{{label}}</span>{{/requirements}}</div>{{/hasrequirements}}{{/latest}}
+          {{#hasversiondiff}}
+          <details class="u-route-editor__version-diff" open>
+            <summary>Изменения {{versiondiffpublishedlabel}} → {{versiondiffdraftlabel}}</summary>
+            <p class="u-route-editor__version-diff-note">Сотрудники продолжают видеть опубликованную версию, пока черновик не опубликован.</p>
+            <dl class="u-route-editor__version-diff-rows">
+              {{#versiondiffrows}}<div class="u-route-editor__version-diff-row"><dt>{{label}}</dt><dd><span class="u-route-editor__version-diff-side"><b>Опубликовано</b>{{published}}</span><span class="u-route-editor__version-diff-arrow" aria-hidden="true">→</span><span class="u-route-editor__version-diff-side is-draft"><b>Черновик</b>{{draft}}</span></dd></div>{{/versiondiffrows}}
+            </dl>
+            {{#hasversiondiffadded}}<div class="u-route-editor__version-diff-list"><b>Добавлено в требования</b><ul>{{#versiondiffadded}}<li>{{label}}</li>{{/versiondiffadded}}</ul></div>{{/hasversiondiffadded}}
+            {{#hasversiondiffremoved}}<div class="u-route-editor__version-diff-list is-removed"><b>Убрано из требований</b><ul>{{#versiondiffremoved}}<li>{{label}}</li>{{/versiondiffremoved}}</ul></div>{{/hasversiondiffremoved}}
+          </details>
+          {{/hasversiondiff}}
           {{^latest}}<p class="u-route-editor__muted">У точки ещё нет версии с учебным содержанием.</p>{{/latest}}
           <div class="u-route-editor__actions">
             {{#canedit}}<a class="u-btn u-btn--small" href="{{editurl}}#point-{{id}}">Редактировать</a>{{/canedit}}

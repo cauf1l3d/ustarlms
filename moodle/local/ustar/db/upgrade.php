@@ -4182,5 +4182,48 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082735, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082736) {
+        // Stage 4 route commands are application-code changes. The savepoint
+        // makes the new command boundary available after a normal Moodle
+        // upgrade without changing existing route or evidence rows.
+        upgrade_plugin_savepoint(true, 2026082736, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082737) {
+        // Stage 4 version diff is presentation/application code only. No route,
+        // scope, evidence or completion rows are changed during upgrade.
+        upgrade_plugin_savepoint(true, 2026082737, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082738) {
+        // Route scope commands now own their lock and transaction when called
+        // outside the HTTP studio. Existing scope/history rows are untouched.
+        upgrade_plugin_savepoint(true, 2026082738, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082739) {
+        // Immutable evidence renewal/revocation/restoration is application
+        // logic over the existing facts and event journal.
+        upgrade_plugin_savepoint(true, 2026082739, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082740) {
+        // Add explicit stable standards and their immutable versions. Existing
+        // route/evidence rows are intentionally left unmodified.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026082740, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082741) {
+        // Route Studio browser-contract coverage ships without runtime data
+        // migration. This savepoint marks the completed Stage 4 package.
+        upgrade_plugin_savepoint(true, 2026082741, 'local', 'ustar');
+    }
+
 return true;
 }

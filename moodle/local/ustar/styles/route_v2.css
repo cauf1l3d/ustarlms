@@ -98,3 +98,24 @@
 .u-route-rewards {display:flex; flex-wrap:wrap; gap:12px 24px; align-items:center; padding:20px; margin:20px 0; border:1px solid #c5a900; border-radius:16px; background:#fffbea; color:#26251f; font-size:15px;}
 .u-route-rewards span {flex:1 1 250px;}
 .u-route-rewards a {color:#625200; text-decoration:underline;}
+
+/* Route Studio draft/publication diff. Keep both payloads visible without
+   turning the immutable version history into an editing surface. */
+.u-route-editor__version-diff{margin-top:14px;padding:12px 14px;border:1px solid color-mix(in srgb,var(--u-warning,#b54708) 32%,var(--u-border,#e4e7ec));border-radius:12px;background:color-mix(in srgb,var(--u-warning,#b54708) 5%,var(--u-surface-raised,#fff))}
+.u-route-editor__version-diff summary{cursor:pointer;font-size:12px;font-weight:800;color:var(--u-text-primary,#1d2939)}
+.u-route-editor__version-diff summary:focus-visible{outline:3px solid color-mix(in srgb,var(--u-brand,#d7a62a) 42%,transparent);outline-offset:3px;border-radius:4px}
+.u-route-editor__version-diff-note{margin:8px 0 10px!important;font-size:12px;line-height:1.45!important;color:var(--u-text-secondary,#667085)}
+.u-route-editor__version-diff-rows{display:grid;gap:8px;margin:0}
+.u-route-editor__version-diff-row{display:grid;grid-template-columns:minmax(100px,.6fr) minmax(0,2fr);gap:10px;padding-top:8px;border-top:1px solid color-mix(in srgb,var(--u-border,#e4e7ec) 75%,transparent)}
+.u-route-editor__version-diff-row:first-child{padding-top:0;border-top:0}
+.u-route-editor__version-diff-row dt{font-size:11px;font-weight:800;color:var(--u-text-secondary,#667085)}
+.u-route-editor__version-diff-row dd{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:start;margin:0}
+.u-route-editor__version-diff-side{display:grid;gap:3px;min-width:0;padding:7px 8px;border-radius:8px;background:var(--u-surface-muted,#f2f4f7);white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.4}
+.u-route-editor__version-diff-side b{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--u-text-muted,#98a2b3)}
+.u-route-editor__version-diff-side.is-draft{background:color-mix(in srgb,var(--u-brand,#d7a62a) 10%,var(--u-surface-raised,#fff))}
+.u-route-editor__version-diff-arrow{align-self:center;color:var(--u-text-muted,#98a2b3);font-weight:800}
+.u-route-editor__version-diff-list{margin-top:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--u-border,#e4e7ec) 75%,transparent);font-size:12px}
+.u-route-editor__version-diff-list b{font-size:11px;color:var(--u-text-secondary,#667085)}
+.u-route-editor__version-diff-list ul{margin:5px 0 0;padding-left:20px;line-height:1.5}
+.u-route-editor__version-diff-list.is-removed li::marker{color:var(--u-danger,#b42318)}
+@media(max-width:600px){.u-route-editor__version-diff-row{grid-template-columns:1fr}.u-route-editor__version-diff-row dd{grid-template-columns:1fr}.u-route-editor__version-diff-arrow{display:none}}

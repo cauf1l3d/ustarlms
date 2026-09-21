@@ -4146,5 +4146,30 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082729, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082733) {
+        $table = new xmldb_table('local_ustar_employment');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '16', null, XMLDB_NOTNULL, null, 'pending');
+        $table->add_field('source', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, 'manual');
+        $table->add_field('approvedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('approvedat', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('approvedby_fk', XMLDB_KEY_FOREIGN, ['approvedby'], 'user', ['id']);
+        $table->add_index('userid_uix', XMLDB_INDEX_UNIQUE, ['userid']);
+        $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Deliberately do not backfill. Absence means legacy-compatible active state;
+        // explicit rows are created only by a reviewed HR/registration workflow.
+        upgrade_plugin_savepoint(true, 2026082733, 'local', 'ustar');
+    }
+
 return true;
 }

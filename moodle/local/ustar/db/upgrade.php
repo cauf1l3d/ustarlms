@@ -4250,6 +4250,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         require_once(__DIR__ . '/../classes/board_retirement.php');
         \local_ustar\board_retirement::archive_live_boards(0);
+        // Archive is now the source of historical truth. The working DJGMS
+        // table is removed so boards cannot be reactivated accidentally.
+        $legacyboards = new xmldb_table('local_ustar_boards');
+        if ($dbman->table_exists($legacyboards)) {
+            $dbman->drop_table($legacyboards);
+        }
         upgrade_plugin_savepoint(true, 2026082744, 'local', 'ustar');
     }
 

@@ -39,7 +39,7 @@ final class material_studio {
               ORDER BY c.timemodified DESC, c.id DESC';
         $out = [];
         foreach ($DB->get_records_sql($sql) as $row) {
-            $out[] = self::view_row($row);
+            $out[] = self::view_row($row, $actorid);
         }
         return $out;
     }
@@ -231,7 +231,7 @@ final class material_studio {
                 \context_system::instance(), 'local/ustar:use', 'nopermissions', ''
             );
         }
-        return self::view_row($row);
+        return self::view_row($row, $viewerid);
     }
 
     /** @return array<string,mixed> */
@@ -290,14 +290,14 @@ final class material_studio {
     }
 
     /** @return array<string,mixed> */
-    private static function view_row(\stdClass $row): array {
+    private static function view_row(\stdClass $row, int $viewerid): array {
         $source = json_decode((string)$row->sourcejson, true);
         $source = is_array($source) ? $source : [];
         $questions = is_array($source['questions'] ?? null) ? $source['questions'] : [];
         $blueprintid = (int)$row->blueprintid;
         $packageurl = '';
         if ((string)($row->packagestatus ?? '') === 'imported') {
-            $file = self::package_file($blueprintid, (int)($GLOBALS['USER']->id ?? 0));
+            $file = self::package_file($blueprintid, $viewerid);
             if ($file) {
                 $packageurl = \moodle_url::make_pluginfile_url(
                     \context_system::instance()->id, 'local_ustar', self::FILEAREA_SCORM, $blueprintid,

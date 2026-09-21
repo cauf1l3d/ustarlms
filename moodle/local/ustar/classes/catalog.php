@@ -159,6 +159,7 @@ final class catalog {
         $context = \context_system::instance();
         return $userid > 0 && (is_siteadmin($userid)
             || has_capability('local/ustar:admin', $context, $userid)
+            || has_capability('local/ustar:hr', $context, $userid)
             || has_capability('local/ustar:hrmanage', $context, $userid)
             || has_capability('local/ustar:managecatalog', $context, $userid));
     }

@@ -9,6 +9,7 @@ $result = null;
 $notice = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (string)$item['kind'] === 'assessment') {
     require_sesskey();
+    \local_ustar\view_as::assert_writable();
     try {
         $answers = [];
         foreach ((array)$item['questions'] as $index => $question) {

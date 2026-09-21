@@ -1038,11 +1038,10 @@
           </FIELDS>
           <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-            <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+            <KEY NAME="userid_fk" TYPE="foreign-unique" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
             <KEY NAME="approvedby_fk" TYPE="foreign" FIELDS="approvedby" REFTABLE="user" REFFIELDS="id" />
           </KEYS>
           <INDEXES>
-            <INDEX NAME="userid_uix" UNIQUE="true" FIELDS="userid" />
             <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status" />
           </INDEXES>
         </TABLE>

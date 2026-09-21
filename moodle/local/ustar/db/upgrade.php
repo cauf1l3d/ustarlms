@@ -4158,9 +4158,8 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN_UNIQUE, ['userid'], 'user', ['id']);
         $table->add_key('approvedby_fk', XMLDB_KEY_FOREIGN, ['approvedby'], 'user', ['id']);
-        $table->add_index('userid_uix', XMLDB_INDEX_UNIQUE, ['userid']);
         $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);

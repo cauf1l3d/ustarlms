@@ -24,6 +24,7 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/material_player.php', ['id' => $id]));
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title((string)$item['title'] . ' | USTAR Academy');
+$PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 $PAGE->set_heading('USTAR Academy');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(s((string)$item['title']));

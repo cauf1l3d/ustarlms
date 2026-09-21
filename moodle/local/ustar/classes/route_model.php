@@ -317,7 +317,7 @@ final class route_model {
         try {
             $transaction = $DB->start_delegated_transaction();
             try {
-                $DB->get_record(
+                $route = $DB->get_record(
                     'local_ustar_routes',
                     ['id' => $routeid, 'active' => 1],
                     '*',
@@ -358,6 +358,19 @@ final class route_model {
                 if ($status === self::STATUS_PUBLISHED && !$requirements) {
                     throw new \moodle_exception(
                         'Нельзя опубликовать шаг без обучения или условия завершения'
+                    );
+                }
+
+                // Validate publication before touching point metadata. The
+                // transaction still protects the full command, while this
+                // ordering also keeps a rejected material from producing any
+                // observable point revision on database drivers that defer
+                // delegated-transaction rollback callbacks.
+                if ($status === self::STATUS_PUBLISHED) {
+                    self::assert_publishable_requirements(
+                        $route,
+                        $requirements,
+                        $actorid
                     );
                 }
 

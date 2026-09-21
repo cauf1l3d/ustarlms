@@ -9,6 +9,7 @@ $notice = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
+    \local_ustar\view_as::assert_writable();
     try {
         $action = required_param('action', PARAM_ALPHANUMEXT);
         if ($action === 'request') {

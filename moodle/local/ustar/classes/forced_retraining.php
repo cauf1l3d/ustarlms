@@ -93,7 +93,7 @@ final class forced_retraining {
             if (isset($blockedpolicyids[(int)$policy->id])) {
                 continue;
             }
-            $topic = self::topic_for_policy($policy, $positionid);
+            $topic = self::topic_for_policy($policy, $positionid, $userid);
             if ($topic) {
                 $out[] = $topic;
             }
@@ -147,7 +147,7 @@ final class forced_retraining {
                     continue;
                 }
                 $policy = $DB->get_record('local_ustar_assess_policy', ['id' => $policyid, 'active' => 1], '*', MUST_EXIST);
-                $topic = self::topic_for_policy($policy, $positionid);
+                $topic = self::topic_for_policy($policy, $positionid, $userid);
                 if (!$topic) {
                     throw new \moodle_exception('Одна из выбранных тем не относится к текущей должности сотрудника.');
                 }
@@ -159,6 +159,9 @@ final class forced_retraining {
                     'assessmentversionid' => (int)$policy->versionid,
                     'remediationpointid' => (int)$topic['remediationpointid'],
                     'remediationversionid' => (int)$topic['remediationversionid'],
+                    'priorcompletionid' => (int)$topic['priorcompletionid'],
+                    'priorcompletedat' => (int)$topic['priorcompletedat'],
+                    'priorcompletionkey' => (string)$topic['priorcompletionkey'],
                     'positionid' => $positionid,
                     'cutoff' => $now,
                     'baselineattempts' => (int)($assessment['totalattempts'] ?? 0),
@@ -469,7 +472,7 @@ final class forced_retraining {
     }
 
     /** @return array<string,mixed>|null */
-    private static function topic_for_policy(\stdClass $policy, string $positionid): ?array {
+    private static function topic_for_policy(\stdClass $policy, string $positionid, int $userid): ?array {
         global $DB;
         $assessmentversion = route_model::current_published_version((int)$policy->pointid);
         if (!$assessmentversion || (int)$assessmentversion->id !== (int)$policy->versionid) {
@@ -488,6 +491,14 @@ final class forced_retraining {
         if (!$remediationversion) {
             return null;
         }
+
+        // A retraining assignment is a repeat, never a first delivery. Accept
+        // only preserved confirmed completion of this logical route material;
+        // viewing, failed attempts, revoked facts and pending work are excluded.
+        $prior = self::prior_confirmed_material_completion($userid, $remediationpointid);
+        if (!$prior) {
+            return null;
+        }
         $assessmentpoint = $DB->get_record('local_ustar_route_points', ['id' => (int)$policy->pointid], 'id,routeid', IGNORE_MISSING);
         $remediationpoint = $DB->get_record('local_ustar_route_points', ['id' => $remediationpointid], 'id,routeid', IGNORE_MISSING);
         if (!$assessmentpoint || !$remediationpoint || (int)$assessmentpoint->routeid !== (int)$remediationpoint->routeid) {
@@ -497,9 +508,50 @@ final class forced_retraining {
             'policyid' => (int)$policy->id,
             'remediationpointid' => $remediationpointid,
             'remediationversionid' => (int)$remediationversion->id,
+            'priorcompletionid' => (int)$prior->id,
+            'priorcompletedat' => (int)$prior->completedat,
+            'priorcompletionkey' => (string)$prior->completionkey,
             'materialtitle' => format_string((string)$remediationversion->title),
             'assessmenttitle' => format_string((string)$assessmentversion->title),
             'label' => format_string((string)$remediationversion->title) . ' → ' . format_string((string)$assessmentversion->title),
+        ];
+    }
+
+
+    /**
+     * Find a prior verified route completion for this material. The current
+     * completion-cycle identity is authoritative; legacy immutable progress is
+     * accepted only when it is explicitly complete for the same route point.
+     */
+    private static function prior_confirmed_material_completion(int $userid, int $pointid): ?\stdClass {
+        global $DB;
+        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_completion_cycle'))) {
+            $cycle = completion_cycle::latest_confirmed($userid, $pointid);
+            if ($cycle) {
+                return (object)[
+                    'id' => (int)$cycle->id,
+                    'completedat' => (int)$cycle->completedat,
+                    'completionkey' => (string)$cycle->cyclekey,
+                ];
+            }
+        }
+        $progress = $DB->get_record_sql(
+            'SELECT id, completedat, versionid
+               FROM {local_ustar_route_progress}
+              WHERE userid = :userid
+                AND pointid = :pointid
+                AND status = :status
+           ORDER BY completedat DESC, id DESC',
+            ['userid' => $userid, 'pointid' => $pointid, 'status' => 'complete'],
+            IGNORE_MULTIPLE
+        );
+        if (!$progress || (int)$progress->completedat <= 0) {
+            return null;
+        }
+        return (object)[
+            'id' => (int)$progress->id,
+            'completedat' => (int)$progress->completedat,
+            'completionkey' => 'legacy-progress:' . (int)$progress->id . ':' . (int)$progress->versionid,
         ];
     }
 

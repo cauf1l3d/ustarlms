@@ -241,6 +241,9 @@ final class competition {
            ORDER BY points DESC, p.id ASC',
             ['competitionid' => $competitionid, 'status' => 'active']
         );
+        $records = array_filter($records, static fn(\stdClass $record): bool =>
+            accounts::participates((int)$record->userid)
+        );
         $counts = [];
         foreach ($records as $record) {
             $counts[(string)$record->points] = ($counts[(string)$record->points] ?? 0) + 1;
@@ -249,9 +252,6 @@ final class competition {
         $previous = null;
         $rank = 0;
         foreach (array_values($records) as $index => $record) {
-            if (!accounts::participates((int)$record->userid)) {
-                continue;
-            }
             $points = (int)$record->points;
             if ($previous === null || $points !== $previous) {
                 $rank = $index + 1;

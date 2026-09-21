@@ -109,8 +109,15 @@ final class target_core {
         self::require_manager($actorid, (int)$evidence->userid);
         $eventtype = self::clean_code($eventtype, 16);
         $reason = trim($reason);
-        if (!in_array($eventtype, ['corrected','revoked'], true) || $reason === '') {
+        if (!in_array($eventtype, ['corrected','revoked','renewed','restored'], true) || $reason === '') {
             throw new \invalid_parameter_exception('A supported evidence event and reason are required');
+        }
+        $latest = self::latest_evidence_event($evidenceid);
+        if ($latest
+                && (string)$latest->eventtype === $eventtype
+                && (int)($latest->replacementid ?? 0) === (int)($replacementid ?? 0)
+                && (string)$latest->reason === $reason) {
+            return (int)$latest->id;
         }
         if ($replacementid !== null) {
             $replacement = $DB->get_record('local_ustar_evidence_rec', ['id' => $replacementid], 'id,userid', MUST_EXIST);
@@ -124,17 +131,93 @@ final class target_core {
         ]);
     }
 
-    /** Current evidence state is derived from immutable facts and events. */
+    /** Return the newest immutable lifecycle event for one evidence fact. */
+    private static function latest_evidence_event(int $evidenceid): ?\stdClass {
+        global $DB;
+        $event = $DB->get_record_sql(
+            'SELECT * FROM {local_ustar_evidence_evt}
+              WHERE evidenceid = :evidenceid
+           ORDER BY timecreated DESC, id DESC',
+            ['evidenceid' => $evidenceid],
+            IGNORE_MULTIPLE
+        );
+        return $event ?: null;
+    }
+
+    /** Current evidence state is derived from immutable facts and its latest lifecycle event. */
     public static function evidence_is_valid(int $evidenceid, ?int $attime = null): bool {
         global $DB;
         $evidence = $DB->get_record('local_ustar_evidence_rec', ['id' => $evidenceid], '*', IGNORE_MISSING);
-        if (!$evidence || $evidence->outcome === 'failed') return false;
+        if (!$evidence || $evidence->outcome === 'failed') {
+            return false;
+        }
         $attime = $attime ?? time();
-        if ((int)$evidence->validfrom > $attime || (!empty($evidence->expiresat) && (int)$evidence->expiresat <= $attime)) return false;
-        return !$DB->record_exists_select(
-            'local_ustar_evidence_evt', 'evidenceid = :id AND eventtype IN (:revoked,:corrected)',
-            ['id' => $evidenceid, 'revoked' => 'revoked', 'corrected' => 'corrected']
+        if ((int)$evidence->validfrom > $attime
+                || (!empty($evidence->expiresat) && (int)$evidence->expiresat <= $attime)) {
+            return false;
+        }
+        $latest = self::latest_evidence_event($evidenceid);
+        return !$latest || (string)$latest->eventtype === 'restored';
+    }
+
+    /**
+     * Renew evidence as a new immutable fact and supersede the old fact.
+     *
+     * The caller supplies a new idempotency key and may override source,
+     * validity and details. Identity, type and outcome stay explicit in the
+     * copied payload, so every supported evidence type follows one lifecycle.
+     */
+    public static function renew_evidence(
+        int $evidenceid,
+        array $overrides,
+        int $actorid
+    ): int {
+        global $DB;
+        $evidence = $DB->get_record('local_ustar_evidence_rec', ['id' => $evidenceid], '*', MUST_EXIST);
+        self::require_manager($actorid, (int)$evidence->userid);
+
+        $key = \core_text::substr(trim((string)($overrides['idempotencykey'] ?? '')), 0, 128);
+        if ($key === '') {
+            throw new \invalid_parameter_exception('Renewal idempotency key is required');
+        }
+
+        $transaction = $DB->start_delegated_transaction();
+        $replacementid = self::record_evidence([
+            'userid' => (int)$evidence->userid,
+            'assignmentid' => $overrides['assignmentid'] ?? $evidence->assignmentid,
+            'skillid' => $overrides['skillid'] ?? $evidence->skillid,
+            'positionid' => $overrides['positionid'] ?? $evidence->positionid,
+            'evidencetype' => (string)$evidence->evidencetype,
+            'sourcekind' => $overrides['sourcekind'] ?? $evidence->sourcekind,
+            'sourceid' => $overrides['sourceid'] ?? $evidence->sourceid,
+            'outcome' => $overrides['outcome'] ?? $evidence->outcome,
+            'idempotencykey' => $key,
+            'details' => $overrides['details'] ?? json_decode((string)$evidence->detailsjson, true) ?? [],
+            'validfrom' => $overrides['validfrom'] ?? time(),
+            'expiresat' => $overrides['expiresat'] ?? null,
+        ], $actorid);
+
+        self::append_evidence_event(
+            $evidenceid,
+            'renewed',
+            trim((string)($overrides['reason'] ?? 'Evidence renewed')),
+            $actorid,
+            $replacementid
         );
+        $transaction->allow_commit();
+        return $replacementid;
+    }
+
+    /** Restore a previously revoked fact without deleting its audit history. */
+    public static function restore_evidence(int $evidenceid, string $reason, int $actorid): int {
+        global $DB;
+        $evidence = $DB->get_record('local_ustar_evidence_rec', ['id' => $evidenceid], '*', MUST_EXIST);
+        self::require_manager($actorid, (int)$evidence->userid);
+        $latest = self::latest_evidence_event($evidenceid);
+        if (!$latest || (string)$latest->eventtype !== 'revoked') {
+            throw new \invalid_parameter_exception('Only revoked evidence can be restored');
+        }
+        return self::append_evidence_event($evidenceid, 'restored', $reason, $actorid);
     }
 
     /** Record a human decision for a published critical-operation gate. */

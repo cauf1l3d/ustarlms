@@ -331,7 +331,7 @@ final class catalog {
     private static function slug(string $slug, string $title): ?string {
         $slug = trim(clean_param($slug, PARAM_ALPHANUMEXT));
         if ($slug !== '') { return $slug; }
-        $slug = core_text::strtolower($title);
+        $slug = \core_text::strtolower($title);
         $slug = preg_replace('/[^a-z0-9а-яё]+/ui', '-', $slug);
         return trim((string)$slug, '-') ?: null;
     }

@@ -240,7 +240,7 @@ final class staffing_requests {
                     (string)$request->positionid,
                     (int)$request->requestedby
                 );
-                position_access::sync_user($createduserid);
+                employment::set_status($createduserid, employment::ACTIVE, $actorid, 'staffing_hire');
             } else if ((string)$request->requesttype === self::TYPE_TERMINATE) {
                 require_once($CFG->dirroot . '/user/lib.php');
                 $target = $DB->get_record('user', [
@@ -268,7 +268,7 @@ final class staffing_requests {
                     (int)$target->id,
                     'staffing_termination'
                 );
-                position_access::sync_user((int)$target->id);
+                employment::set_status((int)$target->id, employment::TERMINATED, $actorid, 'staffing_termination');
                 $targetuserid = (int)$target->id;
                 people::log_action($actorid, $targetuserid, 'person_terminated', [
                     'requestid' => $requestid,

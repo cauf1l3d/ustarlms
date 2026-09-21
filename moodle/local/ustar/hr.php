@@ -290,14 +290,8 @@ $sql = "
         u.lastname,
         u.email,
         u.suspended,
-        u.lastaccess,
-        TRIM(d.data) AS positionid
+        u.lastaccess
     FROM {user} u
-    LEFT JOIN {user_info_field} f
-      ON f.shortname = 'ustar_position'
-    LEFT JOIN {user_info_data} d
-      ON d.userid = u.id
-     AND d.fieldid = f.id
     WHERE "
     .
     implode(
@@ -330,10 +324,7 @@ foreach ($records as $person) {
         continue;
     }
 
-    $positionid =
-        trim(
-            (string)$person->positionid
-        );
+    $positionid = (string)\local_ustar\organization_identity::resolve((int)$person->id)['positionid'];
 
     $position =
         $positionmap[

@@ -519,19 +519,11 @@ final class forced_retraining {
             throw new \moodle_exception('Механика принудительного переобучения недоступна.');
         }
         $context = \context_system::instance();
-        // executive is intentionally granted this one scoped mutation by the
-        // product requirement; this does not make the role a general HR writer.
-        $companywrite = is_siteadmin($actorid)
-            || has_capability('local/ustar:admin', $context, $actorid)
-            || has_capability('local/ustar:hrmanage', $context, $actorid)
-            || has_capability('local/ustar:executive', $context, $actorid);
-        $scope = $companywrite
-            ? team_access::learning_scope($actorid)
-            : organization_model::manager_scope($actorid);
-        if (empty($scope['allowed'])) {
+        $access = access_context::for_user($actorid);
+        if (empty($access['teamremediation']) || empty($access['scope']['allowed'])) {
             throw new \required_capability_exception($context, 'local/ustar:viewteam', 'nopermissions', '');
         }
-        return $scope;
+        return $access['scope'];
     }
 
     private static function evidence_runtime(array $assignment): \stdClass {

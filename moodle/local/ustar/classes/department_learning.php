@@ -35,25 +35,16 @@ final class department_learning {
         }
         [$usersql, $userparams] = $DB->get_in_or_equal(array_keys($alloweduserids), SQL_PARAMS_NAMED, 'teamuser');
 
-        $sql =
-            "SELECT u.id,u.firstname,u.lastname,
-                    u.lastaccess,d.data AS positionid
-               FROM {user} u
-               JOIN {user_info_data} d
-                 ON d.userid=u.id
-               JOIN {user_info_field} f
-                 ON f.id=d.fieldid
-                AND f.shortname='ustar_position'
-              WHERE u.deleted=0
-                AND u.suspended=0
-                AND u.id>1 AND u.id {$usersql}";
+        $sql = "SELECT u.id,u.firstname,u.lastname,u.lastaccess
+                  FROM {user} u
+                 WHERE u.deleted=0 AND u.suspended=0 AND u.id>1 AND u.id {$usersql}";
 
         foreach ($DB->get_records_sql($sql, $userparams) as $u) {
             if ((int)$u->id === $managerid) {
                 continue;
             }
 
-            if (!accounts::participates((int)$u->id)) {
+            if (!accounts::participates((int)$u->id) || !employment::is_active((int)$u->id)) {
                 continue;
             }
 

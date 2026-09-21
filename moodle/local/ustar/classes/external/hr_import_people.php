@@ -77,21 +77,6 @@ class hr_import_people extends base {
                     people::log_action((int)$USER->id, (int)$existing->id, 'bulk_position_updated', ['positionid' => $positionid, 'line' => $line]);
 
                     try {
-                        $access = \local_ustar\position_access::sync_user((int)$existing->id);
-                        $sync['accessSynced']++;
-                        people::log_action((int)$USER->id, (int)$existing->id, 'position_access_synced', [
-                            'positionid' => $positionid,
-                            'targetrole' => $access['targetrole'] ?? '',
-                            'line' => $line,
-                        ]);
-                    } catch (\Throwable $e) {
-                        $sync['accessErrors'][] = ['line' => $line, 'userid' => (int)$existing->id, 'message' => $e->getMessage()];
-                        people::log_action((int)$USER->id, (int)$existing->id, 'position_access_sync_failed', [
-                            'positionid' => $positionid, 'message' => $e->getMessage(), 'line' => $line,
-                        ]);
-                    }
-
-                    try {
                         $result = assignment::sync_user((int)$existing->id);
                         $sync['users']++;
                         $sync['enrolled'] += count($result['enrolled'] ?? []);
@@ -138,22 +123,13 @@ class hr_import_people extends base {
                 set_user_preference('auth_forcepasswordchange', 1, $userid);
                 people::set_position_id($userid, $positionid);
                 \local_ustar\accounts::set_type($userid, \local_ustar\accounts::TYPE_EMPLOYEE);
+                \local_ustar\employment::set_status(
+                    $userid,
+                    \local_ustar\employment::ACTIVE,
+                    (int)$USER->id,
+                    'hr_import'
+                );
                 people::log_action((int)$USER->id, $userid, 'person_imported', ['positionid' => $positionid, 'line' => $line]);
-
-                try {
-                    $access = \local_ustar\position_access::sync_user($userid);
-                    $sync['accessSynced']++;
-                    people::log_action((int)$USER->id, $userid, 'position_access_synced', [
-                        'positionid' => $positionid,
-                        'targetrole' => $access['targetrole'] ?? '',
-                        'line' => $line,
-                    ]);
-                } catch (\Throwable $e) {
-                    $sync['accessErrors'][] = ['line' => $line, 'userid' => $userid, 'message' => $e->getMessage()];
-                    people::log_action((int)$USER->id, $userid, 'position_access_sync_failed', [
-                        'positionid' => $positionid, 'message' => $e->getMessage(), 'line' => $line,
-                    ]);
-                }
 
                 try {
                     $result = assignment::sync_user($userid);

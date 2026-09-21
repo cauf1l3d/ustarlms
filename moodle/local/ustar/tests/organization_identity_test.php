@@ -6,6 +6,9 @@ defined('MOODLE_INTERNAL') || die();
 #[\PHPUnit\Framework\Attributes\CoversClass(organization_model::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(team_access::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(employment::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(access_context::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(capabilities::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(access_migration::class)]
 final class organization_identity_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -128,6 +131,29 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertEquals([$employee->id], array_column($result['team'], 'id'));
     }
 
+    public function test_position_never_grants_team_access_without_explicit_capability(): void {
+        global $DB;
+        $head = $this->employee('retail_head');
+        $place = $this->place('retail_head');
+        $this->assign($head->id, $place);
+        $this->assign($this->employee()->id, $this->place('retail_seller', $place));
+
+        $before = $DB->perf_get_writes();
+        $result = position_access::sync_user($head->id);
+
+        $this->assertSame('explicit_access_required', $result['status']);
+        $this->assertFalse(access_context::for_user($head->id)['teamread']);
+        $this->assertSame($before, $DB->perf_get_writes());
+    }
+
+    public function test_team_capability_without_valid_subtree_grants_no_scope(): void {
+        $user = $this->employee('retail_head');
+        $this->grant($user->id, ['local/ustar:viewteam']);
+        $access = access_context::for_user($user->id);
+        $this->assertFalse($access['teamread']);
+        $this->assertFalse($access['scope']['allowed']);
+    }
+
     public function test_hr_and_hrd_read_company_but_private_capability_stays_separate(): void {
         foreach (['local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:executive'] as $capability) {
             $user = $this->employee();
@@ -244,5 +270,36 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertSame($first['employees'], $second['employees']);
         $this->assertSame($before, $DB->perf_get_writes());
         $this->assertSame('review_legacy_projection', $first['employees'][0]['action']);
+    }
+
+    public function test_access_migration_dry_run_is_read_only_and_apply_is_repeatable(): void {
+        global $DB;
+        $user = $this->employee('retail_head');
+        $roleid = create_role('Legacy projected manager', 'ustar_manager', 'Fixture');
+        role_assign($roleid, $user->id, \context_system::instance()->id, 'local_ustar', 0);
+        $before = $DB->perf_get_writes();
+        $report = access_migration::report();
+        $this->assertSame($before, $DB->perf_get_writes());
+        $row = current(array_filter($report['users'],
+            static fn(array $candidate): bool => (int)$candidate['userid'] === (int)$user->id));
+        $plan = ['users' => [[
+            'userid' => (int)$user->id,
+            'expectedpositionid' => (string)$row['positionid'],
+            'expectedemployment' => (string)$row['employment'],
+            'expectedprojectedroles' => $row['projectedroles'],
+            'employment' => employment::ACTIVE,
+            'roles' => ['ustar_manager'],
+        ]]];
+
+        $first = access_migration::apply($plan);
+        $second = access_migration::apply($plan);
+        $this->assertSame([(int)$user->id], $first['changeduserids']);
+        $this->assertSame([(int)$user->id], $second['unchangeduserids']);
+        $this->assertFalse($DB->record_exists('role_assignments', [
+            'roleid' => $roleid, 'userid' => $user->id,
+            'contextid' => \context_system::instance()->id, 'component' => 'local_ustar']));
+        $this->assertTrue($DB->record_exists('role_assignments', [
+            'roleid' => $roleid, 'userid' => $user->id,
+            'contextid' => \context_system::instance()->id, 'component' => 'local_ustar_migration']));
     }
 }

@@ -4170,5 +4170,11 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082733, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082734) {
+        // Stage 2 completes the access cutover in application code. The reviewed
+        // role/employment migration remains an explicit CLI operation.
+        upgrade_plugin_savepoint(true, 2026082734, 'local', 'ustar');
+    }
+
 return true;
 }

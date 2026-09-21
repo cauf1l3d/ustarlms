@@ -40,12 +40,21 @@ final class employment {
     }
 
     public static function set_status(int $userid, string $status, int $actorid, string $source = 'manual'): void {
-        global $DB;
+        global $DB, $USER;
         if (!in_array($status, self::statuses(), true)) {
             throw new \invalid_parameter_exception('Неизвестный статус занятости USTAR');
         }
         if (!$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])) {
             throw new \invalid_parameter_exception('Пользователь не найден');
+        }
+        if ($actorid <= 0 || (int)($USER->id ?? 0) !== $actorid
+                || (!is_siteadmin($actorid)
+                    && !has_capability('local/ustar:hrmanage', \context_system::instance(), $actorid))) {
+            throw new \required_capability_exception(
+                \context_system::instance(), 'local/ustar:hrmanage', 'nopermissions', '');
+        }
+        if (class_exists('\\local_ustar\\view_as')) {
+            view_as::assert_writable();
         }
         $now = time();
         $existing = $DB->get_record('local_ustar_employment', ['userid' => $userid], '*', IGNORE_MISSING);

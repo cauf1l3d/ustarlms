@@ -4,17 +4,15 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Position -> USTAR interface access bridge.
- *
- * Position remains the business source of truth. Moodle roles are only the
- * permission projection required by protected USTAR pages.
+ * Compatibility bridge for access previously projected from positions.
+ * New access decisions use explicit Moodle capabilities through access_context.
  */
 final class position_access {
     private const COMPONENT = 'local_ustar';
     private const ROLE_MANAGER = 'ustar_manager';
     private const ROLE_HR = 'ustar_hr';
 
-    /** Ensure the system roles used by automatic position projection exist. */
+    /** Ensure the explicit system roles used by USTAR administrators exist. */
     public static function ensure_roles(): array {
         global $DB;
 
@@ -22,7 +20,7 @@ final class position_access {
         $definitions = [
             self::ROLE_MANAGER => [
                 'name' => 'USTAR Manager',
-                'description' => 'Position-derived manager access in USTAR Academy.',
+                'description' => 'Explicit manager access in USTAR Academy.',
                 'caps' => [
                     'local/ustar:use',
                     'local/ustar:viewteam',
@@ -30,7 +28,7 @@ final class position_access {
             ],
             self::ROLE_HR => [
                 'name' => 'USTAR HR',
-                'description' => 'Position-derived HR access in USTAR Academy.',
+                'description' => 'Explicit HR access in USTAR Academy.',
                 'caps' => [
                     'local/ustar:use',
                     'local/ustar:hr',
@@ -85,29 +83,14 @@ final class position_access {
         return null;
     }
 
-    /** Business classification used for automatic system-role projection. */
+    /** @deprecated Positions no longer grant access roles. */
     public static function target_role_for_position(?array $position): string {
-        if (!$position) {
-            return '';
-        }
-
-        // HR positions get HR workspace permissions automatically.
-        if ((string)($position['department'] ?? '') === 'hr') {
-            return self::ROLE_HR;
-        }
-
-        // Department heads get team-management visibility. This deliberately
-        // does NOT auto-grant executive access.
-        if (!empty($position['ishead'])) {
-            return self::ROLE_MANAGER;
-        }
-
         return '';
     }
 
     /**
-     * Synchronise only role assignments owned by local_ustar.
-     * Manually assigned HR/executive/admin roles are never removed.
+     * Compatibility no-op. Position changes must never create or remove access.
+     * Legacy projected assignments are handled only by the reviewed migration.
      */
     public static function sync_user(int $userid): array {
         global $DB;
@@ -117,51 +100,7 @@ final class position_access {
             return ['ok' => true, 'userid' => $userid, 'status' => 'skipped'];
         }
 
-        $roles = self::ensure_roles();
-        $context = \context_system::instance();
         $position = self::position_for_user($userid);
-        $target = !empty($user->suspended) ? '' : self::target_role_for_position($position);
-        if (
-            $target === ''
-            && empty($user->suspended)
-            && class_exists('\\local_ustar\\organization_model')
-            && organization_model::is_manager($userid)
-        ) {
-            $target = self::ROLE_MANAGER;
-        }
-
-        foreach ([self::ROLE_MANAGER, self::ROLE_HR] as $shortname) {
-            $roleid = (int)($roles[$shortname] ?? 0);
-            if (!$roleid) {
-                continue;
-            }
-
-            if ($shortname !== $target && $DB->record_exists('role_assignments', [
-                'roleid' => $roleid,
-                'userid' => $userid,
-                'contextid' => $context->id,
-                'component' => self::COMPONENT,
-                'itemid' => 0,
-            ])) {
-                role_unassign($roleid, $userid, $context->id, self::COMPONENT, 0);
-            }
-        }
-
-        if ($target !== '') {
-            $roleid = (int)$roles[$target];
-
-            // If the same role is already assigned manually, do not create a
-            // duplicate local_ustar assignment. Manual ownership is preserved.
-            $alreadyassigned = $DB->record_exists('role_assignments', [
-                'roleid' => $roleid,
-                'userid' => $userid,
-                'contextid' => $context->id,
-            ]);
-
-            if (!$alreadyassigned) {
-                role_assign($roleid, $userid, $context->id, self::COMPONENT, 0);
-            }
-        }
 
         return [
             'ok' => true,
@@ -169,31 +108,25 @@ final class position_access {
             'username' => (string)$user->username,
             'positionid' => (string)($position['id'] ?? ''),
             'position' => (string)($position['name'] ?? ''),
-            'targetrole' => $target,
-            'status' => 'synced',
+            'targetrole' => '',
+            'status' => 'explicit_access_required',
         ];
     }
 
     /** Role-aware first page after a normal sign-in. */
     public static function landing_path(int $userid): string {
         $context = \context_system::instance();
-        $position = self::position_for_user($userid);
-
+        $access = access_context::for_user($userid);
+        if ($access['employment']['status'] !== employment::ACTIVE) {
+            return '/local/ustar/profile.php';
+        }
         if (has_capability('local/ustar:executive', $context, $userid)) {
             return '/local/ustar/executive.php';
         }
-
-        if (
-            has_capability('local/ustar:hr', $context, $userid)
-            || (string)($position['department'] ?? '') === 'hr'
-        ) {
+        if (has_capability('local/ustar:hr', $context, $userid)) {
             return '/local/ustar/hr.php';
         }
-
-        if (
-            has_capability('local/ustar:viewteam', $context, $userid)
-            || !empty($position['ishead'])
-        ) {
+        if (!empty($access['teamread'])) {
             return '/local/ustar/team.php';
         }
 

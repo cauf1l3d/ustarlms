@@ -25,13 +25,10 @@ final class company_hierarchy {
         $ownblock = '';
         if ($viewerid !== null && !$admin) {
             $me = org::person($viewerid);
-            $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
-            $position = $positions[(string)($me['positionid'] ?? '')] ?? [];
+            $access = access_context::for_user($viewerid);
             $ownid = (string)($me['departmentid'] ?? '');
             $ownblock = $ownid !== '' ? self::business_block((string)($me['department'] ?? '')) : '';
-            $mode = self::business_label((string)($me['position'] ?? '')) === 'генеральный директор'
-                ? 'full' : ((!empty($position['ishead']) || organization_model::is_manager($viewerid))
-                    ? 'leaders' : 'branch');
+            $mode = !empty($access['teamread']) ? 'leaders' : 'branch';
         }
         if ($viewerid !== null && !$admin) {
             $scope = team_access::learning_scope($viewerid);
@@ -219,26 +216,8 @@ final class company_hierarchy {
             ];
         }
 
-        $sql =
-            "SELECT u.id,u.firstname,u.lastname,
-                    d.data AS positionid
-               FROM {user} u
-               JOIN {user_info_data} d
-                 ON d.userid=u.id
-               JOIN {user_info_field} f
-                 ON f.id=d.fieldid
-                AND f.shortname='ustar_position'
-              WHERE u.deleted=0
-                AND u.suspended=0
-                AND u.id>1";
-
-        foreach ($DB->get_records_sql($sql) as $u) {
-            if (!accounts::participates((int)$u->id)) {
-                continue;
-            }
-
-            $positionid =
-                trim((string)$u->positionid);
+        foreach (organization_directory::users(true) as $u) {
+            $positionid = (string)$u->positionid;
 
             $position =
                 $positionmap[$positionid]

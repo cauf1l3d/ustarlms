@@ -76,22 +76,6 @@ class hr_bulk_assign_positions extends base {
 
         foreach (array_keys($syncuserids) as $syncuserid) {
             try {
-                $access = \local_ustar\position_access::sync_user((int)$syncuserid);
-                $sync['accessSynced']++;
-                people::log_action((int)$USER->id, (int)$syncuserid, 'position_access_synced', [
-                    'targetrole' => $access['targetrole'] ?? '',
-                ]);
-            } catch (\Throwable $e) {
-                $sync['accessErrors'][] = [
-                    'userid' => (int)$syncuserid,
-                    'message' => $e->getMessage(),
-                ];
-                people::log_action((int)$USER->id, (int)$syncuserid, 'position_access_sync_failed', [
-                    'message' => $e->getMessage(),
-                ]);
-            }
-
-            try {
                 $result = assignment::sync_user((int)$syncuserid);
 
                 $sync['users']++;

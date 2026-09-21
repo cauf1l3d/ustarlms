@@ -72,7 +72,7 @@ class accounts {
 
     /**
      * Whether this identity belongs to the business workforce domain.
-     * Suspended employees remain business identities for HR/history, while
+     * Inactive employees remain business identities for HR/history, while
      * siteadmin/service/test accounts never become HR-visible employees.
      */
     public static function is_business_account(int $userid): bool {
@@ -118,7 +118,10 @@ class accounts {
             return false;
         }
 
-        return self::is_business_account($userid);
+        if (!self::is_business_account($userid)) {
+            return false;
+        }
+        return !class_exists('\\local_ustar\\employment') || employment::is_active($userid);
     }
 
     /**

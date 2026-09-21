@@ -138,11 +138,11 @@ class structure {
     }
 
     /**
-     * Resolve the workspace role and position of a Moodle user.
-     * Priority: capability admin > head position (via profile field) > employee.
+     * Resolve the workspace role and canonical organization identity of a Moodle user.
+     * Priority: capability admin > explicit team access with valid scope > employee.
      *
-     * Position comes from custom profile field shortname 'ustar_position'
-     * (value = position id from the structure). Department is derived.
+     * Position comes from the primary StaffPlace assignment, with the legacy
+     * profile field used only while no assignment history exists.
      */
     public static function resolve_user(int $userid): array {
         global $DB;
@@ -161,11 +161,10 @@ class structure {
 
         $context = \context_system::instance();
         if (class_exists('\\local_ustar\\view_as') && isset($GLOBALS['USER']) && (int)$GLOBALS['USER']->id === $userid && view_as::active()) {
-            $role = ($position && !empty($position['ishead'])) ? 'head' : 'employee';
+            $role = 'employee';
         } else if (has_capability('local/ustar:admin', $context, $userid)) {
             $role = 'superadmin';
-        } else if (has_capability('local/ustar:viewteam', $context, $userid)
-                && organization_model::is_manager($userid)) {
+        } else if (access_context::for_user($userid)['teamread']) {
             $role = 'head';
         } else {
             $role = 'employee';

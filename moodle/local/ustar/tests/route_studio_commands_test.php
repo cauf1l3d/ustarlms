@@ -294,4 +294,62 @@ final class route_studio_commands_test extends \advanced_testcase {
             $revision
         );
     }
+
+    public function test_override_commands_are_idempotent_and_revert_preserves_history(): void {
+        global $DB, $USER;
+        [, , $route, $point] = $this->fixture();
+
+        $overrideid = route_commands::create_override(
+            (int)$route->id,
+            (int)$point->id,
+            (string)$route->positionid,
+            (int)$USER->id
+        );
+        $this->assertNotSame((int)$point->id, $overrideid);
+        $this->assertSame(
+            [$overrideid],
+            array_column(
+                route_scope::points_for_position(
+                    (int)$route->id,
+                    (string)$route->positionid
+                ),
+                'id'
+            )
+        );
+
+        $repeat = route_commands::create_override(
+            (int)$route->id,
+            (int)$point->id,
+            (string)$route->positionid,
+            (int)$USER->id
+        );
+        $this->assertSame($overrideid, $repeat);
+
+        $sourceid = route_commands::revert_override(
+            (int)$route->id,
+            $overrideid,
+            (string)$route->positionid,
+            (int)$USER->id
+        );
+        $this->assertSame((int)$point->id, $sourceid);
+        $this->assertSame(
+            [$point->id],
+            array_column(
+                route_scope::points_for_position(
+                    (int)$route->id,
+                    (string)$route->positionid
+                ),
+                'id'
+            )
+        );
+        $this->assertSame(
+            'reverted',
+            (string)$DB->get_field('local_ustar_route_scope', 'state', [
+                'pointid' => $overrideid,
+                'scopeid' => (string)$route->positionid,
+            ])
+        );
+        $this->assertNotNull(route_model::latest_version($overrideid));
+    }
+
 }

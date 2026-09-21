@@ -4195,5 +4195,11 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082737, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082738) {
+        // Route scope commands now own their lock and transaction when called
+        // outside the HTTP studio. Existing scope/history rows are untouched.
+        upgrade_plugin_savepoint(true, 2026082738, 'local', 'ustar');
+    }
+
 return true;
 }

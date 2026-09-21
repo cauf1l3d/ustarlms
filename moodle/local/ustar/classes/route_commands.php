@@ -13,6 +13,41 @@ defined('MOODLE_INTERNAL') || die();
 final class route_commands {
 
     /**
+     * Run a route mutation with the same lock/transaction contract as version
+     * commands. HTTP callers may have an outer transaction, while CLI/API
+     * callers must still be safe when they invoke the command directly.
+     *
+     * @param callable():mixed $operation
+     * @return mixed
+     */
+    private static function with_route_lock(int $routeid, callable $operation) {
+        global $DB;
+
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+        $lock = $factory->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception(
+                'Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.'
+            );
+        }
+
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $result = $operation();
+                $transaction->allow_commit();
+                return $result;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+
+        throw new \coding_exception('Не удалось изменить область маршрута');
+    }
+
+    /**
      * Save one point version for the common route or one position override.
      *
      * @param array<string,mixed> $command
@@ -134,12 +169,19 @@ final class route_commands {
                 'Не хватает данных для переопределения шага'
             );
         }
-        return route_scope::create_override(
+        return (int)self::with_route_lock($routeid, static function() use (
             $routeid,
             $pointid,
             $positionid,
             $actorid
-        );
+        ): int {
+            return route_scope::create_override(
+                $routeid,
+                $pointid,
+                $positionid,
+                $actorid
+            );
+        });
     }
 
     /** Revert a position override while preserving its history. */
@@ -154,11 +196,18 @@ final class route_commands {
                 'Не хватает данных для возврата общего шага'
             );
         }
-        return route_scope::revert_override(
+        return (int)self::with_route_lock($routeid, static function() use (
             $routeid,
             $pointid,
             $positionid,
             $actorid
-        );
+        ): int {
+            return route_scope::revert_override(
+                $routeid,
+                $pointid,
+                $positionid,
+                $actorid
+            );
+        });
     }
 }

@@ -44,6 +44,14 @@ published-версии. `route_model::version_diff()` сравнивает immut
 видеть прежнюю публикацию. История archived-версий не становится редактируемой и
 не подмешивается в текущий diff.
 
+## Третий пакет — безопасные scope-команды
+
+`route_commands::create_override()` и `revert_override()` теперь сами получают
+тот же route lock и delegated transaction, что и save/publish. Поэтому прямой
+CLI/API-вызов не может обойти атомарность HTTP-студии. Повторное создание
+переопределения остаётся идемпотентным, возврат переводит scope в `reverted`,
+отключает только локальную физическую точку и сохраняет её версии/факты.
+
 ## Что ещё не закрыто этапом 4
 
 - browser acceptance Route Studio и drag-and-drop на интегрированном host;

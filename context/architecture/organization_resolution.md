@@ -45,3 +45,18 @@ This package does not close stage 2: explicit employment/approval state, replaci
 automatic position-to-HR role projection, reviewed migration/apply commands and
 the remaining organization consumers still need conversion. Signup and HR-console
 UI belong to stage 3. Full stage-2 acceptance must not be inferred from this package's tests.
+
+## Employment and approval state
+
+`local_ustar_employment` is the explicit USTAR lifecycle record. Its states are
+`pending`, `active`, `suspended` and `terminated`; they do not mirror or mutate
+Moodle `user.confirmed`, `user.suspended` or `user.deleted`.
+
+- A missing row preserves legacy behaviour during the reviewed migration window.
+- Once a row exists, it is authoritative; no fallback to Moodle flags is allowed.
+- Only `active` employees may receive learning assignments, route rewards or
+  organization authority. Moodle account guards still apply independently.
+- No automatic backfill runs during upgrade. Registration and HR approval will
+  create/change records through an authorized command in the next package.
+- `source`, approver and timestamps make an activation auditable. Position and
+  department remain resolved through StaffPlace/Assignment, not this table.

@@ -4176,5 +4176,11 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082734, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082735) {
+        // Registration uses the existing staffing and notification schema.
+        // The savepoint refreshes the user_created observer through the normal upgrade.
+        upgrade_plugin_savepoint(true, 2026082735, 'local', 'ustar');
+    }
+
 return true;
 }

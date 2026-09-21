@@ -9,6 +9,7 @@ defined('MOODLE_INTERNAL') || die();
 #[\PHPUnit\Framework\Attributes\CoversClass(access_context::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(capabilities::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(access_migration::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(registration_service::class)]
 final class organization_identity_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -301,5 +302,69 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertTrue($DB->record_exists('role_assignments', [
             'roleid' => $roleid, 'userid' => $user->id,
             'contextid' => \context_system::instance()->id, 'component' => 'local_ustar_migration']));
+    }
+
+    public function test_self_registration_stays_pending_until_scoped_manager_approves(): void {
+        global $DB;
+        $manager = $this->employee('retail_head');
+        $managerplace = $this->place('retail_head');
+        $this->assign($manager->id, $managerplace);
+        $this->place('retail_seller', $managerplace);
+        $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
+
+        $candidate = $this->getDataGenerator()->create_user(['auth' => 'email']);
+        $this->assertSame(employment::PENDING, employment::resolve($candidate->id)['status']);
+        $this->setUser($candidate);
+        $requestid = registration_service::submit($candidate->id, 'retail_seller');
+        $this->assertSame($requestid,
+            registration_service::submit($candidate->id, 'retail_seller'));
+        $this->assertFalse(employment::learning_allowed($candidate->id));
+
+        $this->setUser($manager);
+        $result = staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
+            $manager->id);
+        $repeat = staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
+            $manager->id);
+        $this->assertSame((int)$candidate->id, $result['userid']);
+        $this->assertTrue($repeat['idempotent']);
+        $this->assertSame(employment::ACTIVE, employment::resolve($candidate->id)['status']);
+        $this->assertSame('retail_seller', organization_identity::resolve($candidate->id)['positionid']);
+        $this->assertCount(1, array_filter(organization_model::active_assignments($candidate->id),
+            static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'));
+    }
+
+    public function test_manager_cannot_approve_registration_outside_scope(): void {
+        $manager = $this->employee('retail_head');
+        $this->assign($manager->id, $this->place('retail_head'));
+        $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
+        $candidate = $this->getDataGenerator()->create_user(['auth' => 'email']);
+        $this->setUser($candidate);
+        $requestid = registration_service::submit($candidate->id, 'opt_manager');
+        $this->setUser($manager);
+        $this->expectException(\required_capability_exception::class);
+        staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED, $manager->id);
+    }
+
+    public function test_registration_rejection_is_repeatable_and_allows_corrected_request(): void {
+        $manager = $this->employee('retail_head');
+        $managerplace = $this->place('retail_head');
+        $this->assign($manager->id, $managerplace);
+        $this->place('retail_seller', $managerplace);
+        $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
+        $candidate = $this->getDataGenerator()->create_user(['auth' => 'email']);
+        $this->setUser($candidate);
+        $firstid = registration_service::submit($candidate->id, 'retail_seller');
+
+        $this->setUser($manager);
+        staffing_requests::review($firstid, staffing_requests::STATUS_REJECTED,
+            $manager->id, ['reviewcomment' => 'Уточните должность']);
+        $repeat = staffing_requests::review($firstid, staffing_requests::STATUS_REJECTED,
+            $manager->id, ['reviewcomment' => 'Уточните должность']);
+        $this->assertTrue($repeat['idempotent']);
+        $this->assertSame(employment::PENDING, employment::resolve($candidate->id)['status']);
+
+        $this->setUser($candidate);
+        $secondid = registration_service::submit($candidate->id, 'retail_seller');
+        $this->assertNotSame($firstid, $secondid);
     }
 }

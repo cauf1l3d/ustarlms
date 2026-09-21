@@ -645,27 +645,7 @@
         <INDEX NAME="sku_idx" UNIQUE="false" FIELDS="sku" />
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_ustar_boards" COMMENT="Server-side DGM board documents">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-        <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="documentjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
-        <FIELD NAME="sharedteam" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-        <KEY NAME="ownerid_fk" TYPE="foreign" FIELDS="ownerid" REFTABLE="user" REFFIELDS="id" />
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="owner_deleted_idx" UNIQUE="false" FIELDS="ownerid, deleted" />
-        <INDEX NAME="shared_idx" UNIQUE="false" FIELDS="sharedteam, deleted" />
-      </INDEXES>
-    </TABLE>
+    
     <TABLE NAME="local_ustar_route_families" COMMENT="USTAR route families with one common parent route and position children">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />

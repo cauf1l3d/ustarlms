@@ -1324,5 +1324,44 @@
         <INDEX NAME="assignment_idx" UNIQUE="false" FIELDS="assignmentid" />
       </INDEXES>
     </TABLE>
+      <TABLE NAME="local_ustar_standards" COMMENT="Explicit stable standard identities">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="code" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
+        <FIELD NAME="activeversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="code_uix" UNIQUE="true" FIELDS="code" />
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status" />
+        <INDEX NAME="activeversion_idx" UNIQUE="false" FIELDS="activeversionid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_standard_ver" COMMENT="Immutable standard requirement versions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="standardid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="requirementsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="renewalpolicy" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="keep" SEQUENCE="false" />
+        <FIELD NAME="validdays" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" />
+        <FIELD NAME="effectivedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="standard_version_uix" UNIQUE="true" FIELDS="standardid, versionno" />
+        <INDEX NAME="standard_status_idx" UNIQUE="false" FIELDS="standardid, status, effectivedate" />
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

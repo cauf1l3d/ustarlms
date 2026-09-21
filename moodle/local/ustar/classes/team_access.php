@@ -6,7 +6,9 @@ defined('MOODLE_INTERNAL') || die();
 final class team_access {
     public static function active_actor(int $userid): bool {
         global $DB;
-        return $userid > 1 && $DB->record_exists('user', ['id' => $userid, 'deleted' => 0, 'suspended' => 0]);
+        return $userid > 1
+            && $DB->record_exists('user', ['id' => $userid, 'deleted' => 0, 'suspended' => 0])
+            && employment::is_active($userid);
     }
 
     public static function company(int $userid): bool {
@@ -30,7 +32,9 @@ final class team_access {
         }
         $ids = [];
         foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id') as $u) {
-            if (accounts::participates((int)$u->id)) {$ids[] = (int)$u->id;}
+            if (accounts::participates((int)$u->id) && employment::is_active((int)$u->id)) {
+                $ids[] = (int)$u->id;
+            }
         }
         return ['allowed' => true, 'departmentid' => '', 'department' => 'Вся компания', 'userids' => $ids];
     }

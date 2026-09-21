@@ -2405,6 +2405,40 @@ class content_admin {
         ];
     }
 
+    /**
+     * Remove a material from the active catalogue without destroying route
+     * evidence, acknowledgements, versions or audit history.
+     */
+    public static function delete(int $contentid, int $actorid, string $reason = ''): array {
+        global $DB;
+        self::require_manage($actorid);
+        $tx = $DB->start_delegated_transaction();
+        $record = $DB->get_record_sql(
+            'SELECT * FROM {local_ustar_content} WHERE id = :contentid FOR UPDATE',
+            ['contentid' => $contentid], MUST_EXIST
+        );
+        $previousstatus = (string)$record->status;
+        $record->status = content::STATUS_ARCHIVED;
+        $record->timemodified = time();
+        $record->usermodified = $actorid;
+        $DB->update_record('local_ustar_content', $record);
+        $DB->set_field('local_ustar_content_access', 'active', 0, ['contentid' => $contentid, 'active' => 1]);
+        people::log_action($actorid, null, 'content_deleted_from_catalog', [
+            'contentid' => $contentid, 'reason' => trim(clean_param($reason, PARAM_TEXT)),
+        ]);
+        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_workflow_events'))) {
+            $DB->insert_record('local_ustar_workflow_events', (object)[
+                'entitytype' => 'content', 'entityid' => $contentid, 'eventtype' => 'content_deleted',
+                'actorid' => $actorid, 'reason' => trim(clean_param($reason, PARAM_TEXT)) ?: null,
+                'detailsjson' => json_encode(['previousstatus' => $previousstatus], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'timecreated' => time(),
+            ]);
+        }
+        $tx->allow_commit();
+        return ['contentid' => $contentid, 'status' => content::STATUS_ARCHIVED];
+    }
+
+
 
     /**
      * Restore an archived material to publication. publish() performs

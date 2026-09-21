@@ -53,7 +53,8 @@ if (!empty($scoped['allowed'])) {
 }
 $canhr = is_siteadmin((int)$USER->id) || has_capability('local/ustar:admin', $context)
     || has_capability('local/ustar:hr', $context) || has_capability('local/ustar:hrmanage', $context);
-if ($canhr && !$candidates) {
+if ($canhr) {
+    $candidates = [];
     foreach ($DB->get_records_select('user', 'id > 1 AND deleted = 0 AND suspended = 0', [], 'lastname ASC, firstname ASC', 'id,firstname,lastname') as $user) {
         if ((int)$user->id !== (int)$USER->id && \local_ustar\learning_tasks::can_assign((int)$USER->id, (int)$user->id)) {
             $candidates[] = ['id' => (int)$user->id, 'fullname' => fullname($user), 'position' => ''];
@@ -139,7 +140,7 @@ if ($tab === 'assigned') {
 }
 if ($tab === 'outgoing') {
     if ($candidates) {
-        echo html_writer::heading('Поставить задачу сотруднику', 3);
+        echo $OUTPUT->heading('Поставить задачу сотруднику', 3);
         echo html_writer::start_tag('form', ['method' => 'post']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'assign']);

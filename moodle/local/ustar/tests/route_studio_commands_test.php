@@ -338,7 +338,7 @@ final class route_studio_commands_test extends \advanced_testcase {
         );
         $this->assertSame((int)$point->id, $sourceid);
         $this->assertSame(
-            [$point->id],
+            [(int)$point->id],
             array_map(
                 'intval',
                 array_column(

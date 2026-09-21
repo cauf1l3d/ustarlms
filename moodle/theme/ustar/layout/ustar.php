@@ -507,7 +507,7 @@ if (!$canadmin && !$canhr && !$canexec && $canmanager) {
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
         ['label'=>'База знаний','short'=>'Знания','url'=>(new moodle_url('/local/ustar/knowledge.php',['view'=>'knowledge']))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='knowledge'],
-        ['label'=>'Доска','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 

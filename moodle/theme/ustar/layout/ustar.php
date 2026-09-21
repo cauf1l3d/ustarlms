@@ -93,6 +93,7 @@ $operationpages = [
     '/local/ustar/game_studio.php',
     '/local/ustar/competition_studio.php',
     '/local/ustar/checklist_studio.php',
+    '/local/ustar/stage6_status.php',
 ];
 
 $productgrowthpages = [
@@ -349,6 +350,7 @@ $controlpagelabels = [
     '/local/ustar/game_studio.php' => 'Игровые задания',
     '/local/ustar/competition_studio.php' => 'Соревнования',
     '/local/ustar/checklist_studio.php' => 'Редактор чек-листов',
+    '/local/ustar/stage6_status.php' => 'Состояние сервисов',
     '/local/ustar/games.php' => 'Игровые задания',
     '/local/ustar/game.php' => 'Игровые задания',
     '/local/ustar/achievements.php' => 'Достижения',
@@ -477,6 +479,7 @@ if (!$canadmin && $canhr) {
         ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)],
         ['label'=>'Материалы','short'=>'Материалы','url'=>(new moodle_url('/local/ustar/materials.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>in_array($pagepath,$materialpages,true)],
         ['label'=>'Контроль','short'=>'Контроль','url'=>(new moodle_url('/local/ustar/operations.php'))->out(false),'icon'=>$icons['growth'],'active'=>in_array($pagepath,$operationpages,true)],
+        ['label'=>'Состояние','short'=>'Статус','url'=>(new moodle_url('/local/ustar/stage6_status.php'))->out(false),'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/stage6_status.php'],
         ['label'=>'Проверка аттестаций','short'=>'Проверка','url'=>(new moodle_url('/local/ustar/hr_quiz_grading.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,['/local/ustar/hr_quiz_grading.php','/local/ustar/hr_quiz_attempt.php'],true)],
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],

@@ -143,6 +143,7 @@ final class learning_tasks {
                 );
             }
             $now = time();
+            $previousstatus = (string)$task->status;
             $task->status = $next;
             $task->version++;
             $task->timemodified = $now;
@@ -150,7 +151,7 @@ final class learning_tasks {
             if ($next === 'cancelled') { $task->cancelledat = $now; }
             $DB->update_record('local_ustar_learning_tasks', $task);
             self::event($taskid, (int)$task->ownerid, $event, $actorid, [
-                'comment' => self::plain($comment), 'previousstatus' => (string)$task->status,
+                'comment' => self::plain($comment), 'previousstatus' => $previousstatus,
             ]);
             if (!$isnote && $actorid !== (int)$task->assigneeid) {
                 self::notify((int)$task->assigneeid, $event, 'Изменился статус задачи',

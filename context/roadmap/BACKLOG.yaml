@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: '2026-09-20'
+updated_at: '2026-09-21'
 canonical_branch: main
 canonical_path: context/roadmap/BACKLOG.yaml
 status_protocol: AGENT_PROTOCOL.md
@@ -878,3 +878,64 @@ tasks:
   validation_evidence: []
   deployment_evidence: []
   updated_at: '2026-09-07'
+- id: R21
+  title: 'Этап 6 — целостный продукт, материалы, грейды, каталог и задачи'
+  priority: P1
+  stage: S3
+  refactor_stage: 6
+  status: planned
+  owner: null
+  planning_pr: https://github.com/cauf1l3d/ustarlms/pull/9
+  plan_path: context/architecture/stage6_product_20260921.md
+  depends_on:
+  - R01
+  - R10
+  - R11
+  - R12
+  - R13
+  related_tasks:
+  - R07
+  - R14
+  - R15
+  - R17
+  - R19
+  findings: []
+  paths:
+  - context/architecture/stage6_product_20260921.md
+  - moodle/local/ustar/classes/career_grades.php
+  - moodle/local/ustar/classes/forced_retraining.php
+  - moodle/local/ustar/classes/content_admin.php
+  - moodle/local/ustar/classes/catalog.php
+  - moodle/local/ustar/classes/checklists.php
+  - moodle/local/ustar/classes/boards.php
+  actions:
+  - '6.1: сверить предыдущие PR и статусы зависимостей по точному SHA, воспроизвести
+    дефекты, определить права, миграции, редактор и форматы SCORM.'
+  - '6.2–6.3: исправить материалы и реализовать авторский цикл обычных курсов,
+    аттестаций, визуального создания SCORM и импорта пакетов.'
+  - '6.4: первая ступень, автоматическая заявка по выполненным требованиям,
+    повышение только действующим руководителем, сохранение истории.'
+  - '6.5: серверная проверка предыдущего прохождения во всех путях переобучения.'
+  - '6.6: редактирование товаров, групп и подгрупп прямо на странице каталога HR.'
+  - '6.7: связанные задачи с чек-листами, приватным блокнотом и поручениями.'
+  - '6.8: сохранение нужных данных и полное удаление досок с миграцией и откатом.'
+  - '6.9–6.10: общая оболочка, показатели, скорость, privacy и сквозная приёмка.'
+  acceptance:
+  - Только действующий руководитель повышает грейд после проверки требований;
+    повтор и гонка не создают второго повышения.
+  - Непройденное невозможно назначить на принудительное переобучение через
+    UI, API, batch и фоновую команду.
+  - Три типа обучения создаются без кода и проходят проверку до результата сотрудника.
+  - HR управляет каталогом на его странице без learner-аттестации.
+  - Блокнот доступен в продукте только владельцу; задачи не дублируют результаты.
+  - Доски отсутствуют в рабочем продукте; сохранность данных и откат доказаны.
+  - Выполнены ролевые, браузерные, DB/API, install/upgrade и rollback проверки
+    точного SHA; production evidence фиксируется отдельно.
+  production_benefit: Связанная академия с управляемыми грейдами, авторством
+    обучения, рабочим каталогом и задачами вместо досок.
+  effort_hint: Оценить после 6.1; десять пакетов с отдельной приёмкой.
+  blockers: []
+  implementation_commit: null
+  validation_evidence: []
+  deployment_evidence: []
+  updated_at: '2026-09-21'

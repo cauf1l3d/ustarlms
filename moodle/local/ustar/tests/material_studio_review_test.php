@@ -209,4 +209,64 @@ final class material_studio_review_test extends \advanced_testcase {
         ]);
     }
 
+
+    public function test_passed_studio_assessment_flows_into_canonical_route_completion(): void {
+        global $DB, $USER;
+        $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $route = $g->create_route();
+        $point = $g->create_point($route);
+        $version = $g->create_version($point);
+
+        $assessment = $this->create_assessment();
+        content_admin::publish((int)$assessment['id'], (int)$USER->id);
+        $DB->set_field(
+            'local_ustar_route_versions',
+            'requirementsjson',
+            json_encode([[
+                'type' => 'content',
+                'sourceid' => (int)$assessment['id'],
+                'required' => true,
+                'completionmode' => 'open',
+            ]], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            ['id' => (int)$version->id]
+        );
+        $version = $DB->get_record('local_ustar_route_versions', ['id' => (int)$version->id], '*', MUST_EXIST);
+
+        material_studio::submit_assessment(
+            (int)$assessment['id'],
+            (int)$USER->id,
+            ['Yes'],
+            (int)$assessment['sourceversion']
+        );
+
+        $method = new \ReflectionMethod(route_model::class, 'evaluate_point');
+        $state = $method->invoke(
+            null,
+            $point,
+            $version,
+            (int)$USER->id,
+            (string)$route->positionid,
+            []
+        );
+
+        $this->assertTrue($state['satisfied']);
+        $progress = $DB->get_record('local_ustar_route_progress', [
+            'userid' => (int)$USER->id,
+            'pointid' => (int)$point->id,
+            'versionid' => (int)$version->id,
+        ], '*', MUST_EXIST);
+        $this->assertSame('complete', (string)$progress->status);
+
+        $cycle = $DB->get_record('local_ustar_completion_cycle', [
+            'userid' => (int)$USER->id,
+            'pointid' => (int)$point->id,
+            'versionid' => (int)$version->id,
+        ], '*', MUST_EXIST);
+        $this->assertSame('confirmed', (string)$cycle->status);
+        $evidence = json_decode((string)$cycle->evidencejson, true);
+        $this->assertSame('evaluated', (string)($evidence['mode'] ?? ''));
+        $this->assertSame('content', (string)($evidence['requirements'][0]['type'] ?? ''));
+        $this->assertTrue(!empty($evidence['requirements'][0]['satisfied']));
+    }
+
 }

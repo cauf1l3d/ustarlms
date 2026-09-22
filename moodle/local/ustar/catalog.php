@@ -9,6 +9,7 @@ if (!$canmanage) {
 }
 
 $notice = '';
+$failedinput = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     \local_ustar\view_as::assert_writable();
@@ -19,15 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($action === 'save') {
             $id = optional_param('id', 0, PARAM_INT);
-            $record = \local_ustar\catalog::save($id, $_POST, (int)$USER->id);
+            $uploads = [];
             if (!empty($_FILES['imagefile']['name'])) {
-                \local_ustar\catalog::upload_file((int)$record->id, (int)$USER->id,
-                    \local_ustar\catalog::FILEAREA_IMAGE, $_FILES['imagefile']);
+                $uploads[\local_ustar\catalog::FILEAREA_IMAGE] = $_FILES['imagefile'];
             }
             if (!empty($_FILES['sourcefile']['name'])) {
-                \local_ustar\catalog::upload_file((int)$record->id, (int)$USER->id,
-                    \local_ustar\catalog::FILEAREA_SOURCE, $_FILES['sourcefile']);
+                $uploads[\local_ustar\catalog::FILEAREA_SOURCE] = $_FILES['sourcefile'];
             }
+            $record = \local_ustar\catalog::save($id, $_POST, (int)$USER->id, $uploads);
             redirect(new moodle_url('/local/ustar/catalog.php', ['edit' => (int)$record->id, 'saved' => 1]));
         }
         if ($action === 'archive') {
@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
+        if ($action === 'save') { $failedinput = $_POST; }
     }
 }
 
@@ -128,7 +129,15 @@ if ($canmanage) {
             break;
         }
     }
-    $value = static function(string $name, string $default = '') use ($editing): string {
+    if ($failedinput !== null) {
+        // Keep the submitted revision: a retry must not silently overwrite a concurrent edit.
+        $editing = (object)['id' => (int)($failedinput['id'] ?? 0),
+            'timemodified' => (int)($failedinput['expectedmodified'] ?? 0)];
+    }
+    $value = static function(string $name, string $default = '') use ($editing, $failedinput): string {
+        if ($failedinput !== null && isset($failedinput[$name]) && is_scalar($failedinput[$name])) {
+            return (string)$failedinput[$name];
+        }
         return $editing && isset($editing->$name) ? (string)$editing->$name : $default;
     };
     $currenttype = $value('itemtype', \local_ustar\catalog::TYPE_GROUP);
@@ -143,6 +152,7 @@ if ($canmanage) {
             ));
         }
     }
+    if ($failedinput !== null) { $attributes = $value('attributes'); }
     echo html_writer::start_div('u-catalog-editor');
     echo html_writer::tag('h2', $editing ? 'Редактирование карточки' : 'Новая карточка каталога');
     echo html_writer::tag('p', 'HR может прямо здесь создавать и менять разделы, категории, карточки, свойства, изображения и материалы. История каждой карточки сохраняется.');
@@ -166,7 +176,9 @@ if ($canmanage) {
     $parents = [0 => '— корневой раздел —'];
     foreach ($records as $candidate) {
         if ($editing && (int)$candidate->id === (int)$editing->id) { continue; }
-        $parents[(int)$candidate->id] = str_repeat('— ', (int)$candidate->itemtype === \local_ustar\catalog::TYPE_SUBGROUP ? 1 : 0)
+        if (empty($candidate->active) || !in_array($candidate->itemtype,
+                [\local_ustar\catalog::TYPE_GROUP, \local_ustar\catalog::TYPE_SUBGROUP], true)) { continue; }
+        $parents[(int)$candidate->id] = str_repeat('— ', (string)$candidate->itemtype === \local_ustar\catalog::TYPE_SUBGROUP ? 1 : 0)
             . format_string((string)$candidate->title);
     }
     echo html_writer::select($parents, 'parentid', $currentparent, false, ['class' => 'form-select']);
@@ -188,7 +200,7 @@ if ($canmanage) {
     echo html_writer::empty_tag('input', ['type' => 'number', 'name' => 'sortorder', 'value' => $value('sortorder', '0'), 'class' => 'form-control']);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить карточку', 'class' => 'btn btn-primary']);
     echo html_writer::end_tag('form');
-    if ($editing) {
+    if ($editing && (int)$editing->id > 0) {
         echo html_writer::start_tag('form', ['method' => 'post', 'action' => (new moodle_url('/local/ustar/catalog.php'))->out(false)]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'catalogaction', 'value' => 'archive']);

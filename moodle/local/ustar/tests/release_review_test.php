@@ -117,4 +117,11 @@ final class release_review_test extends \advanced_testcase {
         $this->assertSame('revoked', $repeat->status);
         $this->assertSame(1, $DB->count_records('local_ustar_completion_cycle', ['userid' => $user->id]));
     }
+
+    public function test_upload_error_does_not_report_success(): void {
+        global $USER;
+        $this->expectException(\invalid_parameter_exception::class);
+        catalog::save(0, ['itemtype' => 'group', 'title' => 'Failed upload'], $USER->id,
+            [catalog::FILEAREA_IMAGE => ['error' => UPLOAD_ERR_INI_SIZE, 'name' => 'photo.png']]);
+    }
 }

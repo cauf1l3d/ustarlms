@@ -168,7 +168,7 @@ final class catalog {
     }
 
     /** @param array<string,mixed> $input */
-    public static function save(int $id, array $input, int $actorid): \stdClass {
+    public static function save(int $id, array $input, int $actorid, array $uploads = []): \stdClass {
         global $DB;
         self::assert_manage($actorid);
         if (!self::available()) {
@@ -229,6 +229,9 @@ final class catalog {
             } else {
                 $record->id = (int)$DB->insert_record('local_ustar_catalog', $record);
             }
+            foreach ($uploads as $filearea => $upload) {
+                self::upload_file((int)$record->id, $actorid, $filearea, $upload);
+            }
             self::snapshot($record, $actorid);
             self::audit((int)$record->id, 'catalog_saved', $actorid, ['itemtype' => $type]);
             $tx->allow_commit();
@@ -267,22 +270,25 @@ final class catalog {
         }
     }
 
-    /** @param array<string,mixed> $upload */
-    public static function upload_file(int $id, int $actorid, string $filearea, array $upload): void {
+    /** File metadata shares the save transaction, revision and lock. */
+    private static function upload_file(int $id, int $actorid, string $filearea, array $upload): void {
         self::assert_manage($actorid);
         if (!in_array($filearea, [self::FILEAREA_IMAGE, self::FILEAREA_SOURCE], true)) {
             throw new \invalid_parameter_exception('Недопустимый тип файла каталога.');
         }
-        if (empty($upload['tmp_name']) || !is_uploaded_file((string)$upload['tmp_name'])) {
-            return;
+        if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) { return; }
+        if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK
+                || empty($upload['tmp_name']) || !is_uploaded_file((string)$upload['tmp_name'])) {
+            throw new \invalid_parameter_exception('Не удалось загрузить файл. Выберите его повторно и проверьте размер.');
         }
         $record = self::get_any($id);
         if (!$record) { throw new \moodle_exception('Карточка каталога не найдена.'); }
         $filename = clean_param((string)($upload['name'] ?? ''), PARAM_FILE);
         if ($filename === '') { throw new \invalid_parameter_exception('У файла нет имени.'); }
-        $mimetype = (string)($upload['type'] ?? '');
+        $mimetype = (new \finfo(FILEINFO_MIME_TYPE))->file((string)$upload['tmp_name']);
         if ($filearea === self::FILEAREA_IMAGE
-                && !in_array($mimetype, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true)) {
+                && (!in_array($mimetype, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true)
+                    || @getimagesize((string)$upload['tmp_name']) === false)) {
             throw new \invalid_parameter_exception('Для карточки разрешены JPEG, PNG, WEBP и GIF.');
         }
         $fs = get_file_storage();

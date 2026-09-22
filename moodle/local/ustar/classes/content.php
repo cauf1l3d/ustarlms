@@ -34,23 +34,7 @@ class content {
         int $userid
     ): bool {
 
-        $context =
-            \context_system::instance();
-
-        return
-            is_siteadmin($userid)
-            ||
-            has_capability(
-                'local/ustar:admin',
-                $context,
-                $userid
-            )
-            ||
-            has_capability(
-                'local/ustar:hr',
-                $context,
-                $userid
-            );
+        return capabilities::has($userid, capabilities::MATERIALS_READ_ALL);
     }
 
 
@@ -161,6 +145,9 @@ class content {
         int $userid
     ): bool {
         global $DB;
+        if (!capabilities::has($userid, capabilities::LEARNING_USE) && !self::is_elevated($userid)) {
+            return false;
+        }
 
         if (
             self::is_elevated(

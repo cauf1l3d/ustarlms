@@ -232,43 +232,65 @@ final class material_studio {
     }
 
     /** @return array<string,mixed> */
-    public static function submit_assessment(int $contentid, int $userid, array $answers): array {
+    public static function submit_assessment(int $contentid, int $userid, array $answers,
+            int $expectedversion, bool $preview = false): array {
         global $DB;
-        $item = self::by_content($contentid, $userid);
-        if ((string)$item['kind'] !== self::KIND_ASSESSMENT) {
-            throw new \invalid_parameter_exception('Это не аттестация.');
+        if ($preview && !self::can_manage($userid)) {
+            throw new \required_capability_exception(\context_system::instance(), 'local/ustar:hrmanage', 'nopermissions', '');
         }
-        if ((string)$item['status'] !== content::STATUS_PUBLISHED && !self::can_manage($userid)) {
-            throw new \moodle_exception('Аттестация ещё не опубликована.');
-        }
-        $questions = $item['questions'];
-        $correct = 0;
-        $normalized = [];
-        foreach ($questions as $index => $question) {
-            $answer = trim(clean_param((string)($answers[$index] ?? ''), PARAM_TEXT));
-            $normalized[$index] = $answer;
-            if ($answer !== '' && hash_equals((string)$question['answer'], $answer)) {
-                $correct++;
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('studio:' . $contentid, 10);
+        if (!$lock) { throw new \moodle_exception('Аттестация обновляется. Повторите отправку.'); }
+        try {
+            $item = self::by_content($contentid, $userid);
+            if ($item['kind'] !== self::KIND_ASSESSMENT) {
+                throw new \invalid_parameter_exception('Это не аттестация.');
             }
+            if (!$preview && $item['status'] !== content::STATUS_PUBLISHED) {
+                throw new \moodle_exception('Аттестация ещё не опубликована.');
+            }
+            if ($expectedversion <= 0 || $expectedversion !== (int)$item['sourceversion']) {
+                throw new \moodle_exception('Автор обновил аттестацию. Откройте новую версию перед отправкой.');
+            }
+            // Correct answers stay server-side, separate from the learner view.
+            $blueprint = $DB->get_record('local_ustar_content_blueprints', ['contentid' => $contentid], '*', MUST_EXIST);
+            $source = json_decode($blueprint->sourcejson, true, 512, JSON_THROW_ON_ERROR);
+            $questions = $source['questions'] ?? [];
+            $correct = 0;
+            $normalized = [];
+            foreach ($questions as $index => $question) {
+                $answer = trim(clean_param((string)($answers[$index] ?? ''), PARAM_TEXT));
+                if (!in_array($answer, $question['options'], true)) {
+                    throw new \invalid_parameter_exception('Ответьте на все вопросы перед отправкой.');
+                }
+                $normalized[$index] = $answer;
+                if (hash_equals((string)$question['answer'], $answer)) { $correct++; }
+            }
+            if (!$questions) { throw new \moodle_exception('В аттестации нет вопросов.'); }
+            $score = (int)round(100 * $correct / count($questions));
+            $attemptkey = 'studio-assessment-v2:' . hash('sha256',
+                $userid . ':' . $contentid . ':' . $expectedversion . ':' . json_encode($normalized));
+            $result = [
+                'contentid' => $contentid, 'userid' => $userid, 'score' => $score,
+                'passed' => $score >= (int)$item['passscore'], 'correct' => $correct,
+                'total' => count($questions), 'attemptkey' => $attemptkey,
+                'sourceversion' => $expectedversion, 'sourcehash' => $blueprint->sourcehash,
+                'submittedat' => time(), 'preview' => $preview,
+            ];
+            if ($preview) { return $result; }
+            $existing = self::find_submission($contentid, $attemptkey);
+            if ($existing) { return $existing; }
+            $DB->insert_record('local_ustar_workflow_events', (object)[
+                'entitytype' => 'studio_assessment', 'entityid' => $contentid,
+                'eventtype' => 'studio_assessment_submitted', 'actorid' => $userid, 'reason' => null,
+                'detailsjson' => json_encode($result + ['answers' => $normalized],
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'timecreated' => (int)$result['submittedat'],
+            ]);
+            return $result;
+        } finally {
+            $lock->release();
         }
-        $score = $questions ? (int)round(100 * $correct / count($questions)) : 0;
-        $passed = $score >= (int)$item['passscore'];
-        $attemptkey = 'studio-assessment-v1:' . hash('sha256', $userid . ':' . $contentid . ':' . json_encode($normalized));
-        $existing = self::find_submission($contentid, $attemptkey);
-        if ($existing) {
-            return $existing;
-        }
-        $result = [
-            'contentid' => $contentid, 'userid' => $userid, 'score' => $score, 'passed' => $passed,
-            'correct' => $correct, 'total' => count($questions), 'attemptkey' => $attemptkey, 'submittedat' => time(),
-        ];
-        $DB->insert_record('local_ustar_workflow_events', (object)[
-            'entitytype' => 'studio_assessment', 'entityid' => $contentid, 'eventtype' => 'studio_assessment_submitted',
-            'actorid' => $userid, 'reason' => null,
-            'detailsjson' => json_encode($result + ['answers' => $normalized], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            'timecreated' => (int)$result['submittedat'],
-        ]);
-        return $result;
     }
 
     /** The package is downloadable only to an author or an eligible material viewer. */
@@ -291,6 +313,12 @@ final class material_studio {
         $source = json_decode((string)$row->sourcejson, true);
         $source = is_array($source) ? $source : [];
         $questions = is_array($source['questions'] ?? null) ? $source['questions'] : [];
+        $author = self::can_manage($viewerid);
+        $questionslines = $author ? self::questions_to_lines($questions) : '';
+        if (!$author) {
+            foreach ($questions as &$question) { unset($question['answer']); }
+            unset($question);
+        }
         $blueprintid = (int)$row->blueprintid;
         $packageurl = '';
         if ((string)($row->packagestatus ?? '') === 'imported') {
@@ -308,11 +336,11 @@ final class material_studio {
             'summary' => (string)$row->summary, 'status' => (string)$row->status,
             'expectedmodified' => (int)$row->timemodified, 'sourceversion' => (int)$row->sourceversion,
             'body' => (string)($source['body'] ?? ''), 'outline' => (string)($source['outline'] ?? ''),
-            'questions' => $questions, 'questionslines' => self::questions_to_lines($questions),
+            'questions' => $questions, 'questionslines' => $questionslines,
             'passscore' => (int)($source['passscore'] ?? 80),
             'packagestatus' => (string)($row->packagestatus ?? 'none'),
             'packagefilename' => (string)($row->packagefilename ?? ''), 'packageurl' => $packageurl,
-            'editable_source' => true,
+            'editable_source' => $author,
         ];
     }
 

@@ -11,6 +11,7 @@ final class capabilities {
     public const COMPANY_READ = 'company.read';
     public const HR_WRITE = 'hr.write';
     public const CATALOG_WRITE = 'catalog.write';
+    public const MATERIALS_READ_ALL = 'materials.read.all';
 
     private const MAP = [
         self::LEARNING_USE => ['local/ustar:use'],
@@ -21,6 +22,7 @@ final class capabilities {
             'local/ustar:hrmanage', 'local/ustar:executive',
         ],
         self::HR_WRITE => ['local/ustar:admin', 'local/ustar:hrmanage'],
+        self::MATERIALS_READ_ALL => ['local/ustar:admin', 'local/ustar:hr', 'local/ustar:hrmanage'],
         self::CATALOG_WRITE => [
             'local/ustar:admin', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:managecatalog',
         ],

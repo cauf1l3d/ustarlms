@@ -382,6 +382,19 @@ final class target_schema {
                     ['transition_status_idx',false,['positionid','fromgrade','tograde','status']],
                 ],
             ],
+            'local_ustar_grade_rules' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['positionid',$c,'64',true], ['fromgrade',$c,'32',true],
+                    ['tograde',$c,'32',true], ['versionno',$i,'10',true,false,'1'], ['routeid',$i,'10',true],
+                    ['requirementsjson',$t,null,true], ['rulehash',$c,'64',true],
+                    ['status',$c,'16',true,false,'published'], ['createdby',$i,'10',true,false,'0'],
+                    ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['transition_version_uix',true,['positionid','fromgrade','tograde','versionno']],
+                    ['transition_status_idx',false,['positionid','fromgrade','tograde','status']],
+                ],
+            ],
             'local_ustar_employee_grades' => [
                 'fields' => [
                     ['id',$i,'10',true,true], ['userid',$i,'10',true], ['gradekey',$c,'32',true],

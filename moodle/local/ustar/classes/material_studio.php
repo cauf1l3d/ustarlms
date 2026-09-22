@@ -82,6 +82,12 @@ final class material_studio {
                     'SELECT * FROM {local_ustar_content_blueprints} WHERE contentid = :id FOR UPDATE',
                     ['id' => $contentid], MUST_EXIST
                 );
+                if ((string)$content->status === content::STATUS_PUBLISHED) {
+                    throw new \moodle_exception(
+                        'Опубликованный материал нельзя менять на лету. '
+                        . 'Сначала верните его в черновики, сохраните новую source-version и опубликуйте снова.'
+                    );
+                }
                 if ($expected <= 0 || (int)$content->timemodified !== $expected) {
                     throw new \moodle_exception('Материал уже изменён в другой сессии. Обновите форму.');
                 }

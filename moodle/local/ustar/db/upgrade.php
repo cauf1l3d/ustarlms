@@ -4284,9 +4284,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         // employment and manager approval. Activate that existing guarded
         // workflow so the login page can expose the registration entry point.
         require_once($CFG->libdir . '/authlib.php');
-        if (in_array('email', get_enabled_auth_plugins(true), true)) {
-            set_config('registerauth', 'email');
+        $enabledauth = get_enabled_auth_plugins(true);
+        if (!in_array('email', $enabledauth, true)) {
+            $enabledauth[] = 'email';
+            set_config('auth', implode(',', array_values(array_unique($enabledauth))));
         }
+        set_config('registerauth', 'email');
         upgrade_plugin_savepoint(true, 2026082747, 'local', 'ustar');
     }
 

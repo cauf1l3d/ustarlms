@@ -1741,6 +1741,8 @@ final class route_model {
                 $evidence
             );
             route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
+        self::reconcile_grade_promotion($userid);
+            self::reconcile_grade_promotion($userid);
             return;
         }
         $now = time();
@@ -1776,6 +1778,18 @@ final class route_model {
             $evidence
         );
         route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
+    }
+
+    /** Grade automation is secondary: never roll back a verified learning completion. */
+    private static function reconcile_grade_promotion(int $userid): void {
+        if (!class_exists('\\local_ustar\\grade_promotion')) {
+            return;
+        }
+        try {
+            grade_promotion::reconcile($userid);
+        } catch (\Throwable $e) {
+            debugging('USTAR grade reconciliation failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        }
     }
 
     /** An invalid managed assessment must not be completed through a stale Moodle completion row. */

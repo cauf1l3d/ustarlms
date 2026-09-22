@@ -75,7 +75,7 @@ final class org {
         for ($i=0;$i<50 && $cur>0;$i++) {
             if (isset($seen[$cur])) break;
             $seen[$cur]=true;
-            $u=$DB->get_record('user',['id'=>$cur,'deleted'=>0],'id,firstname,lastname',IGNORE_MISSING);
+            $u=$DB->get_record('user',['id'=>$cur,'deleted'=>0],'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename',IGNORE_MISSING);
             if (!$u) break;
             $out[] = self::person((int)$u->id, fullname($u));
             $cur=self::manager_id((int)$u->id);
@@ -86,7 +86,7 @@ final class org {
     public static function person(int $userid, string $fullname=''): array {
         global $DB;
         if ($fullname==='') {
-            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname',MUST_EXIST); $fullname=fullname($u);
+            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename',MUST_EXIST); $fullname=fullname($u);
         }
         $st=structure::get(structure::NAME_STRUCTURE); $pm=people::position_map($st); $dm=people::department_map($st);
         $pid=people::position_id($userid); $pos=$pm[$pid]??[]; $did=(string)($pos['department']??'');
@@ -103,7 +103,7 @@ final class org {
         $me=self::person($userid); $pid=$me['positionid']; $did=$me['departmentid'];
         $out=[];
         if ($did === '') return [];
-        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id,firstname,lastname') as $u) {
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $u) {
             if (!accounts::participates((int)$u->id)) continue;
             $p = self::person((int)$u->id, $u->firstname . ' ' . $u->lastname);
             if ($p['departmentid'] === $did) $out[] = $p;
@@ -124,7 +124,7 @@ final class org {
     public static function company_tree(): array {
         global $DB;
         $people=[];
-        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1', [], '', 'id,firstname,lastname') as $u) {
+        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1', [], '', 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $u) {
             if (!accounts::participates((int)$u->id)) continue;
             $p=self::person((int)$u->id,fullname($u)); $p['managerid']=self::manager_id((int)$u->id); $p['children']=[]; $people[(int)$u->id]=$p;
         }

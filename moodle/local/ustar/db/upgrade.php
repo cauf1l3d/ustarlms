@@ -4146,5 +4146,138 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082729, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082733) {
+        $table = new xmldb_table('local_ustar_employment');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '16', null, XMLDB_NOTNULL, null, 'pending');
+        $table->add_field('source', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, 'manual');
+        $table->add_field('approvedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('approvedat', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN_UNIQUE, ['userid'], 'user', ['id']);
+        $table->add_key('approvedby_fk', XMLDB_KEY_FOREIGN, ['approvedby'], 'user', ['id']);
+        $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Deliberately do not backfill. Absence means legacy-compatible active state;
+        // explicit rows are created only by a reviewed HR/registration workflow.
+        upgrade_plugin_savepoint(true, 2026082733, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082734) {
+        // Stage 2 completes the access cutover in application code. The reviewed
+        // role/employment migration remains an explicit CLI operation.
+        upgrade_plugin_savepoint(true, 2026082734, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082735) {
+        // Registration uses the existing staffing and notification schema.
+        // The savepoint refreshes the user_created observer through the normal upgrade.
+        upgrade_plugin_savepoint(true, 2026082735, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082736) {
+        // Stage 4 route commands are application-code changes. The savepoint
+        // makes the new command boundary available after a normal Moodle
+        // upgrade without changing existing route or evidence rows.
+        upgrade_plugin_savepoint(true, 2026082736, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082737) {
+        // Stage 4 version diff is presentation/application code only. No route,
+        // scope, evidence or completion rows are changed during upgrade.
+        upgrade_plugin_savepoint(true, 2026082737, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082738) {
+        // Route scope commands now own their lock and transaction when called
+        // outside the HTTP studio. Existing scope/history rows are untouched.
+        upgrade_plugin_savepoint(true, 2026082738, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082739) {
+        // Immutable evidence renewal/revocation/restoration is application
+        // logic over the existing facts and event journal.
+        upgrade_plugin_savepoint(true, 2026082739, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082740) {
+        // Add explicit stable standards and their immutable versions. Existing
+        // route/evidence rows are intentionally left unmodified.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026082740, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082741) {
+        // Route Studio browser-contract coverage ships without runtime data
+        // migration. This savepoint marks the completed Stage 4 package.
+        upgrade_plugin_savepoint(true, 2026082741, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082742) {
+        // Stage 5 begins with an immutable identity for each independently
+        // verified completion cycle. Existing progress/history is untouched;
+        // cycles are created only by new reconciliations after this upgrade.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026082742, 'local', 'ustar');
+    }
+
+
+    if ($oldversion < 2026082744) {
+        // Stage 6 introduces only additive tables. Existing learning facts,
+        // catalog cards and board documents remain preserved.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::stage6_definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        require_once(__DIR__ . '/../classes/board_retirement.php');
+        \local_ustar\board_retirement::archive_live_boards(0);
+        // Archive is now the source of historical truth. The working DJGMS
+        // table is removed so boards cannot be reactivated accidentally.
+        $legacyboards = new xmldb_table('local_ustar_boards');
+        if ($dbman->table_exists($legacyboards)) {
+            $dbman->drop_table($legacyboards);
+        }
+        upgrade_plugin_savepoint(true, 2026082744, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082745) {
+        // Explicit transition rules fail closed until HR publishes the exact
+        // evidence for each step. No legacy whole-route rule is inferred.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::stage6_definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026082745, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082746) {
+        // RC43 is an application-contract release: Studio Assessment joins the
+        // canonical route completion flow, published Studio sources become
+        // immutable until unpublish, and non-runtime Studio SCORM is blocked
+        // from route publication. No existing learning rows are rewritten.
+        upgrade_plugin_savepoint(true, 2026082746, 'local', 'ustar');
+    }
+
 return true;
 }

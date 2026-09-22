@@ -25,16 +25,13 @@ final class renew_acting_assignments extends \core\task\scheduled_task {
             ['threshold'=>$threshold],
             'id ASC'
         );
-        $users=[];
         foreach($rows as $row){
             $row->effectiveto=self::month_end_after((int)$row->effectiveto);
             $row->timemodified=$now;$row->usermodified=0;
             $DB->update_record('local_ustar_assignments',$row);
-            $users[(int)$row->userid]=true;
         }
         if($rows){
             \local_ustar\organization_model::rebuild_reporting();
-            foreach(array_keys($users) as $uid)\local_ustar\position_access::sync_user((int)$uid);
         }
         mtrace('USTAR acting renewals: '.count($rows));
     }

@@ -3,7 +3,7 @@ name: USTAR review gate
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, 'integration/**', 'codex/refactor-stage-1-20260920']
+    branches: [main, 'integration/**', 'codex/**']
   push:
     branches: ['integration/**']
 

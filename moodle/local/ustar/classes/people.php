@@ -54,7 +54,6 @@ class people {
                 'dataformat' => 0,
             ]);
         }
-        position_access::sync_user($userid);
         $transaction->allow_commit();
         } catch (\Throwable $e) {
             $transaction->rollback($e);

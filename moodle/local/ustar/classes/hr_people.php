@@ -308,6 +308,13 @@ class hr_people {
                 $accounttype
             );
 
+            employment::set_status(
+                $userid,
+                $suspended ? employment::SUSPENDED : employment::ACTIVE,
+                $actorid,
+                'hr_update'
+            );
+
 
             if ($oldaccounttype !== $accounttype) {
                 people::log_action(
@@ -417,6 +424,13 @@ class hr_people {
                 $accounttype
             );
 
+            employment::set_status(
+                $savedid,
+                $suspended ? employment::SUSPENDED : employment::ACTIVE,
+                $actorid,
+                'hr_create'
+            );
+
 
             people::log_action(
                 $actorid,
@@ -433,25 +447,6 @@ class hr_people {
         }
 
 
-        /*
-         * Project the selected position into the protected USTAR workspace role.
-         * Manual executive/admin assignments are never touched.
-         */
-        try {
-            $accessresult = position_access::sync_user($savedid);
-            people::log_action(
-                $actorid,
-                $savedid,
-                'position_access_synced',
-                [
-                    'positionid' => $positionid,
-                    'targetrole' => $accessresult['targetrole'] ?? '',
-                ]
-            );
-        } catch (\Throwable $e) {
-            // Workspace access is mandatory: never commit a new position with stale privileges.
-            throw $e;
-        }
         $transaction->allow_commit();
         } catch (\Throwable $e) {
             $transaction->rollback($e);
@@ -460,7 +455,7 @@ class hr_people {
 
 
         /*
-         * Immediate position-derived Moodle access.
+         * Immediate learning assignment based on canonical identity.
          *
          * A temporary course configuration problem must not
          * roll back the employee identity itself.

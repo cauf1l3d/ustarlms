@@ -65,7 +65,7 @@ final class stage1_test extends \advanced_testcase {
     public function test_preview_does_not_enrol_or_create_progress(): void {
         global $DB, $SESSION;
         [$g, $user, $route, $point, $version] = $this->fixture();
-        $course = $this->getDataGenerator()->create_course();
+        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
         $page = $this->getDataGenerator()->create_module('page', ['course' => $course->id, 'completion' => 1]);
         $DB->set_field('local_ustar_route_versions', 'requirementsjson', json_encode([['type' => 'cm', 'sourceid' => $page->cmid, 'required' => true]]), ['id' => $version->id]);
         $SESSION->ustar_view_position = $route->positionid;
@@ -157,5 +157,52 @@ final class stage1_test extends \advanced_testcase {
         route_rewards::try_progress($user->id, $point->id, $version->id);
         $this->assertSame(0, $DB->count_records('local_ustar_coin_ledger', ['userid' => $user->id]));
         $this->assertSame(0, $DB->count_records('local_ustar_evidence_rec', ['userid' => $user->id]));
+    }
+
+    public function test_route_reward_is_once_per_cycle_and_new_cycle_is_rewarded(): void {
+        global $DB;
+        [$g, $user, $route, $point, $version] = $this->fixture();
+        $startedat = time() - 100;
+        $firstat = time();
+        set_config('route_rewards_startedat', $startedat, 'local_ustar');
+        $evidence = [
+            'mode' => 'evaluated',
+            'requirements' => [[
+                'type' => 'cm',
+                'required' => true,
+                'satisfied' => true,
+                'completedat' => $firstat,
+            ]],
+        ];
+        $g->create_progress($user, $point, $version, [
+            'completedat' => $firstat,
+            'evidencejson' => json_encode($evidence),
+        ]);
+
+        route_rewards::try_progress($user->id, $point->id, $version->id);
+        route_rewards::try_progress($user->id, $point->id, $version->id);
+        $this->assertSame(1, $DB->count_records('local_ustar_coin_ledger', [
+            'userid' => $user->id,
+            'txtype' => 'route_reward',
+        ]));
+
+        $secondat = $firstat + 1;
+        $evidence['requirements'][0]['completedat'] = $secondat;
+        $progress = $DB->get_record('local_ustar_route_progress', [
+            'userid' => $user->id,
+            'pointid' => $point->id,
+            'versionid' => $version->id,
+        ], '*', MUST_EXIST);
+        $progress->completedat = $secondat;
+        $progress->evidencejson = json_encode($evidence);
+        $DB->update_record('local_ustar_route_progress', $progress);
+
+        route_rewards::try_progress($user->id, $point->id, $version->id);
+        $this->assertSame(2, $DB->count_records('local_ustar_completion_cycle', ['userid' => $user->id]));
+        $this->assertSame(2, $DB->count_records('local_ustar_coin_ledger', [
+            'userid' => $user->id,
+            'txtype' => 'route_reward',
+        ]));
+        $this->assertSame(2, route_rewards::summary($user->id)['count']);
     }
 }

@@ -964,6 +964,15 @@
                 </form>
                 {{/isarchived}}
 
+                <form method="post">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="contentid" value="{{id}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <button class="u-btn u-btn--quiet" type="submit">
+                        Удалить из каталога
+                    </button>
+                </form>
+
             </div>
 
             {{/canmanage}}

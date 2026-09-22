@@ -6,7 +6,7 @@
 </header>
 <ol class="u-consultant-ladder">
 {{#grades}}<li class="u-consultant-grade{{#current}} is-current{{/current}}">
-{{#current}}<span class="u-consultant-grade__current">Текущий грейд должности</span>{{/current}}
+{{#current}}<span class="u-consultant-grade__current">Ваш текущий грейд</span>{{/current}}
 <span class="u-consultant-grade__number">Грейд {{number}}</span><h3>{{name}}</h3>
 <p class="u-consultant-grade__pay"><small>По документу грейдов</small><strong>{{pay}}</strong></p>
 <details><summary>Критерии и условия</summary><p>{{period}}</p>
@@ -15,5 +15,7 @@
 {{#note}}<p>{{note}}</p>{{/note}}
 </details></li>{{/grades}}
 </ol>
-<p class="u-consultant-career__note">Основание: «Грейды для консультантов». Грейд описывает модель должности; повышение и условия оплаты оформляются отдельно.</p>
+<p class="u-consultant-career__note">Переход на следующую ступень подтверждает только ваш действующий руководитель после прохождения маршрута и аттестаций.</p>
+{{#gradeeligible}}<p><a class="u-btn u-btn--primary" href="{{gradesurl}}">Отправить заявку на {{nextgradename}}</a></p>{{/gradeeligible}}
+{{^gradeeligible}}<p><a class="u-btn" href="{{gradesurl}}">Проверить условия перехода</a></p>{{/gradeeligible}}
 </section>

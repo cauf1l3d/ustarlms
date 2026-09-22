@@ -1851,290 +1851,6 @@ textarea {
 
 
 /* ============================================================
-   USTAR Content — acknowledgement
-   ============================================================ */
-
-.u-content-ack {
-    display: grid;
-    grid-template-columns:
-        minmax(0, 1fr)
-        auto;
-
-    align-items: center;
-    gap: 22px;
-
-    margin-top: 14px;
-    padding: 18px 20px;
-
-    background:
-        color-mix(
-            in srgb,
-            var(--u-brand) 5%,
-            var(--u-surface-raised)
-        );
-
-    border:
-        1px solid
-        color-mix(
-            in srgb,
-            var(--u-brand) 32%,
-            var(--u-border)
-        );
-
-    border-radius: 14px;
-
-    box-shadow: var(--u-e-1);
-}
-
-
-.u-content-ack__body h2 {
-    margin: 3px 0 5px;
-
-    font-size: 18px;
-    letter-spacing: -.02em;
-}
-
-
-.u-content-ack__body > p:last-child {
-    margin: 0;
-
-    color: var(--u-text-secondary);
-
-    font-size: 9px;
-    line-height: 1.45;
-}
-
-
-.u-content-ack__action {
-    display: grid;
-    justify-items: end;
-
-    gap: 10px;
-}
-
-
-.u-content-ack__confirm {
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-
-    color: var(--u-text-secondary);
-
-    font-size: 9px;
-
-    cursor: pointer;
-}
-
-
-.u-content-ack__confirm input {
-    width: 16px;
-    height: 16px;
-}
-
-
-.u-content-ack.is-acked {
-    grid-template-columns:
-        minmax(0, 1fr)
-        42px;
-
-    background: var(--u-surface-raised);
-
-    border-color: var(--u-border);
-}
-
-
-.u-content-ack__status {
-    width: 42px;
-    height: 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border:
-        1px solid
-        color-mix(
-            in srgb,
-            var(--u-brand) 35%,
-            var(--u-border)
-        );
-
-    border-radius: 50%;
-
-    font-size: 18px;
-    font-weight: 750;
-}
-
-
-@media (max-width: 720px) {
-
-    .u-content-ack {
-        grid-template-columns: 1fr;
-    }
-
-
-    .u-content-ack__action {
-        justify-items: stretch;
-    }
-
-
-    .u-content-ack__confirm {
-        align-items: flex-start;
-    }
-
-
-    .u-content-ack.is-acked {
-        grid-template-columns:
-            minmax(0, 1fr)
-            auto;
-    }
-}
-
-
-/* ============================================================
-   USTAR Content — acknowledgement
-   ============================================================ */
-
-.u-content-ack {
-    display: grid;
-    grid-template-columns:
-        minmax(0, 1fr)
-        auto;
-
-    align-items: center;
-    gap: 22px;
-
-    margin-top: 14px;
-    padding: 18px 20px;
-
-    background:
-        color-mix(
-            in srgb,
-            var(--u-brand) 5%,
-            var(--u-surface-raised)
-        );
-
-    border:
-        1px solid
-        color-mix(
-            in srgb,
-            var(--u-brand) 32%,
-            var(--u-border)
-        );
-
-    border-radius: 14px;
-
-    box-shadow: var(--u-e-1);
-}
-
-
-.u-content-ack__body h2 {
-    margin: 3px 0 5px;
-
-    font-size: 18px;
-    letter-spacing: -.02em;
-}
-
-
-.u-content-ack__body > p:last-child {
-    margin: 0;
-
-    color: var(--u-text-secondary);
-
-    font-size: 9px;
-    line-height: 1.45;
-}
-
-
-.u-content-ack__action {
-    display: grid;
-    justify-items: end;
-
-    gap: 10px;
-}
-
-
-.u-content-ack__confirm {
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-
-    color: var(--u-text-secondary);
-
-    font-size: 9px;
-
-    cursor: pointer;
-}
-
-
-.u-content-ack__confirm input {
-    width: 16px;
-    height: 16px;
-}
-
-
-.u-content-ack.is-acked {
-    grid-template-columns:
-        minmax(0, 1fr)
-        42px;
-
-    background: var(--u-surface-raised);
-
-    border-color: var(--u-border);
-}
-
-
-.u-content-ack__status {
-    width: 42px;
-    height: 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border:
-        1px solid
-        color-mix(
-            in srgb,
-            var(--u-brand) 35%,
-            var(--u-border)
-        );
-
-    border-radius: 50%;
-
-    font-size: 18px;
-    font-weight: 750;
-}
-
-
-@media (max-width: 720px) {
-
-    .u-content-ack {
-        grid-template-columns: 1fr;
-    }
-
-
-    .u-content-ack__action {
-        justify-items: stretch;
-    }
-
-
-    .u-content-ack__confirm {
-        align-items: flex-start;
-    }
-
-
-    .u-content-ack.is-acked {
-        grid-template-columns:
-            minmax(0, 1fr)
-            auto;
-    }
-}
-
-
-/* ============================================================
    USTAR Content — Versioning
    ============================================================ */
 
@@ -2840,5 +2556,41 @@ textarea {
         align-items: flex-start;
         flex-direction: column;
         gap: 3px;
+    }
+}
+
+
+/* Stage 6 repair: keep material actions readable and stable across viewports. */
+.u-materials-head__actions,
+.u-material-row-shell,
+.u-materials-workspace,
+.u-material-detail,
+.u-materials-catalog {
+    min-width: 0;
+}
+
+.u-materials-head__actions .u-btn {
+    white-space: normal;
+    text-align: center;
+}
+
+.u-material-row__body > strong,
+.u-material-row__body > small,
+.u-material-detail__summary {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 680px) {
+    .u-material-row-shell {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .u-material-row-menu > summary {
+        min-height: 2.5rem;
+        width: 100%;
+    }
+
+    .u-materials-list {
+        max-height: none;
     }
 }

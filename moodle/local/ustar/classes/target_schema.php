@@ -11,6 +11,47 @@ final class target_schema {
         $c = XMLDB_TYPE_CHAR;
         $t = XMLDB_TYPE_TEXT;
         $specs = [
+            'local_ustar_completion_cycle' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['userid',$i,'10',true],
+                    ['pointid',$i,'10',true], ['versionid',$i,'10',true],
+                    ['logicalpointid',$i,'10',true], ['cyclekey',$c,'128',true],
+                    ['status',$c,'16',true,false,'confirmed'], ['completedat',$i,'10',true,false,'0'],
+                    ['expiresat',$i,'10'], ['evidencejson',$t,null,true],
+                    ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['cyclekey_uix',true,['cyclekey']],
+                    ['user_point_time_idx',false,['userid','logicalpointid','completedat']],
+                    ['user_status_idx',false,['userid','status','completedat']],
+                ],
+            ],
+            'local_ustar_standards' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['code',$c,'64',true], ['title',$c,'255',true],
+                    ['description',$t], ['status',$c,'16',true,false,'draft'], ['activeversionid',$i,'10'],
+                    ['ownerid',$i,'10',true,false,'0'], ['timecreated',$i,'10',true,false,'0'],
+                    ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['code_uix',true,['code']], ['status_idx',false,['status']],
+                    ['activeversion_idx',false,['activeversionid']],
+                ],
+            ],
+            'local_ustar_standard_ver' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['standardid',$i,'10',true],
+                    ['versionno',$i,'10',true,false,'1'], ['requirementsjson',$t,null,true],
+                    ['renewalpolicy',$c,'16',true,false,'keep'], ['validdays',$i,'10',true,false,'0'],
+                    ['status',$c,'16',true,false,'draft'], ['effectivedate',$i,'10'],
+                    ['createdby',$i,'10',true,false,'0'], ['timecreated',$i,'10',true,false,'0'],
+                    ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['standard_version_uix',true,['standardid','versionno']],
+                    ['standard_status_idx',false,['standardid','status','effectivedate']],
+                ],
+            ],
             'local_ustar_evidence_rec' => [
                 'fields' => [
                     ['id',$i,'10',true,true], ['userid',$i,'10',true], ['assignmentid',$i,'10'],
@@ -311,4 +352,128 @@ final class target_schema {
         }
         return $tables;
     }
+
+    /** @return array<int,\xmldb_table> Stage 6 product-service tables. */
+    public static function stage6_definitions(): array {
+        $i = XMLDB_TYPE_INTEGER;
+        $c = XMLDB_TYPE_CHAR;
+        $t = XMLDB_TYPE_TEXT;
+        $specs = [
+            'local_ustar_content_blueprints' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['contentid',$i,'10',true],
+                    ['kind',$c,'16',true], ['sourcejson',$t,null,true], ['sourceversion',$i,'10',true,false,'0'],
+                    ['sourcehash',$c,'64',true], ['packagestatus',$c,'16',true,false,'none'],
+                    ['packagefilename',$c,'255'], ['authorid',$i,'10',true,false,'0'],
+                    ['timecreated',$i,'10',true,false,'0'], ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [['contentid_uix',true,['contentid']], ['kind_status_idx',false,['kind','packagestatus']]],
+            ],
+            'local_ustar_grade_rules' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['positionid',$c,'64',true], ['fromgrade',$c,'32',true],
+                    ['tograde',$c,'32',true], ['versionno',$i,'10',true,false,'1'], ['routeid',$i,'10',true],
+                    ['requirementsjson',$t,null,true], ['rulehash',$c,'64',true],
+                    ['status',$c,'16',true,false,'published'], ['createdby',$i,'10',true,false,'0'],
+                    ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['transition_version_uix',true,['positionid','fromgrade','tograde','versionno']],
+                    ['transition_status_idx',false,['positionid','fromgrade','tograde','status']],
+                ],
+            ],
+            'local_ustar_grade_rules' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['positionid',$c,'64',true], ['fromgrade',$c,'32',true],
+                    ['tograde',$c,'32',true], ['versionno',$i,'10',true,false,'1'], ['routeid',$i,'10',true],
+                    ['requirementsjson',$t,null,true], ['rulehash',$c,'64',true],
+                    ['status',$c,'16',true,false,'published'], ['createdby',$i,'10',true,false,'0'],
+                    ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['transition_version_uix',true,['positionid','fromgrade','tograde','versionno']],
+                    ['transition_status_idx',false,['positionid','fromgrade','tograde','status']],
+                ],
+            ],
+            'local_ustar_employee_grades' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['userid',$i,'10',true], ['gradekey',$c,'32',true],
+                    ['positionid',$c,'64',true], ['source',$c,'32',true,false,'initial'],
+                    ['requestid',$i,'10'], ['timecreated',$i,'10',true,false,'0'],
+                    ['timemodified',$i,'10',true,false,'0'], ['usermodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [['userid_uix',true,['userid']], ['grade_position_idx',false,['gradekey','positionid']]],
+            ],
+            'local_ustar_grade_requests' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['userid',$i,'10',true], ['fromgrade',$c,'32',true],
+                    ['tograde',$c,'32',true], ['routeid',$i,'10',true], ['requirementsjson',$t,null,true],
+                    ['managerid',$i,'10',true], ['status',$c,'16',true,false,'pending'],
+                    ['requestkey',$c,'128',true], ['requestedat',$i,'10',true,false,'0'],
+                    ['decidedat',$i,'10'], ['decisionby',$i,'10'], ['decisionreason',$t],
+                    ['timecreated',$i,'10',true,false,'0'], ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['requestkey_uix',true,['requestkey']], ['user_status_idx',false,['userid','status','requestedat']],
+                    ['manager_status_idx',false,['managerid','status','requestedat']],
+                ],
+            ],
+            'local_ustar_learning_tasks' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['ownerid',$i,'10',true], ['assigneeid',$i,'10',true],
+                    ['assignerid',$i,'10'], ['tasktype',$c,'16',true,false,'assigned'], ['title',$c,'255',true],
+                    ['description',$t], ['status',$c,'16',true,false,'assigned'], ['requirereview',$i,'1',true,false,'0'],
+                    ['relatedtype',$c,'32'], ['relatedid',$i,'10'], ['privacy',$c,'16',true,false,'assigned'],
+                    ['version',$i,'10',true,false,'1'], ['dueat',$i,'10'], ['completedat',$i,'10'], ['cancelledat',$i,'10'],
+                    ['timecreated',$i,'10',true,false,'0'], ['timemodified',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [
+                    ['owner_privacy_idx',false,['ownerid','privacy','timemodified']],
+                    ['assignee_status_idx',false,['assigneeid','status','timemodified']],
+                    ['assigner_status_idx',false,['assignerid','status','timemodified']],
+                ],
+            ],
+            'local_ustar_learning_task_events' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['taskid',$i,'10',true], ['eventtype',$c,'32',true],
+                    ['actorid',$i,'10',true,false,'0'], ['datajson',$t,null,true],
+                    ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [['task_time_idx',false,['taskid','timecreated']]],
+            ],
+            'local_ustar_catalog_versions' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['catalogid',$i,'10',true], ['versionno',$i,'10',true],
+                    ['snapshotjson',$t,null,true], ['actorid',$i,'10',true,false,'0'],
+                    ['timecreated',$i,'10',true,false,'0'],
+                ],
+                'indexes' => [['catalog_version_uix',true,['catalogid','versionno']], ['catalog_time_idx',false,['catalogid','timecreated']]],
+            ],
+            'local_ustar_board_archive' => [
+                'fields' => [
+                    ['id',$i,'10',true,true], ['boardid',$i,'10',true], ['ownerid',$i,'10',true],
+                    ['title',$c,'255',true], ['documentjson',$t,null,true], ['version',$i,'10',true,false,'1'],
+                    ['sharedteam',$i,'1',true,false,'0'], ['archivedat',$i,'10',true,false,'0'],
+                    ['archivedby',$i,'10',true,false,'0'], ['checksum',$c,'64',true],
+                ],
+                'indexes' => [['boardid_uix',true,['boardid']], ['owner_time_idx',false,['ownerid','archivedat']]],
+            ],
+        ];
+        $tables = [];
+        foreach ($specs as $name => $spec) {
+            $table = new \xmldb_table($name);
+            foreach ($spec['fields'] as $field) {
+                [$fname, $type, $length] = $field;
+                $table->add_field($fname, $type, $length, null, !empty($field[3]) ? XMLDB_NOTNULL : null,
+                    !empty($field[4]) ? XMLDB_SEQUENCE : null, $field[5] ?? null);
+            }
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            foreach ($spec['indexes'] as [$iname, $unique, $fields]) {
+                $table->add_index($iname, $unique ? XMLDB_INDEX_UNIQUE : XMLDB_INDEX_NOTUNIQUE, $fields);
+            }
+            $tables[] = $table;
+        }
+        return $tables;
+    }
+
 }

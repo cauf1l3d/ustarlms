@@ -24,23 +24,6 @@ class sync_enrolments extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
 
-        $sql = "
-            SELECT
-                u.id,
-                u.username,
-                TRIM(d.data) AS positionid
-            FROM {user} u
-            JOIN {user_info_data} d
-              ON d.userid = u.id
-            JOIN {user_info_field} f
-              ON f.id = d.fieldid
-             AND f.shortname = 'ustar_position'
-            WHERE u.deleted = 0
-              AND u.suspended = 0
-              AND TRIM(d.data) <> ''
-            ORDER BY u.id
-        ";
-
         // Effective manager occupancy can change when ACTING expires.
         $reportingtx = $DB->start_delegated_transaction();
         try {
@@ -49,18 +32,9 @@ class sync_enrolments extends \core\task\scheduled_task {
         } catch (\Throwable $e) {
             $reportingtx->rollback($e);
         }
-        // Reconcile effective PRIMARY/ACTING roles, including users with empty legacy profiles.
-        $roleusers = $DB->get_records_select('user', 'deleted=0 AND id>1', [], 'id ASC', 'id');
-        foreach ($roleusers as $roleuser) {
-            try { \local_ustar\position_access::sync_user((int)$roleuser->id); }
-            catch (\Throwable $e) {
-                mtrace('USTAR role reconciliation failed userid='.(int)$roleuser->id.' type='.get_class($e));
-            }
-        }
-
         // Bounded recovery of saved progress whose reward could not be committed.
         \local_ustar\route_rewards::reconcile(200);
-        $users = $DB->get_records_sql($sql);
+        $users = \local_ustar\organization_directory::users(true);
 
         $processed = 0;
         $enrolled = 0;
@@ -70,7 +44,7 @@ class sync_enrolments extends \core\task\scheduled_task {
 
         foreach ($users as $user) {
 
-            if (!\local_ustar\accounts::learning_enabled((int)$user->id)) {
+            if (!\local_ustar\employment::learning_allowed((int)$user->id)) {
                 continue;
             }
 
@@ -141,4 +115,3 @@ class sync_enrolments extends \core\task\scheduled_task {
         );
     }
 }
-

@@ -24,26 +24,17 @@ class hr_get_dashboard extends base {
         }
 
         $activeusers = 0;
-        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id') as $u) {
-            if (\local_ustar\accounts::participates((int)$u->id)) {
-                $activeusers++;
-            }
-        }
-
-        $sql = "SELECT d.userid, TRIM(d.data) AS positionid
-                  FROM {user_info_data} d
-                  JOIN {user_info_field} f ON f.id = d.fieldid AND f.shortname = 'ustar_position'
-                  JOIN {user} u ON u.id = d.userid
-                 WHERE u.deleted = 0 AND u.suspended = 0 AND u.id > 1";
-        $assignedrecords = $DB->get_records_sql($sql);
+        $assignedrecords = \local_ustar\organization_directory::users(true);
+        $activeusers = count(array_filter($assignedrecords,
+            static fn($u): bool => $u->employmentstatus === \local_ustar\employment::ACTIVE));
         $assigned = 0;
         $heads = 0;
         $bydept = [];
         foreach ($assignedrecords as $rec) {
-            if (!\local_ustar\accounts::participates((int)$rec->userid)) {
+            if ($rec->employmentstatus !== \local_ustar\employment::ACTIVE) {
                 continue;
             }
-            $p = $posmap[trim((string)$rec->positionid)] ?? null;
+            $p = $posmap[(string)$rec->positionid] ?? null;
             if (!$p) {
                 continue;
             }

@@ -30,12 +30,8 @@ final class team_presenter {
             $positionmap[(string)($me['positionid'] ?? '')]
             ?? [];
 
-        $ishead =
-            team_access::company($userid) || !empty($myposition['ishead'])
-            || (
-                class_exists('\\local_ustar\\organization_model')
-                && organization_model::is_manager($userid)
-            );
+        $access = access_context::for_user($userid);
+        $ishead = !empty($access['teamread']);
 
         /*
          * Explicit reporting chain has priority.
@@ -312,8 +308,6 @@ final class team_presenter {
         string $departmentid,
         int $excludeuserid
     ): array {
-        global $DB;
-
         if ($departmentid === '') {
             return [];
         }
@@ -340,20 +334,9 @@ final class team_presenter {
             return [];
         }
 
-        $sql =
-            "SELECT u.id,u.firstname,u.lastname,d.data AS positionid
-               FROM {user} u
-               JOIN {user_info_data} d
-                 ON d.userid=u.id
-               JOIN {user_info_field} f
-                 ON f.id=d.fieldid
-                AND f.shortname='ustar_position'
-              WHERE u.deleted=0
-                AND u.suspended=0";
-
         $out = [];
 
-        foreach ($DB->get_records_sql($sql) as $user) {
+        foreach (organization_directory::users(true) as $user) {
             if ((int)$user->id === $excludeuserid) {
                 continue;
             }
@@ -361,14 +344,10 @@ final class team_presenter {
             if (
                 !isset(
                     $headpositions[
-                        trim((string)$user->positionid)
+                        (string)$user->positionid
                     ]
                 )
             ) {
-                continue;
-            }
-
-            if (!accounts::participates((int)$user->id)) {
                 continue;
             }
 
@@ -425,8 +404,6 @@ final class team_presenter {
         int $excludeuserid,
         bool $excludeheads = false
     ): array {
-        global $DB;
-
         if ($departmentid === '') {
             return [];
         }
@@ -442,30 +419,15 @@ final class team_presenter {
             ] = $position;
         }
 
-        $sql =
-            "SELECT u.id,u.firstname,u.lastname,d.data AS positionid
-               FROM {user} u
-               JOIN {user_info_data} d
-                 ON d.userid=u.id
-               JOIN {user_info_field} f
-                 ON f.id=d.fieldid
-                AND f.shortname='ustar_position'
-              WHERE u.deleted=0
-                AND u.suspended=0";
-
         $out = [];
 
-        foreach ($DB->get_records_sql($sql) as $user) {
+        foreach (organization_directory::users(true) as $user) {
             if ((int)$user->id === $excludeuserid) {
                 continue;
             }
 
-            if (!accounts::participates((int)$user->id)) {
-                continue;
-            }
-
             $positionid =
-                trim((string)$user->positionid);
+                (string)$user->positionid;
 
             $position =
                 $positionmap[$positionid]

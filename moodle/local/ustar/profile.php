@@ -8,6 +8,21 @@ global $USER, $DB;
 $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && optional_param('action', '', PARAM_ALPHANUMEXT) === 'registrationrequest') {
+    require_sesskey();
+    try {
+        \local_ustar\registration_service::submit(
+            (int)$USER->id,
+            required_param('positionid', PARAM_ALPHANUMEXT)
+        );
+        redirect(new moodle_url('/local/ustar/profile.php'),
+            'Заявка отправлена руководителю подразделения.', null,
+            \core\output\notification::NOTIFY_SUCCESS);
+    } catch (Throwable $e) {
+        \core\notification::error($e->getMessage());
+    }
+}
+
 $PAGE->set_context($context);
 
 $profile = \local_ustar\employee_profile::build((int)$USER->id);
@@ -17,6 +32,17 @@ $learning = $profile['learning'];
 $knowledge = $profile['knowledge'];
 $skills = $profile['skills'];
 $readiness = $profile['readiness'];
+$registration = \local_ustar\registration_service::state((int)$USER->id);
+$registrationrequest = $registration['request'];
+$employmentstatus = (string)$registration['employment']['status'];
+$structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
+$registrationpositions = [];
+foreach ($structure['positions'] ?? [] as $position) {
+    $registrationpositions[] = [
+        'id' => (string)$position['id'],
+        'name' => (string)($position['name'] ?? $position['id']),
+    ];
+}
 
 $badges = [];
 foreach (($dashboard['badges'] ?? []) as $badge) {
@@ -38,6 +64,16 @@ $data = [
     'department' => $identity['department'] ?: 'Без подразделения',
     'lastaccess' => !empty($identity['lastaccess']) ? userdate((int)$identity['lastaccess'], '%d.%m.%Y %H:%M') : '—',
     'accounttypelabel' => $identity['accounttypelabel'],
+    'employmentpending' => $employmentstatus === \local_ustar\employment::PENDING,
+    'registrationrequested' => $registrationrequest
+        && (string)$registrationrequest->status === \local_ustar\staffing_requests::STATUS_PENDING,
+    'registrationrejected' => $registrationrequest
+        && (string)$registrationrequest->status === \local_ustar\staffing_requests::STATUS_REJECTED,
+    'registrationreviewcomment' => $registrationrequest
+        ? (string)($registrationrequest->reviewcomment ?? '') : '',
+    'registrationpositions' => $registrationpositions,
+    'hasregistrationpositions' => !empty($registrationpositions),
+    'sesskey' => sesskey(),
 
     'assigned' => (int)$learning['assigned'],
     'completed' => (int)$learning['completed'],
@@ -85,6 +121,7 @@ $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(
     new moodle_url('/local/ustar/styles/team_hierarchy.css')
 );
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/staffing.css'));
 
 $output = $PAGE->get_renderer('local_ustar');
 echo $output->header();

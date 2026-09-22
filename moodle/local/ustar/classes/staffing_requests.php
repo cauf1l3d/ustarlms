@@ -9,6 +9,7 @@ defined('MOODLE_INTERNAL') || die();
 final class staffing_requests {
     public const TYPE_HIRE = 'hire';
     public const TYPE_TERMINATE = 'terminate';
+    public const TYPE_REGISTRATION = 'registration';
 
     public const STATUS_PENDING = 'pending';
     public const STATUS_APPROVED = 'approved';
@@ -186,7 +187,6 @@ final class staffing_requests {
         self::assert_actor($actorid);
         global $DB, $CFG;
 
-        require_capability('local/ustar:hrmanage', \context_system::instance());
         if (!in_array($decision, [self::STATUS_APPROVED, self::STATUS_REJECTED], true)) {
             throw new \invalid_parameter_exception('Неизвестное решение');
         }
@@ -201,7 +201,25 @@ final class staffing_requests {
         try {
         $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid], '*', MUST_EXIST);
         if ((string)$request->status !== self::STATUS_PENDING) {
+            if ((string)$request->requesttype === self::TYPE_REGISTRATION
+                    && (string)$request->status === $decision) {
+                $transaction->allow_commit();
+                return ['requestid' => $requestid, 'status' => $decision,
+                    'userid' => (int)$request->employeeid, 'createduserid' => null,
+                    'idempotent' => true];
+            }
             throw new \invalid_parameter_exception('Заявка уже обработана');
+        }
+
+        if ((string)$request->requesttype === self::TYPE_REGISTRATION) {
+            $scope = self::require_manager($actorid);
+            if (!in_array((string)$request->positionid,
+                    array_column($scope['positions'] ?? [], 'id'), true)) {
+                throw new \required_capability_exception(\context_system::instance(),
+                    'local/ustar:viewteam', 'nopermissions', '');
+            }
+        } else {
+            require_capability('local/ustar:hrmanage', \context_system::instance());
         }
 
         $reviewcomment = clean_param(trim((string)($input['reviewcomment'] ?? '')), PARAM_TEXT);
@@ -240,7 +258,23 @@ final class staffing_requests {
                     (string)$request->positionid,
                     (int)$request->requestedby
                 );
-                position_access::sync_user($createduserid);
+                employment::set_status($createduserid, employment::ACTIVE, $actorid, 'staffing_hire');
+            } else if ((string)$request->requesttype === self::TYPE_REGISTRATION) {
+                $targetuserid = (int)$request->employeeid;
+                if ($targetuserid <= 1 || employment::resolve($targetuserid)['status'] !== employment::PENDING) {
+                    throw new \invalid_parameter_exception('Регистрация уже активирована или недоступна.');
+                }
+                employment::approve_registration(
+                    $targetuserid,
+                    $actorid,
+                    (string)$request->positionid
+                );
+                organization_model::assign_hire(
+                    $targetuserid,
+                    (string)$request->positionid,
+                    $actorid
+                );
+                assignment::sync_user($targetuserid);
             } else if ((string)$request->requesttype === self::TYPE_TERMINATE) {
                 require_once($CFG->dirroot . '/user/lib.php');
                 $target = $DB->get_record('user', [
@@ -268,7 +302,7 @@ final class staffing_requests {
                     (int)$target->id,
                     'staffing_termination'
                 );
-                position_access::sync_user((int)$target->id);
+                employment::set_status((int)$target->id, employment::TERMINATED, $actorid, 'staffing_termination');
                 $targetuserid = (int)$target->id;
                 people::log_action($actorid, $targetuserid, 'person_terminated', [
                     'requestid' => $requestid,
@@ -297,6 +331,21 @@ final class staffing_requests {
             'createduserid' => $createduserid,
             'reviewcomment' => $reviewcomment,
         ]);
+
+        if ((string)$request->requesttype === self::TYPE_REGISTRATION && $targetuserid) {
+            target_core::notify([
+                'userid' => $targetuserid,
+                'severity' => 'normal',
+                'eventtype' => 'registration_' . $decision,
+                'subject' => $decision === self::STATUS_APPROVED
+                    ? 'Должность подтверждена' : 'Заявка на должность отклонена',
+                'message' => $decision === self::STATUS_APPROVED
+                    ? 'Ваша должность подтверждена. Назначенный маршрут обучения уже доступен.'
+                    : ('Причина: ' . $reviewcomment),
+                'actionurl' => (new \moodle_url('/local/ustar/profile.php'))->out(false),
+                'idempotencykey' => 'registration-' . $decision . ':' . $requestid,
+            ]);
+        }
 
         $transaction->allow_commit();
         return [
@@ -338,6 +387,7 @@ final class staffing_requests {
                 : null;
             $status = (string)$record->status;
             $type = (string)$record->requesttype;
+            $isregistration = $type === self::TYPE_REGISTRATION;
             $adaptation = null;
             if ($type === self::TYPE_HIRE && $status === self::STATUS_APPROVED && !empty($record->createduserid)) {
                 $adaptation = adaptation_service::for_staffing_request((int)$record->id);
@@ -353,7 +403,9 @@ final class staffing_requests {
                 'type' => $type,
                 'ishire' => $type === self::TYPE_HIRE,
                 'isterminate' => $type === self::TYPE_TERMINATE,
-                'typelabel' => $type === self::TYPE_HIRE ? 'Приём сотрудника' : 'Увольнение сотрудника',
+                'isregistration' => $isregistration,
+                'typelabel' => $type === self::TYPE_HIRE ? 'Приём сотрудника'
+                    : ($isregistration ? 'Подтверждение регистрации' : 'Увольнение сотрудника'),
                 'department' => (string)($departments[(string)$record->departmentid]['name'] ?? $record->departmentid),
                 'position' => (string)($positions[(string)$record->positionid]['name'] ?? $record->positionid),
                 'fullname' => trim((string)$record->lastname . ' ' . (string)$record->firstname),
@@ -379,6 +431,11 @@ final class staffing_requests {
                 'canassignadaptation' => $canassignadaptation,
                 'hasadaptation' => (bool)$adaptationcard,
                 'adaptation' => $adaptationcard,
+                'canreview' => $status === self::STATUS_PENDING
+                    && ((!$isregistration && $ishr) || ($isregistration
+                        && !empty($scope['allowed'])
+                        && in_array((string)$record->positionid,
+                            array_column($scope['positions'] ?? [], 'id'), true))),
             ];
         }
         usort($rows, static function(array $a, array $b): int {

@@ -24,6 +24,7 @@ final class route_model {
     public const RENEW_ALL = 'all';
     public const RENEW_EXPIRY = 'expiry';
     public const RENEW_MANUAL = 'manual';
+    public const LOCAL_POINT = 'local';
 
     private static function position_context(string $positionid): array {
         $structure = structure::get(structure::NAME_STRUCTURE);
@@ -143,6 +144,162 @@ final class route_model {
         return $record ?: null;
     }
 
+    /** Return the newest unpublished version without exposing archived history. */
+    public static function latest_draft_version(int $pointid): ?\stdClass {
+        global $DB;
+        $record = $DB->get_record_sql(
+            'SELECT *
+               FROM {local_ustar_route_versions}
+              WHERE pointid = :pointid
+                AND status = :status
+           ORDER BY versionno DESC, id DESC',
+            [
+                'pointid' => $pointid,
+                'status' => self::STATUS_DRAFT,
+            ],
+            IGNORE_MULTIPLE
+        );
+        return $record ?: null;
+    }
+
+    /**
+     * Build a presentation-neutral diff between the current publication and a draft.
+     *
+     * Version payloads are immutable. This helper deliberately returns only changed
+     * fields and requirement additions/removals so the studio can render a diff without
+     * reimplementing version semantics or exposing source IDs as an editing API.
+     *
+     * @return array<string,mixed>
+     */
+    public static function version_diff(?\stdClass $published, ?\stdClass $draft): array {
+        $empty = [
+            'available' => false,
+            'haschanges' => false,
+            'publishedversion' => 0,
+            'draftversion' => 0,
+            'rows' => [],
+            'requirementsadded' => [],
+            'requirementsremoved' => [],
+            'hasrequirementsadded' => false,
+            'hasrequirementsremoved' => false,
+        ];
+        if (!$draft) {
+            return $empty;
+        }
+
+        $publishedvalue = static function(?\stdClass $version, string $field, string $fallback = ''): string {
+            if (!$version) {
+                return '';
+            }
+            return (string)($version->{$field} ?? $fallback);
+        };
+        $displaydays = static function(string $value): string {
+            $days = max(0, (int)$value);
+            return $days > 0 ? $days . ' дн.' : 'Без срока';
+        };
+        $fields = [
+            [
+                'label' => 'Название',
+                'published' => $publishedvalue($published, 'title'),
+                'draft' => $publishedvalue($draft, 'title'),
+            ],
+            [
+                'label' => 'Описание',
+                'published' => $publishedvalue($published, 'summary'),
+                'draft' => $publishedvalue($draft, 'summary'),
+            ],
+            [
+                'label' => 'Повторное прохождение',
+                'published' => $published
+                    ? self::policy_label((string)$published->renewalpolicy)
+                    : '',
+                'draft' => self::policy_label((string)$draft->renewalpolicy),
+            ],
+            [
+                'label' => 'Срок действия',
+                'published' => $published
+                    ? $displaydays((string)$published->validdays)
+                    : '',
+                'draft' => $displaydays((string)$draft->validdays),
+            ],
+        ];
+        $rows = [];
+        foreach ($fields as $field) {
+            if ($published && $field['published'] === $field['draft']) {
+                continue;
+            }
+            $rows[] = [
+                'label' => $field['label'],
+                'published' => $field['published'] !== ''
+                    ? $field['published']
+                    : 'Нет опубликованной версии',
+                'draft' => $field['draft'] !== '' ? $field['draft'] : '—',
+            ];
+        }
+
+        $requirementkey = static function(array $requirement): string {
+            return (string)json_encode([
+                'type' => (string)($requirement['type'] ?? ''),
+                'sourceid' => (int)($requirement['sourceid'] ?? 0),
+                'sourcekey' => (string)($requirement['sourcekey'] ?? ''),
+                'completionmode' => (string)($requirement['completionmode'] ?? ''),
+                'required' => !empty($requirement['required']),
+                'primary' => !empty($requirement['primary']),
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        };
+        $requirementlabel = static function(array $requirement): string {
+            $label = trim((string)($requirement['label'] ?? ''));
+            if ($label === '') {
+                $label = match ((string)($requirement['type'] ?? '')) {
+                    'course' => 'Moodle-курс',
+                    'cm' => 'Учебная активность',
+                    'content' => 'Материал',
+                    'assessment' => 'Развивающий профиль',
+                    'native' => 'Системное условие',
+                    'skill' => 'Навык',
+                    default => 'Предыдущие обязательные шаги',
+                };
+            }
+            $notes = [];
+            if (!empty($requirement['required'])) {
+                $notes[] = 'обязательно';
+            }
+            if (($requirement['type'] ?? '') === 'content'
+                    && ($requirement['completionmode'] ?? 'open') === 'ack') {
+                $notes[] = 'подтверждение ознакомления';
+            }
+            if (($requirement['type'] ?? '') === 'skill' && !empty($requirement['primary'])) {
+                $notes[] = 'главный навык';
+            }
+            return $notes ? $label . ' · ' . implode(', ', $notes) : $label;
+        };
+
+        $publishedrequirements = $published ? self::requirements_for_version($published) : [];
+        $draftrequirements = self::requirements_for_version($draft);
+        $publishedmap = [];
+        foreach ($publishedrequirements as $requirement) {
+            $publishedmap[$requirementkey($requirement)] = $requirementlabel($requirement);
+        }
+        $draftmap = [];
+        foreach ($draftrequirements as $requirement) {
+            $draftmap[$requirementkey($requirement)] = $requirementlabel($requirement);
+        }
+        $added = array_values(array_diff_key($draftmap, $publishedmap));
+        $removed = array_values(array_diff_key($publishedmap, $draftmap));
+
+        return [
+            'available' => true,
+            'haschanges' => !empty($rows) || !empty($added) || !empty($removed),
+            'publishedversion' => $published ? (int)$published->versionno : 0,
+            'draftversion' => (int)$draft->versionno,
+            'rows' => $rows,
+            'requirementsadded' => $added,
+            'requirementsremoved' => $removed,
+            'hasrequirementsadded' => !empty($added),
+            'hasrequirementsremoved' => !empty($removed),
+        ];
+    }
+
     public static function current_published_version(int $pointid, ?int $at = null): ?\stdClass {
         global $DB;
         $at = $at ?? time();
@@ -232,7 +389,14 @@ final class route_model {
     public static function revision(int $routeid): string {
         $parts = [];
         foreach (self::points($routeid) as $point) {
-            $parts[] = (int)$point->id . ':' . (int)$point->sortorder . ':' . (int)$point->timemodified;
+            $parts[] = implode(':', [
+                (int)$point->id,
+                (int)$point->sortorder,
+                (int)$point->timemodified,
+                (int)$point->active,
+                (int)($point->sourcepointid ?? 0),
+                (string)($point->inheritstate ?? self::LOCAL_POINT),
+            ]);
         }
         return sha1(implode('|', $parts));
     }
@@ -276,6 +440,270 @@ final class route_model {
         }
 
         return $point;
+    }
+
+    /**
+     * Atomically save point metadata and its next immutable version.
+     *
+     * Route Studio used to update the point and then create the version in
+     * separate transactions. A validation failure (for example an unpublished
+     * material) could therefore leave the point changed without its matching
+     * version. This command owns the route lock, optimistic revision check and
+     * transaction for both writes.
+     */
+    public static function save_point_version(
+        int $routeid,
+        int $pointid,
+        string $phase,
+        bool $active,
+        array $versiondata,
+        int $actorid,
+        int $expectedmodified = 0
+    ): \stdClass {
+        global $DB;
+
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+        $lock = $factory->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception(
+                'Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.'
+            );
+        }
+
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $route = $DB->get_record(
+                    'local_ustar_routes',
+                    ['id' => $routeid, 'active' => 1],
+                    '*',
+                    MUST_EXIST
+                );
+
+                $point = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_route_points}
+                      WHERE id = :id AND routeid = :routeid
+                      FOR UPDATE',
+                    ['id' => $pointid, 'routeid' => $routeid],
+                    MUST_EXIST
+                );
+
+                if ($expectedmodified > 0
+                        && (int)$point->timemodified !== $expectedmodified) {
+                    throw new \moodle_exception(
+                        'Точка уже изменена в другой сессии. Обновите маршрут и повторите действие.'
+                    );
+                }
+
+                if ((string)($point->inheritstate ?? self::LOCAL_POINT)
+                        === \local_ustar\route_family::INHERITED) {
+                    throw new \moodle_exception(
+                        'Наследуемый общий шаг нельзя редактировать напрямую.'
+                    );
+                }
+
+                $status = self::clean_status(
+                    (string)($versiondata['status'] ?? self::STATUS_DRAFT)
+                );
+                $requirements = self::normalize_requirements(
+                    is_array($versiondata['requirements'] ?? null)
+                        ? $versiondata['requirements']
+                        : []
+                );
+
+                if ($status === self::STATUS_PUBLISHED && !$requirements) {
+                    throw new \moodle_exception(
+                        'Нельзя опубликовать шаг без обучения или условия завершения'
+                    );
+                }
+
+                // Validate publication before touching point metadata. The
+                // transaction still protects the full command, while this
+                // ordering also keeps a rejected material from producing any
+                // observable point revision on database drivers that defer
+                // delegated-transaction rollback callbacks.
+                if ($status === self::STATUS_PUBLISHED) {
+                    self::assert_publishable_requirements(
+                        $route,
+                        $requirements,
+                        $actorid
+                    );
+                }
+
+                $point->phase = self::clean_phase($phase);
+                $point->active = $active ? 1 : 0;
+                $point->timemodified = max(
+                    time(),
+                    (int)$point->timemodified + 1
+                );
+                $point->usermodified = $actorid;
+                $DB->update_record('local_ustar_route_points', $point);
+
+                $versiondata['requirements'] = $requirements;
+                $versiondata['status'] = $status;
+                if ($status === self::STATUS_PUBLISHED
+                        && empty($versiondata['effectivedate'])) {
+                    $versiondata['effectivedate'] = time();
+                }
+
+                $created = self::create_version_locked(
+                    $pointid,
+                    $versiondata,
+                    $actorid
+                );
+
+                if ($status === self::STATUS_PUBLISHED) {
+                    $DB->execute(
+                        "UPDATE {local_ustar_route_versions}
+                            SET status = :archived,
+                                timemodified = :modified,
+                                usermodified = :actorid
+                          WHERE pointid = :pointid
+                            AND status = :published
+                            AND id <> :id",
+                        [
+                            'archived' => self::STATUS_ARCHIVED,
+                            'modified' => time(),
+                            'actorid' => $actorid,
+                            'pointid' => $pointid,
+                            'published' => self::STATUS_PUBLISHED,
+                            'id' => (int)$created->id,
+                        ]
+                    );
+                }
+
+                $transaction->allow_commit();
+                return $created;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+
+        throw new \coding_exception('Не удалось сохранить версию точки маршрута');
+    }
+
+    /**
+     * Publish an existing draft without rewriting its historical payload.
+     * Repeated publication of the same version is idempotent.
+     */
+    public static function publish_version(
+        int $routeid,
+        int $pointid,
+        int $versionid,
+        int $actorid,
+        int $expectedmodified = 0
+    ): \stdClass {
+        global $DB;
+
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar_routes');
+        $lock = $factory->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception(
+                'Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.'
+            );
+        }
+
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $route = $DB->get_record(
+                    'local_ustar_routes',
+                    ['id' => $routeid, 'active' => 1],
+                    '*',
+                    MUST_EXIST
+                );
+                $point = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_route_points}
+                      WHERE id = :id AND routeid = :routeid
+                      FOR UPDATE',
+                    ['id' => $pointid, 'routeid' => $routeid],
+                    MUST_EXIST
+                );
+                $version = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_route_versions}
+                      WHERE id = :id AND pointid = :pointid
+                      FOR UPDATE',
+                    ['id' => $versionid, 'pointid' => $pointid],
+                    MUST_EXIST
+                );
+
+                if ($expectedmodified > 0
+                        && (int)$point->timemodified !== $expectedmodified) {
+                    throw new \moodle_exception(
+                        'Точка уже изменена в другой сессии. Обновите маршрут и повторите действие.'
+                    );
+                }
+
+                if ((string)$version->status === self::STATUS_PUBLISHED) {
+                    $transaction->allow_commit();
+                    return $version;
+                }
+                if ((string)$version->status !== self::STATUS_DRAFT) {
+                    throw new \moodle_exception(
+                        'Архивную версию нельзя опубликовать повторно. Создайте новую версию.'
+                    );
+                }
+
+                $requirements = self::requirements_for_version($version);
+                if (!$requirements) {
+                    throw new \moodle_exception(
+                        'Нельзя опубликовать шаг без обучения или условия завершения'
+                    );
+                }
+
+                self::assert_publishable_requirements(
+                    $route,
+                    $requirements,
+                    $actorid
+                );
+
+                $now = time();
+                $version->status = self::STATUS_PUBLISHED;
+                $version->effectivedate = $now;
+                $version->timemodified = max(
+                    $now,
+                    (int)$version->timemodified + 1
+                );
+                $version->usermodified = $actorid;
+                $DB->update_record('local_ustar_route_versions', $version);
+
+                $DB->execute(
+                    "UPDATE {local_ustar_route_versions}
+                        SET status = :archived,
+                            timemodified = :modified,
+                            usermodified = :actorid
+                      WHERE pointid = :pointid
+                        AND status = :published
+                        AND id <> :id",
+                    [
+                        'archived' => self::STATUS_ARCHIVED,
+                        'modified' => $now,
+                        'actorid' => $actorid,
+                        'pointid' => $pointid,
+                        'published' => self::STATUS_PUBLISHED,
+                        'id' => $versionid,
+                    ]
+                );
+
+                $point->timemodified = max(
+                    $now,
+                    (int)$point->timemodified + 1
+                );
+                $point->usermodified = $actorid;
+                $DB->update_record('local_ustar_route_points', $point);
+
+                $transaction->allow_commit();
+                return $version;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+
+        throw new \coding_exception('Не удалось опубликовать версию точки маршрута');
     }
 
     public static function add_point(
@@ -440,6 +868,80 @@ final class route_model {
         }
     }
 
+    /** Validate all content requirements before a version becomes visible. */
+    private static function assert_publishable_requirements(
+        \stdClass $route,
+        array $requirements,
+        int $actorid
+    ): void {
+        global $DB;
+
+        if (!$requirements) {
+            throw new \moodle_exception(
+                'Нельзя опубликовать шаг без обучения или условия завершения'
+            );
+        }
+
+        // Stage 6 Studio stores imported SCORM ZIPs as package attachments.
+        // Until a real runtime records resume/score/completion, such a package
+        // must never be published as a completable route requirement. Existing
+        // Moodle SCORM course modules remain supported through type=cm.
+        if (class_exists('\\local_ustar\\material_studio') && material_studio::available()) {
+            foreach ($requirements as $requirement) {
+                if ((string)($requirement['type'] ?? '') !== 'content') {
+                    continue;
+                }
+                $contentid = (int)($requirement['sourceid'] ?? 0);
+                if ($contentid <= 0) {
+                    continue;
+                }
+                $kind = (string)$DB->get_field(
+                    'local_ustar_content_blueprints',
+                    'kind',
+                    ['contentid' => $contentid]
+                );
+                if ($kind === material_studio::KIND_SCORM) {
+                    throw new \moodle_exception(
+                        'Studio SCORM пока нельзя публиковать как шаг маршрута: '
+                        . 'для него не подключён runtime. Используйте Moodle SCORM.'
+                    );
+                }
+            }
+        }
+
+        if ((string)$route->routekind === \local_ustar\route_family::KIND_PARENT) {
+            foreach ($requirements as $requirement) {
+                if ((string)($requirement['type'] ?? '') !== 'content') {
+                    continue;
+                }
+
+                $contentid = (int)($requirement['sourceid'] ?? 0);
+                if ($contentid <= 0) {
+                    continue;
+                }
+
+                $contentstatus = (string)$DB->get_field(
+                    'local_ustar_content',
+                    'status',
+                    ['id' => $contentid],
+                    MUST_EXIST
+                );
+                if ($contentstatus !== \local_ustar\content::STATUS_PUBLISHED) {
+                    throw new \moodle_exception(
+                        'Общий шаг нельзя опубликовать: сначала опубликуйте выбранный материал'
+                    );
+                }
+            }
+            return;
+        }
+
+        self::ensure_route_content_access(
+            (int)$route->id,
+            $requirements,
+            $actorid
+        );
+    }
+
 
     public static function create_version(int $pointid, array $data, int $actorid): \stdClass {
         global $DB;
@@ -485,55 +987,9 @@ final class route_model {
             MUST_EXIST
         );
 
-        if (
-            $status === self::STATUS_PUBLISHED
-            &&
-            (string)$ownerroute->routekind ===
-                \local_ustar\route_family::KIND_PARENT
-        ) {
-            foreach ($requirements as $requirement) {
-                if (
-                    (string)($requirement['type'] ?? '')
-                    !== 'content'
-                ) {
-                    continue;
-                }
-
-                $contentid =
-                    (int)($requirement['sourceid'] ?? 0);
-
-                if ($contentid <= 0) {
-                    continue;
-                }
-
-                $contentstatus =
-                    (string)$DB->get_field(
-                        'local_ustar_content',
-                        'status',
-                        ['id' => $contentid],
-                        MUST_EXIST
-                    );
-
-                if (
-                    $contentstatus
-                    !== \local_ustar\content::STATUS_PUBLISHED
-                ) {
-                    throw new \moodle_exception(
-                        'Общий шаг нельзя опубликовать: '
-                        . 'сначала опубликуйте выбранный материал'
-                    );
-                }
-            }
-        }
-
-        if (
-            $status === self::STATUS_PUBLISHED
-            &&
-            (string)$ownerroute->routekind !==
-                \local_ustar\route_family::KIND_PARENT
-        ) {
-            self::ensure_route_content_access(
-                (int)$point->routeid,
+        if ($status === self::STATUS_PUBLISHED) {
+            self::assert_publishable_requirements(
+                $ownerroute,
                 $requirements,
                 $actorid
             );
@@ -682,6 +1138,18 @@ final class route_model {
             $allowed = [];
             foreach (self::points($routeid) as $point) {
                 $allowed[(int)$point->id] = true;
+            }
+            $submittedids = array_values(array_unique(array_map(
+                'intval',
+                array_filter($pointids, static fn($pointid): bool => (int)$pointid > 0)
+            )));
+            $expectedids = array_keys($allowed);
+            sort($submittedids, SORT_NUMERIC);
+            sort($expectedids, SORT_NUMERIC);
+            if ($submittedids !== $expectedids) {
+                throw new \invalid_parameter_exception(
+                    'Для сохранения порядка нужен полный список активных шагов маршрута.'
+                );
             }
             $seen = [];
             $sort = 10;
@@ -1087,14 +1555,25 @@ final class route_model {
         } else if ($type === 'content') {
             $contentid = (int)$requirement['sourceid'];
             $item = $DB->get_record('local_ustar_content', ['id' => $contentid]);
-            $contentversion = $item ? content::current_version($contentid) : null;
+            $studio = false;
+            if ($item && class_exists('\\local_ustar\\material_studio') && material_studio::available()) {
+                $studio = $DB->get_record(
+                    'local_ustar_content_blueprints',
+                    ['contentid' => $contentid],
+                    'id,kind,sourceversion',
+                    IGNORE_MISSING
+                );
+            }
+            $contentversion = ($item && !$studio) ? content::current_version($contentid) : null;
             if (
                 !$item
                 || (string)$item->type === 'folder'
                 || (string)$item->status !== content::STATUS_PUBLISHED
-                || !$contentversion
-                || empty($contentversion->iscurrent)
-                || (string)$contentversion->status !== content::STATUS_PUBLISHED
+                || (!$studio && (
+                    !$contentversion
+                    || empty($contentversion->iscurrent)
+                    || (string)$contentversion->status !== content::STATUS_PUBLISHED
+                ))
             ) {
                 $result['configured'] = false;
                 $result['detail'] = 'Текущая опубликованная версия материала USTAR не найдена';
@@ -1105,33 +1584,64 @@ final class route_model {
                 $result['detail'] = 'Правила доступа материала не включают этого сотрудника';
                 return $result;
             }
+
             $mode = (string)($requirement['completionmode'] ?? 'open');
+            if ($studio && $mode === 'ack') {
+                $result['configured'] = false;
+                $result['detail'] = 'Подтверждение ознакомления неприменимо к материалу Studio';
+                return $result;
+            }
             if (
-                $mode === 'ack'
+                !$studio
+                && $mode === 'ack'
                 && (empty($item->ackrequired) || (string)$item->sourcekind !== content::SOURCE_FILE)
             ) {
                 $result['configured'] = false;
                 $result['detail'] = 'Подтверждение доступно только для USTAR File с включённым ознакомлением';
                 return $result;
             }
+
             $result['label'] = $result['label'] ?: format_string((string)$item->title);
             $result['url'] = (new \moodle_url('/local/ustar/open.php', [
                 'contentid' => $contentid,
                 'pointid' => (int)$version->pointid,
                 'versionid' => (int)$version->id,
             ]))->out(false);
-            $event = learning_events::route_fact(
-                $userid,
-                $contentid,
-                (int)$version->pointid,
-                (int)$version->id,
-                $mode
-            );
-            $result['satisfied'] = !empty($event);
-            $result['completedat'] = $event ? (int)$event->timecreated : 0;
-            $result['detail'] = $mode === 'ack'
-                ? ($result['satisfied'] ? 'Ознакомление подтверждено' : 'Откройте и подтвердите ознакомление')
-                : ($result['satisfied'] ? 'Материал открыт из маршрута' : 'Откройте материал из маршрута');
+
+            if ($studio && (string)$studio->kind === material_studio::KIND_ASSESSMENT) {
+                $attempt = material_studio::latest_submission_for_user(
+                    $contentid,
+                    $userid,
+                    (int)$studio->sourceversion
+                );
+                $result['satisfied'] = $attempt && !empty($attempt['passed']);
+                $result['failed'] = $attempt && empty($attempt['passed']);
+                $result['completedat'] = $attempt ? (int)($attempt['submittedat'] ?? 0) : 0;
+                $result['detail'] = !$attempt
+                    ? 'Пройдите аттестацию'
+                    : ($result['satisfied']
+                        ? 'Аттестация пройдена'
+                        : 'Аттестация не пройдена. Повторите попытку');
+            } else if ($studio && (string)$studio->kind === material_studio::KIND_SCORM) {
+                // Imported Studio ZIP is an immutable package attachment, not a
+                // SCORM runtime. Never turn a download/open into completion.
+                $result['configured'] = false;
+                $result['satisfied'] = false;
+                $result['detail'] = 'Для Studio SCORM ещё не подключён runtime. Используйте Moodle SCORM в маршруте.';
+            } else {
+                $event = learning_events::route_fact(
+                    $userid,
+                    $contentid,
+                    (int)$version->pointid,
+                    (int)$version->id,
+                    $mode
+                );
+                $result['satisfied'] = !empty($event);
+                $result['completedat'] = $event ? (int)$event->timecreated : 0;
+                $result['detail'] = $mode === 'ack'
+                    ? ($result['satisfied'] ? 'Ознакомление подтверждено' : 'Откройте и подтвердите ознакомление')
+                    : ($result['satisfied'] ? 'Материал открыт из маршрута' : 'Откройте материал из маршрута');
+            }
         } else if ($type === 'assessment') {
             $assessmentkey = (string)$requirement['sourcekey'];
             $definition = development_assessment::published($assessmentkey);
@@ -1223,6 +1733,39 @@ final class route_model {
         return $result;
     }
 
+    /**
+     * Convert a lifecycle PASS into the exact immutable completion fact.
+     *
+     * The provider's finalized timestamp is authoritative. Using the current
+     * request time would make verifiedcompletedat differ from completedat and
+     * completion_cycle would correctly reject the fact. The cycle number is
+     * also mandatory evidence: a bare "passed" projection is not a lifecycle.
+     *
+     * @return array{completedat:int,evidence:array<string,mixed>}|null
+     */
+    private static function verified_assessment_completion(?array $assessmentview): ?array {
+        if (!$assessmentview || (string)($assessmentview['status'] ?? '') !== 'passed') {
+            return null;
+        }
+        $completedat = (int)($assessmentview['verifiedcompletedat'] ?? 0);
+        $cycle = (int)($assessmentview['cycle'] ?? 0);
+        if ($completedat <= 0 || $cycle <= 0) {
+            return null;
+        }
+        return [
+            'completedat' => $completedat,
+            'evidence' => [
+                'mode' => 'assessment_lifecycle',
+                'verifiedcompletedat' => $completedat,
+                'status' => 'passed',
+                'cycle' => $cycle,
+                'attempts' => (int)($assessmentview['attemptsused'] ?? 0),
+                'bestscore' => (float)($assessmentview['bestscore'] ?? 0),
+                'passscore' => (float)($assessmentview['passscore'] ?? 0),
+            ],
+        ];
+    }
+
     private static function prior_progress(int $userid, int $pointid): array {
         global $DB;
         return array_values($DB->get_records(
@@ -1258,7 +1801,16 @@ final class route_model {
                     'oldcompleted' => (int)$existing->completedat, 'oldexpiry' => (int)$existing->expiresat,
                 ]);
             }
+            completion_cycle::confirm(
+                $userid,
+                (int)$point->id,
+                (int)$version->id,
+                $completedat > 0 ? $completedat : (int)$existing->completedat,
+                $expiresat > 0 ? $expiresat : (int)($existing->expiresat ?? 0),
+                $evidence
+            );
             route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
+            self::reconcile_grade_promotion($userid);
             return;
         }
         $now = time();
@@ -1285,7 +1837,28 @@ final class route_model {
                 throw $e;
             }
         }
+        completion_cycle::confirm(
+            $userid,
+            (int)$point->id,
+            (int)$version->id,
+            $completedat > 0 ? $completedat : $now,
+            $expiresat,
+            $evidence
+        );
         route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
+        self::reconcile_grade_promotion($userid);
+    }
+
+    /** Grade automation is secondary: never roll back a verified learning completion. */
+    private static function reconcile_grade_promotion(int $userid): void {
+        if (!class_exists('\\local_ustar\\grade_promotion')) {
+            return;
+        }
+        try {
+            grade_promotion::reconcile($userid);
+        } catch (\Throwable $e) {
+            debugging('USTAR grade reconciliation failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        }
     }
 
     /** An invalid managed assessment must not be completed through a stale Moodle completion row. */
@@ -2046,32 +2619,20 @@ final class route_model {
                     );
                     // A lifecycle-managed assessment PASS is authoritative.
                     // Do not depend on Moodle course_modules_completion catching up.
-                    if (
-                        $assessmentview
-                        && (string)($assessmentview['status'] ?? '') === 'passed'
-                        && empty($fact['satisfied'])
-                    ) {
-                        $completedat = time();
-
+                    $verifiedassessment = self::verified_assessment_completion($assessmentview);
+                    if ($verifiedassessment && empty($fact['satisfied'])) {
                         self::record_completion(
                             $userid,
                             $point,
                             $version,
-                            [
-                                'mode' => 'assessment_lifecycle',
-                                'verifiedcompletedat' => (int)($assessmentview['verifiedcompletedat'] ?? 0),
-                                'status' => 'passed',
-                                'attempts' => (int)($assessmentview['attemptsused'] ?? 0),
-                                'bestscore' => (float)($assessmentview['bestscore'] ?? 0),
-                                'passscore' => (float)($assessmentview['passscore'] ?? 0),
-                            ],
-                            $completedat,
+                            $verifiedassessment['evidence'],
+                            $verifiedassessment['completedat'],
                             0
                         );
 
                         $fact['satisfied'] = true;
                         $fact['failed'] = false;
-                        $fact['completedat'] = $completedat;
+                        $fact['completedat'] = $verifiedassessment['completedat'];
                         $fact['launchurl'] = '';
                     }
 

@@ -73,7 +73,7 @@ final class organization_model {
         foreach ($rows as $row) {
             $uid=(int)$row->userid;
             $u=$DB->get_record('user',['id'=>$uid,'deleted'=>0,'suspended'=>0],'id',IGNORE_MISSING);
-            if (!$u || is_siteadmin($uid) || !accounts::participates($uid)) continue;
+            if (!$u || is_siteadmin($uid) || !accounts::participates($uid) || !employment::is_active($uid)) continue;
             if (organization_identity::resolve($uid, $now)['conflicts']) continue;
             if (isset($occupants[$row->assignmenttype])) {
                 $occupants[$row->assignmenttype][] = $uid;
@@ -99,7 +99,7 @@ final class organization_model {
     }
 
     public static function manager_places(int $userid, ?int $now=null): array {
-        if (!accounts::participates($userid)) return [];
+        if (!accounts::participates($userid) || !employment::is_active($userid)) return [];
         $now = $now ?? time();
         if (organization_identity::resolve($userid, $now)['conflicts']) return [];
         $positions=self::position_map();

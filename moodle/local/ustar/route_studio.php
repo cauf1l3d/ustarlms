@@ -370,7 +370,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
         }
 
-        \local_ustar\route_model::reorder(
+        \local_ustar\route_commands::reorder(
             (int)$route->id,
             optional_param_array(
                 'pointids',
@@ -538,27 +538,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 \local_ustar\route_scope::assert_replaceable((int)$point->sourcepointid);
             }
 
-            \local_ustar\route_model::update_point(
-                (int)$route->id,
-                $pointid,
-                $phase,
-                optional_param(
-                    'active',
-                    0,
-                    PARAM_BOOL
-                ),
-                $actorid,
-                required_param(
-                    'expectedmodified',
-                    PARAM_INT
-                )
-            );
-
-            \local_ustar\route_model::create_version(
-                $pointid,
-                $versiondata,
-                $actorid
-            );
+            \local_ustar\route_commands::save_version([
+                'routeid' => (int)$route->id,
+                'pointid' => $pointid,
+                'positionid' => $positionid,
+                'positionediting' => $positionediting,
+                'phase' => $phase,
+                'active' => optional_param('active', 0, PARAM_BOOL),
+                'versiondata' => $versiondata,
+                'actorid' => $actorid,
+                'expectedmodified' => required_param('expectedmodified', PARAM_INT),
+            ]);
 
             $anchor =
                 '#point-'
@@ -584,7 +574,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
         if (!$positionediting) { throw new invalid_parameter_exception('Выберите должность'); }
-        $editafter = \local_ustar\route_scope::create_override(
+        $editafter = \local_ustar\route_commands::create_override(
             (int)$route->id, $pointid, $positionid, $actorid
         );
         $anchor = '#point-' . $editafter;
@@ -608,7 +598,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
         if (!$positionediting) { throw new invalid_parameter_exception('Выберите должность'); }
-        $sourceid = \local_ustar\route_scope::revert_override(
+        $sourceid = \local_ustar\route_commands::revert_override(
             (int)$route->id, $pointid, $positionid, $actorid
         );
         $anchor = '#point-' . $sourceid;
@@ -867,6 +857,17 @@ if ($routeexists) {
     foreach ($route['points'] as &$point) {
         $latest = \local_ustar\route_model::latest_version((int)$point['id']);
         $requirements = $latest ? \local_ustar\route_model::requirements_for_version($latest) : [];
+        $publishedversion = \local_ustar\route_model::current_published_version((int)$point['id']);
+        // Only the newest draft is actionable in Studio. Archived drafts remain
+        // available through history but must not be presented as the next publish.
+        $draftversion = $latest
+            && (string)$latest->status === \local_ustar\route_model::STATUS_DRAFT
+            ? $latest
+            : null;
+        $versiondiff = \local_ustar\route_model::version_diff(
+            $publishedversion,
+            $draftversion
+        );
         $selectedcontents = []; $selectedskills = []; $primaryskill = ''; $selectedcourse = 0; $selectedcm = 0; $selectedassessment = ''; $previous = false;
         foreach ($requirements as $requirement) {
             if (($requirement['type'] ?? '') === 'content') { $selectedcontents[] = (int)$requirement['sourceid']; }
@@ -1062,6 +1063,24 @@ if ($routeexists) {
         $point['formtitle'] = $latest ? (string)$latest->title : '';
         $point['formsummary'] = $latest ? (string)$latest->summary : '';
         $point['formvaliddays'] = $latest ? (int)$latest->validdays : 0;
+        $point['hasversiondiff'] = !empty($versiondiff['haschanges']);
+        $point['versiondiffrows'] = $versiondiff['rows'];
+        $point['versiondiffadded'] = array_map(
+            static fn(string $label): array => ['label' => $label],
+            $versiondiff['requirementsadded']
+        );
+        $point['versiondiffremoved'] = array_map(
+            static fn(string $label): array => ['label' => $label],
+            $versiondiff['requirementsremoved']
+        );
+        $point['hasversiondiffadded'] = !empty($versiondiff['hasrequirementsadded']);
+        $point['hasversiondiffremoved'] = !empty($versiondiff['hasrequirementsremoved']);
+        $point['versiondiffpublishedlabel'] = !empty($versiondiff['publishedversion'])
+            ? 'v' . (int)$versiondiff['publishedversion']
+            : 'нет публикации';
+        $point['versiondiffdraftlabel'] = !empty($versiondiff['draftversion'])
+            ? 'v' . (int)$versiondiff['draftversion']
+            : '';
         $point['draftselected'] = !$latest || (string)$latest->status !== \local_ustar\route_model::STATUS_PUBLISHED;
         $point['publishedselected'] = $latest && (string)$latest->status === \local_ustar\route_model::STATUS_PUBLISHED;
 
@@ -1405,4 +1424,3 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
-

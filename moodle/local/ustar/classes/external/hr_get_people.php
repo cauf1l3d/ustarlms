@@ -49,11 +49,8 @@ class hr_get_people extends base {
             $sqlparams += ['q1' => $like, 'q2' => $like, 'q3' => $like, 'q4' => $like];
         }
 
-        $sql = "SELECT u.id, u.username, u.firstname, u.lastname, u.email, u.suspended, u.lastaccess,
-                       TRIM(d.data) AS positionid
+        $sql = "SELECT u.id, u.username, u.firstname, u.lastname, u.email, u.suspended, u.lastaccess
                   FROM {user} u
-             LEFT JOIN {user_info_field} f ON f.shortname = 'ustar_position'
-             LEFT JOIN {user_info_data} d ON d.userid = u.id AND d.fieldid = f.id
                  WHERE " . implode(' AND ', $where) . "
               ORDER BY u.lastname, u.firstname";
         $records = $DB->get_records_sql($sql, $sqlparams, 0, $limit * 3);
@@ -75,6 +72,7 @@ class hr_get_people extends base {
                 'email' => $u->email,
                 'suspended' => (bool)$u->suspended,
                 'lastaccess' => (int)$u->lastaccess,
+                'employmentStatus' => \local_ustar\employment::resolve((int)$u->id)['status'],
                 'positionid' => $p['id'] ?? '',
                 'position' => $p['name'] ?? '',
                 'department' => $p['department'] ?? '',

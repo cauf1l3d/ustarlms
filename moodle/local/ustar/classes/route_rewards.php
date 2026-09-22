@@ -3,7 +3,7 @@ namespace local_ustar;
 
 defined('MOODLE_INTERNAL') || die();
 
-/** Rewards for verified route progress; existing progress is the durable retry queue. */
+/** Rewards for verified route completion cycles; progress remains the durable retry queue. */
 final class route_rewards {
     public const XP = 10;
     public const COINS = 1;
@@ -21,7 +21,9 @@ final class route_rewards {
         }
         if (($evidence['mode'] ?? '') === 'assessment_lifecycle') {
             return ($evidence['status'] ?? '') === 'passed'
-                && (int)($evidence['verifiedcompletedat'] ?? 0) >= $startedat;
+                && (int)($evidence['cycle'] ?? 0) > 0
+                && (int)($evidence['verifiedcompletedat'] ?? 0) === (int)$progress->completedat
+                && (int)$evidence['verifiedcompletedat'] >= $startedat;
         }
         if (($evidence['mode'] ?? '') !== 'evaluated') { return false; }
         foreach ($evidence['requirements'] ?? [] as $fact) {
@@ -34,7 +36,7 @@ final class route_rewards {
         return false;
     }
 
-    /** Failure preserves progress for the scheduled repair; learning remains usable. */
+    /** Failure preserves progress for scheduled reconciliation; learning remains usable. */
     public static function try_progress(int $userid, int $pointid, int $versionid): void {
         if (!self::enabled() || view_as::active()) { return; }
         try {
@@ -49,30 +51,15 @@ final class route_rewards {
     private static function grant(\stdClass $progress): void {
         global $DB;
         $evidence = json_decode((string)$progress->evidencejson, true) ?: [];
-        if (!self::eligible($progress, $evidence, (int)get_config('local_ustar', 'route_rewards_startedat'))) { return; }
-        if (!accounts::learning_enabled((int)$progress->userid)
-                || accounts::type_of((int)$progress->userid) !== accounts::TYPE_EMPLOYEE) { return; }
+        $startedat = (int)get_config('local_ustar', 'route_rewards_startedat');
+        if (!self::eligible($progress, $evidence, $startedat)) { return; }
+        if (!accounts::participates((int)$progress->userid)
+                || !employment::learning_allowed((int)$progress->userid)) { return; }
+
+        $cycle = completion_cycle::for_progress($progress);
+        if (!$cycle || (string)$cycle->status !== 'confirmed' || (int)$cycle->completedat < $startedat) { return; }
         $version = $DB->get_record('local_ustar_route_versions', ['id' => $progress->versionid], '*', MUST_EXIST);
-        $point = $DB->get_record('local_ustar_route_points', ['id' => $progress->pointid], '*', MUST_EXIST);
-        // Keep one identity when a legacy materialised copy points to a common parent.
-        $seen = [];
-        while (!empty($point->sourcepointid)) {
-            if (isset($seen[$point->id]) || count($seen) >= 64) { throw new \moodle_exception('Route point ancestry cycle'); }
-            $seen[$point->id] = true;
-            $point = $DB->get_record('local_ustar_route_points', ['id' => $point->sourcepointid], '*', MUST_EXIST);
-        }
-        $cycle = 'first';
-        if ($version->renewalpolicy === route_model::RENEW_ALL) {
-            // Materialised copies have different technical version IDs but the same published contract.
-            $cycle = 'mandatory-' . sha1(json_encode([
-                (int)($version->effectivedate ?? 0),
-                json_decode((string)($version->requirementsjson ?? '[]'), true),
-            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        }
-        // A local replacement is the same logical step for reward idempotency.
-        $logicalpointid = ((string)($point->inheritstate ?? '') === 'override' && !empty($point->sourcepointid))
-            ? (int)$point->sourcepointid : (int)$point->id;
-        $key = 'route-reward-v1:' . (int)$progress->userid . ':' . $logicalpointid . ':' . $cycle;
+        $key = 'route-reward-v2:' . (string)$cycle->cyclekey;
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('reward:' . sha1($key), 10);
         if (!$lock) { throw new \moodle_exception('Route reward lock timeout'); }
         try {
@@ -80,35 +67,79 @@ final class route_rewards {
             $transaction = $DB->start_delegated_transaction();
             try {
                 target_core::record_evidence([
-                    'userid' => (int)$progress->userid, 'evidencetype' => 'learning', 'outcome' => 'completed',
-                    'sourcekind' => 'route_progress', 'sourceid' => (string)$progress->id,
-                    'idempotencykey' => 'evidence:' . $key, 'validfrom' => (int)$progress->completedat,
-                    'expiresat' => $progress->expiresat,
-                    'details' => ['pointid' => (int)$progress->pointid, 'versionid' => (int)$progress->versionid,
-                        'canonicalpointid' => (int)$point->id, 'rewardpolicy' => 'route-v1', 'xp' => self::XP],
+                    'userid' => (int)$progress->userid,
+                    'evidencetype' => 'learning',
+                    'outcome' => 'completed',
+                    'sourcekind' => 'completion_cycle',
+                    'sourceid' => (string)$cycle->id,
+                    'idempotencykey' => 'evidence:' . $key,
+                    'validfrom' => (int)$cycle->completedat,
+                    'expiresat' => $cycle->expiresat,
+                    'details' => [
+                        'pointid' => (int)$progress->pointid,
+                        'versionid' => (int)$progress->versionid,
+                        'logicalpointid' => (int)$cycle->logicalpointid,
+                        'cyclekey' => (string)$cycle->cyclekey,
+                        'rewardpolicy' => 'route-cycle-v2',
+                        'xp' => self::XP,
+                    ],
                 ], 0);
-                $granted = economy::post((int)$progress->userid, self::COINS, 'route_reward', $key, 'route_progress',
-                    (string)$progress->id, 'Точка маршрута: ' . format_string((string)$version->title), 0);
+                $granted = economy::post(
+                    (int)$progress->userid,
+                    self::COINS,
+                    'route_reward',
+                    $key,
+                    'completion_cycle',
+                    (string)$cycle->id,
+                    'Точка маршрута: ' . format_string((string)$version->title),
+                    0
+                );
                 $transaction->allow_commit();
                 global $USER;
-                if ($granted && (int)($USER->id ?? 0) === (int)$progress->userid && !(defined('CLI_SCRIPT') && CLI_SCRIPT)) {
-                    \core\notification::success('Шаг подтверждён! +10 XP и +1 USCOIN. ' . format_string((string)$version->title));
+                if ($granted && (int)($USER->id ?? 0) === (int)$progress->userid
+                        && !(defined('CLI_SCRIPT') && CLI_SCRIPT)) {
+                    \core\notification::success(
+                        'Шаг подтверждён! +10 XP и +1 USCOIN. ' . format_string((string)$version->title)
+                    );
                 }
-            } catch (\Throwable $e) { $transaction->rollback($e); }
-        } finally { $lock->release(); }
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
     }
 
     public static function summary(int $userid): array {
         global $DB;
-        $count = economy::available() ? (int)$DB->count_records('local_ustar_coin_ledger', [
-            'userid' => $userid, 'txtype' => 'route_reward', 'sourcekind' => 'route_progress',
-        ]) : 0;
+        if (!accounts::participates($userid)) {
+            return ['count' => 0, 'xp' => 0, 'coins' => 0, 'badges' => []];
+        }
+        $select = 'userid = :userid AND txtype = :txtype'
+            . ' AND (sourcekind = :legacy OR sourcekind = :cycle)';
+        $params = [
+            'userid' => $userid,
+            'txtype' => 'route_reward',
+            'legacy' => 'route_progress',
+            'cycle' => 'completion_cycle',
+        ];
+        $count = economy::available()
+            ? (int)$DB->count_records_select('local_ustar_coin_ledger', $select, $params)
+            : 0;
         $badges = [];
-        foreach ([1 => 'Первый шаг', 5 => 'Набираю темп', 10 => 'Уверенный прогресс', 25 => 'Мастер маршрута'] as $threshold => $name) {
+        foreach ([1 => 'Первый шаг', 5 => 'Набираю темп', 10 => 'Уверенный прогресс', 25 => 'Мастер маршрута']
+                as $threshold => $name) {
             if ($count < $threshold) { continue; }
-            $row = $DB->get_records('local_ustar_coin_ledger', ['userid' => $userid, 'txtype' => 'route_reward',
-                'sourcekind' => 'route_progress'], 'timecreated ASC,id ASC', '*', $threshold - 1, 1);
-            $grant = reset($row);
+            $rows = $DB->get_records_select(
+                'local_ustar_coin_ledger',
+                $select,
+                $params,
+                'timecreated ASC,id ASC',
+                '*',
+                $threshold - 1,
+                1
+            );
+            $grant = reset($rows);
             $badges[] = ['name' => $name . ' · ' . $threshold . ' шагов', 'dateissued' => (int)$grant->timecreated];
         }
         return ['count' => $count, 'xp' => $count * self::XP, 'coins' => $count * self::COINS, 'badges' => $badges];
@@ -122,14 +153,26 @@ final class route_rewards {
         if (!$lock) { return; }
         try {
             $cursor = (int)get_config('local_ustar', 'route_rewards_cursor');
-            $rows = $DB->get_records_select('local_ustar_route_progress', 'id > :cursor AND timecreated >= :start',
+            $rows = $DB->get_records_select(
+                'local_ustar_route_progress',
+                'id > :cursor AND timecreated >= :start',
                 ['cursor' => $cursor, 'start' => (int)get_config('local_ustar', 'route_rewards_startedat')],
-                'id ASC', '*', 0, max(1, min(500, $limit)));
+                'id ASC',
+                '*',
+                0,
+                max(1, min(500, $limit))
+            );
             foreach ($rows as $row) {
-                try { self::grant($row); } catch (\Throwable $e) { mtrace('USTAR reward pending progress=' . $row->id . ': ' . $e->getMessage()); }
+                try {
+                    self::grant($row);
+                } catch (\Throwable $e) {
+                    mtrace('USTAR reward pending progress=' . $row->id . ': ' . $e->getMessage());
+                }
                 $cursor = (int)$row->id;
             }
             set_config('route_rewards_cursor', $rows ? $cursor : 0, 'local_ustar');
-        } finally { $lock->release(); }
+        } finally {
+            $lock->release();
+        }
     }
 }

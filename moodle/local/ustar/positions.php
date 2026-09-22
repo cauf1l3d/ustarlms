@@ -320,25 +320,9 @@ if (
 
 $occupancy = [];
 
-$sql = "
-    SELECT
-        u.id,
-        TRIM(d.data) AS positionid
-      FROM {user_info_data} d
-      JOIN {user_info_field} f
-        ON f.id = d.fieldid
-       AND f.shortname = 'ustar_position'
-      JOIN {user} u
-        ON u.id = d.userid
-       AND u.deleted = 0
-       AND u.suspended = 0
-";
-
-foreach ($DB->get_records_sql($sql) as $row) {
-    if (!\local_ustar\accounts::participates((int)$row->id)) {
-        continue;
-    }
-    $occupancypositionid = trim((string)$row->positionid);
+foreach (\local_ustar\organization_directory::users(true) as $row) {
+    if (!\local_ustar\accounts::participates((int)$row->id)) continue;
+    $occupancypositionid = (string)$row->positionid;
     if ($occupancypositionid === '') {
         continue;
     }
@@ -525,36 +509,14 @@ foreach ($graphpositionids as $graphpositionid) {
 
 $workspacepeople = [];
 
-$workspacepeoplesql = "
-    SELECT
-        u.id,
-        u.firstname,
-        u.lastname,
-        u.middlename,
-        TRIM(d.data) AS positionid
-      FROM {user_info_data} d
-      JOIN {user_info_field} f
-        ON f.id = d.fieldid
-       AND f.shortname = 'ustar_position'
-      JOIN {user} u
-        ON u.id = d.userid
-       AND u.deleted = 0
-       AND u.suspended = 0
-     WHERE TRIM(COALESCE(d.data, '')) <> ''
-     ORDER BY
-        u.lastname,
-        u.firstname,
-        u.id
-";
-
-foreach ($DB->get_records_sql($workspacepeoplesql) as $workspaceperson) {
+foreach (\local_ustar\organization_directory::users(true) as $workspaceperson) {
 
     if (!\local_ustar\accounts::participates((int)$workspaceperson->id)) {
         continue;
     }
 
     $workspacepersonpositionid =
-        trim((string)$workspaceperson->positionid);
+        (string)$workspaceperson->positionid;
 
     $workspacepersonposition =
         $positionmap[$workspacepersonpositionid]

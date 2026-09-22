@@ -882,6 +882,33 @@ final class route_model {
             );
         }
 
+        // Stage 6 Studio stores imported SCORM ZIPs as package attachments.
+        // Until a real runtime records resume/score/completion, such a package
+        // must never be published as a completable route requirement. Existing
+        // Moodle SCORM course modules remain supported through type=cm.
+        if (class_exists('\\local_ustar\\material_studio') && material_studio::available()) {
+            foreach ($requirements as $requirement) {
+                if ((string)($requirement['type'] ?? '') !== 'content') {
+                    continue;
+                }
+                $contentid = (int)($requirement['sourceid'] ?? 0);
+                if ($contentid <= 0) {
+                    continue;
+                }
+                $kind = (string)$DB->get_field(
+                    'local_ustar_content_blueprints',
+                    'kind',
+                    ['contentid' => $contentid]
+                );
+                if ($kind === material_studio::KIND_SCORM) {
+                    throw new \moodle_exception(
+                        'Studio SCORM пока нельзя публиковать как шаг маршрута: '
+                        . 'для него не подключён runtime. Используйте Moodle SCORM.'
+                    );
+                }
+            }
+        }
+
         if ((string)$route->routekind === \local_ustar\route_family::KIND_PARENT) {
             foreach ($requirements as $requirement) {
                 if ((string)($requirement['type'] ?? '') !== 'content') {

@@ -22,10 +22,17 @@ final class board_retirement {
         }
         $archived = 0;
         $already = 0;
-        $rows = $DB->get_records('local_ustar_boards', ['deleted' => 0], 'id ASC');
+        // Preserve soft-deleted history as well: the source table is dropped
+        // only after this migration has verified every document.
+        $rows = $DB->get_records('local_ustar_boards', [], 'id ASC');
         foreach ($rows as $board) {
-            $existing = $DB->get_record('local_ustar_board_archive', ['boardid' => (int)$board->id], 'id', IGNORE_MISSING);
+            $existing = $DB->get_record('local_ustar_board_archive', ['boardid' => (int)$board->id], '*', IGNORE_MISSING);
             if ($existing) {
+                if ((int)$existing->ownerid !== (int)$board->ownerid
+                        || !hash_equals((string)$existing->checksum, hash('sha256', (string)$board->documentjson))
+                        || (string)$existing->documentjson !== (string)$board->documentjson) {
+                    throw new \moodle_exception('Board archive mismatch; source table must be preserved.');
+                }
                 $already++;
             } else {
                 $DB->insert_record('local_ustar_board_archive', (object)[

@@ -524,35 +524,12 @@ final class forced_retraining {
      * accepted only when it is explicitly complete for the same route point.
      */
     private static function prior_confirmed_material_completion(int $userid, int $pointid, int $versionid): ?\stdClass {
-        global $DB;
-        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_completion_cycle'))) {
-            $cycle = completion_cycle::latest_confirmed($userid, $pointid);
-            if ($cycle && (int)$cycle->versionid === $versionid) {
-                return (object)[
-                    'id' => (int)$cycle->id,
-                    'completedat' => (int)$cycle->completedat,
-                    'completionkey' => (string)$cycle->cyclekey,
-                ];
-            }
-        }
-        $progress = $DB->get_record_sql(
-            'SELECT id, completedat, versionid
-               FROM {local_ustar_route_progress}
-              WHERE userid = :userid
-                AND pointid = :pointid
-                AND versionid = :versionid
-                AND status = :status
-           ORDER BY completedat DESC, id DESC',
-            ['userid' => $userid, 'pointid' => $pointid, 'versionid' => $versionid, 'status' => 'complete'],
-            IGNORE_MULTIPLE
-        );
-        if (!$progress || (int)$progress->completedat <= 0) {
-            return null;
-        }
+        $progress = completion_cycle::prior_verified($userid, $pointid, $versionid);
+        if (!$progress) { return null; }
         return (object)[
             'id' => (int)$progress->id,
             'completedat' => (int)$progress->completedat,
-            'completionkey' => 'legacy-progress:' . (int)$progress->id . ':' . (int)$progress->versionid,
+            'completionkey' => (string)$progress->cyclekey,
         ];
     }
 

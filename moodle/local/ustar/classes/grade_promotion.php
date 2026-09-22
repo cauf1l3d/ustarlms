@@ -29,7 +29,8 @@ final class grade_promotion {
         $record = self::available()
             ? $DB->get_record('local_ustar_employee_grades', ['userid' => $userid], '*', IGNORE_MISSING)
             : false;
-        $grade = $record ? (string)$record->gradekey : self::first_grade();
+        $grade = $record && (string)$record->positionid === $positionid
+            ? (string)$record->gradekey : self::first_grade();
         return [
             'enabled' => true,
             'grade' => $grade,
@@ -280,18 +281,8 @@ final class grade_promotion {
     }
 
     private static function has_confirmed_requirement(int $userid, int $pointid, int $versionid): bool {
-        global $DB;
-        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_completion_cycle'))) {
-            try {
-                $cycle = completion_cycle::latest_confirmed($userid, $pointid);
-                if ($cycle && (int)$cycle->versionid === $versionid) { return true; }
-            } catch (\Throwable $e) {
-                // The legacy projection remains a conservative fallback.
-            }
-        }
-        return $DB->record_exists('local_ustar_route_progress', [
-            'userid' => $userid, 'pointid' => $pointid, 'versionid' => $versionid, 'status' => 'complete',
-        ]);
+        $cycle = completion_cycle::prior_verified($userid, $pointid, $versionid);
+        return $cycle && (empty($cycle->expiresat) || (int)$cycle->expiresat > time());
     }
 
     private static function manager_for(int $userid): int {

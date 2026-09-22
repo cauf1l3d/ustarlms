@@ -54,6 +54,50 @@ final class completion_cycle {
     }
 
     /** Restore or create the cycle represented by the current progress projection. */
+    public static function prior_verified(int $userid, int $pointid, int $versionid): ?\stdClass {
+        global $DB;
+        $logicalpointid = self::logical_point($pointid);
+        $params = ['userid' => $userid, 'logicalpointid' => $logicalpointid, 'versionid' => $versionid];
+        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_completion_cycle'))) {
+            // A revoked canonical fact must never be revived by a stale projection.
+            $rows = $DB->get_records_select('local_ustar_completion_cycle',
+                'userid = :userid AND logicalpointid = :logicalpointid AND versionid = :versionid',
+                $params, 'completedat DESC, id DESC', '*', 0, 1);
+            if ($rows) {
+                $cycle = reset($rows);
+                return $cycle->status === 'confirmed' ? $cycle : null;
+            }
+        }
+        $progress = $DB->get_record('local_ustar_route_progress', [
+            'userid' => $userid, 'pointid' => $pointid, 'versionid' => $versionid,
+            'status' => 'complete',
+        ]);
+        if (!$progress || (int)$progress->completedat <= 0) { return null; }
+        $evidence = json_decode((string)$progress->evidencejson, true);
+        if (!is_array($evidence) || !self::verified_evidence($evidence, (int)$progress->completedat)) {
+            return null;
+        }
+        $progress->cyclekey = 'legacy-progress:' . $progress->id . ':' . $versionid;
+        return $progress;
+    }
+
+    private static function verified_evidence(array $evidence, int $completedat): bool {
+        if (($evidence['mode'] ?? '') === 'assessment_lifecycle') {
+            return ($evidence['status'] ?? '') === 'passed'
+                && (int)($evidence['cycle'] ?? 0) > 0
+                && (int)($evidence['verifiedcompletedat'] ?? 0) === $completedat;
+        }
+        if (($evidence['mode'] ?? '') !== 'evaluated') { return false; }
+        $required = false;
+        foreach ($evidence['requirements'] ?? [] as $fact) {
+            if (empty($fact['required'])) { continue; }
+            $required = true;
+            if (empty($fact['satisfied']) || !empty($fact['failed'])) { return false; }
+        }
+        return $required;
+    }
+
+    /** Restore or create the cycle represented by the current progress projection. */
     public static function for_progress(\stdClass $progress): ?\stdClass {
         $evidence = json_decode((string)$progress->evidencejson, true);
         if (!is_array($evidence)) { throw new \moodle_exception('Completion evidence is invalid'); }

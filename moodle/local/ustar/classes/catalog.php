@@ -222,7 +222,8 @@ final class catalog {
                 JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             $record->sortorder = (int)($input['sortorder'] ?? 0);
             $record->active = !isset($input['active']) || !empty($input['active']) ? 1 : 0;
-            $record->timemodified = $now;
+            // A revision must change even when two saves occur in one second.
+            $record->timemodified = max($now, $expected + 1);
             $record->usermodified = $actorid;
             if ($id > 0) {
                 $DB->update_record('local_ustar_catalog', $record);

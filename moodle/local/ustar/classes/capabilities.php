@@ -23,7 +23,10 @@ final class capabilities {
     ];
 
     public static function has(int $userid, string $operation): bool {
-        if ($userid <= 1 || !employment::is_active($userid)) {
+        global $DB;
+        if ($userid <= 1 || !$DB->record_exists('user', [
+                'id' => $userid, 'deleted' => 0, 'suspended' => 0,
+            ]) || !employment::is_active($userid)) {
             return false;
         }
         if (is_siteadmin($userid)) {

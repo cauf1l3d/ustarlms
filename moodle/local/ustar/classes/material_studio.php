@@ -293,6 +293,68 @@ final class material_studio {
         }
     }
 
+    /**
+     * Latest persisted learner submission for one exact editable source version.
+     * Preview results are never persisted, so they cannot appear here.
+     *
+     * @return array<string,mixed>|null
+     */
+    public static function latest_submission_for_user(
+        int $contentid,
+        int $userid,
+        ?int $sourceversion = null
+    ): ?array {
+        global $DB;
+        if ($contentid <= 0 || $userid <= 0 || !self::available()) {
+            return null;
+        }
+        if ($sourceversion === null) {
+            $sourceversion = (int)$DB->get_field(
+                'local_ustar_content_blueprints',
+                'sourceversion',
+                ['contentid' => $contentid]
+            );
+        }
+        if ($sourceversion <= 0) {
+            return null;
+        }
+
+        $events = $DB->get_records('local_ustar_workflow_events', [
+            'entitytype' => 'studio_assessment',
+            'entityid' => $contentid,
+            'eventtype' => 'studio_assessment_submitted',
+            'actorid' => $userid,
+        ], 'id DESC');
+
+        foreach ($events as $event) {
+            $data = json_decode((string)$event->detailsjson, true);
+            if (!is_array($data) || (int)($data['sourceversion'] ?? 0) !== $sourceversion) {
+                continue;
+            }
+            unset($data['answers']);
+            return $data;
+        }
+        return null;
+    }
+
+    /**
+     * Route completion fact for a Studio Assessment.
+     *
+     * Only a passed persisted submission of the requested source version is
+     * completion evidence. A failed attempt remains visible to the route as a
+     * failure but cannot close the point.
+     *
+     * @return array<string,mixed>|null
+     */
+    public static function completion_for_user(
+        int $contentid,
+        int $userid,
+        ?int $sourceversion = null
+    ): ?array {
+        $submission = self::latest_submission_for_user($contentid, $userid, $sourceversion);
+        return $submission && !empty($submission['passed']) ? $submission : null;
+    }
+
     /** The package is downloadable only to an author or an eligible material viewer. */
     public static function package_file(int $blueprintid, int $userid): ?\stored_file {
         global $DB;

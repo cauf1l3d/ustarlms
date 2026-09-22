@@ -4271,5 +4271,13 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082745, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082746) {
+        // RC43 is an application-contract release: Studio Assessment joins the
+        // canonical route completion flow, published Studio sources become
+        // immutable until unpublish, and non-runtime Studio SCORM is blocked
+        // from route publication. No existing learning rows are rewritten.
+        upgrade_plugin_savepoint(true, 2026082746, 'local', 'ustar');
+    }
+
 return true;
 }

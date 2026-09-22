@@ -118,6 +118,35 @@ final class release_review_test extends \advanced_testcase {
         $this->assertSame(1, $DB->count_records('local_ustar_completion_cycle', ['userid' => $user->id]));
     }
 
+    public function test_managed_assessment_uses_verified_provider_time_and_cycle(): void {
+        $method = new \ReflectionMethod(route_model::class, 'verified_assessment_completion');
+        $method->setAccessible(true);
+        $fact = $method->invoke(null, [
+            'status' => 'passed',
+            'verifiedcompletedat' => 1700000123,
+            'cycle' => 2,
+            'attemptsused' => 5,
+            'bestscore' => 91.5,
+            'passscore' => 80.0,
+        ]);
+
+        $this->assertSame(1700000123, $fact['completedat']);
+        $this->assertSame(1700000123, $fact['evidence']['verifiedcompletedat']);
+        $this->assertSame(2, $fact['evidence']['cycle']);
+        $this->assertSame('assessment_lifecycle', $fact['evidence']['mode']);
+
+        $this->assertNull($method->invoke(null, [
+            'status' => 'passed',
+            'verifiedcompletedat' => 0,
+            'cycle' => 2,
+        ]));
+        $this->assertNull($method->invoke(null, [
+            'status' => 'passed',
+            'verifiedcompletedat' => 1700000123,
+            'cycle' => 0,
+        ]));
+    }
+
     public function test_upload_error_does_not_report_success(): void {
         global $USER;
         $this->expectException(\invalid_parameter_exception::class);

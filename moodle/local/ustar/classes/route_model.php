@@ -1664,6 +1664,39 @@ final class route_model {
         return $result;
     }
 
+    /**
+     * Convert a lifecycle PASS into the exact immutable completion fact.
+     *
+     * The provider's finalized timestamp is authoritative. Using the current
+     * request time would make verifiedcompletedat differ from completedat and
+     * completion_cycle would correctly reject the fact. The cycle number is
+     * also mandatory evidence: a bare "passed" projection is not a lifecycle.
+     *
+     * @return array{completedat:int,evidence:array<string,mixed>}|null
+     */
+    private static function verified_assessment_completion(?array $assessmentview): ?array {
+        if (!$assessmentview || (string)($assessmentview['status'] ?? '') !== 'passed') {
+            return null;
+        }
+        $completedat = (int)($assessmentview['verifiedcompletedat'] ?? 0);
+        $cycle = (int)($assessmentview['cycle'] ?? 0);
+        if ($completedat <= 0 || $cycle <= 0) {
+            return null;
+        }
+        return [
+            'completedat' => $completedat,
+            'evidence' => [
+                'mode' => 'assessment_lifecycle',
+                'verifiedcompletedat' => $completedat,
+                'status' => 'passed',
+                'cycle' => $cycle,
+                'attempts' => (int)($assessmentview['attemptsused'] ?? 0),
+                'bestscore' => (float)($assessmentview['bestscore'] ?? 0),
+                'passscore' => (float)($assessmentview['passscore'] ?? 0),
+            ],
+        ];
+    }
+
     private static function prior_progress(int $userid, int $pointid): array {
         global $DB;
         return array_values($DB->get_records(
@@ -2503,32 +2536,20 @@ final class route_model {
                     );
                     // A lifecycle-managed assessment PASS is authoritative.
                     // Do not depend on Moodle course_modules_completion catching up.
-                    if (
-                        $assessmentview
-                        && (string)($assessmentview['status'] ?? '') === 'passed'
-                        && empty($fact['satisfied'])
-                    ) {
-                        $completedat = time();
-
+                    $verifiedassessment = self::verified_assessment_completion($assessmentview);
+                    if ($verifiedassessment && empty($fact['satisfied'])) {
                         self::record_completion(
                             $userid,
                             $point,
                             $version,
-                            [
-                                'mode' => 'assessment_lifecycle',
-                                'verifiedcompletedat' => (int)($assessmentview['verifiedcompletedat'] ?? 0),
-                                'status' => 'passed',
-                                'attempts' => (int)($assessmentview['attemptsused'] ?? 0),
-                                'bestscore' => (float)($assessmentview['bestscore'] ?? 0),
-                                'passscore' => (float)($assessmentview['passscore'] ?? 0),
-                            ],
-                            $completedat,
+                            $verifiedassessment['evidence'],
+                            $verifiedassessment['completedat'],
                             0
                         );
 
                         $fact['satisfied'] = true;
                         $fact['failed'] = false;
-                        $fact['completedat'] = $completedat;
+                        $fact['completedat'] = $verifiedassessment['completedat'];
                         $fact['launchurl'] = '';
                     }
 

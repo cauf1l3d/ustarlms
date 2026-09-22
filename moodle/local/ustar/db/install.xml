@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026082744" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026082745" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1383,6 +1383,26 @@
       <INDEXES>
         <INDEX NAME="contentid_uix" UNIQUE="true" FIELDS="contentid" />
         <INDEX NAME="kind_status_idx" UNIQUE="false" FIELDS="kind, packagestatus" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_grade_rules" COMMENT="Immutable per-transition employee grade evidence rules">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="fromgrade" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="tograde" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="routeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="requirementsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="rulehash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="published" SEQUENCE="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="transition_version_uix" UNIQUE="true" FIELDS="positionid, fromgrade, tograde, versionno" />
+        <INDEX NAME="transition_status_idx" UNIQUE="false" FIELDS="positionid, fromgrade, tograde, status" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_employee_grades" COMMENT="Personal current grade; every eligible employee starts from first grade">

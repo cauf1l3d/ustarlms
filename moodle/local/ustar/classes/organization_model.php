@@ -287,6 +287,148 @@ final class organization_model {
         );
     }
 
+    /**
+     * Apply a position selected by HR to the canonical organization model.
+     *
+     * The HR card used to update only the legacy profile field. Once staff
+     * places became authoritative, that either failed or left the employee
+     * outside the organization chart. This command keeps the profile
+     * projection and the primary assignment atomic at the caller boundary.
+     */
+    public static function assign_position_by_hr(int $userid, string $positionid, int $actorid): int {
+        global $DB, $USER;
+
+        if ($actorid <= 0 || $actorid !== (int)$USER->id) {
+            throw new \invalid_parameter_exception('Неверный автор кадровой операции');
+        }
+        require_capability('local/ustar:hrmanage', \context_system::instance());
+        if (!self::available()) {
+            throw new \moodle_exception(
+                'error',
+                'local_ustar',
+                '',
+                null,
+                'Штатная структура недоступна. Выполните обновление базы данных Moodle.'
+            );
+        }
+
+        $positions = self::position_map();
+        if ($positionid !== '' && !isset($positions[$positionid])) {
+            throw new \invalid_parameter_exception('Неизвестная должность USTAR');
+        }
+
+        $now = time();
+        $transaction = $DB->start_delegated_transaction();
+        try {
+            $primaryassignments = array_values(array_filter(
+                self::active_assignments($userid, $now),
+                static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'
+            ));
+
+            if (count($primaryassignments) === 1 && $positionid !== '') {
+                $currentplace = self::staff_place((int)$primaryassignments[0]->staffplaceid, $now);
+                if ($currentplace && (string)$currentplace->positionid === $positionid) {
+                    $transaction->allow_commit();
+                    return (int)$currentplace->id;
+                }
+            }
+
+            // Close only the primary employment place. Temporary acting
+            // authority is a separate fact and must survive a staff transfer.
+            foreach ($primaryassignments as $assignment) {
+                $assignment->status = 'ended';
+                $assignment->effectiveto = $now;
+                $assignment->timemodified = $now;
+                $assignment->usermodified = $actorid;
+                if (property_exists($assignment, 'autorenew')) {
+                    $assignment->autorenew = 0;
+                }
+                $DB->update_record('local_ustar_assignments', $assignment);
+            }
+
+            if ($positionid === '') {
+                self::rebuild_reporting();
+                $transaction->allow_commit();
+                return 0;
+            }
+
+            $position = $positions[$positionid];
+            $departmentid = (string)($position['department'] ?? '');
+            $candidates = [];
+            foreach ($DB->get_records('local_ustar_staff_places', [
+                'positionid' => $positionid,
+                'active' => 1,
+            ], 'id ASC') as $candidate) {
+                if (self::staff_place((int)$candidate->id, $now)
+                        && self::valid_place_chain((int)$candidate->id, $now)) {
+                    $candidates[] = $candidate;
+                }
+            }
+
+            $place = null;
+            foreach ($candidates as $candidate) {
+                if (!self::active_assignment_exists((int)$candidate->id)) {
+                    $place = $candidate;
+                    break;
+                }
+            }
+
+            if (!$place) {
+                $template = $candidates[0] ?? null;
+                $managerplaceid = $template ? ($template->managerplaceid ?: null) : null;
+
+                // For a newly introduced non-head position, attach the place
+                // to the configured head of its department when one exists.
+                if (!$template && empty($position['ishead']) && $departmentid !== '') {
+                    foreach ($DB->get_records('local_ustar_staff_places', [
+                        'departmentid' => $departmentid,
+                        'active' => 1,
+                    ], 'id ASC') as $possiblemanager) {
+                        $managerposition = $positions[(string)$possiblemanager->positionid] ?? null;
+                        if ($managerposition && !empty($managerposition['ishead'])
+                                && self::staff_place((int)$possiblemanager->id, $now)
+                                && self::valid_place_chain((int)$possiblemanager->id, $now)) {
+                            $managerplaceid = (int)$possiblemanager->id;
+                            break;
+                        }
+                    }
+                }
+
+                $place = (object)[
+                    'placecode' => 'hr_' . $userid . '_' . $now . '_' . random_string(8),
+                    'positionid' => $positionid,
+                    'departmentid' => $departmentid,
+                    'managerplaceid' => $managerplaceid,
+                    'active' => 1,
+                    'effectivefrom' => $now,
+                    'effectiveto' => null,
+                    'timecreated' => $now,
+                    'timemodified' => $now,
+                    'usermodified' => $actorid,
+                ];
+                $place->id = (int)$DB->insert_record('local_ustar_staff_places', $place);
+            }
+
+            $DB->insert_record('local_ustar_assignments', (object)[
+                'staffplaceid' => (int)$place->id,
+                'userid' => $userid,
+                'assignmenttype' => 'primary',
+                'status' => 'active',
+                'effectivefrom' => $now,
+                'effectiveto' => null,
+                'timecreated' => $now,
+                'timemodified' => $now,
+                'usermodified' => $actorid,
+                'autorenew' => 0,
+            ]);
+            self::rebuild_reporting();
+            $transaction->allow_commit();
+            return (int)$place->id;
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+    }
+
     public static function assign_hire(int $userid,string $positionid,int $requesterid): int {
         global $DB,$USER;
         $scope=self::manager_scope($requesterid);

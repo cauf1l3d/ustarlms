@@ -297,6 +297,12 @@ class hr_people {
             );
 
 
+            organization_model::assign_position_by_hr(
+                $userid,
+                $positionid,
+                $actorid
+            );
+
             people::set_position_id(
                 $userid,
                 $positionid
@@ -412,6 +418,12 @@ class hr_people {
                 $savedid
             );
 
+
+            organization_model::assign_position_by_hr(
+                $savedid,
+                $positionid,
+                $actorid
+            );
 
             people::set_position_id(
                 $savedid,

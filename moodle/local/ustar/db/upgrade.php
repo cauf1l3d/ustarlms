@@ -4293,5 +4293,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082747, 'local', 'ustar');
     }
 
+
+    if ($oldversion < 2026082748) {
+        // HR position edits now update the canonical staff place/assignment
+        // model. Existing assignments are preserved until an explicit HR edit.
+        upgrade_plugin_savepoint(true, 2026082748, 'local', 'ustar');
+    }
+
 return true;
 }

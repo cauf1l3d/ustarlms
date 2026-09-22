@@ -36,11 +36,13 @@ final class learning_tasks {
 
     /** @return array<string,mixed> */
     public static function create_note(int $ownerid, string $title, string $body): array {
+        global $DB;
         self::assert_available();
         $title = trim(clean_param($title, PARAM_TEXT));
         if ($title === '') {
             throw new \invalid_parameter_exception('Укажите название личной заметки.');
         }
+        $tx = $DB->start_delegated_transaction();
         $now = time();
         $id = self::insert_task((object)[
             'ownerid' => $ownerid, 'assigneeid' => $ownerid, 'assignerid' => null,
@@ -51,11 +53,56 @@ final class learning_tasks {
             'timecreated' => $now, 'timemodified' => $now,
         ]);
         self::event($id, $ownerid, 'note_created', $ownerid, []);
+        $tx->allow_commit();
         return self::view($id, $ownerid);
+    }
+
+    public static function update_note(int $id, int $ownerid, int $version, string $title, string $body): void {
+        $title = self::plain($title);
+        if ($title === '') { throw new \invalid_parameter_exception('Укажите название личной заметки.'); }
+        self::mutate_note($id, $ownerid, $version, $title, self::plain($body));
+    }
+
+    public static function delete_note(int $id, int $ownerid, int $version): void {
+        self::mutate_note($id, $ownerid, $version, null, null);
+    }
+
+    private static function mutate_note(int $id, int $ownerid, int $version, ?string $title, ?string $body): void {
+        global $DB;
+        self::assert_available();
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('learning-task:' . $id, 10);
+        if (!$lock) { throw new \moodle_exception('Заметка изменяется в другой сессии. Повторите действие.'); }
+        try {
+            $tx = $DB->start_delegated_transaction();
+            $note = $DB->get_record_sql('SELECT * FROM {local_ustar_learning_tasks} WHERE id = :id FOR UPDATE',
+                ['id' => $id], MUST_EXIST);
+            self::assert_view($note, $ownerid);
+            if ($note->privacy !== self::PRIVACY_OWNER || (int)$note->ownerid !== $ownerid) {
+                throw new \required_capability_exception(\context_system::instance(), 'local/ustar:use', 'nopermissions', '');
+            }
+            if ($version <= 0 || (int)$note->version !== $version) {
+                throw new \moodle_exception('Заметка уже изменилась. Обновите страницу.');
+            }
+            if ($title === null) {
+                $DB->delete_records('local_ustar_learning_task_events', ['taskid' => $id]);
+                $DB->delete_records('local_ustar_learning_tasks', ['id' => $id]);
+            } else {
+                $note->title = $title;
+                $note->description = $body;
+                $note->version = $version + 1;
+                $note->timemodified = time();
+                $DB->update_record('local_ustar_learning_tasks', $note);
+                self::event($id, $ownerid, 'note_updated', $ownerid, []);
+            }
+            $tx->allow_commit();
+        } finally {
+            $lock->release();
+        }
     }
 
     /** @param array<string,mixed> $input @return array<string,mixed> */
     public static function assign(int $actorid, int $assigneeid, array $input): array {
+        global $DB;
         self::assert_available();
         if (!self::can_assign($actorid, $assigneeid)) {
             throw new \required_capability_exception(
@@ -74,6 +121,7 @@ final class learning_tasks {
         }
         if ($relatedtype === '') { $relatedid = 0; }
         $dueat = (int)($input['dueat'] ?? 0);
+        $tx = $DB->start_delegated_transaction();
         $now = time();
         $id = self::insert_task((object)[
             'ownerid' => $assigneeid, 'assigneeid' => $assigneeid, 'assignerid' => $actorid,
@@ -89,6 +137,7 @@ final class learning_tasks {
         ]);
         self::notify($assigneeid, 'task_assigned', 'Новая задача', $title,
             '/local/ustar/tasks.php?tab=assigned', 'task-assigned:' . $id);
+        $tx->allow_commit();
         return self::view($id, $actorid);
     }
 
@@ -150,7 +199,7 @@ final class learning_tasks {
             if ($next === 'completed') { $task->completedat = $now; }
             if ($next === 'cancelled') { $task->cancelledat = $now; }
             $DB->update_record('local_ustar_learning_tasks', $task);
-            self::event($taskid, (int)$task->ownerid, $event, $actorid, [
+            self::event($taskid, (int)$task->ownerid, $event, $actorid, $isnote ? [] : [
                 'comment' => self::plain($comment), 'previousstatus' => $previousstatus,
             ]);
             if (!$isnote && $actorid !== (int)$task->assigneeid) {
@@ -245,6 +294,7 @@ final class learning_tasks {
     private static function view_record(\stdClass $task, int $actorid): array {
         $out = [
             'id' => (int)$task->id, 'title' => format_string((string)$task->title),
+            'titleplain' => (string)$task->title, 'descriptionplain' => (string)$task->description,
             'description' => format_text((string)$task->description, FORMAT_PLAIN, ['para' => true, 'filter' => false]),
             'status' => (string)$task->status, 'version' => (int)$task->version,
             'assigned' => (string)$task->privacy === self::PRIVACY_ASSIGNED,
@@ -275,19 +325,7 @@ final class learning_tasks {
     }
 
     private static function notify(int $userid, string $eventtype, string $subject, string $message, string $url, string $key): void {
-        global $DB;
-        if ($userid <= 0 || !$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) { return; }
-        try {
-            $now = time();
-            $DB->insert_record('local_ustar_notifications', (object)[
-                'userid' => $userid, 'severity' => 'normal', 'eventtype' => $eventtype,
-                'subject' => $subject, 'message' => $message, 'actionurl' => $url, 'dueat' => null,
-                'status' => 'unread', 'idempotencykey' => $key, 'ackat' => null,
-                'timecreated' => $now, 'timemodified' => $now,
-            ]);
-        } catch (\dml_write_exception $e) {
-            // Idempotent notification delivery.
-        }
+        workflow_notifications::enqueue($userid, $eventtype, $subject, $message, $url, $key);
     }
 
     private static function plain(string $text): string {

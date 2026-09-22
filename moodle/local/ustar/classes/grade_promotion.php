@@ -149,6 +149,7 @@ final class grade_promotion {
                 self::refresh_manager($existing);
                 return $DB->get_record('local_ustar_grade_requests', ['id' => (int)$existing->id], '*', MUST_EXIST);
             }
+            $tx = $DB->start_delegated_transaction();
             $now = time();
             $id = (int)$DB->insert_record('local_ustar_grade_requests', (object)[
                 'userid' => $userid,
@@ -177,6 +178,7 @@ final class grade_promotion {
                 '/local/ustar/grades.php?view=team',
                 'grade-request:' . $id . ':' . $managerid
             );
+            $tx->allow_commit();
             return $DB->get_record('local_ustar_grade_requests', ['id' => $id], '*', MUST_EXIST);
         } finally {
             $lock->release();
@@ -374,19 +376,7 @@ final class grade_promotion {
     }
 
     private static function notify(int $userid, string $eventtype, string $subject, string $message, string $url, string $key): void {
-        global $DB;
-        if ($userid <= 0 || !$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) { return; }
-        $now = time();
-        try {
-            $DB->insert_record('local_ustar_notifications', (object)[
-                'userid' => $userid, 'severity' => 'normal', 'eventtype' => $eventtype,
-                'subject' => $subject, 'message' => $message, 'actionurl' => $url, 'dueat' => null,
-                'status' => 'unread', 'idempotencykey' => $key, 'ackat' => null,
-                'timecreated' => $now, 'timemodified' => $now,
-            ]);
-        } catch (\dml_write_exception $e) {
-            // The idempotency index intentionally turns repeat delivery into a no-op.
-        }
+        workflow_notifications::enqueue($userid, $eventtype, $subject, $message, $url, $key);
     }
 
     private static function assert_available(): void {

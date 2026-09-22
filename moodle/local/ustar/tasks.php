@@ -3,10 +3,7 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
-$canhrworkspace = is_siteadmin((int)$USER->id)
-    || has_capability('local/ustar:admin', $context)
-    || has_capability('local/ustar:hr', $context)
-    || has_capability('local/ustar:hrmanage', $context);
+$canhrworkspace = \local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::COMPANY_READ);
 if (!$canhrworkspace) {
     require_capability('local/ustar:use', $context);
 }
@@ -28,15 +25,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'notebook', 'saved' => 1]));
         }
         if ($action === 'assign') {
+            $duedate = optional_param('duedate', '', PARAM_RAW_TRIMMED);
+            $dueat = 0;
+            if ($duedate !== '') {
+                if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $duedate, $parts)
+                        || !checkdate((int)$parts[2], (int)$parts[3], (int)$parts[1])) {
+                    throw new invalid_parameter_exception('Укажите корректную дату срока.');
+                }
+                $dueat = make_timestamp((int)$parts[1], (int)$parts[2], (int)$parts[3], 23, 59, 59);
+            }
             \local_ustar\learning_tasks::assign((int)$USER->id, required_param('assigneeid', PARAM_INT), [
                 'title' => required_param('title', PARAM_TEXT),
                 'description' => optional_param('description', '', PARAM_TEXT),
                 'requirereview' => optional_param('requirereview', 0, PARAM_BOOL),
                 'relatedtype' => optional_param('relatedtype', '', PARAM_ALPHANUMEXT),
                 'relatedid' => optional_param('relatedid', 0, PARAM_INT),
-                'dueat' => 0,
+                'dueat' => $dueat,
             ]);
             redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'outgoing', 'assigned' => 1]));
+        }
+        if ($action === 'editnote') {
+            \local_ustar\learning_tasks::update_note(required_param('id', PARAM_INT), (int)$USER->id,
+                required_param('version', PARAM_INT), required_param('title', PARAM_TEXT),
+                optional_param('description', '', PARAM_TEXT));
+            redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'notebook', 'saved' => 1]));
+        }
+        if ($action === 'deletenote') {
+            if (!required_param('confirmdelete', PARAM_BOOL)) {
+                throw new invalid_parameter_exception('Подтвердите удаление заметки.');
+            }
+            \local_ustar\learning_tasks::delete_note(required_param('id', PARAM_INT), (int)$USER->id,
+                required_param('version', PARAM_INT));
+            redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'notebook', 'deleted' => 1]));
         }
         if ($action === 'transition') {
             \local_ustar\learning_tasks::transition(
@@ -58,8 +78,7 @@ $scoped = \local_ustar\organization_model::manager_scope((int)$USER->id);
 if (!empty($scoped['allowed'])) {
     $candidates = $scoped['employees'] ?? [];
 }
-$canhr = is_siteadmin((int)$USER->id) || has_capability('local/ustar:admin', $context)
-    || has_capability('local/ustar:hr', $context) || has_capability('local/ustar:hrmanage', $context);
+$canhr = $canhrworkspace;
 if ($canhr) {
     $candidates = [];
     foreach ($DB->get_records_select('user', 'id > 1 AND deleted = 0 AND suspended = 0', [], 'lastname ASC, firstname ASC', 'id,firstname,lastname') as $user) {
@@ -79,7 +98,8 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading('Задачи');
 
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
-foreach (['saved' => 'Личная заметка сохранена.', 'assigned' => 'Задача назначена.', 'changed' => 'Статус задачи изменён.'] as $key => $message) {
+foreach (['saved' => 'Личная заметка сохранена.', 'assigned' => 'Задача назначена.',
+        'changed' => 'Статус задачи изменён.', 'deleted' => 'Личная заметка удалена.'] as $key => $message) {
     if (optional_param($key, 0, PARAM_BOOL)) { echo $OUTPUT->notification($message, 'notifysuccess'); }
 }
 
@@ -101,7 +121,12 @@ $taskform = static function(array $task, array $actions) use ($tab): void {
     echo html_writer::start_div('u-stage6-card');
     echo html_writer::tag('h3', s((string)$task['title']));
     if ($task['description'] !== '') { echo $task['description']; }
-    echo html_writer::tag('p', 'Статус: ' . s((string)$task['status']));
+    $statuses = ['open' => 'Открыта', 'assigned' => 'Назначена', 'in_progress' => 'В работе',
+        'in_review' => 'На проверке', 'completed' => 'Выполнена', 'cancelled' => 'Отменена'];
+    echo html_writer::tag('p', 'Статус: ' . s($statuses[$task['status']] ?? (string)$task['status']));
+    if (!empty($task['dueat'])) {
+        echo html_writer::tag('p', 'Срок: ' . userdate((int)$task['dueat']));
+    }
     foreach ($actions as $action => $label) {
         echo html_writer::start_tag('form', ['method' => 'post', 'style' => 'display:inline']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
@@ -112,10 +137,30 @@ $taskform = static function(array $task, array $actions) use ($tab): void {
         if (in_array($action, ['return', 'cancel'], true)) {
             echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'comment', 'placeholder' => 'Причина', 'required' => 'required']);
         }
+        if ($action === 'submit') {
+            echo html_writer::tag('label', 'Результат', ['for' => 'result-' . (int)$task['id']]);
+            echo html_writer::tag('textarea', '', ['name' => 'comment', 'id' => 'result-' . (int)$task['id'],
+                'rows' => 3, 'class' => 'form-control']);
+        }
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => $label, 'class' => 'btn']);
         echo html_writer::end_tag('form');
     }
+    if (empty($task['private'])) {
+        global $USER;
+        foreach (\local_ustar\learning_tasks::events((int)$task['id'], (int)$USER->id) as $event) {
+            if ($event['comment'] === '') { continue; }
+            echo html_writer::tag('p', s(userdate($event['time']) . ': ' . $event['comment']));
+        }
+    }
     echo html_writer::end_div();
+};
+
+$formvalue = static function(string $action, int $id, string $name, string $default = '') use ($notice): string {
+    if ($notice !== '' && ($_POST['action'] ?? '') === $action && (int)($_POST['id'] ?? 0) === $id
+            && isset($_POST[$name]) && is_scalar($_POST[$name])) {
+        return (string)$_POST[$name];
+    }
+    return $default;
 };
 
 if ($tab === 'checklists') {
@@ -128,12 +173,38 @@ if ($tab === 'notebook') {
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'note']);
     echo html_writer::tag('label', 'Заметка');
-    echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required', 'class' => 'form-control']);
-    echo html_writer::tag('textarea', '', ['name' => 'description', 'rows' => 4, 'class' => 'form-control']);
+    echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required',
+        'value' => $formvalue('note', 0, 'title'), 'class' => 'form-control']);
+    echo html_writer::tag('textarea', s($formvalue('note', 0, 'description')),
+        ['name' => 'description', 'rows' => 4, 'class' => 'form-control']);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить в блокнот', 'class' => 'btn btn-primary']);
     echo html_writer::end_tag('form');
     foreach ($notes as $task) {
         $taskform($task, (string)$task['status'] === 'open' ? ['complete' => 'Отметить выполненной'] : []);
+        echo html_writer::start_tag('details');
+        echo html_writer::tag('summary', 'Редактировать заметку');
+        echo html_writer::start_tag('form', ['method' => 'post']);
+        foreach (['sesskey' => sesskey(), 'action' => 'editnote', 'id' => $task['id'], 'version' => $task['version']] as $name => $value) {
+            if ($name === 'version') { $value = (int)$formvalue('editnote', $task['id'], 'version', (string)$value); }
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $name, 'value' => $value]);
+        }
+        echo html_writer::tag('label', 'Название', ['for' => 'note-title-' . $task['id']]);
+        echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'id' => 'note-title-' . $task['id'],
+            'value' => $formvalue('editnote', $task['id'], 'title', $task['titleplain']), 'required' => 'required', 'class' => 'form-control']);
+        echo html_writer::tag('label', 'Текст', ['for' => 'note-body-' . $task['id']]);
+        echo html_writer::tag('textarea', s($formvalue('editnote', $task['id'], 'description', $task['descriptionplain'])), ['name' => 'description',
+            'id' => 'note-body-' . $task['id'], 'rows' => 4, 'class' => 'form-control']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить', 'class' => 'btn btn-primary']);
+        echo html_writer::end_tag('form');
+        echo html_writer::end_tag('details');
+        echo html_writer::start_tag('form', ['method' => 'post']);
+        foreach (['sesskey' => sesskey(), 'action' => 'deletenote', 'id' => $task['id'], 'version' => $task['version']] as $name => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $name, 'value' => $value]);
+        }
+        echo html_writer::tag('label', html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'confirmdelete',
+            'value' => 1, 'required' => 'required']) . ' Удалить эту заметку без восстановления');
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Удалить', 'class' => 'btn btn-outline-danger']);
+        echo html_writer::end_tag('form');
     }
 }
 if ($tab === 'assigned') {
@@ -155,9 +226,13 @@ if ($tab === 'outgoing') {
         foreach ($candidates as $candidate) {
             $options[(int)$candidate['id']] = (string)$candidate['fullname'] . ((string)($candidate['position'] ?? '') ? ' · ' . $candidate['position'] : '');
         }
-        echo html_writer::select($options, 'assigneeid', false, 'Выберите сотрудника', ['required' => 'required', 'class' => 'form-select']);
-        echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required', 'placeholder' => 'Задача', 'class' => 'form-control']);
-        echo html_writer::tag('textarea', '', ['name' => 'description', 'rows' => 3, 'class' => 'form-control']);
+        echo html_writer::select($options, 'assigneeid', $formvalue('assign', 0, 'assigneeid'), 'Выберите сотрудника', ['required' => 'required', 'class' => 'form-select']);
+        echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required',
+            'value' => $formvalue('assign', 0, 'title'), 'placeholder' => 'Задача', 'class' => 'form-control']);
+        echo html_writer::tag('textarea', s($formvalue('assign', 0, 'description')), ['name' => 'description', 'rows' => 3, 'class' => 'form-control']);
+        echo html_writer::tag('label', 'Срок выполнения (необязательно)', ['for' => 'task-duedate']);
+        echo html_writer::empty_tag('input', ['type' => 'date', 'name' => 'duedate', 'id' => 'task-duedate',
+            'value' => $formvalue('assign', 0, 'duedate'), 'class' => 'form-control']);
         echo html_writer::tag('label', html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'requirereview', 'value' => 1]) . ' Нужна проверка результата');
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Назначить', 'class' => 'btn btn-primary']);
         echo html_writer::end_tag('form');

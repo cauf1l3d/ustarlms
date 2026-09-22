@@ -4259,5 +4259,17 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082744, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082745) {
+        // Explicit transition rules fail closed until HR publishes the exact
+        // evidence for each step. No legacy whole-route rule is inferred.
+        require_once(__DIR__ . '/../classes/target_schema.php');
+        foreach (\local_ustar\target_schema::stage6_definitions() as $table) {
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026082745, 'local', 'ustar');
+    }
+
 return true;
 }

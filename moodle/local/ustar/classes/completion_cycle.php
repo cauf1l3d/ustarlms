@@ -53,7 +53,7 @@ final class completion_cycle {
         ) ?: null;
     }
 
-    /** Restore or create the cycle represented by the current progress projection. */
+    /** Read verified history without reviving revoked facts from legacy projections. */
     public static function prior_verified(int $userid, int $pointid, int $versionid): ?\stdClass {
         global $DB;
         $logicalpointid = self::logical_point($pointid);
@@ -126,6 +126,12 @@ final class completion_cycle {
         }
         $mode = (string)($evidence['mode'] ?? '');
         if ($mode === 'inherited') { return null; }
+        if (!self::verified_evidence($evidence, $completedat)) {
+            throw new \invalid_parameter_exception('Completion requires satisfied, verified evidence');
+        }
+        if (!$DB->record_exists('local_ustar_route_versions', ['id' => $versionid, 'pointid' => $pointid])) {
+            throw new \invalid_parameter_exception('Completion version does not belong to the route point');
+        }
         if ($mode === 'assessment_lifecycle'
                 && ((string)($evidence['status'] ?? '') !== 'passed'
                     || (int)($evidence['cycle'] ?? 0) <= 0

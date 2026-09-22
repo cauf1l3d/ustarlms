@@ -21,10 +21,7 @@ final class material_studio {
     }
 
     public static function can_manage(int $userid): bool {
-        $context = \context_system::instance();
-        return $userid > 0 && (is_siteadmin($userid)
-            || has_capability('local/ustar:admin', $context, $userid)
-            || has_capability('local/ustar:hrmanage', $context, $userid));
+        return capabilities::has($userid, capabilities::HR_WRITE);
     }
 
     /** @return array<int,array<string,mixed>> */

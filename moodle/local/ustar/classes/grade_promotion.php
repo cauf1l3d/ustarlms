@@ -57,7 +57,9 @@ final class grade_promotion {
                 'nextgrade' => '', 'nextlabel' => '', 'routeid' => 0, 'requirements' => [],
             ]);
         }
-        $route = $DB->get_record('local_ustar_routes', [
+        $route = route_scope::available()
+            ? route_scope::parent_for_position((string)$current['positionid']) : null;
+        $route = $route ?: $DB->get_record('local_ustar_routes', [
             'positionid' => (string)$current['positionid'], 'active' => 1,
         ], '*', IGNORE_MULTIPLE);
         if (!$route) {
@@ -69,7 +71,9 @@ final class grade_promotion {
 
         $requirements = [];
         $missing = [];
-        $points = $DB->get_records('local_ustar_route_points', [
+        $points = (string)$route->routekind === route_family::KIND_PARENT && route_scope::available()
+            ? route_scope::points_for_position((int)$route->id, (string)$current['positionid'])
+            : $DB->get_records('local_ustar_route_points', [
             'routeid' => (int)$route->id, 'active' => 1,
         ], 'sortorder ASC, id ASC');
         if (!$points) {

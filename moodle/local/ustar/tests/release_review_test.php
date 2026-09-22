@@ -62,5 +62,39 @@ final class release_review_test extends \advanced_testcase {
         $this->assertTrue(capabilities::has($user->id, capabilities::HR_WRITE));
         $DB->set_field('user', 'suspended', 1, ['id' => $user->id]);
         $this->assertFalse(capabilities::has($user->id, capabilities::HR_WRITE));
+        $this->assertFalse(catalog::can_manage($user->id));
+        $this->assertFalse(material_studio::can_manage($user->id));
+    }
+
+    public function test_empty_evidence_cannot_create_rewardable_cycle(): void {
+        $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $user = $this->getDataGenerator()->create_user();
+        $point = $g->create_point($g->create_route());
+        $version = $g->create_version($point);
+        $this->expectException(\invalid_parameter_exception::class);
+        completion_cycle::confirm($user->id, $point->id, $version->id, 1000, 0,
+            ['mode' => 'evaluated', 'requirements' => []]);
+    }
+
+    public function test_foreign_version_cannot_create_completion(): void {
+        $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $user = $this->getDataGenerator()->create_user();
+        $route = $g->create_route();
+        $point = $g->create_point($route);
+        $foreign = $g->create_version($g->create_point($route));
+        $this->expectException(\invalid_parameter_exception::class);
+        completion_cycle::confirm($user->id, $point->id, $foreign->id, 1000, 0,
+            ['mode' => 'assessment_lifecycle', 'status' => 'passed', 'cycle' => 1,
+                'verifiedcompletedat' => 1000]);
+    }
+
+    public function test_catalog_parent_type_cannot_orphan_children(): void {
+        global $USER;
+        $group = catalog::save(0, ['itemtype' => 'group', 'title' => 'Group'], $USER->id);
+        $other = catalog::save(0, ['itemtype' => 'group', 'title' => 'Other'], $USER->id);
+        catalog::save(0, ['itemtype' => 'subgroup', 'title' => 'Child', 'parentid' => $group->id], $USER->id);
+        $this->expectException(\moodle_exception::class);
+        catalog::save($group->id, ['itemtype' => 'subgroup', 'title' => 'Group',
+            'parentid' => $other->id, 'expectedmodified' => $group->timemodified], $USER->id);
     }
 }

@@ -22,13 +22,13 @@ final class learning_tasks {
         if ($actorid <= 0 || $assigneeid <= 1 || $actorid === $assigneeid) {
             return false;
         }
-        $context = \context_system::instance();
-        if (is_siteadmin($actorid)
-            || has_capability('local/ustar:admin', $context, $actorid)
-            || has_capability('local/ustar:hr', $context, $actorid)
-            || has_capability('local/ustar:hrmanage', $context, $actorid)) {
+        if (!accounts::participates($assigneeid) || !employment::is_active($assigneeid)) {
+            return false;
+        }
+        if (capabilities::has($actorid, capabilities::COMPANY_READ)) {
             return true;
         }
+        if (!capabilities::has($actorid, capabilities::TEAM_READ)) { return false; }
         $scope = organization_model::manager_scope($actorid);
         return !empty($scope['allowed'])
             && in_array($assigneeid, array_map('intval', $scope['userids'] ?? []), true);

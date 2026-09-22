@@ -156,12 +156,7 @@ final class catalog {
 
     /** HR authors may edit the catalog even before learner mastery is granted. */
     public static function can_manage(int $userid): bool {
-        $context = \context_system::instance();
-        return $userid > 0 && (is_siteadmin($userid)
-            || has_capability('local/ustar:admin', $context, $userid)
-            || has_capability('local/ustar:hr', $context, $userid)
-            || has_capability('local/ustar:hrmanage', $context, $userid)
-            || has_capability('local/ustar:managecatalog', $context, $userid));
+        return capabilities::has($userid, capabilities::CATALOG_WRITE);
     }
 
     /** @return array<int,\stdClass> */
@@ -190,7 +185,7 @@ final class catalog {
         }
         $parentid = (int)($input['parentid'] ?? 0);
         $expected = (int)($input['expectedmodified'] ?? 0);
-        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('catalog:' . ($id ?: 'new'), 10);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('catalog:structure', 10);
         if (!$lock) {
             throw new \moodle_exception('Карточка каталога редактируется в другой сессии. Повторите попытку.');
         }
@@ -205,6 +200,10 @@ final class catalog {
                 );
                 if ($expected <= 0 || (int)$record->timemodified !== $expected) {
                     throw new \moodle_exception('Карточка уже изменилась. Обновите страницу.');
+                }
+                if ($record->itemtype !== $type
+                        && $DB->record_exists('local_ustar_catalog', ['parentid' => $id])) {
+                    throw new \moodle_exception('Перед изменением типа перенесите вложенные карточки.');
                 }
                 self::snapshot($record, $actorid);
             } else {
@@ -242,20 +241,30 @@ final class catalog {
     public static function archive(int $id, int $actorid, int $expectedmodified): void {
         global $DB;
         self::assert_manage($actorid);
-        $record = $DB->get_record('local_ustar_catalog', ['id' => $id], '*', MUST_EXIST);
-        if ($expectedmodified <= 0 || (int)$record->timemodified !== $expectedmodified) {
-            throw new \moodle_exception('Карточка уже изменилась. Обновите страницу.');
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('catalog:structure', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Каталог изменяется в другой сессии. Повторите попытку.');
         }
-        if ($DB->record_exists('local_ustar_catalog', ['parentid' => $id, 'active' => 1])) {
-            throw new \moodle_exception('Сначала перенесите или архивируйте вложенные карточки.');
+        try {
+            $tx = $DB->start_delegated_transaction();
+            $record = $DB->get_record('local_ustar_catalog', ['id' => $id], '*', MUST_EXIST);
+            if ($expectedmodified <= 0 || (int)$record->timemodified !== $expectedmodified) {
+                throw new \moodle_exception('Карточка уже изменилась. Обновите страницу.');
+            }
+            if ($DB->record_exists('local_ustar_catalog', ['parentid' => $id, 'active' => 1])) {
+                throw new \moodle_exception('Сначала перенесите или архивируйте вложенные карточки.');
+            }
+            self::snapshot($record, $actorid);
+            $record->active = 0;
+            $record->timemodified = max(time(), $expectedmodified + 1);
+            $record->usermodified = $actorid;
+            $DB->update_record('local_ustar_catalog', $record);
+            self::snapshot($record, $actorid);
+            self::audit($id, 'catalog_archived', $actorid, []);
+            $tx->allow_commit();
+        } finally {
+            $lock->release();
         }
-        self::snapshot($record, $actorid);
-        $record->active = 0;
-        $record->timemodified = time();
-        $record->usermodified = $actorid;
-        $DB->update_record('local_ustar_catalog', $record);
-        self::snapshot($record, $actorid);
-        self::audit($id, 'catalog_archived', $actorid, []);
     }
 
     /** @param array<string,mixed> $upload */

@@ -63,8 +63,11 @@ final class material_studio_review_test extends \advanced_testcase {
         $again = material_studio::submit_assessment($item['id'], $USER->id, ['Yes'], $item['sourceversion']);
         $this->assertSame($first['attemptkey'], $again['attemptkey']);
         $this->assertSame(1, $DB->count_records('local_ustar_workflow_events', ['entitytype' => 'studio_assessment']));
+        content_admin::unpublish((int)$item['id'], (int)$USER->id);
+        $draft = material_studio::by_content((int)$item['id'], (int)$USER->id);
         $next = material_studio::save($item['id'], ['kind' => 'assessment', 'title' => 'Updated assessment',
-            'questions' => 'Different question | Yes | No | 2', 'expectedmodified' => $item['expectedmodified']], $USER->id);
+            'questions' => 'Different question | Yes | No | 2', 'expectedmodified' => $draft['expectedmodified']], $USER->id);
+        content_admin::publish((int)$item['id'], (int)$USER->id);
         $second = material_studio::submit_assessment($item['id'], $USER->id, ['Yes'], $next['sourceversion']);
         $this->assertNotSame($first['attemptkey'], $second['attemptkey']);
         $this->assertFalse($second['passed']);
@@ -103,11 +106,13 @@ final class material_studio_review_test extends \advanced_testcase {
         $this->assertNotNull($completion);
         $this->assertSame($passed['attemptkey'], $completion['attemptkey']);
 
+        content_admin::unpublish((int)$item['id'], (int)$USER->id);
+        $draft = material_studio::by_content((int)$item['id'], (int)$USER->id);
         $updated = material_studio::save((int)$item['id'], [
             'kind' => 'assessment',
             'title' => 'Updated assessment',
             'questions' => 'New question | Yes | No | 1',
-            'expectedmodified' => (int)$item['expectedmodified'],
+            'expectedmodified' => (int)$draft['expectedmodified'],
         ], (int)$USER->id);
 
         $this->assertNull(material_studio::completion_for_user(
@@ -267,6 +272,22 @@ final class material_studio_review_test extends \advanced_testcase {
         $this->assertSame('evaluated', (string)($evidence['mode'] ?? ''));
         $this->assertSame('content', (string)($evidence['requirements'][0]['type'] ?? ''));
         $this->assertTrue(!empty($evidence['requirements'][0]['satisfied']));
+    }
+
+
+    public function test_published_studio_source_must_be_unpublished_before_editing(): void {
+        global $USER;
+        $item = $this->create_assessment();
+        content_admin::publish((int)$item['id'], (int)$USER->id);
+
+        $this->expectException(\moodle_exception::class);
+        $this->expectExceptionMessage('нельзя менять на лету');
+        material_studio::save((int)$item['id'], [
+            'kind' => 'assessment',
+            'title' => 'Unsafe live edit',
+            'questions' => 'Question | Yes | No | 1',
+            'expectedmodified' => (int)$item['expectedmodified'],
+        ], (int)$USER->id);
     }
 
 }

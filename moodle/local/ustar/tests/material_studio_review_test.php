@@ -4,6 +4,7 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 #[\PHPUnit\Framework\Attributes\CoversClass(material_studio::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(route_model::class)]
 final class material_studio_review_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -69,4 +70,107 @@ final class material_studio_review_test extends \advanced_testcase {
         $this->assertFalse($second['passed']);
         $this->assertSame(2, $DB->count_records('local_ustar_workflow_events', ['entitytype' => 'studio_assessment']));
     }
+
+    public function test_only_passed_current_source_version_is_route_completion_evidence(): void {
+        global $DB, $USER;
+        $item = $this->create_assessment();
+        content_admin::publish((int)$item['id'], (int)$USER->id);
+
+        $failed = material_studio::submit_assessment(
+            (int)$item['id'],
+            (int)$USER->id,
+            ['No'],
+            (int)$item['sourceversion']
+        );
+        $this->assertFalse($failed['passed']);
+        $this->assertNull(material_studio::completion_for_user(
+            (int)$item['id'],
+            (int)$USER->id,
+            (int)$item['sourceversion']
+        ));
+
+        $passed = material_studio::submit_assessment(
+            (int)$item['id'],
+            (int)$USER->id,
+            ['Yes'],
+            (int)$item['sourceversion']
+        );
+        $completion = material_studio::completion_for_user(
+            (int)$item['id'],
+            (int)$USER->id,
+            (int)$item['sourceversion']
+        );
+        $this->assertNotNull($completion);
+        $this->assertSame($passed['attemptkey'], $completion['attemptkey']);
+
+        $updated = material_studio::save((int)$item['id'], [
+            'kind' => 'assessment',
+            'title' => 'Updated assessment',
+            'questions' => 'New question | Yes | No | 1',
+            'expectedmodified' => (int)$item['expectedmodified'],
+        ], (int)$USER->id);
+
+        $this->assertNull(material_studio::completion_for_user(
+            (int)$item['id'],
+            (int)$USER->id,
+            (int)$updated['sourceversion']
+        ));
+        $this->assertSame(
+            2,
+            $DB->count_records('local_ustar_workflow_events', [
+                'entitytype' => 'studio_assessment',
+                'entityid' => (int)$item['id'],
+                'eventtype' => 'studio_assessment_submitted',
+            ])
+        );
+    }
+
+    public function test_route_content_uses_studio_assessment_pass_and_never_scorm_open_as_completion(): void {
+        global $USER;
+        $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $route = $g->create_route();
+        $point = $g->create_point($route);
+        $version = $g->create_version($point);
+
+        $assessment = $this->create_assessment();
+        content_admin::publish((int)$assessment['id'], (int)$USER->id);
+
+        $method = new \ReflectionMethod(route_model::class, 'requirement_result');
+        $requirement = [
+            'type' => 'content',
+            'sourceid' => (int)$assessment['id'],
+            'required' => true,
+            'completionmode' => 'open',
+        ];
+        $before = $method->invoke(null, $requirement, (int)$USER->id, (string)$route->positionid, [], $version);
+        $this->assertTrue($before['configured']);
+        $this->assertFalse($before['satisfied']);
+
+        material_studio::submit_assessment(
+            (int)$assessment['id'],
+            (int)$USER->id,
+            ['Yes'],
+            (int)$assessment['sourceversion']
+        );
+        $after = $method->invoke(null, $requirement, (int)$USER->id, (string)$route->positionid, [], $version);
+        $this->assertTrue($after['configured']);
+        $this->assertTrue($after['satisfied']);
+        $this->assertGreaterThan(0, (int)$after['completedat']);
+
+        $scorm = material_studio::save(0, [
+            'kind' => 'scorm',
+            'title' => 'Studio SCORM without runtime',
+        ], (int)$USER->id);
+        content_admin::publish((int)$scorm['id'], (int)$USER->id);
+        $scormresult = $method->invoke(null, [
+            'type' => 'content',
+            'sourceid' => (int)$scorm['id'],
+            'required' => true,
+            'completionmode' => 'open',
+        ], (int)$USER->id, (string)$route->positionid, [], $version);
+        $this->assertFalse($scormresult['configured']);
+        $this->assertFalse($scormresult['satisfied']);
+        $this->assertStringContainsString('runtime', (string)$scormresult['detail']);
+    }
+
 }

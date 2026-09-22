@@ -143,17 +143,20 @@ final class completion_cycle {
 
         $logicalpointid = self::logical_point($pointid);
         $canonical = self::canonicalize($evidence);
-        $fingerprint = hash('sha256', json_encode(
-            $canonical,
-            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
-        ));
-        $cyclekey = 'route-cycle-v1:' . hash('sha256', implode(':', [
-            $userid, $logicalpointid, $versionid, $completedat, $fingerprint,
+        // Presentation metadata is not a new completion and must not mint rewards.
+        $cyclekey = 'route-cycle-v2:' . hash('sha256', implode(':', [
+            $userid, $logicalpointid, $versionid, $completedat,
         ]));
-        $existing = $DB->get_record('local_ustar_completion_cycle', ['cyclekey' => $cyclekey], '*', IGNORE_MISSING);
-        if ($existing) { return $existing; }
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('completion:' . sha1($cyclekey), 10);
+        if (!$lock) { throw new \moodle_exception('Completion lock timeout'); }
         try {
+            // Preserve v1 identities, including revoked facts and their reward keys.
+            $rows = $DB->get_records('local_ustar_completion_cycle', [
+                'userid' => $userid, 'logicalpointid' => $logicalpointid,
+                'versionid' => $versionid, 'completedat' => $completedat,
+            ], 'id ASC', '*', 0, 1);
+            if ($rows) { return reset($rows); }
             $id = (int)$DB->insert_record('local_ustar_completion_cycle', (object)[
                 'userid' => $userid,
                 'pointid' => $pointid,
@@ -169,11 +172,11 @@ final class completion_cycle {
                 ),
                 'timecreated' => time(),
             ]);
-        } catch (\dml_write_exception $exception) {
-            $existing = $DB->get_record('local_ustar_completion_cycle', ['cyclekey' => $cyclekey], '*', IGNORE_MISSING);
-            if (!$existing) { throw $exception; }
-            return $existing;
+            return $DB->get_record('local_ustar_completion_cycle', ['id' => $id], '*', MUST_EXIST);
+        } finally {
+            // A uniqueness failure in an outer transaction must propagate: a
+            // PostgreSQL transaction cannot be queried again after that error.
+            $lock->release();
         }
-        return $DB->get_record('local_ustar_completion_cycle', ['id' => $id], '*', MUST_EXIST);
     }
 }

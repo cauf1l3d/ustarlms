@@ -97,4 +97,24 @@ final class release_review_test extends \advanced_testcase {
         catalog::save($group->id, ['itemtype' => 'subgroup', 'title' => 'Group',
             'parentid' => $other->id, 'expectedmodified' => $group->timemodified], $USER->id);
     }
+
+    public function test_evidence_metadata_does_not_create_another_completion(): void {
+        global $DB;
+        $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $user = $this->getDataGenerator()->create_user();
+        $point = $g->create_point($g->create_route());
+        $version = $g->create_version($point);
+        $evidence = ['mode' => 'assessment_lifecycle', 'status' => 'passed',
+            'cycle' => 1, 'verifiedcompletedat' => 1000];
+        $first = completion_cycle::confirm($user->id, $point->id, $version->id, 1000, 0, $evidence);
+        // Model an already deployed v1 key; redelivery must preserve its identity.
+        $DB->set_field('local_ustar_completion_cycle', 'cyclekey', 'route-cycle-v1:existing', ['id' => $first->id]);
+        $DB->set_field('local_ustar_completion_cycle', 'status', 'revoked', ['id' => $first->id]);
+        $evidence['title'] = 'Renamed material';
+        $repeat = completion_cycle::confirm($user->id, $point->id, $version->id, 1000, 0, $evidence);
+        $this->assertSame((int)$first->id, (int)$repeat->id);
+        $this->assertSame('route-cycle-v1:existing', $repeat->cyclekey);
+        $this->assertSame('revoked', $repeat->status);
+        $this->assertSame(1, $DB->count_records('local_ustar_completion_cycle', ['userid' => $user->id]));
+    }
 }

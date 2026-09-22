@@ -8,7 +8,7 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool
  */
 function xmldb_local_ustar_upgrade($oldversion): bool {
-    global $DB;
+    global $CFG, $DB;
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2026081300) {
@@ -4277,6 +4277,17 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         // immutable until unpublish, and non-runtime Studio SCORM is blocked
         // from route publication. No existing learning rows are rewritten.
         upgrade_plugin_savepoint(true, 2026082746, 'local', 'ustar');
+    }
+
+    if ($oldversion < 2026082747) {
+        // Stage 3 already routes email self-registration into pending
+        // employment and manager approval. Activate that existing guarded
+        // workflow so the login page can expose the registration entry point.
+        require_once($CFG->libdir . '/authlib.php');
+        if (in_array('email', get_enabled_auth_plugins(true), true)) {
+            set_config('registerauth', 'email');
+        }
+        upgrade_plugin_savepoint(true, 2026082747, 'local', 'ustar');
     }
 
 return true;

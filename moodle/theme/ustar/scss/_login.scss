@@ -56,6 +56,9 @@ body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
 .ustar-auth-core .btn-secondary { min-height:44px; border:1px solid #caa34d; border-radius:12px; background:#ffffff80; color:#2b2b2b; padding:10px 16px; }
 .ustar-auth-core a { color:#795400; font-size:15px; text-decoration:underline; }
 .ustar-auth-core .login-form-forgotpassword { text-align:center; margin:12px 0 18px; }
+.ustar-auth-signup { display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
+    margin-top:16px; padding-top:16px; border-top:1px solid #aca59c; color:#4f4b44; }
+.ustar-auth-signup .btn { text-decoration:none; font-weight:700; }
 .ustar-auth-core .login-divider { margin:18px 0; }
 .ustar-auth-core .alert { font-size:16px; line-height:1.5; padding:12px; border:1px solid #b73728; background:#fff0eb; color:#7a1c11; border-radius:10px; }
 .ustar-auth-core :is(input,button,a,select):focus-visible { outline:3px solid #806300; outline-offset:3px; }

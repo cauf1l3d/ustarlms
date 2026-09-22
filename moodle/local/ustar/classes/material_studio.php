@@ -143,8 +143,14 @@ final class material_studio {
             self::audit($contentid, 'studio_material_saved', $actorid, [
                 'kind' => $kind, 'sourceversion' => (int)$blueprint->sourceversion,
             ]);
+            $result = self::by_content($contentid, $actorid);
             $tx->allow_commit();
-            return self::by_content($contentid, $actorid);
+            return $result;
+        } catch (\Throwable $e) {
+            if (isset($tx)) {
+                $tx->rollback($e);
+            }
+            throw $e;
         } finally {
             $lock->release();
         }
@@ -265,10 +271,24 @@ final class material_studio {
             $correct = 0;
             $normalized = [];
             foreach ($questions as $index => $question) {
-                $answer = trim(clean_param((string)($answers[$index] ?? ''), PARAM_TEXT));
-                if (!in_array($answer, $question['options'], true)) {
+                $options = array_values((array)($question['options'] ?? []));
+                $submitted = $answers[$index] ?? null;
+                $answerindex = filter_var($submitted, FILTER_VALIDATE_INT, [
+                    'options' => ['min_range' => 1, 'max_range' => count($options)],
+                ]);
+                if ($answerindex !== false) {
+                    $answer = (string)$options[$answerindex - 1];
+                } else {
+                    // Accept a form opened before this hotfix was deployed.
+                    $answer = trim(clean_param((string)$submitted, PARAM_TEXT));
+                    $answerindex = array_search($answer, $options, true);
+                    $answerindex = $answerindex === false ? false : $answerindex + 1;
+                }
+                if ($answerindex === false || !isset($options[$answerindex - 1])) {
                     throw new \invalid_parameter_exception('Ответьте на все вопросы перед отправкой.');
                 }
+                // Keep the persisted representation stable for idempotency with
+                // submissions made before the UI switched to option indexes.
                 $normalized[$index] = $answer;
                 if (hash_equals((string)$question['answer'], $answer)) { $correct++; }
             }
@@ -420,7 +440,10 @@ final class material_studio {
             if (count($parts) < 4 || $parts[0] === '') { continue; }
             $answerindex = max(1, (int)array_pop($parts));
             $question = array_shift($parts);
-            $options = array_values(array_filter($parts, static fn(string $item): bool => $item !== ''));
+            $options = array_values(array_filter(array_map(
+                static fn(string $item): string => trim(clean_param($item, PARAM_TEXT)),
+                $parts
+            ), static fn(string $item): bool => $item !== ''));
             if (count($options) < 2 || !isset($options[$answerindex - 1])) { continue; }
             $out[] = ['question' => clean_param($question, PARAM_TEXT), 'options' => $options,
                 'answer' => $options[$answerindex - 1]];

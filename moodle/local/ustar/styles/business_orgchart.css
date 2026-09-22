@@ -79,3 +79,6 @@
 /* Separate final element, after all company blocks. */
 .u-orgchart__assistant { position:relative; margin:28px auto 0; max-width:480px; padding-top:24px; }
 .u-orgchart__assistant::before { content:""; position:absolute; top:0; left:50%; height:24px; border-left:2px solid var(--u-border); }
+.u-orgchart__groups { display:grid; gap:14px; margin-top:16px; }
+.u-orgchart__group { padding:14px; border:1px solid #e1ddd5; border-radius:14px; background:#faf9f6; }
+.u-orgchart__group > h4 { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 12px; }

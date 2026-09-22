@@ -39,6 +39,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
+        if ($action === 'save') {
+            $editingid = optional_param('id', 0, PARAM_INT);
+            $postedediting = [
+                'id' => $editingid,
+                'kind' => optional_param('kind', 'course', PARAM_ALPHA),
+                'title' => optional_param('title', '', PARAM_TEXT),
+                'summary' => optional_param('summary', '', PARAM_TEXT),
+                'outline' => optional_param('outline', '', PARAM_TEXT),
+                'body' => optional_param('body', '', PARAM_RAW),
+                'questionslines' => optional_param('questions', '', PARAM_RAW),
+                'passscore' => optional_param('passscore', 80, PARAM_INT),
+                'expectedmodified' => optional_param('expectedmodified', 0, PARAM_INT),
+                'status' => 'draft', 'packagestatus' => 'none',
+                'packagefilename' => '', 'packageurl' => '',
+            ];
+        }
     }
 }
 
@@ -50,7 +66,7 @@ foreach ($items as $item) {
         break;
     }
 }
-$editing = $editing ?: [
+$editing = ($postedediting ?? $editing) ?: [
     'id' => 0, 'kind' => 'course', 'title' => '', 'summary' => '', 'outline' => '', 'body' => '',
     'questionslines' => '', 'passscore' => 80, 'expectedmodified' => 0, 'status' => 'draft',
     'packagestatus' => 'none', 'packagefilename' => '', 'packageurl' => '',

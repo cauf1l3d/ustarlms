@@ -81,7 +81,7 @@ if (!empty($scoped['allowed'])) {
 $canhr = $canhrworkspace;
 if ($canhr) {
     $candidates = [];
-    foreach ($DB->get_records_select('user', 'id > 1 AND deleted = 0 AND suspended = 0', [], 'lastname ASC, firstname ASC', 'id,firstname,lastname') as $user) {
+    foreach ($DB->get_records_select('user', 'id > 1 AND deleted = 0 AND suspended = 0', [], 'lastname ASC, firstname ASC', 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $user) {
         if ((int)$user->id !== (int)$USER->id && \local_ustar\learning_tasks::can_assign((int)$USER->id, (int)$user->id)) {
             $candidates[] = ['id' => (int)$user->id, 'fullname' => fullname($user), 'position' => ''];
         }

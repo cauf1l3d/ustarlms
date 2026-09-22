@@ -44,6 +44,7 @@ php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/phpun
 php vendor/bin/phpunit \
     --testsuite local_ustar_testsuite \
     --display-notices \
+    --fail-on-notice \
     --log-junit /artifacts/phpunit.xml \
     2>&1 | tee /artifacts/phpunit.log
 php -r 'echo "PHP=" . PHP_VERSION . PHP_EOL;' > /artifacts/runtime.txt

@@ -50,7 +50,7 @@ final class registration_service {
         ])) {
             throw new \invalid_parameter_exception('Регистрация уже подтверждена.');
         }
-        $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname', MUST_EXIST);
+        $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename', MUST_EXIST);
         $now = time();
         $id = (int)$DB->insert_record('local_ustar_staff_requests', (object)[
             'requesttype' => staffing_requests::TYPE_REGISTRATION,

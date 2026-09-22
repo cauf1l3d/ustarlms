@@ -65,7 +65,7 @@ final class stage1_test extends \advanced_testcase {
     public function test_preview_does_not_enrol_or_create_progress(): void {
         global $DB, $SESSION;
         [$g, $user, $route, $point, $version] = $this->fixture();
-        $course = $this->getDataGenerator()->create_course();
+        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
         $page = $this->getDataGenerator()->create_module('page', ['course' => $course->id, 'completion' => 1]);
         $DB->set_field('local_ustar_route_versions', 'requirementsjson', json_encode([['type' => 'cm', 'sourceid' => $page->cmid, 'required' => true]]), ['id' => $version->id]);
         $SESSION->ustar_view_position = $route->positionid;

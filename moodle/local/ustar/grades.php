@@ -29,6 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+try {
+    \local_ustar\grade_promotion::reconcile((int)$USER->id);
+} catch (\Throwable $e) {
+    debugging('USTAR grade reconciliation failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+}
 $current = \local_ustar\grade_promotion::current((int)$USER->id);
 $eligibility = \local_ustar\grade_promotion::eligibility((int)$USER->id);
 $ownrequests = \local_ustar\grade_promotion::own_requests((int)$USER->id);
@@ -50,6 +55,11 @@ echo html_writer::start_div('u-stage6-tabs');
 echo html_writer::tag('a', 'Мой грейд', ['href' => (new moodle_url('/local/ustar/grades.php'))->out(false), 'class' => $view === 'mine' ? 'is-active' : '']);
 if ($teamrequests || \local_ustar\organization_model::is_manager((int)$USER->id)) {
     echo html_writer::tag('a', 'Заявки команды', ['href' => (new moodle_url('/local/ustar/grades.php', ['view' => 'team']))->out(false), 'class' => $view === 'team' ? 'is-active' : '']);
+}
+if (\local_ustar\grade_rules::can_manage((int)$USER->id)) {
+    echo html_writer::tag('a', 'Правила переходов', [
+        'href' => (new moodle_url('/local/ustar/grade_rules.php'))->out(false),
+    ]);
 }
 echo html_writer::end_div();
 

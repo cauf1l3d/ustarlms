@@ -16,7 +16,8 @@ final class grade_promotion {
         global $DB;
         $manager = $DB->get_manager();
         return $manager->table_exists(new \xmldb_table('local_ustar_grade_requests'))
-            && $manager->table_exists(new \xmldb_table('local_ustar_employee_grades'));
+            && $manager->table_exists(new \xmldb_table('local_ustar_employee_grades'))
+            && grade_rules::available();
     }
 
     /** @return array<string,mixed> */
@@ -44,80 +45,88 @@ final class grade_promotion {
     public static function eligibility(int $userid): array {
         global $DB;
         $current = self::current($userid);
+        $emptyrule = ['ruleid' => 0, 'ruleversion' => 0, 'rulehash' => ''];
         if (empty($current['enabled'])) {
-            return array_merge($current, [
+            return array_merge($current, $emptyrule, [
                 'eligible' => false, 'reason' => 'Для этой должности грейдовая лестница не настроена.',
                 'nextgrade' => '', 'nextlabel' => '', 'routeid' => 0, 'requirements' => [],
             ]);
         }
         $next = self::next_grade((string)$current['grade']);
         if ($next === '') {
-            return array_merge($current, [
+            return array_merge($current, $emptyrule, [
                 'eligible' => false, 'reason' => 'Это максимальная ступень грейда.',
                 'nextgrade' => '', 'nextlabel' => '', 'routeid' => 0, 'requirements' => [],
             ]);
         }
-        $route = route_scope::available()
-            ? route_scope::parent_for_position((string)$current['positionid']) : null;
-        $route = $route ?: $DB->get_record('local_ustar_routes', [
-            'positionid' => (string)$current['positionid'], 'active' => 1,
-        ], '*', IGNORE_MULTIPLE);
-        if (!$route) {
-            return array_merge($current, [
-                'eligible' => false, 'reason' => 'Для должности ещё не опубликован маршрут перехода.',
+
+        $rule = grade_rules::published((string)$current['positionid'], (string)$current['grade'], $next);
+        if (!$rule) {
+            return array_merge($current, $emptyrule, [
+                'eligible' => false,
+                'reason' => 'Критерии перехода «' . self::label((string)$current['grade'])
+                    . ' → ' . self::label($next) . '» ещё не опубликованы.',
                 'nextgrade' => $next, 'nextlabel' => self::label($next), 'routeid' => 0, 'requirements' => [],
+            ]);
+        }
+
+        $common = [
+            'ruleid' => (int)$rule->id,
+            'ruleversion' => (int)$rule->versionno,
+            'rulehash' => (string)$rule->rulehash,
+            'nextgrade' => $next,
+            'nextlabel' => self::label($next),
+            'routeid' => (int)$rule->routeid,
+        ];
+        if (!$DB->record_exists('local_ustar_routes', ['id' => (int)$rule->routeid, 'active' => 1])) {
+            return array_merge($current, $common, [
+                'eligible' => false, 'reason' => 'Маршрут опубликованного правила больше не активен.',
+                'requirements' => [],
             ]);
         }
 
         $requirements = [];
         $missing = [];
-        $points = (string)$route->routekind === route_family::KIND_PARENT && route_scope::available()
-            ? route_scope::points_for_position((int)$route->id, (string)$current['positionid'])
-            : $DB->get_records('local_ustar_route_points', [
-            'routeid' => (int)$route->id, 'active' => 1,
-        ], 'sortorder ASC, id ASC');
-        if (!$points) {
-            return array_merge($current, [
-                'eligible' => false, 'reason' => 'В маршруте перехода пока нет этапов.',
-                'nextgrade' => $next, 'nextlabel' => self::label($next), 'routeid' => (int)$route->id, 'requirements' => [],
-            ]);
-        }
-        foreach ($points as $point) {
-            $version = route_model::current_published_version((int)$point->id);
-            if (!$version) {
-                continue;
-            }
-            $completed = self::has_confirmed_requirement($userid, (int)$point->id, (int)$version->id);
+        foreach (grade_rules::requirements($rule) as $requirement) {
+            $pointid = (int)($requirement['pointid'] ?? 0);
+            $versionid = (int)($requirement['versionid'] ?? 0);
+            $title = format_string((string)($requirement['title'] ?? ('Этап #' . $pointid)));
+            $configured = $pointid > 0 && $versionid > 0
+                && $DB->record_exists('local_ustar_route_points', ['id' => $pointid, 'active' => 1])
+                && $DB->record_exists('local_ustar_route_versions', [
+                    'id' => $versionid, 'pointid' => $pointid, 'status' => route_model::STATUS_PUBLISHED,
+                ]);
+            $completed = $configured && self::has_confirmed_requirement($userid, $pointid, $versionid);
             $requirements[] = [
-                'pointid' => (int)$point->id,
-                'versionid' => (int)$version->id,
-                'title' => format_string((string)$version->title),
+                'pointid' => $pointid,
+                'versionid' => $versionid,
+                'title' => $title,
                 'complete' => $completed,
+                'configured' => $configured,
             ];
-            if (!$completed) {
-                $missing[] = format_string((string)$version->title);
+            if (!$configured) {
+                $missing[] = $title . ' (правило требует перепубликации)';
+            } else if (!$completed) {
+                $missing[] = $title;
             }
         }
         if (!$requirements) {
-            return array_merge($current, [
-                'eligible' => false, 'reason' => 'В маршруте перехода нет опубликованных этапов.',
-                'nextgrade' => $next, 'nextlabel' => self::label($next), 'routeid' => (int)$route->id, 'requirements' => [],
+            return array_merge($current, $common, [
+                'eligible' => false, 'reason' => 'В опубликованном правиле нет подтверждаемых этапов.',
+                'requirements' => [],
             ]);
         }
 
-        return array_merge($current, [
+        return array_merge($current, $common, [
             'eligible' => !$missing,
             'reason' => $missing
-                ? 'Не завершены этапы: ' . implode(', ', array_slice($missing, 0, 5))
-                : 'Все этапы маршрута и аттестации подтверждены.',
-            'nextgrade' => $next,
-            'nextlabel' => self::label($next),
-            'routeid' => (int)$route->id,
+                ? 'Не подтверждены критерии: ' . implode(', ', array_slice($missing, 0, 5))
+                : 'Все критерии этой ступени подтверждены.',
             'requirements' => $requirements,
         ]);
     }
 
-    /** Creates one idempotent request for the current verified route state. */
+    /** Creates one idempotent request for one exact published transition rule. */
     public static function request(int $userid): \stdClass {
         global $DB;
         self::assert_available();
@@ -135,31 +144,57 @@ final class grade_promotion {
             if ($managerid <= 0 || $managerid === $userid) {
                 throw new \moodle_exception('Для сотрудника не назначен действующий руководитель. Заявка не создана.');
             }
+            $snapshot = [
+                'rule' => [
+                    'id' => (int)$eligible['ruleid'],
+                    'version' => (int)$eligible['ruleversion'],
+                    'hash' => (string)$eligible['rulehash'],
+                ],
+                'requirements' => $eligible['requirements'],
+            ];
             $fingerprint = hash('sha256', json_encode([
-                $userid, $eligible['grade'], $eligible['nextgrade'], $eligible['routeid'],
-                array_map(static fn(array $item): array => [
-                    (int)$item['pointid'], (int)$item['versionid'], !empty($item['complete']),
-                ], $eligible['requirements']),
+                $userid, $eligible['grade'], $eligible['nextgrade'], $eligible['routeid'], $snapshot,
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+            $tx = $DB->start_delegated_transaction();
             $existing = $DB->get_record('local_ustar_grade_requests', [
-                'userid' => $userid, 'fromgrade' => (string)$eligible['grade'],
-                'tograde' => (string)$eligible['nextgrade'], 'status' => self::STATUS_PENDING,
+                'userid' => $userid,
+                'fromgrade' => (string)$eligible['grade'],
+                'tograde' => (string)$eligible['nextgrade'],
+                'status' => self::STATUS_PENDING,
             ], '*', IGNORE_MULTIPLE);
             if ($existing) {
-                self::refresh_manager($existing);
-                return $DB->get_record('local_ustar_grade_requests', ['id' => (int)$existing->id], '*', MUST_EXIST);
+                $old = json_decode((string)$existing->requirementsjson, true);
+                $oldhash = is_array($old) ? (string)($old['rule']['hash'] ?? '') : '';
+                if ($oldhash !== '' && hash_equals((string)$eligible['rulehash'], $oldhash)) {
+                    self::refresh_manager($existing);
+                    $tx->allow_commit();
+                    return $DB->get_record(
+                        'local_ustar_grade_requests', ['id' => (int)$existing->id], '*', MUST_EXIST
+                    );
+                }
+                $existing->status = self::STATUS_REJECTED;
+                $existing->decidedat = time();
+                $existing->decisionby = 0;
+                $existing->decisionreason = 'Критерии перехода изменены; заявка заменена новой версией.';
+                $existing->timemodified = time();
+                $DB->update_record('local_ustar_grade_requests', $existing);
+                self::event((int)$existing->id, $userid, 'grade_request_superseded', 0, [
+                    'previousrulehash' => $oldhash,
+                    'newrulehash' => (string)$eligible['rulehash'],
+                ]);
             }
-            $tx = $DB->start_delegated_transaction();
+
             $now = time();
             $id = (int)$DB->insert_record('local_ustar_grade_requests', (object)[
                 'userid' => $userid,
                 'fromgrade' => (string)$eligible['grade'],
                 'tograde' => (string)$eligible['nextgrade'],
                 'routeid' => (int)$eligible['routeid'],
-                'requirementsjson' => json_encode($eligible['requirements'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'requirementsjson' => json_encode($snapshot, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'managerid' => $managerid,
                 'status' => self::STATUS_PENDING,
-                'requestkey' => 'grade-v1:' . $fingerprint . ':' . random_string(12),
+                'requestkey' => 'grade-v2:' . $fingerprint . ':' . random_string(12),
                 'requestedat' => $now,
                 'decidedat' => null,
                 'decisionby' => null,
@@ -168,13 +203,18 @@ final class grade_promotion {
                 'timemodified' => $now,
             ]);
             self::event($id, $userid, 'grade_request_created', $userid, [
-                'managerid' => $managerid, 'fromgrade' => $eligible['grade'], 'tograde' => $eligible['nextgrade'],
+                'managerid' => $managerid,
+                'fromgrade' => $eligible['grade'],
+                'tograde' => $eligible['nextgrade'],
+                'ruleid' => (int)$eligible['ruleid'],
+                'ruleversion' => (int)$eligible['ruleversion'],
+                'rulehash' => (string)$eligible['rulehash'],
             ]);
             self::notify(
                 $managerid,
                 'grade_request',
                 'Новая заявка на переход грейда',
-                'Сотрудник выполнил маршрут и ждёт решения руководителя.',
+                'Сотрудник выполнил опубликованные критерии перехода и ждёт решения руководителя.',
                 '/local/ustar/grades.php?view=team',
                 'grade-request:' . $id . ':' . $managerid
             );
@@ -184,6 +224,7 @@ final class grade_promotion {
             $lock->release();
         }
     }
+
 
     /** Approve or return a pending request. The actual current manager is the only decision maker. */
     public static function decide(int $requestid, int $actorid, bool $approved, string $reason = ''): \stdClass {
@@ -225,10 +266,16 @@ final class grade_promotion {
             if (!$approved && trim($reason) === '') {
                 throw new \invalid_parameter_exception('Укажите причину возврата заявки.');
             }
-            if ($approved && (!$eligible['eligible']
+            $snapshot = json_decode((string)$request->requirementsjson, true);
+            $requestrulehash = is_array($snapshot) ? (string)($snapshot['rule']['hash'] ?? '') : '';
+            if ($approved && ($requestrulehash === ''
+                    || empty($eligible['eligible'])
+                    || !hash_equals((string)$eligible['rulehash'], $requestrulehash)
                     || (string)$eligible['grade'] !== (string)$request->fromgrade
                     || (string)$eligible['nextgrade'] !== (string)$request->tograde)) {
-                throw new \moodle_exception('Маршрут сотрудника изменился или больше не подтверждён. Перепроверьте заявку.');
+                throw new \moodle_exception(
+                    'Критерии, маршрут или ступень сотрудника изменились. Создайте заявку по актуальному правилу.'
+                );
             }
 
             $now = time();
@@ -257,6 +304,22 @@ final class grade_promotion {
         } finally {
             $lock->release();
         }
+    }
+
+    /** Create the pending request as soon as the explicit rule is satisfied. */
+    public static function reconcile(int $userid): ?\stdClass {
+        if (!self::available()) {
+            return null;
+        }
+        $eligible = self::eligibility($userid);
+        if (empty($eligible['eligible'])) {
+            return null;
+        }
+        $managerid = self::manager_for($userid);
+        if ($managerid <= 0 || $managerid === $userid) {
+            return null;
+        }
+        return self::request($userid);
     }
 
     /** @return array<int,\stdClass> */

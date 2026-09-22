@@ -173,4 +173,40 @@ final class material_studio_review_test extends \advanced_testcase {
         $this->assertStringContainsString('runtime', (string)$scormresult['detail']);
     }
 
+
+    public function test_published_route_rejects_studio_scorm_without_runtime(): void {
+        global $DB, $USER;
+        $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $route = $g->create_route();
+        $point = $g->create_point($route);
+        $g->create_version($point);
+
+        $scorm = material_studio::save(0, [
+            'kind' => 'scorm',
+            'title' => 'Studio SCORM attachment',
+        ], (int)$USER->id);
+        content_admin::publish((int)$scorm['id'], (int)$USER->id);
+
+        $pointrow = $DB->get_record('local_ustar_route_points', ['id' => $point->id], '*', MUST_EXIST);
+        $this->expectException(\moodle_exception::class);
+        $this->expectExceptionMessage('Studio SCORM');
+        route_commands::save_version([
+            'routeid' => (int)$route->id,
+            'pointid' => (int)$point->id,
+            'phase' => route_model::PHASE_ADAPTATION,
+            'active' => true,
+            'versiondata' => [
+                'title' => 'SCORM step',
+                'requirements' => [[
+                    'type' => 'content',
+                    'sourceid' => (int)$scorm['id'],
+                    'required' => true,
+                ]],
+                'status' => route_model::STATUS_PUBLISHED,
+            ],
+            'actorid' => (int)$USER->id,
+            'expectedmodified' => (int)$pointrow->timemodified,
+        ]);
+    }
+
 }

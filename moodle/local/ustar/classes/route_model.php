@@ -1528,14 +1528,25 @@ final class route_model {
         } else if ($type === 'content') {
             $contentid = (int)$requirement['sourceid'];
             $item = $DB->get_record('local_ustar_content', ['id' => $contentid]);
-            $contentversion = $item ? content::current_version($contentid) : null;
+            $studio = false;
+            if ($item && class_exists('\\local_ustar\\material_studio') && material_studio::available()) {
+                $studio = $DB->get_record(
+                    'local_ustar_content_blueprints',
+                    ['contentid' => $contentid],
+                    'id,kind,sourceversion',
+                    IGNORE_MISSING
+                );
+            }
+            $contentversion = ($item && !$studio) ? content::current_version($contentid) : null;
             if (
                 !$item
                 || (string)$item->type === 'folder'
                 || (string)$item->status !== content::STATUS_PUBLISHED
-                || !$contentversion
-                || empty($contentversion->iscurrent)
-                || (string)$contentversion->status !== content::STATUS_PUBLISHED
+                || (!$studio && (
+                    !$contentversion
+                    || empty($contentversion->iscurrent)
+                    || (string)$contentversion->status !== content::STATUS_PUBLISHED
+                ))
             ) {
                 $result['configured'] = false;
                 $result['detail'] = 'Текущая опубликованная версия материала USTAR не найдена';
@@ -1546,33 +1557,64 @@ final class route_model {
                 $result['detail'] = 'Правила доступа материала не включают этого сотрудника';
                 return $result;
             }
+
             $mode = (string)($requirement['completionmode'] ?? 'open');
+            if ($studio && $mode === 'ack') {
+                $result['configured'] = false;
+                $result['detail'] = 'Подтверждение ознакомления неприменимо к материалу Studio';
+                return $result;
+            }
             if (
-                $mode === 'ack'
+                !$studio
+                && $mode === 'ack'
                 && (empty($item->ackrequired) || (string)$item->sourcekind !== content::SOURCE_FILE)
             ) {
                 $result['configured'] = false;
                 $result['detail'] = 'Подтверждение доступно только для USTAR File с включённым ознакомлением';
                 return $result;
             }
+
             $result['label'] = $result['label'] ?: format_string((string)$item->title);
             $result['url'] = (new \moodle_url('/local/ustar/open.php', [
                 'contentid' => $contentid,
                 'pointid' => (int)$version->pointid,
                 'versionid' => (int)$version->id,
             ]))->out(false);
-            $event = learning_events::route_fact(
-                $userid,
-                $contentid,
-                (int)$version->pointid,
-                (int)$version->id,
-                $mode
-            );
-            $result['satisfied'] = !empty($event);
-            $result['completedat'] = $event ? (int)$event->timecreated : 0;
-            $result['detail'] = $mode === 'ack'
-                ? ($result['satisfied'] ? 'Ознакомление подтверждено' : 'Откройте и подтвердите ознакомление')
-                : ($result['satisfied'] ? 'Материал открыт из маршрута' : 'Откройте материал из маршрута');
+
+            if ($studio && (string)$studio->kind === material_studio::KIND_ASSESSMENT) {
+                $attempt = material_studio::latest_submission_for_user(
+                    $contentid,
+                    $userid,
+                    (int)$studio->sourceversion
+                );
+                $result['satisfied'] = $attempt && !empty($attempt['passed']);
+                $result['failed'] = $attempt && empty($attempt['passed']);
+                $result['completedat'] = $attempt ? (int)($attempt['submittedat'] ?? 0) : 0;
+                $result['detail'] = !$attempt
+                    ? 'Пройдите аттестацию'
+                    : ($result['satisfied']
+                        ? 'Аттестация пройдена'
+                        : 'Аттестация не пройдена. Повторите попытку');
+            } else if ($studio && (string)$studio->kind === material_studio::KIND_SCORM) {
+                // Imported Studio ZIP is an immutable package attachment, not a
+                // SCORM runtime. Never turn a download/open into completion.
+                $result['configured'] = false;
+                $result['satisfied'] = false;
+                $result['detail'] = 'Для Studio SCORM ещё не подключён runtime. Используйте Moodle SCORM в маршруте.';
+            } else {
+                $event = learning_events::route_fact(
+                    $userid,
+                    $contentid,
+                    (int)$version->pointid,
+                    (int)$version->id,
+                    $mode
+                );
+                $result['satisfied'] = !empty($event);
+                $result['completedat'] = $event ? (int)$event->timecreated : 0;
+                $result['detail'] = $mode === 'ack'
+                    ? ($result['satisfied'] ? 'Ознакомление подтверждено' : 'Откройте и подтвердите ознакомление')
+                    : ($result['satisfied'] ? 'Материал открыт из маршрута' : 'Откройте материал из маршрута');
+            }
         } else if ($type === 'assessment') {
             $assessmentkey = (string)$requirement['sourcekey'];
             $definition = development_assessment::published($assessmentkey);
@@ -1741,7 +1783,6 @@ final class route_model {
                 $evidence
             );
             route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
-        self::reconcile_grade_promotion($userid);
             self::reconcile_grade_promotion($userid);
             return;
         }
@@ -1778,6 +1819,7 @@ final class route_model {
             $evidence
         );
         route_rewards::try_progress($userid, (int)$point->id, (int)$version->id);
+        self::reconcile_grade_promotion($userid);
     }
 
     /** Grade automation is secondary: never roll back a verified learning completion. */

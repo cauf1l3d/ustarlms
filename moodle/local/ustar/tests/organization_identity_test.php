@@ -367,4 +367,46 @@ final class organization_identity_test extends \advanced_testcase {
         $secondid = registration_service::submit($candidate->id, 'retail_seller');
         $this->assertNotSame($firstid, $secondid);
     }
+
+    public function test_hr_position_change_updates_canonical_assignment_and_keeps_acting_role(): void {
+        global $DB;
+        $employee = $this->employee('retail_seller');
+        $originalplace = $this->place('retail_seller');
+        $actingplace = $this->place('retail_head');
+        $this->assign($employee->id, $originalplace);
+        $this->assign($employee->id, $actingplace, ['assignmenttype' => 'acting']);
+        $this->place('retail_senior');
+
+        $placeid = organization_model::assign_position_by_hr(
+            (int)$employee->id,
+            'retail_senior',
+            (int)get_admin()->id
+        );
+        people::set_position_id((int)$employee->id, 'retail_senior');
+
+        $this->assertSame('retail_senior', organization_identity::resolve($employee->id)['positionid']);
+        $this->assertSame($placeid, (int)organization_model::primary_assignment($employee->id)->staffplaceid);
+        $this->assertCount(1, array_filter(
+            organization_model::active_assignments($employee->id),
+            static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'
+        ));
+        $this->assertTrue($DB->record_exists_select(
+            'local_ustar_assignments',
+            'userid = :userid AND staffplaceid = :staffplaceid AND assignmenttype = :assignmenttype'
+                . ' AND status = :status',
+            [
+                'userid' => (int)$employee->id,
+                'staffplaceid' => $actingplace,
+                'assignmenttype' => 'acting',
+                'status' => 'active',
+            ]
+        ));
+        $this->assertTrue($DB->record_exists('local_ustar_assignments', [
+            'userid' => (int)$employee->id,
+            'staffplaceid' => $originalplace,
+            'assignmenttype' => 'primary',
+            'status' => 'ended',
+        ]));
+    }
+
 }

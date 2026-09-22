@@ -55,14 +55,18 @@ if ((string)$item['kind'] === 'assessment') {
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'preview', 'value' => (int)$preview]);
     foreach ((array)$item['questions'] as $index => $question) {
         echo html_writer::tag('h3', s((string)$question['question']));
-        foreach ((array)$question['options'] as $option) {
+        foreach (array_values((array)$question['options']) as $optionindex => $option) {
             $field = 'answer_' . $index;
-            $idattr = $field . '_' . substr(hash('sha1', (string)$option), 0, 8);
+            $value = $optionindex + 1;
+            $idattr = $field . '_' . $value;
             echo html_writer::start_tag('label', ['for' => $idattr, 'style' => 'display:block']);
             $attrs = [
-                'id' => $idattr, 'type' => 'radio', 'name' => $field, 'value' => (string)$option, 'required' => 'required',
+                'id' => $idattr, 'type' => 'radio', 'name' => $field, 'value' => $value, 'required' => 'required',
             ];
-            if (($answers[$index] ?? '') === (string)$option) { $attrs['checked'] = 'checked'; }
+            if ((string)($answers[$index] ?? '') === (string)$value
+                    || (string)($answers[$index] ?? '') === (string)$option) {
+                $attrs['checked'] = 'checked';
+            }
             echo html_writer::empty_tag('input', $attrs);
             echo ' ' . s((string)$option);
             echo html_writer::end_tag('label');

@@ -26,7 +26,8 @@ final class career_grades {
         }
         unset($row);
         return ['hasgrade'=>$key !== '', 'gradeid'=>$key, 'gradename'=>$current,
-            'grades'=>$grades, 'gradepositionname'=>(string)($position['name'] ?? '')];
+            'grades'=>$grades, 'gradepositionname'=>(string)($position['name'] ?? ''),
+            'gradesurl'=>(new \moodle_url('/local/ustar/grades.php'))->out(false)];
     }
     public static function fingerprint(array $position): string {
         return hash('sha256', json_encode([$position, get_config('local_ustar', 'careergrade_'.$position['id'])]));

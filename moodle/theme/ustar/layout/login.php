@@ -3,6 +3,8 @@ defined('MOODLE_INTERNAL') || die();
 
 global $SITE;
 
+require_once($CFG->libdir . '/authlib.php');
+
 $bodyattributes = $OUTPUT->body_attributes(['ustar-auth-body']);
 $runtimecss = '';
 try {
@@ -30,7 +32,8 @@ $templatecontext = [
     'brandmarkurl' => $OUTPUT->image_url('brand/logo-onlight', 'theme_ustar')->out(false),
     'mascoturl' => $OUTPUT->image_url('brand/mascot-admin', 'theme_ustar')->out(false),
     'academybannerurl' => $OUTPUT->image_url('brand/ustar-academy-banner', 'theme_ustar')->out(false),
+    'signupenabled' => signup_is_enabled(),
+    'signupurl' => (new moodle_url('/login/signup.php'))->out(false),
 ];
 
 echo $OUTPUT->render_from_template('theme_ustar/login', $templatecontext);
-

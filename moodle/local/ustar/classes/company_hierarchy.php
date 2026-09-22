@@ -57,10 +57,12 @@ final class company_hierarchy {
             $name = (string)($department['name'] ?? 'Без подразделения');
             $key = self::business_block($name);
             $row = ['id' => (string)($department['id'] ?? ''), 'name' => $name,
-                'heads' => [], 'members' => [], 'people' => 0];
+                'heads' => [], 'members' => [], 'groupsmap' => [], 'groups' => [], 'people' => 0];
             $members = $department['members'] ?? [];
             foreach ($department['groups'] ?? [] as $group) {
                 foreach ($group['people'] ?? [] as $person) {
+                    $person['_groupkey'] = (string)($group['id'] ?? $group['positionid'] ?? $group['name'] ?? 'group');
+                    $person['_groupname'] = (string)($group['name'] ?? 'Команда');
                     $members[] = $person;
                 }
             }
@@ -115,7 +117,20 @@ final class company_hierarchy {
                     if ($mode === 'leaders' && $bucket !== 'heads') { continue; }
                     if ($mode === 'branch' && ($ownid === ''
                             || preg_replace('/^department:/', '', $row['id']) !== $ownid)) { continue; }
-                    $row[$bucket][] = $person;
+                    if ($bucket === 'members' && !empty($person['_groupname'])) {
+                        $groupkey = (string)$person['_groupkey'];
+                        if (!isset($row['groupsmap'][$groupkey])) {
+                            $row['groupsmap'][$groupkey] = [
+                                'name' => (string)$person['_groupname'], 'people' => [], 'count' => 0,
+                            ];
+                        }
+                        unset($person['_groupkey'], $person['_groupname']);
+                        $row['groupsmap'][$groupkey]['people'][] = $person;
+                        $row['groupsmap'][$groupkey]['count']++;
+                    } else {
+                        unset($person['_groupkey'], $person['_groupname']);
+                        $row[$bucket][] = $person;
+                    }
                     $row['people']++;
                 }
             }
@@ -128,8 +143,18 @@ final class company_hierarchy {
                 usort($row[$bucket], static fn(array $a, array $b): int =>
                     strnatcasecmp((string)$a['fullname'], (string)$b['fullname']));
             }
+            $row['groups'] = array_values($row['groupsmap']);
+            unset($row['groupsmap']);
+            foreach ($row['groups'] as &$group) {
+                usort($group['people'], static fn(array $a, array $b): int =>
+                    strnatcasecmp((string)$a['fullname'], (string)$b['fullname']));
+            }
+            unset($group);
+            usort($row['groups'], static fn(array $a, array $b): int =>
+                strnatcasecmp((string)$a['name'], (string)$b['name']));
             $row['hasheads'] = !empty($row['heads']);
             $row['hasmembers'] = !empty($row['members']);
+            $row['hasgroups'] = !empty($row['groups']);
             $row['empty'] = false;
             $row['expanded'] = $mode === 'branch';
             $blocks[$key]['departments'][] = $row;
@@ -224,6 +249,19 @@ final class company_hierarchy {
                 ?? null;
 
             if (!$position) {
+                $departmentid = '__unassigned';
+                if (!isset($rows[$departmentid])) {
+                    $rows[$departmentid] = ['id' => $departmentid, 'name' => 'Не распределены по оргструктуре',
+                        'heads' => [], 'hasheads' => false, 'groupsmap' => [], 'groups' => [], 'people' => 0];
+                }
+                $person = org::person((int)$u->id, fullname($u));
+                $person['avatarurl'] = team_presenter::avatar_url((int)$u->id, 64);
+                $rows[$departmentid]['groupsmap']['unassigned'] ??= [
+                    'positionid' => '', 'name' => 'Требуется назначить должность', 'people' => [], 'count' => 0,
+                ];
+                $rows[$departmentid]['groupsmap']['unassigned']['people'][] = $person;
+                $rows[$departmentid]['groupsmap']['unassigned']['count']++;
+                $rows[$departmentid]['people']++;
                 continue;
             }
 
@@ -238,7 +276,11 @@ final class company_hierarchy {
                 ||
                 !isset($rows[$departmentid])
             ) {
-                continue;
+                $departmentid = '__unassigned';
+                if (!isset($rows[$departmentid])) {
+                    $rows[$departmentid] = ['id' => $departmentid, 'name' => 'Не распределены по оргструктуре',
+                        'heads' => [], 'hasheads' => false, 'groupsmap' => [], 'groups' => [], 'people' => 0];
+                }
             }
 
             $person =
@@ -264,8 +306,11 @@ final class company_hierarchy {
             }
 
             $groupkey = $positionid;
+            $grouplabel = (string)($position['name'] ?? $positionid);
+            $managerid = org::manager_id((int)$u->id);
 
-            if ($departmentid === 'dept_bd305b8b27fb3a') {
+            if ($departmentid === 'dept_bd305b8b27fb3a'
+                    && !in_array($groupkey, ['mop_1', 'mop_2'], true)) {
 
                 $userid = (int)$u->id;
 
@@ -293,26 +338,30 @@ final class company_hierarchy {
                     $departmentid
                 ]['groupsmap'][$groupkey] = [
                     'positionid' => $positionid,
+                    'id' => $groupkey,
                     'name' => match ($groupkey) {
 
                         'active_supervisor_team1'
                             => 'Супервайзер команды 1',
 
                         'active_team1'
-                            => 'Команда 1',
+                            => 'МОП 1',
 
                         'active_team2'
-                            => 'Команда 2',
+                            => 'МОП 2',
 
-                        default
-                            => (string)(
-                                $position['name']
-                                ?? $positionid
-                            ),
+                        default => $grouplabel,
                     },
                     'people' => [],
                     'count' => 0,
+                    'managers' => [],
                 ];
+            }
+
+            if ($managerid > 0 && $managerid !== (int)$u->id) {
+                $manager = org::person($managerid);
+                $rows[$departmentid]['groupsmap'][$groupkey]['managers'][$managerid] =
+                    (string)($manager['fullname'] ?? '');
             }
 
             $rows[
@@ -355,6 +404,11 @@ final class company_hierarchy {
             );
 
             foreach ($department['groups'] as &$group) {
+                $managers = array_values(array_filter((array)($group['managers'] ?? [])));
+                if (count($managers) === 1 && str_starts_with((string)$group['name'], 'МОП ')) {
+                    $group['name'] .= ' · руководитель ' . $managers[0];
+                }
+                unset($group['managers']);
                 usort(
                     $group['people'],
                     static fn(array $a, array $b): int =>

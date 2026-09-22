@@ -15,6 +15,12 @@
             <h1 class="ustar-auth-start">Начни с входа</h1>
             <div class="ustar-auth-auth__card">
                 <div id="region-main" class="ustar-auth-core">{{{ output.main_content }}}</div>
+                {{#signupenabled}}
+                <div class="ustar-auth-signup" aria-label="Регистрация в USTAR Академии">
+                    <span>Впервые в Академии?</span>
+                    <a class="btn btn-secondary" href="{{signupurl}}">Зарегистрироваться</a>
+                </div>
+                {{/signupenabled}}
             </div>
             <footer class="ustar-auth-auth__footer">
                 <p>USTAR Академия использует авторские технологии и собственные разработанные сервисы обучения на основе ядра Moodle.</p>

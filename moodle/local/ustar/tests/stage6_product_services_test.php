@@ -89,7 +89,9 @@ final class stage6_product_services_test extends \advanced_testcase {
             (int)$version->id,
             1000,
             0,
-            ['mode' => 'evaluated', 'requirements' => []]
+            ['mode' => 'evaluated', 'requirements' => [
+                ['type' => 'cm', 'required' => true, 'satisfied' => true, 'completedat' => 1000],
+            ]]
         );
 
         $this->assertNotNull(completion_cycle::latest_confirmed((int)$user->id, (int)$point->id));

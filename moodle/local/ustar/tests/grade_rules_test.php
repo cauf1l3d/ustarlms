@@ -42,6 +42,10 @@ final class grade_rules_test extends \advanced_testcase {
 
         $current = grade_rules::published($positionid, 'trainee', 'junior');
         $this->assertSame((int)$rule2->id, (int)$current->id);
+
+        // A rule belongs to one exact transition. The next grade must stay
+        // blocked until its own rule is explicitly published.
+        $this->assertNull(grade_rules::published($positionid, 'junior', 'middle'));
     }
 
     public function test_rule_rejects_point_from_another_route(): void {

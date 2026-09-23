@@ -13,6 +13,9 @@
     {{#assignedok}}
     <div class="alert alert-success" role="status">Назначено тем: {{assigned}}. Они уже приоритетно отображаются в маршруте сотрудника.</div>
     {{/assignedok}}
+    {{#cancelledok}}
+    <div class="alert alert-success" role="status">Назначение отменено. История назначения сохранена.</div>
+    {{/cancelledok}}
 
     {{#hastargets}}
     <section class="u-fr-panel">
@@ -95,6 +98,17 @@
                     <b>{{statuslabel}}</b>
                     <small>Новых попыток: {{attemptsused}} / {{attemptslimit}}</small>
                 </div>
+                <form class="u-fr-cancel" method="post" action="{{selfurl}}?userid={{selected.id}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="action" value="cancel">
+                    <input type="hidden" name="targetuserid" value="{{selected.id}}">
+                    <input type="hidden" name="assignmentid" value="{{id}}">
+                    <label>
+                        <span class="sr-only">Причина отмены</span>
+                        <input type="text" name="reason" required maxlength="1000" placeholder="Причина отмены">
+                    </label>
+                    <button class="u-btn" type="submit">Отменить назначение</button>
+                </form>
             </article>
             {{/active}}
         </div>

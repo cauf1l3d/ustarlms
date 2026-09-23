@@ -196,7 +196,7 @@ final class forced_retraining {
         $resolved = structure::resolve_user($userid);
         $positionid = (string)($resolved['position']['id'] ?? '');
         $cards = [];
-        foreach (self::active_assignments($userid, true) as $assignment) {
+        foreach (self::active_assignments($userid, false) as $assignment) {
             $state = self::state($assignment, $positionid, true);
             if (empty($state['completed'])) {
                 $cards[] = $state;
@@ -212,13 +212,39 @@ final class forced_retraining {
         $resolved = structure::resolve_user($userid);
         $positionid = (string)($resolved['position']['id'] ?? '');
         $out = [];
-        foreach (self::active_assignments($userid, true) as $assignment) {
+        foreach (self::active_assignments($userid, false) as $assignment) {
             $state = self::state($assignment, $positionid, true);
             if (empty($state['completed'])) {
                 $out[] = $state;
             }
         }
         return $out;
+    }
+
+    /** Cancel one still-active manual assignment without deleting its audit trail. */
+    public static function cancel(int $actorid, int $userid, int $assignmentid, string $reason): void {
+        self::assert_target_allowed($actorid, $userid);
+        $reason = trim(clean_param($reason, PARAM_TEXT));
+        if ($reason === '') {
+            throw new \moodle_exception('Укажите причину отмены назначения.');
+        }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('forced-retraining-cancel:' . $assignmentid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Назначение сейчас изменяется. Повторите попытку.');
+        }
+        try {
+            $assignment = self::assignment($userid, $assignmentid);
+            if (!empty($assignment['closed'])) {
+                throw new \moodle_exception('Назначение уже завершено или отменено.');
+            }
+            self::event($assignmentid, $userid, self::EVENT_CANCELLED, $actorid, $reason, [
+                'policyid' => (int)$assignment['policyid'],
+                'cancelledat' => time(),
+            ]);
+        } finally {
+            $lock->release();
+        }
     }
 
     /** @return array<string,mixed> */

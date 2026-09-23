@@ -54,6 +54,18 @@
                                         {{#members}}{{> local_ustar/business_orgchart_person}}{{/members}}
                                     </div>
                                     {{/hasmembers}}
+                                    {{#hasgroups}}
+                                    <div class="u-orgchart__groups">
+                                        {{#groups}}
+                                        <section class="u-orgchart__group">
+                                            <h4>{{name}} <span class="u-orgchart__count">{{count}}</span></h4>
+                                            <div class="u-orgchart__people">
+                                                {{#people}}{{> local_ustar/business_orgchart_person}}{{/people}}
+                                            </div>
+                                        </section>
+                                        {{/groups}}
+                                    </div>
+                                    {{/hasgroups}}
                                     {{#empty}}<p class="u-orgchart__note">Нет сотрудников в доступном составе.</p>{{/empty}}
                                 </div>
                             </details>

@@ -14,6 +14,7 @@ if (!\local_ustar\forced_retraining::can_manage((int)$USER->id)) {
 
 $userid = optional_param('userid', 0, PARAM_INT);
 $assigned = optional_param('assigned', 0, PARAM_INT);
+$cancelled = optional_param('cancelled', 0, PARAM_BOOL);
 $targets = \local_ustar\forced_retraining::targets((int)$USER->id);
 $targetids = array_map(static fn(array $row): int => (int)$row['id'], $targets);
 if ($userid <= 0 || !in_array($userid, $targetids, true)) {
@@ -36,6 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect(new moodle_url('/local/ustar/forced_retraining.php', [
             'userid' => $targetuserid,
             'assigned' => count($ids),
+        ]));
+    }
+    if ($action === 'cancel') {
+        $targetuserid = required_param('targetuserid', PARAM_INT);
+        \local_ustar\forced_retraining::cancel(
+            (int)$USER->id,
+            $targetuserid,
+            required_param('assignmentid', PARAM_INT),
+            required_param('reason', PARAM_TEXT)
+        );
+        redirect(new moodle_url('/local/ustar/forced_retraining.php', [
+            'userid' => $targetuserid,
+            'cancelled' => 1,
         ]));
     }
 }
@@ -74,6 +88,7 @@ $data = [
     'sesskey' => sesskey(),
     'assigned' => $assigned,
     'assignedok' => $assigned > 0,
+    'cancelledok' => $cancelled,
 ];
 
 $PAGE->set_context($context);

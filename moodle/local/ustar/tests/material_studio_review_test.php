@@ -27,6 +27,19 @@ final class material_studio_review_test extends \advanced_testcase {
         $this->assertFalse($DB->record_exists('local_ustar_workflow_events', ['entitytype' => 'studio_assessment']));
     }
 
+    public function test_player_option_index_is_graded_without_text_round_trip(): void {
+        global $DB, $USER;
+        $item = $this->create_assessment();
+        $DB->set_field('local_ustar_content', 'status', content::STATUS_PUBLISHED, ['id' => $item['id']]);
+
+        $result = material_studio::submit_assessment(
+            (int)$item['id'], (int)$USER->id, [1], (int)$item['sourceversion']
+        );
+
+        $this->assertTrue($result['passed']);
+        $this->assertSame(100, $result['score']);
+    }
+
     public function test_learner_projection_omits_answers_and_inactive_users_lose_access(): void {
         global $DB;
         $item = $this->create_assessment();

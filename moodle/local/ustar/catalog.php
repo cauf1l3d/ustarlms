@@ -89,6 +89,10 @@ $data = [
     'hasbreadcrumbs' => !empty($breadcrumbs),
     'detail' => $detail,
     'hasdetail' => (bool)$detail,
+    'canmanage' => $canmanage,
+    'editorurl' => '#catalog-editor',
+    'editurl' => $detail ? (new moodle_url('/local/ustar/catalog.php',
+        ['edit' => (int)$detail['id']]))->out(false) . '#catalog-editor' : '',
     'fallbackimage' => $OUTPUT->image_url('brand/ustar-course-placeholder', 'theme_ustar')->out(false),
     'catalogicon' => \local_ustar\ui::icon('knowledge', 'u-feature-icon'),
     'stats' => [
@@ -141,7 +145,7 @@ if ($canmanage) {
         return $editing && isset($editing->$name) ? (string)$editing->$name : $default;
     };
     $currenttype = $value('itemtype', \local_ustar\catalog::TYPE_GROUP);
-    $currentparent = (int)$value('parentid', '0');
+    $currentparent = (int)$value('parentid', (string)$parent);
     $attributes = $value('attributesjson');
     if ($attributes !== '') {
         $decoded = json_decode($attributes, true);
@@ -153,7 +157,8 @@ if ($canmanage) {
         }
     }
     if ($failedinput !== null) { $attributes = $value('attributes'); }
-    echo html_writer::start_div('u-catalog-editor');
+    echo html_writer::start_tag('section', ['class' => 'u-catalog-editor', 'id' => 'catalog-editor',
+        'aria-label' => 'Редактор каталога']);
     echo html_writer::tag('h2', $editing ? 'Редактирование карточки' : 'Новая карточка каталога');
     echo html_writer::tag('p', 'HR может прямо здесь создавать и менять разделы, категории, карточки, свойства, изображения и материалы. История каждой карточки сохраняется.');
     echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data', 'action' => (new moodle_url('/local/ustar/catalog.php'))->out(false)]);
@@ -198,7 +203,7 @@ if ($canmanage) {
     echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'sourcefile']);
     echo html_writer::tag('label', 'Порядок');
     echo html_writer::empty_tag('input', ['type' => 'number', 'name' => 'sortorder', 'value' => $value('sortorder', '0'), 'class' => 'form-control']);
-    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить карточку', 'class' => 'btn btn-primary']);
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить карточку', 'class' => 'u-btn u-btn--primary']);
     echo html_writer::end_tag('form');
     if ($editing && (int)$editing->id > 0) {
         echo html_writer::start_tag('form', ['method' => 'post', 'action' => (new moodle_url('/local/ustar/catalog.php'))->out(false)]);
@@ -219,6 +224,6 @@ if ($canmanage) {
         ));
     }
     echo html_writer::end_tag('ul');
-    echo html_writer::end_div();
+    echo html_writer::end_tag('section');
 }
 echo $output->footer();

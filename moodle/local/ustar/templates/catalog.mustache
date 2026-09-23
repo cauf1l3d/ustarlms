@@ -5,6 +5,7 @@
     <h1>{{title}}</h1>
     <p>{{subtitle}}</p>
   </div>
+  {{#canmanage}}<a class="u-btn u-btn--primary" href="{{editorurl}}">+ Добавить карточку</a>{{/canmanage}}
   {{{catalogicon}}}
 </header>
 
@@ -37,6 +38,7 @@
   <div>
     <p class="u-page-kicker">{{detail.typelabel}}</p>
     <h2>{{detail.title}}</h2>
+    {{#canmanage}}<a class="u-btn" href="{{editurl}}">Редактировать карточку</a>{{/canmanage}}
     {{#detail.sku}}<span class="u-status-pill">SKU {{detail.sku}}</span>{{/detail.sku}}
     {{#detail.summary}}<p>{{detail.summary}}</p>{{/detail.summary}}
     {{#detail.descriptionhtml}}<div class="u-richtext">{{{detail.descriptionhtml}}}</div>{{/detail.descriptionhtml}}

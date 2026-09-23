@@ -38,6 +38,33 @@ body.u-materials-fullwidth-page .u-materials-list {
     align-items: stretch;
 }
 
+/* Dropdown actions and their labels must not be clipped by the catalogue scroll area. */
+body.u-materials-fullwidth-page .u-materials-catalog,
+body.u-materials-fullwidth-page .u-materials-list {
+    max-height: none;
+    overflow: visible;
+}
+
+body.u-materials-fullwidth-page .u-material-row-delete {
+    position: absolute;
+    right: 9px;
+    bottom: 8px;
+    z-index: 2;
+    margin: 0;
+}
+
+body.u-materials-fullwidth-page .u-material-row-delete .u-btn {
+    padding: 5px 8px;
+    border: 1px solid var(--u-border);
+    background: var(--u-surface);
+    color: var(--u-danger-fg);
+    font-size: 12px;
+}
+
+body.u-materials-fullwidth-page .u-material-row {
+    padding-bottom: 44px !important;
+}
+
 
 /* One catalog object = one compact tile. */
 body.u-materials-fullwidth-page .u-material-row-shell {
@@ -817,4 +844,3 @@ body.u-materials-fullwidth-page
 .u-win-file--quiz {
     --u-file-accent: #c99512;
 }
-

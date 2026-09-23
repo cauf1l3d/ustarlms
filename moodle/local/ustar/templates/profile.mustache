@@ -13,6 +13,11 @@
             <div class="u-profile-meta">
                 <span>{{position}}</span><span>{{department}}</span><span>{{email}}</span>
             </div>
+            {{#haspersonalgrade}}
+            <a class="u-profile-grade" href="{{personalgradeurl}}">
+                <span>Мой грейд</span><strong>{{personalgradelabel}}</strong><span aria-hidden="true">→</span>
+            </a>
+            {{/haspersonalgrade}}
         </div>
         <div class="u-profile-level">
             <span>Уровень</span><strong>{{level}}</strong><small>{{xp}} XP</small>

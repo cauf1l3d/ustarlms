@@ -1382,6 +1382,9 @@ $data = [
     'canmanage' =>
         $canmanage,
 
+    'structureurl' =>
+        (new moodle_url('/local/ustar/organization_settings.php'))->out(false),
+
     'routestudiourl' =>
         (
             new moodle_url(

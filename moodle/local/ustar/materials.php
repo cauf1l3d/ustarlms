@@ -1113,6 +1113,9 @@ foreach ($records as $record) {
         'canmove' =>
             $canmanage,
 
+        'candelete' =>
+            $canmanage && (string)$record->status !== 'archived',
+
         'folderoptions' =>
             array_values(array_filter(
                 $movefolders,

@@ -2,6 +2,12 @@ name: USTAR review gate
 
 on:
   workflow_dispatch:
+    inputs:
+      full_rc:
+        description: 'Run the full release candidate gate on this exact commit'
+        required: true
+        type: boolean
+        default: false
   pull_request:
     branches: [main, 'integration/**', 'codex/**']
   push:
@@ -67,6 +73,8 @@ jobs:
       - run: node tests/http-smoke.mjs
 
   moodle-db:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.full_rc }}
+    needs: [source, frontend, rollback, prepare-rc]
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -96,6 +104,7 @@ jobs:
         run: docker compose -f tests/stage/compose.yaml down --volumes
 
   rollback:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.full_rc }}
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -114,9 +123,30 @@ jobs:
         if: always()
         run: docker compose -f tests/stage/rollback-compose.yaml down --volumes
 
+  prepare-rc:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.full_rc }}
+    needs: [source, frontend, rollback]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Verify packaged candidate matches the tested commit
+        env:
+          CANDIDATE_SHA: ${{ github.sha }}
+        run: |
+          python3 scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
+          git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle frontend
+          python3 -c 'import json,os; d=json.load(open("artifacts/release-manifest.json")); assert os.environ["CANDIDATE_SHA"] == d["source_commit"], "manifest does not identify tested SHA"'
+          sha256sum artifacts/ustar-source.tar.gz artifacts/release-manifest.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: frozen-release-candidate
+          path: artifacts/
+
   gate:
-    if: always()
-    needs: [source, frontend, moodle-db, rollback]
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.full_rc }}
+    needs: [source, frontend, rollback, prepare-rc, moodle-db]
     runs-on: ubuntu-24.04
     steps:
       - name: Require every check to pass
@@ -125,8 +155,10 @@ jobs:
           FRONTEND: ${{ needs.frontend.result }}
           MOODLE: ${{ needs.moodle-db.result }}
           ROLLBACK: ${{ needs.rollback.result }}
+          PREPARE: ${{ needs.prepare-rc.result }}
         run: |
           test "$SOURCE" = success
           test "$FRONTEND" = success
           test "$MOODLE" = success
           test "$ROLLBACK" = success
+          test "$PREPARE" = success

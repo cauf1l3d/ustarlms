@@ -477,9 +477,9 @@ if (!$canadmin && $canhr) {
         ['label'=>'Панель HR','short'=>'HR','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>in_array($pagepath,$hrpages,true)],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)],
+        ['label'=>'Оргструктура','short'=>'Структура','url'=>(new moodle_url('/local/ustar/organization_settings.php'))->out(false),'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/organization_settings.php'],
         ['label'=>'Материалы','short'=>'Материалы','url'=>(new moodle_url('/local/ustar/materials.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>in_array($pagepath,$materialpages,true)],
         ['label'=>'Контроль','short'=>'Контроль','url'=>(new moodle_url('/local/ustar/operations.php'))->out(false),'icon'=>$icons['growth'],'active'=>in_array($pagepath,$operationpages,true)],
-        ['label'=>'Состояние','short'=>'Статус','url'=>(new moodle_url('/local/ustar/stage6_status.php'))->out(false),'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/stage6_status.php'],
         ['label'=>'Проверка аттестаций','short'=>'Проверка','url'=>(new moodle_url('/local/ustar/hr_quiz_grading.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,['/local/ustar/hr_quiz_grading.php','/local/ustar/hr_quiz_attempt.php'],true)],
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
@@ -673,6 +673,8 @@ $PAGE->requires->js_call_amd('theme_ustar/shell', 'init');
 
 $viewasactive = class_exists('\local_ustar\view_as') && \local_ustar\view_as::active();
 $viewasposition = '';
+// A manager sees the decision queue even if their HR/executive role selects a different shell.
+$canapprovegrades = !$viewasactive && \local_ustar\organization_model::is_manager((int)$USER->id);
 if ($viewasactive) {
     $pid = \local_ustar\view_as::position_id();
     foreach ((\local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE)['positions'] ?? []) as $vp) {
@@ -713,6 +715,8 @@ if ($guiderole !== '') {
 }
 
 $templatecontext = [
+    'canapprovegrades' => $canapprovegrades,
+    'gradeapprovalsurl' => (new moodle_url('/local/ustar/grades.php', ['view' => 'team']))->out(false),
     'routecontinue' => $routecontinue,
     'profilesettingsurl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
     'logouturl' => (new moodle_url('/login/logout.php', ['sesskey' => sesskey()]))->out(false),

@@ -287,6 +287,16 @@
                 </details>
                 {{/canmove}}
 
+                {{#candelete}}
+                <form method="post" class="u-material-row-delete" onsubmit="return confirm('Убрать материал из рабочего каталога? Его история сохранится.');">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="contentid" value="{{id}}">
+                    <input type="hidden" name="parent" value="{{currentparentid}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <button class="u-btn u-btn--small" type="submit" aria-label="Удалить {{title}} из каталога">Удалить</button>
+                </form>
+                {{/candelete}}
+
                 </div>
 
                 {{/materials}}

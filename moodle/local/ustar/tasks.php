@@ -142,7 +142,7 @@ $taskform = static function(array $task, array $actions) use ($tab): void {
             echo html_writer::tag('textarea', '', ['name' => 'comment', 'id' => 'result-' . (int)$task['id'],
                 'rows' => 3, 'class' => 'form-control']);
         }
-        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => $label, 'class' => 'btn']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => $label, 'class' => 'u-btn']);
         echo html_writer::end_tag('form');
     }
     if (empty($task['private'])) {
@@ -177,7 +177,7 @@ if ($tab === 'notebook') {
         'value' => $formvalue('note', 0, 'title'), 'class' => 'form-control']);
     echo html_writer::tag('textarea', s($formvalue('note', 0, 'description')),
         ['name' => 'description', 'rows' => 4, 'class' => 'form-control']);
-    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить в блокнот', 'class' => 'btn btn-primary']);
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить в блокнот', 'class' => 'u-btn u-btn--primary']);
     echo html_writer::end_tag('form');
     foreach ($notes as $task) {
         $taskform($task, (string)$task['status'] === 'open' ? ['complete' => 'Отметить выполненной'] : []);
@@ -194,7 +194,7 @@ if ($tab === 'notebook') {
         echo html_writer::tag('label', 'Текст', ['for' => 'note-body-' . $task['id']]);
         echo html_writer::tag('textarea', s($formvalue('editnote', $task['id'], 'description', $task['descriptionplain'])), ['name' => 'description',
             'id' => 'note-body-' . $task['id'], 'rows' => 4, 'class' => 'form-control']);
-        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить', 'class' => 'btn btn-primary']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить', 'class' => 'u-btn u-btn--primary']);
         echo html_writer::end_tag('form');
         echo html_writer::end_tag('details');
         echo html_writer::start_tag('form', ['method' => 'post']);
@@ -203,7 +203,7 @@ if ($tab === 'notebook') {
         }
         echo html_writer::tag('label', html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'confirmdelete',
             'value' => 1, 'required' => 'required']) . ' Удалить эту заметку без восстановления');
-        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Удалить', 'class' => 'btn btn-outline-danger']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Удалить', 'class' => 'u-btn u-btn--quiet']);
         echo html_writer::end_tag('form');
     }
 }
@@ -234,7 +234,7 @@ if ($tab === 'outgoing') {
         echo html_writer::empty_tag('input', ['type' => 'date', 'name' => 'duedate', 'id' => 'task-duedate',
             'value' => $formvalue('assign', 0, 'duedate'), 'class' => 'form-control']);
         echo html_writer::tag('label', html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'requirereview', 'value' => 1]) . ' Нужна проверка результата');
-        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Назначить', 'class' => 'btn btn-primary']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Назначить', 'class' => 'u-btn u-btn--primary']);
         echo html_writer::end_tag('form');
     }
     foreach ($outgoing as $task) {

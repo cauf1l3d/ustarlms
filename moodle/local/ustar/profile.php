@@ -57,6 +57,7 @@ $skills = $profile['skills'];
 $readiness = $profile['readiness'];
 $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
 $registrationdepartments = \local_ustar\registration_service::departments();
+$personalgrade = $pending ? ['enabled' => false] : \local_ustar\grade_promotion::current((int)$USER->id);
 
 $badges = [];
 foreach (($dashboard['badges'] ?? []) as $badge) {
@@ -75,6 +76,9 @@ $data = [
     'photoediturl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
     'hasposition' => $identity['positionid'] !== '',
     'position' => $identity['position'] ?: 'Должность пока не назначена',
+    'haspersonalgrade' => !empty($personalgrade['enabled']),
+    'personalgradelabel' => (string)($personalgrade['label'] ?? ''),
+    'personalgradeurl' => (new moodle_url('/local/ustar/grades.php'))->out(false),
     'department' => $identity['department'] ?: 'Без подразделения',
     'lastaccess' => !empty($identity['lastaccess']) ? userdate((int)$identity['lastaccess'], '%d.%m.%Y %H:%M') : '—',
     'accounttypelabel' => $identity['accounttypelabel'],

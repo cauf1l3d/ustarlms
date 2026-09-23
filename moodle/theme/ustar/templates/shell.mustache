@@ -105,6 +105,10 @@
 
         <div class="u-topbar__actions">
 
+            {{#canapprovegrades}}
+            <a class="u-grade-approvals-link" href="{{gradeapprovalsurl}}">Согласовать грейд</a>
+            {{/canapprovegrades}}
+
             {{#guiderole}}
             <a
                 class="u-iconbtn u-guide-trigger"

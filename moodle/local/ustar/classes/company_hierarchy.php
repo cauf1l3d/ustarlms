@@ -27,7 +27,11 @@ final class company_hierarchy {
             $me = org::person($viewerid);
             $access = access_context::for_user($viewerid);
             $ownid = (string)($me['departmentid'] ?? '');
-            $ownblock = $ownid !== '' ? self::business_block((string)($me['department'] ?? '')) : '';
+            $configured = people::department_map(structure::get(structure::NAME_STRUCTURE));
+            $ownblock = (string)($configured[$ownid]['block'] ?? '');
+            if ($ownblock === '' && $ownid !== '') {
+                $ownblock = self::business_block((string)($me['department'] ?? ''));
+            }
             $mode = !empty($access['teamread']) ? 'leaders' : 'branch';
         }
         if ($viewerid !== null && !$admin) {
@@ -55,7 +59,8 @@ final class company_hierarchy {
         $seen = [];
         foreach ($departments as $department) {
             $name = (string)($department['name'] ?? 'Без подразделения');
-            $key = self::business_block($name);
+            $key = (string)($department['block'] ?? '');
+            if (!isset($blocks[$key])) { $key = self::business_block($name); }
             $row = ['id' => (string)($department['id'] ?? ''), 'name' => $name,
                 'heads' => [], 'members' => [], 'groupsmap' => [], 'groups' => [], 'people' => 0];
             $members = $department['members'] ?? [];
@@ -228,6 +233,7 @@ final class company_hierarchy {
         foreach ($departmentmap as $id => $department) {
             $rows[$id] = [
                 'id' => (string)$id,
+                'block' => (string)($department['block'] ?? ''),
                 'name' =>
                     (string)(
                         $department['name']

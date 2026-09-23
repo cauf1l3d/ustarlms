@@ -25,6 +25,12 @@ $capabilities = [
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => [],
     ],
+    'local/ustar:approveregistration' => [
+        'riskbitmask'  => RISK_PERSONAL,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [],
+    ],
     'local/ustar:executive' => [
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',

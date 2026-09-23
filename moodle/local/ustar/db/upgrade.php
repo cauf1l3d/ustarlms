@@ -4300,5 +4300,30 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082748, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026082749) {
+        // Keep email auth enabled for existing identities but close Moodle's
+        // email signup. USTAR owns new account + HRD request creation.
+        if ((string)($CFG->registerauth ?? '') === 'email') {
+            set_config('registerauth', '');
+        }
+        require_once($CFG->libdir . '/authlib.php');
+        $enabledauth = get_enabled_auth_plugins(true);
+        if (!in_array('manual', $enabledauth, true)) {
+            $enabledauth[] = 'manual';
+            set_config('auth', implode(',', array_values(array_unique($enabledauth))));
+        }
+        require_once($CFG->libdir . '/accesslib.php');
+        update_capabilities('local_ustar');
+        $context = \context_system::instance();
+        foreach (['ustar_hrd', 'ustar_superadmin'] as $shortname) {
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if ($roleid) {
+                assign_capability('local/ustar:approveregistration', CAP_ALLOW, $roleid, $context->id, true);
+            }
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026082749, 'local', 'ustar');
+    }
+
 return true;
 }

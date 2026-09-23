@@ -84,6 +84,7 @@
                         <span class="u-staffing-type">{{typelabel}}</span>
                         <h3>{{fullname}}</h3>
                         <p>{{department}} · {{position}}</p>
+                        {{#isregistration}}<p>Логин: {{registrationusername}} · Email: {{registrationemail}}</p>{{/isregistration}}
                     </div>
                     <span class="u-staffing-status is-{{status}}">{{statuslabel}}</span>
                 </div>
@@ -137,6 +138,14 @@
                         <label>Email<input type="email" name="email" required autocomplete="off"></label>
                         <label>Временный пароль<input type="password" name="password" required autocomplete="new-password"></label>
                         {{/ishire}}
+                        {{#isregistration}}
+                        <label>Должность в заявленном подразделении
+                            <select name="positionid" required>
+                                <option value="">Выберите должность</option>
+                                {{#departmentpositions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/departmentpositions}}
+                            </select>
+                        </label>
+                        {{/isregistration}}
                         <label>Комментарий HRD<textarea name="reviewcomment" rows="2"></textarea></label>
                         <button class="u-btn u-btn--primary" type="submit">Одобрить и исполнить</button>
                     </form>
@@ -153,6 +162,6 @@
             {{/requests}}
         </div>
         {{/hasrequests}}
-        {{^hasrequests}}<div class="u-empty-state"><h3>Заявок пока нет</h3><p>Новая заявка появится здесь сразу после отправки руководителем.</p></div>{{/hasrequests}}
+        {{^hasrequests}}<div class="u-empty-state"><h3>Заявок пока нет</h3><p>Новые заявки руководителей и регистрации сотрудников появятся здесь после отправки.</p></div>{{/hasrequests}}
     </section>
 </div>

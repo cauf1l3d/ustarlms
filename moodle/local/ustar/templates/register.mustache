@@ -1,0 +1,22 @@
+<div class="u-register">
+    <p class="u-page-kicker">USTAR Академия</p>
+    <h2>Новая учётная запись</h2>
+    <p>Укажите подразделение. HRD проверит заявку и назначит должность; до подтверждения учебный маршрут закрыт.</p>
+    {{#error}}<div class="u-inline-notice" role="alert">{{error}}</div>{{/error}}
+    <form method="post" autocomplete="on">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <div class="u-register-trap" aria-hidden="true"><label>Сайт<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label>Имя<input name="firstname" value="{{values.firstname}}" autocomplete="given-name" required maxlength="100"></label>
+        <label>Фамилия<input name="lastname" value="{{values.lastname}}" autocomplete="family-name" required maxlength="100"></label>
+        <label>Логин<input name="username" value="{{values.username}}" autocomplete="username" required maxlength="100"></label>
+        <label>Email<input name="email" type="email" value="{{values.email}}" autocomplete="email" required maxlength="100"></label>
+        <label>Подразделение<select name="departmentid" required>
+            <option value="">Выберите подразделение</option>
+            {{#departments}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/departments}}
+        </select></label>
+        <label>Пароль<input name="password" type="password" autocomplete="new-password" required></label>
+        <label>Повторите пароль<input name="passwordconfirm" type="password" autocomplete="new-password" required></label>
+        <button class="btn btn-primary" type="submit">Создать профиль и отправить заявку</button>
+    </form>
+    <p class="u-register-login">Уже есть профиль? <a href="{{loginurl}}">Войти</a></p>
+</div>

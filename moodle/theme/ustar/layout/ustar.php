@@ -680,6 +680,16 @@ if ($viewasactive) {
     }
 }
 
+if (class_exists('\local_ustar\employment') && !empty($USER->id)
+        && \local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\employment::PENDING) {
+    $homeurl = new moodle_url('/local/ustar/profile.php');
+    $productname = 'Профиль · ожидает подтверждения';
+    $navitems = [[
+        'label' => 'Мой профиль', 'short' => 'Профиль', 'url' => $homeurl->out(false),
+        'icon' => $icons['home'], 'active' => true,
+    ]];
+}
+
 $mobilenavitems = array_values(array_filter($navitems, static function(array $item): bool {
     return !array_key_exists('mobile', $item) || !empty($item['mobile']);
 }));

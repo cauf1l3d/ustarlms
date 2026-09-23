@@ -5,6 +5,164 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Self-registration bridge into the existing staffing workflow. */
 final class registration_service {
+    /** Return public choices only; a self-declared department never grants a role. */
+    public static function departments(): array {
+        $structure = structure::get(structure::NAME_STRUCTURE);
+        $departments = people::department_map($structure);
+        $result = [];
+        foreach ($departments as $id => $department) {
+            if ($id !== '' && !empty($department['name'])) {
+                $result[] = ['id' => (string)$id, 'name' => (string)$department['name']];
+            }
+        }
+        return $result;
+    }
+
+    /** Create one Moodle identity and one pending HRD request in the same transaction. */
+    public static function register(array $input): int {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/user/lib.php');
+        require_once($CFG->libdir . '/moodlelib.php');
+
+        // Limit anonymous creation attempts across PHP workers without
+        // writing IP addresses into the personnel records.
+        self::throttle();
+
+        $username = \core_text::strtolower(trim((string)($input['username'] ?? '')));
+        $email = trim((string)($input['email'] ?? ''));
+        $firstname = trim((string)($input['firstname'] ?? ''));
+        $lastname = trim((string)($input['lastname'] ?? ''));
+        $departmentid = trim((string)($input['departmentid'] ?? ''));
+        $password = (string)($input['password'] ?? '');
+        if ($username === '' || $username !== clean_param($username, PARAM_USERNAME)
+                || strlen($username) > 100 || $email === '' || strlen($email) > 100
+                || !validate_email($email) || $firstname === '' || $lastname === ''
+                || $firstname !== clean_param($firstname, PARAM_NOTAGS)
+                || $lastname !== clean_param($lastname, PARAM_NOTAGS)
+                || \core_text::strlen($firstname) > 100 || \core_text::strlen($lastname) > 100) {
+            throw new \invalid_parameter_exception('Проверьте логин, имя, фамилию и email.');
+        }
+        $departments = array_column(self::departments(), 'name', 'id');
+        if ($departmentid === '' || !array_key_exists($departmentid, $departments)) {
+            throw new \invalid_parameter_exception('Выберите подразделение из справочника.');
+        }
+        $passworderror = '';
+        if ($password === '' || !check_password_policy($password, $passworderror)) {
+            throw new \invalid_parameter_exception($passworderror ?: 'Пароль не соответствует политике безопасности.');
+        }
+        $identitylock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('registration-email-' . hash('sha256', \core_text::strtolower($email)), 10);
+        if (!$identitylock) {
+            throw new \moodle_exception('Регистрация занята. Повторите попытку позже.');
+        }
+        try {
+            if ($DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])
+                    || $DB->record_exists_select('user', 'LOWER(email) = LOWER(:email) AND deleted = 0',
+                        ['email' => $email])) {
+                throw new \invalid_parameter_exception('Логин или email уже используется.');
+            }
+
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $userid = (int)user_create_user((object)[
+                'auth' => 'manual', 'confirmed' => 1, 'mnethostid' => $CFG->mnet_localhost_id,
+                'username' => $username, 'password' => $password, 'email' => $email,
+                'firstname' => $firstname, 'lastname' => $lastname, 'suspended' => 0,
+            ], true, false);
+            accounts::set_type($userid, accounts::TYPE_EMPLOYEE);
+            employment::register_pending($userid);
+            self::submit_department($userid, $departmentid);
+                $transaction->allow_commit();
+                return $userid;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $identitylock->release();
+        }
+    }
+
+    private static function throttle(): void {
+        $address = (string)getremoteaddr();
+        $key = hash('sha256', $address !== '' ? $address : 'unknown');
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
+        $lock = $factory->get_lock('registration-ip-' . $key, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Регистрация занята. Повторите попытку позже.');
+        }
+        try {
+            $cache = \cache::make('local_ustar', 'registration_throttle');
+            $now = time();
+            $item = $cache->get($key);
+            if (!is_array($item) || $now - (int)($item['started'] ?? 0) >= 900) {
+                $item = ['started' => $now, 'count' => 0];
+            }
+            if ((int)$item['count'] >= 30) {
+                throw new \moodle_exception('Слишком много попыток. Повторите через 15 минут.');
+            }
+            $item['count']++;
+            $cache->set($key, $item);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    /** Department is a claim; the position is chosen by HRD during review. */
+    public static function request_department(int $userid, string $departmentid): int {
+        global $USER;
+        if ((int)$USER->id !== $userid) {
+            throw new \invalid_parameter_exception('Заявку можно отправить только из своего профиля.');
+        }
+        view_as::assert_writable();
+        return self::submit_department($userid, $departmentid);
+    }
+
+    private static function submit_department(int $userid, string $departmentid): int {
+        global $DB;
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('registration-request-' . $userid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Заявка уже отправляется. Повторите попытку.');
+        }
+        try {
+            $departments = array_column(self::departments(), 'name', 'id');
+            if (!isset($departments[$departmentid])) {
+                throw new \invalid_parameter_exception('Подразделение не найдено.');
+            }
+            if (!accounts::is_business_account($userid) || employment::resolve($userid)['status'] !== employment::PENDING) {
+                throw new \invalid_parameter_exception('Регистрация уже обработана или недоступна.');
+            }
+            $existing = $DB->get_records('local_ustar_staff_requests', [
+                'requesttype' => staffing_requests::TYPE_REGISTRATION,
+                'employeeid' => $userid, 'status' => staffing_requests::STATUS_PENDING,
+            ], 'id DESC', '*', 0, 1);
+            if ($existing) {
+                $request = reset($existing);
+                if ((string)$request->departmentid !== $departmentid) {
+                    throw new \invalid_parameter_exception('Заявка на другое подразделение уже ожидает решения.');
+                }
+                return (int)$request->id;
+            }
+            $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
+            $now = time();
+            $id = (int)$DB->insert_record('local_ustar_staff_requests', (object)[
+                'requesttype' => staffing_requests::TYPE_REGISTRATION,
+                'departmentid' => $departmentid, 'positionid' => '', 'employeeid' => $userid,
+                'firstname' => (string)$user->firstname, 'lastname' => (string)$user->lastname,
+                'requesteddate' => $now, 'comment' => null, 'reason' => null,
+                'status' => staffing_requests::STATUS_PENDING, 'requestedby' => $userid,
+                'reviewedby' => null, 'reviewcomment' => null, 'createduserid' => null,
+                'timecreated' => $now, 'timemodified' => $now, 'reviewedat' => null,
+            ]);
+            people::log_action($userid, $userid, 'registration_requested', [
+                'requestid' => $id, 'departmentid' => $departmentid,
+            ]);
+            self::notify_reviewers($id, $departmentid, fullname($user));
+            return $id;
+        } finally {
+            $lock->release();
+        }
+    }
     public static function initialize(int $userid): void {
         global $DB;
         $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], 'id,auth', IGNORE_MISSING);
@@ -16,8 +174,8 @@ final class registration_service {
 
     public static function submit(int $userid, string $positionid): int {
         global $DB, $USER;
-        // A few import/test paths create users without dispatching observers;
-        // email-auth users are still safely lowered before accepting a request.
+        // Existing email-auth accounts from the old registration flow may still
+        // be pending; keep their saved position requests readable for HRD.
         self::initialize($userid);
         if ((int)$USER->id !== $userid || $userid <= 1 || !accounts::is_business_account($userid)) {
             throw new \invalid_parameter_exception('Заявку можно отправить только из своего профиля.');
@@ -75,7 +233,7 @@ final class registration_service {
             'requestid' => $id, 'positionid' => $positionid,
             'departmentid' => (string)$position['department'],
         ]);
-        self::notify_reviewers($id, $positionid, (string)$position['department'], fullname($user));
+        self::notify_reviewers($id, (string)$position['department'], fullname($user));
         return $id;
     }
 
@@ -90,16 +248,13 @@ final class registration_service {
         return ['employment' => $employment, 'request' => $request];
     }
 
-    private static function notify_reviewers(int $requestid, string $positionid,
-            string $departmentid, string $fullname): void {
-        global $DB;
+    private static function notify_reviewers(int $requestid, string $departmentid, string $fullname): void {
         $recipients = [];
-        foreach ($DB->get_records('user', ['deleted' => 0, 'suspended' => 0], '', 'id') as $candidate) {
+        foreach (get_users_by_capability(\context_system::instance(),
+                'local/ustar:approveregistration', 'u.id', 'u.id ASC') ?: [] as $candidate) {
             $candidateid = (int)$candidate->id;
-            if (!has_capability('local/ustar:viewteam', \context_system::instance(), $candidateid)) continue;
-            $scope = organization_model::manager_scope($candidateid);
-            if (!empty($scope['allowed']) && (string)$scope['departmentid'] === $departmentid
-                    && in_array($positionid, array_column($scope['positions'] ?? [], 'id'), true)) {
+            if (team_access::active_actor($candidateid)
+                    && has_capability('local/ustar:hrmanage', \context_system::instance(), $candidateid)) {
                 $recipients[$candidateid] = true;
             }
         }
@@ -108,8 +263,8 @@ final class registration_service {
                 'userid' => $recipientid,
                 'severity' => 'normal',
                 'eventtype' => 'registration_requested',
-                'subject' => 'Новая заявка на подтверждение должности',
-                'message' => $fullname . ' указал должность для подтверждения.',
+                'subject' => 'Новая заявка на регистрацию сотрудника',
+                'message' => $fullname . ' указал подразделение ' . $departmentid . ' для подтверждения HRD.',
                 'actionurl' => (new \moodle_url('/local/ustar/staffing.php'))->out(false),
                 'idempotencykey' => 'registration-requested:' . $requestid . ':' . $recipientid,
             ]);

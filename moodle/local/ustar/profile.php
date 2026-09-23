@@ -11,9 +11,9 @@ require_capability('local/ustar:use', $context);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && optional_param('action', '', PARAM_ALPHANUMEXT) === 'registrationrequest') {
     require_sesskey();
     try {
-        \local_ustar\registration_service::submit(
+        \local_ustar\registration_service::request_department(
             (int)$USER->id,
-            required_param('positionid', PARAM_ALPHANUMEXT)
+            required_param('departmentid', PARAM_ALPHANUMEXT)
         );
         redirect(new moodle_url('/local/ustar/profile.php'),
             'Заявка отправлена руководителю подразделения.', null,
@@ -25,24 +25,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && optional_param('action', '', PARAM_
 
 $PAGE->set_context($context);
 
-$profile = \local_ustar\employee_profile::build((int)$USER->id);
-$dashboard = \local_ustar\native_data::dashboard();
+$registration = \local_ustar\registration_service::state((int)$USER->id);
+$registrationrequest = $registration['request'];
+$employmentstatus = (string)$registration['employment']['status'];
+$pending = $employmentstatus === \local_ustar\employment::PENDING;
+if ($pending) {
+    // Pending accounts have no approved job and must not invoke learner or
+    // reward providers while merely viewing their profile.
+    $user = $DB->get_record('user', ['id' => $USER->id], '*', MUST_EXIST);
+    $profile = [
+        'identity' => [
+            'fullname' => fullname($user), 'firstname' => $user->firstname,
+            'lastname' => $user->lastname, 'email' => $user->email,
+            'positionid' => '', 'position' => '', 'department' => '',
+            'lastaccess' => (int)$user->lastaccess, 'accounttypelabel' => 'Сотрудник',
+        ],
+        'learning' => ['assigned' => 0, 'completed' => 0, 'inprogress' => 0, 'items' => []],
+        'knowledge' => ['assigned' => 0, 'pending' => 0, 'percent' => 0],
+        'skills' => ['required' => 0, 'confirmed' => 0, 'gaps' => 0, 'items' => []],
+        'readiness' => ['percent' => 0],
+    ];
+    $dashboard = [];
+} else {
+    $profile = \local_ustar\employee_profile::build((int)$USER->id);
+    $dashboard = \local_ustar\native_data::dashboard();
+}
 $identity = $profile['identity'];
 $learning = $profile['learning'];
 $knowledge = $profile['knowledge'];
 $skills = $profile['skills'];
 $readiness = $profile['readiness'];
-$registration = \local_ustar\registration_service::state((int)$USER->id);
-$registrationrequest = $registration['request'];
-$employmentstatus = (string)$registration['employment']['status'];
 $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
-$registrationpositions = [];
-foreach ($structure['positions'] ?? [] as $position) {
-    $registrationpositions[] = [
-        'id' => (string)$position['id'],
-        'name' => (string)($position['name'] ?? $position['id']),
-    ];
-}
+$registrationdepartments = \local_ustar\registration_service::departments();
 
 $badges = [];
 foreach (($dashboard['badges'] ?? []) as $badge) {
@@ -64,15 +78,15 @@ $data = [
     'department' => $identity['department'] ?: 'Без подразделения',
     'lastaccess' => !empty($identity['lastaccess']) ? userdate((int)$identity['lastaccess'], '%d.%m.%Y %H:%M') : '—',
     'accounttypelabel' => $identity['accounttypelabel'],
-    'employmentpending' => $employmentstatus === \local_ustar\employment::PENDING,
+    'employmentpending' => $pending,
     'registrationrequested' => $registrationrequest
         && (string)$registrationrequest->status === \local_ustar\staffing_requests::STATUS_PENDING,
     'registrationrejected' => $registrationrequest
         && (string)$registrationrequest->status === \local_ustar\staffing_requests::STATUS_REJECTED,
     'registrationreviewcomment' => $registrationrequest
         ? (string)($registrationrequest->reviewcomment ?? '') : '',
-    'registrationpositions' => $registrationpositions,
-    'hasregistrationpositions' => !empty($registrationpositions),
+    'registrationdepartments' => $registrationdepartments,
+    'hasregistrationdepartments' => !empty($registrationdepartments),
     'sesskey' => sesskey(),
 
     'assigned' => (int)$learning['assigned'],

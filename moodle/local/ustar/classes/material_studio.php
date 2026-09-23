@@ -270,6 +270,7 @@ final class material_studio {
                     . '<manifest identifier="USTAR-' . $contentid . '-v' . (int)$item['sourceversion'] . '" version="1.2"'
                     . ' xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"'
                     . ' xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2">'
+                    . '<metadata><schema>ADL SCORM</schema><schemaversion>1.2</schemaversion></metadata>'
                     . '<organizations default="USTAR"><organization identifier="USTAR">'
                     . '<title>' . htmlspecialchars((string)$item['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</title>'
                     . '<item identifier="USTAR-ITEM" identifierref="USTAR-RESOURCE">'

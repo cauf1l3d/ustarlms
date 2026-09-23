@@ -110,7 +110,7 @@ echo html_writer::select([
     'course' => 'Курс',
     'scorm' => 'SCORM-курс',
     'assessment' => 'Аттестация',
-], 'kind', (string)$editing['kind'], false, ['class' => 'form-select']);
+], 'kind', (string)$editing['kind'], false, ['class' => 'form-select', 'id' => 'studio-kind']);
 echo html_writer::tag('label', 'Название');
 echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required',
     'value' => (string)$editing['title'], 'class' => 'form-control']);
@@ -118,9 +118,11 @@ echo html_writer::tag('label', 'Краткое описание');
 echo html_writer::tag('textarea', s((string)$editing['summary']), ['name' => 'summary', 'rows' => 2, 'class' => 'form-control']);
 echo html_writer::tag('label', 'План курса');
 echo html_writer::tag('textarea', s((string)$editing['outline']), ['name' => 'outline', 'rows' => 3, 'class' => 'form-control']);
+echo html_writer::start_div('', ['id' => 'studio-course-fields']);
 echo html_writer::tag('label', 'Редактор содержимого');
 echo html_writer::tag('textarea', s((string)$editing['body']), ['name' => 'body', 'rows' => 12, 'class' => 'form-control',
     'placeholder' => 'Добавьте текст, списки, ссылки и оформление курса.']);
+echo html_writer::end_div();
 echo html_writer::start_div('u-studio-scorm-pages', ['id' => 'studio-scorm-pages']);
 echo html_writer::tag('h3', 'Страницы SCORM');
 echo html_writer::tag('p', 'Добавьте страницы в порядке прохождения. Для обычного импорта ZIP страницы заполнять не требуется.');
@@ -153,14 +155,18 @@ echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'buildscor
 echo ' Собрать и импортировать SCORM из страниц при сохранении';
 echo html_writer::end_tag('label');
 echo html_writer::end_div();
+echo html_writer::start_div('', ['id' => 'studio-assessment-fields']);
 echo html_writer::tag('label', 'Вопросы аттестации');
 echo html_writer::tag('p', 'Для аттестации добавьте по одному вопросу на строку: Вопрос | вариант 1 | вариант 2 | номер верного варианта.');
 echo html_writer::tag('textarea', s((string)$editing['questionslines']), ['name' => 'questions', 'rows' => 6, 'class' => 'form-control']);
 echo html_writer::tag('label', 'Проходной балл');
 echo html_writer::empty_tag('input', ['type' => 'number', 'name' => 'passscore', 'min' => 1, 'max' => 100,
     'value' => (int)$editing['passscore'], 'class' => 'form-control']);
+echo html_writer::end_div();
+echo html_writer::start_div('', ['id' => 'studio-zip-fields']);
 echo html_writer::tag('label', 'Импорт ZIP-пакета SCORM');
 echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'scormzip', 'accept' => '.zip,application/zip']);
+echo html_writer::end_div();
 if ($editing['packagestatus'] === 'imported') {
     echo html_writer::tag('p', 'Подключён пакет: ' . s((string)$editing['packagefilename'])
         . ($editing['packageurl'] ? ' · ' . html_writer::link((string)$editing['packageurl'], 'скачать пакет') : ''));
@@ -176,6 +182,15 @@ $PAGE->requires->js_init_code(<<<'JS'
     const panel = document.getElementById('studio-scorm-pages');
     const add = document.getElementById('studio-add-page');
     if (!panel || !add) { return; }
+    const kind = document.getElementById('studio-kind');
+    function showFields() {
+        document.getElementById('studio-course-fields').hidden = kind.value !== 'course';
+        document.getElementById('studio-assessment-fields').hidden = kind.value !== 'assessment';
+        panel.hidden = kind.value !== 'scorm';
+        document.getElementById('studio-zip-fields').hidden = kind.value !== 'scorm';
+    }
+    kind.addEventListener('change', showFields);
+    showFields();
     function init(page) {
         const source = page.querySelector('textarea');
         const rich = page.querySelector('.u-scorm-rich-editor');

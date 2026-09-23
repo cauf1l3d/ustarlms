@@ -359,6 +359,25 @@ final class organization_identity_test extends \advanced_testcase {
         $hrd = $this->employee('retail_head');
         $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
         $this->setUser($hrd);
+        staffing_requests::review($request->id, staffing_requests::STATUS_APPROVED,
+            $hrd->id, ['positionid' => 'retail_seller']);
+        $this->assertSame(employment::ACTIVE, employment::resolve($userid)['status']);
+        $this->assertSame('retail_seller', organization_identity::resolve($userid)['positionid']);
+    }
+
+    public function test_hrd_cannot_assign_registration_to_another_department(): void {
+        global $DB;
+        $userid = registration_service::register([
+            'username' => 'crosshire', 'password' => 'Qx9!Ayear2026',
+            'email' => 'crosshire@example.invalid', 'firstname' => 'Сотрудник',
+            'lastname' => 'Тестовый', 'departmentid' => 'retail',
+        ]);
+        $request = $DB->get_record('local_ustar_staff_requests', [
+            'requesttype' => staffing_requests::TYPE_REGISTRATION, 'employeeid' => $userid,
+        ], '*', MUST_EXIST);
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
         try {
             staffing_requests::review($request->id, staffing_requests::STATUS_APPROVED,
                 $hrd->id, ['positionid' => 'opt_manager']);
@@ -367,10 +386,6 @@ final class organization_identity_test extends \advanced_testcase {
             $this->assertSame(staffing_requests::STATUS_PENDING,
                 $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $request->id]));
         }
-        staffing_requests::review($request->id, staffing_requests::STATUS_APPROVED,
-            $hrd->id, ['positionid' => 'retail_seller']);
-        $this->assertSame(employment::ACTIVE, employment::resolve($userid)['status']);
-        $this->assertSame('retail_seller', organization_identity::resolve($userid)['positionid']);
     }
 
     public function test_manager_cannot_approve_registration_without_hrd_capability(): void {

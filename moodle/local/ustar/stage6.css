@@ -66,7 +66,7 @@
     padding: 1rem;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-    background: #f5f7fa;
+    background: var(--u-surface-muted, #f0efeb);
     border-radius: .6rem;
 }
 @media (max-width: 640px) {

@@ -1,7 +1,7 @@
 /* USTAR 1.5 — focused product hardening and new surfaces. */
 
 /* Per-user presets override the admin base palette without mutating it. */
-html[data-ustar-preset="yellow"] { --u-brand:#FBC502 !important; --u-brand-strong:#DFAF00 !important; --u-brand-soft:rgba(251,197,2,.14) !important; }
+html[data-ustar-preset="yellow"] { --u-brand:#EBC500 !important; --u-brand-strong:#C9A700 !important; --u-brand-soft:rgba(235,197,0,.14) !important; }
 html[data-ustar-preset="graphite"] { --u-brand:#C8A900 !important; --u-brand-strong:#9A8000 !important; --u-brand-soft:rgba(200,169,0,.14) !important; }
 html[data-ustar-preset="ocean"] { --u-brand:#45A7D9 !important; --u-brand-strong:#287FAE !important; --u-brand-soft:rgba(69,167,217,.14) !important; --u-text-on-brand:#08141B !important; }
 html[data-ustar-preset="forest"] { --u-brand:#66A76B !important; --u-brand-strong:#477F4C !important; --u-brand-soft:rgba(102,167,107,.14) !important; --u-text-on-brand:#071009 !important; }

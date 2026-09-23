@@ -168,8 +168,16 @@ final class material_studio {
         if ((string)$item['kind'] !== self::KIND_SCORM) {
             throw new \invalid_parameter_exception('ZIP можно прикрепить только к SCORM-материалу.');
         }
+        if ((string)$item['status'] !== content::STATUS_DRAFT) {
+            throw new \moodle_exception('Пакет опубликованного материала нельзя заменить. Сначала верните его в черновик.');
+        }
         if (empty($upload['tmp_name']) || !is_uploaded_file((string)$upload['tmp_name'])) {
             throw new \invalid_parameter_exception('Выберите ZIP-файл SCORM.');
+        }
+        if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK
+                || (int)($upload['size'] ?? 0) <= 0
+                || (int)$upload['size'] > 100 * 1024 * 1024) {
+            throw new \invalid_parameter_exception('SCORM ZIP должен быть не больше 100 МБ.');
         }
         $filename = clean_param((string)($upload['name'] ?? ''), PARAM_FILE);
         if (!str_ends_with(strtolower($filename), '.zip')) {
@@ -183,13 +191,25 @@ final class material_studio {
             throw new \invalid_parameter_exception('Не удалось открыть ZIP-пакет.');
         }
         $manifest = false;
+        $uncompressed = 0;
+        if ($zip->numFiles > 10000) {
+            $zip->close();
+            throw new \invalid_parameter_exception('Слишком много файлов в SCORM ZIP.');
+        }
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $entry = (string)$zip->getNameIndex($i);
-            if (str_contains($entry, '..') || str_starts_with($entry, '/')) {
+            if (str_contains($entry, '..') || str_starts_with($entry, '/')
+                    || str_contains($entry, '\\') || preg_match('/^[a-zA-Z]:/', $entry)) {
                 $zip->close();
                 throw new \invalid_parameter_exception('SCORM-пакет содержит небезопасный путь.');
             }
-            if (strtolower(basename($entry)) === 'imsmanifest.xml') {
+            $stat = $zip->statIndex($i);
+            $uncompressed += (int)($stat['size'] ?? 0);
+            if ($uncompressed > 500 * 1024 * 1024) {
+                $zip->close();
+                throw new \invalid_parameter_exception('Распакованный SCORM ZIP превышает 500 МБ.');
+            }
+            if (strtolower($entry) === 'imsmanifest.xml') {
                 $manifest = true;
             }
         }

@@ -315,24 +315,6 @@ final class company_hierarchy {
             $grouplabel = (string)($position['name'] ?? $positionid);
             $managerid = org::manager_id((int)$u->id);
 
-            if ($departmentid === 'dept_bd305b8b27fb3a'
-                    && !in_array($groupkey, ['mop_1', 'mop_2'], true)) {
-
-                $userid = (int)$u->id;
-
-                if ($userid === 62) {
-                    $groupkey = 'active_supervisor_team1';
-                }
-
-                if ($positionid === 'pos_4ae1d264291a9901') {
-                    $groupkey = 'active_team1';
-                }
-
-                if ($positionid === 'pos_9e43fe3808d709f4') {
-                    $groupkey = 'active_team2';
-                }
-            }
-
             if (
                 !isset(
                     $rows[
@@ -345,19 +327,7 @@ final class company_hierarchy {
                 ]['groupsmap'][$groupkey] = [
                     'positionid' => $positionid,
                     'id' => $groupkey,
-                    'name' => match ($groupkey) {
-
-                        'active_supervisor_team1'
-                            => 'Супервайзер команды 1',
-
-                        'active_team1'
-                            => 'МОП 1',
-
-                        'active_team2'
-                            => 'МОП 2',
-
-                        default => $grouplabel,
-                    },
+                    'name' => $grouplabel,
                     'people' => [],
                     'count' => 0,
                     'managers' => [],

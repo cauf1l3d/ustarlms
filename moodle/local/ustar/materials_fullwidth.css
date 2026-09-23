@@ -96,11 +96,11 @@ body.u-materials-fullwidth-page .u-material-row {
 
     color: var(--u-text-primary) !important;
 
-    background: #f7f9fc !important;
+    background: var(--u-surface-muted, #f0efeb) !important;
 
     border:
         1px solid
-        #d9dee6 !important;
+        var(--u-border, rgba(40, 39, 39, .14)) !important;
 
     border-radius: 10px !important;
 
@@ -122,7 +122,7 @@ body.u-materials-fullwidth-page .u-material-row:hover {
 
     background: #ffffff !important;
 
-    border-color: #aebbc9 !important;
+    border-color: var(--u-border-strong, #706d6a) !important;
 
     box-shadow:
         0 5px 14px

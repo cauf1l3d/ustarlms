@@ -269,6 +269,8 @@ final class staffing_requests {
                 organization_model::assign_position_by_hr($targetuserid, $positionid, $actorid);
                 people::set_position_id($targetuserid, $positionid);
                 employment::approve_registration($targetuserid, $actorid, $positionid);
+                // Pending users are omitted from reporting until employment is active.
+                organization_model::rebuild_reporting();
                 $request->positionid = $positionid;
                 assignment::sync_user($targetuserid);
             } else if ((string)$request->requesttype === self::TYPE_TERMINATE) {

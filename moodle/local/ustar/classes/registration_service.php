@@ -28,7 +28,7 @@ final class registration_service {
         // writing IP addresses into the personnel records.
         self::throttle();
 
-        $username = core_text::strtolower(trim((string)($input['username'] ?? '')));
+        $username = \core_text::strtolower(trim((string)($input['username'] ?? '')));
         $email = trim((string)($input['email'] ?? ''));
         $firstname = trim((string)($input['firstname'] ?? ''));
         $lastname = trim((string)($input['lastname'] ?? ''));
@@ -39,7 +39,7 @@ final class registration_service {
                 || !validate_email($email) || $firstname === '' || $lastname === ''
                 || $firstname !== clean_param($firstname, PARAM_NOTAGS)
                 || $lastname !== clean_param($lastname, PARAM_NOTAGS)
-                || core_text::strlen($firstname) > 100 || core_text::strlen($lastname) > 100) {
+                || \core_text::strlen($firstname) > 100 || \core_text::strlen($lastname) > 100) {
             throw new \invalid_parameter_exception('Проверьте логин, имя, фамилию и email.');
         }
         $departments = array_column(self::departments(), 'name', 'id');
@@ -50,15 +50,21 @@ final class registration_service {
         if ($password === '' || !check_password_policy($password, $passworderror)) {
             throw new \invalid_parameter_exception($passworderror ?: 'Пароль не соответствует политике безопасности.');
         }
-        if ($DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])
-                || $DB->record_exists_select('user', 'LOWER(email) = LOWER(:email) AND deleted = 0',
-                    ['email' => $email])) {
-            throw new \invalid_parameter_exception('Логин или email уже используется.');
+        $identitylock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('registration-email-' . hash('sha256', \core_text::strtolower($email)), 10);
+        if (!$identitylock) {
+            throw new \moodle_exception('Регистрация занята. Повторите попытку позже.');
         }
-
-        $transaction = $DB->start_delegated_transaction();
         try {
-            $userid = (int)user_create_user((object)[
+            if ($DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])
+                    || $DB->record_exists_select('user', 'LOWER(email) = LOWER(:email) AND deleted = 0',
+                        ['email' => $email])) {
+                throw new \invalid_parameter_exception('Логин или email уже используется.');
+            }
+
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $userid = (int)user_create_user((object)[
                 'auth' => 'manual', 'confirmed' => 1, 'mnethostid' => $CFG->mnet_localhost_id,
                 'username' => $username, 'password' => $password, 'email' => $email,
                 'firstname' => $firstname, 'lastname' => $lastname, 'suspended' => 0,
@@ -66,10 +72,13 @@ final class registration_service {
             accounts::set_type($userid, accounts::TYPE_EMPLOYEE);
             employment::register_pending($userid);
             self::submit_department($userid, $departmentid);
-            $transaction->allow_commit();
-            return $userid;
-        } catch (\Throwable $e) {
-            $transaction->rollback($e);
+                $transaction->allow_commit();
+                return $userid;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $identitylock->release();
         }
     }
 
@@ -242,7 +251,7 @@ final class registration_service {
     private static function notify_reviewers(int $requestid, string $departmentid, string $fullname): void {
         $recipients = [];
         foreach (get_users_by_capability(\context_system::instance(),
-                'local/ustar:approveregistration', 'u.id', 'u.id ASC') as $candidate) {
+                'local/ustar:approveregistration', 'u.id', 'u.id ASC') ?: [] as $candidate) {
             $candidateid = (int)$candidate->id;
             if (team_access::active_actor($candidateid)
                     && has_capability('local/ustar:hrmanage', \context_system::instance(), $candidateid)) {

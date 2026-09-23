@@ -331,6 +331,7 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertTrue($repeat['idempotent']);
         $this->assertSame(employment::ACTIVE, employment::resolve($candidate->id)['status']);
         $this->assertSame('retail_seller', organization_identity::resolve($candidate->id)['positionid']);
+        $this->assertSame((int)$manager->id, org::manager_id($candidate->id));
         $this->assertCount(1, array_filter(organization_model::active_assignments($candidate->id),
             static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'));
     }

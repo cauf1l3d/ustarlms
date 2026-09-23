@@ -15,7 +15,8 @@ body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
 }
 .ustar-auth-shell > section { min-width:0; border-radius:34px; }
 .ustar-auth-shell .ustar-auth-brand { position:relative; overflow:hidden; align-self:stretch; }
-.ustar-auth-artwork { display:block; width:100%; height:auto; aspect-ratio:711 / 836; overflow:hidden; border-radius:34px; }
+/* Let the form determine the shared grid row height, then fill the artwork panel. */
+.ustar-auth-artwork { position:absolute; inset:0; display:block; width:100%; height:100%; overflow:hidden; border-radius:34px; }
 
 .ustar-auth-shell .ustar-auth-auth {
     display:flex; flex-direction:column; align-items:center; box-sizing:border-box;
@@ -69,7 +70,7 @@ body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
 @media (max-width:900px) {
     #page-wrapper #page.ustar-auth-shell { grid-template-columns:minmax(0,1fr); max-width:620px; width:calc(100% - 24px); margin:16px auto !important; }
     .ustar-auth-shell .ustar-auth-auth { grid-row:1; padding:24px 18px; }
-    .ustar-auth-shell .ustar-auth-brand { grid-row:2; }
+    .ustar-auth-shell .ustar-auth-brand { grid-row:2; min-height:min(120vw,700px); }
     .ustar-auth-shell .ustar-auth-start { font-size:clamp(26px,6vw,36px); }
 }
 @media (forced-colors:active) {

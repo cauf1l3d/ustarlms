@@ -35,15 +35,16 @@
 
     <article class="u-stat-card">
         <span>Квалификационно готовы</span>
-        <strong>{{qualcoverage}}%</strong>
-        <small>{{qualified}} без обязательных пробелов</small>
+        {{#qualcomplete}}<strong>{{qualcoverage}}%</strong>{{/qualcomplete}}
+        {{#qualincomplete}}<strong>—</strong><small>Выборка ограничена. Итоговая доля пока недоступна.</small>{{/qualincomplete}}
+        <small>{{qualified}} без обязательных пробелов в проверенной выборке</small>
         {{#unconfiguredstandards}}<small>{{unconfiguredstandards}} — стандарт должности не настроен</small>{{/unconfiguredstandards}}
     </article>
 
     <article class="u-stat-card">
         <span>Требуют внимания</span>
         <strong>{{withgaps}}</strong>
-        <small>есть обязательные skill gaps</small>
+        <small>есть обязательные skill gaps{{#qualincomplete}} в проверенной выборке{{/qualincomplete}}</small>
     </article>
 
 </div>

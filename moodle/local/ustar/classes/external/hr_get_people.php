@@ -26,6 +26,9 @@ class hr_get_people extends base {
         $department = trim($params['department']);
         $status = $params['status'];
         $limit = max(1, min(250, $params['limit']));
+        if (!in_array($status, ['active', 'suspended', 'all'], true)) {
+            throw new \invalid_parameter_exception('Неизвестный статус сотрудника.');
+        }
 
         $st = structure::get(structure::NAME_STRUCTURE);
         $posmap = [];
@@ -52,41 +55,52 @@ class hr_get_people extends base {
         $sql = "SELECT u.id, u.username, u.firstname, u.lastname, u.email, u.suspended, u.lastaccess
                   FROM {user} u
                  WHERE " . implode(' AND ', $where) . "
-              ORDER BY u.lastname, u.firstname";
-        $records = $DB->get_records_sql($sql, $sqlparams, 0, $limit * 3);
-
+              ORDER BY u.lastname, u.firstname, u.id";
         $people = [];
-        foreach ($records as $u) {
-            if (!\local_ustar\accounts::is_business_account((int)$u->id)) {
-                continue;
+        $offset = 0;
+        do {
+            // Position and business-account filters cannot be expressed through
+            // the legacy JSON position column. Keep scanning until the page is
+            // actually full, including one extra eligible row for hasMore.
+            $records = $DB->get_records_sql($sql, $sqlparams, $offset, 250);
+            $offset += count($records);
+            foreach ($records as $u) {
+                if (!\local_ustar\accounts::is_business_account((int)$u->id)) {
+                    continue;
+                }
+                $p = $posmap[\local_ustar\organization_identity::resolve((int)$u->id)['positionid']] ?? null;
+                if ($department !== '' && (!$p || $p['department'] !== $department)) {
+                    continue;
+                }
+                $resolved = structure::resolve_user((int)$u->id);
+                $people[] = [
+                    'id' => (int)$u->id,
+                    'username' => $u->username,
+                    'fullname' => trim($u->firstname . ' ' . $u->lastname),
+                    'email' => $u->email,
+                    'suspended' => (bool)$u->suspended,
+                    'lastaccess' => (int)$u->lastaccess,
+                    'employmentStatus' => \local_ustar\employment::resolve((int)$u->id)['status'],
+                    'positionid' => $p['id'] ?? '',
+                    'position' => $p['name'] ?? '',
+                    'department' => $p['department'] ?? '',
+                    'role' => $resolved['role'],
+                    'protected' => is_siteadmin($u) || has_capability('local/ustar:admin', \context_system::instance(), $u->id),
+                ];
+                if (count($people) > $limit) {
+                    break;
+                }
             }
-            $p = $posmap[\local_ustar\organization_identity::resolve((int)$u->id)['positionid']] ?? null;
-            if ($department !== '' && (!$p || $p['department'] !== $department)) {
-                continue;
-            }
-            $resolved = structure::resolve_user((int)$u->id);
-            $people[] = [
-                'id' => (int)$u->id,
-                'username' => $u->username,
-                'fullname' => trim($u->firstname . ' ' . $u->lastname),
-                'email' => $u->email,
-                'suspended' => (bool)$u->suspended,
-                'lastaccess' => (int)$u->lastaccess,
-                'employmentStatus' => \local_ustar\employment::resolve((int)$u->id)['status'],
-                'positionid' => $p['id'] ?? '',
-                'position' => $p['name'] ?? '',
-                'department' => $p['department'] ?? '',
-                'role' => $resolved['role'],
-                'protected' => is_siteadmin($u) || has_capability('local/ustar:admin', \context_system::instance(), $u->id),
-            ];
-            if (count($people) >= $limit) {
-                break;
-            }
+        } while (count($people) <= $limit && count($records) === 250);
+        $hasmore = count($people) > $limit;
+        if ($hasmore) {
+            array_pop($people);
         }
 
         return ['json' => json_encode([
             'people' => $people,
             'count' => count($people),
+            'hasMore' => $hasmore,
             'positions' => array_values($st['positions']),
             'departments' => array_values($st['departments']),
         ], JSON_UNESCAPED_UNICODE)];

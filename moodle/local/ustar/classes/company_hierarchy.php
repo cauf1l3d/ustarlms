@@ -18,6 +18,7 @@ final class company_hierarchy {
      * Both entry pages supply the real viewer ID. Directory visibility never grants learning access.
      */
     public static function business_view(array $departments, ?int $viewerid = null): array {
+        $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
         $admin = $viewerid !== null && team_access::company($viewerid);
         $allowed = [];
         $mode = 'full';
@@ -91,16 +92,22 @@ final class company_hierarchy {
                     $person['detailurl'] = $person['canlearn'] ? (string)($person['detailurl'] ?? '') : '';
                     $person['canlearn'] = $person['canlearn'] && $person['detailurl'] !== '';
                     $person['ishead'] = $bucket === 'heads';
+                    $companyrole = (string)($positions[(string)($person['positionid'] ?? '')]['companyrole'] ?? '');
                     $role = self::business_label((string)($person['position'] ?? ''));
-                    if ($role === 'генеральный директор') {
+                    if ($companyrole === 'executive' || ($companyrole === '' && $role === 'генеральный директор')) {
                         $executives[] = $person;
                         continue;
                     }
                     $leaderblock = [
+                        'commercial_director' => 'commercial',
+                        'operations_director' => 'operations',
+                        'finance_director' => 'finance',
+                    ][$companyrole] ?? '';
+                    if ($companyrole === '') { $leaderblock = [
                         'коммерческий директор' => 'commercial',
                         'операционный директор' => 'operations',
                         'финансовый директор' => 'finance',
-                    ][$role] ?? '';
+                    ][$role] ?? ''; }
                     if ($leaderblock !== '') {
                         if ($mode === 'branch' && $leaderblock !== $ownblock) { continue; }
                         $blocks[$leaderblock]['leaders'][] = $person;
@@ -110,8 +117,8 @@ final class company_hierarchy {
                     // A renamed leadership department must not recreate an Operations branch.
                     $leadership = in_array(self::business_label($name),
                         ['руководитель', 'руководство', 'администрация'], true);
-                    if ($leadership && (str_contains($role, 'ассистент')
-                            || str_contains($role, 'помощник'))) {
+                    if ($companyrole === 'assistant' || ($companyrole === '' && $leadership
+                            && (str_contains($role, 'ассистент') || str_contains($role, 'помощник')))) {
                         if ($mode === 'full' || $ownblock === 'administrative') {
                             $person['ishead'] = false;
                             $blocks['administrative']['members'][] = $person;

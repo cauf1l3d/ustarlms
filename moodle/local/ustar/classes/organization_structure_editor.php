@@ -12,6 +12,14 @@ final class organization_structure_editor {
         'logistics' => 'Логистика',
         'administrative' => 'Аппарат директора',
     ];
+    public const COMPANY_ROLES = [
+        'member' => 'Сотрудник',
+        'executive' => 'Генеральный директор',
+        'commercial_director' => 'Коммерческий директор',
+        'operations_director' => 'Операционный директор',
+        'finance_director' => 'Финансовый директор',
+        'assistant' => 'Ассистент руководства',
+    ];
 
     public static function revision(): int {
         global $DB;
@@ -83,8 +91,27 @@ final class organization_structure_editor {
                 $data['positions'][] = [
                     'id' => $positionid, 'department' => $id,
                     'name' => $name, 'level' => 1, 'next' => null,
+                    'companyrole' => 'member',
                 ];
                 $data['matrix'][$positionid] = [];
+            } else if ($action === 'updateposition') {
+                $companyrole = (string)($input['companyrole'] ?? '');
+                if (!isset(self::COMPANY_ROLES[$companyrole])) {
+                    throw new \invalid_parameter_exception('Выберите роль в схеме компании.');
+                }
+                $found = false;
+                foreach ($data['positions'] as &$position) {
+                    if ((string)$position['id'] === $id) {
+                        $position['name'] = $name;
+                        $position['companyrole'] = $companyrole;
+                        $found = true;
+                        break;
+                    }
+                }
+                unset($position);
+                if (!$found) {
+                    throw new \invalid_parameter_exception('Должность больше не существует.');
+                }
             } else {
                 throw new \invalid_parameter_exception('Неизвестное действие со структурой.');
             }

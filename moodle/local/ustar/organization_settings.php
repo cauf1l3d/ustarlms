@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'id' => optional_param('id', '', PARAM_ALPHANUMEXT),
                 'name' => required_param('name', PARAM_TEXT),
                 'block' => optional_param('block', '', PARAM_ALPHA),
+                'companyrole' => optional_param('companyrole', '', PARAM_ALPHANUMEXT),
             ],
             required_param('revision', PARAM_INT)
         );
@@ -28,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
 $revision = \local_ustar\organization_structure_editor::revision();
 $blocks = \local_ustar\organization_structure_editor::BLOCKS;
+$companyroles = \local_ustar\organization_structure_editor::COMPANY_ROLES;
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/organization_settings.php'));
 $PAGE->set_pagelayout('ustar');
@@ -83,6 +85,36 @@ foreach ($structure['departments'] ?? [] as $department) {
     echo html_writer::end_tag('form');
     echo html_writer::tag('p', 'Должностей: ' . count(array_filter($structure['positions'] ?? [],
         static fn(array $position): bool => (string)($position['department'] ?? '') === $id)));
+    $roleforms = '';
+    foreach ($structure['positions'] ?? [] as $position) {
+        if ((string)($position['department'] ?? '') !== $id) { continue; }
+        $positionid = (string)($position['id'] ?? '');
+        $roleoptions = '';
+        foreach ($companyroles as $roleid => $rolelabel) {
+            $attrs = ['value' => $roleid];
+            if ((string)($position['companyrole'] ?? '') === $roleid) {
+                $attrs['selected'] = 'selected';
+            }
+            $roleoptions .= html_writer::tag('option', s($rolelabel), $attrs);
+        }
+        $roleforms .= html_writer::start_tag('form', ['method' => 'post']);
+        $roleforms .= $hidden('updateposition', $positionid);
+        $roleforms .= html_writer::tag('label', 'Должность', ['for' => 'position-' . $positionid]);
+        $roleforms .= html_writer::empty_tag('input', ['type' => 'text', 'name' => 'name',
+            'id' => 'position-' . $positionid,
+            'required' => 'required', 'maxlength' => 120, 'class' => 'form-control',
+            'value' => (string)($position['name'] ?? '')]);
+        $roleforms .= html_writer::tag('label', 'Роль в схеме компании', ['for' => 'role-' . $positionid]);
+        $roleforms .= html_writer::tag('select', $roleoptions,
+            ['id' => 'role-' . $positionid, 'name' => 'companyrole',
+                'required' => 'required', 'class' => 'form-select']);
+        $roleforms .= html_writer::empty_tag('input', ['type' => 'submit',
+            'value' => 'Сохранить должность', 'class' => 'btn btn-primary']);
+        $roleforms .= html_writer::end_tag('form');
+    }
+    if ($roleforms !== '') {
+        echo html_writer::tag('details', html_writer::tag('summary', 'Редактировать должности') . $roleforms);
+    }
     echo html_writer::end_div();
 }
 echo html_writer::end_div();

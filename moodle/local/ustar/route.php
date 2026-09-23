@@ -6,6 +6,10 @@ require_login();
 $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 
+if (\local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\employment::PENDING) {
+    redirect(new moodle_url('/local/ustar/profile.php'));
+}
+
 $iselevated = is_siteadmin() || has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context);
 $requestedposition = optional_param('position', '', PARAM_ALPHANUMEXT);
 

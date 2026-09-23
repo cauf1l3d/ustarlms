@@ -51,18 +51,18 @@ final class employment {
         ]);
     }
 
-    /** Approve a pending registration only inside the actor's explicit team scope. */
+    /** Approve a pending registration through the explicitly delegated HRD operation. */
     public static function approve_registration(int $userid, int $actorid, string $positionid): void {
         global $DB, $USER;
-        if ((int)$USER->id !== $actorid || !capabilities::has($actorid, capabilities::TEAM_READ)) {
+        if ((int)$USER->id !== $actorid || !has_capability('local/ustar:approveregistration',
+                \context_system::instance(), $actorid)
+                || !has_capability('local/ustar:hrmanage', \context_system::instance(), $actorid)) {
             throw new \required_capability_exception(\context_system::instance(),
-                'local/ustar:viewteam', 'nopermissions', '');
+                'local/ustar:approveregistration', 'nopermissions', '');
         }
-        $scope = organization_model::manager_scope($actorid);
-        if (empty($scope['allowed']) || !in_array($positionid,
-                array_column($scope['positions'] ?? [], 'id'), true)) {
-            throw new \required_capability_exception(\context_system::instance(),
-                'local/ustar:viewteam', 'nopermissions', '');
+        $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
+        if (!isset($positions[$positionid])) {
+            throw new \invalid_parameter_exception('Выбранная должность не найдена.');
         }
         if (!$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])
                 || self::resolve($userid)['status'] !== self::PENDING) {

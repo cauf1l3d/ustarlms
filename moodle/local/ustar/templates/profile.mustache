@@ -31,18 +31,19 @@
         <form method="post" class="u-staffing-card">
             <input type="hidden" name="sesskey" value="{{sesskey}}">
             <input type="hidden" name="action" value="registrationrequest">
-            <label>Ваша должность
-                <select name="positionid" required>
-                    <option value="">Выберите должность</option>
-                    {{#registrationpositions}}<option value="{{id}}">{{name}}</option>{{/registrationpositions}}
+            <label>Ваше подразделение
+                <select name="departmentid" required>
+                    <option value="">Выберите подразделение</option>
+                    {{#registrationdepartments}}<option value="{{id}}">{{name}}</option>{{/registrationdepartments}}
                 </select>
             </label>
-            <button class="u-btn u-btn--primary" type="submit">Отправить на подтверждение</button>
+            <button class="u-btn u-btn--primary" type="submit">Отправить заявку HRD</button>
         </form>
         {{/registrationrequested}}
     </section>
     {{/employmentpending}}
 
+    {{^employmentpending}}
     {{^hasposition}}
     <div class="u-inline-notice u-inline-notice--info">
         {{{profileicon}}}
@@ -106,4 +107,5 @@
         {{/hasbadges}}
         {{^hasbadges}}<div class="u-empty-mini">Первая награда появится после реального учебного или игрового результата.</div>{{/hasbadges}}
     </section>
+    {{/employmentpending}}
 </div>

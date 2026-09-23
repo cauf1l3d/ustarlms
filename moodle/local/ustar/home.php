@@ -6,6 +6,10 @@ require_login();
 
 global $USER, $DB;
 
+if (\local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\employment::PENDING) {
+    redirect(new moodle_url('/local/ustar/profile.php'));
+}
+
 $context = context_system::instance();
 
 $view = optional_param(

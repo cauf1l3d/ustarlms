@@ -304,7 +304,7 @@ final class organization_identity_test extends \advanced_testcase {
             'contextid' => \context_system::instance()->id, 'component' => 'local_ustar_migration']));
     }
 
-    public function test_self_registration_stays_pending_until_scoped_manager_approves(): void {
+    public function test_existing_email_registration_stays_pending_until_hrd_approves(): void {
         global $DB;
         $manager = $this->employee('retail_head');
         $managerplace = $this->place('retail_head');
@@ -320,11 +320,13 @@ final class organization_identity_test extends \advanced_testcase {
             registration_service::submit($candidate->id, 'retail_seller'));
         $this->assertFalse(employment::learning_allowed($candidate->id));
 
-        $this->setUser($manager);
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
         $result = staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
-            $manager->id);
+            $hrd->id, ['positionid' => 'retail_seller']);
         $repeat = staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
-            $manager->id);
+            $hrd->id, ['positionid' => 'retail_seller']);
         $this->assertSame((int)$candidate->id, $result['userid']);
         $this->assertTrue($repeat['idempotent']);
         $this->assertSame(employment::ACTIVE, employment::resolve($candidate->id)['status']);
@@ -333,7 +335,44 @@ final class organization_identity_test extends \advanced_testcase {
             static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'));
     }
 
-    public function test_manager_cannot_approve_registration_outside_scope(): void {
+    public function test_native_registration_creates_one_pending_user_and_hrd_request(): void {
+        global $DB;
+        $userid = registration_service::register([
+            'username' => 'newhire', 'password' => 'Qx9!Ayear2026',
+            'email' => 'newhire@example.invalid', 'firstname' => 'Сотрудник',
+            'lastname' => 'Тестовый', 'departmentid' => 'retail',
+        ]);
+        $user = $DB->get_record('user', ['id' => $userid], 'id,auth,confirmed', MUST_EXIST);
+        $this->assertSame('manual', $user->auth);
+        $this->assertSame(1, (int)$user->confirmed);
+        $this->assertSame(employment::PENDING, employment::resolve($userid)['status']);
+        $this->assertFalse(employment::learning_allowed($userid));
+        $request = $DB->get_record('local_ustar_staff_requests', [
+            'requesttype' => staffing_requests::TYPE_REGISTRATION, 'employeeid' => $userid,
+        ], '*', MUST_EXIST);
+        $this->assertSame('retail', $request->departmentid);
+        $this->assertSame('', $request->positionid);
+        $this->assertSame(staffing_requests::STATUS_PENDING, $request->status);
+        $this->assertSame(1, $DB->count_records('local_ustar_staff_requests', ['employeeid' => $userid]));
+
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
+        try {
+            staffing_requests::review($request->id, staffing_requests::STATUS_APPROVED,
+                $hrd->id, ['positionid' => 'opt_manager']);
+            $this->fail('HRD may not assign a position outside the claimed department');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(staffing_requests::STATUS_PENDING,
+                $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $request->id]));
+        }
+        staffing_requests::review($request->id, staffing_requests::STATUS_APPROVED,
+            $hrd->id, ['positionid' => 'retail_seller']);
+        $this->assertSame(employment::ACTIVE, employment::resolve($userid)['status']);
+        $this->assertSame('retail_seller', organization_identity::resolve($userid)['positionid']);
+    }
+
+    public function test_manager_cannot_approve_registration_without_hrd_capability(): void {
         $manager = $this->employee('retail_head');
         $this->assign($manager->id, $this->place('retail_head'));
         $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
@@ -342,7 +381,8 @@ final class organization_identity_test extends \advanced_testcase {
         $requestid = registration_service::submit($candidate->id, 'opt_manager');
         $this->setUser($manager);
         $this->expectException(\required_capability_exception::class);
-        staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED, $manager->id);
+        staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
+            $manager->id, ['positionid' => 'opt_manager']);
     }
 
     public function test_registration_rejection_is_repeatable_and_allows_corrected_request(): void {
@@ -355,11 +395,13 @@ final class organization_identity_test extends \advanced_testcase {
         $this->setUser($candidate);
         $firstid = registration_service::submit($candidate->id, 'retail_seller');
 
-        $this->setUser($manager);
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
         staffing_requests::review($firstid, staffing_requests::STATUS_REJECTED,
-            $manager->id, ['reviewcomment' => 'Уточните должность']);
+            $hrd->id, ['reviewcomment' => 'Уточните должность']);
         $repeat = staffing_requests::review($firstid, staffing_requests::STATUS_REJECTED,
-            $manager->id, ['reviewcomment' => 'Уточните должность']);
+            $hrd->id, ['reviewcomment' => 'Уточните должность']);
         $this->assertTrue($repeat['idempotent']);
         $this->assertSame(employment::PENDING, employment::resolve($candidate->id)['status']);
 

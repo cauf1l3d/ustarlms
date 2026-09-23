@@ -32,8 +32,11 @@ $templatecontext = [
     'brandmarkurl' => $OUTPUT->image_url('brand/logo-onlight', 'theme_ustar')->out(false),
     'mascoturl' => $OUTPUT->image_url('brand/mascot-admin', 'theme_ustar')->out(false),
     'academybannerurl' => $OUTPUT->image_url('brand/ustar-academy-banner', 'theme_ustar')->out(false),
-    'signupenabled' => signup_is_enabled(),
-    'signupurl' => (new moodle_url('/login/signup.php'))->out(false),
+    'signupenabled' => (int)get_config('local_ustar', 'version') >= 2026082749
+        && (string)$PAGE->url->get_path() !== '/local/ustar/register.php',
+    'starttitle' => (string)$PAGE->url->get_path() === '/local/ustar/register.php'
+        ? 'Создай профиль' : 'Начни с входа',
+    'signupurl' => (new moodle_url('/local/ustar/register.php'))->out(false),
 ];
 
 echo $OUTPUT->render_from_template('theme_ustar/login', $templatecontext);

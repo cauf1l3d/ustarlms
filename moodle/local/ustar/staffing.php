@@ -8,10 +8,11 @@ $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 
 $ishr = has_capability('local/ustar:hrmanage', $context);
+$canapproveregistration = has_capability('local/ustar:approveregistration', $context);
 $scope = \local_ustar\staffing_requests::manager_scope((int)$USER->id);
 $ismanager = !empty($scope['allowed']) && has_capability('local/ustar:viewteam', $context);
 
-if (!$ishr && !$ismanager) {
+if (!$ishr && !$ismanager && !$canapproveregistration) {
     throw new required_capability_exception($context, 'local/ustar:viewteam', 'nopermissions', '');
 }
 
@@ -78,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== '') {
                     'username' => optional_param('username', '', PARAM_USERNAME),
                     'email' => optional_param('email', '', PARAM_EMAIL),
                     'password' => optional_param('password', '', PARAM_RAW),
+                    'positionid' => optional_param('positionid', '', PARAM_ALPHANUMEXT),
                     'reviewcomment' => optional_param('reviewcomment', '', PARAM_TEXT),
                 ]
             );
@@ -105,6 +107,7 @@ $PAGE->requires->css(new moodle_url('/local/ustar/styles/staffing.css'));
 
 $data = [
     'ishr' => $ishr,
+    'canapproveregistration' => $canapproveregistration,
     'ismanager' => $ismanager,
     'department' => (string)($scope['department'] ?? ''),
     'positions' => $scope['positions'] ?? [],

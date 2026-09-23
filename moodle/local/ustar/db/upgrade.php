@@ -4303,7 +4303,7 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
     if ($oldversion < 2026082749) {
         // Keep email auth enabled for existing identities but close Moodle's
         // email signup. USTAR owns new account + HRD request creation.
-        if ((string)get_config('registerauth') === 'email') {
+        if ((string)($CFG->registerauth ?? '') === 'email') {
             set_config('registerauth', '');
         }
         require_once($CFG->libdir . '/authlib.php');

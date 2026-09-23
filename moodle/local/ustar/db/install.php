@@ -7,7 +7,7 @@ function xmldb_local_ustar_install(): void {
 
     // Preserve legacy email-auth users while routing new registration through
     // USTAR's own pending-employee + staffing request transaction.
-    if ((string)get_config('registerauth') === 'email') {
+    if ((string)($CFG->registerauth ?? '') === 'email') {
         set_config('registerauth', '');
     }
     require_once($CFG->libdir . '/authlib.php');

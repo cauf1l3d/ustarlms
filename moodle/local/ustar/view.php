@@ -465,7 +465,8 @@ if (
 
     \local_ustar\content::acknowledge(
         $contentid,
-        (int)$USER->id
+        (int)$USER->id,
+        required_param('contentversionid', PARAM_INT)
     );
 
     if ($hasroutecontext) {
@@ -886,6 +887,8 @@ $data = [
 
     'sesskey' =>
         sesskey(),
+
+    'contentversionid' => (int)$version->id,
 
     'hasroutecontext' =>
         $hasroutecontext,

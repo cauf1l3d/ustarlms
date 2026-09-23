@@ -219,7 +219,8 @@ try {
         (int)$ackversion->id,
         'ack'
     ) === null, 'ACK_OPEN_IS_NOT_STUDIED');
-    \local_ustar\content::acknowledge((int)$ackcontent['contentid'], (int)$employee->id);
+    \local_ustar\content::acknowledge((int)$ackcontent['contentid'], (int)$employee->id,
+        (int)\local_ustar\content::current_version((int)$ackcontent['contentid'])->id);
     \local_ustar\learning_events::record_route_studied(
         (int)$employee->id,
         (int)$ackcontent['contentid'],

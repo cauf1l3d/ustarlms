@@ -20,6 +20,28 @@ final class material_studio {
         return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_content_blueprints'));
     }
 
+    /** Reject publishing an edited SCORM source until its matching Moodle runtime exists. */
+    public static function runtime_ready(int $contentid): bool {
+        global $DB;
+        if (!self::available()) { return false; }
+        $item = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,cmid,courseid');
+        $blueprint = $DB->get_record('local_ustar_content_blueprints',
+            ['contentid' => $contentid], 'id,kind,sourceversion,packagestatus');
+        if (!$item || !$blueprint || (string)$blueprint->kind !== self::KIND_SCORM
+                || (string)$blueprint->packagestatus !== 'imported'
+                || (int)$item->cmid <= 0 || (int)$item->courseid <= 0) { return false; }
+        $events = $DB->get_records('local_ustar_workflow_events', [
+            'entitytype' => 'studio_scorm_runtime', 'entityid' => $contentid,
+            'eventtype' => 'scorm_runtime_created',
+        ], 'id DESC', 'id,detailsjson', 0, 1);
+        $event = $events ? reset($events) : null;
+        $data = $event ? json_decode((string)$event->detailsjson, true) : null;
+        return is_array($data)
+            && (int)($data['sourceversion'] ?? 0) === (int)$blueprint->sourceversion
+            && (int)($data['cmid'] ?? 0) === (int)$item->cmid
+            && (int)($data['courseid'] ?? 0) === (int)$item->courseid;
+    }
+
     public static function can_manage(int $userid): bool {
         return capabilities::has($userid, capabilities::HR_WRITE);
     }
@@ -63,6 +85,7 @@ final class material_studio {
             throw new \invalid_parameter_exception('Добавьте хотя бы один вопрос аттестации.');
         }
         $passscore = min(100, max(1, (int)($input['passscore'] ?? 80)));
+        $pages = $kind === self::KIND_SCORM ? self::scorm_pages($input['scormpages'] ?? []) : [];
         $expected = (int)($input['expectedmodified'] ?? 0);
         $now = time();
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
@@ -128,6 +151,7 @@ final class material_studio {
                 'outline' => trim(clean_param((string)($input['outline'] ?? ''), PARAM_TEXT)),
                 'passscore' => $passscore,
                 'questions' => $questions,
+                'pages' => $pages,
             ];
             $blueprint->sourcejson = json_encode($source, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             $blueprint->sourceversion = (int)$blueprint->sourceversion + 1;
@@ -218,22 +242,77 @@ final class material_studio {
             throw new \invalid_parameter_exception('В ZIP не найден imsmanifest.xml — это не SCORM-пакет.');
         }
 
-        $blueprint = $DB->get_record('local_ustar_content_blueprints', ['contentid' => $contentid], '*', MUST_EXIST);
-        $fs = get_file_storage();
-        $context = \context_system::instance();
-        $fs->delete_area_files($context->id, 'local_ustar', self::FILEAREA_SCORM, (int)$blueprint->id);
-        $fs->create_file_from_pathname((object)[
-            'contextid' => $context->id, 'component' => 'local_ustar', 'filearea' => self::FILEAREA_SCORM,
-            'itemid' => (int)$blueprint->id, 'filepath' => '/', 'filename' => $filename,
-            'userid' => $actorid, 'mimetype' => 'application/zip',
-        ], (string)$upload['tmp_name']);
-        $blueprint->packagestatus = 'imported';
-        $blueprint->packagefilename = $filename;
-        $blueprint->timemodified = time();
-        $blueprint->authorid = $actorid;
-        $DB->update_record('local_ustar_content_blueprints', $blueprint);
-        self::audit($contentid, 'studio_scorm_package_imported', $actorid, ['filename' => $filename]);
+        studio_scorm_runtime::import($contentid, $actorid, (string)$upload['tmp_name'],
+            $filename, (int)$item['sourceversion']);
         return self::by_content($contentid, $actorid);
+    }
+
+    /** Build a single-SCO SCORM 1.2 package from the visual page editor. */
+    public static function build_scorm(int $contentid, int $actorid): array {
+        self::assert_manage($actorid);
+        $item = self::by_content($contentid, $actorid);
+        if ((string)$item['kind'] !== self::KIND_SCORM || !$item['pages']
+                || (string)$item['status'] !== content::STATUS_DRAFT) {
+            throw new \invalid_parameter_exception('Сначала сохраните страницы SCORM в черновике.');
+        }
+        if (!class_exists('\\ZipArchive')) {
+            throw new \moodle_exception('Для сборки SCORM на сервере требуется ZipArchive.');
+        }
+        $path = tempnam(sys_get_temp_dir(), 'ustar-scorm-');
+        if ($path === false) { throw new \moodle_exception('Не удалось создать временный пакет SCORM.'); }
+        try {
+            $zip = new \ZipArchive();
+            if ($zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+                throw new \moodle_exception('Не удалось открыть временный пакет SCORM.');
+            }
+            try {
+                $manifest = '<?xml version="1.0" encoding="UTF-8"?>'
+                    . '<manifest identifier="USTAR-' . $contentid . '-v' . (int)$item['sourceversion'] . '" version="1.2"'
+                    . ' xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"'
+                    . ' xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2">'
+                    . '<organizations default="USTAR"><organization identifier="USTAR">'
+                    . '<title>' . htmlspecialchars((string)$item['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</title>'
+                    . '<item identifier="USTAR-ITEM" identifierref="USTAR-RESOURCE">'
+                    . '<title>' . htmlspecialchars((string)$item['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</title>'
+                    . '</item></organization></organizations><resources>'
+                    . '<resource identifier="USTAR-RESOURCE" type="webcontent" adlcp:scormtype="sco" href="index.html">'
+                    . '<file href="index.html"/></resource></resources></manifest>';
+                if (!$zip->addFromString('imsmanifest.xml', $manifest)
+                        || !$zip->addFromString('index.html', studio_scorm_package::html($item))) {
+                    throw new \moodle_exception('Не удалось записать страницы SCORM.');
+                }
+            } finally {
+                $zip->close();
+            }
+            studio_scorm_runtime::import($contentid, $actorid, $path,
+                'ustar-' . $contentid . '-v' . (int)$item['sourceversion'] . '.zip',
+                (int)$item['sourceversion']);
+            return self::by_content($contentid, $actorid);
+        } finally {
+            @unlink($path);
+        }
+    }
+
+    /** @return array<int,array{title:string,body:string}> */
+    private static function scorm_pages(mixed $input): array {
+        if (!is_array($input) || count($input) > 30) {
+            throw new \invalid_parameter_exception('SCORM допускает до 30 страниц.');
+        }
+        $pages = [];
+        foreach ($input as $page) {
+            if (!is_array($page)) { throw new \invalid_parameter_exception('Некорректная страница SCORM.'); }
+            $title = trim(clean_param((string)($page['title'] ?? ''), PARAM_TEXT));
+            $body = clean_text((string)($page['body'] ?? ''), FORMAT_HTML);
+            if ($title === '' && trim(strip_tags($body)) === '') { continue; }
+            if ($title === '' || trim(strip_tags($body)) === '') {
+                throw new \invalid_parameter_exception('У каждой страницы SCORM должны быть название и содержание.');
+            }
+            if (strlen($body) > 100000) {
+                throw new \invalid_parameter_exception('Страница SCORM превышает допустимый размер.');
+            }
+            $pages[] = ['title' => $title, 'body' => $body];
+        }
+        return $pages;
     }
 
     /** Archive rather than erase: route evidence and historical audit remain intact. */
@@ -444,6 +523,7 @@ final class material_studio {
             'summary' => (string)$row->summary, 'status' => (string)$row->status,
             'expectedmodified' => (int)$row->timemodified, 'sourceversion' => (int)$row->sourceversion,
             'body' => (string)($source['body'] ?? ''), 'outline' => (string)($source['outline'] ?? ''),
+            'pages' => is_array($source['pages'] ?? null) ? $source['pages'] : [],
             'questions' => $questions, 'questionslines' => $questionslines,
             'passscore' => (int)($source['passscore'] ?? 80),
             'packagestatus' => (string)($row->packagestatus ?? 'none'),

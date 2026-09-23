@@ -81,12 +81,17 @@ if ((string)$item['kind'] === 'assessment') {
     }
     echo html_writer::tag('div', format_text((string)$item['body'], FORMAT_HTML, ['filter' => false]), ['class' => 'u-material-player-body']);
     if ((string)$item['kind'] === 'scorm') {
-        echo html_writer::tag('h3', 'SCORM-пакет');
-        if ((string)$item['packagestatus'] === 'imported' && (string)$item['packageurl'] !== '') {
-            echo html_writer::tag('p', 'К этому курсу подключён SCORM ZIP: '
-                . html_writer::link((string)$item['packageurl'], s((string)$item['packagefilename'])));
+        echo html_writer::tag('h3', 'Интерактивное обучение');
+        if (\local_ustar\material_studio::runtime_ready($id)) {
+            echo html_writer::tag('p', 'SCORM запускается из шага учебного маршрута. Moodle сохраняет попытку, прогресс и результат.');
+            echo html_writer::tag('p', html_writer::link(
+                new moodle_url('/local/ustar/route.php'), 'Открыть учебный маршрут', ['class' => 'btn btn-primary']));
+            if (\local_ustar\material_studio::can_manage((int)$USER->id)
+                    && (string)$item['packageurl'] !== '') {
+                echo html_writer::tag('p', html_writer::link((string)$item['packageurl'], 'Скачать исходный ZIP'));
+            }
         } else {
-            echo $OUTPUT->notification('Автор ещё не подключил ZIP-пакет. Редактируемый сценарий курса уже доступен выше.', 'notifyinfo');
+            echo $OUTPUT->notification('Автор ещё не импортировал пакет для текущей версии.', 'notifyinfo');
         }
     }
 }

@@ -163,9 +163,23 @@ $requirements_from_request = static function() use ($DB, $skillmap): array {
     $completionmode = optional_param('completionmode', 'open', PARAM_ALPHA);
     $completionmode = in_array($completionmode, ['open', 'ack'], true) ? $completionmode : 'open';
     foreach (optional_param_array('contentids', [], PARAM_INT) as $contentid) {
-        $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type', IGNORE_MISSING);
+        $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,type,status,cmid', IGNORE_MISSING);
         if (!$content || (string)$content->type === 'folder') {
             throw new invalid_parameter_exception('Выбранный материал больше недоступен. Обновите форму.');
+        }
+        // A Studio SCORM package runs in Moodle. Pin the actual CM in the
+        // immutable route version so its completion, score and attempts come
+        // from Moodle, including when the author imports a later version.
+        if (\local_ustar\material_studio::available()
+                && (string)$DB->get_field('local_ustar_content_blueprints', 'kind',
+                    ['contentid' => (int)$content->id]) === \local_ustar\material_studio::KIND_SCORM) {
+            if ((string)$content->status !== \local_ustar\content::STATUS_PUBLISHED
+                    || !\local_ustar\material_studio::runtime_ready((int)$content->id)) {
+                throw new invalid_parameter_exception('Сначала импортируйте и опубликуйте SCORM-пакет.');
+            }
+            $requirements[] = ['type' => 'cm', 'sourceid' => (int)$content->cmid,
+                'required' => $required, 'label' => (string)$content->title];
+            continue;
         }
         $requirements[] = ['type' => 'content', 'sourceid' => (int)$content->id, 'completionmode' => $completionmode,
             'required' => $required, 'label' => (string)$content->title];
@@ -762,8 +776,17 @@ $editpointid = optional_param('point', 0, PARAM_INT);
 $newcontentid = optional_param('newcontent', 0, PARAM_INT);
 $contentoptions = [];
 foreach ($DB->get_records_select('local_ustar_content', 'type <> :folder AND status <> :archived', ['folder' => 'folder', 'archived' => 'archived'], 'title ASC', 'id,title,type,status') as $item) {
+    $studio = \local_ustar\material_studio::available()
+        ? $DB->get_field('local_ustar_content_blueprints', 'kind', ['contentid' => (int)$item->id]) : false;
+    if ($studio === \local_ustar\material_studio::KIND_SCORM
+            && ((string)$item->status !== \local_ustar\content::STATUS_PUBLISHED
+                || !\local_ustar\material_studio::runtime_ready((int)$item->id))) {
+        continue;
+    }
     $contentoptions[(int)$item->id] = ['id' => (int)$item->id, 'name' => (string)$item->title,
-        'meta' => ((string)$item->type === 'video' ? 'Видео' : 'Материал') . ((string)$item->status === 'draft' ? ' · Черновик' : '')];
+        'meta' => ($studio === \local_ustar\material_studio::KIND_SCORM ? 'SCORM · попытки в Moodle'
+            : ((string)$item->type === 'video' ? 'Видео' : 'Материал'))
+            . ((string)$item->status === 'draft' ? ' · Черновик' : '')];
 }
 $courseoptions = [];
 foreach ($DB->get_records_select('course', 'id > 1', [], 'fullname ASC', 'id,fullname') as $course) {

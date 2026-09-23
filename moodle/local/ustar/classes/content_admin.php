@@ -608,6 +608,15 @@ class content_admin {
                 MUST_EXIST
             );
 
+        if (material_studio::available()
+                && (string)$DB->get_field('local_ustar_content_blueprints', 'kind',
+                    ['contentid' => $contentid]) === material_studio::KIND_SCORM
+                && !material_studio::runtime_ready($contentid)) {
+            $transaction->rollback(new \moodle_exception(
+                'SCORM изменён: импортируйте пакет для текущей версии перед публикацией.'
+            ));
+        }
+
 
         $accesscount =
             $DB->count_records(

@@ -3,6 +3,7 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
+$PAGE->set_context($context);
 if (!\local_ustar\material_studio::can_manage((int)$USER->id)) {
     throw new required_capability_exception($context, 'local/ustar:hrmanage', 'nopermissions', '');
 }
@@ -20,6 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             if (!empty($_FILES['scormzip']['name'])) {
                 $item = \local_ustar\material_studio::upload_scorm_zip((int)$item['id'], (int)$USER->id, $_FILES['scormzip']);
+            } else if (optional_param('buildscorm', 0, PARAM_BOOL)) {
+                $item = \local_ustar\material_studio::build_scorm((int)$item['id'], (int)$USER->id);
             }
             redirect(new moodle_url('/local/ustar/materials_studio.php', ['id' => (int)$item['id'], 'saved' => 1]));
         }
@@ -53,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'expectedmodified' => optional_param('expectedmodified', 0, PARAM_INT),
                 'status' => 'draft', 'packagestatus' => 'none',
                 'packagefilename' => '', 'packageurl' => '',
+                'pages' => is_array($_POST['scormpages'] ?? null) ? $_POST['scormpages'] : [],
             ];
         }
     }
@@ -70,6 +74,7 @@ $editing = ($postedediting ?? $editing) ?: [
     'id' => 0, 'kind' => 'course', 'title' => '', 'summary' => '', 'outline' => '', 'body' => '',
     'questionslines' => '', 'passscore' => 80, 'expectedmodified' => 0, 'status' => 'draft',
     'packagestatus' => 'none', 'packagefilename' => '', 'packageurl' => '',
+    'pages' => [],
 ];
 
 $PAGE->set_context($context);
@@ -91,7 +96,7 @@ foreach (['saved' => 'Материал сохранён.', 'published' => 'Ма�
 }
 
 echo html_writer::tag('p',
-    'В одном месте создаются курсы, аттестации и SCORM. Текст курса редактируется здесь, а импортированный ZIP хранится как пакет: его нельзя ошибочно выдать за редактируемый исходник.');
+    'В одном месте создаются курсы, аттестации и SCORM. Сценарий остаётся редактируемым. Импортированный ZIP запускается как активность Moodle; его содержимое нельзя править в этом редакторе. После изменения сценария импортируйте пакет текущей версии перед публикацией.');
 echo html_writer::start_tag('form', [
     'method' => 'post', 'enctype' => 'multipart/form-data',
     'action' => (new moodle_url('/local/ustar/materials_studio.php'))->out(false),
@@ -116,6 +121,38 @@ echo html_writer::tag('textarea', s((string)$editing['outline']), ['name' => 'ou
 echo html_writer::tag('label', 'Редактор содержимого');
 echo html_writer::tag('textarea', s((string)$editing['body']), ['name' => 'body', 'rows' => 12, 'class' => 'form-control',
     'placeholder' => 'Добавьте текст, списки, ссылки и оформление курса.']);
+echo html_writer::start_div('u-studio-scorm-pages', ['id' => 'studio-scorm-pages']);
+echo html_writer::tag('h3', 'Страницы SCORM');
+echo html_writer::tag('p', 'Добавьте страницы в порядке прохождения. Для обычного импорта ZIP страницы заполнять не требуется.');
+$pages = (array)($editing['pages'] ?? []);
+if (!$pages) { $pages = [['title' => '', 'body' => '']]; }
+foreach ($pages as $index => $page) {
+    echo html_writer::start_div('u-studio-scorm-page');
+    echo html_writer::tag('label', 'Название страницы ' . ((int)$index + 1));
+    echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'scormpages[' . (int)$index . '][title]',
+        'value' => (string)($page['title'] ?? ''), 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Содержимое страницы');
+    echo html_writer::start_div('u-scorm-toolbar');
+    echo html_writer::tag('button', 'Жирный', ['type' => 'button', 'data-format' => 'bold', 'class' => 'btn btn-sm']);
+    echo html_writer::tag('button', 'Список', ['type' => 'button', 'data-format' => 'insertUnorderedList', 'class' => 'btn btn-sm']);
+    echo html_writer::end_div();
+    echo html_writer::tag('div', format_text((string)($page['body'] ?? ''), FORMAT_HTML, ['filter' => false]),
+        ['class' => 'u-scorm-rich-editor', 'contenteditable' => 'true', 'role' => 'textbox',
+            'aria-label' => 'Содержимое страницы ' . ((int)$index + 1), 'aria-multiline' => 'true']);
+    echo html_writer::tag('textarea', s((string)($page['body'] ?? '')),
+        ['name' => 'scormpages[' . (int)$index . '][body]', 'rows' => 6,
+            'class' => 'form-control', 'placeholder' => 'Текст страницы, списки и ссылки']);
+    echo html_writer::tag('button', 'Удалить страницу', ['type' => 'button',
+        'class' => 'btn btn-outline-secondary u-scorm-remove']);
+    echo html_writer::end_div();
+}
+echo html_writer::tag('button', 'Добавить страницу', ['type' => 'button', 'id' => 'studio-add-page',
+    'class' => 'btn btn-outline-secondary']);
+echo html_writer::start_tag('label');
+echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'buildscorm', 'value' => 1]);
+echo ' Собрать и импортировать SCORM из страниц при сохранении';
+echo html_writer::end_tag('label');
+echo html_writer::end_div();
 echo html_writer::tag('label', 'Вопросы аттестации');
 echo html_writer::tag('p', 'Для аттестации добавьте по одному вопросу на строку: Вопрос | вариант 1 | вариант 2 | номер верного варианта.');
 echo html_writer::tag('textarea', s((string)$editing['questionslines']), ['name' => 'questions', 'rows' => 6, 'class' => 'form-control']);
@@ -127,9 +164,64 @@ echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'scormzip', 'a
 if ($editing['packagestatus'] === 'imported') {
     echo html_writer::tag('p', 'Подключён пакет: ' . s((string)$editing['packagefilename'])
         . ($editing['packageurl'] ? ' · ' . html_writer::link((string)$editing['packageurl'], 'скачать пакет') : ''));
+    if ((string)$editing['kind'] === 'scorm' && (int)$editing['id'] > 0
+            && \local_ustar\material_studio::runtime_ready((int)$editing['id'])) {
+        echo $OUTPUT->notification('Пакет текущей версии импортирован в Moodle. В маршруте выберите этот материал: результаты и возобновление записывает Moodle.', 'notifyinfo');
+    }
 }
 echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить в черновик', 'class' => 'btn btn-primary']);
 echo html_writer::end_tag('form');
+$PAGE->requires->js_init_code(<<<'JS'
+(function() {
+    const panel = document.getElementById('studio-scorm-pages');
+    const add = document.getElementById('studio-add-page');
+    if (!panel || !add) { return; }
+    function init(page) {
+        const source = page.querySelector('textarea');
+        const rich = page.querySelector('.u-scorm-rich-editor');
+        source.hidden = true;
+        rich.addEventListener('input', function() { source.value = rich.innerHTML; });
+        rich.addEventListener('paste', function(e) {
+            e.preventDefault();
+            document.execCommand('insertText', false, e.clipboardData.getData('text/plain'));
+        });
+    }
+    panel.querySelectorAll('.u-studio-scorm-page').forEach(init);
+    panel.closest('form').addEventListener('submit', function() {
+        panel.querySelectorAll('.u-studio-scorm-page').forEach(function(page) {
+            page.querySelector('textarea').value = page.querySelector('.u-scorm-rich-editor').innerHTML;
+        });
+    });
+    add.addEventListener('click', function() {
+        const pages = panel.querySelectorAll('.u-studio-scorm-page');
+        if (pages.length >= 30) { return; }
+        const node = pages[0].cloneNode(true);
+        const index = Math.max(...Array.from(panel.querySelectorAll('[name^="scormpages["]'))
+            .map(function(input) { return Number(input.name.match(/^scormpages\[(\d+)\]/)[1]); })) + 1;
+        node.querySelectorAll('input,textarea').forEach(function(input) {
+            input.name = input.name.replace(/^scormpages\[\d+\]/, 'scormpages[' + index + ']');
+            input.value = '';
+        });
+        node.querySelector('.u-scorm-rich-editor').innerHTML = '';
+        node.querySelector('label').textContent = 'Название страницы ' + (index + 1);
+        panel.insertBefore(node, add);
+        init(node);
+    });
+    panel.addEventListener('click', function(event) {
+        if (event.target.matches('.u-scorm-remove')) {
+            const page = event.target.closest('.u-studio-scorm-page');
+            if (panel.querySelectorAll('.u-studio-scorm-page').length > 1) { page.remove(); }
+            else { page.querySelectorAll('input,textarea').forEach(function(input) { input.value = ''; });
+                page.querySelector('.u-scorm-rich-editor').innerHTML = ''; }
+        }
+        const button = event.target.closest('[data-format]');
+        if (button) { event.preventDefault();
+            const editor = button.closest('.u-studio-scorm-page').querySelector('.u-scorm-rich-editor');
+            editor.focus(); document.execCommand(button.dataset.format, false);
+        }
+    });
+}());
+JS);
 
 if ((int)$editing['id'] > 0) {
     echo html_writer::start_div('u-studio-actions');

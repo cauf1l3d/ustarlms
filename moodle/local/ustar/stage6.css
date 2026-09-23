@@ -60,6 +60,32 @@
     max-width: 860px;
     line-height: 1.65;
 }
+.u-studio-scorm-pages {
+    max-width: 860px;
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--u-border, #e5e7eb);
+    border-radius: .8rem;
+    background: var(--u-surface, #fff);
+}
+.u-studio-scorm-page {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid var(--u-border, #e5e7eb);
+    border-radius: .65rem;
+}
+.u-studio-scorm-page label { display: block; margin: .5rem 0; font-weight: 600; }
+.u-scorm-toolbar { display: flex; gap: .4rem; margin: .6rem 0; }
+.u-scorm-rich-editor {
+    min-height: 9rem;
+    padding: .75rem;
+    border: 1px solid var(--u-border, #b8bec7);
+    border-radius: .5rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+.u-scorm-rich-editor:focus-visible { outline: 3px solid var(--u-accent, #ebc500); outline-offset: 2px; }
+.u-studio-scorm-pages > label { display: block; margin: 1rem 0; }
 .u-board-archive {
     max-height: 65vh;
     overflow: auto;

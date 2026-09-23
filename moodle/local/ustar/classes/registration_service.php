@@ -234,7 +234,8 @@ final class registration_service {
         foreach (get_users_by_capability(\context_system::instance(),
                 'local/ustar:approveregistration', 'u.id', 'u.id ASC') as $candidate) {
             $candidateid = (int)$candidate->id;
-            if (team_access::active_actor($candidateid)) {
+            if (team_access::active_actor($candidateid)
+                    && has_capability('local/ustar:hrmanage', \context_system::instance(), $candidateid)) {
                 $recipients[$candidateid] = true;
             }
         }

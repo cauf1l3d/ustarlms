@@ -8,7 +8,7 @@ $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 
 $ishr = has_capability('local/ustar:hrmanage', $context);
-$canapproveregistration = has_capability('local/ustar:approveregistration', $context);
+$canapproveregistration = $ishr && has_capability('local/ustar:approveregistration', $context);
 $scope = \local_ustar\staffing_requests::manager_scope((int)$USER->id);
 $ismanager = !empty($scope['allowed']) && has_capability('local/ustar:viewteam', $context);
 

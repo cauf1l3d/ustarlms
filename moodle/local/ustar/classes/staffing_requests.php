@@ -359,7 +359,8 @@ final class staffing_requests {
 
         $context = \context_system::instance();
         $ishr = has_capability('local/ustar:hrmanage', $context, $viewerid);
-        $canapproveregistration = has_capability('local/ustar:approveregistration', $context, $viewerid);
+        $canapproveregistration = $ishr
+            && has_capability('local/ustar:approveregistration', $context, $viewerid);
         $scope = self::manager_scope($viewerid);
         if (!$ishr && !$canapproveregistration && empty($scope['allowed'])) {
             return [];

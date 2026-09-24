@@ -1,6 +1,6 @@
 # USTAR agent entrypoint
 
-**Draft integration note (2026-09-24):** `codex/ustar-complete-rc-20260923` contains the work in PR #14, stacked on PR #13. Neither PR nor the earlier stage PRs are accepted as a release. The source baseline described below is historical; inspect the branch HEAD, current `main` and production evidence before using it. Keep the canonical roadmap in `context/roadmap/` and do not mark audit items done from source-only CI.
+**Draft integration note (2026-09-24):** `codex/ustar-complete-rc-20260923` is [PR #14](https://github.com/cauf1l3d/ustarlms/pull/14), now targeting `main` and including the unaccepted PR #13 changes. Neither this PR nor earlier stage PRs are accepted as a release. The [60-item audit register](context/roadmap/RC_AUDIT_ACCEPTANCE_20260924.md) retains every audit finding without marking source-only fixes accepted. The source baseline described below is historical; inspect the branch HEAD, current `main` and production evidence before using it.
 
 Before doing work, read **[START_HERE.md](START_HERE.md)**, then:
 

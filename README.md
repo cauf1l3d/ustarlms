@@ -1,15 +1,14 @@
-# Current roadmap — 2026-09-07
+# USTAR Academy
 
-Canonical plan and task status are maintained in main:
+**Релизная работа 24.09.2026:** черновой [PR #14](https://github.com/cauf1l3d/ustarlms/pull/14) содержит изменения поверх PR #13. Проверка кода не является приёмкой Moodle runtime или production. Канонические критерии и история статусов находятся в `context/roadmap/`; приведённая ниже запись описывает более раннюю публикацию исходников.
 
-- [START_HERE](https://github.com/cauf1l3d/ustarlms/blob/main/START_HERE.md)
-- [STATE](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/STATE.yaml)
-- [BACKLOG](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/BACKLOG.yaml)
-- [Agent protocol](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/AGENT_PROTOCOL.md)
+**Актуальная работа: [начать здесь](START_HERE.md) → [roadmap](context/roadmap/README.md) → [статус и следующий шаг](context/roadmap/STATE.yaml).**
 
-Read these first. This branch contains the audited application/context baseline; its historical task list is not the current roadmap. Follow existing ADRs below and distinguish source code, tested runtime and deployed release. Do not create a second independent task-status copy.
+Приоритет: надёжный production, консистентная студия маршрутов, награда за каждое новое подтверждённое прохождение точки, геймификация и инженерный порядок. Код патчей опубликован в `integration/ustar-20260912`; main содержит канонический контекст и harness. Код приложения main в этой публикации не менялся. Точный кодовый SHA и границы проверки — в STATE. Последний SCORM-вариант предварительно подтверждён пользователем; полная сверка production ещё требуется.
 
 ---
+
+## Историческая запись исходного baseline
 
 # USTAR 1.5.1 production baseline
 

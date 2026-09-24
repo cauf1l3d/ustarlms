@@ -1,13 +1,21 @@
-# Current roadmap — 2026-09-07
+# USTAR agent entrypoint
 
-Canonical plan and task status are maintained in main:
+**Draft integration note (2026-09-24):** `codex/ustar-complete-rc-20260923` contains the work in PR #14, stacked on PR #13. Neither PR nor the earlier stage PRs are accepted as a release. The source baseline described below is historical; inspect the branch HEAD, current `main` and production evidence before using it. Keep the canonical roadmap in `context/roadmap/` and do not mark audit items done from source-only CI.
 
-- [START_HERE](https://github.com/cauf1l3d/ustarlms/blob/main/START_HERE.md)
-- [STATE](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/STATE.yaml)
-- [BACKLOG](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/BACKLOG.yaml)
-- [Agent protocol](https://github.com/cauf1l3d/ustarlms/blob/main/context/roadmap/AGENT_PROTOCOL.md)
+Before doing work, read **[START_HERE.md](START_HERE.md)**, then:
 
-Read these first. This branch contains the audited application/context baseline; its historical task list is not the current roadmap. Follow existing ADRs below and distinguish source code, tested runtime and deployed release. Do not create a second independent task-status copy.
+1. `context/roadmap/STATE.yaml`
+2. `context/tasks/ACTIVE.md`
+3. `context/roadmap/BACKLOG.yaml`
+4. `context/roadmap/AGENT_PROTOCOL.md`
+
+The patch application code is in `integration/ustar-20260912`; canonical context and harness are in main; STATE records the exact source baseline and separate runtime evidence. Follow START_HERE links and read the existing project, architecture, ADRs, domains, runtime, code map and agent instructions at that baseline before changing code. Check newer commits and production drift rather than blindly applying an old patch.
+
+Keep architecture decisions and historical evidence. Do not create duplicate domain models, change Moodle core, hide business logic in the theme, or remove learning/economy history. Database changes need explicit migrations and validation. User instructions take precedence over historical audit recommendations; roadmap proposals do not authorize unrelated production mutations.
+
+Current business priority includes working route studio, reliable completion, rewards for every newly confirmed route point, gamification and achievements. Do not freeze these because an older plan suggested it.
+
+Canonical task status is maintained in main `context/roadmap/`. Each completed step must include exact code SHA, real validation evidence and separate deployment evidence where applicable. An archive, a code file or a static check is not production acceptance. See the protocol before claiming a task done.
 
 ---
 

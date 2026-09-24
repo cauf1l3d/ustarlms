@@ -87,13 +87,34 @@ final class material_studio {
         $passscore = min(100, max(1, (int)($input['passscore'] ?? 80)));
         $pages = $kind === self::KIND_SCORM ? self::scorm_pages($input['scormpages'] ?? []) : [];
         $expected = (int)($input['expectedmodified'] ?? 0);
+        $creationtoken = (string)($input['creationtoken'] ?? '');
+        if ($contentid === 0 && !preg_match('/^[a-f0-9]{32}$/', $creationtoken)) {
+            throw new \invalid_parameter_exception('Форма создания устарела. Обновите страницу и повторите сохранение.');
+        }
+        $inputhash = hash('sha256', json_encode([$kind, $title, $summary, $body,
+            (string)($input['outline'] ?? ''), $questions, $passscore, $pages], JSON_UNESCAPED_UNICODE));
         $now = time();
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
-            ->get_lock('studio:' . ($contentid ?: 'new'), 10);
+            ->get_lock($contentid ? 'studio:' . $contentid : 'studio:new:' . $actorid . ':' . $creationtoken, 10);
         if (!$lock) {
             throw new \moodle_exception('Материал сейчас редактируется в другой сессии. Повторите попытку.');
         }
         try {
+            if ($contentid === 0) {
+                $existing = $DB->get_record('local_ustar_workflow_events', [
+                    'entitytype' => 'studio_material_create', 'eventtype' => 'created',
+                    'actorid' => $actorid, 'reason' => $creationtoken,
+                ]);
+                if ($existing) {
+                    $details = json_decode((string)$existing->detailsjson, true);
+                    if (!is_array($details) || (string)($details['inputhash'] ?? '') !== $inputhash) {
+                        throw new \invalid_parameter_exception('Эта форма уже создала другой материал. Откройте новую форму.');
+                    }
+                    $result = self::by_content((int)$existing->entityid, $actorid);
+                    $result['replay'] = true;
+                    return $result;
+                }
+            }
             $tx = $DB->start_delegated_transaction();
             $blueprint = false;
             if ($contentid > 0) {
@@ -167,6 +188,14 @@ final class material_studio {
             self::audit($contentid, 'studio_material_saved', $actorid, [
                 'kind' => $kind, 'sourceversion' => (int)$blueprint->sourceversion,
             ]);
+            if ($creationtoken !== '' && $expected === 0) {
+                $DB->insert_record('local_ustar_workflow_events', (object)[
+                    'entitytype' => 'studio_material_create', 'entityid' => $contentid,
+                    'eventtype' => 'created', 'actorid' => $actorid, 'reason' => $creationtoken,
+                    'detailsjson' => json_encode(['inputhash' => $inputhash]),
+                    'timecreated' => $now,
+                ]);
+            }
             $result = self::by_content($contentid, $actorid);
             $tx->allow_commit();
             return $result;

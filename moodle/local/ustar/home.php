@@ -687,16 +687,16 @@ try {
 } catch (\Throwable $e) {
     $homepositionid = '';
 }
+if (\local_ustar\view_as::active()) {
+    $homepositionid = \local_ustar\view_as::position_id();
+}
 
 $homepermanentroute = null;
 
 if ($homepositionid !== '') {
     try {
         $homepermanentroute =
-            \local_ustar\route_model::for_user(
-                $homepositionid,
-                (int)$USER->id
-            );
+            \local_ustar\route_model::for_user($homepositionid, (int)$USER->id);
     } catch (\Throwable $e) {
         $homepermanentroute = null;
     }

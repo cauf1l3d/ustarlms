@@ -88,8 +88,14 @@ final class studio_scorm_runtime {
                 'completionview' => 0, 'completionexpected' => 0,
             ];
             $module = add_moduleinfo($module, $course);
-            if (!$DB->record_exists('scorm_scoes', ['scorm' => (int)$module->instance])) {
-                throw new \invalid_parameter_exception('Moodle не нашёл исполняемую часть в SCORM ZIP. Проверьте manifest.');
+            $parsed = $DB->get_record('scorm', ['id' => (int)$module->instance], 'id,version', MUST_EXIST);
+            if ((string)$parsed->version !== 'SCORM_1.2'
+                    || !$DB->record_exists_select('scorm_scoes',
+                        "scorm = :scorm AND scormtype = :type AND launch <> ''",
+                        ['scorm' => (int)$module->instance, 'type' => 'sco'])) {
+                throw new \invalid_parameter_exception(
+                    'Пакет не содержит запускаемый SCORM 1.2 SCO. Проверьте imsmanifest.xml и файлы запуска.'
+                );
             }
 
             $context = \context_system::instance();

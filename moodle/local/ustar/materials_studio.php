@@ -19,7 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $item = \local_ustar\material_studio::save(
                 optional_param('id', 0, PARAM_INT), $_POST, (int)$USER->id
             );
-            if (!empty($_FILES['scormzip']['name'])) {
+            if (!empty($item['replay'])) {
+                // The same new-material POST was already committed.
+            } else if (!empty($_FILES['scormzip']['name'])) {
                 $item = \local_ustar\material_studio::upload_scorm_zip((int)$item['id'], (int)$USER->id, $_FILES['scormzip']);
             } else if (optional_param('buildscorm', 0, PARAM_BOOL)) {
                 $item = \local_ustar\material_studio::build_scorm((int)$item['id'], (int)$USER->id);
@@ -43,9 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
         if ($action === 'save') {
-            $editingid = optional_param('id', 0, PARAM_INT);
-            $postedediting = [
+            $editingid = isset($item['id']) ? (int)$item['id'] : optional_param('id', 0, PARAM_INT);
+            $postedediting = isset($item['id']) ? null : [
                 'id' => $editingid,
+                'creationtoken' => optional_param('creationtoken', '', PARAM_ALPHANUM),
                 'kind' => optional_param('kind', 'course', PARAM_ALPHA),
                 'title' => optional_param('title', '', PARAM_TEXT),
                 'summary' => optional_param('summary', '', PARAM_TEXT),
@@ -76,6 +79,9 @@ $editing = ($postedediting ?? $editing) ?: [
     'packagestatus' => 'none', 'packagefilename' => '', 'packageurl' => '',
     'pages' => [],
 ];
+if (empty($editing['id']) && empty($editing['creationtoken'])) {
+    $editing['creationtoken'] = bin2hex(random_bytes(16));
+}
 
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/materials_studio.php', ['id' => (int)$editing['id']]));
@@ -104,6 +110,8 @@ echo html_writer::start_tag('form', [
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'save']);
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$editing['id']]);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'creationtoken',
+    'value' => (string)($editing['creationtoken'] ?? '')]);
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'expectedmodified', 'value' => (int)$editing['expectedmodified']]);
 echo html_writer::tag('label', 'Тип материала');
 echo html_writer::select([
@@ -240,6 +248,11 @@ JS);
 
 if ((int)$editing['id'] > 0) {
     echo html_writer::start_div('u-studio-actions');
+    if ((string)$editing['kind'] === 'scorm' && !empty($editing['pages'])) {
+        echo html_writer::link(new moodle_url('/local/ustar/studio_scorm_preview.php',
+            ['id' => (int)$editing['id']]), 'Предпросмотр без записи результата',
+            ['class' => 'btn btn-outline-secondary', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
+    }
     foreach ([
         $editing['status'] === 'published' ? 'unpublish' : 'publish' =>
             $editing['status'] === 'published' ? 'Вернуть в черновики' : 'Опубликовать',

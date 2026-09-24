@@ -988,7 +988,11 @@ final class adaptation_service {
 
     /** HRD-only guard based on canonical USTAR role/access profile. */
     public static function require_hrd_actor(int $actorid): void {
+        global $USER;
         $context = \context_system::instance();
+        if ($actorid !== (int)$USER->id || !team_access::active_actor($actorid)) {
+            throw new \required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
+        }
         require_capability('local/ustar:use', $context);
         if (!self::is_hrd_actor($actorid)) {
             throw new \required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
@@ -1026,10 +1030,6 @@ final class adaptation_service {
     }
 
     public static function hrd_final_decision(int $adaptationid, int $actorid, string $decision, string $reason, int $extensiondays = 0): void {
-        global $USER;
-        if ($actorid !== (int)$USER->id || !team_access::active_actor($actorid)) {
-            throw new \required_capability_exception(\context_system::instance(), 'local/ustar:use', 'nopermissions', '');
-        }
         self::require_hrd_actor($actorid);
         view_as::assert_writable();
         self::final_decision_transaction($adaptationid, static function() use (

@@ -221,6 +221,16 @@
 }
 .u-scorm-rich-editor:focus-visible { outline: 3px solid var(--u-accent, #ebc500); outline-offset: 2px; }
 .u-studio-scorm-pages > label { display: block; margin: 1rem 0; }
+.u-studio-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+    align-items: center;
+    max-width: 920px;
+    margin: 1rem 0;
+}
+.u-studio-actions form { margin: 0; }
+.u-studio-actions .u-btn { max-width: 100%; white-space: normal; }
 .u-studio-history { max-width: 860px; margin: 1.5rem 0; }
 .u-studio-revision {
     margin: .6rem 0;

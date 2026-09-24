@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             [
                 'id' => optional_param('id', '', PARAM_ALPHANUMEXT),
                 'name' => required_param('name', PARAM_TEXT),
-                'block' => optional_param('block', '', PARAM_ALPHA),
+                'block' => optional_param('block', '', PARAM_ALPHANUMEXT),
                 'companyrole' => optional_param('companyrole', '', PARAM_ALPHANUMEXT),
             ],
             required_param('revision', PARAM_INT)

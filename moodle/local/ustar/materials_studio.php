@@ -99,7 +99,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading('Студия материалов');
 echo html_writer::tag('p', html_writer::link(
     new moodle_url('/local/ustar/assessment_studio.php'), 'Создать аттестацию',
-    ['class' => 'btn btn-primary']));
+    ['class' => 'u-btn u-btn--primary']));
 
 if ($notice !== '') {
     echo $OUTPUT->notification(s($notice), 'notifyproblem');
@@ -112,6 +112,8 @@ foreach (['saved' => 'Материал сохранён.', 'published' => 'Ма�
 
 echo html_writer::tag('p',
     'Здесь создаются учебные материалы и SCORM. Новые аттестации открываются в конструкторе Moodle Quiz — его попытки, оценки и проверка являются общим источником результата. Импортированный ZIP запускается как активность Moodle; его содержимое нельзя править в этом редакторе. После изменения сценария импортируйте пакет текущей версии перед публикацией.');
+echo html_writer::start_tag('section', ['class' => 'u-catalog-editor', 'aria-label' => 'Редактор материала']);
+echo html_writer::tag('h2', (int)$editing['id'] > 0 ? 'Редактирование материала' : 'Новый материал');
 echo html_writer::start_tag('form', [
     'method' => 'post', 'enctype' => 'multipart/form-data',
     'action' => (new moodle_url('/local/ustar/materials_studio.php'))->out(false),
@@ -126,23 +128,25 @@ if ((string)$editing['status'] === 'published') {
     echo $OUTPUT->notification('Материал опубликован. Верните его в черновик перед изменением или заменой пакета.', 'notifyinfo');
     echo html_writer::start_tag('fieldset', ['disabled' => 'disabled']);
 }
-echo html_writer::tag('label', 'Тип материала');
+echo html_writer::tag('label', 'Тип материала', ['for' => 'studio-kind']);
 $kinds = ['course' => 'Учебный материал', 'scorm' => 'SCORM-курс'];
 if ((int)$editing['id'] > 0 && (string)$editing['kind'] === 'assessment') {
     $kinds['assessment'] = 'Аттестация, созданная ранее';
 }
 echo html_writer::select($kinds, 'kind', (string)$editing['kind'], false,
     ['class' => 'form-select', 'id' => 'studio-kind']);
-echo html_writer::tag('label', 'Название');
+echo html_writer::tag('label', 'Название', ['for' => 'studio-title']);
 echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required',
-    'value' => (string)$editing['title'], 'class' => 'form-control']);
-echo html_writer::tag('label', 'Краткое описание');
-echo html_writer::tag('textarea', s((string)$editing['summary']), ['name' => 'summary', 'rows' => 2, 'class' => 'form-control']);
-echo html_writer::tag('label', 'План курса');
-echo html_writer::tag('textarea', s((string)$editing['outline']), ['name' => 'outline', 'rows' => 3, 'class' => 'form-control']);
+    'id' => 'studio-title', 'value' => (string)$editing['title'], 'class' => 'form-control']);
+echo html_writer::tag('label', 'Краткое описание', ['for' => 'studio-summary']);
+echo html_writer::tag('textarea', s((string)$editing['summary']),
+    ['id' => 'studio-summary', 'name' => 'summary', 'rows' => 2, 'class' => 'form-control']);
+echo html_writer::tag('label', 'План курса', ['for' => 'studio-outline']);
+echo html_writer::tag('textarea', s((string)$editing['outline']),
+    ['id' => 'studio-outline', 'name' => 'outline', 'rows' => 3, 'class' => 'form-control']);
 echo html_writer::start_div('', ['id' => 'studio-course-fields']);
-echo html_writer::tag('label', 'Редактор содержимого');
-echo html_writer::tag('textarea', s((string)$editing['body']), ['name' => 'body', 'rows' => 12, 'class' => 'form-control',
+echo html_writer::tag('label', 'Редактор содержимого', ['for' => 'studio-body']);
+echo html_writer::tag('textarea', s((string)$editing['body']), ['id' => 'studio-body', 'name' => 'body', 'rows' => 12, 'class' => 'form-control',
     'placeholder' => 'Добавьте текст, списки, ссылки и оформление курса.']);
 echo html_writer::end_div();
 echo html_writer::start_div('u-studio-scorm-pages', ['id' => 'studio-scorm-pages']);
@@ -152,8 +156,10 @@ $pages = (array)($editing['pages'] ?? []);
 if (!$pages) { $pages = [['title' => '', 'body' => '']]; }
 foreach ($pages as $index => $page) {
     echo html_writer::start_div('u-studio-scorm-page');
-    echo html_writer::tag('label', 'Название страницы ' . ((int)$index + 1));
+    echo html_writer::tag('label', 'Название страницы ' . ((int)$index + 1),
+        ['for' => 'studio-page-title-' . (int)$index]);
     echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'scormpages[' . (int)$index . '][title]',
+        'id' => 'studio-page-title-' . (int)$index,
         'value' => (string)($page['title'] ?? ''), 'class' => 'form-control']);
     echo html_writer::tag('label', 'Содержимое страницы');
     echo html_writer::start_div('u-scorm-toolbar');
@@ -179,16 +185,18 @@ echo ' Собрать и импортировать SCORM из страниц п
 echo html_writer::end_tag('label');
 echo html_writer::end_div();
 echo html_writer::start_div('', ['id' => 'studio-assessment-fields']);
-echo html_writer::tag('label', 'Вопросы аттестации');
+echo html_writer::tag('label', 'Вопросы аттестации', ['for' => 'studio-questions']);
 echo html_writer::tag('p', 'Для аттестации добавьте по одному вопросу на строку: Вопрос | вариант 1 | вариант 2 | номер верного варианта.');
-echo html_writer::tag('textarea', s((string)$editing['questionslines']), ['name' => 'questions', 'rows' => 6, 'class' => 'form-control']);
-echo html_writer::tag('label', 'Проходной балл');
+echo html_writer::tag('textarea', s((string)$editing['questionslines']),
+    ['id' => 'studio-questions', 'name' => 'questions', 'rows' => 6, 'class' => 'form-control']);
+echo html_writer::tag('label', 'Проходной балл', ['for' => 'studio-passscore']);
 echo html_writer::empty_tag('input', ['type' => 'number', 'name' => 'passscore', 'min' => 1, 'max' => 100,
-    'value' => (int)$editing['passscore'], 'class' => 'form-control']);
+    'id' => 'studio-passscore', 'value' => (int)$editing['passscore'], 'class' => 'form-control']);
 echo html_writer::end_div();
 echo html_writer::start_div('', ['id' => 'studio-zip-fields']);
-echo html_writer::tag('label', 'Импорт ZIP-пакета SCORM');
-echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'scormzip', 'accept' => '.zip,application/zip']);
+echo html_writer::tag('label', 'Импорт ZIP-пакета SCORM', ['for' => 'studio-scorm-zip']);
+echo html_writer::empty_tag('input', ['type' => 'file', 'id' => 'studio-scorm-zip',
+    'name' => 'scormzip', 'accept' => '.zip,application/zip']);
 echo html_writer::end_div();
 if ($editing['packagestatus'] === 'imported') {
     echo html_writer::tag('p', 'Подключён пакет: ' . s((string)$editing['packagefilename'])
@@ -199,11 +207,13 @@ if ($editing['packagestatus'] === 'imported') {
     }
 }
 if ((string)$editing['status'] !== 'published') {
-    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить в черновик', 'class' => 'btn btn-primary']);
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить в черновик',
+        'class' => 'u-btn u-btn--primary']);
 } else {
     echo html_writer::end_tag('fieldset');
 }
 echo html_writer::end_tag('form');
+echo html_writer::end_tag('section');
 $PAGE->requires->js_init_code(<<<'JS'
 (function() {
     const panel = document.getElementById('studio-scorm-pages');
@@ -242,10 +252,15 @@ $PAGE->requires->js_init_code(<<<'JS'
             .map(function(input) { return Number(input.name.match(/^scormpages\[(\d+)\]/)[1]); })) + 1;
         node.querySelectorAll('input,textarea').forEach(function(input) {
             input.name = input.name.replace(/^scormpages\[\d+\]/, 'scormpages[' + index + ']');
+            if (input.id && input.name.endsWith('[title]')) {
+                input.id = 'studio-page-title-' + index;
+            }
             input.value = '';
         });
         node.querySelector('.u-scorm-rich-editor').innerHTML = '';
-        node.querySelector('label').textContent = 'Название страницы ' + (index + 1);
+        const titleLabel = node.querySelector('label');
+        titleLabel.textContent = 'Название страницы ' + (index + 1);
+        titleLabel.htmlFor = 'studio-page-title-' + index;
         panel.insertBefore(node, add);
         init(node);
     });
@@ -270,29 +285,29 @@ if ((int)$editing['id'] > 0) {
     if ((string)$editing['kind'] === 'assessment') {
         echo html_writer::link(new moodle_url('/local/ustar/material_player.php',
             ['id' => (int)$editing['id'], 'preview' => 1]), 'Предпросмотр без записи результата',
-            ['class' => 'btn btn-outline-secondary', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
+            ['class' => 'u-btn', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
     }
     if ((string)$editing['kind'] === 'scorm' && !empty($editing['pages'])) {
         echo html_writer::link(new moodle_url('/local/ustar/studio_scorm_preview.php',
             ['id' => (int)$editing['id']]), 'Предпросмотр без записи результата',
-            ['class' => 'btn btn-outline-secondary', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
+            ['class' => 'u-btn', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
     }
     foreach ([
         $editing['status'] === 'published' ? 'unpublish' : 'publish' =>
             $editing['status'] === 'published' ? 'Вернуть в черновики' : 'Опубликовать',
     ] as $action => $label) {
-        echo html_writer::start_tag('form', ['method' => 'post', 'style' => 'display:inline']);
+        echo html_writer::start_tag('form', ['method' => 'post']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => $action]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$editing['id']]);
-        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => $label, 'class' => 'btn']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => $label, 'class' => 'u-btn u-btn--primary']);
         echo html_writer::end_tag('form');
     }
-    echo html_writer::start_tag('form', ['method' => 'post', 'style' => 'display:inline']);
+    echo html_writer::start_tag('form', ['method' => 'post']);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'delete']);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$editing['id']]);
-    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Удалить из каталога', 'class' => 'btn btn-outline-danger']);
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Удалить из каталога', 'class' => 'u-btn']);
     echo html_writer::end_tag('form');
     echo html_writer::end_div();
 

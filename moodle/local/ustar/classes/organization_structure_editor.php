@@ -25,7 +25,7 @@ final class organization_structure_editor {
     public static function blocks(?array $structure = null): array {
         $structure = $structure ?? structure::get(structure::NAME_STRUCTURE);
         $blocks = self::BLOCKS;
-        foreach ($structure['blocks'] ?? [] as $id => $name) {
+        foreach (is_array($structure['blocks'] ?? null) ? $structure['blocks'] : [] as $id => $name) {
             if (is_string($id) && preg_match('/^[a-z][a-z0-9_]*$/', $id)
                     && is_string($name) && trim($name) !== '') {
                 $blocks[$id] = $name;

@@ -20,6 +20,8 @@ Source: user-supplied `USTAR_ENGINEERING_AUDIT_REFACTOR_PLAN_20260920(1).md`, se
 
 **Material acknowledgement (D01, source only):** The opened content version is mandatory for route studied events; callers without a version now fail closed, including the diagnostic CLI. Publication between acknowledgement and route completion is rejected. Version switch browser acceptance and migration of older facts are still open.
 
+**Organization blocks (B13, source only):** HR can create and rename business blocks with stable keys; `company_hierarchy` now renders the configured labels and accepts newly created blocks. Existing named leader/assistant heuristics and access projections still need architectural reconciliation. No staff assignment is rewritten when a block is renamed; linked positions and reporting must be checked in runtime.
+
 | ID | Priority / basis | RC status | Audit finding and required change |
 |---|---|---|---|
 | A01 | P0 · К | Acceptance pending | **Устаревший CI-gate.** Workflow запускается для `ustar-final-audit-release`, не для актуальных PR/интеграционной ветки; ожидает XMLDB/plugin `2026082705` и сравнивает код с историческим release-каталогом. Перевести на действующие ветки, обязательные PR-проверки и актуальные инварианты; убрать сравнение с исторической копией как критерий корректности. Приёмка: дефектный PR блокируется, текущий SHA проходит осмысленный pipeline. [Workflow][ci] |

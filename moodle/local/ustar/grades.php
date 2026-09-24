@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'decide') {
             $requestid = required_param('id', PARAM_INT);
             $decision = required_param('decision', PARAM_ALPHA);
+            if (!in_array($decision, ['approve', 'return'], true)) {
+                throw new invalid_parameter_exception('Выберите допустимое решение по заявке.');
+            }
             \local_ustar\grade_promotion::decide(
                 $requestid, (int)$USER->id, $decision === 'approve', optional_param('reason', '', PARAM_TEXT)
             );
@@ -67,7 +70,7 @@ if ($view === 'mine') {
     if (empty($current['enabled'])) {
         echo $OUTPUT->notification('Для вашей должности грейдовая лестница не настроена.', 'notifyinfo');
     } else {
-        echo html_writer::tag('h2', 'Текущая ступень: ' . s((string)$current['label']));
+            echo html_writer::tag('h2', 'Текущая ступень: ' . s((string)$current['label']));
         echo html_writer::tag('p', s((string)$eligibility['reason']));
         echo html_writer::start_tag('ul');
         foreach ((array)$eligibility['requirements'] as $requirement) {
@@ -80,7 +83,7 @@ if ($view === 'mine') {
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'request']);
             echo html_writer::empty_tag('input', ['type' => 'submit',
-                'value' => 'Отправить заявку на «' . s((string)$eligibility['nextlabel']) . '»', 'class' => 'btn btn-primary']);
+                'value' => 'Отправить заявку на «' . s((string)$eligibility['nextlabel']) . '»', 'class' => 'u-btn u-btn--primary']);
             echo html_writer::end_tag('form');
         }
     }
@@ -109,15 +112,17 @@ if ($view === 'team') {
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'decide']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$request->id]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'decision', 'value' => 'approve']);
-        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Согласовать', 'class' => 'btn btn-primary']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Согласовать', 'class' => 'u-btn u-btn--primary']);
         echo html_writer::end_tag('form');
         echo html_writer::start_tag('form', ['method' => 'post']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'decide']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$request->id]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'decision', 'value' => 'return']);
-        echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'reason', 'required' => 'required', 'placeholder' => 'Что нужно доработать']);
-        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Вернуть', 'class' => 'btn']);
+        echo html_writer::tag('label', 'Причина возврата', ['for' => 'grade-reason-' . (int)$request->id]);
+        echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'reason',
+            'id' => 'grade-reason-' . (int)$request->id, 'required' => 'required', 'class' => 'form-control']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Вернуть', 'class' => 'u-btn']);
         echo html_writer::end_tag('form');
         echo html_writer::end_div();
     }

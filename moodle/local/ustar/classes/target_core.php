@@ -176,6 +176,37 @@ final class target_core {
         return !$latest || (string)$latest->eventtype === 'restored';
     }
 
+    /** Batch lifecycle projection for reports; the latest event is time-scoped. */
+    public static function evidence_validity(array $evidenceids, ?int $attime = null): array {
+        global $DB;
+        $ids = array_values(array_unique(array_filter(array_map('intval', $evidenceids),
+            static fn(int $id): bool => $id > 0)));
+        if (!$ids) return [];
+        $attime = $attime ?? time();
+        [$insql, $params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'ev');
+        $records = $DB->get_records_select('local_ustar_evidence_rec', 'id ' . $insql,
+            $params, '', 'id,outcome,validfrom,expiresat,timecreated');
+        [$eventsql, $eventparams] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'evt');
+        $eventparams['at'] = $attime;
+        $events = $DB->get_records_select('local_ustar_evidence_evt',
+            'evidenceid ' . $eventsql . ' AND timecreated <= :at', $eventparams,
+            'timecreated DESC,id DESC', 'id,evidenceid,eventtype');
+        $latest = [];
+        foreach ($events as $event) {
+            $eid = (int)$event->evidenceid;
+            if (!isset($latest[$eid])) $latest[$eid] = (string)$event->eventtype;
+        }
+        $valid = [];
+        foreach ($ids as $id) {
+            $fact = $records[$id] ?? null;
+            $valid[$id] = $fact !== null && (string)$fact->outcome !== 'failed'
+                && (int)$fact->timecreated <= $attime && (int)$fact->validfrom <= $attime
+                && (empty($fact->expiresat) || (int)$fact->expiresat > $attime)
+                && (!isset($latest[$id]) || $latest[$id] === 'restored');
+        }
+        return $valid;
+    }
+
     /**
      * Renew evidence as a new immutable fact and supersede the old fact.
      *

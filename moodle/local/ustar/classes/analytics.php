@@ -26,6 +26,9 @@ final class analytics {
         $users=$DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1', [], 'id ASC', 'id,firstname,lastname',0,$limit+1);
         $incomplete=count($users)>$limit;
         if ($incomplete) {array_pop($users);}
+        $positionversions=[];
+        foreach($published as $pid=>$standard)$positionversions[(string)$pid]=(int)$standard['versionid'];
+        $assessedlevels=skill_assessment::current_for_users(array_keys($users),$positionversions);
         $qualified=0;$withgaps=0;$unassigned=0;$unconfigured=0;$unverified=0;$expired=0;$total=0;$gaps=[];
         foreach($users as $u){
             if(!accounts::participates((int)$u->id))continue; $total++; $pid=people::position_id((int)$u->id);
@@ -45,9 +48,8 @@ final class analytics {
                 // Course/activity completion cannot demonstrate a human skill level.
                 // Until a separately reviewed and revocable level fact exists, the
                 // person's qualification is unknown, not a passed standard or gap.
-                $assessment=skill_assessment::current((int)$u->id,$pid,$skillid,
-                    (int)$published[$pid]['versionid']);
-                $level=$assessment['level']??null;
+                $level=$assessedlevels[(int)$u->id.':'.$pid.':'.$skillid.':'
+                    .(int)$published[$pid]['versionid']]??null;
                 if($level===null){$unknown=true;continue;}
                 if($level<$target){$ok=false;$usergaps[$skillid]=true;}
             }

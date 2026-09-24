@@ -71,6 +71,40 @@ final class skill_assessment {
         return ['id'=>(int)$fact->id,'level'=>$level,'reason'=>(string)($details['reason'] ?? '')];
     }
 
+    /** Read assessed levels in two bounded queries for an executive page. */
+    public static function current_for_users(array $userids, array $positionversions): array {
+        global $DB;
+        $userids = array_values(array_unique(array_map('intval', $userids)));
+        $versionids = array_values(array_unique(array_map('strval', array_values($positionversions))));
+        if (!$userids || !$versionids) return [];
+        [$userin, $userparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'usr');
+        [$versionin, $versionparams] = $DB->get_in_or_equal($versionids, SQL_PARAMS_NAMED, 'ver');
+        $params = $userparams + $versionparams + [
+            'sourcekind'=>'human_skill_level','type'=>'manager_review','outcome'=>'passed'];
+        $facts = $DB->get_records_select('local_ustar_evidence_rec',
+            'userid ' . $userin . ' AND sourceid ' . $versionin
+                . ' AND sourcekind=:sourcekind AND evidencetype=:type AND outcome=:outcome',
+            $params, 'timecreated DESC,id DESC');
+        $latest = [];
+        foreach ($facts as $fact) {
+            if ((int)($positionversions[(string)$fact->positionid] ?? 0) !== (int)$fact->sourceid) continue;
+            $key = (int)$fact->userid . ':' . (string)$fact->positionid . ':'
+                . (string)$fact->skillid . ':' . (string)$fact->sourceid;
+            if (!isset($latest[$key])) $latest[$key] = $fact;
+        }
+        $validity = target_core::evidence_validity(array_map(
+            static fn(\stdClass $fact): int => (int)$fact->id, array_values($latest)));
+        $levels = [];
+        foreach ($latest as $key => $fact) {
+            if ((int)$fact->recordedby <= 0 || (int)$fact->recordedby === (int)$fact->userid
+                    || empty($validity[(int)$fact->id])) continue;
+            $details = json_decode((string)$fact->detailsjson, true);
+            $level = is_array($details) ? ($details['level'] ?? null) : null;
+            if (is_int($level) && $level >= 1 && $level <= 5) $levels[$key] = $level;
+        }
+        return $levels;
+    }
+
     public static function revoke(int $userid, int $evidenceid, string $reason, int $actorid): void {
         global $DB;
         view_as::assert_writable();

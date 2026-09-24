@@ -14,18 +14,22 @@ class hr_get_people extends base {
             'department' => new external_value(PARAM_ALPHANUMEXT, 'Department id', VALUE_DEFAULT, ''),
             'status' => new external_value(PARAM_ALPHA, 'active | suspended | all', VALUE_DEFAULT, 'active'),
             'limit' => new external_value(PARAM_INT, 'Maximum rows', VALUE_DEFAULT, 100),
+            'offset' => new external_value(PARAM_INT, 'Number of matching people to skip', VALUE_DEFAULT, 0),
         ]);
     }
 
-    public static function execute(string $query = '', string $department = '', string $status = 'active', int $limit = 100): array {
+    public static function execute(string $query = '', string $department = '', string $status = 'active',
+            int $limit = 100, int $offset = 0): array {
         global $DB;
         self::guard();
         require_capability('local/ustar:hr', \context_system::instance());
-        $params = self::validate_parameters(self::execute_parameters(), compact('query', 'department', 'status', 'limit'));
+        $params = self::validate_parameters(self::execute_parameters(),
+            compact('query', 'department', 'status', 'limit', 'offset'));
         $query = trim($params['query']);
         $department = trim($params['department']);
         $status = $params['status'];
         $limit = max(1, min(250, $params['limit']));
+        $offset = max(0, $params['offset']);
         if (!in_array($status, ['active', 'suspended', 'all'], true)) {
             throw new \invalid_parameter_exception('Неизвестный статус сотрудника.');
         }
@@ -57,13 +61,13 @@ class hr_get_people extends base {
                  WHERE " . implode(' AND ', $where) . "
               ORDER BY u.lastname, u.firstname, u.id";
         $people = [];
-        $offset = 0;
+        $scanoffset = 0;
+        $total = 0;
         do {
-            // Position and business-account filters cannot be expressed through
-            // the legacy JSON position column. Keep scanning until the page is
-            // actually full, including one extra eligible row for hasMore.
-            $records = $DB->get_records_sql($sql, $sqlparams, $offset, 250);
-            $offset += count($records);
+            // Scan every matching row so total and page boundaries reflect
+            // workforce and department filters, not an arbitrary SQL prefix.
+            $records = $DB->get_records_sql($sql, $sqlparams, $scanoffset, 250);
+            $scanoffset += count($records);
             foreach ($records as $u) {
                 if (!\local_ustar\accounts::is_business_account((int)$u->id)) {
                     continue;
@@ -72,6 +76,7 @@ class hr_get_people extends base {
                 if ($department !== '' && (!$p || $p['department'] !== $department)) {
                     continue;
                 }
+                if ($total++ < $offset || $total > $offset + $limit) continue;
                 $resolved = structure::resolve_user((int)$u->id);
                 $people[] = [
                     'id' => (int)$u->id,
@@ -87,19 +92,15 @@ class hr_get_people extends base {
                     'role' => $resolved['role'],
                     'protected' => is_siteadmin($u) || has_capability('local/ustar:admin', \context_system::instance(), $u->id),
                 ];
-                if (count($people) > $limit) {
-                    break;
-                }
             }
-        } while (count($people) <= $limit && count($records) === 250);
-        $hasmore = count($people) > $limit;
-        if ($hasmore) {
-            array_pop($people);
-        }
+        } while (count($records) === 250);
+        $hasmore = $total > $offset + $limit;
 
         return ['json' => json_encode([
             'people' => $people,
             'count' => count($people),
+            'total' => $total,
+            'offset' => $offset,
             'hasMore' => $hasmore,
             'positions' => array_values($st['positions']),
             'departments' => array_values($st['departments']),

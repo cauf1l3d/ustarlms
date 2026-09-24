@@ -141,11 +141,11 @@ final class learning_events {
         int $contentid,
         int $pointid,
         int $routeversionid,
-        int $expectedversionid = 0
+        int $expectedversionid
     ): int {
         global $DB;
         $version = content::current_version($contentid);
-        if (!$version || ($expectedversionid > 0 && (int)$version->id !== $expectedversionid)) {
+        if ($expectedversionid <= 0 || !$version || (int)$version->id !== $expectedversionid) {
             throw new \moodle_exception('Версия материала изменилась. Откройте его заново.');
         }
         $opens = $DB->get_records('local_ustar_content_events', [

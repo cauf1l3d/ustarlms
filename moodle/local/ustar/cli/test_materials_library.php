@@ -225,7 +225,8 @@ try {
         (int)$employee->id,
         (int)$ackcontent['contentid'],
         (int)$ackpoint->id,
-        (int)$ackversion->id
+        (int)$ackversion->id,
+        (int)\local_ustar\content::current_version((int)$ackcontent['contentid'])->id
     );
     $assert(\local_ustar\learning_events::route_fact(
         (int)$employee->id,

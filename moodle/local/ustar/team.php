@@ -95,6 +95,10 @@ $data = array_merge(
             : '',
 
         'canforceretraining' => $canforceretraining,
+        'canapprovegrades' => !\local_ustar\view_as::active()
+            && \local_ustar\organization_model::is_manager((int)$USER->id),
+        'gradeapprovalsurl' => (new moodle_url('/local/ustar/grades.php',
+            ['view' => 'team']))->out(false),
         'forcedretrainingurl' => $canforceretraining
             ? (new moodle_url('/local/ustar/forced_retraining.php'))->out(false)
             : '',

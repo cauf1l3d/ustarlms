@@ -95,7 +95,10 @@ $PAGE->set_title('Задачи | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 echo $OUTPUT->header();
-echo $OUTPUT->heading('Задачи');
+echo html_writer::start_tag('main', ['class' => 'u-tasks']);
+echo html_writer::tag('header', html_writer::tag('h1', 'Задачи') .
+    html_writer::tag('p', 'Личные заметки, поручения и чек-листы в одном месте.'),
+    ['class' => 'u-tasks__header']);
 
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
 foreach (['saved' => 'Личная заметка сохранена.', 'assigned' => 'Задача назначена.',
@@ -112,30 +115,35 @@ $tabs = [
 echo html_writer::start_div('u-stage6-tabs');
 foreach ($tabs as $key => $label) {
     $attrs = ['href' => (new moodle_url('/local/ustar/tasks.php', ['tab' => $key]))->out(false),
-        'class' => $tab === $key ? 'is-active' : ''];
+        'class' => $tab === $key ? 'is-active' : '',
+        'aria-current' => $tab === $key ? 'page' : null];
     echo html_writer::tag('a', $label, $attrs);
 }
 echo html_writer::end_div();
 
 $taskform = static function(array $task, array $actions) use ($tab): void {
-    echo html_writer::start_div('u-stage6-card');
+    echo html_writer::start_tag('article', ['class' => 'u-stage6-card u-tasks__item']);
     echo html_writer::tag('h3', s((string)$task['title']));
     if ($task['description'] !== '') { echo $task['description']; }
     $statuses = ['open' => 'Открыта', 'assigned' => 'Назначена', 'in_progress' => 'В работе',
         'in_review' => 'На проверке', 'completed' => 'Выполнена', 'cancelled' => 'Отменена'];
-    echo html_writer::tag('p', 'Статус: ' . s($statuses[$task['status']] ?? (string)$task['status']));
+    echo html_writer::tag('p', s($statuses[$task['status']] ?? (string)$task['status']),
+        ['class' => 'u-tasks__status']);
     if (!empty($task['dueat'])) {
         echo html_writer::tag('p', 'Срок: ' . userdate((int)$task['dueat']));
     }
     foreach ($actions as $action => $label) {
-        echo html_writer::start_tag('form', ['method' => 'post', 'style' => 'display:inline']);
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-tasks__action']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'transition']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$task['id']]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'version', 'value' => (int)$task['version']]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'taskaction', 'value' => $action]);
         if (in_array($action, ['return', 'cancel'], true)) {
-            echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'comment', 'placeholder' => 'Причина', 'required' => 'required']);
+            echo html_writer::tag('label', 'Причина', ['for' => 'task-reason-' . $action . '-' . (int)$task['id']]);
+            echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'comment',
+                'id' => 'task-reason-' . $action . '-' . (int)$task['id'], 'required' => 'required',
+                'class' => 'form-control']);
         }
         if ($action === 'submit') {
             echo html_writer::tag('label', 'Результат', ['for' => 'result-' . (int)$task['id']]);
@@ -152,7 +160,7 @@ $taskform = static function(array $task, array $actions) use ($tab): void {
             echo html_writer::tag('p', s(userdate($event['time']) . ': ' . $event['comment']));
         }
     }
-    echo html_writer::end_div();
+    echo html_writer::end_tag('article');
 };
 
 $formvalue = static function(string $action, int $id, string $name, string $default = '') use ($notice): string {
@@ -164,26 +172,33 @@ $formvalue = static function(string $action, int $id, string $name, string $defa
 };
 
 if ($tab === 'checklists') {
-    echo html_writer::tag('p', 'Рабочие чек-листы остаются частью Академии и открываются в этом же контуре задач.');
-    echo html_writer::tag('p', html_writer::link(new moodle_url('/local/ustar/checklists.php'), 'Открыть чек-листы'));
+    echo html_writer::start_div('u-stage6-card u-tasks__empty');
+    echo html_writer::tag('h2', 'Рабочие чек-листы');
+    echo html_writer::tag('p', 'Проверяйте этапы работы в общем контуре задач Академии.');
+    echo html_writer::link(new moodle_url('/local/ustar/checklists.php'), 'Открыть чек-листы',
+        ['class' => 'u-btn u-btn--primary']);
+    echo html_writer::end_div();
 }
 if ($tab === 'notebook') {
-    echo html_writer::tag('p', 'Этот блок видите только вы. Текст заметок не попадает в поиск, уведомления, аналитику или экран руководителя.');
-    echo html_writer::start_tag('form', ['method' => 'post']);
+    echo html_writer::tag('p', 'Заметки видны только вам: их текст не попадает в поиск, уведомления, аналитику или экран руководителя.',
+        ['class' => 'u-tasks__hint']);
+    echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-stage6-card u-tasks__editor']);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'note']);
-    echo html_writer::tag('label', 'Заметка');
+    echo html_writer::tag('h2', 'Новая заметка');
+    echo html_writer::tag('label', 'Название', ['for' => 'task-note-title']);
     echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required',
-        'value' => $formvalue('note', 0, 'title'), 'class' => 'form-control']);
+        'id' => 'task-note-title', 'value' => $formvalue('note', 0, 'title'), 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Текст', ['for' => 'task-note-body']);
     echo html_writer::tag('textarea', s($formvalue('note', 0, 'description')),
-        ['name' => 'description', 'rows' => 4, 'class' => 'form-control']);
+        ['name' => 'description', 'id' => 'task-note-body', 'rows' => 4, 'class' => 'form-control']);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить в блокнот', 'class' => 'u-btn u-btn--primary']);
     echo html_writer::end_tag('form');
     foreach ($notes as $task) {
         $taskform($task, (string)$task['status'] === 'open' ? ['complete' => 'Отметить выполненной'] : []);
-        echo html_writer::start_tag('details');
+        echo html_writer::start_tag('details', ['class' => 'u-tasks__edit']);
         echo html_writer::tag('summary', 'Редактировать заметку');
-        echo html_writer::start_tag('form', ['method' => 'post']);
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-tasks__editform']);
         foreach (['sesskey' => sesskey(), 'action' => 'editnote', 'id' => $task['id'], 'version' => $task['version']] as $name => $value) {
             if ($name === 'version') { $value = (int)$formvalue('editnote', $task['id'], 'version', (string)$value); }
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $name, 'value' => $value]);
@@ -197,7 +212,7 @@ if ($tab === 'notebook') {
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить', 'class' => 'u-btn u-btn--primary']);
         echo html_writer::end_tag('form');
         echo html_writer::end_tag('details');
-        echo html_writer::start_tag('form', ['method' => 'post']);
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-tasks__deleteform']);
         foreach (['sesskey' => sesskey(), 'action' => 'deletenote', 'id' => $task['id'], 'version' => $task['version']] as $name => $value) {
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $name, 'value' => $value]);
         }
@@ -208,7 +223,7 @@ if ($tab === 'notebook') {
     }
 }
 if ($tab === 'assigned') {
-    if (!$assigned) { echo $OUTPUT->notification('Нет назначенных задач.', 'notifyinfo'); }
+    if (!$assigned) { echo html_writer::tag('p', 'Пока нет назначенных задач.', ['class' => 'u-stage6-card u-tasks__empty']); }
     foreach ($assigned as $task) {
         $actions = [];
         if ($task['status'] === 'assigned') { $actions['start'] = 'Начать'; }
@@ -218,18 +233,23 @@ if ($tab === 'assigned') {
 }
 if ($tab === 'outgoing') {
     if ($candidates) {
-        echo $OUTPUT->heading('Поставить задачу сотруднику', 3);
-        echo html_writer::start_tag('form', ['method' => 'post']);
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-stage6-card u-tasks__editor']);
+        echo html_writer::tag('h2', 'Поставить задачу сотруднику');
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'assign']);
         $options = [];
         foreach ($candidates as $candidate) {
             $options[(int)$candidate['id']] = (string)$candidate['fullname'] . ((string)($candidate['position'] ?? '') ? ' · ' . $candidate['position'] : '');
         }
-        echo html_writer::select($options, 'assigneeid', $formvalue('assign', 0, 'assigneeid'), 'Выберите сотрудника', ['required' => 'required', 'class' => 'form-select']);
+        echo html_writer::tag('label', 'Сотрудник', ['for' => 'task-assignee']);
+        echo html_writer::select($options, 'assigneeid', $formvalue('assign', 0, 'assigneeid'), 'Выберите сотрудника',
+            ['required' => 'required', 'class' => 'form-select', 'id' => 'task-assignee']);
+        echo html_writer::tag('label', 'Название задачи', ['for' => 'task-title']);
         echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required',
-            'value' => $formvalue('assign', 0, 'title'), 'placeholder' => 'Задача', 'class' => 'form-control']);
-        echo html_writer::tag('textarea', s($formvalue('assign', 0, 'description')), ['name' => 'description', 'rows' => 3, 'class' => 'form-control']);
+            'id' => 'task-title', 'value' => $formvalue('assign', 0, 'title'), 'class' => 'form-control']);
+        echo html_writer::tag('label', 'Описание', ['for' => 'task-description']);
+        echo html_writer::tag('textarea', s($formvalue('assign', 0, 'description')),
+            ['name' => 'description', 'id' => 'task-description', 'rows' => 3, 'class' => 'form-control']);
         echo html_writer::tag('label', 'Срок выполнения (необязательно)', ['for' => 'task-duedate']);
         echo html_writer::empty_tag('input', ['type' => 'date', 'name' => 'duedate', 'id' => 'task-duedate',
             'value' => $formvalue('assign', 0, 'duedate'), 'class' => 'form-control']);
@@ -243,5 +263,9 @@ if ($tab === 'outgoing') {
         if (!in_array($task['status'], ['completed', 'cancelled'], true)) { $actions['cancel'] = 'Отменить'; }
         $taskform($task, $actions);
     }
+    if (!$outgoing && !$candidates) {
+        echo html_writer::tag('p', 'Пока нет ваших назначений.', ['class' => 'u-stage6-card u-tasks__empty']);
+    }
 }
+echo html_writer::end_tag('main');
 echo $OUTPUT->footer();

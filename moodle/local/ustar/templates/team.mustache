@@ -21,6 +21,10 @@
           <a class="u-btn u-btn--primary" href="{{staffingurl}}">Заявки на персонал</a>
           {{/ishead}}
 
+          {{#canapprovegrades}}
+          <a class="u-btn" href="{{gradeapprovalsurl}}">Согласовать переход по грейду</a>
+          {{/canapprovegrades}}
+
         {{#hasexecutive}}
         <a
             class="u-btn u-btn--primary"

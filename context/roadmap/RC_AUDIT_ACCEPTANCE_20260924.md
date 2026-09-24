@@ -6,6 +6,8 @@ Source: user-supplied `USTAR_ENGINEERING_AUDIT_REFACTOR_PLAN_20260920(1).md`, se
 
 **In progress (source only):** C09 now reads lifecycle events no later than the requested historical timestamp and rejects facts created after it. E05 has an explicit position-standard publication command and distinct unknown reasons: no published standard or no reviewed skill-level evidence. HR can enter and revoke a manager-reviewed level bound to the current published standard version; publishing a new version requires a fresh assessment. A completed course is not treated as an assessed skill level. Production evidence backfill, browser acceptance and final Moodle DB suite remain open; none of these entries is accepted by this source change.
 
+**Search (E07, source only):** Course, content and people matches now page until enough ACL-visible results are collected; team people are scoped in SQL before paging. Position and skill links point to the relevant HR position or employee route, and people links target HR detail or an organization-chart anchor. Search over large result sets and final recipient ACL still need browser/runtime acceptance.
+
 | ID | Priority / basis | RC status | Audit finding and required change |
 |---|---|---|---|
 | A01 | P0 · К | Acceptance pending | **Устаревший CI-gate.** Workflow запускается для `ustar-final-audit-release`, не для актуальных PR/интеграционной ветки; ожидает XMLDB/plugin `2026082705` и сравнивает код с историческим release-каталогом. Перевести на действующие ветки, обязательные PR-проверки и актуальные инварианты; убрать сравнение с исторической копией как критерий корректности. Приёмка: дефектный PR блокируется, текущий SHA проходит осмысленный pipeline. [Workflow][ci] |

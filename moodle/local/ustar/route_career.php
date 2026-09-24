@@ -104,6 +104,7 @@ foreach (($profile['skills']['items'] ?? []) as $skill) {
         (int)$skill['targetlevel'];
 
     $skillrows[] = [
+        'skillid' => (string)$skill['skillid'],
         'name' => (string)$skill['name'],
         'category' =>
             (string)($skill['category'] ?? ''),

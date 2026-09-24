@@ -88,13 +88,13 @@
         </section>
 
         <section class="u-panel">
-            <header class="u-panel-title"><div><p class="u-page-kicker">Подтверждение навыка</p><h2>Навыки и готовность</h2></div><span>{{readiness}}%</span></header>
+            <header class="u-panel-title"><div><p class="u-page-kicker">Учебные требования</p><h2>Прогресс обучения по навыкам</h2></div><span>{{readiness}}%</span></header>
             {{#hasskills}}
             <div class="u-skill-mini-list">
                 {{#skillitems}}
                 <div class="u-skill-mini {{#satisfied}}is-ok{{/satisfied}}">
                     <div><strong>{{name}}</strong><small>{{category}} · уровень {{targetlevel}}</small></div>
-                    {{#satisfied}}<b>Подтверждено</b>{{/satisfied}}{{^satisfied}}<b>Нужны evidence</b>{{/satisfied}}
+                    {{#satisfied}}<b>Обучение подтверждено</b>{{/satisfied}}{{^satisfied}}<b>Обучение ожидается</b>{{/satisfied}}
                 </div>
                 {{/skillitems}}
             </div>

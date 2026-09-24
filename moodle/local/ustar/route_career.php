@@ -122,8 +122,8 @@ foreach (($profile['skills']['items'] ?? []) as $skill) {
 
         'statuslabel' =>
             !empty($skill['satisfied'])
-            ? 'Подтверждено'
-            : 'Нужно развить',
+            ? 'Обучение подтверждено'
+            : 'Обучение ожидается',
 
         'sources' => $sources,
         'hassources' => !empty($sources),
@@ -335,4 +335,3 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
-

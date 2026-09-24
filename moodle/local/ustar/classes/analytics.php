@@ -19,7 +19,8 @@ final class analytics {
         foreach($versions as $version){
             if(!isset($codes[(string)$version->code]))continue;
             $requirements=json_decode((string)$version->requirementsjson,true);
-            if(is_array($requirements)&&$requirements)$published[$codes[(string)$version->code]]=$requirements;
+            if(is_array($requirements)&&$requirements)$published[$codes[(string)$version->code]]=[
+                'versionid'=>(int)$version->id,'requirements'=>$requirements];
         }
         $limit=max(1,$limit);
         $users=$DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1', [], 'id ASC', 'id,firstname,lastname',0,$limit+1);
@@ -29,7 +30,7 @@ final class analytics {
         foreach($users as $u){
             if(!accounts::participates((int)$u->id))continue; $total++; $pid=people::position_id((int)$u->id);
             if($pid===''||!isset($pm[$pid])){$unassigned++;continue;}
-            $requirements=$published[$pid]??[];
+            $requirements=$published[$pid]['requirements']??[];
             if (!$requirements) {$unconfigured++;continue;}
             $ok=true;$configured=true;$unknown=false;$usergaps=[];
             foreach($requirements as $requirement){
@@ -44,7 +45,9 @@ final class analytics {
                 // Course/activity completion cannot demonstrate a human skill level.
                 // Until a separately reviewed and revocable level fact exists, the
                 // person's qualification is unknown, not a passed standard or gap.
-                $level=self::verified_skill_level((int)$u->id,$pid,$skillid);
+                $assessment=skill_assessment::current((int)$u->id,$pid,$skillid,
+                    (int)$published[$pid]['versionid']);
+                $level=$assessment['level']??null;
                 if($level===null){$unknown=true;continue;}
                 if($level<$target){$ok=false;$usergaps[$skillid]=true;}
             }
@@ -64,22 +67,4 @@ final class analytics {
             'incomplete'=>$incomplete,'topgaps'=>$top,'hastopgaps'=>!empty($top)];
     }
 
-    /** Only a human-reviewed, still-valid level fact can demonstrate competence. */
-    private static function verified_skill_level(int $userid,string $positionid,string $skillid): ?int {
-        global $DB;
-        $fact=$DB->get_record_sql(
-            'SELECT * FROM {local_ustar_evidence_rec}
-              WHERE userid=:userid AND positionid=:positionid AND skillid=:skillid
-                AND sourcekind=:sourcekind AND evidencetype=:evidencetype AND outcome=:outcome
-           ORDER BY validfrom DESC, id DESC',
-            ['userid'=>$userid,'positionid'=>$positionid,'skillid'=>$skillid,
-                'sourcekind'=>'human_skill_level','evidencetype'=>'manager_review','outcome'=>'passed'],
-            IGNORE_MULTIPLE
-        );
-        if(!$fact||(int)$fact->recordedby<=0||(int)$fact->recordedby===$userid
-                ||!target_core::evidence_is_valid((int)$fact->id))return null;
-        $details=json_decode((string)$fact->detailsjson,true);
-        $level=is_array($details)?($details['level']??null):null;
-        return is_int($level)&&$level>=1&&$level<=5?$level:null;
-    }
 }

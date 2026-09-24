@@ -518,11 +518,11 @@
                     </article>
                     <article>
                         <strong>{{skills.confirmed}} / {{skills.required}}</strong>
-                        <span>компетенции подтверждены</span>
+                        <span>учебные требования выполнены</span>
                     </article>
                     <article>
                         <strong>{{readiness.percent}}%</strong>
-                        <span>готовность по evidence</span>
+                        <span>выполнение учебных требований</span>
                     </article>
                 </div>
 
@@ -679,7 +679,7 @@
                         <p class="u-sectionhead__eyebrow">
                             Навыки / подтверждения
                         </p>
-                        <h3>Требования должности</h3>
+                        <h3>Учебные требования должности</h3>
                     </div>
                     <span>{{skills.confirmed}} / {{skills.required}}</span>
                 </header>
@@ -691,10 +691,10 @@
                         <span>Целевой уровень · {{targetlevel}}</span>
                     </div>
                     {{#satisfied}}
-                    <div class="u-state u-state--ok">Подтверждено</div>
+                    <div class="u-state u-state--ok">Обучение подтверждено</div>
                     {{/satisfied}}
                     {{#gap}}
-                    <div class="u-state">Gap</div>
+                    <div class="u-state">Обучение ожидается</div>
                     {{/gap}}
                     {{#hassources}}
                     <div class="u-hr-skill-sources">
@@ -703,6 +703,51 @@
                         {{/sources}}
                     </div>
                     {{/hassources}}
+                    {{#hasassessment}}
+                    <div class="u-hr-skill-assessment-status u-state u-state--ok">
+                        Руководитель оценил уровень: {{assessedlevel}} · {{assessedreason}}
+                    </div>
+                    {{/hasassessment}}
+                    {{#canassess}}
+                    <details class="u-hr-skill-assessment">
+                        <summary>Оценить уровень навыка</summary>
+                        <form method="post">
+                            <input type="hidden" name="action" value="assessskill">
+                            <input type="hidden" name="userid" value="{{userid}}">
+                            <input type="hidden" name="skillid" value="{{skillid}}">
+                            <input type="hidden" name="standardversion" value="{{assessmentversion}}">
+                            <input type="hidden" name="assessmentnonce" value="{{assessmentnonce}}">
+                            <input type="hidden" name="sesskey" value="{{sesskey}}">
+                            <label>Подтверждённый уровень
+                                <select name="level" required>
+                                    <option value="">Выберите уровень</option>
+                                    <option value="1">1</option><option value="2">2</option>
+                                    <option value="3">3</option><option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </label>
+                            <label>Основание оценки
+                                <textarea name="reason" required minlength="10" maxlength="1000" rows="2" placeholder="Кратко опишите наблюдение или проверку"></textarea>
+                            </label>
+                            <button type="submit" class="u-btn u-btn--primary">Сохранить оценку</button>
+                        </form>
+                    </details>
+                    {{#hasassessment}}
+                    <details class="u-hr-skill-assessment">
+                        <summary>Отозвать ошибочную оценку</summary>
+                        <form method="post">
+                            <input type="hidden" name="action" value="revokeskill">
+                            <input type="hidden" name="userid" value="{{userid}}">
+                            <input type="hidden" name="evidenceid" value="{{assessmentevidenceid}}">
+                            <input type="hidden" name="sesskey" value="{{sesskey}}">
+                            <label>Причина отзыва
+                                <textarea name="reason" required rows="2" placeholder="Почему оценка больше не действует"></textarea>
+                            </label>
+                            <button type="submit" class="u-btn">Отозвать оценку</button>
+                        </form>
+                    </details>
+                    {{/hasassessment}}
+                    {{/canassess}}
                 </article>
                 {{/skills.items}}
 

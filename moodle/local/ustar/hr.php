@@ -59,6 +59,38 @@ $newperson =
         PARAM_BOOL
     );
 
+$assessmentaction = optional_param('action', '', PARAM_ALPHA);
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+        && in_array($assessmentaction, ['assessskill', 'revokeskill'], true)) {
+    require_sesskey();
+    require_capability('local/ustar:hrmanage', $context);
+    try {
+        $target = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
+        if ($userid === (int)$USER->id || is_siteadmin($target)
+                || has_capability('local/ustar:admin', $context, $userid)) {
+            throw new \invalid_parameter_exception('Этот аккаунт нельзя оценивать из кадровой карточки');
+        }
+        if ($assessmentaction === 'assessskill') {
+            \local_ustar\skill_assessment::record($userid,
+                required_param('skillid', PARAM_ALPHANUMEXT),
+                required_param('level', PARAM_INT),
+                required_param('standardversion', PARAM_INT),
+                required_param('reason', PARAM_TEXT),
+                required_param('assessmentnonce', PARAM_ALPHANUMEXT),
+                (int)$USER->id);
+        } else {
+            \local_ustar\skill_assessment::revoke($userid,
+                required_param('evidenceid', PARAM_INT),
+                required_param('reason', PARAM_TEXT), (int)$USER->id);
+        }
+        redirect(new moodle_url('/local/ustar/hr.php', ['userid' => $userid]),
+            $assessmentaction === 'assessskill' ? 'Оценка уровня сохранена' : 'Оценка уровня отозвана',
+            null, \core\output\notification::NOTIFY_SUCCESS);
+    } catch (\Throwable $e) {
+        \core\notification::error($e->getMessage());
+    }
+}
+
 
 /*
  * ------------------------------------------------------------
@@ -819,6 +851,35 @@ if (
             \local_ustar\employee_profile::build(
                 $userid
             );
+
+        $assessmentversion = $editpositionid === '' ? null
+            : \local_ustar\standard_model::current_position($editpositionid);
+        $publishedskills = [];
+        if ($assessmentversion) {
+            $publishedrequirements = json_decode((string)$assessmentversion->requirementsjson, true);
+            foreach (is_array($publishedrequirements) ? $publishedrequirements : [] as $requirement) {
+                if (($requirement['sourcekind'] ?? '') === 'ustar_skill' && !empty($requirement['required'])) {
+                    $publishedskills[(string)$requirement['sourceid']] = (int)($requirement['targetlevel'] ?? 0);
+                }
+            }
+        }
+        foreach ($profile['skills']['items'] as &$profileitem) {
+            $assessment = \local_ustar\skill_assessment::current($userid,
+                $editpositionid, (string)$profileitem['skillid'],
+                $assessmentversion ? (int)$assessmentversion->id : 0);
+            $profileitem['hasassessment'] = $assessment !== null;
+            $profileitem['assessedlevel'] = $assessment['level'] ?? 0;
+            $profileitem['assessedreason'] = $assessment['reason'] ?? '';
+            $profileitem['assessmentevidenceid'] = $assessment['id'] ?? 0;
+            $profileitem['canassess'] = !$protected
+                && has_capability('local/ustar:hrmanage', $context)
+                && $assessmentversion !== null
+                && (int)($publishedskills[$profileitem['skillid']] ?? 0) === (int)$profileitem['targetlevel'];
+            $profileitem['assessmentnonce'] = random_string(32);
+            $profileitem['assessmentversion'] = $assessmentversion ? (int)$assessmentversion->id : 0;
+            $profileitem['userid'] = $userid;
+        }
+        unset($profileitem);
 
         foreach ($profile['knowledge']['items'] as &$knowledgeitem) {
             $knowledgeitem['acktimeformatted'] =

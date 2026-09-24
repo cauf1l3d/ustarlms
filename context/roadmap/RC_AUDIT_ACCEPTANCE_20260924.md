@@ -4,7 +4,7 @@ Source: user-supplied `USTAR_ENGINEERING_AUDIT_REFACTOR_PLAN_20260920(1).md`, se
 
 **Gate:** Each ID needs an implementation/retirement decision, an exact change reference, evidence for the applicable acceptance criteria, and final owner review. No ID is marked accepted yet. Defect #4 is held for owner verification; the on-server form hotfix is not proof of backend acceptance.
 
-**In progress (source only):** C09 now reads lifecycle events no later than the requested historical timestamp and rejects facts created after it. E05 has an explicit position-standard publication command and distinct unknown reasons: no published standard or no reviewed skill-level evidence. A completed course is not treated as an assessed skill level. The manager assessment entry flow, production evidence backfill, browser acceptance and final Moodle DB suite remain open; none of these entries is accepted by this source change.
+**In progress (source only):** C09 now reads lifecycle events no later than the requested historical timestamp and rejects facts created after it. E05 has an explicit position-standard publication command and distinct unknown reasons: no published standard or no reviewed skill-level evidence. HR can enter and revoke a manager-reviewed level bound to the current published standard version; publishing a new version requires a fresh assessment. A completed course is not treated as an assessed skill level. Production evidence backfill, browser acceptance and final Moodle DB suite remain open; none of these entries is accepted by this source change.
 
 | ID | Priority / basis | RC status | Audit finding and required change |
 |---|---|---|---|

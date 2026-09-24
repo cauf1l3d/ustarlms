@@ -77,7 +77,7 @@ class employee_profile {
                 'percent' => $requiredskillcount > 0
                     ? (int)round(($confirmedskillcount / $requiredskillcount) * 100)
                     : 0,
-                'basis' => 'evidence',
+                'basis' => 'learning_evidence',
             ],
         ];
     }
@@ -208,7 +208,8 @@ class employee_profile {
                 'name' => (string)($skill['name'] ?? $skillid),
                 'category' => (string)($skill['category'] ?? ''),
                 'targetlevel' => (int)$targetlevel,
-                'evidencedlevel' => $satisfied ? (int)$targetlevel : 0,
+                // Learning completion does not measure the target skill level.
+                'evidencedlevel' => 0,
                 'configured' => !empty($evaluation['configured']),
                 'satisfied' => $satisfied,
                 'gap' => !$satisfied,

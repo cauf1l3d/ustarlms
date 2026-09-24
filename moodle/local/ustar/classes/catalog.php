@@ -156,7 +156,7 @@ final class catalog {
 
     /** HR authors may edit the catalog even before learner mastery is granted. */
     public static function can_manage(int $userid): bool {
-        return capabilities::has($userid, capabilities::CATALOG_WRITE);
+        return is_siteadmin($userid) || capabilities::has($userid, capabilities::CATALOG_WRITE);
     }
 
     /** @return array<int,\stdClass> */

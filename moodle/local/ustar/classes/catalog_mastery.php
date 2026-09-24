@@ -34,6 +34,12 @@ final class catalog_mastery {
             return true;
         }
 
+        // A historical mastery fact cannot reopen the catalog for a pending,
+        // suspended or otherwise ineligible learner account.
+        if (!capabilities::has($userid, capabilities::LEARNING_USE)) {
+            return false;
+        }
+
         if (
             has_capability(
                 'local/ustar:managecatalog',

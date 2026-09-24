@@ -99,7 +99,7 @@ function local_ustar_pluginfile(
 
 
     if (in_array($filearea, ['catalog_image', 'catalog_source'], true)) {
-        if (!\local_ustar\catalog::can_manage((int)$USER->id)) {
+        if (!is_siteadmin((int)$USER->id) && !\local_ustar\catalog::can_manage((int)$USER->id)) {
             if (!\local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::LEARNING_USE)
                     || !\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
                 return false;

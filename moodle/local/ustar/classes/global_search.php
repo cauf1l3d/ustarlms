@@ -100,7 +100,8 @@ final class global_search {
 
         // Product catalog.
         $products = [];
-        if (catalog::available()) {
+        if (catalog::available() && (catalog::can_manage($userid)
+                || catalog_mastery::has_access($userid))) {
             foreach (catalog::browse(null, $q) as $record) {
                 if (empty($record['isproduct'])) {
                     continue;

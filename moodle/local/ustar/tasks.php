@@ -95,7 +95,7 @@ $PAGE->set_title('Задачи | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 echo $OUTPUT->header();
-echo html_writer::start_tag('main', ['class' => 'u-tasks']);
+echo html_writer::start_div('u-tasks');
 echo html_writer::tag('header', html_writer::tag('h1', 'Задачи') .
     html_writer::tag('p', 'Личные заметки, поручения и чек-листы в одном месте.'),
     ['class' => 'u-tasks__header']);
@@ -267,5 +267,5 @@ if ($tab === 'outgoing') {
         echo html_writer::tag('p', 'Пока нет ваших назначений.', ['class' => 'u-stage6-card u-tasks__empty']);
     }
 }
-echo html_writer::end_tag('main');
+echo html_writer::end_div();
 echo $OUTPUT->footer();

@@ -154,7 +154,9 @@ final class company_hierarchy {
             }
             // A leadership department emptied by lifting its directors is not duplicated.
             if ($row['people'] === 0 && !($mode === 'branch' && $ownid !== ''
-                    && preg_replace('/^department:/', '', $row['id']) === $ownid)) {
+                    && preg_replace('/^department:/', '', $row['id']) === $ownid)
+                    && !($mode === 'full' && str_starts_with(
+                        preg_replace('/^department:/', '', (string)$row['id']), 'dept_'))) {
                 continue;
             }
             foreach (['heads', 'members'] as $bucket) {
@@ -173,7 +175,7 @@ final class company_hierarchy {
             $row['hasheads'] = !empty($row['heads']);
             $row['hasmembers'] = !empty($row['members']);
             $row['hasgroups'] = !empty($row['groups']);
-            $row['empty'] = false;
+            $row['empty'] = $row['people'] === 0;
             $row['expanded'] = $mode === 'branch';
             $blocks[$key]['departments'][] = $row;
             $blocks[$key]['people'] += $row['people'];
@@ -192,7 +194,8 @@ final class company_hierarchy {
         }
         unset($block);
         $blocks = array_filter($blocks, static fn(array $b): bool =>
-            $b['hasleaders'] || $b['hasmembers'] || $b['hasdepartments']);
+            $b['hasleaders'] || $b['hasmembers'] || $b['hasdepartments']
+                || ($mode === 'full' && str_starts_with((string)$b['key'], 'block_')));
         $count = count($executives) + count($assistants) + array_sum(array_column($blocks, 'people'));
         return ['assistants' => $assistants, 'hasassistants' => !empty($assistants),
             'description' => $mode === 'full' ? 'Подразделения, руководители и сотрудники компании.'

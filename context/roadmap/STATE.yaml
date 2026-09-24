@@ -3,12 +3,12 @@ updated_at: '2026-09-24'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Draft PR 14 now targets main and includes the prior unmerged
-  PR 13 changes via an explicit main reconciliation. Earlier PRs remain
-  unaccepted. Source/frontend checks passed on the reconciliation commit;
-  latest gate passed on the initial Studio route evidence commit. Subsequent
-  changes still need CI; Moodle runtime, browser, clean restore and full audit
-  acceptance remain open. R00 remains review.
+current_activity: Draft PR 14 targets main and includes prior unmerged PR 13.
+  Earlier PRs remain unaccepted. The current code-bearing draft SHA passed
+  source/frontend gate 193. Position standards, reviewed skill levels, search
+  pagination, HR paging, catalog access and questionnaire version pinning are
+  implemented in source only. Full Moodle runtime, browser, restore, performance
+  and all audit acceptance are still open. R00 remains review.
 next_task: R10
 ready_tasks:
 - R00
@@ -16,11 +16,11 @@ ready_tasks:
 draft_candidate:
   branch: codex/ustar-complete-rc-20260923
   main_reconciliation_commit: 81bbb8e4f6f81276fc6d98f1903cac89b5a62ae9
-  last_source_gate_commit: e9e3db29b99bb945a058e7852abb7a0d247e5778
-  last_source_gate_result: passed_workflow_177
+  last_source_gate_commit: b48f24ad0c3e18313bb16caf93c18a97451d4d2d
+  last_source_gate_result: passed_workflow_193
   pull_request: 14
   status: in_progress_not_releasable
-  checks_completed: source_and_frontend_only_on_prior_commit
+  checks_completed: source_and_frontend_only_on_code_bearing_draft
   checks_remaining: source_frontend_rollback_on_frozen_sha_then_one_moodle_db_suite;
     browser_acceptance;fresh_install_and_upgrade;clean_restore_rehearsal
   user_deploys_from_github: true

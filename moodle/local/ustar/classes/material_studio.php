@@ -527,11 +527,19 @@ final class material_studio {
         if (!self::can_manage($userid) && !content::can_access((int)$blueprint->contentid, $userid)) {
             return null;
         }
-        $files = get_file_storage()->get_area_files(
-            \context_system::instance()->id, 'local_ustar', self::FILEAREA_SCORM, $blueprintid,
-            'filename ASC, id ASC', false
-        );
-        return $files ? reset($files) : null;
+        $fs = get_file_storage();
+        $filename = (string)($blueprint->packagefilename ?? '');
+        $versionpath = '/v' . (int)$blueprint->sourceversion . '/';
+        if ($filename !== '') {
+            $current = $fs->get_file(\context_system::instance()->id, 'local_ustar',
+                self::FILEAREA_SCORM, $blueprintid, $versionpath, $filename);
+            if ($current) { return $current; }
+            // Read packages imported before source-version storage was added.
+            $legacy = $fs->get_file(\context_system::instance()->id, 'local_ustar',
+                self::FILEAREA_SCORM, $blueprintid, '/', $filename);
+            if ($legacy) { return $legacy; }
+        }
+        return null;
     }
 
     /** @return array<string,mixed> */

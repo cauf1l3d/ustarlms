@@ -158,7 +158,9 @@ function local_ustar_pluginfile(
         }
         $file = \local_ustar\material_studio::package_file($blueprintid, (int)$USER->id);
         $filename = array_pop($args);
-        if (!$file || $file->is_directory() || $filename !== $file->get_filename()) {
+        $filepath = '/' . ($args ? implode('/', $args) . '/' : '');
+        if (!$file || $file->is_directory() || $filename !== $file->get_filename()
+                || $filepath !== $file->get_filepath()) {
             return false;
         }
         header('X-Content-Type-Options: nosniff');
@@ -431,4 +433,3 @@ function local_ustar_before_footer_original(): string {
 function local_ustar_before_footer(): string {
     return local_ustar_before_footer_original() . \local_ustar\route_continue::footer_button();
 }
-

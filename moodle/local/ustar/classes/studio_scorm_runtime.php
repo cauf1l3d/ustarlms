@@ -101,12 +101,17 @@ final class studio_scorm_runtime {
 
             $context = \context_system::instance();
             $fs = get_file_storage();
-            $fs->delete_area_files($context->id, 'local_ustar',
-                material_studio::FILEAREA_SCORM, (int)$blueprint->id);
+            // Keep older source ZIPs. Published route versions still point to
+            // their own Moodle activity and its immutable package/attempts.
+            $versionpath = '/v' . $expectedsourceversion . '/';
+            foreach ($fs->get_area_files($context->id, 'local_ustar',
+                    material_studio::FILEAREA_SCORM, (int)$blueprint->id, 'id ASC', false) as $oldfile) {
+                if ($oldfile->get_filepath() === $versionpath) { $oldfile->delete(); }
+            }
             $fs->create_file_from_pathname((object)[
                 'contextid' => $context->id, 'component' => 'local_ustar',
                 'filearea' => material_studio::FILEAREA_SCORM,
-                'itemid' => (int)$blueprint->id, 'filepath' => '/',
+                'itemid' => (int)$blueprint->id, 'filepath' => $versionpath,
                 'filename' => $filename, 'userid' => $actorid,
                 'mimetype' => 'application/zip',
             ], $path);

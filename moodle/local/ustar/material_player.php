@@ -55,13 +55,14 @@ if ($result) {
 
 if ((string)$item['kind'] === 'assessment') {
     if ($preview) { echo $OUTPUT->notification('Предпросмотр автора — без записи результата.', 'notifyinfo'); }
-    echo html_writer::start_tag('form', ['method' => 'post']);
+    echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-stage6-card u-material-assessment']);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sourceversion', 'value' => $item['sourceversion']]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'preview', 'value' => (int)$preview]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'attemptnonce', 'value' => $attemptnonce]);
     foreach ((array)$item['questions'] as $index => $question) {
-        echo html_writer::tag('h3', s((string)$question['question']));
+        echo html_writer::start_tag('fieldset', ['class' => 'u-material-question']);
+        echo html_writer::tag('legend', s((string)$question['question']));
         foreach (array_values((array)$question['options']) as $optionindex => $option) {
             $field = 'answer_' . $index;
             $value = $optionindex + 1;
@@ -78,6 +79,7 @@ if ((string)$item['kind'] === 'assessment') {
             echo ' ' . s((string)$option);
             echo html_writer::end_tag('label');
         }
+        echo html_writer::end_tag('fieldset');
     }
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Отправить аттестацию', 'class' => 'btn btn-primary']);
     echo html_writer::end_tag('form');

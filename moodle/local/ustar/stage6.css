@@ -60,6 +60,48 @@
     max-width: 860px;
     line-height: 1.65;
 }
+.u-material-question {
+    min-width: 0;
+    margin: 0 0 1.25rem;
+    padding: 0 0 1rem;
+    border: 0;
+    border-bottom: 1px solid var(--u-border, #d8dde8);
+}
+.u-material-question legend {
+    width: 100%;
+    margin-bottom: .7rem;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--u-text-primary, #282727);
+}
+.u-material-assessment .u-material-question label {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    width: 100%;
+    margin: .25rem 0;
+    padding: .55rem .7rem;
+    border: 1px solid var(--u-border, #d8dde8);
+    border-radius: var(--u-r-md, 12px);
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+.u-stage6-card .u-material-question input[type="radio"] {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: 0 0 1.1rem;
+    margin: .2rem 0 0;
+}
+.u-material-assessment .u-material-question label:has(input:checked) {
+    border-color: var(--u-brand-strong, #ebc500);
+    background: var(--u-surface-muted, #f0efeb);
+}
+.u-material-assessment .u-material-question label:focus-within {
+    outline: 2px solid var(--u-brand-strong, #ebc500);
+    outline-offset: 2px;
+}
 .u-studio-scorm-pages {
     max-width: 860px;
     margin: 1.5rem 0;

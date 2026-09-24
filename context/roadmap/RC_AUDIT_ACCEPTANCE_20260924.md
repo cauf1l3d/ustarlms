@@ -12,6 +12,8 @@ Source: user-supplied `USTAR_ENGINEERING_AUDIT_REFACTOR_PLAN_20260920(1).md`, se
 
 **People list (E06, source only):** The HR API now returns an exact filtered `total`, `offset` and `hasMore`; the optional offset is applied after workforce and department filters. The Next HR screen has previous/next controls and no longer filters an already truncated page. Counting currently scans eligible accounts and needs a production-sized query-count/latency check; the executive KPI still reports incomplete sampling rather than a fabricated total.
 
+**Economy (C06, source only):** The shared USCOIN posting service rejects test/service/non-business recipients across route, CLI and other credit/debit callers. A reversal of a historical debit remains possible. Historical test-account ledger entries require a separate production inventory and correction decision; gameplay/other award paths and final runtime acceptance remain open.
+
 | ID | Priority / basis | RC status | Audit finding and required change |
 |---|---|---|---|
 | A01 | P0 · К | Acceptance pending | **Устаревший CI-gate.** Workflow запускается для `ustar-final-audit-release`, не для актуальных PR/интеграционной ветки; ожидает XMLDB/plugin `2026082705` и сравнивает код с историческим release-каталогом. Перевести на действующие ветки, обязательные PR-проверки и актуальные инварианты; убрать сравнение с исторической копией как критерий корректности. Приёмка: дефектный PR блокируется, текущий SHA проходит осмысленный pipeline. [Workflow][ci] |

@@ -126,6 +126,12 @@ final class economy {
         if (!self::available() || $userid <= 0 || $amount === 0 || trim($idempotencykey) === '') {
             throw new \invalid_parameter_exception('USCOIN ledger, user, amount and idempotency key are required.');
         }
+        // A test/service account may learn in its own context, but must never
+        // enter the live employee economy through a route, CLI or repair job.
+        // Historical debit reversals remain possible for an old ledger row.
+        if ($reversalofid === null && !accounts::is_business_account($userid)) {
+            throw new \invalid_parameter_exception('USCOIN requires an employee business account.');
+        }
         $idempotencykey = \core_text::substr(trim($idempotencykey), 0, 128);
         if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey' => $idempotencykey])) {
             return false;

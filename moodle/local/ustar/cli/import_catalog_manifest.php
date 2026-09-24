@@ -11,12 +11,15 @@ require_once($CFG->libdir . '/clilib.php');
 [$options, $unrecognized] = cli_get_params([
     'dir' => null,
     'dry-run' => false,
+    'apply' => false,
+    'sha256' => '',
+    'backup-ref' => '',
     'help' => false,
 ], ['h' => 'help']);
 
 if ($options['help'] || empty($options['dir'])) {
     echo "USTAR catalog manifest import\n\n";
-    echo "php local/ustar/cli/import_catalog_manifest.php --dir=/path/catalog_seed [--dry-run]\n";
+    echo "php local/ustar/cli/import_catalog_manifest.php --dir=/path/catalog_seed [--apply --sha256=<SOURCE_SHA256> --backup-ref=<backup ID>]\n";
     exit($options['help'] ? 0 : 2);
 }
 
@@ -42,6 +45,9 @@ $groups = [];
 $subgroups = [];
 $images = 0;
 $sources = 0;
+$assetsha256 = [];
+$seedroot = realpath($seeddir);
+if ($seedroot === false) { cli_error('Seed directory not found.'); }
 foreach ($manifest['items'] as $n => $item) {
     $line = $n + 1;
     foreach (['group', 'itemtype', 'slug', 'title'] as $required) {
@@ -65,10 +71,12 @@ foreach ($manifest['items'] as $n => $item) {
         if (empty($item[$field])) {
             continue;
         }
-        $path = $seeddir . '/' . ltrim((string)$item[$field], '/');
-        if (!is_readable($path)) {
-            cli_error("Item {$line}: missing asset {$field}: {$path}");
+        $relative = ltrim((string)$item[$field], '/');
+        $path = realpath($seeddir . '/' . $relative);
+        if ($path === false || !str_starts_with($path, $seedroot . '/') || !is_file($path) || !is_readable($path)) {
+            cli_error("Item {$line}: invalid or missing asset {$field}");
         }
+        $assetsha256[$line . ':' . $field . ':' . $relative] = hash_file('sha256', $path);
         if ($field === 'image_file') {
             $images++;
         } else {
@@ -88,6 +96,18 @@ echo 'ASSESSMENTS=' . (int)($counts['assessment'] ?? 0) . PHP_EOL;
 echo 'IMAGES=' . $images . PHP_EOL;
 echo 'SOURCES=' . $sources . PHP_EOL;
 
+$sha256 = hash('sha256', hash_file('sha256', $manifestfile) . '\n'
+    . json_encode($assetsha256, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+echo 'SOURCE_SHA256=' . $sha256 . PHP_EOL;
+if (empty($options['apply'])) {
+    echo "DRY_RUN=YES\nNo changes applied. Pass --apply --sha256=<printed hash> --backup-ref=<backup ID> to write.\n";
+    exit(0);
+}
+if (!preg_match('/^[a-f0-9]{64}$/', (string)$options['sha256'])
+        || !hash_equals($sha256, (string)$options['sha256'])
+        || trim((string)$options['backup-ref']) === '') {
+    cli_error('Apply requires exact --sha256 and a --backup-ref.');
+}
 if ($options['dry-run']) {
     echo "CATALOG_MANIFEST_DRY_RUN=OK\n";
     exit(0);

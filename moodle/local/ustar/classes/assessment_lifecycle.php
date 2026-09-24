@@ -556,6 +556,8 @@ final class assessment_lifecycle {
                             self::event($runtime, 'assess_content_opened',
                                 'Нативный материал повторно открыт для переобучения', [
                                     'contentid' => $contentid, 'cycle' => (int)$runtime->cycle,
+                                    'failurecutoff' => (int)$runtime->failurecutoff,
+                                    'remediationversionid' => (int)$runtime->remediationversionid,
                                 ]);
                         }
                         $result = ['kind' => 'url', 'url' => $url->out(false)];

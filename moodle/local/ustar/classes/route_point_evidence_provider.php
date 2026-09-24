@@ -91,12 +91,12 @@ final class route_point_evidence_provider {
                 (int)$runtime->userid,
                 $pointid,
                 $versionid,
-                (int)$runtime->id,
+                $runtime,
                 $positionid,
                 $evententitytype
             );
             $evidence['fresh'] = !empty($evidence['configured'])
-                && (int)$evidence['completedat'] > $cutoff;
+                && ((int)$evidence['completedat'] > $cutoff || !empty($evidence['aftercutoff']));
             if (!empty($evidence['fresh'])) {
                 $freshcount++;
                 $latest = max($latest, (int)$evidence['completedat']);
@@ -122,7 +122,7 @@ final class route_point_evidence_provider {
         int $userid,
         int $pointid,
         int $versionid,
-        int $runtimeid,
+        \stdClass $runtime,
         string $positionid,
         string $evententitytype
     ): array {
@@ -249,13 +249,20 @@ final class route_point_evidence_provider {
             $base['label'] = $label !== '' ? $label : format_string((string)$content->title);
             $events = $DB->get_records('local_ustar_workflow_events', [
                 'entitytype' => $evententitytype,
-                'entityid' => $runtimeid,
+                'entityid' => (int)$runtime->id,
                 'eventtype' => 'assess_content_opened',
-            ], 'timecreated DESC');
+            ], 'timecreated DESC, id DESC');
             foreach ($events as $event) {
                 $details = json_decode((string)$event->detailsjson, true);
                 if ((int)($details['contentid'] ?? 0) === $contentid) {
                     $base['completedat'] = (int)$event->timecreated;
+                    // A workflow event written after approval under the same
+                    // lifecycle lock can share the approval's second. The
+                    // exact cycle/version/cutoff tuple proves its order.
+                    $base['aftercutoff'] = (int)($details['cycle'] ?? -1) === (int)$runtime->cycle
+                        && (int)($details['failurecutoff'] ?? -1) === (int)$runtime->failurecutoff
+                        && (int)($details['remediationversionid'] ?? -1) === (int)$runtime->remediationversionid
+                        && (int)$event->timecreated >= (int)$runtime->failurecutoff;
                     break;
                 }
             }

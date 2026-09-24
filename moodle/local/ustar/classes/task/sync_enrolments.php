@@ -23,18 +23,13 @@ class sync_enrolments extends \core\task\scheduled_task {
 
     public function execute() {
         global $DB;
-
-        // Effective manager occupancy can change when ACTING expires.
-        $reportingtx = $DB->start_delegated_transaction();
-        try {
-            \local_ustar\organization_model::rebuild_reporting();
-            $reportingtx->allow_commit();
-        } catch (\Throwable $e) {
-            $reportingtx->rollback($e);
-        }
-        // Bounded recovery of saved progress whose reward could not be committed.
-        \local_ustar\route_rewards::reconcile(200);
-        $users = \local_ustar\organization_directory::users(true);
+        // Cursor bounds the cost of one run; every cycle restarts at the
+        // beginning so missed HR changes are eventually reconciled.
+        $cursor = max(0, (int)get_config('local_ustar', 'enrol_sync_cursor'));
+        $limit = 200;
+        $users = $DB->get_records_select('user',
+            'id > :cursor AND id > 1 AND deleted = 0 AND suspended = 0',
+            ['cursor' => $cursor], 'id ASC', 'id,username', 0, $limit);
 
         $processed = 0;
         $enrolled = 0;
@@ -43,12 +38,13 @@ class sync_enrolments extends \core\task\scheduled_task {
 
 
         foreach ($users as $user) {
-
-            if (!\local_ustar\employment::learning_allowed((int)$user->id)) {
-                continue;
-            }
-
+            $cursor = (int)$user->id;
             try {
+                if (!\local_ustar\accounts::is_business_account($cursor)
+                        || !\local_ustar\accounts::participates($cursor)
+                        || !\local_ustar\employment::learning_allowed($cursor)) {
+                    continue;
+                }
 
                 $result =
                     assignment::sync_user(
@@ -105,6 +101,8 @@ class sync_enrolments extends \core\task\scheduled_task {
             }
         }
 
+        set_config('enrol_sync_cursor', count($users) < $limit ? 0 : $cursor, 'local_ustar');
+
 
         mtrace(
             "USTAR reconciliation complete: "
@@ -112,6 +110,7 @@ class sync_enrolments extends \core\task\scheduled_task {
             . "enrolled={$enrolled}, "
             . "missingmanual={$missingmanual}, "
             . "errors={$errors}"
+            . ", cursor=" . (count($users) < $limit ? 0 : $cursor)
         );
     }
 }

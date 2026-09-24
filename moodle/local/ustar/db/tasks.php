@@ -3,6 +3,24 @@ defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
     [
+        'classname' => 'local_ustar\\task\\reconcile_reporting',
+        'blocking' => 0,
+        'minute' => '5',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
+        'classname' => 'local_ustar\\task\\reconcile_rewards',
+        'blocking' => 0,
+        'minute' => '10,40',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
         'classname' => 'local_ustar\task\sync_enrolments',
         'blocking'  => 0,
         'minute'    => '*/30',

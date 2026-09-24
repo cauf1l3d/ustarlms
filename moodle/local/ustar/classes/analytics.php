@@ -27,6 +27,12 @@ final class analytics {
             if($ok)$qualified++; else $withgaps++;
         }
         arsort($gaps);$top=[];foreach(array_slice($gaps,0,8,true) as $sid=>$count)$top[]=['name'=>(string)($skillmap[$sid]['name']??$sid),'count'=>(int)$count];
-        return ['total'=>$total,'qualified'=>$qualified,'withgaps'=>$withgaps,'unassigned'=>$unassigned,'unconfigured'=>$unconfigured,'expired'=>$expired,'coverage'=>$total?round($qualified/$total*100):0,'incomplete'=>$incomplete,'topgaps'=>$top,'hastopgaps'=>!empty($top)];
+        return ['total'=>$total,'qualified'=>$qualified,'withgaps'=>$withgaps,'unassigned'=>$unassigned,
+            'unconfigured'=>$unconfigured,'unknown'=>$unassigned+$unconfigured,
+            'assessable'=>$qualified+$withgaps,'expired'=>$expired,
+            // The full employee denominator prevents unknown standards from
+            // silently inflating the qualification percentage.
+            'coverage'=>$total?round($qualified/$total*100):0,
+            'incomplete'=>$incomplete,'topgaps'=>$top,'hastopgaps'=>!empty($top)];
     }
 }

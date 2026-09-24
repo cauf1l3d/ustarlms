@@ -108,6 +108,10 @@ $data = [
 
     'unconfiguredstandards' => (int)$qualification['unconfigured'],
 
+    'qualificationtotal' => (int)$qualification['total'],
+    'qualificationassessable' => (int)$qualification['assessable'],
+    'qualificationunknown' => (int)$qualification['unknown'],
+
     'topgaps' =>
         $qualification['topgaps'],
 

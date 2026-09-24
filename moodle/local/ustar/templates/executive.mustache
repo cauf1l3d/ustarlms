@@ -34,10 +34,11 @@
     </article>
 
     <article class="u-stat-card">
-        <span>Квалификационно готовы</span>
+        <span>Подтверждены по требованиям</span>
         {{#qualcomplete}}<strong>{{qualcoverage}}%</strong>{{/qualcomplete}}
         {{#qualincomplete}}<strong>—</strong><small>Выборка ограничена. Итоговая доля пока недоступна.</small>{{/qualincomplete}}
-        <small>{{qualified}} без обязательных пробелов в проверенной выборке</small>
+        <small>{{qualified}} из {{qualificationtotal}} сотрудников; требования оценимы у {{qualificationassessable}}</small>
+        {{#qualificationunknown}}<small>Неопределённо: {{qualificationunknown}} — должность или стандарт не настроены</small>{{/qualificationunknown}}
         {{#unconfiguredstandards}}<small>{{unconfiguredstandards}} — стандарт должности не настроен</small>{{/unconfiguredstandards}}
     </article>
 

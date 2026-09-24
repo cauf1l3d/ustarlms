@@ -1391,7 +1391,8 @@ $data = [
     'canmanage' =>
         $canmanage,
 
-    'canpublishstandard' => has_capability('local/ustar:admin', $context) && !empty($required),
+    'canpublishstandard' => $canmanage && has_capability('local/ustar:admin', $context)
+        && !empty($required),
     'standardpublished' => !empty($publishedstandard),
     'standardversion' => $publishedstandard ? (int)$publishedstandard->versionno : 0,
     'standarddate' => $publishedstandard ? userdate((int)$publishedstandard->effectivedate) : '',

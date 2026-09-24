@@ -192,6 +192,8 @@ final class material_studio {
             }
             self::audit($contentid, 'studio_material_saved', $actorid, [
                 'kind' => $kind, 'sourceversion' => (int)$blueprint->sourceversion,
+                'sourcehash' => $blueprint->sourcehash,
+                'title' => $title, 'summary' => $summary, 'source' => $source,
             ]);
             if ($creationtoken !== '' && $expected === 0) {
                 $DB->insert_record('local_ustar_workflow_events', (object)[
@@ -379,6 +381,32 @@ final class material_studio {
             );
         }
         return self::view_row($row, $viewerid);
+    }
+
+    /** Immutable source revisions visible only to material authors. Older revisions may lack snapshots. */
+    public static function source_history(int $contentid, int $actorid): array {
+        global $DB;
+        self::assert_manage($actorid);
+        self::by_content($contentid, $actorid);
+        $events = $DB->get_records('local_ustar_workflow_events', [
+            'entitytype' => 'studio_material', 'entityid' => $contentid,
+            'eventtype' => 'studio_material_saved',
+        ], 'id DESC', 'id,actorid,timecreated,detailsjson', 0, 50);
+        $history = [];
+        foreach ($events as $event) {
+            $details = json_decode((string)$event->detailsjson, true);
+            if (!is_array($details)) { continue; }
+            $history[] = [
+                'version' => (int)($details['sourceversion'] ?? 0),
+                'hash' => (string)($details['sourcehash'] ?? ''),
+                'actorid' => (int)$event->actorid,
+                'timecreated' => (int)$event->timecreated,
+                'title' => (string)($details['title'] ?? ''),
+                'summary' => (string)($details['summary'] ?? ''),
+                'source' => $details['source'] ?? null,
+            ];
+        }
+        return $history;
     }
 
     /** @return array<string,mixed> */

@@ -169,6 +169,7 @@ foreach ($pages as $index => $page) {
     echo html_writer::tag('button', 'Удалить страницу', ['type' => 'button',
         'class' => 'btn btn-outline-secondary u-scorm-remove']);
     echo html_writer::end_div();
+
 }
 echo html_writer::tag('button', 'Добавить страницу', ['type' => 'button', 'id' => 'studio-add-page',
     'class' => 'btn btn-outline-secondary']);
@@ -288,6 +289,42 @@ if ((int)$editing['id'] > 0) {
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$editing['id']]);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Удалить из каталога', 'class' => 'btn btn-outline-danger']);
     echo html_writer::end_tag('form');
+    echo html_writer::end_div();
+
+    echo html_writer::start_div('u-studio-history');
+    echo $OUTPUT->heading('История исходника', 3);
+    echo html_writer::tag('p', 'Последние 50 сохранений. Ранние редакции без снимка исходника нельзя восстановить из номера версии.');
+    foreach (\local_ustar\material_studio::source_history((int)$editing['id'], (int)$USER->id) as $revision) {
+        $label = 'Версия ' . (int)$revision['version'] . ' · '
+            . userdate((int)$revision['timecreated']) . ' · автор #' . (int)$revision['actorid'];
+        echo html_writer::start_tag('details', ['class' => 'u-studio-revision']);
+        echo html_writer::tag('summary', s($label));
+        if (is_array($revision['source'])) {
+            echo html_writer::tag('p', 'Название: ' . s($revision['title']));
+            if ($revision['summary'] !== '') {
+                echo html_writer::tag('p', 'Описание: ' . s($revision['summary']));
+            }
+            $source = $revision['source'];
+            if (!empty($source['outline'])) {
+                echo html_writer::tag('p', 'План: ' . s((string)$source['outline']));
+            }
+            if (!empty($source['body'])) {
+                echo html_writer::tag('div', format_text((string)$source['body'], FORMAT_HTML),
+                    ['class' => 'u-studio-revision-body']);
+            }
+            foreach ((array)($source['pages'] ?? []) as $page) {
+                echo html_writer::tag('h4', s((string)($page['title'] ?? 'Страница')));
+                echo html_writer::tag('div', format_text((string)($page['body'] ?? ''), FORMAT_HTML),
+                    ['class' => 'u-studio-revision-body']);
+            }
+            if ($revision['hash'] !== '') {
+                echo html_writer::tag('small', 'SHA-256 исходника: ' . s($revision['hash']));
+            }
+        } else {
+            echo html_writer::tag('p', 'Для этой ранней версии сохранён только факт редактирования.');
+        }
+        echo html_writer::end_tag('details');
+    }
     echo html_writer::end_div();
 }
 

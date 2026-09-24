@@ -86,6 +86,16 @@
 }
 .u-scorm-rich-editor:focus-visible { outline: 3px solid var(--u-accent, #ebc500); outline-offset: 2px; }
 .u-studio-scorm-pages > label { display: block; margin: 1rem 0; }
+.u-studio-history { max-width: 860px; margin: 1.5rem 0; }
+.u-studio-revision {
+    margin: .6rem 0;
+    padding: .75rem 1rem;
+    border: 1px solid var(--u-border, #e5e7eb);
+    border-radius: .65rem;
+    background: var(--u-surface, #fff);
+}
+.u-studio-revision summary { cursor: pointer; font-weight: 600; }
+.u-studio-revision-body { padding: .4rem .75rem; overflow-wrap: anywhere; }
 .u-board-archive {
     max-height: 65vh;
     overflow: auto;

@@ -16,6 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = required_param('action', PARAM_ALPHANUMEXT);
     try {
         if ($action === 'save') {
+            $haszip = !empty($_FILES['scormzip']['name']);
+            $buildscorm = optional_param('buildscorm', 0, PARAM_BOOL);
+            if ($haszip && $buildscorm) {
+                throw new invalid_parameter_exception(
+                    'Выберите один способ подготовки SCORM: загрузить ZIP или собрать из страниц.'
+                );
+            }
+            if (($haszip || $buildscorm) && optional_param('kind', 'course', PARAM_ALPHA) !== 'scorm') {
+                throw new invalid_parameter_exception('SCORM-пакет можно добавить только к материалу типа SCORM.');
+            }
             if (optional_param('id', 0, PARAM_INT) === 0
                     && optional_param('kind', 'course', PARAM_ALPHA) === 'assessment') {
                 throw new invalid_parameter_exception(
@@ -27,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             if (!empty($item['replay'])) {
                 // The same new-material POST was already committed.
-            } else if (!empty($_FILES['scormzip']['name'])) {
+            } else if ($haszip) {
                 $item = \local_ustar\material_studio::upload_scorm_zip((int)$item['id'], (int)$USER->id, $_FILES['scormzip']);
-            } else if (optional_param('buildscorm', 0, PARAM_BOOL)) {
+            } else if ($buildscorm) {
                 $item = \local_ustar\material_studio::build_scorm((int)$item['id'], (int)$USER->id);
             }
             redirect(new moodle_url('/local/ustar/materials_studio.php', ['id' => (int)$item['id'], 'saved' => 1]));
@@ -197,6 +207,7 @@ echo html_writer::start_div('', ['id' => 'studio-zip-fields']);
 echo html_writer::tag('label', 'Импорт ZIP-пакета SCORM', ['for' => 'studio-scorm-zip']);
 echo html_writer::empty_tag('input', ['type' => 'file', 'id' => 'studio-scorm-zip',
     'name' => 'scormzip', 'accept' => '.zip,application/zip']);
+echo html_writer::tag('p', 'Выберите загрузку ZIP или сборку из страниц — одновременно их использовать нельзя.');
 echo html_writer::end_div();
 if ($editing['packagestatus'] === 'imported') {
     echo html_writer::tag('p', 'Подключён пакет: ' . s((string)$editing['packagefilename'])

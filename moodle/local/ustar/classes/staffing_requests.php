@@ -196,7 +196,17 @@ final class staffing_requests {
         if ($actorid !== (int)$USER->id) { throw new \invalid_parameter_exception('Неверный автор решения'); }
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('staffing-review', 10);
         if (!$lock) { throw new \moodle_exception('Кадровая операция уже выполняется. Повторите попытку.'); }
+        $registrationlock = null;
         try {
+        $requeststub = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid],
+            'id,requesttype,employeeid', MUST_EXIST);
+        if ((string)$requeststub->requesttype === self::TYPE_REGISTRATION) {
+            $registrationlock = \core\lock\lock_config::get_lock_factory('local_ustar')
+                ->get_lock('registration-request-' . (int)$requeststub->employeeid, 10);
+            if (!$registrationlock) {
+                throw new \moodle_exception('Заявка на регистрацию изменяется. Повторите решение.');
+            }
+        }
         $transaction = $DB->start_delegated_transaction();
         try {
         $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid], '*', MUST_EXIST);
@@ -353,7 +363,10 @@ final class staffing_requests {
             'createduserid' => $createduserid,
         ];
         } catch (\Throwable $e) { $transaction->rollback($e); }
-        } finally { $lock->release(); }
+        } finally {
+            if ($registrationlock) { $registrationlock->release(); }
+            $lock->release();
+        }
     }
 
     public static function list_for(int $viewerid): array {

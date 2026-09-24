@@ -125,6 +125,7 @@ final class registration_service {
             throw new \moodle_exception('Заявка уже отправляется. Повторите попытку.');
         }
         try {
+            $transaction = $DB->start_delegated_transaction();
             $departments = array_column(self::departments(), 'name', 'id');
             if (!isset($departments[$departmentid])) {
                 throw new \invalid_parameter_exception('Подразделение не найдено.');
@@ -141,6 +142,7 @@ final class registration_service {
                 if ((string)$request->departmentid !== $departmentid) {
                     throw new \invalid_parameter_exception('Заявка на другое подразделение уже ожидает решения.');
                 }
+                $transaction->allow_commit();
                 return (int)$request->id;
             }
             $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
@@ -158,7 +160,13 @@ final class registration_service {
                 'requestid' => $id, 'departmentid' => $departmentid,
             ]);
             self::notify_reviewers($id, $departmentid, fullname($user));
+            $transaction->allow_commit();
             return $id;
+        } catch (\Throwable $e) {
+            if (isset($transaction)) {
+                $transaction->rollback($e);
+            }
+            throw $e;
         } finally {
             $lock->release();
         }
@@ -190,51 +198,71 @@ final class registration_service {
         if (!$position || empty($position['department'])) {
             throw new \invalid_parameter_exception('Выберите должность из справочника USTAR.');
         }
-        $existing = $DB->get_record('local_ustar_staff_requests', [
-            'requesttype' => staffing_requests::TYPE_REGISTRATION,
-            'employeeid' => $userid,
-            'status' => staffing_requests::STATUS_PENDING,
-        ], '*', IGNORE_MISSING);
-        if ($existing) {
-            if ((string)$existing->positionid !== $positionid) {
-                throw new \invalid_parameter_exception('У вас уже есть заявка на другую должность. Дождитесь решения.');
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('registration-request-' . $userid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Заявка уже отправляется. Повторите попытку.');
+        }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            if (employment::resolve($userid)['status'] !== employment::PENDING) {
+                throw new \invalid_parameter_exception('Регистрация уже обработана.');
             }
-            return (int)$existing->id;
+            $existing = $DB->get_record('local_ustar_staff_requests', [
+                'requesttype' => staffing_requests::TYPE_REGISTRATION,
+                'employeeid' => $userid,
+                'status' => staffing_requests::STATUS_PENDING,
+            ], '*', IGNORE_MISSING);
+            if ($existing) {
+                if ((string)$existing->positionid !== $positionid) {
+                    throw new \invalid_parameter_exception('У вас уже есть заявка на другую должность. Дождитесь решения.');
+                }
+                $transaction->allow_commit();
+                return (int)$existing->id;
+            }
+            if ($DB->record_exists('local_ustar_staff_requests', [
+                'requesttype' => staffing_requests::TYPE_REGISTRATION,
+                'employeeid' => $userid,
+                'status' => staffing_requests::STATUS_APPROVED,
+            ])) {
+                throw new \invalid_parameter_exception('Регистрация уже подтверждена.');
+            }
+            $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename', MUST_EXIST);
+            $now = time();
+            $id = (int)$DB->insert_record('local_ustar_staff_requests', (object)[
+                'requesttype' => staffing_requests::TYPE_REGISTRATION,
+                'departmentid' => (string)$position['department'],
+                'positionid' => $positionid,
+                'employeeid' => $userid,
+                'firstname' => (string)$user->firstname,
+                'lastname' => (string)$user->lastname,
+                'requesteddate' => $now,
+                'comment' => null,
+                'reason' => null,
+                'status' => staffing_requests::STATUS_PENDING,
+                'requestedby' => $userid,
+                'reviewedby' => null,
+                'reviewcomment' => null,
+                'createduserid' => null,
+                'timecreated' => $now,
+                'timemodified' => $now,
+                'reviewedat' => null,
+            ]);
+            people::log_action($userid, $userid, 'registration_requested', [
+                'requestid' => $id, 'positionid' => $positionid,
+                'departmentid' => (string)$position['department'],
+            ]);
+            self::notify_reviewers($id, (string)$position['department'], fullname($user));
+            $transaction->allow_commit();
+            return $id;
+        } catch (\Throwable $e) {
+            if (isset($transaction)) {
+                $transaction->rollback($e);
+            }
+            throw $e;
+        } finally {
+            $lock->release();
         }
-        if ($DB->record_exists('local_ustar_staff_requests', [
-            'requesttype' => staffing_requests::TYPE_REGISTRATION,
-            'employeeid' => $userid,
-            'status' => staffing_requests::STATUS_APPROVED,
-        ])) {
-            throw new \invalid_parameter_exception('Регистрация уже подтверждена.');
-        }
-        $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename', MUST_EXIST);
-        $now = time();
-        $id = (int)$DB->insert_record('local_ustar_staff_requests', (object)[
-            'requesttype' => staffing_requests::TYPE_REGISTRATION,
-            'departmentid' => (string)$position['department'],
-            'positionid' => $positionid,
-            'employeeid' => $userid,
-            'firstname' => (string)$user->firstname,
-            'lastname' => (string)$user->lastname,
-            'requesteddate' => $now,
-            'comment' => null,
-            'reason' => null,
-            'status' => staffing_requests::STATUS_PENDING,
-            'requestedby' => $userid,
-            'reviewedby' => null,
-            'reviewcomment' => null,
-            'createduserid' => null,
-            'timecreated' => $now,
-            'timemodified' => $now,
-            'reviewedat' => null,
-        ]);
-        people::log_action($userid, $userid, 'registration_requested', [
-            'requestid' => $id, 'positionid' => $positionid,
-            'departmentid' => (string)$position['department'],
-        ]);
-        self::notify_reviewers($id, (string)$position['department'], fullname($user));
-        return $id;
     }
 
     public static function state(int $userid): array {

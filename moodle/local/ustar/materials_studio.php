@@ -16,6 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = required_param('action', PARAM_ALPHANUMEXT);
     try {
         if ($action === 'save') {
+            if (optional_param('id', 0, PARAM_INT) === 0
+                    && optional_param('kind', 'course', PARAM_ALPHA) === 'assessment') {
+                throw new invalid_parameter_exception(
+                    'Новые аттестации создаются в конструкторе Moodle Quiz. Откройте ссылку «Создать аттестацию».'
+                );
+            }
             $item = \local_ustar\material_studio::save(
                 optional_param('id', 0, PARAM_INT), $_POST, (int)$USER->id
             );
@@ -91,6 +97,9 @@ $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 $PAGE->set_heading('USTAR Academy');
 echo $OUTPUT->header();
 echo $OUTPUT->heading('Студия материалов');
+echo html_writer::tag('p', html_writer::link(
+    new moodle_url('/local/ustar/assessment_studio.php'), 'Создать аттестацию',
+    ['class' => 'btn btn-primary']));
 
 if ($notice !== '') {
     echo $OUTPUT->notification(s($notice), 'notifyproblem');
@@ -102,7 +111,7 @@ foreach (['saved' => 'Материал сохранён.', 'published' => 'Ма�
 }
 
 echo html_writer::tag('p',
-    'В одном месте создаются курсы, аттестации и SCORM. Сценарий остаётся редактируемым. Импортированный ZIP запускается как активность Moodle; его содержимое нельзя править в этом редакторе. После изменения сценария импортируйте пакет текущей версии перед публикацией.');
+    'Здесь создаются учебные материалы и SCORM. Новые аттестации открываются в конструкторе Moodle Quiz — его попытки, оценки и проверка являются общим источником результата. Импортированный ZIP запускается как активность Moodle; его содержимое нельзя править в этом редакторе. После изменения сценария импортируйте пакет текущей версии перед публикацией.');
 echo html_writer::start_tag('form', [
     'method' => 'post', 'enctype' => 'multipart/form-data',
     'action' => (new moodle_url('/local/ustar/materials_studio.php'))->out(false),
@@ -114,11 +123,12 @@ echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'creationtok
     'value' => (string)($editing['creationtoken'] ?? '')]);
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'expectedmodified', 'value' => (int)$editing['expectedmodified']]);
 echo html_writer::tag('label', 'Тип материала');
-echo html_writer::select([
-    'course' => 'Курс',
-    'scorm' => 'SCORM-курс',
-    'assessment' => 'Аттестация',
-], 'kind', (string)$editing['kind'], false, ['class' => 'form-select', 'id' => 'studio-kind']);
+$kinds = ['course' => 'Учебный материал', 'scorm' => 'SCORM-курс'];
+if ((int)$editing['id'] > 0 && (string)$editing['kind'] === 'assessment') {
+    $kinds['assessment'] = 'Аттестация, созданная ранее';
+}
+echo html_writer::select($kinds, 'kind', (string)$editing['kind'], false,
+    ['class' => 'form-select', 'id' => 'studio-kind']);
 echo html_writer::tag('label', 'Название');
 echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'title', 'required' => 'required',
     'value' => (string)$editing['title'], 'class' => 'form-control']);

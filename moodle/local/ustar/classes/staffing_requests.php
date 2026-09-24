@@ -384,9 +384,14 @@ final class staffing_requests {
         if ($ishr || $canapproveregistration) {
             $records = $DB->get_records('local_ustar_staff_requests', [], 'timecreated DESC');
         } else {
-            $records = $DB->get_records('local_ustar_staff_requests', [
-                'departmentid' => (string)$scope['departmentid'],
-            ], 'timecreated DESC');
+            $departmentids = array_values(array_filter((array)($scope['departmentids'] ?? []),
+                static fn($id): bool => is_string($id) && $id !== ''));
+            if (!$departmentids) {
+                return [];
+            }
+            [$insql, $inparams] = $DB->get_in_or_equal($departmentids, SQL_PARAMS_NAMED, 'manageddept');
+            $records = $DB->get_records_select('local_ustar_staff_requests',
+                'departmentid ' . $insql, $inparams, 'timecreated DESC');
         }
 
         $structure = structure::get(structure::NAME_STRUCTURE);

@@ -145,7 +145,8 @@ final class organization_model {
         $managerplaces=self::manager_places($userid);
         if(!$managerplaces){
             return ['allowed'=>false,'departmentid'=>'','department'=>'','positions'=>[],
-                'employees'=>[],'userids'=>[],'staffplaceids'=>[],'managerplaceids'=>[]];
+                'departmentids'=>[],'employees'=>[],'userids'=>[],
+                'staffplaceids'=>[],'managerplaceids'=>[]];
         }
 
         $rootids=array_map(static fn($p)=>(int)$p->id,$managerplaces);
@@ -196,6 +197,7 @@ final class organization_model {
         return [
             'allowed'=>true,
             'departmentid'=>$primarydepartmentid,
+            'departmentids'=>$departmentkeys,
             'department'=>$departmentlabel,
             'positions'=>$positionoptions,
             'employees'=>$employees,

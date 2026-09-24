@@ -39,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         throw new invalid_parameter_exception('Форма уже была отправлена или устарела. Обновите страницу и повторите попытку.');
     }
     $answers = optional_param_array('answer', [], PARAM_ALPHANUMEXT);
-    \local_ustar\development_assessment::submit($assessmentkey, (int)$USER->id, $answers, $nonce, time());
+    \local_ustar\development_assessment::submit($assessmentkey, (int)$USER->id, $answers,
+        $nonce, required_param('versionid', PARAM_INT), time());
     unset($SESSION->{$sessionkey});
     $routeflow = !empty($SESSION->{$routeflowkey});
     unset($SESSION->{$routeflowkey});
@@ -97,6 +98,7 @@ $data = [
     'questions' => $questions,
     'sesskey' => sesskey(),
     'submissionkey' => $isself ? (string)$SESSION->{$sessionkey} : '',
+    'versionid' => (int)$definition['version']->id,
     'retryurl' => (new moodle_url('/local/ustar/development_assessment.php', ['assessment' => $assessmentkey, 'retry' => 1]))->out(false),
     'homeurl' => (new moodle_url('/local/ustar/home.php', ['view' => 'career']))->out(false),
     'analyticsurl' => (new moodle_url('/local/ustar/development_assessments.php'))->out(false),

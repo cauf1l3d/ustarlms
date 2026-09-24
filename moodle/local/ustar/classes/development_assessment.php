@@ -130,7 +130,8 @@ final class development_assessment {
      *
      * @return array<string, mixed>
      */
-    public static function submit(string $assessmentkey, int $userid, array $answers, string $idempotencykey, int $startedat = 0): array {
+    public static function submit(string $assessmentkey, int $userid, array $answers,
+            string $idempotencykey, int $expectedversionid, int $startedat = 0): array {
         global $DB;
         if ($userid <= 0 || !$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])) {
             throw new \invalid_parameter_exception('Сотрудник для сохранения результата не найден.');
@@ -138,6 +139,10 @@ final class development_assessment {
         $definition = self::published($assessmentkey);
         if (!$definition) {
             throw new \moodle_exception('Развивающий профиль недоступен.');
+        }
+        if ($expectedversionid <= 0 || $expectedversionid !== (int)$definition['version']->id) {
+            throw new \invalid_parameter_exception(
+                'Опросник обновился после открытия страницы. Откройте новую версию и ответьте заново.');
         }
         $idempotencykey = clean_param($idempotencykey, PARAM_ALPHANUMEXT);
         if ($idempotencykey === '') {

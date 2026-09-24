@@ -8,6 +8,8 @@ Source: user-supplied `USTAR_ENGINEERING_AUDIT_REFACTOR_PLAN_20260920(1).md`, se
 
 **Search (E07, source only):** Course, content and people matches now page until enough ACL-visible results are collected; team people are scoped in SQL before paging. Position and skill links point to the relevant HR position or employee route, and people links target HR detail or an organization-chart anchor. Search over large result sets and final recipient ACL still need browser/runtime acceptance.
 
+**Private development questionnaire (C15, source only):** Each opened form now carries its published version ID; submit rejects a newly published definition and asks the employee to reopen the questionnaire. Submitted results remain private and do not become qualification evidence. Runtime acceptance and publication races still need the final gate.
+
 | ID | Priority / basis | RC status | Audit finding and required change |
 |---|---|---|---|
 | A01 | P0 · К | Acceptance pending | **Устаревший CI-gate.** Workflow запускается для `ustar-final-audit-release`, не для актуальных PR/интеграционной ветки; ожидает XMLDB/plugin `2026082705` и сравнивает код с историческим release-каталогом. Перевести на действующие ветки, обязательные PR-проверки и актуальные инварианты; убрать сравнение с исторической копией как критерий корректности. Приёмка: дефектный PR блокируется, текущий SHA проходит осмысленный pipeline. [Workflow][ci] |

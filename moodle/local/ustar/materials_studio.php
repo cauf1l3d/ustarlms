@@ -122,6 +122,10 @@ echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'creationtoken',
     'value' => (string)($editing['creationtoken'] ?? '')]);
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'expectedmodified', 'value' => (int)$editing['expectedmodified']]);
+if ((string)$editing['status'] === 'published') {
+    echo $OUTPUT->notification('Материал опубликован. Верните его в черновик перед изменением или заменой пакета.', 'notifyinfo');
+    echo html_writer::start_tag('fieldset', ['disabled' => 'disabled']);
+}
 echo html_writer::tag('label', 'Тип материала');
 $kinds = ['course' => 'Учебный материал', 'scorm' => 'SCORM-курс'];
 if ((int)$editing['id'] > 0 && (string)$editing['kind'] === 'assessment') {
@@ -193,7 +197,11 @@ if ($editing['packagestatus'] === 'imported') {
         echo $OUTPUT->notification('Пакет текущей версии импортирован в Moodle. В маршруте выберите этот материал: результаты и возобновление записывает Moodle.', 'notifyinfo');
     }
 }
-echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить в черновик', 'class' => 'btn btn-primary']);
+if ((string)$editing['status'] !== 'published') {
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить в черновик', 'class' => 'btn btn-primary']);
+} else {
+    echo html_writer::end_tag('fieldset');
+}
 echo html_writer::end_tag('form');
 $PAGE->requires->js_init_code(<<<'JS'
 (function() {

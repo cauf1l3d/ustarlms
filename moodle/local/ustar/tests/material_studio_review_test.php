@@ -179,7 +179,6 @@ final class material_studio_review_test extends \advanced_testcase {
             'kind' => 'scorm',
             'title' => 'Studio SCORM without runtime',
         ], (int)$USER->id);
-        content_admin::publish((int)$scorm['id'], (int)$USER->id);
         $scormresult = $method->invoke(null, [
             'type' => 'content',
             'sourceid' => (int)$scorm['id'],
@@ -192,7 +191,7 @@ final class material_studio_review_test extends \advanced_testcase {
     }
 
 
-    public function test_published_route_rejects_studio_scorm_without_runtime(): void {
+    public function test_route_rejects_studio_scorm_without_runtime(): void {
         global $DB, $USER;
         $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
         $route = $g->create_route();
@@ -203,8 +202,6 @@ final class material_studio_review_test extends \advanced_testcase {
             'kind' => 'scorm',
             'title' => 'Studio SCORM attachment',
         ], (int)$USER->id);
-        content_admin::publish((int)$scorm['id'], (int)$USER->id);
-
         $pointrow = $DB->get_record('local_ustar_route_points', ['id' => $point->id], '*', MUST_EXIST);
         $this->expectException(\moodle_exception::class);
         $this->expectExceptionMessage('Studio SCORM');

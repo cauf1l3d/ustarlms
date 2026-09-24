@@ -870,7 +870,42 @@ final class adaptation_service {
         return $id;
     }
 
+    /** Serialize final decisions and commit state, events and case changes together. */
+    private static function final_decision_transaction(int $adaptationid, callable $command): void {
+        global $DB;
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('adaptation-final-' . $adaptationid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Итоговое решение по адаптации уже обрабатывается. Повторите попытку.');
+        }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $command();
+                $transaction->allow_commit();
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+    }
+
     public static function manager_final_decision(int $adaptationid, int $actorid, string $decision, string $reason, int $extensiondays = 0): void {
+        global $USER;
+        if ($actorid !== (int)$USER->id || !team_access::active_actor($actorid)) {
+            throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
+        }
+        require_capability('local/ustar:viewteam', \context_system::instance());
+        view_as::assert_writable();
+        self::final_decision_transaction($adaptationid, static function() use (
+            $adaptationid, $actorid, $decision, $reason, $extensiondays
+        ): void {
+            self::manager_final_decision_locked($adaptationid, $actorid, $decision, $reason, $extensiondays);
+        });
+    }
+
+    private static function manager_final_decision_locked(int $adaptationid, int $actorid, string $decision, string $reason, int $extensiondays): void {
         global $DB;
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
         if ((int)$adaptation->managerid !== $actorid || (string)$adaptation->status !== self::STATUS_ACTIVE) {
@@ -991,7 +1026,20 @@ final class adaptation_service {
     }
 
     public static function hrd_final_decision(int $adaptationid, int $actorid, string $decision, string $reason, int $extensiondays = 0): void {
+        global $USER;
+        if ($actorid !== (int)$USER->id || !team_access::active_actor($actorid)) {
+            throw new \required_capability_exception(\context_system::instance(), 'local/ustar:use', 'nopermissions', '');
+        }
         self::require_hrd_actor($actorid);
+        view_as::assert_writable();
+        self::final_decision_transaction($adaptationid, static function() use (
+            $adaptationid, $actorid, $decision, $reason, $extensiondays
+        ): void {
+            self::hrd_final_decision_locked($adaptationid, $actorid, $decision, $reason, $extensiondays);
+        });
+    }
+
+    private static function hrd_final_decision_locked(int $adaptationid, int $actorid, string $decision, string $reason, int $extensiondays): void {
         global $DB;
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
         if ((string)$adaptation->status !== self::STATUS_ESCALATED) {

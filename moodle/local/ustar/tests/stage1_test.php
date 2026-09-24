@@ -159,6 +159,21 @@ final class stage1_test extends \advanced_testcase {
         $this->assertSame(0, $DB->count_records('local_ustar_evidence_rec', ['userid' => $user->id]));
     }
 
+    public function test_pending_employee_cannot_learn_before_hr_approval(): void {
+        global $DB;
+        $user = $this->getDataGenerator()->create_user();
+        $this->assertTrue(accounts::learning_enabled($user->id));
+
+        employment::register_pending($user->id);
+        $this->assertFalse(accounts::learning_enabled($user->id));
+        $this->assertFalse(employment::learning_allowed($user->id));
+
+        $employment = $DB->get_record('local_ustar_employment', ['userid' => $user->id], '*', MUST_EXIST);
+        $employment->status = employment::ACTIVE;
+        $DB->update_record('local_ustar_employment', $employment);
+        $this->assertTrue(accounts::learning_enabled($user->id));
+    }
+
     public function test_route_reward_is_once_per_cycle_and_new_cycle_is_rewarded(): void {
         global $DB;
         [$g, $user, $route, $point, $version] = $this->fixture();

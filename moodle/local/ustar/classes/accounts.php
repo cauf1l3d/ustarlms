@@ -127,9 +127,11 @@ class accounts {
     /**
      * Whether an account is allowed to receive/execute learner access.
      *
-     * Employees and isolated TYPE_TEST sandbox users may learn. Service
-     * accounts and site administrators must never receive workforce learning
-     * assignments automatically.
+     * Only active employees and isolated TYPE_TEST sandbox users may learn.
+     * A pending, suspended or terminated employee remains an HR identity, but
+     * cannot receive learner access before approval (or after deactivation).
+     * Service accounts and site administrators must never receive workforce
+     * learning assignments automatically.
      */
     public static function learning_enabled(int $userid): bool {
         global $DB;
@@ -149,11 +151,12 @@ class accounts {
             return false;
         }
 
-        return in_array(
-            self::type_of($userid),
-            [self::TYPE_EMPLOYEE, self::TYPE_TEST],
-            true
-        );
+        $type = self::type_of($userid);
+        if ($type === self::TYPE_TEST) {
+            return true;
+        }
+
+        return $type === self::TYPE_EMPLOYEE && employment::is_active($userid);
     }
 
     /**

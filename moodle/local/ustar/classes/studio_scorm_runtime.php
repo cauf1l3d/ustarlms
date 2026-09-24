@@ -8,8 +8,9 @@ final class studio_scorm_runtime {
     /** Import one validated archive into a new Moodle activity and pin its source version. */
     public static function import(int $contentid, int $actorid, string $path, string $filename,
             int $expectedsourceversion): array {
-        global $CFG, $DB;
-        if (!material_studio::can_manage($actorid)) {
+        global $CFG, $DB, $USER;
+        if (!material_studio::can_manage($actorid)
+                || (!(defined('CLI_SCRIPT') && CLI_SCRIPT) && (int)($USER->id ?? 0) !== $actorid)) {
             throw new \required_capability_exception(\context_system::instance(),
                 'local/ustar:hrmanage', 'nopermissions', '');
         }

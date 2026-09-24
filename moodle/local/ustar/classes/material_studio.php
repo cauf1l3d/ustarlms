@@ -67,6 +67,7 @@ final class material_studio {
     public static function save(int $contentid, array $input, int $actorid): array {
         global $DB;
         self::assert_manage($actorid);
+        view_as::assert_writable();
         self::assert_available();
         $kind = clean_param((string)($input['kind'] ?? ''), PARAM_ALPHA);
         if (!in_array($kind, [self::KIND_COURSE, self::KIND_SCORM, self::KIND_ASSESSMENT], true)) {
@@ -88,6 +89,10 @@ final class material_studio {
         $pages = $kind === self::KIND_SCORM ? self::scorm_pages($input['scormpages'] ?? []) : [];
         $expected = (int)($input['expectedmodified'] ?? 0);
         $creationtoken = (string)($input['creationtoken'] ?? '');
+        if ($contentid === 0 && $creationtoken === ''
+                && ((defined('CLI_SCRIPT') && CLI_SCRIPT) || (defined('PHPUNIT_TEST') && PHPUNIT_TEST))) {
+            $creationtoken = bin2hex(random_bytes(16));
+        }
         if ($contentid === 0 && !preg_match('/^[a-f0-9]{32}$/', $creationtoken)) {
             throw new \invalid_parameter_exception('Форма создания устарела. Обновите страницу и повторите сохранение.');
         }
@@ -216,6 +221,7 @@ final class material_studio {
     public static function upload_scorm_zip(int $contentid, int $actorid, array $upload): array {
         global $DB;
         self::assert_manage($actorid);
+        view_as::assert_writable();
         self::assert_available();
         $item = self::by_content($contentid, $actorid);
         if ((string)$item['kind'] !== self::KIND_SCORM) {
@@ -279,6 +285,7 @@ final class material_studio {
     /** Build a single-SCO SCORM 1.2 package from the visual page editor. */
     public static function build_scorm(int $contentid, int $actorid): array {
         self::assert_manage($actorid);
+        view_as::assert_writable();
         $item = self::by_content($contentid, $actorid);
         if ((string)$item['kind'] !== self::KIND_SCORM || !$item['pages']
                 || (string)$item['status'] !== content::STATUS_DRAFT) {
@@ -347,6 +354,8 @@ final class material_studio {
 
     /** Archive rather than erase: route evidence and historical audit remain intact. */
     public static function delete(int $contentid, int $actorid, string $reason = ''): void {
+        self::assert_manage($actorid);
+        view_as::assert_writable();
         content_admin::delete($contentid, $actorid, $reason ?: 'Удалено из рабочего каталога материалов');
     }
 
@@ -620,7 +629,9 @@ final class material_studio {
     }
 
     private static function assert_manage(int $actorid): void {
-        if (!self::can_manage($actorid)) {
+        global $USER;
+        if (!self::can_manage($actorid)
+                || (!(defined('CLI_SCRIPT') && CLI_SCRIPT) && (int)($USER->id ?? 0) !== $actorid)) {
             throw new \required_capability_exception(
                 \context_system::instance(), 'local/ustar:hrmanage', 'nopermissions', ''
             );

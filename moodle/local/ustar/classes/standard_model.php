@@ -21,6 +21,69 @@ final class standard_model {
     ];
     private const OUTCOMES = ['observed', 'completed', 'passed'];
 
+    /** The published qualification contract for one stable position ID. */
+    public static function position_code(string $positionid): string {
+        return 'position_' . substr(hash('sha256', $positionid), 0, 40);
+    }
+
+    public static function current_position(string $positionid): ?\stdClass {
+        return self::current(self::position_code($positionid));
+    }
+
+    /** Publish a reviewed snapshot of the editable position matrix. */
+    public static function publish_position_matrix(string $positionid, string $expectedhash, int $actorid): \stdClass {
+        global $DB;
+        require_capability('local/ustar:admin', \context_system::instance(), $actorid);
+        view_as::assert_writable();
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_standards')
+            ->get_lock('position-publish:' . self::position_code($positionid), 10);
+        if (!$lock) {
+            throw new \moodle_exception('Стандарт этой должности сейчас публикуется. Повторите попытку.');
+        }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            $structure = structure::get(structure::NAME_STRUCTURE);
+            $position = people::position_map($structure)[$positionid] ?? null;
+            $matrix = $structure['matrix'][$positionid] ?? [];
+            if (!$position || !is_array($matrix) || !$matrix
+                    || !hash_equals(self::matrix_hash($matrix), $expectedhash)) {
+                throw new \moodle_exception('Требования должности изменились или пусты. Обновите страницу перед публикацией.');
+            }
+            $skills = [];
+            foreach ($structure['skills'] ?? [] as $skill) {
+                $skills[(string)$skill['id']] = true;
+            }
+            $requirements = [];
+            foreach ($matrix as $skillid => $level) {
+                if (!isset($skills[(string)$skillid]) || (int)$level < 1 || (int)$level > 5) {
+                    throw new \moodle_exception('Матрица содержит недействительный навык или уровень.');
+                }
+                $requirements[] = ['type' => 'practice', 'outcome' => 'passed',
+                    'sourcekind' => 'ustar_skill', 'sourceid' => (string)$skillid,
+                    'targetlevel' => (int)$level, 'required' => true];
+            }
+            $standard = self::create(self::position_code($positionid),
+                'Стандарт должности: ' . (string)$position['name'],
+                'Опубликованный снимок обязательных навыков должности.', $actorid);
+            $version = self::save_version((int)$standard->id,
+                ['requirements' => $requirements], $actorid);
+            $published = self::publish((int)$standard->id, (int)$version->id, $actorid);
+            $transaction->allow_commit();
+            return $published;
+        } catch (\Throwable $e) {
+            if (isset($transaction)) { $transaction->rollback($e); }
+            throw $e;
+        } finally {
+            $lock->release();
+        }
+    }
+
+    /** @param array<string,int> $matrix */
+    public static function matrix_hash(array $matrix): string {
+        ksort($matrix, SORT_STRING);
+        return hash('sha256', json_encode($matrix, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+    }
+
     /** @return array<int,array<string,mixed>> */
     public static function normalize_requirements(array $requirements): array {
         $normalized = [];
@@ -45,6 +108,14 @@ final class standard_model {
                 'sourceid' => \core_text::substr($sourceid, 0, 128),
                 'required' => !array_key_exists('required', $requirement) || !empty($requirement['required']),
             ];
+            if ($sourcekind === 'ustar_skill') {
+                $level = (int)($requirement['targetlevel'] ?? 0);
+                if ($level < 1 || $level > 5) {
+                    array_pop($normalized);
+                    continue;
+                }
+                $normalized[array_key_last($normalized)]['targetlevel'] = $level;
+            }
         }
         return $normalized;
     }

@@ -183,6 +183,13 @@ if (
             );
         }
 
+        if ($action === 'publishstandard') {
+            \local_ustar\standard_model::publish_position_matrix(
+                $positionid, required_param('matrixhash', PARAM_ALPHANUMEXT), (int)$USER->id);
+            redirect(new moodle_url('/local/ustar/positions.php', ['positionid' => $positionid]),
+                'Стандарт должности опубликован', null, \core\output\notification::NOTIFY_SUCCESS);
+        }
+
 
         if ($action === 'addevidence') {
 
@@ -399,6 +406,8 @@ foreach ($positions as $position) {
 $required =
     $structure['matrix'][$positionid]
     ?? [];
+$publishedstandard = \local_ustar\standard_model::current_position($positionid);
+$matrixhash = \local_ustar\standard_model::matrix_hash(is_array($required) ? $required : []);
 
 $selectedskillid = optional_param('skillid', '', PARAM_ALPHANUMEXT);
 $skillmap = [];
@@ -1381,6 +1390,12 @@ $data = [
 
     'canmanage' =>
         $canmanage,
+
+    'canpublishstandard' => has_capability('local/ustar:admin', $context) && !empty($required),
+    'standardpublished' => !empty($publishedstandard),
+    'standardversion' => $publishedstandard ? (int)$publishedstandard->versionno : 0,
+    'standarddate' => $publishedstandard ? userdate((int)$publishedstandard->effectivedate) : '',
+    'matrixhash' => $matrixhash,
 
     'structureurl' =>
         (new moodle_url('/local/ustar/organization_settings.php'))->out(false),

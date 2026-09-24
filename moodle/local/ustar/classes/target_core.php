@@ -60,6 +60,16 @@ final class target_core {
         }
         $sourcekind = self::clean_code((string)($data['sourcekind'] ?? ''), 32);
         $sourceid = \core_text::substr(trim((string)($data['sourceid'] ?? '')), 0, 128);
+        if ($sourcekind === 'human_skill_level') {
+            $level = $data['details']['level'] ?? null;
+            if ($actorid <= 0 || $actorid === $userid
+                    || !in_array($type, ['manager_review'], true) || $outcome !== 'passed'
+                    || !is_int($level) || $level < 1 || $level > 5
+                    || self::clean_code((string)($data['skillid'] ?? '')) === ''
+                    || self::clean_code((string)($data['positionid'] ?? '')) === '') {
+                throw new \invalid_parameter_exception('A human skill level requires a manager, position, skill and reviewed level');
+            }
+        }
         $key = trim((string)($data['idempotencykey'] ?? ''));
         if ($sourcekind === '' || $sourceid === '' || $key === '') {
             throw new \invalid_parameter_exception('Evidence source and idempotency key are required');
@@ -132,13 +142,19 @@ final class target_core {
     }
 
     /** Return the newest immutable lifecycle event for one evidence fact. */
-    private static function latest_evidence_event(int $evidenceid): ?\stdClass {
+    private static function latest_evidence_event(int $evidenceid, ?int $attime = null): ?\stdClass {
         global $DB;
+        $where = 'evidenceid = :evidenceid';
+        $params = ['evidenceid' => $evidenceid];
+        if ($attime !== null) {
+            $where .= ' AND timecreated <= :attime';
+            $params['attime'] = $attime;
+        }
         $event = $DB->get_record_sql(
             'SELECT * FROM {local_ustar_evidence_evt}
-              WHERE evidenceid = :evidenceid
+              WHERE ' . $where . '
            ORDER BY timecreated DESC, id DESC',
-            ['evidenceid' => $evidenceid],
+            $params,
             IGNORE_MULTIPLE
         );
         return $event ?: null;
@@ -152,11 +168,11 @@ final class target_core {
             return false;
         }
         $attime = $attime ?? time();
-        if ((int)$evidence->validfrom > $attime
+        if ((int)$evidence->timecreated > $attime || (int)$evidence->validfrom > $attime
                 || (!empty($evidence->expiresat) && (int)$evidence->expiresat <= $attime)) {
             return false;
         }
-        $latest = self::latest_evidence_event($evidenceid);
+        $latest = self::latest_evidence_event($evidenceid, $attime);
         return !$latest || (string)$latest->eventtype === 'restored';
     }
 

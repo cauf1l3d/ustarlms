@@ -107,6 +107,7 @@ $data = [
     'qualincomplete' => !empty($qualification['incomplete']),
 
     'unconfiguredstandards' => (int)$qualification['unconfigured'],
+    'unverifiedskills' => (int)$qualification['unverified'],
 
     'qualificationtotal' => (int)$qualification['total'],
     'qualificationassessable' => (int)$qualification['assessable'],

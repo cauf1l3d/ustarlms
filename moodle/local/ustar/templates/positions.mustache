@@ -470,6 +470,26 @@
 
                 </form>
 
+                <div class="u-panel u-position-standard" aria-live="polite">
+                    {{#standardpublished}}
+                    <p><strong>Опубликованный стандарт · версия {{standardversion}}</strong></p>
+                    <p>Действует с {{standarddate}}. Изменения матрицы применятся к показателю квалификации после новой публикации. Прохождение курса не подтверждает уровень навыка: требуется отдельная оценка руководителя.</p>
+                    {{/standardpublished}}
+                    {{^standardpublished}}
+                    <p><strong>Стандарт должности ещё не опубликован</strong></p>
+                    <p>Сотрудники с этой должностью отображаются как «неопределённо» в показателе квалификации.</p>
+                    {{/standardpublished}}
+                    {{#canpublishstandard}}
+                    <form method="post">
+                        <input type="hidden" name="action" value="publishstandard">
+                        <input type="hidden" name="positionid" value="{{position.id}}">
+                        <input type="hidden" name="matrixhash" value="{{matrixhash}}">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <button class="u-btn u-btn--primary" type="submit">Опубликовать текущие требования</button>
+                    </form>
+                    {{/canpublishstandard}}
+                </div>
+
             </section>
 
 

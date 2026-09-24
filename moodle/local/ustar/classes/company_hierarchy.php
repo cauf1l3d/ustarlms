@@ -42,13 +42,19 @@ final class company_hierarchy {
             }
         }
         $blocks = [];
-        foreach ([
+        $blocknames = [
             'commercial' => 'Коммерческий блок',
             'operations' => 'Операционный блок',
             'finance' => 'Финансовый блок',
             'logistics' => 'Блок «Логистика»',
             'administrative' => 'Административный блок',
-        ] as $key => $name) {
+        ];
+        $configuredblocks = organization_structure_editor::blocks();
+        foreach ($configuredblocks as $key => $name) {
+            if (isset(organization_structure_editor::BLOCKS[$key])
+                    && $name === organization_structure_editor::BLOCKS[$key]) {
+                $name = $blocknames[$key];
+            }
             $blocks[$key] = ['key' => $key, 'name' => $name, 'leaders' => [],
                 'members' => [], 'departments' => [], 'people' => 0,
                 'islogistics' => $key === 'logistics',

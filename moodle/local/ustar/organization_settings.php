@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
 $revision = \local_ustar\organization_structure_editor::revision();
-$blocks = \local_ustar\organization_structure_editor::BLOCKS;
+$blocks = \local_ustar\organization_structure_editor::blocks($structure);
 $companyroles = \local_ustar\organization_structure_editor::COMPANY_ROLES;
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/organization_settings.php'));
@@ -47,14 +47,15 @@ if (optional_param('saved', 0, PARAM_BOOL)) {
     echo $OUTPUT->notification('Оргструктура сохранена.', 'notifysuccess');
 }
 
-$blockselect = static function(string $selected) use ($blocks): string {
+$blockselect = static function(string $selected, string $id) use ($blocks): string {
     $options = html_writer::tag('option', 'Выберите блок', ['value' => '']);
     foreach ($blocks as $key => $label) {
         $options .= html_writer::tag('option', s($label), [
             'value' => $key, 'selected' => $key === $selected ? 'selected' : null,
         ]);
     }
-    return html_writer::tag('select', $options, ['name' => 'block', 'required' => 'required', 'class' => 'form-select']);
+    return html_writer::tag('select', $options, ['id' => $id, 'name' => 'block',
+        'required' => 'required', 'class' => 'form-select']);
 };
 $hidden = static function(string $action, string $id = '') use ($revision): string {
     $html = '';
@@ -66,6 +67,33 @@ $hidden = static function(string $action, string $id = '') use ($revision): stri
     return $html;
 };
 
+echo html_writer::tag('h2', 'Блоки компании');
+echo html_writer::tag('p', 'Переименование блока сохраняет привязанные подразделения и сотрудников.');
+echo html_writer::start_div('u-structure-grid');
+foreach ($blocks as $blockid => $blockname) {
+    echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-stage6-card']);
+    echo $hidden('updateblock', $blockid);
+    echo html_writer::tag('label', 'Название блока', ['for' => 'block-' . $blockid]);
+    echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'name',
+        'id' => 'block-' . $blockid, 'required' => 'required', 'maxlength' => 120,
+        'value' => $blockname, 'class' => 'form-control']);
+    echo html_writer::tag('p', 'Подразделений: ' . count(array_filter($structure['departments'] ?? [],
+        static fn(array $department): bool => (string)($department['block'] ?? '') === $blockid)));
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить название',
+        'class' => 'u-btn u-btn--primary']);
+    echo html_writer::end_tag('form');
+}
+echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-stage6-card']);
+echo $hidden('createblock');
+echo html_writer::tag('label', 'Новый блок', ['for' => 'new-block-name']);
+echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'name', 'id' => 'new-block-name',
+    'required' => 'required', 'maxlength' => 120, 'class' => 'form-control']);
+echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить блок',
+    'class' => 'u-btn u-btn--primary']);
+echo html_writer::end_tag('form');
+echo html_writer::end_div();
+
+echo html_writer::tag('h2', 'Подразделения');
 echo html_writer::start_div('u-structure-grid');
 foreach ($structure['departments'] ?? [] as $department) {
     $id = (string)($department['id'] ?? '');
@@ -78,8 +106,8 @@ foreach ($structure['departments'] ?? [] as $department) {
     echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'name',
         'id' => 'department-' . $id, 'required' => 'required', 'maxlength' => 120,
         'value' => (string)($department['name'] ?? ''), 'class' => 'form-control']);
-    echo html_writer::tag('label', 'Блок компании');
-    echo $blockselect((string)($department['block'] ?? ''));
+    echo html_writer::tag('label', 'Блок компании', ['for' => 'department-block-' . $id]);
+    echo $blockselect((string)($department['block'] ?? ''), 'department-block-' . $id);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить подразделение',
         'class' => 'btn btn-primary']);
     echo html_writer::end_tag('form');
@@ -123,11 +151,11 @@ echo html_writer::start_div('u-stage6-card');
 echo html_writer::tag('h2', 'Добавить подразделение');
 echo html_writer::start_tag('form', ['method' => 'post']);
 echo $hidden('createdepartment');
-echo html_writer::tag('label', 'Название');
+echo html_writer::tag('label', 'Название', ['for' => 'new-department-name']);
 echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'name', 'required' => 'required',
-    'maxlength' => 120, 'class' => 'form-control']);
-echo html_writer::tag('label', 'Блок компании');
-echo $blockselect('');
+    'id' => 'new-department-name', 'maxlength' => 120, 'class' => 'form-control']);
+echo html_writer::tag('label', 'Блок компании', ['for' => 'new-department-block']);
+echo $blockselect('', 'new-department-block');
 echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить подразделение',
     'class' => 'btn btn-primary']);
 echo html_writer::end_tag('form');
@@ -137,17 +165,17 @@ echo html_writer::start_div('u-stage6-card');
 echo html_writer::tag('h2', 'Добавить должность');
 echo html_writer::start_tag('form', ['method' => 'post']);
 echo $hidden('createposition');
-echo html_writer::tag('label', 'Подразделение');
+echo html_writer::tag('label', 'Подразделение', ['for' => 'new-position-department']);
 $positions = html_writer::tag('option', 'Выберите подразделение', ['value' => '']);
 foreach ($structure['departments'] ?? [] as $department) {
     $positions .= html_writer::tag('option', s((string)$department['name']),
         ['value' => (string)$department['id']]);
 }
 echo html_writer::tag('select', $positions,
-    ['name' => 'id', 'required' => 'required', 'class' => 'form-select']);
-echo html_writer::tag('label', 'Название должности');
+    ['id' => 'new-position-department', 'name' => 'id', 'required' => 'required', 'class' => 'form-select']);
+echo html_writer::tag('label', 'Название должности', ['for' => 'new-position-name']);
 echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'name',
-    'required' => 'required', 'maxlength' => 120, 'class' => 'form-control']);
+    'id' => 'new-position-name', 'required' => 'required', 'maxlength' => 120, 'class' => 'form-control']);
 echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить должность',
     'class' => 'btn btn-primary']);
 echo html_writer::end_tag('form');

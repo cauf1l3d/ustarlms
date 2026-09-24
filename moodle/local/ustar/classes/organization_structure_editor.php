@@ -21,6 +21,19 @@ final class organization_structure_editor {
         'assistant' => 'Ассистент руководства',
     ];
 
+    /** Block IDs stay stable when an HR editor changes their visible names. */
+    public static function blocks(?array $structure = null): array {
+        $structure = $structure ?? structure::get(structure::NAME_STRUCTURE);
+        $blocks = self::BLOCKS;
+        foreach ($structure['blocks'] ?? [] as $id => $name) {
+            if (is_string($id) && preg_match('/^[a-z][a-z0-9_]*$/', $id)
+                    && is_string($name) && trim($name) !== '') {
+                $blocks[$id] = $name;
+            }
+        }
+        return $blocks;
+    }
+
     public static function revision(): int {
         global $DB;
         return (int)$DB->get_field('local_ustar_structure', 'version',
@@ -51,9 +64,28 @@ final class organization_structure_editor {
             if ($name === '' || \core_text::strlen($name) > 120) {
                 throw new \invalid_parameter_exception('Укажите название длиной до 120 символов.');
             }
-            if ($action === 'createdepartment' || $action === 'updatedepartment') {
+            if ($action === 'createblock') {
+                foreach (self::blocks($data) as $existingname) {
+                    if (\core_text::strtolower($existingname) === \core_text::strtolower($name)) {
+                        throw new \invalid_parameter_exception('Блок с таким названием уже существует.');
+                    }
+                }
+                $id = 'block_' . bin2hex(random_bytes(8));
+                $data['blocks'][$id] = $name;
+            } else if ($action === 'updateblock') {
+                $availableblocks = self::blocks($data);
+                if (!isset($availableblocks[$id])) {
+                    throw new \invalid_parameter_exception('Блок больше не существует.');
+                }
+                foreach ($availableblocks as $otherid => $existingname) {
+                    if ($otherid !== $id && \core_text::strtolower($existingname) === \core_text::strtolower($name)) {
+                        throw new \invalid_parameter_exception('Блок с таким названием уже существует.');
+                    }
+                }
+                $data['blocks'][$id] = $name;
+            } else if ($action === 'createdepartment' || $action === 'updatedepartment') {
                 $block = (string)($input['block'] ?? '');
-                if (!isset(self::BLOCKS[$block])) {
+                if (!isset(self::blocks($data)[$block])) {
                     throw new \invalid_parameter_exception('Выберите блок компании.');
                 }
                 if ($action === 'createdepartment') {

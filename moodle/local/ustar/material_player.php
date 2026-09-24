@@ -5,10 +5,15 @@ require_login();
 $id = required_param('id', PARAM_INT);
 $context = context_system::instance();
 $item = \local_ustar\material_studio::by_content($id, (int)$USER->id);
-$preview = optional_param('preview', \local_ustar\material_studio::can_manage((int)$USER->id), PARAM_BOOL);
+$preview = optional_param('preview', 0, PARAM_BOOL);
+if ($preview && !\local_ustar\material_studio::can_manage((int)$USER->id)) {
+    throw new required_capability_exception($context, 'local/ustar:hrmanage', 'nopermissions', '');
+}
 $result = null;
 $notice = '';
 $answers = [];
+$attemptnonce = $_SERVER['REQUEST_METHOD'] === 'POST'
+    ? required_param('attemptnonce', PARAM_ALPHANUMEXT) : bin2hex(random_bytes(16));
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (string)$item['kind'] === 'assessment') {
     require_sesskey();
     \local_ustar\view_as::assert_writable();
@@ -18,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (string)$item['kind'] === 'assessme
             $answers[$index] = optional_param('answer_' . $index, '', PARAM_TEXT);
         }
         $result = \local_ustar\material_studio::submit_assessment($id, (int)$USER->id, $answers,
-            required_param('sourceversion', PARAM_INT), $preview);
+            required_param('sourceversion', PARAM_INT), $preview, $attemptnonce);
+        $attemptnonce = bin2hex(random_bytes(16));
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
     }
@@ -53,6 +59,7 @@ if ((string)$item['kind'] === 'assessment') {
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sourceversion', 'value' => $item['sourceversion']]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'preview', 'value' => (int)$preview]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'attemptnonce', 'value' => $attemptnonce]);
     foreach ((array)$item['questions'] as $index => $question) {
         echo html_writer::tag('h3', s((string)$question['question']));
         foreach (array_values((array)$question['options']) as $optionindex => $option) {

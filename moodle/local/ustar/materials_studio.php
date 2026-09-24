@@ -267,6 +267,11 @@ JS);
 
 if ((int)$editing['id'] > 0) {
     echo html_writer::start_div('u-studio-actions');
+    if ((string)$editing['kind'] === 'assessment') {
+        echo html_writer::link(new moodle_url('/local/ustar/material_player.php',
+            ['id' => (int)$editing['id'], 'preview' => 1]), 'Предпросмотр без записи результата',
+            ['class' => 'btn btn-outline-secondary', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
+    }
     if ((string)$editing['kind'] === 'scorm' && !empty($editing['pages'])) {
         echo html_writer::link(new moodle_url('/local/ustar/studio_scorm_preview.php',
             ['id' => (int)$editing['id']]), 'Предпросмотр без записи результата',

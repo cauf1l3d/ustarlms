@@ -411,8 +411,11 @@ final class material_studio {
 
     /** @return array<string,mixed> */
     public static function submit_assessment(int $contentid, int $userid, array $answers,
-            int $expectedversion, bool $preview = false): array {
+            int $expectedversion, bool $preview = false, string $attemptnonce = ''): array {
         global $DB;
+        if ($attemptnonce !== '' && !preg_match('/^[a-f0-9]{32}$/D', $attemptnonce)) {
+            throw new \invalid_parameter_exception('Форма аттестации устарела. Откройте её заново.');
+        }
         if ($preview && !self::can_manage($userid)) {
             throw new \required_capability_exception(\context_system::instance(), 'local/ustar:hrmanage', 'nopermissions', '');
         }
@@ -460,18 +463,26 @@ final class material_studio {
             }
             if (!$questions) { throw new \moodle_exception('В аттестации нет вопросов.'); }
             $score = (int)round(100 * $correct / count($questions));
+            $answerhash = hash('sha256', json_encode($normalized, JSON_UNESCAPED_UNICODE));
             $attemptkey = 'studio-assessment-v2:' . hash('sha256',
-                $userid . ':' . $contentid . ':' . $expectedversion . ':' . json_encode($normalized));
+                $userid . ':' . $contentid . ':' . $expectedversion . ':'
+                    . ($attemptnonce !== '' ? $attemptnonce : json_encode($normalized)));
             $result = [
                 'contentid' => $contentid, 'userid' => $userid, 'score' => $score,
                 'passed' => $score >= (int)$item['passscore'], 'correct' => $correct,
                 'total' => count($questions), 'attemptkey' => $attemptkey,
                 'sourceversion' => $expectedversion, 'sourcehash' => $blueprint->sourcehash,
+                'answerhash' => $answerhash,
                 'submittedat' => time(), 'preview' => $preview,
             ];
             if ($preview) { return $result; }
             $existing = self::find_submission($contentid, $attemptkey);
-            if ($existing) { return $existing; }
+            if ($existing) {
+                if ($attemptnonce !== '' && (string)($existing['answerhash'] ?? '') !== $answerhash) {
+                    throw new \invalid_parameter_exception('Форма уже отправлена с другими ответами. Откройте новую попытку.');
+                }
+                return $existing;
+            }
             $DB->insert_record('local_ustar_workflow_events', (object)[
                 'entitytype' => 'studio_assessment', 'entityid' => $contentid,
                 'eventtype' => 'studio_assessment_submitted', 'actorid' => $userid, 'reason' => null,

@@ -4,11 +4,13 @@ project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
 current_activity: Draft PR 14 targets main and includes prior unmerged PR 13.
-  Earlier PRs remain unaccepted. The current code-bearing draft SHA passed
-  source/frontend gate 193. Position standards, reviewed skill levels, search
-  pagination, HR paging, catalog access and questionnaire version pinning are
-  implemented in source only. Full Moodle runtime, browser, restore, performance
-  and all audit acceptance are still open. R00 remains review.
+  Earlier PRs remain unaccepted. Draft SHA 32d6982498258f71722314686260662eeeb39523
+  passed source/frontend gate 199. Position standards, reviewed skill levels,
+  search and HR paging, catalog access, questionnaire version pinning, material
+  studio UI and configurable organization blocks are implemented in source only.
+  The 13-bug register retains browser/runtime acceptance. Full Moodle runtime,
+  browser, restore, performance and all audit acceptance are still open.
+  R00 remains review.
 next_task: R10
 ready_tasks:
 - R00
@@ -16,8 +18,8 @@ ready_tasks:
 draft_candidate:
   branch: codex/ustar-complete-rc-20260923
   main_reconciliation_commit: 81bbb8e4f6f81276fc6d98f1903cac89b5a62ae9
-  last_source_gate_commit: b48f24ad0c3e18313bb16caf93c18a97451d4d2d
-  last_source_gate_result: passed_workflow_193
+  last_source_gate_commit: 32d6982498258f71722314686260662eeeb39523
+  last_source_gate_result: passed_workflow_199
   pull_request: 14
   status: in_progress_not_releasable
   checks_completed: source_and_frontend_only_on_code_bearing_draft

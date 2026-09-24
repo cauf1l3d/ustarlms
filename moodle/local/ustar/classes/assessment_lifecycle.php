@@ -399,64 +399,89 @@ final class assessment_lifecycle {
     }
 
     public static function authorize_remediation(int $actorid, int $runtimeid): \stdClass {
-        global $DB;
+        global $DB, $USER;
         view_as::assert_writable();
-
-        $runtime = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid], '*', MUST_EXIST);
-        $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid, 'active' => 1], '*', MUST_EXIST);
-        $status = (string)$runtime->status;
-
-        $ismanagerreview = $status === self::STATUS_MANAGER_REVIEW_REQUIRED;
-        $ishrdreview = $status === self::STATUS_HRD_REVIEW_REQUIRED;
-        if (!$ismanagerreview && !$ishrdreview) {
-            throw new \moodle_exception('Эта аттестация сейчас не ожидает согласования переобучения.');
+        if ($actorid <= 0 || $actorid !== (int)($USER->id ?? 0)) {
+            throw new \invalid_parameter_exception('Неверный автор согласования.');
         }
 
-        $context = \context_system::instance();
-        if ($ismanagerreview) {
-            $managerid = self::direct_manager_id((int)$runtime->userid);
-            if ($actorid !== $managerid && !is_siteadmin($actorid)) {
-                throw new \moodle_exception('Переобучение первого уровня может согласовать только прямой руководитель.');
+        $stub = $DB->get_record('local_ustar_assess_runtime', ['id' => $runtimeid],
+            'id,userid,policyid', MUST_EXIST);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock(
+            'assessment-lifecycle:' . (int)$stub->userid . ':' . (int)$stub->policyid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Аттестация сейчас изменяется. Повторите решение.');
+        }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+
+            $runtime = $DB->get_record_sql('SELECT * FROM {local_ustar_assess_runtime} WHERE id = :id FOR UPDATE',
+                ['id' => $runtimeid], MUST_EXIST);
+            if ((int)$runtime->userid !== (int)$stub->userid || (int)$runtime->policyid !== (int)$stub->policyid) {
+                throw new \moodle_exception('Аттестация изменилась. Обновите страницу.');
             }
-            $approvallevel = 'direct_manager';
-            $eventtype = 'assess_remediation_authorized';
-            $reason = 'Руководитель согласовал переобучение';
-        } else {
-            $canhrd = is_siteadmin($actorid)
-                || has_capability('local/ustar:hrmanage', $context, $actorid)
-                || has_capability('local/ustar:admin', $context, $actorid);
-            if (!$canhrd) {
-                throw new \moodle_exception('Повторное переобучение после второго пакета попыток может согласовать только HRD.');
+            $policy = $DB->get_record('local_ustar_assess_policy', ['id' => (int)$runtime->policyid, 'active' => 1], '*', MUST_EXIST);
+            $status = (string)$runtime->status;
+
+            $ismanagerreview = $status === self::STATUS_MANAGER_REVIEW_REQUIRED;
+            $ishrdreview = $status === self::STATUS_HRD_REVIEW_REQUIRED;
+            if (!$ismanagerreview && !$ishrdreview) {
+                throw new \moodle_exception('Эта аттестация сейчас не ожидает согласования переобучения.');
             }
-            $approvallevel = 'hrd';
-            $eventtype = 'assess_hrd_remediation_approved';
-            $reason = 'HRD согласовал повторное переобучение';
+
+            $context = \context_system::instance();
+            if ($ismanagerreview) {
+                $managerid = self::direct_manager_id((int)$runtime->userid);
+                if ($actorid !== $managerid && !is_siteadmin($actorid)) {
+                    throw new \moodle_exception('Переобучение первого уровня может согласовать только прямой руководитель.');
+                }
+                $approvallevel = 'direct_manager';
+                $eventtype = 'assess_remediation_authorized';
+                $reason = 'Руководитель согласовал переобучение';
+            } else {
+                $canhrd = is_siteadmin($actorid)
+                    || has_capability('local/ustar:hrmanage', $context, $actorid)
+                    || has_capability('local/ustar:admin', $context, $actorid);
+                if (!$canhrd) {
+                    throw new \moodle_exception('Повторное переобучение после второго пакета попыток может согласовать только HRD.');
+                }
+                $approvallevel = 'hrd';
+                $eventtype = 'assess_hrd_remediation_approved';
+                $reason = 'HRD согласовал повторное переобучение';
+            }
+
+            $remediationversion = route_model::current_published_version((int)$policy->remediationpointid);
+            if (!$remediationversion) {
+                throw new \moodle_exception('Для переобучения нет опубликованной версии материала.');
+            }
+
+            $now = time();
+            $runtime->status = self::STATUS_REMEDIATION_REQUIRED;
+            $runtime->failurecutoff = $now;
+            $runtime->remediationversionid = (int)$remediationversion->id;
+            $runtime->remediationstartedat = null;
+            $runtime->remediationcompletedat = null;
+            $runtime->timemodified = $now;
+            $DB->update_record('local_ustar_assess_runtime', $runtime);
+
+            self::event($runtime, $eventtype, $reason, [
+                'cycle' => (int)$runtime->cycle,
+                'approverid' => $actorid,
+                'approvallevel' => $approvallevel,
+                'cutoff' => $now,
+                'remediationpointid' => (int)$runtime->remediationpointid,
+                'remediationversionid' => (int)$runtime->remediationversionid,
+            ], $actorid);
+
+            $result = $DB->get_record('local_ustar_assess_runtime', ['id' => (int)$runtime->id], '*', MUST_EXIST);
+            $transaction->allow_commit();
+            return $result;
+        } catch (\Throwable $e) {
+            if (isset($transaction)) { $transaction->rollback($e); }
+            throw $e;
+        } finally {
+            $lock->release();
         }
-
-        $remediationversion = route_model::current_published_version((int)$policy->remediationpointid);
-        if (!$remediationversion) {
-            throw new \moodle_exception('Для переобучения нет опубликованной версии материала.');
-        }
-
-        $now = time();
-        $runtime->status = self::STATUS_REMEDIATION_REQUIRED;
-        $runtime->failurecutoff = $now;
-        $runtime->remediationversionid = (int)$remediationversion->id;
-        $runtime->remediationstartedat = null;
-        $runtime->remediationcompletedat = null;
-        $runtime->timemodified = $now;
-        $DB->update_record('local_ustar_assess_runtime', $runtime);
-
-        self::event($runtime, $eventtype, $reason, [
-            'cycle' => (int)$runtime->cycle,
-            'approverid' => $actorid,
-            'approvallevel' => $approvallevel,
-            'cutoff' => $now,
-            'remediationpointid' => (int)$runtime->remediationpointid,
-            'remediationversionid' => (int)$runtime->remediationversionid,
-        ], $actorid);
-
-        return $DB->get_record('local_ustar_assess_runtime', ['id' => (int)$runtime->id], '*', MUST_EXIST);
     }
 
     /** @return array<string,mixed> */
@@ -476,52 +501,78 @@ final class assessment_lifecycle {
             return ['kind' => 'url', 'url' => assessment_provider_factory::for_policy($policy)->launch_url($policy)];
         }
 
-        $state = route_point_evidence_provider::state($runtime, $policy, $positionid);
-        if (!empty($state['satisfied'])) {
-            $runtime = self::sync_policy_user($policy, $userid, $positionid, true);
-            return ['kind' => 'url', 'url' => assessment_provider_factory::for_policy($policy)->launch_url($policy)];
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock(
+            'assessment-lifecycle:' . $userid . ':' . (int)$policy->id, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Переобучение сейчас изменяется. Повторите попытку.');
         }
-        if (empty($state['configured']) || empty($state['next'])) {
-            throw new \moodle_exception('Переобучение настроено некорректно: нет доступного обязательного материала.');
-        }
-
-        if ((string)$runtime->status === self::STATUS_REMEDIATION_REQUIRED) {
-            $runtime->status = self::STATUS_REMEDIATION_PROGRESS;
-            if (empty($runtime->remediationstartedat)) {
-                $runtime->remediationstartedat = time();
+        $satisfied = false;
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            $runtime = $DB->get_record_sql(
+                'SELECT * FROM {local_ustar_assess_runtime} WHERE id = :id AND userid = :userid FOR UPDATE',
+                ['id' => $runtimeid, 'userid' => $userid], MUST_EXIST);
+            if ((int)$runtime->policyid !== (int)$policy->id) {
+                throw new \moodle_exception('Аттестация изменилась. Обновите страницу.');
             }
-            $runtime->timemodified = time();
-            $DB->update_record('local_ustar_assess_runtime', $runtime);
-            self::event($runtime, 'assess_remediation_started', 'Сотрудник начал обязательное переобучение', [
-                'cycle' => (int)$runtime->cycle,
-                'remediationpointid' => (int)$runtime->remediationpointid,
-                'remediationversionid' => (int)$runtime->remediationversionid,
-            ]);
-        }
-
-        $next = $state['next'];
-        if ((string)$next['kind'] === 'content') {
-            $contentid = (int)$next['contentid'];
-            learning_events::record_route_open(
-                $userid,
-                $contentid,
-                (int)$runtime->remediationpointid,
-                (int)$runtime->remediationversionid
-            );
-            if ((string)($next['completionmode'] ?? 'open') === 'open') {
-                self::event($runtime, 'assess_content_opened', 'Нативный материал повторно открыт для переобучения', [
-                    'contentid' => $contentid,
-                    'cycle' => (int)$runtime->cycle,
-                ]);
+            if (!in_array((string)$runtime->status,
+                    [self::STATUS_REMEDIATION_REQUIRED, self::STATUS_REMEDIATION_PROGRESS], true)) {
+                $result = ['kind' => 'url', 'url' => assessment_provider_factory::for_policy($policy)->launch_url($policy)];
+            } else {
+                $state = route_point_evidence_provider::state($runtime, $policy, $positionid);
+                if (!empty($state['satisfied'])) {
+                    $satisfied = true;
+                    $result = ['kind' => 'url', 'url' => assessment_provider_factory::for_policy($policy)->launch_url($policy)];
+                } else {
+                    if (empty($state['configured']) || empty($state['next'])) {
+                        throw new \moodle_exception('Переобучение настроено некорректно: нет доступного обязательного материала.');
+                    }
+                    if ((string)$runtime->status === self::STATUS_REMEDIATION_REQUIRED) {
+                        $runtime->status = self::STATUS_REMEDIATION_PROGRESS;
+                        if (empty($runtime->remediationstartedat)) {
+                            $runtime->remediationstartedat = time();
+                        }
+                        $runtime->timemodified = time();
+                        $DB->update_record('local_ustar_assess_runtime', $runtime);
+                        self::event($runtime, 'assess_remediation_started', 'Сотрудник начал обязательное переобучение', [
+                            'cycle' => (int)$runtime->cycle,
+                            'remediationpointid' => (int)$runtime->remediationpointid,
+                            'remediationversionid' => (int)$runtime->remediationversionid,
+                        ]);
+                    }
+                    $next = $state['next'];
+                    if ((string)$next['kind'] === 'content') {
+                        $contentid = (int)$next['contentid'];
+                        $url = content::open_url($contentid, $userid);
+                        if (!$url) {
+                            throw new \moodle_exception('Материал сейчас невозможно открыть.');
+                        }
+                        learning_events::record_route_open(
+                            $userid, $contentid, (int)$runtime->remediationpointid,
+                            (int)$runtime->remediationversionid);
+                        if ((string)($next['completionmode'] ?? 'open') === 'open') {
+                            self::event($runtime, 'assess_content_opened',
+                                'Нативный материал повторно открыт для переобучения', [
+                                    'contentid' => $contentid, 'cycle' => (int)$runtime->cycle,
+                                ]);
+                        }
+                        $result = ['kind' => 'url', 'url' => $url->out(false)];
+                    } else {
+                        $result = $next;
+                    }
+                }
             }
-            $url = content::open_url($contentid, $userid);
-            if (!$url) {
-                throw new \moodle_exception('Материал сейчас невозможно открыть.');
-            }
-            return ['kind' => 'url', 'url' => $url->out(false)];
+            $transaction->allow_commit();
+        } catch (\Throwable $e) {
+            if (isset($transaction)) { $transaction->rollback($e); }
+            throw $e;
+        } finally {
+            $lock->release();
         }
-
-        return $next;
+        if ($satisfied) {
+            self::sync_policy_user($policy, $userid, $positionid, true);
+        }
+        return $result;
     }
 
     public static function validate_remediation_context(int $userid, array $context): \stdClass {

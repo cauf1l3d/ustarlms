@@ -53,59 +53,85 @@ final class learning_events {
     ): int {
         global $DB;
 
-        $content = $DB->get_record('local_ustar_content', ['id' => $contentid], '*', MUST_EXIST);
-        if ((string)$content->status !== content::STATUS_PUBLISHED || !content::can_access_record($content, $userid)) {
-            throw new \required_capability_exception(
-                \context_system::instance(), 'local/ustar:use', 'nopermissions', ''
-            );
-        }
-        $contentversion = content::current_version($contentid);
-        if (!$contentversion || empty($contentversion->iscurrent) || (string)$contentversion->status !== content::STATUS_PUBLISHED) {
-            throw new \moodle_exception('У материала нет текущей опубликованной версии');
-        }
-
-        $now = time();
         $transaction = $DB->start_delegated_transaction();
-        $eventid = self::insert_event([
-            'actorid' => $userid,
-            'userid' => $userid,
-            'contentid' => $contentid,
-            'contentversionid' => (int)$contentversion->id,
-            'routepointid' => $pointid,
-            'routeversionid' => $routeversionid,
-            'eventtype' => self::EVENT_OPENED,
-            'idempotencykey' => 'route-open:' . $userid . ':' . $contentid . ':' . $pointid . ':' . $routeversionid,
-            'details' => ['source' => 'route_gateway'],
-            'timecreated' => $now,
-        ]);
-
-        $library = $DB->get_record('local_ustar_library', ['userid' => $userid, 'contentid' => $contentid]);
-        if (!$library) {
-            try {
-                $DB->insert_record('local_ustar_library', (object)[
-                    'userid' => $userid,
-                    'contentid' => $contentid,
-                    'unlockedversionid' => (int)$contentversion->id,
-                    'firsteventid' => $eventid,
-                    'routepointid' => $pointid,
-                    'routeversionid' => $routeversionid,
-                    'unlockedat' => $now,
-                    'lastaccessedat' => $now,
-                    'timecreated' => $now,
-                    'timemodified' => $now,
-                ]);
-            } catch (\dml_write_exception $e) {
-                if (!$DB->record_exists('local_ustar_library', ['userid' => $userid, 'contentid' => $contentid])) {
-                    throw $e;
-                }
+        try {
+            // Serialize opening with publication and source edits of the material.
+            $content = $DB->get_record_sql(
+                'SELECT * FROM {local_ustar_content} WHERE id = :id FOR UPDATE',
+                ['id' => $contentid], MUST_EXIST
+            );
+            if ((string)$content->status !== content::STATUS_PUBLISHED || !content::can_access_record($content, $userid)) {
+                throw new \required_capability_exception(
+                    \context_system::instance(), 'local/ustar:use', 'nopermissions', ''
+                );
             }
-        } else {
-            $library->lastaccessedat = $now;
-            $library->timemodified = $now;
-            $DB->update_record('local_ustar_library', $library);
+            $studio = material_studio::available()
+                ? $DB->get_record('local_ustar_content_blueprints', ['contentid' => $contentid],
+                    'id,kind,sourceversion,sourcehash') : false;
+            if ($studio) {
+                if ((string)$studio->kind === material_studio::KIND_SCORM) {
+                    throw new \moodle_exception('Для Studio SCORM требуется Moodle SCORM runtime.');
+                }
+                $versionid = 0; // Studio revisions are stored in their own version namespace.
+                $revision = ':studio-v' . (int)$studio->sourceversion . ':' . substr((string)$studio->sourcehash, 0, 12);
+                $details = ['source' => 'route_gateway', 'studio_version' => (int)$studio->sourceversion,
+                    'studio_hash' => (string)$studio->sourcehash];
+            } else {
+                $contentversion = content::current_version($contentid);
+                if (!$contentversion || empty($contentversion->iscurrent)
+                        || (string)$contentversion->status !== content::STATUS_PUBLISHED) {
+                    throw new \moodle_exception('У материала нет текущей опубликованной версии');
+                }
+                $versionid = (int)$contentversion->id;
+                $revision = '';
+                $details = ['source' => 'route_gateway'];
+            }
+
+            $now = time();
+            $eventid = self::insert_event([
+                'actorid' => $userid,
+                'userid' => $userid,
+                'contentid' => $contentid,
+                'contentversionid' => $versionid,
+                'routepointid' => $pointid,
+                'routeversionid' => $routeversionid,
+                'eventtype' => self::EVENT_OPENED,
+                'idempotencykey' => 'route-open:' . $userid . ':' . $contentid . ':' . $pointid . ':' . $routeversionid . $revision,
+                'details' => $details,
+                'timecreated' => $now,
+            ]);
+
+            $library = $DB->get_record('local_ustar_library', ['userid' => $userid, 'contentid' => $contentid]);
+            if (!$library) {
+                try {
+                    $DB->insert_record('local_ustar_library', (object)[
+                        'userid' => $userid,
+                        'contentid' => $contentid,
+                        'unlockedversionid' => $versionid,
+                        'firsteventid' => $eventid,
+                        'routepointid' => $pointid,
+                        'routeversionid' => $routeversionid,
+                        'unlockedat' => $now,
+                        'lastaccessedat' => $now,
+                        'timecreated' => $now,
+                        'timemodified' => $now,
+                    ]);
+                } catch (\dml_write_exception $e) {
+                    if (!$DB->record_exists('local_ustar_library', ['userid' => $userid, 'contentid' => $contentid])) {
+                        throw $e;
+                    }
+                }
+            } else {
+                $library->lastaccessedat = $now;
+                $library->timemodified = $now;
+                $DB->update_record('local_ustar_library', $library);
+            }
+            $transaction->allow_commit();
+            return $eventid;
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+            throw $e;
         }
-        $transaction->allow_commit();
-        return $eventid;
     }
 
     public static function record_route_studied(
@@ -145,13 +171,35 @@ final class learning_events {
     ): ?\stdClass {
         global $DB;
         $eventtype = $mode === 'ack' ? self::EVENT_STUDIED : self::EVENT_OPENED;
-        return $DB->get_record('local_ustar_content_events', [
+        $conditions = [
             'userid' => $userid,
             'contentid' => $contentid,
             'routepointid' => $pointid,
             'routeversionid' => $routeversionid,
             'eventtype' => $eventtype,
-        ]) ?: null;
+        ];
+        $studio = material_studio::available()
+            ? $DB->get_record('local_ustar_content_blueprints', ['contentid' => $contentid],
+                'id,kind,sourceversion,sourcehash') : false;
+        if (!$studio) {
+            return $DB->get_record('local_ustar_content_events', $conditions) ?: null;
+        }
+        if ($mode === 'ack' || (string)$studio->kind === material_studio::KIND_SCORM) {
+            return null;
+        }
+        $events = $DB->get_recordset('local_ustar_content_events', $conditions, 'id DESC');
+        try {
+            foreach ($events as $event) {
+                $details = json_decode((string)$event->detailsjson, true);
+                if (is_array($details) && (int)($details['studio_version'] ?? 0) === (int)$studio->sourceversion
+                        && (string)($details['studio_hash'] ?? '') === (string)$studio->sourcehash) {
+                    return $event;
+                }
+            }
+        } finally {
+            $events->close();
+        }
+        return null;
     }
 
     public static function library_for_user(int $userid): array {

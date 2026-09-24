@@ -3,16 +3,21 @@ updated_at: '2026-09-24'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Draft PR 14 is stacked on PR 13; earlier PRs remain unaccepted.
-  Source/frontend gates pass at the previous exact SHA; Moodle runtime, browser,
-  clean restore and full audit acceptance are open. R00 remains review.
+current_activity: Draft PR 14 now targets main and includes the prior unmerged
+  PR 13 changes via an explicit main reconciliation. Earlier PRs remain
+  unaccepted. Source/frontend checks passed on the reconciliation commit;
+  latest gate passed on the initial Studio route evidence commit. Subsequent
+  changes still need CI; Moodle runtime, browser, clean restore and full audit
+  acceptance remain open. R00 remains review.
 next_task: R10
 ready_tasks:
 - R00
 - R04
 draft_candidate:
   branch: codex/ustar-complete-rc-20260923
-  source_commit_before_main_context_merge: 9a3b15ac08e943465246328def0bdc8a0d1b86f3
+  main_reconciliation_commit: 81bbb8e4f6f81276fc6d98f1903cac89b5a62ae9
+  last_source_gate_commit: e9e3db29b99bb945a058e7852abb7a0d247e5778
+  last_source_gate_result: passed_workflow_177
   pull_request: 14
   status: in_progress_not_releasable
   checks_completed: source_and_frontend_only_on_prior_commit

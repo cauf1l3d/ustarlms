@@ -463,10 +463,11 @@ if (
     }
 
 
+    $ackversionid = required_param('contentversionid', PARAM_INT);
     \local_ustar\content::acknowledge(
         $contentid,
         (int)$USER->id,
-        required_param('contentversionid', PARAM_INT)
+        $ackversionid
     );
 
     if ($hasroutecontext) {
@@ -479,7 +480,8 @@ if (
             (int)$USER->id,
             $contentid,
             $routepointid,
-            $routeversionid
+            $routeversionid,
+            $ackversionid
         );
 
 

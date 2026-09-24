@@ -549,7 +549,9 @@ final class assessment_lifecycle {
                         }
                         learning_events::record_route_open(
                             $userid, $contentid, (int)$runtime->remediationpointid,
-                            (int)$runtime->remediationversionid);
+                            (int)$runtime->remediationversionid,
+                            'remediation:' . (int)$runtime->id . ':' . (int)$runtime->cycle
+                                . ':' . (int)$runtime->failurecutoff);
                         if ((string)($next['completionmode'] ?? 'open') === 'open') {
                             self::event($runtime, 'assess_content_opened',
                                 'Нативный материал повторно открыт для переобучения', [

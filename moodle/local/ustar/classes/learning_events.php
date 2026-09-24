@@ -49,7 +49,8 @@ final class learning_events {
         int $userid,
         int $contentid,
         int $pointid,
-        int $routeversionid
+        int $routeversionid,
+        string $episode = ''
     ): int {
         global $DB;
 
@@ -83,7 +84,7 @@ final class learning_events {
                     throw new \moodle_exception('У материала нет текущей опубликованной версии');
                 }
                 $versionid = (int)$contentversion->id;
-                $revision = '';
+                $revision = ':file-v' . $versionid;
                 $details = ['source' => 'route_gateway'];
             }
 
@@ -96,7 +97,8 @@ final class learning_events {
                 'routepointid' => $pointid,
                 'routeversionid' => $routeversionid,
                 'eventtype' => self::EVENT_OPENED,
-                'idempotencykey' => 'route-open:' . $userid . ':' . $contentid . ':' . $pointid . ':' . $routeversionid . $revision,
+                'idempotencykey' => 'route-open:' . $userid . ':' . $contentid . ':' . $pointid . ':' . $routeversionid
+                    . $revision . ($episode === '' ? '' : ':run-' . substr(hash('sha256', $episode), 0, 16)),
                 'details' => $details,
                 'timecreated' => $now,
             ]);
@@ -138,17 +140,26 @@ final class learning_events {
         int $userid,
         int $contentid,
         int $pointid,
-        int $routeversionid
+        int $routeversionid,
+        int $expectedversionid = 0
     ): int {
         global $DB;
-        $opened = $DB->get_record('local_ustar_content_events', [
+        $version = content::current_version($contentid);
+        if (!$version || ($expectedversionid > 0 && (int)$version->id !== $expectedversionid)) {
+            throw new \moodle_exception('Версия материала изменилась. Откройте его заново.');
+        }
+        $opens = $DB->get_records('local_ustar_content_events', [
             'userid' => $userid,
             'contentid' => $contentid,
             'routepointid' => $pointid,
             'routeversionid' => $routeversionid,
             'eventtype' => self::EVENT_OPENED,
-        ], '*', MUST_EXIST);
-        $version = content::current_version($contentid);
+            'contentversionid' => (int)$version->id,
+        ], 'id DESC', '*', 0, 1);
+        if (!$opens) {
+            throw new \moodle_exception('Откройте текущую версию материала из маршрута перед подтверждением.');
+        }
+        $opened = reset($opens);
         return self::insert_event([
             'actorid' => $userid,
             'userid' => $userid,
@@ -157,7 +168,8 @@ final class learning_events {
             'routepointid' => $pointid,
             'routeversionid' => $routeversionid,
             'eventtype' => self::EVENT_STUDIED,
-            'idempotencykey' => 'route-studied:' . $userid . ':' . $contentid . ':' . $pointid . ':' . $routeversionid,
+            'idempotencykey' => 'route-studied:' . $userid . ':' . $contentid . ':' . $pointid
+                . ':' . $routeversionid . ':file-v' . (int)$version->id,
             'details' => ['opened_event_id' => (int)$opened->id],
         ]);
     }
@@ -182,7 +194,14 @@ final class learning_events {
             ? $DB->get_record('local_ustar_content_blueprints', ['contentid' => $contentid],
                 'id,kind,sourceversion,sourcehash') : false;
         if (!$studio) {
-            return $DB->get_record('local_ustar_content_events', $conditions) ?: null;
+            $version = content::current_version($contentid);
+            if (!$version || empty($version->iscurrent)
+                    || (string)$version->status !== content::STATUS_PUBLISHED) {
+                return null;
+            }
+            $conditions['contentversionid'] = (int)$version->id;
+            $events = $DB->get_records('local_ustar_content_events', $conditions, 'id DESC', '*', 0, 1);
+            return $events ? reset($events) : null;
         }
         if ($mode === 'ack' || (string)$studio->kind === material_studio::KIND_SCORM) {
             return null;

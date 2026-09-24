@@ -26,6 +26,7 @@
   {{^hasresult}}
   <section class="u-development-assessment__form-card">
     <h2>Короткая саморефлексия</h2><p>{{intro}}</p>
+    <p>Сохраните ответы в течение двух часов после открытия. Если опросник обновится, откройте новую форму.</p>
     <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="submissionkey" value="{{submissionkey}}"><input type="hidden" name="versionid" value="{{versionid}}">
       {{#questions}}<fieldset class="u-development-assessment__question"><legend><span>{{number}}</span>{{text}}</legend>{{#options}}<label><input type="radio" name="answer[{{questionkey}}]" value="{{key}}" required><span>{{text}}</span></label>{{/options}}</fieldset>{{/questions}}
       <button class="u-btn u-btn--primary" type="submit">Сохранить личный результат</button>

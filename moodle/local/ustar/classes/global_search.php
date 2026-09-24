@@ -18,6 +18,9 @@ final class global_search {
         if (\core_text::strlen($q) < 2) {
             return [];
         }
+        if (!is_siteadmin($userid) && !employment::is_active($userid)) {
+            return [];
+        }
 
         $like = '%' . $DB->sql_like_escape($q) . '%';
         $groups = [];

@@ -19,6 +19,8 @@ if (!\local_ustar\development_assessment::can_view_private_result((int)$USER->id
 $isself = $subjectid === (int)$USER->id;
 $subject = $DB->get_record('user', ['id' => $subjectid, 'deleted' => 0], 'id,firstname,lastname', MUST_EXIST);
 $sessionkey = 'ustar_dev_assessment_' . $assessmentkey . '_nonce';
+$openedkey = $sessionkey . '_openedat';
+$submissionwindow = 2 * HOURSECS;
 $routeflowkey = $sessionkey . '_routeflow';
 $fromroute = optional_param('fromroute', 0, PARAM_BOOL);
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -38,10 +40,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($SESSION->{$sessionkey}) || !hash_equals((string)$SESSION->{$sessionkey}, $nonce)) {
         throw new invalid_parameter_exception('Форма уже была отправлена или устарела. Обновите страницу и повторите попытку.');
     }
+    $startedat = (int)($SESSION->{$openedkey} ?? 0);
+    if ($startedat <= 0 || $startedat > time() || time() - $startedat > $submissionwindow) {
+        unset($SESSION->{$sessionkey}, $SESSION->{$openedkey});
+        throw new invalid_parameter_exception('Срок отправки формы истёк. Откройте опросник заново.');
+    }
     $answers = optional_param_array('answer', [], PARAM_ALPHANUMEXT);
     \local_ustar\development_assessment::submit($assessmentkey, (int)$USER->id, $answers,
-        $nonce, required_param('versionid', PARAM_INT), time());
-    unset($SESSION->{$sessionkey});
+        $nonce, required_param('versionid', PARAM_INT), $startedat);
+    unset($SESSION->{$sessionkey}, $SESSION->{$openedkey});
     $routeflow = !empty($SESSION->{$routeflowkey});
     unset($SESSION->{$routeflowkey});
     if ($routeflow) {
@@ -57,8 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $retry = $isself && optional_param('retry', 0, PARAM_BOOL);
 $result = $retry ? null : \local_ustar\development_assessment::latest_for_user($assessmentkey, $subjectid);
-if ($isself && empty($SESSION->{$sessionkey})) {
+if ($isself && (empty($SESSION->{$sessionkey}) || empty($SESSION->{$openedkey})
+        || time() - (int)$SESSION->{$openedkey} > $submissionwindow)) {
     $SESSION->{$sessionkey} = bin2hex(random_bytes(24));
+    $SESSION->{$openedkey} = time();
 }
 $questions = [];
 foreach ($definition['questions'] as $number => $question) {

@@ -88,8 +88,13 @@ final class assessment_authoring {
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar_authoring')->get_lock('create:'.$USER->id.':'.$token, 10);
         if (!$lock) {throw new \moodle_exception('Сохранение уже выполняется. Повторите запрос.');}
         try {
-            $existing = $DB->get_record('local_ustar_workflow_events',
-                ['entitytype'=>'assessment_studio','eventtype'=>'created','actorid'=>$USER->id,'reason'=>$token]);
+            $existing = $DB->get_record_sql(
+                'SELECT id, entityid, detailsjson FROM {local_ustar_workflow_events}
+                  WHERE entitytype = :entitytype AND eventtype = :eventtype
+                    AND actorid = :actorid AND ' . $DB->sql_compare_text('reason') . ' = :token',
+                ['entitytype' => 'assessment_studio', 'eventtype' => 'created',
+                    'actorid' => (int)$USER->id, 'token' => $token]
+            );
             $inputhash = hash('sha256', json_encode($input,JSON_UNESCAPED_UNICODE));
             if ($existing) {
                 $saved = json_decode($existing->detailsjson, true, 512, JSON_THROW_ON_ERROR);

@@ -106,10 +106,13 @@ final class material_studio {
         }
         try {
             if ($contentid === 0) {
-                $existing = $DB->get_record('local_ustar_workflow_events', [
-                    'entitytype' => 'studio_material_create', 'eventtype' => 'created',
-                    'actorid' => $actorid, 'reason' => $creationtoken,
-                ]);
+                $existing = $DB->get_record_sql(
+                    'SELECT id, entityid, detailsjson FROM {local_ustar_workflow_events}
+                      WHERE entitytype = :entitytype AND eventtype = :eventtype
+                        AND actorid = :actorid AND ' . $DB->sql_compare_text('reason') . ' = :token',
+                    ['entitytype' => 'studio_material_create', 'eventtype' => 'created',
+                        'actorid' => $actorid, 'token' => $creationtoken]
+                );
                 if ($existing) {
                     $details = json_decode((string)$existing->detailsjson, true);
                     if (!is_array($details) || (string)($details['inputhash'] ?? '') !== $inputhash) {

@@ -22,15 +22,15 @@ class structure {
         return [
             'brandName'   => 'USTAR',
             'tagline'     => 'Академия',
-            'primary'     => '#2B2B2B',   // graphite
+            'primary'     => '#282727',   // graphite
             'accent'      => '#EBC500',   // ustar yellow
-            'accentSoft'  => '#FFF7DA',
-            'bg'          => '#F6F5F2',   // soft ivory (ispring-like)
+            'accentSoft'  => '#F9F2CA',
+            'bg'          => '#F6F5F1',   // soft ivory (ispring-like)
             'surface'     => '#FFFFFF',
-            'text'        => '#2B2B2B',
-            'muted'       => '#8A8A8A',
-            'success'     => '#3BB273',
-            'warning'     => '#F2994A',
+            'text'        => '#282727',
+            'muted'       => '#706D6A',
+            'success'     => '#277C4F',
+            'warning'     => '#A8540C',
             'radius'      => 16,
             'logoUrl'     => '/brand/hozmagia-wordmark.png',
             'sidebarHeroUrl' => '/brand/ustar-banner.jpg',

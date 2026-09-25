@@ -1,0 +1,36 @@
+/* Route-only embedded SCORM. Keep the Moodle DOM/API alive, remove outer presentation. */
+body.ustar-scorm-inline [data-ustar-scorm-return],
+body.ustar-scorm-inline .ustar-scorm-legacy,
+body.ustar-scorm-inline .u-activity-context,
+body.ustar-scorm-inline .activity-header,
+body.ustar-scorm-inline .activity-navigation,
+body.ustar-scorm-inline .tertiary-navigation,
+body.ustar-scorm-inline .scorm-exitbar,
+body.ustar-scorm-inline #scorm_toc_toggle,
+body.ustar-scorm-inline #scorm_navpanel { display:none !important; }
+body#page-mod-scorm-player.ustar-scorm-inline .u-main {
+    height:var(--ustar-scorm-height,calc(100dvh - 64px)) !important;
+    min-height:0 !important; padding:0 !important; margin-top:0 !important; margin-bottom:0 !important;
+    overflow:hidden !important;
+}
+body#page-mod-scorm-player.ustar-scorm-inline .u-main > .u-container,
+body#page-mod-scorm-player.ustar-scorm-inline #page-content,
+body#page-mod-scorm-player.ustar-scorm-inline #region-main-box,
+body#page-mod-scorm-player.ustar-scorm-inline #region-main,
+body#page-mod-scorm-player.ustar-scorm-inline [role="main"],
+body#page-mod-scorm-player.ustar-scorm-inline #scorm_layout,
+body#page-mod-scorm-player.ustar-scorm-inline #scormpage,
+body#page-mod-scorm-player.ustar-scorm-inline #scorm_content,
+body#page-mod-scorm-player.ustar-scorm-inline #scorm_box,
+body#page-mod-scorm-player.ustar-scorm-inline #scorm_object {
+    box-sizing:border-box !important; width:100% !important; max-width:none !important;
+    height:100% !important; min-height:0 !important; max-height:none !important;
+    margin:0 !important; padding:0 !important; border:0 !important; border-radius:0 !important;
+}
+body#page-mod-scorm-player.ustar-scorm-inline #scorm_content,
+body#page-mod-scorm-player.ustar-scorm-inline #scorm_object { display:block !important; }
+/* The TOC stays available to Moodle's initialization and SCORM navigation code. */
+body#page-mod-scorm-player.ustar-scorm-inline #scorm_toc {
+    position:absolute !important; width:0 !important; min-width:0 !important;
+    height:0 !important; overflow:hidden !important; visibility:hidden !important;
+}

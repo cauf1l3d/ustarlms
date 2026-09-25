@@ -20,22 +20,11 @@ class executive_get_dashboard extends base {
         $st = structure::get(structure::NAME_STRUCTURE);
         $posmap = [];
         foreach ($st['positions'] as $p) { $posmap[$p['id']] = $p; }
-        $sql = "SELECT u.id, TRIM(d.data) AS positionid
-                  FROM {user} u
-             LEFT JOIN {user_info_field} f ON f.shortname = 'ustar_position'
-             LEFT JOIN {user_info_data} d ON d.userid = u.id AND d.fieldid = f.id
-                 WHERE u.deleted = 0 AND u.suspended = 0 AND u.id > 1";
-        $rawusers = $DB->get_records_sql($sql);
-        $users = [];
-        foreach ($rawusers as $u) {
-            if (\local_ustar\accounts::participates((int)$u->id)) {
-                $users[(int)$u->id] = $u;
-            }
-        }
+        $users = \local_ustar\organization_directory::users(true);
         $bydept = [];
         $assigned = 0;
         foreach ($users as $u) {
-            $p = $posmap[trim((string)$u->positionid)] ?? null;
+            $p = $posmap[(string)$u->positionid] ?? null;
             if ($p) {
                 $assigned++;
                 $bydept[$p['department']] = ($bydept[$p['department']] ?? 0) + 1;

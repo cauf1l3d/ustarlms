@@ -10,16 +10,42 @@ final class org {
         return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reporting'));
     }
 
+    /** Whether at least one reporting line can participate in the rendered active-company tree. */
+    public static function reporting_configured(): bool {
+        global $DB;
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id') as $user) {
+            if (self::manager_id((int)$user->id) > 0) return true;
+        }
+        return false;
+    }
+
     public static function manager_id(int $userid): int {
         global $DB;
+        if (!accounts::participates($userid)) return 0;
+        $identity = organization_identity::resolve($userid);
+        if ($identity['source'] === 'assignment') {
+            if ($identity['conflicts']) return 0;
+            $managerid = organization_model::manager_user_for_place($identity['staffplaceid']);
+            return $managerid !== $userid ? $managerid : 0;
+        }
         if (!self::reporting_available()) return 0;
-        return (int)$DB->get_field('local_ustar_reporting','managerid',['userid'=>$userid]);
+        $managerid = (int)$DB->get_field('local_ustar_reporting', 'managerid', ['userid' => $userid]);
+        return $managerid !== $userid && accounts::participates($managerid) ? $managerid : 0;
     }
 
     public static function set_manager(int $userid, int $managerid, string $source='manual'): void {
         global $DB, $USER;
+        if (!$DB->record_exists('user', ['id'=>$userid, 'deleted'=>0])) {
+            throw new \invalid_parameter_exception('Сотрудник не найден');
+        }
+        if ($managerid > 0 && !$DB->record_exists('user', ['id'=>$managerid, 'deleted'=>0])) {
+            throw new \invalid_parameter_exception('Руководитель не найден');
+        }
         if ($userid === $managerid) throw new \invalid_parameter_exception('Сотрудник не может быть своим руководителем');
         if ($managerid > 0 && self::would_cycle($userid,$managerid)) throw new \invalid_parameter_exception('Цикл в оргструктуре');
+        $source=trim(clean_param($source, PARAM_ALPHANUMEXT));
+        if ($source==='') $source='manual';
+        $source=\core_text::substr($source,0,32);
         $now=time();
         $r=$DB->get_record('local_ustar_reporting',['userid'=>$userid]);
         if ($r) {
@@ -40,7 +66,7 @@ final class org {
             if (isset($seen[$cur])) return true;
             $seen[$cur]=true; $cur=self::manager_id($cur);
         }
-        return false;
+        return $cur > 0;
     }
 
     public static function chain(int $userid): array {
@@ -49,7 +75,7 @@ final class org {
         for ($i=0;$i<50 && $cur>0;$i++) {
             if (isset($seen[$cur])) break;
             $seen[$cur]=true;
-            $u=$DB->get_record('user',['id'=>$cur,'deleted'=>0],'id,firstname,lastname',IGNORE_MISSING);
+            $u=$DB->get_record('user',['id'=>$cur,'deleted'=>0],'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename',IGNORE_MISSING);
             if (!$u) break;
             $out[] = self::person((int)$u->id, fullname($u));
             $cur=self::manager_id((int)$u->id);
@@ -60,7 +86,7 @@ final class org {
     public static function person(int $userid, string $fullname=''): array {
         global $DB;
         if ($fullname==='') {
-            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname',MUST_EXIST); $fullname=fullname($u);
+            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename',MUST_EXIST); $fullname=fullname($u);
         }
         $st=structure::get(structure::NAME_STRUCTURE); $pm=people::position_map($st); $dm=people::department_map($st);
         $pid=people::position_id($userid); $pos=$pm[$pid]??[]; $did=(string)($pos['department']??'');
@@ -76,21 +102,21 @@ final class org {
         global $DB;
         $me=self::person($userid); $pid=$me['positionid']; $did=$me['departmentid'];
         $out=[];
-        $sql="SELECT u.id,u.firstname,u.lastname,d.data positionid FROM {user} u JOIN {user_info_data} d ON d.userid=u.id JOIN {user_info_field} f ON f.id=d.fieldid AND f.shortname='ustar_position' WHERE u.deleted=0 AND u.suspended=0";
-        foreach ($DB->get_records_sql($sql) as $u) {
+        if ($did === '') return [];
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], '', 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $u) {
             if (!accounts::participates((int)$u->id)) continue;
-            $p=self::person((int)$u->id,$u->firstname.' '.$u->lastname);
-            if ($p['positionid']===$pid || ($pid==='' && $p['departmentid']===$did)) $out[]=$p;
+            $p = self::person((int)$u->id, $u->firstname . ' ' . $u->lastname);
+            if ($p['departmentid'] === $did) $out[] = $p;
         }
         return $out;
     }
 
     public static function direct_reports(int $managerid): array {
         global $DB;
-        if (!self::reporting_available()) return [];
-        $out=[];
-        foreach ($DB->get_records('local_ustar_reporting',['managerid'=>$managerid],'userid ASC') as $r) {
-            if (accounts::participates((int)$r->userid)) $out[]=self::person((int)$r->userid);
+        $out = [];
+        if (!accounts::participates($managerid)) return $out;
+        foreach ($DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], 'id', 'id') as $user) {
+            if (self::manager_id((int)$user->id) === $managerid) $out[] = self::person((int)$user->id);
         }
         return $out;
     }
@@ -98,7 +124,7 @@ final class org {
     public static function company_tree(): array {
         global $DB;
         $people=[];
-        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1', [], '', 'id,firstname,lastname') as $u) {
+        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1', [], '', 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $u) {
             if (!accounts::participates((int)$u->id)) continue;
             $p=self::person((int)$u->id,fullname($u)); $p['managerid']=self::manager_id((int)$u->id); $p['children']=[]; $people[(int)$u->id]=$p;
         }

@@ -44,15 +44,22 @@ $data = [
         ? (new moodle_url('/local/ustar/game_studio.php'))->out(false)
         : '',
     'hasgamestudio' => has_capability('local/ustar:admin', $context),
+    'competitionurl' => has_capability('local/ustar:managecompetition', $context)
+        ? (new moodle_url('/local/ustar/competition_studio.php'))->out(false)
+        : '',
+    'hascompetitionstudio' => has_capability('local/ustar:managecompetition', $context),
     'checkliststudiourl' => has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context)
         ? (new moodle_url('/local/ustar/checklist_studio.php'))->out(false)
         : '',
     'hascheckliststudio' => has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context),
+    'hasadaptationcontrol' => \local_ustar\adaptation_service::is_hrd_actor((int)$USER->id),
+    'adaptationcontrolurl' => (new moodle_url('/local/ustar/adaptation_control.php'))->out(false),
     'workspaceicon' => \local_ustar\ui::icon('workspace', 'u-feature-icon'),
     'routeicon' => \local_ustar\ui::icon('route', 'u-feature-icon'),
     'knowledgeicon' => \local_ustar\ui::icon('knowledge', 'u-feature-icon'),
     'paletteicon' => \local_ustar\ui::icon('palette', 'u-feature-icon'),
     'gameicon' => \local_ustar\ui::icon('game', 'u-feature-icon'),
+    'competitionicon' => \local_ustar\ui::icon('trophy', 'u-feature-icon'),
     'checkicon' => \local_ustar\ui::icon('check', 'u-feature-icon'),
 ];
 

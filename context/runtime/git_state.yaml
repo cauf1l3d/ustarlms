@@ -1,22 +1,6 @@
-kind: production_source_reconciliation
-measured_at: '2026-09-19T14:43:52+00:00'
-branch: integration/ustar-20260919
-commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
-published_source_commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
-previous_branch: integration/ustar-20260912
-previous_commit: 48326c6a011f58b985d251cb0462835bc1d37a16
-production_checkout_observed: false
-source_reconciliation:
-  result: INDEX_SOURCE_BYTE_MATCH_OK
-  publishable_local_ustar_files: 328
-  publishable_theme_ustar_files: 53
-  publishable_total: 381
-  ignored_runtime_artifacts: 33
-  production_inventory_after_cleanup: 414
-evidence:
-  runtime: context/runtime/20260919_prod_sync.md
-  release: release/20260919/README.md
-recovery:
-  archive: USTAR_FULL_CURRENT_20260919_113924.tar.gz
-  sha256: 598177f211333d7d036abc025b9d21c3c7c3eb4cfb0bc10d004ff0fcff473f41
-  stored_in_git: false
+git:
+  branch: "feature/route-position-parent-override"
+  commit: "109b94b5e9a2c2a7d7f1fa1dd7cf9168f99de0d4"
+  commit_short: "109b94b"
+  remote: "git@github.com:cauf1l3d/ustarlms.git"
+  refreshed: "2026-09-07 08:01:30"

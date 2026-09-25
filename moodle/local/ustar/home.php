@@ -6,6 +6,10 @@ require_login();
 
 global $USER, $DB;
 
+if (\local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\employment::PENDING) {
+    redirect(new moodle_url('/local/ustar/profile.php'));
+}
+
 $context = context_system::instance();
 
 $view = optional_param(
@@ -19,6 +23,23 @@ $courseid = optional_param(
     0,
     PARAM_INT
 );
+
+/*
+ * USTAR_EMPLOYEE_ROUTE_CUTOVER_2706
+ *
+ * Employee Learning is no longer selected by Moodle course enrolment.
+ * Canonical runtime:
+ * current USTAR position -> permanent route -> published point versions.
+ *
+ * Ignore legacy courseid completely.
+ */
+if ($view === 'learning') {
+    redirect(
+        new moodle_url(
+            '/local/ustar/route.php'
+        )
+    );
+}
 
 $PAGE->set_context($context);
 
@@ -641,6 +662,141 @@ if ($nextcourse) {
 }
 
 
+
+
+/*
+ * USTAR_HOME_PERMANENT_ROUTE_2706
+ *
+ * Home "next action" must use the same source of truth as
+ * employee Learning:
+ * user -> USTAR position -> permanent route -> current point.
+ */
+$homepositionid = '';
+
+try {
+    $homeresolved =
+        \local_ustar\structure::resolve_user(
+            (int)$USER->id
+        );
+
+    $homepositionid =
+        (string)(
+            $homeresolved['position']['id']
+            ?? ''
+        );
+} catch (\Throwable $e) {
+    $homepositionid = '';
+}
+if (\local_ustar\view_as::active()) {
+    $homepositionid = \local_ustar\view_as::position_id();
+}
+
+$homepermanentroute = null;
+
+if ($homepositionid !== '') {
+    try {
+        $homepermanentroute =
+            \local_ustar\route_model::for_user($homepositionid, (int)$USER->id);
+    } catch (\Throwable $e) {
+        $homepermanentroute = null;
+    }
+}
+
+/*
+ * If a permanent route exists, it owns Home learning state.
+ * Never fall back to an unrelated Moodle course.
+ */
+if (!empty($homepermanentroute['ok'])) {
+
+    $homenext = null;
+
+    if (
+        !empty(
+            $homepermanentroute[
+                'currentpoint'
+            ]
+        )
+    ) {
+        $homepoint =
+            $homepermanentroute[
+                'currentpoint'
+            ];
+
+        $homeadmitted =
+            !empty(
+                $homepermanentroute[
+                    'admitted'
+                ]
+            );
+
+        $homeprogress =
+            $homeadmitted
+                ? (int)$homepermanentroute['freshness']
+                : (int)$homepermanentroute['adaptationprogress'];
+
+        $homesteps =
+            $homeadmitted
+                ? (
+                    (int)$homepermanentroute['continuouspending']
+                    . ' актуальных точек'
+                )
+                : (
+                    (int)$homepermanentroute['adaptationdone']
+                    . ' из '
+                    . (int)$homepermanentroute['adaptationtotal']
+                    . ' обязательных точек'
+                );
+
+        $homenext = [
+            'name' =>
+                (string)$homepoint['title'],
+
+            'coverurl' =>
+                $output
+                    ->image_url(
+                        'brand/ustar-course-placeholder',
+                        'theme_ustar'
+                    )
+                    ->out(false),
+
+            'progress' =>
+                $homeprogress,
+
+            'hasprogress' =>
+                true,
+
+            'stepslabel' =>
+                $homesteps,
+
+            'actionurl' =>
+                (
+                    new moodle_url(
+                        '/local/ustar/route.php'
+                    )
+                )->out(false),
+
+            'actionlabel' =>
+                'Продолжить',
+
+            'nextactivityname' =>
+                trim(
+                    (string)(
+                        $homepoint['phaselabel']
+                        ?? ''
+                    )
+                    . ' · '
+                    . (string)(
+                        $homepoint['versionlabel']
+                        ?? ''
+                    ),
+                    " \t\n\r\0\x0B·"
+                ),
+
+            'hasnextactivity' =>
+                true,
+        ];
+    }
+}
 
 /*
  * ============================================================
@@ -1538,6 +1694,9 @@ if (
 }
 
 
+$developmentassessments = \local_ustar\development_assessment::catalog();
+$developmentassessment = $developmentassessments[0] ?? null;
+
 $development = [
 
     'hasposition' =>
@@ -1609,6 +1768,23 @@ $development = [
         $currentposition
         &&
         !$nextposition,
+
+    'hasdevelopmentassessment' =>
+        $developmentassessment !== null,
+
+    'developmentassessmenturl' =>
+        $developmentassessment
+            ? (new moodle_url('/local/ustar/development_assessment.php', [
+                'assessment' => (string)$developmentassessment['key'],
+            ]))->out(false)
+            : '',
+
+    'hasdevelopmentanalytics' =>
+        has_capability('local/ustar:developmentanalytics', $context)
+        || is_siteadmin(),
+
+    'developmentanalyticsurl' =>
+        (new moodle_url('/local/ustar/development_assessments.php'))->out(false),
 ];
 
 

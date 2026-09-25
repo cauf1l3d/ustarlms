@@ -8,7 +8,7 @@ if (!is_file($config)) {
 require_once($config);
 require_once($CFG->libdir . '/clilib.php');
 
-$expectedversion = 2026082002;
+$expectedversion = 2026082301;
 $actualversion = (int)get_config('local_ustar', 'version');
 if ($actualversion !== $expectedversion) {
     cli_error('LOCAL_USTAR_VERSION_MISMATCH actual=' . $actualversion . ' expected=' . $expectedversion);

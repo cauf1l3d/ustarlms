@@ -1,0 +1,42 @@
+# USTAR release notes
+
+Статус: **релиз не выполнен**  
+Дата: 2026-08-23
+
+Матрица фактической завершённости находится в `MASTER_TASK_COMPLETION_MATRIX.md`. Она отделяет PROVEN test evidence от PARTIAL business journeys, OWNER decisions и NOT AUTHORIZED production work.
+
+Phase 0 read-only аудит согласован владельцем. Создана ветка `ustar-final-audit-release`, свежий backup, isolated test environment и выполнен разрешённый P0 containment.
+
+Production-релиз не выполнялся. Production DB, пользователи, роли, маршруты, содержимое theme, Moodle containers, Caddy и DNS не менялись. Выполнены только два отдельно разрешённых P0 containment-блока: обратимое удаление из public web-root двух подтверждённых HR mapping files и нормализация ownership/mode для `config.php`, `local_ustar` и `theme_ustar`.
+
+В isolated environment восстановлен свежий DB dump, созданы synthetic role identities, проверены employee/manager/HR/CEO journeys и смоделирован reset default user role к Moodle archetype. Login polish реализован и проверен только в test theme: исправлена desktop grid, одинаковая ширина полей/CTA, нативный show/hide password toggle, mobile/tablet layout и login footer noise. Нативная Moodle auth form сохранена.
+
+До отдельного production approval остаются: production default-role remediation, dependency upgrades, production-grade offsite/RPO/RTO и rollback rehearsal, TARGET decisions и финальный release snapshot. Isolated negative capability и полный test-only DR restore уже прошли.
+
+После отдельного точного подтверждения permission hardening применён в production: `config.php` — `root:www-data|640`; код `local_ustar` и `theme_ustar` — `adu:adu`, каталоги `0755`, файлы `0644`; writable objects для web-процесса отсутствуют. Schema check и login — PASS. Rollback manifest сохранён в `/var/backups/ustar/p0-permission-manifests/2026-08-22_23-27-14/permissions.before`.
+
+В isolated environment capability matrix, 34 запрещённых и 18 разрешённых protected entry points прошли как на исходном, так и на восстановленном стеке. Проверены немедленное снятие роли в активной сессии и штатный forced session revoke. Полный snapshot code+moodledata+DB (445 MB) восстановлен во второй стек; checksums, schema, login и HR-404 regression — PASS. Отдельной HRD-роли в CURRENT нет, поэтому HR/HRD separation остаётся TARGET-блокером, а не автоматически исправленной настройкой.
+
+Новая система Academy icons реализована только в isolated environment. Из 29 исходных 3D PNG отобраны 12 feature/card illustrations; функциональная навигация и action controls оставлены SVG. Achievements, Games, Knowledge и Profile проверены в браузере, включая lazy-load, тёмную тему и отсутствие horizontal overflow. Production gate для assets: подтверждение license/provenance, оптимизация веса и отдельное разрешение на релиз.
+
+Расширенный game runtime E2E выявил production CURRENT-дефект: question image хранится как absolute URL старого host и не получает authenticated session. В isolated environment добавлен File API resolver; изображение, wrong/correct feedback, attempts, mastery, 25 XP и +5 USCOIN posting прошли. Пустая active game с 0 questions скрыта из learner catalog, но сохранена в Game Studio. Эти изменения не опубликованы в production; связь XP→USCOIN остаётся CURRENT / TEST IMPLEMENTATION, а не TARGET-решением.
+
+Оставшиеся Moodle health issues диагностированы без изменений production. `core_publicpaths` — Caddy trailing-slash 308, после которого каждый target даёт 404; private-file disclosure не воспроизведён. `local_ai_manager` ERROR реален: кадровое поле `institution` используется как tenant identifier и конфликтует с Latin-only rule. Исправление требует TARGET-решения об AI tenancy/owner/privacy; кадровые значения автоматически не менялись.
+
+Финальный post-change isolated snapshot `2026-08-23_01-00-56` (445 MB) прошёл все checksum checks и восстановлен в независимый RC stack на loopback `18082`. В restored stack подтверждены schema/login/HR-404, exact login/icon/game hashes, 12 Academy assets, capability matrix, 34 denial и 18 allow tests. После проверки RC containers остановлены; production не менялся.
+
+Canonical private repository подтверждён как `https://github.com/cauf1l3d/ustarlms`. Ветка `ustar-final-audit-release` построена от `main` и опубликована non-force; initial payload commit `c30a2aa` удалённо подтверждён, а `main` остался на `5443bf5`. Это публикация review-ветки, не production release.
+
+После owner supplement в review-ветке реализован отдельный Materials/Personal Library block (plugin `1.5.2-review`, schema `2026082301`): Explorer-style move с server-side ACL, общей hierarchy lock, stale-write/cycle protection и immutable audit; route-gated material requirements (`open` / `ack`); immutable learning events и персональная библиотека как rebuildable read model. CURRENT ACL/acknowledgements намеренно не backfill-ятся. Portable PHP lint, JavaScript syntax, XMLDB structure, Mustache balance и requirement normalization прошли локально. Подробности — `MATERIALS_LIBRARY_IMPLEMENTATION.md`.
+
+Тот же блок применён только в loopback isolated Moodle. Upgrade/schema PASS; synthetic smoke 15/15, role allow/deny, idempotency/no-backfill, cleanup, login/schema health и independent rollback restore PASS. В rollback restore подтверждены pre-change code/DB `2026082002` и отсутствие новых таблиц. Восемь authenticated synthetic desktop/mobile PNG подтверждают HR context move, employee denial и Personal Library `0 → 1`; cross-user counts `1/0/0`, credentials/sessions/fixture cleanup PASS. Native HTML5 drag не отмечен browser-PASS из-за ограничения драйвера; service verifier остаётся PASS. Production не менялся.
+
+Отдельный isolated USCOIN CURRENT audit подтвердил race-idempotency (12 одновременных запросов → 1 проводка), но выявил `actorid=NULL` у manual CLI, отсутствие store/reversal и принятие `-9999` при балансе `+5`. Dry-run показал 2 неприменённые исторические награды. Все synthetic проводки очищены, baseline восстановлен. Это не TARGET economy и не разрешение на production.
+
+Read-only isolated Leaderboard audit зафиксировал 90 участников и раскрытие synthetic employee payload по 89 другим людям/29 должностям. 87 участников находятся в равных XP-группах, но получают разные места; `Моя команда` при `reporting=0` состоит из same-position peers и показывает глобальное место вместо локального. Competition/season/league tables отсутствуют, календарный month автоматически считает course/module completion. Изменений БД не было, временные probes удалены, production не менялся.
+
+Isolated Boards CURRENT audit подтвердил owner/private и same-department read boundaries, запрет shared write, invalid JSON и >10 MiB. Но 24 параллельных save с expected version 1 получили 24 success, итоговая версия осталась 2 и сохранился только один документ — 23 silent lost updates. Все 7 исходных досок private; share/delete/rename/history UI отсутствует. Две synthetic rows удалены, baseline 7/3/0/0 и временные файлы восстановлены/очищены; production не менялся.
+
+Поверх этого CURRENT-аудита в review candidate добавлен только технический atomic-save invariant: version check и update выполняются под транзакцией и row lock, с явным rollback/rethrow. Isolated 24-worker acceptance дал ровно 1 success / 23 conflicts, validation/ACL и 7→7 cleanup PASS. Реальный rollback roundtrip вернул старый SHA и снова получил 24/0, после reapply нового SHA вернулся результат 1/23. Login 200, новых critical log lines 0. Production не менялся; TARGET board types/audience/history/lifecycle не выбирались.
+
+Workflow/Communication CURRENT audit установил, что USTAR показывает Moodle core notifications/messages, но не имеет конституционной task/notification-модели: 70 Moodle alerts/48 unread/13 recipients, 0 USTAR notifications/providers, нет official/personal task, rule, delivery или escalation tables и Bitrix processor. Synthetic notification/conversation/goal/review ACL и exact cleanup `70/0/2/1/176` PASS. Старый goal API принимал неизвестное действие как success; isolated allowlist guard отклоняет его, rollback→reapply PASS. Production не менялся; B086–B091 остаются TARGET owner decision.

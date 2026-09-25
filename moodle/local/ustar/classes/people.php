@@ -24,16 +24,22 @@ class people {
     public static function position_id(int $userid): string {
         global $DB, $USER;
         if ((int)$USER->id === $userid && class_exists('\\local_ustar\\view_as') && view_as::active()) { return view_as::position_id(); }
-        $sql = "SELECT d.data
-                  FROM {user_info_data} d
-                  JOIN {user_info_field} f ON f.id = d.fieldid
-                 WHERE d.userid = :uid AND f.shortname = 'ustar_position'";
-        $value = $DB->get_field_sql($sql, ['uid' => $userid]);
-        return trim((string)$value);
+        return organization_identity::resolve($userid)['positionid'];
     }
 
     public static function set_position_id(int $userid, string $positionid): void {
         global $DB;
+        $primary = organization_model::primary_assignment($userid);
+        if ($primary) {
+            $place = organization_model::staff_place((int)$primary->staffplaceid);
+            if (!$place || (string)$place->positionid !== $positionid) {
+                throw new \invalid_parameter_exception(
+                    'Должность отличается от основного штатного назначения. Сначала оформите кадровый перевод; временное и.о. не меняет основную должность.'
+                );
+            }
+        }
+        $transaction = $DB->start_delegated_transaction();
+        try {
         $field = $DB->get_record('user_info_field', ['shortname' => 'ustar_position'], '*', MUST_EXIST);
         $record = $DB->get_record('user_info_data', ['userid' => $userid, 'fieldid' => $field->id]);
         if ($record) {
@@ -47,6 +53,10 @@ class people {
                 'data' => $positionid,
                 'dataformat' => 0,
             ]);
+        }
+        $transaction->allow_commit();
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
         }
     }
 

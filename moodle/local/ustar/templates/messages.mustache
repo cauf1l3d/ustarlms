@@ -1,6 +1,6 @@
 <div class="u-product-page">
     <header class="u-product-head">
-        <div><p class="u-page-kicker">Communication</p><h1>Сообщения</h1><p>Рабочие диалоги на Moodle messaging — внутри интерфейса USTAR.</p></div>
+        <div><p class="u-page-kicker">Общение</p><h1>Сообщения</h1><p>Найдите коллегу и начните рабочий диалог.</p></div>
         {{{messageicon}}}
     </header>
 
@@ -8,6 +8,7 @@
         <aside class="u-messenger-list">
             <form class="u-messenger-search" method="get">
                 {{{searchicon}}}<input type="search" name="q" value="{{searchq}}" placeholder="Найти сотрудника..." aria-label="Найти сотрудника">
+                <button class="u-btn u-btn--small" type="submit">Найти</button>
             </form>
 
             {{#searched}}
@@ -21,7 +22,8 @@
                     <button type="submit" class="u-search-person"><span>{{initials}}</span><strong>{{fullname}}</strong></button>
                 </form>
                 {{/searchresults}}
-                {{^hassearchresults}}<p>Совпадений нет.</p>{{/hassearchresults}}
+                {{#searcherror}}<p role="alert">{{searcherror}}</p>{{/searcherror}}
+                {{^searcherror}}{{^hassearchresults}}<p>Нет доступных получателей. Введите хотя бы две буквы имени или фамилии.</p>{{/hassearchresults}}{{/searcherror}}
             </div>
             {{/searched}}
 

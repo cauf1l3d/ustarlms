@@ -1,0 +1,1106 @@
+{
+  "version": "2724-dryrun-r1",
+  "source": "Источник кадровой информации(1).xlsx + owner overrides 2026-08-29",
+  "protected_users": [
+    1,
+    2,
+    87
+  ],
+  "protected_hashes": {
+    "skills": "f3e620dc74e70c5d1a030263106b2b5d0ab4b537ba7795ee48a21705c35f9608",
+    "matrix": "138d73bc3a09586b6389d1739dff7591df439d78d3799eaf5c90b7c4545c10dc",
+    "routes": "5f7f8cd751a9df60b2a936e16f736ac5d64d632bc4baea2d2599eda8ad53f3e5",
+    "points": "79fa5fd7ca5e2fb6daa02757c03675b0769a5abadd18ae2a996213812fd794e7",
+    "versions": "571eb178cf4ea934238f0d65ce9ee4a559a14f504e8e57a359c2399b8e55b2e8",
+    "scopes": "7a34ef9f3b08719ad3c1597fccf70dfd8f142229ddc06f7aadcac91ce967af16"
+  },
+  "delete_users": [
+    {
+      "id": 3,
+      "username": "consultest"
+    },
+    {
+      "id": 4,
+      "username": "kassirtest"
+    },
+    {
+      "id": 5,
+      "username": "tovarovedtest"
+    },
+    {
+      "id": 7,
+      "username": "ceorozntest"
+    },
+    {
+      "id": 8,
+      "username": "lmstester"
+    },
+    {
+      "id": 9,
+      "username": "suppentest"
+    },
+    {
+      "id": 10,
+      "username": "ceo"
+    },
+    {
+      "id": 11,
+      "username": "ibragimov.i"
+    },
+    {
+      "id": 19,
+      "username": "ibragimov.i2"
+    },
+    {
+      "id": 20,
+      "username": "kurbanov.n"
+    },
+    {
+      "id": 23,
+      "username": "magomedov.m"
+    },
+    {
+      "id": 24,
+      "username": "idrisov.m"
+    },
+    {
+      "id": 26,
+      "username": "onkolmagomedov.r"
+    },
+    {
+      "id": 32,
+      "username": "alishaev.m"
+    },
+    {
+      "id": 58,
+      "username": "bagamaev.b"
+    },
+    {
+      "id": 67,
+      "username": "ahaev.r"
+    },
+    {
+      "id": 68,
+      "username": "bagamaev.b2"
+    },
+    {
+      "id": 89,
+      "username": "u.testpro"
+    },
+    {
+      "id": 90,
+      "username": "konstorztest"
+    },
+    {
+      "id": 91,
+      "username": "konstest"
+    }
+  ],
+  "new_users": {
+    "new_marat": {
+      "username": "ataev.m",
+      "lastname": "Атаев",
+      "firstname": "Марат"
+    },
+    "new_sharab": {
+      "username": "abdurashidov.s",
+      "lastname": "Абдурашидов",
+      "firstname": "Шарабутдин"
+    },
+    "new_abdulaziz": {
+      "username": "abakarov.aa",
+      "lastname": "Абакаров",
+      "firstname": "Абдул Азиз"
+    },
+    "new_sultan": {
+      "username": "yahyaev.s",
+      "lastname": "Яхьяев",
+      "firstname": "Султан"
+    },
+    "new_abdulla": {
+      "username": "shamhalov.a",
+      "lastname": "Шамхалов",
+      "firstname": "Абдулла"
+    },
+    "new_magomed_warehouse": {
+      "username": "magomedov.m3",
+      "lastname": "Магомедов",
+      "firstname": "Магомед"
+    },
+    "new_zainab": {
+      "username": "musaeva.z",
+      "lastname": "Мусаева",
+      "firstname": "Зайнаб"
+    },
+    "new_baitulla": {
+      "username": "gadzhiev.b",
+      "lastname": "Гаджиев",
+      "firstname": "Байтулла"
+    },
+    "new_arsen_omarp": {
+      "username": "omarpashaev.a",
+      "lastname": "Омарпашаев",
+      "firstname": "Арсен"
+    }
+  },
+  "new_positions": [
+    {
+      "id": "pos_e518822b64df3ab6",
+      "departmentid": "dept_5311c8e99d383c",
+      "name": "Техничка",
+      "ishead": false,
+      "accessprofile": "employee"
+    },
+    {
+      "id": "pos_fe996c3dd5e313f6",
+      "departmentid": "dept_576ea5ace2669f",
+      "name": "Администратор",
+      "ishead": false,
+      "accessprofile": "employee"
+    },
+    {
+      "id": "pos_aef1f0c3fddd2fa5",
+      "departmentid": "dept_bd305b8b27fb3a",
+      "name": "Бренд-менеджер",
+      "ishead": false,
+      "accessprofile": "employee"
+    },
+    {
+      "id": "pos_526d0aede50b714e",
+      "departmentid": "dept_e588c200df2205",
+      "name": "Разработчик корпоративной платформы обучения",
+      "ishead": false,
+      "accessprofile": "employee"
+    },
+    {
+      "id": "pos_61ff27c8d0fe3791",
+      "departmentid": "dept_32d121fab03e24",
+      "name": "Главный бухгалтер",
+      "ishead": true,
+      "accessprofile": "manager"
+    },
+    {
+      "id": "pos_9ab58043102bf14c",
+      "departmentid": "dept_0743e6ac0c6259",
+      "name": "Руководитель отдела КК",
+      "ishead": true,
+      "accessprofile": "manager"
+    }
+  ],
+  "seats": [
+    {
+      "seatkey": "store_head",
+      "staffplaceid": 173,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_15f75eb67a822a46",
+      "position": "Зав.склад",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "store_controller_1",
+      "staffplaceid": 174,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_64514db87250e91d",
+      "position": "Контролер",
+      "assignmenttype": "primary",
+      "occupant": 12,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "store_controller_2",
+      "staffplaceid": 175,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_64514db87250e91d",
+      "position": "Контролер",
+      "assignmenttype": "primary",
+      "occupant": 13,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "store_receiver",
+      "staffplaceid": 176,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_4501550e7b9915b6",
+      "position": "Приемщик",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "store_worker_1",
+      "staffplaceid": 177,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_539bd92b9fe9b4e7",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": 15,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "store_worker_2",
+      "staffplaceid": 178,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_539bd92b9fe9b4e7",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": 16,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "store_worker_3",
+      "staffplaceid": 179,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_539bd92b9fe9b4e7",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": 17,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "store_worker_4",
+      "staffplaceid": 180,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_539bd92b9fe9b4e7",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": 18,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "store_operator1c",
+      "staffplaceid": 181,
+      "departmentid": "dept_2929c1e41d846a",
+      "positionid": "pos_b26cc2d584dd4489",
+      "position": "Оператор 1с",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "store_head"
+    },
+    {
+      "seatkey": "rc_head",
+      "staffplaceid": 182,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_f0a27c79ede75f11",
+      "position": "Завсклад",
+      "assignmenttype": "primary",
+      "occupant": "new_marat",
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "rc_deputy",
+      "staffplaceid": 183,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_854dc5455ae507a9",
+      "position": "Контролер/зам. Завсклада",
+      "assignmenttype": "primary",
+      "occupant": "new_sharab",
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_controller_1",
+      "staffplaceid": 184,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_5ddf3f124569e03f",
+      "position": "Контролер",
+      "assignmenttype": "primary",
+      "occupant": "new_abdulaziz",
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_controller_2",
+      "staffplaceid": 185,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_5ddf3f124569e03f",
+      "position": "Контролер",
+      "assignmenttype": "primary",
+      "occupant": 21,
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_controller_3",
+      "staffplaceid": 186,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_5ddf3f124569e03f",
+      "position": "Контролер",
+      "assignmenttype": "primary",
+      "occupant": 22,
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_receiver",
+      "staffplaceid": 187,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_d616230587cdd16a",
+      "position": "Приемщик",
+      "assignmenttype": "primary",
+      "occupant": 14,
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_worker_1",
+      "staffplaceid": 188,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_52bf339291edda5b",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_worker_2",
+      "staffplaceid": 189,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_52bf339291edda5b",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": "new_sultan",
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_worker_3",
+      "staffplaceid": 190,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_52bf339291edda5b",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": 25,
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_worker_4",
+      "staffplaceid": 191,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_52bf339291edda5b",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": "new_abdulla",
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_worker_5",
+      "staffplaceid": 192,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_52bf339291edda5b",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": "new_magomed_warehouse",
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_worker_6",
+      "staffplaceid": 193,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_52bf339291edda5b",
+      "position": "Работник склада",
+      "assignmenttype": "primary",
+      "occupant": 28,
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "rc_cleaner",
+      "staffplaceid": null,
+      "departmentid": "dept_5311c8e99d383c",
+      "positionid": "pos_e518822b64df3ab6",
+      "position": "Техничка",
+      "assignmenttype": "primary",
+      "occupant": 29,
+      "managerseat": "rc_head"
+    },
+    {
+      "seatkey": "retail_director",
+      "staffplaceid": 194,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_8dd9749f07a5bc80",
+      "position": "Директор розницы",
+      "assignmenttype": "primary",
+      "occupant": 31,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "retail_admin",
+      "staffplaceid": null,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_fe996c3dd5e313f6",
+      "position": "Администратор",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_master",
+      "staffplaceid": 195,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_291ca10e777807f0",
+      "position": "Мастер менеджер",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_tovaroved",
+      "staffplaceid": 196,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_edcafa7ab3e816d3",
+      "position": "Товаровед",
+      "assignmenttype": "primary",
+      "occupant": 33,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_cashier_1",
+      "staffplaceid": 197,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_ba27695e3e0796c2",
+      "position": "кассир",
+      "assignmenttype": "primary",
+      "occupant": 34,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_cashier_2",
+      "staffplaceid": 198,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_ba27695e3e0796c2",
+      "position": "кассир",
+      "assignmenttype": "primary",
+      "occupant": 35,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_1",
+      "staffplaceid": 199,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 36,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_2",
+      "staffplaceid": 200,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 37,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_3",
+      "staffplaceid": 201,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 38,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_4",
+      "staffplaceid": 202,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 39,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_5",
+      "staffplaceid": 203,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 40,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_6",
+      "staffplaceid": 204,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 41,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_7",
+      "staffplaceid": 205,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 42,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_8",
+      "staffplaceid": 206,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 88,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_seller_9",
+      "staffplaceid": 207,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_4551dd63496af62f",
+      "position": "Продавец-кассир",
+      "assignmenttype": "primary",
+      "occupant": 44,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_cleaner_1",
+      "staffplaceid": 208,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_9c374b12835f0f66",
+      "position": "Техничка",
+      "assignmenttype": "primary",
+      "occupant": 45,
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "retail_cleaner_2",
+      "staffplaceid": 209,
+      "departmentid": "dept_576ea5ace2669f",
+      "positionid": "pos_9c374b12835f0f66",
+      "position": "Техничка",
+      "assignmenttype": "primary",
+      "occupant": "new_zainab",
+      "managerseat": "retail_director"
+    },
+    {
+      "seatkey": "sales_head",
+      "staffplaceid": 210,
+      "departmentid": "dept_549a3b6ee23511",
+      "positionid": "pos_392778f6ac8b102c",
+      "position": "РОП",
+      "assignmenttype": "primary",
+      "occupant": 46,
+      "managerseat": "commercial"
+    },
+    {
+      "seatkey": "sales_active",
+      "staffplaceid": 211,
+      "departmentid": "dept_549a3b6ee23511",
+      "positionid": "pos_2e0035230b376471",
+      "position": "МОП-Активный",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "sales_head"
+    },
+    {
+      "seatkey": "sales_mop_vac",
+      "staffplaceid": 212,
+      "departmentid": "dept_549a3b6ee23511",
+      "positionid": "pos_80bb9f9ddcb4cd64",
+      "position": "МОП",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "sales_head"
+    },
+    {
+      "seatkey": "sales_mop1",
+      "staffplaceid": 213,
+      "departmentid": "dept_549a3b6ee23511",
+      "positionid": "pos_f57da070d2ef4d02",
+      "position": "МОП-1",
+      "assignmenttype": "primary",
+      "occupant": 27,
+      "managerseat": "sales_head"
+    },
+    {
+      "seatkey": "sales_mop_1",
+      "staffplaceid": 214,
+      "departmentid": "dept_549a3b6ee23511",
+      "positionid": "pos_80bb9f9ddcb4cd64",
+      "position": "МОП",
+      "assignmenttype": "primary",
+      "occupant": 47,
+      "managerseat": "sales_head"
+    },
+    {
+      "seatkey": "sales_mop_2",
+      "staffplaceid": 215,
+      "departmentid": "dept_549a3b6ee23511",
+      "positionid": "pos_80bb9f9ddcb4cd64",
+      "position": "МОП",
+      "assignmenttype": "primary",
+      "occupant": 48,
+      "managerseat": "sales_head"
+    },
+    {
+      "seatkey": "sales_tender",
+      "staffplaceid": 216,
+      "departmentid": "dept_549a3b6ee23511",
+      "positionid": "pos_985683b600a697ad",
+      "position": "Тендерный специалист",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "sales_head"
+    },
+    {
+      "seatkey": "active_sup1",
+      "staffplaceid": 217,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_ea1326047d5e7ede",
+      "position": "Супервайзер - ком.1",
+      "assignmenttype": "acting",
+      "occupant": 62,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "active_sup2",
+      "staffplaceid": 218,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_339644a16113bb9a",
+      "position": "Супервайзер - ком.2",
+      "assignmenttype": "primary",
+      "occupant": 49,
+      "managerseat": "commercial"
+    },
+    {
+      "seatkey": "active_mop",
+      "staffplaceid": 219,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_6505e87cbe645f2d",
+      "position": "МОП",
+      "assignmenttype": "primary",
+      "occupant": 50,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "active_team1_1",
+      "staffplaceid": 220,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_4ae1d264291a9901",
+      "position": "МОП - ком.1",
+      "assignmenttype": "primary",
+      "occupant": 51,
+      "managerseat": "active_sup1"
+    },
+    {
+      "seatkey": "active_team1_2",
+      "staffplaceid": 221,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_4ae1d264291a9901",
+      "position": "МОП - ком.1",
+      "assignmenttype": "primary",
+      "occupant": 52,
+      "managerseat": "active_sup1"
+    },
+    {
+      "seatkey": "active_team1_3",
+      "staffplaceid": 222,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_4ae1d264291a9901",
+      "position": "МОП - ком.1",
+      "assignmenttype": "primary",
+      "occupant": 53,
+      "managerseat": "active_sup1"
+    },
+    {
+      "seatkey": "active_team1_4",
+      "staffplaceid": 223,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_4ae1d264291a9901",
+      "position": "МОП - ком.1",
+      "assignmenttype": "primary",
+      "occupant": 54,
+      "managerseat": "active_sup1"
+    },
+    {
+      "seatkey": "active_team1_5",
+      "staffplaceid": 224,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_4ae1d264291a9901",
+      "position": "МОП - ком.1",
+      "assignmenttype": "primary",
+      "occupant": 55,
+      "managerseat": "active_sup1"
+    },
+    {
+      "seatkey": "active_team1_6",
+      "staffplaceid": 225,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_4ae1d264291a9901",
+      "position": "МОП - ком.1",
+      "assignmenttype": "primary",
+      "occupant": 56,
+      "managerseat": "active_sup1"
+    },
+    {
+      "seatkey": "active_team2_1",
+      "staffplaceid": 226,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_9e43fe3808d709f4",
+      "position": "МОП - ком.2",
+      "assignmenttype": "primary",
+      "occupant": 57,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "active_team2_2",
+      "staffplaceid": 227,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_9e43fe3808d709f4",
+      "position": "МОП - ком.2",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "active_team2_3",
+      "staffplaceid": 228,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_9e43fe3808d709f4",
+      "position": "МОП - ком.2",
+      "assignmenttype": "primary",
+      "occupant": 59,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "active_team2_4",
+      "staffplaceid": 229,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_9e43fe3808d709f4",
+      "position": "МОП - ком.2",
+      "assignmenttype": "primary",
+      "occupant": 60,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "active_team2_5",
+      "staffplaceid": 230,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_9e43fe3808d709f4",
+      "position": "МОП - ком.2",
+      "assignmenttype": "primary",
+      "occupant": 61,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "active_brand",
+      "staffplaceid": null,
+      "departmentid": "dept_bd305b8b27fb3a",
+      "positionid": "pos_aef1f0c3fddd2fa5",
+      "position": "Бренд-менеджер",
+      "assignmenttype": "primary",
+      "occupant": 62,
+      "managerseat": "active_sup2"
+    },
+    {
+      "seatkey": "purchase_head",
+      "staffplaceid": 231,
+      "departmentid": "dept_6cb94a52124dd9",
+      "positionid": "pos_5da3ba1d6e0d0a4f",
+      "position": "РОКМ",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "purchase_operator",
+      "staffplaceid": 232,
+      "departmentid": "dept_6cb94a52124dd9",
+      "positionid": "pos_e9c2520044a5795a",
+      "position": "Оператор закупок",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "purchase_head"
+    },
+    {
+      "seatkey": "purchase_cat_1",
+      "staffplaceid": 233,
+      "departmentid": "dept_6cb94a52124dd9",
+      "positionid": "pos_871f96a4ec121f5e",
+      "position": "Категорийный менеджер",
+      "assignmenttype": "primary",
+      "occupant": 63,
+      "managerseat": "purchase_head"
+    },
+    {
+      "seatkey": "purchase_cat_2",
+      "staffplaceid": 234,
+      "departmentid": "dept_6cb94a52124dd9",
+      "positionid": "pos_871f96a4ec121f5e",
+      "position": "Категорийный менеджер",
+      "assignmenttype": "primary",
+      "occupant": 64,
+      "managerseat": "purchase_head"
+    },
+    {
+      "seatkey": "purchase_cat_3",
+      "staffplaceid": 235,
+      "departmentid": "dept_6cb94a52124dd9",
+      "positionid": "pos_871f96a4ec121f5e",
+      "position": "Категорийный менеджер",
+      "assignmenttype": "primary",
+      "occupant": 65,
+      "managerseat": "purchase_head"
+    },
+    {
+      "seatkey": "purchase_cat_4",
+      "staffplaceid": 236,
+      "departmentid": "dept_6cb94a52124dd9",
+      "positionid": "pos_871f96a4ec121f5e",
+      "position": "Категорийный менеджер",
+      "assignmenttype": "primary",
+      "occupant": "new_baitulla",
+      "managerseat": "purchase_head"
+    },
+    {
+      "seatkey": "logistics_head",
+      "staffplaceid": 237,
+      "departmentid": "dept_bc3472ed779983",
+      "positionid": "pos_0c43f1c98cfc4351",
+      "position": "Логист",
+      "assignmenttype": "primary",
+      "occupant": 66,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "driver_1",
+      "staffplaceid": 238,
+      "departmentid": "dept_bc3472ed779983",
+      "positionid": "pos_8e224f34280656bf",
+      "position": "Водитель",
+      "assignmenttype": "primary",
+      "occupant": "new_arsen_omarp",
+      "managerseat": "logistics_head"
+    },
+    {
+      "seatkey": "driver_2",
+      "staffplaceid": 239,
+      "departmentid": "dept_bc3472ed779983",
+      "positionid": "pos_8e224f34280656bf",
+      "position": "Водитель",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "logistics_head"
+    },
+    {
+      "seatkey": "driver_3",
+      "staffplaceid": 240,
+      "departmentid": "dept_bc3472ed779983",
+      "positionid": "pos_8e224f34280656bf",
+      "position": "Водитель",
+      "assignmenttype": "primary",
+      "occupant": 69,
+      "managerseat": "logistics_head"
+    },
+    {
+      "seatkey": "driver_4",
+      "staffplaceid": 241,
+      "departmentid": "dept_bc3472ed779983",
+      "positionid": "pos_8e224f34280656bf",
+      "position": "Водитель",
+      "assignmenttype": "primary",
+      "occupant": 70,
+      "managerseat": "logistics_head"
+    },
+    {
+      "seatkey": "driver_5",
+      "staffplaceid": 242,
+      "departmentid": "dept_bc3472ed779983",
+      "positionid": "pos_8e224f34280656bf",
+      "position": "Водитель",
+      "assignmenttype": "primary",
+      "occupant": 71,
+      "managerseat": "logistics_head"
+    },
+    {
+      "seatkey": "driver_6",
+      "staffplaceid": 243,
+      "departmentid": "dept_bc3472ed779983",
+      "positionid": "pos_8e224f34280656bf",
+      "position": "Водитель",
+      "assignmenttype": "primary",
+      "occupant": 72,
+      "managerseat": "logistics_head"
+    },
+    {
+      "seatkey": "marketing",
+      "staffplaceid": 244,
+      "departmentid": "dept_67c49134396546",
+      "positionid": "pos_977218370cc8d0d6",
+      "position": "Маркетолог",
+      "assignmenttype": "primary",
+      "occupant": 73,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "smm",
+      "staffplaceid": 245,
+      "departmentid": "dept_67c49134396546",
+      "positionid": "pos_caac6e64f3e5c5d5",
+      "position": "СММ",
+      "assignmenttype": "primary",
+      "occupant": null,
+      "managerseat": "marketing"
+    },
+    {
+      "seatkey": "hrd",
+      "staffplaceid": 246,
+      "departmentid": "dept_11e102b0ee0a93",
+      "positionid": "pos_c53d05bb93104e2b",
+      "position": "HRD",
+      "assignmenttype": "primary",
+      "occupant": 74,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "recruiter",
+      "staffplaceid": 247,
+      "departmentid": "dept_11e102b0ee0a93",
+      "positionid": "pos_80234f25d3b7f6eb",
+      "position": "Рекрутер",
+      "assignmenttype": "primary",
+      "occupant": 75,
+      "managerseat": "hrd"
+    },
+    {
+      "seatkey": "it_specialist",
+      "staffplaceid": 248,
+      "departmentid": "dept_e588c200df2205",
+      "positionid": "pos_10075aa0034add9d",
+      "position": "IT - специалист",
+      "assignmenttype": "primary",
+      "occupant": 76,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "platform_developer",
+      "staffplaceid": null,
+      "departmentid": "dept_e588c200df2205",
+      "positionid": "pos_526d0aede50b714e",
+      "position": "Разработчик корпоративной платформы обучения",
+      "assignmenttype": "primary",
+      "occupant": 2,
+      "managerseat": "it_specialist"
+    },
+    {
+      "seatkey": "programmer",
+      "staffplaceid": 249,
+      "departmentid": "dept_e588c200df2205",
+      "positionid": "pos_989a3953e48c5bdf",
+      "position": "Программист",
+      "assignmenttype": "primary",
+      "occupant": 77,
+      "managerseat": "it_specialist"
+    },
+    {
+      "seatkey": "chief_accountant",
+      "staffplaceid": 250,
+      "departmentid": "dept_32d121fab03e24",
+      "positionid": "pos_61ff27c8d0fe3791",
+      "position": "Главный бухгалтер",
+      "assignmenttype": "primary",
+      "occupant": 78,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "accountant_1",
+      "staffplaceid": 251,
+      "departmentid": "dept_32d121fab03e24",
+      "positionid": "pos_50ae6b5ebb4e84f7",
+      "position": "Бухгалтер",
+      "assignmenttype": "primary",
+      "occupant": 79,
+      "managerseat": "chief_accountant"
+    },
+    {
+      "seatkey": "accountant_2",
+      "staffplaceid": 252,
+      "departmentid": "dept_32d121fab03e24",
+      "positionid": "pos_50ae6b5ebb4e84f7",
+      "position": "Бухгалтер",
+      "assignmenttype": "primary",
+      "occupant": 80,
+      "managerseat": "chief_accountant"
+    },
+    {
+      "seatkey": "quality_head",
+      "staffplaceid": 253,
+      "departmentid": "dept_0743e6ac0c6259",
+      "positionid": "pos_9ab58043102bf14c",
+      "position": "Руководитель отдела КК",
+      "assignmenttype": "primary",
+      "occupant": 81,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "quality_auditor",
+      "staffplaceid": 254,
+      "departmentid": "dept_0743e6ac0c6259",
+      "positionid": "pos_6740e30605b80954",
+      "position": "Ревизор",
+      "assignmenttype": "primary",
+      "occupant": 82,
+      "managerseat": "quality_head"
+    },
+    {
+      "seatkey": "caretaker",
+      "staffplaceid": 255,
+      "departmentid": "dept_36c62299752c96",
+      "positionid": "pos_b9fded4a43071d03",
+      "position": "Завхоз",
+      "assignmenttype": "primary",
+      "occupant": 83,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "ceo",
+      "staffplaceid": 256,
+      "departmentid": "dept_3dc64933465c7b",
+      "positionid": "pos_86f0ee871bb54eb4",
+      "position": "Генеральный директор",
+      "assignmenttype": "primary",
+      "occupant": 84,
+      "managerseat": null
+    },
+    {
+      "seatkey": "commercial",
+      "staffplaceid": 257,
+      "departmentid": "dept_3dc64933465c7b",
+      "positionid": "pos_fe51c5c270e99392",
+      "position": "Коммерческий директор",
+      "assignmenttype": "primary",
+      "occupant": 85,
+      "managerseat": "ceo"
+    },
+    {
+      "seatkey": "exec_assistant",
+      "staffplaceid": 258,
+      "departmentid": "dept_3dc64933465c7b",
+      "positionid": "pos_43c26e70078a7df0",
+      "position": "Асситент руководителя",
+      "assignmenttype": "primary",
+      "occupant": 86,
+      "managerseat": "ceo"
+    }
+  ],
+  "rules": {
+    "kalina": "U31 remains Director retail; Administrator is separate vacancy",
+    "u88": "keep as active retail seller",
+    "bagamaev": "delete U58 and U68; team2 seat becomes vacant",
+    "skip_create": [
+      "Ахмаев Магомед",
+      "Маликов Гаджи"
+    ],
+    "yusup": "U62 primary Brand Manager + acting Supervisor team1; acting end = month end; autorenew monthly until HR changes it",
+    "gasanov_rasimovich": "U66 = Logistics head, manages drivers",
+    "duplicate_magomed": "U27 is sales MOP-1; separate new warehouse Magomedov Magomed",
+    "team1": "MOП team1 seats report to acting Supervisor team1",
+    "protected_learning": "skills/matrix/routes/route-points/versions/scopes hashes must not change"
+  }
+}

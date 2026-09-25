@@ -1,35 +1,32 @@
-{{! Moodle-native USTAR login. Authentication and form rendering remain owned by Moodle core. }}
+{{! Canonical artwork supplied by USTAR. Moodle owns tokens, credentials, errors, reset and SSO. }}
 {{> theme_boost/head }}
 <body {{{ bodyattributes }}}>
 {{> core/local/toast/wrapper}}
-<style>{{{runtimebrandcss}}}</style>
-<div id="page-wrapper" class="u-login-page">
+<div id="page-wrapper" class="ustar-auth-page">
     {{{ output.standard_top_of_body_html }}}
-    <main id="page" class="u-login-shell" aria-label="Вход в USTAR Academy">
-        <section class="u-login-brand" aria-label="USTAR Academy">
-            <div class="u-login-brand__top">
-                <span class="u-login-brand__kicker">Корпоративная академия</span>
-                <img src="{{bannerurl}}" alt="USTAR Академия" class="u-login-brand__banner">
-            </div>
-            <div class="u-login-brand__copy">
-                <p>Обучение · Знания · Развитие</p>
-                <h1>Рабочее пространство, которое ведёт сотрудника от первого дня до следующего профессионального уровня.</h1>
-                <div class="u-login-brand__chips" aria-hidden="true">
-                    <span>Маршрут обучения</span><span>База знаний</span><span>Достижения</span>
-                </div>
-            </div>
+    <main id="page" class="ustar-auth-shell" aria-label="Вход в USTAR Академию">
+        <section class="ustar-auth-brand" aria-label="Академия USTAR">
+            <svg class="ustar-auth-artwork" viewBox="155 50 711 836" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR: обучение, навыки, карьера, игры. Развивайся, строй карьеру, участвуй в играх, будь частью команды.">
+                <image href="{{loginreferenceurl}}" x="0" y="0" width="1672" height="941" />
+            </svg>
         </section>
-        <section class="u-login-auth">
-            <div class="u-login-auth__card">
-                <div class="u-login-auth__heading">
-                    <span class="u-login-mark" aria-hidden="true">U</span>
-                    <div><small>USTAR Academy</small><strong>Вход в личный кабинет</strong></div>
+        <section class="ustar-auth-auth" aria-label="Авторизация">
+            <svg class="ustar-auth-logo" viewBox="1055 85 287 100" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR Академия"><image href="{{loginreferenceurl}}" x="0" y="0" width="1672" height="941" /></svg>
+            <h1 class="ustar-auth-start">{{starttitle}}</h1>
+            <div class="ustar-auth-auth__card">
+                <div id="region-main" class="ustar-auth-core">{{{ output.main_content }}}</div>
+                {{#signupenabled}}
+                <div class="ustar-auth-signup" aria-label="Регистрация в USTAR Академии">
+                    <span>Впервые в Академии?</span>
+                    <a class="btn btn-secondary" href="{{signupurl}}">Зарегистрироваться</a>
                 </div>
-                <div id="region-main" class="u-login-core">
-                    {{{ output.main_content }}}
-                </div>
-                <p class="u-login-auth__note">Используйте корпоративную учётную запись Moodle. Пароль и авторизация остаются защищёнными штатными механизмами LMS.</p>
+                {{/signupenabled}}
             </div>
+            <footer class="ustar-auth-auth__footer">
+                <p>USTAR Академия использует авторские технологии и собственные разработанные сервисы обучения на основе ядра Moodle.</p>
+                <strong>Тут растут эксперты</strong>
+                <small>© USTAR Академия. 2026 Все права защищены</small>
+            </footer>
         </section>
     </main>
     {{> theme_boost/footer }}
@@ -38,7 +35,5 @@
 </html>
 {{#js}}
 M.util.js_pending('theme_boost/loader');
-require(['theme_boost/loader'], function() {
-    M.util.js_complete('theme_boost/loader');
-});
+require(['theme_boost/loader'], function() { M.util.js_complete('theme_boost/loader'); });
 {{/js}}

@@ -1,0 +1,141 @@
+<div class="u-product-page">
+
+<a class="u-backlink" href="{{teamurl}}">
+    ← Моя команда
+</a>
+
+{{#person}}
+<header class="u-learning-profile-head">
+    <div class="u-team-avatar u-learning-profile-head__avatar">
+        {{#avatarurl}}
+        <img src="{{avatarurl}}" alt="">
+        {{/avatarurl}}
+    </div>
+
+    <div>
+        <p class="u-page-kicker">
+            Обучение сотрудника
+        </p>
+
+        <h1>{{fullname}}</h1>
+
+        <p>
+            {{position}} · {{department}}
+        </p>
+
+        <small>
+            Последний вход: {{lastaccess}}
+        </small>
+    </div>
+</header>
+{{/person}}
+
+{{#snapshot}}
+<section class="u-learning-profile-summary">
+    <article>
+        <span>Прогресс маршрута</span>
+        <strong>{{progress}}%</strong>
+    </article>
+
+    <article>
+        <span>Пройдено</span>
+        <strong>{{donepoints}} / {{totalpoints}}</strong>
+    </article>
+
+    <article>
+        <span>Осталось</span>
+        <strong>{{remaining}}</strong>
+    </article>
+</section>
+{{/snapshot}}
+
+{{#hascurrent}}
+{{#current}}
+<section class="u-learning-current-card">
+    <p class="u-page-kicker">Сейчас</p>
+    <h2>{{title}}</h2>
+    <span>Текущий доступный шаг маршрута</span>
+</section>
+{{/current}}
+{{/hascurrent}}
+
+<section class="u-learning-history u-assessment-results">
+    <header><p class="u-page-kicker">Проверка знаний</p><h2>Результаты аттестаций</h2></header>
+    {{#assessments}}
+    <article class="u-assessment-result">
+        <h3>{{title}}</h3><p>{{quizname}} · {{versionlabel}}</p>
+        <strong class="u-assessment-result__status">{{statuslabel}}</strong>
+        {{^error}}
+        <dl class="u-assessment-result__facts">
+            <div><dt>Последний результат</dt><dd>{{lastscore}}</dd></div>
+            <div><dt>Дата последней попытки</dt><dd>{{lastdate}}</dd></div>
+            <div><dt>Лучший учитываемый результат</dt><dd>{{bestscore}}</dd></div>
+            <div><dt>Проходной балл</dt><dd>{{passscore}}</dd></div>
+        </dl>
+        <p>{{attemptslabel}}</p>
+        {{#workflow}}<p class="u-assessment-result__workflow">{{workflow}}</p>{{/workflow}}
+        {{#cutofflabel}}<small>{{cutofflabel}}</small>{{/cutofflabel}}
+        {{#hashistory}}
+        <details><summary>История попыток</summary>
+            <div class="u-assessment-result__scroll"><table>
+                <thead><tr><th>Попытка Moodle</th><th>Дата</th><th>Балл</th><th>Результат</th></tr></thead>
+                <tbody>{{#history}}<tr><td>{{number}}</td><td>{{date}}</td><td>{{score}}</td><td>{{result}}</td></tr>{{/history}}</tbody>
+            </table></div>
+            {{#historylimited}}<small>Показаны последние 50 завершённых попыток.</small>{{/historylimited}}
+        </details>
+        {{/hashistory}}
+        {{/error}}
+    </article>
+    {{/assessments}}
+    {{^hasassessments}}<div class="u-empty-mini">В текущем маршруте нет аттестаций Moodle Quiz.</div>{{/hasassessments}}
+</section>
+
+<section class="u-learning-history">
+    <header>
+        <p class="u-page-kicker">История</p>
+        <h2>Пройдено</h2>
+    </header>
+
+    {{#haspassed}}
+    <div class="u-learning-history__list">
+        {{#passed}}
+        <article>
+            <span class="u-learning-check">✓</span>
+            <div>
+                <strong>{{title}}</strong>
+                <small>{{completedlabel}}</small>
+            </div>
+        </article>
+        {{/passed}}
+    </div>
+    {{/haspassed}}
+
+    {{^haspassed}}
+    <div class="u-empty-mini">
+        Завершённых шагов пока нет.
+    </div>
+    {{/haspassed}}
+</section>
+
+{{#hasfuture}}
+<section class="u-learning-history">
+    <header>
+        <p class="u-page-kicker">Дальше</p>
+        <h2>Следующие шаги</h2>
+    </header>
+
+    <div class="u-learning-history__list">
+        {{#future}}
+        <article>
+            <span class="u-learning-lock">○</span>
+            <div>
+                <strong>{{title}}</strong>
+                <small>Откроется последовательно</small>
+            </div>
+        </article>
+        {{/future}}
+    </div>
+</section>
+{{/hasfuture}}
+
+</div>

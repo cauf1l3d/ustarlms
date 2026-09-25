@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import subprocess
 from collect_runtime import collect
-from production_manifest import audit, BASELINE, git
+from production_manifest import audit, git
 
 
 def write_json(path, value):
@@ -21,7 +21,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[1])
     p.add_argument('--output-dir', type=Path, required=True)
-    p.add_argument('--commit', default=BASELINE)
+    p.add_argument('--commit', required=True, help='Exact source baseline; no historical default')
     a = p.parse_args()
     repo, out = a.repo.resolve(), a.output_dir.resolve()
     if out.is_relative_to(repo):

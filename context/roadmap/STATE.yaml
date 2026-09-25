@@ -1,16 +1,32 @@
 schema_version: 1
-updated_at: '2026-09-20'
+updated_at: '2026-09-24'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Stage 1 source and isolated CI/rollback are under review in PR 2.
-  Stage 2 organization/assignment resolution and team-scope package is in PR 4,
-  stacked on PR 2. R10/R12 in progress; full employment/role migration remains open.
-  Production unchanged; R00 browser/DR acceptance remains open.
+current_activity: Draft PR 14 targets main and includes prior unmerged PR 13.
+  Earlier PRs remain unaccepted. Draft SHA 32d6982498258f71722314686260662eeeb39523
+  passed source/frontend gate 199. Position standards, reviewed skill levels,
+  search and HR paging, catalog access, questionnaire version pinning, material
+  studio UI and configurable organization blocks are implemented in source only.
+  The 13-bug register retains browser/runtime acceptance. Full Moodle runtime,
+  browser, restore, performance and all audit acceptance are still open.
+  R00 remains review.
 next_task: R10
 ready_tasks:
 - R00
 - R04
+draft_candidate:
+  branch: codex/ustar-complete-rc-20260923
+  main_reconciliation_commit: 81bbb8e4f6f81276fc6d98f1903cac89b5a62ae9
+  last_source_gate_commit: 32d6982498258f71722314686260662eeeb39523
+  last_source_gate_result: passed_workflow_199
+  pull_request: 14
+  status: in_progress_not_releasable
+  checks_completed: source_and_frontend_only_on_code_bearing_draft
+  checks_remaining: source_frontend_rollback_on_frozen_sha_then_one_moodle_db_suite;
+    browser_acceptance;fresh_install_and_upgrade;clean_restore_rehearsal
+  user_deploys_from_github: true
+  history_reset_bug_4: owner_held_for_verification
 code_baseline:
   branch: integration/ustar-20260919
   commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02

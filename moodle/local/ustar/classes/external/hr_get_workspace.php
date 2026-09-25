@@ -32,14 +32,7 @@ class hr_get_workspace extends base {
             $posmap[$p['id']] = $p;
         }
 
-        $sql = "SELECT u.id, u.username, u.firstname, u.lastname, u.email, u.department AS profiledepartment,
-                       u.suspended, u.lastaccess, TRIM(d.data) AS positionid
-                  FROM {user} u
-             LEFT JOIN {user_info_field} f ON f.shortname = 'ustar_position'
-             LEFT JOIN {user_info_data} d ON d.userid = u.id AND d.fieldid = f.id
-                 WHERE u.deleted = 0 AND u.id > 1
-              ORDER BY u.lastname, u.firstname";
-        $records = $DB->get_records_sql($sql);
+        $records = \local_ustar\organization_directory::users(false);
 
         $people = [];
         $assigned = 0;
@@ -49,7 +42,10 @@ class hr_get_workspace extends base {
             $occupancy[$p['id']] = 0;
         }
         foreach ($records as $u) {
-            $positionid = trim((string)$u->positionid);
+            if (!\local_ustar\accounts::is_business_account((int)$u->id)) {
+                continue;
+            }
+            $positionid = (string)$u->positionid;
             $p = $posmap[$positionid] ?? null;
             if ($p) {
                 $assigned++;
@@ -64,9 +60,10 @@ class hr_get_workspace extends base {
                 'firstname' => $u->firstname,
                 'lastname' => $u->lastname,
                 'email' => $u->email,
-                'profileDepartment' => trim((string)$u->profiledepartment),
+                'profileDepartment' => trim((string)$u->department),
                 'suspended' => (bool)$u->suspended,
                 'lastaccess' => (int)$u->lastaccess,
+                'employmentStatus' => (string)$u->employmentstatus,
                 'positionid' => $p['id'] ?? '',
                 'position' => $p['name'] ?? '',
                 'department' => $p['department'] ?? '',

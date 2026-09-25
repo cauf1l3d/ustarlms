@@ -23,25 +23,13 @@ class sync_enrolments extends \core\task\scheduled_task {
 
     public function execute() {
         global $DB;
-
-        $sql = "
-            SELECT
-                u.id,
-                u.username,
-                TRIM(d.data) AS positionid
-            FROM {user} u
-            JOIN {user_info_data} d
-              ON d.userid = u.id
-            JOIN {user_info_field} f
-              ON f.id = d.fieldid
-             AND f.shortname = 'ustar_position'
-            WHERE u.deleted = 0
-              AND u.suspended = 0
-              AND TRIM(d.data) <> ''
-            ORDER BY u.id
-        ";
-
-        $users = $DB->get_records_sql($sql);
+        // Cursor bounds the cost of one run; every cycle restarts at the
+        // beginning so missed HR changes are eventually reconciled.
+        $cursor = max(0, (int)get_config('local_ustar', 'enrol_sync_cursor'));
+        $limit = 200;
+        $users = $DB->get_records_select('user',
+            'id > :cursor AND id > 1 AND deleted = 0 AND suspended = 0',
+            ['cursor' => $cursor], 'id ASC', 'id,username', 0, $limit);
 
         $processed = 0;
         $enrolled = 0;
@@ -50,8 +38,13 @@ class sync_enrolments extends \core\task\scheduled_task {
 
 
         foreach ($users as $user) {
-
+            $cursor = (int)$user->id;
             try {
+                if (!\local_ustar\accounts::is_business_account($cursor)
+                        || !\local_ustar\accounts::participates($cursor)
+                        || !\local_ustar\employment::learning_allowed($cursor)) {
+                    continue;
+                }
 
                 $result =
                     assignment::sync_user(
@@ -108,6 +101,8 @@ class sync_enrolments extends \core\task\scheduled_task {
             }
         }
 
+        set_config('enrol_sync_cursor', count($users) < $limit ? 0 : $cursor, 'local_ustar');
+
 
         mtrace(
             "USTAR reconciliation complete: "
@@ -115,6 +110,7 @@ class sync_enrolments extends \core\task\scheduled_task {
             . "enrolled={$enrolled}, "
             . "missingmanual={$missingmanual}, "
             . "errors={$errors}"
+            . ", cursor=" . (count($users) < $limit ? 0 : $cursor)
         );
     }
 }

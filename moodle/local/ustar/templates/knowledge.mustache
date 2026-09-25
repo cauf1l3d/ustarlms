@@ -2,14 +2,14 @@
     <header class="u-knowledge-head">
         <div>
             <p class="u-pagehead__eyebrow">USTAR Knowledge</p>
-            <h1>База знаний</h1>
-            <p>Регламенты, инструкции и рабочие материалы, доступные именно вам.</p>
+            <h1>Моя библиотека</h1>
+            <p>Личная история материалов, которые вы открыли или изучили в своём маршруте.</p>
         </div>
         <div class="u-knowledge-count"><strong>{{total}}</strong><span>доступно</span></div>
     </header>
 
-    <section class="u-knowledge-cockpit" aria-label="Сводка базы знаний">
-        <article class="u-knowledge-metric">{{{knowledgeicon}}}<div><strong>{{total}}</strong><span>доступных материалов</span></div></article>
+    <section class="u-knowledge-cockpit" aria-label="Сводка личной библиотеки">
+        <article class="u-knowledge-metric">{{{knowledgeicon}}}<div><strong>{{total}}</strong><span>в личной библиотеке</span></div></article>
         <article class="u-knowledge-metric">{{{checkicon}}}<div><strong>{{needsactioncount}}</strong><span>нужно ознакомиться</span></div></article>
         <article class="u-knowledge-metric">{{{clockicon}}}<div><strong>{{recentcount}}</strong><span>обновлено недавно</span></div></article>
         <article class="u-knowledge-metric">{{{searchicon}}}<div><strong>{{categorycount}}</strong><span>категорий в доступе</span></div></article>
@@ -52,12 +52,24 @@
 
     {{#hasregularmaterials}}
     <section class="u-knowledge-library-zone">
-        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Для вашей роли</p><h2>Вся база</h2></div></header>
+        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Личная история</p><h2>Все изученные материалы</h2></div></header>
         <div class="u-knowledge-grid">{{#regularmaterials}}{{> local_ustar/knowledge_card }}{{/regularmaterials}}</div>
     </section>
     {{/hasregularmaterials}}
 
     {{^hasmaterials}}
-    <div class="u-knowledge-empty"><strong>По текущим фильтрам ничего не найдено</strong><p>Доступ к материалам определяется вашими правилами доступа, должностью и подразделением.</p></div>
+    <div class="u-knowledge-empty" role="status">
+        {{{knowledgeicon}}}
+        {{#hasactivefilters}}
+        <strong>Ничего не найдено</strong>
+        <p>В личной библиотеке нет материалов, соответствующих поиску или выбранным фильтрам.</p>
+        <a class="u-btn" href="{{reseturl}}">Сбросить поиск и фильтры</a>
+        {{/hasactivefilters}}
+        {{^hasactivefilters}}
+        <strong>В личной библиотеке пока ничего нет</strong>
+        <p>Откройте материал из доступной точки маршрута — после learning event он появится здесь. Прямой доступ по роли библиотеку не пополняет.</p>
+        <a class="u-btn u-btn--primary" href="{{learningurl}}">Перейти к моему маршруту</a>
+        {{/hasactivefilters}}
+    </div>
     {{/hasmaterials}}
 </div>

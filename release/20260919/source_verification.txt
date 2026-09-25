@@ -1,0 +1,29 @@
+USTAR production source verification
+
+Date:
+2026-09-19T14:43:52+00:00
+
+Previous baseline:
+48326c6a011f58b985d251cb0462835bc1d37a16
+
+Scopes:
+moodle/local/ustar
+moodle/theme/ustar
+
+Verification:
+INDEX_SOURCE_BYTE_MATCH_OK
+
+Publishable local/ustar files:
+328
+
+Publishable theme/ustar files:
+53
+
+Production files deliberately ignored by Git:
+33
+
+Recovery snapshot:
+USTAR_FULL_CURRENT_20260919_113924.tar.gz
+
+Recovery SHA256:
+598177f211333d7d036abc025b9d21c3c7c3eb4cfb0bc10d004ff0fcff473f41

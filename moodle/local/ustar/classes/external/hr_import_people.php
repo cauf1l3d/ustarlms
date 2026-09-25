@@ -48,6 +48,8 @@ class hr_import_people extends base {
         $sync = [
             'users' => 0,
             'enrolled' => 0,
+            'accessSynced' => 0,
+            'accessErrors' => [],
             'errors' => [],
         ];
         foreach ($rows as $index => $row) {
@@ -67,7 +69,8 @@ class hr_import_people extends base {
 
                 $existing = $DB->get_record('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0]);
                 if ($existing) {
-                    if (is_siteadmin($existing) || has_capability('local/ustar:admin', $context, $existing->id)) {
+                    if (is_siteadmin($existing) || (int)$existing->id === (int)$USER->id
+                            || has_capability('local/ustar:admin', $context, $existing->id)) {
                         throw new \required_capability_exception($context, 'local/ustar:hrmanage', 'nopermissions', '');
                     }
                     people::set_position_id((int)$existing->id, $positionid);
@@ -119,6 +122,13 @@ class hr_import_people extends base {
                 $userid = (int)user_create_user($newuser, true, false);
                 set_user_preference('auth_forcepasswordchange', 1, $userid);
                 people::set_position_id($userid, $positionid);
+                \local_ustar\accounts::set_type($userid, \local_ustar\accounts::TYPE_EMPLOYEE);
+                \local_ustar\employment::set_status(
+                    $userid,
+                    \local_ustar\employment::ACTIVE,
+                    (int)$USER->id,
+                    'hr_import'
+                );
                 people::log_action((int)$USER->id, $userid, 'person_imported', ['positionid' => $positionid, 'line' => $line]);
 
                 try {
@@ -144,7 +154,7 @@ class hr_import_people extends base {
         }
 
         return ['json' => json_encode([
-            'ok' => count($errors) === 0 && count($sync['errors']) === 0,
+            'ok' => count($errors) === 0 && count($sync['errors']) === 0 && count($sync['accessErrors']) === 0,
             'created' => $created,
             'updated' => $updated,
             'errors' => $errors,

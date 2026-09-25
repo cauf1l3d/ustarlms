@@ -1,0 +1,273 @@
+/* ============================================================
+   USTAR Knowledge Hero — theme-aware glass version
+   Accent follows current preset via --u-brand
+   ============================================================ */
+
+.u-knowledge-head {
+    position: relative;
+    overflow: hidden;
+
+    min-height: 176px;
+    padding: 30px 34px;
+    border-radius: 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+
+    border: 1px solid color-mix(in srgb, var(--u-brand) 20%, rgba(255,255,255,.55));
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.72) 0%,
+            rgba(255,255,255,.58) 38%,
+            color-mix(in srgb, var(--u-brand) 7%, white) 100%
+        );
+    box-shadow:
+        0 18px 48px rgba(18, 28, 45, .08),
+        inset 0 1px 0 rgba(255,255,255,.78),
+        inset 0 -1px 0 rgba(255,255,255,.28);
+
+    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.u-knowledge-head::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 86% 18%,
+            color-mix(in srgb, var(--u-brand) 22%, transparent) 0%,
+            color-mix(in srgb, var(--u-brand) 10%, transparent) 18%,
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 14% -12%,
+            rgba(255,255,255,.92) 0%,
+            rgba(255,255,255,.22) 28%,
+            transparent 48%
+        );
+}
+
+.u-knowledge-head::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: -52px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle,
+            color-mix(in srgb, var(--u-brand) 16%, transparent) 0%,
+            color-mix(in srgb, var(--u-brand) 8%, transparent) 35%,
+            transparent 68%
+        );
+    filter: blur(8px);
+    opacity: .95;
+}
+
+.u-knowledge-head > div:first-child {
+    position: relative;
+    z-index: 2;
+    max-width: 860px;
+}
+
+.u-knowledge-head .u-pagehead__eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--u-brand) 68%, #49607a);
+}
+
+.u-knowledge-head h1 {
+    margin: 0;
+    font-size: clamp(36px, 3vw, 52px);
+    line-height: 1.02;
+    letter-spacing: -.04em;
+    font-weight: 800;
+    color: #162232;
+}
+
+.u-knowledge-head > div:first-child > p:last-child {
+    margin: 12px 0 0;
+    max-width: 760px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #607085;
+}
+
+/* ---------- compact glass counter ---------- */
+
+.u-knowledge-count {
+    position: relative;
+    z-index: 2;
+    flex: 0 0 auto;
+
+    min-width: 156px;
+    padding: 14px 18px;
+    border-radius: 999px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    border: 1px solid color-mix(in srgb, var(--u-brand) 24%, rgba(255,255,255,.6));
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.78) 0%,
+            rgba(255,255,255,.48) 100%
+        );
+
+    box-shadow:
+        0 10px 28px color-mix(in srgb, var(--u-brand) 10%, rgba(12,18,28,.06)),
+        inset 0 1px 0 rgba(255,255,255,.8);
+
+    backdrop-filter: blur(14px) saturate(1.08);
+    -webkit-backdrop-filter: blur(14px) saturate(1.08);
+}
+
+.u-knowledge-count::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.38) 0%,
+            rgba(255,255,255,0) 42%
+        );
+}
+
+.u-knowledge-count strong {
+    position: relative;
+    z-index: 1;
+    font-size: 26px;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--u-brand);
+}
+
+.u-knowledge-count span {
+    position: relative;
+    z-index: 1;
+    font-size: 12px;
+    line-height: 1.1;
+    font-weight: 800;
+    color: #67778c;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+/* ---------- small stat cards below hero remain readable ---------- */
+
+.u-knowledge-stats .u-stat-card,
+.u-knowledge-summary .u-stat-card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* ---------- dark mode ---------- */
+
+html[data-ustar-theme="dark"] .u-knowledge-head,
+body.theme-dark .u-knowledge-head,
+body.dark .u-knowledge-head {
+    border-color: color-mix(in srgb, var(--u-brand) 26%, rgba(255,255,255,.14));
+    background:
+        linear-gradient(
+            135deg,
+            rgba(27, 35, 44, .76) 0%,
+            rgba(31, 40, 50, .72) 38%,
+            color-mix(in srgb, var(--u-brand) 12%, rgba(39,45,56,.82)) 100%
+        );
+    box-shadow:
+        0 18px 48px rgba(0, 0, 0, .24),
+        inset 0 1px 0 rgba(255,255,255,.08),
+        inset 0 -1px 0 rgba(255,255,255,.04);
+}
+
+html[data-ustar-theme="dark"] .u-knowledge-head::before,
+body.theme-dark .u-knowledge-head::before,
+body.dark .u-knowledge-head::before {
+    background:
+        radial-gradient(
+            circle at 86% 18%,
+            color-mix(in srgb, var(--u-brand) 28%, transparent) 0%,
+            color-mix(in srgb, var(--u-brand) 12%, transparent) 18%,
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 14% -12%,
+            rgba(255,255,255,.12) 0%,
+            rgba(255,255,255,.04) 28%,
+            transparent 48%
+        );
+}
+
+html[data-ustar-theme="dark"] .u-knowledge-head h1,
+body.theme-dark .u-knowledge-head h1,
+body.dark .u-knowledge-head h1 {
+    color: #f4f7fb;
+}
+
+html[data-ustar-theme="dark"] .u-knowledge-head > div:first-child > p:last-child,
+body.theme-dark .u-knowledge-head > div:first-child > p:last-child,
+body.dark .u-knowledge-head > div:first-child > p:last-child {
+    color: #b7c3cf;
+}
+
+html[data-ustar-theme="dark"] .u-knowledge-count,
+body.theme-dark .u-knowledge-count,
+body.dark .u-knowledge-count {
+    border-color: color-mix(in srgb, var(--u-brand) 22%, rgba(255,255,255,.12));
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.09) 0%,
+            rgba(255,255,255,.05) 100%
+        );
+    box-shadow:
+        0 8px 22px rgba(0,0,0,.2),
+        inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+html[data-ustar-theme="dark"] .u-knowledge-count span,
+body.theme-dark .u-knowledge-count span,
+body.dark .u-knowledge-count span {
+    color: #bcc7d2;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 860px) {
+    .u-knowledge-head {
+        padding: 24px;
+        min-height: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .u-knowledge-count {
+        min-width: 0;
+    }
+
+    .u-knowledge-head h1 {
+        font-size: 34px;
+    }
+}

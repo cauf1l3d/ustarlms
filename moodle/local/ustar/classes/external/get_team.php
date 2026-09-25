@@ -13,50 +13,33 @@ class get_team extends base {
         return new external_function_parameters([]);
     }
 
-    /**
-     * Head sees ONLY own department members (hierarchical visibility).
-     * Superadmin sees everyone. Employees get 403 (capability check).
-     */
+    /** Managers use the canonical managed subtree; authorized administrators see the company. */
     public static function execute(): array {
         global $USER, $DB;
         self::guard();
-
-        $resolved = structure::resolve_user($USER->id);
-        $st = $resolved['structure'];
-        $role = $resolved['role'];
-        $mydept = $resolved['position']['department'] ?? null;
-
-        if ($role !== 'head' && $role !== 'superadmin') {
-            throw new \required_capability_exception(
-                \context_system::instance(),
-                'local/ustar:viewteam',
-                'nopermissions',
-                ''
-            );
+        $scope = \local_ustar\team_access::learning_scope((int)$USER->id);
+        if (empty($scope['allowed'])) {
+            throw new \required_capability_exception(\context_system::instance(),
+                'local/ustar:viewteam', 'nopermissions', '');
         }
-
-        // Users whose profile field ustar_position belongs to visible departments.
-        $positionsbyid = [];
-        foreach ($st['positions'] as $p) {
-            $positionsbyid[$p['id']] = $p;
+        $companyaccess = \local_ustar\team_access::company((int)$USER->id);
+        $scopename = $companyaccess ? 'company' : 'managed_subtree';
+        if (!$scope['userids']) {
+            return ['json' => json_encode(['team' => [], 'scope' => $scopename])];
         }
-
-        $sql = "SELECT d.userid, d.data AS positionid,
-                       u.firstname, u.lastname, u.email, u.suspended, u.deleted
-                  FROM {user_info_data} d
-                  JOIN {user_info_field} f ON f.id = d.fieldid AND f.shortname = 'ustar_position'
-                  JOIN {user} u ON u.id = d.userid
-                 WHERE u.deleted = 0 AND u.suspended = 0";
-        $records = $DB->get_records_sql($sql);
+        $positionsbyid = \local_ustar\people::position_map(structure::get(structure::NAME_STRUCTURE));
+        [$insql, $params] = $DB->get_in_or_equal($scope['userids'], SQL_PARAMS_NAMED, 'teamuser');
+        $records = $DB->get_records_sql("SELECT u.id AS userid, u.firstname, u.lastname
+            FROM {user} u WHERE u.id {$insql} AND u.deleted = 0 AND u.suspended = 0", $params);
 
         $team = [];
         foreach ($records as $rec) {
-            $pos = $positionsbyid[trim($rec->positionid)] ?? null;
-            if (!$pos) {
+            if (!\local_ustar\accounts::participates((int)$rec->userid)) {
                 continue;
             }
-            if ($role !== 'superadmin' && $pos['department'] !== $mydept) {
-                continue; // Hierarchical visibility boundary.
+            $pos = $positionsbyid[\local_ustar\organization_identity::resolve((int)$rec->userid)['positionid']] ?? null;
+            if (!$pos) {
+                continue;
             }
             $courses = self::user_courses((int)$rec->userid);
             $sum = 0;
@@ -75,7 +58,7 @@ class get_team extends base {
         }
         usort($team, fn($a, $b) => $b['avgProgress'] <=> $a['avgProgress']);
 
-        return ['json' => json_encode(['team' => $team, 'scope' => $role === 'superadmin' ? 'company' : 'department'],
+        return ['json' => json_encode(['team' => $team, 'scope' => $companyaccess ? 'company' : 'managed_subtree'],
             JSON_UNESCAPED_UNICODE)];
     }
 

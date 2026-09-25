@@ -55,7 +55,7 @@ class hr_bulk_assign_positions extends base {
                 $errors[] = ['index' => $index, 'userid' => $userid, 'message' => 'User not found'];
                 continue;
             }
-            if (is_siteadmin($target) || $target->id == $USER->id || has_capability('local/ustar:admin', $context, $target->id)) {
+            if (!\local_ustar\accounts::is_business_account($userid) || is_siteadmin($target) || $target->id == $USER->id || has_capability('local/ustar:admin', $context, $target->id)) {
                 $skipped++;
                 continue;
             }
@@ -69,6 +69,8 @@ class hr_bulk_assign_positions extends base {
         $sync = [
             'users' => 0,
             'enrolled' => 0,
+            'accessSynced' => 0,
+            'accessErrors' => [],
             'errors' => [],
         ];
 
@@ -107,7 +109,7 @@ class hr_bulk_assign_positions extends base {
         }
 
         return ['json' => json_encode([
-            'ok' => count($errors) === 0 && count($sync['errors']) === 0,
+            'ok' => count($errors) === 0 && count($sync['errors']) === 0 && count($sync['accessErrors']) === 0,
             'updated' => $updated,
             'skipped' => $skipped,
             'errors' => $errors,

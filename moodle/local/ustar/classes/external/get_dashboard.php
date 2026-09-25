@@ -14,7 +14,7 @@ class get_dashboard extends base {
     }
 
     public static function execute(): array {
-        global $USER, $DB;
+        global $USER, $DB, $CFG;
         self::guard();
 
         $courses = self::user_courses($USER->id);
@@ -42,10 +42,12 @@ class get_dashboard extends base {
                 ['uid' => $USER->id]
             );
         }
-        $xp = $completedcourses * 100 + (int)$activitydone * 10 + $gamexp;
+        $routerewards = \local_ustar\route_rewards::summary((int)$USER->id);
+        $xp = $completedcourses * 100 + (int)$activitydone * 10 + $gamexp + $routerewards['xp'];
         $level = (int) floor(sqrt($xp / 50)) + 1;
         $nextlevelxp = 50 * $level * $level;
 
+        require_once($CFG->libdir . '/badgeslib.php');
         // Badges from Moodle.
         $badges = [];
         if (function_exists('badges_get_user_badges')) {
@@ -54,6 +56,7 @@ class get_dashboard extends base {
             }
         }
 
+        foreach ($routerewards['badges'] as $badge) { $badges[] = $badge; }
         // Goals.
         $goals = [];
         foreach ($DB->get_records('local_ustar_goals', ['userid' => $USER->id], 'timecreated DESC') as $g) {
@@ -98,3 +101,4 @@ class get_dashboard extends base {
         ]);
     }
 }
+

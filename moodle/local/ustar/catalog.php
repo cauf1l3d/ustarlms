@@ -3,17 +3,71 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/ustar:use', $context);
+$canmanage = \local_ustar\catalog::can_manage((int)$USER->id);
+if (!$canmanage) {
+    require_capability('local/ustar:use', $context);
+}
+
+$notice = '';
+$failedinput = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_sesskey();
+    \local_ustar\view_as::assert_writable();
+    if (!$canmanage) {
+        throw new required_capability_exception($context, 'local/ustar:managecatalog', 'nopermissions', '');
+    }
+    $action = required_param('catalogaction', PARAM_ALPHANUMEXT);
+    try {
+        if ($action === 'save') {
+            $id = optional_param('id', 0, PARAM_INT);
+            $uploads = [];
+            if (!empty($_FILES['imagefile']['name'])) {
+                $uploads[\local_ustar\catalog::FILEAREA_IMAGE] = $_FILES['imagefile'];
+            }
+            if (!empty($_FILES['sourcefile']['name'])) {
+                $uploads[\local_ustar\catalog::FILEAREA_SOURCE] = $_FILES['sourcefile'];
+            }
+            $record = \local_ustar\catalog::save($id, $_POST, (int)$USER->id, $uploads);
+            redirect(new moodle_url('/local/ustar/catalog.php', ['edit' => (int)$record->id, 'saved' => 1]));
+        }
+        if ($action === 'archive') {
+            \local_ustar\catalog::archive(
+                required_param('id', PARAM_INT), (int)$USER->id, required_param('expectedmodified', PARAM_INT)
+            );
+            redirect(new moodle_url('/local/ustar/catalog.php', ['archived' => 1]));
+        }
+    } catch (\Throwable $e) {
+        $notice = $e->getMessage();
+        if ($action === 'save') { $failedinput = $_POST; }
+    }
+}
+
+if (!$canmanage && !\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
+    $PAGE->set_context($context);
+    $PAGE->set_url(new moodle_url('/local/ustar/catalog.php'));
+    $PAGE->set_pagelayout('ustar');
+    $PAGE->set_title('Каталог товаров | USTAR Academy');
+    $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
+    $PAGE->set_heading('USTAR Academy');
+    $output = $PAGE->get_renderer('local_ustar');
+    echo $output->header();
+    echo $output->render_from_template('local_ustar/catalog_locked', [
+        'learningurl' => (new moodle_url('/local/ustar/home.php', ['view' => 'learning']))->out(false),
+        'examurl' => (new moodle_url('/local/ustar/route.php'))->out(false),
+    ]);
+    echo $output->footer();
+    exit;
+}
 
 $parent = optional_param('parent', 0, PARAM_INT);
 $product = optional_param('product', 0, PARAM_INT);
 $q = trim(optional_param('q', '', PARAM_TEXT));
+$edit = optional_param('edit', 0, PARAM_INT);
 
 $current = $parent ? \local_ustar\catalog::get($parent) : null;
 $detail = $product ? \local_ustar\catalog::view($product) : null;
 $items = \local_ustar\catalog::browse($q !== '' ? null : ($parent ?: null), $q);
 $stats = \local_ustar\catalog::stats();
-
 $breadcrumbs = [];
 if ($current) {
     $breadcrumbs = \local_ustar\catalog::ancestors((int)$current->id);
@@ -35,6 +89,10 @@ $data = [
     'hasbreadcrumbs' => !empty($breadcrumbs),
     'detail' => $detail,
     'hasdetail' => (bool)$detail,
+    'canmanage' => $canmanage,
+    'editorurl' => '#catalog-editor',
+    'editurl' => $detail ? (new moodle_url('/local/ustar/catalog.php',
+        ['edit' => (int)$detail['id']]))->out(false) . '#catalog-editor' : '',
     'fallbackimage' => $OUTPUT->image_url('brand/ustar-course-placeholder', 'theme_ustar')->out(false),
     'catalogicon' => \local_ustar\ui::icon('knowledge', 'u-feature-icon'),
     'stats' => [
@@ -52,8 +110,130 @@ $PAGE->set_url(new moodle_url('/local/ustar/catalog.php'));
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Каталог товаров | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
+$PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 
 $output = $PAGE->get_renderer('local_ustar');
 echo $output->header();
+if ($notice !== '') {
+    echo $OUTPUT->notification(s($notice), 'notifyproblem');
+}
+if (optional_param('saved', 0, PARAM_BOOL)) {
+    echo $OUTPUT->notification('Карточка каталога сохранена.', 'notifysuccess');
+}
+if (optional_param('archived', 0, PARAM_BOOL)) {
+    echo $OUTPUT->notification('Карточка перенесена в архив. История сохранена.', 'notifysuccess');
+}
 echo $output->render_from_template('local_ustar/catalog', $data);
+
+if ($canmanage) {
+    $records = \local_ustar\catalog::editor_records((int)$USER->id);
+    $editing = null;
+    foreach ($records as $record) {
+        if ((int)$record->id === $edit) {
+            $editing = $record;
+            break;
+        }
+    }
+    if ($failedinput !== null) {
+        // Keep the submitted revision: a retry must not silently overwrite a concurrent edit.
+        $editing = (object)['id' => (int)($failedinput['id'] ?? 0),
+            'timemodified' => (int)($failedinput['expectedmodified'] ?? 0)];
+    }
+    $value = static function(string $name, string $default = '') use ($editing, $failedinput): string {
+        if ($failedinput !== null && isset($failedinput[$name]) && is_scalar($failedinput[$name])) {
+            return (string)$failedinput[$name];
+        }
+        return $editing && isset($editing->$name) ? (string)$editing->$name : $default;
+    };
+    $currenttype = $value('itemtype', \local_ustar\catalog::TYPE_GROUP);
+    $currentparent = (int)$value('parentid', (string)$parent);
+    $attributes = $value('attributesjson');
+    if ($attributes !== '') {
+        $decoded = json_decode($attributes, true);
+        if (is_array($decoded)) {
+            $attributes = implode("\n", array_map(
+                static fn($key, $item): string => $key . ': ' . (is_scalar($item) ? $item : ''),
+                array_keys($decoded), array_values($decoded)
+            ));
+        }
+    }
+    if ($failedinput !== null) { $attributes = $value('attributes'); }
+    echo html_writer::start_tag('section', ['class' => 'u-catalog-editor', 'id' => 'catalog-editor',
+        'aria-label' => 'Редактор каталога']);
+    echo html_writer::tag('h2', $editing ? 'Редактирование карточки' : 'Новая карточка каталога');
+    echo html_writer::tag('p', 'Начните с типа и места в каталоге. Затем добавьте описание и файлы. История изменений сохраняется.');
+    echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data', 'action' => (new moodle_url('/local/ustar/catalog.php'))->out(false)]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'catalogaction', 'value' => 'save']);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => $editing ? (int)$editing->id : 0]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'expectedmodified', 'value' => $editing ? (int)$editing->timemodified : 0]);
+    echo html_writer::start_tag('fieldset', ['class' => 'u-catalog-editor__group']);
+    echo html_writer::tag('legend', '1. Место в каталоге');
+    echo html_writer::tag('label', 'Название', ['for' => 'catalog-title']);
+    echo html_writer::empty_tag('input', ['type' => 'text', 'id' => 'catalog-title', 'name' => 'title', 'required' => 'required', 'maxlength' => 255, 'value' => $value('title'), 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Тип карточки', ['for' => 'catalog-type']);
+    $options = [
+        \local_ustar\catalog::TYPE_GROUP => 'Раздел',
+        \local_ustar\catalog::TYPE_SUBGROUP => 'Категория',
+        \local_ustar\catalog::TYPE_PRODUCT => 'Товар',
+        \local_ustar\catalog::TYPE_MATERIAL => 'Материал',
+        \local_ustar\catalog::TYPE_ASSESSMENT => 'Проверка знаний',
+    ];
+    echo html_writer::select($options, 'itemtype', $currenttype, false, ['id' => 'catalog-type', 'class' => 'form-select']);
+    echo html_writer::tag('label', 'Раздел или категория', ['for' => 'catalog-parent']);
+    $parents = [0 => '— корневой раздел —'];
+    foreach ($records as $candidate) {
+        if ($editing && (int)$candidate->id === (int)$editing->id) { continue; }
+        if (empty($candidate->active) || !in_array($candidate->itemtype,
+                [\local_ustar\catalog::TYPE_GROUP, \local_ustar\catalog::TYPE_SUBGROUP], true)) { continue; }
+        $parents[(int)$candidate->id] = str_repeat('— ', (string)$candidate->itemtype === \local_ustar\catalog::TYPE_SUBGROUP ? 1 : 0)
+            . format_string((string)$candidate->title);
+    }
+    echo html_writer::select($parents, 'parentid', $currentparent, false, ['id' => 'catalog-parent', 'class' => 'form-select']);
+    echo html_writer::end_tag('fieldset');
+    echo html_writer::start_tag('fieldset', ['class' => 'u-catalog-editor__group']);
+    echo html_writer::tag('legend', '2. Описание и свойства');
+    echo html_writer::tag('label', 'Краткое описание', ['for' => 'catalog-summary']);
+    echo html_writer::tag('textarea', s($value('summary')), ['id' => 'catalog-summary', 'name' => 'summary', 'rows' => 2, 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Полное описание', ['for' => 'catalog-description']);
+    echo html_writer::tag('textarea', s($value('description')), ['id' => 'catalog-description', 'name' => 'description', 'rows' => 5, 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Артикул', ['for' => 'catalog-sku']);
+    echo html_writer::empty_tag('input', ['type' => 'text', 'id' => 'catalog-sku', 'name' => 'sku', 'value' => $value('sku'), 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Свойства: по одному в строке «Название: значение»', ['for' => 'catalog-attributes']);
+    echo html_writer::tag('textarea', s($attributes), ['id' => 'catalog-attributes', 'name' => 'attributes', 'rows' => 4, 'class' => 'form-control']);
+    echo html_writer::end_tag('fieldset');
+    echo html_writer::start_tag('fieldset', ['class' => 'u-catalog-editor__group']);
+    echo html_writer::tag('legend', '3. Изображение и файл');
+    echo html_writer::tag('label', 'Ссылка на изображение (необязательно)', ['for' => 'catalog-image-url']);
+    echo html_writer::empty_tag('input', ['type' => 'url', 'id' => 'catalog-image-url', 'name' => 'imageurl', 'value' => $value('imageurl'), 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Или загрузите изображение', ['for' => 'catalog-image-file']);
+    echo html_writer::empty_tag('input', ['type' => 'file', 'id' => 'catalog-image-file', 'name' => 'imagefile', 'accept' => 'image/jpeg,image/png,image/webp,image/gif']);
+    echo html_writer::tag('label', 'Исходный файл карточки (необязательно)', ['for' => 'catalog-source-file']);
+    echo html_writer::empty_tag('input', ['type' => 'file', 'id' => 'catalog-source-file', 'name' => 'sourcefile']);
+    echo html_writer::end_tag('fieldset');
+    echo html_writer::tag('label', 'Порядок показа', ['for' => 'catalog-sort']);
+    echo html_writer::empty_tag('input', ['type' => 'number', 'id' => 'catalog-sort', 'name' => 'sortorder', 'value' => $value('sortorder', '0'), 'class' => 'form-control']);
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить карточку', 'class' => 'u-btn u-btn--primary']);
+    echo html_writer::end_tag('form');
+    if ($editing && (int)$editing->id > 0) {
+        echo html_writer::start_tag('form', ['method' => 'post', 'action' => (new moodle_url('/local/ustar/catalog.php'))->out(false)]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'catalogaction', 'value' => 'archive']);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$editing->id]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'expectedmodified', 'value' => (int)$editing->timemodified]);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Архивировать карточку', 'class' => 'u-btn u-btn--secondary']);
+        echo html_writer::end_tag('form');
+    }
+    echo html_writer::tag('p', html_writer::link(new moodle_url('/local/ustar/catalog.php'), 'Создать новую карточку', ['class' => 'u-btn']));
+    echo html_writer::tag('h3', 'Карточки каталога');
+    echo html_writer::start_tag('ul', ['class' => 'u-catalog-editor__list']);
+    foreach ($records as $record) {
+        echo html_writer::tag('li', html_writer::link(
+            new moodle_url('/local/ustar/catalog.php', ['edit' => (int)$record->id]),
+            format_string((string)$record->title) . ' · ' . s((string)$record->itemtype)
+        ));
+    }
+    echo html_writer::end_tag('ul');
+    echo html_writer::end_tag('section');
+}
 echo $output->footer();

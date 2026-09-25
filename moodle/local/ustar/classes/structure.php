@@ -138,24 +138,18 @@ class structure {
     }
 
     /**
-     * Resolve the workspace role and position of a Moodle user.
-     * Priority: capability admin > head position (via profile field) > employee.
+     * Resolve the workspace role and canonical organization identity of a Moodle user.
+     * Priority: capability admin > explicit team access with valid scope > employee.
      *
-     * Position comes from custom profile field shortname 'ustar_position'
-     * (value = position id from the structure). Department is derived.
+     * Position comes from the primary StaffPlace assignment, with the legacy
+     * profile field used only while no assignment history exists.
      */
     public static function resolve_user(int $userid): array {
         global $DB;
 
         $structure = self::get(self::NAME_STRUCTURE);
 
-        $positionid = '';
-        if (class_exists('\\local_ustar\\view_as') && isset($GLOBALS['USER']) && (int)$GLOBALS['USER']->id === $userid && view_as::active()) {
-            $positionid = view_as::position_id();
-        } else {
-            $sql = "SELECT d.data FROM {user_info_data} d JOIN {user_info_field} f ON f.id = d.fieldid WHERE d.userid = :uid AND f.shortname = 'ustar_position'";
-            if ($rec = $DB->get_record_sql($sql, ['uid' => $userid])) { $positionid = trim($rec->data); }
-        }
+        $positionid = people::position_id($userid);
 
         $position = null;
         foreach ($structure['positions'] as $p) {
@@ -167,10 +161,10 @@ class structure {
 
         $context = \context_system::instance();
         if (class_exists('\\local_ustar\\view_as') && isset($GLOBALS['USER']) && (int)$GLOBALS['USER']->id === $userid && view_as::active()) {
-            $role = ($position && !empty($position['ishead'])) ? 'head' : 'employee';
+            $role = 'employee';
         } else if (has_capability('local/ustar:admin', $context, $userid)) {
             $role = 'superadmin';
-        } else if ($position && !empty($position['ishead'])) {
+        } else if (access_context::for_user($userid)['teamread']) {
             $role = 'head';
         } else {
             $role = 'employee';

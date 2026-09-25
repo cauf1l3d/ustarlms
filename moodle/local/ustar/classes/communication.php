@@ -14,11 +14,10 @@ final class communication {
     public static function counts(int $userid): array {
         global $DB;
 
-        $unreadnotifications = (int)$DB->count_records_select(
-            'notifications',
-            'useridto = :userid AND timeread IS NULL',
-            ['userid' => $userid]
-        );
+        $targettable = $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'));
+        $unreadnotifications = $targettable
+            ? (int)$DB->count_records('local_ustar_notifications', ['userid' => $userid, 'status' => 'unread'])
+            : (int)$DB->count_records_select('notifications', 'useridto = :userid AND timeread IS NULL', ['userid' => $userid]);
 
         $unreadconversations = 0;
         try {
@@ -239,13 +238,9 @@ final class communication {
             return [];
         }
 
-        try {
-            // Moodle returns [contacts, noncontacts]. Both sets have already
-            // passed core visibility checks; canmessage is still respected below.
-            $sets = \core_message\api::message_search_users($userid, $query, 0, 20);
-        } catch (\Throwable $e) {
-            return [];
-        }
+        // Core search omits privacy details: canmessage is normally null.
+        // Visibility comes from search; send permission must be checked separately.
+        $sets = \core_message\api::message_search_users($userid, $query, 0, 20);
 
         $found = [];
         foreach ($sets as $set) {
@@ -257,7 +252,8 @@ final class communication {
                     continue;
                 }
                 $id = (int)$item->id;
-                if ($id !== $userid && !empty($item->canmessage)) {
+                if ($id !== $userid && !isset($found[$id])
+                        && \core_message\api::can_send_message($id, $userid)) {
                     $found[$id] = $item;
                 }
             }
@@ -283,6 +279,32 @@ final class communication {
 
     public static function notifications(int $userid, int $limit = 100): array {
         global $DB;
+
+        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
+            $records = $DB->get_records(
+                'local_ustar_notifications', ['userid' => $userid], 'timecreated DESC', '*', 0, max(1, min(200, $limit))
+            );
+            $rows = [];
+            foreach ($records as $record) {
+                $actionurl = clean_param((string)$record->actionurl, PARAM_URL);
+                $unread = (string)$record->status === 'unread';
+                $rows[] = [
+                    'id' => (int)$record->id,
+                    'subject' => (string)$record->subject,
+                    'message' => shorten_text(strip_tags((string)$record->message), 220),
+                    'component' => 'local_ustar',
+                    'eventtype' => (string)$record->eventtype,
+                    'severity' => (string)$record->severity,
+                    'unread' => $unread,
+                    'read' => !$unread,
+                    'time' => userdate((int)$record->timecreated, '%d.%m.%Y %H:%M'),
+                    'hasurl' => $actionurl !== '',
+                    'url' => $actionurl,
+                    'urlname' => 'Открыть действие',
+                ];
+            }
+            return $rows;
+        }
 
         $records = $DB->get_records(
             'notifications',
@@ -315,6 +337,15 @@ final class communication {
 
     public static function mark_notification(int $userid, int $notificationid): void {
         global $DB;
+        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
+            $record = $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], '*', MUST_EXIST);
+            if ((string)$record->status === 'unread') {
+                $record->status = 'read';
+                $record->timemodified = time();
+                $DB->update_record('local_ustar_notifications', $record);
+            }
+            return;
+        }
         $record = $DB->get_record(
             'notifications',
             ['id' => $notificationid, 'useridto' => $userid],
@@ -327,6 +358,18 @@ final class communication {
     }
 
     public static function mark_all_notifications(int $userid): void {
+        global $DB;
+        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
+            $DB->set_field_select(
+                'local_ustar_notifications', 'timemodified', time(), 'userid = :userid AND status = :status',
+                ['userid' => $userid, 'status' => 'unread']
+            );
+            $DB->set_field_select(
+                'local_ustar_notifications', 'status', 'read', 'userid = :userid AND status = :status',
+                ['userid' => $userid, 'status' => 'unread']
+            );
+            return;
+        }
         \core_message\api::mark_all_notifications_as_read($userid);
     }
 }

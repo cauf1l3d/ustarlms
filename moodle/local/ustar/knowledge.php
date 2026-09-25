@@ -151,15 +151,14 @@ $categoryfilter =
 
 
 /*
- * Content access is resolved by local_ustar\content:
+ * The employee Library is a personal history, not the whole access catalogue:
  *
- * user
- *   -> position
- *   -> department
- *   -> published content access rules
+ * unlocked route point -> material learning event -> personal library row.
+ * ACL is checked again while building the read model, so losing access also
+ * removes the item from the visible library without deleting audit history.
  */
 $all =
-    \local_ustar\content::list_for_user(
+    \local_ustar\learning_events::library_for_user(
         (int)$USER->id
     );
 
@@ -444,15 +443,15 @@ foreach ($all as $item) {
             (int)($item['timemodified'] ?? 0),
 
         'updatedat' =>
-            max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)),
+            max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)),
 
         'updatedlabel' =>
-            max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) > 0
-                ? userdate(max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)), '%d.%m.%Y')
+            max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) > 0
+                ? userdate(max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)), '%d.%m.%Y')
                 : '',
 
         'fresh' =>
-            max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) >= time() - (30 * DAYSECS),
+            max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) >= time() - (30 * DAYSECS),
 
         'icon' =>
             \local_ustar\ui::icon(
@@ -669,6 +668,19 @@ $PAGE->set_pagelayout(
     'ustar'
 );
 
+$knowledgeherocss =
+    __DIR__ . '/knowledge_hero_2706.css';
+
+$PAGE->requires->css(
+    new moodle_url(
+        '/local/ustar/knowledge_hero_2706.css',
+        [
+            'v' => filemtime($knowledgeherocss),
+        ]
+    )
+);
+
+
 $PAGE->set_title(
     'Знания | USTAR Academy'
 );
@@ -697,6 +709,26 @@ $data = [
 
     'hasmaterials' =>
         !empty($materials),
+
+    'hasactivefilters' =>
+        $q !== ''
+        || $type !== 'all'
+        || $categoryfilter !== 'all',
+
+    'reseturl' =>
+        (
+            new moodle_url(
+                '/local/ustar/knowledge.php'
+            )
+        )->out(false),
+
+    'learningurl' =>
+        (
+            new moodle_url(
+                '/local/ustar/home.php',
+                ['view' => 'learning']
+            )
+        )->out(false),
 
     'materials' =>
         $materials,

@@ -14,12 +14,19 @@ class admin_get_structure extends base {
     }
 
     public static function execute(): array {
+        global $DB;
         self::guard();
         require_capability('local/ustar:admin', \context_system::instance());
 
         return ['json' => json_encode([
             'structure' => structure::get(structure::NAME_STRUCTURE),
             'branding'  => structure::get(structure::NAME_BRANDING),
+            'versions' => [
+                'structure' => (int)$DB->get_field('local_ustar_structure', 'version',
+                    ['name' => structure::NAME_STRUCTURE]),
+                'branding' => (int)$DB->get_field('local_ustar_structure', 'version',
+                    ['name' => structure::NAME_BRANDING]),
+            ],
         ], JSON_UNESCAPED_UNICODE)];
     }
 

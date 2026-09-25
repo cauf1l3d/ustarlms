@@ -24,6 +24,7 @@ if ($unrecognized) {
 if (!empty($options['help'])) {
     echo "USTAR: типовой маршрут Торгового зала\n\n";
     echo "php bootstrap_trading_floor_route.php [--apply] [--positionid=retail_seller] [--course-shortname=ТЗ-ОСН] [--rename-position=1]\n";
+    echo "The employee-facing route starts with the original USTAR team profile. Two post-attestation videos are reported as an external-content dependency and are never fabricated by this script.\n";
     exit(0);
 }
 
@@ -113,6 +114,9 @@ echo 'HIDDEN_SKIPPED=' . count($skippedhidden) . PHP_EOL;
 foreach ($skippedhidden as $item) {
     echo '  SKIP_HIDDEN cmid=' . $item['cmid'] . ' mod=' . $item['modname'] . ' name=' . $item['name'] . PHP_EOL;
 }
+echo "FIRST_STEP=Экспресс-профиль командного взаимодействия\n";
+echo "POST_ATTESTATION_VIDEO_SCENARIOS=2\n";
+echo "VIDEO_ASSET_STATUS=BLOCKED_OWNER_CONTENT_REQUIRED\n";
 
 if (!$apply) {
     echo "NEXT=Run with --apply after reviewing detected content.\n";
@@ -121,6 +125,8 @@ if (!$apply) {
 
 $transaction = $DB->start_delegated_transaction();
 $actorid = 0;
+$createdpublished = 0;
+$createddraft = 0;
 
 if ($rename && (string)$structure['positions'][$positionindex]['name'] !== 'Работник Торгового зала') {
     $structure['positions'][$positionindex]['name'] = 'Работник Торгового зала';
@@ -129,9 +135,32 @@ if ($rename && (string)$structure['positions'][$positionindex]['name'] !== 'Ра
 }
 
 $route = \local_ustar\route_model::ensure_route($positionid, $actorid);
+$profile = \local_ustar\development_assessment::published(\local_ustar\development_assessment::TEAM_PROFILE_KEY);
+if (!$profile) {
+    $transaction->rollback(new moodle_exception('DEVELOPMENT_PROFILE_NOT_PUBLISHED: run the USTAR plugin upgrade first.'));
+}
+$profilepoint = \local_ustar\route_model::find_point((int)$route->id, 'team_profile_express');
+$createdprofile = 0;
+if (!$profilepoint) {
+    \local_ustar\route_model::add_point((int)$route->id, 'team_profile_express', \local_ustar\route_model::PHASE_ADAPTATION, 1, [
+        'title' => 'Экспресс-профиль командного взаимодействия',
+        'summary' => 'Первый личный шаг маршрута: короткая саморефлексия о привычном вкладе в командную работу. Не является кадровой оценкой, психодиагностикой или методикой Белбина.',
+        'requirements' => [[
+            'type' => 'assessment',
+            'sourcekey' => \local_ustar\development_assessment::TEAM_PROFILE_KEY,
+            'required' => true,
+            'label' => (string)$profile['assessment']->title,
+        ]],
+        'renewalpolicy' => \local_ustar\route_model::RENEW_KEEP,
+        'validdays' => 0,
+        'status' => \local_ustar\route_model::STATUS_PUBLISHED,
+        'effectivedate' => 0,
+    ], $actorid);
+    $createdpublished++;
+    $createdprofile = 1;
+}
+
 $sort = 10;
-$createdpublished = 0;
-$createddraft = 0;
 
 foreach ($tracked as $item) {
     $key = 'cm_' . $item['cmid'];
@@ -202,5 +231,7 @@ $route = \local_ustar\route_model::ensure_route($positionid, $actorid);
 echo 'ROUTE_ID=' . (int)$route->id . PHP_EOL;
 echo 'ROUTE_NAME=' . (string)$route->name . PHP_EOL;
 echo 'PUBLISHED_POINTS_CREATED=' . $createdpublished . PHP_EOL;
+echo 'TEAM_PROFILE_POINT_CREATED=' . $createdprofile . PHP_EOL;
 echo 'DRAFT_POINTS_CREATED=' . $createddraft . PHP_EOL;
+echo "POST_ATTESTATION_VIDEO_SCENARIOS=BLOCKED_OWNER_CONTENT_REQUIRED\n";
 echo "TRADING_FLOOR_ROUTE_BOOTSTRAP=OK\n";

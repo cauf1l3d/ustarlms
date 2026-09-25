@@ -1,0 +1,171 @@
+name: USTAR review gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      full_rc:
+        description: 'Run the full release candidate gate on this exact commit'
+        required: true
+        type: boolean
+        default: false
+  pull_request:
+    branches: [main, 'integration/**', 'codex/**']
+    types: [opened, synchronize, reopened, labeled]
+  push:
+    branches: ['integration/**']
+
+permissions:
+  contents: read
+concurrency:
+  group: ustar-review-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.2'
+          coverage: none
+      - run: python scripts/ci/source_checks.py
+      - run: pip install -r tests/stage/python-requirements.txt
+      - run: python -m unittest discover -s tests/r16 -v
+      - run: php tests/release_20260912/route_flow.php
+      - run: php tests/release_20260912/career.php
+      - run: npm ci --prefix tests/release_20260912
+      - run: npm test --prefix tests/release_20260912
+      - run: python scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
+      - run: git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle frontend
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: source-manifest
+          path: artifacts/
+
+  frontend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=moderate
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+      - run: node tests/http-smoke.mjs
+
+  moodle-db:
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
+    needs: [source, frontend, rollback, prepare-rc]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Export baseline from immutable commit
+        run: |
+          python3 scripts/ci/prepare_stage.py
+          mkdir -p artifacts
+          cp .stage-input/baseline.json artifacts/baseline.json
+      - name: Build isolated test runtime
+        run: docker compose -f tests/stage/compose.yaml build --pull
+      - name: Fresh install, upgrade, repeat upgrade and Moodle database tests
+        run: docker compose -f tests/stage/compose.yaml up --abort-on-container-exit --exit-code-from runner
+      - name: Capture runtime image identity
+        if: always()
+        run: docker image ls --digests --no-trunc > artifacts/images.txt
+      - name: Upload test evidence, including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moodle-db-evidence
+          path: artifacts/
+      - name: Dispose only the isolated stage project
+        if: always()
+        run: docker compose -f tests/stage/compose.yaml down --volumes
+
+  rollback:
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Run isolated full rollback and restore drill
+        run: bash scripts/stage1_rollback_drill.sh
+      - name: Upload rollback evidence, including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: rollback-drill-evidence
+          path: artifacts/rollback-drill/
+      - name: Dispose only the isolated rollback project
+        if: always()
+        run: docker compose -f tests/stage/rollback-compose.yaml down --volumes
+
+  prepare-rc:
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
+    needs: [source, frontend, rollback]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify packaged candidate matches the tested commit
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python3 scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
+          git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle frontend
+          python3 -c 'import json,os; d=json.load(open("artifacts/release-manifest.json")); assert os.environ["CANDIDATE_SHA"] == d["source_commit"], "manifest does not identify tested SHA"'
+          sha256sum artifacts/ustar-source.tar.gz artifacts/release-manifest.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: frozen-release-candidate
+          path: artifacts/
+
+  gate:
+    if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc')) }}
+    needs: [source, frontend, rollback, prepare-rc, moodle-db]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require every check to pass
+        env:
+          SOURCE: ${{ needs.source.result }}
+          FRONTEND: ${{ needs.frontend.result }}
+          MOODLE: ${{ needs.moodle-db.result }}
+          ROLLBACK: ${{ needs.rollback.result }}
+          PREPARE: ${{ needs.prepare-rc.result }}
+        run: |
+          test "$SOURCE" = success
+          test "$FRONTEND" = success
+          test "$MOODLE" = success
+          test "$ROLLBACK" = success
+          test "$PREPARE" = success

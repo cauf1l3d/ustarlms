@@ -1,4 +1,6 @@
-Current source: `378d397152a8c83f8b0d046e2e561ab2732d6b02` on `integration/ustar-20260919`.
+Historical source from 2026-09-19: `378d397152a8c83f8b0d046e2e561ab2732d6b02` on `integration/ustar-20260919`.
+
+Draft release work on 2026-09-24 is in PR #14 (`codex/ustar-complete-rc-20260923`), targeting `main` and including the still-unaccepted PR #13 changes. The [60-item audit acceptance register](roadmap/RC_AUDIT_ACCEPTANCE_20260924.md) tracks the current candidate; source/frontend checks do not prove runtime acceptance. The canonical roadmap and dated production observations remain separate.
 
 Read [STATE](roadmap/STATE.yaml), [ACTIVE](tasks/ACTIVE.md), [production sync release](../release/20260919/README.md), and [runtime evidence](runtime/20260919_prod_sync.md).
 

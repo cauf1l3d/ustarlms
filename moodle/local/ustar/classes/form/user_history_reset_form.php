@@ -1,0 +1,50 @@
+<?php
+namespace local_ustar\form;
+defined('MOODLE_INTERNAL') || die();
+require_once($CFG->libdir . '/formslib.php');
+
+final class user_history_reset_form extends \moodleform {
+    public function definition(): void {
+        global $DB, $USER;
+        $mform = $this->_form;
+        $users = $DB->get_records_sql('SELECT u.id, u.username, u.firstname, u.lastname, u.email
+            FROM {user} u JOIN {local_ustar_route_testers} t ON t.sandboxuserid = u.id
+            WHERE t.actorid = :actor AND u.deleted = 0', ['actor' => (int)$USER->id]);
+        $options = [0 => '— Выберите вашу тестовую учётную запись —'];
+        foreach ($users as $user) {
+            if (\local_ustar\accounts::type_of((int)$user->id) !== \local_ustar\accounts::TYPE_TEST
+                    || (string)$user->username !== \local_ustar\route_tester::USERNAME_PREFIX . (int)$USER->id) {
+                continue;
+            }
+            $label = fullname($user) . ' [' . $user->username . ']';
+            if (!empty($user->email)) { $label .= ' — ' . $user->email; }
+            $options[(int)$user->id] = $label;
+        }
+        $mform->addElement('autocomplete', 'userid', 'Тестовая учётная запись', $options, ['multiple' => false]);
+        $mform->setType('userid', PARAM_INT);
+        $mform->addRule('userid', 'Выберите тестовую учётную запись', 'required', null, 'client');
+        $mform->addElement('static', 'warning', 'Что будет удалено', 'Учебная история вашей тестовой учётной записи: Quiz/SCORM попытки, completion, маршрутный прогресс USTAR, lifecycle аттестаций, переобучение и связанные workflow-события. <strong>Не удаляются:</strong> аккаунт, профиль, должность, staff place, руководитель, назначения, оргструктура, маршруты, контент, вопросы, политики, монеты, задачи и отзывы.');
+        $mform->addElement('advcheckbox', 'confirmreset', 'Подтверждение', 'Я понимаю, что учебная история моей тестовой учётной записи будет удалена.');
+        $mform->setType('confirmreset', PARAM_BOOL);
+        $this->add_action_buttons(false, 'Очистить учебную историю');
+    }
+
+    public function validation($data, $files): array {
+        global $DB, $USER;
+        $errors = parent::validation($data, $files);
+        $userid = (int)($data['userid'] ?? 0);
+        if ($userid <= 1 || !$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])) {
+            $errors['userid'] = 'Выберите вашу тестовую учётную запись.';
+        } else {
+            try {
+                \local_ustar\user_history_reset::assert_allowed($userid, (int)$USER->id);
+            } catch (\moodle_exception $e) {
+                $errors['userid'] = 'Сброс доступен только владельцу тестовой учётной записи Route Tester.';
+            }
+        }
+        if (empty($data['confirmreset'])) {
+            $errors['confirmreset'] = 'Нужно подтвердить очистку.';
+        }
+        return $errors;
+    }
+}

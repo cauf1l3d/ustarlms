@@ -43,7 +43,7 @@ class get_game_question extends base {
             'gameid' => (int)$game->id,
             'gameTitle' => $game->title,
             'text' => $question->question,
-            'imageUrl' => (string)$question->imageurl,
+            'imageUrl' => \local_ustar\game_media::question_image_url($question),
             'options' => array_values($options),
             'xpReward' => (int)$question->xpreward,
         ]], JSON_UNESCAPED_UNICODE)];

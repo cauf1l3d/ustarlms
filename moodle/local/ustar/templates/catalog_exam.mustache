@@ -1,0 +1,247 @@
+<div class="u-product-page u-catalog-exam">
+
+<header class="u-native-route__hero">
+    <div>
+        <p class="u-page-kicker">
+            Маршрут · Товарный блок
+        </p>
+        <h1>Мастер-Чемодан</h1>
+        <p>
+            25 вопросов из реального ассортимента.
+            Товары, категории, характеристики,
+            клиентские ситуации и фотографии
+            из пройденного товароведения.
+        </p>
+    </div>
+
+    <span class="u-native-route__chip">
+        Проходной балл · 80%
+    </span>
+</header>
+
+
+{{#passed}}
+<section class="u-catalog-exam__success">
+    <div class="u-catalog-exam__trophy">✓</div>
+    <div>
+        <p class="u-page-kicker">ДОСТИЖЕНИЕ</p>
+        <h2>Мастер-Чемодан</h2>
+        <p>
+            Товарная аттестация пройдена.
+            Рабочий Каталог теперь доступен постоянно.
+        </p>
+    </div>
+    <a class="u-btn u-btn--primary" href="{{catalogurl}}">
+        Открыть Каталог →
+    </a>
+</section>
+{{/passed}}
+
+
+{{#needscorm}}
+<section class="u-native-empty">
+    <strong>Сначала завершите «Ассортимент и товароведение».</strong>
+    <p>
+        Аттестация открывается только после полного
+        прохождения SCORM товарного блока.
+    </p>
+
+    {{#hasscormurl}}
+    <a class="u-btn u-btn--primary" href="{{scormurl}}">
+        Продолжить товароведение →
+    </a>
+    {{/hasscormurl}}
+
+    {{^hasscormurl}}
+    <a class="u-btn u-btn--primary" href="{{learningurl}}">
+        Вернуться в обучение →
+    </a>
+    {{/hasscormurl}}
+</section>
+{{/needscorm}}
+
+
+{{#blocked}}
+<section class="u-native-empty">
+    <strong>Три попытки использованы.</strong>
+    <p>
+        Дальнейшая попытка должна быть разрешена
+        руководителем. Факт исчерпания попыток уже
+        сохранён в USTAR для последующей эскалации.
+    </p>
+</section>
+{{/blocked}}
+
+
+{{#notreachable}}
+<section class="u-native-empty">
+    <strong>Товарная аттестация пока недоступна.</strong>
+    <p>
+        Завершите предыдущие точки маршрута.
+    </p>
+    <a class="u-btn u-btn--primary" href="{{learningurl}}">
+        Вернуться в маршрут →
+    </a>
+</section>
+{{/notreachable}}
+
+
+{{#hasresult}}
+
+{{#resultpassed}}
+<section class="u-catalog-exam__result is-pass">
+    <p class="u-page-kicker">РЕЗУЛЬТАТ</p>
+    <h2>{{resultscore}} / {{resulttotal}}</h2>
+    <strong>{{resultpercent}}% · Аттестация пройдена</strong>
+    <p>
+        Достижение «Мастер-Чемодан» получено.
+        Каталог разблокирован.
+    </p>
+    <a class="u-btn u-btn--primary" href="{{catalogurl}}">
+        Перейти в Каталог →
+    </a>
+</section>
+{{/resultpassed}}
+
+{{#resultfailed}}
+<section class="u-catalog-exam__result is-fail">
+    <p class="u-page-kicker">РЕЗУЛЬТАТ</p>
+    <h2>{{resultscore}} / {{resulttotal}}</h2>
+    <strong>{{resultpercent}}% · Нужно минимум 80%</strong>
+
+    {{^resultlocked}}
+    <p>
+        Осталось попыток: {{resultremaining}}.
+        Следующая попытка получит новый
+        сбалансированный набор вопросов.
+    </p>
+    <a class="u-btn u-btn--primary" href="{{examurl}}">
+        Новая попытка →
+    </a>
+    {{/resultlocked}}
+
+    {{#resultlocked}}
+    <p>
+        Лимит попыток исчерпан.
+        Дальнейшая попытка — через руководителя.
+    </p>
+    {{/resultlocked}}
+</section>
+{{/resultfailed}}
+
+{{/hasresult}}
+
+
+{{#showexam}}
+<section class="u-catalog-exam__meta">
+    <div>
+        <span>Попытка</span>
+        <strong>{{attemptnumber}} / 3</strong>
+    </div>
+    <div>
+        <span>Вопросов</span>
+        <strong>{{questioncount}}</strong>
+    </div>
+    <div>
+        <span>Нужно правильно</span>
+        <strong>20 / 25</strong>
+    </div>
+</section>
+
+<div class="u-catalog-exam__progress">
+    <div class="u-catalog-exam__progress-track">
+        <span data-exam-progress></span>
+    </div>
+    <span data-exam-progress-label>1 / {{questioncount}}</span>
+</div>
+
+<form method="post" class="u-catalog-exam__form" data-catalog-exam-form>
+
+    <input type="hidden" name="sesskey" value="{{sesskey}}">
+    <input type="hidden" name="action" value="submit">
+    <input type="hidden" name="attemptid" value="{{attemptid}}">
+
+    {{#questions}}
+    <article
+        class="u-catalog-exam__question {{#first}}is-active{{/first}}"
+        data-exam-question
+    >
+        <header>
+            <span class="u-catalog-exam__number">
+                Вопрос {{number}} из {{questioncount}}
+            </span>
+            <span class="u-catalog-exam__difficulty is-{{difficulty}}">
+                {{difficultylabel}}
+            </span>
+        </header>
+
+        {{#hasimage}}
+        <div class="u-catalog-exam__image">
+            <img src="{{imageurl}}" alt="Товар из учебного материала">
+        </div>
+        {{/hasimage}}
+
+        <h2>{{text}}</h2>
+
+        {{#context}}
+        <div class="u-catalog-exam__context">
+            {{context}}
+        </div>
+        {{/context}}
+
+        <div class="u-catalog-exam__answers">
+            {{#options}}
+            <label>
+                <input
+                    type="radio"
+                    name="{{fieldname}}"
+                    data-option-key="{{key}}"
+                    value="{{key}}"
+                >
+                <span>{{text}}</span>
+            </label>
+            {{/options}}
+        </div>
+
+        <div class="u-catalog-exam__error" data-exam-error>
+            Выберите один вариант ответа.
+        </div>
+
+        <footer>
+            {{^first}}
+            <button
+                type="button"
+                class="u-btn"
+                data-exam-prev
+            >
+                ← Назад
+            </button>
+            {{/first}}
+
+            {{^last}}
+            <button
+                type="button"
+                class="u-btn u-btn--primary"
+                data-exam-next
+            >
+                Следующий →
+            </button>
+            {{/last}}
+
+            {{#last}}
+            <button
+                type="submit"
+                class="u-btn u-btn--primary"
+                data-exam-submit
+            >
+                Завершить аттестацию
+            </button>
+            {{/last}}
+        </footer>
+    </article>
+    {{/questions}}
+
+</form>
+{{/showexam}}
+
+</div>

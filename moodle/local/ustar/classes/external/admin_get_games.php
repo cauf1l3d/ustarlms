@@ -17,7 +17,8 @@ class admin_get_games extends base {
             $questions = [];
             foreach ($DB->get_records('local_ustar_questions', ['gameid' => $game->id], 'sortorder ASC') as $q) {
                 $questions[] = [
-                    'id' => (int)$q->id, 'question' => $q->question, 'imageUrl' => (string)$q->imageurl,
+                    'id' => (int)$q->id, 'question' => $q->question,
+                    'imageUrl' => \local_ustar\game_media::question_image_url($q),
                     'options' => array_values(json_decode($q->optionsjson, true) ?: []),
                     'correctOption' => (int)$q->correctoption, 'explanation' => (string)$q->explanation,
                     'xpReward' => (int)$q->xpreward, 'active' => (bool)$q->active,

@@ -1,0 +1,28 @@
+.u-staffing-page { display: grid; gap: 24px; }
+.u-staffing-manager,.u-staffing-queue { background: var(--u-surface-raised); border: 1px solid var(--u-border, var(--u-border-subtle)); border-radius: var(--u-radius-lg, 20px); padding: 24px; box-shadow: var(--u-shadow-sm); }
+.u-staffing-section-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
+.u-staffing-section-head h2 { margin: 0; }
+.u-staffing-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.u-staffing-card { display: grid; gap: 14px; padding: 18px; border: 1px solid var(--u-border, var(--u-border-subtle)); border-radius: var(--u-radius-md, 16px); background: var(--u-surface-raised); }
+.u-staffing-card h3 { margin: 0; }
+.u-staffing-card label,.u-staffing-review-form label { display: grid; gap: 7px; font-size: .88rem; color: var(--u-text-secondary); }
+.u-staffing-card input,.u-staffing-card select,.u-staffing-card textarea,.u-staffing-review-form input,.u-staffing-review-form textarea { width: 100%; border: 1px solid var(--u-border, var(--u-border-subtle)); border-radius: 12px; padding: 10px 12px; background: var(--u-surface-raised); color: var(--u-text-primary); }
+.u-staffing-list { display: grid; gap: 14px; }
+.u-staffing-request { border: 1px solid var(--u-border, var(--u-border-subtle)); border-radius: var(--u-radius-md, 16px); padding: 18px; background: var(--u-surface-raised); }
+.u-staffing-request__top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.u-staffing-request__top h3 { margin: 4px 0 2px; }
+.u-staffing-request__top p { margin: 0; color: var(--u-text-secondary); }
+.u-staffing-type { font-size: .78rem; color: var(--u-text-muted); text-transform: uppercase; letter-spacing: .05em; }
+.u-staffing-status { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 10px; border-radius: 999px; background: var(--u-brand-soft); color: var(--u-text-primary); white-space: nowrap; font-size: .82rem; }
+.u-staffing-status.is-approved { background: var(--u-brand-soft); }
+.u-staffing-status.is-rejected { background: var(--u-surface); }
+.u-staffing-meta { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin: 16px 0; }
+.u-staffing-meta div { display: grid; gap: 2px; }
+.u-staffing-meta dt { color: var(--u-text-muted); font-size: .78rem; }
+.u-staffing-meta dd { margin: 0; color: var(--u-text-primary); }
+.u-staffing-review { color: var(--u-text-secondary); }
+.u-staffing-review-grid { display: grid; grid-template-columns: minmax(0,2fr) minmax(240px,1fr); gap: 14px; padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--u-border, var(--u-border-subtle)); }
+.u-staffing-review-form { display: grid; gap: 10px; align-content: start; }
+@media (max-width: 900px) { .u-staffing-form-grid,.u-staffing-review-grid { grid-template-columns: 1fr; } .u-staffing-meta { grid-template-columns: 1fr; } }
+
+.u-staffing-adaptation{margin-top:16px;padding:14px;border:1px solid var(--u-border,#e4e7ec);border-radius:14px;background:var(--u-surface-muted,#f8fafc);display:grid;gap:12px}.u-staffing-adaptation>div:first-child{display:grid;gap:4px}.u-staffing-adaptation>div:first-child strong{font-size:16px}.u-staffing-adaptation>div:first-child small{color:var(--u-text-secondary,#667085)}.u-staffing-adaptation details summary{cursor:pointer;list-style:none;width:max-content}.u-staffing-adaptation details summary::-webkit-details-marker{display:none}.u-staffing-adaptation-form{margin-top:12px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.u-staffing-adaptation-form label{display:grid;gap:5px;font-weight:700}.u-staffing-adaptation-form input{min-height:42px;border:1px solid var(--u-border,#d0d5dd);border-radius:10px;padding:0 10px}.u-staffing-adaptation-status{display:flex;flex-wrap:wrap;gap:14px;font-size:13px}.u-staffing-adaptation-note{margin:0;color:var(--u-text-secondary,#667085)}@media(max-width:700px){.u-staffing-adaptation-form{grid-template-columns:1fr}}

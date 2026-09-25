@@ -99,7 +99,12 @@ function local_ustar_pluginfile(
 
 
     if (in_array($filearea, ['catalog_image', 'catalog_source'], true)) {
-        require_capability('local/ustar:use', $context);
+        if (!is_siteadmin((int)$USER->id) && !\local_ustar\catalog::can_manage((int)$USER->id)) {
+            if (!\local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::LEARNING_USE)
+                    || !\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
+                return false;
+            }
+        }
 
         if (!$args) {
             return false;
@@ -138,6 +143,28 @@ function local_ustar_pluginfile(
             return true;
         }
 
+        send_stored_file($file, 0, 0, true, $options);
+        return true;
+    }
+
+
+    if ($filearea === 'material_scorm_package') {
+        if (!$args) {
+            return false;
+        }
+        $blueprintid = (int)array_shift($args);
+        if ($blueprintid <= 0 || !$args) {
+            return false;
+        }
+        $file = \local_ustar\material_studio::package_file($blueprintid, (int)$USER->id);
+        $filename = array_pop($args);
+        $filepath = '/' . ($args ? implode('/', $args) . '/' : '');
+        if (!$file || $file->is_directory() || $filename !== $file->get_filename()
+                || $filepath !== $file->get_filepath()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header('Content-Security-Policy: sandbox; default-src \'none\';');
         send_stored_file($file, 0, 0, true, $options);
         return true;
     }
@@ -386,4 +413,23 @@ function local_ustar_pluginfile(
 
 
     return true;
+}
+
+/** Render a persistent fixed banner on every page in the isolated Route Tester session. */
+function local_ustar_before_footer_original(): string {
+    try {
+        if (class_exists('\\local_ustar\\route_tester') && \local_ustar\route_tester::active()) {
+            return \local_ustar\route_tester::banner_html();
+        }
+    } catch (\Throwable $e) {
+        // Never break a Moodle page because the optional developer banner failed.
+    }
+    return '';
+}
+
+/**
+ * Existing footer output + route sequential navigation.
+ */
+function local_ustar_before_footer(): string {
+    return local_ustar_before_footer_original() . \local_ustar\route_continue::footer_button();
 }

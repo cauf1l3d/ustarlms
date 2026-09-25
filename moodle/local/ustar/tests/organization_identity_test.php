@@ -1,0 +1,546 @@
+<?php
+namespace local_ustar;
+defined('MOODLE_INTERNAL') || die();
+
+#[\PHPUnit\Framework\Attributes\CoversClass(organization_identity::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(organization_model::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(team_access::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(employment::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(access_context::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(capabilities::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(access_migration::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(registration_service::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(staffing_requests::class)]
+final class organization_identity_test extends \advanced_testcase {
+    protected function setUp(): void {
+        parent::setUp();
+        $this->resetAfterTest(true);
+        $this->setAdminUser();
+        accounts::ensure_profile_field();
+        global $DB;
+        if (!$DB->record_exists('user_info_field', ['shortname' => 'ustar_position'])) {
+            $this->getDataGenerator()->create_custom_profile_field([
+                'shortname' => 'ustar_position', 'name' => 'Position', 'datatype' => 'text']);
+        }
+    }
+
+    private function employee(string $legacy = 'retail_seller'): \stdClass {
+        global $DB;
+        $user = $this->getDataGenerator()->create_user();
+        $DB->insert_record('user_info_data', (object)['userid' => $user->id,
+            'fieldid' => $DB->get_field('user_info_field', 'id', ['shortname' => 'ustar_position']),
+            'data' => $legacy, 'dataformat' => 0]);
+        return $user;
+    }
+
+    private function place(string $position = 'retail_seller', int $parent = 0): int {
+        global $DB;
+        return $DB->insert_record('local_ustar_staff_places', (object)[
+            'placecode' => 'fixture_' . random_string(16), 'positionid' => $position,
+            'departmentid' => 'retail', 'managerplaceid' => $parent ?: null]);
+    }
+
+    private function assign(int $userid, int $place, array $values = []): int {
+        global $DB;
+        return $DB->insert_record('local_ustar_assignments', (object)($values + [
+            'userid' => $userid, 'staffplaceid' => $place, 'assignmenttype' => 'primary']));
+    }
+
+    private function grant(int $userid, array $capabilities): void {
+        $context = \context_system::instance();
+        $role = create_role('Fixture', 'fixture_' . random_string(8), 'Synthetic organization test');
+        foreach ($capabilities as $capability) assign_capability($capability, CAP_ALLOW, $role, $context->id);
+        role_assign($role, $userid, $context->id);
+        accesslib_clear_all_caches(true);
+    }
+
+    public function test_primary_is_shared_by_profile_and_access_without_writes(): void {
+        global $DB;
+        $user = $this->employee();
+        $this->assign($user->id, $this->place('retail_senior'));
+        $before = $DB->perf_get_writes();
+        $this->assertSame('retail_senior', people::position_id($user->id));
+        $this->assertSame('retail_senior', structure::resolve_user($user->id)['position']['id']);
+        $this->assertSame('retail_senior', position_access::position_for_user($user->id)['id']);
+        $this->assertContains('legacy_position_mismatch', organization_identity::resolve($user->id)['warnings']);
+        $this->assertSame($before, $DB->perf_get_writes());
+        $this->assertSame('retail_seller', organization_identity::legacy_position_id($user->id));
+    }
+
+    public function test_assignment_end_is_exclusive_and_does_not_restore_legacy(): void {
+        $user = $this->employee();
+        $this->assign($user->id, $this->place(), ['effectivefrom' => 100, 'effectiveto' => 200]);
+        $this->assertSame('retail_seller', organization_identity::resolve($user->id, 199)['positionid']);
+        $this->assertSame('', organization_identity::resolve($user->id, 200)['positionid']);
+        $this->assertSame('', organization_identity::resolve($user->id, 99)['positionid']);
+        $this->assertSame('assignment', organization_identity::resolve($user->id, 200)['source']);
+    }
+
+    public function test_conflicting_primary_blocks_position_and_management(): void {
+        $user = $this->employee('retail_head');
+        $this->assign($user->id, $this->place('retail_head'));
+        $this->assign($user->id, $this->place('retail_head'));
+        $this->assertNull(organization_model::primary_assignment($user->id));
+        $this->assertSame('', people::position_id($user->id));
+        $this->assertContains('multiple_primary_assignments', organization_identity::resolve($user->id)['conflicts']);
+        $this->assertFalse(organization_model::manager_scope($user->id)['allowed']);
+    }
+
+    public function test_place_lifetime_and_cycles_block_authority(): void {
+        global $DB;
+        $user = $this->employee('retail_head');
+        $place = $this->place('retail_head');
+        $this->assign($user->id, $place);
+        $DB->set_field('local_ustar_staff_places', 'effectivefrom', time() + 100, ['id' => $place]);
+        $this->assertNull(organization_model::staff_place($place));
+        $this->assertSame('', people::position_id($user->id));
+        $DB->set_field('local_ustar_staff_places', 'effectivefrom', 0, ['id' => $place]);
+        $DB->set_field('local_ustar_staff_places', 'managerplaceid', $place, ['id' => $place]);
+        $this->assertContains('invalid_staff_place_hierarchy', organization_identity::resolve($user->id)['conflicts']);
+        $this->assertFalse(organization_model::is_manager($user->id));
+    }
+
+    public function test_acting_authority_expires_without_changing_primary_position(): void {
+        $acting = $this->employee();
+        $other = $this->employee();
+        $head = $this->place('retail_head');
+        $this->assign($acting->id, $this->place());
+        $this->assign($other->id, $this->place());
+        $this->assign($acting->id, $head, ['assignmenttype' => 'acting', 'effectiveto' => 200]);
+        $this->assertSame((int)$acting->id, organization_model::occupant_for_place($head, 199));
+        $this->assertSame(0, organization_model::occupant_for_place($head, 200));
+        $this->assertSame('retail_seller', organization_identity::resolve($acting->id, 199)['positionid']);
+        $this->assign($other->id, $head, ['assignmenttype' => 'acting', 'effectiveto' => 200]);
+        $this->assertSame(0, organization_model::occupant_for_place($head, 199));
+    }
+
+    public function test_manager_scope_and_api_exclude_other_subtrees(): void {
+        $head = $this->employee('retail_head');
+        $employee = $this->employee();
+        $outsider = $this->employee();
+        $place = $this->place('retail_head');
+        $this->assign($head->id, $place);
+        $this->assign($employee->id, $this->place('retail_seller', $place));
+        $this->assign($outsider->id, $this->place());
+        $this->assertFalse(team_access::learning_scope($head->id)['allowed']);
+        $this->grant($head->id, ['local/ustar:viewteam', 'local/ustar:use']);
+        $this->assertEquals([$employee->id], team_access::learning_scope($head->id)['userids']);
+        $this->assertSame((int)$head->id, org::manager_id($employee->id));
+        $this->assertEquals([$employee->id], array_column(org::direct_reports($head->id), 'id'));
+        $this->assertTrue(org::reporting_configured());
+        $this->setUser($head);
+        $result = json_decode(external\get_team::execute()['json'], true);
+        $this->assertEquals([$employee->id], array_column($result['team'], 'id'));
+    }
+
+    public function test_position_never_grants_team_access_without_explicit_capability(): void {
+        global $DB;
+        $head = $this->employee('retail_head');
+        $place = $this->place('retail_head');
+        $this->assign($head->id, $place);
+        $this->assign($this->employee()->id, $this->place('retail_seller', $place));
+
+        $before = $DB->perf_get_writes();
+        $result = position_access::sync_user($head->id);
+
+        $this->assertSame('explicit_access_required', $result['status']);
+        $this->assertFalse(access_context::for_user($head->id)['teamread']);
+        $this->assertSame($before, $DB->perf_get_writes());
+    }
+
+    public function test_team_capability_without_valid_subtree_grants_no_scope(): void {
+        $user = $this->employee('retail_head');
+        $this->grant($user->id, ['local/ustar:viewteam']);
+        $access = access_context::for_user($user->id);
+        $this->assertFalse($access['teamread']);
+        $this->assertFalse($access['scope']['allowed']);
+    }
+
+    public function test_hr_and_hrd_read_company_but_private_capability_stays_separate(): void {
+        foreach (['local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:executive'] as $capability) {
+            $user = $this->employee();
+            $this->grant($user->id, [$capability]);
+            $this->assertTrue(team_access::company($user->id));
+            $this->assertFalse(has_capability('local/ustar:developmentanalytics', \context_system::instance(), $user->id));
+        }
+        $hrd = $this->employee();
+        $this->grant($hrd->id, ['local/ustar:hr', 'local/ustar:developmentanalytics']);
+        $this->assertTrue(team_access::company($hrd->id));
+        $this->assertTrue(has_capability('local/ustar:developmentanalytics', \context_system::instance(), $hrd->id));
+    }
+
+    public function test_suspended_actor_loses_company_and_manager_scope(): void {
+        global $DB;
+        $user = $this->employee('retail_head');
+        $this->assign($user->id, $this->place('retail_head'));
+        $this->grant($user->id, ['local/ustar:hr', 'local/ustar:viewteam']);
+        $DB->set_field('user', 'suspended', 1, ['id' => $user->id]);
+        $this->assertFalse(team_access::company($user->id));
+        $this->assertFalse(team_access::learning_scope($user->id)['allowed']);
+        $this->assertFalse(organization_model::is_manager($user->id));
+    }
+
+    public function test_explicit_pending_employment_blocks_learning_and_authority(): void {
+        $user = $this->employee('retail_head');
+        $place = $this->place('retail_head');
+        $this->assign($user->id, $place);
+        $this->grant($user->id, ['local/ustar:hr', 'local/ustar:viewteam']);
+
+        $this->assertSame('legacy', employment::resolve($user->id)['source']);
+        $this->assertTrue(employment::learning_allowed($user->id));
+        employment::set_status($user->id, employment::PENDING, (int)get_admin()->id, 'registration');
+
+        $this->assertSame(employment::PENDING, employment::resolve($user->id)['status']);
+        $this->assertFalse(employment::learning_allowed($user->id));
+        $this->assertFalse(team_access::company($user->id));
+        $this->assertFalse(organization_model::is_manager($user->id));
+    }
+
+    public function test_explicit_approval_is_independent_from_moodle_confirmation(): void {
+        global $DB;
+        $user = $this->employee();
+        $adminid = (int)get_admin()->id;
+        $DB->set_field('user', 'confirmed', 0, ['id' => $user->id]);
+
+        employment::set_status($user->id, employment::ACTIVE, $adminid, 'reviewed_migration');
+        $state = employment::resolve($user->id);
+
+        $this->assertTrue($state['explicit']);
+        $this->assertSame(employment::ACTIVE, $state['status']);
+        $this->assertSame($adminid, $state['approvedby']);
+        $this->assertTrue(employment::learning_allowed($user->id));
+    }
+
+    public function test_staffing_command_rejects_forged_actor(): void {
+        $user = $this->employee();
+        $this->expectException(\invalid_parameter_exception::class);
+        staffing_requests::create_hire($user->id, []);
+    }
+
+    public function test_reporting_rebuild_preserves_manual_decisions(): void {
+        global $DB;
+        $user = $this->employee();
+        $manager = $this->employee('retail_head');
+        org::set_manager($user->id, $manager->id);
+        $before = $DB->get_record('local_ustar_reporting', ['userid' => $user->id]);
+        organization_model::rebuild_reporting();
+        $this->assertEquals($before, $DB->get_record('local_ustar_reporting', ['userid' => $user->id]));
+        $actual = $this->employee('retail_head');
+        $place = $this->place('retail_head');
+        $this->assign($actual->id, $place);
+        $this->assign($user->id, $this->place('retail_seller', $place));
+        organization_model::rebuild_reporting();
+        $this->assertEquals($before, $DB->get_record('local_ustar_reporting', ['userid' => $user->id]));
+        $this->assertSame((int)$actual->id, org::manager_id($user->id));
+    }
+
+    public function test_department_colleagues_include_different_positions(): void {
+        $seller = $this->employee();
+        $senior = $this->employee('retail_senior');
+        $outside = $this->employee('opt_manager');
+        $ids = array_column(org::horizon($seller->id), 'id');
+        $this->assertContains((int)$senior->id, $ids);
+        $this->assertNotContains((int)$outside->id, $ids);
+    }
+
+    public function test_team_api_rejects_employee_without_management_permission(): void {
+        $user = $this->employee('retail_head');
+        $this->assign($user->id, $this->place('retail_head'));
+        $this->setUser($user);
+        $this->expectException(\required_capability_exception::class);
+        external\get_team::execute();
+    }
+
+    public function test_service_and_test_identities_never_become_team_occupants(): void {
+        foreach ([accounts::TYPE_SERVICE, accounts::TYPE_TEST] as $type) {
+            $user = $this->employee('retail_head');
+            $place = $this->place('retail_head');
+            $this->assign($user->id, $place);
+            accounts::set_type($user->id, $type);
+            $this->assertSame(0, organization_model::occupant_for_place($place));
+            $this->assertFalse(organization_model::is_manager($user->id));
+        }
+    }
+
+    public function test_reconciliation_is_repeatable_and_read_only(): void {
+        global $DB;
+        $user = $this->employee();
+        $this->assign($user->id, $this->place('retail_senior'));
+        $before = $DB->perf_get_writes();
+        $first = organization_identity::reconciliation();
+        $second = organization_identity::reconciliation();
+        $this->assertSame($first['employees'], $second['employees']);
+        $this->assertSame($before, $DB->perf_get_writes());
+        $this->assertSame('review_legacy_projection', $first['employees'][0]['action']);
+    }
+
+    public function test_access_migration_dry_run_is_read_only_and_apply_is_repeatable(): void {
+        global $DB;
+        $user = $this->employee('retail_head');
+        $roleid = create_role('Legacy projected manager', 'ustar_manager', 'Fixture');
+        role_assign($roleid, $user->id, \context_system::instance()->id, 'local_ustar', 0);
+        $before = $DB->perf_get_writes();
+        $report = access_migration::report();
+        $this->assertSame($before, $DB->perf_get_writes());
+        $row = current(array_filter($report['users'],
+            static fn(array $candidate): bool => (int)$candidate['userid'] === (int)$user->id));
+        $plan = ['users' => [[
+            'userid' => (int)$user->id,
+            'expectedpositionid' => (string)$row['positionid'],
+            'expectedemployment' => (string)$row['employment'],
+            'expectedprojectedroles' => $row['projectedroles'],
+            'employment' => employment::ACTIVE,
+            'roles' => ['ustar_manager'],
+        ]]];
+
+        $first = access_migration::apply($plan);
+        $second = access_migration::apply($plan);
+        $this->assertSame([(int)$user->id], $first['changeduserids']);
+        $this->assertSame([(int)$user->id], $second['unchangeduserids']);
+        $this->assertFalse($DB->record_exists('role_assignments', [
+            'roleid' => $roleid, 'userid' => $user->id,
+            'contextid' => \context_system::instance()->id, 'component' => 'local_ustar']));
+        $this->assertTrue($DB->record_exists('role_assignments', [
+            'roleid' => $roleid, 'userid' => $user->id,
+            'contextid' => \context_system::instance()->id, 'component' => 'local_ustar_migration']));
+    }
+
+    public function test_existing_email_registration_stays_pending_until_hrd_approves(): void {
+        global $DB;
+        $manager = $this->employee('retail_head');
+        $managerplace = $this->place('retail_head');
+        $this->assign($manager->id, $managerplace);
+        $this->place('retail_seller', $managerplace);
+        $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
+
+        $candidate = $this->getDataGenerator()->create_user(['auth' => 'email']);
+        $this->assertSame(employment::PENDING, employment::resolve($candidate->id)['status']);
+        $this->setUser($candidate);
+        $requestid = registration_service::submit($candidate->id, 'retail_seller');
+        $this->assertSame($requestid,
+            registration_service::submit($candidate->id, 'retail_seller'));
+        $this->assertFalse(employment::learning_allowed($candidate->id));
+
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
+        $result = staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
+            $hrd->id, ['positionid' => 'retail_seller']);
+        $repeat = staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
+            $hrd->id, ['positionid' => 'retail_seller']);
+        $this->assertSame((int)$candidate->id, $result['userid']);
+        $this->assertTrue($repeat['idempotent']);
+        $this->assertSame(employment::ACTIVE, employment::resolve($candidate->id)['status']);
+        $this->assertSame('retail_seller', organization_identity::resolve($candidate->id)['positionid']);
+        $this->assertSame((int)$manager->id, org::manager_id($candidate->id));
+        $this->assertCount(1, array_filter(organization_model::active_assignments($candidate->id),
+            static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'));
+    }
+
+    public function test_native_registration_creates_one_pending_user_and_hrd_request(): void {
+        global $DB;
+        $userid = registration_service::register([
+            'username' => 'newhire', 'password' => 'Qx9!Ayear2026',
+            'email' => 'newhire@example.invalid', 'firstname' => 'Сотрудник',
+            'lastname' => 'Тестовый', 'departmentid' => 'retail',
+        ]);
+        $user = $DB->get_record('user', ['id' => $userid], 'id,auth,confirmed', MUST_EXIST);
+        $this->assertSame('manual', $user->auth);
+        $this->assertSame(1, (int)$user->confirmed);
+        $this->assertSame(employment::PENDING, employment::resolve($userid)['status']);
+        $this->assertFalse(employment::learning_allowed($userid));
+        $request = $DB->get_record('local_ustar_staff_requests', [
+            'requesttype' => staffing_requests::TYPE_REGISTRATION, 'employeeid' => $userid,
+        ], '*', MUST_EXIST);
+        $this->assertSame('retail', $request->departmentid);
+        $this->assertSame('', $request->positionid);
+        $this->assertSame(staffing_requests::STATUS_PENDING, $request->status);
+        $this->assertSame(1, $DB->count_records('local_ustar_staff_requests', ['employeeid' => $userid]));
+
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
+        staffing_requests::review($request->id, staffing_requests::STATUS_APPROVED,
+            $hrd->id, ['positionid' => 'retail_seller']);
+        $this->assertSame(employment::ACTIVE, employment::resolve($userid)['status']);
+        $this->assertSame('retail_seller', organization_identity::resolve($userid)['positionid']);
+    }
+
+    public function test_hrd_cannot_assign_registration_to_another_department(): void {
+        global $DB;
+        $userid = registration_service::register([
+            'username' => 'crosshire', 'password' => 'Qx9!Ayear2026',
+            'email' => 'crosshire@example.invalid', 'firstname' => 'Сотрудник',
+            'lastname' => 'Тестовый', 'departmentid' => 'retail',
+        ]);
+        $request = $DB->get_record('local_ustar_staff_requests', [
+            'requesttype' => staffing_requests::TYPE_REGISTRATION, 'employeeid' => $userid,
+        ], '*', MUST_EXIST);
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
+        try {
+            staffing_requests::review($request->id, staffing_requests::STATUS_APPROVED,
+                $hrd->id, ['positionid' => 'opt_manager']);
+            $this->fail('HRD may not assign a position outside the claimed department');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(staffing_requests::STATUS_PENDING,
+                $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $request->id]));
+        }
+    }
+
+    public function test_manager_cannot_approve_registration_without_hrd_capability(): void {
+        $manager = $this->employee('retail_head');
+        $this->assign($manager->id, $this->place('retail_head'));
+        $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
+        $candidate = $this->getDataGenerator()->create_user(['auth' => 'email']);
+        $this->setUser($candidate);
+        $requestid = registration_service::submit($candidate->id, 'opt_manager');
+        $this->setUser($manager);
+        $this->expectException(\required_capability_exception::class);
+        staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED,
+            $manager->id, ['positionid' => 'opt_manager']);
+    }
+
+    public function test_registration_rejection_is_repeatable_and_allows_corrected_request(): void {
+        $manager = $this->employee('retail_head');
+        $managerplace = $this->place('retail_head');
+        $this->assign($manager->id, $managerplace);
+        $this->place('retail_seller', $managerplace);
+        $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
+        $candidate = $this->getDataGenerator()->create_user(['auth' => 'email']);
+        $this->setUser($candidate);
+        $firstid = registration_service::submit($candidate->id, 'retail_seller');
+
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $this->setUser($hrd);
+        staffing_requests::review($firstid, staffing_requests::STATUS_REJECTED,
+            $hrd->id, ['reviewcomment' => 'Уточните должность']);
+        $repeat = staffing_requests::review($firstid, staffing_requests::STATUS_REJECTED,
+            $hrd->id, ['reviewcomment' => 'Уточните должность']);
+        $this->assertTrue($repeat['idempotent']);
+        $this->assertSame(employment::PENDING, employment::resolve($candidate->id)['status']);
+
+        $this->setUser($candidate);
+        $secondid = registration_service::submit($candidate->id, 'retail_seller');
+        $this->assertNotSame($firstid, $secondid);
+    }
+
+    public function test_future_hire_approval_does_not_create_an_employee_early(): void {
+        global $DB;
+        $requester = $this->getDataGenerator()->create_user(['timezone' => 'Europe/Moscow']);
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage']);
+        $date = (new \DateTimeImmutable('today', new \DateTimeZone('Europe/Moscow')))
+            ->modify('+1 day')->setTime(12, 0)->getTimestamp();
+        $requestid = $DB->insert_record('local_ustar_staff_requests', (object)[
+            'requesttype' => staffing_requests::TYPE_HIRE, 'departmentid' => 'retail',
+            'positionid' => 'retail_seller', 'firstname' => 'Будущий', 'lastname' => 'Сотрудник',
+            'requesteddate' => $date, 'status' => staffing_requests::STATUS_PENDING,
+            'requestedby' => $requester->id, 'timecreated' => time(), 'timemodified' => time(),
+        ]);
+        $this->setUser($hrd);
+        $row = array_values(staffing_requests::list_for($hrd->id))[0];
+        $this->assertFalse($row['canapprove']);
+        try {
+            staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED, $hrd->id,
+                ['username' => 'premature_hire', 'email' => 'premature@example.invalid', 'password' => 'Secret123!']);
+            $this->fail('A future hire must not be executed during approval.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(staffing_requests::STATUS_PENDING,
+                $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $requestid]));
+            $this->assertFalse($DB->record_exists('user', ['username' => 'premature_hire']));
+        }
+    }
+
+    public function test_last_working_day_does_not_suspend_employee_early(): void {
+        global $DB;
+        $requester = $this->getDataGenerator()->create_user(['timezone' => 'Europe/Moscow']);
+        $employee = $this->employee();
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage']);
+        $date = (new \DateTimeImmutable('today', new \DateTimeZone('Europe/Moscow')))
+            ->setTime(12, 0)->getTimestamp();
+        $requestid = $DB->insert_record('local_ustar_staff_requests', (object)[
+            'requesttype' => staffing_requests::TYPE_TERMINATE, 'departmentid' => 'retail',
+            'positionid' => 'retail_seller', 'employeeid' => $employee->id,
+            'requesteddate' => $date, 'reason' => 'Fixture',
+            'status' => staffing_requests::STATUS_PENDING, 'requestedby' => $requester->id,
+            'timecreated' => time(), 'timemodified' => time(),
+        ]);
+        $this->setUser($hrd);
+        $row = array_values(staffing_requests::list_for($hrd->id))[0];
+        $this->assertFalse($row['canapprove']);
+        try {
+            staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED, $hrd->id);
+            $this->fail('Termination must not execute on the last working day.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(staffing_requests::STATUS_PENDING,
+                $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $requestid]));
+            $this->assertSame(0, (int)$DB->get_field('user', 'suspended', ['id' => $employee->id]));
+        }
+    }
+
+    public function test_staffing_execution_window_uses_requester_day_not_server_day(): void {
+        $window = new \ReflectionMethod(staffing_requests::class, 'execution_window_open');
+        $requester = (object)['timezone' => 'Asia/Tokyo'];
+        $date = (new \DateTimeImmutable('2026-09-05 12:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $request = (object)['requesttype' => staffing_requests::TYPE_HIRE,
+            'requesteddate' => $date];
+        $before = (new \DateTimeImmutable('2026-09-04 12:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $same = (new \DateTimeImmutable('2026-09-05 08:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $after = (new \DateTimeImmutable('2026-09-06 00:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $this->assertFalse($window->invoke(null, $request, $requester, $before));
+        $this->assertTrue($window->invoke(null, $request, $requester, $same));
+        $request->requesttype = staffing_requests::TYPE_TERMINATE;
+        $this->assertFalse($window->invoke(null, $request, $requester, $same));
+        $this->assertTrue($window->invoke(null, $request, $requester, $after));
+    }
+
+    public function test_hr_position_change_updates_canonical_assignment_and_keeps_acting_role(): void {
+        global $DB;
+        $employee = $this->employee('retail_seller');
+        $originalplace = $this->place('retail_seller');
+        $actingplace = $this->place('retail_head');
+        $this->assign($employee->id, $originalplace);
+        $this->assign($employee->id, $actingplace, ['assignmenttype' => 'acting']);
+        $this->place('retail_senior');
+
+        $placeid = organization_model::assign_position_by_hr(
+            (int)$employee->id,
+            'retail_senior',
+            (int)get_admin()->id
+        );
+        people::set_position_id((int)$employee->id, 'retail_senior');
+
+        $this->assertSame('retail_senior', organization_identity::resolve($employee->id)['positionid']);
+        $this->assertSame($placeid, (int)organization_model::primary_assignment($employee->id)->staffplaceid);
+        $this->assertCount(1, array_filter(
+            organization_model::active_assignments($employee->id),
+            static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'
+        ));
+        $this->assertTrue($DB->record_exists_select(
+            'local_ustar_assignments',
+            'userid = :userid AND staffplaceid = :staffplaceid AND assignmenttype = :assignmenttype'
+                . ' AND status = :status',
+            [
+                'userid' => (int)$employee->id,
+                'staffplaceid' => $actingplace,
+                'assignmenttype' => 'acting',
+                'status' => 'active',
+            ]
+        ));
+        $this->assertTrue($DB->record_exists('local_ustar_assignments', [
+            'userid' => (int)$employee->id,
+            'staffplaceid' => $originalplace,
+            'assignmenttype' => 'primary',
+            'status' => 'ended',
+        ]));
+    }
+
+}

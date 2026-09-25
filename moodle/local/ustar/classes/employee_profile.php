@@ -20,6 +20,10 @@ class employee_profile {
             MUST_EXIST
         );
 
+        if (!accounts::is_business_account($userid)) {
+            throw new \invalid_parameter_exception('Сотрудник недоступен в кадровом контуре USTAR');
+        }
+
         $structure = structure::get(structure::NAME_STRUCTURE);
         $positions = people::position_map($structure);
         $departments = people::department_map($structure);
@@ -43,6 +47,7 @@ class employee_profile {
         $confirmedskillcount = $skills['confirmed'];
 
         return [
+            'careergrades' => career_grades::view($position ?? []),
             'identity' => [
                 'userid' => (int)$user->id,
                 'username' => (string)$user->username,
@@ -72,7 +77,7 @@ class employee_profile {
                 'percent' => $requiredskillcount > 0
                     ? (int)round(($confirmedskillcount / $requiredskillcount) * 100)
                     : 0,
-                'basis' => 'evidence',
+                'basis' => 'learning_evidence',
             ],
         ];
     }
@@ -203,7 +208,8 @@ class employee_profile {
                 'name' => (string)($skill['name'] ?? $skillid),
                 'category' => (string)($skill['category'] ?? ''),
                 'targetlevel' => (int)$targetlevel,
-                'evidencedlevel' => $satisfied ? (int)$targetlevel : 0,
+                // Learning completion does not measure the target skill level.
+                'evidencedlevel' => 0,
                 'configured' => !empty($evaluation['configured']),
                 'satisfied' => $satisfied,
                 'gap' => !$satisfied,

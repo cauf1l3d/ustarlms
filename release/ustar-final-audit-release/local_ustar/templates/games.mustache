@@ -1,0 +1,24 @@
+<div class="u-product-page u-games-page">
+    <header class="u-product-head u-product-head--accent">
+        <div><p class="u-page-kicker">2–5 минут микрообучения</p><h1>Игровые задания</h1><p>Закрепляйте знания короткими сериями. Ответ проверяется сервером, XP начисляется за освоение вопроса один раз.</p></div>
+        <div class="u-xp-chip">{{{trophyicon}}}<strong>{{totalxp}}</strong><span>Game XP</span></div>
+    </header>
+
+    <div class="u-game-grid">
+        {{#games}}
+        <a class="u-game-card" href="{{url}}">
+            <div class="u-game-card__top">{{{icon}}}<span>{{difficultylabel}}</span></div>
+            <div><p class="u-page-kicker">USTAR Game</p><h2>{{title}}</h2><p>{{description}}</p></div>
+            <div class="u-game-card__stats"><span>{{correct}} / {{questionCount}} освоено</span><b>{{xp}} XP</b></div>
+            <div class="u-progress"><span style="width:{{progress}}%"></span></div>
+            <strong class="u-game-card__cta">Играть →</strong>
+        </a>
+        {{/games}}
+    </div>
+
+    {{^hasgames}}
+    <div class="u-empty-state u-empty-state--product">{{{gameicon}}}<h2>Игры ещё не опубликованы</h2><p>Раздел готов; игровые задания появятся после публикации вопросов администратором USTAR.</p></div>
+    {{/hasgames}}
+
+    <div class="u-product-footer-action"><a href="{{achievementsurl}}">Посмотреть достижения и общий прогресс →</a></div>
+</div>

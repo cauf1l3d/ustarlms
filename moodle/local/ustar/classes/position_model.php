@@ -189,15 +189,11 @@ class position_model {
         $allowedtypes = [
             'learning',
             'assessment',
-            'practice',
-            'manager_review',
-            'checklist',
-            'certification',
         ];
 
         if (!in_array($type, $allowedtypes, true)) {
             throw new \invalid_parameter_exception(
-                'Неизвестный тип подтверждения'
+                'Этот тип подтверждения ещё не поддерживается движком Evidence'
             );
         }
 
@@ -249,9 +245,15 @@ class position_model {
                     'id' => $cmid,
                     'course' => $courseid,
                 ],
-                'id,course,module,instance',
+                'id,course,module,instance,completion',
                 MUST_EXIST
             );
+
+        if ((int)$cm->completion === 0) {
+            throw new \invalid_parameter_exception(
+                'Для активности Moodle не включено отслеживание завершения'
+            );
+        }
 
 
         /*
@@ -404,28 +406,8 @@ class position_model {
     public static function sync_position(
         string $positionid
     ): array {
-        global $DB;
-
-        $sql = "
-            SELECT u.id
-              FROM {user} u
-              JOIN {user_info_data} d
-                ON d.userid = u.id
-              JOIN {user_info_field} f
-                ON f.id = d.fieldid
-               AND f.shortname = 'ustar_position'
-             WHERE u.deleted = 0
-               AND u.suspended = 0
-               AND TRIM(d.data) = :positionid
-        ";
-
-        $users =
-            $DB->get_records_sql(
-                $sql,
-                [
-                    'positionid' => $positionid,
-                ]
-            );
+        $users = array_filter(organization_directory::users(true),
+            static fn(\stdClass $user): bool => (string)$user->positionid === $positionid);
 
         $result = [
             'users' => 0,
@@ -434,6 +416,10 @@ class position_model {
         ];
 
         foreach ($users as $user) {
+
+            if (!employment::learning_allowed((int)$user->id)) {
+                continue;
+            }
 
             try {
 

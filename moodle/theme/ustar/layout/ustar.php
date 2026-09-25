@@ -1,7 +1,7 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
 
-global $SITE, $USER, $CFG;
+global $SITE, $USER, $CFG, $SESSION;
 
 $context = context_system::instance();
 
@@ -77,19 +77,23 @@ $positionpages = [
 ];
 
 $materialpages = [
+    '/local/ustar/assessment_studio.php',
     '/local/ustar/materials.php',
     '/local/ustar/material_create.php',
     '/local/ustar/material_bulk.php',
     '/local/ustar/material_version.php',
     '/local/ustar/material_version_action.php',
     '/local/ustar/material_ack_export.php',
+    '/local/ustar/materials_studio.php',
 ];
 
 $operationpages = [
     '/local/ustar/operations.php',
     '/local/ustar/brand.php',
     '/local/ustar/game_studio.php',
+    '/local/ustar/competition_studio.php',
     '/local/ustar/checklist_studio.php',
+    '/local/ustar/stage6_status.php',
 ];
 
 $productgrowthpages = [
@@ -100,7 +104,9 @@ $productgrowthpages = [
     '/local/ustar/team.php',
     '/local/ustar/executive.php',
     '/local/ustar/catalog.php',
-    '/local/ustar/boards.php',
+    '/local/ustar/tasks.php',
+    '/local/ustar/grades.php',
+    '/local/ustar/board_archive.php',
 ];
 
 if (in_array($pagepath, $productgrowthpages, true)) {
@@ -109,9 +115,23 @@ if (in_array($pagepath, $productgrowthpages, true)) {
 
 if ($pagepath === '/local/ustar/games.php' || $pagepath === '/local/ustar/game.php') { $view = 'games'; }
 if ($pagepath === '/local/ustar/catalog.php') { $view = 'catalog'; }
+
+$catalogunlocked =
+    (class_exists('\\local_ustar\\catalog')
+        && \local_ustar\catalog::can_manage((int)$USER->id))
+    ||
+    (class_exists('\\local_ustar\\catalog_mastery')
+        && \local_ustar\catalog_mastery::has_access((int)$USER->id));
+
+$cataloglabel =
+    $catalogunlocked
+        ? 'Каталог'
+        : 'Каталог · закрыт';
+
 if ($pagepath === '/local/ustar/team.php' || $pagepath === '/local/ustar/executive.php') { $view = 'team'; }
 if ($pagepath === '/local/ustar/achievements.php') { $view = 'achievements'; }
-if ($pagepath === '/local/ustar/boards.php') { $view = 'tools'; }
+if ($pagepath === '/local/ustar/tasks.php') { $view = 'tasks'; }
+if ($pagepath === '/local/ustar/grades.php') { $view = 'career'; }
 
 if (in_array($pagepath, [
     '/local/ustar/profile.php',
@@ -293,10 +313,10 @@ if ($ishrworkspace) {
         ['label'=>'Обучение','short'=>'Учёба','url'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),'icon'=>$icons['learning'],'active'=>$view==='learning'],
         ['label'=>'Игры','short'=>'Игры','url'=>(new moodle_url('/local/ustar/games.php'))->out(false),'icon'=>$icons['game'],'active'=>$view==='games','mobile'=>false],
         ['label'=>'База знаний','short'=>'Знания','url'=>(new moodle_url('/local/ustar/knowledge.php',['view'=>'knowledge']))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='knowledge'],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
-        ['label'=>'Инструменты','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 
@@ -309,7 +329,7 @@ $pagelabels = [
     'catalog' => 'Каталог',
     'team' => 'Команда',
     'achievements' => 'Достижения',
-    'tools' => 'Инструменты',
+    'tasks' => 'Задачи',
 ];
 
 $controlpagelabels = [
@@ -323,10 +343,14 @@ $controlpagelabels = [
     '/local/ustar/material_version.php' => 'Новая версия',
     '/local/ustar/material_version_action.php' => 'Версии',
     '/local/ustar/material_ack_export.php' => 'Журнал ознакомления',
+    '/local/ustar/materials_studio.php' => 'Курсы, SCORM и аттестации',
+    '/local/ustar/material_player.php' => 'Материал',
     '/local/ustar/operations.php' => 'Контроль',
     '/local/ustar/brand.php' => 'Оформление',
     '/local/ustar/game_studio.php' => 'Игровые задания',
+    '/local/ustar/competition_studio.php' => 'Соревнования',
     '/local/ustar/checklist_studio.php' => 'Редактор чек-листов',
+    '/local/ustar/stage6_status.php' => 'Состояние сервисов',
     '/local/ustar/games.php' => 'Игровые задания',
     '/local/ustar/game.php' => 'Игровые задания',
     '/local/ustar/achievements.php' => 'Достижения',
@@ -334,7 +358,9 @@ $controlpagelabels = [
     '/local/ustar/team.php' => 'Команда',
     '/local/ustar/executive.php' => 'Руководство',
     '/local/ustar/catalog.php' => 'Каталог',
-    '/local/ustar/boards.php' => 'Доска',
+    '/local/ustar/tasks.php' => 'Задачи',
+    '/local/ustar/grades.php' => 'Грейды',
+    '/local/ustar/board_archive.php' => 'Архив досок',
     '/local/ustar/view_as.php' => 'Просмотр как',
     '/local/ustar/legacy.php' => 'Legacy UI',
     '/local/ustar/profile.php' => 'Личный кабинет',
@@ -449,10 +475,14 @@ if (!$canadmin && $canhr) {
     $homeurl = new moodle_url('/local/ustar/hr.php');
     $navitems = [
         ['label'=>'Панель HR','short'=>'HR','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>in_array($pagepath,$hrpages,true)],
+        ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)],
+        ['label'=>'Оргструктура','short'=>'Структура','url'=>(new moodle_url('/local/ustar/organization_settings.php'))->out(false),'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/organization_settings.php'],
         ['label'=>'Материалы','short'=>'Материалы','url'=>(new moodle_url('/local/ustar/materials.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>in_array($pagepath,$materialpages,true)],
         ['label'=>'Контроль','short'=>'Контроль','url'=>(new moodle_url('/local/ustar/operations.php'))->out(false),'icon'=>$icons['growth'],'active'=>in_array($pagepath,$operationpages,true)],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>'Проверка аттестаций','short'=>'Проверка','url'=>(new moodle_url('/local/ustar/hr_quiz_grading.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,['/local/ustar/hr_quiz_grading.php','/local/ustar/hr_quiz_attempt.php'],true)],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 
@@ -463,9 +493,9 @@ if (!$canadmin && !$canhr && $canexec) {
     $navitems = [
         ['label'=>'Компания','short'=>'Компания','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>$pagepath==='/local/ustar/executive.php'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team' && $pagepath!=='/local/ustar/executive.php'],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
-        ['label'=>'Доска','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 
@@ -477,10 +507,10 @@ if (!$canadmin && !$canhr && !$canexec && $canmanager) {
         ['label'=>'Моя команда','short'=>'Команда','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>$view==='team'],
         ['label'=>'Обучение','short'=>'Учёба','url'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),'icon'=>$icons['learning'],'active'=>$view==='learning'],
         ['label'=>'Игры','short'=>'Игры','url'=>(new moodle_url('/local/ustar/games.php'))->out(false),'icon'=>$icons['game'],'active'=>$view==='games','mobile'=>false],
-        ['label'=>'Каталог','short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
+        ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
         ['label'=>'База знаний','short'=>'Знания','url'=>(new moodle_url('/local/ustar/knowledge.php',['view'=>'knowledge']))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='knowledge'],
-        ['label'=>'Доска','short'=>'Доска','url'=>(new moodle_url('/local/ustar/boards.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tools'],
+        ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
 }
 
@@ -571,6 +601,50 @@ if ($activityruntime) {
 }
 
 
+
+/*
+ * ------------------------------------------------------------
+ * USTAR SCORM ROUTE CONTINUATION
+ * ------------------------------------------------------------
+ */
+$ustarscormroute = false;
+$ustarscormcmid = 0;
+
+if (
+    $pagepath === '/mod/scorm/player.php'
+    &&
+    !empty($SESSION->ustar_scorm_route)
+    &&
+    (int)($SESSION->ustar_scorm_route['cmid'] ?? 0) > 0
+) {
+
+    /*
+     * player.php does not reliably expose $PAGE->cm at the
+     * point where the USTAR layout is built. The route launcher
+     * already stored the authoritative cmid in the session.
+     */
+    $ustarscormroute = true;
+    $ustarscormcmid =
+        (int)$SESSION->ustar_scorm_route['cmid'];
+
+    $scormroutejs =
+        $CFG->dirroot
+        . '/local/ustar/scorm_route_return.js';
+
+    $PAGE->requires->js(
+        new moodle_url(
+            '/local/ustar/scorm_route_return.js',
+            [
+                'v' =>
+                    is_readable($scormroutejs)
+                        ? filemtime($scormroutejs)
+                        : time(),
+            ]
+        )
+    );
+}
+
+
 $brandcss = '';
 if (class_exists('\local_ustar\branding')) {
     try {
@@ -597,11 +671,10 @@ if (!in_array($preset, ['yellow','graphite','ocean','forest','berry','sand'], tr
 
 $PAGE->requires->js_call_amd('theme_ustar/shell', 'init');
 
-
-
-
 $viewasactive = class_exists('\local_ustar\view_as') && \local_ustar\view_as::active();
 $viewasposition = '';
+// A manager sees the decision queue even if their HR/executive role selects a different shell.
+$canapprovegrades = !$viewasactive && \local_ustar\organization_model::is_manager((int)$USER->id);
 if ($viewasactive) {
     $pid = \local_ustar\view_as::position_id();
     foreach ((\local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE)['positions'] ?? []) as $vp) {
@@ -609,24 +682,84 @@ if ($viewasactive) {
     }
 }
 
+if (class_exists('\local_ustar\employment') && !empty($USER->id)
+        && \local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\employment::PENDING) {
+    $homeurl = new moodle_url('/local/ustar/profile.php');
+    $productname = 'Профиль · ожидает подтверждения';
+    $navitems = [[
+        'label' => 'Мой профиль', 'short' => 'Профиль', 'url' => $homeurl->out(false),
+        'icon' => $icons['home'], 'active' => true,
+    ]];
+}
+
 $mobilenavitems = array_values(array_filter($navitems, static function(array $item): bool {
     return !array_key_exists('mobile', $item) || !empty($item['mobile']);
 }));
 $mobilenavitems = array_slice($mobilenavitems, 0, 5);
 
+// Render the plugin's navigation presenter: this shell omits standard_footer_html.
+$routecontinue = \local_ustar\route_continue::footer_button();
+if (in_array($pagepath, ['/mod/page/view.php', '/mod/book/view.php', '/mod/resource/view.php', '/mod/folder/view.php'], true)) {
+    $PAGE->requires->js(new moodle_url('/local/ustar/route_continue.js', ['v' => '20260911']));
+}
+if ($ustarscormroute) {
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_flow.css', ['v' => '20260911']));
+}
+
+$guiderole = \local_ustar\academy_guide::role();
+if ($guiderole !== '') {
+    $guidecss = $CFG->dirroot . '/local/ustar/styles/academy_guide.css';
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/academy_guide.css', [
+        'v' => is_readable($guidecss) ? filemtime($guidecss) : '20260912',
+    ]));
+}
+
 $templatecontext = [
+    'canapprovegrades' => $canapprovegrades,
+    'gradeapprovalsurl' => (new moodle_url('/local/ustar/grades.php', ['view' => 'team']))->out(false),
+    'routecontinue' => $routecontinue,
+    'profilesettingsurl' => (new moodle_url('/local/ustar/profile_settings.php'))->out(false),
+    'logouturl' => (new moodle_url('/login/logout.php', ['sesskey' => sesskey()]))->out(false),
+    'guiderole' => $guiderole,
+    'guideurl' => (new moodle_url('/local/ustar/guide.php'))->out(false),
     'output' => $OUTPUT,
 
-    'bodyattributes' => $OUTPUT->body_attributes(
-        $activityruntime
-            ? [
-                'u-shell-page',
-                'u-activity-runtime',
-            ]
-            : [
-                'u-shell-page',
-            ]
-    ),
+    'bodyattributes' =>
+        $OUTPUT->body_attributes(
+            $activityruntime
+                ? [
+                    'u-shell-page',
+                    'u-activity-runtime',
+                ]
+                : [
+                    'u-shell-page',
+                ]
+        )
+        .
+        (
+            $ustarscormroute
+                ? ' data-ustar-scorm-cmid="' . $ustarscormcmid . '"'
+                    . ' data-ustar-scorm-launch="' . s((string)($SESSION->ustar_scorm_route['launchid'] ?? '')) . '"'
+                    . ' data-ustar-scorm-status-url="'
+                    . s(
+                        (
+                            new moodle_url(
+                                '/local/ustar/scorm_route_status.php'
+                            )
+                        )->out(false)
+                    )
+                    . '"'
+                    . ' data-ustar-route-url="'
+                    . s(
+                        (
+                            new moodle_url(
+                                '/local/ustar/route.php'
+                            )
+                        )->out(false)
+                    )
+                    . '"'
+                : ''
+        ),
 
     'brandname' => $brandname,
     'productname' => $productname,
@@ -703,6 +836,13 @@ $templatecontext = [
     'collapseicon' => $icons['collapse'],
     'adminicon' => $icons['admin'],
 ];
+
+// The custom shell does not render Moodle's standard user navigation where
+// tool_usertours normally bootstraps itself. Keep the native engine and start
+// its normal AMD bootstrap explicitly once for eligible USTAR users.
+if ($guiderole !== '' && class_exists('\\tool_usertours\\helper')) {
+    \tool_usertours\helper::bootstrap();
+}
 
 echo $OUTPUT->render_from_template(
     'theme_ustar/shell',

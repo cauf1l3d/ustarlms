@@ -4,7 +4,11 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Small shared visual helper. SVG is generated server-side and contains no user input.
+ * Shared USTAR visual helpers.
+ *
+ * Navigation/action icons remain lightweight SVG. The approved Academy asset
+ * pack is used only for decorative feature imagery and always has an empty alt
+ * because the adjacent heading/label carries the meaning.
  */
 final class ui {
     private const ICONS = [
@@ -29,7 +33,39 @@ final class ui {
         'arrow' => '<path d="M5 12h14M14 7l5 5-5 5"/>',
     ];
 
+    private const ILLUSTRATIONS = [
+        'bell' => '3dicons-bell-front-premium.png',
+        'book' => '3dicons-notebook-front-premium.png',
+        'check' => '3dicons-tick-front-premium.png',
+        'clock' => '3dicons-calender-front-premium.png',
+        'executive' => '3dicons-crown-front-premium.png',
+        'game' => '3dicons-puzzle-front-premium.png',
+        'knowledge' => '3dicons-notebook-front-premium.png',
+        'palette' => '3dicons-setting-front-premium.png',
+        'route' => '3dicons-rocket-front-premium.png',
+        'settings' => '3dicons-setting-front-premium.png',
+        'spark' => '3dicons-bulb-front-premium.png',
+        'star' => '3dicons-star-front-premium.png',
+        'trophy' => '3dicons-trophy-front-premium.png',
+        'workspace' => '3dicons-tools-front-premium.png',
+    ];
+
     public static function icon(string $name, string $class = 'u-icon'): string {
+        if ($class !== 'u-icon' && isset(self::ILLUSTRATIONS[$name])) {
+            return \html_writer::empty_tag('img', [
+                'class' => trim($class . ' u-academy-illustration'),
+                'src' => (new \moodle_url(
+                    '/local/ustar/pix/academy/' . self::ILLUSTRATIONS[$name]
+                ))->out(false),
+                'alt' => '',
+                'aria-hidden' => 'true',
+                'loading' => 'lazy',
+                'decoding' => 'async',
+                'width' => '512',
+                'height' => '512',
+            ]);
+        }
+
         $body = self::ICONS[$name] ?? self::ICONS['spark'];
         return '<svg class="' . s($class) . '" viewBox="0 0 24 24" aria-hidden="true">' . $body . '</svg>';
     }

@@ -68,7 +68,7 @@ class evidence {
             ";
         }
 
-        return array_values(
+        $definitions = array_values(
             $DB->get_records_select(
                 'local_ustar_skill_evidence',
                 $where,
@@ -76,6 +76,11 @@ class evidence {
                 'sortorder ASC, id ASC'
             )
         );
+        // Explicit position/global definitions always take precedence.
+        if (!$definitions && $skillid === 'product_know' && !empty($positionid)) {
+            return consultant_career::product_definitions($positionid);
+        }
+        return $definitions;
     }
 
 
@@ -146,6 +151,23 @@ class evidence {
             'activityname' => '',
             'modname' => '',
         ];
+
+        /*
+         * Only learning completion and assessment pass/fail currently have
+         * implemented runtime evaluators. The schema reserves additional
+         * evidence types for future workflows, but treating those labels as
+         * ordinary Moodle completion would falsely claim practice, manager
+         * review, checklist or certification evidence.
+         */
+        $supportedtypes = [
+            'learning',
+            'assessment',
+        ];
+
+        if (!in_array((string)$definition->evidencetype, $supportedtypes, true)) {
+            $result['status'] = 'unsupported_type';
+            return $result;
+        }
 
 
         /*
@@ -308,15 +330,12 @@ class evidence {
                 }
 
                 /*
-                 * State 1 means Moodle says the assessment is
-                 * complete but has no explicit pass/fail state.
-                 *
-                 * We accept completion as satisfying the configured
-                 * evidence requirement but intentionally do not claim
-                 * that a pass was independently verified.
+                 * State 1 only proves that Moodle marked the activity
+                 * complete. It does not prove a passing assessment result,
+                 * so the evidence must remain unsatisfied.
                  */
                 $result['passed'] = null;
-                $result['satisfied'] = true;
+                $result['satisfied'] = false;
                 $result['status'] =
                     'completed_ungraded';
 
@@ -345,6 +364,16 @@ class evidence {
          * activity-level evidence.
          */
         if (!empty($definition->courseid)) {
+
+            /*
+             * Course completion has no single pass/fail result. Assessment
+             * evidence therefore requires an activity-level source whose
+             * Moodle completion state can preserve pass/fail semantics.
+             */
+            if ((string)$definition->evidencetype === 'assessment') {
+                $result['status'] = 'unsupported_source';
+                return $result;
+            }
 
             $courseid =
                 (int)$definition->courseid;

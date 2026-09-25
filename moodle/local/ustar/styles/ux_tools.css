@@ -1,0 +1,10 @@
+.u-ux-tools{max-width:1200px;margin:24px auto;padding:0 16px}
+.u-ux-form{padding:24px}.u-ux-form input:not([type=checkbox]):not([type=radio]),.u-ux-form select,.u-ux-form textarea{max-width:100%;font-size:16px}
+.u-ux-form label{display:block;font-weight:600;margin:12px 0 6px}
+.u-ux-form input[type=text],.u-ux-form input[type=number],.u-ux-form select,.u-ux-form textarea{width:100%;padding:10px;border:1px solid #91978c;border-radius:8px;background:var(--u-surface,#fff);color:inherit}
+.u-ux-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.u-ux-question{padding:18px;border:1px solid #91978c;border-radius:12px;margin:16px 0}
+.u-ux-question legend{font-size:18px;font-weight:700;width:auto;padding:0 8px}
+.u-ux-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.u-ux-bank{max-height:360px;overflow:auto}.u-ux-bank label{font-weight:400;padding:8px;border-bottom:1px solid #91978c}
+@media(max-width:700px){.u-ux-grid{grid-template-columns:1fr}.u-ux-form{padding:16px}.u-topbar__actions{gap:4px}}

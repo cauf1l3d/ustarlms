@@ -1,18 +1,54 @@
 <div class="u-product-page u-profile-page">
     <header class="u-profile-hero">
-        <div class="u-profile-avatar">{{initials}}</div>
+        <div class="u-profile-avatar-wrap">
+        <div class="u-profile-avatar u-profile-avatar--photo">
+            {{#avatarurl}}<img src="{{avatarurl}}" alt="Фото профиля">{{/avatarurl}}
+            {{^avatarurl}}{{initials}}{{/avatarurl}}
+        </div>
+        <a class="u-profile-photo-edit" href="{{photoediturl}}">Изменить фото</a>
+    </div>
         <div class="u-profile-hero__body">
             <p class="u-page-kicker">Личный кабинет</p>
             <h1>{{fullname}}</h1>
             <div class="u-profile-meta">
                 <span>{{position}}</span><span>{{department}}</span><span>{{email}}</span>
             </div>
+            {{#haspersonalgrade}}
+            <a class="u-profile-grade" href="{{personalgradeurl}}">
+                <span>Мой грейд</span><strong>{{personalgradelabel}}</strong><span aria-hidden="true">→</span>
+            </a>
+            {{/haspersonalgrade}}
         </div>
         <div class="u-profile-level">
             <span>Уровень</span><strong>{{level}}</strong><small>{{xp}} XP</small>
         </div>
     </header>
 
+    {{#employmentpending}}
+    <section class="u-panel u-registration-panel">
+        <header class="u-panel-title"><div><p class="u-page-kicker">Регистрация</p><h2>Подтверждение должности</h2></div></header>
+        {{#registrationrequested}}
+        <div class="u-inline-notice u-inline-notice--info"><div><strong>Заявка отправлена</strong>
+            <p>Руководитель подразделения проверит должность. До решения профиль доступен, а обучение и награды отключены.</p></div></div>
+        {{/registrationrequested}}
+        {{^registrationrequested}}
+        {{#registrationrejected}}<div class="u-inline-notice"><div><strong>Предыдущая заявка отклонена</strong><p>{{registrationreviewcomment}}</p></div></div>{{/registrationrejected}}
+        <form method="post" class="u-staffing-card">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="action" value="registrationrequest">
+            <label>Ваше подразделение
+                <select name="departmentid" required>
+                    <option value="">Выберите подразделение</option>
+                    {{#registrationdepartments}}<option value="{{id}}">{{name}}</option>{{/registrationdepartments}}
+                </select>
+            </label>
+            <button class="u-btn u-btn--primary" type="submit">Отправить заявку HRD</button>
+        </form>
+        {{/registrationrequested}}
+    </section>
+    {{/employmentpending}}
+
+    {{^employmentpending}}
     {{^hasposition}}
     <div class="u-inline-notice u-inline-notice--info">
         {{{profileicon}}}
@@ -33,7 +69,6 @@
         <a class="u-feature-card" href="{{knowledgeurl}}">{{{knowledgeicon}}}<div><strong>База знаний</strong><span>Регламенты и рабочие материалы</span></div><b>→</b></a>
         <a class="u-feature-card" href="{{achievementsurl}}">{{{trophyicon}}}<div><strong>Достижения</strong><span>XP, уровень и награды</span></div><b>→</b></a>
         <a class="u-feature-card" href="{{messagesurl}}">{{{messageicon}}}<div><strong>Сообщения</strong><span>Рабочие диалоги внутри Академии</span></div><b>→</b></a>
-        <a class="u-feature-card" href="{{preferencesurl}}">{{{settingsicon}}}<div><strong>Настройки профиля</strong><span>Параметры Moodle и уведомления</span></div><b>→</b></a>
     </div>
 
     <div class="u-profile-columns">
@@ -53,13 +88,13 @@
         </section>
 
         <section class="u-panel">
-            <header class="u-panel-title"><div><p class="u-page-kicker">Подтверждение навыка</p><h2>Навыки и готовность</h2></div><span>{{readiness}}%</span></header>
+            <header class="u-panel-title"><div><p class="u-page-kicker">Учебные требования</p><h2>Прогресс обучения по навыкам</h2></div><span>{{readiness}}%</span></header>
             {{#hasskills}}
             <div class="u-skill-mini-list">
                 {{#skillitems}}
                 <div class="u-skill-mini {{#satisfied}}is-ok{{/satisfied}}">
                     <div><strong>{{name}}</strong><small>{{category}} · уровень {{targetlevel}}</small></div>
-                    {{#satisfied}}<b>Подтверждено</b>{{/satisfied}}{{^satisfied}}<b>Нужны evidence</b>{{/satisfied}}
+                    {{#satisfied}}<b>Обучение подтверждено</b>{{/satisfied}}{{^satisfied}}<b>Обучение ожидается</b>{{/satisfied}}
                 </div>
                 {{/skillitems}}
             </div>
@@ -77,4 +112,5 @@
         {{/hasbadges}}
         {{^hasbadges}}<div class="u-empty-mini">Первая награда появится после реального учебного или игрового результата.</div>{{/hasbadges}}
     </section>
+    {{/employmentpending}}
 </div>

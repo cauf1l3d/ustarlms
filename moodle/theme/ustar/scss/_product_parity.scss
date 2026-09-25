@@ -456,6 +456,15 @@
 .u-profile-level span,
 .u-profile-level small { color: var(--u-text-secondary); font-size: 11px; }
 .u-profile-level strong { font-size: 32px; line-height: 1.05; }
+.u-profile-grade { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px;
+    padding: 8px 12px; border-radius: var(--u-r-md); border: 1px solid var(--u-border);
+    background: var(--u-surface); color: var(--u-text-primary); text-decoration: none; }
+.u-profile-grade strong { color: var(--u-ink-900); }
+.u-profile-grade:hover, .u-profile-grade:focus-visible { border-color: var(--u-brand-strong); }
+.u-grade-approvals-link { padding: 9px 12px; border: 1px solid var(--u-border);
+    border-radius: var(--u-r-md); background: var(--u-surface); color: var(--u-text-primary);
+    font-weight: 600; text-decoration: none; white-space: nowrap; }
+.u-grade-approvals-link:hover, .u-grade-approvals-link:focus-visible { border-color: var(--u-brand-strong); }
 .u-profile-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 
 .u-compact-list,

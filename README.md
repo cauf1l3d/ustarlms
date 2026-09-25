@@ -1,5 +1,7 @@
 # USTAR Academy
 
+**Релизная работа 24.09.2026:** черновой [PR #14](https://github.com/cauf1l3d/ustarlms/pull/14) содержит изменения поверх PR #13. Проверка кода не является приёмкой Moodle runtime или production. Канонические критерии и история статусов находятся в `context/roadmap/`; приведённая ниже запись описывает более раннюю публикацию исходников.
+
 **Актуальная работа: [начать здесь](START_HERE.md) → [roadmap](context/roadmap/README.md) → [статус и следующий шаг](context/roadmap/STATE.yaml).**
 
 Приоритет: надёжный production, консистентная студия маршрутов, награда за каждое новое подтверждённое прохождение точки, геймификация и инженерный порядок. Код патчей опубликован в `integration/ustar-20260912`; main содержит канонический контекст и harness. Код приложения main в этой публикации не менялся. Точный кодовый SHA и границы проверки — в STATE. Последний SCORM-вариант предварительно подтверждён пользователем; полная сверка production ещё требуется.
@@ -25,4 +27,3 @@ IMPORTANT:
 bitrix_bot_handler.php is intentionally excluded from this baseline commit.
 The live handler contains credential-related configuration that must first be moved to protected environment configuration.
 The live handler remains protected by the production snapshot/recovery system.
-

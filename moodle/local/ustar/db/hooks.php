@@ -3,8 +3,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
     [
-        'hook' => \core_user\hook\after_login_completed::class,
-        'callback' => [\local_ustar\hook_callbacks::class, 'after_login_completed'],
-        'priority' => 100,
+        'hook' => \core\hook\output\before_footer_html_generation::class,
+        'callback' => [\local_ustar\hook_callbacks::class, 'before_footer_html_generation'],
     ],
 ];

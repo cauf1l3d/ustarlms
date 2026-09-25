@@ -126,7 +126,7 @@ final class assessment_authoring {
                 }
                 $info = (object)['modulename'=>'quiz','module'=>$DB->get_field('modules','id',['name'=>'quiz'],MUST_EXIST),
                     'course'=>$course->id,'section'=>1,'name'=>$input['title'],'intro'=>'','introformat'=>FORMAT_PLAIN,
-                    'visible'=>1,'visibleoncoursepage'=>1,'groupmode'=>0,'groupingid'=>0,
+                    'visible'=>1,'visibleoncoursepage'=>1,'groupmode'=>0,'groupingid'=>0,'cmidnumber'=>'',
                     'completion'=>COMPLETION_TRACKING_AUTOMATIC,'completionusegrade'=>1,'completiongradeitemnumber'=>0,'completionpassgrade'=>1,
                     'completionview'=>0,'completionexpected'=>0,'timeopen'=>0,'timeclose'=>0,
                     'timelimit'=>$input['minutes']*60,'overduehandling'=>'autosubmit','graceperiod'=>0,
@@ -152,7 +152,7 @@ final class assessment_authoring {
                 $ids = $input['bankids'];
                 foreach ($input['questions'] as $row) {$ids[] = self::save_question($row, $categoryid);}
                 foreach ($ids as $qid) {
-                    if (!quiz_add_quiz_question($qid, $quiz)) {throw new \moodle_exception('Вопрос добавлен дважды.');}
+                    if (quiz_add_quiz_question($qid, $quiz) === false) {throw new \moodle_exception('Вопрос добавлен дважды.');}
                 }
                 // Pin every slot through the core API: later edits in the bank cannot silently change this test.
                 $quizobj = \mod_quiz\quiz_settings::create($quiz->id);

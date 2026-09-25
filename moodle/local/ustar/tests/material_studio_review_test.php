@@ -187,7 +187,7 @@ final class material_studio_review_test extends \advanced_testcase {
         ], (int)$USER->id, (string)$route->positionid, [], $version);
         $this->assertFalse($scormresult['configured']);
         $this->assertFalse($scormresult['satisfied']);
-        $this->assertStringContainsString('runtime', (string)$scormresult['detail']);
+        $this->assertStringContainsString('опубликованная версия', (string)$scormresult['detail']);
     }
 
 

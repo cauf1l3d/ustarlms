@@ -427,6 +427,62 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertNotSame($firstid, $secondid);
     }
 
+    public function test_approved_hire_has_one_manager_scoped_primary_and_learning_assignment(): void {
+        global $DB;
+        $manager = $this->employee('retail_head');
+        $headplace = $this->place('retail_head');
+        $this->assign($manager->id, $headplace);
+        $staffplace = $this->place('retail_seller', $headplace);
+        $this->grant($manager->id, ['local/ustar:viewteam', 'local/ustar:use']);
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage']);
+
+        $this->setUser($manager);
+        $requestid = staffing_requests::create_hire($manager->id, [
+            'firstname' => 'Новый', 'lastname' => 'Сотрудник', 'positionid' => 'retail_seller',
+            'requesteddate' => time() - DAYSECS,
+        ]);
+        $this->setUser($hrd);
+        $result = staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED, $hrd->id, [
+            'username' => 'hired_' . random_string(8),
+            'email' => 'hired_' . random_string(8) . '@example.invalid',
+            'password' => 'Qx9!Ayear2026',
+        ]);
+        $userid = (int)$result['createduserid'];
+        $this->assertGreaterThan(1, $userid);
+        $this->assertSame(1, $DB->count_records('local_ustar_assignments', [
+            'userid' => $userid, 'assignmenttype' => 'primary', 'status' => 'active',
+        ]));
+        $this->assertSame($staffplace, (int)organization_model::primary_assignment($userid)->staffplaceid);
+        $this->assertSame('retail_seller', organization_identity::resolve($userid)['positionid']);
+        $this->assertSame((int)$manager->id, org::manager_id($userid));
+        $this->assertSame(employment::ACTIVE, employment::resolve($userid)['status']);
+        $this->assertSame('ready', assignment::plan_user($userid)['status']);
+    }
+
+    public function test_pending_registration_bootstraps_but_cannot_call_learning_api(): void {
+        global $DB;
+        $userid = registration_service::register([
+            'username' => 'waiting_' . random_string(8), 'password' => 'Qx9!Ayear2026',
+            'email' => 'waiting_' . random_string(8) . '@example.invalid',
+            'firstname' => 'Ожидающий', 'lastname' => 'Сотрудник', 'departmentid' => 'retail',
+        ]);
+        $user = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
+        $this->setUser($user);
+        $bootstrap = json_decode(\local_ustar\external\get_workspace::execute()['json'], true);
+        $this->assertSame(employment::PENDING, $bootstrap['employmentStatus']);
+        try {
+            \local_ustar\external\get_games::execute();
+            $this->fail('Pending users must not access learning functions');
+        } catch (\required_capability_exception $e) {
+            $this->assertSame(employment::PENDING, employment::resolve($userid)['status']);
+        }
+        $this->setAdminUser();
+        employment::set_status($userid, employment::ACTIVE, (int)$GLOBALS['USER']->id, 'fixture');
+        $this->setUser($user);
+        $this->assertIsArray(json_decode(\local_ustar\external\get_games::execute()['json'], true));
+    }
+
     public function test_future_hire_approval_does_not_create_an_employee_early(): void {
         global $DB;
         $requester = $this->getDataGenerator()->create_user(['timezone' => 'Europe/Moscow']);

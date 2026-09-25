@@ -10,6 +10,7 @@ on:
         default: false
   pull_request:
     branches: [main, 'integration/**', 'codex/**']
+    types: [opened, synchronize, reopened, labeled]
   push:
     branches: ['integration/**']
 
@@ -27,6 +28,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '24'
@@ -59,6 +61,8 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '24'
@@ -73,7 +77,7 @@ jobs:
       - run: node tests/http-smoke.mjs
 
   moodle-db:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.full_rc }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
     needs: [source, frontend, rollback, prepare-rc]
     runs-on: ubuntu-24.04
     timeout-minutes: 40
@@ -81,6 +85,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Export baseline from immutable commit
         run: |
           python3 scripts/ci/prepare_stage.py
@@ -104,13 +109,14 @@ jobs:
         run: docker compose -f tests/stage/compose.yaml down --volumes
 
   rollback:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.full_rc }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Run isolated full rollback and restore drill
         run: bash scripts/stage1_rollback_drill.sh
       - name: Upload rollback evidence, including failures
@@ -124,16 +130,17 @@ jobs:
         run: docker compose -f tests/stage/rollback-compose.yaml down --volumes
 
   prepare-rc:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.full_rc }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
     needs: [source, frontend, rollback]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Verify packaged candidate matches the tested commit
         env:
-          CANDIDATE_SHA: ${{ github.sha }}
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python3 scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
           git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle frontend
@@ -145,7 +152,7 @@ jobs:
           path: artifacts/
 
   gate:
-    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.full_rc }}
+    if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc')) }}
     needs: [source, frontend, rollback, prepare-rc, moodle-db]
     runs-on: ubuntu-24.04
     steps:

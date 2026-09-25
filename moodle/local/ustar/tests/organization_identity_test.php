@@ -10,6 +10,7 @@ defined('MOODLE_INTERNAL') || die();
 #[\PHPUnit\Framework\Attributes\CoversClass(capabilities::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(access_migration::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(registration_service::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(staffing_requests::class)]
 final class organization_identity_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -424,6 +425,81 @@ final class organization_identity_test extends \advanced_testcase {
         $this->setUser($candidate);
         $secondid = registration_service::submit($candidate->id, 'retail_seller');
         $this->assertNotSame($firstid, $secondid);
+    }
+
+    public function test_future_hire_approval_does_not_create_an_employee_early(): void {
+        global $DB;
+        $requester = $this->getDataGenerator()->create_user(['timezone' => 'Europe/Moscow']);
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage']);
+        $date = (new \DateTimeImmutable('today', new \DateTimeZone('Europe/Moscow')))
+            ->modify('+1 day')->setTime(12, 0)->getTimestamp();
+        $requestid = $DB->insert_record('local_ustar_staff_requests', (object)[
+            'requesttype' => staffing_requests::TYPE_HIRE, 'departmentid' => 'retail',
+            'positionid' => 'retail_seller', 'firstname' => 'Будущий', 'lastname' => 'Сотрудник',
+            'requesteddate' => $date, 'status' => staffing_requests::STATUS_PENDING,
+            'requestedby' => $requester->id, 'timecreated' => time(), 'timemodified' => time(),
+        ]);
+        $this->setUser($hrd);
+        $row = array_values(staffing_requests::list_for($hrd->id))[0];
+        $this->assertFalse($row['canapprove']);
+        try {
+            staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED, $hrd->id,
+                ['username' => 'premature_hire', 'email' => 'premature@example.invalid', 'password' => 'Secret123!']);
+            $this->fail('A future hire must not be executed during approval.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(staffing_requests::STATUS_PENDING,
+                $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $requestid]));
+            $this->assertFalse($DB->record_exists('user', ['username' => 'premature_hire']));
+        }
+    }
+
+    public function test_last_working_day_does_not_suspend_employee_early(): void {
+        global $DB;
+        $requester = $this->getDataGenerator()->create_user(['timezone' => 'Europe/Moscow']);
+        $employee = $this->employee();
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage']);
+        $date = (new \DateTimeImmutable('today', new \DateTimeZone('Europe/Moscow')))
+            ->setTime(12, 0)->getTimestamp();
+        $requestid = $DB->insert_record('local_ustar_staff_requests', (object)[
+            'requesttype' => staffing_requests::TYPE_TERMINATE, 'departmentid' => 'retail',
+            'positionid' => 'retail_seller', 'employeeid' => $employee->id,
+            'requesteddate' => $date, 'reason' => 'Fixture',
+            'status' => staffing_requests::STATUS_PENDING, 'requestedby' => $requester->id,
+            'timecreated' => time(), 'timemodified' => time(),
+        ]);
+        $this->setUser($hrd);
+        $row = array_values(staffing_requests::list_for($hrd->id))[0];
+        $this->assertFalse($row['canapprove']);
+        try {
+            staffing_requests::review($requestid, staffing_requests::STATUS_APPROVED, $hrd->id);
+            $this->fail('Termination must not execute on the last working day.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(staffing_requests::STATUS_PENDING,
+                $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $requestid]));
+            $this->assertSame(0, (int)$DB->get_field('user', 'suspended', ['id' => $employee->id]));
+        }
+    }
+
+    public function test_staffing_execution_window_uses_requester_day_not_server_day(): void {
+        $window = new \ReflectionMethod(staffing_requests::class, 'execution_window_open');
+        $requester = (object)['timezone' => 'Asia/Tokyo'];
+        $date = (new \DateTimeImmutable('2026-09-05 12:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $request = (object)['requesttype' => staffing_requests::TYPE_HIRE,
+            'requesteddate' => $date];
+        $before = (new \DateTimeImmutable('2026-09-04 12:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $same = (new \DateTimeImmutable('2026-09-05 08:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $after = (new \DateTimeImmutable('2026-09-06 00:00:00', new \DateTimeZone('Asia/Tokyo')))
+            ->getTimestamp();
+        $this->assertFalse($window->invoke(null, $request, $requester, $before));
+        $this->assertTrue($window->invoke(null, $request, $requester, $same));
+        $request->requesttype = staffing_requests::TYPE_TERMINATE;
+        $this->assertFalse($window->invoke(null, $request, $requester, $same));
+        $this->assertTrue($window->invoke(null, $request, $requester, $after));
     }
 
     public function test_hr_position_change_updates_canonical_assignment_and_keeps_acting_role(): void {

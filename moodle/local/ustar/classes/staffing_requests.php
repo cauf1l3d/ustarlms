@@ -46,6 +46,30 @@ final class staffing_requests {
         view_as::assert_writable();
     }
 
+    /**
+     * A decision currently executes immediately. A planned hire may start on
+     * its requested day; termination must wait until the last working day has
+     * ended. Interpret the date in the requester's timezone, which was used by
+     * the date picker when the request was created.
+     */
+    private static function execution_window_open(\stdClass $request, ?\stdClass $requester = null,
+            ?int $now = null): bool {
+        global $DB;
+        if (!in_array((string)$request->requesttype, [self::TYPE_HIRE, self::TYPE_TERMINATE], true)) {
+            return true;
+        }
+        $requester = $requester ?: $DB->get_record('user',
+            ['id' => (int)$request->requestedby, 'deleted' => 0], 'id,timezone');
+        if (!$requester || (int)$request->requesteddate <= 0) {
+            return false;
+        }
+        $timezone = (string)$requester->timezone;
+        $requestedday = userdate((int)$request->requesteddate, '%Y-%m-%d', $timezone, false);
+        $today = userdate($now ?? time(), '%Y-%m-%d', $timezone, false);
+        return (string)$request->requesttype === self::TYPE_HIRE
+            ? $requestedday <= $today : $requestedday < $today;
+    }
+
     public static function create_hire(int $actorid, array $input): int {
         global $DB;
 
@@ -226,6 +250,11 @@ final class staffing_requests {
             }
             throw new \invalid_parameter_exception('Заявка уже обработана');
         }
+        if ($decision === self::STATUS_APPROVED && !self::execution_window_open($request)) {
+            throw new \invalid_parameter_exception((string)$request->requesttype === self::TYPE_TERMINATE
+                ? 'Последний рабочий день ещё не завершён. Исполнение увольнения возможно со следующего дня.'
+                : 'Дата выхода ещё не наступила. Немедленное назначение пока невозможно.');
+        }
 
         $reviewcomment = clean_param(trim((string)($input['reviewcomment'] ?? '')), PARAM_TEXT);
         if ($decision === self::STATUS_REJECTED && $reviewcomment === '') {
@@ -399,7 +428,8 @@ final class staffing_requests {
         $departments = people::department_map($structure);
         $rows = [];
         foreach ($records as $record) {
-            $requester = $DB->get_record('user', ['id' => (int)$record->requestedby], 'id,firstname,lastname', IGNORE_MISSING);
+            $requester = $DB->get_record('user', ['id' => (int)$record->requestedby],
+                'id,firstname,lastname,timezone', IGNORE_MISSING);
             $reviewer = !empty($record->reviewedby)
                 ? $DB->get_record('user', ['id' => (int)$record->reviewedby], 'id,firstname,lastname', IGNORE_MISSING)
                 : null;
@@ -433,6 +463,9 @@ final class staffing_requests {
                 && !empty($record->createduserid)
                 && (int)$record->requestedby === $viewerid
                 && !$adaptation;
+            $canreview = $status === self::STATUS_PENDING
+                && ((!$isregistration && $ishr) || ($isregistration && $canapproveregistration));
+            $canapprove = $canreview && self::execution_window_open($record, $requester ?: null);
             $rows[] = [
                 'id' => (int)$record->id,
                 'type' => $type,
@@ -449,7 +482,8 @@ final class staffing_requests {
                 'hasdepartmentpositions' => !empty($departmentpositions),
                 'fullname' => trim((string)$record->lastname . ' ' . (string)$record->firstname),
                 'employeeid' => (int)($record->employeeid ?? 0),
-                'requesteddate' => userdate((int)$record->requesteddate, '%d.%m.%Y'),
+                'requesteddate' => userdate((int)$record->requesteddate, '%d.%m.%Y',
+                    $requester ? (string)$requester->timezone : 99),
                 'comment' => (string)($record->comment ?? ''),
                 'hascomment' => trim((string)($record->comment ?? '')) !== '',
                 'reason' => (string)($record->reason ?? ''),
@@ -466,12 +500,17 @@ final class staffing_requests {
                 'hasreviewcomment' => trim((string)($record->reviewcomment ?? '')) !== '',
                 'timecreated' => userdate((int)$record->timecreated, '%d.%m.%Y %H:%M'),
                 'createduserid' => (int)($record->createduserid ?? 0),
-                'requesteddateiso' => userdate((int)$record->requesteddate, '%Y-%m-%d'),
+                'requesteddateiso' => userdate((int)$record->requesteddate, '%Y-%m-%d',
+                    $requester ? (string)$requester->timezone : 99, false),
                 'canassignadaptation' => $canassignadaptation,
                 'hasadaptation' => (bool)$adaptationcard,
                 'adaptation' => $adaptationcard,
-                'canreview' => $status === self::STATUS_PENDING
-                    && ((!$isregistration && $ishr) || ($isregistration && $canapproveregistration)),
+                'canreview' => $canreview,
+                'canapprove' => $canapprove,
+                'approvalnotready' => $canreview && !$canapprove
+                    ? ($type === self::TYPE_TERMINATE
+                        ? 'Исполнение возможно после последнего рабочего дня.'
+                        : 'Исполнение возможно в дату выхода или позже.') : '',
             ];
         }
         usort($rows, static function(array $a, array $b): int {

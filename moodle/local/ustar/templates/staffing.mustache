@@ -129,6 +129,7 @@
 
                 {{#canreview}}
                 <div class="u-staffing-review-grid">
+                    {{#canapprove}}
                     <form method="post" class="u-staffing-review-form">
                         <input type="hidden" name="sesskey" value="{{sesskey}}">
                         <input type="hidden" name="requestid" value="{{id}}">
@@ -149,6 +150,8 @@
                         <label>Комментарий HRD<textarea name="reviewcomment" rows="2"></textarea></label>
                         <button class="u-btn u-btn--primary" type="submit">Одобрить и исполнить</button>
                     </form>
+                    {{/canapprove}}
+                    {{^canapprove}}<p class="u-staffing-adaptation-note" role="status">{{approvalnotready}} Заявка остаётся на согласовании; её можно отклонить сейчас.</p>{{/canapprove}}
                     <form method="post" class="u-staffing-review-form u-staffing-review-form--reject">
                         <input type="hidden" name="sesskey" value="{{sesskey}}">
                         <input type="hidden" name="requestid" value="{{id}}">

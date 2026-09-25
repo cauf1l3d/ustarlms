@@ -174,6 +174,49 @@ final class stage1_test extends \advanced_testcase {
         $this->assertTrue(accounts::learning_enabled($user->id));
     }
 
+    public function test_renewed_completion_on_old_progress_is_rewarded_and_repaired(): void {
+        global $DB;
+        [$generator, $user, $route, $point, $version] = $this->fixture();
+        $startedat = time() - 100;
+        $oldat = $startedat - DAYSECS;
+        $currentat = time();
+        set_config('route_rewards_startedat', $startedat, 'local_ustar');
+        $old = ['mode' => 'evaluated', 'requirements' => [[
+            'type' => 'cm', 'required' => true, 'satisfied' => true, 'completedat' => $oldat,
+        ]]];
+        $generator->create_progress($user, $point, $version, [
+            'completedat' => $oldat, 'evidencejson' => json_encode($old),
+        ]);
+        $progress = $DB->get_record('local_ustar_route_progress', [
+            'userid' => $user->id, 'pointid' => $point->id, 'versionid' => $version->id,
+        ], '*', MUST_EXIST);
+        $progress->timecreated = $oldat;
+        $DB->update_record('local_ustar_route_progress', $progress);
+        route_rewards::try_progress($user->id, $point->id, $version->id);
+        $this->assertSame(0, $DB->count_records('local_ustar_coin_ledger', [
+            'userid' => $user->id, 'txtype' => 'route_reward',
+        ]));
+
+        $renewed = $old;
+        $renewed['requirements'][0]['completedat'] = $currentat;
+        $progress->completedat = $currentat;
+        $progress->evidencejson = json_encode($renewed);
+        $DB->update_record('local_ustar_route_progress', $progress);
+        route_rewards::try_progress($user->id, $point->id, $version->id);
+        $this->assertSame(1, $DB->count_records('local_ustar_coin_ledger', [
+            'userid' => $user->id, 'txtype' => 'route_reward',
+        ]));
+
+        $secondat = $currentat + 1;
+        $renewed['requirements'][0]['completedat'] = $secondat;
+        completion_cycle::confirm($user->id, $point->id, $version->id, $secondat, 0, $renewed);
+        route_rewards::reconcile(200);
+        route_rewards::reconcile(200);
+        $this->assertSame(2, $DB->count_records('local_ustar_coin_ledger', [
+            'userid' => $user->id, 'txtype' => 'route_reward',
+        ]));
+    }
+
     public function test_route_reward_is_once_per_cycle_and_new_cycle_is_rewarded(): void {
         global $DB;
         [$g, $user, $route, $point, $version] = $this->fixture();

@@ -13,7 +13,8 @@ class hr_people {
 
     public static function save(
         array $input,
-        int $actorid
+        int $actorid,
+        bool $deferstaffplace = false
     ): array {
         global $DB, $CFG, $USER;
         view_as::assert_writable();
@@ -419,11 +420,13 @@ class hr_people {
             );
 
 
-            organization_model::assign_position_by_hr(
-                $savedid,
-                $positionid,
-                $actorid
-            );
+            if (!$deferstaffplace) {
+                organization_model::assign_position_by_hr(
+                    $savedid,
+                    $positionid,
+                    $actorid
+                );
+            }
 
             people::set_position_id(
                 $savedid,
@@ -464,7 +467,11 @@ class hr_people {
             $transaction->rollback($e);
         }
 
-
+        // Staffing assigns a manager-scoped place before synchronizing learning.
+        if ($deferstaffplace) {
+            return ['userid' => $savedid, 'assignment' => ['ok' => true,
+                'status' => 'pending_staffplace', 'enrolled' => []]];
+        }
 
         /*
          * Immediate learning assignment based on canonical identity.

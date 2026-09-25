@@ -8,12 +8,14 @@ Production используется только для финального smo
 
 В production допускается только один immutable SHA кандидата, для которого одновременно выполнено:
 
-- PR #11 не содержит незакрытых P1 по каноническому learning lifecycle;
-- USTAR review gate зелёный именно на этом SHA;
+- единый PR #14 принят по реестру `context/roadmap/RC_AUDIT_ACCEPTANCE_20260924.md`;
+- на одном и том же SHA завершились успешно source, frontend, rollback, prepare-rc, moodle-db и gate;
 - сохранены CI source archive и release-manifest.json;
 - production_manifest.py --require-match не обнаруживает drift относительно подтверждённого baseline;
 - известен и проверен путь полного восстановления code + DB + moodledata одной согласованной точки;
-- Studio SCORM не используется как route completion. Для маршрутов до появления Studio runtime используется существующий Moodle SCORM requirement type=cm.
+- для SCORM Studio подтверждены создание Moodle activity, запуск, попытка, результат и завершение маршрута в DB и браузере;
+- в браузере проверены создание Moodle Quiz через материалы, публикация, отправка попытки и результат;
+- production-only файлы `.php.before_user_selector_fix` и `boards.*` разобраны отдельно: файл резервной копии удалён из публичного корня, судьба старого Boards кода подтверждена перед заменой.
 
 Любое несовпадение SHA, manifest/hash, DB version или неизвестный drift = STOP.
 
@@ -32,12 +34,12 @@ Production используется только для финального smo
 5. Проверить, что backup читается и его местоположение известно оператору.
 6. Запустить release manifest preflight. При drift не применять RC.
 
-Текущий Docker layout USTAR:
+Исторический Docker layout USTAR (проверить по месту до выполнения команд):
 
 - application container: ustar_moodle;
 - host code root: /opt/ustar/data/moodle/public;
 - Moodle public dir in container: /var/www/html/public;
-- Moodle CLI: /var/www/html/admin/cli.
+- Moodle CLI: определить из действующего монтирования, не полагаться на этот документ как на источник текущего пути.
 
 ## 3. Применение кандидата
 
@@ -51,10 +53,13 @@ Production используется только для финального smo
 
 После применения точного source archive:
 
+Сначала определить `$MOODLE_CLI_ROOT` внутри контейнера по наличию
+`admin/cli/upgrade.php` и убедиться, что путь указывает на действующий
+production-код. Затем выполнять команды от пользователя веб-сервера:
+
 ```bash
-sudo docker exec ustar_moodle php /var/www/html/admin/cli/upgrade.php --non-interactive
-sudo docker exec ustar_moodle php /var/www/html/admin/cli/purge_caches.php
-sudo docker exec ustar_moodle php /var/www/html/admin/cli/build_theme_css.php
+sudo docker exec -u www-data ustar_moodle php "$MOODLE_CLI_ROOT/admin/cli/upgrade.php" --non-interactive
+sudo docker exec -u www-data ustar_moodle php "$MOODLE_CLI_ROOT/admin/cli/purge_caches.php"
 ```
 
 Если build_theme_css.php отсутствует в данной версии Moodle, это не повод менять core:
@@ -94,7 +99,11 @@ sudo docker exec ustar_moodle php /var/www/html/admin/cli/build_theme_css.php
    - Evidence и USCOIN/XP создаются только по действующей reward policy.
 8. Если автор меняет source-version assessment, старый PASS не должен закрывать новую версию автоматически.
 
-Studio SCORM ZIP не считать runtime-проверкой: до отдельной реализации он не должен публиковаться как завершаемый route requirement.
+Отдельно проверить созданный в Studio SCORM ZIP: запуск Moodle activity, повторное
+открытие, оценку и закрытие route point. До подтверждения этого сценария на
+изолированной БД не использовать новый Studio SCORM как обязательный шаг.
+Через конструктор Moodle Quiz проверить отправку попытки и итоговую оценку;
+исторический Studio Assessment проверять отдельно, поскольку это другой runtime.
 
 ### C. Руководитель
 

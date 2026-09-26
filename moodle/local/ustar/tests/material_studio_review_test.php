@@ -28,7 +28,7 @@ final class material_studio_review_test extends \advanced_testcase {
         $this->assertSame($original, $pages[0]['image']);
         $this->assertSame($key, $pages[0]['imagekey']);
         $package = studio_scorm_package::html(['title' => 'Страница', 'pages' => $pages]);
-        $this->assertStringContainsString($original, $package);
+        $this->assertStringContainsString(str_replace('/', '\\/', $original), $package);
         $this->assertStringNotContainsString('image/svg+xml', $package);
     }
 

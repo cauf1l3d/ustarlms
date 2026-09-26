@@ -152,7 +152,7 @@ final class stage1_test extends \advanced_testcase {
         $this->assertSame(0, $result['after']['routerewards']);
         $this->assertSame(0, $DB->count_records('local_ustar_route_progress', ['userid' => $user->id]));
         $this->assertSame(1, $DB->count_records('local_ustar_completion_cycle', [
-            'userid' => $user->id, 'status' => 'revoked',
+            'userid' => $user->id, 'status' => 'reset',
         ]));
         $this->assertSame(1, $DB->count_records('local_ustar_coin_ledger', [
             'userid' => $user->id, 'txtype' => 'route_reward_revoke',

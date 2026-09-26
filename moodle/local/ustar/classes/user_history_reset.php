@@ -27,7 +27,7 @@ final class user_history_reset {
 
     public static function preview(int $userid): array {
         global $DB;
-        $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], 'id,username,firstname,lastname', MUST_EXIST);
+        $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
         $runtimeids = array_keys($DB->get_records('local_ustar_assess_runtime', ['userid' => $userid], '', 'id'));
         $workflowevents = 0;
         if ($runtimeids) {
@@ -82,7 +82,7 @@ final class user_history_reset {
             // any credit or evidence cannot be reversed.
             foreach ($DB->get_records('local_ustar_completion_cycle', [
                     'userid' => $userid, 'status' => 'confirmed']) as $cycle) {
-                $cycle->status = 'revoked';
+                $cycle->status = 'reset';
                 $DB->update_record('local_ustar_completion_cycle', $cycle);
             }
             $evidence = $DB->get_records_select('local_ustar_evidence_rec',

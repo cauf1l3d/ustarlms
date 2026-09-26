@@ -159,7 +159,10 @@ final class completion_cycle {
             ], 'id DESC');
             if ($rows) {
                 $latest = reset($rows);
-                if ((string)$latest->status === 'confirmed') { return $latest; }
+                // An unrelated revocation still keeps its original identity on
+                // redelivery. Only an administrator's explicit route reset lets
+                // a newly verified completion reuse this second.
+                if ((string)$latest->status !== 'reset') { return $latest; }
                 $cyclekey .= ':reset:' . count($rows);
             }
             $id = (int)$DB->insert_record('local_ustar_completion_cycle', (object)[

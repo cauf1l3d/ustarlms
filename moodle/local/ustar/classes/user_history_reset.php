@@ -3,7 +3,7 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 final class user_history_reset {
-    /** Destructive resets are restricted to the caller's registered tester identity. */
+    /** Only a real site administrator may reset an employee or their own Route Tester. */
     public static function assert_allowed(int $userid, int $actorid): void {
         global $DB, $USER;
         require_capability('moodle/site:config', \context_system::instance());
@@ -12,10 +12,16 @@ final class user_history_reset {
             throw new \required_capability_exception(\context_system::instance(), 'moodle/site:config', 'nopermissions', '');
         }
         $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], 'id,username', MUST_EXIST);
+        if ($userid <= 1 || $userid === $actorid || is_siteadmin($userid)) {
+            throw new \moodle_exception('Нельзя сбросить учебную историю администратора.');
+        }
+        if (accounts::is_business_account($userid)) {
+            return;
+        }
         $tester = $DB->get_record('local_ustar_route_testers', ['actorid' => $actorid, 'sandboxuserid' => $userid]);
-        if (!$tester || is_siteadmin($userid) || accounts::type_of($userid) !== accounts::TYPE_TEST
+        if (!$tester || accounts::type_of($userid) !== accounts::TYPE_TEST
                 || (string)$user->username !== route_tester::USERNAME_PREFIX . $actorid) {
-            throw new \moodle_exception('Сброс разрешён только для вашей тестовой учётной записи Route Tester. Историю сотрудников удалять нельзя.');
+            throw new \moodle_exception('Сброс разрешён для сотрудников и вашей учётной записи Route Tester.');
         }
     }
 
@@ -34,6 +40,8 @@ final class user_history_reset {
             'username' => $user->username,
             'fullname' => fullname($user),
             'routeprogress' => $DB->count_records('local_ustar_route_progress', ['userid' => $userid]),
+            'confirmedcycles' => $DB->count_records('local_ustar_completion_cycle', ['userid' => $userid, 'status' => 'confirmed']),
+            'routerewards' => route_rewards::summary($userid)['count'],
             'assessruntime' => count($runtimeids),
             'workflowevents' => $workflowevents,
             'contentack' => $DB->count_records('local_ustar_content_ack', ['userid' => $userid]),
@@ -68,6 +76,33 @@ final class user_history_reset {
             require_once($CFG->dirroot . '/mod/quiz/locallib.php');
             require_once($CFG->dirroot . '/mod/scorm/locallib.php');
             require_once($CFG->dirroot . '/mod/scorm/lib.php');
+
+            // Preserve immutable completion and money history while removing their
+            // active effect. The outer transaction rolls back the whole reset if
+            // any credit or evidence cannot be reversed.
+            foreach ($DB->get_records('local_ustar_completion_cycle', [
+                    'userid' => $userid, 'status' => 'confirmed']) as $cycle) {
+                $cycle->status = 'revoked';
+                $DB->update_record('local_ustar_completion_cycle', $cycle);
+            }
+            $evidence = $DB->get_records_select('local_ustar_evidence_rec',
+                'userid = :userid AND (sourcekind = :cycle OR sourcekind = :progress)',
+                ['userid' => $userid, 'cycle' => 'completion_cycle', 'progress' => 'route_progress']);
+            foreach ($evidence as $fact) {
+                if (target_core::evidence_is_valid((int)$fact->id)) {
+                    target_core::append_evidence_event((int)$fact->id, 'revoked',
+                        'Сброс учебного маршрута администратором', $actorid);
+                }
+            }
+            $rewards = $DB->get_records_select('local_ustar_coin_ledger',
+                'userid = :userid AND txtype = :reward AND amount > 0'
+                . ' AND (sourcekind = :cycle OR sourcekind = :progress)',
+                ['userid' => $userid, 'reward' => 'route_reward',
+                    'cycle' => 'completion_cycle', 'progress' => 'route_progress']);
+            foreach ($rewards as $reward) {
+                economy::revoke_credit((int)$reward->id, 'reset-route-reward:' . $reward->id,
+                    'Возврат награды при сбросе учебного маршрута', $actorid);
+            }
 
             foreach ($DB->get_records('quiz_attempts', ['userid' => $userid], 'id ASC') as $attempt) {
                 $quiz = $DB->get_record('quiz', ['id' => $attempt->quiz], '*', MUST_EXIST);
@@ -120,7 +155,7 @@ final class user_history_reset {
                 'entityid' => $userid,
                 'eventtype' => 'admin_history_reset',
                 'actorid' => $actorid,
-                'reason' => 'Администратор очистил учебную историю сотрудника',
+                'reason' => 'Администратор сбросил учебный маршрут и связанные награды',
                 'detailsjson' => json_encode(['userid' => $userid, 'username' => $user->username, 'before' => $before], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'timecreated' => time(),
             ]);

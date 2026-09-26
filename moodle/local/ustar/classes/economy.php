@@ -7,7 +7,8 @@ defined('MOODLE_INTERNAL') || die();
  * USCOIN is a non-cash Academy balance, never a competition score.
  *
  * The immutable ledger is the audit history. local_ustar_coin_balance is a
- * locked projection used exclusively to make a debit atomic and non-negative.
+ * locked projection used to make a debit atomic. A revoked earned reward can
+ * create a debt when its coins were already spent; later credits repay it.
  */
 final class economy {
     public static function available(): bool {
@@ -70,6 +71,32 @@ final class economy {
         }
     }
 
+    /** Reverse an earned route reward without erasing an already recorded spend. */
+    public static function revoke_credit(int $ledgerid, string $idempotencykey, string $comment, int $actorid): bool {
+        global $DB;
+        if ($actorid <= 0 || !is_siteadmin($actorid)) {
+            throw new \invalid_parameter_exception('A site administrator is required to revoke a route reward.');
+        }
+        $original = $DB->get_record('local_ustar_coin_ledger', ['id' => $ledgerid], '*', MUST_EXIST);
+        if ((int)$original->amount <= 0 || (string)$original->txtype !== 'route_reward'
+                || !in_array((string)$original->sourcekind, ['completion_cycle', 'route_progress'], true)) {
+            throw new \invalid_parameter_exception('Only an earned route reward may be revoked.');
+        }
+        if ($DB->record_exists('local_ustar_coin_ledger', ['reversalofid' => $ledgerid])) {
+            return false;
+        }
+        try {
+            return self::apply((int)$original->userid, -(int)$original->amount,
+                'route_reward_revoke', $idempotencykey, 'ledger', (string)$ledgerid,
+                $comment, $actorid, $ledgerid, true);
+        } catch (\dml_write_exception $e) {
+            if ($DB->record_exists('local_ustar_coin_ledger', ['reversalofid' => $ledgerid])) {
+                return false;
+            }
+            throw $e;
+        }
+    }
+
     public static function balance(int $userid): int {
         global $DB;
         if (!self::available() || $userid <= 0) {
@@ -90,16 +117,22 @@ final class economy {
     public static function totals(int $userid): array {
         global $DB;
         if (!self::available()) {
-            return ['balance' => 0, 'earned' => 0, 'spent' => 0];
+            return ['balance' => 0, 'earned' => 0, 'spent' => 0, 'debt' => 0];
         }
         $row = $DB->get_record_sql(
-            'SELECT COALESCE(SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END), 0) AS earned,
-                    COALESCE(SUM(CASE WHEN amount < 0 THEN -amount ELSE 0 END), 0) AS spent
-               FROM {local_ustar_coin_ledger}
-              WHERE userid = :userid',
+            'SELECT COALESCE(SUM(CASE WHEN l.amount > 0 AND rev.id IS NULL THEN l.amount ELSE 0 END), 0) AS earned,
+                    COALESCE(SUM(CASE WHEN l.amount < 0 AND l.txtype <> :revoked THEN -l.amount ELSE 0 END), 0) AS spent
+               FROM {local_ustar_coin_ledger} l
+          LEFT JOIN {local_ustar_coin_ledger} rev ON rev.reversalofid = l.id
+              WHERE l.userid = :userid',
+            ['userid' => $userid, 'revoked' => 'route_reward_revoke']
+        );
+        $signed = (int)$DB->get_field_sql(
+            'SELECT COALESCE(SUM(amount), 0) FROM {local_ustar_coin_ledger} WHERE userid = :userid',
             ['userid' => $userid]
         );
-        return ['balance' => self::balance($userid), 'earned' => (int)$row->earned, 'spent' => (int)$row->spent];
+        return ['balance' => self::balance($userid), 'earned' => (int)$row->earned,
+            'spent' => (int)$row->spent, 'debt' => max(0, -$signed)];
     }
 
     public static function history(int $userid, int $limit = 20): array {
@@ -121,7 +154,8 @@ final class economy {
     }
 
     private static function apply(int $userid, int $amount, string $type, string $idempotencykey,
-            string $sourcekind, string $sourceid, string $comment, ?int $actorid, ?int $reversalofid = null): bool {
+            string $sourcekind, string $sourceid, string $comment, ?int $actorid,
+            ?int $reversalofid = null, bool $allowdebt = false): bool {
         global $DB, $USER;
         if (!self::available() || $userid <= 0 || $amount === 0 || trim($idempotencykey) === '') {
             throw new \invalid_parameter_exception('USCOIN ledger, user, amount and idempotency key are required.');
@@ -158,7 +192,7 @@ final class economy {
                 }
                 $balance = self::locked_balance($userid);
                 $nextbalance = (int)$balance->balance + $amount;
-                if ($nextbalance < 0) {
+                if ($nextbalance < 0 && $amount < 0 && !$allowdebt) {
                     throw new \moodle_exception('USCOIN debit refused: insufficient balance.');
                 }
                 $now = time();
@@ -198,9 +232,6 @@ final class economy {
                 'SELECT COALESCE(SUM(amount), 0) FROM {local_ustar_coin_ledger} WHERE userid = :userid',
                 ['userid' => $userid]
             );
-            if ($historical < 0) {
-                throw new \moodle_exception('USCOIN balance migration is invalid: negative historical balance.');
-            }
             $DB->insert_record('local_ustar_coin_balance', (object)[
                 'userid' => $userid, 'balance' => $historical, 'timemodified' => time(),
             ]);

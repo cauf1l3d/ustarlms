@@ -118,8 +118,10 @@ final class route_rewards {
         if (!accounts::participates($userid)) {
             return ['count' => 0, 'xp' => 0, 'coins' => 0, 'badges' => []];
         }
-        $select = 'userid = :userid AND txtype = :txtype'
-            . ' AND (sourcekind = :legacy OR sourcekind = :cycle)';
+        $select = 'l.userid = :userid AND l.txtype = :txtype'
+            . ' AND (l.sourcekind = :legacy OR l.sourcekind = :cycle)'
+            . ' AND NOT EXISTS (SELECT 1 FROM {local_ustar_coin_ledger} rev'
+            . ' WHERE rev.reversalofid = l.id)';
         $params = [
             'userid' => $userid,
             'txtype' => 'route_reward',
@@ -127,21 +129,14 @@ final class route_rewards {
             'cycle' => 'completion_cycle',
         ];
         $count = economy::available()
-            ? (int)$DB->count_records_select('local_ustar_coin_ledger', $select, $params)
+            ? (int)$DB->count_records_sql('SELECT COUNT(1) FROM {local_ustar_coin_ledger} l WHERE ' . $select, $params)
             : 0;
         $badges = [];
         foreach ([1 => 'Первый шаг', 5 => 'Набираю темп', 10 => 'Уверенный прогресс', 25 => 'Мастер маршрута']
                 as $threshold => $name) {
             if ($count < $threshold) { continue; }
-            $rows = $DB->get_records_select(
-                'local_ustar_coin_ledger',
-                $select,
-                $params,
-                'timecreated ASC,id ASC',
-                '*',
-                $threshold - 1,
-                1
-            );
+            $rows = $DB->get_records_sql('SELECT l.* FROM {local_ustar_coin_ledger} l WHERE '
+                . $select . ' ORDER BY l.timecreated ASC,l.id ASC', $params, $threshold - 1, 1);
             $grant = reset($rows);
             $badges[] = ['name' => $name . ' · ' . $threshold . ' шагов', 'dateissued' => (int)$grant->timecreated];
         }

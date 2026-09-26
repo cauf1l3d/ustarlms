@@ -130,11 +130,63 @@ final class stage1_test extends \advanced_testcase {
         economy::spend($user->id, 4, 'fixture', 'fixture-too-large', 'fixture', 'one', 'Synthetic test', $USER->id);
     }
 
-    public function test_real_employee_cannot_be_reset_even_by_admin(): void {
+    public function test_employee_route_reset_revokes_spent_reward_and_allows_retake(): void {
+        global $DB, $USER;
+        [$generator, $user, $route, $point, $version] = $this->fixture();
+        $completedat = time();
+        set_config('route_rewards_startedat', $completedat - 100, 'local_ustar');
+        $evidence = ['mode' => 'evaluated', 'requirements' => [[
+            'type' => 'cm', 'required' => true, 'satisfied' => true, 'completedat' => $completedat,
+        ]]];
+        $generator->create_progress($user, $point, $version, [
+            'completedat' => $completedat, 'evidencejson' => json_encode($evidence),
+        ]);
+        route_rewards::try_progress($user->id, $point->id, $version->id);
+        $this->assertSame(1, route_rewards::summary($user->id)['count']);
+        $this->assertTrue(economy::spend($user->id, 1, 'fixture', 'spent-route-coin',
+            'fixture', 'one', 'Spent reward', $USER->id));
+
+        $result = user_history_reset::execute($user->id, $USER->id);
+        $this->assertSame(1, $result['before']['confirmedcycles']);
+        $this->assertSame(0, $result['after']['confirmedcycles']);
+        $this->assertSame(0, $result['after']['routerewards']);
+        $this->assertSame(0, $DB->count_records('local_ustar_route_progress', ['userid' => $user->id]));
+        $this->assertSame(1, $DB->count_records('local_ustar_completion_cycle', [
+            'userid' => $user->id, 'status' => 'revoked',
+        ]));
+        $this->assertSame(1, $DB->count_records('local_ustar_coin_ledger', [
+            'userid' => $user->id, 'txtype' => 'route_reward_revoke',
+        ]));
+        $fact = $DB->get_record('local_ustar_evidence_rec', ['userid' => $user->id], '*', MUST_EXIST);
+        $this->assertFalse(target_core::evidence_is_valid((int)$fact->id));
+        $this->assertSame(-1, (int)$DB->get_field('local_ustar_coin_balance', 'balance', ['userid' => $user->id]));
+        $this->assertSame(0, economy::balance($user->id));
+
+        // The old fact is still auditable but cannot be reissued by repair.
+        route_rewards::reconcile(200);
+        $this->assertSame(0, route_rewards::summary($user->id)['count']);
+        $generator->create_progress($user, $point, $version, [
+            'completedat' => $completedat, 'evidencejson' => json_encode($evidence),
+        ]);
+        route_rewards::try_progress($user->id, $point->id, $version->id);
+        $this->assertSame(1, route_rewards::summary($user->id)['count']);
+        $this->assertSame(2, $DB->count_records('local_ustar_completion_cycle', ['userid' => $user->id]));
+        $this->assertSame(0, economy::balance($user->id));
+    }
+
+    public function test_reset_refuses_administrator_target(): void {
         global $USER;
-        $user = $this->getDataGenerator()->create_user();
+        $adminid = (int)$USER->id;
         $this->expectException(\moodle_exception::class);
-        user_history_reset::execute($user->id, $USER->id);
+        user_history_reset::assert_allowed($adminid, $adminid);
+    }
+
+    public function test_reset_refuses_service_account(): void {
+        global $USER;
+        $service = $this->getDataGenerator()->create_user();
+        accounts::set_type($service->id, accounts::TYPE_SERVICE);
+        $this->expectException(\moodle_exception::class);
+        user_history_reset::assert_allowed($service->id, (int)$USER->id);
     }
 
     public function test_reset_requires_registered_owned_test_identity_and_real_actor(): void {

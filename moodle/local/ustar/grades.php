@@ -49,7 +49,14 @@ $PAGE->set_title('Грейды | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 echo $OUTPUT->header();
-echo $OUTPUT->heading('Грейды');
+echo html_writer::start_div('u-grades');
+echo html_writer::start_tag('header', ['class' => 'u-grades__header']);
+echo html_writer::tag('p', 'Развитие · USTAR Академия', ['class' => 'u-grades__eyebrow']);
+echo html_writer::tag('h1', $view === 'team' ? 'Согласование грейдов' : 'Грейды');
+echo html_writer::tag('p', $view === 'team'
+    ? 'Заявки сотрудников вашей команды. Перед решением проверьте условия перехода и результат обучения.'
+    : 'Ступень, условия перехода и история ваших заявок.', ['class' => 'u-grades__intro']);
+echo html_writer::end_tag('header');
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
 if (optional_param('requested', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Заявка отправлена действующему руководителю.', 'notifysuccess'); }
 if (optional_param('decided', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Решение по заявке сохранено.', 'notifysuccess'); }
@@ -104,9 +111,12 @@ if ($view === 'team') {
     }
     foreach ($teamrequests as $request) {
         $employee = $DB->get_record('user', ['id' => (int)$request->userid], 'id,firstname,lastname', IGNORE_MISSING);
-        echo html_writer::start_div('u-stage6-card');
-        echo html_writer::tag('h3', $employee ? fullname($employee) : 'Сотрудник #' . (int)$request->userid);
-        echo html_writer::tag('p', 'Переход: ' . s((string)$request->fromgrade) . ' → ' . s((string)$request->tograde));
+        echo html_writer::start_div('u-stage6-card u-grades__request');
+        echo html_writer::tag('p', 'Заявка на переход', ['class' => 'u-grades__eyebrow']);
+        echo html_writer::tag('h2', $employee ? fullname($employee) : 'Сотрудник #' . (int)$request->userid);
+        echo html_writer::tag('p', s((string)$request->fromgrade) . ' → ' . s((string)$request->tograde),
+            ['class' => 'u-grades__transition']);
+        echo html_writer::start_div('u-grades__actions');
         echo html_writer::start_tag('form', ['method' => 'post']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'decide']);
@@ -125,6 +135,8 @@ if ($view === 'team') {
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Вернуть', 'class' => 'u-btn']);
         echo html_writer::end_tag('form');
         echo html_writer::end_div();
+        echo html_writer::end_div();
     }
 }
+echo html_writer::end_div();
 echo $OUTPUT->footer();

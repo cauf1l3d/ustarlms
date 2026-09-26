@@ -1,4 +1,19 @@
 /* Stage 6 shared service surfaces: responsive, accessible and scoped to USTAR pages. */
+.u-grades { max-width: 1080px; margin: 0 auto; padding: clamp(12px, 2vw, 28px); color: var(--u-text-primary, #2b2b2b); }
+.u-grades__header { margin-bottom: 24px; padding: clamp(18px, 3vw, 32px); border: 1px solid var(--u-border, #dedbd3); border-radius: var(--u-r-lg, 16px); background: var(--u-surface, #fff); box-shadow: var(--u-e-1, 0 1px 2px #2b2b2b12); }
+.u-grades__eyebrow { margin: 0 0 8px; color: var(--u-text-secondary, #605e59); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.u-grades__header h1 { margin: 0 0 8px; font-size: clamp(26px, 3vw, 38px); }
+.u-grades__intro { margin: 0; color: var(--u-text-secondary, #605e59); }
+.u-grades__request { max-width: none; padding: clamp(18px, 2vw, 28px); }
+.u-grades__request h2 { margin: 0 0 8px; font-size: clamp(19px, 2vw, 24px); }
+.u-grades__transition { display: inline-block; padding: 7px 12px; border-radius: 8px; background: var(--u-surface-muted, #ededed); font-weight: 700; }
+.u-grades__actions { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.u-grades__actions form { margin: 0; }
+.u-grades__actions label { width: min(100%, 300px); font-weight: 600; }
+.u-grades__actions input[name="reason"] { min-height: 42px; }
+.u-grades__actions .u-btn { min-height: 42px; }
+.u-studio-scorm-image { display: block; width: auto !important; max-width: min(100%, 480px); max-height: 260px; height: auto; margin: 8px 0 16px; border: 1px solid var(--u-border, #dedbd3); border-radius: 10px; object-fit: contain; }
+@media (max-width: 600px) { .u-grades__actions, .u-grades__actions form { display: block; width: 100%; } .u-grades__actions .u-btn { width: 100%; } }
 .u-stage6-tabs {
     display: flex;
     flex-wrap: wrap;

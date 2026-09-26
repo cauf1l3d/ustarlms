@@ -18,6 +18,20 @@ final class material_studio_review_test extends \advanced_testcase {
             'questions' => 'Question | Yes | No | 1'], $USER->id);
     }
 
+    public function test_scorm_photo_is_kept_by_page_key_without_accepting_posted_image_data(): void {
+        $key = str_repeat('a', 32);
+        $original = 'data:image/png;base64,aGVsbG8=';
+        $pages = (new \ReflectionMethod(material_studio::class, 'scorm_pages'))->invoke(null,
+            [['title' => 'Страница', 'body' => 'Текст', 'imagekey' => $key,
+                'image' => 'data:image/svg+xml;base64,PHN2Zz4=']],
+            [], [['title' => 'Страница', 'body' => 'Текст', 'imagekey' => $key, 'image' => $original]]);
+        $this->assertSame($original, $pages[0]['image']);
+        $this->assertSame($key, $pages[0]['imagekey']);
+        $package = studio_scorm_package::html(['title' => 'Страница', 'pages' => $pages]);
+        $this->assertStringContainsString($original, $package);
+        $this->assertStringNotContainsString('image/svg+xml', $package);
+    }
+
     public function test_preview_does_not_write_a_submission(): void {
         global $DB, $USER;
         $item = $this->create_assessment();

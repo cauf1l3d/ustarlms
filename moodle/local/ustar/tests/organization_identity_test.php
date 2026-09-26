@@ -366,6 +366,22 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertSame('retail_seller', organization_identity::resolve($userid)['positionid']);
     }
 
+    public function test_invalid_self_registration_reports_a_useful_field_error_without_creating_a_user(): void {
+        global $DB;
+        $before = $DB->count_records('user');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Проверьте логин, имя, фамилию и email.');
+        try {
+            registration_service::register([
+                'username' => 'invalid username', 'password' => 'Qx9!Ayear2026',
+                'email' => 'new@example.invalid', 'firstname' => 'Тест',
+                'lastname' => 'Регистрация', 'departmentid' => 'retail',
+            ]);
+        } finally {
+            $this->assertSame($before, $DB->count_records('user'));
+        }
+    }
+
     public function test_hrd_cannot_assign_registration_to_another_department(): void {
         global $DB;
         $userid = registration_service::register([
@@ -597,6 +613,30 @@ final class organization_identity_test extends \advanced_testcase {
             'assignmenttype' => 'primary',
             'status' => 'ended',
         ]));
+    }
+
+    public function test_hr_resaving_same_position_repairs_wrong_department_without_reusing_bad_place(): void {
+        global $DB;
+        $employee = $this->employee('retail_seller');
+        $wrongplace = $this->place('retail_seller');
+        $DB->set_field('local_ustar_staff_places', 'departmentid', 'opt', ['id' => $wrongplace]);
+        $this->assign($employee->id, $wrongplace);
+        $this->assertContains('department_mismatch', organization_identity::resolve($employee->id)['conflicts']);
+
+        $correctplace = $this->place('retail_seller');
+        $selected = organization_model::assign_position_by_hr(
+            (int)$employee->id, 'retail_seller', (int)get_admin()->id);
+        $this->assertSame($correctplace, $selected);
+        $this->assertSame('retail_seller', organization_identity::resolve($employee->id)['positionid']);
+        $this->assertSame([], organization_identity::resolve($employee->id)['conflicts']);
+        $this->assertTrue($DB->record_exists('local_ustar_assignments', [
+            'userid' => $employee->id, 'staffplaceid' => $wrongplace,
+            'assignmenttype' => 'primary', 'status' => 'ended',
+        ]));
+        $this->assertSame($selected, organization_model::assign_position_by_hr(
+            (int)$employee->id, 'retail_seller', (int)get_admin()->id));
+        $this->assertCount(1, array_filter(organization_model::active_assignments($employee->id),
+            static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'));
     }
 
 }

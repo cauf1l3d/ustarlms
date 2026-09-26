@@ -49,6 +49,9 @@ const panel=document.getElementById("page"),status=document.getElementById("stat
 function render(){const page=pages[index];panel.innerHTML="";
 const heading=document.createElement("h2");heading.textContent=page.title;panel.append(heading);
 const content=document.createElement("div");content.innerHTML=page.body;panel.append(content);
+if(typeof page.image==="string"&&/^data:image\/(png|jpeg|webp);base64,/.test(page.image)){
+const photo=document.createElement("img");photo.src=page.image;photo.alt=page.title;
+photo.style.cssText="display:block;max-width:100%;height:auto;margin:18px 0;border-radius:12px";panel.append(photo);}
 document.getElementById("prev").disabled=index===0;
 document.getElementById("next").textContent=index===pages.length-1?(done?"Завершено":"Завершить"):"Далее";
 document.getElementById("next").disabled=done&&index===pages.length-1;

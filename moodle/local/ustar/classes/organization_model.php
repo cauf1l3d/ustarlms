@@ -318,6 +318,7 @@ final class organization_model {
         if ($positionid !== '' && !isset($positions[$positionid])) {
             throw new \invalid_parameter_exception('Неизвестная должность USTAR');
         }
+        $departmentid = $positionid !== '' ? (string)($positions[$positionid]['department'] ?? '') : '';
 
         $now = time();
         $transaction = $DB->start_delegated_transaction();
@@ -329,7 +330,9 @@ final class organization_model {
 
             if (count($primaryassignments) === 1 && $positionid !== '') {
                 $currentplace = self::staff_place((int)$primaryassignments[0]->staffplaceid, $now);
-                if ($currentplace && (string)$currentplace->positionid === $positionid) {
+                if ($currentplace && (string)$currentplace->positionid === $positionid
+                        && (string)$currentplace->departmentid === $departmentid
+                        && self::valid_place_chain((int)$currentplace->id, $now)) {
                     $transaction->allow_commit();
                     return (int)$currentplace->id;
                 }
@@ -355,10 +358,10 @@ final class organization_model {
             }
 
             $position = $positions[$positionid];
-            $departmentid = (string)($position['department'] ?? '');
             $candidates = [];
             foreach ($DB->get_records('local_ustar_staff_places', [
                 'positionid' => $positionid,
+                'departmentid' => $departmentid,
                 'active' => 1,
             ], 'id ASC') as $candidate) {
                 if (self::staff_place((int)$candidate->id, $now)

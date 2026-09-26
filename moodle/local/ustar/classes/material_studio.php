@@ -86,7 +86,10 @@ final class material_studio {
             throw new \invalid_parameter_exception('Добавьте хотя бы один вопрос аттестации.');
         }
         $passscore = min(100, max(1, (int)($input['passscore'] ?? 80)));
-        $pages = $kind === self::KIND_SCORM ? self::scorm_pages($input['scormpages'] ?? []) : [];
+        $previouspages = $contentid > 0 && $kind === self::KIND_SCORM
+            ? self::by_content($contentid, $actorid)['pages'] : [];
+        $pages = $kind === self::KIND_SCORM
+            ? self::scorm_pages($input['scormpages'] ?? [], $input['scormimages'] ?? [], $previouspages) : [];
         $expected = (int)($input['expectedmodified'] ?? 0);
         $creationtoken = (string)($input['creationtoken'] ?? '');
         if ($contentid === 0 && $creationtoken === ''
@@ -335,13 +338,20 @@ final class material_studio {
         }
     }
 
-    /** @return array<int,array{title:string,body:string}> */
-    private static function scorm_pages(mixed $input): array {
+    /** Store small, verified image assets with the exact SCORM source revision. */
+    private static function scorm_pages(mixed $input, array $uploads = [], array $previous = []): array {
         if (!is_array($input) || count($input) > 30) {
             throw new \invalid_parameter_exception('SCORM допускает до 30 страниц.');
         }
         $pages = [];
-        foreach ($input as $page) {
+        $previousimages = [];
+        foreach ($previous as $oldpage) {
+            if (!empty($oldpage['imagekey']) && !empty($oldpage['image'])) {
+                $previousimages[(string)$oldpage['imagekey']] = (string)$oldpage['image'];
+            }
+        }
+        $totalimages = 0;
+        foreach ($input as $index => $page) {
             if (!is_array($page)) { throw new \invalid_parameter_exception('Некорректная страница SCORM.'); }
             $title = trim(clean_param((string)($page['title'] ?? ''), PARAM_TEXT));
             $body = clean_text((string)($page['body'] ?? ''), FORMAT_HTML);
@@ -352,7 +362,34 @@ final class material_studio {
             if (strlen($body) > 100000) {
                 throw new \invalid_parameter_exception('Страница SCORM превышает допустимый размер.');
             }
-            $pages[] = ['title' => $title, 'body' => $body];
+            $imagekey = (string)($page['imagekey'] ?? '');
+            $image = preg_match('/^[a-f0-9]{32}$/D', $imagekey)
+                ? ($previousimages[$imagekey] ?? '') : '';
+            if (!empty($page['removeimage'])) {
+                $image = '';
+            }
+            $file = (string)($uploads['tmp_name'][$index] ?? '');
+            if (($uploads['error'][$index] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                if (($uploads['error'][$index] ?? null) !== UPLOAD_ERR_OK
+                        || !is_uploaded_file($file)
+                        || (int)($uploads['size'][$index] ?? 0) > 1024 * 1024) {
+                    throw new \InvalidArgumentException('Фото для страницы SCORM должно быть PNG, JPEG или WebP не больше 1 МБ.');
+                }
+                $bytes = file_get_contents($file);
+                $info = $bytes === false ? false : @getimagesizefromstring($bytes);
+                $mime = $info['mime'] ?? '';
+                if (!in_array($mime, ['image/png', 'image/jpeg', 'image/webp'], true)) {
+                    throw new \InvalidArgumentException('Загрузите изображение PNG, JPEG или WebP.');
+                }
+                $image = 'data:' . $mime . ';base64,' . base64_encode($bytes);
+            }
+            $totalimages += strlen($image);
+            if ($totalimages > 4 * 1024 * 1024) {
+                throw new \InvalidArgumentException('Суммарный размер фото SCORM не должен превышать 4 МБ.');
+            }
+            $pages[] = ['title' => $title, 'body' => $body,
+                'imagekey' => $imagekey !== '' && isset($previousimages[$imagekey])
+                    ? $imagekey : bin2hex(random_bytes(16)), 'image' => $image];
         }
         return $pages;
     }

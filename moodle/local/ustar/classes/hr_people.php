@@ -309,6 +309,13 @@ class hr_people {
                 $positionid
             );
 
+            $identity = organization_identity::resolve($userid);
+            $expectedconflicts = $positionid === '' ? ['no_active_primary_assignment'] : [];
+            if ($identity['conflicts'] !== $expectedconflicts
+                    || (string)$identity['positionid'] !== $positionid) {
+                throw new \moodle_exception('Кадровое назначение не отражено в оргструктуре. Изменение отменено; проверьте штатное место сотрудника.');
+            }
+
 
             accounts::set_type(
                 $userid,
@@ -432,6 +439,14 @@ class hr_people {
                 $savedid,
                 $positionid
             );
+
+            if (!$deferstaffplace) {
+                $identity = organization_identity::resolve($savedid);
+                if ($identity['conflicts']
+                        || (string)$identity['positionid'] !== $positionid) {
+                    throw new \moodle_exception('Кадровое назначение не отражено в оргструктуре. Создание сотрудника отменено.');
+                }
+            }
 
 
             accounts::set_type(

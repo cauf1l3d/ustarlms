@@ -39,9 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             redirect(new moodle_url('/local/ustar/profile.php'),
                 'Профиль создан. Заявка передана HRD для подтверждения.', null,
                 \core\output\notification::NOTIFY_SUCCESS);
-        } catch (\invalid_parameter_exception $e) {
+        } catch (\InvalidArgumentException $e) {
             $error = $e->getMessage();
         } catch (\Throwable $e) {
+            error_log('USTAR self-registration failed: ' . get_class($e)
+                . ' in ' . basename($e->getFile()) . ':' . $e->getLine());
             debugging('USTAR registration failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
             $error = 'Регистрация временно недоступна. Обратитесь к HRD.';
         }

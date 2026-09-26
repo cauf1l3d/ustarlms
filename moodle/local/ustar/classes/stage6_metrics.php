@@ -36,9 +36,6 @@ final class stage6_metrics {
                     'status' => 'completed',
                 ]),
             ],
-            'boards' => [
-                'archived' => self::count('local_ustar_board_archive'),
-            ],
         ];
     }
 

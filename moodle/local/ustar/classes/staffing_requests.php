@@ -283,7 +283,7 @@ final class staffing_requests {
                     'accounttype' => accounts::TYPE_EMPLOYEE,
                     'suspended' => 0,
                     'password' => $password,
-                ], $actorid);
+                ], $actorid, true);
                 $createduserid = (int)$result['userid'];
                 $targetuserid = $createduserid;
 
@@ -293,6 +293,10 @@ final class staffing_requests {
                     (int)$request->requestedby
                 );
                 employment::set_status($createduserid, employment::ACTIVE, $actorid, 'staffing_hire');
+                $assignmentresult = assignment::sync_user($createduserid);
+                if (empty($assignmentresult['ok']) || ($assignmentresult['status'] ?? '') !== 'ready') {
+                    throw new \moodle_exception('Не удалось назначить обучение новому сотруднику');
+                }
             } else if ((string)$request->requesttype === self::TYPE_REGISTRATION) {
                 $targetuserid = (int)$request->employeeid;
                 if ($targetuserid <= 1 || employment::resolve($targetuserid)['status'] !== employment::PENDING) {

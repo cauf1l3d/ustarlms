@@ -60,6 +60,9 @@ function local_ustar_pluginfile(
         $isadmin = has_capability('local/ustar:admin', $context);
         if (!$isadmin) {
             require_capability('local/ustar:use', $context);
+            if (!\local_ustar\employment::learning_allowed((int)$USER->id)) {
+                return false;
+            }
             if (empty($game->active) || empty($question->active)) {
                 return false;
             }

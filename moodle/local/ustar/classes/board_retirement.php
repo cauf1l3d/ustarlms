@@ -51,21 +51,6 @@ final class board_retirement {
         return ['archived' => $archived, 'already' => $already];
     }
 
-    /** @return array<int,array<string,mixed>> */
-    public static function own_archive(int $userid): array {
-        global $DB;
-        if (!self::available()) { return []; }
-        $out = [];
-        foreach ($DB->get_records('local_ustar_board_archive', ['ownerid' => $userid], 'archivedat DESC, id DESC') as $row) {
-            $out[] = [
-                'id' => (int)$row->id, 'title' => format_string((string)$row->title),
-                'version' => (int)$row->version, 'archivedat' => (int)$row->archivedat,
-                'url' => (new \moodle_url('/local/ustar/board_archive.php', ['id' => (int)$row->id]))->out(false),
-            ];
-        }
-        return $out;
-    }
-
     public static function get_for_owner(int $archiveid, int $userid): ?\stdClass {
         global $DB;
         if (!self::available() || $archiveid <= 0) { return null; }

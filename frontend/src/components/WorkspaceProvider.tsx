@@ -8,6 +8,7 @@ export type Role = "employee" | "head" | "superadmin";
 export interface Workspace {
   user: { id: number; fullname: string; firstname: string; email: string };
   role: Role;
+  employmentStatus: "active" | "pending" | "suspended" | "terminated";
   position: { id: string; name: string; level: number; department: string; next?: string | null } | null;
   department: { id: string; name: string } | null;
   branding: Record<string, any>;

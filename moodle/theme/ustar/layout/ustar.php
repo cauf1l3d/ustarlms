@@ -106,7 +106,6 @@ $productgrowthpages = [
     '/local/ustar/catalog.php',
     '/local/ustar/tasks.php',
     '/local/ustar/grades.php',
-    '/local/ustar/board_archive.php',
 ];
 
 if (in_array($pagepath, $productgrowthpages, true)) {
@@ -360,7 +359,6 @@ $controlpagelabels = [
     '/local/ustar/catalog.php' => 'Каталог',
     '/local/ustar/tasks.php' => 'Задачи',
     '/local/ustar/grades.php' => 'Грейды',
-    '/local/ustar/board_archive.php' => 'Архив досок',
     '/local/ustar/view_as.php' => 'Просмотр как',
     '/local/ustar/legacy.php' => 'Legacy UI',
     '/local/ustar/profile.php' => 'Личный кабинет',

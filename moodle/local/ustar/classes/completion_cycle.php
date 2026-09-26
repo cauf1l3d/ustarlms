@@ -151,12 +151,20 @@ final class completion_cycle {
             ->get_lock('completion:' . sha1($cyclekey), 10);
         if (!$lock) { throw new \moodle_exception('Completion lock timeout'); }
         try {
-            // Preserve v1 identities, including revoked facts and their reward keys.
+            // Preserve old facts and reward keys. A verified retake can occur in
+            // the same second as a reset, so a revoked identity needs a new key.
             $rows = $DB->get_records('local_ustar_completion_cycle', [
                 'userid' => $userid, 'logicalpointid' => $logicalpointid,
                 'versionid' => $versionid, 'completedat' => $completedat,
-            ], 'id ASC', '*', 0, 1);
-            if ($rows) { return reset($rows); }
+            ], 'id DESC');
+            if ($rows) {
+                $latest = reset($rows);
+                // An unrelated revocation still keeps its original identity on
+                // redelivery. Only an administrator's explicit route reset lets
+                // a newly verified completion reuse this second.
+                if ((string)$latest->status !== 'reset') { return $latest; }
+                $cyclekey .= ':reset:' . count($rows);
+            }
             $id = (int)$DB->insert_record('local_ustar_completion_cycle', (object)[
                 'userid' => $userid,
                 'pointid' => $pointid,

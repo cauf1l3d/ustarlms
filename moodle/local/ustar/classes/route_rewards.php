@@ -16,7 +16,7 @@ final class route_rewards {
     /** No retroactive grants, inherited facts, optional-only steps, or personality data. */
     public static function eligible(\stdClass $progress, array $evidence, int $startedat): bool {
         if ($startedat <= 0 || $progress->status !== 'complete'
-                || (int)$progress->timecreated < $startedat || (int)$progress->completedat < $startedat) {
+                || (int)$progress->completedat < $startedat) {
             return false;
         }
         if (($evidence['mode'] ?? '') === 'assessment_lifecycle') {
@@ -42,23 +42,26 @@ final class route_rewards {
         try {
             global $DB;
             $progress = $DB->get_record('local_ustar_route_progress', compact('userid', 'pointid', 'versionid'));
-            if ($progress) { self::grant($progress); }
+            if ($progress && (string)$progress->status === 'complete') {
+                $cycle = completion_cycle::for_progress($progress);
+                if ($cycle) { self::grant_cycle($cycle); }
+            }
         } catch (\Throwable $e) {
             debugging('USTAR route reward pending: ' . $e->getMessage(), DEBUG_DEVELOPER);
         }
     }
 
-    private static function grant(\stdClass $progress): void {
+    private static function grant_cycle(\stdClass $cycle): void {
         global $DB;
-        $evidence = json_decode((string)$progress->evidencejson, true) ?: [];
+        if ((string)$cycle->status !== 'confirmed') { return; }
+        $evidence = json_decode((string)$cycle->evidencejson, true) ?: [];
         $startedat = (int)get_config('local_ustar', 'route_rewards_startedat');
-        if (!self::eligible($progress, $evidence, $startedat)) { return; }
-        if (!accounts::participates((int)$progress->userid)
-                || !employment::learning_allowed((int)$progress->userid)) { return; }
+        $completion = (object)['status' => 'complete', 'completedat' => (int)$cycle->completedat];
+        if (!self::eligible($completion, $evidence, $startedat)) { return; }
+        if (!accounts::participates((int)$cycle->userid)
+                || !employment::learning_allowed((int)$cycle->userid)) { return; }
 
-        $cycle = completion_cycle::for_progress($progress);
-        if (!$cycle || (string)$cycle->status !== 'confirmed' || (int)$cycle->completedat < $startedat) { return; }
-        $version = $DB->get_record('local_ustar_route_versions', ['id' => $progress->versionid], '*', MUST_EXIST);
+        $version = $DB->get_record('local_ustar_route_versions', ['id' => $cycle->versionid], '*', MUST_EXIST);
         $key = 'route-reward-v2:' . (string)$cycle->cyclekey;
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('reward:' . sha1($key), 10);
         if (!$lock) { throw new \moodle_exception('Route reward lock timeout'); }
@@ -67,7 +70,7 @@ final class route_rewards {
             $transaction = $DB->start_delegated_transaction();
             try {
                 target_core::record_evidence([
-                    'userid' => (int)$progress->userid,
+                    'userid' => (int)$cycle->userid,
                     'evidencetype' => 'learning',
                     'outcome' => 'completed',
                     'sourcekind' => 'completion_cycle',
@@ -76,8 +79,8 @@ final class route_rewards {
                     'validfrom' => (int)$cycle->completedat,
                     'expiresat' => $cycle->expiresat,
                     'details' => [
-                        'pointid' => (int)$progress->pointid,
-                        'versionid' => (int)$progress->versionid,
+                        'pointid' => (int)$cycle->pointid,
+                        'versionid' => (int)$cycle->versionid,
                         'logicalpointid' => (int)$cycle->logicalpointid,
                         'cyclekey' => (string)$cycle->cyclekey,
                         'rewardpolicy' => 'route-cycle-v2',
@@ -85,7 +88,7 @@ final class route_rewards {
                     ],
                 ], 0);
                 $granted = economy::post(
-                    (int)$progress->userid,
+                    (int)$cycle->userid,
                     self::COINS,
                     'route_reward',
                     $key,
@@ -96,7 +99,7 @@ final class route_rewards {
                 );
                 $transaction->allow_commit();
                 global $USER;
-                if ($granted && (int)($USER->id ?? 0) === (int)$progress->userid
+                if ($granted && (int)($USER->id ?? 0) === (int)$cycle->userid
                         && !(defined('CLI_SCRIPT') && CLI_SCRIPT)) {
                     \core\notification::success(
                         'Шаг подтверждён! +10 XP и +1 USCOIN. ' . format_string((string)$version->title)
@@ -115,8 +118,10 @@ final class route_rewards {
         if (!accounts::participates($userid)) {
             return ['count' => 0, 'xp' => 0, 'coins' => 0, 'badges' => []];
         }
-        $select = 'userid = :userid AND txtype = :txtype'
-            . ' AND (sourcekind = :legacy OR sourcekind = :cycle)';
+        $select = 'l.userid = :userid AND l.txtype = :txtype'
+            . ' AND (l.sourcekind = :legacy OR l.sourcekind = :cycle)'
+            . ' AND NOT EXISTS (SELECT 1 FROM {local_ustar_coin_ledger} rev'
+            . ' WHERE rev.reversalofid = l.id)';
         $params = [
             'userid' => $userid,
             'txtype' => 'route_reward',
@@ -124,53 +129,59 @@ final class route_rewards {
             'cycle' => 'completion_cycle',
         ];
         $count = economy::available()
-            ? (int)$DB->count_records_select('local_ustar_coin_ledger', $select, $params)
+            ? (int)$DB->count_records_sql('SELECT COUNT(1) FROM {local_ustar_coin_ledger} l WHERE ' . $select, $params)
             : 0;
         $badges = [];
         foreach ([1 => 'Первый шаг', 5 => 'Набираю темп', 10 => 'Уверенный прогресс', 25 => 'Мастер маршрута']
                 as $threshold => $name) {
             if ($count < $threshold) { continue; }
-            $rows = $DB->get_records_select(
-                'local_ustar_coin_ledger',
-                $select,
-                $params,
-                'timecreated ASC,id ASC',
-                '*',
-                $threshold - 1,
-                1
-            );
+            $rows = $DB->get_records_sql('SELECT l.* FROM {local_ustar_coin_ledger} l WHERE '
+                . $select . ' ORDER BY l.timecreated ASC,l.id ASC', $params, $threshold - 1, 1);
             $grant = reset($rows);
             $badges[] = ['name' => $name . ' · ' . $threshold . ' шагов', 'dateissued' => (int)$grant->timecreated];
         }
         return ['count' => $count, 'xp' => $count * self::XP, 'coins' => $count * self::COINS, 'badges' => $badges];
     }
 
-    /** Bounded, wraparound scan: errors retry without starving later progress. */
+    /** Repair old projections and independently persisted completion cycles, in bounded batches. */
     public static function reconcile(int $limit = 200): void {
         global $DB;
         if (!self::enabled()) { return; }
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('route-reward-repair', 0);
         if (!$lock) { return; }
         try {
+            $limit = max(1, min(500, $limit));
+            // Legacy progress can predate activation while its renewed completion is new.
             $cursor = (int)get_config('local_ustar', 'route_rewards_cursor');
-            $rows = $DB->get_records_select(
-                'local_ustar_route_progress',
-                'id > :cursor AND timecreated >= :start',
-                ['cursor' => $cursor, 'start' => (int)get_config('local_ustar', 'route_rewards_startedat')],
-                'id ASC',
-                '*',
-                0,
-                max(1, min(500, $limit))
-            );
+            $rows = $DB->get_records_select('local_ustar_route_progress', 'id > :cursor',
+                ['cursor' => $cursor], 'id ASC', '*', 0, $limit);
             foreach ($rows as $row) {
                 try {
-                    self::grant($row);
+                    if ((string)$row->status === 'complete'
+                            && (int)$row->completedat >= (int)get_config('local_ustar', 'route_rewards_startedat')) {
+                        $cycle = completion_cycle::for_progress($row);
+                        if ($cycle) { self::grant_cycle($cycle); }
+                    }
                 } catch (\Throwable $e) {
                     mtrace('USTAR reward pending progress=' . $row->id . ': ' . $e->getMessage());
                 }
                 $cursor = (int)$row->id;
             }
             set_config('route_rewards_cursor', $rows ? $cursor : 0, 'local_ustar');
+
+            // Each historical renewal has its own durable cycle even when the projection moved on.
+            $cursor = (int)get_config('local_ustar', 'route_rewards_cycle_cursor');
+            $cycles = $DB->get_records_select('local_ustar_completion_cycle', 'id > :cursor',
+                ['cursor' => $cursor], 'id ASC', '*', 0, $limit);
+            foreach ($cycles as $cycle) {
+                try {
+                    self::grant_cycle($cycle);
+                } catch (\Throwable $e) {
+                    mtrace('USTAR reward pending cycle=' . $cycle->id . ': ' . $e->getMessage());
+                }
+                $cursor = (int)$cycle->id;
+            }
+            set_config('route_rewards_cycle_cursor', $cycles ? $cursor : 0, 'local_ustar');
         } finally {
             $lock->release();
         }

@@ -7,24 +7,26 @@ final class user_history_reset_form extends \moodleform {
     public function definition(): void {
         global $DB, $USER;
         $mform = $this->_form;
-        $users = $DB->get_records_sql('SELECT u.id, u.username, u.firstname, u.lastname, u.email
-            FROM {user} u JOIN {local_ustar_route_testers} t ON t.sandboxuserid = u.id
-            WHERE t.actorid = :actor AND u.deleted = 0', ['actor' => (int)$USER->id]);
-        $options = [0 => '— Выберите вашу тестовую учётную запись —'];
+        $users = $DB->get_records_sql('SELECT id, username, firstname, lastname, email
+            FROM {user} WHERE id > 1 AND deleted = 0 ORDER BY lastname, firstname, id');
+        $options = [0 => '— Выберите сотрудника —'];
         foreach ($users as $user) {
-            if (\local_ustar\accounts::type_of((int)$user->id) !== \local_ustar\accounts::TYPE_TEST
-                    || (string)$user->username !== \local_ustar\route_tester::USERNAME_PREFIX . (int)$USER->id) {
+            $employee = \local_ustar\accounts::is_business_account((int)$user->id);
+            $tester = (string)$user->username === \local_ustar\route_tester::USERNAME_PREFIX . (int)$USER->id
+                && $DB->record_exists('local_ustar_route_testers',
+                    ['actorid' => (int)$USER->id, 'sandboxuserid' => (int)$user->id]);
+            if (!$employee && !$tester) {
                 continue;
             }
             $label = fullname($user) . ' [' . $user->username . ']';
             if (!empty($user->email)) { $label .= ' — ' . $user->email; }
             $options[(int)$user->id] = $label;
         }
-        $mform->addElement('autocomplete', 'userid', 'Тестовая учётная запись', $options, ['multiple' => false]);
+        $mform->addElement('autocomplete', 'userid', 'Сотрудник или ваша тестовая учётная запись', $options, ['multiple' => false]);
         $mform->setType('userid', PARAM_INT);
-        $mform->addRule('userid', 'Выберите тестовую учётную запись', 'required', null, 'client');
-        $mform->addElement('static', 'warning', 'Что будет удалено', 'Учебная история вашей тестовой учётной записи: Quiz/SCORM попытки, completion, маршрутный прогресс USTAR, lifecycle аттестаций, переобучение и связанные workflow-события. <strong>Не удаляются:</strong> аккаунт, профиль, должность, staff place, руководитель, назначения, оргструктура, маршруты, контент, вопросы, политики, монеты, задачи и отзывы.');
-        $mform->addElement('advcheckbox', 'confirmreset', 'Подтверждение', 'Я понимаю, что учебная история моей тестовой учётной записи будет удалена.');
+        $mform->addRule('userid', 'Выберите сотрудника', 'required', null, 'client');
+        $mform->addElement('static', 'warning', 'Что будет сброшено', 'Все Quiz/SCORM попытки и завершения курсов этого сотрудника, прогресс точек маршрута, аттестации и связанные учебные события. Подтверждённые циклы и награды за маршрут будут отозваны; если наградные монеты уже потрачены, новые начисления сначала погасит этот остаток. Сохраняются учётная запись, профиль, назначения, структура, маршруты, контент и проверяемая история наградных операций.');
+        $mform->addElement('advcheckbox', 'confirmreset', 'Подтверждение', 'Я понимаю, что прохождение маршрута и награды выбранного сотрудника будут сброшены.');
         $mform->setType('confirmreset', PARAM_BOOL);
         $this->add_action_buttons(false, 'Очистить учебную историю');
     }
@@ -34,12 +36,12 @@ final class user_history_reset_form extends \moodleform {
         $errors = parent::validation($data, $files);
         $userid = (int)($data['userid'] ?? 0);
         if ($userid <= 1 || !$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])) {
-            $errors['userid'] = 'Выберите вашу тестовую учётную запись.';
+            $errors['userid'] = 'Выберите сотрудника.';
         } else {
             try {
                 \local_ustar\user_history_reset::assert_allowed($userid, (int)$USER->id);
             } catch (\moodle_exception $e) {
-                $errors['userid'] = 'Сброс доступен только владельцу тестовой учётной записи Route Tester.';
+                $errors['userid'] = $e->getMessage();
             }
         }
         if (empty($data['confirmreset'])) {

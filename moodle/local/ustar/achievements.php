@@ -16,7 +16,7 @@ $data=[
  'gamesurl'=>(new moodle_url('/local/ustar/games.php'))->out(false),'learningurl'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),
  'hascompetition'=>(bool)$competition,'competitiontitle'=>$competition['title']??'','competitionenddate'=>$competition['enddate']??'','competitionprivacy'=>$competition['privacylabel']??'','competitionruleversion'=>$competition['ruleversion']??0,
  'top'=>$top,'hastop'=>!empty($top),'rankrows'=>$rest,'hasrankrows'=>!empty($rest),'currentrank'=>$competition['current']??null,
- 'coinbalance'=>$coin['balance'],'coinearned'=>$coin['earned'],'coinspent'=>$coin['spent'],'coinhistory'=>$history,'hascoinhistory'=>!empty($history),
+ 'coinbalance'=>$coin['balance'],'coinearned'=>$coin['earned'],'coinspent'=>$coin['spent'],'coindebt'=>$coin['debt'],'hascoindebt'=>$coin['debt']>0,'coinhistory'=>$history,'hascoinhistory'=>!empty($history),
 ];
 $PAGE->set_context($context); $PAGE->set_url(new moodle_url('/local/ustar/achievements.php')); $PAGE->set_pagelayout('ustar'); $PAGE->set_title('Достижения | USTAR Academy'); $PAGE->set_heading('USTAR Academy');
 $output=$PAGE->get_renderer('local_ustar'); echo $output->header(); echo $output->render_from_template('local_ustar/achievements',$data); echo $output->footer();

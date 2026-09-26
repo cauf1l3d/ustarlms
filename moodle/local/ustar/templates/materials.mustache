@@ -269,8 +269,10 @@
 
                 {{#canmove}}
                 <details class="u-material-row-menu">
-                    <summary aria-label="Действия с {{title}}">•••</summary>
-                    <form method="post">
+                    <summary aria-label="Действия с {{title}}" title="Действия">⋯</summary>
+                    <div class="u-material-row-menu__panel">
+                    <a class="u-material-row-menu__action" href="{{url}}">Открыть {{#isfolder}}папку{{/isfolder}}{{^isfolder}}материал{{/isfolder}}</a>
+                    <form method="post" class="u-material-row-menu__move">
                         <input type="hidden" name="action" value="move">
                         <input type="hidden" name="contentid" value="{{id}}">
                         <input type="hidden" name="expectedmodified" value="{{timemodified}}">
@@ -284,18 +286,18 @@
                         </label>
                         <button class="u-btn u-btn--small" type="submit" disabled data-u-context-move-submit>Переместить</button>
                     </form>
-                </details>
-                {{/canmove}}
-
-                {{#candelete}}
-                <form method="post" class="u-material-row-delete" onsubmit="return confirm('Убрать материал из рабочего каталога? Его история сохранится.');">
+                    {{#candelete}}
+                    <form method="post" class="u-material-row-menu__delete" onsubmit="return confirm('Убрать объект из рабочего каталога? История сохранится.');">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="contentid" value="{{id}}">
                     <input type="hidden" name="parent" value="{{currentparentid}}">
                     <input type="hidden" name="sesskey" value="{{sesskey}}">
-                    <button class="u-btn u-btn--small" type="submit" aria-label="Удалить {{title}} из каталога">Удалить</button>
-                </form>
-                {{/candelete}}
+                    <button class="u-material-row-menu__danger" type="submit">Убрать из каталога</button>
+                    </form>
+                    {{/candelete}}
+                    </div>
+                </details>
+                {{/canmove}}
 
                 </div>
 

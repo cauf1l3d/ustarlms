@@ -32,8 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'Новые аттестации создаются в конструкторе Moodle Quiz. Откройте ссылку «Создать аттестацию».'
                 );
             }
+            $input = $_POST;
+            $input['scormimages'] = $_FILES['scormimages'] ?? [];
             $item = \local_ustar\material_studio::save(
-                optional_param('id', 0, PARAM_INT), $_POST, (int)$USER->id
+                optional_param('id', 0, PARAM_INT), $input, (int)$USER->id
             );
             if (!empty($item['replay'])) {
                 // The same new-material POST was already committed.
@@ -162,6 +164,7 @@ echo html_writer::end_div();
 echo html_writer::start_div('u-studio-scorm-pages', ['id' => 'studio-scorm-pages']);
 echo html_writer::tag('h3', 'Страницы SCORM');
 echo html_writer::tag('p', 'Добавьте страницы в порядке прохождения. Для обычного импорта ZIP страницы заполнять не требуется.');
+echo html_writer::tag('p', 'Фото на странице будет включено в пакет при выборе «Собрать и импортировать SCORM из страниц».');
 $pages = (array)($editing['pages'] ?? []);
 if (!$pages) { $pages = [['title' => '', 'body' => '']]; }
 foreach ($pages as $index => $page) {
@@ -182,6 +185,23 @@ foreach ($pages as $index => $page) {
     echo html_writer::tag('textarea', s((string)($page['body'] ?? '')),
         ['name' => 'scormpages[' . (int)$index . '][body]', 'rows' => 6,
             'class' => 'form-control', 'placeholder' => 'Текст страницы, списки и ссылки']);
+    echo html_writer::empty_tag('input', ['type' => 'hidden',
+        'name' => 'scormpages[' . (int)$index . '][imagekey]',
+        'value' => (string)($page['imagekey'] ?? '')]);
+    echo html_writer::tag('label', 'Фото страницы (PNG, JPEG, WebP, до 1 МБ)',
+        ['for' => 'studio-page-image-' . (int)$index]);
+    echo html_writer::empty_tag('input', ['type' => 'file',
+        'name' => 'scormimages[' . (int)$index . ']', 'id' => 'studio-page-image-' . (int)$index,
+        'accept' => 'image/png,image/jpeg,image/webp']);
+    if (!empty($page['image'])) {
+        echo html_writer::empty_tag('img', ['src' => (string)$page['image'],
+            'alt' => 'Фото страницы ' . ((int)$index + 1), 'class' => 'u-studio-scorm-image']);
+        echo html_writer::start_tag('label', ['class' => 'u-studio-scorm-remove-image']);
+        echo html_writer::empty_tag('input', ['type' => 'checkbox', 'value' => 1,
+            'name' => 'scormpages[' . (int)$index . '][removeimage]']);
+        echo ' Удалить фото при сохранении';
+        echo html_writer::end_tag('label');
+    }
     echo html_writer::tag('button', 'Удалить страницу', ['type' => 'button',
         'class' => 'btn btn-outline-secondary u-scorm-remove']);
     echo html_writer::end_div();
@@ -263,15 +283,24 @@ $PAGE->requires->js_init_code(<<<'JS'
             .map(function(input) { return Number(input.name.match(/^scormpages\[(\d+)\]/)[1]); })) + 1;
         node.querySelectorAll('input,textarea').forEach(function(input) {
             input.name = input.name.replace(/^scormpages\[\d+\]/, 'scormpages[' + index + ']');
+            input.name = input.name.replace(/^scormimages\[\d+\]/, 'scormimages[' + index + ']');
             if (input.id && input.name.endsWith('[title]')) {
                 input.id = 'studio-page-title-' + index;
             }
-            input.value = '';
+            if (input.type === 'file') { input.id = 'studio-page-image-' + index; }
+            if (input.type === 'checkbox') { input.checked = false; }
+            else { input.value = ''; }
         });
+        const photo = node.querySelector('.u-studio-scorm-image');
+        if (photo) { photo.remove(); }
+        const removePhoto = node.querySelector('.u-studio-scorm-remove-image');
+        if (removePhoto) { removePhoto.remove(); }
         node.querySelector('.u-scorm-rich-editor').innerHTML = '';
         const titleLabel = node.querySelector('label');
         titleLabel.textContent = 'Название страницы ' + (index + 1);
         titleLabel.htmlFor = 'studio-page-title-' + index;
+        const photoLabel = node.querySelector('label[for^="studio-page-image-"]');
+        if (photoLabel) { photoLabel.htmlFor = 'studio-page-image-' + index; }
         panel.insertBefore(node, add);
         init(node);
     });
@@ -280,7 +309,9 @@ $PAGE->requires->js_init_code(<<<'JS'
             const page = event.target.closest('.u-studio-scorm-page');
             if (panel.querySelectorAll('.u-studio-scorm-page').length > 1) { page.remove(); }
             else { page.querySelectorAll('input,textarea').forEach(function(input) { input.value = ''; });
-                page.querySelector('.u-scorm-rich-editor').innerHTML = ''; }
+                page.querySelector('.u-scorm-rich-editor').innerHTML = '';
+                const photo = page.querySelector('.u-studio-scorm-image');
+                if (photo) { photo.remove(); } }
         }
         const button = event.target.closest('[data-format]');
         if (button) { event.preventDefault();

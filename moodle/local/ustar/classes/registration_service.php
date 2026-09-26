@@ -40,15 +40,15 @@ final class registration_service {
                 || $firstname !== clean_param($firstname, PARAM_NOTAGS)
                 || $lastname !== clean_param($lastname, PARAM_NOTAGS)
                 || \core_text::strlen($firstname) > 100 || \core_text::strlen($lastname) > 100) {
-            throw new \invalid_parameter_exception('Проверьте логин, имя, фамилию и email.');
+            throw new \InvalidArgumentException('Проверьте логин, имя, фамилию и email.');
         }
         $departments = array_column(self::departments(), 'name', 'id');
         if ($departmentid === '' || !array_key_exists($departmentid, $departments)) {
-            throw new \invalid_parameter_exception('Выберите подразделение из справочника.');
+            throw new \InvalidArgumentException('Выберите подразделение из справочника.');
         }
         $passworderror = '';
         if ($password === '' || !check_password_policy($password, $passworderror)) {
-            throw new \invalid_parameter_exception($passworderror ?: 'Пароль не соответствует политике безопасности.');
+            throw new \InvalidArgumentException($passworderror ?: 'Пароль не соответствует политике безопасности.');
         }
         $identitylock = \core\lock\lock_config::get_lock_factory('local_ustar')
             ->get_lock('registration-email-' . hash('sha256', \core_text::strtolower($email)), 10);
@@ -59,7 +59,7 @@ final class registration_service {
             if ($DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])
                     || $DB->record_exists_select('user', 'LOWER(email) = LOWER(:email) AND deleted = 0',
                         ['email' => $email])) {
-                throw new \invalid_parameter_exception('Логин или email уже используется.');
+                throw new \InvalidArgumentException('Логин или email уже используется.');
             }
 
             $transaction = $DB->start_delegated_transaction();
@@ -111,7 +111,7 @@ final class registration_service {
     public static function request_department(int $userid, string $departmentid): int {
         global $USER;
         if ((int)$USER->id !== $userid) {
-            throw new \invalid_parameter_exception('Заявку можно отправить только из своего профиля.');
+            throw new \InvalidArgumentException('Заявку можно отправить только из своего профиля.');
         }
         view_as::assert_writable();
         return self::submit_department($userid, $departmentid);
@@ -128,10 +128,10 @@ final class registration_service {
             $transaction = $DB->start_delegated_transaction();
             $departments = array_column(self::departments(), 'name', 'id');
             if (!isset($departments[$departmentid])) {
-                throw new \invalid_parameter_exception('Подразделение не найдено.');
+                throw new \InvalidArgumentException('Подразделение не найдено.');
             }
             if (!accounts::is_business_account($userid) || employment::resolve($userid)['status'] !== employment::PENDING) {
-                throw new \invalid_parameter_exception('Регистрация уже обработана или недоступна.');
+                throw new \InvalidArgumentException('Регистрация уже обработана или недоступна.');
             }
             $existing = $DB->get_records('local_ustar_staff_requests', [
                 'requesttype' => staffing_requests::TYPE_REGISTRATION,
@@ -140,7 +140,7 @@ final class registration_service {
             if ($existing) {
                 $request = reset($existing);
                 if ((string)$request->departmentid !== $departmentid) {
-                    throw new \invalid_parameter_exception('Заявка на другое подразделение уже ожидает решения.');
+                    throw new \InvalidArgumentException('Заявка на другое подразделение уже ожидает решения.');
                 }
                 $transaction->allow_commit();
                 return (int)$request->id;
@@ -186,17 +186,17 @@ final class registration_service {
         // be pending; keep their saved position requests readable for HRD.
         self::initialize($userid);
         if ((int)$USER->id !== $userid || $userid <= 1 || !accounts::is_business_account($userid)) {
-            throw new \invalid_parameter_exception('Заявку можно отправить только из своего профиля.');
+            throw new \InvalidArgumentException('Заявку можно отправить только из своего профиля.');
         }
         view_as::assert_writable();
         if (employment::resolve($userid)['status'] !== employment::PENDING) {
-            throw new \invalid_parameter_exception('Регистрация уже обработана.');
+            throw new \InvalidArgumentException('Регистрация уже обработана.');
         }
         $positionid = clean_param(trim($positionid), PARAM_ALPHANUMEXT);
         $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
         $position = $positions[$positionid] ?? null;
         if (!$position || empty($position['department'])) {
-            throw new \invalid_parameter_exception('Выберите должность из справочника USTAR.');
+            throw new \InvalidArgumentException('Выберите должность из справочника USTAR.');
         }
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
             ->get_lock('registration-request-' . $userid, 10);
@@ -206,7 +206,7 @@ final class registration_service {
         try {
             $transaction = $DB->start_delegated_transaction();
             if (employment::resolve($userid)['status'] !== employment::PENDING) {
-                throw new \invalid_parameter_exception('Регистрация уже обработана.');
+                throw new \InvalidArgumentException('Регистрация уже обработана.');
             }
             $existing = $DB->get_record('local_ustar_staff_requests', [
                 'requesttype' => staffing_requests::TYPE_REGISTRATION,
@@ -215,7 +215,7 @@ final class registration_service {
             ], '*', IGNORE_MISSING);
             if ($existing) {
                 if ((string)$existing->positionid !== $positionid) {
-                    throw new \invalid_parameter_exception('У вас уже есть заявка на другую должность. Дождитесь решения.');
+                    throw new \InvalidArgumentException('У вас уже есть заявка на другую должность. Дождитесь решения.');
                 }
                 $transaction->allow_commit();
                 return (int)$existing->id;
@@ -225,7 +225,7 @@ final class registration_service {
                 'employeeid' => $userid,
                 'status' => staffing_requests::STATUS_APPROVED,
             ])) {
-                throw new \invalid_parameter_exception('Регистрация уже подтверждена.');
+                throw new \InvalidArgumentException('Регистрация уже подтверждена.');
             }
             $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename', MUST_EXIST);
             $now = time();

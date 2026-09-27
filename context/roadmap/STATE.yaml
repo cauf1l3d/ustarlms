@@ -8,10 +8,12 @@ current_activity: G00 production source matched PR16, but performance baseline
   G02 N01/N04/N08 source changes are draft stacked PR21 and PR22. G03 N05
   checklist definitions/submissions are draft PR24 at 3a15a43, and N06 scoped
   task lists/files are draft PR25 at 65a7baf. Both passed source/frontend
-  runs 244 and 247. Moodle DB, rollback, browser/visual and performance
-  evidence remain open. The 8 priorities, 60 audit items and 13 earlier
-  defects are not accepted by these source gates.
-next_task: G01
+  runs 244 and 247. G04 position catalogue, focused card and guarded matrix
+  publication are draft PR27 at 86b6887; source/frontend passed on earlier
+  commits, exact-head run 253 remains open. Moodle DB, rollback,
+  browser/visual and performance evidence remain open. The 8 priorities,
+  60 audit items and 13 earlier defects are not accepted by source gates.
+next_task: G04
 ready_tasks:
 - R00
 - R04

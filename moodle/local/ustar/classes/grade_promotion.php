@@ -30,14 +30,14 @@ final class grade_promotion {
         $record = self::available()
             ? $DB->get_record('local_ustar_employee_grades', ['userid' => $userid], '*', IGNORE_MISSING)
             : false;
-        $grade = $record && (string)$record->positionid === $positionid
-            ? (string)$record->gradekey : self::first_grade();
+        $recorded = $record && (string)$record->positionid === $positionid;
+        $grade = $recorded ? (string)$record->gradekey : '';
         return [
             'enabled' => true,
             'grade' => $grade,
-            'label' => self::label($grade),
+            'label' => $recorded ? self::label($grade) : 'Не назначен',
             'positionid' => $positionid,
-            'recorded' => (bool)$record,
+            'recorded' => (bool)$recorded,
         ];
     }
 
@@ -49,6 +49,12 @@ final class grade_promotion {
         if (empty($current['enabled'])) {
             return array_merge($current, $emptyrule, [
                 'eligible' => false, 'reason' => 'Для этой должности грейдовая лестница не настроена.',
+                'nextgrade' => '', 'nextlabel' => '', 'routeid' => 0, 'requirements' => [],
+            ]);
+        }
+        if (empty($current['recorded'])) {
+            return array_merge($current, $emptyrule, [
+                'eligible' => false, 'reason' => 'Стартовый грейд для этой должности ещё не назначен HR.',
                 'nextgrade' => '', 'nextlabel' => '', 'routeid' => 0, 'requirements' => [],
             ]);
         }
@@ -306,20 +312,70 @@ final class grade_promotion {
         }
     }
 
-    /** Create the pending request as soon as the explicit rule is satisfied. */
+    /** Compatibility hook: reads and route completion must never create a request. */
     public static function reconcile(int $userid): ?\stdClass {
-        if (!self::available()) {
-            return null;
+        return null;
+    }
+
+    /** Explicit, audited first assignment. Never inferred from reading a profile or finishing a route. */
+    public static function assign_initial(int $userid, int $actorid, string $reason): \stdClass {
+        global $DB, $USER;
+        self::assert_available();
+        if ($actorid <= 0 || (int)$USER->id !== $actorid
+                || !has_capability('local/ustar:hrmanage', \context_system::instance(), $actorid)) {
+            throw new \required_capability_exception(
+                \context_system::instance(), 'local/ustar:hrmanage', 'nopermissions', '');
         }
-        $eligible = self::eligibility($userid);
-        if (empty($eligible['eligible'])) {
-            return null;
+        view_as::assert_writable();
+        $reason = trim(clean_param($reason, PARAM_TEXT));
+        if ($reason === '') {
+            throw new \invalid_parameter_exception('Укажите основание назначения стартового грейда.');
         }
-        $managerid = self::manager_for($userid);
-        if ($managerid <= 0 || $managerid === $userid) {
-            return null;
+        if (!accounts::is_business_account($userid) || !employment::is_active($userid)) {
+            throw new \invalid_parameter_exception('Выберите действующего сотрудника.');
         }
-        return self::request($userid);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('grade-initial:' . $userid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Назначение грейда уже выполняется. Повторите попытку.');
+        }
+        try {
+            $tx = $DB->start_delegated_transaction();
+            try {
+                $positionid = people::position_id($userid);
+                if (!self::position_has_ladder($positionid)) {
+                    throw new \invalid_parameter_exception('Для должности сотрудника лестница не настроена.');
+                }
+                $existing = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_employee_grades} WHERE userid = :userid FOR UPDATE',
+                    ['userid' => $userid], IGNORE_MISSING
+                );
+                if ($existing) {
+                    if ((string)$existing->positionid !== $positionid) {
+                        throw new \invalid_parameter_exception(
+                            'У сотрудника есть грейд прежней должности. Требуется отдельное решение о переносе.'
+                        );
+                    }
+                    $tx->allow_commit();
+                    return $existing;
+                }
+                $now = time();
+                $id = (int)$DB->insert_record('local_ustar_employee_grades', (object)[
+                    'userid' => $userid, 'gradekey' => self::first_grade(), 'positionid' => $positionid,
+                    'source' => 'initial_hr', 'requestid' => null,
+                    'timecreated' => $now, 'timemodified' => $now, 'usermodified' => $actorid,
+                ]);
+                people::log_action($actorid, $userid, 'grade_initial_assigned', [
+                    'positionid' => $positionid, 'gradekey' => self::first_grade(), 'reason' => $reason,
+                ]);
+                $tx->allow_commit();
+                return $DB->get_record('local_ustar_employee_grades', ['id' => $id], '*', MUST_EXIST);
+            } catch (\Throwable $e) {
+                $tx->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
     }
 
     /** @return array<int,\stdClass> */
@@ -338,10 +394,7 @@ final class grade_promotion {
         foreach ($rows as $row) {
             $currentmanager = self::manager_for((int)$row->userid);
             if ($currentmanager <= 0) { continue; }
-            if ((int)$row->managerid !== $currentmanager) {
-                self::refresh_manager($row);
-                $row->managerid = $currentmanager;
-            }
+            // Resolve current scope without mutating a request on GET.
             if ($currentmanager === $managerid && $managerid !== (int)$row->userid) {
                 $out[] = $row;
             }

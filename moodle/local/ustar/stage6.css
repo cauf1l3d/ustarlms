@@ -12,8 +12,12 @@
 .u-grades__actions label { width: min(100%, 300px); font-weight: 600; }
 .u-grades__actions input[name="reason"] { min-height: 42px; }
 .u-grades__actions .u-btn { min-height: 42px; }
+.u-grades__search, .u-grades__assignment { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+.u-grades__search label, .u-grades__assignment label { flex-basis: 100%; font-weight: 600; }
+.u-grades__search .form-control, .u-grades__assignment .form-control { width: min(100%, 420px); min-height: 42px; }
+.u-grades__hint { color: var(--u-text-secondary, #605e59); }
 .u-studio-scorm-image { display: block; width: auto !important; max-width: min(100%, 480px); max-height: 260px; height: auto; margin: 8px 0 16px; border: 1px solid var(--u-border, #dedbd3); border-radius: 10px; object-fit: contain; }
-@media (max-width: 600px) { .u-grades__actions, .u-grades__actions form { display: block; width: 100%; } .u-grades__actions .u-btn { width: 100%; } }
+@media (max-width: 600px) { .u-grades__actions, .u-grades__actions form { display: block; width: 100%; } .u-grades__actions .u-btn, .u-grades__search .u-btn, .u-grades__assignment .u-btn { width: 100%; } }
 .u-stage6-tabs {
     display: flex;
     flex-wrap: wrap;

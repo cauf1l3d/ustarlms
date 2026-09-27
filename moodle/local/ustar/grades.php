@@ -4,7 +4,10 @@ require_once(__DIR__ . '/../../config.php');
 require_login();
 $context = context_system::instance();
 require_capability('local/ustar:use', $context);
-$view = optional_param('view', 'mine', PARAM_ALPHA) === 'team' ? 'team' : 'mine';
+$view = optional_param('view', 'mine', PARAM_ALPHA);
+if (!in_array($view, ['mine', 'team', 'assignments'], true)) { $view = 'mine'; }
+$canassign = has_capability('local/ustar:hrmanage', $context);
+if ($view === 'assignments' && !$canassign) { require_capability('local/ustar:hrmanage', $context); }
 $notice = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,20 +30,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             redirect(new moodle_url('/local/ustar/grades.php', ['view' => 'team', 'decided' => 1]));
         }
+        if ($action === 'assigninitial') {
+            require_capability('local/ustar:hrmanage', $context);
+            \local_ustar\grade_promotion::assign_initial(
+                required_param('userid', PARAM_INT), (int)$USER->id, required_param('reason', PARAM_TEXT)
+            );
+            redirect(new moodle_url('/local/ustar/grades.php', [
+                'view' => 'assignments', 'q' => optional_param('q', '', PARAM_RAW_TRIMMED), 'assigned' => 1,
+            ]));
+        }
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
     }
 }
 
-try {
-    \local_ustar\grade_promotion::reconcile((int)$USER->id);
-} catch (\Throwable $e) {
-    debugging('USTAR grade reconciliation failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+$current = $view === 'mine' ? \local_ustar\grade_promotion::current((int)$USER->id) : [];
+$eligibility = $view === 'mine' ? \local_ustar\grade_promotion::eligibility((int)$USER->id) : [];
+$ownrequests = $view === 'mine' ? \local_ustar\grade_promotion::own_requests((int)$USER->id) : [];
+$teamrequests = $view === 'team' ? \local_ustar\grade_promotion::pending_for_manager((int)$USER->id) : [];
+$query = $view === 'assignments' ? trim(optional_param('q', '', PARAM_RAW_TRIMMED)) : '';
+$candidates = [];
+if ($view === 'assignments' && core_text::strlen($query) >= 2) {
+    $escaped = $DB->sql_like_escape($query);
+    $term = '%' . $escaped . '%';
+    $candidates = $DB->get_records_sql(
+        'SELECT id, firstname, lastname, email FROM {user}
+          WHERE deleted = 0 AND id > 1 AND ('
+            . $DB->sql_like('firstname', ':firstname', false) . ' OR '
+            . $DB->sql_like('lastname', ':lastname', false) . ' OR '
+            . $DB->sql_like('email', ':email', false) . ')
+          ORDER BY lastname, firstname, id',
+        ['firstname' => $term, 'lastname' => $term, 'email' => $term], 0, 25
+    );
 }
-$current = \local_ustar\grade_promotion::current((int)$USER->id);
-$eligibility = \local_ustar\grade_promotion::eligibility((int)$USER->id);
-$ownrequests = \local_ustar\grade_promotion::own_requests((int)$USER->id);
-$teamrequests = \local_ustar\grade_promotion::pending_for_manager((int)$USER->id);
 
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/grades.php', ['view' => $view]));
@@ -52,19 +74,25 @@ echo $OUTPUT->header();
 echo html_writer::start_div('u-grades');
 echo html_writer::start_tag('header', ['class' => 'u-grades__header']);
 echo html_writer::tag('p', 'Развитие · USTAR Академия', ['class' => 'u-grades__eyebrow']);
-echo html_writer::tag('h1', $view === 'team' ? 'Согласование грейдов' : 'Грейды');
+echo html_writer::tag('h1', $view === 'team' ? 'Согласование грейдов' : ($view === 'assignments' ? 'Назначения грейдов' : 'Грейды'));
 echo html_writer::tag('p', $view === 'team'
     ? 'Заявки сотрудников вашей команды. Перед решением проверьте условия перехода и результат обучения.'
-    : 'Ступень, условия перехода и история ваших заявок.', ['class' => 'u-grades__intro']);
+    : ($view === 'assignments' ? 'Найдите сотрудника и назначьте начальную ступень с указанием основания.'
+        : 'Ступень, условия перехода и история ваших заявок.'), ['class' => 'u-grades__intro']);
 echo html_writer::end_tag('header');
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
 if (optional_param('requested', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Заявка отправлена действующему руководителю.', 'notifysuccess'); }
 if (optional_param('decided', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Решение по заявке сохранено.', 'notifysuccess'); }
+if (optional_param('assigned', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Начальная ступень назначена.', 'notifysuccess'); }
 
 echo html_writer::start_div('u-stage6-tabs');
 echo html_writer::tag('a', 'Мой грейд', ['href' => (new moodle_url('/local/ustar/grades.php'))->out(false), 'class' => $view === 'mine' ? 'is-active' : '']);
 if ($teamrequests || \local_ustar\organization_model::is_manager((int)$USER->id)) {
     echo html_writer::tag('a', 'Заявки команды', ['href' => (new moodle_url('/local/ustar/grades.php', ['view' => 'team']))->out(false), 'class' => $view === 'team' ? 'is-active' : '']);
+}
+if ($canassign) {
+    echo html_writer::tag('a', 'Назначения', ['href' => (new moodle_url('/local/ustar/grades.php',
+        ['view' => 'assignments']))->out(false), 'class' => $view === 'assignments' ? 'is-active' : '']);
 }
 if (\local_ustar\grade_rules::can_manage((int)$USER->id)) {
     echo html_writer::tag('a', 'Правила переходов', [
@@ -77,7 +105,7 @@ if ($view === 'mine') {
     if (empty($current['enabled'])) {
         echo $OUTPUT->notification('Для вашей должности грейдовая лестница не настроена.', 'notifyinfo');
     } else {
-            echo html_writer::tag('h2', 'Текущая ступень: ' . s((string)$current['label']));
+        echo html_writer::tag('h2', 'Текущая ступень: ' . s((string)$current['label']));
         echo html_writer::tag('p', s((string)$eligibility['reason']));
         echo html_writer::start_tag('ul');
         foreach ((array)$eligibility['requirements'] as $requirement) {
@@ -103,6 +131,51 @@ if ($view === 'mine') {
             echo html_writer::tag('li', $text);
         }
         echo html_writer::end_tag('ul');
+    }
+}
+if ($view === 'assignments') {
+    echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-grades__search']);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'assignments']);
+    echo html_writer::tag('label', 'Имя или почта сотрудника', ['for' => 'grade-search']);
+    echo html_writer::empty_tag('input', ['type' => 'search', 'name' => 'q', 'id' => 'grade-search',
+        'value' => s($query), 'minlength' => 2, 'class' => 'form-control']);
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Найти', 'class' => 'u-btn']);
+    echo html_writer::end_tag('form');
+    if ($query !== '' && core_text::strlen($query) < 2) {
+        echo $OUTPUT->notification('Для поиска укажите не менее двух символов.', 'notifyinfo');
+    } else if ($query !== '' && !$candidates) {
+        echo $OUTPUT->notification('Сотрудники не найдены.', 'notifyinfo');
+    }
+    foreach ($candidates as $candidate) {
+        if (!\local_ustar\accounts::is_business_account((int)$candidate->id)
+                || !\local_ustar\employment::is_active((int)$candidate->id)) { continue; }
+        $grade = \local_ustar\grade_promotion::current((int)$candidate->id);
+        echo html_writer::start_div('u-stage6-card u-grades__request');
+        echo html_writer::tag('h2', s(fullname($candidate)));
+        echo html_writer::tag('p', s((string)$candidate->email));
+        echo html_writer::tag('p', empty($grade['enabled']) ? 'Лестница для должности не настроена'
+            : 'Текущая ступень: ' . s((string)$grade['label']));
+        $previous = $DB->get_record('local_ustar_employee_grades', ['userid' => (int)$candidate->id],
+            'id,positionid', IGNORE_MISSING);
+        if ($previous && empty($grade['recorded'])) {
+            echo html_writer::tag('p',
+                'Есть грейд прежней должности. Перед новым назначением требуется решение о переносе.',
+                ['class' => 'u-grades__hint']);
+        }
+        if (!empty($grade['enabled']) && empty($grade['recorded']) && !$previous) {
+            echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-grades__assignment']);
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'assigninitial']);
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'userid', 'value' => (int)$candidate->id]);
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'q', 'value' => s($query)]);
+            echo html_writer::tag('label', 'Основание назначения', ['for' => 'grade-assignment-' . (int)$candidate->id]);
+            echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'reason',
+                'id' => 'grade-assignment-' . (int)$candidate->id, 'required' => 'required', 'class' => 'form-control']);
+            echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Назначить начальную ступень',
+                'class' => 'u-btn u-btn--primary']);
+            echo html_writer::end_tag('form');
+        }
+        echo html_writer::end_div();
     }
 }
 if ($view === 'team') {

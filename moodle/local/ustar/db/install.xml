@@ -1427,7 +1427,7 @@
         <INDEX NAME="transition_status_idx" UNIQUE="false" FIELDS="positionid, fromgrade, tograde, status" />
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_ustar_employee_grades" COMMENT="Personal current grade; every eligible employee starts from first grade">
+    <TABLE NAME="local_ustar_employee_grades" COMMENT="Personal current grade; initial assignment is an explicit HR action">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />

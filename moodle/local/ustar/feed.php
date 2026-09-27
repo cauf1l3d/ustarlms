@@ -57,8 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new invalid_parameter_exception('Неизвестное действие.');
         }
         redirect(new moodle_url('/local/ustar/feed.php', ['postid' => $postid]));
-    } catch (\Throwable $e) {
+    } catch (\invalid_parameter_exception | \required_capability_exception $e) {
         $notice = $e->getMessage();
+    } catch (\Throwable $e) {
+        // A database or file-storage failure must never be rendered to employees.
+        error_log('USTAR feed action failed: ' . get_class($e));
+        $notice = 'Действие не выполнено. Повторите попытку позже.';
     }
 }
 

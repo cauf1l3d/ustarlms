@@ -90,9 +90,10 @@ class hr_get_workspace extends base {
         }
         $coursemap = [];
         $courserows = [];
+        $modulecounts = self::course_module_counts();
         $allcourses = $DB->get_records_select('course', 'id <> :siteid', ['siteid' => SITEID], 'fullname ASC', 'id,fullname,shortname,idnumber,visible');
         foreach ($allcourses as $course) {
-            $modules = (int)$DB->count_records('course_modules', ['course' => $course->id]);
+            $modules = $modulecounts[(int)$course->id] ?? 0;
             $idnumber = trim((string)$course->idnumber);
             $row = [
                 'id' => (int)$course->id,
@@ -146,8 +147,13 @@ class hr_get_workspace extends base {
         $dbman = $DB->get_manager();
         if ($dbman->table_exists(new \xmldb_table('local_ustar_games'))) {
             $gamerecords = $DB->get_records('local_ustar_games', null, 'title ASC');
+            $questioncounts = [];
+            foreach ($DB->get_records_sql('SELECT gameid, COUNT(id) AS total
+                FROM {local_ustar_questions} WHERE active = 1 GROUP BY gameid') as $countrow) {
+                $questioncounts[(int)$countrow->gameid] = (int)$countrow->total;
+            }
             foreach ($gamerecords as $game) {
-                $qcount = (int)$DB->count_records('local_ustar_questions', ['gameid' => $game->id, 'active' => 1]);
+                $qcount = $questioncounts[(int)$game->id] ?? 0;
                 if ($game->active) {
                     $activegames++;
                 }
@@ -265,10 +271,7 @@ class hr_get_workspace extends base {
                 'courseRefs' => array_values($skill['courses'] ?? []),
             ];
         }
-        $modulecounts = [];
-        foreach ($DB->get_records_sql('SELECT course, COUNT(id) AS total FROM {course_modules} GROUP BY course') as $row) {
-            $modulecounts[(int)$row->course] = (int)$row->total;
-        }
+        $modulecounts = self::course_module_counts();
         $courses = [];
         foreach ($DB->get_records_select('course', 'id <> :siteid', ['siteid' => SITEID],
             'fullname ASC', 'id,fullname,shortname,idnumber,visible') as $course) {
@@ -288,5 +291,14 @@ class hr_get_workspace extends base {
             'matrix' => $matrix,
             'courses' => $courses,
         ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)];
+    }
+
+    private static function course_module_counts(): array {
+        global $DB;
+        $counts = [];
+        foreach ($DB->get_records_sql('SELECT course, COUNT(id) AS total FROM {course_modules} GROUP BY course') as $row) {
+            $counts[(int)$row->course] = (int)$row->total;
+        }
+        return $counts;
     }
 }

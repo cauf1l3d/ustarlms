@@ -161,8 +161,8 @@ class admin_save_structure extends base {
                     if (!isset($skillids[$sid])) {
                         throw new \invalid_parameter_exception("Matrix references unknown skill: {$sid}");
                     }
-                    if ((int)$level < 1 || (int)$level > 3) {
-                        throw new \invalid_parameter_exception("Matrix level for {$posid}/{$sid} must be 1..3");
+                    if ((int)$level < 1 || (int)$level > 5) {
+                        throw new \invalid_parameter_exception("Matrix level for {$posid}/{$sid} must be 1..5");
                     }
                 }
             }
@@ -176,8 +176,9 @@ class admin_save_structure extends base {
         }
         try {
             $tx = $DB->start_delegated_transaction();
-            $current = (int)$DB->get_field('local_ustar_structure', 'version',
-                ['name' => $params['name']]);
+            $record = $DB->get_record_sql('SELECT id, version FROM {local_ustar_structure}
+                WHERE name = :name FOR UPDATE', ['name' => $params['name']], IGNORE_MISSING);
+            $current = $record ? (int)$record->version : 0;
             if ($params['expectedversion'] < 0 || $current !== (int)$params['expectedversion']) {
                 throw new \moodle_exception('Документ изменён в другой сессии. Обновите форму перед сохранением.');
             }

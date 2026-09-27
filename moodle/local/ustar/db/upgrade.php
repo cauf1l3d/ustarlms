@@ -4427,7 +4427,7 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         if (!$dbman->table_exists($table)) {
             $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
             $table->add_field('positionid', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL);
-            $table->add_field('ladderversionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('ladderversionid', XMLDB_TYPE_INTEGER, '10');
             $table->add_field('revision', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1');
             $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
             $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);

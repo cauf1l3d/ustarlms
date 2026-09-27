@@ -15,6 +15,8 @@ final class career_grades {
         return grade_ladders::grades_for_position($positionid) ?? self::catalogue();
     }
     public static function key(array $position): string {
+        $binding = grade_ladders::binding((string)($position['id'] ?? ''));
+        if ($binding && empty($binding->ladderversionid)) { return ''; }
         $bound = grade_ladders::grades_for_position((string)($position['id'] ?? ''));
         if ($bound) { return (string)$bound[0]['id']; }
         $saved = get_config('local_ustar', 'careergrade_'.($position['id'] ?? ''));
@@ -25,7 +27,7 @@ final class career_grades {
     }
     public static function view(array $position): array {
         $positionid = (string)($position['id'] ?? '');
-        $bound = grade_ladders::binding($positionid) !== null;
+        $bound = !empty(grade_ladders::binding($positionid)->ladderversionid);
         $key = self::key($position); $grades = self::catalogue_for_position($positionid); $current = '';
         foreach ($grades as &$row) {
             $row['current'] = !$bound && $row['id'] === $key;

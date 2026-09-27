@@ -1458,7 +1458,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="ladderversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ladderversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />

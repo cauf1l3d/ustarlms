@@ -60,6 +60,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'id' => $ladderid, 'positionid' => $positionid, 'bound' => 1,
             ]));
         }
+        if ($action === 'unbind') {
+            $positionid = required_param('positionid', PARAM_ALPHANUMEXT);
+            \local_ustar\grade_ladders::unbind($positionid,
+                required_param('revision', PARAM_INT), (int)$USER->id,
+                required_param('reason', PARAM_TEXT));
+            redirect(new moodle_url('/local/ustar/grade_ladders.php', [
+                'id' => $ladderid, 'positionid' => $positionid, 'unbound' => 1,
+            ]));
+        }
     } catch (Throwable $e) { $notice = $e->getMessage(); }
 }
 
@@ -86,7 +95,8 @@ echo html_writer::tag('p', 'Создайте ступени, опубликуй�
 echo html_writer::end_tag('header');
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
 foreach (['saved' => 'Черновик сохранён.', 'published' => 'Версия опубликована.',
-        'bound' => 'Привязка должности сохранена.'] as $flag => $message) {
+        'bound' => 'Привязка должности сохранена.',
+        'unbound' => 'Привязка снята с сохранением истории.'] as $flag => $message) {
     if (optional_param($flag, 0, PARAM_BOOL)) { echo $OUTPUT->notification($message, 'notifysuccess'); }
 }
 
@@ -168,7 +178,7 @@ if (!$ladder) {
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Показать', 'class' => 'u-btn']);
         echo html_writer::end_tag('form');
         if ($positionid !== '' && isset($positions[$positionid])) {
-            echo html_writer::tag('p', $binding
+            echo html_writer::tag('p', $binding && !empty($binding->ladderversionid)
                 ? 'Действующая версия #' . (int)$binding->ladderversionid
                 : 'Лестница не назначена.');
             $affected = (int)$DB->count_records('local_ustar_employee_grades', ['positionid' => $positionid]);
@@ -198,6 +208,20 @@ if (!$ladder) {
             echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Привязать версию',
                 'class' => 'u-btn u-btn--primary']);
             echo html_writer::end_tag('form');
+            if ($binding && !empty($binding->ladderversionid)) {
+                echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-grades__assignment']);
+                foreach (['sesskey' => sesskey(), 'action' => 'unbind', 'id' => $ladderid,
+                        'positionid' => $positionid, 'revision' => (int)$binding->revision]
+                        as $field => $value) {
+                    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+                }
+                echo html_writer::tag('label', 'Основание снятия привязки', ['for' => 'binding-remove-reason']);
+                echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'reason',
+                    'id' => 'binding-remove-reason', 'required' => 'required', 'class' => 'form-control']);
+                echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Снять привязку',
+                    'class' => 'u-btn']);
+                echo html_writer::end_tag('form');
+            }
         }
         echo html_writer::end_div();
     }

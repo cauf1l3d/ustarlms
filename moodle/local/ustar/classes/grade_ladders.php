@@ -199,6 +199,42 @@ final class grade_ladders {
         } finally { $lock->release(); }
     }
 
+    /** Explicit absence overrides the pre-migration name fallback without deleting history. */
+    public static function unbind(string $positionid, int $expectedrevision,
+            int $actorid, string $reason): void {
+        global $DB;
+        self::assert_editor($actorid);
+        $positionid = clean_param($positionid, PARAM_ALPHANUMEXT);
+        $reason = trim(clean_param($reason, PARAM_TEXT));
+        if ($positionid === '' || $reason === '') {
+            throw new \invalid_parameter_exception('Укажите должность и основание снятия привязки.');
+        }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('grade-binding:' . sha1($positionid), 10);
+        if (!$lock) { throw new \moodle_exception('Привязка изменяется. Повторите попытку.'); }
+        try {
+            $tx = $DB->start_delegated_transaction();
+            try {
+                $binding = $DB->get_record_sql('SELECT * FROM {local_ustar_grade_bindings}
+                    WHERE positionid = :positionid FOR UPDATE', ['positionid' => $positionid], MUST_EXIST);
+                if ((int)$binding->revision !== $expectedrevision || empty($binding->ladderversionid)) {
+                    throw new \invalid_parameter_exception('Привязка изменилась. Обновите страницу.');
+                }
+                $oldid = (int)$binding->ladderversionid;
+                $binding->ladderversionid = null;
+                $binding->revision++;
+                $binding->timemodified = time();
+                $binding->usermodified = $actorid;
+                $DB->update_record('local_ustar_grade_bindings', $binding);
+                people::log_action($actorid, null, 'grade_binding_removed', [
+                    'positionid' => $positionid, 'fromversionid' => $oldid, 'reason' => $reason,
+                ]);
+                $tx->allow_commit();
+                self::$bindingcache = null;
+            } catch (\Throwable $e) { $tx->rollback($e); }
+        } finally { $lock->release(); }
+    }
+
     public static function binding(string $positionid): ?\stdClass {
         global $DB;
         if (!self::available() || $positionid === '') { return null; }
@@ -217,6 +253,7 @@ final class grade_ladders {
         $binding = self::binding($positionid);
         if (!$binding) { return null; }
         $versionid = (int)$binding->ladderversionid;
+        if ($versionid <= 0) { return null; }
         if (isset(self::$versiongrades[$versionid])) { return self::$versiongrades[$versionid]; }
         $version = $DB->get_record('local_ustar_grade_ladder_ver',
             ['id' => $versionid], '*', MUST_EXIST);

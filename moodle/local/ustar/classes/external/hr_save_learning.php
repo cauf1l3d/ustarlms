@@ -33,8 +33,10 @@ class hr_save_learning extends base {
         }
         $seen = [];
         foreach ($skills as &$skill) {
-            $id = preg_replace('/[^a-zA-Z0-9_.-]/', '_', (string)($skill['id'] ?? ''));
-            if ($id === '' || isset($seen[$id])) throw new \invalid_parameter_exception('Skill ids must be unique');
+            $id = trim((string)($skill['id'] ?? ''));
+            if (!preg_match('/^[a-zA-Z0-9_.-]{1,64}$/D', $id) || isset($seen[$id])) {
+                throw new \invalid_parameter_exception('ID навыка должен быть уникальным и содержать до 64 латинских символов, цифр, точек, дефисов или подчёркиваний');
+            }
             $seen[$id] = true; $skill['id'] = $id;
             $skill['name'] = trim((string)($skill['name'] ?? ''));
             if ($skill['name'] === '' || \core_text::strlen($skill['name']) > 120) {
@@ -74,8 +76,9 @@ class hr_save_learning extends base {
         try {
         $tx = $DB->start_delegated_transaction();
         $record = $DB->get_record_sql('SELECT id, version FROM {local_ustar_structure}
-            WHERE name = :name FOR UPDATE', ['name' => structure::NAME_STRUCTURE], MUST_EXIST);
-        if ((int)$params['expectedversion'] !== (int)$record->version) {
+            WHERE name = :name FOR UPDATE', ['name' => structure::NAME_STRUCTURE], IGNORE_MISSING);
+        $currentversion = $record ? (int)$record->version : 0;
+        if ((int)$params['expectedversion'] !== $currentversion) {
             throw new \moodle_exception('Модель изменилась в другой сессии. Обновите страницу перед сохранением.');
         }
         $st = structure::get(structure::NAME_STRUCTURE);
@@ -117,7 +120,7 @@ class hr_save_learning extends base {
             $lock->release();
         }
         return ['json' => json_encode(['ok' => true, 'skills' => count($skills),
-            'matrixPositions' => count($cleanmatrix), 'revision' => (int)$record->version + 1],
+            'matrixPositions' => count($cleanmatrix), 'revision' => $currentversion + 1],
             JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)];
     }
     public static function execute_returns() { return new \core_external\external_single_structure(['json' => new external_value(PARAM_RAW, 'Learning model publish result')]); }

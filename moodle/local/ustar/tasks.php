@@ -18,6 +18,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     \local_ustar\view_as::assert_writable();
     try {
         $action = required_param('action', PARAM_ALPHANUMEXT);
+        if ($action === 'checklistsave') {
+            $checklistid = required_param('checklistid', PARAM_ALPHANUMEXT);
+            $available = \local_ustar\checklist_service::list_for((int)$USER->id);
+            $definition = null;
+            foreach ($available['checklists'] as $checklist) {
+                if ((string)$checklist['id'] === $checklistid) {
+                    $definition = $checklist;
+                    break;
+                }
+            }
+            if (!$definition) {
+                throw new required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
+            }
+            \local_ustar\checklist_service::submit((int)$USER->id, $checklistid,
+                \local_ustar\checklist_service::posted_answers($definition),
+                optional_param('comment', '', PARAM_TEXT));
+            redirect(new moodle_url('/local/ustar/tasks.php',
+                ['tab' => 'checklists', 'id' => $checklistid, 'saved' => 1]));
+        }
         if ($action === 'note') {
             \local_ustar\learning_tasks::create_note(
                 (int)$USER->id, required_param('title', PARAM_TEXT), optional_param('description', '', PARAM_TEXT)
@@ -70,16 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$assigned = \local_ustar\learning_tasks::assigned_to((int)$USER->id);
-$notes = \local_ustar\learning_tasks::notes_for_owner((int)$USER->id);
-$outgoing = \local_ustar\learning_tasks::assigned_by((int)$USER->id);
+$assigned = $tab === 'assigned' ? \local_ustar\learning_tasks::assigned_to((int)$USER->id) : [];
+$notes = $tab === 'notebook' ? \local_ustar\learning_tasks::notes_for_owner((int)$USER->id) : [];
+$outgoing = $tab === 'outgoing' ? \local_ustar\learning_tasks::assigned_by((int)$USER->id) : [];
 $candidates = [];
-$scoped = \local_ustar\organization_model::manager_scope((int)$USER->id);
-if (!empty($scoped['allowed'])) {
-    $candidates = $scoped['employees'] ?? [];
-}
 $canhr = $canhrworkspace;
-if ($canhr) {
+if ($tab === 'outgoing') {
+    $scoped = \local_ustar\organization_model::manager_scope((int)$USER->id);
+    if (!empty($scoped['allowed'])) {
+        $candidates = $scoped['employees'] ?? [];
+    }
+}
+if ($tab === 'outgoing' && $canhr) {
     $candidates = [];
     foreach ($DB->get_records_select('user', 'id > 1 AND deleted = 0 AND suspended = 0', [], 'lastname ASC, firstname ASC', 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $user) {
         if ((int)$user->id !== (int)$USER->id && \local_ustar\learning_tasks::can_assign((int)$USER->id, (int)$user->id)) {
@@ -101,16 +122,16 @@ echo html_writer::tag('header', html_writer::tag('h1', 'Задачи') .
     ['class' => 'u-tasks__header']);
 
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
-foreach (['saved' => 'Личная заметка сохранена.', 'assigned' => 'Задача назначена.',
+foreach (['saved' => $tab === 'checklists' ? 'Чек-лист сохранён.' : 'Личная заметка сохранена.', 'assigned' => 'Задача назначена.',
         'changed' => 'Статус задачи изменён.', 'deleted' => 'Личная заметка удалена.'] as $key => $message) {
     if (optional_param($key, 0, PARAM_BOOL)) { echo $OUTPUT->notification($message, 'notifysuccess'); }
 }
 
 $tabs = [
+    'assigned' => 'Назначено мне',
+    'outgoing' => 'Мои поручения',
     'checklists' => 'Чек-листы',
     'notebook' => 'Личный блокнот',
-    'assigned' => 'Назначено мне',
-    'outgoing' => 'Мои назначения',
 ];
 echo html_writer::start_div('u-stage6-tabs');
 foreach ($tabs as $key => $label) {
@@ -172,12 +193,11 @@ $formvalue = static function(string $action, int $id, string $name, string $defa
 };
 
 if ($tab === 'checklists') {
-    echo html_writer::start_div('u-stage6-card u-tasks__empty');
-    echo html_writer::tag('h2', 'Рабочие чек-листы');
-    echo html_writer::tag('p', 'Проверяйте этапы работы в общем контуре задач Академии.');
-    echo html_writer::link(new moodle_url('/local/ustar/checklists.php'), 'Открыть чек-листы',
-        ['class' => 'u-btn u-btn--primary']);
-    echo html_writer::end_div();
+    $data = \local_ustar\checklist_service::present((int)$USER->id,
+        optional_param('id', '', PARAM_ALPHANUMEXT),
+        optional_param('date', '', PARAM_RAW_TRIMMED));
+    $data['tasksurl'] = (new moodle_url('/local/ustar/tasks.php'))->out(false);
+    echo $OUTPUT->render_from_template('local_ustar/checklists', $data);
 }
 if ($tab === 'notebook') {
     echo html_writer::tag('p', 'Заметки видны только вам: их текст не попадает в поиск, уведомления, аналитику или экран руководителя.',

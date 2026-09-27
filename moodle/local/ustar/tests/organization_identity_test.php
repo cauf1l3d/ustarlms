@@ -10,6 +10,7 @@ defined('MOODLE_INTERNAL') || die();
 #[\PHPUnit\Framework\Attributes\CoversClass(capabilities::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(access_migration::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(registration_service::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(checklist_service::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(staffing_requests::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(adaptation_service::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(hr_people::class)]
@@ -54,6 +55,29 @@ final class organization_identity_test extends \advanced_testcase {
         foreach ($capabilities as $capability) assign_capability($capability, CAP_ALLOW, $role, $context->id);
         role_assign($role, $userid, $context->id);
         accesslib_clear_all_caches(true);
+    }
+
+    public function test_checklist_native_and_api_share_scope_and_one_daily_run(): void {
+        global $DB;
+        $user = $this->employee('retail_seller');
+        $this->grant($user->id, ['local/ustar:use']);
+        checklists::save(['version' => 1, 'items' => [[
+            'id' => 'fixture_check', 'title' => 'Рабочая проверка', 'active' => true,
+            'positionIds' => ['retail_seller'], 'recurrence' => 'daily',
+            'sections' => [['id' => 'main', 'title' => 'Основное',
+                'items' => [['id' => 'point', 'title' => 'Выполнено']]]],
+        ]]]);
+        $this->setUser($user);
+        $list = checklist_service::list_for((int)$user->id);
+        $this->assertCount(1, $list['checklists']);
+        $view = checklist_service::present((int)$user->id);
+        $this->assertSame('fixture_check', $view['current']['id']);
+        $this->assertCount(1, \local_ustar\native_data::checklists()['checklists']);
+        checklist_service::submit((int)$user->id, 'fixture_check', ['point' => ['done' => true]]);
+        $this->assertSame(1, $DB->count_records('local_ustar_check_runs', ['userid' => $user->id]));
+        $this->assertTrue(checklist_service::present((int)$user->id)['current']['complete']);
+        $this->expectException(\required_capability_exception::class);
+        checklist_service::submit((int)$user->id, 'unknown_check', []);
     }
 
     public function test_primary_is_shared_by_profile_and_access_without_writes(): void {

@@ -53,14 +53,22 @@ $candidates = [];
 if ($view === 'assignments' && core_text::strlen($query) >= 2) {
     $escaped = $DB->sql_like_escape($query);
     $term = '%' . $escaped . '%';
+    $typefieldid = (int)$DB->get_field('user_info_field', 'id',
+        ['shortname' => \local_ustar\accounts::FIELD]);
     $candidates = $DB->get_records_sql(
-        'SELECT id, firstname, lastname, email FROM {user}
-          WHERE deleted = 0 AND id > 1 AND ('
-            . $DB->sql_like('firstname', ':firstname', false) . ' OR '
-            . $DB->sql_like('lastname', ':lastname', false) . ' OR '
-            . $DB->sql_like('email', ':email', false) . ')
-          ORDER BY lastname, firstname, id',
-        ['firstname' => $term, 'lastname' => $term, 'email' => $term], 0, 25
+        'SELECT u.id, u.firstname, u.lastname, u.email FROM {user} u
+          LEFT JOIN {local_ustar_employment} e ON e.userid = u.id
+          LEFT JOIN {user_info_data} d ON d.userid = u.id AND d.fieldid = :typefieldid
+          WHERE u.deleted = 0 AND u.id > 1 AND (e.status IS NULL OR e.status = :active)
+            AND (d.data IS NULL OR d.data NOT IN (:service, :test)) AND ('
+            . $DB->sql_like('u.firstname', ':firstname', false) . ' OR '
+            . $DB->sql_like('u.lastname', ':lastname', false) . ' OR '
+            . $DB->sql_like('u.email', ':email', false) . ')
+          ORDER BY u.lastname, u.firstname, u.id',
+        ['typefieldid' => $typefieldid, 'active' => \local_ustar\employment::ACTIVE,
+            'service' => \local_ustar\accounts::TYPE_SERVICE,
+            'test' => \local_ustar\accounts::TYPE_TEST,
+            'firstname' => $term, 'lastname' => $term, 'email' => $term], 0, 25
     );
 }
 
@@ -146,9 +154,11 @@ if ($view === 'assignments') {
     } else if ($query !== '' && !$candidates) {
         echo $OUTPUT->notification('Сотрудники не найдены.', 'notifyinfo');
     }
+    $shown = 0;
     foreach ($candidates as $candidate) {
         if (!\local_ustar\accounts::is_business_account((int)$candidate->id)
                 || !\local_ustar\employment::is_active((int)$candidate->id)) { continue; }
+        $shown++;
         $grade = \local_ustar\grade_promotion::current((int)$candidate->id);
         echo html_writer::start_div('u-stage6-card u-grades__request');
         echo html_writer::tag('h2', s(fullname($candidate)));
@@ -176,6 +186,9 @@ if ($view === 'assignments') {
             echo html_writer::end_tag('form');
         }
         echo html_writer::end_div();
+    }
+    if ($candidates && !$shown) {
+        echo $OUTPUT->notification('Действующие сотрудники по запросу не найдены.', 'notifyinfo');
     }
 }
 if ($view === 'team') {

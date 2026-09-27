@@ -1,5 +1,20 @@
 # Журнал выполнения roadmap
 
+## 2026-09-27 — G05/N02, версии лестниц в draft
+
+[PR №29](https://github.com/cauf1l3d/ustarlms/pull/29) поверх PR28,
+head `f1dfa079f2e4a19efa7038407cbbba22812cc0f8`, миграция
+`2026092706`, [ADR-0007](https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-g05-ladders-20260927/context/decisions/ADR-0007-versioned-grade-ladders.md).
+Отдельные черновик, опубликованная версия и привязка должности;
+снятие привязки сохраняет явную пустую связь. Персональные записи,
+правила и заявки закрепляют версию. HR-коррекция/перенос требует причины
+и ревизии, создаёт audit; прежняя версия блокирует согласование до
+пересмотра. Профиль и карьерный маршрут используют общий personal presenter.
+Миграция не подтверждает name-based связи автоматически; отдельный CLI
+выводит их для решения. Source/frontend run №262 SUCCESS. DB, upgrade,
+browser, performance и rollback отложены до общего кандидата; prod не менялся.
+G05 ещё не принят.
+
 ## 2026-09-27 — G05/N02, явное назначение грейда в draft
 
 [PR №28](https://github.com/cauf1l3d/ustarlms/pull/28) поверх PR27,

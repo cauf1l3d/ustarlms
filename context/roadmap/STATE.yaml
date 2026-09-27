@@ -11,8 +11,9 @@ current_activity: G00 production source matched PR16, but performance baseline
   runs 244 and 247. G04 position catalogue, focused card and guarded matrix
   publication are draft PR27 at ae70b8a; source/frontend passed on exact-head
   run 254. G05 initial grade assignment/read side effects are draft PR28 at
-  5c44eac; source/frontend passed in run 257. Versioned ladders and binding
-  remain open. Moodle DB, rollback,
+  5c44eac; source/frontend passed in run 257. G05 versioned ladders,
+  bindings and HR correction are draft PR29 at f1dfa07; exact-head source
+  run 262 succeeded. Moodle DB, rollback,
   browser/visual and performance evidence remain open. The 8 priorities,
   60 audit items and 13 earlier defects are not accepted by source gates.
 next_task: G05

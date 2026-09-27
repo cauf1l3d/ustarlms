@@ -1,6 +1,21 @@
 # Активная работа — 2026-09-27
 
-## G05 / N02 — начальное назначение грейда, черновик
+## G05 / N02 — версии и HR-коррекция, исходники в черновике
+
+[PR №29](https://github.com/cauf1l3d/ustarlms/pull/29) поверх PR28,
+head `f1dfa079f2e4a19efa7038407cbbba22812cc0f8`:
+черновик и публикация неизменяемых версий лестниц, явная привязка/снятие
+привязки должности, ревизии личного грейда и HR-коррекция с причиной и
+историей. Новые правила/заявки закрепляют версию; изменение версии требует
+перепроверки. Миграция `2026092706` переносит JSON и только явные
+stable-ID связи, read-only CLI перечисляет legacy name-based случаи.
+[ADR-0007](https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-g05-ladders-20260927/context/decisions/ADR-0007-versioned-grade-ladders.md) фиксирует
+границу миграции. Source/frontend exact-head run №262 SUCCESS.
+Moodle DB, install/upgrade, браузер, ACL, rollback и производительность
+не запускались, production не менялся. G05 не принят; legacy решения и
+интеграция кадрового перевода остаются до общего кандидата.
+
+## G05 / N02 — начальное назначение грейда, предыдущий пакет
 
 [PR №28](https://github.com/cauf1l3d/ustarlms/pull/28) поверх PR27,
 head `5c44eace8330ab4607017ca653935b635b36d759`:

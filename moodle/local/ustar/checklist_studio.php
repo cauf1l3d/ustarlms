@@ -10,10 +10,20 @@ if (!has_capability('local/ustar:hrmanage', $context) && !has_capability('local/
 
 $id = optional_param('id', '', PARAM_ALPHANUMEXT);
 $saved = optional_param('saved', 0, PARAM_BOOL);
+$published = optional_param('published', 0, PARAM_BOOL);
 
 $payload = \local_ustar\native_data::hr_checklists();
 $definitions = $payload['definitions'] ?? \local_ustar\checklists::get();
 $items = array_values($definitions['items'] ?? []);
+$publishedids = array_fill_keys(array_column($items, 'id'), true);
+foreach ($DB->get_records('local_ustar_check_def_ver', ['status' => 'draft']) as $draftrecord) {
+    if (!isset($publishedids[(string)$draftrecord->checklistkey])) {
+        $draftitem = json_decode((string)$draftrecord->definitionjson, true);
+        if (is_array($draftitem)) {
+            $items[] = $draftitem;
+        }
+    }
+}
 
 $findCurrent = static function(array $items, string $id): ?array {
     foreach ($items as $item) {
@@ -28,20 +38,42 @@ $current = $id !== '' ? $findCurrent($items, $id) : ($items[0] ?? null);
 if ($id === '' && $current) {
     $id = (string)$current['id'];
 }
+$draft = $id !== '' && $id !== 'new' ? \local_ustar\checklists::draft_for($id) : null;
+if ($draft) {
+    $current = $draft;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     \local_ustar\view_as::assert_writable();
+    $action = required_param('action', PARAM_ALPHA);
+    if ($action === 'publish') {
+        $publishid = required_param('originalid', PARAM_ALPHANUMEXT);
+        \local_ustar\checklists::publish_draft($publishid,
+            required_param('draftversion', PARAM_INT), required_param('draftrevision', PARAM_INT));
+        redirect(new moodle_url('/local/ustar/checklist_studio.php', ['id' => $publishid, 'published' => 1]));
+    }
+    if ($action !== 'draft') {
+        throw new invalid_parameter_exception('Неизвестное действие редактора.');
+    }
     $originalid = optional_param('originalid', '', PARAM_ALPHANUMEXT);
     $newid = required_param('checklistid', PARAM_ALPHANUMEXT);
+    if (($originalid !== '' && $originalid !== $newid)
+            || ($originalid === '' && $findCurrent($items, $newid))) {
+        throw new invalid_parameter_exception('ID существующего чек-листа изменять нельзя.');
+    }
     $title = required_param('title', PARAM_TEXT);
     $description = optional_param('description', '', PARAM_TEXT);
     $recurrence = required_param('recurrence', PARAM_ALPHANUMEXT);
     $active = optional_param('active', 0, PARAM_BOOL);
     $positionids = optional_param_array('positionids', [], PARAM_ALPHANUMEXT);
     $outline = trim(optional_param('outline', '', PARAM_RAW_TRIMMED));
+    if ($outline === '') {
+        throw new invalid_parameter_exception('Добавьте хотя бы один пункт чек-листа.');
+    }
 
-    $old = $originalid !== '' ? $findCurrent($items, $originalid) : null;
+    $old = $originalid !== '' ? (\local_ustar\checklists::draft_for($originalid)
+        ?? $findCurrent($items, $originalid)) : null;
     $oldSectionIds = [];
     $oldItemIds = [];
     foreach (($old['sections'] ?? []) as $section) {
@@ -84,22 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'sections' => $sections,
     ];
 
-    $updated = [];
-    $replaced = false;
-    foreach ($items as $item) {
-        if ($originalid !== '' && (string)$item['id'] === $originalid) {
-            $updated[] = $new;
-            $replaced = true;
-        } else {
-            $updated[] = $item;
-        }
-    }
-    if (!$replaced) {
-        $updated[] = $new;
-    }
-
-    $definitions['items'] = $updated;
-    \local_ustar\native_data::save_checklists($definitions);
+    \local_ustar\checklists::save_draft($new, required_param('draftrevision', PARAM_INT));
     redirect(new moodle_url('/local/ustar/checklist_studio.php', ['id' => $newid, 'saved' => 1]));
 }
 
@@ -117,6 +134,7 @@ foreach ($items as $item) {
         'id' => $itemid,
         'title' => (string)$item['title'],
         'active' => !empty($item['active']),
+        'draftlabel' => \local_ustar\checklists::draft_for($itemid) ? ' · Черновик' : '',
         'selected' => $itemid === (string)$current['id'],
         'url' => (new moodle_url('/local/ustar/checklist_studio.php', ['id' => $itemid]))->out(false),
     ];
@@ -155,6 +173,12 @@ unset($run);
 
 $data = [
     'saved' => $saved,
+    'published' => $published,
+    'hasdraft' => $draft !== null,
+    'draftversion' => $draft['version'] ?? 0,
+    'draftrevision' => $draft['draftrevision'] ?? 0,
+    'publishedversion' => isset($publishedids[(string)($current['id'] ?? '')])
+        ? (int)($findCurrent($definitions['items'], (string)$current['id'])['version'] ?? 1) : 0,
     'items' => $list,
     'hasitems' => !empty($list),
     'templatecount' => count($list),

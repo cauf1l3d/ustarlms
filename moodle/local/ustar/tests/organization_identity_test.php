@@ -80,6 +80,51 @@ final class organization_identity_test extends \advanced_testcase {
         checklist_service::submit((int)$user->id, 'unknown_check', []);
     }
 
+    public function test_checklist_draft_pins_version_and_corrections_append_history(): void {
+        global $DB;
+        $user = $this->employee('retail_seller');
+        $this->grant($user->id, ['local/ustar:use']);
+        $definition = [
+            'id' => 'versioned_check', 'title' => 'Версия 1', 'active' => true,
+            'positionIds' => ['retail_seller'], 'recurrence' => 'daily',
+            'sections' => [['id' => 'main', 'title' => 'Основное',
+                'items' => [['id' => 'point', 'title' => 'Первый пункт']]]],
+        ];
+        checklists::save(['version' => 1, 'items' => [$definition]]);
+        $this->setUser($user);
+        $draft = checklist_service::submit((int)$user->id, 'versioned_check',
+            ['point' => ['done' => false]], 'Ещё проверяю', 'draft', 0);
+        $this->assertSame(1, $draft['revision']);
+        $this->assertSame(0, $DB->count_records('local_ustar_check_submits', ['userid' => $user->id]));
+        $this->assertSame('Версия 1', checklist_service::present((int)$user->id)['current']['title']);
+
+        $this->setAdminUser();
+        $definition['title'] = 'Версия 2';
+        $definition['sections'][0]['items'][] = ['id' => 'second', 'title' => 'Второй пункт'];
+        $this->assertSame(2, checklists::save_draft($definition, 0));
+        $this->assertSame(1, checklists::draft_for('versioned_check')['draftrevision']);
+        $this->assertSame(2, checklists::publish_draft('versioned_check', 2, 1));
+        $this->assertSame('Версия 2', checklists::find('versioned_check')['title']);
+        $this->setUser($user);
+        $view = checklist_service::present((int)$user->id);
+        $this->assertSame('Версия 1', $view['current']['title']);
+        $this->assertCount(1, checklists::flat_items($view['current']));
+
+        $final = checklist_service::submit((int)$user->id, 'versioned_check',
+            ['point' => ['done' => true]], 'Готово', 'final', 1);
+        $this->assertSame(1, $DB->count_records('local_ustar_check_submits', ['userid' => $user->id]));
+        $same = checklist_service::submit((int)$user->id, 'versioned_check',
+            ['point' => ['done' => true]], 'Готово', 'final', $final['revision']);
+        $this->assertSame($final['submissionid'], $same['submissionid']);
+        $this->assertSame(1, $DB->count_records('local_ustar_check_submits', ['userid' => $user->id]));
+        $corrected = checklist_service::submit((int)$user->id, 'versioned_check',
+            ['point' => ['done' => false]], 'Исправлено', 'final', $final['revision'], 'Ошибка отметки');
+        $this->assertSame(2, $DB->count_records('local_ustar_check_submits', ['userid' => $user->id]));
+        $last = $DB->get_record('local_ustar_check_submits', ['id' => $corrected['submissionid']], '*', MUST_EXIST);
+        $this->assertSame((int)$final['submissionid'], (int)$last->correctionofid);
+        $this->assertSame(1, (int)$last->definitionversion);
+    }
+
     public function test_primary_is_shared_by_profile_and_access_without_writes(): void {
         global $DB;
         $user = $this->employee();

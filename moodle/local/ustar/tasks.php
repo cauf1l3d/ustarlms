@@ -33,7 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             \local_ustar\checklist_service::submit((int)$USER->id, $checklistid,
                 \local_ustar\checklist_service::posted_answers($definition),
-                optional_param('comment', '', PARAM_TEXT));
+                optional_param('comment', '', PARAM_TEXT),
+                optional_param('mode', 'final', PARAM_ALPHA),
+                required_param('revision', PARAM_INT),
+                optional_param('correctionreason', '', PARAM_TEXT),
+                required_param('definitionversion', PARAM_INT));
             redirect(new moodle_url('/local/ustar/tasks.php',
                 ['tab' => 'checklists', 'id' => $checklistid, 'saved' => 1]));
         }

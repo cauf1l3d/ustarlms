@@ -6,8 +6,10 @@ defined('MOODLE_INTERNAL') || die();
 /** Shared checklist access and presentation for native pages and external API. */
 final class checklist_service {
     private static function assert_actor(int $userid): void {
+        global $USER;
         $context = \context_system::instance();
-        if (!has_capability('local/ustar:use', $context, $userid)
+        if ((int)$USER->id !== $userid
+                || !has_capability('local/ustar:use', $context, $userid)
                 || !employment::is_active($userid)) {
             throw new \required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
         }
@@ -35,19 +37,48 @@ final class checklist_service {
             $bykey[(string)$run->checklistkey] = $run;
         }
         $rows = [];
+        $seen = [];
         foreach ((checklists::get()['items'] ?? []) as $checklist) {
-            if (!checklists::applies_to($checklist, $positionid)) {
+            $run = $bykey[(string)$checklist['id']] ?? null;
+            $seen[(string)$checklist['id']] = true;
+            if (!checklists::applies_to($checklist, $positionid) && !$run) {
                 continue;
             }
-            $run = $bykey[(string)$checklist['id']] ?? null;
-            $total = count(checklists::flat_items($checklist));
-            $rows[] = $checklist + ['today' => $run ? [
+            $definition = $run && $run->definitionversion
+                ? checklists::published_version((string)$checklist['id'], (int)$run->definitionversion) : null;
+            $missingversion = $run && $run->definitionversion && !$definition;
+            $definition ??= $missingversion ? [
+                'id' => (string)$checklist['id'], 'title' => 'Старая версия недоступна',
+                'description' => 'Опубликованная версия не найдена. Обратитесь к администратору.',
+                'sections' => [], 'recurrence' => 'manual',
+            ] : $checklist;
+            $total = count(checklists::flat_items($definition));
+            $rows[] = $definition + ['today' => $run ? [
                 'status' => (string)$run->status, 'done' => (int)$run->doneitems,
                 'total' => (int)$run->totalitems, 'score' => (int)$run->score,
                 'comment' => (string)$run->comment, 'completedAt' => (int)$run->completedat,
+                'revision' => (int)$run->revision, 'submissionid' => (int)$run->lastsubmissionid,
+                'legacy' => !$run->definitionversion || $missingversion,
             ] : [
                 'status' => 'pending', 'done' => 0, 'total' => $total,
                 'score' => 0, 'comment' => '', 'completedAt' => 0,
+                'revision' => 0, 'submissionid' => 0, 'legacy' => false,
+            ]];
+        }
+        foreach ($bykey as $key => $run) {
+            if (isset($seen[$key])) {
+                continue;
+            }
+            $definition = $run->definitionversion
+                ? checklists::published_version($key, (int)$run->definitionversion) : null;
+            $definition ??= ['id' => $key, 'title' => 'Архивный чек-лист',
+                'description' => 'Опубликованная версия не найдена.', 'sections' => [], 'recurrence' => 'manual'];
+            $rows[] = $definition + ['today' => [
+                'status' => (string)$run->status, 'done' => (int)$run->doneitems,
+                'total' => (int)$run->totalitems, 'score' => (int)$run->score,
+                'comment' => (string)$run->comment, 'completedAt' => (int)$run->completedat,
+                'revision' => (int)$run->revision, 'submissionid' => (int)$run->lastsubmissionid,
+                'legacy' => !$run->definitionversion || !$definition['sections'],
             ]];
         }
         return ['date' => $datekey, 'positionid' => $positionid, 'checklists' => $rows];
@@ -91,6 +122,8 @@ final class checklist_service {
                 }
                 unset($section);
                 $checklist['todaycomment'] = $run ? (string)$run->comment : (string)$today['comment'];
+                $checklist['definitionversion'] = max(1, (int)($checklist['version'] ?? 1));
+                $checklist['hasfinal'] = !empty($today['submissionid']);
                 $current = $checklist;
             }
             $rows[] = $checklist;
@@ -102,7 +135,8 @@ final class checklist_service {
             'date' => $datekey, 'checklists' => $rows, 'haschecklists' => !empty($rows),
             'current' => $current, 'hascurrent' => $current !== null,
             'selectedid' => $selected,
-            'canedit' => $datekey === self::date_key(),
+            'canedit' => $datekey === self::date_key() && empty($current['today']['legacy']),
+            'legacy' => !empty($current['today']['legacy']),
             'sesskey' => sesskey(),
             'studiourl' => (new \moodle_url('/local/ustar/checklist_studio.php'))->out(false),
             'canstudio' => has_capability('local/ustar:hrmanage', \context_system::instance())
@@ -110,68 +144,134 @@ final class checklist_service {
         ];
     }
 
-    public static function submit(int $userid, string $id, array $answers, string $comment = ''): array {
+    public static function submit(int $userid, string $id, array $answers, string $comment = '',
+            string $mode = 'final', int $expectedrevision = -1, string $correctionreason = '',
+            int $expecteddefinitionversion = -1): array {
         global $DB;
         self::assert_actor($userid);
         view_as::assert_writable();
+        if (!in_array($mode, ['draft', 'final'], true)) {
+            throw new \invalid_parameter_exception('Неизвестный способ сохранения чек-листа.');
+        }
         $checklist = checklists::find($id);
         $positionid = (string)(structure::resolve_user($userid)['position']['id'] ?? '');
-        if (!$checklist || !checklists::applies_to($checklist, $positionid)) {
+        if (!$checklist) {
             throw new \required_capability_exception(\context_system::instance(), 'local/ustar:use', 'nopermissions', '');
         }
-        $items = checklists::flat_items($checklist);
-        $done = 0;
-        foreach ($items as $itemid => $item) {
-            if (!empty($answers[$itemid]['done'])) {
-                $done++;
-            }
-        }
-        $total = count($items);
-        $score = $total ? (int)round($done * 100 / $total) : 100;
         $today = self::date_key();
         $now = time();
-        $transaction = $DB->start_delegated_transaction();
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('check-run-' . $userid . '-' . $id . '-' . $today, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Чек-лист сейчас сохраняется. Повторите попытку.');
+        }
         try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
             $run = $DB->get_record('local_ustar_check_runs',
                 ['checklistkey' => $id, 'userid' => $userid, 'datekey' => $today]);
+            if ($run && !$run->definitionversion) {
+                throw new \invalid_parameter_exception('Историческое выполнение без версии доступно только для просмотра.');
+            }
+            if (!$run && !checklists::applies_to($checklist, $positionid)) {
+                throw new \required_capability_exception(\context_system::instance(), 'local/ustar:use', 'nopermissions', '');
+            }
+            if ($expectedrevision >= 0 && $expectedrevision !== (int)($run->revision ?? 0)) {
+                throw new \invalid_parameter_exception('Чек-лист изменился в другом окне. Обновите страницу.');
+            }
+            $version = $run ? (int)$run->definitionversion : max(1, (int)($checklist['version'] ?? 1));
+            if ($expecteddefinitionversion >= 0 && $expecteddefinitionversion !== $version) {
+                throw new \invalid_parameter_exception('Шаблон обновился. Обновите страницу чек-листа.');
+            }
+            $definition = checklists::published_version($id, $version);
+            if (!$definition) {
+                throw new \invalid_parameter_exception('Версия чек-листа недоступна. Обратитесь к администратору.');
+            }
+            $items = checklists::flat_items($definition);
+            $normalized = [];
+            $done = 0;
+            foreach ($items as $itemid => $item) {
+                $answer = $answers[$itemid] ?? [];
+                $checked = !empty($answer['done']);
+                $done += (int)$checked;
+                $normalized[$itemid] = ['done' => $checked,
+                    'comment' => trim((string)($answer['comment'] ?? ''))];
+            }
+            $total = count($items);
+            $score = $total ? (int)round($done * 100 / $total) : 100;
+            $comment = trim($comment);
+            $lastsubmission = $run && $run->lastsubmissionid
+                ? $DB->get_record('local_ustar_check_submits', ['id' => $run->lastsubmissionid]) : null;
+            if ($run && $run->lastsubmissionid && !$lastsubmission) {
+                throw new \coding_exception('Checklist submission reference is missing');
+            }
+            if ($lastsubmission && $mode === 'draft') {
+                throw new \invalid_parameter_exception('После отправки изменения оформляются исправлением.');
+            }
+            if ($lastsubmission && $mode === 'final') {
+                $oldanswers = json_decode((string)$lastsubmission->answersjson, true);
+                $oldissues = json_decode((string)$lastsubmission->issuesjson, true);
+                if ($oldanswers == $normalized && (string)($oldissues['items']['comment'] ?? '') === $comment) {
+                    $transaction->allow_commit();
+                    return ['ok' => true, 'status' => (string)$run->status, 'done' => (int)$run->doneitems,
+                        'total' => (int)$run->totalitems, 'score' => (int)$run->score,
+                        'revision' => (int)$run->revision, 'submissionid' => (int)$run->lastsubmissionid];
+                }
+                if (trim($correctionreason) === '') {
+                    throw new \invalid_parameter_exception('Укажите причину исправления отправленного чек-листа.');
+                }
+            }
             if (!$run) {
                 $run = (object)[
                     'checklistkey' => $id, 'userid' => $userid, 'positionid' => $positionid,
-                    'datekey' => $today, 'status' => $done === $total ? 'completed' : 'partial',
+                    'definitionversion' => $version, 'revision' => 1, 'lastsubmissionid' => null,
+                    'datekey' => $today, 'status' => $mode === 'draft' ? 'draft' : ($done === $total ? 'completed' : 'partial'),
                     'doneitems' => $done, 'totalitems' => $total, 'score' => $score,
                     'comment' => $comment, 'startedat' => $now,
-                    'completedat' => $done === $total ? $now : 0, 'timemodified' => $now,
+                    'completedat' => $mode === 'final' && $done === $total ? $now : 0, 'timemodified' => $now,
                 ];
                 $run->id = $DB->insert_record('local_ustar_check_runs', $run);
             } else {
                 $run->positionid = $positionid;
-                $run->status = $done === $total ? 'completed' : 'partial';
+                $run->revision++;
+                $run->status = $mode === 'draft' ? 'draft' : ($done === $total ? 'completed' : 'partial');
                 $run->doneitems = $done;
                 $run->totalitems = $total;
                 $run->score = $score;
                 $run->comment = $comment;
-                $run->completedat = $done === $total ? $now : 0;
+                $run->completedat = $mode === 'final' && $done === $total ? $now : 0;
                 $run->timemodified = $now;
-                $DB->update_record('local_ustar_check_runs', $run);
                 $DB->delete_records('local_ustar_check_answers', ['runid' => $run->id]);
             }
-            foreach ($items as $itemid => $item) {
-                $answer = $answers[$itemid] ?? [];
+            foreach ($normalized as $itemid => $answer) {
                 $DB->insert_record('local_ustar_check_answers', (object)[
                     'runid' => $run->id, 'itemkey' => $itemid,
-                    'checked' => !empty($answer['done']) ? 1 : 0,
-                    'comment' => trim((string)($answer['comment'] ?? '')),
+                    'checked' => $answer['done'] ? 1 : 0, 'comment' => $answer['comment'],
                     'timecreated' => $now,
                 ]);
             }
-            people::log_action($userid, $userid, 'checklist_submitted',
-                ['checklistid' => $id, 'score' => $score, 'date' => $today]);
+            if ($mode === 'final') {
+                $run->lastsubmissionid = target_core::submit_checklist([
+                    'userid' => $userid, 'checklistkey' => $id, 'definitionversion' => $version,
+                    'perspective' => 'employee', 'workdate' => $today, 'status' => $run->status,
+                    'answers' => $normalized, 'issues' => ['comment' => $comment],
+                    'correctionofid' => $lastsubmission ? (int)$lastsubmission->id : null,
+                    'correctionreason' => trim($correctionreason),
+                ], $userid);
+                people::log_action($userid, $userid, $lastsubmission ? 'checklist_corrected' : 'checklist_submitted',
+                    ['checklistid' => $id, 'score' => $score, 'date' => $today]);
+            }
+            $DB->update_record('local_ustar_check_runs', $run);
             $transaction->allow_commit();
-        } catch (\Throwable $e) {
-            $transaction->rollback($e);
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
         }
         return ['ok' => true, 'status' => $run->status, 'done' => $done,
-            'total' => $total, 'score' => $score];
+            'total' => $total, 'score' => $score, 'revision' => (int)$run->revision,
+            'submissionid' => (int)$run->lastsubmissionid];
     }
 
     public static function posted_answers(array $definition): array {

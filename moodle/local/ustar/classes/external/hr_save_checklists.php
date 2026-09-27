@@ -81,7 +81,7 @@ class hr_save_checklists extends base {
         }
         unset($checklist);
         $data['version'] = $currentversion + 1;
-        checklists::save($data);
+        checklists::save($data, $currentversion);
         people::log_action((int)$USER->id, null, 'checklists_published', ['count' => count($data['items']), 'version' => $data['version']]);
         return ['json' => json_encode(['ok' => true, 'version' => $data['version'], 'count' => count($data['items'])], JSON_UNESCAPED_UNICODE)];
     }

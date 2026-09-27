@@ -332,7 +332,9 @@ final class target_core {
         if ($correctionof !== null) {
             $old = $DB->get_record('local_ustar_check_submits', ['id' => $correctionof], '*', MUST_EXIST);
             if ((int)$old->userid !== $userid || (string)$old->checklistkey !== $checklistkey
-                    || (string)$old->perspective !== $perspective || empty($data['correctionreason'])) {
+                    || (string)$old->perspective !== $perspective || (string)$old->workdate !== $workdate
+                    || (int)$old->definitionversion !== (int)($data['definitionversion'] ?? 1)
+                    || trim((string)($data['correctionreason'] ?? '')) === '') {
                 throw new \invalid_parameter_exception('Checklist correction must match the original and include a reason');
             }
         }

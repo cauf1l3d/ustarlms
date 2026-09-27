@@ -4351,5 +4351,50 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092702, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092705) {
+        $runs = new xmldb_table('local_ustar_check_runs');
+        foreach ([
+            new xmldb_field('definitionversion', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'positionid'),
+            new xmldb_field('revision', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'definitionversion'),
+            new xmldb_field('lastsubmissionid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'revision'),
+        ] as $field) {
+            if (!$dbman->field_exists($runs, $field)) {
+                $dbman->add_field($runs, $field);
+            }
+        }
+        $versions = new xmldb_table('local_ustar_check_def_ver');
+        if (!$dbman->table_exists($versions)) {
+            $versions->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $versions->add_field('checklistkey', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL);
+            $versions->add_field('version', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $versions->add_field('status', XMLDB_TYPE_CHAR, '16', null, XMLDB_NOTNULL);
+            $versions->add_field('definitionjson', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+            $versions->add_field('revision', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1');
+            $versions->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $versions->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $versions->add_field('publishedat', XMLDB_TYPE_INTEGER, '10');
+            $versions->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $versions->add_index('check_version_uix', XMLDB_INDEX_UNIQUE, ['checklistkey', 'version']);
+            $versions->add_index('check_status_idx', XMLDB_INDEX_NOTUNIQUE, ['checklistkey', 'status']);
+            $dbman->create_table($versions);
+        }
+        // This is a snapshot of the definition at upgrade, not a claim about
+        // the version used by historical runs. Existing runs stay unpinned.
+        require_once(__DIR__ . '/../classes/checklists.php');
+        foreach ((\local_ustar\checklists::get()['items'] ?? []) as $definition) {
+            $key = (string)($definition['id'] ?? '');
+            if ($key === '' || $DB->record_exists('local_ustar_check_def_ver',
+                    ['checklistkey' => $key, 'version' => 1])) {
+                continue;
+            }
+            $DB->insert_record('local_ustar_check_def_ver', (object)[
+                'checklistkey' => $key, 'version' => 1, 'status' => 'published',
+                'definitionjson' => json_encode($definition, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+                'createdby' => 0, 'timecreated' => time(), 'publishedat' => time(),
+            ]);
+        }
+        upgrade_plugin_savepoint(true, 2026092705, 'local', 'ustar');
+    }
+
 return true;
 }

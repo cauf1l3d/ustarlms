@@ -23,19 +23,25 @@
         <section class="u-checklist-sheet">
             {{#current}}
             <header><p class="u-page-kicker">{{recurrence}}</p><h2>{{title}}</h2><p>{{description}}</p></header>
+            {{#legacy}}<p class="u-inline-notice">Это выполнение сохранено до фиксации версии шаблона. Исторические ответы доступны только для просмотра.</p>{{/legacy}}
             {{#canedit}}
             <form method="post" action="{{tasksurl}}">
                 <input type="hidden" name="sesskey" value="{{sesskey}}">
                 <input type="hidden" name="tab" value="checklists">
                 <input type="hidden" name="action" value="checklistsave">
                 <input type="hidden" name="checklistid" value="{{id}}">
+                <input type="hidden" name="revision" value="{{today.revision}}">
+                <input type="hidden" name="definitionversion" value="{{definitionversion}}">
                 {{#sections}}
                 <fieldset class="u-check-section"><legend>{{title}}</legend>
-                    {{#items}}<label class="u-check-item"><input type="checkbox" name="done_{{fieldid}}" value="1" {{#checked}}checked{{/checked}}><span>{{title}}</span></label>{{/items}}
+                    {{#items}}<label class="u-check-item"><input type="checkbox" name="done_{{fieldid}}" value="1" {{#checked}}checked{{/checked}}><span>{{title}}</span></label>
+                    <label class="u-field"><span>Примечание к пункту</span><input type="text" name="comment_{{fieldid}}" value="{{comment}}" placeholder="При необходимости"></label>{{/items}}
                 </fieldset>
                 {{/sections}}
                 <label class="u-field"><span>Комментарий к выполнению</span><textarea name="comment" rows="3" placeholder="Необязательно">{{todaycomment}}</textarea></label>
-                <button class="u-btn u-btn--primary" type="submit">Сохранить выполнение</button>
+                {{#hasfinal}}<label class="u-field"><span>Причина исправления</span><textarea name="correctionreason" rows="2" placeholder="Укажите, почему меняете отправленный чек-лист"></textarea></label>{{/hasfinal}}
+                {{^hasfinal}}<button class="u-btn u-btn--quiet" type="submit" name="mode" value="draft">Сохранить черновик</button>{{/hasfinal}}
+                <button class="u-btn u-btn--primary" type="submit" name="mode" value="final">{{#hasfinal}}Отправить исправление{{/hasfinal}}{{^hasfinal}}Отправить выполнение{{/hasfinal}}</button>
             </form>
             {{/canedit}}
             {{^canedit}}<p>Это сохранённые ответы за выбранную дату. Изменения доступны только за сегодня.</p>{{/canedit}}

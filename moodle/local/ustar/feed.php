@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $postid = \local_ustar\feed_service::create($actorid, $publisher, $publisherid,
                 $audience, required_param('body', PARAM_TEXT), $action !== 'draft',
                 $action === 'repost' ? required_param('sourceid', PARAM_INT) : 0,
-                \local_ustar\task_files::uploaded());
+                \local_ustar\task_files::uploaded(), required_param('requestkey', PARAM_ALPHANUMEXT));
             redirect(new moodle_url('/local/ustar/feed.php', ['postid' => $postid]));
         }
         $postid = required_param('postid', PARAM_INT);
@@ -81,6 +81,8 @@ try {
     $page = \local_ustar\feed_query::page($actorid);
 }
 $posts = $page['posts'];
+$departmentnames = \local_ustar\people::department_map(
+    \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE));
 if ($selected && !in_array((int)$selected->id, array_map(static fn($post) => (int)$post->id, $posts), true)) {
     array_unshift($posts, $selected);
 }
@@ -150,17 +152,18 @@ if ($canwrite) {
         'class' => 'u-feed__composer']);
     echo html_writer::tag('h2', 'Новая публикация');
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'requestkey',
+        'value' => bin2hex(random_bytes(16))]);
     echo html_writer::tag('label', 'От чьего имени', ['for' => 'feed-publisher']);
     $publishers = ['person' => 'От моего имени'];
     if ($managed) { $publishers['department'] = 'От имени подразделения'; }
     if ($canacademy) { $publishers['academy'] = 'От имени Академии'; }
     echo html_writer::select($publishers, 'publisher', 'person', false,
         ['id' => 'feed-publisher', 'class' => 'form-select']);
-    $names = \local_ustar\people::department_map(\local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE));
     if ($managed) {
         $options = [];
         foreach ($managed as $departmentid) {
-            $options[$departmentid] = (string)($names[$departmentid]['name'] ?? $departmentid);
+            $options[$departmentid] = (string)($departmentnames[$departmentid]['name'] ?? 'Подразделение');
         }
         echo html_writer::tag('label', 'Подразделение', ['for' => 'feed-department']);
         echo html_writer::select($options, 'departmentid', '', false,
@@ -170,7 +173,7 @@ if ($canwrite) {
         echo html_writer::tag('label', 'Аудитория публикации Академии',
             ['for' => 'feed-audience']);
         $audienceoptions = ['all' => 'Все сотрудники Академии'];
-        foreach ($names as $id => $department) {
+        foreach ($departmentnames as $id => $department) {
             $audienceoptions[$id] = (string)$department['name'];
         }
         echo html_writer::select($audienceoptions, 'audience[]', ['all'], false,
@@ -224,7 +227,8 @@ foreach ($posts as $post) {
     $postid = (int)$post->id;
     $author = $users[(int)$post->actoruserid] ?? null;
     $name = $post->publishertype === 'academy' ? 'Академия USTAR' :
-        ($post->publishertype === 'department' ? (string)$post->publisherid :
+        ($post->publishertype === 'department'
+            ? (string)($departmentnames[(string)$post->publisherid]['name'] ?? 'Подразделение') :
             ($author ? fullname($author) : 'Сотрудник'));
     echo html_writer::start_tag('article', ['class' => 'u-feed__post', 'id' => 'post-' . $postid]);
     echo html_writer::start_div('u-feed__meta');
@@ -375,6 +379,8 @@ foreach ($posts as $post) {
                     echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sourceid', 'value' => $postid]);
+                    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'requestkey',
+                        'value' => bin2hex(random_bytes(16))]);
                     echo html_writer::tag('label', 'Добавить подпись к репосту', ['for' => 'feed-repost']);
                     echo html_writer::tag('textarea', '', ['name' => 'body', 'id' => 'feed-repost',
                         'required' => 'required', 'maxlength' => 5000, 'class' => 'form-control', 'rows' => 2]);

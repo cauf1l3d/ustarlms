@@ -23,10 +23,24 @@ final class feed_service {
 
     public static function create(int $actorid, string $type, string $publisherid,
             array $audience, string $body, bool $publish, int $sourceid = 0,
-            array $uploads = []): int {
+            array $uploads = [], string $requestkey = ''): int {
         global $DB;
+        if (!preg_match('/^[a-f0-9]{32}$/D', $requestkey)) {
+            throw new \invalid_parameter_exception('Неверный ключ отправки публикации.');
+        }
         $audience = array_values(array_map('strval', $audience));
         feed_access::assert_publisher($actorid, $type, $publisherid, $audience);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('feed-create:' . $actorid . ':' . $requestkey, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку публикации.');
+        }
+        try {
+        $existing = (int)$DB->get_field('local_ustar_feed_posts', 'id',
+            ['actoruserid' => $actorid, 'requestkey' => $requestkey]);
+        if ($existing) {
+            return $existing;
+        }
         $source = null;
         if ($sourceid > 0) {
             $source = feed_access::readable($sourceid, $actorid);
@@ -41,6 +55,7 @@ final class feed_service {
             'actoruserid' => $actorid, 'publishertype' => $type, 'publisherid' => $publisherid,
             'status' => $publish ? 'published' : 'draft', 'body' => $body,
             'version' => 1, 'audienceversion' => 1,
+            'requestkey' => $requestkey,
             'sourcepostid' => $source ? $sourceid : null, 'publishedat' => $publish ? $now : null,
             'timecreated' => $now, 'timemodified' => $now,
         ]);
@@ -54,6 +69,9 @@ final class feed_service {
         self::event($id, $actorid, $publish ? 'publish' : 'draft');
         $transaction->allow_commit();
         return $id;
+        } finally {
+            $lock->release();
+        }
     }
 
     public static function revise(int $postid, int $actorid, int $version, string $body,
@@ -76,12 +94,13 @@ final class feed_service {
         }
         $now = time();
         $post->body = $body;
+        $wasdraft = $post->status === 'draft';
         $post->status = $publish ? 'published' : $post->status;
         $post->publishedat = $post->publishedat ?: ($publish ? $now : null);
         $post->timemodified = $now;
         $post->version++;
         $DB->update_record('local_ustar_feed_posts', $post);
-        self::event($postid, $actorid, $publish && $post->status === 'draft' ? 'publish' : 'edit');
+        self::event($postid, $actorid, $publish && $wasdraft ? 'publish' : 'edit');
         $transaction->allow_commit();
     }
 

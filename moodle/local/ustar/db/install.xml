@@ -1596,6 +1596,7 @@
         <FIELD NAME="body" TYPE="text" NOTNULL="true" />
         <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
         <FIELD NAME="audienceversion" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
+        <FIELD NAME="requestkey" TYPE="char" LENGTH="64" NOTNULL="false" />
         <FIELD NAME="sourcepostid" TYPE="int" LENGTH="10" NOTNULL="false" />
         <FIELD NAME="publishedat" TYPE="int" LENGTH="10" NOTNULL="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -1606,6 +1607,7 @@
         <INDEX NAME="status_published_idx" UNIQUE="false" FIELDS="status, publishedat, id" />
         <INDEX NAME="publisher_idx" UNIQUE="false" FIELDS="publishertype, publisherid, publishedat" />
         <INDEX NAME="actor_idx" UNIQUE="false" FIELDS="actoruserid, id" />
+        <INDEX NAME="actor_request_uix" UNIQUE="true" FIELDS="actoruserid, requestkey" />
         <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcepostid" />
       </INDEXES>
     </TABLE>

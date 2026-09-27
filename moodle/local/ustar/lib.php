@@ -34,6 +34,31 @@ function local_ustar_pluginfile(
         return false;
     }
 
+    if ($filearea === \local_ustar\feed_files::AREA) {
+        if (!$args || !\local_ustar\accounts::participates((int)$USER->id)) {
+            return false;
+        }
+        $postid = (int)array_shift($args);
+        if ($postid <= 0 || count($args) !== 2 || $args[0] !== 'v1') {
+            return false;
+        }
+        try {
+            \local_ustar\feed_access::readable($postid, (int)$USER->id);
+        } catch (\Throwable $e) {
+            return false;
+        }
+        $filename = array_pop($args);
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $postid, '/v1/', $filename);
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none';");
+        send_stored_file($file, 0, 0, true, $options);
+        return true;
+    }
+
     if (in_array($filearea, [\local_ustar\task_files::ATTACHMENT, \local_ustar\task_files::RESULT], true)) {
         if (!$args || !\local_ustar\employment::is_active((int)$USER->id)) {
             return false;

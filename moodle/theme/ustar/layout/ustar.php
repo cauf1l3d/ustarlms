@@ -129,6 +129,7 @@ $cataloglabel =
 if ($pagepath === '/local/ustar/team.php' || $pagepath === '/local/ustar/executive.php') { $view = 'team'; }
 if ($pagepath === '/local/ustar/achievements.php') { $view = 'achievements'; }
 if ($pagepath === '/local/ustar/tasks.php') { $view = 'tasks'; }
+if ($pagepath === '/local/ustar/feed.php') { $view = 'feed'; }
 if ($pagepath === '/local/ustar/grades.php') { $view = 'career'; }
 
 if (in_array($pagepath, [
@@ -154,6 +155,11 @@ $ishrworkspace = in_array(
 $icons = [
     'home' => '<svg class="u-icon u-navitem__icon" viewBox="0 0 24 24" aria-hidden="true">'
         . '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-7h6v7"/>'
+        . '</svg>',
+
+    'feed' => '<svg class="u-icon u-navitem__icon" viewBox="0 0 24 24" aria-hidden="true">'
+        . '<rect x="3" y="4" width="18" height="16" rx="2"/>'
+        . '<path d="M7 9h10M7 13h10M7 17h6"/>'
         . '</svg>',
 
     'learning' => '<svg class="u-icon u-navitem__icon" viewBox="0 0 24 24" aria-hidden="true">'
@@ -308,6 +314,7 @@ if ($ishrworkspace) {
 
     $navitems = [
         ['label'=>'Главная','short'=>'Главная','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>$view==='home'],
+        ['label'=>'Лента','short'=>'Лента','url'=>(new moodle_url('/local/ustar/feed.php'))->out(false),'icon'=>$icons['feed'],'active'=>$view==='feed'],
         ['label'=>'Обучение','short'=>'Учёба','url'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),'icon'=>$icons['learning'],'active'=>$view==='learning'],
         ['label'=>'Игры','short'=>'Игры','url'=>(new moodle_url('/local/ustar/games.php'))->out(false),'icon'=>$icons['game'],'active'=>$view==='games','mobile'=>false],
         ['label'=>'База знаний','short'=>'Знания','url'=>(new moodle_url('/local/ustar/knowledge.php',['view'=>'knowledge']))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='knowledge'],
@@ -320,6 +327,7 @@ if ($ishrworkspace) {
 
 $pagelabels = [
     'home' => 'Главная',
+    'feed' => 'Лента',
     'learning' => 'Обучение',
     'games' => 'Игры',
     'knowledge' => 'Знания',
@@ -356,6 +364,7 @@ $controlpagelabels = [
     '/local/ustar/executive.php' => 'Руководство',
     '/local/ustar/catalog.php' => 'Каталог',
     '/local/ustar/tasks.php' => 'Задачи',
+    '/local/ustar/feed.php' => 'Лента',
     '/local/ustar/grades.php' => 'Грейды',
     '/local/ustar/view_as.php' => 'Просмотр как',
     '/local/ustar/legacy.php' => 'Legacy UI',
@@ -471,6 +480,7 @@ if (!$canadmin && $canhr) {
     $homeurl = new moodle_url('/local/ustar/hr.php');
     $navitems = [
         ['label'=>'Панель HR','short'=>'HR','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>in_array($pagepath,$hrpages,true)],
+        ['label'=>'Лента','short'=>'Лента','url'=>(new moodle_url('/local/ustar/feed.php'))->out(false),'icon'=>$icons['feed'],'active'=>$view==='feed'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
         ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)],
         ['label'=>'Оргструктура','short'=>'Структура','url'=>(new moodle_url('/local/ustar/organization_settings.php'))->out(false),'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/organization_settings.php'],
@@ -488,6 +498,7 @@ if (!$canadmin && !$canhr && $canexec) {
     $homeurl = new moodle_url('/local/ustar/executive.php');
     $navitems = [
         ['label'=>'Компания','short'=>'Компания','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>$pagepath==='/local/ustar/executive.php'],
+        ['label'=>'Лента','short'=>'Лента','url'=>(new moodle_url('/local/ustar/feed.php'))->out(false),'icon'=>$icons['feed'],'active'=>$view==='feed'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team' && $pagepath!=='/local/ustar/executive.php'],
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Достижения','short'=>'Рейтинг','url'=>(new moodle_url('/local/ustar/achievements.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='achievements'],
@@ -501,6 +512,7 @@ if (!$canadmin && !$canhr && !$canexec && $canmanager) {
     $homeurl = new moodle_url('/local/ustar/team.php');
     $navitems = [
         ['label'=>'Моя команда','short'=>'Команда','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>$view==='team'],
+        ['label'=>'Лента','short'=>'Лента','url'=>(new moodle_url('/local/ustar/feed.php'))->out(false),'icon'=>$icons['feed'],'active'=>$view==='feed'],
         ['label'=>'Обучение','short'=>'Учёба','url'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),'icon'=>$icons['learning'],'active'=>$view==='learning'],
         ['label'=>'Игры','short'=>'Игры','url'=>(new moodle_url('/local/ustar/games.php'))->out(false),'icon'=>$icons['game'],'active'=>$view==='games','mobile'=>false],
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],

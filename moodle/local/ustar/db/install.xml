@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026092706" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026092707" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1585,6 +1585,94 @@
         <INDEX NAME="boardid_uix" UNIQUE="true" FIELDS="boardid" />
         <INDEX NAME="owner_time_idx" UNIQUE="false" FIELDS="ownerid, archivedat" />
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_posts" COMMENT="Feed posts and repost references">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="actoruserid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="publishertype" TYPE="char" LENGTH="16" NOTNULL="true" />
+        <FIELD NAME="publisherid" TYPE="char" LENGTH="64" NOTNULL="true" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" />
+        <FIELD NAME="body" TYPE="text" NOTNULL="true" />
+        <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
+        <FIELD NAME="audienceversion" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
+        <FIELD NAME="sourcepostid" TYPE="int" LENGTH="10" NOTNULL="false" />
+        <FIELD NAME="publishedat" TYPE="int" LENGTH="10" NOTNULL="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="status_published_idx" UNIQUE="false" FIELDS="status, publishedat, id" />
+        <INDEX NAME="publisher_idx" UNIQUE="false" FIELDS="publishertype, publisherid, publishedat" />
+        <INDEX NAME="actor_idx" UNIQUE="false" FIELDS="actoruserid, id" />
+        <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcepostid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_audience" COMMENT="Explicit post audience; all or department IDs">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="scopekind" TYPE="char" LENGTH="16" NOTNULL="true" />
+        <FIELD NAME="scopeid" TYPE="char" LENGTH="64" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="post_scope_uix" UNIQUE="true" FIELDS="postid, scopekind, scopeid" />
+        <INDEX NAME="scope_post_idx" UNIQUE="false" FIELDS="scopekind, scopeid, postid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_comments" COMMENT="One-level threaded comments">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="false" />
+        <FIELD NAME="actoruserid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="body" TYPE="text" NOTNULL="true" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" />
+        <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="post_parent_idx" UNIQUE="false" FIELDS="postid, parentid, id" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_reactions" COMMENT="One reaction per active employee and post">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="kind" TYPE="char" LENGTH="16" NOTNULL="true" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="post_user_kind_uix" UNIQUE="true" FIELDS="postid, userid, kind" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_events" COMMENT="Minimal actor and reason audit of feed mutations">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="actoruserid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="action" TYPE="char" LENGTH="32" NOTNULL="true" />
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="post_time_idx" UNIQUE="false" FIELDS="postid, timecreated" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_reports" COMMENT="Moderation reports and decisions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="reporterid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="reason" TYPE="text" NOTNULL="true" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" />
+        <FIELD NAME="resolvedby" TYPE="int" LENGTH="10" NOTNULL="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="post_status_idx" UNIQUE="false" FIELDS="postid, status" /></INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

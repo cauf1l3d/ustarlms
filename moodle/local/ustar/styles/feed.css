@@ -1,0 +1,26 @@
+.u-feed { max-width: 860px; margin: 0 auto 48px; color: var(--u-text, #241f28); }
+.u-feed__intro { color: var(--u-muted, #665f69); margin: 4px 0 22px; }
+.u-feed__composer, .u-feed__post, .u-feed__empty { background: var(--u-surface, #fff);
+  border: 1px solid var(--u-border, #e6dfe5); border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(32, 24, 28, .045); padding: 22px; margin-bottom: 18px; }
+.u-feed__composer h2 { font-size: 1.25rem; margin: 0 0 16px; }
+.u-feed__composer label { display: block; font-weight: 600; margin: 14px 0 6px; }
+.u-feed__composer textarea { min-height: 110px; resize: vertical; }
+.u-feed__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.u-feed__filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+.u-feed__filters a { text-decoration: none; border: 1px solid var(--u-border, #e6dfe5);
+  background: var(--u-surface, #fff); color: inherit; border-radius: 999px; padding: 8px 14px; }
+.u-feed__filters a.is-active { background: var(--u-accent, #f5bd34); border-color: var(--u-accent, #f5bd34); font-weight: 700; }
+.u-feed__filters a:focus-visible, .u-feed__like:focus-visible { outline: 3px solid #224a9e; outline-offset: 2px; }
+.u-feed__post { overflow-wrap: anywhere; }
+.u-feed__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+.u-feed__meta time, .u-feed__meta span, .u-feed__source { color: var(--u-muted, #665f69); font-size: .85rem; }
+.u-feed__body { margin: 16px 0; line-height: 1.55; white-space: normal; }
+.u-feed__inline { margin: 0; }
+.u-feed__like { border: 0; background: transparent; color: inherit; cursor: pointer; padding: 8px 0; font: inherit; }
+.u-feed__more { display: inline-block; margin: 4px 0 20px; }
+@media (max-width: 640px) {
+  .u-feed__composer, .u-feed__post { padding: 16px; border-radius: 14px; }
+  .u-feed__actions > button { flex: 1 1 100%; }
+  .u-feed__filters a { flex: 1 1 auto; text-align: center; }
+}

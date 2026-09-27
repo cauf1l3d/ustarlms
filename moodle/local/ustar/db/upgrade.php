@@ -4456,5 +4456,97 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092706, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092707) {
+        // The XMLDB install schema and upgrade use the same field contract.
+        $definitions = [
+            'local_ustar_feed_posts' => [
+                'fields' => [
+                    ['actoruserid', 'int'], ['publishertype', 'char', '16'],
+                    ['publisherid', 'char', '64'], ['status', 'char', '16'],
+                    ['body', 'text'], ['version', 'int', '10', '1'],
+                    ['audienceversion', 'int', '10', '1'],
+                    ['sourcepostid', 'int', '10', null, true],
+                    ['publishedat', 'int', '10', null, true],
+                    ['timecreated', 'int'], ['timemodified', 'int'],
+                ],
+                'indexes' => [
+                    ['status_published_idx', ['status', 'publishedat', 'id']],
+                    ['publisher_idx', ['publishertype', 'publisherid', 'publishedat']],
+                    ['actor_idx', ['actoruserid', 'id']],
+                    ['source_idx', ['sourcepostid']],
+                ],
+            ],
+            'local_ustar_feed_audience' => [
+                'fields' => [['postid', 'int'], ['scopekind', 'char', '16'], ['scopeid', 'char', '64']],
+                'indexes' => [
+                    ['post_scope_uix', ['postid', 'scopekind', 'scopeid'], true],
+                    ['scope_post_idx', ['scopekind', 'scopeid', 'postid']],
+                ],
+            ],
+            'local_ustar_feed_comments' => [
+                'fields' => [
+                    ['postid', 'int'], ['parentid', 'int', '10', null, true],
+                    ['actoruserid', 'int'], ['body', 'text'], ['status', 'char', '16'],
+                    ['version', 'int', '10', '1'], ['timecreated', 'int'], ['timemodified', 'int'],
+                ],
+                'indexes' => [['post_parent_idx', ['postid', 'parentid', 'id']]],
+            ],
+            'local_ustar_feed_reactions' => [
+                'fields' => [['postid', 'int'], ['userid', 'int'], ['kind', 'char', '16'], ['timecreated', 'int']],
+                'indexes' => [['post_user_kind_uix', ['postid', 'userid', 'kind'], true]],
+            ],
+            'local_ustar_feed_events' => [
+                'fields' => [
+                    ['postid', 'int'], ['actoruserid', 'int'], ['action', 'char', '32'],
+                    ['reason', 'text', null, null, true], ['timecreated', 'int'],
+                ],
+                'indexes' => [['post_time_idx', ['postid', 'timecreated']]],
+            ],
+            'local_ustar_feed_reports' => [
+                'fields' => [
+                    ['postid', 'int'], ['reporterid', 'int'], ['reason', 'text'],
+                    ['status', 'char', '16'], ['resolvedby', 'int', '10', null, true],
+                    ['timecreated', 'int'], ['timemodified', 'int'],
+                ],
+                'indexes' => [['post_status_idx', ['postid', 'status']]],
+            ],
+        ];
+        foreach ($definitions as $name => $definition) {
+            $table = new xmldb_table($name);
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            foreach ($definition['fields'] as $spec) {
+                [$field, $type] = $spec;
+                $table->add_field($field, [
+                    'int' => XMLDB_TYPE_INTEGER, 'char' => XMLDB_TYPE_CHAR,
+                    'text' => XMLDB_TYPE_TEXT,
+                ][$type], $spec[2] ?? ($type === 'int' ? '10' : null), null,
+                    !empty($spec[4]) ? null : XMLDB_NOTNULL, null, $spec[3] ?? null);
+            }
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            foreach ($definition['indexes'] as $indexspec) {
+                $table->add_index($indexspec[0], !empty($indexspec[2]) ? XMLDB_INDEX_UNIQUE : XMLDB_INDEX_NOTUNIQUE,
+                    $indexspec[1]);
+            }
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        // Product publishing grants are explicit. No username/position label
+        // confers academy authority; assistants/CEO require mapped roles.
+        require_once($CFG->libdir . '/accesslib.php');
+        update_capabilities('local_ustar');
+        $context = context_system::instance();
+        foreach (['ustar_hr', 'ustar_hrd'] as $shortname) {
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if ($roleid) {
+                foreach (['local/ustar:feedpublishacademy', 'local/ustar:feedsetaudience'] as $capability) {
+                    assign_capability($capability, CAP_ALLOW, $roleid, $context->id, true);
+                }
+            }
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026092707, 'local', 'ustar');
+    }
+
 return true;
 }

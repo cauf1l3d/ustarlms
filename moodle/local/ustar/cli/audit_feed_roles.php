@@ -1,5 +1,5 @@
 <?php
-// Read-only preview of explicit feed publishing grants before role mapping.
+// Read-only audit of the four explicit feed grants.
 define('CLI_SCRIPT', true);
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
@@ -14,12 +14,13 @@ if ($unrecognised) {
 if ($options['help']) {
     echo "Read-only feed-role audit\n";
     echo "  php local/ustar/cli/audit_feed_roles.php [--userids=12,34]\n";
-    echo "Supply exact Moodle user IDs for proposed CEO, assistant, manager or moderator grants.\n";
+    echo "Supply exact Moodle user IDs to inspect effective rights.\n";
     exit(0);
 }
 
 $context = context_system::instance();
 $roles = [
+    'ustar_feed_person' => ['local/ustar:use', 'local/ustar:feedpublish'],
     'ustar_feed_academy' => ['local/ustar:feedpublish', 'local/ustar:feedpublishacademy',
         'local/ustar:feedsetaudience'],
     'ustar_feed_department' => ['local/ustar:feedpublish', 'local/ustar:feedpublishdepartment'],
@@ -67,8 +68,10 @@ foreach ($userids as $userid) {
         'department_scope' => array_values($scope), 'effective_capabilities' => $caps,
         'may_publish_department' => $active && $caps['local/ustar:feedpublish']
             && $caps['local/ustar:feedpublishdepartment'] && !empty($scope),
+        'may_publish_person' => $active && $caps['local/ustar:feedpublish'],
         'may_publish_academy' => $active && $caps['local/ustar:feedpublish']
             && $caps['local/ustar:feedpublishacademy'],
+        'may_moderate' => $active && $caps['local/ustar:feedmoderate'],
     ];
 }
 echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR), "\n";

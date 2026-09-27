@@ -323,31 +323,40 @@ final class learning_tasks {
     }
 
     /** @return array<int,array<string,mixed>> */
-    public static function notes_for_owner(int $userid, int $page = 0): array {
+    public static function notes_for_owner(int $userid, int $page = 0,
+            string $filter = 'all', string $query = ''): array {
         return self::list_by('ownerid = :ownerid AND privacy = :privacy',
-            ['ownerid' => $userid, 'privacy' => self::PRIVACY_OWNER], $userid, $page);
+            ['ownerid' => $userid, 'privacy' => self::PRIVACY_OWNER], $userid, $page, $filter, $query);
     }
 
     /** @return array<int,array<string,mixed>> */
-    public static function assigned_to(int $userid, int $page = 0): array {
+    public static function assigned_to(int $userid, int $page = 0,
+            string $filter = 'all', string $query = ''): array {
         return self::list_by('assigneeid = :userid AND privacy = :privacy',
-            ['userid' => $userid, 'privacy' => self::PRIVACY_ASSIGNED], $userid, $page);
+            ['userid' => $userid, 'privacy' => self::PRIVACY_ASSIGNED], $userid, $page, $filter, $query);
     }
 
     /** @return array<int,array<string,mixed>> */
-    public static function assigned_by(int $userid, int $page = 0): array {
+    public static function assigned_by(int $userid, int $page = 0,
+            string $filter = 'all', string $query = ''): array {
         return self::list_by('assignerid = :userid AND privacy = :privacy',
-            ['userid' => $userid, 'privacy' => self::PRIVACY_ASSIGNED], $userid, $page);
+            ['userid' => $userid, 'privacy' => self::PRIVACY_ASSIGNED], $userid, $page, $filter, $query);
     }
 
-    public static function count_for(int $userid, string $tab): int {
-        global $DB;
+    public static function count_for(int $userid, string $tab,
+            string $filter = 'all', string $query = ''): int {
+        global $DB, $USER;
+        if ((int)$USER->id !== $userid) {
+            throw new \required_capability_exception(\context_system::instance(),
+                'local/ustar:use', 'nopermissions', '');
+        }
         $fields = ['notebook' => 'ownerid', 'assigned' => 'assigneeid', 'outgoing' => 'assignerid'];
         if (!isset($fields[$tab]) || !self::available()) { return 0; }
         $field = $fields[$tab];
-        return $DB->count_records_select('local_ustar_learning_tasks',
-            "$field = :userid AND privacy = :privacy",
-            ['userid' => $userid, 'privacy' => $tab === 'notebook' ? self::PRIVACY_OWNER : self::PRIVACY_ASSIGNED]);
+        [$where, $params] = self::apply_filters("$field = :userid AND privacy = :privacy",
+            ['userid' => $userid, 'privacy' => $tab === 'notebook' ? self::PRIVACY_OWNER : self::PRIVACY_ASSIGNED],
+            $filter, $query);
+        return $DB->count_records_select('local_ustar_learning_tasks', $where, $params);
     }
 
     /** @return array<string,mixed> */
@@ -378,9 +387,15 @@ final class learning_tasks {
     }
 
     /** @return array<int,array<string,mixed>> */
-    private static function list_by(string $where, array $params, int $actorid, int $page): array {
-        global $DB;
+    private static function list_by(string $where, array $params, int $actorid, int $page,
+            string $filter, string $query): array {
+        global $DB, $USER;
+        if ((int)$USER->id !== $actorid) {
+            throw new \required_capability_exception(\context_system::instance(),
+                'local/ustar:use', 'nopermissions', '');
+        }
         if (!self::available()) { return []; }
+        [$where, $params] = self::apply_filters($where, $params, $filter, $query);
         $out = [];
         foreach ($DB->get_records_select('local_ustar_learning_tasks', $where, $params,
                 'timemodified DESC, id DESC', '*', max(0, $page) * 25, 25) as $task) {
@@ -388,6 +403,26 @@ final class learning_tasks {
             $out[] = self::view_record($task, $actorid);
         }
         return $out;
+    }
+
+    private static function apply_filters(string $where, array $params, string $filter, string $query): array {
+        global $DB;
+        if (!in_array($filter, ['all', 'active', 'review', 'done'], true)) {
+            throw new \invalid_parameter_exception('Неизвестный фильтр задач.');
+        }
+        if ($filter === 'active') {
+            $where .= " AND status IN ('assigned', 'in_progress', 'open')";
+        } else if ($filter === 'review') {
+            $where .= " AND status = 'in_review'";
+        } else if ($filter === 'done') {
+            $where .= " AND status IN ('completed', 'cancelled')";
+        }
+        $query = trim(clean_param($query, PARAM_TEXT));
+        if ($query !== '') {
+            $where .= ' AND ' . $DB->sql_like('title', ':tasktitle', false);
+            $params['tasktitle'] = '%' . $DB->sql_like_escape($query) . '%';
+        }
+        return [$where, $params];
     }
 
     private static function assert_view(\stdClass $task, int $actorid): void {

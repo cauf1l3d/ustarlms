@@ -13,6 +13,9 @@ if (!in_array($tab, ['checklists', 'notebook', 'assigned', 'outgoing'], true)) {
 }
 $pageno = max(0, min(100000, optional_param('pageno', 0, PARAM_INT)));
 $selectedid = max(0, optional_param('taskid', 0, PARAM_INT));
+$filter = optional_param('filter', 'all', PARAM_ALPHA);
+if (!in_array($filter, ['all', 'active', 'review', 'done'], true)) { $filter = 'all'; }
+$taskquery = trim(optional_param('q', '', PARAM_TEXT));
 $notice = '';
 $parseDueDate = static function(string $duedate): int {
     if ($duedate === '') { return 0; }
@@ -109,10 +112,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$assigned = $tab === 'assigned' ? \local_ustar\learning_tasks::assigned_to((int)$USER->id, $pageno) : [];
-$notes = $tab === 'notebook' ? \local_ustar\learning_tasks::notes_for_owner((int)$USER->id, $pageno) : [];
-$outgoing = $tab === 'outgoing' ? \local_ustar\learning_tasks::assigned_by((int)$USER->id, $pageno) : [];
-$count = \local_ustar\learning_tasks::count_for((int)$USER->id, $tab);
+$assigned = $tab === 'assigned' ? \local_ustar\learning_tasks::assigned_to((int)$USER->id, $pageno, $filter, $taskquery) : [];
+$notes = $tab === 'notebook' ? \local_ustar\learning_tasks::notes_for_owner((int)$USER->id, $pageno, $filter, $taskquery) : [];
+$outgoing = $tab === 'outgoing' ? \local_ustar\learning_tasks::assigned_by((int)$USER->id, $pageno, $filter, $taskquery) : [];
+$count = \local_ustar\learning_tasks::count_for((int)$USER->id, $tab, $filter, $taskquery);
 $lookup = $tab === 'outgoing' ? optional_param('lookup', '', PARAM_TEXT) : '';
 $candidates = $tab === 'outgoing'
     ? \local_ustar\learning_tasks::candidates((int)$USER->id, $lookup) : [];
@@ -163,7 +166,20 @@ foreach ($tabs as $key => $label) {
 }
 echo html_writer::end_div();
 
-$taskform = static function(array $task, array $actions) use ($tab, $pageno, $attachmentlimit): void {
+if ($tab !== 'checklists') {
+    echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-tasks__filters']);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'tab', 'value' => $tab]);
+    echo html_writer::tag('label', 'Найти по названию', ['for' => 'task-query']);
+    echo html_writer::empty_tag('input', ['type' => 'search', 'id' => 'task-query', 'name' => 'q',
+        'value' => $taskquery, 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Состояние', ['for' => 'task-filter']);
+    echo html_writer::select(['all' => 'Все', 'active' => 'Активные', 'review' => 'На проверке',
+        'done' => 'Завершённые'], 'filter', $filter, false, ['id' => 'task-filter', 'class' => 'form-select']);
+    echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Показать', 'class' => 'u-btn']);
+    echo html_writer::end_tag('form');
+}
+
+$taskform = static function(array $task, array $actions) use ($tab, $pageno, $attachmentlimit, $filter, $taskquery): void {
     echo html_writer::start_tag('article', ['class' => 'u-stage6-card u-tasks__item']);
     echo html_writer::tag('h3', s((string)$task['title']));
     if ($task['description'] !== '') { echo $task['description']; }
@@ -175,7 +191,8 @@ $taskform = static function(array $task, array $actions) use ($tab, $pageno, $at
         echo html_writer::tag('p', 'Срок: ' . userdate((int)$task['dueat']));
     }
     echo html_writer::link(new moodle_url('/local/ustar/tasks.php',
-        ['tab' => $tab, 'pageno' => $pageno, 'taskid' => $task['id']]),
+        ['tab' => $tab, 'pageno' => $pageno, 'filter' => $filter,
+            'q' => $taskquery, 'taskid' => $task['id']]),
         'Открыть карточку и файлы', ['class' => 'u-tasks__open']);
     foreach ($actions as $action => $label) {
         echo html_writer::start_tag('form', ['method' => 'post',
@@ -244,6 +261,11 @@ if ($tab === 'notebook') {
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить в блокнот', 'class' => 'u-btn u-btn--primary']);
     echo html_writer::end_tag('form');
     echo html_writer::end_tag('details');
+    if (!$notes) {
+        echo html_writer::tag('p', ($filter !== 'all' || $taskquery !== '')
+            ? 'По выбранным условиям заметок нет.' : 'Пока нет личных заметок.',
+            ['class' => 'u-stage6-card u-tasks__empty']);
+    }
     foreach ($notes as $task) {
         $taskform($task, (string)$task['status'] === 'open' ? ['complete' => 'Отметить выполненной'] : []);
         if ($selectedid !== (int)$task['id']) { continue; }
@@ -278,7 +300,8 @@ if ($tab === 'notebook') {
     }
 }
 if ($tab === 'assigned') {
-    if (!$assigned) { echo html_writer::tag('p', 'Пока нет назначенных задач.', ['class' => 'u-stage6-card u-tasks__empty']); }
+    if (!$assigned) { echo html_writer::tag('p', ($filter !== 'all' || $taskquery !== '')
+        ? 'По выбранным условиям задач нет.' : 'Пока нет назначенных задач.', ['class' => 'u-stage6-card u-tasks__empty']); }
     foreach ($assigned as $task) {
         $actions = [];
         if ($task['status'] === 'assigned') { $actions['start'] = 'Начать'; }
@@ -344,7 +367,9 @@ if ($tab === 'outgoing') {
         $taskform($task, $actions);
     }
     if (!$outgoing) {
-        echo html_writer::tag('p', 'Пока нет ваших назначений.', ['class' => 'u-stage6-card u-tasks__empty']);
+        echo html_writer::tag('p', ($filter !== 'all' || $taskquery !== '')
+            ? 'По выбранным условиям поручений нет.' : 'Пока нет ваших назначений.',
+            ['class' => 'u-stage6-card u-tasks__empty']);
     }
 }
 if ($selected) {
@@ -399,7 +424,7 @@ if ($selected) {
 }
 if ($count > 25) {
     echo $OUTPUT->paging_bar($count, $pageno, 25,
-        new moodle_url('/local/ustar/tasks.php', ['tab' => $tab]));
+        new moodle_url('/local/ustar/tasks.php', ['tab' => $tab, 'filter' => $filter, 'q' => $taskquery]));
 }
 echo html_writer::end_div();
 echo $OUTPUT->footer();

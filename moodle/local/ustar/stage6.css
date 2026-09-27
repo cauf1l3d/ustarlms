@@ -165,6 +165,10 @@
 .u-tasks__empty { padding: 1.5rem; color: var(--u-text-secondary, #5b5855); }
 .u-tasks__empty h2 { color: var(--u-text-primary, #282727); }
 .u-tasks__create { margin: 1rem 0; }
+.u-tasks__filters { display: flex; flex-wrap: wrap; gap: .6rem; align-items: end; margin: 1rem 0; }
+.u-tasks__filters input[type="search"] { flex: 1 1 15rem; }
+.u-tasks__filters select { flex: 0 1 12rem; }
+.u-tasks__filters label { font-weight: 600; }
 .u-tasks__create summary { cursor: pointer; font-weight: 650; font-size: 1.1rem; }
 .u-tasks__lookup, .u-tasks__editor { margin-top: .9rem; }
 .u-tasks__lookup { display: flex; flex-wrap: wrap; align-items: end; gap: .7rem; }

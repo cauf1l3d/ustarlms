@@ -31,13 +31,16 @@ function xmldb_local_ustar_install(): void {
     $syscontext = context_system::instance();
     $roles = [
         'ustar_superadmin' => ['USTAR Superadmin', ['local/ustar:use', 'local/ustar:admin', 'local/ustar:viewteam', 'local/ustar:managecompetition', 'local/ustar:adjustcoin', 'local/ustar:approveregistration', 'local/ustar:manageadaptation']],
-        'ustar_hr' => ['USTAR HR', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage']],
-        'ustar_hrd' => ['USTAR HRD', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:developmentanalytics', 'local/ustar:approveregistration', 'local/ustar:manageadaptation']],
+        'ustar_hr' => ['USTAR HR', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage',
+            'local/ustar:feedpublish', 'local/ustar:feedpublishacademy', 'local/ustar:feedsetaudience']],
+        'ustar_hrd' => ['USTAR HRD', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:developmentanalytics', 'local/ustar:approveregistration', 'local/ustar:manageadaptation',
+            'local/ustar:feedpublish', 'local/ustar:feedpublishacademy', 'local/ustar:feedsetaudience']],
         'ustar_executive' => ['USTAR Executive', ['local/ustar:use', 'local/ustar:executive']],
         'ustar_feed_academy' => ['USTAR Academy Publisher', ['local/ustar:use',
             'local/ustar:feedpublish', 'local/ustar:feedpublishacademy', 'local/ustar:feedsetaudience']],
         'ustar_feed_department' => ['USTAR Department Publisher', ['local/ustar:use',
             'local/ustar:feedpublish', 'local/ustar:feedpublishdepartment']],
+        'ustar_feed_moderator' => ['USTAR Feed Moderator', ['local/ustar:use', 'local/ustar:feedmoderate']],
     ];
     foreach ($roles as $shortname => [$name, $caps]) {
         $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);

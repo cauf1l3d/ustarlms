@@ -4585,5 +4585,33 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092708, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092709) {
+        // Publishing is opt-in per real person. Remove the legacy archetype
+        // and HR/HRD grants, including installations that ran the prior draft.
+        require_once($CFG->libdir . '/accesslib.php');
+        $context = context_system::instance();
+        foreach (['user', 'manager', 'ustar_hr', 'ustar_hrd'] as $shortname) {
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if (!$roleid) {
+                continue;
+            }
+            foreach (['local/ustar:feedpublish', 'local/ustar:feedpublishacademy',
+                    'local/ustar:feedsetaudience'] as $capability) {
+                unassign_capability($capability, $roleid, $context->id);
+            }
+        }
+        $roleid = (int)$DB->get_field('role', 'id', ['shortname' => 'ustar_feed_person']);
+        if (!$roleid) {
+            $roleid = create_role('USTAR Personal Publisher', 'ustar_feed_person',
+                'Explicit USTAR personal feed publishing grant');
+            set_role_contextlevels($roleid, [CONTEXT_SYSTEM]);
+        }
+        foreach (['local/ustar:use', 'local/ustar:feedpublish'] as $capability) {
+            assign_capability($capability, CAP_ALLOW, $roleid, $context->id, true);
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026092709, 'local', 'ustar');
+    }
+
 return true;
 }

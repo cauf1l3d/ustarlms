@@ -92,7 +92,7 @@ $capabilities = [
     ],
     'local/ustar:feedpublish' => [
         'captype' => 'write', 'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => ['user' => CAP_ALLOW, 'manager' => CAP_ALLOW],
+        'archetypes' => [],
     ],
     'local/ustar:feedpublishdepartment' => [
         'captype' => 'write', 'contextlevel' => CONTEXT_SYSTEM, 'archetypes' => [],

@@ -25,6 +25,15 @@ final class feed_roles_test extends \advanced_testcase {
         accesslib_clear_all_caches(true);
     }
 
+    public function test_ordinary_employee_has_no_publishing_or_moderation_grant(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+        $context = \context_system::instance();
+        $this->assertFalse(has_capability('local/ustar:feedpublish', $context));
+        $this->assertFalse(has_capability('local/ustar:feedpublishacademy', $context));
+        $this->assertFalse(has_capability('local/ustar:feedmoderate', $context));
+    }
+
     public function test_department_role_without_current_manager_scope_cannot_publish(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->grant((int)$user->id, ['local/ustar:use', 'local/ustar:feedpublish',

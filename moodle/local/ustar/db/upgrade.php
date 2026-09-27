@@ -4325,5 +4325,22 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026082749, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092701) {
+        // Keep ordinary HR separate from HRD adaptation decisions. The new
+        // capability is attached only to the existing explicit HRD and USTAR
+        // superadmin roles; manual role assignments are left intact.
+        require_once($CFG->libdir . '/accesslib.php');
+        update_capabilities('local_ustar');
+        $context = \context_system::instance();
+        foreach (['ustar_hrd', 'ustar_superadmin'] as $shortname) {
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if ($roleid) {
+                assign_capability('local/ustar:manageadaptation', CAP_ALLOW, $roleid, $context->id, true);
+            }
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026092701, 'local', 'ustar');
+    }
+
 return true;
 }

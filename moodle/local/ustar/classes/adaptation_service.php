@@ -965,38 +965,21 @@ final class adaptation_service {
     }
 
     public static function is_hrd_actor(int $actorid): bool {
-        if (is_siteadmin($actorid)) {
-            return true;
-        }
-        try {
-            $resolved = structure::resolve_user($actorid);
-            $role = strtolower(trim((string)($resolved['role'] ?? '')));
-            $position = is_array($resolved['position'] ?? null) ? $resolved['position'] : [];
-            $profile = strtolower(trim((string)(
-                $position['accessprofile'] ?? $resolved['accessprofile'] ?? ''
-            )));
-            if ($role !== 'hrd' && $profile !== 'hrd') {
-                return false;
-            }
-            // HRD identity is canonical. Do not couple this HRD-only surface to the
-            // shared local/ustar:hrmanage capability (HR and HRD may share it).
-            return has_capability('local/ustar:use', \context_system::instance(), $actorid);
-        } catch (\Throwable $e) {
-            return false;
-        }
+        return team_access::active_actor($actorid)
+            && capabilities::has($actorid, capabilities::ADAPTATION_HRD)
+            && has_capability('local/ustar:use', \context_system::instance(), $actorid);
     }
 
-    /** HRD-only guard based on canonical USTAR role/access profile. */
+    /** Explicit operation permission, independent of position and HR department. */
     public static function require_hrd_actor(int $actorid): void {
         global $USER;
         $context = \context_system::instance();
+        view_as::assert_writable();
         if ($actorid !== (int)$USER->id || !team_access::active_actor($actorid)) {
-            throw new \required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
+            throw new \required_capability_exception($context, 'local/ustar:manageadaptation', 'nopermissions', '');
         }
         require_capability('local/ustar:use', $context);
-        if (!self::is_hrd_actor($actorid)) {
-            throw new \required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
-        }
+        require_capability('local/ustar:manageadaptation', $context);
     }
 
     public static function take_case(int $adaptationid, string $fingerprint, int $actorid): void {

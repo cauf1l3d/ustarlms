@@ -9,4 +9,5 @@ $string['taskssync'] = 'USTAR: синхронизация записи на ку
 $string['ustar:hr'] = 'Просмотр HR-панели USTAR';
 $string['ustar:hrmanage'] = 'Управление сотрудниками в HR-панели USTAR';
 $string['ustar:approveregistration'] = 'Подтверждение регистрации сотрудников';
+$string['ustar:manageadaptation'] = 'Решение эскалаций адаптации в роли HRD';
 $string['ustar:executive'] = 'Просмотр исполнительной аналитики USTAR';

@@ -310,9 +310,15 @@ class hr_people {
             );
 
             $identity = organization_identity::resolve($userid);
-            $expectedconflicts = $positionid === '' ? ['no_active_primary_assignment'] : [];
-            if ($identity['conflicts'] !== $expectedconflicts
-                    || (string)$identity['positionid'] !== $positionid) {
+            // A person who has never held a staff place has no assignment
+            // conflict. After an earlier appointment, the resolver records
+            // the ended primary as an explicit unassigned state.
+            $conflicts = $identity['conflicts'];
+            $validunassigned = $positionid === '' && (string)$identity['positionid'] === ''
+                && ($conflicts === [] || $conflicts === ['no_active_primary_assignment']);
+            $validassigned = $positionid !== '' && (string)$identity['positionid'] === $positionid
+                && $conflicts === [];
+            if (!$validunassigned && !$validassigned) {
                 throw new \moodle_exception('Кадровое назначение не отражено в оргструктуре. Изменение отменено; проверьте штатное место сотрудника.');
             }
 

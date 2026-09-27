@@ -31,6 +31,12 @@ $capabilities = [
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => [],
     ],
+    'local/ustar:manageadaptation' => [
+        'riskbitmask'  => RISK_PERSONAL | RISK_DATALOSS,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [],
+    ],
     'local/ustar:executive' => [
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',

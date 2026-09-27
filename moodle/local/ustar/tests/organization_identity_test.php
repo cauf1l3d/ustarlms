@@ -11,6 +11,8 @@ defined('MOODLE_INTERNAL') || die();
 #[\PHPUnit\Framework\Attributes\CoversClass(access_migration::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(registration_service::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(staffing_requests::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(adaptation_service::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(hr_people::class)]
 final class organization_identity_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
@@ -167,6 +169,63 @@ final class organization_identity_test extends \advanced_testcase {
         $this->grant($hrd->id, ['local/ustar:hr', 'local/ustar:developmentanalytics']);
         $this->assertTrue(team_access::company($hrd->id));
         $this->assertTrue(has_capability('local/ustar:developmentanalytics', \context_system::instance(), $hrd->id));
+    }
+
+    public function test_adaptation_hrd_operation_requires_explicit_capability_and_active_actor(): void {
+        global $DB;
+        $hr = $this->employee();
+        $this->grant($hr->id, ['local/ustar:use', 'local/ustar:hrmanage']);
+        $this->assertFalse(adaptation_service::is_hrd_actor((int)$hr->id));
+        $this->setUser($hr);
+        try {
+            adaptation_service::require_hrd_actor((int)$hr->id);
+            $this->fail('Ordinary HR must not decide HRD adaptation cases.');
+        } catch (\required_capability_exception $e) {
+            $this->assertFalse(adaptation_service::is_hrd_actor((int)$hr->id));
+        }
+
+        $hrd = $this->employee();
+        $this->grant($hrd->id, ['local/ustar:use', 'local/ustar:manageadaptation']);
+        $this->assertTrue(adaptation_service::is_hrd_actor((int)$hrd->id));
+        $this->setUser($hrd);
+        adaptation_service::require_hrd_actor((int)$hrd->id);
+        $DB->set_field('user', 'suspended', 1, ['id' => $hrd->id]);
+        $this->assertFalse(adaptation_service::is_hrd_actor((int)$hrd->id));
+    }
+
+    public function test_hr_can_save_unassigned_person_with_and_without_prior_staff_place(): void {
+        global $DB;
+        $adminid = (int)get_admin()->id;
+        foreach ([false, true] as $hadappointment) {
+            $employee = $this->employee('');
+            $placeid = 0;
+            if ($hadappointment) {
+                $placeid = $this->place('retail_seller');
+                $this->assign((int)$employee->id, $placeid);
+            }
+            $this->setAdminUser();
+            $result = hr_people::save([
+                'userid' => (int)$employee->id,
+                'username' => (string)$employee->username,
+                'firstname' => 'Исправлено',
+                'lastname' => (string)$employee->lastname,
+                'email' => (string)$employee->email,
+                'positionid' => '',
+                'accounttype' => accounts::TYPE_EMPLOYEE,
+            ], $adminid);
+            $this->assertSame((int)$employee->id, (int)$result['userid']);
+            $this->assertSame('Исправлено', $DB->get_field('user', 'firstname', ['id' => $employee->id]));
+            $identity = organization_identity::resolve((int)$employee->id);
+            $this->assertSame('', $identity['positionid']);
+            $this->assertSame($hadappointment ? ['no_active_primary_assignment'] : [], $identity['conflicts']);
+            $this->assertNull(organization_model::primary_assignment((int)$employee->id));
+            if ($hadappointment) {
+                $this->assertTrue($DB->record_exists('local_ustar_assignments', [
+                    'userid' => $employee->id, 'staffplaceid' => $placeid,
+                    'assignmenttype' => 'primary', 'status' => 'ended',
+                ]));
+            }
+        }
     }
 
     public function test_suspended_actor_loses_company_and_manager_scope(): void {

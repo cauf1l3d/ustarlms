@@ -30,9 +30,9 @@ function xmldb_local_ustar_install(): void {
     update_capabilities('local_ustar');
     $syscontext = context_system::instance();
     $roles = [
-        'ustar_superadmin' => ['USTAR Superadmin', ['local/ustar:use', 'local/ustar:admin', 'local/ustar:viewteam', 'local/ustar:managecompetition', 'local/ustar:adjustcoin', 'local/ustar:approveregistration']],
+        'ustar_superadmin' => ['USTAR Superadmin', ['local/ustar:use', 'local/ustar:admin', 'local/ustar:viewteam', 'local/ustar:managecompetition', 'local/ustar:adjustcoin', 'local/ustar:approveregistration', 'local/ustar:manageadaptation']],
         'ustar_hr' => ['USTAR HR', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage']],
-        'ustar_hrd' => ['USTAR HRD', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:developmentanalytics', 'local/ustar:approveregistration']],
+        'ustar_hrd' => ['USTAR HRD', ['local/ustar:use', 'local/ustar:hr', 'local/ustar:hrmanage', 'local/ustar:developmentanalytics', 'local/ustar:approveregistration', 'local/ustar:manageadaptation']],
         'ustar_executive' => ['USTAR Executive', ['local/ustar:use', 'local/ustar:executive']],
     ];
     foreach ($roles as $shortname => [$name, $caps]) {

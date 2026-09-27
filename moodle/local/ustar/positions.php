@@ -160,7 +160,8 @@ if (
             \local_ustar\position_model::save_matrix(
                 $positionid,
                 $levels,
-                (int)$USER->id
+                (int)$USER->id,
+                required_param('matrixexpected', PARAM_ALPHANUMEXT)
             );
 
             redirect(
@@ -1314,6 +1315,10 @@ foreach ($positions as $candidate) {
 }
 $gradeview = \local_ustar\career_grades::view($currentposition);
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v'=>'20260914-1']));
+$application = $tab === 'application'
+    ? \local_ustar\position_application::present($positionid,
+        is_array($required) ? $required : [], $skillmap, $publishedstandard)
+    : [];
 $tabnames = [
     'overview' => 'О должности',
     'requirements' => 'Требования',
@@ -1340,6 +1345,7 @@ $data = [
     'showgrades' => $tab === 'grades',
     'showapplication' => $tab === 'application',
     'showgraph' => $tab === 'graph',
+    'application' => $application,
     'careergrades' => $gradeview,
     'gradeexpected' => \local_ustar\career_grades::fingerprint($currentposition),
 
@@ -1457,6 +1463,7 @@ $data = [
     'standardversion' => $publishedstandard ? (int)$publishedstandard->versionno : 0,
     'standarddate' => $publishedstandard ? userdate((int)$publishedstandard->effectivedate) : '',
     'matrixhash' => $matrixhash,
+    'matrixexpected' => $matrixhash,
 
     'structureurl' =>
         (new moodle_url('/local/ustar/organization_settings.php'))->out(false),

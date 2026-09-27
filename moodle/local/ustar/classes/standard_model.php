@@ -42,6 +42,8 @@ final class standard_model {
         }
         try {
             $transaction = $DB->start_delegated_transaction();
+            $DB->get_record_sql('SELECT id FROM {local_ustar_structure} WHERE name = :name FOR UPDATE',
+                ['name' => structure::NAME_STRUCTURE], MUST_EXIST);
             $structure = structure::get(structure::NAME_STRUCTURE);
             $position = people::position_map($structure)[$positionid] ?? null;
             $matrix = $structure['matrix'][$positionid] ?? [];

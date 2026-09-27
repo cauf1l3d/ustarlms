@@ -376,7 +376,18 @@
             {{#showapplication}}
             <section class="u-pos-section">
                 <header class="u-pos-section__head"><div><p class="u-sectionhead__eyebrow">Применение и история</p><h3>Проверка стандарта</h3></div></header>
-                <p>Сейчас эту должность занимают {{position.peoplecount}} сотрудников. Публикация создаёт версию требований; она не засчитывает обучение и не меняет назначения.</p>
+                <p>Сейчас эту должность занимают {{position.peoplecount}} сотрудников. Публикация создаёт версию требований; она не засчитывает обучение и не меняет назначения. Индивидуальный результат сотрудника проверяется по его фактам на дату оценки.</p>
+                {{#application}}
+                {{^hasrequirements}}<p class="u-position-review-alert">Обязательные навыки не заданы. Добавьте их перед публикацией.</p>{{/hasrequirements}}
+                {{#hasmissing}}
+                <div class="u-position-review-alert">
+                    <strong>Нет способа подтверждения для навыков:</strong>
+                    <ul>{{#missing}}<li>{{name}}</li>{{/missing}}</ul>
+                    <a href="{{taburls.learning}}">Настроить подтверждения →</a>
+                </div>
+                {{/hasmissing}}
+                {{#haspendingchanges}}<p class="u-position-review-alert">Текущие требования отличаются от опубликованной версии. Для применения изменений потребуется новая публикация.</p>{{/haspendingchanges}}
+                {{/application}}
                 <div class="u-panel u-position-standard" aria-live="polite">
                     {{#standardpublished}}
                     <p><strong>Опубликованный стандарт · версия {{standardversion}}</strong></p>
@@ -397,6 +408,13 @@
                     {{/canpublishstandard}}
                 </div>
                 <p><a class="u-btn u-btn--quiet" href="{{taburls.requirements}}">Проверить требования →</a> <a class="u-btn u-btn--quiet" href="{{taburls.learning}}">Проверить обучение и подтверждения →</a></p>
+                <h4>Версии стандарта</h4>
+                {{#application.hashistory}}
+                <ol class="u-position-versions">
+                    {{#application.history}}<li><strong>Версия {{version}} · {{state}}</strong><span>{{date}} · {{author}}</span></li>{{/application.history}}
+                </ol>
+                {{/application.hashistory}}
+                {{^application.hashistory}}<p>Версий пока нет. После публикации здесь появится история стандарта.</p>{{/application.hashistory}}
             </section>
             {{/showapplication}}
 
@@ -454,6 +472,8 @@
                         name="sesskey"
                         value="{{sesskey}}"
                     >
+
+                    <input type="hidden" name="matrixexpected" value="{{matrixexpected}}">
 
 
                     <div class="u-skill-editor">

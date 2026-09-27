@@ -123,3 +123,15 @@
 .u-pos-overview__steps span { color: var(--u-text-secondary); }
 .u-position-settings { padding: 18px; margin: 18px 0; }
 .u-position-settings__form { margin-top: 16px; }
+.u-position-review-alert {
+    padding: 14px 16px;
+    margin: 16px 0;
+    background: var(--u-surface-muted);
+    border: 1px solid var(--u-border);
+    border-left: 3px solid var(--u-brand);
+    border-radius: 10px;
+}
+.u-position-review-alert ul { margin: 9px 0; padding-left: 22px; }
+.u-position-versions { display: grid; gap: 9px; padding-left: 22px; }
+.u-position-versions li { padding: 10px 14px; border-bottom: 1px solid var(--u-border); }
+.u-position-versions span { display: block; color: var(--u-text-secondary); }

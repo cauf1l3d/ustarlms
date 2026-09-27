@@ -21,15 +21,25 @@ class position_model {
     public static function save_matrix(
         string $positionid,
         array $levels,
-        int $actorid
+        int $actorid,
+        string $expectedhash
     ): array {
-
+        global $DB;
+        require_capability('local/ustar:hrmanage', \context_system::instance(), $actorid);
+        view_as::assert_writable();
         $positionid = trim($positionid);
-
-        $structure =
-            structure::get(
-                structure::NAME_STRUCTURE
-            );
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('structure:document', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Структура сейчас изменяется. Повторите действие.');
+        }
+        try {
+            $tx = $DB->start_delegated_transaction();
+            // Serialize against career-path changes and publication. The shared
+            // document lock also coordinates with organization_structure_editor.
+            $DB->get_record_sql('SELECT id FROM {local_ustar_structure} WHERE name = :name FOR UPDATE',
+                ['name' => structure::NAME_STRUCTURE], MUST_EXIST);
+            $structure = structure::get(structure::NAME_STRUCTURE);
 
         $positions = [];
         foreach ($structure['positions'] ?? [] as $position) {
@@ -40,6 +50,10 @@ class position_model {
             throw new \invalid_parameter_exception(
                 'Неизвестная должность'
             );
+        }
+        $current = $structure['matrix'][$positionid] ?? [];
+        if (!is_array($current) || !hash_equals(standard_model::matrix_hash($current), $expectedhash)) {
+            throw new \invalid_parameter_exception('Требования уже изменены. Обновите страницу перед сохранением.');
         }
 
         $skills = [];
@@ -83,7 +97,16 @@ class position_model {
                 'matrix' => $clean,
             ]
         );
-
+            $tx->allow_commit();
+        } catch (\Throwable $e) {
+            if (isset($tx)) {
+                $tx->rollback($e);
+            }
+            throw $e;
+        } finally {
+            $lock->release();
+        }
+        // Enrolment can be slow and must never hold the structure row lock.
         return self::sync_position(
             $positionid
         );

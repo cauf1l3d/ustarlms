@@ -55,6 +55,8 @@ final class organization_structure_editor {
         }
         try {
             $tx = $DB->start_delegated_transaction();
+            $DB->get_record_sql('SELECT id FROM {local_ustar_structure} WHERE name = :name FOR UPDATE',
+                ['name' => structure::NAME_STRUCTURE], IGNORE_MISSING);
             $current = self::revision();
             if ($current !== $expectedversion) {
                 throw new \moodle_exception('Структура уже изменена. Обновите страницу перед сохранением.');

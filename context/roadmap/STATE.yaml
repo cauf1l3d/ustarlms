@@ -9,11 +9,13 @@ current_activity: G00 production source matched PR16, but performance baseline
   checklist definitions/submissions are draft PR24 at 3a15a43, and N06 scoped
   task lists/files are draft PR25 at 65a7baf. Both passed source/frontend
   runs 244 and 247. G04 position catalogue, focused card and guarded matrix
-  publication are draft PR27 at 86b6887; source/frontend passed on exact-head
-  run 253. Moodle DB, rollback,
+  publication are draft PR27 at ae70b8a; source/frontend passed on exact-head
+  run 254. G05 initial grade assignment/read side effects are draft PR28 at
+  7172d30; source/frontend passed in run 255. Versioned ladders and binding
+  remain open. Moodle DB, rollback,
   browser/visual and performance evidence remain open. The 8 priorities,
   60 audit items and 13 earlier defects are not accepted by source gates.
-next_task: G04
+next_task: G05
 ready_tasks:
 - R00
 - R04

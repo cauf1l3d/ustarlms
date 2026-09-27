@@ -264,17 +264,20 @@ final class grade_ladders {
     /** Migration preserves the original catalog and only explicit stable-ID config bindings. */
     public static function seed_legacy(): void {
         global $DB;
-        if ($DB->count_records('local_ustar_grade_ladders')) { return; }
         $data = json_decode(file_get_contents(__DIR__ . '/../data/consultant_grades.json'), true,
             512, JSON_THROW_ON_ERROR);
         $grades = self::validate_grades((array)($data['grades'] ?? []));
         $json = json_encode($grades, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         $now = time();
-        $ladderid = (int)$DB->insert_record('local_ustar_grade_ladders', (object)[
+        $ladder = $DB->get_record('local_ustar_grade_ladders',
+            ['name' => 'Грейды консультантов'], '*', IGNORE_MISSING);
+        $ladderid = $ladder ? (int)$ladder->id : (int)$DB->insert_record('local_ustar_grade_ladders', (object)[
             'name' => 'Грейды консультантов', 'status' => 'active', 'draftjson' => $json,
             'revision' => 1, 'createdby' => 0, 'timecreated' => $now, 'timemodified' => $now,
         ]);
-        $versionid = (int)$DB->insert_record('local_ustar_grade_ladder_ver', (object)[
+        $version = $DB->get_record('local_ustar_grade_ladder_ver',
+            ['ladderid' => $ladderid, 'versionno' => 1], '*', IGNORE_MISSING);
+        $versionid = $version ? (int)$version->id : (int)$DB->insert_record('local_ustar_grade_ladder_ver', (object)[
             'ladderid' => $ladderid, 'versionno' => 1, 'gradesjson' => $json,
             'gradehash' => hash('sha256', $json), 'createdby' => 0, 'timecreated' => $now,
         ]);
@@ -288,15 +291,23 @@ final class grade_ladders {
             if (!isset($positions[$positionid]) || !in_array((string)$config->value, $keys, true)) {
                 continue;
             }
-            if ($DB->record_exists('local_ustar_grade_bindings', ['positionid' => $positionid])) { continue; }
-            $DB->insert_record('local_ustar_grade_bindings', (object)[
-                'positionid' => $positionid, 'ladderversionid' => $versionid,
-                'revision' => 1, 'timemodified' => $now, 'usermodified' => 0,
-            ]);
+            $existing = $DB->get_record('local_ustar_grade_bindings',
+                ['positionid' => $positionid], 'id,ladderversionid', IGNORE_MISSING);
+            if ($existing && (int)$existing->ladderversionid !== $versionid) { continue; }
+            if (!$existing) {
+                $DB->insert_record('local_ustar_grade_bindings', (object)[
+                    'positionid' => $positionid, 'ladderversionid' => $versionid,
+                    'revision' => 1, 'timemodified' => $now, 'usermodified' => 0,
+                ]);
+            }
             $DB->set_field('local_ustar_grade_rules', 'ladderversionid', $versionid,
                 ['positionid' => $positionid]);
-            $DB->set_field('local_ustar_employee_grades', 'ladderversionid', $versionid,
-                ['positionid' => $positionid]);
+            foreach ($DB->get_records('local_ustar_employee_grades', ['positionid' => $positionid]) as $employeegrade) {
+                if (in_array((string)$employeegrade->gradekey, $keys, true)) {
+                    $DB->set_field('local_ustar_employee_grades', 'ladderversionid', $versionid,
+                        ['id' => (int)$employeegrade->id]);
+                }
+            }
         }
         self::$bindingcache = null;
     }

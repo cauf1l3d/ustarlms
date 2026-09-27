@@ -40,7 +40,8 @@ final class organization_structure_editor {
             ['name' => structure::NAME_STRUCTURE]);
     }
 
-    public static function change(int $actorid, string $action, array $input, int $expectedversion): void {
+    /** Returns the stable ID of a newly created position, or an empty string. */
+    public static function change(int $actorid, string $action, array $input, int $expectedversion): string {
         global $DB;
         if (!capabilities::has($actorid, capabilities::HR_WRITE)) {
             throw new \required_capability_exception(\context_system::instance(),
@@ -154,6 +155,7 @@ final class organization_structure_editor {
                 'revision' => $current + 1,
             ]);
             $tx->allow_commit();
+            return $action === 'createposition' ? $positionid : '';
         } catch (\Throwable $e) {
             if (isset($tx)) {
                 $tx->rollback($e);

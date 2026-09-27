@@ -59,15 +59,10 @@ $positionid =
         PARAM_ALPHANUMEXT
     );
 
-if (
-    $positionid === ''
-    &&
-    !empty($positions)
-) {
-    $positionid =
-        $positions[0]['id'];
+$tab = optional_param('tab', 'overview', PARAM_ALPHA);
+if (!in_array($tab, ['overview', 'requirements', 'learning', 'grades', 'application', 'graph'], true)) {
+    $tab = 'overview';
 }
-
 
 $positionmap = [];
 
@@ -78,19 +73,14 @@ foreach ($positions as $position) {
 }
 
 
-if (
-    !isset(
-        $positionmap[$positionid]
-    )
-) {
+if ($positionid !== '' && !isset($positionmap[$positionid])) {
     throw new \invalid_parameter_exception(
         'Неизвестная должность'
     );
 }
 
 
-$currentposition =
-    $positionmap[$positionid];
+$currentposition = $positionid !== '' ? $positionmap[$positionid] : null;
 
 
 /*
@@ -105,6 +95,10 @@ $action =
         '',
         PARAM_ALPHANUMEXT
     );
+
+if ($action !== '' && $positionid === '') {
+    throw new \invalid_parameter_exception('Выберите должность для изменения');
+}
 
 
 if (
@@ -128,14 +122,14 @@ if (
             \local_ustar\career_grades::save($positionid,
                 required_param('careergrade', PARAM_ALPHANUMEXT),
                 required_param('gradeexpected', PARAM_ALPHANUMEXT));
-            redirect(new moodle_url('/local/ustar/positions.php', ['positionid'=>$positionid]));
+            redirect(new moodle_url('/local/ustar/positions.php', ['positionid'=>$positionid, 'tab'=>'grades']));
         }
 
         if ($action === 'savecareer') {
             \local_ustar\career_path::save($positionid,
                 optional_param('nextpositionid', '', PARAM_ALPHANUMEXT),
                 required_param('careerexpected', PARAM_ALPHANUMEXT));
-            redirect(new moodle_url('/local/ustar/positions.php', ['positionid'=>$positionid]),
+            redirect(new moodle_url('/local/ustar/positions.php', ['positionid'=>$positionid, 'tab'=>'grades']),
                 'Карьерный переход сохранён', null, \core\output\notification::NOTIFY_SUCCESS);
         }
 
@@ -175,6 +169,7 @@ if (
                     [
                         'positionid' =>
                             $positionid,
+                        'tab' => 'requirements',
                     ]
                 ),
                 'Требования должности сохранены',
@@ -186,7 +181,7 @@ if (
         if ($action === 'publishstandard') {
             \local_ustar\standard_model::publish_position_matrix(
                 $positionid, required_param('matrixhash', PARAM_ALPHANUMEXT), (int)$USER->id);
-            redirect(new moodle_url('/local/ustar/positions.php', ['positionid' => $positionid]),
+            redirect(new moodle_url('/local/ustar/positions.php', ['positionid' => $positionid, 'tab' => 'application']),
                 'Стандарт должности опубликован', null, \core\output\notification::NOTIFY_SUCCESS);
         }
 
@@ -271,6 +266,7 @@ if (
                     [
                         'positionid' =>
                             $positionid,
+                        'tab' => 'learning',
                     ]
                 ),
                 'Подтверждение добавлено',
@@ -302,6 +298,7 @@ if (
                     [
                         'positionid' =>
                             $positionid,
+                        'tab' => 'learning',
                     ]
                 ),
                 'Связь отключена',
@@ -318,6 +315,29 @@ if (
     }
 }
 
+// The catalog is a separate, inexpensive entry point. Detail-only directory,
+// graph and learning projections are built only after a position is chosen.
+if ($positionid === '') {
+    $PAGE->set_context($context);
+    $PAGE->set_url(new moodle_url('/local/ustar/positions.php'));
+    $PAGE->set_pagelayout('ustar');
+    $PAGE->set_title('Модели должностей | Центр управления USTAR');
+    $PAGE->set_heading('Центр управления USTAR');
+    $catalogcss = __DIR__ . '/styles/positions_catalog.css';
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/positions_catalog.css',
+        ['v' => filemtime($catalogcss)]));
+    $catalog = \local_ustar\position_catalog::present($positions, $departmentmap, $structure);
+    $catalog['canmanage'] = $canmanage;
+    $catalog['catalogurl'] = (new moodle_url('/local/ustar/positions.php'))->out(false);
+    $catalog['structureurl'] = (new moodle_url('/local/ustar/organization_settings.php'))->out(false)
+        . '#ustar-add-position';
+    $output = $PAGE->get_renderer('local_ustar');
+    echo $output->header();
+    echo $output->render_from_template('local_ustar/positions_catalog', $catalog);
+    echo $output->footer();
+    return;
+}
+
 
 /*
  * ------------------------------------------------------------
@@ -326,8 +346,9 @@ if (
  */
 
 $occupancy = [];
+$directoryusers = \local_ustar\organization_directory::users(true);
 
-foreach (\local_ustar\organization_directory::users(true) as $row) {
+foreach ($directoryusers as $row) {
     if (!\local_ustar\accounts::participates((int)$row->id)) continue;
     $occupancypositionid = (string)$row->positionid;
     if ($occupancypositionid === '') {
@@ -409,7 +430,7 @@ $required =
 $publishedstandard = \local_ustar\standard_model::current_position($positionid);
 $matrixhash = \local_ustar\standard_model::matrix_hash(is_array($required) ? $required : []);
 
-$selectedskillid = optional_param('skillid', '', PARAM_ALPHANUMEXT);
+$selectedskillid = '';
 $skillmap = [];
 foreach ($skills as $skill) {
     $skillid = clean_param((string)($skill['id'] ?? ''), PARAM_ALPHANUMEXT);
@@ -417,6 +438,11 @@ foreach ($skills as $skill) {
         $skillmap[$skillid] = $skill;
     }
 }
+$graphpositionrows = [];
+$graphskillrows = [];
+$graphmaterialrows = [];
+if ($tab === 'graph') {
+$selectedskillid = optional_param('skillid', '', PARAM_ALPHANUMEXT);
 if ($selectedskillid !== '' && !isset($skillmap[$selectedskillid])) {
     $selectedskillid = '';
 }
@@ -442,7 +468,8 @@ foreach ($positions as $position) {
     $positionidvalue = (string)$position['id'];
     $department = $departmentmap[$position['department'] ?? ''] ?? [];
     $positionrequired = $structure['matrix'][$positionidvalue] ?? [];
-    $graphurl = new moodle_url('/local/ustar/positions.php', ['positionid' => $positionidvalue]);
+    $graphurl = new moodle_url('/local/ustar/positions.php',
+        ['positionid' => $positionidvalue, 'tab' => 'graph']);
     if ($selectedskillid !== '') {
         $graphurl->param('skillid', $selectedskillid);
     }
@@ -466,6 +493,7 @@ foreach ($skills as $skill) {
     }
     $skillurl = new moodle_url('/local/ustar/positions.php', [
         'positionid' => $positionid,
+        'tab' => 'graph',
         'skillid' => $skillid,
     ]);
     $affectedcount = 0;
@@ -518,7 +546,7 @@ foreach ($graphpositionids as $graphpositionid) {
 
 $workspacepeople = [];
 
-foreach (\local_ustar\organization_directory::users(true) as $workspaceperson) {
+foreach ($directoryusers as $workspaceperson) {
 
     if (!\local_ustar\accounts::participates((int)$workspaceperson->id)) {
         continue;
@@ -727,6 +755,7 @@ if ($workspacejson === false) {
         'Не удалось сформировать USTAR position workspace JSON'
     );
 }
+}
 
 
 $nextpositionmap = [];
@@ -835,6 +864,13 @@ foreach ($skills as $skill) {
  * ------------------------------------------------------------
  */
 
+$learningcourses = [];
+$mandatoryknowledge = [];
+$evidencerows = [];
+$sourceoptions = [];
+$requiredskilloptions = [];
+$typeoptions = [];
+if ($tab === 'learning') {
 $assignment =
     \local_ustar\assignment::required_courses(
         $positionid
@@ -1182,6 +1218,7 @@ $typeoptions = [
         'name' => 'Аттестация',
     ],
 ];
+}
 
 
 /*
@@ -1202,15 +1239,7 @@ $PAGE->set_context(
     $context
 );
 
-$PAGE->set_url(
-    new moodle_url(
-        '/local/ustar/positions.php',
-        [
-            'positionid' =>
-                $positionid,
-        ]
-    )
-);
+$PAGE->set_url(new moodle_url('/local/ustar/positions.php', ['positionid' => $positionid, 'tab' => $tab]));
 
 $PAGE->set_pagelayout(
     'ustar'
@@ -1228,6 +1257,7 @@ $PAGE->set_heading(
 /*
  * Four-column workspace runtime.
  */
+if ($tab === 'graph') {
 $PAGE->requires->js_init_code(
     'window.USTAR_POSITION_WORKSPACE_DATA='
     .
@@ -1263,6 +1293,11 @@ $PAGE->requires->js(
         ]
     )
 );
+}
+
+$catalogcss = __DIR__ . '/styles/positions_catalog.css';
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/positions_catalog.css',
+    ['v' => filemtime($catalogcss)]));
 
 $output =
     $PAGE->get_renderer(
@@ -1279,7 +1314,32 @@ foreach ($positions as $candidate) {
 }
 $gradeview = \local_ustar\career_grades::view($currentposition);
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v'=>'20260914-1']));
+$tabnames = [
+    'overview' => 'О должности',
+    'requirements' => 'Требования',
+    'learning' => 'Обучение и проверка',
+    'grades' => 'Грейды',
+    'application' => 'Применение и история',
+    'graph' => 'Граф связей',
+];
+$tabs = [];
+$taburls = [];
+foreach ($tabnames as $key => $name) {
+    $url = (new moodle_url('/local/ustar/positions.php',
+        ['positionid' => $positionid, 'tab' => $key]))->out(false);
+    $tabs[] = ['name' => $name, 'url' => $url, 'active' => $tab === $key];
+    $taburls[$key] = $url;
+}
 $data = [
+    'tabs' => $tabs,
+    'taburls' => $taburls,
+    'catalogurl' => (new moodle_url('/local/ustar/positions.php'))->out(false),
+    'showoverview' => $tab === 'overview',
+    'showrequirements' => $tab === 'requirements',
+    'showlearning' => $tab === 'learning',
+    'showgrades' => $tab === 'grades',
+    'showapplication' => $tab === 'application',
+    'showgraph' => $tab === 'graph',
     'careergrades' => $gradeview,
     'gradeexpected' => \local_ustar\career_grades::fingerprint($currentposition),
 

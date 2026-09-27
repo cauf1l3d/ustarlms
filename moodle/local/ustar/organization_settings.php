@@ -9,7 +9,7 @@ $notice = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     try {
-        \local_ustar\organization_structure_editor::change(
+        $createdpositionid = \local_ustar\organization_structure_editor::change(
             (int)$USER->id,
             required_param('action', PARAM_ALPHANUMEXT),
             [
@@ -20,6 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ],
             required_param('revision', PARAM_INT)
         );
+        if ($createdpositionid !== '') {
+            redirect(new moodle_url('/local/ustar/positions.php',
+                ['positionid' => $createdpositionid, 'tab' => 'requirements']),
+                'Должность создана. Настройте обязательные требования.',
+                null, \core\output\notification::NOTIFY_SUCCESS);
+        }
         redirect(new moodle_url('/local/ustar/organization_settings.php', ['saved' => 1]));
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
@@ -161,7 +167,7 @@ echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добав
 echo html_writer::end_tag('form');
 echo html_writer::end_div();
 
-echo html_writer::start_div('u-stage6-card');
+echo html_writer::start_div('u-stage6-card', ['id' => 'ustar-add-position']);
 echo html_writer::tag('h2', 'Добавить должность');
 echo html_writer::start_tag('form', ['method' => 'post']);
 echo $hidden('createposition');

@@ -89,6 +89,7 @@ final class route_commands {
                     'Не выбрана должность для локального изменения'
                 );
             }
+            route_scope::assert_route_position($routeid, $positionid);
             if (!route_scope::exclusive_to($pointid, $positionid)
                     || !route_scope::point_applies($pointid, $positionid, true)) {
                 throw new \invalid_parameter_exception(

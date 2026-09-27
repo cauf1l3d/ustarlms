@@ -360,4 +360,22 @@ final class route_studio_commands_test extends \advanced_testcase {
         $this->assertNotNull(route_model::latest_version($overrideid));
     }
 
+    public function test_override_rejects_position_from_another_route(): void {
+        global $DB, $USER;
+        [$generator, , $route, $point] = $this->fixture();
+        $other = $generator->create_route();
+        $before = $DB->count_records('local_ustar_route_points', ['routeid' => $route->id]);
+
+        try {
+            route_commands::create_override((int)$route->id, (int)$point->id,
+                (string)$other->positionid, (int)$USER->id);
+            $this->fail('Нельзя создать переопределение чужой должности');
+        } catch (\invalid_parameter_exception $exception) {
+            $this->assertStringContainsString('не относится', $exception->getMessage());
+        }
+
+        $this->assertSame($before,
+            $DB->count_records('local_ustar_route_points', ['routeid' => $route->id]));
+    }
+
 }

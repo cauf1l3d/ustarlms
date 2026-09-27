@@ -133,9 +133,27 @@ final class route_scope {
         }
     }
 
+    /** The route being edited must actually own this position's resolved view. */
+    public static function assert_route_position(int $routeid, string $positionid): void {
+        global $DB;
+        $route = $DB->get_record('local_ustar_routes', ['id' => $routeid, 'active' => 1],
+            'id,routekind,positionid', MUST_EXIST);
+        if ((string)$route->routekind === 'position' && (string)$route->positionid === $positionid) {
+            return;
+        }
+        if ((string)$route->routekind === 'parent') {
+            $parent = self::parent_for_position($positionid);
+            if ($parent && (int)$parent->id === $routeid) {
+                return;
+            }
+        }
+        throw new \invalid_parameter_exception('Должность не относится к выбранному маршруту');
+    }
+
     /** Caller owns the route-studio parent lock, transaction, capability and sesskey checks. */
     public static function create_override(int $routeid, int $pointid, string $positionid, int $actorid): int {
         global $DB;
+        self::assert_route_position($routeid, $positionid);
         $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], '*', MUST_EXIST);
         if (!self::point_applies($pointid, $positionid, true)) {
             // Idempotent resubmission: return the existing local replacement.
@@ -171,6 +189,7 @@ final class route_scope {
 
     public static function revert_override(int $routeid, int $pointid, string $positionid, int $actorid): int {
         global $DB;
+        self::assert_route_position($routeid, $positionid);
         $point = $DB->get_record('local_ustar_route_points', ['id' => $pointid, 'routeid' => $routeid], '*', MUST_EXIST);
         if ((string)$point->inheritstate !== 'override' || empty($point->sourcepointid)
                 || !self::exclusive_to($pointid, $positionid)) {
@@ -216,4 +235,3 @@ final class route_scope {
         return array_values(array_unique($result));
     }
 }
-

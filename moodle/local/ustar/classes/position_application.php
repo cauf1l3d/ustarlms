@@ -32,24 +32,9 @@ final class position_application {
             ];
         }
 
-        $covered = [];
-        if ($required) {
-            [$insql, $params] = $DB->get_in_or_equal(array_keys($required), SQL_PARAMS_NAMED, 'skill');
-            $params['positionid'] = $positionid;
-            foreach ($DB->get_records_sql(
-                "SELECT id, skillid FROM {local_ustar_skill_evidence}
-                  WHERE active = 1 AND skillid {$insql}
-                    AND (positionid = :positionid OR positionid IS NULL OR positionid = '')",
-                $params
-            ) as $row) {
-                $covered[(string)$row->skillid] = true;
-            }
-        }
         $missing = [];
-        foreach ($required as $skillid => $level) {
-            if (!isset($covered[(string)$skillid])) {
-                $missing[] = ['name' => (string)($skillmap[$skillid]['name'] ?? $skillid)];
-            }
+        foreach (standard_model::missing_position_sources($positionid, $required) as $skillid) {
+            $missing[] = ['name' => (string)($skillmap[$skillid]['name'] ?? $skillid)];
         }
 
         $publishedmatrix = [];

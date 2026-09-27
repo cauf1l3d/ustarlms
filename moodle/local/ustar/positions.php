@@ -1458,7 +1458,8 @@ $data = [
         $canmanage,
 
     'canpublishstandard' => $canmanage && has_capability('local/ustar:admin', $context)
-        && !empty($required),
+        && !empty($required) && empty($application['missing'])
+        && (!$publishedstandard || !empty($application['haspendingchanges'])),
     'standardpublished' => !empty($publishedstandard),
     'standardversion' => $publishedstandard ? (int)$publishedstandard->versionno : 0,
     'standarddate' => $publishedstandard ? userdate((int)$publishedstandard->effectivedate) : '',

@@ -64,6 +64,27 @@ final class standard_model {
                     'sourcekind' => 'ustar_skill', 'sourceid' => (string)$skillid,
                     'targetlevel' => (int)$level, 'required' => true];
             }
+            if (self::missing_position_sources($positionid, $matrix)) {
+                throw new \moodle_exception('Для части навыков нет действующего обязательного источника подтверждения. Настройте подтверждения перед публикацией.');
+            }
+            $active = self::current_position($positionid);
+            if ($active) {
+                $activeitems = json_decode((string)$active->requirementsjson, true);
+                $activematrix = [];
+                $canonical = is_array($activeitems) && count($activeitems) === count($requirements);
+                foreach (is_array($activeitems) ? $activeitems : [] as $item) {
+                    if (($item['type'] ?? '') !== 'practice' || ($item['outcome'] ?? '') !== 'passed'
+                            || ($item['sourcekind'] ?? '') !== 'ustar_skill' || empty($item['required'])) {
+                        $canonical = false;
+                        break;
+                    }
+                    $activematrix[(string)($item['sourceid'] ?? '')] = (int)($item['targetlevel'] ?? 0);
+                }
+                if ($canonical && hash_equals(self::matrix_hash($matrix), self::matrix_hash($activematrix))) {
+                    $transaction->allow_commit();
+                    return $active;
+                }
+            }
             $standard = self::create(self::position_code($positionid),
                 'Стандарт должности: ' . (string)$position['name'],
                 'Опубликованный снимок обязательных навыков должности.', $actorid);
@@ -84,6 +105,59 @@ final class standard_model {
     public static function matrix_hash(array $matrix): string {
         ksort($matrix, SORT_STRING);
         return hash('sha256', json_encode($matrix, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+    }
+
+    /** Skill IDs with no runnable, required evidence in this position scope. */
+    public static function missing_position_sources(string $positionid, array $matrix): array {
+        global $DB;
+        if (!$matrix) {
+            return [];
+        }
+        [$insql, $params] = $DB->get_in_or_equal(array_keys($matrix), SQL_PARAMS_NAMED, 'skill');
+        $params['positionid'] = $positionid;
+        $rows = $DB->get_records_sql(
+            "SELECT e.id, e.skillid, e.evidencetype, e.courseid, e.cmid,
+                    cm.id AS moduleid, cm.course AS modulecourse,
+                    cm.completion, cm.deletioninprogress, c.id AS courseexists
+               FROM {local_ustar_skill_evidence} e
+          LEFT JOIN {course_modules} cm ON cm.id = e.cmid
+          LEFT JOIN {course} c ON c.id = e.courseid
+              WHERE e.active = 1 AND e.required = 1 AND e.skillid {$insql}
+                AND (e.positionid = :positionid OR e.positionid IS NULL OR e.positionid = '')",
+            $params
+        );
+        $courseids = [];
+        foreach ($rows as $row) {
+            if (empty($row->cmid) && (string)$row->evidencetype === 'learning'
+                    && !empty($row->courseexists)) {
+                $courseids[(int)$row->courseid] = (int)$row->courseid;
+            }
+        }
+        $tracked = [];
+        if ($courseids) {
+            [$coursesql, $courseparams] = $DB->get_in_or_equal(array_values($courseids), SQL_PARAMS_NAMED, 'course');
+            foreach ($DB->get_records_sql(
+                "SELECT course, COUNT(id) AS total FROM {course_modules}
+                  WHERE course {$coursesql} AND deletioninprogress = 0 AND completion <> 0
+               GROUP BY course", $courseparams) as $course) {
+                $tracked[(int)$course->course] = true;
+            }
+        }
+        $covered = [];
+        foreach ($rows as $row) {
+            if (!in_array((string)$row->evidencetype, ['learning', 'assessment'], true)) {
+                continue;
+            }
+            if (!empty($row->cmid)) {
+                if (!empty($row->moduleid) && !(int)$row->deletioninprogress && (int)$row->completion > 0
+                        && (empty($row->courseid) || (int)$row->modulecourse === (int)$row->courseid)) {
+                    $covered[(string)$row->skillid] = true;
+                }
+            } else if ((string)$row->evidencetype === 'learning' && isset($tracked[(int)$row->courseid])) {
+                $covered[(string)$row->skillid] = true;
+            }
+        }
+        return array_values(array_diff(array_keys($matrix), array_keys($covered)));
     }
 
     /** @return array<int,array<string,mixed>> */

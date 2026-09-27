@@ -1,25 +1,27 @@
 schema_version: 1
-updated_at: '2026-09-20'
+updated_at: '2026-09-27'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Stage 1 source and isolated CI/rollback are under review in PR 2.
-  Stage 2 organization/assignment resolution and team-scope package is in PR 4,
-  stacked on PR 2. R10/R12 in progress; full employment/role migration remains open.
-  Production unchanged; R00 browser/DR acceptance remains open.
-next_task: R10
+current_activity: G00 next RC baseline reconciliation. Owner-reported production
+  plugin/theme source exactly matches PR 16 commit 0e1eba2 (424 matching files,
+  no drift); DB plugin versions are 2026092601. PR 17 contains the architecture
+  plan for 8 priorities / 60 audit IDs / 13 prior defects. Draft PR 18 prepares
+  a standalone rollback gate. Performance baseline and future migration/browser
+  evidence remain open. Historical stage 1-2 records remain below and in
+  context/runtime.
+next_task: G00
 ready_tasks:
 - R00
 - R04
 code_baseline:
-  branch: integration/ustar-20260919
-  commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
-  kind: production_source_snapshot_verified
-  previous_branch: integration/ustar-20260912
-  previous_commit: 48326c6a011f58b985d251cb0462835bc1d37a16
-  production_equivalence: 381_publishable_source_files_byte_verified;
-    33_gitignored_runtime_backup_artifacts_recorded; database_moodledata_runtime_not_in_git;
-    schema_browser_clean_restore_acceptance_outstanding
+  branch: codex/ustar-postrelease-fixes-20260926
+  commit: 0e1eba2ca08b11f929730ab09df7bc91732f0e62
+  kind: owner_reported_production_plugin_theme_source_verified_20260927
+  previous_branch: integration/ustar-20260919
+  previous_commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
+  production_equivalence: 424_plugin_theme_files_match_exact_commit;
+    database_moodledata_core_image_not_compared; complete_browser_acceptance_open
 main_at_audit_start: 5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
 canonical_roadmap_branch: main
 user_priorities:
@@ -29,8 +31,22 @@ user_priorities:
 - Консистентная студия маршрутов
 - Рабочие игры и достижения
 production:
-  status: production_source_reconciled_20260919
+  status: plugin_theme_source_matches_pr16_20260927_owner_observation
   measured_in_this_audit: false
+  current_source_observation:
+    date: '2026-09-27'
+    source: owner-executed read-only production manifest and DB plugin version check
+    commit: 0e1eba2ca08b11f929730ab09df7bc91732f0e62
+    report_on_server: /home/aduk/ustar-g00-20260927T112929Z/comparison.md
+    evidence_in_repo: context/runtime/20260927_prod_g00.md
+    matching_files: 424
+    changed_files: 0
+    production_only_files: 0
+    git_only_files: 0
+    errors: 0
+    local_ustar_db_version: 2026092601
+    theme_ustar_db_version: 2026092601
+    independent_server_access: false
   user_session_evidence:
     container: ustar_moodle
     database_container: ustar_postgres
@@ -51,18 +67,23 @@ production:
     stored_in_git: false
     clean_server_restore_tested: false
   unknown:
-  - Full database schema and upgrade-path acceptance against exact code SHA
-  - Full browser smoke/acceptance against exact code SHA
-  - Native tour DB records and visual acceptance
-  - Clean-server disaster-recovery restore acceptance
-  - Whether all 33 ignored production remnants may be deleted from runtime
+  - Production DB schema/config and data-specific migration dry-run of next RC
+  - Measured performance baseline by role on agreed representative stage
+  - Full browser acceptance of all 8 new requirements and 60 audit IDs
+  - Clean-server disaster-recovery restore of current agreed production backup
+  - Native tour DB records and visual acceptance where applicable
   latest_observation:
-    date: '2026-09-19'
-    source: user-executed source reconciliation and recovery snapshot creation
-    source_commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
-    runtime_evidence: context/runtime/20260919_prod_sync.md
+    date: '2026-09-27'
+    source: user-executed post-PR16 manifest and plugin DB version inspection
+    source_commit: 0e1eba2ca08b11f929730ab09df7bc91732f0e62
+    runtime_evidence: context/runtime/20260927_prod_g00.md
     independently_measured: false
 prior_deliveries:
+- name: PR 16 production source observed 20260927
+  status: owner_reported_deployed_source_exact_match
+  evidence: context/runtime/20260927_prod_g00.md; commit
+    0e1eba2ca08b11f929730ab09df7bc91732f0e62; 424 plugin/theme files
+    match and both DB plugin versions are 2026092601.
 - name: Production source reconciliation 20260919
   status: source_verified_and_published
   evidence: release/20260919/README.md; exact Git source commit
@@ -102,6 +123,8 @@ next_agent_read:
 - context/tasks/ACTIVE.md
 - context/roadmap/BACKLOG.yaml
 - context/roadmap/AGENT_PROTOCOL.md
+- https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-product-plan-20260927/context/roadmap/USTAR_PRODUCT_ARCHITECTURE_PLAN_20260927_RU.md
+- context/runtime/20260927_prod_g00.md
 - release/20260919/README.md
 release_gates:
 - Baseline и source drift известны

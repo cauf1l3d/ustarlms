@@ -1,5 +1,26 @@
 # Журнал выполнения roadmap
 
+## 2026-09-27 — G00, source baseline следующего RC
+
+Владелец на server1 выполнил read-only manifest против точного SHA
+`0e1eba2ca08b11f929730ab09df7bc91732f0e62` (PR №16):
+424 файла plugin/theme совпадают, изменённых/лишних/отсутствующих/ошибок — 0.
+DB plugin versions `local_ustar=2026092601` и `theme_ustar=2026092601`.
+Монтирование проверено; доказательство и его границы — в
+[runtime G00](../runtime/20260927_prod_g00.md). По сообщению владельца PR №16
+установлен и проверен, но обезличенный performance baseline и подробная
+матрица browser-сценариев не переданы. Production не менялся этой поставкой.
+
+Спецификация следующего RC — docs-only PR №17 (8 новых требований,
+60 audit ID, 13 старых замечаний). Подготовительный PR №18
+`a207c9e7c2b4447e0a0bd0e70dbc06458f7cc0c2` меняет только
+workflow: ручной `rollback_only`. Run №237 source/frontend SUCCESS;
+rollback, prepare-rc и Moodle DB SKIPPED, поскольку это обычный PR-run.
+Плановый общий Moodle DB suite следующего RC не запускался. Канонический
+контекст обновлён отдельным docs commit к main; G00 остаётся in_progress
+до измерения baseline. Следующее действие — G01 после фиксации условий
+измерения и источников прав/файлов.
+
 ## 2026-09-20 — первый этап рефакторинга, R01 review
 
 Владелец: Codex. Код: `e657cda7dc29750511535b94eee85b22ca7fdb86`,

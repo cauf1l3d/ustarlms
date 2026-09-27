@@ -1,4 +1,24 @@
-# Активная работа — 2026-09-20
+# Активная работа — 2026-09-27
+
+## G00 — подготовка следующего RC
+
+Владелец выпустил PR №16 и предоставил read-only manifest от 27.09:
+`codex/ustar-postrelease-fixes-20260926@0e1eba2ca08b11f929730ab09df7bc91732f0e62`
+совпадает с 424 файлами production plugin/theme без drift. DB plugin versions:
+`local_ustar=2026092601`, `theme_ustar=2026092601`.
+Подробности и границы доказательства — [runtime G00](../runtime/20260927_prod_g00.md).
+
+[План восьми приоритетов и аудита](https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-product-plan-20260927/context/roadmap/USTAR_PRODUCT_ARCHITECTURE_PLAN_20260927_RU.md)
+опубликован в docs-only PR №17. Подготовительный PR №18 добавляет
+`rollback_only`; его обычный PR-run №237 прошёл source/frontend,
+но отдельный rollback будет запускаться на frozen candidate.
+Следующее действие: получить performance baseline на согласованном стенде,
+затем G01 (общие UI/ACL/files контракты). Все 8 новых функций, 60 audit ID
+и 13 старых замечаний остаются предметом реализации/приёмки; source match
+не закрывает их автоматически.
+
+Далее сохранена историческая запись этапов 1–2 от 20.09. Её фразы о
+неизменённом production и прежней кодовой базе относятся только к той дате.
 
 ## Второй этап — in progress
 

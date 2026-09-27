@@ -1,3 +1,12 @@
+> **Актуальная база 27.09.2026:** пользовательский read-only manifest подтвердил
+> полное совпадение 424 production plugin/theme файлов с
+> `codex/ustar-postrelease-fixes-20260926@0e1eba2ca08b11f929730ab09df7bc91732f0e62`;
+> версии `local_ustar` и `theme_ustar` в БД — `2026092601`.
+> См. [G00 evidence](context/runtime/20260927_prod_g00.md),
+> [канонический STATE](context/roadmap/STATE.yaml) и
+> [план следующего RC](https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-product-plan-20260927/context/roadmap/USTAR_PRODUCT_ARCHITECTURE_PLAN_20260927_RU.md).
+> Текст ниже о базе 19.09 сохраняется как историческое описание.
+
 > Обновление 19.09: фактический source production сведен в GitHub и проверен побайтно для publishable source. Канонический код: `integration/ustar-20260919@378d397152a8c83f8b0d046e2e561ab2732d6b02`. Полный recovery snapshot сохранён отдельно и не публикуется в Git.
 
 # USTAR — начать здесь

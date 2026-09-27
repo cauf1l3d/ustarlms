@@ -1,5 +1,15 @@
 # USTAR agent entrypoint
 
+**Current source observation (2026-09-27):** The owner-run production manifest
+matches all 424 plugin/theme files against
+`codex/ustar-postrelease-fixes-20260926@0e1eba2ca08b11f929730ab09df7bc91732f0e62`.
+Read [G00 evidence](context/runtime/20260927_prod_g00.md),
+[STATE](context/roadmap/STATE.yaml), and the
+[next RC plan](https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-product-plan-20260927/context/roadmap/USTAR_PRODUCT_ARCHITECTURE_PLAN_20260927_RU.md)
+before changing product code. The 19–24 September branch pointers below are
+historical; production DB schema, performance and new feature acceptance remain
+separate evidence.
+
 Before doing work, read **[START_HERE.md](START_HERE.md)**, then:
 
 1. `context/roadmap/STATE.yaml`

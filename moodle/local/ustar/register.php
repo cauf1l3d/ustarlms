@@ -15,21 +15,23 @@ $PAGE->set_url(new moodle_url('/local/ustar/register.php'));
 $PAGE->set_pagelayout('login');
 $PAGE->set_title('Регистрация в USTAR Академии');
 $PAGE->set_heading('Регистрация в USTAR Академии');
+$PAGE->requires->js_call_amd('local_ustar/register', 'init');
 
 $error = '';
+$errors = [];
 $values = [
     'username' => '', 'email' => '', 'firstname' => '', 'lastname' => '', 'departmentid' => '',
 ];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     foreach (array_keys($values) as $key) {
-        $values[$key] = optional_param($key, '', PARAM_RAW_TRIMMED);
+        $values[$key] = \core_text::substr(optional_param($key, '', PARAM_RAW_TRIMMED), 0, 100);
     }
     if (optional_param('website', '', PARAM_RAW) !== '') {
         $error = 'Не удалось отправить заявку. Повторите попытку позже.';
     } else if (optional_param('password', '', PARAM_RAW)
             !== optional_param('passwordconfirm', '', PARAM_RAW)) {
-        $error = 'Пароли не совпадают.';
+        $errors['passwordconfirm'] = 'Пароли не совпадают.';
     } else {
         try {
             $userid = \local_ustar\registration_service::register($values + [
@@ -39,12 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             redirect(new moodle_url('/local/ustar/profile.php'),
                 'Профиль создан. Заявка передана HRD для подтверждения.', null,
                 \core\output\notification::NOTIFY_SUCCESS);
+        } catch (\local_ustar\registration_validation_exception $e) {
+            $errors[$e->field] = $e->getMessage();
         } catch (\InvalidArgumentException $e) {
             $error = $e->getMessage();
         } catch (\Throwable $e) {
             error_log('USTAR self-registration failed: ' . get_class($e)
                 . ' in ' . basename($e->getFile()) . ':' . $e->getLine());
-            debugging('USTAR registration failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            debugging('USTAR registration failed: ' . get_class($e), DEBUG_DEVELOPER);
             $error = 'Регистрация временно недоступна. Обратитесь к HRD.';
         }
     }
@@ -58,7 +62,7 @@ unset($department);
 
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_ustar/register', [
-    'error' => $error, 'values' => $values, 'departments' => $departments,
+    'error' => $error, 'errors' => $errors, 'values' => $values, 'departments' => $departments,
     'sesskey' => sesskey(), 'loginurl' => (new moodle_url('/login/index.php'))->out(false),
 ]);
 echo $OUTPUT->footer();

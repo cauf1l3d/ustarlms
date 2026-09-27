@@ -35,20 +35,28 @@ final class registration_service {
         $departmentid = trim((string)($input['departmentid'] ?? ''));
         $password = (string)($input['password'] ?? '');
         if ($username === '' || $username !== clean_param($username, PARAM_USERNAME)
-                || strlen($username) > 100 || $email === '' || strlen($email) > 100
-                || !validate_email($email) || $firstname === '' || $lastname === ''
-                || $firstname !== clean_param($firstname, PARAM_NOTAGS)
-                || $lastname !== clean_param($lastname, PARAM_NOTAGS)
-                || \core_text::strlen($firstname) > 100 || \core_text::strlen($lastname) > 100) {
-            throw new \InvalidArgumentException('Проверьте логин, имя, фамилию и email.');
+                || strlen($username) > 100) {
+            throw new registration_validation_exception('username', 'Проверьте логин.');
+        }
+        if ($email === '' || strlen($email) > 100 || !validate_email($email)) {
+            throw new registration_validation_exception('email', 'Укажите корректный email.');
+        }
+        if ($firstname === '' || $firstname !== clean_param($firstname, PARAM_NOTAGS)
+                || \core_text::strlen($firstname) > 100) {
+            throw new registration_validation_exception('firstname', 'Проверьте имя.');
+        }
+        if ($lastname === '' || $lastname !== clean_param($lastname, PARAM_NOTAGS)
+                || \core_text::strlen($lastname) > 100) {
+            throw new registration_validation_exception('lastname', 'Проверьте фамилию.');
         }
         $departments = array_column(self::departments(), 'name', 'id');
         if ($departmentid === '' || !array_key_exists($departmentid, $departments)) {
-            throw new \InvalidArgumentException('Выберите подразделение из справочника.');
+            throw new registration_validation_exception('departmentid', 'Выберите подразделение из справочника.');
         }
         $passworderror = '';
         if ($password === '' || !check_password_policy($password, $passworderror)) {
-            throw new \InvalidArgumentException($passworderror ?: 'Пароль не соответствует политике безопасности.');
+            throw new registration_validation_exception('password',
+                $passworderror ?: 'Пароль не соответствует политике безопасности.');
         }
         $identitylock = \core\lock\lock_config::get_lock_factory('local_ustar')
             ->get_lock('registration-email-' . hash('sha256', \core_text::strtolower($email)), 10);
@@ -56,10 +64,12 @@ final class registration_service {
             throw new \moodle_exception('Регистрация занята. Повторите попытку позже.');
         }
         try {
-            if ($DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])
-                    || $DB->record_exists_select('user', 'LOWER(email) = LOWER(:email) AND deleted = 0',
-                        ['email' => $email])) {
-                throw new \InvalidArgumentException('Логин или email уже используется.');
+            if ($DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])) {
+                throw new registration_validation_exception('username', 'Логин уже используется.');
+            }
+            if ($DB->record_exists_select('user', 'LOWER(email) = LOWER(:email) AND deleted = 0',
+                    ['email' => $email])) {
+                throw new registration_validation_exception('email', 'Email уже используется.');
             }
 
             $transaction = $DB->start_delegated_transaction();

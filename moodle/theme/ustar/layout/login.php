@@ -5,7 +5,9 @@ global $SITE;
 
 require_once($CFG->libdir . '/authlib.php');
 
-$bodyattributes = $OUTPUT->body_attributes(['ustar-auth-body']);
+$isregistration = (string)$PAGE->url->get_path() === '/local/ustar/register.php';
+$bodyattributes = $OUTPUT->body_attributes($isregistration
+    ? ['ustar-auth-body', 'ustar-register-body'] : ['ustar-auth-body']);
 $runtimecss = '';
 try {
     if (class_exists('\\local_ustar\\branding')) {
@@ -33,8 +35,8 @@ $templatecontext = [
     'mascoturl' => $OUTPUT->image_url('brand/mascot-admin', 'theme_ustar')->out(false),
     'academybannerurl' => $OUTPUT->image_url('brand/ustar-academy-banner', 'theme_ustar')->out(false),
     'signupenabled' => (int)get_config('local_ustar', 'version') >= 2026082749
-        && (string)$PAGE->url->get_path() !== '/local/ustar/register.php',
-    'starttitle' => (string)$PAGE->url->get_path() === '/local/ustar/register.php'
+        && !$isregistration,
+    'starttitle' => $isregistration
         ? 'Создай профиль' : 'Начни с входа',
     'signupurl' => (new moodle_url('/local/ustar/register.php'))->out(false),
 ];

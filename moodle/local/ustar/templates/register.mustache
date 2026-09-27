@@ -1,21 +1,49 @@
 <div class="u-register">
     <p class="u-page-kicker">USTAR Академия</p>
     <h2>Новая учётная запись</h2>
-    <p>Укажите подразделение. HRD проверит заявку и назначит должность; до подтверждения учебный маршрут закрыт.</p>
-    {{#error}}<div class="u-inline-notice" role="alert">{{error}}</div>{{/error}}
-    <form method="post" autocomplete="on">
+    <p>Создайте профиль. Подразделение подтвердит HRD; до решения учебный маршрут закрыт.</p>
+    {{#error}}<div class="u-inline-notice" role="alert" tabindex="-1">{{error}}</div>{{/error}}
+    <form method="post" autocomplete="on" data-u-register>
         <input type="hidden" name="sesskey" value="{{sesskey}}">
         <div class="u-register-trap" aria-hidden="true"><label>Сайт<input name="website" tabindex="-1" autocomplete="off"></label></div>
-        <label>Имя<input name="firstname" value="{{values.firstname}}" autocomplete="given-name" required maxlength="100"></label>
-        <label>Фамилия<input name="lastname" value="{{values.lastname}}" autocomplete="family-name" required maxlength="100"></label>
-        <label>Логин<input name="username" value="{{values.username}}" autocomplete="username" required maxlength="100"></label>
-        <label>Email<input name="email" type="email" value="{{values.email}}" autocomplete="email" required maxlength="100"></label>
-        <label>Подразделение<select name="departmentid" required>
-            <option value="">Выберите подразделение</option>
-            {{#departments}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/departments}}
-        </select></label>
-        <label>Пароль<input name="password" type="password" autocomplete="new-password" required></label>
-        <label>Повторите пароль<input name="passwordconfirm" type="password" autocomplete="new-password" required></label>
+        <div class="u-register-names">
+            <label for="u-register-firstname">Имя
+                <input id="u-register-firstname" name="firstname" value="{{values.firstname}}" autocomplete="given-name" required maxlength="100" {{#errors.firstname}}aria-invalid="true" aria-describedby="u-register-firstname-error"{{/errors.firstname}}>
+                {{#errors.firstname}}<span id="u-register-firstname-error" class="u-register-error">{{errors.firstname}}</span>{{/errors.firstname}}
+            </label>
+            <label for="u-register-lastname">Фамилия
+                <input id="u-register-lastname" name="lastname" value="{{values.lastname}}" autocomplete="family-name" required maxlength="100" {{#errors.lastname}}aria-invalid="true" aria-describedby="u-register-lastname-error"{{/errors.lastname}}>
+                {{#errors.lastname}}<span id="u-register-lastname-error" class="u-register-error">{{errors.lastname}}</span>{{/errors.lastname}}
+            </label>
+        </div>
+        <label for="u-register-username">Логин
+            <input id="u-register-username" name="username" value="{{values.username}}" autocomplete="username" required maxlength="100" {{#errors.username}}aria-invalid="true" aria-describedby="u-register-username-error"{{/errors.username}}>
+            {{#errors.username}}<span id="u-register-username-error" class="u-register-error">{{errors.username}}</span>{{/errors.username}}
+        </label>
+        <label for="u-register-email">Email
+            <input id="u-register-email" name="email" type="email" value="{{values.email}}" autocomplete="email" required maxlength="100" {{#errors.email}}aria-invalid="true" aria-describedby="u-register-email-error"{{/errors.email}}>
+            {{#errors.email}}<span id="u-register-email-error" class="u-register-error">{{errors.email}}</span>{{/errors.email}}
+        </label>
+        <div class="u-register-department">
+            <label for="u-register-department-search">Найти подразделение
+                <input id="u-register-department-search" type="search" autocomplete="off" placeholder="Поиск по названию" aria-controls="u-register-department">
+            </label>
+            <label for="u-register-department">Подразделение
+                <select id="u-register-department" name="departmentid" required {{#errors.departmentid}}aria-invalid="true" aria-describedby="u-register-department-error"{{/errors.departmentid}}>
+                    <option value="">Выберите подразделение</option>
+                    {{#departments}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/departments}}
+                </select>
+                {{#errors.departmentid}}<span id="u-register-department-error" class="u-register-error">{{errors.departmentid}}</span>{{/errors.departmentid}}
+            </label>
+        </div>
+        <div class="u-register-field"><label for="u-register-password">Пароль</label>
+            <span class="u-register-password"><input id="u-register-password" name="password" type="password" autocomplete="new-password" required {{#errors.password}}aria-invalid="true" aria-describedby="u-register-password-error"{{/errors.password}}><button type="button" class="u-register-reveal" data-u-reveal="u-register-password" aria-pressed="false">Показать</button></span>
+            {{#errors.password}}<span id="u-register-password-error" class="u-register-error">{{errors.password}}</span>{{/errors.password}}
+        </div>
+        <div class="u-register-field"><label for="u-register-passwordconfirm">Повторите пароль</label>
+            <span class="u-register-password"><input id="u-register-passwordconfirm" name="passwordconfirm" type="password" autocomplete="new-password" required {{#errors.passwordconfirm}}aria-invalid="true" aria-describedby="u-register-passwordconfirm-error"{{/errors.passwordconfirm}}><button type="button" class="u-register-reveal" data-u-reveal="u-register-passwordconfirm" aria-pressed="false">Показать</button></span>
+            {{#errors.passwordconfirm}}<span id="u-register-passwordconfirm-error" class="u-register-error">{{errors.passwordconfirm}}</span>{{/errors.passwordconfirm}}
+        </div>
         <button class="btn btn-primary" type="submit">Создать профиль и отправить заявку</button>
     </form>
     <p class="u-register-login">Уже есть профиль? <a href="{{loginurl}}">Войти</a></p>

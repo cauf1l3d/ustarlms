@@ -471,7 +471,7 @@ final class organization_identity_test extends \advanced_testcase {
         global $DB;
         $before = $DB->count_records('user');
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Проверьте логин, имя, фамилию и email.');
+        $this->expectExceptionMessage('Проверьте логин.');
         try {
             registration_service::register([
                 'username' => 'invalid username', 'password' => 'Qx9!Ayear2026',
@@ -481,6 +481,26 @@ final class organization_identity_test extends \advanced_testcase {
         } finally {
             $this->assertSame($before, $DB->count_records('user'));
         }
+    }
+
+    public function test_duplicate_registration_email_is_tied_to_field_and_creates_no_request(): void {
+        global $DB;
+        $this->getDataGenerator()->create_user(['email' => 'existing@example.invalid']);
+        $beforeusers = $DB->count_records('user');
+        $beforerequests = $DB->count_records('local_ustar_staff_requests');
+        try {
+            registration_service::register([
+                'username' => 'uniquename', 'password' => 'Qx9!Ayear2026',
+                'email' => 'existing@example.invalid', 'firstname' => 'Новый',
+                'lastname' => 'Сотрудник', 'departmentid' => 'retail',
+            ]);
+            $this->fail('A duplicate email must reject registration');
+        } catch (registration_validation_exception $e) {
+            $this->assertSame('email', $e->field);
+            $this->assertSame('Email уже используется.', $e->getMessage());
+        }
+        $this->assertSame($beforeusers, $DB->count_records('user'));
+        $this->assertSame($beforerequests, $DB->count_records('local_ustar_staff_requests'));
     }
 
     public function test_hrd_cannot_assign_registration_to_another_department(): void {

@@ -15,8 +15,8 @@ head `86b6887e76920803e9303bf3ccad19960353f3fd`. Каталог открывае
 Frontend получает только нужную модель и агрегированные данные курсов;
 старые ID навыков не удаляются без явной миграции.
 
-CI source/frontend №248–252 SUCCESS на промежуточных SHA, №253 на exact
-head ещё ожидается. Никакой DB, browser, rollback или performance-приёмки
+CI source/frontend №253 SUCCESS на exact head. Никакой DB, browser,
+rollback или performance-приёмки
 этой ветки не было; production не менялся. Остаток G04: персональный impact,
 route scope/override lock, другие писатели структуры, pinned/latest связи,
 проверка общей стилистики в браузере.

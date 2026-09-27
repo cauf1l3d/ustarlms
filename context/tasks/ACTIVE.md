@@ -14,8 +14,8 @@ head `86b6887e76920803e9303bf3ccad19960353f3fd`:
 общего документа. Frontend HR-редактор получает компактные данные без
 чтения всех сотрудников/игр и запросов по каждому курсу.
 
-Source/frontend GitHub прошли на предыдущих SHA в run №248–252; exact-head
-run №253 ещё в очереди. Moodle DB, upgrade, browser, performance, rollback и
+Source/frontend GitHub прошли на exact-head в run №253. Moodle DB, upgrade,
+browser, performance, rollback и
 production не выполнялись. G04 не принят: персональный impact по фактам,
 route lock/override, оставшиеся API-писатели структуры и исторические
 binding открыты. G01 общий UI/files контракт по-прежнему открыт.

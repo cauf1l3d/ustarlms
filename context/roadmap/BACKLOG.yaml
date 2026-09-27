@@ -84,6 +84,31 @@ tasks:
   blockers:
   - Миграция metadatajson/Moodle DB, rollback и браузерная доступная сверка не выполнены.
   updated_at: '2026-09-27'
+- id: G03
+  title: Чек-листы как рабочая вкладка, задачи, блокнот и вложения
+  priority: P0
+  stage: S0
+  status: review
+  owner: Codex / 20260927 next RC
+  branch: codex/ustar-g03-cont-20260927
+  started_at: '2026-09-27'
+  depends_on: [G01, G02]
+  findings: [D04, D07, E08, F04]
+  actions:
+  - N05 встроить чек-листы в tasks, версионировать определения и финальные отправки.
+  - N06 прикладывать файлы произвольных форматов к задаче, результату и личной
+    заметке; проверять actor при каждом чтении; добавить scoped search и pagination.
+  - Довести G01 общий контракт файлов и privacy provider при сборке полного RC.
+  implementation_commit: 65a7baf122fbf3c008718ba428a5da840b66ed84
+  validation_evidence:
+  - PR 24 / run 244 source/frontend success; PR 25 / run 247 source/frontend success.
+  - Локальная проверка source_checks --skip-php, git diff --check и побайтное
+    совпадение дерева опубликованного коммита с подготовленным исходником.
+  deployment_evidence: []
+  blockers:
+  - Moodle DB, install/upgrade миграции 2026092705, rollback, privacy export/delete,
+    browser UI и прямые ссылки на файлы не проверены на финальном кандидате.
+  updated_at: '2026-09-27'
 - id: R00
   title: Зафиксировать проверяемую базу Git/release/runtime
   priority: P0

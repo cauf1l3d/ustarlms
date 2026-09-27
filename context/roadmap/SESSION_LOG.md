@@ -1,5 +1,29 @@
 # Журнал выполнения roadmap
 
+## 2026-09-27 — G03/N05/N06, рабочие чек-листы и задачи в draft
+
+[PR №24](https://github.com/cauf1l3d/ustarlms/pull/24) поверх PR22:
+`3a15a432216dd16909998167129be433aced6830`, plugin version
+`2026092705`, XMLDB migration `check_def_ver`, version/revision/submission
+links. Старый `checklists.php` оставлен совместимым входом, вкладка Tasks
+рендерит саму форму. История старых run без pinned definition обозначена
+отдельно; названия сегодняшней версии не подставляются вместо прошлого.
+
+[PR №25](https://github.com/cauf1l3d/ustarlms/pull/25) поверх PR24:
+`65a7baf122fbf3c008718ba428a5da840b66ed84`. Задачи/ноутбук
+постраничны, фильтруются по названию/статусу; поиск получателя ограничен
+управленческой областью. Поручения, заметки и результаты принимают файлы
+разных форматов с server limits; Moodle File API и `pluginfile` проверяют
+текущего actor; прочие пользователи и pending не читают личный блокнот.
+Файлы результата закреплены за версией отправки, удаление заметки удаляет
+её вложения. Добавлены два DB-сценария для общего прогона позже.
+
+GitHub CI №244 и №247: source/frontend SUCCESS на указанных SHA. Rollback,
+prepare-rc, Moodle DB и gate SKIPPED по плану. Локальный PHP CLI отсутствует;
+`source_checks --skip-php` и `git diff --check` прошли. Миграция, браузерные
+действия, download ACL, privacy provider и performance остаются открытыми.
+Новые PR не установлены на сервер; факт production source — только G00.
+
 ## 2026-09-27 — G01/G02, три видимые доработки в draft исходниках
 
 G01 [PR №20](https://github.com/cauf1l3d/ustarlms/pull/20), head

@@ -22,7 +22,7 @@
 | `local_ustar_content_ack` | `userid` |
 | `local_ustar_content_events` | `actorid`, `userid` |
 | `local_ustar_library` | `userid` |
-| `local_ustar_evidence_rec` | `userid` |
+| `local_ustar_evidence_rec` | `userid`, `recordedby` |
 | `local_ustar_evidence_evt` | `actorid` |
 | `local_ustar_gate_defs` | `ownerid` |
 | `local_ustar_gate_decisions` | `userid`, `decidedby` |
@@ -39,7 +39,7 @@
 | `local_ustar_route_points` | `usermodified` |
 | `local_ustar_route_scope` | `usermodified` |
 | `local_ustar_route_versions` | `usermodified` |
-| `local_ustar_route_progress` | `userid` |
+| `local_ustar_route_progress` | `userid`, `recordedby` |
 | `local_ustar_assess_policy` | `usermodified` |
 | `local_ustar_assess_runtime` | `userid`, `managerid` |
 | `local_ustar_dev_assess` | `usermodified` |
@@ -57,7 +57,7 @@
 | `local_ustar_competitions` | `ownerid` |
 | `local_ustar_comp_rules` | `createdby` |
 | `local_ustar_comp_participants` | `userid` |
-| `local_ustar_staff_requests` | `employeeid`, `createduserid` |
+| `local_ustar_staff_requests` | `employeeid`, `requestedby`, `reviewedby`, `createduserid` |
 | `local_ustar_route_testers` | `actorid`, `sandboxuserid` |
 | `local_ustar_route_test_tokens` | `actorid`, `sandboxuserid` |
 | `local_ustar_adaptations` | `userid`, `managerid`, `createdby` |
@@ -70,16 +70,16 @@
 | `local_ustar_grade_ladder_ver` | `createdby` |
 | `local_ustar_grade_bindings` | `usermodified` |
 | `local_ustar_employee_grades` | `userid`, `usermodified` |
-| `local_ustar_grade_requests` | `userid`, `managerid` |
+| `local_ustar_grade_requests` | `userid`, `managerid`, `decisionby` |
 | `local_ustar_learning_tasks` | `ownerid`, `assigneeid`, `assignerid` |
 | `local_ustar_learning_task_events` | `actorid` |
 | `local_ustar_catalog_versions` | `actorid` |
-| `local_ustar_board_archive` | `ownerid` |
+| `local_ustar_board_archive` | `ownerid`, `archivedby` |
 | `local_ustar_feed_posts` | `actoruserid` |
 | `local_ustar_feed_comments` | `actoruserid` |
 | `local_ustar_feed_reactions` | `userid` |
 | `local_ustar_feed_events` | `actoruserid` |
-| `local_ustar_feed_reports` | `reporterid` |
+| `local_ustar_feed_reports` | `reporterid`, `resolvedby` |
 
 ## Связанные записи и файлы, которые нельзя потерять при реализации
 

@@ -1,0 +1,9 @@
+{
+  "source_commit": "0e1eba2ca08b11f929730ab09df7bc91732f0e62",
+  "source_observed_at": "2026-09-27T11:29:29Z",
+  "source_evidence": "User-run production_manifest: complete=true, matching=424, changed=0, production_only=0, git_only=0, uncompared=0, errors={}",
+  "local_ustar_db_version": 2026092601,
+  "theme_ustar_db_version": 2026092601,
+  "runtime_drift_recheck_required": true,
+  "database_and_moodledata_not_covered": true
+}

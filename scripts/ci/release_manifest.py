@@ -31,7 +31,9 @@ def build(commit):
             raise ValueError('Runtime environment must not be in a release: ' + path)
         frontend[path] = hashlib.sha256(subprocess.check_output(['git', 'cat-file', 'blob', oid], cwd=ROOT)).hexdigest()
     runtime = json.loads(subprocess.check_output(['git', 'show', sha + ':tests/stage/runtime.json'], cwd=ROOT))
-    baseline_sha, baseline_files, baseline_skipped = git_files(ROOT, runtime['upgrade_from_commit'])
+    production = json.loads(subprocess.check_output(
+        ['git', 'show', sha + ':tests/stage/production.json'], cwd=ROOT))
+    baseline_sha, baseline_files, baseline_skipped = git_files(ROOT, production['source_commit'])
     if baseline_skipped:
         raise ValueError('Baseline contains unreviewed non-regular application source')
     # An overlay copy cannot retire removed endpoints/assets. Publish an explicit,
@@ -46,13 +48,15 @@ def build(commit):
         blob = subprocess.check_output(['git', 'show', sha + ':' + path], cwd=ROOT)
         locks[path] = hashlib.sha256(blob).hexdigest()
     return {'format': 1, 'source_commit': sha, 'created_at': datetime.now(timezone.utc).isoformat(),
-            'runtime_reference': runtime, 'source_files': files, 'frontend_source_files': frontend,
+            'runtime_reference': runtime, 'production_source_evidence': production,
+            'source_files': files, 'frontend_source_files': frontend,
             'dependency_lock_sha256': locks,
             'upgrade_plan': {'baseline_commit': baseline_sha, 'added': added,
                              'changed': changed, 'removed': removed,
                              'removal_policy': 'Require exact baseline hash; abort on drift; never delete outside plugin/theme'},
             'deployment_status': 'not_deployed', 'production_restore': 'not_verified',
-            'preflight': 'Compare installed source to upgrade_from_commit before any release apply'}
+            'preflight': 'Compare installed source to upgrade_plan.baseline_commit before any release apply. '
+                         'The isolated test fixture in runtime_reference is not a production fingerprint.'}
 
 
 if __name__ == '__main__':

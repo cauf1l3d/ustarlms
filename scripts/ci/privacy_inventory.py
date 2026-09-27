@@ -13,9 +13,10 @@ SCHEMA = ROOT / "moodle/local/ustar/db/install.xml"
 OUTPUT = ROOT / "context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md"
 
 USER_KEYS = {
-    "actorid", "authorid", "assigneeid", "assignerid", "approvedby",
-    "createdby", "decidedby", "employeeid", "managerid", "ownerid",
-    "reportedby", "reporterid", "reviewerid", "submittedby", "usermodified",
+    "actorid", "archivedby", "authorid", "assigneeid", "assignerid", "approvedby",
+    "createdby", "decidedby", "decisionby", "employeeid", "managerid", "ownerid",
+    "recordedby", "reportedby", "reporterid", "requestedby", "resolvedby",
+    "reviewedby", "reviewerid", "submittedby", "usermodified",
 }
 
 

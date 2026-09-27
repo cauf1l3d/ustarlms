@@ -11,7 +11,17 @@ $tab = optional_param('tab', 'assigned', PARAM_ALPHA);
 if (!in_array($tab, ['checklists', 'notebook', 'assigned', 'outgoing'], true)) {
     $tab = 'assigned';
 }
+$pageno = max(0, min(100000, optional_param('pageno', 0, PARAM_INT)));
+$selectedid = max(0, optional_param('taskid', 0, PARAM_INT));
 $notice = '';
+$parseDueDate = static function(string $duedate): int {
+    if ($duedate === '') { return 0; }
+    if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $duedate, $parts)
+            || !checkdate((int)$parts[2], (int)$parts[3], (int)$parts[1])) {
+        throw new invalid_parameter_exception('Укажите корректную дату срока.');
+    }
+    return make_timestamp((int)$parts[1], (int)$parts[2], (int)$parts[3], 23, 59, 59);
+};
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
@@ -42,36 +52,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ['tab' => 'checklists', 'id' => $checklistid, 'saved' => 1]));
         }
         if ($action === 'note') {
-            \local_ustar\learning_tasks::create_note(
-                (int)$USER->id, required_param('title', PARAM_TEXT), optional_param('description', '', PARAM_TEXT)
+            $note = \local_ustar\learning_tasks::create_note(
+                (int)$USER->id, required_param('title', PARAM_TEXT), optional_param('description', '', PARAM_TEXT),
+                \local_ustar\task_files::uploaded()
             );
-            redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'notebook', 'saved' => 1]));
+            redirect(new moodle_url('/local/ustar/tasks.php',
+                ['tab' => 'notebook', 'taskid' => $note['id'], 'saved' => 1]));
         }
         if ($action === 'assign') {
-            $duedate = optional_param('duedate', '', PARAM_RAW_TRIMMED);
-            $dueat = 0;
-            if ($duedate !== '') {
-                if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $duedate, $parts)
-                        || !checkdate((int)$parts[2], (int)$parts[3], (int)$parts[1])) {
-                    throw new invalid_parameter_exception('Укажите корректную дату срока.');
-                }
-                $dueat = make_timestamp((int)$parts[1], (int)$parts[2], (int)$parts[3], 23, 59, 59);
-            }
-            \local_ustar\learning_tasks::assign((int)$USER->id, required_param('assigneeid', PARAM_INT), [
+            $dueat = $parseDueDate(optional_param('duedate', '', PARAM_RAW_TRIMMED));
+            $task = \local_ustar\learning_tasks::assign((int)$USER->id, required_param('assigneeid', PARAM_INT), [
                 'title' => required_param('title', PARAM_TEXT),
                 'description' => optional_param('description', '', PARAM_TEXT),
                 'requirereview' => optional_param('requirereview', 0, PARAM_BOOL),
                 'relatedtype' => optional_param('relatedtype', '', PARAM_ALPHANUMEXT),
                 'relatedid' => optional_param('relatedid', 0, PARAM_INT),
                 'dueat' => $dueat,
-            ]);
-            redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'outgoing', 'assigned' => 1]));
+            ], \local_ustar\task_files::uploaded());
+            redirect(new moodle_url('/local/ustar/tasks.php',
+                ['tab' => 'outgoing', 'taskid' => $task['id'], 'assigned' => 1]));
         }
         if ($action === 'editnote') {
             \local_ustar\learning_tasks::update_note(required_param('id', PARAM_INT), (int)$USER->id,
                 required_param('version', PARAM_INT), required_param('title', PARAM_TEXT),
-                optional_param('description', '', PARAM_TEXT));
-            redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'notebook', 'saved' => 1]));
+                optional_param('description', '', PARAM_TEXT), \local_ustar\task_files::uploaded());
+            redirect(new moodle_url('/local/ustar/tasks.php',
+                ['tab' => 'notebook', 'taskid' => required_param('id', PARAM_INT), 'saved' => 1]));
+        }
+        if ($action === 'revisetask') {
+            $task = \local_ustar\learning_tasks::revise(required_param('id', PARAM_INT),
+                (int)$USER->id, required_param('version', PARAM_INT),
+                required_param('assigneeid', PARAM_INT),
+                $parseDueDate(optional_param('duedate', '', PARAM_RAW_TRIMMED)));
+            redirect(new moodle_url('/local/ustar/tasks.php',
+                ['tab' => 'outgoing', 'taskid' => $task['id'], 'changed' => 1]));
         }
         if ($action === 'deletenote') {
             if (!required_param('confirmdelete', PARAM_BOOL)) {
@@ -82,34 +96,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => 'notebook', 'deleted' => 1]));
         }
         if ($action === 'transition') {
-            \local_ustar\learning_tasks::transition(
+            $task = \local_ustar\learning_tasks::transition(
                 required_param('id', PARAM_INT), (int)$USER->id, required_param('taskaction', PARAM_ALPHANUMEXT),
-                required_param('version', PARAM_INT), optional_param('comment', '', PARAM_TEXT)
+                required_param('version', PARAM_INT), optional_param('comment', '', PARAM_TEXT),
+                \local_ustar\task_files::uploaded()
             );
-            redirect(new moodle_url('/local/ustar/tasks.php', ['tab' => $tab, 'changed' => 1]));
+            redirect(new moodle_url('/local/ustar/tasks.php',
+                ['tab' => $tab, 'taskid' => $task['id'], 'changed' => 1]));
         }
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
     }
 }
 
-$assigned = $tab === 'assigned' ? \local_ustar\learning_tasks::assigned_to((int)$USER->id) : [];
-$notes = $tab === 'notebook' ? \local_ustar\learning_tasks::notes_for_owner((int)$USER->id) : [];
-$outgoing = $tab === 'outgoing' ? \local_ustar\learning_tasks::assigned_by((int)$USER->id) : [];
-$candidates = [];
-$canhr = $canhrworkspace;
-if ($tab === 'outgoing') {
-    $scoped = \local_ustar\organization_model::manager_scope((int)$USER->id);
-    if (!empty($scoped['allowed'])) {
-        $candidates = $scoped['employees'] ?? [];
-    }
-}
-if ($tab === 'outgoing' && $canhr) {
-    $candidates = [];
-    foreach ($DB->get_records_select('user', 'id > 1 AND deleted = 0 AND suspended = 0', [], 'lastname ASC, firstname ASC', 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $user) {
-        if ((int)$user->id !== (int)$USER->id && \local_ustar\learning_tasks::can_assign((int)$USER->id, (int)$user->id)) {
-            $candidates[] = ['id' => (int)$user->id, 'fullname' => fullname($user), 'position' => ''];
-        }
+$assigned = $tab === 'assigned' ? \local_ustar\learning_tasks::assigned_to((int)$USER->id, $pageno) : [];
+$notes = $tab === 'notebook' ? \local_ustar\learning_tasks::notes_for_owner((int)$USER->id, $pageno) : [];
+$outgoing = $tab === 'outgoing' ? \local_ustar\learning_tasks::assigned_by((int)$USER->id, $pageno) : [];
+$count = \local_ustar\learning_tasks::count_for((int)$USER->id, $tab);
+$lookup = $tab === 'outgoing' ? optional_param('lookup', '', PARAM_TEXT) : '';
+$candidates = $tab === 'outgoing'
+    ? \local_ustar\learning_tasks::candidates((int)$USER->id, $lookup) : [];
+$selected = null;
+if ($selectedid && $tab !== 'checklists') {
+    try {
+        $candidate = \local_ustar\learning_tasks::view($selectedid, (int)$USER->id);
+        $belongs = ($tab === 'notebook' && $candidate['private'])
+            || ($tab === 'assigned' && !$candidate['private'] && $candidate['assigneeid'] === (int)$USER->id)
+            || ($tab === 'outgoing' && !$candidate['private'] && $candidate['assignerid'] === (int)$USER->id);
+        if ($belongs) { $selected = $candidate; }
+    } catch (\Throwable $e) {
+        // An old bookmark or an object outside this actor's scope opens the list.
     }
 }
 
@@ -119,6 +135,7 @@ $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Задачи | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
+$attachmentlimit = display_size(\local_ustar\task_files::max_file_bytes());
 echo $OUTPUT->header();
 echo html_writer::start_div('u-tasks');
 echo html_writer::tag('header', html_writer::tag('h1', 'Задачи') .
@@ -146,7 +163,7 @@ foreach ($tabs as $key => $label) {
 }
 echo html_writer::end_div();
 
-$taskform = static function(array $task, array $actions) use ($tab): void {
+$taskform = static function(array $task, array $actions) use ($tab, $pageno, $attachmentlimit): void {
     echo html_writer::start_tag('article', ['class' => 'u-stage6-card u-tasks__item']);
     echo html_writer::tag('h3', s((string)$task['title']));
     if ($task['description'] !== '') { echo $task['description']; }
@@ -157,8 +174,12 @@ $taskform = static function(array $task, array $actions) use ($tab): void {
     if (!empty($task['dueat'])) {
         echo html_writer::tag('p', 'Срок: ' . userdate((int)$task['dueat']));
     }
+    echo html_writer::link(new moodle_url('/local/ustar/tasks.php',
+        ['tab' => $tab, 'pageno' => $pageno, 'taskid' => $task['id']]),
+        'Открыть карточку и файлы', ['class' => 'u-tasks__open']);
     foreach ($actions as $action => $label) {
-        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-tasks__action']);
+        echo html_writer::start_tag('form', ['method' => 'post',
+            'enctype' => $action === 'submit' ? 'multipart/form-data' : null, 'class' => 'u-tasks__action']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'transition']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => (int)$task['id']]);
@@ -174,16 +195,13 @@ $taskform = static function(array $task, array $actions) use ($tab): void {
             echo html_writer::tag('label', 'Результат', ['for' => 'result-' . (int)$task['id']]);
             echo html_writer::tag('textarea', '', ['name' => 'comment', 'id' => 'result-' . (int)$task['id'],
                 'rows' => 3, 'class' => 'form-control']);
+            echo html_writer::tag('label', 'Файлы результата (до 10, каждый до ' . $attachmentlimit . ')',
+                ['for' => 'result-files-' . (int)$task['id']]);
+            echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'attachments[]', 'multiple' => 'multiple',
+                'id' => 'result-files-' . (int)$task['id']]);
         }
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => $label, 'class' => 'u-btn']);
         echo html_writer::end_tag('form');
-    }
-    if (empty($task['private'])) {
-        global $USER;
-        foreach (\local_ustar\learning_tasks::events((int)$task['id'], (int)$USER->id) as $event) {
-            if ($event['comment'] === '') { continue; }
-            echo html_writer::tag('p', s(userdate($event['time']) . ': ' . $event['comment']));
-        }
     }
     echo html_writer::end_tag('article');
 };
@@ -206,7 +224,10 @@ if ($tab === 'checklists') {
 if ($tab === 'notebook') {
     echo html_writer::tag('p', 'Заметки видны только вам: их текст не попадает в поиск, уведомления, аналитику или экран руководителя.',
         ['class' => 'u-tasks__hint']);
-    echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-stage6-card u-tasks__editor']);
+    echo html_writer::start_tag('details', ['class' => 'u-stage6-card u-tasks__create']);
+    echo html_writer::tag('summary', 'Новая заметка');
+    echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data',
+        'class' => 'u-tasks__editor']);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'note']);
     echo html_writer::tag('h2', 'Новая заметка');
@@ -216,13 +237,20 @@ if ($tab === 'notebook') {
     echo html_writer::tag('label', 'Текст', ['for' => 'task-note-body']);
     echo html_writer::tag('textarea', s($formvalue('note', 0, 'description')),
         ['name' => 'description', 'id' => 'task-note-body', 'rows' => 4, 'class' => 'form-control']);
+    echo html_writer::tag('label', 'Вложения (до 10, каждый до ' . $attachmentlimit . ')',
+        ['for' => 'task-note-files']);
+    echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'attachments[]',
+        'id' => 'task-note-files', 'multiple' => 'multiple']);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Добавить в блокнот', 'class' => 'u-btn u-btn--primary']);
     echo html_writer::end_tag('form');
+    echo html_writer::end_tag('details');
     foreach ($notes as $task) {
         $taskform($task, (string)$task['status'] === 'open' ? ['complete' => 'Отметить выполненной'] : []);
+        if ($selectedid !== (int)$task['id']) { continue; }
         echo html_writer::start_tag('details', ['class' => 'u-tasks__edit']);
         echo html_writer::tag('summary', 'Редактировать заметку');
-        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-tasks__editform']);
+        echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data',
+            'class' => 'u-tasks__editform']);
         foreach (['sesskey' => sesskey(), 'action' => 'editnote', 'id' => $task['id'], 'version' => $task['version']] as $name => $value) {
             if ($name === 'version') { $value = (int)$formvalue('editnote', $task['id'], 'version', (string)$value); }
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $name, 'value' => $value]);
@@ -233,6 +261,9 @@ if ($tab === 'notebook') {
         echo html_writer::tag('label', 'Текст', ['for' => 'note-body-' . $task['id']]);
         echo html_writer::tag('textarea', s($formvalue('editnote', $task['id'], 'description', $task['descriptionplain'])), ['name' => 'description',
             'id' => 'note-body-' . $task['id'], 'rows' => 4, 'class' => 'form-control']);
+        echo html_writer::tag('label', 'Добавить файлы', ['for' => 'note-files-' . $task['id']]);
+        echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'attachments[]',
+            'id' => 'note-files-' . $task['id'], 'multiple' => 'multiple']);
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить', 'class' => 'u-btn u-btn--primary']);
         echo html_writer::end_tag('form');
         echo html_writer::end_tag('details');
@@ -256,8 +287,27 @@ if ($tab === 'assigned') {
     }
 }
 if ($tab === 'outgoing') {
-    if ($candidates) {
-        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-stage6-card u-tasks__editor']);
+    if (\local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::COMPANY_READ)
+            || \local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::TEAM_READ)) {
+        echo html_writer::start_tag('details', ['class' => 'u-stage6-card u-tasks__create',
+            'open' => $lookup !== '' ? 'open' : null]);
+        echo html_writer::tag('summary', 'Поставить задачу сотруднику');
+        echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-tasks__lookup']);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'tab', 'value' => 'outgoing']);
+        if ($selectedid) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'taskid', 'value' => $selectedid]);
+        }
+        echo html_writer::tag('label', 'Найти сотрудника по имени или логину', ['for' => 'task-lookup']);
+        echo html_writer::empty_tag('input', ['type' => 'search', 'name' => 'lookup', 'value' => $lookup,
+            'id' => 'task-lookup', 'minlength' => 2, 'class' => 'form-control']);
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Найти', 'class' => 'u-btn']);
+        echo html_writer::end_tag('form');
+        if ($lookup !== '' && !$candidates) {
+            echo html_writer::tag('p', 'Сотрудники в доступной области не найдены.');
+        }
+        if ($candidates) {
+        echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data',
+            'class' => 'u-tasks__editor']);
         echo html_writer::tag('h2', 'Поставить задачу сотруднику');
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'assign']);
@@ -278,8 +328,14 @@ if ($tab === 'outgoing') {
         echo html_writer::empty_tag('input', ['type' => 'date', 'name' => 'duedate', 'id' => 'task-duedate',
             'value' => $formvalue('assign', 0, 'duedate'), 'class' => 'form-control']);
         echo html_writer::tag('label', html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'requirereview', 'value' => 1]) . ' Нужна проверка результата');
+        echo html_writer::tag('label', 'Вложения (до 10, каждый до ' . $attachmentlimit . ')',
+            ['for' => 'task-files']);
+        echo html_writer::empty_tag('input', ['type' => 'file', 'name' => 'attachments[]',
+            'id' => 'task-files', 'multiple' => 'multiple']);
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Назначить', 'class' => 'u-btn u-btn--primary']);
         echo html_writer::end_tag('form');
+        }
+        echo html_writer::end_tag('details');
     }
     foreach ($outgoing as $task) {
         $actions = [];
@@ -287,9 +343,63 @@ if ($tab === 'outgoing') {
         if (!in_array($task['status'], ['completed', 'cancelled'], true)) { $actions['cancel'] = 'Отменить'; }
         $taskform($task, $actions);
     }
-    if (!$outgoing && !$candidates) {
+    if (!$outgoing) {
         echo html_writer::tag('p', 'Пока нет ваших назначений.', ['class' => 'u-stage6-card u-tasks__empty']);
     }
+}
+if ($selected) {
+    echo html_writer::start_tag('section', ['class' => 'u-stage6-card u-tasks__detail',
+        'aria-label' => 'Карточка и файлы']);
+    echo html_writer::tag('h2', s($selected['title']));
+    if ($tab === 'outgoing' && in_array($selected['status'], ['assigned', 'in_progress'], true)) {
+        echo html_writer::start_tag('details', ['class' => 'u-tasks__edit']);
+        echo html_writer::tag('summary', 'Изменить срок или исполнителя');
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-tasks__editform']);
+        foreach (['sesskey' => sesskey(), 'action' => 'revisetask', 'id' => $selected['id'],
+                'version' => $selected['version']] as $name => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $name, 'value' => $value]);
+        }
+        echo html_writer::tag('label', 'Срок', ['for' => 'task-revise-date']);
+        echo html_writer::empty_tag('input', ['type' => 'date', 'id' => 'task-revise-date',
+            'name' => 'duedate', 'value' => $selected['dueat'] ? userdate($selected['dueat'], '%Y-%m-%d') : '',
+            'class' => 'form-control']);
+        echo html_writer::tag('label', 'Исполнитель', ['for' => 'task-revise-assignee']);
+        $assigneeoptions = [$selected['assigneeid'] => 'Текущий сотрудник'];
+        if ($selected['status'] === 'assigned') {
+            foreach ($candidates as $candidate) {
+                $assigneeoptions[(int)$candidate['id']] = $candidate['fullname'];
+            }
+        }
+        echo html_writer::select($assigneeoptions, 'assigneeid', $selected['assigneeid'], false,
+            ['id' => 'task-revise-assignee', 'class' => 'form-select']);
+        echo html_writer::tag('p', 'Для выбора другого сотрудника сначала найдите его в форме выше. Сменить исполнителя можно до начала работы.');
+        echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить изменения', 'class' => 'u-btn']);
+        echo html_writer::end_tag('form');
+        echo html_writer::end_tag('details');
+    }
+    $files = \local_ustar\task_files::list_for((int)$selected['id'], (int)$USER->id);
+    if ($files) {
+        echo html_writer::tag('h3', 'Вложения и результаты');
+        echo html_writer::start_tag('ul');
+        foreach ($files as $file) {
+            echo html_writer::tag('li', s($file['label'] . ': ') . html_writer::link($file['url'], $file['name']) .
+                ' · ' . display_size($file['size']));
+        }
+        echo html_writer::end_tag('ul');
+    }
+    if (!$selected['private']) {
+        echo html_writer::tag('h3', 'История');
+        foreach (\local_ustar\learning_tasks::events((int)$selected['id'], (int)$USER->id) as $event) {
+            if ($event['comment'] !== '') {
+                echo html_writer::tag('p', s(userdate($event['time']) . ': ' . $event['comment']));
+            }
+        }
+    }
+    echo html_writer::end_tag('section');
+}
+if ($count > 25) {
+    echo $OUTPUT->paging_bar($count, $pageno, 25,
+        new moodle_url('/local/ustar/tasks.php', ['tab' => $tab]));
 }
 echo html_writer::end_div();
 echo $OUTPUT->footer();

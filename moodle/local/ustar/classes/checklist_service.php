@@ -111,12 +111,25 @@ final class checklist_service {
                         $answers[(string)$answer->itemkey] = $answer;
                     }
                 }
+                if (!empty($today['legacy'])) {
+                    // No historical definition was pinned before the migration. Never
+                    // mislabel old answers with today's possibly edited item titles.
+                    $items = [];
+                    foreach ($answers as $key => $answer) {
+                        $items[] = ['id' => $key, 'fieldid' => $key,
+                            'title' => 'Исторический пункт ' . $key,
+                            'checked' => !empty($answer->checked), 'comment' => (string)$answer->comment];
+                    }
+                    $checklist['sections'] = $items
+                        ? [['title' => 'Сохранённые ответы', 'items' => $items]] : [];
+                    $answers = [];
+                }
                 foreach (($checklist['sections'] ?? []) as &$section) {
                     foreach (($section['items'] ?? []) as &$item) {
                         $item['fieldid'] = preg_replace('/[^a-zA-Z0-9_]/', '_', (string)$item['id']);
                         $answer = $answers[(string)$item['id']] ?? null;
-                        $item['checked'] = $answer && !empty($answer->checked);
-                        $item['comment'] = $answer ? (string)$answer->comment : '';
+                        $item['checked'] = $answer ? !empty($answer->checked) : !empty($item['checked']);
+                        $item['comment'] = $answer ? (string)$answer->comment : (string)($item['comment'] ?? '');
                     }
                     unset($item);
                 }

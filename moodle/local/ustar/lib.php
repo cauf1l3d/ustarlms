@@ -34,6 +34,36 @@ function local_ustar_pluginfile(
         return false;
     }
 
+    if (in_array($filearea, [\local_ustar\task_files::ATTACHMENT, \local_ustar\task_files::RESULT], true)) {
+        if (!$args || !\local_ustar\employment::is_active((int)$USER->id)) {
+            return false;
+        }
+        $taskid = (int)array_shift($args);
+        if ($taskid <= 0 || !$args) {
+            return false;
+        }
+        // The task itself is the ACL; HR/admin roles never bypass a private note.
+        try {
+            \local_ustar\learning_tasks::view($taskid, (int)$USER->id);
+        } catch (\Throwable $e) {
+            return false;
+        }
+        $filename = array_pop($args);
+        $filepath = '/' . ($args ? implode('/', $args) . '/' : '');
+        if ($filepath !== '/' && !preg_match('~^/v[1-9][0-9]*/$~', $filepath)) {
+            return false;
+        }
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $taskid, $filepath, $filename);
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none';");
+        send_stored_file($file, 0, 0, true, $options);
+        return true;
+    }
+
 
     if ($filearea === 'game_question_image') {
         global $DB;

@@ -38,14 +38,45 @@ final class position_application {
         }
 
         $publishedmatrix = [];
+        $publishedcanonical = true;
         if ($published) {
             $items = json_decode((string)$published->requirementsjson, true);
             if (is_array($items)) {
                 foreach ($items as $item) {
-                    if (($item['sourcekind'] ?? '') === 'ustar_skill') {
-                        $publishedmatrix[(string)$item['sourceid']] = (int)($item['targetlevel'] ?? 0);
+                    if (($item['sourcekind'] ?? '') === 'ustar_skill'
+                            && ($item['type'] ?? '') === 'practice'
+                            && ($item['outcome'] ?? '') === 'passed' && !empty($item['required'])) {
+                        $publishedmatrix[(string)($item['sourceid'] ?? '')] = (int)($item['targetlevel'] ?? 0);
+                    } else {
+                        $publishedcanonical = false;
                     }
                 }
+                $publishedcanonical = $publishedcanonical && count($items) === count($publishedmatrix);
+            } else {
+                $publishedcanonical = false;
+            }
+        }
+        $changes = [];
+        foreach ($required as $skillid => $level) {
+            $previous = $publishedmatrix[$skillid] ?? 0;
+            if (!$published || $previous !== (int)$level) {
+                $changes[] = [
+                    'name' => (string)($skillmap[$skillid]['name'] ?? $skillid),
+                    'change' => $previous ? 'Уровень ' . $previous . ' → ' . (int)$level
+                        : 'Новый навык · уровень ' . (int)$level,
+                ];
+            }
+        }
+        if ($published) {
+            foreach ($publishedmatrix as $skillid => $level) {
+                if (!array_key_exists($skillid, $required)) {
+                    $changes[] = ['name' => (string)($skillmap[$skillid]['name'] ?? $skillid),
+                        'change' => 'Больше не обязателен'];
+                }
+            }
+            if (!$publishedcanonical) {
+                $changes[] = ['name' => 'Правила стандарта',
+                    'change' => 'Обновить состав опубликованных требований'];
             }
         }
         return [
@@ -54,8 +85,11 @@ final class position_application {
             'missing' => $missing,
             'hasmissing' => !empty($missing),
             'hasrequirements' => !empty($required),
-            'haspendingchanges' => $published && !hash_equals(standard_model::matrix_hash($publishedmatrix),
-                standard_model::matrix_hash($required)),
+            'changes' => $changes,
+            'haschanges' => !empty($changes),
+            'haspendingchanges' => $published && (!$publishedcanonical
+                || !hash_equals(standard_model::matrix_hash($publishedmatrix),
+                    standard_model::matrix_hash($required))),
         ];
     }
 }

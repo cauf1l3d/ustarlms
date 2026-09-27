@@ -387,6 +387,11 @@
                 </div>
                 {{/hasmissing}}
                 {{#haspendingchanges}}<p class="u-position-review-alert">Текущие требования отличаются от опубликованной версии. Для применения изменений потребуется новая публикация.</p>{{/haspendingchanges}}
+                {{#haschanges}}
+                <h4>Изменения требований для сотрудников с этой должностью</h4>
+                <ul class="u-position-change-list">{{#changes}}<li><strong>{{name}}</strong><span>{{change}}</span></li>{{/changes}}</ul>
+                {{/haschanges}}
+                {{^haschanges}}{{#hasrequirements}}<p>Требования совпадают с действующей версией.</p>{{/hasrequirements}}{{/haschanges}}
                 {{/application}}
                 <div class="u-panel u-position-standard" aria-live="polite">
                     {{#standardpublished}}

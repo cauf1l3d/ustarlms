@@ -31,6 +31,10 @@ final class feed_access {
     }
 
     public static function department_id(int $userid): string {
+        if (view_as::active()) {
+            $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
+            return (string)($positions[view_as::position_id()]['department'] ?? '');
+        }
         $identity = organization_identity::resolve($userid);
         return $identity['conflicts'] ? '' : (string)$identity['departmentid'];
     }
@@ -40,8 +44,7 @@ final class feed_access {
         if (!has_capability('local/ustar:feedpublishdepartment', \context_system::instance(), $userid)) {
             return [];
         }
-        $scope = organization_model::manager_scope($userid);
-        return $scope['allowed'] ? array_values(array_filter($scope['departmentids'])) : [];
+        return organization_model::manager_department_ids($userid);
     }
 
     public static function assert_publisher(int $userid, string $type, string $publisherid,
@@ -79,9 +82,8 @@ final class feed_access {
             $ids = [self::department_id($userid)];
             // A current manager can read across their current reporting scope;
             // publishing from that scope still requires its separate capability.
-            if (organization_model::is_manager($userid)) {
-                $scope = organization_model::manager_scope($userid);
-                $ids = array_merge($ids, $scope['departmentids'] ?? []);
+            if (!view_as::active()) {
+                $ids = array_merge($ids, organization_model::manager_department_ids($userid));
             }
             $departments[$userid] = array_values(array_unique(array_filter($ids)));
         }

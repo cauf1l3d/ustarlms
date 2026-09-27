@@ -116,27 +116,29 @@ final class feed_service {
         feed_access::require_actor($userid);
         feed_access::readable($postid, $userid);
         $conditions = ['postid' => $postid, 'userid' => $userid, 'kind' => 'like'];
-        if ($liked) {
-            if (!$DB->record_exists('local_ustar_feed_reactions', $conditions)) {
-                // The unique DB index is authoritative under concurrent requests.
-                try {
-                    $DB->insert_record('local_ustar_feed_reactions', (object)($conditions + ['timecreated' => time()]));
-                } catch (\dml_write_exception $e) {
-                    if (!$DB->record_exists('local_ustar_feed_reactions', $conditions)) {
-                        throw $e;
-                    }
-                }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('feed-like:' . $postid . ':' . $userid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку реакции.');
+        }
+        try {
+            if ($liked && !$DB->record_exists('local_ustar_feed_reactions', $conditions)) {
+                $DB->insert_record('local_ustar_feed_reactions',
+                    (object)($conditions + ['timecreated' => time()]));
+            } else if (!$liked) {
+                $DB->delete_records('local_ustar_feed_reactions', $conditions);
             }
-        } else {
-            $DB->delete_records('local_ustar_feed_reactions', $conditions);
+        } finally {
+            $lock->release();
         }
     }
 
     public static function comment(int $postid, int $userid, string $body, int $parentid = 0): int {
         global $DB;
         feed_access::require_actor($userid);
-        feed_access::readable($postid, $userid);
+        $post = feed_access::readable($postid, $userid);
         $body = self::body($body);
+        $parent = null;
         if ($parentid) {
             $parent = $DB->get_record('local_ustar_feed_comments', ['id' => $parentid,
                 'postid' => $postid, 'status' => 'visible'], '*', MUST_EXIST);
@@ -145,11 +147,30 @@ final class feed_service {
             }
         }
         $now = time();
-        return (int)$DB->insert_record('local_ustar_feed_comments', (object)[
+        $transaction = $DB->start_delegated_transaction();
+        $commentid = (int)$DB->insert_record('local_ustar_feed_comments', (object)[
             'postid' => $postid, 'parentid' => $parentid ?: null,
             'actoruserid' => $userid, 'body' => $body, 'status' => 'visible',
             'version' => 1, 'timecreated' => $now, 'timemodified' => $now,
         ]);
+        $recipient = $parent ? (int)$parent->actoruserid : (int)$post->actoruserid;
+        if ($recipient !== $userid && accounts::participates($recipient)) {
+            // Recipient ACL is checked at creation AND when the link is opened.
+            try {
+                feed_access::readable($postid, $recipient);
+                $eventtype = $parent ? 'feed_reply' : 'feed_comment';
+                workflow_notifications::enqueue($recipient, $eventtype,
+                    $parent ? 'Ответ на ваш комментарий' : 'Комментарий к публикации',
+                    'Откройте обсуждение в ленте Академии.',
+                    (new \moodle_url('/local/ustar/feed.php', ['postid' => $postid]))->out(false),
+                    $eventtype . ':' . $postid . ':' . $recipient . ':' . intdiv($now, 600));
+            } catch (\required_capability_exception $e) {
+                // An author transferred out of the audience must not learn that
+                // the private discussion is still active.
+            }
+        }
+        $transaction->allow_commit();
+        return $commentid;
     }
 
     public static function revise_comment(int $commentid, int $postid, int $userid,

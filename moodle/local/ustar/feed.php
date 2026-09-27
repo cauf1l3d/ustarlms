@@ -68,8 +68,8 @@ $beforeid = max(0, optional_param('beforeid', 0, PARAM_INT));
 $selectedid = max(0, optional_param('postid', 0, PARAM_INT));
 $selected = null;
 if ($selectedid) {
-    $draft = $DB->get_record('local_ustar_feed_posts', ['id' => $selectedid, 'status' => 'draft',
-        'actoruserid' => $actorid]);
+    $draft = \local_ustar\view_as::active() ? null : $DB->get_record('local_ustar_feed_posts',
+        ['id' => $selectedid, 'status' => 'draft', 'actoruserid' => $actorid]);
     $selected = $draft ?: \local_ustar\feed_access::readable($selectedid, $actorid);
 }
 $moderation = optional_param('moderation', 0, PARAM_BOOL) &&
@@ -192,11 +192,34 @@ if ($canwrite) {
 
 echo html_writer::start_tag('nav', ['class' => 'u-feed__filters', 'aria-label' => 'Фильтр ленты']);
 foreach (['all' => 'Все доступные', 'academy' => 'Академия', 'department' => 'Моё подразделение',
-        'mine' => 'Мои публикации'] as $key => $label) {
+    'mine' => 'Мои публикации'] as $key => $label) {
+    if ($key === 'mine' && \local_ustar\view_as::active()) { continue; }
     echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['filter' => $key]), $label,
         ['class' => $filter === $key ? 'is-active' : '', 'aria-current' => $filter === $key ? 'page' : null]);
 }
 echo html_writer::end_tag('nav');
+if ($filter === 'mine') {
+    $draftpage = max(0, min(10000, optional_param('draftpage', 0, PARAM_INT)));
+    $drafts = array_values($DB->get_records('local_ustar_feed_posts',
+        ['actoruserid' => $actorid, 'status' => 'draft'], 'id DESC',
+        'id,body,timemodified', $draftpage * 20, 21));
+    if ($drafts) {
+        echo html_writer::start_tag('section', ['class' => 'u-feed__drafts']);
+        echo html_writer::tag('h2', 'Мои черновики');
+        foreach (array_slice($drafts, 0, 20) as $draft) {
+            echo html_writer::link(new moodle_url('/local/ustar/feed.php',
+                ['postid' => (int)$draft->id, 'filter' => 'mine']),
+                s(\core_text::substr((string)$draft->body, 0, 110)) . ' · ' .
+                userdate((int)$draft->timemodified), ['class' => 'u-feed__draft']);
+        }
+        if (count($drafts) > 20) {
+            echo html_writer::link(new moodle_url('/local/ustar/feed.php',
+                ['filter' => 'mine', 'draftpage' => $draftpage + 1]), 'Ещё черновики',
+                ['class' => 'u-feed__source']);
+        }
+        echo html_writer::end_tag('section');
+    }
+}
 foreach ($posts as $post) {
     $postid = (int)$post->id;
     $author = $users[(int)$post->actoruserid] ?? null;
@@ -215,6 +238,11 @@ foreach ($posts as $post) {
     echo html_writer::tag('div', nl2br(s((string)$post->body)), ['class' => 'u-feed__body']);
     if ($post->status === 'published' && $selected && (int)$selected->id === $postid) {
         foreach (\local_ustar\feed_files::list_for($postid, $actorid) as $attachment) {
+            if ($attachment['image']) {
+                echo html_writer::empty_tag('img', ['src' => $attachment['url'],
+                    'alt' => $attachment['name'], 'loading' => 'lazy', 'class' => 'u-feed__image']);
+                continue;
+            }
             echo html_writer::link($attachment['url'], s($attachment['name']),
                 ['class' => 'u-feed__attachment', 'download' => $attachment['name']]);
         }

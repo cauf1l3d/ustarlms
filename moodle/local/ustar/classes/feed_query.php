@@ -11,6 +11,9 @@ final class feed_query {
         if (!in_array($filter, ['all', 'academy', 'department', 'mine'], true)) {
             throw new \invalid_parameter_exception('Неизвестный фильтр ленты.');
         }
+        if ($filter === 'mine' && view_as::active()) {
+            throw new \invalid_parameter_exception('Личные публикации недоступны в режиме просмотра.');
+        }
         $limit = max(1, min(30, $limit));
         $params = ['published' => 'published'];
         $where = 'p.status = :published AND ' . feed_access::audience_sql($userid, 'p', $params);

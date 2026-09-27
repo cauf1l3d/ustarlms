@@ -33,9 +33,11 @@ final class feed_files {
         $out = [];
         foreach (get_file_storage()->get_area_files($contextid, 'local_ustar', self::AREA,
                 $postid, 'timecreated ASC, id ASC', false) as $file) {
+            $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true);
             $out[] = ['name' => $file->get_filename(), 'size' => (int)$file->get_filesize(),
+                'image' => $image,
                 'url' => \moodle_url::make_pluginfile_url($contextid, 'local_ustar', self::AREA,
-                    $postid, $file->get_filepath(), $file->get_filename(), true)->out(false)];
+                    $postid, $file->get_filepath(), $file->get_filename(), !$image)->out(false)];
         }
         return $out;
     }

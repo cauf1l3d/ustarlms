@@ -122,6 +122,21 @@ final class organization_model {
         return !empty(self::manager_places($userid,$now));
     }
 
+    /** Lightweight current department scope for audience ACL, without loading employees. */
+    public static function manager_department_ids(int $userid): array {
+        $places = self::manager_places($userid);
+        if (!$places) return [];
+        $ids = array_map(static fn($place) => (int)$place->id, $places);
+        $departments = [];
+        foreach (array_merge($places, array_map(static fn($id) => self::staff_place((int)$id),
+                self::descendant_place_ids($ids))) as $place) {
+            if ($place && (string)$place->departmentid !== '') {
+                $departments[(string)$place->departmentid] = (string)$place->departmentid;
+            }
+        }
+        return array_values($departments);
+    }
+
     private static function descendant_place_ids(array $rootids): array {
         global $DB;
         if (!$rootids || !self::available()) return [];

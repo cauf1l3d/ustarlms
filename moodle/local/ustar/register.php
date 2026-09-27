@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $userid = \local_ustar\registration_service::register($values + [
-                'password' => required_param('password', PARAM_RAW),
+                'password' => optional_param('password', '', PARAM_RAW),
             ]);
             complete_user_login($DB->get_record('user', ['id' => $userid], '*', MUST_EXIST));
             redirect(new moodle_url('/local/ustar/profile.php'),

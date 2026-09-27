@@ -39,6 +39,20 @@ final class career_grades {
             'settingsurl'=>(new \moodle_url('/local/ustar/grade_ladders.php',
                 ['positionid' => $positionid]))->out(false)];
     }
+    public static function employee_view(array $position, int $userid): array {
+        $view = self::view($position);
+        $current = grade_promotion::current($userid);
+        if (empty($current['enabled'])) { return $view; }
+        $view['hasgrade'] = true;
+        $view['gradeid'] = (string)$current['grade'];
+        $view['gradename'] = (string)$current['label'];
+        foreach ($view['grades'] as &$grade) {
+            $grade['current'] = !empty($current['recorded'])
+                && (string)$grade['id'] === (string)$current['grade'];
+        }
+        unset($grade);
+        return $view;
+    }
     public static function fingerprint(array $position): string {
         return hash('sha256', json_encode([$position, get_config('local_ustar', 'careergrade_'.$position['id'])]));
     }

@@ -205,18 +205,8 @@ if ($submitted) {
     }
 }
 
-$stage6grade = \local_ustar\grade_promotion::current((int)$USER->id);
 $stage6eligibility = \local_ustar\grade_promotion::eligibility((int)$USER->id);
 $careergradeview = $profile['careergrades'];
-if (!empty($stage6grade['enabled'])) {
-    $careergradeview['hasgrade'] = true;
-    $careergradeview['gradeid'] = (string)$stage6grade['grade'];
-    $careergradeview['gradename'] = (string)$stage6grade['label'];
-    foreach ($careergradeview['grades'] as &$grade) {
-        $grade['current'] = (string)$grade['id'] === (string)$stage6grade['grade'];
-    }
-    unset($grade);
-}
 $careergradeview['gradesurl'] = (new moodle_url('/local/ustar/grades.php'))->out(false);
 $careergradeview['gradeeligible'] = !empty($stage6eligibility['eligible']);
 $careergradeview['nextgradename'] = (string)($stage6eligibility['nextlabel'] ?? '');

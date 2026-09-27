@@ -4443,6 +4443,11 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
                 $dbman->add_field($table, $field);
             }
         }
+        $table = new xmldb_table('local_ustar_employee_grades');
+        $revision = new xmldb_field('revision', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1');
+        if (!$dbman->field_exists($table, $revision)) {
+            $dbman->add_field($table, $revision);
+        }
         // The bundled consultant ladder is a source snapshot. Only explicit
         // stable-ID config links are migrated; name-based legacy guesses are
         // reported separately and never written as authoritative bindings.

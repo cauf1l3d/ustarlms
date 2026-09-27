@@ -39,6 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'view' => 'assignments', 'q' => optional_param('q', '', PARAM_RAW_TRIMMED), 'assigned' => 1,
             ]));
         }
+        if ($action === 'correct') {
+            require_capability('local/ustar:hrmanage', $context);
+            \local_ustar\grade_promotion::correct(required_param('userid', PARAM_INT),
+                required_param('gradekey', PARAM_ALPHANUMEXT), required_param('revision', PARAM_INT),
+                (int)$USER->id, required_param('reason', PARAM_TEXT));
+            redirect(new moodle_url('/local/ustar/grades.php', [
+                'view' => 'assignments', 'q' => optional_param('q', '', PARAM_RAW_TRIMMED), 'corrected' => 1,
+            ]));
+        }
     } catch (\Throwable $e) {
         $notice = $e->getMessage();
     }
@@ -92,6 +101,7 @@ if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
 if (optional_param('requested', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Заявка отправлена действующему руководителю.', 'notifysuccess'); }
 if (optional_param('decided', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Решение по заявке сохранено.', 'notifysuccess'); }
 if (optional_param('assigned', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Начальная ступень назначена.', 'notifysuccess'); }
+if (optional_param('corrected', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Коррекция грейда сохранена в истории.', 'notifysuccess'); }
 
 echo html_writer::start_div('u-stage6-tabs');
 echo html_writer::tag('a', 'Мой грейд', ['href' => (new moodle_url('/local/ustar/grades.php'))->out(false), 'class' => $view === 'mine' ? 'is-active' : '']);
@@ -169,7 +179,7 @@ if ($view === 'assignments') {
         echo html_writer::tag('p', empty($grade['enabled']) ? 'Лестница для должности не настроена'
             : 'Текущая ступень: ' . s((string)$grade['label']));
         $previous = $DB->get_record('local_ustar_employee_grades', ['userid' => (int)$candidate->id],
-            'id,positionid', IGNORE_MISSING);
+            'id,positionid,revision,gradekey,ladderversionid', IGNORE_MISSING);
         if ($previous && empty($grade['recorded'])) {
             echo html_writer::tag('p',
                 'Есть грейд прежней должности. Перед новым назначением требуется решение о переносе.',
@@ -187,6 +197,45 @@ if ($view === 'assignments') {
             echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Назначить начальную ступень',
                 'class' => 'u-btn u-btn--primary']);
             echo html_writer::end_tag('form');
+        }
+        if (!empty($grade['enabled']) && $previous) {
+            echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-grades__assignment']);
+            foreach (['sesskey' => sesskey(), 'action' => 'correct', 'userid' => (int)$candidate->id,
+                    'revision' => (int)$previous->revision, 'q' => $query] as $field => $value) {
+                echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+            }
+            $options = [];
+            foreach (\local_ustar\career_grades::catalogue_for_position((string)$grade['positionid']) as $step) {
+                $options[(string)$step['id']] = (string)$step['name'];
+            }
+            echo html_writer::tag('label', 'Подтверждённая ступень', ['for' => 'grade-correct-' . (int)$candidate->id]);
+            echo html_writer::select($options, 'gradekey', $previous->gradekey, false,
+                ['id' => 'grade-correct-' . (int)$candidate->id, 'class' => 'form-select']);
+            echo html_writer::tag('label', 'Основание переноса или коррекции',
+                ['for' => 'grade-correct-reason-' . (int)$candidate->id]);
+            echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'reason',
+                'id' => 'grade-correct-reason-' . (int)$candidate->id,
+                'required' => 'required', 'class' => 'form-control']);
+            echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Сохранить решение HR',
+                'class' => 'u-btn']);
+            echo html_writer::end_tag('form');
+        }
+        if ($DB->get_manager()->table_exists(new xmldb_table('local_ustar_hr_actions'))) {
+            $events = $DB->get_records_select('local_ustar_hr_actions',
+                'targetuserid = :userid AND action IN (:initial, :corrected)',
+                ['userid' => (int)$candidate->id, 'initial' => 'grade_initial_assigned',
+                    'corrected' => 'grade_corrected'], 'timecreated DESC, id DESC', '*', 0, 5);
+            if ($events) {
+                echo html_writer::tag('h3', 'История решений');
+                echo html_writer::start_tag('ul');
+                foreach ($events as $event) {
+                    $details = json_decode((string)$event->detailsjson, true) ?: [];
+                    echo html_writer::tag('li', s(userdate((int)$event->timecreated)) . ' · '
+                        . ($event->action === 'grade_corrected' ? 'Коррекция' : 'Начальное назначение')
+                        . ' · ' . s((string)($details['reason'] ?? '')));
+                }
+                echo html_writer::end_tag('ul');
+            }
         }
         echo html_writer::end_div();
     }

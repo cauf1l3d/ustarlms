@@ -260,11 +260,21 @@ final class grade_promotion {
             throw new \moodle_exception('Заявка сейчас обрабатывается. Повторите попытку.');
         }
         try {
+            $targetid = (int)$DB->get_field('local_ustar_grade_requests', 'userid',
+                ['id' => $requestid], MUST_EXIST);
+            $statelock = \core\lock\lock_config::get_lock_factory('local_ustar')
+                ->get_lock('grade-state:' . $targetid, 10);
+            if (!$statelock) { throw new \moodle_exception('Грейд сотрудника сейчас изменяется.'); }
+            try {
             $tx = $DB->start_delegated_transaction();
+            try {
             $request = $DB->get_record_sql(
                 'SELECT * FROM {local_ustar_grade_requests} WHERE id = :id FOR UPDATE',
                 ['id' => $requestid], MUST_EXIST
             );
+            if ((int)$request->userid !== $targetid) {
+                throw new \moodle_exception('Сотрудник заявки изменился. Обновите страницу.');
+            }
             if ((string)$request->status !== self::STATUS_PENDING) {
                 throw new \moodle_exception('По этой заявке уже принято решение.');
             }
@@ -329,6 +339,8 @@ final class grade_promotion {
             );
             $tx->allow_commit();
             return $request;
+            } catch (\Throwable $e) { $tx->rollback($e); }
+            } finally { $statelock->release(); }
         } finally {
             $lock->release();
         }
@@ -357,7 +369,7 @@ final class grade_promotion {
             throw new \invalid_parameter_exception('Выберите действующего сотрудника.');
         }
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
-            ->get_lock('grade-initial:' . $userid, 10);
+            ->get_lock('grade-state:' . $userid, 10);
         if (!$lock) {
             throw new \moodle_exception('Назначение грейда уже выполняется. Повторите попытку.');
         }
@@ -385,6 +397,7 @@ final class grade_promotion {
                 $id = (int)$DB->insert_record('local_ustar_employee_grades', (object)[
                     'userid' => $userid, 'gradekey' => self::first_grade($positionid), 'positionid' => $positionid,
                     'ladderversionid' => (int)(grade_ladders::binding($positionid)->ladderversionid ?? 0) ?: null,
+                    'revision' => 1,
                     'source' => 'initial_hr', 'requestid' => null,
                     'timecreated' => $now, 'timemodified' => $now, 'usermodified' => $actorid,
                 ]);
@@ -406,6 +419,67 @@ final class grade_promotion {
         global $DB;
         if (!self::available()) { return []; }
         return array_values($DB->get_records('local_ustar_grade_requests', ['userid' => $userid], 'timecreated DESC'));
+    }
+
+    /** An HR correction or transfer is an explicit audited decision, never a promotion request. */
+    public static function correct(int $userid, string $gradekey, int $expectedrevision,
+            int $actorid, string $reason): \stdClass {
+        global $DB, $USER;
+        self::assert_available();
+        if ($actorid <= 0 || (int)$USER->id !== $actorid
+                || !has_capability('local/ustar:hrmanage', \context_system::instance(), $actorid)) {
+            throw new \required_capability_exception(
+                \context_system::instance(), 'local/ustar:hrmanage', 'nopermissions', '');
+        }
+        view_as::assert_writable();
+        $reason = trim(clean_param($reason, PARAM_TEXT));
+        if ($reason === '') { throw new \invalid_parameter_exception('Укажите основание коррекции.'); }
+        if (!accounts::is_business_account($userid) || !employment::is_active($userid)) {
+            throw new \invalid_parameter_exception('Выберите действующего сотрудника.');
+        }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('grade-state:' . $userid, 10);
+        if (!$lock) { throw new \moodle_exception('Грейд сейчас изменяется. Повторите попытку.'); }
+        try {
+            $tx = $DB->start_delegated_transaction();
+            try {
+                $positionid = people::position_id($userid);
+                if (!self::position_has_ladder($positionid)
+                        || !in_array($gradekey,
+                            array_column(career_grades::catalogue_for_position($positionid), 'id'), true)) {
+                    throw new \invalid_parameter_exception('Выберите ступень действующей лестницы должности.');
+                }
+                $record = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_employee_grades} WHERE userid = :userid FOR UPDATE',
+                    ['userid' => $userid], MUST_EXIST);
+                if ((int)$record->revision !== $expectedrevision) {
+                    throw new \invalid_parameter_exception('Грейд сотрудника изменился. Обновите страницу.');
+                }
+                $before = ['positionid' => (string)$record->positionid,
+                    'gradekey' => (string)$record->gradekey,
+                    'ladderversionid' => (int)$record->ladderversionid];
+                $newversionid = (int)(grade_ladders::binding($positionid)->ladderversionid ?? 0);
+                if ($before['positionid'] === $positionid && $before['gradekey'] === $gradekey
+                        && $before['ladderversionid'] === $newversionid) {
+                    throw new \invalid_parameter_exception('Грейд и версия не изменились.');
+                }
+                $record->positionid = $positionid;
+                $record->gradekey = $gradekey;
+                $record->ladderversionid = $newversionid ?: null;
+                $record->source = 'manual_hr';
+                $record->requestid = null;
+                $record->revision++;
+                $record->timemodified = time();
+                $record->usermodified = $actorid;
+                $DB->update_record('local_ustar_employee_grades', $record);
+                people::log_action($actorid, $userid, 'grade_corrected', [
+                    'from' => $before, 'to' => ['positionid' => $positionid, 'gradekey' => $gradekey,
+                        'ladderversionid' => (int)$record->ladderversionid], 'reason' => $reason,
+                ]);
+                $tx->allow_commit();
+                return $record;
+            } catch (\Throwable $e) { $tx->rollback($e); }
+        } finally { $lock->release(); }
     }
 
     /** @return array<int,\stdClass> */
@@ -463,6 +537,7 @@ final class grade_promotion {
             $existing->ladderversionid = (int)(grade_ladders::binding((string)$existing->positionid)->ladderversionid ?? 0) ?: null;
             $existing->source = 'manager_approval';
             $existing->requestid = $requestid;
+            $existing->revision++;
             $existing->timemodified = $now;
             $existing->usermodified = $actorid;
             $DB->update_record('local_ustar_employee_grades', $existing);
@@ -471,6 +546,7 @@ final class grade_promotion {
         $DB->insert_record('local_ustar_employee_grades', (object)[
             'userid' => $userid, 'gradekey' => $grade, 'positionid' => people::position_id($userid),
             'ladderversionid' => (int)(grade_ladders::binding(people::position_id($userid))->ladderversionid ?? 0) ?: null,
+            'revision' => 1,
             'source' => 'manager_approval', 'requestid' => $requestid,
             'timecreated' => $now, 'timemodified' => $now, 'usermodified' => $actorid,
         ]);

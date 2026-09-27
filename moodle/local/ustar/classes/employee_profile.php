@@ -47,7 +47,7 @@ class employee_profile {
         $confirmedskillcount = $skills['confirmed'];
 
         return [
-            'careergrades' => career_grades::view($position ?? []),
+            'careergrades' => career_grades::employee_view($position ?? [], $userid),
             'identity' => [
                 'userid' => (int)$user->id,
                 'username' => (string)$user->username,

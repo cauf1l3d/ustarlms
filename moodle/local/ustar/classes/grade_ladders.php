@@ -49,13 +49,17 @@ final class grade_ladders {
         }
         $grades = self::validate_grades($grades);
         $now = time();
-        $id = (int)$DB->insert_record('local_ustar_grade_ladders', (object)[
-            'name' => $name, 'status' => 'active',
-            'draftjson' => json_encode($grades, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
-            'revision' => 1, 'createdby' => $actorid, 'timecreated' => $now, 'timemodified' => $now,
-        ]);
-        people::log_action($actorid, null, 'grade_ladder_created', ['ladderid' => $id]);
-        return $DB->get_record('local_ustar_grade_ladders', ['id' => $id], '*', MUST_EXIST);
+        $tx = $DB->start_delegated_transaction();
+        try {
+            $id = (int)$DB->insert_record('local_ustar_grade_ladders', (object)[
+                'name' => $name, 'status' => 'active',
+                'draftjson' => json_encode($grades, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+                'revision' => 1, 'createdby' => $actorid, 'timecreated' => $now, 'timemodified' => $now,
+            ]);
+            people::log_action($actorid, null, 'grade_ladder_created', ['ladderid' => $id]);
+            $tx->allow_commit();
+            return $DB->get_record('local_ustar_grade_ladders', ['id' => $id], '*', MUST_EXIST);
+        } catch (\Throwable $e) { $tx->rollback($e); }
     }
 
     public static function save_draft(int $id, array $grades, int $expectedrevision, int $actorid): \stdClass {

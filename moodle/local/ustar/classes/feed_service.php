@@ -106,11 +106,15 @@ final class feed_service {
 
     public static function remove(int $postid, int $actorid, int $version, string $reason = ''): void {
         global $DB;
-        feed_access::require_writer($actorid);
+        feed_access::require_actor($actorid);
+        $moderator = has_capability('local/ustar:feedmoderate', \context_system::instance(), $actorid);
+        if (!$moderator && !has_capability('local/ustar:feedpublish', \context_system::instance(), $actorid)) {
+            throw new \required_capability_exception(\context_system::instance(),
+                'local/ustar:feedpublish', 'nopermissions', '');
+        }
         $transaction = $DB->start_delegated_transaction();
         $post = $DB->get_record_sql('SELECT * FROM {local_ustar_feed_posts} WHERE id = :id FOR UPDATE',
             ['id' => $postid], MUST_EXIST);
-        $moderator = has_capability('local/ustar:feedmoderate', \context_system::instance(), $actorid);
         if ((int)$post->actoruserid !== $actorid && !$moderator) {
             throw new \required_capability_exception(\context_system::instance(),
                 'local/ustar:feedmoderate', 'nopermissions', '');

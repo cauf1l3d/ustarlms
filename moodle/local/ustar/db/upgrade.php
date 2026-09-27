@@ -4567,5 +4567,23 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092707, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092708) {
+        // Moderation is independently assignable; it never grants publishing.
+        require_once($CFG->libdir . '/accesslib.php');
+        $context = context_system::instance();
+        $shortname = 'ustar_feed_moderator';
+        $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+        if (!$roleid) {
+            $roleid = create_role('USTAR Feed Moderator', $shortname,
+                'Explicit USTAR feed moderation grant');
+            set_role_contextlevels($roleid, [CONTEXT_SYSTEM]);
+        }
+        foreach (['local/ustar:use', 'local/ustar:feedmoderate'] as $capability) {
+            assign_capability($capability, CAP_ALLOW, $roleid, $context->id, true);
+        }
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026092708, 'local', 'ustar');
+    }
+
 return true;
 }

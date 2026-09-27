@@ -25,7 +25,7 @@ $values = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     foreach (array_keys($values) as $key) {
-        $values[$key] = \core_text::substr(optional_param($key, '', PARAM_RAW_TRIMMED), 0, 100);
+        $values[$key] = optional_param($key, '', PARAM_RAW_TRIMMED);
     }
     if (optional_param('website', '', PARAM_RAW) !== '') {
         $error = 'Не удалось отправить заявку. Повторите попытку позже.';
@@ -53,6 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// Limit retained display values only after the service has validated the
+// original input, so an overlong value cannot silently create a new account.
+foreach ($values as &$value) {
+    $value = \core_text::substr($value, 0, 100);
+}
+unset($value);
 
 $departments = \local_ustar\registration_service::departments();
 foreach ($departments as &$department) {

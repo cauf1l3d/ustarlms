@@ -3,14 +3,13 @@ updated_at: '2026-09-27'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: G00 next RC baseline reconciliation. Owner-reported production
-  plugin/theme source exactly matches PR 16 commit 0e1eba2 (424 matching files,
-  no drift); DB plugin versions are 2026092601. PR 17 contains the architecture
-  plan for 8 priorities / 60 audit IDs / 13 prior defects. Draft PR 18 prepares
-  a standalone rollback gate. Performance baseline and future migration/browser
-  evidence remain open. Historical stage 1-2 records remain below and in
-  context/runtime.
-next_task: G00
+current_activity: G00 production source matched PR16, but performance baseline
+  remains unmeasured. G01 HRD capability/no-position source fix is draft PR20.
+  G02 N01/N04/N08 source changes are draft stacked PR21 and PR22. Exact final
+  G02 head add125f5 passed source/frontend run 242. Moodle DB, rollback,
+  browser/visual and performance evidence remain open. The 8 priorities,
+  60 audit items and 13 earlier defects are not accepted by these source gates.
+next_task: G01
 ready_tasks:
 - R00
 - R04

@@ -1,5 +1,24 @@
 # Журнал выполнения roadmap
 
+## 2026-09-27 — G01/G02, три видимые доработки в draft исходниках
+
+G01 [PR №20](https://github.com/cauf1l3d/ustarlms/pull/20), head
+`51a67a7e5eb1e8f6dc49eb8c552ed76bd12a69e0`: explicit adaptation
+capability и HR no-position source fix, G01 целиком ещё не завершён.
+G02 [PR №21](https://github.com/cauf1l3d/ustarlms/pull/21), head
+`bd4561268562e3438f0402555400110f16acc55b`: N01/N04, миграция
+nullable `metadatajson` + version `2026092702`, legacy inbox только
+читается и разрешается по ключу/заявке. [PR №22](https://github.com/cauf1l3d/ustarlms/pull/22),
+head `add125f5da90e488df594c25fbafd5636b34df39`, добавляет N08:
+полевая валидация, регистрационная разметка/AMD/CSS, theme version
+`2026092701`, plugin version `2026092703`. Business auth flow не изменён.
+
+CI run №239 и №242: source/frontend SUCCESS. Moodle DB, rollback и
+browser/visual/performance не запускались на этом SHA; новая миграция
+пока не проверена штатным upgrade. Production остаётся PR16 exact source
+по отчёту владельца; новые PR не установлены. Следующее — завершить
+G01 contracts и визуально проверить G02 на стенде, затем двигаться к G03.
+
 ## 2026-09-27 — G00, source baseline следующего RC
 
 Владелец на server1 выполнил read-only manifest против точного SHA

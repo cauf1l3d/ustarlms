@@ -44,6 +44,46 @@ tasks:
   - Владелец сообщил об установке и проверке PR 16; exact source match подтверждён
     read-only manifest 27.09.2026. Полная runtime приёмка новых функций открыта.
   updated_at: '2026-09-27'
+- id: G01
+  title: Общие права, UI и файл-контракты следующего RC
+  priority: P0
+  stage: S0
+  status: in_progress
+  owner: Codex / 20260927 next RC
+  branch: codex/ustar-g01-org-contracts-20260927
+  started_at: '2026-09-27'
+  depends_on: [G00]
+  actions:
+  - Завершить общие UI/ACL/files контракты, без расширения полномочий по названию должности.
+  - Сохранить отдельные решения для грейдов, чек-листов и ленты.
+  implementation_commit: 51a67a7e5eb1e8f6dc49eb8c552ed76bd12a69e0
+  validation_evidence:
+  - PR 20 / run 238 source/frontend success; Moodle DB не запускался.
+  deployment_evidence: []
+  blockers:
+  - Общие контракты и ADR ещё не закрыты; PR в draft.
+  updated_at: '2026-09-27'
+- id: G02
+  title: Убрать отдельное Оргпространство, привести уведомления и регистрацию
+  priority: P0
+  stage: S0
+  status: in_progress
+  owner: Codex / 20260927 next RC
+  branch: codex/ustar-g02-register-20260927
+  started_at: '2026-09-27'
+  depends_on: [G01]
+  actions:
+  - N01 совместимый безопасный вход через Команду без отдельного canvas.
+  - N04 снимок названия, legacy resolution и ACL заявки в уведомлениях.
+  - N08 адаптивная форма без изменения auth-policy.
+  implementation_commit: add125f5da90e488df594c25fbafd5636b34df39
+  validation_evidence:
+  - PR 21 / run 239 source/frontend success; PR 22 / run 242 source/frontend success.
+  - Локальный source_checks --skip-php и git diff --check success.
+  deployment_evidence: []
+  blockers:
+  - Миграция metadatajson/Moodle DB, rollback и браузерная доступная сверка не выполнены.
+  updated_at: '2026-09-27'
 - id: R00
   title: Зафиксировать проверяемую базу Git/release/runtime
   priority: P0

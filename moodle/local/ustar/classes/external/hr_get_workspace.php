@@ -13,14 +13,23 @@ use local_ustar\structure;
  */
 class hr_get_workspace extends base {
     public static function execute_parameters(): external_function_parameters {
-        return new external_function_parameters([]);
+        return new external_function_parameters([
+            'scope' => new external_value(PARAM_ALPHA, 'full or learning', VALUE_DEFAULT, 'full'),
+        ]);
     }
 
-    public static function execute(): array {
+    public static function execute(string $scope = 'full'): array {
         global $DB;
         self::guard();
         require_capability('local/ustar:hr', \context_system::instance());
+        $params = self::validate_parameters(self::execute_parameters(), ['scope' => $scope]);
+        if (!in_array($params['scope'], ['full', 'learning'], true)) {
+            throw new \invalid_parameter_exception('Неизвестный набор данных HR');
+        }
 
+        if ($params['scope'] === 'learning') {
+            return self::learning_model();
+        }
         $st = structure::get(structure::NAME_STRUCTURE);
         $positions = array_values($st['positions'] ?? []);
         $departments = array_values($st['departments'] ?? []);
@@ -234,5 +243,50 @@ class hr_get_workspace extends base {
         return new \core_external\external_single_structure([
             'json' => new external_value(PARAM_RAW, 'Live USTAR HR workspace JSON'),
         ]);
+    }
+
+    /** Editor data without the employee directory, game hub or per-course queries. */
+    private static function learning_model(): array {
+        global $DB;
+        $record = $DB->get_record('local_ustar_structure', ['name' => structure::NAME_STRUCTURE],
+            'id,version,jsondata', IGNORE_MISSING);
+        $structure = $record ? json_decode((string)$record->jsondata, true) : structure::default_structure();
+        if (!is_array($structure)) {
+            throw new \moodle_exception('Модель структуры повреждена. Сохранение недоступно.');
+        }
+        $matrix = $structure['matrix'] ?? [];
+        $skills = [];
+        foreach ($structure['skills'] ?? [] as $skill) {
+            $id = (string)$skill['id'];
+            $skills[] = [
+                'id' => $id,
+                'name' => (string)$skill['name'],
+                'category' => (string)($skill['category'] ?? 'Общее'),
+                'courseRefs' => array_values($skill['courses'] ?? []),
+            ];
+        }
+        $modulecounts = [];
+        foreach ($DB->get_records_sql('SELECT course, COUNT(id) AS total FROM {course_modules} GROUP BY course') as $row) {
+            $modulecounts[(int)$row->course] = (int)$row->total;
+        }
+        $courses = [];
+        foreach ($DB->get_records_select('course', 'id <> :siteid', ['siteid' => SITEID],
+            'fullname ASC', 'id,fullname,shortname,idnumber,visible') as $course) {
+            $courses[] = [
+                'id' => (int)$course->id,
+                'idnumber' => (string)$course->idnumber,
+                'name' => (string)$course->fullname,
+                'shortname' => (string)$course->shortname,
+                'visible' => (bool)$course->visible,
+                'modules' => $modulecounts[(int)$course->id] ?? 0,
+            ];
+        }
+        return ['json' => json_encode([
+            'revision' => $record ? (int)$record->version : 0,
+            'positions' => array_values($structure['positions'] ?? []),
+            'skills' => $skills,
+            'matrix' => $matrix,
+            'courses' => $courses,
+        ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)];
     }
 }

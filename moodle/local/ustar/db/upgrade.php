@@ -4546,6 +4546,23 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
                 }
             }
         }
+        foreach ([
+            'ustar_feed_academy' => ['USTAR Academy Publisher',
+                ['local/ustar:use', 'local/ustar:feedpublish',
+                    'local/ustar:feedpublishacademy', 'local/ustar:feedsetaudience']],
+            'ustar_feed_department' => ['USTAR Department Publisher',
+                ['local/ustar:use', 'local/ustar:feedpublish',
+                    'local/ustar:feedpublishdepartment']],
+        ] as $shortname => [$name, $rolecaps]) {
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if (!$roleid) {
+                $roleid = create_role($name, $shortname, 'Explicit USTAR feed publishing grant');
+                set_role_contextlevels($roleid, [CONTEXT_SYSTEM]);
+            }
+            foreach ($rolecaps as $capability) {
+                assign_capability($capability, CAP_ALLOW, $roleid, $context->id, true);
+            }
+        }
         accesslib_clear_all_caches(true);
         upgrade_plugin_savepoint(true, 2026092707, 'local', 'ustar');
     }

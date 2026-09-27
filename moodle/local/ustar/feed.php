@@ -112,17 +112,51 @@ if ($notice !== '') {
 if (has_capability('local/ustar:feedmoderate', $context)) {
     echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['moderation' => 1]),
         'Очередь модерации', ['class' => 'u-feed__source']);
+    echo ' · ';
+    echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['moderation' => 1, 'hidden' => 1]),
+        'Скрытые публикации', ['class' => 'u-feed__source']);
 }
 if ($moderation) {
-    echo html_writer::tag('h2', 'Обращения по публикациям');
-    $reported = $DB->get_records_sql("SELECT p.* FROM {local_ustar_feed_posts} p
-        WHERE EXISTS (SELECT 1 FROM {local_ustar_feed_reports} r
-              WHERE r.postid = p.id AND r.status = :open)
-        ORDER BY p.id DESC", ['open' => 'open'], 0, 30);
+    $hiddenmode = optional_param('hidden', 0, PARAM_BOOL);
+    echo html_writer::tag('h2', $hiddenmode ? 'Скрытые публикации' : 'Обращения по публикациям');
+    $beforepost = max(0, optional_param('beforepost', 0, PARAM_INT));
+    $reportparams = $hiddenmode ? ['hidden' => 'hidden'] : ['open' => 'open'];
+    $beforewhere = '';
+    if ($beforepost) {
+        $beforewhere = 'AND p.id < :beforepost';
+        $reportparams['beforepost'] = $beforepost;
+    }
+    $selection = $hiddenmode ? 'p.status = :hidden' :
+        'EXISTS (SELECT 1 FROM {local_ustar_feed_reports} r WHERE r.postid = p.id AND r.status = :open)';
+    $reported = array_values($DB->get_records_sql("SELECT p.* FROM {local_ustar_feed_posts} p
+        WHERE {$selection}
+        {$beforewhere} ORDER BY p.id DESC", $reportparams, 0, 31));
+    $more = count($reported) > 30;
+    if ($more) { array_pop($reported); }
+    $reportsbyid = [];
+    if ($reported) {
+        [$reportinsql, $reportinparams] = $DB->get_in_or_equal(array_map(
+            static fn($post) => (int)$post->id, $reported), SQL_PARAMS_NAMED, 'mr');
+        $reportsbyid = $DB->get_records_sql("SELECT postid AS id, COUNT(*) AS total,
+            MAX(id) AS latestid FROM {local_ustar_feed_reports}
+            WHERE postid {$reportinsql} AND status = :status GROUP BY postid",
+            $reportinparams + ['status' => 'open']);
+        $lastids = array_map(static fn($report) => (int)$report->latestid, $reportsbyid);
+        $lastreasons = $lastids ? $DB->get_records_list('local_ustar_feed_reports',
+            'id', $lastids, '', 'id,reason') : [];
+        foreach ($reportsbyid as $report) {
+            $report->reason = (string)($lastreasons[(int)$report->latestid]->reason ?? '');
+        }
+    }
     foreach ($reported as $reportedpost) {
         echo html_writer::start_tag('article', ['class' => 'u-feed__post']);
         echo html_writer::tag('h3', 'Публикация №' . (int)$reportedpost->id . ' · ' . s($reportedpost->status));
         echo html_writer::tag('p', nl2br(s((string)$reportedpost->body)));
+        if (isset($reportsbyid[(int)$reportedpost->id])) {
+            $report = $reportsbyid[(int)$reportedpost->id];
+            echo html_writer::tag('p', 'Жалоб: ' . (int)$report->total . '. Последняя причина: ' .
+                s($report->reason), ['class' => 'u-feed__source']);
+        }
         echo html_writer::start_tag('form', ['method' => 'post']);
         foreach (['sesskey' => sesskey(), 'action' => 'moderate', 'postid' => $reportedpost->id,
                 'version' => $reportedpost->version] as $field => $value) {
@@ -133,11 +167,20 @@ if ($moderation) {
             'required' => 'required', 'class' => 'form-control']);
         foreach (['hide' => 'Скрыть', 'restore' => 'Восстановить', 'dismiss' => 'Отклонить жалобу'] as
                 $decision => $label) {
+            if (($decision === 'restore') !== ($reportedpost->status === 'hidden')
+                    && $decision !== 'dismiss') { continue; }
             echo html_writer::tag('button', $label, ['name' => 'decision', 'value' => $decision,
                 'type' => 'submit', 'class' => 'u-btn u-btn--secondary']);
         }
         echo html_writer::end_tag('form');
         echo html_writer::end_tag('article');
+    }
+    if ($more && $reported) {
+        $last = end($reported);
+        echo html_writer::link(new moodle_url('/local/ustar/feed.php',
+            ['moderation' => 1, 'hidden' => $hiddenmode, 'beforepost' => (int)$last->id]),
+            'Следующие обращения',
+            ['class' => 'u-btn u-feed__more']);
     }
     echo html_writer::end_div();
     echo $OUTPUT->footer();

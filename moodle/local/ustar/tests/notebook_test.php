@@ -51,4 +51,21 @@ final class notebook_test extends \advanced_testcase {
         $this->expectException(\moodle_exception::class);
         learning_tasks::delete_note($note['id'], $owner->id, $note['version']);
     }
+
+    public function test_private_note_list_cannot_be_queried_for_another_owner(): void {
+        $owner = $this->getDataGenerator()->create_user();
+        $other = $this->getDataGenerator()->create_user();
+        learning_tasks::create_note($owner->id, 'Private', 'Never list for someone else');
+        $this->setUser($other);
+        $this->expectException(\required_capability_exception::class);
+        learning_tasks::notes_for_owner($owner->id);
+    }
+
+    public function test_pending_registration_cannot_create_a_personal_note(): void {
+        $owner = $this->getDataGenerator()->create_user();
+        employment::register_pending($owner->id);
+        $this->setUser($owner);
+        $this->expectException(\required_capability_exception::class);
+        learning_tasks::create_note($owner->id, 'Pending', 'Not admitted');
+    }
 }

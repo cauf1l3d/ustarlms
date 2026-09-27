@@ -22,6 +22,7 @@ final class learning_tasks {
         if ($actorid <= 0 || $assigneeid <= 1 || $actorid === $assigneeid) {
             return false;
         }
+        if (!employment::is_active($actorid)) { return false; }
         if (!accounts::participates($assigneeid) || !employment::is_active($assigneeid)) {
             return false;
         }
@@ -74,6 +75,10 @@ final class learning_tasks {
     public static function create_note(int $ownerid, string $title, string $body, array $uploads = []): array {
         global $DB;
         self::assert_available();
+        if (!employment::is_active($ownerid)) {
+            throw new \required_capability_exception(\context_system::instance(),
+                'local/ustar:use', 'nopermissions', '');
+        }
         $title = trim(clean_param($title, PARAM_TEXT));
         if ($title === '') {
             throw new \invalid_parameter_exception('Укажите название личной заметки.');
@@ -346,7 +351,7 @@ final class learning_tasks {
     public static function count_for(int $userid, string $tab,
             string $filter = 'all', string $query = ''): int {
         global $DB, $USER;
-        if ((int)$USER->id !== $userid) {
+        if ((int)$USER->id !== $userid || !employment::is_active($userid)) {
             throw new \required_capability_exception(\context_system::instance(),
                 'local/ustar:use', 'nopermissions', '');
         }
@@ -390,7 +395,7 @@ final class learning_tasks {
     private static function list_by(string $where, array $params, int $actorid, int $page,
             string $filter, string $query): array {
         global $DB, $USER;
-        if ((int)$USER->id !== $actorid) {
+        if ((int)$USER->id !== $actorid || !employment::is_active($actorid)) {
             throw new \required_capability_exception(\context_system::instance(),
                 'local/ustar:use', 'nopermissions', '');
         }
@@ -426,6 +431,10 @@ final class learning_tasks {
     }
 
     private static function assert_view(\stdClass $task, int $actorid): void {
+        if (!employment::is_active($actorid)) {
+            throw new \required_capability_exception(\context_system::instance(),
+                'local/ustar:use', 'nopermissions', '');
+        }
         if ((string)$task->privacy === self::PRIVACY_OWNER) {
             if ($actorid !== (int)$task->ownerid) {
                 throw new \required_capability_exception(

@@ -3,6 +3,9 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
+if (!\local_ustar\employment::is_active((int)$USER->id)) {
+    throw new required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
+}
 $canhrworkspace = \local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::COMPANY_READ);
 if (!$canhrworkspace) {
     require_capability('local/ustar:use', $context);
@@ -15,6 +18,7 @@ $pageno = max(0, min(100000, optional_param('pageno', 0, PARAM_INT)));
 $selectedid = max(0, optional_param('taskid', 0, PARAM_INT));
 $filter = optional_param('filter', 'all', PARAM_ALPHA);
 if (!in_array($filter, ['all', 'active', 'review', 'done'], true)) { $filter = 'all'; }
+if ($tab === 'notebook' && $filter === 'review') { $filter = 'all'; }
 $taskquery = trim(optional_param('q', '', PARAM_TEXT));
 $notice = '';
 $parseDueDate = static function(string $duedate): int {
@@ -173,8 +177,11 @@ if ($tab !== 'checklists') {
     echo html_writer::empty_tag('input', ['type' => 'search', 'id' => 'task-query', 'name' => 'q',
         'value' => $taskquery, 'class' => 'form-control']);
     echo html_writer::tag('label', 'Состояние', ['for' => 'task-filter']);
-    echo html_writer::select(['all' => 'Все', 'active' => 'Активные', 'review' => 'На проверке',
-        'done' => 'Завершённые'], 'filter', $filter, false, ['id' => 'task-filter', 'class' => 'form-select']);
+    $filters = ['all' => 'Все', 'active' => 'Активные'];
+    if ($tab !== 'notebook') { $filters['review'] = 'На проверке'; }
+    $filters['done'] = 'Завершённые';
+    echo html_writer::select($filters, 'filter', $filter, false,
+        ['id' => 'task-filter', 'class' => 'form-select']);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Показать', 'class' => 'u-btn']);
     echo html_writer::end_tag('form');
 }

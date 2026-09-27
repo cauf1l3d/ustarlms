@@ -23,8 +23,9 @@ final class grade_rules {
     }
 
     /** @return array<int,array<string,mixed>> */
-    public static function transitions(): array {
-        $grades = array_values(career_grades::catalogue());
+    public static function transitions(string $positionid = ''): array {
+        $grades = array_values($positionid !== '' ? career_grades::catalogue_for_position($positionid)
+            : career_grades::catalogue());
         $out = [];
         for ($i = 0; $i + 1 < count($grades); $i++) {
             $out[] = [
@@ -39,8 +40,8 @@ final class grade_rules {
     }
 
     /** @return array<string,mixed>|null */
-    public static function transition(string $fromgrade): ?array {
-        foreach (self::transitions() as $transition) {
+    public static function transition(string $fromgrade, string $positionid = ''): ?array {
+        foreach (self::transitions($positionid) as $transition) {
             if ($transition['fromgrade'] === $fromgrade) {
                 return $transition;
             }
@@ -69,11 +70,13 @@ final class grade_rules {
         if (!self::available()) {
             return null;
         }
+        $binding = grade_ladders::binding($positionid);
         $rows = $DB->get_records('local_ustar_grade_rules', [
             'positionid' => $positionid,
             'fromgrade' => $fromgrade,
             'tograde' => $tograde,
             'status' => self::STATUS_PUBLISHED,
+            'ladderversionid' => $binding ? (int)$binding->ladderversionid : null,
         ], 'versionno DESC, id DESC', '*', 0, 1);
         return $rows ? reset($rows) : null;
     }
@@ -91,7 +94,7 @@ final class grade_rules {
     /** @return array<string,mixed> */
     public static function editor(string $positionid, string $fromgrade): array {
         global $DB;
-        $transition = self::transition($fromgrade);
+        $transition = self::transition($fromgrade, $positionid);
         if (!$transition) {
             throw new \invalid_parameter_exception('Неизвестный переход грейда.');
         }
@@ -152,7 +155,7 @@ final class grade_rules {
         if (!self::available()) {
             throw new \moodle_exception('Правила грейдов будут доступны после обновления базы данных.');
         }
-        $transition = self::transition($fromgrade);
+        $transition = self::transition($fromgrade, $positionid);
         if (!$transition) {
             throw new \invalid_parameter_exception('Неизвестный переход грейда.');
         }
@@ -204,6 +207,7 @@ final class grade_rules {
 
         $payload = [
             'positionid' => $positionid,
+            'ladderversionid' => (int)(grade_ladders::binding($positionid)->ladderversionid ?? 0),
             'fromgrade' => $fromgrade,
             'tograde' => (string)$transition['tograde'],
             'routeid' => (int)$route->id,
@@ -233,6 +237,7 @@ final class grade_rules {
                 'tograde' => (string)$transition['tograde'],
                 'versionno' => $maxversion + 1,
                 'routeid' => (int)$route->id,
+                'ladderversionid' => (int)(grade_ladders::binding($positionid)->ladderversionid ?? 0) ?: null,
                 'requirementsjson' => $json,
                 'rulehash' => $hash,
                 'status' => self::STATUS_PUBLISHED,

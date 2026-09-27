@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026092705" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026092706" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1415,6 +1415,7 @@
         <FIELD NAME="tograde" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
         <FIELD NAME="routeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ladderversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="requirementsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="rulehash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="published" SEQUENCE="false" />
@@ -1427,12 +1428,51 @@
         <INDEX NAME="transition_status_idx" UNIQUE="false" FIELDS="positionid, fromgrade, tograde, status" />
       </INDEXES>
     </TABLE>
+    <TABLE NAME="local_ustar_grade_ladders" COMMENT="Stable identity and editable draft for a grade ladder">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="active" SEQUENCE="false" />
+        <FIELD NAME="draftjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+    </TABLE>
+    <TABLE NAME="local_ustar_grade_ladder_ver" COMMENT="Immutable published order and labels of grade steps">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="ladderid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="gradesjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="gradehash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="ladder_version_uix" UNIQUE="true" FIELDS="ladderid, versionno" /></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_grade_bindings" COMMENT="Explicit current published ladder version for a stable position ID">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ladderversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES><INDEX NAME="position_uix" UNIQUE="true" FIELDS="positionid" /></INDEXES>
+    </TABLE>
     <TABLE NAME="local_ustar_employee_grades" COMMENT="Personal current grade; initial assignment is an explicit HR action">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="gradekey" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="positionid" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ladderversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="source" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="initial" SEQUENCE="false" />
         <FIELD NAME="requestid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
@@ -1452,6 +1492,7 @@
         <FIELD NAME="fromgrade" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="tograde" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="routeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="ladderversionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="requirementsjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="managerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" />

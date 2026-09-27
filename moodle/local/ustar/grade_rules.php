@@ -9,8 +9,8 @@ if (!\local_ustar\grade_rules::can_manage((int)$USER->id)) {
 \local_ustar\view_as::assert_writable();
 
 $positions = \local_ustar\grade_rules::position_options();
-$transitions = \local_ustar\grade_rules::transitions();
 $positionid = optional_param('positionid', (string)($positions[0]['id'] ?? ''), PARAM_ALPHANUMEXT);
+$transitions = \local_ustar\grade_rules::transitions($positionid);
 $fromgrade = optional_param('fromgrade', (string)($transitions[0]['fromgrade'] ?? ''), PARAM_ALPHANUMEXT);
 $notice = '';
 

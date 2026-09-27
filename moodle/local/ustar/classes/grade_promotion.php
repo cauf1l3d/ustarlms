@@ -35,9 +35,11 @@ final class grade_promotion {
         return [
             'enabled' => true,
             'grade' => $grade,
-            'label' => $recorded ? self::label($grade) : 'Не назначен',
+            'label' => $recorded ? self::label($positionid, $grade) : 'Не назначен',
             'positionid' => $positionid,
             'recorded' => (bool)$recorded,
+            'ladderversionid' => (int)(grade_ladders::binding($positionid)->ladderversionid ?? 0),
+            'recordversionid' => $recorded ? (int)($record->ladderversionid ?? 0) : 0,
         ];
     }
 
@@ -58,7 +60,14 @@ final class grade_promotion {
                 'nextgrade' => '', 'nextlabel' => '', 'routeid' => 0, 'requirements' => [],
             ]);
         }
-        $next = self::next_grade((string)$current['grade']);
+        if ((int)$current['ladderversionid'] > 0
+                && (int)$current['recordversionid'] !== (int)$current['ladderversionid']) {
+            return array_merge($current, $emptyrule, [
+                'eligible' => false, 'reason' => 'Версия лестницы должности изменилась. HR должен подтвердить перенос.',
+                'nextgrade' => '', 'nextlabel' => '', 'routeid' => 0, 'requirements' => [],
+            ]);
+        }
+        $next = self::next_grade((string)$current['positionid'], (string)$current['grade']);
         if ($next === '') {
             return array_merge($current, $emptyrule, [
                 'eligible' => false, 'reason' => 'Это максимальная ступень грейда.',
@@ -70,9 +79,10 @@ final class grade_promotion {
         if (!$rule) {
             return array_merge($current, $emptyrule, [
                 'eligible' => false,
-                'reason' => 'Критерии перехода «' . self::label((string)$current['grade'])
-                    . ' → ' . self::label($next) . '» ещё не опубликованы.',
-                'nextgrade' => $next, 'nextlabel' => self::label($next), 'routeid' => 0, 'requirements' => [],
+                'reason' => 'Критерии перехода «' . self::label((string)$current['positionid'], (string)$current['grade'])
+                    . ' → ' . self::label((string)$current['positionid'], $next) . '» ещё не опубликованы.',
+                'nextgrade' => $next, 'nextlabel' => self::label((string)$current['positionid'], $next),
+                'routeid' => 0, 'requirements' => [],
             ]);
         }
 
@@ -81,7 +91,7 @@ final class grade_promotion {
             'ruleversion' => (int)$rule->versionno,
             'rulehash' => (string)$rule->rulehash,
             'nextgrade' => $next,
-            'nextlabel' => self::label($next),
+            'nextlabel' => self::label((string)$current['positionid'], $next),
             'routeid' => (int)$rule->routeid,
         ];
         if (!$DB->record_exists('local_ustar_routes', ['id' => (int)$rule->routeid, 'active' => 1])) {
@@ -156,6 +166,8 @@ final class grade_promotion {
                     'version' => (int)$eligible['ruleversion'],
                     'hash' => (string)$eligible['rulehash'],
                 ],
+                'positionid' => (string)$eligible['positionid'],
+                'ladderversionid' => (int)$eligible['ladderversionid'],
                 'requirements' => $eligible['requirements'],
             ];
             $fingerprint = hash('sha256', json_encode([
@@ -172,7 +184,12 @@ final class grade_promotion {
             if ($existing) {
                 $old = json_decode((string)$existing->requirementsjson, true);
                 $oldhash = is_array($old) ? (string)($old['rule']['hash'] ?? '') : '';
-                if ($oldhash !== '' && hash_equals((string)$eligible['rulehash'], $oldhash)) {
+                $oldsnapshotversion = is_array($old) ? (int)($old['ladderversionid'] ?? 0) : 0;
+                $oldsnapshotposition = is_array($old) ? (string)($old['positionid'] ?? '') : '';
+                if ($oldhash !== '' && hash_equals((string)$eligible['rulehash'], $oldhash)
+                        && $oldsnapshotversion === (int)$eligible['ladderversionid']
+                        && ($oldsnapshotposition === (string)$eligible['positionid']
+                            || ($oldsnapshotposition === '' && $oldsnapshotversion === 0))) {
                     self::refresh_manager($existing);
                     $tx->allow_commit();
                     return $DB->get_record(
@@ -182,7 +199,7 @@ final class grade_promotion {
                 $existing->status = self::STATUS_REJECTED;
                 $existing->decidedat = time();
                 $existing->decisionby = 0;
-                $existing->decisionreason = 'Критерии перехода изменены; заявка заменена новой версией.';
+                $existing->decisionreason = 'Критерии, должность или версия лестницы изменены; заявка заменена.';
                 $existing->timemodified = time();
                 $DB->update_record('local_ustar_grade_requests', $existing);
                 self::event((int)$existing->id, $userid, 'grade_request_superseded', 0, [
@@ -197,6 +214,7 @@ final class grade_promotion {
                 'fromgrade' => (string)$eligible['grade'],
                 'tograde' => (string)$eligible['nextgrade'],
                 'routeid' => (int)$eligible['routeid'],
+                'ladderversionid' => (int)$eligible['ladderversionid'] ?: null,
                 'requirementsjson' => json_encode($snapshot, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'managerid' => $managerid,
                 'status' => self::STATUS_PENDING,
@@ -277,6 +295,10 @@ final class grade_promotion {
             if ($approved && ($requestrulehash === ''
                     || empty($eligible['eligible'])
                     || !hash_equals((string)$eligible['rulehash'], $requestrulehash)
+                    || (int)($snapshot['ladderversionid'] ?? 0) !== (int)$eligible['ladderversionid']
+                    || ((int)$eligible['ladderversionid'] > 0 && empty($snapshot['positionid']))
+                    || (!empty($snapshot['positionid'])
+                        && (string)$snapshot['positionid'] !== (string)$eligible['positionid'])
                     || (string)$eligible['grade'] !== (string)$request->fromgrade
                     || (string)$eligible['nextgrade'] !== (string)$request->tograde)) {
                 throw new \moodle_exception(
@@ -361,12 +383,13 @@ final class grade_promotion {
                 }
                 $now = time();
                 $id = (int)$DB->insert_record('local_ustar_employee_grades', (object)[
-                    'userid' => $userid, 'gradekey' => self::first_grade(), 'positionid' => $positionid,
+                    'userid' => $userid, 'gradekey' => self::first_grade($positionid), 'positionid' => $positionid,
+                    'ladderversionid' => (int)(grade_ladders::binding($positionid)->ladderversionid ?? 0) ?: null,
                     'source' => 'initial_hr', 'requestid' => null,
                     'timecreated' => $now, 'timemodified' => $now, 'usermodified' => $actorid,
                 ]);
                 people::log_action($actorid, $userid, 'grade_initial_assigned', [
-                    'positionid' => $positionid, 'gradekey' => self::first_grade(), 'reason' => $reason,
+                    'positionid' => $positionid, 'gradekey' => self::first_grade($positionid), 'reason' => $reason,
                 ]);
                 $tx->allow_commit();
                 return $DB->get_record('local_ustar_employee_grades', ['id' => $id], '*', MUST_EXIST);
@@ -437,6 +460,7 @@ final class grade_promotion {
         if ($existing) {
             $existing->gradekey = $grade;
             $existing->positionid = people::position_id($userid);
+            $existing->ladderversionid = (int)(grade_ladders::binding((string)$existing->positionid)->ladderversionid ?? 0) ?: null;
             $existing->source = 'manager_approval';
             $existing->requestid = $requestid;
             $existing->timemodified = $now;
@@ -446,6 +470,7 @@ final class grade_promotion {
         }
         $DB->insert_record('local_ustar_employee_grades', (object)[
             'userid' => $userid, 'gradekey' => $grade, 'positionid' => people::position_id($userid),
+            'ladderversionid' => (int)(grade_ladders::binding(people::position_id($userid))->ladderversionid ?? 0) ?: null,
             'source' => 'manager_approval', 'requestid' => $requestid,
             'timecreated' => $now, 'timemodified' => $now, 'usermodified' => $actorid,
         ]);
@@ -457,13 +482,13 @@ final class grade_promotion {
         return isset($positions[$positionid]) && career_grades::key($positions[$positionid]) !== '';
     }
 
-    private static function first_grade(): string {
-        $grades = career_grades::catalogue();
+    private static function first_grade(string $positionid): string {
+        $grades = career_grades::catalogue_for_position($positionid);
         return (string)($grades[0]['id'] ?? 'trainee');
     }
 
-    private static function next_grade(string $grade): string {
-        $rows = career_grades::catalogue();
+    private static function next_grade(string $positionid, string $grade): string {
+        $rows = career_grades::catalogue_for_position($positionid);
         foreach ($rows as $index => $row) {
             if ((string)$row['id'] === $grade) {
                 return (string)($rows[$index + 1]['id'] ?? '');
@@ -472,8 +497,8 @@ final class grade_promotion {
         return '';
     }
 
-    private static function label(string $grade): string {
-        foreach (career_grades::catalogue() as $row) {
+    private static function label(string $positionid, string $grade): string {
+        foreach (career_grades::catalogue_for_position($positionid) as $row) {
             if ((string)$row['id'] === $grade) { return (string)$row['name']; }
         }
         return $grade;

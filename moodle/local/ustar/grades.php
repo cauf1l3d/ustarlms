@@ -103,6 +103,9 @@ if ($canassign) {
         ['view' => 'assignments']))->out(false), 'class' => $view === 'assignments' ? 'is-active' : '']);
 }
 if (\local_ustar\grade_rules::can_manage((int)$USER->id)) {
+    echo html_writer::tag('a', 'Настройка лестниц', [
+        'href' => (new moodle_url('/local/ustar/grade_ladders.php'))->out(false),
+    ]);
     echo html_writer::tag('a', 'Правила переходов', [
         'href' => (new moodle_url('/local/ustar/grade_rules.php'))->out(false),
     ]);

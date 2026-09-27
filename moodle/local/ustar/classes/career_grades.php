@@ -11,7 +11,12 @@ final class career_grades {
         }
         return $data['grades'];
     }
+    public static function catalogue_for_position(string $positionid): array {
+        return grade_ladders::grades_for_position($positionid) ?? self::catalogue();
+    }
     public static function key(array $position): string {
+        $bound = grade_ladders::grades_for_position((string)($position['id'] ?? ''));
+        if ($bound) { return (string)$bound[0]['id']; }
         $saved = get_config('local_ustar', 'careergrade_'.($position['id'] ?? ''));
         if ($saved !== false) { return in_array($saved, array_column(self::catalogue(), 'id'), true) ? $saved : ''; }
         // Previously approved role equivalence, not an inference from level or department.
@@ -19,15 +24,20 @@ final class career_grades {
         return '';
     }
     public static function view(array $position): array {
-        $key = self::key($position); $grades = self::catalogue(); $current = '';
+        $positionid = (string)($position['id'] ?? '');
+        $bound = grade_ladders::binding($positionid) !== null;
+        $key = self::key($position); $grades = self::catalogue_for_position($positionid); $current = '';
         foreach ($grades as &$row) {
-            $row['current'] = $row['id'] === $key;
+            $row['current'] = !$bound && $row['id'] === $key;
             if ($row['current']) { $current = $row['name']; }
         }
         unset($row);
-        return ['hasgrade'=>$key !== '', 'gradeid'=>$key, 'gradename'=>$current,
+        return ['hasgrade'=>$key !== '', 'boundladder'=>$bound, 'gradeid'=>$key,
+            'gradename'=>$bound ? 'Опубликованная лестница' : $current,
             'grades'=>$grades, 'gradepositionname'=>(string)($position['name'] ?? ''),
-            'gradesurl'=>(new \moodle_url('/local/ustar/grades.php'))->out(false)];
+            'gradesurl'=>(new \moodle_url('/local/ustar/grades.php'))->out(false),
+            'settingsurl'=>(new \moodle_url('/local/ustar/grade_ladders.php',
+                ['positionid' => $positionid]))->out(false)];
     }
     public static function fingerprint(array $position): string {
         return hash('sha256', json_encode([$position, get_config('local_ustar', 'careergrade_'.$position['id'])]));
@@ -36,6 +46,9 @@ final class career_grades {
         global $DB, $USER;
         require_capability('local/ustar:hrmanage', \context_system::instance());
         view_as::assert_writable();
+        if (grade_ladders::available()) {
+            throw new \invalid_parameter_exception('Настраивайте привязку должности через опубликованные лестницы грейдов.');
+        }
         if ($grade !== 'none' && !in_array($grade, array_column(self::catalogue(), 'id'), true)) {
             throw new \invalid_parameter_exception('Неизвестный грейд.');
         }

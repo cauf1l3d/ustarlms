@@ -4396,5 +4396,60 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092705, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092706) {
+        $table = new xmldb_table('local_ustar_grade_ladders');
+        if (!$dbman->table_exists($table)) {
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+            $table->add_field('status', XMLDB_TYPE_CHAR, '16', null, XMLDB_NOTNULL, null, 'active');
+            $table->add_field('draftjson', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+            $table->add_field('revision', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1');
+            $table->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $dbman->create_table($table);
+        }
+        $table = new xmldb_table('local_ustar_grade_ladder_ver');
+        if (!$dbman->table_exists($table)) {
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->add_field('ladderid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('versionno', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('gradesjson', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+            $table->add_field('gradehash', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL);
+            $table->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $table->add_index('ladder_version_uix', XMLDB_INDEX_UNIQUE, ['ladderid', 'versionno']);
+            $dbman->create_table($table);
+        }
+        $table = new xmldb_table('local_ustar_grade_bindings');
+        if (!$dbman->table_exists($table)) {
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->add_field('positionid', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL);
+            $table->add_field('ladderversionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('revision', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1');
+            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $table->add_index('position_uix', XMLDB_INDEX_UNIQUE, ['positionid']);
+            $dbman->create_table($table);
+        }
+        foreach (['local_ustar_employee_grades', 'local_ustar_grade_requests',
+                'local_ustar_grade_rules'] as $tablename) {
+            $table = new xmldb_table($tablename);
+            $field = new xmldb_field('ladderversionid', XMLDB_TYPE_INTEGER, '10');
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+        }
+        // The bundled consultant ladder is a source snapshot. Only explicit
+        // stable-ID config links are migrated; name-based legacy guesses are
+        // reported separately and never written as authoritative bindings.
+        require_once(__DIR__ . '/../classes/grade_ladders.php');
+        \local_ustar\grade_ladders::seed_legacy();
+        upgrade_plugin_savepoint(true, 2026092706, 'local', 'ustar');
+    }
+
 return true;
 }

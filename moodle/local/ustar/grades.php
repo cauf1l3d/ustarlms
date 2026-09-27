@@ -138,7 +138,7 @@ if ($view === 'assignments') {
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'assignments']);
     echo html_writer::tag('label', 'Имя или почта сотрудника', ['for' => 'grade-search']);
     echo html_writer::empty_tag('input', ['type' => 'search', 'name' => 'q', 'id' => 'grade-search',
-        'value' => s($query), 'minlength' => 2, 'class' => 'form-control']);
+        'value' => $query, 'minlength' => 2, 'class' => 'form-control']);
     echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Найти', 'class' => 'u-btn']);
     echo html_writer::end_tag('form');
     if ($query !== '' && core_text::strlen($query) < 2) {
@@ -167,7 +167,7 @@ if ($view === 'assignments') {
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'assigninitial']);
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'userid', 'value' => (int)$candidate->id]);
-            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'q', 'value' => s($query)]);
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'q', 'value' => $query]);
             echo html_writer::tag('label', 'Основание назначения', ['for' => 'grade-assignment-' . (int)$candidate->id]);
             echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'reason',
                 'id' => 'grade-assignment-' . (int)$candidate->id, 'required' => 'required', 'class' => 'form-control']);

@@ -114,7 +114,7 @@ jobs:
         run: docker compose -f tests/stage/compose.yaml down --volumes
 
   rollback:
-    if: ${{ (github.event_name == 'workflow_dispatch' && (inputs.full_rc || inputs.rollback_only)) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && (inputs.full_rc || inputs.rollback_only)) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && contains(fromJSON('["full-rc","rollback-preflight"]'), github.event.label.name)) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:

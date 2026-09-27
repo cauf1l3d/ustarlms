@@ -35,7 +35,8 @@ cp /source/tests/stage/config.php "$MOODLE/config.php"
 BASELINE_SHA="$(php -r 'echo json_decode(file_get_contents("/source/tests/stage/runtime.json"), true)["upgrade_from_commit"];')"
 CANDIDATE_SHA="$(git -C /source rev-parse HEAD)"
 
-test "$BASELINE_SHA" = "378d397152a8c83f8b0d046e2e561ab2732d6b02" || fail "unexpected baseline SHA: $BASELINE_SHA"
+PRODUCTION_SHA="$(php -r 'echo json_decode(file_get_contents("/source/tests/stage/production.json"), true)["source_commit"];')"
+test "$BASELINE_SHA" = "$PRODUCTION_SHA" || fail "stage baseline differs from verified production source"
 test "$CANDIDATE_SHA" != "$BASELINE_SHA" || fail "candidate must differ from baseline"
 
 install_sources() {

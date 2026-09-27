@@ -1,5 +1,20 @@
 # Активная работа — 2026-09-27
 
+## G06 / N07 — лента Академии, черновой код
+
+[PR №30](https://github.com/cauf1l3d/ustarlms/pull/30) поверх PR29,
+head `894910597d0bad8a05588c455ee38bbc23f84ccc`:
+лента с серверным audience ACL до пагинации и на прямом просмотре/файлах,
+посты от себя/подразделения/Академии, черновики, ключ повторной отправки,
+изображения и файлы, лайки, комментарии, репосты и жалобы. Отдельные
+capability и текущий scope запрещают получать права по строке должности.
+[ADR-0008](https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-g06-feed-20260927/context/decisions/ADR-0008-feed-audience-and-authorship.md)
+описывает аудиторию и незакрытые назначения ролей. Первый/второй коммиты
+прошли source/frontend runs №263/264; exact-head run №265 SUCCESS.
+Privacy export/delete/retention, role mapping и финальный UX/ACL/performance
+не закрыты. Moodle DB/rollback/визуальная проверка — на общем RC;
+production не менялся. N07 не принят.
+
 ## G05 / N02 — версии и HR-коррекция, исходники в черновике
 
 [PR №29](https://github.com/cauf1l3d/ustarlms/pull/29) поверх PR28,

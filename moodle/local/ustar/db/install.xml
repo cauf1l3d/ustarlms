@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026082746" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026092702" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -539,6 +539,7 @@
         <FIELD NAME="eventtype" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="metadatajson" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="actionurl" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="dueat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="unread" SEQUENCE="false" />

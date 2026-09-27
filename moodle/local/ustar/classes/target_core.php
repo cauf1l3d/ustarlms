@@ -477,6 +477,8 @@ final class target_core {
                     'userid' => $userid, 'severity' => $severity,
                     'eventtype' => self::clean_code((string)($data['eventtype'] ?? 'general')) ?: 'general',
                     'subject' => \core_text::substr($subject, 0, 255), 'message' => $message,
+                    'metadatajson' => !empty($data['metadata'])
+                        ? json_encode($data['metadata'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) : null,
                     'actionurl' => trim((string)($data['actionurl'] ?? '')) ?: null,
                     'dueat' => !empty($data['dueat']) ? (int)$data['dueat'] : null,
                     'status' => 'unread', 'idempotencykey' => $key, 'ackat' => null,

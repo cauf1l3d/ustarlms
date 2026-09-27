@@ -284,16 +284,62 @@ final class communication {
             $records = $DB->get_records(
                 'local_ustar_notifications', ['userid' => $userid], 'timecreated DESC', '*', 0, max(1, min(200, $limit))
             );
+            // The key ties legacy notification rows to an exact request and
+            // recipient. Fetch all candidates at once, then verify the type.
+            $registrationids = [];
+            foreach ($records as $record) {
+                if ((string)$record->eventtype === 'registration_requested'
+                        && preg_match('/^registration-requested:([1-9][0-9]*):' . $userid . '$/',
+                            (string)$record->idempotencykey, $match)) {
+                    $registrationids[] = (int)$match[1];
+                }
+            }
+            $requests = [];
+            if ($registrationids) {
+                $requests = $DB->get_records_list('local_ustar_staff_requests', 'id',
+                    array_values(array_unique($registrationids)));
+            }
+            $departmentmap = $registrationids
+                ? people::department_map(structure::get(structure::NAME_STRUCTURE)) : [];
+            $canreview = has_capability('local/ustar:hrmanage', \context_system::instance(), $userid)
+                && has_capability('local/ustar:approveregistration', \context_system::instance(), $userid)
+                && team_access::active_actor($userid);
             $rows = [];
             foreach ($records as $record) {
                 $actionurl = clean_param((string)$record->actionurl, PARAM_URL);
+                $message = (string)$record->message;
+                $eventlabel = (string)$record->eventtype === 'registration_requested'
+                    ? 'Регистрация сотрудника' : 'Уведомление Академии';
+                if ((string)$record->eventtype === 'registration_requested') {
+                    $actionurl = '';
+                    $message = 'Заявка на регистрацию сотрудника.';
+                    if ($canreview && preg_match('/^registration-requested:([1-9][0-9]*):' . $userid . '$/',
+                            (string)$record->idempotencykey, $match)) {
+                        $requestid = (int)$match[1];
+                        $request = $requests[$requestid] ?? null;
+                        if ($request && (string)$request->requesttype === staffing_requests::TYPE_REGISTRATION) {
+                            $metadata = json_decode((string)($record->metadatajson ?? ''), true);
+                            $snapshot = is_array($metadata) && (int)($metadata['version'] ?? 0) === 1
+                                && (int)($metadata['requestid'] ?? 0) === $requestid
+                                && (string)($metadata['departmentid'] ?? '') === (string)$request->departmentid
+                                ? trim((string)($metadata['departmentname'] ?? '')) : '';
+                            $department = $snapshot !== '' ? $snapshot
+                                : (string)($departmentmap[(string)$request->departmentid]['name']
+                                    ?? 'Подразделение недоступно');
+                            $fullname = trim((string)$request->lastname . ' ' . (string)$request->firstname);
+                            $message = ($fullname !== '' ? $fullname : 'Сотрудник')
+                                . ' указал подразделение «' . $department . '» для подтверждения HRD.';
+                            $actionurl = (new \moodle_url('/local/ustar/staffing.php',
+                                ['requestid' => $requestid], 'request-' . $requestid))->out(false);
+                        }
+                    }
+                }
                 $unread = (string)$record->status === 'unread';
                 $rows[] = [
                     'id' => (int)$record->id,
                     'subject' => (string)$record->subject,
-                    'message' => shorten_text(strip_tags((string)$record->message), 220),
-                    'component' => 'local_ustar',
-                    'eventtype' => (string)$record->eventtype,
+                    'message' => shorten_text(strip_tags($message), 220),
+                    'eventlabel' => $eventlabel,
                     'severity' => (string)$record->severity,
                     'unread' => $unread,
                     'read' => !$unread,
@@ -322,8 +368,7 @@ final class communication {
                 'id' => (int)$record->id,
                 'subject' => trim((string)$record->subject) ?: 'Уведомление',
                 'message' => shorten_text(strip_tags((string)($record->smallmessage ?: $record->fullmessage)), 220),
-                'component' => (string)$record->component,
-                'eventtype' => (string)$record->eventtype,
+                'eventlabel' => 'Уведомление Академии',
                 'unread' => empty($record->timeread),
                 'read' => !empty($record->timeread),
                 'time' => userdate((int)$record->timecreated, '%d.%m.%Y %H:%M'),

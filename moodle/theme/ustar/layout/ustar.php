@@ -68,7 +68,6 @@ $view =
 
 $hrpages = [
     '/local/ustar/hr.php',
-    '/local/ustar/workspace.php',
 ];
 
 $positionpages = [
@@ -333,7 +332,6 @@ $pagelabels = [
 
 $controlpagelabels = [
     '/local/ustar/hr.php' => 'Сотрудники',
-    '/local/ustar/workspace.php' => 'Оргпространство',
     '/local/ustar/positions.php' => 'Модели должностей',
     '/local/ustar/route_studio.php' => 'Маршруты обучения',
     '/local/ustar/materials.php' => 'Материалы',

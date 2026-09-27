@@ -425,6 +425,48 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertSame('retail_seller', organization_identity::resolve($userid)['positionid']);
     }
 
+    public function test_registration_notification_preserves_snapshot_and_recovers_legacy_without_exposing_ids(): void {
+        global $DB;
+        $hrd = $this->employee('retail_head');
+        $this->grant($hrd->id, ['local/ustar:hrmanage', 'local/ustar:approveregistration']);
+        $userid = registration_service::register([
+            'username' => 'noticehire', 'password' => 'Qx9!Ayear2026',
+            'email' => 'noticehire@example.invalid', 'firstname' => 'Сотрудник',
+            'lastname' => 'Тестовый', 'departmentid' => 'retail',
+        ]);
+        $request = $DB->get_record('local_ustar_staff_requests', ['employeeid' => $userid], '*', MUST_EXIST);
+        $key = 'registration-requested:' . $request->id . ':' . $hrd->id;
+        $notice = $DB->get_record('local_ustar_notifications', ['idempotencykey' => $key], '*', MUST_EXIST);
+        $this->assertSame('Розничный отдел', json_decode($notice->metadatajson, true)['departmentname']);
+        $this->assertStringNotContainsString('dept_', $notice->message);
+
+        $structure = structure::get(structure::NAME_STRUCTURE);
+        foreach ($structure['departments'] as &$department) {
+            if ($department['id'] === 'retail') {
+                $department['name'] = 'Новый розничный отдел';
+            }
+        }
+        unset($department);
+        structure::save(structure::NAME_STRUCTURE, $structure);
+        $rows = communication::notifications((int)$hrd->id);
+        $this->assertSame('Регистрация сотрудника', $rows[0]['eventlabel']);
+        $this->assertStringContainsString('Розничный отдел', $rows[0]['message']);
+        $this->assertStringNotContainsString('Новый розничный отдел', $rows[0]['message']);
+        $this->assertStringContainsString('requestid=' . $request->id, $rows[0]['url']);
+
+        $DB->set_field('local_ustar_notifications', 'metadatajson', null, ['id' => $notice->id]);
+        $DB->set_field('local_ustar_notifications', 'message', 'Сотрудник указал подразделение dept_internal',
+            ['id' => $notice->id]);
+        $rows = communication::notifications((int)$hrd->id);
+        $this->assertStringContainsString('Новый розничный отдел', $rows[0]['message']);
+        $this->assertStringNotContainsString('dept_internal', $rows[0]['message']);
+
+        $DB->set_field('user', 'suspended', 1, ['id' => $hrd->id]);
+        $rows = communication::notifications((int)$hrd->id);
+        $this->assertFalse($rows[0]['hasurl']);
+        $this->assertSame('Заявка на регистрацию сотрудника.', $rows[0]['message']);
+    }
+
     public function test_invalid_self_registration_reports_a_useful_field_error_without_creating_a_user(): void {
         global $DB;
         $before = $DB->count_records('user');

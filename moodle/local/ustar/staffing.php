@@ -96,10 +96,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== '') {
 }
 
 $requests = \local_ustar\staffing_requests::list_for((int)$USER->id);
+$focusedrequestid = optional_param('requestid', 0, PARAM_INT);
+if ($focusedrequestid > 0 && !in_array($focusedrequestid,
+        array_map(static fn(array $row): int => (int)$row['id'], $requests), true)) {
+    throw new required_capability_exception($context, 'local/ustar:approveregistration', 'nopermissions', '');
+}
 $today = userdate(time(), '%Y-%m-%d');
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/ustar/staffing.php'));
+$PAGE->set_url(new moodle_url('/local/ustar/staffing.php',
+    $focusedrequestid ? ['requestid' => $focusedrequestid] : []));
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Заявки на персонал | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');

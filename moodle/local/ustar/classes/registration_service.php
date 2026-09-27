@@ -277,6 +277,8 @@ final class registration_service {
     }
 
     private static function notify_reviewers(int $requestid, string $departmentid, string $fullname): void {
+        $departments = array_column(self::departments(), 'name', 'id');
+        $departmentname = (string)($departments[$departmentid] ?? 'Подразделение недоступно');
         $recipients = [];
         foreach (get_users_by_capability(\context_system::instance(),
                 'local/ustar:approveregistration', 'u.id', 'u.id ASC') ?: [] as $candidate) {
@@ -292,8 +294,14 @@ final class registration_service {
                 'severity' => 'normal',
                 'eventtype' => 'registration_requested',
                 'subject' => 'Новая заявка на регистрацию сотрудника',
-                'message' => $fullname . ' указал подразделение ' . $departmentid . ' для подтверждения HRD.',
-                'actionurl' => (new \moodle_url('/local/ustar/staffing.php'))->out(false),
+                'message' => $fullname . ' указал подразделение «' . $departmentname . '» для подтверждения HRD.',
+                'actionurl' => (new \moodle_url('/local/ustar/staffing.php',
+                    ['requestid' => $requestid], 'request-' . $requestid))->out(false),
+                'metadata' => [
+                    'version' => 1, 'requestid' => $requestid,
+                    'departmentid' => $departmentid, 'departmentname' => $departmentname,
+                    'fullname' => $fullname,
+                ],
                 'idempotencykey' => 'registration-requested:' . $requestid . ':' . $recipientid,
             ]);
         }

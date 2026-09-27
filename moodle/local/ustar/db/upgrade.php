@@ -4342,5 +4342,14 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092701, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092702) {
+        $table = new xmldb_table('local_ustar_notifications');
+        $field = new xmldb_field('metadatajson', XMLDB_TYPE_TEXT, null, null, null, null, null, 'message');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_plugin_savepoint(true, 2026092702, 'local', 'ustar');
+    }
+
 return true;
 }

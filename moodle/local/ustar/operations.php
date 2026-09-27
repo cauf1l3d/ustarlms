@@ -29,7 +29,7 @@ $data = [
     'skillpeople' => $dashboard['skills']['people'],
     'hasskillpeople' => !empty($dashboard['skills']['people']),
 
-    'workspaceurl' => (new moodle_url('/local/ustar/workspace.php'))->out(false),
+    'teamurl' => (new moodle_url('/local/ustar/team.php'))->out(false),
     'positionsurl' => (new moodle_url('/local/ustar/positions.php'))->out(false),
     'materialsurl' => (new moodle_url('/local/ustar/materials.php'))->out(false),
     'routesurl' => has_capability('local/ustar:hrmanage', $context)
@@ -54,7 +54,7 @@ $data = [
     'hascheckliststudio' => has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context),
     'hasadaptationcontrol' => \local_ustar\adaptation_service::is_hrd_actor((int)$USER->id),
     'adaptationcontrolurl' => (new moodle_url('/local/ustar/adaptation_control.php'))->out(false),
-    'workspaceicon' => \local_ustar\ui::icon('workspace', 'u-feature-icon'),
+    'teamicon' => \local_ustar\ui::icon('team', 'u-feature-icon'),
     'routeicon' => \local_ustar\ui::icon('route', 'u-feature-icon'),
     'knowledgeicon' => \local_ustar\ui::icon('knowledge', 'u-feature-icon'),
     'paletteicon' => \local_ustar\ui::icon('palette', 'u-feature-icon'),

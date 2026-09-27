@@ -8,6 +8,11 @@ on:
         required: true
         type: boolean
         default: false
+      rollback_only:
+        description: 'Run source, frontend and rollback without the Moodle DB suite'
+        required: true
+        type: boolean
+        default: false
   pull_request:
     branches: [main, 'integration/**', 'codex/**']
     types: [opened, synchronize, reopened, labeled]
@@ -109,7 +114,7 @@ jobs:
         run: docker compose -f tests/stage/compose.yaml down --volumes
 
   rollback:
-    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && (inputs.full_rc || inputs.rollback_only)) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:

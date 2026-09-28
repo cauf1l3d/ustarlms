@@ -63,7 +63,8 @@
 .u-feed__body { margin: 16px 0; line-height: 1.6; font-size: .98rem; }
 .u-feed__external-title { margin: 14px 0 4px; font-size: 1.35rem; line-height: 1.25; }
 .u-feed__external-title-button { display: inline; border: 0; padding: 0; background: transparent;
-  color: var(--u-link, #0879cf); font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+  color: var(--u-link, #0879cf); font: inherit; font-weight: 700; text-align: left; cursor: pointer;
+  text-decoration: none; }
 .u-feed__external-title-button:hover { text-decoration: underline; }
 .u-feed__external-detail { margin: 12px 0 4px; padding: 14px 16px;
   border: 1px solid var(--u-border, #e1e6e2); border-radius: 12px;
@@ -87,6 +88,7 @@
 .u-feed__external-content th, .u-feed__external-content td {
   padding: 7px 9px; border: 1px solid var(--u-border, #e1e6e2); text-align: left;
 }
+.u-feed__external-content a { color: var(--u-link, #0879cf); overflow-wrap: anywhere; }
 .u-feed__external-origin { display: inline-block; margin-top: 12px; font-size: .86rem;
   color: var(--u-brand, #9c356b); text-decoration: none; }
 .u-feed__external-origin:hover { text-decoration: underline; }

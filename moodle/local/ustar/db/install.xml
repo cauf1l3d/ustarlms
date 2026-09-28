@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026092801" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026092802" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1599,6 +1599,46 @@
       <INDEXES>
         <INDEX NAME="owner_source_uix" UNIQUE="true" FIELDS="userid, sourcefileid" />
         <INDEX NAME="owner_time_idx" UNIQUE="false" FIELDS="userid, timecreated" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_sources" COMMENT="Configured external RSS sources for the USTAR feed">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="name" TYPE="char" LENGTH="128" NOTNULL="true" />
+        <FIELD NAME="url" TYPE="text" NOTNULL="true" />
+        <FIELD NAME="urlhash" TYPE="char" LENGTH="64" NOTNULL="true" />
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+        <FIELD NAME="audiencejson" TYPE="text" NOTNULL="true" />
+        <FIELD NAME="lastchecked" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+        <FIELD NAME="lastsuccess" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+        <FIELD NAME="lasterror" TYPE="text" NOTNULL="false" />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="urlhash_uix" UNIQUE="true" FIELDS="urlhash" />
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled, id" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_feed_sourceitem" COMMENT="Deduplicated RSS items linked to imported feed posts">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="sourceid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="guidhash" TYPE="char" LENGTH="64" NOTNULL="true" />
+        <FIELD NAME="externalguid" TYPE="text" NOTNULL="true" />
+        <FIELD NAME="externalurl" TYPE="text" NOTNULL="true" />
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" />
+        <FIELD NAME="publishedat" TYPE="int" LENGTH="10" NOTNULL="true" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
+      <INDEXES>
+        <INDEX NAME="source_guid_uix" UNIQUE="true" FIELDS="sourceid, guidhash" />
+        <INDEX NAME="post_uix" UNIQUE="true" FIELDS="postid" />
+        <INDEX NAME="source_time_idx" UNIQUE="false" FIELDS="sourceid, publishedat" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_feed_posts" COMMENT="Feed posts and repost references">

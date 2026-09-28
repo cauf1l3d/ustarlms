@@ -570,7 +570,14 @@ final class feed_rss {
             $update->contenthash = hash('sha256', $feedcontent);
         } else if (!empty($source->resolverenabled)) {
             if ($status === 'done') {
-                // Keep already resolved full text; only refresh feed metadata.
+                // Stable successful items are not refetched. A changed RSS item
+                // is requeued while the previously resolved content stays visible.
+                if ($feedchanged) {
+                    $update->enrichstatus = 'pending';
+                    $update->enrichattempts = 0;
+                    $update->enrichnexttry = 0;
+                    $update->enricherror = null;
+                }
             } else {
                 $update->contenttext = $feedcontent;
                 $update->contenthtml = null;

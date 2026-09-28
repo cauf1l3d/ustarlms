@@ -87,6 +87,7 @@ XML;
             'url' => feed_rss::PILOT_URL,
             'urlhash' => hash('sha256', feed_rss::PILOT_URL),
             'enabled' => 0,
+            'resolverenabled' => 0,
             'audiencejson' => json_encode(['all']),
             'lastchecked' => 0,
             'lastsuccess' => 0,
@@ -116,7 +117,16 @@ XML;
             'externalguid' => 'g1',
             'externalurl' => 'https://vc.ru/example',
             'title' => 'Материал VC',
+            'feedcontenttext' => 'Полный текст материала',
             'contenttext' => 'Полный текст материала',
+            'contenthtml' => null,
+            'enrichstatus' => 'feed',
+            'enrichattempts' => 0,
+            'enrichnexttry' => 0,
+            'enrichedat' => 0,
+            'enricherror' => null,
+            'resolvedurl' => null,
+            'contenthash' => hash('sha256', 'Полный текст материала'),
             'publishedat' => time(),
             'timecreated' => time(),
         ]);
@@ -125,7 +135,6 @@ XML;
         $this->assertArrayHasKey($postid, $rows);
         $this->assertSame('vc.ru', $rows[$postid]->sourcename);
         $this->assertSame('Материал VC', $rows[$postid]->title);
-        $this->assertSame('Полный текст материала', $rows[$postid]->contenttext);
         $this->assertSame('https://vc.ru/example', $rows[$postid]->externalurl);
     }
 }

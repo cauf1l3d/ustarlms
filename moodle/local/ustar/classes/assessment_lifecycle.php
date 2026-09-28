@@ -75,7 +75,11 @@ final class assessment_lifecycle {
             ];
         }
         $view = self::route_view($runtime, $policy, $positionid);
-        if ((int)$view['attemptsused'] > $storedattempts && $view['status'] !== self::STATUS_PASSED) {
+        $gradedwhileawaiting = (string)$runtime->status === self::STATUS_AWAITING
+            && (int)$view['providerpending'] === 0;
+        if (((int)$view['attemptsused'] > $storedattempts
+                || ((int)$view['verifiedcompletedat'] > 0 && $view['status'] !== self::STATUS_PASSED)
+                || $gradedwhileawaiting) && $view['status'] !== self::STATUS_PASSED) {
             $view['pendingsync'] = true;
             $view['statuslabel'] = 'Состояние аттестации обновляется';
             $view['canlaunch'] = false;
@@ -354,6 +358,7 @@ final class assessment_lifecycle {
             'actionlabel' => 'Продолжить',
             'actionlabelshort' => 'Продолжить',
             'attemptsused' => (int)$state['totalattempts'],
+            'providerpending' => (int)($state['pendingattempts'] ?? 0),
             'attemptlimit' => $currentlimit,
             'cycle' => $cycle,
             'maxcycles' => (int)$policy->maxcycles,

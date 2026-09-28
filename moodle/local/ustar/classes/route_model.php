@@ -772,6 +772,15 @@ final class route_model {
             return $existing;
         }
 
+        // Reject an empty published version before inserting the point. In a
+        // delegated transaction owned by another caller (including PHPUnit),
+        // rollback is deferred until the outer transaction finishes.
+        if (self::clean_status((string)($version['status'] ?? self::STATUS_DRAFT)) === self::STATUS_PUBLISHED
+                && !self::normalize_requirements(is_array($version['requirements'] ?? null)
+                    ? $version['requirements'] : [])) {
+            throw new \moodle_exception('Нельзя опубликовать шаг без обучения или условия завершения');
+        }
+
         $pointid = (int)$DB->insert_record('local_ustar_route_points', (object)[
             'routeid' => (int)$route->id,
             'pointkey' => $pointkey,

@@ -605,7 +605,7 @@ if ($feedtotal) {
 $categoryfilters = [
     [
         'label' => 'Все категории',
-        'count' => count($all),
+        'count' => count($all) + $feedtotal,
         'selected' => $categoryfilter === 'all',
         'url' => (new moodle_url(
             '/local/ustar/knowledge.php',

@@ -39,6 +39,8 @@ def check(skip_php=False):
     assert int(schema.attrib['VERSION']) <= version, 'Schema version exceeds plugin version'
     saves = re.findall(r'upgrade_plugin_savepoint\(true,\s*(\d+)', (ROOT / 'moodle/local/ustar/db/upgrade.php').read_text())
     assert all(int(v) <= version for v in saves), 'Upgrade savepoint exceeds plugin version'
+    feed = (ROOT / 'moodle/local/ustar/feed.php').read_text()
+    assert "$PAGE->set_pagelayout('ustar');" in feed, 'Feed must use native USTAR page layout'
     templates = [p for p in files if p.suffix == '.mustache']
     for path in templates:
         stack = []

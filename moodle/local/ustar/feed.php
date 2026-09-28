@@ -10,8 +10,8 @@ $PAGE->set_context($context);
 $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
 $PAGE->set_pagelayout('ustar');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-rss-stage2']));
-$PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-rss-stage2']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-rss-stage3']));
+$PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-rss-stage3']));
 $notice = '';
 $actorid = (int)$USER->id;
 
@@ -512,12 +512,31 @@ foreach ($posts as $post) {
     }
     if ($external) {
         $fulltext = trim((string)($external->contenttext ?? ''));
+        $fullhtml = trim((string)($external->contenthtml ?? ''));
+        $enrichstatus = (string)($external->enrichstatus ?? '');
         echo html_writer::start_div('u-feed__external-detail', [
             'id' => 'feed-external-' . $postid,
             'hidden' => $externalopen ? null : 'hidden',
         ]);
-        if ($fulltext !== '' && $fulltext !== trim((string)$post->body)) {
+        if ($fullhtml !== '') {
+            echo html_writer::tag('div',
+                format_text($fullhtml, FORMAT_HTML, ['filter' => false]),
+                ['class' => 'u-feed__external-content']);
+        } else if ($fulltext !== '' && $fulltext !== trim((string)$post->body)) {
             echo html_writer::tag('div', nl2br(s($fulltext)), ['class' => 'u-feed__external-content']);
+        } else if (!empty($external->resolverenabled)
+                && in_array($enrichstatus, ['pending', 'retry'], true)) {
+            echo html_writer::tag('p',
+                'Полный текст поставлен в безопасную очередь обработки.',
+                ['class' => 'u-feed__source']);
+        } else if ($enrichstatus === 'failed') {
+            echo html_writer::tag('p',
+                'Полный текст не удалось получить после ограниченного числа попыток.',
+                ['class' => 'u-feed__source']);
+        } else if ($enrichstatus === 'limited') {
+            echo html_writer::tag('p',
+                'Страница источника не предоставила достаточно дополнительного текста.',
+                ['class' => 'u-feed__source']);
         } else {
             echo html_writer::tag('p',
                 'Источник передал только краткое описание материала.',

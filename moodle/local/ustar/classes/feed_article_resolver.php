@@ -365,7 +365,7 @@ final class feed_article_resolver {
     private static function candidate_score(\DOMElement $node, int $bonus): int {
         $text = self::normalise_text((string)$node->textContent);
         $length = \core_text::strlen($text);
-        if ($length < 250) {
+        if ($length < 120) {
             return -1;
         }
 

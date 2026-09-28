@@ -29,7 +29,11 @@ final class feed_service {
             throw new \invalid_parameter_exception('Неверный ключ отправки публикации.');
         }
         $audience = array_values(array_map('strval', $audience));
-        feed_access::assert_publisher($actorid, $type, $publisherid, $audience);
+        if ($type === 'person' && $publisherid === (string)$actorid && $audience === ['all']) {
+            feed_access::require_creator($actorid);
+        } else {
+            feed_access::assert_publisher($actorid, $type, $publisherid, $audience);
+        }
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
             ->get_lock('feed-create:' . $actorid . ':' . $requestkey, 10);
         if (!$lock) {

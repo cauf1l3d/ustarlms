@@ -80,6 +80,19 @@ XML;
         feed_rss::parse('<?xml version="1.0"?><root><item>not-rss</item></root>');
     }
 
+    public function test_validate_url_rejects_private_literal_address(): void {
+        $this->expectException(\invalid_parameter_exception::class);
+        feed_rss::validate_url('https://127.0.0.1/rss.xml');
+    }
+
+    public function test_resolve_url_keeps_https_relative_targets(): void {
+        $this->assertSame(
+            'https://example.com/news/image.jpg',
+            feed_rss::resolve_url('https://example.com/news/article', 'image.jpg')
+        );
+        $this->assertSame('', feed_rss::resolve_url('https://example.com/news/article', 'javascript:alert(1)'));
+    }
+
     public function test_metadata_for_posts_joins_source_and_external_item(): void {
         global $DB;
         $sourceid = (int)$DB->insert_record('local_ustar_feed_sources', (object)[

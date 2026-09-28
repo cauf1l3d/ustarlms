@@ -285,6 +285,9 @@ if ($compose && $cancreate) {
     $modes = ['all' => 'Все сотрудники', 'mydepartment' => 'Моё подразделение',
         'departments' => 'Выбранные подразделения', 'managers' => 'Все руководители',
         'positions' => 'Выбранные должности', 'people' => 'Конкретные сотрудники'];
+    if (\local_ustar\feed_access::department_id($actorid) === '') {
+        unset($modes['mydepartment']);
+    }
     foreach ($modes as $mode => $label) {
         echo html_writer::start_tag('label', ['data-feed-mode-for' => $mode === 'mydepartment' ? 'person' :
             ($mode === 'departments' ? 'academy' : 'both')]);
@@ -418,7 +421,9 @@ if ($filter === 'mine') {
         echo html_writer::end_tag('section');
     }
 }
-$renderattachment = static function(array $attachment, int $sourcepostid) use ($caninteract, $actorid): void {
+$cansaveattachments = $caninteract && \local_ustar\employment::is_active($actorid);
+$academyiconurl = $OUTPUT->image_url('brand/ustar-app-icon', 'theme_ustar')->out(false);
+$renderattachment = static function(array $attachment, int $sourcepostid) use ($cansaveattachments): void {
     echo html_writer::start_tag('figure', ['class' => 'u-feed__file']);
     if ($attachment['image']) {
         echo html_writer::link($attachment['url'],
@@ -432,7 +437,7 @@ $renderattachment = static function(array $attachment, int $sourcepostid) use ($
     echo html_writer::start_tag('figcaption', ['class' => 'u-feed__file-actions']);
     echo html_writer::link($attachment['downloadurl'], '↓ Скачать',
         ['class' => 'u-feed__file-action', 'download' => $attachment['name']]);
-    if ($caninteract && \local_ustar\employment::is_active($actorid)) {
+    if ($cansaveattachments) {
         echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
         foreach (['sesskey' => sesskey(), 'action' => 'savefile', 'postid' => $sourcepostid,
                 'fileid' => $attachment['id']] as $field => $value) {
@@ -456,7 +461,7 @@ foreach ($posts as $post) {
     echo html_writer::start_div('u-feed__meta');
     if ($post->publishertype === 'academy') {
         echo html_writer::tag('span', html_writer::empty_tag('img', [
-            'src' => $OUTPUT->image_url('brand/ustar-app-icon', 'theme_ustar')->out(false),
+            'src' => $academyiconurl,
             'alt' => '', 'class' => 'u-feed__avatar-image']),
             ['class' => 'u-feed__avatar u-feed__avatar--academy', 'aria-hidden' => 'true']);
     } else {

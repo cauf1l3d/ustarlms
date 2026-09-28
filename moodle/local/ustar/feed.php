@@ -492,12 +492,17 @@ foreach ($posts as $post) {
     echo html_writer::end_div();
     echo html_writer::end_div();
     $externalopen = $external && $selectedid === $postid;
+    $externalcontenturl = $external
+        ? (new moodle_url('/local/ustar/feed_external_content.php', ['postid' => $postid]))->out(false)
+        : '';
     if ($external) {
+        $internalurl = (new moodle_url('/local/ustar/feed.php',
+            ['postid' => $postid, 'filter' => $filter]))->out(false) . '#post-' . $postid;
         echo html_writer::tag('h3',
-            html_writer::tag('button', s((string)$external->title), [
-                'type' => 'button',
+            html_writer::link($internalurl, s((string)$external->title), [
                 'class' => 'u-feed__external-title-button',
                 'data-feed-external-toggle' => 'feed-external-' . $postid,
+                'data-feed-external-content-url' => $externalcontenturl,
                 'aria-expanded' => $externalopen ? 'true' : 'false',
             ]),
             ['class' => 'u-feed__external-title']);
@@ -511,37 +516,22 @@ foreach ($posts as $post) {
         echo html_writer::end_div();
     }
     if ($external) {
-        $fulltext = trim((string)($external->contenttext ?? ''));
-        $fullhtml = trim((string)($external->contenthtml ?? ''));
-        $enrichstatus = (string)($external->enrichstatus ?? '');
+        $externalpayload = $externalopen
+            ? \local_ustar\feed_external_content::payload($postid, $actorid)
+            : null;
         echo html_writer::start_div('u-feed__external-detail', [
             'id' => 'feed-external-' . $postid,
             'hidden' => $externalopen ? null : 'hidden',
+            'data-feed-external-panel' => '1',
+            'data-feed-loaded' => $externalopen ? '1' : '0',
         ]);
-        if ($fullhtml !== '') {
-            echo html_writer::tag('div',
-                format_text($fullhtml, FORMAT_HTML, ['filter' => false]),
-                ['class' => 'u-feed__external-content']);
-        } else if ($fulltext !== '' && $fulltext !== trim((string)$post->body)) {
-            echo html_writer::tag('div', nl2br(s($fulltext)), ['class' => 'u-feed__external-content']);
-        } else if (!empty($external->resolverenabled)
-                && in_array($enrichstatus, ['pending', 'retry'], true)) {
-            echo html_writer::tag('p',
-                'Полный текст поставлен в безопасную очередь обработки.',
-                ['class' => 'u-feed__source']);
-        } else if ($enrichstatus === 'failed') {
-            echo html_writer::tag('p',
-                'Полный текст не удалось получить после ограниченного числа попыток.',
-                ['class' => 'u-feed__source']);
-        } else if ($enrichstatus === 'limited') {
-            echo html_writer::tag('p',
-                'Страница источника не предоставила достаточно дополнительного текста.',
-                ['class' => 'u-feed__source']);
+        echo html_writer::start_div('u-feed__external-body', ['data-feed-external-body' => '1']);
+        if ($externalpayload) {
+            echo $externalpayload['html'];
         } else {
-            echo html_writer::tag('p',
-                'Источник передал только краткое описание материала.',
-                ['class' => 'u-feed__source']);
+            echo html_writer::tag('p', 'Загрузка полного материала…', ['class' => 'u-feed__source']);
         }
+        echo html_writer::end_div();
         echo html_writer::link((string)$external->externalurl,
             'Оригинал на ' . s((string)$external->sourcename) . ' ↗', [
                 'class' => 'u-feed__external-origin',

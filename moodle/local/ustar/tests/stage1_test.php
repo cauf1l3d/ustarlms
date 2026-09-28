@@ -77,6 +77,25 @@ final class stage1_test extends \advanced_testcase {
         $this->assertSame(0, $DB->count_records('local_ustar_route_progress', ['userid' => $user->id]));
     }
 
+    public function test_employee_route_read_keeps_launch_details_without_writing(): void {
+        global $DB;
+        [$g, $user, $route, $point, $version] = $this->fixture();
+        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $page = $this->getDataGenerator()->create_module('page',
+            ['course' => $course->id, 'completion' => 1]);
+        $DB->set_field('local_ustar_route_versions', 'requirementsjson', json_encode([
+            ['type' => 'cm', 'sourceid' => $page->cmid, 'required' => true],
+        ]), ['id' => $version->id]);
+        $before = $DB->perf_get_writes();
+        $actual = route_model::for_user($route->positionid, $user->id, true);
+        $this->assertSame($before, $DB->perf_get_writes());
+        $this->assertSame('current', $actual['currentpoint']['status']);
+        $this->assertTrue($actual['currentpoint']['canlaunch']);
+        $this->assertStringContainsString('activity_launch.php', $actual['currentpoint']['launchurl']);
+        $this->assertSame(0, $DB->count_records('user_enrolments', ['userid' => $user->id]));
+        $this->assertSame(0, $DB->count_records('local_ustar_route_progress', ['userid' => $user->id]));
+    }
+
     public function test_assessment_preview_returns_only_persisted_state_without_provider(): void {
         global $DB, $SESSION;
         [$g, $user, $route, $point, $version] = $this->fixture();

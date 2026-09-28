@@ -5,7 +5,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Published grade order is immutable; positions bind a specific version. */
 final class grade_ladders {
-    /** @var array<string,\stdClass>|null */
+    /** @var array<string,\stdClass|null>|null */
     private static ?array $bindingcache = null;
     /** @var array<int,array<int,array<string,mixed>>> */
     private static array $versiongrades = [];
@@ -238,13 +238,12 @@ final class grade_ladders {
     public static function binding(string $positionid): ?\stdClass {
         global $DB;
         if (!self::available() || $positionid === '') { return null; }
-        if (self::$bindingcache === null) {
-            self::$bindingcache = [];
-            foreach ($DB->get_records('local_ustar_grade_bindings') as $row) {
-                self::$bindingcache[(string)$row->positionid] = $row;
-            }
+        self::$bindingcache ??= [];
+        if (!array_key_exists($positionid, self::$bindingcache)) {
+            self::$bindingcache[$positionid] = $DB->get_record('local_ustar_grade_bindings',
+                ['positionid' => $positionid], '*', IGNORE_MISSING) ?: null;
         }
-        return self::$bindingcache[$positionid] ?? null;
+        return self::$bindingcache[$positionid];
     }
 
     /** @return array<int,array<string,mixed>>|null */

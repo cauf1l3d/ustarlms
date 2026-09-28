@@ -68,7 +68,8 @@ if ($view === 'assignments' && core_text::strlen($query) >= 2) {
         'SELECT u.id, u.firstname, u.lastname, u.email FROM {user} u
           LEFT JOIN {local_ustar_employment} e ON e.userid = u.id
           LEFT JOIN {user_info_data} d ON d.userid = u.id AND d.fieldid = :typefieldid
-          WHERE u.deleted = 0 AND u.id > 1 AND (e.status IS NULL OR e.status = :active)
+          WHERE u.deleted = 0 AND u.suspended = 0 AND u.id > 1
+            AND (e.status IS NULL OR e.status = :active)
             AND (d.data IS NULL OR d.data NOT IN (:service, :test)) AND ('
             . $DB->sql_like('u.firstname', ':firstname', false) . ' OR '
             . $DB->sql_like('u.lastname', ':lastname', false) . ' OR '

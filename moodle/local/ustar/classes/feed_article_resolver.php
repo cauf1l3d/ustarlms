@@ -557,7 +557,7 @@ final class feed_article_resolver {
                         continue;
                     }
                     foreach (self::jsonld_articles($decoded) as $article) {
-                        $body = self::normalise_text((string)($article['articleBody'] ?? ''));
+                        $body = self::normalise_text(strip_tags((string)($article['articleBody'] ?? '')));
                         if (\core_text::strlen($body) > \core_text::strlen($jsontext)) {
                             $jsontext = $body;
                             $jsonmedia = self::jsonld_images($article['image'] ?? []);

@@ -44,7 +44,9 @@ final class department_learning {
                 continue;
             }
 
-            if (!accounts::participates((int)$u->id) || !employment::is_active((int)$u->id)) {
+            // participates() already checks active employment; resolving it a
+            // second time added one database read for each team member.
+            if (!accounts::participates((int)$u->id)) {
                 continue;
             }
 

@@ -47,11 +47,8 @@ class hr_operations {
         $learningpeople = [];
         $skillgaps = 0;
         $skillgappeople = [];
-        $profiles = [];
-
         foreach ($employeeids as $userid) {
             $profile = employee_profile::build($userid);
-            $profiles[$userid] = $profile;
 
             $identity = $profile['identity'];
             $hrurl = (new \moodle_url('/local/ustar/hr.php', [
@@ -135,7 +132,6 @@ class hr_operations {
                 'peoplewithgaps' => count($skillgappeople),
                 'people' => array_slice($skillgappeople, 0, 100),
             ],
-            'profiles' => $profiles,
         ];
     }
 }

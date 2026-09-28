@@ -10,6 +10,17 @@ if (\local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\
     redirect(new moodle_url('/local/ustar/profile.php'));
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && optional_param('action', '', PARAM_ALPHA) === 'sync') {
+    require_sesskey();
+    \local_ustar\view_as::assert_writable();
+    $ownidentity = \local_ustar\structure::resolve_user((int)$USER->id);
+    $ownpositionid = (string)($ownidentity['position']['id'] ?? '');
+    if ($ownpositionid !== '' && \local_ustar\employment::learning_allowed((int)$USER->id)) {
+        \local_ustar\route_model::for_user($ownpositionid, (int)$USER->id);
+    }
+    redirect(new moodle_url('/local/ustar/route.php'));
+}
+
 $iselevated = is_siteadmin() || has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context);
 $requestedposition = optional_param('position', '', PARAM_ALPHANUMEXT);
 
@@ -26,7 +37,7 @@ if ($positionid !== '') {
     try {
         $route = $previewing
             ? \local_ustar\route_model::read_only_snapshot($positionid, (int)$USER->id)
-            : \local_ustar\route_model::for_user($positionid, (int)$USER->id);
+            : \local_ustar\route_model::for_user($positionid, (int)$USER->id, true);
     } catch (\Throwable $e) {
         $route = ['ok' => false, 'reason' => 'runtime_error'];
     }
@@ -50,14 +61,14 @@ $forcedretraining = [];
 
 if (!$previewing) {
     try {
-        $adaptation = \local_ustar\adaptation_service::route_card((int)$USER->id);
+        $adaptation = \local_ustar\adaptation_service::route_card((int)$USER->id, false);
     } catch (\Throwable $e) {
         $adaptation = null;
     }
 
     try {
         if (\local_ustar\forced_retraining::available()) {
-            $forcedretraining = \local_ustar\forced_retraining::cards_for_user((int)$USER->id);
+            $forcedretraining = \local_ustar\forced_retraining::cards_for_user((int)$USER->id, false);
             foreach ($forcedretraining as &$forceditem) {
                 $forceditem['assigneddate'] = userdate(
                     (int)$forceditem['assignedat'],
@@ -85,6 +96,7 @@ if ($adaptation && !empty($adaptation['blocked']) && !empty($route['ok'])) {
 
 $rewards = \local_ustar\route_rewards::summary((int)$USER->id);
 $data = [
+    'sesskey' => sesskey(),
     'previewing' => $previewing,
     'continueerror' => optional_param('continueerror', 0, PARAM_BOOL),
     'routerewards' => $rewards,

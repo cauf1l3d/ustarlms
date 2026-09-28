@@ -30,14 +30,14 @@ final class feed_external_content {
         $status = (string)($item->enrichstatus ?? '');
 
         if ($fullhtml !== '') {
-            $html = html_writer::tag(
+            $html = \html_writer::tag(
                 'div',
                 format_text($fullhtml, FORMAT_HTML, ['filter' => false]),
                 ['class' => 'u-feed__external-content']
             );
             $available = true;
         } else if ($fulltext !== '' && $fulltext !== $body) {
-            $html = html_writer::tag(
+            $html = \html_writer::tag(
                 'div',
                 nl2br(s($fulltext)),
                 ['class' => 'u-feed__external-content']
@@ -53,7 +53,7 @@ final class feed_external_content {
             ];
             $message = $messages[$status]
                 ?? 'Источник передал только краткое описание материала.';
-            $html = html_writer::tag('p', s($message), ['class' => 'u-feed__source']);
+            $html = \html_writer::tag('p', s($message), ['class' => 'u-feed__source']);
             $available = false;
         }
 

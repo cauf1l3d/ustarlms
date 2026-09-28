@@ -90,6 +90,19 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    'local/ustar:feedcreate' => [
+        'captype' => 'write', 'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => ['user' => CAP_ALLOW, 'manager' => CAP_ALLOW],
+    ],
+    'local/ustar:feededit' => [
+        'captype' => 'write', 'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [],
+    ],
+    'local/ustar:feedmanage' => [
+        'riskbitmask' => RISK_CONFIG | RISK_DATALOSS | RISK_PERSONAL,
+        'captype' => 'write', 'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [],
+    ],
     'local/ustar:feedpublish' => [
         'captype' => 'write', 'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [],

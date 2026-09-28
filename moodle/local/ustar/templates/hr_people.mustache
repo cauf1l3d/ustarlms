@@ -144,7 +144,7 @@
                 </div>
 
                 <span>
-                    {{peoplecount}}
+                    Показано {{peoplecount}} · страница {{peoplepage}}
                 </span>
 
             </header>
@@ -212,6 +212,20 @@
             </div>
 
             {{/haspeople}}
+
+            {{#previouspeopleurl}}
+            <nav class="u-hr-page-nav" aria-label="Страницы сотрудников">
+                <a class="u-btn" href="{{previouspeopleurl}}">← Предыдущая</a>
+                {{#nextpeopleurl}}<a class="u-btn" href="{{nextpeopleurl}}">Следующая →</a>{{/nextpeopleurl}}
+            </nav>
+            {{/previouspeopleurl}}
+            {{^previouspeopleurl}}
+            {{#nextpeopleurl}}
+            <nav class="u-hr-page-nav" aria-label="Страницы сотрудников">
+                <a class="u-btn" href="{{nextpeopleurl}}">Следующая →</a>
+            </nav>
+            {{/nextpeopleurl}}
+            {{/previouspeopleurl}}
 
 
             {{^haspeople}}

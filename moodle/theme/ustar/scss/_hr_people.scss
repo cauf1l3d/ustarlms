@@ -7,6 +7,14 @@
     margin: 0 auto;
 }
 
+.u-hr-page-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px;
+    border-top: 1px solid var(--u-border);
+}
+
 .u-hr-head {
     display: flex;
     align-items: flex-end;

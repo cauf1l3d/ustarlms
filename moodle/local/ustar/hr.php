@@ -45,6 +45,9 @@ $statusfilter =
         PARAM_ALPHA
     );
 
+$peoplepage = max(0, optional_param('page', 0, PARAM_INT));
+$peoplepagesize = 50;
+
 $userid =
     optional_param(
         'userid',
@@ -338,19 +341,16 @@ $sql = "
 ";
 
 
-$records =
-    $DB->get_records_sql(
-        $sql,
-        $params,
-        0,
-        500
-    );
-
-
 $people = [];
-
-
-foreach ($records as $person) {
+$matchingpeople = 0;
+$hasnextpeoplepage = false;
+$scanoffset = 0;
+do {
+    // Apply the workforce and canonical position filters before deciding the
+    // page boundary. A SQL prefix of 500 users is not a complete HR result.
+    $records = $DB->get_records_sql($sql, $params, $scanoffset, 250);
+    $scanoffset += count($records);
+    foreach ($records as $person) {
 
     if (!\local_ustar\accounts::is_business_account((int)$person->id)) {
         continue;
@@ -385,6 +385,14 @@ foreach ($records as $person) {
         $positionid !== $positionfilter
     ) {
         continue;
+    }
+
+    if ($matchingpeople++ < $peoplepage * $peoplepagesize) {
+        continue;
+    }
+    if (count($people) >= $peoplepagesize) {
+        $hasnextpeoplepage = true;
+        break;
     }
 
 
@@ -488,11 +496,28 @@ foreach ($records as $person) {
 
                         'status' =>
                             $statusfilter,
+
+                        'page' =>
+                            $peoplepage,
                     ]
                 )
             )->out(false),
     ];
 }
+} while (!$hasnextpeoplepage && count($records) === 250);
+
+$peoplepageparams = [
+    'q' => $query,
+    'department' => $departmentfilter,
+    'position' => $positionfilter,
+    'status' => $statusfilter,
+];
+$previouspeopleurl = $peoplepage > 0
+    ? (new moodle_url('/local/ustar/hr.php', $peoplepageparams + ['page' => $peoplepage - 1]))->out(false)
+    : '';
+$nextpeopleurl = $hasnextpeoplepage
+    ? (new moodle_url('/local/ustar/hr.php', $peoplepageparams + ['page' => $peoplepage + 1]))->out(false)
+    : '';
 
 
 /*
@@ -1074,6 +1099,10 @@ $data = [
 
     'peoplecount' =>
         count($people),
+
+    'peoplepage' => $peoplepage + 1,
+    'previouspeopleurl' => $previouspeopleurl,
+    'nextpeopleurl' => $nextpeopleurl,
 
     'haspeople' =>
         !empty($people),

@@ -90,6 +90,7 @@ class content_admin {
         }
 
         $transaction = $DB->start_delegated_transaction();
+        try {
         $record->parentid = $parentid > 0 ? $parentid : null;
         $record->timemodified = max(time(), $expectedmodified + 1);
         $record->usermodified = $actorid;
@@ -98,6 +99,9 @@ class content_admin {
         $transaction->allow_commit();
 
         return ['contentid' => $contentid, 'oldparentid' => $oldparentid, 'newparentid' => $parentid, 'changed' => true];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
         } finally {
             $lock->release();
         }
@@ -449,6 +453,8 @@ class content_admin {
         $transaction =
             $DB->start_delegated_transaction();
 
+        try {
+
 
         $record->title =
             $title;
@@ -569,6 +575,9 @@ class content_admin {
             'status' =>
                 $record->status,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
         } finally {
             $lock->release();
         }
@@ -594,9 +603,15 @@ class content_admin {
             $actorid
         );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
         $record =
             $DB->get_record_sql(
@@ -612,9 +627,9 @@ class content_admin {
                 && (string)$DB->get_field('local_ustar_content_blueprints', 'kind',
                     ['contentid' => $contentid]) === material_studio::KIND_SCORM
                 && !material_studio::runtime_ready($contentid)) {
-            $transaction->rollback(new \moodle_exception(
+            throw new \moodle_exception(
                 'SCORM изменён: импортируйте пакет для текущей версии перед публикацией.'
-            ));
+            );
         }
 
 
@@ -802,6 +817,12 @@ class content_admin {
             'status' =>
                 content::STATUS_PUBLISHED,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -818,9 +839,15 @@ class content_admin {
             $actorid
         );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
         $record =
             $DB->get_record_sql(
@@ -900,6 +927,12 @@ class content_admin {
             'status' =>
                 content::STATUS_DRAFT,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
     /**
@@ -2047,9 +2080,15 @@ class content_admin {
                 MUST_EXIST
             );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
 
         /*
@@ -2354,6 +2393,12 @@ class content_admin {
             'status' =>
                 content::STATUS_PUBLISHED,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -2369,7 +2414,14 @@ class content_admin {
 
         self::require_manage($actorid);
 
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction = $DB->start_delegated_transaction();
+        try {
 
         $record = $DB->get_record_sql(
             'SELECT *
@@ -2412,6 +2464,12 @@ class content_admin {
             'contentid' => $contentid,
             'status' => content::STATUS_ARCHIVED,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
     /**
@@ -2421,7 +2479,14 @@ class content_admin {
     public static function delete(int $contentid, int $actorid, string $reason = ''): array {
         global $DB;
         self::require_manage($actorid);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $tx = $DB->start_delegated_transaction();
+        try {
         $record = $DB->get_record_sql(
             'SELECT * FROM {local_ustar_content} WHERE id = :contentid FOR UPDATE',
             ['contentid' => $contentid], MUST_EXIST
@@ -2445,6 +2510,12 @@ class content_admin {
         }
         $tx->allow_commit();
         return ['contentid' => $contentid, 'status' => content::STATUS_ARCHIVED];
+        } catch (\Throwable $e) {
+            $tx->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 

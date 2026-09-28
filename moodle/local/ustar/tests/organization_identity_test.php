@@ -433,6 +433,48 @@ final class organization_identity_test extends \advanced_testcase {
             'contextid' => \context_system::instance()->id, 'component' => 'local_ustar_migration']));
     }
 
+    public function test_access_migration_rejects_stale_second_target_before_changing_first(): void {
+        global $DB;
+        $first = $this->employee('retail_head');
+        $second = $this->employee('retail_head');
+        $roleid = create_role('Legacy projected manager', 'ustar_manager', 'Fixture');
+        $contextid = \context_system::instance()->id;
+        foreach ([$first, $second] as $user) {
+            role_assign($roleid, $user->id, $contextid, 'local_ustar', 0);
+        }
+        $rows = [];
+        foreach (access_migration::report()['users'] as $row) {
+            $rows[(int)$row['userid']] = $row;
+        }
+        $entries = [];
+        foreach ([$first, $second] as $user) {
+            $row = $rows[(int)$user->id];
+            $entries[] = [
+                'userid' => (int)$user->id,
+                'expectedpositionid' => $row['positionid'],
+                'expectedemployment' => $row['employment'],
+                'expectedprojectedroles' => $row['projectedroles'],
+                'employment' => employment::ACTIVE,
+                'roles' => ['ustar_manager'],
+            ];
+        }
+        $entries[1]['expectedpositionid'] = 'stale-position';
+        try {
+            access_migration::apply(['users' => $entries]);
+            $this->fail('A stale plan should be rejected.');
+        } catch (\moodle_exception $e) {
+            $this->assertStringContainsString('stale', $e->getMessage());
+        }
+        $this->assertTrue($DB->record_exists('role_assignments', [
+            'roleid' => $roleid, 'userid' => $first->id,
+            'contextid' => $contextid, 'component' => 'local_ustar',
+        ]));
+        $this->assertFalse($DB->record_exists('role_assignments', [
+            'roleid' => $roleid, 'userid' => $first->id,
+            'contextid' => $contextid, 'component' => 'local_ustar_migration',
+        ]));
+    }
+
     public function test_existing_email_registration_stays_pending_until_hrd_approves(): void {
         global $DB;
         $manager = $this->employee('retail_head');

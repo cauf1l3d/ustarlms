@@ -10,8 +10,12 @@ $opts = getopt('', ['file:', 'apply', 'include-protected']);
 $file = $opts['file'] ?? '';
 $apply = array_key_exists('apply', $opts);
 $includeprotected = array_key_exists('include-protected', $opts);
+if ($apply) {
+    fwrite(STDERR, "RETIRED_APPLY: staff mapping requires reviewed assignments; direct profile writes are disabled.\n");
+    exit(78);
+}
 if (!$file || !is_readable($file)) {
-    fwrite(STDERR, "Usage: php sync_staff_map.php --file=/path/staff_position_map.csv [--apply] [--include-protected]\n");
+    fwrite(STDERR, "Usage: php sync_staff_map.php --file=/path/staff_position_map.csv [--include-protected] (report only)\n");
     exit(2);
 }
 
@@ -55,10 +59,9 @@ foreach ($users as $u) {
 }
 
 $ctx = context_system::instance();
-$actorid = (int)get_admin()->id;
-$matched = $ambiguous = $missing = $invalid = $protected = $updated = 0;
+$matched = $ambiguous = $missing = $invalid = $protected = 0;
 $report = [];
-$transaction = $apply ? $DB->start_delegated_transaction() : null;
+
 foreach ($rows as $row) {
     $fullname = $row['fullname']; $positionid = $row['positionid'];
     if (!isset($validpositions[$positionid])) {
@@ -83,17 +86,11 @@ foreach ($rows as $row) {
     $isprotected = is_siteadmin($u) || has_capability('local/ustar:admin', $ctx, $u->id);
     if ($isprotected && !$includeprotected) { $protected++; $report[] = ['PROTECTED', $fullname, $positionid, $u->id . ':' . $u->username]; continue; }
     $old = people::position_id((int)$u->id);
-    if ($apply && $old !== $positionid) {
-        people::set_position_id((int)$u->id, $positionid);
-        people::log_action($actorid, (int)$u->id, 'staff_map_sync', ['source' => basename($file), 'old' => $old, 'new' => $positionid]);
-        $updated++;
-    }
-    $report[] = [$apply ? ($old === $positionid ? 'UNCHANGED' : 'UPDATED') : 'MATCH', $fullname, $positionid, $u->id . ':' . $u->username . ($old ? ':old=' . $old : '')];
+    $report[] = ['MATCH', $fullname, $positionid, $u->id . ':' . $u->username . ($old ? ':old=' . $old : '')];
 }
-if ($transaction) $transaction->allow_commit();
 
 echo "USTAR STAFF MAP SYNC\n====================\n";
 echo "Mode: " . ($apply ? "APPLY" : "DRY-RUN") . "\n";
-echo "Rows ready: " . count($rows) . "\nMatched: $matched\nUpdated: $updated\nProtected: $protected\nAmbiguous: $ambiguous\nNot found: $missing\nInvalid position: $invalid\n\n";
+echo "Rows ready: " . count($rows) . "\nMatched: $matched\nProtected: $protected\nAmbiguous: $ambiguous\nNot found: $missing\nInvalid position: $invalid\n\n";
 foreach ($report as $r) printf("%-16s | %-38s | %-30s | %s\n", $r[0], $r[1], $r[2], $r[3]);
-if (!$apply) echo "\nNo database changes were made. Re-run with --apply only after reviewing this report.\n";
+echo "\nNo database changes were made. Apply reviewed staff assignments through the canonical HR workflow.\n";

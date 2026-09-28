@@ -8,6 +8,7 @@ final class feed_external_content {
     public static function payload(int $postid, int $userid): array {
         global $DB;
 
+        feed_access::require_reader($userid);
         $post = feed_access::readable($postid, $userid);
         if ((string)$post->publishertype !== 'external') {
             throw new \invalid_parameter_exception('Публикация не является внешним материалом.');

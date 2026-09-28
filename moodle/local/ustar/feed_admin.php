@@ -81,7 +81,7 @@ foreach ($roles as $key => $definition) {
 }
 
 $employees = [];
-$personsearch = trim(optional_param('person', '', PARAM_TEXT));
+$personsearch = \core_text::substr(trim(optional_param('person', '', PARAM_TEXT)), 0, 80);
 $candidates = [];
 if (\core_text::strlen($personsearch) >= 2) {
     $needle = '%' . $DB->sql_like_escape($personsearch) . '%';

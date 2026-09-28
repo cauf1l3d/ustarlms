@@ -86,7 +86,10 @@ final class feed_article_resolver {
             }
 
             $status = (string)($record->enrichstatus ?? 'disabled');
-            if (!$retryterminal && in_array($status, ['done', 'failed', 'limited'], true)) {
+            if ($status === 'done') {
+                continue;
+            }
+            if (!$retryterminal && in_array($status, ['failed', 'limited'], true)) {
                 continue;
             }
 

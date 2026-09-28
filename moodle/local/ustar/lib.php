@@ -35,7 +35,7 @@ function local_ustar_pluginfile(
     }
 
     if ($filearea === \local_ustar\feed_files::AREA) {
-        if (!$args || !\local_ustar\accounts::participates((int)$USER->id)) {
+        if (!$args) {
             return false;
         }
         $postid = (int)array_shift($args);
@@ -43,6 +43,8 @@ function local_ustar_pluginfile(
             return false;
         }
         try {
+            // readable() applies workforce participation or feedmanage and the
+            // current audience, including the source of a repost.
             \local_ustar\feed_access::readable($postid, (int)$USER->id);
         } catch (\Throwable $e) {
             return false;

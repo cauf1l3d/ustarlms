@@ -14,6 +14,10 @@ final class workflow_notifications_test extends \advanced_testcase {
                 '/local/ustar/tasks.php', 'fixture:delivery');
         }
         $this->assertSame(1, $DB->count_records('local_ustar_notifications', ['idempotencykey' => 'fixture:delivery']));
+        $notification = $DB->get_record('local_ustar_notifications', ['idempotencykey' => 'fixture:delivery']);
+        $this->assertSame(1, $DB->count_records('local_ustar_notify_delivery', [
+            'notificationid' => $notification->id, 'channel' => 'ustar', 'status' => 'delivered',
+        ]));
     }
 
     public function test_key_collision_cannot_silently_drop_another_recipients_message(): void {

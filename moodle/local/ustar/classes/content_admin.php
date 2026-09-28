@@ -1340,6 +1340,7 @@ class content_admin {
 
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
 
         $contentid =
@@ -1469,6 +1470,9 @@ class content_admin {
             'versionid' =>
                 $versionid,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
     }
 
 

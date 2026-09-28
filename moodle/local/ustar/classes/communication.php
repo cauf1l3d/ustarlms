@@ -15,9 +15,12 @@ final class communication {
         global $DB;
 
         $targettable = $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'));
-        $unreadnotifications = $targettable
-            ? (int)$DB->count_records('local_ustar_notifications', ['userid' => $userid, 'status' => 'unread'])
-            : (int)$DB->count_records_select('notifications', 'useridto = :userid AND timeread IS NULL', ['userid' => $userid]);
+        $unreadnotifications = (int)$DB->count_records_select(
+            'notifications', 'useridto = :userid AND timeread IS NULL', ['userid' => $userid]);
+        if ($targettable) {
+            $unreadnotifications += (int)$DB->count_records('local_ustar_notifications',
+                ['userid' => $userid, 'status' => 'unread']);
+        }
 
         $unreadconversations = 0;
         try {
@@ -279,7 +282,8 @@ final class communication {
 
     public static function notifications(int $userid, int $limit = 100): array {
         global $DB;
-
+        $limit = max(1, min(200, $limit));
+        $rows = [];
         if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
             $records = $DB->get_records(
                 'local_ustar_notifications', ['userid' => $userid], 'timecreated DESC', '*', 0, max(1, min(200, $limit))
@@ -304,7 +308,6 @@ final class communication {
             $canreview = has_capability('local/ustar:hrmanage', \context_system::instance(), $userid)
                 && has_capability('local/ustar:approveregistration', \context_system::instance(), $userid)
                 && team_access::active_actor($userid);
-            $rows = [];
             foreach ($records as $record) {
                 $actionurl = clean_param((string)$record->actionurl, PARAM_URL);
                 $message = (string)$record->message;
@@ -337,6 +340,8 @@ final class communication {
                 $unread = (string)$record->status === 'unread';
                 $rows[] = [
                     'id' => (int)$record->id,
+                    'source' => 'local',
+                    'timecreated' => (int)$record->timecreated,
                     'subject' => (string)$record->subject,
                     'message' => shorten_text(strip_tags($message), 220),
                     'eventlabel' => $eventlabel,
@@ -349,7 +354,6 @@ final class communication {
                     'urlname' => 'Открыть действие',
                 ];
             }
-            return $rows;
         }
 
         $records = $DB->get_records(
@@ -361,11 +365,12 @@ final class communication {
             max(1, min(200, $limit))
         );
 
-        $rows = [];
         foreach ($records as $record) {
             $contexturl = clean_param((string)$record->contexturl, PARAM_URL);
             $rows[] = [
                 'id' => (int)$record->id,
+                'source' => 'moodle',
+                'timecreated' => (int)$record->timecreated,
                 'subject' => trim((string)$record->subject) ?: 'Уведомление',
                 'message' => shorten_text(strip_tags((string)($record->smallmessage ?: $record->fullmessage)), 220),
                 'eventlabel' => 'Уведомление Академии',
@@ -377,12 +382,20 @@ final class communication {
                 'urlname' => trim((string)$record->contexturlname) ?: 'Открыть',
             ];
         }
-        return $rows;
+        usort($rows, static fn(array $a, array $b): int =>
+            $b['timecreated'] <=> $a['timecreated'] ?: $b['id'] <=> $a['id']);
+        return array_slice($rows, 0, $limit);
     }
 
-    public static function mark_notification(int $userid, int $notificationid): void {
+    public static function mark_notification(int $userid, int $notificationid, string $source = 'local'): void {
         global $DB;
-        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
+        if (!in_array($source, ['local', 'moodle'], true)) {
+            throw new \invalid_parameter_exception('Unknown notification source');
+        }
+        if ($source === 'local') {
+            if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
+                throw new \invalid_parameter_exception('Local notifications are unavailable');
+            }
             $record = $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], '*', MUST_EXIST);
             if ((string)$record->status === 'unread') {
                 $record->status = 'read';
@@ -413,7 +426,6 @@ final class communication {
                 'local_ustar_notifications', 'status', 'read', 'userid = :userid AND status = :status',
                 ['userid' => $userid, 'status' => 'unread']
             );
-            return;
         }
         \core_message\api::mark_all_notifications_as_read($userid);
     }

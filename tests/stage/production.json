@@ -1,9 +1,9 @@
 {
-  "source_commit": "0e1eba2ca08b11f929730ab09df7bc91732f0e62",
-  "source_observed_at": "2026-09-27T11:29:29Z",
-  "source_evidence": "User-run production_manifest: complete=true, matching=424, changed=0, production_only=0, git_only=0, uncompared=0, errors={}",
-  "local_ustar_db_version": 2026092601,
-  "theme_ustar_db_version": 2026092601,
+  "source_commit": "7cc5587d300c799fc43e3f95c2ebc01cf3e50988",
+  "source_observed_at": "2026-09-28T09:02:57Z",
+  "source_evidence": "User-run production release: candidate manifest complete=true, changed=0, production_only=0, git_only=0, matching=450, uncompared=0; DEPLOY_OK=7cc5587d300c799fc43e3f95c2ebc01cf3e50988; LOGIN_HTTP=200",
+  "local_ustar_db_version": 2026092709,
+  "theme_ustar_db_version": 2026092702,
   "runtime_drift_recheck_required": true,
   "database_and_moodledata_not_covered": true
 }

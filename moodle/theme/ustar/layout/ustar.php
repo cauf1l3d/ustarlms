@@ -129,7 +129,7 @@ $cataloglabel =
 if ($pagepath === '/local/ustar/team.php' || $pagepath === '/local/ustar/executive.php') { $view = 'team'; }
 if ($pagepath === '/local/ustar/achievements.php') { $view = 'achievements'; }
 if ($pagepath === '/local/ustar/tasks.php') { $view = 'tasks'; }
-if ($pagepath === '/local/ustar/feed.php') { $view = 'feed'; }
+if (in_array($pagepath, ['/local/ustar/feed.php', '/local/ustar/feed_admin.php'], true)) { $view = 'feed'; }
 if ($pagepath === '/local/ustar/grades.php') { $view = 'career'; }
 
 if (in_array($pagepath, [
@@ -365,6 +365,7 @@ $controlpagelabels = [
     '/local/ustar/catalog.php' => 'Каталог',
     '/local/ustar/tasks.php' => 'Задачи',
     '/local/ustar/feed.php' => 'Лента',
+    '/local/ustar/feed_admin.php' => 'Настройки Ленты',
     '/local/ustar/grades.php' => 'Грейды',
     '/local/ustar/view_as.php' => 'Просмотр как',
     '/local/ustar/legacy.php' => 'Legacy UI',

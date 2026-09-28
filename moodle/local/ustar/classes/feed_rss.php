@@ -19,22 +19,22 @@ final class feed_rss {
     private const MAX_MEDIA_PER_ITEM = 4;
     private const MAX_REDIRECTS = 3;
 
-    public static function validate_url(string $url): string {
+    private static function validated_target(string $url): array {
         $url = trim($url);
         $parts = parse_url($url);
         if (!is_array($parts) || strtolower((string)($parts['scheme'] ?? '')) !== 'https'
                 || empty($parts['host']) || isset($parts['user']) || isset($parts['pass'])) {
             throw new \invalid_parameter_exception(
-                'RSS-адрес должен быть абсолютным HTTPS URL без логина и пароля.'
+                'Внешний адрес должен быть абсолютным HTTPS URL без логина и пароля.'
             );
         }
         if (isset($parts['port']) && (int)$parts['port'] !== 443) {
-            throw new \invalid_parameter_exception('Для RSS разрешён только стандартный HTTPS-порт 443.');
+            throw new \invalid_parameter_exception('Для внешних источников разрешён только HTTPS-порт 443.');
         }
 
         $host = strtolower(rtrim((string)$parts['host'], '.'));
         if ($host === 'localhost' || str_ends_with($host, '.localhost')) {
-            throw new \invalid_parameter_exception('Локальные RSS-адреса запрещены.');
+            throw new \invalid_parameter_exception('Локальные внешние адреса запрещены.');
         }
 
         $ips = [];
@@ -51,16 +51,27 @@ final class feed_rss {
                 }
             }
         }
+        $ips = array_values(array_unique($ips));
         if (!$ips) {
-            throw new \invalid_parameter_exception('Не удалось разрешить адрес RSS-источника.');
+            throw new \invalid_parameter_exception('Не удалось разрешить адрес внешнего источника.');
         }
-        foreach (array_unique($ips) as $ip) {
+        foreach ($ips as $ip) {
             if (!filter_var($ip, FILTER_VALIDATE_IP,
                     FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-                throw new \invalid_parameter_exception('RSS-источник не может указывать на внутреннюю сеть.');
+                throw new \invalid_parameter_exception('Внешний источник не может указывать на внутреннюю сеть.');
             }
         }
-        return $url;
+
+        usort($ips, static function(string $a, string $b): int {
+            $av4 = filter_var($a, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1;
+            $bv4 = filter_var($b, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1;
+            return $av4 <=> $bv4 ?: strcmp($a, $b);
+        });
+        return ['url' => $url, 'host' => $host, 'ips' => $ips];
+    }
+
+    public static function validate_url(string $url): string {
+        return (string)self::validated_target($url)['url'];
     }
 
     public static function resolve_url(string $base, string $candidate): string {
@@ -99,42 +110,109 @@ final class feed_rss {
      * Fetch one trusted HTTPS resource. Redirects are followed manually so
      * every hop receives the same public-address validation.
      */
-    public static function fetch_external(string $url, int $maxbytes, string $accept, int $timeout = 15): array {
-        global $CFG;
-        require_once($CFG->libdir . '/filelib.php');
-
+    public static function fetch_external(string $url, int $maxbytes, string $accept,
+            int $timeout = 15): array {
+        $maxbytes = max(1024, $maxbytes);
+        $timeout = max(5, min(20, $timeout));
         $current = self::validate_url($url);
-        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
-            $curl = new \curl();
-            $curl->setHeader([
-                'Accept: ' . $accept,
-                'User-Agent: USTAR-Academy-RSS/3.0',
-            ]);
-            $body = $curl->get($current, [], [
-                'CURLOPT_CONNECTTIMEOUT' => 5,
-                'CURLOPT_TIMEOUT' => max(5, min(20, $timeout)),
-                'CURLOPT_FOLLOWLOCATION' => false,
-                'CURLOPT_MAXREDIRS' => 0,
-            ]);
-            $info = $curl->get_info();
-            $status = (int)($info['http_code'] ?? 0);
 
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            $target = self::validated_target($current);
+            $host = (string)$target['host'];
+            $ip = (string)$target['ips'][0];
+
+            $ch = curl_init();
+            if ($ch === false) {
+                throw new \moodle_exception('Не удалось инициализировать HTTPS-клиент.');
+            }
+
+            $buffer = '';
+            $oversized = false;
+            $location = '';
+            try {
+                $options = [
+                    CURLOPT_URL => $current,
+                    CURLOPT_RETURNTRANSFER => false,
+                    CURLOPT_FOLLOWLOCATION => false,
+                    CURLOPT_CONNECTTIMEOUT => 5,
+                    CURLOPT_TIMEOUT => $timeout,
+                    CURLOPT_USERAGENT => 'USTAR-Academy-RSS/3.0',
+                    CURLOPT_HTTPHEADER => ['Accept: ' . $accept],
+                    CURLOPT_SSL_VERIFYPEER => true,
+                    CURLOPT_SSL_VERIFYHOST => 2,
+                    CURLOPT_HEADERFUNCTION => static function($curl, string $header) use (&$location): int {
+                        $length = strlen($header);
+                        if (stripos($header, 'Location:') === 0) {
+                            $location = trim(substr($header, 9));
+                        }
+                        return $length;
+                    },
+                    CURLOPT_WRITEFUNCTION => static function($curl, string $chunk)
+                            use (&$buffer, &$oversized, $maxbytes): int {
+                        if (strlen($buffer) + strlen($chunk) > $maxbytes) {
+                            $oversized = true;
+                            return 0;
+                        }
+                        $buffer .= $chunk;
+                        return strlen($chunk);
+                    },
+                ];
+                if (defined('CURLOPT_PROTOCOLS') && defined('CURLPROTO_HTTPS')) {
+                    $options[CURLOPT_PROTOCOLS] = CURLPROTO_HTTPS;
+                }
+                if (defined('CURLOPT_RESOLVE') && !filter_var($host, FILTER_VALIDATE_IP)) {
+                    $resolvedip = str_contains($ip, ':') ? '[' . $ip . ']' : $ip;
+                    $options[CURLOPT_RESOLVE] = [$host . ':443:' . $resolvedip];
+                }
+                curl_setopt_array($ch, $options);
+
+                $ok = curl_exec($ch);
+                $errno = curl_errno($ch);
+                $error = curl_error($ch);
+                $info = curl_getinfo($ch);
+            } finally {
+                curl_close($ch);
+            }
+
+            if ($oversized) {
+                throw new \moodle_exception('Ответ внешнего источника превышает допустимый размер.');
+            }
+            if ($ok === false) {
+                throw new \moodle_exception(
+                    'Ошибка HTTPS внешнего источника (' . $errno . '): '
+                    . \core_text::substr($error, 0, 240)
+                );
+            }
+
+            $status = (int)($info['http_code'] ?? 0);
             if ($status >= 300 && $status < 400) {
-                $redirect = trim((string)($info['redirect_url'] ?? ''));
-                if ($redirect === '' || $hop >= self::MAX_REDIRECTS) {
+                if ($location === '' || $hop >= self::MAX_REDIRECTS) {
                     throw new \moodle_exception('Внешний источник вернул неподдерживаемый redirect.');
                 }
-                $current = self::validate_url(self::resolve_url($current, $redirect));
+                $next = self::resolve_url($current, $location);
+                if ($next === '') {
+                    throw new \moodle_exception('Внешний источник вернул некорректный redirect.');
+                }
+                $current = self::validate_url($next);
                 continue;
             }
 
             if ($status < 200 || $status >= 300) {
                 throw new \moodle_exception('Внешний источник вернул HTTP ' . $status . '.');
             }
-            if (!is_string($body) || $body === '' || strlen($body) > $maxbytes) {
-                throw new \moodle_exception('Ответ внешнего источника пуст или превышает допустимый размер.');
+            if ($buffer === '') {
+                throw new \moodle_exception('Ответ внешнего источника пуст.');
             }
-            return ['body' => $body, 'url' => $current, 'info' => $info];
+
+            return [
+                'body' => $buffer,
+                'url' => $current,
+                'info' => [
+                    'http_code' => $status,
+                    'content_type' => (string)($info['content_type'] ?? ''),
+                    'primary_ip' => (string)($info['primary_ip'] ?? $ip),
+                ],
+            ];
         }
         throw new \moodle_exception('Превышено число перенаправлений внешнего источника.');
     }

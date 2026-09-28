@@ -9,6 +9,7 @@ $PAGE->set_url($url);
 $PAGE->set_context($context);
 $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
+$PAGE->set_pagelayout('ustar');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928']));
 $notice = '';
 $actorid = (int)$USER->id;
@@ -72,12 +73,18 @@ $beforeid = max(0, optional_param('beforeid', 0, PARAM_INT));
 $selectedid = max(0, optional_param('postid', 0, PARAM_INT));
 $selected = null;
 if ($selectedid) {
-    $draft = \local_ustar\view_as::active() ? null : $DB->get_record('local_ustar_feed_posts',
-        ['id' => $selectedid, 'status' => 'draft', 'actoruserid' => $actorid]);
-    $selected = $draft ?: \local_ustar\feed_access::readable($selectedid, $actorid);
+    if (!\local_ustar\view_as::active()) {
+        $candidate = $DB->get_record('local_ustar_feed_posts', ['id' => $selectedid]);
+        if ($candidate && $candidate->status === 'draft'
+                && ((int)$candidate->actoruserid === $actorid
+                    || \local_ustar\feed_access::can_edit($actorid))) {
+            $selected = $candidate;
+        }
+    }
+    $selected = $selected ?: \local_ustar\feed_access::readable($selectedid, $actorid);
 }
 $moderation = optional_param('moderation', 0, PARAM_BOOL) &&
-    has_capability('local/ustar:feedmoderate', $context);
+    \local_ustar\feed_access::can_moderate($actorid);
 try {
     $page = \local_ustar\feed_query::page($actorid, $filter, $beforetime, $beforeid);
 } catch (\invalid_parameter_exception $e) {
@@ -110,10 +117,14 @@ if ($postids) {
 echo $OUTPUT->header();
 echo html_writer::start_div('u-feed');
 echo html_writer::tag('p', 'Новости Академии и вашей команды в одном месте.', ['class' => 'u-feed__intro']);
+if (\local_ustar\feed_access::can_manage($actorid)) {
+    echo html_writer::link(new moodle_url('/local/ustar/feed_admin.php'),
+        'Настройки Ленты', ['class' => 'u-btn u-btn--secondary']);
+}
 if ($notice !== '') {
     echo $OUTPUT->notification(s($notice), 'notifyproblem');
 }
-if (has_capability('local/ustar:feedmoderate', $context)) {
+if (\local_ustar\feed_access::can_moderate($actorid)) {
     echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['moderation' => 1]),
         'Очередь модерации', ['class' => 'u-feed__source']);
     echo ' · ';
@@ -191,10 +202,14 @@ if ($moderation) {
     exit;
 }
 $caninteract = !\local_ustar\view_as::active();
-$canwrite = $caninteract && has_capability('local/ustar:feedpublish', $context);
-$managed = $canwrite ? \local_ustar\feed_access::manageable_departments($actorid) : [];
-$canacademy = $canwrite && has_capability('local/ustar:feedpublishacademy', $context);
-if ($canwrite) {
+$cancreate = $caninteract && \local_ustar\feed_access::can_create($actorid);
+$canpublish = $caninteract && \local_ustar\feed_access::can_publish($actorid);
+$canedit = $caninteract && \local_ustar\feed_access::can_edit($actorid);
+$canwrite = $cancreate;
+$managed = $canpublish ? \local_ustar\feed_access::manageable_departments($actorid) : [];
+$canacademy = $canpublish && (\local_ustar\feed_access::can_manage($actorid)
+    || has_capability('local/ustar:feedpublishacademy', $context));
+if ($cancreate) {
     echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data',
         'class' => 'u-feed__composer']);
     echo html_writer::tag('h2', 'Новая публикация');
@@ -320,7 +335,10 @@ foreach ($posts as $post) {
             'Обсуждение и репост', ['class' => 'u-feed__source']);
     }
     if ($selected && (int)$selected->id === $postid) {
-        if ($canwrite && (int)$post->actoruserid === $actorid) {
+        $isowner = (int)$post->actoruserid === $actorid;
+        $caneditpost = ($isowner && $cancreate) || (!$isowner && $canedit);
+        $canpublishpost = $isowner ? $cancreate : $canpublish;
+        if ($caneditpost) {
             echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
             foreach (['sesskey' => sesskey(), 'postid' => $postid,
                     'version' => (int)$post->version] as $field => $value) {
@@ -333,20 +351,22 @@ foreach ($posts as $post) {
                 'class' => 'form-control', 'rows' => 3]);
             echo html_writer::start_div('u-feed__actions');
             echo html_writer::tag('button', 'Сохранить', ['type' => 'submit', 'class' => 'u-btn']);
-            if ($post->status === 'draft') {
+            if ($post->status === 'draft' && $canpublishpost) {
                 echo html_writer::tag('button', 'Опубликовать', ['type' => 'submit', 'name' => 'publish',
                     'value' => '1', 'class' => 'u-btn u-btn--secondary']);
             }
             echo html_writer::end_div();
             echo html_writer::end_tag('form');
-            echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
-            foreach (['sesskey' => sesskey(), 'postid' => $postid,
-                    'version' => (int)$post->version, 'action' => 'delete'] as $field => $value) {
-                echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+            if ($isowner || \local_ustar\feed_access::can_moderate($actorid)) {
+                echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
+                foreach (['sesskey' => sesskey(), 'postid' => $postid,
+                        'version' => (int)$post->version, 'action' => 'delete'] as $field => $value) {
+                    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+                }
+                echo html_writer::tag('button', 'Удалить публикацию', ['type' => 'submit',
+                    'class' => 'u-feed__like']);
+                echo html_writer::end_tag('form');
             }
-            echo html_writer::tag('button', 'Удалить публикацию', ['type' => 'submit',
-                'class' => 'u-feed__like']);
-            echo html_writer::end_tag('form');
         }
         if ($post->status === 'published') {
             $commentpage = max(0, min(10000, optional_param('comments', 0, PARAM_INT)));
@@ -422,7 +442,7 @@ foreach ($posts as $post) {
                 echo html_writer::tag('button', 'Отправить комментарий', ['type' => 'submit',
                     'name' => 'action', 'value' => 'comment', 'class' => 'u-btn']);
                 echo html_writer::end_tag('form');
-                if ($canwrite && !$post->sourcepostid) {
+                if ($cancreate && !$post->sourcepostid) {
                     echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sourceid', 'value' => $postid]);

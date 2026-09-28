@@ -4613,5 +4613,49 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092709, 'local', 'ustar');
     }
 
+
+    if ($oldversion < 2026092710) {
+        // Personal publishing is available to active employees. Elevated
+        // department/academy publishing, editing and service management remain
+        // explicit system-role grants.
+        require_once($CFG->libdir . '/accesslib.php');
+        update_capabilities('local_ustar');
+        $context = \context_system::instance();
+
+        foreach (['user', 'manager'] as $shortname) {
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if ($roleid) {
+                assign_capability('local/ustar:feedcreate', CAP_ALLOW, $roleid, $context->id, true);
+            }
+        }
+
+        $editorrole = (int)$DB->get_field('role', 'id', ['shortname' => 'ustar_feed_editor']);
+        if (!$editorrole) {
+            $editorrole = create_role('USTAR Feed Editor', 'ustar_feed_editor',
+                'May edit feed content without receiving publishing or service-management authority');
+            set_role_contextlevels($editorrole, [CONTEXT_SYSTEM]);
+        }
+        foreach (['local/ustar:use', 'local/ustar:feededit'] as $capability) {
+            assign_capability($capability, CAP_ALLOW, $editorrole, $context->id, true);
+        }
+
+        foreach (['ustar_feed_person', 'ustar_feed_department', 'ustar_feed_academy'] as $shortname) {
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if ($roleid) {
+                foreach (['local/ustar:feedcreate', 'local/ustar:feededit'] as $capability) {
+                    assign_capability($capability, CAP_ALLOW, $roleid, $context->id, true);
+                }
+            }
+        }
+
+        $superadminrole = (int)$DB->get_field('role', 'id', ['shortname' => 'ustar_superadmin']);
+        if ($superadminrole) {
+            assign_capability('local/ustar:feedmanage', CAP_ALLOW, $superadminrole, $context->id, true);
+        }
+
+        accesslib_clear_all_caches(true);
+        upgrade_plugin_savepoint(true, 2026092710, 'local', 'ustar');
+    }
+
 return true;
 }

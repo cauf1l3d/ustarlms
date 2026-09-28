@@ -2213,6 +2213,24 @@ final class route_model {
             $points = self::points((int)$route->id);
         }
 
+        // Read all persisted completions for the visible route in one query.
+        // The snapshot remains read-only and keeps the exact-version/renewal
+        // checks below; it does not infer completion from uncommitted events.
+        $progressbypoint = [];
+        if ($points) {
+            $pointids = array_map(static fn(\stdClass $point): int => (int)$point->id, $points);
+            [$insql, $params] = $DB->get_in_or_equal($pointids, SQL_PARAMS_NAMED, 'routepoint');
+            $params['userid'] = $userid;
+            $params['status'] = 'complete';
+            foreach ($DB->get_records_sql(
+                "SELECT id, pointid, versionid, completedat, expiresat
+                   FROM {local_ustar_route_progress}
+                  WHERE userid = :userid AND status = :status AND pointid {$insql}
+               ORDER BY completedat DESC, id DESC", $params) as $progress) {
+                $progressbypoint[(int)$progress->pointid][] = $progress;
+            }
+        }
+
         $rows = [];
         $done = 0;
         $currentpoint = null;
@@ -2232,15 +2250,14 @@ final class route_model {
             $complete = false;
             $completedat = 0;
 
-            $exact = $DB->get_record(
-                'local_ustar_route_progress',
-                [
-                    'userid' => $userid,
-                    'pointid' => (int)$point->id,
-                    'versionid' => (int)$version->id,
-                    'status' => 'complete',
-                ]
-            );
+            $priorrecords = $progressbypoint[(int)$point->id] ?? [];
+            $exact = null;
+            foreach ($priorrecords as $progress) {
+                if ((int)$progress->versionid === (int)$version->id) {
+                    $exact = $progress;
+                    break;
+                }
+            }
 
             if ($exact) {
                 $expired =
@@ -2260,17 +2277,7 @@ final class route_model {
                 &&
                 in_array((string)$version->renewalpolicy, [self::RENEW_KEEP, self::RENEW_EXPIRY], true)
             ) {
-                $prior = $DB->get_records(
-                    'local_ustar_route_progress',
-                    [
-                        'userid' => $userid,
-                        'pointid' => (int)$point->id,
-                        'status' => 'complete',
-                    ],
-                    'completedat DESC, id DESC'
-                );
-
-                foreach ($prior as $progress) {
+                foreach ($priorrecords as $progress) {
                     if ((int)$progress->versionid === (int)$version->id) { continue; }
                     $expiresat = (int)($progress->expiresat ?? 0);
                     if ((string)$version->renewalpolicy === self::RENEW_EXPIRY) {

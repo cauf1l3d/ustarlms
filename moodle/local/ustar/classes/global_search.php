@@ -105,10 +105,7 @@ final class global_search {
         $products = [];
         if (catalog::available() && (catalog::can_manage($userid)
                 || catalog_mastery::has_access($userid))) {
-            foreach (catalog::browse(null, $q) as $record) {
-                if (empty($record['isproduct'])) {
-                    continue;
-                }
+            foreach (catalog::search_products($q, $limit) as $record) {
                 $products[] = [
                     'label' => (string)$record['title'],
                     'meta' => !empty($record['sku']) ? 'Товар · ' . $record['sku'] : 'Товар',
@@ -142,7 +139,7 @@ final class global_search {
             if ($iswide && $relatedposition === '') continue;
             $destination = $iswide
                 ? new \moodle_url('/local/ustar/positions.php',
-                    ['positionid'=>$relatedposition,'skillid'=>$skillid])
+                    ['positionid' => $relatedposition, 'tab' => 'graph', 'skillid' => $skillid])
                 : new \moodle_url('/local/ustar/route_career.php');
             if (!$iswide) $destination->set_anchor('skill-' . $skillid);
             $skills[] = [

@@ -9,8 +9,23 @@ if ($CFG->dbhost !== 'db' || $CFG->dbname !== 'ustar_stage1' || $CFG->prefix !==
 $mode = $argv[1] ?? '';
 $fixturepath = '/artifacts/board-migration-fixture.json';
 if ($mode === 'seed') {
-    if (is_file($fixturepath) || (int)get_config('local_ustar', 'version') >= 2026082744) {
+    if (is_file($fixturepath)) {
         throw new RuntimeException('Fixture must be seeded once before the candidate upgrade');
+    }
+    // The verified production baseline already retired Boards. Preserve the
+    // old migration fixture for earlier baselines, but do not recreate a
+    // retired working table in the current production-upgrade scenario.
+    if ((int)get_config('local_ustar', 'version') >= 2026082744) {
+        if ($DB->get_manager()->table_exists(new xmldb_table('local_ustar_boards'))
+                || !$DB->get_manager()->table_exists(new xmldb_table('local_ustar_board_archive'))) {
+            throw new RuntimeException('Retired baseline has an unexpected Boards schema');
+        }
+        if (file_put_contents($fixturepath, json_encode(['mode' => 'already_retired'],
+                JSON_THROW_ON_ERROR)) === false) {
+            throw new RuntimeException('Cannot save retired-baseline evidence');
+        }
+        echo "BOARD_BASELINE_ALREADY_RETIRED=PASS\n";
+        exit;
     }
     $ownerid = (int)get_admin()->id;
     $rows = [];
@@ -31,6 +46,14 @@ if ($mode === 'seed') {
     echo "BOARD_FIXTURE_SEEDED=2 (active and soft-deleted)\n";
 } else if ($mode === 'verify') {
     $rows = json_decode(file_get_contents($fixturepath), true, 512, JSON_THROW_ON_ERROR);
+    if (($rows['mode'] ?? '') === 'already_retired') {
+        if ($DB->get_manager()->table_exists(new xmldb_table('local_ustar_boards'))
+                || !$DB->get_manager()->table_exists(new xmldb_table('local_ustar_board_archive'))) {
+            throw new RuntimeException('Boards were reactivated after candidate upgrade');
+        }
+        echo "BOARD_RETIRED_BASELINE_STILL_RETIRED=PASS\n";
+        exit;
+    }
     if (count($rows) !== 2 || $DB->get_manager()->table_exists(new xmldb_table('local_ustar_boards'))) {
         throw new RuntimeException('Board retirement did not complete');
     }

@@ -18,6 +18,14 @@
 .u-feed__composer [hidden] { display: none; }
 .u-feed__composer textarea { min-height: 126px; resize: vertical; }
 .u-feed__composer .form-control, .u-feed__composer .form-select { max-width: 100%; }
+.u-feed__audience { border: 0; padding: 0; margin: 16px 0 0; }
+.u-feed__audience legend { font-weight: 600; font-size: .96rem; margin-bottom: 8px; }
+.u-feed__audience > label { margin: 6px 0; font-weight: 400; }
+.u-feed__audience-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 4px 12px; padding: 10px 0 0 20px; max-height: 220px; overflow-y: auto; }
+.u-feed__audience-options[hidden] { display: none; }
+.u-feed__audience-options label { margin: 0; font-weight: 400; }
+.u-feed__audience-options [role="alert"] { color: var(--u-error, #b32333); grid-column: 1 / -1; }
 .u-feed__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .u-feed__filters { display: flex; gap: 6px; margin: 0 0 18px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
 .u-feed__filters a { text-decoration: none; flex: 0 0 auto; border: 1px solid var(--u-border, #e1e6e2);

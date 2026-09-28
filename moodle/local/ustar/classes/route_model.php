@@ -712,6 +712,41 @@ final class route_model {
         string $phase,
         int $sortorder,
         array $version,
+        int $actorid,
+        bool $routelocked = false
+    ): \stdClass {
+        global $DB;
+        if ($routelocked) {
+            // Bulk route commands hold the same route lock and transaction.
+            return self::add_point_locked($routeid, $pointkey, $phase, $sortorder, $version, $actorid);
+        }
+
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_routes')
+            ->get_lock('route:' . $routeid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Маршрут сейчас изменяется другим пользователем. Повторите попытку через несколько секунд.');
+        }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $point = self::add_point_locked($routeid, $pointkey, $phase, $sortorder, $version, $actorid);
+                $transaction->allow_commit();
+                return $point;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+        throw new \coding_exception('Не удалось создать точку маршрута');
+    }
+
+    private static function add_point_locked(
+        int $routeid,
+        string $pointkey,
+        string $phase,
+        int $sortorder,
+        array $version,
         int $actorid
     ): \stdClass {
         global $DB;
@@ -748,7 +783,7 @@ final class route_model {
             'usermodified' => $actorid,
         ]);
 
-        self::create_version($pointid, $version, $actorid);
+        self::create_version_locked($pointid, $version, $actorid);
         return $DB->get_record('local_ustar_route_points', ['id' => $pointid], '*', MUST_EXIST);
     }
 
@@ -945,11 +980,17 @@ final class route_model {
 
     public static function create_version(int $pointid, array $data, int $actorid): \stdClass {
         global $DB;
-        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('route-version:' . $pointid, 10);
+        $routeid = (int)$DB->get_field('local_ustar_route_points', 'routeid',
+            ['id' => $pointid], MUST_EXIST);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_routes')
+            ->get_lock('route:' . $routeid, 10);
         if (!$lock) { throw new \moodle_exception('Точка занята другим сохранением. Повторите попытку.'); }
         try {
             $transaction = $DB->start_delegated_transaction();
             try {
+                $DB->get_record_sql('SELECT id FROM {local_ustar_route_points}
+                    WHERE id = :id AND routeid = :routeid FOR UPDATE',
+                    ['id' => $pointid, 'routeid' => $routeid], MUST_EXIST);
                 $created = self::create_version_locked($pointid, $data, $actorid);
                 $transaction->allow_commit();
                 return $created;

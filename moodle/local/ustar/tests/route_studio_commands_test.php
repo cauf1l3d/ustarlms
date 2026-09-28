@@ -33,6 +33,22 @@ final class route_studio_commands_test extends \advanced_testcase {
         return [$generator, $user, $route, $point, $version];
     }
 
+    public function test_rejected_published_point_does_not_leave_an_orphan(): void {
+        global $DB, $USER;
+        $route = $this->getDataGenerator()->get_plugin_generator('local_ustar')->create_route();
+        $before = $DB->count_records('local_ustar_route_points', ['routeid' => $route->id]);
+        try {
+            route_model::add_point((int)$route->id, 'unconfigured_step',
+                route_model::PHASE_ADAPTATION, 10,
+                ['title' => 'Без требования', 'status' => route_model::STATUS_PUBLISHED,
+                    'requirements' => []], (int)$USER->id);
+            $this->fail('A published point without a requirement must be rejected.');
+        } catch (\moodle_exception $e) {
+            $this->assertSame($before,
+                $DB->count_records('local_ustar_route_points', ['routeid' => $route->id]));
+        }
+    }
+
     public function test_native_completion_uses_the_warehouse_point_version_instead_of_retail_ids(): void {
         global $DB;
         $structure = structure::get(structure::NAME_STRUCTURE);

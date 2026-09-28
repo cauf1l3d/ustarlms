@@ -112,7 +112,7 @@ final class route_intro_transfer {
                         ['title' => $row['title'], 'summary' => $row['summary'],
                             'requirements' => $row['requirements'], 'renewalpolicy' => $row['renewalpolicy'],
                             'validdays' => $row['validdays'], 'status' => route_model::STATUS_DRAFT,
-                            'effectivedate' => 0], $actorid);
+                            'effectivedate' => 0], $actorid, true);
                     if (route_scope::available() && (string)$preview['target']->routekind === 'parent') {
                         $DB->insert_record('local_ustar_route_scope', (object)[
                             'pointid' => (int)$point->id, 'scopeid' => route_scope::ALL,

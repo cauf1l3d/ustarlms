@@ -86,7 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if ($action === 'rssimport') {
             $sourceid = required_param('sourceid', PARAM_INT);
             $result = \local_ustar\feed_rss::import_now($actorid, $sourceid);
-            $notice = 'RSS проверен: новых публикаций — ' . (int)$result['imported']
+            $notice = 'Источник проверен: новых публикаций — ' . (int)$result['imported']
+                . ', обновлено существующих — ' . (int)$result['refreshed']
                 . ', обработано элементов — ' . (int)$result['seen'] . '.';
         } else {
             throw new invalid_parameter_exception('Неизвестное действие управления Лентой.');
@@ -206,9 +207,9 @@ echo html_writer::end_div();
 echo html_writer::end_div();
 
 echo html_writer::start_tag('section', ['class' => 'u-feed-admin__section', 'id' => 'rss-sources']);
-echo html_writer::tag('h2', 'Внешние RSS-источники');
+echo html_writer::tag('h2', 'Внешние RSS / Atom-источники');
 echo html_writer::tag('p',
-    'Пилотный режим: источник импортируется в Ленту как «Внешний источник». Первый запуск берёт не более 10 последних материалов, затем cron проверяет включённые источники каждые 15 минут.',
+    'Источник импортируется в Ленту как «Внешний источник». RSS 2.0 и Atom 1.0 поддерживают локальное кэширование изображений. Первый запуск берёт не более 10 последних материалов, затем cron проверяет включённые источники каждые 15 минут.',
     ['class' => 'u-feed__source']);
 
 echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed-admin__assign']);

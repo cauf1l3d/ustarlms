@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $publisherid = $publisher === 'person' ? (string)$actorid :
                 ($publisher === 'academy' ? 'academy' : optional_param('departmentid', '', PARAM_ALPHANUMEXT));
             $audience = $publisher === 'academy'
-                ? optional_param_array('audience', ['all'], PARAM_ALPHANUMEXT)
+                ? (optional_param('audiencemode', 'all', PARAM_ALPHA) === 'departments'
+                    ? optional_param_array('audience', [], PARAM_ALPHANUMEXT) : ['all'])
                 : [$publisher === 'department' ? $publisherid : 'all'];
             $postid = \local_ustar\feed_service::create($actorid, $publisher, $publisherid,
                 $audience, required_param('body', PARAM_TEXT), $action !== 'draft',
@@ -255,15 +256,28 @@ if ($compose && $cancreate) {
     }
     if ($canacademy) {
         echo html_writer::start_div('', ['data-feed-publisher-field' => 'academy']);
-        echo html_writer::tag('label', 'Аудитория публикации Академии',
-            ['for' => 'feed-audience']);
-        $audienceoptions = ['all' => 'Все сотрудники Академии'];
+        echo html_writer::start_tag('fieldset', ['class' => 'u-feed__audience']);
+        echo html_writer::tag('legend', 'Кто увидит публикацию Академии');
+        echo html_writer::start_tag('label');
+        echo html_writer::empty_tag('input', ['type' => 'radio', 'name' => 'audiencemode',
+            'value' => 'all', 'checked' => 'checked']);
+        echo ' Все сотрудники';
+        echo html_writer::end_tag('label');
+        echo html_writer::start_tag('label');
+        echo html_writer::empty_tag('input', ['type' => 'radio', 'name' => 'audiencemode',
+            'value' => 'departments']);
+        echo ' Выбранные подразделения';
+        echo html_writer::end_tag('label');
+        echo html_writer::start_div('u-feed__audience-options', ['data-feed-audience-options' => '1']);
         foreach ($departmentnames as $id => $department) {
-            $audienceoptions[$id] = (string)$department['name'];
+            echo html_writer::start_tag('label');
+            echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'audience[]',
+                'value' => $id]);
+            echo ' ' . s((string)$department['name']);
+            echo html_writer::end_tag('label');
         }
-        echo html_writer::select($audienceoptions, 'audience[]', ['all'], false,
-            ['id' => 'feed-audience', 'multiple' => 'multiple', 'class' => 'form-select']);
-        echo html_writer::tag('small', 'Для выбранных подразделений снимите выделение «Все сотрудники».');
+        echo html_writer::end_div();
+        echo html_writer::end_tag('fieldset');
         echo html_writer::end_div();
     }
     echo html_writer::tag('label', 'Текст публикации', ['for' => 'feed-body']);

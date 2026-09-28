@@ -68,14 +68,20 @@ php local/ustar/cli/migrate_stage2_access.php > /secure/path/stage2-report.json
 The default is a read-only JSON report. Review every `review_access_mapping` row
 and create a separate plan containing the expected position, employment state and
 legacy projected roles plus the desired explicit roles/employment state. Apply only
-that reviewed plan:
+that reviewed plan after verifying a database backup and recording its identifier.
+Compute the hash of the exact JSON file that will be passed to the CLI:
 
 ```bash
+sha256sum /secure/path/reviewed-plan.json
 php local/ustar/cli/migrate_stage2_access.php \
-  --plan=/secure/path/reviewed-plan.json --apply --confirm=APPLY_STAGE2_ACCESS
+  --plan=/secure/path/reviewed-plan.json --sha256=<reviewed-sha256> \
+  --backup-ref=<verified-backup-id> --apply --confirm=APPLY_STAGE2_ACCESS
 ```
 
-Apply is transactional, rejects stale identity/state/role inputs and is repeatable.
+The backup reference is an operator attestation; the command cannot verify the
+backup exists or is restorable. Apply checks all target identities, states, roles
+and duplicate IDs before the first employee mutation, rolls back on failure and
+is repeatable. Review the JSON result and reconcile it with a new dry-run report.
 It removes only role assignments owned by the former `local_ustar` projection and
 creates reviewed assignments under `local_ustar_migration`; unrelated/manual roles
 are preserved. Position edits and scheduled jobs never synchronize access roles.

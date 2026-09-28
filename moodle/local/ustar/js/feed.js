@@ -14,6 +14,37 @@
             updateFields();
         }
 
+        var audienceOptions = document.querySelector('[data-feed-audience-options]');
+        if (audienceOptions) {
+            var modes = document.querySelectorAll('input[name="audiencemode"]');
+            var updateAudience = function() {
+                var selected = document.querySelector('input[name="audiencemode"]:checked');
+                audienceOptions.hidden = !selected || selected.value !== 'departments';
+                audienceOptions.querySelectorAll('input').forEach(function(input) {
+                    input.disabled = audienceOptions.hidden;
+                });
+            };
+            modes.forEach(function(mode) {
+                mode.addEventListener('change', updateAudience);
+            });
+            updateAudience();
+            audienceOptions.closest('form').addEventListener('submit', function(event) {
+                var selected = document.querySelector('input[name="audiencemode"]:checked');
+                if (publisher.value === 'academy' && selected && selected.value === 'departments' &&
+                        !audienceOptions.querySelector('input:checked')) {
+                    event.preventDefault();
+                    audienceOptions.querySelector('input').focus();
+                    var warning = audienceOptions.querySelector('[role="alert"]');
+                    if (!warning) {
+                        warning = document.createElement('p');
+                        warning.setAttribute('role', 'alert');
+                        audienceOptions.appendChild(warning);
+                    }
+                    warning.textContent = 'Выберите хотя бы одно подразделение.';
+                }
+            });
+        }
+
         document.querySelectorAll('[data-feed-like]').forEach(function(form) {
             form.addEventListener('submit', function(event) {
                 if (!window.fetch || !window.FormData) {

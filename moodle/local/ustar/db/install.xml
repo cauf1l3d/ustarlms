@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026092802" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026092803" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1631,6 +1631,7 @@
         <FIELD NAME="externalguid" TYPE="text" NOTNULL="true" />
         <FIELD NAME="externalurl" TYPE="text" NOTNULL="true" />
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" />
+        <FIELD NAME="contenttext" TYPE="text" NOTNULL="false" />
         <FIELD NAME="publishedat" TYPE="int" LENGTH="10" NOTNULL="true" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" />
       </FIELDS>

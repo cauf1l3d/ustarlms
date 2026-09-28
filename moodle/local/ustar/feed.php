@@ -10,14 +10,19 @@ $PAGE->set_context($context);
 $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
 $PAGE->set_pagelayout('ustar');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-experience']));
+$PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-experience']));
 $notice = '';
 $actorid = (int)$USER->id;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
+    $ajaxlike = optional_param('ajaxlike', 0, PARAM_BOOL);
     try {
         $action = required_param('action', PARAM_ALPHA);
+        if ($ajaxlike && !in_array($action, ['like', 'unlike'], true)) {
+            throw new invalid_parameter_exception('Неизвестное действие.');
+        }
         if ($action === 'publish' || $action === 'draft' || $action === 'repost') {
             $publisher = optional_param('publisher', 'person', PARAM_ALPHA);
             $publisherid = $publisher === 'person' ? (string)$actorid :
@@ -34,6 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $postid = required_param('postid', PARAM_INT);
         if ($action === 'like' || $action === 'unlike') {
             \local_ustar\feed_service::like($postid, $actorid, $action === 'like');
+            if ($ajaxlike) {
+                $liked = $DB->record_exists('local_ustar_feed_reactions',
+                    ['postid' => $postid, 'userid' => $actorid, 'kind' => 'like']);
+                $count = $DB->count_records('local_ustar_feed_reactions',
+                    ['postid' => $postid, 'kind' => 'like']);
+                header('Content-Type: application/json; charset=utf-8');
+                header('Cache-Control: no-store');
+                echo json_encode(['ok' => true, 'liked' => $liked, 'count' => $count]);
+                exit;
+            }
         } else if ($action === 'comment') {
             \local_ustar\feed_service::comment($postid, $actorid,
                 required_param('body', PARAM_TEXT), optional_param('parentid', 0, PARAM_INT));
@@ -41,7 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             \local_ustar\feed_service::revise($postid, $actorid, required_param('version', PARAM_INT),
                 required_param('body', PARAM_TEXT), optional_param('publish', 0, PARAM_BOOL));
         } else if ($action === 'delete') {
-            \local_ustar\feed_service::remove($postid, $actorid, required_param('version', PARAM_INT));
+            \local_ustar\feed_service::remove($postid, $actorid, required_param('version', PARAM_INT),
+                optional_param('reason', '', PARAM_TEXT));
             redirect(new moodle_url('/local/ustar/feed.php'));
         } else if ($action === 'commentedit' || $action === 'commentdelete') {
             \local_ustar\feed_service::revise_comment(required_param('commentid', PARAM_INT),
@@ -65,12 +81,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log('USTAR feed action failed: ' . get_class($e));
         $notice = 'Действие не выполнено. Повторите попытку позже.';
     }
+    if ($ajaxlike) {
+        http_response_code(400);
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+        echo json_encode(['ok' => false, 'message' => $notice]);
+        exit;
+    }
 }
 
 $filter = optional_param('filter', 'all', PARAM_ALPHA);
 $beforetime = max(0, optional_param('beforetime', 0, PARAM_INT));
 $beforeid = max(0, optional_param('beforeid', 0, PARAM_INT));
 $selectedid = max(0, optional_param('postid', 0, PARAM_INT));
+$compose = optional_param('compose', 0, PARAM_BOOL);
+$moderation = optional_param('moderation', 0, PARAM_BOOL) &&
+    \local_ustar\feed_access::can_moderate($actorid);
+$departmentnames = \local_ustar\people::department_map(
+    \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE));
+if ($compose) {
+    \local_ustar\feed_access::require_creator($actorid);
+}
 $selected = null;
 if ($selectedid) {
     if (!\local_ustar\view_as::active()) {
@@ -83,53 +114,40 @@ if ($selectedid) {
     }
     $selected = $selected ?: \local_ustar\feed_access::readable($selectedid, $actorid);
 }
-$moderation = optional_param('moderation', 0, PARAM_BOOL) &&
-    \local_ustar\feed_access::can_moderate($actorid);
-try {
-    $page = \local_ustar\feed_query::page($actorid, $filter, $beforetime, $beforeid);
-} catch (\invalid_parameter_exception $e) {
-    $filter = 'all';
-    $page = \local_ustar\feed_query::page($actorid);
-}
-$posts = $page['posts'];
-$departmentnames = \local_ustar\people::department_map(
-    \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE));
-if ($selected && !in_array((int)$selected->id, array_map(static fn($post) => (int)$post->id, $posts), true)) {
-    array_unshift($posts, $selected);
-}
-$postids = array_map(static fn($post) => (int)$post->id, $posts);
-$counts = [];
-$liked = [];
-$users = [];
-if ($postids) {
-    [$insql, $inparams] = $DB->get_in_or_equal($postids, SQL_PARAMS_NAMED, 'fp');
-    $counts = $DB->get_records_sql("SELECT postid AS id, COUNT(id) AS total
-          FROM {local_ustar_feed_reactions} WHERE postid {$insql} AND kind = :kind GROUP BY postid",
-        $inparams + ['kind' => 'like']);
-    $liked = $DB->get_records_sql("SELECT postid AS id FROM {local_ustar_feed_reactions}
-          WHERE postid {$insql} AND userid = :userid AND kind = :kind",
-        $inparams + ['userid' => $actorid, 'kind' => 'like']);
-    $authorids = array_values(array_unique(array_map(static fn($post) => (int)$post->actoruserid, $posts)));
-    [$usersql, $userparams] = $DB->get_in_or_equal($authorids, SQL_PARAMS_NAMED, 'fu');
-    $users = $DB->get_records_select('user', "id {$usersql}", $userparams, '', 'id,firstname,lastname');
-}
-
 echo $OUTPUT->header();
 echo html_writer::start_div('u-feed');
-echo html_writer::tag('p', 'Новости Академии и вашей команды в одном месте.', ['class' => 'u-feed__intro']);
+echo html_writer::start_div('u-feed__head');
+echo html_writer::start_div();
+echo html_writer::tag('h1', $compose ? 'Новая публикация' : ($moderation ? 'Модерация' : 'Лента'));
+echo html_writer::tag('p', $compose ? 'Поделитесь новостью с коллегами.' :
+    ($moderation ? 'Разберите обращения и скрытые публикации.' :
+        'Новости Академии и вашей команды в одном месте.'), ['class' => 'u-feed__intro']);
+echo html_writer::end_div();
+echo html_writer::start_div('u-feed__head-actions');
+if ($compose || $moderation) {
+    echo html_writer::link(new moodle_url('/local/ustar/feed.php'), '← К ленте',
+        ['class' => 'u-btn u-btn--secondary']);
+} else if (!\local_ustar\view_as::active() && \local_ustar\feed_access::can_create($actorid)) {
+    echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['compose' => 1]),
+        '＋ Создать запись', ['class' => 'u-btn u-feed__create']);
+}
 if (\local_ustar\feed_access::can_manage($actorid)) {
     echo html_writer::link(new moodle_url('/local/ustar/feed_admin.php'),
-        'Настройки Ленты', ['class' => 'u-btn u-btn--secondary']);
+        'Управление', ['class' => 'u-btn u-btn--secondary']);
 }
+echo html_writer::end_div();
+echo html_writer::end_div();
 if ($notice !== '') {
     echo $OUTPUT->notification(s($notice), 'notifyproblem');
 }
-if (\local_ustar\feed_access::can_moderate($actorid)) {
+if (!$compose && \local_ustar\feed_access::can_moderate($actorid)) {
+    echo html_writer::start_div('u-feed__moderation-links');
     echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['moderation' => 1]),
         'Очередь модерации', ['class' => 'u-feed__source']);
     echo ' · ';
     echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['moderation' => 1, 'hidden' => 1]),
         'Скрытые публикации', ['class' => 'u-feed__source']);
+    echo html_writer::end_div();
 }
 if ($moderation) {
     $hiddenmode = optional_param('hidden', 0, PARAM_BOOL);
@@ -209,29 +227,34 @@ $canwrite = $cancreate;
 $managed = $canpublish ? \local_ustar\feed_access::manageable_departments($actorid) : [];
 $canacademy = $canpublish && (\local_ustar\feed_access::can_manage($actorid)
     || has_capability('local/ustar:feedpublishacademy', $context));
-if ($cancreate) {
+if ($compose && $cancreate) {
     echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data',
         'class' => 'u-feed__composer']);
-    echo html_writer::tag('h2', 'Новая публикация');
+    echo html_writer::tag('h2', 'Расскажите о важном');
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'requestkey',
         'value' => bin2hex(random_bytes(16))]);
-    echo html_writer::tag('label', 'От чьего имени', ['for' => 'feed-publisher']);
+    echo html_writer::tag('label', 'Категория публикации', ['for' => 'feed-publisher']);
     $publishers = ['person' => 'От моего имени'];
-    if ($managed) { $publishers['department'] = 'От имени подразделения'; }
-    if ($canacademy) { $publishers['academy'] = 'От имени Академии'; }
+    if ($managed) { $publishers['department'] = 'Новости подразделения'; }
+    if ($canacademy) { $publishers['academy'] = 'Новости Академии'; }
     echo html_writer::select($publishers, 'publisher', 'person', false,
         ['id' => 'feed-publisher', 'class' => 'form-select']);
+    echo html_writer::tag('p', 'От личного имени запись увидят действующие сотрудники Академии. Другие категории доступны только с соответствующим правом.',
+        ['class' => 'u-feed__hint']);
     if ($managed) {
         $options = [];
         foreach ($managed as $departmentid) {
             $options[$departmentid] = (string)($departmentnames[$departmentid]['name'] ?? 'Подразделение');
         }
+        echo html_writer::start_div('', ['data-feed-publisher-field' => 'department']);
         echo html_writer::tag('label', 'Подразделение', ['for' => 'feed-department']);
         echo html_writer::select($options, 'departmentid', '', false,
             ['id' => 'feed-department', 'class' => 'form-select']);
+        echo html_writer::end_div();
     }
     if ($canacademy) {
+        echo html_writer::start_div('', ['data-feed-publisher-field' => 'academy']);
         echo html_writer::tag('label', 'Аудитория публикации Академии',
             ['for' => 'feed-audience']);
         $audienceoptions = ['all' => 'Все сотрудники Академии'];
@@ -241,6 +264,7 @@ if ($cancreate) {
         echo html_writer::select($audienceoptions, 'audience[]', ['all'], false,
             ['id' => 'feed-audience', 'multiple' => 'multiple', 'class' => 'form-select']);
         echo html_writer::tag('small', 'Для выбранных подразделений снимите выделение «Все сотрудники».');
+        echo html_writer::end_div();
     }
     echo html_writer::tag('label', 'Текст публикации', ['for' => 'feed-body']);
     echo html_writer::tag('textarea', '', ['name' => 'body', 'id' => 'feed-body',
@@ -253,6 +277,56 @@ if ($cancreate) {
     echo html_writer::tag('button', 'Сохранить черновик', ['name' => 'action', 'value' => 'draft', 'type' => 'submit', 'class' => 'u-btn u-btn--secondary']);
     echo html_writer::end_div();
     echo html_writer::end_tag('form');
+    echo html_writer::end_div();
+    echo $OUTPUT->footer();
+    exit;
+}
+
+try {
+    $page = \local_ustar\feed_query::page($actorid, $filter, $beforetime, $beforeid);
+} catch (\invalid_parameter_exception $e) {
+    $filter = 'all';
+    $page = \local_ustar\feed_query::page($actorid);
+}
+$posts = $page['posts'];
+if ($selected && !in_array((int)$selected->id, array_map(static fn($post) => (int)$post->id, $posts), true)) {
+    array_unshift($posts, $selected);
+}
+$postids = array_map(static fn($post) => (int)$post->id, $posts);
+$sourceids = array_values(array_unique(array_filter(array_map(
+    static fn($post) => (int)$post->sourcepostid, $posts))));
+$sources = [];
+if ($sourceids) {
+    [$sourcesql, $sourceparams] = $DB->get_in_or_equal($sourceids, SQL_PARAMS_NAMED, 'src');
+    $sourceparams['status'] = 'published';
+    $sourceaudience = \local_ustar\feed_access::audience_sql($actorid, 'src', $sourceparams, 'preview');
+    $sources = $DB->get_records_sql("SELECT src.* FROM {local_ustar_feed_posts} src
+        WHERE src.id {$sourcesql} AND src.status = :status AND {$sourceaudience}", $sourceparams);
+    $posts = array_values(array_filter($posts, static fn($post) => !$post->sourcepostid ||
+        isset($sources[(int)$post->sourcepostid])));
+    $postids = array_map(static fn($post) => (int)$post->id, $posts);
+}
+$attachments = \local_ustar\feed_files::list_for_visible_posts(
+    array_merge($postids, array_keys($sources)), $actorid);
+$counts = [];
+$liked = [];
+$commentcounts = [];
+$users = [];
+if ($postids) {
+    [$insql, $inparams] = $DB->get_in_or_equal($postids, SQL_PARAMS_NAMED, 'fp');
+    $counts = $DB->get_records_sql("SELECT postid AS id, COUNT(id) AS total
+          FROM {local_ustar_feed_reactions} WHERE postid {$insql} AND kind = :kind GROUP BY postid",
+        $inparams + ['kind' => 'like']);
+    $liked = $DB->get_records_sql("SELECT postid AS id FROM {local_ustar_feed_reactions}
+          WHERE postid {$insql} AND userid = :userid AND kind = :kind",
+        $inparams + ['userid' => $actorid, 'kind' => 'like']);
+    $commentcounts = $DB->get_records_sql("SELECT postid AS id, COUNT(id) AS total
+          FROM {local_ustar_feed_comments} WHERE postid {$insql} AND status = :visible GROUP BY postid",
+        $inparams + ['visible' => 'visible']);
+    $authorids = array_values(array_unique(array_map(static fn($post) => (int)$post->actoruserid,
+        array_merge($posts, array_values($sources)))));
+    [$usersql, $userparams] = $DB->get_in_or_equal($authorids, SQL_PARAMS_NAMED, 'fu');
+    $users = $DB->get_records_select('user', "id {$usersql}", $userparams, '', 'id,firstname,lastname');
 }
 
 echo html_writer::start_tag('nav', ['class' => 'u-feed__filters', 'aria-label' => 'Фильтр ленты']);
@@ -294,51 +368,105 @@ foreach ($posts as $post) {
             ($author ? fullname($author) : 'Сотрудник'));
     echo html_writer::start_tag('article', ['class' => 'u-feed__post', 'id' => 'post-' . $postid]);
     echo html_writer::start_div('u-feed__meta');
+    echo html_writer::tag('span', s(\core_text::substr($name, 0, 1)),
+        ['class' => 'u-feed__avatar', 'aria-hidden' => 'true']);
+    echo html_writer::start_div('u-feed__byline');
     echo html_writer::tag('strong', s($name));
-    echo html_writer::tag('time', userdate((int)$post->publishedat),
-        ['datetime' => date('c', (int)$post->publishedat)]);
-    if ((int)$post->timemodified > (int)$post->publishedat) {
+    echo html_writer::tag('span', $post->publishertype === 'academy' ? 'Академия' :
+        ($post->publishertype === 'department' ? 'Подразделение' : 'Личный пост'),
+        ['class' => 'u-feed__badge']);
+    $displaytime = $post->status === 'draft' ? (int)$post->timemodified : (int)$post->publishedat;
+    echo html_writer::tag('time', userdate($displaytime),
+        ['datetime' => date('c', $displaytime)]);
+    if ($post->status !== 'draft' && (int)$post->timemodified > (int)$post->publishedat) {
         echo html_writer::tag('span', 'Изменено');
     }
     echo html_writer::end_div();
+    echo html_writer::end_div();
     echo html_writer::tag('div', nl2br(s((string)$post->body)), ['class' => 'u-feed__body']);
-    if ($post->status === 'published' && $selected && (int)$selected->id === $postid) {
-        foreach (\local_ustar\feed_files::list_for($postid, $actorid) as $attachment) {
+    if ($post->status === 'published' && !empty($attachments[$postid])) {
+        echo html_writer::start_div('u-feed__media');
+        foreach ($attachments[$postid] as $attachment) {
             if ($attachment['image']) {
                 echo html_writer::empty_tag('img', ['src' => $attachment['url'],
                     'alt' => $attachment['name'], 'loading' => 'lazy', 'class' => 'u-feed__image']);
                 continue;
             }
-            echo html_writer::link($attachment['url'], s($attachment['name']),
+            echo html_writer::link($attachment['url'], '↓ ' . s($attachment['name']) .
+                ' · ' . display_size($attachment['size']),
                 ['class' => 'u-feed__attachment', 'download' => $attachment['name']]);
         }
+        echo html_writer::end_div();
     }
     if ($post->sourcepostid) {
-        echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['postid' => (int)$post->sourcepostid]),
-            'Исходная публикация', ['class' => 'u-feed__source']);
+        $source = $sources[(int)$post->sourcepostid] ?? null;
+        if ($source) {
+            $sourceauthor = $users[(int)$source->actoruserid] ?? null;
+            $sourcename = $source->publishertype === 'academy' ? 'Академия USTAR' :
+                ($source->publishertype === 'department'
+                    ? (string)($departmentnames[(string)$source->publisherid]['name'] ?? 'Подразделение') :
+                    ($sourceauthor ? fullname($sourceauthor) : 'Сотрудник'));
+            echo html_writer::start_div('u-feed__repost');
+            echo html_writer::tag('strong', s($sourcename));
+            echo html_writer::tag('p', nl2br(s((string)$source->body)));
+            foreach ($attachments[(int)$source->id] ?? [] as $attachment) {
+                if ($attachment['image']) {
+                    echo html_writer::empty_tag('img', ['src' => $attachment['url'],
+                        'alt' => $attachment['name'], 'loading' => 'lazy', 'class' => 'u-feed__image']);
+                } else {
+                    echo html_writer::link($attachment['url'], '↓ ' . s($attachment['name']),
+                        ['class' => 'u-feed__attachment', 'download' => $attachment['name']]);
+                }
+            }
+            echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['postid' => (int)$source->id]),
+                'Открыть оригинал', ['class' => 'u-feed__source']);
+            echo html_writer::end_div();
+        }
     }
     if ($post->status === 'draft') {
         echo html_writer::tag('p', 'Черновик · виден только вам', ['class' => 'u-feed__source']);
     }
-    echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
-    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
-    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'postid', 'value' => $postid]);
-    if ($caninteract && $post->status === 'published') {
-        echo html_writer::tag('button', (isset($liked[$postid]) ? '♥ Нравится' : '♡ Нравится')
-            . ' · ' . (int)($counts[$postid]->total ?? 0),
-            ['type' => 'submit', 'name' => 'action', 'value' => isset($liked[$postid]) ? 'unlike' : 'like',
-                'class' => 'u-feed__like']);
-    }
-    echo html_writer::end_tag('form');
     if ($post->status === 'published') {
-        echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['postid' => $postid]),
-            'Обсуждение и репост', ['class' => 'u-feed__source']);
+        echo html_writer::start_div('u-feed__toolbar', ['role' => 'group',
+            'aria-label' => 'Действия с публикацией']);
+        if ($caninteract) {
+            echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline',
+                'data-feed-like' => '1']);
+            foreach (['sesskey' => sesskey(), 'postid' => $postid] as $field => $value) {
+                echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+            }
+            echo html_writer::tag('button',
+                '<span aria-hidden="true">' . (isset($liked[$postid]) ? '♥' : '♡') . '</span> '
+                . 'Нравится <span data-feed-count>' . (int)($counts[$postid]->total ?? 0) . '</span>',
+                ['type' => 'submit', 'name' => 'action',
+                    'value' => isset($liked[$postid]) ? 'unlike' : 'like',
+                    'aria-pressed' => isset($liked[$postid]) ? 'true' : 'false',
+                    'class' => 'u-feed__action']);
+            echo html_writer::end_tag('form');
+        }
+        $detailurl = new moodle_url('/local/ustar/feed.php', ['postid' => $postid]);
+        echo html_writer::link($detailurl->out(false) . '#discussion-' . $postid,
+            '▤ Комментарии ' . (int)($commentcounts[$postid]->total ?? 0),
+            ['class' => 'u-feed__action']);
+        if ($cancreate && !$post->sourcepostid) {
+            echo html_writer::link($detailurl->out(false) . '#repost-' . $postid,
+                '↗ Поделиться', ['class' => 'u-feed__action']);
+        }
+        if ($caninteract) {
+            echo html_writer::link($detailurl->out(false) . '#report-' . $postid,
+                '⋯ Пожаловаться', ['class' => 'u-feed__action u-feed__action--quiet']);
+        }
+        echo html_writer::end_div();
     }
     if ($selected && (int)$selected->id === $postid) {
+        echo html_writer::start_tag('section', ['class' => 'u-feed__detail']);
         $isowner = (int)$post->actoruserid === $actorid;
         $caneditpost = ($isowner && $cancreate) || (!$isowner && $canedit);
         $canpublishpost = $isowner ? $cancreate : $canpublish;
         if ($caneditpost) {
+            echo html_writer::start_tag('details', ['class' => 'u-feed__panel',
+                'open' => $post->status === 'draft' ? 'open' : null]);
+            echo html_writer::tag('summary', 'Редактировать публикацию');
             echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
             foreach (['sesskey' => sesskey(), 'postid' => $postid,
                     'version' => (int)$post->version] as $field => $value) {
@@ -363,10 +491,16 @@ foreach ($posts as $post) {
                         'version' => (int)$post->version, 'action' => 'delete'] as $field => $value) {
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
                 }
+                if (!$isowner) {
+                    echo html_writer::tag('label', 'Основание удаления', ['for' => 'feed-remove-' . $postid]);
+                    echo html_writer::empty_tag('input', ['name' => 'reason', 'id' => 'feed-remove-' . $postid,
+                        'required' => 'required', 'class' => 'form-control']);
+                }
                 echo html_writer::tag('button', 'Удалить публикацию', ['type' => 'submit',
                     'class' => 'u-feed__like']);
                 echo html_writer::end_tag('form');
             }
+            echo html_writer::end_tag('details');
         }
         if ($post->status === 'published') {
             $commentpage = max(0, min(10000, optional_param('comments', 0, PARAM_INT)));
@@ -379,9 +513,16 @@ foreach ($posts as $post) {
                 $commentauthors = $DB->get_records_select('user', "id {$sql}", $params,
                     '', 'id,firstname,lastname');
             }
-            echo html_writer::tag('h3', 'Обсуждение');
+            echo html_writer::start_tag('div', ['id' => 'discussion-' . $postid,
+                'class' => 'u-feed__discussion']);
+            echo html_writer::tag('h3', 'Обсуждение · ' . (int)($commentcounts[$postid]->total ?? 0));
+            if (!$comments) {
+                echo html_writer::tag('p', 'Пока нет комментариев. Начните обсуждение.',
+                    ['class' => 'u-feed__source']);
+            }
             foreach (array_slice(array_values($comments), 0, 20) as $comment) {
                 $commentauthor = $commentauthors[(int)$comment->actoruserid] ?? null;
+                echo html_writer::start_div('u-feed__comment');
                 echo html_writer::tag('p', s($commentauthor ? fullname($commentauthor) : 'Сотрудник') .
                     ' · ' . userdate((int)$comment->timecreated), ['class' => 'u-feed__source']);
                 echo html_writer::tag('p', nl2br(s((string)$comment->body)));
@@ -390,6 +531,8 @@ foreach ($posts as $post) {
                         ['class' => 'u-feed__source']);
                 }
                 if ($caninteract && (int)$comment->actoruserid === $actorid) {
+                    echo html_writer::start_tag('details', ['class' => 'u-feed__small-panel']);
+                    echo html_writer::tag('summary', 'Изменить');
                     echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
                     foreach (['sesskey' => sesskey(), 'postid' => $postid,
                             'commentid' => $comment->id, 'version' => $comment->version] as $field => $value) {
@@ -403,8 +546,11 @@ foreach ($posts as $post) {
                     echo html_writer::tag('button', 'Удалить', ['name' => 'action', 'value' => 'commentdelete',
                         'type' => 'submit', 'class' => 'u-feed__like', 'formnovalidate' => 'formnovalidate']);
                     echo html_writer::end_tag('form');
+                    echo html_writer::end_tag('details');
                 }
                 if ($caninteract && !$comment->parentid) {
+                    echo html_writer::start_tag('details', ['class' => 'u-feed__small-panel']);
+                    echo html_writer::tag('summary', 'Ответить');
                     echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
                     foreach (['sesskey' => sesskey(), 'postid' => $postid,
                             'parentid' => $comment->id, 'action' => 'comment'] as $field => $value) {
@@ -415,34 +561,47 @@ foreach ($posts as $post) {
                         'required' => 'required', 'maxlength' => 5000, 'class' => 'form-control']);
                     echo html_writer::tag('button', 'Ответить', ['type' => 'submit', 'class' => 'u-feed__like']);
                     echo html_writer::end_tag('form');
+                    echo html_writer::end_tag('details');
                 }
+                echo html_writer::end_div();
             }
             if (count($comments) > 20) {
                 echo html_writer::link(new moodle_url('/local/ustar/feed.php',
                     ['postid' => $postid, 'comments' => $commentpage + 1]), 'Следующие комментарии');
             }
             if ($caninteract) {
+                echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__comment-form']);
+                echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+                echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'postid', 'value' => $postid]);
+                echo html_writer::tag('label', 'Ваш комментарий', ['for' => 'feed-comment-' . $postid]);
+                echo html_writer::tag('textarea', '', ['name' => 'body', 'id' => 'feed-comment-' . $postid,
+                    'required' => 'required', 'maxlength' => 5000, 'class' => 'form-control', 'rows' => 2,
+                    'placeholder' => 'Написать комментарий…']);
+                echo html_writer::tag('button', 'Отправить', ['type' => 'submit',
+                    'name' => 'action', 'value' => 'comment', 'class' => 'u-btn']);
+                echo html_writer::end_tag('form');
+            }
+            echo html_writer::end_div();
+            if ($caninteract) {
+                echo html_writer::start_tag('details', ['id' => 'report-' . $postid,
+                    'class' => 'u-feed__panel u-feed__panel--report']);
+                echo html_writer::tag('summary', 'Пожаловаться на публикацию');
                 echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
                 foreach (['sesskey' => sesskey(), 'action' => 'report', 'postid' => $postid] as
                         $field => $value) {
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
                 }
-                echo html_writer::tag('label', 'Сообщить о проблеме с публикацией', ['for' => 'feed-reason']);
-                echo html_writer::empty_tag('input', ['name' => 'reason', 'id' => 'feed-reason',
+                echo html_writer::tag('label', 'Что произошло?', ['for' => 'feed-reason-' . $postid]);
+                echo html_writer::empty_tag('input', ['name' => 'reason', 'id' => 'feed-reason-' . $postid,
                     'required' => 'required', 'class' => 'form-control']);
                 echo html_writer::tag('button', 'Отправить жалобу', ['type' => 'submit',
                     'class' => 'u-btn u-btn--secondary']);
                 echo html_writer::end_tag('form');
-                echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
-                echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
-                echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'postid', 'value' => $postid]);
-                echo html_writer::tag('label', 'Ваш комментарий', ['for' => 'feed-comment']);
-                echo html_writer::tag('textarea', '', ['name' => 'body', 'id' => 'feed-comment',
-                    'required' => 'required', 'maxlength' => 5000, 'class' => 'form-control', 'rows' => 2]);
-                echo html_writer::tag('button', 'Отправить комментарий', ['type' => 'submit',
-                    'name' => 'action', 'value' => 'comment', 'class' => 'u-btn']);
-                echo html_writer::end_tag('form');
+                echo html_writer::end_tag('details');
                 if ($cancreate && !$post->sourcepostid) {
+                    echo html_writer::start_tag('details', ['id' => 'repost-' . $postid,
+                        'class' => 'u-feed__panel']);
+                    echo html_writer::tag('summary', 'Поделиться записью');
                     echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__edit']);
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
                     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sourceid', 'value' => $postid]);
@@ -454,9 +613,11 @@ foreach ($posts as $post) {
                     echo html_writer::tag('button', 'Поделиться от моего имени', ['type' => 'submit',
                         'name' => 'action', 'value' => 'repost', 'class' => 'u-btn u-btn--secondary']);
                     echo html_writer::end_tag('form');
+                    echo html_writer::end_tag('details');
                 }
             }
         }
+        echo html_writer::end_tag('section');
     }
     echo html_writer::end_tag('article');
 }

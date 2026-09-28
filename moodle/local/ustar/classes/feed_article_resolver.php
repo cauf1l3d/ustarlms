@@ -394,9 +394,9 @@ final class feed_article_resolver {
             }
         };
 
-        $register($xpath->query('//*[@itemprop="articleBody"]'), 7000);
-        $register($xpath->query('//article'), 6000);
-        $register($xpath->query('//main'), 1500);
+        $register($xpath->query('//*[@itemprop="articleBody"]'), 200000);
+        $register($xpath->query('//article'), 150000);
+        $register($xpath->query('//main'), 0);
 
         $generic = $xpath->query('//div|//section');
         if ($generic) {
@@ -414,7 +414,7 @@ final class feed_article_resolver {
                         $id = spl_object_id($node);
                         if (!isset($seen[$id])) {
                             $seen[$id] = true;
-                            $candidates[] = [$node, 4500];
+                            $candidates[] = [$node, 100000];
                         }
                         break;
                     }

@@ -4675,5 +4675,49 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092801, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092802) {
+        $dbman = $DB->get_manager();
+
+        $sources = new xmldb_table('local_ustar_feed_sources');
+        if (!$dbman->table_exists($sources)) {
+            $sources->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $sources->add_field('name', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL);
+            $sources->add_field('url', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+            $sources->add_field('urlhash', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL);
+            $sources->add_field('enabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+            $sources->add_field('audiencejson', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+            $sources->add_field('lastchecked', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $sources->add_field('lastsuccess', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $sources->add_field('lasterror', XMLDB_TYPE_TEXT, null, null, null);
+            $sources->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $sources->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $sources->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $sources->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $sources->add_index('urlhash_uix', XMLDB_INDEX_UNIQUE, ['urlhash']);
+            $sources->add_index('enabled_idx', XMLDB_INDEX_NOTUNIQUE, ['enabled', 'id']);
+            $dbman->create_table($sources);
+        }
+
+        $items = new xmldb_table('local_ustar_feed_sourceitem');
+        if (!$dbman->table_exists($items)) {
+            $items->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $items->add_field('sourceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $items->add_field('postid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $items->add_field('guidhash', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL);
+            $items->add_field('externalguid', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+            $items->add_field('externalurl', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+            $items->add_field('title', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+            $items->add_field('publishedat', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $items->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $items->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $items->add_index('source_guid_uix', XMLDB_INDEX_UNIQUE, ['sourceid', 'guidhash']);
+            $items->add_index('post_uix', XMLDB_INDEX_UNIQUE, ['postid']);
+            $items->add_index('source_time_idx', XMLDB_INDEX_NOTUNIQUE, ['sourceid', 'publishedat']);
+            $dbman->create_table($items);
+        }
+
+        upgrade_plugin_savepoint(true, 2026092802, 'local', 'ustar');
+    }
+
 return true;
 }

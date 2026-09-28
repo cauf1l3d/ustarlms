@@ -4731,5 +4731,56 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092803, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092804) {
+        $dbman = $DB->get_manager();
+
+        $sources = new xmldb_table('local_ustar_feed_sources');
+        if ($dbman->table_exists($sources)) {
+            $field = new xmldb_field('resolverenabled', XMLDB_TYPE_INTEGER, '1', null,
+                XMLDB_NOTNULL, null, '0', 'enabled');
+            if (!$dbman->field_exists($sources, $field)) {
+                $dbman->add_field($sources, $field);
+            }
+        }
+
+        $items = new xmldb_table('local_ustar_feed_sourceitem');
+        if ($dbman->table_exists($items)) {
+            $fields = [
+                new xmldb_field('feedcontenttext', XMLDB_TYPE_TEXT, null, null, null, null, null, 'title'),
+                new xmldb_field('contenthtml', XMLDB_TYPE_TEXT, null, null, null, null, null, 'contenttext'),
+                new xmldb_field('enrichstatus', XMLDB_TYPE_CHAR, '16', null,
+                    XMLDB_NOTNULL, null, 'disabled', 'contenthtml'),
+                new xmldb_field('enrichattempts', XMLDB_TYPE_INTEGER, '4', null,
+                    XMLDB_NOTNULL, null, '0', 'enrichstatus'),
+                new xmldb_field('enrichnexttry', XMLDB_TYPE_INTEGER, '10', null,
+                    XMLDB_NOTNULL, null, '0', 'enrichattempts'),
+                new xmldb_field('enrichedat', XMLDB_TYPE_INTEGER, '10', null,
+                    XMLDB_NOTNULL, null, '0', 'enrichnexttry'),
+                new xmldb_field('enricherror', XMLDB_TYPE_TEXT, null, null, null, null, null, 'enrichedat'),
+                new xmldb_field('resolvedurl', XMLDB_TYPE_TEXT, null, null, null, null, null, 'enricherror'),
+                new xmldb_field('contenthash', XMLDB_TYPE_CHAR, '64', null, null, null, null, null, 'resolvedurl'),
+            ];
+            foreach ($fields as $field) {
+                if (!$dbman->field_exists($items, $field)) {
+                    $dbman->add_field($items, $field);
+                }
+            }
+
+            $DB->execute(
+                "UPDATE {local_ustar_feed_sourceitem}
+                    SET feedcontenttext = contenttext
+                  WHERE feedcontenttext IS NULL"
+            );
+
+            $index = new xmldb_index('enrich_queue_idx', XMLDB_INDEX_NOTUNIQUE,
+                ['enrichstatus', 'enrichnexttry', 'id']);
+            if (!$dbman->index_exists($items, $index)) {
+                $dbman->add_index($items, $index);
+            }
+        }
+
+        upgrade_plugin_savepoint(true, 2026092804, 'local', 'ustar');
+    }
+
 return true;
 }

@@ -2696,7 +2696,8 @@ final class route_model {
             $assessmentstats = $assessmentview ?: $quizsummary;
 
             $storedstatus = $readonly ? (string)($storedpoints[(int)$point->id]['status'] ?? 'locked') : '';
-            $pendingsync = $readonly && $storedstatus === 'current' && !empty($fact['satisfied']);
+            $pendingsync = $readonly && $storedstatus === 'current'
+                && (!empty($fact['satisfied']) || !empty($assessmentview['pendingsync']));
             if ($readonly && $storedstatus === 'done') {
                 $fact['satisfied'] = true;
             }

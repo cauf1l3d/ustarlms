@@ -57,6 +57,7 @@ final class native_learning {
 
     /** Resolve a native requirement through the employee's current route and position scope. */
     public static function availability(int $userid, string $factkey): array {
+        global $DB;
         if (!isset(self::FACTS[$factkey]) || !accounts::participates($userid)) {
             return ['configured' => false, 'reachable' => false];
         }
@@ -72,7 +73,9 @@ final class native_learning {
         $sequential = in_array($factkey, [self::TEAM_STRUCTURE, self::ROLE_DEVELOPMENT,
             self::ROLE_SKILLS_CHECK, self::TEAM_PROFILE_REVEAL], true);
         foreach ($snapshot['points'] ?? [] as $point) {
-            $version = route_model::current_published_version((int)$point['id']);
+            $version = $DB->get_record('local_ustar_route_versions',
+                ['id' => (int)$point['versionid'], 'pointid' => (int)$point['id'],
+                    'status' => route_model::STATUS_PUBLISHED], '*', IGNORE_MISSING);
             if (!$version) { continue; }
             foreach (route_model::requirements_for_version($version) as $requirement) {
                 if (($requirement['type'] ?? '') === 'native'

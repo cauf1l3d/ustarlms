@@ -150,18 +150,9 @@ final class route_continue {
         if ($positionid === '' || !empty(adaptation_service::route_card($userid)['blocked'])) {
             throw new \moodle_exception('Сначала завершите предыдущие шаги маршрута.');
         }
-        $route = route_model::read_only_snapshot($positionid, $userid);
-        foreach ($route['points'] ?? [] as $point) {
-            if (!empty($point['locked'])) { continue; }
-            $version = route_model::current_published_version((int)$point['id']);
-            if (!$version) { continue; }
-            foreach (route_model::requirements_for_version($version) as $requirement) {
-                if (($requirement['type'] ?? '') === 'native' && ($requirement['sourcekey'] ?? '') === $factkey) {
-                    return;
-                }
-            }
+        if (empty(native_learning::availability($userid, $factkey)['reachable'])) {
+            throw new \moodle_exception('Этот шаг ещё недоступен в вашем маршруте.');
         }
-        throw new \moodle_exception('Этот шаг ещё недоступен в вашем маршруте.');
     }
 
     public static function destination(array $route, string $avoidpath = '', int $avoidcmid = 0): \moodle_url {
@@ -233,4 +224,3 @@ final class route_continue {
 
 
 }
-

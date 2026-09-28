@@ -1071,54 +1071,74 @@ final class route_model {
 
         try {
             $transaction = $DB->start_delegated_transaction();
-            $point = $DB->get_record_sql(
-                'SELECT * FROM {local_ustar_route_points} WHERE id = :id AND routeid = :routeid FOR UPDATE',
-                ['id' => $pointid, 'routeid' => $routeid],
-                MUST_EXIST
-            );
-            if ($expectedmodified > 0 && (int)$point->timemodified !== $expectedmodified) {
-                $transaction->rollback(new \moodle_exception('Точка маршрута уже изменена в другой сессии. Материал сохранён в USTAR Content, но не был привязан автоматически. Обновите маршрут и добавьте его из списка материалов.'));
-            }
-
-            $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,status,ackrequired', MUST_EXIST);
-            if ((string)$content->status !== content::STATUS_PUBLISHED) {
-                $transaction->rollback(new \moodle_exception('В маршрут можно автоматически добавить только опубликованный материал.'));
-            }
-
-            $latest = self::latest_version((int)$point->id);
-            if (!$latest) {
-                $transaction->rollback(new \moodle_exception('Сначала создайте первую версию точки маршрута, затем загрузите в неё файл.'));
-            }
-
-            $requirements = self::requirements_for_version($latest);
-            foreach ($requirements as $requirement) {
-                if (($requirement['type'] ?? '') === 'content' && (int)($requirement['sourceid'] ?? 0) === $contentid) {
-                    $transaction->allow_commit();
-                    return $latest;
+            try {
+                $point = $DB->get_record_sql(
+                    'SELECT * FROM {local_ustar_route_points} WHERE id = :id AND routeid = :routeid FOR UPDATE',
+                    ['id' => $pointid, 'routeid' => $routeid],
+                    MUST_EXIST
+                );
+                if ($expectedmodified > 0 && (int)$point->timemodified !== $expectedmodified) {
+                    throw new \moodle_exception('Точка маршрута уже изменена в другой сессии. Материал сохранён в USTAR Content, но не был привязан автоматически. Обновите маршрут и добавьте его из списка материалов.');
                 }
-            }
-            $requirements[] = [
-                'type' => 'content',
-                'sourceid' => $contentid,
-                'completionmode' => !empty($content->ackrequired) ? 'ack' : 'open',
-                'required' => true,
-                'label' => (string)$content->title,
-            ];
 
-            $point->timemodified = max(time(), (int)$point->timemodified + 1);
-            $point->usermodified = $actorid;
-            $DB->update_record('local_ustar_route_points', $point);
-            $version = self::create_version((int)$point->id, [
-                'title' => (string)$latest->title,
-                'summary' => (string)$latest->summary,
-                'requirements' => $requirements,
-                'renewalpolicy' => (string)$latest->renewalpolicy,
-                'validdays' => (int)$latest->validdays,
-                'status' => self::STATUS_PUBLISHED,
-                'effectivedate' => time(),
-            ], $actorid);
-            $transaction->allow_commit();
-            return $version;
+                $content = $DB->get_record('local_ustar_content', ['id' => $contentid], 'id,title,status,ackrequired', MUST_EXIST);
+                if ((string)$content->status !== content::STATUS_PUBLISHED) {
+                    throw new \moodle_exception('В маршрут можно автоматически добавить только опубликованный материал.');
+                }
+
+                $latest = self::latest_version((int)$point->id);
+                if (!$latest) {
+                    throw new \moodle_exception('Сначала создайте первую версию точки маршрута, затем загрузите в неё файл.');
+                }
+
+                $requirements = self::requirements_for_version($latest);
+                foreach ($requirements as $requirement) {
+                    if (($requirement['type'] ?? '') === 'content' && (int)($requirement['sourceid'] ?? 0) === $contentid) {
+                        $transaction->allow_commit();
+                        return $latest;
+                    }
+                }
+                $requirements[] = [
+                    'type' => 'content',
+                    'sourceid' => $contentid,
+                    'completionmode' => !empty($content->ackrequired) ? 'ack' : 'open',
+                    'required' => true,
+                    'label' => (string)$content->title,
+                ];
+
+                $point->timemodified = max(time(), (int)$point->timemodified + 1);
+                $point->usermodified = $actorid;
+                $DB->update_record('local_ustar_route_points', $point);
+                // The route lock and transaction are already held. Creating a
+                // second version lock here needlessly nests lock orders and the
+                // public create_version() command would commit independently.
+                $version = self::create_version_locked((int)$point->id, [
+                    'title' => (string)$latest->title,
+                    'summary' => (string)$latest->summary,
+                    'requirements' => $requirements,
+                    'renewalpolicy' => (string)$latest->renewalpolicy,
+                    'validdays' => (int)$latest->validdays,
+                    'status' => self::STATUS_PUBLISHED,
+                    'effectivedate' => time(),
+                ], $actorid);
+                $DB->execute(
+                    "UPDATE {local_ustar_route_versions}
+                        SET status = :archived, timemodified = :modified, usermodified = :actorid
+                      WHERE pointid = :pointid AND status = :published AND id <> :id",
+                    [
+                        'archived' => self::STATUS_ARCHIVED,
+                        'modified' => time(),
+                        'actorid' => $actorid,
+                        'pointid' => $pointid,
+                        'published' => self::STATUS_PUBLISHED,
+                        'id' => (int)$version->id,
+                    ]
+                );
+                $transaction->allow_commit();
+                return $version;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
         } finally {
             $lock->release();
         }

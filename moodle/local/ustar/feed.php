@@ -27,8 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $publisher = optional_param('publisher', 'person', PARAM_ALPHA);
             $publisherid = $publisher === 'person' ? (string)$actorid :
                 ($publisher === 'academy' ? 'academy' : optional_param('departmentid', '', PARAM_ALPHANUMEXT));
+            $audiencemode = optional_param('audiencemode', 'all', PARAM_ALPHA);
+            if ($publisher === 'academy' && !in_array($audiencemode, ['all', 'departments'], true)) {
+                throw new invalid_parameter_exception('Неизвестная аудитория публикации.');
+            }
             $audience = $publisher === 'academy'
-                ? (optional_param('audiencemode', 'all', PARAM_ALPHA) === 'departments'
+                ? ($audiencemode === 'departments'
                     ? optional_param_array('audience', [], PARAM_ALPHANUMEXT) : ['all'])
                 : [$publisher === 'department' ? $publisherid : 'all'];
             $postid = \local_ustar\feed_service::create($actorid, $publisher, $publisherid,
@@ -228,6 +232,8 @@ $canwrite = $cancreate;
 $managed = $canpublish ? \local_ustar\feed_access::manageable_departments($actorid) : [];
 $canacademy = $canpublish && (\local_ustar\feed_access::can_manage($actorid)
     || has_capability('local/ustar:feedpublishacademy', $context));
+$canaudience = $canacademy && (\local_ustar\feed_access::can_manage($actorid)
+    || has_capability('local/ustar:feedsetaudience', $context));
 if ($compose && $cancreate) {
     echo html_writer::start_tag('form', ['method' => 'post', 'enctype' => 'multipart/form-data',
         'class' => 'u-feed__composer']);
@@ -263,20 +269,22 @@ if ($compose && $cancreate) {
             'value' => 'all', 'checked' => 'checked']);
         echo ' Все сотрудники';
         echo html_writer::end_tag('label');
-        echo html_writer::start_tag('label');
-        echo html_writer::empty_tag('input', ['type' => 'radio', 'name' => 'audiencemode',
-            'value' => 'departments']);
-        echo ' Выбранные подразделения';
-        echo html_writer::end_tag('label');
-        echo html_writer::start_div('u-feed__audience-options', ['data-feed-audience-options' => '1']);
-        foreach ($departmentnames as $id => $department) {
+        if ($canaudience) {
             echo html_writer::start_tag('label');
-            echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'audience[]',
-                'value' => $id]);
-            echo ' ' . s((string)$department['name']);
+            echo html_writer::empty_tag('input', ['type' => 'radio', 'name' => 'audiencemode',
+                'value' => 'departments']);
+            echo ' Выбранные подразделения';
             echo html_writer::end_tag('label');
+            echo html_writer::start_div('u-feed__audience-options', ['data-feed-audience-options' => '1']);
+            foreach ($departmentnames as $id => $department) {
+                echo html_writer::start_tag('label');
+                echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'audience[]',
+                    'value' => $id]);
+                echo ' ' . s((string)$department['name']);
+                echo html_writer::end_tag('label');
+            }
+            echo html_writer::end_div();
         }
-        echo html_writer::end_div();
         echo html_writer::end_tag('fieldset');
         echo html_writer::end_div();
     }

@@ -58,6 +58,28 @@ final class catalog {
         return $rows;
     }
 
+    /** Bounded product-only search for the shell; do not hydrate an entire catalog. */
+    public static function search_products(string $q, int $limit = 6): array {
+        global $DB;
+        $q = trim($q);
+        if (!self::available() || \core_text::strlen($q) < 2) {
+            return [];
+        }
+        $limit = max(1, min(12, $limit));
+        $like = '%' . $DB->sql_like_escape($q) . '%';
+        $select = 'active = :active AND itemtype = :itemtype AND ('
+            . $DB->sql_like('title', ':q1', false) . ' OR '
+            . $DB->sql_like('sku', ':q2', false) . ' OR '
+            . $DB->sql_like('summary', ':q3', false) . ' OR '
+            . $DB->sql_like('description', ':q4', false) . ' OR '
+            . $DB->sql_like('attributesjson', ':q5', false) . ')';
+        $params = ['active' => 1, 'itemtype' => self::TYPE_PRODUCT,
+            'q1' => $like, 'q2' => $like, 'q3' => $like, 'q4' => $like, 'q5' => $like];
+        return array_map([self::class, 'view_record'], array_values($DB->get_records_select(
+            'local_ustar_catalog', $select, $params, 'sortorder ASC, title ASC, id ASC', '*', 0, $limit
+        )));
+    }
+
     public static function get(int $id): ?\stdClass {
         global $DB;
         if ($id <= 0 || !self::available()) {

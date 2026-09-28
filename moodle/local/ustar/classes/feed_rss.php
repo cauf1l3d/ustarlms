@@ -495,7 +495,8 @@ final class feed_rss {
                 $response = self::fetch_external(
                     self::validate_url((string)$url),
                     self::MAX_MEDIA_BYTES,
-                    'image/avif,image/webp,image/apng,image/svg+xml,image/*;q=0.8,*/*;q=0.1'
+                    'image/avif,image/webp,image/apng,image/svg+xml,image/*;q=0.8,*/*;q=0.1',
+                    8
                 );
                 $bytes = (string)$response['body'];
                 $info = @getimagesizefromstring($bytes);

@@ -192,12 +192,12 @@ final class forced_retraining {
     }
 
     /** @return array<int,array<string,mixed>> */
-    public static function cards_for_user(int $userid): array {
+    public static function cards_for_user(int $userid, bool $reconcile = true): array {
         $resolved = structure::resolve_user($userid);
         $positionid = (string)($resolved['position']['id'] ?? '');
         $cards = [];
         foreach (self::active_assignments($userid, false) as $assignment) {
-            $state = self::state($assignment, $positionid, true);
+            $state = self::state($assignment, $positionid, $reconcile);
             if (empty($state['completed'])) {
                 $cards[] = $state;
             }

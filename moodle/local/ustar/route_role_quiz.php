@@ -27,14 +27,38 @@ $position =
     $positionmap[$positionid]
     ?? null;
 
-$matrix =
-    $structure['matrix'][$positionid]
-    ?? [];
+// This check is part of the published position contract. Editable matrix
+// drafts may change while an employee is answering and cannot be the key.
+$standard = $positionid !== ''
+    ? \local_ustar\standard_model::current_position($positionid)
+    : null;
+$matrix = [];
+if ($standard) {
+    $items = json_decode((string)$standard->requirementsjson, true);
+    $valid = is_array($items) && !empty($items);
+    foreach (is_array($items) ? $items : [] as $item) {
+        if (($item['sourcekind'] ?? '') === 'ustar_skill'
+                && ($item['type'] ?? '') === 'practice'
+                && !empty($item['required'])
+                && (int)($item['targetlevel'] ?? 0) >= 1
+                && (int)($item['targetlevel'] ?? 0) <= 5
+                && !empty($item['sourceid'])
+                && !array_key_exists((string)$item['sourceid'], $matrix)) {
+            $matrix[(string)$item['sourceid']] = (int)$item['targetlevel'];
+        } else {
+            $valid = false;
+        }
+    }
+    if (!$valid) { $matrix = []; }
+}
 
 $skillmap = [];
 
 foreach (($structure['skills'] ?? []) as $skill) {
     $skillmap[(string)$skill['id']] = $skill;
+}
+foreach (array_keys($matrix) as $skillid) {
+    if (!isset($skillmap[$skillid])) { $matrix = []; break; }
 }
 
 $levelnames = [
@@ -288,6 +312,7 @@ if ($passed) {
             \local_ustar\native_learning::ROLE_SKILLS_CHECK,
             [
                 'positionid' => $positionid,
+                'standardversionid' => (int)$standard->id,
                 'matrixhash' => $matrixhash,
                 'score' => $score,
                 'total' => $total,
@@ -390,4 +415,3 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
-

@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else if ($action === 'read') {
         $id = required_param('id', PARAM_INT);
         \local_ustar\communication::mark_notification((int)$USER->id, $id,
-            required_param('source', PARAM_ALPHA));
+            optional_param('source', 'local', PARAM_ALPHA));
     }
     redirect(new moodle_url('/local/ustar/notifications.php'));
 }

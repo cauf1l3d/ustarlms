@@ -56,6 +56,26 @@ final class assessment_lifecycle {
         return $runtime ? self::route_view($runtime, $policy, $positionid) : null;
     }
 
+    /** Present persisted lifecycle state without creating a runtime or unlocking an attempt. */
+    public static function read_route_point(int $userid, string $positionid, \stdClass $version): ?array {
+        global $DB;
+        $policy = self::policy_for_version((int)$version->id);
+        if (!$policy || !self::policy_applies_to_user($policy, $userid, $positionid)) {
+            return null;
+        }
+        $runtime = $DB->get_record('local_ustar_assess_runtime', [
+            'userid' => $userid, 'pointid' => (int)$policy->pointid,
+            'versionid' => (int)$policy->versionid,
+        ]);
+        if (!$runtime) {
+            $runtime = (object)[
+                'id' => 0, 'userid' => $userid, 'status' => self::STATUS_ACTIVE,
+                'cycle' => 1, 'managerescalatedat' => null,
+            ];
+        }
+        return self::route_view($runtime, $policy, $positionid);
+    }
+
     /**
      * Synchronise one employee against authoritative provider facts.
      *

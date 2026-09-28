@@ -8,6 +8,15 @@ require_capability('local/ustar:use', context_system::instance());
 
 global $DB, $SESSION, $USER;
 
+$userid = (int)$USER->id;
+if (!\local_ustar\employment::learning_allowed($userid)) {
+    throw new required_capability_exception(context_system::instance(),
+        'local/ustar:use', 'nopermissions', '');
+}
+if (\local_ustar\adaptation_service::learning_blocked($userid)) {
+    redirect(new moodle_url('/local/ustar/route.php'));
+}
+
 $cmid = required_param('cmid', PARAM_INT);
 $pointid = required_param('pointid', PARAM_INT);
 $versionid = optional_param('versionid', 0, PARAM_INT);
@@ -96,4 +105,3 @@ redirect(
         ['id' => $cmid]
     )
 );
-

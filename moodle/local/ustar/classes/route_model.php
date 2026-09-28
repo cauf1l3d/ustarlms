@@ -2430,6 +2430,14 @@ final class route_model {
     ): void {
         global $DB;
 
+        // A direct material URL must obey the same employee/adaptation gate
+        // as a launch from the route page, before any route reconciliation.
+        if (!employment::learning_allowed($userid)
+                || adaptation_service::learning_blocked($userid)) {
+            throw new \required_capability_exception(
+                \context_system::instance(), 'local/ustar:use', 'nopermissions', '');
+        }
+
         $scope = content::user_scope($userid);
         $positionid = (string)($scope['positionid'] ?? '');
 

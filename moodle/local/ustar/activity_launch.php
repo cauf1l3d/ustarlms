@@ -8,6 +8,15 @@ require_capability('local/ustar:use', context_system::instance());
 
 global $DB, $PAGE, $USER;
 
+$userid = (int)$USER->id;
+if (!\local_ustar\employment::learning_allowed($userid)) {
+    throw new required_capability_exception(context_system::instance(),
+        'local/ustar:use', 'nopermissions', '');
+}
+if (\local_ustar\adaptation_service::learning_blocked($userid)) {
+    redirect(new moodle_url('/local/ustar/route.php'));
+}
+
 $cmid = required_param('cmid', PARAM_INT);
 $pointid = required_param('pointid', PARAM_INT);
 $versionid = required_param('versionid', PARAM_INT);
@@ -23,7 +32,7 @@ $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Открытие шага | USTAR');
 $PAGE->set_heading('USTAR Academy');
 
-$resolved = \local_ustar\structure::resolve_user((int)$USER->id);
+$resolved = \local_ustar\structure::resolve_user($userid);
 $positionid = (string)($resolved['position']['id'] ?? '');
 if ($positionid === '') {
     throw new moodle_exception('Для сотрудника не определена должность USTAR.');
@@ -33,7 +42,7 @@ if ($positionid === '') {
  * The USTAR route is the only business availability gate.
  * Do not let a raw Moodle course page decide whether this current step exists.
  */
-$route = \local_ustar\route_model::for_user($positionid, (int)$USER->id);
+$route = \local_ustar\route_model::for_user($positionid, $userid);
 $current = $route['currentpoint'] ?? null;
 if (!$current || (int)($current['id'] ?? 0) !== $pointid || empty($current['canlaunch'])) {
     redirect(new moodle_url('/local/ustar/route.php'));
@@ -84,4 +93,3 @@ try {
 
 // The legacy course is only a backend container; this launcher only targets the authorised activity.
 redirect(new moodle_url((string)$prepared['targeturl']));
-

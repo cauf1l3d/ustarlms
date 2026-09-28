@@ -399,7 +399,20 @@ final class feed_rss {
 
         $fs = get_file_storage();
         $contextid = \context_system::instance()->id;
+        $existingfiles = $fs->get_area_files(
+            $contextid,
+            'local_ustar',
+            feed_files::AREA,
+            $postid,
+            'id ASC',
+            false
+        );
+        $stored = count(array_filter($existingfiles, static fn($file): bool =>
+            str_starts_with((string)$file->get_filename(), 'rss-')));
         foreach ($urls as $url) {
+            if ($stored >= self::MAX_MEDIA_PER_ITEM) {
+                break;
+            }
             try {
                 $response = self::fetch_external(
                     self::validate_url((string)$url),
@@ -426,6 +439,7 @@ final class feed_rss {
                     'filepath' => '/v1/',
                     'filename' => $filename,
                 ], $bytes);
+                $stored++;
             } catch (\Throwable $e) {
                 // A broken remote image must never abort the article import.
                 debugging('USTAR RSS media skipped: ' . get_class($e), DEBUG_DEVELOPER);
@@ -433,7 +447,7 @@ final class feed_rss {
         }
     }
 
-    private static function refresh_existing(\stdClass $record, array $item): void {
+    private static function refresh_existing(\stdClass $source, \stdClass $record, array $item): void {
         global $DB;
         $post = $DB->get_record('local_ustar_feed_posts', ['id' => (int)$record->postid]);
         if (!$post || $post->publishertype !== 'external') {
@@ -444,25 +458,55 @@ final class feed_rss {
         if ($body === '') {
             $body = (string)$item['title'];
         }
-        $changed = false;
         $newbody = \core_text::substr($body, 0, 5000);
         if ((string)$post->body !== $newbody) {
             $post->body = $newbody;
-            $changed = true;
-        }
-        if ($changed) {
             $post->timemodified = time();
             $post->version++;
             $DB->update_record('local_ustar_feed_posts', $post);
         }
 
-        $DB->update_record('local_ustar_feed_sourceitem', (object)[
+        $feedcontent = (string)$item['contenttext'];
+        $needs = feed_article_resolver::needs_enrichment($newbody, $feedcontent);
+        $status = (string)($record->enrichstatus ?? 'disabled');
+        $update = (object)[
             'id' => (int)$record->id,
             'externalurl' => (string)$item['link'],
             'title' => (string)$item['title'],
-            'contenttext' => (string)$item['contenttext'],
+            'feedcontenttext' => $feedcontent,
             'publishedat' => (int)$item['publishedat'],
-        ]);
+        ];
+
+        if (!$needs) {
+            $update->contenttext = $feedcontent;
+            $update->contenthtml = null;
+            $update->enrichstatus = 'feed';
+            $update->enrichattempts = 0;
+            $update->enrichnexttry = 0;
+            $update->enrichedat = 0;
+            $update->enricherror = null;
+            $update->resolvedurl = null;
+            $update->contenthash = hash('sha256', $feedcontent);
+        } else if (!empty($source->resolverenabled)) {
+            if ($status === 'done') {
+                // Keep already resolved full text; only refresh feed metadata.
+            } else {
+                $update->contenttext = $feedcontent;
+                $update->contenthtml = null;
+                if (!in_array($status, ['failed', 'limited'], true)) {
+                    $update->enrichstatus = 'pending';
+                    $update->enrichnexttry = 0;
+                    $update->enricherror = null;
+                }
+            }
+        } else if ($status !== 'done') {
+            $update->contenttext = $feedcontent;
+            $update->contenthtml = null;
+            $update->enrichstatus = 'disabled';
+            $update->enrichnexttry = 0;
+        }
+
+        $DB->update_record('local_ustar_feed_sourceitem', $update);
         self::sync_external_media((int)$record->postid, $item['media'] ?? []);
     }
 
@@ -474,7 +518,7 @@ final class feed_rss {
             'guidhash' => $guidhash,
         ]);
         if ($existing) {
-            self::refresh_existing($existing, $item);
+            self::refresh_existing($source, $existing, $item);
             return false;
         }
 
@@ -486,7 +530,7 @@ final class feed_rss {
         ]);
         if ($existing) {
             $transaction->allow_commit();
-            self::refresh_existing($existing, $item);
+            self::refresh_existing($source, $existing, $item);
             return false;
         }
 
@@ -520,7 +564,19 @@ final class feed_rss {
             'externalguid' => (string)$item['guid'],
             'externalurl' => (string)$item['link'],
             'title' => (string)$item['title'],
+            'feedcontenttext' => (string)$item['contenttext'],
             'contenttext' => (string)$item['contenttext'],
+            'contenthtml' => null,
+            'enrichstatus' => (!empty($source->resolverenabled)
+                && feed_article_resolver::needs_enrichment($body, (string)$item['contenttext']))
+                ? 'pending'
+                : (!empty($source->resolverenabled) ? 'feed' : 'disabled'),
+            'enrichattempts' => 0,
+            'enrichnexttry' => 0,
+            'enrichedat' => 0,
+            'enricherror' => null,
+            'resolvedurl' => null,
+            'contenthash' => hash('sha256', (string)$item['contenttext']),
             'publishedat' => (int)$item['publishedat'],
             'timecreated' => $now,
         ]);

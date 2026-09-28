@@ -4,24 +4,29 @@ namespace local_ustar;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * RSS source registry and importer for the USTAR feed.
+ * External RSS/Atom source registry and importer for the USTAR feed.
  *
- * The importer intentionally does not use feed_service::create(): external
- * sources are system-authored, immutable feed entries and must never inherit
- * a human publisher's capabilities.
+ * External posts are system-authored records. Remote media is copied into the
+ * Moodle File API so feed ACL, personal-library copying and retention rules
+ * remain local to USTAR.
  */
 final class feed_rss {
     public const PILOT_URL = 'https://vc.ru/rss/all';
     private const FIRST_IMPORT_LIMIT = 10;
     private const REGULAR_IMPORT_LIMIT = 30;
     private const MAX_RESPONSE_BYTES = 2097152;
+    private const MAX_MEDIA_BYTES = 8388608;
+    private const MAX_MEDIA_PER_ITEM = 4;
+    private const MAX_REDIRECTS = 3;
 
     public static function validate_url(string $url): string {
         $url = trim($url);
         $parts = parse_url($url);
         if (!is_array($parts) || strtolower((string)($parts['scheme'] ?? '')) !== 'https'
                 || empty($parts['host']) || isset($parts['user']) || isset($parts['pass'])) {
-            throw new \invalid_parameter_exception('RSS-адрес должен быть абсолютным HTTPS URL без логина и пароля.');
+            throw new \invalid_parameter_exception(
+                'RSS-адрес должен быть абсолютным HTTPS URL без логина и пароля.'
+            );
         }
         if (isset($parts['port']) && (int)$parts['port'] !== 443) {
             throw new \invalid_parameter_exception('Для RSS разрешён только стандартный HTTPS-порт 443.');
@@ -56,6 +61,82 @@ final class feed_rss {
             }
         }
         return $url;
+    }
+
+    private static function absolute_url(string $base, string $candidate): string {
+        $candidate = trim(html_entity_decode($candidate, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        if ($candidate === '') {
+            return '';
+        }
+        if (preg_match('~^https://~i', $candidate)) {
+            return $candidate;
+        }
+        $baseparts = parse_url($base);
+        if (!is_array($baseparts) || empty($baseparts['scheme']) || empty($baseparts['host'])) {
+            return '';
+        }
+        if (str_starts_with($candidate, '//')) {
+            return $baseparts['scheme'] . ':' . $candidate;
+        }
+        if (preg_match('~^[a-z][a-z0-9+.-]*:~i', $candidate)) {
+            return '';
+        }
+
+        $origin = $baseparts['scheme'] . '://' . $baseparts['host'];
+        if (!empty($baseparts['port'])) {
+            $origin .= ':' . (int)$baseparts['port'];
+        }
+        if (str_starts_with($candidate, '/')) {
+            return $origin . $candidate;
+        }
+
+        $path = (string)($baseparts['path'] ?? '/');
+        $directory = preg_replace('~/[^/]*$~', '/', $path);
+        return $origin . ($directory ?: '/') . $candidate;
+    }
+
+    /**
+     * Fetch one trusted HTTPS resource. Redirects are followed manually so
+     * every hop receives the same public-address validation.
+     */
+    private static function fetch(string $url, int $maxbytes, string $accept): array {
+        global $CFG;
+        require_once($CFG->libdir . '/filelib.php');
+
+        $current = self::validate_url($url);
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            $curl = new \curl();
+            $curl->setHeader([
+                'Accept: ' . $accept,
+                'User-Agent: USTAR-Academy-RSS/2.0',
+            ]);
+            $body = $curl->get($current, [], [
+                'CURLOPT_CONNECTTIMEOUT' => 5,
+                'CURLOPT_TIMEOUT' => 15,
+                'CURLOPT_FOLLOWLOCATION' => false,
+                'CURLOPT_MAXREDIRS' => 0,
+            ]);
+            $info = $curl->get_info();
+            $status = (int)($info['http_code'] ?? 0);
+
+            if ($status >= 300 && $status < 400) {
+                $redirect = trim((string)($info['redirect_url'] ?? ''));
+                if ($redirect === '' || $hop >= self::MAX_REDIRECTS) {
+                    throw new \moodle_exception('Внешний источник вернул неподдерживаемый redirect.');
+                }
+                $current = self::validate_url(self::absolute_url($current, $redirect));
+                continue;
+            }
+
+            if ($status < 200 || $status >= 300) {
+                throw new \moodle_exception('Внешний источник вернул HTTP ' . $status . '.');
+            }
+            if (!is_string($body) || $body === '' || strlen($body) > $maxbytes) {
+                throw new \moodle_exception('Ответ внешнего источника пуст или превышает допустимый размер.');
+            }
+            return ['body' => $body, 'url' => $current, 'info' => $info];
+        }
+        throw new \moodle_exception('Превышено число перенаправлений внешнего источника.');
     }
 
     public static function create_source(int $actorid, string $name, string $url): int {
@@ -109,7 +190,8 @@ final class feed_rss {
         foreach ($sources as $source) {
             try {
                 $result = self::import_source((int)$source->id);
-                mtrace('USTAR RSS #' . (int)$source->id . ': imported=' . (int)$result['imported']);
+                mtrace('USTAR RSS #' . (int)$source->id . ': imported=' . (int)$result['imported']
+                    . ' refreshed=' . (int)$result['refreshed']);
             } catch (\Throwable $e) {
                 mtrace('USTAR RSS #' . (int)$source->id . ': failed=' . get_class($e));
             }
@@ -117,44 +199,31 @@ final class feed_rss {
     }
 
     public static function import_source(int $sourceid): array {
-        global $CFG, $DB;
+        global $DB;
         $source = $DB->get_record('local_ustar_feed_sources', ['id' => $sourceid], '*', MUST_EXIST);
         $url = self::validate_url((string)$source->url);
         $now = time();
         $DB->set_field('local_ustar_feed_sources', 'lastchecked', $now, ['id' => $sourceid]);
 
         try {
-            require_once($CFG->libdir . '/filelib.php');
-            $curl = new \curl();
-            $curl->setHeader([
-                'Accept: application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.1',
-                'User-Agent: USTAR-Academy-RSS/1.0',
-            ]);
-            $xml = $curl->get($url, [], [
-                'CURLOPT_CONNECTTIMEOUT' => 5,
-                'CURLOPT_TIMEOUT' => 15,
-                'CURLOPT_FOLLOWLOCATION' => false,
-                'CURLOPT_MAXREDIRS' => 0,
-            ]);
-            $info = $curl->get_info();
-            $status = (int)($info['http_code'] ?? 0);
-            if ($status < 200 || $status >= 300) {
-                throw new \moodle_exception('RSS HTTP status ' . $status);
-            }
-            if (!is_string($xml) || $xml === '' || strlen($xml) > self::MAX_RESPONSE_BYTES) {
-                throw new \moodle_exception('RSS response is empty or too large.');
-            }
-
-            $items = self::parse($xml);
+            $response = self::fetch(
+                $url,
+                self::MAX_RESPONSE_BYTES,
+                'application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.1'
+            );
+            $items = self::parse((string)$response['body']);
             $first = !$DB->record_exists('local_ustar_feed_sourceitem', ['sourceid' => $sourceid]);
             $limit = $first ? self::FIRST_IMPORT_LIMIT : self::REGULAR_IMPORT_LIMIT;
             $items = array_slice($items, 0, $limit);
             $items = array_reverse($items);
 
             $imported = 0;
+            $refreshed = 0;
             foreach ($items as $item) {
                 if (self::publish_item($source, $item)) {
                     $imported++;
+                } else {
+                    $refreshed++;
                 }
             }
 
@@ -165,7 +234,7 @@ final class feed_rss {
                 'lasterror' => null,
                 'timemodified' => time(),
             ]);
-            return ['imported' => $imported, 'seen' => count($items)];
+            return ['imported' => $imported, 'refreshed' => $refreshed, 'seen' => count($items)];
         } catch (\Throwable $e) {
             $DB->update_record('local_ustar_feed_sources', (object)[
                 'id' => $sourceid,
@@ -177,6 +246,49 @@ final class feed_rss {
         }
     }
 
+    private static function text_from_html(string $html, int $limit): string {
+        if ($html === '') {
+            return '';
+        }
+        $html = preg_replace(
+            '~<(?:br\s*/?|/p|/div|/li|/h[1-6]|/blockquote)\s*>~iu',
+            "\n",
+            $html
+        );
+        $text = html_entity_decode(strip_tags((string)$html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        $text = preg_replace('/[ \t]+/u', ' ', $text);
+        $text = preg_replace('/ *\n */u', "\n", (string)$text);
+        $text = preg_replace('/\n{3,}/u', "\n\n", (string)$text);
+        return \core_text::substr(trim((string)$text), 0, $limit);
+    }
+
+    private static function image_urls(string $base, array $nodes, string ...$htmlblocks): array {
+        $urls = [];
+        foreach ($nodes as $node) {
+            if (!$node instanceof \DOMElement) {
+                continue;
+            }
+            $url = trim((string)$node->getAttribute('url'));
+            $type = strtolower(trim((string)$node->getAttribute('type')));
+            $medium = strtolower(trim((string)$node->getAttribute('medium')));
+            if ($url !== '' && ($type === '' || str_starts_with($type, 'image/') || $medium === 'image')) {
+                $urls[] = self::absolute_url($base, $url);
+            }
+        }
+        foreach ($htmlblocks as $html) {
+            if ($html === '') {
+                continue;
+            }
+            if (preg_match_all('~<img\b[^>]*\bsrc\s*=\s*(["\'])(.*?)\1~isu', $html, $matches)) {
+                foreach ($matches[2] as $url) {
+                    $urls[] = self::absolute_url($base, (string)$url);
+                }
+            }
+        }
+        return array_slice(array_values(array_unique(array_filter($urls))), 0, self::MAX_MEDIA_PER_ITEM);
+    }
+
     public static function parse(string $xml): array {
         $old = libxml_use_internal_errors(true);
         try {
@@ -185,17 +297,53 @@ final class feed_rss {
                 throw new \invalid_parameter_exception('Источник вернул некорректный XML.');
             }
             $xpath = new \DOMXPath($document);
-            $nodes = $xpath->query('/rss/channel/item');
+            $rssnodes = $xpath->query('/rss/channel/item');
+            $atomnodes = $xpath->query('/*[local-name()="feed"]/*[local-name()="entry"]');
+            $isrss = $rssnodes && $rssnodes->length > 0;
+            $nodes = $isrss ? $rssnodes : $atomnodes;
             if (!$nodes || $nodes->length === 0) {
-                throw new \invalid_parameter_exception('Пока поддерживается RSS 2.0 с channel/item.');
+                throw new \invalid_parameter_exception('Поддерживаются RSS 2.0 и Atom 1.0.');
             }
+
             $result = [];
             foreach ($nodes as $node) {
-                $title = trim((string)$xpath->evaluate('string(title)', $node));
-                $link = trim((string)$xpath->evaluate('string(link)', $node));
-                $guid = trim((string)$xpath->evaluate('string(guid)', $node));
-                $date = trim((string)$xpath->evaluate('string(pubDate)', $node));
-                $description = (string)$xpath->evaluate('string(description)', $node);
+                if ($isrss) {
+                    $title = trim((string)$xpath->evaluate('string(title)', $node));
+                    $link = trim((string)$xpath->evaluate('string(link)', $node));
+                    $guid = trim((string)$xpath->evaluate('string(guid)', $node));
+                    $date = trim((string)$xpath->evaluate('string(pubDate)', $node));
+                    $description = (string)$xpath->evaluate('string(description)', $node);
+                    $content = (string)$xpath->evaluate('string(*[local-name()="encoded"])', $node);
+                    $medianodes = [];
+                    foreach ($xpath->query('./*[local-name()="enclosure" or local-name()="content" or local-name()="thumbnail"]',
+                            $node) ?: [] as $medianode) {
+                        $medianodes[] = $medianode;
+                    }
+                } else {
+                    $title = trim((string)$xpath->evaluate('string(*[local-name()="title"])', $node));
+                    $link = trim((string)$xpath->evaluate(
+                        'string(*[local-name()="link" and (not(@rel) or @rel="alternate")][1]/@href)',
+                        $node
+                    ));
+                    $guid = trim((string)$xpath->evaluate('string(*[local-name()="id"])', $node));
+                    $date = trim((string)$xpath->evaluate(
+                        'string((*[local-name()="published"]|*[local-name()="updated"])[1])',
+                        $node
+                    ));
+                    $description = (string)$xpath->evaluate('string(*[local-name()="summary"])', $node);
+                    $content = (string)$xpath->evaluate('string(*[local-name()="content"])', $node);
+                    $medianodes = [];
+                    foreach ($xpath->query('./*[local-name()="link" and @rel="enclosure"]'
+                            . '|./*[local-name()="content" and @url]'
+                            . '|./*[local-name()="thumbnail"]', $node) ?: [] as $medianode) {
+                        if ($medianode instanceof \DOMElement && !$medianode->hasAttribute('url')
+                                && $medianode->hasAttribute('href')) {
+                            $medianode->setAttribute('url', $medianode->getAttribute('href'));
+                        }
+                        $medianodes[] = $medianode;
+                    }
+                }
+
                 if ($title === '' || $link === '') {
                     continue;
                 }
@@ -203,16 +351,25 @@ final class feed_rss {
                 if (!in_array($scheme, ['http', 'https'], true)) {
                     continue;
                 }
+
                 $guid = $guid !== '' ? $guid : $link;
-                $summary = html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                $summary = trim((string)preg_replace('/\s+/u', ' ', $summary));
-                $summary = \core_text::substr($summary, 0, 1500);
+                $fulltext = self::text_from_html($content !== '' ? $content : $description, 20000);
+                $summary = self::text_from_html($description !== '' ? $description : $content, 1500);
+                if ($summary === '') {
+                    $summary = \core_text::substr($fulltext, 0, 1500);
+                }
+                if ($fulltext === '') {
+                    $fulltext = $summary;
+                }
+
                 $published = $date !== '' ? strtotime($date) : false;
                 $result[] = [
                     'title' => \core_text::substr($title, 0, 255),
                     'link' => $link,
                     'guid' => $guid,
                     'summary' => $summary,
+                    'contenttext' => $fulltext,
+                    'media' => self::image_urls($link, $medianodes, $content, $description),
                     'publishedat' => $published && $published > 0 ? (int)$published : time(),
                 ];
             }
@@ -223,19 +380,112 @@ final class feed_rss {
         }
     }
 
+    private static function media_extension(int $imagetype): string {
+        return match ($imagetype) {
+            IMAGETYPE_JPEG => 'jpg',
+            IMAGETYPE_PNG => 'png',
+            IMAGETYPE_GIF => 'gif',
+            IMAGETYPE_WEBP => 'webp',
+            default => '',
+        };
+    }
+
+    private static function sync_media(int $postid, array $urls): void {
+        $urls = array_slice(array_values(array_unique(array_filter($urls))), 0, self::MAX_MEDIA_PER_ITEM);
+        if (!$urls) {
+            return;
+        }
+
+        $fs = get_file_storage();
+        $contextid = \context_system::instance()->id;
+        foreach ($urls as $url) {
+            try {
+                $response = self::fetch(
+                    self::validate_url((string)$url),
+                    self::MAX_MEDIA_BYTES,
+                    'image/avif,image/webp,image/apng,image/svg+xml,image/*;q=0.8,*/*;q=0.1'
+                );
+                $bytes = (string)$response['body'];
+                $info = @getimagesizefromstring($bytes);
+                $imagetype = is_array($info) ? (int)($info[2] ?? 0) : 0;
+                $extension = self::media_extension($imagetype);
+                if ($extension === '') {
+                    continue;
+                }
+                $filename = 'rss-' . substr(hash('sha256', (string)$url), 0, 20) . '.' . $extension;
+                if ($fs->get_file($contextid, 'local_ustar', feed_files::AREA,
+                        $postid, '/v1/', $filename)) {
+                    continue;
+                }
+                $fs->create_file_from_string([
+                    'contextid' => $contextid,
+                    'component' => 'local_ustar',
+                    'filearea' => feed_files::AREA,
+                    'itemid' => $postid,
+                    'filepath' => '/v1/',
+                    'filename' => $filename,
+                ], $bytes);
+            } catch (\Throwable $e) {
+                // A broken remote image must never abort the article import.
+                debugging('USTAR RSS media skipped: ' . get_class($e), DEBUG_DEVELOPER);
+            }
+        }
+    }
+
+    private static function refresh_existing(\stdClass $record, array $item): void {
+        global $DB;
+        $post = $DB->get_record('local_ustar_feed_posts', ['id' => (int)$record->postid]);
+        if (!$post || $post->publishertype !== 'external') {
+            return;
+        }
+
+        $body = trim((string)$item['summary']);
+        if ($body === '') {
+            $body = (string)$item['title'];
+        }
+        $changed = false;
+        $newbody = \core_text::substr($body, 0, 5000);
+        if ((string)$post->body !== $newbody) {
+            $post->body = $newbody;
+            $changed = true;
+        }
+        if ($changed) {
+            $post->timemodified = time();
+            $post->version++;
+            $DB->update_record('local_ustar_feed_posts', $post);
+        }
+
+        $DB->update_record('local_ustar_feed_sourceitem', (object)[
+            'id' => (int)$record->id,
+            'externalurl' => (string)$item['link'],
+            'title' => (string)$item['title'],
+            'contenttext' => (string)$item['contenttext'],
+            'publishedat' => (int)$item['publishedat'],
+        ]);
+        self::sync_media((int)$record->postid, $item['media'] ?? []);
+    }
+
     private static function publish_item(\stdClass $source, array $item): bool {
         global $DB;
         $guidhash = hash('sha256', (string)$item['guid']);
-        if ($DB->record_exists('local_ustar_feed_sourceitem', [
-                'sourceid' => (int)$source->id, 'guidhash' => $guidhash])) {
+        $existing = $DB->get_record('local_ustar_feed_sourceitem', [
+            'sourceid' => (int)$source->id,
+            'guidhash' => $guidhash,
+        ]);
+        if ($existing) {
+            self::refresh_existing($existing, $item);
             return false;
         }
 
         $now = time();
         $transaction = $DB->start_delegated_transaction();
-        if ($DB->record_exists('local_ustar_feed_sourceitem', [
-                'sourceid' => (int)$source->id, 'guidhash' => $guidhash])) {
+        $existing = $DB->get_record('local_ustar_feed_sourceitem', [
+            'sourceid' => (int)$source->id,
+            'guidhash' => $guidhash,
+        ]);
+        if ($existing) {
             $transaction->allow_commit();
+            self::refresh_existing($existing, $item);
             return false;
         }
 
@@ -258,7 +508,9 @@ final class feed_rss {
             'timemodified' => $now,
         ]);
         $DB->insert_record('local_ustar_feed_audience', (object)[
-            'postid' => $postid, 'scopekind' => 'all', 'scopeid' => 'all',
+            'postid' => $postid,
+            'scopekind' => 'all',
+            'scopeid' => 'all',
         ]);
         $DB->insert_record('local_ustar_feed_sourceitem', (object)[
             'sourceid' => (int)$source->id,
@@ -267,10 +519,13 @@ final class feed_rss {
             'externalguid' => (string)$item['guid'],
             'externalurl' => (string)$item['link'],
             'title' => (string)$item['title'],
+            'contenttext' => (string)$item['contenttext'],
             'publishedat' => (int)$item['publishedat'],
             'timecreated' => $now,
         ]);
         $transaction->allow_commit();
+
+        self::sync_media($postid, $item['media'] ?? []);
         return true;
     }
 
@@ -282,7 +537,7 @@ final class feed_rss {
         }
         [$insql, $params] = $DB->get_in_or_equal($postids, SQL_PARAMS_NAMED, 'rsspost');
         return $DB->get_records_sql(
-            "SELECT i.postid AS id, i.externalurl, i.title, i.publishedat,
+            "SELECT i.postid AS id, i.externalurl, i.title, i.contenttext, i.publishedat,
                     s.id AS sourceid, s.name AS sourcename, s.url AS sourceurl
                FROM {local_ustar_feed_sourceitem} i
                JOIN {local_ustar_feed_sources} s ON s.id = i.sourceid

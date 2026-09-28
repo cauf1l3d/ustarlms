@@ -67,13 +67,21 @@ final class assessment_lifecycle {
             'userid' => $userid, 'pointid' => (int)$policy->pointid,
             'versionid' => (int)$policy->versionid,
         ]);
+        $storedattempts = $runtime ? (int)$runtime->attemptsused : 0;
         if (!$runtime) {
             $runtime = (object)[
                 'id' => 0, 'userid' => $userid, 'status' => self::STATUS_ACTIVE,
                 'cycle' => 1, 'managerescalatedat' => null,
             ];
         }
-        return self::route_view($runtime, $policy, $positionid);
+        $view = self::route_view($runtime, $policy, $positionid);
+        if ((int)$view['attemptsused'] > $storedattempts && $view['status'] !== self::STATUS_PASSED) {
+            $view['pendingsync'] = true;
+            $view['statuslabel'] = 'Состояние аттестации обновляется';
+            $view['canlaunch'] = false;
+            $view['launchurl'] = '';
+        }
+        return $view;
     }
 
     /**

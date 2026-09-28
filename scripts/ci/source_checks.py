@@ -44,6 +44,14 @@ def check(skip_php=False):
     access = (ROOT / 'moodle/local/ustar/db/access.php').read_text()
     for capability in ('feedcreate', 'feededit', 'feedmanage'):
         assert f"local/ustar:{capability}" in access, f'Missing feed capability: {capability}'
+    feed_admin = (ROOT / 'moodle/local/ustar/feed_admin.php').read_text()
+    assert "feed_access::require_manager" in feed_admin, 'Feed control center must require feed manager'
+    assert "$PAGE->set_pagelayout('ustar');" in feed_admin, 'Feed control center must use native USTAR layout'
+    install = (ROOT / 'moodle/local/ustar/db/install.php').read_text()
+    assert "'ustar_feed_editor'" in install and "'local/ustar:feedmanage'" in install, \
+        'Fresh install must seed feed editor and owner roles'
+    theme_layout = (ROOT / 'moodle/theme/ustar/layout/ustar.php').read_text()
+    assert "'/local/ustar/feed_admin.php'" in theme_layout, 'Feed control center must stay in feed navigation'
     templates = [p for p in files if p.suffix == '.mustache']
     for path in templates:
         stack = []

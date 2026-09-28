@@ -696,7 +696,7 @@ $homepermanentroute = null;
 if ($homepositionid !== '') {
     try {
         $homepermanentroute =
-            \local_ustar\route_model::for_user($homepositionid, (int)$USER->id);
+            \local_ustar\route_model::read_only_snapshot($homepositionid, (int)$USER->id);
     } catch (\Throwable $e) {
         $homepermanentroute = null;
     }
@@ -722,30 +722,9 @@ if (!empty($homepermanentroute['ok'])) {
                 'currentpoint'
             ];
 
-        $homeadmitted =
-            !empty(
-                $homepermanentroute[
-                    'admitted'
-                ]
-            );
-
-        $homeprogress =
-            $homeadmitted
-                ? (int)$homepermanentroute['freshness']
-                : (int)$homepermanentroute['adaptationprogress'];
-
-        $homesteps =
-            $homeadmitted
-                ? (
-                    (int)$homepermanentroute['continuouspending']
-                    . ' актуальных точек'
-                )
-                : (
-                    (int)$homepermanentroute['adaptationdone']
-                    . ' из '
-                    . (int)$homepermanentroute['adaptationtotal']
-                    . ' обязательных точек'
-                );
+        $homeprogress = (int)$homepermanentroute['progress'];
+        $homesteps = (int)$homepermanentroute['donepoints']
+            . ' из ' . (int)$homepermanentroute['totalpoints'] . ' актуальных шагов';
 
         $homenext = [
             'name' =>
@@ -778,19 +757,7 @@ if (!empty($homepermanentroute['ok'])) {
             'actionlabel' =>
                 'Продолжить',
 
-            'nextactivityname' =>
-                trim(
-                    (string)(
-                        $homepoint['phaselabel']
-                        ?? ''
-                    )
-                    . ' · '
-                    . (string)(
-                        $homepoint['versionlabel']
-                        ?? ''
-                    ),
-                    " \t\n\r\0\x0B·"
-                ),
+            'nextactivityname' => 'Следующий шаг маршрута',
 
             'hasnextactivity' =>
                 true,

@@ -155,6 +155,18 @@
             });
         });
 
+        document.querySelectorAll('[data-feed-external-toggle]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var panel = document.getElementById(button.dataset.feedExternalToggle);
+                if (!panel) { return; }
+                panel.hidden = !panel.hidden;
+                button.setAttribute('aria-expanded', panel.hidden ? 'false' : 'true');
+                if (!panel.hidden) {
+                    panel.scrollIntoView({block: 'nearest'});
+                }
+            });
+        });
+
         document.querySelectorAll('[data-feed-discussion-toggle]').forEach(function(link) {
             link.addEventListener('click', function(event) {
                 var panel = document.getElementById(link.dataset.feedDiscussionToggle);

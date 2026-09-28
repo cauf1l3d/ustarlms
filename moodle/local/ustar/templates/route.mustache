@@ -262,4 +262,12 @@
         <a class="u-btn" href="{{homeurl}}">← На главную</a>
     </section>
     {{/noroute}}
+
+    {{#routeerror}}
+    <section class="u-empty-state u-route2-empty" role="alert">
+        <h2>Не удалось загрузить учебный маршрут</h2>
+        <p>Повторите открытие страницы. Если ошибка сохранится, обратитесь к администратору Академии.</p>
+        <a class="u-btn u-btn--primary" href="{{retryurl}}">Повторить</a>
+    </section>
+    {{/routeerror}}
 </div>

@@ -39,6 +39,7 @@ if ($positionid !== '') {
             ? \local_ustar\route_model::read_only_snapshot($positionid, (int)$USER->id)
             : \local_ustar\route_model::for_user($positionid, (int)$USER->id, true);
     } catch (\Throwable $e) {
+        debugging('USTAR route read failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
         $route = ['ok' => false, 'reason' => 'runtime_error'];
     }
 }
@@ -106,7 +107,8 @@ $data = [
     'forcedretrainingcount' => count($forcedretraining),
     'route' => !empty($route['ok']) ? $route : null,
     'hasroute' => !empty($route['ok']),
-    'noroute' => empty($route['ok']),
+    'noroute' => empty($route['ok']) && ($route['reason'] ?? '') !== 'runtime_error',
+    'routeerror' => ($route['reason'] ?? '') === 'runtime_error',
     'hasposition' => $positionid !== '',
     'positionid' => $positionid,
     'iselevated' => $iselevated,
@@ -116,6 +118,8 @@ $data = [
     'studio' => (new moodle_url('/local/ustar/route_studio.php', ['position' => $positionid]))->out(false),
     'coursesurl' => (new moodle_url('/local/ustar/home.php', ['view' => 'learning']))->out(false),
     'homeurl' => (new moodle_url('/local/ustar/home.php'))->out(false),
+    'retryurl' => (new moodle_url('/local/ustar/route.php',
+        $requestedposition !== '' ? ['position' => $requestedposition] : []))->out(false),
 ];
 
 $PAGE->set_context($context);

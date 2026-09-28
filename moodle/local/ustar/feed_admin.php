@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $notice = 'Права сняты: ' . fullname($target) . '.';
         }
         accesslib_clear_all_caches(true);
-    } catch (invalid_parameter_exception | moodle_exception $e) {
+    } catch (moodle_exception $e) {
         $notice = $e->getMessage();
     }
 }

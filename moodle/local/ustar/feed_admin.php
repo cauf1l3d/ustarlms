@@ -89,6 +89,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $notice = 'Источник проверен: новых публикаций — ' . (int)$result['imported']
                 . ', обновлено существующих — ' . (int)$result['refreshed']
                 . ', обработано элементов — ' . (int)$result['seen'] . '.';
+        } else if ($action === 'rssresolvertoggle') {
+            $sourceid = required_param('sourceid', PARAM_INT);
+            $enabled = required_param('enabled', PARAM_BOOL);
+            $queued = \local_ustar\feed_article_resolver::set_source_enabled(
+                $actorid,
+                $sourceid,
+                $enabled
+            );
+            $notice = $enabled
+                ? 'Расширение статей включено. В очередь поставлено: ' . $queued . '.'
+                : 'Расширение статей выключено. Уже сохранённый полный текст остаётся в Ленте.';
+        } else if ($action === 'rssenrich') {
+            $sourceid = required_param('sourceid', PARAM_INT);
+            $result = \local_ustar\feed_article_resolver::run_now($actorid, $sourceid);
+            $notice = 'Расширение выполнено: обработано — ' . (int)$result['processed']
+                . ', полный текст — ' . (int)$result['done']
+                . ', ограниченный источник — ' . (int)$result['limited']
+                . ', ошибок — ' . (int)$result['failed'] . '.';
         } else {
             throw new invalid_parameter_exception('Неизвестное действие управления Лентой.');
         }
@@ -157,6 +175,12 @@ if ($rsssources) {
     );
 }
 
+$rssenrichstats = [];
+foreach ($rsssources as $source) {
+    $rssenrichstats[(int)$source->id] =
+        \local_ustar\feed_article_resolver::source_stats((int)$source->id);
+}
+
 $drafts = array_values($DB->get_records('local_ustar_feed_posts',
     ['status' => 'draft'], 'timemodified DESC, id DESC', '*', 0, 30));
 $draftauthors = [];
@@ -209,7 +233,7 @@ echo html_writer::end_div();
 echo html_writer::start_tag('section', ['class' => 'u-feed-admin__section', 'id' => 'rss-sources']);
 echo html_writer::tag('h2', 'Внешние RSS / Atom-источники');
 echo html_writer::tag('p',
-    'Источник импортируется в Ленту как «Внешний источник». RSS 2.0 и Atom 1.0 поддерживают локальное кэширование изображений. Первый запуск берёт не более 10 последних материалов, затем cron проверяет включённые источники каждые 15 минут.',
+    'Источник импортируется в Ленту как «Внешний источник». RSS 2.0 и Atom 1.0 поддерживают локальные изображения. Расширение полного текста включается отдельно для каждого источника: HTML загружается только для неполных материалов, не более 5 страниц за cron-запуск, без выполнения JavaScript.',
     ['class' => 'u-feed__source']);
 
 echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed-admin__assign']);
@@ -235,6 +259,17 @@ if (!$rsssources) {
         echo html_writer::tag('div', s((string)$source->url), ['class' => 'u-feed__source']);
         $status = !empty($source->enabled) ? 'Включён' : 'Выключен';
         $status .= ' · импортировано: ' . $count;
+        $resolverstats = $rssenrichstats[(int)$source->id] ?? [];
+        $status .= !empty($source->resolverenabled)
+            ? ' · полный текст: включён'
+            : ' · полный текст: выключен';
+        if (!empty($source->resolverenabled)) {
+            $status .= ' · готово: ' . (int)($resolverstats['done'] ?? 0)
+                . ' · очередь: ' . ((int)($resolverstats['pending'] ?? 0)
+                    + (int)($resolverstats['retry'] ?? 0))
+                . ' · ограничено: ' . (int)($resolverstats['limited'] ?? 0)
+                . ' · ошибок: ' . (int)($resolverstats['failed'] ?? 0);
+        }
         if ((int)$source->lastsuccess > 0) {
             $status .= ' · последний успех: ' . userdate((int)$source->lastsuccess);
         } else if ((int)$source->lastchecked > 0) {
@@ -263,6 +298,28 @@ if (!$rsssources) {
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
         }
         echo html_writer::tag('button', 'Проверить сейчас', ['type' => 'submit', 'class' => 'u-btn']);
+        echo html_writer::end_tag('form');
+
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
+        foreach (['sesskey' => sesskey(), 'action' => 'rssresolvertoggle',
+                'sourceid' => (int)$source->id,
+                'enabled' => empty($source->resolverenabled) ? 1 : 0] as $field => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+        }
+        echo html_writer::tag('button',
+            empty($source->resolverenabled) ? 'Включить полный текст' : 'Выключить полный текст',
+            ['type' => 'submit', 'class' => 'u-btn u-btn--secondary']);
+        echo html_writer::end_tag('form');
+
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
+        foreach (['sesskey' => sesskey(), 'action' => 'rssenrich', 'sourceid' => (int)$source->id]
+                as $field => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+        }
+        echo html_writer::tag('button', 'Расширить сейчас · до 2',
+            ['type' => 'submit', 'class' => 'u-btn',
+                'disabled' => (empty($source->enabled) || empty($source->resolverenabled))
+                    ? 'disabled' : null]);
         echo html_writer::end_tag('form');
         echo html_writer::end_div();
 

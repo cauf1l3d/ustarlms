@@ -55,68 +55,93 @@ final class access_migration {
         if (empty($plan['users']) || !is_array($plan['users'])) {
             throw new \invalid_parameter_exception('Migration plan must contain users.');
         }
-        position_access::ensure_roles();
-        $roles = self::roles(false);
-        $context = \context_system::instance();
         $transaction = $DB->start_delegated_transaction();
-        $changed = [];
-        $unchanged = [];
-        foreach ($plan['users'] as $entry) {
-            $userid = (int)($entry['userid'] ?? 0);
-            if ($userid <= 1 || !accounts::is_business_account($userid)) {
-                throw new \invalid_parameter_exception('Invalid migration employee.');
+        try {
+            position_access::ensure_roles();
+            $roles = self::roles(false);
+            $context = \context_system::instance();
+            $rows = [];
+            foreach (self::report()['users'] as $row) {
+                $rows[(int)$row['userid']] = $row;
             }
-            $current = self::report_row($userid);
-            $expectedroles = array_values(array_unique(array_map('strval', $entry['expectedprojectedroles'] ?? [])));
-            sort($expectedroles);
-            $actualroles = $current['projectedroles'];
-            sort($actualroles);
-            $desired = array_values(array_unique(array_map('strval', $entry['roles'] ?? [])));
-            sort($desired);
-            foreach ($desired as $shortname) {
-                if (!in_array($shortname, self::ROLE_ALLOWLIST, true) || empty($roles[$shortname])) {
-                    throw new \invalid_parameter_exception('Unsupported explicit role: ' . $shortname);
+            $prepared = [];
+            $unchanged = [];
+            // Validate every target before modifying any employee's access.
+            foreach ($plan['users'] as $entry) {
+                if (!is_array($entry) || !is_int($entry['userid'] ?? null)) {
+                    throw new \invalid_parameter_exception('Invalid migration employee.');
+                }
+                $userid = $entry['userid'];
+                if ($userid <= 1 || isset($prepared[$userid]) || !isset($rows[$userid])) {
+                    throw new \invalid_parameter_exception('Duplicate or unknown migration employee.');
+                }
+                foreach (['expectedprojectedroles', 'roles'] as $field) {
+                    if (!isset($entry[$field]) || !is_array($entry[$field])) {
+                        throw new \invalid_parameter_exception('Missing migration role list: ' . $field);
+                    }
+                    foreach ($entry[$field] as $role) {
+                        if (!is_string($role)) {
+                            throw new \invalid_parameter_exception('Invalid migration role.');
+                        }
+                    }
+                }
+                $current = $rows[$userid];
+                $expectedroles = array_values(array_unique($entry['expectedprojectedroles']));
+                sort($expectedroles);
+                $actualroles = $current['projectedroles'];
+                sort($actualroles);
+                $desired = array_values(array_unique($entry['roles']));
+                sort($desired);
+                foreach (array_merge($expectedroles, $desired) as $shortname) {
+                    if (!in_array($shortname, self::ROLE_ALLOWLIST, true) || empty($roles[$shortname])) {
+                        throw new \invalid_parameter_exception('Unsupported migration role: ' . $shortname);
+                    }
+                }
+                $desiredemployment = (string)($entry['employment'] ?? $current['employment']);
+                if (!in_array($desiredemployment, employment::statuses(), true)) {
+                    throw new \invalid_parameter_exception('Unsupported employment state.');
+                }
+                $explicitroles = $current['explicitroles'];
+                sort($explicitroles);
+                $alreadyapplied = (string)($entry['expectedpositionid'] ?? '') === $current['positionid']
+                    && $actualroles === []
+                    && $current['employment'] === $desiredemployment
+                    && !array_diff($desired, $explicitroles);
+                if (!$alreadyapplied && ((string)($entry['expectedpositionid'] ?? '') !== $current['positionid']
+                        || (string)($entry['expectedemployment'] ?? '') !== $current['employment']
+                        || $expectedroles !== $actualroles)) {
+                    throw new \moodle_exception('Migration plan is stale for user ' . $userid);
+                }
+                $prepared[$userid] = [$actualroles, $desired, $desiredemployment, $alreadyapplied];
+                if ($alreadyapplied) {
+                    $unchanged[] = $userid;
                 }
             }
-            $desiredemployment = (string)($entry['employment'] ?? $current['employment']);
-            $explicitroles = $current['explicitroles'];
-            sort($explicitroles);
-            $alreadyapplied = (string)($entry['expectedpositionid'] ?? '') === $current['positionid']
-                && $actualroles === []
-                && $current['employment'] === $desiredemployment
-                && !array_diff($desired, $explicitroles);
-            if ($alreadyapplied) {
-                $unchanged[] = $userid;
-                continue;
-            }
-            if ((string)($entry['expectedpositionid'] ?? '') !== $current['positionid']
-                    || (string)($entry['expectedemployment'] ?? '') !== $current['employment']
-                    || $expectedroles !== $actualroles) {
-                throw new \moodle_exception('Migration plan is stale for user ' . $userid);
-            }
-            foreach ($actualroles as $shortname) {
-                role_unassign($roles[$shortname], $userid, $context->id, self::PROJECTED_COMPONENT, 0);
-            }
-            foreach ($desired as $shortname) {
-                $roleid = $roles[$shortname];
-                if (!$DB->record_exists('role_assignments', [
-                    'roleid' => $roleid, 'userid' => $userid, 'contextid' => $context->id,
-                ])) {
-                    role_assign($roleid, $userid, $context->id, self::MIGRATION_COMPONENT, 0);
+            $changed = [];
+            foreach ($prepared as $userid => [$actualroles, $desired, $desiredemployment, $alreadyapplied]) {
+                if ($alreadyapplied) {
+                    continue;
                 }
+                foreach ($actualroles as $shortname) {
+                    role_unassign($roles[$shortname], $userid, $context->id, self::PROJECTED_COMPONENT, 0);
+                }
+                foreach ($desired as $shortname) {
+                    $roleid = $roles[$shortname];
+                    if (!$DB->record_exists('role_assignments', [
+                        'roleid' => $roleid, 'userid' => $userid, 'contextid' => $context->id,
+                    ])) {
+                        role_assign($roleid, $userid, $context->id, self::MIGRATION_COMPONENT, 0);
+                    }
+                }
+                self::set_employment($userid, $desiredemployment);
+                $changed[] = $userid;
             }
-            self::set_employment($userid, $desiredemployment);
-            $changed[] = $userid;
+            $transaction->allow_commit();
+            return ['applied' => true, 'changeduserids' => $changed, 'unchangeduserids' => $unchanged];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+            throw $e;
         }
-        $transaction->allow_commit();
-        return ['applied' => true, 'changeduserids' => $changed, 'unchangeduserids' => $unchanged];
-    }
-
-    private static function report_row(int $userid): array {
-        foreach (self::report()['users'] as $row) {
-            if ((int)$row['userid'] === $userid) return $row;
-        }
-        throw new \invalid_parameter_exception('Migration employee not found.');
     }
 
     private static function roles(bool $ensure = false): array {

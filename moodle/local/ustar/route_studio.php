@@ -1415,6 +1415,10 @@ $data = [
             )
         )->out(false),
 
+    'introtransferurl' =>
+        (new moodle_url('/local/ustar/route_intro_transfer.php',
+            ['target' => $routeexists ? (int)$route['routeid'] : 0]))->out(false),
+
     'uploadurl' =>
         (
             new moodle_url(

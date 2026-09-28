@@ -6,6 +6,7 @@ defined('MOODLE_INTERNAL') || die();
 #[\PHPUnit\Framework\Attributes\CoversClass(route_commands::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(route_model::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(native_learning::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(route_intro_transfer::class)]
 final class route_studio_commands_test extends \advanced_testcase {
 
     protected function setUp(): void {
@@ -67,6 +68,42 @@ final class route_studio_commands_test extends \advanced_testcase {
             (int)$version->id, native_learning::TEAM_STRUCTURE));
         $this->assertSame((int)$version->id,
             (int)$DB->get_field('local_ustar_workflow_events', 'entityid', ['id' => $eventid]));
+    }
+
+    public function test_six_published_steps_transfer_as_drafts_without_rewriting_source(): void {
+        global $DB, $USER;
+        $generator = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $source = $generator->create_route(['positionid' => 'source_role']);
+        $target = $generator->create_route(['positionid' => 'warehouse_role']);
+        $ids = [];
+        $versions = [];
+        for ($i = 1; $i <= 6; $i++) {
+            $point = $generator->create_point($source, ['pointkey' => 'introduction_' . $i,
+                'sortorder' => $i * 10]);
+            $version = $generator->create_version($point, ['title' => 'Шаг ' . $i,
+                'requirementsjson' => json_encode([
+                    ['type' => 'previous_adaptation', 'required' => true],
+                ]), 'status' => route_model::STATUS_PUBLISHED]);
+            $ids[] = (int)$point->id;
+            $versions[] = (int)$version->id;
+        }
+        $preview = route_intro_transfer::preview((int)$source->id, (int)$target->id, $ids);
+        $this->assertTrue($preview['ready']);
+        $this->assertCount(6, $preview['rows']);
+        $created = route_intro_transfer::create_drafts((int)$source->id, (int)$target->id,
+            $ids, $preview['fingerprint'], (int)$USER->id);
+        $this->assertCount(6, $created);
+        $this->assertSame($created, route_intro_transfer::create_drafts((int)$source->id,
+            (int)$target->id, $ids, $preview['fingerprint'], (int)$USER->id));
+        foreach ($created as $id) {
+            $this->assertSame(route_model::STATUS_DRAFT,
+                (string)route_model::latest_version($id)->status);
+        }
+        foreach ($versions as $versionid) {
+            $this->assertSame(route_model::STATUS_PUBLISHED,
+                (string)$DB->get_field('local_ustar_route_versions', 'status', ['id' => $versionid]));
+        }
+        $this->assertCount(6, route_model::points((int)$target->id));
     }
 
     public function test_version_diff_reports_payload_and_requirement_changes(): void {

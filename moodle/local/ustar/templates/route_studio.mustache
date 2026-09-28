@@ -11,6 +11,7 @@
     {{^familyselected}}<label><span>Должность</span><select name="position" aria-label="Выберите должность" onchange="this.form.submit()">{{#positions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/positions}}</select></label>{{/familyselected}}
     <noscript><button class="u-btn" type="submit">Открыть</button></noscript>
     <a href="{{materialsurl}}" class="u-btn">Открыть материалы</a>
+    <a href="{{introtransferurl}}" class="u-btn">Перенести вводный блок</a>
   </form>
 
   {{#familyselected}}

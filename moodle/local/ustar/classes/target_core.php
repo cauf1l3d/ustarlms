@@ -466,18 +466,24 @@ final class target_core {
             throw new \invalid_parameter_exception('Notification key, subject and message are required');
         }
         $key = \core_text::substr($key, 0, 128);
-        if ($existing = $DB->get_field('local_ustar_notifications', 'id', ['idempotencykey' => $key])) return (int)$existing;
+        $eventtype = self::clean_code((string)($data['eventtype'] ?? 'general')) ?: 'general';
         $now = time();
         $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
-        $lock = $factory->get_lock('notification:' . sha1($key), 10);
+        $lock = $factory->get_lock('workflow-notification:' . sha1($key), 10);
         if (!$lock) throw new \moodle_exception('Unable to acquire notification idempotency lock');
         try {
-            if ($existing = $DB->get_field('local_ustar_notifications', 'id', ['idempotencykey' => $key])) return (int)$existing;
+            $existing = $DB->get_record('local_ustar_notifications', ['idempotencykey' => $key]);
+            if ($existing) {
+                if ((int)$existing->userid !== $userid || (string)$existing->eventtype !== $eventtype) {
+                    throw new \coding_exception('Notification key reused for another event or recipient');
+                }
+                return (int)$existing->id;
+            }
             $transaction = $DB->start_delegated_transaction();
             try {
                 $id = (int)$DB->insert_record('local_ustar_notifications', (object)[
                     'userid' => $userid, 'severity' => $severity,
-                    'eventtype' => self::clean_code((string)($data['eventtype'] ?? 'general')) ?: 'general',
+                    'eventtype' => $eventtype,
                     'subject' => \core_text::substr($subject, 0, 255), 'message' => $message,
                     'metadatajson' => !empty($data['metadata'])
                         ? json_encode($data['metadata'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) : null,
@@ -493,8 +499,9 @@ final class target_core {
                 ]);
                 if ($severity !== 'normal') {
                     $DB->insert_record('local_ustar_notify_delivery', (object)[
-                        'notificationid' => $id, 'channel' => 'bitrix', 'status' => 'pending', 'attempts' => 0,
-                        'nextattempt' => $now, 'providerref' => null, 'lasterror' => null,
+                        'notificationid' => $id, 'channel' => 'bitrix', 'status' => 'disabled', 'attempts' => 0,
+                        'nextattempt' => null, 'providerref' => null,
+                        'lasterror' => 'No Bitrix delivery adapter is configured in this release.',
                         'timecreated' => $now, 'timemodified' => $now,
                     ]);
                 }

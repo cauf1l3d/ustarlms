@@ -478,8 +478,12 @@ final class feed_article_resolver {
         }
 
         if ($tag === 'a') {
-            // Keep readable text but not arbitrary third-party navigation inside the article body.
-            return $inner;
+            $href = self::safe_href($base, $node->getAttribute('href'));
+            if ($href === '') {
+                return $inner;
+            }
+            return '<a href="' . s($href)
+                . '" target="_blank" rel="noopener noreferrer nofollow">' . $inner . '</a>';
         }
         if ($tag === 'br') {
             return '<br>';

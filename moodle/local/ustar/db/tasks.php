@@ -39,6 +39,15 @@ $tasks = [
         'dayofweek' => '*',
     ],
     [
+        'classname' => 'local_ustar\\task\\enrich_feed_sources',
+        'blocking' => 0,
+        'minute' => '2,7,12,17,22,27,32,37,42,47,52,57',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
         'classname' => 'local_ustar\\task\\renew_acting_assignments',
         'blocking'  => 0,
         'minute'    => '20',

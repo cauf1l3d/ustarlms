@@ -547,6 +547,8 @@ final class feed_rss {
         $feedcontent = (string)$item['contenttext'];
         $needs = feed_article_resolver::needs_enrichment($newbody, $feedcontent);
         $status = (string)($record->enrichstatus ?? 'disabled');
+        $feedchanged = trim((string)($record->feedcontenttext ?? '')) !== trim($feedcontent)
+            || trim((string)$record->externalurl) !== trim((string)$item['link']);
         $update = (object)[
             'id' => (int)$record->id,
             'externalurl' => (string)$item['link'],
@@ -571,8 +573,9 @@ final class feed_rss {
             } else {
                 $update->contenttext = $feedcontent;
                 $update->contenthtml = null;
-                if (!in_array($status, ['failed', 'limited'], true)) {
+                if (!in_array($status, ['failed', 'limited'], true) || $feedchanged) {
                     $update->enrichstatus = 'pending';
+                    $update->enrichattempts = $feedchanged ? 0 : (int)($record->enrichattempts ?? 0);
                     $update->enrichnexttry = 0;
                     $update->enricherror = null;
                 }

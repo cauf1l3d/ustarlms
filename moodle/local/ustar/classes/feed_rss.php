@@ -63,7 +63,7 @@ final class feed_rss {
         return $url;
     }
 
-    private static function absolute_url(string $base, string $candidate): string {
+    public static function resolve_url(string $base, string $candidate): string {
         $candidate = trim(html_entity_decode($candidate, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
         if ($candidate === '') {
             return '';
@@ -99,7 +99,7 @@ final class feed_rss {
      * Fetch one trusted HTTPS resource. Redirects are followed manually so
      * every hop receives the same public-address validation.
      */
-    private static function fetch(string $url, int $maxbytes, string $accept): array {
+    public static function fetch_external(string $url, int $maxbytes, string $accept, int $timeout = 15): array {
         global $CFG;
         require_once($CFG->libdir . '/filelib.php');
 
@@ -108,11 +108,11 @@ final class feed_rss {
             $curl = new \curl();
             $curl->setHeader([
                 'Accept: ' . $accept,
-                'User-Agent: USTAR-Academy-RSS/2.0',
+                'User-Agent: USTAR-Academy-RSS/3.0',
             ]);
             $body = $curl->get($current, [], [
                 'CURLOPT_CONNECTTIMEOUT' => 5,
-                'CURLOPT_TIMEOUT' => 15,
+                'CURLOPT_TIMEOUT' => max(5, min(20, $timeout)),
                 'CURLOPT_FOLLOWLOCATION' => false,
                 'CURLOPT_MAXREDIRS' => 0,
             ]);
@@ -124,7 +124,7 @@ final class feed_rss {
                 if ($redirect === '' || $hop >= self::MAX_REDIRECTS) {
                     throw new \moodle_exception('Внешний источник вернул неподдерживаемый redirect.');
                 }
-                $current = self::validate_url(self::absolute_url($current, $redirect));
+                $current = self::validate_url(self::resolve_url($current, $redirect));
                 continue;
             }
 
@@ -158,6 +158,7 @@ final class feed_rss {
             'url' => $url,
             'urlhash' => $urlhash,
             'enabled' => 0,
+            'resolverenabled' => 0,
             'audiencejson' => json_encode(['all']),
             'lastchecked' => 0,
             'lastsuccess' => 0,
@@ -206,7 +207,7 @@ final class feed_rss {
         $DB->set_field('local_ustar_feed_sources', 'lastchecked', $now, ['id' => $sourceid]);
 
         try {
-            $response = self::fetch(
+            $response = self::fetch_external(
                 $url,
                 self::MAX_RESPONSE_BYTES,
                 'application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.1'
@@ -273,7 +274,7 @@ final class feed_rss {
             $type = strtolower(trim((string)$node->getAttribute('type')));
             $medium = strtolower(trim((string)$node->getAttribute('medium')));
             if ($url !== '' && ($type === '' || str_starts_with($type, 'image/') || $medium === 'image')) {
-                $urls[] = self::absolute_url($base, $url);
+                $urls[] = self::resolve_url($base, $url);
             }
         }
         foreach ($htmlblocks as $html) {
@@ -282,7 +283,7 @@ final class feed_rss {
             }
             if (preg_match_all('~<img\b[^>]*\bsrc\s*=\s*(["\'])(.*?)\1~isu', $html, $matches)) {
                 foreach ($matches[2] as $url) {
-                    $urls[] = self::absolute_url($base, (string)$url);
+                    $urls[] = self::resolve_url($base, (string)$url);
                 }
             }
         }
@@ -390,7 +391,7 @@ final class feed_rss {
         };
     }
 
-    private static function sync_media(int $postid, array $urls): void {
+    public static function sync_external_media(int $postid, array $urls): void {
         $urls = array_slice(array_values(array_unique(array_filter($urls))), 0, self::MAX_MEDIA_PER_ITEM);
         if (!$urls) {
             return;
@@ -400,7 +401,7 @@ final class feed_rss {
         $contextid = \context_system::instance()->id;
         foreach ($urls as $url) {
             try {
-                $response = self::fetch(
+                $response = self::fetch_external(
                     self::validate_url((string)$url),
                     self::MAX_MEDIA_BYTES,
                     'image/avif,image/webp,image/apng,image/svg+xml,image/*;q=0.8,*/*;q=0.1'
@@ -462,7 +463,7 @@ final class feed_rss {
             'contenttext' => (string)$item['contenttext'],
             'publishedat' => (int)$item['publishedat'],
         ]);
-        self::sync_media((int)$record->postid, $item['media'] ?? []);
+        self::sync_external_media((int)$record->postid, $item['media'] ?? []);
     }
 
     private static function publish_item(\stdClass $source, array $item): bool {
@@ -525,7 +526,7 @@ final class feed_rss {
         ]);
         $transaction->allow_commit();
 
-        self::sync_media($postid, $item['media'] ?? []);
+        self::sync_external_media($postid, $item['media'] ?? []);
         return true;
     }
 
@@ -537,8 +538,10 @@ final class feed_rss {
         }
         [$insql, $params] = $DB->get_in_or_equal($postids, SQL_PARAMS_NAMED, 'rsspost');
         return $DB->get_records_sql(
-            "SELECT i.postid AS id, i.externalurl, i.title, i.contenttext, i.publishedat,
-                    s.id AS sourceid, s.name AS sourcename, s.url AS sourceurl
+            "SELECT i.postid AS id, i.externalurl, i.title, i.contenttext, i.contenthtml,
+                    i.enrichstatus, i.enrichedat, i.publishedat,
+                    s.id AS sourceid, s.name AS sourcename, s.url AS sourceurl,
+                    s.resolverenabled
                FROM {local_ustar_feed_sourceitem} i
                JOIN {local_ustar_feed_sources} s ON s.id = i.sourceid
               WHERE i.postid {$insql}",

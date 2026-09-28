@@ -44,33 +44,59 @@ $noticeerror = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     try {
-        $action = required_param('action', PARAM_ALPHA);
-        $rolekey = required_param('rolekey', PARAM_ALPHANUMEXT);
-        $targetid = required_param('userid', PARAM_INT);
-        if (!isset($roles[$rolekey]) || !in_array($action, ['assign', 'unassign'], true)) {
+        $action = required_param('action', PARAM_ALPHANUMEXT);
+
+        if (in_array($action, ['assign', 'unassign'], true)) {
+            $rolekey = required_param('rolekey', PARAM_ALPHANUMEXT);
+            $targetid = required_param('userid', PARAM_INT);
+            if (!isset($roles[$rolekey])) {
+                throw new invalid_parameter_exception('Неизвестное действие управления Лентой.');
+            }
+
+            $target = $DB->get_record('user', ['id' => $targetid, 'deleted' => 0],
+                'id,firstname,lastname,suspended', MUST_EXIST);
+            $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $roles[$rolekey]['shortname']]);
+            if (!$roleid) {
+                throw new moodle_exception('Роль Ленты ещё не установлена. Выполните обновление local_ustar.');
+            }
+
+            if ($action === 'assign') {
+                if (!empty($target->suspended) || !\local_ustar\accounts::participates($targetid)) {
+                    throw new invalid_parameter_exception('Права Ленты можно назначить только активному сотруднику.');
+                }
+                role_assign($roleid, $targetid, $context->id);
+                $notice = 'Права назначены: ' . fullname($target) . '.';
+            } else {
+                role_unassign($roleid, $targetid, $context->id);
+                $notice = 'Права сняты: ' . fullname($target) . '.';
+            }
+            accesslib_clear_all_caches(true);
+        } else if ($action === 'rssadd') {
+            $sourceid = \local_ustar\feed_rss::create_source(
+                $actorid,
+                required_param('name', PARAM_TEXT),
+                required_param('url', PARAM_RAW_TRIMMED)
+            );
+            $notice = 'RSS-источник сохранён (#' . $sourceid . '). Включите его и выполните тестовый импорт.';
+        } else if ($action === 'rsstoggle') {
+            $sourceid = required_param('sourceid', PARAM_INT);
+            $enabled = required_param('enabled', PARAM_BOOL);
+            \local_ustar\feed_rss::set_enabled($actorid, $sourceid, $enabled);
+            $notice = $enabled ? 'RSS-источник включён.' : 'RSS-источник выключен.';
+        } else if ($action === 'rssimport') {
+            $sourceid = required_param('sourceid', PARAM_INT);
+            $result = \local_ustar\feed_rss::import_now($actorid, $sourceid);
+            $notice = 'RSS проверен: новых публикаций — ' . (int)$result['imported']
+                . ', обработано элементов — ' . (int)$result['seen'] . '.';
+        } else {
             throw new invalid_parameter_exception('Неизвестное действие управления Лентой.');
         }
-
-        $target = $DB->get_record('user', ['id' => $targetid, 'deleted' => 0], 'id,firstname,lastname,suspended',
-            MUST_EXIST);
-        $roleid = (int)$DB->get_field('role', 'id', ['shortname' => $roles[$rolekey]['shortname']]);
-        if (!$roleid) {
-            throw new moodle_exception('Роль Ленты ещё не установлена. Выполните обновление local_ustar.');
-        }
-
-        if ($action === 'assign') {
-            if (!empty($target->suspended) || !\local_ustar\accounts::participates($targetid)) {
-                throw new invalid_parameter_exception('Права Ленты можно назначить только активному сотруднику.');
-            }
-            role_assign($roleid, $targetid, $context->id);
-            $notice = 'Права назначены: ' . fullname($target) . '.';
-        } else {
-            role_unassign($roleid, $targetid, $context->id);
-            $notice = 'Права сняты: ' . fullname($target) . '.';
-        }
-        accesslib_clear_all_caches(true);
     } catch (moodle_exception $e) {
         $notice = $e->getMessage();
+        $noticeerror = true;
+    } catch (\Throwable $e) {
+        error_log('USTAR feed admin failed: ' . get_class($e));
+        $notice = 'Операция не выполнена. Проверьте журнал сервера.';
         $noticeerror = true;
     }
 }
@@ -118,6 +144,16 @@ foreach ($roleids as $key => $roleid) {
           ORDER BY u.lastname, u.firstname, u.id",
         ['contextid' => $context->id, 'roleid' => $roleid]
     ));
+}
+
+$rsssources = array_values($DB->get_records('local_ustar_feed_sources', [], 'id DESC'));
+$rsscounts = [];
+if ($rsssources) {
+    $rsscounts = $DB->get_records_sql(
+        "SELECT sourceid AS id, COUNT(id) AS total
+           FROM {local_ustar_feed_sourceitem}
+       GROUP BY sourceid"
+    );
 }
 
 $drafts = array_values($DB->get_records('local_ustar_feed_posts',
@@ -168,6 +204,71 @@ echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['moderation' => 
     'Скрытые публикации', ['class' => 'u-btn u-btn--secondary']);
 echo html_writer::end_div();
 echo html_writer::end_div();
+
+echo html_writer::start_tag('section', ['class' => 'u-feed-admin__section', 'id' => 'rss-sources']);
+echo html_writer::tag('h2', 'Внешние RSS-источники');
+echo html_writer::tag('p',
+    'Пилотный режим: источник импортируется в Ленту как «Внешний источник». Первый запуск берёт не более 10 последних материалов, затем cron проверяет включённые источники каждые 15 минут.',
+    ['class' => 'u-feed__source']);
+
+echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed-admin__assign']);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'rssadd']);
+echo html_writer::tag('label', 'Название', ['for' => 'rss-name']);
+echo html_writer::empty_tag('input', ['type' => 'text', 'name' => 'name', 'id' => 'rss-name',
+    'value' => 'vc.ru', 'maxlength' => 128, 'required' => 'required', 'class' => 'form-control']);
+echo html_writer::tag('label', 'RSS URL', ['for' => 'rss-url']);
+echo html_writer::empty_tag('input', ['type' => 'url', 'name' => 'url', 'id' => 'rss-url',
+    'value' => \local_ustar\feed_rss::PILOT_URL, 'required' => 'required', 'class' => 'form-control']);
+echo html_writer::tag('button', 'Добавить источник', ['type' => 'submit', 'class' => 'u-btn']);
+echo html_writer::end_tag('form');
+
+if (!$rsssources) {
+    echo html_writer::tag('p', 'RSS-источники ещё не добавлены.', ['class' => 'u-feed__empty']);
+} else {
+    foreach ($rsssources as $source) {
+        $count = (int)($rsscounts[(int)$source->id]->total ?? 0);
+        echo html_writer::start_div('u-feed-admin__holder');
+        echo html_writer::start_div();
+        echo html_writer::tag('strong', s((string)$source->name));
+        echo html_writer::tag('div', s((string)$source->url), ['class' => 'u-feed__source']);
+        $status = !empty($source->enabled) ? 'Включён' : 'Выключен';
+        $status .= ' · импортировано: ' . $count;
+        if ((int)$source->lastsuccess > 0) {
+            $status .= ' · последний успех: ' . userdate((int)$source->lastsuccess);
+        } else if ((int)$source->lastchecked > 0) {
+            $status .= ' · последняя проверка: ' . userdate((int)$source->lastchecked);
+        }
+        echo html_writer::tag('div', s($status), ['class' => 'u-feed__source']);
+        if ((string)$source->lasterror !== '') {
+            echo html_writer::tag('div', 'Ошибка: ' . s((string)$source->lasterror),
+                ['class' => 'u-feed__source']);
+        }
+        echo html_writer::end_div();
+
+        echo html_writer::start_div('u-feed__actions');
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
+        foreach (['sesskey' => sesskey(), 'action' => 'rsstoggle', 'sourceid' => (int)$source->id,
+                'enabled' => empty($source->enabled) ? 1 : 0] as $field => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+        }
+        echo html_writer::tag('button', empty($source->enabled) ? 'Включить' : 'Выключить',
+            ['type' => 'submit', 'class' => 'u-btn u-btn--secondary']);
+        echo html_writer::end_tag('form');
+
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
+        foreach (['sesskey' => sesskey(), 'action' => 'rssimport', 'sourceid' => (int)$source->id]
+                as $field => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+        }
+        echo html_writer::tag('button', 'Проверить сейчас', ['type' => 'submit', 'class' => 'u-btn']);
+        echo html_writer::end_tag('form');
+        echo html_writer::end_div();
+
+        echo html_writer::end_div();
+    }
+}
+echo html_writer::end_tag('section');
 
 echo html_writer::start_tag('section', ['class' => 'u-feed-admin__section']);
 echo html_writer::tag('h2', 'Найти сотрудника для назначения');

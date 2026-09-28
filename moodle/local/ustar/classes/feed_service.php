@@ -85,6 +85,10 @@ final class feed_service {
                 || (int)$post->version !== $version) {
             throw new \invalid_parameter_exception('Публикация изменилась или недоступна.');
         }
+        if ($post->publishertype === 'external' && !feed_access::can_manage($actorid)) {
+            throw new \required_capability_exception(\context_system::instance(),
+                'local/ustar:feedmanage', 'nopermissions', '');
+        }
         $isowner = (int)$post->actoruserid === $actorid;
         if ($isowner) {
             feed_access::require_creator($actorid);

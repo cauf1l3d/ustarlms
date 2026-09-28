@@ -393,6 +393,8 @@ if ($postids) {
     $users = $DB->get_records_select('user', "id {$usersql}", $userparams, '', 'id,firstname,lastname');
 }
 
+$rssmeta = \local_ustar\feed_rss::metadata_for_posts(array_merge($postids, array_keys($sources)));
+
 echo html_writer::start_tag('nav', ['class' => 'u-feed__filters', 'aria-label' => 'Фильтр ленты']);
 foreach (['all' => 'Все доступные', 'academy' => 'Академия', 'department' => 'Моё подразделение',
     'mine' => 'Мои публикации'] as $key => $label) {
@@ -456,10 +458,13 @@ $renderattachment = static function(array $attachment, int $sourcepostid) use ($
 foreach ($posts as $post) {
     $postid = (int)$post->id;
     $author = $users[(int)$post->actoruserid] ?? null;
+    $external = $post->publishertype === 'external' ? ($rssmeta[$postid] ?? null) : null;
     $name = $post->publishertype === 'academy' ? 'Академия USTAR' :
         ($post->publishertype === 'department'
             ? (string)($departmentnames[(string)$post->publisherid]['name'] ?? 'Подразделение') :
-            ($author ? fullname($author) : 'Сотрудник'));
+            ($post->publishertype === 'external'
+                ? (string)($external->sourcename ?? 'Внешний источник')
+                : ($author ? fullname($author) : 'Сотрудник')));
     echo html_writer::start_tag('article', ['class' => 'u-feed__post', 'id' => 'post-' . $postid]);
     echo html_writer::start_div('u-feed__meta');
     if ($post->publishertype === 'academy') {
@@ -474,7 +479,8 @@ foreach ($posts as $post) {
     echo html_writer::start_div('u-feed__byline');
     echo html_writer::tag('strong', s($name));
     echo html_writer::tag('span', $post->publishertype === 'academy' ? 'Академия' :
-        ($post->publishertype === 'department' ? 'Подразделение' : 'Личный пост'),
+        ($post->publishertype === 'department' ? 'Подразделение' :
+            ($post->publishertype === 'external' ? 'Внешний источник' : 'Личный пост')),
         ['class' => 'u-feed__badge']);
     $displaytime = $post->status === 'draft' ? (int)$post->timemodified : (int)$post->publishedat;
     echo html_writer::tag('time', userdate($displaytime),
@@ -484,7 +490,17 @@ foreach ($posts as $post) {
     }
     echo html_writer::end_div();
     echo html_writer::end_div();
+    if ($external) {
+        echo html_writer::tag('h3',
+            html_writer::link((string)$external->externalurl, s((string)$external->title),
+                ['target' => '_blank', 'rel' => 'noopener noreferrer']),
+            ['class' => 'u-feed__external-title']);
+    }
     echo html_writer::tag('div', nl2br(s((string)$post->body)), ['class' => 'u-feed__body']);
+    if ($external) {
+        echo html_writer::link((string)$external->externalurl, 'Читать на ' . s((string)$external->sourcename) . ' ↗',
+            ['class' => 'u-feed__source', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
+    }
     if ($post->status === 'published' && !empty($attachments[$postid])) {
         echo html_writer::start_div('u-feed__media');
         foreach ($attachments[$postid] as $attachment) {
@@ -496,12 +512,21 @@ foreach ($posts as $post) {
         $source = $sources[(int)$post->sourcepostid] ?? null;
         if ($source) {
             $sourceauthor = $users[(int)$source->actoruserid] ?? null;
+            $sourceexternal = $source->publishertype === 'external'
+                ? ($rssmeta[(int)$source->id] ?? null) : null;
             $sourcename = $source->publishertype === 'academy' ? 'Академия USTAR' :
                 ($source->publishertype === 'department'
                     ? (string)($departmentnames[(string)$source->publisherid]['name'] ?? 'Подразделение') :
-                    ($sourceauthor ? fullname($sourceauthor) : 'Сотрудник'));
+                    ($source->publishertype === 'external'
+                        ? (string)($sourceexternal->sourcename ?? 'Внешний источник')
+                        : ($sourceauthor ? fullname($sourceauthor) : 'Сотрудник')));
             echo html_writer::start_div('u-feed__repost');
             echo html_writer::tag('strong', s($sourcename));
+            if ($sourceexternal) {
+                echo html_writer::tag('h4',
+                    html_writer::link((string)$sourceexternal->externalurl, s((string)$sourceexternal->title),
+                        ['target' => '_blank', 'rel' => 'noopener noreferrer']));
+            }
             echo html_writer::tag('p', nl2br(s((string)$source->body)));
             foreach ($attachments[(int)$source->id] ?? [] as $attachment) {
                 $renderattachment($attachment, (int)$source->id);

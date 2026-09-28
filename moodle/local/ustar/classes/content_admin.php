@@ -1734,9 +1734,15 @@ class content_admin {
             $actorid
         );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
 
         /*
@@ -1934,6 +1940,12 @@ class content_admin {
                 .
                 $versionno,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -1959,8 +1971,15 @@ class content_admin {
                 MUST_EXIST
             );
 
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
         // Use the same lock order as publish_file_version(): parent first.
         $content =
@@ -2005,19 +2024,6 @@ class content_admin {
         }
 
 
-        $context =
-            \context_system::instance();
-
-
-        get_file_storage()
-            ->delete_area_files(
-                $context->id,
-                'local_ustar',
-                'content_version',
-                $versionid
-            );
-
-
         $DB->delete_records(
             'local_ustar_content_ack',
             [
@@ -2050,6 +2056,22 @@ class content_admin {
         );
 
         $transaction->allow_commit();
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        // File API removal cannot be rolled back with SQL. Delete only after
+        // the version and its audit event are committed; failed file cleanup
+        // leaves an orphan rather than silently losing a live draft.
+        try {
+            get_file_storage()->delete_area_files(
+                \context_system::instance()->id, 'local_ustar', 'content_version', $versionid
+            );
+        } catch (\Throwable $cleanup) {
+            debugging('USTAR draft file cleanup pending for version ' . $versionid, DEBUG_DEVELOPER);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 

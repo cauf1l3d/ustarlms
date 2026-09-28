@@ -72,11 +72,18 @@ final class native_learning {
         $matches = [];
         $sequential = in_array($factkey, [self::TEAM_STRUCTURE, self::ROLE_DEVELOPMENT,
             self::ROLE_SKILLS_CHECK, self::TEAM_PROFILE_REVEAL], true);
+        $versionids = [];
         foreach ($snapshot['points'] ?? [] as $point) {
-            $version = $DB->get_record('local_ustar_route_versions',
-                ['id' => (int)$point['versionid'], 'pointid' => (int)$point['id'],
-                    'status' => route_model::STATUS_PUBLISHED], '*', IGNORE_MISSING);
-            if (!$version) { continue; }
+            if ((int)($point['versionid'] ?? 0) > 0) {
+                $versionids[] = (int)$point['versionid'];
+            }
+        }
+        $versions = $versionids ? $DB->get_records_list('local_ustar_route_versions', 'id',
+            array_values(array_unique($versionids))) : [];
+        foreach ($snapshot['points'] ?? [] as $point) {
+            $version = $versions[(int)$point['versionid']] ?? null;
+            if (!$version || (int)$version->pointid !== (int)$point['id']
+                    || (string)$version->status !== route_model::STATUS_PUBLISHED) { continue; }
             foreach (route_model::requirements_for_version($version) as $requirement) {
                 if (($requirement['type'] ?? '') === 'native'
                         && ($requirement['sourcekey'] ?? '') === $factkey) {

@@ -78,6 +78,9 @@
     {{/adaptation}}{{/hasadaptation}}
 
     {{#continueerror}}<div class="alert alert-info" role="status">Условия точки ещё не выполнены. Проверьте обязательные задания ниже; результаты теста могут ожидать проверки.</div>{{/continueerror}}
+    {{#route.currentpoint.pendingsync}}<div class="alert alert-info" role="status">Результат получен. Обновите прогресс маршрута.
+        <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="sync"><button class="u-btn" type="submit">Обновить прогресс</button></form>
+    </div>{{/route.currentpoint.pendingsync}}
     {{#previewing}}<div class="alert alert-info">Предпросмотр: показаны сохранённые результаты. Обучение и награды здесь не изменяются.</div>{{/previewing}}
     {{#rewardsenabled}}<section class="u-route-rewards" aria-label="Награды маршрута">
         <strong>За новый подтверждённый шаг: +10 XP и +1 USCOIN</strong>

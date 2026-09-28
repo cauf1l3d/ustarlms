@@ -17,6 +17,7 @@ final class feed_article_resolver {
     private const MIN_FEED_FULL_CHARS = 1800;
     private const MIN_EXTRACTED_CHARS = 500;
     private const MAX_CONTENT_CHARS = 60000;
+    private const MAX_HTML_OUTPUT_CHARS = 250000;
     private const HOST_DELAY_US = 750000;
     private const MAX_RUN_SECONDS = 45;
 
@@ -458,10 +459,22 @@ final class feed_article_resolver {
         }
 
         $tag = strtolower($node->tagName);
-        if ($tag === 'img') {
+        if ($tag === 'img' || $tag === 'source') {
             $src = trim($node->getAttribute('src'));
+            foreach (['data-src', 'data-original'] as $attribute) {
+                if ($src === '') {
+                    $src = trim($node->getAttribute($attribute));
+                }
+            }
             if ($src === '') {
-                $src = trim($node->getAttribute('data-src'));
+                $srcset = trim($node->getAttribute('srcset'));
+                if ($srcset === '') {
+                    $srcset = trim($node->getAttribute('data-srcset'));
+                }
+                if ($srcset !== '') {
+                    $first = trim(explode(',', $srcset)[0] ?? '');
+                    $src = trim(explode(' ', $first)[0] ?? '');
+                }
             }
             if ($src !== '') {
                 $resolved = self::safe_href($base, $src);
@@ -580,15 +593,34 @@ final class feed_article_resolver {
                 $media = $dommedia;
             }
 
+            $metaimages = $xpath->query(
+                '//meta[@property="og:image" or @name="twitter:image" or @name="twitter:image:src"]/@content'
+            );
+            if ($metaimages) {
+                foreach ($metaimages as $image) {
+                    $media[] = (string)$image->nodeValue;
+                }
+            }
+
             $media = array_values(array_unique(array_filter(array_map(
                 static fn(string $candidate): string => self::safe_href($url, $candidate),
                 $media
             ))));
             $media = array_slice($media, 0, 8);
 
+            $text = \core_text::substr($text, 0, self::MAX_CONTENT_CHARS);
+            $cleanhtml = clean_text($safehtml, FORMAT_HTML);
+            if (\core_text::strlen($cleanhtml) > self::MAX_HTML_OUTPUT_CHARS) {
+                $cleanhtml = html_writer::tag(
+                    'div',
+                    nl2br(s($text)),
+                    ['class' => 'u-feed__external-content-text']
+                );
+            }
+
             return [
-                'text' => \core_text::substr($text, 0, self::MAX_CONTENT_CHARS),
-                'html' => clean_text($safehtml, FORMAT_HTML),
+                'text' => $text,
+                'html' => $cleanhtml,
                 'media' => $media,
             ];
         } finally {

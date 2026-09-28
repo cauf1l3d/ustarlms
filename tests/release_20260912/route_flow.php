@@ -31,6 +31,22 @@ namespace local_ustar {
         static function current_published_version($id){return self::$versions[$id]??null;}
         static function requirements_for_version($v){return $v->requirements;}
     }
+    // The standalone harness does not load Moodle's native-learning service.
+    // Its stub models the availability contract; the real resolver is covered
+    // by the Moodle DB scenario on the assembled release candidate.
+    class native_learning {
+        static function availability($userid,$key){
+            foreach (route_model::$route['points']??[] as $point) {
+                $version=route_model::current_published_version($point['id']);
+                foreach ($version->requirements??[] as $requirement) {
+                    if (($requirement['type']??'')==='native'&&($requirement['sourcekey']??'')===$key) {
+                        return ['configured'=>true,'reachable'=>empty($point['locked'])];
+                    }
+                }
+            }
+            return ['configured'=>false,'reachable'=>false];
+        }
+    }
 }
 namespace {
     /* LOAD_SOURCES */

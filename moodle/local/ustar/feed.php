@@ -485,27 +485,50 @@ foreach ($posts as $post) {
     $displaytime = $post->status === 'draft' ? (int)$post->timemodified : (int)$post->publishedat;
     echo html_writer::tag('time', userdate($displaytime),
         ['datetime' => date('c', $displaytime)]);
-    if ($post->status !== 'draft' && (int)$post->timemodified > (int)$post->publishedat) {
+    if ($post->publishertype !== 'external' && $post->status !== 'draft'
+            && (int)$post->timemodified > (int)$post->publishedat) {
         echo html_writer::tag('span', 'Изменено');
     }
     echo html_writer::end_div();
     echo html_writer::end_div();
+    $externalopen = $external && $selectedid === $postid;
     if ($external) {
         echo html_writer::tag('h3',
-            html_writer::link((string)$external->externalurl, s((string)$external->title),
-                ['target' => '_blank', 'rel' => 'noopener noreferrer']),
+            html_writer::tag('button', s((string)$external->title), [
+                'type' => 'button',
+                'class' => 'u-feed__external-title-button',
+                'data-feed-external-toggle' => 'feed-external-' . $postid,
+                'aria-expanded' => $externalopen ? 'true' : 'false',
+            ]),
             ['class' => 'u-feed__external-title']);
     }
     echo html_writer::tag('div', nl2br(s((string)$post->body)), ['class' => 'u-feed__body']);
-    if ($external) {
-        echo html_writer::link((string)$external->externalurl, 'Читать на ' . s((string)$external->sourcename) . ' ↗',
-            ['class' => 'u-feed__source', 'target' => '_blank', 'rel' => 'noopener noreferrer']);
-    }
     if ($post->status === 'published' && !empty($attachments[$postid])) {
         echo html_writer::start_div('u-feed__media');
         foreach ($attachments[$postid] as $attachment) {
             $renderattachment($attachment, $postid);
         }
+        echo html_writer::end_div();
+    }
+    if ($external) {
+        $fulltext = trim((string)($external->contenttext ?? ''));
+        echo html_writer::start_div('u-feed__external-detail', [
+            'id' => 'feed-external-' . $postid,
+            'hidden' => $externalopen ? null : 'hidden',
+        ]);
+        if ($fulltext !== '' && $fulltext !== trim((string)$post->body)) {
+            echo html_writer::tag('div', nl2br(s($fulltext)), ['class' => 'u-feed__external-content']);
+        } else {
+            echo html_writer::tag('p',
+                'Источник передал только краткое описание материала.',
+                ['class' => 'u-feed__source']);
+        }
+        echo html_writer::link((string)$external->externalurl,
+            'Оригинал на ' . s((string)$external->sourcename) . ' ↗', [
+                'class' => 'u-feed__external-origin',
+                'target' => '_blank',
+                'rel' => 'noopener noreferrer',
+            ]);
         echo html_writer::end_div();
     }
     if ($post->sourcepostid) {
@@ -523,9 +546,7 @@ foreach ($posts as $post) {
             echo html_writer::start_div('u-feed__repost');
             echo html_writer::tag('strong', s($sourcename));
             if ($sourceexternal) {
-                echo html_writer::tag('h4',
-                    html_writer::link((string)$sourceexternal->externalurl, s((string)$sourceexternal->title),
-                        ['target' => '_blank', 'rel' => 'noopener noreferrer']));
+                echo html_writer::tag('h4', s((string)$sourceexternal->title));
             }
             echo html_writer::tag('p', nl2br(s((string)$source->body)));
             foreach ($attachments[(int)$source->id] ?? [] as $attachment) {

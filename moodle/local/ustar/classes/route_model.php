@@ -1399,7 +1399,11 @@ final class route_model {
                 return $result;
             }
             $result['label'] = $result['label'] ?: format_string($course->fullname);
-            $result['url'] = (new \moodle_url('/course/view.php', ['id' => $courseid]))->out(false);
+            // Explicit launch provisions technical access after the route GET.
+            $result['url'] = (new \moodle_url('/local/ustar/course_launch.php', [
+                'courseid' => $courseid, 'pointid' => (int)$version->pointid,
+                'versionid' => (int)$version->id,
+            ]))->out(false);
             $completion = $DB->get_record('course_completions', ['course' => $courseid, 'userid' => $userid], 'timecompleted');
             $completedat = $completion ? (int)$completion->timecompleted : 0;
             $result['completedat'] = $completedat;
@@ -1876,7 +1880,8 @@ final class route_model {
         return !array_key_exists('configured', $state) || !empty($state['configured']);
     }
 
-    private static function evaluate_point(\stdClass $point, \stdClass $version, int $userid, string $positionid, array $priorstates): array {
+    private static function evaluate_point(\stdClass $point, \stdClass $version, int $userid, string $positionid,
+            array $priorstates, bool $persist = true): array {
         global $DB;
         if (!self::assessment_configuration_valid($version, $userid)) {
             return ['satisfied' => false, 'inherited' => false, 'completedat' => 0,
@@ -1919,10 +1924,12 @@ final class route_model {
                     $valid = $expiresat <= 0 || $expiresat >= time();
                 }
                 if ($valid) {
-                    self::record_completion($userid, $point, $version, [
-                        'mode' => 'inherited',
-                        'fromprogressid' => (int)$progress->id,
-                    ], (int)$progress->completedat, $expiresat);
+                    if ($persist) {
+                        self::record_completion($userid, $point, $version, [
+                            'mode' => 'inherited',
+                            'fromprogressid' => (int)$progress->id,
+                        ], (int)$progress->completedat, $expiresat);
+                    }
                     return [
                         'satisfied' => true,
                         'inherited' => true,
@@ -1971,7 +1978,7 @@ final class route_model {
             }
         }
 
-        if ($satisfied) {
+        if ($satisfied && $persist) {
             self::record_completion($userid, $point, $version, [
                 'mode' => 'evaluated',
                 'requirements' => $requirements,
@@ -2539,12 +2546,19 @@ final class route_model {
      */
     public static function for_user(
         string $positionid,
-        int $userid
+        int $userid,
+        bool $readonly = false
     ): array {
         // Preview must never enrol, reconcile completion or advance assessment.
         // Keep the existing persisted snapshot as the single preview read path.
         if (view_as::active()) {
             return self::read_only_snapshot($positionid, $userid);
+        }
+        $storedpoints = [];
+        if ($readonly) {
+            foreach (self::read_only_snapshot($positionid, $userid)['points'] as $stored) {
+                $storedpoints[(int)$stored['id']] = $stored;
+            }
         }
         $route = null;
 
@@ -2620,41 +2634,43 @@ final class route_model {
              * currently reachable sequence.
              */
             if ($sequenceopen) {
-                self::ensure_runtime_requirement_access(
-                    self::requirements($version),
-                    $userid
-                );
+                if (!$readonly) {
+                    self::ensure_runtime_requirement_access(
+                        self::requirements($version),
+                        $userid
+                    );
+                }
 
                 $fact = self::evaluate_point(
                     $point,
                     $version,
                     $userid,
                     $positionid,
-                    $priorstates
+                    $priorstates,
+                    !$readonly
                 );
             }
 
             $assessmentview = null;
             if ($sequenceopen && class_exists('\\local_ustar\\assessment_lifecycle')) {
                 try {
-                    $assessmentview = assessment_lifecycle::sync_route_point(
-                        $userid,
-                        $positionid,
-                        $point,
-                        $version
-                    );
+                    $assessmentview = $readonly
+                        ? assessment_lifecycle::read_route_point($userid, $positionid, $version)
+                        : assessment_lifecycle::sync_route_point($userid, $positionid, $point, $version);
                     // A lifecycle-managed assessment PASS is authoritative.
                     // Do not depend on Moodle course_modules_completion catching up.
                     $verifiedassessment = self::verified_assessment_completion($assessmentview);
                     if ($verifiedassessment && empty($fact['satisfied'])) {
-                        self::record_completion(
-                            $userid,
-                            $point,
-                            $version,
-                            $verifiedassessment['evidence'],
-                            $verifiedassessment['completedat'],
-                            0
-                        );
+                        if (!$readonly) {
+                            self::record_completion(
+                                $userid,
+                                $point,
+                                $version,
+                                $verifiedassessment['evidence'],
+                                $verifiedassessment['completedat'],
+                                0
+                            );
+                        }
 
                         $fact['satisfied'] = true;
                         $fact['failed'] = false;
@@ -2679,15 +2695,20 @@ final class route_model {
             }
             $assessmentstats = $assessmentview ?: $quizsummary;
 
-            if ($sequenceopen && !empty($fact['satisfied'])) {
+            $storedstatus = $readonly ? (string)($storedpoints[(int)$point->id]['status'] ?? 'locked') : '';
+            $pendingsync = $readonly && $storedstatus === 'current' && !empty($fact['satisfied']);
+            if ($readonly && $storedstatus === 'done') {
+                $fact['satisfied'] = true;
+            }
+            if ($sequenceopen && ($readonly ? $storedstatus === 'done' : !empty($fact['satisfied']))) {
                 $status = 'done';
                 $statuslabel = 'Завершено';
                 $done++;
             } else if ($sequenceopen) {
                 $status = 'current';
-                $statuslabel = $assessmentview
+                $statuslabel = $pendingsync ? 'Результат обрабатывается' : ($assessmentview
                     ? (string)($assessmentview['statuslabel'] ?? 'Сейчас')
-                    : (!empty($fact['failed']) ? 'Нужно повторить' : 'Сейчас');
+                    : (!empty($fact['failed']) ? 'Нужно повторить' : 'Сейчас'));
 
                 $sequenceopen = false;
             } else {
@@ -2751,10 +2772,12 @@ final class route_model {
                 'done' => $status === 'done',
                 'current' => $status === 'current',
                 'locked' => $status === 'locked',
+                'pendingsync' => $pendingsync,
 
                 'launchurl' => (string)($fact['launchurl'] ?? ''),
                 'canlaunch' =>
                     $status === 'current' &&
+                    !$pendingsync &&
                     !empty($fact['launchurl']) &&
                     (!$assessmentview || !empty($assessmentview['canlaunch'])),
                 'actionlabel' => $assessmentview

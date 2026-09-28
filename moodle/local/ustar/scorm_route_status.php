@@ -55,7 +55,8 @@ try {
     if ($confirm && !optional_param('acknowledged', 0, PARAM_BOOL)) {
         throw new invalid_parameter_exception('Explicit acknowledgement required');
     }
-    if (!empty(\local_ustar\adaptation_service::route_card((int)$USER->id)['blocked'])) {
+    // Polling the SCORM status must not reconcile adaptation cases on GET.
+    if (!empty(\local_ustar\adaptation_service::route_card((int)$USER->id, $confirm)['blocked'])) {
         echo json_encode($response);
         die;
     }
@@ -329,4 +330,3 @@ try {
 }
 
 echo json_encode($response);
-

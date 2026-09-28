@@ -50,7 +50,9 @@ final class feed_article_resolver_test extends \advanced_testcase {
   <div class="social-share">Поделиться в социальной сети</div>
   <p>Второй основной абзац с дополнительным содержанием и деталями материала.</p>
   <blockquote>Цитата автора публикации.</blockquote>
-  <img src="/media/photo.webp">
+  <a href="https://example.com/source">Безопасная ссылка</a>
+  <a href="javascript:alert(1)">Опасная ссылка</a>
+  <picture><source srcset="/media/photo-large.webp 2x, /media/photo.webp 1x"></picture>
   <script>alert(1)</script>
 </article>
 <section class="comments">Комментарии пользователей</section>
@@ -66,7 +68,9 @@ HTML;
         $this->assertStringNotContainsString('Поделиться в социальной сети', $result['text']);
         $this->assertStringNotContainsString('Комментарии пользователей', $result['text']);
         $this->assertStringNotContainsString('<script', $result['html']);
-        $this->assertContains('https://example.com/media/photo.webp', $result['media']);
+        $this->assertStringContainsString('href="https://example.com/source"', $result['html']);
+        $this->assertStringNotContainsString('javascript:', $result['html']);
+        $this->assertContains('https://example.com/media/photo-large.webp', $result['media']);
     }
 
     public function test_queue_source_respects_terminal_states_until_explicit_retry(): void {

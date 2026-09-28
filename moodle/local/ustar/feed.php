@@ -9,7 +9,7 @@ $PAGE->set_url($url);
 $PAGE->set_context($context);
 $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260927']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928']));
 $notice = '';
 $actorid = (int)$USER->id;
 

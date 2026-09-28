@@ -1,20 +1,20 @@
-.u-feed { max-width: 860px; margin: 0 auto 48px; color: var(--u-text-primary, #241f28); }
-.u-feed__intro { color: var(--u-text-secondary, #665f69); margin: 4px 0 22px; }
+.u-feed { max-width: 860px; margin: 0 auto 48px; color: var(--u-text-primary, #2b2b2b); }
+.u-feed__intro { color: var(--u-text-secondary, #666); margin: 4px 0 22px; }
 .u-feed__composer, .u-feed__post, .u-feed__empty { background: var(--u-surface-raised, #fff);
-  border: 1px solid var(--u-border, #e6dfe5); border-radius: 18px;
-  box-shadow: 0 8px 28px rgba(32, 24, 28, .045); padding: 22px; margin-bottom: 18px; }
+  border: 1px solid var(--u-border, #e5e5e5); border-radius: var(--u-r-lg, 16px);
+  box-shadow: var(--u-e-1, 0 1px 2px rgba(40, 39, 39, .05)); padding: 22px; margin-bottom: 18px; }
 .u-feed__composer h2 { font-size: 1.25rem; margin: 0 0 16px; }
 .u-feed__composer label { display: block; font-weight: 600; margin: 14px 0 6px; }
 .u-feed__composer textarea { min-height: 110px; resize: vertical; }
 .u-feed__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .u-feed__filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
-.u-feed__filters a { text-decoration: none; border: 1px solid var(--u-border, #e6dfe5);
+.u-feed__filters a { text-decoration: none; border: 1px solid var(--u-border, #e5e5e5);
   background: var(--u-surface-raised, #fff); color: inherit; border-radius: 999px; padding: 8px 14px; }
-.u-feed__filters a.is-active { background: var(--u-brand, #f5bd34); border-color: var(--u-brand, #f5bd34); font-weight: 700; }
-.u-feed__filters a:focus-visible, .u-feed__like:focus-visible { outline: 3px solid #224a9e; outline-offset: 2px; }
+.u-feed__filters a.is-active { background: var(--u-brand, #ebc500); border-color: var(--u-brand, #ebc500); font-weight: 700; }
+.u-feed__filters a:focus-visible, .u-feed__like:focus-visible { outline: 2px solid var(--u-text-primary, #2b2b2b); outline-offset: 2px; }
 .u-feed__post { overflow-wrap: anywhere; }
 .u-feed__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
-.u-feed__meta time, .u-feed__meta span, .u-feed__source { color: var(--u-text-secondary, #665f69); font-size: .85rem; }
+.u-feed__meta time, .u-feed__meta span, .u-feed__source { color: var(--u-text-secondary, #666); font-size: .85rem; }
 .u-feed__body { margin: 16px 0; line-height: 1.55; white-space: normal; }
 .u-feed__inline { margin: 0; }
 .u-feed__like { border: 0; background: transparent; color: inherit; cursor: pointer; padding: 8px 0; font: inherit; }
@@ -22,14 +22,14 @@
 .u-feed__drafts { margin: 0 0 24px; }
 .u-feed__drafts h2 { font-size: 1.1rem; }
 .u-feed__draft { display: block; margin: 7px 0; padding: 12px 16px;
-  border: 1px solid var(--u-border, #e6dfe5); border-radius: 12px;
+  border: 1px solid var(--u-border, #e5e5e5); border-radius: 12px;
   background: var(--u-surface-raised, #fff); color: inherit; text-decoration: none; }
 .u-feed__edit { margin: 16px 0; display: grid; gap: 8px; }
 .u-feed__attachment { display: inline-flex; margin: 4px 10px 8px 0; }
 .u-feed__image { display: block; max-width: 100%; height: auto; max-height: 680px;
   object-fit: contain; border-radius: 12px; margin: 10px 0; }
 @media (max-width: 640px) {
-  .u-feed__composer, .u-feed__post { padding: 16px; border-radius: 14px; }
+  .u-feed__composer, .u-feed__post { padding: 16px; }
   .u-feed__actions > button { flex: 1 1 100%; }
   .u-feed__filters a { flex: 1 1 auto; text-align: center; }
 }

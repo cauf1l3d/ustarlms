@@ -14,7 +14,7 @@ $PAGE->set_context($context);
 $PAGE->set_title('Настройки Ленты · USTAR Academy');
 $PAGE->set_heading('Настройки Ленты');
 $PAGE->set_pagelayout('ustar');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-control']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-experience']));
 
 $roles = [
     'editor' => [
@@ -40,6 +40,7 @@ $roles = [
 ];
 
 $notice = '';
+$noticeerror = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     try {
@@ -70,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         accesslib_clear_all_caches(true);
     } catch (moodle_exception $e) {
         $notice = $e->getMessage();
+        $noticeerror = true;
     }
 }
 
@@ -79,17 +81,20 @@ foreach ($roles as $key => $definition) {
 }
 
 $employees = [];
-$candidates = $DB->get_records_sql(
-    "SELECT id, firstname, lastname, username, email, suspended
-       FROM {user}
-      WHERE deleted = 0
-        AND suspended = 0
-        AND id > 1
-      ORDER BY lastname, firstname, id",
-    [],
-    0,
-    600
-);
+$personsearch = trim(optional_param('person', '', PARAM_TEXT));
+$candidates = [];
+if (\core_text::strlen($personsearch) >= 2) {
+    $needle = '%' . $DB->sql_like_escape($personsearch) . '%';
+    $like = $DB->sql_like('firstname', ':first', false) . ' OR '
+        . $DB->sql_like('lastname', ':last', false) . ' OR '
+        . $DB->sql_like('username', ':username', false) . ' OR '
+        . $DB->sql_like('email', ':email', false);
+    $candidates = $DB->get_records_sql("SELECT id, firstname, lastname, username, email, suspended
+           FROM {user}
+          WHERE deleted = 0 AND suspended = 0 AND id > 1 AND ({$like})
+          ORDER BY lastname, firstname, id",
+        ['first' => $needle, 'last' => $needle, 'username' => $needle, 'email' => $needle], 0, 30);
+}
 foreach ($candidates as $candidate) {
     if (\local_ustar\accounts::participates((int)$candidate->id)) {
         $employees[(int)$candidate->id] = fullname($candidate)
@@ -138,15 +143,18 @@ $events = $DB->get_records_sql(
 echo $OUTPUT->header();
 echo html_writer::start_div('u-feed u-feed-admin');
 echo html_writer::start_div('u-feed-admin__head');
+echo html_writer::start_div();
+echo html_writer::tag('h1', 'Управление лентой');
 echo html_writer::tag('p',
-    'Здесь владелец Ленты назначает редакторов и издателей, управляет модерацией и проверяет журнал действий.',
+    'Права авторов, модерация и история действий в одном месте.',
     ['class' => 'u-feed__intro']);
+echo html_writer::end_div();
 echo html_writer::link(new moodle_url('/local/ustar/feed.php'), '← Вернуться в Ленту',
-    ['class' => 'u-feed__source']);
+    ['class' => 'u-btn u-btn--secondary']);
 echo html_writer::end_div();
 
 if ($notice !== '') {
-    echo $OUTPUT->notification(s($notice), 'notifysuccess');
+    echo $OUTPUT->notification(s($notice), $noticeerror ? 'notifyproblem' : 'notifysuccess');
 }
 
 echo html_writer::start_div('u-feed-admin__owner');
@@ -161,9 +169,25 @@ echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['moderation' => 
 echo html_writer::end_div();
 echo html_writer::end_div();
 
+echo html_writer::start_tag('section', ['class' => 'u-feed-admin__section']);
+echo html_writer::tag('h2', 'Найти сотрудника для назначения');
+echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-feed-admin__search']);
+echo html_writer::tag('label', 'Имя, фамилия, логин или почта', ['for' => 'feed-person']);
+echo html_writer::empty_tag('input', ['type' => 'search', 'name' => 'person',
+    'id' => 'feed-person', 'value' => $personsearch, 'class' => 'form-control',
+    'minlength' => 2, 'placeholder' => 'Введите не менее двух символов']);
+echo html_writer::tag('button', 'Найти', ['type' => 'submit', 'class' => 'u-btn']);
+echo html_writer::end_tag('form');
+if ($personsearch !== '') {
+    echo html_writer::tag('p', $employees ? 'Выберите найденного сотрудника в разделе нужного права.' :
+        'Нет действующих сотрудников по этому запросу.', ['class' => 'u-feed__source']);
+}
+echo html_writer::end_tag('section');
+
 foreach ($roles as $key => $definition) {
-    echo html_writer::start_tag('section', ['class' => 'u-feed-admin__section']);
-    echo html_writer::tag('h2', s($definition['label']));
+    echo html_writer::start_tag('details', ['class' => 'u-feed-admin__section',
+        'open' => $personsearch !== '' || $key === 'editor' ? 'open' : null]);
+    echo html_writer::tag('summary', s($definition['label']) . ' · ' . count($holders[$key]));
     echo html_writer::tag('p', s($definition['description']), ['class' => 'u-feed__source']);
 
     echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed-admin__assign']);
@@ -172,8 +196,10 @@ foreach ($roles as $key => $definition) {
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'rolekey', 'value' => $key]);
     echo html_writer::tag('label', 'Добавить сотрудника', ['for' => 'feed-role-' . $key]);
     echo html_writer::select($employees, 'userid', '', ['' => '— Выберите сотрудника —'],
-        ['id' => 'feed-role-' . $key, 'class' => 'form-select']);
-    echo html_writer::tag('button', 'Назначить', ['type' => 'submit', 'class' => 'u-btn']);
+        ['id' => 'feed-role-' . $key, 'class' => 'form-select',
+            'required' => 'required', 'disabled' => !$employees ? 'disabled' : null]);
+    echo html_writer::tag('button', 'Назначить', ['type' => 'submit', 'class' => 'u-btn',
+        'disabled' => !$employees ? 'disabled' : null]);
     echo html_writer::end_tag('form');
 
     if (!$holders[$key]) {
@@ -196,7 +222,7 @@ foreach ($roles as $key => $definition) {
         }
         echo html_writer::end_tag('div');
     }
-    echo html_writer::end_tag('section');
+    echo html_writer::end_tag('details');
 }
 
 echo html_writer::start_tag('section', ['class' => 'u-feed-admin__section']);

@@ -3,7 +3,7 @@
         <div>
             <p class="u-pagehead__eyebrow">USTAR Knowledge</p>
             <h1>Моя библиотека</h1>
-            <p>Личная история материалов, которые вы открыли или изучили в своём маршруте.</p>
+            <p>Изученные материалы маршрута и файлы, которые вы сохранили из ленты.</p>
         </div>
         <div class="u-knowledge-count"><strong>{{total}}</strong><span>доступно</span></div>
     </header>
@@ -57,6 +57,29 @@
     </section>
     {{/hasregularmaterials}}
 
+    {{#hasfeedfiles}}
+    <section class="u-knowledge-library-zone" id="saved-feed-files">
+        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Моя коллекция</p><h2>Сохранено из ленты</h2></div><strong>{{feedfilecount}}</strong></header>
+        <div class="u-knowledge-grid">
+            {{#feedfiles}}
+            <article class="u-knowledge-card">
+                <div class="u-knowledge-card__meta"><span>Файл из ленты</span><span>{{size}}</span></div>
+                <div class="u-knowledge-card__titleline">{{{knowledgeicon}}}<h2>{{title}}</h2></div>
+                <p class="u-knowledge-card__summary">Личная копия вложения публикации.</p>
+                <footer><small>Сохранено · {{date}}</small><a class="u-btn u-btn--primary" href="{{url}}">Скачать</a></footer>
+                <form method="post" action="{{removeurl}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="action" value="removefeedfile">
+                    <input type="hidden" name="savedid" value="{{id}}">
+                    <button type="submit" class="u-btn u-btn--secondary">Убрать из библиотеки</button>
+                </form>
+            </article>
+            {{/feedfiles}}
+        </div>
+        {{#hasmorefeedfiles}}<a class="u-btn u-btn--secondary" href="{{nextfeedurl}}#saved-feed-files">Ещё сохранённые файлы</a>{{/hasmorefeedfiles}}
+    </section>
+    {{/hasfeedfiles}}
+
     {{^hasmaterials}}
     <div class="u-knowledge-empty" role="status">
         {{{knowledgeicon}}}
@@ -67,7 +90,7 @@
         {{/hasactivefilters}}
         {{^hasactivefilters}}
         <strong>В личной библиотеке пока ничего нет</strong>
-        <p>Откройте материал из доступной точки маршрута — после learning event он появится здесь. Прямой доступ по роли библиотеку не пополняет.</p>
+        <p>Откройте материал маршрута или сохраните вложение публикации из ленты.</p>
         <a class="u-btn u-btn--primary" href="{{learningurl}}">Перейти к моему маршруту</a>
         {{/hasactivefilters}}
     </div>

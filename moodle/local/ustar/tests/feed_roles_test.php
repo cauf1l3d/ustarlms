@@ -82,6 +82,29 @@ final class feed_roles_test extends \advanced_testcase {
         $this->assertTrue(true);
     }
 
+    public function test_feed_attachment_is_saved_once_in_owner_library_and_survives_source_removal(): void {
+        global $USER, $DB;
+        $owner = $this->getDataGenerator()->create_user();
+        $other = $this->getDataGenerator()->create_user();
+        $this->setUser($owner);
+        $postid = feed_service::create((int)$owner->id, 'person', (string)$owner->id,
+            ['all'], 'Документ отдела', true, 0, [], md5('feed-library-copy'));
+        $file = get_file_storage()->create_file_from_string([
+            'contextid' => \context_system::instance()->id, 'component' => 'local_ustar',
+            'filearea' => feed_files::AREA, 'itemid' => $postid,
+            'filepath' => '/v1/', 'filename' => 'guide.pdf',
+        ], 'Private attachment');
+        $savedid = feed_files::save_to_library($postid, (int)$owner->id, (int)$file->get_id());
+        $this->assertSame($savedid,
+            feed_files::save_to_library($postid, (int)$owner->id, (int)$file->get_id()));
+        $this->assertSame(1, $DB->count_records('local_ustar_feed_saves', ['userid' => (int)$owner->id]));
+        feed_service::remove($postid, (int)$owner->id, 1);
+        $this->assertSame('guide.pdf', feed_files::saved_for_library((int)$owner->id)['items'][0]['title']);
+        $this->setUser($other);
+        $this->expectException(\invalid_parameter_exception::class);
+        feed_files::remove_from_library($savedid, (int)$other->id);
+    }
+
     public function test_editor_can_revise_another_author_but_cannot_publish_their_draft(): void {
         global $DB;
         $author = $this->getDataGenerator()->create_user();

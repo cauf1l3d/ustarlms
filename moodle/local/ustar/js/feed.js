@@ -117,15 +117,14 @@
                 var previous = button.value;
                 var data = new FormData(form);
                 data.set('action', previous);
-                data.set('ajaxlike', '1');
                 button.disabled = true;
 
-                fetch(form.action || window.location.href, {
+                fetch(form.dataset.reactionUrl, {
                     method: 'POST', body: data, credentials: 'same-origin',
                     headers: {'Accept': 'application/json'}
                 }).then(function(response) {
-                    if (!response.ok || !response.headers.get('Content-Type') ||
-                            !response.headers.get('Content-Type').includes('application/json')) {
+                    if (!response.ok || response.redirected ||
+                            !(response.headers.get('Content-Type') || '').includes('application/json')) {
                         throw new Error('Не удалось обновить реакцию.');
                     }
                     return response.json();

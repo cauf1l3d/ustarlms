@@ -11,7 +11,7 @@ $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
 $PAGE->set_pagelayout('ustar');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-audience']));
-$PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-audience']));
+$PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-reaction-library']));
 $notice = '';
 $actorid = (int)$USER->id;
 
@@ -85,10 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if ($action === 'report') {
             \local_ustar\feed_service::report($postid, $actorid, required_param('reason', PARAM_TEXT));
         } else if ($action === 'savefile') {
-            $noteid = \local_ustar\feed_files::save_to_notebook($postid, $actorid,
+            \local_ustar\feed_files::save_to_library($postid, $actorid,
                 required_param('fileid', PARAM_INT));
-            redirect(new moodle_url('/local/ustar/tasks.php',
-                ['tab' => 'notebook', 'taskid' => $noteid, 'saved' => 1]));
+            $libraryurl = new moodle_url('/local/ustar/knowledge.php',
+                ['view' => 'knowledge', 'theme' => 'ustar']);
+            $libraryurl->set_anchor('saved-feed-files');
+            redirect($libraryurl);
         } else if ($action === 'moderate') {
             \local_ustar\feed_service::moderate($postid, $actorid,
                 required_param('version', PARAM_INT), required_param('decision', PARAM_ALPHA),
@@ -421,7 +423,8 @@ if ($filter === 'mine') {
         echo html_writer::end_tag('section');
     }
 }
-$cansaveattachments = $caninteract && \local_ustar\employment::is_active($actorid);
+$cansaveattachments = $caninteract && \local_ustar\employment::is_active($actorid)
+    && \local_ustar\accounts::participates($actorid);
 $academyiconurl = $OUTPUT->image_url('brand/ustar-app-icon', 'theme_ustar')->out(false);
 $renderattachment = static function(array $attachment, int $sourcepostid) use ($cansaveattachments): void {
     echo html_writer::start_tag('figure', ['class' => 'u-feed__file']);
@@ -443,7 +446,7 @@ $renderattachment = static function(array $attachment, int $sourcepostid) use ($
                 'fileid' => $attachment['id']] as $field => $value) {
             echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
         }
-        echo html_writer::tag('button', '＋ В личный блокнот',
+        echo html_writer::tag('button', '＋ В мою библиотеку',
             ['type' => 'submit', 'class' => 'u-feed__file-action']);
         echo html_writer::end_tag('form');
     }
@@ -516,7 +519,8 @@ foreach ($posts as $post) {
             'aria-label' => 'Действия с публикацией']);
         if ($caninteract) {
             echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline',
-                'data-feed-like' => '1']);
+                'data-feed-like' => '1', 'data-reaction-url' =>
+                    (new moodle_url('/local/ustar/feed_reaction.php'))->out(false)]);
             foreach (['sesskey' => sesskey(), 'postid' => $postid] as $field => $value) {
                 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
             }

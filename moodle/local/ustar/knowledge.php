@@ -6,6 +6,18 @@ require_login();
 
 global $USER;
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_sesskey();
+    \local_ustar\feed_access::require_actor((int)$USER->id);
+    if (required_param('action', PARAM_ALPHA) !== 'removefeedfile') {
+        throw new invalid_parameter_exception('Неизвестное действие.');
+    }
+    \local_ustar\feed_files::remove_from_library(required_param('savedid', PARAM_INT),
+        (int)$USER->id);
+    redirect(new moodle_url('/local/ustar/knowledge.php',
+        ['view' => 'knowledge', 'theme' => 'ustar']));
+}
+
 $context =
     context_system::instance();
 
@@ -148,6 +160,26 @@ $categoryfilter =
         'all',
         PARAM_ALPHANUMEXT
     );
+
+// Saved feed files are personal copies, separate from route learning events.
+$feedpage = max(0, min(10000, optional_param('feedpage', 0, PARAM_INT)));
+$feedtotal = \local_ustar\accounts::participates((int)$USER->id)
+    && \local_ustar\employment::is_active((int)$USER->id)
+    && !\local_ustar\view_as::active()
+    ? $DB->count_records('local_ustar_feed_saves', ['userid' => (int)$USER->id]) : 0;
+$feedselection = $feedtotal && ($type === 'all' || $type === 'feedfile')
+    && $categoryfilter === 'all'
+    ? \local_ustar\feed_files::saved_for_library((int)$USER->id, $q, $feedpage)
+    : ['items' => [], 'total' => 0, 'hasnext' => false];
+$feedfiles = $feedselection['items'];
+$visiblefeedfiles = ($type === 'all' || $type === 'feedfile') && $categoryfilter === 'all'
+    ? $feedfiles
+    : [];
+foreach ($visiblefeedfiles as &$feedfile) {
+    $feedfile['removeurl'] = (new moodle_url('/local/ustar/knowledge.php'))->out(false);
+    $feedfile['sesskey'] = sesskey();
+}
+unset($feedfile);
 
 
 /*
@@ -483,7 +515,7 @@ $typefilters = [
             'Все',
 
         'count' =>
-            count($all),
+            count($all) + $feedtotal,
 
         'selected' =>
             $type === 'all',
@@ -549,6 +581,17 @@ foreach ($typecounts as $id => $count) {
                     ]
                 )
             )->out(false),
+    ];
+}
+
+if ($feedtotal) {
+    $typefilters[] = [
+        'label' => 'Сохранено из ленты', 'count' => $feedtotal,
+        'selected' => $type === 'feedfile',
+        'url' => (new moodle_url('/local/ustar/knowledge.php', [
+            'view' => 'knowledge', 'type' => 'feedfile', 'q' => $q,
+            'preview' => $preview ? 1 : 0,
+        ]))->out(false),
     ];
 }
 
@@ -702,13 +745,23 @@ $data = [
         s($q),
 
     'total' =>
-        count($all),
+        count($all) + $feedtotal,
 
     'visiblecount' =>
         count($materials),
 
     'hasmaterials' =>
-        !empty($materials),
+        !empty($materials) || !empty($visiblefeedfiles),
+
+    'feedfiles' => $visiblefeedfiles,
+    'hasfeedfiles' => !empty($visiblefeedfiles),
+    'feedfilecount' => $feedselection['total'],
+    'hasmorefeedfiles' => $feedselection['hasnext'],
+    'nextfeedurl' => (new moodle_url('/local/ustar/knowledge.php', [
+        'view' => 'knowledge', 'theme' => 'ustar', 'type' => $type,
+        'category' => $categoryfilter, 'q' => $q, 'feedpage' => $feedpage + 1,
+        'preview' => $preview ? 1 : 0,
+    ]))->out(false),
 
     'hasactivefilters' =>
         $q !== ''

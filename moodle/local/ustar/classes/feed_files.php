@@ -6,6 +6,7 @@ defined('MOODLE_INTERNAL') || die();
 /** Private post attachments. No public Moodle file URL bypasses feed ACL. */
 final class feed_files {
     public const AREA = 'feed_attachment';
+    public const SAVED_AREA = 'feed_saved';
 
     public static function store(int $postid, array $uploads): void {
         if (!$uploads) {
@@ -85,10 +86,13 @@ final class feed_files {
         return $out;
     }
 
-    /** Copy a visible attachment into the employee's owner-only notebook. */
-    public static function save_to_notebook(int $postid, int $userid, int $fileid): int {
+    /** Save a private, independent copy in the employee's personal knowledge library. */
+    public static function save_to_library(int $postid, int $userid, int $fileid): int {
         global $DB;
         feed_access::require_actor($userid);
+        if (!accounts::participates($userid) || !employment::is_active($userid)) {
+            throw new \invalid_parameter_exception('Личная библиотека недоступна.');
+        }
         $post = feed_access::readable($postid, $userid);
         $contextid = \context_system::instance()->id;
         $file = get_file_storage()->get_file_by_id($fileid);
@@ -97,16 +101,74 @@ final class feed_files {
                 || (int)$file->get_itemid() !== (int)$post->id || $file->get_filepath() !== '/v1/') {
             throw new \invalid_parameter_exception('Вложение недоступно.');
         }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('feed-save:' . $userid . ':' . $fileid, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось сохранить вложение.');
+        }
+        try {
+            $existing = $DB->get_field('local_ustar_feed_saves', 'id',
+                ['userid' => $userid, 'sourcefileid' => $fileid]);
+            if ($existing) {
+                return (int)$existing;
+            }
+            $transaction = $DB->start_delegated_transaction();
+            $savedid = (int)$DB->insert_record('local_ustar_feed_saves', (object)[
+                'userid' => $userid, 'sourcepostid' => $postid, 'sourcefileid' => $fileid,
+                'filename' => $file->get_filename(), 'timecreated' => time(),
+            ]);
+            get_file_storage()->create_file_from_storedfile([
+                'contextid' => $contextid, 'component' => 'local_ustar',
+                'filearea' => self::SAVED_AREA, 'itemid' => $savedid,
+                'filepath' => '/', 'filename' => $file->get_filename(),
+            ], $file);
+            $transaction->allow_commit();
+            return $savedid;
+        } finally {
+            $lock->release();
+        }
+    }
+
+    /** Files are independent of subsequent feed visibility changes. */
+    public static function saved_for_library(int $userid, string $query = '', int $page = 0): array {
+        global $DB;
+        $where = 'userid = :userid';
+        $params = ['userid' => $userid];
+        if (trim($query) !== '') {
+            $where .= ' AND ' . $DB->sql_like('filename', ':filename', false);
+            $params['filename'] = '%' . $DB->sql_like_escape(trim($query)) . '%';
+        }
+        $total = $DB->count_records_select('local_ustar_feed_saves', $where, $params);
+        $records = $DB->get_records_select('local_ustar_feed_saves', $where, $params,
+            'timecreated DESC, id DESC', '*', min(10000, max(0, $page)) * 24, 24);
+        $out = [];
+        $contextid = \context_system::instance()->id;
+        foreach ($records as $record) {
+            $file = get_file_storage()->get_file($contextid, 'local_ustar', self::SAVED_AREA,
+                (int)$record->id, '/', $record->filename);
+            if (!$file || $file->is_directory()) {
+                continue;
+            }
+            $out[] = ['id' => (int)$record->id, 'title' => $record->filename,
+                'date' => userdate((int)$record->timecreated, '%d.%m.%Y'),
+                'size' => display_size($file->get_filesize()),
+                'url' => \moodle_url::make_pluginfile_url($contextid, 'local_ustar', self::SAVED_AREA,
+                    (int)$record->id, '/', $record->filename, true)->out(false)];
+        }
+        return ['items' => $out, 'total' => $total,
+            'hasnext' => (max(0, $page) + 1) * 24 < $total];
+    }
+
+    public static function remove_from_library(int $savedid, int $userid): void {
+        global $DB;
+        $record = $DB->get_record('local_ustar_feed_saves', ['id' => $savedid, 'userid' => $userid]);
+        if (!$record) {
+            throw new \invalid_parameter_exception('Вложение недоступно.');
+        }
         $transaction = $DB->start_delegated_transaction();
-        $note = learning_tasks::create_note($userid, \core_text::substr($file->get_filename(), 0, 255),
-            'Сохранено из публикации №' . $postid . ' · ' . \core_text::substr((string)$post->body, 0, 500));
-        $noteid = (int)$note['id'];
-        get_file_storage()->create_file_from_storedfile([
-            'contextid' => $contextid, 'component' => 'local_ustar',
-            'filearea' => task_files::ATTACHMENT, 'itemid' => $noteid,
-            'filepath' => '/', 'filename' => $file->get_filename(),
-        ], $file);
+        get_file_storage()->delete_area_files(\context_system::instance()->id,
+            'local_ustar', self::SAVED_AREA, $savedid);
+        $DB->delete_records('local_ustar_feed_saves', ['id' => $savedid, 'userid' => $userid]);
         $transaction->allow_commit();
-        return $noteid;
     }
 }

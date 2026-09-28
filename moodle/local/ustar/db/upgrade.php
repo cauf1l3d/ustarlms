@@ -4657,5 +4657,23 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092710, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092801) {
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_ustar_feed_saves');
+        if (!$dbman->table_exists($table)) {
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('sourcepostid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('sourcefileid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_field('filename', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+            $table->add_index('owner_source_uix', XMLDB_INDEX_UNIQUE, ['userid', 'sourcefileid']);
+            $table->add_index('owner_time_idx', XMLDB_INDEX_NOTUNIQUE, ['userid', 'timecreated']);
+            $dbman->create_table($table);
+        }
+        upgrade_plugin_savepoint(true, 2026092801, 'local', 'ustar');
+    }
+
 return true;
 }

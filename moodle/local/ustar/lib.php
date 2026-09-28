@@ -62,6 +62,34 @@ function local_ustar_pluginfile(
         return true;
     }
 
+    if ($filearea === \local_ustar\feed_files::SAVED_AREA) {
+        if (!\local_ustar\employment::is_active((int)$USER->id) || \local_ustar\view_as::active()
+                || count($args) !== 2) {
+            return false;
+        }
+        $savedid = (int)array_shift($args);
+        $filename = array_shift($args);
+        if ($savedid <= 0 || !$filename || !\local_ustar\accounts::participates((int)$USER->id)
+                || !has_capability('local/ustar:use', $context, (int)$USER->id)) {
+            return false;
+        }
+        global $DB;
+        $saved = $DB->get_record('local_ustar_feed_saves',
+            ['id' => $savedid, 'userid' => (int)$USER->id, 'filename' => $filename]);
+        if (!$saved) {
+            return false;
+        }
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $savedid, '/', $filename);
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none';");
+        send_stored_file($file, 0, 0, true, $options);
+        return true;
+    }
+
     if (in_array($filearea, [\local_ustar\task_files::ATTACHMENT, \local_ustar\task_files::RESULT], true)) {
         if (!$args || !\local_ustar\employment::is_active((int)$USER->id)) {
             return false;

@@ -11,6 +11,9 @@ foreach ($tables as $table) {
         // Driver metadata includes names, types, lengths, nullability and defaults.
         $columns[$name] = (array)$column;
     }
+    // XMLDB upgrade appends fields, while a fresh install follows install.xml.
+    // Compare the schema by column identity rather than creation order.
+    ksort($columns, SORT_STRING);
     $indexes = array_values($DB->get_indexes($table));
     usort($indexes, static fn($a, $b) => strcmp(json_encode($a), json_encode($b)));
     $snapshot[$table] = ['columns' => $columns, 'indexes' => $indexes];

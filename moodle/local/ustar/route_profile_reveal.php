@@ -37,60 +37,12 @@ $definition =
     );
 
 
-/*
- * When point 63 is published, direct URL must not allow
- * premature disclosure before the sequential route reaches it.
- *
- * While point 63 is still draft we allow direct preview.
- */
-$point63published =
-    $DB->record_exists(
-        'local_ustar_route_versions',
-        [
-            'pointid' => 63,
-            'status' =>
-                \local_ustar\route_model::STATUS_PUBLISHED,
-        ]
-    );
-
-$reachable = true;
-
-if ($point63published) {
-    $positionid =
-        \local_ustar\people::position_id(
-            (int)$USER->id
-        );
-
-    $snapshot =
-        \local_ustar\route_model::read_only_snapshot(
-            $positionid,
-            (int)$USER->id
-        );
-
-    $currentid =
-        (int)(
-            $snapshot['currentpoint']['id']
-            ?? 0
-        );
-
-    $point63done = false;
-
-    foreach (($snapshot['points'] ?? []) as $point) {
-        if (
-            (int)$point['id'] === 63
-            &&
-            !empty($point['done'])
-        ) {
-            $point63done = true;
-            break;
-        }
-    }
-
-    $reachable =
-        $currentid === 63
-        ||
-        $point63done;
-}
+// A published reveal belongs to the employee's position route, not to
+// the historical retail point 63. An unpublished activity remains a preview.
+$availability = \local_ustar\native_learning::availability(
+    (int)$USER->id, \local_ustar\native_learning::TEAM_PROFILE_REVEAL
+);
+$reachable = empty($availability['configured']) || !empty($availability['reachable']);
 
 
 $submitted =
@@ -311,4 +263,3 @@ echo $output->render_from_template(
 );
 
 echo $output->footer();
-

@@ -20,36 +20,76 @@ final class native_learning {
 
     private const FACTS = [
         self::TEAM_STRUCTURE => [
-            'pointid' => 60,
             'eventtype' => 'native_team_structure',
             'url' => '/local/ustar/route_team.php',
         ],
         self::ROLE_DEVELOPMENT => [
-            'pointid' => 61,
             'eventtype' => 'native_role_development',
             'url' => '/local/ustar/route_career.php',
         ],
         self::ROLE_SKILLS_CHECK => [
-            'pointid' => 62,
             'eventtype' => 'native_role_skills_check',
             'url' => '/local/ustar/route_role_quiz.php',
         ],
         self::TEAM_PROFILE_REVEAL => [
-            'pointid' => 63,
             'eventtype' => 'native_profile_reveal',
             'url' => '/local/ustar/route_profile_reveal.php',
         ],
         self::PRODUCT_MASTERY => [
-            'pointid' => 70,
             'eventtype' => 'native_product_mastery',
             'url' => '/local/ustar/catalog_exam.php',
         ],
         self::PRODUCT_SCORM_ACK => [
-            'pointid' => 69,
             'eventtype' => 'native_product_scorm_ack',
             'url' => '/local/ustar/scorm_launch.php?cmid=41&pointid=69',
         ],
     ];
+
+    /** Native activities that an author can safely attach to another position route. */
+    public static function authoring_options(): array {
+        return [
+            ['id' => self::TEAM_STRUCTURE, 'name' => 'Знакомство с командой и проверка'],
+            ['id' => self::ROLE_DEVELOPMENT, 'name' => 'Развитие в своей должности'],
+            ['id' => self::ROLE_SKILLS_CHECK, 'name' => 'Проверка навыков должности'],
+            ['id' => self::TEAM_PROFILE_REVEAL, 'name' => 'Результат командного профиля'],
+        ];
+    }
+
+    /** Resolve a native requirement through the employee's current route and position scope. */
+    public static function availability(int $userid, string $factkey): array {
+        if (!isset(self::FACTS[$factkey]) || !accounts::participates($userid)) {
+            return ['configured' => false, 'reachable' => false];
+        }
+        $positionid = people::position_id($userid);
+        if ($positionid === '') {
+            return ['configured' => false, 'reachable' => false];
+        }
+        $snapshot = route_model::read_only_snapshot($positionid, $userid);
+        if (empty($snapshot['ok'])) {
+            return ['configured' => false, 'reachable' => false];
+        }
+        $matches = [];
+        $sequential = in_array($factkey, [self::TEAM_STRUCTURE, self::ROLE_DEVELOPMENT,
+            self::ROLE_SKILLS_CHECK, self::TEAM_PROFILE_REVEAL], true);
+        foreach ($snapshot['points'] ?? [] as $point) {
+            $version = route_model::current_published_version((int)$point['id']);
+            if (!$version) { continue; }
+            foreach (route_model::requirements_for_version($version) as $requirement) {
+                if (($requirement['type'] ?? '') === 'native'
+                        && ($requirement['sourcekey'] ?? '') === $factkey) {
+                    // Catalog/SCORM completion may arrive before their route
+                    // point opens; their existing evidence policy accepts it.
+                    $matches[] = ['configured' => true, 'reachable' => !$sequential || empty($point['locked']),
+                        'pointid' => (int)$point['id'], 'versionid' => (int)$version->id];
+                    break;
+                }
+            }
+        }
+        if (count($matches) > 1) {
+            throw new \moodle_exception('Нативная активность указана в нескольких точках одного маршрута. Исправьте маршрут.');
+        }
+        return $matches[0] ?? ['configured' => false, 'reachable' => false];
+    }
 
     public static function url_for(string $factkey): string {
         $cfg = self::FACTS[$factkey] ?? null;
@@ -78,8 +118,6 @@ final class native_learning {
 
         if (
             !$cfg
-            ||
-            (int)$cfg['pointid'] !== $pointid
             ||
             $routeversionid <= 0
         ) {
@@ -132,7 +170,15 @@ final class native_learning {
             );
         }
 
-        $pointid = (int)$cfg['pointid'];
+        $availability = self::availability($userid, $factkey);
+        if (empty($availability['configured'])) {
+            // An unpublished draft has no completion fact.
+            return 0;
+        }
+        if (empty($availability['reachable'])) {
+            throw new \moodle_exception('Этот шаг ещё недоступен в вашем маршруте.');
+        }
+        $pointid = (int)$availability['pointid'];
 
         $point = $DB->get_record(
             'local_ustar_route_points',
@@ -148,19 +194,9 @@ final class native_learning {
          * Never create a completion fact for a draft route version.
          * Direct preview pages remain safe before publication.
          */
-        $version = $DB->get_record_sql(
-            "SELECT *
-               FROM {local_ustar_route_versions}
-              WHERE pointid = :pointid
-                AND status = :status
-           ORDER BY versionno DESC, id DESC",
-            [
-                'pointid' => $pointid,
-                'status' =>
-                    route_model::STATUS_PUBLISHED,
-            ],
-            IGNORE_MULTIPLE
-        );
+        $version = $DB->get_record('local_ustar_route_versions',
+            ['id' => (int)$availability['versionid'], 'pointid' => $pointid,
+                'status' => route_model::STATUS_PUBLISHED], '*', MUST_EXIST);
 
         if (!$version) {
             return 0;
@@ -207,6 +243,11 @@ final class native_learning {
         }
 
         try {
+            $current = self::availability($userid, $factkey);
+            if (empty($current['reachable']) || (int)($current['pointid'] ?? 0) !== $pointid
+                    || (int)($current['versionid'] ?? 0) !== (int)$version->id) {
+                throw new \moodle_exception('Маршрут изменился. Откройте текущий шаг заново.');
+            }
             $existing = self::fact(
                 $userid,
                 $pointid,

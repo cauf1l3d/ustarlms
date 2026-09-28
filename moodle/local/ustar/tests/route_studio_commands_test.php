@@ -5,6 +5,7 @@ defined('MOODLE_INTERNAL') || die();
 
 #[\PHPUnit\Framework\Attributes\CoversClass(route_commands::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(route_model::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(native_learning::class)]
 final class route_studio_commands_test extends \advanced_testcase {
 
     protected function setUp(): void {
@@ -29,6 +30,43 @@ final class route_studio_commands_test extends \advanced_testcase {
             ]),
         ]);
         return [$generator, $user, $route, $point, $version];
+    }
+
+    public function test_native_completion_uses_the_warehouse_point_version_instead_of_retail_ids(): void {
+        global $DB;
+        $structure = structure::get(structure::NAME_STRUCTURE);
+        $structure['departments'][] = ['id' => 'warehouse', 'name' => 'Склад'];
+        $structure['positions'][] = ['id' => 'warehouse_worker', 'department' => 'warehouse',
+            'name' => 'Сотрудник склада', 'level' => 1];
+        structure::save(structure::NAME_STRUCTURE, $structure);
+        $fieldid = $DB->get_field('user_info_field', 'id', ['shortname' => 'ustar_position']);
+        if (!$fieldid) {
+            $field = $this->getDataGenerator()->create_custom_profile_field([
+                'shortname' => 'ustar_position', 'name' => 'Должность', 'datatype' => 'text']);
+            $fieldid = $field->id;
+        }
+        $employee = $this->getDataGenerator()->create_user();
+        $DB->insert_record('user_info_data', (object)['userid' => $employee->id,
+            'fieldid' => $fieldid, 'data' => 'warehouse_worker', 'dataformat' => 0]);
+        $generator = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $route = $generator->create_route(['positionid' => 'warehouse_worker']);
+        $point = $generator->create_point($route, ['pointkey' => 'warehouse_team']);
+        $version = $generator->create_version($point, ['requirementsjson' => json_encode([
+            ['type' => 'native', 'sourcekey' => native_learning::TEAM_STRUCTURE, 'required' => true],
+        ])]);
+        $this->setUser($employee);
+        $available = native_learning::availability((int)$employee->id, native_learning::TEAM_STRUCTURE);
+        $this->assertTrue($available['reachable']);
+        $this->assertSame((int)$point->id, $available['pointid']);
+        $eventid = native_learning::record((int)$employee->id, native_learning::TEAM_STRUCTURE,
+            ['score' => 4]);
+        $this->assertGreaterThan(0, $eventid);
+        $this->assertSame($eventid, native_learning::record((int)$employee->id,
+            native_learning::TEAM_STRUCTURE, ['score' => 4]));
+        $this->assertNotNull(native_learning::fact((int)$employee->id, (int)$point->id,
+            (int)$version->id, native_learning::TEAM_STRUCTURE));
+        $this->assertSame((int)$version->id,
+            (int)$DB->get_field('local_ustar_workflow_events', 'entityid', ['id' => $eventid]));
     }
 
     public function test_version_diff_reports_payload_and_requirement_changes(): void {

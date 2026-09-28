@@ -216,6 +216,17 @@ $requirements_from_request = static function() use ($DB, $skillmap): array {
             'label' => (string)$assessment['assessment']->title,
         ];
     }
+    $nativekey = optional_param('nativekey', '', PARAM_ALPHANUMEXT);
+    if ($nativekey !== '') {
+        $allowednative = array_column(\local_ustar\native_learning::authoring_options(), 'name', 'id');
+        if (!isset($allowednative[$nativekey])) {
+            throw new invalid_parameter_exception('Выберите доступную активность USTAR.');
+        }
+        $requirements[] = [
+            'type' => 'native', 'sourcekey' => $nativekey,
+            'required' => $required, 'label' => $allowednative[$nativekey],
+        ];
+    }
     $primaryskillid = optional_param('primaryskillid', '', PARAM_ALPHANUMEXT);
     $skillids = optional_param_array('skillids', [], PARAM_ALPHANUMEXT);
     if ($primaryskillid !== '' && !in_array($primaryskillid, $skillids, true)) { $skillids[] = $primaryskillid; }
@@ -811,6 +822,7 @@ foreach (\local_ustar\development_assessment::catalog() as $assessment) {
         'meta' => 'Личный развивающий профиль',
     ];
 }
+$nativeoptions = \local_ustar\native_learning::authoring_options();
 
 if ($routeexists) {
     $route['hasinherited'] = false;
@@ -891,12 +903,13 @@ if ($routeexists) {
             $publishedversion,
             $draftversion
         );
-        $selectedcontents = []; $selectedskills = []; $primaryskill = ''; $selectedcourse = 0; $selectedcm = 0; $selectedassessment = ''; $previous = false;
+        $selectedcontents = []; $selectedskills = []; $primaryskill = ''; $selectedcourse = 0; $selectedcm = 0; $selectedassessment = ''; $selectednative = ''; $previous = false;
         foreach ($requirements as $requirement) {
             if (($requirement['type'] ?? '') === 'content') { $selectedcontents[] = (int)$requirement['sourceid']; }
             if (($requirement['type'] ?? '') === 'course') { $selectedcourse = (int)$requirement['sourceid']; }
             if (($requirement['type'] ?? '') === 'cm') { $selectedcm = (int)$requirement['sourceid']; }
             if (($requirement['type'] ?? '') === 'assessment') { $selectedassessment = (string)($requirement['sourcekey'] ?? ''); }
+            if (($requirement['type'] ?? '') === 'native') { $selectednative = (string)($requirement['sourcekey'] ?? ''); }
             if (($requirement['type'] ?? '') === 'skill') { $selectedskills[] = (string)$requirement['sourcekey']; if (!empty($requirement['primary'])) { $primaryskill = (string)$requirement['sourcekey']; } }
             $previous = $previous || (($requirement['type'] ?? '') === 'previous_adaptation');
         }
@@ -1132,6 +1145,7 @@ if ($routeexists) {
         $point['courseoptions'] = array_values(array_map(static function(array $item) use ($selectedcourse): array { $item['selected'] = (int)$item['id'] === $selectedcourse; return $item; }, $courseoptions));
         $point['activityoptions'] = array_values(array_map(static function(array $item) use ($selectedcm): array { $item['selected'] = (int)$item['id'] === $selectedcm; return $item; }, $activityoptions));
         $point['assessmentoptions'] = array_values(array_map(static function(array $item) use ($selectedassessment): array { $item['selected'] = (string)$item['id'] === $selectedassessment; return $item; }, $assessmentoptions));
+        $point['nativeoptions'] = array_values(array_map(static function(array $item) use ($selectednative): array { $item['selected'] = (string)$item['id'] === $selectednative; return $item; }, $nativeoptions));
         $point['skilloptions'] = []; $point['primaryskills'] = [];
         foreach ($skillmap as $id => $name) { $point['skilloptions'][] = ['id' => $id, 'name' => $name, 'selected' => in_array($id, $selectedskills, true)]; $point['primaryskills'][] = ['id' => $id, 'name' => $name, 'selected' => $id === $primaryskill]; }
         $point['previouschecked'] = $previous ? 'checked' : '';
@@ -1426,6 +1440,8 @@ $data = [
 
     'assessmentoptions' =>
         $addassessmentoptions,
+
+    'nativeoptions' => $nativeoptions,
 
     'skilloptions' =>
         $addskilloptions,

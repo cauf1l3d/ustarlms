@@ -109,32 +109,81 @@ final class feed_access {
 
     public static function assert_publisher(int $userid, string $type, string $publisherid,
             array $audience): void {
-        if ($type === 'person' && $publisherid === (string)$userid && $audience === ['all']) {
+        if ($type === 'person' && $publisherid === (string)$userid) {
             self::require_creator($userid);
+            $scopes = self::parse_audience($audience);
+            foreach ($scopes as $scope) {
+                if ($scope['kind'] === 'department' && $scope['id'] !== self::department_id($userid)) {
+                    throw new \invalid_parameter_exception('Можно выбрать только своё подразделение.');
+                }
+            }
             return;
         }
         self::require_writer($userid);
+        $scopes = self::parse_audience($audience);
         if ($type === 'department' && in_array($publisherid, self::manageable_departments($userid), true)
-                && $audience === [$publisherid]) {
+                && $scopes === [['kind' => 'department', 'id' => $publisherid]]) {
             return;
         }
         if ($type === 'academy' && $publisherid === 'academy'
                 && (self::can_manage($userid)
                     || has_capability('local/ustar:feedpublishacademy', \context_system::instance(), $userid))) {
-            if ($audience === ['all']) {
+            if ($scopes === [['kind' => 'all', 'id' => 'all']]) {
                 return;
             }
             if ((self::can_manage($userid)
-                    || has_capability('local/ustar:feedsetaudience', \context_system::instance(), $userid))
-                    && $audience && count($audience) === count(array_unique($audience))) {
-                $valid = array_column(structure::get(structure::NAME_STRUCTURE)['departments'] ?? [], 'id');
-                if (!array_diff($audience, $valid)) {
-                    return;
-                }
+                    || has_capability('local/ustar:feedsetaudience', \context_system::instance(), $userid))) {
+                return;
             }
         }
         throw new \required_capability_exception(\context_system::instance(),
             'local/ustar:feedpublishacademy', 'nopermissions', '');
+    }
+
+    /** Legacy department IDs remain valid; new scopes have an explicit kind. */
+    public static function parse_audience(array $audience): array {
+        global $DB;
+        if (!$audience || count($audience) > 50 || count($audience) !== count(array_unique($audience))) {
+            throw new \invalid_parameter_exception('Выберите от 1 до 50 уникальных адресатов.');
+        }
+        $departments = people::department_map(structure::get(structure::NAME_STRUCTURE));
+        $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
+        $scopes = [];
+        $seen = [];
+        foreach ($audience as $token) {
+            $token = (string)$token;
+            if ($token === 'all') {
+                $scope = ['kind' => 'all', 'id' => 'all'];
+            } else if ($token === 'manager:all') {
+                $scope = ['kind' => 'manager', 'id' => 'all'];
+            } else {
+                $parts = explode(':', $token, 2);
+                $kind = count($parts) === 2 ? $parts[0] : 'department';
+                $id = count($parts) === 2 ? $parts[1] : $parts[0];
+                if ($kind === 'department' && isset($departments[$id])) {
+                    $scope = ['kind' => 'department', 'id' => $id];
+                } else if ($kind === 'position' && isset($positions[$id])) {
+                    $scope = ['kind' => 'position', 'id' => $id];
+                } else if ($kind === 'user' && ctype_digit($id) && (int)$id > 1
+                        && (string)(int)$id === $id
+                        && $DB->record_exists('user', ['id' => (int)$id, 'deleted' => 0, 'suspended' => 0])
+                        && accounts::participates((int)$id)) {
+                    $scope = ['kind' => 'user', 'id' => $id];
+                } else {
+                    throw new \invalid_parameter_exception('Адресат публикации недоступен.');
+                }
+            }
+            $key = $scope['kind'] . ':' . $scope['id'];
+            if (isset($seen[$key])) {
+                throw new \invalid_parameter_exception('Адресат выбран повторно.');
+            }
+            $seen[$key] = true;
+            $scopes[] = $scope;
+        }
+        if (count($scopes) > 1 && in_array(['kind' => 'all', 'id' => 'all'], $scopes, true)) {
+            throw new \invalid_parameter_exception('Для общей публикации отдельные адресаты не нужны.');
+        }
+        return $scopes;
     }
 
     /** Add this clause BEFORE keyset paging/limit; never fetch and filter in PHP. */
@@ -154,7 +203,14 @@ final class feed_access {
             $departments[$userid] = array_values(array_unique(array_filter($ids)));
         }
         $params[$prefix . 'all'] = 'all';
+        $params[$prefix . 'owner'] = $userid;
         $params[$prefix . 'departmentkind'] = 'department';
+        $params[$prefix . 'userkind'] = 'user';
+        $params[$prefix . 'userid'] = (string)$userid;
+        $params[$prefix . 'positionkind'] = 'position';
+        $positionid = view_as::active() ? view_as::position_id() :
+            (string)(organization_identity::resolve($userid)['positionid'] ?? '');
+        $params[$prefix . 'positionid'] = $positionid;
         $ids = [];
         foreach ($departments[$userid] as $offset => $id) {
             $name = $prefix . 'dept' . $offset;
@@ -162,10 +218,17 @@ final class feed_access {
             $params[$name] = $id;
         }
         $deptcondition = $ids ? 'fa.scopeid IN (' . implode(',', $ids) . ')' : '1 = 0';
-        return "EXISTS (SELECT 1 FROM {local_ustar_feed_audience} fa
+        $manager = !view_as::active() && organization_model::is_manager($userid);
+        if ($manager) { $params[$prefix . 'managerkind'] = 'manager'; }
+        $managercondition = $manager ? 'fa.scopekind = :' . $prefix . 'managerkind' : '1 = 0';
+        return "({$alias}.actoruserid = :{$prefix}owner OR EXISTS
+                (SELECT 1 FROM {local_ustar_feed_audience} fa
                        WHERE fa.postid = {$alias}.id AND
                          (fa.scopekind = :{$prefix}all OR
-                          (fa.scopekind = :{$prefix}departmentkind AND {$deptcondition})))";
+                          (fa.scopekind = :{$prefix}departmentkind AND {$deptcondition}) OR
+                          (fa.scopekind = :{$prefix}userkind AND fa.scopeid = :{$prefix}userid) OR
+                          (fa.scopekind = :{$prefix}positionkind AND fa.scopeid = :{$prefix}positionid) OR
+                          {$managercondition})))";
     }
 
     /** Published posts require both current ACLs; a repost never copies private content. */

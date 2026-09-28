@@ -43,6 +43,37 @@ final class feed_roles_test extends \advanced_testcase {
             $DB->get_field('local_ustar_feed_posts', 'status', ['id' => $postid]));
     }
 
+    public function test_personal_recipient_is_enforced_for_feed_and_direct_read(): void {
+        $author = $this->getDataGenerator()->create_user();
+        $recipient = $this->getDataGenerator()->create_user();
+        $other = $this->getDataGenerator()->create_user();
+        $this->setUser($author);
+        $id = feed_service::create((int)$author->id, 'person', (string)$author->id,
+            ['user:' . $recipient->id], 'Адресное сообщение', true, 0, [], md5('private-feed-person'));
+        $this->assertSame($id, (int)feed_access::readable($id, (int)$author->id)->id);
+        $this->setUser($recipient);
+        $this->assertSame($id, (int)feed_access::readable($id, (int)$recipient->id)->id);
+        $this->setUser($other);
+        $this->assertSame([], feed_query::page((int)$other->id)['posts']);
+        $this->expectException(\required_capability_exception::class);
+        feed_access::readable($id, (int)$other->id);
+    }
+
+    public function test_academy_can_target_position_without_leaking_to_unassigned_employee(): void {
+        global $USER;
+        $this->setAdminUser();
+        $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
+        $positionid = (string)array_key_first($positions);
+        $this->assertNotSame('', $positionid);
+        $id = feed_service::create((int)$USER->id, 'academy', 'academy',
+            ['position:' . $positionid], 'Для должности', true, 0, [], md5('position-feed'));
+        $employee = $this->getDataGenerator()->create_user();
+        $this->setUser($employee);
+        $this->assertSame([], feed_query::page((int)$employee->id)['posts']);
+        $this->expectException(\required_capability_exception::class);
+        feed_access::readable($id, (int)$employee->id);
+    }
+
     public function test_site_admin_can_open_feed_management_without_employee_participation(): void {
         global $USER;
         $this->setAdminUser();

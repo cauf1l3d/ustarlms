@@ -26,6 +26,16 @@
 .u-feed__audience-options[hidden] { display: none; }
 .u-feed__audience-options label { margin: 0; font-weight: 400; }
 .u-feed__audience-options [role="alert"] { color: var(--u-error, #b32333); grid-column: 1 / -1; }
+.u-feed__audience [hidden] { display: none; }
+.u-feed__people { padding: 12px 0 0 20px; }
+.u-feed__people label { margin: 0 0 6px; }
+.u-feed__people-results { display: grid; gap: 4px; max-height: 180px; overflow: auto; }
+.u-feed__person-option { text-align: left; border: 0; padding: 8px; cursor: pointer;
+  background: var(--u-surface-subtle, #f3f5f3); border-radius: 8px; }
+.u-feed__people-selected { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.u-feed__person-chip { padding: 5px 8px; border-radius: 20px;
+  background: var(--u-brand-soft, #f7e3ec); }
+.u-feed__person-chip button { border: 0; background: transparent; cursor: pointer; }
 .u-feed__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .u-feed__filters { display: flex; gap: 6px; margin: 0 0 18px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
 .u-feed__filters a { text-decoration: none; flex: 0 0 auto; border: 1px solid var(--u-border, #e1e6e2);
@@ -40,6 +50,8 @@
 .u-feed__avatar { flex: none; display: grid; place-items: center; width: 42px; height: 42px;
   border-radius: 50%; background: var(--u-brand-soft, #f7e3ec); color: var(--u-brand, #9c356b);
   font-size: 1.2rem; font-weight: 700; }
+.u-feed__avatar--academy { overflow: hidden; background: #292929; }
+.u-feed__avatar-image { width: 100%; height: 100%; object-fit: cover; }
 .u-feed__byline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 8px; min-width: 0; }
 .u-feed__byline strong { font-size: .98rem; }
 .u-feed__byline time { flex-basis: 100%; }
@@ -49,18 +61,24 @@
 .u-feed__badge { font-size: .7rem; font-weight: 600; padding: 2px 8px; border-radius: 999px;
   background: var(--u-surface-subtle, #f3f5f3); color: var(--u-text-secondary, #68746f); }
 .u-feed__body { margin: 16px 0; line-height: 1.6; font-size: .98rem; }
-.u-feed__media { display: grid; gap: 8px; margin: 12px -22px 14px; }
-.u-feed__image { display: block; width: 100%; max-height: 560px; object-fit: contain;
+.u-feed__media { display: grid; gap: 12px; margin: 12px 0 14px; min-width: 0; }
+.u-feed__file { margin: 0; min-width: 0; border: 1px solid var(--u-border, #e1e6e2);
+  border-radius: 12px; overflow: hidden; background: var(--u-surface-subtle, #f8faf9); }
+.u-feed__image-link { display: flex; justify-content: center; align-items: center; padding: 8px;
   background: var(--u-surface-subtle, #f3f5f3); }
-.u-feed__attachment { display: flex; align-items: center; gap: 8px; margin: 0 22px; padding: 11px 14px;
-  border: 1px solid var(--u-border, #e1e6e2); border-radius: 10px; color: inherit;
-  text-decoration: none; background: var(--u-surface-subtle, #f8faf9); }
-.u-feed__attachment:hover { text-decoration: underline; }
+.u-feed__image { display: block; width: auto; max-width: 100%; height: auto;
+  max-height: 560px; object-fit: contain; border-radius: 6px; }
+.u-feed__attachment { display: block; padding: 12px 14px; overflow-wrap: anywhere; }
+.u-feed__file-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  padding: 8px 14px; border-top: 1px solid var(--u-border, #e1e6e2); }
+.u-feed__file-action { border: 0; background: transparent; padding: 4px 0; cursor: pointer;
+  color: var(--u-brand, #9c356b); font: inherit; font-size: .87rem; text-decoration: none; }
+.u-feed__file-action:hover { text-decoration: underline; }
 .u-feed__repost { border: 1px solid var(--u-border, #e1e6e2); border-radius: 12px;
   padding: 14px; margin: 12px 0; overflow: hidden; }
 .u-feed__repost p { margin: 8px 0; line-height: 1.5; }
-.u-feed__repost .u-feed__image { max-height: 300px; border-radius: 8px; }
-.u-feed__repost .u-feed__attachment { margin: 8px 0; }
+.u-feed__repost .u-feed__image { max-height: 300px; }
+.u-feed__repost .u-feed__file { margin: 8px 0; }
 .u-feed__toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
   border-top: 1px solid var(--u-border, #e1e6e2); padding-top: 10px; margin-top: 14px; }
 .u-feed__inline { margin: 0; position: relative; }
@@ -76,6 +94,7 @@
   color: var(--u-error, #b32333); border: 1px solid currentColor; font-size: .8rem; }
 .u-feed__detail { border-top: 1px solid var(--u-border, #e1e6e2); margin-top: 12px; padding-top: 12px; }
 .u-feed__discussion h3 { font-size: 1.05rem; margin: 12px 0; }
+.u-feed__discussion[hidden] { display: none; }
 .u-feed__comment { padding: 12px 0; border-bottom: 1px solid var(--u-border, #e1e6e2); }
 .u-feed__comment > p { margin: 4px 0; }
 .u-feed__comment-form { display: grid; gap: 8px; margin-top: 12px; }
@@ -121,8 +140,6 @@
   .u-feed__head-actions { width: 100%; }
   .u-feed__composer, .u-feed__post, .u-feed-admin__head,
   .u-feed-admin__owner, .u-feed-admin__section { padding: 16px; }
-  .u-feed__media { margin-left: -16px; margin-right: -16px; }
-  .u-feed__attachment { margin-left: 16px; margin-right: 16px; }
   .u-feed__toolbar { justify-content: space-between; gap: 0; }
   .u-feed__action { padding: 8px 6px; font-size: .78rem; }
   .u-feed__action--quiet { margin-left: 0; }

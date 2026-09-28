@@ -29,11 +29,7 @@ final class feed_service {
             throw new \invalid_parameter_exception('Неверный ключ отправки публикации.');
         }
         $audience = array_values(array_map('strval', $audience));
-        if ($type === 'person' && $publisherid === (string)$actorid && $audience === ['all']) {
-            feed_access::require_creator($actorid);
-        } else {
-            feed_access::assert_publisher($actorid, $type, $publisherid, $audience);
-        }
+        feed_access::assert_publisher($actorid, $type, $publisherid, $audience);
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
             ->get_lock('feed-create:' . $actorid . ':' . $requestkey, 10);
         if (!$lock) {
@@ -63,10 +59,9 @@ final class feed_service {
             'sourcepostid' => $source ? $sourceid : null, 'publishedat' => $publish ? $now : null,
             'timecreated' => $now, 'timemodified' => $now,
         ]);
-        foreach ($audience as $scopeid) {
+        foreach (feed_access::parse_audience($audience) as $scope) {
             $DB->insert_record('local_ustar_feed_audience', (object)[
-                'postid' => $id, 'scopekind' => $scopeid === 'all' ? 'all' : 'department',
-                'scopeid' => $scopeid,
+                'postid' => $id, 'scopekind' => $scope['kind'], 'scopeid' => $scope['id'],
             ]);
         }
         feed_files::store($id, $uploads);
@@ -96,7 +91,8 @@ final class feed_service {
         } else {
             feed_access::require_editor($actorid);
         }
-        $audience = array_map(static fn($row) => (string)$row->scopeid,
+        $audience = array_map(static fn($row) => in_array($row->scopekind, ['all', 'department'], true)
+            ? (string)$row->scopeid : ($row->scopekind . ':' . $row->scopeid),
             array_values($DB->get_records('local_ustar_feed_audience', ['postid' => $postid])));
         if ($publish) {
             if ($isowner) {

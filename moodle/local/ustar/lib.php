@@ -58,7 +58,7 @@ function local_ustar_pluginfile(
         header('X-Content-Type-Options: nosniff');
         header("Content-Security-Policy: sandbox; default-src 'none';");
         $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true);
-        send_stored_file($file, 0, 0, !$image, $options);
+        send_stored_file($file, 0, 0, $forcedownload || !$image, $options);
         return true;
     }
 

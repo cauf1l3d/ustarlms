@@ -10,8 +10,8 @@ $PAGE->set_context($context);
 $PAGE->set_title('Лента · USTAR Academy');
 $PAGE->set_heading('Лента');
 $PAGE->set_pagelayout('ustar');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-experience']));
-$PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-experience']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/feed.css', ['v' => '20260928-audience']));
+$PAGE->requires->js(new moodle_url('/local/ustar/js/feed.js', ['v' => '20260928-audience']));
 $notice = '';
 $actorid = (int)$USER->id;
 
@@ -28,13 +28,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $publisherid = $publisher === 'person' ? (string)$actorid :
                 ($publisher === 'academy' ? 'academy' : optional_param('departmentid', '', PARAM_ALPHANUMEXT));
             $audiencemode = optional_param('audiencemode', 'all', PARAM_ALPHA);
-            if ($publisher === 'academy' && !in_array($audiencemode, ['all', 'departments'], true)) {
+            if (!in_array($audiencemode, ['all', 'mydepartment', 'departments',
+                    'managers', 'positions', 'people'], true)) {
                 throw new invalid_parameter_exception('Неизвестная аудитория публикации.');
             }
-            $audience = $publisher === 'academy'
-                ? ($audiencemode === 'departments'
-                    ? optional_param_array('audience', [], PARAM_ALPHANUMEXT) : ['all'])
-                : [$publisher === 'department' ? $publisherid : 'all'];
+            $audience = match ($publisher) {
+                'department' => [$publisherid],
+                'person', 'academy' => match ($audiencemode) {
+                    'all' => ['all'],
+                    'mydepartment' => $publisher === 'person'
+                        ? [\local_ustar\feed_access::department_id($actorid)] : [],
+                    'departments' => $publisher === 'academy'
+                        ? optional_param_array('audience', [], PARAM_ALPHANUMEXT) : [],
+                    'managers' => ['manager:all'],
+                    'positions' => array_map(static fn($id) => 'position:' . $id,
+                        optional_param_array('positions', [], PARAM_ALPHANUMEXT)),
+                    'people' => array_map(static fn($id) => 'user:' . $id,
+                        optional_param_array('people', [], PARAM_INT)),
+                    default => [],
+                },
+                default => [],
+            };
             $postid = \local_ustar\feed_service::create($actorid, $publisher, $publisherid,
                 $audience, required_param('body', PARAM_TEXT), $action !== 'draft',
                 $action === 'repost' ? required_param('sourceid', PARAM_INT) : 0,
@@ -47,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($ajaxlike) {
                 $liked = $DB->record_exists('local_ustar_feed_reactions',
                     ['postid' => $postid, 'userid' => $actorid, 'kind' => 'like']);
-                $count = $DB->count_records('local_ustar_feed_reactions',
+                $count = (int)$DB->count_records('local_ustar_feed_reactions',
                     ['postid' => $postid, 'kind' => 'like']);
                 header('Content-Type: application/json; charset=utf-8');
                 header('Cache-Control: no-store');
@@ -70,6 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 optional_param('body', '', PARAM_TEXT), $action === 'commentdelete');
         } else if ($action === 'report') {
             \local_ustar\feed_service::report($postid, $actorid, required_param('reason', PARAM_TEXT));
+        } else if ($action === 'savefile') {
+            $noteid = \local_ustar\feed_files::save_to_notebook($postid, $actorid,
+                required_param('fileid', PARAM_INT));
+            redirect(new moodle_url('/local/ustar/tasks.php',
+                ['tab' => 'notebook', 'taskid' => $noteid, 'saved' => 1]));
         } else if ($action === 'moderate') {
             \local_ustar\feed_service::moderate($postid, $actorid,
                 required_param('version', PARAM_INT), required_param('decision', PARAM_ALPHA),
@@ -247,7 +266,7 @@ if ($compose && $cancreate) {
     if ($canacademy) { $publishers['academy'] = 'Новости Академии'; }
     echo html_writer::select($publishers, 'publisher', 'person', false,
         ['id' => 'feed-publisher', 'class' => 'form-select']);
-    echo html_writer::tag('p', 'От личного имени запись увидят действующие сотрудники Академии. Другие категории доступны только с соответствующим правом.',
+    echo html_writer::tag('p', 'Выберите автора и круг сотрудников, которым будет доступна запись.',
         ['class' => 'u-feed__hint']);
     if ($managed) {
         $options = [];
@@ -260,34 +279,52 @@ if ($compose && $cancreate) {
             ['id' => 'feed-department', 'class' => 'form-select']);
         echo html_writer::end_div();
     }
-    if ($canacademy) {
-        echo html_writer::start_div('', ['data-feed-publisher-field' => 'academy']);
-        echo html_writer::start_tag('fieldset', ['class' => 'u-feed__audience']);
-        echo html_writer::tag('legend', 'Кто увидит публикацию Академии');
-        echo html_writer::start_tag('label');
+    echo html_writer::start_tag('fieldset', ['class' => 'u-feed__audience',
+        'data-feed-audience' => '1', 'data-feed-can-academy-audience' => $canaudience ? '1' : '0']);
+    echo html_writer::tag('legend', 'Кто увидит публикацию');
+    $modes = ['all' => 'Все сотрудники', 'mydepartment' => 'Моё подразделение',
+        'departments' => 'Выбранные подразделения', 'managers' => 'Все руководители',
+        'positions' => 'Выбранные должности', 'people' => 'Конкретные сотрудники'];
+    foreach ($modes as $mode => $label) {
+        echo html_writer::start_tag('label', ['data-feed-mode-for' => $mode === 'mydepartment' ? 'person' :
+            ($mode === 'departments' ? 'academy' : 'both')]);
         echo html_writer::empty_tag('input', ['type' => 'radio', 'name' => 'audiencemode',
-            'value' => 'all', 'checked' => 'checked']);
-        echo ' Все сотрудники';
+            'value' => $mode, 'checked' => $mode === 'all' ? 'checked' : null]);
+        echo ' ' . s($label);
         echo html_writer::end_tag('label');
-        if ($canaudience) {
-            echo html_writer::start_tag('label');
-            echo html_writer::empty_tag('input', ['type' => 'radio', 'name' => 'audiencemode',
-                'value' => 'departments']);
-            echo ' Выбранные подразделения';
-            echo html_writer::end_tag('label');
-            echo html_writer::start_div('u-feed__audience-options', ['data-feed-audience-options' => '1']);
-            foreach ($departmentnames as $id => $department) {
-                echo html_writer::start_tag('label');
-                echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'audience[]',
-                    'value' => $id]);
-                echo ' ' . s((string)$department['name']);
-                echo html_writer::end_tag('label');
-            }
-            echo html_writer::end_div();
-        }
-        echo html_writer::end_tag('fieldset');
-        echo html_writer::end_div();
     }
+    echo html_writer::start_div('u-feed__audience-options', ['data-feed-audience-options' => 'departments']);
+    foreach ($departmentnames as $id => $department) {
+        echo html_writer::start_tag('label');
+        echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'audience[]',
+            'value' => $id]);
+        echo ' ' . s((string)$department['name']);
+        echo html_writer::end_tag('label');
+    }
+    echo html_writer::end_div();
+    echo html_writer::start_div('u-feed__audience-options', ['data-feed-audience-options' => 'positions']);
+    $positions = \local_ustar\people::position_map(
+        \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE));
+    foreach ($positions as $id => $position) {
+        echo html_writer::start_tag('label');
+        echo html_writer::empty_tag('input', ['type' => 'checkbox', 'name' => 'positions[]',
+            'value' => $id]);
+        echo ' ' . s((string)($position['name'] ?? $id));
+        echo html_writer::end_tag('label');
+    }
+    echo html_writer::end_div();
+    echo html_writer::start_div('u-feed__people', ['data-feed-audience-options' => 'people',
+        'data-search-url' => (new moodle_url('/local/ustar/feed_people.php'))->out(false)]);
+    echo html_writer::tag('label', 'Найти сотрудника', ['for' => 'feed-people-search']);
+    echo html_writer::empty_tag('input', ['type' => 'search', 'id' => 'feed-people-search',
+        'autocomplete' => 'off', 'placeholder' => 'Имя или логин, от 2 символов', 'class' => 'form-control']);
+    echo html_writer::start_div('u-feed__people-results', ['data-feed-people-results' => '1',
+        'role' => 'status', 'aria-live' => 'polite']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('u-feed__people-selected', ['data-feed-people-selected' => '1']);
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::end_tag('fieldset');
     echo html_writer::tag('label', 'Текст публикации', ['for' => 'feed-body']);
     echo html_writer::tag('textarea', '', ['name' => 'body', 'id' => 'feed-body',
         'maxlength' => 5000, 'required' => 'required', 'class' => 'form-control', 'rows' => 4]);
@@ -381,6 +418,33 @@ if ($filter === 'mine') {
         echo html_writer::end_tag('section');
     }
 }
+$renderattachment = static function(array $attachment, int $sourcepostid) use ($caninteract, $actorid): void {
+    echo html_writer::start_tag('figure', ['class' => 'u-feed__file']);
+    if ($attachment['image']) {
+        echo html_writer::link($attachment['url'],
+            html_writer::empty_tag('img', ['src' => $attachment['url'],
+                'alt' => $attachment['name'], 'loading' => 'lazy', 'class' => 'u-feed__image']),
+            ['class' => 'u-feed__image-link', 'target' => '_blank', 'rel' => 'noopener']);
+    } else {
+        echo html_writer::tag('span', s($attachment['name']) . ' · ' .
+            display_size($attachment['size']), ['class' => 'u-feed__attachment']);
+    }
+    echo html_writer::start_tag('figcaption', ['class' => 'u-feed__file-actions']);
+    echo html_writer::link($attachment['downloadurl'], '↓ Скачать',
+        ['class' => 'u-feed__file-action', 'download' => $attachment['name']]);
+    if ($caninteract && \local_ustar\employment::is_active($actorid)) {
+        echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'u-feed__inline']);
+        foreach (['sesskey' => sesskey(), 'action' => 'savefile', 'postid' => $sourcepostid,
+                'fileid' => $attachment['id']] as $field => $value) {
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $field, 'value' => $value]);
+        }
+        echo html_writer::tag('button', '＋ В личный блокнот',
+            ['type' => 'submit', 'class' => 'u-feed__file-action']);
+        echo html_writer::end_tag('form');
+    }
+    echo html_writer::end_tag('figcaption');
+    echo html_writer::end_tag('figure');
+};
 foreach ($posts as $post) {
     $postid = (int)$post->id;
     $author = $users[(int)$post->actoruserid] ?? null;
@@ -390,8 +454,15 @@ foreach ($posts as $post) {
             ($author ? fullname($author) : 'Сотрудник'));
     echo html_writer::start_tag('article', ['class' => 'u-feed__post', 'id' => 'post-' . $postid]);
     echo html_writer::start_div('u-feed__meta');
-    echo html_writer::tag('span', s(\core_text::substr($name, 0, 1)),
-        ['class' => 'u-feed__avatar', 'aria-hidden' => 'true']);
+    if ($post->publishertype === 'academy') {
+        echo html_writer::tag('span', html_writer::empty_tag('img', [
+            'src' => $OUTPUT->image_url('brand/ustar-app-icon', 'theme_ustar')->out(false),
+            'alt' => '', 'class' => 'u-feed__avatar-image']),
+            ['class' => 'u-feed__avatar u-feed__avatar--academy', 'aria-hidden' => 'true']);
+    } else {
+        echo html_writer::tag('span', s(\core_text::substr($name, 0, 1)),
+            ['class' => 'u-feed__avatar', 'aria-hidden' => 'true']);
+    }
     echo html_writer::start_div('u-feed__byline');
     echo html_writer::tag('strong', s($name));
     echo html_writer::tag('span', $post->publishertype === 'academy' ? 'Академия' :
@@ -409,14 +480,7 @@ foreach ($posts as $post) {
     if ($post->status === 'published' && !empty($attachments[$postid])) {
         echo html_writer::start_div('u-feed__media');
         foreach ($attachments[$postid] as $attachment) {
-            if ($attachment['image']) {
-                echo html_writer::empty_tag('img', ['src' => $attachment['url'],
-                    'alt' => $attachment['name'], 'loading' => 'lazy', 'class' => 'u-feed__image']);
-                continue;
-            }
-            echo html_writer::link($attachment['url'], '↓ ' . s($attachment['name']) .
-                ' · ' . display_size($attachment['size']),
-                ['class' => 'u-feed__attachment', 'download' => $attachment['name']]);
+            $renderattachment($attachment, $postid);
         }
         echo html_writer::end_div();
     }
@@ -432,13 +496,7 @@ foreach ($posts as $post) {
             echo html_writer::tag('strong', s($sourcename));
             echo html_writer::tag('p', nl2br(s((string)$source->body)));
             foreach ($attachments[(int)$source->id] ?? [] as $attachment) {
-                if ($attachment['image']) {
-                    echo html_writer::empty_tag('img', ['src' => $attachment['url'],
-                        'alt' => $attachment['name'], 'loading' => 'lazy', 'class' => 'u-feed__image']);
-                } else {
-                    echo html_writer::link($attachment['url'], '↓ ' . s($attachment['name']),
-                        ['class' => 'u-feed__attachment', 'download' => $attachment['name']]);
-                }
+                $renderattachment($attachment, (int)$source->id);
             }
             echo html_writer::link(new moodle_url('/local/ustar/feed.php', ['postid' => (int)$source->id]),
                 'Открыть оригинал', ['class' => 'u-feed__source']);
@@ -469,7 +527,9 @@ foreach ($posts as $post) {
         $detailurl = new moodle_url('/local/ustar/feed.php', ['postid' => $postid]);
         echo html_writer::link($detailurl->out(false) . '#discussion-' . $postid,
             '▤ Комментарии ' . (int)($commentcounts[$postid]->total ?? 0),
-            ['class' => 'u-feed__action']);
+            ['class' => 'u-feed__action', 'data-feed-discussion-toggle' => 'discussion-' . $postid,
+                'aria-controls' => 'discussion-' . $postid,
+                'aria-expanded' => ($selected && (int)$selected->id === $postid) ? 'true' : 'false']);
         if ($cancreate && !$post->sourcepostid) {
             echo html_writer::link($detailurl->out(false) . '#repost-' . $postid,
                 '↗ Поделиться', ['class' => 'u-feed__action']);

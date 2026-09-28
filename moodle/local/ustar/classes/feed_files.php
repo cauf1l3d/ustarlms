@@ -34,10 +34,12 @@ final class feed_files {
         foreach (get_file_storage()->get_area_files($contextid, 'local_ustar', self::AREA,
                 $postid, 'timecreated ASC, id ASC', false) as $file) {
             $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true);
-            $out[] = ['name' => $file->get_filename(), 'size' => (int)$file->get_filesize(),
+            $out[] = ['id' => (int)$file->get_id(), 'name' => $file->get_filename(), 'size' => (int)$file->get_filesize(),
                 'image' => $image,
                 'url' => \moodle_url::make_pluginfile_url($contextid, 'local_ustar', self::AREA,
-                    $postid, $file->get_filepath(), $file->get_filename(), !$image)->out(false)];
+                    $postid, $file->get_filepath(), $file->get_filename(), !$image)->out(false),
+                'downloadurl' => \moodle_url::make_pluginfile_url($contextid, 'local_ustar', self::AREA,
+                    $postid, $file->get_filepath(), $file->get_filename(), true)->out(false)];
         }
         return $out;
     }
@@ -73,11 +75,38 @@ final class feed_files {
         foreach ($files as $file) {
             $image = in_array($file->mimetype, ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true);
             $out[(int)$file->itemid][] = [
-                'name' => $file->filename, 'size' => (int)$file->filesize, 'image' => $image,
+                'id' => (int)$file->id, 'name' => $file->filename, 'size' => (int)$file->filesize, 'image' => $image,
                 'url' => \moodle_url::make_pluginfile_url($params['contextid'], 'local_ustar',
                     self::AREA, (int)$file->itemid, $file->filepath, $file->filename, !$image)->out(false),
+                'downloadurl' => \moodle_url::make_pluginfile_url($params['contextid'], 'local_ustar',
+                    self::AREA, (int)$file->itemid, $file->filepath, $file->filename, true)->out(false),
             ];
         }
         return $out;
+    }
+
+    /** Copy a visible attachment into the employee's owner-only notebook. */
+    public static function save_to_notebook(int $postid, int $userid, int $fileid): int {
+        global $DB;
+        feed_access::require_actor($userid);
+        $post = feed_access::readable($postid, $userid);
+        $contextid = \context_system::instance()->id;
+        $file = get_file_storage()->get_file_by_id($fileid);
+        if (!$file || $file->is_directory() || (int)$file->get_contextid() !== $contextid
+                || $file->get_component() !== 'local_ustar' || $file->get_filearea() !== self::AREA
+                || (int)$file->get_itemid() !== (int)$post->id || $file->get_filepath() !== '/v1/') {
+            throw new \invalid_parameter_exception('Вложение недоступно.');
+        }
+        $transaction = $DB->start_delegated_transaction();
+        $note = learning_tasks::create_note($userid, \core_text::substr($file->get_filename(), 0, 255),
+            'Сохранено из публикации №' . $postid . ' · ' . \core_text::substr((string)$post->body, 0, 500));
+        $noteid = (int)$note['id'];
+        get_file_storage()->create_file_from_storedfile([
+            'contextid' => $contextid, 'component' => 'local_ustar',
+            'filearea' => task_files::ATTACHMENT, 'itemid' => $noteid,
+            'filepath' => '/', 'filename' => $file->get_filename(),
+        ], $file);
+        $transaction->allow_commit();
+        return $noteid;
     }
 }

@@ -1611,7 +1611,7 @@
         <INDEX NAME="source_idx" UNIQUE="false" FIELDS="sourcepostid" />
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_ustar_feed_audience" COMMENT="Explicit post audience; all or department IDs">
+    <TABLE NAME="local_ustar_feed_audience" COMMENT="Explicit post audience: all, department, manager, position or user">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" />

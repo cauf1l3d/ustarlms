@@ -48,12 +48,12 @@ $PAGE->set_heading('Перенос вводного блока');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_v2.css'));
 echo $OUTPUT->header();
 echo html_writer::start_div('u-product-page u-route-studio u-route-editor');
-echo html_writer::tag('header', html_writer::tag('p', 'Учебный маршрут', ['class' => 'u-page-kicker'])
+echo html_writer::tag('header', html_writer::div(html_writer::tag('p', 'Учебный маршрут', ['class' => 'u-page-kicker'])
     . html_writer::tag('h1', 'Перенос вводного блока')
-    . html_writer::tag('p', 'Выберите шесть опубликованных шагов исходного маршрута. Проверьте зависимости и создайте черновики в целевом маршруте. Сотрудники увидят их после отдельной публикации.'),
+    . html_writer::tag('p', 'Выберите шесть опубликованных шагов исходного маршрута. Проверьте зависимости и создайте черновики в целевом маршруте. Сотрудники увидят их после отдельной публикации.')),
     ['class' => 'u-route-editor__head']);
 
-echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-panel u-route-editor__form']);
+echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-route-editor__add u-route-editor__form']);
 echo html_writer::tag('h2', 'Выбор маршрутов и шагов');
 foreach (['source' => 'Исходный маршрут', 'target' => 'Целевой маршрут'] as $name => $label) {
     $options = html_writer::tag('option', 'Выберите маршрут', ['value' => '0']);
@@ -81,7 +81,7 @@ echo html_writer::tag('button', 'Проверить перенос', ['type' => 
 echo html_writer::end_tag('form');
 
 if ($preview) {
-    echo html_writer::start_tag('section', ['class' => 'u-panel u-route-editor__form']);
+    echo html_writer::start_tag('section', ['class' => 'u-route-editor__add u-route-editor__form']);
     echo html_writer::tag('h2', 'Предпросмотр шести шагов');
     foreach ($preview['rows'] as $row) {
         $notes = $row['issues'] ?: ($row['existing']

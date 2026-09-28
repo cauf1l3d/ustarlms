@@ -566,12 +566,14 @@ final class adaptation_service {
         ];
     }
 
-    public static function route_card(int $userid): ?array {
+    public static function route_card(int $userid, bool $reconcile = true): ?array {
         $adaptation = self::current_for_user($userid);
         if (!$adaptation) {
             return null;
         }
-        self::sync_cases($adaptation);
+        if ($reconcile) {
+            self::sync_cases($adaptation);
+        }
         $map = self::submissions($adaptation);
         $due = self::due_workdate($adaptation, 'employee', $map);
         $today = self::today();

@@ -30,6 +30,15 @@ $tasks = [
         'dayofweek' => '*',
     ],
     [
+        'classname' => 'local_ustar\\task\\import_feed_sources',
+        'blocking' => 0,
+        'minute' => '*/15',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
         'classname' => 'local_ustar\\task\\renew_acting_assignments',
         'blocking'  => 0,
         'minute'    => '20',

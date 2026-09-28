@@ -18,6 +18,7 @@ final class feed_article_resolver {
     private const MIN_EXTRACTED_CHARS = 500;
     private const MAX_CONTENT_CHARS = 60000;
     private const HOST_DELAY_US = 750000;
+    private const MAX_RUN_SECONDS = 45;
 
     /** A reasonably complete feed body should not trigger page scraping. */
     public static function needs_enrichment(string $summary, string $content): bool {
@@ -154,7 +155,11 @@ final class feed_article_resolver {
 
             $stats = ['processed' => 0, 'done' => 0, 'failed' => 0, 'limited' => 0, 'busy' => 0];
             $lasthost = '';
+            $started = microtime(true);
             foreach ($records as $record) {
+                if ($stats['processed'] > 0 && microtime(true) - $started >= self::MAX_RUN_SECONDS) {
+                    break;
+                }
                 $host = strtolower((string)parse_url((string)$record->externalurl, PHP_URL_HOST));
                 if ($lasthost !== '' && $host !== '' && $host === $lasthost) {
                     usleep(self::HOST_DELAY_US);

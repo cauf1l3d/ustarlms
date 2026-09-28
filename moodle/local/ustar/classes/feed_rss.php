@@ -676,7 +676,7 @@ final class feed_rss {
         }
         [$insql, $params] = $DB->get_in_or_equal($postids, SQL_PARAMS_NAMED, 'rsspost');
         return $DB->get_records_sql(
-            "SELECT i.postid AS id, i.externalurl, i.title, i.contenttext, i.contenthtml,
+            "SELECT i.postid AS id, i.externalurl, i.title,
                     i.enrichstatus, i.enrichedat, i.publishedat,
                     s.id AS sourceid, s.name AS sourcename, s.url AS sourceurl,
                     s.resolverenabled

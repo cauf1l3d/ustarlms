@@ -77,18 +77,30 @@ final class feed_service {
     public static function revise(int $postid, int $actorid, int $version, string $body,
             bool $publish = false): void {
         global $DB;
-        feed_access::require_writer($actorid);
+        feed_access::require_actor($actorid);
         $body = self::body($body);
         $transaction = $DB->start_delegated_transaction();
         $post = $DB->get_record_sql('SELECT * FROM {local_ustar_feed_posts} WHERE id = :id FOR UPDATE',
             ['id' => $postid], MUST_EXIST);
-        if ((int)$post->actoruserid !== $actorid || !in_array($post->status, ['draft', 'published'], true)
+        if (!in_array($post->status, ['draft', 'published'], true)
                 || (int)$post->version !== $version) {
             throw new \invalid_parameter_exception('Публикация изменилась или недоступна.');
         }
+        $isowner = (int)$post->actoruserid === $actorid;
+        if ($isowner) {
+            feed_access::require_creator($actorid);
+        } else {
+            feed_access::require_editor($actorid);
+        }
         $audience = array_map(static fn($row) => (string)$row->scopeid,
             array_values($DB->get_records('local_ustar_feed_audience', ['postid' => $postid])));
-        feed_access::assert_publisher($actorid, $post->publishertype, $post->publisherid, $audience);
+        if ($publish) {
+            if ($isowner) {
+                feed_access::assert_publisher($actorid, $post->publishertype, $post->publisherid, $audience);
+            } else {
+                feed_access::require_writer($actorid);
+            }
+        }
         if ($post->sourcepostid) {
             feed_access::readable((int)$post->sourcepostid, $actorid);
         }
@@ -107,15 +119,13 @@ final class feed_service {
     public static function remove(int $postid, int $actorid, int $version, string $reason = ''): void {
         global $DB;
         feed_access::require_actor($actorid);
-        $moderator = has_capability('local/ustar:feedmoderate', \context_system::instance(), $actorid);
-        if (!$moderator && !has_capability('local/ustar:feedpublish', \context_system::instance(), $actorid)) {
-            throw new \required_capability_exception(\context_system::instance(),
-                'local/ustar:feedpublish', 'nopermissions', '');
-        }
+        $moderator = feed_access::can_moderate($actorid);
         $transaction = $DB->start_delegated_transaction();
         $post = $DB->get_record_sql('SELECT * FROM {local_ustar_feed_posts} WHERE id = :id FOR UPDATE',
             ['id' => $postid], MUST_EXIST);
-        if ((int)$post->actoruserid !== $actorid && !$moderator) {
+        if ((int)$post->actoruserid === $actorid) {
+            feed_access::require_creator($actorid);
+        } else if (!$moderator) {
             throw new \required_capability_exception(\context_system::instance(),
                 'local/ustar:feedmoderate', 'nopermissions', '');
         }
@@ -241,8 +251,7 @@ final class feed_service {
         global $DB, $USER;
         feed_access::require_reader($userid);
         view_as::assert_writable();
-        if ((int)$USER->id !== $userid || !has_capability('local/ustar:feedmoderate',
-                \context_system::instance(), $userid)) {
+        if ((int)$USER->id !== $userid || !feed_access::can_moderate($userid)) {
             throw new \required_capability_exception(\context_system::instance(),
                 'local/ustar:feedmoderate', 'nopermissions', '');
         }

@@ -155,15 +155,51 @@
             });
         });
 
-        document.querySelectorAll('[data-feed-external-toggle]').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var panel = document.getElementById(button.dataset.feedExternalToggle);
-                if (!panel) { return; }
+        document.querySelectorAll('[data-feed-external-toggle]').forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                var panel = document.getElementById(link.dataset.feedExternalToggle);
+                if (!panel || !window.fetch) { return; }
+                event.preventDefault();
+
                 panel.hidden = !panel.hidden;
-                button.setAttribute('aria-expanded', panel.hidden ? 'false' : 'true');
-                if (!panel.hidden) {
-                    panel.scrollIntoView({block: 'nearest'});
+                link.setAttribute('aria-expanded', panel.hidden ? 'false' : 'true');
+                if (panel.hidden) { return; }
+
+                panel.scrollIntoView({block: 'nearest'});
+                if (panel.dataset.feedLoaded === '1' || panel.dataset.feedLoading === '1') {
+                    return;
                 }
+
+                var body = panel.querySelector('[data-feed-external-body]');
+                var url = link.dataset.feedExternalContentUrl;
+                if (!body || !url) { return; }
+
+                panel.dataset.feedLoading = '1';
+                panel.setAttribute('aria-busy', 'true');
+                body.textContent = 'Загрузка полного материала…';
+
+                fetch(url, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {'Accept': 'application/json'}
+                }).then(function(response) {
+                    if (!response.ok || response.redirected ||
+                            !(response.headers.get('Content-Type') || '').includes('application/json')) {
+                        throw new Error('Не удалось открыть полный материал внутри Ленты.');
+                    }
+                    return response.json();
+                }).then(function(result) {
+                    if (!result.ok || typeof result.html !== 'string') {
+                        throw new Error(result.message || 'Не удалось открыть полный материал внутри Ленты.');
+                    }
+                    body.innerHTML = result.html;
+                    panel.dataset.feedLoaded = '1';
+                }).catch(function(error) {
+                    body.textContent = error.message || 'Не удалось открыть полный материал внутри Ленты.';
+                }).finally(function() {
+                    panel.dataset.feedLoading = '0';
+                    panel.removeAttribute('aria-busy');
+                });
             });
         });
 

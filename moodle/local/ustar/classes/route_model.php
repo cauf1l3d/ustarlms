@@ -2237,6 +2237,7 @@ final class route_model {
         // The snapshot remains read-only and keeps the exact-version/renewal
         // checks below; it does not infer completion from uncommitted events.
         $progressbypoint = [];
+        $versionsbypoint = [];
         if ($points) {
             $pointids = array_map(static fn(\stdClass $point): int => (int)$point->id, $points);
             [$insql, $params] = $DB->get_in_or_equal($pointids, SQL_PARAMS_NAMED, 'routepoint');
@@ -2249,6 +2250,21 @@ final class route_model {
                ORDER BY completedat DESC, id DESC", $params) as $progress) {
                 $progressbypoint[(int)$progress->pointid][] = $progress;
             }
+            // Match current_published_version() at one timestamp, preserving
+            // its versionno/id precedence without one query per route point.
+            $versionparams = $params;
+            unset($versionparams['userid'], $versionparams['status']);
+            $versionparams['published'] = self::STATUS_PUBLISHED;
+            $versionparams['at'] = time();
+            foreach ($DB->get_records_sql(
+                "SELECT *
+                   FROM {local_ustar_route_versions}
+                  WHERE pointid {$insql}
+                    AND status = :published
+                    AND (effectivedate IS NULL OR effectivedate = 0 OR effectivedate <= :at)
+               ORDER BY pointid, versionno DESC, id DESC", $versionparams) as $version) {
+                $versionsbypoint[(int)$version->pointid] ??= $version;
+            }
         }
 
         $rows = [];
@@ -2258,10 +2274,7 @@ final class route_model {
         $lastprogressat = 0;
 
         foreach ($points as $point) {
-            $version =
-                self::current_published_version(
-                    (int)$point->id
-                );
+            $version = $versionsbypoint[(int)$point->id] ?? null;
 
             if (!$version) {
                 continue;

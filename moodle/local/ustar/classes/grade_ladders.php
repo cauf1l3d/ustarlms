@@ -248,14 +248,19 @@ final class grade_ladders {
 
     /** @return array<int,array<string,mixed>>|null */
     public static function grades_for_position(string $positionid): ?array {
-        global $DB;
         $binding = self::binding($positionid);
         if (!$binding) { return null; }
-        $versionid = (int)$binding->ladderversionid;
-        if ($versionid <= 0) { return null; }
+        return self::grades_for_version((int)$binding->ladderversionid);
+    }
+
+    /** Published versions are immutable and are safe for rendering historical requests. */
+    public static function grades_for_version(int $versionid): ?array {
+        global $DB;
+        if ($versionid <= 0 || !self::available()) { return null; }
         if (isset(self::$versiongrades[$versionid])) { return self::$versiongrades[$versionid]; }
         $version = $DB->get_record('local_ustar_grade_ladder_ver',
-            ['id' => $versionid], '*', MUST_EXIST);
+            ['id' => $versionid], '*', IGNORE_MISSING);
+        if (!$version) { return null; }
         return self::$versiongrades[$versionid] = self::validate_grades(
             json_decode((string)$version->gradesjson, true) ?: []);
     }

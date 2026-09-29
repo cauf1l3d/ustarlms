@@ -129,44 +129,12 @@ if ($view === 'assignments') {
         : '— Выберите сотрудника —';
 
     if ($positionfilter !== '') {
-        $now = time();
-        $rows = $DB->get_records_sql(
-            "SELECT DISTINCT u.id, u.firstname, u.lastname, u.email
-               FROM {local_ustar_assignments} a
-               JOIN {local_ustar_staff_places} sp ON sp.id = a.staffplaceid
-               JOIN {user} u ON u.id = a.userid
-               JOIN {local_ustar_employment} e ON e.userid = u.id
-              WHERE a.assignmenttype = :primarytype
-                AND a.status = :assignmentactive
-                AND a.effectivefrom <= :nowfrom
-                AND (a.effectiveto IS NULL OR a.effectiveto > :nowto)
-                AND sp.positionid = :positionid
-                AND sp.active = 1
-                AND sp.effectivefrom <= :placefrom
-                AND (sp.effectiveto IS NULL OR sp.effectiveto > :placeto)
-                AND e.status = :employmentactive
-                AND u.deleted = 0
-                AND u.suspended = 0
-                AND u.id > 1
-           ORDER BY u.lastname, u.firstname, u.id",
-            [
-                'primarytype' => 'primary',
-                'assignmentactive' => 'active',
-                'nowfrom' => $now,
-                'nowto' => $now,
-                'positionid' => $positionfilter,
-                'placefrom' => $now,
-                'placeto' => $now,
-                'employmentactive' => \local_ustar\employment::ACTIVE,
-            ],
-            0,
-            250
+        $rows = \local_ustar\grade_assignment_directory::employees_for_position(
+            $departmentfilter,
+            $positionfilter
         );
 
         foreach ($rows as $person) {
-            if (!\local_ustar\accounts::is_business_account((int)$person->id)) {
-                continue;
-            }
             $assignmentemployees[(int)$person->id] =
                 fullname($person)
                 . ((string)$person->email !== '' ? ' · ' . (string)$person->email : '');
@@ -332,7 +300,8 @@ if ($view === 'assignments') {
     );
     echo html_writer::end_div();
 
-    echo html_writer::noscript(
+    echo html_writer::tag(
+        'noscript',
         html_writer::empty_tag('input', [
             'type' => 'submit',
             'value' => 'Показать',

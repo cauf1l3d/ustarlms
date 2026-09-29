@@ -63,10 +63,15 @@ final class grade_assignment_directory {
             return ['employees' => [], 'truncated' => false];
         }
 
-        [$positionsql, $positionparams] = $DB->get_in_or_equal(
+        [$canonicalpositionsql, $canonicalpositionparams] = $DB->get_in_or_equal(
             array_keys($scopepositions),
             SQL_PARAMS_NAMED,
-            'scopepos'
+            'canonicalpos'
+        );
+        [$legacypositionsql, $legacypositionparams] = $DB->get_in_or_equal(
+            array_keys($scopepositions),
+            SQL_PARAMS_NAMED,
+            'legacypos'
         );
 
         $now = time();
@@ -95,7 +100,7 @@ final class grade_assignment_directory {
                                AND a.status = :assignmentactive
                                AND (a.effectivefrom = 0 OR a.effectivefrom <= :nowfrom)
                                AND (a.effectiveto IS NULL OR a.effectiveto = 0 OR a.effectiveto > :nowto)
-                               AND sp.positionid {$positionsql}
+                               AND sp.positionid {$canonicalpositionsql}
                                AND sp.departmentid = :departmentid
                                AND sp.active = 1
                                AND (sp.effectivefrom = 0 OR sp.effectivefrom <= :placefrom)
@@ -114,7 +119,7 @@ final class grade_assignment_directory {
                                     ON posfield.id = posdata.fieldid
                                  WHERE posdata.userid = u.id
                                    AND posfield.shortname = :positionfield
-                                   AND posdata.data {$positionsql}
+                                   AND posdata.data {$legacypositionsql}
                             )
                         )
                    )
@@ -134,7 +139,8 @@ final class grade_assignment_directory {
                 'placeto' => $now,
                 'positionfield' => 'ustar_position',
             ],
-            $positionparams
+            $canonicalpositionparams,
+            $legacypositionparams
         );
 
         // Ask for one extra row so bulk actions never silently omit employees.

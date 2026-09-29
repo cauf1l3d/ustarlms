@@ -505,6 +505,56 @@ final class organization_identity_test extends \advanced_testcase {
         $this->assertSame((int)$manager->id, org::manager_id($candidate->id));
         $this->assertCount(1, array_filter(organization_model::active_assignments($candidate->id),
             static fn($assignment): bool => (string)$assignment->assignmenttype === 'primary'));
+
+        $approvedrequest = $DB->get_record(
+            'local_ustar_staff_requests',
+            ['id' => $requestid],
+            '*',
+            MUST_EXIST
+        );
+        $this->setUser($manager);
+
+        $offer = adaptation_service::assignment_offer($approvedrequest, (int)$manager->id);
+        $this->assertNotNull($offer);
+        $this->assertSame((int)$candidate->id, $offer['userid']);
+        $this->assertSame('retail_seller', $offer['positionid']);
+
+        $managerrows = staffing_requests::list_for((int)$manager->id);
+        $managerrow = current(array_filter(
+            $managerrows,
+            static fn(array $row): bool => (int)$row['id'] === $requestid
+        ));
+        $this->assertNotFalse($managerrow);
+        $this->assertTrue($managerrow['isregistration']);
+        $this->assertTrue($managerrow['canassignadaptation']);
+
+        $adaptationid = adaptation_service::assign_from_request(
+            $requestid,
+            (int)$manager->id,
+            (string)$offer['startdate'],
+            10
+        );
+        $adaptation = $DB->get_record(
+            'local_ustar_adaptations',
+            ['id' => $adaptationid],
+            '*',
+            MUST_EXIST
+        );
+        $this->assertSame((int)$candidate->id, (int)$adaptation->userid);
+        $this->assertSame((int)$manager->id, (int)$adaptation->managerid);
+        $this->assertSame('retail_seller', (string)$adaptation->positionid);
+
+        $managerrows = staffing_requests::list_for((int)$manager->id);
+        $managerrow = current(array_filter(
+            $managerrows,
+            static fn(array $row): bool => (int)$row['id'] === $requestid
+        ));
+        $this->assertFalse($managerrow['canassignadaptation']);
+        $this->assertTrue($managerrow['hasadaptation']);
+
+        $this->assertTrue($DB->record_exists('local_ustar_notifications', [
+            'idempotencykey' => 'registration-adaptation-ready:' . $requestid . ':' . $manager->id,
+        ]));
     }
 
     public function test_native_registration_creates_one_pending_user_and_hrd_request(): void {

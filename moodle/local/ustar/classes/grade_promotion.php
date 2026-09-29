@@ -421,6 +421,58 @@ final class grade_promotion {
         return array_values($DB->get_records('local_ustar_grade_requests', ['userid' => $userid], 'timecreated DESC'));
     }
 
+    /**
+     * Human-readable immutable request snapshot for UI.
+     *
+     * Historical requests use their published ladder version first, so changing
+     * the current position binding never rewrites what the employee requested.
+     *
+     * @return array{fromlabel:string,tolabel:string,statuslabel:string}
+     */
+    public static function request_display(\stdClass $request): array {
+        $grades = null;
+        $versionid = (int)($request->ladderversionid ?? 0);
+        if ($versionid > 0) {
+            $grades = grade_ladders::grades_for_version($versionid);
+        }
+
+        if (!$grades) {
+            $snapshot = json_decode((string)($request->requirementsjson ?? ''), true);
+            $positionid = is_array($snapshot) ? (string)($snapshot['positionid'] ?? '') : '';
+            if ($positionid === '' && !empty($request->userid)) {
+                $positionid = people::position_id((int)$request->userid);
+            }
+            if ($positionid !== '') {
+                $grades = career_grades::catalogue_for_position($positionid);
+            }
+        }
+
+        $labels = [];
+        foreach ((array)$grades as $grade) {
+            $key = (string)($grade['id'] ?? '');
+            if ($key !== '') {
+                $labels[$key] = (string)($grade['name'] ?? $key);
+            }
+        }
+
+        $from = (string)($request->fromgrade ?? '');
+        $to = (string)($request->tograde ?? '');
+        return [
+            'fromlabel' => $labels[$from] ?? $from,
+            'tolabel' => $labels[$to] ?? $to,
+            'statuslabel' => self::status_label((string)($request->status ?? '')),
+        ];
+    }
+
+    public static function status_label(string $status): string {
+        return match ($status) {
+            self::STATUS_PENDING => 'На рассмотрении',
+            self::STATUS_APPROVED => 'Согласовано',
+            self::STATUS_REJECTED => 'Возвращено',
+            default => $status,
+        };
+    }
+
     /** An HR correction or transfer is an explicit audited decision, never a promotion request. */
     public static function correct(int $userid, string $gradekey, int $expectedrevision,
             int $actorid, string $reason): \stdClass {

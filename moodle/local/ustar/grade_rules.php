@@ -9,10 +9,34 @@ if (!\local_ustar\grade_rules::can_manage((int)$USER->id)) {
 \local_ustar\view_as::assert_writable();
 
 $positions = \local_ustar\grade_rules::position_options();
-$positionid = optional_param('positionid', (string)($positions[0]['id'] ?? ''), PARAM_ALPHANUMEXT);
-$transitions = \local_ustar\grade_rules::transitions($positionid);
-$fromgrade = optional_param('fromgrade', (string)($transitions[0]['fromgrade'] ?? ''), PARAM_ALPHANUMEXT);
+$positionmap = array_column($positions, null, 'id');
+$requestedpositionid = optional_param('positionid', '', PARAM_ALPHANUMEXT);
 $notice = '';
+
+if ($requestedpositionid !== '' && !isset($positionmap[$requestedpositionid])) {
+    $notice = 'Для выбранной должности не привязана опубликованная лестница грейдов. '
+        . 'Сначала откройте «Настройка лестниц», опубликуйте лестницу и привяжите её к должности.';
+    $positionid = '';
+} else {
+    $positionid = $requestedpositionid !== ''
+        ? $requestedpositionid
+        : (string)($positions[0]['id'] ?? '');
+}
+
+$transitions = $positionid !== ''
+    ? \local_ustar\grade_rules::transitions($positionid)
+    : [];
+
+$requestedfromgrade = optional_param('fromgrade', '', PARAM_ALPHANUMEXT);
+$transitionmap = array_column($transitions, null, 'fromgrade');
+if ($requestedfromgrade !== '' && isset($transitionmap[$requestedfromgrade])) {
+    $fromgrade = $requestedfromgrade;
+} else {
+    // A position change may arrive with a stale transition from the previous
+    // ladder. Never throw from GET navigation: select the first valid
+    // transition of the newly selected position instead.
+    $fromgrade = (string)($transitions[0]['fromgrade'] ?? '');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
@@ -53,9 +77,9 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading('Правила перехода между грейдами');
 echo html_writer::tag(
     'p',
-    'Каждый переход публикуется отдельной неизменяемой версией. '
-    . 'Выберите этапы маршрута, подтверждающие именно этот переход, и режим отправки заявки. '
-    . 'Автоматический режим создаёт ту же заявку только после подтверждения всех условий правила.'
+    'Переходы берутся только из опубликованной лестницы, которая привязана к выбранной должности. '
+    . 'Каждый переход публикуется отдельной неизменяемой версией. '
+    . 'Выберите этапы маршрута, подтверждающие именно этот переход, и режим отправки заявки.'
 );
 if ($notice !== '') {
     echo $OUTPUT->notification(s($notice), 'notifyproblem');
@@ -64,22 +88,70 @@ if (optional_param('saved', 0, PARAM_BOOL)) {
     echo $OUTPUT->notification('Новая версия правила опубликована.', 'notifysuccess');
 }
 
-echo html_writer::start_tag('form', ['method' => 'get']);
-$positionoptions = [];
-foreach ($positions as $position) {
-    $positionoptions[(string)$position['id']] = (string)$position['name'];
+if (!$positions) {
+    echo $OUTPUT->notification(
+        'Нет должностей с привязанной опубликованной лестницей. '
+            . 'Сначала создайте и опубликуйте лестницу, затем привяжите её к должности.',
+        'notifywarning'
+    );
+    echo html_writer::tag(
+        'p',
+        html_writer::link(
+            new moodle_url('/local/ustar/grade_ladders.php'),
+            'Перейти к настройке лестниц',
+            ['class' => 'u-btn u-btn--primary']
+        )
+    );
+} else {
+    echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-grades__rule-picker']);
+    $positionoptions = [];
+    foreach ($positions as $position) {
+        $positionoptions[(string)$position['id']] = (string)$position['name'];
+    }
+    $transitionoptions = [];
+    foreach ($transitions as $transition) {
+        $transitionoptions[(string)$transition['fromgrade']] =
+            (string)$transition['fromlabel'] . ' → ' . (string)$transition['tolabel'];
+    }
+    echo html_writer::tag('label', 'Должность', ['for' => 'grade-rule-position']);
+    echo html_writer::select(
+        $positionoptions,
+        'positionid',
+        $positionid,
+        false,
+        [
+            'id' => 'grade-rule-position',
+            'class' => 'form-select',
+            'onchange' => 'this.form.elements.fromgrade.value="";this.form.submit();',
+        ]
+    );
+    echo html_writer::tag('label', 'Переход', ['for' => 'grade-rule-transition']);
+    echo html_writer::select(
+        $transitionoptions,
+        'fromgrade',
+        $fromgrade,
+        false,
+        [
+            'id' => 'grade-rule-transition',
+            'class' => 'form-select',
+            'disabled' => !$transitionoptions ? 'disabled' : null,
+        ]
+    );
+    echo html_writer::empty_tag('input', [
+        'type' => 'submit',
+        'value' => 'Показать',
+        'class' => 'u-btn',
+        'disabled' => !$transitionoptions ? 'disabled' : null,
+    ]);
+    echo html_writer::end_tag('form');
+
+    if (!$transitions && $positionid !== '') {
+        echo $OUTPUT->notification(
+            'У привязанной лестницы меньше двух корректных ступеней — переходы создать нельзя.',
+            'notifyproblem'
+        );
+    }
 }
-$transitionoptions = [];
-foreach ($transitions as $transition) {
-    $transitionoptions[(string)$transition['fromgrade']] =
-        (string)$transition['fromlabel'] . ' → ' . (string)$transition['tolabel'];
-}
-echo html_writer::tag('label', 'Должность');
-echo html_writer::select($positionoptions, 'positionid', $positionid, false, ['class' => 'form-select']);
-echo html_writer::tag('label', 'Переход');
-echo html_writer::select($transitionoptions, 'fromgrade', $fromgrade, false, ['class' => 'form-select']);
-echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Показать', 'class' => 'btn']);
-echo html_writer::end_tag('form');
 
 if (!empty($editor['transition'])) {
     $transition = $editor['transition'];

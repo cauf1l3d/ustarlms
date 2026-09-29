@@ -187,6 +187,20 @@ final class grade_assignment_directory_test extends \advanced_testcase {
         $this->assertCount(1, $preview['targets']);
         $this->assertSame((int)$needsgrade->id, (int)$preview['targets'][0]['userid']);
         $this->assertSame('Стажёр', (string)$preview['targets'][0]['gradelabel']);
+
+        $result = grade_assignment_directory::bulk_assign_initial(
+            $departmentid,
+            $positionid,
+            (int)$admin->id,
+            'Fixture bulk assignment'
+        );
+        $this->assertSame(1, $result['assigned']);
+        $this->assertSame('trainee', (string)$DB->get_field(
+            'local_ustar_employee_grades',
+            'gradekey',
+            ['userid' => (int)$needsgrade->id]
+        ));
+        $this->assertSame(2, $DB->count_records('local_ustar_employee_grades'));
     }
 
     public function test_picker_rejects_position_from_another_department(): void {

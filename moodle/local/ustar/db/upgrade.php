@@ -4782,5 +4782,11 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092804, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092902) {
+        // No schema change. The savepoint activates the new scheduled task and
+        // route/UI behavior while preserving the existing grade data model.
+        upgrade_plugin_savepoint(true, 2026092902, 'local', 'ustar');
+    }
+
 return true;
 }

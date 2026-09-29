@@ -162,8 +162,11 @@ if (!$ladder) {
     echo html_writer::end_div();
     echo html_writer::tag('h2', 'Опубликованные версии');
     foreach ($versions as $version) {
-        echo html_writer::tag('p', 'Версия ' . (int)$version->versionno . ' · '
-            . s(substr((string)$version->gradehash, 0, 12)));
+        echo html_writer::tag(
+            'p',
+            'Версия лестницы ' . (int)$version->versionno
+                . ' · хэш лестницы ' . s(substr((string)$version->gradehash, 0, 12))
+        );
     }
     if ($versions && $ladder->status === 'active') {
         echo html_writer::start_div('u-stage6-card u-grades__request');
@@ -178,9 +181,21 @@ if (!$ladder) {
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Показать', 'class' => 'u-btn']);
         echo html_writer::end_tag('form');
         if ($positionid !== '' && isset($positions[$positionid])) {
-            echo html_writer::tag('p', $binding && !empty($binding->ladderversionid)
-                ? 'Действующая версия #' . (int)$binding->ladderversionid
-                : 'Лестница не назначена.');
+            $boundversion = $binding && !empty($binding->ladderversionid)
+                ? $DB->get_record(
+                    'local_ustar_grade_ladder_ver',
+                    ['id' => (int)$binding->ladderversionid],
+                    'id,versionno,gradehash',
+                    IGNORE_MISSING
+                )
+                : null;
+            echo html_writer::tag(
+                'p',
+                $boundversion
+                    ? 'Действующая лестница: Версия ' . (int)$boundversion->versionno
+                        . ' · хэш лестницы ' . s(substr((string)$boundversion->gradehash, 0, 12))
+                    : 'Лестница не назначена.'
+            );
             $affected = (int)$DB->count_records('local_ustar_employee_grades', ['positionid' => $positionid]);
             $pending = (int)$DB->count_records_sql(
                 'SELECT COUNT(*) FROM {local_ustar_grade_requests} r

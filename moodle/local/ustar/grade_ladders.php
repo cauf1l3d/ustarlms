@@ -76,7 +76,9 @@ $ladders = \local_ustar\grade_ladders::all();
 $ladder = $ladderid ? $DB->get_record('local_ustar_grade_ladders', ['id' => $ladderid], '*', MUST_EXIST) : null;
 $versions = $ladder ? $DB->get_records('local_ustar_grade_ladder_ver',
     ['ladderid' => $ladderid], 'versionno DESC') : [];
-$positions = \local_ustar\people::position_map(\local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE));
+$structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
+$positions = \local_ustar\people::position_map($structure);
+$departments = \local_ustar\people::department_map($structure);
 $binding = $positionid !== '' ? \local_ustar\grade_ladders::binding($positionid) : null;
 
 $PAGE->set_context($context);
@@ -174,7 +176,14 @@ if (!$ladder) {
         echo html_writer::start_tag('form', ['method' => 'get', 'class' => 'u-grades__search']);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => $ladderid]);
         $positionoptions = ['' => '— Выберите должность —'];
-        foreach ($positions as $position) { $positionoptions[(string)$position['id']] = (string)$position['name']; }
+        foreach ($positions as $position) {
+            $departmentid = (string)($position['department'] ?? '');
+            $departmentname = (string)($departments[$departmentid]['name'] ?? $departmentid);
+            $positionname = (string)($position['name'] ?? $position['id'] ?? '');
+            $positionoptions[(string)$position['id']] = $departmentname !== ''
+                ? $positionname . ' — ' . $departmentname
+                : $positionname;
+        }
         echo html_writer::tag('label', 'Должность', ['for' => 'binding-position']);
         echo html_writer::select($positionoptions, 'positionid', $positionid, false,
             ['id' => 'binding-position', 'class' => 'form-select']);

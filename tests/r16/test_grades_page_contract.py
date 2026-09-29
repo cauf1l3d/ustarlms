@@ -58,6 +58,21 @@ class GradesPageContract(unittest.TestCase):
         self.assertGreater(assignment_picker, header)
 
 
+    def test_bulk_assignment_is_previewed_and_server_scoped(self):
+        source = (ROOT / 'moodle/local/ustar/grades.php').read_text(encoding='utf-8')
+        directory = (
+            ROOT / 'moodle/local/ustar/classes/grade_assignment_directory.php'
+        ).read_text(encoding='utf-8')
+
+        self.assertIn("if ($action === 'bulkassigninitial')", source)
+        self.assertIn("initial_assignment_preview(", source)
+        self.assertIn("'Будет назначено'", source)
+        self.assertIn("'action' => 'bulkassigninitial'", source)
+        self.assertIn("bulk_assign_initial(", directory)
+        self.assertIn("Existing grades are never overwritten", directory)
+        self.assertIn("if ($preview['truncated'])", directory)
+        self.assertIn("start_delegated_transaction()", directory)
+
     def test_assignment_picker_uses_supported_noscript_markup(self):
         source = (ROOT / 'moodle/local/ustar/grades.php').read_text(encoding='utf-8')
 

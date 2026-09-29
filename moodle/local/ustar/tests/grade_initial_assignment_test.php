@@ -8,6 +8,57 @@ final class grade_initial_assignment_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest(true);
+        $this->ensure_position_profile_field();
+    }
+
+    private function ensure_position_profile_field(): void {
+        global $DB;
+
+        if ($DB->record_exists('user_info_field', ['shortname' => 'ustar_position'])) {
+            return;
+        }
+
+        $category = $DB->get_record(
+            'user_info_category',
+            ['name' => 'USTAR'],
+            '*',
+            IGNORE_MISSING
+        );
+        if (!$category) {
+            $categoryid = (int)$DB->insert_record('user_info_category', (object)[
+                'name' => 'USTAR',
+                'sortorder' => (int)$DB->get_field_sql(
+                    'SELECT COALESCE(MAX(sortorder), 0) FROM {user_info_category}'
+                ) + 1,
+            ]);
+        } else {
+            $categoryid = (int)$category->id;
+        }
+
+        $DB->insert_record('user_info_field', (object)[
+            'shortname' => 'ustar_position',
+            'name' => 'Должность USTAR',
+            'datatype' => 'text',
+            'description' => 'Fixture for the legacy position projection used by people::set_position_id().',
+            'descriptionformat' => FORMAT_PLAIN,
+            'categoryid' => $categoryid,
+            'sortorder' => (int)$DB->get_field_sql(
+                'SELECT COALESCE(MAX(sortorder), 0) FROM {user_info_field} WHERE categoryid = :categoryid',
+                ['categoryid' => $categoryid]
+            ) + 1,
+            'required' => 0,
+            'locked' => 0,
+            'visible' => 0,
+            'forceunique' => 0,
+            'signup' => 0,
+            'defaultdata' => '',
+            'defaultdataformat' => 0,
+            'param1' => '100',
+            'param2' => '2048',
+            'param3' => '0',
+            'param4' => '',
+            'param5' => '',
+        ]);
     }
 
     public function test_assign_initial_if_bound_creates_first_grade_once(): void {

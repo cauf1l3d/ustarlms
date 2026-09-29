@@ -10,15 +10,24 @@ if (\local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\
     redirect(new moodle_url('/local/ustar/profile.php'));
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && optional_param('action', '', PARAM_ALPHA) === 'sync') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_sesskey();
     \local_ustar\view_as::assert_writable();
-    $ownidentity = \local_ustar\structure::resolve_user((int)$USER->id);
-    $ownpositionid = (string)($ownidentity['position']['id'] ?? '');
-    if ($ownpositionid !== '' && \local_ustar\employment::learning_allowed((int)$USER->id)) {
-        \local_ustar\route_model::for_user($ownpositionid, (int)$USER->id);
+    $action = optional_param('action', '', PARAM_ALPHA);
+
+    if ($action === 'sync') {
+        $ownidentity = \local_ustar\structure::resolve_user((int)$USER->id);
+        $ownpositionid = (string)($ownidentity['position']['id'] ?? '');
+        if ($ownpositionid !== '' && \local_ustar\employment::learning_allowed((int)$USER->id)) {
+            \local_ustar\route_model::for_user($ownpositionid, (int)$USER->id);
+        }
+        redirect(new moodle_url('/local/ustar/route.php'));
     }
-    redirect(new moodle_url('/local/ustar/route.php'));
+
+    if ($action === 'grade_request') {
+        \local_ustar\grade_promotion::request((int)$USER->id, 'manual');
+        redirect(new moodle_url('/local/ustar/route.php', ['graderequested' => 1]));
+    }
 }
 
 $iselevated = is_siteadmin() || has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context);
@@ -59,6 +68,7 @@ if ($iselevated) {
 
 $adaptation = null;
 $forcedretraining = [];
+$gradecard = null;
 
 if (!$previewing) {
     try {
@@ -80,6 +90,13 @@ if (!$previewing) {
         }
     } catch (\Throwable $e) {
         $forcedretraining = [];
+    }
+
+    try {
+        $gradecard = \local_ustar\grade_promotion::route_card((int)$USER->id);
+    } catch (\Throwable $e) {
+        debugging('USTAR grade route card read failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        $gradecard = null;
     }
 }
 
@@ -105,6 +122,9 @@ $data = [
     'forcedretraining' => $forcedretraining,
     'hasforcedretraining' => !empty($forcedretraining),
     'forcedretrainingcount' => count($forcedretraining),
+    'hasgradecard' => !empty($gradecard),
+    'gradecard' => $gradecard,
+    'graderequested' => optional_param('graderequested', 0, PARAM_BOOL),
     'route' => !empty($route['ok']) ? $route : null,
     'hasroute' => !empty($route['ok']),
     'noroute' => empty($route['ok']) && ($route['reason'] ?? '') !== 'runtime_error',

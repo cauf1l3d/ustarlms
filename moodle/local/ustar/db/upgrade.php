@@ -4795,5 +4795,11 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092903, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092904) {
+        // No schema change. Restores the Moodle page lifecycle for grade views
+        // after the linked HR assignment-filter refactor.
+        upgrade_plugin_savepoint(true, 2026092904, 'local', 'ustar');
+    }
+
 return true;
 }

@@ -82,11 +82,61 @@
         <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="sync"><button class="u-btn" type="submit">Обновить прогресс</button></form>
     </div>{{/route.currentpoint.pendingsync}}
     {{#previewing}}<div class="alert alert-info">Предпросмотр: показаны сохранённые результаты. Обучение и награды здесь не изменяются.</div>{{/previewing}}
+    {{#graderequested}}<div class="alert alert-success" role="status">Заявка на повышение грейда отправлена руководителю.</div>{{/graderequested}}
     {{#rewardsenabled}}<section class="u-route-rewards" aria-label="Награды маршрута">
         <strong>За новый подтверждённый шаг: +10 XP и +1 USCOIN</strong>
         <span>Получено за маршрут: {{routerewards.xp}} XP · {{routerewards.coins}} USCOIN</span>
         <a href="achievements.php">Мои достижения →</a>
     </section>{{/rewardsenabled}}
+
+    {{#hasgradecard}}{{#gradecard}}
+    <section class="u-route-grade-card {{#eligible}}is-ready{{/eligible}} {{#pending}}is-pending{{/pending}}" aria-label="Повышение грейда">
+        <div class="u-route-grade-card__body">
+            <p class="u-page-kicker">Повышение грейда</p>
+            <h2>{{currentlabel}} → {{nextlabel}}</h2>
+
+            {{#pending}}
+            <p class="u-route-grade-card__status">Заявка уже отправлена и ожидает решения руководителя.</p>
+            {{/pending}}
+
+            {{^pending}}
+                {{#hasremaining}}
+                <p class="u-route-grade-card__status">
+                    Осталось выполнить шагов: <strong>{{remaining}}</strong>.
+                    {{#hasfirstmissing}} Ближайшее условие: «{{firstmissing}}».{{/hasfirstmissing}}
+                </p>
+                {{/hasremaining}}
+
+                {{^hasremaining}}
+                    {{#manualmode}}
+                    <p class="u-route-grade-card__status">Все условия выполнены. Можно отправить заявку на повышение прямо здесь.</p>
+                    {{/manualmode}}
+                    {{#autmode}}
+                        {{^autoreturned}}
+                        <p class="u-route-grade-card__status">Все условия выполнены. Заявка будет отправлена автоматически.</p>
+                        {{#hastrigger}}<small>Контрольный шаг: {{triggerlabel}}</small>{{/hastrigger}}
+                        {{/autoreturned}}
+                        {{#autoreturned}}
+                        <p class="u-route-grade-card__status">Предыдущая автоматическая заявка была возвращена. Повторную заявку можно отправить вручную.</p>
+                        {{/autoreturned}}
+                    {{/autmode}}
+                {{/hasremaining}}
+            {{/pending}}
+        </div>
+
+        <div class="u-route-grade-card__actions">
+            {{#canrequest}}
+            <form method="post">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="grade_request">
+                <button class="u-btn u-btn--primary u-btn--large" type="submit">{{requestlabel}}</button>
+            </form>
+            {{/canrequest}}
+            <a class="u-btn" href="{{gradesurl}}">Подробнее о грейде</a>
+        </div>
+    </section>
+    {{/gradecard}}{{/hasgradecard}}
+
     {{#hasroute}}
     {{#route}}
 

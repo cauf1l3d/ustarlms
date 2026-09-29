@@ -26,8 +26,22 @@ final class grade_rules {
 
     /** @return array<int,array<string,mixed>> */
     public static function transitions(string $positionid = ''): array {
-        $grades = array_values($positionid !== '' ? career_grades::catalogue_for_position($positionid)
-            : career_grades::catalogue());
+        // Rules are position-specific. Once the versioned ladder subsystem is
+        // available, never fall back to the consultant catalogue for an
+        // unbound position: that creates foreign transitions and stale GET
+        // parameters when HR switches positions in the editor.
+        if ($positionid !== '' && grade_ladders::available()) {
+            $grades = grade_ladders::grades_for_position($positionid);
+            if (!$grades) {
+                return [];
+            }
+        } else {
+            $grades = $positionid !== ''
+                ? career_grades::catalogue_for_position($positionid)
+                : career_grades::catalogue();
+        }
+
+        $grades = array_values($grades);
         $out = [];
         for ($i = 0; $i + 1 < count($grades); $i++) {
             $out[] = [
@@ -55,12 +69,24 @@ final class grade_rules {
     public static function position_options(): array {
         $out = [];
         foreach (structure::get(structure::NAME_STRUCTURE)['positions'] ?? [] as $position) {
-            if (career_grades::key($position) === '') {
+            $positionid = (string)($position['id'] ?? '');
+            if ($positionid === '') {
                 continue;
             }
+
+            if (grade_ladders::available()) {
+                $binding = grade_ladders::binding($positionid);
+                if (!$binding || empty($binding->ladderversionid)
+                        || !grade_ladders::grades_for_version((int)$binding->ladderversionid)) {
+                    continue;
+                }
+            } else if (career_grades::key($position) === '') {
+                continue;
+            }
+
             $out[] = [
-                'id' => (string)($position['id'] ?? ''),
-                'name' => (string)($position['name'] ?? $position['id'] ?? ''),
+                'id' => $positionid,
+                'name' => (string)($position['name'] ?? $positionid),
             ];
         }
         usort($out, static fn(array $a, array $b): int => strnatcasecmp($a['name'], $b['name']));

@@ -15,6 +15,11 @@ final class grade_rules_test extends \advanced_testcase {
         global $USER;
         $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
         $positionid = 'fixture_grade_position';
+        $this->bind_ladder($positionid, [
+            ['id' => 'trainee', 'name' => 'Стажёр'],
+            ['id' => 'junior', 'name' => 'Младший консультант'],
+            ['id' => 'middle', 'name' => 'Консультант'],
+        ]);
         $route = $g->create_route(['positionid' => $positionid]);
         $p1 = $g->create_point($route, ['sortorder' => 10]);
         $p2 = $g->create_point($route, ['sortorder' => 20]);
@@ -55,6 +60,10 @@ final class grade_rules_test extends \advanced_testcase {
         global $USER;
         $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
         $positionid = 'fixture_grade_auto_position';
+        $this->bind_ladder($positionid, [
+            ['id' => 'trainee', 'name' => 'Стажёр'],
+            ['id' => 'junior', 'name' => 'Младший консультант'],
+        ]);
         $route = $g->create_route(['positionid' => $positionid]);
         $p1 = $g->create_point($route, ['sortorder' => 10]);
         $p2 = $g->create_point($route, ['sortorder' => 20]);
@@ -81,6 +90,10 @@ final class grade_rules_test extends \advanced_testcase {
         global $USER;
         $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
         $positionid = 'fixture_grade_auto_invalid';
+        $this->bind_ladder($positionid, [
+            ['id' => 'trainee', 'name' => 'Стажёр'],
+            ['id' => 'junior', 'name' => 'Младший консультант'],
+        ]);
         $route = $g->create_route(['positionid' => $positionid]);
         $selected = $g->create_point($route, ['sortorder' => 10]);
         $trigger = $g->create_point($route, ['sortorder' => 20]);
@@ -98,9 +111,36 @@ final class grade_rules_test extends \advanced_testcase {
         );
     }
 
+    public function test_position_transitions_use_only_its_bound_custom_ladder(): void {
+        $positionid = 'fixture_warehouse_position';
+        $this->bind_ladder($positionid, [
+            ['id' => 'warehouse_new', 'name' => 'Работник склада'],
+            ['id' => 'warehouse_skilled', 'name' => 'Старший работник склада'],
+            ['id' => 'warehouse_lead', 'name' => 'Бригадир склада'],
+        ]);
+
+        $transitions = grade_rules::transitions($positionid);
+
+        $this->assertCount(2, $transitions);
+        $this->assertSame('warehouse_new', $transitions[0]['fromgrade']);
+        $this->assertSame('Работник склада', $transitions[0]['fromlabel']);
+        $this->assertSame('warehouse_skilled', $transitions[0]['tograde']);
+        $this->assertSame('Старший работник склада', $transitions[0]['tolabel']);
+        $this->assertSame('warehouse_skilled', $transitions[1]['fromgrade']);
+        $this->assertSame('warehouse_lead', $transitions[1]['tograde']);
+    }
+
+    public function test_unbound_position_does_not_fall_back_to_consultant_transitions(): void {
+        $this->assertSame([], grade_rules::transitions('fixture_unbound_warehouse'));
+    }
+
     public function test_rule_rejects_point_from_another_route(): void {
         global $USER;
         $g = $this->getDataGenerator()->get_plugin_generator('local_ustar');
+        $this->bind_ladder('fixture_grade_position_a', [
+            ['id' => 'trainee', 'name' => 'Стажёр'],
+            ['id' => 'junior', 'name' => 'Младший консультант'],
+        ]);
         $route = $g->create_route(['positionid' => 'fixture_grade_position_a']);
         $g->create_version($g->create_point($route));
         $foreign = $g->create_route(['positionid' => 'fixture_grade_position_b']);
@@ -112,4 +152,39 @@ final class grade_rules_test extends \advanced_testcase {
             'fixture_grade_position_a', 'trainee', [(int)$foreignpoint->id], (int)$USER->id
         );
     }
+    private function bind_ladder(string $positionid, array $grades): void {
+        global $DB, $USER;
+
+        $json = json_encode(
+            $grades,
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+        );
+        $now = time();
+
+        $ladderid = (int)$DB->insert_record('local_ustar_grade_ladders', (object)[
+            'name' => 'Fixture ' . $positionid,
+            'status' => 'active',
+            'draftjson' => $json,
+            'revision' => 1,
+            'createdby' => (int)$USER->id,
+            'timecreated' => $now,
+            'timemodified' => $now,
+        ]);
+        $versionid = (int)$DB->insert_record('local_ustar_grade_ladder_ver', (object)[
+            'ladderid' => $ladderid,
+            'versionno' => 1,
+            'gradesjson' => $json,
+            'gradehash' => hash('sha256', $json),
+            'createdby' => (int)$USER->id,
+            'timecreated' => $now,
+        ]);
+        $DB->insert_record('local_ustar_grade_bindings', (object)[
+            'positionid' => $positionid,
+            'ladderversionid' => $versionid,
+            'revision' => 1,
+            'timemodified' => $now,
+            'usermodified' => (int)$USER->id,
+        ]);
+    }
+
 }

@@ -450,9 +450,25 @@ final class staffing_requests {
             $status = (string)$record->status;
             $type = (string)$record->requesttype;
             $isregistration = $type === self::TYPE_REGISTRATION;
-            if ($isregistration && !$canapproveregistration) {
-                continue;
+
+            $adaptation = null;
+            if (in_array($type, [self::TYPE_HIRE, self::TYPE_REGISTRATION], true)
+                    && $status === self::STATUS_APPROVED) {
+                $adaptation = adaptation_service::for_staffing_request((int)$record->id);
             }
+            $adaptationoffer = !$adaptation
+                ? adaptation_service::assignment_offer($record, $viewerid)
+                : null;
+
+            // Registration approval stays HRD-only. After approval the record is
+            // handed off to the canonical direct manager solely for adaptation.
+            if ($isregistration && !$canapproveregistration) {
+                $ownsadaptation = $adaptation && (int)$adaptation->managerid === $viewerid;
+                if ($status !== self::STATUS_APPROVED || (!$adaptationoffer && !$ownsadaptation)) {
+                    continue;
+                }
+            }
+
             $applicant = $isregistration && !empty($record->employeeid)
                 ? $DB->get_record('user', ['id' => (int)$record->employeeid, 'deleted' => 0],
                     'id,username,email', IGNORE_MISSING) : null;
@@ -467,16 +483,9 @@ final class staffing_requests {
                     }
                 }
             }
-            $adaptation = null;
-            if ($type === self::TYPE_HIRE && $status === self::STATUS_APPROVED && !empty($record->createduserid)) {
-                $adaptation = adaptation_service::for_staffing_request((int)$record->id);
-            }
+
             $adaptationcard = $adaptation ? adaptation_service::manager_card($adaptation, $viewerid) : null;
-            $canassignadaptation = $type === self::TYPE_HIRE
-                && $status === self::STATUS_APPROVED
-                && !empty($record->createduserid)
-                && (int)$record->requestedby === $viewerid
-                && !$adaptation;
+            $canassignadaptation = $adaptationoffer !== null;
             $canreview = $status === self::STATUS_PENDING
                 && ((!$isregistration && $ishr) || ($isregistration && $canapproveregistration));
             $canapprove = $canreview && self::execution_window_open($record, $requester ?: null);
@@ -514,8 +523,10 @@ final class staffing_requests {
                 'hasreviewcomment' => trim((string)($record->reviewcomment ?? '')) !== '',
                 'timecreated' => userdate((int)$record->timecreated, '%d.%m.%Y %H:%M'),
                 'createduserid' => (int)($record->createduserid ?? 0),
-                'requesteddateiso' => userdate((int)$record->requesteddate, '%Y-%m-%d',
-                    $requester ? (string)$requester->timezone : 99, false),
+                'requesteddateiso' => $adaptationoffer
+                    ? (string)$adaptationoffer['startdate']
+                    : userdate((int)$record->requesteddate, '%Y-%m-%d',
+                        $requester ? (string)$requester->timezone : 99, false),
                 'canassignadaptation' => $canassignadaptation,
                 'hasadaptation' => (bool)$adaptationcard,
                 'adaptation' => $adaptationcard,

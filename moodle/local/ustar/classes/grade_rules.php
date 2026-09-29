@@ -12,6 +12,8 @@ defined('MOODLE_INTERNAL') || die();
  */
 final class grade_rules {
     public const STATUS_PUBLISHED = 'published';
+    public const MODE_MANUAL = 'manual';
+    public const MODE_AUTO = 'auto';
 
     public static function available(): bool {
         global $DB;
@@ -91,6 +93,65 @@ final class grade_rules {
         return is_array($rows) ? array_values(array_filter($rows, 'is_array')) : [];
     }
 
+    /** @return array{mode:string,triggerpointid:int,triggerversionid:int,triggertitle:string} */
+    public static function submission_policy(\stdClass $rule): array {
+        $decoded = json_decode((string)$rule->requirementsjson, true);
+        $policy = is_array($decoded) && is_array($decoded['submission'] ?? null)
+            ? $decoded['submission'] : [];
+
+        $mode = (string)($policy['mode'] ?? self::MODE_MANUAL);
+        if (!in_array($mode, [self::MODE_MANUAL, self::MODE_AUTO], true)) {
+            $mode = self::MODE_MANUAL;
+        }
+
+        return [
+            'mode' => $mode,
+            'triggerpointid' => max(0, (int)($policy['triggerpointid'] ?? 0)),
+            'triggerversionid' => max(0, (int)($policy['triggerversionid'] ?? 0)),
+            'triggertitle' => trim((string)($policy['triggertitle'] ?? '')),
+        ];
+    }
+
+    /** Latest current-ladder rules configured for automatic request creation. */
+    public static function automatic_rules(): array {
+        global $DB;
+        if (!self::available()) {
+            return [];
+        }
+
+        $rows = array_values($DB->get_records(
+            'local_ustar_grade_rules',
+            ['status' => self::STATUS_PUBLISHED],
+            'positionid ASC, fromgrade ASC, tograde ASC, versionno DESC, id DESC'
+        ));
+
+        $out = [];
+        $seen = [];
+        foreach ($rows as $rule) {
+            $key = (string)$rule->positionid . ':' . (string)$rule->fromgrade . ':' . (string)$rule->tograde;
+            if (isset($seen[$key])) {
+                continue;
+            }
+            $seen[$key] = true;
+
+            $binding = grade_ladders::binding((string)$rule->positionid);
+            $bindingversion = (int)($binding->ladderversionid ?? 0);
+            if ($bindingversion <= 0 || (int)$rule->ladderversionid !== $bindingversion) {
+                continue;
+            }
+
+            $policy = self::submission_policy($rule);
+            if ($policy['mode'] !== self::MODE_AUTO || $policy['triggerpointid'] <= 0
+                    || $policy['triggerversionid'] <= 0) {
+                continue;
+            }
+
+            $rule->submissionpolicy = $policy;
+            $out[] = $rule;
+        }
+        return $out;
+    }
+
     /** @return array<string,mixed> */
     public static function editor(string $positionid, string $fromgrade): array {
         global $DB;
@@ -119,12 +180,19 @@ final class grade_rules {
             }
         }
         $current = self::published($positionid, $fromgrade, (string)$transition['tograde']);
+        $policy = $current ? self::submission_policy($current) : [
+            'mode' => self::MODE_MANUAL,
+            'triggerpointid' => 0,
+            'triggerversionid' => 0,
+            'triggertitle' => '',
+        ];
         $selected = [];
         foreach ($current ? self::requirements($current) : [] as $requirement) {
             $selected[(int)($requirement['pointid'] ?? 0)] = true;
         }
         foreach ($points as &$point) {
             $point['selected'] = !empty($selected[$point['pointid']]);
+            $point['triggerselected'] = (int)$policy['triggerpointid'] === (int)$point['pointid'];
         }
         unset($point);
         return [
@@ -132,6 +200,7 @@ final class grade_rules {
             'routeid' => $route ? (int)$route->id : 0,
             'points' => $points,
             'current' => $current,
+            'submission' => $policy,
         ];
     }
 
@@ -144,7 +213,9 @@ final class grade_rules {
         string $positionid,
         string $fromgrade,
         array $pointids,
-        int $actorid
+        int $actorid,
+        string $submissionmode = self::MODE_MANUAL,
+        int $triggerpointid = 0
     ): \stdClass {
         global $DB;
         if (!self::can_manage($actorid)) {
@@ -172,6 +243,18 @@ final class grade_rules {
         ))), true);
         if (!$selected) {
             throw new \invalid_parameter_exception('Выберите хотя бы один подтверждаемый этап перехода.');
+        }
+
+        $submissionmode = clean_param($submissionmode, PARAM_ALPHA);
+        if (!in_array($submissionmode, [self::MODE_MANUAL, self::MODE_AUTO], true)) {
+            throw new \invalid_parameter_exception('Выберите ручной или автоматический режим отправки заявки.');
+        }
+        $triggerpointid = max(0, $triggerpointid);
+        if ($submissionmode === self::MODE_AUTO
+                && ($triggerpointid <= 0 || empty($selected[$triggerpointid]))) {
+            throw new \invalid_parameter_exception(
+                'Для автоматического режима выберите контрольный шаг из условий перехода.'
+            );
         }
 
         $rows = (string)($route->routekind ?? '') === route_family::KIND_PARENT && route_scope::available()
@@ -205,6 +288,21 @@ final class grade_rules {
             throw new \invalid_parameter_exception('Не найдено опубликованных этапов для правила.');
         }
 
+        $trigger = null;
+        if ($submissionmode === self::MODE_AUTO) {
+            foreach ($requirements as $requirement) {
+                if ((int)$requirement['pointid'] === $triggerpointid) {
+                    $trigger = $requirement;
+                    break;
+                }
+            }
+            if (!$trigger) {
+                throw new \invalid_parameter_exception(
+                    'Контрольный шаг автоматической заявки не найден среди опубликованных условий.'
+                );
+            }
+        }
+
         $payload = [
             'positionid' => $positionid,
             'ladderversionid' => (int)(grade_ladders::binding($positionid)->ladderversionid ?? 0),
@@ -212,6 +310,12 @@ final class grade_rules {
             'tograde' => (string)$transition['tograde'],
             'routeid' => (int)$route->id,
             'requirements' => $requirements,
+            'submission' => [
+                'mode' => $submissionmode,
+                'triggerpointid' => $trigger ? (int)$trigger['pointid'] : 0,
+                'triggerversionid' => $trigger ? (int)$trigger['versionid'] : 0,
+                'triggertitle' => $trigger ? (string)$trigger['title'] : '',
+            ],
         ];
         $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         $hash = hash('sha256', $json);
@@ -251,6 +355,8 @@ final class grade_rules {
                 'tograde' => (string)$transition['tograde'],
                 'versionno' => $maxversion + 1,
                 'rulehash' => $hash,
+                'submissionmode' => $submissionmode,
+                'triggerpointid' => $trigger ? (int)$trigger['pointid'] : 0,
             ]);
             $tx->allow_commit();
             return $DB->get_record('local_ustar_grade_rules', ['id' => $id], '*', MUST_EXIST);

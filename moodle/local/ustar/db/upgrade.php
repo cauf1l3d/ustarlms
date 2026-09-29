@@ -4788,5 +4788,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092902, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092903) {
+        // No schema change. This release wires the existing immutable ladder
+        // and employee-grade records into registration approval and replaces
+        // the HR free-text assignment lookup with canonical linked filters.
+        upgrade_plugin_savepoint(true, 2026092903, 'local', 'ustar');
+    }
+
 return true;
 }

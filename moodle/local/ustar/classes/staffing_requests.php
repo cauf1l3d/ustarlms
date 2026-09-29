@@ -396,6 +396,37 @@ final class staffing_requests {
                 'actionurl' => (new \moodle_url('/local/ustar/profile.php'))->out(false),
                 'idempotencykey' => 'registration-' . $decision . ':' . $requestid,
             ]);
+
+            if ($decision === self::STATUS_APPROVED) {
+                $primary = organization_model::primary_assignment($targetuserid);
+                $managerid = $primary
+                    ? organization_model::manager_user_for_place((int)$primary->staffplaceid)
+                    : 0;
+                if ($managerid > 0 && $managerid !== $targetuserid
+                        && team_access::active_actor($managerid)
+                        && has_capability('local/ustar:viewteam', \context_system::instance(), $managerid)) {
+                    $target = $DB->get_record(
+                        'user',
+                        ['id' => $targetuserid, 'deleted' => 0],
+                        'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename',
+                        IGNORE_MISSING
+                    );
+                    target_core::notify([
+                        'userid' => $managerid,
+                        'severity' => 'normal',
+                        'eventtype' => 'registration_adaptation_ready',
+                        'subject' => 'Сотрудник готов к назначению адаптации',
+                        'message' => ($target ? fullname($target) : ('Сотрудник #' . $targetuserid))
+                            . ' подтверждён HRD и добавлен в ваш контур. Назначьте адаптационный лист.',
+                        'actionurl' => (new \moodle_url(
+                            '/local/ustar/staffing.php',
+                            ['requestid' => $requestid],
+                            'request-' . $requestid
+                        ))->out(false),
+                        'idempotencykey' => 'registration-adaptation-ready:' . $requestid . ':' . $managerid,
+                    ]);
+                }
+            }
         }
 
         $transaction->allow_commit();

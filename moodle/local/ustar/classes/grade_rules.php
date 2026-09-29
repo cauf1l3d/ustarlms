@@ -68,7 +68,9 @@ final class grade_rules {
     /** @return array<int,array{id:string,name:string}> */
     public static function position_options(): array {
         $out = [];
-        foreach (structure::get(structure::NAME_STRUCTURE)['positions'] ?? [] as $position) {
+        $structure = structure::get(structure::NAME_STRUCTURE);
+        $departments = people::department_map($structure);
+        foreach ($structure['positions'] ?? [] as $position) {
             $positionid = (string)($position['id'] ?? '');
             if ($positionid === '') {
                 continue;
@@ -84,9 +86,15 @@ final class grade_rules {
                 continue;
             }
 
+            $positionname = (string)($position['name'] ?? $positionid);
+            $departmentid = (string)($position['department'] ?? '');
+            $departmentname = (string)($departments[$departmentid]['name'] ?? $departmentid);
+
             $out[] = [
                 'id' => $positionid,
-                'name' => (string)($position['name'] ?? $positionid),
+                'name' => $departmentname !== ''
+                    ? $positionname . ' — ' . $departmentname
+                    : $positionname,
             ];
         }
         usort($out, static fn(array $a, array $b): int => strnatcasecmp($a['name'], $b['name']));

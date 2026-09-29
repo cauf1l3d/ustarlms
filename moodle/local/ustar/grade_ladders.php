@@ -196,6 +196,51 @@ if (!$ladder) {
                         . ' · хэш лестницы ' . s(substr((string)$boundversion->gradehash, 0, 12))
                     : 'Лестница не назначена.'
             );
+
+            if (!$boundversion) {
+                echo $OUTPUT->notification(
+                    'Пока версия не привязана к должности, сотрудники этой должности будут показаны '
+                        . 'в «Назначениях» как «Без лестницы», а правила переходов для неё недоступны.',
+                    'notifywarning'
+                );
+            } else {
+                $boundgrades = \local_ustar\grade_ladders::grades_for_version((int)$boundversion->id) ?: [];
+                if ($boundgrades) {
+                    echo html_writer::tag('h3', 'Ступени действующей лестницы');
+                    echo html_writer::start_tag('ol', ['class' => 'u-grades__bound-steps']);
+                    foreach ($boundgrades as $step) {
+                        echo html_writer::tag(
+                            'li',
+                            s((string)$step['name']) . ' '
+                                . html_writer::tag('code', s((string)$step['id']))
+                        );
+                    }
+                    echo html_writer::end_tag('ol');
+
+                    $firstgrade = (string)($boundgrades[0]['id'] ?? '');
+                    $departmentid = (string)($positions[$positionid]['department'] ?? '');
+                    echo html_writer::start_div('u-grades__next-actions');
+                    echo html_writer::link(
+                        new moodle_url('/local/ustar/grade_rules.php', [
+                            'positionid' => $positionid,
+                            'fromgrade' => $firstgrade,
+                        ]),
+                        'Настроить правила переходов',
+                        ['class' => 'u-btn u-btn--primary']
+                    );
+                    echo html_writer::link(
+                        new moodle_url('/local/ustar/grades.php', [
+                            'view' => 'assignments',
+                            'department' => $departmentid,
+                            'position' => $positionid,
+                        ]),
+                        'Перейти к назначениям',
+                        ['class' => 'u-btn']
+                    );
+                    echo html_writer::end_div();
+                }
+            }
+
             $affected = (int)$DB->count_records('local_ustar_employee_grades', ['positionid' => $positionid]);
             $pending = (int)$DB->count_records_sql(
                 'SELECT COUNT(*) FROM {local_ustar_grade_requests} r

@@ -78,6 +78,197 @@ $assignmentemployees = [];
 $candidates = [];
 
 if ($view === 'assignments') {
+    $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
+
+    $departmentids = [];
+    $assignmentdepartments[''] = '— Выберите подразделение —';
+    foreach (($structure['departments'] ?? []) as $department) {
+        $id = (string)($department['id'] ?? '');
+        if ($id === '') {
+            continue;
+        }
+        $departmentids[$id] = true;
+        $assignmentdepartments[$id] = (string)($department['name'] ?? $id);
+    }
+
+    if ($departmentfilter !== '' && !isset($departmentids[$departmentfilter])) {
+        $departmentfilter = '';
+        $positionfilter = '';
+        $employeeid = 0;
+    }
+
+    $assignmentpositions[''] = $departmentfilter === ''
+        ? '— Сначала выберите подразделение —'
+        : '— Выберите должность —';
+
+    $validpositions = [];
+    if ($departmentfilter !== '') {
+        foreach (($structure['positions'] ?? []) as $position) {
+            if ((string)($position['department'] ?? '') !== $departmentfilter) {
+                continue;
+            }
+            $id = (string)($position['id'] ?? '');
+            if ($id === '') {
+                continue;
+            }
+            $validpositions[$id] = true;
+            $assignmentpositions[$id] = (string)($position['name'] ?? $id);
+        }
+
+        if ($positionfilter !== '' && !isset($validpositions[$positionfilter])) {
+            $positionfilter = '';
+            $employeeid = 0;
+        }
+    } else {
+        $positionfilter = '';
+        $employeeid = 0;
+    }
+
+    $assignmentemployees[0] = $positionfilter === ''
+        ? '— Сначала выберите должность —'
+        : '— Выберите сотрудника —';
+
+    if ($positionfilter !== '') {
+        $now = time();
+        $rows = $DB->get_records_sql(
+            "SELECT DISTINCT u.id, u.firstname, u.lastname, u.email
+               FROM {local_ustar_assignments} a
+               JOIN {local_ustar_staff_places} sp ON sp.id = a.staffplaceid
+               JOIN {user} u ON u.id = a.userid
+               JOIN {local_ustar_employment} e ON e.userid = u.id
+              WHERE a.assignmenttype = :primarytype
+                AND a.status = :assignmentactive
+                AND a.effectivefrom <= :nowfrom
+                AND (a.effectiveto IS NULL OR a.effectiveto > :nowto)
+                AND sp.positionid = :positionid
+                AND sp.active = 1
+                AND sp.effectivefrom <= :placefrom
+                AND (sp.effectiveto IS NULL OR sp.effectiveto > :placeto)
+                AND e.status = :employmentactive
+                AND u.deleted = 0
+                AND u.suspended = 0
+                AND u.id > 1
+           ORDER BY u.lastname, u.firstname, u.id",
+            [
+                'primarytype' => 'primary',
+                'assignmentactive' => 'active',
+                'nowfrom' => $now,
+                'nowto' => $now,
+                'positionid' => $positionfilter,
+                'placefrom' => $now,
+                'placeto' => $now,
+                'employmentactive' => \local_ustar\employment::ACTIVE,
+            ],
+            0,
+            250
+        );
+
+        foreach ($rows as $person) {
+            if (!\local_ustar\accounts::is_business_account((int)$person->id)) {
+                continue;
+            }
+            $assignmentemployees[(int)$person->id] =
+                fullname($person)
+                . ((string)$person->email !== '' ? ' · ' . (string)$person->email : '');
+        }
+
+        if ($employeeid > 0 && !array_key_exists($employeeid, $assignmentemployees)) {
+            $employeeid = 0;
+        }
+
+        if ($employeeid > 0) {
+            $selected = $DB->get_record(
+                'user',
+                ['id' => $employeeid, 'deleted' => 0, 'suspended' => 0],
+                'id,firstname,lastname,email',
+                IGNORE_MISSING
+            );
+            if ($selected) {
+                $candidates = [$selected];
+            }
+        }
+    }
+}
+
+$PAGE->set_context($context);
+$PAGE->set_url(new moodle_url('/local/ustar/grades.php', ['view' => $view]));
+$PAGE->set_pagelayout('ustar');
+$PAGE->set_title('Грейды | USTAR Academy');
+$PAGE->set_heading('USTAR Academy');
+$PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
+echo $OUTPUT->header();
+echo html_writer::start_div('u-grades');
+echo html_writer::start_tag('header', ['class' => 'u-grades__header']);
+echo html_writer::tag('p', 'Развитие · USTAR Академия', ['class' => 'u-grades__eyebrow']);
+echo html_writer::tag('h1', $view === 'team' ? 'Согласование грейдов' : ($view === 'assignments' ? 'Назначения грейдов' : 'Грейды'));
+echo html_writer::tag('p', $view === 'team'
+    ? 'Заявки сотрудников вашей команды. Перед решением проверьте условия перехода и результат обучения.'
+    : ($view === 'assignments'
+        ? 'Выберите подразделение, должность и сотрудника. Стартовый грейд назначается автоматически при подтверждении регистрации; здесь HR может проверить или скорректировать назначение.'
+        : 'Ступень, условия перехода и история ваших заявок.'), ['class' => 'u-grades__intro']);
+echo html_writer::end_tag('header');
+if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }
+if (optional_param('requested', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Заявка отправлена действующему руководителю.', 'notifysuccess'); }
+if (optional_param('decided', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Решение по заявке сохранено.', 'notifysuccess'); }
+if (optional_param('assigned', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Начальная ступень назначена.', 'notifysuccess'); }
+if (optional_param('corrected', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Коррекция грейда сохранена в истории.', 'notifysuccess'); }
+
+echo html_writer::start_div('u-stage6-tabs');
+echo html_writer::tag('a', 'Мой грейд', ['href' => (new moodle_url('/local/ustar/grades.php'))->out(false), 'class' => $view === 'mine' ? 'is-active' : '']);
+if ($teamrequests || \local_ustar\organization_model::is_manager((int)$USER->id)) {
+    echo html_writer::tag('a', 'Заявки команды', ['href' => (new moodle_url('/local/ustar/grades.php', ['view' => 'team']))->out(false), 'class' => $view === 'team' ? 'is-active' : '']);
+}
+if ($canassign) {
+    echo html_writer::tag('a', 'Назначения', ['href' => (new moodle_url('/local/ustar/grades.php',
+        ['view' => 'assignments']))->out(false), 'class' => $view === 'assignments' ? 'is-active' : '']);
+}
+if (\local_ustar\grade_rules::can_manage((int)$USER->id)) {
+    echo html_writer::tag('a', 'Настройка лестниц', [
+        'href' => (new moodle_url('/local/ustar/grade_ladders.php'))->out(false),
+    ]);
+    echo html_writer::tag('a', 'Правила переходов', [
+        'href' => (new moodle_url('/local/ustar/grade_rules.php'))->out(false),
+    ]);
+}
+echo html_writer::end_div();
+
+if ($view === 'mine') {
+    if (empty($current['enabled'])) {
+        echo $OUTPUT->notification('Для вашей должности грейдовая лестница не настроена.', 'notifyinfo');
+    } else {
+        echo html_writer::tag('h2', 'Текущая ступень: ' . s((string)$current['label']));
+        echo html_writer::tag('p', s((string)$eligibility['reason']));
+        echo html_writer::start_tag('ul');
+        foreach ((array)$eligibility['requirements'] as $requirement) {
+            echo html_writer::tag('li',
+                (!empty($requirement['complete']) ? '✓ ' : '○ ') . s((string)$requirement['title']));
+        }
+        echo html_writer::end_tag('ul');
+        if (!empty($eligibility['eligible'])) {
+            echo html_writer::start_tag('form', ['method' => 'post']);
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'request']);
+            echo html_writer::empty_tag('input', ['type' => 'submit',
+                'value' => 'Отправить заявку на «' . s((string)$eligibility['nextlabel']) . '»', 'class' => 'u-btn u-btn--primary']);
+            echo html_writer::end_tag('form');
+        }
+    }
+    if ($ownrequests) {
+        echo $OUTPUT->heading('Мои заявки', 3);
+        echo html_writer::start_tag('ul');
+        foreach ($ownrequests as $request) {
+            $display = \local_ustar\grade_promotion::request_display($request);
+            $text = s($display['fromlabel']) . ' → ' . s($display['tolabel'])
+                . ' · ' . s($display['statuslabel']);
+            if (!empty($request->decisionreason)) {
+                $text .= ' · ' . s((string)$request->decisionreason);
+            }
+            echo html_writer::tag('li', $text);
+        }
+        echo html_writer::end_tag('ul');
+    }
+}
+if ($view === 'assignments') {
     echo html_writer::start_div('u-stage6-card u-grades__assignment-picker');
     echo html_writer::tag('h2', 'Выбор сотрудника');
     echo html_writer::tag(

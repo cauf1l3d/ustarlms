@@ -148,8 +148,12 @@ if ($view === 'mine') {
         echo $OUTPUT->heading('Мои заявки', 3);
         echo html_writer::start_tag('ul');
         foreach ($ownrequests as $request) {
-            $text = s((string)$request->fromgrade . ' → ' . (string)$request->tograde . ' · ' . (string)$request->status);
-            if (!empty($request->decisionreason)) { $text .= ' · ' . s((string)$request->decisionreason); }
+            $display = \local_ustar\grade_promotion::request_display($request);
+            $text = s($display['fromlabel']) . ' → ' . s($display['tolabel'])
+                . ' · ' . s($display['statuslabel']);
+            if (!empty($request->decisionreason)) {
+                $text .= ' · ' . s((string)$request->decisionreason);
+            }
             echo html_writer::tag('li', $text);
         }
         echo html_writer::end_tag('ul');
@@ -253,7 +257,8 @@ if ($view === 'team') {
         echo html_writer::start_div('u-stage6-card u-grades__request');
         echo html_writer::tag('p', 'Заявка на переход', ['class' => 'u-grades__eyebrow']);
         echo html_writer::tag('h2', $employee ? fullname($employee) : 'Сотрудник #' . (int)$request->userid);
-        echo html_writer::tag('p', s((string)$request->fromgrade) . ' → ' . s((string)$request->tograde),
+        $display = \local_ustar\grade_promotion::request_display($request);
+        echo html_writer::tag('p', s($display['fromlabel']) . ' → ' . s($display['tolabel']),
             ['class' => 'u-grades__transition']);
         echo html_writer::start_div('u-grades__actions');
         echo html_writer::start_tag('form', ['method' => 'post']);

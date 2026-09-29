@@ -312,6 +312,16 @@ final class staffing_requests {
                 organization_model::assign_position_by_hr($targetuserid, $positionid, $actorid);
                 people::set_position_id($targetuserid, $positionid);
                 employment::approve_registration($targetuserid, $actorid, $positionid);
+
+                // If the confirmed position has an explicit published ladder,
+                // initialize the employee at its first grade in the same HR
+                // transaction. Existing grade state is never overwritten.
+                grade_promotion::assign_initial_if_bound(
+                    $targetuserid,
+                    $actorid,
+                    'Автоматически при подтверждении регистрации'
+                );
+
                 // Pending users are omitted from reporting until employment is active.
                 organization_model::rebuild_reporting();
                 $request->positionid = $positionid;

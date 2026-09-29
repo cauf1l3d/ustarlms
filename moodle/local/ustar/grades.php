@@ -30,6 +30,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             redirect(new moodle_url('/local/ustar/grades.php', ['view' => 'team', 'decided' => 1]));
         }
+        if ($action === 'bulkassigninitial') {
+            require_capability('local/ustar:hrmanage', $context);
+            $departmentid = required_param('department', PARAM_ALPHANUMEXT);
+            $positionid = optional_param('position', '', PARAM_ALPHANUMEXT);
+            $result = \local_ustar\grade_assignment_directory::bulk_assign_initial(
+                $departmentid,
+                $positionid,
+                (int)$USER->id,
+                required_param('reason', PARAM_TEXT)
+            );
+            redirect(new moodle_url('/local/ustar/grades.php', [
+                'view' => 'assignments',
+                'department' => $departmentid,
+                'position' => $positionid,
+                'bulkassigned' => (int)$result['assigned'],
+            ]));
+        }
         if ($action === 'assigninitial') {
             require_capability('local/ustar:hrmanage', $context);
             \local_ustar\grade_promotion::assign_initial(
@@ -76,6 +93,7 @@ $assignmentdepartments = [];
 $assignmentpositions = [];
 $assignmentemployees = [];
 $candidates = [];
+$bulkpreview = null;
 
 if ($view === 'assignments') {
     $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
@@ -156,6 +174,13 @@ if ($view === 'assignments') {
             }
         }
     }
+
+    if ($departmentfilter !== '') {
+        $bulkpreview = \local_ustar\grade_assignment_directory::initial_assignment_preview(
+            $departmentfilter,
+            $positionfilter
+        );
+    }
 }
 
 $PAGE->set_context($context);
@@ -180,6 +205,15 @@ if (optional_param('requested', 0, PARAM_BOOL)) { echo $OUTPUT->notification('З
 if (optional_param('decided', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Решение по заявке сохранено.', 'notifysuccess'); }
 if (optional_param('assigned', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Начальная ступень назначена.', 'notifysuccess'); }
 if (optional_param('corrected', 0, PARAM_BOOL)) { echo $OUTPUT->notification('Коррекция грейда сохранена в истории.', 'notifysuccess'); }
+$bulkassigned = optional_param('bulkassigned', -1, PARAM_INT);
+if ($bulkassigned >= 0) {
+    echo $OUTPUT->notification(
+        $bulkassigned > 0
+            ? 'Массовое назначение выполнено. Стартовый грейд назначен сотрудникам: ' . $bulkassigned . '.'
+            : 'Массовое назначение не изменило данные: в выбранном контуре нет сотрудников без стартового грейда.',
+        $bulkassigned > 0 ? 'notifysuccess' : 'notifyinfo'
+    );
+}
 
 echo html_writer::start_div('u-stage6-tabs');
 echo html_writer::tag('a', 'Мой грейд', ['href' => (new moodle_url('/local/ustar/grades.php'))->out(false), 'class' => $view === 'mine' ? 'is-active' : '']);
@@ -238,11 +272,11 @@ if ($view === 'mine') {
 }
 if ($view === 'assignments') {
     echo html_writer::start_div('u-stage6-card u-grades__assignment-picker');
-    echo html_writer::tag('h2', 'Выбор сотрудника');
+    echo html_writer::tag('h2', 'Контур назначения');
     echo html_writer::tag(
         'p',
-        'Фильтры связаны между собой: подразделение → должность → сотрудник. '
-            . 'Список сотрудников загружается только для выбранной должности.',
+        'Выберите подразделение. Можно назначить стартовый грейд сразу всему подразделению, '
+            . 'сузить контур до должности или выбрать одного сотрудника для индивидуальной проверки и коррекции.',
         ['class' => 'u-grades__hint']
     );
 
@@ -313,9 +347,128 @@ if ($view === 'assignments') {
 
     if ($positionfilter !== '' && count($assignmentemployees) <= 1) {
         echo $OUTPUT->notification(
-            'Для выбранной должности нет действующих сотрудников в канонической оргструктуре.',
+            'Для выбранной должности нет действующих сотрудников.',
             'notifyinfo'
         );
+    }
+
+    if ($bulkpreview !== null) {
+        echo html_writer::start_div('u-stage6-card u-grades__bulk-preview');
+        echo html_writer::tag(
+            'p',
+            $positionfilter !== '' ? 'МАССОВОЕ НАЗНАЧЕНИЕ · ДОЛЖНОСТЬ' : 'МАССОВОЕ НАЗНАЧЕНИЕ · ПОДРАЗДЕЛЕНИЕ',
+            ['class' => 'u-grades__eyebrow']
+        );
+        echo html_writer::tag(
+            'h2',
+            $positionfilter !== ''
+                ? 'Кому будет назначен стартовый грейд по выбранной должности'
+                : 'Кому будет назначен стартовый грейд по выбранному подразделению'
+        );
+
+        echo html_writer::start_div('u-grades__bulk-summary');
+        foreach ([
+            'В контуре' => (int)$bulkpreview['total'],
+            'Будет назначено' => (int)$bulkpreview['assignable'],
+            'Уже назначено' => (int)$bulkpreview['already'],
+            'Без лестницы' => (int)$bulkpreview['noladder'],
+            'Нужна проверка' => (int)$bulkpreview['review'],
+        ] as $label => $value) {
+            echo html_writer::tag(
+                'div',
+                '<span>' . s($label) . '</span><strong>' . $value . '</strong>'
+            );
+        }
+        echo html_writer::end_div();
+
+        if (!empty($bulkpreview['truncated'])) {
+            echo $OUTPUT->notification(
+                'В выбранном контуре больше ' . \local_ustar\grade_assignment_directory::MAX_RESULTS
+                    . ' сотрудников. Массовое назначение заблокировано: уточните должность, чтобы список был полным.',
+                'notifyproblem'
+            );
+        }
+
+        if (!empty($bulkpreview['targets'])) {
+            echo html_writer::tag(
+                'p',
+                'Ниже показан точный список сотрудников, которым будет создано начальное назначение. '
+                    . 'Существующие грейды не изменяются.',
+                ['class' => 'u-grades__hint']
+            );
+
+            echo html_writer::start_tag('div', ['class' => 'u-grades__bulk-table-wrap']);
+            echo html_writer::start_tag('table', ['class' => 'u-grades__bulk-table']);
+            echo html_writer::start_tag('thead');
+            echo html_writer::tag(
+                'tr',
+                html_writer::tag('th', 'Сотрудник')
+                    . html_writer::tag('th', 'Должность')
+                    . html_writer::tag('th', 'Стартовый грейд')
+            );
+            echo html_writer::end_tag('thead');
+            echo html_writer::start_tag('tbody');
+            foreach ($bulkpreview['targets'] as $target) {
+                $employee = s((string)$target['fullname']);
+                if ((string)$target['email'] !== '') {
+                    $employee .= '<small>' . s((string)$target['email']) . '</small>';
+                }
+                echo html_writer::tag(
+                    'tr',
+                    html_writer::tag('td', $employee)
+                        . html_writer::tag('td', s((string)$target['position']))
+                        . html_writer::tag('td', s((string)$target['gradelabel']))
+                );
+            }
+            echo html_writer::end_tag('tbody');
+            echo html_writer::end_tag('table');
+            echo html_writer::end_tag('div');
+
+            if (empty($bulkpreview['truncated'])) {
+                echo html_writer::start_tag('form', [
+                    'method' => 'post',
+                    'class' => 'u-grades__bulk-action',
+                ]);
+                foreach ([
+                    'sesskey' => sesskey(),
+                    'action' => 'bulkassigninitial',
+                    'department' => $departmentfilter,
+                    'position' => $positionfilter,
+                ] as $field => $value) {
+                    echo html_writer::empty_tag('input', [
+                        'type' => 'hidden',
+                        'name' => $field,
+                        'value' => $value,
+                    ]);
+                }
+                echo html_writer::tag(
+                    'label',
+                    'Основание массового назначения',
+                    ['for' => 'grade-bulk-reason']
+                );
+                echo html_writer::empty_tag('input', [
+                    'type' => 'text',
+                    'name' => 'reason',
+                    'id' => 'grade-bulk-reason',
+                    'required' => 'required',
+                    'class' => 'form-control',
+                    'placeholder' => 'Например: инициализация грейдов после привязки лестницы к должности',
+                ]);
+                echo html_writer::empty_tag('input', [
+                    'type' => 'submit',
+                    'value' => 'Назначить стартовый грейд сотрудникам: ' . (int)$bulkpreview['assignable'],
+                    'class' => 'u-btn u-btn--primary',
+                ]);
+                echo html_writer::end_tag('form');
+            }
+        } else {
+            echo $OUTPUT->notification(
+                'В выбранном контуре нет сотрудников, которым сейчас требуется стартовое назначение.',
+                'notifyinfo'
+            );
+        }
+
+        echo html_writer::end_div();
     }
 
     foreach ($candidates as $candidate) {

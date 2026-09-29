@@ -51,6 +51,13 @@ class GradesPageContract(unittest.TestCase):
         self.assertIn("NOT EXISTS (", directory)
         self.assertIn("posfield.shortname = :positionfield", directory)
         self.assertIn("(e.id IS NULL OR e.status = :employmentactive)", directory)
+        for field in (
+            "firstnamephonetic",
+            "lastnamephonetic",
+            "middlename",
+            "alternatename",
+        ):
+            self.assertIn(field, directory)
 
         assignment_picker = source.index(
             "echo html_writer::start_div('u-stage6-card u-grades__assignment-picker')"

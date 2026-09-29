@@ -4815,5 +4815,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092906, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092907) {
+        // No schema change. Approved self-registration now hands adaptation
+        // assignment to the employee's canonical direct manager, matching the
+        // existing manual-hire adaptation lifecycle.
+        upgrade_plugin_savepoint(true, 2026092907, 'local', 'ustar');
+    }
+
 return true;
 }

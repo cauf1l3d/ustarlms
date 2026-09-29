@@ -75,7 +75,7 @@ final class grade_assignment_directory {
         );
 
         $now = time();
-        $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.email
+        $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename, u.email
                   FROM {user} u
              LEFT JOIN {local_ustar_employment} e
                     ON e.userid = u.id

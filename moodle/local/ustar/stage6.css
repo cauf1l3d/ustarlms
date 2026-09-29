@@ -415,3 +415,40 @@
     .u-grades__bulk-summary { grid-template-columns: 1fr; }
     .u-grades__bulk-action { grid-template-columns: 1fr; }
 }
+
+.u-grades__rule-picker {
+    display: grid;
+    grid-template-columns: minmax(220px, .9fr) minmax(280px, 1.2fr) auto;
+    gap: .75rem;
+    align-items: end;
+    margin: 1rem 0 1.25rem;
+}
+.u-grades__rule-picker label {
+    display: block;
+    font-weight: 650;
+    margin: 0 0 .3rem;
+}
+.u-grades__rule-picker .form-select {
+    width: 100%;
+}
+.u-grades__bound-steps {
+    margin: .65rem 0 1rem 1.25rem;
+}
+.u-grades__bound-steps li {
+    margin: .35rem 0;
+}
+.u-grades__bound-steps code {
+    margin-left: .35rem;
+    font-size: .78rem;
+}
+.u-grades__next-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+    margin: .9rem 0 1.1rem;
+}
+@media (max-width: 820px) {
+    .u-grades__rule-picker {
+        grid-template-columns: 1fr;
+    }
+}

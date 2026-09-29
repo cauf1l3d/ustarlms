@@ -88,7 +88,10 @@ final class grade_assignment_directory {
                    AND u.suspended = 0
                    AND u.id > 1
                    AND (e.id IS NULL OR e.status = :employmentactive)
-                   AND (accountdata.data IS NULL OR accountdata.data = :employeetype)
+                   AND (
+                        accountdata.data IS NULL
+                        OR accountdata.data NOT IN (:servicetype, :testtype)
+                   )
                    AND (
                         EXISTS (
                             SELECT 1
@@ -129,7 +132,8 @@ final class grade_assignment_directory {
             [
                 'accountfield' => accounts::FIELD,
                 'employmentactive' => employment::ACTIVE,
-                'employeetype' => accounts::TYPE_EMPLOYEE,
+                'servicetype' => accounts::TYPE_SERVICE,
+                'testtype' => accounts::TYPE_TEST,
                 'primarytype' => 'primary',
                 'assignmentactive' => 'active',
                 'nowfrom' => $now,
@@ -290,7 +294,7 @@ final class grade_assignment_directory {
         int $actorid,
         string $reason
     ): array {
-        global $USER;
+        global $DB, $USER;
 
         if ($actorid <= 0 || (int)$USER->id !== $actorid
                 || !has_capability('local/ustar:hrmanage', \context_system::instance(), $actorid)) {
@@ -319,18 +323,32 @@ final class grade_assignment_directory {
             return ['assigned' => 0, 'preview' => $preview];
         }
 
-        $assigned = 0;
-        foreach ($preview['targets'] as $target) {
-            $record = grade_promotion::assign_initial_if_bound(
-                (int)$target['userid'],
-                $actorid,
-                $reason
-            );
-            if ($record) {
-                $assigned++;
-            }
-        }
+        $tx = $DB->start_delegated_transaction();
+        try {
+            $assigned = 0;
+            foreach ($preview['targets'] as $target) {
+                $userid = (int)$target['userid'];
 
-        return ['assigned' => $assigned, 'preview' => $preview];
+                // Recheck inside the transaction so a stale browser preview
+                // can never overwrite or double-count an existing assignment.
+                if ($DB->record_exists('local_ustar_employee_grades', ['userid' => $userid])) {
+                    continue;
+                }
+
+                $record = grade_promotion::assign_initial_if_bound(
+                    $userid,
+                    $actorid,
+                    $reason
+                );
+                if ($record) {
+                    $assigned++;
+                }
+            }
+
+            $tx->allow_commit();
+            return ['assigned' => $assigned, 'preview' => $preview];
+        } catch (\Throwable $e) {
+            $tx->rollback($e);
+        }
     }
 }

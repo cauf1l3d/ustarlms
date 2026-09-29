@@ -143,8 +143,9 @@ final class grade_promotion {
     }
 
     /** Creates one idempotent request for one exact published transition rule. */
-    public static function request(int $userid): \stdClass {
+    public static function request(int $userid, string $source = 'manual'): \stdClass {
         global $DB;
+        $source = in_array($source, ['manual', 'auto'], true) ? $source : 'manual';
         self::assert_available();
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
             ->get_lock('grade-request:' . $userid, 10);
@@ -226,13 +227,14 @@ final class grade_promotion {
                 'timecreated' => $now,
                 'timemodified' => $now,
             ]);
-            self::event($id, $userid, 'grade_request_created', $userid, [
+            self::event($id, $userid, 'grade_request_created', $source === 'auto' ? 0 : $userid, [
                 'managerid' => $managerid,
                 'fromgrade' => $eligible['grade'],
                 'tograde' => $eligible['nextgrade'],
                 'ruleid' => (int)$eligible['ruleid'],
                 'ruleversion' => (int)$eligible['ruleversion'],
                 'rulehash' => (string)$eligible['rulehash'],
+                'source' => $source,
             ]);
             self::notify(
                 $managerid,
@@ -421,6 +423,164 @@ final class grade_promotion {
         return array_values($DB->get_records('local_ustar_grade_requests', ['userid' => $userid], 'timecreated DESC'));
     }
 
+    /** Compact grade context for the employee route page; never mutates state on GET. */
+    public static function route_card(int $userid): ?array {
+        global $DB;
+        if (!self::available()) {
+            return null;
+        }
+
+        $eligibility = self::eligibility($userid);
+        if (empty($eligibility['enabled']) || empty($eligibility['recorded'])
+                || empty($eligibility['nextgrade'])) {
+            return null;
+        }
+
+        $rule = !empty($eligibility['ruleid'])
+            ? $DB->get_record('local_ustar_grade_rules', ['id' => (int)$eligibility['ruleid']], '*', IGNORE_MISSING)
+            : false;
+        $policy = $rule ? grade_rules::submission_policy($rule) : [
+            'mode' => grade_rules::MODE_MANUAL,
+            'triggerpointid' => 0,
+            'triggerversionid' => 0,
+            'triggertitle' => '',
+        ];
+
+        $pending = self::latest_transition_request(
+            $userid,
+            (string)$eligibility['grade'],
+            (string)$eligibility['nextgrade'],
+            self::STATUS_PENDING
+        );
+        $latest = self::latest_transition_request(
+            $userid,
+            (string)$eligibility['grade'],
+            (string)$eligibility['nextgrade']
+        );
+        $samehashrejected = $latest
+            && (string)$latest->status === self::STATUS_REJECTED
+            && !empty($eligibility['rulehash'])
+            && self::request_rule_hash($latest) !== ''
+            && hash_equals((string)$eligibility['rulehash'], self::request_rule_hash($latest));
+
+        $missing = array_values(array_filter(
+            (array)($eligibility['requirements'] ?? []),
+            static fn(array $requirement): bool => empty($requirement['complete'])
+        ));
+        $remaining = count($missing);
+        $firstmissing = $missing ? (string)($missing[0]['title'] ?? '') : '';
+
+        $auto = $policy['mode'] === grade_rules::MODE_AUTO;
+        $eligible = !empty($eligibility['eligible']);
+        $canrequest = !$pending && $eligible && (!$auto || $samehashrejected);
+
+        return [
+            'currentlabel' => (string)$eligibility['label'],
+            'nextlabel' => (string)$eligibility['nextlabel'],
+            'reason' => (string)$eligibility['reason'],
+            'eligible' => $eligible,
+            'pending' => (bool)$pending,
+            'autmode' => $auto,
+            'manualmode' => !$auto,
+            'autoreturned' => $auto && $samehashrejected,
+            'canrequest' => $canrequest,
+            'requestlabel' => $samehashrejected ? 'Повторно отправить заявку' : 'Отправить заявку на повышение',
+            'remaining' => $remaining,
+            'hasremaining' => $remaining > 0,
+            'firstmissing' => $firstmissing,
+            'hasfirstmissing' => $firstmissing !== '',
+            'triggerlabel' => (string)$policy['triggertitle'],
+            'hastrigger' => (string)$policy['triggertitle'] !== '',
+            'gradesurl' => (new \moodle_url('/local/ustar/grades.php'))->out(false),
+        ];
+    }
+
+    /**
+     * Bounded auto-submission worker. It calls the same canonical request()
+     * method as the employee button and never approves/promotes anyone.
+     */
+    public static function process_automatic_requests(int $limit = 50): array {
+        global $DB;
+        $limit = max(1, min(200, $limit));
+        $stats = ['checked' => 0, 'submitted' => 0, 'waiting' => 0, 'returned' => 0, 'errors' => 0];
+
+        foreach (grade_rules::automatic_rules() as $rule) {
+            if ($stats['checked'] >= $limit) {
+                break;
+            }
+            $policy = (array)($rule->submissionpolicy ?? grade_rules::submission_policy($rule));
+            $employees = array_values($DB->get_records(
+                'local_ustar_employee_grades',
+                [
+                    'positionid' => (string)$rule->positionid,
+                    'gradekey' => (string)$rule->fromgrade,
+                ],
+                'id ASC'
+            ));
+
+            foreach ($employees as $employeegrade) {
+                if ($stats['checked'] >= $limit) {
+                    break 2;
+                }
+                $stats['checked']++;
+                $userid = (int)$employeegrade->userid;
+
+                if (!accounts::is_business_account($userid) || !employment::is_active($userid)) {
+                    $stats['waiting']++;
+                    continue;
+                }
+
+                if (!self::has_confirmed_requirement(
+                    $userid,
+                    (int)$policy['triggerpointid'],
+                    (int)$policy['triggerversionid']
+                )) {
+                    $stats['waiting']++;
+                    continue;
+                }
+
+                $eligibility = self::eligibility($userid);
+                if (empty($eligibility['eligible']) || (int)$eligibility['ruleid'] !== (int)$rule->id) {
+                    $stats['waiting']++;
+                    continue;
+                }
+
+                $latest = self::latest_transition_request(
+                    $userid,
+                    (string)$rule->fromgrade,
+                    (string)$rule->tograde
+                );
+                if ($latest && (string)$latest->status === self::STATUS_PENDING) {
+                    $stats['waiting']++;
+                    continue;
+                }
+
+                if ($latest && (string)$latest->status === self::STATUS_REJECTED) {
+                    $oldhash = self::request_rule_hash($latest);
+                    if ($oldhash !== '' && hash_equals((string)$rule->rulehash, $oldhash)) {
+                        // Avoid a rejection/resubmit loop. Employee can explicitly
+                        // resubmit from the route card, or HR can publish a new rule.
+                        $stats['returned']++;
+                        continue;
+                    }
+                }
+
+                try {
+                    self::request($userid, 'auto');
+                    $stats['submitted']++;
+                } catch (\Throwable $e) {
+                    debugging(
+                        'USTAR automatic grade request failed for user ' . $userid . ': ' . $e->getMessage(),
+                        DEBUG_DEVELOPER
+                    );
+                    $stats['errors']++;
+                }
+            }
+        }
+
+        return $stats;
+    }
+
     /**
      * Human-readable immutable request snapshot for UI.
      *
@@ -549,6 +709,37 @@ final class grade_promotion {
             }
         }
         return $out;
+    }
+
+    private static function request_rule_hash(\stdClass $request): string {
+        $snapshot = json_decode((string)($request->requirementsjson ?? ''), true);
+        return is_array($snapshot) ? (string)($snapshot['rule']['hash'] ?? '') : '';
+    }
+
+    private static function latest_transition_request(
+        int $userid,
+        string $fromgrade,
+        string $tograde,
+        ?string $status = null
+    ): ?\stdClass {
+        global $DB;
+        $conditions = [
+            'userid' => $userid,
+            'fromgrade' => $fromgrade,
+            'tograde' => $tograde,
+        ];
+        if ($status !== null) {
+            $conditions['status'] = $status;
+        }
+        $rows = $DB->get_records(
+            'local_ustar_grade_requests',
+            $conditions,
+            'timecreated DESC, id DESC',
+            '*',
+            0,
+            1
+        );
+        return $rows ? reset($rows) : null;
     }
 
     private static function has_confirmed_requirement(int $userid, int $pointid, int $versionid): bool {

@@ -104,7 +104,7 @@ if (!empty($editor['transition'])) {
     if (!empty($editor['current'])) {
         echo $OUTPUT->notification(
             'Текущая версия правила: v' . (int)$editor['current']->versionno
-                . ' · hash ' . s(substr((string)$editor['current']->rulehash, 0, 12)),
+                . ' · хэш правила ' . s(substr((string)$editor['current']->rulehash, 0, 12)),
             'notifyinfo'
         );
     }

@@ -37,14 +37,32 @@ class GradesPageContract(unittest.TestCase):
         self.assertIn("$departmentfilter = $view === 'assignments'", source[:header])
         self.assertIn("$positionfilter = $view === 'assignments'", source[:header])
         self.assertIn("$employeeid = $view === 'assignments'", source[:header])
-        self.assertIn("JOIN {local_ustar_staff_places}", source[:header])
-        self.assertIn("sp.positionid = :positionid", source[:header])
+        self.assertIn(
+            "grade_assignment_directory::employees_for_position(",
+            source[:header],
+        )
+
+        directory = (
+            ROOT / 'moodle/local/ustar/classes/grade_assignment_directory.php'
+        ).read_text(encoding='utf-8')
+        self.assertIn("EXISTS (", directory)
+        self.assertIn("{local_ustar_assignments}", directory)
+        self.assertIn("{local_ustar_staff_places}", directory)
+        self.assertIn("NOT EXISTS (", directory)
+        self.assertIn("posfield.shortname = :positionfield", directory)
+        self.assertIn("(e.id IS NULL OR e.status = :employmentactive)", directory)
 
         assignment_picker = source.index(
             "echo html_writer::start_div('u-stage6-card u-grades__assignment-picker')"
         )
         self.assertGreater(assignment_picker, header)
 
+
+    def test_assignment_picker_uses_supported_noscript_markup(self):
+        source = (ROOT / 'moodle/local/ustar/grades.php').read_text(encoding='utf-8')
+
+        self.assertNotIn('html_writer::noscript(', source)
+        self.assertIn("html_writer::tag(\n        'noscript'", source)
 
 if __name__ == '__main__':
     unittest.main()

@@ -80,6 +80,30 @@ class GradesPageContract(unittest.TestCase):
         self.assertIn("if ($preview['truncated'])", directory)
         self.assertIn("start_delegated_transaction()", directory)
 
+    def test_grade_rule_editor_rejects_stale_position_transition_pairs(self):
+        page = (ROOT / 'moodle/local/ustar/grade_rules.php').read_text(encoding='utf-8')
+        rules = (
+            ROOT / 'moodle/local/ustar/classes/grade_rules.php'
+        ).read_text(encoding='utf-8')
+
+        self.assertIn("$requestedpositionid = optional_param('positionid'", page)
+        self.assertIn("$requestedfromgrade = optional_param('fromgrade'", page)
+        self.assertIn("isset($transitionmap[$requestedfromgrade])", page)
+        self.assertIn("this.form.elements.fromgrade.value=\"\"", page)
+
+        self.assertIn("grade_ladders::grades_for_position($positionid)", rules)
+        self.assertIn("if (!$grades)", rules)
+        self.assertIn("return [];", rules)
+
+    def test_ladder_binding_page_explains_next_steps(self):
+        source = (
+            ROOT / 'moodle/local/ustar/grade_ladders.php'
+        ).read_text(encoding='utf-8')
+
+        self.assertIn("Пока версия не привязана к должности", source)
+        self.assertIn("Настроить правила переходов", source)
+        self.assertIn("Перейти к назначениям", source)
+
     def test_assignment_picker_uses_supported_noscript_markup(self):
         source = (ROOT / 'moodle/local/ustar/grades.php').read_text(encoding='utf-8')
 

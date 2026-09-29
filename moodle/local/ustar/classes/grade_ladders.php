@@ -7,8 +7,6 @@ defined('MOODLE_INTERNAL') || die();
 final class grade_ladders {
     /** @var array<string,\stdClass|null>|null */
     private static ?array $bindingcache = null;
-    /** @var array<int,array<int,array<string,mixed>>> */
-    private static array $versiongrades = [];
     public static function available(): bool {
         global $DB;
         return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_grade_bindings'));
@@ -253,15 +251,21 @@ final class grade_ladders {
         return self::grades_for_version((int)$binding->ladderversionid);
     }
 
-    /** Published versions are immutable and are safe for rendering historical requests. */
+    /**
+     * Published versions are immutable and are safe for rendering historical requests.
+     *
+     * Do not keep a static cache here: Moodle PHPUnit rolls database state back
+     * between tests while PHP statics survive, and long-running CLI workers may
+     * also observe database restores/reseeds. One indexed lookup is cheap and
+     * keeps the immutable snapshot deterministic.
+     */
     public static function grades_for_version(int $versionid): ?array {
         global $DB;
         if ($versionid <= 0 || !self::available()) { return null; }
-        if (isset(self::$versiongrades[$versionid])) { return self::$versiongrades[$versionid]; }
         $version = $DB->get_record('local_ustar_grade_ladder_ver',
             ['id' => $versionid], '*', IGNORE_MISSING);
         if (!$version) { return null; }
-        return self::$versiongrades[$versionid] = self::validate_grades(
+        return self::validate_grades(
             json_decode((string)$version->gradesjson, true) ?: []);
     }
 

@@ -166,7 +166,7 @@ if ($view === 'assignments') {
             $selected = $DB->get_record(
                 'user',
                 ['id' => $employeeid, 'deleted' => 0, 'suspended' => 0],
-                'id,firstname,lastname,email',
+                'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename,email',
                 IGNORE_MISSING
             );
             if ($selected) {

@@ -4801,5 +4801,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092904, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092905) {
+        // No schema change. Fixes the HR grade assignment picker rendering and
+        // includes both normalized StaffPlace employees and legacy-only
+        // position projections without scanning the whole user base.
+        upgrade_plugin_savepoint(true, 2026092905, 'local', 'ustar');
+    }
+
 return true;
 }

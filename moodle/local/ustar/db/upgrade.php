@@ -4808,5 +4808,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092905, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026092906) {
+        // No schema change. Grade-rule transitions now come only from the
+        // published ladder explicitly bound to the selected position, and the
+        // editor safely resets stale transitions when HR switches positions.
+        upgrade_plugin_savepoint(true, 2026092906, 'local', 'ustar');
+    }
+
 return true;
 }

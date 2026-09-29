@@ -296,3 +296,52 @@
     .u-stage6-card,
     .u-catalog-editor { padding: .85rem; }
 }
+
+.u-grades__assignment-picker { margin: 1rem 0 1.25rem; }
+.u-grades__assignment-filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .85rem;
+    align-items: end;
+}
+.u-grades__filter-field { min-width: 0; }
+.u-grades__filter-field label {
+    display: block;
+    margin: 0 0 .35rem;
+    font-weight: 650;
+}
+.u-grades__filter-field .form-select {
+    width: 100%;
+    min-width: 0;
+}
+.u-grades__assignment-card { margin-top: 1rem; }
+.u-grades__assignment-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .65rem;
+    margin: 1rem 0;
+}
+.u-grades__assignment-summary > div {
+    padding: .8rem .9rem;
+    border: 1px solid var(--u-border, #d8dde8);
+    border-radius: .7rem;
+    background: var(--u-surface-muted, #f8f7f4);
+}
+.u-grades__assignment-summary span,
+.u-grades__assignment-summary strong {
+    display: block;
+}
+.u-grades__assignment-summary span {
+    margin-bottom: .25rem;
+    color: var(--u-text-secondary, #667085);
+    font-size: .85rem;
+}
+.u-grades__assignment { display: grid; gap: .45rem; margin-top: 1rem; max-width: 760px; }
+.u-grades__assignment label { font-weight: 650; margin-top: .25rem; }
+.u-grades__assignment .form-select,
+.u-grades__assignment .form-control { width: 100%; max-width: 100%; }
+.u-grades__history { margin-top: .5rem; }
+@media (max-width: 820px) {
+    .u-grades__assignment-filters,
+    .u-grades__assignment-summary { grid-template-columns: 1fr; }
+}

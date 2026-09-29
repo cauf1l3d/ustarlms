@@ -353,6 +353,44 @@ final class grade_promotion {
         return null;
     }
 
+    /**
+     * Automatically attach the first grade of the explicitly bound ladder.
+     *
+     * Used only by trusted HR approval flows after the employee already has
+     * the confirmed canonical position. Existing grade state is never
+     * overwritten here; corrections remain an explicit HR action.
+     */
+    public static function assign_initial_if_bound(
+        int $userid,
+        int $actorid,
+        string $reason = 'Автоматически при подтверждении учётной записи'
+    ): ?\stdClass {
+        global $DB;
+
+        self::assert_available();
+        $positionid = people::position_id($userid);
+        if ($positionid === '') {
+            return null;
+        }
+
+        $binding = grade_ladders::binding($positionid);
+        if (!$binding || empty($binding->ladderversionid)) {
+            return null;
+        }
+
+        $existing = $DB->get_record(
+            'local_ustar_employee_grades',
+            ['userid' => $userid],
+            '*',
+            IGNORE_MISSING
+        );
+        if ($existing) {
+            return (string)$existing->positionid === $positionid ? $existing : null;
+        }
+
+        return self::assign_initial($userid, $actorid, $reason);
+    }
+
     /** Explicit, audited first assignment. Never inferred from reading a profile or finishing a route. */
     public static function assign_initial(int $userid, int $actorid, string $reason): \stdClass {
         global $DB, $USER;

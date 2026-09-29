@@ -21,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             required_param('positionid', PARAM_ALPHANUMEXT),
             required_param('fromgrade', PARAM_ALPHANUMEXT),
             optional_param_array('pointids', [], PARAM_INT),
-            (int)$USER->id
+            (int)$USER->id,
+            required_param('submissionmode', PARAM_ALPHA),
+            optional_param('triggerpointid', 0, PARAM_INT)
         );
         redirect(new moodle_url('/local/ustar/grade_rules.php', [
             'positionid' => (string)$rule->positionid,
@@ -52,8 +54,8 @@ echo $OUTPUT->heading('Правила перехода между грейдам
 echo html_writer::tag(
     'p',
     'Каждый переход публикуется отдельной неизменяемой версией. '
-    . 'Выберите этапы маршрута, подтверждающие именно этот переход. '
-    . 'Система не придумывает пороги и не копирует критерии соседней ступени.'
+    . 'Выберите этапы маршрута, подтверждающие именно этот переход, и режим отправки заявки. '
+    . 'Автоматический режим создаёт ту же заявку только после подтверждения всех условий правила.'
 );
 if ($notice !== '') {
     echo $OUTPUT->notification(s($notice), 'notifyproblem');
@@ -107,6 +109,21 @@ if (!empty($editor['transition'])) {
         );
     }
 
+    $submission = $editor['submission'] ?? [
+        'mode' => \local_ustar\grade_rules::MODE_MANUAL,
+        'triggerpointid' => 0,
+        'triggerversionid' => 0,
+        'triggertitle' => '',
+    ];
+    echo html_writer::tag(
+        'p',
+        $submission['mode'] === \local_ustar\grade_rules::MODE_AUTO
+            ? 'Текущий режим: автоматическая отправка после контрольного шага «'
+                . s((string)$submission['triggertitle']) . '» и выполнения всех условий.'
+            : 'Текущий режим: сотрудник отправляет заявку вручную после выполнения условий.',
+        ['class' => 'alert alert-info']
+    );
+
     if (empty($editor['points'])) {
         echo $OUTPUT->notification(
             'Для должности нет опубликованных точек маршрута. Правило публиковать нельзя.',
@@ -123,6 +140,32 @@ if (!empty($editor['transition'])) {
         echo html_writer::empty_tag('input', [
             'type' => 'hidden', 'name' => 'fromgrade', 'value' => $fromgrade,
         ]);
+
+        echo html_writer::tag('label', 'Режим отправки заявки');
+        echo html_writer::select([
+            \local_ustar\grade_rules::MODE_MANUAL => 'Ручной — сотрудник нажимает кнопку',
+            \local_ustar\grade_rules::MODE_AUTO => 'Автоматический — после контрольного шага',
+        ], 'submissionmode', (string)$submission['mode'], false, ['class' => 'form-select']);
+
+        $triggeroptions = [0 => '— Контрольный шаг не выбран —'];
+        foreach ($editor['points'] as $point) {
+            $triggeroptions[(int)$point['pointid']] =
+                (string)$point['title'] . ' · version #' . (int)$point['versionid'];
+        }
+        echo html_writer::tag('label', 'Контрольный шаг для автоматического режима');
+        echo html_writer::select(
+            $triggeroptions,
+            'triggerpointid',
+            (int)$submission['triggerpointid'],
+            false,
+            ['class' => 'form-select']
+        );
+        echo html_writer::tag(
+            'p',
+            'В автоматическом режиме контрольный шаг должен входить в выбранные условия ниже. '
+                . 'Заявка не обходит остальные критерии: grade_promotion проверит их тем же способом, что и при ручной отправке.',
+            ['class' => 'text-muted']
+        );
 
         foreach ($editor['points'] as $point) {
             $id = 'grade_point_' . (int)$point['pointid'];

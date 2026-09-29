@@ -54,10 +54,87 @@ final class adaptation_service {
         ) ?: null;
     }
 
-    public static function assign_from_request(int $requestid, int $managerid, string $startdate, int $plannedworkdays): int {
-        global $DB;
+    /**
+     * Resolve the exact employee/assignment that a manager may start adaptation for.
+     *
+     * Manual hires preserve the existing ownership rule: the manager who
+     * requested the hire owns the handoff. Self-registration uses the canonical
+     * StaffPlace chain created by HRD approval: only the employee's direct
+     * current manager may start adaptation.
+     *
+     * @return array{userid:int,assignmentid:int,positionid:string,startdate:string}|null
+     */
+    public static function assignment_offer(\stdClass $request, int $managerid): ?array {
+        if ($managerid <= 0 || (string)$request->status !== staffing_requests::STATUS_APPROVED) {
+            return null;
+        }
 
-        require_capability('local/ustar:viewteam', \context_system::instance());
+        $type = (string)$request->requesttype;
+        if ($type === staffing_requests::TYPE_HIRE) {
+            $userid = (int)($request->createduserid ?? 0);
+            if ($userid <= 1 || (int)$request->requestedby !== $managerid) {
+                return null;
+            }
+            $earliest = (int)$request->requesteddate;
+        } else if ($type === staffing_requests::TYPE_REGISTRATION) {
+            $userid = (int)($request->employeeid ?? 0);
+            if ($userid <= 1) {
+                return null;
+            }
+            $earliest = max(
+                (int)($request->reviewedat ?? 0),
+                (int)($request->timemodified ?? 0)
+            );
+        } else {
+            return null;
+        }
+
+        if (!employment::is_active($userid)) {
+            return null;
+        }
+
+        $assignment = organization_model::primary_assignment($userid);
+        if (!$assignment) {
+            return null;
+        }
+        $place = organization_model::staff_place((int)$assignment->staffplaceid);
+        if (!$place || (string)$place->positionid !== (string)$request->positionid) {
+            return null;
+        }
+
+        if ($type === staffing_requests::TYPE_REGISTRATION) {
+            $canonicalmanager = organization_model::manager_user_for_place((int)$place->id);
+            if ($canonicalmanager <= 0 || $canonicalmanager !== $managerid) {
+                return null;
+            }
+            $earliest = max($earliest, (int)$assignment->effectivefrom);
+        }
+
+        if ($earliest <= 0) {
+            $earliest = time();
+        }
+
+        return [
+            'userid' => $userid,
+            'assignmentid' => (int)$assignment->id,
+            'positionid' => (string)$place->positionid,
+            'startdate' => userdate($earliest, '%Y-%m-%d', 99, false),
+        ];
+    }
+
+    public static function assign_from_request(int $requestid, int $managerid, string $startdate, int $plannedworkdays): int {
+        global $DB, $USER;
+
+        if ($managerid <= 0 || (int)$USER->id !== $managerid
+                || !has_capability('local/ustar:viewteam', \context_system::instance(), $managerid)) {
+            throw new \required_capability_exception(
+                \context_system::instance(),
+                'local/ustar:viewteam',
+                'nopermissions',
+                ''
+            );
+        }
+        view_as::assert_writable();
 
         if ($plannedworkdays < 1 || $plannedworkdays > 180) {
             throw new \invalid_parameter_exception('Срок адаптации должен быть от 1 до 180 рабочих дней');
@@ -71,43 +148,29 @@ final class adaptation_service {
         }
 
         $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid], '*', MUST_EXIST);
-        if ((string)$request->requesttype !== staffing_requests::TYPE_HIRE
-                || (string)$request->status !== staffing_requests::STATUS_APPROVED
-                || empty($request->createduserid)) {
-            throw new \invalid_parameter_exception('Адаптацию можно назначить только по исполненной заявке на приём');
-        }
-        if ((int)$request->requestedby !== $managerid) {
-            throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
+        $offer = self::assignment_offer($request, $managerid);
+        if (!$offer) {
+            throw new \invalid_parameter_exception(
+                'Адаптацию можно назначить только после кадрового подтверждения сотрудника его текущим руководителем'
+            );
         }
         if (self::for_staffing_request($requestid)) {
             throw new \invalid_parameter_exception('Адаптационный чек по этой заявке уже назначен');
         }
-
-        $hiredate = date('Y-m-d', (int)$request->requesteddate);
-        if (strtotime($startdate) < strtotime($hiredate)) {
-            throw new \invalid_parameter_exception('Адаптация не может начинаться раньше даты выхода сотрудника');
-        }
-
-        $userid = (int)$request->createduserid;
-        $assignment = $DB->get_record_sql(
-            "SELECT * FROM {local_ustar_assignments}
-              WHERE userid = :userid AND assignmenttype = :atype AND status = :status
-           ORDER BY effectivefrom DESC, id DESC",
-            ['userid' => $userid, 'atype' => 'primary', 'status' => 'active'],
-            IGNORE_MULTIPLE
-        );
-        if (!$assignment) {
-            throw new \invalid_parameter_exception('У сотрудника не найдено активное основное назначение');
+        if ($startdate < (string)$offer['startdate']) {
+            throw new \invalid_parameter_exception(
+                'Адаптация не может начинаться раньше кадрового подтверждения или даты выхода сотрудника'
+            );
         }
 
         $now = time();
         $transaction = $DB->start_delegated_transaction();
         $id = (int)$DB->insert_record('local_ustar_adaptations', (object)[
             'staffingrequestid' => $requestid,
-            'userid' => $userid,
+            'userid' => (int)$offer['userid'],
             'managerid' => $managerid,
-            'assignmentid' => (int)$assignment->id,
-            'positionid' => (string)$request->positionid,
+            'assignmentid' => (int)$offer['assignmentid'],
+            'positionid' => (string)$offer['positionid'],
             'checklistkey' => self::CHECKLIST_KEY,
             'definitionversion' => self::DEFINITION_VERSION,
             'startdate' => $startdate,
@@ -120,16 +183,18 @@ final class adaptation_service {
                 'independent_perspectives' => true,
                 'final_reports_independent' => true,
                 'hrd_control_queue' => true,
+                'source_request_type' => (string)$request->requesttype,
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'createdby' => $managerid,
             'timecreated' => $now,
             'timemodified' => $now,
             'completedat' => null,
         ]);
-        people::log_action($managerid, $userid, 'adaptation_assigned', [
+        people::log_action($managerid, (int)$offer['userid'], 'adaptation_assigned', [
             'adaptationid' => $id,
             'requestid' => $requestid,
-            'assignmentid' => (int)$assignment->id,
+            'requesttype' => (string)$request->requesttype,
+            'assignmentid' => (int)$offer['assignmentid'],
             'startdate' => $startdate,
             'plannedworkdays' => $plannedworkdays,
         ]);

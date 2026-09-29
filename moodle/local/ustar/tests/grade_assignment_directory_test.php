@@ -29,6 +29,13 @@ final class grade_assignment_directory_test extends \advanced_testcase {
             'level' => 1,
             'next' => null,
         ];
+        $structure['positions'][] = [
+            'id' => 'fixture_consultant',
+            'department' => $departmentid,
+            'name' => 'Fixture consultant',
+            'level' => 1,
+            'next' => null,
+        ];
         structure::save(structure::NAME_STRUCTURE, $structure);
 
         $legacy = $this->getDataGenerator()->create_user([
@@ -36,6 +43,12 @@ final class grade_assignment_directory_test extends \advanced_testcase {
             'lastname' => 'Employee',
         ]);
         $this->set_legacy_position((int)$legacy->id, $positionid);
+
+        $departmentpeer = $this->getDataGenerator()->create_user([
+            'firstname' => 'Department',
+            'lastname' => 'Peer',
+        ]);
+        $this->set_legacy_position((int)$departmentpeer->id, 'fixture_consultant');
 
         $canonical = $this->getDataGenerator()->create_user([
             'firstname' => 'Canonical',
@@ -73,6 +86,107 @@ final class grade_assignment_directory_test extends \advanced_testcase {
         $this->assertArrayHasKey((int)$canonical->id, $rows);
         $this->assertArrayNotHasKey((int)$historyonly->id, $rows);
         $this->assertArrayNotHasKey((int)$pending->id, $rows);
+
+        $this->assertArrayNotHasKey((int)$departmentpeer->id, $rows);
+
+        $departmentrows = grade_assignment_directory::employees_for_scope($departmentid);
+        $this->assertFalse($departmentrows['truncated']);
+        $this->assertArrayHasKey((int)$legacy->id, $departmentrows['employees']);
+        $this->assertArrayHasKey((int)$canonical->id, $departmentrows['employees']);
+        $this->assertArrayHasKey((int)$departmentpeer->id, $departmentrows['employees']);
+    }
+
+    public function test_bulk_preview_lists_only_people_who_will_receive_initial_grade(): void {
+        global $DB;
+
+        $admin = get_admin();
+        $this->setAdminUser();
+
+        $departmentid = 'fixture_bulk_department';
+        $positionid = 'fixture_bulk_position';
+        $structure = structure::default_structure();
+        $structure['departments'][] = [
+            'id' => $departmentid,
+            'name' => 'Fixture bulk department',
+            'cohort' => $departmentid,
+        ];
+        $structure['positions'][] = [
+            'id' => $positionid,
+            'department' => $departmentid,
+            'name' => 'Fixture bulk position',
+            'level' => 1,
+            'next' => null,
+        ];
+        structure::save(structure::NAME_STRUCTURE, $structure);
+
+        $grades = [
+            ['id' => 'trainee', 'name' => 'Стажёр'],
+            ['id' => 'junior', 'name' => 'Младший консультант'],
+        ];
+        $json = json_encode($grades, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $now = time();
+
+        $ladderid = (int)$DB->insert_record('local_ustar_grade_ladders', (object)[
+            'name' => 'Fixture bulk ladder',
+            'status' => 'active',
+            'draftjson' => $json,
+            'revision' => 1,
+            'createdby' => (int)$admin->id,
+            'timecreated' => $now,
+            'timemodified' => $now,
+        ]);
+        $versionid = (int)$DB->insert_record('local_ustar_grade_ladder_ver', (object)[
+            'ladderid' => $ladderid,
+            'versionno' => 1,
+            'gradesjson' => $json,
+            'gradehash' => hash('sha256', $json),
+            'createdby' => (int)$admin->id,
+            'timecreated' => $now,
+        ]);
+        $DB->insert_record('local_ustar_grade_bindings', (object)[
+            'positionid' => $positionid,
+            'ladderversionid' => $versionid,
+            'revision' => 1,
+            'timemodified' => $now,
+            'usermodified' => (int)$admin->id,
+        ]);
+
+        $needsgrade = $this->getDataGenerator()->create_user([
+            'firstname' => 'Needs',
+            'lastname' => 'Grade',
+        ]);
+        $this->set_legacy_position((int)$needsgrade->id, $positionid);
+
+        $already = $this->getDataGenerator()->create_user([
+            'firstname' => 'Already',
+            'lastname' => 'Graded',
+        ]);
+        $this->set_legacy_position((int)$already->id, $positionid);
+        $DB->insert_record('local_ustar_employee_grades', (object)[
+            'userid' => (int)$already->id,
+            'gradekey' => 'trainee',
+            'positionid' => $positionid,
+            'ladderversionid' => $versionid,
+            'revision' => 1,
+            'source' => 'initial_hr',
+            'requestid' => null,
+            'timecreated' => $now,
+            'timemodified' => $now,
+            'usermodified' => (int)$admin->id,
+        ]);
+
+        $preview = grade_assignment_directory::initial_assignment_preview(
+            $departmentid,
+            $positionid
+        );
+
+        $this->assertSame(2, $preview['total']);
+        $this->assertSame(1, $preview['assignable']);
+        $this->assertSame(1, $preview['already']);
+        $this->assertFalse($preview['truncated']);
+        $this->assertCount(1, $preview['targets']);
+        $this->assertSame((int)$needsgrade->id, (int)$preview['targets'][0]['userid']);
+        $this->assertSame('Стажёр', (string)$preview['targets'][0]['gradelabel']);
     }
 
     public function test_picker_rejects_position_from_another_department(): void {

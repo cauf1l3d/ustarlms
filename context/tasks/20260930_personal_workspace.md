@@ -115,3 +115,21 @@ Follow-up versions: local 2026093006, theme 2026093004. No additional schema or
 business-policy change. Regression coverage: deleted-note connections, reward
 sources pending deletion, per-account palette initialization. The final exact
 SHA and full gate result will be recorded in PR71 after this follow-up completes.
+
+A subsequent Chromium fixture pass rendered the repository's actual templates,
+18 compiled theme SCSS partials and notebook/home scripts, with synthetic data
+and a representative native login form (not a Moodle signed-in session). At
+1720px the notebook used all 1440px of its content container; real browser
+interactions verified resize, grouping, links and light-mode background changes.
+The 390px fixture exposed horizontal overflow in the home settings selects;
+responsive labels now wrap inside the panel. Login artwork now clips the source
+raster to its intended SVG region so adjacent reference-image content cannot
+appear in letterboxed margins. Desktop/mobile fixtures were rerun successfully,
+including home ordering, hide/resize and catalog image containment. Production
+acceptance and actual Moodle auth/SSO rendering remain separate.
+
+Full follow-up gate `36756924576` failed one new source-selector assertion:
+Moodle defines SITEID as a string in this runtime, so strict comparison with an
+integer course ID retained the site course. Both operands now use integer IDs.
+All other 191 DB tests passed; final follow-up re-runs the complete gate, including
+the new UI clipping/mobile settings fixes. This failed run is not release evidence.

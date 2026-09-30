@@ -18,7 +18,7 @@ final class reward_conditions {
             $out['resources'][$kind]=[];
             $filters = $kind === 'activity' ? ['deletioninprogress' => 0] : [];
             foreach ($DB->get_records($table,$filters,'id',implode(',',array_unique(['id',$field]))) as $r) {
-                if ($kind === 'course' && (int)$r->id === SITEID) { continue; }
+                if ($kind === 'course' && (int)$r->id === (int)SITEID) { continue; }
                 $out['resources'][$kind][(string)$r->id]=$kind==='route'?'Точка маршрута №'.$r->id:
                     ($kind==='activity'?'Активность №'.$r->id:(string)$r->$field);
             }

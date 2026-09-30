@@ -2178,7 +2178,7 @@ if ($view==='home') {
         [$label,$description,$path]=$extras[$id];
         $data['homeextras'][]=['id'=>$id,'label'=>$label,'description'=>$description,'url'=>(new moodle_url($path))->out(false)];
     }
-    $PAGE->requires->css(new moodle_url('/local/ustar/styles/home_layout.css',['v'=>'20260930-ux5']));
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/home_layout.css',['v'=>'20260930-ux6']));
     $PAGE->requires->js(new moodle_url('/local/ustar/home_layout.js',['v'=>'20260930-ux5']));
 }
 

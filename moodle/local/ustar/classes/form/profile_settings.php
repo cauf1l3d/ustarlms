@@ -10,7 +10,7 @@ final class profile_settings extends \moodleform {
         $m->addElement('header', 'appearance', 'Личные настройки');
         $m->addElement('select', 'preset', 'Цвет Академии', [
             'yellow'=>'USTAR', 'graphite'=>'Графит', 'ocean'=>'Океан',
-            'forest'=>'Лес', 'berry'=>'Ягодный', 'sand'=>'Песок']);
+            'forest'=>'Лес', 'berry'=>'Ягодный', 'sand'=>'Песок','lavender'=>'Лаванда','mint'=>'Мята','coral'=>'Коралл','indigo'=>'Индиго','rose'=>'Роза','ice'=>'Лёд']);
         $m->addElement('select', 'lang', 'Язык', get_string_manager()->get_list_of_translations());
         $m->addElement('select', 'timezone', 'Часовой пояс', \core_date::get_list_of_timezones());
         if ($this->_customdata['canphoto']) {
@@ -23,7 +23,7 @@ final class profile_settings extends \moodleform {
 
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-        foreach (['preset'=>['yellow'=>1,'graphite'=>1,'ocean'=>1,'forest'=>1,'berry'=>1,'sand'=>1],
+        foreach (['preset'=>['yellow'=>1,'graphite'=>1,'ocean'=>1,'forest'=>1,'berry'=>1,'sand'=>1,'lavender'=>1,'mint'=>1,'coral'=>1,'indigo'=>1,'rose'=>1,'ice'=>1],
             'lang'=>get_string_manager()->get_list_of_translations(),
             'timezone'=>\core_date::get_list_of_timezones()] as $key=>$allowed) {
             if (!array_key_exists((string)($data[$key] ?? ''), $allowed)) {$errors[$key]='Выберите значение из списка.';}

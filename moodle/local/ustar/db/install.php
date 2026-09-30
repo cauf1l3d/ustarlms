@@ -76,5 +76,6 @@ function xmldb_local_ustar_install(): void {
     \local_ustar\accounts::ensure_profile_field();
     \local_ustar\development_assessment::ensure_team_profile(0);
 
+    set_config('completion_reward_startedat',time()+1,'local_ustar');
     accesslib_clear_all_caches(true);
 }

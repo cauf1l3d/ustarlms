@@ -27,16 +27,17 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $input=['title'=>required_param('title',PARAM_TEXT),
                 'audiencevalue'=>required_param('departmentid',PARAM_ALPHANUMEXT),
                 'startdate'=>required_param('startdate',PARAM_RAW_TRIMMED),'enddate'=>required_param('enddate',PARAM_RAW_TRIMMED),
+                'mode'=>required_param('mode',PARAM_ALPHA),'learningsource'=>optional_param('learningsource','route',PARAM_ALPHA),
                 'pointsperxp'=>required_param('pointsperxp',PARAM_INT),'is_draft'=>true,'id'=>$id,
                 'timemodified'=>optional_param('expected',0,PARAM_INT)];
             $start=$parse_date($input['startdate'],false);$end=$parse_date($input['enddate'],true);
             if ($action==='create') {
                 $id=\local_ustar\competition::create_draft('season_'.bin2hex(random_bytes(8)),
-                    $input['title'],$input['audiencevalue'],$start,$end,$input['pointsperxp'],(int)$USER->id);
+                    $input['title'],$input['audiencevalue'],$start,$end,$input['pointsperxp'],(int)$USER->id,$input['mode'],$input['learningsource']);
             } else {
                 $seasonid=$id;
                 \local_ustar\competition::revise_draft($id,(int)$USER->id,$input['timemodified'],
-                    $input['title'],$input['audiencevalue'],$start,$end,$input['pointsperxp']);
+                    $input['title'],$input['audiencevalue'],$start,$end,$input['pointsperxp'],$input['mode'],$input['learningsource']);
             }
         } else if (in_array($action,['publish','close'],true)) {
             $seasonid=$id;
@@ -60,6 +61,9 @@ if ($input===null && $seasonid) {
 $departments=\local_ustar\competition::department_options();
 foreach ($departments as &$d) $d['selected']=$d['id']===($form['audiencevalue'] ?? '');
 unset($d);
+$form['game']=($form['mode']??'game')==='game';$form['learning']=!$form['game'];
+$form['routelearning']=($form['learningsource']??'route')==='route';$form['courselearning']=!$form['routelearning'];
+$audiences=\local_ustar\competition::audiences((int)$USER->id);
 $form['departments']=$departments;$form['action']=$seasonid?'revise':'create';
 $form['submitlabel']=$seasonid?'Сохранить изменения':'Создать черновик';
 $total=$DB->count_records('local_ustar_competitions');
@@ -68,8 +72,9 @@ $PAGE->set_context($context);$PAGE->set_url($url,['season'=>$seasonid,'page'=>$p
 $PAGE->set_pagelayout('ustar');$PAGE->set_title('Соревнования | USTAR');$PAGE->set_heading('Соревнования');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css',['v'=>'20260930-ux']));
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/competition_studio.css',['v'=>'20260930']));
+$PAGE->requires->js(new moodle_url('/local/ustar/competition_studio.js',['v'=>'20260930-ux5']));
 $data=['url'=>$url->out(false),'sesskey'=>sesskey(),'rows'=>$rows,'hasrows'=>!empty($rows),'form'=>$form,
-    'timezone' => $timezone, 'selected'=>$selected['definition'] ?? null,'scores'=>$selected['scores'] ?? [],
+    'audiencesjson'=>json_encode($audiences),'timezone' => $timezone, 'selected'=>$selected['definition'] ?? null,'scores'=>$selected['scores'] ?? [],
     'hasscores'=>!empty($selected['scores']),'scorelimit'=>count($selected['scores'] ?? [])===100,
     'errors'=>$errors,'haserrors'=>!empty($errors),'saved'=>optional_param('saved',0,PARAM_BOOL),
     'pagination'=>$OUTPUT->paging_bar($total,$page,25,$url)];

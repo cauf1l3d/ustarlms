@@ -11,7 +11,7 @@ final class competition {
     }
 
     public static function create_draft(string $code, string $title, string $departmentid,
-            int $startat, int $endat, int $pointsperxp, int $ownerid): int {
+            int $startat, int $endat, int $pointsperxp, int $ownerid, string $mode = 'game', string $learningsource = 'route'): int {
         global $DB;
         self::require_operator($ownerid);
         $code = clean_param(strtolower(trim($code)), PARAM_ALPHANUMEXT);
@@ -22,6 +22,7 @@ final class competition {
         if (!self::department_exists($departmentid) || $pointsperxp < 1 || $pointsperxp > 100) {
             throw new \invalid_parameter_exception('Выберите действующее подразделение и от 1 до 100 баллов за XP.');
         }
+        $events = self::event_rules($mode, $learningsource, $pointsperxp);
         $transaction = $DB->start_delegated_transaction();
         try {
         $now = time();
@@ -35,7 +36,7 @@ final class competition {
         $ruleid = (int)$DB->insert_record('local_ustar_comp_rules', (object)[
             'competitionid' => $competitionid, 'versionno' => 1,
             'rulesjson' => json_encode([
-                'events' => ['game_mastery' => ['pointsperxp' => $pointsperxp]],
+                'mode' => $mode, 'events' => $events,
                 'uscoin' => ['enabled' => false],
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'status' => 'draft', 'createdby' => $ownerid, 'timecreated' => $now, 'timemodified' => $now,
@@ -135,6 +136,7 @@ final class competition {
                     && !$DB->record_exists('local_ustar_comp_score_events',['idempotencykey'=>$key])) {
                 $rule=$DB->get_record('local_ustar_comp_rules',['id'=>$competition->activeversionid],'*',MUST_EXIST);
                 $rules=self::validated_rules($rule->rulesjson);
+                if (!isset($rules['events']['game_mastery']) || $occurredat < (int)$rule->timemodified) { $tx->allow_commit(); continue; }
                 $DB->insert_record('local_ustar_comp_score_events',(object)[
                     'competitionid'=>(int)$competition->id,'participantid'=>(int)$participant->id,
                     'ruleversionid'=>(int)$rule->id,'eventtype'=>'game_mastery',
@@ -184,6 +186,7 @@ final class competition {
         if ((string)$competition->status !== 'published' || (int)$competition->endat > time()) {
             throw new \moodle_exception('Only a finished published competition may be closed.');
         }
+        self::reconcile_learning(500,$competitionid,true);
         $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
         $lock = $factory->get_lock('competition-close:' . $competitionid, 10);
         if (!$lock) {
@@ -243,26 +246,40 @@ final class competition {
         self::require_operator($actor);
         $c=$DB->get_record('local_ustar_competitions',['id'=>$id],'*',MUST_EXIST);
         $r=$DB->get_record('local_ustar_comp_rules',['competitionid'=>$id,'versionno'=>1],'*',MUST_EXIST);
-        $c->pointsperxp=self::validated_rules($r->rulesjson)['events']['game_mastery']['pointsperxp'];
+        $rules=self::validated_rules($r->rulesjson);
+        $event=array_key_first($rules['events']);
+        $c->pointsperxp=$rules['events'][$event]['pointsperxp'];
+        $c->mode=$event==='game_mastery'?'game':'learning';
+        $c->learningsource=$event==='course_completion'?'course':'route';
+        $c->modelabel=$c->mode==='game'?'Игровой сезон':'Обучающий сезон';
+        $c->sourcelabel=['game_mastery'=>'освоение игр','course_completion'=>'завершение курсов Moodle','route_completion'=>'подтверждённые точки учебного маршрута'][$event];
         $c->is_draft=$c->status==='draft';$c->is_closed=$c->status==='closed';
         $c->canclose=$c->status==='published' && $c->endat<=time();
         $c->audience=self::department_name($c->audiencevalue);$c->statuslabel=self::status_label($c->status);
         $c->dates=userdate($c->startat,'%d.%m.%Y').' — '.userdate($c->endat,'%d.%m.%Y');
         if ($c->is_closed) {
-            $scores=array_values($DB->get_records_sql('SELECT r.id,r.rankno AS rank,r.points,p.publiclabel AS displayname
+            $scores=array_values($DB->get_records_sql('SELECT r.id,r.rankno AS rank,r.points,p.publiclabel AS displayname,p.userid
                 FROM {local_ustar_comp_results} r JOIN {local_ustar_comp_participants} p ON p.id=r.participantid
                 WHERE r.competitionid=:id ORDER BY r.rankno,p.id',['id'=>$id],0,100));
         } else {
             $scores=array_slice(self::scoreboard($id,0),0,100);
         }
+        foreach ($scores as &$score) {
+            $userid=is_array($score)?(int)$DB->get_field('local_ustar_comp_participants','userid',['id'=>$score['participantid']]):(int)$score->userid;
+            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname');
+            if (is_array($score)) { $score['displayname']=$u?fullname($u):'Удалённая учётная запись'; }
+            else { $score->displayname=$u?fullname($u):'Удалённая учётная запись'; }
+        }
+        unset($score);
         return ['definition'=>(array)$c,'scores'=>$scores];
     }
-    public static function revise_draft(int $id,int $actor,int $expected,string $title,string $dept,int $start,int $end,int $rate): void {
+    public static function revise_draft(int $id,int $actor,int $expected,string $title,string $dept,int $start,int $end,int $rate,string $mode='game',string $learningsource='route'): void {
         global $DB;
         self::require_operator($actor);
         if (trim($title)==='' || $start<=0 || $end<=$start || !self::department_exists($dept) || $rate<1 || $rate>100) {
             throw new \invalid_parameter_exception('Проверьте название, подразделение, даты и баллы за XP.');
         }
+        $events=self::event_rules($mode,$learningsource,$rate);
         $tx=$DB->start_delegated_transaction();
         try {
         $c=$DB->get_record_sql('SELECT * FROM {local_ustar_competitions} WHERE id=:id FOR UPDATE',['id'=>$id],MUST_EXIST);
@@ -273,7 +290,7 @@ final class competition {
         $c->startat=$start;$c->endat=$end;$c->timemodified=max(time(),(int)$c->timemodified+1);
         $DB->update_record('local_ustar_competitions',$c);
         $r=$DB->get_record('local_ustar_comp_rules',['competitionid'=>$id,'versionno'=>1],'*',MUST_EXIST);
-        $rules=self::validated_rules($r->rulesjson);$rules['events']['game_mastery']['pointsperxp']=$rate;
+        $rules=self::validated_rules($r->rulesjson);$rules['mode']=$mode;$rules['events']=$events;
         $r->rulesjson=json_encode($rules);$r->timemodified=$c->timemodified;
         $DB->update_record('local_ustar_comp_rules',$r);$tx->allow_commit();
         } catch (\Throwable $e) { $tx->rollback($e); }
@@ -336,11 +353,104 @@ final class competition {
         if (!is_array($rules)) {
             throw new \moodle_exception('Правило сезона повреждено. Обратитесь к администратору.');
         }
-        $rate = (int)($rules['events']['game_mastery']['pointsperxp'] ?? 0);
-        if ($rate < 1 || $rate > 100 || !empty($rules['uscoin']['enabled'])) {
+        $events=$rules['events'] ?? [];
+        if (!is_array($events) || count($events)!==1 || array_diff(array_keys($events),['game_mastery','route_completion','course_completion'])
+                || !empty($rules['uscoin']['enabled'])) {
             throw new \moodle_exception('Правило сезона повреждено. Обратитесь к администратору.');
         }
+        $rate=$events[array_key_first($events)]['pointsperxp'] ?? 0;
+        if (!is_int($rate) || $rate<1 || $rate>100) { throw new \moodle_exception('Правило сезона повреждено.'); }
         return $rules;
+    }
+
+    private static function event_rules(string $mode,string $source,int $rate): array {
+        if (!in_array($mode,['game','learning'],true) || !in_array($source,['route','course'],true)) {
+            throw new \invalid_parameter_exception('Выберите игровой или обучающий сезон.');
+        }
+        $event=$mode==='game'?'game_mastery':($source==='course'?'course_completion':'route_completion');
+        return [$event=>['pointsperxp'=>$rate]];
+    }
+
+    /** Same resolver as publication. Real names are visible only in the operator studio. */
+    public static function audience_preview(string $department,int $actor): array {
+        return self::audiences($actor)[$department]??[];
+    }
+    public static function audiences(int $actor): array {
+        global $DB;
+        self::require_operator($actor);$rows=[];
+        foreach (self::department_options() as $d) { $rows[$d['id']]=[]; }
+        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1',[],'lastname,firstname,id','id,firstname,lastname') as $u) {
+            if (!accounts::participates((int)$u->id)) { continue; }
+            $department=self::department_for_user((int)$u->id);
+            if (isset($rows[$department])) { $rows[$department][]=['id'=>(int)$u->id,'name'=>fullname($u)]; }
+        }
+        return $rows;
+    }
+
+    public static function record_route_completion(int $cycleid): void {
+        global $DB;
+        $c=$DB->get_record('local_ustar_completion_cycle',['id'=>$cycleid,'status'=>'confirmed']);
+        if (!$c) { return; }
+        $frozen=$DB->get_record('local_ustar_reward_grants',['kind'=>'route','sourceid'=>(string)$c->id,'userid'=>$c->userid]);
+        $xp=$frozen?(int)$frozen->xp:reward_control::amounts((int)$c->userid,'route',(string)$c->id,(int)$c->completedat)['xp'];
+        self::record_learning((int)$c->userid,'route_completion',(string)$c->id,$xp,(int)$c->completedat);
+    }
+    public static function record_course_completion(int $userid,int $courseid): void {
+        global $DB;
+        $c=$DB->get_record('course_completions',['userid'=>$userid,'course'=>$courseid]);
+        if (!$c || empty($c->timecompleted)) { return; }
+        $frozen=$DB->get_record('local_ustar_reward_grants',['eventkey'=>'learning-course:'.$c->id]);
+        $xp=$frozen?(int)$frozen->xp:reward_control::amounts($userid,'course',(string)$c->id,(int)$c->timecompleted)['xp'];
+        self::record_learning($userid,'course_completion',(string)$c->id,$xp,(int)$c->timecompleted);
+    }
+    private static function record_learning(int $userid,string $event,string $source,int $xp,int $at): void {
+        global $DB;
+        if (!self::available() || !accounts::participates($userid) || $xp<=0 || view_as::active()) { return; }
+        foreach ($DB->get_records_select('local_ustar_competitions','status=:s AND startat<=:a AND endat>=:b',
+                ['s'=>'published','a'=>$at,'b'=>$at]) as $season) {
+            $tx=$DB->start_delegated_transaction();
+            try {
+                $season=$DB->get_record_sql('SELECT * FROM {local_ustar_competitions} WHERE id=:id FOR UPDATE',['id'=>$season->id],MUST_EXIST);
+                $participant=$DB->get_record('local_ustar_comp_participants',['competitionid'=>$season->id,'userid'=>$userid,'status'=>'active']);
+                $rule=$season->activeversionid?$DB->get_record('local_ustar_comp_rules',['id'=>$season->activeversionid]):null;
+                $rules=$rule?self::validated_rules($rule->rulesjson):[];
+                $key='competition:'.$season->id.':'.$event.':'.$source;
+                if ($season->status==='published' && $participant && isset($rules['events'][$event]) && $at>=(int)$rule->timemodified
+                        && !$DB->record_exists('local_ustar_comp_score_events',['idempotencykey'=>$key])) {
+                    $DB->insert_record('local_ustar_comp_score_events',(object)['competitionid'=>$season->id,'participantid'=>$participant->id,
+                        'ruleversionid'=>$rule->id,'eventtype'=>$event,'points'=>$xp*$rules['events'][$event]['pointsperxp'],
+                        'sourcekind'=>$event,'sourceid'=>$source,'idempotencykey'=>$key,'occurredat'=>$at,'timecreated'=>time()]);
+                }
+                $tx->allow_commit();
+            } catch (\Throwable $e) { $tx->rollback($e); }
+        }
+    }
+
+    /** A durable retry scans only completions within a published season, in bounded batches. */
+    public static function reconcile_learning(int $limit=200,int $onlyid=0,bool $complete=false): void {
+        global $DB;
+        if (!self::available()) { return; }
+        foreach ($DB->get_records('local_ustar_competitions',['status'=>'published']+($onlyid?['id'=>$onlyid]:[])) as $s) {
+            $r=$DB->get_record('local_ustar_comp_rules',['id'=>$s->activeversionid]);
+            if (!$r) { continue; }
+            $event=array_key_first(self::validated_rules($r->rulesjson)['events']);
+            if ($event==='game_mastery') { continue; }
+            $name='competition_cursor_'.$s->id;
+            $cursor=$complete?0:(int)get_config('local_ustar',$name);$start=max((int)$s->startat,(int)$r->timemodified);
+            $table=$event==='route_completion'?'local_ustar_completion_cycle':'course_completions';
+            $date=$event==='route_completion'?'completedat':'timecompleted';
+            do {
+            $rows=$DB->get_records_select($table,'id>:i AND '.$date.'>=:a AND '.$date.'<=:b',
+                ['i'=>$cursor,'a'=>$start,'b'=>$s->endat],'id','*',0,max(1,min(500,$limit)));
+            foreach ($rows as $c) {
+                if ($event==='route_completion') { self::record_route_completion((int)$c->id); }
+                else { self::record_course_completion((int)$c->userid,(int)$c->course); }
+                $cursor=(int)$c->id;
+            }
+            } while ($complete && count($rows)===$limit);
+            // Rescan when caught up: out-of-order completion delivery keeps its original timestamp.
+            set_config($name,count($rows)<$limit?0:$cursor,'local_ustar');
+        }
     }
 
     private static function matches_audience(int $userid, \stdClass $competition): bool {
@@ -349,8 +459,8 @@ final class competition {
     }
 
     private static function department_for_user(int $userid): string {
-        $positions = people::position_map(structure::get(structure::NAME_STRUCTURE));
-        return (string)($positions[people::position_id($userid)]['department'] ?? '');
+        $identity=organization_identity::resolve($userid);
+        return $identity['conflicts'] ? '' : (string)$identity['departmentid'];
     }
 
     private static function department_exists(string $departmentid): bool {

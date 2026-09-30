@@ -54,11 +54,82 @@ final class reward_control {
             if (!hash_equals(hash('sha256',json_encode($versions)), $expected)) { throw new \moodle_exception('Правила изменились. Обновите страницу.'); }
             // Effective next second: existing same-second completions keep their old rule.
             $at = max(time()+1, (int)(end($versions)['at'] ?? 0)+1);
-            $versions[] = ['at'=>$at,'rules'=>$rules,'actor'=>$actor,'reason'=>$reason];
+            $conditions=end($versions)['conditions']??[];
+            $versions[] = ['at'=>$at,'rules'=>$rules,'conditions'=>$conditions,'actor'=>$actor,'reason'=>$reason];
             if (count($versions)>1000) { throw new \moodle_exception('Достигнут лимит версий правил.'); }
             set_config('reward_rules_v1',json_encode($versions,JSON_UNESCAPED_UNICODE),'local_ustar');
         } finally { $lock->release(); }
     }
+    public static function conditions(?int $at=null): array {
+        $conditions=[];
+        foreach (self::versions() as $v) { if ($v['at']<=($at??time())) { $conditions=$v['conditions']??[]; } }
+        return $conditions;
+    }
+    public static function amounts(int $userid,string $kind,string $source,int $at): array {
+        $rule=self::rules($at)[$kind]??null;
+        if (!$rule) { throw new \invalid_parameter_exception('Неизвестное событие награды.'); }
+        foreach (self::conditions($at) as $condition) {
+            if (reward_conditions::matches($condition,$userid,$kind,$source,$at)) {
+                $rule=['xp'=>$condition['xp'],'coins'=>$condition['coins']];
+            }
+        }
+        return $rule;
+    }
+    public static function save_condition(int $actor,?array $input,string $disable,string $reason,string $expected): void {
+        self::assert_manager($actor);
+        if (trim($reason)==='') { throw new \invalid_parameter_exception('Укажите причину изменения.'); }
+        $condition=$input!==null?reward_conditions::validate($input):null;
+        $lock=\core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('reward-rules',10);
+        if (!$lock) { throw new \moodle_exception('Правила сейчас редактируются.'); }
+        try {
+            $versions=self::versions();
+            if (!hash_equals(hash('sha256',json_encode($versions)),$expected)) { throw new \moodle_exception('Правила изменились. Обновите страницу.'); }
+            $latest=end($versions);$conditions=$latest['conditions']??[];
+            if ($condition) { $conditions[]=$condition; }
+            else {
+                $found=false;
+                foreach ($conditions as &$c) { if ($c['id']===$disable) { $c['active']=false;$found=true; } }
+                unset($c);
+                if (!$found) { throw new \invalid_parameter_exception('Условие не найдено.'); }
+            }
+            if (count($conditions)>100 || count($versions)>=1000) { throw new \invalid_parameter_exception('Достигнут лимит версий или условий.'); }
+            $at=max(time()+1,(int)($latest['at']??0)+1);
+            $versions[]=['at'=>$at,'rules'=>$latest['rules']??self::defaults(),'conditions'=>$conditions,'actor'=>$actor,'reason'=>$reason];
+            set_config('reward_rules_v1',json_encode($versions,JSON_UNESCAPED_UNICODE),'local_ustar');
+        } finally { $lock->release(); }
+    }
+
+    /** Freeze Moodle completion XP in the existing immutable grant store. */
+    public static function course_completion(int $userid,int $courseid): void {
+        global $DB;
+        $c=$DB->get_record('course_completions',['userid'=>$userid,'course'=>$courseid]);
+        if (!$c || empty($c->timecompleted) || (int)$c->timecompleted<(int)get_config('local_ustar','completion_reward_startedat')
+                || !(int)get_config('local_ustar','completion_reward_startedat')) { return; }
+        self::grant($userid,'course',(string)$c->id,(int)$c->timecompleted,'learning-course:'.$c->id);
+    }
+    public static function activity_completion(int $id): void {
+        global $DB;
+        $c=$DB->get_record('course_modules_completion',['id'=>$id]);
+        if (!$c || !in_array((int)$c->completionstate,[1,2],true) || !(int)get_config('local_ustar','completion_reward_startedat')
+                || (int)$c->timemodified<(int)get_config('local_ustar','completion_reward_startedat')) { return; }
+        self::grant((int)$c->userid,'activity',(string)$c->id,(int)$c->timemodified,'learning-activity:'.$c->id);
+    }
+    public static function reconcile_learning(int $limit=200): void {
+        global $DB;
+        $since=(int)get_config('local_ustar','completion_reward_startedat');
+        if (!$since) { return; }
+        foreach (['course'=>['course_completions','timecompleted'],'activity'=>['course_modules_completion','timemodified']] as $kind=>[$table,$date]) {
+            $name='reward_learning_cursor_'.$kind;$cursor=(int)get_config('local_ustar',$name);
+            $rows=$DB->get_records_select($table,'id>:id AND '.$date.'>=:since',['id'=>$cursor,'since'=>$since],'id','*',0,$limit);
+            foreach ($rows as $c) {
+                if ($kind==='course') { self::course_completion((int)$c->userid,(int)$c->course); }
+                else { self::activity_completion((int)$c->id); }
+                $cursor=(int)$c->id;
+            }
+            set_config($name,count($rows)<$limit?0:$cursor,'local_ustar');
+        }
+    }
+
     public static function available(): bool {
         global $DB;
         return $DB->get_manager()->table_exists(new \xmldb_table('local_ustar_reward_grants'));
@@ -71,7 +142,7 @@ final class reward_control {
         if (!$lock) { throw new \moodle_exception('Не удалось сохранить награду.'); }
         try {
             if ($DB->record_exists('local_ustar_reward_grants',['eventkey'=>$key])) { return false; }
-            $rules = self::rules($at); $rule = $rules[$kind] ?? null;
+            $rule = self::amounts($userid,$kind,$sourceid,$at);
             if (!$rule || $rule['xp']<0) { throw new \invalid_parameter_exception('Неизвестное событие награды.'); }
             $tx = $DB->start_delegated_transaction();
             $DB->insert_record('local_ustar_reward_grants',(object)['userid'=>$userid,'kind'=>$kind,
@@ -98,11 +169,16 @@ final class reward_control {
         $total = 0;
         foreach ($courses ?? external\base::user_courses($userid) as $course) {
             if (($course['progress'] ?? 0)<100) { continue; }
-            $at = (int)$DB->get_field('course_completions','timecompleted',['userid'=>$userid,'course'=>$course['id']]);
+            $completion=$DB->get_record('course_completions',['userid'=>$userid,'course'=>$course['id']]);
+            $at=(int)($completion->timecompleted??0);
+            if ($completion && self::available() && $DB->record_exists('local_ustar_reward_grants',['eventkey'=>'learning-course:'.$completion->id])) { continue; }
             if (!$since || $at>$since) { $total += self::rules($at)['course']['xp']; }
         }
         foreach ($DB->get_records_select('course_modules_completion','userid=:u AND completionstate IN (1,2) AND timemodified>:s',
-                ['u'=>$userid,'s'=>$since], '', 'id,timemodified') as $c) { $total += self::rules((int)$c->timemodified)['activity']['xp']; }
+                ['u'=>$userid,'s'=>$since], '', 'id,timemodified') as $c) {
+            if (self::available() && $DB->record_exists('local_ustar_reward_grants',['eventkey'=>'learning-activity:'.$c->id])) { continue; }
+            $total += self::rules((int)$c->timemodified)['activity']['xp'];
+        }
         $game = (int)$DB->get_field_sql('SELECT COALESCE(SUM(xpearned),0) FROM {local_ustar_game_mastery} WHERE userid=:u AND timecreated>:s',['u'=>$userid,'s'=>$since]);
         $total += $game;
         // Legacy route rewards retain the historical 10 XP; future grants freeze their own amounts.

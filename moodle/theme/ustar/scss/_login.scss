@@ -11,8 +11,8 @@ body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
     display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr));
     align-items:stretch; gap:18px; box-sizing:border-box;
     width:calc(100% - 48px); max-width:1420px; height:auto;
-    min-height:100svh;
-    margin:0 auto !important; padding:0 !important; background:transparent;
+    min-height:0;
+    margin:24px auto !important; padding:0 !important; background:transparent;
 }
 .ustar-auth-shell > section { min-width:0; border-radius:34px; }
 .ustar-auth-shell .ustar-auth-brand { position:relative; overflow:hidden; align-self:stretch; }
@@ -64,7 +64,7 @@ body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
 .ustar-auth-core .login-divider { margin:18px 0; }
 .ustar-auth-core .alert { font-size:16px; line-height:1.5; padding:12px; border:1px solid #b73728; background:#fff0eb; color:#7a1c11; border-radius:10px; }
 .ustar-auth-core :is(input,button,a,select):focus-visible { outline:3px solid #806300; outline-offset:3px; }
-.ustar-auth-shell .ustar-auth-auth__footer { display:flex; flex-direction:column; align-items:center; margin-top:auto; padding-top:24px; text-align:center; width:100%; }
+.ustar-auth-shell .ustar-auth-auth__footer { display:flex; flex-direction:column; align-items:center; margin-top:16px; padding-top:24px; text-align:center; width:100%; }
 .ustar-auth-auth__footer p { color:#62605b; font-size:13px; line-height:1.5; margin:0 0 16px; }
 .ustar-auth-auth__footer strong { background:linear-gradient(#575753,#2b2b2b); color:#ededed; font-size:clamp(18px,2vw,26px); font-weight:500; border-radius:12px; padding:8px 22px; }
 .ustar-auth-auth__footer small { margin-top:16px; color:#62605b; font-size:11px; line-height:1.5; }

@@ -15,12 +15,20 @@ if (!in_array($filter, ['all', 'active', 'done'], true)) { $filter = 'all'; }
 $url = new moodle_url('/local/ustar/notebook.php', ['pageno' => $page, 'q' => $query, 'filter' => $filter]);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = required_param('action', PARAM_ALPHA);
-    if ($action === 'move') {
+    if (in_array($action, ['move', 'board'], true)) {
         // JSON stays separate from Moodle's page/redirect output.
         try {
             require_sesskey();
-            $layout = notebook_board::move($actor, required_param('id', PARAM_INT), required_param('revision', PARAM_INT),
-                required_param('x', PARAM_INT), required_param('y', PARAM_INT), required_param('color', PARAM_ALPHA));
+            if ($action === 'board') {
+                $json = required_param('patch', PARAM_RAW);
+                if (strlen($json) > 250000) { throw new invalid_parameter_exception('Слишком большой размер доски.'); }
+                $patch = json_decode($json, true);
+                if (!is_array($patch)) { throw new invalid_parameter_exception('Некорректные данные доски.'); }
+                $layout = notebook_board::update($actor, required_param('revision', PARAM_INT), $patch);
+            } else {
+                $layout = notebook_board::move($actor, required_param('id', PARAM_INT), required_param('revision', PARAM_INT),
+                    required_param('x', PARAM_INT), required_param('y', PARAM_INT), required_param('color', PARAM_ALPHA));
+            }
             $result = ['ok' => true, 'revision' => $layout['revision']];
         } catch (Throwable $e) { http_response_code(400); $result = ['ok' => false, 'error' => $e->getMessage()]; }
         header('Content-Type: application/json; charset=utf-8');
@@ -59,7 +67,10 @@ foreach ($notes as $i => &$note) {
     $position = $layout['items'][$note['id']] ?? ['x' => ($i % 3) * 340 + 24, 'y' => intdiv($i, 3) * 340 + 24, 'color' => 'neutral'];
     $note['x'] = max(0, min(5000, (int)($position['x'] ?? 0)));
     $note['y'] = max(0, min(5000, (int)($position['y'] ?? 0)));
-    $note['color'] = in_array($position['color'] ?? '', ['neutral','yellow','blue','green'], true) ? $position['color'] : 'neutral';
+    $note['color'] = in_array($position['color'] ?? '', ['neutral','yellow','blue','green','pink','purple'], true) ? $position['color'] : 'neutral';
+    $note['width'] = max(240, min(1200, (int)($position['width'] ?? 310)));
+    $note['height'] = max(180, min(1200, (int)($position['height'] ?? 320)));
+    $note['frame'] = $position['frame'] ?? '';
     $note['open'] = $note['status'] === 'open';
     $note['files'] = task_files::list_for($note['id'], $actor);
     $note['editopen'] = ($input['id'] ?? 0) === $note['id'];
@@ -68,6 +79,7 @@ foreach ($notes as $i => &$note) {
 unset($note);
 $total = learning_tasks::count_for($actor, 'notebook', $filter, $query);
 $data = ['notes' => $notes, 'hasnotes' => !empty($notes), 'total' => $total, 'revision' => $layout['revision'],
+    'boardjson' => json_encode(['frames' => $layout['frames'], 'links' => $layout['links'], 'background' => $layout['background']]),
     'sesskey' => sesskey(), 'url' => $url->out(false), 'q' => $query, 'filter' => $filter,
     'all' => $filter === 'all', 'active' => $filter === 'active', 'done' => $filter === 'done',
     'previous' => $page ? (new moodle_url($url, ['pageno' => $page - 1]))->out(false) : '',
@@ -81,9 +93,9 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Личный блокнот | USTAR');
 $PAGE->set_heading('Личный блокнот');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-rc4']));
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/notebook.css', ['v' => '20260930-rc4']));
-$PAGE->requires->js(new moodle_url('/local/ustar/notebook.js', ['v' => '20260930-rc4']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-ux5']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/notebook.css', ['v' => '20260930-ux5']));
+$PAGE->requires->js(new moodle_url('/local/ustar/notebook.js', ['v' => '20260930-ux5']));
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_ustar/notebook', $data);
 echo $OUTPUT->footer();

@@ -698,8 +698,10 @@ if (class_exists('\local_ustar\communication')) {
     }
 }
 
+$PAGE->add_body_class(in_array($pagepath, ['/local/ustar/notebook.php','/local/ustar/catalog.php'], true) ? 'u-personal-wide' : 'u-standard-width');
+
 $preset = (string)get_user_preferences('local_ustar_preset', 'yellow', (int)$USER->id);
-if (!in_array($preset, ['yellow','graphite','ocean','forest','berry','sand'], true)) { $preset = 'yellow'; }
+if (!in_array($preset, ['yellow','graphite','ocean','forest','berry','sand','lavender','mint','coral','indigo','rose','ice'], true)) { $preset = 'yellow'; }
 
 $PAGE->requires->js_call_amd('theme_ustar/shell', 'init');
 

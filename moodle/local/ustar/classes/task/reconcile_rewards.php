@@ -11,6 +11,7 @@ final class reconcile_rewards extends \core\task\scheduled_task {
 
     public function execute(): void {
         \local_ustar\route_rewards::reconcile(200);
+        \local_ustar\reward_control::reconcile_learning(200);
         mtrace('USTAR reward reconciliation completed');
     }
 }

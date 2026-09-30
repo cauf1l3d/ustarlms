@@ -38,13 +38,13 @@ final class route_rewards {
 
     /** Failure preserves progress for scheduled reconciliation; learning remains usable. */
     public static function try_progress(int $userid, int $pointid, int $versionid): void {
-        if (!self::enabled() || view_as::active()) { return; }
+        if (view_as::active()) { return; }
         try {
             global $DB;
             $progress = $DB->get_record('local_ustar_route_progress', compact('userid', 'pointid', 'versionid'));
             if ($progress && (string)$progress->status === 'complete') {
                 $cycle = completion_cycle::for_progress($progress);
-                if ($cycle) { self::grant_cycle($cycle); }
+                if ($cycle) { competition::record_route_completion((int)$cycle->id); if (self::enabled()) { self::grant_cycle($cycle); } }
             }
         } catch (\Throwable $e) {
             debugging('USTAR route reward pending: ' . $e->getMessage(), DEBUG_DEVELOPER);
@@ -85,7 +85,7 @@ final class route_rewards {
                         'logicalpointid' => (int)$cycle->logicalpointid,
                         'cyclekey' => (string)$cycle->cyclekey,
                         'rewardpolicy' => 'route-cycle-v2',
-                        'xp' => reward_control::rules((int)$cycle->completedat)['route']['xp'],
+                        'xp' => reward_control::amounts((int)$cycle->userid,'route',(string)$cycle->id,(int)$cycle->completedat)['xp'],
                     ],
                 ], 0);
                 $granted = reward_control::grant((int)$cycle->userid,'route',(string)$cycle->id,

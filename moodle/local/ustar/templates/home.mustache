@@ -4,6 +4,9 @@
     ========================================================== }}
 
 {{#viewhome}}
+<div class="u-home-settings">{{#canpersonalize}}<details><summary class="uw-btn">Настроить главную</summary><div data-home-controls></div><button type="button" class="uw-btn" data-home-reset>Стандартный вид</button><p data-home-status role="status" aria-live="polite"></p></details>{{/canpersonalize}}</div>
+<div class="u-home-layout" data-home-layout data-settings="{{homelayoutjson}}" data-url="{{homelayouturl}}" data-sesskey="{{sesskey}}" data-editable="{{canpersonalize}}">
+<div class="u-home-widget" data-home-block="hero" data-home-label="Приветствие">
 
 <section class="u-home-hero">
     <div class="u-home-hero__brand">
@@ -16,12 +19,8 @@
         <a href="{{profileurl}}">Открыть личный кабинет →</a>
     </div>
 </section>
-
-
-{{#cancontrolrewards}}<div class="u-feature-grid"><a class="u-feature-card" href="{{rewardcontrolurl}}"><div><strong>Управление наградами</strong><span>Настроить XP, USCOIN и личные показатели сотрудников</span></div><b>→</b></a></div>{{/cancontrolrewards}}
-
-{{{workflowshtml}}}
-
+</div>
+<div class="u-home-widget" data-home-block="next" data-home-label="Следующее действие">
 {{#hashomenext}}
 {{#homenext}}
 
@@ -131,9 +130,9 @@
 </section>
 
 {{/hashomenext}}
-
-
-<div class="u-home-grid">
+</div>
+{{{workflowshtml}}}
+<div class="u-home-widget" data-home-block="links" data-home-label="Быстрые переходы"><div class="u-home-grid">
 
     <a
         class="u-home-tile u-home-tile--icon"
@@ -225,6 +224,9 @@
 
 </div>
 
+</div>
+{{#homeextras}}<section class="u-home-widget uw-panel uw-editor" data-home-block="{{id}}" data-home-label="{{label}}"><h2>{{label}}</h2><p>{{description}}</p><a class="uw-btn" href="{{url}}">Открыть →</a></section>{{/homeextras}}
+</div>
 {{/viewhome}}
 
 

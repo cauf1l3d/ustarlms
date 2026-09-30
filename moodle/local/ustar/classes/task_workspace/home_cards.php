@@ -5,11 +5,11 @@ defined('MOODLE_INTERNAL') || die();
 final class home_cards {
     public static function render(int $userid): string {
         if (!service::available() || !\local_ustar\team_access::active_actor($userid)) { return ''; }
-        $out = '<div class="u-workspace uw-home-flows">';
+        $out = '';
         foreach (['other'=>'Мои задачи', 'checklist'=>'Мои чек-листы'] as $kind=>$label) {
             $rows = service::rows($userid,'mine','active',0,0,0,'',$kind);
             $url = new \moodle_url('/local/ustar/tasks.php',['scope'=>'mine','view'=>$kind==='checklist'?'checklists':'overview']);
-            $out .= '<section class="uw-panel"><div class="uw-panel-head"><h2>'.s($label).'</h2><a class="uw-btn" href="'.$url->out().'">Все · '.$rows['total'].'</a></div>';
+            $out .= '<section class="u-home-widget u-workspace uw-home-flow uw-panel" data-home-block="'.($kind==='checklist'?'checklists':'tasks').'" data-home-label="'.s($label).'"><div class="uw-panel-head"><h2>'.s($label).'</h2><a class="uw-btn" href="'.$url->out().'">Все · '.$rows['total'].'</a></div>';
             if (!$rows['total']) { $out .= '<p class="uw-empty">Текущих назначений нет.</p>'; }
             foreach (array_slice($rows['items'],0,5) as $row) {
                 $url = new \moodle_url('/local/ustar/tasks.php',['scope'=>'mine','taskid'=>$row['id']]);
@@ -43,6 +43,16 @@ final class home_cards {
             }
             $out.='</section>';
         }
-        return $out.'</div>';
+        if (!view_as::active()) {
+            $url=(new \moodle_url('/local/ustar/notebook.php'))->out();
+            $out.='<section class="u-home-widget u-workspace uw-home-flow uw-panel" data-home-block="notes" data-home-label="Личные заметки"><div class="uw-panel-head"><h2>Личные заметки</h2><a class="uw-btn" href="'.$url.'">На доску →</a></div>';
+            $notes=\local_ustar\learning_tasks::notes_for_owner($userid,0,'all','');
+            if (!$notes) { $out.='<p class="uw-empty">Запишите идею или добавьте заметку на личную доску.</p>'; }
+            foreach (array_slice($notes,0,5) as $note) {
+                $out.='<article class="uw-home-card"><a href="'.$url.'#note-'.$note['id'].'"><strong>'.s($note['titleplain']).'</strong></a><p class="uw-footnote">'.s(\core_text::substr($note['descriptionplain'],0,160)).'</p></article>';
+            }
+            $out.='</section>';
+        }
+        return $out;
     }
 }

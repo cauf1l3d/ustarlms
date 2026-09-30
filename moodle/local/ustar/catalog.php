@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $uploads[\local_ustar\catalog::FILEAREA_SOURCE] = $_FILES['sourcefile'];
             }
             $record = \local_ustar\catalog::save($id, $_POST, (int)$USER->id, $uploads);
-            redirect(new moodle_url('/local/ustar/catalog.php', ['edit' => (int)$record->id, 'saved' => 1]));
+            redirect(new moodle_url('/local/ustar/catalog.php', ['editor'=>1,'edit' => (int)$record->id, 'saved' => 1]));
         }
         if ($action === 'archive') {
             \local_ustar\catalog::archive(
@@ -63,6 +63,7 @@ $parent = optional_param('parent', 0, PARAM_INT);
 $product = optional_param('product', 0, PARAM_INT);
 $q = trim(optional_param('q', '', PARAM_TEXT));
 $edit = optional_param('edit', 0, PARAM_INT);
+$editoropen = $canmanage && ($edit > 0 || optional_param('editor', 0, PARAM_BOOL) || $failedinput !== null);
 
 $current = $parent ? \local_ustar\catalog::get($parent) : null;
 $detail = $product ? \local_ustar\catalog::view($product) : null;
@@ -90,9 +91,11 @@ $data = [
     'detail' => $detail,
     'hasdetail' => (bool)$detail,
     'canmanage' => $canmanage,
-    'editorurl' => '#catalog-editor',
+    'editoropen' => $editoropen,
+    'editorurl' => (new moodle_url('/local/ustar/catalog.php', ['editor'=>1,'parent'=>$parent]))->out(false),
+    'manageurl' => (new moodle_url('/local/ustar/catalog.php', ['editor'=>1]))->out(false) . '#catalog-records',
     'editurl' => $detail ? (new moodle_url('/local/ustar/catalog.php',
-        ['edit' => (int)$detail['id']]))->out(false) . '#catalog-editor' : '',
+        ['editor'=>1, 'edit' => (int)$detail['id']]))->out(false) . '#catalog-editor' : '',
     'fallbackimage' => $OUTPUT->image_url('brand/ustar-course-placeholder', 'theme_ustar')->out(false),
     'catalogicon' => \local_ustar\ui::icon('knowledge', 'u-feature-icon'),
     'stats' => [
@@ -125,7 +128,7 @@ if (optional_param('archived', 0, PARAM_BOOL)) {
 }
 echo $output->render_from_template('local_ustar/catalog', $data);
 
-if ($canmanage) {
+if ($editoropen) {
     $records = \local_ustar\catalog::editor_records((int)$USER->id);
     $editing = null;
     foreach ($records as $record) {
@@ -224,12 +227,12 @@ if ($canmanage) {
         echo html_writer::empty_tag('input', ['type' => 'submit', 'value' => 'Архивировать карточку', 'class' => 'u-btn u-btn--secondary']);
         echo html_writer::end_tag('form');
     }
-    echo html_writer::tag('p', html_writer::link(new moodle_url('/local/ustar/catalog.php'), 'Создать новую карточку', ['class' => 'u-btn']));
-    echo html_writer::tag('h3', 'Карточки каталога');
+    echo html_writer::tag('p', html_writer::link(new moodle_url('/local/ustar/catalog.php',['editor'=>1]), 'Создать новую карточку', ['class' => 'u-btn']));
+    echo html_writer::tag('h3', 'Карточки каталога', ['id'=>'catalog-records']);
     echo html_writer::start_tag('ul', ['class' => 'u-catalog-editor__list']);
     foreach ($records as $record) {
         echo html_writer::tag('li', html_writer::link(
-            new moodle_url('/local/ustar/catalog.php', ['edit' => (int)$record->id]),
+            new moodle_url('/local/ustar/catalog.php', ['editor'=>1, 'edit' => (int)$record->id]),
             format_string((string)$record->title) . ' · ' . s((string)$record->itemtype)
         ));
     }

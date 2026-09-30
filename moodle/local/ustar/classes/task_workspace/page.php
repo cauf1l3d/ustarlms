@@ -15,7 +15,9 @@ final class page {
         $manage = service::can_manage($actor);
         $out = '<div class="u-workspace"><header class="uw-heading"><div><div class="uw-eyebrow">Рабочее пространство</div>
             <h1>Задачи и контроль</h1><p>Поручения, ежедневные проверки и результаты команды.</p></div>';
+        $out .= '<div class="uw-actions">';
         if ($manage) { $out .= self::link('Создать задачу', ['form' => 'create', 'taskid' => 0], 'uw-btn uw-primary'); }
+        $out .= '<a class="uw-btn" href="'.(new \moodle_url('/local/ustar/notebook.php'))->out().'">Личный блокнот</a></div>';
         $out .= '</header><nav class="uw-tabs" aria-label="Разделы задач">';
         $tabs = ['overview' => $manage ? 'Обзор' : 'Мой день', 'calendar' => 'Календарь', 'checklists' => 'Чек-листы'];
         if ($manage) { $tabs['control'] = 'Контроль'; }

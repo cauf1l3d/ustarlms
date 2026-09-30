@@ -4892,5 +4892,12 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026093003, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026093005) {
+        // Presentation uses existing preferences. Future completion rewards use existing grants.
+        if (!get_config('local_ustar','completion_reward_startedat')) {
+            set_config('completion_reward_startedat',time()+1,'local_ustar');
+        }
+        upgrade_plugin_savepoint(true,2026093005,'local','ustar');
+    }
 return true;
 }

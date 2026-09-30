@@ -19,6 +19,22 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             }
             rewards::save($actor,$rules,required_param('reason',PARAM_TEXT),required_param('revision',PARAM_ALPHANUM));
             redirect($url,'Новая версия правил сохранена. Применяется к будущим событиям.');
+        } else if (in_array($action,['condition','disable'],true)) {
+            $condition=null;$disable='';
+            if ($action==='condition') {
+                $timezone=core_date::get_user_timezone();
+                if (!in_array($timezone,DateTimeZone::listIdentifiers(),true)) { $timezone='Europe/Moscow'; }
+                $from=required_param('fromdate',PARAM_RAW_TRIMMED);$until=optional_param('untildate','',PARAM_RAW_TRIMMED);
+                $scope=required_param('conditionscope',PARAM_ALPHA);
+                $scopeid=$scope==='company'?'':required_param('scope_'.$scope,PARAM_ALPHANUMEXT);
+                $condition=['title'=>required_param('conditiontitle',PARAM_TEXT),'kind'=>required_param('conditionkind',PARAM_ALPHA),
+                    'scope'=>$scope,'scopeid'=>$scopeid,'resource'=>optional_param('conditionresource','',PARAM_ALPHANUMEXT),
+                    'xp'=>required_param('conditionxp',PARAM_INT),'coins'=>optional_param('conditioncoins',0,PARAM_INT),
+                    'from'=>\local_ustar\task_workspace\calendar::timestamp($from,'00:00',$timezone),
+                    'until'=>$until!==''?\local_ustar\task_workspace\calendar::timestamp($until,'23:59',$timezone)+59:0];
+            } else { $disable=required_param('conditionid',PARAM_ALPHANUM); }
+            rewards::save_condition($actor,$condition,$disable,required_param('reason',PARAM_TEXT),required_param('revision',PARAM_ALPHANUM));
+            redirect($url,'Условия сохранены для будущих событий.');
         } else if ($action==='preview') {
             $target=required_param('userid',PARAM_INT);
             $preview=rewards::preview($actor,$target);
@@ -42,9 +58,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 }
 $PAGE->set_context($context); $PAGE->set_url($url); $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Управление геймификацией | USTAR'); $PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-rc4']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-ux5']));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/reward_control.css',['v'=>'20260930-ux5']));
+$PAGE->requires->js(new moodle_url('/local/ustar/reward_control.js',['v'=>'20260930-ux5']));
 echo $OUTPUT->header();
-echo '<div class="u-workspace"><header class="uw-heading"><div><p class="uw-eyebrow">Администратор</p><h1>Управление геймификацией</h1><p>Правила наград и адресная корректировка показателей сотрудников.</p></div></header>';
+echo '<div class="u-workspace u-reward-control"><header class="uw-heading"><div><p class="uw-eyebrow">Администратор</p><h1>Управление геймификацией</h1><p>Правила наград и адресная корректировка показателей сотрудников.</p></div></header>';
 if ($notice) { echo $OUTPUT->notification(s($notice),'notifyproblem'); }
 function ustar_reward_hidden(string $name,$value): string { return html_writer::empty_tag('input',['type'=>'hidden','name'=>$name,'value'=>$value]); }
 if ($preview && isset($SESSION->ustar_reward_reset)) {
@@ -57,8 +75,24 @@ if ($preview && isset($SESSION->ustar_reward_reset)) {
 }
 $labels=['course'=>'Завершение курса','activity'=>'Завершение учебной активности','route'=>'Подтверждённая точка маршрута',
     'game'=>'Первый верный ответ на вопрос игры','task'=>'Принятое поручение','checklist'=>'Принятый чек-лист'];
-$versions=rewards::versions(); $rules=$versions ? end($versions)['rules'] : rewards::defaults();
-echo '<section class="uw-panel uw-editor"><h2>За что и сколько начислять</h2><p>Новая версия действует на будущие события. Начисленные награды не пересчитываются. Ноль отключает награду за событие. Игровые XP: −1 — значение из редактора вопроса.</p><form class="uw-form" method="post" action="'.$url->out().'">'
+$versions=rewards::versions(); $latest=end($versions);$rules=$versions ? $latest['rules'] : rewards::defaults();
+$options=\local_ustar\reward_conditions::options();$conditions=$latest['conditions']??[];
+$rows=[];
+foreach ($conditions as $c) {
+    $scope=['company'=>'Вся компания','department'=>'Отдел','position'=>'Должность','person'=>'Сотрудник'][$c['scope']];
+    $map=['department'=>'departments','position'=>'positions','person'=>'people'];
+    $who=$c['scope']==='company'?$scope:$scope.': '.($options[$map[$c['scope']]][$c['scopeid']]??$c['scopeid']);
+    $rows[]=$c+['kindlabel'=>$labels[$c['kind']],'wholabel'=>$who,
+        'resourcelabel'=>$c['resource']!==''?($options['resources'][$c['kind']][$c['resource']]??'Источник №'.$c['resource']):'Любой источник этого события',
+        'period'=>userdate($c['from'],'%d.%m.%Y').' — '.($c['until']?userdate($c['until'],'%d.%m.%Y'):'без окончания')];
+}
+$selectoptions=static function(array $values): array { $out=[];foreach ($values as $id=>$name) { $out[]=['id'=>$id,'name'=>$name]; }return $out; };
+echo $OUTPUT->render_from_template('local_ustar/reward_conditions',[
+    'url'=>$url->out(false),'sesskey'=>sesskey(),'revision'=>hash('sha256',json_encode($versions)),
+    'rows'=>$rows,'hasconditions'=>!empty($rows),'resourcejson'=>json_encode($options['resources']),
+    'departments'=>$selectoptions($options['departments']),'positions'=>$selectoptions($options['positions']),
+    'people'=>$selectoptions($options['people']),'tomorrow'=>userdate(time()+DAYSECS,'%Y-%m-%d')]);
+echo '<details class="uw-panel uw-editor"><summary>Базовые награды для всей компании</summary><h2>За что и сколько начислять</h2><p>Новая версия действует на будущие события. Начисленные награды не пересчитываются. Ноль отключает награду за событие. Игровые XP: −1 — значение из редактора вопроса.</p><form class="uw-form" method="post" action="'.$url->out().'">'
     .ustar_reward_hidden('sesskey',sesskey()).ustar_reward_hidden('action','rules')
     .ustar_reward_hidden('revision',hash('sha256',json_encode($versions)));
 foreach ($labels as $kind=>$label) {
@@ -68,7 +102,7 @@ foreach ($labels as $kind=>$label) {
     } else { echo '<p class="uw-footnote">USCOIN за обучение начисляется при подтверждении точки маршрута.</p>'; }
     echo '</div></fieldset>';
 }
-echo '<label class="uw-field"><span>Причина изменения правил</span><textarea name="reason" required maxlength="2000"></textarea></label><button class="uw-btn uw-primary">Сохранить новую версию правил</button></form></section>';
+echo '<label class="uw-field"><span>Причина изменения правил</span><textarea name="reason" required maxlength="2000"></textarea></label><button class="uw-btn uw-primary">Сохранить новую версию правил</button></form></details>';
 $department=optional_param('departmentid','',PARAM_ALPHANUMEXT); $position=optional_param('positionid','',PARAM_ALPHANUMEXT);
 $options=\local_ustar\task_workspace\recipients::options($actor,$department,$position);
 echo '<section class="uw-panel uw-editor"><h2>Сброс показателей сотрудника</h2><form method="get" class="uw-form"><div class="uw-form-grid"><label class="uw-field">Отдел'

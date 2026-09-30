@@ -2165,6 +2165,23 @@ $PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['
 $data['cancontrolrewards'] = !\local_ustar\view_as::active() && \local_ustar\reward_control::can_manage((int)$USER->id);
 $data['rewardcontrolurl'] = (new moodle_url('/local/ustar/reward_control.php'))->out(false);
 $data['workflowshtml'] = \local_ustar\task_workspace\home_cards::render((int)$USER->id);
+if ($view==='home') {
+    $data['canpersonalize']=!\local_ustar\view_as::active() && \local_ustar\team_access::active_actor((int)$USER->id);
+    $data['homelayoutjson']=json_encode(\local_ustar\home_layout::read((int)$USER->id));
+    $data['homelayouturl']=(new moodle_url('/local/ustar/home_layout.php'))->out(false);
+    $data['sesskey']=sesskey();$data['homeextras']=[];
+    $extras=['achievements'=>['Достижения','Ваши XP, KPI, награды и уровень.','/local/ustar/achievements.php'],
+        'team'=>['Моя команда','Сводка обучения и структура команды.','/local/ustar/team.php'],
+        'competition'=>['Соревнования','Сезоны обучения и игр академии.','/local/ustar/competition_studio.php']];
+    foreach (\local_ustar\home_layout::blocks((int)$USER->id) as $id=>$label) {
+        if (!isset($extras[$id])) { continue; }
+        [$label,$description,$path]=$extras[$id];
+        $data['homeextras'][]=['id'=>$id,'label'=>$label,'description'=>$description,'url'=>(new moodle_url($path))->out(false)];
+    }
+    $PAGE->requires->css(new moodle_url('/local/ustar/styles/home_layout.css',['v'=>'20260930-ux5']));
+    $PAGE->requires->js(new moodle_url('/local/ustar/home_layout.js',['v'=>'20260930-ux5']));
+}
+
 echo $output->header();
 
 

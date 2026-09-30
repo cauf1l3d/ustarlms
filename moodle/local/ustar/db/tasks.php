@@ -2,6 +2,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
+    ['classname'=>'local_ustar\\task\\reconcile_competitions','blocking'=>0,'minute'=>'*/5','hour'=>'*','day'=>'*','month'=>'*','dayofweek'=>'*'],
     [
         'classname' => 'local_ustar\\task\\reconcile_reporting',
         'blocking' => 0,

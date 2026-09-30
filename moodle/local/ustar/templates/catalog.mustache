@@ -5,10 +5,11 @@
     <h1>{{title}}</h1>
     <p>{{subtitle}}</p>
   </div>
-  {{#canmanage}}<a class="u-btn u-btn--primary" href="{{editorurl}}">+ Добавить карточку</a>{{/canmanage}}
+  {{#canmanage}}<div class="u-product-head__actions"><a class="u-btn u-btn--primary" href="{{editorurl}}">+ Создать</a><a class="u-btn" href="{{manageurl}}">Управление каталогом</a>{{#editoropen}}<a class="u-btn" href="{{rooturl}}">Вернуться в каталог</a>{{/editoropen}}</div>{{/canmanage}}
   {{{catalogicon}}}
 </header>
 
+{{^editoropen}}
 <form class="u-catalog-search" method="get" action="{{rooturl}}">
   <input type="search" name="q" value="{{q}}" placeholder="Найти товар, SKU или характеристику..." aria-label="Поиск товара">
   <button class="u-btn u-btn--primary" type="submit">Найти</button>
@@ -82,4 +83,5 @@
   <a class="u-btn u-btn--secondary" href="{{rooturl}}">Весь каталог</a>
 </div>
 {{/hasitems}}
+{{/editoropen}}
 </div>

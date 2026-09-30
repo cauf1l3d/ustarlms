@@ -505,3 +505,18 @@ html[data-ustar-theme="dark"] :is(
         width: auto !important;
     }
 }
+
+/* Dedicated canvas and catalog pages use all the room beside navigation. */
+body.u-personal-wide .u-main > .u-container { width:100%; max-width:none; }
+body.u-personal-wide .u-product-page { max-width:none; width:100%; }
+body.u-personal-wide .u-catalog-grid { grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr)); }
+body.u-personal-wide .u-catalog-card__image img { object-fit:contain; padding:12px; }
+body.u-personal-wide .u-catalog-detail__image img { object-fit:contain; }
+.u-preset-grid button { display:flex; align-items:center; gap:8px; padding:8px 12px; }
+.u-preset-grid button::before { content:''; width:14px; height:14px; border-radius:50%; background:var(--preset-swatch,var(--u-brand)); }
+html[data-ustar-preset="lavender"] { --u-brand:#B89CE9 !important; --u-brand-strong:#9275C2 !important; --u-brand-soft:color-mix(in srgb,#B89CE9 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
+html[data-ustar-preset="mint"] { --u-brand:#73C6AF !important; --u-brand-strong:#459D85 !important; --u-brand-soft:color-mix(in srgb,#73C6AF 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
+html[data-ustar-preset="coral"] { --u-brand:#EC947F !important; --u-brand-strong:#CA6C57 !important; --u-brand-soft:color-mix(in srgb,#EC947F 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
+html[data-ustar-preset="indigo"] { --u-brand:#9EA9ED !important; --u-brand-strong:#7583CC !important; --u-brand-soft:color-mix(in srgb,#9EA9ED 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
+html[data-ustar-preset="rose"] { --u-brand:#E5A2B8 !important; --u-brand-strong:#C17793 !important; --u-brand-soft:color-mix(in srgb,#E5A2B8 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
+html[data-ustar-preset="ice"] { --u-brand:#84C8DF !important; --u-brand-strong:#51A0BC !important; --u-brand-soft:color-mix(in srgb,#84C8DF 16%,transparent) !important; --u-text-on-brand:#182027 !important; }

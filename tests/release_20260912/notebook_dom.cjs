@@ -27,10 +27,25 @@ async function run() {
  for (let i=0;i<8;i++) { await tick(); }
  assert.equal(calls.length, 2); assert.deepEqual(calls.map(c => c.params.revision), ['2','3']);
  assert.equal(calls[0].url, '/local/ustar/notebook.php');
- assert.equal(calls[1].params.x, '40'); assert.equal(calls[1].params.y, '60');
+ const saved = JSON.parse(calls[1].params.patch).items['10'];
+ assert.equal(saved.x, 40); assert.equal(saved.y, 60);
+ assert.equal(saved.width, 310);
  win.document.querySelector('[data-zoom=in]').click();
  assert.equal(win.document.querySelector('[data-zoom-label]').textContent, '110%');
  assert.equal(calls.length, 2, 'Zoom must not mutate notes');
+ card.querySelector('[data-resize]').dispatchEvent(new win.KeyboardEvent('keydown', {key:'ArrowRight'}));
+ for(let i=0;i<4;i++)await tick();
+ assert.equal(JSON.parse(calls.at(-1).params.patch).items['10'].width,330);
+ card.querySelector('[data-select]').checked=true;
+ win.document.querySelector('[data-group]').click();
+ for(let i=0;i<4;i++)await tick();
+ const grouped=JSON.parse(calls.at(-1).params.patch);
+ assert.equal(Object.keys(grouped.frames).length,1,'A frame must be serialized as an object');
+ assert.ok(grouped.items['10'].frame);
+ win.document.querySelector('select[data-background]').value='mint';
+ win.document.querySelector('select[data-background]').dispatchEvent(new win.Event('change'));
+ for(let i=0;i<4;i++)await tick();
+ assert.equal(JSON.parse(calls.at(-1).params.patch).background,'mint');
  win.fetch = async () => ({ok:false, json:async () => ({ok:false, error:'Доска изменилась'})});
  handle.dispatchEvent(new win.KeyboardEvent('keydown', {key:'ArrowRight'}));
  for (let i=0;i<4;i++) { await tick(); }

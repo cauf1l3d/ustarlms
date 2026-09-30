@@ -13,10 +13,7 @@ $runtimeid = required_param('runtimeid', PARAM_INT);
 
 \local_ustar\assessment_lifecycle::authorize_remediation((int)$USER->id, $runtimeid);
 
-$context = context_system::instance();
-$ishrd = is_siteadmin((int)$USER->id)
-    || has_capability('local/ustar:hrmanage', $context)
-    || has_capability('local/ustar:admin', $context);
+$ishrd = \local_ustar\hr_access::can_view_hrd_escalations((int)$USER->id);
 
 $returnurl = $ishrd
     ? new moodle_url('/local/ustar/hr_quiz_grading.php')

@@ -91,7 +91,7 @@ echo $OUTPUT->render_from_template('local_ustar/reward_conditions',[
     'url'=>$url->out(false),'sesskey'=>sesskey(),'revision'=>hash('sha256',json_encode($versions)),
     'rows'=>$rows,'hasconditions'=>!empty($rows),'resourcejson'=>json_encode($options['resources']),
     'departments'=>$selectoptions($options['departments']),'positions'=>$selectoptions($options['positions']),
-    'people'=>$selectoptions($options['people']),'tomorrow'=>userdate(time()+DAYSECS,'%Y-%m-%d')]);
+    'people'=>$selectoptions($options['people']),'tomorrow'=>(new DateTimeImmutable('now',core_date::get_user_timezone_object()))->modify('+1 day')->format('Y-m-d')]);
 echo '<details class="uw-panel uw-editor"><summary>Базовые награды для всей компании</summary><h2>За что и сколько начислять</h2><p>Новая версия действует на будущие события. Начисленные награды не пересчитываются. Ноль отключает награду за событие. Игровые XP: −1 — значение из редактора вопроса.</p><form class="uw-form" method="post" action="'.$url->out().'">'
     .ustar_reward_hidden('sesskey',sesskey()).ustar_reward_hidden('action','rules')
     .ustar_reward_hidden('revision',hash('sha256',json_encode($versions)));

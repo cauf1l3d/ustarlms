@@ -10,7 +10,9 @@ $context = context_system::instance();
 \local_ustar\hr_access::require_grader();
 
 $attempts = \local_ustar\route_quiz_grading::attempts();
-$assessmentescalations = \local_ustar\assessment_lifecycle::hrd_alerts((int)$USER->id);
+$assessmentescalations = \local_ustar\hr_access::can_view_hrd_escalations((int)$USER->id)
+    ? \local_ustar\assessment_lifecycle::hrd_alerts((int)$USER->id)
+    : ['alerts' => [], 'count' => 0];
 
 /*
  * Queue semantics: one visible row is one employee + one logical assessment

@@ -7,7 +7,7 @@ require_capability('local/ustar:use', $context);
 $view = optional_param('view', 'mine', PARAM_ALPHA);
 if (!in_array($view, ['mine', 'team', 'assignments'], true)) { $view = 'mine'; }
 $canassign = \local_ustar\hr_access::can_manage_structure((int)$USER->id);
-if ($view === 'assignments' && !$canassign) { require_capability('local/ustar:hrmanage', $context); }
+if ($view === 'assignments' && !$canassign) { \local_ustar\hr_access::require_structure_manager(); }
 $notice = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

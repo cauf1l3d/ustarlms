@@ -31,7 +31,7 @@ final class page {
                 $out .= self::link($label, ['scope' => $key, 'pageno' => 0], 'uw-chip' . ($state['scope'] === $key ? ' is-active' : ''));
             }
         } else { $out .= '<span>Мои задачи</span>'; }
-        $out .= '<span class="uw-scope-links"><a href="' . (new \moodle_url('/local/ustar/tasks.php', ['tab' => 'notebook']))->out() . '">Личный блокнот</a>
+        $out .= '<span class="uw-scope-links"><a href="' . (new \moodle_url('/local/ustar/notebook.php'))->out() . '">Личный блокнот</a>
             <a href="' . (new \moodle_url('/local/ustar/tasks.php', ['tab' => 'checklists']))->out() . '">Адаптационные листы</a></span></div>';
         if (!isset($tabs[$state['view']])) { $out .= '<div class="uw-panel">Раздел недоступен для вашей роли.</div>'; }
         else {

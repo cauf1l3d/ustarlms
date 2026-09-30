@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 }
 $PAGE->set_context($context); $PAGE->set_url($url); $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Управление геймификацией | USTAR'); $PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-ux']));
 echo $OUTPUT->header();
 echo '<div class="u-workspace"><header class="uw-heading"><div><p class="uw-eyebrow">Администратор</p><h1>Управление геймификацией</h1><p>Правила наград и адресная корректировка показателей сотрудников.</p></div></header>';
 if ($notice) { echo $OUTPUT->notification(s($notice),'notifyproblem'); }

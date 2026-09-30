@@ -1,0 +1,23 @@
+<div class="u-workspace u-notebook" data-notebook data-url="{{url}}" data-sesskey="{{sesskey}}">
+<header class="uw-heading"><div><p class="uw-eyebrow">Только для вас</p><h1>Личный блокнот</h1><p>Заметки и файлы на доске. Расположите карточки так, как вам удобно.</p></div><div class="uw-actions"><a class="uw-btn" href="{{tasksurl}}">К задачам</a><a class="uw-btn uw-primary" href="{{newurl}}">Новая заметка</a></div></header>
+{{#notice}}<p class="uw-notice" role="alert">{{notice}}</p>{{/notice}}
+{{#saved}}<p class="uw-notice" role="status">Блокнот сохранён.</p>{{/saved}}
+{{#edit}}<section class="uw-panel uw-editor" aria-label="Редактор заметки">
+<div class="uw-panel-head"><h2>{{#editing}}Редактировать заметку{{/editing}}{{^editing}}Новая заметка{{/editing}}</h2><a class="uw-btn" href="{{url}}">Закрыть редактор</a></div>
+<form method="post" action="{{url}}" enctype="multipart/form-data" class="uw-form">
+<input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="{{#editing}}edit{{/editing}}{{^editing}}create{{/editing}}"><input type="hidden" name="noteid" value="{{noteid}}"><input type="hidden" name="version" value="{{version}}">
+<label class="uw-field"><span>Название</span><input name="title" value="{{title}}" maxlength="255" required autofocus></label>
+<label class="uw-field"><span>Заметка</span><textarea name="body" rows="7">{{body}}</textarea></label>
+<label class="uw-field"><span>Добавить файлы · до {{uploadlimit}} на файл</span><input type="file" name="attachments[]" multiple></label>
+<div class="un-files">{{#files}}<a class="uw-btn" href="{{url}}">Скачать · {{name}}</a>{{/files}}</div>
+<div class="uw-actions"><button class="uw-btn uw-primary" type="submit">Сохранить заметку</button><a class="uw-btn" href="{{url}}">Отмена</a></div></form>
+{{#editing}}<details class="un-delete"><summary>Удалить заметку</summary><form method="post" action="{{url}}"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="delete"><input type="hidden" name="noteid" value="{{noteid}}"><input type="hidden" name="version" value="{{version}}"><label class="uw-check"><input name="confirmdelete" type="checkbox" value="1" required>Удалить эту заметку и её файлы</label><button type="submit" class="uw-btn">Удалить</button></form></details>{{/editing}}
+</section>{{/edit}}
+<section class="uw-panel un-tools" aria-label="Инструменты блокнота"><form method="get" action="{{url}}" class="un-search"><label class="uw-field"><span class="accesshide">Поиск заметок</span><input type="search" name="q" value="{{q}}" placeholder="Найти в блокноте"></label><button class="uw-btn" type="submit">Найти</button></form>
+<div class="uw-actions un-board-tools" hidden><button type="button" class="uw-btn" data-mode aria-pressed="false">Список</button><button type="button" class="uw-btn" data-zoom="out" aria-label="Уменьшить масштаб">−</button><output data-scale>100%</output><button type="button" class="uw-btn" data-zoom="in" aria-label="Увеличить масштаб">+</button><button type="button" class="uw-btn" data-origin>К началу доски</button></div></section>
+<p class="uw-muted un-hint" hidden>Перемещайте карточки за верхнюю ручку. Для клавиатуры: выберите ручку и используйте стрелки.</p>
+<p class="un-status" data-status role="status" aria-live="polite"></p>
+{{#hasnotes}}<div class="un-viewport" tabindex="0" aria-label="Доска личных заметок"><div class="un-space"><div class="un-canvas">{{#notes}}<article class="un-card" data-id="{{id}}" data-x="{{x}}" data-y="{{y}}"><button class="un-handle" type="button" aria-label="Переместить заметку {{titleplain}}" hidden><span aria-hidden="true">⠿</span> Заметка</button><a class="un-open" href="{{url}}"><h2>{{titleplain}}</h2><p>{{preview}}</p><footer><span>{{date}}</span><span>Открыть →</span></footer></a></article>{{/notes}}</div></div></div>{{/hasnotes}}
+{{^hasnotes}}<div class="uw-panel uw-empty"><h2>{{#q}}Заметки не найдены{{/q}}{{^q}}Ваша личная доска{{/q}}</h2><p>{{#q}}Попробуйте другое название или текст.{{/q}}{{^q}}Добавьте заметку, приложите файлы и разложите идеи по карточкам. Содержание видите только вы.{{/q}}</p><a class="uw-btn uw-primary" href="{{newurl}}">Создать заметку</a></div>{{/hasnotes}}
+<nav class="uw-pagination" aria-label="Страницы блокнота"><span>Заметок: {{total}}</span>{{#prevurl}}<a class="uw-btn" href="{{prevurl}}">Предыдущие</a>{{/prevurl}}{{#nexturl}}<a class="uw-btn" href="{{nexturl}}">Следующие</a>{{/nexturl}}</nav>
+</div>

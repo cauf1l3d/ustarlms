@@ -11,6 +11,8 @@ $dashboard = \local_ustar\hr_operations::dashboard();
 $canstructure = \local_ustar\hr_access::can_manage_structure((int)$USER->id);
 
 $data = [
+    'hasrewardcontrol' => !\local_ustar\view_as::active() && \local_ustar\reward_control::can_manage((int)$USER->id),
+    'rewardcontrolurl' => (new moodle_url('/local/ustar/reward_control.php'))->out(false),
     'generated' => userdate((int)$dashboard['generatedat'], '%d.%m.%Y %H:%M'),
     'employees' => (int)$dashboard['employees'],
 

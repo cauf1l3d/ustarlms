@@ -117,7 +117,7 @@ $PAGE->set_url(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope
 $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Задачи и контроль | USTAR Academy');
 $PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-ux']));
 $PAGE->requires->js(new moodle_url('/local/ustar/task_workspace.js'));
 echo $OUTPUT->header();
 if ($notice !== '') { echo $OUTPUT->notification(s($notice), 'notifyproblem'); }

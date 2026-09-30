@@ -2161,7 +2161,7 @@ $data = [
 ];
 
 
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-ux']));
 $data['workflowshtml'] = \local_ustar\task_workspace\home_cards::render((int)$USER->id);
 echo $output->header();
 

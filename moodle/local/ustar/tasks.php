@@ -11,6 +11,10 @@ if (!$canhrworkspace) {
     require_capability('local/ustar:use', $context);
 }
 $legacytab = optional_param('tab', '', PARAM_ALPHA);
+if ($legacytab === 'notebook') {
+    require(__DIR__ . '/notebook.php');
+    exit;
+}
 if (!in_array($legacytab, ['checklists', 'notebook'], true)
         && \local_ustar\task_workspace\service::available()) {
     require(__DIR__ . '/task_workspace.php');

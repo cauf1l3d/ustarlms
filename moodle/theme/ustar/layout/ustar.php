@@ -87,6 +87,7 @@ $materialpages = [
 ];
 
 $operationpages = [
+    '/local/ustar/reward_control.php',
     '/local/ustar/operations.php',
     '/local/ustar/brand.php',
     '/local/ustar/game_studio.php',
@@ -128,7 +129,7 @@ $cataloglabel =
 
 if ($pagepath === '/local/ustar/team.php' || $pagepath === '/local/ustar/executive.php') { $view = 'team'; }
 if ($pagepath === '/local/ustar/achievements.php') { $view = 'achievements'; }
-if ($pagepath === '/local/ustar/tasks.php') { $view = 'tasks'; }
+if (in_array($pagepath, ['/local/ustar/tasks.php', '/local/ustar/task_workspace.php', '/local/ustar/notebook.php'], true)) { $view = 'tasks'; }
 if (in_array($pagepath, ['/local/ustar/feed.php', '/local/ustar/feed_admin.php'], true)) { $view = 'feed'; }
 if ($pagepath === '/local/ustar/grades.php') { $view = 'career'; }
 
@@ -339,6 +340,8 @@ $pagelabels = [
 ];
 
 $controlpagelabels = [
+    '/local/ustar/notebook.php' => 'Личный блокнот',
+    '/local/ustar/reward_control.php' => 'Геймификация',
     '/local/ustar/hr.php' => 'Сотрудники',
     '/local/ustar/positions.php' => 'Модели должностей',
     '/local/ustar/route_studio.php' => 'Маршруты обучения',
@@ -688,6 +691,11 @@ if (!in_array($preset, ['yellow','graphite','ocean','forest','berry','sand'], tr
 $PAGE->requires->js_call_amd('theme_ustar/shell', 'init');
 
 $viewasactive = class_exists('\local_ustar\view_as') && \local_ustar\view_as::active();
+if (!$viewasactive && \local_ustar\reward_control::can_manage((int)$USER->id)) {
+    $navitems[] = ['label'=>'Геймификация','short'=>'Награды',
+        'url'=>(new moodle_url('/local/ustar/reward_control.php'))->out(false),
+        'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/reward_control.php'];
+}
 $viewasposition = '';
 // A manager sees the decision queue even if their HR/executive role selects a different shell.
 $canapprovegrades = !$viewasactive && \local_ustar\organization_model::is_manager((int)$USER->id);

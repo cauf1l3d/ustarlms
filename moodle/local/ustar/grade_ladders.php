@@ -3,7 +3,7 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/ustar:hrmanage', $context);
+\local_ustar\hr_access::require_structure_manager();
 \local_ustar\view_as::assert_writable();
 
 $ladderid = optional_param('id', 0, PARAM_INT);

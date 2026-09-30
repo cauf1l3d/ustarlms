@@ -13,12 +13,9 @@ require_capability(
     'local/ustar:hr',
     $context
 );
+\local_ustar\hr_access::require_structure_manager();
 
-$canmanage =
-    has_capability(
-        'local/ustar:hrmanage',
-        $context
-    );
+$canmanage = true;
 
 
 $structure =

@@ -3,6 +3,7 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
+\local_ustar\hr_access::require_structure_manager();
 if (!\local_ustar\grade_rules::can_manage((int)$USER->id)) {
     throw new required_capability_exception($context, 'local/ustar:hrmanage', 'nopermissions', '');
 }

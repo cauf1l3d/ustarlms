@@ -65,4 +65,9 @@ $tasks = [
         'month'     => '*',
         'dayofweek' => '*',
     ],
+    [
+        'classname' => 'local_ustar\\task\\process_work_tasks',
+        'blocking' => 0, 'minute' => '*/5', 'hour' => '*',
+        'day' => '*', 'month' => '*', 'dayofweek' => '*',
+    ],
 ];

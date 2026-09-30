@@ -25,3 +25,5 @@ $string['ustar:legacyui'] = 'Доступ к прежнему интерфейс
 $string['ustar:managecatalog'] = 'Управление каталогом USTAR';
 $string['ustar:managecompetition'] = 'Управление соревнованиями USTAR';
 $string['ustar:viewas'] = 'Предпросмотр USTAR от другой роли';
+
+$string['ustar:taskescalation'] = 'Контроль исключений и эскалаций рабочих задач';

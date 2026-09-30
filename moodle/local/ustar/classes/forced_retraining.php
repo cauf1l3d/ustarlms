@@ -315,6 +315,16 @@ final class forced_retraining {
         return ['kind' => 'assessment', 'cmid' => $cmid];
     }
 
+    /** Integration snapshot. Explicit reconciliation is reserved for the trusted scheduled worker. */
+    public static function assignment_state(int $userid, int $assignmentid, bool $reconcile = false): array {
+        $assignment = self::assignment($userid, $assignmentid);
+        if (!empty($assignment['closed'])) {
+            return array_merge($assignment, ['completed' => empty($assignment['cancelled'])]);
+        }
+        $resolved = structure::resolve_user($userid);
+        return self::state($assignment, (string)($resolved['position']['id'] ?? ''), $reconcile);
+    }
+
     /** @return array<string,mixed> */
     private static function state(array $assignment, string $positionid, bool $reconcile): array {
         global $DB;
@@ -364,6 +374,7 @@ final class forced_retraining {
             return array_merge($assignment, [
                 'completed' => true,
                 'materialdone' => true,
+                'completedat' => $passedat,
                 'statuskey' => 'complete',
                 'statuslabel' => 'Переобучение завершено',
                 'canlaunch' => false,

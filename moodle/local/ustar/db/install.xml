@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026092804" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026093001" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1742,6 +1742,153 @@
       </FIELDS>
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
       <INDEXES><INDEX NAME="post_status_idx" UNIQUE="false" FIELDS="postid, status" /></INDEXES>
+    </TABLE>
+      <TABLE NAME="local_ustar_task_meta" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" NOTNULL="true" SEQUENCE="true" LENGTH="10" />
+        <FIELD NAME="taskid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="kind" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="16" DEFAULT="task" />
+        <FIELD NAME="parentid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="templateversionid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="seriesid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="occurdate" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="" />
+        <FIELD NAME="timezone" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="64" DEFAULT="Europe/Moscow" />
+        <FIELD NAME="kpiweight" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="10" />
+        <FIELD NAME="requirephoto" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="submittedat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="reviewdueat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="lastcheckedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      <FIELD NAME="reviewedat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="policyjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="task" UNIQUE="true" FIELDS="taskid" />
+        <INDEX NAME="seriesdate" UNIQUE="false" FIELDS="seriesid, occurdate" />
+        <INDEX NAME="reviewdue" UNIQUE="false" FIELDS="reviewdueat" />
+        <INDEX NAME="checked" UNIQUE="false" FIELDS="lastcheckedat" />
+      <INDEX NAME="parent" UNIQUE="false" FIELDS="parentid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_task_templates" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" NOTNULL="true" SEQUENCE="true" LENGTH="10" />
+        <FIELD NAME="ownerid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="title" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="255" />
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1" />
+        <FIELD NAME="versionid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="active" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1" />
+        <FIELD NAME="timecreated" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="timemodified" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="owner" UNIQUE="false" FIELDS="ownerid, active" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_task_tpl_versions" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" NOTNULL="true" SEQUENCE="true" LENGTH="10" />
+        <FIELD NAME="templateid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="versionno" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="definitionjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="kpiweight" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="10" />
+        <FIELD NAME="requirephoto" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="createdby" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="timecreated" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="templatever" UNIQUE="true" FIELDS="templateid, versionno" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_task_series" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" NOTNULL="true" SEQUENCE="true" LENGTH="10" />
+        <FIELD NAME="assignerid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="assigneeid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="templateversionid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="title" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="255" />
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="nextdate" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10" />
+        <FIELD NAME="enddate" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10" />
+        <FIELD NAME="dueclock" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="5" />
+        <FIELD NAME="timezone" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="64" />
+        <FIELD NAME="weekdaysjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="policyjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="kpiweight" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="10" />
+        <FIELD NAME="requirephoto" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1" />
+        <FIELD NAME="status" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="16" DEFAULT="active" />
+        <FIELD NAME="timecreated" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="timemodified" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="nextdate" UNIQUE="false" FIELDS="status, nextdate" />
+        <INDEX NAME="owner" UNIQUE="false" FIELDS="assignerid, status" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_task_reports" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" NOTNULL="true" SEQUENCE="true" LENGTH="10" />
+        <FIELD NAME="taskid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="taskversion" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="status" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="16" />
+        <FIELD NAME="answersjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="commenttext" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="actorid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="submittedat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="timecreated" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="taskversion" UNIQUE="true" FIELDS="taskid, taskversion" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_task_escalations" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" NOTNULL="true" SEQUENCE="true" LENGTH="10" />
+        <FIELD NAME="taskid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="lane" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="16" />
+        <FIELD NAME="cyclekey" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="64" />
+        <FIELD NAME="levelno" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="recipientid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="triggerat" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="timecreated" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="delivery" UNIQUE="true" FIELDS="cyclekey, recipientid" />
+        <INDEX NAME="task" UNIQUE="false" FIELDS="taskid" />
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_task_settings" COMMENT="Versioned task workspace extension; existing tasks remain canonical">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" NOTNULL="true" SEQUENCE="true" LENGTH="10" />
+        <FIELD NAME="ownerid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+        <FIELD NAME="revision" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="1" />
+        <FIELD NAME="policyjson" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="timemodified" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="owner" UNIQUE="true" FIELDS="ownerid" />
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

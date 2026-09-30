@@ -25,3 +25,5 @@ $string['ustar:legacyui'] = 'Access legacy USTAR interface';
 $string['ustar:managecatalog'] = 'Manage USTAR catalog';
 $string['ustar:managecompetition'] = 'Manage USTAR competitions';
 $string['ustar:viewas'] = 'Preview USTAR as another role';
+
+$string['ustar:taskescalation'] = 'Handle work-task exceptions and escalations';

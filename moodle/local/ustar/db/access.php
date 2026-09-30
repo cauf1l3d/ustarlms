@@ -120,4 +120,8 @@ $capabilities = [
         'riskbitmask' => RISK_DATALOSS | RISK_PERSONAL,
         'captype' => 'write', 'contextlevel' => CONTEXT_SYSTEM, 'archetypes' => [],
     ],
+    'local/ustar:taskescalation' => [
+        'riskbitmask' => RISK_PERSONAL, 'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM, 'archetypes' => [],
+    ],
 ];

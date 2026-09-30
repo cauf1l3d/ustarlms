@@ -4822,5 +4822,31 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026092907, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026093001) {
+        // Add only workspace extensions; historical tasks, notes, reports and learning remain unchanged.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load task workspace schema'); }
+        $structure = $schema->getStructure();
+        foreach ([
+            'local_ustar_task_meta',
+            'local_ustar_task_templates',
+            'local_ustar_task_tpl_versions',
+            'local_ustar_task_series',
+            'local_ustar_task_reports',
+            'local_ustar_task_escalations',
+            'local_ustar_task_settings',
+        ] as $name) {
+            $table = $structure->getTable($name);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        foreach (['ustar_hrd', 'ustar_superadmin'] as $shortname) {
+            $roleid = $DB->get_field('role', 'id', ['shortname' => $shortname]);
+            if ($roleid) {
+                assign_capability('local/ustar:taskescalation', CAP_ALLOW, $roleid, context_system::instance()->id, true);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026093001, 'local', 'ustar');
+    }
+
 return true;
 }

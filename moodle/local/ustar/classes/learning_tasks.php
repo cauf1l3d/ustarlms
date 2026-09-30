@@ -208,6 +208,19 @@ final class learning_tasks {
             if ($expectedversion !== (int)$task->version) {
                 throw new \moodle_exception('Задача уже изменилась. Обновите страницу.');
             }
+            if (\local_ustar\task_workspace\service::meta($taskid)) {
+                \local_ustar\task_workspace\service::actor($actorid);
+                if (!\local_ustar\task_workspace\service::can_edit($task, $actorid)) {
+                    throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
+                }
+                $meta = \local_ustar\task_workspace\service::meta($taskid);
+                if ($meta->parentid) {
+                    $parentdue = (int)$DB->get_field('local_ustar_learning_tasks', 'dueat', ['id' => $meta->parentid]);
+                    if ($parentdue && (!$dueat || $dueat > $parentdue)) {
+                        throw new \invalid_parameter_exception('Срок поручения не может быть позже срока родительской задачи.');
+                    }
+                }
+            }
             $previous = (int)$task->assigneeid;
             if ($assigneeid !== $previous) {
                 if ((string)$task->status !== 'assigned' || !self::can_assign($actorid, $assigneeid)) {
@@ -264,9 +277,13 @@ final class learning_tasks {
             if ($expectedversion <= 0 || (int)$task->version !== $expectedversion) {
                 throw new \moodle_exception('Задача уже изменилась. Обновите страницу.');
             }
+            \local_ustar\task_workspace\service::before_transition($task, $actorid, $action, $comment);
             $isnote = (string)$task->privacy === self::PRIVACY_OWNER;
             $isassignee = $actorid === (int)$task->assigneeid;
-            $isassigner = $actorid === (int)$task->assignerid;
+            $isassigner = \local_ustar\task_workspace\service::meta($taskid)
+                ? \local_ustar\task_workspace\service::can_review_record($task, $actorid)
+                : $actorid === (int)$task->assignerid;
+            if ($action === 'cancel') { $isassigner = $actorid === (int)$task->assignerid; }
             $next = '';
             $event = '';
             if ($isnote && $isassignee && $action === 'complete' && (string)$task->status === 'open') {
@@ -309,6 +326,7 @@ final class learning_tasks {
             if ($next === 'completed') { $task->completedat = $now; }
             if ($next === 'cancelled') { $task->cancelledat = $now; }
             $DB->update_record('local_ustar_learning_tasks', $task);
+            \local_ustar\task_workspace\service::after_transition($task, $action);
             self::event($taskid, (int)$task->ownerid, $event, $actorid, $isnote ? [] : [
                 'comment' => self::plain($comment), 'previousstatus' => $previousstatus,
             ]);
@@ -317,8 +335,10 @@ final class learning_tasks {
                     (string)$task->title, '/local/ustar/tasks.php?tab=assigned', 'task-event:' . $taskid . ':' . $event . ':' . $task->version);
             }
             if (!$isnote && $actorid === (int)$task->assigneeid && $next === 'in_review') {
-                self::notify((int)$task->assignerid, $event, 'Задача ждёт проверки',
-                    (string)$task->title, '/local/ustar/tasks.php?tab=outgoing', 'task-review:' . $taskid . ':' . $task->version);
+                $reviewerid = \local_ustar\task_workspace\service::meta($taskid)
+                    ? \local_ustar\task_workspace\service::reviewer($task) : (int)$task->assignerid;
+                if ($reviewerid > 1) { self::notify($reviewerid, $event, 'Задача ждёт проверки',
+                    (string)$task->title, '/local/ustar/tasks.php?tab=outgoing', 'task-review:' . $taskid . ':' . $task->version); }
             }
             $tx->allow_commit();
             return self::view($taskid, $actorid);
@@ -373,11 +393,13 @@ final class learning_tasks {
     }
 
     /** @return array<int,array<string,mixed>> */
-    public static function events(int $taskid, int $actorid): array {
+    public static function events(int $taskid, int $actorid, int $limit = 0): array {
         global $DB;
         $task = $DB->get_record('local_ustar_learning_tasks', ['id' => $taskid], '*', MUST_EXIST);
         self::assert_view($task, $actorid);
-        $events = $DB->get_records('local_ustar_learning_task_events', ['taskid' => $taskid], 'timecreated ASC, id ASC');
+        $events = $DB->get_records('local_ustar_learning_task_events', ['taskid' => $taskid],
+            $limit ? 'timecreated DESC, id DESC' : 'timecreated ASC, id ASC', '*', 0, $limit);
+        if ($limit) { $events = array_reverse($events); }
         $out = [];
         foreach ($events as $event) {
             $data = json_decode((string)$event->datajson, true);
@@ -443,6 +465,14 @@ final class learning_tasks {
             }
             return;
         }
+        if (\local_ustar\task_workspace\service::meta((int)$task->id)) {
+            if (!\local_ustar\task_workspace\service::can_view_record($task, $actorid)) {
+                throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
+            }
+            return;
+        }
+        if (\local_ustar\task_workspace\service::available()
+                && \local_ustar\task_workspace\service::can_view_record($task, $actorid)) { return; }
         if ($actorid !== (int)$task->assigneeid && $actorid !== (int)$task->assignerid) {
             throw new \required_capability_exception(
                 \context_system::instance(), 'local/ustar:viewteam', 'nopermissions', ''

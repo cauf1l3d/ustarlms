@@ -10,6 +10,12 @@ $canhrworkspace = \local_ustar\capabilities::has((int)$USER->id, \local_ustar\ca
 if (!$canhrworkspace) {
     require_capability('local/ustar:use', $context);
 }
+$legacytab = optional_param('tab', '', PARAM_ALPHA);
+if (!in_array($legacytab, ['checklists', 'notebook'], true)
+        && \local_ustar\task_workspace\service::available()) {
+    require(__DIR__ . '/task_workspace.php');
+    exit;
+}
 $tab = optional_param('tab', 'assigned', PARAM_ALPHA);
 if (!in_array($tab, ['checklists', 'notebook', 'assigned', 'outgoing'], true)) {
     $tab = 'assigned';

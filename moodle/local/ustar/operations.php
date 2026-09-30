@@ -48,6 +48,8 @@ $data = [
         ? (new moodle_url('/local/ustar/competition_studio.php'))->out(false)
         : '',
     'hascompetitionstudio' => has_capability('local/ustar:managecompetition', $context),
+    'cancontrolrewards' => !\local_ustar\view_as::active() && \local_ustar\reward_control::can_manage((int)$USER->id),
+    'rewardcontrolurl' => (new moodle_url('/local/ustar/reward_control.php'))->out(false),
     'checkliststudiourl' => has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context)
         ? (new moodle_url('/local/ustar/checklist_studio.php'))->out(false)
         : '',

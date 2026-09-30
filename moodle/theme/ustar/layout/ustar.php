@@ -93,6 +93,7 @@ $operationpages = [
     '/local/ustar/competition_studio.php',
     '/local/ustar/checklist_studio.php',
     '/local/ustar/stage6_status.php',
+    '/local/ustar/reward_control.php',
 ];
 
 $productgrowthpages = [
@@ -128,7 +129,7 @@ $cataloglabel =
 
 if ($pagepath === '/local/ustar/team.php' || $pagepath === '/local/ustar/executive.php') { $view = 'team'; }
 if ($pagepath === '/local/ustar/achievements.php') { $view = 'achievements'; }
-if ($pagepath === '/local/ustar/tasks.php') { $view = 'tasks'; }
+if (in_array($pagepath, ['/local/ustar/tasks.php', '/local/ustar/notebook.php'], true)) { $view = 'tasks'; }
 if (in_array($pagepath, ['/local/ustar/feed.php', '/local/ustar/feed_admin.php'], true)) { $view = 'feed'; }
 if ($pagepath === '/local/ustar/grades.php') { $view = 'career'; }
 
@@ -339,6 +340,8 @@ $pagelabels = [
 ];
 
 $controlpagelabels = [
+    '/local/ustar/reward_control.php' => 'Управление наградами',
+    '/local/ustar/notebook.php' => 'Личный блокнот',
     '/local/ustar/hr.php' => 'Сотрудники',
     '/local/ustar/positions.php' => 'Модели должностей',
     '/local/ustar/route_studio.php' => 'Маршруты обучения',
@@ -528,6 +531,19 @@ if (!$canadmin && !$canhr && !$canexec && $canmanager) {
         ['label'=>'База знаний','short'=>'Знания','url'=>(new moodle_url('/local/ustar/knowledge.php',['view'=>'knowledge']))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='knowledge'],
         ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
     ];
+}
+
+// Visibility follows the same domain permission as the destination page.
+if (class_exists('\\local_ustar\\reward_control')
+        && \local_ustar\reward_control::can_manage((int)$USER->id)
+        && !\local_ustar\view_as::active()) {
+    if ($pagepath === '/local/ustar/reward_control.php') {
+        foreach ($navitems as &$item) { $item['active'] = false; }
+        unset($item);
+    }
+    $navitems[] = ['label' => 'Управление наградами', 'short' => 'Награды',
+        'url' => (new moodle_url('/local/ustar/reward_control.php'))->out(false),
+        'icon' => $icons['growth'], 'active' => $pagepath === '/local/ustar/reward_control.php'];
 }
 
 /*

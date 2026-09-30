@@ -17,10 +17,10 @@ final class competition {
         $code = clean_param(strtolower(trim($code)), PARAM_ALPHANUMEXT);
         $title = \core_text::substr(trim($title), 0, 255);
         if ($code === '' || $title === '' || $departmentid === '' || $startat <= 0 || $endat <= $startat) {
-            throw new \invalid_parameter_exception('Competition code, title, audience and valid dates are required.');
+            throw new \invalid_parameter_exception('Укажите название, подразделение и корректный период сезона.');
         }
         if (!self::department_exists($departmentid) || $pointsperxp < 1 || $pointsperxp > 100) {
-            throw new \invalid_parameter_exception('Competition audience or rule is invalid.');
+            throw new \invalid_parameter_exception('Выберите существующее подразделение и от 1 до 100 баллов за XP.');
         }
         $now = time();
         $competitionid = (int)$DB->insert_record('local_ustar_competitions', (object)[
@@ -47,10 +47,10 @@ final class competition {
         self::require_operator($actorid);
         $competition = $DB->get_record('local_ustar_competitions', ['id' => $competitionid], '*', MUST_EXIST);
         if ((string)$competition->status !== 'draft') {
-            throw new \moodle_exception('Only a draft competition can be published.');
+            throw new \moodle_exception('Опубликовать можно только черновик сезона.');
         }
         if ((int)$competition->endat <= (int)$competition->startat) {
-            throw new \moodle_exception('Competition dates are invalid.');
+            throw new \moodle_exception('Проверьте даты: окончание должно быть позже начала.');
         }
         $overlap = $DB->record_exists_select(
             'local_ustar_competitions',
@@ -60,7 +60,7 @@ final class competition {
                 'value' => $competition->audiencevalue, 'endat' => $competition->endat, 'startat' => $competition->startat]
         );
         if ($overlap) {
-            throw new \moodle_exception('Comparable audience already has an overlapping published competition.');
+            throw new \moodle_exception('Для этого подразделения уже опубликован сезон с пересекающимися датами.');
         }
         $rule = $DB->get_record('local_ustar_comp_rules', ['competitionid' => $competitionid, 'status' => 'draft'], '*', MUST_EXIST);
         self::validated_rules((string)$rule->rulesjson);
@@ -71,7 +71,7 @@ final class competition {
             }
         }
         if (!$users) {
-            throw new \moodle_exception('The published audience is empty.');
+            throw new \moodle_exception('В подразделении нет действующих участников. Проверьте кадровые назначения.');
         }
         $now = time();
         $transaction = $DB->start_delegated_transaction();
@@ -168,12 +168,12 @@ final class competition {
         self::require_operator($actorid);
         $competition = $DB->get_record('local_ustar_competitions', ['id' => $competitionid], '*', MUST_EXIST);
         if ((string)$competition->status !== 'published' || (int)$competition->endat > time()) {
-            throw new \moodle_exception('Only a finished published competition may be closed.');
+            throw new \moodle_exception('Подвести итоги можно только после окончания опубликованного сезона.');
         }
         $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
         $lock = $factory->get_lock('competition-close:' . $competitionid, 10);
         if (!$lock) {
-            throw new \moodle_exception('Unable to acquire competition close lock.');
+            throw new \moodle_exception('Итоги сейчас сохраняются. Повторите действие.');
         }
         try {
             $transaction = $DB->start_delegated_transaction();

@@ -1,20 +1,18 @@
-<div class="u-product-page u-competition-studio">
-    <header class="u-product-head"><div><p class="u-page-kicker">Game Economy</p><h1>Соревнования</h1><p>Сезон фиксирует сравнимую аудиторию и версию правила. Баллы соревнования не являются USCOIN и не зависят от его остатка.</p></div></header>
-    {{#hasnotice}}<div class="u-inline-notice u-inline-notice--success">{{notice}}</div>{{/hasnotice}}
-    {{#haserrors}}<div class="u-inline-notice u-inline-notice--error">{{#errors}}<div>{{.}}</div>{{/errors}}</div>{{/haserrors}}
-    <section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Новый сезон</p><h2>Создать черновик</h2></div></header>
-        <form method="post" class="u-form-grid"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="create">
-            <label>Код сезона<input name="code" required maxlength="64" placeholder="retail_summer_2026"></label>
-            <label>Название<input name="title" required maxlength="255" placeholder="Летний сезон магазина"></label>
-            <label>Сравнимая аудитория<select name="departmentid" required><option value="">Выберите отдел</option>{{#departments}}<option value="{{id}}">{{name}}</option>{{/departments}}</select></label>
-            <label>Баллов за 1 XP<input name="pointsperxp" type="number" min="1" max="100" value="1" required></label>
-            <label>Начало<input name="startdate" type="date" required></label>
-            <label>Окончание<input name="enddate" type="date" required></label>
-            <div><button class="u-btn" type="submit">Создать черновик</button></div>
-        </form>
-    </section>
-    <section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Lifecycle сезона</p><h2>Черновики и опубликованные сезоны</h2></div></header>
-        {{#hasrows}}<div class="u-rank-table">{{#rows}}<article class="u-rank-row"><div><strong>{{title}}</strong><small>{{code}} · {{audience}} · {{dates}}</small></div><span>{{participants}} участников</span><span>{{status}}</span><form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="competitionid" value="{{id}}">{{#canpublish}}<button class="u-btn u-btn--small" name="action" value="publish">Опубликовать</button>{{/canpublish}}{{#canclose}}<button class="u-btn u-btn--small" name="action" value="close">Закрыть</button>{{/canclose}}</form></article>{{/rows}}</div>{{/hasrows}}
-        {{^hasrows}}<div class="u-empty-mini">Сезонов ещё нет. Создайте черновик после согласования периода и отдела.</div>{{/hasrows}}
-    </section>
+<div class="u-workspace uc-studio">
+ <header class="uw-heading"><div><span class="uw-eyebrow">Академия · Игры</span><h1>Студия соревнований</h1><p>Создайте сезон для подразделения и сравнивайте игровые результаты за выбранный период.</p></div><a class="uw-btn" href="{{gamesurl}}">Студия игр</a></header>
+ {{#haserrors}}<div class="uw-notice" role="alert">{{#errors}}<p>{{.}}</p>{{/errors}}</div>{{/haserrors}}
+ <div class="uw-stats"><div><span>Черновики</span><strong>{{drafts}}</strong><small>Ожидают публикации</small></div><div><span>Опубликовано</span><strong>{{published}}</strong><small>Состав участников зафиксирован</small></div><div><span>Завершено</span><strong>{{closed}}</strong><small>Итоговые места сохранены</small></div></div>
+ <section class="uw-panel uw-editor"><div class="uw-panel-head"><h2>Как проходит сезон</h2></div><ol class="uc-steps"><li><strong>Создайте черновик</strong><p>Выберите подразделение, даты и баллы за игровой XP.</p></li><li><strong>Опубликуйте</strong><p>Участниками станут действующие сотрудники подразделения на момент публикации. Рейтинг виден им под псевдонимами.</p></li><li><strong>Подведите итоги</strong><p>После окончания периода нажмите «Подвести итоги»: места сохранятся, при равных баллах место общее.</p></li></ol><p class="uw-muted">Баллы начисляются за новые игровые результаты в период сезона. Они не списывают USCOIN и не меняют правила XP. Сброс личных показателей не удаляет результаты сезона.</p></section>
+ {{#readonly}}<div class="uw-notice">Режим «Просмотр как»: изменение сезонов недоступно.</div>{{/readonly}}
+ {{^readonly}}{{#hasdepartments}}<section class="uw-panel uw-editor"><div class="uw-panel-head"><div><h2>Новый сезон</h2><p class="uw-muted">Сначала сохраняется черновик. Даты указаны в часовом поясе {{timezone}}.</p></div></div>
+ <form method="post" class="uw-form"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="create"><div class="uw-form-grid">
+ <label class="uw-field"><span>Название сезона</span><input name="title" required maxlength="255" value="{{title}}" placeholder="Осенний сезон торгового зала"></label>
+ <label class="uw-field"><span>Подразделение</span><select name="departmentid" required><option value="">Выберите подразделение</option>{{#departments}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/departments}}</select></label>
+ <label class="uw-field"><span>Начало</span><input name="startdate" type="date" value="{{startdate}}" required></label><label class="uw-field"><span>Окончание</span><input name="enddate" type="date" value="{{enddate}}" required></label>
+ <label class="uw-field"><span>Баллов за 1 игровой XP</span><input name="pointsperxp" type="number" min="1" max="100" value="{{pointsperxp}}" required><small class="uw-muted">Например: 10 XP × 2 = 20 баллов соревнования.</small></label></div><button class="uw-btn uw-primary">Создать черновик</button></form></section>{{/hasdepartments}}{{^hasdepartments}}<div class="uw-notice">Для создания сезона требуется настроенное подразделение.</div>{{/hasdepartments}}{{/readonly}}
+ <section class="uw-panel"><div class="uw-panel-head"><h2>Сезоны</h2></div>
+ {{#rows}}<article class="uc-season"><div class="uw-grow"><h3>{{title}}</h3><p>{{audience}} · {{dates}}</p><small class="uw-muted">{{participants}} участников</small></div><span class="uw-badge {{#closed}}uw-success{{/closed}}">{{statuslabel}}</span>
+ {{^readonly}}<form method="post" class="uc-season-actions"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="competitionid" value="{{id}}">{{#canpublish}}<button class="uw-btn uw-primary" name="action" value="publish">Опубликовать</button>{{/canpublish}}{{#canclose}}<button class="uw-btn" name="action" value="close">Подвести итоги</button>{{/canclose}}</form>{{/readonly}}
+ {{#waiting}}<small class="uw-muted">Итоги будут доступны после окончания периода</small>{{/waiting}}</article>{{/rows}}
+ {{^hasrows}}<div class="uw-empty">Сезонов пока нет. Создайте первый черновик.</div>{{/hasrows}}</section>
 </div>

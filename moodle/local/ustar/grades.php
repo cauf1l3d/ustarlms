@@ -6,7 +6,7 @@ $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 $view = optional_param('view', 'mine', PARAM_ALPHA);
 if (!in_array($view, ['mine', 'team', 'assignments'], true)) { $view = 'mine'; }
-$canassign = has_capability('local/ustar:hrmanage', $context);
+$canassign = \local_ustar\hr_access::can_manage_structure((int)$USER->id);
 if ($view === 'assignments' && !$canassign) { require_capability('local/ustar:hrmanage', $context); }
 $notice = '';
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             redirect(new moodle_url('/local/ustar/grades.php', ['view' => 'team', 'decided' => 1]));
         }
         if ($action === 'bulkassigninitial') {
-            require_capability('local/ustar:hrmanage', $context);
+            \local_ustar\hr_access::require_structure_manager();
             $departmentid = required_param('department', PARAM_ALPHANUMEXT);
             $positionid = optional_param('position', '', PARAM_ALPHANUMEXT);
             $result = \local_ustar\grade_assignment_directory::bulk_assign_initial(
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]));
         }
         if ($action === 'assigninitial') {
-            require_capability('local/ustar:hrmanage', $context);
+            \local_ustar\hr_access::require_structure_manager();
             \local_ustar\grade_promotion::assign_initial(
                 required_param('userid', PARAM_INT), (int)$USER->id, required_param('reason', PARAM_TEXT)
             );
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]));
         }
         if ($action === 'correct') {
-            require_capability('local/ustar:hrmanage', $context);
+            \local_ustar\hr_access::require_structure_manager();
             \local_ustar\grade_promotion::correct(required_param('userid', PARAM_INT),
                 required_param('gradekey', PARAM_ALPHANUMEXT), required_param('revision', PARAM_INT),
                 (int)$USER->id, required_param('reason', PARAM_TEXT));

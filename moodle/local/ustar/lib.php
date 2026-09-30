@@ -109,6 +109,10 @@ function local_ustar_pluginfile(
         if ($filepath !== '/' && !preg_match('~^/v[1-9][0-9]*/$~', $filepath)) {
             return false;
         }
+        if ($filearea === \local_ustar\task_files::RESULT && preg_match('~^/v(\d+)/$~', $filepath, $version)
+                && !\local_ustar\task_workspace\service::can_read_result($taskid, (int)$USER->id, (int)$version[1])) {
+            return false;
+        }
         $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
             $taskid, $filepath, $filename);
         if (!$file || $file->is_directory()) {
@@ -116,7 +120,8 @@ function local_ustar_pluginfile(
         }
         header('X-Content-Type-Options: nosniff');
         header("Content-Security-Policy: sandbox; default-src 'none';");
-        send_stored_file($file, 0, 0, true, $options);
+        $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/webp'], true);
+        send_stored_file($file, 0, 0, $forcedownload || !$image, $options);
         return true;
     }
 

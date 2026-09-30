@@ -83,16 +83,31 @@ final class task_files {
     /** Only the selected task loads its file list. ACL is checked again by pluginfile. */
     public static function list_for(int $taskid, int $actorid): array {
         learning_tasks::view($taskid, $actorid);
+        global $DB;
         $contextid = \context_system::instance()->id;
+        $modern = \local_ustar\task_workspace\service::meta($taskid);
+        $task = $DB->get_record('local_ustar_learning_tasks', ['id' => $taskid]);
+        $versions = $modern ? $DB->get_records('local_ustar_task_reports', ['taskid' => $taskid] +
+            ((int)$task->assigneeid !== $actorid ? ['status' => 'final'] : []), 'taskversion DESC', 'id,taskversion', 0, 50) : [];
+        $visible = array_column(array_values($versions), 'taskversion');
         $out = [];
         foreach ([self::ATTACHMENT => 'Вложение', self::RESULT => 'Результат'] as $area => $label) {
-            foreach (get_file_storage()->get_area_files($contextid, 'local_ustar', $area, $taskid,
-                    'timecreated ASC, id ASC', false) as $file) {
+            $where = 'contextid=:ctx AND component=:component AND filearea=:area AND itemid=:task AND filename<>:directory';
+            $params = ['ctx' => $contextid, 'component' => 'local_ustar', 'area' => $area, 'task' => $taskid, 'directory' => '.'];
+            if ($modern && $area === self::RESULT) {
+                if (!$visible) { continue; }
+                [$insql, $inparams] = $DB->get_in_or_equal(array_map(static fn($v) => '/v' . $v . '/', $visible), SQL_PARAMS_NAMED, 'reportpath');
+                $where .= ' AND filepath ' . $insql; $params += $inparams;
+            }
+            foreach ($DB->get_records_select('files', $where, $params, 'timecreated DESC, id DESC', 'id', 0, 250) as $row) {
+                $file = get_file_storage()->get_file_by_id($row->id);
+                $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/webp'], true);
                 $out[] = [
                     'name' => $file->get_filename(), 'label' => $label,
-                    'size' => (int)$file->get_filesize(),
+                    'size' => (int)$file->get_filesize(), 'image' => $image,
+                    'version' => preg_match('~^/v(\d+)/$~', $file->get_filepath(), $match) ? (int)$match[1] : 0,
                     'url' => \moodle_url::make_pluginfile_url($contextid, 'local_ustar', $area,
-                        $taskid, $file->get_filepath(), $file->get_filename(), true)->out(false),
+                        $taskid, $file->get_filepath(), $file->get_filename(), !$image)->out(false),
                 ];
             }
         }

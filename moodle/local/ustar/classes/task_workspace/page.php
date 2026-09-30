@@ -364,11 +364,15 @@ final class page {
             $out.='</details>';
         }
         $out.='<div class="uw-photos">';
-        foreach($t['files'] as $file) { $out.='<a class="uw-file" href="'.s($file['url']).'">'.s($file['label'].' · '.$file['name']).'</a>'; }
+        foreach($t['files'] as $file) {
+            $out.='<a class="uw-file" href="'.s($file['url']).'">';
+            if($file['image']){$out.='<img loading="lazy" src="'.s($file['url']).'" alt="'.s($file['name']).'"><br>';}
+            $out.=s($file['label'].' · '.$file['name'].($file['version']?' · v'.$file['version']:'')).'</a>';
+        }
         $out.='</div><h3 class="uw-section-title">История</h3><div class="uw-history">';
         $labels=['task_assigned'=>'Назначена','task_started'=>'Начата','task_sent_for_review'=>'Отчёт отправлен','task_completed'=>'Выполнена',
             'task_approved'=>'Результат принят','task_returned'=>'Возвращена на доработку','task_cancelled'=>'Отменена','task_revised'=>'Срок / исполнитель изменён',
-            'report_draft_saved'=>'Черновик отчёта сохранён','task_escalated'=>'Эскалация','task_learning_result'=>'Получен учебный результат'];
+            'report_draft_saved'=>'Черновик отчёта сохранён','task_reminder'=>'Напоминание исполнителю','task_escalated'=>'Эскалация','task_learning_result'=>'Получен учебный результат'];
         foreach($t['events'] as $event){$out.='<p><span>'.s(userdate($event['time'],'%d.%m %H:%M',$t['timezone'])).'</span> · '.s($labels[$event['event']]??$event['event']).($event['comment']?' · '.s($event['comment']):'').'</p>';}
         return $out.'</div></div></section>';
     }

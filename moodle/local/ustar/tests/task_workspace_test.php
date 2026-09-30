@@ -98,7 +98,7 @@ final class task_workspace_test extends \advanced_testcase {
         $old=$this->employee(); $new=$this->employee(); $employee=$this->employee();
         foreach([$old,$new] as $m){$this->grant($m->id,['local/ustar:viewteam']);}
         $managerplace=$DB->insert_record('local_ustar_staff_places',(object)[
-            'placecode'=>'tw_manager','positionid'=>'retail_director','departmentid'=>'retail']);
+            'placecode'=>'tw_manager','positionid'=>'retail_head','departmentid'=>'retail']);
         $employeeplace=$DB->insert_record('local_ustar_staff_places',(object)[
             'placecode'=>'tw_employee','positionid'=>'retail_seller','departmentid'=>'retail','managerplaceid'=>$managerplace]);
         $assignment=$DB->insert_record('local_ustar_assignments',(object)[
@@ -136,4 +136,76 @@ final class task_workspace_test extends \advanced_testcase {
         $this->assertSame($execution,$DB->count_records('local_ustar_task_escalations',['taskid'=>$id,'lane'=>'execution']));
         $this->assertGreaterThan(0,$DB->count_records('local_ustar_task_escalations',['taskid'=>$id,'lane'=>'review']));
     }
+    public function test_draft_text_and_photos_are_not_visible_to_reviewer(): void {
+        $user = $this->employee(); $id = $this->task($user); $this->setUser($user);
+        service::report($id,$user->id,1,[],'Private draft',false);
+        $this->assertCount(1,service::detail($id,$user->id)['reports']);
+        $this->assertTrue(service::can_read_result($id,$user->id,2));
+        $this->setAdminUser();
+        $this->assertCount(0,service::detail($id,get_admin()->id)['reports']);
+        $this->assertFalse(service::can_read_result($id,get_admin()->id,2));
+        $this->setUser($user); service::report($id,$user->id,2,[],'Public result',true);
+        $this->setAdminUser();
+        $this->assertCount(1,service::detail($id,get_admin()->id)['reports']);
+        $this->assertTrue(service::can_read_result($id,get_admin()->id,3));
+        $this->assertFalse(service::can_read_result($id,get_admin()->id,2));
+    }
+    public function test_parent_cannot_submit_with_active_child(): void {
+        $manager=$this->employee(); $employee=$this->employee();
+        $this->grant($manager->id,['local/ustar:hr']);
+        $parent=$this->task($manager); $this->setUser($manager);
+        service::create($manager->id,$employee->id,$this->input(['parentid'=>$parent]));
+        $this->expectException(\invalid_parameter_exception::class);
+        service::report($parent,$manager->id,1,[],'Premature result',true);
+    }
+    public function test_pause_and_resume_do_not_generate_paused_dates(): void {
+        global $DB; $user=$this->employee(); $id=$this->task($user,[
+            'repeat'=>true,'enddate'=>gmdate('Y-m-d',time()+3*DAYSECS)]);
+        $sid=(int)service::meta($id)->seriesid;
+        service::set_series($sid,get_admin()->id,1,'paused');
+        $this->assertSame(0,worker::run()['generated']);
+        $DB->set_field('local_ustar_task_series','nextdate',gmdate('Y-m-d',time()-3*DAYSECS),['id'=>$sid]);
+        service::set_series($sid,get_admin()->id,2,'active'); worker::run();
+        $this->assertSame(4,$DB->count_records('local_ustar_task_meta',['seriesid'=>$sid]));
+        $this->assertFalse($DB->record_exists('local_ustar_task_meta',['seriesid'=>$sid,'occurdate'=>gmdate('Y-m-d',time()-DAYSECS)]));
+    }
+    public function test_reminder_is_once_per_deadline(): void {
+        global $DB; $user=$this->employee(); $id=$this->task($user);
+        $DB->set_field('local_ustar_learning_tasks','dueat',time()+1800,['id'=>$id]);
+        $this->assertSame(1,worker::check($id)['notified']);
+        $this->assertSame(0,worker::check($id)['notified']);
+        $this->assertSame(1,$DB->count_records('local_ustar_task_escalations',['taskid'=>$id,'lane'=>'reminder']));
+    }
+    public function test_native_views_escape_content_and_do_not_generate_occurrences(): void {
+        global $DB;
+        $user=$this->employee(); $id=$this->task($user,['title'=>'<script>fixture()</script>']);
+        $state=['view'=>'overview','scope'=>'team','page'=>0,'filter'=>'all','q'=>'',
+            'month'=>gmdate('Y-m'),'taskid'=>$id,'form'=>'','lookup'=>'','assigneeid'=>0,'templateid'=>0,'parentid'=>0];
+        $before=$DB->count_records('local_ustar_learning_tasks');
+        foreach(['overview','calendar','checklists','control','analytics','rules'] as $view){
+            $state['view']=$view; $html=\local_ustar\task_workspace\page::render(get_admin()->id,$state);
+            $this->assertStringContainsString('u-workspace',$html);
+            $this->assertStringNotContainsString('<script>fixture()',$html);
+        }
+        $this->assertSame($before,$DB->count_records('local_ustar_learning_tasks'));
+    }
+
+    public function test_saved_photo_is_copied_to_submitted_version_and_draft_is_hidden(): void {
+        $user=$this->employee(); $id=$this->task($user,['requirephoto'=>true]); $this->setUser($user);
+        service::report($id,$user->id,1,[],'Photo draft',false);
+        $fs=get_file_storage(); $ctx=\context_system::instance()->id;
+        $fs->create_file_from_string(['contextid'=>$ctx,'component'=>'local_ustar','filearea'=>task_files::RESULT,
+            'itemid'=>$id,'filepath'=>'/v2/','filename'=>'fixture.png'],
+            base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aO9kAAAAASUVORK5CYII='));
+        service::report($id,$user->id,2,[],'Photo result',true);
+        $this->assertNotFalse($fs->get_file($ctx,'local_ustar',task_files::RESULT,$id,'/v3/','fixture.png'));
+        $this->setAdminUser(); $files=task_files::list_for($id,get_admin()->id);
+        $this->assertCount(1,$files); $this->assertSame(3,$files[0]['version']); $this->assertTrue($files[0]['image']);
+    }
+    public function test_image_extension_does_not_accept_svg_as_photo(): void {
+        $file=make_request_directory().'/fake.png'; file_put_contents($file,'<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+        $this->expectException(\invalid_parameter_exception::class);
+        service::validate_photos([['tmp'=>$file,'filename'=>'fake.png','size'=>filesize($file)]]);
+    }
+
 }

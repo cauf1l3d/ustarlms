@@ -181,13 +181,24 @@ final class service {
         $out = self::present($task);
         $out['meta'] = self::meta($taskid);
         $out['fields'] = self::fields($out['meta']);
-        $out['reports'] = array_values($DB->get_records('local_ustar_task_reports', ['taskid' => $taskid], 'taskversion DESC', '*', 0, 50));
+        $reportwhere = ['taskid' => $taskid];
+        if ((int)$task->assigneeid !== $actorid) { $reportwhere['status'] = 'final'; }
+        $out['reports'] = array_values($DB->get_records('local_ustar_task_reports', $reportwhere, 'taskversion DESC', '*', 0, 50));
         $out['files'] = task_files::list_for($taskid, $actorid);
         $out['events'] = learning_tasks::events($taskid, $actorid, 50);
         $out['canreview'] = $out['meta'] ? self::can_review_record($task, $actorid) : (int)$task->assignerid === $actorid;
         $out['canedit'] = self::can_edit($task, $actorid);
         $out['reviewer'] = self::name($out['meta'] ? self::reviewer($task) : (int)$task->assignerid);
         return $out;
+    }
+
+    public static function can_read_result(int $taskid, int $actorid, int $version): bool {
+        global $DB;
+        if (!self::meta($taskid)) { return true; }
+        $task = $DB->get_record('local_ustar_learning_tasks', ['id' => $taskid], '*', MUST_EXIST);
+        if (!self::can_view_record($task, $actorid)) { return false; }
+        return (int)$task->assigneeid === $actorid || $DB->record_exists('local_ustar_task_reports',
+            ['taskid' => $taskid, 'taskversion' => $version, 'status' => 'final']);
     }
 
     public static function fields(?\stdClass $meta): array {
@@ -259,6 +270,14 @@ final class service {
 
     /** Validate one assignment, with current org/learning scope checked before any write. */
     public static function create(int $actorid, int $assigneeid, array $input, array $uploads = []): int {
+        self::actor($actorid);
+        $parent = (int)($input['parentid'] ?? 0);
+        $lock = $parent ? self::lock('learning-task:' . $parent) : null;
+        try { return self::create_locked($actorid, $assigneeid, $input, $uploads); }
+        finally { if ($lock) { $lock->release(); } }
+    }
+
+    private static function create_locked(int $actorid, int $assigneeid, array $input, array $uploads): int {
         global $DB;
         self::actor($actorid);
         if (!learning_tasks::can_assign($actorid, $assigneeid)) { self::deny(); }
@@ -426,7 +445,10 @@ final class service {
                 throw new \invalid_parameter_exception('Размер фотографии превышает лимит.');
             }
             $image = @getimagesize($file['tmp']);
-            if (!$image || !in_array($image['mime'], ['image/jpeg', 'image/png', 'image/webp'], true)) {
+            $extensions = ['image/jpeg' => ['jpg', 'jpeg'], 'image/png' => ['png'], 'image/webp' => ['webp']];
+            if (!$image || !isset($extensions[$image['mime']])
+                    || !in_array(strtolower(pathinfo($file['filename'] ?? '', PATHINFO_EXTENSION)), $extensions[$image['mime']], true)
+                    || $image[0] * $image[1] > 40000000) {
                 throw new \invalid_parameter_exception('Фотоотчёт принимает только настоящие JPG, PNG и WebP.');
             }
         }

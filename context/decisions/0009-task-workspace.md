@@ -1,0 +1,17 @@
+# ADR 0009: Native work task workspace
+
+Date: 2026-09-30. Status: proposed for release review. Implementation: PR #64, based on PR #63 (`9b1810d73951756b5b2d747a3aecaae371298bc4`).
+
+The approved workspace needs hierarchical delegation, recurring work checks, evidence reports, review control, calendar and KPI analytics. It must reuse workforce identity, learning evidence and existing task history.
+
+Extend `learning_tasks` with task metadata, immutable checklist template versions, append-only report revisions, recurring series, pinned calendar/control policies and an idempotent escalation ledger. Moodle users and canonical organization assignments remain the employee and reporting-line source. Repeat learning references the existing forced-retraining assignment and is completed only by its confirmed new evidence. Private notes and adaptation checklists keep their current contracts.
+
+The native `tasks.php` page renders scoped read models. Every command is POST + sesskey, binds the real session actor, rejects writable view-as and checks current organization and expected revision. Managers lose access after leaving the employee's current chain. New task review belongs to the current direct manager, with explicit company creator fallback for a missing line; unresolved cases go to explicitly authorized HRD. Historic assignments keep their legacy review behavior. Draft reports and photos are visible only to their assignee until submitted.
+
+Task/series locks and delegated DB transactions serialize writes. A bounded scheduled worker creates separate dated occurrences up to fourteen days ahead, checks current assignment authority, reconciles learning evidence, and enqueues reminder/escalation notifications exactly once per task, deadline, lane, level and recipient. Repeated parent levels walk farther up the current chain. Reads do not execute cron or reconcile evidence. A paused/resumed series skips paused days; cancellation stops future generation and keeps existing occurrences. No employee shift or holiday is inferred: weekday, exclusion, working interval and IANA timezone are explicit settings. Existing series/tasks retain their policy/template snapshot when editors publish a new version.
+
+Submission and review have separate deadlines. KPI counts confirmed accepted work whose execution deadline has arrived; review delay does not mark a submitted task overdue for its executor. Cancellations, future occurrences and private notes are excluded. Parents cannot be submitted while active children remain. Child due dates cannot exceed parent deadlines.
+
+The module remains within `local_ustar`, with service/read-model boundaries suitable for a later independently deployed service. A separate network microservice is deferred: introducing another user database, completion store or unverified distributed delivery contract would violate the existing domain boundaries. No new public API contract is claimed in this RC; existing task endpoints use the same aggregate guards.
+
+Seven additive tables, one explicit capability and an explicit migration are required. Fresh install/upgrade/repeated-upgrade schema parity and the full Moodle DB suite are release gates. Production acceptance additionally requires authenticated desktop/mobile checks for employee, manager and HRD, actual cron delivery and a production-specific backup/restore plan. A passing isolated gate is not production evidence.

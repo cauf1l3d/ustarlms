@@ -75,11 +75,18 @@
 | `local_ustar_learning_task_events` | `actorid` |
 | `local_ustar_catalog_versions` | `actorid` |
 | `local_ustar_board_archive` | `ownerid`, `archivedby` |
+| `local_ustar_feed_saves` | `userid` |
+| `local_ustar_feed_sources` | `createdby` |
 | `local_ustar_feed_posts` | `actoruserid` |
 | `local_ustar_feed_comments` | `actoruserid` |
 | `local_ustar_feed_reactions` | `userid` |
 | `local_ustar_feed_events` | `actoruserid` |
 | `local_ustar_feed_reports` | `reporterid`, `resolvedby` |
+| `local_ustar_task_templates` | `ownerid` |
+| `local_ustar_task_tpl_versions` | `createdby` |
+| `local_ustar_task_series` | `assignerid`, `assigneeid` |
+| `local_ustar_task_reports` | `actorid` |
+| `local_ustar_task_settings` | `ownerid` |
 
 ## Связанные записи и файлы, которые нельзя потерять при реализации
 

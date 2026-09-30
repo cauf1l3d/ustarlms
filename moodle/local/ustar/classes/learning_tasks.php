@@ -191,6 +191,14 @@ final class learning_tasks {
     /** The creator may adjust the deadline; reassignment is limited to a task not started. */
     public static function revise(int $taskid, int $actorid, int $expectedversion,
             int $assigneeid, int $dueat): array {
+        $meta = \local_ustar\task_workspace\service::meta($taskid);
+        $parentlock = $meta && $meta->parentid ? \local_ustar\task_workspace\service::lock('learning-task:' . $meta->parentid) : null;
+        try { return self::revise_locked($taskid, $actorid, $expectedversion, $assigneeid, $dueat); }
+        finally { if ($parentlock) { $parentlock->release(); } }
+    }
+
+    private static function revise_locked(int $taskid, int $actorid, int $expectedversion,
+            int $assigneeid, int $dueat): array {
         global $DB;
         self::assert_available();
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
@@ -214,6 +222,15 @@ final class learning_tasks {
                     throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
                 }
                 $meta = \local_ustar\task_workspace\service::meta($taskid);
+                if ($assigneeid !== (int)$task->assigneeid && ($meta->seriesid || $meta->kind === 'retraining'
+                        || $DB->record_exists('local_ustar_task_reports', ['taskid' => $taskid]))) {
+                    throw new \invalid_parameter_exception('Серию, учебное назначение или задачу с отчётом нельзя переназначить. Создайте новое поручение.');
+                }
+                if ($dueat && $DB->record_exists_sql("SELECT 1 FROM {local_ustar_task_meta} m JOIN {local_ustar_learning_tasks} child ON child.id=m.taskid
+                        WHERE m.parentid=:parent AND child.status NOT IN ('completed','cancelled') AND child.dueat>:due",
+                        ['parent' => $taskid, 'due' => $dueat])) {
+                    throw new \invalid_parameter_exception('Новый срок родителя раньше срока активного связанного поручения.');
+                }
                 if ($meta->parentid) {
                     $parentdue = (int)$DB->get_field('local_ustar_learning_tasks', 'dueat', ['id' => $meta->parentid]);
                     if ($parentdue && (!$dueat || $dueat > $parentdue)) {

@@ -55,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 $selected=$seasonid ? \local_ustar\competition::operator_season($seasonid,(int)$USER->id) : null;
 $form=$input ?? ($selected['definition'] ?? ['is_draft'=>true,'pointsperxp'=>1]);
 if ($input===null && $seasonid) {
-    $form['startdate']=userdate($form['startat'],'%Y-%m-%d');
-    $form['enddate']=userdate($form['endat'],'%Y-%m-%d');
+    $form['startdate']=(new DateTimeImmutable('@'.$form['startat']))->setTimezone(new DateTimeZone($timezone))->format('Y-m-d');
+    $form['enddate']=(new DateTimeImmutable('@'.$form['endat']))->setTimezone(new DateTimeZone($timezone))->format('Y-m-d');
 }
 $departments=\local_ustar\competition::department_options();
 foreach ($departments as &$d) $d['selected']=$d['id']===($form['audiencevalue'] ?? '');

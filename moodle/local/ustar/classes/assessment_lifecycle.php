@@ -472,9 +472,7 @@ final class assessment_lifecycle {
                 $eventtype = 'assess_remediation_authorized';
                 $reason = 'Руководитель согласовал переобучение';
             } else {
-                $canhrd = is_siteadmin($actorid)
-                    || has_capability('local/ustar:hrmanage', $context, $actorid)
-                    || has_capability('local/ustar:admin', $context, $actorid);
+                $canhrd = hr_access::can_view_hrd_escalations($actorid);
                 if (!$canhrd) {
                     throw new \moodle_exception('Повторное переобучение после второго пакета попыток может согласовать только HRD.');
                 }
@@ -773,10 +771,7 @@ final class assessment_lifecycle {
     public static function hrd_alerts(int $viewerid): array {
         global $DB;
 
-        $context = \context_system::instance();
-        $allowed = is_siteadmin($viewerid)
-            || has_capability('local/ustar:hrmanage', $context, $viewerid)
-            || has_capability('local/ustar:admin', $context, $viewerid);
+        $allowed = hr_access::can_view_hrd_escalations($viewerid);
         if (!$allowed || !self::available()) {
             return ['alerts' => [], 'count' => 0];
         }

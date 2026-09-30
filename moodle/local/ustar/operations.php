@@ -8,6 +8,7 @@ $context = context_system::instance();
 require_capability('local/ustar:hr', $context);
 
 $dashboard = \local_ustar\hr_operations::dashboard();
+$canstructure = \local_ustar\hr_access::can_manage_structure((int)$USER->id);
 
 $data = [
     'generated' => userdate((int)$dashboard['generatedat'], '%d.%m.%Y %H:%M'),
@@ -30,12 +31,11 @@ $data = [
     'hasskillpeople' => !empty($dashboard['skills']['people']),
 
     'teamurl' => (new moodle_url('/local/ustar/team.php'))->out(false),
-    'positionsurl' => (new moodle_url('/local/ustar/positions.php'))->out(false),
+    'haspositions' => $canstructure,
+    'positionsurl' => $canstructure ? (new moodle_url('/local/ustar/positions.php'))->out(false) : '',
     'materialsurl' => (new moodle_url('/local/ustar/materials.php'))->out(false),
-    'routesurl' => has_capability('local/ustar:hrmanage', $context)
-        ? (new moodle_url('/local/ustar/route_studio.php'))->out(false)
-        : '',
-    'hasroutes' => has_capability('local/ustar:hrmanage', $context),
+    'routesurl' => $canstructure ? (new moodle_url('/local/ustar/route_studio.php'))->out(false) : '',
+    'hasroutes' => $canstructure,
     'brandurl' => has_capability('local/ustar:admin', $context)
         ? (new moodle_url('/local/ustar/brand.php'))->out(false)
         : '',

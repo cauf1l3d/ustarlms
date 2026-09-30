@@ -89,3 +89,29 @@ plugin versions are below the upgraded database and its XP reader predates
 frozen course/activity grants. A code-only rollback would need compatible
 versions and the frozen-event exclusion in the XP reader. Do not delete grant
 or learning rows to emulate old code.
+
+## Independent review and release follow-up
+
+Reviewed PR71 at `7ba6d709f2af7c32c3e006302ca6645f98f3e193` against all ten
+user requests. GitHub run `36754640662` completed successfully: source, frontend,
+rollback, prepare-rc, Moodle DB and gate. This is isolated validation, not a
+production installation or signed-in visual acceptance.
+
+Review fixes:
+- Deleted notes are removed from the board's returned link/item metadata. A
+  dangling link can no longer poison the next connection command after reload.
+- Personal palettes use the server's signed-in account preference. Shared
+  browser localStorage no longer overrides another account or a profile update.
+- Reward sources exclude the site course and activities pending deletion, which
+  are absent from Moodle modinfo and could previously break the management page.
+- Dedicated `scripts/release/deploy_pr71.sh` accepts the exact reviewed SHA and
+  checks its own bytes against that commit. It requires the installed PR70
+  manifest and versions, backs up code/DB/moodledata, installs explicit D755/F644
+  modes, checks every source file as www-data before upgrade, resets web OPcache,
+  verifies plugin versions/HR boundaries/final manifest and preserves maintenance
+  on any post-copy failure. It does not mutate role assignments.
+
+Follow-up versions: local 2026093006, theme 2026093004. No additional schema or
+business-policy change. Regression coverage: deleted-note connections, reward
+sources pending deletion, per-account palette initialization. The final exact
+SHA and full gate result will be recorded in PR71 after this follow-up completes.

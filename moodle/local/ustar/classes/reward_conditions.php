@@ -16,7 +16,9 @@ final class reward_conditions {
             'route'=>['local_ustar_route_points','id'],'game'=>['local_ustar_questions','question'],
             'task'=>['local_ustar_task_templates','title'],'checklist'=>['local_ustar_task_templates','title']] as $kind=>[$table,$field]) {
             $out['resources'][$kind]=[];
-            foreach ($DB->get_records($table,[],'id',implode(',',array_unique(['id',$field]))) as $r) {
+            $filters = $kind === 'activity' ? ['deletioninprogress' => 0] : [];
+            foreach ($DB->get_records($table,$filters,'id',implode(',',array_unique(['id',$field]))) as $r) {
+                if ($kind === 'course' && (int)$r->id === SITEID) { continue; }
                 $out['resources'][$kind][(string)$r->id]=$kind==='route'?'Точка маршрута №'.$r->id:
                     ($kind==='activity'?'Активность №'.$r->id:(string)$r->$field);
             }

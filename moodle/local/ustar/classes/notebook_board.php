@@ -17,8 +17,15 @@ final class notebook_board {
         // Read under the command lock without using a stale session preference cache.
         $value = $DB->get_field('user_preferences', 'value', ['userid' => $userid, 'name' => 'ustar_notebook_layout']);
         $data = json_decode((string)$value, true);
-        return ['revision' => (int)($data['revision'] ?? 0), 'items' => (array)($data['items'] ?? []),
-            'frames' => (array)($data['frames'] ?? []), 'links' => (array)($data['links'] ?? []),
+        // Deleting a note must not send dangling links back to the next board command.
+        $ids = array_flip($DB->get_fieldset_select('local_ustar_learning_tasks', 'id', 'ownerid=:u AND privacy=:p',
+            ['u' => $userid, 'p' => learning_tasks::PRIVACY_OWNER]));
+        $items = array_intersect_key((array)($data['items'] ?? []), $ids);
+        $links = array_values(array_filter((array)($data['links'] ?? []), static function($link) use ($ids): bool {
+            return is_array($link) && isset($ids[$link['from'] ?? 0], $ids[$link['to'] ?? 0]);
+        }));
+        return ['revision' => (int)($data['revision'] ?? 0), 'items' => $items,
+            'frames' => (array)($data['frames'] ?? []), 'links' => $links,
             'background' => $data['background'] ?? 'auto'];
     }
     public static function move(int $userid, int $noteid, int $revision, int $x, int $y, string $color): array {

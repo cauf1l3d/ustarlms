@@ -49,4 +49,16 @@ final class notebook_board_test extends \advanced_testcase {
         $data=notebook_board::update($u->id,2,['frames'=>[]]);$this->assertSame('',$data['items'][$a['id']]['frame']);
     }
 
+    public function test_deleting_linked_note_does_not_block_new_connections(): void {
+        $u=$this->getDataGenerator()->create_user();$this->setUser($u);
+        $a=learning_tasks::create_note($u->id,'A','A');$b=learning_tasks::create_note($u->id,'B','B');
+        $c=learning_tasks::create_note($u->id,'C','C');
+        notebook_board::update($u->id,0,['links'=>[['from'=>$a['id'],'to'=>$b['id']]]]);
+        learning_tasks::delete_note($b['id'],$u->id,$b['version']);
+        $layout=notebook_board::layout($u->id);
+        $this->assertSame([],$layout['links']);
+        $layout['links'][]=['from'=>$a['id'],'to'=>$c['id']];
+        $saved=notebook_board::update($u->id,$layout['revision'],['links'=>$layout['links']]);
+        $this->assertSame([['from'=>$a['id'],'to'=>$c['id']]],$saved['links']);
+    }
 }

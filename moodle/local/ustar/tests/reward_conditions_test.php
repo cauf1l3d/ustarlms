@@ -46,4 +46,16 @@ final class reward_conditions_test extends \advanced_testcase {
         $this->assertSame(100,(int)$DB->get_field('local_ustar_reward_grants','xp',['eventkey'=>'learning-course:'.$id]));
         $this->assertSame(0,economy::balance($u->id));
     }
+    public function test_sources_exclude_site_course_and_activities_pending_deletion(): void {
+        global $DB;
+        $course=$this->getDataGenerator()->create_course();
+        $live=$this->getDataGenerator()->create_module('page',['course'=>$course->id]);
+        $removed=$this->getDataGenerator()->create_module('page',['course'=>$course->id]);
+        $DB->set_field('course_modules','deletioninprogress',1,['id'=>$removed->cmid]);
+        rebuild_course_cache($course->id,true);
+        $options=reward_conditions::options();
+        $this->assertArrayNotHasKey(SITEID,$options['resources']['course']);
+        $this->assertArrayHasKey($live->cmid,$options['resources']['activity']);
+        $this->assertArrayNotHasKey($removed->cmid,$options['resources']['activity']);
+    }
 }

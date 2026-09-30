@@ -24,10 +24,7 @@
                     );
             }
 
-            var preset = window.localStorage.getItem('ustar-preset');
-            if (['yellow','graphite','ocean','forest','berry','sand','lavender','mint','coral','indigo','rose','ice'].indexOf(preset) !== -1) {
-                document.documentElement.setAttribute('data-ustar-preset', preset);
-            }
+            // The server renders the signed-in account's saved palette.
 
             var rail =
                 window.localStorage.getItem(

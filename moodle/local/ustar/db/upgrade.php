@@ -4865,5 +4865,32 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true,2026093002,'local','ustar');
     }
+    if ($oldversion < 2026093003) {
+        update_capabilities('local_ustar');
+        // Recruiter/HR assistant keeps operational HR work but not HRD-only
+        // approvals, escalations or position architecture. Access remains an
+        // explicit Moodle role assignment; positions never grant roles.
+        $roleid = (int)$DB->get_field('role', 'id', ['shortname' => 'ustar_hr']);
+        if ($roleid) {
+            foreach ([
+                'local/ustar:use',
+                'local/ustar:hr',
+                'local/ustar:hrmanage',
+                'local/ustar:viewteam',
+                'local/ustar:gradeassessments',
+                'local/ustar:requeststaff',
+            ] as $capability) {
+                assign_capability(
+                    $capability,
+                    CAP_ALLOW,
+                    $roleid,
+                    context_system::instance()->id,
+                    true
+                );
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026093003, 'local', 'ustar');
+    }
+
 return true;
 }

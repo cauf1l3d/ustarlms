@@ -2161,7 +2161,7 @@ $data = [
 ];
 
 
-$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/task_workspace.css', ['v' => '20260930-rc4']));
 $data['cancontrolrewards'] = !\local_ustar\view_as::active() && \local_ustar\reward_control::can_manage((int)$USER->id);
 $data['rewardcontrolurl'] = (new moodle_url('/local/ustar/reward_control.php'))->out(false);
 $data['workflowshtml'] = \local_ustar\task_workspace\home_cards::render((int)$USER->id);

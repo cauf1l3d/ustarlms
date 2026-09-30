@@ -19,5 +19,13 @@ foreach (['ustar_hr','ustar_hrd','ustar_superadmin'] as $shortname) {
         }
     }
 }
-if ($phase==='after' && (int)get_config('local_ustar','version')!==2026093002) { throw new RuntimeException('WRONG_VERSION'); }
+if ($phase==='after') {
+    // Compare the upgraded DB against this exact candidate's version, not an
+    // obsolete release constant. Capability assertions above remain mandatory.
+    $plugin = new stdClass();
+    require core_component::get_component_directory('local_ustar') . '/version.php';
+    if ((int)get_config('local_ustar','version') !== (int)$plugin->version) {
+        throw new RuntimeException('WRONG_VERSION');
+    }
+}
 echo 'CORPORATE_ROLE_UPGRADE_'.$phase.'=OK'.PHP_EOL;

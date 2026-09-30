@@ -1,9 +1,12 @@
 schema_version: 1
-updated_at: '2026-09-20'
+updated_at: '2026-09-30'
 project: USTAR Academy
 stage: S0
 stage_label: Сверка релизной базы и стабилизация
-current_activity: Stage 1 source and isolated CI/rollback are under review in PR 2.
+current_activity: TASK-CRM-01 native task workspace RC is ready for review in PR 64.
+  Exact SHA passed all six full-RC jobs and 163 Moodle tests. Authenticated staging
+  acceptance, installed-source reconciliation and production deployment remain separate.
+historical_activity_20260920: Stage 1 source and isolated CI/rollback are under review in PR 2.
   Stage 2 organization/assignment resolution and team-scope package is in PR 4,
   stacked on PR 2. R10/R12 in progress; full employment/role migration remains open.
   Production unchanged; R00 browser/DR acceptance remains open.
@@ -110,3 +113,25 @@ release_gates:
 - Артефакт/manifest/backup/rollback готовы
 - Clean-server recovery acceptance выполнен
 - Production deployment подтверждён отдельно runtime evidence
+
+# Independent user-approved workstream; historic refactor acceptance stays unchanged.
+task_workspace_candidate:
+  ticket: TASK-CRM-01
+  status: review
+  pull_request: 64
+  branch: codex/ustar-task-workspace-rc-20260930
+  implementation_commit: 06b0b75496b9e3fe613b1001fa7ae599cf7ced80
+  plugin_version: 2026093001
+  base_commit: 9b1810d73951756b5b2d747a3aecaae371298bc4
+  validation_evidence:
+  - 'https://github.com/cauf1l3d/ustarlms/actions/runs/36655075277 — all six jobs success on exact implementation_commit'
+  - 'Moodle 5.1.1 / PHP 8.2.30 / PostgreSQL 16.10: 163 tests, 704 assertions; install-upgrade-repeat-fresh schema parity'
+  - '21 task workspace scenario tests; DOM editor tests; 542 packaged file hashes verified'
+  deployment_evidence: []
+  next_step: authenticated staging acceptance and production source reconciliation
+  user_reported_runtime:
+    source: user-provided terminal output received 2026-09-30; not independently measured
+    installed_plugin_version: 2026092907
+    maintenance: off
+    schema_and_unauthenticated_http_smoke: reported_ok
+    source_commit: unknown

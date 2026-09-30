@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: '2026-09-20'
+updated_at: '2026-09-30'
 canonical_branch: main
 canonical_path: context/roadmap/BACKLOG.yaml
 status_protocol: AGENT_PROTOCOL.md
@@ -878,3 +878,32 @@ tasks:
   validation_evidence: []
   deployment_evidence: []
   updated_at: '2026-09-07'
+
+- id: TASK-CRM-01
+  title: Native hierarchical tasks, recurring work checklists and result control
+  priority: P0
+  stage: independent_user_approved_workstream
+  status: review
+  owner: Codex
+  depends_on: []
+  paths:
+  - moodle/local/ustar/classes/task_workspace/
+  - moodle/local/ustar/tasks.php
+  - context/releases/TASK_WORKSPACE_RC_20260930_RU.md
+  actions:
+  - Implement the approved native workspace on PR 63 without duplicating organization or learning facts
+  - Validate exact SHA with full RC gate and explicit additive migrations
+  - Accept authenticated desktop/mobile scenarios on restored staging and reconcile installed source before deployment
+  acceptance:
+  - Current organizational scope governs assignment, reads and reviewer changes; private notes and draft reports remain private
+  - Immutable templates and append-only reports preserve history; accepted work alone contributes KPI
+  - Recurrence, reminders and escalation are bounded and idempotent; repeated learning requires fresh canonical evidence
+  - Full exact-SHA CI is green and production acceptance is reported separately
+  blockers:
+  - Authenticated staging/browser acceptance and production source SHA are not yet supplied
+  implementation_commit: 06b0b75496b9e3fe613b1001fa7ae599cf7ced80
+  validation_evidence:
+  - 'https://github.com/cauf1l3d/ustarlms/actions/runs/36655075277 — source/frontend/rollback/prepare-rc/moodle-db/gate success'
+  - '163 tests, 704 assertions; exact SHA 06b0b75496b9e3fe613b1001fa7ae599cf7ced80'
+  deployment_evidence: []
+  updated_at: '2026-09-30'

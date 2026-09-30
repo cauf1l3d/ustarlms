@@ -61,3 +61,23 @@ Native CI run `35544164856`: все пять jobs SUCCESS; Moodle 24 tests / 89 
 R10/R12 остаются in progress; employment state, explicit role migration и полный
 consumer/writer переход ещё впереди. Production не менялся.
 Доказательства: `context/runtime/20260920_stage2_org.md`.
+
+
+## 2026-09-30 — TASK-CRM-01, native task workspace RC
+
+Implementation [PR #64](https://github.com/cauf1l3d/ustarlms/pull/64), SHA `06b0b75496b9e3fe613b1001fa7ae599cf7ced80`,
+plugin `2026093001`, on PR #63 source. User approved the interactive prototype and
+requested a release candidate. Source/frontend/DOM validation is green on this SHA;
+[Full-RC #390](https://github.com/cauf1l3d/ustarlms/actions/runs/36655075277) completed with all six jobs success: 163 tests, 704 assertions; install/upgrade/repeat/fresh schema parity. Initial full gate verified
+install/upgrade/repeat/fresh parity but found one test fixture with an unknown manager
+position; corrected to the canonical retail_head position, without weakening ACL.
+
+Seven additive tables; current reporting line governs review; versions preserve
+templates/reports; cron produces occurrences and idempotent reminders/escalations.
+Forced retraining reuses fresh canonical evidence. Private notes and adaptation stay
+on their existing contracts. ADR 0009 and the Russian delivery/acceptance/rollback guide
+are attached. Production deployment not performed. The user's terminal report of
+version 2026092907 and HTTP/table recovery is not an independently verified source SHA.
+
+Frozen ZIP SHA256: `82ff5720b0f754c9539ce501b6d5a8f4728573bc9426e538e346093affdaf1ac`.
+Manifest SHA and 542 packaged file hashes independently verified.

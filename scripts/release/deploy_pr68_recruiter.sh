@@ -80,7 +80,7 @@ print(path)
 PY
 )
 sudo test -d "$DATA_HOST"
-sudo python3 "$SOURCE/scripts/production_manifest.py" --repo "$SOURCE" --moodle-root "$PROD" --commit "$BASE" --require-match --output-dir "$REPORT/baseline"
+sudo env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0="$SOURCE" python3 "$SOURCE/scripts/production_manifest.py" --repo "$SOURCE" --moodle-root "$PROD" --commit "$BASE" --require-match --output-dir "$REPORT/baseline"
 
 # Maintenance, stop web/cron, consistent application backup; DB remains running.
 sudo docker exec "$MOODLE" php /var/www/html/admin/cli/maintenance.php --enable
@@ -98,13 +98,13 @@ cp "$REPORT/mounts.json" "$BACKUP/mounts.json"
 printf '%s\n' "$BASE" > "$BACKUP/source-sha.txt"
 printf '%s\n' "$DATA_HOST" > "$BACKUP/moodledata-host.txt"
 sha256sum "$BACKUP/database.dump" "$BACKUP/ustar-code.tar.gz" "$BACKUP/moodledata.tar.gz" > "$BACKUP/SHA256SUMS"
-sudo python3 "$SOURCE/scripts/production_manifest.py" --repo "$SOURCE" --moodle-root "$PROD" --commit "$BASE" --require-match --output-dir "$REPORT/baseline-final"
+sudo env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0="$SOURCE" python3 "$SOURCE/scripts/production_manifest.py" --repo "$SOURCE" --moodle-root "$PROD" --commit "$BASE" --require-match --output-dir "$REPORT/baseline-final"
 
 # Install only the two tested components.
 sudo cp -a "$SOURCE/moodle/local/ustar/." "$PROD/local/ustar/"
 sudo cp -a "$SOURCE/moodle/theme/ustar/." "$PROD/theme/ustar/"
 sudo chown -R 33:33 "$PROD/local/ustar" "$PROD/theme/ustar"
-sudo python3 "$SOURCE/scripts/production_manifest.py" --repo "$SOURCE" --moodle-root "$PROD" --commit "$RC" --require-match --output-dir "$REPORT/installed"
+sudo env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0="$SOURCE" python3 "$SOURCE/scripts/production_manifest.py" --repo "$SOURCE" --moodle-root "$PROD" --commit "$RC" --require-match --output-dir "$REPORT/installed"
 sudo docker start "$MOODLE" >/dev/null
 STOPPED=0
 git -C "$SOURCE" diff --name-only "$BASE" "$RC" -- moodle/local/ustar moodle/theme/ustar > "$REPORT/changed.txt"

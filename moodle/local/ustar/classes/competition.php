@@ -266,7 +266,7 @@ final class competition {
         }
         foreach ($scores as &$score) {
             $userid=is_array($score)?(int)$DB->get_field('local_ustar_comp_participants','userid',['id'=>$score['participantid']]):(int)$score->userid;
-            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname');
+            $u=$DB->get_record('user',['id'=>$userid],'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename');
             if (is_array($score)) { $score['displayname']=$u?fullname($u):'Удалённая учётная запись'; }
             else { $score->displayname=$u?fullname($u):'Удалённая учётная запись'; }
         }
@@ -379,7 +379,7 @@ final class competition {
         global $DB;
         self::require_operator($actor);$rows=[];
         foreach (self::department_options() as $d) { $rows[$d['id']]=[]; }
-        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1',[],'lastname,firstname,id','id,firstname,lastname') as $u) {
+        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1',[],'lastname,firstname,id','id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $u) {
             if (!accounts::participates((int)$u->id)) { continue; }
             $department=self::department_for_user((int)$u->id);
             if (isset($rows[$department])) { $rows[$department][]=['id'=>(int)$u->id,'name'=>fullname($u)]; }

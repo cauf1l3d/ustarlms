@@ -17,7 +17,9 @@ final class checklist_service {
 
     public static function date_key(string $requested = ''): string {
         if ($requested === '') {
-            return userdate(time(), '%Y-%m-%d');
+            // Persistent keys use Gregorian ISO dates, independent of display locale/calendar.
+            return (new \DateTimeImmutable('@' . time()))
+                ->setTimezone(\core_date::get_user_timezone_object())->format('Y-m-d');
         }
         if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $requested, $parts)
                 || !checkdate((int)$parts[2], (int)$parts[3], (int)$parts[1])) {

@@ -9,7 +9,7 @@ final class reward_conditions {
         $structure=structure::get(structure::NAME_STRUCTURE);$out=['departments'=>[],'positions'=>[],'people'=>[],'resources'=>[]];
         foreach (people::department_map($structure) as $id=>$d) { $out['departments'][$id]=$d['name']; }
         foreach (people::position_map($structure) as $id=>$p) { $out['positions'][$id]=$p['name']; }
-        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1',[],'lastname,firstname','id,firstname,lastname') as $u) {
+        foreach ($DB->get_records_select('user','deleted=0 AND suspended=0 AND id>1',[],'lastname,firstname','id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename') as $u) {
             if (accounts::participates((int)$u->id)) { $out['people'][(string)$u->id]=fullname($u).' · №'.$u->id; }
         }
         foreach (['course'=>['course','fullname'],'activity'=>['course_modules','id'],

@@ -57,6 +57,16 @@ final class organization_identity_test extends \advanced_testcase {
         accesslib_clear_all_caches(true);
     }
 
+    public function test_checklist_date_key_is_valid_iso_in_user_timezone(): void {
+        global $USER;
+        $USER->timezone = 'Pacific/Kiritimati';
+        $key = checklist_service::date_key();
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $key);
+        $this->assertSame($key, checklist_service::date_key($key));
+        $this->expectException(\invalid_parameter_exception::class);
+        checklist_service::date_key('2026-02-30');
+    }
+
     public function test_checklist_native_and_api_share_scope_and_one_daily_run(): void {
         global $DB;
         $user = $this->employee('retail_seller');

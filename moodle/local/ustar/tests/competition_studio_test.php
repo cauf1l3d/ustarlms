@@ -30,8 +30,8 @@ final class competition_studio_test extends \advanced_testcase {
         $place=$DB->insert_record('local_ustar_staff_places',(object)['placecode'=>'competition_employee','positionid'=>'retail_seller','departmentid'=>'retail']);
         $DB->insert_record('local_ustar_assignments',(object)['userid'=>$u->id,'staffplaceid'=>$place,'assignmenttype'=>'primary']);
         $rows=competition::audience_preview('retail',(int)$USER->id);
-        $this->assertContains($u->id,array_column($rows,'id'));$this->assertContains('Real Employee',array_column($rows,'name'));
-        $this->assertNotContains($u->id,array_column(competition::audience_preview('hr',(int)$USER->id),'id'));
+        $this->assertContains((int)$u->id,array_column($rows,'id'));$this->assertContains('Real Employee',array_column($rows,'name'));
+        $this->assertNotContains((int)$u->id,array_column(competition::audience_preview('hr',(int)$USER->id),'id'));
         $id=competition::create_draft('learning_fixture','Learning','retail',time()-100,time()+100,2,(int)$USER->id,'learning','course');
         competition::publish($id,(int)$USER->id);
         competition::record_game_mastery($u->id,999,50,time());

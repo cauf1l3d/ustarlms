@@ -208,4 +208,30 @@ final class task_workspace_test extends \advanced_testcase {
         service::validate_photos([['tmp'=>$file,'filename'=>'fake.png','size'=>filesize($file)]]);
     }
 
+    public function test_returned_report_keeps_latest_saved_photos(): void {
+        $user=$this->employee(); $id=$this->task($user,['requirephoto'=>true]); $this->setUser($user);
+        service::report($id,$user->id,1,[],'Draft',false);
+        $fs=get_file_storage(); $ctx=\context_system::instance()->id;
+        $fs->create_file_from_string(['contextid'=>$ctx,'component'=>'local_ustar','filearea'=>task_files::RESULT,
+            'itemid'=>$id,'filepath'=>'/v2/','filename'=>'fixture.png'],base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aO9kAAAAASUVORK5CYII='));
+        service::report($id,$user->id,2,[],'First result',true);
+        // Final-only photo represents an upload added at submission, after the draft.
+        $fs->create_file_from_string(['contextid'=>$ctx,'component'=>'local_ustar','filearea'=>task_files::RESULT,
+            'itemid'=>$id,'filepath'=>'/v3/','filename'=>'final.png'],base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aO9kAAAAASUVORK5CYII='));
+        $this->setAdminUser(); learning_tasks::transition($id,get_admin()->id,'return',3,'Clarify result');
+        $this->setUser($user); service::report($id,$user->id,4,[],'Revised result',true);
+        $this->assertNotFalse($fs->get_file($ctx,'local_ustar',task_files::RESULT,$id,'/v5/','final.png'));
+    }
+    public function test_rejected_template_form_preserves_escaped_input(): void {
+        $state=['view'=>'checklists','scope'=>'team','page'=>0,'filter'=>'all','q'=>'','month'=>gmdate('Y-m'),
+            'taskid'=>0,'form'=>'template','lookup'=>'','assigneeid'=>0,'templateid'=>0,'parentid'=>0,
+            'input'=>['title'=>'Retry "title"','fieldkey'=>['retained'],'fieldlabel'=>['<b>Retained text</b>'],
+                'fieldtype'=>['number'],'fieldrequired'=>[1],'kpiweight'=>'25']];
+        $html=\local_ustar\task_workspace\page::render(get_admin()->id,$state);
+        $this->assertStringContainsString('Retry &quot;title&quot;',$html);
+        $this->assertStringContainsString('&lt;b&gt;Retained text&lt;/b&gt;',$html);
+        $this->assertStringContainsString('value="retained"',$html);
+        $this->assertStringContainsString('value="25"',$html);
+    }
+
 }

@@ -90,7 +90,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else { throw new invalid_parameter_exception('Неизвестное действие задач.'); }
         redirect(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope' => $scope,
             'taskid' => $state['taskid'], 'saved' => 1]));
-    } catch (Throwable $e) { $notice = $e->getMessage(); }
+    } catch (Throwable $e) {
+        $notice = $e->getMessage();
+        if (!empty($_FILES['attachments']['name'])) { $notice .= ' Файлы для новой отправки приложите повторно.'; }
+        $state['form'] = ['create' => 'create', 'template' => 'template'][$action ?? ''] ?? $state['form'];
+        // Keep rejected form text in this response only; never persist it or expose uploads.
+        $state['input'] = [];
+        foreach ($_POST as $key => $value) {
+            if (in_array($key, ['sesskey', 'action', 'version', 'revision'], true)) { continue; }
+            if (is_string($value)) { $state['input'][$key] = \core_text::substr($value, 0, 10000); }
+            else if (is_array($value)) {
+                $state['input'][$key] = array_map(static fn($v) => is_scalar($v) ? \core_text::substr((string)$v, 0, 10000) : '', array_slice($value, 0, 100));
+            }
+        }
+    }
 }
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope' => $scope]));

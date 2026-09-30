@@ -70,20 +70,23 @@ final class page {
             . self::hidden('sesskey', sesskey()) . self::hidden('action', $action);
     }
     private static function field(string $label, string $name, $value = '', string $type = 'text', string $extra = ''): string {
+        if (isset(self::$state['input'][$name]) && is_string(self::$state['input'][$name]) && $type !== 'file') { $value = self::$state['input'][$name]; }
         return '<label class="uw-field"><span>' . s($label) . '</span><input type="' . s($type) . '" name="' . s($name)
             . '" value="' . s((string)$value) . '" ' . $extra . '></label>';
     }
     private static function select(string $label, string $name, array $options, $selected): string {
+        if (isset(self::$state['input'][$name]) && is_string(self::$state['input'][$name])) { $selected = self::$state['input'][$name]; }
         return '<label class="uw-field"><span>' . s($label) . '</span>'
             . \html_writer::select($options, $name, $selected, false, ['class' => 'uw-select']) . '</label>';
     }
     private static function textarea(string $label, string $name, string $value = ''): string {
+        if (isset(self::$state['input'][$name]) && is_string(self::$state['input'][$name])) { $value = self::$state['input'][$name]; }
         return '<label class="uw-field"><span>' . s($label) . '</span><textarea name="' . s($name) . '" rows="3">' . s($value) . '</textarea></label>';
     }
     private static function buttons(string $label): string { return '<div class="uw-actions"><button type="submit" class="uw-btn uw-primary">' . s($label) . '</button></div>'; }
     private static function badge(array $task): string {
-        $class = $task['late'] ? 'uw-danger' : ($task['status'] === 'completed' ? 'uw-success' : ($task['status'] === 'in_review' ? 'uw-info' : ''));
-        return '<span class="uw-badge ' . $class . '">' . s($task['late'] ? 'Просрочена' : (self::$status[$task['status']] ?? $task['status'])) . '</span>';
+        $class = ($task['late'] || $task['reviewlate']) ? 'uw-danger' : ($task['status'] === 'completed' ? 'uw-success' : ($task['status'] === 'in_review' ? 'uw-info' : ''));
+        return '<span class="uw-badge ' . $class . '">' . s($task['reviewlate'] ? 'Просрочена проверка' : ($task['late'] ? 'Просрочена' : (self::$status[$task['status']] ?? $task['status']))) . '</span>';
     }
     private static function due(array $task): string {
         return $task['dueat'] ? userdate($task['dueat'], '%d.%m · %H:%M', $task['timezone']) : 'Без срока';
@@ -214,6 +217,7 @@ final class page {
         return $out . '</tbody></table></div><div class="uw-notice">Учитываются задачи с наступившим сроком. Отменённые и будущие назначения исключены. Приватный блокнот не участвует в аналитике.</div>';
     }
     private static function weekdays(array $days): string {
+        if (isset(self::$state['input']['weekdays']) && is_array(self::$state['input']['weekdays'])) { $days = array_map('intval', self::$state['input']['weekdays']); }
         $out = '<div class="uw-weekdays"><span>Рабочие дни</span>';
         foreach ([1=>'Пн',2=>'Вт',3=>'Ср',4=>'Чт',5=>'Пт',6=>'Сб',7=>'Вс'] as $i=>$label) {
             $out .= '<label><input type="checkbox" name="weekdays[]" value="' . $i . '" ' . (in_array($i,$days,true)?'checked':'') . '> ' . $label . '</label>';
@@ -233,6 +237,12 @@ final class page {
             . self::field('Срок проверки, минут','reviewminutes',$p['reviewminutes'],'number','min="15" max="43200"') . '</div>'
             . self::weekdays($p['weekdays']) . self::textarea('Исключённые даты · ГГГГ-ММ-ДД, по одной на строке','excludedates',implode("\n",$p['excludedates']))
             . '<h3>Цепочка эскалации</h3><div data-rule-levels>';
+        if (isset(self::$state['input']['levelminutes']) && is_array(self::$state['input']['levelminutes'])) {
+            $p['levels'] = [];
+            foreach (array_slice(self::$state['input']['levelminutes'],0,5) as $i => $delay) {
+                $p['levels'][] = ['minutes'=>(int)$delay, 'recipient'=>self::$state['input']['levelrecipient'][$i]??'parent'];
+            }
+        }
         foreach ($p['levels'] as $level) { $out .= self::level_row($level); }
         $out .= '</div><button type="button" class="uw-btn" data-add-level>Добавить уровень</button><template data-level-template>'
             . self::level_row(['recipient'=>'parent','minutes'=>1440]) . '</template><div class="uw-notice">Для проверки цепочка начинается с руководителя проверяющего. Если руководитель не найден, уведомление поступает участникам очереди HRD с явным полномочием.</div>'
@@ -273,8 +283,8 @@ final class page {
             . '<div class="uw-form-grid">' . self::field('Дата исполнения','duedate',calendar::date(time()+DAYSECS,$p['timezone']),'date','required')
             . self::field('Время исполнения','dueclock','17:00','time','required') . self::field('Часовой пояс','timezone',$p['timezone'])
             . self::field('KPI: баллы за принятие','kpiweight',10,'number','min="0" max="10000"') . '</div>'
-            . '<label class="uw-check"><input type="checkbox" name="requirephoto" value="1"> Фотоотчёт обязателен</label>'
-            . '<div data-repeat-section><label class="uw-check"><input type="checkbox" name="repeat" value="1"> Создать повторяемую серию</label>'
+            . '<label class="uw-check"><input type="checkbox" name="requirephoto" value="1" ' . (!empty(self::$state['input']['requirephoto'])?'checked':'') . '> Фотоотчёт обязателен</label>'
+            . '<div data-repeat-section><label class="uw-check"><input type="checkbox" name="repeat" value="1" ' . (!empty(self::$state['input']['repeat'])?'checked':'') . '> Создать повторяемую серию</label>'
             . self::field('Завершить серию','enddate',calendar::date(time()+30*DAYSECS,$p['timezone']),'date') . self::weekdays($p['weekdays'])
             . self::textarea('Исключённые даты серии · по одной на строке','excludedates',implode("\n",$p['excludedates'])) . '</div>'
             . self::field('Вложения к поручению','attachments[]','','file','multiple')
@@ -289,6 +299,14 @@ final class page {
         $weight = 10; $photo = false;
         if ($row) { $v = $DB->get_record('local_ustar_task_tpl_versions',['id'=>$row->versionid],'*',MUST_EXIST);
             $fields = json_decode($v->definitionjson,true); $weight=$v->kpiweight; $photo=!empty($v->requirephoto); }
+        if (isset(self::$state['input'])) { $photo = !empty(self::$state['input']['requirephoto']); }
+        if (isset(self::$state['input']['fieldlabel']) && is_array(self::$state['input']['fieldlabel'])) {
+            $fields=[];
+            foreach(array_slice(self::$state['input']['fieldlabel'],0,40) as $i=>$label){
+                $fields[]=['key'=>self::$state['input']['fieldkey'][$i]??('field_'.$i),'label'=>$label,
+                    'type'=>self::$state['input']['fieldtype'][$i]??'check','required'=>!empty(self::$state['input']['fieldrequired'][$i])];
+            }
+        }
         $out = '<section class="uw-panel uw-editor" id="uw-editor"><div class="uw-panel-head"><h2>Редактор чек-листа</h2>' . self::link('Закрыть',['form'=>'']) . '</div>'
             . self::form('template') . self::hidden('templateid',$id) . self::hidden('revision',$row?$row->revision:0)
             . self::field('Название шаблона','title',$row?$row->title:'','text','required maxlength="255"') . '<div data-builder>';
@@ -313,6 +331,11 @@ final class page {
             . self::link('Закрыть',['taskid'=>0]).'</div><div class="uw-detail-body"><div class="uw-panel-head">'.self::badge($t).'<span>'.s(self::due($t)).'</span></div>'
             . '<p>'.nl2br(s($t['description'])).'</p><div class="uw-form-grid"><div><small>Исполнитель</small><p>'.s($t['assignee']).'</p></div><div><small>Проверяющий</small><p>'.s($t['reviewer']).'</p></div></div>';
         if ($t['parentid']) { $out .= self::link('Родительская задача #'.$t['parentid'],['taskid'=>$t['parentid']]); }
+        if ($t['reviewdueat'] && $t['status']==='in_review') { $out.='<div class="uw-notice">Срок проверки: '.s(userdate($t['reviewdueat'],'%d.%m.%Y %H:%M',$t['timezone'])).'</div>'; }
+        if ($t['assigneeid']===self::$actor && $t['status']==='assigned') {
+            $out.=self::form('transition').self::hidden('taskid',$id).self::hidden('version',$t['version'])
+                .self::hidden('taskaction','start').self::buttons('Взять в работу').'</form>';
+        }
         if ($t['kind']==='retraining') {
             $out.='<div class="uw-notice">Для завершения требуется новая попытка материала и подтверждённая аттестация. Исходное прохождение сохраняется.</div>';
             if ($t['assigneeid']===self::$actor && !in_array($t['status'],['completed','cancelled'],true)) {
@@ -323,7 +346,7 @@ final class page {
                 $latest=$t['reports'][0]??null; $answers=$latest?json_decode($latest->answersjson,true):[];
                 $out.=self::form('report').self::hidden('taskid',$id).self::hidden('version',$t['version']);
                 foreach($t['fields'] as $f) {
-                    $name='answer_'.$f['key']; $value=$answers[$f['key']]??''; $label=$f['label'].($f['required']?' · обязательно':'');
+                    $name='answer_'.$f['key']; $value=isset(self::$state['input'])?(self::$state['input'][$name]??''):($answers[$f['key']]??''); $label=$f['label'].($f['required']?' · обязательно':'');
                     if($f['type']==='check'){$out.='<label class="uw-check"><input type="checkbox" name="'.s($name).'" value="1" '.($value?'checked':'').'> '.s($label).'</label>';}
                     else if($f['type']==='text'){$out.=self::textarea($label,$name,(string)$value);}
                     else if($f['type']==='number'){$out.=self::field($label,$name,$value,'number','step="any"');}

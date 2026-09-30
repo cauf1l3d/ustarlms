@@ -170,6 +170,7 @@ final class service {
             'submittedat' => $m ? (int)$m->submittedat : 0, 'reviewdueat' => $m ? (int)$m->reviewdueat : 0,
             'timezone' => $m ? $m->timezone : 'Europe/Moscow', 'kpiweight' => $m ? (int)$m->kpiweight : 0,
             'relatedtype' => $task->relatedtype, 'relatedid' => (int)$task->relatedid,
+            'reviewlate' => $m && $task->status === 'in_review' && $m->reviewdueat > 0 && $m->reviewdueat < time(),
             'late' => in_array($task->status, ['assigned', 'in_progress'], true) && $task->dueat && $task->dueat < time()];
     }
 
@@ -360,7 +361,7 @@ final class service {
             }
             global $DB;
             $raw = self::$submissions[$task->id];
-            $draft = $DB->get_record_sql("SELECT * FROM {local_ustar_task_reports} WHERE taskid=:id AND status='draft'
+            $draft = $DB->get_record_sql("SELECT * FROM {local_ustar_task_reports} WHERE taskid=:id
                 ORDER BY taskversion DESC", ['id' => $task->id], IGNORE_MULTIPLE);
             $draftversion = $draft ? (int)$draft->taskversion : 0;
             self::photo_count((int)$task->id, $draftversion, $raw['uploads']);
@@ -419,7 +420,7 @@ final class service {
             if (!$meta || (int)$task->assigneeid !== $actorid || $meta->kind === 'retraining'
                     || !in_array($task->status, ['assigned', 'in_progress'], true)) { self::deny(); }
             if ((int)$task->version !== $expected) { self::conflict(); }
-            $draft = $DB->get_record_sql("SELECT * FROM {local_ustar_task_reports} WHERE taskid=:id AND status='draft'
+            $draft = $DB->get_record_sql("SELECT * FROM {local_ustar_task_reports} WHERE taskid=:id
                 ORDER BY taskversion DESC", ['id' => $taskid], IGNORE_MULTIPLE);
             $draftversion = $draft ? (int)$draft->taskversion : 0;
             self::photo_count($taskid, $draftversion, $uploads);

@@ -27,3 +27,6 @@ $string['ustar:managecompetition'] = 'Управление соревнован�
 $string['ustar:viewas'] = 'Предпросмотр USTAR от другой роли';
 
 $string['ustar:taskescalation'] = 'Контроль исключений и эскалаций рабочих задач';
+
+$string['ustar:gradeassessments'] = 'Проверять аттестации';
+$string['ustar:requeststaff'] = 'Подавать заявки на персонал по компании';

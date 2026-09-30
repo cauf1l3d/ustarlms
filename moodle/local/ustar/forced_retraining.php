@@ -94,7 +94,7 @@ $data = [
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/ustar/forced_retraining.php', $userid > 0 ? ['userid' => $userid] : []));
 $PAGE->set_pagelayout('ustar');
-$PAGE->set_title('Принудительное переобучение | USTAR');
+$PAGE->set_title('Назначить повторный курс | USTAR');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/forced_retraining.css'));
 

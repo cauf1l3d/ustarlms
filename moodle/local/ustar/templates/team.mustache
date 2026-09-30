@@ -13,8 +13,9 @@
     <div class="u-product-head__actions">
           {{{teamicon}}}
 
+          {{#cangradeassessments}}<a class="u-btn" href="{{gradingurl}}">Проверка аттестаций</a>{{/cangradeassessments}}
           {{#canforceretraining}}
-          <a class="u-btn u-btn--primary" href="{{forcedretrainingurl}}">Принудительное переобучение</a>
+          <a class="u-btn u-btn--primary" href="{{forcedretrainingurl}}">Назначить повторный курс</a>
           {{/canforceretraining}}
 
           {{#ishead}}
@@ -68,7 +69,7 @@
                 <form method="post" action="/local/ustar/assessment_remediation_authorize.php">
                     <input type="hidden" name="sesskey" value="{{sesskey}}">
                     <input type="hidden" name="runtimeid" value="{{runtimeid}}">
-                    <button class="u-btn u-btn--primary" type="submit">Отправить на переобучение</button>
+                    <button class="u-btn u-btn--primary" type="submit">Назначить повторный курс</button>
                 </form>
                 {{/canmanagerauthorize}}
             </div>

@@ -1890,5 +1890,31 @@
         <INDEX NAME="owner" UNIQUE="true" FIELDS="ownerid" />
       </INDEXES>
     </TABLE>
-  </TABLES>
+      <TABLE NAME="local_ustar_reward_grants" COMMENT="Immutable configurable reward grants">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="kind" TYPE="char" LENGTH="20" NOTNULL="true"/>
+        <FIELD NAME="sourceid" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="eventkey" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="xp" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="coins" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/><KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="eventkey" UNIQUE="true" FIELDS="eventkey"/><INDEX NAME="user-time" UNIQUE="false" FIELDS="userid,timecreated"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_reward_resets" COMMENT="Append-only personal reward reset audit">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="token" TYPE="char" LENGTH="32" NOTNULL="true"/>
+        <FIELD NAME="detailsjson" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/><KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="token" UNIQUE="true" FIELDS="token"/></INDEXES>
+    </TABLE>
+</TABLES>
 </XMLDB>

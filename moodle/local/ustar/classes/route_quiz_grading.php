@@ -650,7 +650,9 @@ final class route_quiz_grading {
         global $DB;
 
         self::bootstrap();
-        require_capability('local/ustar:hrmanage', \context_system::instance());
+        hr_access::require_grader();
+        global $USER;
+        if ($graderid !== (int)$USER->id) { throw new \invalid_parameter_exception('Недопустимый проверяющий'); }
         view_as::assert_writable();
         self::$notificationfailed = false;
 

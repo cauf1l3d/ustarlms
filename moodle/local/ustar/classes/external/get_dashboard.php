@@ -43,7 +43,8 @@ class get_dashboard extends base {
             );
         }
         $routerewards = \local_ustar\route_rewards::summary((int)$USER->id);
-        $xp = $completedcourses * 100 + (int)$activitydone * 10 + $gamexp + $routerewards['xp'];
+        $rewardxp = \local_ustar\reward_control::xp((int)$USER->id, $courses);
+        $xp = $rewardxp['xp']; $gamexp = $rewardxp['gamexp'];
         $level = (int) floor(sqrt($xp / 50)) + 1;
         $nextlevelxp = 50 * $level * $level;
 

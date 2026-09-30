@@ -38,6 +38,15 @@ cmp /artifacts/schema-upgraded.json /artifacts/schema-repeat.json
 USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/install-fresh.log 2>&1
 USTAR_STAGE_PREFIX=fresh_ php /source/tests/stage/schema_snapshot.php > /artifacts/schema-fresh.json
 cmp /artifacts/schema-upgraded.json /artifacts/schema-fresh.json
+# Regression for the actual production incident: upgrade from PR63 with corporate roles.
+mkdir -p /stage/data/pr63_
+install_sources /source/.stage-input/pr63/moodle
+USTAR_STAGE_PREFIX=pr63_ install_site > /artifacts/install-pr63.log 2>&1
+USTAR_STAGE_PREFIX=pr63_ php /source/tests/stage/workspace_roles_fixture.php before > /artifacts/pr63-roles-before.log 2>&1
+install_sources /source/moodle
+USTAR_STAGE_PREFIX=pr63_ php admin/cli/upgrade.php --non-interactive > /artifacts/upgrade-pr63.log 2>&1
+USTAR_STAGE_PREFIX=pr63_ php /source/tests/stage/workspace_roles_fixture.php after > /artifacts/pr63-roles-after.log 2>&1
+USTAR_STAGE_PREFIX=pr63_ php admin/cli/upgrade.php --non-interactive > /artifacts/upgrade-pr63-repeat.log 2>&1
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/phpunit-init.log 2>&1
 # /stage is disposable tmpfs. Invoke Composer's PHP proxy explicitly so the
 # test gate does not depend on the executable bit / mount exec policy.

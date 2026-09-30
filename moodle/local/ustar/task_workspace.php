@@ -14,6 +14,8 @@ $state = ['view' => $view, 'scope' => $scope, 'page' => max(0, optional_param('p
     'filter' => optional_param('filter', 'all', PARAM_ALPHA), 'q' => optional_param('q', '', PARAM_TEXT),
     'month' => optional_param('month', date('Y-m'), PARAM_RAW_TRIMMED),
     'taskid' => optional_param('taskid', 0, PARAM_INT), 'form' => optional_param('form', '', PARAM_ALPHA),
+    'departmentid' => optional_param('departmentid', '', PARAM_ALPHANUMEXT),
+    'positionid' => optional_param('positionid', '', PARAM_ALPHANUMEXT),
     'lookup' => optional_param('lookup', '', PARAM_TEXT), 'assigneeid' => optional_param('assigneeid', 0, PARAM_INT),
     'templateid' => optional_param('templateid', 0, PARAM_INT), 'parentid' => optional_param('parentid', 0, PARAM_INT)];
 $notice = '';
@@ -23,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $action = required_param('action', PARAM_ALPHANUMEXT);
         if ($action === 'create') {
+            \local_ustar\task_workspace\recipients::validate($actorid, required_param('assigneeid', PARAM_INT),
+                required_param('departmentid', PARAM_ALPHANUMEXT), required_param('positionid', PARAM_ALPHANUMEXT));
             $p = service::policy_for($actorid);
             $p['timezone'] = required_param('timezone', PARAM_RAW_TRIMMED);
             if (optional_param('repeat', 0, PARAM_BOOL)) {
@@ -88,6 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             service::set_series(required_param('seriesid', PARAM_INT), $actorid, required_param('revision', PARAM_INT),
                 required_param('seriesstatus', PARAM_ALPHA));
         } else { throw new invalid_parameter_exception('Неизвестное действие задач.'); }
+        if (optional_param('returnhome', 0, PARAM_BOOL) && in_array($action, ['report','transition'], true)) {
+            redirect(new moodle_url('/local/ustar/home.php'), 'Отчёт сохранён и отправлен на проверку.');
+        }
         redirect(new moodle_url('/local/ustar/tasks.php', ['view' => $view, 'scope' => $scope,
             'taskid' => $state['taskid'], 'saved' => 1]));
     } catch (Throwable $e) {

@@ -10,7 +10,8 @@ $competition=\local_ustar\competition::current_for_user((int)$USER->id);
 $rows=$competition['rows']??[];
 $top=array_slice($rows,0,3); foreach($top as $i=>&$r){$r['medal']=['🥇','🥈','🥉'][$i];} unset($r); $rest=array_slice($rows,3,47);
 $coin=\local_ustar\economy::totals((int)$USER->id); $history=\local_ustar\economy::history((int)$USER->id,8);
-$data=[
+$kpipoints = \local_ustar\reward_control::kpi((int)$USER->id);
+$data=['kpipoints'=>$kpipoints,
  'xp'=>$xp,'gamexp'=>(int)($d['gameXp']??0),'level'=>$level,'nextxp'=>$next,'pct'=>$pct,'activeDays30'=>(int)($d['activeDays30']??0),'completedCourses'=>(int)($d['completedCourses']??0),
  'badges'=>$badges,'hasbadges'=>!empty($badges),'trophyicon'=>\local_ustar\ui::icon('trophy','u-feature-icon'),'gameicon'=>\local_ustar\ui::icon('game','u-feature-icon'),'staricon'=>\local_ustar\ui::icon('star','u-feature-icon'),
  'gamesurl'=>(new moodle_url('/local/ustar/games.php'))->out(false),'learningurl'=>(new moodle_url('/local/ustar/home.php',['view'=>'learning']))->out(false),

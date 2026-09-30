@@ -19,6 +19,18 @@ final class staffing_requests {
      * Department scope of a position-derived head.
      */
     public static function manager_scope(int $userid): array {
+        if (team_access::active_actor($userid) && has_capability('local/ustar:requeststaff', \context_system::instance(), $userid)) {
+            $scope = access_context::scope($userid);
+            $st = structure::get(structure::NAME_STRUCTURE);
+            $scope['positions'] = array_map(static fn($p) => ['id'=>(string)$p['id'], 'name'=>(string)$p['name']], array_values($st['positions'] ?? []));
+            $scope['employees'] = [];
+            foreach ($scope['userids'] ?? [] as $id) {
+                if ((int)$id === $userid || is_siteadmin((int)$id)) { continue; }
+                $person = org::person((int)$id);
+                $scope['employees'][] = $person;
+            }
+            return $scope;
+        }
         return organization_model::manager_scope($userid);
     }
 

@@ -4,6 +4,12 @@
     function init() {
         const root = document.querySelector('.u-workspace');
         if (!root) { return; }
+        const picker = root.querySelector('[data-recipient-filter]');
+        if (picker) { picker.addEventListener('change', event => {
+            if (event.target.name === 'departmentid') { picker.elements.positionid.value = ''; picker.elements.assigneeid.value = '0'; }
+            if (event.target.name === 'positionid') { picker.elements.assigneeid.value = '0'; }
+            picker.submit();
+        }); }
         const type = root.querySelector('select[name="kind"]');
         function updateKind() {
             root.querySelectorAll('[data-kind]').forEach(el => {

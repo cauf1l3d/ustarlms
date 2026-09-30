@@ -7,7 +7,7 @@ require_login();
 global $USER;
 
 $context = context_system::instance();
-require_capability('local/ustar:hrmanage', $context);
+\local_ustar\hr_access::require_grader();
 
 $attemptid = required_param('attemptid', PARAM_INT);
 

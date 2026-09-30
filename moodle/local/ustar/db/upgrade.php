@@ -4823,6 +4823,7 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
     }
 
     if ($oldversion < 2026093001) {
+        update_capabilities('local_ustar');
         // Add only workspace extensions; historical tasks, notes, reports and learning remain unchanged.
         $schema = new xmldb_file(__DIR__ . '/install.xml');
         if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load task workspace schema'); }
@@ -4848,5 +4849,21 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         upgrade_plugin_savepoint(true, 2026093001, 'local', 'ustar');
     }
 
+    if ($oldversion < 2026093002) {
+        update_capabilities('local_ustar');
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load reward schema'); }
+        foreach (['local_ustar_reward_grants','local_ustar_reward_resets'] as $name) {
+            $table = $schema->getStructure()->getTable($name);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        foreach (['ustar_hr','ustar_hrd'] as $shortname) {
+            $role = $DB->get_field('role','id',['shortname'=>$shortname]);
+            if ($role) { foreach (['local/ustar:hr','local/ustar:viewteam','local/ustar:gradeassessments','local/ustar:requeststaff'] as $cap) {
+                assign_capability($cap,CAP_ALLOW,$role,context_system::instance()->id,true);
+            } }
+        }
+        upgrade_plugin_savepoint(true,2026093002,'local','ustar');
+    }
 return true;
 }

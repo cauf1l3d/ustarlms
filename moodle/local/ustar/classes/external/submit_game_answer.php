@@ -47,7 +47,8 @@ class submit_game_answer extends base {
                 $xpearned = 0;
                 if ($correct) {
                     if (!$mastery) {
-                        $xpearned = max(0, (int)$question->xpreward);
+                        $configured = \local_ustar\reward_control::rules()['game']['xp'];
+                        $xpearned = $configured < 0 ? max(0, (int)$question->xpreward) : $configured;
                         $mastery = (object)['userid' => $USER->id, 'gameid' => $question->gameid,
                             'questionid' => $question->id, 'xpearned' => $xpearned, 'timecreated' => time()];
                         $mastery->id = $DB->insert_record('local_ustar_game_mastery', $mastery);

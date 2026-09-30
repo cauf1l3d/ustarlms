@@ -66,7 +66,8 @@ final class route_rewards {
         $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('reward:' . sha1($key), 10);
         if (!$lock) { throw new \moodle_exception('Route reward lock timeout'); }
         try {
-            if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey' => $key])) { return; }
+            if ($DB->record_exists('local_ustar_coin_ledger', ['idempotencykey' => $key])
+                    || (reward_control::available() && $DB->record_exists('local_ustar_reward_grants',['eventkey'=>$key]))) { return; }
             $transaction = $DB->start_delegated_transaction();
             try {
                 target_core::record_evidence([
@@ -84,25 +85,17 @@ final class route_rewards {
                         'logicalpointid' => (int)$cycle->logicalpointid,
                         'cyclekey' => (string)$cycle->cyclekey,
                         'rewardpolicy' => 'route-cycle-v2',
-                        'xp' => self::XP,
+                        'xp' => reward_control::rules((int)$cycle->completedat)['route']['xp'],
                     ],
                 ], 0);
-                $granted = economy::post(
-                    (int)$cycle->userid,
-                    self::COINS,
-                    'route_reward',
-                    $key,
-                    'completion_cycle',
-                    (string)$cycle->id,
-                    'Точка маршрута: ' . format_string((string)$version->title),
-                    0
-                );
+                $granted = reward_control::grant((int)$cycle->userid,'route',(string)$cycle->id,
+                    (int)$cycle->completedat,$key,'completion_cycle','Точка маршрута: '.format_string((string)$version->title));
                 $transaction->allow_commit();
                 global $USER;
                 if ($granted && (int)($USER->id ?? 0) === (int)$cycle->userid
                         && !(defined('CLI_SCRIPT') && CLI_SCRIPT)) {
                     \core\notification::success(
-                        'Шаг подтверждён! +10 XP и +1 USCOIN. ' . format_string((string)$version->title)
+                        'Шаг подтверждён! Награда сохранена по действующим правилам. ' . format_string((string)$version->title)
                     );
                 }
             } catch (\Throwable $e) {
@@ -128,19 +121,23 @@ final class route_rewards {
             'legacy' => 'route_progress',
             'cycle' => 'completion_cycle',
         ];
-        $count = economy::available()
-            ? (int)$DB->count_records_sql('SELECT COUNT(1) FROM {local_ustar_coin_ledger} l WHERE ' . $select, $params)
-            : 0;
-        $badges = [];
-        foreach ([1 => 'Первый шаг', 5 => 'Набираю темп', 10 => 'Уверенный прогресс', 25 => 'Мастер маршрута']
-                as $threshold => $name) {
-            if ($count < $threshold) { continue; }
-            $rows = $DB->get_records_sql('SELECT l.* FROM {local_ustar_coin_ledger} l WHERE '
-                . $select . ' ORDER BY l.timecreated ASC,l.id ASC', $params, $threshold - 1, 1);
-            $grant = reset($rows);
-            $badges[] = ['name' => $name . ' · ' . $threshold . ' шагов', 'dateissued' => (int)$grant->timecreated];
+        $records = economy::available() ? array_values($DB->get_records_sql(
+            'SELECT l.* FROM {local_ustar_coin_ledger} l WHERE ' . $select . ' ORDER BY l.timecreated,l.id', $params)) : [];
+        $grants = reward_control::available() ? $DB->get_records_sql("SELECT g.* FROM {local_ustar_reward_grants} g
+            JOIN {local_ustar_completion_cycle} c ON c.id=".$DB->sql_cast_char2int("CASE WHEN g.kind='route' THEN g.sourceid ELSE '0' END")."
+            WHERE g.userid=:u AND g.kind='route' AND c.status='confirmed'", ['u'=>$userid]) : [];
+        $mapped = array_column(array_values($grants), null, 'eventkey');
+        $events=[]; $xp=0; $coins=0;
+        foreach ($records as $row) {
+            if (isset($mapped[$row->idempotencykey])) { continue; }
+            $events[]=(int)$row->timecreated; $xp+=self::XP; $coins+=(int)$row->amount;
         }
-        return ['count' => $count, 'xp' => $count * self::XP, 'coins' => $count * self::COINS, 'badges' => $badges];
+        foreach ($grants as $g) { $events[]=(int)$g->timecreated; $xp+=(int)$g->xp; $coins+=(int)$g->coins; }
+        sort($events); $count=count($events); $badges=[];
+        foreach ([1=>'Первый шаг',5=>'Набираю темп',10=>'Уверенный прогресс',25=>'Мастер маршрута'] as $threshold=>$name) {
+            if ($count >= $threshold) { $badges[]=['name'=>$name.' · '.$threshold.' шагов','dateissued'=>$events[$threshold-1]]; }
+        }
+        return ['count'=>$count,'xp'=>$xp,'coins'=>$coins,'badges'=>$badges];
     }
 
     /** Repair old projections and independently persisted completion cycles, in bounded batches. */

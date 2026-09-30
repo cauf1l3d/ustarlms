@@ -5,7 +5,7 @@ global $CFG;
 $CFG = new stdClass();
 if (__DIR__ !== '/stage/moodle') { throw new RuntimeException('REFUSING_NON_ISOLATED_MOODLE'); }
 $prefix = getenv('USTAR_STAGE_PREFIX') ?: 'stage_';
-if (!in_array($prefix, ['stage_', 'fresh_'], true)) { throw new RuntimeException('INVALID_STAGE_PREFIX'); }
+if (!in_array($prefix, ['stage_', 'fresh_', 'pr63_'], true)) { throw new RuntimeException('INVALID_STAGE_PREFIX'); }
 $CFG->dbtype = 'pgsql';
 $CFG->dblibrary = 'native';
 $CFG->dbhost = 'db';

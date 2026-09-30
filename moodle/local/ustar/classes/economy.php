@@ -29,11 +29,11 @@ final class economy {
 
     /** Atomically debit a balance. A duplicate key is a no-op; overspending is rejected. */
     public static function spend(int $userid, int $amount, string $type, string $idempotencykey,
-            string $sourcekind, string $sourceid, string $comment, int $actorid): bool {
+            string $sourcekind, string $sourceid, string $comment, int $actorid, ?int $expectedbalance = null): bool {
         if ($amount <= 0 || $actorid <= 0) {
             throw new \invalid_parameter_exception('USCOIN debit amount and responsible actor are required.');
         }
-        return self::apply($userid, -$amount, $type, $idempotencykey, $sourcekind, $sourceid, $comment, $actorid);
+        return self::apply($userid, -$amount, $type, $idempotencykey, $sourcekind, $sourceid, $comment, $actorid, null, false, $expectedbalance);
     }
 
     /** Reverse one prior debit once, preserving both the debit and its reversal. */
@@ -155,7 +155,7 @@ final class economy {
 
     private static function apply(int $userid, int $amount, string $type, string $idempotencykey,
             string $sourcekind, string $sourceid, string $comment, ?int $actorid,
-            ?int $reversalofid = null, bool $allowdebt = false): bool {
+            ?int $reversalofid = null, bool $allowdebt = false, ?int $expectedbalance = null): bool {
         global $DB, $USER;
         if (!self::available() || $userid <= 0 || $amount === 0 || trim($idempotencykey) === '') {
             throw new \invalid_parameter_exception('USCOIN ledger, user, amount and idempotency key are required.');
@@ -191,6 +191,9 @@ final class economy {
                     return false;
                 }
                 $balance = self::locked_balance($userid);
+                if ($expectedbalance !== null && (int)$balance->balance !== $expectedbalance) {
+                    throw new \moodle_exception('Баланс изменился. Повторите предварительный просмотр.');
+                }
                 $nextbalance = (int)$balance->balance + $amount;
                 if ($nextbalance < 0 && $amount < 0 && !$allowdebt) {
                     throw new \moodle_exception('USCOIN debit refused: insufficient balance.');

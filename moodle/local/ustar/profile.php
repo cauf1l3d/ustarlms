@@ -68,7 +68,8 @@ foreach (($dashboard['badges'] ?? []) as $badge) {
     ];
 }
 
-$data = [
+$kpipoints = \local_ustar\reward_control::kpi((int)$USER->id);
+$data = ['kpipoints'=>$kpipoints, 'cancontrolrewards'=>\local_ustar\reward_control::can_manage((int)$USER->id),
     'fullname' => $identity['fullname'],
     'email' => $identity['email'],
     'initials' => \local_ustar\ui::initials($identity['firstname'], $identity['lastname']),

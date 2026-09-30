@@ -95,6 +95,8 @@ $data = array_merge(
             : '',
 
         'canforceretraining' => $canforceretraining,
+        'cangradeassessments' => \local_ustar\hr_access::can_grade((int)$USER->id),
+        'gradingurl' => (new moodle_url('/local/ustar/hr_quiz_grading.php'))->out(false),
         'canapprovegrades' => !\local_ustar\view_as::active()
             && \local_ustar\organization_model::is_manager((int)$USER->id),
         'gradeapprovalsurl' => (new moodle_url('/local/ustar/grades.php',

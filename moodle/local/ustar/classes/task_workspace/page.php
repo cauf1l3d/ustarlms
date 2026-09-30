@@ -257,22 +257,28 @@ final class page {
     }
     private static function create_form(): string {
         $s = self::$state; $p = service::policy_for(self::$actor);
-        $assignee = (int)$s['assigneeid']; $out = '<section class="uw-editor uw-panel" id="uw-editor"><div class="uw-panel-head"><h2>Новая задача</h2>'
-            . self::link('Закрыть', ['form'=>'']) . '</div><form method="get" class="uw-search">'
-            . self::hidden('form','create') . self::hidden('scope',$s['scope']) . self::hidden('parentid',$s['parentid']) . self::hidden('templateid',$s['templateid'])
-            . self::field('Найти исполнителя · минимум 2 символа','lookup',$s['lookup'],'search') . '<button class="uw-btn">Найти</button></form><div class="uw-recipient-list">';
-        foreach (learning_tasks::candidates(self::$actor,$s['lookup']) as $user) {
-            $out .= self::link($user['fullname'], ['form'=>'create','lookup'=>$s['lookup'],'assigneeid'=>$user['id'],
-                'templateid'=>$s['templateid'],'parentid'=>$s['parentid']], 'uw-chip');
+        $assignee = (int)$s['assigneeid'];
+        $department = $s['departmentid'] ?? ''; $position = $s['positionid'] ?? '';
+        $options = recipients::options(self::$actor, $department, $position);
+        $out = '<section class="uw-editor uw-panel" id="uw-editor"><div class="uw-panel-head"><h2>Новая задача</h2>'
+            . self::link('Закрыть', ['form'=>'']) . '</div><form method="get" class="uw-form" data-recipient-filter>'
+            . self::hidden('form','create') . self::hidden('scope',$s['scope'])
+            . self::hidden('parentid',$s['parentid']) . self::hidden('templateid',$s['templateid'])
+            . '<div class="uw-form-grid">'
+            . self::select('1. Отдел', 'departmentid', [''=>'Выберите отдел'] + $options['departments'], $department)
+            . self::select('2. Должность', 'positionid', [''=>'Выберите должность'] + $options['positions'], $position)
+            . self::select('3. Сотрудник', 'assigneeid', [0=>'Выберите сотрудника'] + $options['people'], $assignee)
+            . '</div><button class="uw-btn">Применить выбор</button></form>';
+        if (!isset($options['people'][$assignee])) {
+            return $out . '<div class="uw-empty">Выберите отдел, должность и действующего сотрудника.</div></section>';
         }
-        $out .= '</div>';
-        if (!$assignee || !learning_tasks::can_assign(self::$actor,$assignee)) { return $out . '<div class="uw-empty">Выберите исполнителя из своей области управления.</div></section>'; }
+        $out .= '<p class="uw-notice">Исполнитель: ' . s($options['people'][$assignee]) . '</p>';
         $topics = [];
         try { foreach (forced_retraining::topics_for_user(self::$actor,$assignee) as $t) { $topics[$t['policyid']] = strip_tags($t['label']); } }
         catch (\required_capability_exception $e) { /* A company read role does not imply remediation authority. */ }
         $templates = [];
         foreach (service::templates(self::$actor) as $t) { $templates[$t->id] = $t->title . ' · v' . $t->revision; }
-        $out .= self::form('create') . self::hidden('assigneeid',$assignee) . self::hidden('parentid',$s['parentid'])
+        $out .= self::form('create') . self::hidden('departmentid',$department) . self::hidden('positionid',$position) . self::hidden('assigneeid',$assignee) . self::hidden('parentid',$s['parentid'])
             . '<div class="uw-notice">Исполнитель: ' . s(service::name($assignee)) . ($s['parentid']?' · связанное поручение #'.$s['parentid']:'') . '</div>'
             . self::select('Тип задачи','kind',['task'=>'Поручение','checklist'=>'Чек-лист','retraining'=>'Повторное обучение'],$s['templateid']?'checklist':'task')
             . self::field('Название','title','', 'text','required maxlength="255"')
@@ -339,7 +345,7 @@ final class page {
         if ($t['kind']==='retraining') {
             $out.='<div class="uw-notice">Для завершения требуется новая попытка материала и подтверждённая аттестация. Исходное прохождение сохраняется.</div>';
             if ($t['assigneeid']===self::$actor && !in_array($t['status'],['completed','cancelled'],true)) {
-                $out.='<a class="uw-btn uw-primary" href="'.(new \moodle_url('/local/ustar/forced_retraining.php'))->out().'">Открыть переобучение</a>';
+                $out.='<a class="uw-btn uw-primary" href="'.(new \moodle_url('/local/ustar/forced_retraining.php'))->out().'">Открыть повторный курс</a>';
             }
         } else if ($t['assigneeid']===self::$actor && in_array($t['status'],['assigned','in_progress'],true)) {
             if ($t['meta']) {

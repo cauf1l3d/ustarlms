@@ -96,7 +96,8 @@ final class service {
             $where .= ' AND ' . $DB->sql_like('t.title', ':query', false);
             $params['query'] = '%' . $DB->sql_like_escape(clean_param($query, PARAM_TEXT)) . '%';
         }
-        if ($kind !== '') { $where .= ' AND m.kind = :kind'; $params['kind'] = $kind; }
+        if ($kind === 'other') { $where .= " AND (m.kind IS NULL OR m.kind <> 'checklist')"; }
+        else if ($kind !== '') { $where .= ' AND m.kind = :kind'; $params['kind'] = $kind; }
         $sql = ' FROM {local_ustar_learning_tasks} t LEFT JOIN {local_ustar_task_meta} m ON m.taskid=t.id WHERE ' . $where;
         $total = $DB->count_records_sql('SELECT COUNT(t.id)' . $sql, $params);
         $tasks = $DB->get_records_sql('SELECT t.*' . $sql . ' ORDER BY CASE WHEN t.dueat IS NULL THEN 1 ELSE 0 END,
@@ -400,6 +401,10 @@ final class service {
                 'Отмена связанной задачи');
         }
         $DB->update_record('local_ustar_task_meta', $m);
+        if ($task->status === 'completed' && $m->kind !== 'retraining') {
+            \local_ustar\reward_control::grant((int)$task->assigneeid,$m->kind,(string)$task->id,
+                (int)$task->completedat,'work-task:'.$task->id,'task','Принята задача: '.$task->title);
+        }
     }
 
     public static function report(int $taskid, int $actorid, int $expected, array $answers, string $comment,

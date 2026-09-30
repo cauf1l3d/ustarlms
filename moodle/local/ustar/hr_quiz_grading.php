@@ -7,7 +7,7 @@ require_login();
 global $DB, $USER;
 
 $context = context_system::instance();
-require_capability('local/ustar:hrmanage', $context);
+\local_ustar\hr_access::require_grader();
 
 $attempts = \local_ustar\route_quiz_grading::attempts();
 $assessmentescalations = \local_ustar\assessment_lifecycle::hrd_alerts((int)$USER->id);

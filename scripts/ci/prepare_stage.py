@@ -28,3 +28,11 @@ for entry in entries.split(b'\0'):
     manifest[path.as_posix()] = hashlib.sha256(data).hexdigest()
 (out.parent / 'baseline.json').write_text(json.dumps({'commit': commit, 'files': manifest}, indent=2) + '\n')
 print(f'STAGE_INPUT_READY commit={commit} files={len(manifest)}')
+
+# Exact pre-workspace production source exercises capability registration with corporate roles.
+import io
+import tarfile
+pr63 = '9b1810d73951756b5b2d747a3aecaae371298bc4'
+archive = subprocess.check_output(['git','archive',pr63,'moodle/local/ustar','moodle/theme/ustar'],cwd=ROOT)
+with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+    tar.extractall(ROOT / '.stage-input/pr63', filter='data')

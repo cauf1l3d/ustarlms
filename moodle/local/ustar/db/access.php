@@ -2,6 +2,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
+    'local/ustar:gradeassessments' => ['captype'=>'write', 'riskbitmask'=>RISK_PERSONAL, 'contextlevel'=>CONTEXT_SYSTEM, 'archetypes'=>[]],
+    'local/ustar:requeststaff' => ['captype'=>'write', 'riskbitmask'=>RISK_PERSONAL, 'contextlevel'=>CONTEXT_SYSTEM, 'archetypes'=>[]],
+
     'local/ustar:admin' => [
         'riskbitmask'  => RISK_CONFIG | RISK_DATALOSS,
         'captype'      => 'write',

@@ -133,3 +133,10 @@ Moodle defines SITEID as a string in this runtime, so strict comparison with an
 integer course ID retained the site course. Both operands now use integer IDs.
 All other 191 DB tests passed; final follow-up re-runs the complete gate, including
 the new UI clipping/mobile settings fixes. This failed run is not release evidence.
+
+Installer simulation on synthetic PR70 files exposed rsync's size/mtime quick
+check: same-size version files created in the same second could be skipped.
+The installed manifest correctly stopped that incomplete copy in maintenance.
+The delta transfer now uses `--checksum` so actual bytes determine replacement.
+The simulation uses real Git manifests and rsync with mocked Docker/PHP/DB/HTTP
+operations; it does not constitute a production deployment or a DB restore test.

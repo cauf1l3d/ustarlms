@@ -101,7 +101,7 @@ for plugin in local/ustar theme/ustar; do
     list="$REPORT/${plugin//\//-}.txt"
     sed -n "\#^$plugin/#s#^$plugin/##p" "$REPORT/changed-files.txt" > "$list"
     # Explicit modes: root-owned code must still be readable by www-data.
-    sudo rsync -a --chmod=D755,F644 --chown="$owner" --files-from="$list" \
+    sudo rsync -a --checksum --chmod=D755,F644 --chown="$owner" --files-from="$list" \
         "$DIR/moodle/$plugin/" "$ROOT/$plugin/"
 done
 sudo python3 "$DIR/scripts/production_manifest.py" --repo "$DIR" --moodle-root "$ROOT" \

@@ -432,6 +432,9 @@ $canadmin = is_siteadmin($USER)
     || has_capability('local/ustar:admin', $context);
 
 $canhr = has_capability('local/ustar:hr', $context);
+$isrecruiter = $canhr
+    && class_exists('\\local_ustar\\hr_access')
+    && \local_ustar\hr_access::is_recruiter((int)$USER->id);
 $canexec = has_capability('local/ustar:executive', $context);
 $canmanager = has_capability('local/ustar:viewteam', $context);
 
@@ -483,14 +486,18 @@ if (!$canadmin && $canhr) {
         ['label'=>'Панель HR','short'=>'HR','url'=>$homeurl->out(false),'icon'=>$icons['home'],'active'=>in_array($pagepath,$hrpages,true)],
         ['label'=>'Лента','short'=>'Лента','url'=>(new moodle_url('/local/ustar/feed.php'))->out(false),'icon'=>$icons['feed'],'active'=>$view==='feed'],
         ['label'=>'Команда','short'=>'Команда','url'=>(new moodle_url('/local/ustar/team.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='team'],
-        ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)],
-        ['label'=>'Оргструктура','short'=>'Структура','url'=>(new moodle_url('/local/ustar/organization_settings.php'))->out(false),'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/organization_settings.php'],
+    ];
+    if (!$isrecruiter) {
+        $navitems[] = ['label'=>'Должности','short'=>'Должности','url'=>(new moodle_url('/local/ustar/positions.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,$positionpages,true)];
+        $navitems[] = ['label'=>'Оргструктура','short'=>'Структура','url'=>(new moodle_url('/local/ustar/organization_settings.php'))->out(false),'icon'=>$icons['growth'],'active'=>$pagepath==='/local/ustar/organization_settings.php'];
+    }
+    $navitems = array_merge($navitems, [
         ['label'=>'Материалы','short'=>'Материалы','url'=>(new moodle_url('/local/ustar/materials.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>in_array($pagepath,$materialpages,true)],
         ['label'=>'Контроль','short'=>'Контроль','url'=>(new moodle_url('/local/ustar/operations.php'))->out(false),'icon'=>$icons['growth'],'active'=>in_array($pagepath,$operationpages,true)],
         ['label'=>'Проверка аттестаций','short'=>'Проверка','url'=>(new moodle_url('/local/ustar/hr_quiz_grading.php'))->out(false),'icon'=>$icons['learning'],'active'=>in_array($pagepath,['/local/ustar/hr_quiz_grading.php','/local/ustar/hr_quiz_attempt.php'],true)],
         ['label'=>$cataloglabel,'short'=>'Каталог','url'=>(new moodle_url('/local/ustar/catalog.php'))->out(false),'icon'=>$icons['knowledge'],'active'=>$view==='catalog'],
         ['label'=>'Задачи','short'=>'Задачи','url'=>(new moodle_url('/local/ustar/tasks.php'))->out(false),'icon'=>$icons['growth'],'active'=>$view==='tasks'],
-    ];
+    ]);
 }
 
 /* Executive account opens on the company-level dashboard. */

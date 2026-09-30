@@ -82,6 +82,10 @@ submit and private notes; HR summary and original capability boundaries; game
 and learning season participants; light/dark layouts and mobile login. Anonymous
 303 alone does not validate the signed-in flows.
 
-Rollback: restore PR70 code and theme; preserve append-only grants and learning
-history. Restore database backup only as an explicit full runtime rollback with
-new runtime activity accounted for, never by deleting reward history rows.
+Rollback: use the verified pre-install code/database/moodledata backup as one
+runtime snapshot in maintenance, with post-backup activity explicitly accounted
+for. Code-only replacement with unmodified PR70 is not a valid rollback: its
+plugin versions are below the upgraded database and its XP reader predates
+frozen course/activity grants. A code-only rollback would need compatible
+versions and the frozen-event exclusion in the XP reader. Do not delete grant
+or learning rows to emulate old code.

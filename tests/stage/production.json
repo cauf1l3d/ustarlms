@@ -1,9 +1,9 @@
 {
-  "source_commit": "7cc5587d300c799fc43e3f95c2ebc01cf3e50988",
-  "source_observed_at": "2026-09-28T09:02:57Z",
-  "source_evidence": "User-run production release: candidate manifest complete=true, changed=0, production_only=0, git_only=0, matching=450, uncompared=0; DEPLOY_OK=7cc5587d300c799fc43e3f95c2ebc01cf3e50988; LOGIN_HTTP=200",
-  "local_ustar_db_version": 2026092709,
-  "theme_ustar_db_version": 2026092702,
+  "source_commit": "301cc7229246e0f212733221acc4659b05418cc8",
+  "source_observed_at": "2026-09-30",
+  "source_evidence": "User-supplied PR70 installation log: complete=true, changed=0, production_only=0, git_only=0, matching=493, uncompared=0; DEPLOY_SUCCESS=YES; DEPLOYED_SHA=301cc7229246e0f212733221acc4659b05418cc8; login HTTP=200; maintenance disabled; recruiter allowed/forbidden access checks passed. Time of server observation not present in the supplied log.",
+  "local_ustar_db_version": 2026093004,
+  "theme_ustar_db_version": 2026093002,
   "runtime_drift_recheck_required": true,
   "database_and_moodledata_not_covered": true
 }

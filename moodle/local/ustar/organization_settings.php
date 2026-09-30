@@ -3,7 +3,7 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/ustar:hrmanage', $context);
+\local_ustar\hr_access::require_structure_manager();
 $notice = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

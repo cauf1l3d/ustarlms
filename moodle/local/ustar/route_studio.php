@@ -5,7 +5,7 @@ require_login();
 
 global $DB, $USER;
 $context = context_system::instance();
-require_capability('local/ustar:hrmanage', $context);
+\local_ustar\hr_access::require_structure_manager();
 
 $structure = \local_ustar\structure::get(\local_ustar\structure::NAME_STRUCTURE);
 $departments = [];

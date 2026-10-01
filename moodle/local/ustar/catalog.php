@@ -3,6 +3,13 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
+// Image URLs and catalog presenters may initialise the renderer. Configure the page first.
+$PAGE->set_context($context);
+$PAGE->set_url(new moodle_url('/local/ustar/catalog.php'));
+$PAGE->set_pagelayout('ustar');
+$PAGE->set_title('Каталог товаров | USTAR Academy');
+$PAGE->set_heading('USTAR Academy');
+$PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 $canmanage = \local_ustar\catalog::can_manage((int)$USER->id);
 if (!$canmanage) {
     require_capability('local/ustar:use', $context);
@@ -43,12 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if (!$canmanage && !\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
-    $PAGE->set_context($context);
-    $PAGE->set_url(new moodle_url('/local/ustar/catalog.php'));
-    $PAGE->set_pagelayout('ustar');
-    $PAGE->set_title('Каталог товаров | USTAR Academy');
-    $PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
-    $PAGE->set_heading('USTAR Academy');
     $output = $PAGE->get_renderer('local_ustar');
     echo $output->header();
     echo $output->render_from_template('local_ustar/catalog_locked', [
@@ -108,12 +109,6 @@ $data = [
     'searching' => $q !== '',
 ];
 
-$PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/ustar/catalog.php'));
-$PAGE->set_pagelayout('ustar');
-$PAGE->set_title('Каталог товаров | USTAR Academy');
-$PAGE->set_heading('USTAR Academy');
-$PAGE->requires->css(new moodle_url('/local/ustar/stage6.css'));
 
 $output = $PAGE->get_renderer('local_ustar');
 echo $output->header();

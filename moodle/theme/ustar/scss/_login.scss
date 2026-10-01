@@ -26,7 +26,7 @@ body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell {
 .ustar-auth-wordmark small { display:block; margin-top:7px; font-size:11px; font-weight:600; letter-spacing:6px; }
 .ustar-auth-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; }
 .ustar-auth-columns > section { box-sizing:border-box; min-width:0; padding:24px clamp(28px,4vw,64px) 32px; }
-.ustar-auth-brand { display:flex; flex-direction:column; justify-content:center; border-right:1px solid #d9d5c8; }
+.ustar-auth-brand { display:flex; flex-direction:column; justify-content:flex-start; border-right:1px solid #d9d5c8; }
 .ustar-auth-brand h2,.ustar-auth-start { margin:0 0 22px; color:#2b2b2b; font-size:30px; font-weight:750; line-height:1.2; letter-spacing:-.6px; }
 .ustar-auth-intro { margin:0 0 28px; color:#666057; font-size:17px; line-height:1.6; }
 .ustar-auth-features { display:grid; gap:22px; margin:0; padding:0; list-style:none; }

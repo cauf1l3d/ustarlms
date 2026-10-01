@@ -38,3 +38,22 @@ modes/readability, cache and OPcache reset, upgrade/version checks. Public smoke
 is labeled as such and does not claim production signed-in acceptance.
 Full exact-SHA gate and visual verification must be recorded in PR71 before
 issuing the deployment command. Production installation remains user-executed.
+
+## First authenticated gate
+
+Run 36797444337 reproduced the baseline body-class exception and then rendered
+home and notebook correctly on d69ff8f4. It rejected catalog HTTP 500. Its HTML
+artifact identified an E_USER_NOTICE promoted to exception in developer mode:
+PAGE context unset at catalog.php:99, where fallbackimage initialised OUTPUT
+before set_context/layout. Catalog now configures PAGE before any presenter or
+image URL. This also protects populated catalog browse/detail paths. The gate
+was correctly red and must not be used as release evidence.
+
+Chromium fixtures compiled all 18 actual theme SCSS partials and rendered the
+native login template with representative forms. Five widths (1920/1366/1024/
+768/390) × login/error/registration passed: no horizontal overflow, no raster
+images, equal desktop column widths. Desktop headings now share their baseline.
+These visual fixtures are distinct from the actual signed-in Moodle HTTP smoke.
+Hotfix installer simulation passed success, lint-before-copy, upgrade failure and
+HTTP failure scenarios; post-copy errors retain maintenance. Docker/DB/HTTP are
+mocked in the installer simulation, with real Git manifests and rsync transfer.

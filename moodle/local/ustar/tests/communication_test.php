@@ -119,7 +119,7 @@ final class communication_test extends \advanced_testcase {
         $this->expectException(\invalid_parameter_exception::class); $this->group();
     }
     public function test_private_recipient_is_not_invited(): void {
-        set_user_preference('message_blocknoncontacts', \core_message\api::MESSAGE_PRIVACY_CONTACTS, $this->users[2]->id);
+        set_user_preference('message_blocknoncontacts', \core_message\api::MESSAGE_PRIVACY_ONLYCONTACTS, $this->users[2]->id);
         $this->expectException(\invalid_parameter_exception::class); $this->group();
     }
     public function test_local_path_cannot_be_supplied_as_an_upload(): void {

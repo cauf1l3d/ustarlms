@@ -34,6 +34,21 @@ function local_ustar_pluginfile(
         return false;
     }
 
+    if ($filearea === \local_ustar\chat_files::AREA) {
+        if (count($args) !== 2) { return false; }
+        $messageid = (int)array_shift($args);
+        if (!\local_ustar\chat_files::can_read((int)$USER->id, $messageid)) { return false; }
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $messageid, '/', array_shift($args));
+        if (!$file || $file->is_directory()) { return false; }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none'; media-src 'self';");
+        $inline = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp',
+            'video/mp4', 'video/webm', 'video/quicktime', 'audio/mpeg', 'audio/mp4', 'audio/ogg', 'audio/x-wav'], true);
+        send_stored_file($file, 0, 0, $forcedownload || !$inline, $options);
+        return true;
+    }
+
     if ($filearea === \local_ustar\feed_files::AREA) {
         if (!$args) {
             return false;

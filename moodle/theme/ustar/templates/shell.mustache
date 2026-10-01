@@ -373,10 +373,23 @@
                 <span>{{short}}</span>
             </a>
             {{/mobilenavitems}}
+            <button type="button" class="u-bnavitem" data-mobile-menu-open aria-controls="u-mobile-menu" aria-label="Все разделы Академии">
+                <svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>Ещё</span>
+            </button>
 
         </div>
     </nav>
 
+    <dialog id="u-mobile-menu" class="u-mobile-menu" aria-labelledby="u-mobile-menu-title">
+        <header><h2 id="u-mobile-menu-title">Академия</h2><button class="u-btn" type="button" data-mobile-menu-close aria-label="Закрыть меню">×</button></header>
+        <nav aria-label="Все разделы">{{#navitems}}<a href="{{url}}" {{#active}}aria-current="page"{{/active}}>{{{icon}}}<span>{{label}}</span></a>{{/navitems}}</nav>
+        <nav aria-label="Учётная запись">
+            <a href="{{profilesettingsurl}}">Личные настройки</a>
+            {{#canapprovegrades}}<a href="{{gradeapprovalsurl}}">Проверка аттестаций</a>{{/canapprovegrades}}
+            <a href="{{guideurl}}">Помощь по Академии</a><a href="{{logouturl}}">Выйти</a>
+        </nav>
+        <button class="u-btn u-btn--primary" type="button" data-app-install hidden>Добавить на домашний экран</button><p class="u-chat-hint" data-app-install-help role="status"></p>
+    </dialog>
 </div>
 
 {{{ output.standard_end_of_body_html }}}

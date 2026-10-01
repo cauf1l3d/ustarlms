@@ -4,7 +4,6 @@
     ========================================================== }}
 
 {{#viewhome}}
-<div class="u-home-settings">{{#canpersonalize}}<details><summary class="uw-btn">Настроить главную</summary><div data-home-controls></div><button type="button" class="uw-btn" data-home-reset>Стандартный вид</button><p data-home-status role="status" aria-live="polite"></p></details>{{/canpersonalize}}</div>
 <div class="u-home-layout" data-home-layout data-settings="{{homelayoutjson}}" data-url="{{homelayouturl}}" data-sesskey="{{sesskey}}" data-editable="{{canpersonalize}}">
 <div class="u-home-widget" data-home-block="hero" data-home-label="Приветствие">
 
@@ -227,6 +226,7 @@
 </div>
 {{#homeextras}}<section class="u-home-widget uw-panel uw-editor" data-home-block="{{id}}" data-home-label="{{label}}"><h2>{{label}}</h2><p>{{description}}</p><a class="uw-btn" href="{{url}}">Открыть →</a></section>{{/homeextras}}
 </div>
+<div class="u-home-settings">{{#canpersonalize}}<details><summary class="uw-btn">Настроить главную</summary><div data-home-controls></div><button type="button" class="uw-btn" data-home-reset>Стандартный вид</button><p data-home-status role="status" aria-live="polite"></p></details>{{/canpersonalize}}</div>
 {{/viewhome}}
 
 

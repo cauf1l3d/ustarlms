@@ -27,7 +27,7 @@ if [[ $MODE = broken-baseline ]]; then
     exit 0
 fi
 # No -L: a login redirect cannot masquerade as a successful product page.
-for page in home notebook catalog; do
+for page in home notebook catalog messages; do
     code=$(curl -sS --max-time 60 -b "$COOKIE" -o "/artifacts/shell-$page.html" -w '%{http_code}' "$WEBROOT/local/ustar/$page.php")
     test "$code" = 200 || { echo "SIGNED_IN_HTTP_FAILED=$page:$code"; exit 1; }
     php -r '
@@ -41,4 +41,5 @@ for page in home notebook catalog; do
         echo "AUTHENTICATED_SHELL_RENDER=OK:".$argv[2].PHP_EOL;
     ' "/artifacts/shell-$page.html" "$page"
 done
+bash /source/tests/stage/chat_http_smoke.sh
 echo 'AUTHENTICATED_SHELL_HTTP=PASS'

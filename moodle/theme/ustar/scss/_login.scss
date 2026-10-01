@@ -1,74 +1,63 @@
-/* A single native composition: shared surface, typography, spacing and gold accents. */
+/* Preserve the supplied artwork and mascot. Both panels share the same surface and scale. */
 body.pagelayout-login.ustar-auth-body {
-    display:block; margin:0; padding:0; height:auto; min-height:100vh;
-    color:#2b2b2b; background:#ededed;
-    background-image:radial-gradient(ellipse at 0% 0%,#f7e6a766,transparent 50%),
-        radial-gradient(ellipse at 100% 100%,#e9d9a855,transparent 50%);
-    background-attachment:fixed;
+    display:block; margin:0; padding:0; height:auto; min-height:100dvh; color:#2b2b2b;
+    background:radial-gradient(ellipse at 15% 85%,#fff8,transparent 55%),
+        radial-gradient(ellipse at 85% 10%,#fff9,transparent 45%),linear-gradient(125deg,#dfd8cd,#f2efea 42%,#e0d8cc);
 }
 body.pagelayout-login.ustar-auth-body #page-wrapper {
-    display:flex; flex-direction:column; justify-content:center;
-    min-height:100vh; height:auto; margin:0; padding:32px 24px; background:transparent;
+    display:flex; flex-direction:column; justify-content:center; height:auto; min-height:100dvh;
+    margin:0; padding:24px; background:transparent;
 }
 body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
 body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell {
-    display:block!important; box-sizing:border-box; width:100%; max-width:1180px;
-    height:auto; min-height:0; margin:auto!important; padding:0!important;
-    overflow:hidden; border:1px solid #ffffff; border-radius:32px;
-    background:linear-gradient(120deg,#fffffff0,#faf9f5e8);
-    box-shadow:0 24px 70px #34312612,inset 0 1px 0 #fff;
+    display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px;
+    box-sizing:border-box; width:100%; max-width:1320px; margin:auto!important; padding:0!important;
+    height:auto; min-height:0; overflow:visible; border:0; box-shadow:none; background:transparent;
 }
-.ustar-auth-heading { display:flex; justify-content:center; padding:30px 40px 24px; }
-.ustar-auth-wordmark { display:inline-flex; align-items:center; gap:12px; color:#2b2b2b; text-decoration:none; }
-.ustar-auth-wordmark:hover { color:#2b2b2b; text-decoration:none; }
-.ustar-auth-wordmark > svg { width:32px; height:40px; fill:#b58a00; }
-.ustar-auth-wordmark > span { font-size:42px; font-weight:900; letter-spacing:-2px; line-height:1; }
-.ustar-auth-wordmark small { display:block; margin-top:7px; font-size:11px; font-weight:600; letter-spacing:6px; }
-.ustar-auth-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; }
-.ustar-auth-columns > section { box-sizing:border-box; min-width:0; padding:24px clamp(28px,4vw,64px) 32px; }
-.ustar-auth-brand { display:flex; flex-direction:column; justify-content:flex-start; border-right:1px solid #d9d5c8; }
-.ustar-auth-brand h2,.ustar-auth-start { margin:0 0 22px; color:#2b2b2b; font-size:30px; font-weight:750; line-height:1.2; letter-spacing:-.6px; }
-.ustar-auth-intro { margin:0 0 28px; color:#666057; font-size:17px; line-height:1.6; }
-.ustar-auth-features { display:grid; gap:22px; margin:0; padding:0; list-style:none; }
-.ustar-auth-features li { display:flex; gap:16px; align-items:center; }
-.ustar-auth-features strong { display:block; font-size:17px; font-weight:650; }
-.ustar-auth-features small { display:block; margin-top:3px; color:#666057; font-size:14px; line-height:1.45; }
-.ustar-auth-icon { display:grid; flex:0 0 48px; width:48px; height:48px; place-items:center; border-radius:14px;
-    background:#f6edcf; color:#8a6400; }
-.ustar-auth-icon svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linejoin:round; stroke-linecap:round; }
-.ustar-auth-motto { margin:30px 0 0; color:#856200; font-size:15px; font-weight:600; }
-.ustar-auth-auth { display:flex; flex-direction:column; justify-content:center; }
-.ustar-auth-start { text-align:left; }
+.ustar-auth-shell > section { min-width:0; box-sizing:border-box; border:2px solid #ffffffe0;
+    border-radius:32px; overflow:hidden; background:linear-gradient(135deg,#ebe6dec9,#ffffff70 55%,#e8e1d5c9);
+    box-shadow:inset 0 1px 8px #fff9,0 12px 36px #4f422318; }
+.ustar-auth-shell .ustar-auth-brand { position:relative; display:flex; padding:0; align-items:center; }
+.ustar-auth-brand::before,.ustar-auth-brand::after { content:none; }
+.ustar-auth-artwork { display:block; width:100%; height:auto; max-height:none; overflow:hidden;
+    aspect-ratio:691 / 815; mix-blend-mode:multiply; }
+.ustar-auth-artwork image,.ustar-auth-logo image { pointer-events:none; }
+.ustar-auth-shell .ustar-auth-auth { display:flex; flex-direction:column; justify-content:center;
+    align-items:center; padding:clamp(24px,3vw,42px); backdrop-filter:blur(18px); }
+.ustar-auth-logo { display:block; width:56%; max-width:260px; height:auto; aspect-ratio:287 / 100;
+    flex-shrink:0; overflow:hidden; mix-blend-mode:multiply; }
+.ustar-auth-shell .ustar-auth-start { margin:20px 0; text-align:center; text-transform:uppercase;
+    font-size:clamp(26px,2.6vw,40px); line-height:1.15; font-weight:800;
+    color:#966d09; background:linear-gradient(120deg,#bd8c14,#cfa51f,#8b6100);
+    background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    text-decoration:underline; text-underline-offset:8px; text-decoration-thickness:2px; }
 .ustar-auth-auth__card,.ustar-auth-core { width:100%; min-width:0; overflow-wrap:anywhere; }
 .ustar-auth-core h1.login-heading,.ustar-auth-core .login-logo { display:none; }
 .ustar-auth-core h2.login-heading { font-size:16px; margin:16px 0 10px; }
 .ustar-auth-core .login-container,.ustar-auth-core .loginform,.ustar-auth-core .loginform > .login-form {
-    width:100%; max-width:none; margin:0; padding:0; border:0; background:transparent; box-shadow:none;
-}
-.ustar-auth-core .login-form-username,.ustar-auth-core .login-form-password,.ustar-auth-core .login-form-submit { margin:0 0 14px; }
+    width:100%; max-width:none; margin:0; padding:0; border:0; background:transparent; box-shadow:none; }
+.ustar-auth-core .login-form-username,.ustar-auth-core .login-form-password,.ustar-auth-core .login-form-submit { margin:0 0 12px; }
 .ustar-auth-core .form-control,.ustar-auth-core #username,.ustar-auth-core #password {
     box-sizing:border-box; width:100%; min-height:50px; padding:12px 15px;
-    border:1px solid #d6d1c5; border-radius:12px; background:#fff; color:#2b2b2b; font-size:16px;
-}
+    border:1px solid #ffffff; border-radius:12px; background:#ffffff99; color:#2b2b2b; font-size:16px; }
 .ustar-auth-core .toggle-sensitive-wrapper { display:flex; width:100%; }
 .ustar-auth-core .toggle-sensitive-wrapper #password { flex:1 1 0; min-width:0; width:1%; border-radius:12px 0 0 12px; }
 .ustar-auth-core .toggle-sensitive-btn { display:grid; flex:0 0 50px; place-items:center; min-height:50px;
-    border:1px solid #d6d1c5; border-left:0; border-radius:0 12px 12px 0; background:#fff; color:#555; }
+    border:1px solid #fff; border-left:0; border-radius:0 12px 12px 0; background:#ffffff99; color:#555; }
 .ustar-auth-core .login-form-submit .btn-primary,.ustar-auth-core .u-register .btn-primary {
-    width:100%; min-height:50px; border:1px solid #cfad10; border-radius:12px;
-    background:linear-gradient(110deg,#ebc500,#e2b900); color:#2b2b2b; font-size:17px; font-weight:700;
-    box-shadow:0 5px 16px #b48a0014;
-}
-.ustar-auth-core .btn-primary:hover { background:#dfba00; }
+    width:100%; min-height:50px; border:1px solid #ffe7a3; border-radius:12px;
+    background:linear-gradient(115deg,#eabd33,#c99919 55%,#f4d77a); color:#211b0b;
+    font-size:18px; font-weight:700; box-shadow:inset 0 1px 2px #fff,0 8px 24px #c99a1920; }
+.ustar-auth-core .btn-primary:hover { filter:brightness(1.05); }
 .ustar-auth-core .btn-primary:disabled { opacity:.65; cursor:wait; }
-.ustar-auth-core .btn-secondary,.ustar-auth-signup .btn-secondary { min-height:42px; padding:9px 14px;
-    border:1px solid #d6d1c5; border-radius:10px; background:#fff; color:#2b2b2b; }
+.ustar-auth-core .btn-secondary,.ustar-auth-signup .btn-secondary { min-height:44px; padding:10px 14px;
+    border:1px solid #caa34d; border-radius:12px; background:#ffffff80; color:#2b2b2b; }
 .ustar-auth-core a { color:#795b00; font-size:14px; text-decoration:underline; }
 .ustar-auth-core .login-form-forgotpassword { text-align:center; margin:12px 0 18px; }
 .ustar-auth-signup { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
-    margin-top:18px; padding-top:18px; border-top:1px solid #dedacf; color:#666057; font-size:14px; }
+    margin-top:16px; padding-top:16px; border-top:1px solid #b9b2a7; color:#554f45; font-size:14px; }
 .ustar-auth-signup .btn { text-decoration:none; font-weight:600; }
-.ustar-auth-core .login-divider { margin:18px 0; border-top:1px solid #dedacf; }
+.ustar-auth-core .login-divider { margin:18px 0; border-top:1px solid #b9b2a7; }
 .ustar-auth-core .alert { font-size:15px; line-height:1.5; padding:12px; border:1px solid #b73728;
     background:#fff0eb; color:#7a1c11; border-radius:10px; }
 .ustar-auth-shell :is(input,button,a,select):focus-visible { outline:3px solid #806300; outline-offset:3px; }
@@ -78,34 +67,27 @@ body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell {
 .ustar-auth-core h2.login-heading:has(+ #guestlogin) { font-size:13px; line-height:1.5; font-weight:400; text-align:center; }
 .ustar-auth-core #guestlogin { display:flex; justify-content:center; }
 .ustar-auth-core #loginguestbtn { width:100%; }
-.ustar-auth-footer { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 24px; margin:0 40px;
-    padding:22px 0; border-top:1px solid #dedacf; color:#777064; text-align:center; }
-.ustar-auth-footer p,.ustar-auth-footer small { margin:0; font-size:12px; line-height:1.5; }
+.ustar-auth-auth__footer { display:flex; flex-direction:column; align-items:center;
+    margin-top:18px; text-align:center; width:100%; }
+.ustar-auth-auth__footer p { color:#625b51; font-size:12px; line-height:1.5; margin:0 0 10px; }
+.ustar-auth-auth__footer strong { background:linear-gradient(#575753,#2b2b2b); color:#ededed;
+    font-size:clamp(18px,2vw,24px); font-weight:500; border-radius:12px; padding:6px 22px; }
+.ustar-auth-auth__footer small { margin-top:10px; color:#625b51; font-size:11px; line-height:1.5; }
 body.pagelayout-login.ustar-auth-body #region-main { float:none; width:100%; padding:0; border:0; background:transparent; overflow:visible; }
 @media(max-width:900px) {
-    body.pagelayout-login.ustar-auth-body #page-wrapper { padding:20px; }
-    body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell { max-width:600px; border-radius:24px; }
-    .ustar-auth-columns { grid-template-columns:minmax(0,1fr); }
-    .ustar-auth-auth { grid-row:1; }
-    .ustar-auth-brand { grid-row:2; border-right:0; border-top:1px solid #dedacf; }
-    .ustar-auth-columns > section { padding:26px 32px; }
-    .ustar-auth-brand h2,.ustar-auth-start { font-size:26px; }
-    .ustar-auth-heading { padding:26px 32px 0; }
-    .ustar-auth-features { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
-    .ustar-auth-features li { gap:10px; }
-    .ustar-auth-features strong { font-size:15px; }
-    .ustar-auth-features small { font-size:13px; }
-    .ustar-auth-icon { flex-basis:40px; width:40px; height:40px; }
-    .ustar-auth-intro br { display:none; }
-    .ustar-auth-footer { margin:0 32px; }
+    body.pagelayout-login.ustar-auth-body #page-wrapper { padding:16px; }
+    body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell { grid-template-columns:minmax(0,1fr); max-width:600px; }
+    .ustar-auth-shell .ustar-auth-auth { grid-row:1; padding:28px; }
+    .ustar-auth-shell .ustar-auth-brand { grid-row:2; }
+    .ustar-auth-logo { max-width:230px; }
 }
 @media(max-width:540px) {
     body.pagelayout-login.ustar-auth-body #page-wrapper { padding:12px; }
-    .ustar-auth-columns > section { padding:24px; }
-    .ustar-auth-features { grid-template-columns:minmax(0,1fr); gap:18px; }
-    .ustar-auth-footer { margin:0 24px; }
-    .ustar-auth-wordmark > span { font-size:36px; }
-    .ustar-auth-wordmark > svg { width:28px; height:36px; }
+    .ustar-auth-shell > section { border-radius:24px; }
+    .ustar-auth-shell .ustar-auth-auth { padding:24px 20px; }
+}
+@media(forced-colors:active) {
+    .ustar-auth-shell .ustar-auth-start { background:none; -webkit-text-fill-color:CanvasText; color:CanvasText; }
 }
 
 /* USTAR registration uses the existing login shell and its brand tokens. */
@@ -136,9 +118,17 @@ body.pagelayout-login.ustar-auth-body #region-main { float:none; width:100%; pad
     border-left:0; border-radius:0 12px 12px 0; background:#ffffffd9; color:#554214; cursor:pointer; }
 .ustar-auth-core .u-register .u-register-error { color:#8a2518; font-size:12px; font-weight:600; line-height:1.35; }
 .ustar-auth-core .u-register [aria-invalid="true"] { border-color:#b73728; box-shadow:0 0 0 1px #b73728; }
+.ustar-auth-core .u-register .btn-primary { width:100%; padding:10px 14px; border:1px solid #ffe7a3;
+    border-radius:13px; background:linear-gradient(115deg,#eabd33,#c99919 55%,#f4d77a);
+    color:#211b0b; font-size:16px; font-weight:700; box-shadow:inset 0 1px 2px #fff,0 8px 24px #c99a1930; }
 .ustar-auth-core .u-register .btn-primary:disabled { opacity:.65; cursor:wait; }
 .ustar-auth-core .u-register :is(input,select,button):focus-visible { outline:3px solid #806300; outline-offset:2px; }
+@media(max-width:900px) {
+    body.ustar-register-body #page-wrapper #page.ustar-auth-shell { grid-template-columns:minmax(0,1fr); }
+    body.ustar-register-body .ustar-auth-shell .ustar-auth-brand { min-height:min(75vw,420px); }
+}
 @media(max-width:540px) {
     .ustar-auth-core .u-register .u-register-names,
     .ustar-auth-core .u-register .u-register-department { grid-template-columns:minmax(0,1fr); }
+    body.ustar-register-body .ustar-auth-shell .ustar-auth-auth { padding:20px 16px; }
 }

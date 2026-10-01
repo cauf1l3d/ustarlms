@@ -67,9 +67,22 @@ final class communication {
         return $names ? implode(', ', $names) : 'Личные заметки';
     }
 
-    public static function conversations(int $userid, int $limit = 50): array {
+    /** Private communication always uses the real session identity. */
+    public static function require_actor(int $userid, bool $write = false): void {
+        global $USER, $CFG, $DB;
+        $user = $DB->get_record('user', ['id' => $userid], 'id,deleted,suspended');
+        if ((int)$USER->id !== $userid || !$user || $user->deleted || $user->suspended
+                || empty($CFG->messaging) || view_as::active() || !employment::is_active($userid)) {
+            throw new \invalid_parameter_exception('Общение недоступно для текущей учётной записи.');
+        }
+        require_capability('local/ustar:use', \context_system::instance(), $userid);
+        if ($write) { require_capability('moodle/site:sendmessage', \context_system::instance(), $userid); }
+    }
+
+    public static function conversations(int $userid, int $limit = 50, int $offset = 0): array {
+        self::require_actor($userid);
         $limit = max(1, min(100, $limit));
-        $records = \core_message\api::get_conversations($userid, 0, $limit);
+        $records = \core_message\api::get_conversations($userid, max(0, $offset), $limit);
 
         $rows = [];
         foreach ($records as $conversation) {
@@ -109,104 +122,120 @@ final class communication {
         return $rows;
     }
 
-    public static function conversation(int $userid, int $conversationid): array {
-        if (!\core_message\api::is_user_in_conversation($userid, $conversationid)) {
-            throw new \required_capability_exception(
-                \context_system::instance(),
-                'local/ustar:use',
-                'nopermissions',
-                ''
-            );
+    public static function conversation(int $userid, int $conversationid, int $offset = 0): array {
+        global $DB;
+        self::require_actor($userid);
+        if (!\core_message\api::is_user_in_conversation($userid, $conversationid)
+                || !$DB->record_exists('message_conversations', ['id' => $conversationid,
+                    'enabled' => \core_message\api::MESSAGE_CONVERSATION_ENABLED])) {
+            throw new \invalid_parameter_exception('Чат недоступен.');
         }
-
-        // Read oldest-first so the thread is immediately displayable in chat order.
-        $conversation = \core_message\api::get_conversation(
-            $userid,
-            $conversationid,
-            false,
-            false,
-            50,
-            0,
-            200,
-            0,
-            false
-        );
-
-        if (!$conversation) {
-            throw new \moodle_exception('Conversation not found');
-        }
-
-        if (\core_message\api::can_mark_all_messages_as_read($userid, $conversationid)) {
-            \core_message\api::mark_all_messages_as_read($userid, $conversationid);
-        }
-
-        $rows = [];
-        foreach (($conversation->messages ?? []) as $message) {
-            if (!is_object($message)) {
-                continue;
-            }
-            $senderid = (int)($message->useridfrom ?? 0);
-            $mine = $senderid === $userid;
-
-            $sender = 'Пользователь';
-            if ($mine) {
-                $sender = 'Вы';
-            } else {
-                foreach (($conversation->members ?? []) as $member) {
-                    if (!is_object($member) || (int)($member->id ?? 0) !== $senderid) {
-                        continue;
-                    }
-                    $sender = trim((string)($member->fullname ?? ''));
-                    if ($sender === '') {
-                        $sender = trim((string)($member->firstname ?? '') . ' ' . (string)($member->lastname ?? ''));
-                    }
-                    if ($sender === '') {
-                        $sender = 'Пользователь';
-                    }
-                    break;
-                }
-            }
-
-            // core_message has already formatted the stored message. Clean once more
-            // before triple-Mustache output to keep the custom UI defensive.
-            $text = clean_text((string)($message->text ?? ''), FORMAT_HTML);
-            $timecreated = (int)($message->timecreated ?? 0);
-            $rows[] = [
-                'id' => (int)($message->id ?? 0),
-                'mine' => $mine,
-                'theirs' => !$mine,
-                'sender' => $sender,
-                'text' => $text,
-                'time' => $timecreated > 0 ? userdate($timecreated, '%d.%m.%Y %H:%M') : '',
+        $offset = max(0, min(100000, $offset));
+        // Latest bounded page; sort by ID too so messages in the same second stay stable.
+        $conversation = \core_message\api::get_conversation($userid, $conversationid,
+            false, false, chat_groups::MAX_MEMBERS, 0, 1, 0, true);
+        $page = \core_message\api::get_conversation_messages($userid, $conversationid,
+            $offset, 51, 'timecreated DESC, m.id DESC');
+        $records = array_values($page['messages']);
+        $hasolder = count($records) > 50;
+        $records = array_reverse(array_slice($records, 0, 50));
+        $files = chat_files::for_visible_messages(array_map(static fn($message) => (int)$message->id, $records));
+        $members = [];
+        foreach ($conversation->members as $member) {
+            $members[(int)$member->id] = [
+                'id' => (int)$member->id, 'fullname' => (string)$member->fullname,
+                'removable' => (int)$member->id !== $userid,
             ];
         }
-
+        $rows = [];
+        foreach ($records as $message) {
+            $mine = (int)$message->useridfrom === $userid;
+            $rows[] = [
+                'id' => (int)$message->id, 'mine' => $mine,
+                'sender' => $mine ? 'Вы' : ($members[(int)$message->useridfrom]['fullname'] ?? 'Бывший участник'),
+                'text' => clean_text((string)$message->text, FORMAT_HTML),
+                'time' => userdate((int)$message->timecreated, '%d.%m.%Y %H:%M'),
+                'attachments' => $files[(int)$message->id] ?? [],
+            ];
+        }
+        if ($offset === 0 && \core_message\api::can_mark_all_messages_as_read($userid, $conversationid)) {
+            \core_message\api::mark_all_messages_as_read($userid, $conversationid);
+        }
+        $url = static fn($offset) => (new \moodle_url('/local/ustar/messages.php',
+            ['conversationid' => $conversationid, 'offset' => $offset]))->out(false);
         return [
-            'id' => $conversationid,
-            'title' => self::conversation_title($conversation, $userid),
-            'messages' => $rows,
-            'hasmessages' => !empty($rows),
+            'id' => $conversationid, 'title' => self::conversation_title($conversation, $userid),
+            'messages' => $rows, 'hasmessages' => !empty($rows),
             'cansend' => !empty($conversation->cansendmessagetoconversation),
+            'isgroup' => (int)$conversation->type === \core_message\api::MESSAGE_CONVERSATION_TYPE_GROUP,
+            'members' => array_values($members), 'membercount' => (int)$conversation->membercount,
+            'canmanage' => chat_groups::can_manage($userid, $conversationid),
+            'hasolder' => $hasolder, 'isolder' => $offset > 0,
+            'olderurl' => $url($offset + 50), 'newerurl' => $url(max(0, $offset - 50)),
         ];
     }
 
-    public static function send(int $userid, int $conversationid, string $message): void {
-        require_capability('moodle/site:sendmessage', \context_system::instance());
+    public static function send(int $userid, int $conversationid, string $message, array $uploads = [], string $requestid = ''): int {
+        global $DB;
+        self::require_actor($userid, true);
         $message = trim($message);
-        if ($message === '') {
-            throw new \invalid_parameter_exception('Message cannot be empty');
+        if (($message === '' && !$uploads) || \core_text::strlen($message) > 4000) {
+            throw new \invalid_parameter_exception('Напишите до 4000 символов или приложите файл.');
         }
-        if (\core_text::strlen($message) > 4000) {
-            throw new \invalid_parameter_exception('Message is too long');
+        if ($requestid !== '' && !preg_match('/^[a-zA-Z0-9_-]{16,80}$/D', $requestid)) {
+            throw new \invalid_parameter_exception('Некорректный идентификатор отправки.');
         }
-        if (!\core_message\api::can_send_message_to_conversation($userid, $conversationid)) {
-            throw new \moodle_exception('You cannot send a message to this conversation.');
+        $uploads = chat_files::validate($uploads);
+        $fingerprint = hash('sha256', json_encode([$conversationid, $message,
+            array_map(static fn($file) => [$file['filename'], hash_file('sha256', $file['tmp'])], $uploads)]));
+        $factory = \core\lock\lock_config::get_lock_factory('local_ustar');
+        $chatlock = $factory->get_lock('chat:' . $conversationid, 10);
+        if (!$chatlock) { throw new \invalid_parameter_exception('Чат занят. Повторите отправку.'); }
+        $actorlock = null;
+        try {
+            $actorlock = $factory->get_lock('chat-send:' . $userid, 10);
+            if (!$actorlock) { throw new \invalid_parameter_exception('Отправка уже выполняется.'); }
+            if (!$DB->record_exists('message_conversations', ['id' => $conversationid,
+                    'enabled' => \core_message\api::MESSAGE_CONVERSATION_ENABLED])
+                    || !\core_message\api::can_send_message_to_conversation($userid, $conversationid)) {
+                throw new \invalid_parameter_exception('Отправка в этот чат недоступна.');
+            }
+            $transaction = $DB->start_delegated_transaction();
+            // A bounded retry receipt is presentation metadata, not a parallel message store.
+            $pref = $DB->get_field('user_preferences', 'value', ['userid' => $userid, 'name' => 'ustar_chat_receipts']);
+            $receipts = json_decode($pref ?: '{}', true) ?: [];
+            if ($requestid !== '' && isset($receipts[$requestid])) {
+                if ($receipts[$requestid]['hash'] !== $fingerprint) {
+                    throw new \invalid_parameter_exception('Эта отправка уже использована для другого сообщения.');
+                }
+                $id = (int)$receipts[$requestid]['id'];
+                $transaction->allow_commit();
+                return $id;
+            }
+            $sent = \core_message\api::send_message_to_conversation($userid, $conversationid,
+                $message !== '' ? $message : 'Вложения', FORMAT_PLAIN);
+            chat_files::store((int)$sent->id, $userid, $uploads);
+            if ($requestid !== '') {
+                $receipts[$requestid] = ['id' => (int)$sent->id, 'hash' => $fingerprint];
+                set_user_preference('ustar_chat_receipts', json_encode(array_slice($receipts, -30, null, true)), $userid);
+            }
+            $transaction->allow_commit();
+            return (int)$sent->id;
+        } catch (\Throwable $e) {
+            if (isset($transaction)) { $transaction->rollback($e); }
+            throw $e;
+        } finally {
+            if ($actorlock) { $actorlock->release(); }
+            $chatlock->release();
         }
-        \core_message\api::send_message_to_conversation($userid, $conversationid, $message, FORMAT_PLAIN);
     }
 
     public static function start(int $userid, int $otheruserid, string $message = ''): int {
-        require_capability('moodle/site:sendmessage', \context_system::instance());
+        self::require_actor($userid, true);
+        $target = \core_user::get_user($otheruserid, 'id,deleted,suspended', MUST_EXIST);
+        if ($target->deleted || $target->suspended || !employment::is_active($otheruserid)) {
+            throw new \invalid_parameter_exception('Сотрудник недоступен для общения.');
+        }
 
         if ($userid === $otheruserid) {
             $conversation = \core_message\api::get_self_conversation($userid);
@@ -236,6 +265,7 @@ final class communication {
     }
 
     public static function search_users(int $userid, string $query): array {
+        self::require_actor($userid);
         $query = trim($query);
         if (\core_text::strlen($query) < 2) {
             return [];
@@ -256,6 +286,8 @@ final class communication {
                 }
                 $id = (int)$item->id;
                 if ($id !== $userid && !isset($found[$id])
+                        && employment::is_active($id)
+                        && has_capability('local/ustar:use', \context_system::instance(), $id)
                         && \core_message\api::can_send_message($id, $userid)) {
                     $found[$id] = $item;
                 }

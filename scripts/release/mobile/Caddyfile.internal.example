@@ -1,0 +1,6 @@
+# Merge this single host into the existing Caddy configuration after checking its actual mount/network.
+# Host-based Caddy -> current observed loopback Apache upstream. In Docker, use the existing backend network address.
+ustar.local {
+    tls internal
+    reverse_proxy 127.0.0.1:8082
+}

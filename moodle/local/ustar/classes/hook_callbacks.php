@@ -12,6 +12,12 @@ use core\hook\output\before_footer_html_generation;
  * @package local_ustar
  */
 final class hook_callbacks {
+    public static function before_standard_head_html_generation(
+        \core\hook\output\before_standard_head_html_generation $hook
+    ): void {
+        $hook->add_html(mobile_app::head_html());
+    }
+
     public static function before_footer_html_generation(
         before_footer_html_generation $hook
     ): void {

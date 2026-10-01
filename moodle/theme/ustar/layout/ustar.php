@@ -699,7 +699,7 @@ if (class_exists('\local_ustar\communication')) {
 }
 
 // Layouts run after STATE_PRINTING_HEADER. Pass classes to body_attributes().
-$widthclass = in_array($pagepath, ['/local/ustar/notebook.php', '/local/ustar/catalog.php'], true)
+$widthclass = in_array($pagepath, ['/local/ustar/notebook.php', '/local/ustar/catalog.php', '/local/ustar/messages.php'], true)
     ? 'u-personal-wide' : 'u-standard-width';
 
 $preset = (string)get_user_preferences('local_ustar_preset', 'yellow', (int)$USER->id);
@@ -731,7 +731,7 @@ if (class_exists('\local_ustar\employment') && !empty($USER->id)
 $mobilenavitems = array_values(array_filter($navitems, static function(array $item): bool {
     return !array_key_exists('mobile', $item) || !empty($item['mobile']);
 }));
-$mobilenavitems = array_slice($mobilenavitems, 0, 5);
+$mobilenavitems = array_slice($mobilenavitems, 0, 4);
 
 // Render the plugin's navigation presenter: this shell omits standard_footer_html.
 $routecontinue = \local_ustar\route_continue::footer_button();

@@ -44,3 +44,13 @@ authorization. On 2026-10-01 the user explicitly authorized publication, PR crea
 and full CI. Direct git push has no configured credentials in this execution
 workspace; publication proceeds through the connected GitHub Git-data API, with
 its resulting complete source tree compared to the local candidate before CI.
+
+PR72 initial full run 36852093564 passed source/frontend/rollback/package gates and
+fresh install, baseline/repeated/PR63 upgrades plus real HTTP group creation and
+multipart retry. Opening the new group then failed: Moodle 5.1's linked presenter
+warns when a linked conversation has a component other than core_group/groups.
+Work groups now remain standalone native GROUP conversations, with null component
+and a reserved local_ustar_workchat item marker/creator ID. Course-linked metadata
+and core are untouched. Native tests cover both group list and detail reads and a
+real course-linked group. Installer media prerequisites are checked before maintenance.
+The corrected exact head requires a new complete full RC run before deployment.

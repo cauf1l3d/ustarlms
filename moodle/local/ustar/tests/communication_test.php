@@ -32,6 +32,12 @@ final class communication_test extends \advanced_testcase {
         global $DB;
         $id = $this->group(); $second = $this->group();
         $this->assertNotSame($id, $second);
+        $record = $DB->get_record('message_conversations', ['id' => $id], '*', MUST_EXIST);
+        $this->assertNull($record->component);
+        $this->assertSame(chat_groups::ITEMTYPE, $record->itemtype);
+        $this->assertSame((int)$this->users[0]->id, (int)$record->itemid);
+        $this->assertSame('Рабочая группа', communication::conversation($this->users[0]->id, $id)['title']);
+        $this->assertContains($id, array_column(communication::conversations($this->users[0]->id), 'id'));
         $this->assertSame(3, \core_message\api::count_conversation_members($id));
         chat_groups::change($this->users[0]->id, $id, 'rename', 'Новый заголовок');
         chat_groups::change($this->users[0]->id, $id, 'add', '', [$this->users[3]->id, $this->users[3]->id]);
@@ -57,8 +63,12 @@ final class communication_test extends \advanced_testcase {
         chat_groups::change($this->users[0]->id, $id, 'remove', '', [$this->users[0]->id]);
     }
     public function test_native_course_group_is_not_managed_by_workchat_controller(): void {
+        $course = $this->getDataGenerator()->create_course();
+        $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
         $conversation = \core_message\api::create_conversation(\core_message\api::MESSAGE_CONVERSATION_TYPE_GROUP,
-            [$this->users[0]->id, $this->users[1]->id], 'Course group');
+            [$this->users[0]->id, $this->users[1]->id], 'Course group',
+            \core_message\api::MESSAGE_CONVERSATION_ENABLED, 'core_group', 'groups', $group->id,
+            \context_course::instance($course->id)->id);
         $this->assertFalse(chat_groups::can_manage($this->users[0]->id, $conversation->id));
     }
     public function test_retry_receipt_deduplicates_and_detects_changed_payload(): void {

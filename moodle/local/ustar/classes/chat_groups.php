@@ -3,9 +3,9 @@ namespace local_ustar;
 
 defined('MOODLE_INTERNAL') || die();
 
-/** Work chats are native Moodle conversations; the linked item identifies their creator. */
+/** Standalone native groups use a reserved marker for ownership, not a course component link. */
 final class chat_groups {
-    public const ITEMTYPE = 'workchat';
+    public const ITEMTYPE = 'local_ustar_workchat';
     public const MAX_MEMBERS = 100;
 
     public static function can_create(int $userid): bool {
@@ -54,13 +54,21 @@ final class chat_groups {
         }
         $name = self::name($name);
         $transaction = $DB->start_delegated_transaction();
-        $conversation = \core_message\api::create_conversation(
-            \core_message\api::MESSAGE_CONVERSATION_TYPE_GROUP, array_merge([$userid], $members),
-            $name, \core_message\api::MESSAGE_CONVERSATION_ENABLED,
-            'local_ustar', self::ITEMTYPE, $userid, \context_system::instance()->id
-        );
-        $transaction->allow_commit();
-        return (int)$conversation->id;
+        try {
+            // Moodle 5.1's linked presenter assumes core_group/groups and warns for other components.
+            // These are standalone groups: core owns members/messages; the reserved item marker
+            // identifies the USTAR creator without entering the course-link presentation path.
+            $conversation = \core_message\api::create_conversation(
+                \core_message\api::MESSAGE_CONVERSATION_TYPE_GROUP, array_merge([$userid], $members),
+                $name, \core_message\api::MESSAGE_CONVERSATION_ENABLED,
+                null, self::ITEMTYPE, $userid, \context_system::instance()->id
+            );
+            $transaction->allow_commit();
+            return (int)$conversation->id;
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+            throw $e;
+        }
     }
 
     public static function can_manage(int $userid, int $conversationid): bool {
@@ -69,8 +77,9 @@ final class chat_groups {
             && \core_message\api::is_user_in_conversation($userid, $conversationid)
             && $DB->record_exists('message_conversations', [
                 'id' => $conversationid, 'type' => \core_message\api::MESSAGE_CONVERSATION_TYPE_GROUP,
-                'component' => 'local_ustar', 'itemtype' => self::ITEMTYPE,
+                'component' => null, 'itemtype' => self::ITEMTYPE,
                 'itemid' => $userid, 'enabled' => \core_message\api::MESSAGE_CONVERSATION_ENABLED,
+                'contextid' => \context_system::instance()->id,
             ]);
     }
 

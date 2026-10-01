@@ -24,7 +24,8 @@ for attempt in 1 2; do
         "$WEBROOT/local/ustar/messages_api.php" -o /artifacts/chat-send.json
     php -r '$r=json_decode(file_get_contents("/artifacts/chat-send.json"),true); if(empty($r["ok"])||strpos($r["html"],"<img ")===false||strpos($r["html"],"Скачать")===false){echo json_encode($r);exit(1);} if(substr_count($r["html"],"HTTP_MEDIA_FIXTURE")!==1){exit(1);}echo "CHAT_MULTIPART_AND_RETRY=OK\n";'
 done
-curl -fsS -b "$COOKIE" "$WEBROOT/local/ustar/messages.php?conversationid=$conversation" -o /artifacts/chat-thread.html
+code=$(curl -sS -b "$COOKIE" "$WEBROOT/local/ustar/messages.php?conversationid=$conversation" -o /artifacts/chat-thread.html -w '%{http_code}')
+test "$code" = 200 || { echo "CHAT_THREAD_HTTP_FAILED=$code"; exit 1; }
 php -r '$s=file_get_contents("/artifacts/chat-thread.html");if(strpos($s,"HTTP_MEDIA_FIXTURE")===false||preg_match("/Debug info:|Stack trace:|codingerror/i",$s)){exit(1);}echo "CHAT_AUTHENTICATED_RENDER=OK\n";'
 fileurl=$(php -r '$r=json_decode(file_get_contents("/artifacts/chat-send.json"),true);if(!preg_match("/<img src=\"([^\"]+)\"/",$r["html"],$m)){exit(1);}echo html_entity_decode($m[1]);')
 curl -fsS -b "$COOKIE" "$fileurl" -o /artifacts/chat-download.png

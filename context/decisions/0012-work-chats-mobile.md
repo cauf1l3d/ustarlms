@@ -3,8 +3,12 @@
 2026-10-01. Review candidate; extends the existing core_message presentation.
 
 Moodle remains the owner of messages, conversation membership, privacy, per-user
-message deletion and notifications. Work groups are native GROUP conversations
-linked to local_ustar/workchat; itemid identifies their creator. Only that active
+message deletion and notifications. Work groups are standalone native GROUP
+conversations: component is null, the reserved itemtype local_ustar_workchat marks
+their origin and itemid identifies their creator. Moodle 5.1's linked-conversation
+presenter assumes core_group/groups and warns for other components; standalone work
+groups do not enter that course-link path. No core patch or warning suppression.
+Only that active
 session actor, while still a member, manages the group. Course-linked groups are
 readable through core messaging but cannot be managed by this controller. Multiple
 work groups may share one creator. Invitations check current employment, actual

@@ -55,6 +55,9 @@ PY
 sudo docker exec -i -u www-data ustar_moodle php -d opcache.enable_cli=0 <<'PHP' | tee "$REPORT/preflight.txt"
 <?php
 define('CLI_SCRIPT',true); require '/var/www/html/config.php';
+if (!function_exists('imagecreatefrompng') || !function_exists('imagepng') || !class_exists('finfo')) {
+    throw new RuntimeException('GD_PNG_AND_FILEINFO_REQUIRED_FOR_CHAT_MEDIA_AND_APP_ICONS');
+}
 if ($CFG->dirroot!=='/var/www/html/public' || !empty($CFG->maintenance_enabled)) {
     throw new RuntimeException('UNEXPECTED_DIRROOT_OR_EXISTING_MAINTENANCE');
 }

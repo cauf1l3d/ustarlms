@@ -6,7 +6,7 @@
   "php_image": "php:8.2.30-cli-bookworm",
   "composer_image": "composer:2.8.12",
   "postgres_image": "postgres:16.10-bookworm",
-  "upgrade_from_commit": "301cc7229246e0f212733221acc4659b05418cc8",
+  "upgrade_from_commit": "4cbb8ac37ef99051b9432e1e5c7c462f1472ad36",
   "outbound_at_runtime": "blocked by internal Docker network",
   "data": "synthetic only"
 }

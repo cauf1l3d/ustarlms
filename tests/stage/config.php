@@ -14,7 +14,9 @@ $CFG->dbuser = 'ustar_fixture';
 $CFG->dbpass = 'fixture-only-not-a-production-secret';
 $CFG->prefix = $prefix;
 $CFG->dboptions = ['dbpersist' => false, 'dbport' => 5432, 'dbsocket' => '', 'dbcollation' => ''];
-$CFG->wwwroot = 'http://ustar-stage1.invalid';
+$httproot = getenv('USTAR_STAGE_HTTP_ROOT');
+if ($httproot && $httproot !== 'http://127.0.0.1:8087') { throw new RuntimeException('INVALID_STAGE_HTTP_ROOT'); }
+$CFG->wwwroot = $httproot ?: 'http://ustar-stage1.invalid';
 $CFG->dataroot = '/stage/data/' . $prefix;
 $CFG->admin = 'admin';
 $CFG->directorypermissions = 02777;

@@ -1,115 +1,112 @@
-/* Login only. Original supplied brand artwork; native Moodle owns all authentication. */
+/* A single native composition: shared surface, typography, spacing and gold accents. */
 body.pagelayout-login.ustar-auth-body {
-    background: radial-gradient(ellipse at 10% 80%, #fff 0, transparent 42%),
-        radial-gradient(ellipse at 90% 15%, #fff 0, transparent 45%),
-        linear-gradient(125deg, #e0d9ce, #f5f3ef 42%, #ddd4c6);
-    color: #2b2b2b;
+    display:block; margin:0; padding:0; height:auto; min-height:100vh;
+    color:#2b2b2b; background:#ededed;
+    background-image:radial-gradient(ellipse at 0% 0%,#f7e6a766,transparent 50%),
+        radial-gradient(ellipse at 100% 100%,#e9d9a855,transparent 50%);
+    background-attachment:fixed;
 }
-body.pagelayout-login.ustar-auth-body #page-wrapper { margin:0; padding:0; min-height:100vh; }
+body.pagelayout-login.ustar-auth-body #page-wrapper {
+    display:flex; flex-direction:column; justify-content:center;
+    min-height:100vh; height:auto; margin:0; padding:32px 24px; background:transparent;
+}
 body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
-#page-wrapper #page.ustar-auth-shell {
-    display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr));
-    align-items:stretch; gap:18px; box-sizing:border-box;
-    width:calc(100% - 48px); max-width:1420px; height:auto;
-    min-height:0;
-    margin:24px auto !important; padding:0 !important; background:transparent;
+body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell {
+    display:block!important; box-sizing:border-box; width:100%; max-width:1180px;
+    height:auto; min-height:0; margin:auto!important; padding:0!important;
+    overflow:hidden; border:1px solid #ffffff; border-radius:32px;
+    background:linear-gradient(120deg,#fffffff0,#faf9f5e8);
+    box-shadow:0 24px 70px #34312612,inset 0 1px 0 #fff;
 }
-.ustar-auth-shell > section { min-width:0; border-radius:34px; }
-.ustar-auth-shell .ustar-auth-brand { position:relative; overflow:hidden; align-self:stretch; }
-/* Let the form determine the shared grid row height, then fill the artwork panel. */
-.ustar-auth-artwork { position:absolute; inset:0; display:block; width:100%; height:100%; overflow:hidden; border-radius:34px; }
-
-.ustar-auth-shell .ustar-auth-auth {
-    display:flex; flex-direction:column; align-items:center; box-sizing:border-box;
-    padding:clamp(24px,3vw,40px); border:2px solid #ffffffd9;
-    background:linear-gradient(135deg,#ece7dfb8,#ffffff52 55%,#e8e1d6b8);
-    box-shadow:inset 0 0 10px #fff,0 12px 36px #4f422321;
-    backdrop-filter:blur(18px);
-}
-.ustar-auth-logo { display:block; width:56%; max-width:300px; height:auto; aspect-ratio:287 / 100; flex-shrink:0; overflow:hidden; }
-
-.ustar-auth-shell .ustar-auth-start { margin:24px 0; text-align:center; text-transform:uppercase;
-    font-size:clamp(26px,3vw,46px); line-height:1.15; font-weight:800;
-    color:#966d09; background:linear-gradient(120deg,#bd8c14,#ebc500,#8b6100);
-    background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    text-decoration:underline; text-underline-offset:8px; text-decoration-thickness:2px;
-}
-.ustar-auth-auth__card { width:100%; }
-.ustar-auth-core h1.login-heading, .ustar-auth-core .login-logo { display:none; }
-.ustar-auth-core h2.login-heading { font-size:18px; margin:20px 0 12px; }
-.ustar-auth-core .login-container, .ustar-auth-core .loginform, .ustar-auth-core .loginform > .login-form {
+.ustar-auth-heading { display:flex; justify-content:center; padding:30px 40px 24px; }
+.ustar-auth-wordmark { display:inline-flex; align-items:center; gap:12px; color:#2b2b2b; text-decoration:none; }
+.ustar-auth-wordmark:hover { color:#2b2b2b; text-decoration:none; }
+.ustar-auth-wordmark > svg { width:32px; height:40px; fill:#b58a00; }
+.ustar-auth-wordmark > span { font-size:42px; font-weight:900; letter-spacing:-2px; line-height:1; }
+.ustar-auth-wordmark small { display:block; margin-top:7px; font-size:11px; font-weight:600; letter-spacing:6px; }
+.ustar-auth-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; }
+.ustar-auth-columns > section { box-sizing:border-box; min-width:0; padding:24px clamp(28px,4vw,64px) 32px; }
+.ustar-auth-brand { display:flex; flex-direction:column; justify-content:center; border-right:1px solid #d9d5c8; }
+.ustar-auth-brand h2,.ustar-auth-start { margin:0 0 22px; color:#2b2b2b; font-size:30px; font-weight:750; line-height:1.2; letter-spacing:-.6px; }
+.ustar-auth-intro { margin:0 0 28px; color:#666057; font-size:17px; line-height:1.6; }
+.ustar-auth-features { display:grid; gap:22px; margin:0; padding:0; list-style:none; }
+.ustar-auth-features li { display:flex; gap:16px; align-items:center; }
+.ustar-auth-features strong { display:block; font-size:17px; font-weight:650; }
+.ustar-auth-features small { display:block; margin-top:3px; color:#666057; font-size:14px; line-height:1.45; }
+.ustar-auth-icon { display:grid; flex:0 0 48px; width:48px; height:48px; place-items:center; border-radius:14px;
+    background:#f6edcf; color:#8a6400; }
+.ustar-auth-icon svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linejoin:round; stroke-linecap:round; }
+.ustar-auth-motto { margin:30px 0 0; color:#856200; font-size:15px; font-weight:600; }
+.ustar-auth-auth { display:flex; flex-direction:column; justify-content:center; }
+.ustar-auth-start { text-align:left; }
+.ustar-auth-auth__card,.ustar-auth-core { width:100%; min-width:0; overflow-wrap:anywhere; }
+.ustar-auth-core h1.login-heading,.ustar-auth-core .login-logo { display:none; }
+.ustar-auth-core h2.login-heading { font-size:16px; margin:16px 0 10px; }
+.ustar-auth-core .login-container,.ustar-auth-core .loginform,.ustar-auth-core .loginform > .login-form {
     width:100%; max-width:none; margin:0; padding:0; border:0; background:transparent; box-shadow:none;
 }
-.ustar-auth-core .login-form-username,.ustar-auth-core .login-form-password,.ustar-auth-core .login-form-submit { margin:0 0 12px; }
+.ustar-auth-core .login-form-username,.ustar-auth-core .login-form-password,.ustar-auth-core .login-form-submit { margin:0 0 14px; }
 .ustar-auth-core .form-control,.ustar-auth-core #username,.ustar-auth-core #password {
-    box-sizing:border-box; width:100%; min-height:54px; padding:12px 16px;
-    border:1px solid #fff; border-radius:14px; background:#ffffff85; color:#2b2b2b; font-size:16px;
-    box-shadow:inset 0 1px 2px #fff9;
+    box-sizing:border-box; width:100%; min-height:50px; padding:12px 15px;
+    border:1px solid #d6d1c5; border-radius:12px; background:#fff; color:#2b2b2b; font-size:16px;
 }
 .ustar-auth-core .toggle-sensitive-wrapper { display:flex; width:100%; }
-.ustar-auth-core .toggle-sensitive-wrapper #password { flex:1 1 0; width:1%; border-radius:14px 0 0 14px; }
-.ustar-auth-core .toggle-sensitive-btn { display:grid; flex:0 0 54px; place-items:center; min-height:54px; border:1px solid #fff; border-left:0; border-radius:0 14px 14px 0; background:#ffffff85; color:#444; }
-.ustar-auth-core .login-form-submit .btn-primary { width:100%; min-height:54px; border:1px solid #ffe7a3; border-radius:13px;
-    background:linear-gradient(115deg,#eabd33,#c99919 55%,#f4d77a); color:#211b0b; font-size:20px; font-weight:700;
-    box-shadow:inset 0 1px 2px #fff,0 8px 24px #c99a1930;
+.ustar-auth-core .toggle-sensitive-wrapper #password { flex:1 1 0; min-width:0; width:1%; border-radius:12px 0 0 12px; }
+.ustar-auth-core .toggle-sensitive-btn { display:grid; flex:0 0 50px; place-items:center; min-height:50px;
+    border:1px solid #d6d1c5; border-left:0; border-radius:0 12px 12px 0; background:#fff; color:#555; }
+.ustar-auth-core .login-form-submit .btn-primary,.ustar-auth-core .u-register .btn-primary {
+    width:100%; min-height:50px; border:1px solid #cfad10; border-radius:12px;
+    background:linear-gradient(110deg,#ebc500,#e2b900); color:#2b2b2b; font-size:17px; font-weight:700;
+    box-shadow:0 5px 16px #b48a0014;
 }
-.ustar-auth-core .login-form-submit .btn-primary:hover { filter:brightness(1.06); }
-.ustar-auth-core .login-form-submit .btn-primary:disabled { opacity:.65; }
-.ustar-auth-core .btn-secondary { min-height:44px; border:1px solid #caa34d; border-radius:12px; background:#ffffff80; color:#2b2b2b; padding:10px 16px; }
-.ustar-auth-core a { color:#795400; font-size:15px; text-decoration:underline; }
+.ustar-auth-core .btn-primary:hover { background:#dfba00; }
+.ustar-auth-core .btn-primary:disabled { opacity:.65; cursor:wait; }
+.ustar-auth-core .btn-secondary,.ustar-auth-signup .btn-secondary { min-height:42px; padding:9px 14px;
+    border:1px solid #d6d1c5; border-radius:10px; background:#fff; color:#2b2b2b; }
+.ustar-auth-core a { color:#795b00; font-size:14px; text-decoration:underline; }
 .ustar-auth-core .login-form-forgotpassword { text-align:center; margin:12px 0 18px; }
-.ustar-auth-signup { display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
-    margin-top:16px; padding-top:16px; border-top:1px solid #aca59c; color:#4f4b44; }
-.ustar-auth-signup .btn { text-decoration:none; font-weight:700; }
-.ustar-auth-core .login-divider { margin:18px 0; }
-.ustar-auth-core .alert { font-size:16px; line-height:1.5; padding:12px; border:1px solid #b73728; background:#fff0eb; color:#7a1c11; border-radius:10px; }
-.ustar-auth-core :is(input,button,a,select):focus-visible { outline:3px solid #806300; outline-offset:3px; }
-.ustar-auth-shell .ustar-auth-auth__footer { display:flex; flex-direction:column; align-items:center; margin-top:16px; padding-top:24px; text-align:center; width:100%; }
-.ustar-auth-auth__footer p { color:#62605b; font-size:13px; line-height:1.5; margin:0 0 16px; }
-.ustar-auth-auth__footer strong { background:linear-gradient(#575753,#2b2b2b); color:#ededed; font-size:clamp(18px,2vw,26px); font-weight:500; border-radius:12px; padding:8px 22px; }
-.ustar-auth-auth__footer small { margin-top:16px; color:#62605b; font-size:11px; line-height:1.5; }
-@media (max-width:900px) {
-    #page-wrapper #page.ustar-auth-shell { grid-template-columns:minmax(0,1fr); max-width:620px;
-        width:calc(100% - 24px); min-height:0; margin:0 auto !important; }
-    .ustar-auth-shell .ustar-auth-auth { grid-row:1; padding:24px 18px; }
-    .ustar-auth-shell .ustar-auth-brand { grid-row:2; min-height:min(120vw,700px); }
-    .ustar-auth-shell .ustar-auth-start { font-size:clamp(26px,6vw,36px); }
-}
-@media (forced-colors:active) {
-    .ustar-auth-shell .ustar-auth-start { background:none; -webkit-text-fill-color:CanvasText; color:CanvasText; }
-}
-
-.ustar-auth-core h2.login-heading:has(+ #guestlogin) { font-size:13px; line-height:1.5; font-weight:400; text-align:center; }
-.ustar-auth-core #guestlogin { display:flex; justify-content:center; }
-.ustar-auth-core #loginguestbtn { width:80%; }
-.ustar-auth-core .login-divider { border-top:1px solid #aca59c; }
+.ustar-auth-signup { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    margin-top:18px; padding-top:18px; border-top:1px solid #dedacf; color:#666057; font-size:14px; }
+.ustar-auth-signup .btn { text-decoration:none; font-weight:600; }
+.ustar-auth-core .login-divider { margin:18px 0; border-top:1px solid #dedacf; }
+.ustar-auth-core .alert { font-size:15px; line-height:1.5; padding:12px; border:1px solid #b73728;
+    background:#fff0eb; color:#7a1c11; border-radius:10px; }
+.ustar-auth-shell :is(input,button,a,select):focus-visible { outline:3px solid #806300; outline-offset:3px; }
+.ustar-auth-core .login-identityproviders .btn { white-space:normal; }
 .ustar-auth-core .login-languagemenu { min-width:0; }
 .ustar-auth-core .d-flex { display:flex; flex-wrap:wrap; gap:8px; }
-.ustar-auth-core .login-form-submit .btn-primary::after { content:' →'; margin-left:14px; }
-
-/* Explicit reset of inherited page/shell styles. All selectors belong to this login only. */
-body.pagelayout-login.ustar-auth-body { display:block; margin:0; padding:0; height:auto; min-height:100vh; }
-body.pagelayout-login.ustar-auth-body #page-wrapper { display:block; height:auto; background:transparent; }
-body.pagelayout-login.ustar-auth-body #page { max-width:1420px; overflow:visible; box-shadow:none; border:0; }
-body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell { padding:0!important; }
-.ustar-auth-shell .ustar-auth-brand { display:flex; align-items:center; padding:0; border:0; background:linear-gradient(135deg,#eee8df,#faf8f4); box-shadow:inset 0 0 8px #fff; }
-.ustar-auth-brand::before,.ustar-auth-brand::after { content:none; }
-.ustar-auth-artwork image,.ustar-auth-logo image { pointer-events:none; }
-.ustar-auth-core { width:100%; overflow-wrap:anywhere; }
-.ustar-auth-core .login-identityproviders .btn { white-space:normal; }
+.ustar-auth-core h2.login-heading:has(+ #guestlogin) { font-size:13px; line-height:1.5; font-weight:400; text-align:center; }
+.ustar-auth-core #guestlogin { display:flex; justify-content:center; }
+.ustar-auth-core #loginguestbtn { width:100%; }
+.ustar-auth-footer { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 24px; margin:0 40px;
+    padding:22px 0; border-top:1px solid #dedacf; color:#777064; text-align:center; }
+.ustar-auth-footer p,.ustar-auth-footer small { margin:0; font-size:12px; line-height:1.5; }
 body.pagelayout-login.ustar-auth-body #region-main { float:none; width:100%; padding:0; border:0; background:transparent; overflow:visible; }
-@media(max-width:900px) { body.pagelayout-login.ustar-auth-body #page { max-width:620px; } }
-@media(min-width:901px) {
- .ustar-auth-shell .ustar-auth-auth { padding:28px 32px; }
- .ustar-auth-shell .ustar-auth-logo { max-width:260px; }
- .ustar-auth-shell .ustar-auth-start { font-size:clamp(28px,2.7vw,42px); margin:16px 0; }
- .ustar-auth-shell .ustar-auth-auth__footer { padding-top:16px; }
- .ustar-auth-auth__footer p { margin-bottom:10px; }
- .ustar-auth-auth__footer strong { padding:6px 22px; }
- .ustar-auth-auth__footer small { margin-top:12px; }
+@media(max-width:900px) {
+    body.pagelayout-login.ustar-auth-body #page-wrapper { padding:20px; }
+    body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell { max-width:600px; border-radius:24px; }
+    .ustar-auth-columns { grid-template-columns:minmax(0,1fr); }
+    .ustar-auth-auth { grid-row:1; }
+    .ustar-auth-brand { grid-row:2; border-right:0; border-top:1px solid #dedacf; }
+    .ustar-auth-columns > section { padding:26px 32px; }
+    .ustar-auth-brand h2,.ustar-auth-start { font-size:26px; }
+    .ustar-auth-heading { padding:26px 32px 0; }
+    .ustar-auth-features { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .ustar-auth-features li { gap:10px; }
+    .ustar-auth-features strong { font-size:15px; }
+    .ustar-auth-features small { font-size:13px; }
+    .ustar-auth-icon { flex-basis:40px; width:40px; height:40px; }
+    .ustar-auth-intro br { display:none; }
+    .ustar-auth-footer { margin:0 32px; }
 }
-.ustar-auth-logo { mix-blend-mode:multiply; }
-body.pagelayout-login.ustar-auth-body { background-attachment:fixed; }
+@media(max-width:540px) {
+    body.pagelayout-login.ustar-auth-body #page-wrapper { padding:12px; }
+    .ustar-auth-columns > section { padding:24px; }
+    .ustar-auth-features { grid-template-columns:minmax(0,1fr); gap:18px; }
+    .ustar-auth-footer { margin:0 24px; }
+    .ustar-auth-wordmark > span { font-size:36px; }
+    .ustar-auth-wordmark > svg { width:28px; height:36px; }
+}
 
 /* USTAR registration uses the existing login shell and its brand tokens. */
 .ustar-auth-core .u-register { color:#2b2b2b; }
@@ -126,16 +123,6 @@ body.pagelayout-login.ustar-auth-body { background-attachment:fixed; }
 .ustar-auth-core .u-register .u-register-login { margin-top:14px; }
 .ustar-auth-core .u-register .u-register-trap { position:absolute; left:-10000px; height:0; overflow:hidden; }
 
-/* Keep the supplied artwork and align the registration card in the same shell. */
-body.ustar-register-body #page-wrapper #page.ustar-auth-shell {
-    grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
-}
-body.ustar-register-body .ustar-auth-shell .ustar-auth-auth { padding:20px clamp(20px,3vw,36px); }
-body.ustar-register-body .ustar-auth-shell .ustar-auth-start { margin:8px 0 12px; font-size:clamp(26px,2.5vw,34px); }
-body.ustar-register-body .ustar-auth-logo { max-width:205px; }
-body.ustar-register-body .ustar-auth-shell .ustar-auth-auth__footer { padding-top:12px; }
-body.ustar-register-body .ustar-auth-auth__footer p { margin-bottom:8px; }
-body.ustar-register-body .ustar-auth-auth__footer small { margin-top:8px; }
 .ustar-auth-core .u-register { width:100%; max-width:590px; margin:auto; }
 .ustar-auth-core .u-register form { gap:9px; }
 .ustar-auth-core .u-register .u-register-names { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
@@ -149,17 +136,9 @@ body.ustar-register-body .ustar-auth-auth__footer small { margin-top:8px; }
     border-left:0; border-radius:0 12px 12px 0; background:#ffffffd9; color:#554214; cursor:pointer; }
 .ustar-auth-core .u-register .u-register-error { color:#8a2518; font-size:12px; font-weight:600; line-height:1.35; }
 .ustar-auth-core .u-register [aria-invalid="true"] { border-color:#b73728; box-shadow:0 0 0 1px #b73728; }
-.ustar-auth-core .u-register .btn-primary { width:100%; padding:10px 14px; border:1px solid #ffe7a3;
-    border-radius:13px; background:linear-gradient(115deg,#eabd33,#c99919 55%,#f4d77a);
-    color:#211b0b; font-size:16px; font-weight:700; box-shadow:inset 0 1px 2px #fff,0 8px 24px #c99a1930; }
 .ustar-auth-core .u-register .btn-primary:disabled { opacity:.65; cursor:wait; }
 .ustar-auth-core .u-register :is(input,select,button):focus-visible { outline:3px solid #806300; outline-offset:2px; }
-@media(max-width:900px) {
-    body.ustar-register-body #page-wrapper #page.ustar-auth-shell { grid-template-columns:minmax(0,1fr); }
-    body.ustar-register-body .ustar-auth-shell .ustar-auth-brand { min-height:min(75vw,420px); }
-}
 @media(max-width:540px) {
     .ustar-auth-core .u-register .u-register-names,
     .ustar-auth-core .u-register .u-register-department { grid-template-columns:minmax(0,1fr); }
-    body.ustar-register-body .ustar-auth-shell .ustar-auth-auth { padding:20px 16px; }
 }

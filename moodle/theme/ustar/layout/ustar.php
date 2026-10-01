@@ -698,7 +698,9 @@ if (class_exists('\local_ustar\communication')) {
     }
 }
 
-$PAGE->add_body_class(in_array($pagepath, ['/local/ustar/notebook.php','/local/ustar/catalog.php'], true) ? 'u-personal-wide' : 'u-standard-width');
+// Layouts run after STATE_PRINTING_HEADER. Pass classes to body_attributes().
+$widthclass = in_array($pagepath, ['/local/ustar/notebook.php', '/local/ustar/catalog.php'], true)
+    ? 'u-personal-wide' : 'u-standard-width';
 
 $preset = (string)get_user_preferences('local_ustar_preset', 'yellow', (int)$USER->id);
 if (!in_array($preset, ['yellow','graphite','ocean','forest','berry','sand','lavender','mint','coral','indigo','rose','ice'], true)) { $preset = 'yellow'; }
@@ -763,10 +765,12 @@ $templatecontext = [
             $activityruntime
                 ? [
                     'u-shell-page',
+                    $widthclass,
                     'u-activity-runtime',
                 ]
                 : [
                     'u-shell-page',
+                    $widthclass,
                 ]
         )
         .

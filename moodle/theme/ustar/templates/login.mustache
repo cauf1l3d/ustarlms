@@ -1,34 +1,45 @@
-{{! Canonical artwork supplied by USTAR. Moodle owns tokens, credentials, errors, reset and SSO. }}
+{{! One native composition. Moodle owns credentials, tokens, errors, reset and SSO. }}
 {{> theme_boost/head }}
 <body {{{ bodyattributes }}}>
 {{> core/local/toast/wrapper}}
 <div id="page-wrapper" class="ustar-auth-page">
     {{{ output.standard_top_of_body_html }}}
     <main id="page" class="ustar-auth-shell" aria-label="Вход в USTAR Академию">
-        <section class="ustar-auth-brand" aria-label="Академия USTAR">
-            <svg class="ustar-auth-artwork" viewBox="155 50 711 836" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR: обучение, навыки, карьера, игры. Развивайся, строй карьеру, участвуй в играх, будь частью команды.">
-                <defs><clipPath id="ustar-auth-artwork-crop" clipPathUnits="userSpaceOnUse"><rect x="155" y="50" width="711" height="836" /></clipPath></defs>
-                <image href="{{loginreferenceurl}}" x="0" y="0" width="1672" height="941" clip-path="url(#ustar-auth-artwork-crop)" />
-            </svg>
-        </section>
-        <section class="ustar-auth-auth" aria-label="Авторизация">
-            <svg class="ustar-auth-logo" viewBox="1055 85 287 100" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR Академия"><image href="{{loginreferenceurl}}" x="0" y="0" width="1672" height="941" /></svg>
-            <h1 class="ustar-auth-start">{{starttitle}}</h1>
-            <div class="ustar-auth-auth__card">
-                <div id="region-main" class="ustar-auth-core">{{{ output.main_content }}}</div>
-                {{#signupenabled}}
-                <div class="ustar-auth-signup" aria-label="Регистрация в USTAR Академии">
-                    <span>Впервые в Академии?</span>
-                    <a class="btn btn-secondary" href="{{signupurl}}">Зарегистрироваться</a>
+        <header class="ustar-auth-heading">
+            <a class="ustar-auth-wordmark" href="{{loginurl}}" aria-label="USTAR Академия">
+                <svg viewBox="0 0 32 40" aria-hidden="true"><path d="M18 1 4 23h10L10 39 29 15H18L23 1Z" /></svg>
+                <span>USTAR<small>АКАДЕМИЯ</small></span>
+            </a>
+        </header>
+        <div class="ustar-auth-columns">
+            <section class="ustar-auth-brand" aria-labelledby="ustar-auth-welcome">
+                <h2 id="ustar-auth-welcome">Тут растут эксперты</h2>
+                <p class="ustar-auth-intro">Обучение, навыки и карьера —<br>в одном рабочем пространстве.</p>
+                <ul class="ustar-auth-features">
+                    <li><span class="ustar-auth-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 8 10-5 10 5-10 5Z M6 10v6c4 3 8 3 12 0v-6 M22 8v8" /></svg></span><span><strong>Развивайся</strong><small>Новые знания и навыки</small></span></li>
+                    <li><span class="ustar-auth-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V13h4v7 M10 20V8h4v12 M16 20V3h4v17" /></svg></span><span><strong>Строй карьеру</strong><small>Расти вместе с USTAR</small></span></li>
+                    <li><span class="ustar-auth-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 6h10c3 0 5 10 4 12-1 2-4-1-6-3H9c-2 2-5 5-6 3-1-2 1-12 4-12Z M6 10v4 M4 12h4 M16 11h.01 M18 13h.01" /></svg></span><span><strong>Участвуй в играх</strong><small>Делай обучение интересным</small></span></li>
+                    <li><span class="ustar-auth-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M6 21v-3a6 6 0 0 1 12 0v3 M4 5a3 3 0 0 0 0 6 M20 5a3 3 0 0 1 0 6 M2 19v-3a4 4 0 0 1 3-4 M22 19v-3a4 4 0 0 0-3-4" /></svg></span><span><strong>Будь частью команды</strong><small>Больше возможностей вместе</small></span></li>
+                </ul>
+                <p class="ustar-auth-motto">Знания двигают вперёд</p>
+            </section>
+            <section class="ustar-auth-auth" aria-labelledby="ustar-auth-start">
+                <h1 id="ustar-auth-start" class="ustar-auth-start">{{starttitle}}</h1>
+                <div class="ustar-auth-auth__card">
+                    <div id="region-main" class="ustar-auth-core">{{{ output.main_content }}}</div>
+                    {{#signupenabled}}
+                    <div class="ustar-auth-signup" aria-label="Регистрация в USTAR Академии">
+                        <span>Впервые в Академии?</span>
+                        <a class="btn btn-secondary" href="{{signupurl}}">Зарегистрироваться</a>
+                    </div>
+                    {{/signupenabled}}
                 </div>
-                {{/signupenabled}}
-            </div>
-            <footer class="ustar-auth-auth__footer">
-                <p>USTAR Академия использует авторские технологии и собственные разработанные сервисы обучения на основе ядра Moodle.</p>
-                <strong>Тут растут эксперты</strong>
-                <small>© USTAR Академия. 2026 Все права защищены</small>
-            </footer>
-        </section>
+            </section>
+        </div>
+        <footer class="ustar-auth-footer">
+            <p>USTAR Академия — обучение и развитие команды</p>
+            <small>© USTAR Академия. 2026</small>
+        </footer>
     </main>
     {{> theme_boost/footer }}
 </div>

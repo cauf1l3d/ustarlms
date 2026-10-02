@@ -18,7 +18,7 @@ body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell {
     border-radius:32px; overflow:hidden; background:linear-gradient(135deg,#ebe6dec9,#ffffff70 55%,#e8e1d5c9);
     box-shadow:inset 0 1px 8px #fff9,0 12px 36px #4f422318; }
 .ustar-auth-shell .ustar-auth-brand { position:relative; display:block; padding:0;
-    border:0; border-radius:0; background:none; box-shadow:none; align-self:center; }
+    border:0; border-radius:5% / 4.25%; background:none; box-shadow:none; align-self:center; }
 .ustar-auth-brand::before,.ustar-auth-brand::after { content:none; }
 .ustar-auth-artwork { display:block; width:100%; height:auto; max-height:none; overflow:hidden;
     aspect-ratio:712 / 837; }

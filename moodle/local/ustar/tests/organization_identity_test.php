@@ -487,6 +487,8 @@ final class organization_identity_test extends \advanced_testcase {
 
     private function reset_adaptation_fixture(): array {
         global $DB;
+        // Exercise real rollback/retry boundaries without PHPUnit's enclosing transaction.
+        $this->preventResetByRollback();
         $manager = $this->employee('retail_head');
         $employee = $this->employee();
         $managerplace = $this->place('retail_head');
@@ -516,6 +518,7 @@ final class organization_identity_test extends \advanced_testcase {
             'mastered' => 'Ознакомление', 'succeeded' => 'Первый день', 'difficult' => 'Нужен разбор',
             'help' => 'no', 'ready' => 'no', 'action' => 'Разобрать ошибки',
         ]);
+        $this->assertSame(checklist_service::date_key(), $DB->get_field('local_ustar_check_submits', 'workdate', ['id' => $submission]));
         $DB->set_field('local_ustar_check_submits', 'workdate', $startdate, ['id' => $submission]);
         $old = $DB->get_record('local_ustar_adaptations', ['id' => $id]);
         adaptation_service::sync_cases($old);

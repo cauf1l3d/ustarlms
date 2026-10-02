@@ -122,7 +122,8 @@ final class adaptation_service {
             'userid' => $userid,
             'assignmentid' => (int)$assignment->id,
             'positionid' => (string)$place->positionid,
-            'startdate' => userdate($earliest, '%Y-%m-%d', 99, false),
+            'startdate' => (new \DateTimeImmutable('@' . $earliest))
+                ->setTimezone(\core_date::get_user_timezone_object())->format('Y-m-d'),
         ];
     }
 
@@ -230,7 +231,7 @@ final class adaptation_service {
     }
 
     private static function today(): string {
-        return userdate(time(), '%Y-%m-%d');
+        return checklist_service::date_key();
     }
 
     private static function factual_dates(array $map): array {
@@ -1008,7 +1009,10 @@ final class adaptation_service {
                 $transaction->allow_commit();
                 return $result;
             } catch (\Throwable $e) {
-                $transaction->rollback($e);
+                if (!$transaction->is_disposed()) {
+                    $transaction->rollback($e);
+                }
+                throw $e;
             }
         } finally {
             unset($held[$key]);

@@ -1,29 +1,18 @@
 # USTAR Academy
 
-**Релизная работа 24.09.2026:** черновой [PR #14](https://github.com/cauf1l3d/ustarlms/pull/14) содержит изменения поверх PR #13. Проверка кода не является приёмкой Moodle runtime или production. Канонические критерии и история статусов находятся в `context/roadmap/`; приведённая ниже запись описывает более раннюю публикацию исходников.
+Корпоративная академия розничной сети «Хозмагия», работающая во внутренней сети компании. Moodle отвечает за LMS, `local_ustar` — за бизнес-процессы, `theme_ustar` — за интерфейс.
 
-**Актуальная работа: [начать здесь](START_HERE.md) → [roadmap](context/roadmap/README.md) → [статус и следующий шаг](context/roadmap/STATE.yaml).**
+**Код и текущая документация находятся вместе в `main`. Начните с [START_HERE.md](START_HERE.md).**
 
-Приоритет: надёжный production, консистентная студия маршрутов, награда за каждое новое подтверждённое прохождение точки, геймификация и инженерный порядок. Код патчей опубликован в `integration/ustar-20260912`; main содержит канонический контекст и harness. Код приложения main в этой публикации не менялся. Точный кодовый SHA и границы проверки — в STATE. Последний SCORM-вариант предварительно подтверждён пользователем; полная сверка production ещё требуется.
+| Что нужно | Куда идти |
+|---|---|
+| Состояние и следующий шаг | [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md) |
+| Архитектура и ограничения | [Обзор](context/architecture/overview.md), [ADR](context/decisions/README.md) |
+| Найти реализацию | [Карта модулей](context/code_map/README.md) |
+| Установленный код, CI, последние SHA | [Реестр релизов](context/runtime/RELEASE_LEDGER.md) |
+| Эксплуатация, проверка prod, выпуск | [Runbook](context/runtime/OPERATIONS.md) |
+| Следующий этап Android/iOS | [План мобильного клиента](context/roadmap/MOBILE_CLIENT.md) |
 
----
+На 02.10.2026 владелец сообщает о стабильной работе без выявленных в текущей работе багов. Это пользовательское наблюдение; актуальный серверный manifest и полная приёмка всех сценариев — отдельные свидетельства. Последний проверенный application baseline — PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`, версии `2026100204 / 2026100202`, полный CI #456. Слияние в main само по себе не устанавливает обновление на сервер.
 
-## Историческая запись исходного baseline
-
-# USTAR 1.5.1 production baseline
-
-Canonical source repository for USTAR.
-
-Production Moodle custom source was captured from:
-/opt/ustar/apps/moodle/moodle/public/local/ustar
-/opt/ustar/apps/moodle/moodle/public/theme/ustar
-
-Frontend source:
-/opt/ustar/source/frontend
-
-DGMJS is maintained as an external pinned dependency.
-
-IMPORTANT:
-bitrix_bot_handler.php is intentionally excluded from this baseline commit.
-The live handler contains credential-related configuration that must first be moved to protected environment configuration.
-The live handler remains protected by the production snapshot/recovery system.
+Исторические RC, аудиты и копии исходников в `release/` сохранены для трассировки; новый код меняется в `moodle/`. Секреты, production DB, moodledata и recovery archives в Git не хранятся.

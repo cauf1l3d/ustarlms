@@ -1,59 +1,40 @@
-# Протокол продолжения для ИИ
+# Протокол продолжения
 
-## Канонический статус и ветки
+## База работы
 
-Roadmap, STATE и BACKLOG ведутся в `main:context/roadmap/`. Ссылки из feature-контекста указывают сюда. Не заводить вторую независимо редактируемую копию статусов в feature, Notion или чате.
+Код и контекст совместно поддерживаются в `main`. Прочитать START_HERE и обязательный контекст, обновить refs, зафиксировать HEAD. Рабочая ветка — от main, короткий PR — в main. Не возобновлять старый stacked PR только потому, что он открыт или называется release.
 
-До R00 код main не является проверенной современной базой. Сначала прочитать START_HERE, STATE и соответствующий BACKLOG ticket, затем получить код по `code_baseline.commit`. Если HEAD сдвинулся, проверить diff релевантных файлов и обновить evidence; нельзя применять старый patch только по совпадению имени.
+Наличие application baseline SHA в STATE не означает, что documentation HEAD или production имеют тот же SHA. Перед выпуском сравнить релевантные деревья, manifest и версии; читать release ledger.
 
-Если checkout находится в feature-ветке, прочитать канонические документы через `git show origin/main:context/roadmap/STATE.yaml` и соседние файлы либо по GitHub-ссылкам. Если работа офлайн и refs не обновлены — явно назвать время/commit своей копии. Метка CURRENT без даты и источника запрещена.
+## Задача и поставка
 
-## Порядок чтения
+Выбрать задачу из ACTIVE/BACKLOG в границах запроса владельца. Указать owner, branch, статус. Сначала проверить реальную реализацию, затем менять. Не перезаписывать чужую незавершённую работу. Сохранять ADR и историю. Инструкция владельца приоритетнее старых аудитов; предложения аудита не разрешают несвязанные production-операции.
 
-1. START_HERE.md и `context/roadmap/STATE.yaml` текущего main.
-2. `context/tasks/ACTIVE.md`, нужная запись BACKLOG и связанные audit findings.
-3. **Из указанной базы кода:** `context/project.yaml`, `context/CONTEXT_INDEX.md`, `context/architecture/`, `context/decisions/`, `context/domains/`, `context/runtime/`, `context/code_map/`, `context/tasks/ACTIVE.md`, `context/agents/astra.md`, `AGENTS.md` и constraints.
-4. Код всех входов/записей/чтений изменяемого сценария. Проверить свои предположения по XMLDB и runtime evidence.
+Каждая поставка содержит:
 
-Текущая инструкция пользователя имеет приоритет над историческими рекомендациями внешнего аудита. Код показывает фактическое поведение, ADR — принятое архитектурное решение, runtime — наблюдение конкретного deployment. Эти источники нельзя подменять друг другом. Противоречие фиксируется, а не разрешается произвольным «весом доверия».
+- implementation SHA и список изменённых сценариев;
+- реально выполненные проверки с SHA/environment и ссылкой на CI;
+- отдельно deployment evidence или явное `not_verified`;
+- при schema change — install/upgrade/repeat, согласованный backup и rollback;
+- актуальные STATE/ACTIVE/BACKLOG/SESSION_LOG и source map при изменении application source.
 
-## Взять задачу
-
-- Выбрать `ready` задачу без незакрытых dependencies; ближайшая — `STATE.next_task`.
-- `planned` задачу можно готовить, но зависимости обязательны до merge/release соответствующей реализации. `deferred` не выполнять без нового приоритета.
-- Изменить status на `in_progress`, указать owner/session, branch и started_at. Проверить, что другой исполнитель не владеет ей. Не перезаписывать чужие изменения статуса.
-- Фиксировать проверяемое поведение до рефакторинга для важных операций с состоянием. Для небольшого CSS-исправления достаточно целевой браузерной проверки; не писать тесты, повторяющие CSS.
-- Сохранять границы Moodle core / local plugin / theme. Не менять БД из UI-патча. Не удалять историю и не выполнять кадровые merge/remove из старых приватных планов.
-
-## Статусы и готовность
-
-| Поле/status | Значение |
+| Статус | Смысл |
 |---|---|
-| ready | Можно начать определённую работу; это не «готово к prod» |
-| in_progress | Есть владелец и рабочая ветка |
-| blocked | Есть конкретный blocker и уже сделанные полезные шаги |
-| review | Есть implementation commit и результаты проверок для ревью |
-| stage_verified | Проверен точный SHA на изолированном runtime |
-| released | Код/миграции установлены, manifest и post-deploy smoke приложены |
-| done | Все acceptance выполнены; для кода production evidence есть; для docs/исследования достаточен опубликованный результат |
-| deferred | Намеренно за текущими этапами |
+| ready | Следующая определённая работа |
+| planned | Работа описана, зависимости/решения остаются |
+| in_progress | Есть текущий исполнитель |
+| review | Реализация и evidence подготовлены |
+| stage_verified | Точный SHA прошёл соответствующий isolated runtime |
+| released | Есть подтверждение установки этого SHA |
+| done | Acceptance задачи выполнены; для docs достаточно опубликованного проверенного результата |
+| deferred | Не выполнять до нового приоритета |
 
-В ticket отдельно указывать `implementation_commit`, `validation_evidence`, `deployment_evidence`. «Класс существует», «архив отправлен», «lint зелёный» и «работает в production» — разные статусы. Не ставить done автоматически после генерации файла.
+Старые R/G/N задачи сохраняются в архиве как критерии, не как действующая очередь. Не маркировать их все done задним числом. Остатки сведены в текущий BACKLOG.
 
-## Что сдавать
+## Проверки
 
-1. Проблема и поведение после изменения, ticket ID, кодовые ссылки.
-2. Изменённые файлы, schema/ACL/business-policy impact.
-3. Реально выполненные проверки, точный SHA, environment, ограничения. `not_run` с причиной честнее PASS из чужого отчёта.
-4. Проверяемый артефакт/PR, manifest, preflight и откат для production-поставки.
-5. Обновлённые BACKLOG/STATE/ACTIVE и SESSION_LOG в каноническом main или docs-PR к нему с ссылкой на кодовый PR. Ссылки должны совпадать по SHA; не переписывать audit snapshot задним числом.
+Обычный PR запускает source/frontend; Moodle DB и rollback включаются отдельным full RC event. Скipped jobs не являются PASS. Штатный workflow: `.github/workflows/ustar-review-gate.yml`; инструкции — в `context/runtime/OPERATIONS.md`.
 
-## При блокировке runtime-доступа
+В documentation-only handoff достаточно проверить ссылки, YAML/JSON, provenance и равенство application trees уже проверенному SHA. Проверка новых context tools должна быть воспроизводимой. При изменении application code требуется новый соответствующий gate, а не заимствование старого результата.
 
-Закончить всё, что можно проверить по коду: diff, fixtures, manifest template, migration preflight, тесты/пакет. Затем записать конкретное недостающее evidence. Не объявлять entire project blocked и не обходить preflight. Старые `check_route_user`/assessment probes сначала прочитать: часть запускает sync и пишет данные, несмотря на диагностическое имя. Не запускать их на production как якобы read-only.
-
-## Обновление контекста
-
-STATE меняется при принятии стадии/следующей задачи; BACKLOG — при изменении task state; SESSION_LOG — после каждой поставки. При runtime observation сохранять measured_at, source, code SHA, image/version/schema и known drift. Не публиковать dumps, credentials, персональные кадровые решения и необезличенные журналы. Автогенератор индекса должен исключать собственный output и не выдавать жёстко заданные пути за измерение.
-
-Не менять default branch, branch protection, runtime и продуктовую архитектуру только ради публикации документа. После R00 отдельно согласовать/реализовать перенос проверенного кода в нормальную integration/release ветку и обновить pointers. Историческая feature-ветка не является вечным новым main.
+Production доступ не подразумевается наличием GitHub. Когда он отсутствует, завершить source-анализ и подготовку, назвать точное недостающее evidence. Не объявлять весь проект заблокированным. Runtime collectors пишут отчёт в отдельный каталог; содержимое проверить перед публикацией. Не публиковать secrets, dumps, личные данные и config.php.

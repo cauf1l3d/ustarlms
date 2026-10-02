@@ -4,7 +4,6 @@ import argparse
 from pathlib import Path
 import hashlib
 import json
-from datetime import datetime, timezone
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -89,12 +88,6 @@ def main():
                 "size":
                     stat.st_size,
 
-                "modified":
-                    datetime.fromtimestamp(
-                        stat.st_mtime,
-                        timezone.utc
-                    ).isoformat(),
-
                 "sha256":
                     sha256(path)
             }
@@ -103,13 +96,11 @@ def main():
 
     result = {
 
-        "generated":
-            datetime.now(
-                timezone.utc
-            ).isoformat(),
+        "schema_version": 2,
+        "kind": "content_index",
 
         "root":
-            str(CONTEXT),
+            "context",
 
         "files":
             sorted(

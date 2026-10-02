@@ -1,13 +1,8 @@
-server:
-
-  hostname:
-    server1.example.com
-
-  os:
-    Ubuntu 24.04.4 LTS
-
-  kernel:
-    6.8.0-138-generic
-
-  refreshed:
-    "2026-09-07 08:01:30"
+kind: owner_reported_topology
+reviewed_at: '2026-10-02'
+measured_now: false
+operating_system: Ubuntu; exact release/kernel unverified
+network: company internal LAN; user SSH access
+reverse_proxy: Caddy; configuration/location unverified
+current_dns_tls_vpn: null
+runbook: context/runtime/OPERATIONS.md

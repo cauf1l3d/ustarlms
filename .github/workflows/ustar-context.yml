@@ -1,0 +1,29 @@
+name: USTAR context integrity
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  context:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - run: pip install PyYAML==6.0.3
+      - name: Regenerate source and content inventories
+        run: |
+          SOURCE_SHA=$(python -c "import yaml; print(yaml.safe_load(open('context/roadmap/STATE.yaml'))['code_baseline']['commit'])")
+          bash scripts/build_code_map.sh "$SOURCE_SHA"
+          python scripts/build_context_index.py
+          git diff --exit-code -- context/code_map/generated context/index/context_index.json
+      - name: Validate source, schema, pointers and links
+        run: python scripts/check_context.py

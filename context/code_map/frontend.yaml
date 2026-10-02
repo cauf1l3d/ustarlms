@@ -1,34 +1,13 @@
-frontend:
-
-theme:
-
-  path:
-    moodle/theme/ustar
-
-  responsibility:
-    - внешний интерфейс
-    - branding
-    - layout
-
-
-templates:
-
-  path:
-    moodle/local/ustar/templates
-
-  responsibility:
-    - mustache views
-    - component rendering
-
-
-assets:
-
-  paths:
-
-    - assets/
-    - frontend/
-
-  responsibility:
-    - JS
-    - CSS
-    - frontend components
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+primary:
+  kind: native_moodle
+  theme: moodle/theme/ustar
+  parent: boost
+  templates: moodle/local/ustar/templates
+  amd: moodle/local/ustar/amd
+  styles: moodle/local/ustar/styles
+secondary:
+  path: frontend
+  kind: Next.js web client
+  production_deployment: unverified
+mobile_native: planned; context/roadmap/MOBILE_CLIENT.md

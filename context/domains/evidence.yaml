@@ -1,22 +1,24 @@
 domain: evidence
-
-
-purpose:
-  Реестр подтвержденных результатов обучения.
-
-
-canonical:
-
-  evidence_rec
-
-
-legacy:
-
-  skill_evidence
-
-  assessment_records
-
-
-rule:
-
-  Any qualification claim must have evidence.
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Подтверждённые результаты, gates и completion cycles
+services:
+- moodle/local/ustar/classes/target_core.php
+- moodle/local/ustar/classes/evidence.php
+- moodle/local/ustar/classes/completion_cycle.php
+- moodle/local/ustar/classes/route_point_evidence_provider.php
+- moodle/local/ustar/classes/grading_commit.php
+tables:
+- local_ustar_evidence_rec
+- local_ustar_evidence_evt
+- local_ustar_gate_defs
+- local_ustar_gate_decisions
+- local_ustar_completion_cycle
+- local_ustar_skill_evidence
+rules:
+- Canonical evidence_rec/evidence_evt are distinct from legacy skill_evidence requirements
+- Keep old attempts/evidence/cycles when repeating or correcting learning
+- Reset is not silent history deletion
+entry_points:
+- moodle/local/ustar/route.php
+- moodle/local/ustar/achievements.php

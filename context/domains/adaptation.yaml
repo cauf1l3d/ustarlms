@@ -1,28 +1,20 @@
 domain: adaptation
-
-purpose:
-  Первичный ввод сотрудника в должность.
-
-
-lifecycle:
-
-  employee:
-    ->
-      adaptation_route
-    ->
-      checkpoints
-    ->
-      admission
-
-
-current:
-
-  status:
-    migration_in_progress
-
-
-integrations:
-
-  - learning
-  - evidence
-  - organization
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Адаптация, контроль, эскалация, история циклов
+services:
+- moodle/local/ustar/classes/adaptation_service.php
+- moodle/local/ustar/classes/staffing_requests.php
+- moodle/local/ustar/classes/checklist_service.php
+tables:
+- local_ustar_adaptations
+- local_ustar_check_submits
+- local_ustar_workflow_events
+rules:
+- HRD decisions require manageadaptation and real active actor
+- PR76 reset cancels active/escalated cycle, retains reports and history
+- Reassignment creates new cycle; completed cycle cannot be reset; DB version 2026100204
+  required
+entry_points:
+- moodle/local/ustar/adaptation.php
+- moodle/local/ustar/adaptation_control.php

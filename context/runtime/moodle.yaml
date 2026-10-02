@@ -1,21 +1,14 @@
-moodle:
-
-  container:
-    name: ustar_moodle
-
-  filesystem:
-    host: /opt/ustar/data/moodle/public
-    container: /var/www/html/public
-
-  plugin:
-    local/ustar
-
-  theme:
-    theme/ustar
-
-  database:
-    engine: PostgreSQL
-    version: 16
-
-  refreshed:
-    2026-09-07 08:01:30
+kind: runtime_path_contract
+reviewed_at: '2026-10-02'
+measured_now: false
+container: ustar_moodle
+host_mount: /opt/ustar/data/moodle/public
+container_mount: /var/www/html
+host_public_root: /opt/ustar/data/moodle/public/public
+container_public_root: /var/www/html/public
+core_cli: /var/www/html/admin/cli
+theme_source_parent: boost
+production_theme_setting: null
+production_versions: null
+isolated_reference: tests/stage/runtime.json
+deployment_evidence: context/runtime/RELEASE_LEDGER.md

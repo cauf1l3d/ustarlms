@@ -1,38 +1,35 @@
-dependencies:
-
-  routes:
-    entry:
-      - moodle/local/ustar/route_studio.php
-
-    core:
-      - classes/route_model.php
-      - classes/route_family.php
-      - classes/route_scope.php
-
-    consumers:
-      - adaptation_service.php
-      - route_runtime.php
-
-
-  organization:
-    entry:
-      - team.php
-
-    core:
-      - classes/organization_model.php
-      - classes/team_presenter.php
-
-
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+relationships:
+  organization_identity:
+  - organization_model
+  - structure
+  - people
+  - employment
   learning:
-    entry:
-      - materials.php
-
-    core:
-      - classes/native_learning.php
-      - classes/catalog_mastery.php
-
-
-  economy:
-    core:
-      - classes/uscoin.php
-      - classes/competition.php
+  - route_model
+  - route_scope
+  - content
+  - Moodle completion
+  adaptation:
+  - staffing_requests
+  - organization_identity
+  - checklist_service
+  work:
+  - learning_tasks
+  - organization_identity
+  - workflow_notifications
+  - Moodle File API
+  rewards:
+  - confirmed learning/work evidence
+  - reward_control
+  - economy
+  messages:
+  - core_message
+  - chat_groups
+  - chat_files
+  - Moodle File API
+  mobile_client:
+  - existing domain services
+  - new reviewed API contracts
+note: Conceptual ownership relationships, not a complete static call graph; verify
+  imports/callers before changes.

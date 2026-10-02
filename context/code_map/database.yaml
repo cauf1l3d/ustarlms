@@ -1,53 +1,14 @@
-database:
-
-engine:
-  PostgreSQL 16
-
-
-source:
-  Moodle install.xml
-  upgrade.php
-
-
-ustar_tables:
-
-
-  local_ustar_routes:
-    meaning:
-      Маршруты обучения
-
-
-  local_ustar_route_points:
-    meaning:
-      Физические точки маршрута
-
-    relations:
-
-      routeid:
-        table:
-          local_ustar_routes
-
-
-      sourcepointid:
-        meaning:
-          связь override с родителем
-
-
-  local_ustar_route_scope:
-    meaning:
-      область применимости точки
-
-    used_for:
-      - должности
-      - подразделения
-      - scoped routes
-
-
-  local_ustar_evidence:
-    meaning:
-      доказательства прохождения
-
-
-  local_ustar_uscoin:
-    meaning:
-      игровая экономика
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+engine: PostgreSQL 16
+schema: moodle/local/ustar/db/install.xml
+upgrade: moodle/local/ustar/db/upgrade.php
+inventory: context/code_map/generated/database_tables.md
+table_count: 93
+prefix_note: Names are XMLDB logical names. Physical Moodle prefix is runtime config,
+  commonly mdl_.
+canonical_evidence: local_ustar_evidence_rec
+canonical_coin_ledger: local_ustar_coin_ledger
+organization_catalog: local_ustar_structure
+staff_places: local_ustar_staff_places
+assignments: local_ustar_assignments
+warning: No invented local_ustar_evidence or local_ustar_uscoin tables.

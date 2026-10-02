@@ -1,62 +1,30 @@
 domain: routes
-
-
-purpose:
-  Движок маршрутов обучения и переобучения.
-
-
-entities:
-
-  route:
-    contains:
-      - route_points
-
-
-  route_point:
-    contains:
-      - materials
-      - assessments
-      - evidence_rules
-
-
-versioning:
-
-  route_version:
-    immutable_after_publish: true
-
-
-assessment_bridge:
-
-
-  rule:
-
-    Assessment failure:
-      creates:
-        remediation_requirement
-
-
-  example:
-
-    assessment:
-      code: CM40
-      version: 95
-
-
-    remediation:
-
-      route_point_id:
-        28
-
-      route_version_id:
-        94
-
-
-important:
-
-  CM40 does_not_replace CM37
-
-  CM40:
-    validates
-
-  CM37:
-    remediation_learning
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Семейства маршрутов, scope, immutable publication и launch
+services:
+- moodle/local/ustar/classes/route_model.php
+- moodle/local/ustar/classes/route_family.php
+- moodle/local/ustar/classes/route_scope.php
+- moodle/local/ustar/classes/route_commands.php
+- moodle/local/ustar/classes/route_continue.php
+- moodle/local/ustar/classes/route_intro_transfer.php
+- moodle/local/ustar/classes/forced_retraining.php
+tables:
+- local_ustar_route_families
+- local_ustar_routes
+- local_ustar_route_points
+- local_ustar_route_scope
+- local_ustar_route_versions
+- local_ustar_route_progress
+- local_ustar_completion_cycle
+rules:
+- Parent physical point and position override follow ADR-0004
+- Published versions and progress are separate
+- No hardcoded production point/version IDs in new implementations
+- Direct launches must check learning eligibility and adaptation gates
+entry_points:
+- moodle/local/ustar/route.php
+- moodle/local/ustar/route_studio.php
+- moodle/local/ustar/activity_launch.php
+- moodle/local/ustar/forced_retraining.php

@@ -1,117 +1,15 @@
-# USTAR agent entrypoint
+# USTAR — инструкции агентам
 
-**Draft integration note (2026-09-24):** `codex/ustar-complete-rc-20260923` is [PR #14](https://github.com/cauf1l3d/ustarlms/pull/14), now targeting `main` and including the unaccepted PR #13 changes. Neither this PR nor earlier stage PRs are accepted as a release. The [60-item audit register](context/roadmap/RC_AUDIT_ACCEPTANCE_20260924.md) retains every audit finding without marking source-only fixes accepted. The source baseline described below is historical; inspect the branch HEAD, current `main` and production evidence before using it.
+Перед любой задачей читать [START_HERE.md](START_HERE.md), затем `context/project.yaml`, `context/CONTEXT_INDEX.md`, `context/architecture/`, `context/decisions/`, `context/domains/`, `context/runtime/`, `context/code_map/`, `context/tasks/ACTIVE.md`, `context/agents/astra.md` и `context/roadmap/AGENT_PROTOCOL.md`.
 
-Before doing work, read **[START_HERE.md](START_HERE.md)**, then:
+Код и текущий контекст теперь совместно поддерживаются в **main**. Новые ветки создавать от обновлённого main; PR направлять в main. Старые integration/codex ветки и release mirrors — provenance, не актуальная база. Точный application baseline и отдельно deployment evidence — в `context/roadmap/STATE.yaml`.
 
-1. `context/roadmap/STATE.yaml`
-2. `context/tasks/ACTIVE.md`
-3. `context/roadmap/BACKLOG.yaml`
-4. `context/roadmap/AGENT_PROTOCOL.md`
+Текущая инструкция владельца имеет приоритет над историческим планом. Код описывает реализацию, ADR — согласованные границы, серверные наблюдения — deployment. Не подменять один источник другим. Не объявлять missing evidence багом и не объявлять CI production-приёмкой.
 
-The patch application code is in `integration/ustar-20260912`; canonical context and harness are in main; STATE records the exact source baseline and separate runtime evidence. Follow START_HERE links and read the existing project, architecture, ADRs, domains, runtime, code map and agent instructions at that baseline before changing code. Check newer commits and production drift rather than blindly applying an old patch.
+Сохранять Moodle core / local plugin / theme boundaries. Не вводить второй store сотрудников, completion, кошелька или чатов. Не удалять историю, не менять реальные роли по строкам должностей, не выполнять миграцию из старого персонального плана. Записи проверяют real actor, capability, current scope, sesskey/эквивалентный API contract, revision, locks и idempotency по реализации домена. View-as не предоставляет права записи.
 
-Keep architecture decisions and historical evidence. Do not create duplicate domain models, change Moodle core, hide business logic in the theme, or remove learning/economy history. Database changes need explicit migrations and validation. User instructions take precedence over historical audit recommendations; roadmap proposals do not authorize unrelated production mutations.
+Database changes требуют XMLDB install/upgrade parity и release gate. Source code меняется в `moodle/`, не в исторических `release/` копиях. Не публиковать config.php, токены, dumps, moodledata или персональные журналы. Не запускать CLI probe на production, пока не проверен его write impact.
 
-Current business priority includes working route studio, reliable completion, rewards for every newly confirmed route point, gamification and achievements. Do not freeze these because an older plan suggested it.
+В текущем этапе сохранять стабильный web. Следующая работа — `MOB-01` в `context/roadmap/MOBILE_CLIENT.md`: карта покрытия API и согласование архитектуры Android/iOS. Стек мобильного клиента ещё не выбран. Не заменять приложение утверждением, что PWA уже завершает запрос владельца.
 
-Canonical task status is maintained in main `context/roadmap/`. Each completed step must include exact code SHA, real validation evidence and separate deployment evidence where applicable. An archive, a code file or a static check is not production acceptance. See the protocol before claiming a task done.
-
----
-
-# USTAR Agent Instructions
-
-You are working on USTAR Academy.
-
-Before any task:
-
-1. Read:
-
-context/CONTEXT_INDEX.md
-
-2. Load:
-
-context/project.yaml
-context/constraints.yaml
-context/state/platform.yaml
-
-3. For architectural changes:
-
-Read:
-
-context/decisions/
-
-4. For production questions:
-
-Read:
-
-context/runtime/
-
-
----
-
-# USTAR principles
-
-## Source of truth
-
-Git repository is canonical.
-
-Production server is runtime evidence.
-
-Chat history is NOT source of truth.
-
-
----
-
-# Development rules
-
-Never:
-
-- overwrite working production files blindly
-- create duplicate architecture
-- bypass existing ADR decisions
-- remove historical evidence
-
-
-Always:
-
-- create reversible changes
-- update context when architecture changes
-- document decisions
-- keep migrations explicit
-
-
----
-
-# Current architecture
-
-Platform:
-
-Moodle 5.x
-
-USTAR layer:
-
-local/ustar
-
-Main domains:
-
-- Learning
-- Routes
-- Organization
-- Adaptation
-- Evidence
-- Economy
-
-
----
-
-# Agent behavior
-
-Before answering:
-
-understand existing implementation.
-
-Do not invent missing modules.
-
-If information is missing:
-request evidence.
+Каждая поставка содержит точный implementation SHA, реально выполненные проверки и отдельный deployment status. Обновлять STATE/ACTIVE/BACKLOG/SESSION_LOG и generated code map при изменении исходников. Документация не является причиной повторно запрашивать уже данное пользователем разрешение.

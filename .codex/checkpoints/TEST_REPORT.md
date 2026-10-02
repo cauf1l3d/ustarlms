@@ -1,12 +1,7 @@
-PHASE: DELIVERY / GAME ECONOMY IMPLEMENTATION
-BRANCH: canonical-release
-COMMIT: 8e55778
-IMPLEMENTED: Competition/USCOIN implementation and release mirror committed; no production code or data changed.
-TEST_CONTAINER: Isolated USTAR Moodle/Postgres environment (not updated for this block).
-TESTS: PASS — XMLDB tables=38, JS syntax, source mirror, manifest entries=188 and staged diff checks. Game Economy runtime probe NOT RUN pending isolated deployment approval.
-ROLE_E2E: Static only; operator capability and pseudonymous payload paths are implemented, runtime matrix pending.
-ROLLBACK: No new runtime change to roll back; prior isolated restore rehearsal remains valid.
-GITHUB_GATE: Not run for 8e55778; prior 33053549426 PASS remains the last candidate gate.
-PROD_CHANGED: NO
-KNOWN_GAPS: Tool usage-limit review blocked the external isolated deployment attempt and GitHub push returned SEC_E_NO_CREDENTIALS; no claim of runtime PASS is made.
-NEXT: After explicit re-approval, deploy only to isolated, run the self-cleaning economy probe, capture rollback and then gate Phase 3.
+# USTAR checkpoint — 2026-10-02
+
+Canonical source and context: main. Read START_HERE.md, context/roadmap/STATE.yaml and context/runtime/RELEASE_LEDGER.md.
+
+Application baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe (PR76), full CI run 37023122306 passed all six jobs. Current production SHA is not independently measured; owner reports stable use. Do not treat an old checkpoint or CI as deployment evidence.
+
+Next task: MOB-01, context/roadmap/MOBILE_CLIENT.md. Previous checkpoint retained in context/archive/handoff_20261002/previous_entrypoints/.codex/checkpoints/.

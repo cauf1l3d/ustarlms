@@ -1,0 +1,142 @@
+schema_version: 1
+updated_at: '2026-09-27'
+project: USTAR Academy
+stage: S0
+stage_label: Сверка релизной базы и стабилизация
+current_activity: G00 production source matched PR16, but performance baseline
+  remains unmeasured. G01 HRD capability/no-position source fix is draft PR20.
+  G02 N01/N04/N08 source changes are draft stacked PR21 and PR22. G03 N05
+  checklist definitions/submissions are draft PR24 at 3a15a43, and N06 scoped
+  task lists/files are draft PR25 at 65a7baf. Both passed source/frontend
+  runs 244 and 247. G04 position catalogue, focused card and guarded matrix
+  publication are draft PR27 at ae70b8a; source/frontend passed on exact-head
+  run 254. G05 initial grade assignment/read side effects are draft PR28 at
+  5c44eac; source/frontend passed in run 257. G05 versioned ladders,
+  bindings and HR correction are draft PR29 at f1dfa07; exact-head source
+  run 262 succeeded. G06 Academy feed is draft PR30 at 8949105;
+  source/frontend exact-head run 265 succeeded. Moodle DB, rollback,
+  browser/visual and performance evidence remain open. The 8 priorities,
+  60 audit items and 13 earlier defects are not accepted by source gates.
+next_task: G06
+ready_tasks:
+- R00
+- R04
+code_baseline:
+  branch: codex/ustar-postrelease-fixes-20260926
+  commit: 0e1eba2ca08b11f929730ab09df7bc91732f0e62
+  kind: owner_reported_production_plugin_theme_source_verified_20260927
+  previous_branch: integration/ustar-20260919
+  previous_commit: 378d397152a8c83f8b0d046e2e561ab2732d6b02
+  production_equivalence: 424_plugin_theme_files_match_exact_commit;
+    database_moodledata_core_image_not_compared; complete_browser_acceptance_open
+main_at_audit_start: 5443bf5ab2c000a0fc019d3b0b30dcff0a60a7ff
+canonical_roadmap_branch: main
+user_priorities:
+- Инженерный порядок и пошаговый рефакторинг
+- Работоспособность и удобство production
+- Награда и обратная связь за каждое новое подтверждённое прохождение точки
+- Консистентная студия маршрутов
+- Рабочие игры и достижения
+production:
+  status: plugin_theme_source_matches_pr16_20260927_owner_observation
+  measured_in_this_audit: false
+  current_source_observation:
+    date: '2026-09-27'
+    source: owner-executed read-only production manifest and DB plugin version check
+    commit: 0e1eba2ca08b11f929730ab09df7bc91732f0e62
+    report_on_server: /home/aduk/ustar-g00-20260927T112929Z/comparison.md
+    evidence_in_repo: context/runtime/20260927_prod_g00.md
+    matching_files: 424
+    changed_files: 0
+    production_only_files: 0
+    git_only_files: 0
+    errors: 0
+    local_ustar_db_version: 2026092601
+    theme_ustar_db_version: 2026092601
+    independent_server_access: false
+  user_session_evidence:
+    container: ustar_moodle
+    database_container: ustar_postgres
+    host_mount_source: /opt/ustar/data/moodle/public
+    container_mount_destination: /var/www/html
+    host_moodle_root: /opt/ustar/data/moodle/public/public
+    container_moodle_root: /var/www/html/public
+    source: User-executed production reconciliation script, 2026-09-19
+    source_verification: INDEX_SOURCE_BYTE_MATCH_OK
+    publishable_local_ustar_files: 328
+    publishable_theme_ustar_files: 53
+    ignored_runtime_artifacts: 33
+    production_inventory_files: 414
+    recheck_before_release: true
+  recovery:
+    archive: USTAR_FULL_CURRENT_20260919_113924.tar.gz
+    sha256: 598177f211333d7d036abc025b9d21c3c7c3eb4cfb0bc10d004ff0fcff473f41
+    stored_in_git: false
+    clean_server_restore_tested: false
+  unknown:
+  - Production DB schema/config and data-specific migration dry-run of next RC
+  - Measured performance baseline by role on agreed representative stage
+  - Full browser acceptance of all 8 new requirements and 60 audit IDs
+  - Clean-server disaster-recovery restore of current agreed production backup
+  - Native tour DB records and visual acceptance where applicable
+  latest_observation:
+    date: '2026-09-27'
+    source: user-executed post-PR16 manifest and plugin DB version inspection
+    source_commit: 0e1eba2ca08b11f929730ab09df7bc91732f0e62
+    runtime_evidence: context/runtime/20260927_prod_g00.md
+    independently_measured: false
+prior_deliveries:
+- name: PR 16 production source observed 20260927
+  status: owner_reported_deployed_source_exact_match
+  evidence: context/runtime/20260927_prod_g00.md; commit
+    0e1eba2ca08b11f929730ab09df7bc91732f0e62; 424 plugin/theme files
+    match and both DB plugin versions are 2026092601.
+- name: Production source reconciliation 20260919
+  status: source_verified_and_published
+  evidence: release/20260919/README.md; exact Git source commit
+    378d397152a8c83f8b0d046e2e561ab2732d6b02; 381 publishable source files
+    verified byte-for-byte before push.
+- name: Executive tree 20260907
+  status: user_confirmed_applied
+  evidence: Пользователь показал CHECK_OK/APPLY_OK и cache purge; это не manifest
+    всего plugin.
+- name: Executive employee links
+  status: user_reported_success
+  evidence: Подтверждение в переписке; историческая поставка включена в текущий production source.
+- name: Team department cards/filter
+  status: user_reported_applied_with_ui_defects
+  evidence: Исторический статус; текущий source зафиксирован 19.09.
+- name: USTAR_POSITIONS_MATERIALS_FIX_20260907.zip
+  status: user_confirmed_not_applied
+  evidence: Пользователь явно указал, что materials patch не применял.
+- name: USTAR_ORG_UNIFIED_20260907.zip
+  status: prepared_not_confirmed_deployed
+  evidence: Историческая поставка; не использовать как текущий baseline.
+- name: UX RC1 20260909
+  status: superseded_by_20260919_production_source
+  evidence: Текущая фактическая версия входит в production source commit 378d397.
+- name: 20260911-12 consolidated patches
+  status: superseded_as_current_baseline
+  evidence: release/20260912 retained for provenance; current source is release/20260919.
+non_goals:
+- Большое переписывание Moodle/SPA
+- Удаление исторических таблиц/миграций без отдельного решения
+- Автоматическая кадровая миграция из прежних private owner overrides
+- Заморозка маршрутных наград и достижений
+- Хранение production database, moodledata или secrets в Git
+next_agent_read:
+- START_HERE.md
+- context/roadmap/STATE.yaml
+- context/tasks/ACTIVE.md
+- context/roadmap/BACKLOG.yaml
+- context/roadmap/AGENT_PROTOCOL.md
+- https://github.com/cauf1l3d/ustarlms/blob/codex/ustar-product-plan-20260927/context/roadmap/USTAR_PRODUCT_ARCHITECTURE_PLAN_20260927_RU.md
+- context/runtime/20260927_prod_g00.md
+- release/20260919/README.md
+release_gates:
+- Baseline и source drift известны
+- Критические CI/DB/browser проверки exact SHA
+- Install/upgrade path проверен
+- Артефакт/manifest/backup/rollback готовы
+- Clean-server recovery acceptance выполнен
+- Production deployment подтверждён отдельно runtime evidence

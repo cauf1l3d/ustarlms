@@ -92,3 +92,7 @@ gate 201 прошёл на `08db2902249290dccd527839960cc77bf00724fd`, gate 202 
 PHP/source/frontend проверяются PR workflow. Moodle DB, browser, свежая установка,
 upgrade, production performance и clean restore на этом SHA не выполнялись.
 Пункт 4 PDF — на проверке владельца; production, DB, moodledata и secrets не менялись.
+
+## 2026-10-02 — repository consolidation and mobile handoff
+
+Owner requested current main and complete engineering context while production is stable. Reviewed all PR heads and exact ancestry; PR76 e1d57f5bc28f6964afd20aeff7620345b34a80fe contains prior main and 62 open PR heads. Full CI #456 verified via GitHub API. Preserved unique parallel docs and historical evidence; refreshed entrypoints, actual architecture/schema/API maps, operations, release ledger and current backlog. Application and deployment status remain separate: fresh production manifest unknown. Next: MOB-01, full Android/iOS client preparation. No production operations or application behavior change in handoff.

@@ -1,0 +1,19 @@
+domain: registration
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Внутренняя регистрация и решение HRD
+services:
+- moodle/local/ustar/classes/registration_service.php
+- moodle/local/ustar/classes/staffing_requests.php
+- moodle/local/ustar/classes/hr_access.php
+- moodle/local/ustar/classes/access_context.php
+tables:
+- local_ustar_staff_requests
+- local_ustar_employment
+rules:
+- Pending user and request created transactionally
+- HRD approval requires hrmanage and approveregistration
+- No SMTP verification prerequisite for new internal registration
+entry_points:
+- moodle/local/ustar/register.php
+- moodle/local/ustar/staffing.php

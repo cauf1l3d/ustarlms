@@ -1,0 +1,34 @@
+domain: work
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Рабочие задачи, checklist versions, отчёты, календарь и личная доска
+services:
+- moodle/local/ustar/classes/learning_tasks.php
+- moodle/local/ustar/classes/task_workspace/service.php
+- moodle/local/ustar/classes/task_workspace/policy.php
+- moodle/local/ustar/classes/task_workspace/worker.php
+- moodle/local/ustar/classes/task_workspace/recipients.php
+- moodle/local/ustar/classes/task_workspace/home_cards.php
+- moodle/local/ustar/classes/notebook_board.php
+- moodle/local/ustar/classes/home_layout.php
+- moodle/local/ustar/classes/task_files.php
+tables:
+- local_ustar_learning_tasks
+- local_ustar_learning_task_events
+- local_ustar_task_meta
+- local_ustar_task_templates
+- local_ustar_task_tpl_versions
+- local_ustar_task_series
+- local_ustar_task_reports
+- local_ustar_task_escalations
+- local_ustar_task_settings
+rules:
+- Notes stay owner-private; assigned work uses current scope and review authority
+- Versions/reports preserved, commands locked and revision checked
+- KPI excludes private notes, cancellations and future deadline work
+entry_points:
+- moodle/local/ustar/tasks.php
+- moodle/local/ustar/checklist_studio.php
+- moodle/local/ustar/notebook.php
+- moodle/local/ustar/board_api.php
+- moodle/local/ustar/home.php

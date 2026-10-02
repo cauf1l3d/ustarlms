@@ -1,205 +1,360 @@
 # PHP files
-moodle/local/ustar/achievements.php
-moodle/local/ustar/activity_launch.php
-moodle/local/ustar/adaptation_control.php
-moodle/local/ustar/adaptation.php
-moodle/local/ustar/admin_user_history_reset.php
-moodle/local/ustar/assessment_remediation_authorize.php
-moodle/local/ustar/assessment_remediation_launch.php
-moodle/local/ustar/.backup_route_override_20260906_220051/route_scope.php
-moodle/local/ustar/.backup_route_override_20260906_220051/route_studio.php
-moodle/local/ustar/board_api.php
-moodle/local/ustar/boards.php
-moodle/local/ustar/brand_asset.php
-moodle/local/ustar/brand.php
-moodle/local/ustar/catalog_exam.php
-moodle/local/ustar/catalog.php
-moodle/local/ustar/checklists.php
-moodle/local/ustar/checklist_studio.php
-moodle/local/ustar/classes/accounts.php
-moodle/local/ustar/classes/adaptation_service.php
-moodle/local/ustar/classes/analytics.php
-moodle/local/ustar/classes/assessment_lifecycle.php
-moodle/local/ustar/classes/assessment_provider_factory.php
-moodle/local/ustar/classes/assessment_provider.php
-moodle/local/ustar/classes/assignment.php
-moodle/local/ustar/classes/boards.php
-moodle/local/ustar/classes/branding.php
-moodle/local/ustar/classes/catalog_mastery.php
-moodle/local/ustar/classes/catalog.php
-moodle/local/ustar/classes/checklists.php
-moodle/local/ustar/classes/communication.php
-moodle/local/ustar/classes/company_hierarchy.php
-moodle/local/ustar/classes/competition.php
-moodle/local/ustar/classes/compliance.php
-moodle/local/ustar/classes/content_ack_report.php
-moodle/local/ustar/classes/content_admin.php
-moodle/local/ustar/classes/content.php
-moodle/local/ustar/classes/department_learning.php
-moodle/local/ustar/classes/development_assessment.php
-moodle/local/ustar/classes/economy.php
-moodle/local/ustar/classes/employee_profile.php
-moodle/local/ustar/classes/event/legacy_ui_toggled.php
-moodle/local/ustar/classes/evidence.php
-moodle/local/ustar/classes/external/admin_get_games.php
-moodle/local/ustar/classes/external/admin_get_structure.php
-moodle/local/ustar/classes/external/admin_save_game.php
-moodle/local/ustar/classes/external/admin_save_structure.php
-moodle/local/ustar/classes/external/admin_upload_brand_asset.php
-moodle/local/ustar/classes/external/base.php
-moodle/local/ustar/classes/external/executive_get_dashboard.php
-moodle/local/ustar/classes/external/get_checklists.php
-moodle/local/ustar/classes/external/get_dashboard.php
-moodle/local/ustar/classes/external/get_game_question.php
-moodle/local/ustar/classes/external/get_games.php
-moodle/local/ustar/classes/external/get_ladder.php
-moodle/local/ustar/classes/external/get_matrix.php
-moodle/local/ustar/classes/external/get_skills.php
-moodle/local/ustar/classes/external/get_team.php
-moodle/local/ustar/classes/external/get_workspace.php
-moodle/local/ustar/classes/external/hr_bulk_assign_positions.php
-moodle/local/ustar/classes/external/hr_get_checklists.php
-moodle/local/ustar/classes/external/hr_get_dashboard.php
-moodle/local/ustar/classes/external/hr_get_people.php
-moodle/local/ustar/classes/external/hr_get_person.php
-moodle/local/ustar/classes/external/hr_get_workspace.php
-moodle/local/ustar/classes/external/hr_import_people.php
-moodle/local/ustar/classes/external/hr_save_checklists.php
-moodle/local/ustar/classes/external/hr_save_learning.php
-moodle/local/ustar/classes/external/hr_save_person.php
-moodle/local/ustar/classes/external/hr_save_review.php
-moodle/local/ustar/classes/external/save_goal.php
-moodle/local/ustar/classes/external/save_prefs.php
-moodle/local/ustar/classes/external/submit_checklist.php
-moodle/local/ustar/classes/external/submit_game_answer.php
-moodle/local/ustar/classes/form/material_bulk.php
-moodle/local/ustar/classes/form/material_create.php
-moodle/local/ustar/classes/form/material_version.php
-moodle/local/ustar/classes/form/user_history_reset_form.php
-moodle/local/ustar/classes/game_media.php
-moodle/local/ustar/classes/global_search.php
-moodle/local/ustar/classes/hook_callbacks.php
-moodle/local/ustar/classes/hr_operations.php
-moodle/local/ustar/classes/hr_people.php
-moodle/local/ustar/classes/knowledge_index.php
-moodle/local/ustar/classes/learning_events.php
-moodle/local/ustar/classes/learning_path.php
-moodle/local/ustar/classes/learning_route.php
-moodle/local/ustar/classes/moodle_activity_bridge.php
-moodle/local/ustar/classes/moodle_quiz_assessment_provider.php
-moodle/local/ustar/classes/native_data.php
-moodle/local/ustar/classes/native_learning.php
-moodle/local/ustar/classes/observer.php
-moodle/local/ustar/classes/organization_model.php
-moodle/local/ustar/classes/org.php
-moodle/local/ustar/classes/output/renderer.php
-moodle/local/ustar/classes/people.php
-moodle/local/ustar/classes/position_access.php
-moodle/local/ustar/classes/position_model.php
-moodle/local/ustar/classes/product_quiz.php
-moodle/local/ustar/classes/route_continue.php
-moodle/local/ustar/classes/route_family.php
-moodle/local/ustar/classes/route_model.php
-moodle/local/ustar/classes/route_point_evidence_provider.php
-moodle/local/ustar/classes/route_quiz_grading.php
-moodle/local/ustar/classes/route_scope.php
-moodle/local/ustar/classes/route_tester.php
-moodle/local/ustar/classes/staffing_requests.php
-moodle/local/ustar/classes/structure.php
-moodle/local/ustar/classes/target_core.php
-moodle/local/ustar/classes/target_schema.php
-moodle/local/ustar/classes/task/renew_acting_assignments.php
-moodle/local/ustar/classes/task/sync_enrolments.php
-moodle/local/ustar/classes/team_presenter.php
-moodle/local/ustar/classes/ui.php
-moodle/local/ustar/classes/user_history_reset.php
-moodle/local/ustar/classes/view_as.php
-moodle/local/ustar/cli/adjust_uscoin.php
-moodle/local/ustar/cli/archive_courses.php
-moodle/local/ustar/cli/assessment_lifecycle_probe.php
-moodle/local/ustar/cli/audit_access.php
-moodle/local/ustar/cli/bootstrap_trading_floor_route.php
-moodle/local/ustar/cli/check_catalog_archobuch.php
-moodle/local/ustar/cli/check_development_assessment.php
-moodle/local/ustar/cli/check_learning_route_v2.php
-moodle/local/ustar/cli/check_learning_route_v2_schema.php
-moodle/local/ustar/cli/check_materials_library_schema.php
-moodle/local/ustar/cli/check_role_ui.php
-moodle/local/ustar/cli/check_route_user.php
-moodle/local/ustar/cli/ensure_demo_executive.php
-moodle/local/ustar/cli/ensure_tasks_2725.php
-moodle/local/ustar/cli/hr_canonical_2724_apply.php
-moodle/local/ustar/cli/import_catalog_manifest.php
-moodle/local/ustar/cli/import_catalog.php
-moodle/local/ustar/cli/import_reporting.php
-moodle/local/ustar/cli/import_structure.php
-moodle/local/ustar/cli/materials_library_ui_fixture.php
-moodle/local/ustar/cli/normalize_demo_positions.php
-moodle/local/ustar/cli/probe_development_assessment.php
-moodle/local/ustar/cli/reconcile_assessment_runtime.php
-moodle/local/ustar/cli/sync_position_access.php
-moodle/local/ustar/cli/sync_staff_map.php
-moodle/local/ustar/cli/sync_uscoin.php
-moodle/local/ustar/cli/test_materials_library.php
-moodle/local/ustar/cli/validate_2725.php
-moodle/local/ustar/cli/validate_2726.php
-moodle/local/ustar/competition_studio.php
-moodle/local/ustar/continue.php
-moodle/local/ustar/db/access.php
-moodle/local/ustar/db/events.php
-moodle/local/ustar/db/install.php
-moodle/local/ustar/db/services.php
-moodle/local/ustar/db/tasks.php
-moodle/local/ustar/db/upgrade.php
-moodle/local/ustar/development_assessment.php
-moodle/local/ustar/development_assessments.php
-moodle/local/ustar/executive.php
-moodle/local/ustar/game.php
-moodle/local/ustar/games.php
-moodle/local/ustar/game_studio.php
-moodle/local/ustar/home.php
-moodle/local/ustar/hr.php
-moodle/local/ustar/hr_quiz_attempt.php
-moodle/local/ustar/hr_quiz_grading.php
-moodle/local/ustar/knowledge.php
-moodle/local/ustar/lang/en/local_ustar.php
-moodle/local/ustar/lang/ru/local_ustar.php
-moodle/local/ustar/learning.php
-moodle/local/ustar/legacy.php
-moodle/local/ustar/lib.php
-moodle/local/ustar/material_ack_export.php
-moodle/local/ustar/material_bulk.php
-moodle/local/ustar/material_create.php
-moodle/local/ustar/material.php
-moodle/local/ustar/materials.php
-moodle/local/ustar/material_version_action.php
-moodle/local/ustar/material_version.php
-moodle/local/ustar/messages.php
-moodle/local/ustar/notifications.php
-moodle/local/ustar/open.php
-moodle/local/ustar/operations.php
-moodle/local/ustar/positions.php
-moodle/local/ustar/profile.php
-moodle/local/ustar/public_branding.php
-moodle/local/ustar/route_career.php
-moodle/local/ustar/route.php
-moodle/local/ustar/route_profile_reveal.php
-moodle/local/ustar/route_role_quiz.php
-moodle/local/ustar/route_studio.php
-moodle/local/ustar/route_team.php
-moodle/local/ustar/route_team_quiz.php
-moodle/local/ustar/route_tester_enter.php
-moodle/local/ustar/route_tester_exit.php
-moodle/local/ustar/route_tester.php
-moodle/local/ustar/scorm_launch.php
-moodle/local/ustar/scorm_route_status.php
-moodle/local/ustar/search_api.php
-moodle/local/ustar/settings.php
-moodle/local/ustar/staffing.php
-moodle/local/ustar/team_learning.php
-moodle/local/ustar/team.php
-moodle/local/ustar/user_prefs.php
-moodle/local/ustar/version.php
-moodle/local/ustar/view_as.php
-moodle/local/ustar/view.php
-moodle/local/ustar/workspace.php
+
+Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live database snapshot.
+
+- `moodle/local/ustar/achievements.php`
+- `moodle/local/ustar/activity_launch.php`
+- `moodle/local/ustar/adaptation.php`
+- `moodle/local/ustar/adaptation_control.php`
+- `moodle/local/ustar/admin_feed_roles.php`
+- `moodle/local/ustar/admin_user_history_reset.php`
+- `moodle/local/ustar/app_icon.php`
+- `moodle/local/ustar/app_manifest.php`
+- `moodle/local/ustar/app_offline.php`
+- `moodle/local/ustar/app_worker.php`
+- `moodle/local/ustar/assessment_remediation_authorize.php`
+- `moodle/local/ustar/assessment_remediation_launch.php`
+- `moodle/local/ustar/assessment_studio.php`
+- `moodle/local/ustar/board_api.php`
+- `moodle/local/ustar/brand.php`
+- `moodle/local/ustar/brand_asset.php`
+- `moodle/local/ustar/catalog.php`
+- `moodle/local/ustar/catalog_exam.php`
+- `moodle/local/ustar/checklist_studio.php`
+- `moodle/local/ustar/checklists.php`
+- `moodle/local/ustar/classes/academy_guide.php`
+- `moodle/local/ustar/classes/access_context.php`
+- `moodle/local/ustar/classes/access_migration.php`
+- `moodle/local/ustar/classes/accounts.php`
+- `moodle/local/ustar/classes/adaptation_service.php`
+- `moodle/local/ustar/classes/analytics.php`
+- `moodle/local/ustar/classes/assessment_authoring.php`
+- `moodle/local/ustar/classes/assessment_authoring_input.php`
+- `moodle/local/ustar/classes/assessment_lifecycle.php`
+- `moodle/local/ustar/classes/assessment_provider.php`
+- `moodle/local/ustar/classes/assessment_provider_factory.php`
+- `moodle/local/ustar/classes/assessment_summary.php`
+- `moodle/local/ustar/classes/assignment.php`
+- `moodle/local/ustar/classes/board_retirement.php`
+- `moodle/local/ustar/classes/branding.php`
+- `moodle/local/ustar/classes/capabilities.php`
+- `moodle/local/ustar/classes/career_grades.php`
+- `moodle/local/ustar/classes/career_learning.php`
+- `moodle/local/ustar/classes/career_path.php`
+- `moodle/local/ustar/classes/catalog.php`
+- `moodle/local/ustar/classes/catalog_mastery.php`
+- `moodle/local/ustar/classes/chat_files.php`
+- `moodle/local/ustar/classes/chat_groups.php`
+- `moodle/local/ustar/classes/checklist_service.php`
+- `moodle/local/ustar/classes/checklists.php`
+- `moodle/local/ustar/classes/communication.php`
+- `moodle/local/ustar/classes/company_hierarchy.php`
+- `moodle/local/ustar/classes/competition.php`
+- `moodle/local/ustar/classes/completion_cycle.php`
+- `moodle/local/ustar/classes/compliance.php`
+- `moodle/local/ustar/classes/consultant_career.php`
+- `moodle/local/ustar/classes/content.php`
+- `moodle/local/ustar/classes/content_ack_report.php`
+- `moodle/local/ustar/classes/content_admin.php`
+- `moodle/local/ustar/classes/department_learning.php`
+- `moodle/local/ustar/classes/development_assessment.php`
+- `moodle/local/ustar/classes/economy.php`
+- `moodle/local/ustar/classes/employee_profile.php`
+- `moodle/local/ustar/classes/employment.php`
+- `moodle/local/ustar/classes/event/legacy_ui_toggled.php`
+- `moodle/local/ustar/classes/evidence.php`
+- `moodle/local/ustar/classes/external/admin_get_games.php`
+- `moodle/local/ustar/classes/external/admin_get_structure.php`
+- `moodle/local/ustar/classes/external/admin_save_game.php`
+- `moodle/local/ustar/classes/external/admin_save_structure.php`
+- `moodle/local/ustar/classes/external/admin_upload_brand_asset.php`
+- `moodle/local/ustar/classes/external/base.php`
+- `moodle/local/ustar/classes/external/executive_get_dashboard.php`
+- `moodle/local/ustar/classes/external/get_checklists.php`
+- `moodle/local/ustar/classes/external/get_dashboard.php`
+- `moodle/local/ustar/classes/external/get_game_question.php`
+- `moodle/local/ustar/classes/external/get_games.php`
+- `moodle/local/ustar/classes/external/get_ladder.php`
+- `moodle/local/ustar/classes/external/get_matrix.php`
+- `moodle/local/ustar/classes/external/get_skills.php`
+- `moodle/local/ustar/classes/external/get_team.php`
+- `moodle/local/ustar/classes/external/get_workspace.php`
+- `moodle/local/ustar/classes/external/hr_bulk_assign_positions.php`
+- `moodle/local/ustar/classes/external/hr_get_checklists.php`
+- `moodle/local/ustar/classes/external/hr_get_dashboard.php`
+- `moodle/local/ustar/classes/external/hr_get_people.php`
+- `moodle/local/ustar/classes/external/hr_get_person.php`
+- `moodle/local/ustar/classes/external/hr_get_workspace.php`
+- `moodle/local/ustar/classes/external/hr_import_people.php`
+- `moodle/local/ustar/classes/external/hr_save_checklists.php`
+- `moodle/local/ustar/classes/external/hr_save_learning.php`
+- `moodle/local/ustar/classes/external/hr_save_person.php`
+- `moodle/local/ustar/classes/external/hr_save_review.php`
+- `moodle/local/ustar/classes/external/save_goal.php`
+- `moodle/local/ustar/classes/external/save_prefs.php`
+- `moodle/local/ustar/classes/external/submit_checklist.php`
+- `moodle/local/ustar/classes/external/submit_game_answer.php`
+- `moodle/local/ustar/classes/feed_access.php`
+- `moodle/local/ustar/classes/feed_article_resolver.php`
+- `moodle/local/ustar/classes/feed_external_content.php`
+- `moodle/local/ustar/classes/feed_files.php`
+- `moodle/local/ustar/classes/feed_query.php`
+- `moodle/local/ustar/classes/feed_retention.php`
+- `moodle/local/ustar/classes/feed_rss.php`
+- `moodle/local/ustar/classes/feed_service.php`
+- `moodle/local/ustar/classes/forced_retraining.php`
+- `moodle/local/ustar/classes/form/material_bulk.php`
+- `moodle/local/ustar/classes/form/material_create.php`
+- `moodle/local/ustar/classes/form/material_version.php`
+- `moodle/local/ustar/classes/form/profile_settings.php`
+- `moodle/local/ustar/classes/form/user_history_reset_form.php`
+- `moodle/local/ustar/classes/game_media.php`
+- `moodle/local/ustar/classes/global_search.php`
+- `moodle/local/ustar/classes/grade_assignment_directory.php`
+- `moodle/local/ustar/classes/grade_ladders.php`
+- `moodle/local/ustar/classes/grade_promotion.php`
+- `moodle/local/ustar/classes/grade_rules.php`
+- `moodle/local/ustar/classes/grading_commit.php`
+- `moodle/local/ustar/classes/home_layout.php`
+- `moodle/local/ustar/classes/hook_callbacks.php`
+- `moodle/local/ustar/classes/hr_access.php`
+- `moodle/local/ustar/classes/hr_operations.php`
+- `moodle/local/ustar/classes/hr_people.php`
+- `moodle/local/ustar/classes/knowledge_index.php`
+- `moodle/local/ustar/classes/learning_events.php`
+- `moodle/local/ustar/classes/learning_path.php`
+- `moodle/local/ustar/classes/learning_route.php`
+- `moodle/local/ustar/classes/learning_tasks.php`
+- `moodle/local/ustar/classes/material_studio.php`
+- `moodle/local/ustar/classes/mobile_app.php`
+- `moodle/local/ustar/classes/moodle_activity_bridge.php`
+- `moodle/local/ustar/classes/moodle_quiz_assessment_provider.php`
+- `moodle/local/ustar/classes/native_data.php`
+- `moodle/local/ustar/classes/native_learning.php`
+- `moodle/local/ustar/classes/notebook_board.php`
+- `moodle/local/ustar/classes/observer.php`
+- `moodle/local/ustar/classes/org.php`
+- `moodle/local/ustar/classes/organization_directory.php`
+- `moodle/local/ustar/classes/organization_identity.php`
+- `moodle/local/ustar/classes/organization_model.php`
+- `moodle/local/ustar/classes/organization_structure_editor.php`
+- `moodle/local/ustar/classes/output/renderer.php`
+- `moodle/local/ustar/classes/people.php`
+- `moodle/local/ustar/classes/position_access.php`
+- `moodle/local/ustar/classes/position_application.php`
+- `moodle/local/ustar/classes/position_catalog.php`
+- `moodle/local/ustar/classes/position_model.php`
+- `moodle/local/ustar/classes/product_quiz.php`
+- `moodle/local/ustar/classes/registration_service.php`
+- `moodle/local/ustar/classes/registration_validation_exception.php`
+- `moodle/local/ustar/classes/reward_conditions.php`
+- `moodle/local/ustar/classes/reward_control.php`
+- `moodle/local/ustar/classes/route_commands.php`
+- `moodle/local/ustar/classes/route_continue.php`
+- `moodle/local/ustar/classes/route_family.php`
+- `moodle/local/ustar/classes/route_intro_transfer.php`
+- `moodle/local/ustar/classes/route_model.php`
+- `moodle/local/ustar/classes/route_point_evidence_provider.php`
+- `moodle/local/ustar/classes/route_quiz_grading.php`
+- `moodle/local/ustar/classes/route_rewards.php`
+- `moodle/local/ustar/classes/route_scope.php`
+- `moodle/local/ustar/classes/route_tester.php`
+- `moodle/local/ustar/classes/skill_assessment.php`
+- `moodle/local/ustar/classes/staffing_requests.php`
+- `moodle/local/ustar/classes/stage6_metrics.php`
+- `moodle/local/ustar/classes/standard_model.php`
+- `moodle/local/ustar/classes/structure.php`
+- `moodle/local/ustar/classes/studio_scorm_package.php`
+- `moodle/local/ustar/classes/studio_scorm_runtime.php`
+- `moodle/local/ustar/classes/target_core.php`
+- `moodle/local/ustar/classes/target_schema.php`
+- `moodle/local/ustar/classes/task/enrich_feed_sources.php`
+- `moodle/local/ustar/classes/task/import_feed_sources.php`
+- `moodle/local/ustar/classes/task/process_work_tasks.php`
+- `moodle/local/ustar/classes/task/reconcile_competitions.php`
+- `moodle/local/ustar/classes/task/reconcile_reporting.php`
+- `moodle/local/ustar/classes/task/reconcile_rewards.php`
+- `moodle/local/ustar/classes/task/renew_acting_assignments.php`
+- `moodle/local/ustar/classes/task/submit_grade_requests.php`
+- `moodle/local/ustar/classes/task/sync_enrolments.php`
+- `moodle/local/ustar/classes/task_files.php`
+- `moodle/local/ustar/classes/task_workspace/calendar.php`
+- `moodle/local/ustar/classes/task_workspace/home_cards.php`
+- `moodle/local/ustar/classes/task_workspace/page.php`
+- `moodle/local/ustar/classes/task_workspace/policy.php`
+- `moodle/local/ustar/classes/task_workspace/recipients.php`
+- `moodle/local/ustar/classes/task_workspace/service.php`
+- `moodle/local/ustar/classes/task_workspace/worker.php`
+- `moodle/local/ustar/classes/team_access.php`
+- `moodle/local/ustar/classes/team_presenter.php`
+- `moodle/local/ustar/classes/team_quiz.php`
+- `moodle/local/ustar/classes/ui.php`
+- `moodle/local/ustar/classes/user_history_reset.php`
+- `moodle/local/ustar/classes/view_as.php`
+- `moodle/local/ustar/classes/workflow_notifications.php`
+- `moodle/local/ustar/cli/adjust_uscoin.php`
+- `moodle/local/ustar/cli/archive_courses.php`
+- `moodle/local/ustar/cli/assessment_lifecycle_probe.php`
+- `moodle/local/ustar/cli/audit_access.php`
+- `moodle/local/ustar/cli/audit_domain_integrity.php`
+- `moodle/local/ustar/cli/audit_feed_roles.php`
+- `moodle/local/ustar/cli/bootstrap_trading_floor_route.php`
+- `moodle/local/ustar/cli/check_catalog_archobuch.php`
+- `moodle/local/ustar/cli/check_development_assessment.php`
+- `moodle/local/ustar/cli/check_learning_route_v2.php`
+- `moodle/local/ustar/cli/check_learning_route_v2_schema.php`
+- `moodle/local/ustar/cli/check_materials_library_schema.php`
+- `moodle/local/ustar/cli/check_role_ui.php`
+- `moodle/local/ustar/cli/check_route_user.php`
+- `moodle/local/ustar/cli/ensure_demo_executive.php`
+- `moodle/local/ustar/cli/ensure_tasks_2725.php`
+- `moodle/local/ustar/cli/feed_retention_report.php`
+- `moodle/local/ustar/cli/grade_ladder_legacy_report.php`
+- `moodle/local/ustar/cli/hr_canonical_2724_apply.php`
+- `moodle/local/ustar/cli/import_catalog.php`
+- `moodle/local/ustar/cli/import_catalog_manifest.php`
+- `moodle/local/ustar/cli/import_reporting.php`
+- `moodle/local/ustar/cli/import_structure.php`
+- `moodle/local/ustar/cli/inspect_employee_position.php`
+- `moodle/local/ustar/cli/inspect_intro_route.php`
+- `moodle/local/ustar/cli/materials_library_ui_fixture.php`
+- `moodle/local/ustar/cli/migrate_stage2_access.php`
+- `moodle/local/ustar/cli/normalize_demo_positions.php`
+- `moodle/local/ustar/cli/probe_development_assessment.php`
+- `moodle/local/ustar/cli/reconcile_assessment_runtime.php`
+- `moodle/local/ustar/cli/reconcile_organization.php`
+- `moodle/local/ustar/cli/sync_position_access.php`
+- `moodle/local/ustar/cli/sync_staff_map.php`
+- `moodle/local/ustar/cli/sync_uscoin.php`
+- `moodle/local/ustar/cli/test_materials_library.php`
+- `moodle/local/ustar/cli/validate_2725.php`
+- `moodle/local/ustar/cli/validate_2726.php`
+- `moodle/local/ustar/competition_studio.php`
+- `moodle/local/ustar/continue.php`
+- `moodle/local/ustar/course_launch.php`
+- `moodle/local/ustar/db/access.php`
+- `moodle/local/ustar/db/caches.php`
+- `moodle/local/ustar/db/events.php`
+- `moodle/local/ustar/db/hooks.php`
+- `moodle/local/ustar/db/install.php`
+- `moodle/local/ustar/db/services.php`
+- `moodle/local/ustar/db/tasks.php`
+- `moodle/local/ustar/db/upgrade.php`
+- `moodle/local/ustar/development_assessment.php`
+- `moodle/local/ustar/development_assessments.php`
+- `moodle/local/ustar/executive.php`
+- `moodle/local/ustar/feed.php`
+- `moodle/local/ustar/feed_admin.php`
+- `moodle/local/ustar/feed_external_content.php`
+- `moodle/local/ustar/feed_people.php`
+- `moodle/local/ustar/feed_reaction.php`
+- `moodle/local/ustar/forced_retraining.php`
+- `moodle/local/ustar/forced_retraining_launch.php`
+- `moodle/local/ustar/game.php`
+- `moodle/local/ustar/game_studio.php`
+- `moodle/local/ustar/games.php`
+- `moodle/local/ustar/grade_ladders.php`
+- `moodle/local/ustar/grade_rules.php`
+- `moodle/local/ustar/grades.php`
+- `moodle/local/ustar/guide.php`
+- `moodle/local/ustar/home.php`
+- `moodle/local/ustar/home_layout.php`
+- `moodle/local/ustar/hr.php`
+- `moodle/local/ustar/hr_quiz_attempt.php`
+- `moodle/local/ustar/hr_quiz_grading.php`
+- `moodle/local/ustar/knowledge.php`
+- `moodle/local/ustar/lang/en/local_ustar.php`
+- `moodle/local/ustar/lang/ru/local_ustar.php`
+- `moodle/local/ustar/learning.php`
+- `moodle/local/ustar/legacy.php`
+- `moodle/local/ustar/lib.php`
+- `moodle/local/ustar/material.php`
+- `moodle/local/ustar/material_ack_export.php`
+- `moodle/local/ustar/material_bulk.php`
+- `moodle/local/ustar/material_create.php`
+- `moodle/local/ustar/material_player.php`
+- `moodle/local/ustar/material_version.php`
+- `moodle/local/ustar/material_version_action.php`
+- `moodle/local/ustar/materials.php`
+- `moodle/local/ustar/materials_studio.php`
+- `moodle/local/ustar/messages.php`
+- `moodle/local/ustar/messages_api.php`
+- `moodle/local/ustar/notebook.php`
+- `moodle/local/ustar/notifications.php`
+- `moodle/local/ustar/open.php`
+- `moodle/local/ustar/operations.php`
+- `moodle/local/ustar/organization_settings.php`
+- `moodle/local/ustar/positions.php`
+- `moodle/local/ustar/profile.php`
+- `moodle/local/ustar/profile_settings.php`
+- `moodle/local/ustar/public_branding.php`
+- `moodle/local/ustar/register.php`
+- `moodle/local/ustar/reward_control.php`
+- `moodle/local/ustar/route.php`
+- `moodle/local/ustar/route_career.php`
+- `moodle/local/ustar/route_intro_transfer.php`
+- `moodle/local/ustar/route_next.php`
+- `moodle/local/ustar/route_profile_reveal.php`
+- `moodle/local/ustar/route_role_quiz.php`
+- `moodle/local/ustar/route_studio.php`
+- `moodle/local/ustar/route_team.php`
+- `moodle/local/ustar/route_team_quiz.php`
+- `moodle/local/ustar/route_tester.php`
+- `moodle/local/ustar/route_tester_enter.php`
+- `moodle/local/ustar/route_tester_exit.php`
+- `moodle/local/ustar/scorm_launch.php`
+- `moodle/local/ustar/scorm_route_status.php`
+- `moodle/local/ustar/search_api.php`
+- `moodle/local/ustar/settings.php`
+- `moodle/local/ustar/staffing.php`
+- `moodle/local/ustar/stage6_status.php`
+- `moodle/local/ustar/studio_scorm_preview.php`
+- `moodle/local/ustar/task_workspace.php`
+- `moodle/local/ustar/tasks.php`
+- `moodle/local/ustar/team.php`
+- `moodle/local/ustar/team_learning.php`
+- `moodle/local/ustar/tests/assessment_authoring_review_test.php`
+- `moodle/local/ustar/tests/communication_test.php`
+- `moodle/local/ustar/tests/competition_studio_test.php`
+- `moodle/local/ustar/tests/completion_cycle_test.php`
+- `moodle/local/ustar/tests/evidence_lifecycle_test.php`
+- `moodle/local/ustar/tests/feed_article_resolver_test.php`
+- `moodle/local/ustar/tests/feed_external_content_test.php`
+- `moodle/local/ustar/tests/feed_retention_test.php`
+- `moodle/local/ustar/tests/feed_roles_test.php`
+- `moodle/local/ustar/tests/feed_rss_test.php`
+- `moodle/local/ustar/tests/generator/lib.php`
+- `moodle/local/ustar/tests/grade_assignment_directory_test.php`
+- `moodle/local/ustar/tests/grade_initial_assignment_test.php`
+- `moodle/local/ustar/tests/grade_promotion_display_test.php`
+- `moodle/local/ustar/tests/grade_rules_test.php`
+- `moodle/local/ustar/tests/home_layout_test.php`
+- `moodle/local/ustar/tests/material_studio_review_test.php`
+- `moodle/local/ustar/tests/notebook_board_test.php`
+- `moodle/local/ustar/tests/notebook_test.php`
+- `moodle/local/ustar/tests/notification_delivery_test.php`
+- `moodle/local/ustar/tests/organization_identity_test.php`
+- `moodle/local/ustar/tests/recruiter_access_test.php`
+- `moodle/local/ustar/tests/release_review_test.php`
+- `moodle/local/ustar/tests/reward_conditions_test.php`
+- `moodle/local/ustar/tests/reward_workspace_test.php`
+- `moodle/local/ustar/tests/route_studio_commands_test.php`
+- `moodle/local/ustar/tests/stage1_test.php`
+- `moodle/local/ustar/tests/stage6_product_services_test.php`
+- `moodle/local/ustar/tests/standard_model_test.php`
+- `moodle/local/ustar/tests/task_workspace_test.php`
+- `moodle/local/ustar/tests/team_quiz_test.php`
+- `moodle/local/ustar/tests/workflow_notifications_test.php`
+- `moodle/local/ustar/user_prefs.php`
+- `moodle/local/ustar/version.php`
+- `moodle/local/ustar/view.php`
+- `moodle/local/ustar/view_as.php`
+- `moodle/local/ustar/workspace.php`
+- `moodle/theme/ustar/classes/output/qtype_truefalse_renderer.php`
+- `moodle/theme/ustar/config.php`
+- `moodle/theme/ustar/lang/en/theme_ustar.php`
+- `moodle/theme/ustar/lang/ru/theme_ustar.php`
+- `moodle/theme/ustar/layout/login.php`
+- `moodle/theme/ustar/layout/ustar.php`
+- `moodle/theme/ustar/lib.php`
+- `moodle/theme/ustar/version.php`

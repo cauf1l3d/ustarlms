@@ -1,39 +1,32 @@
 domain: learning
-
-purpose:
-  Обучение сотрудников через маршруты.
-
-
-canonical_model:
-
-  route:
-    description:
-      Полный путь развития сотрудника
-
-
-  route_point:
-    description:
-      Отдельный шаг маршрута
-
-
-  route_version:
-    description:
-      Версия содержимого маршрута
-
-
-  route_progress:
-    description:
-      Фактическое прохождение пользователем
-
-
-flow:
-
-  employee:
-    ->
-      route
-    ->
-      points
-    ->
-      evidence
-    ->
-      qualification
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Материалы, нативное обучение, SCORM/Quiz, аттестации
+services:
+- moodle/local/ustar/classes/content.php
+- moodle/local/ustar/classes/content_admin.php
+- moodle/local/ustar/classes/native_learning.php
+- moodle/local/ustar/classes/moodle_activity_bridge.php
+- moodle/local/ustar/classes/studio_scorm_runtime.php
+- moodle/local/ustar/classes/assessment_lifecycle.php
+- moodle/local/ustar/classes/development_assessment.php
+tables:
+- local_ustar_content
+- local_ustar_content_versions
+- local_ustar_content_access
+- local_ustar_content_ack
+- local_ustar_assess_policy
+- local_ustar_assess_runtime
+- local_ustar_dev_assess
+- local_ustar_dev_assess_ver
+- local_ustar_dev_assess_try
+rules:
+- Moodle owns course/activity completion
+- Opening content alone is not confirmed learning evidence
+- Existing assessment/remediation policy links are data, not global constants
+entry_points:
+- moodle/local/ustar/materials.php
+- moodle/local/ustar/knowledge.php
+- moodle/local/ustar/catalog.php
+- moodle/local/ustar/assessment_studio.php
+- moodle/local/ustar/development_assessment.php

@@ -1,23 +1,32 @@
 domain: economy
-
-
-purpose:
-  Игровая экономика и мотивация.
-
-
-canonical:
-
-  coin_ledger
-
-
-principles:
-
-  balance:
-    derived_state
-
-
-events:
-
-  - achievement
-  - learning_completion
-  - competition_result
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: XP, USCOIN ledger, награды, сезоны соревнований
+services:
+- moodle/local/ustar/classes/economy.php
+- moodle/local/ustar/classes/reward_control.php
+- moodle/local/ustar/classes/reward_conditions.php
+- moodle/local/ustar/classes/route_rewards.php
+- moodle/local/ustar/classes/competition.php
+- moodle/local/ustar/classes/catalog_mastery.php
+tables:
+- local_ustar_coin_ledger
+- local_ustar_coin_accounts
+- local_ustar_coin_balance
+- local_ustar_reward_grants
+- local_ustar_reward_resets
+- local_ustar_competitions
+- local_ustar_comp_rules
+- local_ustar_comp_participants
+- local_ustar_comp_score_events
+- local_ustar_comp_results
+rules:
+- One locked idempotent USCOIN ledger, no second wallet
+- XP/KPI/competition points are distinct
+- Current named season ranking follows ADR0013, which supersedes pseudonym display
+- Reward reset retains history with compensating/accounting semantics
+entry_points:
+- moodle/local/ustar/achievements.php
+- moodle/local/ustar/competition_studio.php
+- moodle/local/ustar/reward_control.php
+- moodle/local/ustar/games.php

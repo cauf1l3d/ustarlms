@@ -1262,12 +1262,13 @@ final class adaptation_service {
         $opencount = 0;
         $criticalcount = 0;
         $incontrolcount = 0;
+        $namefields = 'id,' . implode(',', \core_user\fields::get_name_fields());
 
         foreach ($adaptations as $adaptation) {
             self::sync_cases($adaptation);
             $states = self::case_states((int)$adaptation->id);
-            $employee = $DB->get_record('user', ['id' => (int)$adaptation->userid], 'id,firstname,lastname', IGNORE_MISSING);
-            $manager = $DB->get_record('user', ['id' => (int)$adaptation->managerid], 'id,firstname,lastname', IGNORE_MISSING);
+            $employee = $DB->get_record('user', ['id' => (int)$adaptation->userid], $namefields, IGNORE_MISSING);
+            $manager = $DB->get_record('user', ['id' => (int)$adaptation->managerid], $namefields, IGNORE_MISSING);
             $map = self::submissions($adaptation);
             $status = (string)$adaptation->status;
             $cycles[] = [
@@ -1349,8 +1350,9 @@ final class adaptation_service {
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
         self::sync_cases($adaptation);
         $map = self::submissions($adaptation);
-        $employee = $DB->get_record('user', ['id' => (int)$adaptation->userid], 'id,firstname,lastname', IGNORE_MISSING);
-        $manager = $DB->get_record('user', ['id' => (int)$adaptation->managerid], 'id,firstname,lastname', IGNORE_MISSING);
+        $namefields = 'id,' . implode(',', \core_user\fields::get_name_fields());
+        $employee = $DB->get_record('user', ['id' => (int)$adaptation->userid], $namefields, IGNORE_MISSING);
+        $manager = $DB->get_record('user', ['id' => (int)$adaptation->managerid], $namefields, IGNORE_MISSING);
         $structure = structure::get(structure::NAME_STRUCTURE);
         $positions = people::position_map($structure);
         $days = [];
@@ -1369,7 +1371,7 @@ final class adaptation_service {
         $reset = [];
         foreach (self::events($adaptationid) as $event) {
             if ((string)$event->eventtype === self::EVENT_ASSIGNMENT_RESET) {
-                $actor = $DB->get_record('user', ['id' => $event->actorid], 'id,firstname,lastname', IGNORE_MISSING);
+                $actor = $DB->get_record('user', ['id' => $event->actorid], $namefields, IGNORE_MISSING);
                 $reset = ['resetreason' => (string)$event->reason,
                     'resetby' => $actor ? fullname($actor) : ('#' . $event->actorid),
                     'resetat' => userdate((int)$event->timecreated, '%d.%m.%Y %H:%M')];

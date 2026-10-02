@@ -520,3 +520,9 @@ html[data-ustar-preset="coral"] { --u-brand:#EC947F !important; --u-brand-strong
 html[data-ustar-preset="indigo"] { --u-brand:#9EA9ED !important; --u-brand-strong:#7583CC !important; --u-brand-soft:color-mix(in srgb,#9EA9ED 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
 html[data-ustar-preset="rose"] { --u-brand:#E5A2B8 !important; --u-brand-strong:#C17793 !important; --u-brand-soft:color-mix(in srgb,#E5A2B8 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
 html[data-ustar-preset="ice"] { --u-brand:#84C8DF !important; --u-brand-strong:#51A0BC !important; --u-brand-soft:color-mix(in srgb,#84C8DF 16%,transparent) !important; --u-text-on-brand:#182027 !important; }
+
+/* Native profile photos in the season ranking; initials remain readable without a photo. */
+.u-leaderboard .u-person-dot.u-leaderboard-avatar { color:var(--u-text-on-brand); font-size:14px; border-radius:50%; flex-shrink:0; }
+.u-leaderboard .u-leaderboard-avatar::after { content:none; }
+.u-leaderboard-avatar img { display:block; width:100%; height:100%; object-fit:cover; }
+.u-leaderboard .u-podium-card .u-leaderboard-avatar { width:64px; height:64px; font-size:20px; }

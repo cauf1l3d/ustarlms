@@ -20,6 +20,7 @@ try {
 
 $templatecontext = [
     'loginreferenceurl' => (new moodle_url('/theme/ustar/pix/brand/login-reference-20260914.png'))->out(false),
+    'loginbackgroundurl' => (new moodle_url('/theme/ustar/pix/brand/login-background-20261002.webp'))->out(false),
     'loginurl' => (new moodle_url('/login/index.php'))->out(false),
     'sitename' => format_string(
         $SITE->shortname,

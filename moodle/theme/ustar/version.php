@@ -2,7 +2,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'theme_ustar';
-$plugin->version   = 2026100102;
+$plugin->version   = 2026100201;
 $plugin->requires  = 2025100600;
 $plugin->maturity  = MATURITY_BETA;
-$plugin->release   = '1.8.0-rc.1';
+$plugin->release   = '1.8.1-rc.1';

@@ -1,8 +1,8 @@
-/* Preserve the supplied artwork and mascot. Both panels share the same surface and scale. */
+/* Original card artwork and supplied backdrop, fitted without clipping or empty bands. */
 body.pagelayout-login.ustar-auth-body {
     display:block; margin:0; padding:0; height:auto; min-height:100dvh; color:#2b2b2b;
-    background:radial-gradient(ellipse at 15% 85%,#fff8,transparent 55%),
-        radial-gradient(ellipse at 85% 10%,#fff9,transparent 45%),linear-gradient(125deg,#dfd8cd,#f2efea 42%,#e0d8cc);
+    background-color:#eee6db; background-image:var(--ustar-login-background);
+    background-position:center; background-size:cover; background-repeat:no-repeat;
 }
 body.pagelayout-login.ustar-auth-body #page-wrapper {
     display:flex; flex-direction:column; justify-content:center; height:auto; min-height:100dvh;
@@ -10,24 +10,25 @@ body.pagelayout-login.ustar-auth-body #page-wrapper {
 }
 body.pagelayout-login.ustar-auth-body #page-footer { display:none; }
 body.pagelayout-login.ustar-auth-body #page.ustar-auth-shell {
-    display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px;
+    display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; align-items:center;
     box-sizing:border-box; width:100%; max-width:1320px; margin:auto!important; padding:0!important;
     height:auto; min-height:0; overflow:visible; border:0; box-shadow:none; background:transparent;
 }
 .ustar-auth-shell > section { min-width:0; box-sizing:border-box; border:2px solid #ffffffe0;
     border-radius:32px; overflow:hidden; background:linear-gradient(135deg,#ebe6dec9,#ffffff70 55%,#e8e1d5c9);
     box-shadow:inset 0 1px 8px #fff9,0 12px 36px #4f422318; }
-.ustar-auth-shell .ustar-auth-brand { position:relative; display:flex; padding:0; align-items:center; }
+.ustar-auth-shell .ustar-auth-brand { position:relative; display:block; padding:0;
+    border:0; border-radius:0; background:none; box-shadow:none; align-self:center; }
 .ustar-auth-brand::before,.ustar-auth-brand::after { content:none; }
 .ustar-auth-artwork { display:block; width:100%; height:auto; max-height:none; overflow:hidden;
-    aspect-ratio:691 / 815; mix-blend-mode:multiply; }
+    aspect-ratio:712 / 837; }
 .ustar-auth-artwork image,.ustar-auth-logo image { pointer-events:none; }
 .ustar-auth-shell .ustar-auth-auth { display:flex; flex-direction:column; justify-content:center;
-    align-items:center; padding:clamp(24px,3vw,42px); backdrop-filter:blur(18px); }
-.ustar-auth-logo { display:block; width:56%; max-width:260px; height:auto; aspect-ratio:287 / 100;
+    align-items:center; padding:clamp(24px,2.2vw,34px); backdrop-filter:blur(18px); }
+.ustar-auth-logo { display:block; width:56%; max-width:232px; height:auto; aspect-ratio:287 / 100;
     flex-shrink:0; overflow:hidden; mix-blend-mode:multiply; }
-.ustar-auth-shell .ustar-auth-start { margin:20px 0; text-align:center; text-transform:uppercase;
-    font-size:clamp(26px,2.6vw,40px); line-height:1.15; font-weight:800;
+.ustar-auth-shell .ustar-auth-start { margin:16px 0; text-align:center; text-transform:uppercase;
+    font-size:clamp(26px,2.3vw,36px); line-height:1.15; font-weight:800;
     color:#966d09; background:linear-gradient(120deg,#bd8c14,#cfa51f,#8b6100);
     background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     text-decoration:underline; text-underline-offset:8px; text-decoration-thickness:2px; }
@@ -125,7 +126,7 @@ body.pagelayout-login.ustar-auth-body #region-main { float:none; width:100%; pad
 .ustar-auth-core .u-register :is(input,select,button):focus-visible { outline:3px solid #806300; outline-offset:2px; }
 @media(max-width:900px) {
     body.ustar-register-body #page-wrapper #page.ustar-auth-shell { grid-template-columns:minmax(0,1fr); }
-    body.ustar-register-body .ustar-auth-shell .ustar-auth-brand { min-height:min(75vw,420px); }
+    body.ustar-register-body .ustar-auth-shell .ustar-auth-brand { min-height:0; }
 }
 @media(max-width:540px) {
     .ustar-auth-core .u-register .u-register-names,

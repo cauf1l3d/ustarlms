@@ -17,13 +17,17 @@ function render(page, theme) {
   const partials={'theme_boost/head':head(),'core/local/toast/wrapper':'','theme_boost/footer':'','local_ustar/messages_thread':template('local/ustar/templates/messages_thread.mustache')};
   if(page==='login'||page==='login-error'||page==='registration') {
     const register = `<div class="u-register"><h2>Регистрация в Академии</h2><p>Заявка будет направлена HRD.</p><form><div class="u-register-names"><label>Имя<input></label><label>Фамилия<input></label></div><label>Логин<input></label><label>Email<input type="email"></label><label>Пароль<input type="password"></label><label>Подразделение<select><option>Выберите подразделение</option></select></label><button class="btn btn-primary">Создать профиль</button></form></div>`;
-    return Mustache.render(template('theme/ustar/templates/login.mustache'), {bodyattributes:'class="pagelayout-login ustar-auth-body"',starttitle:page==='registration'?'Создай профиль':'Начни с входа',loginreferenceurl:files+'login-reference-20260914.png',loginurl:'/login',signupurl:'/registration',signupenabled:page!=='registration',output:{main_content:page==='registration'?register:(page==='login-error'?'<div class="alert">Неверный логин или пароль</div>':'')+nativeLogin}},partials);
+    return Mustache.render(template('theme/ustar/templates/login.mustache'), {bodyattributes:'class="pagelayout-login ustar-auth-body"',starttitle:page==='registration'?'Создай профиль':'Начни с входа',loginreferenceurl:files+'login-reference-20260914.png',loginbackgroundurl:files+'login-background-20261002.webp',loginurl:'/login',signupurl:'/registration',signupenabled:page!=='registration',output:{main_content:page==='registration'?register:(page==='login-error'?'<div class="alert">Неверный логин или пароль</div>':'')+nativeLogin}},partials);
   }
   const nav = ['Главная','Обучение','Задачи','Команда','Сообщения','Каталог','Контроль','Настройки'].map((label,i)=>({label,short:label,url:'/home',icon:'<span aria-hidden="true">○</span>',active:i===0}));
   let content;
   if(page==='messages'||page==='messages-list'||page==='messages-disabled') {
     const current={id:10,title:'Рабочая команда магазина',isgroup:true,membercount:3,canmanage:true,members:[{id:11,fullname:'Сотрудник Один',removable:true}],cansend:true,hasmessages:true,messages:[{id:1,sender:'Сотрудник Один',text:'Обсудим обучение и рабочие вопросы.',time:'01.10 12:00'},{id:2,mine:true,sender:'Вы',text:'Медиа и документы в переписке',time:'01.10 12:01',attachments:[{name:'Фото.png',size:'24 КБ',image:true,url:files+'ustar-app-icon.png',downloadurl:files+'ustar-app-icon.png'}]}]};
     content=Mustache.render(template('local/ustar/templates/messages.mustache'),{available:page!=='messages-disabled',cancreate:true,hascurrent:page==='messages',current:page==='messages'?current:null,conversationid:page==='messages'?10:0,sesskey:'fixture',requestid:'fixture_request_000000000',apiurl:'/api',listurl:'/messages-list',maxbytes:25000000,maxsize:'25 МБ',maxpostbytes:50000000,hasconversations:true,conversations:[{id:10,title:'Рабочая команда магазина',url:'/messages',preview:'Медиа и документы',hasunread:true,unread:2},{id:11,title:'Коллега',preview:'Последнее сообщение',url:'/messages'}]},partials);
+  } else if(page==='achievements') {
+    const rows=[{displayname:'Сотрудник Один',initials:'СО',avatarurl:files+'mascot-round.png',current:true,rank:1,points:600,medal:'🥇'},
+      {displayname:'Сотрудница Без Фото',initials:'СБ',current:false,rank:2,points:0,medal:'🥈'}];
+    content=Mustache.render(template('local/ustar/templates/achievements.mustache'),{hascompetition:true,competitiontitle:'Учебный сезон',competitionprivacy:'Рейтинг участников сезона',competitionruleversion:1,competitionenddate:'10.10.2026',top:rows,hastop:true,rankrows:rows,hasrankrows:true},partials);
   } else {
     content='<div class="u-product-page"><header class="u-product-head"><div><h1>Моя команда</h1><p>Сводка и рабочие действия</p></div><button class="u-btn">Создать задачу</button></header><table class="generaltable"><tr><th>Сотрудник</th><th>Подразделение</th><th>Текущий маршрут</th></tr><tr><td>Синтетический сотрудник</td><td>Торговый зал</td><td>Обучение и аттестация</td></tr></table></div>';
   }
@@ -33,10 +37,10 @@ function render(page, theme) {
 const server=http.createServer((req,res)=>{
   const url=new URL(req.url,'http://localhost'), p=url.pathname;
   if(p==='/theme.css'){res.setHeader('Content-Type','text/css');return res.end(css);}
-  if(['/login','/login-error','/registration','/messages','/messages-list','/messages-disabled','/team'].includes(p)){res.setHeader('Content-Type','text/html');return res.end(render(p.slice(1),url.searchParams.get('theme')||'light'));}
+  if(['/login','/login-error','/registration','/messages','/messages-list','/messages-disabled','/team','/achievements'].includes(p)){res.setHeader('Content-Type','text/html');return res.end(render(p.slice(1),url.searchParams.get('theme')||'light'));}
   if(p==='/api'){res.setHeader('Content-Type','application/json');return res.end(JSON.stringify({ok:true,html:'',signature:'fixture',cansend:true}));}
   const file=path.join(repo,'moodle',p);
-  if(file.startsWith(path.join(repo,'moodle')+'/')&&fs.existsSync(file)&&fs.statSync(file).isFile()){res.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':'image/png');return fs.createReadStream(file).pipe(res);}
+  if(file.startsWith(path.join(repo,'moodle')+'/')&&fs.existsSync(file)&&fs.statSync(file).isFile()){res.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':file.endsWith('.webp')?'image/webp':'image/png');return fs.createReadStream(file).pipe(res);}
   res.statusCode=404;res.end();
 });
 (async()=>{
@@ -46,7 +50,7 @@ const server=http.createServer((req,res)=>{
   const evidence=[];
   try {
     for(const width of [320,390,768,1366,1920]) {
-      for(const scenario of ['login','login-error','registration','messages','messages-list','messages-disabled','team', ...([390,1366].includes(width)?['login?theme=dark','registration?theme=dark','messages?theme=dark','messages-list?theme=dark','team?theme=dark']:[])]) {
+      for(const scenario of ['login','login-error','registration','messages','messages-list','messages-disabled','team','achievements', ...([390,1366].includes(width)?['login?theme=dark','registration?theme=dark','messages?theme=dark','messages-list?theme=dark','team?theme=dark','achievements?theme=dark']:[])]) {
         const name=scenario.split('?')[0],theme=scenario.includes('dark')?'dark':'light';
         const page=await browser.newPage({viewport:{width,height:844}}),errors=[];
         page.on('pageerror',e=>errors.push(e.message));
@@ -62,7 +66,18 @@ const server=http.createServer((req,res)=>{
         }
         if(name==='login'&&width>900){
           const a=await page.locator('.ustar-auth-brand').boundingBox(),b=await page.locator('.ustar-auth-auth').boundingBox();
-          assert(Math.abs(a.width-b.width)<1&&Math.abs(a.y-b.y)<1&&Math.abs(a.height-b.height)<1,'Unequal original login panels');
+          assert(Math.abs(a.width-b.width)<1,'Unequal login column widths');
+          const art=await page.locator('.ustar-auth-artwork').boundingBox();
+          assert(Math.abs(a.height-art.height)<1&&Math.abs(a.y-art.y)<1,'Empty bands around login artwork');
+          assert(Math.abs(art.width/art.height-712/837)<0.002,'Artwork proportions changed');
+          assert((await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage)).includes('login-background-20261002.webp'),'Missing supplied login backdrop');
+        }
+        if(name==='achievements') {
+          assert.strictEqual(await page.locator('.u-leaderboard-avatar img').count(),2);
+          assert.strictEqual(await page.locator('.u-leaderboard-avatar span').count(),2);
+          assert(await page.locator('.u-leaderboard-avatar img').first().evaluate(el=>el.complete&&el.naturalWidth>0),'Broken profile picture');
+          assert.strictEqual(await page.locator('.u-leaderboard-avatar').first().evaluate(el=>getComputedStyle(el,'::after').content),'none');
+          assert.notStrictEqual(await page.locator('.u-leaderboard-avatar span').first().evaluate(el=>getComputedStyle(el.parentElement).fontSize),'0px');
         }
         if(name==='team'&&width<768){await page.locator('[data-mobile-menu-open]').click();assert(await page.locator('#u-mobile-menu').isVisible());assert.strictEqual(await page.locator('#u-mobile-menu nav:first-of-type a').count(),8);await page.locator('[data-mobile-menu-close]').click();}
         await page.screenshot({path:path.join(out,`${name}-${width}${theme==='dark'?'-dark':''}.png`),fullPage:true});

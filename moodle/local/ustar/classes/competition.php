@@ -309,7 +309,7 @@ final class competition {
 
     /** @return array<int,array<string,mixed>> */
     private static function scoreboard(int $competitionid, int $viewerid): array {
-        global $DB;
+        global $DB, $PAGE;
         $records = $DB->get_records_sql(
             'SELECT p.id AS participantid, p.userid, p.publiclabel, COALESCE(SUM(e.points), 0) AS points
                FROM {local_ustar_comp_participants} p
@@ -328,7 +328,7 @@ final class competition {
         if ($records) {
             [$insql, $params] = $DB->get_in_or_equal(array_column($records, 'userid'), SQL_PARAMS_NAMED);
             $users = $DB->get_records_select('user', 'id ' . $insql, $params, '',
-                'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename');
+                'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename,email,picture,imagealt');
         }
         $counts = [];
         foreach ($records as $record) {
@@ -344,11 +344,19 @@ final class competition {
                 $previous = $points;
             }
             $current = $viewerid > 0 && (int)$record->userid === $viewerid;
+            $avatarurl = '';
+            if (isset($users[$record->userid]) && (int)$users[$record->userid]->picture > 0) {
+                $picture = new \user_picture($users[$record->userid]);
+                $picture->size = 100;
+                $picture->alttext = false;
+                $avatarurl = $picture->get_url($PAGE)->out(false);
+            }
             $rows[] = [
                 'participantid' => (int)$record->participantid, 'rank' => $rank, 'points' => $points,
                 'displayname' => isset($users[$record->userid]) ? fullname($users[$record->userid]) : 'Удалённая учётная запись',
                 'initials' => isset($users[$record->userid])
                     ? ui::initials($users[$record->userid]->firstname, $users[$record->userid]->lastname) : '?',
+                'avatarurl' => $avatarurl,
                 'current' => $current, 'sharedplace' => $counts[(string)$points] > 1,
             ];
         }

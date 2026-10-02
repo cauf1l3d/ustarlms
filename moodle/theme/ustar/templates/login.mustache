@@ -1,14 +1,14 @@
 {{! Canonical artwork supplied by USTAR. Moodle owns tokens, credentials, errors, reset and SSO. }}
 {{> theme_boost/head }}
-<body {{{ bodyattributes }}}>
+<body {{{ bodyattributes }}} style="--ustar-login-background:url('{{loginbackgroundurl}}')">
 {{#runtimebrandcss}}<style id="u-brand-runtime">{{{runtimebrandcss}}}</style>{{/runtimebrandcss}}
 {{> core/local/toast/wrapper}}
 <div id="page-wrapper" class="ustar-auth-page">
     {{{ output.standard_top_of_body_html }}}
     <main id="page" class="ustar-auth-shell" aria-label="Вход в USTAR Академию">
         <section class="ustar-auth-brand" aria-label="Академия USTAR">
-            <svg class="ustar-auth-artwork" viewBox="165 60 691 815" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR: обучение, навыки, карьера, игры. Развивайся, строй карьеру, участвуй в играх, будь частью команды.">
-                <defs><clipPath id="ustar-auth-artwork-crop" clipPathUnits="userSpaceOnUse"><rect x="165" y="60" width="691" height="815" /></clipPath></defs>
+            <svg class="ustar-auth-artwork" viewBox="155 50 712 837" preserveAspectRatio="xMidYMid meet" role="img" aria-label="USTAR: обучение, навыки, карьера, игры. Развивайся, строй карьеру, участвуй в играх, будь частью команды.">
+                <defs><clipPath id="ustar-auth-artwork-crop" clipPathUnits="userSpaceOnUse"><rect x="155" y="50" width="712" height="837" /></clipPath></defs>
                 <image href="{{loginreferenceurl}}" x="0" y="0" width="1672" height="941" clip-path="url(#ustar-auth-artwork-crop)" />
             </svg>
         </section>

@@ -50,7 +50,7 @@ final class competition_studio_test extends \advanced_testcase {
     }
 
     public function test_participants_see_real_names_in_existing_season_but_outsiders_and_inactive_accounts_do_not(): void {
-        global $USER, $DB;
+        global $USER, $DB, $PAGE;
         $operator = (int)$USER->id;
         $first = $this->getDataGenerator()->create_user(['firstname' => 'First', 'lastname' => 'Seller']);
         $second = $this->getDataGenerator()->create_user(['firstname' => 'Second', 'lastname' => 'Seller']);
@@ -65,11 +65,19 @@ final class competition_studio_test extends \advanced_testcase {
         competition::publish($id, $operator);
         // Model the already-published production season without migrating its legacy privacy metadata.
         $DB->set_field('local_ustar_competitions', 'privacy', 'pseudonymous', ['id' => $id]);
+        $first->picture = 123;
+        $DB->set_field('user', 'picture', $first->picture, ['id' => $first->id]);
+        $PAGE->set_url('/local/ustar/achievements.php');
         $this->setUser($first);
         $personal = competition::current_for_user($first->id);
         $this->assertSame(['First Seller', 'Second Seller'], array_column($personal['rows'], 'displayname'));
         $this->assertSame('First Seller', $personal['current']['displayname']);
         $this->assertSame('FS', $personal['current']['initials']);
+        $picture = new \user_picture($first);
+        $picture->size = 100;
+        $picture->alttext = false;
+        $this->assertSame($picture->get_url($PAGE)->out(false), $personal['current']['avatarurl']);
+        $this->assertSame('', $personal['rows'][1]['avatarurl']);
         $this->assertTrue($personal['rows'][0]['current']);
         $this->assertFalse($personal['rows'][1]['current']);
         $this->assertSame([1, 1], array_column($personal['rows'], 'rank'));

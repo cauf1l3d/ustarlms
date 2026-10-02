@@ -485,6 +485,168 @@ final class organization_identity_test extends \advanced_testcase {
         ]));
     }
 
+    private function reset_adaptation_fixture(): array {
+        global $DB;
+        $manager = $this->employee('retail_head');
+        $employee = $this->employee();
+        $managerplace = $this->place('retail_head');
+        $this->assign($manager->id, $managerplace);
+        $this->assign($employee->id, $this->place('retail_seller', $managerplace));
+        $this->grant($manager->id, ['local/ustar:use', 'local/ustar:viewteam']);
+        $this->grant($employee->id, ['local/ustar:use']);
+        $requestid = (int)$DB->insert_record('local_ustar_staff_requests', (object)[
+            'requesttype' => staffing_requests::TYPE_HIRE, 'status' => staffing_requests::STATUS_APPROVED,
+            'departmentid' => 'retail', 'positionid' => 'retail_seller', 'requestedby' => $manager->id,
+            'createduserid' => $employee->id, 'requesteddate' => time() - DAYSECS,
+        ]);
+        $this->setUser($manager);
+        $request = $DB->get_record('local_ustar_staff_requests', ['id' => $requestid]);
+        $startdate = adaptation_service::assignment_offer($request, (int)$manager->id)['startdate'];
+        $id = adaptation_service::assign_from_request($requestid, (int)$manager->id, $startdate, 10);
+        $hrd = $this->employee();
+        $this->grant($hrd->id, ['local/ustar:use', 'local/ustar:manageadaptation']);
+        return [$manager, $employee, $hrd, $requestid, $id, $startdate];
+    }
+
+    public function test_adaptation_reset_preserves_history_closes_cases_and_allows_new_cycle(): void {
+        global $DB;
+        [$manager, $employee, $hrd, $requestid, $id, $startdate] = $this->reset_adaptation_fixture();
+        $this->setUser($manager);
+        $submission = adaptation_service::submit_daily($id, (int)$manager->id, [
+            'mastered' => 'Ознакомление', 'succeeded' => 'Первый день', 'difficult' => 'Нужен разбор',
+            'help' => 'no', 'ready' => 'no', 'action' => 'Разобрать ошибки',
+        ]);
+        $DB->set_field('local_ustar_check_submits', 'workdate', $startdate, ['id' => $submission]);
+        $old = $DB->get_record('local_ustar_adaptations', ['id' => $id]);
+        adaptation_service::sync_cases($old);
+        $this->assertTrue(adaptation_service::learning_blocked((int)$employee->id));
+        $this->setUser($hrd);
+        $before = adaptation_service::hr_control_context((int)$hrd->id, $id);
+        $this->assertTrue($before['detail']['canreset']);
+        $this->assertGreaterThan(0, $before['opencount']);
+        adaptation_service::reset_assignment($id, (int)$hrd->id, 'Ошибочное назначение');
+        adaptation_service::reset_assignment($id, (int)$hrd->id, 'Повтор POST');
+        // A stale object from an old page must not reopen escalation signals after cancellation.
+        adaptation_service::sync_cases($old);
+        $after = adaptation_service::hr_control_context((int)$hrd->id, $id);
+        $this->assertSame(0, $after['activecount']);
+        $this->assertSame(0, $after['opencount']);
+        $this->assertSame(0, $after['incontrolcount']);
+        $this->assertFalse($after['detail']['canreset']);
+        $this->assertTrue($after['detail']['cancelled']);
+        $this->assertSame('Ошибочное назначение', $after['detail']['resetreason']);
+        $this->assertCount(1, $after['detail']['days']);
+        $this->assertTrue($DB->record_exists('local_ustar_check_submits', ['id' => $submission, 'adaptationid' => $id]));
+        $this->assertSame(staffing_requests::STATUS_APPROVED, $DB->get_field('local_ustar_staff_requests', 'status', ['id' => $requestid]));
+        $this->assertSame(1, $DB->count_records('local_ustar_workflow_events', [
+            'entitytype' => 'adaptation', 'entityid' => $id, 'eventtype' => 'adaptation_assignment_reset', 'actorid' => $hrd->id,
+        ]));
+        $this->assertSame(1, $DB->count_records('local_ustar_hr_actions', ['action' => 'adaptation_assignment_reset']));
+        $this->assertNull(adaptation_service::route_card((int)$employee->id));
+        $this->assertFalse(adaptation_service::learning_blocked((int)$employee->id));
+        $this->setUser($manager);
+        $row = current(array_filter(staffing_requests::list_for((int)$manager->id),
+            static fn($row) => (int)$row['id'] === $requestid));
+        $this->assertTrue($row['canassignadaptation']);
+        $this->assertSame('Назначение отменено', $row['adaptation']['statuslabel']);
+        $newid = adaptation_service::assign_from_request($requestid, (int)$manager->id, $startdate, 5);
+        $this->assertNotSame($id, $newid);
+        $this->assertSame($newid, (int)adaptation_service::for_staffing_request($requestid)->id);
+        $this->assertSame(2, $DB->count_records('local_ustar_adaptations', ['staffingrequestid' => $requestid]));
+        $this->assertSame(0, $DB->count_records('local_ustar_check_submits', ['adaptationid' => $newid]));
+        try {
+            adaptation_service::assign_from_request($requestid, (int)$manager->id, $startdate, 5);
+            $this->fail('A second live cycle must not be created for the request.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(2, $DB->count_records('local_ustar_adaptations', ['staffingrequestid' => $requestid]));
+        }
+        $this->setUser($employee);
+        try {
+            adaptation_service::submit_daily($id, (int)$employee->id, []);
+            $this->fail('An old daily form must reject writes to the cancelled cycle.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(1, $DB->count_records('local_ustar_check_submits', ['adaptationid' => $id]));
+        }
+    }
+
+    public function test_adaptation_reset_rejects_unprivileged_forged_suspended_and_view_as_actors(): void {
+        global $DB, $SESSION;
+        [$manager, $employee, $hrd, $requestid, $id] = $this->reset_adaptation_fixture();
+        $hr = $this->employee();
+        $this->grant($hr->id, ['local/ustar:use', 'local/ustar:hrmanage']);
+        foreach ([$employee, $manager, $hr] as $actor) {
+            $this->setUser($actor);
+            try {
+                adaptation_service::reset_assignment($id, (int)$actor->id, 'Отмена');
+                $this->fail('Only an explicitly authorized HRD may reset an assignment.');
+            } catch (\required_capability_exception $e) {
+                $this->assertSame(adaptation_service::STATUS_ACTIVE, $DB->get_field('local_ustar_adaptations', 'status', ['id' => $id]));
+            }
+        }
+        $this->setUser($manager);
+        try {
+            adaptation_service::reset_assignment($id, (int)$hrd->id, 'Подмена автора');
+            $this->fail('The actor must match the session.');
+        } catch (\required_capability_exception $e) {
+            $this->assertSame(0, $DB->count_records('local_ustar_hr_actions', ['action' => 'adaptation_assignment_reset']));
+        }
+        $this->setUser($hrd);
+        $DB->set_field('user', 'suspended', 1, ['id' => $hrd->id]);
+        try {
+            adaptation_service::reset_assignment($id, (int)$hrd->id, 'Отмена');
+            $this->fail('A suspended HRD must be denied.');
+        } catch (\required_capability_exception $e) {
+            $this->assertSame(adaptation_service::STATUS_ACTIVE, $DB->get_field('local_ustar_adaptations', 'status', ['id' => $id]));
+        }
+        $DB->set_field('user', 'suspended', 0, ['id' => $hrd->id]);
+        $this->setAdminUser();
+        $SESSION->ustar_view_position = 'retail_seller';
+        try {
+            adaptation_service::reset_assignment($id, (int)get_admin()->id, 'Просмотр как');
+            $this->fail('View-as must remain read-only.');
+        } catch (\moodle_exception $e) {
+            $this->assertSame(adaptation_service::STATUS_ACTIVE, $DB->get_field('local_ustar_adaptations', 'status', ['id' => $id]));
+        } finally {
+            unset($SESSION->ustar_view_position);
+        }
+    }
+
+    public function test_adaptation_reset_requires_reason_and_preserves_completed_and_final_reports(): void {
+        global $DB;
+        [$manager, $employee, $hrd, $requestid, $id] = $this->reset_adaptation_fixture();
+        $this->setUser($hrd);
+        try {
+            adaptation_service::reset_assignment($id, (int)$hrd->id, ' ');
+            $this->fail('A reset requires a reason.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(adaptation_service::STATUS_ACTIVE, $DB->get_field('local_ustar_adaptations', 'status', ['id' => $id]));
+        }
+        $DB->set_field('local_ustar_adaptations', 'status', adaptation_service::STATUS_COMPLETED, ['id' => $id]);
+        try {
+            adaptation_service::reset_assignment($id, (int)$hrd->id, 'Отмена завершённой');
+            $this->fail('Completed adaptation must not be cancelled.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(adaptation_service::STATUS_COMPLETED, $DB->get_field('local_ustar_adaptations', 'status', ['id' => $id]));
+        }
+        $DB->set_field('local_ustar_adaptations', 'status', adaptation_service::STATUS_ESCALATED, ['id' => $id]);
+        $reportid = $DB->insert_record('local_ustar_workflow_events', (object)[
+            'entitytype' => 'adaptation', 'entityid' => $id, 'eventtype' => 'adaptation_final_report',
+            'actorid' => $employee->id, 'detailsjson' => json_encode(['round' => 1, 'perspective' => 'employee',
+                'mastered' => 'Обучение', 'risks' => 'Нужна практика', 'support' => 'Помощь', 'ready' => 'partly']),
+            'timecreated' => time(),
+        ]);
+        adaptation_service::reset_assignment($id, (int)$hrd->id, 'Переназначение');
+        $detail = adaptation_service::hr_control_context((int)$hrd->id, $id)['detail'];
+        $this->assertTrue($detail['hasemployeefinal']);
+        $this->assertTrue($DB->record_exists('local_ustar_workflow_events', ['id' => $reportid]));
+        try {
+            adaptation_service::take_case($id, 'old-case', (int)$hrd->id);
+            $this->fail('An old HRD form cannot act on a cancelled cycle.');
+        } catch (\invalid_parameter_exception $e) {
+            $this->assertSame(adaptation_service::STATUS_CANCELLED, $DB->get_field('local_ustar_adaptations', 'status', ['id' => $id]));
+        }
+    }
+
     public function test_existing_email_registration_stays_pending_until_hrd_approves(): void {
         global $DB;
         $manager = $this->employee('retail_head');

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026093001" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026100204" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1320,7 +1320,7 @@
       </FIELDS>
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
       <INDEXES>
-        <INDEX NAME="staffing_request_uix" UNIQUE="true" FIELDS="staffingrequestid" />
+        <INDEX NAME="staffing_request_idx" UNIQUE="false" FIELDS="staffingrequestid" />
         <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status" />
         <INDEX NAME="manager_status_idx" UNIQUE="false" FIELDS="managerid, status" />
         <INDEX NAME="assignment_idx" UNIQUE="false" FIELDS="assignmentid" />

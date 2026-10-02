@@ -14,7 +14,7 @@ const nativeLogin = `<div class="login-container"><div class="loginform"><form c
 function headContent() { return `<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,sans-serif}button,input,textarea,select{font:inherit}a{color:inherit}label{display:block}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.btn{display:inline-block;text-align:center;cursor:pointer}</style><link rel="stylesheet" href="/theme.css"><script defer src="/local/ustar/app.js"></script>`; }
 function head() { return `<!doctype html><html lang="ru"><head>${headContent()}</head>`; }
 function render(page, theme) {
-  const partials={'theme_boost/head':head(),'core/local/toast/wrapper':'','theme_boost/footer':'','local_ustar/messages_thread':template('local/ustar/templates/messages_thread.mustache')};
+  const partials={'theme_boost/head':head(),'core/local/toast/wrapper':'','theme_boost/footer':'','local_ustar/messages_thread':template('local/ustar/templates/messages_thread.mustache'),'local_ustar/adaptation_reset':template('local/ustar/templates/adaptation_reset.mustache')};
   if(page==='login'||page==='login-error'||page==='registration') {
     const register = `<div class="u-register"><h2>Регистрация в Академии</h2><p>Заявка будет направлена HRD.</p><form><div class="u-register-names"><label>Имя<input></label><label>Фамилия<input></label></div><label>Логин<input></label><label>Email<input type="email"></label><label>Пароль<input type="password"></label><label>Подразделение<select><option>Выберите подразделение</option></select></label><button class="btn btn-primary">Создать профиль</button></form></div>`;
     return Mustache.render(template('theme/ustar/templates/login.mustache'), {bodyattributes:'class="pagelayout-login ustar-auth-body"',starttitle:page==='registration'?'Создай профиль':'Начни с входа',loginreferenceurl:files+'login-reference-20260914.png',loginbackgroundurl:files+'login-background-20261002.webp',loginurl:'/login',signupurl:'/registration',signupenabled:page!=='registration',output:{main_content:page==='registration'?register:(page==='login-error'?'<div class="alert">Неверный логин или пароль</div>':'')+nativeLogin}},partials);
@@ -24,6 +24,10 @@ function render(page, theme) {
   if(page==='messages'||page==='messages-list'||page==='messages-disabled') {
     const current={id:10,title:'Рабочая команда магазина',isgroup:true,membercount:3,canmanage:true,members:[{id:11,fullname:'Сотрудник Один',removable:true}],cansend:true,hasmessages:true,messages:[{id:1,sender:'Сотрудник Один',text:'Обсудим обучение и рабочие вопросы.',time:'01.10 12:00'},{id:2,mine:true,sender:'Вы',text:'Медиа и документы в переписке',time:'01.10 12:01',attachments:[{name:'Фото.png',size:'24 КБ',image:true,url:files+'ustar-app-icon.png',downloadurl:files+'ustar-app-icon.png'}]}]};
     content=Mustache.render(template('local/ustar/templates/messages.mustache'),{available:page!=='messages-disabled',cancreate:true,hascurrent:page==='messages',current:page==='messages'?current:null,conversationid:page==='messages'?10:0,sesskey:'fixture',requestid:'fixture_request_000000000',apiurl:'/api',listurl:'/messages-list',maxbytes:25000000,maxsize:'25 МБ',maxpostbytes:50000000,hasconversations:true,conversations:[{id:10,title:'Рабочая команда магазина',url:'/messages',preview:'Медиа и документы',hasunread:true,unread:2},{id:11,title:'Коллега',preview:'Последнее сообщение',url:'/messages'}]},partials);
+  } else if(page==='adaptation-control') {
+    const current={id:1,employee:'Сотрудник Тестовый',manager:'Руководитель Тестовый',position:'Продавец-кассир',statuslabel:'Активна',canreset:true,plannedworkdays:10,paireddays:0,detailurl:'/adaptation-control'};
+    const cycles=[current,{...current,id:2,canreset:false,statuslabel:'Завершена'},{...current,id:3,canreset:false,statuslabel:'Назначение отменено'}];
+    content='<style>'+template('local/ustar/styles/adaptation_control.css')+'</style>'+Mustache.render(template('local/ustar/templates/adaptation_control.mustache'),{operationsurl:'/team',controlurl:'/capture-reset',sesskey:'fixture',activecount:1,opencount:0,incontrolcount:0,criticalcount:0,hascycles:true,cycles,hasdetail:true,detail:current},partials);
   } else if(page==='achievements') {
     const rows=[{displayname:'Сотрудник Один',initials:'СО',avatarurl:files+'mascot-round.png',current:true,rank:1,points:600,medal:'🥇'},
       {displayname:'Сотрудница Без Фото',initials:'СБ',current:false,rank:2,points:0,medal:'🥈'}];
@@ -37,7 +41,7 @@ function render(page, theme) {
 const server=http.createServer((req,res)=>{
   const url=new URL(req.url,'http://localhost'), p=url.pathname;
   if(p==='/theme.css'){res.setHeader('Content-Type','text/css');return res.end(css);}
-  if(['/login','/login-error','/registration','/messages','/messages-list','/messages-disabled','/team','/achievements'].includes(p)){res.setHeader('Content-Type','text/html');return res.end(render(p.slice(1),url.searchParams.get('theme')||'light'));}
+  if(['/login','/login-error','/registration','/messages','/messages-list','/messages-disabled','/team','/achievements','/adaptation-control'].includes(p)){res.setHeader('Content-Type','text/html');return res.end(render(p.slice(1),url.searchParams.get('theme')||'light'));}
   if(p==='/api'){res.setHeader('Content-Type','application/json');return res.end(JSON.stringify({ok:true,html:'',signature:'fixture',cansend:true}));}
   const file=path.join(repo,'moodle',p);
   if(file.startsWith(path.join(repo,'moodle')+'/')&&fs.existsSync(file)&&fs.statSync(file).isFile()){res.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':file.endsWith('.webp')?'image/webp':'image/png');return fs.createReadStream(file).pipe(res);}
@@ -50,7 +54,7 @@ const server=http.createServer((req,res)=>{
   const evidence=[];
   try {
     for(const width of [320,390,768,1366,1920]) {
-      for(const scenario of ['login','login-error','registration','messages','messages-list','messages-disabled','team','achievements', ...([390,1366].includes(width)?['login?theme=dark','registration?theme=dark','messages?theme=dark','messages-list?theme=dark','team?theme=dark','achievements?theme=dark']:[])]) {
+      for(const scenario of ['login','login-error','registration','messages','messages-list','messages-disabled','team','achievements','adaptation-control', ...([390,1366].includes(width)?['login?theme=dark','registration?theme=dark','messages?theme=dark','messages-list?theme=dark','team?theme=dark','achievements?theme=dark','adaptation-control?theme=dark']:[])]) {
         const name=scenario.split('?')[0],theme=scenario.includes('dark')?'dark':'light';
         const page=await browser.newPage({viewport:{width,height:844}}),errors=[];
         page.on('pageerror',e=>errors.push(e.message));
@@ -71,6 +75,18 @@ const server=http.createServer((req,res)=>{
           assert(Math.abs(a.height-art.height)<1&&Math.abs(a.y-art.y)<1,'Empty bands around login artwork');
           assert(Math.abs(art.width/art.height-712/837)<0.002,'Artwork proportions changed');
           assert((await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage)).includes('login-background-20261002.webp'),'Missing supplied login backdrop');
+        }
+        if(name==='adaptation-control') {
+          assert.strictEqual(await page.locator('.u-adapt-reset').count(),2,'Reset must appear for the active cycle in registry and detail only');
+          await page.locator('.u-adapt-reset summary').first().click();
+          const form=page.locator('.u-adapt-reset form').first();
+          assert(await form.isVisible(),'Reset form did not open');
+          assert.strictEqual(await form.locator('input[name=adaptationid]').inputValue(),'1');
+          await form.locator('textarea').fill('Ошибочное назначение адаптации');
+          assert.strictEqual(await form.evaluate(el=>el.checkValidity()),false,'Confirmation is required');
+          await form.locator('input[name=confirmreset]').check();
+          assert.strictEqual(await form.evaluate(el=>el.checkValidity()),true);
+          assert((await page.evaluate(()=>document.documentElement.scrollWidth))<=width+1,'Expanded reset form overflows');
         }
         if(name==='achievements') {
           assert.strictEqual(await page.locator('.u-leaderboard-avatar img').count(),2);

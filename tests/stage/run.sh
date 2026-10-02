@@ -27,13 +27,16 @@ install_sources /source/.stage-input/baseline/moodle
 php /source/tests/stage/register_baseline_capabilities.php > /artifacts/baseline-preparation.log 2>&1
 php admin/cli/upgrade.php --non-interactive > /artifacts/install-baseline.log 2>&1
 php /source/tests/stage/board_migration_fixture.php seed > /artifacts/board-seed.log 2>&1
+USTAR_STAGE_PREFIX=stage_ php /source/tests/stage/adaptation_reset_fixture.php seed > /artifacts/adaptation-reset-seed.log 2>&1
 USTAR_STAGE_PREFIX=stage_ bash /source/tests/stage/authenticated_shell_smoke.sh broken-baseline 2>&1 | tee /artifacts/authenticated-shell-baseline.log
 install_sources /source/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/upgrade.log 2>&1
 php /source/tests/stage/board_migration_fixture.php verify > /artifacts/board-upgrade.log 2>&1
+USTAR_STAGE_PREFIX=stage_ php /source/tests/stage/adaptation_reset_fixture.php verify > /artifacts/adaptation-reset-upgrade.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/schema-upgraded.json
 php admin/cli/upgrade.php --non-interactive > /artifacts/upgrade-repeat.log 2>&1
 php /source/tests/stage/board_migration_fixture.php verify > /artifacts/board-repeat.log 2>&1
+USTAR_STAGE_PREFIX=stage_ php /source/tests/stage/adaptation_reset_fixture.php verify > /artifacts/adaptation-reset-repeat.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/schema-repeat.json
 cmp /artifacts/schema-upgraded.json /artifacts/schema-repeat.json
 USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/install-fresh.log 2>&1

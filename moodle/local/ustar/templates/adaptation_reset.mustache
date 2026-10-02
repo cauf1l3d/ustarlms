@@ -1,0 +1,15 @@
+{{#canreset}}
+<details class="u-adapt-reset">
+    <summary class="u-btn">Сбросить назначение</summary>
+    <form method="post" action="{{controlurl}}">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <input type="hidden" name="action" value="resetassignment">
+        <input type="hidden" name="adaptationid" value="{{id}}">
+        <strong>Сброс назначения: {{employee}}</strong>
+        <p>Текущий цикл будет отменён. Заполненные листы и история сохранятся. Руководитель сможет назначить новый цикл.</p>
+        <label>Причина сброса<textarea name="reason" rows="2" required maxlength="2000"></textarea></label>
+        <label class="u-adapt-reset__confirm"><input type="checkbox" name="confirmreset" value="1" required> Подтверждаю отмену этого назначения</label>
+        <button class="u-btn u-btn--primary" type="submit">Подтвердить сброс</button>
+    </form>
+</details>
+{{/canreset}}

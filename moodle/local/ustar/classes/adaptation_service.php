@@ -26,10 +26,14 @@ final class adaptation_service {
     private const EVENT_CASE_OPEN = 'adaptation_case_open';
     private const EVENT_CASE_TAKEN = 'adaptation_case_taken';
     private const EVENT_CASE_RESOLVED = 'adaptation_case_resolved';
+    private const EVENT_ASSIGNMENT_RESET = 'adaptation_assignment_reset';
 
     public static function for_staffing_request(int $requestid): ?\stdClass {
         global $DB;
-        return $DB->get_record('local_ustar_adaptations', ['staffingrequestid' => $requestid]) ?: null;
+        return $DB->get_record_sql(
+            'SELECT * FROM {local_ustar_adaptations} WHERE staffingrequestid = :requestid ORDER BY id DESC',
+            ['requestid' => $requestid], IGNORE_MULTIPLE
+        ) ?: null;
     }
 
     public static function active_for_user(int $userid): ?\stdClass {
@@ -123,6 +127,11 @@ final class adaptation_service {
     }
 
     public static function assign_from_request(int $requestid, int $managerid, string $startdate, int $plannedworkdays): int {
+        return self::locked_transaction('adaptation-request-' . $requestid,
+            static fn() => self::assign_from_request_locked($requestid, $managerid, $startdate, $plannedworkdays));
+    }
+
+    private static function assign_from_request_locked(int $requestid, int $managerid, string $startdate, int $plannedworkdays): int {
         global $DB, $USER;
 
         if ($managerid <= 0 || (int)$USER->id !== $managerid
@@ -154,7 +163,8 @@ final class adaptation_service {
                 'Адаптацию можно назначить только после кадрового подтверждения сотрудника его текущим руководителем'
             );
         }
-        if (self::for_staffing_request($requestid)) {
+        $previous = self::for_staffing_request($requestid);
+        if ($previous && (string)$previous->status !== self::STATUS_CANCELLED) {
             throw new \invalid_parameter_exception('Адаптационный чек по этой заявке уже назначен');
         }
         if ($startdate < (string)$offer['startdate']) {
@@ -164,7 +174,6 @@ final class adaptation_service {
         }
 
         $now = time();
-        $transaction = $DB->start_delegated_transaction();
         $id = (int)$DB->insert_record('local_ustar_adaptations', (object)[
             'staffingrequestid' => $requestid,
             'userid' => (int)$offer['userid'],
@@ -198,7 +207,6 @@ final class adaptation_service {
             'startdate' => $startdate,
             'plannedworkdays' => $plannedworkdays,
         ]);
-        $transaction->allow_commit();
         return $id;
     }
 
@@ -486,6 +494,16 @@ final class adaptation_service {
 
     /** Synchronise deterministic HRD escalation signals from current adaptation facts. */
     public static function sync_cases(\stdClass $adaptation): void {
+        self::final_decision_transaction((int)$adaptation->id, static function() use ($adaptation): void {
+            global $DB;
+            $current = $DB->get_record('local_ustar_adaptations', ['id' => $adaptation->id], '*', MUST_EXIST);
+            if ((string)$current->status !== self::STATUS_CANCELLED) {
+                self::sync_cases_locked($current);
+            }
+        });
+    }
+
+    private static function sync_cases_locked(\stdClass $adaptation): void {
         $map = self::submissions($adaptation);
         $today = self::today();
         $dates = self::factual_dates($map);
@@ -612,7 +630,9 @@ final class adaptation_service {
             'id' => (int)$adaptation->id,
             'active' => $active,
             'escalated' => $escalated,
-            'statuslabel' => $escalated ? 'Передано HRD' : ($dailycomplete ? 'Ежедневные листы завершены' : 'Активна'),
+            'statuslabel' => (string)$adaptation->status === self::STATUS_CANCELLED ? 'Назначение отменено'
+                : ((string)$adaptation->status === self::STATUS_COMPLETED ? 'Завершена'
+                    : ($escalated ? 'Передано HRD' : ($dailycomplete ? 'Ежедневные листы завершены' : 'Активна'))),
             'startdate' => userdate(strtotime((string)$adaptation->startdate . ' 12:00:00'), '%d.%m.%Y'),
             'plannedworkdays' => (int)$adaptation->plannedworkdays,
             'daynumber' => $day,
@@ -799,6 +819,11 @@ final class adaptation_service {
     }
 
     public static function submit_daily(int $adaptationid, int $actorid, array $input): int {
+        self::require_participant_actor($actorid);
+        return self::final_decision_transaction($adaptationid, static fn() => self::submit_daily_locked($adaptationid, $actorid, $input));
+    }
+
+    private static function submit_daily_locked(int $adaptationid, int $actorid, array $input): int {
         global $DB;
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
         if ((string)$adaptation->status !== self::STATUS_ACTIVE) {
@@ -867,8 +892,16 @@ final class adaptation_service {
     }
 
     public static function resolve_daily_issue(int $adaptationid, int $actorid, int $submissionid, string $note): void {
+        self::require_participant_actor($actorid);
+        self::final_decision_transaction($adaptationid, static fn() => self::resolve_daily_issue_locked($adaptationid, $actorid, $submissionid, $note));
+    }
+
+    private static function resolve_daily_issue_locked(int $adaptationid, int $actorid, int $submissionid, string $note): void {
         global $DB;
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
+        if ((string)$adaptation->status === self::STATUS_CANCELLED) {
+            throw new \invalid_parameter_exception('Назначение адаптации отменено');
+        }
         if ((int)$adaptation->managerid !== $actorid) {
             throw new \required_capability_exception(\context_system::instance(), 'local/ustar:viewteam', 'nopermissions', '');
         }
@@ -896,6 +929,11 @@ final class adaptation_service {
     }
 
     public static function submit_final_report(int $adaptationid, int $actorid, array $input): int {
+        self::require_participant_actor($actorid);
+        return self::final_decision_transaction($adaptationid, static fn() => self::submit_final_report_locked($adaptationid, $actorid, $input));
+    }
+
+    private static function submit_final_report_locked(int $adaptationid, int $actorid, array $input): int {
         global $DB;
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
         if ((string)$adaptation->status !== self::STATUS_ACTIVE) {
@@ -937,25 +975,81 @@ final class adaptation_service {
         return $id;
     }
 
-    /** Serialize final decisions and commit state, events and case changes together. */
-    private static function final_decision_transaction(int $adaptationid, callable $command): void {
-        global $DB;
-        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
-            ->get_lock('adaptation-final-' . $adaptationid, 10);
-        if (!$lock) {
-            throw new \moodle_exception('Итоговое решение по адаптации уже обрабатывается. Повторите попытку.');
+    /** Bind participant commands to the real, active session before acquiring a lock. */
+    private static function require_participant_actor(int $actorid): void {
+        global $USER;
+        if ($actorid !== (int)$USER->id || !team_access::active_actor($actorid)) {
+            throw new \required_capability_exception(\context_system::instance(), 'local/ustar:use', 'nopermissions', '');
         }
+        require_capability('local/ustar:use', \context_system::instance());
+        view_as::assert_writable();
+    }
+
+    /** Share one cycle lock for submissions, decisions, reconciliation and cancellation. */
+    private static function final_decision_transaction(int $adaptationid, callable $command): mixed {
+        return self::locked_transaction('adaptation-final-' . $adaptationid, $command);
+    }
+
+    private static function locked_transaction(string $key, callable $command): mixed {
+        global $DB;
+        static $held = [];
+        if (isset($held[$key])) {
+            return $command();
+        }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock($key, 10);
+        if (!$lock) {
+            throw new \moodle_exception('Операция по адаптации уже обрабатывается. Повторите попытку.');
+        }
+        $held[$key] = true;
         try {
             $transaction = $DB->start_delegated_transaction();
             try {
-                $command();
+                $result = $command();
                 $transaction->allow_commit();
+                return $result;
             } catch (\Throwable $e) {
                 $transaction->rollback($e);
             }
         } finally {
+            unset($held[$key]);
             $lock->release();
         }
+    }
+
+    /** Cancel the assignment, retaining submissions, reports and the source staffing request. */
+    public static function reset_assignment(int $adaptationid, int $actorid, string $reason): void {
+        self::require_hrd_actor($actorid);
+        $reason = clean_param(trim($reason), PARAM_TEXT);
+        if ($reason === '') {
+            throw new \invalid_parameter_exception('Укажите причину сброса назначения');
+        }
+        self::final_decision_transaction($adaptationid, static function() use ($adaptationid, $actorid, $reason): void {
+            global $DB;
+            $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
+            $previous = (string)$adaptation->status;
+            if ($previous === self::STATUS_CANCELLED) {
+                return;
+            }
+            if (!in_array($previous, [self::STATUS_ACTIVE, self::STATUS_ESCALATED], true)) {
+                throw new \invalid_parameter_exception('Можно сбросить только действующее назначение адаптации');
+            }
+            $adaptation->status = self::STATUS_CANCELLED;
+            $adaptation->timemodified = time();
+            $DB->update_record('local_ustar_adaptations', $adaptation);
+            $eventid = self::event($adaptationid, self::EVENT_ASSIGNMENT_RESET, $actorid, $reason, [
+                'previousstatus' => $previous, 'requestid' => (int)$adaptation->staffingrequestid,
+            ]);
+            foreach (self::case_states($adaptationid) as $fingerprint => $case) {
+                if ($case['status'] !== 'resolved') {
+                    self::event($adaptationid, self::EVENT_CASE_RESOLVED, $actorid,
+                        'Назначение отменено: ' . $reason, ['fingerprint' => $fingerprint]);
+                }
+            }
+            people::log_action($actorid, (int)$adaptation->userid, 'adaptation_assignment_reset', [
+                'adaptationid' => $adaptationid, 'requestid' => (int)$adaptation->staffingrequestid,
+                'previousstatus' => $previous, 'reason' => $reason, 'eventid' => $eventid,
+            ]);
+        });
     }
 
     public static function manager_final_decision(int $adaptationid, int $actorid, string $decision, string $reason, int $extensiondays = 0): void {
@@ -1051,8 +1145,16 @@ final class adaptation_service {
 
     public static function take_case(int $adaptationid, string $fingerprint, int $actorid): void {
         self::require_hrd_actor($actorid);
+        self::final_decision_transaction($adaptationid, static fn() => self::take_case_locked($adaptationid, $fingerprint, $actorid));
+    }
+
+    private static function take_case_locked(int $adaptationid, string $fingerprint, int $actorid): void {
+        self::require_hrd_actor($actorid);
         global $DB;
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
+        if ((string)$adaptation->status === self::STATUS_CANCELLED) {
+            throw new \invalid_parameter_exception('Назначение адаптации отменено');
+        }
         self::sync_cases($adaptation);
         $states = self::case_states($adaptationid);
         if (!isset($states[$fingerprint]) || $states[$fingerprint]['status'] === 'resolved') {
@@ -1065,8 +1167,16 @@ final class adaptation_service {
 
     public static function resolve_case(int $adaptationid, string $fingerprint, int $actorid, string $resolution): void {
         self::require_hrd_actor($actorid);
+        self::final_decision_transaction($adaptationid, static fn() => self::resolve_case_locked($adaptationid, $fingerprint, $actorid, $resolution));
+    }
+
+    private static function resolve_case_locked(int $adaptationid, string $fingerprint, int $actorid, string $resolution): void {
+        self::require_hrd_actor($actorid);
         global $DB;
         $adaptation = $DB->get_record('local_ustar_adaptations', ['id' => $adaptationid], '*', MUST_EXIST);
+        if ((string)$adaptation->status === self::STATUS_CANCELLED) {
+            throw new \invalid_parameter_exception('Назначение адаптации отменено');
+        }
         self::sync_cases($adaptation);
         $states = self::case_states($adaptationid);
         if (!isset($states[$fingerprint]) || $states[$fingerprint]['status'] === 'resolved') {
@@ -1166,7 +1276,8 @@ final class adaptation_service {
                 'manager' => $manager ? fullname($manager) : ('#' . (int)$adaptation->managerid),
                 'position' => (string)($positions[(string)$adaptation->positionid]['name'] ?? $adaptation->positionid),
                 'status' => $status,
-                'statuslabel' => $status === self::STATUS_ACTIVE ? 'Активна' : ($status === self::STATUS_ESCALATED ? 'На решении HRD' : ($status === self::STATUS_COMPLETED ? 'Завершена' : $status)),
+                'statuslabel' => $status === self::STATUS_ACTIVE ? 'Активна' : ($status === self::STATUS_ESCALATED ? 'На решении HRD' : ($status === self::STATUS_COMPLETED ? 'Завершена' : ($status === self::STATUS_CANCELLED ? 'Назначение отменено' : $status))),
+                'canreset' => in_array($status, [self::STATUS_ACTIVE, self::STATUS_ESCALATED], true),
                 'active' => $status === self::STATUS_ACTIVE,
                 'escalated' => $status === self::STATUS_ESCALATED,
                 'completed' => $status === self::STATUS_COMPLETED,
@@ -1255,6 +1366,15 @@ final class adaptation_service {
         $round = self::current_round($adaptationid);
         $finals = self::final_reports($adaptationid, $round);
         $states = self::case_states($adaptationid);
+        $reset = [];
+        foreach (self::events($adaptationid) as $event) {
+            if ((string)$event->eventtype === self::EVENT_ASSIGNMENT_RESET) {
+                $actor = $DB->get_record('user', ['id' => $event->actorid], 'id,firstname,lastname', IGNORE_MISSING);
+                $reset = ['resetreason' => (string)$event->reason,
+                    'resetby' => $actor ? fullname($actor) : ('#' . $event->actorid),
+                    'resetat' => userdate((int)$event->timecreated, '%d.%m.%Y %H:%M')];
+            }
+        }
         $detailcases = [];
         foreach ($states as $state) {
             if ($state['status'] === 'resolved') {
@@ -1273,6 +1393,8 @@ final class adaptation_service {
             'manager' => $manager ? fullname($manager) : ('#' . (int)$adaptation->managerid),
             'position' => (string)($positions[(string)$adaptation->positionid]['name'] ?? $adaptation->positionid),
             'status' => (string)$adaptation->status,
+            'canreset' => in_array((string)$adaptation->status, [self::STATUS_ACTIVE, self::STATUS_ESCALATED], true),
+            'cancelled' => (string)$adaptation->status === self::STATUS_CANCELLED,
             'active' => (string)$adaptation->status === self::STATUS_ACTIVE,
             'escalated' => (string)$adaptation->status === self::STATUS_ESCALATED,
             'completed' => (string)$adaptation->status === self::STATUS_COMPLETED,
@@ -1290,6 +1412,6 @@ final class adaptation_service {
             // HRD reviews the full adaptation dossier here. The generic HR employee
             // editor has a different permission boundary and is intentionally not linked.
             'profileurl' => '',
-        ];
+        ] + $reset;
     }
 }

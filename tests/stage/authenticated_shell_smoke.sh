@@ -42,4 +42,5 @@ for page in home notebook catalog messages; do
     ' "/artifacts/shell-$page.html" "$page"
 done
 bash /source/tests/stage/chat_http_smoke.sh
+bash /source/tests/stage/adaptation_reset_http_smoke.sh
 echo 'AUTHENTICATED_SHELL_HTTP=PASS'

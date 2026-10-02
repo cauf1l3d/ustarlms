@@ -499,7 +499,7 @@ final class staffing_requests {
                     && $status === self::STATUS_APPROVED) {
                 $adaptation = adaptation_service::for_staffing_request((int)$record->id);
             }
-            $adaptationoffer = !$adaptation
+            $adaptationoffer = (!$adaptation || (string)$adaptation->status === adaptation_service::STATUS_CANCELLED)
                 ? adaptation_service::assignment_offer($record, $viewerid)
                 : null;
 

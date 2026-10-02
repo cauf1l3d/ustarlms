@@ -14,6 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = required_param('action', PARAM_ALPHANUMEXT);
     try {
         $adaptationid = required_param('adaptationid', PARAM_INT);
+        if ($action === 'resetassignment') {
+            if (!optional_param('confirmreset', false, PARAM_BOOL)) {
+                throw new \invalid_parameter_exception('Подтвердите сброс назначения');
+            }
+            \local_ustar\adaptation_service::reset_assignment($adaptationid, (int)$USER->id, required_param('reason', PARAM_TEXT));
+            redirect(new moodle_url('/local/ustar/adaptation_control.php', ['adaptationid' => $adaptationid]),
+                'Назначение адаптации отменено. История сохранена; руководитель может назначить новый цикл.',
+                null, \core\output\notification::NOTIFY_SUCCESS);
+        }
         if ($action === 'takecase') {
             \local_ustar\adaptation_service::take_case($adaptationid, required_param('fingerprint', PARAM_RAW_TRIMMED), (int)$USER->id);
             redirect(new moodle_url('/local/ustar/adaptation_control.php', ['adaptationid' => $adaptationid]), 'Эскалация взята в контроль', null, \core\output\notification::NOTIFY_SUCCESS);
@@ -33,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $data = \local_ustar\adaptation_service::hr_control_context((int)$USER->id, $selectedid);
 $data['sesskey'] = sesskey();
+$data['controlurl'] = (new moodle_url('/local/ustar/adaptation_control.php'))->out(false);
 $data['operationsurl'] = (new moodle_url('/local/ustar/operations.php'))->out(false);
 
 $PAGE->set_context($context);

@@ -4899,5 +4899,19 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true,2026093005,'local','ustar');
     }
+    if ($oldversion < 2026100204) {
+        // Multiple historical cycles may reference one approved request after explicit cancellation.
+        // Request-level command locking prevents two live assignments for the same request.
+        $table = new xmldb_table('local_ustar_adaptations');
+        $unique = new xmldb_index('staffing_request_uix', XMLDB_INDEX_UNIQUE, ['staffingrequestid']);
+        if ($dbman->index_exists($table, $unique)) {
+            $dbman->drop_index($table, $unique);
+        }
+        $index = new xmldb_index('staffing_request_idx', XMLDB_INDEX_NOTUNIQUE, ['staffingrequestid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+        upgrade_plugin_savepoint(true, 2026100204, 'local', 'ustar');
+    }
 return true;
 }

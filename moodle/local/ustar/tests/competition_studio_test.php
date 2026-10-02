@@ -49,4 +49,40 @@ final class competition_studio_test extends \advanced_testcase {
         $this->assertArrayNotHasKey('userid',$personal['rows'][0]);
     }
 
+    public function test_participants_see_real_names_in_existing_season_but_outsiders_and_inactive_accounts_do_not(): void {
+        global $USER, $DB;
+        $operator = (int)$USER->id;
+        $first = $this->getDataGenerator()->create_user(['firstname' => 'First', 'lastname' => 'Seller']);
+        $second = $this->getDataGenerator()->create_user(['firstname' => 'Second', 'lastname' => 'Seller']);
+        $outsider = $this->getDataGenerator()->create_user(['firstname' => 'Outside', 'lastname' => 'Season']);
+        foreach ([$first, $second] as $user) {
+            $place = $DB->insert_record('local_ustar_staff_places', (object)[
+                'placecode' => 'named_season_' . $user->id, 'positionid' => 'retail_seller', 'departmentid' => 'retail']);
+            $DB->insert_record('local_ustar_assignments', (object)[
+                'userid' => $user->id, 'staffplaceid' => $place, 'assignmenttype' => 'primary']);
+        }
+        $id = competition::create_draft('named_fixture', 'Named season', 'retail', time()-60, time()+600, 1, $operator);
+        competition::publish($id, $operator);
+        // Model the already-published production season without migrating its legacy privacy metadata.
+        $DB->set_field('local_ustar_competitions', 'privacy', 'pseudonymous', ['id' => $id]);
+        $this->setUser($first);
+        $personal = competition::current_for_user($first->id);
+        $this->assertSame(['First Seller', 'Second Seller'], array_column($personal['rows'], 'displayname'));
+        $this->assertSame('First Seller', $personal['current']['displayname']);
+        $this->assertSame('FS', $personal['current']['initials']);
+        $this->assertTrue($personal['rows'][0]['current']);
+        $this->assertFalse($personal['rows'][1]['current']);
+        $this->assertSame([1, 1], array_column($personal['rows'], 'rank'));
+        $this->assertArrayNotHasKey('userid', $personal['rows'][0]);
+        $this->assertSame('Рейтинг участников сезона', $personal['privacylabel']);
+        $this->setUser($outsider);
+        $this->assertNull(competition::current_for_user($outsider->id));
+        $this->setUser($first);
+        $DB->set_field('user', 'suspended', 1, ['id' => $second->id]);
+        $this->assertCount(1, competition::current_for_user($first->id)['rows']);
+        $this->assertNull(competition::current_for_user($second->id));
+        $DB->set_field('local_ustar_comp_participants', 'status', 'left', ['competitionid' => $id, 'userid' => $first->id]);
+        $this->assertNull(competition::current_for_user($first->id));
+    }
+
 }

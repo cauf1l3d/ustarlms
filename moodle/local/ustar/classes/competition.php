@@ -29,7 +29,7 @@ final class competition {
         $competitionid = (int)$DB->insert_record('local_ustar_competitions', (object)[
             'code' => $code, 'title' => $title, 'status' => 'draft',
             'audiencekind' => 'department', 'audiencevalue' => $departmentid,
-            'privacy' => 'pseudonymous', 'tiepolicy' => 'shared_place',
+            'privacy' => 'named', 'tiepolicy' => 'shared_place',
             'startat' => $startat, 'endat' => $endat, 'activeversionid' => null,
             'ownerid' => $ownerid, 'timecreated' => $now, 'timemodified' => $now,
         ]);
@@ -149,7 +149,7 @@ final class competition {
         }
     }
 
-    /** Return a pseudonymous, comparable leaderboard only to a participant. */
+    /** Return a named, comparable leaderboard only to an active season participant. */
     public static function current_for_user(int $userid): ?array {
         global $DB;
         if (!self::available() || !accounts::participates($userid)) {
@@ -173,7 +173,7 @@ final class competition {
         $rule = $DB->get_record('local_ustar_comp_rules', ['id' => $participant->activeversionid], 'versionno', MUST_EXIST);
         return [
             'title' => (string)$participant->title, 'enddate' => userdate((int)$participant->endat, '%d.%m.%Y'),
-            'privacylabel' => 'Псевдонимный рейтинг участников', 'ruleversion' => (int)$rule->versionno,
+            'privacylabel' => 'Рейтинг участников сезона', 'ruleversion' => (int)$rule->versionno,
             'rows' => $rows, 'current' => current(array_filter($rows, static fn(array $row): bool => !empty($row['current']))) ?: null,
         ];
     }
@@ -323,6 +323,13 @@ final class competition {
         $records = array_filter($records, static fn(\stdClass $record): bool =>
             accounts::participates((int)$record->userid)
         );
+        // Fetch names only after the season and employment boundaries have filtered participants.
+        $users = [];
+        if ($records) {
+            [$insql, $params] = $DB->get_in_or_equal(array_column($records, 'userid'), SQL_PARAMS_NAMED);
+            $users = $DB->get_records_select('user', 'id ' . $insql, $params, '',
+                'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename');
+        }
         $counts = [];
         foreach ($records as $record) {
             $counts[(string)$record->points] = ($counts[(string)$record->points] ?? 0) + 1;
@@ -339,8 +346,9 @@ final class competition {
             $current = $viewerid > 0 && (int)$record->userid === $viewerid;
             $rows[] = [
                 'participantid' => (int)$record->participantid, 'rank' => $rank, 'points' => $points,
-                'displayname' => $current ? 'Вы' : (string)$record->publiclabel,
-                'initials' => $current ? 'Вы' : ui::initials('Участник', (string)$record->publiclabel),
+                'displayname' => isset($users[$record->userid]) ? fullname($users[$record->userid]) : 'Удалённая учётная запись',
+                'initials' => isset($users[$record->userid])
+                    ? ui::initials($users[$record->userid]->firstname, $users[$record->userid]->lastname) : '?',
                 'current' => $current, 'sharedplace' => $counts[(string)$points] > 1,
             ];
         }

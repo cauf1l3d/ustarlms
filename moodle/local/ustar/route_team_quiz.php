@@ -76,11 +76,13 @@ $selected = [];
 $usedpositions = [];
 
 foreach ($people as $person) {
-    $pid = (string)$person['positionid'];
+    $key = \local_ustar\team_quiz::position_key(
+        (string)$positionmap[$person['positionid']]['name']
+    );
 
-    if (!isset($usedpositions[$pid])) {
+    if (!isset($usedpositions[$key])) {
         $selected[] = $person;
-        $usedpositions[$pid] = true;
+        $usedpositions[$key] = true;
     }
 
     if (count($selected) >= 6) {
@@ -111,34 +113,8 @@ if (count($selected) < 4) {
     }
 }
 
-/*
- * Position option pool.
- * Real positions only.
- */
-$optionmap = [];
-
-foreach ($selected as $person) {
-    $optionmap[$person['positionid']] =
-        $person['position'];
-}
-
-/*
- * Add plausible distractors until we have enough choices.
- */
-foreach ($positionmap as $pid => $position) {
-    if (count($optionmap) >= 8) {
-        break;
-    }
-
-    if (
-        empty($position['name'])
-    ) {
-        continue;
-    }
-
-    $optionmap[(string)$pid] =
-        (string)$position['name'];
-}
+// One visible answer for equivalent names, keeping canonical organization IDs intact.
+$optionmap = \local_ustar\team_quiz::options($selected, $positionmap);
 
 $submitted =
     $_SERVER['REQUEST_METHOD'] === 'POST';
@@ -169,7 +145,9 @@ foreach ($selected as $i => $person) {
     $correct =
         $submitted
         &&
-        $answer === $person['positionid'];
+        \local_ustar\team_quiz::answer_matches(
+            $answer, (string)$person['positionid'], $positionmap
+        );
 
     if ($correct) {
         $score++;
@@ -179,10 +157,10 @@ foreach ($selected as $i => $person) {
 
     foreach ($optionmap as $pid => $label) {
         $options[] = [
-            'id' => $pid,
+            'id' => (string)$pid,
             'name' => $label,
             'selected' =>
-                $answer === $pid,
+                \local_ustar\team_quiz::answer_matches($answer, (string)$pid, $positionmap),
         ];
     }
 

@@ -8,9 +8,16 @@ $file = '/artifacts/adaptation-reset-upgrade-seed.json';
 $table = new xmldb_table('local_ustar_adaptations');
 $admin = get_admin();
 
+// database_manager::index_exists matches columns only, ignoring index name and uniqueness.
+function staffing_indexes(): array {
+    global $DB;
+    return array_values(array_filter($DB->get_indexes('local_ustar_adaptations'),
+        static fn(array $index): bool => $index['columns'] === ['staffingrequestid']));
+}
+
 if ($mode === 'seed' || $mode === 'http') {
-    if ($mode === 'seed' && !$DB->get_manager()->index_exists($table,
-            new xmldb_index('staffing_request_uix', XMLDB_INDEX_UNIQUE, ['staffingrequestid']))) {
+    $indexes = staffing_indexes();
+    if ($mode === 'seed' && (count($indexes) !== 1 || !$indexes[0]['unique'])) {
         throw new RuntimeException('OLD_UNIQUE_INDEX_NOT_EXERCISED');
     }
     $userid = $mode === 'http' ? (int)$DB->get_field('user', 'id', ['username' => 'chatone'], MUST_EXIST) : (int)$admin->id;
@@ -48,8 +55,8 @@ if ($mode === 'seed' || $mode === 'http') {
             || !$DB->record_exists('local_ustar_check_submits', ['id' => $seed['submissionid']])) {
         throw new RuntimeException('ADAPTATION_HISTORY_CHANGED_BY_UPGRADE');
     }
-    if ($DB->get_manager()->index_exists($table, new xmldb_index('staffing_request_uix', XMLDB_INDEX_UNIQUE, ['staffingrequestid']))
-            || !$DB->get_manager()->index_exists($table, new xmldb_index('staffing_request_idx', XMLDB_INDEX_NOTUNIQUE, ['staffingrequestid']))) {
+    $indexes = staffing_indexes();
+    if (count($indexes) !== 1 || $indexes[0]['unique']) {
         throw new RuntimeException('ADAPTATION_INDEX_MIGRATION_FAILED');
     }
     if (empty($seed['newid'])) {

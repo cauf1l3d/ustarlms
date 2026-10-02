@@ -51,7 +51,10 @@ install_sources /source/moodle
 USTAR_STAGE_PREFIX=pr63_ php admin/cli/upgrade.php --non-interactive > /artifacts/upgrade-pr63.log 2>&1
 USTAR_STAGE_PREFIX=pr63_ php /source/tests/stage/workspace_roles_fixture.php after > /artifacts/pr63-roles-after.log 2>&1
 USTAR_STAGE_PREFIX=pr63_ php admin/cli/upgrade.php --non-interactive > /artifacts/upgrade-pr63-repeat.log 2>&1
-USTAR_STAGE_PREFIX=stage_ bash /source/tests/stage/authenticated_shell_smoke.sh 2>&1 | tee /artifacts/authenticated-shell.log
+httpresult=0
+if ! USTAR_STAGE_PREFIX=stage_ bash /source/tests/stage/authenticated_shell_smoke.sh 2>&1 | tee /artifacts/authenticated-shell.log; then
+    httpresult=1
+fi
 php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/phpunit-init.log 2>&1
 # /stage is disposable tmpfs. Invoke Composer's PHP proxy explicitly so the
 # test gate does not depend on the executable bit / mount exec policy.
@@ -61,6 +64,7 @@ php vendor/bin/phpunit \
     --fail-on-notice \
     --log-junit /artifacts/phpunit.xml \
     2>&1 | tee /artifacts/phpunit.log
+test "$httpresult" = 0
 php -r 'echo "PHP=" . PHP_VERSION . PHP_EOL;' > /artifacts/runtime.txt
 git rev-parse HEAD >> /artifacts/runtime.txt
 psql -h db -U ustar_fixture -d ustar_stage1 -Atc 'SELECT version();' >> /artifacts/runtime.txt

@@ -8,7 +8,12 @@ COOKIE=/artifacts/shell-cookies.txt
 id=$(php /source/tests/stage/adaptation_reset_fixture.php http)
 [[ $id =~ ^[0-9]+$ ]]
 url="$WEBROOT/local/ustar/adaptation_control.php?adaptationid=$id"
-curl -fsS -b "$COOKIE" "$url" -o /artifacts/adaptation-reset-before.html
+code=$(curl -sS -b "$COOKIE" "$url" -o /artifacts/adaptation-reset-before.html -w '%{http_code}')
+if [[ $code != 200 ]]; then
+    echo "ADAPTATION_RESET_GET_FAILED=$code"
+    php -r 'echo strip_tags(file_get_contents("/artifacts/adaptation-reset-before.html")),PHP_EOL;'
+    exit 1
+fi
 key=$(php -r '$s=file_get_contents("/artifacts/adaptation-reset-before.html");if(!preg_match("/name=\"sesskey\" value=\"([^\"]+)\"/",$s,$m)||strpos($s,"Сбросить назначение")===false||preg_match("/Debug info:|Stack trace:|codingerror/",$s)){exit(1);}echo html_entity_decode($m[1]);')
 # GET and invalid CSRF cannot cancel a cycle.
 curl -sS -b "$COOKIE" "$url&action=resetassignment&confirmreset=1&reason=GET" -o /artifacts/adaptation-reset-get.html

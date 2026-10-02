@@ -90,8 +90,14 @@
     {
       "path": "context/archive/handoff_20261002/README.md",
       "domain": "archive",
-      "size": 2519,
-      "sha256": "75cda61f02413489d0126c0b961790212ce716ef4b648281b3b8b51dd6bc9f08"
+      "size": 3441,
+      "sha256": "54dc3426f0e8836daab60a347409fb6c971124635a7cc44c0d06cb61c06c36c9"
+    },
+    {
+      "path": "context/archive/handoff_20261002/branch_inventory.json",
+      "domain": "archive",
+      "size": 24235,
+      "sha256": "b0423b1c0a54ea2292b2644847cbe680d9eee8eaa30690f6b8d1ece2068ee7a7"
     },
     {
       "path": "context/archive/handoff_20261002/pr26/AGENTS.md",

@@ -11,3 +11,7 @@
 62 открытых PR имели head в ancestry PR76. Пять отдельных documentation PR9/19/23/26/65 заменены текущим handoff с сохранением уникального материала. PR1 — историческая альтернативная ветка forced retraining; её файлы сравнивались с текущим кодом, который содержит последующие lifecycle/ACL/cancellation исправления. Возврат старой реализации не нужен. Исторические refs не удаляются: release installers ссылаются на них, и они сохраняют provenance.
 
 Закрытие старого PR означает включение/замену в консолидированной базе, а не принятие каждого старого пункта аудита и не production deploy. Точный runtime status находится в RELEASE_LEDGER. Относительные ссылки внутри архивных копий сохраняют исходный текст и могут указывать на их прежнее расположение; для навигации использовать текущие entrypoints.
+
+## Ветки вне PR-цепочки
+
+`branch_inventory.json` фиксирует 94 remote branches до публикации handoff. Альтернативные stage2 scaffolds от 21.09 не входят в ancestry PR76: их дополнительные employee_context/capability_matrix/consumer_access классы не считать действующей архитектурой и не добавлять автоматически. Действующие access_context/employment/organization_identity проверяются по main. Две ветки install-only/PR68 содержат старые установщики; snapshot/production-20260923T111550Z — исторический снимок, включая backup remnant, не новый release. Все эти refs сохранены, без слепого слияния и без заявления об их runtime-приёмке.

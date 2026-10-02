@@ -2,14 +2,14 @@
     <header class="u-knowledge-head">
         <div>
             <p class="u-pagehead__eyebrow">USTAR Knowledge</p>
-            <h1>База знаний</h1>
-            <p>Регламенты, инструкции и рабочие материалы, доступные именно вам.</p>
+            <h1>Моя библиотека</h1>
+            <p>Изученные материалы маршрута и файлы, которые вы сохранили из ленты.</p>
         </div>
         <div class="u-knowledge-count"><strong>{{total}}</strong><span>доступно</span></div>
     </header>
 
-    <section class="u-knowledge-cockpit" aria-label="Сводка базы знаний">
-        <article class="u-knowledge-metric">{{{knowledgeicon}}}<div><strong>{{total}}</strong><span>доступных материалов</span></div></article>
+    <section class="u-knowledge-cockpit" aria-label="Сводка личной библиотеки">
+        <article class="u-knowledge-metric">{{{knowledgeicon}}}<div><strong>{{total}}</strong><span>в личной библиотеке</span></div></article>
         <article class="u-knowledge-metric">{{{checkicon}}}<div><strong>{{needsactioncount}}</strong><span>нужно ознакомиться</span></div></article>
         <article class="u-knowledge-metric">{{{clockicon}}}<div><strong>{{recentcount}}</strong><span>обновлено недавно</span></div></article>
         <article class="u-knowledge-metric">{{{searchicon}}}<div><strong>{{categorycount}}</strong><span>категорий в доступе</span></div></article>
@@ -52,12 +52,47 @@
 
     {{#hasregularmaterials}}
     <section class="u-knowledge-library-zone">
-        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Для вашей роли</p><h2>Вся база</h2></div></header>
+        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Личная история</p><h2>Все изученные материалы</h2></div></header>
         <div class="u-knowledge-grid">{{#regularmaterials}}{{> local_ustar/knowledge_card }}{{/regularmaterials}}</div>
     </section>
     {{/hasregularmaterials}}
 
+    {{#hasfeedfiles}}
+    <section class="u-knowledge-library-zone" id="saved-feed-files">
+        <header class="u-knowledge-section-head"><div><p class="u-sectionhead__eyebrow">Моя коллекция</p><h2>Сохранено из ленты</h2></div><strong>{{feedfilecount}}</strong></header>
+        <div class="u-knowledge-grid">
+            {{#feedfiles}}
+            <article class="u-knowledge-card">
+                <div class="u-knowledge-card__meta"><span>Файл из ленты</span><span>{{size}}</span></div>
+                <div class="u-knowledge-card__titleline">{{{knowledgeicon}}}<h2>{{title}}</h2></div>
+                <p class="u-knowledge-card__summary">Личная копия вложения публикации.</p>
+                <footer><small>Сохранено · {{date}}</small><a class="u-btn u-btn--primary" href="{{url}}">Скачать</a></footer>
+                <form method="post" action="{{removeurl}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="action" value="removefeedfile">
+                    <input type="hidden" name="savedid" value="{{id}}">
+                    <button type="submit" class="u-btn u-btn--secondary">Убрать из библиотеки</button>
+                </form>
+            </article>
+            {{/feedfiles}}
+        </div>
+        {{#hasmorefeedfiles}}<a class="u-btn u-btn--secondary" href="{{nextfeedurl}}#saved-feed-files">Ещё сохранённые файлы</a>{{/hasmorefeedfiles}}
+    </section>
+    {{/hasfeedfiles}}
+
     {{^hasmaterials}}
-    <div class="u-knowledge-empty"><strong>По текущим фильтрам ничего не найдено</strong><p>Доступ к материалам определяется вашими правилами доступа, должностью и подразделением.</p></div>
+    <div class="u-knowledge-empty" role="status">
+        {{{knowledgeicon}}}
+        {{#hasactivefilters}}
+        <strong>Ничего не найдено</strong>
+        <p>В личной библиотеке нет материалов, соответствующих поиску или выбранным фильтрам.</p>
+        <a class="u-btn" href="{{reseturl}}">Сбросить поиск и фильтры</a>
+        {{/hasactivefilters}}
+        {{^hasactivefilters}}
+        <strong>В личной библиотеке пока ничего нет</strong>
+        <p>Откройте материал маршрута или сохраните вложение публикации из ленты.</p>
+        <a class="u-btn u-btn--primary" href="{{learningurl}}">Перейти к моему маршруту</a>
+        {{/hasactivefilters}}
+    </div>
     {{/hasmaterials}}
 </div>

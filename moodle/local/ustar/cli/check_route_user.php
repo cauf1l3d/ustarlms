@@ -11,16 +11,16 @@ require_once($CFG->libdir . '/clilib.php');
     'help' => false,
     'userid' => 0,
     'email' => '',
-    'positionid' => 'retail_seller',
+    'positionid' => '',
 ], ['h' => 'help']);
 
 if ($unrecognized) {
     cli_error('Неизвестные параметры: ' . implode(', ', $unrecognized));
 }
 if (!empty($options['help'])) {
-    echo "USTAR Learning Route 2.0: проверка маршрута пользователя\n\n";
-    echo "php check_route_user.php --userid=123 [--positionid=retail_seller]\n";
-    echo "php check_route_user.php --email=user@example.com [--positionid=retail_seller]\n";
+    echo "USTAR Learning Route: только сохранённое состояние, без синхронизации и записи\n\n";
+    echo "php check_route_user.php --userid=123 [--positionid=position_code]\n";
+    echo "php check_route_user.php --email=user@example.com [--positionid=position_code]\n";
     exit(0);
 }
 
@@ -31,8 +31,16 @@ if ($userid <= 0 && trim((string)$options['email']) !== '') {
 if ($userid <= 0 || !$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])) {
     cli_error('USER_NOT_FOUND');
 }
-$positionid = clean_param((string)$options['positionid'], PARAM_ALPHANUMEXT);
-$route = \local_ustar\route_model::for_user($positionid, $userid);
+$positionid = clean_param(trim((string)$options['positionid']), PARAM_ALPHANUMEXT);
+if ($positionid === '') {
+    $positionid = \local_ustar\people::position_id($userid);
+}
+if ($positionid === '') {
+    cli_error('POSITION_NOT_AVAILABLE');
+}
+// for_user() reconciles completion and may enrol a real employee. Diagnostics
+// must read persisted state without advancing a route or delivering rewards.
+$route = \local_ustar\route_model::read_only_snapshot($positionid, $userid);
 if (empty($route['ok'])) {
     cli_error('ROUTE_NOT_AVAILABLE reason=' . (string)($route['reason'] ?? 'unknown'));
 }
@@ -40,18 +48,15 @@ if (empty($route['ok'])) {
 echo 'USER_ID=' . $userid . PHP_EOL;
 echo 'POSITION=' . $positionid . PHP_EOL;
 echo 'ROUTE=' . (string)$route['name'] . PHP_EOL;
-echo 'ADAPTATION=' . (int)$route['adaptationdone'] . '/' . (int)$route['adaptationtotal'] . ' (' . (int)$route['adaptationprogress'] . '%)' . PHP_EOL;
-echo 'ADMITTED=' . (!empty($route['admitted']) ? 'YES' : 'NO') . PHP_EOL;
-echo 'CONTINUOUS_PENDING=' . (int)$route['continuouspending'] . PHP_EOL;
-echo 'FRESHNESS=' . (int)$route['freshness'] . '%' . PHP_EOL;
+echo 'PERSISTED_PROGRESS=' . (int)$route['donepoints'] . '/' . (int)$route['totalpoints']
+    . ' (' . (int)$route['progress'] . '%)' . PHP_EOL;
 foreach ($route['points'] as $point) {
     echo sprintf(
-        "POINT=%02d phase=%s version=v%d status=%s title=%s\n",
-        (int)$point['number'],
-        (string)$point['phase'],
-        (int)$point['versionno'],
+        "POINT_ID=%d version_id=%d status=%s title=%s\n",
+        (int)$point['id'],
+        (int)$point['versionid'],
         (string)$point['status'],
         (string)$point['title']
     );
 }
-echo "ROUTE_USER_CHECK=OK\n";
+echo "PERSISTED_SNAPSHOT_ONLY=YES\nROUTE_USER_CHECK=OK\n";

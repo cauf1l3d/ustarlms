@@ -1,0 +1,21 @@
+migration:
+  phase:
+    current: baseline_creation
+
+steps:
+
+  - id: M001
+    name: Git baseline
+    status: in_progress
+
+  - id: M002
+    name: Dynamic AI Context foundation
+    status: in_progress
+
+  - id: M003
+    name: Route patch integration
+    status: pending
+
+  - id: M004
+    name: Organization domain migration
+    status: pending

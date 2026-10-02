@@ -1,11 +1,14 @@
-measured_at: '2026-09-12T20:48:24.575590+00:00'
-dirroot: /var/www/html/public
-php: 8.3.33
-moodle_db: '2025100601.03'
-moodle_disk: '2025100601.03'
-moodle_release: '5.1.1+ (Build: 20251219)'
-ustar_db: '2026082730'
-ustar_disk: '2026082730'
-postgres: 16.15 (Debian 16.15-1.pgdg13+2)
-host_root: /opt/ustar/data/moodle/public/public
-ustar_db_matches_disk: true
+kind: runtime_path_contract
+reviewed_at: '2026-10-02'
+measured_now: false
+container: ustar_moodle
+host_mount: /opt/ustar/data/moodle/public
+container_mount: /var/www/html
+host_public_root: /opt/ustar/data/moodle/public/public
+container_public_root: /var/www/html/public
+core_cli: /var/www/html/admin/cli
+theme_source_parent: boost
+production_theme_setting: null
+production_versions: null
+isolated_reference: tests/stage/runtime.json
+deployment_evidence: context/runtime/RELEASE_LEDGER.md

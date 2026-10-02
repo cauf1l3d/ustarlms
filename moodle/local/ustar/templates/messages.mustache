@@ -1,68 +1,82 @@
-<div class="u-product-page">
-    <header class="u-product-head">
-        <div><p class="u-page-kicker">Communication</p><h1>Сообщения</h1><p>Рабочие диалоги на Moodle messaging — внутри интерфейса USTAR.</p></div>
-        {{{messageicon}}}
-    </header>
-
-    <div class="u-messenger">
-        <aside class="u-messenger-list">
-            <form class="u-messenger-search" method="get">
-                {{{searchicon}}}<input type="search" name="q" value="{{searchq}}" placeholder="Найти сотрудника..." aria-label="Найти сотрудника">
+<div class="u-product-page u-chat-page" data-chat-root data-conversation="{{conversationid}}" data-api="{{apiurl}}" data-sesskey="{{sesskey}}">
+    <header class="u-product-head u-chat-page-head">
+        <div><p class="u-page-kicker">Общение</p><h1>Сообщения</h1><p>Рабочие диалоги, медиа и групповые чаты.</p></div>
+        {{#cancreate}}
+        <details class="u-chat-create"><summary class="u-btn u-btn--primary">Новый групповой чат</summary>
+            <form method="post" class="u-chat-group-form" data-chat-picker>
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="create">
+                <label>Название чата<input name="name" maxlength="100" required placeholder="Например, команда магазина"></label>
+                <label>Добавить коллег<input type="search" data-chat-person-search placeholder="Имя или фамилия — от 2 букв" autocomplete="off"></label>
+                <div data-chat-person-results role="status" aria-live="polite"></div><div data-chat-selected></div>
+                <p class="u-chat-hint">Выберите не менее двух коллег. До 100 участников вместе с вами. Новые участники видят историю чата.</p>
+                <button class="u-btn u-btn--primary" type="submit">Создать чат</button>
             </form>
-
-            {{#searched}}
-            <div class="u-messenger-search-results">
-                <small>Начать диалог</small>
-                {{#searchresults}}
-                <form method="post">
-                    <input type="hidden" name="sesskey" value="{{sesskey}}">
-                    <input type="hidden" name="action" value="start">
-                    <input type="hidden" name="userid" value="{{id}}">
+        </details>{{/cancreate}}
+    </header>
+    {{#notice}}<p class="u-inline-notice" role="alert">{{notice}}</p>{{/notice}}
+    {{^available}}<div class="u-inline-notice">Общение недоступно в режиме просмотра другой роли, до подтверждения регистрации или при отключённых сообщениях.</div>{{/available}}
+    {{#available}}
+    <div class="u-messenger {{#hascurrent}}has-current{{/hascurrent}}">
+        <aside class="u-messenger-list" aria-label="Диалоги">
+            <form class="u-messenger-search" method="get">
+                {{{searchicon}}}<input type="search" name="q" value="{{searchq}}" placeholder="Найти сотрудника…" aria-label="Найти сотрудника">
+                <button class="u-btn u-btn--small" type="submit">Найти</button>
+            </form>
+            {{#searched}}<div class="u-messenger-search-results"><small>Начать диалог</small>
+                {{#searchresults}}<form method="post">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="start"><input type="hidden" name="userid" value="{{id}}">
                     <button type="submit" class="u-search-person"><span>{{initials}}</span><strong>{{fullname}}</strong></button>
-                </form>
-                {{/searchresults}}
-                {{^hassearchresults}}<p>Совпадений нет.</p>{{/hassearchresults}}
-            </div>
-            {{/searched}}
-
+                </form>{{/searchresults}}
+                {{#searcherror}}<p role="alert">{{searcherror}}</p>{{/searcherror}}
+                {{^searcherror}}{{^hassearchresults}}<p>Доступные коллеги не найдены. Введите хотя бы две буквы.</p>{{/hassearchresults}}{{/searcherror}}
+            </div>{{/searched}}
             <div class="u-conversation-list">
-                {{#conversations}}
-                <a href="{{url}}" class="u-conversation-row {{#hasunread}}has-unread{{/hasunread}}">
-                    <div><strong>{{title}}</strong><span>{{preview}}</span></div>
-                    <div><time>{{time}}</time>{{#hasunread}}<b>{{unread}}</b>{{/hasunread}}</div>
-                </a>
-                {{/conversations}}
-                {{^hasconversations}}<div class="u-empty-mini">Диалогов пока нет. Найдите сотрудника выше.</div>{{/hasconversations}}
+                {{#conversations}}<a href="{{url}}" data-conversation-id="{{id}}" class="u-conversation-row {{#hasunread}}has-unread{{/hasunread}}">
+                    <div><strong>{{title}}</strong><span>{{preview}}</span></div><div><time>{{time}}</time>{{#hasunread}}<b>{{unread}}</b>{{/hasunread}}</div>
+                </a>{{/conversations}}
+                {{^hasconversations}}<div class="u-empty-mini">Диалогов пока нет. Найдите коллегу или создайте групповой чат.</div>{{/hasconversations}}
+                {{#haspreviouschats}}<a class="u-chat-history" href="{{previouschatsurl}}">← Предыдущие диалоги</a>{{/haspreviouschats}}
+                {{#hasmorechats}}<a class="u-chat-history" href="{{morechatsurl}}">Следующие диалоги →</a>{{/hasmorechats}}
             </div>
         </aside>
-
-        <section class="u-messenger-thread">
-            {{#hascurrent}}
+        <section class="u-messenger-thread" aria-label="Переписка">
             {{#current}}
-            <header class="u-thread-head"><div><p class="u-page-kicker">Диалог</p><h2>{{title}}</h2></div></header>
-            <div class="u-thread-messages">
-                {{#messages}}
-                <article class="u-message-bubble {{#mine}}is-mine{{/mine}}">
-                    <small>{{sender}}</small><div>{{{text}}}</div><time>{{time}}</time>
-                </article>
-                {{/messages}}
-                {{^hasmessages}}<div class="u-empty-mini">Напишите первое сообщение.</div>{{/hasmessages}}
-            </div>
+            <header class="u-thread-head">
+                <a class="u-chat-back u-btn u-btn--small" href="{{listurl}}" aria-label="Назад к диалогам">← Диалоги</a>
+                <div><h2>{{title}}</h2>{{#isgroup}}<small>{{membercount}} участников</small>{{/isgroup}}</div>
+                {{#isgroup}}<details class="u-chat-members"><summary class="u-btn u-btn--small">Участники</summary><div class="u-chat-members-panel">
+                    <p class="u-chat-hint">При добавлении коллеги ему доступна вся история. После удаления доступ к сообщениям и файлам закрывается.</p>
+                    <div class="u-chat-member"><strong>Вы</strong></div>
+                    {{#members}}<div class="u-chat-member"><span>{{fullname}}</span>{{#canmanage}}{{#removable}}<form method="post">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="remove"><input type="hidden" name="conversationid" value="{{conversationid}}"><input type="hidden" name="members[]" value="{{id}}">
+                        <button class="u-btn u-btn--small" type="submit">Убрать</button>
+                    </form>{{/removable}}{{/canmanage}}</div>{{/members}}
+                    {{#canmanage}}
+                    <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="conversationid" value="{{id}}"><input type="hidden" name="action" value="rename">
+                        <label>Название<input name="name" maxlength="100" required value="{{title}}"></label><button class="u-btn" type="submit">Переименовать</button>
+                    </form>
+                    <form method="post" data-chat-picker><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="conversationid" value="{{id}}"><input type="hidden" name="action" value="add">
+                        <label>Добавить коллег<input type="search" data-chat-person-search placeholder="Имя или фамилия" autocomplete="off"></label>
+                        <div data-chat-person-results role="status" aria-live="polite"></div><div data-chat-selected></div><button class="u-btn" type="submit">Добавить</button>
+                    </form>{{/canmanage}}
+                </div></details>{{/isgroup}}
+            </header>
+            <div class="u-thread-messages" data-chat-messages data-older="{{isolder}}">{{> local_ustar/messages_thread}}</div>
             {{#cansend}}
-            <form method="post" class="u-message-compose">
-                <input type="hidden" name="sesskey" value="{{sesskey}}">
-                <input type="hidden" name="action" value="send">
-                <input type="hidden" name="conversationid" value="{{id}}">
-                <textarea name="message" rows="2" maxlength="4000" required placeholder="Написать сообщение..."></textarea>
-                <button class="u-btn u-btn--primary" type="submit">Отправить</button>
-            </form>
-            {{/cansend}}
-            {{^cansend}}<div class="u-inline-notice"><div><strong>Отправка недоступна</strong><p>Диалог доступен для чтения, но текущие настройки Moodle не разрешают отправку сообщений этому получателю.</p></div></div>{{/cansend}}
+            <form method="post" enctype="multipart/form-data" class="u-message-compose" data-chat-compose data-maxbytes="{{maxbytes}}" data-maxpostbytes="{{maxpostbytes}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="send"><input type="hidden" name="conversationid" value="{{id}}"><input type="hidden" name="requestid" value="{{requestid}}">
+                <textarea name="message" rows="2" maxlength="4000" placeholder="Написать сообщение…" aria-label="Сообщение">{{draft}}</textarea>
+                <div class="u-chat-uploads" data-chat-uploads></div><progress max="100" value="0" hidden aria-label="Загрузка вложений"></progress>
+                <div class="u-chat-compose-actions"><label class="u-btn u-chat-file-button">＋ Вложение<input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov,.mp3,.m4a,.ogg,.wav,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" aria-label="Прикрепить медиа или файлы"></label>
+                    <button class="u-btn u-btn--primary" type="submit">Отправить</button></div>
+                <p class="u-chat-hint">До 5 файлов по {{maxsize}}, всего до 50 МБ. Ctrl/⌘ + Enter — отправить.</p>
+                <p data-chat-status role="status" aria-live="polite"></p>
+            </form>{{/cansend}}
+            {{^cansend}}<div class="u-inline-notice">Чат доступен для чтения. Отправка сейчас недоступна.</div>{{/cansend}}
             {{/current}}
-            {{/hascurrent}}
-            {{^hascurrent}}
-            <div class="u-thread-empty">{{{messageicon}}}<h2>Выберите диалог</h2><p>Или найдите сотрудника слева, чтобы начать новый.</p></div>
-            {{/hascurrent}}
+            {{^hascurrent}}<div class="u-thread-empty">{{{messageicon}}}<h2>Выберите диалог</h2><p>Или найдите коллегу, чтобы начать разговор.</p></div>{{/hascurrent}}
         </section>
     </div>
+    <noscript><p>Для загрузки медиа и выбора участников включите JavaScript. Личные текстовые сообщения доступны и без него.</p></noscript>
+    {{/available}}
 </div>

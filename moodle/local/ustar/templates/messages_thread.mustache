@@ -1,0 +1,17 @@
+{{#hasolder}}<a class="u-chat-history" href="{{olderurl}}">↑ Предыдущие сообщения</a>{{/hasolder}}
+{{#isolder}}<a class="u-chat-history" href="{{newerurl}}">Более новые сообщения ↓</a>{{/isolder}}
+{{#messages}}
+<article class="u-message-bubble {{#mine}}is-mine{{/mine}}" data-message-id="{{id}}">
+    <small>{{sender}}</small><div>{{{text}}}</div>
+    {{#attachments}}
+    <div class="u-chat-attachment">
+        {{#image}}<a href="{{url}}" target="_blank" rel="noopener"><img src="{{url}}" alt="{{name}}" loading="lazy"></a>{{/image}}
+        {{#video}}<video controls playsinline preload="none" src="{{url}}" aria-label="{{name}}"></video>{{/video}}
+        {{#audio}}<audio controls preload="none" src="{{url}}" aria-label="{{name}}"></audio>{{/audio}}
+        <a class="u-chat-download" href="{{downloadurl}}">{{name}} <small>{{size}} · Скачать</small></a>
+    </div>
+    {{/attachments}}
+    <time>{{time}}</time>
+</article>
+{{/messages}}
+{{^hasmessages}}<div class="u-thread-empty"><h2>Начните разговор</h2><p>Напишите сообщение или приложите медиа.</p></div>{{/hasmessages}}

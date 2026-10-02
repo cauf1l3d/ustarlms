@@ -1,0 +1,21 @@
+domain: messaging
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Личные/групповые чаты, media и уведомления
+services:
+- moodle/local/ustar/classes/communication.php
+- moodle/local/ustar/classes/chat_groups.php
+- moodle/local/ustar/classes/chat_files.php
+- moodle/local/ustar/classes/workflow_notifications.php
+tables:
+- local_ustar_notifications
+- local_ustar_notify_delivery
+rules:
+- Native Moodle messaging owns messages, conversations and memberships
+- Message attachments in File API; access rechecks membership and per-user deletion
+- All messages API actions require real session actor, POST and sesskey
+- External Bitrix delivery is not claimed as working
+entry_points:
+- moodle/local/ustar/messages.php
+- moodle/local/ustar/messages_api.php
+- moodle/local/ustar/notifications.php

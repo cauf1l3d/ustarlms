@@ -34,23 +34,7 @@ class content {
         int $userid
     ): bool {
 
-        $context =
-            \context_system::instance();
-
-        return
-            is_siteadmin($userid)
-            ||
-            has_capability(
-                'local/ustar:admin',
-                $context,
-                $userid
-            )
-            ||
-            has_capability(
-                'local/ustar:hr',
-                $context,
-                $userid
-            );
+        return capabilities::has($userid, capabilities::MATERIALS_READ_ALL);
     }
 
 
@@ -161,6 +145,9 @@ class content {
         int $userid
     ): bool {
         global $DB;
+        if (!capabilities::has($userid, capabilities::LEARNING_USE) && !self::is_elevated($userid)) {
+            return false;
+        }
 
         if (
             self::is_elevated(
@@ -805,7 +792,8 @@ class content {
      */
     public static function acknowledge(
         int $contentid,
-        int $userid
+        int $userid,
+        int $expectedversionid
     ): bool {
         global $DB;
 
@@ -824,92 +812,40 @@ class content {
         }
 
 
-        $content =
-            $DB->get_record(
-                'local_ustar_content',
-                [
-                    'id' =>
-                        $contentid,
-                ],
-                '*',
-                MUST_EXIST
+        // Lock the same content row as publication so a version switch cannot
+        // occur between verifying the page the learner saw and recording it.
+        $tx = $DB->start_delegated_transaction();
+        try {
+            $content = $DB->get_record_sql(
+                'SELECT * FROM {local_ustar_content} WHERE id = :id FOR UPDATE',
+                ['id' => $contentid], MUST_EXIST
             );
-
-
-        if (
-            empty(
-                $content->ackrequired
-            )
-        ) {
+            $version = self::current_version($contentid);
+            if ($expectedversionid <= 0 || !$version
+                    || (int)$version->id !== $expectedversionid
+                    || empty($version->iscurrent)
+                    || (string)$version->status !== self::STATUS_PUBLISHED
+                    || (string)$content->status !== self::STATUS_PUBLISHED) {
+                throw new \moodle_exception('Версия материала изменилась. Откройте материал заново перед подтверждением.');
+            }
+            if (empty($content->ackrequired)) {
+                $tx->allow_commit();
+                return true;
+            }
+            if (!$DB->record_exists('local_ustar_content_ack', [
+                    'userid' => $userid, 'versionid' => $expectedversionid])) {
+                $now = time();
+                $DB->insert_record('local_ustar_content_ack', (object)[
+                    'contentid' => $contentid, 'versionid' => $expectedversionid,
+                    'userid' => $userid, 'acktime' => $now,
+                    'method' => 'manual', 'timecreated' => $now,
+                ]);
+            }
+            $tx->allow_commit();
             return true;
+        } catch (\Throwable $e) {
+            $tx->rollback($e);
         }
-
-
-        $version =
-            self::current_version(
-                $contentid
-            );
-
-
-        if (
-            !$version
-            ||
-            empty($version->iscurrent)
-            ||
-            $version->status
-                !==
-                self::STATUS_PUBLISHED
-        ) {
-            throw new \moodle_exception(
-                'Текущая опубликованная версия отсутствует'
-            );
-        }
-
-
-        if (
-            $DB->record_exists(
-                'local_ustar_content_ack',
-                [
-                    'userid' =>
-                        $userid,
-
-                    'versionid' =>
-                        $version->id,
-                ]
-            )
-        ) {
-            return true;
-        }
-
-
-        $now = time();
-
-
-        $DB->insert_record(
-            'local_ustar_content_ack',
-            (object)[
-                'contentid' =>
-                    $contentid,
-
-                'versionid' =>
-                    $version->id,
-
-                'userid' =>
-                    $userid,
-
-                'acktime' =>
-                    $now,
-
-                'method' =>
-                    'manual',
-
-                'timecreated' =>
-                    $now,
-            ]
-        );
-
-
-        return true;
     }
 
 

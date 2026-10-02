@@ -1,0 +1,33 @@
+/* Academy 3D pack: decorative feature imagery, never action/navigation icons. */
+.u-academy-illustration {
+    display: block;
+    flex: 0 0 auto;
+    max-width: 100%;
+    object-fit: contain;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.u-product-head > .u-academy-illustration,
+.u-product-head__actions > .u-academy-illustration {
+    filter: drop-shadow(0 10px 14px rgba(19, 25, 45, .14));
+}
+
+.u-badge-card > .u-academy-illustration,
+.u-game-card .u-academy-illustration,
+.u-feature-card .u-academy-illustration,
+.u-home-tool .u-academy-illustration {
+    filter: drop-shadow(0 6px 9px rgba(19, 25, 45, .12));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .u-feature-card:hover .u-academy-illustration,
+    .u-home-tool:hover .u-academy-illustration,
+    .u-game-card:hover .u-academy-illustration {
+        transform: translateY(-2px);
+        transition: transform 160ms ease;
+    }
+}

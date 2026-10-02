@@ -13,14 +13,23 @@ use local_ustar\structure;
  */
 class hr_get_workspace extends base {
     public static function execute_parameters(): external_function_parameters {
-        return new external_function_parameters([]);
+        return new external_function_parameters([
+            'scope' => new external_value(PARAM_ALPHA, 'full or learning', VALUE_DEFAULT, 'full'),
+        ]);
     }
 
-    public static function execute(): array {
+    public static function execute(string $scope = 'full'): array {
         global $DB;
         self::guard();
         require_capability('local/ustar:hr', \context_system::instance());
+        $params = self::validate_parameters(self::execute_parameters(), ['scope' => $scope]);
+        if (!in_array($params['scope'], ['full', 'learning'], true)) {
+            throw new \invalid_parameter_exception('Неизвестный набор данных HR');
+        }
 
+        if ($params['scope'] === 'learning') {
+            return self::learning_model();
+        }
         $st = structure::get(structure::NAME_STRUCTURE);
         $positions = array_values($st['positions'] ?? []);
         $departments = array_values($st['departments'] ?? []);
@@ -32,14 +41,7 @@ class hr_get_workspace extends base {
             $posmap[$p['id']] = $p;
         }
 
-        $sql = "SELECT u.id, u.username, u.firstname, u.lastname, u.email, u.department AS profiledepartment,
-                       u.suspended, u.lastaccess, TRIM(d.data) AS positionid
-                  FROM {user} u
-             LEFT JOIN {user_info_field} f ON f.shortname = 'ustar_position'
-             LEFT JOIN {user_info_data} d ON d.userid = u.id AND d.fieldid = f.id
-                 WHERE u.deleted = 0 AND u.id > 1
-              ORDER BY u.lastname, u.firstname";
-        $records = $DB->get_records_sql($sql);
+        $records = \local_ustar\organization_directory::users(false);
 
         $people = [];
         $assigned = 0;
@@ -49,7 +51,10 @@ class hr_get_workspace extends base {
             $occupancy[$p['id']] = 0;
         }
         foreach ($records as $u) {
-            $positionid = trim((string)$u->positionid);
+            if (!\local_ustar\accounts::is_business_account((int)$u->id)) {
+                continue;
+            }
+            $positionid = (string)$u->positionid;
             $p = $posmap[$positionid] ?? null;
             if ($p) {
                 $assigned++;
@@ -64,9 +69,10 @@ class hr_get_workspace extends base {
                 'firstname' => $u->firstname,
                 'lastname' => $u->lastname,
                 'email' => $u->email,
-                'profileDepartment' => trim((string)$u->profiledepartment),
+                'profileDepartment' => trim((string)$u->department),
                 'suspended' => (bool)$u->suspended,
                 'lastaccess' => (int)$u->lastaccess,
+                'employmentStatus' => (string)$u->employmentstatus,
                 'positionid' => $p['id'] ?? '',
                 'position' => $p['name'] ?? '',
                 'department' => $p['department'] ?? '',
@@ -84,9 +90,10 @@ class hr_get_workspace extends base {
         }
         $coursemap = [];
         $courserows = [];
+        $modulecounts = self::course_module_counts();
         $allcourses = $DB->get_records_select('course', 'id <> :siteid', ['siteid' => SITEID], 'fullname ASC', 'id,fullname,shortname,idnumber,visible');
         foreach ($allcourses as $course) {
-            $modules = (int)$DB->count_records('course_modules', ['course' => $course->id]);
+            $modules = $modulecounts[(int)$course->id] ?? 0;
             $idnumber = trim((string)$course->idnumber);
             $row = [
                 'id' => (int)$course->id,
@@ -140,8 +147,13 @@ class hr_get_workspace extends base {
         $dbman = $DB->get_manager();
         if ($dbman->table_exists(new \xmldb_table('local_ustar_games'))) {
             $gamerecords = $DB->get_records('local_ustar_games', null, 'title ASC');
+            $questioncounts = [];
+            foreach ($DB->get_records_sql('SELECT gameid, COUNT(id) AS total
+                FROM {local_ustar_questions} WHERE active = 1 GROUP BY gameid') as $countrow) {
+                $questioncounts[(int)$countrow->gameid] = (int)$countrow->total;
+            }
             foreach ($gamerecords as $game) {
-                $qcount = (int)$DB->count_records('local_ustar_questions', ['gameid' => $game->id, 'active' => 1]);
+                $qcount = $questioncounts[(int)$game->id] ?? 0;
                 if ($game->active) {
                     $activegames++;
                 }
@@ -237,5 +249,56 @@ class hr_get_workspace extends base {
         return new \core_external\external_single_structure([
             'json' => new external_value(PARAM_RAW, 'Live USTAR HR workspace JSON'),
         ]);
+    }
+
+    /** Editor data without the employee directory, game hub or per-course queries. */
+    private static function learning_model(): array {
+        global $DB;
+        $record = $DB->get_record('local_ustar_structure', ['name' => structure::NAME_STRUCTURE],
+            'id,version,jsondata', IGNORE_MISSING);
+        $structure = $record ? json_decode((string)$record->jsondata, true) : structure::default_structure();
+        if (!is_array($structure)) {
+            throw new \moodle_exception('Модель структуры повреждена. Сохранение недоступно.');
+        }
+        $matrix = $structure['matrix'] ?? [];
+        $skills = [];
+        foreach ($structure['skills'] ?? [] as $skill) {
+            $id = (string)$skill['id'];
+            $skills[] = [
+                'id' => $id,
+                'name' => (string)$skill['name'],
+                'category' => (string)($skill['category'] ?? 'Общее'),
+                'courseRefs' => array_values($skill['courses'] ?? []),
+            ];
+        }
+        $modulecounts = self::course_module_counts();
+        $courses = [];
+        foreach ($DB->get_records_select('course', 'id <> :siteid', ['siteid' => SITEID],
+            'fullname ASC', 'id,fullname,shortname,idnumber,visible') as $course) {
+            $courses[] = [
+                'id' => (int)$course->id,
+                'idnumber' => (string)$course->idnumber,
+                'name' => (string)$course->fullname,
+                'shortname' => (string)$course->shortname,
+                'visible' => (bool)$course->visible,
+                'modules' => $modulecounts[(int)$course->id] ?? 0,
+            ];
+        }
+        return ['json' => json_encode([
+            'revision' => $record ? (int)$record->version : 0,
+            'positions' => array_values($structure['positions'] ?? []),
+            'skills' => $skills,
+            'matrix' => $matrix,
+            'courses' => $courses,
+        ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)];
+    }
+
+    private static function course_module_counts(): array {
+        global $DB;
+        $counts = [];
+        foreach ($DB->get_records_sql('SELECT course, COUNT(id) AS total FROM {course_modules} GROUP BY course') as $row) {
+            $counts[(int)$row->course] = (int)$row->total;
+        }
+        return $counts;
     }
 }

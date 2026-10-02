@@ -24,6 +24,10 @@ class save_goal extends base {
         $params = self::validate_parameters(self::execute_parameters(),
             compact('action', 'id', 'title', 'duedate'));
 
+        if (!in_array($params['action'], ['create', 'complete', 'delete'], true)) {
+            throw new \invalid_parameter_exception('Unknown goal action');
+        }
+
         if ($params['action'] === 'create') {
             if (trim($params['title']) === '') {
                 throw new \invalid_parameter_exception('Empty goal title');

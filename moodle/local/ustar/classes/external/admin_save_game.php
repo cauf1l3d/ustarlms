@@ -62,7 +62,7 @@ class admin_save_game extends base {
             throw new \invalid_parameter_exception('Questions must be an array');
         }
         foreach ($questions as $index => $question) {
-            if (!is_array($question) || trim((string)($question['question'] ?? '')) === '') {
+            if (!is_array($question) || trim(clean_param((string)($question['question'] ?? ''), PARAM_TEXT)) === '') {
                 throw new \invalid_parameter_exception('Every question must contain text');
             }
             $options = $question['options'] ?? null;
@@ -70,16 +70,42 @@ class admin_save_game extends base {
                 throw new \invalid_parameter_exception('Every Game Hub question must contain exactly four options');
             }
             foreach ($options as $option) {
-                if (trim((string)$option) === '') {
+                if (!is_scalar($option) || trim(clean_param((string)$option, PARAM_TEXT)) === '') {
                     throw new \invalid_parameter_exception('Game Hub options cannot be empty');
                 }
             }
-            $correctoption = (int)($question['correctOption'] ?? -1);
+            $correctvalue = $question['correctOption'] ?? null;
+            if (!(is_int($correctvalue) || (is_string($correctvalue) && preg_match('/^[0-3]$/D', $correctvalue)))) {
+                throw new \invalid_parameter_exception('Correct option must be an integer from 0 to 3');
+            }
+            $correctoption = (int)$correctvalue;
             if ($correctoption < 0 || $correctoption > 3) {
                 throw new \invalid_parameter_exception('Correct option must be between 0 and 3');
             }
         }
 
+        if (!empty($data['active']) && !array_filter($questions,
+                static fn(array $q): bool => !array_key_exists('active', $q) || !empty($q['active']))) {
+            throw new \invalid_parameter_exception('Нельзя опубликовать игру без активных вопросов');
+        }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')->get_lock('game-studio-save', 10);
+        if (!$lock) { throw new \moodle_exception('Игра уже сохраняется. Повторите попытку.'); }
+        try {
+        $transaction = $DB->start_delegated_transaction();
+        try {
+        $duplicate = $DB->get_record('local_ustar_games', ['code' => $code]);
+        if ($duplicate && (int)$duplicate->id !== $gameid) {
+            throw new \invalid_parameter_exception('Game code must be unique');
+        }
+        $ids = [];
+        foreach ($questions as $q) {
+            $qid = (int)($q['id'] ?? 0);
+            if ($qid > 0 && (isset($ids[$qid]) || !$gameid
+                    || !$DB->record_exists('local_ustar_questions', ['id' => $qid, 'gameid' => $gameid]))) {
+                throw new \invalid_parameter_exception('Вопрос не принадлежит игре или указан дважды');
+            }
+            if ($qid > 0) { $ids[$qid] = true; }
+        }
         $now = time();
         $record = (object)[
             'code' => $code,
@@ -132,11 +158,14 @@ class admin_save_game extends base {
             }
         }
 
+        $transaction->allow_commit();
         return ['json' => json_encode([
             'ok' => true,
             'gameid' => $gameid,
             'questionids' => $questionids,
         ], JSON_UNESCAPED_UNICODE)];
+        } catch (\Throwable $e) { $transaction->rollback($e); }
+        } finally { $lock->release(); }
     }
 
     public static function execute_returns() {

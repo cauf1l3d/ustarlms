@@ -1,0 +1,20 @@
+<div class="u-product-page u-competition-studio">
+    <header class="u-product-head"><div><p class="u-page-kicker">Game Economy</p><h1>Соревнования</h1><p>Сезон фиксирует сравнимую аудиторию и версию правила. Баллы соревнования не являются USCOIN и не зависят от его остатка.</p></div></header>
+    {{#hasnotice}}<div class="u-inline-notice u-inline-notice--success">{{notice}}</div>{{/hasnotice}}
+    {{#haserrors}}<div class="u-inline-notice u-inline-notice--error">{{#errors}}<div>{{.}}</div>{{/errors}}</div>{{/haserrors}}
+    <section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Новый сезон</p><h2>Создать черновик</h2></div></header>
+        <form method="post" class="u-form-grid"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="create">
+            <label>Код сезона<input name="code" required maxlength="64" placeholder="retail_summer_2026"></label>
+            <label>Название<input name="title" required maxlength="255" placeholder="Летний сезон магазина"></label>
+            <label>Сравнимая аудитория<select name="departmentid" required><option value="">Выберите отдел</option>{{#departments}}<option value="{{id}}">{{name}}</option>{{/departments}}</select></label>
+            <label>Баллов за 1 XP<input name="pointsperxp" type="number" min="1" max="100" value="1" required></label>
+            <label>Начало<input name="startdate" type="date" required></label>
+            <label>Окончание<input name="enddate" type="date" required></label>
+            <div><button class="u-btn" type="submit">Создать черновик</button></div>
+        </form>
+    </section>
+    <section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Lifecycle сезона</p><h2>Черновики и опубликованные сезоны</h2></div></header>
+        {{#hasrows}}<div class="u-rank-table">{{#rows}}<article class="u-rank-row"><div><strong>{{title}}</strong><small>{{code}} · {{audience}} · {{dates}}</small></div><span>{{participants}} участников</span><span>{{status}}</span><form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="competitionid" value="{{id}}">{{#canpublish}}<button class="u-btn u-btn--small" name="action" value="publish">Опубликовать</button>{{/canpublish}}{{#canclose}}<button class="u-btn u-btn--small" name="action" value="close">Закрыть</button>{{/canclose}}</form></article>{{/rows}}</div>{{/hasrows}}
+        {{^hasrows}}<div class="u-empty-mini">Сезонов ещё нет. Создайте черновик после согласования периода и отдела.</div>{{/hasrows}}
+    </section>
+</div>

@@ -6,6 +6,30 @@ require_login();
 $context = context_system::instance();
 require_capability('local/ustar:use', $context);
 
+if (\local_ustar\employment::resolve((int)$USER->id)['status'] === \local_ustar\employment::PENDING) {
+    redirect(new moodle_url('/local/ustar/profile.php'));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_sesskey();
+    \local_ustar\view_as::assert_writable();
+    $action = optional_param('action', '', PARAM_ALPHA);
+
+    if ($action === 'sync') {
+        $ownidentity = \local_ustar\structure::resolve_user((int)$USER->id);
+        $ownpositionid = (string)($ownidentity['position']['id'] ?? '');
+        if ($ownpositionid !== '' && \local_ustar\employment::learning_allowed((int)$USER->id)) {
+            \local_ustar\route_model::for_user($ownpositionid, (int)$USER->id);
+        }
+        redirect(new moodle_url('/local/ustar/route.php'));
+    }
+
+    if ($action === 'grade_request') {
+        \local_ustar\grade_promotion::request((int)$USER->id, 'manual');
+        redirect(new moodle_url('/local/ustar/route.php', ['graderequested' => 1]));
+    }
+}
+
 $iselevated = is_siteadmin() || has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context);
 $requestedposition = optional_param('position', '', PARAM_ALPHANUMEXT);
 
@@ -16,11 +40,15 @@ if ($iselevated && $requestedposition !== '') {
     $positionid = $requestedposition;
 }
 
+$previewing = ($iselevated && $requestedposition !== '') || \local_ustar\view_as::active();
 $route = null;
 if ($positionid !== '') {
     try {
-        $route = \local_ustar\route_model::for_user($positionid, (int)$USER->id);
+        $route = $previewing
+            ? \local_ustar\route_model::read_only_snapshot($positionid, (int)$USER->id)
+            : \local_ustar\route_model::for_user($positionid, (int)$USER->id, true);
     } catch (\Throwable $e) {
+        debugging('USTAR route read failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
         $route = ['ok' => false, 'reason' => 'runtime_error'];
     }
 }
@@ -38,17 +66,80 @@ if ($iselevated) {
     usort($positions, static fn(array $a, array $b): int => strcasecmp($a['name'], $b['name']));
 }
 
+$adaptation = null;
+$forcedretraining = [];
+$gradecard = null;
+
+if (!$previewing) {
+    try {
+        $adaptation = \local_ustar\adaptation_service::route_card((int)$USER->id, false);
+    } catch (\Throwable $e) {
+        $adaptation = null;
+    }
+
+    try {
+        if (\local_ustar\forced_retraining::available()) {
+            $forcedretraining = \local_ustar\forced_retraining::cards_for_user((int)$USER->id, false);
+            foreach ($forcedretraining as &$forceditem) {
+                $forceditem['assigneddate'] = userdate(
+                    (int)$forceditem['assignedat'],
+                    get_string('strftimedatetimeshort', 'langconfig')
+                );
+            }
+            unset($forceditem);
+        }
+    } catch (\Throwable $e) {
+        $forcedretraining = [];
+    }
+
+    try {
+        $gradecard = \local_ustar\grade_promotion::route_card((int)$USER->id);
+    } catch (\Throwable $e) {
+        debugging('USTAR grade route card read failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        $gradecard = null;
+    }
+}
+
+if ($adaptation && !empty($adaptation['blocked']) && !empty($route['ok'])) {
+    if (!empty($route['currentpoint'])) {
+        $route['currentpoint']['canlaunch'] = false;
+    }
+    if (!empty($route['points'])) {
+        foreach ($route['points'] as &$routepoint) {
+            $routepoint['canlaunch'] = false;
+        }
+        unset($routepoint);
+    }
+}
+
+$rewards = \local_ustar\route_rewards::summary((int)$USER->id);
 $data = [
+    'sesskey' => sesskey(),
+    'previewing' => $previewing,
+    'continueerror' => optional_param('continueerror', 0, PARAM_BOOL),
+    'routerewards' => $rewards,
+    'rewardsenabled' => !$previewing && \local_ustar\route_rewards::enabled(),
+    'forcedretraining' => $forcedretraining,
+    'hasforcedretraining' => !empty($forcedretraining),
+    'forcedretrainingcount' => count($forcedretraining),
+    'hasgradecard' => !empty($gradecard),
+    'gradecard' => $gradecard,
+    'graderequested' => optional_param('graderequested', 0, PARAM_BOOL),
     'route' => !empty($route['ok']) ? $route : null,
     'hasroute' => !empty($route['ok']),
-    'noroute' => empty($route['ok']),
+    'noroute' => empty($route['ok']) && ($route['reason'] ?? '') !== 'runtime_error',
+    'routeerror' => ($route['reason'] ?? '') === 'runtime_error',
     'hasposition' => $positionid !== '',
     'positionid' => $positionid,
     'iselevated' => $iselevated,
     'positions' => $positions,
+    'hasadaptation' => !empty($adaptation),
+    'adaptation' => $adaptation,
     'studio' => (new moodle_url('/local/ustar/route_studio.php', ['position' => $positionid]))->out(false),
     'coursesurl' => (new moodle_url('/local/ustar/home.php', ['view' => 'learning']))->out(false),
     'homeurl' => (new moodle_url('/local/ustar/home.php'))->out(false),
+    'retryurl' => (new moodle_url('/local/ustar/route.php',
+        $requestedposition !== '' ? ['position' => $requestedposition] : []))->out(false),
 ];
 
 $PAGE->set_context($context);
@@ -57,6 +148,7 @@ $PAGE->set_pagelayout('ustar');
 $PAGE->set_title('Мой учебный маршрут | USTAR');
 $PAGE->set_heading('USTAR Academy');
 $PAGE->requires->css(new moodle_url('/local/ustar/styles/route_v2.css'));
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/forced_retraining.css'));
 
 $output = $PAGE->get_renderer('local_ustar');
 echo $output->header();

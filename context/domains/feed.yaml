@@ -1,0 +1,32 @@
+domain: feed
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Лента, scoped аудитория, moderation, RSS и сохранение файлов
+services:
+- moodle/local/ustar/classes/feed_service.php
+- moodle/local/ustar/classes/feed_access.php
+- moodle/local/ustar/classes/feed_query.php
+- moodle/local/ustar/classes/feed_files.php
+- moodle/local/ustar/classes/feed_rss.php
+- moodle/local/ustar/classes/feed_article_resolver.php
+- moodle/local/ustar/classes/feed_retention.php
+tables:
+- local_ustar_feed_posts
+- local_ustar_feed_audience
+- local_ustar_feed_comments
+- local_ustar_feed_reactions
+- local_ustar_feed_events
+- local_ustar_feed_reports
+- local_ustar_feed_saves
+- local_ustar_feed_sources
+- local_ustar_feed_sourceitem
+rules:
+- ACL before pagination and again for direct file URLs
+- Publishing authority separate from audience and moderation
+- Personal saved file copy is not a learning completion
+- Privacy API inventory is not complete Privacy API implementation
+entry_points:
+- moodle/local/ustar/feed_admin.php
+- moodle/local/ustar/feed.php
+- moodle/local/ustar/admin_feed_roles.php
+- moodle/local/ustar/knowledge.php

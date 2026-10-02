@@ -45,6 +45,9 @@ $statusfilter =
         PARAM_ALPHA
     );
 
+$peoplepage = max(0, optional_param('page', 0, PARAM_INT));
+$peoplepagesize = 50;
+
 $userid =
     optional_param(
         'userid',
@@ -58,6 +61,38 @@ $newperson =
         0,
         PARAM_BOOL
     );
+
+$assessmentaction = optional_param('action', '', PARAM_ALPHA);
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+        && in_array($assessmentaction, ['assessskill', 'revokeskill'], true)) {
+    require_sesskey();
+    require_capability('local/ustar:hrmanage', $context);
+    try {
+        $target = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
+        if ($userid === (int)$USER->id || is_siteadmin($target)
+                || has_capability('local/ustar:admin', $context, $userid)) {
+            throw new \invalid_parameter_exception('Этот аккаунт нельзя оценивать из кадровой карточки');
+        }
+        if ($assessmentaction === 'assessskill') {
+            \local_ustar\skill_assessment::record($userid,
+                required_param('skillid', PARAM_ALPHANUMEXT),
+                required_param('level', PARAM_INT),
+                required_param('standardversion', PARAM_INT),
+                required_param('reason', PARAM_TEXT),
+                required_param('assessmentnonce', PARAM_ALPHANUMEXT),
+                (int)$USER->id);
+        } else {
+            \local_ustar\skill_assessment::revoke($userid,
+                required_param('evidenceid', PARAM_INT),
+                required_param('reason', PARAM_TEXT), (int)$USER->id);
+        }
+        redirect(new moodle_url('/local/ustar/hr.php', ['userid' => $userid]),
+            $assessmentaction === 'assessskill' ? 'Оценка уровня сохранена' : 'Оценка уровня отозвана',
+            null, \core\output\notification::NOTIFY_SUCCESS);
+    } catch (\Throwable $e) {
+        \core\notification::error($e->getMessage());
+    }
+}
 
 
 /*
@@ -290,14 +325,8 @@ $sql = "
         u.lastname,
         u.email,
         u.suspended,
-        u.lastaccess,
-        TRIM(d.data) AS positionid
+        u.lastaccess
     FROM {user} u
-    LEFT JOIN {user_info_field} f
-      ON f.shortname = 'ustar_position'
-    LEFT JOIN {user_info_data} d
-      ON d.userid = u.id
-     AND d.fieldid = f.id
     WHERE "
     .
     implode(
@@ -312,24 +341,22 @@ $sql = "
 ";
 
 
-$records =
-    $DB->get_records_sql(
-        $sql,
-        $params,
-        0,
-        500
-    );
-
-
 $people = [];
+$matchingpeople = 0;
+$hasnextpeoplepage = false;
+$scanoffset = 0;
+do {
+    // Apply the workforce and canonical position filters before deciding the
+    // page boundary. A SQL prefix of 500 users is not a complete HR result.
+    $records = $DB->get_records_sql($sql, $params, $scanoffset, 250);
+    $scanoffset += count($records);
+    foreach ($records as $person) {
 
+    if (!\local_ustar\accounts::is_business_account((int)$person->id)) {
+        continue;
+    }
 
-foreach ($records as $person) {
-
-    $positionid =
-        trim(
-            (string)$person->positionid
-        );
+    $positionid = (string)\local_ustar\organization_identity::resolve((int)$person->id)['positionid'];
 
     $position =
         $positionmap[
@@ -358,6 +385,14 @@ foreach ($records as $person) {
         $positionid !== $positionfilter
     ) {
         continue;
+    }
+
+    if ($matchingpeople++ < $peoplepage * $peoplepagesize) {
+        continue;
+    }
+    if (count($people) >= $peoplepagesize) {
+        $hasnextpeoplepage = true;
+        break;
     }
 
 
@@ -461,11 +496,28 @@ foreach ($records as $person) {
 
                         'status' =>
                             $statusfilter,
+
+                        'page' =>
+                            $peoplepage,
                     ]
                 )
             )->out(false),
     ];
 }
+} while (!$hasnextpeoplepage && count($records) === 250);
+
+$peoplepageparams = [
+    'q' => $query,
+    'department' => $departmentfilter,
+    'position' => $positionfilter,
+    'status' => $statusfilter,
+];
+$previouspeopleurl = $peoplepage > 0
+    ? (new moodle_url('/local/ustar/hr.php', $peoplepageparams + ['page' => $peoplepage - 1]))->out(false)
+    : '';
+$nextpeopleurl = $hasnextpeoplepage
+    ? (new moodle_url('/local/ustar/hr.php', $peoplepageparams + ['page' => $peoplepage + 1]))->out(false)
+    : '';
 
 
 /*
@@ -825,6 +877,35 @@ if (
                 $userid
             );
 
+        $assessmentversion = $editpositionid === '' ? null
+            : \local_ustar\standard_model::current_position($editpositionid);
+        $publishedskills = [];
+        if ($assessmentversion) {
+            $publishedrequirements = json_decode((string)$assessmentversion->requirementsjson, true);
+            foreach (is_array($publishedrequirements) ? $publishedrequirements : [] as $requirement) {
+                if (($requirement['sourcekind'] ?? '') === 'ustar_skill' && !empty($requirement['required'])) {
+                    $publishedskills[(string)$requirement['sourceid']] = (int)($requirement['targetlevel'] ?? 0);
+                }
+            }
+        }
+        foreach ($profile['skills']['items'] as &$profileitem) {
+            $assessment = \local_ustar\skill_assessment::current($userid,
+                $editpositionid, (string)$profileitem['skillid'],
+                $assessmentversion ? (int)$assessmentversion->id : 0);
+            $profileitem['hasassessment'] = $assessment !== null;
+            $profileitem['assessedlevel'] = $assessment['level'] ?? 0;
+            $profileitem['assessedreason'] = $assessment['reason'] ?? '';
+            $profileitem['assessmentevidenceid'] = $assessment['id'] ?? 0;
+            $profileitem['canassess'] = !$protected
+                && has_capability('local/ustar:hrmanage', $context)
+                && $assessmentversion !== null
+                && (int)($publishedskills[$profileitem['skillid']] ?? 0) === (int)$profileitem['targetlevel'];
+            $profileitem['assessmentnonce'] = random_string(32);
+            $profileitem['assessmentversion'] = $assessmentversion ? (int)$assessmentversion->id : 0;
+            $profileitem['userid'] = $userid;
+        }
+        unset($profileitem);
+
         foreach ($profile['knowledge']['items'] as &$knowledgeitem) {
             $knowledgeitem['acktimeformatted'] =
                 !empty($knowledgeitem['acktime'])
@@ -1019,6 +1100,10 @@ $data = [
     'peoplecount' =>
         count($people),
 
+    'peoplepage' => $peoplepage + 1,
+    'previouspeopleurl' => $previouspeopleurl,
+    'nextpeopleurl' => $nextpeopleurl,
+
     'haspeople' =>
         !empty($people),
 
@@ -1033,6 +1118,9 @@ $data = [
 
     'statusoptions' =>
         $statusoptions,
+
+      'staffingurl' =>
+          (new moodle_url('/local/ustar/staffing.php'))->out(false),
 
     'newurl' =>
         (
@@ -1049,6 +1137,8 @@ $data = [
         $editor !== null,
 ];
 
+
+$PAGE->requires->css(new moodle_url('/local/ustar/styles/consultant_career.css', ['v'=>'20260914-1']));
 
 echo $output->header();
 

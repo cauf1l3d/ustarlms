@@ -34,6 +34,112 @@ function local_ustar_pluginfile(
         return false;
     }
 
+    if ($filearea === \local_ustar\chat_files::AREA) {
+        if (count($args) !== 2) { return false; }
+        $messageid = (int)array_shift($args);
+        if (!\local_ustar\chat_files::can_read((int)$USER->id, $messageid)) { return false; }
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $messageid, '/', array_shift($args));
+        if (!$file || $file->is_directory()) { return false; }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none'; media-src 'self';");
+        $inline = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp',
+            'video/mp4', 'video/webm', 'video/quicktime', 'audio/mpeg', 'audio/mp4', 'audio/ogg', 'audio/x-wav'], true);
+        send_stored_file($file, 0, 0, $forcedownload || !$inline, $options);
+        return true;
+    }
+
+    if ($filearea === \local_ustar\feed_files::AREA) {
+        if (!$args) {
+            return false;
+        }
+        $postid = (int)array_shift($args);
+        if ($postid <= 0 || count($args) !== 2 || $args[0] !== 'v1') {
+            return false;
+        }
+        try {
+            // readable() applies workforce participation or feedmanage and the
+            // current audience, including the source of a repost.
+            \local_ustar\feed_access::readable($postid, (int)$USER->id);
+        } catch (\Throwable $e) {
+            return false;
+        }
+        $filename = array_pop($args);
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $postid, '/v1/', $filename);
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none';");
+        $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true);
+        send_stored_file($file, 0, 0, $forcedownload || !$image, $options);
+        return true;
+    }
+
+    if ($filearea === \local_ustar\feed_files::SAVED_AREA) {
+        if (!\local_ustar\employment::is_active((int)$USER->id) || \local_ustar\view_as::active()
+                || count($args) !== 2) {
+            return false;
+        }
+        $savedid = (int)array_shift($args);
+        $filename = array_shift($args);
+        if ($savedid <= 0 || !$filename || !\local_ustar\accounts::participates((int)$USER->id)
+                || !has_capability('local/ustar:use', $context, (int)$USER->id)) {
+            return false;
+        }
+        global $DB;
+        $saved = $DB->get_record('local_ustar_feed_saves',
+            ['id' => $savedid, 'userid' => (int)$USER->id, 'filename' => $filename]);
+        if (!$saved) {
+            return false;
+        }
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $savedid, '/', $filename);
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none';");
+        send_stored_file($file, 0, 0, true, $options);
+        return true;
+    }
+
+    if (in_array($filearea, [\local_ustar\task_files::ATTACHMENT, \local_ustar\task_files::RESULT], true)) {
+        if (!$args || !\local_ustar\employment::is_active((int)$USER->id)) {
+            return false;
+        }
+        $taskid = (int)array_shift($args);
+        if ($taskid <= 0 || !$args) {
+            return false;
+        }
+        // The task itself is the ACL; HR/admin roles never bypass a private note.
+        try {
+            \local_ustar\learning_tasks::view($taskid, (int)$USER->id);
+        } catch (\Throwable $e) {
+            return false;
+        }
+        $filename = array_pop($args);
+        $filepath = '/' . ($args ? implode('/', $args) . '/' : '');
+        if ($filepath !== '/' && !preg_match('~^/v[1-9][0-9]*/$~', $filepath)) {
+            return false;
+        }
+        if ($filearea === \local_ustar\task_files::RESULT && preg_match('~^/v(\d+)/$~', $filepath, $version)
+                && !\local_ustar\task_workspace\service::can_read_result($taskid, (int)$USER->id, (int)$version[1])) {
+            return false;
+        }
+        $file = get_file_storage()->get_file($context->id, 'local_ustar', $filearea,
+            $taskid, $filepath, $filename);
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header("Content-Security-Policy: sandbox; default-src 'none';");
+        $image = in_array($file->get_mimetype(), ['image/jpeg', 'image/png', 'image/webp'], true);
+        send_stored_file($file, 0, 0, $forcedownload || !$image, $options);
+        return true;
+    }
+
 
     if ($filearea === 'game_question_image') {
         global $DB;
@@ -60,6 +166,9 @@ function local_ustar_pluginfile(
         $isadmin = has_capability('local/ustar:admin', $context);
         if (!$isadmin) {
             require_capability('local/ustar:use', $context);
+            if (!\local_ustar\employment::learning_allowed((int)$USER->id)) {
+                return false;
+            }
             if (empty($game->active) || empty($question->active)) {
                 return false;
             }
@@ -99,7 +208,12 @@ function local_ustar_pluginfile(
 
 
     if (in_array($filearea, ['catalog_image', 'catalog_source'], true)) {
-        require_capability('local/ustar:use', $context);
+        if (!is_siteadmin((int)$USER->id) && !\local_ustar\catalog::can_manage((int)$USER->id)) {
+            if (!\local_ustar\capabilities::has((int)$USER->id, \local_ustar\capabilities::LEARNING_USE)
+                    || !\local_ustar\catalog_mastery::has_access((int)$USER->id)) {
+                return false;
+            }
+        }
 
         if (!$args) {
             return false;
@@ -138,6 +252,28 @@ function local_ustar_pluginfile(
             return true;
         }
 
+        send_stored_file($file, 0, 0, true, $options);
+        return true;
+    }
+
+
+    if ($filearea === 'material_scorm_package') {
+        if (!$args) {
+            return false;
+        }
+        $blueprintid = (int)array_shift($args);
+        if ($blueprintid <= 0 || !$args) {
+            return false;
+        }
+        $file = \local_ustar\material_studio::package_file($blueprintid, (int)$USER->id);
+        $filename = array_pop($args);
+        $filepath = '/' . ($args ? implode('/', $args) . '/' : '');
+        if (!$file || $file->is_directory() || $filename !== $file->get_filename()
+                || $filepath !== $file->get_filepath()) {
+            return false;
+        }
+        header('X-Content-Type-Options: nosniff');
+        header('Content-Security-Policy: sandbox; default-src \'none\';');
         send_stored_file($file, 0, 0, true, $options);
         return true;
     }
@@ -386,4 +522,23 @@ function local_ustar_pluginfile(
 
 
     return true;
+}
+
+/** Render a persistent fixed banner on every page in the isolated Route Tester session. */
+function local_ustar_before_footer_original(): string {
+    try {
+        if (class_exists('\\local_ustar\\route_tester') && \local_ustar\route_tester::active()) {
+            return \local_ustar\route_tester::banner_html();
+        }
+    } catch (\Throwable $e) {
+        // Never break a Moodle page because the optional developer banner failed.
+    }
+    return '';
+}
+
+/**
+ * Existing footer output + route sequential navigation.
+ */
+function local_ustar_before_footer(): string {
+    return local_ustar_before_footer_original() . \local_ustar\route_continue::footer_button();
 }

@@ -5,19 +5,19 @@
 :root {
   /* Brand tokens sampled from the supplied ХОЗМАГия / USTAR materials. */
   --c-primary: #282727;
-  --c-accent: #fbc502;
-  --c-accent-soft: #fff2b8;
+  --c-accent: #EBC500;
+  --c-accent-soft: #F9F2CA;
   --c-orange: #fc9617;
   --c-blue: #5ca3d4;
-  --c-bg: #f3f2ee;
+  --c-bg: #F6F5F1;
   --c-surface: #ffffff;
   --c-text: #282727;
-  --c-muted: #74736f;
+  --c-muted: #706D6A;
   --c-success: #2d8f5b;
   --c-warning: #d86723;
   --c-danger: #b42318;
   --c-line: #dddcd6;
-  --radius-card: 14px;
+  --radius-card: 16px;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,7 +26,7 @@ body {
   margin: 0;
   background: var(--c-bg);
   color: var(--c-text);
-  font-family: Arial, "Helvetica Neue", sans-serif;
+  font-family: Inter, Arial, sans-serif;
   font-feature-settings: "kern" 1, "liga" 1;
 }
 button, input, select, textarea { font: inherit; }

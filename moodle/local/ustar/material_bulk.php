@@ -162,6 +162,12 @@ if ($data = $mform->get_data()) {
                     'summary' => (string)($data->summary ?? ''),
                     'category' => (string)($data->category ?? ''),
                     'ackrequired' => !empty($data->ackrequired),
+                    'expectedmodified' => (int)$DB->get_field(
+                        'local_ustar_content',
+                        'timemodified',
+                        ['id' => (int)$created['contentid']],
+                        MUST_EXIST
+                    ),
                     'accessmode' => (string)($data->accessmode ?? 'custom'),
                     'positions' => is_array($data->positions ?? null) ? $data->positions : [],
                     'departments' => is_array($data->departments ?? null) ? $data->departments : [],

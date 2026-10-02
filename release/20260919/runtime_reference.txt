@@ -1,0 +1,11 @@
+Snapshot date: 2026-09-19T14:43:52+00:00
+
+Docker:
+NAMES            IMAGE          PORTS                    STATUS
+ustar_moodle     stack-moodle   127.0.0.1:8082->80/tcp   Up 5 days
+ustar_postgres   postgres:16    5432/tcp                 Up 5 days
+
+Moodle mounts:
+/opt/ustar/data/moodle/public -> /var/www/html
+/opt/ustar/data/moodle/moodledata -> /var/www/moodledata
+

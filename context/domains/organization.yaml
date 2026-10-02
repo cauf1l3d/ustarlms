@@ -1,56 +1,26 @@
 domain: organization
-
-purpose:
-  Управление структурой компании и привязкой сотрудников.
-
-canonical_model:
-
-  entities:
-
-    department:
-      meaning:
-        Подразделение компании
-
-
-    position:
-      meaning:
-        Должность
-
-
-    skill:
-      meaning:
-        Компетенция или требование должности
-
-
-    staff_place:
-      meaning:
-        Штатная единица
-
-
-    assignment:
-      meaning:
-        Назначение пользователя на штатную единицу
-
-
-relations:
-
-  department:
-    has:
-      - positions
-
-
-  position:
-    requires:
-      - skills
-
-
-  employee:
-    receives:
-      - assignment
-
-
-legacy:
-
-  structure_json:
-    status:
-      migration_required
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Каталог организации, PRIMARY/ACTING, reporting scope
+services:
+- moodle/local/ustar/classes/organization_identity.php
+- moodle/local/ustar/classes/organization_model.php
+- moodle/local/ustar/classes/organization_directory.php
+- moodle/local/ustar/classes/structure.php
+- moodle/local/ustar/classes/people.php
+- moodle/local/ustar/classes/team_presenter.php
+- moodle/local/ustar/classes/employment.php
+tables:
+- local_ustar_structure
+- local_ustar_staff_places
+- local_ustar_assignments
+- local_ustar_employment
+- local_ustar_reporting
+rules:
+- Catalogue remains in structure; no new departments/positions SQL tables are claimed
+- Assignment history prevents legacy PRIMARY fallback resurrection
+- ACTING grants temporary authority, not another learning position
+entry_points:
+- moodle/local/ustar/team.php
+- moodle/local/ustar/executive.php
+- moodle/local/ustar/positions.php

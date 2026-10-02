@@ -13,9 +13,14 @@ class hr_people {
 
     public static function save(
         array $input,
-        int $actorid
+        int $actorid,
+        bool $deferstaffplace = false
     ): array {
-        global $DB, $CFG;
+        global $DB, $CFG, $USER;
+        view_as::assert_writable();
+        if ($actorid <= 0 || $actorid !== (int)$USER->id) {
+            throw new \invalid_parameter_exception('Неверный автор кадровой операции');
+        }
 
         $context =
             \context_system::instance();
@@ -90,6 +95,12 @@ class hr_people {
         if (!in_array($accounttype, accounts::types(), true)) {
             throw new \invalid_parameter_exception(
                 'Неизвестный тип учётной записи USTAR'
+            );
+        }
+
+        if ($accounttype !== accounts::TYPE_EMPLOYEE) {
+            throw new \invalid_parameter_exception(
+                'HR может создавать и изменять только кадровые учётные записи сотрудников'
             );
         }
 
@@ -203,6 +214,8 @@ class hr_people {
         );
 
 
+        $transaction = $DB->start_delegated_transaction();
+        try {
         if ($userid > 0) {
 
             $target =
@@ -225,9 +238,11 @@ class hr_people {
              * themselves, or protected USTAR admins.
              */
             if (
+                !accounts::is_business_account($userid)
+                ||
                 is_siteadmin($target)
                 ||
-                $target->id === $actorid
+                (int)$target->id === $actorid
                 ||
                 has_capability(
                     'local/ustar:admin',
@@ -283,15 +298,41 @@ class hr_people {
             );
 
 
+            organization_model::assign_position_by_hr(
+                $userid,
+                $positionid,
+                $actorid
+            );
+
             people::set_position_id(
                 $userid,
                 $positionid
             );
 
+            $identity = organization_identity::resolve($userid);
+            // A person who has never held a staff place has no assignment
+            // conflict. After an earlier appointment, the resolver records
+            // the ended primary as an explicit unassigned state.
+            $conflicts = $identity['conflicts'];
+            $validunassigned = $positionid === '' && (string)$identity['positionid'] === ''
+                && ($conflicts === [] || $conflicts === ['no_active_primary_assignment']);
+            $validassigned = $positionid !== '' && (string)$identity['positionid'] === $positionid
+                && $conflicts === [];
+            if (!$validunassigned && !$validassigned) {
+                throw new \moodle_exception('Кадровое назначение не отражено в оргструктуре. Изменение отменено; проверьте штатное место сотрудника.');
+            }
+
 
             accounts::set_type(
                 $userid,
                 $accounttype
+            );
+
+            employment::set_status(
+                $userid,
+                $suspended ? employment::SUSPENDED : employment::ACTIVE,
+                $actorid,
+                'hr_update'
             );
 
 
@@ -392,15 +433,38 @@ class hr_people {
             );
 
 
+            if (!$deferstaffplace) {
+                organization_model::assign_position_by_hr(
+                    $savedid,
+                    $positionid,
+                    $actorid
+                );
+            }
+
             people::set_position_id(
                 $savedid,
                 $positionid
             );
 
+            if (!$deferstaffplace) {
+                $identity = organization_identity::resolve($savedid);
+                if ($identity['conflicts']
+                        || (string)$identity['positionid'] !== $positionid) {
+                    throw new \moodle_exception('Кадровое назначение не отражено в оргструктуре. Создание сотрудника отменено.');
+                }
+            }
+
 
             accounts::set_type(
                 $savedid,
                 $accounttype
+            );
+
+            employment::set_status(
+                $savedid,
+                $suspended ? employment::SUSPENDED : employment::ACTIVE,
+                $actorid,
+                'hr_create'
             );
 
 
@@ -419,36 +483,19 @@ class hr_people {
         }
 
 
-        /*
-         * Project the selected position into the protected USTAR workspace role.
-         * Manual executive/admin assignments are never touched.
-         */
-        try {
-            $accessresult = position_access::sync_user($savedid);
-            people::log_action(
-                $actorid,
-                $savedid,
-                'position_access_synced',
-                [
-                    'positionid' => $positionid,
-                    'targetrole' => $accessresult['targetrole'] ?? '',
-                ]
-            );
+        $transaction->allow_commit();
         } catch (\Throwable $e) {
-            people::log_action(
-                $actorid,
-                $savedid,
-                'position_access_sync_failed',
-                [
-                    'positionid' => $positionid,
-                    'message' => $e->getMessage(),
-                ]
-            );
+            $transaction->rollback($e);
         }
 
+        // Staffing assigns a manager-scoped place before synchronizing learning.
+        if ($deferstaffplace) {
+            return ['userid' => $savedid, 'assignment' => ['ok' => true,
+                'status' => 'pending_staffplace', 'enrolled' => []]];
+        }
 
         /*
-         * Immediate position-derived Moodle access.
+         * Immediate learning assignment based on canonical identity.
          *
          * A temporary course configuration problem must not
          * roll back the employee identity itself.

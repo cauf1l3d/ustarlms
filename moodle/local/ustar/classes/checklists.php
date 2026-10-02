@@ -82,8 +82,228 @@ class checklists {
         return is_array($data) ? $data : self::defaults();
     }
 
-    public static function save(array $data): void {
-        structure::save(self::NAME, $data);
+    public static function save(array $data, ?int $expectedversion = null): void {
+        global $DB, $USER;
+        if (!isset($data['items']) || !is_array($data['items'])) {
+            throw new \invalid_parameter_exception('Checklist catalogue items are required');
+        }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('checklist-publish', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Checklist publication is busy');
+        }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $previous = self::get();
+                if ($expectedversion !== null && (int)($previous['version'] ?? 1) !== $expectedversion) {
+                    throw new \invalid_parameter_exception('Каталог изменился. Обновите редактор.');
+                }
+                $byid = array_column($previous['items'] ?? [], null, 'id');
+                $now = time();
+                foreach ($byid as $key => $old) {
+                    if (!$DB->record_exists('local_ustar_check_def_ver',
+                            ['checklistkey' => (string)$key, 'version' => 1])) {
+                        $DB->insert_record('local_ustar_check_def_ver', (object)[
+                            'checklistkey' => (string)$key, 'version' => 1, 'status' => 'published',
+                            'definitionjson' => json_encode($old + ['version' => 1], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+                            'createdby' => 0, 'timecreated' => $now, 'publishedat' => $now,
+                        ]);
+                    }
+                }
+                $seen = [];
+                foreach ($data['items'] as &$definition) {
+                    $key = (string)($definition['id'] ?? '');
+                    if ($key === '' || isset($seen[$key]) || strlen($key) > 64) {
+                        throw new \invalid_parameter_exception('Checklist IDs must be unique and non-empty');
+                    }
+                    $seen[$key] = true;
+                    $old = $byid[$key] ?? null;
+                    $before = $old;
+                    $after = $definition;
+                    if ($before) {
+                        unset($before['version']);
+                    }
+                    unset($after['version']);
+                    if ($old && $before == $after) {
+                        $definition['version'] = max(1, (int)($old['version'] ?? 1));
+                        continue;
+                    }
+                    if ($DB->record_exists('local_ustar_check_def_ver',
+                            ['checklistkey' => $key, 'status' => 'draft'])) {
+                        throw new \invalid_parameter_exception('Сначала опубликуйте черновик чек-листа.');
+                    }
+                    $version = (int)$DB->get_field_sql(
+                        'SELECT MAX(version) FROM {local_ustar_check_def_ver} WHERE checklistkey = :key',
+                        ['key' => $key]) + 1;
+                    $definition['version'] = $version;
+                    $DB->insert_record('local_ustar_check_def_ver', (object)[
+                        'checklistkey' => $key, 'version' => $version, 'status' => 'published',
+                        'definitionjson' => json_encode($definition, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+                        'createdby' => (int)$USER->id, 'timecreated' => $now, 'publishedat' => $now,
+                    ]);
+                }
+                unset($definition);
+                $data['version'] = max((int)($data['version'] ?? 1), (int)($previous['version'] ?? 0) + 1);
+                structure::save(self::NAME, $data);
+                $transaction->allow_commit();
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+    }
+
+    public static function published_version(string $id, int $version): ?array {
+        global $DB;
+        $record = $DB->get_record('local_ustar_check_def_ver',
+            ['checklistkey' => $id, 'version' => $version, 'status' => 'published']);
+        if ($record) {
+            $definition = json_decode((string)$record->definitionjson, true);
+            return is_array($definition) ? $definition : null;
+        }
+        // Fresh installation has no initial snapshot until its first write.
+        $current = self::find($id);
+        return $version === 1 && $current && (int)($current['version'] ?? 1) === 1
+            ? $current : null;
+    }
+
+    public static function draft_for(string $id): ?array {
+        global $DB;
+        $record = $DB->get_record('local_ustar_check_def_ver',
+            ['checklistkey' => $id, 'status' => 'draft']);
+        if (!$record) {
+            return null;
+        }
+        $data = json_decode((string)$record->definitionjson, true);
+        return is_array($data) ? $data + ['version' => (int)$record->version,
+            'draftrevision' => (int)$record->revision] : null;
+    }
+
+    /** Store one mutable draft without changing the published catalogue. */
+    public static function save_draft(array $definition, int $expectedrevision = 0): int {
+        global $DB, $USER;
+        $id = (string)($definition['id'] ?? '');
+        if ($id === '' || strlen($id) > 64 || $id !== clean_param($id, PARAM_ALPHANUMEXT)) {
+            throw new \invalid_parameter_exception('Invalid checklist id');
+        }
+        if (trim((string)($definition['title'] ?? '')) === ''
+                || !is_array($definition['sections'] ?? null)
+                || count($definition['sections']) > 50) {
+            throw new \invalid_parameter_exception('Добавьте название и не более 50 разделов.');
+        }
+        $itemids = [];
+        foreach ($definition['sections'] as $section) {
+            if (!is_array($section) || !is_array($section['items'] ?? null)) {
+                throw new \invalid_parameter_exception('Некорректный раздел чек-листа.');
+            }
+            foreach ($section['items'] as $item) {
+                $itemid = (string)($item['id'] ?? '');
+                if ($itemid === '' || strlen($itemid) > 64 || isset($itemids[$itemid])
+                        || trim((string)($item['title'] ?? '')) === '') {
+                    throw new \invalid_parameter_exception('Пункты должны иметь уникальные ID и название.');
+                }
+                $itemids[$itemid] = true;
+            }
+        }
+        if (!$itemids || count($itemids) > 150) {
+            throw new \invalid_parameter_exception('Добавьте от 1 до 150 пунктов.');
+        }
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('checklist-publish', 10);
+        if (!$lock) { throw new \moodle_exception('Checklist editor is busy'); }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $draft = $DB->get_record('local_ustar_check_def_ver',
+                    ['checklistkey' => $id, 'status' => 'draft']);
+                if (($draft ? (int)$draft->revision : 0) !== $expectedrevision) {
+                    throw new \invalid_parameter_exception('Черновик изменился. Перезагрузите редактор.');
+                }
+                if ($draft) {
+                    $version = (int)$draft->version;
+                    $definition['version'] = $version;
+                    $draft->definitionjson = json_encode($definition, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+                    $draft->revision++;
+                    $DB->update_record('local_ustar_check_def_ver', $draft);
+                } else {
+                    $current = self::find($id);
+                    if ($current && !$DB->record_exists('local_ustar_check_def_ver',
+                            ['checklistkey' => $id, 'version' => 1])) {
+                        $DB->insert_record('local_ustar_check_def_ver', (object)[
+                            'checklistkey' => $id, 'version' => 1, 'status' => 'published',
+                            'definitionjson' => json_encode($current + ['version' => 1], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+                            'createdby' => 0, 'timecreated' => time(), 'publishedat' => time(),
+                        ]);
+                    }
+                    $version = (int)$DB->get_field_sql(
+                        'SELECT MAX(version) FROM {local_ustar_check_def_ver} WHERE checklistkey = :key',
+                        ['key' => $id]) + 1;
+                    $definition['version'] = $version;
+                    $DB->insert_record('local_ustar_check_def_ver', (object)[
+                        'checklistkey' => $id, 'version' => $version, 'status' => 'draft',
+                        'definitionjson' => json_encode($definition, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+                        'revision' => 1,
+                        'createdby' => (int)$USER->id, 'timecreated' => time(), 'publishedat' => null,
+                    ]);
+                }
+                $transaction->allow_commit();
+                return $version;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
+    }
+
+    public static function publish_draft(string $id, int $expectedversion, int $expectedrevision): int {
+        global $DB;
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock('checklist-publish', 10);
+        if (!$lock) { throw new \moodle_exception('Checklist publication is busy'); }
+        try {
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $draft = $DB->get_record('local_ustar_check_def_ver',
+                    ['checklistkey' => $id, 'status' => 'draft'], '*', MUST_EXIST);
+                if ((int)$draft->version !== $expectedversion
+                        || (int)$draft->revision !== $expectedrevision) {
+                    throw new \invalid_parameter_exception('Черновик изменился. Перезагрузите редактор.');
+                }
+                $definition = json_decode((string)$draft->definitionjson, true);
+                if (!is_array($definition)) {
+                    throw new \coding_exception('Invalid checklist draft');
+                }
+                $catalogue = self::get();
+                $current = self::find($id);
+                if ($current && (int)($current['version'] ?? 1) >= (int)$draft->version) {
+                    throw new \invalid_parameter_exception('Опубликованная версия изменилась. Создайте новый черновик.');
+                }
+                $replaced = false;
+                foreach ($catalogue['items'] as &$item) {
+                    if ((string)$item['id'] === $id) {
+                        $item = $definition;
+                        $replaced = true;
+                        break;
+                    }
+                }
+                unset($item);
+                if (!$replaced) { $catalogue['items'][] = $definition; }
+                $catalogue['version'] = (int)($catalogue['version'] ?? 1) + 1;
+                $draft->status = 'published';
+                $draft->publishedat = time();
+                $DB->update_record('local_ustar_check_def_ver', $draft);
+                structure::save(self::NAME, $catalogue);
+                $transaction->allow_commit();
+                return (int)$draft->version;
+            } catch (\Throwable $e) {
+                $transaction->rollback($e);
+            }
+        } finally {
+            $lock->release();
+        }
     }
 
     public static function flat_items(array $checklist): array {

@@ -8,16 +8,205 @@
             </p>
 
             <h1>
-                Модели должностей
+                Должности и развитие
             </h1>
 
             <p>
                 Навыки, обязательное обучение и подтверждения по должности.
             </p>
+            {{#canmanage}}<a class="u-btn" href="{{structureurl}}">Подразделения и блоки →</a>{{/canmanage}}
         </div>
 
     </header>
 
+    <nav class="u-pos-breadcrumb" aria-label="Навигация">
+        <a href="{{catalogurl}}">Модели должностей</a><span aria-hidden="true">/</span><span>{{position.name}}</span>
+    </nav>
+
+    <nav class="u-pos-tabs" aria-label="Разделы модели должности">
+        {{#tabs}}<a href="{{url}}" class="u-pos-tabs__link {{#active}}is-active{{/active}}" {{#active}}aria-current="page"{{/active}}>{{name}}</a>{{/tabs}}
+    </nav>
+
+    {{#showgraph}}
+    <section class="u-position-studio" aria-labelledby="position-studio-title">
+        <header class="u-position-studio__head">
+            <div>
+                <p class="u-pagehead__eyebrow">Архитектура должности</p>
+                <h2 id="position-studio-title">Должность → навыки → материалы</h2>
+                <p>Живая карта строится из текущей структуры, матрицы навыков и опубликованных точек маршрута. Это текущая реализация, а не согласованный бизнес-эталон.</p>
+            </div>
+            <form method="get" class="u-position-studio__selector">
+                <label for="position-studio-position">Должность</label>
+                <input type="hidden" name="tab" value="graph">
+                <select id="position-studio-position" name="positionid" onchange="this.form.submit()">
+                    {{#positions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{department}} — {{name}}</option>{{/positions}}
+                </select>
+                {{#hasselectedskill}}<input type="hidden" name="skillid" value="{{selectedskillid}}">{{/hasselectedskill}}
+            </form>
+        </header>
+
+        <section
+            id="u-position-workspace"
+            class="u-position-workspace"
+            aria-labelledby="u-position-workspace-title"
+        >
+            <header class="u-position-workspace__head">
+                <div>
+                    <p class="u-sectionhead__eyebrow">
+                        Живая модель компании
+                    </p>
+
+                    <h3 id="u-position-workspace-title">
+                        Сотрудники ↔ должности ↔ навыки ↔ материалы
+                    </h3>
+
+                    <p>
+                        Нажмите на любую карточку — USTAR мгновенно покажет всю связанную цепочку.
+                    </p>
+                </div>
+            </header>
+
+            <div class="u-position-workspace__toolbar">
+
+                <label class="u-position-workspace__search">
+                    <span>Поиск</span>
+                    <input
+                        type="search"
+                        data-workspace-search
+                        placeholder="ФИО, должность, навык или материал"
+                        autocomplete="off"
+                    >
+                </label>
+
+                <label>
+                    <span>Подразделение</span>
+                    <select
+                        data-workspace-department
+                        aria-label="Фильтр по подразделению"
+                    >
+                        <option value="">Все подразделения</option>
+                    </select>
+                </label>
+
+                <button
+                    type="button"
+                    class="u-position-workspace__reset"
+                    data-workspace-reset
+                >
+                    Сбросить выделение
+                </button>
+
+            </div>
+
+            <div class="u-position-workspace__status">
+                <span data-workspace-hint>
+                    Выберите сотрудника, должность, навык или материал
+                </span>
+
+                <small>
+                    Обычный клик — показать связи. Ссылки внутри карточек — открыть объект.
+                </small>
+            </div>
+
+            <div
+                class="u-position-workspace__canvas"
+                data-workspace-canvas
+            >
+                <svg
+                    class="u-position-workspace__lines"
+                    data-workspace-lines
+                    aria-hidden="true"
+                ></svg>
+
+                <div class="u-position-workspace__columns">
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="people"
+                    >
+                        <h4>
+                            <span>Сотрудники</span>
+                            <small data-people-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-people
+                        ></div>
+                    </section>
+
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="positions"
+                    >
+                        <h4>
+                            <span>Должности</span>
+                            <small data-position-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-positions
+                        ></div>
+                    </section>
+
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="skills"
+                    >
+                        <h4>
+                            <span>Требуемые навыки</span>
+                            <small data-skill-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-skills
+                        ></div>
+                    </section>
+
+
+                    <section
+                        class="u-position-workspace__column"
+                        data-column="materials"
+                    >
+                        <h4>
+                            <span>Материалы</span>
+                            <small data-material-count>0</small>
+                        </h4>
+
+                        <div
+                            class="u-position-workspace__items"
+                            data-workspace-materials
+                        ></div>
+                    </section>
+
+                </div>
+            </div>
+
+            <footer class="u-position-workspace__legend">
+
+                <span>
+                    <i class="is-direct"></i>
+                    текущая связь
+                </span>
+
+                <span>
+                    <i class="is-learning"></i>
+                    обучение / материал
+                </span>
+
+                <span>
+                    <i class="is-gap"></i>
+                    связь требует настройки
+                </span>
+
+            </footer>
+        </section>
+    </section>
+    {{/showgraph}}
 
     <div class="u-pos-layout">
 
@@ -103,6 +292,123 @@
             {{/position}}
 
 
+            {{#showoverview}}
+            <section class="u-pos-section u-pos-overview">
+                <header class="u-pos-section__head"><div><p class="u-sectionhead__eyebrow">О должности</p><h3>Порядок настройки</h3></div></header>
+                <p>Должность принадлежит подразделению «{{position.department}}». Требования, обучение и подтверждения настраиваются отдельно; опубликованный стандарт определяет проверяемую квалификацию.</p>
+                <div class="u-pos-overview__steps">
+                    <a href="{{taburls.requirements}}"><strong>1. Требования</strong><span>Обязательные навыки и уровни</span></a>
+                    <a href="{{taburls.learning}}"><strong>2. Обучение и проверка</strong><span>Маршрут и способы подтверждения</span></a>
+                    <a href="{{taburls.grades}}"><strong>3. Грейды</strong><span>Необязательная лестница развития</span></a>
+                    <a href="{{taburls.application}}"><strong>4. Применение и история</strong><span>Проверка и публикация стандарта</span></a>
+                </div>
+                {{#canmanage}}<p><a class="u-btn u-btn--quiet" href="{{structureurl}}">Изменить название или подразделение →</a></p>{{/canmanage}}
+            </section>
+            {{/showoverview}}
+
+            {{#showgrades}}
+            <section class="u-pos-section">
+                <header class="u-pos-section__head"><div><p class="u-sectionhead__eyebrow">Грейды</p><h3>Лестница развития</h3></div></header>
+                <p>Грейд необязателен. Переход на следующую должность не меняет кадровое назначение и права доступа.</p>
+        {{#careergrades}}{{#hasgrade}}{{> local_ustar/career_grades}}{{/hasgrade}}{{/careergrades}}
+        {{#canmanage}}
+        <p><a class="u-btn" href="{{careergrades.settingsurl}}">Настроить лестницу и привязку</a></p>
+        {{/canmanage}}
+
+        {{#hasladder}}
+        <section class="u-position-ladder" aria-labelledby="position-ladder-title">
+            <div class="u-position-studio__sectionhead">
+                <div><p class="u-sectionhead__eyebrow">Лестница развития</p><h3 id="position-ladder-title">Путь должности</h3></div>
+                <span>Переходы взяты из поля «следующая должность» текущей структуры</span>
+            </div>
+            <div class="u-position-ladder__track">
+                {{#ladder}}
+                <a class="u-position-ladder__step {{#selected}}is-selected{{/selected}}" href="{{url}}">
+                    <span class="u-position-ladder__level">{{level}}</span>
+                    <strong>{{name}}</strong>
+                    <small>{{department}} · {{periodlabel}}</small>
+                    {{#hasskills}}<span class="u-position-ladder__skills">Навыки: {{skills}}</span>{{/hasskills}}
+                    {{#hasnext}}<em>Дальше: {{nextname}} →</em>{{/hasnext}}
+                    {{^hasnext}}<em>Финальная ступень</em>{{/hasnext}}
+                </a>
+                {{/ladder}}
+            </div>
+        </section>
+        {{/hasladder}}
+
+        {{#canmanage}}
+        <details class="u-panel u-position-settings">
+            <summary>Настроить следующую карьерную ступень</summary>
+            <form method="post" class="u-position-settings__form">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="savecareer">
+                <input type="hidden" name="positionid" value="{{careerpositionid}}">
+                <input type="hidden" name="careerexpected" value="{{careerexpected}}">
+                <label for="career-next">Следующая должность</label>
+                <select id="career-next" name="nextpositionid" class="custom-select">
+                    <option value="">Финальная ступень — переход не задан</option>
+                    {{#careertargets}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/careertargets}}
+                </select>
+                <p>Сотрудник увидит следующую должность и её требования в шаге развития. Для следующих ступеней откройте выбранную должность и задайте её переход. Назначение сотрудника и допуски оформляются отдельно.</p>
+                <button type="submit" class="u-btn u-btn--primary">Сохранить переход</button>
+            </form>
+        </details>
+        {{/canmanage}}
+
+            </section>
+            {{/showgrades}}
+
+            {{#showapplication}}
+            <section class="u-pos-section">
+                <header class="u-pos-section__head"><div><p class="u-sectionhead__eyebrow">Применение и история</p><h3>Проверка стандарта</h3></div></header>
+                <p>Сейчас эту должность занимают {{position.peoplecount}} сотрудников. Публикация создаёт версию требований; она не засчитывает обучение и не меняет назначения. Индивидуальный результат сотрудника проверяется по его фактам на дату оценки.</p>
+                {{#application}}
+                {{^hasrequirements}}<p class="u-position-review-alert">Обязательные навыки не заданы. Добавьте их перед публикацией.</p>{{/hasrequirements}}
+                {{#hasmissing}}
+                <div class="u-position-review-alert">
+                    <strong>Нет способа подтверждения для навыков:</strong>
+                    <ul>{{#missing}}<li>{{name}}</li>{{/missing}}</ul>
+                    <a href="{{taburls.learning}}">Настроить подтверждения →</a>
+                </div>
+                {{/hasmissing}}
+                {{#haspendingchanges}}<p class="u-position-review-alert">Текущие требования отличаются от опубликованной версии. Для применения изменений потребуется новая публикация.</p>{{/haspendingchanges}}
+                {{#haschanges}}
+                <h4>Изменения требований для сотрудников с этой должностью</h4>
+                <ul class="u-position-change-list">{{#changes}}<li><strong>{{name}}</strong><span>{{change}}</span></li>{{/changes}}</ul>
+                {{/haschanges}}
+                {{^haschanges}}{{#hasrequirements}}<p>Требования совпадают с действующей версией.</p>{{/hasrequirements}}{{/haschanges}}
+                {{/application}}
+                <div class="u-panel u-position-standard" aria-live="polite">
+                    {{#standardpublished}}
+                    <p><strong>Опубликованный стандарт · версия {{standardversion}}</strong></p>
+                    <p>Действует с {{standarddate}}. Изменения матрицы применятся к показателю квалификации после новой публикации. Прохождение курса не подтверждает уровень навыка: требуется отдельная оценка руководителя.</p>
+                    {{/standardpublished}}
+                    {{^standardpublished}}
+                    <p><strong>Стандарт должности ещё не опубликован</strong></p>
+                    <p>Сотрудники с этой должностью отображаются как «неопределённо» в показателе квалификации.</p>
+                    {{/standardpublished}}
+                    {{#canpublishstandard}}
+                    <form method="post">
+                        <input type="hidden" name="action" value="publishstandard">
+                        <input type="hidden" name="positionid" value="{{position.id}}">
+                        <input type="hidden" name="matrixhash" value="{{matrixhash}}">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <button class="u-btn u-btn--primary" type="submit">Опубликовать текущие требования</button>
+                    </form>
+                    {{/canpublishstandard}}
+                </div>
+                <p><a class="u-btn u-btn--quiet" href="{{taburls.requirements}}">Проверить требования →</a> <a class="u-btn u-btn--quiet" href="{{taburls.learning}}">Проверить обучение и подтверждения →</a></p>
+                <h4>Версии стандарта</h4>
+                {{#application.hashistory}}
+                <ol class="u-position-versions">
+                    {{#application.history}}<li><strong>Версия {{version}} · {{state}}</strong><span>{{date}} · {{author}}</span></li>{{/application.history}}
+                </ol>
+                {{/application.hashistory}}
+                {{^application.hashistory}}<p>Версий пока нет. После публикации здесь появится история стандарта.</p>{{/application.hashistory}}
+            </section>
+            {{/showapplication}}
+
+            {{#showrequirements}}
             <section class="u-pos-section">
 
                 <header class="u-pos-section__head">
@@ -156,6 +462,8 @@
                         name="sesskey"
                         value="{{sesskey}}"
                     >
+
+                    <input type="hidden" name="matrixexpected" value="{{matrixexpected}}">
 
 
                     <div class="u-skill-editor">
@@ -230,9 +538,14 @@
 
                 </form>
 
+
+
             </section>
 
 
+            {{/showrequirements}}
+
+            {{#showlearning}}
             <section class="u-pos-section">
 
                 <header class="u-pos-section__head">
@@ -646,6 +959,8 @@
                 {{/canmanage}}
 
             </section>
+
+            {{/showlearning}}
 
         </main>
 

@@ -26,6 +26,88 @@ class content_admin {
     }
 
 
+    /**
+     * Move a file/folder with optimistic concurrency and immutable audit.
+     */
+    public static function move(
+        int $contentid,
+        int $parentid,
+        int $expectedmodified,
+        int $actorid
+    ): array {
+        global $DB;
+
+        self::require_manage($actorid);
+        $lockfactory = \core\lock\lock_config::get_lock_factory('local_ustar_content');
+        // A single hierarchy lock also prevents two concurrent folder moves
+        // from creating a cycle across different content rows.
+        $lock = $lockfactory->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+
+        try {
+        $record = $DB->get_record('local_ustar_content', ['id' => $contentid], '*', MUST_EXIST);
+
+        if ($expectedmodified <= 0 || (int)$record->timemodified !== $expectedmodified) {
+            throw new \moodle_exception(
+                'Материал уже изменён в другой сессии. Обновите страницу и повторите перенос.'
+            );
+        }
+        if ($parentid === $contentid) {
+            throw new \invalid_parameter_exception('Материал нельзя поместить внутрь самого себя');
+        }
+
+        if ($parentid > 0) {
+            $cursor = $DB->get_record(
+                'local_ustar_content',
+                ['id' => $parentid, 'type' => 'folder'],
+                'id,parentid,type',
+                MUST_EXIST
+            );
+            if ((string)$record->type === 'folder') {
+                $seen = [];
+                while ($cursor) {
+                    $cursorid = (int)$cursor->id;
+                    if ($cursorid === $contentid) {
+                        throw new \invalid_parameter_exception('Нельзя переместить папку внутрь её дочерней папки');
+                    }
+                    if (isset($seen[$cursorid])) {
+                        throw new \invalid_parameter_exception('Обнаружена повреждённая циклическая структура папок');
+                    }
+                    $seen[$cursorid] = true;
+                    $nextid = (int)($cursor->parentid ?? 0);
+                    $cursor = $nextid > 0
+                        ? $DB->get_record('local_ustar_content', ['id' => $nextid, 'type' => 'folder'], 'id,parentid,type')
+                        : false;
+                }
+            }
+        }
+
+        $oldparentid = (int)($record->parentid ?? 0);
+        if ($oldparentid === $parentid) {
+            return ['contentid' => $contentid, 'oldparentid' => $oldparentid, 'newparentid' => $parentid, 'changed' => false];
+        }
+
+        $transaction = $DB->start_delegated_transaction();
+        try {
+        $record->parentid = $parentid > 0 ? $parentid : null;
+        $record->timemodified = max(time(), $expectedmodified + 1);
+        $record->usermodified = $actorid;
+        $DB->update_record('local_ustar_content', $record);
+        learning_events::record_content_move($actorid, $contentid, $oldparentid, $parentid, $expectedmodified);
+        $transaction->allow_commit();
+
+        return ['contentid' => $contentid, 'oldparentid' => $oldparentid, 'newparentid' => $parentid, 'changed' => true];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
+    }
+
+
     private static function require_manage(
         int $actorid
     ): void {
@@ -352,8 +434,26 @@ class content_admin {
         }
 
 
+        $lockfactory = \core\lock\lock_config::get_lock_factory('local_ustar_content');
+        $lock = $lockfactory->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите сохранение.');
+        }
+
+        try {
+        $expectedmodified = (int)($input['expectedmodified'] ?? 0);
+        $freshrecord = $DB->get_record('local_ustar_content', ['id' => $contentid], '*', MUST_EXIST);
+        if ($expectedmodified <= 0 || (int)$freshrecord->timemodified !== $expectedmodified) {
+            throw new \moodle_exception(
+                'Материал уже изменён в другой сессии. Обновите страницу и повторите сохранение.'
+            );
+        }
+        $record = $freshrecord;
+
         $transaction =
             $DB->start_delegated_transaction();
+
+        try {
 
 
         $record->title =
@@ -377,7 +477,7 @@ class content_admin {
         $record->parentid = $parentid > 0 ? $parentid : null;
 
         $record->timemodified =
-            time();
+            max(time(), $expectedmodified + 1);
 
         $record->usermodified =
             $actorid;
@@ -475,6 +575,12 @@ class content_admin {
             'status' =>
                 $record->status,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -497,9 +603,15 @@ class content_admin {
             $actorid
         );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
         $record =
             $DB->get_record_sql(
@@ -510,6 +622,15 @@ class content_admin {
                 ['contentid' => $contentid],
                 MUST_EXIST
             );
+
+        if (material_studio::available()
+                && (string)$DB->get_field('local_ustar_content_blueprints', 'kind',
+                    ['contentid' => $contentid]) === material_studio::KIND_SCORM
+                && !material_studio::runtime_ready($contentid)) {
+            throw new \moodle_exception(
+                'SCORM изменён: импортируйте пакет для текущей версии перед публикацией.'
+            );
+        }
 
 
         $accesscount =
@@ -696,6 +817,12 @@ class content_admin {
             'status' =>
                 content::STATUS_PUBLISHED,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -712,9 +839,15 @@ class content_admin {
             $actorid
         );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
         $record =
             $DB->get_record_sql(
@@ -794,6 +927,12 @@ class content_admin {
             'status' =>
                 content::STATUS_DRAFT,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
     /**
@@ -1201,6 +1340,7 @@ class content_admin {
 
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
 
         $contentid =
@@ -1330,6 +1470,9 @@ class content_admin {
             'versionid' =>
                 $versionid,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
     }
 
 
@@ -1595,9 +1738,15 @@ class content_admin {
             $actorid
         );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
 
         /*
@@ -1795,6 +1944,12 @@ class content_admin {
                 .
                 $versionno,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -1820,8 +1975,15 @@ class content_admin {
                 MUST_EXIST
             );
 
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
         // Use the same lock order as publish_file_version(): parent first.
         $content =
@@ -1866,19 +2028,6 @@ class content_admin {
         }
 
 
-        $context =
-            \context_system::instance();
-
-
-        get_file_storage()
-            ->delete_area_files(
-                $context->id,
-                'local_ustar',
-                'content_version',
-                $versionid
-            );
-
-
         $DB->delete_records(
             'local_ustar_content_ack',
             [
@@ -1911,6 +2060,22 @@ class content_admin {
         );
 
         $transaction->allow_commit();
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        // File API removal cannot be rolled back with SQL. Delete only after
+        // the version and its audit event are committed; failed file cleanup
+        // leaves an orphan rather than silently losing a live draft.
+        try {
+            get_file_storage()->delete_area_files(
+                \context_system::instance()->id, 'local_ustar', 'content_version', $versionid
+            );
+        } catch (\Throwable $cleanup) {
+            debugging('USTAR draft file cleanup pending for version ' . $versionid, DEBUG_DEVELOPER);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -1941,9 +2106,15 @@ class content_admin {
                 MUST_EXIST
             );
 
-
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction =
             $DB->start_delegated_transaction();
+        try {
 
 
         /*
@@ -2248,6 +2419,12 @@ class content_admin {
             'status' =>
                 content::STATUS_PUBLISHED,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
 
 
@@ -2263,7 +2440,14 @@ class content_admin {
 
         self::require_manage($actorid);
 
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
         $transaction = $DB->start_delegated_transaction();
+        try {
 
         $record = $DB->get_record_sql(
             'SELECT *
@@ -2306,7 +2490,60 @@ class content_admin {
             'contentid' => $contentid,
             'status' => content::STATUS_ARCHIVED,
         ];
+        } catch (\Throwable $e) {
+            $transaction->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
     }
+
+    /**
+     * Remove a material from the active catalogue without destroying route
+     * evidence, acknowledgements, versions or audit history.
+     */
+    public static function delete(int $contentid, int $actorid, string $reason = ''): array {
+        global $DB;
+        self::require_manage($actorid);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar_content')
+            ->get_lock('hierarchy', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Не удалось получить блокировку материала. Повторите действие.');
+        }
+        try {
+        $tx = $DB->start_delegated_transaction();
+        try {
+        $record = $DB->get_record_sql(
+            'SELECT * FROM {local_ustar_content} WHERE id = :contentid FOR UPDATE',
+            ['contentid' => $contentid], MUST_EXIST
+        );
+        $previousstatus = (string)$record->status;
+        $record->status = content::STATUS_ARCHIVED;
+        $record->timemodified = time();
+        $record->usermodified = $actorid;
+        $DB->update_record('local_ustar_content', $record);
+        $DB->set_field('local_ustar_content_access', 'active', 0, ['contentid' => $contentid, 'active' => 1]);
+        people::log_action($actorid, null, 'content_deleted_from_catalog', [
+            'contentid' => $contentid, 'reason' => trim(clean_param($reason, PARAM_TEXT)),
+        ]);
+        if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_workflow_events'))) {
+            $DB->insert_record('local_ustar_workflow_events', (object)[
+                'entitytype' => 'content', 'entityid' => $contentid, 'eventtype' => 'content_deleted',
+                'actorid' => $actorid, 'reason' => trim(clean_param($reason, PARAM_TEXT)) ?: null,
+                'detailsjson' => json_encode(['previousstatus' => $previousstatus], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'timecreated' => time(),
+            ]);
+        }
+        $tx->allow_commit();
+        return ['contentid' => $contentid, 'status' => content::STATUS_ARCHIVED];
+        } catch (\Throwable $e) {
+            $tx->rollback($e);
+        }
+        } finally {
+            $lock->release();
+        }
+    }
+
 
 
     /**

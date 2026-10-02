@@ -8,6 +8,12 @@ global $DB, $USER;
 
 $context = context_system::instance();
 
+$detailpage =
+    defined('USTAR_MATERIAL_DETAIL_PAGE')
+    &&
+    USTAR_MATERIAL_DETAIL_PAGE;
+
+
 require_capability(
     'local/ustar:hr',
     $context
@@ -65,6 +71,28 @@ $parentid = optional_param(
     0,
     PARAM_INT
 );
+
+/*
+ * USTAR_MATERIAL_DETAIL_REDIRECT
+ *
+ * Old links and old action redirects remain valid,
+ * but the editor itself now lives on material.php.
+ */
+if (
+    !$detailpage
+    &&
+    $_SERVER['REQUEST_METHOD'] === 'GET'
+    &&
+    $contentid > 0
+) {
+    redirect(
+        new moodle_url(
+            '/local/ustar/material.php',
+            ['id' => $contentid]
+        )
+    );
+}
+
 
 if ($parentid > 0) {
     $parentrecord = $DB->get_record('local_ustar_content', ['id' => $parentid, 'type' => 'folder'], 'id,parentid,title,type');
@@ -177,6 +205,27 @@ if (
                 PARAM_INT
             );
 
+        if ($action === 'move') {
+            $targetparentid = optional_param('targetparentid', 0, PARAM_INT);
+            $expectedmodified = required_param('expectedmodified', PARAM_INT);
+            $moveresult = \local_ustar\content_admin::move(
+                $postedcontentid,
+                $targetparentid,
+                $expectedmodified,
+                (int)$USER->id
+            );
+            redirect(
+                new moodle_url('/local/ustar/materials.php', ['parent' => $targetparentid]),
+                $moveresult['changed']
+                    ? 'Объект перемещён'
+                    : 'Объект уже находится в выбранной папке',
+                null,
+                $moveresult['changed']
+                    ? \core\output\notification::NOTIFY_SUCCESS
+                    : \core\output\notification::NOTIFY_INFO
+            );
+        }
+
         if ($action === 'save') {
 
             \local_ustar\content_admin::save(
@@ -213,6 +262,12 @@ if (
                         optional_param(
                             'parentid',
                             0,
+                            PARAM_INT
+                        ),
+
+                    'expectedmodified' =>
+                        required_param(
+                            'expectedmodified',
                             PARAM_INT
                         ),
 
@@ -318,6 +373,21 @@ if (
                     ]
                 ),
                 'Материал возвращён в черновики',
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
+        }
+
+
+        if ($action === 'delete') {
+            \local_ustar\content_admin::delete(
+                $postedcontentid,
+                (int)$USER->id,
+                optional_param('reason', '', PARAM_TEXT)
+            );
+            redirect(
+                new moodle_url('/local/ustar/materials.php', ['status' => 'all', 'parent' => $parentid]),
+                'Материал удалён из рабочего каталога. История сохранена.',
                 null,
                 \core\output\notification::NOTIFY_SUCCESS
             );
@@ -666,6 +736,305 @@ $rows = [];
 
 $selectedrecord = null;
 
+$movefolders = [[
+    'id' => 0,
+    'name' => 'Корень',
+]];
+foreach ($DB->get_records('local_ustar_content', ['type' => 'folder'], 'title ASC', 'id,title') as $folder) {
+    $movefolders[] = [
+        'id' => (int)$folder->id,
+        'name' => format_string($folder->title),
+    ];
+}
+
+
+
+/*
+ * ============================================================
+ * USTAR 2706 MATERIAL EXPLORER TYPE MODEL
+ * ============================================================
+ * Resolve an Explorer-style visual type from the actual content.
+ */
+$materialvisual = static function(\stdClass $record) use ($context): array {
+
+    if ((string)$record->type === 'folder') {
+        return [
+            'label' => 'ПАПКА',
+            'class' => 'folder',
+            'filename' => '',
+        ];
+    }
+
+    $filename = '';
+    $extension = '';
+
+    /*
+     * Native USTAR file:
+     * local_ustar / content_version / current version id.
+     */
+    if (
+        (string)$record->sourcekind
+        ===
+        \local_ustar\content::SOURCE_FILE
+    ) {
+        try {
+            $version =
+                \local_ustar\content::current_version(
+                    (int)$record->id
+                );
+
+            if ($version) {
+                $fs = get_file_storage();
+
+                $files = $fs->get_area_files(
+                    $context->id,
+                    'local_ustar',
+                    'content_version',
+                    (int)$version->id,
+                    'id ASC',
+                    false
+                );
+
+                if ($files) {
+                    $file = reset($files);
+
+                    $filename =
+                        (string)$file->get_filename();
+
+                    $extension =
+                        core_text::strtolower(
+                            pathinfo(
+                                $filename,
+                                PATHINFO_EXTENSION
+                            )
+                        );
+                }
+            }
+        } catch (\Throwable $e) {
+            // Fall back to catalog/Moodle type below.
+        }
+    }
+
+    /*
+     * Existing Moodle Resource:
+     * try to determine its real uploaded file extension too.
+     */
+    if (
+        $extension === ''
+        &&
+        (string)$record->sourcekind
+            ===
+            \local_ustar\content::SOURCE_MOODLE
+        &&
+        core_text::strtolower((string)$record->modname)
+            ===
+            'resource'
+        &&
+        !empty($record->cmid)
+    ) {
+        try {
+            $modulecontext =
+                \context_module::instance(
+                    (int)$record->cmid,
+                    IGNORE_MISSING
+                );
+
+            if ($modulecontext) {
+                $fs = get_file_storage();
+
+                $files = $fs->get_area_files(
+                    $modulecontext->id,
+                    'mod_resource',
+                    'content',
+                    0,
+                    'sortorder ASC, id ASC',
+                    false
+                );
+
+                if ($files) {
+                    $file = reset($files);
+
+                    $filename =
+                        (string)$file->get_filename();
+
+                    $extension =
+                        core_text::strtolower(
+                            pathinfo(
+                                $filename,
+                                PATHINFO_EXTENSION
+                            )
+                        );
+                }
+            }
+        } catch (\Throwable $e) {
+            // Fall back to module type.
+        }
+    }
+
+    $extensions = [
+        'pdf' => ['PDF', 'pdf'],
+
+        'doc' => ['DOC', 'doc'],
+        'docx' => ['DOCX', 'doc'],
+
+        'xls' => ['XLS', 'xls'],
+        'xlsx' => ['XLSX', 'xls'],
+        'csv' => ['CSV', 'xls'],
+
+        'ppt' => ['PPT', 'ppt'],
+        'pptx' => ['PPTX', 'ppt'],
+
+        'zip' => ['ZIP', 'archive'],
+        'rar' => ['RAR', 'archive'],
+        '7z' => ['7Z', 'archive'],
+
+        'jpg' => ['JPG', 'image'],
+        'jpeg' => ['JPG', 'image'],
+        'png' => ['PNG', 'image'],
+        'gif' => ['GIF', 'image'],
+        'webp' => ['WEBP', 'image'],
+        'svg' => ['SVG', 'image'],
+
+        'mp4' => ['MP4', 'video'],
+        'webm' => ['WEBM', 'video'],
+        'mov' => ['MOV', 'video'],
+        'mkv' => ['MKV', 'video'],
+
+        'mp3' => ['MP3', 'audio'],
+        'wav' => ['WAV', 'audio'],
+        'm4a' => ['M4A', 'audio'],
+        'ogg' => ['OGG', 'audio'],
+
+        'txt' => ['TXT', 'text'],
+        'md' => ['MD', 'text'],
+
+        'html' => ['HTML', 'web'],
+        'htm' => ['HTML', 'web'],
+
+        'json' => ['JSON', 'data'],
+        'xml' => ['XML', 'data'],
+    ];
+
+    if (
+        $extension !== ''
+        &&
+        isset($extensions[$extension])
+    ) {
+        return [
+            'label' => $extensions[$extension][0],
+            'class' => $extensions[$extension][1],
+            'filename' => $filename,
+        ];
+    }
+
+    $module =
+        core_text::strtolower(
+            trim((string)$record->modname)
+        );
+
+    $modules = [
+        'scorm' => ['SCORM', 'scorm'],
+        'quiz' => ['ТЕСТ', 'quiz'],
+        'page' => ['СТРАНИЦА', 'page'],
+        'lesson' => ['УРОК', 'lesson'],
+        'forum' => ['ФОРУМ', 'forum'],
+        'database' => ['БАЗА', 'data'],
+        'url' => ['ССЫЛКА', 'link'],
+        'assign' => ['ЗАДАНИЕ', 'assignment'],
+        'book' => ['КНИГА', 'book'],
+        'h5pactivity' => ['H5P', 'interactive'],
+        'resource' => ['FILE', 'file'],
+    ];
+
+    if (
+        $module !== ''
+        &&
+        isset($modules[$module])
+    ) {
+        return [
+            'label' => $modules[$module][0],
+            'class' => $modules[$module][1],
+            'filename' => $filename,
+        ];
+    }
+
+    $type =
+        core_text::strtolower(
+            trim((string)$record->type)
+        );
+
+    $types = [
+        'document' => ['FILE', 'file'],
+        'article' => ['СТАТЬЯ', 'page'],
+        'quiz' => ['ТЕСТ', 'quiz'],
+        'scorm' => ['SCORM', 'scorm'],
+        'lesson' => ['УРОК', 'lesson'],
+        'forum' => ['ФОРУМ', 'forum'],
+        'database' => ['БАЗА', 'data'],
+        'video' => ['ВИДЕО', 'video'],
+        'link' => ['ССЫЛКА', 'link'],
+        'assignment' => ['ЗАДАНИЕ', 'assignment'],
+        'interactive' => ['ИНТЕРАКТИВ', 'interactive'],
+        'collection' => ['КОЛЛЕКЦИЯ', 'collection'],
+    ];
+
+    if (isset($types[$type])) {
+        return [
+            'label' => $types[$type][0],
+            'class' => $types[$type][1],
+            'filename' => $filename,
+        ];
+    }
+
+    return [
+        'label' => 'FILE',
+        'class' => 'file',
+        'filename' => $filename,
+    ];
+};
+
+
+
+/*
+ * USTAR 2706 MATERIAL SEMANTIC LABELS
+ *
+ * Technical file type remains visible (PNG/DOCX/MP4/etc),
+ * while HR also receives an immediately understandable kind.
+ */
+$materialvisualcategories = [
+    'folder' => 'Папка',
+
+    'image' => 'Фото / изображение',
+    'video' => 'Видео',
+    'audio' => 'Аудио',
+
+    'pdf' => 'PDF-документ',
+    'doc' => 'Документ',
+    'xls' => 'Таблица',
+    'ppt' => 'Презентация',
+
+    'archive' => 'Архив',
+
+    'scorm' => 'Учебный модуль',
+    'quiz' => 'Тест',
+    'page' => 'Страница',
+    'lesson' => 'Урок',
+    'forum' => 'Обсуждение',
+    'book' => 'Книга',
+
+    'link' => 'Ссылка',
+    'web' => 'Веб-страница',
+
+    'text' => 'Текстовый документ',
+    'data' => 'Данные',
+
+    'assignment' => 'Задание',
+    'interactive' => 'Интерактив',
+    'collection' => 'Коллекция',
+
+    'file' => 'Файл',
+];
+
 
 foreach ($records as $record) {
 
@@ -711,6 +1080,11 @@ foreach ($records as $record) {
 
     $isfolder = (string)$record->type === 'folder';
 
+    $visual =
+        $materialvisual(
+            $record
+        );
+
     $urlparams = [
         'type' => $type,
         'status' => $status,
@@ -732,6 +1106,39 @@ foreach ($records as $record) {
 
         'id' =>
             (int)$record->id,
+
+        'timemodified' =>
+            (int)$record->timemodified,
+
+        'canmove' =>
+            $canmanage,
+
+        'candelete' =>
+            $canmanage && (string)$record->status !== 'archived',
+
+        'folderoptions' =>
+            array_values(array_filter(
+                $movefolders,
+                static fn(array $folder): bool =>
+                    (int)$folder['id'] !== (int)$record->id
+                    && (int)$folder['id'] !== $parentid
+            )),
+
+        'visualtype' =>
+            $visual['label'],
+
+        'visualclass' =>
+            $visual['class'],
+
+        'visualcategory' =>
+            $materialvisualcategories[
+                $visual['class']
+            ]
+            ??
+            'Файл',
+
+        'filename' =>
+            $visual['filename'],
 
         'title' =>
             format_string(
@@ -801,10 +1208,15 @@ foreach ($records as $record) {
 
         'url' =>
             (
-                new moodle_url(
-                    '/local/ustar/materials.php',
-                    $urlparams
-                )
+                $isfolder
+                    ? new moodle_url(
+                        '/local/ustar/materials.php',
+                        $urlparams
+                    )
+                    : new moodle_url(
+                        '/local/ustar/material.php',
+                        ['id' => (int)$record->id]
+                    )
             )->out(false),
     ];
 
@@ -822,39 +1234,8 @@ foreach ($records as $record) {
 
 
 /*
- * If nothing is explicitly selected,
- * use the first row.
- */
-
-if (
-    !$selectedrecord
-    &&
-    $records
-) {
-
-    foreach ($records as $candidate) {
-        if ((string)$candidate->type !== 'folder') {
-            $selectedrecord = $candidate;
-            break;
-        }
-    }
-
-    $contentid = $selectedrecord ? (int)$selectedrecord->id : 0;
-
-    foreach ($rows as &$row) {
-        $row['selected'] =
-            $row['id']
-            ===
-            $contentid;
-    }
-
-    unset($row);
-}
-
-
-/*
  * ------------------------------------------------------------
- * DETAIL PANEL
+ * DETAIL VIEW (opened deliberately by selecting a material)
  * ------------------------------------------------------------
  */
 
@@ -1353,6 +1734,9 @@ if ($selectedrecord) {
         'id' =>
             (int)$selectedrecord->id,
 
+        'timemodified' =>
+            (int)$selectedrecord->timemodified,
+
         'title' =>
             format_string(
                 $selectedrecord->title
@@ -1674,10 +2058,13 @@ if ($parentid > 0) {
         $next = (int)($cursor->parentid ?? 0);
         $cursor = $next > 0 ? $DB->get_record('local_ustar_content', ['id' => $next, 'type' => 'folder'], 'id,parentid,title') : false;
     }
-    foreach ($chain as $folder) {
+    $lastbreadcrumb = count($chain) - 1;
+    foreach ($chain as $index => $folder) {
         $breadcrumbs[] = [
+            'id' => (int)$folder->id,
             'title' => format_string($folder->title),
             'url' => (new moodle_url('/local/ustar/materials.php', ['parent' => (int)$folder->id]))->out(false),
+            'iscurrent' => $index === $lastbreadcrumb,
         ];
     }
     $current = end($chain);
@@ -1700,9 +2087,14 @@ $PAGE->set_context(
 );
 
 $PAGE->set_url(
-    new moodle_url(
-        '/local/ustar/materials.php'
-    )
+    $detailpage
+        ? new moodle_url(
+            '/local/ustar/material.php',
+            ['id' => $contentid]
+        )
+        : new moodle_url(
+            '/local/ustar/materials.php'
+        )
 );
 
 $PAGE->set_pagelayout(
@@ -1710,11 +2102,48 @@ $PAGE->set_pagelayout(
 );
 
 $PAGE->set_title(
-    'Материалы | Центр управления'
+    $detailpage && $selectedrecord
+        ? format_string($selectedrecord->title) . ' | Материалы'
+        : 'Материалы | Центр управления'
 );
 
 $PAGE->set_heading(
     'Центр управления'
+);
+
+$PAGE->requires->js_call_amd('local_ustar/materials', 'init');
+
+$materialmanagecss =
+    __DIR__ . '/material_manage.css';
+
+$PAGE->requires->css(
+    new moodle_url(
+        '/local/ustar/material_manage.css',
+        [
+            'v' => file_exists($materialmanagecss)
+                ? filemtime($materialmanagecss)
+                : time(),
+        ]
+    )
+);
+
+
+$materialsfullwidthcss =
+    __DIR__ . '/materials_fullwidth.css';
+
+$PAGE->requires->css(
+    new moodle_url(
+        '/local/ustar/materials_fullwidth.css',
+        [
+            'v' => file_exists($materialsfullwidthcss)
+                ? filemtime($materialsfullwidthcss)
+                : time(),
+        ]
+    )
+);
+
+$PAGE->requires->js_init_code(
+    "document.body.classList.add('u-materials-fullwidth-page');"
 );
 
 
@@ -1725,9 +2154,21 @@ $output =
 
 
 $data = [
+    'assessmentstudiourl' => (new moodle_url('/local/ustar/assessment_studio.php'))->out(false),
+    'studiourl' => (new moodle_url('/local/ustar/materials_studio.php'))->out(false),
 
     'canmanage' =>
         $canmanage,
+
+    'detailbackurl' =>
+        (
+            new moodle_url(
+                '/local/ustar/materials.php',
+                $selectedrecord && !empty($selectedrecord->parentid)
+                    ? ['parent' => (int)$selectedrecord->parentid]
+                    : []
+            )
+        )->out(false),
 
     'currentfolder' => $currentfoldertitle,
     'currentparentid' => $parentid,
@@ -1774,6 +2215,19 @@ $data = [
     'currentstatus' =>
         $status,
 
+    'hasactivefilters' =>
+        $q !== ''
+        || $type !== 'all'
+        || $status !== 'all',
+
+    'reseturl' =>
+        (
+            new moodle_url(
+                '/local/ustar/materials.php',
+                $parentid > 0 ? ['parent' => $parentid] : []
+            )
+        )->out(false),
+
     'typefilters' =>
         $typefilters,
 
@@ -1797,7 +2251,9 @@ $data = [
 echo $output->header();
 
 echo $output->render_from_template(
-    'local_ustar/materials',
+    $detailpage
+        ? 'local_ustar/material_manage'
+        : 'local_ustar/materials',
     $data
 );
 

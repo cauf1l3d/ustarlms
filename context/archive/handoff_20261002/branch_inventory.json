@@ -1,0 +1,665 @@
+{
+  "observed_at": "2026-10-02",
+  "source_baseline": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+  "scope": "remote heads observed before handoff publication; no branch deleted",
+  "branches": [
+    {
+      "branch": "codex/final-integration-rc-20260827",
+      "sha": "156adb5bfc35b7cbbc89809079be2965edc3d8c1",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/hotfix-rc43-production-gaps-20260922",
+      "sha": "db33e132e34122a6067944fa13797ea7f51d65a3",
+      "pull_request": 12,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/native-registration-hrd-20260923",
+      "sha": "000e7a4777c18afb6d7a4e2e3820f20d4a71c102",
+      "pull_request": 13,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/refactor-stage-1-20260920",
+      "sha": "e657cda7dc29750511535b94eee85b22ca7fdb86",
+      "pull_request": 2,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/refactor-stage-1-tracking-20260920",
+      "sha": "9b5473932db5e0c061e6544c1970bc88dbeedeb7",
+      "pull_request": 3,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/refactor-stage-2-20260920",
+      "sha": "2502281af5e687a7bcb094b2bad8593d480304d7",
+      "pull_request": 4,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/review-six-stages-20260922",
+      "sha": "41fde9f972f0fce0e440dc0523d9d55491f0f62f",
+      "pull_request": 11,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/stage2-employment-state",
+      "sha": "0f0b720513a181e5b941803230860178e1305948",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_scaffolding_not_merged"
+    },
+    {
+      "branch": "codex/stage2-r10-employment-lifecycle",
+      "sha": "67114663dcdcd043cd5791245feb353b014b1866",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_scaffolding_not_merged"
+    },
+    {
+      "branch": "codex/stage2-r10-employment-model",
+      "sha": "3eda03e6fee10632c62ecb6baa0c47a104d644bf",
+      "pull_request": 5,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/stage2-r11-capability-matrix",
+      "sha": "51e116b5a4dd5f007ee7fe7fc2d907b9cb58cae7",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_scaffolding_not_merged"
+    },
+    {
+      "branch": "codex/stage2-r11-position-capability-mapping",
+      "sha": "bf656bbe6eaac752d127df184a33baddbc35ba3f",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_scaffolding_not_merged"
+    },
+    {
+      "branch": "codex/stage2-r12-consumer-migration",
+      "sha": "865b1977a1b3a562d41e15751449d3ea76c71c21",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_scaffolding_not_merged"
+    },
+    {
+      "branch": "codex/stage2-r12-consumer-migration-wiring",
+      "sha": "b5d2eb8f864519a940f7e17d7a61cc5131f35d96",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_scaffolding_not_merged"
+    },
+    {
+      "branch": "codex/stage3-registration-hr-console",
+      "sha": "1bd6f22335ee931c3e8c3614da391a13dae33752",
+      "pull_request": 6,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/stage4-standards-route-studio",
+      "sha": "9fc43603a65925034859eb76c23ba0fdf0d01ba4",
+      "pull_request": 7,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/stage5-completion-rewards",
+      "sha": "df5abe55101ea1da0befc01c63ae11c6b1502bef",
+      "pull_request": 8,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/stage6-materials-scope",
+      "sha": "0ac814279d3deb00644f3227971885c7556c9892",
+      "pull_request": 9,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "codex/stage6-product-services",
+      "sha": "8a6325bafb4bf83c55e22ae04b6579fcf60fb1bb",
+      "pull_request": 10,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-access-migration-safety-20260928",
+      "sha": "6d7c50d5f6adb87d6e63aab2426cda628f6f02eb",
+      "pull_request": 41,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-adaptation-reset-20261002",
+      "sha": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+      "pull_request": 76,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-app-icon-20261002",
+      "sha": "79be8529f949cc86164d287c5089f7d4271a9ca5",
+      "pull_request": 75,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-avatars-login-20261002",
+      "sha": "dd6e06efc0d4b2a9cab68cce4745393dfc572b21",
+      "pull_request": 74,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-complete-rc-20260923",
+      "sha": "dd28e35e32b313b7221176f1c0ea66a1921b7948",
+      "pull_request": 14,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-context-g00-20260927",
+      "sha": "893c4f5485a7d6f48d086a210b8fad8769d08e35",
+      "pull_request": 19,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "codex/ustar-context-g02-20260927",
+      "sha": "51f7f33cad9d3bb38469241922c81e94eea138b8",
+      "pull_request": 23,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "codex/ustar-context-g03-20260927",
+      "sha": "b11a8fa3d7b3e5ee2b0975be23d8d5c075c2d570",
+      "pull_request": 26,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "codex/ustar-direct-launch-gates-20260928",
+      "sha": "42a3aa53134d7559dd600fb57b815edec93a01ff",
+      "pull_request": 47,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-feed-control-hotfix-20260928",
+      "sha": "ccae2ca209bf93ca0d8ca7273cb4d366f8c6b2a8",
+      "pull_request": 50,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-feed-experience-20260928",
+      "sha": "2f100e1faf6dbd885ad32fa7109e47c0fa4ef44f",
+      "pull_request": 51,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-feed-followup-20260928",
+      "sha": "5c98d68a5431aeffbfd7a812aa4ed3600af06af7",
+      "pull_request": 52,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-feed-knowledge-reaction-20260928",
+      "sha": "878b894e5250885f8259516e0c232ee5df718216",
+      "pull_request": 53,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-feed-native-shell-20260928",
+      "sha": "79e1591b02bf8ab9cdf8c33c095266db28662198",
+      "pull_request": 49,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "codex/ustar-feed-rss-poc-20260928",
+      "sha": "239ed4b1233a704abe3bdd87e12aa9db7c623cff",
+      "pull_request": 54,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-feed-rss-stage2-20260928",
+      "sha": "d77386b0cd88002ce0c03bee091e022ad1dd770c",
+      "pull_request": 55,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-feed-rss-stage3-20260928",
+      "sha": "b5c9da09ac4ba5c64dda774981717e43c55efb80",
+      "pull_request": 56,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g01-org-contracts-20260927",
+      "sha": "51a67a7e5eb1e8f6dc49eb8c552ed76bd12a69e0",
+      "pull_request": 20,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g02-register-20260927",
+      "sha": "add125f5da90e488df594c25fbafd5636b34df39",
+      "pull_request": 22,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g02-workspace-notifications-20260927",
+      "sha": "bd4561268562e3438f0402555400110f16acc55b",
+      "pull_request": 21,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g03-checklists-20260927",
+      "sha": "3a15a432216dd16909998167129be433aced6830",
+      "pull_request": 24,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g03-cont-20260927",
+      "sha": "65a7baf122fbf3c008718ba428a5da840b66ed84",
+      "pull_request": 25,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g04-portable-onboarding-20260928",
+      "sha": "a4bddcb673716cadae67ffa617e05cee90af2084",
+      "pull_request": 34,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g04-positions-20260927",
+      "sha": "ae70b8a37159426a04941c350bc3742077462734",
+      "pull_request": 27,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g05-grades-20260927",
+      "sha": "5c44eace8330ab4607017ca653935b635b36d759",
+      "pull_request": 28,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g05-ladders-20260927",
+      "sha": "f1dfa079f2e4a19efa7038407cbbba22812cc0f8",
+      "pull_request": 29,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g06-feed-20260927",
+      "sha": "93028a85f1bbe1329e92fc1bf89f60eff59c1bc6",
+      "pull_request": 30,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g06-privacy-20260928",
+      "sha": "79aaffc8a453a2d5ebd20abf2440dc57cd0334e5",
+      "pull_request": 31,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g07-grade-reads-20260928",
+      "sha": "91012f44700ee0be6f182047a65eb4bb6ab4e870",
+      "pull_request": 35,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g07-hr-pagination-20260928",
+      "sha": "89471097a60eb92b6a391586acf7166fcdeae73d",
+      "pull_request": 33,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g07-native-read-20260928",
+      "sha": "53692a24cde97a3d722cde23c25c4cc084975ad7",
+      "pull_request": 39,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g07-route-snapshot-20260928",
+      "sha": "c9bba8ce627265525836e9293f28e6a936f6ee5c",
+      "pull_request": 36,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g08-feed-style-20260928",
+      "sha": "b4c417e1b7325d620b9e989fd6e35eac4c4a5c41",
+      "pull_request": 40,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g09-cli-safety-20260928",
+      "sha": "95ff66296b4f0207057456f51a97c05cf42793e5",
+      "pull_request": 37,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-g09-content-locks-20260928",
+      "sha": "a45c5aef19ff64a946e9b64ebed5a492c44fd982",
+      "pull_request": 38,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-grade-assignment-picker-hotfix-20260929",
+      "sha": "81621eaa98c362669b2cc5c57e15476713054c9c",
+      "pull_request": 61,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-grade-auto-initial-filters-20260929",
+      "sha": "80711a6760b00b9699386707fa799937e7926990",
+      "pull_request": 59,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-grade-request-labels-20260929",
+      "sha": "650cc437cd9b8588eeccbefb7d44cf774283d1a7",
+      "pull_request": 57,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-grade-route-auto-request-20260929",
+      "sha": "71b2292eeb7e929727bac661d9d27395c32eb997",
+      "pull_request": 58,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-grade-rules-binding-flow-20260929",
+      "sha": "0dfe6dcbca25700452b01c19dfecfa3a818a0df2",
+      "pull_request": 62,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-grades-page-state-hotfix-20260929",
+      "sha": "5fbf9dbdc5682a6de133ede683d71894febddbc4",
+      "pull_request": 60,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-home-route-snapshot-20260928",
+      "sha": "fa0cf2da2e5ee6028d81444bc4a58cdf3de4ae60",
+      "pull_request": 44,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-install-only-20260930",
+      "sha": "daa302598525837698dd89087e0ea8a4e0e0ddcf",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_installer_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-learning-release-20260925",
+      "sha": "c2214c2f8b59350c3322d1a7a262a579514736e8",
+      "pull_request": 15,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-local-notification-delivery-20260928",
+      "sha": "90e2686c60ee0927cd121b2555ab757b1724b761",
+      "pull_request": 42,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-mobile-messages-20261001",
+      "sha": "971be902c4554539650aafc39e81fbc61354de7b",
+      "pull_request": 72,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-next-rc-prep-20260927",
+      "sha": "a207c9e7c2b4447e0a0bd0e70dbc06458f7cc0c2",
+      "pull_request": 18,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-notebook-competition-20260930",
+      "sha": "301cc7229246e0f212733221acc4659b05418cc8",
+      "pull_request": 70,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-personal-workspace-20260930",
+      "sha": "c77ba822423855ea822be461efc91793e3189afe",
+      "pull_request": 71,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-postrelease-fixes-20260926",
+      "sha": "0e1eba2ca08b11f929730ab09df7bc91732f0e62",
+      "pull_request": 16,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-pr68-deploy-20260930",
+      "sha": "3632c32ef9bce8e8e6a51ffa42776ddb3371e876",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_installer_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-product-plan-20260927",
+      "sha": "39ee7851b91facfab6afbc16a5ea9da39b7699e1",
+      "pull_request": 17,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-rc-integration-20260928",
+      "sha": "dd743da7141fecf8897598f6f43c60ba2b5af243",
+      "pull_request": 32,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-recruiter-access-hotfix-20260930",
+      "sha": "e7f894ef408e2ee0119477fbc648285e422797af",
+      "pull_request": 68,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-registration-adaptation-handoff-20260929",
+      "sha": "9b1810d73951756b5b2d747a3aecaae371298bc4",
+      "pull_request": 63,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-route-read-contract-20260928",
+      "sha": "14ba312d30b8dab87f70dc1b3ee49293c00a823a",
+      "pull_request": 46,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-route-writer-contract-20260928",
+      "sha": "7cc5587d300c799fc43e3f95c2ebc01cf3e50988",
+      "pull_request": 48,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-search-products-scope-20260928",
+      "sha": "5e0f06b68631cb39d22638e8d02c456fb5b6dfed",
+      "pull_request": 43,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-season-team-20261002",
+      "sha": "fb4036f53928749f42cbaffbfc2f925ada8a7551",
+      "pull_request": 73,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-task-workspace-context-20260930",
+      "sha": "9e3b490dd66a9f7d44955e691aa77438af63e1cf",
+      "pull_request": 65,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "codex/ustar-task-workspace-rc-20260930",
+      "sha": "06b0b75496b9e3fe613b1001fa7ae599cf7ced80",
+      "pull_request": 64,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-unified-inbox-20260928",
+      "sha": "98c9e20bc8f1b5dfefe48d10607fd37d30f7ff70",
+      "pull_request": 45,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "codex/ustar-ux-services-20260930",
+      "sha": "6b62e6ed8fa5689a602a24f905b7e652e52e133b",
+      "pull_request": 69,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "codex/ustar-workspace-hr-rewards-20260930",
+      "sha": "0b369f626a0bdfc03446a305ba4ce902444f4ef1",
+      "pull_request": 66,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "feature/USTAR_UX_CLEANUP_20260917_RC1",
+      "sha": "91380fbcc87ab6e14427b00adc3a95d9952ce885",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "feature/manual-forced-retraining-20260917",
+      "sha": "91380fbcc87ab6e14427b00adc3a95d9952ce885",
+      "pull_request": 1,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_alternative_or_docs_see_pr_inventory"
+    },
+    {
+      "branch": "feature/route-position-parent-override",
+      "sha": "f4961bc3207eeb2bff8b28a3cc84dffa7e5b5df4",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "integration/ustar-20260912",
+      "sha": "48326c6a011f58b985d251cb0462835bc1d37a16",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "integration/ustar-20260919",
+      "sha": "4503b3b739e1d59ee5e991e935de1eccb9657d99",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "main",
+      "sha": "99248772a91526c87c1a31f425d1a07906727152",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "previous_canonical_main"
+    },
+    {
+      "branch": "prod-sync-20260906_210811",
+      "sha": "4f13ba6d072289b7d56c9b767962118b6e826464",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "prod-sync-20260919",
+      "sha": "378d397152a8c83f8b0d046e2e561ab2732d6b02",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "release/ustar-1.8.0-rc43-prod-smoke",
+      "sha": "41fde9f972f0fce0e440dc0523d9d55491f0f62f",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    },
+    {
+      "branch": "snapshot/production-20260923T111550Z",
+      "sha": "003bab85cfab53078cba1ddbc3e837d4ef3680f2",
+      "pull_request": null,
+      "contained_in_source_baseline": false,
+      "disposition": "historical_production_snapshot_not_current_baseline"
+    },
+    {
+      "branch": "ustar-final-audit-release",
+      "sha": "156adb5bfc35b7cbbc89809079be2965edc3d8c1",
+      "pull_request": null,
+      "contained_in_source_baseline": true,
+      "disposition": "contained_historical_ref_retained"
+    }
+  ]
+}

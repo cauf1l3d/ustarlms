@@ -1,0 +1,44 @@
+<div class="u-pos u-pos-catalog">
+    <header class="u-pos-head u-pos-catalog__head">
+        <div>
+            <p class="u-pagehead__eyebrow">Центр управления USTAR</p>
+            <h1>Модели должностей</h1>
+            <p>Выберите должность, чтобы настроить требования, обучение и применение стандарта.</p>
+        </div>
+        {{#canmanage}}<a class="u-btn u-btn--primary" href="{{structureurl}}">Добавить должность</a>{{/canmanage}}
+    </header>
+
+    <form class="u-pos-catalog__filters" method="get" action="{{catalogurl}}" role="search">
+        <label for="u-pos-query">Поиск должности или подразделения
+            <input id="u-pos-query" type="search" name="q" value="{{query}}" maxlength="100" placeholder="Например, консультант">
+        </label>
+        <label for="u-pos-department">Подразделение
+            <select id="u-pos-department" name="department">
+                <option value="">Все подразделения</option>
+                {{#departments}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/departments}}
+            </select>
+        </label>
+        <button class="u-btn u-btn--primary" type="submit">Показать</button>
+        <a class="u-btn u-btn--quiet" href="{{catalogurl}}">Сбросить</a>
+    </form>
+
+    <section class="u-pos-catalog__results" aria-label="Должности">
+        <div class="u-pos-catalog__summary">Найдено: {{count}}</div>
+        {{#haspositions}}
+        <div class="u-pos-catalog__grid">
+            {{#positions}}
+            <a class="u-pos-catalog__card" href="{{url}}">
+                <span class="u-pos-catalog__department">{{department}}</span>
+                <strong>{{name}}</strong>
+                <span class="u-pos-catalog__meta">Ступень {{level}} <span class="u-pos-catalog__status {{#published}}is-published{{/published}}">{{status}}</span></span>
+                <span class="u-pos-catalog__open">Открыть модель →</span>
+            </a>
+            {{/positions}}
+        </div>
+        {{/haspositions}}
+        {{^haspositions}}<div class="u-hr-empty">Должности не найдены. Измените поиск или фильтр. {{#canmanage}}Создать должность можно в настройках подразделений.{{/canmanage}}</div>{{/haspositions}}
+        {{#hasprevious}}<a class="u-btn u-btn--quiet" href="{{previousurl}}">← Назад</a>{{/hasprevious}}
+        {{#hasnext}}<a class="u-btn u-btn--quiet" href="{{nexturl}}">Дальше →</a>{{/hasnext}}
+        {{#haspositions}}<span class="u-pos-catalog__pages">Страница {{page}} из {{pages}}</span>{{/haspositions}}
+    </section>
+</div>

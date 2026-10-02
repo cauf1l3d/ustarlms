@@ -3,7 +3,7 @@ import { getSessionToken } from "@/lib/session";
 import { moodleCall } from "@/lib/moodle";
 
 export async function GET() {
-  const token = getSessionToken();
+  const token = await getSessionToken();
   if (!token) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   try {
     const info = await moodleCall(token, "core_user_get_private_files_info");

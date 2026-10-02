@@ -4,6 +4,8 @@
     ========================================================== }}
 
 {{#viewhome}}
+<div class="u-home-layout" data-home-layout data-settings="{{homelayoutjson}}" data-url="{{homelayouturl}}" data-sesskey="{{sesskey}}" data-editable="{{canpersonalize}}">
+<div class="u-home-widget" data-home-block="hero" data-home-label="Приветствие">
 
 <section class="u-home-hero">
     <div class="u-home-hero__brand">
@@ -16,8 +18,8 @@
         <a href="{{profileurl}}">Открыть личный кабинет →</a>
     </div>
 </section>
-
-
+</div>
+<div class="u-home-widget" data-home-block="next" data-home-label="Следующее действие">
 {{#hashomenext}}
 {{#homenext}}
 
@@ -127,9 +129,9 @@
 </section>
 
 {{/hashomenext}}
-
-
-<div class="u-home-grid">
+</div>
+{{{workflowshtml}}}
+<div class="u-home-widget" data-home-block="links" data-home-label="Быстрые переходы"><div class="u-home-grid">
 
     <a
         class="u-home-tile u-home-tile--icon"
@@ -221,6 +223,10 @@
 
 </div>
 
+</div>
+{{#homeextras}}<section class="u-home-widget uw-panel uw-editor" data-home-block="{{id}}" data-home-label="{{label}}"><h2>{{label}}</h2><p>{{description}}</p><a class="uw-btn" href="{{url}}">Открыть →</a></section>{{/homeextras}}
+</div>
+<div class="u-home-settings">{{#canpersonalize}}<details><summary class="uw-btn">Настроить главную</summary><div data-home-controls></div><button type="button" class="uw-btn" data-home-reset>Стандартный вид</button><p data-home-status role="status" aria-live="polite"></p></details>{{/canpersonalize}}</div>
 {{/viewhome}}
 
 
@@ -876,7 +882,9 @@
     <a class="u-feature-card" href="{{gamesurl}}">{{{gameicon}}}<div><strong>Игровые задания</strong><span>Микрообучение и XP</span></div><b>→</b></a>
     <a class="u-feature-card" href="{{achievementsurl}}">{{{trophyicon}}}<div><strong>Достижения</strong><span>Уровни и награды</span></div><b>→</b></a>
     <a class="u-feature-card" href="{{checklistsurl}}">{{{checkicon}}}<div><strong>Чек-листы</strong><span>Рабочие evidence</span></div><b>→</b></a>
+    {{#hasdevelopmentassessment}}<a class="u-feature-card" href="{{developmentassessmenturl}}">{{{sparkicon}}}<div><strong>Мой развивающий профиль</strong><span>Саморефлексия и рекомендации</span></div><b>→</b></a>{{/hasdevelopmentassessment}}
     {{#hasteam}}<a class="u-feature-card" href="{{teamurl}}">{{{teamicon}}}<div><strong>Моя команда</strong><span>Прогресс руководителя</span></div><b>→</b></a>{{/hasteam}}
+    {{#hasdevelopmentanalytics}}<a class="u-feature-card" href="{{developmentanalyticsurl}}">{{{profileicon}}}<div><strong>Развитие команды</strong><span>Защищённая аналитика HRD</span></div><b>→</b></a>{{/hasdevelopmentanalytics}}
     {{#hasexecutive}}<a class="u-feature-card" href="{{executiveurl}}">{{{executiveicon}}}<div><strong>Руководство</strong><span>Готовность компании</span></div><b>→</b></a>{{/hasexecutive}}
 </div>
 

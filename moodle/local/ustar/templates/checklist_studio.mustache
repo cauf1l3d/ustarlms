@@ -1,6 +1,7 @@
 <div class="u-product-page u-content-studio">
     <header class="u-product-head"><div><p class="u-page-kicker">Checklist Studio</p><h1>Операционные чек-листы</h1><p>Редактирование заданий и аудит выполнений. История runs остаётся relational и не удаляется при изменении шаблона.</p></div>{{{checkicon}}}</header>
-    {{#saved}}<div class="u-inline-notice u-inline-notice--success"><strong>Чек-листы опубликованы</strong><span>Новая версия определений уже применяется сотрудникам.</span></div>{{/saved}}
+    {{#saved}}<div class="u-inline-notice u-inline-notice--success"><strong>Черновик сохранён</strong><span>Сотрудники увидят изменения после публикации.</span></div>{{/saved}}
+    {{#published}}<div class="u-inline-notice u-inline-notice--success"><strong>Версия опубликована</strong><span>Новые выполнения используют обновлённый шаблон.</span></div>{{/published}}
 
     <section class="u-stat-grid u-stat-grid--3">
         <article class="u-stat-card"><span>Сегодня</span><strong>{{todayruns}}</strong><small>запусков · {{todaydate}}</small></article>
@@ -11,14 +12,16 @@
     <div class="u-studio-layout">
         <aside class="u-studio-list">
             <a class="u-btn u-btn--primary" href="{{newurl}}">+ Новый чек-лист</a>
-            {{#items}}<a href="{{url}}" class="u-studio-list__row {{#selected}}is-selected{{/selected}}"><strong>{{title}}</strong><span>{{#active}}Активен{{/active}}{{^active}}Выключен{{/active}}</span></a>{{/items}}
+            {{#items}}<a href="{{url}}" class="u-studio-list__row {{#selected}}is-selected{{/selected}}"><strong>{{title}}</strong><span>{{#active}}Активен{{/active}}{{^active}}Выключен{{/active}}{{draftlabel}}</span></a>{{/items}}
         </aside>
         <section class="u-studio-editor">
             {{#current}}
             <form method="post">
                 <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="originalid" value="{{id}}">
+                <input type="hidden" name="action" value="draft"><input type="hidden" name="draftrevision" value="{{draftrevision}}">
+                <p class="u-page-kicker">{{#hasdraft}}Черновик · версия {{draftversion}}{{/hasdraft}}{{^hasdraft}}Опубликованная версия {{publishedversion}}{{/hasdraft}}</p>
                 <div class="u-studio-form-grid">
-                    <label class="u-field"><span>ID</span><input type="text" name="checklistid" value="{{id}}" required placeholder="retail_morning"></label>
+                    <label class="u-field"><span>ID</span><input type="text" name="checklistid" value="{{id}}" required {{^isnew}}readonly{{/isnew}} placeholder="retail_morning"></label>
                     <label class="u-field"><span>Название</span><input type="text" name="title" value="{{title}}" required></label>
                     <label class="u-field"><span>Периодичность</span><select name="recurrence">{{#recurrenceoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/recurrenceoptions}}</select></label>
                     <label class="u-switch-field"><input type="checkbox" name="active" value="1" {{#active}}checked{{/active}}><span>Шаблон активен</span></label>
@@ -26,8 +29,14 @@
                 <label class="u-field"><span>Описание</span><textarea name="description" rows="3">{{description}}</textarea></label>
                 <label class="u-field"><span>Назначить должностям</span><select name="positionids[]" multiple size="8">{{#positionoptions}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/positionoptions}}</select><small>Если ничего не выбрано — чек-лист доступен всем.</small></label>
                 <label class="u-field"><span>Структура чек-листа</span><textarea class="u-outline-editor" name="outline" rows="18" required>{{outline}}</textarea><small>Формат: строка «## Раздел», затем пункты «- Проверить ...». Это обычный редактор, JSON знать не нужно.</small></label>
-                <button class="u-btn u-btn--primary u-btn--large" type="submit">Сохранить и опубликовать</button>
+                <button class="u-btn u-btn--primary u-btn--large" type="submit">Сохранить черновик</button>
             </form>
+            {{#hasdraft}}<form method="post">
+                <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="publish">
+                <input type="hidden" name="originalid" value="{{id}}"><input type="hidden" name="draftversion" value="{{draftversion}}">
+                <input type="hidden" name="draftrevision" value="{{draftrevision}}">
+                <button class="u-btn u-btn--quiet" type="submit">Опубликовать версию {{draftversion}}</button>
+            </form>{{/hasdraft}}
             {{/current}}
         </section>
     </div>

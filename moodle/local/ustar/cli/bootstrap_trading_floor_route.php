@@ -22,9 +22,16 @@ if ($unrecognized) {
     cli_error('Неизвестные параметры: ' . implode(', ', $unrecognized));
 }
 if (!empty($options['help'])) {
-    echo "USTAR: типовой маршрут Торгового зала\n\n";
-    echo "php bootstrap_trading_floor_route.php [--apply] [--positionid=retail_seller] [--course-shortname=ТЗ-ОСН] [--rename-position=1]\n";
+    echo "USTAR: диагностика исторического маршрута Торгового зала (только чтение)\n\n";
+    echo "php bootstrap_trading_floor_route.php [--positionid=retail_seller] [--course-shortname=ТЗ-ОСН]\n";
+    echo "Для переноса вводных шагов используйте Route Studio. --apply отключён.\n";
     exit(0);
+}
+
+// This legacy bootstrap encodes retail names and could rewrite an existing
+// route/position. Its historical apply path must never run on a live academy.
+if (!empty($options['apply'])) {
+    cli_error('RETIRED_APPLY: use Route Studio and review the six-point introduction preview');
 }
 
 $positionid = clean_param((string)$options['positionid'], PARAM_ALPHANUMEXT);
@@ -113,94 +120,9 @@ echo 'HIDDEN_SKIPPED=' . count($skippedhidden) . PHP_EOL;
 foreach ($skippedhidden as $item) {
     echo '  SKIP_HIDDEN cmid=' . $item['cmid'] . ' mod=' . $item['modname'] . ' name=' . $item['name'] . PHP_EOL;
 }
+echo "FIRST_STEP=Экспресс-профиль командного взаимодействия\n";
+echo "POST_ATTESTATION_VIDEO_SCENARIOS=2\n";
+echo "VIDEO_ASSET_STATUS=BLOCKED_OWNER_CONTENT_REQUIRED\n";
 
-if (!$apply) {
-    echo "NEXT=Run with --apply after reviewing detected content.\n";
-    exit(0);
-}
-
-$transaction = $DB->start_delegated_transaction();
-$actorid = 0;
-
-if ($rename && (string)$structure['positions'][$positionindex]['name'] !== 'Работник Торгового зала') {
-    $structure['positions'][$positionindex]['name'] = 'Работник Торгового зала';
-    \local_ustar\structure::save(\local_ustar\structure::NAME_STRUCTURE, $structure);
-    echo "POSITION_RENAMED=Работник Торгового зала\n";
-}
-
-$route = \local_ustar\route_model::ensure_route($positionid, $actorid);
-$sort = 10;
-$createdpublished = 0;
-$createddraft = 0;
-
-foreach ($tracked as $item) {
-    $key = 'cm_' . $item['cmid'];
-    if (!\local_ustar\route_model::find_point((int)$route->id, $key)) {
-        \local_ustar\route_model::add_point((int)$route->id, $key, \local_ustar\route_model::PHASE_ADAPTATION, $sort, [
-            'title' => $item['name'],
-            'summary' => 'Реальная Moodle-активность из курса «' . format_string($course->fullname) . '». Завершение проверяется по Moodle completion.',
-            'requirements' => [[
-                'type' => 'cm',
-                'sourceid' => $item['cmid'],
-                'required' => true,
-                'label' => $item['name'],
-            ]],
-            'renewalpolicy' => \local_ustar\route_model::RENEW_KEEP,
-            'validdays' => 0,
-            'status' => \local_ustar\route_model::STATUS_PUBLISHED,
-            'effectivedate' => 0,
-        ], $actorid);
-        $createdpublished++;
-    }
-    $sort += 10;
-}
-
-// Untracked or hidden Moodle activities are intentionally not inserted.
-// They stay visible in dry-run output until completion tracking/content quality is reviewed.
-if (!\local_ustar\route_model::find_point((int)$route->id, 'admission_gate')) {
-    \local_ustar\route_model::add_point((int)$route->id, 'admission_gate', \local_ustar\route_model::PHASE_GATE, 900, [
-        'title' => 'Допуск к самостоятельной работе',
-        'summary' => 'Системная контрольная точка. Закрывается только после всех предыдущих опубликованных обязательных точек адаптации.',
-        'requirements' => [[
-            'type' => 'previous_adaptation',
-            'required' => true,
-            'label' => 'Все предыдущие обязательные точки адаптации',
-        ]],
-        'renewalpolicy' => \local_ustar\route_model::RENEW_KEEP,
-        'validdays' => 0,
-        'status' => \local_ustar\route_model::STATUS_PUBLISHED,
-        'effectivedate' => 0,
-    ], $actorid);
-    $createdpublished++;
-}
-
-$continuous = [
-    ['new_products', 'Новинки ассортимента', 'Новые товарные позиции и знания продавца по ним.'],
-    ['standards_updates', 'Изменения стандартов', 'Новые версии регламентов, стандартов обслуживания и работы торгового зала.'],
-    ['seasonal_learning', 'Сезонное обучение', 'Обязательные сезонные темы и кампании.'],
-];
-$sort = 1000;
-foreach ($continuous as [$key, $title, $summary]) {
-    if (!\local_ustar\route_model::find_point((int)$route->id, $key)) {
-        \local_ustar\route_model::add_point((int)$route->id, $key, \local_ustar\route_model::PHASE_CONTINUOUS, $sort, [
-            'title' => $title,
-            'summary' => $summary . ' Точка создана как шаблон и пока не опубликована сотрудникам.',
-            'requirements' => [],
-            'renewalpolicy' => \local_ustar\route_model::RENEW_ALL,
-            'validdays' => 0,
-            'status' => \local_ustar\route_model::STATUS_DRAFT,
-            'effectivedate' => 0,
-        ], $actorid);
-        $createddraft++;
-    }
-    $sort += 10;
-}
-
-$transaction->allow_commit();
-$route = \local_ustar\route_model::ensure_route($positionid, $actorid);
-
-echo 'ROUTE_ID=' . (int)$route->id . PHP_EOL;
-echo 'ROUTE_NAME=' . (string)$route->name . PHP_EOL;
-echo 'PUBLISHED_POINTS_CREATED=' . $createdpublished . PHP_EOL;
-echo 'DRAFT_POINTS_CREATED=' . $createddraft . PHP_EOL;
-echo "TRADING_FLOOR_ROUTE_BOOTSTRAP=OK\n";
+echo "NEXT=Use Route Studio to create or transfer reviewed introduction steps.\n";
+exit(0);

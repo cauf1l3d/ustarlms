@@ -2,6 +2,25 @@
 defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
+    ['classname'=>'local_ustar\\task\\reconcile_competitions','blocking'=>0,'minute'=>'*/5','hour'=>'*','day'=>'*','month'=>'*','dayofweek'=>'*'],
+    [
+        'classname' => 'local_ustar\\task\\reconcile_reporting',
+        'blocking' => 0,
+        'minute' => '5',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
+        'classname' => 'local_ustar\\task\\reconcile_rewards',
+        'blocking' => 0,
+        'minute' => '10,40',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
     [
         'classname' => 'local_ustar\task\sync_enrolments',
         'blocking'  => 0,
@@ -10,5 +29,46 @@ $tasks = [
         'day'       => '*',
         'month'     => '*',
         'dayofweek' => '*',
+    ],
+    [
+        'classname' => 'local_ustar\\task\\import_feed_sources',
+        'blocking' => 0,
+        'minute' => '*/15',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
+        'classname' => 'local_ustar\\task\\submit_grade_requests',
+        'blocking' => 0,
+        'minute' => '*/5',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
+        'classname' => 'local_ustar\\task\\enrich_feed_sources',
+        'blocking' => 0,
+        'minute' => '2,7,12,17,22,27,32,37,42,47,52,57',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ],
+    [
+        'classname' => 'local_ustar\\task\\renew_acting_assignments',
+        'blocking'  => 0,
+        'minute'    => '20',
+        'hour'      => '3',
+        'day'       => '*',
+        'month'     => '*',
+        'dayofweek' => '*',
+    ],
+    [
+        'classname' => 'local_ustar\\task\\process_work_tasks',
+        'blocking' => 0, 'minute' => '*/5', 'hour' => '*',
+        'day' => '*', 'month' => '*', 'dayofweek' => '*',
     ],
 ];

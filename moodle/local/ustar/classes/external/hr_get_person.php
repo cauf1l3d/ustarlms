@@ -21,6 +21,9 @@ class hr_get_person extends base {
         ['userid' => $userid] = self::validate_parameters(self::execute_parameters(), ['userid' => $userid]);
 
         $u = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
+        if (!\local_ustar\accounts::is_business_account($userid)) {
+            throw new \invalid_parameter_exception('Сотрудник недоступен в кадровом контуре USTAR');
+        }
         $resolved = structure::resolve_user($userid);
         $st = $resolved['structure'];
         $position = $resolved['position'];

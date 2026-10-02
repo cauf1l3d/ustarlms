@@ -1,0 +1,17 @@
+domain: mobile_web
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Responsive shell, PWA manifest/icon и offline notice
+services:
+- moodle/local/ustar/classes/mobile_app.php
+- moodle/local/ustar/classes/hook_callbacks.php
+tables: []
+rules:
+- Only public offline notice and icons cached
+- No private offline learning or finished Android/iOS client
+- TLS/DNS/trust require runtime verification
+entry_points:
+- moodle/local/ustar/app_manifest.php
+- moodle/local/ustar/app_icon.php
+- moodle/local/ustar/app_worker.php
+- moodle/local/ustar/app_offline.php

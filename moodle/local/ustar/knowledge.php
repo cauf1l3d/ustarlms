@@ -6,6 +6,18 @@ require_login();
 
 global $USER;
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_sesskey();
+    \local_ustar\feed_access::require_actor((int)$USER->id);
+    if (required_param('action', PARAM_ALPHA) !== 'removefeedfile') {
+        throw new invalid_parameter_exception('Неизвестное действие.');
+    }
+    \local_ustar\feed_files::remove_from_library(required_param('savedid', PARAM_INT),
+        (int)$USER->id);
+    redirect(new moodle_url('/local/ustar/knowledge.php',
+        ['view' => 'knowledge', 'theme' => 'ustar']));
+}
+
 $context =
     context_system::instance();
 
@@ -149,17 +161,36 @@ $categoryfilter =
         PARAM_ALPHANUMEXT
     );
 
+// Saved feed files are personal copies, separate from route learning events.
+$feedpage = max(0, min(10000, optional_param('feedpage', 0, PARAM_INT)));
+$feedtotal = \local_ustar\accounts::participates((int)$USER->id)
+    && \local_ustar\employment::is_active((int)$USER->id)
+    && !\local_ustar\view_as::active()
+    ? $DB->count_records('local_ustar_feed_saves', ['userid' => (int)$USER->id]) : 0;
+$feedselection = $feedtotal && ($type === 'all' || $type === 'feedfile')
+    && $categoryfilter === 'all'
+    ? \local_ustar\feed_files::saved_for_library((int)$USER->id, $q, $feedpage)
+    : ['items' => [], 'total' => 0, 'hasnext' => false];
+$feedfiles = $feedselection['items'];
+$visiblefeedfiles = ($type === 'all' || $type === 'feedfile') && $categoryfilter === 'all'
+    ? $feedfiles
+    : [];
+foreach ($visiblefeedfiles as &$feedfile) {
+    $feedfile['removeurl'] = (new moodle_url('/local/ustar/knowledge.php'))->out(false);
+    $feedfile['sesskey'] = sesskey();
+}
+unset($feedfile);
+
 
 /*
- * Content access is resolved by local_ustar\content:
+ * The employee Library is a personal history, not the whole access catalogue:
  *
- * user
- *   -> position
- *   -> department
- *   -> published content access rules
+ * unlocked route point -> material learning event -> personal library row.
+ * ACL is checked again while building the read model, so losing access also
+ * removes the item from the visible library without deleting audit history.
  */
 $all =
-    \local_ustar\content::list_for_user(
+    \local_ustar\learning_events::library_for_user(
         (int)$USER->id
     );
 
@@ -444,15 +475,15 @@ foreach ($all as $item) {
             (int)($item['timemodified'] ?? 0),
 
         'updatedat' =>
-            max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)),
+            max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)),
 
         'updatedlabel' =>
-            max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) > 0
-                ? userdate(max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)), '%d.%m.%Y')
+            max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) > 0
+                ? userdate(max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)), '%d.%m.%Y')
                 : '',
 
         'fresh' =>
-            max((int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) >= time() - (30 * DAYSECS),
+            max((int)($item['library_lastaccessedat'] ?? 0), (int)($item['publishedat'] ?? 0), (int)($item['timemodified'] ?? 0)) >= time() - (30 * DAYSECS),
 
         'icon' =>
             \local_ustar\ui::icon(
@@ -484,7 +515,7 @@ $typefilters = [
             'Все',
 
         'count' =>
-            count($all),
+            count($all) + $feedtotal,
 
         'selected' =>
             $type === 'all',
@@ -553,6 +584,17 @@ foreach ($typecounts as $id => $count) {
     ];
 }
 
+if ($feedtotal) {
+    $typefilters[] = [
+        'label' => 'Сохранено из ленты', 'count' => $feedtotal,
+        'selected' => $type === 'feedfile',
+        'url' => (new moodle_url('/local/ustar/knowledge.php', [
+            'view' => 'knowledge', 'type' => 'feedfile', 'q' => $q,
+            'preview' => $preview ? 1 : 0,
+        ]))->out(false),
+    ];
+}
+
 
 /*
  * ------------------------------------------------------------
@@ -563,7 +605,7 @@ foreach ($typecounts as $id => $count) {
 $categoryfilters = [
     [
         'label' => 'Все категории',
-        'count' => count($all),
+        'count' => count($all) + $feedtotal,
         'selected' => $categoryfilter === 'all',
         'url' => (new moodle_url(
             '/local/ustar/knowledge.php',
@@ -669,6 +711,19 @@ $PAGE->set_pagelayout(
     'ustar'
 );
 
+$knowledgeherocss =
+    __DIR__ . '/knowledge_hero_2706.css';
+
+$PAGE->requires->css(
+    new moodle_url(
+        '/local/ustar/knowledge_hero_2706.css',
+        [
+            'v' => filemtime($knowledgeherocss),
+        ]
+    )
+);
+
+
 $PAGE->set_title(
     'Знания | USTAR Academy'
 );
@@ -690,13 +745,43 @@ $data = [
         s($q),
 
     'total' =>
-        count($all),
+        count($all) + $feedtotal,
 
     'visiblecount' =>
         count($materials),
 
     'hasmaterials' =>
-        !empty($materials),
+        !empty($materials) || !empty($visiblefeedfiles),
+
+    'feedfiles' => $visiblefeedfiles,
+    'hasfeedfiles' => !empty($visiblefeedfiles),
+    'feedfilecount' => $feedselection['total'],
+    'hasmorefeedfiles' => $feedselection['hasnext'],
+    'nextfeedurl' => (new moodle_url('/local/ustar/knowledge.php', [
+        'view' => 'knowledge', 'theme' => 'ustar', 'type' => $type,
+        'category' => $categoryfilter, 'q' => $q, 'feedpage' => $feedpage + 1,
+        'preview' => $preview ? 1 : 0,
+    ]))->out(false),
+
+    'hasactivefilters' =>
+        $q !== ''
+        || $type !== 'all'
+        || $categoryfilter !== 'all',
+
+    'reseturl' =>
+        (
+            new moodle_url(
+                '/local/ustar/knowledge.php'
+            )
+        )->out(false),
+
+    'learningurl' =>
+        (
+            new moodle_url(
+                '/local/ustar/home.php',
+                ['view' => 'learning']
+            )
+        )->out(false),
 
     'materials' =>
         $materials,

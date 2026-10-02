@@ -1,42 +1,11 @@
-measured_at: '2026-09-12T20:48:24.575590+00:00'
+kind: historical_runtime_facts
+reviewed_at: '2026-10-02'
+measured_now: false
+source: context/runtime/20260927_prod_g00.md and release installers
 containers:
-  moodle:
-    name: /ustar_moodle
-    image: stack-moodle
-    image_id: sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b
-    mounts:
-    - Type: bind
-      Source: /opt/ustar/data/moodle/public
-      Destination: /var/www/html
-      Mode: rw
-      RW: true
-      Propagation: rprivate
-    - Type: bind
-      Source: /opt/ustar/data/moodle/moodledata
-      Destination: /var/www/moodledata
-      Mode: rw
-      RW: true
-      Propagation: rprivate
-    running: true
-    status: running
-    started_at: '2026-09-11T11:25:25.106904757Z'
-    restart_count: 0
-    health: not_configured
-    uptime_seconds: 120179
-  postgres:
-    name: /ustar_postgres
-    image: postgres:16
-    image_id: sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94
-    mounts:
-    - Type: bind
-      Source: /opt/ustar/data/postgres
-      Destination: /var/lib/postgresql/data
-      Mode: rw
-      RW: true
-      Propagation: rprivate
-    running: true
-    status: running
-    started_at: '2026-09-11T11:25:25.08403604Z'
-    restart_count: 0
-    health: not_configured
-    uptime_seconds: 120179
+- name: ustar_moodle
+  current_image_digest: null
+- name: ustar_postgres
+  engine: PostgreSQL 16
+  current_image_digest: null
+recheck: context/runtime/OPERATIONS.md

@@ -56,6 +56,10 @@ export default function Shell({ children }: { children: React.ReactNode }) {
     return null;
   }
 
+  if (wsData.employmentStatus === "pending") {
+    return <main className="flex min-h-screen items-center justify-center bg-page px-4"><div className="card w-full max-w-lg p-8 text-center"><div className="eyebrow">USTAR АКАДЕМИЯ</div><h1 className="mt-4 text-2xl font-black text-brand">Заявка передана в HRD</h1><p className="mt-3 text-sm text-mut">Вашу регистрацию проверяют. После согласования появятся маршруты и материалы для вашей должности.</p><button type="button" onClick={async()=>{await fetch("/api/auth/logout",{method:"POST"});router.push("/login");}} className="btn btn-primary mt-6">Выйти</button></div></main>;
+  }
+
   const roleLabel = wsData.role === "superadmin" ? "USTAR Superadmin" : wsData.role === "head" ? "Руководитель" : "Сотрудник";
   const logout = async () => { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login"); };
   const groups = [

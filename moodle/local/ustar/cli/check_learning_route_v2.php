@@ -34,6 +34,7 @@ $points = \local_ustar\route_model::points((int)$route->id);
 $publishedadaptation = 0;
 $gate = 0;
 $continuousdraft = 0;
+$profilepoint = null;
 foreach ($points as $point) {
     $published = \local_ustar\route_model::current_published_version((int)$point->id);
     if (in_array((string)$point->phase, [\local_ustar\route_model::PHASE_ADAPTATION, \local_ustar\route_model::PHASE_GATE], true) && $published) {
@@ -48,6 +49,25 @@ foreach ($points as $point) {
             $continuousdraft++;
         }
     }
+    if ((string)$point->pointkey === 'team_profile_express') {
+        $profilepoint = $point;
+    }
+}
+if (!$profilepoint) {
+    cli_error('TEAM_PROFILE_FIRST_STEP_MISSING');
+}
+$profileversion = \local_ustar\route_model::current_published_version((int)$profilepoint->id);
+$profilerequirements = $profileversion ? \local_ustar\route_model::requirements_for_version($profileversion) : [];
+$hasprofile = false;
+foreach ($profilerequirements as $requirement) {
+    $hasprofile = $hasprofile || (
+        ($requirement['type'] ?? '') === 'assessment'
+        && ($requirement['sourcekey'] ?? '') === \local_ustar\development_assessment::TEAM_PROFILE_KEY
+        && !empty($requirement['required'])
+    );
+}
+if (!$hasprofile || (int)$profilepoint->sortorder !== 1) {
+    cli_error('TEAM_PROFILE_FIRST_STEP_INVALID');
 }
 if ($publishedadaptation < 2) {
     cli_error('NOT_ENOUGH_PUBLISHED_ADAPTATION_POINTS=' . $publishedadaptation);
@@ -62,4 +82,6 @@ if ($continuousdraft < 3) {
 echo 'PUBLISHED_ADAPTATION_POINTS=' . $publishedadaptation . PHP_EOL;
 echo 'ADMISSION_GATE=' . $gate . PHP_EOL;
 echo 'CONTINUOUS_DRAFT_POINTS=' . $continuousdraft . PHP_EOL;
+echo "TEAM_PROFILE_FIRST_STEP=OK\n";
+echo "POST_ATTESTATION_VIDEO_SCENARIOS=BLOCKED_OWNER_CONTENT_REQUIRED\n";
 echo "LEARNING_ROUTE_V2_SMOKE=OK\n";

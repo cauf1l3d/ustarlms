@@ -1,0 +1,80 @@
+<div class="u-product-page u-adaptation-page">
+    <header class="u-product-head">
+        <div>
+            {{#dailymode}}<p class="u-page-kicker">Адаптация · день {{daynumber}} из {{plannedworkdays}}</p><h1>{{perspectivelabel}}</h1><p>Рабочий день: {{workdatelabel}}. Сотрудник и руководитель отвечают независимо.</p>{{/dailymode}}
+            {{#finalmode}}<p class="u-page-kicker">Итог адаптации · раунд {{round}}</p><h1>{{perspectivelabel}}</h1><p>Итоговые отчёты также заполняются независимо. Вторая сторона открывается только после собственной отправки.</p>{{/finalmode}}
+        </div>
+        <div class="u-product-head__actions">
+            {{#employee}}<a class="u-btn" href="{{routeurl}}">← В маршрут</a>{{/employee}}
+            {{#manager}}<a class="u-btn" href="{{staffingurl}}">← К заявкам</a>{{/manager}}
+            {{#dailymode}}{{#dailycomplete}}<a class="u-btn u-btn--primary" href="{{finalurl}}">Итоговый отчёт</a>{{/dailycomplete}}{{/dailymode}}
+            {{#finalmode}}<a class="u-btn" href="{{dailyurl}}">Ежедневные листы</a>{{/finalmode}}
+        </div>
+    </header>
+
+    {{#escalated}}<div class="u-inline-notice u-inline-notice--warning"><strong>Адаптация передана HRD</strong><span>Дальнейшее итоговое решение принимается в HRD → Контроль → Адаптация.</span></div>{{/escalated}}
+    {{#completed}}<div class="u-inline-notice u-inline-notice--success"><strong>Адаптация завершена</strong><span>Итоговое решение сохранено в истории.</span></div>{{/completed}}
+
+    {{#dailymode}}
+    {{#canfill}}
+    <section class="u-panel u-adaptation-form-card">
+        <form method="post">
+            <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="submitdaily">
+            {{#isoverdue}}<div class="u-adaptation-overdue"><strong>Лист просрочен.</strong><span>Для продолжения сотрудник обязан указать причину.</span></div><label><span>Причина просрочки</span><textarea name="overduereason" rows="2" required></textarea></label>{{/isoverdue}}
+            <label><span>1. {{q1}}</span><textarea name="mastered" rows="3" required></textarea></label>
+            <label><span>2. {{q2}}</span><textarea name="succeeded" rows="3" required></textarea></label>
+            <label><span>3. {{q3}}</span><textarea name="difficult" rows="3" required placeholder="Если трудностей нет, так и укажите."></textarea></label>
+            <fieldset><legend>4. {{q4}}</legend><label class="u-adaptation-radio"><input type="radio" name="help" value="no" required> Нет</label><label class="u-adaptation-radio"><input type="radio" name="help" value="yes" required> Да</label></fieldset>
+            <fieldset><legend>5. {{q5}}</legend><label class="u-adaptation-radio"><input type="radio" name="ready" value="yes" required> Да</label><label class="u-adaptation-radio"><input type="radio" name="ready" value="partly" required> Частично</label><label class="u-adaptation-radio"><input type="radio" name="ready" value="no" required> Нет</label></fieldset>
+            <label><span>Конкретное следующее действие / помощь</span><textarea name="nextaction" rows="2" placeholder="Обязательно, если нужна помощь или готовность неполная."></textarea></label>
+            <button class="u-btn u-btn--primary" type="submit">Отправить мой лист</button>
+        </form>
+    </section>
+    {{/canfill}}
+
+    {{#hasown}}{{#own}}
+    <section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Моя отправка</p><h2>Заполнено {{submittedat}}</h2></div></header><dl class="u-adaptation-summary">
+        <div><dt>{{q1}}</dt><dd>{{mastered}}</dd></div><div><dt>{{q2}}</dt><dd>{{succeeded}}</dd></div><div><dt>{{q3}}</dt><dd>{{difficult}}</dd></div><div><dt>{{q4}}</dt><dd>{{help}}</dd></div><div><dt>{{q5}}</dt><dd>{{ready}}</dd></div>
+        {{#overduereason}}<div><dt>Причина просрочки</dt><dd>{{overduereason}}</dd></div>{{/overduereason}}{{#action}}<div><dt>Следующее действие</dt><dd>{{action}}</dd></div>{{/action}}
+    </dl></section>
+    {{/own}}{{/hasown}}
+
+    {{#hasother}}{{#other}}
+    <section class="u-panel u-adaptation-other"><header class="u-panel-title"><div><p class="u-page-kicker">Вторая сторона</p><h2>Независимый лист также заполнен</h2><p>Сравнение показывается только после собственной отправки.</p></div></header><dl class="u-adaptation-summary">
+        <div><dt>Что освоено</dt><dd>{{mastered}}</dd></div><div><dt>Что получилось</dt><dd>{{succeeded}}</dd></div><div><dt>Что осталось трудным или рискованным</dt><dd>{{difficult}}</dd></div><div><dt>Нужна ли помощь</dt><dd>{{help}}</dd></div><div><dt>Готовность идти дальше</dt><dd>{{ready}}</dd></div>{{#action}}<div><dt>Следующее действие</dt><dd>{{action}}</dd></div>{{/action}}
+    </dl></section>
+    {{/other}}{{/hasother}}
+
+    {{#manager}}{{#hasmanagerissues}}
+    <section class="u-panel u-adaptation-actions"><header class="u-panel-title"><div><p class="u-page-kicker">Действия руководителя</p><h2>Закрыть выявленные проблемы</h2><p>Если действие не закрыто до следующего фактического рабочего дня, оно появляется у HRD в «Контроле».</p></div></header>
+        {{#managerissues}}<form method="post" class="u-adaptation-resolve"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="resolveissue"><input type="hidden" name="submissionid" value="{{submissionid}}"><div><strong>{{perspectivelabel}}</strong><span>{{action}}</span></div><textarea name="resolution" rows="2" required placeholder="Что сделано и чем закрыт вопрос"></textarea><button class="u-btn" type="submit">Отметить выполненным</button></form>{{/managerissues}}
+    </section>
+    {{/hasmanagerissues}}{{/manager}}
+    {{/dailymode}}
+
+    {{#finalmode}}
+    {{#canfinalfill}}
+    <section class="u-panel u-adaptation-form-card"><header class="u-panel-title"><div><p class="u-page-kicker">Итоговый независимый отчёт</p><h2>За весь период адаптации</h2></div></header><form method="post">
+        <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="submitfinal">
+        <label><span>1. Что освоено за период?</span><textarea name="mastered" rows="3" required></textarea></label>
+        <label><span>2. Что осталось трудным или рискованным?</span><textarea name="risks" rows="3" required></textarea></label>
+        <label><span>3. Какая помощь / следующий план нужен?</span><textarea name="support" rows="3" required></textarea></label>
+        <fieldset><legend>4. Готовность к самостоятельной работе</legend><label class="u-adaptation-radio"><input type="radio" name="ready" value="yes" required> Да</label><label class="u-adaptation-radio"><input type="radio" name="ready" value="partly" required> Частично</label><label class="u-adaptation-radio"><input type="radio" name="ready" value="no" required> Нет</label></fieldset>
+        <button class="u-btn u-btn--primary" type="submit">Отправить итоговый отчёт</button>
+    </form></section>
+    {{/canfinalfill}}
+
+    {{#hasownfinal}}{{#ownfinal}}<section class="u-panel"><header class="u-panel-title"><div><p class="u-page-kicker">Мой итог</p><h2>Заполнено {{submittedat}}</h2></div></header><dl class="u-adaptation-summary"><div><dt>Освоено</dt><dd>{{mastered}}</dd></div><div><dt>Риски</dt><dd>{{risks}}</dd></div><div><dt>Помощь / план</dt><dd>{{support}}</dd></div><div><dt>Готовность</dt><dd>{{ready}}</dd></div></dl></section>{{/ownfinal}}{{/hasownfinal}}
+    {{#hasotherfinal}}{{#otherfinal}}<section class="u-panel u-adaptation-other"><header class="u-panel-title"><div><p class="u-page-kicker">Вторая сторона</p><h2>Итоговый отчёт также заполнен</h2></div></header><dl class="u-adaptation-summary"><div><dt>Освоено</dt><dd>{{mastered}}</dd></div><div><dt>Риски</dt><dd>{{risks}}</dd></div><div><dt>Помощь / план</dt><dd>{{support}}</dd></div><div><dt>Готовность</dt><dd>{{ready}}</dd></div></dl></section>{{/otherfinal}}{{/hasotherfinal}}
+
+    {{#manager}}{{#canfinaldecide}}
+    <section class="u-panel u-adaptation-decision"><header class="u-panel-title"><div><p class="u-page-kicker">Итоговое решение руководителя</p><h2>Выберите один исход</h2></div></header><form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="finaldecision">
+        <label class="u-adaptation-choice {{^cancomplete}}is-disabled{{/cancomplete}}"><input type="radio" name="decision" value="complete" {{^cancomplete}}disabled{{/cancomplete}} required><span><strong>Адаптация завершена</strong><small>Доступно только когда обе стороны указали полную готовность.</small></span></label>
+        <label class="u-adaptation-choice"><input type="radio" name="decision" value="extend" required><span><strong>Адаптация продлена</strong><small>Добавляет рабочие дни и открывает новый раунд итоговой оценки.</small></span></label>
+        <label>Добавить рабочих дней<input type="number" name="extensiondays" min="1" max="180" value="3"></label>
+        <label class="u-adaptation-choice"><input type="radio" name="decision" value="escalate" required><span><strong>Требуется решение HRD</strong><small>Создаёт критическую эскалацию в HRD → Контроль → Адаптация.</small></span></label>
+        <label>Причина / комментарий<textarea name="reason" rows="3"></textarea></label><button class="u-btn u-btn--primary" type="submit">Зафиксировать решение</button>
+    </form></section>
+    {{/canfinaldecide}}{{/manager}}
+    {{/finalmode}}
+</div>

@@ -11,7 +11,8 @@ abstract class base extends external_api {
     /**
      * Common guard for every external function.
      */
-    protected static function guard(): void {
+    protected static function guard(bool $allowpending = false): void {
+        global $USER;
         $context = \context_system::instance();
 
         self::validate_context($context);
@@ -20,6 +21,9 @@ abstract class base extends external_api {
             'local/ustar:use',
             $context
         );
+        if (!$allowpending && !\local_ustar\employment::is_active((int)$USER->id)) {
+            throw new \required_capability_exception($context, 'local/ustar:use', 'nopermissions', '');
+        }
     }
 
 

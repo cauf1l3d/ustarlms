@@ -1,0 +1,36 @@
+<main class="u-product-page u-development-assessment">
+  <header class="u-development-assessment__head">
+    <p class="u-page-kicker">Центр развития</p>
+    <h1>{{title}}</h1>
+    <p>{{summary}}</p>
+    {{#isself}}<a class="u-btn" href="{{homeurl}}">Вернуться к развитию</a>{{/isself}}
+    {{#canviewanalytics}}<a class="u-btn" href="{{analyticsurl}}">Аналитика HRD</a>{{/canviewanalytics}}
+  </header>
+
+  {{#saved}}<div class="u-inline-notice u-inline-notice--success"><strong>Результат сохранён</strong><span>Он остаётся вашим личным развивающим результатом.</span></div>{{/saved}}
+  {{^isself}}<div class="u-inline-notice"><strong>Защищённый результат</strong><span>Вы просматриваете его с правом HRD. Обычная HR-роль и руководители доступа не получают.</span></div>{{/isself}}
+
+  {{#hasresult}}
+  <section class="u-development-assessment__result">
+    <p class="u-page-kicker">{{#isself}}Ваш текущий профиль{{/isself}}{{^isself}}Профиль: {{subjectname}}{{/isself}}</p>
+    <h2>{{result.primarytitle}}</h2>
+    <p>{{result.primarysummary}}</p>
+    <div class="u-development-assessment__result-grid"><div><span>Поддерживающий стиль</span><strong>{{result.secondarytitle}}</strong></div><div><span>Пройдён</span><strong>{{result.submitteddate}}</strong></div></div>
+    <div class="u-development-assessment__recommendation"><strong>Рекомендация для развития</strong><p>{{result.recommendation}}</p></div>
+    <p class="u-development-assessment__disclaimer">{{result.disclaimer}}</p>
+    {{#isself}}<details><summary>Пройти ещё раз</summary><p>Новый результат сохранится отдельной записью и не сотрёт предыдущую саморефлексию.</p><a class="u-btn" href="{{retryurl}}">Новая саморефлексия</a></details>{{/isself}}
+  </section>
+  {{/hasresult}}
+
+  {{#canstart}}
+  {{^hasresult}}
+  <section class="u-development-assessment__form-card">
+    <h2>Короткая саморефлексия</h2><p>{{intro}}</p>
+    <form method="post"><input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="submissionkey" value="{{submissionkey}}">
+      {{#questions}}<fieldset class="u-development-assessment__question"><legend><span>{{number}}</span>{{text}}</legend>{{#options}}<label><input type="radio" name="answer[{{questionkey}}]" value="{{key}}" required><span>{{text}}</span></label>{{/options}}</fieldset>{{/questions}}
+      <button class="u-btn u-btn--primary" type="submit">Сохранить личный результат</button>
+    </form>
+  </section>
+  {{/hasresult}}
+  {{/canstart}}
+</main>

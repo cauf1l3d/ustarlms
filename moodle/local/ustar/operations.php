@@ -8,6 +8,7 @@ $context = context_system::instance();
 require_capability('local/ustar:hr', $context);
 
 $dashboard = \local_ustar\hr_operations::dashboard();
+$canstructure = \local_ustar\hr_access::can_manage_structure((int)$USER->id);
 
 $data = [
     'generated' => userdate((int)$dashboard['generatedat'], '%d.%m.%Y %H:%M'),
@@ -29,13 +30,12 @@ $data = [
     'skillpeople' => $dashboard['skills']['people'],
     'hasskillpeople' => !empty($dashboard['skills']['people']),
 
-    'workspaceurl' => (new moodle_url('/local/ustar/workspace.php'))->out(false),
-    'positionsurl' => (new moodle_url('/local/ustar/positions.php'))->out(false),
+    'teamurl' => (new moodle_url('/local/ustar/team.php'))->out(false),
+    'haspositions' => $canstructure,
+    'positionsurl' => $canstructure ? (new moodle_url('/local/ustar/positions.php'))->out(false) : '',
     'materialsurl' => (new moodle_url('/local/ustar/materials.php'))->out(false),
-    'routesurl' => has_capability('local/ustar:hrmanage', $context)
-        ? (new moodle_url('/local/ustar/route_studio.php'))->out(false)
-        : '',
-    'hasroutes' => has_capability('local/ustar:hrmanage', $context),
+    'routesurl' => $canstructure ? (new moodle_url('/local/ustar/route_studio.php'))->out(false) : '',
+    'hasroutes' => $canstructure,
     'brandurl' => has_capability('local/ustar:admin', $context)
         ? (new moodle_url('/local/ustar/brand.php'))->out(false)
         : '',
@@ -44,15 +44,24 @@ $data = [
         ? (new moodle_url('/local/ustar/game_studio.php'))->out(false)
         : '',
     'hasgamestudio' => has_capability('local/ustar:admin', $context),
+    'competitionurl' => has_capability('local/ustar:managecompetition', $context)
+        ? (new moodle_url('/local/ustar/competition_studio.php'))->out(false)
+        : '',
+    'hascompetitionstudio' => has_capability('local/ustar:managecompetition', $context),
+    'cancontrolrewards' => !\local_ustar\view_as::active() && \local_ustar\reward_control::can_manage((int)$USER->id),
+    'rewardcontrolurl' => (new moodle_url('/local/ustar/reward_control.php'))->out(false),
     'checkliststudiourl' => has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context)
         ? (new moodle_url('/local/ustar/checklist_studio.php'))->out(false)
         : '',
     'hascheckliststudio' => has_capability('local/ustar:hrmanage', $context) || has_capability('local/ustar:admin', $context),
-    'workspaceicon' => \local_ustar\ui::icon('workspace', 'u-feature-icon'),
+    'hasadaptationcontrol' => \local_ustar\adaptation_service::is_hrd_actor((int)$USER->id),
+    'adaptationcontrolurl' => (new moodle_url('/local/ustar/adaptation_control.php'))->out(false),
+    'teamicon' => \local_ustar\ui::icon('team', 'u-feature-icon'),
     'routeicon' => \local_ustar\ui::icon('route', 'u-feature-icon'),
     'knowledgeicon' => \local_ustar\ui::icon('knowledge', 'u-feature-icon'),
     'paletteicon' => \local_ustar\ui::icon('palette', 'u-feature-icon'),
     'gameicon' => \local_ustar\ui::icon('game', 'u-feature-icon'),
+    'competitionicon' => \local_ustar\ui::icon('trophy', 'u-feature-icon'),
     'checkicon' => \local_ustar\ui::icon('check', 'u-feature-icon'),
 ];
 

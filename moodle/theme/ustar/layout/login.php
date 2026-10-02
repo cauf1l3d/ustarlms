@@ -3,7 +3,11 @@ defined('MOODLE_INTERNAL') || die();
 
 global $SITE;
 
-$bodyattributes = $OUTPUT->body_attributes(['u-login-body']);
+require_once($CFG->libdir . '/authlib.php');
+
+$isregistration = (string)$PAGE->url->get_path() === '/local/ustar/register.php';
+$bodyattributes = $OUTPUT->body_attributes($isregistration
+    ? ['ustar-auth-body', 'ustar-register-body'] : ['ustar-auth-body']);
 $runtimecss = '';
 try {
     if (class_exists('\\local_ustar\\branding')) {
@@ -15,6 +19,9 @@ try {
 }
 
 $templatecontext = [
+    'loginreferenceurl' => (new moodle_url('/theme/ustar/pix/brand/login-reference-20260914.png'))->out(false),
+    'loginbackgroundurl' => (new moodle_url('/theme/ustar/pix/brand/login-background-20261002.webp'))->out(false),
+    'loginurl' => (new moodle_url('/login/index.php'))->out(false),
     'sitename' => format_string(
         $SITE->shortname,
         true,
@@ -23,7 +30,11 @@ $templatecontext = [
     'output' => $OUTPUT,
     'bodyattributes' => $bodyattributes,
     'runtimebrandcss' => $runtimecss,
-    'bannerurl' => $OUTPUT->image_url('brand/ustar-academy-banner', 'theme_ustar')->out(false),
+    'signupenabled' => (int)get_config('local_ustar', 'version') >= 2026082749
+        && !$isregistration,
+    'starttitle' => $isregistration
+        ? 'Создай профиль' : 'Начни с входа',
+    'signupurl' => (new moodle_url('/local/ustar/register.php'))->out(false),
 ];
 
 echo $OUTPUT->render_from_template('theme_ustar/login', $templatecontext);

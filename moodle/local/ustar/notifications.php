@@ -16,13 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         \local_ustar\communication::mark_all_notifications((int)$USER->id);
     } else if ($action === 'read') {
         $id = required_param('id', PARAM_INT);
-        \local_ustar\communication::mark_notification((int)$USER->id, $id);
+        \local_ustar\communication::mark_notification((int)$USER->id, $id,
+            optional_param('source', 'local', PARAM_ALPHA));
     }
     redirect(new moodle_url('/local/ustar/notifications.php'));
 }
 
 $rows = \local_ustar\communication::notifications((int)$USER->id);
-$unread = count(array_filter($rows, static fn(array $row): bool => !empty($row['unread'])));
+$unread = \local_ustar\communication::counts((int)$USER->id)['notifications'];
 
 $data = [
     'notifications' => $rows,

@@ -7,12 +7,15 @@ require_once($CFG->libdir . '/clilib.php');
 [$options, $unrecognized] = cli_get_params([
     'file' => null,
     'dry-run' => false,
+    'apply' => false,
+    'sha256' => '',
+    'backup-ref' => '',
     'help' => false,
 ], ['h' => 'help']);
 
 if ($options['help'] || empty($options['file'])) {
     echo "USTAR product catalog import\n\n";
-    echo "php local/ustar/cli/import_catalog.php --file=/path/catalog.csv [--dry-run]\n";
+    echo "php local/ustar/cli/import_catalog.php --file=/path/catalog.csv [--apply --sha256=<SOURCE_SHA256> --backup-ref=<backup ID>]\n";
     echo "Columns: group,subgroup,sku,title,summary,description,imageurl,attributes_json\n";
     exit($options['help'] ? 0 : 2);
 }
@@ -62,6 +65,17 @@ while (($row = fgetcsv($h)) !== false) {
 fclose($h);
 
 echo 'Validated products: ' . count($items) . PHP_EOL;
+$sha256 = hash_file('sha256', $file);
+echo 'SOURCE_SHA256=' . $sha256 . PHP_EOL;
+if (empty($options['apply'])) {
+    echo "DRY_RUN=YES\nNo changes applied. Pass --apply --sha256=<printed hash> --backup-ref=<backup ID> to write.\n";
+    exit(0);
+}
+if (!preg_match('/^[a-f0-9]{64}$/', (string)$options['sha256'])
+        || !hash_equals($sha256, (string)$options['sha256'])
+        || trim((string)$options['backup-ref']) === '') {
+    cli_error('Apply requires exact --sha256 and a --backup-ref.');
+}
 if ($options['dry-run']) {
     echo "DRY_RUN=YES\nCATALOG_IMPORT=VALID\n";
     exit(0);

@@ -1,0 +1,56 @@
+<div class="u-product-page">
+  <header class="u-product-head">
+    <div>
+      <p class="u-page-kicker">Разработчик · изолированный E2E</p>
+      <h1>Тестер маршрутов</h1>
+      <p>Запускает настоящий USTAR от имени скрытого TYPE_TEST sandbox-пользователя. Ваш U2 остаётся в основной вкладке разработчика и не получает учебного следа.</p>
+    </div>
+  </header>
+
+  {{#closed}}
+  <section class="u-panel"><strong>Тестовая сессия закрыта.</strong> Основная сессия разработчика не менялась.</section>
+  {{/closed}}
+
+  <section class="u-panel">
+    <h2>Запустить маршрут как новый сотрудник</h2>
+    <form method="post" action="{{posturl}}">
+      <input type="hidden" name="sesskey" value="{{sesskey}}">
+      <input type="hidden" name="action" value="launch">
+      <label><strong>Отдел и должность</strong>
+        <select name="positionid" required style="width:100%;max-width:760px;margin-top:8px">
+          <option value="">Выберите должность</option>
+          {{#departments}}
+            {{#haspositions}}
+            <optgroup label="{{name}}">
+              {{#positions}}<option value="{{id}}">{{name}}</option>{{/positions}}
+            </optgroup>
+            {{/haspositions}}
+          {{/departments}}
+        </select>
+      </label>
+      <p style="margin-top:14px"><label><input type="checkbox" name="fresh" value="1" checked> Сбросить sandbox в абсолютный ноль перед запуском</label></p>
+      <p><button class="u-btn u-btn--primary" type="submit">Запустить как сотрудник</button></p>
+    </form>
+    <p><small>Изолированный host: <code>{{testerurl}}</code>. Quiz, SCORM, completion, route progress, gate, игры и тестовые USCOIN пишутся только на sandbox.</small></p>
+  </section>
+
+  <section class="u-panel">
+    <h2>Sandbox</h2>
+    {{#sandboxexists}}
+      <p><strong>{{sandboxusername}}</strong> · U{{sandboxuserid}}</p>
+      <p>Последний сброс: {{sandboxlastreset}}</p>
+      <form method="post" action="{{posturl}}">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <input type="hidden" name="action" value="reset">
+        <button class="u-btn" type="submit">Сбросить sandbox в ноль</button>
+      </form>
+    {{/sandboxexists}}
+    {{^sandboxexists}}<p>Sandbox будет создан при первом запуске.</p>{{/sandboxexists}}
+  </section>
+
+  <section class="u-panel">
+    <h2>Быстрый просмотр без записи</h2>
+    <p>Для проверки только интерфейса без реального прохождения используйте старый read-only режим.</p>
+    <p><a class="u-btn" href="{{viewasurl}}">Просмотр как должность</a></p>
+  </section>
+</div>

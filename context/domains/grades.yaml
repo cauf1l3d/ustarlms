@@ -1,0 +1,25 @@
+domain: grades
+reviewed_at: '2026-10-02'
+source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+purpose: Версионированные лестницы, привязки должностей и личный грейд
+services:
+- moodle/local/ustar/classes/grade_ladders.php
+- moodle/local/ustar/classes/grade_rules.php
+- moodle/local/ustar/classes/grade_promotion.php
+- moodle/local/ustar/classes/grade_assignment_directory.php
+- moodle/local/ustar/classes/career_grades.php
+tables:
+- local_ustar_grade_ladders
+- local_ustar_grade_ladder_ver
+- local_ustar_grade_bindings
+- local_ustar_grade_rules
+- local_ustar_employee_grades
+- local_ustar_grade_requests
+rules:
+- Published ladders immutable; position binding uses stable string ID
+- Initial bound grade can be assigned within approved HR staffing command (PR59)
+- Reading does not assign grades; version transfer requires explicit reconciliation
+- Scheduled auto request is not automatic approval
+entry_points:
+- moodle/local/ustar/grades.php
+- moodle/local/ustar/route_career.php

@@ -13,15 +13,17 @@ class admin_save_structure extends base {
         return new external_function_parameters([
             'name' => new external_value(PARAM_ALPHA, 'structure | branding'),
             'json' => new external_value(PARAM_RAW, 'Payload JSON'),
+            'expectedversion' => new external_value(PARAM_INT, 'Version returned by admin_get_structure', VALUE_DEFAULT, -1),
         ]);
     }
 
-    public static function execute(string $name, string $json): array {
+    public static function execute(string $name, string $json, int $expectedversion = -1): array {
+        global $DB;
         self::guard();
         \local_ustar\view_as::assert_writable();
         require_capability('local/ustar:admin', \context_system::instance());
         $params = self::validate_parameters(self::execute_parameters(),
-            ['name' => $name, 'json' => $json]);
+            ['name' => $name, 'json' => $json, 'expectedversion' => $expectedversion]);
 
         if (!in_array($params['name'], [structure::NAME_STRUCTURE, structure::NAME_BRANDING], true)) {
             throw new \invalid_parameter_exception('Unknown document name');
@@ -159,14 +161,52 @@ class admin_save_structure extends base {
                     if (!isset($skillids[$sid])) {
                         throw new \invalid_parameter_exception("Matrix references unknown skill: {$sid}");
                     }
-                    if ((int)$level < 1 || (int)$level > 3) {
-                        throw new \invalid_parameter_exception("Matrix level for {$posid}/{$sid} must be 1..3");
+                    if ((int)$level < 1 || (int)$level > 5) {
+                        throw new \invalid_parameter_exception("Matrix level for {$posid}/{$sid} must be 1..5");
                     }
                 }
             }
         }
 
-        structure::save($params['name'], $data);
+        $lock = \core\lock\lock_config::get_lock_factory('local_ustar')
+            ->get_lock($params['name'] === structure::NAME_STRUCTURE
+                ? 'structure:document' : 'structure:branding', 10);
+        if (!$lock) {
+            throw new \moodle_exception('Документ сейчас редактируется. Повторите сохранение.');
+        }
+        try {
+            $tx = $DB->start_delegated_transaction();
+            $record = $DB->get_record_sql('SELECT id, version FROM {local_ustar_structure}
+                WHERE name = :name FOR UPDATE', ['name' => $params['name']], IGNORE_MISSING);
+            $current = $record ? (int)$record->version : 0;
+            if ($params['expectedversion'] < 0 || $current !== (int)$params['expectedversion']) {
+                throw new \moodle_exception('Документ изменён в другой сессии. Обновите форму перед сохранением.');
+            }
+            if ($params['name'] === structure::NAME_STRUCTURE) {
+                $previous = structure::get(structure::NAME_STRUCTURE);
+                $newdepartments = array_column($data['departments'], null, 'id');
+                $newpositions = array_column($data['positions'], null, 'id');
+                foreach ($previous['departments'] ?? [] as $department) {
+                    if (!isset($newdepartments[(string)$department['id']])) {
+                        throw new \moodle_exception('Удаление или смена ID подразделения требует отдельного переноса кадровых связей.');
+                    }
+                }
+                foreach ($previous['positions'] ?? [] as $position) {
+                    $id = (string)$position['id'];
+                    if (!isset($newpositions[$id])
+                            || (string)$newpositions[$id]['department'] !== (string)$position['department']) {
+                        throw new \moodle_exception('Удаление, смена ID или перенос существующей должности требует отдельной кадровой операции.');
+                    }
+                }
+            }
+            structure::save($params['name'], $data);
+            $tx->allow_commit();
+        } catch (\Throwable $e) {
+            if (isset($tx)) { $tx->rollback($e); }
+            throw $e;
+        } finally {
+            $lock->release();
+        }
         return ['status' => 'ok'];
     }
 

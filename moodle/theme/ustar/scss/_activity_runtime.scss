@@ -160,3 +160,310 @@
         margin-top: 12px;
     }
 }
+
+/* ============================================================
+   USTAR — wide inline SCORM
+   Make embedded SCORM use the full working area.
+   ============================================================ */
+
+body.path-mod-scorm.u-activity-runtime .u-main > .u-container {
+    width: 100%;
+    max-width: none;
+}
+
+body.path-mod-scorm.u-activity-runtime #region-main,
+body.path-mod-scorm.u-activity-runtime [role="main"] {
+    width: 100%;
+    max-width: none;
+}
+
+body.path-mod-scorm.u-activity-runtime #scormpage,
+body.path-mod-scorm.u-activity-runtime .scorm-center,
+body.path-mod-scorm.u-activity-runtime #scorm_layout,
+body.path-mod-scorm.u-activity-runtime #scorm_box {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+body.path-mod-scorm.u-activity-runtime iframe[src*="/mod/scorm/player.php"],
+body.path-mod-scorm.u-activity-runtime iframe#scorm_object,
+body.path-mod-scorm.u-activity-runtime #scorm_object,
+body.path-mod-scorm.u-activity-runtime object,
+body.path-mod-scorm.u-activity-runtime embed {
+    width: 100% !important;
+    max-width: none !important;
+}
+/* ============================================================
+   USTAR — FULLSCREEN INLINE SCORM
+   Full-page embedded SCORM inside the USTAR shell
+   ============================================================ */
+
+body.path-mod-scorm.u-activity-runtime .u-main {
+    padding: 8px 12px 16px;
+}
+
+body.path-mod-scorm.u-activity-runtime .u-main > .u-container,
+body.path-mod-scorm.u-activity-runtime #page-content,
+body.path-mod-scorm.u-activity-runtime #region-main,
+body.path-mod-scorm.u-activity-runtime [role="main"],
+body.path-mod-scorm.u-activity-runtime .activity-header,
+body.path-mod-scorm.u-activity-runtime .activity-description {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+body.path-mod-scorm.u-activity-runtime #region-main {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Remove extra classic Moodle spacing around SCORM */
+body.path-mod-scorm.u-activity-runtime #page,
+body.path-mod-scorm.u-activity-runtime #page-content,
+body.path-mod-scorm.u-activity-runtime #region-main-box {
+    background: transparent !important;
+}
+
+/* Main SCORM wrappers */
+body.path-mod-scorm.u-activity-runtime #scormpage,
+body.path-mod-scorm.u-activity-runtime .scorm-center,
+body.path-mod-scorm.u-activity-runtime #scorm_layout,
+body.path-mod-scorm.u-activity-runtime #scorm_box,
+body.path-mod-scorm.u-activity-runtime #scorm_toc,
+body.path-mod-scorm.u-activity-runtime #scorm_content {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+/* If Moodle wraps the player in a table/div block */
+body.path-mod-scorm.u-activity-runtime table,
+body.path-mod-scorm.u-activity-runtime .box,
+body.path-mod-scorm.u-activity-runtime .generalbox {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Actual embedded player */
+body.path-mod-scorm.u-activity-runtime iframe#scorm_object,
+body.path-mod-scorm.u-activity-runtime iframe[src*="/mod/scorm/player.php"],
+body.path-mod-scorm.u-activity-runtime #scorm_object,
+body.path-mod-scorm.u-activity-runtime object,
+body.path-mod-scorm.u-activity-runtime embed {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: calc(100vh - 110px) !important;
+    min-height: 820px !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    background: #fff !important;
+    box-sizing: border-box !important;
+}
+
+/* Make surrounding SCORM area use all space */
+body.path-mod-scorm.u-activity-runtime #scorm_layout {
+    display: block !important;
+}
+
+/* Optional: top action row gets less wasted space */
+body.path-mod-scorm.u-activity-runtime .singlebutton,
+body.path-mod-scorm.u-activity-runtime .buttons {
+    margin: 8px 0 12px !important;
+}
+
+/* Mobile fallback */
+@media (max-width: 900px) {
+    body.path-mod-scorm.u-activity-runtime .u-main {
+        padding: 4px 8px 12px;
+    }
+
+    body.path-mod-scorm.u-activity-runtime iframe#scorm_object,
+    body.path-mod-scorm.u-activity-runtime iframe[src*="/mod/scorm/player.php"],
+    body.path-mod-scorm.u-activity-runtime #scorm_object,
+    body.path-mod-scorm.u-activity-runtime object,
+    body.path-mod-scorm.u-activity-runtime embed {
+        height: calc(100vh - 90px) !important;
+        min-height: 620px !important;
+        border-radius: 12px !important;
+    }
+}
+
+
+/* ============================================================
+   USTAR — SAFE FULLSCREEN SCORM
+   Keep Moodle SCORM DOM alive; expand only layout/content.
+   ============================================================ */
+
+#page-mod-scorm-player .u-main {
+    padding: 6px 10px 10px !important;
+}
+
+#page-mod-scorm-player .u-main > .u-container,
+#page-mod-scorm-player #page-content,
+#page-mod-scorm-player #region-main-box,
+#page-mod-scorm-player #region-main,
+#page-mod-scorm-player [role="main"] {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/*
+ * IMPORTANT:
+ * Do NOT hide #tocbox / #scorm_toc.
+ * Moodle JS parses the TOC and builds the SCO iframe from it.
+ */
+
+#page-mod-scorm-player #scorm_layout {
+    width: 100% !important;
+    max-width: none !important;
+
+    height: calc(100vh - 88px) !important;
+    min-height: 720px !important;
+
+    margin: 0 !important;
+}
+
+#page-mod-scorm-player #scormpage {
+    width: 100% !important;
+    max-width: none !important;
+
+    height: 100% !important;
+    min-height: 720px !important;
+}
+
+/*
+ * With hidetoc=1 Moodle itself switches scorm_content to yui3-u-1.
+ * Force that full-width class to use the entire workspace.
+ */
+#page-mod-scorm-player #scormpage #scorm_content,
+#page-mod-scorm-player #scormpage #scorm_content.yui3-u-1 {
+    width: 100% !important;
+    max-width: none !important;
+
+    height: 100% !important;
+
+    display: block !important;
+}
+
+/* Core defaults scorm_object to 98%. Make it truly full-size. */
+#page-mod-scorm-player #scormpage #scorm_object {
+    display: block !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    height: 100% !important;
+    min-height: calc(100vh - 88px) !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 10px !important;
+
+    box-sizing: border-box !important;
+}
+
+/*
+ * Moodle's toggle can remain available, but it must not consume
+ * meaningful horizontal space when the TOC is already hidden.
+ */
+#page-mod-scorm-player #scorm_toc_toggle {
+    max-width: 32px !important;
+}
+
+/* Remove unrelated card-like Moodle presentation. */
+#page-mod-scorm-player #region-main {
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Keep exit navigation compact. */
+#page-mod-scorm-player .tertiary-navigation,
+#page-mod-scorm-player .scorm-exitbar {
+    margin: 0 0 5px !important;
+}
+
+@media (max-width: 900px) {
+    #page-mod-scorm-player .u-main {
+        padding: 3px !important;
+    }
+
+    #page-mod-scorm-player #scorm_layout,
+    #page-mod-scorm-player #scormpage,
+    #page-mod-scorm-player #scormpage #scorm_object {
+        height: calc(100vh - 76px) !important;
+        min-height: 620px !important;
+    }
+}
+
+/* USTAR SCORM route continuation */
+
+.u-scorm-route-return {
+    position: fixed;
+    top: 62px;
+    right: 18px;
+    z-index: 500;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 8px 11px;
+
+    border: 1px solid var(--u-border);
+    border-radius: 999px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--u-surface-raised) 82%,
+            transparent
+        );
+
+    box-shadow: var(--u-e-1);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    font-size: 11px;
+}
+
+.u-scorm-route-return span {
+    color: var(--u-text-muted);
+}
+
+.u-scorm-route-return a {
+    color: var(--u-text-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.u-scorm-route-return.is-complete {
+    border-color:
+        color-mix(
+            in srgb,
+            #269366 50%,
+            var(--u-border)
+        );
+}
+
+@media (max-width: 760px) {
+    .u-scorm-route-return span {
+        display: none;
+    }
+}

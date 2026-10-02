@@ -1,14 +1,25 @@
+schema_version: 2
+updated_at: '2026-10-02'
 project:
   name: USTAR Academy
-  stage: migration_refactoring
-
+  organization: Хозмагия
+  purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
+  stage: stable_web_mobile_client_preparation
+  repository: https://github.com/cauf1l3d/ustarlms
+  canonical_branch: main
 stack:
-  platform: Moodle 5.1
-  language: PHP 8.2
+  platform: Moodle 5.1 family; exact production patch requires runtime observation
+  language: PHP 8.2 compatibility reference
   database: PostgreSQL 16
-  deployment: Docker
-
+  deployment: Docker on company Ubuntu VM
+  native_ui: PHP + Mustache + JS/AMD + SCSS
+  theme: theme_ustar extends boost
+  secondary_frontend: Next.js 15 / React 18; production deployment unverified
 components:
-  - moodle
-  - local/ustar
-  - theme/ustar
+  business: moodle/local/ustar
+  presentation: moodle/theme/ustar
+  secondary_client: frontend
+  context_harness: harness/ustar-contextd; running service unverified
+state: context/roadmap/STATE.yaml
+runtime_evidence: context/runtime/RELEASE_LEDGER.md
+next_stage: context/roadmap/MOBILE_CLIENT.md

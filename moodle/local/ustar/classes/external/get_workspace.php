@@ -14,7 +14,7 @@ class get_workspace extends base {
 
     public static function execute(): array {
         global $USER;
-        self::guard();
+        self::guard(true);
         $resolved = structure::resolve_user($USER->id);
         $branding = structure::get(structure::NAME_BRANDING);
         $prefs = json_decode(get_user_preferences('local_ustar_prefs', '{}'), true) ?: new \stdClass();
@@ -28,6 +28,7 @@ class get_workspace extends base {
                 'email' => $USER->email,
             ],
             'role' => $resolved['role'],
+            'employmentStatus' => \local_ustar\employment::resolve((int)$USER->id)['status'],
             'position' => $resolved['position'],
             'department' => $resolved['department'],
             'branding' => $branding,

@@ -1,0 +1,978 @@
+/* ============================================================
+   USTAR 2706 — Four-column Position Workspace
+   Employee ↔ Position ↔ Skill ↔ Material
+   ============================================================ */
+
+.u-position-workspace {
+    --uw-accent: #f4c430;
+    --uw-accent-soft: rgba(244, 196, 48, .16);
+    --uw-dark: #292929;
+    --uw-dark-2: #343434;
+    --uw-line: #d5d7dc;
+    --uw-gap: #d2695c;
+
+    position: relative;
+    margin: 24px 0 30px;
+    padding: 22px;
+
+    background: var(--u-surface-raised);
+    border: 1px solid var(--u-border);
+    border-radius: 18px;
+    box-shadow: var(--u-e-1);
+}
+
+
+/* ------------------------------------------------------------
+   HEADER
+   ------------------------------------------------------------ */
+
+.u-position-workspace__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 18px;
+}
+
+.u-position-workspace__head h3 {
+    margin: 4px 0 5px;
+    color: var(--u-text-primary);
+    font-size: clamp(22px, 2vw, 30px);
+    letter-spacing: -.035em;
+}
+
+.u-position-workspace__head p:last-child {
+    max-width: 760px;
+    margin: 0;
+    color: var(--u-text-secondary);
+    font-size: 10px;
+}
+
+
+/* ------------------------------------------------------------
+   TOOLBAR
+   ------------------------------------------------------------ */
+
+.u-position-workspace__toolbar {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(210px, 280px) auto;
+    gap: 10px;
+    align-items: end;
+
+    margin-bottom: 12px;
+    padding: 13px;
+
+    background: var(--u-surface-muted);
+    border: 1px solid var(--u-border);
+    border-radius: 12px;
+}
+
+.u-position-workspace__toolbar label {
+    display: grid;
+    gap: 5px;
+    margin: 0;
+}
+
+.u-position-workspace__toolbar label > span {
+    color: var(--u-text-muted);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.u-position-workspace__toolbar input,
+.u-position-workspace__toolbar select,
+.u-position-workspace__reset {
+    width: 100%;
+    min-height: 40px;
+    margin: 0;
+    padding: 0 11px;
+
+    color: var(--u-text-primary);
+    background: var(--u-surface-raised);
+
+    border: 1px solid var(--u-border);
+    border-radius: 9px;
+
+    font-size: 10px;
+}
+
+.u-position-workspace__toolbar input:focus,
+.u-position-workspace__toolbar select:focus {
+    border-color: var(--uw-accent);
+    outline: 2px solid var(--uw-accent-soft);
+    outline-offset: 0;
+}
+
+.u-position-workspace__reset {
+    width: auto;
+    padding: 0 15px;
+    cursor: pointer;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.u-position-workspace__reset:hover {
+    border-color: var(--uw-accent);
+}
+
+
+/* ------------------------------------------------------------
+   STATUS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    min-height: 42px;
+    margin-bottom: 12px;
+    padding: 9px 12px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--uw-accent) 6%,
+            var(--u-surface-muted)
+        );
+
+    border: 1px solid var(--u-border);
+    border-radius: 10px;
+}
+
+.u-position-workspace__status > span {
+    color: var(--u-text-primary);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.u-position-workspace__status > small {
+    color: var(--u-text-muted);
+    font-size: 8px;
+    text-align: right;
+}
+
+
+/* ------------------------------------------------------------
+   CANVAS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__canvas {
+    position: relative;
+
+    max-height: 730px;
+    min-height: 390px;
+
+    overflow: auto;
+
+    padding:
+        2px
+        4px
+        28px;
+
+    scrollbar-width: thin;
+}
+
+.u-position-workspace__columns {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(210px, 1fr)
+        minmax(210px, 1fr)
+        minmax(210px, 1fr)
+        minmax(235px, 1.08fr);
+
+    gap: 72px;
+    align-items: start;
+
+    min-width: 1180px;
+}
+
+
+/* ------------------------------------------------------------
+   COLUMN HEADERS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__column {
+    min-width: 0;
+}
+
+.u-position-workspace__column > h4 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    position: sticky;
+    top: 0;
+    z-index: 7;
+
+    margin: 0 0 9px;
+    padding: 8px 4px;
+
+    background: var(--u-surface-raised);
+
+    color: var(--u-text-muted);
+
+    font-size: 8px;
+    font-weight: 850;
+    letter-spacing: .085em;
+    text-transform: uppercase;
+}
+
+.u-position-workspace__column > h4 small {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 26px;
+    height: 24px;
+    padding: 0 7px;
+
+    background: var(--uw-accent-soft);
+    border: 1px solid
+        color-mix(
+            in srgb,
+            var(--uw-accent) 34%,
+            var(--u-border)
+        );
+    border-radius: 999px;
+
+    color: var(--u-text-primary);
+    font-size: 8px;
+}
+
+
+/* ------------------------------------------------------------
+   ITEM LISTS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__items {
+    display: grid;
+    gap: 9px;
+}
+
+
+/* ------------------------------------------------------------
+   BASE CARD
+   ------------------------------------------------------------ */
+
+.u-position-workspace__card {
+    position: relative;
+    z-index: 4;
+
+    display: block;
+
+    width: 100%;
+    min-height: 76px;
+    margin: 0;
+    padding: 12px 13px;
+
+    color: var(--u-text-primary);
+    background: var(--u-surface-muted);
+
+    border: 1px solid var(--u-border);
+    border-radius: 11px;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .045);
+
+    text-align: left;
+
+    transition:
+        border-color .12s ease,
+        transform .12s ease,
+        opacity .12s ease,
+        box-shadow .12s ease;
+}
+
+button.u-position-workspace__card,
+.u-position-workspace__card-main {
+    font: inherit;
+}
+
+button.u-position-workspace__card {
+    cursor: pointer;
+}
+
+button.u-position-workspace__card:hover,
+.u-position-workspace__card-main:hover {
+    transform: translateY(-1px);
+}
+
+.u-position-workspace__card strong,
+.u-position-workspace__card span,
+.u-position-workspace__card small {
+    display: block;
+}
+
+.u-position-workspace__card strong {
+    color: inherit;
+    font-size: 11px;
+    line-height: 1.28;
+}
+
+.u-position-workspace__card span {
+    margin-top: 4px;
+    color: var(--u-text-secondary);
+    font-size: 8px;
+    line-height: 1.3;
+}
+
+.u-position-workspace__card small {
+    margin-top: 5px;
+    color: var(--u-text-muted);
+    font-size: 8px;
+    line-height: 1.3;
+}
+
+
+/* ------------------------------------------------------------
+   EMPLOYEE CARDS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__card--person {
+    cursor: pointer;
+
+    color: #fff;
+    background: var(--uw-dark);
+
+    border-color: #1f1f1f;
+}
+
+.u-position-workspace__card--person:hover {
+    background: var(--uw-dark-2);
+    border-color: var(--uw-accent);
+}
+
+.u-position-workspace__card--person strong {
+    color: #fff;
+}
+
+.u-position-workspace__card--person span {
+    color: #c9c9c9;
+}
+
+.u-position-workspace__card--person small {
+    color: #929292;
+}
+
+
+/* ------------------------------------------------------------
+   POSITION CARDS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__card--position {
+    padding: 0;
+    overflow: hidden;
+
+    color: #fff;
+    background: var(--uw-dark);
+
+    border-color: #1f1f1f;
+}
+
+.u-position-workspace__card--position .u-position-workspace__card-main {
+    display: block;
+
+    width: 100%;
+    min-height: 73px;
+
+    padding: 12px 13px;
+
+    color: #fff;
+    background: transparent;
+
+    border: 0;
+
+    cursor: pointer;
+    text-align: left;
+}
+
+.u-position-workspace__card--position strong {
+    color: #fff;
+}
+
+.u-position-workspace__card--position span {
+    color: #c9c9c9;
+}
+
+.u-position-workspace__card--position small {
+    color: #929292;
+}
+
+
+/* ------------------------------------------------------------
+   SKILL CARDS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__card--skill {
+    cursor: pointer;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--uw-accent) 5%,
+            var(--u-surface-muted)
+        );
+}
+
+.u-position-workspace__card--skill:hover {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--uw-accent) 68%,
+            var(--u-border)
+        );
+}
+
+
+/* ------------------------------------------------------------
+   MATERIAL CARDS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__card--material {
+    padding: 0;
+    overflow: hidden;
+
+    background: var(--u-surface-raised);
+}
+
+.u-position-workspace__card--material .u-position-workspace__card-main {
+    display: block;
+
+    width: 100%;
+    min-height: 70px;
+
+    padding: 12px 13px;
+
+    color: inherit;
+    background: transparent;
+
+    border: 0;
+
+    cursor: pointer;
+    text-align: left;
+}
+
+.u-position-workspace__card--material:hover {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--uw-accent) 56%,
+            var(--u-border)
+        );
+}
+
+
+/* ------------------------------------------------------------
+   EXPLICIT ACTIONS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 8px 12px;
+
+    border-top: 1px solid
+        rgba(127, 127, 127, .18);
+}
+
+.u-position-workspace__actions a {
+    color: inherit;
+    opacity: .72;
+
+    font-size: 7px;
+    font-weight: 750;
+
+    text-decoration: none;
+}
+
+.u-position-workspace__actions a:hover {
+    color: var(--uw-accent);
+    opacity: 1;
+    text-decoration: none;
+}
+
+
+/* ------------------------------------------------------------
+   SELECTED STATE
+   ------------------------------------------------------------ */
+
+.u-position-workspace__card.is-selected {
+    border-color: var(--uw-accent);
+
+    box-shadow:
+        0 0 0 2px var(--uw-accent),
+        0 7px 18px rgba(0, 0, 0, .10);
+
+    transform: translateY(-1px);
+}
+
+.u-position-workspace__card--person.is-selected,
+.u-position-workspace__card--position.is-selected {
+    background:
+        linear-gradient(
+            145deg,
+            #272727,
+            #34301f
+        );
+}
+
+
+/* ------------------------------------------------------------
+   MODEL GAPS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__card.is-gap {
+    border-color:
+        color-mix(
+            in srgb,
+            var(--uw-gap) 65%,
+            var(--u-border)
+        );
+}
+
+.u-position-workspace__warning {
+    color: var(--uw-gap) !important;
+    font-weight: 750;
+}
+
+.u-position-workspace__card.is-gap::after {
+    content: "!";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    display: grid;
+    place-items: center;
+
+    width: 18px;
+    height: 18px;
+
+    color: #fff;
+    background: var(--uw-gap);
+
+    border-radius: 50%;
+
+    font-size: 9px;
+    font-weight: 900;
+}
+
+
+/* ------------------------------------------------------------
+   EMPTY
+   ------------------------------------------------------------ */
+
+.u-position-workspace__empty {
+    padding: 15px 13px;
+
+    color: var(--u-text-muted);
+
+    border: 1px dashed var(--u-border);
+    border-radius: 10px;
+
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+
+/* ------------------------------------------------------------
+   SVG CONNECTIONS
+   ------------------------------------------------------------ */
+
+.u-position-workspace__lines {
+    position: absolute;
+    inset: 0 auto auto 0;
+
+    z-index: 1;
+
+    overflow: visible;
+
+    pointer-events: none;
+}
+
+.u-position-workspace__line {
+    fill: none;
+
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.u-position-workspace__line.is-direct {
+    stroke: var(--uw-accent);
+    stroke-width: 2.1;
+    opacity: .94;
+}
+
+.u-position-workspace__line.is-learning {
+    stroke:
+        color-mix(
+            in srgb,
+            var(--uw-accent) 72%,
+            #949494
+        );
+
+    stroke-width: 1.65;
+
+    opacity: .82;
+}
+
+.u-position-workspace__line.is-gap {
+    stroke: var(--uw-gap);
+    stroke-width: 1.8;
+
+    stroke-dasharray: 6 5;
+
+    opacity: .88;
+}
+
+
+/* ------------------------------------------------------------
+   LEGEND
+   ------------------------------------------------------------ */
+
+.u-position-workspace__legend {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+
+    margin-top: 13px;
+
+    color: var(--u-text-muted);
+
+    font-size: 8px;
+}
+
+.u-position-workspace__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.u-position-workspace__legend i {
+    display: inline-block;
+
+    width: 24px;
+    height: 0;
+
+    border-top: 2px solid var(--uw-accent);
+}
+
+.u-position-workspace__legend i.is-learning {
+    opacity: .67;
+}
+
+.u-position-workspace__legend i.is-gap {
+    border-color: var(--uw-gap);
+    border-top-style: dashed;
+}
+
+
+/* ------------------------------------------------------------
+   SCROLLBAR
+   ------------------------------------------------------------ */
+
+.u-position-workspace__canvas::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.u-position-workspace__canvas::-webkit-scrollbar-thumb {
+    background: rgba(127, 127, 127, .28);
+    border-radius: 999px;
+}
+
+
+/* ------------------------------------------------------------
+   RESPONSIVE
+   ------------------------------------------------------------ */
+
+@media (max-width: 1150px) {
+
+    .u-position-workspace__toolbar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .u-position-workspace__reset {
+        grid-column: 1 / -1;
+    }
+
+    .u-position-workspace__canvas {
+        max-height: none;
+    }
+}
+
+
+@media (max-width: 720px) {
+
+    .u-position-workspace {
+        padding: 15px;
+    }
+
+    .u-position-workspace__toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .u-position-workspace__reset {
+        grid-column: auto;
+        width: 100%;
+    }
+
+    .u-position-workspace__status {
+        display: grid;
+    }
+
+    .u-position-workspace__status > small {
+        text-align: left;
+    }
+}
+
+/* ============================================================
+   USTAR 2706 — Full-width live workspace
+   Only the live model breaks out to the full available page area.
+   Other Position Studio/editor sections stay readable.
+   ============================================================ */
+
+/*
+ * Remove the old 1480px ceiling from the positions page itself.
+ * Moodle's main content area still defines the real left/right bounds,
+ * so this does NOT cover the navigation sidebar.
+ */
+.u-pos {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
+/*
+ * Keep ordinary page content at the previous readable width.
+ */
+.u-pos > .u-pos-head,
+.u-pos > .u-pos-layout {
+    width: min(1480px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/*
+ * Position Studio itself may use the full Moodle content area.
+ */
+.u-position-studio {
+    width: 100%;
+    max-width: none;
+}
+
+
+/*
+ * Keep the ladder/header sections restrained.
+ * The interactive workspace alone is full-width.
+ */
+.u-position-studio > .u-position-studio__head,
+.u-position-studio > .u-position-ladder {
+    width: min(1480px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/*
+ * Live model fills everything between Moodle sidebar
+ * and the right page/scroll boundary.
+ */
+#u-position-workspace {
+    width: 100%;
+    max-width: none;
+
+    margin-left: 0;
+    margin-right: 0;
+
+    border-left-radius: 14px;
+    border-right-radius: 14px;
+}
+
+
+/*
+ * Use the available width instead of forcing a compact card block.
+ */
+#u-position-workspace .u-position-workspace__columns {
+    grid-template-columns:
+        minmax(250px, 1.12fr)
+        minmax(250px, 1.08fr)
+        minmax(250px, 1fr)
+        minmax(270px, 1.12fr);
+
+    gap: clamp(48px, 4vw, 88px);
+
+    width: 100%;
+    min-width: 1120px;
+}
+
+
+/*
+ * On wide desktop screens don't artificially constrain the canvas.
+ * Vertical scrolling remains inside the model where useful.
+ */
+@media (min-width: 1400px) {
+    #u-position-workspace .u-position-workspace__canvas {
+        width: 100%;
+    }
+}
+
+
+/* ============================================================
+   USTAR 2706 — Positions page true full-width mode
+   Override the PRODUCT SHELL 1160px region limit.
+   ============================================================ */
+
+/* Главный реальный ограничитель страницы */
+.u-product-region {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/*
+ * На странице моделей нам не нужны огромные внешние поля.
+ * Оставляем только небольшой безопасный отступ от rail/scrollbar.
+ */
+.u-product-main {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+/* Вся positions-страница использует доступную ширину */
+.u-pos,
+.u-position-studio,
+#u-position-workspace {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Само живое полотно тоже не центрируем внутри ограничителя */
+#u-position-workspace {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/*
+ * Четыре колонки распределяем по всей ширине,
+ * а не держим компактной группой в центре.
+ */
+#u-position-workspace .u-position-workspace__columns {
+    width: 100% !important;
+    max-width: none !important;
+
+    grid-template-columns:
+        minmax(230px, 1fr)
+        minmax(230px, 1fr)
+        minmax(230px, 1fr)
+        minmax(250px, 1fr) !important;
+
+    gap: clamp(48px, 4vw, 96px) !important;
+}
+
+
+/* USTAR 2706 — final full width HR model */
+body.u-positions-workspace-page .u-product-region {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+body.u-positions-workspace-page .u-product-main {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+body.u-positions-workspace-page #u-position-workspace {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+body.u-positions-workspace-page #u-position-workspace .u-position-workspace__columns {
+    width: 100% !important;
+    max-width: none !important;
+
+    grid-template-columns:
+        minmax(240px, 1fr)
+        minmax(240px, 1fr)
+        minmax(240px, 1fr)
+        minmax(260px, 1fr) !important;
+
+    gap: clamp(40px, 3.2vw, 76px) !important;
+}
+
+/* ============================================================
+   USTAR 2706 — TRUE FULL WIDTH POSITION WORKSPACE
+   Real shell DOM:
+   .u-main > .u-container > ... > #u-position-workspace
+   ============================================================ */
+
+/*
+ * Только на странице живой модели снимаем общий USTAR container limit.
+ * Остальные страницы Академии не затрагиваются.
+ */
+body.u-positions-workspace-page .u-main > .u-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/*
+ * Основной контент занимает всё пространство справа от rail.
+ */
+body.u-positions-workspace-page .u-main {
+    width: auto !important;
+    max-width: none !important;
+
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+}
+
+/*
+ * Positions hierarchy itself must not reintroduce a max-width.
+ */
+body.u-positions-workspace-page .u-pos,
+body.u-positions-workspace-page .u-position-studio,
+body.u-positions-workspace-page #u-position-workspace {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/*
+ * Spread all four graph columns through the resulting width.
+ */
+body.u-positions-workspace-page
+#u-position-workspace
+.u-position-workspace__columns {
+    width: 100% !important;
+    max-width: none !important;
+
+    grid-template-columns:
+        minmax(240px, 1fr)
+        minmax(240px, 1fr)
+        minmax(240px, 1fr)
+        minmax(260px, 1fr) !important;
+
+    gap: clamp(44px, 3.4vw, 86px) !important;
+}
+

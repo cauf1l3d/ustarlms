@@ -1,35 +1,21 @@
-project: USTAR LMS
-
-context_version: 2
-
-purpose:
-  description: >
-    Dynamic AI context layer for USTAR development agents.
-    Contains architecture, decisions, runtime state,
-    active tasks and historical memory.
-
+schema_version: 3
+updated_at: '2026-10-02'
+project: USTAR Academy
+canonical_branch: main
 read_order:
-  - AGENTS.md
-  - context/project.yaml
-  - context/constraints.yaml
-  - context/runtime/
-  - context/architecture/
-  - context/state/
-  - context/tasks/
-  - context/memory/
-
+- START_HERE.md
+- context/project.yaml
+- context/CONTEXT_INDEX.md
+- context/architecture/
+- context/decisions/README.md
+- context/domains/
+- context/runtime/README.md
+- context/code_map/README.md
+- context/tasks/ACTIVE.md
+- context/agents/astra.md
+current_state: context/roadmap/STATE.yaml
+search_index: context/index/context_index.json
 rules:
-  source_of_truth:
-    - git repository
-    - production snapshot
-    - ADR decisions
-
-  before_change:
-    - inspect existing architecture
-    - inspect active tasks
-    - check previous failures
-
-  after_change:
-    - update state
-    - update memory
-    - create commit
+- Current user instructions govern scope
+- Code, ADR and runtime evidence answer different questions
+- Historical snapshots never override current STATE

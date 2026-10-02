@@ -1,21 +1,7 @@
-migration:
-  phase:
-    current: baseline_creation
-
-steps:
-
-  - id: M001
-    name: Git baseline
-    status: in_progress
-
-  - id: M002
-    name: Dynamic AI Context foundation
-    status: in_progress
-
-  - id: M003
-    name: Route patch integration
-    status: pending
-
-  - id: M004
-    name: Organization domain migration
-    status: pending
+kind: migration_status_pointer
+updated_at: '2026-10-02'
+canonical_backlog: context/roadmap/BACKLOG.yaml
+implemented_schema: moodle/local/ustar/db/install.xml
+migrations: moodle/local/ustar/db/upgrade.php
+remaining_runtime_migration_acceptance: AUDIT-01
+rule: Do not infer live legacy data migration from source integration or CI.

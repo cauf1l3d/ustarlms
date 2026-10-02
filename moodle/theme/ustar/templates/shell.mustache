@@ -24,10 +24,7 @@
                     );
             }
 
-            var preset = window.localStorage.getItem('ustar-preset');
-            if (['yellow','graphite','ocean','forest','berry','sand'].indexOf(preset) !== -1) {
-                document.documentElement.setAttribute('data-ustar-preset', preset);
-            }
+            // The server renders the signed-in account's saved palette.
 
             var rail =
                 window.localStorage.getItem(
@@ -63,7 +60,7 @@
     >
 </head>
 
-<body {{{ bodyattributes }}}>
+<body {{{ bodyattributes }}} data-ustar-guide-role="{{guiderole}}">
 
 <a class="u-skiplink" href="#u-main">
     К основному содержанию
@@ -72,6 +69,10 @@
 <div class="u-app">
 
     {{{ output.standard_top_of_body_html }}}
+
+    {{#guiderole}}
+    <div class="tool_usertours-resettourcontainer u-guide-reset" aria-live="polite"></div>
+    {{/guiderole}}
 
     <header class="u-topbar u-glass">
 
@@ -101,6 +102,25 @@
 
         <div class="u-topbar__actions">
 
+            {{#canapprovegrades}}
+            <a class="u-grade-approvals-link" href="{{gradeapprovalsurl}}">Согласовать грейд</a>
+            {{/canapprovegrades}}
+
+            {{#guiderole}}
+            <a
+                class="u-iconbtn u-guide-trigger"
+                href="{{guideurl}}"
+                aria-label="Открыть гид по Академии"
+                title="Гид по Академии"
+            >
+                <svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M9.8 9a2.4 2.4 0 1 1 3.6 2.1c-.9.5-1.4 1.1-1.4 2.1"></path>
+                    <path d="M12 17h.01"></path>
+                </svg>
+            </a>
+            {{/guiderole}}
+
             <button
                 class="u-searchtrigger"
                 id="u-search-trigger"
@@ -121,7 +141,6 @@
                 </kbd>
             </button>
 
-            <button class="u-iconbtn" id="u-preset-trigger" type="button" aria-label="Выбрать цветовое оформление" title="Оформление">◐</button>
 
             <button
                 class="u-iconbtn"
@@ -152,6 +171,12 @@
                 {{#hasnotificationcount}}<span class="u-top-count">{{notificationcount}}</span>{{/hasnotificationcount}}
             </a>
 
+            <a class="u-iconbtn" href="{{profilesettingsurl}}" aria-label="Настройки профиля" title="Настройки профиля">
+                <svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6M16 14v6"/></svg>
+            </a>
+            <a class="u-iconbtn" href="{{logouturl}}" aria-label="Выйти из аккаунта" title="Выйти из аккаунта">
+                <svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H4v16h6M10 12h11M17 8l4 4-4 4"/></svg>
+            </a>
             <a
                 class="u-avatar"
                 href="{{profileurl}}"
@@ -180,6 +205,13 @@
             <button type="button" data-u-preset="forest">Лес</button>
             <button type="button" data-u-preset="berry">Ягода</button>
             <button type="button" data-u-preset="sand">Песок</button>
+            <button type="button" data-u-preset="lavender" style="--preset-swatch:#B89CE9">Лаванда</button>
+            <button type="button" data-u-preset="mint" style="--preset-swatch:#73C6AF">Мята</button>
+            <button type="button" data-u-preset="coral" style="--preset-swatch:#EC947F">Коралл</button>
+            <button type="button" data-u-preset="indigo" style="--preset-swatch:#9EA9ED">Индиго</button>
+            <button type="button" data-u-preset="rose" style="--preset-swatch:#E5A2B8">Роза</button>
+            <button type="button" data-u-preset="ice" style="--preset-swatch:#84C8DF">Лёд</button>
+
         </div>
         <small>Настройка сохраняется только для вашего аккаунта.</small>
     </div>
@@ -214,6 +246,17 @@
             </div>
 
             <div class="u-rail__foot">
+
+                <button
+                    class="u-navitem u-navitem--quiet u-navitem--preset"
+                    id="u-preset-trigger"
+                    type="button"
+                    aria-label="Выбрать цветовое оформление"
+                    title="Оформление"
+                >
+                    <span class="u-navitem__icon u-preset-navicon" aria-hidden="true">◐</span>
+                    <span class="u-navitem__label">Оформление</span>
+                </button>
 
                 {{#canviewas}}<a class="u-navitem u-navitem--quiet" href="{{viewasurl}}" title="Просмотр как должность"><span class="u-navitem__icon">◉</span><span class="u-navitem__label">Просмотр как</span></a>{{/canviewas}}
                 {{#canlegacy}}<a class="u-navitem u-navitem--quiet" href="{{legacyurl}}" title="Резервный интерфейс"><span class="u-navitem__icon">↶</span><span class="u-navitem__label">Legacy UI</span></a>{{/canlegacy}}
@@ -302,6 +345,7 @@
                 {{{ output.course_content_header }}}
 
                 {{{ output.main_content }}}
+                {{{ routecontinue }}}
 
                 {{{ output.activity_navigation }}}
                 {{{ output.course_content_footer }}}
@@ -329,10 +373,23 @@
                 <span>{{short}}</span>
             </a>
             {{/mobilenavitems}}
+            <button type="button" class="u-bnavitem" data-mobile-menu-open aria-controls="u-mobile-menu" aria-label="Все разделы Академии">
+                <svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>Ещё</span>
+            </button>
 
         </div>
     </nav>
 
+    <dialog id="u-mobile-menu" class="u-mobile-menu" aria-labelledby="u-mobile-menu-title">
+        <header><h2 id="u-mobile-menu-title">Академия</h2><button class="u-btn" type="button" data-mobile-menu-close aria-label="Закрыть меню">×</button></header>
+        <nav aria-label="Все разделы">{{#navitems}}<a href="{{url}}" {{#active}}aria-current="page"{{/active}}>{{{icon}}}<span>{{label}}</span></a>{{/navitems}}</nav>
+        <nav aria-label="Учётная запись">
+            <a href="{{profilesettingsurl}}">Личные настройки</a>
+            {{#canapprovegrades}}<a href="{{gradeapprovalsurl}}">Проверка аттестаций</a>{{/canapprovegrades}}
+            <a href="{{guideurl}}">Помощь по Академии</a><a href="{{logouturl}}">Выйти</a>
+        </nav>
+        <button class="u-btn u-btn--primary" type="button" data-app-install hidden>Добавить на домашний экран</button><p class="u-chat-hint" data-app-install-help role="status"></p>
+    </dialog>
 </div>
 
 {{{ output.standard_end_of_body_html }}}

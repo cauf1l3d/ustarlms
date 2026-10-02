@@ -1005,3 +1005,846 @@ body.u-shell-page .u-home-tile {
     }
 }
 
+
+/* ============================================================
+   USTAR 2706 — LIQUID GLASS TOPBAR
+   ============================================================ */
+
+.u-topbar.u-glass {
+    isolation: isolate;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.62) 0%,
+            rgba(255,255,255,.42) 100%
+        ),
+        radial-gradient(
+            520px 120px at 10% -20%,
+            color-mix(in srgb, var(--u-brand) 10%, transparent),
+            transparent 72%
+        );
+
+    border-bottom:
+        1px solid
+        rgba(120,130,145,.16);
+
+    box-shadow:
+        0 8px 30px rgba(24,34,48,.055),
+        inset 0 1px 0 rgba(255,255,255,.82);
+
+    backdrop-filter:
+        blur(22px)
+        saturate(1.45);
+
+    -webkit-backdrop-filter:
+        blur(22px)
+        saturate(1.45);
+}
+
+
+/* glass highlight */
+.u-topbar.u-glass::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: -1;
+    pointer-events: none;
+
+    opacity: 1;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.45) 0%,
+            rgba(255,255,255,.10) 42%,
+            transparent 70%
+        );
+}
+
+
+/* subtle theme-aware light inside navbar */
+.u-topbar.u-glass::after {
+    content: "";
+
+    position: absolute;
+    top: -55px;
+    left: 5%;
+
+    width: 360px;
+    height: 110px;
+
+    z-index: -1;
+    pointer-events: none;
+
+    border-radius: 999px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 9%,
+            transparent
+        );
+
+    filter: blur(35px);
+}
+
+
+/* Search becomes a small nested glass capsule */
+.u-topbar .u-searchtrigger {
+    background:
+        rgba(255,255,255,.38);
+
+    border-color:
+        rgba(115,130,148,.18);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.55);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.u-topbar .u-searchtrigger:hover {
+    background:
+        rgba(255,255,255,.58);
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--u-brand) 22%,
+            rgba(115,130,148,.18)
+        );
+}
+
+
+/* Icon buttons: keep clean until hover */
+.u-topbar .u-iconbtn:hover {
+    background:
+        rgba(255,255,255,.36);
+
+    border-color:
+        rgba(115,130,148,.12);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+
+/* ---------- DARK ---------- */
+
+html[data-ustar-theme="dark"]
+.u-topbar.u-glass {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(24,28,34,.66) 0%,
+            rgba(24,28,34,.46) 100%
+        ),
+        radial-gradient(
+            520px 120px at 10% -20%,
+            color-mix(in srgb, var(--u-brand) 12%, transparent),
+            transparent 72%
+        );
+
+    border-bottom-color:
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 10px 34px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.07);
+
+    backdrop-filter:
+        blur(24px)
+        saturate(1.35);
+
+    -webkit-backdrop-filter:
+        blur(24px)
+        saturate(1.35);
+}
+
+html[data-ustar-theme="dark"]
+.u-topbar.u-glass::before {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.07),
+            rgba(255,255,255,.02) 48%,
+            transparent 76%
+        );
+}
+
+html[data-ustar-theme="dark"]
+.u-topbar .u-searchtrigger {
+    background:
+        rgba(255,255,255,.055);
+
+    border-color:
+        rgba(255,255,255,.09);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+html[data-ustar-theme="dark"]
+.u-topbar .u-searchtrigger:hover,
+html[data-ustar-theme="dark"]
+.u-topbar .u-iconbtn:hover {
+    background:
+        rgba(255,255,255,.09);
+}
+
+/* ============================================================
+   USTAR 2706 — PREMIUM LIQUID GLASS TOPBAR v3
+   ============================================================ */
+
+/* Preset-aware iridescent palette */
+html {
+    --u-glass-spectrum-a: rgba(94, 203, 255, .18);
+    --u-glass-spectrum-b: rgba(255, 139, 199, .15);
+    --u-glass-spectrum-c: rgba(166, 145, 255, .13);
+    --u-glass-spectrum-d: rgba(255, 224, 125, .12);
+}
+
+html[data-ustar-preset="yellow"] {
+    --u-glass-spectrum-a: rgba(255, 217, 77, .18);
+    --u-glass-spectrum-b: rgba(255, 157, 117, .13);
+    --u-glass-spectrum-c: rgba(124, 205, 255, .11);
+    --u-glass-spectrum-d: rgba(255, 244, 177, .16);
+}
+
+html[data-ustar-preset="graphite"] {
+    --u-glass-spectrum-a: rgba(177, 194, 215, .14);
+    --u-glass-spectrum-b: rgba(208, 182, 220, .10);
+    --u-glass-spectrum-c: rgba(130, 189, 224, .10);
+    --u-glass-spectrum-d: rgba(255, 255, 255, .13);
+}
+
+html[data-ustar-preset="ocean"] {
+    --u-glass-spectrum-a: rgba(65, 194, 255, .22);
+    --u-glass-spectrum-b: rgba(81, 224, 225, .13);
+    --u-glass-spectrum-c: rgba(118, 145, 255, .15);
+    --u-glass-spectrum-d: rgba(188, 240, 255, .14);
+}
+
+html[data-ustar-preset="forest"] {
+    --u-glass-spectrum-a: rgba(84, 205, 149, .18);
+    --u-glass-spectrum-b: rgba(118, 224, 188, .13);
+    --u-glass-spectrum-c: rgba(104, 173, 238, .10);
+    --u-glass-spectrum-d: rgba(217, 235, 141, .11);
+}
+
+html[data-ustar-preset="berry"] {
+    --u-glass-spectrum-a: rgba(242, 102, 166, .19);
+    --u-glass-spectrum-b: rgba(210, 122, 238, .13);
+    --u-glass-spectrum-c: rgba(120, 174, 255, .12);
+    --u-glass-spectrum-d: rgba(255, 190, 221, .13);
+}
+
+html[data-ustar-preset="sand"] {
+    --u-glass-spectrum-a: rgba(225, 183, 115, .17);
+    --u-glass-spectrum-b: rgba(244, 204, 157, .12);
+    --u-glass-spectrum-c: rgba(136, 199, 220, .09);
+    --u-glass-spectrum-d: rgba(255, 239, 196, .15);
+}
+
+
+/* Main glass sheet */
+.u-topbar.u-glass {
+    overflow: hidden;
+    isolation: isolate;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.25) 0%,
+            rgba(255,255,255,.11) 100%
+        ),
+        radial-gradient(
+            500px 130px at 12% -30%,
+            color-mix(in srgb, var(--u-brand) 8%, transparent),
+            transparent 72%
+        );
+
+    border-bottom:
+        1px solid rgba(255,255,255,.28);
+
+    box-shadow:
+        0 9px 30px rgba(22,31,44,.045),
+        inset 0 1px 0 rgba(255,255,255,.68),
+        inset 0 -1px 0 rgba(255,255,255,.09);
+
+    backdrop-filter:
+        blur(32px)
+        saturate(1.85)
+        brightness(1.035);
+
+    -webkit-backdrop-filter:
+        blur(32px)
+        saturate(1.85)
+        brightness(1.035);
+}
+
+
+/* Fine glass reflection */
+.u-topbar.u-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.55) 0%,
+            rgba(255,255,255,.15) 22%,
+            rgba(255,255,255,.045) 52%,
+            transparent 76%
+        );
+
+    opacity: .72;
+}
+
+
+/*
+ * Moving iridescent optical sheen.
+ * Intentionally very slow — should feel like glass, not animation.
+ */
+.u-topbar.u-glass::after {
+    content: "";
+    position: absolute;
+
+    width: 145%;
+    height: 260%;
+
+    left: -30%;
+    top: -80%;
+
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at 14% 48%,
+            var(--u-glass-spectrum-a) 0%,
+            transparent 24%
+        ),
+        radial-gradient(
+            ellipse at 38% 40%,
+            var(--u-glass-spectrum-d) 0%,
+            transparent 22%
+        ),
+        radial-gradient(
+            ellipse at 62% 52%,
+            var(--u-glass-spectrum-b) 0%,
+            transparent 25%
+        ),
+        radial-gradient(
+            ellipse at 84% 42%,
+            var(--u-glass-spectrum-c) 0%,
+            transparent 22%
+        ),
+        linear-gradient(
+            110deg,
+            transparent 18%,
+            rgba(255,255,255,.08) 38%,
+            rgba(255,255,255,.20) 48%,
+            rgba(255,255,255,.06) 57%,
+            transparent 72%
+        );
+
+    filter: blur(22px);
+    opacity: .80;
+
+    transform:
+        translate3d(-3%, 0, 0)
+        rotate(-2deg);
+
+    animation:
+        ustar-liquid-glass-sheen
+        18s
+        ease-in-out
+        infinite alternate;
+
+    will-change: transform, opacity;
+}
+
+
+@keyframes ustar-liquid-glass-sheen {
+    0% {
+        transform:
+            translate3d(-4%, -1%, 0)
+            rotate(-2deg);
+
+        opacity: .70;
+    }
+
+    50% {
+        transform:
+            translate3d(2%, 1%, 0)
+            rotate(1deg);
+
+        opacity: .86;
+    }
+
+    100% {
+        transform:
+            translate3d(7%, -1%, 0)
+            rotate(-1deg);
+
+        opacity: .74;
+    }
+}
+
+
+/* Search = inner glass capsule */
+.u-topbar .u-searchtrigger {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.24),
+            rgba(255,255,255,.12)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.30);
+
+    box-shadow:
+        0 4px 14px rgba(24,32,44,.035),
+        inset 0 1px 0 rgba(255,255,255,.64);
+
+    backdrop-filter:
+        blur(18px)
+        saturate(1.55);
+
+    -webkit-backdrop-filter:
+        blur(18px)
+        saturate(1.55);
+
+    transition:
+        background 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
+}
+
+.u-topbar .u-searchtrigger:hover {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.34),
+            rgba(255,255,255,.18)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--u-brand) 18%,
+            rgba(255,255,255,.32)
+        );
+
+    box-shadow:
+        0 7px 20px rgba(22,31,44,.055),
+        inset 0 1px 0 rgba(255,255,255,.72);
+
+    transform: translateY(-1px);
+}
+
+
+/* Keyboard hint inside search */
+.u-topbar .u-kbd {
+    background: rgba(255,255,255,.30);
+    border-color: rgba(255,255,255,.32);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.52);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+
+/* Individual control glass response */
+.u-topbar .u-iconbtn {
+    transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        transform 160ms ease;
+}
+
+.u-topbar .u-iconbtn:hover {
+    background:
+        rgba(255,255,255,.16);
+
+    border-color:
+        rgba(255,255,255,.22);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.38);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    transform: translateY(-1px);
+}
+
+
+/* Avatar floats slightly above glass */
+.u-topbar .u-avatar {
+    box-shadow:
+        0 5px 15px
+        color-mix(
+            in srgb,
+            var(--u-brand) 13%,
+            rgba(20,28,40,.08)
+        ),
+        inset 0 1px 0 rgba(255,255,255,.34);
+}
+
+
+/* ============================================================
+   DARK
+   ============================================================ */
+
+html[data-ustar-theme="dark"]
+.u-topbar.u-glass {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(19,23,29,.28) 0%,
+            rgba(19,23,29,.13) 100%
+        ),
+        radial-gradient(
+            500px 130px at 12% -30%,
+            color-mix(in srgb, var(--u-brand) 11%, transparent),
+            transparent 72%
+        );
+
+    border-bottom-color:
+        rgba(255,255,255,.09);
+
+    box-shadow:
+        0 10px 34px rgba(0,0,0,.16),
+        inset 0 1px 0 rgba(255,255,255,.075);
+
+    backdrop-filter:
+        blur(34px)
+        saturate(1.6)
+        brightness(.98);
+
+    -webkit-backdrop-filter:
+        blur(34px)
+        saturate(1.6)
+        brightness(.98);
+}
+
+html[data-ustar-theme="dark"]
+.u-topbar.u-glass::before {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.105) 0%,
+            rgba(255,255,255,.025) 34%,
+            transparent 72%
+        );
+
+    opacity: .72;
+}
+
+html[data-ustar-theme="dark"]
+.u-topbar.u-glass::after {
+    opacity: .53;
+}
+
+html[data-ustar-theme="dark"]
+.u-topbar .u-searchtrigger {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.025)
+        );
+
+    border-color:
+        rgba(255,255,255,.095);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.075);
+}
+
+html[data-ustar-theme="dark"]
+.u-topbar .u-searchtrigger:hover,
+html[data-ustar-theme="dark"]
+.u-topbar .u-iconbtn:hover {
+    background:
+        rgba(255,255,255,.085);
+}
+
+
+/* Respect OS accessibility preference */
+@media (prefers-reduced-motion: reduce) {
+    .u-topbar.u-glass::after {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .u-topbar .u-searchtrigger,
+    .u-topbar .u-iconbtn {
+        transition: none !important;
+    }
+}
+
+/* ============================================================
+   USTAR 2706 — LIQUID GLASS LEFT RAIL
+   ============================================================ */
+
+.u-rail {
+    isolation: isolate;
+    overflow-x: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.20) 0%,
+            rgba(255,255,255,.09) 100%
+        ),
+        radial-gradient(
+            260px 420px at -20% 12%,
+            var(--u-glass-spectrum-a),
+            transparent 68%
+        ),
+        radial-gradient(
+            220px 360px at 120% 72%,
+            var(--u-glass-spectrum-b),
+            transparent 72%
+        );
+
+    border-right:
+        1px solid rgba(255,255,255,.22);
+
+    box-shadow:
+        10px 0 34px rgba(20,28,40,.035),
+        inset -1px 0 0 rgba(255,255,255,.15);
+
+    backdrop-filter:
+        blur(28px)
+        saturate(1.65);
+
+    -webkit-backdrop-filter:
+        blur(28px)
+        saturate(1.65);
+}
+
+
+/* Glass highlight */
+.u-rail::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 0;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            105deg,
+            rgba(255,255,255,.30) 0%,
+            rgba(255,255,255,.06) 34%,
+            transparent 58%
+        );
+
+    opacity: .65;
+}
+
+
+/* Soft preset-aware optical glow */
+.u-rail::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 420px;
+
+    left: -115px;
+    top: 18%;
+
+    z-index: 0;
+    pointer-events: none;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            color-mix(
+                in srgb,
+                var(--u-brand) 16%,
+                transparent
+            ),
+            transparent 68%
+        );
+
+    filter: blur(28px);
+}
+
+
+/* Keep navigation above glass layers */
+.u-rail > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* Navigation items become nested glass capsules */
+.u-rail .u-navitem:hover {
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 7%,
+            rgba(255,255,255,.17)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.14);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.20);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+
+/* Current section */
+.u-rail .u-navitem[aria-current="page"] {
+    background:
+        linear-gradient(
+            100deg,
+            color-mix(
+                in srgb,
+                var(--u-brand) 11%,
+                rgba(255,255,255,.15)
+            ),
+            rgba(255,255,255,.08)
+        );
+
+    border:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--u-brand) 22%,
+            rgba(255,255,255,.12)
+        );
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        0 4px 14px rgba(0,0,0,.035);
+}
+
+
+/* Footer separator */
+.u-rail__foot {
+    border-top-color:
+        color-mix(
+            in srgb,
+            var(--u-brand) 10%,
+            rgba(255,255,255,.13)
+        );
+}
+
+
+/* ============================================================
+   DARK
+   ============================================================ */
+
+html[data-ustar-theme="dark"] .u-rail {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(18,22,27,.31) 0%,
+            rgba(18,22,27,.16) 100%
+        ),
+        radial-gradient(
+            260px 420px at -20% 12%,
+            var(--u-glass-spectrum-a),
+            transparent 68%
+        ),
+        radial-gradient(
+            220px 360px at 120% 72%,
+            var(--u-glass-spectrum-b),
+            transparent 72%
+        );
+
+    border-right-color:
+        rgba(255,255,255,.075);
+
+    box-shadow:
+        10px 0 32px rgba(0,0,0,.10),
+        inset -1px 0 0 rgba(255,255,255,.035);
+
+    backdrop-filter:
+        blur(30px)
+        saturate(1.45);
+
+    -webkit-backdrop-filter:
+        blur(30px)
+        saturate(1.45);
+}
+
+html[data-ustar-theme="dark"] .u-rail::before {
+    background:
+        linear-gradient(
+            105deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.015) 38%,
+            transparent 62%
+        );
+}
+
+html[data-ustar-theme="dark"]
+.u-rail .u-navitem:hover {
+    background:
+        color-mix(
+            in srgb,
+            var(--u-brand) 8%,
+            rgba(255,255,255,.045)
+        );
+
+    border-color:
+        rgba(255,255,255,.07);
+}
+
+html[data-ustar-theme="dark"]
+.u-rail .u-navitem[aria-current="page"] {
+    background:
+        linear-gradient(
+            100deg,
+            color-mix(
+                in srgb,
+                var(--u-brand) 13%,
+                rgba(255,255,255,.045)
+            ),
+            rgba(255,255,255,.025)
+        );
+
+    border-color:
+        color-mix(
+            in srgb,
+            var(--u-brand) 20%,
+            rgba(255,255,255,.075)
+        );
+}
+
+
+/* Don't animate decorative glass on reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .u-rail::after {
+        filter: blur(28px);
+    }
+}

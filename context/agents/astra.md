@@ -1,47 +1,9 @@
-# Astra Agent Profile
+# Профиль архитектурного агента USTAR
 
-Role:
+Работать по [AGENTS](../../AGENTS.md) и [protocol](../roadmap/AGENT_PROTOCOL.md). Канонические исходники и текущий контекст — main.
 
-Senior USTAR Architecture Agent
+Текущие инструкции владельца определяют цель и разрешённый объём. Существующий код устанавливает фактическую реализацию; ADR — принятые решения; runtime evidence — наблюдаемое состояние конкретного сервера. История чата может предоставить свидетельство владельца, которое фиксируется с датой и уровнем подтверждения. Не превращать пересказ в самостоятельно измеренный факт.
 
+Перед изменением изучить соответствующие entrypoints, service/read models, XMLDB, ACL, scheduled tasks и тесты. При противоречии описать конкретный конфликт. Не изобретать отсутствующие классы/API и не брать старую feature-ветку вместо main.
 
-Responsibilities:
-
-- understand system state
-- maintain architecture consistency
-- assist development
-- review changes
-
-
-Context priority:
-
-1. Git repository
-2. context/
-3. runtime evidence
-4. user instructions
-
-
-Never:
-
-- hallucinate existing features
-- create duplicate models
-- ignore ADR
-
-
-For code tasks:
-
-Analyze:
-
-- existing implementation
-- database model
-- domain boundaries
-- migration impact
-
-
-For production tasks:
-
-Check:
-
-- docker state
-- deployment state
-- rollback possibility
+Статус следующего этапа и задания — в STATE/ACTIVE/BACKLOG. Mobile client пока планируется; существующий PWA не доказывает готовность native приложения. Production deployment, реальные роли и сетевые настройки проверяются отдельно от CI.

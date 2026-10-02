@@ -1,0 +1,138 @@
+/* Native Moodle user tours, visually integrated into the USTAR shell. */
+body[data-ustar-guide-role] [data-role="flexitour-step"] {
+    width: min(420px, calc(100vw - 28px));
+    max-width: min(420px, calc(100vw - 28px));
+    border: 1px solid var(--u-border-subtle, #ddd9cf);
+    border-radius: 18px;
+    color: var(--u-text-primary, #20211f);
+    box-shadow: var(--u-e-3, 0 18px 50px rgba(30, 31, 28, .18));
+}
+
+body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-content {
+    overflow: hidden;
+    border: 0;
+    border-radius: inherit;
+    background: var(--u-surface-raised, #fff);
+    color: inherit;
+}
+
+body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-header {
+    padding: 18px 20px 10px;
+    border: 0;
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--u-brand, #d4b000) 16%, var(--u-surface-raised, #fff)),
+        var(--u-surface-raised, #fff));
+}
+
+body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-title {
+    color: var(--u-text-primary, #20211f);
+    font-size: 18px;
+    font-weight: 850;
+    line-height: 1.25;
+}
+
+body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-body {
+    padding: 12px 20px 18px;
+    color: var(--u-text-secondary, #5f625c);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-footer {
+    gap: 8px;
+    padding: 12px 20px 18px;
+    border: 0;
+    background: var(--u-surface-raised, #fff);
+}
+
+body[data-ustar-guide-role] [data-role="flexitour-step"] .btn-primary {
+    border-color: var(--u-brand, #d4b000);
+    border-radius: 10px;
+    background: var(--u-brand, #d4b000);
+    color: var(--u-text-on-brand, #1f211c);
+    font-weight: 800;
+}
+
+body[data-ustar-guide-role] [data-role="flexitour-step"] .btn-secondary {
+    border-color: var(--u-border, #c9c6bc);
+    border-radius: 10px;
+    background: var(--u-surface-muted, #f2f1ed);
+    color: var(--u-text-primary, #20211f);
+    font-weight: 750;
+}
+
+.u-guide-reset {
+    position: fixed;
+    right: 18px;
+    bottom: 78px;
+    z-index: 1030;
+}
+
+.u-guide-reset:empty {
+    display: none;
+}
+
+.u-guide-reset .usertour {
+    padding: 8px 12px;
+    border: 1px solid var(--u-border-subtle, #ddd9cf);
+    border-radius: 12px;
+    background: var(--u-surface-raised, #fff);
+    box-shadow: var(--u-e-2, 0 8px 24px rgba(30, 31, 28, .14));
+}
+
+.u-guide-reset a {
+    color: var(--u-text-primary, #20211f);
+    font-size: 12px;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.u-guide-trigger {
+    color: var(--u-text-primary, #20211f);
+}
+
+.u-guide-intro {
+    max-width: 820px;
+    color: var(--u-text-secondary, #5f625c);
+}
+
+.u-guide-chapter {
+    margin: 16px 0;
+    padding: clamp(18px, 3vw, 24px);
+}
+
+.u-guide-chapter h2 {
+    margin: 0 0 8px;
+}
+
+.u-guide-details {
+    margin-top: 16px;
+    border-top: 1px solid var(--u-border-subtle, #ddd9cf);
+    padding-top: 14px;
+}
+
+.u-guide-details summary {
+    cursor: pointer;
+    color: var(--u-text-primary, #20211f);
+    font-weight: 800;
+}
+
+@media (max-width: 720px) {
+    .u-guide-reset {
+        right: 10px;
+        bottom: calc(72px + env(safe-area-inset-bottom));
+    }
+
+    body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-header,
+    body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-body,
+    body[data-ustar-guide-role] [data-role="flexitour-step"] .modal-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body[data-ustar-guide-role] [data-role="flexitour-step"] {
+        scroll-behavior: auto;
+    }
+}

@@ -83,6 +83,7 @@ const server=http.createServer((req,res)=>{
           assert(await form.isVisible(),'Reset form did not open');
           assert.strictEqual(await form.locator('input[name=adaptationid]').inputValue(),'1');
           await form.locator('textarea').fill('Ошибочное назначение адаптации');
+          assert(await form.locator('textarea').evaluate(el=>getComputedStyle(el).color===getComputedStyle(el.closest('form')).color),'Reset reason must use readable theme text');
           assert.strictEqual(await form.evaluate(el=>el.checkValidity()),false,'Confirmation is required');
           await form.locator('input[name=confirmreset]').check();
           assert.strictEqual(await form.evaluate(el=>el.checkValidity()),true);

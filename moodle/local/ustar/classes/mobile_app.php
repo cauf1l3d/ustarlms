@@ -5,7 +5,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Public installation metadata; no authenticated response is stored by the worker. */
 final class mobile_app {
-    public const VERSION = '2026100102';
+    public const VERSION = '2026100203';
 
     public static function base_path(): string {
         global $CFG;
@@ -33,7 +33,7 @@ final class mobile_app {
         $script = new \moodle_url('/local/ustar/app.js', ['v' => self::VERSION]);
         return \html_writer::tag('script', '', ['src' => $script->out(false), 'defer' => 'defer'])
             . \html_writer::empty_tag('link', ['rel' => 'manifest', 'href' => $manifest->out(false)])
-            . \html_writer::empty_tag('link', ['rel' => 'apple-touch-icon', 'href' => $icon->out(false)])
+            . \html_writer::empty_tag('link', ['rel' => 'apple-touch-icon', 'sizes' => '180x180', 'href' => $icon->out(false)])
             . \html_writer::empty_tag('meta', ['name' => 'theme-color', 'content' => '#2b2b2b'])
             . \html_writer::empty_tag('meta', ['name' => 'apple-mobile-web-app-capable', 'content' => 'yes'])
             . \html_writer::empty_tag('meta', ['name' => 'apple-mobile-web-app-title', 'content' => 'USTAR']);

@@ -49,7 +49,36 @@ curl -fsS "$WEBROOT/local/ustar/app_manifest.php" -o /artifacts/app-manifest.jso
 php -r '$r=json_decode(file_get_contents("/artifacts/app-manifest.json"),true);if($r["display"]!=="standalone"||count($r["icons"])!==2){exit(1);}echo "APP_MANIFEST=OK\n";'
 curl -fsS -D /artifacts/app-worker-headers.txt "$WEBROOT/local/ustar/app_worker.php" -o /artifacts/app-worker.js
 grep -q '^Service-Worker-Allowed: /' /artifacts/app-worker-headers.txt
-curl -fsS "$WEBROOT/local/ustar/app_icon.php?size=192" -o /artifacts/app-icon.png
-php -r '$s=getimagesize("/artifacts/app-icon.png");if($s[0]!==192||$s[1]!==192){exit(1);}echo "APP_ICON=OK\n";'
+# Follow the manifest's actual versioned URLs without a session, rather than only checking dimensions.
+php -r '
+    $r=json_decode(file_get_contents("/artifacts/app-manifest.json"),true);
+    foreach ($r["icons"] as $i) {
+        if ($i["purpose"]!=="any" || $i["type"]!=="image/png" || strpos($i["src"],"v=2026100203")===false) {exit(1);}
+        echo $i["src"],PHP_EOL;
+    }
+' > /artifacts/app-icon-urls.txt
+while IFS= read -r url; do
+    size=$(php -r 'parse_str(parse_url($argv[1],PHP_URL_QUERY),$q);echo $q["size"];' "$url")
+    curl -fsS -D "/artifacts/app-icon-$size-headers.txt" "$url" -o "/artifacts/app-icon-$size.png"
+    cmp "/source/moodle/theme/ustar/pix/brand/app-icon-20261002-$size.png" "/artifacts/app-icon-$size.png"
+done < /artifacts/app-icon-urls.txt
+# iOS uses apple-touch-icon before manifest icons. Check the real login HTML too.
+php -r '
+    $s=file_get_contents("/artifacts/shell-login.html");
+    if (!preg_match("/<link[^>]*rel=\"apple-touch-icon\"[^>]*sizes=\"180x180\"[^>]*href=\"([^\"]+)\"/",$s,$m)) {exit(1);}
+    $url=html_entity_decode($m[1]);
+    if (strpos($url,"size=180&v=2026100203")===false) {exit(1);}
+    echo $url;
+' > /artifacts/apple-touch-icon-url.txt
+curl -fsS -D /artifacts/app-icon-180-headers.txt "$(cat /artifacts/apple-touch-icon-url.txt)" -o /artifacts/app-icon-180.png
+cmp /source/moodle/theme/ustar/pix/brand/app-icon-20261002-180.png /artifacts/app-icon-180.png
+for size in 180 192 512; do
+    php -r '$s=getimagesize($argv[1]);if($s[0]!=(int)$argv[2]||$s[1]!=(int)$argv[2]||$s[2]!==IMAGETYPE_PNG){exit(1);}' "/artifacts/app-icon-$size.png" "$size"
+    grep -qi '^Content-Type: image/png' "/artifacts/app-icon-$size-headers.txt"
+    if grep -qi '^Set-Cookie:' "/artifacts/app-icon-$size-headers.txt"; then exit 1; fi
+done
+code=$(curl -sS "$WEBROOT/local/ustar/app_icon.php?size=181" -o /dev/null -w '%{http_code}')
+test "$code" = 400
+echo 'APP_ICONS_PUBLIC_EXACT_BYTES_AND_IOS_HEAD=OK'
 rm -f "$OUTSIDER"
 echo 'WORKCHAT_AUTHENTICATED_HTTP=PASS'

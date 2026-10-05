@@ -1,5 +1,7 @@
 # INF-01/08: подготовка обновления retained lab и бюджета отката
 
+**Latest20:44UTC:** PR86 server planning PASS и новый extended SMART Completed without error подтверждены. [Точный report](lab_planning_result_20261005.json), [новый cold checkpoint/workspace и следующий шаг](lab_cold_checkpoint_20261005.md). Разделы ниже сохраняют последовательные checkpoints с исходными датами.
+
 Источник нового checkpoint — owner terminal output, полученный **05.10 13:11:41 UTC / 16:11:41 MSK**. Прямого server access у агента нет.
 
 ## Свежий storage/HDD checkpoint и CI
@@ -56,3 +58,9 @@ Helper SHA-256 **`075c454aa58be4209466864dae734ea140c024d7ed5b82863ebfac7e08cc3d
 **HDD post-write SMART** снят в **17:36:49 UTC** с exact WWN0x50014ee200c1ee59 / WD-WCAS82914317 /500106780160bytes: reallocated0/events0, pending0, offlineUNC1, CRC0, power-on16383h, temperature47°C. Health PASSED означает threshold assessment и не отменяет старый extended read failure (lifetime16359h/LBA752045700). Stored ATA error9 latest at1970h относится к старому lifetime, не доказательство новой ошибки после overwrite. Owner **успешно запустил новый long self-test**, ожидаемые154min и **20:11:04UTC /23:11:04MSK**; actual start timestamp не напечатан, completion/result ещё отсутствуют. Не перезапускать тест и не повторять badblocks; дождаться newest completed entry/сверить свежие attributes. HDD пока не trusted backup target.
 
 Следующий operator шаг сейчас: immutable download только policy helper, SHA до root600 install, read-only `--check`, передать полный sanitized report/ошибку. Права/содержимое retained tree не менять. После23:11MSK отдельно снять `smartctl -a` на exact WWN; anticipated finish не является наблюдаемым completion. Затем успешный budget → full-addon lab candidate/paired cold rollback; production patch/Ubuntu/HTTPS остаются впереди в порядке1→7→6.
+
+## Owner checkpoint20:46:23UTC /23:46:23MSK
+
+PR86 implementation9646157a2b2c5e1a4ff585d5c4d33aa730db4bcd, main mergea826a73c052a72c94ad5c6367b9cb9bcc1e115f0; source37352550732/context37352550761 SUCCESS. Owner SHA/install OK и check20:44:34.950875UTC PASS:526 USTAR/57 addon metadata, exact report получен, ordinary writable data files1. Free11280769024bytes, first budget8752834560bytes/reserve4GiB. No source permission repair, upgrade или rollback создан. Новый [cold checkpoint + independent workspace](lab_cold_checkpoint_20261005.md) отдельно считает вторую copy и требует9,80GiB; helper prepared/tested, server execution pending.
+
+SMART20:44:52UTC newest extended Completed without error16385h/00%, prior failure16359h помечена outdated. Pending/reallocated/events/CRC0, residual198=1, temp48, ATAerrors9/latest1970h unchanged. Surface+long test-scope PASS, cause198 не установлена, backup target ещё не настроен. Long/badblocks повторять не требуется.

@@ -25,6 +25,7 @@ sources:
   - owner_active_HDD_and_root_lab_export_sizes_received_20261005T131141Z
   - owner_HDD_surface_completion_and_original_planning_refusal_received_20261005T171136Z
   - owner_post_write_SMART_long_start_and_diagnostic_refusal_received_20261005T174058Z
+  - owner_planning_PASS_and_latest_extended_SMART_received_20261005T204623Z
   agent_checks:
   - 526_manifest_entries_vs_actual_Git_blobs
   - 468_disk_versions_vs_468_readonly_DB_versions
@@ -38,6 +39,8 @@ sources:
   - 10_offline_retained_lab_resume_safety_and_cleanup_tests
   - synthetic_generator_compatibility_with_uploaded_engine_ownership_calls_mocked
   - PR83_full_RC_and_sanitized_patch_artifact_verified_210_tests_891_assertions
+  - 18_real_filesystem_cold_checkpoint_and_mocked_stage_safety_tests
+  - pinned_uploaded_engine_adapter_generator_ownership_relay_compatibility_mocked
 application:
   reference_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
   manifest_observed_at: '2026-10-05T02:32:35.997389+00:00'
@@ -384,7 +387,39 @@ storage:
       expected_completion_utc: '2026-10-05T20:11:04Z'
       expected_completion_msk: '2026-10-05T23:11:04+03:00'
       actual_start_timestamp: not_printed
-      result: pending_do_not_restart_or_infer_completion
+      result: Completed_without_error_newest_extended_at_lifetime16385h
+      result_observed_at: '2026-10-05T20:44:52Z'
+      exact_completion_wall_clock_time: not_printed
+    post_write_smart_latest:
+      source: owner_terminal_output_not_agent_server_access
+      owner_message_received_at: '2026-10-05T20:46:23Z'
+      observed_at: '2026-10-05T20:44:52Z'
+      device: /dev/disk/by-id/wwn-0x50014ee200c1ee59
+      model: WDC WD5000AAKS-00YGA0
+      serial: WD-WCAS82914317
+      capacity_bytes: 500106780160
+      overall_health_threshold_assessment: PASSED
+      newest_extended_self_test: Completed without error
+      newest_extended_remaining_percent: 0
+      newest_extended_lifetime_hours: 16385
+      previous_failed_extended_lifetime_hours: 16359
+      previous_failed_first_lba: 752045700
+      previous_failed_test_reported_outdated: true
+      power_on_hours: 16386
+      reallocated_sectors: 0
+      reallocated_events: 0
+      pending_sectors: 0
+      offline_uncorrectable: 1
+      udma_crc_errors: 0
+      temperature_celsius: 48
+      ata_error_count: 9
+      latest_stored_ata_error_lifetime_hours: 1970
+      auto_offline_collection: suspended_by_host_command_separate_from_successful_extended
+      surface_and_newest_extended_checks: PASS_in_observed_test_scope
+      residual_attribute_198_cleared: false
+      residual_attribute_198_cause: not_established
+      backup_target_partition_mount_encryption_schedule: not_configured
+      trusted_backup_target: false
   directory_inventory:
     observed_at: '2026-10-05T02:24:18Z'
     opt_ustar_g_reported: 3.9
@@ -501,6 +536,23 @@ backup:
       exact_private_entry_name_and_origin: not_received_not_inferred
       metadata_only_data_policy_helper_sha256: 075c454aa58be4209466864dae734ea140c024d7ed5b82863ebfac7e08cc3d8b
       metadata_only_data_policy_server_execution: pending
+    planning_preflight_latest:
+      source: owner_terminal_output
+      owner_message_received_at: '2026-10-05T20:46:23Z'
+      measured_at: '2026-10-05T20:44:34.950875+00:00'
+      script_sha256: 075c454aa58be4209466864dae734ea140c024d7ed5b82863ebfac7e08cc3d8b
+      implementation: 9646157a2b2c5e1a4ff585d5c4d33aa730db4bcd
+      pr: 86
+      result: PASS
+      ustar_matching_files: 526
+      addon_metadata_matching: 57
+      moodledata_group_or_world_writable_files: 1
+      report: context/runtime/lab_planning_result_20261005.json
+      read_only: true
+      rollback_created_or_verified: false
+      candidate_upgrade_executed: false
+      production_containers_unchanged: true
+      cold_checkpoint_helper_prepared_not_server_executed: true
 business_readonly_checks:
   observed_at: '2026-10-04'
   accounts_reviewed: 72

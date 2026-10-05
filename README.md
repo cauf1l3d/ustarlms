@@ -20,3 +20,5 @@
 Следующая команда владельца разрешила **1 → 7 → 6**: baseline → Moodle/CI/ОС → HTTPS, остальные пункты после них. INF-01 в работе; историческая остановка DOC-02 больше не действует. Backup-автоматизация позже на healthy HDD, не SERVEREXPRESS. Mobile/Privacy/B2B/LTS остаются отдельными проектами. Слияние в main не меняет production.
 
 Исторические RC, аудиты и копии исходников в `release/` сохранены для трассировки; новый код меняется в `moodle/`. Секреты, production DB, moodledata и recovery archives в Git не хранятся.
+
+Текущий infrastructure checkpoint05Oct20:44UTC: [planning PASS / exact budget](context/runtime/lab_planning_result_20261005.json), [cold rollback copy и отдельный patch workspace](context/runtime/lab_cold_checkpoint_20261005.md). Helper подготовлен, server execution/upgrade pending; HDD newest extended без ошибок, residual198=1 и target configuration остаются explicit.

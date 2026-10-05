@@ -54,12 +54,14 @@ tasks:
   - context/runtime/lab_resume_20261005.md
   - context/runtime/patch_runtime_20261005.md
   - context/runtime/lab_patch_preflight_20261005.md
+  - context/runtime/lab_planning_result_20261005.json
+  - context/runtime/lab_cold_checkpoint_20261005.md
   pending_acceptance:
   - Extra files/consumers and candidate preservation of reviewed USTAR homepage redirect; exclusions/plugin provenance
     remain explicit
   - Fresh archive independent copy/decryption evidence; candidate coordinated upgrade/rollback readiness
-  - Verify metadata-only Moodledata policy helper on server after diagnosed33:33/0666 regular-file refusal;
-    successful budget report, cold paired rollback and full-addon candidate upgrade remain pending
+  - Execute paired cold checkpoint + boot independent baseline workspace; then full-addon candidate upgrade/repeat/paired
+    rollback.
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA verified
   - 24678 matching, 1 changed, 0 missing, 23 extra, no errors or reference skips; not full equivalence
@@ -76,12 +78,20 @@ tasks:
   - Owner retained lab resumed 11:30:58 UTC, login200/production unchanged PASS; not a core upgrade
   - 'Owner storage13:11UTC: root49G/36used/11free/78percent, lab2.3G, export~1.9G; rounded not byte budget'
   - PR83 pinned patch-518 full RC37311910916 SUCCESS; synthetic PHPUnit210/891, schema/auth-shell PASS
-  - Owner message17:11:36UTC confirms lab2.3G/export1.9G with complete export path; original helper/profile SHA OK,
-    planning check refused Untrusted retained input; no scope or successful report supplied
+  - Owner message17:11:36UTC confirms lab2.3G/export1.9G with complete export path; original helper/profile SHA
+    OK, planning check refused Untrusted retained input; no scope or successful report supplied
   - Owner HDD unit inactive/dead success/0 and completed write/read log0badblocks/0errors
-  - Owner SMART17:36:49UTC pending0/reallocated0/offlineUNC1; new long test started, expected20:11:04UTC/result pending
+  - Owner SMART17:36:49UTC pending0/reallocated0/offlineUNC1; new long test started, expected20:11:04UTC/result
+    pending
   - PR85 checksum/install/check confirmed; scope=moodledata_tree_entry permissions uid33/gid33/mode0666/type_regular/links1
-  - Separate data metadata policy prepared with exact private0700/33:33 root and per-entry33:33; operator report pending
+  - Separate data metadata policy prepared with exact private0700/33:33 root and per-entry33:33; operator report
+    pending
+  - Owner PR86 planning20:44:34UTC PASS;526 USTAR/57 addon metadata; free11280769024 bytes/required8752834560/reserve4GiB,
+    ordinary writable data files1.
+  - Owner newest extended SMART20:44:52UTC Completed without error at16385h; reallocated0/pending0/offlineUNC1/CRC0/temp48;
+    previous failure retained as history.
+  - Cold paired checkpoint + separate baseline workspace helper prepared with18 filesystem/failure tests; server
+    execution pending.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -112,9 +122,9 @@ tasks:
   - Any cleanup/transfer or partition work has measured scope and recoverable copy
   - Faulty WD5000AAKS excluded; healthy HDD and power/shutdown decisions recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  priority_note: Owner/systemadmin authorized exact500GB HDD overwrite/check/format only; owner message17:11:36UTC
-    confirms write/read completed zero badblocks/errors. SMART17:36UTC pending0/offlineUNC1; new long test started,
-    expected20:11:04UTC/result pending, HDD not trusted. Broader cleanup deferred.
+  priority_note: Exact500GB HDD overwrite/check/format authorized. Surface write/read zero errors and newest extended
+    SMART Completed without error confirmed; latest20:44:52UTC pending0/reallocated0/residual offlineUNC1. Backup
+    target not configured; broader cleanup deferred.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned

@@ -1,0 +1,32 @@
+name: ustar-stage1-patch
+services:
+  db:
+    image: postgres:16.15-trixie@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
+    environment:
+      POSTGRES_DB: ustar_stage1
+      POSTGRES_USER: ustar_fixture
+      POSTGRES_PASSWORD: fixture-only-not-a-production-secret
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ustar_fixture -d ustar_stage1"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    networks: [isolated]
+    tmpfs: [/var/lib/postgresql/data]
+  runner:
+    build:
+      context: ../..
+      dockerfile: tests/stage/Dockerfile.patch
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: fixture-only-not-a-production-secret
+    volumes:
+      - ../..:/source:ro
+      - ../../artifacts:/artifacts
+    networks: [isolated]
+    tmpfs: [/stage]
+networks:
+  isolated:
+    internal: true

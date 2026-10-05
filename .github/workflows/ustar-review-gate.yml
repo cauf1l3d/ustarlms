@@ -29,6 +29,10 @@ jobs:
   source:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -42,7 +46,7 @@ jobs:
           python-version: '3.12'
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
         with:
-          php-version: '8.2'
+          php-version: ${{ matrix.php }}
           coverage: none
       - run: python scripts/ci/source_checks.py
       - run: pip install -r tests/stage/python-requirements.txt
@@ -58,7 +62,7 @@ jobs:
       - run: git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle frontend
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: source-manifest
+          name: ${{ matrix.php == '8.2' && 'source-manifest' || 'source-manifest-php83' }}
           path: artifacts/
 
   frontend:
@@ -89,6 +93,16 @@ jobs:
     needs: [source, frontend, rollback, prepare-rc]
     runs-on: ubuntu-24.04
     timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runtime: historical
+            compose: tests/stage/compose.yaml
+            evidence: moodle-db-evidence
+          - runtime: patch-518
+            compose: tests/stage/patch-compose.yaml
+            evidence: moodle-patch-evidence
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -100,9 +114,9 @@ jobs:
           mkdir -p artifacts
           cp .stage-input/baseline.json artifacts/baseline.json
       - name: Build isolated test runtime
-        run: docker compose -f tests/stage/compose.yaml build --pull
+        run: docker compose -f ${{ matrix.compose }} build --pull
       - name: Fresh install, upgrade, repeat upgrade and Moodle database tests
-        run: docker compose -f tests/stage/compose.yaml up --abort-on-container-exit --exit-code-from runner
+        run: docker compose -f ${{ matrix.compose }} up --abort-on-container-exit --exit-code-from runner
       - name: Capture runtime image identity
         if: always()
         run: docker image ls --digests --no-trunc > artifacts/images.txt
@@ -110,11 +124,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: moodle-db-evidence
+          name: ${{ matrix.evidence }}
           path: artifacts/
       - name: Dispose only the isolated stage project
         if: always()
-        run: docker compose -f tests/stage/compose.yaml down --volumes
+        run: docker compose -f ${{ matrix.compose }} down --volumes
 
   rollback:
     if: ${{ (github.event_name == 'workflow_dispatch' && (inputs.full_rc || inputs.rollback_only)) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && contains(fromJSON('["full-rc","rollback-preflight"]'), github.event.label.name)) }}

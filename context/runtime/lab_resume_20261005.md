@@ -43,7 +43,7 @@ SHA-256 нового helper: `59dec234262dd98fac0aa09a81cc3af9649ab8518580f4d977
 - 10 новых portable offline tests: readonly check, config/env/Apache/sendmail drift, live/name collision, code/PG links, permissions, PG/image drift, enabled tasks, success и failure cleanup при HTTP/bootstrap/production drift.
 - Локальная совместимость с генератором **реального предоставленного engine** проверена на synthetic temporary files, ownership calls mocked, без Docker/SQL/production.
 - Полный local `tests/r16` suite: **52 tests PASS**, включая context boundaries и настоящий local MCP stdio handshake; requirements установлены в отдельном validation environment. `check_context.py` PASS: 526 files / 93 tables / 32 tasks. Content index: 162 files. CI exact delivery фиксируется в Git/PR; application generated maps и исторические fixtures сохраняются.
-- **На сервере новый helper ещё не запускался**; fixture tests не являются live resume/upgrade PASS.
+- При публикации PR82 helper ещё не был запущен. **Позднее owner execution 11:30:58 UTC: LAB_RESUME=PASS / HTTP_LOGIN=200 / PRODUCTION_CONTAINERS_UNCHANGED=PASS**, relay7200s, report `resume-report-20261005T113058Z-a0dc0bf6.json` в прежнем ROOT. Это не core upgrade/rollback; [актуальный checkpoint](patch_runtime_20261005.md).
 
 Оператор получает helper из immutable delivery commit и проверяет SHA-256 до root install. SSH-команды одной физической строкой; `sudo -v` отдельно с ожиданием нового prompt, затем `sudo -n`. `--resume-lab` включает собственный preflight; отдельный `--check` необязателен. Ожидаются `LAB_RESUME=PASS`, `HTTP_LOGIN=200`, `PRODUCTION_CONTAINERS_UNCHANGED=PASS` и report path. При необходимости штатный old engine `--stop-lab` закрывает его без удаления data directories.
 

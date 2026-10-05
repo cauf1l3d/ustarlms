@@ -1,0 +1,16 @@
+{
+  "moodle_repository": "https://github.com/moodle/moodle.git",
+  "moodle_tag": "v5.1.8",
+  "moodle_tag_object": "31700fd584969ba1178c433b62a3c90576e235af",
+  "moodle_commit": "cc0bf17da8b5fbd290faf95b2b14a03d64331923",
+  "moodle_version": "2025100608.00",
+  "moodle_purpose": "additional isolated USTAR compatibility reference; not a production upgrade or full third-party plugin test",
+  "php_image": "php:8.3.33-cli-trixie@sha256:1714c87d55b6c3c5b47bc8d3d0a6cd7a52b6a9cc3f9f950c9174be8a2e48b3ca",
+  "php_version": "8.3.33",
+  "composer_image": "composer:2.8.12",
+  "postgres_image": "postgres:16.15-trixie@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54",
+  "postgres_version_num": "160015",
+  "upgrade_from_commit": "4cbb8ac37ef99051b9432e1e5c7c462f1472ad36",
+  "outbound_at_runtime": "blocked by internal Docker network",
+  "data": "synthetic only"
+}

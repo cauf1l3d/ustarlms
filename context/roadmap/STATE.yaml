@@ -3,8 +3,8 @@ updated_at: '2026-10-05'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: 'По команде владельца: baseline → Moodle/CI/ОС → HTTPS'
-current_activity: 'INF-01: core report проверен; pending static index.php/extras review, wrapper CLI и fresh recovery/stage
-  readiness.'
+current_activity: 'INF-01: index redirect и backup/cron sources проверены; следующий шаг fresh backup со встроенным preflight,
+  затем cron status и isolated upgrade/rollback; extra consumers pending.'
 next_task: INF-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -27,7 +27,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_core_comparison_1_changed_23_extra_review_and_recovery_pending
+  status: owner_core_and_static_index_wrappers_reviewed_fresh_recovery_stage_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -69,9 +69,19 @@ production:
     review: context/runtime/core_review_20261005.md
     changed_paths:
     - public/index.php
-    index_content_review: pending_source_not_in_archive
+    index_content_review: verified_uploaded_bytes_bootstrap_then_USTAR_home_redirect
+    index_sha256: 2f509be81c989d2cf2b1ffb1e195710714fefec93e2d5d0f646a2834037ebcf1
+    index_observed_oid_verified: true
     extra_consumers_and_content_review: pending
     full_deployment_equivalence: false
+  wrapper_contract_review:
+    received_at: '2026-10-05T09:48:49Z'
+    source: context/runtime/recovery_contract_20261005.md
+    hashes_match_installed_observations: true
+    scope: static_uploaded_sources_and_local_offline_gates
+    next_operator_step: fresh_manual_backup_with_builtin_preflight_then_cron_status
+    fresh_backup_executed: false
+    archive_restore_executed: false
 non_goals:
 - Изменение production в этой GitHub-поставке
 - Объявление исправленных рисков по публикации плана
@@ -89,6 +99,7 @@ next_agent_read:
 - context/tasks/ACTIVE.md
 - context/runtime/baseline_20261005.md
 - context/runtime/core_review_20261005.md
+- context/runtime/recovery_contract_20261005.md
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 execution:
   status: authorized_selected_tasks_in_progress

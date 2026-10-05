@@ -14,7 +14,7 @@
 | Не доказано | Полный clean-host restore почты/DNS/ISPConfig; гарантированный RTO/RPO; потеря общей площадки |
 | Регулярность | **Не установлена**, финальный этап текущего инфраструктурного цикла |
 
-Snapshot сделан до последующих записей cron. Перед изменяющей операцией требуется свежая разовая согласованная копия, это не перенос регулярного расписания в начало цикла. Существующие архивы и результаты restore сохраняются до адресного решения; privacy старых dumps относится к INF-03, который владелец отложил после выбранных 1 → 7 → 6. Свежие hashes existing wrappers и отсутствие подтверждённого CLI/source — в [новом baseline](baseline_20261005.md); flags не придумывать.
+Snapshot сделан до последующих записей cron. Перед изменяющей операцией требуется свежая разовая согласованная копия, это не перенос регулярного расписания в начало цикла. Существующие архивы и результаты restore сохраняются до адресного решения; privacy старых dumps относится к INF-03, который владелец отложил после выбранных 1 → 7 → 6. 05.10 09:48:49 UTC получены и полностью проверены existing wrapper sources; hashes совпали. [CLI, состав, lock и короткие команды](recovery_contract_20261005.md): default — preflight, backup — `--backup --acknowledge-outage`, **`--recover` только возобновляет Moodle после прерывания, не восстанавливает архив**.
 
 ## Target и политика
 
@@ -28,7 +28,7 @@ RPO/RTO, retention, pause/window, бюджет и ответственные **�
 
 INF-14 → OPS-02 в [полном плане](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md): проверенный target и bounded capacity → согласованная зашифрованная копия с integrity manifest/atomic completion → required independent copy → проверенный retention → расписание → fresh restore из scheduled результата.
 
-Сохраняются cron v3/backup-lock/single-worker, private paths/logs, stop/resume/failure cleanup, mount validation, absence of other writers и consistent dump. Источник установленного host script и его текущий SHA ещё нужно получить у оператора; новый GitHub harness не устанавливает и не реконструирует его.
+Сохраняются cron v3/backup-lock/single-worker, private paths/logs, stop/resume/failure cleanup, mount validation, absence of other writers и consistent dump. Existing manual script создаёт local SSD export, не выполняет transfer или автоматизацию на HDD. В output SERVEREXPRESS упомянут как историческая инструкция скачать файл, не как сетевой target. Новый GitHub harness не устанавливает и не реконструирует host wrappers. Archive restore и полное host/service восстановление требуют отдельного проверенного процесса; текущий payload не содержит host cron/backup scripts/state или всю общую серверную инфраструктуру.
 
 Отказные проверки на копии: missing mount/full disk/failed dump/interruption/failed transfer/hash/decryption/lock contention. Backup success только после всех обязательных проверок. Retention сохраняет необходимый проверенный набор. Мониторинг отслеживает запуск, transfer/checksum, resume cron и restore freshness.
 

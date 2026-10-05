@@ -13,7 +13,13 @@
 
 Проверены полный JSON, уникальность matching paths и равенство union matching/changed/missing точному reference tree. Expected OID изменённого файла также соответствует upstream tree. Это независимая проверка структуры и reference отчёта; самостоятельно production files агент не читал.
 
-Один изменённый файл — **`public/index.php`**, главная страница Moodle. Expected Git blob `801ffcf1dd31e6356932a20a6433743323d828c6`, observed `529f83bf0735719dfb5240496e9c8eba376e944a`. В архиве есть collector, отчёт и upstream metadata repo; **текущего содержимого production index.php нет**. Нельзя утверждать, что это redirect, ошибка или безопасная косметическая правка, пока файл не изучен.
+Один изменённый файл — **`public/index.php`**, главная страница Moodle. Expected Git blob `801ffcf1dd31e6356932a20a6433743323d828c6`, observed `529f83bf0735719dfb5240496e9c8eba376e944a`. В исходном архиве содержимого index.php не было; затем владелец передал его отдельной private copy. **93 bytes**, SHA-256 `2f509be81c989d2cf2b1ffb1e195710714fefec93e2d5d0f646a2834037ebcf1`, вычисленный Git blob OID точно совпал с observed.
+
+Полный статический review: после `require(__DIR__ . '/config.php')` файл вызывает `redirect(new moodle_url('/local/ustar/home.php'))`. Это замена stock front page на вход в USTAR; отдельного бизнес-кода или credentials в присланном файле нет. В PR76 `local/ustar/home.php` выполняет `require_login()` и направляет pending employment на profile. PHP/HTTP не запускались; это чтение предоставленного файла и Git source, не live access test.
+
+Для сравнения получены bytes [official index.php exact weekly commit](https://github.com/moodle/moodle/blob/1cd17816c56a7df7ee796892efccaf1ed5347340/public/index.php): 5 550 bytes, вычисленный Git OID совпал с expected. Official front-page routing, включая настройки default home, заменён предоставленным коротким redirect; семантическая совместимость нового candidate проверяется отдельно.
+
+При official patch необходимо сохранить вход на главную USTAR и проверить anonymous/login/pending/active navigation в isolated candidate. Нельзя молча заменить эту правку stock index.php или объявить core unmodified. Способ переноса маршрутизации в supported extension/configuration ещё предстоит проверить на candidate; новых core/plugin/config правок эта поставка не делает. Matching/changed/extra counts измерения 08:28 остаются прежними.
 
 ## Дополнительные файлы
 
@@ -32,8 +38,8 @@
 
 ## Следующий шаг
 
-1. Получить private copy **только production public/index.php**, проверить observed blob OID и статически сравнить с upstream. Выяснить поведение главной страницы и способ сохранить его при official patch. PHP не запускать.
-2. Статически получить argument/subparser names и SHA-256 существующих backup/cron wrappers, без их запуска и без defaults/secret values. Не придумывать create/restore/rebind flags.
-3. По проверенному CLI подготовить fresh согласованную ручную recovery copy после записей cron и изолированную upgrade/repeat/rollback репетицию. Копия 04.10 остаётся исторической; регулярного расписания нет.
+1. Index content/OID review завершён; сохранить маршрут на USTAR при candidate upgrade. Extras/consumers и provenance дополнений остаются отдельными входными условиями сохранности release.
+2. Backup/cron исходники получены 09:48:49 UTC; полный статический review и hashes совпали. [CLI, lock, scope и проверки](recovery_contract_20261005.md). `--recover` возобновляет container после прерывания, не восстанавливает архив; `--install` cron выполняет real pass, `--rebind` отсутствует.
+3. Выполнить fresh согласованную ручную recovery copy через backup с встроенным preflight, проверить resume/cron `--status`, затем decryption и изолированную upgrade/repeat/rollback репетицию. Default run доступен для отдельной диагностики без outage. Копия 04.10 остаётся исторической; регулярного расписания нет.
 
-INF-01 остаётся **in_progress**: core comparison result получен, review local index/extras и recovery/stage readiness ещё не приняты. Сохранён порядок baseline → Moodle/CI/ОС → HTTPS. Конфигурация, core, данные, cron и AppArmor не исправлялись этой GitHub-поставкой; application PR76, original audit и runtime fixtures unchanged. Проверки текущей документации и exact implementation SHA/CI — в PR/Git history; старый full gate не является приёмкой нового runtime candidate.
+INF-01 остаётся **in_progress**: core comparison и статический index/wrapper review завершены; extra consumers и fresh recovery/stage readiness ещё не приняты. Сохранён порядок baseline → Moodle/CI/ОС → HTTPS. Конфигурация, core, данные, cron и AppArmor не исправлялись этой GitHub-поставкой; application PR76, original audit и runtime fixtures unchanged. Проверки текущей документации и exact implementation SHA/CI — в PR/Git history; старый full gate не является приёмкой нового runtime candidate.

@@ -35,3 +35,7 @@ python3 scripts/check_context.py
 ```
 
 Для нового application release заменить SHA на проверенный commit и обновить STATE/domain maps. Documentation commit может иметь иной SHA при неизменном application tree. Генераторы не опрашивают production и не копируют config.php.
+
+## Infrastructure planning helper
+
+[`lab_patch_preflight.py`](../../scripts/infra/lab_patch_preflight.py) проверяет retained clone без Moodle bootstrap и считает rollback budget. `trusted` сохраняет strict code/control/PostgreSQL policy; `moodledata_entry` применяется только к exact retained Moodledata tree с root0700/33:33, проверяет per-entry33:33/type/links/no-executable-files и nonwritable directories. Обычные data files с write bits только учитываются через metadata, их содержимое не открывается. Live scan повторно проверяет private root и сообщает count широких file write modes. [Owner refusal и контракт](../runtime/lab_patch_preflight_20261005.md); server acceptance отдельно pending.

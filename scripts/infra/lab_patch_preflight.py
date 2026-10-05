@@ -64,12 +64,7 @@ def input_scope(path):
     return 'trusted_parent' if any(path in p.parents for p in fixed) else 'retained_input'
 
 
-def trusted(path, directory=False, root_owned=True, private=False):
-    info = path.lstat()
-    checks = {'entry_type': stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode),
-              'root_owner': not root_owned or info.st_uid == 0,
-              'permissions': not info.st_mode & (0o077 if private else 0o022),
-              'hardlinks': directory or info.st_nlink == 1}
+def checked_metadata(path, info, checks):
     if not all(checks.values()):
         failed = ','.join(name for name, ok in checks.items() if not ok)
         raise PreflightError('Untrusted retained input: scope=' + input_scope(path)
@@ -77,6 +72,40 @@ def trusted(path, directory=False, root_owned=True, private=False):
                              + '; gid=' + str(info.st_gid) + '; mode=' + format(stat.S_IMODE(info.st_mode), '04o')
                              + '; type=' + stat.filemode(info.st_mode)[0] + '; links=' + str(info.st_nlink))
     return info
+
+
+def trusted(path, directory=False, root_owned=True, private=False):
+    info = path.lstat()
+    return checked_metadata(path, info, {
+        'entry_type': stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode),
+        'root_owner': not root_owned or info.st_uid == 0,
+        'permissions': not info.st_mode & (0o077 if private else 0o022),
+        'hardlinks': directory or info.st_nlink == 1})
+
+
+def moodledata_entry(path, directory=False):
+    """Metadata-only data policy under the exact private www-data boundary.
+
+    Regular mutable files may have group/world write bits; no contents are
+    opened or executed. The root must be 0700/33:33, every entry 33:33,
+    directories non-group/world-writable, and files without executable bits or hardlinks.
+    Immutable code/control and PostgreSQL checks retain their existing policy.
+    """
+    root = ROOT / 'site/moodledata'
+    require(path.is_relative_to(root) and '..' not in path.parts,
+            'Moodledata policy outside retained data tree')
+    info = path.lstat()
+    mode = stat.S_IMODE(info.st_mode)
+    if directory:
+        permissions = mode == 0o700 if path == root else not mode & 0o7022
+    else:
+        permissions = not mode & ~0o666
+    return checked_metadata(path, info, {
+        'entry_type': stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode),
+        'data_owner': info.st_uid == 33,
+        'data_group': info.st_gid == 33,
+        'permissions': permissions,
+        'hardlinks': directory or info.st_nlink == 1})
 
 
 def trust_parents(path):
@@ -132,15 +161,22 @@ def load_profile():
 
 def scan_tree(path, block_size, root_owned=False):
     """Measure metadata only; no links, sockets, devices, hardlinks or crossing filesystems."""
-    first = trusted(path, directory=True, root_owned=root_owned)
+    data_tree = path == ROOT / 'site/moodledata'
+    def entry(candidate, directory=False):
+        if data_tree:
+            return moodledata_entry(candidate, directory=directory)
+        return trusted(candidate, directory=directory, root_owned=root_owned)
+    first = entry(path, directory=True)
     total = {'files': 0, 'directories': 1, 'logical_bytes': 0,
              'allocated_bytes': first.st_blocks * 512, 'copy_budget_bytes': block_size}
+    if data_tree:
+        total['group_or_world_writable_files'] = 0
     def onerror(_):
         raise PreflightError('Directory scan incomplete; live estimate must be repeated')
     for base, dirs, files in os.walk(path, followlinks=False, onerror=onerror):
         for name in dirs + files:
             try:
-                info = trusted(Path(base) / name, directory=name in dirs, root_owned=root_owned)
+                info = entry(Path(base) / name, directory=name in dirs)
             except FileNotFoundError:
                 raise PreflightError('Live tree changed during scan; repeat read-only check') from None
             require(info.st_dev == first.st_dev, 'Nested filesystem in retained tree')
@@ -150,8 +186,12 @@ def scan_tree(path, block_size, root_owned=False):
                 total['copy_budget_bytes'] += block_size
             else:
                 total['files'] += 1
+                if data_tree and info.st_mode & 0o022:
+                    total['group_or_world_writable_files'] += 1
                 total['logical_bytes'] += info.st_size
                 total['copy_budget_bytes'] += ((info.st_size + block_size - 1) // block_size) * block_size
+    if data_tree:
+        moodledata_entry(path, directory=True)  # Recheck the private boundary after the live walk.
     return total
 
 
@@ -242,7 +282,7 @@ def check(resume, lab, template, profile):
     guarded(lambda: lab.assert_offline(state), 'Retained loopback namespace validation failed')
     trusted(ROOT / 'site', directory=True)
     trusted(ROOT / 'site/public', directory=True)
-    trusted(ROOT / 'site/moodledata', directory=True, root_owned=False, private=True)
+    moodledata_entry(ROOT / 'site/moodledata', directory=True)
     report = json.loads((ROOT / 'report.json').read_bytes())
     require(report.get('snapshot_sha256') == state['archive_sha256']
             and report.get('database_restore') == 'PASS' and report.get('moodle_bootstrap') == 'PASS',

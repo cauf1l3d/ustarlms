@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-05'
+updated_at: '2026-10-06'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -24,4 +24,4 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: authorized_selected_points_1_7_6_other_points_after_completion
+execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_points_1_7_6

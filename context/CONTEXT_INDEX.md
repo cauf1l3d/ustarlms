@@ -9,6 +9,7 @@
 | Как работают домены | [domains](domains/), [карта кода](code_map/README.md) |
 | Где source и что реально установлено | [STATE](roadmap/STATE.yaml), [release ledger](runtime/RELEASE_LEDGER.md), [fresh baseline](runtime/baseline_20261005.md), [dated evidence](runtime/evidence_20261005_baseline.yaml) |
 | Как проверить/выпустить/откатить | [operations](runtime/OPERATIONS.md), [patch 5.1.8 CI](runtime/patch_runtime_20261005.md), [planning PASS](runtime/lab_planning_result_20261005.json), [cold checkpoint / independent workspace / fresh HDD PASS](runtime/lab_cold_checkpoint_20261005.md) |
+| Хранение, карта server1 и автобэкапы до стенда | [Карта06Oct / текущий scope](runtime/server_map_20261006.md) |
 | Над чем работать дальше | [ACTIVE](tasks/ACTIVE.md), [BACKLOG](roadmap/BACKLOG.yaml), [полный план аудита](roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) |
 | Оригинал аудита и расхождения | [Аудит](audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md), [сверка](audits/AUDIT_RECONCILIATION_20261005_RU.md) |
 | Пульт, копии и открытые security риски | [Monitoring](runtime/MONITORING.md), [backup/restore](runtime/BACKUP_RESTORE.md), [security baseline](runtime/SECURITY_BASELINE.md) |

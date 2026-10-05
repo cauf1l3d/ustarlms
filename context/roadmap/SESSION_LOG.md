@@ -96,3 +96,11 @@ upgrade, production performance и clean restore на этом SHA не выпо
 ## 2026-10-02 — repository consolidation and mobile handoff
 
 Owner requested current main and complete engineering context while production is stable. Reviewed all PR heads and exact ancestry; PR76 e1d57f5bc28f6964afd20aeff7620345b34a80fe contains prior main and 62 open PR heads. Full CI #456 verified via GitHub API. Preserved unique parallel docs and historical evidence; refreshed entrypoints, actual architecture/schema/API maps, operations, release ledger and current backlog. Application and deployment status remain separate: fresh production manifest unknown. Next: MOB-01, full Android/iOS client preparation. No production operations or application behavior change in handoff.
+
+## 2026-10-05 — DOC-02: аудит, контекст, harness и полный план
+
+Владелец поручил завершить остановленную публикацию из [shared-диалога](https://chatgpt.com/share/6ac2efa7-5800-83eb-8f5e-20ae3549ecab), затем остановиться. База main до правки: `1dfa124ef9a3585b0d36133ee576bce9f7e9692a`; application PR76 без изменений. Ветка `codex/ustar-infrastructure-context-20261005`, точный documentation SHA/PR — в Git history этой записи.
+
+Опубликован исходный аудит с SHA-256 и отдельной сверкой boost/test-copy hypothesis/HDD target. Добавлен полный поэтапный план с rollback/acceptance/coverage текущего цикла и future Privacy/mobile/B2B/LTS/refactor. Исправлены stale VM/Caddy/manifest/mobile-priority поля; runtime evidence датировано. Cron v3 и ручной restore признаны в измеренной области, открытые риски не закрыты. Harness читает current handoff и audit bundle через прежнюю безопасную boundary; обновлён integrity gate и индекс.
+
+Проверки и not-run — [delivery report](../runtime/context_update_20261005.md). Production, host wrappers, роли, SSH/Apache/Docker, данные и snapshots не менялись. Регулярный backup последним этапом на healthy HDD, не SERVEREXPRESS; текущий HDD провалил long SMART. Следующее состояние: awaiting_owner_instruction, INF-01 намечен, выполнение не начинается.

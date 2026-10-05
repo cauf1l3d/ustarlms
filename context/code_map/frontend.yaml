@@ -9,5 +9,5 @@ primary:
 secondary:
   path: frontend
   kind: Next.js web client
-  production_deployment: unverified
+  production_deployment: not_used_per_owner_20261005
 mobile_native: planned; context/roadmap/MOBILE_CLIENT.md

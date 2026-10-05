@@ -1,5 +1,5 @@
 kind: migration_status_pointer
-updated_at: '2026-10-02'
+updated_at: '2026-10-05'
 canonical_backlog: context/roadmap/BACKLOG.yaml
 implemented_schema: moodle/local/ustar/db/install.xml
 migrations: moodle/local/ustar/db/upgrade.php

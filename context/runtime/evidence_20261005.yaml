@@ -1,0 +1,194 @@
+schema_version: 1
+kind: dated_owner_supplied_runtime_evidence
+published_at: '2026-10-05'
+independently_measured_on_server: false
+sources:
+  audit: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+  audit_sha256: aa8b717719f3f1a3b4131e5c56590667a5731186be4025d00151f94bc8c380e4
+  reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
+  dialogue: https://chatgpt.com/share/6ac2efa7-5800-83eb-8f5e-20ae3549ecab
+  raw_server_files: referenced_in_audit_not_republished_or_recollected
+application:
+  reference_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+  manifest_observed_at: '2026-10-03T02:56:02Z'
+  scope: [local/ustar, theme/ustar]
+  matching_files: 526
+  changed: []
+  missing: []
+  extra: []
+  errors: []
+  skipped: []
+  complete_core_equivalence: not_verified
+  fresh_followup_manifest: not_run_missing_origin_main
+  installation_checkout_head: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+  versions_observed_at: '2026-10-04T23:57:18Z'
+  local_ustar: 2026100204
+  theme_ustar: 2026100202
+  maintenance: 0
+  theme_parent_from_git: boost
+host:
+  observed_at: '2026-10-03'
+  os: Ubuntu 24.04.4 LTS
+  kernel: 6.8.0-139-generic
+  architecture: x86_64
+  cpu: Intel Core i7-9700F
+  logical_cpus: 8
+  ram_gib_approx: 31
+  swap_gib: 4
+  systemd_detect_virt: none
+  placement: not_verified
+  reboot_required_banner: true
+  shared_required_services: [Apache, DNS/BIND, Postfix/Dovecot, ISPConfig, MariaDB, amavis]
+platform:
+  moodle: '5.1.1+ (Build: 20251219)'
+  php: 8.3.33
+  postgres: '16.15'
+  database_size_mb: 104
+  database_size_observed_at: '2026-10-04T23:41:00Z'
+  database_size_time_precision: approximate
+  php_ci_source: '8.2'
+  php_ci_stage: 8.2.30
+  latest_patch_reverification: required_before_execution
+network:
+  owner_confirmed_at: '2026-10-05'
+  user_access: HTTP_inside_company_LAN
+  external_academy_access: none_per_owner
+  effective_proxy: host_Apache_to_loopback_8082_to_moodle_container
+  caddy: placeholder_not_academy_tls_proxy
+  academy_tls: not_configured_in_supplied_vhost_snapshot
+  cookie_secure_on_observed_http_response: not_observed
+  cookie_httponly: observed
+  cookie_config_secure: 1
+  full_host_external_surface: not_verified
+containers:
+  observed_at: '2026-10-03'
+  moodle: ustar_moodle
+  postgres: ustar_postgres
+  moodle_host_binding: '127.0.0.1:8082->80'
+  postgres_host_port_published: false
+  image_digests: not_reverified
+  healthchecks: absent_in_supplied_snapshot
+  logging_driver: json-file
+  logging_max_size_and_files: not_set_in_supplied_snapshot
+cron:
+  installed: true
+  wrapper: /usr/local/sbin/USTAR_CRON_SETUP_20261005.py
+  wrapper_version: 3
+  installed_wrapper_source_sha256: not_supplied
+  schedule: /etc/cron.d/ustar_moodle
+  frequency: every_minute
+  mode: --tick
+  worker_count: 1
+  worker_user: www-data
+  keep_alive: 0
+  coordinates_backup_lock: true
+  status: /var/lib/ustar-cron/last-run.json
+  logs: /var/lib/ustar-cron/logs/cron.log
+  private_log_rotation: configured
+  last_success_started_at: '2026-10-04T23:57:02Z'
+  last_success_finished_at: '2026-10-04T23:57:03Z'
+  duration_seconds: 1.374
+  exit_code: 0
+  schedule_present: true
+  containers_match_installation: true
+  adhoc_queued: 0
+  adhoc_failed: 0
+  ustar_failed: 0
+  new_failures: []
+  component_disabled_overdue: 17
+  residual_failed_disabled_tasks: 2
+  disabled_external_exceptions: [H5P_content_types_download, Moodle_org_registration]
+  h5p_network_cause: unresolved
+  all_business_scenarios_accepted: false
+security:
+  observed_at: '2026-10-04T23:57:18Z'
+  db_application_role: moodle
+  role_attributes:
+    superuser: true
+    createrole: true
+    createdb: true
+    replication: true
+    bypassrls: true
+  runtime_writable:
+    config_php: true
+    local_ustar_directory: true
+    theme_ustar_directory: false
+  complete_parent_acl_inventory: not_verified
+  old_dump_permissions: weak_in_earlier_snapshot_recheck_required
+storage:
+  root_observed_at: '2026-10-04T23:57:18Z'
+  root_device: /dev/sda2
+  root_fstype: ext4
+  root_size_g_reported: 49
+  root_used_g_reported: 35
+  root_available_g_reported: 12
+  root_percent: 76
+  ssd_size_gib_reported: 111.8
+  partition_expansion: not_verified
+  occupancy_hypothesis:
+    source: owner_statement_after_audit
+    text: likely_full_test_academy_copy
+    measured: false
+    cleanup_authorized: false
+  hdd:
+    device_at_observation: /dev/sdb
+    model: WDC_WD5000AAKS
+    size_gib_reported: 465.8
+    extended_self_test: 'Completed: read failure'
+    first_failed_lba: 752045700
+    pending_sectors: 1
+    offline_uncorrectable: 1
+    trusted_backup_target: false
+backup:
+  manual_snapshot: ustar-recovery-20261004T123406Z-741e3f72.tar.gz.age
+  archive_sha256: ebf2a8756f07ba5b1b537c6888f7198c1d6107edc90f96d3816d9b7e4b7d4cb2
+  created_at: '2026-10-04'
+  encrypted: true
+  coordinated_point: moodle_stopped_postgres_online
+  moodle_stop_seconds: 27.944
+  payload: [database, code, config, moodledata, container_images]
+  internal_checksums: pass_per_owner
+  manual_external_copy: SERVEREXPRESS_drive_G
+  external_sha256: pass_per_owner
+  separate_key_copy_decryption: pass_per_owner
+  isolated_restore:
+    completed: true
+    reported_seconds: 125
+    restored_files: 4910
+    checks: [HTTP_200, admin, files, user_roles, SCORM_launch, SCORM_progress]
+    full_shared_host_restore: not_verified
+  regular_schedule: not_installed
+  automation_phase: final_current_infrastructure_cycle
+  automatic_target_requirement: healthy_HDD_not_SERVEREXPRESS
+  independent_copy_architecture: decision_required
+  agreed_rpo: null
+  agreed_rto: null
+  agreed_retention: null
+business_readonly_checks:
+  observed_at: '2026-10-04'
+  accounts_reviewed: 72
+  assignment_ready: 71
+  protected_legacy_account_position_missing: 1
+  planned_new_enrolments: 0
+  missing_manual_instances: 0
+  exceptions: 0
+  effective_automatic_grade_rules: 0
+  pending_grade_requests_with_valid_manager_queue: 1
+  personnel_changes_authorized: false
+product:
+  owner_confirmed_at: '2026-10-05'
+  employees_approx: 60_to_70
+  pilot_approx: 18
+  growth_target: 200_and_later_B2B
+  measured_concurrency: null
+  secondary_nextjs_frontend_in_production: false
+  android_ios_client: not_implemented
+  tenant_isolation: not_proven
+  privacy_provider: absent_in_baseline
+monitoring:
+  unified_dashboard_installed: false
+  notification_delivery_verified: false
+  desired: one_dashboard_with_metrics_and_alerts_preferably_Telegram
+  proposed_stack: Grafana_Prometheus_limited_collectors
+  stack_approved_and_deployed: false
+  independent_observer: not_selected

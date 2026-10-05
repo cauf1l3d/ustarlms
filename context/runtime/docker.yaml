@@ -1,11 +1,15 @@
-kind: historical_runtime_facts
-reviewed_at: '2026-10-02'
+kind: dated_owner_supplied_runtime_facts
+reviewed_at: '2026-10-05'
 measured_now: false
-source: context/runtime/20260927_prod_g00.md and release installers
+source: context/runtime/evidence_20261005.yaml
 containers:
 - name: ustar_moodle
   current_image_digest: null
+  host_binding: 127.0.0.1:8082->80
 - name: ustar_postgres
-  engine: PostgreSQL 16
+  engine: PostgreSQL 16.15
   current_image_digest: null
+  host_port_published: false
 recheck: context/runtime/OPERATIONS.md
+logging: json-file; limits absent in supplied snapshot
+healthchecks: absent in supplied snapshot

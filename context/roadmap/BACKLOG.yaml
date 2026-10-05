@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-02'
+updated_at: '2026-10-05'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -16,25 +16,261 @@ tasks:
   acceptance:
   - Main contains verified application baseline and current entrypoints
   - History and distinct deployment confidence levels preserved
-- id: MOB-01
-  title: Мобильный API inventory, сценарии и архитектурный ADR
-  status: ready
+- id: DOC-02
+  title: Публикация аудита, актуализация контекста и MCP harness
+  status: done
   depends_on:
   - DOC-01
   acceptance:
-  - Every native scenario mapped to API/service/ACL/files/retry
-  - Client stack, network access, auth, distribution and offline scope explicitly
-    decided
-  spec: context/roadmap/MOBILE_CLIENT.md
+  - Owner audit published byte-for-byte with reconciliation notes
+  - Complete remediation plan covers every audit area and finite backup-last sequence
+  - Source/context integrity and local MCP handshake checked; application unchanged
+  - Published through PR to main, then stop and await owner
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  implementation_commit: resolve exact GitHub commit from DOC-02 PR/git history
+  validation_evidence:
+  - context/runtime/context_update_20261005.md
+  deployment_evidence: not_applicable_repository_only
+- id: INF-01
+  title: Read-only baseline, core inventory и входные условия
+  status: ready
+  depends_on:
+  - DOC-02
+  acceptance:
+  - Dated versions, scoped exact manifest, roles, storage, containers, proxy and cron verified
+  - Full test copy occupancy hypothesis measured; required shared services and isolated stage documented
+  - Fresh manual recovery point and rollback path checked before mutations
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  execution_gate: new_owner_instruction_required
+- id: INF-02
+  title: Минимальные права PostgreSQL и независимый admin
+  status: planned
+  depends_on:
+  - INF-01
+  acceptance:
+  - Separate admin access verified before role reduction
+  - Application lacks unnecessary cluster privileges; ownership and grants recorded
+  - Domain writes, cron, DDL upgrade/repeat and dump/restore pass on target permissions
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-03
+  title: Защита кода/config, dumps и ключей
+  status: planned
+  depends_on:
+  - INF-01
+  acceptance:
+  - Runtime cannot write or replace code/config through files, parents or ACL
+  - Data/cache/session remain writable; deploy and cron operate
+  - Old dumps/config/keys inaccessible to unrelated local users; archives preserved
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-04
+  title: Расход SSD, healthy HDD и аппаратный резерв
+  status: planned
+  depends_on:
+  - INF-01
+  acceptance:
+  - Per-object storage inventory confirms or rejects full-test-copy hypothesis
+  - Any cleanup/transfer or partition work has measured scope and recoverable copy
+  - Faulty WD5000AAKS excluded; healthy HDD and power/shutdown decisions recorded
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-05
+  title: Ротация логов, readiness и безопасное пересоздание
+  status: planned
+  depends_on:
+  - INF-02
+  - INF-03
+  - INF-04
+  acceptance:
+  - Existing container logs actually rotate within measured budget
+  - Readiness healthchecks and failure response verified
+  - Exact images/mounts preserved; cron binding revalidated, one worker retained
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-06
+  title: Единый пульт, Telegram и независимый наблюдатель
+  status: planned
+  depends_on:
+  - INF-05
+  acceptance:
+  - Metric definitions account for freshness, effective-enabled schedules and backup pauses
+  - Failure, NoData, recovery and delivery failure tested with real chosen recipients
+  - Independent observer detects loss of host/dashboard; storage/access budgets bounded
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-07
+  title: Доверенный HTTPS на действующем Apache
+  status: planned
+  depends_on:
+  - INF-06
+  acceptance:
+  - DNS/CA/trust and proxy/wwwroot/cookie contract agreed
+  - Real workstations/phones pass login, links, files, Quiz/SCORM/chat
+  - Other vhosts and required services preserved; renewal alert verified
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-09
+  title: CI на production PHP/core/PostgreSQL matrix
+  status: planned
+  depends_on:
+  - INF-01
+  acceptance:
+  - Supported runtime matrix explicit; production PHP 8.3 tested
+  - Fresh/upgrade/repeat/schema/roles/files/browser/restore gate on exact new SHA
+  - Historical server fixtures not rewritten as fresh evidence
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-08
+  title: Актуальный patch Moodle текущей ветки
+  status: planned
+  depends_on:
+  - INF-07
+  - INF-09
+  acceptance:
+  - Available supported release and exact upstream/core/plugin provenance verified
+  - Compatible stage full gate and coordinated rollback pass
+  - Production core/version/digest, scoped manifest, smoke and cron evidence recorded
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-10
+  title: ОС, SSH/firewall/MFA и нужные службы общего хоста
+  status: planned
+  depends_on:
+  - INF-08
+  acceptance:
+  - Effective network/SSH/MFA policies and emergency admin access verified
+  - OS/reboot window preserves mail/DNS/ISPConfig and Docker mounts
+  - Required service checks and rollback documented; no blind service removal
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-11
+  title: H5P/registration exceptions, SMTP и полный cron cycle
+  status: planned
+  depends_on:
+  - INF-05
+  - INF-06
+  acceptance:
+  - H5P complete response and existing content checked, re-enable or time-bound exception recorded
+  - Moodle.org registration distinct from employee registration; actual test mail delivered
+  - Hourly/nightly task behavior accepted with correct timezone/overrides and retained failure history
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: OPS-01
   title: Свежая read-only сверка production и проверка PR76
-  status: ready
-  depends_on: []
+  status: planned
+  depends_on:
+  - INF-08
   acceptance:
-  - Current plugin/theme versions and exact source manifest recorded
-  - PR76 deployment status and HRD reset/manager reassign accepted separately
+  - Fresh exact plugin/theme manifest and versions checked before next release
+  - PR76 reset/reassign accepted separately under allowed actors, retained history and new cycle
   - Actual DNS/HTTPS/proxy/cron constraints recorded without secrets
   runbook: context/runtime/OPERATIONS.md
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-12
+  title: Приёмка доменов и сценарная безопасность
+  status: planned
+  depends_on:
+  - OPS-01
+  - INF-11
+  acceptance:
+  - Role/domain matrix includes direct URL/API/files, revoked scope and view-as
+  - CSRF, SQL input, XSS/upload, IDOR, concurrency/retry negatives verified
+  - No double awards/messages/completion or personnel decisions inferred from audit
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: AUDIT-01
+  title: Остатки legacy migration и acceptance старого аудита
+  status: planned
+  depends_on:
+  - INF-01
+  acceptance:
+  - Read-only account types, legacy consumers and schema constraints inventory
+  - Protected service account and real roles/history preserved
+  - Actual defects receive explicit previewed migration with install/upgrade/repeat and rollback
+  legacy_refs:
+  - R10
+  - R12
+  - G00
+  - G01
+  - G04
+  - G05
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: PERF-01
+  title: Измерение latency, SQL, cron lag и нагрузки
+  status: planned
+  depends_on:
+  - INF-06
+  - INF-08
+  - INF-11
+  acceptance:
+  - Real-workday passive baseline and agreed concurrency/SLO recorded
+  - Web SAPI OPcache/workers/MUC/session/DB and shared services measured
+  - Isolated cold/warm scenario p50/p95/p99 and invariants compared before and after tuning
+  legacy_refs:
+  - R19
+  - G07
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-13
+  title: Security сопровождение, ADR и закрытие базовой приёмки
+  status: planned
+  depends_on:
+  - INF-10
+  - INF-12
+  - AUDIT-01
+  - PERF-01
+  acceptance:
+  - Actual owners/private reporting/advisories and repository settings verified
+  - Platform/mobile/privacy/B2B requirements and open decisions recorded with review dates
+  - Finite infrastructure readiness to final backup stage; full future products do not block it
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-14
+  title: Регулярные согласованные копии — финальный этап
+  status: planned
+  depends_on:
+  - INF-13
+  - INF-04
+  acceptance:
+  - Agreed RPO/RTO/retention and healthy HDD; no SERVEREXPRESS automatic target
+  - Mount fails closed, consistent encrypted snapshot, independent copy decision and key access verified
+  - Cron/backup locks, negative failure cases, scheduled runs and delivery/integrity alerts pass
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  priority: P0_risk_owner_ordered_final_phase
+- id: OPS-02
+  title: Fresh scheduled restore и аварийное восстановление общего хоста
+  status: planned
+  depends_on:
+  - INF-14
+  acceptance:
+  - Restore fresh scheduled copy from selected independent instance and separate key
+  - DB/code/config/moodledata/images, roles/files/SCORM/cron accepted with measured recovery scope
+  - Required mail/DNS/ISPConfig host recovery rehearsed or explicitly retained open
+  legacy_refs:
+  - R00
+  - R15
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: PLAT-01
+  title: Поддерживаемый major/LTS Moodle после фактического выпуска
+  status: planned
+  depends_on:
+  - OPS-02
+  acceptance:
+  - Published target release and full compatibility matrix verified
+  - Fresh/upgrade/repeat/scenarios/performance and full restore accepted
+  - Exact production deployment and lifecycle deadline recorded
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: PRIVACY-01
+  title: Полный Moodle Privacy API и согласованный retention
+  status: deferred
+  depends_on:
+  - INF-13
+  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance
+    before first B2B production
+  reference: context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  acceptance:
+  - Approved data export/anonymize/delete/retention policy and exceptions
+  - Full provider including files/shared evidence with negative and repeat tests
+  - No automatic history/personnel deletion inferred from audit
+- id: MOB-01
+  title: Мобильный API inventory, сценарии и архитектурный ADR
+  status: planned
+  depends_on:
+  - INF-13
+  acceptance:
+  - Every native scenario mapped to API/service/ACL/files/retry
+  - Client stack, network access, auth, distribution and offline scope explicitly decided
+  spec: context/roadmap/MOBILE_CLIENT.md
+  priority_note: After infrastructure cycle and new owner instruction; PWA does not satisfy full client
 - id: MOB-02
   title: Версионированный API для полного мобильного покрытия
   status: planned
@@ -49,6 +285,7 @@ tasks:
   status: planned
   depends_on:
   - MOB-02
+  - INF-07
   acceptance:
   - Real-device login, learning and server-confirmed completion
   - Media/chat and token revocation verified
@@ -67,57 +304,48 @@ tasks:
   depends_on:
   - MOB-04
   - OPS-01
+  - OPS-02
   acceptance:
   - Android/iOS install and update verified
   - Support/diagnostics and compatibility/rollback documented
-- id: PERF-01
-  title: Измерение latency, SQL, cron lag и нагрузки
+- id: B2B-01
+  title: ADR изоляции компаний и модели поставки
   status: planned
   depends_on:
-  - OPS-01
+  - OPS-02
+  - INF-13
   acceptance:
-  - Same dataset/hardware cold/warm p50/p95, SQL count, memory and concurrency evidence
-  - Changes follow bottlenecks, not speculative rewrite
-  legacy_refs:
-  - R19
-  - G07
-- id: OPS-02
-  title: Production-specific recovery rehearsal и эксплуатационная наблюдаемость
+  - Separate installation versus proven tenancy explicitly decided
+  - Hosting, support access, resources, data and SLA/RPO/RTO boundaries agreed
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: B2B-02
+  title: Изолированная B2B-поставка и клиентская приёмка
   status: planned
   depends_on:
-  - OPS-01
+  - B2B-01
+  - PRIVACY-01
   acceptance:
-  - Restore selected coordinated backup on isolated runtime
-  - Core/image/config/DB/moodledata identity and cron/health checks recorded
-  legacy_refs:
-  - R00
-  - R15
-- id: AUDIT-01
-  title: Остатки legacy migration и acceptance старого аудита
+  - Two-company API/files/cache/queues/tokens/exports negative tests and per-client restore
+  - Versioned install/upgrade/compatibility, monitored audited support and measured load
+  - Data-processing/license/distribution requirements accepted before customer production
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: TECH-01
+  title: Измеренный рефакторинг и поддерживаемые миграции
   status: planned
   depends_on:
-  - OPS-01
+  - OPS-02
+  - AUDIT-01
+  - PERF-01
   acceptance:
-  - Read-only inventory identifies actual unconverted organization/grade/access records
-  - Per-item evidence links close or retain old R/G/N criteria
-  - No personnel mutation inferred from old plans
-  legacy_refs:
-  - R10
-  - R12
-  - G00
-  - G01
-  - G04
-  - G05
-- id: PRIVACY-01
-  title: Полный Moodle Privacy API и согласованный retention
-  status: deferred
-  depends_on: []
-  reason: Owner previously deferred as non-blocking; current source inventory is not
-    implementation
-  reference: context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md
+  - Only measured bottleneck or concrete boundary defect selected
+  - One-store/domain/history invariants preserved with supported upgrade paths
+  - Focused regression and exact release gate; maturity changes after acceptance
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INTEGRATIONS-01
   title: Внешняя доставка Bitrix и новые интеграции
   status: deferred
   depends_on: []
   reason: No claim of working external delivery; separate approved contract required
   reference: context/architecture/notification_delivery_20260928.md
+remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+execution_gate: awaiting_owner_instruction_after_github_publication

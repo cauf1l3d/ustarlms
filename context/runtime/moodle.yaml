@@ -1,5 +1,5 @@
 kind: runtime_path_contract
-reviewed_at: '2026-10-02'
+reviewed_at: '2026-10-05'
 measured_now: false
 container: ustar_moodle
 host_mount: /opt/ustar/data/moodle/public
@@ -9,6 +9,12 @@ container_public_root: /var/www/html/public
 core_cli: /var/www/html/admin/cli
 theme_source_parent: boost
 production_theme_setting: null
-production_versions: null
+production_versions:
+  moodle: '5.1.1+ (Build: 20251219)'
+  php: 8.3.33
+  local_ustar: 2026100204
+  theme_ustar: 2026100202
 isolated_reference: tests/stage/runtime.json
 deployment_evidence: context/runtime/RELEASE_LEDGER.md
+versions_evidence: context/runtime/evidence_20261005.yaml
+versions_are_dated_not_live_query: true

@@ -105,8 +105,17 @@ class Boundary(unittest.TestCase):
             self.assertIn('error',server.get_context_file('../outside.md'))
             self.assertEqual(server.search_context('OUTSIDE_CANARY'),[])
             self.assertNotIn('OUTSIDE_CANARY',str(server.get_runtime_state()))
-            for func in [server.get_project_context,server.get_context_index,server.get_active_tasks,server.get_recent_context_changes]:
+            for func in [server.get_project_context,server.get_context_index,server.get_active_tasks,
+                         server.get_current_handoff,server.get_audit_context,server.get_recent_context_changes]:
                 with self.assertRaises(ContextDenied):func()
+
+    def test_audit_pointer_cannot_escape_boundary(self):
+        import server
+        (self.root/'context/roadmap').mkdir()
+        (self.root/'context/roadmap/STATE.yaml').write_text(
+            'audit:\n  document: ../outside.md\n')
+        with patch.object(server,'reader',self.reader), self.assertRaises(ContextDenied):
+            server.get_audit_context()
 
 
 class Generator(unittest.TestCase):

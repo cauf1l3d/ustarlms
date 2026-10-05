@@ -53,6 +53,29 @@ def get_active_tasks():
 
 
 @server.tool()
+def get_current_handoff():
+    """Read canonical state/backlog and active scope, including owner execution gates."""
+    return {
+        'state': yaml.safe_load(read_text('context/roadmap/STATE.yaml')) or {},
+        'backlog': yaml.safe_load(read_text('context/roadmap/BACKLOG.yaml')) or {},
+        'active': read_text('context/tasks/ACTIVE.md'),
+    }
+
+
+@server.tool()
+def get_audit_context():
+    """Read the dated audit, corrections, complete plan and owner runtime evidence."""
+    state = yaml.safe_load(read_text('context/roadmap/STATE.yaml')) or {}
+    paths = dict(state.get('audit', {}))
+    paths['evidence'] = state.get('production', {}).get('source')
+    return {
+        name: {'path': paths[name], 'content': read_text(paths[name])}
+        for name in ('document', 'reconciliation', 'remediation_plan', 'evidence')
+        if paths.get(name)
+    }
+
+
+@server.tool()
 def get_decisions():
     return {Path(p).name: text for p, text in reader.collect('decisions').items()}
 

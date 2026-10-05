@@ -116,3 +116,11 @@ Owner00:45:07MSK/05Oct21:45:07UTC явно включил оптимизацию
 Свежие df/lsblk/du: root49G/36Gused/11Gavailable/78%, SSD111.8GiB/root partition50GiB; около61.8GiB вне показанных размеров partitions, free extent ещё не подтверждён. Home15GiB включает около13.1GiB snapshot candidates; backup-export1.9G, restore-lab2.3G, cron-lab2.2G, opt/backups1.8G. Parent/child размеры не суммируются повторно. HDD465.8GiB без показанных partitions/FSTYPE/mount. [Карта и следующий read-only шаг](server_map_20261006.md).
 
 Existing manual backup source повторно проверен: SSD staging/export,6GiB quota, no rotation/timer/mount identity guard. Новый backup contract предусматривает HDD payloads/encrypted archives, persistent mount guard, recovery marker на SSD, cron coordination, trial/verification/status/retention до schedule. Schedule03:30MSK/7daily4weekly3monthly пока proposal, не установлен. Никаких partition writes, moves, deletions или schedule changes пока не выполнено. Текущие STATE/ACTIVE/BACKLOG/project/entrypoints обновлены; старое backup-last правило superseded, прочие hardening/product задачи не расширены.
+
+## 2026-10-06 — server inventory and HDD initializer prepared
+
+Fresh owner inventory: SSD GPT `sda1` BIOS boot 2048–4095, `sda2` root 4096–104855551,
+stale GPT backup boundary and confirmed 61.79GiB free tail; production and retained
+lab containers running; UTC/NTP synchronized; 18 system timers and no managed USTAR
+backup timer. `hdd_initialize.py` is exact-device guarded and tested offline. No
+partition, filesystem, mount, fstab, SSD, container or schedule mutation performed.

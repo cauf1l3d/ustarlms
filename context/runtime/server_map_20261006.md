@@ -9,8 +9,21 @@
 | SSD `/dev/sda` | WALRAM 120GB,111,8GiB | Считать границы/тип partition table; не изменять до проверки свободного диапазона и recovery |
 | `/dev/sda1` | 1MiB, filesystem/mount не показаны | Назначение проверить по типу раздела; не удалять |
 | `/dev/sda2` → `/` | partition50GiB, ext4; df49G/36G used/11G available/78%; lsblk10,5G available | Home, USTAR, export и labs расположены здесь |
-| Ёмкость SSD вне показанных размеров разделов | около61,8GiB, арифметическая разница | Возможный unallocated tail, **не подтверждённый free extent**; нужны start/end sectors |
+| Ёмкость SSD вне показанных размеров разделов | 61.79GiB free tail по start/end sectors | Подтверждённый свободный partition range; GPT repair/partition growth/fs resize ещё не выполнялись |
 | HDD `/dev/sdb` | WDC WD5000AAKS,465,8GiB; child partitions/FSTYPE/mount не показаны | Persistent identity из предыдущего evidence: WWN0x50014ee200c1ee59,serial WD-WCAS82914317,500106780160bytes; повторно сверить перед записью |
+
+Свежий `fdisk -l` уточнил SSD: `/dev/sda` — 234441648 sectors; GPT имеет устаревшую
+backup-table boundary (PMBR mismatch `104857599 != 234441647`), а `/dev/sda2`
+заканчивается на 104855551. Поэтому свободный хвост до стандартного GPT usable end
+составляет 129586062 sectors ≈ 61.79 GiB. Это хороший кандидат на расширение root,
+но сначала нужны сохранённая partition-table copy, HDD/backup readiness и отдельная
+операция relocate GPT → grow partition → ext4 resize. `/dev/sda1` подтверждён как
+BIOS boot и не подлежит удалению.
+
+На HDD опубликован безопасный one-time initializer: [hdd_initialize_20261006](hdd_initialize_20261006.md).
+Результат имеет намеренно три состояния: `--check`/`EMPTY_HDD_CHECK_PASS`, затем
+`--initialize`/`FILESYSTEM_READY` с UUID, затем отдельный mount/backup setup. До
+операторского запуска разделов и filesystem на HDD нет.
 
 На HDD завершены one-zero-pattern write/read0errors и newest extended SMART Completed without error16385h. Последний SMART20:44:52UTC: reallocated/pending/CRC0, Offline_Uncorrectable198=1; причина residual не установлена. Это не гарантия долговечности. Новые копии на HDD дополняют source на SSD; единственные важные архивы нельзя удалять с SSD до проверки независимой копии. Старый отдельно сохранённый/decrypted04Oct архив не подтверждает наличие всех последующих исторических snapshots.
 
@@ -40,6 +53,17 @@
 Эта часть перенесена из **предыдущего** evidence05Oct и должна быть сверена свежим Docker mount/port/service inventory. Ubuntu24.04.4,Linux6.8.0-139-generic,31GiB RAM. Host Apache обслуживает Academy HTTP/LAN через127.0.0.1:8082→`ustar_moodle`:80. PostgreSQL16.15 — `ustar_postgres`, опубликованный host port ранее отсутствовал. Важны также Apache/mail/DNS/ISPConfig/MariaDB/amavis; Caddy не был TLS proxy Академии. Текущие status/ports этих служб пока не переизмерены.
 
 Production bind paths: `/opt/ustar/data/moodle/public`→`/var/www/html`, `/opt/ustar/data/moodle/moodledata`→`/var/www/moodledata`. PostgreSQL volume, все stopped/running container mounts и host consumers нужно получить из metadata. Не публиковать полные `docker inspect`, env/config contents или credentials.
+
+Свежий container inventory показывает четыре running containers: production
+`ustar_moodle` (127.0.0.1:8082) и `ustar_postgres` (без host port), retained lab web/PG
+под `/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72`. Production Apache слушает
+80/443; локальные/shared services включают Postfix/Dovecot, BIND, MariaDB,
+memcached, spamd/postgrey и Caddy management 2019. Никаких остановок или cleanup
+ради storage inventory не выполнялось.
+
+Свежая временная зона host — `Etc/UTC`, NTP synchronized. В системных timers 18
+записей; managed USTAR backup timer отсутствует. Предложение ежедневного 03:30
+Europe/Moscow означает 00:30 UTC и будет установлено только после HDD trial.
 
 Cron v3 — `/usr/local/sbin/USTAR_CRON_SETUP_20261005.py`; один worker, EX `/run/ustar-cron/lock` и SH `/run/ustar-backup/lock`. Backup EX того же backup lock. Installation/schedule/container bindings не менять ради storage inventory. Источники: [wrapper contract](recovery_contract_20261005.md), [server](server.yaml), [Docker](docker.yaml), [dated evidence](evidence_20261005_baseline.yaml).
 

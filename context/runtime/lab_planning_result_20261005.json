@@ -1,0 +1,63 @@
+{
+  "addon_metadata_matching": 57,
+  "addon_requires_nonliteral": [
+    "block_rbreport"
+  ],
+  "candidate_tag": "v5.1.8",
+  "core_upgrade_executed": false,
+  "coverage": "526 USTAR file hashes + 57 addon metadata versions + 3 baseline core metadata hashes; not full core/addon code equivalence or server upgrade acceptance",
+  "full_addon_compatibility_verified": false,
+  "kind": "retained_lab_patch_planning_preflight",
+  "lab_network": "loopback_only",
+  "measured_at": "2026-10-05T20:44:34.950875+00:00",
+  "moodle_bootstrap_executed": false,
+  "php_cli": {
+    "exif": false,
+    "max_input_vars": "5000",
+    "sapi": "cli",
+    "soap": false,
+    "version": "8.3.33"
+  },
+  "planning_check": "PASS",
+  "production_containers_unchanged": true,
+  "read_only": true,
+  "rollback_created_or_verified": false,
+  "sizes_live_non_atomic": {
+    "code": {
+      "allocated_bytes": 503570432,
+      "copy_budget_bytes": 503394304,
+      "directories": 10842,
+      "files": 33380,
+      "logical_bytes": 381790447
+    },
+    "moodledata": {
+      "allocated_bytes": 647397376,
+      "copy_budget_bytes": 647258112,
+      "directories": 6014,
+      "files": 7670,
+      "group_or_world_writable_files": 1,
+      "logical_bytes": 603267766
+    },
+    "postgres": {
+      "allocated_bytes": 214593536,
+      "copy_budget_bytes": 214470656,
+      "directories": 28,
+      "files": 5491,
+      "logical_bytes": 214286218
+    }
+  },
+  "storage_plan": {
+    "available_free_bytes": 11280769024,
+    "available_free_inodes": 2784282,
+    "candidate_code_allowance_bytes": 1073741824,
+    "candidate_work_allowance_bytes": 1073741824,
+    "database_growth_allowance_bytes": 536870912,
+    "estimated_free_after_work_bytes": 6822901760,
+    "minimum_free_after_bytes": 4294967296,
+    "planning_estimate_not_capacity_guarantee": true,
+    "required_free_bytes": 8752834560,
+    "required_free_inodes": 161869,
+    "rollback_copy_allowance_bytes": 1773512704
+  },
+  "ustar_matching_files": 526
+}

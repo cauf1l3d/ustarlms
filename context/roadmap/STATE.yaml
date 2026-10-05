@@ -3,10 +3,10 @@ updated_at: '2026-10-05'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: 'По команде владельца: baseline → Moodle/CI/ОС → HTTPS'
-current_activity: 'INF-01/08: PR85 diagnostic helper executed; refusal is a regular Moodledata file 33:33/0666.
-  Separate metadata-only data policy under private0700/33:33 root prepared; code/control guards unchanged.
-  Post-write SMART17:36:49UTC pending0/offlineUNC1; new long test started, expected20:11:04UTC, result pending.
-  Full-addon upgrade/paired rollback pending successful operator planning report.'
+current_activity: 'INF-01/08: operator PR86 planning PASS20:44:34UTC; 526 USTAR hashes/57 addon metadata, exact
+  storage budget received. HDD latest long Completed without error at16385h, attributes20:44:52UTC pending0/reallocated0/offlineUNC1.
+  Paired cold checkpoint + independent baseline patch workspace helper prepared/tested; server execution and core
+  upgrade/repeat/rollback remain pending.'
 next_task: INF-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -109,17 +109,39 @@ production:
     production_containers_unchanged: PASS_owner_terminal_output
     relay_seconds: 7200
   latest_storage_owner_report:
-    received_at: '2026-10-05T17:11:36Z'
-    root_df_observed_in_owner_message_received_at: '2026-10-05T13:11:41Z'
-    root_total_gib_rounded: 49
-    root_used_gib_rounded: 36
-    root_available_gib_rounded: 11
-    root_used_percent: 78
-    retained_lab_gib_rounded: 2.3
-    backup_export_gib_rounded: 1.9
-    export_path_label_partial_in_owner_message: false
-    precise_component_bytes: not_yet_measured
-    source: context/runtime/lab_patch_preflight_20261005.md
+    received_at: '2026-10-05T20:46:23Z'
+    observed_at: '2026-10-05T20:44:34.950875+00:00'
+    scope: code_Moodledata_physical_PostgreSQL_live_non_atomic_not_full_retained_payload
+    available_free_bytes: 11280769024
+    available_free_inodes: 2784282
+    planning_required_free_bytes: 8752834560
+    checkpoint_and_independent_workspace_required_free_bytes_estimate: 10526347264
+    reserve_bytes: 4294967296
+    sizes_live_non_atomic:
+      code:
+        allocated_bytes: 503570432
+        copy_budget_bytes: 503394304
+        directories: 10842
+        files: 33380
+        logical_bytes: 381790447
+      moodledata:
+        allocated_bytes: 647397376
+        copy_budget_bytes: 647258112
+        directories: 6014
+        files: 7670
+        group_or_world_writable_files: 1
+        logical_bytes: 603267766
+      postgres:
+        allocated_bytes: 214593536
+        copy_budget_bytes: 214470656
+        directories: 28
+        files: 5491
+        logical_bytes: 214286218
+    source: context/runtime/lab_planning_result_20261005.json
+    earlier_total_du:
+      observed_owner_message_at: '2026-10-05T17:11:36Z'
+      retained_lab_gib_rounded: 2.3
+      backup_export_gib_rounded: 1.9
 non_goals:
 - Изменение production в этой GitHub-поставке
 - Объявление исправленных рисков по публикации плана
@@ -169,8 +191,8 @@ audit:
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false
-  current_hdd_state: surface_pass_post_write_pending0_offlineUNC1_new_long_SMART_started_result_pending
-  current_hdd_checkpoint: context/runtime/lab_patch_preflight_20261005.md
+  current_hdd_state: surface_and_newest_extended_PASS_pending0_reallocated0_residual_offlineUNC1_backup_target_not_configured
+  current_hdd_checkpoint: context/runtime/lab_cold_checkpoint_20261005.md
 patch_candidate:
   tag: v5.1.8
   commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
@@ -184,8 +206,8 @@ patch_candidate:
   phpunit_assertions: 891
   planning_helper: scripts/infra/lab_patch_preflight.py
   planning_helper_server_executed: true
-  planning_helper_owner_message_received_at: '2026-10-05T17:11:36Z'
-  planning_helper_owner_result: refused_permissions_moodledata_regular_file_uid33_gid33_mode0666_links1
+  planning_helper_owner_message_received_at: '2026-10-05T20:46:23Z'
+  planning_helper_owner_result: PASS_operator_output_20261005T204434Z
   planning_helper_original_sha256: d106ae44502dc6fa591853efacc34780b90301ccca451c75032cc689642daff4
   planning_helper_diagnostic_sha256: bce3c1d79f3666cce9db77927fc9ad9762f7a2ed9bf842db16bed0f2ccfb35bf
   planning_helper_diagnostic_server_executed: true
@@ -193,6 +215,20 @@ patch_candidate:
   planning_helper_diagnostic_pr: 85
   planning_helper_diagnostic_owner_message_received_at: '2026-10-05T17:40:58Z'
   planning_helper_data_policy_sha256: 075c454aa58be4209466864dae734ea140c024d7ed5b82863ebfac7e08cc3d8b
-  planning_helper_data_policy_server_executed: false
+  planning_helper_data_policy_server_executed: true
   planning_helper_data_policy: exact_private0700_33_33_data_root_metadata_only_regular_files_no_exec_or_hardlinks
   planning_helper_data_policy_source: context/runtime/lab_patch_preflight_20261005.md
+  planning_helper_data_policy_commit: 9646157a2b2c5e1a4ff585d5c4d33aa730db4bcd
+  planning_helper_data_policy_pr: 86
+  planning_helper_data_policy_source_ci: 37352550732
+  planning_helper_data_policy_context_ci: 37352550761
+  planning_helper_measured_at: '2026-10-05T20:44:34.950875+00:00'
+  planning_helper_server_report: context/runtime/lab_planning_result_20261005.json
+  cold_checkpoint_helper: scripts/infra/lab_cold_checkpoint.py
+  cold_checkpoint_helper_sha256: 9c81abb6b30bea611f99fb7a3e336e12d0a7827d4ea462a4d3d63e6f8aec9012
+  cold_checkpoint_helper_branch: codex/ustar-lab-cold-rollback-20261005
+  cold_checkpoint_helper_implementation: resolve_exact_SHA_from_file_Git_history_and_PR
+  cold_checkpoint_source: context/runtime/lab_cold_checkpoint_20261005.md
+  cold_checkpoint_and_independent_workspace_prepared: true
+  cold_checkpoint_and_independent_workspace_server_executed: false
+  core_candidate_upgrade_repeat_and_paired_rollback_server_executed: false

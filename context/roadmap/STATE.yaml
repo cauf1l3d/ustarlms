@@ -3,9 +3,9 @@ updated_at: '2026-10-05'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: 'По команде владельца: baseline → Moodle/CI/ОС → HTTPS'
-current_activity: 'INF-01: свежий backup/hash, resume Moodle, cron 10:24 и HTTP 303 подтверждены владельцем; restore
-  PASS учтён. Retained lab без containers; проверенный resume helper подготовлен, server resume и candidate upgrade/rollback
-  впереди.'
+current_activity: 'INF-01/08: owner retained lab resume/login200/production unchanged PASS; HDD explicitly authorized
+  rewrite/read test started 12:28 UTC, not completed/trusted. Additional Moodle5.1.8/PHP8.3.33/PG16.15 CI prepared;
+  full-addon candidate upgrade and coordinated rollback pending storage budget.'
 next_task: INF-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -28,7 +28,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_fresh_backup_cron_http_confirmed_retained_lab_resume_prepared_not_executed
+  status: owner_backup_cron_http_and_retained_lab_resume_confirmed_patch_stage_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -80,7 +80,7 @@ production:
     source: context/runtime/recovery_contract_20261005.md
     hashes_match_installed_observations: true
     scope: static_uploaded_sources_and_local_offline_gates
-    next_operator_step: resume_retained_lab_with_pinned_helper_then_candidate_upgrade_rollback
+    next_operator_step: measure_retained_lab_export_budget_then_candidate_upgrade_rollback
     fresh_backup_executed: true
     fresh_backup_execution_source: owner_terminal_output_not_agent_server_access
     fresh_archive_restore_executed: false
@@ -94,14 +94,19 @@ production:
     external_copy_and_decryption: not_verified_for_new_archive
     source: context/runtime/lab_resume_20261005.md
   retained_lab:
-    observed_at: '2026-10-05T10:59:56Z'
-    source: context/runtime/lab_resume_20261005.md
-    containers_absent_in_owner_docker_ps_a: true
+    observed_at: '2026-10-05T11:30:58Z'
+    source: context/runtime/patch_runtime_20261005.md
+    containers_absent_in_owner_docker_ps_a: false
     database_files_state_report_retained: true
     old_restore_acceptance: PASS_owner_report_in_declared_scope
     resume_helper_prepared: true
-    resume_helper_server_executed: false
+    resume_helper_server_executed: true
     candidate_upgrade_or_rollback_executed: false
+    previous_containers_absent_observation: '2026-10-05T10:59:56Z'
+    resume_result: PASS_owner_terminal_output
+    http_login: 200
+    production_containers_unchanged: PASS_owner_terminal_output
+    relay_seconds: 7200
 non_goals:
 - Изменение production в этой GitHub-поставке
 - Объявление исправленных рисков по публикации плана
@@ -121,6 +126,7 @@ next_agent_read:
 - context/runtime/core_review_20261005.md
 - context/runtime/recovery_contract_20261005.md
 - context/runtime/lab_resume_20261005.md
+- context/runtime/patch_runtime_20261005.md
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 execution:
   status: authorized_selected_tasks_in_progress
@@ -140,6 +146,8 @@ execution:
   production_changes_in_this_delivery: false
   production_operator: owner_aduk_via_SSH
   direct_production_connection_by_agent: false
+  authorized_extra_operation: 'Owner/sysadmin: overwrite, check and format only WWN0x50014ee200c1ee59 / WD-WCAS82914317
+    / 500106780160 bytes, health qualification before backup use'
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
@@ -147,3 +155,13 @@ audit:
   root_occupancy_hypothesis: private_restore_lab_presence_confirmed_by_owner_ls_total_occupancy_not_measured
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false
+  current_hdd_state: owner_authorized_full_zero_write_read_test_running_health_not_verified
+  current_hdd_checkpoint: context/runtime/patch_runtime_20261005.md
+patch_candidate:
+  tag: v5.1.8
+  commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
+  runtime_profile: tests/stage/patch-runtime.json
+  ci_status: resolve_exact_head_full_rc_from_PR_Actions
+  production_upgrade_executed: false
+  core_upgrade_rollback_verified: false
+  third_party_plugins_stage_verified: false

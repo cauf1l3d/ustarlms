@@ -75,3 +75,11 @@ OPS-01 сохраняет проверку HRD reset/manager reassign как о�
 ## Свежий backup/cron и retained lab 05.10
 
 Владелец выполнил fresh encrypted snapshot 05Oct; local wrapper/independent hash совпали, Moodle running YES, stop-to-running24.097s. Cron scheduled 10:24 UTC exit0/1.25s/new failures0; Apache root303. Старый restore/manual PASS подтверждён, authenticated admin feed screenshot учтён в его области; новая external/decryption verification отдельно открыта. Docker -a 10:59:56 UTC подтвердил удалённые lab containers; retained DB/code/data/state/report есть. [Конкретные evidence и resume helper](lab_resume_20261005.md). Новый helper source/offline failures проверены; на сервере ещё не запускался. Application/core/OS/HTTPS без изменений, INF-01 in_progress.
+
+## Retained lab resume / running HDD test / patch CI 05.10
+
+PR82 implementation `62ef096ee2f0b96c84b69ad20ff9a0225d1d7214`, main merge `7a6eefde8a3662373a62f5c455b499cfe6a51c80`; context/source/frontend PASS, DB/rollback skipped for that helper delivery. Owner subsequently executed resume11:30:58UTC: lab PASS/login200/production unchanged PASS. Existing restoration acceptance stands; no core upgrade performed.
+
+Owner HDD evidence11:56:46UTC: long SMART read failure, pending/offlineUNC1/1, exact WD5000AAKS serial/capacity confirmed, only88bytes Windows service files. Owner/sysadmin explicitly authorized full rewrite/format.12:28:57UTC guarded systemd badblocks write/read one-zero-pattern pass started; no completion/health PASS yet. No new partition/filesystem/storage destination configured.
+
+Separate pinned Moodle5.1.8/PHP8.3.33/Trixie/PG16.15 CI runtime and source PHP8.3 added without changing historical fixtures/application source. Scope is synthetic USTAR fresh/plugin-upgrade/repeat/DB compatibility, not full production core/addon upgrade/rollback. Exact implementation/full RC in PR/Actions; [details and next inputs](patch_runtime_20261005.md). Production core/OS/HTTPS unchanged.

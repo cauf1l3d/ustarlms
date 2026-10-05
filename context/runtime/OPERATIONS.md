@@ -56,7 +56,7 @@ sudo python3 scripts/production_manifest.py   --repo "$PWD"   --moodle-root /opt
 - `npm ci --prefix tests/release_20260912` и `npm test --prefix tests/release_20260912` — DOM contracts; имя каталога историческое, тесты актуализировались.
 - `tests/mobile` — Chromium на реальных templates со synthetic data; это не live screenshots.
 - `frontend` — собственные test/build/audit/http checks; они не доказывают production deployment этого frontend.
-- Full RC: Actions **USTAR review gate**, workflow_dispatch `full_rc=true` на exact branch/commit либо событие добавления label `full-rc` к PR. Нужны все шесть success jobs. Обычный opened/synchronize запускает только source/frontend; наличие уже поставленной метки на новом SHA не запускает автоматически полный gate.
+- Full RC: Actions **USTAR review gate**, workflow_dispatch `full_rc=true` на exact branch/commit либо событие добавления label `full-rc` к PR. Нужны success всех job families: source (PHP8.2 и PHP8.3), frontend, rollback, prepare-rc, moodle-db (historical и patch-518), gate. Historical fixtures/rollback сохраняются. [Patch runtime и пределы](patch_runtime_20261005.md): новая DB cell проверяет USTAR на pinned Moodle5.1.8/PHP8.3.33/PG16.15, не core upgrade всех production addons. Обычный opened/synchronize запускает только source/frontend; наличие уже поставленной метки на новом SHA не запускает автоматически полный gate.
 
 ## Выпуск и откат
 

@@ -41,29 +41,13 @@ Cron удерживает EX lock `/run/ustar-cron/lock` и SH lock `/run/ustar-
 
 Флага `--rebind` нет. Worker при смене ID/image направляет к `--check`/`--install`; сам ничего не перепривязывает. После container recreation нужен контролируемый protocol с сохранением одного расписания, проверкой ongoing worker и отдельным acceptance первого real pass. Повторный installer сейчас не нужен. Версионная пара USTAR и historical lab SHA в wrapper фиксированы; при новом application release контракт должен быть пересмотрен, а не обойдён.
 
-## Следующий операторский шаг
+## Выполненный операторский шаг и продолжение
 
-Каждая команда ниже — **одна физическая строка**. Выполнять отдельно. Сначала `sudo -v`, ввести пароль и дождаться нового приглашения shell; затем команды с `sudo -n`, чтобы password prompt не поглощал вставку.
+Владелец выполнил reviewed backup: `ustar-recovery-20261005T101659Z-7ea0ad99.tar.gz.age`, SHA-256 `42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8`; независимый server sha256sum совпал. Moodle running YES, stop-to-running 24.097 s. Cron scheduled 10:24 UTC exit0/1.25s, schedule/container match true, new failures и USTAR errors0. Root Apache HTTP303 — redirect smoke.
 
-```bash
-sudo -v
-```
+Вчерашний archive/decryption/isolated restore/manual login/functionality PASS сохраняется и дополнительно подтверждён владельцем; повтор полной baseline-репетиции не требуется. Новый archive не наследует его external/decryption acceptance. [Свежие evidence и retained lab resume helper](lab_resume_20261005.md): lab containers удалены, DB/files сохранены; следующий шаг — controlled resume для candidate patch/rollback. Source uploads трёх lab scripts прочитаны полностью и их dependency hashes совпали.
 
-Создать свежую **разовую ручную** копию. Эта команда сама выполняет описанный preflight до остановки; отдельный default run не обязателен. После успешных проверок Moodle остановится на время согласованного dump/files capture и будет возобновлён через resume в finally. PostgreSQL остаётся online. Не выполнять одновременно deploy/host CLI writes. Дождаться завершения и передать только terminal summary, не archive/private payload/key.
-
-```bash
-sudo -n python3 -I /usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py --backup --acknowledge-outage
-```
-
-Затем проверить новый `LOCAL_EXPORT_READY`, SHA-256, resume и fresh cron status:
-
-```bash
-sudo -n python3 -I /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
-```
-
-Для отдельной диагностики без outage доступен тот же backup wrapper **без флагов**; ожидаемый output `LOCAL_PREFLIGHT=PASS`. В backup mode этого сообщения нет, preflight выполняется до `STOPPING_MOODLE_FOR_CONSISTENT_SNAPSHOT`. При отказе сначала разобрать конкретную причину; failed staging/markers не удалять.
-
-Следующий checkpoint: свежий local archive/summary, актуальный cron status и отсутствие unresolved marker/identity mismatch. Затем проверить HTTP/readiness, выгрузку и возможность decryption/isolated restore. Сам backup, archive restore и stage upgrade этой GitHub-поставкой не запускались.
+Операторские команды одной физической строкой; `sudo -v` отдельно с ожиданием prompt, затем `sudo -n`. Новый helper `--resume-lab` включает preflight; старый `--restore-lab` не открывает existing ROOT и не должен запускаться повторно. Production core/AppArmor/packages/HTTPS этой поставкой не меняются.
 
 ## Выполненная проверка
 
@@ -72,4 +56,4 @@ sudo -n python3 -I /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
 - Backup `--help`: PASS. Offline main dispatch с запрещёнными external commands: default не входит в backup, acknowledgement обязателен, recover идёт только в resume; PASS. Это не failure rehearsal настоящего backup.
 - Original audit/application trees/historical fixtures сохраняются; context integrity и точный delivery SHA/CI фиксируются в Git/PR.
 
-INF-01 остаётся **in_progress**: fresh production backup с встроенным preflight и isolated upgrade/rollback ещё впереди. Index review завершён в [core review](core_review_20261005.md); consumers/provenance дополнительных файлов ещё проверяются. Сохранён порядок **1 → 7 → 6**.
+INF-01 остаётся **in_progress**: fresh production backup с встроенным preflight выполнен владельцем; retained lab resume и candidate isolated upgrade/rollback ещё впереди. Index review завершён в [core review](core_review_20261005.md); consumers/provenance дополнительных файлов ещё проверяются. Сохранён порядок **1 → 7 → 6**.

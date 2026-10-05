@@ -263,8 +263,18 @@ storage_reorganization:
   partition_or_filesystem_expansion_executed: false
   automatic_backup_installed: false
   next_readonly_evidence:
-  - partition_tables
-  - all_container_state_mounts_ports
-  - listeners
-  - timezone
-  - systemd_timers
+  - HDD_initializer_check_and_UUID
+  - SSD_GPT_repair_and_root_growth_plan
+  - verified_backup_trial_on_HDD
+  fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
+  fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
+  ssd_gpt_backup_boundary_warning: 'PMBR 104857599 != disk 234441647; no write performed'
+  ssd_sda1: '2048-4095 BIOS boot'
+  ssd_sda2: '4096-104855551 ext4 root'
+  ssd_free_tail_sectors: 129586062
+  ssd_free_tail_gib: 61.79
+  hdd_initializer_published: true
+  hdd_initializer_execution: pending_operator_check
+  hdd_filesystem_uuid: not_created
+  hdd_mount_or_fstab_changes: false
+  hdd_backup_timer: not_installed

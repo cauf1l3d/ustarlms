@@ -53,10 +53,13 @@ tasks:
   - context/runtime/recovery_contract_20261005.md
   - context/runtime/lab_resume_20261005.md
   - context/runtime/patch_runtime_20261005.md
+  - context/runtime/lab_patch_preflight_20261005.md
   pending_acceptance:
   - Extra files/consumers and candidate preservation of reviewed USTAR homepage redirect; exclusions/plugin provenance
     remain explicit
   - Fresh archive independent copy/decryption evidence; candidate coordinated upgrade/rollback readiness
+  - Execute pinned running-lab read-only patch preflight; cold paired rollback and full-addon candidate upgrade
+    remain unexecuted
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA verified
   - 24678 matching, 1 changed, 0 missing, 23 extra, no errors or reference skips; not full equivalence
@@ -71,6 +74,8 @@ tasks:
     reviewed
   - Resume helper prepared with 10 offline safety/failure tests; no new server restore/resume/upgrade yet
   - Owner retained lab resumed 11:30:58 UTC, login200/production unchanged PASS; not a core upgrade
+  - 'Owner storage13:11UTC: root49G/36used/11free/78percent, lab2.3G, export~1.9G; rounded not byte budget'
+  - PR83 pinned patch-518 full RC37311910916 SUCCESS; synthetic PHPUnit210/891, schema/auth-shell PASS
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -101,8 +106,8 @@ tasks:
   - Any cleanup/transfer or partition work has measured scope and recoverable copy
   - Faulty WD5000AAKS excluded; healthy HDD and power/shutdown decisions recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  priority_note: Owner/sysadmin explicitly authorized this 500GB HDD rewrite/format; guarded write/read service
-    started12:28UTC, not yet completed or healthy. Broader storage/SSD cleanup remains deferred.
+  priority_note: Owner/systemadmin authorized exact500GB HDD overwrite/check/format only; service active/running13:11UTC,
+    not completion/health PASS. Root/lab totals measured, broader storage cleanup remains deferred.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -150,8 +155,9 @@ tasks:
   execution_gate: authorized_owner_point_7_after_INF01
   validation_evidence:
   - context/runtime/patch_runtime_20261005.md
-  prepared_work: Additional pinned patch-518 DB matrix and source PHP8.3; historical runtime/rollback retained;
-    full-addon core upgrade/paired rollback pending.
+  prepared_work: PR83 full RC37311910916 SUCCESS on exact implementation9206f844e12350b9b8ab8ee2d28ed4e63a6dd90a;
+    source8.2/8.3 and historical+patch-518 matrix, historical rollback PASS. Full production addon/core rollback
+    distinct.
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
   status: planned

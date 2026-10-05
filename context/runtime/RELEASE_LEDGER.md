@@ -83,3 +83,9 @@ PR82 implementation `62ef096ee2f0b96c84b69ad20ff9a0225d1d7214`, main merge `7a6e
 Owner HDD evidence11:56:46UTC: long SMART read failure, pending/offlineUNC1/1, exact WD5000AAKS serial/capacity confirmed, only88bytes Windows service files. Owner/sysadmin explicitly authorized full rewrite/format.12:28:57UTC guarded systemd badblocks write/read one-zero-pattern pass started; no completion/health PASS yet. No new partition/filesystem/storage destination configured.
 
 Separate pinned Moodle5.1.8/PHP8.3.33/Trixie/PG16.15 CI runtime and source PHP8.3 added without changing historical fixtures/application source. Scope is synthetic USTAR fresh/plugin-upgrade/repeat/DB compatibility, not full production core/addon upgrade/rollback. Exact implementation/full RC in PR/Actions; [details and next inputs](patch_runtime_20261005.md). Production core/OS/HTTPS unchanged.
+
+## Root/lab budget 05.10 13:11 UTC и patch planning preflight
+
+PR83 merged main156110de2a5cc305a57fd9d94fc74753e7f0e5f0; full RC37311910916 SUCCESS, context37311903412 SUCCESS. Actual patch artifact verified: Moodle5.1.8/PHP8.3.33/PG16.15, PHPUnit210/891/failures0/errors0/skips0, schema parity/authenticated shell PASS. Previous rollback artifact exact SHA PASS.
+
+Owner HDD active/running, success/0 not completion; root49G/36used/11free/78percent, retainedlab2.3G/export~1.9G rounded. New [read-only planning helper](lab_patch_preflight_20261005.md) measures component budgets, validates USTAR/addon metadata/config/isolation and bounded clone SQL without new restore, upgrade, backup or production mutation. On server not executed. Application PR76/original audit/historical fixtures retained.

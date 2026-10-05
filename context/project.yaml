@@ -9,8 +9,8 @@ project:
   canonical_branch: main
 stack:
   platform: 'Moodle 5.1.1+ (Build: 20251219), fresh disk/DB owner inventory 2026-10-05T02:43:33Z; full core pending'
-  language: PHP CLI8.3.33/Trixie production; source CI8.2+8.3, additional pinned patch-518 runtime prepared, actual
-    full RC status in PR/Actions
+  language: PHP CLI8.3.33/Trixie production; PR83 source CI8.2+8.3 and pinned patch-518/PG16.15 full RC SUCCESS,
+    server core upgrade not executed
   database: PostgreSQL 16.15, dated owner evidence
   deployment: Docker on company Ubuntu 24.04.4 LTS shared host; virtualization not verified
   native_ui: PHP + Mustache + JS/AMD + SCSS

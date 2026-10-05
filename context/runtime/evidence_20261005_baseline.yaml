@@ -22,6 +22,7 @@ sources:
   - owner_restore_PASS_correction_authenticated_feed_and_lab_sources
   - owner_docker_ps_a_and_retained_paths_20261005T105956Z
   - owner_restore_preflight_source_upload_20261005T105956Z
+  - owner_active_HDD_and_root_lab_export_sizes_received_20261005T131141Z
   agent_checks:
   - 526_manifest_entries_vs_actual_Git_blobs
   - 468_disk_versions_vs_468_readonly_DB_versions
@@ -34,6 +35,7 @@ sources:
   - full_restore_cron_lab_preflight_sources_review_and_pinned_dependency_hashes
   - 10_offline_retained_lab_resume_safety_and_cleanup_tests
   - synthetic_generator_compatibility_with_uploaded_engine_ownership_calls_mocked
+  - PR83_full_RC_and_sanitized_patch_artifact_verified_210_tests_891_assertions
 application:
   reference_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
   manifest_observed_at: '2026-10-05T02:32:35.997389+00:00'
@@ -412,15 +414,18 @@ backup:
   retained_restore_lab:
     observed_at: '2026-10-05T10:59:56Z'
     directory: /var/lib/ustar-restore-lab/20261004T123406Z-741e3f72
-    containers_absent: true
+    containers_absent_before_resume_at_observed_at: true
     state_report_code_moodledata_physical_postgres_pg_env_present: true
-    size_bytes: not_measured
-    resume_prepared_not_executed: true
-    source: context/runtime/lab_resume_20261005.md
+    size_bytes: not_measured_exact_byte_count
+    resume_prepared_not_executed: false
+    source: context/runtime/lab_patch_preflight_20261005.md
     source_sha256:
       restore_engine: 71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac
       cron_lab: 906b1e6fb342b83e6fa3c73ef7bffb590fd7602ed2d2bb3a4ece17cb713e8690
       preflight: e00577aefcbcdd8ae3ebc1f30f98c899c3efd3b2b4e593b6ce0d26d09e2756da
+    resume_owner_at: '2026-10-05T11:30:58Z'
+    resume_owner_result: PASS_login200_production_unchanged
+    size_gib_rounded_owner_20261005T131141Z: 2.3
 business_readonly_checks:
   observed_at: '2026-10-04'
   accounts_reviewed: 72

@@ -1,14 +1,13 @@
 schema_version: 2
-updated_at: '2026-10-02'
+updated_at: '2026-10-05'
 project: USTAR Academy
-stage: stable_web_mobile_preparation
-stage_label: Консолидация main и подготовка полноценного Android/iOS клиента
-current_activity: Код PR76 и контекст объединены в main; текущая стабильность сообщена
-  владельцем, точный runtime SHA требует свежей сверки.
-next_task: MOB-01
+stage: infrastructure_remediation_planned
+stage_label: Аудит, актуализация GitHub и полный план инфраструктурного цикла
+current_activity: 'DOC-02: публикация аудита, актуального контекста и harness; после GitHub остановиться
+  до новой команды владельца.'
+next_task: INF-01
 ready_tasks:
-- MOB-01
-- OPS-01
+- INF-01
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
@@ -26,34 +25,60 @@ code_baseline:
     prepare-rc: success
     moodle-db: success
     gate: success
-  production_equivalence: not_claimed
+  production_equivalence: plugin_theme_files_match_owner_manifest_20261003_only
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_reports_stable
-  observed_at: '2026-10-02'
-  source: Owner statement in repository cleanup request
+  status: dated_owner_evidence_cron_restored_open_infrastructure_risks
+  observed_at: '2026-10-04T23:57:18Z'
+  source: context/runtime/evidence_20261005.yaml
   independently_measured: false
-  current_source_commit: null
-  current_versions: null
+  current_source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+  current_source_commit_scope: plugin_theme_manifest_20261003_not_full_core_or_fresh_deploy
+  current_versions:
+    local_ustar: 2026100204
+    theme_ustar: 2026100202
   last_exact_source_manifest:
-    date: '2026-10-01'
-    commit: 4cbb8ac37ef99051b9432e1e5c7c462f1472ad36
-    local_ustar: 2026093006
-    theme_ustar: 2026093004
-    matching_files: 505
-    evidence: tests/stage/production.json; historical observation, not current installed
-      SHA
+    date: '2026-10-03T02:56:02Z'
+    commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+    scope:
+    - local/ustar
+    - theme/ustar
+    matching_files: 526
+    changed: 0
+    missing: 0
+    extra: 0
+    errors: 0
+    skipped: 0
+    evidence: context/runtime/evidence_20261005.yaml
+  cron: v3_every_minute_one_worker_last_owner_success_20261004T235703Z
+  regular_backup: not_installed_final_current_infrastructure_phase
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
 non_goals:
-- Изменение production в ходе консолидации Git
-- Переписывание Moodle core
-- Объявление всех старых audit tickets done по наличию кода
-- Выбор мобильного стека без анализа API и внутренних сетевых ограничений
+- Изменение production в этой GitHub-поставке
+- Объявление исправленных рисков по публикации плана
+- Удаление тестовой копии или данных без измерения и отдельного решения
+- Автокопирование на SERVEREXPRESS или неисправный HDD
+- Переписывание Moodle core, кадровые автокоррекции и удаление истории
+- Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
 - START_HERE.md
 - context/CONTEXT_INDEX.md
-- context/runtime/RELEASE_LEDGER.md
+- context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+- context/audits/AUDIT_RECONCILIATION_20261005_RU.md
+- context/runtime/evidence_20261005.yaml
+- context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - context/tasks/ACTIVE.md
-- context/roadmap/MOBILE_CLIENT.md
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
+execution:
+  status: awaiting_owner_instruction
+  authorized_scope: repository_context_harness_audit_and_full_plan_only
+  after_github_publication: stop_and_wait
+  production_changes_in_this_delivery: false
+audit:
+  document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+  reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
+  remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  root_occupancy_hypothesis: likely_full_test_academy_copy_owner_statement_not_measured
+  automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
+  current_hdd_trusted: false

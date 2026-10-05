@@ -1,5 +1,5 @@
 kind: compatibility_pointer
-updated_at: '2026-10-02'
+updated_at: '2026-10-05'
 canonical_state: context/roadmap/STATE.yaml
 architecture: context/architecture/overview.md
 runtime: context/runtime/RELEASE_LEDGER.md

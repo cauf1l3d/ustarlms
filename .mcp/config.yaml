@@ -11,6 +11,8 @@ mcp:
 
     ustar-context:
       purpose:
+        - current_handoff_and_owner_execution_gate
+        - dated_audit_and_full_remediation_plan
         - architecture
         - runtime
         - decisions

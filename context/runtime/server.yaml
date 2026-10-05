@@ -1,8 +1,19 @@
-kind: owner_reported_topology
-reviewed_at: '2026-10-02'
+kind: dated_owner_supplied_topology
+reviewed_at: '2026-10-05'
 measured_now: false
-operating_system: Ubuntu; exact release/kernel unverified
-network: company internal LAN; user SSH access
-reverse_proxy: Caddy; configuration/location unverified
-current_dns_tls_vpn: null
+evidence: context/runtime/evidence_20261005.yaml
+operating_system: Ubuntu 24.04.4 LTS
+kernel: 6.8.0-139-generic
+systemd_detect_virt: none
+placement: not_verified
+network: company LAN only for Academy per owner; no external Academy access
+reverse_proxy: host Apache HTTP -> loopback 8082 -> Moodle container
+caddy: placeholder_not_academy_tls_proxy
+academy_https: not_configured_in_supplied_vhost_snapshot
+required_shared_services:
+- mail
+- DNS
+- ISPConfig
+root_storage: 49G / 35G used / 12G available / 76%, 2026-10-04T23:57:18Z
+root_occupancy_hypothesis: full_test_copy_likely_per_owner_not_measured
 runbook: context/runtime/OPERATIONS.md

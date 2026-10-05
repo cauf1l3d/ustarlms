@@ -8,7 +8,7 @@
 | local_ustar | Организация и lifecycle сотрудника, маршруты, evidence, адаптация, грейды, рабочие задачи, лента, награды | `moodle/local/ustar` |
 | theme_ustar | Native layout, Mustache, SCSS, responsive navigation, бренд | `moodle/theme/ustar`; parent `boost` |
 | Native browser UI | PHP controllers вызывают доменные сервисы и выводят шаблоны; JS/AMD выполняет разрешённые команды | `local/ustar/*.php`, `templates/`, `amd/`, `styles/` |
-| Дополнительный web client | Next.js + React, server-side Moodle session/token adapter | `frontend/`; наличие в production не подтверждено |
+| Дополнительный web client | Next.js + React, server-side Moodle session/token adapter | `frontend/`; по ответу владельца 05.10 в production не используется |
 | Context tooling | Индексы, source/schema maps, сбор runtime evidence | `scripts/`, `harness/ustar-contextd` |
 
 ## Жизненный цикл
@@ -27,3 +27,5 @@
 - PWA кеширует только публичные assets/offline notice. Приватные страницы, файлы и команды требуют сети. Отдельного native приложения пока нет.
 
 Точные точки входа, таблицы и тесты: [карта кода](../code_map/README.md). Решения и изменения политик: [ADR index](../decisions/README.md).
+
+Уточнение 05.10: текущий вход — LAN/HTTP через Apache хоста и loopback 8082; Caddy не TLS-прокси Академии. Сервер также обслуживает нужные почту/DNS/ISPConfig; тип размещения не подтверждён (`systemd-detect-virt=none`). Источники и временные границы — [runtime evidence](../runtime/evidence_20261005.yaml). Архитектура мобильного клиента и B2B-изоляции ещё требует решения; текущие подразделения не доказывают multi-tenancy.

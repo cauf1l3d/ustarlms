@@ -8,6 +8,8 @@ Native Moodle UI с мобильной навигацией, manifest/icons/offl
 
 Текущая PWA не хранит приватные страницы/offline learning. `frontend/` — Next.js web client; его наличие не означает, что он является заготовкой native приложения. В Git не найдены проекты Android/iOS, signing/distribution pipeline или законченный push/device-registration contract.
 
+Актуализация приоритета 05.10: mobile — отдельный последующий проект. Текущий инфраструктурный цикл и остановка после GitHub в [полном плане](USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) и [STATE](STATE.yaml). Полная реализация mobile не задерживает регулярные копии; текущий frontend не используется по ответу владельца.
+
 ## Исходная карта покрытия для MOB-01
 
 | Сценарий | Существующее основание | Что проверить/добавить для клиента |

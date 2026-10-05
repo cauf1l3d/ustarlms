@@ -1,26 +1,26 @@
 # Эксплуатация и выпуск USTAR
 
-Основание: предыдущие серверные отчёты и `scripts/release/deploy_*.sh`. Актуальность документа 02.10.2026; фактическое окружение перепроверяется перед записью.
+Основание: предыдущие серверные отчёты и `scripts/release/deploy_*.sh`. Актуальность документа 05.10.2026; фактическое окружение перепроверяется перед записью.
 
 ## Пути и компоненты
 
 | Объект | Значение | Уверенность |
 |---|---|---|
-| Ubuntu VM | внутренний контур, доступ оператора | Версия ОС/ядра заново не измерена |
+| Ubuntu host | 24.04.4 LTS / kernel 6.8.0-139; общий сервер | Owner evidence 03–04.10, размещение не подтверждено |
 | Moodle container | `ustar_moodle` | Предыдущие отчёты / installers |
 | PostgreSQL container | `ustar_postgres`, PostgreSQL 16 | Предыдущие отчёты / installers |
 | Bind mount кода | `/opt/ustar/data/moodle/public` → `/var/www/html` | G00 |
 | Публичный root Moodle 5.1 | host `/opt/ustar/data/moodle/public/public`, container `/var/www/html/public` | G00 / текущие installers |
 | Core CLI | `/var/www/html/admin/cli` | Текущие installers; не добавлять сюда второй public |
 | Moodledata | `/opt/ustar/data/moodle/moodledata` → `/var/www/moodledata` | Предыдущие отчёты |
-| Reverse proxy | Caddy; прежний Apache bind `127.0.0.1:8082` | Текущее место запуска/конфиг требуют проверки |
+| Reverse proxy | Apache хоста → loopback `127.0.0.1:8082` → Moodle | Owner evidence; Caddy — заглушка, не TLS-прокси Академии |
 | Адрес приложения | получить из фактического `$CFG->wwwroot` на сервере | Не публиковать внутренние сетевые адреса в новых отчётах |
 
 Source в Git: `moodle/local/ustar` → `<public-root>/local/ustar`; `moodle/theme/ustar` → `<public-root>/theme/ustar`. Git не содержит весь core и config.php.
 
 ## Read-only сверка OPS-01
 
-На сервере в свежем checkout репозитория, сначала получить нужный exact SHA. Значение ниже проверяет гипотезу PR76, а не объявляет его установленным:
+На сервере в свежем checkout репозитория, сначала получить нужный exact SHA. Manifest владельца 03.10 подтвердил 526 matching plugin/theme PR76; перед следующим релизом нужна новая сверка. Если в server checkout нет origin/main, использовать exact существующий commit согласно §9Б аудита. Значение ниже задаёт reference SHA, не гарантирует свежую эквивалентность:
 
 ```bash
 git fetch origin
@@ -70,6 +70,26 @@ sudo python3 scripts/production_manifest.py   --repo "$PWD"   --moodle-root /opt
 
 ## Cron, сеть и наблюдаемость
 
-Фактические расписания в `db/tasks.php`; основная зависимость — работа штатного Moodle cron. Проверять последние успехи/ошибки и задержку scheduled tasks, обработку work tasks, rewards/competitions, reporting, enrolments, grade requests и RSS. Наличие записи в db/tasks.php не доказывает запуск cron на VM. Не запускать все задачи вручную на prod как диагностику.
+Фактические расписания в `db/tasks.php`; основная зависимость — работа штатного Moodle cron. Проверять последние успехи/ошибки и задержку scheduled tasks, обработку work tasks, rewards/competitions, reporting, enrolments, grade requests и RSS. Наличие записи в db/tasks.php само по себе не доказывает запуск cron; установка v3 и результаты приведены ниже с датой. Не запускать все задачи вручную на prod как диагностику.
 
-Перед мобильным этапом проверить доступ телефона через корпоративную сеть/VPN, DNS и доверенное HTTPS, воспроизвести login/upload/download/SCORM. Смена Caddy/wwwroot не входит в наведение порядка в Git. Performance baseline и clean-server restore остаются отдельными задачами; цифры CI не характеризуют нагрузку реальной компании.
+Перед мобильным этапом проверить доступ телефона через корпоративную сеть/VPN, DNS и доверенное HTTPS, воспроизвести login/upload/download/SCORM. Изменение Apache/wwwroot не входит в наведение порядка в Git. Performance baseline и clean-server restore остаются отдельными задачами; цифры CI не характеризуют нагрузку реальной компании.
+
+
+## Установленный cron v3 и точка остановки 05.10
+
+Источник — [dated evidence](evidence_20261005.yaml). `/usr/local/sbin/USTAR_CRON_SETUP_20261005.py` v3; `/etc/cron.d/ustar_moodle` каждую минуту `--tick`, один worker `www-data`, `--keep-alive=0`, cron/backup locks. Last-run: `/var/lib/ustar-cron/last-run.json`; private rotated log: `/var/lib/ustar-cron/logs/cron.log`.
+
+Последний owner result 04.10 23:57 — 1.374 с, exit 0, schedule/container match true, adhoc/USTAR errors 0, new_failures пуст. Не запускать повторный installer, второй cron/systemd timer или direct cron.php для обычного наблюдения. Статус читает:
+
+```bash
+sudo python3 /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
+sudo docker top ustar_moodle -eo pid,etime,stat,args
+```
+
+При stale/failed выяснить конкретную задачу, effective-enabled/timezone, lock/backup pause, журналы и process внутри контейнера: Ctrl+C SSH wrapper мог оставить PHP child. Не повторять ручной запуск до проверки. 17 COMPONENT_DISABLED overdue и два disabled H5P/registration residual faildelay отличаются от новых business failures. Историю не обнулять. После container recreation штатно перепроверить binding ожидаемых IDs; обход защиты не допускается. Hash установленного host script надо получить у оператора перед будущей правкой; его исходник не восстановлен этой публикацией.
+
+Read-only PHP bootstrap не гарантирует отсутствие всех side effects. Для адресной SQL-диагностики предпочтителен psql BEGIN READ ONLY с bounded statement/lock timeout; в конкретном Moodle DB connection режим включается и проверяется после bootstrap. PGOPTIONS драйвер переопределял; invoking sync/reconcile/execute не является просмотром.
+
+Открытые DB/file/transport вопросы — [SECURITY_BASELINE](SECURITY_BASELINE.md), пульт — [MONITORING](MONITORING.md), согласованные копии — [BACKUP_RESTORE](BACKUP_RESTORE.md). Root 76% относится к 04.10 23:57; тестовый полный стенд — гипотеза, сначала measured inventory. Required mail/DNS/ISPConfig сохраняются.
+
+Текущая поставка ограничена GitHub docs/harness. После публикации остановиться. Будущие изменения по [полному плану](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) требуют новой команды владельца. Разовые recovery snapshots перед изменениями необходимы; регулярность финалом цикла на healthy HDD, не SERVEREXPRESS и не проваливший SMART диск.

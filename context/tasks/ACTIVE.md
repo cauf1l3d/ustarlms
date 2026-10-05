@@ -1,11 +1,11 @@
-# Активная работа — 02.10.2026
+# Активная работа — 05.10.2026
 
-**Следующий приоритет: MOB-01 — подготовить проверяемую спецификацию отдельного приложения Android/iOS.**
+**DOC-02: актуализация GitHub. После публикации и проверки остановиться, ждать следующей команды владельца.** На production в этой поставке никаких изменений. `ready` в backlog описывает готовность следующей задачи, не разрешение начать её.
 
-Код и контекст собраны в main. Application baseline PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`, plugin/theme `2026100204 / 2026100202`, full CI #456. Владелец сообщает о стабильной работе; свежий exact production manifest не получен. Подробнее: [STATE](../roadmap/STATE.yaml), [release ledger](../runtime/RELEASE_LEDGER.md).
+В main публикуются [исходный аудит](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md), [уточнения](../audits/AUDIT_RECONCILIATION_20261005_RU.md), [полный пошаговый план](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md), свежий контекст и локальный stdio harness. Результаты проверки — [delivery report](../runtime/context_update_20261005.md).
 
-Для MOB-01 прочитать [план](../roadmap/MOBILE_CLIENT.md), инвентарь `db/services.php` и существующие native controllers. Составить матрицу сценарий → service → API → права → файлы → offline/retry → acceptance. Затем выбрать мобильный стек отдельным ADR с учётом внутреннего DNS/HTTPS/VPN и способа установки на реальные Android/iPhone.
+Application baseline остаётся PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Manifest владельца от 03.10: 526 matching plugin/theme, core не охвачен. Cron v3 работает по последнему status 04.10 23:57; H5P/registration disabled, сеть не исправлена. Ручной encrypted snapshot/isolated restore есть; регулярного расписания нет. [Evidence](../runtime/evidence_20261005.yaml), [STATE](../roadmap/STATE.yaml).
 
-Параллельно по смыслу, без блокировки source-анализа: OPS-01 — пользовательская read-only сверка текущего production, особенно PR76 и его schema migration. Готовый порядок — [OPERATIONS](../runtime/OPERATIONS.md). Не использовать старую PR71 запись как доказательство, что именно она всё ещё установлена.
+После новой команды ближайший **INF-01** — dated read-only baseline и условия исправлений. Далее DB/file privileges → disk/logs/пульт → HTTPS → patch/CI/OS → приёмка/решения → регулярные копии финалом. Автоматический target — healthy HDD, не SERVEREXPRESS; нынешний HDD провалил чтение. `/` 76% на дату замера; полная тестовая копия — гипотеза, сначала измерить.
 
-Стабильный web сохранять. Новый redesign логина, новая модель чатов, массовые кадровые миграции, чистка истории или внедрение внешней доставки не входят в это задание.
+Стабильный web, нужные почту/DNS/ISPConfig и историю сохранять. Полноценные mobile/Privacy/B2B/LTS идут отдельными проектами после базового цикла, не блокируя копии бессрочно. Персональные миграции, принятие грейда, новый frontend или второй cron не входят в DOC-02.

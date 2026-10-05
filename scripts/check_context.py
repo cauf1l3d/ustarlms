@@ -34,6 +34,33 @@ def check():
     for key in state['ready_tasks']:
         assert tasks[key]['status']=='ready', key
         assert all(tasks[d]['status']=='done' for d in tasks[key]['depends_on']), key
+    project=read('context/project.yaml')
+    for path in state['next_agent_read']:
+        assert (ROOT/path).is_file(),path
+    for t in tasks.values():
+        for key in ('spec','reference','runbook'):
+            if key in t: assert (ROOT/t[key]).is_file(),(t['id'],key)
+    # Cross-check current pointers against the dated evidence, not a live server.
+    evidence_path=project['runtime_evidence']
+    assert state['production']['source']==evidence_path
+    evidence=read(evidence_path)
+    audit_path=state['audit']['document']
+    assert evidence['sources']['audit']==audit_path
+    assert hashlib.sha256((ROOT/audit_path).read_bytes()).hexdigest()==evidence['sources']['audit_sha256']
+    # A new candidate may precede deployment; never force production evidence
+    # to claim the application source baseline being reviewed by this PR.
+    assert re.fullmatch('[0-9a-f]{40}',evidence['application']['reference_commit'])
+    assert state['production']['last_exact_source_manifest']['commit']==evidence['application']['reference_commit']
+    assert state['production']['current_source_commit']==evidence['application']['reference_commit']
+    assert state['production']['last_exact_source_manifest']['date']==evidence['application']['manifest_observed_at']
+    assert state['production']['last_exact_source_manifest']['matching_files']==evidence['application']['matching_files']
+    assert state['production']['current_versions']=={
+        'local_ustar':evidence['application']['local_ustar'],
+        'theme_ustar':evidence['application']['theme_ustar']}
+    assert read('context/runtime/moodle.yaml')['production_versions']['local_ustar']==evidence['application']['local_ustar']
+    for key in ('document','reconciliation','remediation_plan'):
+        assert (ROOT/state['audit'][key]).is_file(),key
+    assert project['next_stage']==backlog['remediation_plan']==state['audit']['remediation_plan']
     manifest=json.loads((ROOT/'context/code_map/generated/source_manifest.json').read_text())
     assert manifest['source_commit']==baseline
     for f in manifest['files']:
@@ -62,6 +89,10 @@ def check():
           'context/tasks/ACTIVE.md','context/roadmap/README.md','context/roadmap/MOBILE_CLIENT.md',
           'context/runtime/README.md','context/runtime/RELEASE_LEDGER.md','context/runtime/OPERATIONS.md',
           'context/runtime/context_refresh_report.md','context/archive/handoff_20261002/README.md']
+    docs += ['harness/ustar-contextd/README.md','context/runtime/context_update_20261005.md',
+             'context/runtime/MONITORING.md','context/runtime/BACKUP_RESTORE.md',
+             'context/runtime/SECURITY_BASELINE.md','context/audits/README.md',
+             state['audit']['reconciliation'],state['audit']['remediation_plan']]
     for name in docs:
         p=ROOT/name
         for target in re.findall(r'\]\(([^)]+)\)',p.read_text()):
@@ -73,6 +104,9 @@ def check():
     for f in idx['files']:
         p=ROOT/f['path']
         assert p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==f['sha256'],f['path']
+    indexed={f['path'] for f in idx['files']}
+    assert set(state['audit'][key] for key in ('document','reconciliation','remediation_plan')) <= indexed
+    assert evidence_path in indexed
     print(f'CONTEXT_OK source={baseline} files={len(paths)} tables={len(tables)} tasks={len(tasks)}')
 
 

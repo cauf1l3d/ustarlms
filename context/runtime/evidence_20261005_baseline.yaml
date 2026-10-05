@@ -334,6 +334,24 @@ storage:
     pending_sectors: 1
     offline_uncorrectable: 1
     trusted_backup_target: false
+    smart_values_scope: historical_before_surface_overwrite_not_current_post_write_values
+    write_read_completion:
+      source: owner_terminal_output
+      owner_message_received_at: '2026-10-05T17:11:36Z'
+      command_execution_timestamps: not_supplied
+      unit: ustar-hdd-check-20261005.service
+      active_state: inactive
+      sub_state: dead
+      result: success
+      exec_main_status: 0
+      pattern: '0x00'
+      writing: done
+      reading_and_comparing: done
+      bad_blocks: 0
+      error_counts: '0/0/0'
+      badblocks_output_file_independently_read: false
+      post_write_long_smart: pending_owner_execution_and_output
+      post_write_smart_attributes: not_received
   directory_inventory:
     observed_at: '2026-10-05T02:24:18Z'
     opt_ustar_g_reported: 3.9
@@ -426,6 +444,16 @@ backup:
     resume_owner_at: '2026-10-05T11:30:58Z'
     resume_owner_result: PASS_login200_production_unchanged
     size_gib_rounded_owner_20261005T131141Z: 2.3
+    planning_preflight_attempt:
+      owner_message_received_at: '2026-10-05T17:11:36Z'
+      source: owner_terminal_output
+      original_script_sha256: d106ae44502dc6fa591853efacc34780b90301ccca451c75032cc689642daff4
+      reference_sha256: 772541013b8f4d5f5d6f49969557f52f89c4032b8e10a18d5552b88be5cf4972
+      operator_sha256_checks: both_OK_before_root_install
+      result: refused_Untrusted_retained_input
+      offending_scope: not_reported_by_original_helper
+      precise_budget_report: not_received
+      diagnostic_revision_server_execution: pending
 business_readonly_checks:
   observed_at: '2026-10-04'
   accounts_reviewed: 72

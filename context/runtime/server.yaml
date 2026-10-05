@@ -1,7 +1,7 @@
 kind: dated_owner_supplied_topology
 reviewed_at: '2026-10-05'
 measured_now: false
-evidence: context/runtime/evidence_20261005.yaml
+evidence: context/runtime/evidence_20261005_baseline.yaml
 operating_system: Ubuntu 24.04.4 LTS
 kernel: 6.8.0-139-generic
 systemd_detect_virt: none
@@ -14,6 +14,6 @@ required_shared_services:
 - mail
 - DNS
 - ISPConfig
-root_storage: 49G / 35G used / 12G available / 76%, 2026-10-04T23:57:18Z
-root_occupancy_hypothesis: full_test_copy_likely_per_owner_not_measured
+root_storage: 49G / 35G used / 12G available / 76%, 2026-10-05T02:13:40Z
+root_occupancy_hypothesis: directory_sizes_measured_full_test_copy_unconfirmed
 runbook: context/runtime/OPERATIONS.md

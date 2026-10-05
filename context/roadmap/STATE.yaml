@@ -1,13 +1,11 @@
 schema_version: 2
 updated_at: '2026-10-05'
 project: USTAR Academy
-stage: infrastructure_remediation_planned
-stage_label: Аудит, актуализация GitHub и полный план инфраструктурного цикла
-current_activity: 'DOC-02: публикация аудита, актуального контекста и harness; после GitHub остановиться
-  до новой команды владельца.'
+stage: selected_infrastructure_remediation_in_progress
+stage_label: 'По команде владельца: baseline → Moodle/CI/ОС → HTTPS'
+current_activity: 'INF-01: свежий read-only baseline и подготовка exact core preflight; затем пункты 7 и 6.'
 next_task: INF-01
-ready_tasks:
-- INF-01
+ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
@@ -25,20 +23,20 @@ code_baseline:
     prepare-rc: success
     moodle-db: success
     gate: success
-  production_equivalence: plugin_theme_files_match_owner_manifest_20261003_only
+  production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: dated_owner_evidence_cron_restored_open_infrastructure_risks
-  observed_at: '2026-10-04T23:57:18Z'
-  source: context/runtime/evidence_20261005.yaml
+  status: fresh_owner_baseline_core_preflight_and_recovery_pending
+  observed_at: '2026-10-05T02:43:33Z'
+  source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
   current_source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
-  current_source_commit_scope: plugin_theme_manifest_20261003_not_full_core_or_fresh_deploy
+  current_source_commit_scope: plugin_theme_exact_manifest_20261005_not_full_core_or_fresh_deploy
   current_versions:
     local_ustar: 2026100204
     theme_ustar: 2026100202
   last_exact_source_manifest:
-    date: '2026-10-03T02:56:02Z'
+    date: '2026-10-05T02:32:35.997389+00:00'
     commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
     scope:
     - local/ustar
@@ -49,8 +47,9 @@ production:
     extra: 0
     errors: 0
     skipped: 0
-    evidence: context/runtime/evidence_20261005.yaml
-  cron: v3_every_minute_one_worker_last_owner_success_20261004T235703Z
+    evidence: context/runtime/evidence_20261005_baseline.yaml
+    uncompared: 0
+  cron: v3_one_worker_owner_success_20261005T021302Z
   regular_backup: not_installed_final_current_infrastructure_phase
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
@@ -59,22 +58,36 @@ non_goals:
 - Объявление исправленных рисков по публикации плана
 - Удаление тестовой копии или данных без измерения и отдельного решения
 - Автокопирование на SERVEREXPRESS или неисправный HDD
-- Переписывание Moodle core, кадровые автокоррекции и удаление истории
+- Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
 - START_HERE.md
 - context/CONTEXT_INDEX.md
 - context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
 - context/audits/AUDIT_RECONCILIATION_20261005_RU.md
-- context/runtime/evidence_20261005.yaml
+- context/runtime/evidence_20261005_baseline.yaml
 - context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - context/tasks/ACTIVE.md
+- context/runtime/baseline_20261005.md
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 execution:
-  status: awaiting_owner_instruction
-  authorized_scope: repository_context_harness_audit_and_full_plan_only
-  after_github_publication: stop_and_wait
+  status: authorized_selected_tasks_in_progress
+  authorized_scope: owner_selected_points_1_7_6_baseline_Moodle_CI_OS_HTTPS
+  owner_selected_order:
+  - 1
+  - 7
+  - 6
+  authorized_task_ids:
+  - INF-01
+  - INF-09
+  - INF-08
+  - INF-10-OS
+  - INF-07
+  other_points: deferred_until_selected_points_complete
+  after_github_publication: continue_selected_work_with_operator_commands
   production_changes_in_this_delivery: false
+  production_operator: owner_aduk_via_SSH
+  direct_production_connection_by_agent: false
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md

@@ -41,7 +41,22 @@ Owner-supplied evidence из [аудита](../audits/USTAR_INFRASTRUCTURE_AUDIT
 | Manual recovery | Snapshot 04.10, checksum/external key/isolated restore подтверждены в своей области; full shared-host restore не проверен |
 | Открытые риски | DB superuser, writable code/config, HTTP, no unified monitoring, old core patch, root 76%, failed HDD; регулярных копий нет |
 
-Новая GitHub-поставка DOC-02 не меняет application code и production. Исходный аудит сохранён без изменения байтов, актуальные runtime/harness/roadmap pointers и полный план опубликованы. [Проверка поставки](context_update_20261005.md). После GitHub остановиться до новой команды владельца.
+GitHub-поставка DOC-02 не меняла application code и production. Исходный аудит сохранён без изменения байтов, runtime/harness/roadmap pointers и полный план опубликованы PR78. [Проверка поставки](context_update_20261005.md). Исходное поручение требовало остановиться после публикации; следующая команда владельца 1 → 7 → 6 приведена ниже.
+
+## Продолжение 05.10 — выбранные пункты 1 → 7 → 6
+
+Владелец разрешил baseline → Moodle/CI/ОС → HTTPS; остальные пункты после них. INF-01 в работе. [Новый evidence](evidence_20261005_baseline.yaml), [baseline и tool scope](baseline_20261005.md), [component inventory](plugin_inventory_20261005.json).
+
+| Контроль UTC | Результат / граница |
+|---|---|
+| Manifest 02:32:35.997389 | 526 files PR76, changed/missing/extra/errors/skipped/uncompared 0; independently checked vs actual Git blobs; non-atomic plugin/theme only |
+| Inventory 02:43:33 | 468 disk/readonly DB component versions identical; USTAR 2 roots and 17 external roots / 55 components; no core Git HEAD |
+| Core metadata | 3 SHA-256 match official weekly commit `1cd17816c56a7df7ee796892efccaf1ed5347340`; runtime core comparison still pending |
+| Runtime images | PHP CLI 8.3.33 Debian13/Trixie, PG16.15; exact IDs/RepoDigests in new evidence; moving PHP FROM requires target pin decision |
+| Cron 02:13 | v3 exit 0 / 1.070 s / schedule and container match; exceptions retained; installed wrapper hash confirmed |
+| AppArmor/packages | snapd rc + stale profile include; Docker still uses docker-default; no repair/update/reboot performed |
+
+Read-only preflight helper and context are repository work; application source, DB/data, historical fixtures and host wrappers unchanged. New full CI on the chosen runtime and isolated/production upgrade are not yet run. Official 5.1.7 candidate is identified, not deployed. Old manual recovery copy precedes latest cron writes; fresh copy still required before mutation. Exact implementation/CI of this repository delivery are recorded in its PR/Git history.
 
 ## Перед следующим релизом
 

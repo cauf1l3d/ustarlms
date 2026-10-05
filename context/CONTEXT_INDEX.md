@@ -1,13 +1,13 @@
 # Индекс контекста USTAR
 
-Актуальность: 05.10.2026. **Канонический код и контекст — main.** Application SHA, dated evidence и остановка до новой команды: [STATE](roadmap/STATE.yaml).
+Актуальность: 05.10.2026. **Канонический код и контекст — main.** Application SHA, dated evidence и выбранный владельцем порядок 1 → 7 → 6: [STATE](roadmap/STATE.yaml).
 
 | Вопрос | Авторитетный источник |
 |---|---|
 | Что за продукт, какой стек | [project](project.yaml), [architecture](architecture/overview.md) |
 | Какие ограничения приняты | [boundaries](architecture/boundaries.md), [ADR index](decisions/README.md), [constraints](constraints.yaml) |
 | Как работают домены | [domains](domains/), [карта кода](code_map/README.md) |
-| Где source и что реально установлено | [STATE](roadmap/STATE.yaml), [release ledger](runtime/RELEASE_LEDGER.md), [dated evidence](runtime/evidence_20261005.yaml) |
+| Где source и что реально установлено | [STATE](roadmap/STATE.yaml), [release ledger](runtime/RELEASE_LEDGER.md), [fresh baseline](runtime/baseline_20261005.md), [dated evidence](runtime/evidence_20261005_baseline.yaml) |
 | Как проверить/выпустить/откатить | [operations](runtime/OPERATIONS.md) |
 | Над чем работать дальше | [ACTIVE](tasks/ACTIVE.md), [BACKLOG](roadmap/BACKLOG.yaml), [полный план аудита](roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) |
 | Оригинал аудита и расхождения | [Аудит](audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md), [сверка](audits/AUDIT_RECONCILIATION_20261005_RU.md) |

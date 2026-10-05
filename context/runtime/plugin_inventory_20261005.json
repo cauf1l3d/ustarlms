@@ -1,0 +1,3855 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-05T02:43:33Z",
+  "kind": "sanitized_owner_readonly_plugin_inventory",
+  "direct_server_connection_by_agent": false,
+  "database_transaction_read_only": true,
+  "upstream_reference_commit": "1cd17816c56a7df7ee796892efccaf1ed5347340",
+  "metadata_or_versions_do_not_prove_full_code_equivalence": true,
+  "disk_components": 468,
+  "database_components": 468,
+  "version_differences": [],
+  "additional_roots": [
+    {
+      "path": "admin/tool/mulib",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "admin/tool/murelation",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "blocks/ai_chat",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "blocks/rbreport",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "blocks/xp",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "filter/filtercodes",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "lib/editor/tiny/plugins/ai",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "local/ai_manager",
+      "components": 18,
+      "ownership": "external"
+    },
+    {
+      "path": "local/cohortrole",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "local/geniai",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "local/intelliboard",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "local/lumination",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "local/preventcopy",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "local/ustar",
+      "components": 1,
+      "ownership": "USTAR"
+    },
+    {
+      "path": "mod/customcert",
+      "components": 20,
+      "ownership": "external"
+    },
+    {
+      "path": "mod/pulse",
+      "components": 3,
+      "ownership": "external"
+    },
+    {
+      "path": "mod/rumbletalkchat",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "theme/boost_union",
+      "components": 1,
+      "ownership": "external"
+    },
+    {
+      "path": "theme/ustar",
+      "components": 1,
+      "ownership": "USTAR"
+    }
+  ],
+  "components": [
+    {
+      "component": "tool_admin_presets",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/admin_presets/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_analytics",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/analytics/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_availabilityconditions",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/availabilityconditions/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_behat",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/behat/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_brickfield",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/brickfield/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_capability",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/capability/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_cohortroles",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/cohortroles/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_componentlibrary",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/componentlibrary/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_customlang",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/customlang/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_dataprivacy",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/dataprivacy/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_dbtransfer",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/dbtransfer/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_filetypes",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/filetypes/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_generator",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/generator/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_httpsreplace",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/httpsreplace/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_installaddon",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/installaddon/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_langimport",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/langimport/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_licensemanager",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/licensemanager/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_log",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/log/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "logstore_database",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/log/store/database/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "logstore_standard",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/log/store/standard/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_lp",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/lp/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_lpimportcsv",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/lpimportcsv/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_lpmigrate",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/lpmigrate/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_messageinbound",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/messageinbound/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_mfa",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_admin",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/admin/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_auth",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/auth/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_capability",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/capability/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_cohort",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/cohort/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_email",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/email/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_grace",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/grace/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_iprange",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/iprange/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_nosetup",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/nosetup/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_role",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/role/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_sms",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/sms/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_token",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/token/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_totp",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/totp/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "factor_webauthn",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mfa/factor/webauthn/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_mobile",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/mobile/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_monitor",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/monitor/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_moodlenet",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/moodlenet/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_mulib",
+      "disk_version": 2026060550,
+      "requires_literal": 2025041400,
+      "version_file": "admin/tool/mulib/version.php",
+      "database_version": 2026060550,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "tool_multilangupgrade",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/multilangupgrade/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_murelation",
+      "disk_version": 2026060550,
+      "requires_literal": 2024100700,
+      "version_file": "admin/tool/murelation/version.php",
+      "database_version": 2026060550,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "tool_oauth2",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/oauth2/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_phpunit",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/phpunit/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_policy",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/policy/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_profiling",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/profiling/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_recyclebin",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/recyclebin/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_replace",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/replace/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_spamcleaner",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/spamcleaner/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_task",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/task/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_templatelibrary",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/templatelibrary/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_unsuproles",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/unsuproles/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_uploadcourse",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/uploadcourse/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_uploaduser",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/uploaduser/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_usertours",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/usertours/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tool_xmldb",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "admin/tool/xmldb/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "aiplacement_courseassist",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "ai/placement/courseassist/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "aiplacement_editor",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "ai/placement/editor/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "aiprovider_azureai",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "ai/provider/azureai/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "aiprovider_deepseek",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "ai/provider/deepseek/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "aiprovider_ollama",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "ai/provider/ollama/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "aiprovider_openai",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "ai/provider/openai/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_db",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/db/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_email",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/email/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_ldap",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/ldap/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_lti",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/lti/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_manual",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/manual/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_nologin",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/nologin/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_none",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/none/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_oauth2",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/oauth2/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_shibboleth",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/shibboleth/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "auth_webservice",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "auth/webservice/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "availability_completion",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "availability/condition/completion/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "availability_date",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "availability/condition/date/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "availability_grade",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "availability/condition/grade/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "availability_group",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "availability/condition/group/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "availability_grouping",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "availability/condition/grouping/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "availability_profile",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "availability/condition/profile/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_accessreview",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/accessreview/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_activity_modules",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/activity_modules/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_activity_results",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/activity_results/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_admin_bookmarks",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/admin_bookmarks/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_ai_chat",
+      "disk_version": 2026050800,
+      "requires_literal": 2025041400,
+      "version_file": "blocks/ai_chat/version.php",
+      "database_version": 2026050800,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "block_badges",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/badges/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_blog_menu",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/blog_menu/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_blog_recent",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/blog_recent/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_blog_tags",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/blog_tags/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_calendar_month",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/calendar_month/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_calendar_upcoming",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/calendar_upcoming/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_comments",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/comments/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_completionstatus",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/completionstatus/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_course_list",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/course_list/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_course_summary",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/course_summary/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_feedback",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/feedback/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_globalsearch",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/globalsearch/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_glossary_random",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/glossary_random/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_html",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/html/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_login",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/login/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_lp",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/lp/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_mentees",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/mentees/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_myoverview",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/myoverview/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_myprofile",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/myprofile/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_navigation",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/navigation/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_news_items",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/news_items/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_online_users",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/online_users/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_private_files",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/private_files/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_rbreport",
+      "disk_version": 2026060900,
+      "requires_literal": null,
+      "version_file": "blocks/rbreport/version.php",
+      "database_version": 2026060900,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "block_recent_activity",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/recent_activity/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_recentlyaccessedcourses",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/recentlyaccessedcourses/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_recentlyaccesseditems",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/recentlyaccesseditems/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_rss_client",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/rss_client/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_search_forums",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/search_forums/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_selfcompletion",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/selfcompletion/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_settings",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/settings/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_site_main_menu",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/site_main_menu/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_social_activities",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/social_activities/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_starredcourses",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/starredcourses/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_tag_flickr",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/tag_flickr/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_tag_youtube",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/tag_youtube/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_tags",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/tags/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_timeline",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "blocks/timeline/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "block_xp",
+      "disk_version": 2026042001,
+      "requires_literal": 2022112800,
+      "version_file": "blocks/xp/version.php",
+      "database_version": 2026042001,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "cachelock_file",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "cache/locks/file/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "cachestore_apcu",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "cache/stores/apcu/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "cachestore_file",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "cache/stores/file/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "cachestore_redis",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "cache/stores/redis/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "cachestore_session",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "cache/stores/session/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "cachestore_static",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "cache/stores/static/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "calendartype_gregorian",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "calendar/type/gregorian/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "communication_customlink",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "communication/provider/customlink/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "communication_matrix",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "communication/provider/matrix/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "contenttype_h5p",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "contentbank/contenttype/h5p/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "format_singleactivity",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "course/format/singleactivity/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "format_social",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "course/format/social/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "format_topics",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "course/format/topics/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "format_weeks",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "course/format/weeks/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "customfield_checkbox",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "customfield/field/checkbox/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "customfield_date",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "customfield/field/date/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "customfield_number",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "customfield/field/number/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "customfield_select",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "customfield/field/select/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "customfield_text",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "customfield/field/text/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "customfield_textarea",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "customfield/field/textarea/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "dataformat_csv",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "dataformat/csv/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "dataformat_excel",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "dataformat/excel/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "dataformat_html",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "dataformat/html/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "dataformat_json",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "dataformat/json/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "dataformat_ods",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "dataformat/ods/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "dataformat_pdf",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "dataformat/pdf/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_category",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/category/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_cohort",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/cohort/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_database",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/database/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_fee",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/fee/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_flatfile",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/flatfile/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_guest",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/guest/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_imsenterprise",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/imsenterprise/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_ldap",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/ldap/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_lti",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/lti/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_manual",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/manual/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_meta",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/meta/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_paypal",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/paypal/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "enrol_self",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "enrol/self/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "fileconverter_googledrive",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "files/converter/googledrive/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "fileconverter_unoconv",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "files/converter/unoconv/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_activitynames",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/activitynames/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_algebra",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/algebra/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_codehighlighter",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/codehighlighter/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_data",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/data/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_displayh5p",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/displayh5p/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_emailprotect",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/emailprotect/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_emoticon",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/emoticon/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_filtercodes",
+      "disk_version": 2026051100,
+      "requires_literal": 2021051700,
+      "version_file": "filter/filtercodes/version.php",
+      "database_version": 2026051100,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "filter_glossary",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/glossary/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_mathjaxloader",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/mathjaxloader/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_mediaplugin",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/mediaplugin/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_multilang",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/multilang/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_tex",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/tex/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "filter_urltolink",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "filter/urltolink/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradeexport_ods",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/export/ods/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradeexport_txt",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/export/txt/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradeexport_xls",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/export/xls/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradeexport_xml",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/export/xml/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradingform_guide",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/grading/form/guide/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradingform_rubric",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/grading/form/rubric/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradeimport_csv",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/import/csv/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradeimport_direct",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/import/direct/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradeimport_xml",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/import/xml/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradepenalty_duedate",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/penalty/duedate/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradereport_grader",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/report/grader/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradereport_history",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/report/history/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradereport_outcomes",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/report/outcomes/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradereport_overview",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/report/overview/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradereport_singleview",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/report/singleview/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradereport_summary",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/report/summary/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "gradereport_user",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "grade/report/user/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "h5plib_v127",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "h5p/h5plib/v127/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "antivirus_clamav",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/antivirus/clamav/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "editor_textarea",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/textarea/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "editor_tiny",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_accessibilitychecker",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/accessibilitychecker/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_ai",
+      "disk_version": 2026050500,
+      "requires_literal": 2025041400,
+      "version_file": "lib/editor/tiny/plugins/ai/version.php",
+      "database_version": 2026050500,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "tiny_aiplacement",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/aiplacement/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_autosave",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/autosave/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_equation",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/equation/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_h5p",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/h5p/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_html",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/html/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_link",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/link/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_media",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/media/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_noautolink",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/noautolink/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_premium",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/premium/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "tiny_recordrtc",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/editor/tiny/plugins/recordrtc/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mlbackend_python",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "lib/mlbackend/python/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "local_ai_manager",
+      "disk_version": 2026071000,
+      "requires_literal": 2025041400,
+      "version_file": "local/ai_manager/version.php",
+      "database_version": 2026071000,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_agent",
+      "disk_version": 2026041600,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/agent/version.php",
+      "database_version": 2026041600,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_chat",
+      "disk_version": 2023121204,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/chat/version.php",
+      "database_version": 2023121204,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_feedback",
+      "disk_version": 2023121204,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/feedback/version.php",
+      "database_version": 2023121204,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_imggen",
+      "disk_version": 2023121203,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/imggen/version.php",
+      "database_version": 2023121203,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_itt",
+      "disk_version": 2024092300,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/itt/version.php",
+      "database_version": 2024092300,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_questiongeneration",
+      "disk_version": 2025061802,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/questiongeneration/version.php",
+      "database_version": 2025061802,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_singleprompt",
+      "disk_version": 2023121204,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/singleprompt/version.php",
+      "database_version": 2023121204,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_translate",
+      "disk_version": 2023121204,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/translate/version.php",
+      "database_version": 2023121204,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aipurpose_tts",
+      "disk_version": 2023121203,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/purposes/tts/version.php",
+      "database_version": 2023121203,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_chatgpt",
+      "disk_version": 2023121204,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/chatgpt/version.php",
+      "database_version": 2023121204,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_dalle",
+      "disk_version": 2023121204,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/dalle/version.php",
+      "database_version": 2023121204,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_gemini",
+      "disk_version": 2024120300,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/gemini/version.php",
+      "database_version": 2024120300,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_googlesynthesize",
+      "disk_version": 2024110500,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/googlesynthesize/version.php",
+      "database_version": 2024110500,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_imagen",
+      "disk_version": 2024120200,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/imagen/version.php",
+      "database_version": 2024120200,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_ollama",
+      "disk_version": 2024031701,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/ollama/version.php",
+      "database_version": 2024031701,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_openaitts",
+      "disk_version": 2025073100,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/openaitts/version.php",
+      "database_version": 2025073100,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "aitool_telli",
+      "disk_version": 2025103100,
+      "requires_literal": 2023042403,
+      "version_file": "local/ai_manager/tools/telli/version.php",
+      "database_version": 2025103100,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "local_cohortrole",
+      "disk_version": 2025100700,
+      "requires_literal": 2022112800,
+      "version_file": "local/cohortrole/version.php",
+      "database_version": 2025100700,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "local_geniai",
+      "disk_version": 2026071000,
+      "requires_literal": 2020110900,
+      "version_file": "local/geniai/version.php",
+      "database_version": 2026071000,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "local_intelliboard",
+      "disk_version": 2025111703,
+      "requires_literal": 2011120500,
+      "version_file": "local/intelliboard/version.php",
+      "database_version": 2025111703,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "local_lumination",
+      "disk_version": 2026022100,
+      "requires_literal": 2024042200,
+      "version_file": "local/lumination/version.php",
+      "database_version": 2026022100,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "local_preventcopy",
+      "disk_version": 2026051700,
+      "requires_literal": 2022112800,
+      "version_file": "local/preventcopy/version.php",
+      "database_version": 2026051700,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "local_ustar",
+      "disk_version": 2026100204,
+      "requires_literal": 2024100100,
+      "version_file": "local/ustar/version.php",
+      "database_version": 2026100204,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "media_html5audio",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "media/player/html5audio/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "media_html5video",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "media/player/html5video/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "media_videojs",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "media/player/videojs/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "media_vimeo",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "media/player/vimeo/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "media_youtube",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "media/player/youtube/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "message_airnotifier",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "message/output/airnotifier/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "message_email",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "message/output/email/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "message_popup",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "message/output/popup/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "message_sms",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "message/output/sms/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_assign",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "assignfeedback_comments",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/feedback/comments/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "assignfeedback_editpdf",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/feedback/editpdf/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "assignfeedback_file",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/feedback/file/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "assignfeedback_offline",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/feedback/offline/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "assignsubmission_comments",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/submission/comments/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "assignsubmission_file",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/submission/file/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "assignsubmission_onlinetext",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/assign/submission/onlinetext/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_bigbluebuttonbn",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/bigbluebuttonbn/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_book",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/book/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "booktool_exportimscp",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/book/tool/exportimscp/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "booktool_importhtml",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/book/tool/importhtml/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "booktool_print",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/book/tool/print/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_choice",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/choice/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_customcert",
+      "disk_version": 2025041406,
+      "requires_literal": 2025041400,
+      "version_file": "mod/customcert/version.php",
+      "database_version": 2025041406,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_bgimage",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/bgimage/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_border",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/border/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_categoryname",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/categoryname/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_code",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/code/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_coursefield",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/coursefield/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_coursename",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/coursename/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_date",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/date/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_daterange",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/daterange/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_digitalsignature",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/digitalsignature/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_expiry",
+      "disk_version": 2024072200,
+      "requires_literal": 2022112800,
+      "version_file": "mod/customcert/element/expiry/version.php",
+      "database_version": 2024072200,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_grade",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/grade/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_gradeitemname",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/gradeitemname/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_image",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/image/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_qrcode",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/qrcode/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_studentname",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/studentname/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_teachername",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/teachername/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_text",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/text/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_userfield",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/userfield/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "customcertelement_userpicture",
+      "disk_version": 2023042400,
+      "requires_literal": 2023042400,
+      "version_file": "mod/customcert/element/userpicture/version.php",
+      "database_version": 2023042400,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "mod_data",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_checkbox",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/checkbox/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_date",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/date/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_file",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/file/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_latlong",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/latlong/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_menu",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/menu/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_multimenu",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/multimenu/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_number",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/number/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_picture",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/picture/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_radiobutton",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/radiobutton/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_text",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/text/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_textarea",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/textarea/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datafield_url",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/field/url/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datapreset_imagegallery",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/preset/imagegallery/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datapreset_journal",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/preset/journal/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datapreset_proposals",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/preset/proposals/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "datapreset_resources",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/data/preset/resources/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_feedback",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/feedback/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_folder",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/folder/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_forum",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/forum/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "forumreport_summary",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/forum/report/summary/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_glossary",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/glossary/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_h5pactivity",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/h5pactivity/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_imscp",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/imscp/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_label",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/label/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_lesson",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lesson/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_lti",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lti/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "ltiservice_basicoutcomes",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lti/service/basicoutcomes/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "ltiservice_gradebookservices",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lti/service/gradebookservices/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "ltiservice_memberships",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lti/service/memberships/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "ltiservice_profile",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lti/service/profile/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "ltiservice_toolproxy",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lti/service/toolproxy/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "ltiservice_toolsettings",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/lti/service/toolsettings/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_page",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/page/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_pulse",
+      "disk_version": 2025110100,
+      "requires_literal": 2022112800,
+      "version_file": "mod/pulse/version.php",
+      "database_version": 2025110100,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "pulseaddon_availability",
+      "disk_version": 2024122607,
+      "requires_literal": 2021051700,
+      "version_file": "mod/pulse/addons/availability/version.php",
+      "database_version": 2024122607,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "pulseaddon_preset",
+      "disk_version": 2024122604,
+      "requires_literal": 2022112800,
+      "version_file": "mod/pulse/addons/preset/version.php",
+      "database_version": 2024122604,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "mod_qbank",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/qbank/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_quiz",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_delaybetweenattempts",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/delaybetweenattempts/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_ipaddress",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/ipaddress/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_numattempts",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/numattempts/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_offlineattempts",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/offlineattempts/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_openclosedate",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/openclosedate/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_password",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/password/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_seb",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/seb/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_securewindow",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/securewindow/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quizaccess_timelimit",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/accessrule/timelimit/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quiz_grading",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/report/grading/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quiz_overview",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/report/overview/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quiz_responses",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/report/responses/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "quiz_statistics",
+      "disk_version": 2025100601,
+      "requires_literal": 2025092600,
+      "version_file": "mod/quiz/report/statistics/version.php",
+      "database_version": 2025100601,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_resource",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/resource/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_rumbletalkchat",
+      "disk_version": 2025071300,
+      "requires_literal": 2025041912,
+      "version_file": "mod/rumbletalkchat/version.php",
+      "database_version": 2025071300,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "mod_scorm",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/scorm/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "scormreport_basic",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/scorm/report/basic/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "scormreport_graphs",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/scorm/report/graphs/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "scormreport_interactions",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/scorm/report/interactions/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "scormreport_objectives",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/scorm/report/objectives/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_subsection",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/subsection/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_url",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/url/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_wiki",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/wiki/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "mod_workshop",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopallocation_manual",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/allocation/manual/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopallocation_random",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/allocation/random/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopallocation_scheduled",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/allocation/scheduled/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopeval_best",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/eval/best/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopform_accumulative",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/form/accumulative/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopform_comments",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/form/comments/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopform_numerrors",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/form/numerrors/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "workshopform_rubric",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "mod/workshop/form/rubric/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "paygw_paypal",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "payment/gateway/paypal/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "portfolio_download",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "portfolio/download/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "portfolio_flickr",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "portfolio/flickr/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "portfolio_googledocs",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "portfolio/googledocs/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_bulkmove",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/bulkmove/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_columnsortorder",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/columnsortorder/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_comment",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/comment/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_customfields",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/customfields/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_deletequestion",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/deletequestion/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_editquestion",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/editquestion/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_exportquestions",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/exportquestions/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_exporttoxml",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/exporttoxml/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_history",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/history/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_importquestions",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/importquestions/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_managecategories",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/managecategories/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_previewquestion",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/previewquestion/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_statistics",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/statistics/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_tagquestion",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/tagquestion/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_usage",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/usage/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_viewcreator",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/viewcreator/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_viewquestionname",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/viewquestionname/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_viewquestiontext",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/viewquestiontext/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbank_viewquestiontype",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/bank/viewquestiontype/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_adaptive",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/adaptive/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_adaptivenopenalty",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/adaptivenopenalty/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_deferredcbm",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/deferredcbm/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_deferredfeedback",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/deferredfeedback/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_immediatecbm",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/immediatecbm/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_immediatefeedback",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/immediatefeedback/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_informationitem",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/informationitem/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_interactive",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/interactive/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_interactivecountback",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/interactivecountback/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_manualgraded",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/manualgraded/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qbehaviour_missing",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/behaviour/missing/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qformat_aiken",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/format/aiken/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qformat_blackboard_six",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/format/blackboard_six/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qformat_gift",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/format/gift/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qformat_missingword",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/format/missingword/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qformat_multianswer",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/format/multianswer/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qformat_xhtml",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/format/xhtml/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qformat_xml",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/format/xml/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_calculated",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/calculated/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_calculatedmulti",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/calculatedmulti/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_calculatedsimple",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/calculatedsimple/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_ddimageortext",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/ddimageortext/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_ddmarker",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/ddmarker/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_ddwtos",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/ddwtos/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_description",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/description/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_essay",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/essay/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_gapselect",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/gapselect/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_match",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/match/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_missingtype",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/missingtype/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_multianswer",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/multianswer/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_multichoice",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/multichoice/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_numerical",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/numerical/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_ordering",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/ordering/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_random",
+      "disk_version": 2025100601,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/random/version.php",
+      "database_version": 2025100601,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_randomsamatch",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/randomsamatch/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_shortanswer",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/shortanswer/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "qtype_truefalse",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "question/type/truefalse/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_backups",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/backups/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_competency",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/competency/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_completion",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/completion/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_configlog",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/configlog/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_courseoverview",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/courseoverview/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_eventlist",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/eventlist/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_infectedfiles",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/infectedfiles/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_insights",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/insights/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_log",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/log/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_loglive",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/loglive/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_outline",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/outline/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_participation",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/participation/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_performance",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/performance/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_progress",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/progress/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_questioninstances",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/questioninstances/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_security",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/security/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_stats",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/stats/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_status",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/status/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_themeusage",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/themeusage/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "report_usersessions",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "report/usersessions/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_areafiles",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/areafiles/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_contentbank",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/contentbank/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_coursefiles",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/coursefiles/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_dropbox",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/dropbox/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_equella",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/equella/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_filesystem",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/filesystem/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_flickr",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/flickr/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_flickr_public",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/flickr_public/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_googledocs",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/googledocs/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_local",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/local/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_merlot",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/merlot/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_nextcloud",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/nextcloud/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_onedrive",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/onedrive/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_recent",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/recent/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_s3",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/s3/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_upload",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/upload/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_url",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/url/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_user",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/user/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_webdav",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/webdav/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_wikimedia",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/wikimedia/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "repository_youtube",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "repository/youtube/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "search_simpledb",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "search/engine/simpledb/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "search_solr",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "search/engine/solr/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "smsgateway_aws",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "sms/gateway/aws/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "smsgateway_modica",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "sms/gateway/modica/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "theme_boost",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "theme/boost/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "theme_boost_union",
+      "disk_version": 2025100643,
+      "requires_literal": 2025100600,
+      "version_file": "theme/boost_union/version.php",
+      "database_version": 2025100643,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "theme_classic",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "theme/classic/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "theme_ustar",
+      "disk_version": 2026100202,
+      "requires_literal": 2025100600,
+      "version_file": "theme/ustar/version.php",
+      "database_version": 2026100202,
+      "in_upstream_weekly_tree": false
+    },
+    {
+      "component": "profilefield_checkbox",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "user/profile/field/checkbox/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "profilefield_datetime",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "user/profile/field/datetime/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "profilefield_menu",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "user/profile/field/menu/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "profilefield_social",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "user/profile/field/social/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "profilefield_text",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "user/profile/field/text/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "profilefield_textarea",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "user/profile/field/textarea/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "webservice_rest",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "webservice/rest/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    },
+    {
+      "component": "webservice_soap",
+      "disk_version": 2025100600,
+      "requires_literal": 2025092600,
+      "version_file": "webservice/soap/version.php",
+      "database_version": 2025100600,
+      "in_upstream_weekly_tree": true
+    }
+  ]
+}

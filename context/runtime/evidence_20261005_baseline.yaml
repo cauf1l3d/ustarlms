@@ -1,0 +1,355 @@
+schema_version: 1
+kind: dated_owner_supplied_runtime_evidence
+published_at: '2026-10-05'
+independently_measured_on_server: false
+sources:
+  audit: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+  audit_sha256: aa8b717719f3f1a3b4131e5c56590667a5731186be4025d00151f94bc8c380e4
+  reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
+  dialogue: https://chatgpt.com/share/6ac2efa7-5800-83eb-8f5e-20ae3549ecab
+  raw_server_files: referenced_in_audit_not_republished_or_recollected
+  previous_evidence: context/runtime/evidence_20261005.yaml
+  fresh_inputs:
+  - owner_production_manifest_and_comparison_20261005
+  - owner_readonly_baseline_20261005T0213Z
+  - owner_packages_wrappers_manifest_20261005T023233Z
+  - owner_core_plugins_images_readonly_sql_20261005T024333Z
+  agent_checks:
+  - 526_manifest_entries_vs_actual_Git_blobs
+  - 468_disk_versions_vs_468_readonly_DB_versions
+  - 3_metadata_sha256_vs_exact_official_weekly_commit
+  - upstream_metadata_tree_and_extra_plugin_roots
+application:
+  reference_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+  manifest_observed_at: '2026-10-05T02:32:35.997389+00:00'
+  scope:
+  - local/ustar
+  - theme/ustar
+  matching_files: 526
+  changed: []
+  missing: []
+  extra: []
+  errors: []
+  skipped: []
+  complete_core_equivalence: not_verified
+  fresh_followup_manifest: pass_exact_PR76_commit_no_origin_main_dependency
+  installation_checkout_head: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+  versions_observed_at: '2026-10-05T02:43:33Z'
+  local_ustar: 2026100204
+  theme_ustar: 2026100202
+  maintenance: 0
+  theme_parent_from_git: boost
+  manifest_agent_blob_verification: true
+  maintenance_observed_at: '2026-10-04T23:57:18Z'
+  manifest_script_sha256: 81df4db73911c716bff3f70199e27eaf74633dd5667769bdeb7a60e783fb1224
+  manifest_server_report: /home/aduk/ustar-baseline-vA6kDg/source
+host:
+  observed_at: '2026-10-03'
+  os: Ubuntu 24.04.4 LTS
+  kernel: 6.8.0-139-generic
+  architecture: x86_64
+  cpu: Intel Core i7-9700F
+  logical_cpus: 8
+  ram_gib_approx: 31
+  swap_gib: 4
+  systemd_detect_virt: none
+  placement: not_verified
+  reboot_required_banner: true
+  shared_required_services:
+  - Apache
+  - DNS/BIND
+  - Postfix/Dovecot
+  - ISPConfig
+  - MariaDB
+  - amavis
+  apparmor:
+    packages_observed_at: '2026-10-05T02:32:33Z'
+    apparmor_package: 4.0.1really4.0.1-0ubuntu0.24.04.7 ii
+    snapd_package: 2.48+20.04 rc
+    snapd_rc_meaning: removed_package_configuration_remains
+    stale_profile: /etc/apparmor.d/usr.lib.snapd.snap-confine.real
+    active_include: /var/lib/snapd/apparmor/snap-confine
+    include_directory_exists: false
+    numeric_yes_boot_error: historical_not_reproduced_in_current_script_or_parser_conf
+    docker_profile: docker-default
+    docker_containers_confined: true
+    snap_consumers_inventory: required_before_archiving_profile
+    repair_executed: false
+  package_preflight:
+    observed_at: '2026-10-05T02:13:40Z'
+    apt_holds: []
+    dpkg_audit_issues: []
+    pending_list: cached_not_refreshed
+    reboot_required_packages:
+    - linux-image-6.8.0-142-generic
+    - linux-base
+    apt_update_install_or_reboot_executed: false
+platform:
+  moodle: '5.1.1+ (Build: 20251219)'
+  php: 8.3.33
+  postgres: '16.15'
+  database_size_mb: 104
+  database_size_observed_at: '2026-10-04T23:41:00Z'
+  database_size_time_precision: approximate
+  php_ci_source: '8.2'
+  php_ci_stage: 8.2.30
+  latest_patch_reverification: published_5.1.7_verified_20261005_not_deployed
+  observed_at: '2026-10-05T02:43:33Z'
+  moodle_version: '2025100601.03'
+  container_os: Debian GNU/Linux 13 (trixie)
+  container_debian_version: '13.6'
+  php_sapi_observed: CLI
+  php_web_sapi_modules: not_verified
+  plugin_disk_components: 468
+  plugin_db_components: 468
+  plugin_version_differences: 0
+  plugin_db_transaction_read_only: true
+  plugin_inventory: context/runtime/plugin_inventory_20261005.json
+  external_roots: 17
+  external_components: 55
+  ustar_roots: 2
+  ustar_components: 2
+  upstream_baseline:
+    commit: 1cd17816c56a7df7ee796892efccaf1ed5347340
+    date: '2025-12-19'
+    identification: 3_metadata_hashes_match_not_full_core
+    core_git_head: not_found
+    metadata_sha256:
+      public/version.php: 1f7d749f134fa2d8dc550999024a5ae3692bfec19e61acfad697bbbe1f69906c
+      composer.json: 38bc9808ce4f0294c6c4b47457a82cda28b4d8294b0ea5bf3caf9c44ddd1aff4
+      composer.lock: 8554bcb7f4682dac036b73fa611f220f7ddda50b377a88cfae616c95b19092f3
+  upgrade_candidate:
+    release: 5.1.7
+    upstream_commit: fc6ed2622475d3aefd7ac8cf62adbe7dc3eda4a2
+    notes: https://moodledev.io/general/releases/5.1/5.1.7
+    stage_verified: false
+    production_deployed: false
+  php_cli_modules:
+  - Core
+  - ctype
+  - curl
+  - date
+  - dom
+  - fileinfo
+  - filter
+  - gd
+  - hash
+  - iconv
+  - intl
+  - json
+  - libxml
+  - mbstring
+  - mysqlnd
+  - openssl
+  - pcre
+  - PDO
+  - pdo_pgsql
+  - pdo_sqlite
+  - pgsql
+  - Phar
+  - posix
+  - random
+  - readline
+  - Reflection
+  - session
+  - SimpleXML
+  - sodium
+  - SPL
+  - sqlite3
+  - standard
+  - tokenizer
+  - xml
+  - xmlreader
+  - xmlwriter
+  - Zend OPcache
+  - zip
+  - zlib
+network:
+  owner_confirmed_at: '2026-10-05'
+  user_access: HTTP_inside_company_LAN
+  external_academy_access: none_per_owner
+  effective_proxy: host_Apache_to_loopback_8082_to_moodle_container
+  caddy: placeholder_not_academy_tls_proxy
+  academy_tls: not_configured_in_supplied_vhost_snapshot
+  cookie_secure_on_observed_http_response: not_observed
+  cookie_httponly: observed
+  cookie_config_secure: 1
+  full_host_external_surface: not_verified
+containers:
+  observed_at: '2026-10-05T02:43:33Z'
+  moodle: ustar_moodle
+  postgres: ustar_postgres
+  moodle_host_binding: 127.0.0.1:8082->80
+  postgres_host_port_published: false
+  image_digests: confirmed_owner_image_inspect
+  healthchecks: absent_in_supplied_snapshot
+  logging_driver: json-file
+  logging_max_size_and_files: not_set_in_supplied_snapshot
+  moodle_image_id: sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b
+  moodle_repo_digest: stack-moodle@sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b
+  postgres_image_id: sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94
+  postgres_repo_digest: postgres@sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94
+  dockerfile_from: php:8.3-apache
+  dockerfile_from_is_moving_tag: true
+  mounts:
+  - source: /opt/ustar/data/moodle/public
+    destination: /var/www/html
+    writable: true
+  - source: /opt/ustar/data/moodle/moodledata
+    destination: /var/www/moodledata
+    writable: true
+  - source: /opt/ustar/data/postgres
+    destination: /var/lib/postgresql/data
+    writable: true
+  compose_working_directory: /opt/ustar/apps/stack
+cron:
+  installed: true
+  wrapper: /usr/local/sbin/USTAR_CRON_SETUP_20261005.py
+  wrapper_version: 3
+  installed_wrapper_source_sha256: 66fd51d364beb59a8874a63c695c122dca5452a720e61b86d070beb0b1939852
+  schedule: /etc/cron.d/ustar_moodle
+  frequency: every_minute
+  mode: --tick
+  worker_count: 1
+  worker_user: www-data
+  keep_alive: 0
+  coordinates_backup_lock: true
+  status: /var/lib/ustar-cron/last-run.json
+  logs: /var/lib/ustar-cron/logs/cron.log
+  private_log_rotation: configured
+  last_success_started_at: '2026-10-05T02:13:01.736967Z'
+  last_success_finished_at: '2026-10-05T02:13:02.806674Z'
+  duration_seconds: 1.07
+  exit_code: 0
+  schedule_present: true
+  containers_match_installation: true
+  adhoc_queued: 0
+  adhoc_failed: 0
+  ustar_failed: 0
+  new_failures: []
+  component_disabled_overdue: 17
+  residual_failed_disabled_tasks: 2
+  disabled_external_exceptions:
+  - H5P_content_types_download
+  - Moodle_org_registration
+  h5p_network_cause: unresolved
+  all_business_scenarios_accepted: false
+  wrapper_hash_observed_at: '2026-10-05T02:32:33Z'
+  installed_wrapper_source_or_full_cli: not_received
+security:
+  observed_at: '2026-10-04T23:57:18Z'
+  db_application_role: moodle
+  role_attributes:
+    superuser: true
+    createrole: true
+    createdb: true
+    replication: true
+    bypassrls: true
+  runtime_writable:
+    config_php: true
+    local_ustar_directory: true
+    theme_ustar_directory: false
+  complete_parent_acl_inventory: not_verified
+  old_dump_permissions: weak_in_earlier_snapshot_recheck_required
+storage:
+  root_observed_at: '2026-10-05T02:13:40Z'
+  root_device: /dev/sda2
+  root_fstype: ext4
+  root_size_g_reported: 49
+  root_used_g_reported: 35
+  root_available_g_reported: 12
+  root_percent: 76
+  ssd_size_gib_reported: 111.8
+  partition_expansion: not_verified
+  occupancy_hypothesis:
+    source: owner_statement_after_audit
+    text: likely_full_test_academy_copy
+    measured: initial_directory_sizes_measured_full_test_copy_unconfirmed
+    cleanup_authorized: false
+  hdd:
+    device_at_observation: /dev/sdb
+    model: WDC_WD5000AAKS
+    size_gib_reported: 465.8
+    extended_self_test: 'Completed: read failure'
+    first_failed_lba: 752045700
+    pending_sectors: 1
+    offline_uncorrectable: 1
+    trusted_backup_target: false
+  directory_inventory:
+    observed_at: '2026-10-05T02:24:18Z'
+    opt_ustar_g_reported: 3.9
+    home_aduk_g_reported: 15
+    containerd_g_reported: 2.0
+    var_log_m_reported: 745
+    var_lib_docker_m_reported: 22
+    full_test_copy_confirmed: false
+    cleanup_or_move_executed: false
+backup:
+  manual_snapshot: ustar-recovery-20261004T123406Z-741e3f72.tar.gz.age
+  archive_sha256: ebf2a8756f07ba5b1b537c6888f7198c1d6107edc90f96d3816d9b7e4b7d4cb2
+  created_at: '2026-10-04'
+  encrypted: true
+  coordinated_point: moodle_stopped_postgres_online
+  moodle_stop_seconds: 27.944
+  payload:
+  - database
+  - code
+  - config
+  - moodledata
+  - container_images
+  internal_checksums: pass_per_owner
+  manual_external_copy: SERVEREXPRESS_drive_G
+  external_sha256: pass_per_owner
+  separate_key_copy_decryption: pass_per_owner
+  isolated_restore:
+    completed: true
+    reported_seconds: 125
+    restored_files: 4910
+    checks:
+    - HTTP_200
+    - admin
+    - files
+    - user_roles
+    - SCORM_launch
+    - SCORM_progress
+    full_shared_host_restore: not_verified
+  regular_schedule: not_installed
+  automation_phase: final_current_infrastructure_cycle
+  automatic_target_requirement: healthy_HDD_not_SERVEREXPRESS
+  independent_copy_architecture: decision_required
+  agreed_rpo: null
+  agreed_rto: null
+  agreed_retention: null
+  installed_wrapper: /usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py
+  installed_wrapper_sha256: 0d31e694db8bee2309072bd00dee2423022f35e18ad2c11ea1cf788fc63ef47f
+  wrapper_hash_observed_at: '2026-10-05T02:32:33Z'
+  installed_wrapper_source_or_full_cli: not_received_do_not_invent_flags
+  fresh_prechange_snapshot: pending_after_latest_cron_writes
+business_readonly_checks:
+  observed_at: '2026-10-04'
+  accounts_reviewed: 72
+  assignment_ready: 71
+  protected_legacy_account_position_missing: 1
+  planned_new_enrolments: 0
+  missing_manual_instances: 0
+  exceptions: 0
+  effective_automatic_grade_rules: 0
+  pending_grade_requests_with_valid_manager_queue: 1
+  personnel_changes_authorized: false
+product:
+  owner_confirmed_at: '2026-10-05'
+  employees_approx: 60_to_70
+  pilot_approx: 18
+  growth_target: 200_and_later_B2B
+  measured_concurrency: null
+  secondary_nextjs_frontend_in_production: false
+  android_ios_client: not_implemented
+  tenant_isolation: not_proven
+  privacy_provider: absent_in_baseline
+monitoring:
+  unified_dashboard_installed: false
+  notification_delivery_verified: false
+  desired: one_dashboard_with_metrics_and_alerts_preferably_Telegram
+  proposed_stack: Grafana_Prometheus_limited_collectors
+  stack_approved_and_deployed: false
+  independent_observer: not_selected

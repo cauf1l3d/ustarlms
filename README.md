@@ -15,8 +15,8 @@
 | Метрики, копии, security | [Пульт](context/runtime/MONITORING.md), [backup/restore](context/runtime/BACKUP_RESTORE.md), [baseline](context/runtime/SECURITY_BASELINE.md) |
 | Последующий Android/iOS | [План мобильного клиента](context/roadmap/MOBILE_CLIENT.md) |
 
-На 05.10.2026 актуализированы аудит, контекст и harness. Application baseline — PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`, версии `2026100204 / 2026100202`, исторический полный CI #456. Owner manifest 03.10: 526 matching plugin/theme; cron v3 success 04.10 23:57. [Серверные факты](context/runtime/evidence_20261005.yaml) получены от владельца, имеют дату и не покрывают весь core/все сценарии. Ручная копия/isolated restore есть, регулярности пока нет.
+На 05.10.2026 аудит/контекст/harness опубликованы PR78. Application baseline — PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`, версии `2026100204 / 2026100202`, исторический полный CI #456. Свежий owner manifest 05.10: 526 matching plugin/theme; 468 disk/DB component versions совпали; cron v3 success в 02:13 UTC. [Baseline](context/runtime/baseline_20261005.md) и [серверные факты](context/runtime/evidence_20261005_baseline.yaml) датированы, полного core/business acceptance ещё нет. Историческая ручная copy/restore есть, регулярности нет.
 
-Сейчас разрешена только актуализация GitHub. **После публикации агент останавливается и ждёт следующей команды.** Намеченный INF-01 и текущий цикл описаны в полном плане; backup-автоматизация последняя, на healthy HDD, не SERVEREXPRESS. Mobile/Privacy/B2B/LTS остаются отдельными будущими проектами. Слияние в main не меняет production.
+Следующая команда владельца разрешила **1 → 7 → 6**: baseline → Moodle/CI/ОС → HTTPS, остальные пункты после них. INF-01 в работе; историческая остановка DOC-02 больше не действует. Backup-автоматизация позже на healthy HDD, не SERVEREXPRESS. Mobile/Privacy/B2B/LTS остаются отдельными проектами. Слияние в main не меняет production.
 
 Исторические RC, аудиты и копии исходников в `release/` сохранены для трассировки; новый код меняется в `moodle/`. Секреты, production DB, moodledata и recovery archives в Git не хранятся.

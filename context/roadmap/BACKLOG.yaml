@@ -48,9 +48,14 @@ tasks:
   - context/runtime/baseline_20261005.md
   - context/runtime/evidence_20261005_baseline.yaml
   - context/runtime/plugin_inventory_20261005.json
+  - context/runtime/core_comparison_20261005.json
+  - context/runtime/core_review_20261005.md
   pending_acceptance:
-  - Server core comparison result within explicit scope; review exclusions and plugin provenance
+  - Static review of changed public/index.php and extra files/consumers; exclusions/plugin provenance remain explicit
   - Fresh manual recovery point, existing wrapper contract and isolated upgrade/rollback readiness
+  completed_observations:
+  - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA verified
+  - 24678 matching, 1 changed, 0 missing, 23 extra, no errors or reference skips; not full equivalence
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned

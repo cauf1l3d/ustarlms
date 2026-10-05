@@ -1,5 +1,5 @@
 kind: dated_owner_supplied_topology
-reviewed_at: '2026-10-05'
+reviewed_at: '2026-10-06'
 measured_now: false
 evidence: context/runtime/evidence_20261005_baseline.yaml
 operating_system: Ubuntu 24.04.4 LTS
@@ -14,6 +14,10 @@ required_shared_services:
 - mail
 - DNS
 - ISPConfig
-root_storage: 49G / 35G used / 12G available / 76%, 2026-10-05T02:13:40Z
-root_occupancy_hypothesis: directory_sizes_measured_full_test_copy_unconfirmed
+root_storage: 49G /36G used /11G available /78%; owner output received2026-10-05T21:45:07Z, exact execution timestamp
+  absent
+root_occupancy_hypothesis: home15GiB_with_approx13GiB_snapshot_candidates_and_two_labs2.2_2.3GiB_measured_no_deletion
 runbook: context/runtime/OPERATIONS.md
+current_storage_map: context/runtime/server_map_20261006.md
+new_storage_priority: before_new_stage_including_HDD_automatic_backups
+ssd_partition_tail: 111.8GiB_disk_50GiB_root_partition_free_extents_not_yet_verified

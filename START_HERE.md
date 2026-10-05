@@ -1,6 +1,8 @@
 # USTAR: вход в проект
 
-Актуализировано 05.10.2026. Канонический репозиторий: https://github.com/cauf1l3d/ustarlms.
+**Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта хранения](context/runtime/server_map_20261006.md).
+
+Актуализировано 06.10.2026. Канонический репозиторий: https://github.com/cauf1l3d/ustarlms.
 
 ## За две минуты
 
@@ -10,7 +12,7 @@
 - Реальные данные, назначения ролей, включённые службы и DNS берутся из runtime evidence. Наличие функции в Git не доказывает её настройку на сервере.
 - Свежий owner manifest 05.10 02:32:35.997389 UTC: 526 файлов plugin/theme совпадают с PR76; все 468 component versions disk = readonly DB в 02:43:33. Core comparison 08:28 UTC: 24 678 matching, один changed `public/index.php`, 23 extra, ошибок/пропусков нет. Index upload проверен: redirect на главную USTAR; extras/consumers ещё проверяются. Backup/cron uploads 09:48:49 UTC полностью прочитаны, hashes совпали; [проверенный CLI и свежая ручная копия](context/runtime/recovery_contract_20261005.md). [Core result](context/runtime/core_review_20261005.md). Cron v3 success в 02:13. Свежий ручной snapshot 05.10 создан, local hash и resume PASS; cron scheduled 10:24 exit0/new failures0, root HTTP303. Вчерашний restore/manual PASS учтён; [resume helper](context/runtime/lab_resume_20261005.md) выполнен владельцем 11:30:58 UTC: lab login200 / production containers unchanged PASS. [Patch CI](context/runtime/patch_runtime_20261005.md) PR83 full RC SUCCESS. [Planning PASS и точные размеры](context/runtime/lab_planning_result_20261005.json): owner20:44:34UTC,526 USTAR/57 addon metadata, free10,51GiB. Новый SMART20:44:52UTC: extended Completed without error, pending/reallocated0, residual offlineUNC1. [Cold checkpoint + separate workspace](context/runtime/lab_cold_checkpoint_20261005.md) подготовлен/tested, fresh required budget9,80GiB/reserve4GiB; server execution pending, core upgrade/repeat/paired rollback впереди. [Baseline](context/runtime/baseline_20261005.md) и [evidence](context/runtime/evidence_20261005_baseline.yaml) имеют даты/область, это не live query агента.
 - Сейчас: [аудит](context/audits/README.md) и [полный план](context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md). Открыты DB superuser, runtime-запись в code/config, HTTP, отсутствие общего пульта, старый core patch и storage/backup риски. Гипотезу о полной тестовой копии на `/` сначала измерить.
-- DOC-02 завершён PR78; новая команда владельца — **1 → 7 → 6**, остальные пункты после них. INF-01 в работе, далее Moodle/CI/ОС, затем HTTPS. Продолжать после публикации, не применять старую остановку. Регулярные копии — финал на healthy HDD, не SERVEREXPRESS и не неисправный нынешний HDD. Mobile Android/iOS, Privacy, B2B и major/LTS остаются отдельными проектами; PWA не завершает запрос приложения.
+- DOC-02 завершён PR78; новая команда владельца — **1 → 7 → 6**, остальные пункты после них. INF-01 в работе, далее Moodle/CI/ОС, затем HTTPS. Продолжать после публикации, не применять старую остановку. Регулярные копии перемещены владельцем в текущий этап до стенда; HDD test-scope PASS/residual198=1 и independent-copy границы сохраняются. Mobile Android/iOS, Privacy, B2B и major/LTS остаются отдельными проектами; PWA не завершает запрос приложения.
 
 ## Обязательный порядок чтения
 

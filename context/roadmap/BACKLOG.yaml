@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-05'
+updated_at: '2026-10-06'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -114,17 +114,20 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-04
   title: Расход SSD, healthy HDD и аппаратный резерв
-  status: planned
+  status: in_progress
   depends_on:
-  - INF-01
+  - DOC-02
   acceptance:
   - Per-object storage inventory confirms or rejects full-test-copy hypothesis
   - Any cleanup/transfer or partition work has measured scope and recoverable copy
-  - Faulty WD5000AAKS excluded; healthy HDD and power/shutdown decisions recorded
+  - HDD test evidence, residual SMART risks, backup redundancy and power/shutdown decisions recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  priority_note: Exact500GB HDD overwrite/check/format authorized. Surface write/read zero errors and newest extended
-    SMART Completed without error confirmed; latest20:44:52UTC pending0/reallocated0/residual offlineUNC1. Backup
-    target not configured; broader cleanup deferred.
+  priority_note: Owner authorized measured storage optimization before new stage. SSD111.8GiB/root50GiB tail needs
+    sector verification; home15GiB contains about13GiB snapshot candidates. Exact HDD surface/newest long passed,
+    residual198=1 retained. Copy verification/consumer checks and important independent copies before source removal.
+  validation_evidence:
+  - context/runtime/server_map_20261006.md
+  execution_gate: authorized_owner_20261006_pre_stage_storage_map
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -290,17 +293,22 @@ tasks:
   - Finite infrastructure readiness to final backup stage; full future products do not block it
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-14
-  title: Регулярные согласованные копии — финальный этап
+  title: Регулярные согласованные копии на HDD — до нового стенда
   status: planned
   depends_on:
-  - INF-13
   - INF-04
   acceptance:
   - Agreed RPO/RTO/retention and healthy HDD; no SERVEREXPRESS automatic target
   - Mount fails closed, consistent encrypted snapshot, independent copy decision and key access verified
   - Cron/backup locks, negative failure cases, scheduled runs and delivery/integrity alerts pass
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  priority: P0_risk_owner_ordered_final_phase
+  priority: P0_owner_moved_before_stage_20261006
+  execution_gate: authorized_after_HDD_mount_identity_and_trial_backup_checks
+  prepared_work: Existing manual wrapper writes staging/export on SSD with6GiB quota; needs guarded HDD target,
+    recovery marker on SSD, retention and timer. Not installed.
+  validation_evidence:
+  - context/runtime/server_map_20261006.md
+  - context/runtime/recovery_contract_20261005.md
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: planned
@@ -424,8 +432,10 @@ tasks:
   reason: No claim of working external delivery; separate approved contract required
   reference: context/architecture/notification_delivery_20260928.md
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: authorized_selected_points_1_7_6_other_points_after_completion
+execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_1_7_6
 owner_selected_order:
 - 1
 - 7
 - 6
+latest_owner_priority: '06Oct00:45MSK: storage optimization/server map/HDD automatic backups before stage; supersedes
+  backup-last/deferred-storage rules.'

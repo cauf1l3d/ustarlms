@@ -1,13 +1,13 @@
 schema_version: 2
-updated_at: '2026-10-05'
+updated_at: '2026-10-06'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
-stage_label: 'По команде владельца: baseline → Moodle/CI/ОС → HTTPS'
-current_activity: 'INF-01/08: operator PR86 planning PASS20:44:34UTC; 526 USTAR hashes/57 addon metadata, exact
-  storage budget received. HDD latest long Completed without error at16385h, attributes20:44:52UTC pending0/reallocated0/offlineUNC1.
-  Paired cold checkpoint + independent baseline patch workspace helper prepared/tested; server execution and core
-  upgrade/repeat/rollback remain pending.'
-next_task: INF-01
+stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
+current_activity: 'Owner06Oct00:45MSK moved storage optimization, server map and automatic HDD backups before new
+  stage. Fresh df/lsblk/du received: SSD111.8GiB/root partition50GiB/free10.5GiB, home15GiB with about13GiB snapshot
+  candidates, two labs2.2/2.3GiB. Need sector boundaries and consumers before mutation. PR87 prepare-stage paused;
+  backup timer not installed.'
+next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -53,7 +53,7 @@ production:
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
   cron: v3_one_worker_owner_success_20261005T102403Z
-  regular_backup: not_installed_final_current_infrastructure_phase
+  regular_backup: not_installed_now_authorized_before_new_stage
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
   last_core_comparison:
@@ -163,10 +163,11 @@ next_agent_read:
 - context/runtime/lab_resume_20261005.md
 - context/runtime/patch_runtime_20261005.md
 - context/runtime/lab_patch_preflight_20261005.md
+- context/runtime/server_map_20261006.md
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 execution:
   status: authorized_selected_tasks_in_progress
-  authorized_scope: owner_selected_points_1_7_6_baseline_Moodle_CI_OS_HTTPS
+  authorized_scope: owner_storage_optimization_server_map_HDD_autobackups_before_stage_then_selected_1_7_6
   owner_selected_order:
   - 1
   - 7
@@ -177,13 +178,21 @@ execution:
   - INF-08
   - INF-10-OS
   - INF-07
-  other_points: deferred_until_selected_points_complete
+  - INF-04
+  - INF-14
+  other_points: unrelated_hardening_product_cleanup_projects_remain_deferred
   after_github_publication: continue_selected_work_with_operator_commands
   production_changes_in_this_delivery: false
   production_operator: owner_aduk_via_SSH
   direct_production_connection_by_agent: false
   authorized_extra_operation: 'Owner/sysadmin: overwrite, check and format only WWN0x50014ee200c1ee59 / WD-WCAS82914317
     / 500106780160 bytes, health qualification before backup use'
+  latest_owner_instruction_at: '2026-10-06T00:45:07+03:00'
+  pre_stage_priority:
+  - storage_inventory_and_verified_reorganization
+  - server_map
+  - HDD_automatic_backup_setup_and_trial
+  backup_last_rule: superseded_by_owner_20261006_pre_stage_backup_request
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
@@ -227,8 +236,35 @@ patch_candidate:
   cold_checkpoint_helper: scripts/infra/lab_cold_checkpoint.py
   cold_checkpoint_helper_sha256: 9c81abb6b30bea611f99fb7a3e336e12d0a7827d4ea462a4d3d63e6f8aec9012
   cold_checkpoint_helper_branch: codex/ustar-lab-cold-rollback-20261005
-  cold_checkpoint_helper_implementation: resolve_exact_SHA_from_file_Git_history_and_PR
+  cold_checkpoint_helper_implementation: 40e7d13e197cd59321e5e89e3f477539eb265b19
   cold_checkpoint_source: context/runtime/lab_cold_checkpoint_20261005.md
   cold_checkpoint_and_independent_workspace_prepared: true
   cold_checkpoint_and_independent_workspace_server_executed: false
   core_candidate_upgrade_repeat_and_paired_rollback_server_executed: false
+  cold_checkpoint_helper_pr: 87
+  cold_checkpoint_source_ci: 37375193949
+  cold_checkpoint_context_ci: 37375193850
+  cold_checkpoint_operator_action: paused_by_owner_pending_storage_map_HDD_backups
+storage_reorganization:
+  source: context/runtime/server_map_20261006.md
+  owner_output_received_at: '2026-10-05T21:45:07Z'
+  command_execution_timestamps: not_printed
+  ssd_model: WALRAM 120GB
+  ssd_gib_rounded: 111.8
+  root_partition_gib_rounded: 50
+  root_filesystem_df: 49G total /36G used /11G available /78%
+  unallocated_tail: about61.8GiB_difference_candidate_not_verified_sector_extents
+  home_aduk_gib_rounded: 15
+  home_snapshot_candidates_gib_approx: 13.1
+  hdd_gib_rounded: 465.8
+  hdd_partitions_filesystem_mount: not_shown_in_owner_lsblk
+  source_deletions_executed: false
+  storage_moves_executed: false
+  partition_or_filesystem_expansion_executed: false
+  automatic_backup_installed: false
+  next_readonly_evidence:
+  - partition_tables
+  - all_container_state_mounts_ports
+  - listeners
+  - timezone
+  - systemd_timers

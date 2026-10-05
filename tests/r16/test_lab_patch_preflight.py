@@ -7,6 +7,7 @@ import io
 import json
 import os
 from pathlib import Path
+import stat
 from types import SimpleNamespace
 import tempfile
 import unittest
@@ -122,6 +123,7 @@ class PatchPlanningTests(unittest.TestCase):
                    mock.patch.object(preflight, 'trust_parents'),
                    mock.patch.object(preflight.shutil, 'disk_usage', return_value=SimpleNamespace(free=12 * preflight.GIB))]
         original = preflight.trusted
+        self.original_trusted = original
         patches.append(mock.patch.object(preflight, 'trusted', side_effect=lambda p, **kw:
             original(p, **{**kw, 'root_owned': False})))  # Portable fixture UID only; real permissions/links checked.
         for patch in patches:
@@ -224,6 +226,57 @@ class PatchPlanningTests(unittest.TestCase):
             with self.assertRaises(preflight.PreflightError):
                 self.check()
         self.assertNotIn('lab_readonly_sql', self.lab.actions)
+
+    def test_refusal_identifies_control_scope_without_reading_private_content(self):
+        path = self.root / 'state.json'
+        path.write_text('secret-control-content')
+        path.chmod(0o644)
+        with self.assertRaises(preflight.PreflightError) as error:
+            preflight.trusted(path, private=True)
+        message = str(error.exception)
+        self.assertIn('scope=retained_state_json', message)
+        self.assertIn('failed=permissions', message)
+        self.assertIn('mode=0644', message)
+        self.assertNotIn('secret-control-content', message)
+        self.assertNotIn(str(self.tmp.name), message)
+
+    def test_runtime_entry_names_and_symlink_targets_are_redacted_on_refusal(self):
+        path = self.root / 'site/moodledata/filedir/private-session-token'
+        path.write_text('private-file-content')
+        path.chmod(0o666)
+        with self.assertRaises(preflight.PreflightError) as error:
+            self.check()
+        self.assertIn('scope=moodledata_tree_entry', str(error.exception))
+        self.assertIn('failed=permissions', str(error.exception))
+        for secret in ('private-session-token', 'private-file-content', str(self.root)):
+            self.assertNotIn(secret, str(error.exception))
+        path.unlink()
+        path.symlink_to(self.root.parent / 'private-target-name')
+        with self.assertRaises(preflight.PreflightError) as error:
+            self.check()
+        self.assertIn('failed=entry_type', str(error.exception))
+        self.assertIn('type=l', str(error.exception))
+        self.assertNotIn('private-target-name', str(error.exception))
+        self.assertNotIn('lab_readonly_sql', self.lab.actions)
+
+    def test_hardlink_refusal_reports_metadata_without_disclosing_entry_names(self):
+        path = self.root / 'postgres/private-database-entry'
+        os.link(self.code / 'public/index.php', path)
+        with self.assertRaises(preflight.PreflightError) as error:
+            self.check()
+        message = str(error.exception)
+        self.assertIn('failed=hardlinks', message)
+        self.assertIn('links=2', message)
+        self.assertNotIn('private-database-entry', message)
+
+    def test_wrong_root_owner_remains_refused_with_diagnostic_metadata(self):
+        info = SimpleNamespace(st_mode=stat.S_IFREG | 0o600, st_uid=999, st_gid=999, st_nlink=1)
+        # Patch the underlying stat only; do not use the portable fixture's owner override.
+        with mock.patch.object(Path, 'lstat', return_value=info):
+            with self.assertRaises(preflight.PreflightError) as error:
+                self.original_trusted(self.root / 'state.json')
+        self.assertIn('failed=root_owner', str(error.exception))
+        self.assertIn('uid=999; gid=999', str(error.exception))
 
     def test_db_version_tasks_or_addon_drift_refused(self):
         for field, value in [('db_version', '2025100608.00'), ('enabled', 1), ('versions', {})]:

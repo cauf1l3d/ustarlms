@@ -46,12 +46,36 @@ def guarded(call, message):
         raise PreflightError(message) from None
 
 
+def input_scope(path):
+    """Fixed diagnostic labels; never disclose private entry names or link targets."""
+    fixed = {PROFILE: 'planning_profile', RESUME: 'resume_helper', LOCK: 'coordination_lock',
+             ROOT: 'retained_lab', ROOT / 'site': 'retained_site',
+             ROOT / 'site/public': 'retained_code', ROOT / 'site/moodledata': 'retained_moodledata',
+             ROOT / 'postgres': 'retained_postgres'}
+    fixed.update({ROOT / name: 'retained_' + name.replace('.', '_')
+                  for name in ('state.json', 'pg.env', 'lab.ini', 'apache.conf', 'report.json')})
+    if path in fixed:
+        return fixed[path]
+    for root, label in ((ROOT / 'site/public', 'code_tree_entry'),
+                        (ROOT / 'site/moodledata', 'moodledata_tree_entry'),
+                        (ROOT / 'postgres', 'postgres_tree_entry')):
+        if path.is_relative_to(root):
+            return label
+    return 'trusted_parent' if any(path in p.parents for p in fixed) else 'retained_input'
+
+
 def trusted(path, directory=False, root_owned=True, private=False):
     info = path.lstat()
-    require((stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode))
-            and (not root_owned or info.st_uid == 0)
-            and not info.st_mode & (0o077 if private else 0o022)
-            and (directory or info.st_nlink == 1), 'Untrusted retained input')
+    checks = {'entry_type': stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode),
+              'root_owner': not root_owned or info.st_uid == 0,
+              'permissions': not info.st_mode & (0o077 if private else 0o022),
+              'hardlinks': directory or info.st_nlink == 1}
+    if not all(checks.values()):
+        failed = ','.join(name for name, ok in checks.items() if not ok)
+        raise PreflightError('Untrusted retained input: scope=' + input_scope(path)
+                             + '; failed=' + failed + '; uid=' + str(info.st_uid)
+                             + '; gid=' + str(info.st_gid) + '; mode=' + format(stat.S_IMODE(info.st_mode), '04o')
+                             + '; type=' + stat.filemode(info.st_mode)[0] + '; links=' + str(info.st_nlink))
     return info
 
 

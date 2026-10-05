@@ -58,8 +58,8 @@ tasks:
   - Extra files/consumers and candidate preservation of reviewed USTAR homepage redirect; exclusions/plugin provenance
     remain explicit
   - Fresh archive independent copy/decryption evidence; candidate coordinated upgrade/rollback readiness
-  - Execute pinned running-lab read-only patch preflight; cold paired rollback and full-addon candidate upgrade
-    remain unexecuted
+  - Diagnose original planning helper refusal without chmod/chown or guard bypass; successful budget report,
+    cold paired rollback and full-addon candidate upgrade remain pending
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA verified
   - 24678 matching, 1 changed, 0 missing, 23 extra, no errors or reference skips; not full equivalence
@@ -76,6 +76,9 @@ tasks:
   - Owner retained lab resumed 11:30:58 UTC, login200/production unchanged PASS; not a core upgrade
   - 'Owner storage13:11UTC: root49G/36used/11free/78percent, lab2.3G, export~1.9G; rounded not byte budget'
   - PR83 pinned patch-518 full RC37311910916 SUCCESS; synthetic PHPUnit210/891, schema/auth-shell PASS
+  - Owner message17:11:36UTC confirms lab2.3G/export1.9G with complete export path; original helper/profile SHA OK,
+    planning check refused Untrusted retained input; no scope or successful report supplied
+  - Owner HDD unit inactive/dead success/0 and completed write/read log0badblocks/0errors; post-write long SMART pending
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -106,8 +109,8 @@ tasks:
   - Any cleanup/transfer or partition work has measured scope and recoverable copy
   - Faulty WD5000AAKS excluded; healthy HDD and power/shutdown decisions recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  priority_note: Owner/systemadmin authorized exact500GB HDD overwrite/check/format only; service active/running13:11UTC,
-    not completion/health PASS. Root/lab totals measured, broader storage cleanup remains deferred.
+  priority_note: Owner/systemadmin authorized exact500GB HDD overwrite/check/format only; owner message17:11:36UTC
+    confirms write/read completed zero badblocks/errors. Post-write long SMART pending, HDD not trusted. Broader cleanup deferred.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned

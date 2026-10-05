@@ -58,8 +58,8 @@ tasks:
   - Extra files/consumers and candidate preservation of reviewed USTAR homepage redirect; exclusions/plugin provenance
     remain explicit
   - Fresh archive independent copy/decryption evidence; candidate coordinated upgrade/rollback readiness
-  - Diagnose original planning helper refusal without chmod/chown or guard bypass; successful budget report,
-    cold paired rollback and full-addon candidate upgrade remain pending
+  - Verify metadata-only Moodledata policy helper on server after diagnosed33:33/0666 regular-file refusal;
+    successful budget report, cold paired rollback and full-addon candidate upgrade remain pending
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA verified
   - 24678 matching, 1 changed, 0 missing, 23 extra, no errors or reference skips; not full equivalence
@@ -78,7 +78,10 @@ tasks:
   - PR83 pinned patch-518 full RC37311910916 SUCCESS; synthetic PHPUnit210/891, schema/auth-shell PASS
   - Owner message17:11:36UTC confirms lab2.3G/export1.9G with complete export path; original helper/profile SHA OK,
     planning check refused Untrusted retained input; no scope or successful report supplied
-  - Owner HDD unit inactive/dead success/0 and completed write/read log0badblocks/0errors; post-write long SMART pending
+  - Owner HDD unit inactive/dead success/0 and completed write/read log0badblocks/0errors
+  - Owner SMART17:36:49UTC pending0/reallocated0/offlineUNC1; new long test started, expected20:11:04UTC/result pending
+  - PR85 checksum/install/check confirmed; scope=moodledata_tree_entry permissions uid33/gid33/mode0666/type_regular/links1
+  - Separate data metadata policy prepared with exact private0700/33:33 root and per-entry33:33; operator report pending
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -110,7 +113,8 @@ tasks:
   - Faulty WD5000AAKS excluded; healthy HDD and power/shutdown decisions recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   priority_note: Owner/systemadmin authorized exact500GB HDD overwrite/check/format only; owner message17:11:36UTC
-    confirms write/read completed zero badblocks/errors. Post-write long SMART pending, HDD not trusted. Broader cleanup deferred.
+    confirms write/read completed zero badblocks/errors. SMART17:36UTC pending0/offlineUNC1; new long test started,
+    expected20:11:04UTC/result pending, HDD not trusted. Broader cleanup deferred.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned

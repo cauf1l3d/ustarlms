@@ -126,6 +126,17 @@ class PatchPlanningTests(unittest.TestCase):
         self.original_trusted = original
         patches.append(mock.patch.object(preflight, 'trusted', side_effect=lambda p, **kw:
             original(p, **{**kw, 'root_owned': False})))  # Portable fixture UID only; real permissions/links checked.
+        self.original_data_entry = preflight.moodledata_entry
+        real_lstat = Path.lstat
+        def portable_data_entry(path, **kw):
+            def lstat(candidate, *args, **kwargs):
+                info = real_lstat(candidate, *args, **kwargs)
+                return SimpleNamespace(**{name: getattr(info, name) for name in
+                    ('st_mode', 'st_nlink', 'st_dev', 'st_blocks', 'st_size')}, st_uid=33, st_gid=33)
+            # Only ownership is simulated for the non-root fixture; the data policy runs in full.
+            with mock.patch.object(Path, 'lstat', side_effect=lstat, autospec=True):
+                return self.original_data_entry(path, **kw)
+        patches.append(mock.patch.object(preflight, 'moodledata_entry', side_effect=portable_data_entry))
         for patch in patches:
             patch.start()
             self.addCleanup(patch.stop)
@@ -243,7 +254,7 @@ class PatchPlanningTests(unittest.TestCase):
     def test_runtime_entry_names_and_symlink_targets_are_redacted_on_refusal(self):
         path = self.root / 'site/moodledata/filedir/private-session-token'
         path.write_text('private-file-content')
-        path.chmod(0o666)
+        path.chmod(0o766)
         with self.assertRaises(preflight.PreflightError) as error:
             self.check()
         self.assertIn('scope=moodledata_tree_entry', str(error.exception))
@@ -258,6 +269,105 @@ class PatchPlanningTests(unittest.TestCase):
         self.assertIn('type=l', str(error.exception))
         self.assertNotIn('private-target-name', str(error.exception))
         self.assertNotIn('lab_readonly_sql', self.lab.actions)
+
+    def test_mutable_data_files_with_write_bits_are_counted_without_reading_or_chmod(self):
+        path = self.root / 'site/moodledata/filedir/private-session-token'
+        path.write_text('private-file-content')
+        path.chmod(0o666)
+        before = path.lstat()
+        real_open = Path.open
+        def open_file(candidate, *args, **kw):
+            if candidate.is_relative_to(self.root / 'site/moodledata'):
+                raise AssertionError('Planning must not open mutable data contents')
+            return real_open(candidate, *args, **kw)
+        with mock.patch.object(Path, 'open', side_effect=open_file, autospec=True):
+            result = self.check()
+        data = result['sizes_live_non_atomic']['moodledata']
+        self.assertEqual(data['group_or_world_writable_files'], 1)
+        self.assertEqual(data['files'], 2)
+        self.assertEqual(data['logical_bytes'], len('private-file-content') + len('file fixture'))
+        after = path.lstat()
+        self.assertEqual((before.st_mode, before.st_uid, before.st_gid, before.st_mtime_ns),
+                         (after.st_mode, after.st_uid, after.st_gid, after.st_mtime_ns))
+        self.assertNotIn('private-session-token', json.dumps(result))
+        self.assertNotIn('private-file-content', json.dumps(result))
+
+    def test_mutable_file_allowance_requires_private_root_and_nonwritable_directories(self):
+        root = self.root / 'site/moodledata'
+        path = root / 'filedir/content'
+        path.chmod(0o666)
+        for directory, mode in ((root, 0o755), (root, 0o770), (root / 'filedir', 0o777),
+                                (root / 'filedir', 0o1700)):
+            with self.subTest(mode=mode):
+                directory.chmod(mode)
+                with self.assertRaises(preflight.PreflightError) as error:
+                    self.check()
+                self.assertIn('failed=permissions', str(error.exception))
+                directory.chmod(0o700)
+        self.assertNotIn('lab_readonly_sql', self.lab.actions)
+
+    def test_moodledata_owner_and_group_are_enforced_for_root_directories_and_files(self):
+        root = self.root / 'site/moodledata'
+        for path, mode, directory in ((root, 0o700, True), (root / 'filedir', 0o700, True),
+                                      (root / 'filedir/private-name', 0o666, False)):
+            for uid, gid, failed in ((999, 33, 'data_owner'), (33, 999, 'data_group')):
+                info = SimpleNamespace(st_mode=(stat.S_IFDIR if directory else stat.S_IFREG) | mode,
+                                       st_uid=uid, st_gid=gid, st_nlink=1)
+                with self.subTest(directory=directory, uid=uid, gid=gid), \
+                        mock.patch.object(Path, 'lstat', return_value=info):
+                    with self.assertRaises(preflight.PreflightError) as error:
+                        self.original_data_entry(path, directory=directory)
+                self.assertIn('failed=' + failed, str(error.exception))
+                self.assertNotIn('private-name', str(error.exception))
+
+    def test_data_allowance_does_not_apply_to_code_postgres_or_control_files(self):
+        for path in (self.code / 'public/index.php', self.root / 'postgres/PG_VERSION', self.root / 'state.json'):
+            before = path.stat().st_mode
+            path.chmod(0o666)
+            with self.subTest(path=path.name), self.assertRaises(preflight.PreflightError):
+                self.check()
+            path.chmod(stat.S_IMODE(before))
+        for outside in (self.code / 'public/index.php', self.root / 'site/moodledata/../public/public/index.php'):
+            with self.subTest(outside=outside), self.assertRaisesRegex(preflight.PreflightError, 'outside retained data tree'):
+                self.original_data_entry(outside)
+        self.assertNotIn('lab_readonly_sql', self.lab.actions)
+
+    def test_mutable_data_hardlinks_special_entries_and_special_file_bits_refused(self):
+        root = self.root / 'site/moodledata'
+        content = root / 'filedir/content'
+        path = root / 'filedir/private-name'
+        os.link(content, path)
+        with self.assertRaisesRegex(preflight.PreflightError, 'hardlinks'):
+            self.check()
+        path.unlink()
+        os.mkfifo(path, 0o600)
+        with self.assertRaisesRegex(preflight.PreflightError, 'entry_type'):
+            self.check()
+        path.unlink()
+        content.chmod(0o1600)
+        with self.assertRaisesRegex(preflight.PreflightError, 'permissions'):
+            self.check()
+        self.assertNotIn('lab_readonly_sql', self.lab.actions)
+
+    def test_data_scan_rechecks_private_root_and_refuses_nested_filesystem(self):
+        root = self.root / 'site/moodledata'
+        real_walk = preflight.os.walk
+        def walk(*args, **kw):
+            root.chmod(0o755)
+            yield from real_walk(*args, **kw)
+        with mock.patch.object(preflight.os, 'walk', side_effect=walk):
+            with self.assertRaisesRegex(preflight.PreflightError, 'permissions'):
+                preflight.scan_tree(root, 4096)
+        root.chmod(0o700)
+        portable = preflight.moodledata_entry.side_effect
+        def entry(path, **kw):
+            info = portable(path, **kw)
+            if not kw.get('directory'):
+                info.st_dev += 1
+            return info
+        with mock.patch.object(preflight, 'moodledata_entry', side_effect=entry):
+            with self.assertRaisesRegex(preflight.PreflightError, 'Nested filesystem'):
+                preflight.scan_tree(root, 4096)
 
     def test_hardlink_refusal_reports_metadata_without_disclosing_entry_names(self):
         path = self.root / 'postgres/private-database-entry'

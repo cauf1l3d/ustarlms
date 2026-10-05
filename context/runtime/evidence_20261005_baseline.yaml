@@ -23,6 +23,8 @@ sources:
   - owner_docker_ps_a_and_retained_paths_20261005T105956Z
   - owner_restore_preflight_source_upload_20261005T105956Z
   - owner_active_HDD_and_root_lab_export_sizes_received_20261005T131141Z
+  - owner_HDD_surface_completion_and_original_planning_refusal_received_20261005T171136Z
+  - owner_post_write_SMART_long_start_and_diagnostic_refusal_received_20261005T174058Z
   agent_checks:
   - 526_manifest_entries_vs_actual_Git_blobs
   - 468_disk_versions_vs_468_readonly_DB_versions
@@ -350,8 +352,39 @@ storage:
       bad_blocks: 0
       error_counts: '0/0/0'
       badblocks_output_file_independently_read: false
-      post_write_long_smart: pending_owner_execution_and_output
-      post_write_smart_attributes: not_received
+      post_write_long_smart: started_result_pending_see_new_record
+      post_write_smart_attributes: received_20261005T173649Z_see_new_record
+    post_write_smart:
+      source: owner_terminal_output
+      owner_message_received_at: '2026-10-05T17:40:58Z'
+      observed_at: '2026-10-05T17:36:49Z'
+      device: /dev/disk/by-id/wwn-0x50014ee200c1ee59
+      serial: WD-WCAS82914317
+      capacity_bytes: 500106780160
+      overall_health_threshold_assessment: PASSED_not_full_qualification
+      power_on_hours: 16383
+      reallocated_sectors: 0
+      reallocated_events: 0
+      pending_sectors: 0
+      offline_uncorrectable: 1
+      udma_crc_errors: 0
+      temperature_celsius: 47
+      ata_error_count: 9
+      latest_stored_ata_error_lifetime_hours: 1970
+      previous_extended_self_test: Completed_read_failure
+      previous_test_lifetime_hours: 16359
+      previous_test_first_failed_lba: 752045700
+      trusted_backup_target: false
+    post_write_long_self_test:
+      source: owner_terminal_output
+      start_command: smartctl_-t_long_exact_WWN
+      device_command_successful: true
+      testing_begun: true
+      estimated_duration_minutes: 154
+      expected_completion_utc: '2026-10-05T20:11:04Z'
+      expected_completion_msk: '2026-10-05T23:11:04+03:00'
+      actual_start_timestamp: not_printed
+      result: pending_do_not_restart_or_infer_completion
   directory_inventory:
     observed_at: '2026-10-05T02:24:18Z'
     opt_ustar_g_reported: 3.9
@@ -453,7 +486,21 @@ backup:
       result: refused_Untrusted_retained_input
       offending_scope: not_reported_by_original_helper
       precise_budget_report: not_received
-      diagnostic_revision_server_execution: pending
+      diagnostic_revision_server_execution: confirmed_owner_output
+      diagnostic_script_sha256: bce3c1d79f3666cce9db77927fc9ad9762f7a2ed9bf842db16bed0f2ccfb35bf
+      diagnostic_implementation: a6a00cb97319ee461a3b166591dbddee53bf5000
+      diagnostic_operator_checksum: OK_before_root_install
+      diagnostic_owner_message_received_at: '2026-10-05T17:40:58Z'
+      diagnostic_scope: moodledata_tree_entry
+      diagnostic_failed: permissions
+      diagnostic_uid: 33
+      diagnostic_gid: 33
+      diagnostic_mode: '0666'
+      diagnostic_type: regular_file
+      diagnostic_links: 1
+      exact_private_entry_name_and_origin: not_received_not_inferred
+      metadata_only_data_policy_helper_sha256: 075c454aa58be4209466864dae734ea140c024d7ed5b82863ebfac7e08cc3d8b
+      metadata_only_data_policy_server_execution: pending
 business_readonly_checks:
   observed_at: '2026-10-04'
   accounts_reviewed: 72

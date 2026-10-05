@@ -17,6 +17,11 @@ sources:
   - owner_core_preflight_archive_20261005T082800Z
   - owner_index_production_php_private_copy_20261005
   - owner_backup_cron_source_uploads_20261005T094849Z
+  - owner_manual_backup_output_and_independent_sha256_20261005T101659Z
+  - owner_cron_status_20261005T102403Z_and_root_HTTP_303
+  - owner_restore_PASS_correction_authenticated_feed_and_lab_sources
+  - owner_docker_ps_a_and_retained_paths_20261005T105956Z
+  - owner_restore_preflight_source_upload_20261005T105956Z
   agent_checks:
   - 526_manifest_entries_vs_actual_Git_blobs
   - 468_disk_versions_vs_468_readonly_DB_versions
@@ -26,6 +31,9 @@ sources:
   - index_uploaded_content_sha256_and_observed_git_blob_oid
   - full_backup_cron_static_source_review_matching_installed_hashes
   - local_cron_self_test_and_backup_offline_main_dispatch_gates
+  - full_restore_cron_lab_preflight_sources_review_and_pinned_dependency_hashes
+  - 10_offline_retained_lab_resume_safety_and_cleanup_tests
+  - synthetic_generator_compatibility_with_uploaded_engine_ownership_calls_mocked
 application:
   reference_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
   manifest_observed_at: '2026-10-05T02:32:35.997389+00:00'
@@ -204,6 +212,10 @@ network:
   cookie_httponly: observed
   cookie_config_secure: 1
   full_host_external_surface: not_verified
+  later_root_smoke:
+    source: owner_curl_through_host_Apache
+    http_status: 303
+    scope: root_redirect_only_not_authenticated_acceptance
 containers:
   observed_at: '2026-10-05T02:43:33Z'
   moodle: ustar_moodle
@@ -246,9 +258,9 @@ cron:
   status: /var/lib/ustar-cron/last-run.json
   logs: /var/lib/ustar-cron/logs/cron.log
   private_log_rotation: configured
-  last_success_started_at: '2026-10-05T02:13:01.736967Z'
-  last_success_finished_at: '2026-10-05T02:13:02.806674Z'
-  duration_seconds: 1.07
+  last_success_started_at: '2026-10-05T10:24:01.895695Z'
+  last_success_finished_at: '2026-10-05T10:24:03.145591Z'
+  duration_seconds: 1.25
   exit_code: 0
   schedule_present: true
   containers_match_installation: true
@@ -267,11 +279,20 @@ cron:
   installed_wrapper_source_or_full_cli: received_full_static_review_hash_matches
   wrapper_source_received_at: '2026-10-05T09:48:49Z'
   contract: context/runtime/recovery_contract_20261005.md
-  cli_modes: [--self-test, --check, --install, --tick, --status, --disable]
+  cli_modes:
+  - --self-test
+  - --check
+  - --install
+  - --tick
+  - --status
+  - --disable
   rebind_flag: absent
   install_runs_real_production_pass: true
   status_runs_php_bootstrap_or_tasks: false
   local_self_test: pass_not_production_execution
+  last_task_log_id: 4149797
+  log_truncated: false
+  email_disabled: false
 security:
   observed_at: '2026-10-04T23:57:18Z'
   db_application_role: moodle
@@ -300,7 +321,7 @@ storage:
   occupancy_hypothesis:
     source: owner_statement_after_audit
     text: likely_full_test_academy_copy
-    measured: initial_directory_sizes_measured_full_test_copy_unconfirmed
+    measured: retained_private_restore_lab_presence_confirmed_20261005T105956Z_total_size_not_measured
     cleanup_authorized: false
   hdd:
     device_at_observation: /dev/sdb
@@ -349,6 +370,8 @@ backup:
     - SCORM_launch
     - SCORM_progress
     full_shared_host_restore: not_verified
+    owner_reaffirmed_20261005: true
+    screenshot_scope: authenticated_admin_feed_on_lab_not_full_role_SCORM_proof
   regular_schedule: not_installed
   automation_phase: final_current_infrastructure_cycle
   automatic_target_requirement: healthy_HDD_not_SERVEREXPRESS
@@ -362,7 +385,10 @@ backup:
   installed_wrapper_source_or_full_cli: received_full_static_review_hash_matches
   wrapper_source_received_at: '2026-10-05T09:48:49Z'
   contract: context/runtime/recovery_contract_20261005.md
-  cli_flags: [--backup, --recover, --acknowledge-outage]
+  cli_flags:
+  - --backup
+  - --recover
+  - --acknowledge-outage
   default_mode: preflight_with_private_metadata_no_outage
   backup_requires_outage_acknowledgement: true
   recover_mode: resume_recorded_moodle_container_not_archive_restore
@@ -372,8 +398,29 @@ backup:
   payload_includes_full_site_files_and_extra_paths: true
   payload_includes_host_cron_backup_scripts_and_state: false
   local_offline_dispatch_gates: pass_not_real_backup
-  fresh_backup_with_builtin_preflight_result: pending_operator_output
-  fresh_prechange_snapshot: pending_after_latest_cron_writes
+  fresh_backup_with_builtin_preflight_result: PASS_owner_terminal_after_reviewed_script
+  fresh_prechange_snapshot:
+    archive: ustar-recovery-20261005T101659Z-7ea0ad99.tar.gz.age
+    sha256: 42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8
+    encrypted: true
+    moodle_running_after: true
+    moodle_stop_to_running_seconds: 24.097
+    independent_local_sha256sum: PASS_owner_output
+    external_copy_sha256: not_verified_for_new_archive
+    decryption_restore: not_verified_for_new_archive
+    source: context/runtime/lab_resume_20261005.md
+  retained_restore_lab:
+    observed_at: '2026-10-05T10:59:56Z'
+    directory: /var/lib/ustar-restore-lab/20261004T123406Z-741e3f72
+    containers_absent: true
+    state_report_code_moodledata_physical_postgres_pg_env_present: true
+    size_bytes: not_measured
+    resume_prepared_not_executed: true
+    source: context/runtime/lab_resume_20261005.md
+    source_sha256:
+      restore_engine: 71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac
+      cron_lab: 906b1e6fb342b83e6fa3c73ef7bffb590fd7602ed2d2bb3a4ece17cb713e8690
+      preflight: e00577aefcbcdd8ae3ebc1f30f98c899c3efd3b2b4e593b6ce0d26d09e2756da
 business_readonly_checks:
   observed_at: '2026-10-04'
   accounts_reviewed: 72

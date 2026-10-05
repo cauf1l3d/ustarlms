@@ -71,3 +71,7 @@ OPS-01 сохраняет проверку HRD reset/manager reassign как о�
 ## Source review 05.10 — index и existing wrappers
 
 Отдельный index upload: 93 bytes, SHA/OID verified; config bootstrap и redirect на `/local/ustar/home.php`. Matching/drift counts core snapshot 08:28 не меняются. Source uploads backup/cron получены 09:48:49 UTC: полное статическое чтение, hashes совпали; [контракт](recovery_contract_20261005.md). Default preflight/backup outage/resume-only recover, local export, lock coordination и real-pass installer различены. Локальные self-test/offline gates PASS; свежая production копия, archive restore и candidate stage ещё не выполнены. Application source и исторические fixtures сохранены; INF-01 остаётся in_progress.
+
+## Свежий backup/cron и retained lab 05.10
+
+Владелец выполнил fresh encrypted snapshot 05Oct; local wrapper/independent hash совпали, Moodle running YES, stop-to-running24.097s. Cron scheduled 10:24 UTC exit0/1.25s/new failures0; Apache root303. Старый restore/manual PASS подтверждён, authenticated admin feed screenshot учтён в его области; новая external/decryption verification отдельно открыта. Docker -a 10:59:56 UTC подтвердил удалённые lab containers; retained DB/code/data/state/report есть. [Конкретные evidence и resume helper](lab_resume_20261005.md). Новый helper source/offline failures проверены; на сервере ещё не запускался. Application/core/OS/HTTPS без изменений, INF-01 in_progress.

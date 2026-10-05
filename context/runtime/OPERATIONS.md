@@ -79,7 +79,7 @@ sudo python3 scripts/production_manifest.py   --repo "$PWD"   --moodle-root /opt
 
 Источник — [fresh dated evidence](evidence_20261005_baseline.yaml). `/usr/local/sbin/USTAR_CRON_SETUP_20261005.py` v3; `/etc/cron.d/ustar_moodle` каждую минуту `--tick`, один worker `www-data`, `--keep-alive=0`, cron/backup locks. Last-run: `/var/lib/ustar-cron/last-run.json`; private rotated log: `/var/lib/ustar-cron/logs/cron.log`.
 
-Последний owner result 05.10 02:13 UTC — 1.070 с, exit 0, schedule/container match true, adhoc/USTAR errors 0, new_failures пуст. Не запускать повторный installer, второй cron/systemd timer или direct cron.php для обычного наблюдения. Статус читает:
+Последний owner result 05.10 10:24:01.895695–10:24:03.145591 UTC — 1.25 с, exit 0, schedule/container match true, adhoc/USTAR errors 0, new_failures пуст. Не запускать повторный installer, второй cron/systemd timer или direct cron.php для обычного наблюдения. Статус читает:
 
 ```bash
 sudo python3 /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
@@ -94,4 +94,4 @@ Read-only PHP bootstrap не гарантирует отсутствие все�
 
 Владелец разрешил порядок 1 → 7 → 6; остальные пункты [полного плана](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) после них. [Baseline и exact core preflight](baseline_20261005.md) — текущий шаг. Затем свежая разовая согласованная recovery copy, isolated upgrade/rollback, Moodle/CI/OS и HTTPS. GitHub-публикация не является deployment; продолжать concrete operator commands. Регулярность позже на healthy HDD, не SERVEREXPRESS и не проваливший SMART диск.
 
-Текущий конкретный шаг — [fresh manual backup со встроенным preflight](recovery_contract_20261005.md#следующий-операторский-шаг) и проверка resume/cron status; Moodle останавливается на время snapshot. После password prompt потеряна вставка длинного heredoc, поэтому новые SSH-команды выдавать одной физической строкой, `sudo -v` отдельно с ожиданием нового prompt, затем `sudo -n`. Backup `--recover` означает resume по marker, не rollback DB/files; сохранность archive/ключа и isolated restore проверяются отдельно.
+Свежая разовая копия уже выполнена владельцем; local hash PASS, Moodle stop-to-running 24.097 s, cron 10:24 PASS, root HTTP303. Текущий шаг — [возобновление retained lab](lab_resume_20261005.md) для candidate upgrade/rollback. Старый restore/manual PASS учитывается; полный baseline-прогон повторно не требуется. После password prompt потеряна вставка длинного heredoc, поэтому новые SSH-команды выдавать одной физической строкой, `sudo -v` отдельно с ожиданием нового prompt, затем `sudo -n`. Backup `--recover` означает resume по marker, не rollback DB/files; сохранность archive/ключа и isolated restore проверяются отдельно.

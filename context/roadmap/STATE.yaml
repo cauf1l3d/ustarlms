@@ -3,8 +3,9 @@ updated_at: '2026-10-05'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: 'По команде владельца: baseline → Moodle/CI/ОС → HTTPS'
-current_activity: 'INF-01: index redirect и backup/cron sources проверены; следующий шаг fresh backup со встроенным preflight,
-  затем cron status и isolated upgrade/rollback; extra consumers pending.'
+current_activity: 'INF-01: свежий backup/hash, resume Moodle, cron 10:24 и HTTP 303 подтверждены владельцем; restore
+  PASS учтён. Retained lab без containers; проверенный resume helper подготовлен, server resume и candidate upgrade/rollback
+  впереди.'
 next_task: INF-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -27,7 +28,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_core_and_static_index_wrappers_reviewed_fresh_recovery_stage_pending
+  status: owner_fresh_backup_cron_http_confirmed_retained_lab_resume_prepared_not_executed
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -50,7 +51,7 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-  cron: v3_one_worker_owner_success_20261005T021302Z
+  cron: v3_one_worker_owner_success_20261005T102403Z
   regular_backup: not_installed_final_current_infrastructure_phase
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
@@ -79,9 +80,28 @@ production:
     source: context/runtime/recovery_contract_20261005.md
     hashes_match_installed_observations: true
     scope: static_uploaded_sources_and_local_offline_gates
-    next_operator_step: fresh_manual_backup_with_builtin_preflight_then_cron_status
-    fresh_backup_executed: false
-    archive_restore_executed: false
+    next_operator_step: resume_retained_lab_with_pinned_helper_then_candidate_upgrade_rollback
+    fresh_backup_executed: true
+    fresh_backup_execution_source: owner_terminal_output_not_agent_server_access
+    fresh_archive_restore_executed: false
+    historical_isolated_restore: PASS_owner_report_and_authenticated_feed_screenshot
+  last_manual_backup:
+    archive: ustar-recovery-20261005T101659Z-7ea0ad99.tar.gz.age
+    sha256: 42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8
+    local_independent_hash: PASS_owner_sha256sum
+    moodle_running_after: 'YES'
+    stop_to_running_seconds: 24.097
+    external_copy_and_decryption: not_verified_for_new_archive
+    source: context/runtime/lab_resume_20261005.md
+  retained_lab:
+    observed_at: '2026-10-05T10:59:56Z'
+    source: context/runtime/lab_resume_20261005.md
+    containers_absent_in_owner_docker_ps_a: true
+    database_files_state_report_retained: true
+    old_restore_acceptance: PASS_owner_report_in_declared_scope
+    resume_helper_prepared: true
+    resume_helper_server_executed: false
+    candidate_upgrade_or_rollback_executed: false
 non_goals:
 - Изменение production в этой GitHub-поставке
 - Объявление исправленных рисков по публикации плана
@@ -100,6 +120,7 @@ next_agent_read:
 - context/runtime/baseline_20261005.md
 - context/runtime/core_review_20261005.md
 - context/runtime/recovery_contract_20261005.md
+- context/runtime/lab_resume_20261005.md
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 execution:
   status: authorized_selected_tasks_in_progress
@@ -123,6 +144,6 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  root_occupancy_hypothesis: likely_full_test_academy_copy_owner_statement_not_measured
+  root_occupancy_hypothesis: private_restore_lab_presence_confirmed_by_owner_ls_total_occupancy_not_measured
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false

@@ -16,6 +16,12 @@
 
 Snapshot сделан до последующих записей cron. Перед изменяющей операцией требуется свежая разовая согласованная копия, это не перенос регулярного расписания в начало цикла. Существующие архивы и результаты restore сохраняются до адресного решения; privacy старых dumps относится к INF-03, который владелец отложил после выбранных 1 → 7 → 6. 05.10 09:48:49 UTC получены и полностью проверены existing wrapper sources; hashes совпали. [CLI, состав, lock и короткие команды](recovery_contract_20261005.md): default — preflight, backup — `--backup --acknowledge-outage`, **`--recover` только возобновляет Moodle после прерывания, не восстанавливает архив**.
 
+## Свежая разовая копия и retained lab 05.10
+
+Local encrypted archive `ustar-recovery-20261005T101659Z-7ea0ad99.tar.gz.age`: SHA-256 `42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8`, wrapper и независимый server hash совпали. Moodle возобновлён за 24.097 s, scheduled cron 10:24 exit0/new failures0, HTTP303. External copy/decryption нового архива ещё не подтверждены. Это выполнение владельцем, не прямой server access агента.
+
+Вчерашний isolated restore и manual PASS учтены; screenshot подтверждает authenticated admin feed в своей области. Его containers удалены штатным stop, physical DB/code/data/state/report retained. [Resume helper и проверки](lab_resume_20261005.md) возобновляют эти данные без нового archive restore; server resume и candidate patch/rollback ещё не выполнены. Старый отчёт и snapshot не переписываются.
+
 ## Target и политика
 
 Предписание сисадмина: автоматизация **на HDD, не на SERVEREXPRESS**. Текущий WD5000AAKS `/dev/sdb` провалил extended self-test и **не trusted target**. Нужен healthy HDD из INF-04. Автоматический fallback на SSD при пропавшем mount запрещён контрактом; target определяется по проверенным serial/UUID, не по случайному имени устройства.

@@ -67,3 +67,7 @@ Read-only preflight helper and context are repository work; application source, 
 Получить свежие versions/scoped manifest и отдельно core/plugins/images, Apache/HTTPS/cron identity. При неизменном PR76 повторная установка не требуется. При другом baseline или drift — разобраться, не обходить preflight. Старые installers ограничены своими исходными версиями; docs main не разрешает слепо запускать historical deploy.
 
 OPS-01 сохраняет проверку HRD reset/manager reassign как отдельную business acceptance. tests/stage/production.json и runtime.json остаются историческими fixtures; не переписаны для совпадения с текущей сводкой.
+
+## Source review 05.10 — index и existing wrappers
+
+Отдельный index upload: 93 bytes, SHA/OID verified; config bootstrap и redirect на `/local/ustar/home.php`. Matching/drift counts core snapshot 08:28 не меняются. Source uploads backup/cron получены 09:48:49 UTC: полное статическое чтение, hashes совпали; [контракт](recovery_contract_20261005.md). Default preflight/backup outage/resume-only recover, local export, lock coordination и real-pass installer различены. Локальные self-test/offline gates PASS; свежая production копия, archive restore и candidate stage ещё не выполнены. Application source и исторические fixtures сохранены; INF-01 остаётся in_progress.

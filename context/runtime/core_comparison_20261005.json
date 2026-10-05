@@ -84,7 +84,18 @@
   "source_report_sha256": "43acc0027cb217b9aafc4cff0bd2ae1669a304e30a257b4f5959d4432c55fe9c",
   "source_archive_sha256": "4f9b66da218d3a10f3278ed1b7054d16be2d8c28763cd9b5da50a0f0cfb5c379",
   "collector_sha256": "898667ddd621f2254b2d1db533fedf9f2edc0d07cb82a83ba02c6926df745c9c",
-  "production_changed_file_content_received": false,
+  "production_changed_file_content_received": true,
   "extra_contents_and_consumers_verified": false,
-  "remediation_performed": false
+  "remediation_performed": false,
+  "changed_file_content_review": {
+    "reviewed_on": "2026-10-05",
+    "source": "owner_supplied_private_copy_index.production.php",
+    "bytes": 93,
+    "sha256": "2f509be81c989d2cf2b1ffb1e195710714fefec93e2d5d0f646a2834037ebcf1",
+    "observed_git_blob_verified": true,
+    "behavior": "config_bootstrap_then_redirect_to_local_ustar_home",
+    "review": "context/runtime/core_review_20261005.md",
+    "php_or_http_executed": false,
+    "candidate_preservation_verified": false
+  }
 }

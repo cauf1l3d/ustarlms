@@ -50,12 +50,16 @@ tasks:
   - context/runtime/plugin_inventory_20261005.json
   - context/runtime/core_comparison_20261005.json
   - context/runtime/core_review_20261005.md
+  - context/runtime/recovery_contract_20261005.md
   pending_acceptance:
-  - Static review of changed public/index.php and extra files/consumers; exclusions/plugin provenance remain explicit
-  - Fresh manual recovery point, existing wrapper contract and isolated upgrade/rollback readiness
+  - Extra files/consumers and candidate preservation of the reviewed USTAR homepage redirect; exclusions/plugin provenance remain explicit
+  - Fresh runtime backup preflight, manual recovery point and isolated upgrade/rollback readiness
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA verified
   - 24678 matching, 1 changed, 0 missing, 23 extra, no errors or reference skips; not full equivalence
+  - Uploaded index 93 bytes/OID verified; config bootstrap then USTAR home redirect, not repaired or staged
+  - Backup/cron sources received 09:48:49 UTC, full static review and hashes match; offline gates PASS, no live backup
+  - recover is resume-only; cron install executes tasks; no rebind flag or automatic network transfer
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned

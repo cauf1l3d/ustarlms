@@ -6,11 +6,11 @@
 
 Локальный MCP **stdio**, без listener, startup service, shell, Docker/DB вызовов или production mutations. ROOT определяется от расположения server.py. ContextReader разрешает только опубликованный UTF-8 `context/` с лимитами; traversal, symlink/hardlink, device/FIFO и unsupported files запрещены. Внешние входы не разрешают чтение config.php/dumps/keys.
 
-- `get_current_handoff`: STATE + BACKLOG + ACTIVE, включая `awaiting_owner_instruction`. Ready task не даёт разрешение выполнять её.
+- `get_current_handoff`: актуальные STATE + BACKLOG + ACTIVE, включая разрешённый владельцем порядок и execution status. Ready task сама по себе не расширяет запрос владельца.
 - `get_audit_context`: исходный датированный audit + reconciliation + full plan + owner evidence. Original theme statement исправляется только в reconciliation; runtime timestamps не превращаются в live status.
 - Existing project/runtime/architecture/decisions/code-map/index/search tools остаются read-only. `get_health` сообщает присутствие context, не здоровье Академии.
 
-После DOC-02 GitHub-поставки **остановиться до новой команды**. Следующая намеченная задача INF-01, один установленный cron v3 сохраняется. Автокопии финалом цикла на healthy HDD, не SERVEREXPRESS/failed HDD; future mobile/B2B/Privacy/LTS отдельно.
+DOC-02 завершён PR78; последующая команда владельца — **1 → 7 → 6**. INF-01 в работе, затем Moodle/CI/ОС и HTTPS; остальные пункты после них. Runtime tools читают текущие пути из STATE/project, прежнее ожидание не hardcoded. Один установленный cron v3 сохраняется. Автокопии позже на healthy HDD, не SERVEREXPRESS/failed HDD; future mobile/B2B/Privacy/LTS отдельно.
 
 ## Локальная проверка
 

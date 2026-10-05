@@ -3,6 +3,6 @@ updated_at: '2026-10-05'
 canonical_branch: main
 application_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 repository: https://github.com/cauf1l3d/ustarlms
-runtime_equivalence: plugin_theme_owner_manifest_20261003_526_match_core_not_verified
+runtime_equivalence: plugin_theme_owner_manifest_20261005_526_match_core_not_verified
 current_state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261005.yaml
+runtime_evidence: context/runtime/evidence_20261005_baseline.yaml

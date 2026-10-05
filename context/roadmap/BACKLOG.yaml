@@ -25,15 +25,17 @@ tasks:
   - Owner audit published byte-for-byte with reconciliation notes
   - Complete remediation plan covers every audit area and finite backup-last sequence
   - Source/context integrity and local MCP handshake checked; application unchanged
-  - Published through PR to main, then stop and await owner
+  - Published through PR78 to main; original stop superseded by later owner order 1 → 7 → 6
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  implementation_commit: resolve exact GitHub commit from DOC-02 PR/git history
+  implementation_commit: b265a7aabd6205065b4fc6458d7fa40a99974d3d
   validation_evidence:
   - context/runtime/context_update_20261005.md
   deployment_evidence: not_applicable_repository_only
+  merged_main_commit: 5ced5dee85734a52ee31397596589e81458a3320
+  pr: 78
 - id: INF-01
   title: Read-only baseline, core inventory и входные условия
-  status: ready
+  status: in_progress
   depends_on:
   - DOC-02
   acceptance:
@@ -41,7 +43,14 @@ tasks:
   - Full test copy occupancy hypothesis measured; required shared services and isolated stage documented
   - Fresh manual recovery point and rollback path checked before mutations
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  execution_gate: new_owner_instruction_required
+  execution_gate: authorized_owner_point_1
+  validation_evidence:
+  - context/runtime/baseline_20261005.md
+  - context/runtime/evidence_20261005_baseline.yaml
+  - context/runtime/plugin_inventory_20261005.json
+  pending_acceptance:
+  - Server core comparison result within explicit scope; review exclusions and plugin provenance
+  - Fresh manual recovery point, existing wrapper contract and isolated upgrade/rollback readiness
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -98,12 +107,14 @@ tasks:
   title: Доверенный HTTPS на действующем Apache
   status: planned
   depends_on:
-  - INF-06
+  - INF-08
+  - INF-10-OS
   acceptance:
   - DNS/CA/trust and proxy/wwwroot/cookie contract agreed
   - Real workstations/phones pass login, links, files, Quiz/SCORM/chat
   - Other vhosts and required services preserved; renewal alert verified
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  execution_gate: authorized_owner_point_6_after_point_7
 - id: INF-09
   title: CI на production PHP/core/PostgreSQL matrix
   status: planned
@@ -114,27 +125,43 @@ tasks:
   - Fresh/upgrade/repeat/schema/roles/files/browser/restore gate on exact new SHA
   - Historical server fixtures not rewritten as fresh evidence
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  execution_gate: authorized_owner_point_7_after_INF01
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
   status: planned
   depends_on:
-  - INF-07
+  - INF-01
   - INF-09
   acceptance:
   - Available supported release and exact upstream/core/plugin provenance verified
   - Compatible stage full gate and coordinated rollback pass
   - Production core/version/digest, scoped manifest, smoke and cron evidence recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-- id: INF-10
-  title: ОС, SSH/firewall/MFA и нужные службы общего хоста
+  execution_gate: authorized_owner_point_7_after_baseline_CI_and_stage_recovery
+- id: INF-10-OS
+  title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot
   status: planned
   depends_on:
+  - INF-01
   - INF-08
+  execution_gate: authorized_owner_point_7_shared_service_window
+  acceptance:
+  - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from banner
+  - Targeted AppArmor repair preserves docker-default; Snap consumers checked before stale profile archive
+  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron v3
+  - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- id: INF-10
+  title: SSH/firewall/MFA и политики нужных служб общего хоста
+  status: planned
+  depends_on:
+  - INF-10-OS
   acceptance:
   - Effective network/SSH/MFA policies and emergency admin access verified
   - OS/reboot window preserves mail/DNS/ISPConfig and Docker mounts
   - Required service checks and rollback documented; no blind service removal
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  priority_note: Broad security policies deferred with remaining points; OS maintenance moved to authorized INF-10-OS
 - id: INF-11
   title: H5P/registration exceptions, SMTP и полный cron cycle
   status: planned
@@ -253,8 +280,8 @@ tasks:
   status: deferred
   depends_on:
   - INF-13
-  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance
-    before first B2B production
+  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance before
+    first B2B production
   reference: context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   acceptance:
@@ -348,4 +375,8 @@ tasks:
   reason: No claim of working external delivery; separate approved contract required
   reference: context/architecture/notification_delivery_20260928.md
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: awaiting_owner_instruction_after_github_publication
+execution_gate: authorized_selected_points_1_7_6_other_points_after_completion
+owner_selected_order:
+- 1
+- 7
+- 6

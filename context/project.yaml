@@ -4,12 +4,12 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: infrastructure_remediation_planned
+  stage: selected_infrastructure_remediation_in_progress
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
-  platform: 'Moodle 5.1.1+ (Build: 20251219), owner evidence 03–04.10; patch reverify before upgrade'
-  language: PHP 8.3.33 production; CI source 8.2 and stage 8.2.30 pending parity
+  platform: 'Moodle 5.1.1+ (Build: 20251219), fresh disk/DB owner inventory 2026-10-05T02:43:33Z; full core pending'
+  language: PHP CLI 8.3.33 / Debian 13 Trixie production; CI 8.2/8.2.30 pending parity
   database: PostgreSQL 16.15, dated owner evidence
   deployment: Docker on company Ubuntu 24.04.4 LTS shared host; virtualization not verified
   native_ui: PHP + Mustache + JS/AMD + SCSS
@@ -21,6 +21,6 @@ components:
   secondary_client: frontend
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
 state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261005.yaml
+runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: awaiting_owner_instruction_after_github_publication
+execution_gate: authorized_selected_points_1_7_6_other_points_after_completion

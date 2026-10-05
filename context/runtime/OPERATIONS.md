@@ -75,21 +75,21 @@ sudo python3 scripts/production_manifest.py   --repo "$PWD"   --moodle-root /opt
 Перед мобильным этапом проверить доступ телефона через корпоративную сеть/VPN, DNS и доверенное HTTPS, воспроизвести login/upload/download/SCORM. Изменение Apache/wwwroot не входит в наведение порядка в Git. Performance baseline и clean-server restore остаются отдельными задачами; цифры CI не характеризуют нагрузку реальной компании.
 
 
-## Установленный cron v3 и точка остановки 05.10
+## Установленный cron v3 и текущее продолжение 05.10
 
-Источник — [dated evidence](evidence_20261005.yaml). `/usr/local/sbin/USTAR_CRON_SETUP_20261005.py` v3; `/etc/cron.d/ustar_moodle` каждую минуту `--tick`, один worker `www-data`, `--keep-alive=0`, cron/backup locks. Last-run: `/var/lib/ustar-cron/last-run.json`; private rotated log: `/var/lib/ustar-cron/logs/cron.log`.
+Источник — [fresh dated evidence](evidence_20261005_baseline.yaml). `/usr/local/sbin/USTAR_CRON_SETUP_20261005.py` v3; `/etc/cron.d/ustar_moodle` каждую минуту `--tick`, один worker `www-data`, `--keep-alive=0`, cron/backup locks. Last-run: `/var/lib/ustar-cron/last-run.json`; private rotated log: `/var/lib/ustar-cron/logs/cron.log`.
 
-Последний owner result 04.10 23:57 — 1.374 с, exit 0, schedule/container match true, adhoc/USTAR errors 0, new_failures пуст. Не запускать повторный installer, второй cron/systemd timer или direct cron.php для обычного наблюдения. Статус читает:
+Последний owner result 05.10 02:13 UTC — 1.070 с, exit 0, schedule/container match true, adhoc/USTAR errors 0, new_failures пуст. Не запускать повторный installer, второй cron/systemd timer или direct cron.php для обычного наблюдения. Статус читает:
 
 ```bash
 sudo python3 /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status
 sudo docker top ustar_moodle -eo pid,etime,stat,args
 ```
 
-При stale/failed выяснить конкретную задачу, effective-enabled/timezone, lock/backup pause, журналы и process внутри контейнера: Ctrl+C SSH wrapper мог оставить PHP child. Не повторять ручной запуск до проверки. 17 COMPONENT_DISABLED overdue и два disabled H5P/registration residual faildelay отличаются от новых business failures. Историю не обнулять. После container recreation штатно перепроверить binding ожидаемых IDs; обход защиты не допускается. Hash установленного host script надо получить у оператора перед будущей правкой; его исходник не восстановлен этой публикацией.
+При stale/failed выяснить конкретную задачу, effective-enabled/timezone, lock/backup pause, журналы и process внутри контейнера: Ctrl+C SSH wrapper мог оставить PHP child. Не повторять ручной запуск до проверки. 17 COMPONENT_DISABLED overdue и два disabled H5P/registration residual faildelay отличаются от новых business failures. Историю не обнулять. После container recreation штатно перепроверить binding ожидаемых IDs; обход защиты не допускается. Hash установленного script подтверждён в 02:32:33 UTC: `66fd51d364beb59a8874a63c695c122dca5452a720e61b86d070beb0b1939852`; исходник/full CLI пока не получены. Не придумывать rebind flags или переустановку.
 
 Read-only PHP bootstrap не гарантирует отсутствие всех side effects. Для адресной SQL-диагностики предпочтителен psql BEGIN READ ONLY с bounded statement/lock timeout; в конкретном Moodle DB connection режим включается и проверяется после bootstrap. PGOPTIONS драйвер переопределял; invoking sync/reconcile/execute не является просмотром.
 
-Открытые DB/file/transport вопросы — [SECURITY_BASELINE](SECURITY_BASELINE.md), пульт — [MONITORING](MONITORING.md), согласованные копии — [BACKUP_RESTORE](BACKUP_RESTORE.md). Root 76% относится к 04.10 23:57; тестовый полный стенд — гипотеза, сначала measured inventory. Required mail/DNS/ISPConfig сохраняются.
+Открытые DB/file/transport вопросы — [SECURITY_BASELINE](SECURITY_BASELINE.md), пульт — [MONITORING](MONITORING.md), согласованные копии — [BACKUP_RESTORE](BACKUP_RESTORE.md). Root 76% подтверждён 05.10 02:13; directory inventory есть, отдельный большой полный стенд не подтверждён. Required mail/DNS/ISPConfig сохраняются.
 
-Текущая поставка ограничена GitHub docs/harness. После публикации остановиться. Будущие изменения по [полному плану](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) требуют новой команды владельца. Разовые recovery snapshots перед изменениями необходимы; регулярность финалом цикла на healthy HDD, не SERVEREXPRESS и не проваливший SMART диск.
+Владелец разрешил порядок 1 → 7 → 6; остальные пункты [полного плана](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) после них. [Baseline и exact core preflight](baseline_20261005.md) — текущий шаг. Затем свежая разовая согласованная recovery copy, isolated upgrade/rollback, Moodle/CI/OS и HTTPS. GitHub-публикация не является deployment; продолжать concrete operator commands. Регулярность позже на healthy HDD, не SERVEREXPRESS и не проваливший SMART диск.

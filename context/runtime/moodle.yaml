@@ -16,5 +16,8 @@ production_versions:
   theme_ustar: 2026100202
 isolated_reference: tests/stage/runtime.json
 deployment_evidence: context/runtime/RELEASE_LEDGER.md
-versions_evidence: context/runtime/evidence_20261005.yaml
+versions_evidence: context/runtime/evidence_20261005_baseline.yaml
 versions_are_dated_not_live_query: true
+core_metadata_upstream_reference: 1cd17816c56a7df7ee796892efccaf1ed5347340
+core_metadata_equivalence: 3_hashes_match_full_core_pending
+plugin_inventory: context/runtime/plugin_inventory_20261005.json

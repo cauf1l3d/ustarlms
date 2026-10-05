@@ -1,15 +1,16 @@
 kind: dated_owner_supplied_runtime_facts
 reviewed_at: '2026-10-05'
 measured_now: false
-source: context/runtime/evidence_20261005.yaml
+source: context/runtime/evidence_20261005_baseline.yaml
 containers:
 - name: ustar_moodle
-  current_image_digest: null
+  current_image_digest: stack-moodle@sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b
   host_binding: 127.0.0.1:8082->80
 - name: ustar_postgres
   engine: PostgreSQL 16.15
-  current_image_digest: null
+  current_image_digest: postgres@sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94
   host_port_published: false
 recheck: context/runtime/OPERATIONS.md
 logging: json-file; limits absent in supplied snapshot
 healthchecks: absent in supplied snapshot
+observed_at: '2026-10-05T02:43:33Z'

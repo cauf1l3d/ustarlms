@@ -1,11 +1,13 @@
 # Активная работа — 05.10.2026
 
-**DOC-02: актуализация GitHub. После публикации и проверки остановиться, ждать следующей команды владельца.** На production в этой поставке никаких изменений. `ready` в backlog описывает готовность следующей задачи, не разрешение начать её.
+**INF-01 в работе. Команда владельца: сначала 1 → 7 → 6, остальные пункты после них.** DOC-02 опубликован и слит PR78; прежняя остановка отменена этой новой командой. Агент готовит артефакты/CI, владелец выполняет SSH-команды на сервере.
 
-В main публикуются [исходный аудит](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md), [уточнения](../audits/AUDIT_RECONCILIATION_20261005_RU.md), [полный пошаговый план](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md), свежий контекст и локальный stdio harness. Результаты проверки — [delivery report](../runtime/context_update_20261005.md).
+1. Baseline: свежая сверка USTAR, core/plugins/images, host/cron/storage и условия recovery/rollback.
+2. Moodle текущей ветки, production PHP/PostgreSQL matrix в CI и patch-обслуживание Ubuntu 24.04 (`INF-09`, `INF-08`, `INF-10-OS`).
+3. Доверенный HTTPS на действующем Apache (`INF-07`), реальные ПК/телефоны и остальные vhosts.
 
-Application baseline остаётся PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Manifest владельца от 03.10: 526 matching plugin/theme, core не охвачен. Cron v3 работает по последнему status 04.10 23:57; H5P/registration disabled, сеть не исправлена. Ручной encrypted snapshot/isolated restore есть; регулярного расписания нет. [Evidence](../runtime/evidence_20261005.yaml), [STATE](../roadmap/STATE.yaml).
+Свежий manifest 05.10 02:32:35.997389 UTC: **526 matching**, различий/пропусков/ошибок нет; файлы отчёта дополнительно сверены с Git PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. В 02:43:33 UTC все 468 component versions на диске совпали с readonly DB; три metadata hash совпали с официальным Moodle weekly commit. Это ещё не полная проверка core/plugin code. [Baseline и следующий шаг](../runtime/baseline_20261005.md), [dated evidence](../runtime/evidence_20261005_baseline.yaml), [STATE](../roadmap/STATE.yaml).
 
-После новой команды ближайший **INF-01** — dated read-only baseline и условия исправлений. Далее DB/file privileges → disk/logs/пульт → HTTPS → patch/CI/OS → приёмка/решения → регулярные копии финалом. Автоматический target — healthy HDD, не SERVEREXPRESS; нынешний HDD провалил чтение. `/` 76% на дату замера; полная тестовая копия — гипотеза, сначала измерить.
+Следующая production-команда: read-only `scripts/infra/core_preflight.py` по immutable upstream SHA. После результата — проверить контракт существующего backup wrapper, подготовить свежую разовую копию и изолированный upgrade/rollback. До этого не менять production core/AppArmor/packages. Скрипт сравнивает объявленную область; config.php, vendor, скрытые пути и известные дополнения исключены явно.
 
-Стабильный web, нужные почту/DNS/ISPConfig и историю сохранять. Полноценные mobile/Privacy/B2B/LTS идут отдельными проектами после базового цикла, не блокируя копии бессрочно. Персональные миграции, принятие грейда, новый frontend или второй cron не входят в DOC-02.
+Остальные пункты — DB/file hardening, disk cleanup, пульт, полный H5P/SMTP cycle, business acceptance и регулярные копии — отложены владельцем. Не превращать их в обязательные предварительные задачи выбранных 1/7/6. Необходимые recovery/stage/service checks входят в выбранную работу. Стабильный web, нужные почту/DNS/ISPConfig и историю сохранять; cron v3 остаётся один. Автокопии — healthy HDD, не SERVEREXPRESS и не нынешний диск с failed SMART. Mobile/Privacy/B2B/LTS остаются отдельными проектами.

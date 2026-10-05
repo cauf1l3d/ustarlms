@@ -2,6 +2,8 @@
 
 Источник — [датированные серверные свидетельства](evidence_20261005.yaml), [аудит](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md). Полные шаги/проверки/откат — в [плане](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md). Публикация не закрывает эти риски.
 
+Последующий [baseline 05.10](baseline_20261005.md) уточняет версии/images, cron, manifest и AppArmor. Владелец разрешил 1 → 7 → 6; broad DB/file/SSH/MFA/firewall hardening остаётся после них. AppArmor и совместимые OS patches входят в выбранную OS часть, HTTPS — следующий выбранный пункт. Риски в таблице сохраняются до фактической приёмки соответствующих задач.
+
 | Контроль | Текущее evidence | Закрывающая работа |
 |---|---|---|
 | DB role | `moodle` SUPERUSER/CREATEROLE/CREATEDB/REPLICATION/BYPASSRLS, 04.10 23:57 UTC | INF-02: separate tested admin, ownership/grants, least privilege, upgrade/backup/restore |

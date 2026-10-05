@@ -14,11 +14,13 @@ sources:
   - owner_readonly_baseline_20261005T0213Z
   - owner_packages_wrappers_manifest_20261005T023233Z
   - owner_core_plugins_images_readonly_sql_20261005T024333Z
+  - owner_core_preflight_archive_20261005T082800Z
   agent_checks:
   - 526_manifest_entries_vs_actual_Git_blobs
   - 468_disk_versions_vs_468_readonly_DB_versions
   - 3_metadata_sha256_vs_exact_official_weekly_commit
   - upstream_metadata_tree_and_extra_plugin_roots
+  - exact_upstream_tree_report_coverage_24679_and_expected_changed_oid
 application:
   reference_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
   manifest_observed_at: '2026-10-05T02:32:35.997389+00:00'
@@ -31,7 +33,7 @@ application:
   extra: []
   errors: []
   skipped: []
-  complete_core_equivalence: not_verified
+  complete_core_equivalence: not_verified_scope_exclusions_and_core_drift
   fresh_followup_manifest: pass_exact_PR76_commit_no_origin_main_dependency
   installation_checkout_head: e1d57f5bc28f6964afd20aeff7620345b34a80fe
   versions_observed_at: '2026-10-05T02:43:33Z'
@@ -164,6 +166,24 @@ platform:
   - Zend OPcache
   - zip
   - zlib
+  core_comparison:
+    observed_at: '2026-10-05T08:28:00.664160+00:00'
+    reference_commit: 1cd17816c56a7df7ee796892efccaf1ed5347340
+    complete_in_declared_scope: true
+    match: false
+    matching_files: 24678
+    changed_files: 1
+    extra_files: 23
+    missing_files: 0
+    errors: 0
+    reference_skipped: 0
+    source: context/runtime/core_comparison_20261005.json
+    review: context/runtime/core_review_20261005.md
+    changed_paths:
+    - public/index.php
+    index_content_review: pending_source_not_in_archive
+    extra_consumers_and_content_review: pending
+    full_deployment_equivalence: false
 network:
   owner_confirmed_at: '2026-10-05'
   user_access: HTTP_inside_company_LAN

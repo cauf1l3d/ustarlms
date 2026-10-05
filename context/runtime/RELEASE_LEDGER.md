@@ -58,6 +58,10 @@ GitHub-поставка DOC-02 не меняла application code и production.
 
 Read-only preflight helper and context are repository work; application source, DB/data, historical fixtures and host wrappers unchanged. New full CI on the chosen runtime and isolated/production upgrade are not yet run. Official 5.1.7 candidate is identified, not deployed. Old manual recovery copy precedes latest cron writes; fresh copy still required before mutation. Exact implementation/CI of this repository delivery are recorded in its PR/Git history.
 
+## Core comparison 05.10 08:28 UTC
+
+Владелец выполнил immutable helper PR79 и передал архив private preflight directory. 24 678 matching / 1 changed (`public/index.php`) / 0 missing / 23 extra / errors и skipped 0. Coverage и expected changed OID проверены по exact official reference tree; PHP/application source из изменённого файла в архиве отсутствует. [Сводка и следующий шаг](core_review_20261005.md). Это complete comparison указанной области с обнаруженным drift, не full equivalence всего deployment. Точный SHA server helper совпал; самостоятельно server files не читались. Production writes/repair/cleanup не выполнялись, INF-01 остаётся in_progress.
+
 ## Перед следующим релизом
 
 Получить свежие versions/scoped manifest и отдельно core/plugins/images, Apache/HTTPS/cron identity. При неизменном PR76 повторная установка не требуется. При другом baseline или drift — разобраться, не обходить preflight. Старые installers ограничены своими исходными версиями; docs main не разрешает слепо запускать historical deploy.

@@ -6,3 +6,5 @@ repository: https://github.com/cauf1l3d/ustarlms
 runtime_equivalence: plugin_theme_owner_manifest_20261005_526_match_core_not_verified
 current_state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
+core_comparison: context/runtime/core_comparison_20261005.json
+core_equivalence: declared_scope_1_changed_23_extra_not_full_deployment_equivalence

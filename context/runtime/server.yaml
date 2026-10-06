@@ -24,3 +24,11 @@ fresh_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
 new_storage_priority: before_new_stage_including_HDD_automatic_backups
 ssd_partition_tail: '61.79GiB confirmed sectors 104855552..234441613; GPT backup header stale; no write'
 hdd_initializer: context/runtime/hdd_initialize_20261006.md
+hdd_owner_output_received_at: '2026-10-06T00:07:20Z'
+hdd_partition: /dev/disk/by-id/wwn-0x50014ee200c1ee59-part1
+hdd_filesystem: ext4
+hdd_uuid: 359a2bae-4e79-461a-ab72-1597f605d801
+hdd_mountpoint: /srv/ustar-storage
+hdd_mount_options: rw,nosuid,nodev,noexec,relatime
+hdd_df_rounded: 458G_total_28K_used_453G_available_1percent
+hdd_persistence_and_backup_trial: pending_operator_output

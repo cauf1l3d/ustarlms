@@ -3,9 +3,11 @@
 **Текущий приоритет владельца 06.10.2026:** после storage inventory подготовить HDD
 для автоматических копий до нового стенда. Этот документ сохраняет dated contract
 05.10 ниже; HDD GPT/ext4/mount, fstab configuration и существующая archive copy/hash
-подтверждены. [Новый producer](hdd_backup_20261006.md) подготовлен/локально проверен;
-server install/check/fresh trial и timer ещё не выполнены. Reboot/mount-after-boot не
-проверялись. [Текущая карта](server_map_20261006.md), [initialization/mount evidence](hdd_initialize_20261006.md).
+подтверждены. [Producer](hdd_backup_20261006.md) PR91 установлен/check/fresh HDD trial
+06Oct01:10..01:12UTC PASS:957829597bytes/readback,24.111s pause/login200.
+[Точный report](hdd_backup_trial_20261006.json). [Начальный daily timer](hdd_backup_schedule_20261006.md)
+подготовлен; server activation/first scheduled run, independent copy/restore новой
+копии и reboot/mount-after-boot ещё не подтверждены. [Карта](server_map_20261006.md).
 
 Сводка 05.10.2026 по [owner evidence](evidence_20261005.yaml), §§4.2/8 аудита и [уточнениям](../audits/AUDIT_RECONCILIATION_20261005_RU.md). Это паспорт результата и контракт будущей работы, не установленное расписание.
 
@@ -19,23 +21,23 @@ server install/check/fresh trial и timer ещё не выполнены. Reboot
 | Ключ | Отдельная копия и decryption проверены по выводу владельца; содержимое/место в Git не публикуется |
 | Isolated restore | 125 с / 4910 files; HTTP 200, admin/files/user roles/SCORM launch/progress PASS в своей области |
 | Не доказано | Полный clean-host restore почты/DNS/ISPConfig; гарантированный RTO/RPO; потеря общей площадки |
-| Регулярность | **Не установлена**, финальный этап текущего инфраструктурного цикла |
+| Регулярность | На дату05Oct не установлена; текущий timer подготовлен, installation pending |
 
-Snapshot сделан до последующих записей cron. Перед изменяющей операцией требуется свежая разовая согласованная копия, это не перенос регулярного расписания в начало цикла. Существующие архивы и результаты restore сохраняются до адресного решения; privacy старых dumps относится к INF-03, который владелец отложил после выбранных 1 → 7 → 6. 05.10 09:48:49 UTC получены и полностью проверены existing wrapper sources; hashes совпали. [CLI, состав, lock и короткие команды](recovery_contract_20261005.md): default — preflight, backup — `--backup --acknowledge-outage`, **`--recover` только возобновляет Moodle после прерывания, не восстанавливает архив**.
+Snapshot сделан до последующих записей cron. Перед изменяющей операцией требуется свежая разовая согласованная копия, Владелец06Oct отдельно перенёс регулярное расписание в текущий этап до нового стенда. Существующие архивы и результаты restore сохраняются до адресного решения; privacy старых dumps относится к INF-03, который владелец отложил после выбранных 1 → 7 → 6. 05.10 09:48:49 UTC получены и полностью проверены existing wrapper sources; hashes совпали. [CLI, состав, lock и короткие команды](recovery_contract_20261005.md): default — preflight, backup — `--backup --acknowledge-outage`, **`--recover` только возобновляет Moodle после прерывания, не восстанавливает архив**.
 
 ## Свежая разовая копия и retained lab 05.10
 
 Local encrypted archive `ustar-recovery-20261005T101659Z-7ea0ad99.tar.gz.age`: SHA-256 `42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8`, wrapper и независимый server hash совпали. Moodle возобновлён за 24.097 s, scheduled cron 10:24 exit0/new failures0, HTTP303. External copy/decryption нового архива ещё не подтверждены. Это выполнение владельцем, не прямой server access агента.
 
-Вчерашний isolated restore и manual PASS учтены; screenshot подтверждает authenticated admin feed в своей области. Его containers удалены штатным stop, physical DB/code/data/state/report retained. [Resume helper и проверки](lab_resume_20261005.md) возобновляют эти данные без нового archive restore; server resume и candidate patch/rollback ещё не выполнены. Старый отчёт и snapshot не переписываются.
+Вчерашний isolated restore и manual PASS учтены; screenshot подтверждает authenticated admin feed в своей области. Его containers удалены штатным stop, physical DB/code/data/state/report retained. [Resume helper и проверки](lab_resume_20261005.md) возобновляют эти данные без нового archive restore; server resume/login200 выполнены владельцем05Oct11:30:58UTC; candidate patch/rollback ещё не выполнены. Старый отчёт и snapshot не переписываются.
 
 ## Target и политика
 
-Предписание сисадмина: автоматизация **на HDD, не на SERVEREXPRESS**. Текущий WD5000AAKS `/dev/sdb` провалил extended self-test и **не trusted target**. Нужен healthy HDD из INF-04. Автоматический fallback на SSD при пропавшем mount запрещён контрактом; target определяется по проверенным serial/UUID, не по случайному имени устройства.
+Предписание сисадмина: автоматизация **на HDD, не на SERVEREXPRESS**. Исторический failed extended self-test WD5000AAKS сохранён. После разрешённой полной перезаписи surface write/read0errors и новый extended Completed without error подтверждены; pending/reallocated0, residual Offline_Uncorrectable198=1 сохраняется. Exact disk инициализирован, ext4/mount/fstab и fresh capture подтверждены. Это условно используемый local target с открытым hardware/redundancy риском, не полностью healthy/sole trusted recovery target. Автоматический fallback на SSD при пропавшем mount запрещён контрактом; target определяется по проверенным serial/UUID, не по случайному имени устройства.
 
 Локальный HDD не обеспечивает независимость от потери основного сервера. Отдельный экземпляр/носитель и его доступность при аварии выбираются владельцем; ручной SERVEREXPRESS snapshot не разрешает включать расписание туда. Если independent copy не выбрана, соответствующий gate остаётся открытым.
 
-RPO/RTO, retention, pause/window, бюджет и ответственные **не согласованы**. Политика «14 daily / 4 weekly» не принята. DB и moodledata должны образовывать одну согласованную точку; отдельная ежедневная БД и произвольные недельные files не гарантируют её.
+Предлагаемый начальный режим: ежедневно03:30 Moscow, окно старта03:30..03:40, без catch-up/удаления архивов, quota100GiB; activation владельцем pending. Measured trial pause24.111s не гарантирует будущую длительность/RTO. RPO, долгий retention, ответственные и independent-copy policy открыты; ни14daily/4weekly, ни7daily/4weekly/3monthly не приняты. DB и moodledata должны образовывать одну согласованную точку; отдельная ежедневная БД и произвольные недельные files не гарантируют её.
 
 ## Контракт финального внедрения
 

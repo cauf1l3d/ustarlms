@@ -94,6 +94,22 @@ production:
     stop_to_running_seconds: 24.097
     external_copy_and_decryption: not_verified_for_new_archive
     source: context/runtime/lab_resume_20261005.md
+  last_hdd_backup:
+    source: context/runtime/hdd_backup_trial_20261006.json
+    owner_message_received_at: '2026-10-06T01:16:21Z'
+    started_utc: '2026-10-06T01:10:22.378330+00:00'
+    finished_utc: '2026-10-06T01:12:02.767562+00:00'
+    result: HDD_BACKUP_PASS_owner_terminal_output
+    archive: /srv/ustar-storage/backups/managed/ustar-recovery-20261006T011112Z-8f332c59.tar.gz.age
+    sha256: d9352e3ce5e237a6ac0ab14c72b9da2648d6906fe7e95cd5c88bea726c965af3
+    bytes: 957829597
+    stop_to_running_seconds: 24.111
+    readback_verified: true
+    login_http: 200
+    staging_retained: false
+    external_copy_verified: false
+    restore_verified: false
+    scheduled_run: false
   retained_lab:
     observed_at: '2026-10-05T11:30:58Z'
     source: context/runtime/patch_runtime_20261005.md
@@ -200,7 +216,7 @@ audit:
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false
-  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_mounted_fstab_and_old_archive_hash_PASS_fresh_trial_pending
+  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_pending
   current_hdd_checkpoint: context/runtime/hdd_backup_20261006.md
 patch_candidate:
   tag: v5.1.8
@@ -263,9 +279,9 @@ storage_reorganization:
   partition_or_filesystem_expansion_executed: false
   automatic_backup_installed: false
   next_readonly_evidence:
-  - installed_HDD_producer_preflight_and_fresh_trial_report
+  - installed_HDD_timer_status_and_first_scheduled_run
   - fresh_root_measurement_and_partition_table_recovery_before_SSD_growth
-  - verified_backup_trial_on_HDD
+  - independent_copy_and_restore_of_fresh_HDD_archive
   fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
   ssd_gpt_backup_boundary_warning: 'PMBR 104857599 != disk 234441647; no write performed'
@@ -293,7 +309,21 @@ storage_reorganization:
   hdd_existing_archive_source_retained: true
   hdd_producer_source: scripts/infra/hdd_backup.py
   hdd_producer_sha256: 75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75
-  hdd_producer_installed: false
+  hdd_producer_installed: true
+  hdd_producer_source_pr: 91
+  hdd_producer_source_commit: d884e402948af91b5c9f2645e07fdaf1b1838e03
+  hdd_producer_context_ci: 37397150420
+  hdd_producer_source_ci: 37397150516
   hdd_producer_local_validation: 19_boundary_and_10_exact_private_engine_fixture_tests_PASS
-  hdd_fresh_backup_trial_executed: false
+  hdd_fresh_backup_trial_executed: true
+  hdd_fresh_backup_trial: context/runtime/hdd_backup_trial_20261006.json
+  hdd_trial_owner_output_received_at: '2026-10-06T01:16:21Z'
   hdd_backup_timer: not_installed
+  hdd_schedule_source: scripts/infra/hdd_backup_schedule.py
+  hdd_schedule_source_sha256: 54533f6a629699e031a877b4a57f68401477a61cf20cab39512c79a2e0477b7d
+  hdd_schedule_contract: context/runtime/hdd_backup_schedule_20261006.md
+  hdd_schedule_local_validation: 24_tests_PASS_including_actual_systemd_calendar_and_unit_parsing
+  hdd_schedule_initial_policy: proposed_daily_0330_Europe_Moscow_no_catchup_no_archive_deletion_100GiB_quota
+  hdd_schedule_policy_owner_activation: pending_operator_install_command
+  hdd_archive_retention_deletion: not_enabled
+  hdd_schedule_server_execution: not_verified

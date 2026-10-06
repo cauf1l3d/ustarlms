@@ -1,6 +1,9 @@
 # Новые согласованные копии USTAR на HDD — 06.10.2026
 
-Статус: **source prepared / server execution pending**. Владелец подтвердил
+Статус: **producer installed / preflight and fresh manual HDD trial PASS**.
+Producer PR91/main `d884e402948af91b5c9f2645e07fdaf1b1838e03` подтверждён
+owner terminal output received06Oct01:16:21UTC/04:16:21MSK;
+[точный report](hdd_backup_trial_20261006.json). Владелец ранее подтвердил
 `FSTAB_CONFIGURED=PASS` и `HDD_ARCHIVE_COPY=PASS`; сообщение получено
 06Oct03:33:41MSK/00:33:41UTC, timestamps выполнения команд не напечатаны.
 `/srv/ustar-storage` — ext4 UUID `359a2bae-4e79-461a-ab72-1597f605d801`,
@@ -9,9 +12,27 @@ df458G/913Mused/452Gavailable/1%. Fstab backup:
 
 Существующий05Oct encrypted snapshot скопирован в `backups/manual` с source и
 copied-file SHA-256 `42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8`.
-Это прежняя точка данных: decryption/restore новой HDD копии и fresh capture не выполнены.
+Это прежняя точка данных; её copy не заменяет свежий capture ниже.
 Source на SSD сохранён. SMART198=1 остаётся отдельным аппаратным риском; локальный
 HDD не считается независимым экземпляром для потери host.
+
+## Пробная свежая копия на сервере
+
+| Поле | Owner report06Oct01:10..01:12UTC |
+|---|---|
+| Install/check/capture | HDD_BACKUP_INSTALLED / HDD_PREFLIGHT / HDD_BACKUP = PASS |
+| Archive | `ustar-recovery-20261006T011112Z-8f332c59.tar.gz.age` под `backups/managed` |
+| SHA256 | `d9352e3ce5e237a6ac0ab14c72b9da2648d6906fe7e95cd5c88bea726c965af3` |
+| Размер | 957829597bytes ≈913.46MiB |
+| Полный цикл | 100.389s по started/finished timestamps |
+| Пауза Moodle | 24.111s; MOODLE_RUNNING=YES, Apache login200 |
+| Final hash | readback_verified=true |
+| Staging/архивы | staging_retained=false, archive_deletion=false |
+| Timer/external/restore | timer_unit_present=false; external_copy_verified=false; restore_verified=false |
+
+Это реальный owner-run pipeline Docker/PG/age на HDD, не прямой доступ агента.
+Missing-disk/full-disk/interruption negative cases на production не запускались.
+Free485129400320bytes — pre-capture measurement; fresh post-capture df не получен.
 
 ## Исполняемые зависимости
 
@@ -83,14 +104,15 @@ Authenticate отдельно `sudo -v`, затем:
 sudo -n python3 -u /usr/local/sbin/USTAR_HDD_BACKUP_20261006.py --check
 ```
 
-После `HDD_PREFLIGHT=PASS`, в выбранное окно короткой паузы Academy:
+Ниже выполненный trial CLI; новый ручной запуск нужен только для новой точки данных,
+в выбранное окно паузы Academy:
 
 ```bash
 sudo -n nice -n 10 ionice -c 2 -n 7 python3 -u /usr/local/sbin/USTAR_HDD_BACKUP_20261006.py --backup --acknowledge-outage
 ```
 
 Ожидаем `HDD_BACKUP=PASS` и полный report со SHA/bytes, временем паузы,
-HDD path и login HTTP200. Это новая trial copy. HTTP200 не подтверждает
+HDD path и login HTTP200. HTTP200 не подтверждает
 authenticated business acceptance; encrypted readback не заменяет decryption/restore.
 При failure — полный безопасный console output и `--status`; retained work не удалять.
 
@@ -105,9 +127,10 @@ failed resume, disconnect без SSD fallback и сохранение uncertain 
 без `USTAR_TEST_BACKUP_ENGINE`; private engine не публикуется. Это не настоящий
 Docker/PG/age encryption или HDD power-loss/recovery rehearsal.
 
-Server install/check/trial и fresh archive independent-copy/decryption/restore ещё
-pending. Timer/retention/notification delivery не установлены этой версией.
-Предложение03:30 Europe/Moscow и7daily/4weekly/3monthly остаётся предложением;
-активация после trial и фиксации policy, без дневного catch-up missed night backup.
+Server install/check/manual trial подтверждены. Fresh archive independent-copy/
+decryption/restore ещё pending. [Начальный scheduler](hdd_backup_schedule_20261006.md)
+подготовлен; server activation/first scheduled run и внешняя notification delivery
+ещё не подтверждены. Рекомендуемый initial daily03:30 Europe/Moscow — без daytime
+catch-up и без archive deletion; retention7daily/4weekly/3monthly не принят/не включён.
 Перед освобождением SSD snapshots нужны consumer/independent-copy checks; перед
 SSD GPT/root growth — separate recovery/partition-table copy/procedure.

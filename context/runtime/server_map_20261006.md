@@ -2,20 +2,51 @@
 
 Текущая команда владельца **06.10.2026 00:45:07 MSK /05.10 21:45:07 UTC**: до нового стенда оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD. Это заменяет прежний порядок «регулярные копии в самом конце». `PR87 --prepare-stage` приостановлен. Прямого SSH у агента нет; ниже датированный вывод владельца, а не live query.
 
+## Новый read-only проход 06Oct
+
+[Owner result](ssd_storage_result_20261006.json) получен06Oct11:19:59MSK/08:19:59UTC;
+первый inventory timestamp08:18:26UTC, время последующих команд не напечатано.
+Root49G/36Gused/11Gavailable/78%; HDD после свежего trial458G/1,8Gused/451Gavailable.
+Root ext4 UUID `fb5cc206-93f8-4601-a415-8d418970cf31`, mount содержит journaled
+user/group quota options. SSD120034123776bytes, GPT UUID
+`074EDCD7-FE7C-4674-9865-6425931232D7`, partition starts/sizes прежние,
+PMBR mismatch и backup-GPT-not-at-end предупреждения сохраняются. `sfdisk --dump`
+ничего не исправлял; его фраза "will be corrected by write" описывает будущую запись.
+
+SSD SMART overall PASSED, raw1/5/196/198=0, power-on25964h/temperature raw50.
+Это H/A query, не self-test или гарантия health. Vendor-specific packed raw175/176/177
+не переводить в количество failures/износ без verified decoder. Model/serial
+в lsblk columns усечены (`WALRA`/`2203JP`), WWN zero не является unique identity.
+Перед pinned write нужен untruncated JSON identity и ext4 features/geometry.
+
+Все четыре показанных containers running; lab web/PG **активно используют**
+`/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72`. Production binds подтверждены:
+site/data под `/opt/ustar/data/moodle`, PG `/opt/ustar/data/postgres`.
+Du подтвердил home15G,18 home snapshot candidates плюс nested2,9G,
+opt backups1,8G/releases828M/export1,9G/labs2,3G+2,2G; внутри вложенных totals
+не суммировать повторно. Это usage, не clearance на cleanup.
+
+Reference search перешёл на grep fallback; шесть wrapper filenames совпали,
+но missing/broken paths в systemd и ISPConfig hook locations дали ошибки.
+Exit status не напечатан, active service impact не проверен; поиск частичный.
+Console/rescue и binary partition-table copy пока не подтверждены. Следующий
+[read-only identity/features шаг и объяснение recovery](ssd_storage_preflight_20261006.md).
+
 ## Диски и размещение
 
 | Объект | Полученные данные | Вывод / следующее действие |
 |---|---|---|
 | SSD `/dev/sda` | WALRAM 120GB,111,8GiB; GPT, stale backup boundary | Sector inventory получен; перед отдельной repair/growth операцией сохранить recovery и partition-table copy |
 | `/dev/sda1` | 1MiB, BIOS boot, sectors2048–4095 | Сохранить; не удалять |
-| `/dev/sda2` → `/` | partition50GiB, ext4; df49G/36G used/11G available/78%; lsblk10,5G available | Home, USTAR, export и labs расположены здесь |
+| `/dev/sda2` → `/` | partition50GiB, ext4 UUIDfb5cc206…; inventory06Oct08:18:26UTC df49G/36G used/11G available/78% | Home, USTAR, export и labs расположены здесь |
 | Ёмкость SSD вне показанных размеров разделов | 61.79GiB free tail по start/end sectors | Подтверждённый свободный partition range; GPT repair/partition growth/fs resize ещё не выполнялись |
-| HDD `/dev/sdb1` → `/srv/ustar-storage` | ext4 `ustar-hdd`, UUID `359a2bae-4e79-461a-ab72-1597f605d801`; pre-trial df458G/913M used/452G available/1% | WWN0x50014ee200c1ee59,serial WD-WCAS82914317,500106780160bytes; mount/fstab/existing-copy SHA и producer install/check/fresh trial PASS; timer active/enabled, first scheduled run pending |
+| HDD `/dev/sdb1` → `/srv/ustar-storage` | ext4 `ustar-hdd`, UUID `359a2bae-4e79-461a-ab72-1597f605d801`; inventory06Oct08:18:26UTC df458G/1,8G used/451G available/1% | WWN0x50014ee200c1ee59,serial WD-WCAS82914317,500106780160bytes; mount/fstab/existing-copy SHA и producer install/check/fresh trial PASS; timer active/enabled, first scheduled run pending |
 
 Свежий `fdisk -l` уточнил SSD: `/dev/sda` — 234441648 sectors; GPT имеет устаревшую
 backup-table boundary (PMBR mismatch `104857599 != 234441647`), а `/dev/sda2`
-заканчивается на 104855551. Поэтому свободный хвост до стандартного GPT usable end
-составляет 129586062 sectors ≈ 61.79 GiB. Это хороший кандидат на расширение root,
+заканчивается на 104855551. Консервативная предыдущая оценка свободного физического хвоста —
+129586062 sectors ≈ 61.79 GiB; текущий GPT last-lba остаётся104857566.
+Точный usable end после repair надо перечитать из GPT до partition growth. Это хороший кандидат на расширение root,
 но сначала нужны сохранённая partition-table copy, HDD/backup readiness и отдельная
 операция relocate GPT → grow partition → ext4 resize. `/dev/sda1` подтверждён как
 BIOS boot и не подлежит удалению.
@@ -30,7 +61,7 @@ initializer не нужно. Следующий owner output, полученны
 `/etc/fstab.before-ustar-hdd-c2kb8T`, source/copy SHA и `HDD_ARCHIVE_COPY=PASS`;
 452G доступны. Reboot/mount-after-boot не проверялись. [Producer/trial](hdd_backup_20261006.md) PR91 установлен: owner06Oct01:10..01:12UTC
 подтвердил HDD_BACKUP=PASS,957829597bytes,24.111s pause,readback/login200,staging removed.
-[Отчёт](hdd_backup_trial_20261006.json); fresh post-capture df не получен.
+[Отчёт](hdd_backup_trial_20261006.json); post-capture df06Oct08:18:26UTC теперь получен:1,8G used/451G available.
 [Scheduler](hdd_backup_schedule_20261006.md) PR92 установлен: [owner report received06Oct08:02:24UTC](hdd_backup_schedule_install_20261006.json), active/enabled, next07Oct00:30UTC/03:30MSK; last scheduled null, recovery marker false. First scheduled run/boot recovery pending.
 
 На HDD завершены one-zero-pattern write/read0errors и newest extended SMART Completed without error16385h. Последний SMART20:44:52UTC: reallocated/pending/CRC0, Offline_Uncorrectable198=1; причина residual не установлена. Это не гарантия долговечности. Новые копии на HDD дополняют source на SSD; единственные важные архивы нельзя удалять с SSD до проверки независимой копии. Старый отдельно сохранённый/decrypted04Oct архив не подтверждает наличие всех последующих исторических snapshots.

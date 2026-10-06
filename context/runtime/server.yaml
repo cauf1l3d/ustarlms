@@ -14,8 +14,7 @@ required_shared_services:
 - mail
 - DNS
 - ISPConfig
-root_storage: 49G /36G used /11G available /78%; owner output received2026-10-05T21:45:07Z, exact execution timestamp
-  absent
+root_storage: 49G /36G used /11G available /78%; inventory2026-10-06T08:18:26Z, owner received08:19:59Z
 root_occupancy_hypothesis: home15GiB_with_approx13GiB_snapshot_candidates_and_two_labs2.2_2.3GiB_measured_no_deletion
 runbook: context/runtime/OPERATIONS.md
 current_storage_map: context/runtime/server_map_20261006.md
@@ -30,7 +29,7 @@ hdd_filesystem: ext4
 hdd_uuid: 359a2bae-4e79-461a-ab72-1597f605d801
 hdd_mountpoint: /srv/ustar-storage
 hdd_mount_options: rw,nosuid,nodev,noexec,relatime
-hdd_df_rounded: 458G_total_913M_used_452G_available_1percent
+hdd_df_rounded: 458G_total_1.8G_used_451G_available_1percent
 hdd_fstab_and_copy_owner_output_received_at: '2026-10-06T00:33:41Z'
 hdd_fstab_configuration: verified_no_reboot_performed
 hdd_existing_archive_copy_hash: PASS_source_retained_on_SSD
@@ -43,7 +42,7 @@ hdd_backup_trial_login_http: 200
 hdd_schedule_contract: context/runtime/hdd_backup_schedule_20261006.md
 hdd_backup_timer: installed_active_enabled_first_scheduled_run_pending
 hdd_schedule_initial_policy: owner_activated_daily_0330_Moscow_no_catchup_no_deletion_100GiB_quota
-hdd_df_timing: before_fresh_HDD_capture_post_capture_df_not_received
+hdd_df_timing: post_manual_trial_inventory_20261006T081826Z
 hdd_schedule_owner_output_received_at: '2026-10-06T08:02:24Z'
 hdd_schedule_install_evidence: context/runtime/hdd_backup_schedule_install_20261006.json
 hdd_schedule_next_event_utc: '2026-10-07T00:30:00Z'
@@ -51,3 +50,13 @@ hdd_schedule_last_scheduled_run: null
 hdd_schedule_recovery_marker_present: false
 hdd_schedule_boot_recovery_verified: false
 next_readonly_preflight: context/runtime/ssd_storage_preflight_20261006.md
+latest_storage_evidence: context/runtime/ssd_storage_result_20261006.json
+latest_storage_inventory_timestamp: '2026-10-06T08:18:26Z'
+latest_storage_owner_received_at: '2026-10-06T08:19:59Z'
+root_filesystem_uuid: fb5cc206-93f8-4601-a415-8d418970cf31
+root_journaled_quota_mount_options: usrjquota=quota.user_grpjquota=quota.group_jqfmt=vfsv0
+ssd_full_identity: not_verified_lsblk_model_serial_column_truncation_WWN_zero
+ssd_smart: overall_PASSED_vendor_specific_raw_decode_not_verified
+retained_lab_mount_consumers: two_running_containers_confirmed
+control_path_reference_search: partial_missing_link_errors_no_complete_clearance
+console_rescue_availability: unknown

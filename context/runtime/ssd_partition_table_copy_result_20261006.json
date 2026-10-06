@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "owner_terminal_output_and_console_access_declaration",
+  "owner_message_received_at": "2026-10-06T09:06:01Z",
+  "capture_timestamp": "stored_in_private_captured-utc.txt_not_printed_in_supplied_output",
+  "independently_measured_by_agent": false,
+  "source_runbook": "context/runtime/ssd_partition_table_copy_20261006.md",
+  "copy_directory": "/srv/ustar-storage/ssd-layout-20261006-06NYpg",
+  "storage": {
+    "hdd_uuid": "359a2bae-4e79-461a-ab72-1597f605d801",
+    "hdd_by_id": "wwn-0x50014ee200c1ee59-part1",
+    "mountpoint": "/srv/ustar-storage",
+    "mode": "root:root/0700",
+    "identity_guards_passed_by_command_completion": true
+  },
+  "ssd": {
+    "model": "WALRAM 120GB",
+    "serial": "2203JPDG120GB6000933",
+    "bytes": 120034123776,
+    "sector_bytes": 512,
+    "gpt_uuid": "074edcd7-fe7c-4674-9865-6425931232d7",
+    "root_uuid": "fb5cc206-93f8-4601-a415-8d418970cf31",
+    "identity_and_geometry_guards_passed_by_command_completion": true
+  },
+  "raw_regions": [
+    {
+      "file": "raw-lba-0-count-4096.bin",
+      "start_lba": 0,
+      "sectors": 4096,
+      "bytes": 2097152,
+      "source_cmp": "PASS_by_completed_guarded_command",
+      "sha256sum_check": "OK"
+    },
+    {
+      "file": "raw-lba-104855552-count-2048.bin",
+      "start_lba": 104855552,
+      "sectors": 2048,
+      "bytes": 1048576,
+      "source_cmp": "PASS_by_completed_guarded_command",
+      "sha256sum_check": "OK"
+    },
+    {
+      "file": "raw-lba-234439600-count-2048.bin",
+      "start_lba": 234439600,
+      "sectors": 2048,
+      "bytes": 1048576,
+      "source_cmp": "PASS_by_completed_guarded_command",
+      "sha256sum_check": "OK"
+    }
+  ],
+  "metadata_hash_checks": {
+    "sgdisk.bin": "OK",
+    "layout.sfdisk": "OK",
+    "layout.json": "OK",
+    "identity.json": "OK",
+    "ext4-header.txt": "OK",
+    "captured-utc.txt": "OK"
+  },
+  "manifest": "SHA256SUMS",
+  "sha256_values_in_supplied_output": false,
+  "all_nine_payload_hash_checks_passed": true,
+  "hdd_sync_completed_by_command": true,
+  "final_marker": "GPT_COPY_READBACK=PASS",
+  "warnings": [
+    "GPT PMBR size mismatch (104857599 != 234441647) will be corrected by write.",
+    "The backup GPT table is not on the end of the device."
+  ],
+  "warning_scope": "read_only_utility_output_not_SSD_repair",
+  "console_access": {
+    "owner_message_received_at": "2026-10-06T09:03:36Z",
+    "owner_text": "да у сисадмина есть доступ",
+    "sysadmin_access_confirmed": true,
+    "exact_console_method": "not_separately_identified",
+    "rescue_boot_medium": "not_separately_identified",
+    "actual_recovery_boot_tested": false
+  },
+  "scope": {
+    "ssd_partition_table_written": false,
+    "root_partition_grown": false,
+    "root_filesystem_resized": false,
+    "services_stopped_by_copy_command": false,
+    "full_ssd_image": false,
+    "shared_host_file_backup": false,
+    "independent_external_copy": false,
+    "restore_boot_verified": false,
+    "gpt_crcs_verified_by_copy_command": false
+  },
+  "next_step": "guarded_raw_GPT_CRC_precheck_then_secondary_GPT_PM_BR_relocation_only_no_partition_growth",
+  "next_runbook": "context/runtime/ssd_gpt_relocate_20261006.md"
+}

@@ -346,3 +346,30 @@ use regular sparse-file fixture (three ranges4MiB/root excluded); native sgdisk
 not executed locally. Production execution and console/rescue remain pending. Timer first
 scheduled event07Oct00:30UTC unchanged. Current state/queue/server map/index updated;
 application/private helpers/scheduler/cron untouched, original audit preserved.
+
+
+## 2026-10-06 — GPT/boot copy PASS; first guarded relocation prepared
+
+База main1c37276937750857055bbfe56be065457dad222c (PR95). Owner09:03:36UTC
+подтвердил доступ сисадмина к консоли; exact method/rescue medium/boot test отдельно
+не названы. Owner output received09:06:01UTC: GPT_COPY_READBACK=PASS, nine payload
+hash checks OK, raw source cmp/sync завершены guarded command. Private directory
+/srv/ustar-storage/ssd-layout-20261006-06NYpg; capture timestamp хранится в private
+file, не напечатан. Raw PMBR/primary+old/physical-end GPT/BIOS boot и metadata/native
+backup сохранены на HDD. Existing GPT warnings остаются, SSD не записывался. Hash
+values не даны, binary contents не публикуются; previous dated evidence не переписано.
+
+Следующая one-line команда подготовлена: recheck identities/mount/hash copy, raw
+header/table CRC и layout before write, sgdisk --move-second-header, independent
+raw post CRC/pointers/exact entry array/GUID/kernel sizes/MBR boot code+BIOS boot
+preservation, readonly utility verify/dump/df. Only GPT/PMBR relocation, no root
+partition growth/ext4 resize/stop services. Bash/Python syntax PASS и17 local guard
+scenarios on sparse regular file PASS, including corruption/mismatch failures;
+native sgdisk locally unavailable/not executed. Expected post usable_end234441614
+не является server result. No automatic retry/rollback after write-stage failure.
+
+STATE/ACTIVE/BACKLOG/entrypoints/server map и generated context index обновлены;
+original audit, application526files/93tables/32tasks, frontend/private backup engine/
+cron/scheduler unchanged. Publication CI/deployment отделены от owner server evidence.
+Timer first scheduled event07Oct00:30UTC unchanged; root growth/source cleanup/stage
+и full host boot restore пока не выполнены. Следующий результат нужен от оператора.

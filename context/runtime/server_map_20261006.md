@@ -23,8 +23,12 @@ Ext4: 13106432×4096 =53683945472bytes, совпадает с размером `
 resize_inode/64bit/extents/metadata_csum recorded. Header прочитан на mounted root:
 clean/needs_recovery и last-write time не являются offline fsck или timestamp команды.
 GPT/SMART follow-up не повторяет. [Raw boot/GPT/native copy command](ssd_partition_table_copy_20261006.md)
-подготовлена для exact mounted HDD, без SSD partition write и stop services;
-owner execution и console/rescue confirmation pending.
+выполнена владельцем без SSD partition write и stop services. [Owner09:06:01UTC result](ssd_partition_table_copy_result_20261006.json):
+`GPT_COPY_READBACK=PASS`, nine hash checks/source cmp, exact directory
+`/srv/ustar-storage/ssd-layout-20261006-06NYpg`. Copy timestamp приватно сохранён,
+в выводе не напечатан. Sysadmin console access owner09:03:36UTC подтверждён;
+rescue medium и boot test отдельно не проверены. Следующий [GPT relocation only](ssd_gpt_relocate_20261006.md)
+подготовлен,17 local guard fixtures PASS; native sgdisk локально не выполнялся, server relocation pending.
 
 Все четыре показанных containers running; lab web/PG **активно используют**
 `/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72`. Production binds подтверждены:
@@ -36,15 +40,15 @@ opt backups1,8G/releases828M/export1,9G/labs2,3G+2,2G; внутри вложен
 Reference search перешёл на grep fallback; шесть wrapper filenames совпали,
 но missing/broken paths в systemd и ISPConfig hook locations дали ошибки.
 Exit status не напечатан, active service impact не проверен; поиск частичный.
-Console/rescue и binary partition-table copy пока не подтверждены. Следующий
-[выполненный identity/features шаг](ssd_storage_preflight_20261006.md) и следующий
-[guarded table-copy шаг](ssd_partition_table_copy_20261006.md).
+Console access и binary partition-table copy теперь подтверждены отдельно от этого
+частичного reference search. [Выполненный identity/features шаг](ssd_storage_preflight_20261006.md),
+[копия разметки PASS](ssd_partition_table_copy_20261006.md), [следующий GPT write](ssd_gpt_relocate_20261006.md).
 
 ## Диски и размещение
 
 | Объект | Полученные данные | Вывод / следующее действие |
 |---|---|---|
-| SSD `/dev/sda` | WALRAM 120GB,111,8GiB; GPT, stale backup boundary | Sector inventory получен; перед отдельной repair/growth операцией сохранить recovery и partition-table copy |
+| SSD `/dev/sda` | WALRAM 120GB,111,8GiB; GPT, stale backup boundary | Inventory и boot/GPT copy PASS; guarded GPT relocation подготовлен, server write/root growth pending |
 | `/dev/sda1` | 1MiB, BIOS boot, sectors2048–4095 | Сохранить; не удалять |
 | `/dev/sda2` → `/` | partition50GiB, ext4 UUIDfb5cc206…; inventory06Oct08:18:26UTC df49G/36G used/11G available/78% | Home, USTAR, export и labs расположены здесь |
 | Ёмкость SSD вне показанных размеров разделов | 61.79GiB free tail по start/end sectors | Подтверждённый свободный partition range; GPT repair/partition growth/fs resize ещё не выполнялись |
@@ -55,8 +59,8 @@ backup-table boundary (PMBR mismatch `104857599 != 234441647`), а `/dev/sda2`
 заканчивается на 104855551. Консервативная предыдущая оценка свободного физического хвоста —
 129586062 sectors ≈ 61.79 GiB; текущий GPT last-lba остаётся104857566.
 Точный usable end после repair надо перечитать из GPT до partition growth. Это хороший кандидат на расширение root,
-но сначала нужны сохранённая partition-table copy, HDD/backup readiness и отдельная
-операция relocate GPT → grow partition → ext4 resize. `/dev/sda1` подтверждён как
+HDD/backup readiness и сохранённая partition-table copy уже подтверждены. Отдельная
+последовательность relocate GPT → grow partition → ext4 resize ещё не выполнялась. `/dev/sda1` подтверждён как
 BIOS boot и не подлежит удалению.
 
 Владелец выполнил [one-time initializer](hdd_initialize_20261006.md):
@@ -132,7 +136,7 @@ Existing `/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py`, SHA0d31e694db8bee23090
 ## Порядок продолжения
 
 1. Выполненные initializer/fstab/old-copy/producer install/fresh trial/scheduler install не повторять. Timer active/enabled; после07Oct03:30MSK получить первый scheduled report. Для следующего read-only storage прохода ждать ночи не требуется.
-2. [SSD/consumer preflight](ssd_storage_preflight_20261006.md) и full identity/ext4 follow-up получены. Выполнить [guarded raw boot/GPT/native copy](ssd_partition_table_copy_20261006.md), получить console/rescue readiness и проверить recovery inputs; sector range61.79GiB уже подтверждён. Подготовить отдельную SSD GPT repair/root expansion процедуру; expansion ещё не выполнялось.
+2. [SSD/consumer preflight](ssd_storage_preflight_20261006.md), full identity/ext4 и [guarded raw boot/GPT/native copy PASS](ssd_partition_table_copy_result_20261006.json) получены; copy не повторять, console access подтверждён. Выполнить [guarded GPT relocation only](ssd_gpt_relocate_20261006.md), получить raw post-CRC/layout/unchanged partition output; затем подготовить sda2 growth/kernel size check/ext4 resize отдельно. Rescue medium/boot restore отдельно не проверены; sector range61.79GiB уже подтверждён, expansion пока не выполнялось.
 3. Переносить named архивы через copy→hash/metadata verification→consumer update→проверку независимой copy→точечное освобождение исходников. Retained labs со строгими absolute-path guards не перемещать обычным `mv`.
 4. Проверить первый scheduled backup и boot recovery; дополнить карту путей/UUID/schedules/recovery procedure по новым результатам. Затем пересчитать budget и вернуться к стенду/Moodle/OS/HTTPS.
 

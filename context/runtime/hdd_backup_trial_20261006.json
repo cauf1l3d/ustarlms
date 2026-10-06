@@ -1,0 +1,46 @@
+{
+  "kind": "dated_owner_terminal_output",
+  "owner_message_received_at": "2026-10-06T01:16:21Z",
+  "agent_direct_server_access": false,
+  "installed_source_sha256": "75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75",
+  "installation_result": "HDD_BACKUP_INSTALLED=PASS",
+  "preflight_result": "HDD_PREFLIGHT=PASS",
+  "capture_result": "HDD_BACKUP=PASS",
+  "report": {
+    "started_utc": "2026-10-06T01:10:22.378330+00:00",
+    "hdd_uuid": "359a2bae-4e79-461a-ab72-1597f605d801",
+    "success": true,
+    "staging": "/srv/ustar-storage/backups/.staging/work-67h90qo9",
+    "budget": {
+      "required_free_bytes_estimate": 10113823536,
+      "available_free_bytes": 485129400320,
+      "managed_export_quota_bytes": 107374182400,
+      "estimate_not_growth_guarantee": true
+    },
+    "phase": "complete",
+    "finished_utc": "2026-10-06T01:12:02.767562+00:00",
+    "manifest": {
+      "utc": "2026-10-06T01:11:58.736927+00:00",
+      "file": "ustar-recovery-20261006T011112Z-8f332c59.tar.gz.age",
+      "sha256": "d9352e3ce5e237a6ac0ab14c72b9da2648d6906fe7e95cd5c88bea726c965af3",
+      "bytes": 957829597,
+      "scope": "USTAR encrypted snapshot on same-host HDD",
+      "external_copy_verified": false,
+      "moodle_stop_to_running_seconds": 24.111,
+      "readback_verified": true,
+      "restore_verified": false,
+      "old_backup_deletion": false,
+      "hdd_uuid": "359a2bae-4e79-461a-ab72-1597f605d801",
+      "producer": "ustar-hdd-backup-v1",
+      "dependency_sha256": "0d31e694db8bee2309072bd00dee2423022f35e18ad2c11ea1cf788fc63ef47f",
+      "archive": "/srv/ustar-storage/backups/managed/ustar-recovery-20261006T011112Z-8f332c59.tar.gz.age"
+    },
+    "readiness": {
+      "login_http": 200,
+      "authenticated_business_acceptance": false
+    },
+    "staging_retained": false,
+    "timer_unit_present": false,
+    "archive_deletion": false
+  }
+}

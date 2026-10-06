@@ -237,3 +237,44 @@ Application source, original audit bytes, historical runtime/fixtures и cron v3
 Server producer install/check/fresh trial, timer/retention, source deletion и SSD
 repair/growth pending. Next operator: pinned install → --check → chosen-window
 --backup --acknowledge-outage/report, then policy/timer and SSD recovery steps.
+
+## 2026-10-06 — Owner HDD trial PASS и начальный ежедневный timer prepared
+
+База main `d884e402948af91b5c9f2645e07fdaf1b1838e03` (PR91), ветка
+`codex/ustar-hdd-backup-schedule-20261006`. Owner upload received04:16:21MSK/
+01:16:21UTC подтверждает pinned producer installation/preflight и fresh
+HDD_BACKUP=PASS06Oct01:10:22..01:12:02UTC. Archive957829597bytes, SHA256
+`d9352e3ce5e237a6ac0ab14c72b9da2648d6906fe7e95cd5c88bea726c965af3`,
+pause24.111s,readback/login200,staging removed, archive deletionfalse.
+Sanitized report `context/runtime/hdd_backup_trial_20261006.json` добавлен;
+это manual trial, не scheduled run/restore/external copy/agent server access.
+
+`scripts/infra/hdd_backup_schedule.py`, SHA256
+`54533f6a629699e031a877b4a57f68401477a61cf20cab39512c79a2e0477b7d`,
+готовит только три systemd units: daily03:30Moscow/window03:30..03:40,
+no catch-up/retry/archive deletion, existing100GiB quota, main45min,
+post-stop/boot resume по SSD marker с точным producer/container guard,
+journal и отдельный scheduled report. Trial<=48h/readback/preflight и
+unit conflict/override/active-worker/verify guards до activation;
+operator installation/first scheduled run/boot recovery ещё pending.
+Предлагаемый initial policy станет действующим после owner install команды;
+retention7daily/4weekly/3monthly и Telegram delivery ещё не приняты/не настроены.
+
+24 local tests PASS, включая настоящий systemd255 calendar и unit parsing;
+реальные files/modes/inodes и producer uncertain-marker guard;
+systemctl/mount/Docker/fixture ownership подменены. Не заявлены production
+negative/power-loss/recovery acceptance. SHA/CI фиксируются в delivery PR/Git.
+STATE/ACTIVE/BACKLOG/server map/backup entrypoints/index обновлены; исходный
+аудит, application source, workflow/harness, private engine и cron v3 прежние.
+Source deletion, SSD repair/growth, fresh archive independent copy/restore pending.
+
+CI correction within this delivery: the first context/source164-test run found
+one fixture calling root-only producer main under a non-root runner. The test
+now mocks effective UID explicitly; production root guard/source stays unchanged.
+24 focused tests also PASS with simulated non-root caller. Frontend audit reported
+GHSA-68fv-2mgg-jv7q/source-map-js1.2.1; npm regenerated only that lock entry to1.2.2
+(version/resolved/integrity), verified against registry/upstream release.
+Production frontend is unused; Moodle/plugin/theme/runtime code is unchanged.
+Clean npm ci and npm audit --omit=dev --audit-level=moderate PASS (zero runtime
+vulnerabilities); frontend4 unit tests PASS. Build/new exact-head CI recorded in PR.
+No audit threshold or required check disabled.

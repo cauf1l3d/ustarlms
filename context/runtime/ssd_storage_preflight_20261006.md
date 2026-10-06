@@ -23,16 +23,22 @@ reference search частичный с missing-link errors. Повтор все�
 они нужны для host boot recovery при отдельной работе с загрузочным SSD.
 Разрешение на storage work ранее дано; это вопрос о доступных средствах восстановления.
 
-Полные model/serial не получены: lsblk column output их усёк. Следующий bounded
-read-only запрос получает JSON identity и ext4 header/features, в том числе quota:
+[Следующий owner output](ssd_identity_ext4_result_20261006.json) received06Oct08:36:58UTC
+получен: WALRAM120GB, serial2203JPDG120GB6000933, UUID/PARTUUID совпадают; ext4
+13106432 blocks×4096 = partition53683945472bytes. Zero WWN не unique pin. Features
+resize_inode/64bit/extents/metadata_csum recorded; header прочитан на mounted root,
+это не offline filesystem check. Needs_recovery/clean/header counters не объявлять
+доказательством отсутствия повреждений. GPT/SMART этим follow-up не повторялись.
+Выполненная команда JSON identity и ext4 header:
 
 ```bash
 sudo -n timeout 20s bash -c 'set -eu; lsblk --json --bytes -o PATH,TYPE,SIZE,MODEL,SERIAL,WWN,UUID,PARTUUID /dev/sda; dumpe2fs -h /dev/sda2'
 ```
 
 Lab сейчас running/actively mounted; его directories не освобождать по du alone.
-GPT dump не является saved binary table copy. До любой partition write остаются
-identity/features/host rescue и verified binary recovery copies.
+GPT dump не является saved binary table copy. [Команда raw boot/GPT + native copy](ssd_partition_table_copy_20261006.md)
+подготовлена; owner execution пока не подтверждено. До любой partition write остаются
+console/rescue, verified binary recovery copies и fresh GPT consistency/layout check.
 
 ## Выполненные команды первого прохода
 

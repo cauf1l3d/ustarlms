@@ -126,12 +126,15 @@ tasks:
     sector-confirmed; home15GiB contains about13GiB snapshot candidates. Exact HDD surface/newest long passed,
     residual198=1 retained; GPT/ext4/UUID mount/fstab and existing05Oct archive copy/hash confirmed,452G available.
     Producer installed/check/fresh HDD trial PASS at06Oct01:10..01:12UTC. Timer owner install/status06Oct08:02UTC PASS/active/enabled/next07Oct03:30MSK; consumer checks,
-    important independent copies and SSD recovery/growth remain pending.
+    important independent copies and SSD recovery/growth remain pending. Read-only06Oct08:18UTC inventory
+    confirms root78%,HDD451G available, unchanged GPT warnings and active retained lab binds. Model/serial
+    columns truncated; full SSD identity, console/rescue, binary table copies and complete consumers pending.
   validation_evidence:
   - context/runtime/server_map_20261006.md
   - context/runtime/hdd_initialize_20261006.md
   - context/runtime/hdd_backup_schedule_install_20261006.json
   - context/runtime/ssd_storage_preflight_20261006.md
+  - context/runtime/ssd_storage_result_20261006.json
   execution_gate: authorized_owner_20261006_pre_stage_storage_map
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание

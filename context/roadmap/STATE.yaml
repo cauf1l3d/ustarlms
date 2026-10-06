@@ -3,11 +3,13 @@ updated_at: '2026-10-06'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'HDD producer installed/check/fresh trial PASS; owner06Oct08:02UTC confirms scheduler PR92
-  installed, timer active/enabled, next07Oct00:30UTC/03:30MSK, no recovery marker and no scheduled run yet.
-  Next: fresh read-only SSD identity/layout/SMART, container mounts, named snapshot sizes/consumers and
-  host/partition-table recovery before separate GPT repair/root growth. SSD free tail61.79GiB previously
-  sector-confirmed; no SSD write or source deletion. PR87 prepare-stage remains paused.'
+current_activity: 'Owner SSD preflight received06Oct08:19:59UTC: initial inventory08:18:26UTC, root78%,
+  HDD451G available post-trial, old GPT/PMBR warning persists, SSD SMART overall PASSED with undeclared
+  vendor decoding. Four running container mounts confirmed, retained lab actively uses its root; control
+  path search has missing-link errors and no complete consumer clearance. Timer active/enabled from
+  earlier evidence, first scheduled run07Oct03:30MSK pending. Next: full untruncated SSD identity/ext4
+  features and host/partition-table recovery; console/rescue availability still unknown. No SSD write,
+  source move/deletion or stage preparation performed.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -281,7 +283,7 @@ storage_reorganization:
   automatic_backup_installed: true
   next_readonly_evidence:
   - first_HDD_scheduled_run_after_20261007T003000Z
-  - fresh_root_measurement_and_partition_table_recovery_before_SSD_growth
+  - full_SSD_identity_ext4_features_and_partition_table_host_recovery_before_growth
   - independent_copy_and_restore_of_fresh_HDD_archive
   fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
@@ -303,8 +305,9 @@ storage_reorganization:
   hdd_fstab_backup: /etc/fstab.before-ustar-hdd-c2kb8T
   hdd_mount_persistence_verified: false
   hdd_mount_owner_output_received_at: '2026-10-06T00:07:20Z'
-  hdd_df_rounded: 458G_total_913M_used_452G_available_1percent
-  hdd_df_timing: before_fresh_HDD_capture_current_free_unverified
+  hdd_df_rounded: 458G_total_1.8G_used_451G_available_1percent
+  hdd_df_timing: post_manual_trial_inventory_20261006T081826Z
+  previous_pre_trial_hdd_df: 458G_total_913M_used_452G_available_1percent
   hdd_fstab_and_copy_owner_output_received_at: '2026-10-06T00:33:41Z'
   hdd_existing_archive_copy_verified: true
   hdd_existing_archive_sha256: 42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8
@@ -343,3 +346,17 @@ storage_reorganization:
   hdd_schedule_recovery_marker_present: false
   hdd_schedule_boot_recovery_verified: false
   next_ssd_preflight: context/runtime/ssd_storage_preflight_20261006.md
+  readonly_storage_result: context/runtime/ssd_storage_result_20261006.json
+  readonly_storage_inventory_timestamp: '2026-10-06T08:18:26Z'
+  readonly_storage_owner_received_at: '2026-10-06T08:19:59Z'
+  root_filesystem_uuid: fb5cc206-93f8-4601-a415-8d418970cf31
+  root_journaled_user_group_quota_mount_options_present: true
+  ssd_full_identity_verified: false
+  ssd_identity_limitation: model_serial_columns_truncated_zero_WWN_not_a_unique_identity
+  ssd_smart_overall_health: PASSED_owner_H_A_only
+  ssd_vendor_specific_smart_raw_decode_verified: false
+  retained_lab_active_mount_consumers_confirmed: true
+  complete_candidate_consumer_clearance: false
+  path_reference_search_missing_link_errors: true
+  host_console_or_rescue_availability_confirmed: false
+  binary_partition_table_recovery_copy_confirmed: false

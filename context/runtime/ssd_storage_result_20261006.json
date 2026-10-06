@@ -1,0 +1,125 @@
+{
+  "kind": "owner_supplied_readonly_terminal_output",
+  "owner_message_received_at": "2026-10-06T08:19:59Z",
+  "initial_inventory_timestamp_utc": "2026-10-06T08:18:26Z",
+  "later_command_timestamps_printed": false,
+  "agent_connected_to_production": false,
+  "root": {
+    "source": "/dev/sda2",
+    "filesystem": "ext4",
+    "uuid": "fb5cc206-93f8-4601-a415-8d418970cf31",
+    "df_rounded": {"total": "49G", "used": "36G", "available": "11G", "use_percent": 78},
+    "mount_options": "rw,relatime,errors=remount-ro,jqfmt=vfsv0,usrjquota=quota.user,grpjquota=quota.group"
+  },
+  "ssd": {
+    "device": "/dev/sda",
+    "bytes": 120034123776,
+    "sector_bytes": 512,
+    "sectors": 234441648,
+    "model_displayed": "WALRA",
+    "serial_displayed": "2203JP",
+    "wwn_displayed": "0x0000000000000000",
+    "model_serial_may_be_column_truncated": true,
+    "full_identity_verified": false,
+    "gpt_uuid": "074EDCD7-FE7C-4674-9865-6425931232D7",
+    "first_lba": 34,
+    "last_lba": 104857566,
+    "warnings": [
+      "GPT PMBR size mismatch (104857599 != 234441647) will be corrected by write.",
+      "The backup GPT table is not on the end of the device."
+    ],
+    "partitions": [
+      {"device": "/dev/sda1", "start": 2048, "size": 2048, "type": "21686148-6449-6E6F-744E-656564454649", "uuid": "4B6F77ED-4DCE-4B46-9A59-F05CE93D11BC"},
+      {"device": "/dev/sda2", "start": 4096, "size": 104851456, "type": "0FC63DAF-8483-4772-8E79-3D69D8477DE4", "uuid": "E32F3B41-9DDE-4D67-8C64-57540C2518CB"}
+    ],
+    "smart": {
+      "overall_health": "PASSED",
+      "power_on_hours": 25964,
+      "temperature_raw": 50,
+      "selected_raw_attributes": {"1": 0, "5": 0, "196": 0, "198": 0},
+      "program_fail_count_chip_raw": 50331648,
+      "erase_fail_count_chip_raw": 4560736,
+      "wear_leveling_count_raw": 19484800,
+      "vendor_specific_raw_decode_verified": false,
+      "self_test_started_by_this_probe": false
+    }
+  },
+  "hdd": {
+    "device": "/dev/sdb1",
+    "mountpoint": "/srv/ustar-storage",
+    "uuid": "359a2bae-4e79-461a-ab72-1597f605d801",
+    "filesystem": "ext4",
+    "options": "rw,nosuid,nodev,noexec,relatime",
+    "df_rounded": {"total": "458G", "used": "1,8G", "available": "451G", "use_percent": 1},
+    "df_scope": "post_manual_HDD_trial_current_inventory"
+  },
+  "container_mounts": [
+    {"name": "ustar_recovery_lab_20261004_web", "status": "running", "binds": [
+      {"source": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/site/public", "target": "/var/www/html"},
+      {"source": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/site/moodledata", "target": "/var/www/moodledata"},
+      {"source": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/lab.ini", "target": "/usr/local/etc/php/conf.d/zz-ustar-lab.ini"},
+      {"source": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/apache.conf", "target": "/etc/apache2/conf-enabled/zz-ustar-lab.conf"}
+    ]},
+    {"name": "ustar_recovery_lab_20261004_pg", "status": "running", "binds": [
+      {"source": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/postgres", "target": "/var/lib/postgresql/data"}
+    ]},
+    {"name": "ustar_moodle", "status": "running", "binds": [
+      {"source": "/opt/ustar/data/moodle/public", "target": "/var/www/html"},
+      {"source": "/opt/ustar/data/moodle/moodledata", "target": "/var/www/moodledata"}
+    ]},
+    {"name": "ustar_postgres", "status": "running", "binds": [
+      {"source": "/opt/ustar/data/postgres", "target": "/var/lib/postgresql/data"}
+    ]}
+  ],
+  "du_rounded": {
+    "/home/aduk": "15G",
+    "/home/aduk/ustar-backups": "2,9G",
+    "/opt/ustar/backups": "1,8G",
+    "/opt/ustar/releases": "828M",
+    "/opt/ustar/releases/20260901T231946Z": "769M",
+    "/var/lib/ustar-backup-export": "1,9G",
+    "/var/lib/ustar-restore-lab": "2,3G",
+    "/var/lib/ustar-cron-lab": "2,2G"
+  },
+  "home_snapshot_directories": [
+    {"path": "/home/aduk/ustar-pr71-hotfix-backup-20261001T010831Z", "du_rounded": "600M"},
+    {"path": "/home/aduk/ustar-backup-20260928T090257Z", "du_rounded": "554M"},
+    {"path": "/home/aduk/ustar-mobile-messages-backup-20261001T114305Z", "du_rounded": "600M"},
+    {"path": "/home/aduk/ustar-pr67rc2-backup-20260930T095444Z", "du_rounded": "600M"},
+    {"path": "/home/aduk/ustar-feed53-backup-20260928T135142Z", "du_rounded": "556M"},
+    {"path": "/home/aduk/ustar-rss54-backup-20260928T143201Z", "du_rounded": "556M"},
+    {"path": "/home/aduk/ustar-rss55-backup-20260928T150923Z", "du_rounded": "553M"},
+    {"path": "/home/aduk/ustar-pr70-backup-20260930T130554Z", "du_rounded": "600M"},
+    {"path": "/home/aduk/ustar-backup-20260926T132136Z", "du_rounded": "559M"},
+    {"path": "/home/aduk/USTAR_PRE_RC43_20260922_110949", "du_rounded": "497M"},
+    {"path": "/home/aduk/ustar-app-icon-backup-20261002T130017Z", "du_rounded": "599M"},
+    {"path": "/home/aduk/ustar-adaptation-reset-backup-20261002T151025Z", "du_rounded": "600M"},
+    {"path": "/home/aduk/ustar-season-team-backup-20261002T114825Z", "du_rounded": "602M"},
+    {"path": "/home/aduk/ustar-rss56-backup-20260929T064704Z", "du_rounded": "567M"},
+    {"path": "/home/aduk/ustar-avatars-login-backup-20261002T123052Z", "du_rounded": "599M"},
+    {"path": "/home/aduk/ustar-pr71-backup-20261001T001931Z", "du_rounded": "603M"},
+    {"path": "/home/aduk/ustar-feed-experience-backup-20260928T122309Z", "du_rounded": "555M"},
+    {"path": "/home/aduk/ustar-feed-backup-20260928T113510Z", "du_rounded": "557M"}
+  ],
+  "path_reference_search": {
+    "method": "grep_fallback_rg_not_found_in_tool_inventory",
+    "scope": ["/etc/systemd/system", "/etc/cron.d", "/etc/crontab", "/usr/local/sbin", "/usr/local/bin", "/var/spool/cron/crontabs"],
+    "matching_files": [
+      "/usr/local/sbin/USTAR_LAB_PATCH_PREFLIGHT_20261005.py",
+      "/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py",
+      "/usr/local/sbin/USTAR_CRON_LAB_20261004.py",
+      "/usr/local/sbin/USTAR_LAB_RESUME_20261005.py",
+      "/usr/local/sbin/USTAR_RESTORE_LAB_20261004.py",
+      "/usr/local/sbin/USTAR_CRON_SETUP_20261005.py"
+    ],
+    "missing_path_errors_present": true,
+    "command_exit_code_printed": false,
+    "complete_consumer_clearance": false,
+    "broken_reference_active_service_impact_verified": false
+  },
+  "available_tools": ["sfdisk", "sgdisk", "growpart", "resize2fs", "smartctl"],
+  "ssd_partition_write_performed": false,
+  "source_move_or_deletion_performed": false,
+  "console_or_rescue_availability_confirmed": false,
+  "binary_partition_table_recovery_copy_confirmed": false
+}

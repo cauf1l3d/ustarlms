@@ -11,7 +11,30 @@ sda2 ext4 root4096–104855551, stale GPT backup/PMBR boundary,
 61.79GiB free tail. Это датированные сведения из [карты](server_map_20261006.md),
 а не разрешение выполнять growth по имени `/dev/sda` без свежей identity/layout.
 
-## Команды оператора
+## Первый проход выполнен, что ещё уточнить
+
+[Вывод владельца](ssd_storage_result_20261006.json) received06Oct08:19:59UTC,
+initial inventory08:18:26UTC: расход/разметка/SMART/mounts/du получены;
+reference search частичный с missing-link errors. Повтор всего прохода не нужен.
+
+Под console подразумевается доступ сисадмина к экрану машины через монитор/
+клавиатуру или management console. Rescue medium — загрузочная Ubuntu Live USB
+или доступный аналог в панели размещения. Эти сведения ещё не известны;
+они нужны для host boot recovery при отдельной работе с загрузочным SSD.
+Разрешение на storage work ранее дано; это вопрос о доступных средствах восстановления.
+
+Полные model/serial не получены: lsblk column output их усёк. Следующий bounded
+read-only запрос получает JSON identity и ext4 header/features, в том числе quota:
+
+```bash
+sudo -n timeout 20s bash -c 'set -eu; lsblk --json --bytes -o PATH,TYPE,SIZE,MODEL,SERIAL,WWN,UUID,PARTUUID /dev/sda; dumpe2fs -h /dev/sda2'
+```
+
+Lab сейчас running/actively mounted; его directories не освобождать по du alone.
+GPT dump не является saved binary table copy. До любой partition write остаются
+identity/features/host rescue и verified binary recovery copies.
+
+## Выполненные команды первого прохода
 
 Каждый блок — одна физическая строка. Authenticate отдельно:
 

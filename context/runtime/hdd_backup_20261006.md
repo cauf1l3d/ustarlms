@@ -7,7 +7,7 @@ owner terminal output received06Oct01:16:21UTC/04:16:21MSK;
 `FSTAB_CONFIGURED=PASS` и `HDD_ARCHIVE_COPY=PASS`; сообщение получено
 06Oct03:33:41MSK/00:33:41UTC, timestamps выполнения команд не напечатаны.
 `/srv/ustar-storage` — ext4 UUID `359a2bae-4e79-461a-ab72-1597f605d801`,
-df до свежего capture:458G/913Mused/452Gavailable/1%; post-capture df ещё не получен. Fstab backup:
+df до свежего capture:458G/913Mused/452Gavailable/1%; [inventory06Oct08:18UTC](ssd_storage_result_20261006.json) после trial:1,8Gused/451Gavailable. Fstab backup:
 `/etc/fstab.before-ustar-hdd-c2kb8T`. Перезагрузка/mount-after-boot не проверялись.
 
 Существующий05Oct encrypted snapshot скопирован в `backups/manual` с source и

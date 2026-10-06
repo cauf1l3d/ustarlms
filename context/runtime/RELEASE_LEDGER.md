@@ -245,3 +245,20 @@ mounts, named copy sizes и control-path filenames. Нет partition writes, pac
 install, service stop, backup invocation, relocation или удаления данных.
 Перед GPT/root growth нужны свежая identity/layout, проверенные partition-table
 copies и host/boot recovery/console; Academy archive не заменяет shared-host rescue.
+
+## 2026-10-06 — SSD/consumer read-only вывод получен; rescue доступ уточняется
+
+База main dc1e8cfee35ed479a9a314dd86c9e46c8c8bf9fe (PR93). Owner attachment
+received08:19:59UTC, first inventory08:18:26UTC, subsequent command times absent.
+Root78%/11G available; HDD post-trial1,8Gused/451Gavailable; root filesystem UUID,
+quota mount options и GPT UUID/starts/sizes зафиксированы. PMBR mismatch и stale
+backup GPT ещё присутствуют; dump не является записью или binary recovery copy.
+SMART overallPASSED/raw1,5,196,198=0; packed vendor raw не интерпретирован как
+fail counts/wear. lsblk model/serial columns усечены, zero WWN не identity pin.
+Four containers running, retained lab has active binds. Named du snapshots сохранены;
+reference grep fallback matches six wrappers but emits missing-link errors, no full
+consumer clearance/active shared-service impact claim. Sanitized result JSON добавлен.
+STATE/ACTIVE/BACKLOG/server map актуализированы; console/rescue explained in plain
+language, unknown; next full JSON identity/ext4 header query read-only/syntax checked.
+Никаких source moves/deletions, SSD GPT/root writes, service stops/reboots или backup
+relaunch не выполнено. Existing timer first run07Oct03:30MSK всё ещё pending.

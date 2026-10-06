@@ -30,5 +30,9 @@ hdd_filesystem: ext4
 hdd_uuid: 359a2bae-4e79-461a-ab72-1597f605d801
 hdd_mountpoint: /srv/ustar-storage
 hdd_mount_options: rw,nosuid,nodev,noexec,relatime
-hdd_df_rounded: 458G_total_28K_used_453G_available_1percent
-hdd_persistence_and_backup_trial: pending_operator_output
+hdd_df_rounded: 458G_total_913M_used_452G_available_1percent
+hdd_fstab_and_copy_owner_output_received_at: '2026-10-06T00:33:41Z'
+hdd_fstab_configuration: verified_no_reboot_performed
+hdd_existing_archive_copy_hash: PASS_source_retained_on_SSD
+hdd_backup_producer: context/runtime/hdd_backup_20261006.md
+hdd_fresh_backup_trial: pending_operator_output

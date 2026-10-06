@@ -3,9 +3,9 @@ updated_at: '2026-10-06'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner confirmed HDD FILESYSTEM_READY and temporary UUID mount on /srv/ustar-storage;
-  ext4, nodev/nosuid/noexec,453G available. Next: validated fstab entry and copy/hash check of existing05Oct
-  encrypted archive, then guarded HDD producer/trial and SSD recovery/reorganization. SSD free tail61.79GiB
+current_activity: 'Owner confirmed HDD ext4/UUID mount, FSTAB_CONFIGURED and existing05Oct archive HDD copy/hash;
+  nodev/nosuid/noexec,452G available. HDD backup producer prepared and locally tested; next installed check
+  and fresh capture trial, then guarded timer policy and SSD recovery/reorganization. SSD free tail61.79GiB
   sector-confirmed; consumer checks still required. PR87 prepare-stage paused; backup timer not installed.'
 next_task: INF-04
 ready_tasks: []
@@ -200,8 +200,8 @@ audit:
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false
-  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_temporarily_mounted_fstab_and_backup_trial_pending
-  current_hdd_checkpoint: context/runtime/hdd_initialize_20261006.md
+  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_mounted_fstab_and_old_archive_hash_PASS_fresh_trial_pending
+  current_hdd_checkpoint: context/runtime/hdd_backup_20261006.md
 patch_candidate:
   tag: v5.1.8
   commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
@@ -263,7 +263,7 @@ storage_reorganization:
   partition_or_filesystem_expansion_executed: false
   automatic_backup_installed: false
   next_readonly_evidence:
-  - persistent_mount_configuration_and_existing_archive_HDD_hash_output
+  - installed_HDD_producer_preflight_and_fresh_trial_report
   - fresh_root_measurement_and_partition_table_recovery_before_SSD_growth
   - verified_backup_trial_on_HDD
   fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
@@ -281,10 +281,19 @@ storage_reorganization:
   hdd_mountpoint: /srv/ustar-storage
   hdd_mounted: true
   hdd_mount_options: rw,nosuid,nodev,noexec,relatime
-  hdd_fstab_changed: false
+  hdd_fstab_changed: true
+  hdd_fstab_configuration_verified: true
+  hdd_fstab_backup: /etc/fstab.before-ustar-hdd-c2kb8T
   hdd_mount_persistence_verified: false
   hdd_mount_owner_output_received_at: '2026-10-06T00:07:20Z'
-  hdd_df_rounded: 458G_total_28K_used_453G_available_1percent
-  hdd_existing_archive_copy_verified: false
+  hdd_df_rounded: 458G_total_913M_used_452G_available_1percent
+  hdd_fstab_and_copy_owner_output_received_at: '2026-10-06T00:33:41Z'
+  hdd_existing_archive_copy_verified: true
+  hdd_existing_archive_sha256: 42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8
+  hdd_existing_archive_source_retained: true
+  hdd_producer_source: scripts/infra/hdd_backup.py
+  hdd_producer_sha256: 75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75
+  hdd_producer_installed: false
+  hdd_producer_local_validation: 19_boundary_and_10_exact_private_engine_fixture_tests_PASS
   hdd_fresh_backup_trial_executed: false
   hdd_backup_timer: not_installed

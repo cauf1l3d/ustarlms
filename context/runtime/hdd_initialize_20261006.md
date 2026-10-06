@@ -58,23 +58,26 @@ Helper завершился с `mounted=false`, `fstab_changed=false`, `ssd_chan
 | Mount flags | `rw,nosuid,nodev,noexec,relatime` |
 | Mount root | `root:root/0700` установлен выполненной командой |
 | `df -hT` | 458G total /28K used /453G available /1% |
-| Пока не подтверждено | fstab/persistence, archive copy/hash, fresh HDD backup producer/trial, timer |
+| Последующий checkpoint | fstab и old archive copy/hash подтверждены следующим owner output; boot persistence/fresh producer/trial/timer ещё впереди |
 
 ## Следующий операторский шаг
 
-Сначала persistent fstab с проверкой текущего UUID и candidate-конфигурации,
-затем copy/hash готового encrypted archive05Oct на HDD. Академия при этих двух
-операциях не останавливается. Исходный архив на SSD сохраняется. Это проверка
-записи и целостности копии, не новый DB snapshot, decryption или restore.
+Owner output06Oct03:33:41MSK подтвердил persistent fstab configuration и copy/hash
+готового encrypted archive05Oct на HDD; source на SSD сохранён, df452Gavailable.
+Это проверка записи и целостности прежней копии, не новый DB snapshot/decryption/
+restore или reboot verification. Следующий шаг — [HDD producer/check/fresh trial](hdd_backup_20261006.md).
 
 Текущий HDD остаётся локальной копией на том же сервере, а не независимым disaster-
 recovery экземпляром. SMART `Offline_Uncorrectable=1` и старые ATA errors сохраняются
 как риск; успешные write/read и новый extended self-test — только положительный scope
 теста, не гарантия диска.
 
-## Подготовленные команды: execution ещё не подтверждён
+## Выполненные команды: сохраняются как история
 
-Команды выдаются одной физической строкой. Сначала отдельно `sudo -v`;
+Обе команды ниже уже выполнены владельцем: `FSTAB_CONFIGURED=PASS` и
+`HDD_ARCHIVE_COPY=PASS`; fstab backup `/etc/fstab.before-ustar-hdd-c2kb8T`,
+source/copy SHA совпали, df458G/913Mused/452Gavailable/1%. Повторять их не нужно.
+Команды выдавались одной физической строкой. Сначала отдельно `sudo -v`;
 последующие `sudo -n` не запрашивают пароль внутри paste-block.
 При `STOP` не выполнять зависимые шаги; прислать полный вывод.
 
@@ -108,7 +111,7 @@ sudo -n bash -c 'set -euo pipefail; umask 077; ustar_uuid=359a2bae-4e79-461a-ab7
 ```
 
 Ожидаемые markers: `FSTAB_CONFIGURED=PASS`, затем `HDD_ARCHIVE_COPY=PASS`.
-Реальный operator output пока не получен. Затем нужны guarded HDD backup producer,
+Реальный operator output с обоими markers получен06Oct03:33:41MSK. Затем нужны guarded HDD backup producer,
 свежая trial copy и recovery/consumer checks перед отдельной SSD операцией и timer.
 
 ## Проверки подготовленных команд

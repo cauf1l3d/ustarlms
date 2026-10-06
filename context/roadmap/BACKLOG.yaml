@@ -348,12 +348,13 @@ tasks:
   - R15
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: PLAT-01
-  title: Поддерживаемый major/LTS Moodle после фактического выпуска
+  title: Поддерживаемый major/LTS Moodle 5.3 с миграцией PostgreSQL17+
   status: planned
   depends_on:
   - OPS-02
   acceptance:
   - Published target release and full compatibility matrix verified
+  - Moodle5.3 published05Oct2026 requires PostgreSQL17+; separate PG major migration and paired rollback verified
   - Fresh/upgrade/repeat/scenarios/performance and full restore accepted
   - Exact production deployment and lifecycle deadline recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md

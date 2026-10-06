@@ -4,6 +4,8 @@
 
 Актуализировано 06.10.2026. Канонический репозиторий: https://github.com/cauf1l3d/ustarlms.
 
+[Полный актуальный аудит06Oct](context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md): сделано/подготовлено/остаток, текущий storage checkpoint и полный перечень приёмки. Original05Oct сохранён. Будущий Moodle5.3 LTS уже released и требует PG17+; это отдельный проект, не переключение текущего patch5.1.8.
+
 ## За две минуты
 
 - Рабочая база разработки — свежий `origin/main`. Application baseline этой консолидации: `e1d57f5bc28f6964afd20aeff7620345b34a80fe` (PR76). Последующие контекстные коммиты не меняют этот код.

@@ -1,5 +1,7 @@
 # Активная работа — 06.10.2026
 
+[Полная актуальная редакция аудита06Oct](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md): выполнено/частично/подготовлено/остаток и текущая точка отдельно. Последний owner result остаётся GPT_COPY_READBACK=PASS; нового server execution для GPT/root нет. First scheduled HDD run07Oct03:30MSK pending. Future Moodle5.3 LTS опубликован05Oct и требует PG17+, это отдельный PLAT-01 после выбранного patch5.1.8/OS/HTTPS.
+
 **INF-04 и INF-01 в работе. Новая команда владельца06Oct00:45MSK: хранение → карта сервера → автобэкапы HDD → новый стенд, затем Moodle/ОС/HTTPS.** PR87 --prepare-stage приостановлен; прежний backup-last порядок заменён.
 
 1. HDD ext4/mount/fstab и прежняя05Oct archive copy/hash подтверждены. [Producer](../runtime/hdd_backup_20261006.md) PR91 установлен: check/fresh trial06Oct01:10..01:12UTC PASS,957829597bytes/readback,24.111s pause/login200, staging removed. [Отчёт](../runtime/hdd_backup_trial_20261006.json). Initializer/install/manual trial не повторять. [Scheduler](../runtime/hdd_backup_schedule_20261006.md) PR92 установлен: [owner status06Oct08:02UTC](../runtime/hdd_backup_schedule_install_20261006.json), timer active/enabled, next07Oct00:30UTC/03:30MSK, last scheduled null/marker false. Повторный install/manual capture не нужен. First scheduled run и reboot/mount-after-boot ещё не проверялись.

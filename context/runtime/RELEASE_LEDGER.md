@@ -147,3 +147,32 @@ producer/timer и SSD repair/growth ещё без operator execution evidence.
 STATE/ACTIVE/BACKLOG/server map/backup entrypoint и generated index актуализированы.
 Application source, workflows/helpers/harness code и байты оригинала аудита
 не меняются; проверка контекста и точный implementation SHA/CI — в delivery PR/Git.
+
+## 2026-10-06 — HDD fstab/copy PASS и новый backup producer
+
+База main `4d1378ab01a6afd9526917681f5afcd54d3127df` (PR90), ветка
+`codex/ustar-hdd-backup-producer-20261006`. Owner output received03:33:41MSK/
+00:33:41UTC подтверждает FSTAB_CONFIGURED=PASS, backup `/etc/fstab.before-ustar-hdd-c2kb8T`,
+HDD_ARCHIVE_COPY=PASS и matching SHA прежнего05Oct archive; df458G/913Mused/452Gfree/1%.
+Source archive остаётся на SSD; reboot/mount-after-boot и fresh capture не выполнены.
+
+Actual private backup source13,689bytes повторно получен/полностью прочитан, dependency
+SHA0d31e694… совпал. Новый `scripts/infra/hdd_backup.py` — SHA
+`75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75` — использует
+его reviewed capture pipeline без публикации/изменения установленного engine.
+Anchored HDD staging/export100GiB quota, private paths, exact disk/mount/live guards,
+existing EX lock, SSD marker и отдельные HDD status/manifests; legacy last-local-export
+не переписывается. Stop reply/durable completion под blocked catchable signals;
+resume работает без HDD, uncertain inflight marker не снимается ради обхода.
+Final readback/fsync + local Apache login200; failed staging/partial сохраняются.
+
+29 local tests PASS:19 boundary/kernel/filesystem и10 actual pinned-engine fixture cases
+с real tar/files/hash, mocked Docker/age/mount/fixture ownership; настоящий SIGINT
+во время fixture stop отложен и resume выполнен. Это не real Docker/PG/encryption/HDD
+power-loss acceptance. В обычном CI10 private-source cases явно skipped; remote
+context/source checks и exact implementation SHA фиксируются delivery PR/Git.
+Application source, original audit bytes, historical runtime/fixtures и cron v3
+не меняются. STATE/ACTIVE/BACKLOG/server map/entrypoints/index обновлены.
+Server producer install/check/fresh trial, timer/retention, source deletion и SSD
+repair/growth pending. Next operator: pinned install → --check → chosen-window
+--backup --acknowledge-outage/report, then policy/timer and SSD recovery steps.

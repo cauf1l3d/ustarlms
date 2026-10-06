@@ -124,8 +124,8 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   priority_note: Owner authorized measured storage optimization before new stage. SSD111.8GiB/root50GiB tail61.79GiB
     sector-confirmed; home15GiB contains about13GiB snapshot candidates. Exact HDD surface/newest long passed,
-    residual198=1 retained; GPT/ext4 and temporary UUID mount confirmed with453G available. Persistent fstab,
-    copy/hash verification, producer/trial, consumer checks and important independent copies remain pending.
+    residual198=1 retained; GPT/ext4/UUID mount/fstab and existing05Oct archive copy/hash confirmed,452G available.
+    Producer prepared; installed check/fresh trial, consumer checks and important independent copies remain pending.
   validation_evidence:
   - context/runtime/server_map_20261006.md
   - context/runtime/hdd_initialize_20261006.md
@@ -296,7 +296,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-14
   title: Регулярные согласованные копии на HDD — до нового стенда
-  status: planned
+  status: in_progress
   depends_on:
   - INF-04
   acceptance:
@@ -305,13 +305,15 @@ tasks:
   - Cron/backup locks, negative failure cases, scheduled runs and delivery/integrity alerts pass
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   priority: P0_owner_moved_before_stage_20261006
-  execution_gate: authorized_after_HDD_mount_identity_and_trial_backup_checks
-  prepared_work: Existing manual wrapper writes staging/export on SSD with6GiB quota; needs guarded HDD target,
-    recovery marker on SSD, retention and timer. Not installed.
-  storage_checkpoint: ext4_UUID359a2bae-4e79-461a-ab72-1597f605d801_temporary_mount_confirmed_fstab_copy_trial_pending
+  execution_gate: authorized_guarded_producer_trial_timer_after_successful_trial_and_policy
+  prepared_work: HDD producer with pinned installed engine, anchored HDD staging/export100GiB quota,
+    SSD recovery/status, shared lock, stop/signal/readback/readiness guards prepared;29 local tests PASS.
+    Install/check/trial and timer/retention activation pending.
+  storage_checkpoint: ext4_UUID359a2bae-4e79-461a-ab72-1597f605d801_mount_fstab_old_archive_copy_hash_PASS_fresh_trial_pending
   validation_evidence:
   - context/runtime/server_map_20261006.md
   - context/runtime/recovery_contract_20261005.md
+  - context/runtime/hdd_backup_20261006.md
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: planned

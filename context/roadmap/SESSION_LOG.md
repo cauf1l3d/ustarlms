@@ -278,3 +278,31 @@ Production frontend is unused; Moodle/plugin/theme/runtime code is unchanged.
 Clean npm ci and npm audit --omit=dev --audit-level=moderate PASS (zero runtime
 vulnerabilities); frontend4 unit tests PASS. Build/new exact-head CI recorded in PR.
 No audit threshold or required check disabled.
+
+## 2026-10-06 — Owner установил HDD timer; следующий шаг SSD/consumer preflight
+
+База main `040c671236cb4d7f4a225700bd288ced7e6f14f3` (PR92), ветка
+`codex/ustar-hdd-timer-evidence-20261006`. Owner terminal output received
+11:02:24MSK/08:02:24UTC: scheduler source/install PASS, timer loaded/active/enabled,
+backup service inactive/static, recovery service inactive/enabled. Next event
+07Oct00:30UTC/03:30MSK совпадает в status/list-timers; last scheduled null,
+recovery marker false, last successful backup remains manual06Oct01:12:02UTC.
+Execution timestamps команд не напечатаны; это owner evidence, не live access.
+Sanitized `hdd_backup_schedule_install_20261006.json` сохраняет область/пределы.
+
+Начальный daily03:30Moscow/no catch-up/no deletion/100GiB quota активирован
+оператором; повторный install/manual capture не требуется. First scheduled run,
+boot recovery/mount, fresh independent copy/restore и alerts ещё pending.
+INF-04/INF-14 остаются in_progress, закрытие всех acceptance не приписывается.
+PR92 exact implementation7501440b476bf720658f5bf039efc3e4f1237d9c CI context
+37400747178 и review37400747176 SUCCESS; source8.2/8.3/frontend PASS,
+r16 164tests/10private-engine skips, scheduler24PASS; ordinary PR DB/rollback/
+prepare-rc/gate skipped. Production application/cron/private engine прежние.
+
+Обновлены текущие STATE/ACTIVE/BACKLOG/entrypoints/server map/backup contract;
+старые SESSION_LOG/RELEASE_LEDGER и audit не переписываются. Следующий документ
+`ssd_storage_preflight_20261006.md`: bounded metadata/layout/SMART, all-container
+mounts, named copy sizes и control-path filenames. Нет partition writes, package
+install, service stop, backup invocation, relocation или удаления данных.
+Перед GPT/root growth нужны свежая identity/layout, проверенные partition-table
+copies и host/boot recovery/console; Academy archive не заменяет shared-host rescue.

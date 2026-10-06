@@ -174,6 +174,7 @@ class HDDScheduleTests(unittest.TestCase):
         engine.MOODLE = 'ustar_moodle'
         engine.inspect.return_value = {'Id': 'same', 'State': {'Running': True}}
         with mock.patch.object(h, 'load_engine', return_value=engine), \
+                mock.patch.object(h.os, 'geteuid', return_value=0), \
                 mock.patch.object(h, 'backup_lock', return_value=nullcontext()):
             with self.assertRaisesRegex(h.Refusal, 'completion unverified'):
                 s.resume_if_needed(h)

@@ -702,8 +702,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 37151,
-      "sha256": "a1359476727ae411bc1ea753f6c235d08691cd147d6323525418ee9431d06176"
+      "size": 37923,
+      "sha256": "a394728127f9c35427d66e84c13d0711ae3fa2d209f2c89842e5d417052de664"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -804,8 +804,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 28002,
-      "sha256": "480569f55c6c55e93cd5574a9e55ac3f9fe8b15a8f4f120970719249c07e4fe8"
+      "size": 28774,
+      "sha256": "65943736b17bc5ce57b2657f8181ad50eb699792f150d8934d3522f74c70c1b4"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -876,8 +876,8 @@
     {
       "path": "context/runtime/hdd_backup_schedule_20261006.md",
       "domain": "runtime",
-      "size": 8710,
-      "sha256": "6786814495dd7f1aa3be3dfc3d60379bf93d294bca07643f10ca5e5b48feca75"
+      "size": 9121,
+      "sha256": "cc53e74af77f66bbf1738227d19971750cfeadb5d91c902c06ec6e0752546ecc"
     },
     {
       "path": "context/runtime/hdd_backup_trial_20261006.json",

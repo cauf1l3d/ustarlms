@@ -267,3 +267,14 @@ negative/power-loss/recovery acceptance. SHA/CI фиксируются в delive
 STATE/ACTIVE/BACKLOG/server map/backup entrypoints/index обновлены; исходный
 аудит, application source, workflow/harness, private engine и cron v3 прежние.
 Source deletion, SSD repair/growth, fresh archive independent copy/restore pending.
+
+CI correction within this delivery: the first context/source164-test run found
+one fixture calling root-only producer main under a non-root runner. The test
+now mocks effective UID explicitly; production root guard/source stays unchanged.
+24 focused tests also PASS with simulated non-root caller. Frontend audit reported
+GHSA-68fv-2mgg-jv7q/source-map-js1.2.1; npm regenerated only that lock entry to1.2.2
+(version/resolved/integrity), verified against registry/upstream release.
+Production frontend is unused; Moodle/plugin/theme/runtime code is unchanged.
+Clean npm ci and npm audit --omit=dev --audit-level=moderate PASS (zero runtime
+vulnerabilities); frontend4 unit tests PASS. Build/new exact-head CI recorded in PR.
+No audit threshold or required check disabled.

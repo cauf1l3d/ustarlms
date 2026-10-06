@@ -116,3 +116,9 @@ installation/boot/first scheduled run на server1.
 [timer](https://github.com/systemd/systemd/blob/v255/man/systemd.timer.xml) и
 [service](https://github.com/systemd/systemd/blob/v255/man/systemd.service.xml).
 CI/implementation SHA фиксируются delivery PR/Git; production evidence отдельно.
+
+First CI failure was a non-root fixture invocation; root-only producer guard was
+kept and fixture UID made explicit. Separately, frontend production-dependency
+audit required source-map-js1.2.1→1.2.2; only its lock entry changed, npm runtime
+audit zero/4unit tests PASS. This does not deploy the unused frontend or change
+Moodle. [Upstream fix](https://github.com/7rulnik/source-map-js/releases/tag/v1.2.2).

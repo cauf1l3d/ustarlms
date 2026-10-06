@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.
+
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 
 Текущая сводка 06.10 — [карта storage/server1](server_map_20261006.md), [HDD mount/fstab/existing-copy PASS](hdd_initialize_20261006.md), [producer/check/fresh trial PASS](hdd_backup_20261006.md), [начальный timer active/enabled](hdd_backup_schedule_20261006.md), [owner installation report](hdd_backup_schedule_install_20261006.json), [следующий SSD preflight](ssd_storage_preflight_20261006.md), [fresh baseline](baseline_20261005.md), [dated owner evidence](evidence_20261005_baseline.yaml) и [RELEASE_LEDGER](RELEASE_LEDGER.md). [Предыдущий паспорт](evidence_20261005.yaml) сохранён с исходными датами. Команды/правила — [OPERATIONS](OPERATIONS.md); специальные контракты — [MONITORING](MONITORING.md), [BACKUP_RESTORE](BACKUP_RESTORE.md), [SECURITY_BASELINE](SECURITY_BASELINE.md).

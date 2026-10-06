@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 3554,
-      "sha256": "50b1899272d8fc72ec1c5c765fde72be6f0985c2a011b3da74e9201715db300b"
+      "size": 3624,
+      "sha256": "460236f9ef7448bf2964092af46a25ad4316d8d3d9c1bcbdb4143764dde50a46"
     },
     {
       "path": "context/agents/astra.md",
@@ -660,8 +660,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 22600,
-      "sha256": "cbfeab2e4eb7d22897c13a4af528d08c3e545710dd2e15ccf6dd6c6a951c1f0f"
+      "size": 23033,
+      "sha256": "69af4291c4bbfb7747fe7bf89ec54cdb8e1e22a75dcb628bf311eb2247704d3e"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -702,8 +702,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 43051,
-      "sha256": "3639989db11c5acadca8e4906bb1d40a27ba16c4b7b0c720210b2443a04240a2"
+      "size": 45123,
+      "sha256": "4f2e396a2b5dbd8639452fc2608a41247fc9a82751db9b1ac53a996f9fe04c45"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -714,8 +714,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 18325,
-      "sha256": "239b151c98e66dd84307042bd11421424eb607697a68f3c7b64182e776ab117b"
+      "size": 19290,
+      "sha256": "31c252cd83ddceb759d23b207acaa3b6da5ca50741580db3501dd0916f799416"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -798,14 +798,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 4749,
-      "sha256": "ac99f05cb92503f387902667dcfae4d8cfb1d14c4f8de33faeac2b9bb9b9638e"
+      "size": 5137,
+      "sha256": "75a07907f7159223320f0ec883aa159bfe2fc418fc385c5ec1a019babb5e7e1a"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 33902,
-      "sha256": "c57cda8244fec63cbed77b3c13cd84dd6cf1b4190438a38a42d28c4fe34b4241"
+      "size": 35974,
+      "sha256": "df0d0a543e578ddb486644e92d4a0e35cda460f79d16366a83cb8f50f7a0b188"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -960,14 +960,14 @@
     {
       "path": "context/runtime/server.yaml",
       "domain": "runtime",
-      "size": 3876,
-      "sha256": "e15b45a2ee3539049f13bfe7b2ee90109be16d5c01538b0bcd5554cda67c317a"
+      "size": 4423,
+      "sha256": "678ee18703f6e3a37fe6d121a8ce1e2cbf0f2a7bc14d3baca2045021ead78a15"
     },
     {
       "path": "context/runtime/server_map_20261006.md",
       "domain": "runtime",
-      "size": 18388,
-      "sha256": "ab142a97d8be8ef005954e11cfc0ea390f0ef30c055286f6370555184d38be52"
+      "size": 19260,
+      "sha256": "6a6f57f88c81a3bcf44a3451aa8d33d6cdbc153f7b68500ae491ef323d8671a0"
     },
     {
       "path": "context/runtime/snapshots/20260912T204824Z/README.md",
@@ -994,6 +994,12 @@
       "sha256": "da6cd409f80cfddba32f9ed0c56957e892f4349a2e4b96e931f75a6602e07041"
     },
     {
+      "path": "context/runtime/ssd_gpt_relocate_20261006.md",
+      "domain": "runtime",
+      "size": 10397,
+      "sha256": "4ef0416a8af3d16a59fadbedeb0a227db7edc7106b0e3b880e94d2aa691a75fd"
+    },
+    {
       "path": "context/runtime/ssd_identity_ext4_result_20261006.json",
       "domain": "runtime",
       "size": 3444,
@@ -1002,14 +1008,20 @@
     {
       "path": "context/runtime/ssd_partition_table_copy_20261006.md",
       "domain": "runtime",
-      "size": 9234,
-      "sha256": "c4a02e891b0d5312c99ee8b39d05486367222fd8f03f2fcf5aaf42c394027372"
+      "size": 9889,
+      "sha256": "3f90bb9334361133b5520e6d0d794f82903c3f3d1b7c5911f32ae3661a827a9c"
+    },
+    {
+      "path": "context/runtime/ssd_partition_table_copy_result_20261006.json",
+      "domain": "runtime",
+      "size": 3210,
+      "sha256": "744a0913a383bcac1bf5469d18054e09471d4867fe0c585abc71b2953c01001a"
     },
     {
       "path": "context/runtime/ssd_storage_preflight_20261006.md",
       "domain": "runtime",
-      "size": 8117,
-      "sha256": "3e094097f34546f103acd76cdbe8db25fd8b48ab807255a245a5d9210c35b78e"
+      "size": 8276,
+      "sha256": "663cfb1892c4a86c276257a96bc49478da72524dec64118a7d5a7ab147ad8db6"
     },
     {
       "path": "context/runtime/ssd_storage_result_20261006.json",
@@ -1050,8 +1062,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 8579,
-      "sha256": "bd18f828c5f14c564629b33ea5ff45809b28cb6a1a22f1e3093a874c0e8a709a"
+      "size": 8906,
+      "sha256": "d9927ab90102962ad1199e72657629c4291dc765bf465ac89abe89083682e378"
     },
     {
       "path": "context/tasks/backlog.yaml",

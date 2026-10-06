@@ -3,12 +3,13 @@ updated_at: '2026-10-06'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner JSON/ext4 header received06Oct08:36:58UTC: full WALRAM120GB serial
-  2203JPDG120GB6000933 verified; zero WWN unused as identity. Root ext4: 13106432x4096 equals
-  partition53683945472bytes; resize_inode/64bit/features recorded, mounted header is not offline fsck.
-  GPT boundary remains prior dated evidence, not remeasured by latest command. Guarded raw boot/GPT
-  and native table copy command prepared for mounted HDD; server execution and console/rescue
-  confirmation pending. No SSD write, source move/deletion or stage preparation performed.
+current_activity: 'Owner GPT copy received06Oct09:06:01UTC: raw PMBR/GPT/BIOS boot and native table
+  copy saved on mounted HDD in ssd-layout-20261006-06NYpg, nine hash checks OK and
+  GPT_COPY_READBACK=PASS. Sysadmin console access confirmed09:03:36UTC; rescue medium and
+  actual boot recovery not separately verified. First GPT relocation command prepared:
+  raw pre/post header/table CRC, exact partition array and boot-byte preservation guards;
+  17 regular sparse-file fixtures PASS, native sgdisk not executed locally. Server GPT write,
+  root growth, source move/deletion and stage preparation remain unexecuted.
   Timer active/enabled from earlier evidence, first scheduled run07Oct03:30MSK pending.'
 next_task: INF-04
 ready_tasks: []
@@ -283,7 +284,7 @@ storage_reorganization:
   automatic_backup_installed: true
   next_readonly_evidence:
   - first_HDD_scheduled_run_after_20261007T003000Z
-  - owner_execution_of_guarded_raw_GPT_PM_BR_copy_and_console_rescue_before_growth
+  - owner_post_write_GPT_CRC_layout_and_unchanged_partition_results
   - independent_copy_and_restore_of_fresh_HDD_archive
   fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
@@ -364,11 +365,24 @@ storage_reorganization:
   mounted_header_is_offline_fsck: false
   partition_table_copy_runbook: context/runtime/ssd_partition_table_copy_20261006.md
   partition_table_copy_command_prepared: true
-  partition_table_copy_command_server_executed: false
+  partition_table_copy_command_server_executed: true
+  partition_table_copy_result: context/runtime/ssd_partition_table_copy_result_20261006.json
+  partition_table_copy_owner_received_at: '2026-10-06T09:06:01Z'
+  partition_table_copy_directory: /srv/ustar-storage/ssd-layout-20261006-06NYpg
+  partition_table_copy_hash_checks: nine_payloads_OK_owner_terminal_output
+  partition_table_copy_raw_source_cmp: PASS_by_completed_guarded_command
+  partition_table_copy_capture_timestamp: stored_privately_not_printed
+  ssd_gpt_relocate_runbook: context/runtime/ssd_gpt_relocate_20261006.md
+  ssd_gpt_relocate_command_prepared: true
+  ssd_gpt_relocate_command_server_executed: false
+  ssd_gpt_relocate_local_validation: Bash_Python_syntax_and_17_regular_sparse_file_guard_scenarios_PASS_native_sgdisk_not_executed
   ssd_smart_overall_health: PASSED_owner_H_A_only
   ssd_vendor_specific_smart_raw_decode_verified: false
   retained_lab_active_mount_consumers_confirmed: true
   complete_candidate_consumer_clearance: false
   path_reference_search_missing_link_errors: true
-  host_console_or_rescue_availability_confirmed: false
-  binary_partition_table_recovery_copy_confirmed: false
+  host_console_or_rescue_availability_confirmed: true
+  host_console_confirmation_scope: owner_sysadmin_console_access_declaration_20261006_received090336Z
+  rescue_boot_medium_identified: false
+  actual_host_boot_recovery_tested: false
+  binary_partition_table_recovery_copy_confirmed: true

@@ -129,7 +129,10 @@ tasks:
     important independent copies and SSD recovery/growth remain pending. Read-only06Oct08:18UTC inventory
     confirms root78%,HDD451G available, unchanged GPT warnings and active retained lab binds. Follow-up JSON/ext4
     received06Oct08:36UTC confirms WALRAM120GB serial2203JPDG120GB6000933 and ext4 bytes equal partition.
-    Guarded raw boot/GPT/native copy command prepared, server copy execution, console/rescue and complete consumers pending.
+    Owner06Oct09:06UTC raw boot/GPT/native copy PASS, nine hashes/source cmp; exact private HDD directory recorded.
+    Sysadmin console access confirmed09:03UTC; rescue medium and boot test not separately identified.
+    Next guarded GPT relocation only prepared/17 local guard fixtures PASS; native utility not run locally, server relocation pending.
+    Root partition/ext4 growth, complete consumers and independent copies remain pending.
   validation_evidence:
   - context/runtime/server_map_20261006.md
   - context/runtime/hdd_initialize_20261006.md
@@ -138,6 +141,8 @@ tasks:
   - context/runtime/ssd_storage_result_20261006.json
   - context/runtime/ssd_identity_ext4_result_20261006.json
   - context/runtime/ssd_partition_table_copy_20261006.md
+  - context/runtime/ssd_partition_table_copy_result_20261006.json
+  - context/runtime/ssd_gpt_relocate_20261006.md
   execution_gate: authorized_owner_20261006_pre_stage_storage_map
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание

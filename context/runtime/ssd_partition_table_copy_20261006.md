@@ -1,6 +1,10 @@
 # Копия исходной разметки SSD перед GPT/root growth
 
-Статус: **команда подготовлена, владелец ещё не подтвердил выполнение**.
+Статус: **выполнено владельцем, GPT_COPY_READBACK=PASS; copy не повторять**.
+Вывод received06Oct09:06:01UTC: `/srv/ustar-storage/ssd-layout-20261006-06NYpg`,
+девять payload hash checks `OK`, source cmp/sync завершены в guarded command.
+[Sanitized result](ssd_partition_table_copy_result_20261006.json); время capture
+находится в private файле и отдельно не напечатано. SSD write этим шагом не выполнялся.
 Основание — [первый SSD inventory](ssd_storage_result_20261006.json) и
 [полная identity/ext4 geometry](ssd_identity_ext4_result_20261006.json),
 owner message received06Oct08:36:58UTC. Прямого SSH у агента нет.
@@ -45,7 +49,8 @@ Native backup semantics: [Ubuntu sgdisk manual](https://manpages.ubuntu.com/manp
 Локально проверены Bash/Python syntax, identity/geometry guard и три raw region
 captures/cmp на sparse **regular file**, включая исключение root data и общий4MiB
 size. Native `sgdisk` локально не исполнялся: его mode проверен по manual;
-реальные device/mount/copy результаты ожидаются от владельца.
+реальный owner device/mount/copy result теперь получен. Это не локальный native test
+и не проверка GPT CRC — эти checks входят в [следующий шаг](ssd_gpt_relocate_20261006.md).
 
 ## Команда владельцу
 
@@ -70,12 +75,13 @@ boot/GPT files и полный header log в Git не публиковать.
 
 ## Перед следующим изменяющим шагом
 
-Нужны owner confirmation этой копии и доступные console/rescue средства общего
-host. Academy archive не содержит всю почту/DNS/ISPConfig; GPT copy их не заменяет.
+Owner confirmation копии и доступ сисадмина к консоли уже получены. Конкретный
+rescue boot medium и фактический boot recovery отдельно не проверены. Academy
+archive не содержит всю почту/DNS/ISPConfig; GPT copy их не заменяет.
 Копия на HDD в том же server не является independent DR экземпляром, residual
 SMART198=1 остаётся в [карте](server_map_20261006.md). Не уменьшать выросшую ext4
 возвратом старой таблицы: rollback depends on phase и требует отдельной процедуры.
-Здесь restore/write commands намеренно не выдаются вместе с backup command.
+Записывающая команда вынесена в [GPT relocation runbook](ssd_gpt_relocate_20261006.md).
 
 Последовательность затем: проверить GPT CRC/layout → guarded relocate secondary
 GPT/PMBR → перечитать usable end/сохранить sda1 и start/UUID sda2 → grow partition →

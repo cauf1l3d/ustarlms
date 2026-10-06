@@ -19,9 +19,9 @@ reference search частичный с missing-link errors. Повтор все�
 
 Под console подразумевается доступ сисадмина к экрану машины через монитор/
 клавиатуру или management console. Rescue medium — загрузочная Ubuntu Live USB
-или доступный аналог в панели размещения. Эти сведения ещё не известны;
-они нужны для host boot recovery при отдельной работе с загрузочным SSD.
-Разрешение на storage work ранее дано; это вопрос о доступных средствах восстановления.
+или доступный аналог в панели размещения. Owner09:03:36UTC подтвердил доступ
+сисадмина к консоли. Конкретный способ и rescue medium отдельно не названы;
+фактический boot recovery не проверен. Повторно доступ/разрешение не запрашивать.
 
 [Следующий owner output](ssd_identity_ext4_result_20261006.json) received06Oct08:36:58UTC
 получен: WALRAM120GB, serial2203JPDG120GB6000933, UUID/PARTUUID совпадают; ext4
@@ -36,9 +36,11 @@ sudo -n timeout 20s bash -c 'set -eu; lsblk --json --bytes -o PATH,TYPE,SIZE,MOD
 ```
 
 Lab сейчас running/actively mounted; его directories не освобождать по du alone.
-GPT dump не является saved binary table copy. [Команда raw boot/GPT + native copy](ssd_partition_table_copy_20261006.md)
-подготовлена; owner execution пока не подтверждено. До любой partition write остаются
-console/rescue, verified binary recovery copies и fresh GPT consistency/layout check.
+GPT dump не является saved binary table copy. [Raw boot/GPT + native copy](ssd_partition_table_copy_result_20261006.json)
+подтверждена owner09:06:01UTC: nine hash checks/source cmp и final PASS; повтор не нужен.
+Следующая [команда GPT relocation](ssd_gpt_relocate_20261006.md) включает fresh raw
+CRC/layout checks до записи и unchanged boot/partition/kernel checks после неё.
+Server GPT write/root growth пока не выполнены.
 
 ## Выполненные команды первого прохода
 

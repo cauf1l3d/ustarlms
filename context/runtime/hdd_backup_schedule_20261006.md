@@ -7,16 +7,36 @@ SHA256 `d9352e3ce5e237a6ac0ab14c72b9da2648d6906fe7e95cd5c88bea726c965af3`,
 pause24.111s, readback и Apache login200, staging removed. Это ручной trial,
 не выполнение timer, не decryption/restore и не независимая копия.
 
+## Установка подтверждена, первый запуск ещё впереди
+
+[Owner terminal output](hdd_backup_schedule_install_20261006.json) получен
+06Oct11:02:24MSK/08:02:24UTC; timestamp выполнения команд не напечатан.
+`HDD_SCHEDULE_SOURCE_INSTALLED=PASS` и `HDD_SCHEDULE_INSTALLED=PASS` подтверждают
+выполнение установки версии PR92. Timer loaded/active/enabled, backup service
+inactive/static, recovery service inactive/enabled. Next07Oct00:30UTC/03:30MSK
+совпадает в status и list-timers; LAST/PASSED отсутствуют, last_scheduled_run=null,
+recovery_marker_present=false. Existing last backup success остаётся ручным
+trial06Oct01:12:02UTC. Не повторять install или manual backup ради проверки таймера.
+
+Implementation `7501440b476bf720658f5bf039efc3e4f1237d9c` / merged main
+`040c671236cb4d7f4a225700bd288ced7e6f14f3`:
+[context CI](https://github.com/cauf1l3d/ustarlms/actions/runs/37400747178) и
+[review CI](https://github.com/cauf1l3d/ustarlms/actions/runs/37400747176) SUCCESS;
+source PHP8.2/8.3 и frontend PASS, r16:164tests/10private-source skips,
+scheduler24PASS. Moodle DB/rollback/prepare-rc/gate в обычном PR skipped, не full RC.
+Установка не доказывает первый scheduled capture, boot recovery или restore.
+Следующий проход — [SSD и consumers, read-only](ssd_storage_preflight_20261006.md).
+
 ## Начальный режим
 
 | Настройка | Реализация |
 |---|---|
 | Расписание | Ежедневно03:30 `Europe/Moscow`,00:30 UTC при текущем timezone rule |
-| Активация | Рекомендуемый начальный режим; операторская команда установки ещё не выполнена |
+| Активация | Owner installation/status PASS; active/enabled, report received06Oct08:02:24UTC |
 | Начало работы | Только03:30..03:40 MSK; проверка в wrapper до capture |
 | Пропущенное событие | `Persistent=false`; без дневного catch-up после reboot; wake-from-suspend вне окна также отказывает |
 | Snapshot сразу при установке | Не запускается; включается timer, а не backup service |
-| Ближайшее событие | Установка отказывает, если до него не более15min; после03:40 06Oct ожидается07Oct03:30 MSK |
+| Ближайшее событие | Owner timer показывает07Oct00:30UTC/03:30MSK; guard установки отказывает при next<=15min |
 | Ёмкость/удаление | Existing managed quota100GiB, no archive deletion; достигнутая quota отказывает и сохраняет архивы |
 | Нагрузка | Nice10, IO best-effort7, один systemd oneshot + existing EX backup / cron SH lock |
 | Таймаут | Main45min; termination и post-stop recovery5min; Restart=no |
@@ -109,8 +129,8 @@ sudo -n systemctl disable --now ustar-hdd-backup.timer
 failed resume/report, damaged status не блокирует resume, stale/future/mismatched
 trial, foreign unit/override/active worker/verify failure до unit writes,
 idempotent install и timer-only activation. Файлы/modes/inodes/reporting реальные;
-systemctl operations, mount/Docker и fixture ownership подменены. Это ещё не
-installation/boot/first scheduled run на server1.
+systemctl operations, mount/Docker и fixture ownership подменены. Server installation
+подтверждена отдельным owner output; boot/first scheduled run ещё не проверены.
 
 Контракт сверялся с upstream systemd v255
 [timer](https://github.com/systemd/systemd/blob/v255/man/systemd.timer.xml) и

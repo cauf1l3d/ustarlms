@@ -1,0 +1,55 @@
+{
+  "kind": "owner_supplied_terminal_output",
+  "owner_message_received_at": "2026-10-06T08:02:24Z",
+  "command_execution_timestamp_printed": false,
+  "agent_connected_to_production": false,
+  "source_install_result": "HDD_SCHEDULE_SOURCE_INSTALLED=PASS",
+  "source_commit": "7501440b476bf720658f5bf039efc3e4f1237d9c",
+  "merged_main_commit": "040c671236cb4d7f4a225700bd288ced7e6f14f3",
+  "source_sha256": "54533f6a629699e031a877b4a57f68401477a61cf20cab39512c79a2e0477b7d",
+  "installed_path": "/usr/local/sbin/USTAR_HDD_SCHEDULE_20261006.py",
+  "install_result": "HDD_SCHEDULE_INSTALLED=PASS; DAILY=03:30_Europe/Moscow; CATCH_UP=NO; ARCHIVE_DELETION=NO",
+  "status": {
+    "calendar": "*-*-* 03:30:00 Europe/Moscow",
+    "catch_up": false,
+    "archive_deletion": false,
+    "last_scheduled_run": null,
+    "last_backup_success_utc": "2026-10-06T01:12:02.767562+00:00",
+    "recovery_marker_present": false,
+    "units": {
+      "ustar-hdd-backup.timer": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "UnitFileState": "enabled",
+        "Result": "success",
+        "NextElapseUSecRealtime": "Wed 2026-10-07 00:30:00 UTC"
+      },
+      "ustar-hdd-backup.service": {
+        "LoadState": "loaded",
+        "ActiveState": "inactive",
+        "UnitFileState": "static",
+        "Result": "success"
+      },
+      "ustar-hdd-backup-recover.service": {
+        "LoadState": "loaded",
+        "ActiveState": "inactive",
+        "UnitFileState": "enabled",
+        "Result": "success"
+      }
+    }
+  },
+  "list_timers": {
+    "next_utc": "2026-10-07T00:30:00Z",
+    "next_moscow": "2026-10-07T03:30:00+03:00",
+    "last": null,
+    "passed": null,
+    "count": 1
+  },
+  "first_scheduled_run_verified": false,
+  "boot_recovery_verified": false,
+  "mount_after_reboot_verified": false,
+  "external_alert_delivery_verified": false,
+  "fresh_scheduled_archive_restore_verified": false,
+  "fresh_archive_external_copy_verified": false,
+  "prior_manual_trial_evidence": "context/runtime/hdd_backup_trial_20261006.json"
+}

@@ -125,11 +125,13 @@ tasks:
   priority_note: Owner authorized measured storage optimization before new stage. SSD111.8GiB/root50GiB tail61.79GiB
     sector-confirmed; home15GiB contains about13GiB snapshot candidates. Exact HDD surface/newest long passed,
     residual198=1 retained; GPT/ext4/UUID mount/fstab and existing05Oct archive copy/hash confirmed,452G available.
-    Producer installed/check/fresh HDD trial PASS at06Oct01:10..01:12UTC. Timer prepared; consumer checks,
+    Producer installed/check/fresh HDD trial PASS at06Oct01:10..01:12UTC. Timer owner install/status06Oct08:02UTC PASS/active/enabled/next07Oct03:30MSK; consumer checks,
     important independent copies and SSD recovery/growth remain pending.
   validation_evidence:
   - context/runtime/server_map_20261006.md
   - context/runtime/hdd_initialize_20261006.md
+  - context/runtime/hdd_backup_schedule_install_20261006.json
+  - context/runtime/ssd_storage_preflight_20261006.md
   execution_gate: authorized_owner_20261006_pre_stage_storage_map
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
@@ -310,15 +312,17 @@ tasks:
   prepared_work: HDD producer installed/check/fresh trial PASS;957829597bytes/hash readback,24.111s pause,
     login200,staging removed, no archive deletion. Scheduler prepared/24 local tests including real systemd
     parsers PASS; daily03:30Moscow, no daytime catchup, bounded timeout, SSD marker resume and separate status.
-    Server timer activation/first scheduled run, retention and notification delivery remain pending.
-  initial_schedule_policy: proposed_daily_0330_Europe_Moscow_no_deletion_100GiB_quota_operator_activation_pending
-  storage_checkpoint: ext4_UUID359a2bae-4e79-461a-ab72-1597f605d801_mount_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_pending
+    Server timer install/status06Oct08:02UTC PASS, active/enabled/next07Oct03:30MSK; first scheduled run, boot recovery, retention and notification delivery remain pending.
+  initial_schedule_policy: owner_activated_daily_0330_Europe_Moscow_no_deletion_100GiB_quota
+  storage_checkpoint: ext4_UUID359a2bae-4e79-461a-ab72-1597f605d801_mount_fstab_old_copy_fresh_HDD_trial_and_timer_install_PASS_first_run_pending
   validation_evidence:
   - context/runtime/server_map_20261006.md
   - context/runtime/recovery_contract_20261005.md
   - context/runtime/hdd_backup_20261006.md
   - context/runtime/hdd_backup_trial_20261006.json
   - context/runtime/hdd_backup_schedule_20261006.md
+  - context/runtime/hdd_backup_schedule_install_20261006.json
+  - context/runtime/ssd_storage_preflight_20261006.md
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: planned

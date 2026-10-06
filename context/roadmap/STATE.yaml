@@ -3,10 +3,11 @@ updated_at: '2026-10-06'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner confirmed HDD ext4/UUID mount, FSTAB_CONFIGURED and existing05Oct archive HDD copy/hash;
-  nodev/nosuid/noexec,452G available. HDD backup producer prepared and locally tested; next installed check
-  and fresh capture trial, then guarded timer policy and SSD recovery/reorganization. SSD free tail61.79GiB
-  sector-confirmed; consumer checks still required. PR87 prepare-stage paused; backup timer not installed.'
+current_activity: 'HDD producer installed/check/fresh trial PASS; owner06Oct08:02UTC confirms scheduler PR92
+  installed, timer active/enabled, next07Oct00:30UTC/03:30MSK, no recovery marker and no scheduled run yet.
+  Next: fresh read-only SSD identity/layout/SMART, container mounts, named snapshot sizes/consumers and
+  host/partition-table recovery before separate GPT repair/root growth. SSD free tail61.79GiB previously
+  sector-confirmed; no SSD write or source deletion. PR87 prepare-stage remains paused.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -53,7 +54,7 @@ production:
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
   cron: v3_one_worker_owner_success_20261005T102403Z
-  regular_backup: not_installed_now_authorized_before_new_stage
+  regular_backup: timer_installed_active_enabled_first_scheduled_run_pending
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
   last_core_comparison:
@@ -216,7 +217,7 @@ audit:
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false
-  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_pending
+  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_active_first_run_pending
   current_hdd_checkpoint: context/runtime/hdd_backup_20261006.md
 patch_candidate:
   tag: v5.1.8
@@ -277,9 +278,9 @@ storage_reorganization:
   source_deletions_executed: false
   storage_moves_executed: false
   partition_or_filesystem_expansion_executed: false
-  automatic_backup_installed: false
+  automatic_backup_installed: true
   next_readonly_evidence:
-  - installed_HDD_timer_status_and_first_scheduled_run
+  - first_HDD_scheduled_run_after_20261007T003000Z
   - fresh_root_measurement_and_partition_table_recovery_before_SSD_growth
   - independent_copy_and_restore_of_fresh_HDD_archive
   fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
@@ -303,6 +304,7 @@ storage_reorganization:
   hdd_mount_persistence_verified: false
   hdd_mount_owner_output_received_at: '2026-10-06T00:07:20Z'
   hdd_df_rounded: 458G_total_913M_used_452G_available_1percent
+  hdd_df_timing: before_fresh_HDD_capture_current_free_unverified
   hdd_fstab_and_copy_owner_output_received_at: '2026-10-06T00:33:41Z'
   hdd_existing_archive_copy_verified: true
   hdd_existing_archive_sha256: 42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8
@@ -318,12 +320,26 @@ storage_reorganization:
   hdd_fresh_backup_trial_executed: true
   hdd_fresh_backup_trial: context/runtime/hdd_backup_trial_20261006.json
   hdd_trial_owner_output_received_at: '2026-10-06T01:16:21Z'
-  hdd_backup_timer: not_installed
+  hdd_backup_timer: installed_active_enabled_first_scheduled_run_pending
   hdd_schedule_source: scripts/infra/hdd_backup_schedule.py
   hdd_schedule_source_sha256: 54533f6a629699e031a877b4a57f68401477a61cf20cab39512c79a2e0477b7d
   hdd_schedule_contract: context/runtime/hdd_backup_schedule_20261006.md
   hdd_schedule_local_validation: 24_tests_PASS_including_actual_systemd_calendar_and_unit_parsing
-  hdd_schedule_initial_policy: proposed_daily_0330_Europe_Moscow_no_catchup_no_archive_deletion_100GiB_quota
-  hdd_schedule_policy_owner_activation: pending_operator_install_command
+  hdd_schedule_initial_policy: owner_activated_daily_0330_Europe_Moscow_no_catchup_no_archive_deletion_100GiB_quota
+  hdd_schedule_policy_owner_activation: PASS_owner_operator_install_command_20261006_received080224Z
   hdd_archive_retention_deletion: not_enabled
-  hdd_schedule_server_execution: not_verified
+  hdd_schedule_server_execution: install_status_PASS_first_scheduled_run_unverified
+  hdd_schedule_source_pr: 92
+  hdd_schedule_implementation_commit: 7501440b476bf720658f5bf039efc3e4f1237d9c
+  hdd_schedule_merged_main_commit: 040c671236cb4d7f4a225700bd288ced7e6f14f3
+  hdd_schedule_source_ci: 37400747176
+  hdd_schedule_context_ci: 37400747178
+  hdd_schedule_installation_evidence: context/runtime/hdd_backup_schedule_install_20261006.json
+  hdd_schedule_owner_message_received_at: '2026-10-06T08:02:24Z'
+  hdd_schedule_timer_active: true
+  hdd_schedule_timer_enabled: true
+  hdd_schedule_next_event_utc: '2026-10-07T00:30:00Z'
+  hdd_schedule_last_scheduled_run: null
+  hdd_schedule_recovery_marker_present: false
+  hdd_schedule_boot_recovery_verified: false
+  next_ssd_preflight: context/runtime/ssd_storage_preflight_20261006.md

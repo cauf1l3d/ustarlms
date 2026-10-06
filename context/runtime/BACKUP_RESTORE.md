@@ -6,7 +6,8 @@
 подтверждены. [Producer](hdd_backup_20261006.md) PR91 установлен/check/fresh HDD trial
 06Oct01:10..01:12UTC PASS:957829597bytes/readback,24.111s pause/login200.
 [Точный report](hdd_backup_trial_20261006.json). [Начальный daily timer](hdd_backup_schedule_20261006.md)
-подготовлен; server activation/first scheduled run, independent copy/restore новой
+установлен владельцем: [report06Oct08:02UTC](hdd_backup_schedule_install_20261006.json),
+active/enabled, next07Oct03:30MSK. First scheduled run, independent copy/restore новой
 копии и reboot/mount-after-boot ещё не подтверждены. [Карта](server_map_20261006.md).
 
 Сводка 05.10.2026 по [owner evidence](evidence_20261005.yaml), §§4.2/8 аудита и [уточнениям](../audits/AUDIT_RECONCILIATION_20261005_RU.md). Это паспорт результата и контракт будущей работы, не установленное расписание.
@@ -21,7 +22,7 @@
 | Ключ | Отдельная копия и decryption проверены по выводу владельца; содержимое/место в Git не публикуется |
 | Isolated restore | 125 с / 4910 files; HTTP 200, admin/files/user roles/SCORM launch/progress PASS в своей области |
 | Не доказано | Полный clean-host restore почты/DNS/ISPConfig; гарантированный RTO/RPO; потеря общей площадки |
-| Регулярность | На дату05Oct не установлена; текущий timer подготовлен, installation pending |
+| Регулярность | На дату05Oct не установлена; owner06Oct timer active/enabled, first run07Oct03:30MSK ещё pending |
 
 Snapshot сделан до последующих записей cron. Перед изменяющей операцией требуется свежая разовая согласованная копия, Владелец06Oct отдельно перенёс регулярное расписание в текущий этап до нового стенда. Существующие архивы и результаты restore сохраняются до адресного решения; privacy старых dumps относится к INF-03, который владелец отложил после выбранных 1 → 7 → 6. 05.10 09:48:49 UTC получены и полностью проверены existing wrapper sources; hashes совпали. [CLI, состав, lock и короткие команды](recovery_contract_20261005.md): default — preflight, backup — `--backup --acknowledge-outage`, **`--recover` только возобновляет Moodle после прерывания, не восстанавливает архив**.
 
@@ -37,7 +38,7 @@ Local encrypted archive `ustar-recovery-20261005T101659Z-7ea0ad99.tar.gz.age`: S
 
 Локальный HDD не обеспечивает независимость от потери основного сервера. Отдельный экземпляр/носитель и его доступность при аварии выбираются владельцем; ручной SERVEREXPRESS snapshot не разрешает включать расписание туда. Если independent copy не выбрана, соответствующий gate остаётся открытым.
 
-Предлагаемый начальный режим: ежедневно03:30 Moscow, окно старта03:30..03:40, без catch-up/удаления архивов, quota100GiB; activation владельцем pending. Measured trial pause24.111s не гарантирует будущую длительность/RTO. RPO, долгий retention, ответственные и independent-copy policy открыты; ни14daily/4weekly, ни7daily/4weekly/3monthly не приняты. DB и moodledata должны образовывать одну согласованную точку; отдельная ежедневная БД и произвольные недельные files не гарантируют её.
+Включённый владельцем начальный режим: ежедневно03:30 Moscow, окно старта03:30..03:40, без catch-up/удаления архивов, quota100GiB; owner install/status PASS, next07Oct03:30MSK. Measured trial pause24.111s не гарантирует будущую длительность/RTO. RPO, долгий retention, ответственные и independent-copy policy открыты; ни14daily/4weekly, ни7daily/4weekly/3monthly не приняты. DB и moodledata должны образовывать одну согласованную точку; отдельная ежедневная БД и произвольные недельные files не гарантируют её.
 
 ## Контракт финального внедрения
 
@@ -47,4 +48,4 @@ INF-14 → OPS-02 в [полном плане](../roadmap/USTAR_AUDIT_REMEDIATIO
 
 Отказные проверки на копии: missing mount/full disk/failed dump/interruption/failed transfer/hash/decryption/lock contention. Backup success только после всех обязательных проверок. Retention сохраняет необходимый проверенный набор. Мониторинг отслеживает запуск, transfer/checksum, resume cron и restore freshness.
 
-Ключ не хранится только на исходном хосте или единственно рядом с архивом. Доступ к нему проверяется в сценарии потери хоста; секреты и recovery archive не коммитятся. OPS-02 дополняет восстановление Академии общим host/service runbook. Расписание, независимость и полная репетиция пока не выполнены.
+Ключ не хранится только на исходном хосте или единственно рядом с архивом. Доступ к нему проверяется в сценарии потери хоста; секреты и recovery archive не коммитятся. OPS-02 дополняет восстановление Академии общим host/service runbook. Расписание установлено; его первый запуск, независимость и полная репетиция пока не подтверждены.

@@ -7,7 +7,7 @@ owner terminal output received06Oct01:16:21UTC/04:16:21MSK;
 `FSTAB_CONFIGURED=PASS` и `HDD_ARCHIVE_COPY=PASS`; сообщение получено
 06Oct03:33:41MSK/00:33:41UTC, timestamps выполнения команд не напечатаны.
 `/srv/ustar-storage` — ext4 UUID `359a2bae-4e79-461a-ab72-1597f605d801`,
-df458G/913Mused/452Gavailable/1%. Fstab backup:
+df до свежего capture:458G/913Mused/452Gavailable/1%; post-capture df ещё не получен. Fstab backup:
 `/etc/fstab.before-ustar-hdd-c2kb8T`. Перезагрузка/mount-after-boot не проверялись.
 
 Существующий05Oct encrypted snapshot скопирован в `backups/manual` с source и
@@ -129,8 +129,9 @@ Docker/PG/age encryption или HDD power-loss/recovery rehearsal.
 
 Server install/check/manual trial подтверждены. Fresh archive independent-copy/
 decryption/restore ещё pending. [Начальный scheduler](hdd_backup_schedule_20261006.md)
-подготовлен; server activation/first scheduled run и внешняя notification delivery
-ещё не подтверждены. Рекомендуемый initial daily03:30 Europe/Moscow — без daytime
+установлен владельцем: [report received06Oct08:02UTC](hdd_backup_schedule_install_20261006.json),
+timer active/enabled, next07Oct03:30MSK. First scheduled run/boot recovery и внешняя
+notification delivery ещё не подтверждены. Включённый initial daily03:30 Europe/Moscow — без daytime
 catch-up и без archive deletion; retention7daily/4weekly/3monthly не принят/не включён.
 Перед освобождением SSD snapshots нужны consumer/independent-copy checks; перед
 SSD GPT/root growth — separate recovery/partition-table copy/procedure.

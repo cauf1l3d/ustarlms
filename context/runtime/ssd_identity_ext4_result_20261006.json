@@ -1,0 +1,106 @@
+{
+  "kind": "owner_supplied_readonly_terminal_output",
+  "owner_message_received_at": "2026-10-06T08:36:58Z",
+  "command_execution_timestamp_printed": false,
+  "agent_connected_to_production": false,
+  "command": "sudo -n timeout 20s bash -c 'set -eu; lsblk --json --bytes -o PATH,TYPE,SIZE,MODEL,SERIAL,WWN,UUID,PARTUUID /dev/sda; dumpe2fs -h /dev/sda2'",
+  "ssd": {
+    "device": "/dev/sda",
+    "model": "WALRAM 120GB",
+    "serial": "2203JPDG120GB6000933",
+    "bytes": 120034123776,
+    "wwn": "0x0000000000000000",
+    "wwn_is_unique_identity": false,
+    "full_model_serial_observed": true
+  },
+  "partitions": [
+    {
+      "device": "/dev/sda1",
+      "bytes": 1048576,
+      "partuuid": "4b6f77ed-4dce-4b46-9a59-f05ce93d11bc"
+    },
+    {
+      "device": "/dev/sda2",
+      "bytes": 53683945472,
+      "uuid": "fb5cc206-93f8-4601-a415-8d418970cf31",
+      "partuuid": "e32f3b41-9dde-4d67-8c64-57540c2518cb"
+    }
+  ],
+  "ext4": {
+    "device": "/dev/sda2",
+    "uuid": "fb5cc206-93f8-4601-a415-8d418970cf31",
+    "tool_version": "dumpe2fs 1.47.0 (5-Feb-2023)",
+    "last_mounted_on": "/",
+    "features": [
+      "has_journal",
+      "ext_attr",
+      "resize_inode",
+      "dir_index",
+      "filetype",
+      "needs_recovery",
+      "extent",
+      "64bit",
+      "flex_bg",
+      "sparse_super",
+      "large_file",
+      "huge_file",
+      "dir_nlink",
+      "extra_isize",
+      "metadata_csum"
+    ],
+    "flags": "signed_directory_hash",
+    "default_mount_options": "user_xattr acl",
+    "state_reported": "clean",
+    "errors_behavior_in_superblock": "Continue",
+    "block_count": 13106432,
+    "block_size": 4096,
+    "reserved_block_count": 655321,
+    "free_blocks": 3409528,
+    "inode_count": 3276800,
+    "free_inodes": 2784570,
+    "reserved_gdt_blocks": 1024,
+    "blocks_per_group": 32768,
+    "inodes_per_group": 8192,
+    "group_descriptor_size": 64,
+    "inode_size": 256,
+    "journal_size": "256M",
+    "journal_features": [
+      "journal_incompat_revoke",
+      "journal_64bit",
+      "journal_checksum_v3"
+    ],
+    "mount_count": 27,
+    "maximum_mount_count": -1,
+    "check_interval": 0,
+    "lifetime_writes_reported": "144 GB",
+    "header_times_local_as_printed": {
+      "filesystem_created": "Sun Jan 17 22:50:33 2021",
+      "last_mount": "Mon Sep 14 07:32:27 2026",
+      "last_write": "Tue Oct 6 08:13:58 2026",
+      "last_checked": "Sun Jan 17 22:50:33 2021"
+    },
+    "printed_header_timezone_confirmed": false,
+    "observed_while_root_mounted": true,
+    "offline_filesystem_check_performed": false
+  },
+  "derived": {
+    "ext4_bytes": 53683945472,
+    "filesystem_bytes_equal_partition_bytes": true,
+    "free_blocks_bytes_include_root_reserved": 13965426688,
+    "reserved_blocks_bytes": 2684194816,
+    "space_counters_are_live_not_atomic": true,
+    "available_df_bytes_not_recomputed_from_header": true
+  },
+  "scope": {
+    "gpt_layout_remeasured_by_this_command": false,
+    "gpt_crc_or_backup_header_consistency_verified": false,
+    "ssd_smart_or_self_test_repeated": false,
+    "partition_or_filesystem_write_performed": false,
+    "source_move_or_deletion_performed": false,
+    "host_console_or_rescue_availability_confirmed": false,
+    "binary_partition_table_recovery_copy_confirmed": false,
+    "backup_command_prepared": true,
+    "backup_command_server_execution_confirmed": false
+  },
+  "previous_storage_evidence": "context/runtime/ssd_storage_result_20261006.json"
+}

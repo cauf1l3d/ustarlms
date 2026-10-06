@@ -3,13 +3,13 @@ updated_at: '2026-10-06'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner SSD preflight received06Oct08:19:59UTC: initial inventory08:18:26UTC, root78%,
-  HDD451G available post-trial, old GPT/PMBR warning persists, SSD SMART overall PASSED with undeclared
-  vendor decoding. Four running container mounts confirmed, retained lab actively uses its root; control
-  path search has missing-link errors and no complete consumer clearance. Timer active/enabled from
-  earlier evidence, first scheduled run07Oct03:30MSK pending. Next: full untruncated SSD identity/ext4
-  features and host/partition-table recovery; console/rescue availability still unknown. No SSD write,
-  source move/deletion or stage preparation performed.'
+current_activity: 'Owner JSON/ext4 header received06Oct08:36:58UTC: full WALRAM120GB serial
+  2203JPDG120GB6000933 verified; zero WWN unused as identity. Root ext4: 13106432x4096 equals
+  partition53683945472bytes; resize_inode/64bit/features recorded, mounted header is not offline fsck.
+  GPT boundary remains prior dated evidence, not remeasured by latest command. Guarded raw boot/GPT
+  and native table copy command prepared for mounted HDD; server execution and console/rescue
+  confirmation pending. No SSD write, source move/deletion or stage preparation performed.
+  Timer active/enabled from earlier evidence, first scheduled run07Oct03:30MSK pending.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -283,7 +283,7 @@ storage_reorganization:
   automatic_backup_installed: true
   next_readonly_evidence:
   - first_HDD_scheduled_run_after_20261007T003000Z
-  - full_SSD_identity_ext4_features_and_partition_table_host_recovery_before_growth
+  - owner_execution_of_guarded_raw_GPT_PM_BR_copy_and_console_rescue_before_growth
   - independent_copy_and_restore_of_fresh_HDD_archive
   fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
@@ -351,8 +351,20 @@ storage_reorganization:
   readonly_storage_owner_received_at: '2026-10-06T08:19:59Z'
   root_filesystem_uuid: fb5cc206-93f8-4601-a415-8d418970cf31
   root_journaled_user_group_quota_mount_options_present: true
-  ssd_full_identity_verified: false
-  ssd_identity_limitation: model_serial_columns_truncated_zero_WWN_not_a_unique_identity
+  ssd_full_identity_verified: true
+  ssd_full_identity_source: context/runtime/ssd_identity_ext4_result_20261006.json
+  ssd_identity_owner_received_at: '2026-10-06T08:36:58Z'
+  ssd_serial: 2203JPDG120GB6000933
+  ssd_bytes: 120034123776
+  ssd_identity_limitation: zero_WWN_not_a_unique_identity
+  root_ext4_block_count: 13106432
+  root_ext4_block_bytes: 4096
+  root_ext4_bytes: 53683945472
+  root_ext4_bytes_equal_partition_bytes: true
+  mounted_header_is_offline_fsck: false
+  partition_table_copy_runbook: context/runtime/ssd_partition_table_copy_20261006.md
+  partition_table_copy_command_prepared: true
+  partition_table_copy_command_server_executed: false
   ssd_smart_overall_health: PASSED_owner_H_A_only
   ssd_vendor_specific_smart_raw_decode_verified: false
   retained_lab_active_mount_consumers_confirmed: true

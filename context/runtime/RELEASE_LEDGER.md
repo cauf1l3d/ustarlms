@@ -262,3 +262,26 @@ STATE/ACTIVE/BACKLOG/server map актуализированы; console/rescue e
 language, unknown; next full JSON identity/ext4 header query read-only/syntax checked.
 Никаких source moves/deletions, SSD GPT/root writes, service stops/reboots или backup
 relaunch не выполнено. Existing timer first run07Oct03:30MSK всё ещё pending.
+
+
+## 2026-10-06 — Full SSD identity/ext4 follow-up; table-copy command prepared
+
+База main7fbf17c34e1b7a3abe58d5888e8c4ae684696083 (PR94). Owner terminal
+output received08:36:58UTC, command timestamp not printed. lsblk JSON resolves
+full model WALRAM120GB/serial2203JPDG120GB6000933,120034123776bytes; WWN zero
+not used as unique pin. Partition UUIDs unchanged. Mounted ext4 header reports
+13106432×4096 =53683945472bytes exactly equal sda2; resize_inode/64bit/etc recorded,
+not offline fsck/SMART/GPT repeat. Header last-write is not query timestamp.
+New sanitized evidence preserves this scope without rewriting previous dated JSON.
+
+One-line guarded backup command prepared: verify SSD serial/capacity/root UUID/raw
+GPT boundary/partition starts and GUIDs, exact HDD UUID/WWN/CWD filesystem0700,
+fresh private directory, raw first2MiB/old-tail1MiB/physical-tail1MiB, native
+sgdisk --pretend backup and metadata, source cmp then HDD sync/hash readback.
+Raw copies avoid relying only on utility in-memory GPT interpretation. No block
+device output, GPT repair/grow/resize, stop services, source cleanup or backup rerun
+in this step. Bash/Python syntax, geometry/source-copy checks and context validation
+use regular sparse-file fixture (three ranges4MiB/root excluded); native sgdisk
+not executed locally. Production execution and console/rescue remain pending. Timer first
+scheduled event07Oct00:30UTC unchanged. Current state/queue/server map/index updated;
+application/private helpers/scheduler/cron untouched, original audit preserved.

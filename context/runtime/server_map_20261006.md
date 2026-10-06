@@ -16,8 +16,15 @@ PMBR mismatch и backup-GPT-not-at-end предупреждения сохран
 SSD SMART overall PASSED, raw1/5/196/198=0, power-on25964h/temperature raw50.
 Это H/A query, не self-test или гарантия health. Vendor-specific packed raw175/176/177
 не переводить в количество failures/износ без verified decoder. Model/serial
-в lsblk columns усечены (`WALRA`/`2203JP`), WWN zero не является unique identity.
-Перед pinned write нужен untruncated JSON identity и ext4 features/geometry.
+в первом lsblk columns усечены (`WALRA`/`2203JP`), WWN zero не unique identity.
+[Follow-up received06Oct08:36:58UTC](ssd_identity_ext4_result_20261006.json) получает
+полные WALRAM120GB/serial2203JPDG120GB6000933, bytes120034123776 и прежние UUID.
+Ext4: 13106432×4096 =53683945472bytes, совпадает с размером `/dev/sda2`; features
+resize_inode/64bit/extents/metadata_csum recorded. Header прочитан на mounted root:
+clean/needs_recovery и last-write time не являются offline fsck или timestamp команды.
+GPT/SMART follow-up не повторяет. [Raw boot/GPT/native copy command](ssd_partition_table_copy_20261006.md)
+подготовлена для exact mounted HDD, без SSD partition write и stop services;
+owner execution и console/rescue confirmation pending.
 
 Все четыре показанных containers running; lab web/PG **активно используют**
 `/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72`. Production binds подтверждены:
@@ -30,7 +37,8 @@ Reference search перешёл на grep fallback; шесть wrapper filenames
 но missing/broken paths в systemd и ISPConfig hook locations дали ошибки.
 Exit status не напечатан, active service impact не проверен; поиск частичный.
 Console/rescue и binary partition-table copy пока не подтверждены. Следующий
-[read-only identity/features шаг и объяснение recovery](ssd_storage_preflight_20261006.md).
+[выполненный identity/features шаг](ssd_storage_preflight_20261006.md) и следующий
+[guarded table-copy шаг](ssd_partition_table_copy_20261006.md).
 
 ## Диски и размещение
 
@@ -124,7 +132,7 @@ Existing `/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py`, SHA0d31e694db8bee23090
 ## Порядок продолжения
 
 1. Выполненные initializer/fstab/old-copy/producer install/fresh trial/scheduler install не повторять. Timer active/enabled; после07Oct03:30MSK получить первый scheduled report. Для следующего read-only storage прохода ждать ночи не требуется.
-2. Выполнить [свежий SSD/consumer preflight](ssd_storage_preflight_20261006.md), проверить recovery inputs и сохранить partition-table copy; sector range61.79GiB уже подтверждён. Подготовить отдельную SSD GPT repair/root expansion процедуру; expansion ещё не выполнялось.
+2. [SSD/consumer preflight](ssd_storage_preflight_20261006.md) и full identity/ext4 follow-up получены. Выполнить [guarded raw boot/GPT/native copy](ssd_partition_table_copy_20261006.md), получить console/rescue readiness и проверить recovery inputs; sector range61.79GiB уже подтверждён. Подготовить отдельную SSD GPT repair/root expansion процедуру; expansion ещё не выполнялось.
 3. Переносить named архивы через copy→hash/metadata verification→consumer update→проверку независимой copy→точечное освобождение исходников. Retained labs со строгими absolute-path guards не перемещать обычным `mv`.
 4. Проверить первый scheduled backup и boot recovery; дополнить карту путей/UUID/schedules/recovery procedure по новым результатам. Затем пересчитать budget и вернуться к стенду/Moodle/OS/HTTPS.
 

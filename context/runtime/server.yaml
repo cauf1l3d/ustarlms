@@ -55,7 +55,17 @@ latest_storage_inventory_timestamp: '2026-10-06T08:18:26Z'
 latest_storage_owner_received_at: '2026-10-06T08:19:59Z'
 root_filesystem_uuid: fb5cc206-93f8-4601-a415-8d418970cf31
 root_journaled_quota_mount_options: usrjquota=quota.user_grpjquota=quota.group_jqfmt=vfsv0
-ssd_full_identity: not_verified_lsblk_model_serial_column_truncation_WWN_zero
+ssd_full_identity: full_JSON_model_serial_observed_WWN_zero_not_used_as_pin
+ssd_identity_evidence: context/runtime/ssd_identity_ext4_result_20261006.json
+ssd_identity_owner_received_at: '2026-10-06T08:36:58Z'
+ssd_model: WALRAM 120GB
+ssd_serial: 2203JPDG120GB6000933
+ssd_bytes: 120034123776
+root_ext4_bytes: 53683945472
+root_ext4_bytes_equal_partition_bytes: true
+root_header_is_offline_fsck: false
+partition_table_copy_runbook: context/runtime/ssd_partition_table_copy_20261006.md
+partition_table_copy_execution: not_verified_prepared_only
 ssd_smart: overall_PASSED_vendor_specific_raw_decode_not_verified
 retained_lab_mount_consumers: two_running_containers_confirmed
 control_path_reference_search: partial_missing_link_errors_no_complete_clearance

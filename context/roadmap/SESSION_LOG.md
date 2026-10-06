@@ -373,3 +373,23 @@ original audit, application526files/93tables/32tasks, frontend/private backup en
 cron/scheduler unchanged. Publication CI/deployment отделены от owner server evidence.
 Timer first scheduled event07Oct00:30UTC unchanged; root growth/source cleanup/stage
 и full host boot restore пока не выполнены. Следующий результат нужен от оператора.
+
+
+## 2026-10-06 — полная актуальная редакция аудита и статус работ
+
+По запросу владельца подготовлен USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
+с сохранением разделов исходного audit05Oct. Current snapshot12:39UTC: HDD
+mount/fstab, fresh manual trial, timer active и raw GPT-copy подтверждены; GPT
+write/root partition/ext4 growth, first scheduled07Oct03:30MSK, full-addon stage,
+production patch/OS/HTTPS и full DR остаются pending. Это сверка уже полученных
+свидетельств; новых операций на production агент не выполнял. Старое backup-last
+исправлено по owner06Oct order, root78%, theme boost, core exception, CI8.3
+учтены. Official Moodle5.3 released05Oct/minimumPG17+ проверены; future PLAT-01
+дополнен отдельной PG major migration/paired rollback, выбранный patch5.1.8
+и очередность владельца сохранены. Без новых app/frontend/infra/workflow changes.
+
+STATE/document/entrypoints/ACTIVE и PLAT-01 acceptance актуализированы; original
+audit05Oct hash и история не переписаны. Полный остаток, scope каждого PASS и
+свидетельства включены в новую редакцию; публикация документа не закрывает риски.
+Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
+docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.

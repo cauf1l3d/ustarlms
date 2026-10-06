@@ -172,6 +172,7 @@ non_goals:
 next_agent_read:
 - START_HERE.md
 - context/CONTEXT_INDEX.md
+- context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
 - context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
 - context/audits/AUDIT_RECONCILIATION_20261005_RU.md
 - context/runtime/evidence_20261005_baseline.yaml
@@ -215,6 +216,9 @@ execution:
   backup_last_rule: superseded_by_owner_20261006_pre_stage_backup_request
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+  current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
+  current_snapshot: '2026-10-06T12:39:00Z'
+  status_summary: storage_GPT_copy_and_HDD_trial_timer_confirmed_GPT_write_root_growth_first_scheduled_and_prod_patch_pending
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
@@ -222,6 +226,13 @@ audit:
   current_hdd_trusted: false
   current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_active_first_run_pending
   current_hdd_checkpoint: context/runtime/hdd_backup_20261006.md
+  future_lts_requirements:
+    target: Moodle_5.3_LTS
+    published: '2026-10-05'
+    minimum_postgresql_major: 17
+    production_postgresql: '16.15'
+    major_migration_executed: false
+    source: https://moodledev.io/general/releases/5.3
 patch_candidate:
   tag: v5.1.8
   commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923

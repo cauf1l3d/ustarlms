@@ -124,3 +124,26 @@ stale GPT backup boundary and confirmed 61.79GiB free tail; production and retai
 lab containers running; UTC/NTP synchronized; 18 system timers and no managed USTAR
 backup timer. `hdd_initialize.py` is exact-device guarded and tested offline. No
 partition, filesystem, mount, fstab, SSD, container or schedule mutation performed.
+
+## 2026-10-06 — HDD initialized and temporarily mounted by owner
+
+База main `89fc5d49f1ac89c29e99d0095f8482f17f22f60d` (PR89), ветка
+`codex/ustar-hdd-mounted-context-20261006`. Owner confirmed initializer SHA
+`ef3a5699f54384428d40e1c9b96b2707e117ad188b1f36628c95fb823be49aa2`,
+`EMPTY_HDD_CHECK_PASS` и `FILESYSTEM_READY`. GPT/sdb1/ext4 labelustar-hdd,
+UUID `359a2bae-4e79-461a-ab72-1597f605d801` созданы. Mount output получен
+06Oct03:07:20MSK/00:07:20UTC; execution timestamp не напечатан. Отдельная
+owner команда смонтировала UUID на `/srv/ustar-storage` с
+`rw,nosuid,nodev,noexec,relatime`, root:root0700; df458G/28Kused/453Gavailable/1%.
+Повторный initialize не требуется. Residual SMART198=1 сохраняется;
+полная hardware/recovery qualification не заявляется.
+
+Подготовлены one-line operator commands: guarded candidate fstab/private backup
+и copy/flush/readback SHA существующего encrypted05Oct archive. Bash syntax и12
+offline failure/success cases PASS с mocked mount/device/systemctl/sync и реальным
+fixture copy/hash. Это подготовка; fstab, archive copy, fresh HDD backup trial,
+producer/timer и SSD repair/growth ещё без operator execution evidence.
+Исходники/архивы/контейнеры не удалены и не перемещены агентом; прямого SSH нет.
+STATE/ACTIVE/BACKLOG/server map/backup entrypoint и generated index актуализированы.
+Application source, workflows/helpers/harness code и байты оригинала аудита
+не меняются; проверка контекста и точный implementation SHA/CI — в delivery PR/Git.

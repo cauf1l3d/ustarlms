@@ -2,8 +2,9 @@
 
 **Текущий приоритет владельца 06.10.2026:** после storage inventory подготовить HDD
 для автоматических копий до нового стенда. Этот документ сохраняет dated contract
-05.10 ниже; target, UUID, mount guard, trial и timer ещё не установлены. [Текущая
-карта и HDD initializer](server_map_20261006.md).
+05.10 ниже; HDD GPT/ext4 и temporary mount по UUID уже подтверждены. Persistent
+fstab, archive copy/hash, guarded backup producer/trial и timer ещё не выполнены.
+[Текущая карта](server_map_20261006.md), [owner mount evidence и следующие команды](hdd_initialize_20261006.md).
 
 Сводка 05.10.2026 по [owner evidence](evidence_20261005.yaml), §§4.2/8 аудита и [уточнениям](../audits/AUDIT_RECONCILIATION_20261005_RU.md). Это паспорт результата и контракт будущей работы, не установленное расписание.
 

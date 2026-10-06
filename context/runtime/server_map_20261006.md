@@ -6,11 +6,11 @@
 
 | Объект | Полученные данные | Вывод / следующее действие |
 |---|---|---|
-| SSD `/dev/sda` | WALRAM 120GB,111,8GiB | Считать границы/тип partition table; не изменять до проверки свободного диапазона и recovery |
-| `/dev/sda1` | 1MiB, filesystem/mount не показаны | Назначение проверить по типу раздела; не удалять |
+| SSD `/dev/sda` | WALRAM 120GB,111,8GiB; GPT, stale backup boundary | Sector inventory получен; перед отдельной repair/growth операцией сохранить recovery и partition-table copy |
+| `/dev/sda1` | 1MiB, BIOS boot, sectors2048–4095 | Сохранить; не удалять |
 | `/dev/sda2` → `/` | partition50GiB, ext4; df49G/36G used/11G available/78%; lsblk10,5G available | Home, USTAR, export и labs расположены здесь |
 | Ёмкость SSD вне показанных размеров разделов | 61.79GiB free tail по start/end sectors | Подтверждённый свободный partition range; GPT repair/partition growth/fs resize ещё не выполнялись |
-| HDD `/dev/sdb` | WDC WD5000AAKS,465,8GiB; child partitions/FSTYPE/mount не показаны | Persistent identity из предыдущего evidence: WWN0x50014ee200c1ee59,serial WD-WCAS82914317,500106780160bytes; повторно сверить перед записью |
+| HDD `/dev/sdb1` → `/srv/ustar-storage` | ext4 `ustar-hdd`, UUID `359a2bae-4e79-461a-ab72-1597f605d801`; df458G/28K used/453G available/1% | WWN0x50014ee200c1ee59,serial WD-WCAS82914317,500106780160bytes; temporary mount подтверждён, fstab/copy/producer/timer pending |
 
 Свежий `fdisk -l` уточнил SSD: `/dev/sda` — 234441648 sectors; GPT имеет устаревшую
 backup-table boundary (PMBR mismatch `104857599 != 234441647`), а `/dev/sda2`
@@ -20,10 +20,14 @@ backup-table boundary (PMBR mismatch `104857599 != 234441647`), а `/dev/sda2`
 операция relocate GPT → grow partition → ext4 resize. `/dev/sda1` подтверждён как
 BIOS boot и не подлежит удалению.
 
-На HDD опубликован безопасный one-time initializer: [hdd_initialize_20261006](hdd_initialize_20261006.md).
-Результат имеет намеренно три состояния: `--check`/`EMPTY_HDD_CHECK_PASS`, затем
-`--initialize`/`FILESYSTEM_READY` с UUID, затем отдельный mount/backup setup. До
-операторского запуска разделов и filesystem на HDD нет.
+Владелец выполнил [one-time initializer](hdd_initialize_20261006.md):
+`EMPTY_HDD_CHECK_PASS` → `FILESYSTEM_READY`, GPT/ext4 и UUID созданы. Повторять
+initializer не нужно. Следующий owner output, полученный06Oct03:07:20MSK/00:07:20UTC,
+подтвердил отдельный mount по UUID: `rw,nosuid,nodev,noexec,relatime`,453G доступны.
+В выполненной команде mount root установлен `root:root/0700`. Время выполнения
+самой команды отдельно не напечатано. Persistent fstab и проверка существующего
+архива на HDD — [следующие подготовленные команды](hdd_initialize_20261006.md),
+ещё без operator execution evidence.
 
 На HDD завершены one-zero-pattern write/read0errors и newest extended SMART Completed without error16385h. Последний SMART20:44:52UTC: reallocated/pending/CRC0, Offline_Uncorrectable198=1; причина residual не установлена. Это не гарантия долговечности. Новые копии на HDD дополняют source на SSD; единственные важные архивы нельзя удалять с SSD до проверки независимой копии. Старый отдельно сохранённый/decrypted04Oct архив не подтверждает наличие всех последующих исторических snapshots.
 
@@ -73,7 +77,7 @@ Existing `/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py`, SHA0d31e694db8bee23090
 
 Целевой контракт:
 
-- HDD mount по UUID с проверкой exact device identity, filesystem и mounted source перед backup; отсутствие/подмена HDD даёт отказ **до staging и остановки Moodle**, без fallback на SSD mountpoint.
+- Временный HDD mount по UUID уже подтверждён. Persistent fstab и повторная проверка exact device identity, filesystem и mounted source перед каждым backup ещё нужны; отсутствие/подмена HDD даёт отказ **до staging и остановки Moodle**, без fallback на SSD mountpoint.
 - Private staging больших payloads и encrypted archives на HDD; public age recipient используется для encryption, private recovery identity в архив не включается. Recovery marker должен оставаться доступен на SSD при пропадании HDD, чтобы Moodle можно было возобновить. Нельзя слепо перенести весь старый STATE вместе с marker.
 - DB/code/config/Moodledata/exact images копируются согласованно с existing backup/cron lock; во время capture возможна короткая пауза Academy, затем resume и HTTP readiness. Shared mail/DNS/ISPConfig не останавливаются.
 - Предварительная schedule policy: ежедневно03:30 Europe/Moscow; retention7 daily/4 weekly/3 monthly. Это предлагаемые настройки, **не включённый timer**. Оценить first-copy size/duration/free quota; не выполнять пропущенный ночной backup днём без отдельного окна.
@@ -83,9 +87,9 @@ Existing `/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py`, SHA0d31e694db8bee23090
 
 ## Порядок продолжения
 
-1. Считать partition tables, Docker state/mounts/ports, listeners/timezone/timers; заполнить карту и проверить consumers кандидатов.
-2. Подготовить HDD storage и копию необходимых recovery inputs; после sector evidence выбрать, нужно ли расширять ext4 root за счёт SSD tail. Expansion сейчас не выполнено и не выдано как команда.
+1. Настроить persistent fstab для уже смонтированного UUID и проверить copy/hash существующего05Oct encrypted archive на HDD. Это ещё не свежий backup capture.
+2. Проверить consumers кандидатов и recovery inputs, сохранить partition-table copy; sector range61.79GiB уже подтверждён. Подготовить отдельную SSD GPT repair/root expansion процедуру; expansion ещё не выполнялось.
 3. Переносить named архивы через copy→hash/metadata verification→consumer update→проверку независимой copy→точечное освобождение исходников. Retained labs со строгими absolute-path guards не перемещать обычным `mv`.
 4. Проверить и включить автобэкапы; обновить карту путей/UUID/schedules/recovery procedure. Затем пересчитать budget и вернуться к стенду/Moodle/OS/HTTPS.
 
-Owner authorization покрывает этот storage/map/automatic-backup проход. Production DB hardening, массовая очистка Docker, продуктовые изменения и удаление истории не добавлены в scope. Форматирование, переносы, расширение SSD и timer **ещё не выполнены**.
+Owner authorization покрывает этот storage/map/automatic-backup проход. Production DB hardening, массовая очистка Docker, продуктовые изменения и удаление истории не добавлены в scope. HDD GPT/ext4 и temporary mount **выполнены владельцем**; fstab, копирование архивов, удаление исходников, расширение SSD и timer пока без execution evidence.

@@ -3,7 +3,7 @@ updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner11Oct GPT/partition/ext4 and postresize cron/HTTP/visible SCORM received. Reviewed PR87 helper installed, downloaded/installed SHA checks OK; fresh --check PASS received18:46:12UTC (check time not printed), free73738452992/required10526347264bytes, inodes6838433/225294. Existing source recovery lab running, separate checkpoint/workspace absent at precheck. Next --prepare-stage, then candidate5.1.8 upgrade/repeat/paired rollback. Production core unchanged; AppArmor/functional shared-services/OS/HTTPS remain open.'
+current_activity: 'Owner11Oct PR87 --prepare-stage18:55:53..19:17:02UTC PASS: frozen checkpoint63431entries/hash/bootstrap; independent baseline workspace login200,526 USTAR/57 addon metadata/4910 contenthashes. Source lab resumed, production unchanged. CoreDB2025100601.03 remains original; manual login/SCORM NOT_TESTED. Next Windows tunnel/browser smoke and full-addon candidate upgrade/repeat/paired restore preparation; real upgrade helper not ready. AppArmor/shared-service functional checks/OS/HTTPS remain open.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -26,7 +26,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_backup_cron_http_and_retained_lab_resume_confirmed_patch_stage_pending
+  status: owner_backup_cron_http_and_independent_patch_stage_baseline_confirmed_candidate_upgrade_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -165,6 +165,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_stage_browser_handoff_20261011.md
+- context/runtime/lab_stage_prepare_result_20261011.json
 - context/runtime/storage_continuation_20261011.md
 - START_HERE.md
 - context/CONTEXT_INDEX.md
@@ -215,7 +217,7 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: GPT_partition_ext4_postresize_and_cold_preflight_PASS_prepare_stage_patch_OS_HTTPS_open
+  status_summary: storage_and_independent_stage_baseline_PASS_manual_stage_candidate_patch_OS_HTTPS_open
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
@@ -268,12 +270,12 @@ patch_candidate:
   cold_checkpoint_helper_implementation: 40e7d13e197cd59321e5e89e3f477539eb265b19
   cold_checkpoint_source: context/runtime/lab_cold_checkpoint_20261005.md
   cold_checkpoint_and_independent_workspace_prepared: true
-  cold_checkpoint_and_independent_workspace_server_executed: false
+  cold_checkpoint_and_independent_workspace_server_executed: true
   core_candidate_upgrade_repeat_and_paired_rollback_server_executed: false
   cold_checkpoint_helper_pr: 87
   cold_checkpoint_source_ci: 37375193949
   cold_checkpoint_context_ci: 37375193850
-  cold_checkpoint_operator_action: fresh_preflight_PASS_next_prepare_stage_existing_source_lab_preserved
+  cold_checkpoint_operator_action: prepare_stage_PASS_next_Windows_tunnel_browser_smoke_and_candidate_upgrade_paired_restore
   cold_checkpoint_helper_installed_owner_confirmed: true
   cold_checkpoint_helper_installation_SHA: OK
   cold_checkpoint_fresh_preflight_server_executed: true
@@ -283,6 +285,16 @@ patch_candidate:
   cold_checkpoint_fresh_required_bytes: 10526347264
   cold_checkpoint_fresh_available_bytes: 73738452992
   cold_checkpoint_prepare_runbook: context/runtime/lab_stage_check_handoff_20261011.md
+  cold_checkpoint_prepare_result: context/runtime/lab_stage_prepare_result_20261011.json
+  cold_checkpoint_prepare_started_utc: '2026-10-11T18:55:53Z'
+  cold_checkpoint_prepare_finished_utc: '2026-10-11T19:17:02Z'
+  cold_checkpoint_manifest_sha256: 77672fd0b5b7bc5a27d1bd71d536f2bf47449455623589b53e0605005584b4c0
+  cold_checkpoint_entries: 63431
+  independent_baseline_workspace_http_login: 200
+  independent_baseline_workspace_core_db_version: '2025100601.03'
+  independent_baseline_workspace_manual_acceptance: NOT_TESTED
+  full_addon_upgrade_and_paired_restore_helper_ready: false
+  next_stage_operator_runbook: context/runtime/lab_stage_browser_handoff_20261011.md
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

@@ -2,7 +2,7 @@
 
 Owner11Oct installed helper и fresh `--check` PASS; [receipt](lab_cold_preflight_result_20261011.json).
 Команды download/install/check ниже уже выполнены и не требуют повторения.
-Следующий шаг — `--prepare-stage` по команде в конце, server result пока pending.
+Owner --prepare-stage18:55:53..19:17:02UTC PASS; [receipt](lab_stage_prepare_result_20261011.json). Все команды ниже уже выполнены; не повторять. Следующий шаг — [Windows SSH-туннель и browser smoke новой workspace](lab_stage_browser_handoff_20261011.md).
 
 Слитый [PR87](https://github.com/cauf1l3d/ustarlms/pull/87), implementation
 `40e7d13e197cd59321e5e89e3f477539eb265b19`. Helper SHA-256
@@ -76,7 +76,7 @@ values не все напечатаны; guards подтверждены success
 ничего из новых copies/containers не создавал. Первоначальное «установить стенд»
 уточнено: речь о второй рабочей копии, а не о повторной установке старой.
 
-Следующая команда использует **уже установленный** helper. Контракт source lab
+Следующая историческая команда уже выполнена11Oct и использовала **уже установленный** helper. Контракт source lab
 и новые объекты: старая recovery copy сохраняется; code/config/Moodledata/PG
 копируются при временной остановке её web/PG, после copy запускаются те же source
 IDs. Frozen checkpoint отдельно; mutable workspace получает собственные data и
@@ -93,7 +93,7 @@ sudo -n bash -c 'set -eu; printf "%s  %s\n" 9c81abb6b30bea611f99fb7a3e336e12d0a7
 изменяющего шага нет. Script печатает `COPYING_COLD_LAB`, затем
 `LAB_COLD_CHECKPOINT=PASS` и окончательный
 `LAB_PATCH_STAGE_BASELINE=PASS; HTTP_LOGIN=200; no core upgrade; production unchanged`.
-Это baseline исходного core, не обновление5.1.8. Server `--prepare-stage` pending.
+Это baseline исходного core, не обновление5.1.8. Server `--prepare-stage` теперь PASS по [owner receipt](lab_stage_prepare_result_20261011.json); повтор не нужен.
 При ошибке передать полный вывод; existing/incomplete paths не удалять и writing
 шаг не повторять до анализа. Reviewed helper при copy failure пытается возобновить
 те же source containers; restart incomplete имеет отдельный recovery mode.

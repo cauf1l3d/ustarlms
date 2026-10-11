@@ -532,3 +532,26 @@ run38164755773 with no jobs. Source/context checks на этом SHA не объ
 причина startup failure отдельно не установлена. Historical helperPR87 source
 CI37375193949/context37375193850 SUCCESS остаются отдельным evidence. GitHub PR
 metadata update ранее403 из-за unverified email; files/ref publication состоялись.
+
+## 2026-10-11 — cold checkpoint и отдельная baseline workspace реально запущены
+
+Owner exact PR87 installed SHA OK; --prepare-stage18:55:53..19:17:02UTC PASS.
+Wrapper1269s (21min9s), helper1267.054s. Frozen checkpoint63431entries, полный
+inventory/file hashes PASS, manifest77672fd0b5b7bc5a27d1bd71d536f2bf47449455623589b53e0605005584b4c0.
+Отдельная mutable workspace restore bootstrap/login200,526 USTAR file hashes,
+57 addon metadata,4910 Moodle contenthashes checked. Source lab resumed,
+production containers unchanged. CoreDB2025100601.03 исходный, upgrade=false,
+cron=false/email disabled/loopback only. Manual login/roles/SCORM NOT_TESTED,
+full-addon compatibility/patch upgrade and paired rollback false.
+
+Storage plan free73738285056/required10526347264bytes относится к pre-copy
+планированию; fresh post-copy free этим stdout не измерено. Relay7200s, exact
+start/expiry не напечатаны. Установка/check/prepare завершены и не повторяются.
+[Owner receipt](../runtime/lab_stage_prepare_result_20261011.json) и [Windows SSH tunnel/browser handoff](../runtime/lab_stage_browser_handoff_20261011.md)
+опубликованы; next login/home/one SCORM smoke нового стенда. PR83 synthetic CI
+не является командой real full-addon upgrade: pinned candidate/vendor/addons/
+USTAR home contract и workspace-only upgrade/repeat/paired restore helper ещё
+предстоит подготовить. Старые lab и frozen checkpoint сохраняются. Scope1→7→6,
+OS/AppArmor/functional shared services/HTTPS и fresh archive restore остаются
+в измеренных границах. Application/frontend/helpers/workflows не менялись;
+PR98 open, публикация docs не означает server candidate acceptance или CI PASS.

@@ -56,12 +56,13 @@ tasks:
   - context/runtime/lab_patch_preflight_20261005.md
   - context/runtime/lab_planning_result_20261005.json
   - context/runtime/lab_cold_checkpoint_20261005.md
+  - context/runtime/lab_stage_prepare_result_20261011.json
+  - context/runtime/lab_stage_browser_handoff_20261011.md
   pending_acceptance:
   - Extra files/consumers and candidate preservation of reviewed USTAR homepage redirect; exclusions/plugin provenance
     remain explicit
   - Fresh archive independent copy/decryption evidence; candidate coordinated upgrade/rollback readiness
-  - Execute paired cold checkpoint + boot independent baseline workspace; then full-addon candidate upgrade/repeat/paired
-    rollback.
+  - Manual new workspace browser login/home/SCORM; prepare and execute full-addon candidate upgrade/repeat/paired rollback.
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA verified
   - 24678 matching, 1 changed, 0 missing, 23 extra, no errors or reference skips; not full equivalence
@@ -90,8 +91,8 @@ tasks:
     ordinary writable data files1.
   - Owner newest extended SMART20:44:52UTC Completed without error at16385h; reallocated0/pending0/offlineUNC1/CRC0/temp48;
     previous failure retained as history.
-  - Cold paired checkpoint + separate baseline workspace helper prepared with18 filesystem/failure tests; server
-    execution pending.
+  - Cold paired checkpoint helper18 filesystem/failure tests; owner11Oct18:55:53..19:17:02UTC prepare PASS,63431entries/full hashes/bootstrap/login200; source lab resumed/production unchanged.
+  - New workspace526 USTAR/57 addon metadata/4910 contenthashes verified; original coreDB2025100601.03, manual login/SCORM and candidate upgrade/repeat/paired restore pending.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -135,7 +136,7 @@ tasks:
     result was then pending. Root partition/ext4 growth, complete consumers and independent copies remain pending.
     Owner11Oct executed relocation: nine copy hashes OK, raw pre/post CRC/entry array/boot/kernel checks PASS; usable
     end234441614, root start/size unchanged. The prepared PR96 relocation must not be rerun. Owner11Oct latest scheduled complete/success/exited0, marker=false and timer active/enabled confirmed; actual dry-run
-    new size234437519/end234441614 matches. Owner11Oct15:21:56UTC actual partition growth PASS: size234437519/end234441614, raw CRC/boot/kernel PASS, ext4 old. Owner11Oct15:35:13UTC online ext4 resize PASS,blocks29304689,df110G/69free/35percent,UUID/mount/GPT preserved. Owner post-check15:44:55UTC received: root69G/HDD447G available, four containers running, login200, cron v3 exit0/no new failures, screenshot authenticated SCORM. AppArmor unit failed remains open in selected OS scope; functional mail/DNS/ISPConfig not proved. Owner helper install/SHA and fresh preflight11Oct PASS received18:46:12UTC: free73738452992/required10526347264bytes, free6838433/required225294inodes; new checkpoint/workspace absent. Existing source lab already installed. Next prepare-stage; no checkpoint/workspace/core upgrade yet.'
+    new size234437519/end234441614 matches. Owner11Oct15:21:56UTC actual partition growth PASS: size234437519/end234441614, raw CRC/boot/kernel PASS, ext4 old. Owner11Oct15:35:13UTC online ext4 resize PASS,blocks29304689,df110G/69free/35percent,UUID/mount/GPT preserved. Owner post-check15:44:55UTC received: root69G/HDD447G available, four containers running, login200, cron v3 exit0/no new failures, screenshot authenticated SCORM. AppArmor unit failed remains open in selected OS scope; functional mail/DNS/ISPConfig not proved. Owner helper install/SHA and fresh preflight11Oct PASS received18:46:12UTC: free73738452992/required10526347264bytes, free6838433/required225294inodes; new checkpoint/workspace absent. Existing source lab already installed. Owner prepare18:55:53..19:17:02UTC PASS: frozen checkpoint63431entries/full hashes/bootstrap and separate workspace login200; source lab resumed/production unchanged, core original. Next manual workspace login/SCORM and candidate upgrade/repeat/paired restore; no core upgrade yet.'
   validation_evidence:
   - context/runtime/server_map_20261006.md
   - context/runtime/hdd_initialize_20261006.md

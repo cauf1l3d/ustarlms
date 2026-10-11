@@ -455,3 +455,11 @@ and232 r16 tests OK/10 private engine skips; adapter fixture256M is synthetic, n
 fact. Application526/tables93/tasks32/generated code map unchanged. Current pointers/
 index updated; frozen candidate/checkpoint/source lab/production not mutated. Exact
 new publication/CI/server diagnostic remain separate evidence. [Contract](../runtime/lab_patch_php_diagnostic_20261012.md).
+
+Published diagnostic implementationb90fd0d836a2f5b07af3818eccf8836c06a5992d,
+SHA a432e80c82ad24dc640cf765fd90b3570a1e0872a55ec104ff52fa97b6388098,
+immutable remote readback matches Git blob36ea5e9d234c5c815f8f2a2e3a990cb6ddd5ad51.
+Context54/38178676723 success; Review490/38178676706 both source_checks and r16
+steps success, source jobs in progress on Chromium install; frontend audit failure,
+rollback skipped, later downstream statuses not yet observed. No full gate PASS,
+PR99 remains draft/unmerged; real server diagnostic pending.

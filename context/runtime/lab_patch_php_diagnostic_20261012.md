@@ -22,9 +22,12 @@ runtime compatibility этим отказом не подтверждена и �
 
 New helper SHA256: `a432e80c82ad24dc640cf765fd90b3570a1e0872a55ec104ff52fa97b6388098`.
 Устанавливается отдельным файлом `/usr/local/sbin/USTAR_LAB_PHP_DIAGNOSTIC_20261012.py`
-root:root0600, прежний installed readiness SHA a45ddc остаётся. Git source file один;
+root:root0600, прежний installed readiness SHA a45ddc остаётся. Implementation
+`b90fd0d836a2f5b07af3818eccf8836c06a5992d`, remote exact bytes readback PASS,
+Git blob36ea5e9d234c5c815f8f2a2e3a990cb6ddd5ad51. Git source file один;
 old implementation2496d11 остаётся immutable для provenance. New implementation
-публикуется в draft PR99, immutable bytes/SHA проверяются перед командой оператору.
+опубликован в [draft PR99](https://github.com/cauf1l3d/ustarlms/pull/99), immutable
+bytes/SHA проверены перед командой оператору.
 
 Default PLAN_ONLY; `--check` и `--diagnose-php` взаимоисключающие. Existing SH/nonblock
 coordination lock с readonly FD и прежняя SHA-pinned chain builder4a6810/cold/preflight/
@@ -69,8 +72,11 @@ stdout and private value redaction. Adapter fixture memory256M — synthetic exa
 **не наблюдение на сервере**. Tests mock private chain/runtime; no real Docker/PHP/SQL.
 Generated map526files/93tables/32tasks unchanged; context/index/diff checked before
 publication. Historical implementation2496d11 Context52/sourcePHP82_83 success;
-frontend npm audit failure/downstream skipped/full gate not PASS. New exact CI is
-recorded separately after publication. PR99 remains draft/unmerged; application,
+frontend npm audit failure/downstream skipped/full gate not PASS. Exact b90fd0 [Context54](https://github.com/cauf1l3d/ustarlms/actions/runs/38178676723)
+SUCCESS; [Review490](https://github.com/cauf1l3d/ustarlms/actions/runs/38178676706)
+PHP8.2/8.3 source_checks и r16 steps SUCCESS; source jobs ещё in progress (Chromium
+install), frontend audit FAILURE, rollback SKIPPED. Остальные downstream job statuses
+при этом чтении ещё не получены. Это не full gate PASS. PR99 remains draft/unmerged; application,
 frontend, cron, scheduler, private engine and runtime settings unchanged.
 
 ## Оператор

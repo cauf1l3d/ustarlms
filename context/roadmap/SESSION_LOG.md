@@ -463,3 +463,26 @@ Context54/38178676723 success; Review490/38178676706 both source_checks and r16
 steps success, source jobs in progress on Chromium install; frontend audit failure,
 rollback skipped, later downstream statuses not yet observed. No full gate PASS,
 PR99 remains draft/unmerged; real server diagnostic pending.
+
+
+## 2026-10-12 01:27:46 Moscow received — native CLI sender confirmed
+
+Owner diagnosticb90fd0/a432e80 installed/checksums OK, COMPLETE22:27:09.438042UTC,
+no SQL/bootstrap/activation/upgrade, production containers unchanged. Native PHP8.3.33/
+CLI/64bit/memory512M/max_input5000, sender/usr/sbin/sendmail -t -i. Frozen INI/one
+readonly bind correct, destination absent from scanned list; empty adapter literals
+not proof of no overrides. Native sender explains refusal; underlying INI loading/
+access/main-or-later override cause not established. [Receipt](../runtime/lab_patch_php_diagnostic_result_20261012.json).
+
+New CLI policy memory512M/binfalse/displayOff/logOn for invoked PHP process only.
+Native and isolated observations separate; strict effective values/platform/executable
+blocker verified before stage READ ONLY SQL. Frozen INI/readonly bind, complete accepted
+candidate hashes/config/overlay, source/stage/prod before/after and reserve checks
+retained. Added bound INI readable/main/scanned booleans, no private paths printed.
+No settings files/container/service change, no repair claim about Apache or native
+INI loading. Future candidate CLI uses same policy. Dedicated40 tests OK/1 skipped
+for absent local PHP; real PHP CLI test designed for both PHP82/83 CI, validates
+flags against actual temporary INI without mail()/Moodle or file changes. Full r16/
+context/code-map recorded after validation; original candidate/frozen copies remain.
+Exact publication/CI and real server readiness separate; stage upgrade/repeat/paired
+restore and browser acceptance still pending. [Contract](../runtime/lab_patch_cli_isolation_20261012.md).

@@ -1,5 +1,10 @@
 # Runtime и эксплуатация
 
+**Next12Oct01:27MSK:** [explicit CLI process isolation/readiness](lab_patch_cli_isolation_20261012.md).
+Native sender mismatch confirmed; memory512M/INI bytes/readonly bind correct. No
+persistent settings changes, candidate still code-only accepted. Diagnostic result recorded.
+
+
 **Next12Oct00:50MSK:** [PHP memory/mail diagnostic](lab_patch_php_diagnostic_20261012.md).
 Owner old readiness checksum/install OK, combined guard отказал before SQL;
 actual values unknown, readiness не принят. Candidate code-only PASS сохраняется.

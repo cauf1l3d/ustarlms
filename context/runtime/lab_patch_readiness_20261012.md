@@ -1,5 +1,10 @@
 # Принятый candidate и read-only проверка — 12.10.2026 Moscow
 
+**Current owner01:27MSK:** diagnostic completed, memory512M correct, native sender
+/usr/sbin/sendmail -t -i. Next [explicit per-process CLI readiness](lab_patch_cli_isolation_20261012.md).
+[Actual result](lab_patch_php_diagnostic_result_20261012.json); below is previous dated contract.
+
+
 **Owner12Oct00:50MSK:** old helper2496d11/a45ddc installed/checksum OK,
 `--check` refused memory/mail before SQL; actual values не были выведены.
 [Refusal](lab_patch_readiness_refusal_20261012.json) / [next diagnostic](lab_patch_php_diagnostic_20261012.md).

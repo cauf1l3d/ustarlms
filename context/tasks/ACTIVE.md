@@ -1,13 +1,14 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** [guarded PHP diagnostic](../runtime/lab_patch_php_diagnostic_20261012.md).
-[Owner12Oct00:50MSK refusal](../runtime/lab_patch_readiness_refusal_20261012.json):
-checker2496d11/a45ddc installed/checksum OK; memory/email combined guard failed
-before SQL. Actual settings unknown, cause not confirmed. New diagnostic reports
-safe CLI memory/mail, stage frozen INI/mount and pinned lab_exec literal overrides;
-no SQL/settings changes/activation, no readiness PASS.35 dedicated/232 full tests OK,
-10 private-engine skips; server diagnostic pending. Candidate0v8ncwgu/07dfa485
-code-only receipt retained. Storage/download/workspace/candidate preparation not repeated.
+**Текущий шаг:** [CLI process isolation/readiness](../runtime/lab_patch_cli_isolation_20261012.md).
+[Owner22:27:09UTC diagnostic](../runtime/lab_patch_php_diagnostic_result_20261012.json):
+native memory512M, sender=/usr/sbin/sendmail -t -i; frozen INI bytes/readonly bind
+correct, not in scanned list. Underlying INI loading/access cause unknown, native
+sender mismatch explains refusal. New helper retains native observation, invokes
+second PHP with explicit512M/binfalse process policy and verifies effective values
+before readonly SQL. No persistent PHP/container/service writes.40 dedicated tests
+OK/1 local PHP skip; real interpreter test awaits exact CI. Candidate/checkpoint
+preserved, upgrade/repeat/paired restore/home/full-addon acceptance pending.
 
 **INF-08 в работе:** paired code/config/Moodledata/physicalPG restore обязан быть
 подготовлен для guarded stage upgrade/repeat. Текущая проверка не выполняет эти операции.

@@ -32,6 +32,10 @@ CANDIDATE_SHA = '07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459
 LOCK = Path('/run/ustar-restore-lab-20261004.lock')
 MIB = 1024 ** 2
 ROOT_UID = 0
+ISOLATION_INI = b'memory_limit=512M\nsendmail_path=/bin/false\ndisplay_errors=Off\nlog_errors=On\n'
+# Explicit process policy: PHP CLI may omit the private mounted INI. Persistent
+# files, Apache settings and container configuration are never modified here.
+CLI_POLICY = ('memory_limit=512M', 'sendmail_path=/bin/false', 'display_errors=Off', 'log_errors=On')
 
 
 class ReadinessError(Exception):
@@ -207,17 +211,50 @@ def addon_composer_inventory(c, inventory, profile):
     return found
 
 
-def observe_php(stage, state):
+def php_probe_argv(isolated=False, ini_destination=None):
     # Literal built-ins only; candidate/config/plugin files are never required.
     php_code = ('echo json_encode(["version"=>PHP_VERSION,"sapi"=>PHP_SAPI,"int_size"=>PHP_INT_SIZE,'
                 '"extensions"=>get_loaded_extensions(),"memory_limit"=>ini_get("memory_limit"),'
                 '"max_input_vars"=>ini_get("max_input_vars"),"sendmail_path"=>ini_get("sendmail_path"),'
-                '"ini_loaded"=>php_ini_loaded_file(),"ini_scanned"=>php_ini_scanned_files()]);')
+                '"ini_loaded"=>php_ini_loaded_file(),"ini_scanned"=>php_ini_scanned_files(),'
+                '"false_executable"=>is_executable("/bin/false"),'
+                '"bound_ini_readable"=>isset($argv[1])?is_readable($argv[1]):null,'
+                '"bound_ini_loaded_as_main"=>isset($argv[1])?php_ini_loaded_file()===$argv[1]:null]);')
+    argv = ['php', '-d', 'auto_prepend_file=', '-d', 'auto_append_file=']
+    if isolated:
+        for directive in CLI_POLICY:
+            argv.extend(['-d', directive])
+    argv.extend(['-r', php_code])
+    if ini_destination is not None:
+        argv.extend(['--', ini_destination])
+    return argv
+
+
+def observe_php(stage, state, isolated=False, ini_destination=None):
     php = json.loads(guarded(lambda: stage.lab_exec('web', state,
-        ['php', '-d', 'auto_prepend_file=', '-d', 'auto_append_file=', '-r', php_code],
+        php_probe_argv(isolated, ini_destination),
         user='33:33').stdout, 'Existing offline stage PHP built-in read failed'))
     require(isinstance(php, dict), 'Invalid stage PHP built-in result')
     return php
+
+
+def cli_ini_policy(c, stage, state, frozen):
+    """Require the accepted private INI and one readonly bind before PHP reads."""
+    require(c.read_checked(c.CHECKPOINT / 'lab.ini', frozen['lab.ini']['sha256'], maximum=8192) == ISOLATION_INI,
+            'Frozen CLI isolation policy differs')
+    c.trusted_parents(c.WORK / 'lab.ini')
+    c.trusted(c.WORK / 'lab.ini', private=True)
+    require(c.read_checked(c.WORK / 'lab.ini', maximum=8192) == ISOLATION_INI,
+            'Stage CLI isolation policy differs')
+    owned = stage.owned('web', state)
+    mounts = [item for item in owned.get('Mounts', []) if item.get('Source') == str(c.WORK / 'lab.ini')]
+    require(len(mounts) == 1 and mounts[0].get('RW') is False, 'Expected one readonly stage INI bind')
+    destination = mounts[0].get('Destination')
+    require(isinstance(destination, str) and destination.startswith('/')
+            and '\\' not in destination and '\0' not in destination
+            and '..' not in Path(destination).parts and Path(destination).as_posix() == destination,
+            'Invalid stage INI bind destination')
+    return destination
 
 
 def safe_php_observation(php):
@@ -271,7 +308,7 @@ def diagnose_php(c):
     load_acceptance(c, profile)
     frozen = c.load_manifest()
     c.prepare_config(resume, source, template, frozen)
-    expected_ini = b'memory_limit=512M\nsendmail_path=/bin/false\ndisplay_errors=Off\nlog_errors=On\n'
+    expected_ini = ISOLATION_INI
     require(c.read_checked(c.CHECKPOINT / 'lab.ini', frozen['lab.ini']['sha256'], maximum=8192) == expected_ini,
             'Frozen isolation INI differs; no diagnostic PHP executed')
     c.trusted_parents(c.WORK / 'lab.ini')
@@ -305,8 +342,11 @@ def diagnose_php(c):
             'readiness_accepted': False}
 
 
-def runtime_checks(stage, state, p, profile, requirements):
-    php = observe_php(stage, state)
+def runtime_checks(stage, state, p, profile, requirements, ini_destination):
+    native = observe_php(stage, state, ini_destination=ini_destination)
+    php = observe_php(stage, state, isolated=True, ini_destination=ini_destination)
+    require(all(native.get(key) == php.get(key) for key in ('version', 'sapi', 'int_size', 'extensions')),
+            'PHP platform changed between native and isolated CLI observations')
     require(php.get('version') == profile['patch_runtime']['php_version']
             and php.get('sapi') == 'cli' and php.get('int_size') == 8,
             'Stage PHP version/SAPI/64-bit differs from selected runtime')
@@ -321,6 +361,7 @@ def runtime_checks(stage, state, p, profile, requirements):
         raise ReadinessError('Offline stage PHP memory/email settings differ; memory_limit='
                              + observation['memory_limit'] + '; sendmail_matches_bin_false='
                              + str(observation['sendmail_path_matches_bin_false']))
+    require(php.get('false_executable') is True, 'CLI mail blocker /bin/false is not executable')
     guarded(lambda: p.readonly_database(stage, state, profile), 'Stage original-core/addon/disabled-task read failed')
     query = ("BEGIN READ ONLY; SET LOCAL statement_timeout='15s'; SET LOCAL lock_timeout='3s'; "
              "SELECT current_setting('server_version_num'); COMMIT;")
@@ -328,6 +369,16 @@ def runtime_checks(stage, state, p, profile, requirements):
     require(pg == profile['patch_runtime']['postgres_version_num'],
             'Stage PostgreSQL differs from selected immutable runtime')
     return {'php_cli': safe_php_observation(php),
+            'native_php_cli': safe_php_observation(native),
+            'cli_process_isolation_policy': list(CLI_POLICY),
+            'cli_process_memory_and_mail_verified': True,
+            'bound_lab_ini_readable_by_cli_user': native.get('bound_ini_readable'),
+            'bound_lab_ini_loaded_as_main': native.get('bound_ini_loaded_as_main'),
+            'bound_lab_ini_listed_as_scanned': ini_destination in
+                {path.strip() for path in native.get('ini_scanned', '').split(',')}
+                if isinstance(native.get('ini_scanned'), str) else False,
+            'persistent_php_configuration_changed': False,
+            'native_cli_mail_disabled': native.get('sendmail_path') == '/bin/false',
             'required_php_extensions': 'PASS', 'optional_php_extensions_missing':
             sorted(set(requirements['optional_extensions']) - loaded), 'postgres_version_num': pg,
             'stage_original_core_db_and_addon_versions': 'PASS', 'stage_enabled_tasks': 0,
@@ -369,13 +420,16 @@ def check(c):
     fs = os.statvfs(SOURCE)
     free = shutil.disk_usage(SOURCE).free
     require(free >= c.RESERVE and fs.f_favail >= 1000, 'Space/inode reserve is exhausted')
-    runtime = runtime_checks(stage, stage.load_state(), p, profile, requirements)
+    state = stage.load_state()
+    ini_destination = cli_ini_policy(c, stage, state, frozen)
+    runtime = runtime_checks(stage, state, p, profile, requirements, ini_destination)
     require(c.inspect_labs(source, stage) == before,
             'Source/stage/production container identity or start time changed during readiness check')
     require(c.prepare_config(resume, source, template, frozen) == expected_config,
             'Baseline offline configuration changed during readiness check')
     c.read_checked(CANDIDATE / 'manifest.json', CANDIDATE_SHA)
     c.read_checked(c.CHECKPOINT / 'manifest.json', c.MANIFEST_SHA)
+    require(cli_ini_policy(c, stage, state, frozen) == ini_destination, 'CLI isolation policy changed during check')
     return {'kind': 'accepted_candidate_readonly_platform_preflight',
             'measured_at': datetime.now(timezone.utc).isoformat(), 'result': 'PASS',
             'candidate_directory': str(CANDIDATE), 'candidate_manifest_sha256': CANDIDATE_SHA,

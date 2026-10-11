@@ -1,5 +1,10 @@
 # Readiness отказ и PHP диагностика — 12.10.2026 Moscow
 
+**Current owner01:27MSK:** diagnostic completed, memory512M correct, native sender
+/usr/sbin/sendmail -t -i. Next [explicit per-process CLI readiness](lab_patch_cli_isolation_20261012.md).
+[Actual result](lab_patch_php_diagnostic_result_20261012.json); below is previous dated contract.
+
+
 **Next:** только `--diagnose-php` нового [helper](../../scripts/infra/lab_patch_readiness.py).
 [Owner refusal receipt](lab_patch_readiness_refusal_20261012.json): old helper2496d11/
 SHA a45ddc установлен/checksum OK, `--check` отказал с `Offline stage PHP memory/email

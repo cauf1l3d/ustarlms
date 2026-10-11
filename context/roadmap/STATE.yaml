@@ -3,11 +3,11 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner12Oct00:50MSK installed readonly checker2496d11/SHAa45ddc; --check refused
-  Offline stage PHP memory/email settings differ before stage SQL. Actual memory/mail values not printed,
-  root cause unknown. Next guarded --diagnose-php reads stage INI/mount/CLI and pinned adapter literals;
-  no SQL/settings writes/activation. Candidate0v8ncwgu/manifest07dfa485 remains code-only accepted.
-  Stage upgrade/repeat/paired code/config/Moodledata/physicalPG restore remain pending.'
+current_activity: 'Owner diagnostic22:27:09UTC confirmed native CLI memory512M but sender /usr/sbin/sendmail
+  -t -i; readonly bound lab.ini matches frozen policy but absent from scanned list. Native sender mismatch
+  explains refusal; underlying INI loading/access/override cause unknown. Next readonly candidate/platform
+  check with explicit per-process PHP memory/mail isolation and separate native/effective report; no
+  persistent settings writes or activation. Stage upgrade/repeat/paired restore remain pending.'
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -167,6 +167,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_cli_isolation_20261012.md
+- context/runtime/lab_patch_php_diagnostic_result_20261012.json
 - context/runtime/lab_patch_php_diagnostic_20261012.md
 - context/runtime/lab_patch_readiness_refusal_20261012.json
 - context/runtime/lab_patch_readiness_20261012.md
@@ -298,7 +300,7 @@ patch_candidate:
   candidate_manifest_sha256: 07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459a
   original_root_vendor_present_in_checkpoint: false
   readiness_helper: scripts/infra/lab_patch_readiness.py
-  readiness_helper_sha256: a432e80c82ad24dc640cf765fd90b3570a1e0872a55ec104ff52fa97b6388098
+  readiness_helper_sha256: 2942e58967980d1d8adcc63c04d996d8798d642724bfead2c66380aee32bc9f9
   readiness_contract: context/runtime/lab_patch_readiness_20261012.md
   readiness_helper_server_executed: false
   readiness_previous_helper_implementation: 2496d11fac6af3fd8f0265355ad143016423d001
@@ -307,17 +309,22 @@ patch_candidate:
   readiness_previous_helper_server_result: memory_mail_combined_refusal_before_SQL_actual_values_unknown
   readiness_previous_helper_server_receipt: context/runtime/lab_patch_readiness_refusal_20261012.json
   readiness_accepted: false
-  readiness_root_cause_confirmed: false
+  readiness_root_cause_confirmed: true
+  readiness_root_cause_scope: native_CLI_sender_mismatch_only_underlying_INI_loading_cause_unknown
   php_diagnostic_contract: context/runtime/lab_patch_php_diagnostic_20261012.md
   php_diagnostic_installed_path: /usr/local/sbin/USTAR_LAB_PHP_DIAGNOSTIC_20261012.py
-  php_diagnostic_server_executed: false
+  php_diagnostic_server_executed: true
+  php_diagnostic_server_receipt: context/runtime/lab_patch_php_diagnostic_result_20261012.json
+  cli_policy_contract: context/runtime/lab_patch_cli_isolation_20261012.md
+  cli_policy_installed_path: /usr/local/sbin/USTAR_LAB_PATCH_READINESS_CLI_20261012.py
+  cli_policy_readiness_server_executed: false
   php_diagnostic_ci_implementation: b90fd0d836a2f5b07af3818eccf8836c06a5992d
   php_diagnostic_context_ci: 38178676723
   php_diagnostic_review_ci: 38178676706
   php_diagnostic_ci_status: context_and_PHP82_83_source_checks_r16_steps_success_source_jobs_in_progress_frontend_audit_failure_no_merge
-  readiness_helper_implementation: b90fd0d836a2f5b07af3818eccf8836c06a5992d
-  readiness_helper_local_validation: 35_dedicated_and_232_full_r16_OK_10_private_engine_skips
-  readiness_helper_remote_readback: diagnostic_b90fd0_byte_identical_PASS
+  readiness_helper_implementation: resolve_cli_policy_implementation_after_publication
+  readiness_helper_local_validation: 40_dedicated_OK_1_local_PHP_skip_237_full_r16_OK_11_skips
+  readiness_helper_remote_readback: latest_cli_policy_pending_publication_prior_b90fd0_PASS
   readiness_ci_implementation: 2496d11fac6af3fd8f0265355ad143016423d001
   readiness_context_ci: 38177469124
   readiness_review_ci: 38177469099

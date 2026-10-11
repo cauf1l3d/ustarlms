@@ -11,7 +11,10 @@ import io
 import json
 import os
 from pathlib import Path
+import shutil
+import subprocess
 import sys
+import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest import mock
@@ -45,19 +48,49 @@ class ReadinessTests(unittest.TestCase):
             item['component'] = name
         self.sql_calls = []
         self.php_calls = []
+        self.honor_cli_policy = True
         self.php = {'version': '8.3.33', 'sapi': 'cli', 'int_size': 8,
                     'extensions': ['JSON', 'filter', 'pgsql'], 'memory_limit': '512M',
-                    'max_input_vars': '5000', 'sendmail_path': '/bin/false'}
+                    'max_input_vars': '5000', 'sendmail_path': '/usr/sbin/sendmail -t -i',
+                    'false_executable': True, 'bound_ini_readable': False,
+                    'bound_ini_loaded_as_main': False}
         self.pg = '160015'
         def sql(state, query):
             self.sql_calls.append(query)
             return self.pg
         def php(kind, state, argv, user):
             self.php_calls.append((kind, argv, user))
-            return SimpleNamespace(stdout=json.dumps(self.php))
+            values = dict(self.php)
+            if self.honor_cli_policy:
+                for index, arg in enumerate(argv[:-1]):
+                    if arg == '-d' and '=' in argv[index + 1]:
+                        key, value = argv[index + 1].split('=', 1)
+                        if key in ('memory_limit', 'sendmail_path'):
+                            values[key] = value
+            return SimpleNamespace(stdout=json.dumps(values))
         self.stage = fixture.stage
         self.stage.sql = sql
         self.stage.lab_exec = php
+        expected_ini = r.ISOLATION_INI
+        for root in (c.SOURCE, c.WORK, c.CHECKPOINT):
+            fixture.file(root / 'lab.ini', expected_ini, 0o600)
+        fixture.entries['lab.ini'] = c.metadata((c.CHECKPOINT / 'lab.ini').lstat(), False, f.sha(expected_ini))
+        manifest_path = c.CHECKPOINT / 'manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['entries'] = fixture.entries
+        manifest_path.write_text(json.dumps(manifest))
+        c.MANIFEST_SHA = f.sha(manifest_path.read_bytes())
+        workspace_report = json.loads((c.WORK / 'report.json').read_bytes())
+        workspace_report['checkpoint_manifest_sha256'] = c.MANIFEST_SHA
+        (c.WORK / 'report.json').write_text(json.dumps(workspace_report))
+        owned = self.stage.owned
+        def mount_aware(kind, state):
+            item = owned(kind, state)
+            if kind == 'web':
+                item['Mounts'] = [{'Source': str(c.WORK / 'lab.ini'),
+                                   'Destination': '/usr/local/etc/php/conf.d/zz-lab.ini', 'RW': False}]
+            return item
+        self.stage.owned = mount_aware
         def readonly_database(stage, state, profile):
             self.assertIs(stage, self.stage)
             self.sql_calls.append('BEGIN READ ONLY; SET LOCAL statement_timeout=\'15s\'; version/tasks/addons; COMMIT;')
@@ -118,7 +151,12 @@ class ReadinessTests(unittest.TestCase):
         self.assertFalse(result['patch_upgrade_rollback_verified'])
         self.assertFalse(result['paired_restore_space_verified'])
         self.assertEqual(result['runtime']['optional_php_extensions_missing'], ['soap'])
-        self.assertEqual(len(self.php_calls), 1)
+        self.assertEqual(len(self.php_calls), 2)
+        self.assertEqual(result['runtime']['native_php_cli']['sendmail_path'], '/usr/sbin/sendmail -t -i')
+        self.assertEqual(result['runtime']['php_cli']['sendmail_path'], '/bin/false')
+        self.assertFalse(result['runtime']['native_cli_mail_disabled'])
+        self.assertFalse(result['runtime']['persistent_php_configuration_changed'])
+        self.assertFalse(result['runtime']['bound_lab_ini_readable_by_cli_user'])
         kind, argv, user = self.php_calls[0]
         self.assertEqual((kind, user), ('web', '33:33'))
         self.assertEqual(argv[:6], ['php', '-d', 'auto_prepend_file=', '-d', 'auto_append_file=', '-r'])
@@ -192,7 +230,8 @@ class ReadinessTests(unittest.TestCase):
                 with self.assertRaisesRegex(r.ReadinessError, 'PHP version'):
                     self.run_check()
 
-    def test_sendmail_or_memory_drift_rejected(self):
+    def test_isolation_policy_ignored_by_adapter_is_rejected_before_sql(self):
+        self.honor_cli_policy = False
         for key, value in [('sendmail_path', '/usr/sbin/sendmail'), ('memory_limit', '128M')]:
             with self.subTest(key=key), mock.patch.dict(self.php, {key: value}):
                 with contextlib.redirect_stdout(io.StringIO()) as out:
@@ -200,6 +239,57 @@ class ReadinessTests(unittest.TestCase):
                         self.run_check()
                 self.assertIn('LAB_PATCH_PHP_OBSERVED=', out.getvalue())
                 self.assertEqual(self.sql_calls, [])
+
+    def test_native_memory_or_mail_defaults_are_reported_separately(self):
+        self.php.update(memory_limit='128M', sendmail_path='/usr/sbin/sendmail -t -i')
+        result = self.run_check()
+        self.assertEqual(result['runtime']['native_php_cli']['memory_limit'], '128M')
+        self.assertEqual(result['runtime']['php_cli']['memory_limit'], '512M')
+        self.assertEqual(result['runtime']['php_cli']['sendmail_path'], '/bin/false')
+        self.assertEqual(self.php['memory_limit'], '128M')
+
+    def test_missing_false_executable_rejected_before_sql(self):
+        self.php['false_executable'] = False
+        with self.assertRaisesRegex(r.ReadinessError, '/bin/false'):
+            self.run_check()
+        self.assertEqual(self.sql_calls, [])
+
+    def test_changed_cli_ini_policy_rejected_before_php(self):
+        (c.WORK / 'lab.ini').write_text('sendmail_path=/usr/sbin/sendmail\n')
+        self.reject_before_runtime()
+
+    def test_read_write_ini_bind_rejected_before_php(self):
+        owned = self.stage.owned
+        def writable(kind, state):
+            item = owned(kind, state)
+            if kind == 'web':
+                item['Mounts'][0]['RW'] = True
+            return item
+        self.stage.owned = writable
+        self.reject_before_runtime()
+
+    @unittest.skipUnless(shutil.which('php'), 'Local PHP binary absent; real CLI policy test runs in PHP82/83 CI')
+    def test_real_php_cli_flags_override_ini_without_changing_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'baseline.ini'
+            original = b'memory_limit=512M\nsendmail_path=/usr/sbin/sendmail -t -i\n'
+            path.write_bytes(original)
+            before = (path.stat().st_ino, path.stat().st_mtime_ns)
+            def observe(isolated):
+                argv = r.php_probe_argv(isolated, ini_destination=str(path))
+                # Both native and isolated commands start from the same real INI.
+                argv[1:1] = ['-c', str(path)]
+                result = subprocess.run(argv, check=True, capture_output=True, text=True, timeout=15)
+                return json.loads(result.stdout)
+            native, isolated = observe(False), observe(True)
+            self.assertEqual(native['sendmail_path'], '/usr/sbin/sendmail -t -i')
+            self.assertEqual(isolated['sendmail_path'], '/bin/false')
+            self.assertEqual(isolated['memory_limit'], '512M')
+            self.assertTrue(isolated['false_executable'])
+            self.assertTrue(native['bound_ini_readable'])
+            self.assertTrue(native['bound_ini_loaded_as_main'])
+            self.assertEqual(path.read_bytes(), original)
+            self.assertEqual((path.stat().st_ino, path.stat().st_mtime_ns), before)
 
     def setup_diagnostic(self):
         expected = b'memory_limit=512M\nsendmail_path=/bin/false\ndisplay_errors=Off\nlog_errors=On\n'
@@ -226,6 +316,7 @@ class ReadinessTests(unittest.TestCase):
             return item
         self.stage.owned = mount_aware
         self.php['memory_limit'] = '256M'
+        self.php['sendmail_path'] = '/bin/false'
         self.php['ini_scanned'] = '/usr/local/etc/php/conf.d/docker.ini,\n/usr/local/etc/php/conf.d/zz-lab.ini'
 
     def test_diagnostic_reports_mismatch_without_sql_or_acceptance(self):
@@ -310,6 +401,7 @@ class ReadinessTests(unittest.TestCase):
         self.assertEqual(result['php_observed']['scanned_ini_basenames'], ['REDACTED_NONSTANDARD', 'safe.ini'])
 
     def test_check_mismatch_diagnostic_redacts_sendmail_secrets(self):
+        self.honor_cli_policy = False
         self.php['sendmail_path'] = 'smtp --password=secret-token'
         with contextlib.redirect_stdout(io.StringIO()) as out:
             with self.assertRaisesRegex(r.ReadinessError, 'sendmail_matches_bin_false=False'):

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "explicit_cli_process_mail_isolation_validation",
+  "helper_path": "scripts/infra/lab_patch_readiness.py",
+  "helper_sha256": "2942e58967980d1d8adcc63c04d996d8798d642724bfead2c66380aee32bc9f9",
+  "dedicated_tests": {
+    "count": 40,
+    "result": "OK",
+    "skipped": 1,
+    "skip_reason": "local PHP binary absent; real CLI interpreter test intended for both CI PHP runtimes"
+  },
+  "full_r16_suite": {
+    "count": 237,
+    "result": "OK",
+    "skipped": 11,
+    "skip_reasons": [
+      "10 tests require unsupplied private HDD backup engine",
+      "1 real PHP CLI test requires absent local PHP interpreter"
+    ]
+  },
+  "native_sender_fixture": "/usr/sbin/sendmail -t -i",
+  "real_php_test": "tests/r16/test_lab_patch_readiness.py::test_real_php_cli_flags_override_ini_without_changing_file",
+  "real_php_test_local": "skipped_no_PHP_binary",
+  "new_exact_ci": "pending_publication",
+  "candidate_activation": false,
+  "server_readiness_executed": false,
+  "process_policy": "memory512M/sendmailbinfalse/displayOff/logOn with effective values verified",
+  "native_configuration_modified": false,
+  "persistent_php_files_or_containers_modified": false,
+  "owner_evidence": "context/runtime/lab_patch_php_diagnostic_result_20261012.json",
+  "context_check": "PASS",
+  "diff_check": "PASS",
+  "code_map": {
+    "files": 526,
+    "tables": 93,
+    "tasks": 32,
+    "application_changed": false
+  }
+}

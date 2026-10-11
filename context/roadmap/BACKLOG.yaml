@@ -209,9 +209,12 @@ tasks:
   - context/runtime/lab_patch_readiness_20261012.md
   - context/runtime/lab_patch_readiness_refusal_20261012.json
   - context/runtime/lab_patch_php_diagnostic_20261012.md
-  current_checkpoint: Candidate0v8ncwgu/07dfa485 code-only accepted; owner readonly checker2496d11
-    refused at combined memory/mail guard before SQL, actual values and root cause unknown. Guarded
-    no-SQL PHP diagnostic prepared/tested, server execution pending. No settings change/activation/upgrade.
+  - context/runtime/lab_patch_php_diagnostic_result_20261012.json
+  - context/runtime/lab_patch_cli_isolation_20261012.md
+  current_checkpoint: Native CLI memory512M but sender/usr/sbin/sendmail confirmed by owner22:27:09UTC.
+    Frozen lab.ini/readonly bind correct, not in scanned list; why not applied unknown. Explicit per-process
+    CLI isolation ready for readonly preflight, tested locally; real PHP CI and server execution pending.
+    No persistent configuration write or candidate activation/upgrade.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

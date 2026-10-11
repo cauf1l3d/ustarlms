@@ -73,13 +73,14 @@ class CandidateTests(unittest.TestCase):
                       'public/version.php': b'<?php $version = 2025100608.00;\n',
                       'public/config.php': b'<?php // official config loader\n',
                       'composer.json': b'{}\n', 'composer.lock': b'{}\n',
-                      'public/lib/setup.php': b'<?php // official setup\n'}
+                      'public/lib/setup.php': b'<?php // official setup\n',
+                      'githash.php': b'<?php $githash = "new-package";\n'}
         replacements = {'SOURCE': source, 'CHECKPOINT': source / 'rollback',
                         'WORK': source / 'workspace', 'PACKAGE_DIR': source / 'package',
                         'ARCHIVE': source / 'package/moodle-5.1.8.tgz', 'LOCK': source / 'coord.lock',
                         'COLD': source / 'installed.py', 'ROOT_UID': os.getuid(),
                         'ROOT_GID': os.getgid(), 'WEB_GID': os.getgid(),
-                        'EXTRAS': ('private.backup', 'public/reports/private.pdf'),
+                        'EXTRAS': ('private.backup', 'public/reports/private.pdf', 'githash.php'),
                         'CORE_HASHES': {p: sha(self.stock[p]) for p in
                                         ('public/version.php', 'public/index.php', 'composer.json', 'composer.lock')}}
         for name, value in replacements.items():
@@ -112,6 +113,7 @@ class CandidateTests(unittest.TestCase):
                   'public/local/ustar/version.php': b'<?php $plugin->version = 2026100204;\n$plugin->requires = 2025100600;\n',
                   'public/blocks/fixture/version.php': b'<?php $plugin->version = 2026090000;\n$plugin->requires = $unknown;\n',
                   'private.backup': b'private-secret-config',
+                  'githash.php': b'<?php $githash = "old-package";\n',
                   'public/reports/private.pdf': b'private-pdf-fixture',
                   'vendor/private-dev.php': b'old dev vendor'}
         for rel, data in frozen.items():
@@ -196,7 +198,7 @@ class CandidateTests(unittest.TestCase):
         self.assertEqual(before, {k: v for k, v in self.snapshot().items() if k in before})
         for rel, data in self.stock.items():
             self.assertEqual((code / rel).read_bytes(), data)
-        for rel in (*self.profile['application_files'], *c.EXTRAS):
+        for rel in (*self.profile['application_files'], *(x for x in c.EXTRAS if x != 'githash.php')):
             src, dst = c.CHECKPOINT / 'site/public' / rel, code / rel
             self.assertEqual(src.read_bytes(), dst.read_bytes())
             self.assertNotEqual(src.stat().st_ino, dst.stat().st_ino)
@@ -206,6 +208,14 @@ class CandidateTests(unittest.TestCase):
         self.assertEqual(stat.S_IMODE((code / 'config.php').stat().st_mode), 0o640)
         self.assertEqual(stat.S_IMODE((root / 'manifest.json').stat().st_mode), 0o600)
         self.assertFalse((code / 'vendor').exists())
+        old, saved = c.CHECKPOINT / 'site/public/githash.php', root / 'preserved-extra-files/githash.php'
+        self.assertEqual(old.read_bytes(), saved.read_bytes())
+        self.assertNotEqual(old.stat().st_ino, saved.stat().st_ino)
+        manifest = json.loads((root / 'manifest.json').read_text())
+        self.assertEqual(manifest['preserved_extra_entries']['githash.php']['sha256'], sha(old.read_bytes()))
+        self.assertEqual(report['extra_files_preserved'], 3)
+        self.assertEqual(report['extra_files_in_candidate_code'], 2)
+        self.assertEqual(report['extra_files_preserved_separately'], ['githash.php'])
         self.assertFalse(report['candidate_activated'])
         self.assertFalse(report['core_upgrade_executed'])
         self.assertFalse(report['full_addon_compatibility_verified'])
@@ -359,9 +369,10 @@ class CandidateTests(unittest.TestCase):
 
     def test_container_restart_during_copy_rejects_candidate(self):
         original = c.verify_candidate
-        def drift(*args):
-            original(*args)
-            self.stage.drift = True
+        def drift(*args, **kwargs):
+            original(*args, **kwargs)
+            if kwargs.get('stock_core', True):
+                self.stage.drift = True
         with mock.patch.object(c, 'verify_candidate', side_effect=drift), self.assertRaises(c.CandidateError):
             self.build()
         root, = c.SOURCE.glob('patch-candidate-*')
@@ -447,6 +458,65 @@ class CandidateTests(unittest.TestCase):
         self.file(c.COLD, b'raise AssertionError("must not execute")', 0o600)
         with self.assertRaisesRegex(c.CandidateError, 'checksum'):
             c.load_dependencies()
+
+    def test_preserved_extra_hash_corruption_rejects_entire_candidate(self):
+        original = c.copy_overlay
+        def corrupt(code, *args):
+            original(code, *args)
+            if code.name == 'preserved-extra-files':
+                (code / 'githash.php').write_bytes(b'corrupt preserved bytes')
+        with mock.patch.object(c, 'copy_overlay', side_effect=corrupt), self.assertRaises(c.CandidateError):
+            self.build()
+        root, = c.SOURCE.glob('patch-candidate-*')
+        self.assertFalse((root / 'manifest.json').exists())
+
+    def test_reviewed_name_cannot_allow_archive_directory_collision(self):
+        self.make_archive({**{k: v for k, v in self.stock.items() if k != 'githash.php'},
+                           'githash.php/inside.php': b'file in unexpected directory'})
+        with self.assertRaises(c.CandidateError), self.checked():
+            pass
+
+    def test_real_package_and_complete_known_overlay_namespace_are_compatible(self):
+        # Actual full package catalog, fixed extras and every profile addon root.
+        # Deliberately separate from private server content/runtime acceptance.
+        package = Path(os.environ.get('USTAR_OFFICIAL_PACKAGE_FIXTURE',
+                                     str(REPO.parent / 'moodle-5.1.8.tgz')))
+        if not package.is_file():
+            self.skipTest('Optional public pinned distribution fixture not supplied')
+        production = importlib.util.module_from_spec(SPEC)
+        SPEC.loader.exec_module(production)
+        self.assertEqual(sha(package.read_bytes()), production.ARCHIVE_SHA)
+        profile = json.loads((REPO / 'scripts/infra/lab_patch_profile_20261005.json').read_text())
+        with tarfile.open(package) as tar:
+            catalog = production.archive_catalog(tar)
+        selected = {rel: {'type': 'file'} for rel in production.EXTRAS}
+        for root in profile['additional_roots']:
+            selected[root] = {'type': 'directory'}
+            self.assertFalse(any(r == root or r.startswith(root + '/') for r in catalog))
+        for rel in list(selected):
+            for parent in Path(rel).parents:
+                if str(parent) != '.':
+                    selected[str(parent)] = {'type': 'directory'}
+        mounted, preserved = production.route_overlay(selected, catalog)
+        self.assertEqual(set(preserved), {'githash.php'})
+        self.assertNotIn('githash.php', mounted)
+        self.assertEqual(len(catalog), 39376)
+        # Execute the entire builder against the real distribution plus private
+        # synthetic addon/config fixtures, not just stock extraction in isolation.
+        import shutil
+        shutil.copyfile(package, c.ARCHIVE)
+        c.ARCHIVE.chmod(0o600)
+        with mock.patch.object(c, 'ARCHIVE_SHA', production.ARCHIVE_SHA), \
+                mock.patch.object(c, 'CORE_HASHES', production.CORE_HASHES):
+            report = self.build()
+        root = Path(report['candidate_directory'])
+        with tarfile.open(package) as tar:
+            stock_githash = tar.extractfile('moodle/githash.php').read()
+        self.assertEqual((root / 'code/githash.php').read_bytes(), stock_githash)
+        self.assertEqual((root / 'preserved-extra-files/githash.php').read_bytes(),
+                         (c.CHECKPOINT / 'site/public/githash.php').read_bytes())
+        self.assertEqual(report['stock_core_files_unchanged'], 29409)
+        self.assertEqual(report['candidate_file_readback_hashes'], 'PASS')
 
 
 if __name__ == '__main__':

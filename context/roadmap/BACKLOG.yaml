@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-11'
+updated_at: '2026-10-12'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -204,8 +204,11 @@ tasks:
   execution_gate: authorized_owner_point_7_after_baseline_CI_and_stage_recovery
   validation_evidence:
   - context/runtime/lab_patch_candidate_20261011.md
-  current_checkpoint: Cold checkpoint and baseline stage accepted11Oct; official pinned5.1.8 downloaded. Candidate-code
-    helper locally tested, server execution/activation/upgrade/repeat/paired restore pending.
+  - context/runtime/lab_patch_candidate_fix_20261012.md
+  current_checkpoint: Owner12Oct00:06MSK original helper installed but precheck refused stock githash.php collision
+    before copying. Corrected helper preserves old file separately; actual package+fixture full prepare and33
+    candidate/197 context tests pass locally. Server retry with corrected pinned helper, stage activation/upgrade/repeat/paired
+    restore pending.
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot
   status: planned

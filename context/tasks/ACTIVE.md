@@ -1,4 +1,6 @@
-# Активная работа — 11.10.2026
+# Активная работа — 12.10.2026
+
+**Текущий шаг:** [исправленный candidate preparer](../runtime/lab_patch_candidate_fix_20261012.md). Прежний helper9fe10fc установлен, но остановился до копирования из-за stock/legacy `githash.php`. Новый helper сохраняет official file в core, старый отдельно; локальные33 candidate/197 context tests PASS(10 private-engine skipped), actual archive+synthetic overlay complete prepare PASS. Corrected server execution/activation/upgrade/rollback pending.
 
 **INF-08 в работе:** [отдельный candidate code](../runtime/lab_patch_candidate_20261011.md). Скрипт и30 локальных тестов подготовлены; server execution/activation/upgrade/repeat/paired restore не выполнены.
 

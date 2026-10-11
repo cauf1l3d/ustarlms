@@ -1,5 +1,7 @@
 # Отдельный каталог Moodle5.1.8 с дополнениями — 11.10.2026
 
+**Заменено12Oct:** owner попытка прежнего helper остановилась до копирования: `githash.php` есть в official package. Следовать [исправленному handoff](lab_patch_candidate_fix_20261012.md); команды/старый SHA ниже — исторические.
+
 Следующий operator step: установить проверенный `lab_patch_candidate.py` и выполнить
 `--prepare-candidate`. Это **сборка кода**, stage ещё работает на прежнем core.
 Production upgrade, stage switch/upgrade/repeat и paired restore этой поставкой не выполнены.

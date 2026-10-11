@@ -1,14 +1,13 @@
 schema_version: 2
-updated_at: '2026-10-11'
+updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner11Oct: GPT relocation, sda2 growth and ext4 resize PASS; root110G/69G available/35%.
-  HDD11Oct03:30MSK scheduled success. Paired cold checkpoint and independent original-core stage prepared18:55:53..19:17:02UTC,
-  login200/526 USTAR/57 addon metadata/4910 content hashes; authenticated SCORM screenshot19:53UTC in visible
-  scope. Official5.1.8 downloaded20:09UTC to private nnixp4se directory, SHA PASS. Separate candidate-code
-  helper locally verified, not yet installed/executed on server; no core activation/DB upgrade. Next: pinned
-  candidate copy, then full-addon upgrade/repeat/paired restore and browser acceptance.'
+current_activity: 'Owner12Oct00:06MSK: helper9fe10fc installed/checksum OK but prepare refused before new copy:
+  githash.php from legacy extras collides with generated official package metadata. Local fix keeps official
+  core intact and copies legacy githash privately outside code. Actual archive + fixture addon/config complete
+  prepare PASS;197 context tests OK/10 skipped. Corrected helper server execution/activation/DB upgrade still
+  pending. GitHub PR metadata writes accepted after email verification.'
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -168,6 +167,7 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_candidate_fix_20261012.md
 - context/runtime/lab_patch_candidate_20261011.md
 - START_HERE.md
 - context/CONTEXT_INDEX.md
@@ -281,17 +281,22 @@ patch_candidate:
   official_package_server_download_executed: true
   official_package_server_receipt: context/runtime/moodle_518_package_download_result_20261011.json
   candidate_copy_helper: scripts/infra/lab_patch_candidate.py
-  candidate_copy_helper_sha256: 4850e17699ab32705b938358dc1f53ffb095daf4fe875b994298482f90e8f735
+  candidate_copy_helper_sha256: bb71ddd01566341d506a560628453bdcec045de89af7f4a80774a205f2f059c2
   candidate_copy_helper_branch: codex/lab-patch-candidate-20261011
-  candidate_copy_contract: context/runtime/lab_patch_candidate_20261011.md
-  candidate_copy_helper_local_validation: 30 filesystem_archive_lock_failure_tests_PASS_plus_pinned_real_archive_extraction_readback
+  candidate_copy_contract: context/runtime/lab_patch_candidate_fix_20261012.md
+  candidate_copy_helper_local_validation: 33 tests_PASS_197_context_OK_10skipped_actual_archive_plus_synthetic_overlay_full_prepare_PASS
   candidate_copy_helper_server_executed: false
   candidate_core_activated_on_stage: false
-  candidate_copy_github_ci_status: no_workflow_runs_for_published_implementation
+  candidate_copy_github_ci_status: pending_corrected_helper_publication
   full_addon_upgrade_repeat_paired_restore_helper_ready: false
-  candidate_copy_helper_implementation: 9fe10fc127d2ac40fe045432719467906d160816
+  candidate_copy_helper_implementation: resolve_corrected_helper_commit_from_git_log
   candidate_copy_pr_created: false
-  candidate_copy_pr_creation_error: GitHub403_requires_at_least_one_verified_email
+  candidate_copy_pr_creation_error: historical_email_403_owner_verified12Oct_metadata_update_now_accepted
+  candidate_copy_original_helper_installed: true
+  candidate_copy_original_helper_server_attempted: true
+  candidate_copy_original_helper_result: prewrite_refusal_no_candidate_directory_created
+  candidate_copy_original_helper_receipt: context/runtime/lab_patch_candidate_refusal_20261012.json
+  candidate_copy_validation: context/runtime/lab_patch_candidate_validation_20261012.json
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

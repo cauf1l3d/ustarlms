@@ -53,6 +53,10 @@ EXTRAS = (
     'public/reports/course_10_c959c810a6b9.pdf', 'public/reports/course_10_d332481cd5be.pdf',
     'wwwroot',
 )
+# The packaging archive generates this file; Git core comparisons list the old
+# distribution copy as extra. Keep stock provenance and preserve the old bytes
+# outside the mounted code, without executing either file.
+PRESERVE_SEPARATELY = ('githash.php',)
 ROOT_UID, ROOT_GID, WEB_GID = 0, 0, 33
 GIB, MIB = 1024 ** 3, 1024 ** 2
 RESERVE = 4 * GIB
@@ -248,6 +252,19 @@ def archive_catalog(tar):
     return catalog
 
 
+def route_overlay(selected, catalog):
+    """Only reviewed packaging provenance files may leave the mounted code."""
+    code, preserved = dict(selected), {}
+    for rel, entry in selected.items():
+        if rel not in catalog or (entry['type'] == 'directory' and catalog[rel].isdir()):
+            continue
+        require(rel in PRESERVE_SEPARATELY and rel in EXTRAS
+                and entry['type'] == 'file' and catalog[rel].isfile(),
+                'Selected overlay file collides with stock candidate core')
+        preserved[rel] = code.pop(rel)
+    return code, preserved
+
+
 def archive_open():
     require(PACKAGE_DIR.parent == SOURCE and ARCHIVE.parent == PACKAGE_DIR,
             'Unexpected package namespace')
@@ -385,9 +402,7 @@ def precheck(dependencies, tar):
     for root in profile['additional_roots']:
         require(not any(rel == root or rel.startswith(root + '/') for rel in catalog),
                 'Addon root collides with stock candidate core')
-    for rel, entry in selected.items():
-        require(rel not in catalog or (entry['type'] == 'directory' and catalog[rel].isdir()),
-                'Selected overlay file collides with stock candidate core')
+    route_overlay(selected, catalog)
     return entries, selected, config, catalog, before, budget(catalog, selected)
 
 
@@ -474,7 +489,7 @@ def copy_overlay(code, entries, selected, inventory):
             inventory[rel] = actual
 
 
-def verify_candidate(code, inventory):
+def verify_candidate(code, inventory, stock_core=True):
     actual = set()
     def failed(_):
         raise CandidateError('Candidate verification scan incomplete')
@@ -496,8 +511,9 @@ def verify_candidate(code, inventory):
                             and signature(os.fstat(stream.fileno())) == signature(info),
                             'Candidate readback hash differs')
     require(actual == set(inventory), 'Candidate entries missing')
-    for path, expected in CORE_HASHES.items():
-        require(inventory[path]['sha256'] == expected, 'Stock core metadata changed during overlay')
+    if stock_core:
+        for path, expected in CORE_HASHES.items():
+            require(inventory[path]['sha256'] == expected, 'Stock core metadata changed during overlay')
     for path in sorted(inventory, key=lambda r: len(PurePosixPath(r).parts), reverse=True):
         if inventory[path]['type'] == 'directory':
             sync_directory(code / path)
@@ -515,12 +531,20 @@ def prepare(dependencies, tar, checked, archive_identity):
     entries, selected, config, catalog, before, planned = checked
     _, _, _, source, stage, _, profile = dependencies
     reserve()
-    root = Path(tempfile.mkdtemp(prefix='patch-candidate-518-20261011-', dir=SOURCE))
+    root = Path(tempfile.mkdtemp(prefix='patch-candidate-518-20261012-', dir=SOURCE))
     print('CANDIDATE_COPY_START; DIRECTORY=' + str(root), flush=True)
     try:
         code = root / 'code'
         inventory = extract_stock(tar, catalog, code)
-        copy_overlay(code, entries, selected, inventory)
+        mounted, preserved = route_overlay(selected, catalog)
+        copy_overlay(code, entries, mounted, inventory)
+        preserved_inventory = {}
+        if preserved:
+            retained = root / 'preserved-extra-files'
+            retained.mkdir(mode=0o700)
+            os.chown(retained, ROOT_UID, ROOT_GID)
+            copy_overlay(retained, entries, preserved, preserved_inventory)
+            verify_candidate(retained, preserved_inventory, stock_core=False)
         inventory['config.php'] = write_file(code / 'config.php', io.BytesIO(config), len(config),
                                              ROOT_UID, WEB_GID, 0o640)
         verify_candidate(code, inventory)
@@ -536,7 +560,8 @@ def prepare(dependencies, tar, checked, archive_identity):
         reserve()
         manifest = {'schema_version': 1, 'kind': 'separate_patch_candidate_code', 'complete': True,
                     'upstream_commit': UPSTREAM, 'archive_sha256': ARCHIVE_SHA,
-                    'checkpoint_manifest_sha256': MANIFEST_SHA, 'entries': inventory}
+                    'checkpoint_manifest_sha256': MANIFEST_SHA, 'entries': inventory,
+                    'preserved_extra_entries': preserved_inventory}
         proof = private_json(root / 'manifest.json', manifest)
         report = {'kind': 'full_addon_patch_candidate_code_only', 'candidate_directory': str(root),
                   'core_version': '2025100608.00', 'upstream_commit': UPSTREAM,
@@ -545,7 +570,12 @@ def prepare(dependencies, tar, checked, archive_identity):
                   'addon_roots_preserved': len(profile['additional_roots']),
                   'addon_metadata_matching': len(profile['additional_components']),
                   'ustar_matching_files': len(profile['application_files']),
-                  'extra_files_preserved': len(EXTRAS), 'independent_overlay_inodes': 'PASS',
+                  'extra_files_preserved': len(EXTRAS),
+                  'extra_files_in_candidate_code': len(EXTRAS) - len(preserved),
+                  'extra_files_preserved_separately': sorted(preserved),
+                  'preserved_extra_file_readback_hashes': 'PASS',
+                  'preserved_extras_directory': str(root / 'preserved-extra-files') if preserved else None,
+                  'independent_overlay_inodes': 'PASS',
                   'candidate_manifest_sha256': proof['sha256'], 'candidate_entries': len(inventory),
                   'custom_home_config_prepared': '/local/ustar/home.php',
                   'custom_home_runtime_verified': False, 'root_vendor_copied': False,

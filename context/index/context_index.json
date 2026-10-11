@@ -6,14 +6,14 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 3940,
-      "sha256": "f68ee3df65cad40c4426c68f41ce2534fdb8b4fae371f23ea6ce18d072833783"
+      "size": 4176,
+      "sha256": "1456fadb485a8f57a09e8c1c9e11704ad02398efb63df5ce889d8eaaeeef823e"
     },
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 4738,
-      "sha256": "8dfb5134fce7792e8c33d3a3a7627411445492339034679dae27dd152da7c223"
+      "size": 4948,
+      "sha256": "9fec8a0f138d01cd05c69a9c17a19b2f84bb9ea2caff85881f706b75bcff3e3b"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 24359,
-      "sha256": "286c720a55cc246a1c102c7475fc544e33b1bcbf0c8b5e5344c7e0078e606b5a"
+      "size": 24809,
+      "sha256": "151a29302d800f730916c26dbfd33202758fb88f5373c4df39b59185184a221e"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 53375,
-      "sha256": "8072b1339daa4163434072751dc22cc37a149a2832f366d15b93342056f4989b"
+      "size": 55287,
+      "sha256": "24cbde377218671462e69a2de3ab7c02b068b69c8f7a82c1eb125f9109496b07"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 22085,
-      "sha256": "bac775331ed8e5bb421f4741f7f47458a14cbc6d5004a7f528843f3f8eaf25fd"
+      "size": 22310,
+      "sha256": "73f10dd10e7495c1135a37510260301f5c51ea543753c6ca83fb993ec7760f17"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -804,14 +804,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 6546,
-      "sha256": "23708f522a456924a2c5a2f99283f7712ac81ac980f7cd4c3b946818981529b6"
+      "size": 6797,
+      "sha256": "559f95a67c5006e36cc72b2912932dfe314fdc7a82e75ad4c65a1598c5642d2a"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 44226,
-      "sha256": "8294af4da5860a62a3cb80314dc5cec5f7d4fb1db79598b227551d0df74ab899"
+      "size": 46116,
+      "sha256": "1df241f21e0b9458c2028434afaccbf28ebc444db327d948dc646d678c5fa4b1"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -934,16 +934,28 @@
       "sha256": "b85ef52d8ef2db10781651935e6edbc13954b0da0184ee5a5cf13beecd9cd192"
     },
     {
+      "path": "context/runtime/moodle_target_rationale_20261011.md",
+      "domain": "runtime",
+      "size": 2837,
+      "sha256": "31a04802f2fd423a30a042e1332bd54a4722baf89d87a20fe07c83e737ad2a31"
+    },
+    {
       "path": "context/runtime/patch_runtime_20261005.md",
       "domain": "runtime",
-      "size": 8722,
-      "sha256": "bc91ab4b4251f29c23899348ccc0dc1b3fbce3841859dfd89fbfd78d0079721f"
+      "size": 9212,
+      "sha256": "0bfb508afff69759161ff2c89beb671352cf2768a399e307f96fb6665d3964c3"
     },
     {
       "path": "context/runtime/plugin_inventory_20261005.json",
       "domain": "runtime",
       "size": 124261,
       "sha256": "3a047d3625c8911559d87c963011bb2cccde8a126830789a99972b46329dfd5b"
+    },
+    {
+      "path": "context/runtime/post_resize_checks_20261011.json",
+      "domain": "runtime",
+      "size": 3700,
+      "sha256": "834c91a8b05bce52e9c3d8bff8613d95c1fd7c387efcfd4b8fb68d47facc174e"
     },
     {
       "path": "context/runtime/production_rc_20260922.md",
@@ -972,8 +984,8 @@
     {
       "path": "context/runtime/server_map_20261006.md",
       "domain": "runtime",
-      "size": 21059,
-      "sha256": "65b4cda03e82c75dcf20ed1f7427571cd7726486d8b5005b4f12c9ac23ef8ac9"
+      "size": 21322,
+      "sha256": "823651edc0e65e677874c79c7281320b84004d6e5e1b12bcc0118ecd2171d4b0"
     },
     {
       "path": "context/runtime/snapshots/20260912T204824Z/README.md",
@@ -1062,8 +1074,8 @@
     {
       "path": "context/runtime/storage_continuation_20261011.md",
       "domain": "runtime",
-      "size": 29647,
-      "sha256": "85499951208940a387498abe15bc9c14081fd40360a8834e4f38f6ab33bb0287"
+      "size": 31706,
+      "sha256": "9a4f63d4b872184dbf091d709531dbcff16a32c0afd839f477777e5cacced712"
     },
     {
       "path": "context/state/platform.yaml",
@@ -1134,8 +1146,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 10199,
-      "sha256": "a8887c7cbf90e4af9d1367e7b8d20439b77571b0d98e6b86984b8202a9691c20"
+      "size": 10530,
+      "sha256": "fb6411c188b0b8ac581d186d476b7e26a147ec8d5bcdc5fd5494e41d4a6913cc"
     },
     {
       "path": "context/tasks/backlog.yaml",

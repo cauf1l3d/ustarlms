@@ -3,7 +3,7 @@ updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner11Oct15:35:13UTC online ext4 resize PASS: blocks29304689x4096, df110G/37used/69available/35percent; UUID/mount/quota/raw GPT unchanged. Kernel supplied window only successful resize messages. GPT and partition growth completed; latest scheduled11Oct backup success. Next read-only host/container/HTTP/cron plus short browser smoke, then fresh stage budget/check and PR87 workspace. No production action by agent.'
+current_activity: 'Owner11Oct GPT/partition/ext4 completed; df110G/69available/35percent. Post-check15:44:55UTC received: four containers running, proxy/backend login200, cron v3 exit0/no new failures, visible authenticated SCORM. AppArmor unit failed remains in OS scope; functional mail/DNS/ISPConfig not proved by unit/listener inventory. Next fresh PR87 read-only stage identity/budget, then checkpoint/workspace. Patch5.1.8 remains selected;5.3 LTS/PG17 is separate,5.1 security support ends19Apr2027.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -49,7 +49,9 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-  cron: v3_one_worker_owner_success_20261005T102403Z
+  cron: v3_one_worker_owner_success_20261011T154403Z
+  post_resize_checks: context/runtime/post_resize_checks_20261011.json
+  target_rationale: context/runtime/moodle_target_rationale_20261011.md
   regular_backup: timer_active_enabled_latest_scheduled_20261011_complete_success_exit0_owner_status
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
@@ -213,7 +215,7 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: GPT_partition_ext4_and_latest_scheduled11Oct_PASS_post_checks_stage_patch_OS_HTTPS_pending
+  status_summary: GPT_partition_ext4_and_postresize_cron_HTTP_visible_SCORM_confirmed_AppArmor_stage_patch_OS_HTTPS_open
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage

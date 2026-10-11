@@ -4,8 +4,10 @@
 владельцем. Root `/` теперь110G/37used/69available/35%; FS29304689×4096bytes,
 UUID/mount/quota/raw GPT прежние. Kernel в supplied resize-window сообщил
 успешное расширение без ошибок. Последний scheduled backup11Oct успешен.
-Следующий шаг — read-only host/container/HTTP/cron checks и короткий browser
-smoke, затем fresh stage budget и продолжение PR87 отдельного workspace.
+Owner post-check15:44:55UTC получен: host services/четыре containers running,
+login200 через proxy/backend, cron v3 exit0 без новых failures; screenshot
+показывает authenticated SCORM. AppArmor unit failed остаётся отдельным вопросом
+ОС. Следующий шаг — fresh stage budget/identity и PR87 отдельного workspace.
 
 Прямого SSH у агента нет. Основание — полный вывод владельца в сообщении
 11.10.2026; время начала операции напечатано `2026-10-11T14:40:15Z`
@@ -191,7 +193,28 @@ Raw FS bytes и df total отличаются из-за filesystem accounting; a
 GPT/partition/resize команды повторно не запускать. Старые меньшие GPT copies
 06Oct/AiJI89 не применять как table rollback после роста FS.
 
-## Следующий шаг: post-resize проверки
+## Выполненные post-resize проверки — 15:44:55UTC
+
+[Sanitized owner receipt](post_resize_checks_20261011.json): root110G/69G available,
+HDD458G/6.5G used/447G available, root inodes7%. Все четыре Moodle/lab containers
+running; Apache/Docker/cron/MariaDB/named/Dovecot/Postfix instance/amavis active.
+Kernel warning query since15:21:56UTC вернула `No entries`; это ограниченное
+окно, не вся история health. Proxy/backend login оба200. Cron v3 source SHA OK,
+scheduled pass15:44:02..15:44:03UTC exit0,1.135s, schedule/container match true,
+USTAR counters0, adhoc0, new failures/24h failures пусты. Прежние17 overdue и2
+scheduled failed остаются; текущий pass не добавил новых ошибок.
+
+Скриншот показывает authenticated Academy shell и существующий SCORM «Основа
+продаж», экран3/15. Fresh login, сохранение completion и все роли отдельно не
+проверены. Functional mail/DNS/ISPConfig acceptance не следует из unit/listeners.
+AppArmor — единственный failed unit: предыдущий audit уже фиксировал stale
+snap-confine include, но свежий вывод не доказывает timestamp/причину unit failure.
+Диагностика/исправление входят в согласованную ОС часть; автоматический restart
+или отключение AppArmor не выполнялись.
+
+Ниже сохранены уже выполненные diagnostic commands. Next — fresh PR87 `--check`
+с actual source/space/inodes/memory/port guards, затем отдельный checkpoint/workspace.
+[Почему кандидат5.1.8 и чем отличается5.3 LTS](moodle_target_rationale_20261011.md).
 
 `sudo -v` отдельно; каждая команда ниже — одна physical line. Это inventory/
 status/HTTP GET, не worker/install/backup/restart/upgrade. Host services собираются
@@ -224,7 +247,7 @@ Owner browser smoke: обычный вход в Академию и открыт
 по actual unit/listener inventory проверить необходимые mail/DNS/ISPConfig
 контрольные точки. Полные env/config/inspect, ключи и dumps не публиковать.
 
-После этих результатов — fresh PR87 `--check`/budget/identity. Current df69G
+Post-check results получены; следующий шаг — fresh PR87 `--check`/budget/identity. Current df69G
 available существенно выше старого estimate9.80GiB, но fresh source/space/inodes/
 memory/port guards выполняются перед cold copy. Отдельный immutable checkpoint и
 mutable workspace, full-addon patch5.1.8 upgrade/repeat/paired rollback, production

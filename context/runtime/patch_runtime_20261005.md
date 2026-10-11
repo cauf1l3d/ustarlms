@@ -6,6 +6,11 @@
 
 Официальный patch **5.1.8 (Build: 20261005)** опубликован 05.10; tag `v5.1.8`, tag object `31700fd584969ba1178c433b62a3c90576e235af`, peeled commit `cc0bf17da8b5fbd290faf95b2b14a03d64331923`, core version `2025100608.00`. Metadata и stock index получены с exact upstream commit. SHA-256 `public/version.php`: `8e8ca75d913bf1f0b0a73bd029d476d827f50855ecf5d1a99a891e65c498ee02`; `public/index.php`: `3af0034674ac5b59e8926ebd63e1a0bf3360a495675d82de7b800e0514c467f7`.
 
+**Перепроверка11Oct:** [выбор ближайшего patch и долгосрочной LTS](moodle_target_rationale_20261011.md).
+5.1 получает только security fixes до19Apr2027;5.3 LTS — до01Oct2029.
+5.1.8 не обязательная промежуточная ступень перед5.3, но именно этот кандидат
+подготовлен в текущем scope. Прямой5.3 требует PG17 migration и full compatibility.
+
 Latest major — 5.3 LTS, также выпущенный 05.10. Его обсуждение не является командой на major migration: требуется PostgreSQL 17 и отдельная совместимость дополнений. Выбран текущий patch 5.1.8; major/LTS остаётся последующим проектом. Источники: [5.1.8](https://moodledev.io/general/releases/5.1/5.1.8), [5.3 requirements](https://moodledev.io/general/releases/5.3).
 
 [`patch-runtime.json`](../../tests/stage/patch-runtime.json), отдельные Dockerfile/Compose и `run-patch.sh` добавляют **дополнительный** isolated runtime PHP **8.3.33 CLI / Debian 13 Trixie**, PostgreSQL **16.15 / Trixie**, Moodle **5.1.8**. Официальные PHP/PG multiarch image digests закреплены; это не local `stack-moodle` production image и не проверка Apache SAPI. Before fixture install проверяются actual PHP/core/PG versions, required extensions, max_input_vars и core commit. Артефакты включают runtime profile/preflight, image digests, логи и JUnit.

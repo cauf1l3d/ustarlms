@@ -416,3 +416,29 @@ snapshots unsafe для table rollback выросшей FS; grown GPT snapshot �
 backup. STATE/ACTIVE/BACKLOG/entrypoints/index актуализированы. PR98 open; remote
 CI нового SHA отделяется от local checks и owner execution. Application/frontend/
 helpers/workflows unchanged. Короткий smoke не повторяет полный baseline QA.
+
+
+## 2026-10-11 — post-resize cron/HTTP/visible SCORM; выбор версии Moodle
+
+Owner upload: inventory15:44:55UTC, root110G/69G available, HDD458G/6.5G used/447G
+available, root inodes7%. Four production/lab containers running; required loaded
+service instances active. Kernel warning query since15:21:56UTC: No entries.
+Proxy/backend login200; pinned cron v3 SHA OK, scheduled15:44:02..15:44:03UTC
+exit0/1.135s, no new failures, USTAR counters0. Прежние17overdue/2scheduled failed
+сохранены. Screenshot показывает authenticated SCORM экран3/15; fresh login,
+completion write и полный role/SCORM QA не доказаны. Functional mail/DNS/ISPConfig
+не следует из units/listeners. AppArmor unit failed: prior audit records stale
+snap-confine include, но current failure timestamp/cause отдельно не измерены.
+[Sanitized receipt](post_resize_checks_20261011.json); raw log/image публично не размещались.
+
+Проверены официальные5.3 latest/requirements и lifecycle:5.3 LTS released05Oct,
+PHP8.3/PG17+, supported upgrade source4.4+. 5.1.8 — prepared ближайший patch,
+не обязательная ступень перед5.3;5.1 security support ends19Apr2027,5.3 —01Oct2029.
+[Обоснование](moodle_target_rationale_20261011.md). Scope1→7→6 сохранён;
+production core не обновлялся. Next fresh PR87 read-only identity/budget.
+
+Remote predecessor95666345bd04104e28462743ec32b104099a8733: Context#48
+38152494478 SUCCESS; Review gate#484 38152494499 FAILURE, sourcePHP8.2/8.3 SUCCESS,
+frontend failed npm audit; downstream rollback/moodle-db/prepare/gate skipped.
+Это не CI нового docs commit. PR98 остаётся open, audit threshold unchanged;
+application/frontend/helpers/workflows/release не менялись.

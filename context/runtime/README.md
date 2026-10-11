@@ -1,6 +1,6 @@
 # Runtime и эксплуатация
 
-Последний storage checkpoint: [owner11Oct GPT/partition/ext4 PASS](storage_continuation_20261011.md), ext4 resize15:35:13UTC/df110G/37used/69free/35%, UUID/mount/quota/raw GPT unchanged. Следующие readonly host/container/HTTP/cron/browser checks, затем fresh PR87 stage budget. Ниже сохраняются датированные свидетельства05–06.10; выполненные storage/install команды не повторять.
+Последний storage checkpoint: [owner11Oct GPT/partition/ext4 PASS](storage_continuation_20261011.md), ext4 resize15:35:13UTC/df110G/37used/69free/35%, UUID/mount/quota/raw GPT unchanged. Owner post-check15:44:55UTC получен: четыре containers running, proxy/backend login200, cron v3 exit0/no new failures; screenshot authenticated SCORM. AppArmor failed открыт в ОС части. Далее fresh PR87 stage identity/budget. [Receipt](post_resize_checks_20261011.json). Ниже сохраняются датированные свидетельства05–06.10; выполненные storage/install команды не повторять.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 
@@ -19,4 +19,4 @@ Owner planning20:44:34UTC PR86 PASS:526 USTAR hashes/57 addon metadata; [точ�
 **Последний owner checkpoint11Oct15:21:56UTC:** [partition growth PASS](ssd_partition_grow_result_20261011.json), root partition120032009728bytes/kernel234437519sectors, raw CRC/boot PASS. Ext4 ещё53683945472bytes/df49G; [следующий online ext4 resize](storage_continuation_20261011.md). Ранее pending partition growth в карте/дополнениях заменён этим actual результатом.
 
 
-**Последний owner checkpoint11Oct15:35:13UTC:** [online ext4 PASS](ssd_ext4_resize_result_20261011.json),29304689blocks/df110G/37used/69free/35%; UUID/mount/quota/raw GPT прежние. [Следующие readonly post-checks](storage_continuation_20261011.md), затем fresh PR87 stage budget. Ранее pending ext4 статусы заменены этим результатом; post-service acceptance пока не получена.
+**Последний owner checkpoint11Oct15:35:13UTC:** [online ext4 PASS](ssd_ext4_resize_result_20261011.json),29304689blocks/df110G/37used/69free/35%; UUID/mount/quota/raw GPT прежние. [Owner post-check15:44:55UTC](post_resize_checks_20261011.json): root69G/HDD447G available, containers running, login200, cron exit0/no new failures, visible authenticated SCORM. AppArmor failed и functional mail/DNS/ISPConfig acceptance отдельно открыты. Next fresh PR87 stage identity/budget.

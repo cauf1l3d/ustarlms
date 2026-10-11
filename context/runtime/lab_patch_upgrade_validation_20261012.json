@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "helper_path": "scripts/infra/lab_patch_upgrade.py",
+  "helper_sha256": "452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4",
+  "local_dedicated_tests": {
+    "count": 23,
+    "result": "PASS",
+    "real_filesystem": true,
+    "Docker_PHP_SQL": "mocked"
+  },
+  "full_r16": {
+    "tests": 260,
+    "result": "PASS",
+    "skipped": 11,
+    "skip_scope": [
+      "10 unsupplied private HDD capture engine tests",
+      "1 absent local PHP interpreter test"
+    ]
+  },
+  "private_stage_engine_review": {
+    "sha256": "71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac",
+    "bytes": 40187,
+    "full_source_read": true,
+    "AST_API_contract": "PASS",
+    "published": false,
+    "server_execution": false
+  },
+  "official_package_cli_review": {
+    "sha256": "0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c",
+    "path": "admin/cli/upgrade.php",
+    "arguments": [
+      "--non-interactive"
+    ],
+    "repeated_exit_zero_means_no_upgrade_needed": true
+  },
+  "server_upgrade_executed": false,
+  "server_paired_restore_executed": false,
+  "production_changed": false,
+  "exact_remote_source_ci": "pending_publication",
+  "local_source_structural": "PASS --skip-php; JS24/tables93/templates56; not CI substitute",
+  "application_source_map": "unchanged PR76; files526/PHP356/symbols172/tables93/tasks32"
+}

@@ -1,10 +1,11 @@
 # USTAR — инструкции агентам
 
-**Checkpoint12Oct01:27MSK:** native CLI memory512M correct, sender/binfalse not
-applied; frozen INI/readonly bind correct, loading cause unknown. Next
-[explicit CLI process isolation/readiness](context/runtime/lab_patch_cli_isolation_20261012.md). Native defaults recorded
-separately; no persistent PHP/services write or activation. Candidate/checkpoint
-сохраняются; storage/download/prepare-stage/prepare-candidate не повторять.
+**Checkpoint12Oct01:56MSK:** owner readiness22:56:35UTC PASS: accepted candidate hashes,
+PHP8.3.33/PG16.15/required extensions and original stage DB/addons passed. CLI user
+cannot read bound lab.ini; explicit512M/binfalse policy verified. Native CLI and
+Apache are not declared repaired. Next [guarded stage upgrade and paired recovery](context/runtime/lab_patch_upgrade_20261012.md).
+Candidate/checkpoint retained; storage/download/prepare-stage/prepare-candidate
+не повторять. Server activation/upgrade/repeat/paired rollback still pending.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Текущая карта и следующий шаг](context/runtime/server_map_20261006.md).
 

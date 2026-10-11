@@ -1,6 +1,11 @@
 # Профиль архитектурного агента USTAR
 
-**Актуальный checkpoint11Oct:** SSD/root расширены, HDD запуск11Oct success, baseline stage и cold checkpoint созданы. Official5.1.8 SHA PASS; следующий шаг — [отдельная сборка candidate code](../runtime/lab_patch_candidate_20261011.md). Storage/download/prepare-stage не повторять. Pending-статусы ниже — история на06Oct.
+**Checkpoint12Oct01:56MSK:** owner readiness22:56:35UTC PASS: accepted candidate hashes,
+PHP8.3.33/PG16.15/required extensions and original stage DB/addons passed. CLI user
+cannot read bound lab.ini; explicit512M/binfalse policy verified. Native CLI and
+Apache are not declared repaired. Next [guarded stage upgrade and paired recovery](../runtime/lab_patch_upgrade_20261012.md).
+Candidate/checkpoint retained; storage/download/prepare-stage/prepare-candidate
+не повторять. Server activation/upgrade/repeat/paired rollback still pending.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 

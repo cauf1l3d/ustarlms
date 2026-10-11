@@ -41,3 +41,13 @@ python3 scripts/check_context.py
 [`lab_patch_preflight.py`](../../scripts/infra/lab_patch_preflight.py) проверяет retained clone без Moodle bootstrap и считает rollback budget. `trusted` сохраняет strict code/control/PostgreSQL policy; `moodledata_entry` применяется только к exact retained Moodledata tree с root0700/33:33, проверяет per-entry33:33/type/links/no-executable-files и nonwritable directories. Обычные data files с write bits только учитываются через metadata, их содержимое не открывается. Live scan повторно проверяет private root и сообщает count широких file write modes. [Owner refusal и контракт](../runtime/lab_patch_preflight_20261005.md); server planning20:44:34UTC PR86 PASS; [точный report](../runtime/lab_planning_result_20261005.json).
 
 [`lab_cold_checkpoint.py`](../../scripts/infra/lab_cold_checkpoint.py) использует SHA-pinned planning/resume/engine, отдельный module namespace и ownership guards. `cold_checkpoint` копирует согласованный комплект после lab-only web/PG stop и всегда возобновляет same source IDs; `copy_workspace` создаёт independent copy без shared inodes, `start_workspace` проверяет DB/files/bootstrap/HTTP/offline isolation. Frozen manifest не монтируется. Source chmod/chown/production exec/SQL отсутствуют; owner/mode сохраняются только на новых copies. [Контракт и deployment pending](../runtime/lab_cold_checkpoint_20261005.md).
+
+
+[`lab_patch_upgrade.py`](../../scripts/infra/lab_patch_upgrade.py) pins the accepted
+readonly readiness/transitive stage engine, snapshots the current stopped stage,
+keeps bind-root inodes/container IDs, activates the accepted candidate and runs
+the official root admin/cli/upgrade.php twice under explicit CLI mail isolation.
+Failure and --restore-baseline restore code/config/Moodledata/physicalPG together
+before startup; changed files and immutable copies are retained. SQL writes only
+disable stage scheduled tasks; no production exec/SQL/stop.
+[Contract and server execution pending](../runtime/lab_patch_upgrade_20261012.md).

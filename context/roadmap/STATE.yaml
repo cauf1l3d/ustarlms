@@ -3,11 +3,11 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner diagnostic22:27:09UTC confirmed native CLI memory512M but sender /usr/sbin/sendmail
-  -t -i; readonly bound lab.ini matches frozen policy but absent from scanned list. Native sender mismatch
-  explains refusal; underlying INI loading/access/override cause unknown. Next readonly candidate/platform
-  check with explicit per-process PHP memory/mail isolation and separate native/effective report; no
-  persistent settings writes or activation. Stage upgrade/repeat/paired restore remain pending.'
+current_activity: 'Owner readiness22:56:35UTC PASS: accepted candidate/platform and original stage
+  DB/addons verified under explicit PHP CLI isolation. Bound private INI unreadable to CLI33;
+  Apache/native defaults not repaired. Guarded isolated stage upgrade/repeat with fresh paired
+  cold baseline and automatic three-tree recovery prepared; separate paired restore trial and
+  browser/addon acceptance remain pending. No server activation/core upgrade or production write.'
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -167,6 +167,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_upgrade_20261012.md
+- context/runtime/lab_patch_readiness_result_20261012.json
 - context/runtime/lab_patch_cli_isolation_20261012.md
 - context/runtime/lab_patch_php_diagnostic_result_20261012.json
 - context/runtime/lab_patch_php_diagnostic_20261012.md
@@ -302,22 +304,22 @@ patch_candidate:
   readiness_helper: scripts/infra/lab_patch_readiness.py
   readiness_helper_sha256: 2942e58967980d1d8adcc63c04d996d8798d642724bfead2c66380aee32bc9f9
   readiness_contract: context/runtime/lab_patch_readiness_20261012.md
-  readiness_helper_server_executed: false
+  readiness_helper_server_executed: true
   readiness_previous_helper_implementation: 2496d11fac6af3fd8f0265355ad143016423d001
   readiness_previous_helper_installed_sha256: a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc
   readiness_previous_helper_server_attempted: true
   readiness_previous_helper_server_result: memory_mail_combined_refusal_before_SQL_actual_values_unknown
   readiness_previous_helper_server_receipt: context/runtime/lab_patch_readiness_refusal_20261012.json
-  readiness_accepted: false
+  readiness_accepted: true
   readiness_root_cause_confirmed: true
-  readiness_root_cause_scope: native_CLI_sender_mismatch_only_underlying_INI_loading_cause_unknown
+  readiness_root_cause_scope: bound_private_INI_unreadable_to_CLI_user_native_sender_unchanged_effective_process_policy_PASS
   php_diagnostic_contract: context/runtime/lab_patch_php_diagnostic_20261012.md
   php_diagnostic_installed_path: /usr/local/sbin/USTAR_LAB_PHP_DIAGNOSTIC_20261012.py
   php_diagnostic_server_executed: true
   php_diagnostic_server_receipt: context/runtime/lab_patch_php_diagnostic_result_20261012.json
   cli_policy_contract: context/runtime/lab_patch_cli_isolation_20261012.md
   cli_policy_installed_path: /usr/local/sbin/USTAR_LAB_PATCH_READINESS_CLI_20261012.py
-  cli_policy_readiness_server_executed: false
+  cli_policy_readiness_server_executed: true
   cli_policy_ci_implementation: 587971b65b15b9dd07ae3a03b2a73d129c3e08b9
   cli_policy_context_ci: 38181448987
   cli_policy_review_ci: 38181449065
@@ -333,9 +335,17 @@ patch_candidate:
   readiness_context_ci: 38177469124
   readiness_review_ci: 38177469099
   readiness_ci_status: context_and_sourcePHP82_83_success_frontend_npm_audit_failure_downstream_skipped_no_merge
+  readiness_server_receipt: context/runtime/lab_patch_readiness_result_20261012.json
   readiness_scope: accepted_candidate_hashes_and_existing_stage_core_platform_only
+  upgrade_helper: scripts/infra/lab_patch_upgrade.py
+  upgrade_helper_sha256: 452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4
+  upgrade_contract: context/runtime/lab_patch_upgrade_20261012.md
+  upgrade_validation: context/runtime/lab_patch_upgrade_validation_20261012.json
+  upgrade_helper_server_executed: false
+  paired_restore_helper_prepared: true
+  paired_restore_server_executed: false
   candidate_copy_github_ci_status: implementation4a6810_context38175465744_success_sourcePHP82_83_success_review38175465742_frontend_npm_audit_failure_downstream_skipped_no_merge
-  full_addon_upgrade_repeat_paired_restore_helper_ready: false
+  full_addon_upgrade_repeat_paired_restore_helper_ready: true
   candidate_copy_helper_implementation: 4a6810234abf33773fb8efbeb7293ddcb21c17c6
   candidate_copy_pr_created: true
   candidate_copy_pr_creation_error: historical_email_403_resolved_after_owner_verification

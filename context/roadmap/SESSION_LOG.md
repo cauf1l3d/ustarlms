@@ -494,3 +494,29 @@ Exact Context56/38181448987 success; Review492/38181449065 both full source PHP8
 success including new real CLI flag/temporary INI test; frontend audit failure,
 rollback/moodle-db/prepare-rc/gate skipped. Full gate not PASS, PR99 draft/unmerged;
 real server CLI-policy readiness not yet executed, production not upgraded.
+
+
+## 2026-10-12 01:56:35 Moscow — owner corrected readiness PASS
+
+Owner installed implementation587971/readinessSHA2942e589, both checksums OK.
+Readonly accepted candidate/platform preflight PASS:44,174 entries/manifest07dfa485,
+57 addon metadata/526 USTAR, PHP8.3.33/PG16.15/required extensions, original DB/addon
+versions and stage tasks0. Native sender still sendmail; bound private INI not
+readable to CLI user33; effective process policy512M/binfalse PASS. No bootstrap,
+activation/core upgrade or persistent configuration change. Optional exif/soap
+missing; Composer/vendor declarations do not prove dependency resolution.
+[Exact owner receipt](../runtime/lab_patch_readiness_result_20261012.json).
+
+Private stage engine retrieved from owner file, fully read40187bytes/SHA71f6a1
+matched; actual ownership/mount/exec/SQL/relay APIs reviewed and AST signatures
+verified. Input remains private outside Git. New stage transaction helper pins
+accepted readiness and its transitive dependencies, retains bind root inodes/IDs,
+saves a fresh cold stage pair before first rename/SQL, runs official package
+admin/cli/upgrade.php twice and uses explicit PHP policy throughout. Core stock
+plugin changes allowed; frozen57 addon versions checked. Bounded readonly DB/file
+reference checks, stage-only task disable, paired failure recovery, durable marker,
+no deletion and --restore-baseline for rollback acceptance.23 dedicated filesystem/
+failure injection tests PASS; full r16 260 OK/11 skips. Real Docker/PHP/Moodle/PG
+upgrade/restore not executed locally or on server. Exact implementation/publication/
+CI recorded separately after publication; PR99 remains draft/unmerged.
+[Contract](../runtime/lab_patch_upgrade_20261012.md).

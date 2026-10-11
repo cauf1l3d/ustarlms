@@ -1,19 +1,21 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** [CLI process isolation/readiness](../runtime/lab_patch_cli_isolation_20261012.md).
-[Owner22:27:09UTC diagnostic](../runtime/lab_patch_php_diagnostic_result_20261012.json):
-native memory512M, sender=/usr/sbin/sendmail -t -i; frozen INI bytes/readonly bind
-correct, not in scanned list. Underlying INI loading/access cause unknown, native
-sender mismatch explains refusal. New helper retains native observation, invokes
-second PHP with explicit512M/binfalse process policy and verifies effective values
-before readonly SQL. No persistent PHP/container/service writes.40 dedicated tests
-OK/1 local PHP skip; real interpreter test awaits exact CI. Candidate/checkpoint
-preserved, upgrade/repeat/paired restore/home/full-addon acceptance pending.
+**Текущий шаг:** [guarded stage upgrade + paired recovery](../runtime/lab_patch_upgrade_20261012.md).
+[Owner22:56:35UTC readiness PASS](../runtime/lab_patch_readiness_result_20261012.json):
+accepted code/config/overlay hashes,57 addon metadata/526 USTAR, required extensions,
+PHP8.3.33/PG16.15 and original stage DB versions/tasks0 verified. Bound private INI
+unreadable to CLI33; explicit512M/binfalse effective policy PASS. Native CLI remains
+sendmail; Apache settings unverified. No server candidate activation or core upgrade.
 
-**INF-08 в работе:** paired code/config/Moodledata/physicalPG restore обязан быть
-подготовлен для guarded stage upgrade/repeat. Текущая проверка не выполняет эти операции.
-Previous exact HEAD808fc0 Context/sourcePHP8.2/8.3 success, frontend npm audit failure;
-full gate не PASS, PR99 остаётся draft/unmerged.
+**INF-08 в работе:** helper saves a fresh current-stage cold pair, retains existing
+bind root inodes/container IDs, activates accepted code only on stage, runs official
+admin/cli/upgrade.php twice, and restores code/config/Moodledata/physicalPG together
+on failure. Separate --restore-baseline proves paired rollback after successful
+upgrade.23 dedicated real filesystem/failure injection tests PASS; full r16 260 OK/11
+skips. Private stage engine fully read/SHA matched/API contract PASS; raw engine
+not published. Source exact CI awaits publication; frontend npm audit blocker/full
+gate remain distinct, PR99 draft/unmerged. Browser roles/SCORM/home/addon acceptance
+and production patch remain pending. Do not rerun storage/candidate/stage preparation.
 
 SSD/root и HDD ночной запуск11Oct success; checkpoint и baseline stage приняты18:55:53..19:17:02UTC. Official5.1.8 SHA проверен20:09UTC в `moodle-518-package-20261011-nnixp4se`. Не повторять. Screenshot подтверждает authenticated SCORM rendering в видимой области; core production прежний.
 

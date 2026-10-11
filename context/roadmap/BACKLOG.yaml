@@ -211,10 +211,14 @@ tasks:
   - context/runtime/lab_patch_php_diagnostic_20261012.md
   - context/runtime/lab_patch_php_diagnostic_result_20261012.json
   - context/runtime/lab_patch_cli_isolation_20261012.md
-  current_checkpoint: Native CLI memory512M but sender/usr/sbin/sendmail confirmed by owner22:27:09UTC.
-    Frozen lab.ini/readonly bind correct, not in scanned list; why not applied unknown. Explicit per-process
-    CLI isolation ready for readonly preflight, tested locally; real PHP CI and server execution pending.
-    No persistent configuration write or candidate activation/upgrade.
+  - context/runtime/lab_patch_readiness_result_20261012.json
+  - context/runtime/lab_patch_upgrade_20261012.md
+  - context/runtime/lab_patch_upgrade_validation_20261012.json
+  current_checkpoint: Owner22:56:35UTC readonly readiness PASS; CLI INI unreadable to user33 but
+    explicit512M/binfalse policy verified. Core/platform/original stage addon versions/tasks0 accepted.
+    Guarded stage upgrade/repeat with fresh current-stage cold pair and whole-pair recovery prepared;
+    explicit paired restore after successful upgrade and browser/addon acceptance pending. Private
+    stage engine fully read/SHA matched without publication. No server activation/production upgrade.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

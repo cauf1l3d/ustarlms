@@ -1,5 +1,12 @@
 # Runtime и эксплуатация
 
+**Checkpoint12Oct01:56MSK:** owner readiness22:56:35UTC PASS: accepted candidate hashes,
+PHP8.3.33/PG16.15/required extensions and original stage DB/addons passed. CLI user
+cannot read bound lab.ini; explicit512M/binfalse policy verified. Native CLI and
+Apache are not declared repaired. Next [guarded stage upgrade and paired recovery](lab_patch_upgrade_20261012.md).
+Candidate/checkpoint retained; storage/download/prepare-stage/prepare-candidate
+не повторять. Server activation/upgrade/repeat/paired rollback still pending.
+
 **Next12Oct01:27MSK:** [explicit CLI process isolation/readiness](lab_patch_cli_isolation_20261012.md).
 Native sender mismatch confirmed; memory512M/INI bytes/readonly bind correct. No
 persistent settings changes, candidate still code-only accepted. Diagnostic result recorded.

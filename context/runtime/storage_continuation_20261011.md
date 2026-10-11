@@ -7,7 +7,7 @@ UUID/mount/quota/raw GPT прежние. Kernel в supplied resize-window соо
 Owner post-check15:44:55UTC получен: host services/четыре containers running,
 login200 через proxy/backend, cron v3 exit0 без новых failures; screenshot
 показывает authenticated SCORM. AppArmor unit failed остаётся отдельным вопросом
-ОС. Следующий шаг — fresh stage budget/identity и PR87 отдельного workspace.
+ОС. Fresh preflight11Oct PASS получен; [helper установлен и следующий --prepare-stage](lab_stage_check_handoff_20261011.md). Старый recovery lab уже существует, новый workspace ещё не создан.
 
 Прямого SSH у агента нет. Основание — полный вывод владельца в сообщении
 11.10.2026; время начала операции напечатано `2026-10-11T14:40:15Z`
@@ -212,8 +212,8 @@ snap-confine include, но свежий вывод не доказывает tim
 Диагностика/исправление входят в согласованную ОС часть; автоматический restart
 или отключение AppArmor не выполнялись.
 
-Ниже сохранены уже выполненные diagnostic commands. Next — fresh PR87 `--check`
-с actual source/space/inodes/memory/port guards, затем отдельный checkpoint/workspace.
+Ниже сохранены уже выполненные diagnostic commands. Fresh PR87 `--check`
+[PASS владельца](lab_cold_preflight_result_20261011.json); следующий шаг — отдельный checkpoint/workspace.
 [Точные команды установки reviewed helper и fresh --check](lab_stage_check_handoff_20261011.md).
 [Почему кандидат5.1.8 и чем отличается5.3 LTS](moodle_target_rationale_20261011.md).
 
@@ -248,7 +248,7 @@ Owner browser smoke: обычный вход в Академию и открыт
 по actual unit/listener inventory проверить необходимые mail/DNS/ISPConfig
 контрольные точки. Полные env/config/inspect, ключи и dumps не публиковать.
 
-Post-check results получены; следующий шаг — fresh PR87 `--check`/budget/identity. Current df69G
+Post-check и fresh PR87 `--check` PASS получены; следующий шаг — `--prepare-stage`. Current df69G
 available существенно выше старого estimate9.80GiB, но fresh source/space/inodes/
 memory/port guards выполняются перед cold copy. Отдельный immutable checkpoint и
 mutable workspace, full-addon patch5.1.8 upgrade/repeat/paired rollback, production

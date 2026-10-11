@@ -1,7 +1,8 @@
 # Свежая проверка перед отдельным стендом — 11.10.2026
 
-Post-resize owner checks получены; следующий шаг текущей очереди — PR87 read-only
-`--check`. Helper deployment/check на сервере пока не подтверждены.
+Owner11Oct installed helper и fresh `--check` PASS; [receipt](lab_cold_preflight_result_20261011.json).
+Команды download/install/check ниже уже выполнены и не требуют повторения.
+Следующий шаг — `--prepare-stage` по команде в конце, server result пока pending.
 
 Слитый [PR87](https://github.com/cauf1l3d/ustarlms/pull/87), implementation
 `40e7d13e197cd59321e5e89e3f477539eb265b19`. Helper SHA-256
@@ -58,3 +59,41 @@ archive restore не объявлены по status/listener smoke.
 PR98 predecessorc13ab254f90dff6ac96a3269ebb3e38ff4dac9ce: Context#49 SUCCESS;
 Review#485 FAILURE на frontend npm audit, sourcePHP8.2/8.3 SUCCESS, downstream
 DB/rollback/prepare/gate skipped. Это отдельно от SUCCESS инструментаPR87.
+
+## Owner result11Oct: установка и --check выполнены — не повторять
+
+[Точный receipt](lab_cold_preflight_result_20261011.json) получен18:46:12UTC /
+21:46:12MSK. Check timestamp не напечатан; login banner18:35:55UTC не является
+временем проверки. Downloaded/installed helper SHA checks OK; installed `--check`
+вернул `LAB_COLD_CHECKPOINT_PREFLIGHT=PASS`. Free73738452992bytes /68.67GiB,
+required10526347264bytes /9.80GiB (reserve4GiB уже включён), free inodes6838433 /
+required225294. Additional independent workspace allowance1773512704bytes.
+
+Старый восстановленный lab уже существует и работает. PASS относится к guards
+этого источника и одновременно проверяет **отсутствие** новых checkpoint/workspace,
+stage container names/relay unit, свободный loopback18085 и RAM≥6GiB. Их actual
+values не все напечатаны; guards подтверждены success path exact helper. Check
+ничего из новых copies/containers не создавал. Первоначальное «установить стенд»
+уточнено: речь о второй рабочей копии, а не о повторной установке старой.
+
+Следующая команда использует **уже установленный** helper. Контракт source lab
+и новые объекты: старая recovery copy сохраняется; code/config/Moodledata/PG
+копируются при временной остановке её web/PG, после copy запускаются те же source
+IDs. Frozen checkpoint отдельно; mutable workspace получает собственные data и
+containers, loopback18085. Production Академия продолжает работать; её состояние
+проверяется через inspect. Guards и бюджет повторяются перед изменением.
+
+`sudo -v` отдельно, затем одна physical line:
+
+```bash
+sudo -n bash -c 'set -eu; printf "%s  %s\n" 9c81abb6b30bea611f99fb7a3e336e12d0a7827d4ea462a4d3d63e6f8aec9012 /usr/local/sbin/USTAR_LAB_COLD_CHECKPOINT_20261005.py | sha256sum --check --strict -; printf "STAGE_PREPARE_START=%s\n" "$(date -u +%FT%TZ)"; python3 -I -B -u /usr/local/sbin/USTAR_LAB_COLD_CHECKPOINT_20261005.py --prepare-stage; printf "STAGE_PREPARE_FINISH=%s\n" "$(date -u +%FT%TZ)"'
+```
+
+Копирование/проверка может занять несколько минут; внешнего timeout вокруг этого
+изменяющего шага нет. Script печатает `COPYING_COLD_LAB`, затем
+`LAB_COLD_CHECKPOINT=PASS` и окончательный
+`LAB_PATCH_STAGE_BASELINE=PASS; HTTP_LOGIN=200; no core upgrade; production unchanged`.
+Это baseline исходного core, не обновление5.1.8. Server `--prepare-stage` pending.
+При ошибке передать полный вывод; existing/incomplete paths не удалять и writing
+шаг не повторять до анализа. Reviewed helper при copy failure пытается возобновить
+те же source containers; restart incomplete имеет отдельный recovery mode.

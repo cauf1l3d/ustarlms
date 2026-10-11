@@ -503,3 +503,32 @@ Remote predecessor95666345bd04104e28462743ec32b104099a8733: Context#48
 frontend failed npm audit; downstream rollback/moodle-db/prepare/gate skipped.
 Это не CI нового docs commit. PR98 остаётся open, audit threshold unchanged;
 application/frontend/helpers/workflows/release не менялись.
+
+
+## 2026-10-11 — existing lab подтверждён; fresh cold preflight PASS
+
+Owner message received18:46:12UTC/21:46:12MSK. Reviewed helper downloaded/installed,
+both SHA checks OK; --check marker LAB_COLD_CHECKPOINT_PREFLIGHT=PASS. Operation
+time не напечатано; login banner18:35:55UTC отдельно. Budget free73738452992/
+required10526347264bytes, inodes6838433/225294, reserve4294967296bytes уже включён,
+additional workspace1773512704bytes. [Receipt](../runtime/lab_cold_preflight_result_20261011.json).
+
+User уточнил, что recovery lab уже установлен. Это существующий source
+ustar_recovery_lab_20261004_web/pg, не новая patch workspace. Exact helper PASS
+также означает новые checkpoint/workspace/names/relay absent и loopback18085/RAM
+guards PASS на момент check. Установка инструмента и check не создавали новую
+копию и не обновляли core. Download/install/check не повторять.
+
+[Next SHA-pinned --prepare-stage](../runtime/lab_stage_check_handoff_20261011.md) prepared,
+Bash syntax PASS; server execution pending. Создаёт отдельный frozen checkpoint
+и mutable workspace; временно pauses только source lab, resumes те же IDs.
+Production inspected/continues running. Fresh guards повторяются перед записью;
+старый lab/checkpoint не переустанавливаются, partial paths не overwrite/delete.
+Current queues/entrypoints/STATE/ACTIVE/BACKLOG актуализированы, application/helper/
+frontend/workflow/release trees unchanged. Это baseline old core, не upgrade5.1.8.
+
+Docs predecessorc3251acc0cbfee48b65b9bd4944406fbae7e4f74: API returned startup_failure
+run38164755773 with no jobs. Source/context checks на этом SHA не объявлены PASS;
+причина startup failure отдельно не установлена. Historical helperPR87 source
+CI37375193949/context37375193850 SUCCESS остаются отдельным evidence. GitHub PR
+metadata update ранее403 из-за unverified email; files/ref publication состоялись.

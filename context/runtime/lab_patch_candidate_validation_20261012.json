@@ -20,6 +20,16 @@
   "Docker_PHP_SQL_executed": false,
   "server_corrected_helper_execution": false,
   "full_addon_runtime_compatibility_verified": false,
-  "remote_CI": "pending_publication",
-  "optional_public_archive_fixture_on_CI": "may_skip_when_not_supplied; synthetic_stock_collision_tests_remain_mandatory"
+  "remote_CI": "context_success_sourcePHP82_83_success_frontend_npm_audit_failure_downstream_skipped",
+  "optional_public_archive_fixture_on_CI": "may_skip_when_not_supplied; synthetic_stock_collision_tests_remain_mandatory",
+  "implementation_commit": "4a6810234abf33773fb8efbeb7293ddcb21c17c6",
+  "published_helper_content_exact_match": true,
+  "pr": 99,
+  "pr_url": "https://github.com/cauf1l3d/ustarlms/pull/99",
+  "remote_context_run": 38175465744,
+  "remote_review_run": 38175465742,
+  "remote_r16_steps_php82_php83": "success",
+  "full_review_gate_pass": false,
+  "remote_source_php82": "success",
+  "remote_source_php83": "success"
 }

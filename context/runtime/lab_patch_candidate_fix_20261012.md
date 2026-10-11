@@ -17,8 +17,13 @@ extraction предыдущего helper не проверила совмеще�
 
 [Helper](../../scripts/infra/lab_patch_candidate.py), SHA256:
 `bb71ddd01566341d506a560628453bdcec045de89af7f4a80774a205f2f059c2`.
-Exact implementation — commit этого файла (`git log -1 --format=%H -- scripts/infra/lab_patch_candidate.py`);
-оператору даётся immutable raw URL и этот SHA. Branch
+Exact implementation: `4a6810234abf33773fb8efbeb7293ddcb21c17c6`; published helper
+content fetched at this SHA exactly matches the tested local bytes.
+[PR99](https://github.com/cauf1l3d/ustarlms/pull/99) draft создан после owner email verification;
+[Context50](https://github.com/cauf1l3d/ustarlms/actions/runs/38175465744) и
+[Review486](https://github.com/cauf1l3d/ustarlms/actions/runs/38175465742) Context completed success; Review: frontend audit failure, source PHP8.2/8.3 completed success;
+rollback/moodle-db/prepare-rc/gate skipped. Full gate is not PASS, no merge.
+Frontend/application code unchanged; audit threshold is not weakened. Оператору даётся immutable raw URL и SHA. Branch
 `codex/lab-patch-candidate-20261011`, main basec53723c8d669a1013c518f34abf392143d211d9d.
 
 Stock `code/githash.php` остаётся byte-identical официальному пакету. Legacy

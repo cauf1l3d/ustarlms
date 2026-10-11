@@ -1,0 +1,28 @@
+{
+  "received_date": "2026-10-11",
+  "origin": "four_owner_attachments",
+  "preserved_byte_for_byte": true,
+  "status": "strategy_proposals_not_runtime_evidence_or_approved_ADR",
+  "files": [
+    {
+      "filename": "00_executive_summary.md",
+      "bytes": 20488,
+      "sha256": "a65404b6efd9db30e0562f031fa1f9ee4a23971dc053ad0c82059b5ab6e7e825"
+    },
+    {
+      "filename": "01_market_analysis.md",
+      "bytes": 39020,
+      "sha256": "b0a9db2387572f261692721d79d6a1bbe7b693d85c19478da8d6d9b425a79703"
+    },
+    {
+      "filename": "02_product_strategy.md",
+      "bytes": 52280,
+      "sha256": "8a74147048c5853d92049ece10acfeb72ceb7ea63e1da208c254f088a1afd759"
+    },
+    {
+      "filename": "03_infra_production_strategy.md",
+      "bytes": 48974,
+      "sha256": "5ce985aa140f1e7999277bdccb76fb7a2b3982a7ac782f0a64fe7c2198de48c6"
+    }
+  ]
+}

@@ -332,3 +332,27 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+
+## 2026-10-11 — стратегии импортированы; owner GPT relocation PASS
+
+Изучен shared dialogue до final PR96 и текущий main с PR97. Владелец прислал
+результат операции started14:40:15UTC: nine copy checks OK, raw pre/post GPT
+CRC/entry array/boot/kernel geometry PASS, native verify без проблем,
+GPT_RELOCATED=PASS; ROOT_PARTITION_SIZE_UNCHANGED=PASS. Root df49G/37used/11free/78%,
+sda2 start4096/size104851456 sectors. Finish timestamp не напечатан.
+[Evidence](../runtime/ssd_gpt_relocate_result_20261011.json),
+[продолжение](../runtime/storage_continuation_20261011.md).
+
+Четыре owner strategy attachments сохранены без изменения bytes; receipt hashes
+и reconciliation показывают дату2025/источники2026, противоречие storage-first,
+непроверенные коммерческие/правовые/конкурентные выводы. Вложения не принимают
+новый ADR/очередь. STATE/ACTIVE/BACKLOG/entrypoints/index обновлены; audit05Oct
+и dated JSON сохранены. Full audit06Oct дополнен только ссылкой на новый execution
+result. Source приложения, frontend, infra helpers, workflow/harness не изменены.
+
+Следующий operator step: pinned scheduler --status и growpart -N, без partition
+write/backup capture/install/recovery. Server dry-run, scheduled acceptance, root
+growth, full-addon stage/paired rollback/production patch/OS/HTTPS ещё впереди.
+Новых серверных операций агент не выполнял. Проверки и точный implementation SHA
+для этого docs-only выпуска фиксируются в GitHub PR; CI не является server acceptance.

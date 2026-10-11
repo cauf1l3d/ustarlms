@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "source": "owner_terminal_output_supplied_20261011",
+  "independently_measured_by_agent": false,
+  "operation_started_utc": "2026-10-11T14:40:15Z",
+  "operation_finished_utc": null,
+  "ssd": {
+    "path": "/dev/sda",
+    "serial": "2203JPDG120GB6000933",
+    "bytes": 120034123776,
+    "logical_sector_bytes": 512,
+    "gpt_uuid": "074edcd7-fe7c-4674-9865-6425931232d7"
+  },
+  "root": {
+    "path": "/dev/sda2",
+    "fs_uuid": "fb5cc206-93f8-4601-a415-8d418970cf31",
+    "partuuid": "e32f3b41-9dde-4d67-8c64-57540c2518cb",
+    "start_sectors": 4096,
+    "size_sectors": 104851456,
+    "bytes": 53683945472,
+    "partition_size_unchanged": true,
+    "filesystem_growth_executed": false,
+    "df_rounded": {
+      "total": "49G",
+      "used": "37G",
+      "available": "11G",
+      "use_percent": 78
+    }
+  },
+  "bios_boot": {
+    "path": "/dev/sda1",
+    "start_sectors": 2048,
+    "size_sectors": 2048,
+    "partuuid": "4b6f77ed-4dce-4b46-9a59-f05ce93d11bc",
+    "unchanged": true
+  },
+  "recovery_copy": {
+    "directory": "/srv/ustar-storage/ssd-layout-20261006-06NYpg",
+    "payload_checksum_checks": 9,
+    "payload_checksum_results": "all_OK",
+    "payload_hash_values": "not_printed"
+  },
+  "gpt": {
+    "before_usable_end": 104857566,
+    "after_usable_end": 234441614,
+    "after_secondary_header_lba": 234441647,
+    "raw_header_and_table_crc": "PASS",
+    "entry_array_and_boot_bytes_preserved": "PASS_by_completed_guarded_command",
+    "native_verify": "No problems found",
+    "kernel_partition_geometry": "PASS_unchanged",
+    "kernel_reread_warning_printed": true,
+    "free_sectors_total_reported": 129588077,
+    "largest_free_segment_sectors_reported": 129586063
+  },
+  "result": "GPT_RELOCATED=PASS; ROOT_PARTITION_SIZE_UNCHANGED=PASS",
+  "not_verified": [
+    "partition_growth",
+    "ext4_growth",
+    "growpart_dry_run",
+    "scheduled_HDD_backup_results_after_20261007",
+    "fresh_HDD_archive_independent_copy_and_restore",
+    "mount_after_reboot",
+    "full_shared_host_boot_and_service_restore",
+    "post_operation_shared_service_smoke"
+  ],
+  "next_operator_step": "read_only_backup_status_and_partition_growth_dry_run",
+  "runbook": "context/runtime/storage_continuation_20261011.md"
+}

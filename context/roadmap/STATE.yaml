@@ -1,16 +1,13 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner GPT copy received06Oct09:06:01UTC: raw PMBR/GPT/BIOS boot and native table
-  copy saved on mounted HDD in ssd-layout-20261006-06NYpg, nine hash checks OK and
-  GPT_COPY_READBACK=PASS. Sysadmin console access confirmed09:03:36UTC; rescue medium and
-  actual boot recovery not separately verified. First GPT relocation command prepared:
-  raw pre/post header/table CRC, exact partition array and boot-byte preservation guards;
-  17 regular sparse-file fixtures PASS, native sgdisk not executed locally. Server GPT write,
-  root growth, source move/deletion and stage preparation remain unexecuted.
-  Timer active/enabled from earlier evidence, first scheduled run07Oct03:30MSK pending.'
+current_activity: 'Owner11Oct GPT relocation PASS at start14:40:15UTC: nine copy hashes OK, raw pre/post CRC and
+  unchanged partition/boot checks PASS; sgdisk verify no problems. Root partition/ext4 not grown: sda2 start4096
+  size104851456 sectors; df49G/37Gused/11Gavailable/78percent. Next: actual growpart dry-run and fresh installed
+  HDD scheduler status, then separate guarded partition growth/kernel size check/ext4 resize. PR97 current full
+  audit and four strategy attachments reconciled; no new application or server action by agent.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -170,6 +167,7 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/storage_continuation_20261011.md
 - START_HERE.md
 - context/CONTEXT_INDEX.md
 - context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
@@ -185,6 +183,7 @@ next_agent_read:
 - context/runtime/patch_runtime_20261005.md
 - context/runtime/lab_patch_preflight_20261005.md
 - context/runtime/server_map_20261006.md
+- context/strategy/20261011/README.md
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 execution:
   status: authorized_selected_tasks_in_progress
@@ -218,7 +217,7 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: storage_GPT_copy_and_HDD_trial_timer_confirmed_GPT_write_root_growth_first_scheduled_and_prod_patch_pending
+  status_summary: GPT_relocation_owner11Oct_PASS_root_growth_scheduled_backup_acceptance_stage_prod_patch_OS_HTTPS_pending
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
@@ -233,6 +232,7 @@ audit:
     production_postgresql: '16.15'
     major_migration_executed: false
     source: https://moodledev.io/general/releases/5.3
+  latest_execution_addendum: context/runtime/storage_continuation_20261011.md
 patch_candidate:
   tag: v5.1.8
   commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
@@ -283,8 +283,8 @@ storage_reorganization:
   ssd_model: WALRAM 120GB
   ssd_gib_rounded: 111.8
   root_partition_gib_rounded: 50
-  root_filesystem_df: 49G total /36G used /11G available /78%
-  unallocated_tail: 61.79GiB_confirmed_sector_extents_GPT_repair_and_growth_pending
+  root_filesystem_df: 49G total /37G used /11G available /78% (owner11Oct operation output)
+  unallocated_tail: about61.8GiB_GPT_relocated_root_partition_and_ext4_growth_pending
   home_aduk_gib_rounded: 15
   home_snapshot_candidates_gib_approx: 13.1
   hdd_gib_rounded: 465.8
@@ -294,15 +294,15 @@ storage_reorganization:
   partition_or_filesystem_expansion_executed: false
   automatic_backup_installed: true
   next_readonly_evidence:
-  - first_HDD_scheduled_run_after_20261007T003000Z
-  - owner_post_write_GPT_CRC_layout_and_unchanged_partition_results
+  - fresh_installed_HDD_scheduler_status_after_20261007
+  - actual_growpart_dry_run_and_current_GPT_kernel_geometry
   - independent_copy_and_restore_of_fresh_HDD_archive
-  fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
+  fresh_server_inventory_received: 2026-10-06 00:13:00+03:00
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
-  ssd_gpt_backup_boundary_warning: 'PMBR 104857599 != disk 234441647; no write performed'
-  ssd_sda1: '2048-4095 BIOS boot'
-  ssd_sda2: '4096-104855551 ext4 root'
-  ssd_free_tail_sectors: 129586062
+  ssd_gpt_backup_boundary_warning: historical06Oct_warning_resolved_by_owner11Oct_relocation_PASS
+  ssd_sda1: 2048-4095 BIOS boot
+  ssd_sda2: 4096-104855551 ext4 root
+  ssd_free_tail_sectors: 129586063
   ssd_free_tail_gib: 61.79
   hdd_initializer_published: true
   hdd_initializer_execution: FILESYSTEM_READY_owner_output
@@ -385,7 +385,7 @@ storage_reorganization:
   partition_table_copy_capture_timestamp: stored_privately_not_printed
   ssd_gpt_relocate_runbook: context/runtime/ssd_gpt_relocate_20261006.md
   ssd_gpt_relocate_command_prepared: true
-  ssd_gpt_relocate_command_server_executed: false
+  ssd_gpt_relocate_command_server_executed: true
   ssd_gpt_relocate_local_validation: Bash_Python_syntax_and_17_regular_sparse_file_guard_scenarios_PASS_native_sgdisk_not_executed
   ssd_smart_overall_health: PASSED_owner_H_A_only
   ssd_vendor_specific_smart_raw_decode_verified: false
@@ -397,3 +397,14 @@ storage_reorganization:
   rescue_boot_medium_identified: false
   actual_host_boot_recovery_tested: false
   binary_partition_table_recovery_copy_confirmed: true
+  ssd_gpt_relocate_result: context/runtime/ssd_gpt_relocate_result_20261011.json
+  ssd_gpt_relocate_started_utc: '2026-10-11T14:40:15Z'
+  ssd_gpt_relocate_finished_utc: null
+  ssd_gpt_usable_end: 234441614
+  next_operator_runbook: context/runtime/storage_continuation_20261011.md
+  root_partition_growth_dry_run_verified: false
+strategy_documents:
+  received_date: '2026-10-11'
+  index: context/strategy/20261011/README.md
+  status: proposals_imported_original_bytes_not_new_execution_priority
+  priorities_unchanged: true

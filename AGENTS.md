@@ -18,4 +18,4 @@ DOC-02 завершён PR78. Владелец дал следующую ком�
 
 Каждая поставка содержит точный implementation SHA, реально выполненные проверки и отдельный deployment status. Обновлять STATE/ACTIVE/BACKLOG/SESSION_LOG и generated code map при изменении исходников. Документация не является причиной повторно запрашивать уже данное пользователем разрешение.
 
-SSD boot/GPT copy owner06Oct09:06UTC [PASS](context/runtime/ssd_partition_table_copy_result_20261006.json), console access сисадмина подтверждён. Следующий шаг — [GPT relocation only](context/runtime/ssd_gpt_relocate_20261006.md); server write/root growth pending. Copy и console question не повторять; actual rescue medium/boot test не приписывать. First scheduled HDD run07Oct03:30MSK проверяется отдельно и не блокирует этот storage шаг.
+**Обновление 11.10:** [перенос GPT выполнен владельцем, root ещё прежний](context/runtime/storage_continuation_20261011.md). Следующий шаг — actual dry-run роста sda2 и свежий HDD backup status. Установку и перенос GPT не повторять. [Четыре стратегических вложения](context/strategy/20261011/README.md) сохранены как предложения; текущая очередь не изменена.

@@ -1,6 +1,6 @@
 # Runtime и эксплуатация
 
-Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.
+Последний storage checkpoint: [owner11Oct GPT relocation PASS](storage_continuation_20261011.md), raw CRC/boot/partition/kernel checks PASS; root partition/ext4 ещё прежние. Следующий actual growpart dry-run и fresh HDD scheduler status. Предыдущая relocation команда уже выполнена; не повторять. Ниже сохраняются датированные свидетельства 05–06.10.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 

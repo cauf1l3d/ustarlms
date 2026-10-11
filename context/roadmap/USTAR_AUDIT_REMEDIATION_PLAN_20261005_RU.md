@@ -1,6 +1,6 @@
 # Полный пошаговый план устранения вопросов аудита USTAR
 
-**Точка продолжения 11.10:** [owner GPT relocation PASS; root growth ещё впереди](../runtime/storage_continuation_20261011.md). Следующий actual growth dry-run и fresh backup status. Четыре стратегических вложения импортированы как предложения и не заменяют приоритет владельца. Более ранние execution-статусы ниже читать с этим дополнением.
+**Точка продолжения 11.10:** [owner GPT relocation PASS; root growth ещё впереди](../runtime/storage_continuation_20261011.md). Owner11Oct scheduled backup complete/success/exited0, marker=false, timer active/enabled; actual dry-run size234437519/end234441614 PASS. Следующий guarded growth только sda2, raw/kernel check, затем отдельно ext4. Четыре стратегических вложения импортированы как предложения и не заменяют приоритет владельца. Более ранние execution-статусы ниже читать с этим дополнением.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 

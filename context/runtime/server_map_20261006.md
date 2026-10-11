@@ -143,3 +143,6 @@ Existing `/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py`, SHA0d31e694db8bee23090
 4. Проверить первый scheduled backup и boot recovery; дополнить карту путей/UUID/schedules/recovery procedure по новым результатам. Затем пересчитать budget и вернуться к стенду/Moodle/OS/HTTPS.
 
 Owner authorization покрывает этот storage/map/automatic-backup проход. Production DB hardening, массовая очистка Docker, продуктовые изменения и удаление истории не добавлены в scope. HDD GPT/ext4/mount/fstab и копирование прежнего архива **выполнены владельцем**. Producer install/check/fresh trial и timer installation/status подтверждены; source deletion, SSD expansion, boot mount/recovery verification и first scheduled run ещё без execution evidence.
+
+
+**Дополнение11Oct — scheduled/dry-run:** [owner evidence](ssd_growth_preflight_result_20261011.json): latest11Oct backup complete/success/exited0, marker=false, timer active/enabled; growpart dry-run size234437519/end234441614. [Следующий guarded partition-only шаг](storage_continuation_20261011.md), ext4 отдельно после raw/kernel PASS. Server root growth ещё не выполнен.

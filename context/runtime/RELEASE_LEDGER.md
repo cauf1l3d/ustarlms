@@ -356,3 +356,23 @@ write/backup capture/install/recovery. Server dry-run, scheduled acceptance, roo
 growth, full-addon stage/paired rollback/production patch/OS/HTTPS ещё впереди.
 Новых серверных операций агент не выполнял. Проверки и точный implementation SHA
 для этого docs-only выпуска фиксируются в GitHub PR; CI не является server acceptance.
+
+
+## 2026-10-11 — последний scheduled backup и growth dry-run PASS; partition-only команда
+
+Owner прислал scheduler --status: последний11Oct00:30:00.847420..00:31:44.442026UTC
+complete/success/exited0, last backup success00:31:43.444339UTC, marker=false;
+timer active/enabled/next12Oct00:30UTC. Это один latest run, не история07–10Oct
+и не fresh restore. Actual growpart -N: start4096, old size104851456/end104855551,
+new size234437519/end234441614; GUID/sda1/root start/type/PARTUUID прежние.
+[Evidence](../runtime/ssd_growth_preflight_result_20261011.json),
+[операторская команда](../runtime/storage_continuation_20261011.md).
+
+Подготовлен только growpart с identity/raw pre/post/boot/CRC/kernel/unchanged ext4
+guards; текущая relocated таблица сначала сохраняется и читается обратно на HDD.
+Native growpart disk lock не вложен во внешний disk flock; отдельный operator
+lockfile держится на весь шаг. Exact syntax/quoting и15 sparse-file guard scenarios
+PASS, native growpart локально не выполнялся. Server partition/ext4 growth pending.
+Новых production операций агент не делал. Application/frontend/helpers/workflows
+не изменены; PR98 остаётся открытым, известный frontend npm audit failure предыдущего
+head3a3a13c13e9042f8bdc48bec04de78acb0d5ef73 не обходится и не исправляется этим docs шагом.

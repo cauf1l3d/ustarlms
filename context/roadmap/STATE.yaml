@@ -3,11 +3,7 @@ updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner11Oct GPT relocation PASS at start14:40:15UTC: nine copy hashes OK, raw pre/post CRC and
-  unchanged partition/boot checks PASS; sgdisk verify no problems. Root partition/ext4 not grown: sda2 start4096
-  size104851456 sectors; df49G/37Gused/11Gavailable/78percent. Next: actual growpart dry-run and fresh installed
-  HDD scheduler status, then separate guarded partition growth/kernel size check/ext4 resize. PR97 current full
-  audit and four strategy attachments reconciled; no new application or server action by agent.'
+current_activity: 'Owner11Oct GPT relocation PASS; latest scheduled backup11Oct0030UTC complete/success/exited0, marker=false, timer active/enabled. Actual growpart dry-run PASS: sda2 start4096, proposed size234437519/end234441614; disk GUID/sda1/root start/type/PARTUUID unchanged. Root partition/ext4 still old. Next guarded partition-only growth/raw and kernel checks, then separate ext4. No server action by agent.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -54,7 +50,7 @@ production:
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
   cron: v3_one_worker_owner_success_20261005T102403Z
-  regular_backup: timer_installed_active_enabled_first_scheduled_run_pending
+  regular_backup: timer_active_enabled_latest_scheduled_20261011_complete_success_exit0_owner_status
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
   last_core_comparison:
@@ -217,7 +213,7 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: GPT_relocation_owner11Oct_PASS_root_growth_scheduled_backup_acceptance_stage_prod_patch_OS_HTTPS_pending
+  status_summary: GPT_relocation_latest_scheduled11Oct_and_dry_run_PASS_partition_ext4_stage_patch_OS_HTTPS_pending
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
@@ -294,8 +290,6 @@ storage_reorganization:
   partition_or_filesystem_expansion_executed: false
   automatic_backup_installed: true
   next_readonly_evidence:
-  - fresh_installed_HDD_scheduler_status_after_20261007
-  - actual_growpart_dry_run_and_current_GPT_kernel_geometry
   - independent_copy_and_restore_of_fresh_HDD_archive
   fresh_server_inventory_received: 2026-10-06 00:13:00+03:00
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
@@ -335,7 +329,7 @@ storage_reorganization:
   hdd_fresh_backup_trial_executed: true
   hdd_fresh_backup_trial: context/runtime/hdd_backup_trial_20261006.json
   hdd_trial_owner_output_received_at: '2026-10-06T01:16:21Z'
-  hdd_backup_timer: installed_active_enabled_first_scheduled_run_pending
+  hdd_backup_timer: active_enabled_latest_scheduled_20261011_complete_success_exit0
   hdd_schedule_source: scripts/infra/hdd_backup_schedule.py
   hdd_schedule_source_sha256: 54533f6a629699e031a877b4a57f68401477a61cf20cab39512c79a2e0477b7d
   hdd_schedule_contract: context/runtime/hdd_backup_schedule_20261006.md
@@ -343,7 +337,7 @@ storage_reorganization:
   hdd_schedule_initial_policy: owner_activated_daily_0330_Europe_Moscow_no_catchup_no_archive_deletion_100GiB_quota
   hdd_schedule_policy_owner_activation: PASS_owner_operator_install_command_20261006_received080224Z
   hdd_archive_retention_deletion: not_enabled
-  hdd_schedule_server_execution: install_status_PASS_first_scheduled_run_unverified
+  hdd_schedule_server_execution: install_and_latest_scheduled_20261011_complete_success_exit0_owner_status
   hdd_schedule_source_pr: 92
   hdd_schedule_implementation_commit: 7501440b476bf720658f5bf039efc3e4f1237d9c
   hdd_schedule_merged_main_commit: 040c671236cb4d7f4a225700bd288ced7e6f14f3
@@ -353,8 +347,16 @@ storage_reorganization:
   hdd_schedule_owner_message_received_at: '2026-10-06T08:02:24Z'
   hdd_schedule_timer_active: true
   hdd_schedule_timer_enabled: true
-  hdd_schedule_next_event_utc: '2026-10-07T00:30:00Z'
-  hdd_schedule_last_scheduled_run: null
+  hdd_schedule_next_event_utc: '2026-10-12T00:30:00Z'
+  hdd_schedule_last_scheduled_run:
+    started_utc: '2026-10-11T00:30:00.847420+00:00'
+    finished_utc: '2026-10-11T00:31:44.442026+00:00'
+    phase: complete
+    success: true
+    exit_status: '0'
+    source: context/runtime/ssd_growth_preflight_result_20261011.json
+  hdd_schedule_last_backup_success_utc: '2026-10-11T00:31:43.444339+00:00'
+  hdd_schedule_intervening_nights_verified: false
   hdd_schedule_recovery_marker_present: false
   hdd_schedule_boot_recovery_verified: false
   next_ssd_preflight: context/runtime/ssd_storage_preflight_20261006.md
@@ -402,7 +404,13 @@ storage_reorganization:
   ssd_gpt_relocate_finished_utc: null
   ssd_gpt_usable_end: 234441614
   next_operator_runbook: context/runtime/storage_continuation_20261011.md
-  root_partition_growth_dry_run_verified: false
+  root_partition_growth_dry_run_verified: true
+  root_partition_growth_preflight: context/runtime/ssd_growth_preflight_result_20261011.json
+  root_partition_growth_proposed_size_sectors: 234437519
+  root_partition_growth_proposed_end_sector: 234441614
+  root_partition_growth_command_prepared: true
+  root_partition_growth_command_server_executed: false
+  root_partition_growth_local_validation: Bash_Python_exact_quoting_and_15_sparse_file_raw_guard_scenarios_PASS_native_growpart_not_executed
 strategy_documents:
   received_date: '2026-10-11'
   index: context/strategy/20261011/README.md

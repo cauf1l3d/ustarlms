@@ -214,6 +214,7 @@ snap-confine include, но свежий вывод не доказывает tim
 
 Ниже сохранены уже выполненные diagnostic commands. Next — fresh PR87 `--check`
 с actual source/space/inodes/memory/port guards, затем отдельный checkpoint/workspace.
+[Точные команды установки reviewed helper и fresh --check](lab_stage_check_handoff_20261011.md).
 [Почему кандидат5.1.8 и чем отличается5.3 LTS](moodle_target_rationale_20261011.md).
 
 `sudo -v` отдельно; каждая команда ниже — одна physical line. Это inventory/

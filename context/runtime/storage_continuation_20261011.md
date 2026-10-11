@@ -1,9 +1,10 @@
 # Продолжение хранения после PR96 — 11.10.2026
 
-**Текущая точка:** перенос резервной GPT выполнен владельцем; корневой раздел и
-ext4 пока прежнего размера. Ночной backup11Oct и actual growpart dry-run
-подтверждены. Следующий операторский шаг — увеличить только `/dev/sda2`,
-проверить raw GPT и kernel size; ext4 изменяется отдельно после owner результата.
+**Текущая точка:** перенос GPT и увеличение `/dev/sda2` выполнены владельцем.
+Raw GPT/boot checks и kernel size234437519sectors PASS; ext4 пока прежняя,
+13106432×4096bytes, df49G/37used/11available/78%. Последний scheduled backup11Oct
+успешен. Следующий отдельный шаг — online ext4 resize с новым GPT snapshot и
+проверками UUID/mount/raw metadata, затем df/kernel/shared-service smoke.
 
 Прямого SSH у агента нет. Основание — полный вывод владельца в сообщении
 11.10.2026; время начала операции напечатано `2026-10-11T14:40:15Z`
@@ -81,9 +82,9 @@ active/enabled, следующий12Oct00:30UTC (03:30МСК). Inactive backup o
 успешного завершения ожидаем. Это подтверждает последний запуск11Oct, а не всю
 историю07–10Oct и не восстановление свежего архива. Boot recovery не исполнялся.
 
-## Следующая команда: только увеличение раздела
+## Выполненное увеличение раздела — не повторять
 
-Перед копированием выполнить `sudo -v` отдельно. Следующая команда одной
+Ниже сохранена уже выполненная владельцем команда (started15:21:56UTC). Команда одной
 физической строкой сохраняет **текущую relocated** разметку в новом защищённом
 каталоге HDD `ssd-grow-20261011-XXXXXX`, fsync/hash/source readback до записи.
 Исходную копию06Oct не перезаписывает. Проверяет identity SSD/root/HDD,
@@ -103,7 +104,7 @@ pre/post checks и capture; перед growpart этот disk lock освобо�
 sudo -n timeout 60s flock --exclusive --nonblock /run/lock/ustar-ssd-grow.lock bash -c 'set -euo pipefail; umask 077; test "$(lsblk -dnro SERIAL /dev/sda)" = 2203JPDG120GB6000933 && test "$(blockdev --getsize64 /dev/sda)" = 120034123776 && test "$(blockdev --getss /dev/sda)" = 512 || { echo "STOP: SSD identity"; exit 1; }; test "$(findmnt -nro SOURCE --mountpoint /)" = /dev/sda2 && test "$(findmnt -nro FSTYPE --mountpoint /)" = ext4 && test "$(blkid -p -s UUID -o value /dev/sda2)" = fb5cc206-93f8-4601-a415-8d418970cf31 || { echo "STOP: root identity"; exit 1; }; ustar_uuid=359a2bae-4e79-461a-ab72-1597f605d801; test ! -L /srv/ustar-storage && test "$(findmnt -nro UUID --mountpoint /srv/ustar-storage)" = "$ustar_uuid" && test "$(readlink -f /dev/disk/by-uuid/$ustar_uuid)" = "$(readlink -f /dev/disk/by-id/wwn-0x50014ee200c1ee59-part1)" || { echo "STOP: HDD mount/device"; exit 1; }; cd /srv/ustar-storage; test "$(stat -c %d .)" = "$(stat -Lc %r /dev/disk/by-uuid/$ustar_uuid)" && test "$(stat -c %u:%g:%a .)" = 0:0:700 || { echo "STOP: HDD filesystem/permissions"; exit 1; }; test ! -L ssd-layout-20261006-06NYpg && test "$(stat -c %u:%g:%a ssd-layout-20261006-06NYpg)" = 0:0:700 || { echo "STOP: original backup directory"; exit 1; }; cd ssd-layout-20261006-06NYpg; sha256sum --check --strict SHA256SUMS; exec 8</dev/sda; flock --exclusive --nonblock 8; ustar_check="import os,sys,struct,zlib,uuid; from pathlib import Path; stage=sys.argv[1]; stop=lambda ok,msg: ok or sys.exit(\"STOP: \"+msg); end=234441647; size=104851456 if stage==\"before\" else 234437519; fd=os.open(\"/dev/sda\",os.O_RDONLY); get=lambda off,n: os.pread(fd,n,off); u32=lambda x,o: struct.unpack_from(\"<I\",x,o)[0]; head=Path(\"/srv/ustar-storage/ssd-layout-20261006-06NYpg/raw-lba-0-count-4096.bin\").read_bytes(); stop(len(head)==2097152,\"backup head size\"); stop(get(0,446)==head[:446] and get(17408,2079744)==head[17408:],\"boot bytes differ\"); h=get(512,512); b=get(end*512,512); stop(all(len(x)==512 and x[:8]==b\"EFI PART\" and struct.unpack_from(\"<II\",x,8)==(65536,92) for x in [h,b]),\"GPT headers\"); stop(all(zlib.crc32(x[:16]+bytes(4)+x[20:92])==u32(x,16) for x in [h,b]),\"GPT header CRC\"); stop(struct.unpack_from(\"<QQQQ\",h,24)==(1,end,34,end-33) and struct.unpack_from(\"<QQQQ\",b,24)==(end,1,34,end-33),\"GPT header bounds\"); stop(struct.unpack_from(\"<QII\",h,72)==(2,128,128) and struct.unpack_from(\"<QII\",b,72)==(end-32,128,128),\"GPT table bounds\"); stop(h[56:72]==b[56:72] and str(uuid.UUID(bytes_le=h[56:72]))==\"074edcd7-fe7c-4674-9865-6425931232d7\",\"GPT UUID\"); expected=bytearray(head[1024:17408]); stop(struct.unpack_from(\"<QQ\",expected,32)==(2048,4095) and struct.unpack_from(\"<QQ\",expected,160)==(4096,104855551),\"backup partition bounds\"); stop(str(uuid.UUID(bytes_le=bytes(expected[16:32])))==\"4b6f77ed-4dce-4b46-9a59-f05ce93d11bc\" and str(uuid.UUID(bytes_le=bytes(expected[144:160])))==\"e32f3b41-9dde-4d67-8c64-57540c2518cb\",\"partition UUIDs\"); struct.pack_into(\"<Q\",expected,168,4096+size-1); t=get(1024,16384); stop(t==expected and t==get((end-32)*512,16384) and zlib.crc32(t)==u32(h,88)==u32(b,88),\"partition table or CRC differs\"); m=get(0,512); stop(m[510:]==bytes([85,170]) and m[450]==238 and struct.unpack_from(\"<II\",m,454)==(1,end) and m[462:510]==bytes(48),\"protective MBR\"); stop(int(Path(\"/sys/class/block/sda1/start\").read_text())==2048 and int(Path(\"/sys/class/block/sda1/size\").read_text())==2048 and int(Path(\"/sys/class/block/sda2/start\").read_text())==4096 and int(Path(\"/sys/class/block/sda2/size\").read_text())==size,\"kernel partition geometry\"); s=get(4096*512+1024,1024); stop(len(s)==1024 and struct.unpack_from(\"<H\",s,56)[0]==61267 and u32(s,24)==2 and u32(s,4)+(u32(s,336)<<32)==13106432 and str(uuid.UUID(bytes=s[104:120]))==\"fb5cc206-93f8-4601-a415-8d418970cf31\",\"ext4 size or UUID differs\"); os.close(fd); print(\"PARTITION_CHECK=\"+stage+\"; CRC=PASS; BOOT_BYTES=PASS; KERNEL_SECTORS=\"+str(size)+\"; EXT4_SIZE_UNCHANGED=PASS\",flush=True)"; python3 -c "$ustar_check" before; ustar_copy=$(mktemp -d /srv/ustar-storage/ssd-grow-20261011-XXXXXX); cd "$ustar_copy"; dd if=/dev/sda of=raw-lba-0-count-4096.bin bs=512 count=4096 conv=fsync status=none; dd if=/dev/sda of=raw-lba-234439600-count-2048.bin bs=512 skip=234439600 count=2048 conv=fsync status=none; sgdisk --backup=sgdisk.bin /dev/sda; sfdisk --dump /dev/sda > layout.sfdisk; LC_ALL=C dumpe2fs -h /dev/sda2 > ext4-header.txt 2>/dev/null; date -u +%FT%TZ > captured-utc.txt; sha256sum raw-lba-*.bin sgdisk.bin layout.sfdisk ext4-header.txt captured-utc.txt > SHA256SUMS; sync -f .; sha256sum --check --strict SHA256SUMS; cmp -n 2097152 raw-lba-0-count-4096.bin /dev/sda; dd if=/dev/sda bs=512 skip=234439600 count=2048 status=none | cmp raw-lba-234439600-count-2048.bin -; printf "PRE_GROW_COPY=PASS; DIRECTORY=%s\n" "$ustar_copy"; flock --unlock 8; printf "PARTITION_GROW_START=%s\n" "$(date -u +%FT%TZ)"; growpart --update=on /dev/sda 2; flock --exclusive --nonblock 8; python3 -c "$ustar_check" after; test "$(blockdev --getsize64 /dev/sda2)" = 120032009728 && test "$(blkid -p -s UUID -o value /dev/sda2)" = fb5cc206-93f8-4601-a415-8d418970cf31; sgdisk --pretend --verify /dev/sda; sfdisk --dump /dev/sda; df -hT /; printf "PARTITION_GROWN=PASS; KERNEL_SIZE=PASS; EXT4_NOT_RESIZED=YES\n"'
 ```
 
-Ожидаемый конечный marker: `PARTITION_GROWN=PASS; KERNEL_SIZE=PASS;
+Полученный конечный marker: `PARTITION_GROWN=PASS; KERNEL_SIZE=PASS;
 EXT4_NOT_RESIZED=YES`. Новый partition размер120032009728bytes (~111,8GiB),
 добавлено129586063sectors (~61,8GiB). `df /` на этом этапе остаётся прежним:
 растёт block device, ext4 ещё не увеличивается.
@@ -117,14 +118,56 @@ EXT4_NOT_RESIZED=YES`. Новый partition размер120032009728bytes (~111,
 Local: Bash/Python syntax, exact Bash→Python quoting и15 sparse regular-file
 raw-guard сценариев PASS: before/after и отказы при boot/BIOS bytes, CRC,
 ext4 size/UUID, kernel size, изменённом entry array с валидными CRC и прежнем
-размере. Native growpart агентом не исполнялся; server partition growth ещё pending.
+размере. Native growpart агентом не исполнялся; владелец предоставил успешный server результат ниже.
 
-## После owner PARTITION_GROWN=PASS
+## Owner результат роста раздела — 15:21:56UTC / 18:21:56МСК
 
-1. Отдельно подготовить online ext4 resize с проверкой нового device size,
-   FS UUID и mount/quota settings; измерить df и ошибки ядра. До actual результата
-   не объявлять filesystem выросшей. После роста FS старая меньшая partition table
-   уже не является безопасным откатом.
+[Точный результат](ssd_partition_grow_result_20261011.json): nine original иsix
+новых copy checksum checks OK; pre/post raw CRC и boot bytes PASS. Actual
+growpart `CHANGED`: start4096, size104851456→234437519, end104855551→234441614.
+Kernel size234437519; ext4 unchanged. Native verify «No problems found», remaining
+free2014sectors (1007KiB в промежутке до sda1). `df /`49G прежний — это ожидаемо.
+Finish timestamp не напечатан. Новая pre-growth копия на HDD:
+`/srv/ustar-storage/ssd-grow-20261011-AiJI89`; она содержит старый меньший раздел.
+
+В native verify есть caution про end alignment2048sectors и некоторые encryption
+tools. По [объяснению автора GPT fdisk](https://www.rodsbooks.com/gdisk/walkthrough.html)
+end alignment важен для LUKS encryption block size. По фактическому mount/UUID/
+raw superblock корень здесь обычная ext4 на `/dev/sda2`, не crypto mapper; вывод
+о неприменимости encryption-specific caution к текущему resize — интерпретация
+этого установленного layout. Начало4096 сохранено; GPT CRC и native verify PASS.
+Повторной правки границ ради caution в текущем ext4 шаге нет.
+
+## Следующая команда: online ext4 resize
+
+`sudo -v` отдельно, затем строка ниже. По [Ubuntu Noble resize2fs manual](https://manpages.ubuntu.com/manpages/noble/man8/resize2fs.8.html)
+mounted ext4 можно увеличивать online при поддержке ядра; без size используется
+размер раздела. Здесь kernel6.8 и ext4, новый размер partition уже проверен.
+Команда проверяет exact SSD/root/kernel identity и старый block count, сохраняет
+**уже выросшую GPT** в новом HDD0700 каталоге и проверяет hashes/source readback.
+Затем `resize2fs /dev/sda2`, syncfs и raw superblock проверки. Ожидается
+29304689×4096=120032006144bytes;3584 trailing partition bytes не составляют целый
+ext4 block. Не приписывать этот expected size серверу до actual результата.
+Mount options/UUID и raw primary/secondary GPT сравниваются до/после; df/kernel
+messages выводятся отдельно. Marker говорит о size/identity, не о full service QA.
+
+Внешнего `timeout` на изменяющий resize нет: wrapper не обрывает online growth
+по произвольному короткому сроку. Отдельный operator lockfile не конфликтует с
+disk lock. При failure не повторять resize/не восстанавливать старую разметку;
+сначала передать full output и определить actual состояние. Старые GPT copies
+06Oct иAiJI89 после роста ext4 не являются безопасной таблицей для rollback.
+
+```bash
+sudo -n flock --exclusive --nonblock /run/lock/ustar-ssd-grow.lock bash -c 'set -euo pipefail; umask 077; test "$(lsblk -dnro SERIAL /dev/sda)" = 2203JPDG120GB6000933 && test "$(blockdev --getsize64 /dev/sda)" = 120034123776 && test "$(blockdev --getss /dev/sda)" = 512 || { echo "STOP: SSD identity"; exit 1; }; test "$(findmnt -nro SOURCE --mountpoint /)" = /dev/sda2 && test "$(findmnt -nro FSTYPE --mountpoint /)" = ext4 && test "$(blkid -p -s UUID -o value /dev/sda2)" = fb5cc206-93f8-4601-a415-8d418970cf31 || { echo "STOP: root identity"; exit 1; }; test "$(cat /sys/class/block/sda2/start)" = 4096 && test "$(cat /sys/class/block/sda2/size)" = 234437519 && test "$(blockdev --getsize64 /dev/sda2)" = 120032009728 || { echo "STOP: kernel partition size"; exit 1; }; ustar_options=$(findmnt -nro OPTIONS --mountpoint /); case ",$ustar_options," in *,rw,*) ;; *) echo "STOP: root is not writable"; exit 1;; esac; ustar_check="import os,sys,struct,uuid; stage=sys.argv[1]; stop=lambda ok,msg: ok or sys.exit(\"STOP: \"+msg); fd=os.open(\"/dev/sda2\",os.O_RDONLY); s=os.pread(fd,1024,1024); os.close(fd); u32=lambda off: struct.unpack_from(\"<I\",s,off)[0]; stop(len(s)==1024 and struct.unpack_from(\"<H\",s,56)[0]==61267 and u32(24)==2,\"ext4 header/block size\"); stop(str(uuid.UUID(bytes=s[104:120]))==\"fb5cc206-93f8-4601-a415-8d418970cf31\",\"ext4 UUID\"); blocks=u32(4)+(u32(336)<<32); stop(blocks==(13106432 if stage==\"before\" else 29304689),\"unexpected ext4 block count: \"+str(blocks)); print(\"EXT4_CHECK=\"+stage+\"; BLOCKS=\"+str(blocks)+\"; BLOCK_SIZE=4096; UUID=PASS\",flush=True)"; python3 -c "$ustar_check" before; ustar_uuid=359a2bae-4e79-461a-ab72-1597f605d801; test ! -L /srv/ustar-storage && test "$(findmnt -nro UUID --mountpoint /srv/ustar-storage)" = "$ustar_uuid" && test "$(readlink -f /dev/disk/by-uuid/$ustar_uuid)" = "$(readlink -f /dev/disk/by-id/wwn-0x50014ee200c1ee59-part1)" || { echo "STOP: HDD mount/device"; exit 1; }; cd /srv/ustar-storage; test "$(stat -c %d .)" = "$(stat -Lc %r /dev/disk/by-uuid/$ustar_uuid)" && test "$(stat -c %u:%g:%a .)" = 0:0:700 || { echo "STOP: HDD filesystem/permissions"; exit 1; }; ustar_copy=$(mktemp -d /srv/ustar-storage/ssd-ext4-20261011-XXXXXX); cd "$ustar_copy"; dd if=/dev/sda of=raw-lba-0-count-34.bin bs=512 count=34 conv=fsync status=none; dd if=/dev/sda of=raw-lba-234441615-count-33.bin bs=512 skip=234441615 count=33 conv=fsync status=none; sgdisk --backup=sgdisk-grown.bin /dev/sda; sfdisk --dump /dev/sda > layout-grown.sfdisk; LC_ALL=C dumpe2fs -h /dev/sda2 > ext4-before.txt 2>/dev/null; printf "%s\n" "$ustar_options" > root-mount-options.txt; date -u +%FT%TZ > captured-utc.txt; sha256sum raw-lba-*.bin sgdisk-grown.bin layout-grown.sfdisk ext4-before.txt root-mount-options.txt captured-utc.txt > SHA256SUMS; sync -f .; sha256sum --check --strict SHA256SUMS; cmp -n 17408 raw-lba-0-count-34.bin /dev/sda; dd if=/dev/sda bs=512 skip=234441615 count=33 status=none | cmp raw-lba-234441615-count-33.bin -; printf "GROWN_GPT_COPY=PASS; DIRECTORY=%s\n" "$ustar_copy"; ustar_started=$(date -u +%FT%TZ); printf "EXT4_RESIZE_START=%s\n" "$ustar_started"; resize2fs /dev/sda2; sync -f /; python3 -c "$ustar_check" after; test "$(findmnt -nro SOURCE --mountpoint /)" = /dev/sda2 && test "$(findmnt -nro FSTYPE --mountpoint /)" = ext4 && test "$(blkid -p -s UUID -o value /dev/sda2)" = fb5cc206-93f8-4601-a415-8d418970cf31 && test "$(findmnt -nro OPTIONS --mountpoint /)" = "$ustar_options" || { echo "STOP: mount/UUID changed"; exit 1; }; cmp -n 17408 raw-lba-0-count-34.bin /dev/sda; dd if=/dev/sda bs=512 skip=234441615 count=33 status=none | cmp raw-lba-234441615-count-33.bin -; test "$(blockdev --getsize64 /dev/sda2)" = 120032009728; findmnt -no SOURCE,FSTYPE,OPTIONS --mountpoint /; df -hT /; df -B1 --output=source,fstype,size,used,avail,pcent,target /; journalctl -k --since "$ustar_started" --no-pager -o short-iso; printf "EXT4_RESIZED=PASS; UUID_MOUNT_GPT_UNCHANGED=PASS; FINISHED=%s\n" "$(date -u +%FT%TZ)"'
+```
+
+Local syntax/quoting и11 regular-file ext4 guard cases PASS; native online resize
+агентом не исполнялся. Утилита не запускает e2fsck на mounted `/`, не меняет quotas,
+не останавливает services, не перезагружает хост и не очищает источники/лаборатории.
+
+## После owner EXT4_RESIZED=PASS
+
+1. Оценить actual df и kernel messages, сохранить UUID/mount settings в evidence.
 2. Проверить Academy login/files/SCORM/cron, production/lab containers и нужные
    Apache/mail/DNS/ISPConfig/MariaDB службы. Корень общий: дополнительное место
    доступно всем путям на `/`; автоматического переноса данных на HDD нет.
@@ -132,9 +175,9 @@ ext4 size/UUID, kernel size, изменённом entry array с валидны�
    full-addon upgrade/repeat/paired rollback для patch5.1.8, затем production
    patch, Ubuntu maintenance/reboot и HTTPS в согласованном порядке.
 
-Перенос GPT, initializer, fstab, producer trial и scheduler install не повторять.
-Источники и лаборатории не удалялись. Fresh independent archive/restore,
-HDD residual SMART198=1, reboot-mount и full shared-host recovery остаются открытыми.
+Перенос GPT/partition growth, initializer, fstab, producer trial и scheduler install
+не повторять. Источники и лаборатории не удалялись. Fresh independent archive/
+restore, HDD residual SMART198=1, reboot-mount и full shared-host recovery открыты.
 
 ## Остаток полного аудита
 

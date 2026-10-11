@@ -14,3 +14,6 @@ Owner planning20:44:34UTC PR86 PASS:526 USTAR hashes/57 addon metadata; [точ�
 
 
 **Дополнение11Oct — scheduled/dry-run:** [owner evidence](ssd_growth_preflight_result_20261011.json): latest11Oct backup complete/success/exited0, marker=false, timer active/enabled; growpart dry-run size234437519/end234441614. [Следующий guarded partition-only шаг](storage_continuation_20261011.md), ext4 отдельно после raw/kernel PASS. Server root growth ещё не выполнен.
+
+
+**Последний owner checkpoint11Oct15:21:56UTC:** [partition growth PASS](ssd_partition_grow_result_20261011.json), root partition120032009728bytes/kernel234437519sectors, raw CRC/boot PASS. Ext4 ещё53683945472bytes/df49G; [следующий online ext4 resize](storage_continuation_20261011.md). Ранее pending partition growth в карте/дополнениях заменён этим actual результатом.

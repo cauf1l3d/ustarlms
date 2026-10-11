@@ -376,3 +376,23 @@ PASS, native growpart локально не выполнялся. Server partiti
 Новых production операций агент не делал. Application/frontend/helpers/workflows
 не изменены; PR98 остаётся открытым, известный frontend npm audit failure предыдущего
 head3a3a13c13e9042f8bdc48bec04de78acb0d5ef73 не обходится и не исправляется этим docs шагом.
+
+
+## 2026-10-11 — actual partition growth PASS; online ext4 команда подготовлена
+
+Owner operation started15:21:56UTC; end timestamp не напечатан. Original9 иnew6
+copy checks OK; новый private snapshot `/srv/ustar-storage/ssd-grow-20261011-AiJI89`
+предшествует growth. Actual growpart CHANGED: start4096,size234437519,end234441614.
+Raw pre/post CRC, entry-array only root end, boot bytes и kernel size PASS. Ext4
+остаётся13106432x4096bytes, df49G/37used/11free/78%; native No problems found,
+2014 free sectors. Caution2048-sector end относится к некоторым encryption tools;
+current mounted root — direct ext4, не crypto mapper. [Evidence](../runtime/ssd_partition_grow_result_20261011.json).
+
+Следующий [guarded online ext4 resize](../runtime/storage_continuation_20261011.md)
+сохраняет grown GPT на HDD, old FS/kernel/identity проверяет до записи, syncfs и
+exact expected29304689 blocks/UUID/mount/raw GPT после. Kernel messages отдельно,
+marker не является full service smoke. Старые меньшие GPT snapshots после FS
+growth unsafe для table rollback. Native online resize не запускался агентом;
+Bash/Python/exact quoting и11 regular-file guard tests PASS. STATE/ACTIVE/BACKLOG/
+entrypoints/index обновлены, source/helper/workflow/frontend unchanged. PR98 open;
+CI нового SHA отделён от local checks и owner server evidence.

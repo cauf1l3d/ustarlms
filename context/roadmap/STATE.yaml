@@ -3,7 +3,7 @@ updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner11Oct PR87 --prepare-stage18:55:53..19:17:02UTC PASS: frozen checkpoint63431entries/hash/bootstrap; independent baseline workspace login200,526 USTAR/57 addon metadata/4910 contenthashes. Source lab resumed, production unchanged. CoreDB2025100601.03 remains original; manual login/SCORM NOT_TESTED. Next Windows tunnel/browser smoke and full-addon candidate upgrade/repeat/paired restore preparation; real upgrade helper not ready. AppArmor/shared-service functional checks/OS/HTTPS remain open.'
+current_activity: 'Owner11Oct PR87 prepare18:55:53..19:17:02UTC PASS; checkpoint63431entries/hash/bootstrap and separate workspace login200; source lab resumed/production unchanged/core original. Screenshot received19:53:07UTC shows authenticated administrator SCORM at18085, section6/20,30percent,text/images; only visible scope accepted. Agent official5.1.8 tgz SHA and four upstream metadata blobs verified. Next bounded package download to new private directory, then full-addon candidate/dependencies/upgrade/repeat/paired restore preparation. Real upgrade helper not ready; OS/HTTPS remain open.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -165,6 +165,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_package_handoff_20261011.md
+- context/runtime/lab_stage_browser_result_20261011.json
 - context/runtime/lab_stage_browser_handoff_20261011.md
 - context/runtime/lab_stage_prepare_result_20261011.json
 - context/runtime/storage_continuation_20261011.md
@@ -275,7 +277,7 @@ patch_candidate:
   cold_checkpoint_helper_pr: 87
   cold_checkpoint_source_ci: 37375193949
   cold_checkpoint_context_ci: 37375193850
-  cold_checkpoint_operator_action: prepare_stage_PASS_next_Windows_tunnel_browser_smoke_and_candidate_upgrade_paired_restore
+  cold_checkpoint_operator_action: prepare_stage_and_partial_SCORM_PASS_next_official_package_download_and_candidate_paired_restore_preparation
   cold_checkpoint_helper_installed_owner_confirmed: true
   cold_checkpoint_helper_installation_SHA: OK
   cold_checkpoint_fresh_preflight_server_executed: true
@@ -292,9 +294,14 @@ patch_candidate:
   cold_checkpoint_entries: 63431
   independent_baseline_workspace_http_login: 200
   independent_baseline_workspace_core_db_version: '2025100601.03'
-  independent_baseline_workspace_manual_acceptance: NOT_TESTED
+  independent_baseline_workspace_manual_acceptance: partial_authenticated_administrator_SCORM_screen_not_full_QA
+  independent_baseline_workspace_manual_evidence: context/runtime/lab_stage_browser_result_20261011.json
   full_addon_upgrade_and_paired_restore_helper_ready: false
-  next_stage_operator_runbook: context/runtime/lab_stage_browser_handoff_20261011.md
+  next_stage_operator_runbook: context/runtime/lab_patch_package_handoff_20261011.md
+  official_package_local_verification: context/runtime/moodle_518_package_verification_20261011.json
+  official_package_sha256: 0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c
+  official_package_server_download_executed: false
+  full_addon_candidate_assembled: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

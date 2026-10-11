@@ -1,5 +1,7 @@
 # Новый стенд: результат и проверка через браузер — 11.10.2026
 
+**Owner screenshot19:53:07UTC:** [authenticated SCORM на18085, section6/20/text/images](lab_stage_browser_result_20261011.json) принят в видимой области. Tunnel/browser access уже работает; эту настройку повторять не нужно. Next [скачать и проверить official package5.1.8](lab_patch_package_handoff_20261011.md). Full role/home/completion/persisted progress acceptance не объявлены по одному изображению.
+
 Владелец выполнил exact PR87 helper `--prepare-stage` в18:55:53..19:17:02UTC
 (21:55:53..22:17:02MSK). [Полный обезличенный receipt](lab_stage_prepare_result_20261011.json).
 Wrapper21min9s; helper1267.054s. Установка, --check и --prepare-stage завершены;

@@ -494,3 +494,30 @@ USTAR home contract и workspace-only upgrade/repeat/paired restore helper ещ�
 OS/AppArmor/functional shared services/HTTPS и fresh archive restore остаются
 в измеренных границах. Application/frontend/helpers/workflows не менялись;
 PR98 open, публикация docs не означает server candidate acceptance или CI PASS.
+
+## 2026-10-11 — новый stage authenticated SCORM и официальный пакет5.1.8
+
+Owner screenshot received19:53:07UTC, sha256f1dd998554ba43206fdde1facc0a24e92a4814728aac7213b71fe29ca89b71e1:
+127.0.0.1:18085/mod/scorm/player.php, administrator session, «Товароведение»,
+section6/20/30percent/text/images rendered. SSH tunnel/new stage browser access
+и authenticated SCORM rendering PASS в видимой области. Fresh login/home redirect,
+completion/progress persistence/all roles/separate attachment download не доказаны.
+Raw image не опубликован; [receipt](lab_stage_browser_result_20261011.json). Original prepare report NOT_TESTED
+сохранён как исторический stdout; поздняя manual evidence отдельна.
+
+Agent downloaded exact official5.1.8 tgz locally:75466974bytes,
+SHA0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c matches primary
+Moodle checksum,39376entries/29409files/9967dirs,313711622logical file bytes.
+Four metadata Git blobs match exact upstreamcc0bf17da8b5fbd290faf95b2b14a03d64331923;
+not full-core equality. No root vendor in archive; lock0prod/68dev packages, runtime
+addon/vendor compatibility still unverified. Stock index/get_default_home_page_url
+support local path defaulthomepage; runtime USTAR home acceptance remains open.
+[Package receipt](moodle_518_package_verification_20261011.json).
+
+[Next operator handoff](lab_patch_package_handoff_20261011.md): existing shared lab lock read-only fd8/EX-NB,
+private parent/checkpoint manifest identity guards/reserve4GiB+128MiB, create new
+private directory, bounded HTTPS download and pinned SHA/fsync only. Bash syntax
+PASS; server download not run, no tar extraction/PHP/SQL/container operations.
+Full-addon candidate assembly/upgrade/repeat/paired restore helper not delivered
+by this docs step; current workspace/source lab/frozen checkpoint preserved.
+Exact source/context/application trees unchanged; queues1→7→6 maintained.

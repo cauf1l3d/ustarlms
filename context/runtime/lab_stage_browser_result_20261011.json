@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "source": "owner_uploaded_screenshot_20261011",
+  "owner_message_received_at": "2026-10-11T19:53:07Z",
+  "image_sha256": "f1dd998554ba43206fdde1facc0a24e92a4814728aac7213b71fe29ca89b71e1",
+  "independently_measured_on_server_by_agent": false,
+  "image_published": false,
+  "observed": {
+    "browser_address": "127.0.0.1:18085/mod/scorm/player.php",
+    "authenticated_session_visible": true,
+    "displayed_role": "Администратор Академии",
+    "USTAR_navigation_visible": true,
+    "SCORM_title": "Товароведение",
+    "SCORM_section": "Инстр: Угольники",
+    "section_indicator": "Раздел 6 из 20",
+    "visible_progress_percent": 30,
+    "lesson_text_and_images_rendered": true,
+    "PHP_SQL_error_visible": false
+  },
+  "acceptance": {
+    "SSH_tunnel_and_new_stage_browser_access": "PASS_in_visible_scope",
+    "authenticated_SCORM_rendering": "PASS_in_visible_scope",
+    "fresh_login_flow": "NOT_VERIFIED",
+    "USTAR_homepage_redirect": "NOT_VERIFIED",
+    "SCORM_completion": "NOT_VERIFIED",
+    "progress_persistence_after_reload": "NOT_VERIFIED",
+    "all_roles": "NOT_VERIFIED",
+    "separate_attachment_download": "NOT_VERIFIED",
+    "full_addon_compatibility": "NOT_VERIFIED",
+    "patch_upgrade_and_paired_rollback": "NOT_EXECUTED"
+  },
+  "next_operator_step": "download_and_hash_check_official_5_1_8_package_to_new_private_directory",
+  "runbook": "context/runtime/lab_patch_package_handoff_20261011.md"
+}

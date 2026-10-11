@@ -2,7 +2,7 @@
 
 Owner11Oct installed helper и fresh `--check` PASS; [receipt](lab_cold_preflight_result_20261011.json).
 Команды download/install/check ниже уже выполнены и не требуют повторения.
-Owner --prepare-stage18:55:53..19:17:02UTC PASS; [receipt](lab_stage_prepare_result_20261011.json). Все команды ниже уже выполнены; не повторять. Следующий шаг — [Windows SSH-туннель и browser smoke новой workspace](lab_stage_browser_handoff_20261011.md).
+Owner --prepare-stage18:55:53..19:17:02UTC PASS; [receipt](lab_stage_prepare_result_20261011.json). Все команды ниже уже выполнены; не повторять. Owner [authenticated SCORM screenshot новой workspace](lab_stage_browser_result_20261011.json) уже принят в видимой области. Следующий шаг — [pinned official package download](lab_patch_package_handoff_20261011.md).
 
 Слитый [PR87](https://github.com/cauf1l3d/ustarlms/pull/87), implementation
 `40e7d13e197cd59321e5e89e3f477539eb265b19`. Helper SHA-256

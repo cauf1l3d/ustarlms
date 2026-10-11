@@ -1,10 +1,10 @@
 # Протокол продолжения
 
-[Owner stage result11Oct](../runtime/lab_stage_prepare_result_20261011.json) и [следующий browser smoke](../runtime/lab_stage_browser_handoff_20261011.md).
+[Owner stage result11Oct](../runtime/lab_stage_prepare_result_20261011.json), [authenticated SCORM screenshot нового стенда](../runtime/lab_stage_browser_result_20261011.json) и [следующая загрузка проверенного пакета5.1.8](../runtime/lab_patch_package_handoff_20261011.md).
 
 **Точка продолжения 11.10:** [owner GPT/partition/ext4 PASS](../runtime/storage_continuation_20261011.md): ext4 resize15:35:13UTC,29304689blocks, df110G/37used/69free/35%; UUID/mount/quota/GPT preserved. Последний scheduled11Oct backup complete/success/exited0, marker=false, timer active/enabled. Post-resize HTTP/cron/visible SCORM и fresh preflight11Oct PASS получены. Owner PR87 prepare18:55:53..19:17:02UTC PASS: source lab resumed, frozen checkpoint/full hashes/новая workspace bootstrap login200, production unchanged. Core прежний; next [browser smoke нового стенда](../runtime/lab_stage_browser_handoff_20261011.md), затем candidate upgrade/repeat/paired rollback. Стратегии — предложения; согласованная очередь сохранена. Более ранние execution-статусы ниже — датированная история.
 
-**Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` был приостановлен до storage; owner11Oct checkpoint и отдельная baseline workspace PASS, next browser smoke и candidate upgrade/paired rollback. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
+**Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` был приостановлен до storage; owner11Oct checkpoint и отдельная baseline workspace PASS, authenticated SCORM screenshot11Oct принят в видимой области; next pinned package download и candidate upgrade/paired rollback. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 
 ## База работы
 

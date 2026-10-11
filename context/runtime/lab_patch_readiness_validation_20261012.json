@@ -53,14 +53,27 @@
     "gate": "skipped",
     "full_gate_pass": false
   },
-  "new_implementation_ci": "not_yet_published",
+  "new_implementation_ci": {
+    "implementation": "2496d11fac6af3fd8f0265355ad143016423d001",
+    "context_run": 38177469124,
+    "context_conclusion": "success",
+    "review_run": 38177469099,
+    "source_php82": "success",
+    "source_php83": "success",
+    "frontend": "failure_at_npm_audit",
+    "rollback": "skipped",
+    "moodle_db": "skipped",
+    "prepare_rc": "skipped",
+    "gate": "skipped",
+    "full_gate_pass": false
+  },
   "production_upgrade_executed": false,
   "full_addon_runtime_compatibility_verified": false,
   "paired_upgrade_rollback_verified": false,
   "local_source_checks": {
     "full_command": "blocked_by_missing_local_php_binary",
     "with_skip_php": "PASS_js24_tables93_templates56; not_a_CI_PHP_substitute",
-    "github_php_lint": "new_exact_commit_pending; previous808fc0_source_PHP82_83_success",
+    "github_php_lint": "PASS_source_PHP82_and_PHP83_at_2496d11",
     "application_php_changed": false
   },
   "actual_official_archive_platform_parse": {
@@ -99,5 +112,12 @@
         "tokenizer"
       ]
     }
+  },
+  "immutable_remote_readback": {
+    "implementation": "2496d11fac6af3fd8f0265355ad143016423d001",
+    "helper_content": "identical_to_tested_local_bytes",
+    "blob": "25851ef077675c7370f31754fe3155ac5e75fe39",
+    "helper_sha256": "a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc",
+    "result": "PASS"
   }
 }

@@ -428,3 +428,9 @@ preserved; storage/download/baseline/candidate creation not repeated. Previous e
 HEAD808fc0 Context51/sourcePHP8.2/8.3 success; frontend audit failure/downstream skipped,
 no full gate PASS/merge. Current pointers/index updated, application/frontend/workflows
 unchanged. [Contract](../runtime/lab_patch_readiness_20261012.md).
+
+Publication: readonly helper implementation2496d11fac6af3fd8f0265355ad143016423d001,
+remote immutable bytes match SHA a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc.
+Exact Context52/38177469124 SUCCESS; Review488/38177469099 sourcePHP82_83 SUCCESS,
+frontend npm audit FAILURE, downstream SKIPPED. PR99 remains draft/unmerged;
+PR98 next-step metadata updated to accepted candidate/readiness. Server check pending.

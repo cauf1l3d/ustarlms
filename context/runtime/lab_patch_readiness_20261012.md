@@ -22,8 +22,10 @@ files; full readback and independent overlay inodes PASS. All23 extras сохр�
 ## Контракт следующей проверки
 
 Helper SHA256: `a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc`.
-Implementation SHA фиксируется в Git commit/PR после публикации; immutable URL
-оператору выдаётся только после remote readback точных bytes.
+Implementation: `2496d11fac6af3fd8f0265355ad143016423d001`. Published immutable helper bytes
+совпали с tested local content; Git blob25851ef077675c7370f31754fe3155ac5e75fe39.
+[PR99](https://github.com/cauf1l3d/ustarlms/pull/99) draft/unmerged; owner receipt
+и helper в этой ветке, main unchanged.
 
 Default PLAN_ONLY. Явный `--check` берёт SH/nonblock существующий coordination lock
 через read-only FD, без его создания. Pinned corrected builder и цепочка cold/
@@ -77,7 +79,12 @@ readiness ещё не выполнен. Full r16/context suite223 OK/10 skipped 
 context/code-map/diff checks PASS. Парсер требований отдельно выполнен на настоящем
 SHA-pinned5.1.8 archive: PHP8.2/PG15/21 required extensions включая pgsql, PASS.
 Локальный source_checks без PHP проверил24JS/93tables/56templates; полный PHP lint
-в этом окружении blocked (binary отсутствует), это не замена exact-commit GitHub CI. Application/frontend/workflows
+в этом окружении blocked (binary отсутствует), это не замена exact-commit GitHub CI.
+После публикации exact implementation2496d11:
+[Context52](https://github.com/cauf1l3d/ustarlms/actions/runs/38177469124) SUCCESS;
+[Review488](https://github.com/cauf1l3d/ustarlms/actions/runs/38177469099)
+source PHP8.2/8.3 SUCCESS включая новый r16 suite, frontend npm audit FAILURE,
+rollback/moodle-db/prepare-rc/gate SKIPPED. Full gate не PASS, merge не выполнен. Application/frontend/workflows
 не менялись. PR99 previous exact HEAD808fc0: Context51 success, sourcePHP8.2/8.3
 success; frontend npm audit failure, rollback/moodle-db/prepare-rc/gate skipped.
 Это не полный CI gate PASS и не основание merge.

@@ -1,8 +1,18 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** [исправленный candidate preparer](../runtime/lab_patch_candidate_fix_20261012.md). Прежний helper9fe10fc установлен, но остановился до копирования из-за stock/legacy `githash.php`. Новый helper сохраняет official file в core, старый отдельно; локальные33 candidate/197 context tests PASS(10 private-engine skipped), actual archive+synthetic overlay complete prepare PASS. Corrected server execution/activation/upgrade/rollback pending.
+**Текущий шаг:** [read-only readiness](../runtime/lab_patch_readiness_20261012.md).
+[Owner candidate receipt](../runtime/lab_patch_candidate_result_20261012.json): corrected
+helper4a681023/SHA bb71ddd установлен и выполнен, candidate0v8ncwgu/manifest07dfa485
+readback PASS,29409 stock/19roots/57metadata/526USTAR, legacy githash сохранён отдельно.
+Original root vendor отсутствует. Candidate ещё не activated; upgrade/rollback/
+full-addon/home runtime acceptance pending. Storage/download/prepare не повторять.
+Readiness helper проверяет accepted tree и existing stage platform без Moodle bootstrap;
+server execution pending. Все runtime false flags сохраняются.
 
-**INF-08 в работе:** [отдельный candidate code](../runtime/lab_patch_candidate_20261011.md). Скрипт и30 локальных тестов подготовлены; server execution/activation/upgrade/repeat/paired restore не выполнены.
+**INF-08 в работе:** paired code/config/Moodledata/physicalPG restore обязан быть
+подготовлен для guarded stage upgrade/repeat. Текущая проверка не выполняет эти операции.
+Previous exact HEAD808fc0 Context/sourcePHP8.2/8.3 success, frontend npm audit failure;
+full gate не PASS, PR99 остаётся draft/unmerged.
 
 SSD/root и HDD ночной запуск11Oct success; checkpoint и baseline stage приняты18:55:53..19:17:02UTC. Official5.1.8 SHA проверен20:09UTC в `moodle-518-package-20261011-nnixp4se`. Не повторять. Screenshot подтверждает authenticated SCORM rendering в видимой области; core production прежний.
 

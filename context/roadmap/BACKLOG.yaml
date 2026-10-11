@@ -205,10 +205,12 @@ tasks:
   validation_evidence:
   - context/runtime/lab_patch_candidate_20261011.md
   - context/runtime/lab_patch_candidate_fix_20261012.md
-  current_checkpoint: Owner12Oct00:06MSK original helper installed but precheck refused stock githash.php collision
-    before copying. Corrected helper preserves old file separately; actual package+fixture full prepare and33
-    candidate/197 context tests pass locally. Server retry with corrected pinned helper, stage activation/upgrade/repeat/paired
-    restore pending.
+  - context/runtime/lab_patch_candidate_result_20261012.json
+  - context/runtime/lab_patch_readiness_20261012.md
+  current_checkpoint: Corrected builder4a681023 executed by owner; candidate0v8ncwgu/manifest07dfa485,
+    29409 stock files/19 roots/57 metadata/526 USTAR/readback PASS. Readonly accepted-candidate platform
+    checker prepared; server execution pending. Candidate activation/upgrade/repeat/paired restore pending.
+
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot
   status: planned

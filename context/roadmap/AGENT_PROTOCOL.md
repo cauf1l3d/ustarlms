@@ -1,6 +1,10 @@
 # Протокол продолжения
 
-**Актуальный checkpoint11Oct:** SSD/root расширены, HDD запуск11Oct success, baseline stage и cold checkpoint созданы. Official5.1.8 SHA PASS; следующий шаг — [отдельная сборка candidate code](../runtime/lab_patch_candidate_20261011.md). Storage/download/prepare-stage не повторять. Pending-статусы ниже — история на06Oct.
+**Актуальный checkpoint12Oct:** SSD/root расширены, HDD запуск11Oct success,
+baseline stage/cold checkpoint и отдельный candidate5.1.8 созданы. Owner candidate
+readback PASS:29409 stock/19 addon roots/57 metadata/526 USTAR. Следующий шаг —
+[read-only readiness](../runtime/lab_patch_readiness_20261012.md), затем guarded stage upgrade/paired restore.
+Storage/download/prepare-stage/prepare-candidate не повторять. Pending ниже — история.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 

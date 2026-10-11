@@ -3,11 +3,11 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner12Oct00:06MSK: helper9fe10fc installed/checksum OK but prepare refused before new copy:
-  githash.php from legacy extras collides with generated official package metadata. Local fix keeps official
-  core intact and copies legacy githash privately outside code. Actual archive + fixture addon/config complete
-  prepare PASS;197 context tests OK/10 skipped. Corrected helper server execution/activation/DB upgrade still
-  pending. GitHub PR metadata writes accepted after email verification.'
+current_activity: 'Owner corrected builder4a681023 installed/checksum OK and full candidate0v8ncwgu
+  code assembly PASS:29409 stock files/19 addon roots/57 metadata/526 USTAR; manifest07dfa485 pinned.
+  Legacy githash preserved separately; original root vendor absent. Candidate not activated, DB not
+  upgraded. Next readonly accepted-candidate/platform readiness; guarded stage activation/upgrade/repeat
+  and paired code/config/Moodledata/physicalPG restore remain pending.'
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -167,6 +167,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_readiness_20261012.md
+- context/runtime/lab_patch_candidate_result_20261012.json
 - context/runtime/lab_patch_candidate_fix_20261012.md
 - context/runtime/lab_patch_candidate_20261011.md
 - START_HERE.md
@@ -217,7 +219,7 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: SSD_growth_HDD_scheduled_and_baseline_stage_confirmed_candidate_code_prepared_server_patch_pending
+  status_summary: SSD_growth_HDD_scheduled_baseline_stage_and_candidate_code_server_PASS_platform_check_next
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
@@ -285,8 +287,19 @@ patch_candidate:
   candidate_copy_helper_branch: codex/lab-patch-candidate-20261011
   candidate_copy_contract: context/runtime/lab_patch_candidate_fix_20261012.md
   candidate_copy_helper_local_validation: 33 tests_PASS_197_context_OK_10skipped_actual_archive_plus_synthetic_overlay_full_prepare_PASS
-  candidate_copy_helper_server_executed: false
+  candidate_copy_helper_server_executed: true
   candidate_core_activated_on_stage: false
+  candidate_copy_server_receipt: context/runtime/lab_patch_candidate_result_20261012.json
+  candidate_copy_helper_corrected_installed: true
+  candidate_code_assembly_server_result: PASS
+  candidate_directory: /var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/patch-candidate-518-20261012-0v8ncwgu
+  candidate_manifest_sha256: 07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459a
+  original_root_vendor_present_in_checkpoint: false
+  readiness_helper: scripts/infra/lab_patch_readiness.py
+  readiness_helper_sha256: a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc
+  readiness_contract: context/runtime/lab_patch_readiness_20261012.md
+  readiness_helper_server_executed: false
+  readiness_scope: accepted_candidate_hashes_and_existing_stage_core_platform_only
   candidate_copy_github_ci_status: implementation4a6810_context38175465744_success_sourcePHP82_83_success_review38175465742_frontend_npm_audit_failure_downstream_skipped_no_merge
   full_addon_upgrade_repeat_paired_restore_helper_ready: false
   candidate_copy_helper_implementation: 4a6810234abf33773fb8efbeb7293ddcb21c17c6

@@ -1,12 +1,11 @@
 # Исправление stock/legacy githash.php — 12.10.2026 Moscow
 
-**Next:** установить corrected pinned helper и повторить только candidate-code
-preparation. Storage, official tgz download, cold checkpoint и baseline stage
-не повторять. [Принятая ошибка владельца](lab_patch_candidate_refusal_20261012.json):
-helper9fe10fc/SHA4850e1 установлен и checksum OK; `--prepare-candidate`
-отказал в precheck до `mkdtemp`/копирования. Время самого запуска не печаталось,
-сообщение получено12Oct00:06:13MSK /11Oct21:06:13UTC. Контейнеры/БД не изменялись
-на reviewed failure path; это не независимый live query агента.
+**Текущий результат:** corrected builder4a681023 выполнен владельцем успешно;
+[receipt](lab_patch_candidate_result_20261012.json) фиксирует exact candidate/manifest
+SHA,29409 stock/19 roots/57 metadata/526 USTAR/full readback PASS. Следующий шаг —
+[read-only readiness](lab_patch_readiness_20261012.md); builder не повторять.
+Ниже сохранены причина первоначального отказа, исправление и уже выполненная команда.
+[Прежний отказ](lab_patch_candidate_refusal_20261012.json) остаётся историей.
 
 Причина воспроизведена на том же official tgz: root `githash.php` — packaging
 metadata (`$githash = 'cc0bf17'`), добавленный при формировании архива; в прежней

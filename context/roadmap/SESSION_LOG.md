@@ -403,3 +403,28 @@ Owner/aduk; branch `codex/lab-patch-candidate-20261011`, fresh main `c53723c8d66
 ## 2026-10-12 Moscow — INF-08 package githash collision fix
 
 Owner00:06MSK installed helper9fe10fc/SHA4850e1 OK; precheck refused before candidate directory/copy. Actual official archive generates root githash.php (cc0bf17), also listed among legacy23 extras in Git comparison. Previous local stock-only integration missed the combined inventory. Fix preserves stock githash and copies legacy file to private preserved-extra-files with independent inode/hash/full readback and separate manifest section; other collisions still refused. Full builder now tested with actual package+synthetic overlay, namespace checked for all19 actual roots/23 extra names.33 local candidate tests/197 full context tests OK,10 private-engine integrations skipped; real private addons/runtime not accepted. GitHub PR98 metadata update now works after owner email verification. Corrected server install/execute and paired runtime upgrade/restore pending. [Contract](../runtime/lab_patch_candidate_fix_20261012.md).
+
+
+## 2026-10-12 Moscow — actual candidate PASS; readonly platform check prepared
+
+Owner corrected helper4a681023/SHA bb71ddd installed/checksum OK, prepare-candidate
+PASS. Exact directory0v8ncwgu/manifest07dfa485,44174 entries/29409 stock files/19 addon
+roots/57 metadata/526 USTAR, independent inode/hash checks PASS.23 extras preserved,
+legacy githash separately; original root vendor absent. No execution timestamps printed;
+space70,914,838,528bytes is pre-copy budget, not post-copy measurement. No candidate
+activation, PHP/SQL/core upgrade or paired rollback. [Receipt](../runtime/lab_patch_candidate_result_20261012.json).
+
+Next helper verifies exact accepted manifest/full tree/config/frozen overlay and
+retained namespace, then only stage PHP built-ins and bounded READ ONLY SQL.
+No Moodle/config/plugin bootstrap, Composer, HTTP, new files or container mutations.
+Default plan-only, shared existing nonblock lock, installed builder SHA pin/error
+redaction. Optional addon top-level Composer declaration counts, not resolution.
+Fresh reserve output is not activation/paired restore capacity.26 filesystem/runtime/
+lock/redaction fixture tests; full r16 suite and context/code-map checked separately.
+Source/stage private engine/Docker/PHP/SQL mocked locally; actual server readiness pending.
+Guarded stage upgrade/repeat/paired code/config/Moodledata/physicalPG restore remains
+next runtime implementation, then browser acceptance. Existing source/checkpoint/prod
+preserved; storage/download/baseline/candidate creation not repeated. Previous exact
+HEAD808fc0 Context51/sourcePHP8.2/8.3 success; frontend audit failure/downstream skipped,
+no full gate PASS/merge. Current pointers/index updated, application/frontend/workflows
+unchanged. [Contract](../runtime/lab_patch_readiness_20261012.md).

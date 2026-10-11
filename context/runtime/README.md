@@ -1,5 +1,10 @@
 # Runtime и эксплуатация
 
+**Checkpoint12Oct:** [candidate0v8ncwgu code-only owner PASS](lab_patch_candidate_result_20261012.json).
+Next [accepted-candidate/platform read-only check](lab_patch_readiness_20261012.md);
+activation/DB upgrade/paired restore ещё не выполнены. Старые dated receipts сохранены.
+
+
 Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.

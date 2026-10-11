@@ -521,3 +521,13 @@ PASS; server download not run, no tar extraction/PHP/SQL/container operations.
 Full-addon candidate assembly/upgrade/repeat/paired restore helper not delivered
 by this docs step; current workspace/source lab/frozen checkpoint preserved.
 Exact source/context/application trees unchanged; queues1→7→6 maintained.
+
+## 2026-10-11 — owner official package download PASS
+
+Owner output received20:14:42UTC; download started20:09:23UTC, finish timestamp
+not printed. New private package directory suffixnnixp4se; official5.1.8 tgz
+pinned SHA0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c OK, fsync
+and MOODLE_518_PACKAGE=PASS/NO_CORE_UPGRADE=YES. Exact parent/checkpoint/lock/reserve
+guards passed; no extraction, addon copy, PHP/SQL, container stop/create or upgrade.
+[Receipt](moodle_518_package_download_result_20261011.json). Download command
+completed, do not repeat; next separate candidate assembly/hash verification.

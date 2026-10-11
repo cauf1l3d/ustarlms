@@ -3,7 +3,7 @@ updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner11Oct PR87 prepare18:55:53..19:17:02UTC PASS; checkpoint63431entries/hash/bootstrap and separate workspace login200; source lab resumed/production unchanged/core original. Screenshot received19:53:07UTC shows authenticated administrator SCORM at18085, section6/20,30percent,text/images; only visible scope accepted. Agent official5.1.8 tgz SHA and four upstream metadata blobs verified. Next bounded package download to new private directory, then full-addon candidate/dependencies/upgrade/repeat/paired restore preparation. Real upgrade helper not ready; OS/HTTPS remain open.'
+current_activity: 'Owner PR87 independent baseline stage and partial authenticated SCORM PASS; core original, production unchanged. Owner official5.1.8 package download started20:09:23UTC PASS with pinned SHA/fsync, new private package directory nnixp4se; finish time not printed. Next separate stock core plus19 addon roots/23 extras/config candidate assembly and hash verification without activation. Full-addon runtime/upgrade/repeat/paired rollback still pending, OS/HTTPS later.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -300,7 +300,9 @@ patch_candidate:
   next_stage_operator_runbook: context/runtime/lab_patch_package_handoff_20261011.md
   official_package_local_verification: context/runtime/moodle_518_package_verification_20261011.json
   official_package_sha256: 0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c
-  official_package_server_download_executed: false
+  official_package_server_download_executed: true
+  official_package_server_download_result: context/runtime/moodle_518_package_download_result_20261011.json
+  official_package_directory: /var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/moodle-518-package-20261011-nnixp4se
   full_addon_candidate_assembled: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md

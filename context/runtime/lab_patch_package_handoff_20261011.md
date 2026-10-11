@@ -1,5 +1,7 @@
 # Пакет Moodle 5.1.8: следующий ограниченный шаг — 11.10.2026
 
+**Owner download20:09:23UTC PASS:** [receipt](moodle_518_package_download_result_20261011.json); directory suffixnnixp4se, pinned SHA OK/fsync/NO_CORE_UPGRADE. Download command ниже выполнена, повтор не нужен. Next — separate candidate assembly; package пока не извлечён и не подключён к runtime.
+
 [Owner browser screenshot](lab_stage_browser_result_20261011.json) получен19:53:07UTC:
 новый loopback18085 доступен, авторизованный administrator session открывает SCORM
 «Товароведение», раздел6/20,30percent, текст/изображения отображаются. Screenshot

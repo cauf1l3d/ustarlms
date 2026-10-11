@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 26364,
-      "sha256": "f03d7785be69f3645b1d736459bf01f4a73aaf32ef17b51912a32a7e498ac5e8"
+      "size": 26433,
+      "sha256": "b20c82c6f6ce67c744093fc4e50ed438555b10d3583a4089939ea531eff929ff"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 61503,
-      "sha256": "5a3f1ea93b3f11003a5e4c85c0304d8c5e6c4cf4e72854c0cd359faf34f43650"
+      "size": 62140,
+      "sha256": "9bfdbcfafcff92c78730cf753d31e540e1991d15f13a9e57ddab81c270660fd3"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 24388,
-      "sha256": "b087154b654780d2295e730aabdd23c22e8e30fe54b256a61df5cda513a1cefa"
+      "size": 24497,
+      "sha256": "64e5fc0b565738b4798a0b11ec163d806f3f7f64eed1ea0dd783789e425e522a"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -810,8 +810,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 52255,
-      "sha256": "2e3f9816a2e13ed9bb922aabe6a7233f1e0a2a257754e99be9da2944044aea5f"
+      "size": 52881,
+      "sha256": "4b880a7c45d53140f508e253c837e6159049961cfd072f97f70b7b8492a3c13d"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -918,8 +918,8 @@
     {
       "path": "context/runtime/lab_patch_package_handoff_20261011.md",
       "domain": "runtime",
-      "size": 7131,
-      "sha256": "0582503dec12a2a07c1b1ee71a36a75ce55b296b969da7ce0d45c530c96da047"
+      "size": 7484,
+      "sha256": "ab41dc09d58bc3596c673533976b75fd7e35ce9cf5da81d8172cd6fa0782ccc6"
     },
     {
       "path": "context/runtime/lab_patch_preflight_20261005.md",
@@ -968,6 +968,12 @@
       "domain": "runtime",
       "size": 893,
       "sha256": "b85ef52d8ef2db10781651935e6edbc13954b0da0184ee5a5cf13beecd9cd192"
+    },
+    {
+      "path": "context/runtime/moodle_518_package_download_result_20261011.json",
+      "domain": "runtime",
+      "size": 1136,
+      "sha256": "2572f9e03635f92e3cff474d026d69eab68a75f8b7032b637957a9fa8ceb68d1"
     },
     {
       "path": "context/runtime/moodle_518_package_verification_20261011.json",

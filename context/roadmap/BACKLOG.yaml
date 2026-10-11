@@ -96,7 +96,7 @@ tasks:
     previous failure retained as history.
   - Cold paired checkpoint helper18 filesystem/failure tests; owner11Oct18:55:53..19:17:02UTC prepare PASS,63431entries/full hashes/bootstrap/login200; source lab resumed/production unchanged.
   - New workspace526 USTAR/57 addon metadata/4910 contenthashes verified; original coreDB2025100601.03. Owner screenshot19:53:07UTC authenticated SCORM6/20/text/images; partial visible scope PASS, full roles/completion/progress persistence and candidate upgrade/paired restore pending.
-  - Agent official5.1.8 tgz SHA matches primary published checksum; version/index/composer metadata Git blobs match exact upstream; download-only operator command prepared, server package download pending.
+  - Agent official5.1.8 tgz SHA matches primary published checksum; version/index/composer metadata Git blobs match exact upstream; download-only operator command executed by owner20:09:23UTC PASS/SHA/fsync, directory nnixp4se; no extraction/candidate assembly/core upgrade.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned

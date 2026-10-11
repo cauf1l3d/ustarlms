@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 54639,
-      "sha256": "9a887eebc93aa57906a74078d7849e48f73cf60517f1603862d26bf6f0322c81"
+      "size": 55191,
+      "sha256": "93ba5966d8e42073bca382219eb955441d839850613748ce624680a6a614f512"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 25168,
-      "sha256": "8458a5bed84ead50bc6d6207e37c205f0f0be9d4cf915a95c48b8708120ea0b2"
+      "size": 25415,
+      "sha256": "979d55f2a57ae2ad4fd5aeb010847c18e8560005adbcca673e2f9b96855bd878"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -954,14 +954,14 @@
     {
       "path": "context/runtime/lab_patch_cli_isolation_20261012.md",
       "domain": "runtime",
-      "size": 7242,
-      "sha256": "803f89a67677196a0a86b5b6536315f39384869582a29df4cf39f33b45b370e9"
+      "size": 7638,
+      "sha256": "5551cdb9579510fddf5e2abf56fc974a9d769f79bed99b49e65030dab327240e"
     },
     {
       "path": "context/runtime/lab_patch_cli_isolation_validation_20261012.json",
       "domain": "runtime",
-      "size": 1437,
-      "sha256": "0b95556edffd2466dea0d4fbc35d0e11c774bfb14242dc3fc0ebe0ba717451c3"
+      "size": 2223,
+      "sha256": "a7c06c3525dc16917895f4a9749a1db802151753303c1d8cd3419c3201b8d314"
     },
     {
       "path": "context/runtime/lab_patch_php_diagnostic_20261012.md",

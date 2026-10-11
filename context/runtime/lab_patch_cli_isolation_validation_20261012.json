@@ -21,7 +21,23 @@
   "native_sender_fixture": "/usr/sbin/sendmail -t -i",
   "real_php_test": "tests/r16/test_lab_patch_readiness.py::test_real_php_cli_flags_override_ini_without_changing_file",
   "real_php_test_local": "skipped_no_PHP_binary",
-  "new_exact_ci": "pending_publication",
+  "new_exact_ci": {
+    "implementation": "587971b65b15b9dd07ae3a03b2a73d129c3e08b9",
+    "context_run": 38181448987,
+    "context_result": "success",
+    "review_run": 38181449065,
+    "source_php82": "success",
+    "source_php83": "success",
+    "r16_step_both": "success",
+    "source_php_lint_both": "success",
+    "real_php_cli_policy_test": "PASS_in_both_PHP_jobs; PHP_binary_available_per_source_lint_and_test_guard",
+    "frontend": "failure_at_npm_audit",
+    "rollback": "skipped",
+    "moodle_db": "skipped",
+    "prepare_rc": "skipped",
+    "gate": "skipped",
+    "full_gate_pass": false
+  },
   "candidate_activation": false,
   "server_readiness_executed": false,
   "process_policy": "memory512M/sendmailbinfalse/displayOff/logOn with effective values verified",
@@ -35,5 +51,11 @@
     "tables": 93,
     "tasks": 32,
     "application_changed": false
+  },
+  "implementation": "587971b65b15b9dd07ae3a03b2a73d129c3e08b9",
+  "immutable_remote_readback": {
+    "result": "PASS",
+    "blob": "53e7ffd65e0842b47aea32bd3eec91a2315d2a42",
+    "tested_content_byte_identical": true
   }
 }

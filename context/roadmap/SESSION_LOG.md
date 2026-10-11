@@ -486,3 +486,11 @@ flags against actual temporary INI without mail()/Moodle or file changes. Full r
 context/code-map recorded after validation; original candidate/frozen copies remain.
 Exact publication/CI and real server readiness separate; stage upgrade/repeat/paired
 restore and browser acceptance still pending. [Contract](../runtime/lab_patch_cli_isolation_20261012.md).
+
+Published CLI policy implementation587971b65b15b9dd07ae3a03b2a73d129c3e08b9,
+SHA2942e58967980d1d8adcc63c04d996d8798d642724bfead2c66380aee32bc9f9,
+immutable remote bytes match Git blob53e7ffd65e0842b47aea32bd3eec91a2315d2a42.
+Exact Context56/38181448987 success; Review492/38181449065 both full source PHP82/83
+success including new real CLI flag/temporary INI test; frontend audit failure,
+rollback/moodle-db/prepare-rc/gate skipped. Full gate not PASS, PR99 draft/unmerged;
+real server CLI-policy readiness not yet executed, production not upgraded.

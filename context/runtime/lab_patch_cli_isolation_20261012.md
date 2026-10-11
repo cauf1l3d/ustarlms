@@ -3,7 +3,8 @@
 **Next:** новый `--check` [helper](../../scripts/infra/lab_patch_readiness.py), SHA256
 `2942e58967980d1d8adcc63c04d996d8798d642724bfead2c66380aee32bc9f9`. Установить отдельным файлом
 `/usr/local/sbin/USTAR_LAB_PATCH_READINESS_CLI_20261012.py`; old readiness/diagnostic
-сохраняются. Immutable implementation/remote bytes фиксируются после публикации.
+сохраняются. Implementation `587971b65b15b9dd07ae3a03b2a73d129c3e08b9`,
+immutable remote bytes match tested local content, Git blob53e7ffd65e0842b47aea32bd3eec91a2315d2a42.
 
 [Owner diagnostic22:27:09UTC](lab_patch_php_diagnostic_result_20261012.json) принят:
 PHP8.3.33/CLI/64bit/memory512M/max_input_vars5000, native sendmail_path=/usr/sbin/sendmail
@@ -69,7 +70,11 @@ INI corruption/readwrite bind, прежние tamper/lock/redaction/platform gua
 Новый **real PHP CLI test** вызывает actual interpreter с временным baseline INI
 (sendmail default), затем с policy flags; проверяет native/effective values и неизменные
 bytes/inode/mtime, без mail()/Moodle/SQL. Он запускается в PHP8.2/8.3 GitHub CI,
-локально skipped; CI acceptance pending at publication. Private engine/Docker/SQL
+локально skipped. Exact implementation587971:
+[Context56](https://github.com/cauf1l3d/ustarlms/actions/runs/38181448987) SUCCESS;
+[Review492](https://github.com/cauf1l3d/ustarlms/actions/runs/38181449065)
+sourcePHP8.2/8.3 SUCCESS включая real CLI policy test (PHP present via source lint),
+frontend audit FAILURE, rollback/moodle-db/prepare-rc/gate SKIPPED, full gate не PASS. Private engine/Docker/SQL
 в локальных тестах mocked. Code map526files/93tables/32tasks, app/frontend/workflows
 unchanged. Exact implementation CI/readback и server readiness фиксируются отдельно;
 PR99 draft/unmerged, frontend audit не обходится.

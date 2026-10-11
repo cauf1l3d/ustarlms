@@ -434,3 +434,24 @@ remote immutable bytes match SHA a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a
 Exact Context52/38177469124 SUCCESS; Review488/38177469099 sourcePHP82_83 SUCCESS,
 frontend npm audit FAILURE, downstream SKIPPED. PR99 remains draft/unmerged;
 PR98 next-step metadata updated to accepted candidate/readiness. Server check pending.
+
+
+## 2026-10-12 00:50:10 Moscow received — readonly PHP settings refusal
+
+Owner checker2496d11/SHA a45ddc installed and both checksums OK. Readiness refused
+Offline stage PHP memory/email settings differ. No actual PHP settings or execution
+start/finish timestamps printed. Reviewed path reached PHP built-ins after candidate
+readback, but before SQL/final container recheck; readiness not accepted, no activation
+or upgrade. Root cause unknown; CLI/INI/adapter override differences are hypotheses.
+[Receipt](../runtime/lab_patch_readiness_refusal_20261012.json).
+
+New --diagnose-php in shared readiness source: guarded accepted controls/frozen INI,
+owned inspect before/after, literal PHP built-ins and AST-only memory/mail literals
+from exact pinned private engine. No full tree rehash, SQL, Moodle bootstrap, settings
+write or acceptance PASS. Diagnostic report sanitized; existing --check strict512M/
+binfalse refusal retained but observed values now printed safely. New separate installed
+path USTAR_LAB_PHP_DIAGNOSTIC_20261012.py preserves old readiness helper.35 dedicated
+and232 r16 tests OK/10 private engine skips; adapter fixture256M is synthetic, not server
+fact. Application526/tables93/tasks32/generated code map unchanged. Current pointers/
+index updated; frozen candidate/checkpoint/source lab/production not mutated. Exact
+new publication/CI/server diagnostic remain separate evidence. [Contract](../runtime/lab_patch_php_diagnostic_20261012.md).

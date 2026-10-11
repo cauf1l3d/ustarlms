@@ -1,5 +1,11 @@
 # Принятый candidate и read-only проверка — 12.10.2026 Moscow
 
+**Owner12Oct00:50MSK:** old helper2496d11/a45ddc installed/checksum OK,
+`--check` refused memory/mail before SQL; actual values не были выведены.
+[Refusal](lab_patch_readiness_refusal_20261012.json) / [next diagnostic](lab_patch_php_diagnostic_20261012.md).
+Ниже сохранён прежний published contract и scoped CI; readiness не принят.
+
+
 **Next:** один `--check` [readiness helper](../../scripts/infra/lab_patch_readiness.py).
 [Owner receipt](lab_patch_candidate_result_20261012.json): corrected builder4a681023,
 SHA bb71ddd01566341d506a560628453bdcec045de89af7f4a80774a205f2f059c2 установлен;

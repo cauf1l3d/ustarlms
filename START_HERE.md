@@ -1,10 +1,10 @@
 # USTAR: вход в проект
 
-**Актуальный checkpoint12Oct:** SSD/root расширены, HDD запуск11Oct success,
-baseline stage/cold checkpoint и отдельный candidate5.1.8 созданы. Owner candidate
-readback PASS:29409 stock/19 addon roots/57 metadata/526 USTAR. Следующий шаг —
-[read-only readiness](context/runtime/lab_patch_readiness_20261012.md), затем guarded stage upgrade/paired restore.
-Storage/download/prepare-stage/prepare-candidate не повторять. Pending ниже — история.
+**Актуальный checkpoint12Oct:** candidate5.1.8 code-only PASS; readiness2496d11
+отказал на memory/mail before SQL, actual values неизвестны. Следующий шаг —
+[PHP diagnostic](context/runtime/lab_patch_php_diagnostic_20261012.md), без SQL/изменения настроек/activation.
+Candidate0v8ncwgu/frozen checkpoint сохраняются; storage/download/prepare-stage/
+prepare-candidate не повторять. Pending ниже — история.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта хранения](context/runtime/server_map_20261006.md).
 

@@ -207,9 +207,11 @@ tasks:
   - context/runtime/lab_patch_candidate_fix_20261012.md
   - context/runtime/lab_patch_candidate_result_20261012.json
   - context/runtime/lab_patch_readiness_20261012.md
-  current_checkpoint: Corrected builder4a681023 executed by owner; candidate0v8ncwgu/manifest07dfa485,
-    29409 stock files/19 roots/57 metadata/526 USTAR/readback PASS. Readonly accepted-candidate platform
-    checker prepared; server execution pending. Candidate activation/upgrade/repeat/paired restore pending.
+  - context/runtime/lab_patch_readiness_refusal_20261012.json
+  - context/runtime/lab_patch_php_diagnostic_20261012.md
+  current_checkpoint: Candidate0v8ncwgu/07dfa485 code-only accepted; owner readonly checker2496d11
+    refused at combined memory/mail guard before SQL, actual values and root cause unknown. Guarded
+    no-SQL PHP diagnostic prepared/tested, server execution pending. No settings change/activation/upgrade.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

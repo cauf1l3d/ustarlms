@@ -2,8 +2,8 @@
 
 **Текущий результат:** corrected builder4a681023 выполнен владельцем успешно;
 [receipt](lab_patch_candidate_result_20261012.json) фиксирует exact candidate/manifest
-SHA,29409 stock/19 roots/57 metadata/526 USTAR/full readback PASS. Следующий шаг —
-[read-only readiness](lab_patch_readiness_20261012.md); builder не повторять.
+SHA,29409 stock/19 roots/57 metadata/526 USTAR/full readback PASS. Readiness2496d11 отказал на memory/mail; next
+[guarded PHP diagnostic](lab_patch_php_diagnostic_20261012.md); builder не повторять.
 Ниже сохранены причина первоначального отказа, исправление и уже выполненная команда.
 [Прежний отказ](lab_patch_candidate_refusal_20261012.json) остаётся историей.
 

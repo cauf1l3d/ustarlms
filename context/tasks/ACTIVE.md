@@ -1,13 +1,13 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** [read-only readiness](../runtime/lab_patch_readiness_20261012.md).
-[Owner candidate receipt](../runtime/lab_patch_candidate_result_20261012.json): corrected
-helper4a681023/SHA bb71ddd установлен и выполнен, candidate0v8ncwgu/manifest07dfa485
-readback PASS,29409 stock/19roots/57metadata/526USTAR, legacy githash сохранён отдельно.
-Original root vendor отсутствует. Candidate ещё не activated; upgrade/rollback/
-full-addon/home runtime acceptance pending. Storage/download/prepare не повторять.
-Readiness helper проверяет accepted tree и existing stage platform без Moodle bootstrap;
-server execution pending. Все runtime false flags сохраняются.
+**Текущий шаг:** [guarded PHP diagnostic](../runtime/lab_patch_php_diagnostic_20261012.md).
+[Owner12Oct00:50MSK refusal](../runtime/lab_patch_readiness_refusal_20261012.json):
+checker2496d11/a45ddc installed/checksum OK; memory/email combined guard failed
+before SQL. Actual settings unknown, cause not confirmed. New diagnostic reports
+safe CLI memory/mail, stage frozen INI/mount and pinned lab_exec literal overrides;
+no SQL/settings changes/activation, no readiness PASS.35 dedicated/232 full tests OK,
+10 private-engine skips; server diagnostic pending. Candidate0v8ncwgu/07dfa485
+code-only receipt retained. Storage/download/workspace/candidate preparation not repeated.
 
 **INF-08 в работе:** paired code/config/Moodledata/physicalPG restore обязан быть
 подготовлен для guarded stage upgrade/repeat. Текущая проверка не выполняет эти операции.

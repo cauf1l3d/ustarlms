@@ -195,8 +195,128 @@ class ReadinessTests(unittest.TestCase):
     def test_sendmail_or_memory_drift_rejected(self):
         for key, value in [('sendmail_path', '/usr/sbin/sendmail'), ('memory_limit', '128M')]:
             with self.subTest(key=key), mock.patch.dict(self.php, {key: value}):
-                with self.assertRaisesRegex(r.ReadinessError, 'memory/email'):
-                    self.run_check()
+                with contextlib.redirect_stdout(io.StringIO()) as out:
+                    with self.assertRaisesRegex(r.ReadinessError, 'memory/email'):
+                        self.run_check()
+                self.assertIn('LAB_PATCH_PHP_OBSERVED=', out.getvalue())
+                self.assertEqual(self.sql_calls, [])
+
+    def setup_diagnostic(self):
+        expected = b'memory_limit=512M\nsendmail_path=/bin/false\ndisplay_errors=Off\nlog_errors=On\n'
+        self.fixture.file(c.CHECKPOINT / 'lab.ini', expected, 0o600)
+        self.fixture.file(c.WORK / 'lab.ini', expected, 0o600)
+        self.fixture.entries['lab.ini'] = c.metadata((c.CHECKPOINT / 'lab.ini').lstat(), False, f.sha(expected))
+        patch = mock.patch.object(c, 'load_manifest', return_value=self.fixture.entries)
+        patch.start()
+        self.addCleanup(patch.stop)
+        engine = c.SOURCE / 'engine-fixture.py'
+        source = (b'def lab_exec(kind, state, argv, user=None):\n'
+                  b'    defaults = ["memory_limit=256M", "sendmail_path=/bin/false", "private-secret-command"]\n'
+                  b'    return defaults\n'
+                  b'OTHER = "memory_limit=128M"\n')
+        self.fixture.file(engine, source, 0o600)
+        self.fixture.resume.ENGINE = engine
+        self.fixture.resume.ENGINE_SHA = f.sha(source)
+        owned = self.stage.owned
+        def mount_aware(kind, state):
+            item = owned(kind, state)
+            if kind == 'web':
+                item['Mounts'] = [{'Source': str(c.WORK / 'lab.ini'),
+                                   'Destination': '/usr/local/etc/php/conf.d/zz-lab.ini', 'RW': False}]
+            return item
+        self.stage.owned = mount_aware
+        self.php['memory_limit'] = '256M'
+        self.php['ini_scanned'] = '/usr/local/etc/php/conf.d/docker.ini,\n/usr/local/etc/php/conf.d/zz-lab.ini'
+
+    def test_diagnostic_reports_mismatch_without_sql_or_acceptance(self):
+        self.setup_diagnostic()
+        before = {str(p): (p.lstat().st_ino, p.lstat().st_mtime_ns) for p in c.SOURCE.rglob('*')}
+        with mock.patch.object(r, 'verify_tree', side_effect=AssertionError('no full candidate scan')):
+            result = r.diagnose_php(c)
+        self.assertEqual(before, {str(p): (p.lstat().st_ino, p.lstat().st_mtime_ns) for p in c.SOURCE.rglob('*')})
+        self.assertEqual(result['php_observed']['memory_limit'], '256M')
+        self.assertFalse(result['memory_limit_matches_stage_ini'])
+        self.assertTrue(result['sendmail_path_matches_stage_ini'])
+        self.assertTrue(result['stage_ini_bind_listed_as_scanned'])
+        self.assertTrue(result['stage_ini_bind_read_only'])
+        self.assertFalse(result['readiness_accepted'])
+        self.assertFalse(result['SQL_executed'])
+        self.assertEqual(result['lab_exec_literal_overrides'], ['memory_limit=256M', 'sendmail_path=/bin/false'])
+        self.assertNotIn('private-secret-command', json.dumps(result))
+        self.assertEqual(self.sql_calls, [])
+
+    def test_diagnostic_refuses_altered_stage_ini_before_php(self):
+        self.setup_diagnostic()
+        (c.WORK / 'lab.ini').write_text('memory_limit=1G\n')
+        with self.assertRaisesRegex(r.ReadinessError, 'Stage lab.ini differs'):
+            r.diagnose_php(c)
+        self.assertEqual(self.php_calls, [])
+
+    def test_diagnostic_refuses_bad_engine_pin_before_php(self):
+        self.setup_diagnostic()
+        self.fixture.resume.ENGINE.write_text('def lab_exec(): pass\n')
+        with self.assertRaises(Exception):
+            r.diagnose_php(c)
+        self.assertEqual(self.php_calls, [])
+
+    def test_unknown_adapter_literal_analysis_does_not_hide_php_observation(self):
+        self.setup_diagnostic()
+        source = b'lab_exec = delegated_callable\n'
+        self.fixture.resume.ENGINE.write_bytes(source)
+        self.fixture.resume.ENGINE_SHA = f.sha(source)
+        result = r.diagnose_php(c)
+        self.assertEqual(result['lab_exec_literal_overrides'], [])
+        self.assertEqual(result['php_observed']['memory_limit'], '256M')
+        self.assertIn('empty list does not exclude', result['adapter_review_scope'])
+        self.assertEqual(self.sql_calls, [])
+
+    def test_diagnostic_refuses_container_drift(self):
+        self.setup_diagnostic()
+        original = self.stage.lab_exec
+        def drifting(*args, **kwargs):
+            result = original(*args, **kwargs)
+            self.stage.drift = True
+            return result
+        self.stage.lab_exec = drifting
+        with self.assertRaisesRegex(r.ReadinessError, 'identities changed'):
+            r.diagnose_php(c)
+
+    def test_diagnostic_cli_never_emits_readiness_pass(self):
+        self.setup_diagnostic()
+        with mock.patch.object(sys, 'argv', ['readiness', '--diagnose-php']):
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(r.main(), 0)
+        self.assertIn('LAB_PATCH_PHP_DIAGNOSTIC=COMPLETE', out.getvalue())
+        self.assertNotIn('LAB_PATCH_READINESS=PASS', out.getvalue())
+        self.assertEqual(self.sql_calls, [])
+
+    def test_diagnostic_lock_contention_prevents_php(self):
+        with c.LOCK.open('rb') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with mock.patch.object(sys, 'argv', ['readiness', '--diagnose-php']):
+                with contextlib.redirect_stderr(io.StringIO()):
+                    self.assertEqual(r.main(), 1)
+        self.assertEqual(self.php_calls, [])
+
+    def test_diagnostic_redacts_arbitrary_commands_paths_and_values(self):
+        self.setup_diagnostic()
+        self.php.update(memory_limit='secret-memory-value', sendmail_path='smtp --password=secret-token',
+                        ini_scanned='/private/secret-token, /usr/local/etc/php/conf.d/safe.ini')
+        result = r.diagnose_php(c)
+        rendered = json.dumps(result)
+        self.assertNotIn('secret-token', rendered)
+        self.assertNotIn('secret-memory-value', rendered)
+        self.assertEqual(result['php_observed']['sendmail_path'], 'REDACTED_NONSTANDARD')
+        self.assertEqual(result['php_observed']['scanned_ini_basenames'], ['REDACTED_NONSTANDARD', 'safe.ini'])
+
+    def test_check_mismatch_diagnostic_redacts_sendmail_secrets(self):
+        self.php['sendmail_path'] = 'smtp --password=secret-token'
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            with self.assertRaisesRegex(r.ReadinessError, 'sendmail_matches_bin_false=False'):
+                self.run_check()
+        self.assertNotIn('secret-token', out.getvalue())
+        self.assertIn('REDACTED_NONSTANDARD', out.getvalue())
+        self.assertEqual(self.sql_calls, [])
 
     def test_postgres_mismatch_rejected(self):
         self.pg = '170001'

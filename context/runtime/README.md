@@ -1,5 +1,10 @@
 # Runtime и эксплуатация
 
+**Next12Oct00:50MSK:** [PHP memory/mail diagnostic](lab_patch_php_diagnostic_20261012.md).
+Owner old readiness checksum/install OK, combined guard отказал before SQL;
+actual values unknown, readiness не принят. Candidate code-only PASS сохраняется.
+
+
 **Checkpoint12Oct:** [candidate0v8ncwgu code-only owner PASS](lab_patch_candidate_result_20261012.json).
 Next [accepted-candidate/platform read-only check](lab_patch_readiness_20261012.md);
 activation/DB upgrade/paired restore ещё не выполнены. Старые dated receipts сохранены.

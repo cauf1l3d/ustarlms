@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "local_stage_php_diagnostic_validation",
+  "helper_path": "scripts/infra/lab_patch_readiness.py",
+  "helper_sha256": "a432e80c82ad24dc640cf765fd90b3570a1e0872a55ec104ff52fa97b6388098",
+  "dedicated_tests": {
+    "count": 35,
+    "result": "PASS",
+    "new_tests": 9
+  },
+  "full_r16_suite": {
+    "count": 232,
+    "result": "OK",
+    "skipped": 10,
+    "skip_reason": "private_HDD_backup_engine_source_not_provided"
+  },
+  "python_syntax": "PASS",
+  "code_map": {
+    "files": 526,
+    "tables": 93,
+    "tasks": 32,
+    "application_changed": false
+  },
+  "context_check": "PASS",
+  "diff_check": "PASS",
+  "server_diagnostic_executed": false,
+  "root_cause_confirmed": false,
+  "strict_readiness_memory_mail_guard_weakened": false,
+  "memory_override_fixture": "256M synthetic only, not a server observation",
+  "SQL_executed_in_diagnostic": false,
+  "new_implementation_ci": "pending_publication",
+  "owner_original_readiness_refusal": "context/runtime/lab_patch_readiness_refusal_20261012.json"
+}

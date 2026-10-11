@@ -3,11 +3,11 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner corrected builder4a681023 installed/checksum OK and full candidate0v8ncwgu
-  code assembly PASS:29409 stock files/19 addon roots/57 metadata/526 USTAR; manifest07dfa485 pinned.
-  Legacy githash preserved separately; original root vendor absent. Candidate not activated, DB not
-  upgraded. Next readonly accepted-candidate/platform readiness; guarded stage activation/upgrade/repeat
-  and paired code/config/Moodledata/physicalPG restore remain pending.'
+current_activity: 'Owner12Oct00:50MSK installed readonly checker2496d11/SHAa45ddc; --check refused
+  Offline stage PHP memory/email settings differ before stage SQL. Actual memory/mail values not printed,
+  root cause unknown. Next guarded --diagnose-php reads stage INI/mount/CLI and pinned adapter literals;
+  no SQL/settings writes/activation. Candidate0v8ncwgu/manifest07dfa485 remains code-only accepted.
+  Stage upgrade/repeat/paired code/config/Moodledata/physicalPG restore remain pending.'
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -167,6 +167,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_php_diagnostic_20261012.md
+- context/runtime/lab_patch_readiness_refusal_20261012.json
 - context/runtime/lab_patch_readiness_20261012.md
 - context/runtime/lab_patch_candidate_result_20261012.json
 - context/runtime/lab_patch_candidate_fix_20261012.md
@@ -296,12 +298,22 @@ patch_candidate:
   candidate_manifest_sha256: 07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459a
   original_root_vendor_present_in_checkpoint: false
   readiness_helper: scripts/infra/lab_patch_readiness.py
-  readiness_helper_sha256: a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc
+  readiness_helper_sha256: a432e80c82ad24dc640cf765fd90b3570a1e0872a55ec104ff52fa97b6388098
   readiness_contract: context/runtime/lab_patch_readiness_20261012.md
   readiness_helper_server_executed: false
-  readiness_helper_implementation: 2496d11fac6af3fd8f0265355ad143016423d001
-  readiness_helper_local_validation: 26_dedicated_and_223_full_r16_OK_10_private_engine_skips
-  readiness_helper_remote_readback: byte_identical_PASS
+  readiness_previous_helper_implementation: 2496d11fac6af3fd8f0265355ad143016423d001
+  readiness_previous_helper_installed_sha256: a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc
+  readiness_previous_helper_server_attempted: true
+  readiness_previous_helper_server_result: memory_mail_combined_refusal_before_SQL_actual_values_unknown
+  readiness_previous_helper_server_receipt: context/runtime/lab_patch_readiness_refusal_20261012.json
+  readiness_accepted: false
+  readiness_root_cause_confirmed: false
+  php_diagnostic_contract: context/runtime/lab_patch_php_diagnostic_20261012.md
+  php_diagnostic_installed_path: /usr/local/sbin/USTAR_LAB_PHP_DIAGNOSTIC_20261012.py
+  php_diagnostic_server_executed: false
+  readiness_helper_implementation: resolve_from_git_log_after_diagnostic_publication
+  readiness_helper_local_validation: 35_dedicated_and_232_full_r16_OK_10_private_engine_skips
+  readiness_helper_remote_readback: latest_diagnostic_pending_publication_prior2496_byte_identical_PASS
   readiness_ci_implementation: 2496d11fac6af3fd8f0265355ad143016423d001
   readiness_context_ci: 38177469124
   readiness_review_ci: 38177469099

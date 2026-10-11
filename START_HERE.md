@@ -1,5 +1,7 @@
 # USTAR: вход в проект
 
+**Продолжение11Oct:** SSD/root расширены, HDD запуск11Oct success, baseline stage и cold checkpoint созданы. Official5.1.8 SHA PASS; следующий шаг — [отдельная сборка candidate code](context/runtime/lab_patch_candidate_20261011.md). Storage/download/prepare-stage не повторять. Pending-статусы ниже — история на06Oct.
+
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта хранения](context/runtime/server_map_20261006.md).
 
 Актуализировано 06.10.2026. Канонический репозиторий: https://github.com/cauf1l3d/ustarlms.

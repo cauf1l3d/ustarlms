@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "local_official_package_verification_not_server_candidate_acceptance",
+  "verified_at": "2026-10-11T20:01:17.938691+00:00",
+  "upstream_commit": "cc0bf17da8b5fbd290faf95b2b14a03d64331923",
+  "download_url": "https://packaging.moodle.org/stable501/moodle-5.1.8.tgz",
+  "checksum_source": "https://packaging.moodle.org/stable501/moodle-5.1.8.tgz.sha256",
+  "archive_sha256": "0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c",
+  "archive_bytes": 75466974,
+  "tar_entries": 39376,
+  "regular_files": 29409,
+  "directories": 9967,
+  "regular_file_logical_bytes": 313711622,
+  "non_file_directory_members": 0,
+  "verified_upstream_metadata": {
+    "public/version.php": {
+      "sha256": "8e8ca75d913bf1f0b0a73bd029d476d827f50855ecf5d1a99a891e65c498ee02",
+      "git_blob_oid": "129fc54afde04d4e53559dbc42ed7d2c0e0771d6",
+      "exact_candidate_upstream_blob_matches": true
+    },
+    "public/index.php": {
+      "sha256": "3af0034674ac5b59e8926ebd63e1a0bf3360a495675d82de7b800e0514c467f7",
+      "git_blob_oid": "71183e222d91b8edc787c9fa019c407cc07eab3d",
+      "exact_candidate_upstream_blob_matches": true
+    },
+    "composer.json": {
+      "sha256": "02d8b9bf7cf18d15459cc4672835ad74cc07440a7214cfcb2e81748d159d63a3",
+      "git_blob_oid": "336f419d9d108dec2498ac630c3fe073a8c0d611",
+      "exact_candidate_upstream_blob_matches": true
+    },
+    "composer.lock": {
+      "sha256": "064bddc7f6b5dc1f23eef6ec40d4c96091e0e651a5cc9639c6b855dd5d3afe8f",
+      "git_blob_oid": "8f49b589e945c63116cc3cd97321c986cd7ee4d0",
+      "exact_candidate_upstream_blob_matches": true
+    }
+  },
+  "version_php_literal": "2025100608.00",
+  "release_php_literal": "5.1.8 (Build: 20261005)",
+  "composer_lock_production_packages": 0,
+  "composer_lock_dev_packages": 68,
+  "root_vendor_in_official_archive": false,
+  "third_party_addon_dependency_compatibility_verified": false,
+  "custom_home_target_supported_by_stock_source": "get_default_home_page_url accepts local URL; public/index.php redirects HOMEPAGE_URL",
+  "custom_home_runtime_acceptance": false,
+  "server_package_download_executed": false,
+  "candidate_assembled_with_addons": false,
+  "server_upgrade_executed": false
+}

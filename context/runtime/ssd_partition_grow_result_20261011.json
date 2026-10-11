@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "source": "owner_terminal_output_supplied_20261011",
+  "independently_measured_by_agent": false,
+  "operation_started_utc": "2026-10-11T15:21:56Z",
+  "operation_finished_utc": null,
+  "operation": "growpart --update=on /dev/sda 2",
+  "ssd": {
+    "path": "/dev/sda",
+    "serial": "2203JPDG120GB6000933",
+    "bytes": 120034123776,
+    "sector_bytes": 512,
+    "gpt_uuid": "074edcd7-fe7c-4674-9865-6425931232d7"
+  },
+  "root": {
+    "path": "/dev/sda2",
+    "start_sectors": 4096,
+    "old_size_sectors": 104851456,
+    "size_sectors": 234437519,
+    "end_sector": 234441614,
+    "partition_bytes": 120032009728,
+    "partuuid": "e32f3b41-9dde-4d67-8c64-57540c2518cb",
+    "fs_uuid": "fb5cc206-93f8-4601-a415-8d418970cf31",
+    "kernel_size_sectors": 234437519,
+    "ext4_block_size": 4096,
+    "ext4_block_count": 13106432,
+    "ext4_bytes": 53683945472,
+    "filesystem_resize_executed": false,
+    "df_rounded": {
+      "total": "49G",
+      "used": "37G",
+      "available": "11G",
+      "use_percent": 78
+    }
+  },
+  "bios_boot": {
+    "path": "/dev/sda1",
+    "start_sectors": 2048,
+    "size_sectors": 2048,
+    "partuuid": "4b6f77ed-4dce-4b46-9a59-f05ce93d11bc",
+    "unchanged": true
+  },
+  "pre_growth_copy": {
+    "directory": "/srv/ustar-storage/ssd-grow-20261011-AiJI89",
+    "payload_hash_checks": 6,
+    "checks": "all_OK",
+    "source_readback": "PASS_by_completed_guarded_command",
+    "scope": "relocated_GPT_before_partition_growth; old_root_size; unsafe_to_restore_as_table_after_ext4_growth"
+  },
+  "original_copy_hash_checks": 9,
+  "original_copy_hash_result": "all_OK",
+  "post_checks": {
+    "raw_gpt_crc": "PASS",
+    "entry_array_only_root_end_changed": "PASS_by_completed_guarded_command",
+    "boot_bytes": "PASS",
+    "kernel_size": "PASS",
+    "ext4_size_unchanged": "PASS",
+    "native_verify": "No problems found",
+    "native_verify_caution": "Partition 2 does not end on a 2048-sector boundary; some disk encryption tools may have problems",
+    "remaining_free_sectors": 2014,
+    "remaining_largest_free_segment_kib": 1007.0
+  },
+  "result": "PARTITION_GROWN=PASS; KERNEL_SIZE=PASS; EXT4_NOT_RESIZED=YES",
+  "next_operator_step": "guarded_online_ext4_resize_then_df_kernel_and_shared_service_checks",
+  "ext4_resize_prepared_command_sha256": "220b9e5f90991c9b3767190723741aa86fff3ff246f4bff44d3ea60a409ab516",
+  "ext4_resize_expected_block_count": 29304689,
+  "ext4_resize_expected_bytes": 120032006144,
+  "ext4_resize_local_validation": "Bash/Python syntax, exact quoting and11 regular-file negative/positive guard scenarios PASS; online resize not executed",
+  "not_verified": [
+    "ext4_growth",
+    "post_growth_shared_service_smoke",
+    "fresh_scheduled_archive_independent_restore",
+    "reboot_mount",
+    "full_shared_host_recovery"
+  ],
+  "runbook": "context/runtime/lab_patch_candidate_20261011.md",
+  "historical_runbook_url": "https://github.com/cauf1l3d/ustarlms/blob/855264f4e38de4a7423b035cfd7ec746b2fce82d/context/runtime/storage_continuation_20261011.md"
+}

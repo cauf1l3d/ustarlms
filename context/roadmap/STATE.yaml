@@ -1,17 +1,15 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner GPT copy received06Oct09:06:01UTC: raw PMBR/GPT/BIOS boot and native table
-  copy saved on mounted HDD in ssd-layout-20261006-06NYpg, nine hash checks OK and
-  GPT_COPY_READBACK=PASS. Sysadmin console access confirmed09:03:36UTC; rescue medium and
-  actual boot recovery not separately verified. First GPT relocation command prepared:
-  raw pre/post header/table CRC, exact partition array and boot-byte preservation guards;
-  17 regular sparse-file fixtures PASS, native sgdisk not executed locally. Server GPT write,
-  root growth, source move/deletion and stage preparation remain unexecuted.
-  Timer active/enabled from earlier evidence, first scheduled run07Oct03:30MSK pending.'
-next_task: INF-04
+current_activity: 'Owner11Oct: GPT relocation, sda2 growth and ext4 resize PASS; root110G/69G available/35%.
+  HDD11Oct03:30MSK scheduled success. Paired cold checkpoint and independent original-core stage prepared18:55:53..19:17:02UTC,
+  login200/526 USTAR/57 addon metadata/4910 content hashes; authenticated SCORM screenshot19:53UTC in visible
+  scope. Official5.1.8 downloaded20:09UTC to private nnixp4se directory, SHA PASS. Separate candidate-code
+  helper locally verified, not yet installed/executed on server; no core activation/DB upgrade. Next: pinned
+  candidate copy, then full-addon upgrade/repeat/paired restore and browser acceptance.'
+next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -33,7 +31,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_backup_cron_http_and_retained_lab_resume_confirmed_patch_stage_pending
+  status: owner_original_core_unchanged_storage_and_baseline_stage_confirmed_candidate_upgrade_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -57,7 +55,7 @@ production:
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
   cron: v3_one_worker_owner_success_20261005T102403Z
-  regular_backup: timer_installed_active_enabled_first_scheduled_run_pending
+  regular_backup: daily_HDD_timer_enabled_last_scheduled_20261011_success_no_catchup_no_deletion
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
   last_core_comparison:
@@ -170,6 +168,7 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_candidate_20261011.md
 - START_HERE.md
 - context/CONTEXT_INDEX.md
 - context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
@@ -218,13 +217,13 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: storage_GPT_copy_and_HDD_trial_timer_confirmed_GPT_write_root_growth_first_scheduled_and_prod_patch_pending
+  status_summary: SSD_growth_HDD_scheduled_and_baseline_stage_confirmed_candidate_code_prepared_server_patch_pending
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false
-  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_active_first_run_pending
+  current_hdd_state: surface_and_long_PASS_residual_offlineUNC1_ext4_fstab_HDD_trial_timer_11Oct_scheduled_success_independent_restore_and_boot_pending
   current_hdd_checkpoint: context/runtime/hdd_backup_20261006.md
   future_lts_requirements:
     target: Moodle_5.3_LTS
@@ -270,40 +269,53 @@ patch_candidate:
   cold_checkpoint_helper_implementation: 40e7d13e197cd59321e5e89e3f477539eb265b19
   cold_checkpoint_source: context/runtime/lab_cold_checkpoint_20261005.md
   cold_checkpoint_and_independent_workspace_prepared: true
-  cold_checkpoint_and_independent_workspace_server_executed: false
+  cold_checkpoint_and_independent_workspace_server_executed: true
   core_candidate_upgrade_repeat_and_paired_rollback_server_executed: false
   cold_checkpoint_helper_pr: 87
   cold_checkpoint_source_ci: 37375193949
   cold_checkpoint_context_ci: 37375193850
-  cold_checkpoint_operator_action: paused_by_owner_pending_storage_map_HDD_backups
+  cold_checkpoint_operator_action: completed_owner_20261011T191702Z_do_not_repeat
+  cold_checkpoint_server_receipt: context/runtime/lab_stage_prepare_result_20261011.json
+  cold_checkpoint_manifest_sha256: 77672fd0b5b7bc5a27d1bd71d536f2bf47449455623589b53e0605005584b4c0
+  baseline_stage_browser_receipt: context/runtime/lab_stage_browser_result_20261011.json
+  official_package_server_download_executed: true
+  official_package_server_receipt: context/runtime/moodle_518_package_download_result_20261011.json
+  candidate_copy_helper: scripts/infra/lab_patch_candidate.py
+  candidate_copy_helper_sha256: 4850e17699ab32705b938358dc1f53ffb095daf4fe875b994298482f90e8f735
+  candidate_copy_helper_branch: codex/lab-patch-candidate-20261011
+  candidate_copy_contract: context/runtime/lab_patch_candidate_20261011.md
+  candidate_copy_helper_local_validation: 30 filesystem_archive_lock_failure_tests_PASS_plus_pinned_real_archive_extraction_readback
+  candidate_copy_helper_server_executed: false
+  candidate_core_activated_on_stage: false
+  candidate_copy_github_ci_status: not_yet_available
+  full_addon_upgrade_repeat_paired_restore_helper_ready: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'
   command_execution_timestamps: not_printed
   ssd_model: WALRAM 120GB
   ssd_gib_rounded: 111.8
-  root_partition_gib_rounded: 50
-  root_filesystem_df: 49G total /36G used /11G available /78%
-  unallocated_tail: 61.79GiB_confirmed_sector_extents_GPT_repair_and_growth_pending
+  root_partition_gib_rounded: 111.8
+  root_filesystem_df: owner11Oct15:35UTC:110G total/37G used/69G available/35%
+  unallocated_tail: consumed_by_sda2_growth_owner11Oct15:21UTC
   home_aduk_gib_rounded: 15
   home_snapshot_candidates_gib_approx: 13.1
   hdd_gib_rounded: 465.8
   hdd_partitions_filesystem_mount: sdb1_ext4_UUID359a2bae-4e79-461a-ab72-1597f605d801_mounted_srv_ustar-storage
   source_deletions_executed: false
   storage_moves_executed: false
-  partition_or_filesystem_expansion_executed: false
+  partition_or_filesystem_expansion_executed: true
   automatic_backup_installed: true
   next_readonly_evidence:
-  - first_HDD_scheduled_run_after_20261007T003000Z
-  - owner_post_write_GPT_CRC_layout_and_unchanged_partition_results
   - independent_copy_and_restore_of_fresh_HDD_archive
-  fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
+  - mount_services_and_backup_recovery_after_coordinated_reboot
+  fresh_server_inventory_received: 2026-10-06 00:13:00+03:00
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
-  ssd_gpt_backup_boundary_warning: 'PMBR 104857599 != disk 234441647; no write performed'
-  ssd_sda1: '2048-4095 BIOS boot'
-  ssd_sda2: '4096-104855551 ext4 root'
-  ssd_free_tail_sectors: 129586062
-  ssd_free_tail_gib: 61.79
+  ssd_gpt_backup_boundary_warning: resolved_owner11Oct14:40UTC_raw_CRC_PASS
+  ssd_sda1: 2048-4095 BIOS boot
+  ssd_sda2: 4096-234441614 ext4 root
+  ssd_free_tail_sectors: 0
+  ssd_free_tail_gib: 0
   hdd_initializer_published: true
   hdd_initializer_execution: FILESYSTEM_READY_owner_output
   hdd_initializer_sha256: ef3a5699f54384428d40e1c9b96b2707e117ad188b1f36628c95fb823be49aa2
@@ -343,7 +355,7 @@ storage_reorganization:
   hdd_schedule_initial_policy: owner_activated_daily_0330_Europe_Moscow_no_catchup_no_archive_deletion_100GiB_quota
   hdd_schedule_policy_owner_activation: PASS_owner_operator_install_command_20261006_received080224Z
   hdd_archive_retention_deletion: not_enabled
-  hdd_schedule_server_execution: install_status_PASS_first_scheduled_run_unverified
+  hdd_schedule_server_execution: install_and_20261011_scheduled_run_success_owner_output
   hdd_schedule_source_pr: 92
   hdd_schedule_implementation_commit: 7501440b476bf720658f5bf039efc3e4f1237d9c
   hdd_schedule_merged_main_commit: 040c671236cb4d7f4a225700bd288ced7e6f14f3
@@ -353,8 +365,13 @@ storage_reorganization:
   hdd_schedule_owner_message_received_at: '2026-10-06T08:02:24Z'
   hdd_schedule_timer_active: true
   hdd_schedule_timer_enabled: true
-  hdd_schedule_next_event_utc: '2026-10-07T00:30:00Z'
-  hdd_schedule_last_scheduled_run: null
+  hdd_schedule_next_event_utc: '2026-10-12T00:30:00Z'
+  hdd_schedule_last_scheduled_run:
+    started_utc: '2026-10-11T00:30:00.847420+00:00'
+    finished_utc: '2026-10-11T00:31:44.442026+00:00'
+    phase: complete
+    success: true
+    exit_status: '0'
   hdd_schedule_recovery_marker_present: false
   hdd_schedule_boot_recovery_verified: false
   next_ssd_preflight: context/runtime/ssd_storage_preflight_20261006.md
@@ -369,10 +386,10 @@ storage_reorganization:
   ssd_serial: 2203JPDG120GB6000933
   ssd_bytes: 120034123776
   ssd_identity_limitation: zero_WWN_not_a_unique_identity
-  root_ext4_block_count: 13106432
+  root_ext4_block_count: 29304689
   root_ext4_block_bytes: 4096
-  root_ext4_bytes: 53683945472
-  root_ext4_bytes_equal_partition_bytes: true
+  root_ext4_bytes: 120032006144
+  root_ext4_bytes_equal_partition_bytes: false
   mounted_header_is_offline_fsck: false
   partition_table_copy_runbook: context/runtime/ssd_partition_table_copy_20261006.md
   partition_table_copy_command_prepared: true
@@ -385,7 +402,7 @@ storage_reorganization:
   partition_table_copy_capture_timestamp: stored_privately_not_printed
   ssd_gpt_relocate_runbook: context/runtime/ssd_gpt_relocate_20261006.md
   ssd_gpt_relocate_command_prepared: true
-  ssd_gpt_relocate_command_server_executed: false
+  ssd_gpt_relocate_command_server_executed: true
   ssd_gpt_relocate_local_validation: Bash_Python_syntax_and_17_regular_sparse_file_guard_scenarios_PASS_native_sgdisk_not_executed
   ssd_smart_overall_health: PASSED_owner_H_A_only
   ssd_vendor_specific_smart_raw_decode_verified: false
@@ -397,3 +414,7 @@ storage_reorganization:
   rescue_boot_medium_identified: false
   actual_host_boot_recovery_tested: false
   binary_partition_table_recovery_copy_confirmed: true
+  root_partition_bytes: 120032009728
+  hdd_last_backup_success_utc: '2026-10-11T00:31:43.444339+00:00'
+  latest_owner_storage_receipt: context/runtime/ssd_ext4_resize_result_20261011.json
+continuation_documentation_pr: https://github.com/cauf1l3d/ustarlms/pull/98

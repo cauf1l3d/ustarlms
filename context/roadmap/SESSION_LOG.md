@@ -393,3 +393,9 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+## 2026-10-11 — INF-08 separate full-addon candidate code
+
+Owner/aduk; branch `codex/lab-patch-candidate-20261011`, fresh main `c53723c8d669a1013c518f34abf392143d211d9d`. Accepted exact official tgz download and prior owner SSD/HDD/baseline stage/SCORM observations. New helper builds a fresh code directory only: stock core, frozen addons/extras hashes and independent inodes, static offline config/home insertion. No PHP/SQL/container mutations/live code/data/PG writes.
+
+30 filesystem/archive/lock/failure tests PASS; real stock archive extraction/full readback PASS. Full context suite194 tests OK/10 skipped. Regenerated inventories recorded in [contract](../runtime/lab_patch_candidate_20261011.md). Docker/private inputs mocked; server execution pending. Stage upgrade/repeat/paired restore/runtime addon acceptance pending. Application/frontend unchanged; full continuation/strategy originals in PR98.

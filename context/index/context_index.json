@@ -12,8 +12,8 @@
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 4098,
-      "sha256": "a3f69d6f1fa3af4642a1a463ac578948174f637826c56b185e6791b4386de97a"
+      "size": 4517,
+      "sha256": "b6c4cd680902a2d1391d2f2d83ee0bb189499bcf334146522face13955d106a0"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -654,8 +654,8 @@
     {
       "path": "context/roadmap/AGENT_PROTOCOL.md",
       "domain": "roadmap",
-      "size": 5990,
-      "sha256": "204b9732983989b1b68cdba269e16abf86fe11bdbba162d100f2c76c99c3141f"
+      "size": 6409,
+      "sha256": "2c0933cc0a3937c57fba1be96cf954f6c9f186227a0845d1481ac3405596f3f7"
     },
     {
       "path": "context/roadmap/AUDIT_2026-09-07.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 23136,
-      "sha256": "b7b6cd81f6a9b71c262b2c450f79fc46f4b4df98ed910743416db28405e55690"
+      "size": 22664,
+      "sha256": "0c5783abba1a6d7b5c6e87703b48b2915d05f5df6a97e0229bbf770a32f20ff4"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 46837,
-      "sha256": "cd6f4cd3fc8e3bc9834d19a21656d3b6bbbe68b8d159d752108f842f2499701c"
+      "size": 47750,
+      "sha256": "5083c79ac0364fb0a304aaf9a3a8338a0428185fadc9cac80e2736668b8c45e4"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19835,
-      "sha256": "f64c9993112a2b621b053ad35e8a17af063b20b9e5fb647939f1374b19612765"
+      "size": 21263,
+      "sha256": "a0046d6ed17b19f1ace0888047edc4d1eb4105dfb8e3b8de333c722392bb5b1b"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -910,6 +910,24 @@
       "sha256": "957ece331a5bef895dca55f06d452fd8ef8c819caddfd072ec4f5e1b8f9896d2"
     },
     {
+      "path": "context/runtime/lab_patch_candidate_20261011.md",
+      "domain": "runtime",
+      "size": 11131,
+      "sha256": "8ae6d0cd7f3cd35098721f72a711f783d3ad31510af807cec8b7206e8ecee61b"
+    },
+    {
+      "path": "context/runtime/lab_patch_candidate_local_archive_result_20261011.json",
+      "domain": "runtime",
+      "size": 1097,
+      "sha256": "a5b02549a80faaae7ad9d736c8db02daf3081461ff5da18ae2692f517730827b"
+    },
+    {
+      "path": "context/runtime/lab_patch_candidate_validation_20261011.json",
+      "domain": "runtime",
+      "size": 788,
+      "sha256": "eac1823714257d8c5e0fdbfec4dccfd10e2bb7d409cb5b95ea517fbebadf6094"
+    },
+    {
       "path": "context/runtime/lab_patch_preflight_20261005.md",
       "domain": "runtime",
       "size": 16714,
@@ -928,10 +946,34 @@
       "sha256": "89fd9decb141debaf672d1360166c1860aba6beec50827cb26e72deb194ddd77"
     },
     {
+      "path": "context/runtime/lab_stage_browser_result_20261011.json",
+      "domain": "runtime",
+      "size": 1665,
+      "sha256": "e90b8cbfebc3b292cb56be9857d306dc337412dfc4c2fafb76cf3251243232ae"
+    },
+    {
+      "path": "context/runtime/lab_stage_prepare_result_20261011.json",
+      "domain": "runtime",
+      "size": 3410,
+      "sha256": "953b818d0c279d689fd8512db24bd8584949557c6bfd6a3dbf551233fd85a862"
+    },
+    {
       "path": "context/runtime/moodle.yaml",
       "domain": "runtime",
       "size": 893,
       "sha256": "b85ef52d8ef2db10781651935e6edbc13954b0da0184ee5a5cf13beecd9cd192"
+    },
+    {
+      "path": "context/runtime/moodle_518_package_download_result_20261011.json",
+      "domain": "runtime",
+      "size": 1136,
+      "sha256": "2572f9e03635f92e3cff474d026d69eab68a75f8b7032b637957a9fa8ceb68d1"
+    },
+    {
+      "path": "context/runtime/moodle_518_package_verification_20261011.json",
+      "domain": "runtime",
+      "size": 2217,
+      "sha256": "3b0e4bb650a1fc76e3ea1e30d99351ba098dc21bac9bf1fe81695a60a36789a5"
     },
     {
       "path": "context/runtime/patch_runtime_20261005.md",
@@ -944,6 +986,12 @@
       "domain": "runtime",
       "size": 124261,
       "sha256": "3a047d3625c8911559d87c963011bb2cccde8a126830789a99972b46329dfd5b"
+    },
+    {
+      "path": "context/runtime/post_resize_checks_20261011.json",
+      "domain": "runtime",
+      "size": 3990,
+      "sha256": "540af9e98234ada3d5d08fde7b4810c6a8646609b5b3581ee3187324c3ce8927"
     },
     {
       "path": "context/runtime/production_rc_20260922.md",
@@ -1000,16 +1048,34 @@
       "sha256": "da6cd409f80cfddba32f9ed0c56957e892f4349a2e4b96e931f75a6602e07041"
     },
     {
+      "path": "context/runtime/ssd_ext4_resize_result_20261011.json",
+      "domain": "runtime",
+      "size": 2882,
+      "sha256": "9526e246c7576fcb58da4194f9d9a2d8097a55cca5923166fcfc305503b74338"
+    },
+    {
       "path": "context/runtime/ssd_gpt_relocate_20261006.md",
       "domain": "runtime",
       "size": 10397,
       "sha256": "4ef0416a8af3d16a59fadbedeb0a227db7edc7106b0e3b880e94d2aa691a75fd"
     },
     {
+      "path": "context/runtime/ssd_gpt_relocate_result_20261011.json",
+      "domain": "runtime",
+      "size": 2406,
+      "sha256": "025cc904cb8161f91ce12ef7c5ad6f947fe218d9fcba510fd6bda28f223046bd"
+    },
+    {
       "path": "context/runtime/ssd_identity_ext4_result_20261006.json",
       "domain": "runtime",
       "size": 3444,
       "sha256": "40747c3d4cb5585e82636fc51805dc8c740aaa4ddba375e8367064f222c3326b"
+    },
+    {
+      "path": "context/runtime/ssd_partition_grow_result_20261011.json",
+      "domain": "runtime",
+      "size": 3040,
+      "sha256": "bb1abe37b7d9c9972efc1a8ea05a9a2c11d966f289c4b2bcff8b677fb4e41c1e"
     },
     {
       "path": "context/runtime/ssd_partition_table_copy_20261006.md",
@@ -1068,8 +1134,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 9489,
-      "sha256": "b1c376f93b4e7ebc47b9b9ee4b8135b9213cdb88148906d13d418920f079fa96"
+      "size": 10413,
+      "sha256": "7b6250e47bbd423f4363f1673c453400405d88dc9ebe474ba6015b28a32f842f"
     },
     {
       "path": "context/tasks/backlog.yaml",

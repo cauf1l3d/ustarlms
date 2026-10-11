@@ -1,0 +1,23 @@
+{
+  "Docker_PHP_SQL_executed": false,
+  "candidate_tests": {
+    "passed": 30,
+    "skipped": 0,
+    "tests": 30
+  },
+  "code_map_regeneration": "PASS_application_tree_unchanged",
+  "context_check": "PASS_source526_tables93_tasks32",
+  "full_context_suite": {
+    "result": "OK",
+    "skip_reason": "exact_private_HDD_backup_engine_source_not_supplied",
+    "skipped": 10,
+    "tests": 194
+  },
+  "full_suite_environment": "local_venv_with_pinned_mcp_1.30.0_PyYAML_6.0.3",
+  "helper_sha256": "4850e17699ab32705b938358dc1f53ffb095daf4fe875b994298482f90e8f735",
+  "kind": "local_candidate_helper_validation",
+  "remote_CI": "not_yet_available",
+  "scope": "local_tests_and_official_archive_only_not_server_stage_runtime",
+  "server_helper_install_or_execution": false,
+  "syntax": "PASS"
+}

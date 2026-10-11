@@ -1,3 +1,13 @@
+# Активная работа — 11.10.2026
+
+**INF-08 в работе:** [отдельный candidate code](../runtime/lab_patch_candidate_20261011.md). Скрипт и30 локальных тестов подготовлены; server execution/activation/upgrade/repeat/paired restore не выполнены.
+
+SSD/root и HDD ночной запуск11Oct success; checkpoint и baseline stage приняты18:55:53..19:17:02UTC. Official5.1.8 SHA проверен20:09UTC в `moodle-518-package-20261011-nnixp4se`. Не повторять. Screenshot подтверждает authenticated SCORM rendering в видимой области; core production прежний.
+
+[Полный continuation и4 strategy originals — PR98](https://github.com/cauf1l3d/ustarlms/pull/98). Independent archive restore и boot/service checks открыты в своих областях.
+
+## История checkpoint06Oct
+
 # Активная работа — 06.10.2026
 
 [Полная актуальная редакция аудита06Oct](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md): выполнено/частично/подготовлено/остаток и текущая точка отдельно. Последний owner result остаётся GPT_COPY_READBACK=PASS; нового server execution для GPT/root нет. First scheduled HDD run07Oct03:30MSK pending. Future Moodle5.3 LTS опубликован05Oct и требует PG17+, это отдельный PLAT-01 после выбранного patch5.1.8/OS/HTTPS.

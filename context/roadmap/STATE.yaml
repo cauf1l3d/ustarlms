@@ -3,7 +3,7 @@ updated_at: '2026-10-11'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner11Oct15:21:56UTC partition growth PASS: sda2 start4096,size234437519,end234441614; raw CRC/entry array/boot/kernel checks PASS. Grown partition120032009728bytes; ext4 still13106432x4096bytes,df49G/37used/11free/78percent. Latest scheduled backup11Oct success. Next guarded online ext4 resize, then df/kernel/shared-service smoke and stage budget. No production action by agent.'
+current_activity: 'Owner11Oct15:35:13UTC online ext4 resize PASS: blocks29304689x4096, df110G/37used/69available/35percent; UUID/mount/quota/raw GPT unchanged. Kernel supplied window only successful resize messages. GPT and partition growth completed; latest scheduled11Oct backup success. Next read-only host/container/HTTP/cron plus short browser smoke, then fresh stage budget/check and PR87 workspace. No production action by agent.'
 next_task: INF-04
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -213,13 +213,13 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: GPT_and_partition_growth_latest_scheduled11Oct_PASS_ext4_stage_patch_OS_HTTPS_pending
+  status_summary: GPT_partition_ext4_and_latest_scheduled11Oct_PASS_post_checks_stage_patch_OS_HTTPS_pending
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
   automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
   current_hdd_trusted: false
-  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_active_first_run_pending
+  current_hdd_state: surface_newest_extended_trial_mount_fstab_PASS_residual198_1_timer_active_latest_scheduled11Oct_success_restore_pending
   current_hdd_checkpoint: context/runtime/hdd_backup_20261006.md
   future_lts_requirements:
     target: Moodle_5.3_LTS
@@ -279,7 +279,7 @@ storage_reorganization:
   ssd_model: WALRAM 120GB
   ssd_gib_rounded: 111.8
   root_partition_gib_rounded: 111.8
-  root_filesystem_df: 49G total /37G used /11G available /78% (owner11Oct operation output)
+  root_filesystem_df: 110G total /37G used /69G available /35percent_owner11Oct153513UTC
   unallocated_tail: none_after_partition_growth_only_2014_sectors_gap_before_sda1
   home_aduk_gib_rounded: 15
   home_snapshot_candidates_gib_approx: 13.1
@@ -289,7 +289,7 @@ storage_reorganization:
   storage_moves_executed: false
   partition_or_filesystem_expansion_executed: true
   partition_growth_executed: true
-  filesystem_growth_executed: false
+  filesystem_growth_executed: true
   automatic_backup_installed: true
   next_readonly_evidence:
   - independent_copy_and_restore_of_fresh_HDD_archive
@@ -297,7 +297,7 @@ storage_reorganization:
   fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
   ssd_gpt_backup_boundary_warning: historical06Oct_warning_resolved_by_owner11Oct_relocation_PASS
   ssd_sda1: 2048-4095 BIOS boot
-  ssd_sda2: 4096-234441614_root_partition_ext4_still_old
+  ssd_sda2: 4096-234441614_ext4_grown
   ssd_free_tail_sectors: 0
   ssd_free_gap_before_sda1_sectors: 2014
   ssd_free_tail_gib: 0
@@ -374,10 +374,11 @@ storage_reorganization:
   ssd_serial: 2203JPDG120GB6000933
   ssd_bytes: 120034123776
   ssd_identity_limitation: zero_WWN_not_a_unique_identity
-  root_ext4_block_count: 13106432
+  root_ext4_block_count: 29304689
   root_ext4_block_bytes: 4096
-  root_ext4_bytes: 53683945472
+  root_ext4_bytes: 120032006144
   root_ext4_bytes_equal_partition_bytes: false
+  root_partition_trailing_partial_block_bytes: 3584
   mounted_header_is_offline_fsck: false
   partition_table_copy_runbook: context/runtime/ssd_partition_table_copy_20261006.md
   partition_table_copy_command_prepared: true
@@ -420,7 +421,12 @@ storage_reorganization:
   root_partition_kernel_size_verified: true
   root_partition_pre_growth_copy: /srv/ustar-storage/ssd-grow-20261011-AiJI89
   root_ext4_resize_command_prepared: true
-  root_ext4_resize_command_server_executed: false
+  root_ext4_resize_command_server_executed: true
+  root_ext4_resize_result: context/runtime/ssd_ext4_resize_result_20261011.json
+  root_ext4_resize_started_utc: 2026-10-11T15:35:13Z
+  root_ext4_resize_finished_utc: 2026-10-11T15:35:13Z
+  root_ext4_grown_gpt_copy: /srv/ustar-storage/ssd-ext4-20261011-MCyX9n
+  root_post_resize_shared_service_smoke_verified: false
   root_ext4_resize_expected_blocks: 29304689
   root_ext4_resize_local_validation: Bash_Python_exact_quoting_and_11_regular_file_guard_scenarios_PASS_native_online_resize_not_executed
   root_partition_growth_local_validation: Bash_Python_exact_quoting_and_15_sparse_file_raw_guard_scenarios_PASS_native_growpart_not_executed

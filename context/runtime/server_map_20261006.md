@@ -1,6 +1,6 @@
 # Карта server1 и хранение перед новым стендом
 
-**Дополнение 11.10:** [GPT relocation PASS и текущая точка](storage_continuation_20261011.md). Root sda2/ext4 прежние, df49G/37Gused/11Gavailable/78%; usable_end234441614. Следующий actual growth dry-run/backup status. Ниже — историческая карта06Oct; её pending relocation и GPT warning заменены результатом11Oct.
+**Дополнение 11.10:** [GPT/partition/ext4 PASS и текущая точка](storage_continuation_20261011.md). Partition234437519sectors/ext4 resize15:35:13UTC/29304689blocks, df110G/37used/69free/35%; UUID/mount/quota/GPT unchanged. Следующие readonly service/HTTP/cron/browser checks, затем fresh stage budget. Ниже — историческая карта06Oct; её GPT/grow/resize pending заменены actual результатами11Oct.
 
 Текущая команда владельца **06.10.2026 00:45:07 MSK /05.10 21:45:07 UTC**: до нового стенда оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD. Это заменяет прежний порядок «регулярные копии в самом конце». `PR87 --prepare-stage` приостановлен. Прямого SSH у агента нет; ниже датированный вывод владельца, а не live query.
 
@@ -149,3 +149,6 @@ Owner authorization покрывает этот storage/map/automatic-backup п�
 
 
 **Последний owner checkpoint11Oct15:21:56UTC:** [partition growth PASS](ssd_partition_grow_result_20261011.json), root partition120032009728bytes/kernel234437519sectors, raw CRC/boot PASS. Ext4 ещё53683945472bytes/df49G; [следующий online ext4 resize](storage_continuation_20261011.md). Ранее pending partition growth в карте/дополнениях заменён этим actual результатом.
+
+
+**Последний owner checkpoint11Oct15:35:13UTC:** [online ext4 PASS](ssd_ext4_resize_result_20261011.json),29304689blocks/df110G/37used/69free/35%; UUID/mount/quota/raw GPT прежние. [Следующие readonly post-checks](storage_continuation_20261011.md), затем fresh PR87 stage budget. Ранее pending ext4 статусы заменены этим результатом; post-service acceptance пока не получена.

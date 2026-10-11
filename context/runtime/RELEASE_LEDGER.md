@@ -396,3 +396,23 @@ growth unsafe для table rollback. Native online resize не запускал�
 Bash/Python/exact quoting и11 regular-file guard tests PASS. STATE/ACTIVE/BACKLOG/
 entrypoints/index обновлены, source/helper/workflow/frontend unchanged. PR98 open;
 CI нового SHA отделён от local checks и owner server evidence.
+
+
+## 2026-10-11 — online ext4 resize PASS; post-service smoke впереди
+
+Owner start/finish stamps15:35:13UTC, exact elapsed отдельно не измерен. Native
+resize2fs1.47.0 online:13106432→29304689(4k)blocks, descriptors7→14. Seven checksum
+checks нового grown GPT snapshot `/srv/ustar-storage/ssd-ext4-20261011-MCyX9n` OK,
+raw source cmp/GPT unchanged/UUID/mount/quota checks PASS. Root df110G/37used/
+69available/35%; exact df size117815881728/used38711189504/avail73749991424bytes.
+Kernel supplied window содержит только resizing/resized, no errors in that window,
+не full historic/later host health. [Exact evidence](../runtime/ssd_ext4_resize_result_20261011.json).
+
+Подготовлены readonly host/unit/container/listener/kernel inventory, pinned cron
+v3 --status и два known HTTP login probes. Browser authenticated file/SCORM и
+mail/DNS/ISPConfig acceptance отдельно впереди; затем fresh PR87 stage budget/check.
+Без service stops/reboot/cleanup/source changes. Все меньшие старые partition
+snapshots unsafe для table rollback выросшей FS; grown GPT snapshot не full host
+backup. STATE/ACTIVE/BACKLOG/entrypoints/index актуализированы. PR98 open; remote
+CI нового SHA отделяется от local checks и owner execution. Application/frontend/
+helpers/workflows unchanged. Короткий smoke не повторяет полный baseline QA.

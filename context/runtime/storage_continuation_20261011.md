@@ -1,10 +1,11 @@
 # Продолжение хранения после PR96 — 11.10.2026
 
-**Текущая точка:** перенос GPT и увеличение `/dev/sda2` выполнены владельцем.
-Raw GPT/boot checks и kernel size234437519sectors PASS; ext4 пока прежняя,
-13106432×4096bytes, df49G/37used/11available/78%. Последний scheduled backup11Oct
-успешен. Следующий отдельный шаг — online ext4 resize с новым GPT snapshot и
-проверками UUID/mount/raw metadata, затем df/kernel/shared-service smoke.
+**Текущая точка:** GPT relocation, рост раздела и online ext4 resize выполнены
+владельцем. Root `/` теперь110G/37used/69available/35%; FS29304689×4096bytes,
+UUID/mount/quota/raw GPT прежние. Kernel в supplied resize-window сообщил
+успешное расширение без ошибок. Последний scheduled backup11Oct успешен.
+Следующий шаг — read-only host/container/HTTP/cron checks и короткий browser
+smoke, затем fresh stage budget и продолжение PR87 отдельного workspace.
 
 Прямого SSH у агента нет. Основание — полный вывод владельца в сообщении
 11.10.2026; время начала операции напечатано `2026-10-11T14:40:15Z`
@@ -138,16 +139,16 @@ raw superblock корень здесь обычная ext4 на `/dev/sda2`, н�
 этого установленного layout. Начало4096 сохранено; GPT CRC и native verify PASS.
 Повторной правки границ ради caution в текущем ext4 шаге нет.
 
-## Следующая команда: online ext4 resize
+## Выполненный online ext4 resize — не повторять
 
-`sudo -v` отдельно, затем строка ниже. По [Ubuntu Noble resize2fs manual](https://manpages.ubuntu.com/manpages/noble/man8/resize2fs.8.html)
+Ниже сохранена уже выполненная владельцем команда15:35:13UTC. По [Ubuntu Noble resize2fs manual](https://manpages.ubuntu.com/manpages/noble/man8/resize2fs.8.html)
 mounted ext4 можно увеличивать online при поддержке ядра; без size используется
 размер раздела. Здесь kernel6.8 и ext4, новый размер partition уже проверен.
 Команда проверяет exact SSD/root/kernel identity и старый block count, сохраняет
 **уже выросшую GPT** в новом HDD0700 каталоге и проверяет hashes/source readback.
 Затем `resize2fs /dev/sda2`, syncfs и raw superblock проверки. Ожидается
 29304689×4096=120032006144bytes;3584 trailing partition bytes не составляют целый
-ext4 block. Не приписывать этот expected size серверу до actual результата.
+ext4 block. Actual owner результат ниже подтвердил ровно этот block count.
 Mount options/UUID и raw primary/secondary GPT сравниваются до/после; df/kernel
 messages выводятся отдельно. Marker говорит о size/identity, не о full service QA.
 
@@ -162,22 +163,75 @@ sudo -n flock --exclusive --nonblock /run/lock/ustar-ssd-grow.lock bash -c 'set 
 ```
 
 Local syntax/quoting и11 regular-file ext4 guard cases PASS; native online resize
-агентом не исполнялся. Утилита не запускает e2fsck на mounted `/`, не меняет quotas,
+выполнен владельцем, не агентом. Утилита не запускает e2fsck на mounted `/`, не меняет quotas,
 не останавливает services, не перезагружает хост и не очищает источники/лаборатории.
 
-## После owner EXT4_RESIZED=PASS
+## Owner результат ext4 — 15:35:13UTC / 18:35:13МСК
 
-1. Оценить actual df и kernel messages, сохранить UUID/mount settings в evidence.
-2. Проверить Academy login/files/SCORM/cron, production/lab containers и нужные
-   Apache/mail/DNS/ISPConfig/MariaDB службы. Корень общий: дополнительное место
-   доступно всем путям на `/`; автоматического переноса данных на HDD нет.
-3. Обновить карту/бюджет, вернуться к PR87 cold checkpoint и отдельному workspace,
-   full-addon upgrade/repeat/paired rollback для patch5.1.8, затем production
-   patch, Ubuntu maintenance/reboot и HTTPS в согласованном порядке.
+[Exact evidence](ssd_ext4_resize_result_20261011.json). Native resize2fs1.47.0
+online: old_desc_blocks7→new14; filesystem now29304689(4k)blocks. Pre/post raw
+superblock guards PASS; UUID/mount options и primary/secondary GPT bytes прежние.
+Новый grown GPT snapshot `/srv/ustar-storage/ssd-ext4-20261011-MCyX9n`: seven hashes
+OK/source readback PASS. Эта копия хранит выросшую таблицу, не весь filesystem/host.
+Start и finish stamps оба15:35:13UTC, точная длительность отдельно не измерялась.
 
-Перенос GPT/partition growth, initializer, fstab, producer trial и scheduler install
-не повторять. Источники и лаборатории не удалялись. Fresh independent archive/
-restore, HDD residual SMART198=1, reboot-mount и full shared-host recovery открыты.
+| Current owner observation | Result |
+|---|---|
+| Root partition | 120032009728bytes,234437519sectors |
+| Ext4 raw size | 29304689×4096=120032006144bytes;3584 trailing bytes |
+| `df -hT /` | 110G total /37G used /69G available /35% |
+| `df -B1 /` | size117815881728 /used38711189504 /avail73749991424bytes |
+| Mount/quotas | rw,relatime,errors=remount-ro,jqfmt=vfsv0,usrjquota=quota.user,grpjquota=quota.group; unchanged |
+| Kernel supplied window | resizing13106432→29304689, resized29304689; no error messages in this window |
+| Marker | EXT4_RESIZED=PASS; UUID_MOUNT_GPT_UNCHANGED=PASS |
+
+Raw FS bytes и df total отличаются из-за filesystem accounting; available df
+также учитывает reserved blocks. Не менять reserved percentage/quotas ради цифр.
+Дополнительное место принадлежит общему `/`, HDD остаётся backup target.
+GPT/partition/resize команды повторно не запускать. Старые меньшие GPT copies
+06Oct/AiJI89 не применять как table rollback после роста FS.
+
+## Следующий шаг: post-resize проверки
+
+`sudo -v` отдельно; каждая команда ниже — одна physical line. Это inventory/
+status/HTTP GET, не worker/install/backup/restart/upgrade. Host services собираются
+по actual loaded units, без предположения об exact имени ISPConfig/DNS unit.
+Failed units и kernel warnings анализируются с timestamp; historical failure
+не автоматически считается последствием resize. Ports/listeners лишь transport
+evidence, не authenticated mail/DNS/panel acceptance.
+
+```bash
+sudo -n timeout 30s bash -c 'date -u +%FT%TZ; df -hT / /srv/ustar-storage; df -i /; systemctl --failed --no-pager; systemctl list-units --type=service --all --no-pager --plain --no-legend | awk "tolower(\$0) ~ /apache|docker|cron|mariadb|mysql|postfix|dovecot|bind9|named|php.*fpm|ispconfig|amavis|clamav|rspamd/"; docker ps -a --format "{{.Names}}\t{{.Status}}"; ss -lntup; journalctl -k --since "2026-10-11 15:21:56 UTC" -p warning --no-pager -o short-iso'
+```
+
+Cron v3 exact SHA из reviewed uploaded source; `--status` выполняет bounded
+readonly SQL/status, без Moodle PHP task execution. Single cron не переустанавливать.
+
+```bash
+sudo -n timeout 30s bash -c 'set -eu; printf "%s  %s\n" 66fd51d364beb59a8874a63c695c122dca5452a720e61b86d070beb0b1939852 /usr/local/sbin/USTAR_CRON_SETUP_20261005.py | sha256sum --check --strict -; python3 -u /usr/local/sbin/USTAR_CRON_SETUP_20261005.py --status'
+```
+
+HTTP два известных пути: host Apache с Hostustar.local и backend127.0.0.1:8082.
+Curl не следует redirects; status/ошибку рассмотреть, не объявлять любой redirect
+failure. Login200 не доказывает authenticated session/file/SCORM.
+
+```bash
+bash -c 'curl --noproxy "*" --connect-timeout 3 --max-time 10 -sS -o /dev/null -w "ACADEMY_PROXY_LOGIN_HTTP=%{http_code}\n" -H "Host: ustar.local" http://127.0.0.1/login/index.php; curl --noproxy "*" --connect-timeout 3 --max-time 10 -sS -o /dev/null -w "ACADEMY_BACKEND_LOGIN_HTTP=%{http_code}\n" -H "Host: ustar.local" http://127.0.0.1:8082/login/index.php'
+```
+
+Owner browser smoke: обычный вход в Академию и открытие одного существующего
+файла/SCORM, без переустановки/назначений/повторения полного baseline QA. Затем
+по actual unit/listener inventory проверить необходимые mail/DNS/ISPConfig
+контрольные точки. Полные env/config/inspect, ключи и dumps не публиковать.
+
+После этих результатов — fresh PR87 `--check`/budget/identity. Current df69G
+available существенно выше старого estimate9.80GiB, но fresh source/space/inodes/
+memory/port guards выполняются перед cold copy. Отдельный immutable checkpoint и
+mutable workspace, full-addon patch5.1.8 upgrade/repeat/paired rollback, production
+patch, OS maintenance/reboot и HTTPS сохраняют согласованную очередь. Источники/
+старые snapshots не удалялись; их cleanup/moves без scope решения не выполняются.
+Fresh independent archive/restore, HDD residual SMART198=1, reboot-mount и full
+shared-host recovery открыты отдельно.
 
 ## Остаток полного аудита
 

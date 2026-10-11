@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 21263,
-      "sha256": "a0046d6ed17b19f1ace0888047edc4d1eb4105dfb8e3b8de333c722392bb5b1b"
+      "size": 21490,
+      "sha256": "75ef78727898f2fcb7b674809a204626186dce4ca3f7237c9f02ee5896dab5b9"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/runtime/lab_patch_candidate_20261011.md",
       "domain": "runtime",
-      "size": 11131,
-      "sha256": "8ae6d0cd7f3cd35098721f72a711f783d3ad31510af807cec8b7206e8ecee61b"
+      "size": 11407,
+      "sha256": "6b21cee33fac3e1ce1e8abb418d50a5f7ef609c8e47af4129a586ff84d0c00f5"
     },
     {
       "path": "context/runtime/lab_patch_candidate_local_archive_result_20261011.json",
@@ -924,8 +924,8 @@
     {
       "path": "context/runtime/lab_patch_candidate_validation_20261011.json",
       "domain": "runtime",
-      "size": 788,
-      "sha256": "eac1823714257d8c5e0fdbfec4dccfd10e2bb7d409cb5b95ea517fbebadf6094"
+      "size": 1060,
+      "sha256": "460f297aac2469d5db493eaeb149b88a24daf28d50ad9a4ff741a1efdebd533d"
     },
     {
       "path": "context/runtime/lab_patch_preflight_20261005.md",

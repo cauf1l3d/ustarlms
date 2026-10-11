@@ -287,8 +287,11 @@ patch_candidate:
   candidate_copy_helper_local_validation: 30 filesystem_archive_lock_failure_tests_PASS_plus_pinned_real_archive_extraction_readback
   candidate_copy_helper_server_executed: false
   candidate_core_activated_on_stage: false
-  candidate_copy_github_ci_status: not_yet_available
+  candidate_copy_github_ci_status: no_workflow_runs_for_published_implementation
   full_addon_upgrade_repeat_paired_restore_helper_ready: false
+  candidate_copy_helper_implementation: 9fe10fc127d2ac40fe045432719467906d160816
+  candidate_copy_pr_created: false
+  candidate_copy_pr_creation_error: GitHub403_requires_at_least_one_verified_email
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

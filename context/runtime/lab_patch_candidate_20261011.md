@@ -37,9 +37,12 @@ Checkpoint `SOURCE/patch-rollback-20261005`; mutable baseline workspace
 Source: [scripts/infra/lab_patch_candidate.py](../../scripts/infra/lab_patch_candidate.py).
 SHA256: `4850e17699ab32705b938358dc1f53ffb095daf4fe875b994298482f90e8f735`.
 Branch `codex/lab-patch-candidate-20261011` от fresh main
-`c53723c8d669a1013c518f34abf392143d211d9d`. Exact implementation SHA — commit этого
-файла (`git log -1 --format=%H -- scripts/infra/lab_patch_candidate.py`); оператору
-выдаётся raw URL на конкретный commit, не изменяемый branch head.
+`c53723c8d669a1013c518f34abf392143d211d9d`. Exact implementation SHA: `9fe10fc127d2ac40fe045432719467906d160816`;
+remote helper bytes fetched at this commit exactly match the local tested file.
+[Published source](https://github.com/cauf1l3d/ustarlms/blob/9fe10fc127d2ac40fe045432719467906d160816/scripts/infra/lab_patch_candidate.py).
+Branch publication accepted. Draft PR creation returned GitHub403:
+“At least one email address must be verified to do that.” Workflow runs for this
+implementation are empty; remote CI is not PASS, no merge performed.
 
 Helper default — PLAN_ONLY, без чтения private inputs. `--check` read-only;
 `--prepare-candidate` создаёт новый root0700 `SOURCE/patch-candidate-518-20261011-*`.
@@ -122,7 +125,7 @@ Contents/config/manifest не загружать публично: достат�
 
 ## Выполнение и следующий результат
 
-В SSH `aduk@server1:~$` после `sudo -v` скачать helper по конкретному implementation
+В SSH `aduk@server1:~$` после `sudo -v` скачать helper по указанному выше implementation
 commit, проверить SHA и установить root:root0600 в
 `/usr/local/sbin/USTAR_LAB_PATCH_CANDIDATE_20261011.py`. Затем одна physical line:
 

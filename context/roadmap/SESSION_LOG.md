@@ -520,3 +520,13 @@ failure injection tests PASS; full r16 260 OK/11 skips. Real Docker/PHP/Moodle/P
 upgrade/restore not executed locally or on server. Exact implementation/publication/
 CI recorded separately after publication; PR99 remains draft/unmerged.
 [Contract](../runtime/lab_patch_upgrade_20261012.md).
+
+
+Published upgrade implementation59b88e1ae061bfa9ca4070ec74c4ffbf1629df44,
+helper SHA452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4,
+immutable GitHub blob3f42c59 byte-identical PASS; local/published tree51c561a matched.
+Exact Context58/run38184389152 SUCCESS and Review494/run38184389139 complete
+source PHP8.2/8.3 SUCCESS. Frontend npm audit FAILURE; rollback/prepare-rc/moodle-db/
+gate SKIPPED; no full gate PASS, merge or server deployment claim. PR98/99 metadata
+updated to owner readiness PASS and concrete stage upgrade/recovery handoff.
+Operator immutable curl/checksum/install/upgrade and recovery commands documented.

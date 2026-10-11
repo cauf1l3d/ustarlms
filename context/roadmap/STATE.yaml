@@ -341,6 +341,11 @@ patch_candidate:
   upgrade_helper_sha256: 452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4
   upgrade_contract: context/runtime/lab_patch_upgrade_20261012.md
   upgrade_validation: context/runtime/lab_patch_upgrade_validation_20261012.json
+  upgrade_helper_implementation: 59b88e1ae061bfa9ca4070ec74c4ffbf1629df44
+  upgrade_remote_helper_readback: byte_identical_PASS_blob3f42c59
+  upgrade_context_ci: 38184389152
+  upgrade_review_ci: 38184389139
+  upgrade_ci_status: context_and_complete_sourcePHP82_83_success_frontend_audit_failure_downstream_skipped_no_merge
   upgrade_helper_server_executed: false
   paired_restore_helper_prepared: true
   paired_restore_server_executed: false

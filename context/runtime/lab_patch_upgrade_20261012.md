@@ -97,7 +97,12 @@ Private restore engine полностью прочитан40187bytes и SHA
 AST API contract PASS, ownership/mount/exec/SQL/relay signatures проверены.
 Исходник engine не добавлен в Git. Official package SHA0e8e2cde... был проверен
 полностью; CLI upgrade source и repeat/no-upgrade exit0 прочитаны из этого пакета.
-Exact new publication SHA/remote bytes/CI фиксируются после публикации.
+Implementation `59b88e1ae061bfa9ca4070ec74c4ffbf1629df44`, helper SHA256 `452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4`.
+Immutable remote blob3f42c59aeddde973d40bca9bc91a0e8c2235787b byte-identical PASS.
+[Context58](https://github.com/cauf1l3d/ustarlms/actions/runs/38184389152) SUCCESS;
+[Review494](https://github.com/cauf1l3d/ustarlms/actions/runs/38184389139) both complete
+source PHP8.2/8.3 SUCCESS, frontend npm audit FAILURE; rollback/prepare-rc/moodle-db/gate
+SKIPPED. Это source verification, не полный gate или live upgrade/restore.
 
 Server upgrade/repeat/paired rollback этого helper ещё не выполнялись.
 Composer declarations не доказывают resolved dependencies; exif/soap optional
@@ -106,3 +111,30 @@ missing не основание для слепого install. После реа
 completion/files и smoke всех сохранённых addons. Production patch, OS/AppArmor/
 reboot/required services, HTTPS и independent backup recovery остаются следующими
 отдельными приёмками выбранного порядка1→7→6.
+
+
+## Точная команда владельцу
+
+В существующем SSH-окне `aduk@server1:~$` выполнить строки по очереди. Каждая
+команда ниже — одна физическая строка. `--upgrade-stage` может долго копировать
+файлы; оставить SSH открытым, дождаться итогового вывода. Короткий внешний timeout
+для операции не применяется; CLI внутри имеет1800s timeout с stage-only recovery.
+
+```bash
+sudo -v
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/59b88e1ae061bfa9ca4070ec74c4ffbf1629df44/scripts/infra/lab_patch_upgrade.py -o /home/aduk/USTAR_LAB_PATCH_UPGRADE_20261012.py
+printf '%s  %s\n' 452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4 /home/aduk/USTAR_LAB_PATCH_UPGRADE_20261012.py | sha256sum --check --strict - && sudo -n install -m 600 -o root -g root /home/aduk/USTAR_LAB_PATCH_UPGRADE_20261012.py /usr/local/sbin/USTAR_LAB_PATCH_UPGRADE_20261012.py
+sudo -n bash -c 'set -euo pipefail; umask 077; printf "%s  %s\n" 452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4 /usr/local/sbin/USTAR_LAB_PATCH_UPGRADE_20261012.py | sha256sum --check --strict -; python3 -I -B -u /usr/local/sbin/USTAR_LAB_PATCH_UPGRADE_20261012.py --upgrade-stage'
+```
+
+После вывода получить owner report. Следующий отдельный rollback trial или
+восстановление при `STAGE_RECOVERY_REQUIRED`/обрыве питания:
+
+```bash
+sudo -v
+sudo -n bash -c 'set -euo pipefail; umask 077; printf "%s  %s\n" 452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4 /usr/local/sbin/USTAR_LAB_PATCH_UPGRADE_20261012.py | sha256sum --check --strict -; python3 -I -B -u /usr/local/sbin/USTAR_LAB_PATCH_UPGRADE_20261012.py --restore-baseline'
+```
+
+`LAB_PATCH_PAIRED_RESTORE=PASS` после successful upgrade возвращает исходную
+baseline, а не оставляет обновлённый candidate. Для новой browser QA затем
+повторяется `--upgrade-stage` после получения и проверки rollback report.

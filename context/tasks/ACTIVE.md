@@ -13,8 +13,9 @@ admin/cli/upgrade.php twice, and restores code/config/Moodledata/physicalPG toge
 on failure. Separate --restore-baseline proves paired rollback after successful
 upgrade.23 dedicated real filesystem/failure injection tests PASS; full r16 260 OK/11
 skips. Private stage engine fully read/SHA matched/API contract PASS; raw engine
-not published. Source exact CI awaits publication; frontend npm audit blocker/full
-gate remain distinct, PR99 draft/unmerged. Browser roles/SCORM/home/addon acceptance
+not published. Implementation59b88e1, exact Context58/complete sourcePHP8.2/8.3
+SUCCESS; frontend npm audit FAILURE/downstream SKIPPED/full gate not PASS.
+PR99 draft/unmerged. Browser roles/SCORM/home/addon acceptance
 and production patch remain pending. Do not rerun storage/candidate/stage preparation.
 
 SSD/root и HDD ночной запуск11Oct success; checkpoint и baseline stage приняты18:55:53..19:17:02UTC. Official5.1.8 SHA проверен20:09UTC в `moodle-518-package-20261011-nnixp4se`. Не повторять. Screenshot подтверждает authenticated SCORM rendering в видимой области; core production прежний.

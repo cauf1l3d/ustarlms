@@ -36,7 +36,23 @@
   "server_upgrade_executed": false,
   "server_paired_restore_executed": false,
   "production_changed": false,
-  "exact_remote_source_ci": "pending_publication",
+  "exact_remote_source_ci": {
+    "implementation": "59b88e1ae061bfa9ca4070ec74c4ffbf1629df44",
+    "context_run": 38184389152,
+    "context": "success",
+    "review_run": 38184389139,
+    "source_php82": "success",
+    "source_php83": "success",
+    "frontend": "failure_npm_audit",
+    "rollback": "skipped",
+    "prepare_rc": "skipped",
+    "moodle_db": "skipped",
+    "gate": "skipped",
+    "full_gate_pass": false
+  },
   "local_source_structural": "PASS --skip-php; JS24/tables93/templates56; not CI substitute",
-  "application_source_map": "unchanged PR76; files526/PHP356/symbols172/tables93/tasks32"
+  "application_source_map": "unchanged PR76; files526/PHP356/symbols172/tables93/tasks32",
+  "implementation_commit": "59b88e1ae061bfa9ca4070ec74c4ffbf1629df44",
+  "remote_helper_blob": "3f42c59aeddde973d40bca9bc91a0e8c2235787b",
+  "immutable_remote_bytes": "PASS"
 }

@@ -1,3 +1,4 @@
+# Checkpoint12Oct16:34MSK: Apache runtime PASS; next CI/addons/production preflight.
 # Checkpoint12Oct15:50MSK: Owner12Oct15:50MSK accepted preceding HR people/card/material/document/assessment read smoke; writes/full addons not inferred. Access ended by owner report. Next bounded Apache/PHP inspection without relay restart or core upgrade, then CI. Production unchanged.
 schema_version: 2
 updated_at: '2026-10-12'
@@ -228,13 +229,11 @@ tasks:
   - context/runtime/lab_patch_reupgrade_result_20261012.json
   - context/runtime/lab_patch_browser_qa_20261012.md
   - context/runtime/lab_patch_browser_result_20261012.json
-  current_checkpoint: Owner12Oct15:25MSK employee/manager requested smoke PASS in owner-reported
-    scope, including own learning/tasks, non-HR HR-page denial and manager team/learning.
-    Earlier admin SCORM/progress/logout-login/home accepted14:41; version5.1.8 screenshots retained.
-    Next existing HR people/card/materials/document/assessment view, then Apache/PHP isolation,
-    relevant addons and CI gate. Full role write/cross-scope/self-registration/completion/grades/
-    full-addon/production not inferred; cron disabled, current runxdgki_yo/prior rollback retained.
-    No repeated passed checks or core operations for browser access.
+  - context/runtime/lab_patch_apache_result_20261012.json
+  current_checkpoint: Owner Apache/PHP12Oct13:33:40UTC PASS;512M/mail blocked/extensions
+    present/tasks0/code and container identities unchanged. HR requested read smoke accepted.
+    Next frontend dependency remediation/full RC and relevant addon acceptance before production.
+    Do not repeat passed stage upgrade/restore operations. Full-addon/production not inferred.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

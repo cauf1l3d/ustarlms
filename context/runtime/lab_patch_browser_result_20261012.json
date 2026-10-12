@@ -68,7 +68,7 @@
     "SCORM_audio_video": "NOT_VERIFIED",
     "real_employee_manager_HR_roles": "OWNER_REPORTED_PASS_requested_read_smoke_only",
     "full_addon_compatibility": "NOT_VERIFIED",
-    "apache_php_settings": "NOT_VERIFIED",
+    "apache_php_settings": "OWNER_TERMINAL_PASS_separate_receipt",
     "real_employee_requested_smoke": "OWNER_REPORTED_PASS_own_learning_tasks_and_non_HR_page_denial",
     "real_manager_requested_smoke": "OWNER_REPORTED_PASS_team_roster_and_learning_summary",
     "real_HR_requested_smoke": "OWNER_REPORTED_PASS_requested_people_card_material_document_assessment_view; no writes inferred",
@@ -84,8 +84,8 @@
   "production_upgrade_executed": false,
   "next_operator_handoff": "context/runtime/lab_patch_browser_qa_20261012.md",
   "next_operator_checks": [
-    "bounded Apache/PHP inspection without relay or upgrade",
-    "relevant addon runtime and complete CI before production"
+    "CI dependency remediation and full RC",
+    "relevant preserved addon acceptance and fresh production preflight before deploy"
   ],
   "latest_owner_message_received_at": "2026-10-12T15:25:03+03:00",
   "followup_owner_reports": [
@@ -127,5 +127,6 @@
   "native_basic_browser_smoke_verified": true,
   "native_basic_browser_smoke_scope": "stage admin/browser/SCORM/progress/login/home; owner report plus prior screenshot rendering, not all real roles/addons",
   "employee_manager_requested_smoke_verified": true,
-  "employee_manager_requested_smoke_scope": "owner umbrella answer to exact preceding employee/manager checks; no all-capability or HR inference"
+  "employee_manager_requested_smoke_scope": "owner umbrella answer to exact preceding employee/manager checks; no all-capability or HR inference",
+  "apache_php_receipt": "context/runtime/lab_patch_apache_result_20261012.json"
 }

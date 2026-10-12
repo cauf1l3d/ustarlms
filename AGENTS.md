@@ -1,3 +1,5 @@
+**Checkpoint12Oct16:34MSK:** Owner Apache/PHP check12Oct13:33:40UTC PASS:512M/mail blocked/required extensions present/tasks0/code and identities unchanged. HR read smoke accepted. Next CI dependency fix/full RC and relevant addon acceptance before production; do not repeat passed stage core operations.
+
 **Checkpoint12Oct15:50MSK:** Owner12Oct15:50MSK accepted preceding HR people/card/material/document/assessment read smoke; writes/full addons not inferred. Access ended by owner report. Next bounded Apache/PHP inspection without relay restart or core upgrade, then CI. Production unchanged.
 
 # USTAR — инструкции агентам

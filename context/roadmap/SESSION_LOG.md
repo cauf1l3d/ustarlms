@@ -680,3 +680,11 @@ Moscow is inferred, not agent current service observation.
 
 Owner12Oct15:50MSK accepted preceding HR people/card/material/document/assessment read smoke; writes/full addons not inferred. Access ended by owner report. Next bounded Apache/PHP inspection without relay restart or core upgrade, then CI. Production unchanged.
 New builtins-only temporary HTTP probe checks existing Apache handler; bounded namespace request, guarded cleanup, readonly DB/version checks; no relay/start/upgrade/production operations. Local tests cover interrupted cleanup, replacement retention and settings denial. Existing frontend dependency edits remain uncommitted and excluded from this delivery; npm audit/full CI still pending.
+
+
+## 12Oct16:34MSK Apache runtime acceptance and frontend audit fix
+
+Owner Apache/PHP check12Oct13:33:40UTC PASS:512M/mail blocked/required extensions present/tasks0/code and identities unchanged. HR read smoke accepted. Next CI dependency fix/full RC and relevant addon acceptance before production; do not repeat passed stage core operations.
+Receipt:context/runtime/lab_patch_apache_result_20261012.json. Audit job114826833000/run38253886782 identifies Next cache poisoning advisories GHSA-4jqv-mc3x-m676/GHSA-mcj8-r9mp-w47p and Sharp GHSA-wq5f-xc86-pv6w. Prepared existing dependency edits reviewed:Next15.5.27,Sharp0.35.5,lockfile parity; no threshold suppression. Production native Moodle code and all pinned stage helpers unchanged. Publication/full RC pending.
+
+Local frontend audit production dependencies0 findings,4 unit tests,clean install(ignore scripts),build and built HTTP fixture PASS. CI uses normal npm ci. Receipt:context/runtime/lab_patch_frontend_audit_fix_20261012.json.

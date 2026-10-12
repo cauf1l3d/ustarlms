@@ -1,3 +1,5 @@
+**Checkpoint12Oct16:34MSK:** Owner Apache/PHP check12Oct13:33:40UTC PASS:512M/mail blocked/required extensions present/tasks0/code and identities unchanged. HR read smoke accepted. Next CI dependency fix/full RC and relevant addon acceptance before production; do not repeat passed stage core operations.
+
 # Протокол продолжения
 
 **Checkpoint12Oct15:25MSK:** [employee/manager smoke принят](../runtime/lab_patch_browser_result_20261012.json)

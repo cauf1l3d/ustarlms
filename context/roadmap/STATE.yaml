@@ -3,10 +3,10 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Owner12Oct15:50MSK accepted preceding HR people/card/material/document/assessment
-  read smoke; writes/full addons not inferred. Access ended by owner report. Next
-  bounded Apache/PHP inspection without relay restart or core upgrade, then CI. Production
-  unchanged.
+current_activity: Owner Apache/PHP check12Oct13:33:40UTC PASS:512M/mail blocked/required
+  extensions present/tasks0/code and identities unchanged. HR read smoke accepted.
+  Next CI dependency fix/full RC and relevant addon acceptance before production;
+  do not repeat passed stage core operations.
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -364,7 +364,7 @@ patch_candidate:
   core_candidate_upgrade_repeat_server_executed: true
   stage_core_db_version: '2025100608.00'
   stage_prior_restored_core_db_version: '2025100601.03'
-  stage_current_phase: candidate518_employee_manager_smoke_accepted_HR_addons_next
+  stage_current_phase: apache_PASS_HR_read_smoke_accepted_CI_addon_preflight_next
   stage_prior_upgrade_core_db_version: '2025100608.00'
   stage_upgrade_finished_at: '2026-10-12T10:40:14.161729+00:00'
   current_stage_paired_baseline_manifest_sha256: d15a50027186ae6da5ae2a7a83ac74579d88399c36dcb8605ee4c0799fcff342
@@ -406,7 +406,7 @@ patch_candidate:
   stage_employee_manager_requested_smoke_verified: true
   stage_employee_manager_smoke_evidence: owner_1525_reply_to_exact_two_account_checks_not_agent_live_query
   stage_non_HR_employee_HR_page_denial: owner_reported_PASS_in_requested_smoke
-  stage_real_HR_smoke_verified: false
+  stage_real_HR_smoke_verified: true
   stage_all_role_write_cross_scope_verified: false
   stage_raw_screenshots_published: false
   custom_home_static_core_support_verified: true
@@ -427,6 +427,12 @@ patch_candidate:
   candidate_copy_ci_implementation: 4a6810234abf33773fb8efbeb7293ddcb21c17c6
   candidate_copy_context_ci: 38175465744
   candidate_copy_review_ci: 38175465742
+  stage_real_HR_smoke_scope: owner_requested_read_views_only_no_grading_writes_inferred
+  apache_php_settings_verified: true
+  apache_php_settings_receipt: context/runtime/lab_patch_apache_result_20261012.json
+  apache_php_measured_at: '2026-10-12T13:33:40.091384+00:00'
+  apache_php_isolation_owner_result: PASS
+  full_addon_compatibility_verified: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

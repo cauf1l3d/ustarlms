@@ -15,3 +15,7 @@ pending. If stage stopped, inspect first; no repeated upgrade to reopen access.
 Local tests do not prove server runtime. Full addons/frontend CI still pending.
 
 Dedicated probe tests:4 PASS. Paired upgrade/recovery tests:23 PASS. Broad r16 attempt had missing mcp dependencies and portable temporary-parent fixture failures; fixture fixed and scoped tests repeated. No broad-suite PASS claimed; exact-head CI pending.
+
+## Owner server result12Oct16:33:40MSK
+
+[Exact receipt](lab_patch_apache_result_20261012.json):Apache PASS,512M,mail blocked,all required extensions,no prepend/append,tasks0,57 addon versions match. Probe removed,code/config and container identities unchanged. Apache reports zz-ustar-lab.ini scanned while worker readability=false; effective settings passed, no permissions edit needed. CLI still uses explicit per-process settings. Production untouched; full addon compatibility not inferred. Exact56251bb source PHP8.2/8.3 and context CI PASS, frontend audit fails next15.5.25/sharp<0.35.5.

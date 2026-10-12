@@ -1,3 +1,7 @@
+## Apache/PHP accepted12Oct16:34MSK
+
+[Owner receipt](lab_patch_apache_result_20261012.json) confirms working upgraded-stage containers after relay expiry, all Apache PHP settings,zero tasks and unchanged code/container identities. Next dependency/full CI and relevant addons; no repeated core operations or full-addon PASS inferred.
+
 ## Обновление по ответу владельца12Oct15:50МСК
 
 Владелец подтвердил предыдущие HR read checks фразой «все работало».

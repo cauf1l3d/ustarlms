@@ -66,12 +66,12 @@
     "SCORM_progress_persistence_after_reload_and_relogin": "OWNER_REPORTED_PASS_in_response_to_requested_check",
     "SCORM_completion_and_grade": "NOT_VERIFIED",
     "SCORM_audio_video": "NOT_VERIFIED",
-    "real_employee_manager_HR_roles": "PARTIAL_employee_manager_requested_smoke_OWNER_REPORTED_PASS; HR not yet tested",
+    "real_employee_manager_HR_roles": "OWNER_REPORTED_PASS_requested_read_smoke_only",
     "full_addon_compatibility": "NOT_VERIFIED",
     "apache_php_settings": "NOT_VERIFIED",
     "real_employee_requested_smoke": "OWNER_REPORTED_PASS_own_learning_tasks_and_non_HR_page_denial",
     "real_manager_requested_smoke": "OWNER_REPORTED_PASS_team_roster_and_learning_summary",
-    "real_HR_requested_smoke": "NOT_VERIFIED",
+    "real_HR_requested_smoke": "OWNER_REPORTED_PASS_requested_people_card_material_document_assessment_view; no writes inferred",
     "all_role_write_and_cross_scope_capabilities": "NOT_VERIFIED"
   },
   "cron_warning": {
@@ -79,14 +79,13 @@
     "interpretation": "expected in this isolated stage: scheduled tasks deliberately disabled; no request to enable cron",
     "stage_isolation_evidence": "prior re-upgrade receipt, not independently inferred from screenshot warning age"
   },
-  "current_stage_phase": "candidate518_employee_manager_smoke_accepted_HR_addons_next",
+  "current_stage_phase": "HR_read_smoke_accepted_apache_check_next",
   "prior_same_helper_paired_rollback_acceptance_retained": true,
   "production_upgrade_executed": false,
   "next_operator_handoff": "context/runtime/lab_patch_browser_qa_20261012.md",
   "next_operator_checks": [
-    "existing real HR account: people list and employee card; materials library and open/download existing document",
-    "HR with actual grading capability: open existing assessment/attempt; empty queue recorded separately, no grading/save inferred",
-    "then bounded Apache/PHP isolation and relevant preserved addon runtime/CI gate before production acceptance"
+    "bounded Apache/PHP inspection without relay or upgrade",
+    "relevant addon runtime and complete CI before production"
   ],
   "latest_owner_message_received_at": "2026-10-12T15:25:03+03:00",
   "followup_owner_reports": [
@@ -116,6 +115,13 @@
       "account_identities": "not_supplied_and_not_published",
       "new_screenshots_or_server_logs": "not_supplied",
       "agent_live_browser_or_database_query": false
+    },
+    {
+      "statement": "все работало, стенд уже отключился, сейчас 15:50 давай идти дальше",
+      "in_response_to": "preceding HR people/card, material/document, assessment viewing checks",
+      "reported_local_time": "2026-10-12 15:50 Europe/Moscow",
+      "agent_live_browser_or_database_query": false,
+      "relay_expiry": "owner reports access ended; service state not measured"
     }
   ],
   "native_basic_browser_smoke_verified": true,

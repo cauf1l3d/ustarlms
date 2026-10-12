@@ -3,12 +3,10 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner12Oct15:25MSK employee/manager requested smoke PASS: own learning/tasks,
-  non-HR HR-page denial, manager correct team/learning in response to exact preceding checks.
-  Admin SCORM/progress/logout-login/home accepted14:41; screenshots/admin5.1.8 retained.
-  Next real HR people/card/materials/document/assessment view, then Apache/PHP isolation,
-  relevant addons and CI gate. Full-role writes/cross-scope/self-registration/completion/grades/
-  all-addon/production not inferred. Current runxdgki_yo/prior paired rollback proof retained.'
+current_activity: Owner12Oct15:50MSK accepted preceding HR people/card/material/document/assessment
+  read smoke; writes/full addons not inferred. Access ended by owner report. Next
+  bounded Apache/PHP inspection without relay restart or core upgrade, then CI. Production
+  unchanged.
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -221,8 +219,8 @@ execution:
   production_changes_in_this_delivery: false
   production_operator: owner_aduk_via_SSH
   direct_production_connection_by_agent: false
-  authorized_extra_operation: 'Owner/sysadmin: overwrite, check and format only WWN0x50014ee200c1ee59 / WD-WCAS82914317
-    / 500106780160 bytes, health qualification before backup use'
+  authorized_extra_operation: 'Owner/sysadmin: overwrite, check and format only WWN0x50014ee200c1ee59
+    / WD-WCAS82914317 / 500106780160 bytes, health qualification before backup use'
   latest_owner_instruction_at: '2026-10-06T00:45:07+03:00'
   pre_stage_priority:
   - storage_inventory_and_verified_reorganization

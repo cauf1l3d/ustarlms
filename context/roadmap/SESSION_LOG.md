@@ -674,3 +674,9 @@ tests unchanged; prior paired restore proof retained/current stage518/runxdgki_y
 No repeated passed admin/employee/manager smoke, core operations, production deploy
 or merge. Doc-only context/index/provenance checks apply. Relay7200s deadline≈15:40
 Moscow is inferred, not agent current service observation.
+
+
+## 12Oct HR owner acceptance and Apache inspection helper
+
+Owner12Oct15:50MSK accepted preceding HR people/card/material/document/assessment read smoke; writes/full addons not inferred. Access ended by owner report. Next bounded Apache/PHP inspection without relay restart or core upgrade, then CI. Production unchanged.
+New builtins-only temporary HTTP probe checks existing Apache handler; bounded namespace request, guarded cleanup, readonly DB/version checks; no relay/start/upgrade/production operations. Local tests cover interrupted cleanup, replacement retention and settings denial. Existing frontend dependency edits remain uncommitted and excluded from this delivery; npm audit/full CI still pending.

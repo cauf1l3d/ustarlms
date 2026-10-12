@@ -1,3 +1,5 @@
+**Checkpoint12Oct15:50MSK:** Owner12Oct15:50MSK accepted preceding HR people/card/material/document/assessment read smoke; writes/full addons not inferred. Access ended by owner report. Next bounded Apache/PHP inspection without relay restart or core upgrade, then CI. Production unchanged.
+
 # USTAR — инструкции агентам
 
 **Checkpoint12Oct15:25MSK:** [employee/manager smoke принят](context/runtime/lab_patch_browser_result_20261012.json)

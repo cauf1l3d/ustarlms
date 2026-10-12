@@ -227,13 +227,13 @@ tasks:
   - context/runtime/lab_patch_reupgrade_result_20261012.json
   - context/runtime/lab_patch_browser_qa_20261012.md
   - context/runtime/lab_patch_browser_result_20261012.json
-  current_checkpoint: Owner12Oct14:10MSK partial native QA on active5.1.8/core2025100608.00;
-    local screenshot review confirms authenticated SCORM16/20/text/images/USTAR UI and admin5.1.8
-    Build20261005. My Team opens by owner report. Same helper/candidate/prior paired rollback proof
-    retained; current runxdgki_yo/paird15a5002. Next same-attempt SCORM persistence after reload/
-    relogin and root→USTAR home, then real roles/addons. Fresh login/self-registration/completion/
-    full-addon/Apache still unverified; clone cron deliberately disabled. Production core unchanged,
-    no repeated core operations or public raw screenshots.
+  current_checkpoint: Owner12Oct14:41MSK basic admin browser QA PASS in owner-reported scope;
+    SCORM navigation/progress, logout/fresh login and home transition; prior screenshots
+    show USTAR UI/SCORM/admin5.1.8 Build20261005. Exact final home URL not supplied.
+    Next existing real employee/manager/HR accounts/capabilities, then preserved addons,
+    completion/grades/Apache; self-registration/full-addon/production not inferred.
+    Current runxdgki_yo/paird15a5002 and prior actual rollback proof retained; clone cron
+    deliberately disabled. No repeated core operations or publication of raw screenshots.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

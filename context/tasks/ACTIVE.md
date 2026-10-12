@@ -1,13 +1,15 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** проверить сохранение SCORM после reload/relogin и root→USTAR home,
-затем реальные роли и дополнения в уже обновлённом stage18085.
-[Частичная ручная приёмка12Oct14:10MSK](../runtime/lab_patch_browser_result_20261012.json):
-локально прочитаны два screenshot; authenticated SCORM16/20/text/images/USTAR UI
-и admin version5.1.8(Build20261005) видимы. «Моя команда» открывается по owner report,
-её screenshot нет. Вход в академию reported, но слово «регается» не доказывает
-fresh login или self-registration. Home/root redirect, saved progress/completion,
-real roles, full-addon compatibility и Apache PHP settings остаются открыты.
+**Текущий шаг:** existing real employee/manager accounts в stage18085: свои страницы,
+команда руководителя и capability restrictions; затем HR/preserved addons/Apache.
+[Owner browser follow-up12Oct14:41MSK](../runtime/lab_patch_browser_result_20261012.json)
+подтвердил SCORM navigation/progress, logout/fresh login и переход на главную в ответ
+на запрошенный same-attempt persistence/root-home check. Basic browser smoke принят
+в owner-reported scope; exact final URL/new screenshot/DB log не присланы. Prior
+screenshots14:10 показывают authenticated SCORM16/20/text/images/USTAR UI и admin
+5.1.8(Build20261005). My Team opens по earlier owner report. Не повторять уже
+пройденные admin SCORM/login/home проверки без новой ошибки. Self-registration,
+SCORM completion/grade/media, real roles, full-addon и Apache settings не приняты.
 
 [Re-upgrade/repeat](../runtime/lab_patch_reupgrade_result_20261012.json) PASS:
 active core2025100608.00/runxdgki_yo/paird15a5002,4910 contenthashes/tasks0/CLI mail

@@ -53,5 +53,5 @@ disable stage scheduled tasks; no production exec/SQL/stop.
 [Contract](../runtime/lab_patch_upgrade_20261012.md), [owner upgrade/repeat PASS](../runtime/lab_patch_upgrade_result_20261012.json)
 [owner actual paired rollback PASS](../runtime/lab_patch_restore_result_20261012.json)
 [owner re-upgrade/repeat PASS](../runtime/lab_patch_reupgrade_result_20261012.json)
-[partial native SCORM/version QA](../runtime/lab_patch_browser_result_20261012.json)
+[basic native SCORM/progress/login/home QA](../runtime/lab_patch_browser_result_20261012.json)
 and [remaining native QA](../runtime/lab_patch_browser_qa_20261012.md).

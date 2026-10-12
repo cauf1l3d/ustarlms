@@ -628,3 +628,26 @@ before calling a failure. Prior same-helper stage rollback proof retained; no ne
 upgrade/restore loop, production operation or merge. Helper/application/frontend/
 workflows/tests unchanged; doc-only context/index/provenance checks apply. Existing
 exact59b88e1 source CI PASS/frontend audit FAILURE/full gate not PASS retained.
+
+
+## 2026-10-12 14:41:24 Moscow received — basic admin browser smoke accepted
+
+Owner exact follow-up: «Переход между экранами работает, прогресс тоже, вход выход
+и переход на главную». This answers the requested same-attempt SCORM persistence/
+logout-login/root-home check. Accept stage admin browser SCORM navigation/progress,
+fresh login after logout and home transition in owner-reported scope. Exact final
+URL/new screenshot/independent browser or DB logs not supplied; no fabricated
+redirect trace/completion/grade/self-registration/all-role proof. Prior screenshot
+observations/hashes and original report preserved in
+[updated receipt](../runtime/lab_patch_browser_result_20261012.json).
+
+Next existing real employee/manager accounts: own learning/tasks, direct HR page
+capability denial for non-HR employee, manager team/learning with actual current
+assignments; then HR/relevant preserved addons/completion/grades/Apache isolation.
+Source read confirms team.php/use + scoped presenters and hr.php/system HR guard;
+ordinary hierarchy visibility is not management permission. View-as not real actor.
+No production role changes, password/personnel publication, repeated admin/core
+upgrade/restore/preparation. Prior same-helper paired rollback proof retained,
+current stage518/runxdgki_yo and clone cron disabled. Helper/application/frontend/
+workflows/tests unchanged; doc-only checks apply; full gate/frontend failure and
+production deployment acceptance remain open, PR99 draft/unmerged.

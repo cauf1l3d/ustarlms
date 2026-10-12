@@ -9,34 +9,40 @@ runfylkhzxl/manifest156e4688 принят, same helper59b88e1 и candidate07dfa4
 меняются. Новый report rollback=false относится к новой transaction; следующий
 этап — authenticated QA, не повтор копирования/upgrade/restore.
 
-## Принятый результат12Oct14:10MSK и ближайший шаг
+## Принятые результаты и текущий проход12Oct14:41MSK
 
-[Обезличенный receipt](lab_patch_browser_result_20261012.json): оба owner screenshot
-прочитаны из local attachments, original bytes/hashes сохранены, raw images в Git
-не опубликованы. На18085 виден authenticated SCORM player со страницей16/20,
-USTAR menu/styles/text/images; admin footer показывает **Moodle5.1.8(Build20261005)**.
-«Моя команда» открывается по owner report, отдельной картинки этой страницы нет.
-Фраза «в академию регается» принята как report доступа, без вывода о новой
-self-registration или конкретном fresh-login flow. Это partial visible browser
-acceptance, не full-addon/roles/completion PASS. Home page на этих двух кадрах нет.
-Cron warning ожидаем при deliberately disabled stage tasks; cron не включать.
+[Обезличенный receipt](lab_patch_browser_result_20261012.json) сохраняет два prior
+screenshot14:10 и exact follow-up14:41. Owner подтвердил «Переход между экранами
+работает, прогресс тоже, вход выход и переход на главную» в ответ на same-attempt
+reload/relogin/root-home check. Базовый admin browser smoke принят в owner-reported
+scope: SCORM navigation/progress, logout/fresh login, переход на USTAR главную.
+Exact final URL/new screenshot/server log не присланы; independent agent browser/
+DB query не выполнялся. Prior screenshots подтверждают rendering/theme/admin5.1.8;
+raw inputs не опубликованы. Self-registration, SCORM completion/grade/media и весь
+набор ролей/addons/Apache settings не выводятся из этого ответа. Cron warning
+ожидаем при deliberately disabled clone tasks; cron не включать.
 
-Ближайший короткий проход на **http://127.0.0.1:18085/**:
+Следующий короткий проход на **http://127.0.0.1:18085/** — существующие реальные
+учётки в копии, без «Просмотр как» и без изменения production назначений:
 
-1. В том же SCORM перейти16→17, штатно выйти из player обратно в курс, снова открыть
-   **тот же attempt** через «Продолжить попытку», если такой выбор показан. Не
-   создавать новый attempt ради проверки. Обновить страницу; затем выйти из учётки,
-   войти снова и повторно открыть тот же SCORM. Записать отдельно позицию resume и
-   показанный прогресс/completion в курсе. Поведение resume зависит от пакета;
-   отсутствие автоматического перехода само по себе не доказывает потерю DB data.
-2. Открыть корень18085 и записать actual URL после автоматического перехода и вид
-   USTAR главной. Прямой home URL и root redirect принимаются раздельно.
-3. Затем войти существующей реальной учёткой сотрудника/руководителя/HR в клоне и
-   проверить допустимую страницу и ограничение чужой команды. Администратор и
-   «Просмотр как» не заменяют real-role acceptance. Production роли не менять.
+| Учётка | Проверка | Ожидаемый результат |
+|---|---|---|
+| Сотрудник без HR capability | Вход, главная, свои обучение/SCORM и задачи | Свои доступные данные загружаются без ошибок |
+| Тот же сотрудник | Открыть `/local/ustar/hr.php` напрямую | Доступ запрещён; controller требует `local/ustar:hr` до чтения страницы |
+| Руководитель | «Моя команда», состав команды и обучение | Страница/сводка работают с фактическими существующими assignments/capabilities |
 
-CLI upgrade/repeat/paired rollback уже проверены. Новые core operations для этого
-прохода не нужны. Если relay истёк, сначала проверка/возобновление только relay.
+Employee-visible hierarchy не приравнивать к управлению чужой командой. Реальный
+scope сверять по current assignments/capabilities, не только названию должности.
+Источник contract: `moodle/local/ustar/team.php` (use/team_presenter/department_learning),
+`hr.php` (require_login + system HR capability), `classes/team_access.php`.
+После этого — существующая HR учётка, relevant addon/material/file runtime,
+completion/grades и Apache isolation. Все19 roots/57 metadata не считаются runtime
+PASS по одному core upgrade. Пароли/персональные списки публиковать не нужно;
+достаточно owner результата по каждой строке и воспроизведения ошибки.
+
+Первые admin SCORM/login/home проверки **уже приняты**; повторить только при новой
+ошибке. CLI upgrade/repeat/paired rollback приняты ранее; новые core operations
+ради QA не нужны. Если relay истёк, сначала проверка/возобновление только relay.
 
 ## Доступ с Windows ПК
 
@@ -62,7 +68,7 @@ existing configured session, достаточно сохранить её отк
 второй listener на занятый local18085. Официальный [PuTTY port-forwarding manual](https://the.earth.li/~sgtatham/putty/latest/htmldoc/Chapter3.html#using-port-forwarding)
 описывает эти source/destination/Local/Add параметры и lifetime session.
 
-## Первый короткий проход
+## История первого admin прохода — выполнен по owner report14:41
 
 1. Открыть приватное окно браузера на Windows и http://127.0.0.1:18085/.
    Выполнить свежий login существующего администратора в копии академии.
@@ -82,7 +88,7 @@ existing configured session, достаточно сохранить её отк
    receipt обезличивается. Fresh login, home redirect/render и SCORM persistence
    фиксировать по отдельности. Отсутствие visible ошибки не закрывает все роли.
 
-## Следующий проход
+## Последующие роли и дополнения
 
 После первого результата проверить existing реальные HR/manager/employee accounts,
 разрешённые/запрещённые действия по их capabilities/current scope, материалы/файлы,
@@ -99,12 +105,14 @@ compatibility нельзя вывести из Composer metadata или успе
 `get_default_home_page_url()` поддерживают relative URL в `$CFG->defaulthomepage`,
 используют PARAM_LOCALURL/HOMEPAGE_URL; `public/index.php` перенаправляет на него.
 Поэтому candidate config path `/local/ustar/home.php` имеет stock-core поддержку
-без переписывания index.php. Это static support, не authenticated runtime PASS.
+без переписывания index.php. Static support проверен по package source; actual home transition позднее принят
+по owner report14:41 без exact URL/independent browser trace.
 
 Source CLI/platform/file hashes/upgrade/repeat/paired restore proof уже принят в
 своих областях. Application/helper bytes неизменны; exact59b88e1 Context58/source
 PHP8.2/8.3 SUCCESS, frontend audit FAILURE/full gate не PASS, PR99 draft/unmerged.
-Partial SCORM rendering/admin version accepted; home/real roles/SCORM persistence/
-full-addon/Apache acceptance и production patch остаются открыты; OS/required services/reboot/HTTPS/independent HDD recovery — следующие
+Basic admin browser SCORM/progress/login/home accepted in owner-reported scope;
+real roles/completion/grades/full-addon/Apache и production patch остаются открыты.
+OS/required services/reboot/HTTPS/independent HDD recovery — следующие
 согласованные этапы. Для ошибки доступа после expiry сначала bounded relay/status
 diagnostic; не повторять core upgrade/restore ради открытия браузера.

@@ -1,15 +1,15 @@
 # Протокол продолжения
 
-**Checkpoint12Oct14:41MSK:** [базовая browser QA5.1.8 принята](../runtime/lab_patch_browser_result_20261012.json)
-в owner-reported scope: SCORM screen navigation/progress, logout/fresh login и
-переход на главную работают. Prior screenshots подтверждают SCORM16/20/text/images/
-USTAR UI и admin5.1.8(Build20261005); exact final home URL не прислан. My Team opens
-по earlier owner report. Следующий шаг — existing real employee/manager/HR accounts,
-разрешённые страницы и ограничения capabilities, затем preserved addons/Apache.
-Self-registration/SCORM completion/grades/full-addon/production acceptance не выводить.
-Clone cron отключён; core operations/recovery cycle не повторять для QA. Current
-stage518/runxdgki_yo, prior same-helper rollback принят, production core прежний.
-Raw screenshots не опубликованы; пароль/персональные данные не нужны агенту.
+**Checkpoint12Oct15:25MSK:** [employee/manager smoke принят](../runtime/lab_patch_browser_result_20261012.json)
+по owner ответу «все работает» на exact preceding two-account checks: свои learning/
+tasks сотрудника, отказ HR page без HR capability, команда/обучение руководителя.
+Admin SCORM/progress/logout-login/home приняты14:41,5.1.8 screenshot14:10 сохранён.
+Следующий проход — existing real HR: people/card/materials/document/assessment view,
+затем bounded Apache/PHP isolation/relevant addons/CI gate. Не выводить full-role
+write/cross-scope, self-registration/completion/grades/all-addon/production PASS.
+Current stage518/runxdgki_yo, prior same-helper paired rollback принят; cron disabled,
+production core прежний. Пройденные checks/core operations не повторять без ошибки.
+Raw images/account IDs/passwords/personnel не публикуются.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
 

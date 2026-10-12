@@ -1,15 +1,16 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** existing real employee/manager accounts в stage18085: свои страницы,
-команда руководителя и capability restrictions; затем HR/preserved addons/Apache.
-[Owner browser follow-up12Oct14:41MSK](../runtime/lab_patch_browser_result_20261012.json)
-подтвердил SCORM navigation/progress, logout/fresh login и переход на главную в ответ
-на запрошенный same-attempt persistence/root-home check. Basic browser smoke принят
-в owner-reported scope; exact final URL/new screenshot/DB log не присланы. Prior
-screenshots14:10 показывают authenticated SCORM16/20/text/images/USTAR UI и admin
-5.1.8(Build20261005). My Team opens по earlier owner report. Не повторять уже
-пройденные admin SCORM/login/home проверки без новой ошибки. Self-registration,
-SCORM completion/grade/media, real roles, full-addon и Apache settings не приняты.
+**Текущий шаг:** existing real HR account: список/карточка сотрудника, библиотека
+материалов и существующий документ/файл, existing assessment/attempt view при grading
+capability; затем bounded Apache/PHP isolation, relevant addons и CI gate.
+[Owner15:25 smoke PASS](../runtime/lab_patch_browser_result_20261012.json): exact
+«все работает» отвечает на separate real employee/manager checks. Приняты свои
+learning/tasks сотрудника, non-HR direct HR-page denial и команда/обучение manager
+в owner-reported scope. Account identities/new screenshots/logs не присланы.
+Это не HR/full-role write/cross-scope acceptance. Admin SCORM navigation/progress/
+logout-login/home принят14:41; screenshots14:10 rendering/admin5.1.8 подтверждены.
+Не повторять passed checks без новой ошибки. Self-registration/SCORM completion/
+grade/media/full-addon/Apache settings и production acceptance открыты.
 
 [Re-upgrade/repeat](../runtime/lab_patch_reupgrade_result_20261012.json) PASS:
 active core2025100608.00/runxdgki_yo/paird15a5002,4910 contenthashes/tasks0/CLI mail

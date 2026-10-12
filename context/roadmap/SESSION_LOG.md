@@ -651,3 +651,26 @@ upgrade/restore/preparation. Prior same-helper paired rollback proof retained,
 current stage518/runxdgki_yo and clone cron disabled. Helper/application/frontend/
 workflows/tests unchanged; doc-only checks apply; full gate/frontend failure and
 production deployment acceptance remain open, PR99 draft/unmerged.
+
+
+## 2026-10-12 15:25:03 Moscow received — employee/manager requested smoke PASS
+
+Owner exact «все работает» replies to preceding two-account checks: employee own
+learning/tasks and HR-page denial without HR capability; manager correct roster/
+learning. Accept this requested stage smoke in owner-reported scope. Account IDs,
+new screenshots/logs and independent browser/DB queries absent; do not invent HR,
+all write/cross-scope capabilities, completion/grades or full addon acceptance.
+Original14:10 screenshots and14:41 basic admin browser result retained; latest
+[receipt](../runtime/lab_patch_browser_result_20261012.json) records the follow-up.
+
+Next batch existing real HR people/card, materials library/detail/document/file,
+existing grading queue/attempt if actual capability present. No role expansion or
+new grades inferred from viewing; empty queue separate from attempt view. Then
+bounded Apache/PHP isolation, relevant addon runtime and frontend/full release CI.
+Pinned profile19 roots/57 metadata includes offline external integrations; don't
+mislabel provider isolation as a data/permission regression or enable external
+network/mail/cron to force a result. Same helper/application/frontend/workflows/
+tests unchanged; prior paired restore proof retained/current stage518/runxdgki_yo.
+No repeated passed admin/employee/manager smoke, core operations, production deploy
+or merge. Doc-only context/index/provenance checks apply. Relay7200s deadline≈15:40
+Moscow is inferred, not agent current service observation.

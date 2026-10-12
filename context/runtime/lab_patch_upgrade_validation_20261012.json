@@ -69,7 +69,7 @@
   "custom_home_static_core_support_verified": true,
   "custom_home_runtime_verified": true,
   "native_browser_QA_verified": false,
-  "native_browser_QA_status": "basic_admin_SCORM_progress_login_home_owner_reported_PASS_real_roles_next",
+  "native_browser_QA_status": "basic_admin_and_employee_manager_requested_smoke_owner_PASS_HR_addons_next",
   "native_browser_QA_receipt": "context/runtime/lab_patch_browser_result_20261012.json",
   "stage_authenticated_SCORM_rendering_verified": true,
   "stage_admin_displayed_version_verified": "5.1.8 (Build: 20261005)",
@@ -79,5 +79,9 @@
   "custom_home_runtime_scope": "owner_home_transition_report_1441_exact_final_URL_not_supplied",
   "native_basic_browser_smoke_verified": true,
   "native_basic_browser_smoke_scope": "owner_report_plus_prior_screenshots_not_independent_agent_browser",
-  "stage_fresh_login_flow_verified": true
+  "stage_fresh_login_flow_verified": true,
+  "stage_employee_manager_requested_smoke_verified": true,
+  "stage_employee_manager_requested_smoke_scope": "owner_1525_reply_to_exact_preceding_two_account_checks_no_account_ID_or_logs",
+  "stage_real_HR_smoke_verified": false,
+  "stage_all_role_write_cross_scope_verified": false
 }

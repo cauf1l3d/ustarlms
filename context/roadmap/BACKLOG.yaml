@@ -227,13 +227,13 @@ tasks:
   - context/runtime/lab_patch_reupgrade_result_20261012.json
   - context/runtime/lab_patch_browser_qa_20261012.md
   - context/runtime/lab_patch_browser_result_20261012.json
-  current_checkpoint: Owner12Oct14:41MSK basic admin browser QA PASS in owner-reported scope;
-    SCORM navigation/progress, logout/fresh login and home transition; prior screenshots
-    show USTAR UI/SCORM/admin5.1.8 Build20261005. Exact final home URL not supplied.
-    Next existing real employee/manager/HR accounts/capabilities, then preserved addons,
-    completion/grades/Apache; self-registration/full-addon/production not inferred.
-    Current runxdgki_yo/paird15a5002 and prior actual rollback proof retained; clone cron
-    deliberately disabled. No repeated core operations or publication of raw screenshots.
+  current_checkpoint: Owner12Oct15:25MSK employee/manager requested smoke PASS in owner-reported
+    scope, including own learning/tasks, non-HR HR-page denial and manager team/learning.
+    Earlier admin SCORM/progress/logout-login/home accepted14:41; version5.1.8 screenshots retained.
+    Next existing HR people/card/materials/document/assessment view, then Apache/PHP isolation,
+    relevant addons and CI gate. Full role write/cross-scope/self-registration/completion/grades/
+    full-addon/production not inferred; cron disabled, current runxdgki_yo/prior rollback retained.
+    No repeated passed checks or core operations for browser access.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

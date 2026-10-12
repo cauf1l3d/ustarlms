@@ -1,15 +1,15 @@
 # Runtime и эксплуатация
 
-**Checkpoint12Oct14:41MSK:** [базовая browser QA5.1.8 принята](lab_patch_browser_result_20261012.json)
-в owner-reported scope: SCORM screen navigation/progress, logout/fresh login и
-переход на главную работают. Prior screenshots подтверждают SCORM16/20/text/images/
-USTAR UI и admin5.1.8(Build20261005); exact final home URL не прислан. My Team opens
-по earlier owner report. Следующий шаг — existing real employee/manager/HR accounts,
-разрешённые страницы и ограничения capabilities, затем preserved addons/Apache.
-Self-registration/SCORM completion/grades/full-addon/production acceptance не выводить.
-Clone cron отключён; core operations/recovery cycle не повторять для QA. Current
-stage518/runxdgki_yo, prior same-helper rollback принят, production core прежний.
-Raw screenshots не опубликованы; пароль/персональные данные не нужны агенту.
+**Checkpoint12Oct15:25MSK:** [employee/manager smoke принят](lab_patch_browser_result_20261012.json)
+по owner ответу «все работает» на exact preceding two-account checks: свои learning/
+tasks сотрудника, отказ HR page без HR capability, команда/обучение руководителя.
+Admin SCORM/progress/logout-login/home приняты14:41,5.1.8 screenshot14:10 сохранён.
+Следующий проход — existing real HR: people/card/materials/document/assessment view,
+затем bounded Apache/PHP isolation/relevant addons/CI gate. Не выводить full-role
+write/cross-scope, self-registration/completion/grades/all-addon/production PASS.
+Current stage518/runxdgki_yo, prior same-helper paired rollback принят; cron disabled,
+production core прежний. Пройденные checks/core operations не повторять без ошибки.
+Raw images/account IDs/passwords/personnel не публикуются.
 
 **Next12Oct01:27MSK:** [explicit CLI process isolation/readiness](lab_patch_cli_isolation_20261012.md).
 Native sender mismatch confirmed; memory512M/INI bytes/readonly bind correct. No

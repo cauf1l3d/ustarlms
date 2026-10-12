@@ -9,40 +9,44 @@ runfylkhzxl/manifest156e4688 принят, same helper59b88e1 и candidate07dfa4
 меняются. Новый report rollback=false относится к новой transaction; следующий
 этап — authenticated QA, не повтор копирования/upgrade/restore.
 
-## Принятые результаты и текущий проход12Oct14:41MSK
+## Принятые результаты и текущий проход12Oct15:25MSK
 
-[Обезличенный receipt](lab_patch_browser_result_20261012.json) сохраняет два prior
-screenshot14:10 и exact follow-up14:41. Owner подтвердил «Переход между экранами
-работает, прогресс тоже, вход выход и переход на главную» в ответ на same-attempt
-reload/relogin/root-home check. Базовый admin browser smoke принят в owner-reported
-scope: SCORM navigation/progress, logout/fresh login, переход на USTAR главную.
-Exact final URL/new screenshot/server log не присланы; independent agent browser/
-DB query не выполнялся. Prior screenshots подтверждают rendering/theme/admin5.1.8;
-raw inputs не опубликованы. Self-registration, SCORM completion/grade/media и весь
-набор ролей/addons/Apache settings не выводятся из этого ответа. Cron warning
-ожидаем при deliberately disabled clone tasks; cron не включать.
+[Receipt](lab_patch_browser_result_20261012.json) сохраняет screenshots14:10 и exact
+owner ответы14:41/15:25. Basic admin SCORM navigation/progress/logout-login/home
+приняты14:41. «Всё работает»15:25 отвечает на preceding checks отдельных employee/
+manager accounts: свои learning/tasks, non-HR direct HR page denial, manager team
+и обучение. Этот smoke принят по owner report; account IDs/new screenshots/logs
+не присланы. Full HR/write/cross-scope/full-addon acceptance не выводится.
+Passed checks не повторять без новой ошибки; original screenshots не публикуются.
 
-Следующий короткий проход на **http://127.0.0.1:18085/** — существующие реальные
-учётки в копии, без «Просмотр как» и без изменения production назначений:
+Следующий проход на **http://127.0.0.1:18085/** под существующей реальной HR учёткой:
 
-| Учётка | Проверка | Ожидаемый результат |
+| Проверка | Ожидаемое поведение | Что записать |
 |---|---|---|
-| Сотрудник без HR capability | Вход, главная, свои обучение/SCORM и задачи | Свои доступные данные загружаются без ошибок |
-| Тот же сотрудник | Открыть `/local/ustar/hr.php` напрямую | Доступ запрещён; controller требует `local/ustar:hr` до чтения страницы |
-| Руководитель | «Моя команда», состав команды и обучение | Страница/сводка работают с фактическими существующими assignments/capabilities |
+| `/local/ustar/hr.php` | Загружается список сотрудников и выбранная карточка | Список/card PASS или точное действие/ошибка |
+| `/local/ustar/materials.php` | Библиотека и существующий материал загружаются; document/file открывается или скачивается штатно | Отдельно library/detail/file PASS; если документа нет — NOT_TESTED |
+| `/local/ustar/hr_quiz_grading.php`, если actual HR grading capability есть | Открывается список проверок и существующая попытка для просмотра | Queue/view PASS; пустой список не доказывает attempt view или выставление оценки |
 
-Employee-visible hierarchy не приравнивать к управлению чужой командой. Реальный
-scope сверять по current assignments/capabilities, не только названию должности.
-Источник contract: `moodle/local/ustar/team.php` (use/team_presenter/department_learning),
-`hr.php` (require_login + system HR capability), `classes/team_access.php`.
-После этого — существующая HR учётка, relevant addon/material/file runtime,
-completion/grades и Apache isolation. Все19 roots/57 metadata не считаются runtime
-PASS по одному core upgrade. Пароли/персональные списки публиковать не нужно;
-достаточно owner результата по каждой строке и воспроизведения ошибки.
+Контроллеры hr.php/materials.php требуют system HR capability; grading требует
+active actor + gradeassessments/hrmanage (`classes/hr_access.php`). Обычная HR роль
+не равна HRD или site admin; не расширять права ради обхода expected denial. Нет
+полученных evidence о новых writes/grades/completion. Для этого короткого прохода
+достаточно existing records/file/view; персональные списки/пароли не передавать.
+Новая ошибка после patch отделяется от существующего product issue.
 
-Первые admin SCORM/login/home проверки **уже приняты**; повторить только при новой
-ошибке. CLI upgrade/repeat/paired rollback приняты ранее; новые core operations
-ради QA не нужны. Если relay истёк, сначала проверка/возобновление только relay.
+После HR/file/assessment smoke — bounded Apache/PHP settings/isolation proof и
+relevant preserved-addon runtime.19 roots/57 metadata сохранены, CLI upgrade PASS
+не доказывает работу всех сторонних addons. Есть AI/external integration roots;
+при offline namespace недоступность external provider не означает потерю данных
+или permission bug. Не включать внешнюю сеть/mail/cron для прохода без определения
+конкретного проверяемого контракта. Источник inventory — pinned stage profile.
+Frontend audit FAILURE/full gate not PASS сохраняются отдельным CI условием до
+production release; не обходить thresholds. Ни одна эта doc publication не
+обновляет production core. Stage upgrade/repeat/prior paired restore приняты.
+
+Если relay истёк, inspect/resume only relay/status; core operations не повторять
+ради browser доступа. По unchanged7200s policy ориентир15:40MSK approximate,
+actual unit deadline не запрашивался агентом. История первых admin checks ниже.
 
 ## Доступ с Windows ПК
 
@@ -88,7 +92,7 @@ existing configured session, достаточно сохранить её отк
    receipt обезличивается. Fresh login, home redirect/render и SCORM persistence
    фиксировать по отдельности. Отсутствие visible ошибки не закрывает все роли.
 
-## Последующие роли и дополнения
+## Исторический полный перечень ролей и дополнений
 
 После первого результата проверить existing реальные HR/manager/employee accounts,
 разрешённые/запрещённые действия по их capabilities/current scope, материалы/файлы,
@@ -112,7 +116,8 @@ Source CLI/platform/file hashes/upgrade/repeat/paired restore proof уже пр�
 своих областях. Application/helper bytes неизменны; exact59b88e1 Context58/source
 PHP8.2/8.3 SUCCESS, frontend audit FAILURE/full gate не PASS, PR99 draft/unmerged.
 Basic admin browser SCORM/progress/login/home accepted in owner-reported scope;
-real roles/completion/grades/full-addon/Apache и production patch остаются открыты.
+Employee/manager requested smoke accepted15:25; HR/completion/grades/full-addon/
+Apache и production patch остаются открыты.
 OS/required services/reboot/HTTPS/independent HDD recovery — следующие
 согласованные этапы. Для ошибки доступа после expiry сначала bounded relay/status
 diagnostic; не повторять core upgrade/restore ради открытия браузера.

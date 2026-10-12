@@ -230,10 +230,12 @@ tasks:
   - context/runtime/lab_patch_browser_qa_20261012.md
   - context/runtime/lab_patch_browser_result_20261012.json
   - context/runtime/lab_patch_apache_result_20261012.json
-  current_checkpoint: Owner Apache/PHP12Oct13:33:40UTC PASS;512M/mail blocked/extensions
-    present/tasks0/code and container identities unchanged. HR requested read smoke accepted.
-    Next frontend dependency remediation/full RC and relevant addon acceptance before production.
-    Do not repeat passed stage upgrade/restore operations. Full-addon/production not inferred.
+  - context/runtime/lab_patch_full_rc_result_20261012.json
+  - context/runtime/production_patch_inventory_20261012.json
+  current_checkpoint: Full RC exacta42672e/run38257457655 SUCCESS(all8 jobs);Apache and
+    browser requested read smoke accepted. Production Docker/HDD/free-space/service0
+    received12Oct16:58MSK. Next scheduler status/archive identity/recovery marker,
+    then production preparation and relevant addons. No repeated stage core operations.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

@@ -3,10 +3,11 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Owner Apache/PHP check12Oct13:33:40UTC PASS:512M/mail blocked/required
-  extensions present/tasks0/code and identities unchanged. HR read smoke accepted.
-  Next CI dependency fix/full RC and relevant addon acceptance before production;
-  do not repeat passed stage core operations.
+current_activity: Full RC exacta42672e/run38257457655 SUCCESS(all8 jobs);Apache and
+  requested browser read smoke accepted. Production Docker/HDD/free-space/service
+  result received12Oct16:58MSK:root60.77GiB,HDD445.34GiB,HDD rw,backup service0/success12Oct00:31:39UTC.
+  Next pinned scheduler --status for archive identity/readback/recovery marker,then
+  production preparation/relevant addons;no repeated stage core or inventory operations.
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -53,7 +54,7 @@ production:
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
   cron: v3_one_worker_owner_success_20261005T102403Z
-  regular_backup: daily_HDD_timer_enabled_last_scheduled_20261011_success_no_catchup_no_deletion
+  regular_backup: daily_HDD_timer_last_service20261012T003139UTC_success_exit0_archive_identity_status_pending
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
   last_core_comparison:
@@ -158,6 +159,7 @@ production:
       observed_owner_message_at: '2026-10-05T17:11:36Z'
       retained_lab_gib_rounded: 2.3
       backup_export_gib_rounded: 1.9
+  latest_patch_inventory: context/runtime/production_patch_inventory_20261012.json
 non_goals:
 - Изменение production в этой GitHub-поставке
 - Объявление исправленных рисков по публикации плана
@@ -364,7 +366,7 @@ patch_candidate:
   core_candidate_upgrade_repeat_server_executed: true
   stage_core_db_version: '2025100608.00'
   stage_prior_restored_core_db_version: '2025100601.03'
-  stage_current_phase: apache_PASS_HR_read_smoke_accepted_CI_addon_preflight_next
+  stage_current_phase: Apache_browser_read_smoke_full_CI_PASS_production_preparation_addons_next
   stage_prior_upgrade_core_db_version: '2025100608.00'
   stage_upgrade_finished_at: '2026-10-12T10:40:14.161729+00:00'
   current_stage_paired_baseline_manifest_sha256: d15a50027186ae6da5ae2a7a83ac74579d88399c36dcb8605ee4c0799fcff342
@@ -433,6 +435,11 @@ patch_candidate:
   apache_php_measured_at: '2026-10-12T13:33:40.091384+00:00'
   apache_php_isolation_owner_result: PASS
   full_addon_compatibility_verified: false
+  latest_full_rc:
+    commit: a42672e842b8d0c3e2c95edca72709be496eed56
+    run: 38257457655
+    result: success
+    receipt: context/runtime/lab_patch_full_rc_result_20261012.json
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

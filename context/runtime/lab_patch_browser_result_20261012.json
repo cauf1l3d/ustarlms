@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "source": "owner_report_and_two_locally_inspected_screenshots",
+  "owner_message_received_at": "2026-10-12T14:10:26+03:00",
+  "screenshot_capture_time": "not_supplied",
+  "owner_statement": "скорм открывается в академию регается, вкладка моя команда открывается в админке показывает версию 5.18",
+  "independently_measured_on_server_by_agent": false,
+  "stage_attribution": "owner_current_patch_stage_report; both browser URLs use loopback port18085; paired with accepted re-upgrade receipt",
+  "stage_reupgrade_receipt": "context/runtime/lab_patch_reupgrade_result_20261012.json",
+  "upgrade_implementation": "59b88e1ae061bfa9ca4070ec74c4ffbf1629df44",
+  "candidate_manifest_sha256": "07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459a",
+  "raw_images_published": false,
+  "attachments": [
+    {
+      "name": "image(7).png",
+      "bytes": 955843,
+      "sha256": "a7390f9bf82353c8dab62ffc26024aa4a370efa9c6a2929cbddc866ba44f6217",
+      "width": 1920,
+      "height": 1080,
+      "read_from_local_attachment": true,
+      "published": false,
+      "observed": {
+        "browser_address": "127.0.0.1:18085/mod/scorm/player.php",
+        "private_browser_window_visible": true,
+        "authenticated_administrator_session_visible": true,
+        "USTAR_navigation_visible": true,
+        "SCORM_screen_indicator": "16 / 20",
+        "SCORM_text_and_images_rendered": true,
+        "SCORM_navigation_items_visible": true,
+        "fatal_PHP_SQL_error_visible": false
+      }
+    },
+    {
+      "name": "image(8).png",
+      "bytes": 163086,
+      "sha256": "d2c1255085464cfaba26cc1eca4b87e391971ac47c08e5230727c21f1f886cd2",
+      "width": 1920,
+      "height": 1080,
+      "read_from_local_attachment": true,
+      "published": false,
+      "observed": {
+        "browser_address": "127.0.0.1:18085/admin/index.php?cache=1",
+        "private_browser_window_visible": true,
+        "authenticated_admin_navigation_visible": true,
+        "displayed_version": "Moodle 5.1.8 (Build: 20261005)",
+        "cron_not_recently_run_warning_visible": true,
+        "fatal_PHP_SQL_error_visible": false
+      }
+    }
+  ],
+  "owner_reported": {
+    "academy_access": "reported; wording does not distinguish fresh login from self-registration",
+    "my_team_opens": true,
+    "admin_version": "5.18; screenshot confirms dotted version5.1.8"
+  },
+  "acceptance": {
+    "stage_browser_access": "PASS_in_visible_scope",
+    "authenticated_session_visible": "PASS_in_visible_scope",
+    "USTAR_theme_navigation_and_SCORM_text_images": "PASS_in_visible_scope",
+    "SCORM_player_rendering": "PASS_in_visible_scope",
+    "admin_displayed_version_5_1_8": "PASS_in_visible_scope",
+    "my_team_opens": "OWNER_REPORTED_PASS; page not shown in these attachments",
+    "fresh_login_flow": "NOT_VERIFIED_SEPARATELY",
+    "self_registration": "NOT_VERIFIED",
+    "USTAR_homepage_render_and_root_redirect": "NOT_VERIFIED",
+    "SCORM_progress_persistence_after_reload_and_relogin": "NOT_VERIFIED",
+    "SCORM_completion_and_grade": "NOT_VERIFIED",
+    "SCORM_audio_video": "NOT_VERIFIED",
+    "real_employee_manager_HR_roles": "NOT_VERIFIED",
+    "full_addon_compatibility": "NOT_VERIFIED",
+    "apache_php_settings": "NOT_VERIFIED"
+  },
+  "cron_warning": {
+    "visible": true,
+    "interpretation": "expected in this isolated stage: scheduled tasks deliberately disabled; no request to enable cron",
+    "stage_isolation_evidence": "prior re-upgrade receipt, not independently inferred from screenshot warning age"
+  },
+  "current_stage_phase": "candidate518_active_partial_browser_QA",
+  "prior_same_helper_paired_rollback_acceptance_retained": true,
+  "production_upgrade_executed": false,
+  "next_operator_handoff": "context/runtime/lab_patch_browser_qa_20261012.md",
+  "next_operator_checks": [
+    "SCORM change section, reload, logout/login and reopen same attempt; compare saved position/progress",
+    "open stage root and record actual redirect to USTAR home",
+    "then existing real employee/manager/HR accounts and preserved addon runtime; no production role changes"
+  ]
+}

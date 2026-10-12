@@ -1,12 +1,14 @@
 # Runtime и эксплуатация
 
-**Checkpoint12Oct13:40MSK:** re-upgrade/repeat5.1.8 PASS, active core2025100608.00,
-login200/4910 hashes, tasks0/CLI mail blocked/loopback-only; source/production and
-stage IDs/bind-root inodes unchanged. New runxdgki_yo/fresh paired manifestd15a5002;
-prior actual rollback runfylkhzxl remains accepted. Next [authenticated browser QA](lab_patch_browser_qa_20261012.md)
-for fresh login/USTAR home/SCORM, then real roles/addons. No repeated upgrade/
-restore/download/install/preparation. Relay access approximately until15:40MSK;
-actual current client tunnel state unobserved. Production core unchanged.
+**Checkpoint12Oct14:10MSK:** [частичная browser QA5.1.8](lab_patch_browser_result_20261012.json):
+оба screenshot18085 прочитаны локально; authenticated SCORM/text/images/navigation,
+экран16/20 и admin version5.1.8(Build20261005) видимы. «Моя команда» открывается
+по owner report; её страница не показана. Fresh login/self-registration/home root
+redirect/SCORM persistence и реальные роли/full-addon/Apache ещё не подтверждены.
+Следующий шаг — SCORM section change → reload → logout/login → reopen same attempt,
+затем root→USTAR home и real roles. Cron на clone намеренно отключён, не включать.
+Текущий stage518/runxdgki_yo; prior same-helper rollback принят. Core upgrade/restore
+не повторять для browser QA. Production core прежний; raw screenshots не опубликованы.
 
 **Next12Oct01:27MSK:** [explicit CLI process isolation/readiness](lab_patch_cli_isolation_20261012.md).
 Native sender mismatch confirmed; memory512M/INI bytes/readonly bind correct. No

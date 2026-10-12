@@ -226,12 +226,14 @@ tasks:
   - context/runtime/lab_patch_reupgrade_handoff_20261012.md
   - context/runtime/lab_patch_reupgrade_result_20261012.json
   - context/runtime/lab_patch_browser_qa_20261012.md
-  current_checkpoint: Owner12Oct10:40:14UTC re-upgrade/repeat PASS, active5.1.8/core2025100608.00,
-    login200/4910 hashes/tasks0/mail blocked/loopback; new paird15a5002/runxdgki_yo, previous real
-    rollback156e4688/fylkhzxl accepted. Same-helper proof remains valid despite latest per-run
-    rollback=false. Next fresh native admin login/USTAR home/SCORM/progress, then real roles/addons.
-    No repeated core operations for browser access. Production core unchanged; manual/full-addon/
-    Apache acceptance and deploy pending. Source static custom-home URL support verified.
+  - context/runtime/lab_patch_browser_result_20261012.json
+  current_checkpoint: Owner12Oct14:10MSK partial native QA on active5.1.8/core2025100608.00;
+    local screenshot review confirms authenticated SCORM16/20/text/images/USTAR UI and admin5.1.8
+    Build20261005. My Team opens by owner report. Same helper/candidate/prior paired rollback proof
+    retained; current runxdgki_yo/paird15a5002. Next same-attempt SCORM persistence after reload/
+    relogin and root→USTAR home, then real roles/addons. Fresh login/self-registration/completion/
+    full-addon/Apache still unverified; clone cron deliberately disabled. Production core unchanged,
+    no repeated core operations or public raw screenshots.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

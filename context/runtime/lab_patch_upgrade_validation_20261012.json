@@ -68,5 +68,12 @@
   "prior_same_helper_cycle_acceptance_retained": true,
   "custom_home_static_core_support_verified": true,
   "custom_home_runtime_verified": false,
-  "native_browser_QA_verified": false
+  "native_browser_QA_verified": false,
+  "native_browser_QA_status": "partial_visible_SCORM_and_admin_version_accepted",
+  "native_browser_QA_receipt": "context/runtime/lab_patch_browser_result_20261012.json",
+  "stage_authenticated_SCORM_rendering_verified": true,
+  "stage_admin_displayed_version_verified": "5.1.8 (Build: 20261005)",
+  "stage_my_team_access": "owner_reported",
+  "stage_SCORM_progress_persistence_verified": false,
+  "stage_real_role_acceptance_verified": false
 }

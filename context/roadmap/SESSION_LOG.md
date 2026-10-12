@@ -604,3 +604,27 @@ access until15:40MSK, actual client tunnel/current unit state unobserved. Source
 helper/application/frontend/workflows unchanged; existing exactsourceCI59b88e1
 success/full gate failure retained, documentation-only checks apply. No repeated
 core operations for browser access, no production deployment/merge.
+
+
+## 2026-10-12 14:10:26 Moscow received — partial stage browser acceptance
+
+Owner reports SCORM opens, academy access, My Team opens and admin version5.18.
+Two attachments read directly from local paths: SCORM screenshot SHAa7390f9b,
+admin screenshot SHAd2c12550. Browser URLs use loopback18085/private window; current
+stage attributed by owner report and prior re-upgrade receipt, not agent live SSH.
+Visible authenticated SCORM player screen16/20, USTAR menu/styles/text/images and
+admin footer Moodle5.1.8(Build20261005) accepted in visible scope. My Team accepted
+as owner report, page not pictured. The phrase «регается» does not establish fresh
+login or self-registration. Screenshots do not show home/root redirect, SCORM saved
+progress/relogin/completion, real roles or full addon/Apache settings. Raw images
+not published; sanitized observations/full attachment hashes in
+[receipt](../runtime/lab_patch_browser_result_20261012.json).
+
+Admin cron age warning expected with intentionally disabled clone scheduled tasks;
+no cron enablement. Next same-attempt SCORM section change/reload/relogin and actual
+root→USTAR home, then existing real employee/manager/HR scopes and preserved addons.
+Package-specific resume position differs from persisted completion; compare both
+before calling a failure. Prior same-helper stage rollback proof retained; no new
+upgrade/restore loop, production operation or merge. Helper/application/frontend/
+workflows/tests unchanged; doc-only context/index/provenance checks apply. Existing
+exact59b88e1 source CI PASS/frontend audit FAILURE/full gate not PASS retained.

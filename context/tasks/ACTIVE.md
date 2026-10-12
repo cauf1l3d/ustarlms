@@ -1,25 +1,25 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** [authenticated native browser QA](../runtime/lab_patch_browser_qa_20261012.md).
-[Owner re-upgrade/repeat](../runtime/lab_patch_reupgrade_result_20261012.json) PASS:
-12Oct10:21:45..10:40:14UTC/13:21..13:40MSK,1109s; current stage5.1.8/core2025100608.00,
-login200/4910 hashes/tasks0/CLI mail blocker/loopback-only. Same stage IDs/bind-root
-inodes and source/production identities. New runxdgki_yo/paired manifestd15a5002;
-previous actual paired rollback runfylkhzxl/156e4688 accepted on same helper59b88e1
-and candidate07dfa485. Latest report rollback=false is per-transaction; do not
-assign another identical old trial instead of browser acceptance.
+**Текущий шаг:** проверить сохранение SCORM после reload/relogin и root→USTAR home,
+затем реальные роли и дополнения в уже обновлённом stage18085.
+[Частичная ручная приёмка12Oct14:10MSK](../runtime/lab_patch_browser_result_20261012.json):
+локально прочитаны два screenshot; authenticated SCORM16/20/text/images/USTAR UI
+и admin version5.1.8(Build20261005) видимы. «Моя команда» открывается по owner report,
+её screenshot нет. Вход в академию reported, но слово «регается» не доказывает
+fresh login или self-registration. Home/root redirect, saved progress/completion,
+real roles, full-addon compatibility и Apache PHP settings остаются открыты.
 
-**INF-08 в работе:** open stage18085 through existing Windows SSH local forward,
-fresh admin login/private browser window, actual root redirect and USTAR home,
-SCORM text/media/progress persistence/relogin; then existing real roles and addons.
-Core static source supports relative URL defaulthomepage/get_default_home_page_url,
-stock index redirects to HOMEPAGE_URL; runtime home/login not yet verified.
-Expected relay access approximately until15:40MSK; if expired inspect/resume only
-relay/status, no core upgrade/restore repeated for browser access. Production core
-unchanged; Apache/manual/roles/full-addon/deploy acceptance pending. No agent SSH
-or client browser observation. Helper/application/frontend/workflows/tests unchanged;
-source59b88e1 Context58/completePHP8.2/8.3 SUCCESS, frontend audit FAILURE/full gate
-not PASS, PR99 draft/unmerged. Old dated SCORM screenshot is baseline-only proof.
+[Re-upgrade/repeat](../runtime/lab_patch_reupgrade_result_20261012.json) PASS:
+active core2025100608.00/runxdgki_yo/paird15a5002,4910 contenthashes/tasks0/CLI mail
+blocked/loopback, same source/production/stage IDs/bind roots. Previous actual paired
+rollback runfylkhzxl/156e4688 accepted on unchanged helper59b88e1/candidate07dfa485.
+Latest per-run rollback=false не отменяет prior proof; upgrade/restore/download/
+install/preparation не повторять. Clone cron выключен специально; admin warning
+не является поводом включить его. Raw screenshots остаются private inputs.
+[Короткий следующий проход](../runtime/lab_patch_browser_qa_20261012.md).
+Production core прежний; deploy/full-addon/Apache acceptance pending. Source59b88e1
+Context58/completePHP8.2/8.3 SUCCESS; frontend audit FAILURE/full gate не PASS,
+PR99 draft/unmerged. Helper/application/frontend/workflows/tests неизменны.
 
 SSD/root и HDD ночной запуск11Oct success; checkpoint и baseline stage приняты18:55:53..19:17:02UTC. Official5.1.8 SHA проверен20:09UTC в `moodle-518-package-20261011-nnixp4se`. Не повторять. Screenshot подтверждает authenticated SCORM rendering в видимой области; core production прежний.
 

@@ -3,13 +3,13 @@ updated_at: '2026-10-13'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Owner13Oct0148MSK reports d3e1bfed/24a51add transaction fresh HDD PASS
-  then failure before cold-pair creation or code activation. Original core2025100601.03
-  resumed,login200,file references5151,live trees unchanged;no paired restore executed.
-  Specific guard unknown because old helper omitted reason/phase and Docker history
-  empty. Add fixed safe failure evidence and read-only restored-transaction diagnostic;
-  local30 PASS/1 owner namespace skip,exact a8caec55 source/context/frontend CI SUCCESS;server diagnostic pending. Strict guards
-  preserved;no repeated candidate/stage cycle or upgrade until cause reviewed.
+current_activity: Owner13Oct0250MSK exact a8caec55/6f87a780 restored-transaction
+  read-only diagnostic COMPLETE at12Oct234948UTC;current old core/addon versions and
+  all task flags match,other PG clients0. Old failing guard remains UNRECORDED;
+  control receipt order suggests pre-normal-PG-stop failure,not direct exit evidence.
+  Collector closed;next same installed tested upgrade transaction with exact failure
+  recording and fresh recovery. Strict guards unchanged;no new source/install/stage
+  cycle. Production upgrade and post-switch roles/learning/cron still pending.
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -468,7 +468,9 @@ patch_candidate:
   production_upgrade_stop_receipt: context/runtime/production_patch_stop_result_20261013.json
   production_upgrade_diagnostic_CI_receipt: context/runtime/production_patch_stop_ci_20261013.json
   production_upgrade_failure_reason: not_recorded_by_old_helper
-  production_upgrade_next_operator_mode: diagnose-transaction_read_only_no_outage
+  production_upgrade_diagnostic_executed: true
+  production_upgrade_diagnostic_result: context/runtime/production_patch_transaction_diagnostic_result_20261013.json
+  production_upgrade_next_operator_mode: same_installed_upgrade-production_with_acknowledge-outage
   production_paired_switch_restore_ready: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md

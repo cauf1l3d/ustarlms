@@ -1,5 +1,14 @@
 # Production Moodle5.1.8 paired deployment transaction
 
+[Current diagnostic](production_patch_transaction_diagnostic_result_20261013.json)
+owner13Oct02:50MSK COMPLETE at12Oct23:49:48UTC on installed a8caec55/helper6f87a780:
+current old core/57 addons/all task flags match,other PG clients0. Standard web
+SIGWINCH/PG SIGINT. Ten ID-only receipts are consistent with failure after web stop
+before normal PG stop;this is control-flow inference,not direct exit/SQL evidence.
+Past guard remains UNRECORDED. Collector complete;next use the same tested installed
+upgrade-production transaction,with fresh recovery and exact guard recording.
+No further collector,download,install or stage operation is justified by this result.
+
 [Owner execution and diagnostic](production_patch_stop_result_20261013.json),
 received13Oct01:48MSK:source d3e1bfed/helper24a51add ran12Oct21:52:04..21:53:56UTC.
 Fresh HDD capture PASS,then stopped before creation of any cold-pair directory.

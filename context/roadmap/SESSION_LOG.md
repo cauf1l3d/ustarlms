@@ -819,3 +819,18 @@ Local full Python344/13skips PASS with existing MCP dependencies;local PHP absen
 Ordinary DB/rollback/full gate skipped;prior unchanged native full RC remains
 separate. Source/helper/guard behavior unchanged by this evidence-only follow-up.
 Server read-only diagnostic and production upgrade still pending.
+
+
+## 13Oct02:50MSK restored transaction diagnostic completed; same installed upgrade next
+
+Owner a8caec55/6f87a780 checksum verified;--diagnose-transaction COMPLETE/read-only
+at12Oct23:49:48UTC. Current old core/57 addons/all task flags match,other PG clients0;
+SIGWINCH web/SIGINT PG,10 ID-only control receipts. [Receipt](../runtime/production_patch_transaction_diagnostic_result_20261013.json).
+Sequence consistent with web stop then recovery before normal PG stop;inference
+only,not old exit/client/task values. Old exact failing guard remains UNRECORDED.
+Read-only collector closed. No new code/install/stage cycle. Next operator runs same
+already installed tested6f87a780 helper --upgrade-production --acknowledge-outage;
+it captures fresh recovery and now records exact failure phase/code if it recurs.
+Strict conditions retained. Upgrade/actual paired production restore/post-switch
+business/cron acceptance remain pending. No repeat permission requested:outage and
+transaction already authorized. Source/helper/tests unchanged from exact passed CI.

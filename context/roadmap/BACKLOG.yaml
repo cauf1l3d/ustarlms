@@ -234,11 +234,12 @@ tasks:
   - context/runtime/production_patch_inventory_20261012.json
   - context/runtime/hdd_backup_schedule_status_20261012.json
   - context/runtime/production_patch_readiness_20261012.md
-  current_checkpoint: Owner12Oct17:28MSK scheduled complete/success/no marker confirmed.
-    Full RC a42672e and stage accepted scopes retained. Next read-only production
-    code/DB/addon versions,archive hash,usage and size collector;no repeated status
-    for archive name/hash (scheduler status does not expose these). Candidate activation
-    and production upgrade remain pending.
+  - context/runtime/production_patch_readiness_result_20261012.json
+  - context/runtime/production_patch_candidate_20261012.md
+  current_checkpoint: Owner production preflight12Oct14:43:42UTC PASS(526/57/old core/tasks129,
+    actual latest HDD archive SHA). Next separate production5.1.8 candidate only;live
+    overlays/config preservation,stock core/home policy,readback and drift guards.
+    Candidate server run and fresh paired deployment backup/rollback/activation pending.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

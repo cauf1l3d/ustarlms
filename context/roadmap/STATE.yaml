@@ -3,11 +3,12 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Owner12Oct17:28MSK scheduler status accepted:complete/success,marker
-  absent,no recovery errors,next13Oct03:30MSK. Correction:status has no archive identity/hash.
-  Next production_patch_readiness --check:read-only pinned profile/code+DB/addon versions,HDD
-  archive SHA/sidecar,aggregate usage and sizes;no Moodle bootstrap or activation.
-  Passed stage/full RC/inventory checks not repeated.
+current_activity: Owner production preflight12Oct14:43:42UTC PASS:526 USTAR/57 versions,old
+  core2025100601.03,tasks129 unchanged,latest1.019GB archive4e18019e rehashed. Next
+  separate production candidate from official5.1.8/live overlays with candidate-only
+  home config;no activation,core/data/DB or service mutations. Stock wrapper reviewed
+  separately from deliberately rewritten lab loader. Passed preflight/stage/full RC
+  not repeated without drift.
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -442,7 +443,10 @@ patch_candidate:
     result: success
     receipt: context/runtime/lab_patch_full_rc_result_20261012.json
   production_readonly_preflight_helper: scripts/infra/production_patch_readiness.py
-  production_readonly_preflight_server_executed: false
+  production_readonly_preflight_server_executed: true
+  production_readonly_preflight_receipt: context/runtime/production_patch_readiness_result_20261012.json
+  production_candidate_helper: scripts/infra/production_patch_candidate.py
+  production_candidate_prepared: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

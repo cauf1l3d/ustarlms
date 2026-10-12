@@ -700,3 +700,9 @@ Receipts:context/runtime/lab_patch_full_rc_result_20261012.json and production_p
 
 Owner12Oct17:28MSK scheduler status accepted:complete/success,marker absent,no recovery errors,next13Oct03:30MSK. Correction:status has no archive identity/hash. Next production_patch_readiness --check:read-only pinned profile/code+DB/addon versions,HDD archive SHA/sidecar,aggregate usage and sizes;no Moodle bootstrap or activation. Passed stage/full RC/inventory checks not repeated.
 Helper static read-impact reviewed;11 guard tests and prior broad274/11skips PASS. Credentials/config never printed;SQL queries bounded read-only. Source/real server evidence pending. Native application/frontend bytes unchanged;full RC a42672e retained within its scope.
+
+
+## 12Oct17:44MSK production preflight accepted; private candidate helper
+
+Owner production preflight12Oct14:43:42UTC PASS:526 USTAR/57 versions,old core2025100601.03,tasks129 unchanged,latest1.019GB archive4e18019e rehashed. Next separate production candidate from official5.1.8/live overlays with candidate-only home config;no activation,core/data/DB or service mutations. Stock wrapper reviewed separately from deliberately rewritten lab loader. Passed preflight/stage/full RC not repeated without drift.
+The lab rewrites root and public config;public loader separately reviewed against original upstream and5.1.8 archive hashes before allowlisting. Profile code unchanged;original root config only candidate-home insertion. Test9/full284(11skips) PASS before final loader guard;dedicated10 PASS afterward. Source CI/server candidate pending.

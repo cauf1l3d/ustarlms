@@ -1,0 +1,94 @@
+{
+  "source": "owner_terminal_stdout",
+  "independently_measured_on_server_by_agent": false,
+  "implementation": "92a23d0320f42835937926f914262065d4c3c6ae",
+  "helper_sha256": "f72031dcb6df1bbaa89f8aa34d33bf30de67c62395e4398a1ad391823ef1f886",
+  "report": {
+    "PHP_or_Moodle_bootstrap": false,
+    "SQL_scope": "bounded_BEGIN_READ_ONLY",
+    "addon_disk_and_database_versions_matching": 57,
+    "candidate_prepared_or_activated": false,
+    "code_config_or_database_mutations": false,
+    "container_identities_and_config_unchanged": true,
+    "containers_services_tasks_changed": false,
+    "existing_activity_counts": {
+      "data": 1,
+      "forum": 10,
+      "lesson": 1,
+      "page": 8,
+      "qbank": 2,
+      "quiz": 8,
+      "resource": 4,
+      "scorm": 14
+    },
+    "existing_block_counts": {
+      "admin_bookmarks": 2,
+      "ai_chat": 1,
+      "badges": 12,
+      "calendar_month": 16,
+      "html": 4,
+      "mentees": 1,
+      "myoverview": 5,
+      "news_items": 1,
+      "online_users": 2,
+      "private_files": 13,
+      "rbreport": 10,
+      "recentlyaccesseditems": 17,
+      "site_main_menu": 4,
+      "timeline": 13
+    },
+    "free_space": {
+      "/opt/ustar/data/moodle/public": {
+        "available_bytes": 65243254784,
+        "available_inodes": 6388136
+      },
+      "/srv/ustar-storage": {
+        "available_bytes": 478183514112,
+        "available_inodes": 30531526
+      }
+    },
+    "full_addon_runtime_compatibility_verified": false,
+    "homepage_policy": {
+      "candidate_needs_reviewed_homepage_config_insertion": true,
+      "declared": false
+    },
+    "kind": "production_patch_readonly_fingerprint_and_backup_preflight",
+    "latest_backup": {
+      "archive_readback_sha256_verified": true,
+      "bytes": 1019254423,
+      "decryption_or_restore_verified": false,
+      "file": "ustar-recovery-20261012T003047Z-40b8b360.tar.gz.age",
+      "finished_utc": "2026-10-12T00:31:38.444385+00:00",
+      "recovery_marker_present": false,
+      "scheduled_success": true,
+      "sha256": "4e18019e3691079c7cbdde5be231aeacc2e376bbf8114b49be553be035f2bba9"
+    },
+    "measured_at": "2026-10-12T14:43:42.252963+00:00",
+    "official_package_sha256_verified": true,
+    "original_core_metadata_and_index_hashes_matching": true,
+    "postgres_version_num": "160015",
+    "production_core_database_version": "2025100601.03",
+    "production_enabled_tasks_unchanged": 129,
+    "production_upgrade_executed": false,
+    "production_upgrade_space_budget_verified": false,
+    "result": "PASS",
+    "trees": {
+      "code": {
+        "entries": 44221,
+        "live_non_atomic_estimate": true,
+        "logical_file_bytes": 381791142
+      },
+      "moodledata": {
+        "entries": 14752,
+        "live_non_atomic_estimate": true,
+        "logical_file_bytes": 629285550
+      },
+      "postgres": {
+        "entries": 5639,
+        "live_non_atomic_estimate": true,
+        "logical_file_bytes": 242196330
+      }
+    },
+    "ustar_matching_file_hashes": 526
+  }
+}

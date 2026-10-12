@@ -60,7 +60,7 @@ tasks:
   pending_acceptance:
   - Extra consumers/runtime dependencies; candidate homepage runtime acceptance
   - Fresh archive independent copy/decryption/restore
-  - Re-upgrade restored stage for authenticated home/roles/SCORM/full-addon acceptance after upgrade/repeat/paired rollback PASS
+  - Authenticated home/roles/SCORM/full-addon acceptance on active5.1.8 after upgrade/repeat/paired rollback/re-upgrade PASS
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA
     verified
@@ -99,6 +99,8 @@ tasks:
     current-stage cold pair manifest156e4688 retained, production unchanged. Real paired rollback next.
   - Owner12Oct08:51:07..09:01:36UTC actual paired stage rollback PASS, original core2025100601.03/4910
     hashes/login200. Current stage baseline restored; re-upgrade for browser/full-addon QA next.
+  - Owner12Oct10:40:14UTC re-upgrade/repeat5.1.8 PASS,4910 hashes/login200/tasks0, new runxdgki_yo/
+    paird15a5002. Prior rollback accepted; authenticated browser QA next.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -222,11 +224,14 @@ tasks:
   - context/runtime/lab_patch_rollback_handoff_20261012.md
   - context/runtime/lab_patch_restore_result_20261012.json
   - context/runtime/lab_patch_reupgrade_handoff_20261012.md
-  current_checkpoint: Owner12Oct09:01:36UTC real paired restore PASS after5.1.8 upgrade/repeat,
-    original core2025100601.03/login200/4910 hashes,629s. Isolated stage upgrade/repeat/paired
-    rollback cycle accepted. Current stage baseline restored; same-helper re-upgrade for native
-    authenticated USTAR home/roles/SCORM/files/preserved-addon QA next. Production pre-restore
-    proxy/backendHTTP200, core unchanged; Apache/manual/full-addon acceptance/deploy pending.
+  - context/runtime/lab_patch_reupgrade_result_20261012.json
+  - context/runtime/lab_patch_browser_qa_20261012.md
+  current_checkpoint: Owner12Oct10:40:14UTC re-upgrade/repeat PASS, active5.1.8/core2025100608.00,
+    login200/4910 hashes/tasks0/mail blocked/loopback; new paird15a5002/runxdgki_yo, previous real
+    rollback156e4688/fylkhzxl accepted. Same-helper proof remains valid despite latest per-run
+    rollback=false. Next fresh native admin login/USTAR home/SCORM/progress, then real roles/addons.
+    No repeated core operations for browser access. Production core unchanged; manual/full-addon/
+    Apache acceptance and deploy pending. Source static custom-home URL support verified.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

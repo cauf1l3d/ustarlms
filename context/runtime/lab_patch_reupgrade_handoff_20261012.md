@@ -1,5 +1,11 @@
 # Возврат проверенного стенда на5.1.8 перед ручной приёмкой
 
+**Completed12Oct13:40MSK:** [owner re-upgrade/repeat5.1.8 PASS](lab_patch_reupgrade_result_20261012.json),
+10:21:45..10:40:14UTC/core2025100608.00/login200/4910 hashes. Current stage active5.1.8;
+this command is execution history. Next [authenticated native browser QA](lab_patch_browser_qa_20261012.md),
+no repeat upgrade/restore/download/install needed.
+
+
 Получен [owner real paired rollback PASS](lab_patch_restore_result_20261012.json):
 12Oct08:51:07..09:01:36UTC/11:51:07..12:01:36MSK,629s/10min29s. Code/config,
 Moodledata и physicalPG восстановлены вместе из согласованной копии; исходный

@@ -1,10 +1,10 @@
 # Пробное обновление Moodle 5.1.8 и согласованное восстановление стенда
 
-**Server checkpoint12Oct:** [upgrade/repeat5.1.8 PASS](lab_patch_upgrade_result_20261012.json)
-and [actual paired rollback09:01:36UTC PASS](lab_patch_restore_result_20261012.json),
-original stage core2025100601.03/login200/4910 hashes. Cycle accepted on helper59b88e1;
-current stage baseline restored. Next [re-upgrade for authenticated QA](lab_patch_reupgrade_handoff_20261012.md)
-using same installed helper. Production unchanged; manual/full-addon/Apache acceptance pending.
+**Server checkpoint12Oct13:40MSK:** [re-upgrade/repeat5.1.8 PASS](lab_patch_reupgrade_result_20261012.json),
+active core2025100608.00/login200/4910 hashes, new runxdgki_yo/paird15a5002.
+[Prior actual paired rollback](lab_patch_restore_result_20261012.json) accepted;
+latest per-run rollback=false kept verbatim. Next [authenticated browser QA](lab_patch_browser_qa_20261012.md),
+no repeated core operations. Production unchanged; manual/full-addon/Apache acceptance pending.
 
 Получен [owner readiness PASS в22:56:35UTC11Oct](lab_patch_readiness_result_20261012.json).
 Candidate0v8ncwgu/manifest07dfa485 проверен, PHP8.3.33/PG16.15 и обязательные
@@ -111,7 +111,7 @@ source PHP8.2/8.3 SUCCESS, frontend npm audit FAILURE; rollback/prepare-rc/moodl
 SKIPPED. Это source verification, не полный gate или live upgrade/restore.
 
 Server upgrade/repeat12Oct00:04:42UTC и actual paired rollback09:01:36UTC PASS.
-Текущий stage восстановлен на original baseline; next --upgrade-stage для browser QA.
+Re-upgrade12Oct10:40:14UTC PASS; текущий stage active5.1.8, next authenticated browser QA.
 No repeated old rollback trial without new errors/changes; historical copies retained.
 Composer declarations не доказывают resolved dependencies; exif/soap optional
 missing не основание для слепого install. После реального upgrade/restore и

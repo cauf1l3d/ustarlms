@@ -61,6 +61,12 @@
   "server_paired_restore_receipt": "context/runtime/lab_patch_restore_result_20261012.json",
   "server_paired_restore_evidence_source": "owner_checksum_verified_SSH_stdout_not_agent_live_query",
   "isolated_stage_upgrade_repeat_paired_rollback_cycle_verified": true,
-  "current_stage_core_db_version": "2025100601.03",
-  "server_reupgrade_for_browser_QA_executed": false
+  "current_stage_core_db_version": "2025100608.00",
+  "server_reupgrade_for_browser_QA_executed": true,
+  "server_reupgrade_receipt": "context/runtime/lab_patch_reupgrade_result_20261012.json",
+  "latest_transaction_paired_restore_executed": false,
+  "prior_same_helper_cycle_acceptance_retained": true,
+  "custom_home_static_core_support_verified": true,
+  "custom_home_runtime_verified": false,
+  "native_browser_QA_verified": false
 }

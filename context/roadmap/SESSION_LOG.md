@@ -579,3 +579,28 @@ Helper/application/frontend/workflows/tests unchanged; documentation-only contex
 JSON/operator-shell/source-equivalence checks apply, broad tests not rerun. Existing
 source CI exact59b88e1 Context58/PHP8.2/8.3 SUCCESS; frontend audit failure/full gate
 not PASS, PR99 draft/unmerged. No production deployment or merge.
+
+
+## 2026-10-12 13:40:55 Moscow received — active5.1.8 re-upgrade/repeat PASS
+
+Owner same installed helper59b88e1/SHA452d8fd6 checksum OK. Markers10:21:45..
+10:40:14UTC/13:21:45..13:40:14MSK,1109s; internal finished_at10:40:14.161729UTC.
+New runxdgki_yo/current paired baseline manifestd15a50027186ae6da5ae2a7a83ac74579d88399c36dcb8605ee4c0799fcff342
+PASS before SQL. Core2025100608.00/candidate active, official first/repeat PASS,
+login200/4910 hashes/tasks0/CLI mail blocker/loopback, same stage IDs/bind-root
+inodes/source/production identities. [Verbatim receipt](../runtime/lab_patch_reupgrade_result_20261012.json).
+Latest report rollback=false belongs to new transaction; previous actual same-helper
+restore156e4688/runfylkhzxl remains accepted, no infinite rollback cycle. Current
+stage5.1.8, not original baseline. No authenticated/full-addon/home/Apache result.
+
+Reviewed SHA-pinned official package0e8e2cde again: stock moodlelib supports relative
+URL defaulthomepage/get_default_home_page_url/HOMEPAGE_URL, stock index redirects.
+Candidate/local/ustar/home.php config is statically supported without modified
+index; actual authenticated redirect remains pending. PuTTY official manual local
+source/destination/Local/Add settings checked for18085 access. [First native QA handoff](../runtime/lab_patch_browser_qa_20261012.md):
+fresh private-window admin login/root redirect/home, SCORM media/progress/relogin,
+then existing real roles/preserved addons. Relay policy7200s implies approximate
+access until15:40MSK, actual client tunnel/current unit state unobserved. Source/
+helper/application/frontend/workflows unchanged; existing exactsourceCI59b88e1
+success/full gate failure retained, documentation-only checks apply. No repeated
+core operations for browser access, no production deployment/merge.

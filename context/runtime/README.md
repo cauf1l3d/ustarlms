@@ -1,12 +1,12 @@
 # Runtime и эксплуатация
 
-**Checkpoint12Oct12:01MSK, owner received13:02MSK:** real paired stage rollback
-PASS after5.1.8 upgrade/repeat: original coreDB2025100601.03, login200/4910 hashes,
-code/config/Moodledata/physicalPG restored together in629s. Current stage is the
-original baseline; the5.1.8 upgrade remains historical PASS. Next [re-upgrade for
-authenticated browser QA](lab_patch_reupgrade_handoff_20261012.md) using the same installed helper. Prior paired
-rollback is accepted; no repeat restore/download/install/preparation. Production
-core unchanged; USTAR home/roles/SCORM/full-addon/Apache acceptance still pending.
+**Checkpoint12Oct13:40MSK:** re-upgrade/repeat5.1.8 PASS, active core2025100608.00,
+login200/4910 hashes, tasks0/CLI mail blocked/loopback-only; source/production and
+stage IDs/bind-root inodes unchanged. New runxdgki_yo/fresh paired manifestd15a5002;
+prior actual rollback runfylkhzxl remains accepted. Next [authenticated browser QA](lab_patch_browser_qa_20261012.md)
+for fresh login/USTAR home/SCORM, then real roles/addons. No repeated upgrade/
+restore/download/install/preparation. Relay access approximately until15:40MSK;
+actual current client tunnel state unobserved. Production core unchanged.
 
 **Next12Oct01:27MSK:** [explicit CLI process isolation/readiness](lab_patch_cli_isolation_20261012.md).
 Native sender mismatch confirmed; memory512M/INI bytes/readonly bind correct. No

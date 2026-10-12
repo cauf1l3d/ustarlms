@@ -157,6 +157,61 @@ def configuration(original):
     return (text[:index] + HOME + text[index:]).encode()
 
 
+def config_tail_kind(tail):
+    """Classify only the raw suffix; never return config text or approve insertion."""
+    comment = False
+    while tail.strip():
+        tail = tail.lstrip()
+        if tail.startswith(('//', '#')):
+            tail = tail.partition('\n')[2]
+        elif tail.startswith('/*'):
+            end = tail.find('*/', 2)
+            if end == -1:
+                return 'unterminated_block_comment'
+            tail = tail[end + 2:]
+        elif tail.startswith('?>') and not tail[2:].strip():
+            return 'closing_tag_with_optional_comments_before_it'
+        else:
+            return 'other_text'
+        comment = True
+    return 'comments_and_whitespace' if comment else 'whitespace_only'
+
+
+def config_diagnostic(original):
+    """Report fixed labels/counts for the existing raw-byte guard, not a PHP parse."""
+    report = {'kind': 'production_candidate_config_guard_diagnostic',
+              'read_only': True, 'config_text_emitted': False,
+              'PHP_or_Moodle_bootstrap': False, 'SQL_executed': False,
+              'candidate_created_or_activated': False,
+              'production_config_data_database_services_tasks_changed': False,
+              'observations_scope': 'raw_text_only_not_PHP_semantics_or_insertion_approval'}
+    try:
+        text = original.decode('utf-8')
+    except UnicodeDecodeError:
+        report.update(utf8_decodable=False, existing_insertion_guard_accepts=False,
+                      failed_guard_conditions=['utf8_decoding'])
+        return report
+    count = text.count(SETUP)
+    conditions = {'homepage_raw_token_absent': '$CFG->defaulthomepage' not in text,
+                  'exact_setup_occurs_once': count == 1,
+                  'exact_setup_is_final_nonwhitespace_text': text.rstrip().endswith(SETUP)}
+    report.update(utf8_decodable=True, guard_conditions=conditions,
+                  existing_insertion_guard_accepts=all(conditions.values()),
+                  failed_guard_conditions=[key for key, ok in conditions.items() if not ok],
+                  exact_setup_raw_occurrences=count,
+                  suffix_after_unique_exact_setup=(config_tail_kind(text.split(SETUP, 1)[1])
+                                                   if count == 1 else 'not_applicable'))
+    # Literal spelling observations can also occur inside comments or values. Do
+    # not use these counts to transform config or print surrounding source text.
+    spellings = {'lib_spaced_single_quote': SETUP,
+                 'lib_compact_single_quote': "require_once(__DIR__.'/lib/setup.php');",
+                 'lib_spaced_double_quote': 'require_once(__DIR__ . "/lib/setup.php");',
+                 'public_lib_spaced_single_quote': "require_once(__DIR__ . '/public/lib/setup.php');",
+                 'cfg_dirroot_single_quote': "require_once($CFG->dirroot . '/lib/setup.php');"}
+    report['known_raw_setup_spelling_counts'] = {key: text.count(value) for key, value in spellings.items()}
+    return report
+
+
 def profile_guard(profile, live, db):
     for rel, digest in profile['application_files'].items():
         require(live.get(rel, {}).get('sha256') == digest, 'USTAR file hash differs from tested profile')
@@ -337,14 +392,22 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--check', action='store_true')
     mode.add_argument('--prepare-candidate', action='store_true')
+    mode.add_argument('--diagnose-config', action='store_true')
     args = parser.parse_args()
-    if not (args.check or args.prepare_candidate):
+    if not (args.check or args.prepare_candidate or args.diagnose_config):
         print('PLAN_ONLY; --prepare-candidate writes a separate private copy; no activation or upgrade')
         return 0
     try:
         require(os.geteuid() == 0, 'Run production candidate preparation as root')
         os.umask(0o077)
         sys.dont_write_bytecode = True
+        if args.diagnose_config:
+            p = load_module(READINESS, READINESS_SHA, 'production_candidate_pinned_readiness')
+            require(p.CODE == Path('/opt/ustar/data/moodle/public'), 'Pinned production code namespace differs')
+            report = config_diagnostic(p.read_file(p.CODE / 'config.php', 128 * 1024))
+            print('PRODUCTION_CONFIG_DIAGNOSTIC=COMPLETE; READ_ONLY; NO_CONFIG_TEXT')
+            print(json.dumps(report, indent=2, sort_keys=True))
+            return 0
         p, c = dependencies()
         stream, tar, archive_info = c.archive_open()
         try:

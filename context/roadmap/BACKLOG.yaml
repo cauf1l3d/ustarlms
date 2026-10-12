@@ -236,10 +236,12 @@ tasks:
   - context/runtime/production_patch_readiness_20261012.md
   - context/runtime/production_patch_readiness_result_20261012.json
   - context/runtime/production_patch_candidate_20261012.md
-  current_checkpoint: Owner production preflight12Oct14:43:42UTC PASS(526/57/old core/tasks129,
-    actual latest HDD archive SHA). Next separate production5.1.8 candidate only;live
-    overlays/config preservation,stock core/home policy,readback and drift guards.
-    Candidate server run and fresh paired deployment backup/rollback/activation pending.
+  - context/runtime/production_patch_candidate_refusal_20261012.json
+  current_checkpoint: Owner production candidate57583559/SHA7ef2216b precheck config
+    refusal before SQL/namespace/copy. Next metadata-only --diagnose-config;fixed
+    raw-text labels/counts,no config values or lifecycle/writes. Exact failed condition
+    unknown,insertion guard unchanged. Prior production readiness/stage/full RC retained.
+    Candidate preparation and fresh paired deployment backup/rollback/activation pending.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

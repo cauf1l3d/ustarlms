@@ -29,6 +29,70 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+class ConfigDiagnosticGuards(unittest.TestCase):
+    def test_official_style_trailing_comments_explain_refusal_without_relaxing_it(self):
+        original = ("<?php\n$CFG->dbpass = 'PRIVATE_SENTINEL';\n" + s.SETUP
+                    + " // Do not edit\n\n// No closing tag\n/* PRIVATE_COMMENT */\n").encode()
+        report = s.config_diagnostic(original)
+        self.assertEqual(report['failed_guard_conditions'], ['exact_setup_is_final_nonwhitespace_text'])
+        self.assertEqual(report['suffix_after_unique_exact_setup'], 'comments_and_whitespace')
+        self.assertNotIn('PRIVATE_SENTINEL', json.dumps(report))
+        self.assertNotIn('PRIVATE_COMMENT', json.dumps(report))
+        with self.assertRaises(s.CandidateRefusal):
+            s.configuration(original)
+
+    def test_known_public_path_is_observed_but_never_approved(self):
+        original = b"<?php\nrequire_once(__DIR__ . '/public/lib/setup.php');\n"
+        report = s.config_diagnostic(original)
+        self.assertEqual(report['known_raw_setup_spelling_counts']['public_lib_spaced_single_quote'], 1)
+        self.assertFalse(report['existing_insertion_guard_accepts'])
+        self.assertEqual(report['suffix_after_unique_exact_setup'], 'not_applicable')
+
+    def test_raw_lookalikes_in_passwords_or_comments_are_not_reported_as_PHP_semantics(self):
+        original = ("<?php\n$CFG->dbpass = \"PRIVATE_SENTINEL " + s.SETUP + "\";\n"
+                    "// $CFG->defaulthomepage\n" + s.SETUP + '\n').encode()
+        report = s.config_diagnostic(original)
+        self.assertEqual(report['exact_setup_raw_occurrences'], 2)
+        self.assertFalse(report['guard_conditions']['homepage_raw_token_absent'])
+        self.assertIn('raw_text_only', report['observations_scope'])
+        self.assertNotIn('PRIVATE_SENTINEL', json.dumps(report))
+        with self.assertRaises(s.CandidateRefusal):
+            s.configuration(original)
+
+    def test_code_unterminated_comment_and_closing_tag_have_fixed_labels_only(self):
+        for suffix, expected in (("\n$PRIVATE = 'PRIVATE_SENTINEL';", 'other_text'),
+                                 ('\n/* PRIVATE_SENTINEL', 'unterminated_block_comment'),
+                                 ('\n// PRIVATE_SENTINEL\n?> \n', 'closing_tag_with_optional_comments_before_it')):
+            report = s.config_diagnostic(('<?php\n' + s.SETUP + suffix).encode())
+            self.assertEqual(report['suffix_after_unique_exact_setup'], expected)
+            self.assertNotIn('PRIVATE_SENTINEL', json.dumps(report))
+            self.assertFalse(report['existing_insertion_guard_accepts'])
+
+    def test_non_utf8_has_no_exception_detail_or_config_bytes(self):
+        report = s.config_diagnostic(b'<?php PRIVATE_SENTINEL\xff')
+        self.assertFalse(report['utf8_decodable'])
+        self.assertFalse(report['existing_insertion_guard_accepts'])
+        self.assertNotIn('PRIVATE_SENTINEL', json.dumps(report))
+
+    def test_cli_diagnostic_only_reads_bounded_config_no_archive_SQL_or_namespace(self):
+        primitive = mock.Mock(CODE=Path('/opt/ustar/data/moodle/public'))
+        primitive.read_file.return_value = b"<?php\n$CFG->dbpass='PRIVATE_SENTINEL';\n" + s.SETUP.encode()
+        with mock.patch.object(s, 'load_module', return_value=primitive) as loader, \
+                mock.patch.object(s, 'dependencies', side_effect=AssertionError('no archive/Docker/SQL')), \
+                mock.patch.object(s, 'own_lock', side_effect=AssertionError('no namespace write')), \
+                mock.patch.object(s.os, 'geteuid', return_value=0), \
+                mock.patch.object(s.os, 'umask'), mock.patch.object(s.sys, 'argv', ['candidate', '--diagnose-config']), \
+                mock.patch.object(s.sys, 'stdout', new_callable=io.StringIO) as output:
+            self.assertEqual(s.main(), 0)
+        loader.assert_called_once_with(s.READINESS, s.READINESS_SHA, 'production_candidate_pinned_readiness')
+        primitive.read_file.assert_called_once_with(primitive.CODE / 'config.php', 128 * 1024)
+        self.assertNotIn('PRIVATE_SENTINEL', output.getvalue())
+        self.assertIn('READ_ONLY; NO_CONFIG_TEXT', output.getvalue())
+        report = json.loads(output.getvalue().split('\n', 1)[1])
+        self.assertFalse(report['SQL_executed'])
+        self.assertFalse(report['candidate_created_or_activated'])
+
+
 class ProductionCandidateGuards(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()

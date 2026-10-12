@@ -706,3 +706,19 @@ Helper static read-impact reviewed;11 guard tests and prior broad274/11skips PAS
 
 Owner production preflight12Oct14:43:42UTC PASS:526 USTAR/57 versions,old core2025100601.03,tasks129 unchanged,latest1.019GB archive4e18019e rehashed. Next separate production candidate from official5.1.8/live overlays with candidate-only home config;no activation,core/data/DB or service mutations. Stock wrapper reviewed separately from deliberately rewritten lab loader. Passed preflight/stage/full RC not repeated without drift.
 The lab rewrites root and public config;public loader separately reviewed against original upstream and5.1.8 archive hashes before allowlisting. Profile code unchanged;original root config only candidate-home insertion. Test9/full284(11skips) PASS before final loader guard;dedicated10 PASS afterward. Source CI/server candidate pending.
+
+## 12Oct production candidate configuration refusal and metadata-only diagnostic
+
+Owner installed source57583559dd3451073620783c5e72bab3a5ec6597 helper7ef2216b,
+checksum OK;--prepare-candidate refused at configuration before SQL,live inventory,
+own namespace/lock or copy. No candidate START. Accepted production readiness and
+prior stage/full RC retained. [Refusal receipt](../runtime/production_patch_candidate_refusal_20261012.json).
+
+Guard demands exact final setup text and no homepage token anywhere. Official stock
+config-dist comments after setup demonstrate a possible limitation;actual failed
+condition is unknown. Added --diagnose-config:only pinned readiness module and
+bounded protected config read,fixed raw-text labels/counts,never source values.
+No PHP parse/bootstrap,SQL,Docker,archive/profile scan,namespace/config/lifecycle writes.
+Insertion guard unchanged. Dedicated16 tests PASS(secret sentinels,misleading raw
+lookalikes,UTF8/comments/closing tag/code,CLI isolation,original10 copy/drift guards).
+New source CI/diagnostic server execution pending. No production activation/upgrade.

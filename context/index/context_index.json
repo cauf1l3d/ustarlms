@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 25221,
-      "sha256": "22ec1fc8d38fba92fcac5b15bf2a5ccbeeb5949f0ea2bedd82b56ce34c2ad41c"
+      "size": 25371,
+      "sha256": "120277144ad871f3064ab7163dee5e2ba5c492e5eba90017a73ca51e74ca27b8"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 71590,
-      "sha256": "04b4fbc33de5e89eb68bcbdf6b0a1cdb698a1ecdc7c4c4783fde98e558c0c782"
+      "size": 72697,
+      "sha256": "831b48990cce56b27acdda393537e4651e8cb87876f73433ca54ef402389f6a6"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 31527,
-      "sha256": "b40fbfa5d1798ac3a2981677e1221e517e629d1b7f791c393b3ea89ed020bc91"
+      "size": 31733,
+      "sha256": "ea89f8023ba51cd715bd8e05d9e2740a914f86a7912c489df12a49344ee53370"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1158,8 +1158,14 @@
     {
       "path": "context/runtime/production_patch_candidate_20261012.md",
       "domain": "runtime",
-      "size": 2826,
-      "sha256": "8a3d3b222810e256071b66e98af9c48d71aa73b86580334a0265d383ee244558"
+      "size": 4276,
+      "sha256": "76e03e033af2546f711b92d0762287e5e2fde2bf81f99117d98e19b8d227e923"
+    },
+    {
+      "path": "context/runtime/production_patch_candidate_refusal_20261012.json",
+      "domain": "runtime",
+      "size": 1284,
+      "sha256": "145d74f47dab2d3dd14fd45e390b1b9cc3205ff0d74a80164efec3f333fe01c1"
     },
     {
       "path": "context/runtime/production_patch_inventory_20261012.json",
@@ -1320,8 +1326,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 14171,
-      "sha256": "927d8c9ecbc5b3b26b2b1efb19e50f97cd718de2de868f8d54d31a62952b8637"
+      "size": 14641,
+      "sha256": "526bb5347975c91b9bb371fff7d28f4fdc7685db93c9ef71aca2e81ba40a75f8"
     },
     {
       "path": "context/tasks/backlog.yaml",

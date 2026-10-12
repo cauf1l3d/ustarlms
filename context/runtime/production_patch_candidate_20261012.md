@@ -1,5 +1,23 @@
 # Separate production5.1.8 candidate; activation is a later contract
 
+[Owner first production candidate attempt](production_patch_candidate_refusal_20261012.json)
+on source57583559/SHA7ef2216b verified but refused at configuration before SQL,
+live inventory,namespace creation or copying. The exact failed raw-text condition
+is unknown: existing guard requires one exact setup spelling, no literal homepage
+token anywhere, and setup as final non-whitespace text. Official stock config-dist
+itself has comments after setup; this demonstrates a possible guard limitation,
+not the observed production config shape. Do not publish config lines or credentials.
+
+New mutually exclusive --diagnose-config loads only pinned readiness primitives
+and reads at most128KiB of the existing config with no-link/identity/drift guards.
+Outputs fixed condition labels, counts and suffix categories; no config text or
+values. This is raw-text observation, not PHP semantics or insertion approval.
+No stock archive/profile scan, Docker/SQL, candidate namespace/lock, lifecycle or
+config writes. Existing insertion/refusal rules deliberately remain unchanged
+until actual shape is known. Local dedicated16 tests PASS, including private-value
+sentinels, misleading raw lookalikes, malformed UTF8, comments/closing tag/code,
+and diagnostic CLI isolation. Diagnostic server execution remains pending.
+
 [Owner production preflight](production_patch_readiness_result_20261012.json)
 12Oct14:43:42UTC PASS:526 USTAR,57 addon disk/DB versions,old core metadata/index,
 latest1,019,254,423byte HDD archive4e18019e readback,129 enabled tasks unchanged.
@@ -36,4 +54,6 @@ backup budget is not accepted yet. Nightly archive hash is not decryption/restor
 Full RC a42672e retained for unchanged native application/frontend;real candidate
 server preparation and fresh paired deployment/rollback contract remain pending.
 Local9 guard tests/full284 with11 skips passed before final loader guard;final dedicated
-suite10 PASS includes loader refusal. Exact new source CI pending. No full-addon PASS.
+suite10 PASS includes loader refusal. Prior source57583559 context38268525410 and
+review38268525497 SUCCESS(source8.2/8.3/frontend); ordinary DB/rollback/gate skipped.
+Exact new diagnostic source CI pending. No full-addon PASS.

@@ -3,11 +3,11 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Owner config diagnostic12Oct23:06MSK c092d3b6/SHA6ea279b4 COMPLETE;
-  only exact-final-text condition failed,raw suffix comments/whitespace,one setup,no
-  home token,no PHP/SQL/writes. Builder fixed to preserve comments and insert only
-  before supported standalone setup in separate candidate. Source CI/server prepare
-  pending;prior production readiness/stage/full RC retained,no activation/upgrade.
+current_activity: Owner12Oct23:31MSK production candidate518-wnd475x8 PASS:44174 entries,
+  526 USTAR/57 versions/19 roots,manifesteb6d025d/sourcee7318ecc,source/lifecycle unchanged.
+  Candidate creation closed. Next read-only switch/paired-recovery metadata and capacity
+  preflight,then fresh paired deployment/restore handoff. Prior stage/full RC retained;
+  relevant addon runtime,production activation/upgrade pending. No repeat preparation.
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -445,12 +445,20 @@ patch_candidate:
   production_readonly_preflight_server_executed: true
   production_readonly_preflight_receipt: context/runtime/production_patch_readiness_result_20261012.json
   production_candidate_helper: scripts/infra/production_patch_candidate.py
-  production_candidate_prepared: false
+  production_candidate_prepared: true
+  production_candidate_implementation: f1b68694e7623d435710cd07b91cc50c271e848d
+  production_candidate_receipt: context/runtime/production_patch_candidate_result_20261012.json
+  production_candidate_directory: /var/lib/ustar-production-patch-20261012/candidate-518-wnd475x8
+  production_candidate_manifest_sha256: eb6d025d458daf6b5bf9f2367b48811fa6f8c20cac95df28370d9c58a8a6b92d
+  production_candidate_source_manifest_sha256: e7318ecca9d49663f81ed76b75f51e416a3b33dd70860a2c9fe0378cd7b99a01
   production_candidate_first_attempt_result: configuration_precheck_refusal_before_SQL_namespace_copy
   production_candidate_first_attempt_receipt: context/runtime/production_patch_candidate_refusal_20261012.json
   production_candidate_config_diagnostic_server_executed: true
   production_candidate_config_diagnostic_receipt: context/runtime/production_patch_config_diagnostic_result_20261012.json
   production_candidate_homepage_insertion_policy: exact_standalone_setup_followed_only_by_complete_comments_or_ASCII_whitespace
+  production_switch_preflight_helper: scripts/infra/production_patch_switch_preflight.py
+  production_switch_preflight_server_executed: false
+  production_paired_switch_restore_ready: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

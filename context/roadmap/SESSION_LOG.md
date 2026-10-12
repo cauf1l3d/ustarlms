@@ -741,3 +741,24 @@ PHP source CI checks fake local setup receives same credential hash/prefix and n
 homepage. Real temporary candidate with trailing comments retained/source unchanged PASS.
 Exact fixed source CI/server preparation pending. Prior readiness/stage/full RC retained;
 no production activation/upgrade or new all-addon acceptance inferred.
+
+## 12Oct23:31MSK production candidate accepted; switch/paired recovery preflight
+
+Owner sourcef1b68694/SHA7b8ee79a candidate518-wnd475x8 PASS:44174 entries,
+manifesteb6d025d/sourcee7318ecc,19 roots/57 versions/526 USTAR,four originals,
+production readback/identities unchanged. [Receipt](../runtime/production_patch_candidate_result_20261012.json).
+Creation closed. Owner23:21 noted circular progress;report concrete closed scopes and
+remaining steps. Do not repeat candidate prepare or passed stage core/role read checks.
+Exact fixed source context38303047195/review38303047204 SUCCESS(source8.2/8.3/frontend),
+Python298/11skips,synthetic PHP setup and real comment-tail candidate tests PASS.
+Ordinary DB/rollback/gate skipped;prior full native-application RC retained in scope.
+
+New readonly switch preflight reads missing live root ownership/modes/inodes and
+physical PG/data metadata/budget,other Docker bind consumers/restart policies,exact
+installed backup/cron hashes and existing shared lock. Accepted manifests/config
+pinned;no code-wide candidate rehash until actual switch,no PHP/SQL or any filesystem
+outputs/lifecycle/backup/activation. Candidate private root mode must not replace
+live bind-root metadata. Local15 real temp read/secret/tamper/metadata/lock guard tests
+PASS. New source CI/server preflight pending. Fresh physical paired copy and automatic
+production restore transaction not implemented by this collector. Relevant addon
+runtime,production activation/upgrade and fresh paired recovery still pending.

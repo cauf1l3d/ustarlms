@@ -238,12 +238,13 @@ tasks:
   - context/runtime/production_patch_candidate_20261012.md
   - context/runtime/production_patch_candidate_refusal_20261012.json
   - context/runtime/production_patch_config_diagnostic_result_20261012.json
-  current_checkpoint: Owner12Oct23:06MSK c092d3b6/SHA6ea279b4 config diagnostic COMPLETE;
-    raw suffix comments/whitespace,only exact-final-text guard failed,one setup,no
-    home token,PHP/SQL/writes absent. Fixed builder preserves comments and validates
-    standalone setup before candidate-only HOME insertion. New source CI/server prepare
-    pending;prior readiness/stage/full RC retained. Fresh paired deployment backup,
-    rollback and activation pending.
+  - context/runtime/production_patch_candidate_result_20261012.json
+  - context/runtime/production_patch_switch_preflight_20261012.md
+  current_checkpoint: Owner12Oct23:31MSK candidate518-wnd475x8 PASS:44174 entries,526/57/19,
+    manifesteb6d025d/sourcee7318ecc,production unchanged. Creation closed;no repeat preparation.
+    Next read-only switch/paired restore metadata and capacity contract,then fresh recovery
+    and guarded deployment handoff. Relevant addon runtime and activation/upgrade pending;
+    prior readiness/stage/full RC retained.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

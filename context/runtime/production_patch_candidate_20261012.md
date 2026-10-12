@@ -1,5 +1,16 @@
 # Separate production5.1.8 candidate; activation is a later contract
 
+**Current owner checkpoint12Oct23:31MSK:**
+[candidate518-wnd475x8](production_patch_candidate_result_20261012.json) PASS:
+44174 entries,19 roots/57 versions/526 USTAR,manifesteb6d025d/sourcee7318ecc,
+four originals retained,source/lifecycle unchanged. Creation is closed;do not repeat
+preparation or accepted stage operations without drift. Fixed sourcef1b68694 context
+38303047195/review38303047204 SUCCESS(source8.2/8.3/frontend);Python298/11skips,
+synthetic PHP config and real candidate-comment-tail tests PASS in source8.3 logs.
+Ordinary DB/rollback/gate skipped;unchanged native application prior full RC retained.
+Next [switch/paired restore metadata and budget](production_patch_switch_preflight_20261012.md).
+Activation,fresh coordinated recovery and relevant addon runtime remain pending.
+
 **Current owner checkpoint12Oct23:06MSK:**
 [diagnostic receipt](production_patch_config_diagnostic_result_20261012.json)
 c092d3b6/SHA6ea279b4 COMPLETE: one exact setup, no homepage token, only old
@@ -18,7 +29,8 @@ Local23 tests:22 PASS/1 PHP-dependent skip in Python-only image. Added real temp
 candidate test with trailing comments/private original readback and source unchanged.
 PHP source CI runs a synthetic local setup to compare credentials hash/prefix and
 homepage-before-setup values;this does not invoke Moodle or production config.
-New fixed source CI/server preparation pending. No production activation/upgrade.
+At that checkpoint fixed source CI/server preparation were pending;later acceptance
+is recorded above. No production activation/upgrade.
 
 ## Historical refusal and diagnostic contract
 
@@ -74,8 +86,8 @@ container/service starts/stops,cron edits,data/DB writes,backup,activation or up
 Copy-only storage budget reserves4GiB/inodes and overhead;deployment/PG growth/paired
 backup budget is not accepted yet. Nightly archive hash is not decryption/restore proof.
 Full RC a42672e retained for unchanged native application/frontend;real candidate
-server preparation and fresh paired deployment/rollback contract remain pending.
+server preparation now accepted above,fresh paired deployment/rollback contract pending.
 Local9 guard tests/full284 with11 skips passed before final loader guard;final dedicated
 suite10 PASS includes loader refusal. Prior source57583559 context38268525410 and
 review38268525497 SUCCESS(source8.2/8.3/frontend); ordinary DB/rollback/gate skipped.
-Exact new diagnostic source CI pending. No full-addon PASS.
+Diagnostic c092d3b6 context38301407662/review38301407648 SUCCESS. No full-addon PASS.

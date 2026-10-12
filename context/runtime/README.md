@@ -1,12 +1,12 @@
 # Runtime и эксплуатация
 
-**Checkpoint12Oct03:04MSK, owner report received11:29MSK:** isolated stage Moodle5.1.8
-upgrade/repeat PASS, login200/4910 contenthashes, tasks0/CLI mail blocked/loopback-only;
-source/production identities and stage IDs/bind-root inodes unchanged. Fresh paired
-baseline manifest156e4688 retained in runfylkhzxl. Next [real paired rollback trial](lab_patch_rollback_handoff_20261012.md)
-with the same installed helper. Production core unchanged; paired rollback/browser/
-home/full-addon acceptance pending. Storage/download/install/prepare-stage/candidate
-не повторять; do not repeat upgrade until rollback report is accepted.
+**Checkpoint12Oct12:01MSK, owner received13:02MSK:** real paired stage rollback
+PASS after5.1.8 upgrade/repeat: original coreDB2025100601.03, login200/4910 hashes,
+code/config/Moodledata/physicalPG restored together in629s. Current stage is the
+original baseline; the5.1.8 upgrade remains historical PASS. Next [re-upgrade for
+authenticated browser QA](lab_patch_reupgrade_handoff_20261012.md) using the same installed helper. Prior paired
+rollback is accepted; no repeat restore/download/install/preparation. Production
+core unchanged; USTAR home/roles/SCORM/full-addon/Apache acceptance still pending.
 
 **Next12Oct01:27MSK:** [explicit CLI process isolation/readiness](lab_patch_cli_isolation_20261012.md).
 Native sender mismatch confirmed; memory512M/INI bytes/readonly bind correct. No

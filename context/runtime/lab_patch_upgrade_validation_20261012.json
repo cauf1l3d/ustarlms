@@ -35,7 +35,7 @@
     "repeated_exit_zero_means_no_upgrade_needed": true
   },
   "server_upgrade_executed": true,
-  "server_paired_restore_executed": false,
+  "server_paired_restore_executed": true,
   "production_changed": false,
   "exact_remote_source_ci": {
     "implementation": "59b88e1ae061bfa9ca4070ec74c4ffbf1629df44",
@@ -57,5 +57,10 @@
   "remote_helper_blob": "3f42c59aeddde973d40bca9bc91a0e8c2235787b",
   "immutable_remote_bytes": "PASS",
   "server_upgrade_evidence_source": "owner_pasted_SSH_stdout_not_agent_live_query",
-  "server_upgrade_receipt": "context/runtime/lab_patch_upgrade_result_20261012.json"
+  "server_upgrade_receipt": "context/runtime/lab_patch_upgrade_result_20261012.json",
+  "server_paired_restore_receipt": "context/runtime/lab_patch_restore_result_20261012.json",
+  "server_paired_restore_evidence_source": "owner_checksum_verified_SSH_stdout_not_agent_live_query",
+  "isolated_stage_upgrade_repeat_paired_rollback_cycle_verified": true,
+  "current_stage_core_db_version": "2025100601.03",
+  "server_reupgrade_for_browser_QA_executed": false
 }

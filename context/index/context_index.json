@@ -12,8 +12,8 @@
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 4746,
-      "sha256": "d1bc2f5cbce62b4b5ada1858e93fb7c34a3103ddc339d269089ff648e855bc7d"
+      "size": 4714,
+      "sha256": "dd8e71b85be7a506435019212217dc7ec50a12ed0e40d305a0e8c8820ef33668"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -342,8 +342,8 @@
     {
       "path": "context/code_map/README.md",
       "domain": "code_map",
-      "size": 6326,
-      "sha256": "4af63e632828534a44ae6b8719acdcb28de565e6bfd5f97c580fc3a01000105c"
+      "size": 6419,
+      "sha256": "69ac4be403d2c61716ffc68c73b51f890f5ab4eb2768e07788aa631e7d7fb432"
     },
     {
       "path": "context/code_map/backend.yaml",
@@ -606,8 +606,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 1592,
-      "sha256": "059a657923d36e5565a1b749a70b08e15e662845159b00b839dfc869767a2c6d"
+      "size": 1645,
+      "sha256": "e271a5d91111dc51c725f56de0192d0591838b109f0fd8bd9f3d3393fd05d7ca"
     },
     {
       "path": "context/releases/ADAPTATION_RESET_20261002_RU.md",
@@ -654,8 +654,8 @@
     {
       "path": "context/roadmap/AGENT_PROTOCOL.md",
       "domain": "roadmap",
-      "size": 6638,
-      "sha256": "57b6e96c8b095369ad9eb18f9c67b58d11c7363b1d83b3cf3a522d94b626c804"
+      "size": 6606,
+      "sha256": "4d9d44e32a684ab726180dd1869bd13b63b7921c9e938ba1c3c11a6fd1aa767e"
     },
     {
       "path": "context/roadmap/AUDIT_2026-09-07.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 23902,
-      "sha256": "8624c2e17849883130b52aaedba5a5496a20031c388dac76ea0acc7e78090d33"
+      "size": 24201,
+      "sha256": "3955dba3cfe63657098fd26ce3de29bcd974cdb60329577435122bf600bca2e1"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 59059,
-      "sha256": "bc9c74a39046e6876456f5dd51fa6f66589d07a56e8772176cd7d9955bce37ce"
+      "size": 60945,
+      "sha256": "d3d4b387a389429ea9b1d044abc21ccd51639c9af1b28fb322998505e2ab0ea3"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 27256,
-      "sha256": "df1fe5040b320fc18060d17fa6cf7c5dee0d7eb2ab70b66839ebaee6282114bd"
+      "size": 28118,
+      "sha256": "7507774b8a223b54fa4c429ac7c7271b20d606ad3c85ae4fa7462574416721a1"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -804,8 +804,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 6640,
-      "sha256": "49ee0641813a87b84d3da375c9f947c8532672a84ceacc47f8f35cf66b54ab34"
+      "size": 6608,
+      "sha256": "3f7e3bea336522a61b629fa37f47b3c63aecdfa16cf64de2f0033e4cf5c08eba"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -1012,16 +1012,28 @@
       "sha256": "d896fbfbf509b5bf82c4d16f2bf3ac8c982a477d4b4dbe73ef8a33efba79e992"
     },
     {
+      "path": "context/runtime/lab_patch_restore_result_20261012.json",
+      "domain": "runtime",
+      "size": 3133,
+      "sha256": "81c2318b5294bf4d10fc05a785e0a0b004c44e53dbc2e3b277175b06fd4e79b8"
+    },
+    {
+      "path": "context/runtime/lab_patch_reupgrade_handoff_20261012.md",
+      "domain": "runtime",
+      "size": 6129,
+      "sha256": "5d2b7539975843359825edce4148ae52491825185802ef0c2fd33146c53a3361"
+    },
+    {
       "path": "context/runtime/lab_patch_rollback_handoff_20261012.md",
       "domain": "runtime",
-      "size": 4934,
-      "sha256": "f500b0ee985680b50842d4d0f9846f19139b138470741ecb8e6355164ce3d862"
+      "size": 5289,
+      "sha256": "4bbae2958760401c87bed6715b464c8bb470fa7926679643c8b75abdf8cc2a86"
     },
     {
       "path": "context/runtime/lab_patch_upgrade_20261012.md",
       "domain": "runtime",
-      "size": 13071,
-      "sha256": "341b9ae9067767e1efcbc17714d3c500a7eb6eacf4ae8280ec58ab398406dde9"
+      "size": 13170,
+      "sha256": "c656087a2befdecc5d60e3bda32fb5b6224d95c7d4f2d9f7b85f2822cb45d143"
     },
     {
       "path": "context/runtime/lab_patch_upgrade_result_20261012.json",
@@ -1032,8 +1044,8 @@
     {
       "path": "context/runtime/lab_patch_upgrade_validation_20261012.json",
       "domain": "runtime",
-      "size": 2208,
-      "sha256": "2c01e609a3224ffc4c02034ce621771eae40efbb664588a8c188275420c362f6"
+      "size": 2579,
+      "sha256": "71bc58822bd22e4a6b84f4bb748c511d6f70a4c2420ac344f17c2b8aeb7fa84a"
     },
     {
       "path": "context/runtime/lab_planning_result_20261005.json",
@@ -1236,8 +1248,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 11556,
-      "sha256": "f8d0876aa31da32cb5226c28ce14cda0658a70fe5291bd3170e402fbc2dccc72"
+      "size": 11638,
+      "sha256": "a92b66a3ffeb5f18add4fd3401bd6aae52f1ca1c974cf6aed2e2c736785373db"
     },
     {
       "path": "context/tasks/backlog.yaml",

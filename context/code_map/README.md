@@ -51,4 +51,5 @@ Failure and --restore-baseline restore code/config/Moodledata/physicalPG togethe
 before startup; changed files and immutable copies are retained. SQL writes only
 disable stage scheduled tasks; no production exec/SQL/stop.
 [Contract](../runtime/lab_patch_upgrade_20261012.md), [owner upgrade/repeat PASS](../runtime/lab_patch_upgrade_result_20261012.json)
-and [next real paired rollback trial](../runtime/lab_patch_rollback_handoff_20261012.md).
+[owner actual paired rollback PASS](../runtime/lab_patch_restore_result_20261012.json)
+and [next re-upgrade for authenticated QA](../runtime/lab_patch_reupgrade_handoff_20261012.md).

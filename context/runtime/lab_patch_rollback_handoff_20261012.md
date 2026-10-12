@@ -1,5 +1,11 @@
 # Реальный откат после успешного обновления стенда
 
+**Completed12Oct:** [owner actual paired restore PASS](lab_patch_restore_result_20261012.json),
+08:51:07..09:01:36UTC/629s/core2025100601.03/login200/4910 hashes. This handoff is
+retained as execution history; next [re-upgrade for authenticated QA](lab_patch_reupgrade_handoff_20261012.md).
+Do not repeat this restore command after the accepted result.
+
+
 Owner report получен12Oct11:29:51MSK, операция завершилась00:04:42UTC/03:04:42MSK.
 [Точный результат](lab_patch_upgrade_result_20261012.json): Moodle5.1.8/core2025100608.00
 активирован на отдельном patch stage, official upgrade и repeat PASS, login200,

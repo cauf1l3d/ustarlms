@@ -1,12 +1,12 @@
 # USTAR: вход в проект
 
-**Checkpoint12Oct03:04MSK, owner report received11:29MSK:** isolated stage Moodle5.1.8
-upgrade/repeat PASS, login200/4910 contenthashes, tasks0/CLI mail blocked/loopback-only;
-source/production identities and stage IDs/bind-root inodes unchanged. Fresh paired
-baseline manifest156e4688 retained in runfylkhzxl. Next [real paired rollback trial](context/runtime/lab_patch_rollback_handoff_20261012.md)
-with the same installed helper. Production core unchanged; paired rollback/browser/
-home/full-addon acceptance pending. Storage/download/install/prepare-stage/candidate
-не повторять; do not repeat upgrade until rollback report is accepted.
+**Checkpoint12Oct12:01MSK, owner received13:02MSK:** real paired stage rollback
+PASS after5.1.8 upgrade/repeat: original coreDB2025100601.03, login200/4910 hashes,
+code/config/Moodledata/physicalPG restored together in629s. Current stage is the
+original baseline; the5.1.8 upgrade remains historical PASS. Next [re-upgrade for
+authenticated browser QA](context/runtime/lab_patch_reupgrade_handoff_20261012.md) using the same installed helper. Prior paired
+rollback is accepted; no repeat restore/download/install/preparation. Production
+core unchanged; USTAR home/roles/SCORM/full-addon/Apache acceptance still pending.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта хранения](context/runtime/server_map_20261006.md).
 

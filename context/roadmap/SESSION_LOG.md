@@ -553,3 +553,29 @@ Next same installed --restore-baseline: real three-tree rollback to original
 core2025100601.03, preserving upgraded files and IDs/root inodes; accept owner
 output before re-upgrade/browser QA. No repeat download/install/preparation.
 [Reviewed handoff](../runtime/lab_patch_rollback_handoff_20261012.md).
+
+
+## 2026-10-12 13:02:37 Moscow received — actual paired stage rollback PASS
+
+Owner pre-restore curl proxy/backend loginHTTP200 with Hostustar.local; no timestamps,
+body or authenticated session, not a post-restore probe. Same installed helper59b88e1/
+SHA452d8fd6 verified. Markers08:51:07..09:01:36UTC/11:51:07..12:01:36MSK,629s.
+LAB_PATCH_PAIRED_RESTORE=PASS, paired_trees_restored=true/baseline_restored=true,
+original coreDB2025100601.03, login200/4910 contenthashes. [Exact owner receipt](../runtime/lab_patch_restore_result_20261012.json).
+Prior actual5.1.8 upgrade/repeat plus this full code/config/Moodledata/physicalPG
+restore establish isolated stage cycle acceptance on this helper. Private source/
+production guard passed by exact helper control flow before PASS; its raw fields
+were not printed and are not fabricated in the receipt. Production core unchanged;
+production rollback/fresh HDD restore/host reboot/full-addon/browser/Apache not
+inferred. Current stage original baseline, not candidate5.1.8. Prior runfylkhzxl/
+manifest156e4688 and upgraded files retained.
+
+Next same helper --upgrade-stage archives the restored marker, runs readonly
+accepted candidate/platform/budget checks and creates a new run/current-stage pair
+for5.1.8/browser QA. No repeat download/install/preparation or old rollback trial.
+New report per-transaction rollback pending does not invalidate old accepted proof;
+no infinite restore loop absent code changes/failure. [Operator command and scoped native QA matrix](../runtime/lab_patch_reupgrade_handoff_20261012.md).
+Helper/application/frontend/workflows/tests unchanged; documentation-only context/
+JSON/operator-shell/source-equivalence checks apply, broad tests not rerun. Existing
+source CI exact59b88e1 Context58/PHP8.2/8.3 SUCCESS; frontend audit failure/full gate
+not PASS, PR99 draft/unmerged. No production deployment or merge.

@@ -60,7 +60,7 @@ tasks:
   pending_acceptance:
   - Extra consumers/runtime dependencies; candidate homepage runtime acceptance
   - Fresh archive independent copy/decryption/restore
-  - Paired code/config/Moodledata/physicalPG rollback and authenticated full-addon browser acceptance after stage upgrade/repeat PASS
+  - Re-upgrade restored stage for authenticated home/roles/SCORM/full-addon acceptance after upgrade/repeat/paired rollback PASS
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA
     verified
@@ -97,6 +97,8 @@ tasks:
     server execution pending.
   - Owner12Oct00:04:42UTC isolated stage Moodle5.1.8 upgrade/repeat PASS,4910 contenthashes/login200/tasks0;
     current-stage cold pair manifest156e4688 retained, production unchanged. Real paired rollback next.
+  - Owner12Oct08:51:07..09:01:36UTC actual paired stage rollback PASS, original core2025100601.03/4910
+    hashes/login200. Current stage baseline restored; re-upgrade for browser/full-addon QA next.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -218,11 +220,13 @@ tasks:
   - context/runtime/lab_patch_upgrade_validation_20261012.json
   - context/runtime/lab_patch_upgrade_result_20261012.json
   - context/runtime/lab_patch_rollback_handoff_20261012.md
-  current_checkpoint: Owner12Oct00:04:42UTC isolated stage upgrade/repeat PASS, core2025100608.00,
-    login200/4910 contenthashes, tasks0/CLI mail blocked/loopback-only; same stage IDs/bind roots and
-    source/production identities. Fresh paired baseline156e4688/runfylkhzxl retained. Next actual
-    --restore-baseline with same installed helper, then re-upgrade/authenticated browser QA. Real
-    paired rollback, home/full-addon/Apache acceptance and production upgrade remain pending.
+  - context/runtime/lab_patch_restore_result_20261012.json
+  - context/runtime/lab_patch_reupgrade_handoff_20261012.md
+  current_checkpoint: Owner12Oct09:01:36UTC real paired restore PASS after5.1.8 upgrade/repeat,
+    original core2025100601.03/login200/4910 hashes,629s. Isolated stage upgrade/repeat/paired
+    rollback cycle accepted. Current stage baseline restored; same-helper re-upgrade for native
+    authenticated USTAR home/roles/SCORM/files/preserved-addon QA next. Production pre-restore
+    proxy/backendHTTP200, core unchanged; Apache/manual/full-addon acceptance/deploy pending.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

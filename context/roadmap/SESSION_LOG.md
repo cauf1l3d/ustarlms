@@ -762,3 +762,28 @@ live bind-root metadata. Local15 real temp read/secret/tamper/metadata/lock guar
 PASS. New source CI/server preflight pending. Fresh physical paired copy and automatic
 production restore transaction not implemented by this collector. Relevant addon
 runtime,production activation/upgrade and fresh paired recovery still pending.
+
+
+## 12Oct23:52MSK accepted switch conditions; unified production transaction
+
+Owner attachment switch preflight20:51:43UTC PASS on eadee288/fd65eda0:code33:33/0755,
+data33:33/0770,PG999:1000/0700,children999:999,mixed root-owned data,no bind consumers,
+unless-stopped,12,706,045,952bytes needed/64,707,956,736free. No PHP/SQL/outage/writes.
+[Receipt](../runtime/production_patch_switch_preflight_result_20261012.json).
+Candidate/preflight closed;no repeating collectors or stage cycle.
+
+Unified transaction captures fresh encrypted HDD copy,uses EX backup/cron lock,
+clean web/PG stop,fresh verified physical pair,preserved live-root inode/UID/GID/mode,
+official CLI upgrade/repeat and all-three-tree restore on pre-release failure.
+Imports only3 pure stage journal/copy/move functions and cold copier;no stage ops.
+Restart no guards partial copies;owned maintenance file blocks web before DB
+bootstrap. After durable public release,old-data restore requires explicit discard
+acknowledgement. Custom/addon task flags preserved;core defaults may evolve.
+Custom SQL read-only,role/route/history resets absent. Raw command details private.
+
+Local24tests:23 PASS/1 exact owner fixture skip(local root namespace cannot chown33/
+999). Real file copy/recovery/retry/journals/kernel locks;Docker/SQL/HDD fake.
+PHP8.3 source CI now mandates privileged temporary33/999/GID1000 owner fixture.
+Exact new CI/publication/production execution pending. Real production restoration
+not claimed;prior actual stage rollback/package/native full RC retained. Post-switch
+role/learning/cron and full addon compatibility remain distinct acceptance.

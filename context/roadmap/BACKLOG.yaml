@@ -240,11 +240,14 @@ tasks:
   - context/runtime/production_patch_config_diagnostic_result_20261012.json
   - context/runtime/production_patch_candidate_result_20261012.json
   - context/runtime/production_patch_switch_preflight_20261012.md
-  current_checkpoint: Owner12Oct23:31MSK candidate518-wnd475x8 PASS:44174 entries,526/57/19,
-    manifesteb6d025d/sourcee7318ecc,production unchanged. Creation closed;no repeat preparation.
-    Next read-only switch/paired restore metadata and capacity contract,then fresh recovery
-    and guarded deployment handoff. Relevant addon runtime and activation/upgrade pending;
-    prior readiness/stage/full RC retained.
+  - context/runtime/production_patch_switch_preflight_result_20261012.json
+  - context/runtime/production_patch_upgrade_20261012.md
+  current_checkpoint: Owner switch preflight20:51:43UTC PASS:live code/data33:33,PG999:1000,
+    mixed owners/modes,no other bind consumers,unless-stopped,12.71GB needed/64.71GB free.
+    Candidate/collector scopes closed. Unified HDD/paired cold recovery/official upgrade
+    and pre-release restore helper prepared;local23 PASS/1 owner namespace skip,
+    mandatory privileged source CI/production execution pending. Post-switch roles,
+    learning,cron and relevant addon runtime distinct;prior full native RC retained.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

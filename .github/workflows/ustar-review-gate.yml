@@ -51,6 +51,12 @@ jobs:
       - run: python scripts/ci/source_checks.py
       - run: pip install -r tests/stage/python-requirements.txt
       - run: python -m unittest discover -s tests/r16 -v
+      - name: Verify production paired copy with exact reported Unix owners
+        if: matrix.php == '8.3'
+        run: >-
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1
+          "$(command -v python)" -m unittest
+          tests.r16.test_production_patch_upgrade.ProductionPairTransactionGuards.test_exact_reported_mixed_ownership_and_root_gid_survive_copy_and_restore -v
       - run: php tests/release_20260912/route_flow.php
       - run: php tests/release_20260912/career.php
       - run: npm ci --prefix tests/release_20260912

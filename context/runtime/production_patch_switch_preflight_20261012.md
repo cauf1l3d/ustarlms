@@ -1,5 +1,15 @@
 # Production switch and paired restore conditions
 
+**Owner result20:51:43UTC received12Oct23:52MSK:**
+[PASS](production_patch_switch_preflight_result_20261012.json),no PHP/SQL/outage/writes.
+Code33:33/0755,data33:33/0770,PG999:1000/0700;children999:999. Existing mixed owners
+and wide/executable data modes preserved,not normalized. Space12.71GB needed/64.71GB
+free,no other bind consumers,both restart unless-stopped. Collector scope closed.
+[Production transaction](production_patch_upgrade_20261012.md) uses actual metadata.
+Source eadee288 context38306418042/review38306418052 SUCCESS(source8.2/8.3/frontend),
+Python313/11skips/new15 guards PASS. Ordinary DB/rollback/gate skipped;prior full RC
+retained in scope. No repeat collector/candidate/stage cycle.
+
 [Owner candidate](production_patch_candidate_result_20261012.json) received12Oct23:31MSK:
 candidate518-wnd475x8 PASS,44174 entries,manifesteb6d025d/sourcee7318ecc,
 19 addon roots/57 versions/526 USTAR hashes;four originals preserved privately.
@@ -41,6 +51,6 @@ Local15 tests PASS:real metadata/config reads with output/mkdir denied,credentia
 personnel and Docker-env sentinels absent,manifest/config/helper tampering rejected,
 resume marker/PG major/link/overlap/policy/capacity/lifecycle drift refusals,wide data
 modes reported without chmod,real shared/exclusive lock conflict and lock replacement
-detection. New source CI/server preflight pending. Full addon functional acceptance
+detection. Source CI/server were pending historically;later acceptance is above. Full addon functional acceptance
 remains distinct. Next use actual metadata to finish the paired deployment/restore
 transaction and fresh recovery handoff;no repeated candidate or stage preparations.

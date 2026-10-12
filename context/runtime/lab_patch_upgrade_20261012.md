@@ -1,5 +1,11 @@
 # Пробное обновление Moodle 5.1.8 и согласованное восстановление стенда
 
+**Server checkpoint12Oct:** [owner upgrade/repeat PASS](lab_patch_upgrade_result_20261012.json),
+finished00:04:42UTC, candidate5.1.8 active only on stage/login200/4910 hashes/tasks0.
+Fresh paired baseline156e4688/runfylkhzxl retained. Next [actual paired rollback trial](lab_patch_rollback_handoff_20261012.md)
+with the installed helper; production unchanged, browser/full-addon/rollback acceptance pending.
+
+
 Получен [owner readiness PASS в22:56:35UTC11Oct](lab_patch_readiness_result_20261012.json).
 Candidate0v8ncwgu/manifest07dfa485 проверен, PHP8.3.33/PG16.15 и обязательные
 расширения подходят; исходные версии БД/57 addons и tasks0 совпали. Файл lab.ini
@@ -7,7 +13,7 @@ Candidate0v8ncwgu/manifest07dfa485 проверен, PHP8.3.33/PG16.15 и обя
 memory_limit512M/sendmail_path=/bin/false/displayOff/logOn и пустые prepend/append.
 Это не ремонт native CLI/Apache и не подтверждение всех функций addons.
 
-Следующая операция — `--upgrade-stage` нового
+Операция `--upgrade-stage` выполнена владельцем с помощью
 [helper](../../scripts/infra/lab_patch_upgrade.py). Прямого SSH/Docker доступа
 агента нет; серверный запуск и результат предоставляет владелец. Source/CI и
 server acceptance записываются отдельно. PR99 остаётся draft/unmerged; frontend
@@ -104,7 +110,8 @@ Immutable remote blob3f42c59aeddde973d40bca9bc91a0e8c2235787b byte-identical PAS
 source PHP8.2/8.3 SUCCESS, frontend npm audit FAILURE; rollback/prepare-rc/moodle-db/gate
 SKIPPED. Это source verification, не полный gate или live upgrade/restore.
 
-Server upgrade/repeat/paired rollback этого helper ещё не выполнялись.
+Server upgrade/repeat выполнены владельцем12Oct00:04:42UTC PASS; реальный paired rollback
+этого helper ещё не выполнен. Следующий шаг — --restore-baseline, не повторный upgrade.
 Composer declarations не доказывают resolved dependencies; exif/soap optional
 missing не основание для слепого install. После реального upgrade/restore и
 повторного upgrade выполняются native login, USTAR home, роли/capabilities, SCORM,

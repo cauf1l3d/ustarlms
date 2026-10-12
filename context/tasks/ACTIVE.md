@@ -1,22 +1,23 @@
 # Активная работа — 12.10.2026
 
-**Текущий шаг:** [guarded stage upgrade + paired recovery](../runtime/lab_patch_upgrade_20261012.md).
-[Owner22:56:35UTC readiness PASS](../runtime/lab_patch_readiness_result_20261012.json):
-accepted code/config/overlay hashes,57 addon metadata/526 USTAR, required extensions,
-PHP8.3.33/PG16.15 and original stage DB versions/tasks0 verified. Bound private INI
-unreadable to CLI33; explicit512M/binfalse effective policy PASS. Native CLI remains
-sendmail; Apache settings unverified. No server candidate activation or core upgrade.
+**Текущий шаг:** [real paired rollback trial](../runtime/lab_patch_rollback_handoff_20261012.md)
+после [owner stage upgrade/repeat PASS](../runtime/lab_patch_upgrade_result_20261012.json).
+Finished12Oct00:04:42UTC/03:04:42MSK, report received11:29:51MSK. Candidate5.1.8
+activated/coreDB2025100608.00, official CLI upgrade and repeat PASS, login200,
+4910 file contenthashes, tasks0/CLI mail disabled/loopback-only. Same stage IDs/
+bind-root inodes and source/production identity/start times unchanged.
+Fresh current-stage cold pair manifest156e4688/runfylkhzxl created before SQL.
 
-**INF-08 в работе:** helper saves a fresh current-stage cold pair, retains existing
-bind root inodes/container IDs, activates accepted code only on stage, runs official
-admin/cli/upgrade.php twice, and restores code/config/Moodledata/physicalPG together
-on failure. Separate --restore-baseline proves paired rollback after successful
-upgrade.23 dedicated real filesystem/failure injection tests PASS; full r16 260 OK/11
-skips. Private stage engine fully read/SHA matched/API contract PASS; raw engine
-not published. Implementation59b88e1, exact Context58/complete sourcePHP8.2/8.3
-SUCCESS; frontend npm audit FAILURE/downstream SKIPPED/full gate not PASS.
-PR99 draft/unmerged. Browser roles/SCORM/home/addon acceptance
-and production patch remain pending. Do not rerun storage/candidate/stage preparation.
+**INF-08 в работе:** execute same installed helper --restore-baseline and accept
+owner output before re-upgrade/browser QA. Original-core stage2025100601.03 must
+boot with full paired code/config/Moodledata/physicalPG restore and hashes PASS;
+upgraded files retained. Source18084/production not targets. No repeat download/
+install/storage/prepare-stage/prepare-candidate. Existing23 dedicated tests/full
+r16 260 OK/11 local skips and exact implementation59b88e1 Context58/complete source
+PHP8.2/8.3 SUCCESS remain valid; helper bytes unchanged. Frontend audit FAILURE/
+downstream SKIPPED/full gate not PASS, PR99 draft/unmerged. Real paired rollback,
+Apache settings, authenticated USTAR home/roles/SCORM/full-addon runtime and
+production patch remain pending. Current proof is owner stdout, not agent SSH.
 
 SSD/root и HDD ночной запуск11Oct success; checkpoint и baseline stage приняты18:55:53..19:17:02UTC. Official5.1.8 SHA проверен20:09UTC в `moodle-518-package-20261011-nnixp4se`. Не повторять. Screenshot подтверждает authenticated SCORM rendering в видимой области; core production прежний.
 

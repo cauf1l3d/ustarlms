@@ -530,3 +530,26 @@ source PHP8.2/8.3 SUCCESS. Frontend npm audit FAILURE; rollback/prepare-rc/moodl
 gate SKIPPED; no full gate PASS, merge or server deployment claim. PR98/99 metadata
 updated to owner readiness PASS and concrete stage upgrade/recovery handoff.
 Operator immutable curl/checksum/install/upgrade and recovery commands documented.
+
+
+## 2026-10-12 11:29:51 Moscow received — real stage upgrade/repeat PASS
+
+Owner downloaded/installed exact implementation59b88e1/helperSHA452d8fd6, both
+checksums OK. Finished00:04:42.290128UTC/03:04:42MSK, operation start timestamp not
+printed. New transactionrunfylkhzxl, fresh current-stage paired cold baseline
+manifest156e468887a09992b6e6b69bc05f4733385e648546f17f3c102c98d5f50abce9
+PASS before SQL. Official CLI first/repeat PASS; stage candidate active/coreDB
+2025100608.00, login200/4910 contenthashes, tasks0/CLI mail blocker/loopback-only,
+same stage container IDs/bind-root inodes and source/production identities/start
+times. [Exact receipt](../runtime/lab_patch_upgrade_result_20261012.json).
+
+This is owner server evidence, not independent agent SSH or all-feature QA.
+Production core unchanged; paired rollback/home/roles/SCORM/full-addon/Apache
+acceptance not reported. No fresh12Oct HDD timer/host reboot/independent archive
+restore evidence inferred. Existing source CI implementation59b88e1 Context58 and
+both full PHP8.2/8.3 source jobs PASS; frontend audit failure/full gate not PASS.
+Helper/application/frontend/workflows/private scripts unchanged in this delivery.
+Next same installed --restore-baseline: real three-tree rollback to original
+core2025100601.03, preserving upgraded files and IDs/root inodes; accept owner
+output before re-upgrade/browser QA. No repeat download/install/preparation.
+[Reviewed handoff](../runtime/lab_patch_rollback_handoff_20261012.md).

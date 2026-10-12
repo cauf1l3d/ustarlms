@@ -23,7 +23,8 @@
     "full_source_read": true,
     "AST_API_contract": "PASS",
     "published": false,
-    "server_execution": false
+    "server_execution": true,
+    "server_execution_scope": "pinned_engine_methods_used_by_stage_upgrade_helper; original_restore_not_repeated"
   },
   "official_package_cli_review": {
     "sha256": "0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c",
@@ -33,7 +34,7 @@
     ],
     "repeated_exit_zero_means_no_upgrade_needed": true
   },
-  "server_upgrade_executed": false,
+  "server_upgrade_executed": true,
   "server_paired_restore_executed": false,
   "production_changed": false,
   "exact_remote_source_ci": {
@@ -54,5 +55,7 @@
   "application_source_map": "unchanged PR76; files526/PHP356/symbols172/tables93/tasks32",
   "implementation_commit": "59b88e1ae061bfa9ca4070ec74c4ffbf1629df44",
   "remote_helper_blob": "3f42c59aeddde973d40bca9bc91a0e8c2235787b",
-  "immutable_remote_bytes": "PASS"
+  "immutable_remote_bytes": "PASS",
+  "server_upgrade_evidence_source": "owner_pasted_SSH_stdout_not_agent_live_query",
+  "server_upgrade_receipt": "context/runtime/lab_patch_upgrade_result_20261012.json"
 }

@@ -60,7 +60,7 @@ tasks:
   pending_acceptance:
   - Extra consumers/runtime dependencies; candidate homepage runtime acceptance
   - Fresh archive independent copy/decryption/restore
-  - Full-addon stage upgrade/repeat and paired code/config/Moodledata/physicalPG restore
+  - Paired code/config/Moodledata/physicalPG rollback and authenticated full-addon browser acceptance after stage upgrade/repeat PASS
   completed_observations:
   - Server core comparison received 2026-10-05T08:28:00.664160+00:00; coverage/reference and collector SHA
     verified
@@ -95,6 +95,8 @@ tasks:
   - Owner11Oct cold checkpoint and independent baseline stage PASS; 526 USTAR/57 addon metadata/4910 content
     hashes; original core unchanged. Official5.1.8 SHA PASS in nnixp4se; separate candidate helper prepared,
     server execution pending.
+  - Owner12Oct00:04:42UTC isolated stage Moodle5.1.8 upgrade/repeat PASS,4910 contenthashes/login200/tasks0;
+    current-stage cold pair manifest156e4688 retained, production unchanged. Real paired rollback next.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -214,11 +216,13 @@ tasks:
   - context/runtime/lab_patch_readiness_result_20261012.json
   - context/runtime/lab_patch_upgrade_20261012.md
   - context/runtime/lab_patch_upgrade_validation_20261012.json
-  current_checkpoint: Owner22:56:35UTC readonly readiness PASS; CLI INI unreadable to user33 but
-    explicit512M/binfalse policy verified. Core/platform/original stage addon versions/tasks0 accepted.
-    Guarded stage upgrade/repeat with fresh current-stage cold pair and whole-pair recovery prepared;
-    explicit paired restore after successful upgrade and browser/addon acceptance pending. Private
-    stage engine fully read/SHA matched without publication. No server activation/production upgrade.
+  - context/runtime/lab_patch_upgrade_result_20261012.json
+  - context/runtime/lab_patch_rollback_handoff_20261012.md
+  current_checkpoint: Owner12Oct00:04:42UTC isolated stage upgrade/repeat PASS, core2025100608.00,
+    login200/4910 contenthashes, tasks0/CLI mail blocked/loopback-only; same stage IDs/bind roots and
+    source/production identities. Fresh paired baseline156e4688/runfylkhzxl retained. Next actual
+    --restore-baseline with same installed helper, then re-upgrade/authenticated browser QA. Real
+    paired rollback, home/full-addon/Apache acceptance and production upgrade remain pending.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

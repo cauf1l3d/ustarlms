@@ -3,11 +3,12 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner readiness22:56:35UTC PASS: accepted candidate/platform and original stage
-  DB/addons verified under explicit PHP CLI isolation. Bound private INI unreadable to CLI33;
-  Apache/native defaults not repaired. Guarded isolated stage upgrade/repeat with fresh paired
-  cold baseline and automatic three-tree recovery prepared; separate paired restore trial and
-  browser/addon acceptance remain pending. No server activation/core upgrade or production write.'
+current_activity: 'Owner stage upgrade/repeat12Oct00:04:42UTC PASS on implementation59b88e1:
+  Moodle5.1.8/core2025100608.00 activated only on offline patch stage, login200/4910 hashes,
+  tasks0/CLI mail disabled, stage IDs/bind roots and source/production identities unchanged.
+  Fresh paired baseline156e4688/runfylkhzxl retained. Next real paired rollback trial using
+  installed helper, then re-upgrade and authenticated browser/addon acceptance. Production
+  core unchanged; rollback/manual/home/full-addon/Apache acceptance remains pending.'
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -30,7 +31,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_original_core_unchanged_storage_and_baseline_stage_confirmed_candidate_upgrade_pending
+  status: owner_production_core_unchanged_isolated_stage_upgrade_repeat_PASS_paired_rollback_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -167,6 +168,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/lab_patch_rollback_handoff_20261012.md
+- context/runtime/lab_patch_upgrade_result_20261012.json
 - context/runtime/lab_patch_upgrade_20261012.md
 - context/runtime/lab_patch_readiness_result_20261012.json
 - context/runtime/lab_patch_cli_isolation_20261012.md
@@ -225,7 +228,7 @@ audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   current_snapshot: '2026-10-06T12:39:00Z'
-  status_summary: SSD_growth_HDD_scheduled_baseline_stage_and_candidate_code_server_PASS_platform_check_next
+  status_summary: SSD_growth_HDD11Oct_scheduled_and_stage_upgrade_repeat_server_PASS_paired_rollback_next
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
@@ -294,7 +297,7 @@ patch_candidate:
   candidate_copy_contract: context/runtime/lab_patch_candidate_fix_20261012.md
   candidate_copy_helper_local_validation: 33 tests_PASS_197_context_OK_10skipped_actual_archive_plus_synthetic_overlay_full_prepare_PASS
   candidate_copy_helper_server_executed: true
-  candidate_core_activated_on_stage: false
+  candidate_core_activated_on_stage: true
   candidate_copy_server_receipt: context/runtime/lab_patch_candidate_result_20261012.json
   candidate_copy_helper_corrected_installed: true
   candidate_code_assembly_server_result: PASS
@@ -346,7 +349,18 @@ patch_candidate:
   upgrade_context_ci: 38184389152
   upgrade_review_ci: 38184389139
   upgrade_ci_status: context_and_complete_sourcePHP82_83_success_frontend_audit_failure_downstream_skipped_no_merge
-  upgrade_helper_server_executed: false
+  upgrade_helper_server_executed: true
+  upgrade_helper_installed_checksum: PASS_owner_stdout
+  upgrade_helper_server_receipt: context/runtime/lab_patch_upgrade_result_20261012.json
+  stage_upgrade_server_result: PASS
+  stage_upgrade_repeat_server_result: PASS
+  core_candidate_upgrade_repeat_server_executed: true
+  stage_core_db_version: '2025100608.00'
+  stage_upgrade_finished_at: '2026-10-12T00:04:42.290128+00:00'
+  current_stage_paired_baseline_manifest_sha256: 156e468887a09992b6e6b69bc05f4733385e648546f17f3c102c98d5f50abce9
+  current_stage_upgrade_run: /var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/patch-upgrade-518-20261012-fylkhzxl
+  rollback_handoff: context/runtime/lab_patch_rollback_handoff_20261012.md
+  stage_current_evidence_scope: owner_pasted_stdout_not_agent_live_query
   paired_restore_helper_prepared: true
   paired_restore_server_executed: false
   candidate_copy_github_ci_status: implementation4a6810_context38175465744_success_sourcePHP82_83_success_review38175465742_frontend_npm_audit_failure_downstream_skipped_no_merge

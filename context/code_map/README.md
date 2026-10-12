@@ -50,4 +50,5 @@ the official root admin/cli/upgrade.php twice under explicit CLI mail isolation.
 Failure and --restore-baseline restore code/config/Moodledata/physicalPG together
 before startup; changed files and immutable copies are retained. SQL writes only
 disable stage scheduled tasks; no production exec/SQL/stop.
-[Contract and server execution pending](../runtime/lab_patch_upgrade_20261012.md).
+[Contract](../runtime/lab_patch_upgrade_20261012.md), [owner upgrade/repeat PASS](../runtime/lab_patch_upgrade_result_20261012.json)
+and [next real paired rollback trial](../runtime/lab_patch_rollback_handoff_20261012.md).

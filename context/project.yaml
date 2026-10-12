@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-12'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -10,7 +10,8 @@ project:
 stack:
   platform: 'Moodle 5.1.1+ (Build: 20251219), fresh disk/DB owner inventory 2026-10-05T02:43:33Z; full core pending'
   language: PHP CLI8.3.33/Trixie production; PR83 source CI8.2+8.3 and pinned patch-518/PG16.15 full RC SUCCESS,
-    server core upgrade not executed
+    production core unchanged; isolated stage upgrade/repeat owner12Oct00:04:42UTC PASS
+  stage_platform: 'Moodle5.1.8/core2025100608.00, owner12Oct00:04:42UTC; paired rollback/manual QA pending'
   database: PostgreSQL 16.15, dated owner evidence
   deployment: Docker on company Ubuntu 24.04.4 LTS shared host; virtualization not verified
   native_ui: PHP + Mustache + JS/AMD + SCSS

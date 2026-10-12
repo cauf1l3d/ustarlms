@@ -1,22 +1,44 @@
 # Separate production5.1.8 candidate; activation is a later contract
 
+**Current owner checkpoint12Oct23:06MSK:**
+[diagnostic receipt](production_patch_config_diagnostic_result_20261012.json)
+c092d3b6/SHA6ea279b4 COMPLETE: one exact setup, no homepage token, only old
+final-nonwhitespace guard failed; raw suffix comments_and_whitespace. No config text,
+PHP/SQL or candidate/lifecycle changes. Previous refusal is a builder limitation,
+not evidence of production config damage. Passed readiness/stage/full RC retained.
+
+Builder now permits only ASCII whitespace and complete line/block/hash comments
+after exact setup;preserves every original byte and inserts HOME only in candidate.
+Rejects PHP tags, attributes, executable suffix, unfinished comments and non-ASCII
+whitespace. Conservative prefix scanner verifies setup is on its own line in PHP,
+outside strings/comments/nested delimiters, following a completed statement.
+Unsupported mixed tags/heredoc/complex interpolation/attributes refuse;no general
+PHP parse or execution. Raw lookalikes/controlled if/loop setup cannot be insertion sites.
+Local23 tests:22 PASS/1 PHP-dependent skip in Python-only image. Added real temporary
+candidate test with trailing comments/private original readback and source unchanged.
+PHP source CI runs a synthetic local setup to compare credentials hash/prefix and
+homepage-before-setup values;this does not invoke Moodle or production config.
+New fixed source CI/server preparation pending. No production activation/upgrade.
+
+## Historical refusal and diagnostic contract
+
 [Owner first production candidate attempt](production_patch_candidate_refusal_20261012.json)
 on source57583559/SHA7ef2216b verified but refused at configuration before SQL,
-live inventory,namespace creation or copying. The exact failed raw-text condition
-is unknown: existing guard requires one exact setup spelling, no literal homepage
+live inventory,namespace creation or copying. At that checkpoint the exact failed
+condition was unknown: the old guard required one exact setup spelling, no literal homepage
 token anywhere, and setup as final non-whitespace text. Official stock config-dist
 itself has comments after setup; this demonstrates a possible guard limitation,
 not the observed production config shape. Do not publish config lines or credentials.
 
-New mutually exclusive --diagnose-config loads only pinned readiness primitives
+Mutually exclusive --diagnose-config loads only pinned readiness primitives
 and reads at most128KiB of the existing config with no-link/identity/drift guards.
 Outputs fixed condition labels, counts and suffix categories; no config text or
 values. This is raw-text observation, not PHP semantics or insertion approval.
 No stock archive/profile scan, Docker/SQL, candidate namespace/lock, lifecycle or
-config writes. Existing insertion/refusal rules deliberately remain unchanged
-until actual shape is known. Local dedicated16 tests PASS, including private-value
+config writes. In the c092d3b6 diagnostic delivery insertion/refusal rules remained
+unchanged until actual shape was known. Local dedicated16 tests PASS, including private-value
 sentinels, misleading raw lookalikes, malformed UTF8, comments/closing tag/code,
-and diagnostic CLI isolation. Diagnostic server execution remains pending.
+and diagnostic CLI isolation. Later actual server execution is recorded above.
 
 [Owner production preflight](production_patch_readiness_result_20261012.json)
 12Oct14:43:42UTC PASS:526 USTAR,57 addon disk/DB versions,old core metadata/index,
@@ -41,7 +63,7 @@ original upstream1cd1781,official5.1.8,or reviewed minimal loader. Unknown loade
 Official new public config/index remain stock. Originals of config,public config/index,
 and legacy githash preserved in a private companion tree. Production master config
 credentials/URL/mail/cron untouched;only candidate gets relative USTAR homepage before
-known final setup line. No offline lab credentials/policy are copied into production.
+known standalone setup line;following comments retained. No offline lab credentials/policy are copied into production.
 
 Before completion,candidate and preserved originals read back;live code/config reread,
 DB versions/tasks and container identities compared. Package mutation,source drift,

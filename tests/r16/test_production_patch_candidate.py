@@ -5,6 +5,8 @@ import io
 import json
 import os
 from pathlib import Path
+import shutil
+import subprocess
 import tarfile
 import tempfile
 import unittest
@@ -30,16 +32,19 @@ def sha(data):
 
 
 class ConfigDiagnosticGuards(unittest.TestCase):
-    def test_official_style_trailing_comments_explain_refusal_without_relaxing_it(self):
+    def test_official_style_trailing_comments_are_preserved_after_safe_insertion(self):
         original = ("<?php\n$CFG->dbpass = 'PRIVATE_SENTINEL';\n" + s.SETUP
                     + " // Do not edit\n\n// No closing tag\n/* PRIVATE_COMMENT */\n").encode()
         report = s.config_diagnostic(original)
-        self.assertEqual(report['failed_guard_conditions'], ['exact_setup_is_final_nonwhitespace_text'])
+        self.assertEqual(report['failed_guard_conditions'], [])
+        self.assertTrue(report['existing_insertion_guard_accepts'])
         self.assertEqual(report['suffix_after_unique_exact_setup'], 'comments_and_whitespace')
         self.assertNotIn('PRIVATE_SENTINEL', json.dumps(report))
         self.assertNotIn('PRIVATE_COMMENT', json.dumps(report))
-        with self.assertRaises(s.CandidateRefusal):
-            s.configuration(original)
+        candidate = s.configuration(original)
+        index = original.index(s.SETUP.encode())
+        self.assertEqual(candidate, original[:index] + s.HOME.encode() + original[index:])
+        self.assertEqual(candidate.replace(s.HOME.encode(), b'', 1), original)
 
     def test_known_public_path_is_observed_but_never_approved(self):
         original = b"<?php\nrequire_once(__DIR__ . '/public/lib/setup.php');\n"
@@ -54,7 +59,7 @@ class ConfigDiagnosticGuards(unittest.TestCase):
         report = s.config_diagnostic(original)
         self.assertEqual(report['exact_setup_raw_occurrences'], 2)
         self.assertFalse(report['guard_conditions']['homepage_raw_token_absent'])
-        self.assertIn('raw_text_only', report['observations_scope'])
+        self.assertIn('not_full_PHP_validation', report['observations_scope'])
         self.assertNotIn('PRIVATE_SENTINEL', json.dumps(report))
         with self.assertRaises(s.CandidateRefusal):
             s.configuration(original)
@@ -81,7 +86,8 @@ class ConfigDiagnosticGuards(unittest.TestCase):
                 mock.patch.object(s, 'dependencies', side_effect=AssertionError('no archive/Docker/SQL')), \
                 mock.patch.object(s, 'own_lock', side_effect=AssertionError('no namespace write')), \
                 mock.patch.object(s.os, 'geteuid', return_value=0), \
-                mock.patch.object(s.os, 'umask'), mock.patch.object(s.sys, 'argv', ['candidate', '--diagnose-config']), \
+                mock.patch.object(s.os, 'umask'), mock.patch.object(s.sys, 'dont_write_bytecode'), \
+                mock.patch.object(s.sys, 'argv', ['candidate', '--diagnose-config']), \
                 mock.patch.object(s.sys, 'stdout', new_callable=io.StringIO) as output:
             self.assertEqual(s.main(), 0)
         loader.assert_called_once_with(s.READINESS, s.READINESS_SHA, 'production_candidate_pinned_readiness')
@@ -91,6 +97,72 @@ class ConfigDiagnosticGuards(unittest.TestCase):
         report = json.loads(output.getvalue().split('\n', 1)[1])
         self.assertFalse(report['SQL_executed'])
         self.assertFalse(report['candidate_created_or_activated'])
+
+
+class ConfigInsertionGuards(unittest.TestCase):
+    @unittest.skipUnless(shutil.which('php'), 'PHP CLI available in source CI; local Python image has no PHP')
+    def test_synthetic_PHP_setup_sees_only_homepage_change_and_same_config_values(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'lib').mkdir()
+            (root / 'lib/setup.php').write_text("<?php echo json_encode(["
+                "'password_hash'=>hash('sha256', $CFG->dbpass),"
+                "'prefix'=>$CFG->prefix,'homepage'=>$CFG->defaulthomepage ?? null]);\n")
+            original = ("<?php\n$CFG = new stdClass();\n"
+                        "$CFG->dbpass = 'PRIVATE_SENTINEL \\' /* // # ?>';\n"
+                        "$CFG->prefix = 'mdl_';\n" + s.SETUP
+                        + ' // Do not edit\r\n/* PRIVATE_COMMENT */\n').encode()
+            path = root / 'config.php'
+            results = []
+            for data in (original, s.configuration(original)):
+                path.write_bytes(data)
+                result = subprocess.run(['php', '-n', str(path)], text=True,
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10, check=True)
+                self.assertEqual(result.stderr, '')
+                self.assertNotIn('PRIVATE_SENTINEL', result.stdout)
+                results.append(json.loads(result.stdout))
+            self.assertIsNone(results[0]['homepage'])
+            self.assertEqual(results[1], dict(results[0], homepage='/local/ustar/home.php'))
+
+    def test_comments_newline_styles_and_values_are_byte_preserved(self):
+        for newline in ('\n', '\r\n'):
+            for tail in (' // Do not edit\n// Final comment\n', '\n# Final comment\n/* Block */\n', '\n'):
+                original = ("<?php\n$CFG->dbpass = 'PRIVATE_SENTINEL \\' /* // # ?>';\n"
+                            + s.SETUP + tail).replace('\n', newline).encode()
+                changed = s.configuration(original)
+                index = original.index(s.SETUP.encode())
+                self.assertEqual(changed, original[:index] + s.HOME.encode() + original[index:])
+                self.assertEqual(changed.replace(s.HOME.encode(), b'', 1), original)
+
+    def test_setup_inside_a_literal_or_comment_is_never_an_insertion_site(self):
+        for original in ("<?php\n// " + s.SETUP + '\n// trailing\n',
+                         "<?php\n/* " + s.SETUP + '\n*/\n',
+                         "<?php\n$CFG->dbpass = \"" + s.SETUP + '\";\n// tail\n'):
+            with self.assertRaises(s.CandidateRefusal):
+                s.configuration(original.encode())
+
+    def test_controlled_or_nonstandalone_setup_is_refused(self):
+        for prefix in ("<?php\nif (true)\n", "<?php\nif (true) {\n",
+                       "<?php\nfor (;;)\n", "<?php\ndo\n",
+                       "<?php\n$CFG->x=1; ", "<?php\n$CFG->x=(1;\n"):
+            with self.assertRaises(s.CandidateRefusal):
+                s.configuration((prefix + s.SETUP + '\n// tail\n').encode())
+
+    def test_post_setup_PHP_tags_and_code_cannot_hide_in_line_comments(self):
+        prefix = "<?php\n$CFG->prefix='mdl_';\n" + s.SETUP
+        for tail in (' // comment\r$CFG->x=1;', ' # comment\r$CFG->x=1;',
+                     ' // ?> secret output', '\n?>\n', '\n<?php\n',
+                     '\n/* unfinished', '\n#[Attribute]', '\n\u00a0'):
+            with self.assertRaises(s.CandidateRefusal):
+                s.configuration((prefix + tail).encode())
+
+    def test_unsupported_prefix_constructs_refuse_instead_of_guessing(self):
+        for body in ('$CFG->x = <<<END\nhello\nEND;\n',
+                     '$CFG->x = "{$complex[\"key\"]}";\n',
+                     '#[Attribute]\nfunction foo() {};\n',
+                     '$CFG->x=1;\n?>\n<?php\n', '$CFG->x=1;\n/* unfinished\n'):
+            with self.assertRaises(s.CandidateRefusal):
+                s.configuration(('<?php\n' + body + s.SETUP + '\n// tail\n').encode())
 
 
 class ProductionCandidateGuards(unittest.TestCase):
@@ -185,6 +257,20 @@ class ProductionCandidateGuards(unittest.TestCase):
         self.assertNotIn('PRIVATE_SENTINEL', json.dumps(report))
         manifest = (root / 'candidate-manifest.json').read_bytes()
         self.assertEqual(sha(manifest), report['candidate_manifest_sha256'])
+
+    def test_real_candidate_preserves_post_setup_comments_and_original_config(self):
+        self.config += b'// Do not edit\r\n/* PRIVATE_COMMENT */\n'
+        (self.live / 'config.php').write_bytes(self.config)
+        self.initial = s.scan_code(p, self.live)
+        self.source_bytes['config.php'] = self.config
+        report = self.execute()
+        root = Path(report['candidate_directory'])
+        self.assert_live_unchanged()
+        self.assertEqual((root / 'preserved-original/config.php').read_bytes(), self.config)
+        changed = (root / 'code/config.php').read_bytes()
+        self.assertEqual(changed.replace(s.HOME.encode(), b'', 1), self.config)
+        self.assertTrue(changed.endswith(b'/* PRIVATE_COMMENT */\n'))
+        self.assertNotIn('PRIVATE_COMMENT', json.dumps(report))
 
     def test_copy_failure_retains_new_directory_and_live_code(self):
         with mock.patch.object(s, 'copy_live', side_effect=RuntimeError('injected')):

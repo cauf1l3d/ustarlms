@@ -149,10 +149,79 @@ def baseline_guard(c, live, frozen, selected):
             require(item['sha256'] == expected[rel]['sha256'], 'Original code file changed since accepted checkpoint')
 
 
+def supported_setup_prefix(prefix):
+    """Conservative lexical check for a standalone top-level setup statement.
+
+    No PHP execution or general PHP parser. Refuse mixed tags, heredocs, complex
+    interpolation, attributes, unbalanced delimiters and unfinished literals.
+    A preceding complete statement and a whitespace-only line prefix prevent
+    inserting HOME between an if/loop header and its controlled setup statement.
+    """
+    whitespace = ' \t\r\n'
+    if not prefix.startswith('<?php') or prefix[5:6] not in whitespace or not prefix[5:6]:
+        return False
+    if prefix.rsplit('\n', 1)[-1].strip(' \t\r'):
+        return False
+    index, stack, last = 5, [], None
+    while index < len(prefix):
+        char = prefix[index]
+        if char in whitespace:
+            index += 1
+            continue
+        if prefix.startswith(('<?', '?>', '<<<', '#['), index):
+            return False
+        if prefix.startswith(('//', '#'), index):
+            end = index
+            while end < len(prefix) and prefix[end] not in '\r\n':
+                end += 1
+            if end == len(prefix) or '?>' in prefix[index:end]:
+                return False
+            index = end
+            continue
+        if prefix.startswith('/*', index):
+            end = prefix.find('*/', index + 2)
+            if end == -1:
+                return False
+            index = end + 2
+            continue
+        if char in "'\"`":
+            quote, start = char, index
+            index += 1
+            while index < len(prefix) and prefix[index] != quote:
+                index += 2 if prefix[index] == '\\' else 1
+            if index >= len(prefix):
+                return False
+            literal = prefix[start:index + 1]
+            if quote != "'" and ('{$' in literal or '${' in literal):
+                return False
+            index += 1
+            last = 'literal'
+            continue
+        if char in '([{':
+            stack.append(char)
+        elif char in ')]}':
+            if not stack or stack.pop() != {')': '(', ']': '[', '}': '{'}[char]:
+                return False
+        last = char
+        index += 1
+    return not stack and last == ';'
+
+
+def config_insertion_conditions(text):
+    count = text.count(SETUP)
+    index = text.find(SETUP)
+    tail = text[index + len(SETUP):] if count == 1 else ''
+    return {'homepage_raw_token_absent': '$CFG->defaulthomepage' not in text,
+            'exact_setup_occurs_once': count == 1,
+            'setup_has_supported_standalone_prefix': count == 1 and supported_setup_prefix(text[:index]),
+            'trailing_text_is_comments_or_whitespace': count == 1 and '<?' not in tail and '?>' not in tail
+            and config_tail_kind(tail) in ('whitespace_only', 'comments_and_whitespace')}
+
+
 def configuration(original):
     text = original.decode('utf-8')
-    require('$CFG->defaulthomepage' not in text and text.count(SETUP) == 1
-            and text.rstrip().endswith(SETUP), 'Production config needs separate homepage insertion review')
+    require(all(config_insertion_conditions(text).values()),
+            'Production config needs separate homepage insertion review')
     index = text.index(SETUP)
     return (text[:index] + HOME + text[index:]).encode()
 
@@ -160,16 +229,22 @@ def configuration(original):
 def config_tail_kind(tail):
     """Classify only the raw suffix; never return config text or approve insertion."""
     comment = False
-    while tail.strip():
-        tail = tail.lstrip()
+    whitespace = ' \t\r\n'
+    while tail.strip(whitespace):
+        tail = tail.lstrip(whitespace)
+        if tail.startswith('#['):
+            return 'other_text'
         if tail.startswith(('//', '#')):
-            tail = tail.partition('\n')[2]
+            end = 0
+            while end < len(tail) and tail[end] not in '\r\n':
+                end += 1
+            tail = tail[end:]
         elif tail.startswith('/*'):
             end = tail.find('*/', 2)
             if end == -1:
                 return 'unterminated_block_comment'
             tail = tail[end + 2:]
-        elif tail.startswith('?>') and not tail[2:].strip():
+        elif tail.startswith('?>') and not tail[2:].strip(whitespace):
             return 'closing_tag_with_optional_comments_before_it'
         else:
             return 'other_text'
@@ -178,13 +253,13 @@ def config_tail_kind(tail):
 
 
 def config_diagnostic(original):
-    """Report fixed labels/counts for the existing raw-byte guard, not a PHP parse."""
+    """Report fixed labels/counts for the insertion guard, not a PHP parse."""
     report = {'kind': 'production_candidate_config_guard_diagnostic',
               'read_only': True, 'config_text_emitted': False,
               'PHP_or_Moodle_bootstrap': False, 'SQL_executed': False,
               'candidate_created_or_activated': False,
               'production_config_data_database_services_tasks_changed': False,
-              'observations_scope': 'raw_text_only_not_PHP_semantics_or_insertion_approval'}
+              'observations_scope': 'raw_text_and_conservative_lexical_checks_not_full_PHP_validation'}
     try:
         text = original.decode('utf-8')
     except UnicodeDecodeError:
@@ -192,9 +267,7 @@ def config_diagnostic(original):
                       failed_guard_conditions=['utf8_decoding'])
         return report
     count = text.count(SETUP)
-    conditions = {'homepage_raw_token_absent': '$CFG->defaulthomepage' not in text,
-                  'exact_setup_occurs_once': count == 1,
-                  'exact_setup_is_final_nonwhitespace_text': text.rstrip().endswith(SETUP)}
+    conditions = config_insertion_conditions(text)
     report.update(utf8_decodable=True, guard_conditions=conditions,
                   existing_insertion_guard_accepts=all(conditions.values()),
                   failed_guard_conditions=[key for key, ok in conditions.items() if not ok],

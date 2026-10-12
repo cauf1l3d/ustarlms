@@ -722,3 +722,22 @@ No PHP parse/bootstrap,SQL,Docker,archive/profile scan,namespace/config/lifecycl
 Insertion guard unchanged. Dedicated16 tests PASS(secret sentinels,misleading raw
 lookalikes,UTF8/comments/closing tag/code,CLI isolation,original10 copy/drift guards).
 New source CI/diagnostic server execution pending. No production activation/upgrade.
+
+## 12Oct23:06MSK owner diagnostic accepted; candidate config comment-tail fix
+
+Owner c092d3b6/SHA6ea279b4 checksum OK,metadata-only diagnostic COMPLETE:one exact
+setup,no raw homepage token,only old exact-final-text condition failed. Raw suffix
+comments_and_whitespace. No config text,PHP/SQL,namespace/copy or lifecycle writes.
+[Receipt](../runtime/production_patch_config_diagnostic_result_20261012.json).
+
+Fixed candidate-only insertion accepts complete comments/ASCII whitespace after
+setup while retaining all original bytes. Conservative lexical prefix check rejects
+setup lookalikes in strings/comments,nested or controlled if/loop setup,unsupported
+mixed PHP tags/heredoc/complex interpolation/attributes. Tail code,tags,unfinished
+comments,CR-hidden statements and non-ASCII whitespace refuse. No PHP executes in
+the builder. Source config is retained and compared;only the isolated candidate gets HOME.
+Local23 tests:22 PASS/1 synthetic PHP-dependent skip in Python-only environment;
+PHP source CI checks fake local setup receives same credential hash/prefix and new
+homepage. Real temporary candidate with trailing comments retained/source unchanged PASS.
+Exact fixed source CI/server preparation pending. Prior readiness/stage/full RC retained;
+no production activation/upgrade or new all-addon acceptance inferred.

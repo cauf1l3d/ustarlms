@@ -237,11 +237,13 @@ tasks:
   - context/runtime/production_patch_readiness_result_20261012.json
   - context/runtime/production_patch_candidate_20261012.md
   - context/runtime/production_patch_candidate_refusal_20261012.json
-  current_checkpoint: Owner production candidate57583559/SHA7ef2216b precheck config
-    refusal before SQL/namespace/copy. Next metadata-only --diagnose-config;fixed
-    raw-text labels/counts,no config values or lifecycle/writes. Exact failed condition
-    unknown,insertion guard unchanged. Prior production readiness/stage/full RC retained.
-    Candidate preparation and fresh paired deployment backup/rollback/activation pending.
+  - context/runtime/production_patch_config_diagnostic_result_20261012.json
+  current_checkpoint: Owner12Oct23:06MSK c092d3b6/SHA6ea279b4 config diagnostic COMPLETE;
+    raw suffix comments/whitespace,only exact-final-text guard failed,one setup,no
+    home token,PHP/SQL/writes absent. Fixed builder preserves comments and validates
+    standalone setup before candidate-only HOME insertion. New source CI/server prepare
+    pending;prior readiness/stage/full RC retained. Fresh paired deployment backup,
+    rollback and activation pending.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

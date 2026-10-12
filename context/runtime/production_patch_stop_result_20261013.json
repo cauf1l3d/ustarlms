@@ -1,0 +1,46 @@
+{
+  "kind": "owner_reported_production_patch_stopped_before_cold_pair",
+  "received_at": "2026-10-13T01:48:13+03:00",
+  "independently_measured": false,
+  "implementation_commit": "d3e1bfedee39a3e01479cff1f87346f55af6d7a9",
+  "installed_helper_sha256": "24a51add12715b4341ec0a4b333ac531418a311fd037757d1ca48451bae2ede8",
+  "owner_reported_checksum_verified": true,
+  "mode": "--upgrade-production --acknowledge-outage",
+  "fresh_hdd_backup_stdout": "FRESH_PRODUCTION_HDD_BACKUP=PASS; PREPARING_PAIRED_COLD_RECOVERY",
+  "fresh_archive_identity_not_received": true,
+  "recovery_report": {
+    "core_db_version": "2025100601.03",
+    "file_references_verified": 5151,
+    "login_http": 200,
+    "paired_trees_restored": false
+  },
+  "readonly_marker_diagnostic": {
+    "transaction": {
+      "phase": "baseline_restored",
+      "failure_type": "ProductionUpgradeError",
+      "switch_started": true,
+      "live_trees_modified": false,
+      "paired_restored": false,
+      "public_released": false,
+      "started_at": "2026-10-12T21:52:04.691821+00:00",
+      "updated_at": "2026-10-12T21:53:56.892164+00:00"
+    },
+    "pair_directories": {
+      "code": false,
+      "moodledata": false,
+      "postgres": false
+    },
+    "pair_manifest_exists": false,
+    "events_read_ok": true,
+    "container_exit_events": []
+  },
+  "interpretation": {
+    "failure_before_paired_copy_or_candidate_activation": true,
+    "original_production_resumed_without_tree_restoration": true,
+    "failure_phase_and_reason_not_recorded_by_old_helper": true,
+    "empty_event_history_does_not_prove_no_container_stop": true,
+    "production_upgrade_or_paired_restore_success": false,
+    "next_step": "read_only_current_DB_comparisons_stop_signals_and_fixed_control_receipts; preserve_strict_guards"
+  },
+  "raw_config_database_personnel_or_command_logs_published": false
+}

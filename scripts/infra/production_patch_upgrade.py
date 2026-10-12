@@ -10,6 +10,8 @@ restores all three live trees together. No images, Composer, roles, retentions,
 shared-host services, schedules, lab lifecycle or source-candidate modifications.
 --restore-baseline is explicit; after release it additionally requires consent
 to discard writes made since the snapshot. Interrupted pairs/journals retained.
+--diagnose-transaction reads only restored transaction metadata, fixed container
+control receipts and current read-only DB comparisons; no shutdown or backup.
 """
 import argparse
 from contextlib import contextmanager
@@ -44,15 +46,59 @@ SIGNALS = (signal.SIGINT, signal.SIGTERM, signal.SIGHUP)
 MAINTENANCE = b'<!doctype html><meta charset="utf-8"><title>USTAR</title><p>USTAR: technical maintenance. Please return shortly.</p>\n'
 MAX_FILE = 1024 ** 3
 ROOT_UID, ROOT_GID = 0, 0
+FAILURE_CODES = frozenset(('GUARD_REFUSED', 'COMMAND_FAILED', 'STOP_NOT_CONFIRMED',
+    'WEB_STOP_UNCLEAN', 'POSTGRES_STOP_UNCLEAN', 'POSTGRES_PID_REMAINS',
+    'CORE_OR_ADDON_CHANGED', 'TASK_FLAGS_CHANGED', 'OTHER_DATABASE_CLIENTS',
+    'HOST_OS_ERROR', 'HOST_COMMAND_TIMEOUT', 'UNCLASSIFIED_EXCEPTION', 'OPERATOR_INTERRUPTED'))
+PHASES = frozenset(('prepared', 'fresh_hdd_backup', 'fresh_hdd_backup_complete',
+    'stopping_production', 'setting_restart_guard', 'stopping_web', 'checking_stopped_web_database',
+    'checking_database_quiescence', 'stopping_postgres', 'copying_paired_baseline',
+    'paired_baseline_complete', 'activating_candidate', 'official_upgrade', 'repeat_upgrade',
+    'verified_before_release', 'public_release_committed', 'upgrade_complete',
+    'baseline_restored', 'hdd_recovery_required', 'post_release_verification_required', 'recovery_required'))
 
 
 class ProductionUpgradeError(Exception):
-    pass
+    def __init__(self, message, code='GUARD_REFUSED', details=None):
+        super().__init__(message)
+        self.code, self.details = code, details or {}
 
 
-def require(ok, message):
+def require(ok, message, code='GUARD_REFUSED', details=None):
     if not ok:
-        raise ProductionUpgradeError(message)
+        raise ProductionUpgradeError(message, code, details)
+
+
+def public_failure_details(value):
+    # Never serialize exception messages/argv/stderr, query text, or arbitrary
+    # journal fields. Only fixed container labels and bounded scalar evidence.
+    if not isinstance(value, dict):
+        return {}
+    result = {}
+    for key in ('exit_code', 'return_code', 'other_clients', 'changed_task_count', 'errno'):
+        number = value.get(key)
+        if type(number) is int and -255 <= number <= 100000:
+            result[key] = number
+    for key in ('running', 'oom_killed'):
+        if type(value.get(key)) is bool:
+            result[key] = value[key]
+    if value.get('container') in ('ustar_moodle', 'ustar_postgres'):
+        result['container'] = value['container']
+    return result
+
+
+def failure_evidence(error, phase):
+    code = 'UNCLASSIFIED_EXCEPTION'
+    details = {}
+    if isinstance(error, ProductionUpgradeError):
+        code = error.code if isinstance(error.code, str) and error.code in FAILURE_CODES else 'GUARD_REFUSED'
+        details = public_failure_details(error.details)
+    elif isinstance(error, subprocess.TimeoutExpired):
+        code = 'HOST_COMMAND_TIMEOUT'
+    elif isinstance(error, OSError):
+        code, details = 'HOST_OS_ERROR', public_failure_details({'errno': error.errno})
+    return {'failure_phase': phase if isinstance(phase, str) and phase in PHASES else 'UNRECORDED',
+            'failure_code': code, 'failure_details': details}
 
 
 def now():
@@ -208,7 +254,8 @@ class Host:
     def action(self, argv, timeout=90):
         result = subprocess.run(argv, stdout=self.log, stderr=self.log, timeout=timeout, check=False)
         self.log.flush()
-        require(result.returncode == 0, 'Production command failed; private log retained')
+        require(result.returncode == 0, 'Production command failed; private log retained',
+                'COMMAND_FAILED', {'return_code': result.returncode})
 
     def policy(self, name):
         for container in ('ustar_moodle', 'ustar_postgres'):
@@ -240,16 +287,21 @@ class Host:
         if row['State']['Running']:
             self.action(['docker', 'stop', '--time', '60', row['Id']])
         state = self.inspect()[name]['State']
-        require(not state['Running'], 'Production stop not confirmed; no recovery writes')
+        details = {'container': name, 'running': state['Running'],
+                   'oom_killed': state.get('OOMKilled', False), 'exit_code': state.get('ExitCode')}
+        require(not state['Running'], 'Production stop not confirmed; no recovery writes',
+                'STOP_NOT_CONFIRMED', details)
         if clean:
             require(not state.get('OOMKilled') and state.get('ExitCode') == 0,
-                    'Production did not stop cleanly; no physical baseline')
+                    'Production did not stop cleanly; no physical baseline',
+                    'WEB_STOP_UNCLEAN' if name == 'ustar_moodle' else 'POSTGRES_STOP_UNCLEAN', details)
 
     def _stop(self, clean):
         for name in ('ustar_moodle', 'ustar_postgres'):
             self._stop_one(name, clean)
         if clean:
-            require(not (self.d.p.PGDATA / 'postmaster.pid').exists(), 'PostgreSQL PID remains after stop')
+            require(not (self.d.p.PGDATA / 'postmaster.pid').exists(),
+                    'PostgreSQL PID remains after stop', 'POSTGRES_PID_REMAINS')
 
     def start(self):
         for name in ('ustar_postgres', 'ustar_moodle'):
@@ -314,11 +366,13 @@ class Host:
 
 def verify_versions(after, baseline, target):
     require(Decimal(after['core']) == Decimal(target) and after['addons'] == baseline['addons'],
-            'Production core or preserved addon DB versions differ')
+            'Production core or preserved addon DB versions differ', 'CORE_OR_ADDON_CHANGED')
     prefixes = tuple('\\' + name + '\\' for name in baseline['addons'])
-    require(all(after['tasks'].get(name) == value for name, value in baseline['tasks'].items()
-                if Decimal(target) == Decimal(OLD_CORE) or name.startswith(prefixes) or value[1] == 1),
-            'A customised or preserved addon task changed; restored original tasks must match entirely')
+    changed = sum(after['tasks'].get(name) != value for name, value in baseline['tasks'].items()
+                  if Decimal(target) == Decimal(OLD_CORE) or name.startswith(prefixes) or value[1] == 1)
+    require(changed == 0,
+            'A customised or preserved addon task changed; restored original tasks must match entirely',
+            'TASK_FLAGS_CHANGED', {'changed_task_count': changed})
 
 
 def references(d, host, prefix):
@@ -481,6 +535,61 @@ def validate_marker(d):
     return marker
 
 
+def diagnose_transaction(d):
+    # The old helper did not record the failing guard. Current DB observations
+    # and control-ID receipts are evidence, not a reconstruction of an old exit.
+    before = d.p.signature(MARKER.lstat())
+    marker = validate_marker(d)
+    require(marker.get('phase') == 'baseline_restored'
+            and marker.get('live_trees_modified') is False
+            and marker.get('public_released') is False,
+            'Read-only diagnostic requires a restored unreleased baseline')
+    host = Host(d, marker['identities'], io.BytesIO())
+    rows = host.inspect()
+    require(all(row['State']['Running'] for row in rows.values()),
+            'Restored production is not running; use recovery workflow')
+    baseline = marker['baseline_versions']
+    current = host.database(marker['prefix'], baseline['addons'])
+    require(type(current.get('other_clients')) is int and 0 <= current['other_clients'] <= 100000,
+            'Database client count shape differs')
+    run = Path(marker['run_directory'])
+    logpath = run / 'commands-private.log'
+    d.p.root_input(logpath)
+    raw = d.p.read_file(logpath, 32 * 1024 ** 2)
+    labels = {row['Id'].encode(): name for name, row in marker['identities'].items()}
+    controls = [labels[line.rstrip(b'\r')] for line in raw.splitlines()
+                if line.rstrip(b'\r') in labels]
+    signals = {}
+    for name, row in rows.items():
+        value = row.get('Config', {}).get('StopSignal', '')
+        signals[name] = value if value in ('SIGINT', 'SIGTERM', 'SIGWINCH', '2', '15', '28') \
+            else 'DEFAULT_SIGTERM' if value in ('', None) else 'OTHER_SIGNAL'
+    phase, code = marker.get('failure_phase'), marker.get('failure_code')
+    report = {'kind': 'restored_production_transaction_readonly_diagnostic',
+              'read_only': True, 'PHP_or_Moodle_bootstrap': False,
+              'SQL_scope': 'bounded_BEGIN_READ_ONLY_current_sample',
+              'backup_or_container_operations': False, 'journal_or_log_written': False,
+              'transaction_phase': 'baseline_restored',
+              'failure_phase': phase if isinstance(phase, str) and phase in PHASES else 'UNRECORDED',
+              'failure_code': code if isinstance(code, str) and code in FAILURE_CODES else 'UNRECORDED',
+              'failure_details': public_failure_details(marker.get('failure_details')),
+              'pair_directories': {name: (run / 'baseline' / name).is_dir() for name in d.trees},
+              'pair_manifest_exists': (run / 'baseline-manifest.json').is_file(),
+              'current_core_matches_old_version': Decimal(current['core']) == Decimal(OLD_CORE),
+              'current_addon_versions_match_baseline': current['addons'] == baseline['addons'],
+              'current_task_flags_match_baseline': current['tasks'] == baseline['tasks'],
+              'current_other_database_clients': current['other_clients'],
+              'current_sample_is_not_past_shutdown_evidence': True,
+              'container_stop_signals': signals,
+              'container_control_receipt_count': len(controls),
+              'container_control_receipt_sequence': controls[-32:],
+              'control_receipts_are_ids_only_not_command_or_exit_details': True,
+              'config_query_personnel_and_private_log_text_emitted': False,
+              'measured_at': now()}
+    require(d.p.signature(MARKER.lstat()) == before, 'Transaction changed during diagnostic')
+    return report
+
+
 def upgrade(d):
     if os.path.lexists(MARKER):
         old = validate_marker(d)
@@ -519,13 +628,19 @@ def upgrade(d):
                 require(not os.path.lexists(d.p.STATE / 'moodle-was-running.json'), 'Backup resume marker remains')
                 require(d.s.scan_code(d.p, d.p.CODE) == source['code_entries']
                         and roots(d) == marker['roots'], 'Production source/root drifted during HDD backup')
-                record(d, marker, phase='stopping_production', switch_started=True)
+                record(d, marker, phase='setting_restart_guard', switch_started=True)
                 host.policy('no')  # Durable daemon policy: power loss must not boot a partial pair.
+                record(d, marker, phase='stopping_web')
                 host.stop_web(clean=True)
+                record(d, marker, phase='checking_stopped_web_database')
                 current = host.database(prefix, baseline['addons'])
                 verify_versions(current, baseline, OLD_CORE)
-                require(current['other_clients'] == 0, 'Other database writer/client remains; no snapshot')
+                record(d, marker, phase='checking_database_quiescence')
+                require(current['other_clients'] == 0, 'Other database writer/client remains; no snapshot',
+                        'OTHER_DATABASE_CLIENTS', {'other_clients': current['other_clients']})
+                record(d, marker, phase='stopping_postgres')
                 host.stop(clean=True)
+                record(d, marker, phase='copying_paired_baseline')
                 pair_sha = paired_copy(d, marker)
                 record(d, marker, phase='paired_baseline_complete', baseline_manifest_sha256=pair_sha)
                 notice('FRESH_PRODUCTION_PAIRED_BASELINE=PASS; ACTIVATING_ACCEPTED_CODE')
@@ -570,7 +685,9 @@ def upgrade(d):
         except BaseException as error:
             for number in SIGNALS:
                 signal.signal(number, signal.SIG_IGN)
-            recovery_record(d, marker, failure_type=type(error).__name__)
+            evidence = failure_evidence(error, marker.get('phase'))
+            recovery_record(d, marker, failure_type=type(error).__name__, **evidence)
+            notice('PRODUCTION_PATCH_STOPPED; ' + json.dumps(evidence, sort_keys=True))
             if not marker.get('switch_started'):
                 try:
                     if os.path.lexists(d.p.STATE / 'moodle-was-running.json'):
@@ -614,7 +731,7 @@ def upgrade(d):
 
 
 def interrupted(_number, _frame):
-    raise ProductionUpgradeError('Operator signal interrupted production transaction')
+    raise ProductionUpgradeError('Operator signal interrupted production transaction', 'OPERATOR_INTERRUPTED')
 
 
 def main():
@@ -622,13 +739,14 @@ def main():
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument('--upgrade-production', action='store_true')
     modes.add_argument('--restore-baseline', action='store_true')
+    modes.add_argument('--diagnose-transaction', action='store_true')
     parser.add_argument('--acknowledge-outage', action='store_true')
     parser.add_argument('--discard-writes-since-snapshot', action='store_true')
     args = parser.parse_args()
-    if not args.upgrade_production and not args.restore_baseline:
+    if not args.upgrade_production and not args.restore_baseline and not args.diagnose_transaction:
         print('PLAN_ONLY; production upgrade captures fresh recovery and changes the working site')
         return 0
-    if not args.acknowledge_outage:
+    if not args.diagnose_transaction and not args.acknowledge_outage:
         parser.error('Production operation requires --acknowledge-outage in the chosen maintenance window')
     try:
         require(os.geteuid() == 0, 'Run production transaction as root')
@@ -636,6 +754,12 @@ def main():
         sys.dont_write_bytecode = True
         d = dependencies()
         d.p.root_input(SCRIPT)
+        if args.diagnose_transaction:
+            with d.w.existing_shared_lock(d.p):
+                report = diagnose_transaction(d)
+            notice('PRODUCTION_TRANSACTION_DIAGNOSTIC=COMPLETE; READ_ONLY; NO_STOP_OR_BACKUP')
+            notice(json.dumps(report, indent=2, sort_keys=True))
+            return 0
         for number in SIGNALS:
             signal.signal(number, interrupted)
         with d.s.own_lock(d.p, d.c, False):

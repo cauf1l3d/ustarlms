@@ -787,3 +787,26 @@ PHP8.3 source CI now mandates privileged temporary33/999/GID1000 owner fixture.
 Exact new CI/publication/production execution pending. Real production restoration
 not claimed;prior actual stage rollback/package/native full RC retained. Post-switch
 role/learning/cron and full addon compatibility remain distinct acceptance.
+
+
+## 13Oct01:48MSK production attempt stopped before cold pair; original resumed
+
+Owner d3e1bfed/24a51add checksum/install and explicit upgrade executed. Fresh HDD
+PASS,then PRODUCTION_BASELINE_RECOVERY=PASS:old2025100601.03/login200/5151 references,
+paired_trees_restored=false. Read-only marker:baseline_restored,switch_started=true,
+live_trees_modified=false/public_released=false;12Oct21:52:04..21:53:56UTC. All three
+baseline directories/complete manifest absent. Docker event read succeeded but
+returned no exits. [Receipt](../runtime/production_patch_stop_result_20261013.json).
+Specific failing guard unknown;do not infer exit/client/task state or claim upgrade
+or all-tree restoration. Stage/candidate/native full RC acceptance retained.
+
+Old helper omitted failing reason/phase and recovery overwrote final phase. Fixed
+safe failure_phase/code/scalar evidence survives recovery and is printed. Strict
+clean-stop,zero-client,version/task conditions remain unchanged. New read-only
+--diagnose-transaction requires restored unreleased baseline,existing SH lock;
+current SQL comparisons/standard stop signals and exact known-ID receipt labels
+only. No PHP/Moodle/stop/start/backup/activation/journal writes or raw logs/messages.
+Current sample cannot prove the previous shutdown state. Local31 tests30 PASS/1
+namespace owner skip,including nonzero/OOM rejection,failure evidence/privacy and
+old-receipt read-only no-write checks. New CI/server diagnostic pending. Next this
+mode without outage,not a blind upgrade repeat. Actual production upgrade/QA pending.

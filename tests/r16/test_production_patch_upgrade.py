@@ -271,11 +271,112 @@ class ProductionPairTransactionGuards(unittest.TestCase):
 
     def test_other_database_client_blocks_pg_stop_and_no_pair_or_CLI_runs(self):
         self.d.other_clients = 1
-        result, _ = self.run_upgrade()
+        result, output = self.run_upgrade()
         self.assertEqual(result, 1)
         self.assert_original()
         self.assertEqual(self.d.attempt, 0)
         self.assertFalse(self.marker().get('baseline_manifest_sha256'))
+        self.assertEqual(self.marker()['failure_phase'], 'checking_database_quiescence')
+        self.assertEqual(self.marker()['failure_code'], 'OTHER_DATABASE_CLIENTS')
+        self.assertEqual(self.marker()['failure_details'], {'other_clients': 1})
+        self.assertIn('OTHER_DATABASE_CLIENTS', output)
+
+    def test_unclean_web_stop_retains_failure_evidence_after_original_restarts(self):
+        def fail_web(host, clean=False):
+            host.d.running['ustar_moodle'] = False
+            raise x.ProductionUpgradeError('PRIVATE_EXCEPTION_SENTINEL', 'WEB_STOP_UNCLEAN',
+                {'container': 'ustar_moodle', 'running': False, 'oom_killed': False,
+                 'exit_code': 143, 'stderr': 'PRIVATE_STDERR_SENTINEL'})
+        with mock.patch.object(FakeHost, 'stop_web', fail_web):
+            result, output = self.run_upgrade()
+        self.assertEqual(result, 1)
+        self.assert_original()
+        self.assertTrue(all(self.d.running.values()))
+        self.assertFalse(self.marker()['paired_restored'])
+        self.assertEqual(self.marker()['phase'], 'baseline_restored')
+        self.assertEqual(self.marker()['failure_phase'], 'stopping_web')
+        self.assertEqual(self.marker()['failure_code'], 'WEB_STOP_UNCLEAN')
+        self.assertEqual(self.marker()['failure_details']['exit_code'], 143)
+        self.assertNotIn('stderr', self.marker()['failure_details'])
+        self.assertNotIn('PRIVATE_', output)
+        self.assertEqual(self.d.attempt, 0)
+
+    def test_unclean_pg_stop_reports_correct_phase_without_creating_pair(self):
+        original = FakeHost.stop
+        def fail_pg(host, clean=False):
+            original(host, clean)
+            if clean:
+                raise x.ProductionUpgradeError('PRIVATE_PG_LOG_SENTINEL', 'POSTGRES_STOP_UNCLEAN',
+                    {'container': 'ustar_postgres', 'exit_code': 137, 'oom_killed': True})
+        with mock.patch.object(FakeHost, 'stop', fail_pg):
+            result, output = self.run_upgrade()
+        self.assertEqual(result, 1)
+        self.assert_original()
+        self.assertTrue(all(self.d.running.values()))
+        self.assertFalse((Path(self.marker()['run_directory']) / 'baseline').exists())
+        self.assertEqual(self.marker()['failure_phase'], 'stopping_postgres')
+        self.assertEqual(self.marker()['failure_code'], 'POSTGRES_STOP_UNCLEAN')
+        self.assertNotIn('PRIVATE_', output)
+
+    def test_exception_messages_commands_and_journal_lookalikes_never_emitted(self):
+        errors = (OSError(5, 'PRIVATE_OS_PATH_SENTINEL'),
+                  x.subprocess.TimeoutExpired(['PRIVATE_COMMAND_SENTINEL'], 1,
+                                              stderr=b'PRIVATE_STDERR_SENTINEL'),
+                  x.ProductionUpgradeError('PRIVATE_MESSAGE_SENTINEL', 'PRIVATE_REASON_SENTINEL',
+                    {'exit_code': 'PRIVATE_EXIT_SENTINEL', 'container': 'PRIVATE_LABEL_SENTINEL',
+                     'running': 'PRIVATE_BOOL_SENTINEL', 'other_clients': True}))
+        for error in errors:
+            with self.subTest(error=type(error).__name__):
+                result, output = self.run_upgrade(error)
+                self.assertEqual(result, 1)
+                self.assertNotIn('PRIVATE_', output)
+                self.assertNotIn('PRIVATE_', json.dumps(self.marker()))
+
+    def test_readonly_diagnostic_of_old_receipt_has_no_writes_or_private_text(self):
+        self.d.other_clients = 1
+        self.assertEqual(self.run_upgrade()[0], 1)
+        marker = self.marker()
+        for key in ('failure_phase', 'failure_code', 'failure_details'):
+            marker.pop(key)
+        self.json(x.MARKER, marker)
+        logpath = Path(marker['run_directory']) / 'commands-private.log'
+        self.file(logpath, b'PRIVATE_LOG_SENTINEL\n' + self.identities['ustar_moodle']['Id'].encode()
+                  + b'\n' + self.identities['ustar_postgres']['Id'].encode() + b'\n')
+        originals = {path: (path.read_bytes(), p.signature(path.stat())) for path in (x.MARKER, logpath)}
+        actions = copy.deepcopy(self.d.actions)
+        report = x.diagnose_transaction(self.d)
+        self.assertEqual(report['failure_phase'], 'UNRECORDED')
+        self.assertEqual(report['failure_code'], 'UNRECORDED')
+        self.assertEqual(report['container_control_receipt_sequence'], ['ustar_moodle', 'ustar_postgres'])
+        self.assertEqual(report['current_other_database_clients'], 1)
+        self.assertTrue(report['current_core_matches_old_version'])
+        self.assertTrue(report['current_task_flags_match_baseline'])
+        self.assertNotIn('PRIVATE_', json.dumps(report))
+        self.assertEqual(self.d.actions, actions)
+        for path, expected in originals.items():
+            self.assertEqual((path.read_bytes(), p.signature(path.stat())), expected)
+        self.assert_original()
+
+    def test_diagnostic_refuses_released_or_incomplete_transaction_before_host_calls(self):
+        self.assertEqual(self.run_upgrade()[0], 0)
+        with mock.patch.object(x, 'Host', side_effect=AssertionError('no host calls')):
+            with self.assertRaisesRegex(x.ProductionUpgradeError, 'restored unreleased baseline'):
+                x.diagnose_transaction(self.d)
+
+    def test_diagnostic_entrypoint_requires_no_outage_ack_and_uses_no_mutation_lock(self):
+        self.d.other_clients = 1
+        self.assertEqual(self.run_upgrade()[0], 1)
+        installed = self.root / 'installed.py'
+        self.file(installed, b'test installed')
+        before = copy.deepcopy(self.d.actions)
+        with mock.patch.object(x.sys, 'argv', ['upgrade', '--diagnose-transaction']), \
+                mock.patch.object(x, 'dependencies', return_value=self.d), \
+                mock.patch.object(x, 'SCRIPT', installed), mock.patch.object(x.os, 'geteuid', return_value=0), \
+                mock.patch.object(self.d.s, 'own_lock', side_effect=AssertionError('no mutation lock')), \
+                mock.patch.object(x.sys, 'stdout', new_callable=io.StringIO) as output:
+            self.assertEqual(x.main(), 0)
+        self.assertEqual(self.d.actions, before)
+        self.assertIn('READ_ONLY; NO_STOP_OR_BACKUP', output.getvalue())
 
     def test_public_readiness_failure_keeps_target_data_and_needs_explicit_rollback(self):
         self.d.fail_login = True
@@ -476,6 +577,23 @@ class ProductionPairTransactionGuards(unittest.TestCase):
         real.stop(clean=True)
         self.assertEqual(calls, ['ustar_moodle', 'ustar_postgres'])
         self.assertEqual(signal.pthread_sigmask(signal.SIG_BLOCK, []), previous)
+
+    def test_real_stop_guard_keeps_rejecting_nonzero_or_OOM_and_captures_safe_state(self):
+        for name, code in (('ustar_moodle', 'WEB_STOP_UNCLEAN'),
+                           ('ustar_postgres', 'POSTGRES_STOP_UNCLEAN')):
+            for exit_code, oom in ((143, False), (0, True)):
+                with self.subTest(name=name, exit_code=exit_code, oom=oom):
+                    host = REAL_HOST(self.d, self.identities, io.BytesIO())
+                    row = {'Id': self.identities[name]['Id'],
+                           'State': {'Running': False, 'ExitCode': exit_code, 'OOMKilled': oom}}
+                    host.inspect = mock.Mock(return_value={name: row})
+                    host.action = mock.Mock(side_effect=AssertionError('already stopped'))
+                    with self.assertRaises(x.ProductionUpgradeError) as caught:
+                        host._stop_one(name, clean=True)
+                    self.assertEqual(caught.exception.code, code)
+                    self.assertEqual(caught.exception.details,
+                        {'container': name, 'running': False, 'exit_code': exit_code, 'oom_killed': oom})
+                    host.action.assert_not_called()
 
     def test_real_SQL_builds_readonly_query_and_checks_all_cluster_clients(self):
         self.d.p.command = mock.Mock(return_value='{}')

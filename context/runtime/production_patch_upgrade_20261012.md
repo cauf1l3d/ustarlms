@@ -1,5 +1,31 @@
 # Production Moodle5.1.8 paired deployment transaction
 
+[Owner execution and diagnostic](production_patch_stop_result_20261013.json),
+received13Oct01:48MSK:source d3e1bfed/helper24a51add ran12Oct21:52:04..21:53:56UTC.
+Fresh HDD capture PASS,then stopped before creation of any cold-pair directory.
+Original source resumed:core2025100601.03/login200/5151 file references;
+live_trees_modified=false/paired_trees_restored=false/public_released=false.
+No production upgrade or actual paired production restoration accepted.
+Old helper stored only exception type and overwrote the phase during recovery;
+Docker event query returned no historical exits. Specific failing guard UNKNOWN.
+Do not infer web/PG exit codes,other-client counts or task drift from this receipt.
+
+New helper retains fixed failure_phase/failure_code and bounded safe scalar details
+before recovery,then prints them even when baseline_restored becomes the final phase.
+Distinguishes web/PG unclean stop,unconfirmed stop,remaining PG PID,version/task drift,
+other-client count,command return/timeout and OS errno;no exception/argv/stderr text.
+Strict clean-stop/zero-client/version/task checks unchanged pending actual cause.
+
+--diagnose-transaction reads only a restored unreleased baseline. Existing SH lock,
+validated private marker/run/IDs/root metadata,container inspect and bounded read-only
+DB comparisons;no PHP/Moodle bootstrap,stop,start,backup,activation or journal write.
+Reads bounded private log but returns ONLY exact known full container-ID lines as
+fixed container labels,never raw text. Unknown stop signals become OTHER_SIGNAL.
+Current core/addon/task comparisons and other-client count are CURRENT observations,
+not proof of the old shutdown condition;old absent failure fields stay UNRECORDED.
+Refuses unfinished/released transactions instead of pretending they need a normal
+diagnostic. Next operator command is this read-only mode,not another upgrade attempt.
+
 [Owner switch preflight](production_patch_switch_preflight_result_20261012.json)
 20:51:43UTC PASS:required12,706,045,952bytes/292211inodes,available64,707,956,736/
 6343936. Code33:33/0755/inode920789,data33:33/0770/inode925371,
@@ -68,14 +94,19 @@ live changes resumes only original source. HDD errors stay in producer recovery.
 Power loss/SIGKILL not claimed automatically repaired;restart no protects partial
 pairs once switching begins and same helper supports explicit recovery.
 
-Local24tests:23 PASS/1 owner fixture skipped because local root namespace maps only
+Local31tests:30 PASS/1 owner fixture skipped because local root namespace maps only
 UID0. Portable real file copies/restores,first/repeat CLI failure,partial baseline,
 restore retry,tamper/client/duplicate/publish/discard-ack guards,task policy,owned
 maintenance,closed SSH stream,EX/SH locks,masked stop API/read-only SQL PASS.
-PHP8.3 source CI mandates privileged actual33:33 roots,999:1000 PG root/999:999 child
+New stop-evidence/privacy/old-receipt diagnostic tests preserve source and control
+file signatures;no mutation lock/host action in diagnostic. Real stop guard still
+rejects nonzero/OOM and records fixed evidence. PHP8.3 source CI mandates privileged
+actual33:33 roots,999:1000 PG root/999:999 child
 and mixed data owners/modes on temporary files. Docker/SQL/HDD external calls fake.
 Schema migration is unchanged official CLI/package already accepted on stage.
-Exact new CI and production execution pending. Relevant addon runtime acceptance
+Previous exact d3e1bfed context38312720879/review38312720878 SUCCESS;privileged owner
+fixture1/OK(no skip). New diagnostic CI/server execution pending. Production upgrade
+stopped safely as above. Relevant addon runtime acceptance
 and prior native full RC retained separately;no repeated stage cycle.
 
 Window estimate:prior same-package stage transaction1109s,real paired rollback629s.

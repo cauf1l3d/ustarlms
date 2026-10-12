@@ -810,3 +810,12 @@ Current sample cannot prove the previous shutdown state. Local31 tests30 PASS/1
 namespace owner skip,including nonzero/OOM rejection,failure evidence/privacy and
 old-receipt read-only no-write checks. New CI/server diagnostic pending. Next this
 mode without outage,not a blind upgrade repeat. Actual production upgrade/QA pending.
+
+Exact diagnostic source a8caec553996b8a1eebb85f265f9dcbdba147ffc/tree27db3165,
+helper6f87a780,remote raw byte readback PASS. [CI receipt](../runtime/production_patch_stop_ci_20261013.json):
+context38319610463/review38319610453 SUCCESS including source8.2/8.3/frontend;
+Python344/12skips PASS,mandatory privileged33/999/GID1000 fixture1/OK(no skip).
+Local full Python344/13skips PASS with existing MCP dependencies;local PHP absent.
+Ordinary DB/rollback/full gate skipped;prior unchanged native full RC remains
+separate. Source/helper/guard behavior unchanged by this evidence-only follow-up.
+Server read-only diagnostic and production upgrade still pending.

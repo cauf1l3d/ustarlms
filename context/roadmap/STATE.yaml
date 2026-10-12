@@ -8,7 +8,7 @@ current_activity: Owner13Oct0148MSK reports d3e1bfed/24a51add transaction fresh 
   resumed,login200,file references5151,live trees unchanged;no paired restore executed.
   Specific guard unknown because old helper omitted reason/phase and Docker history
   empty. Add fixed safe failure evidence and read-only restored-transaction diagnostic;
-  local30 PASS/1 owner namespace skip,new CI/server diagnostic pending. Strict guards
+  local30 PASS/1 owner namespace skip,exact a8caec55 source/context/frontend CI SUCCESS;server diagnostic pending. Strict guards
   preserved;no repeated candidate/stage cycle or upgrade until cause reviewed.
 next_task: INF-08
 ready_tasks: []
@@ -466,6 +466,7 @@ patch_candidate:
   production_upgrade_server_executed: false
   production_upgrade_attempted_and_original_resumed: true
   production_upgrade_stop_receipt: context/runtime/production_patch_stop_result_20261013.json
+  production_upgrade_diagnostic_CI_receipt: context/runtime/production_patch_stop_ci_20261013.json
   production_upgrade_failure_reason: not_recorded_by_old_helper
   production_upgrade_next_operator_mode: diagnose-transaction_read_only_no_outage
   production_paired_switch_restore_ready: false

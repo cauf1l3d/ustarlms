@@ -1,0 +1,47 @@
+{
+  "kind": "exact_source_production_stop_diagnostic_CI",
+  "implementation_commit": "a8caec553996b8a1eebb85f265f9dcbdba147ffc",
+  "implementation_tree": "27db3165bf48f91a34d7d400c6f5d4de82b2ce79",
+  "helper_sha256": "6f87a7802e08b32e4d018bdd0ad86584fc4b56af15b7815c0e04289395b3dd15",
+  "remote_raw_byte_readback": "PASS",
+  "context_run": {
+    "id": 38319610463,
+    "result": "SUCCESS"
+  },
+  "review_run": {
+    "id": 38319610453,
+    "result": "SUCCESS",
+    "source_PHP_82": "SUCCESS",
+    "source_PHP_83": "SUCCESS",
+    "frontend": "SUCCESS",
+    "ordinary_DB_rollback_prepare_full_gate": "SKIPPED"
+  },
+  "local_transaction_suite": {
+    "tests": 31,
+    "passed": 30,
+    "skipped": 1,
+    "skip_reason": "UID33_999_not_mapped_in_local_root_namespace"
+  },
+  "local_full_Python_suite": {
+    "tests": 344,
+    "result": "PASS",
+    "skipped": 13
+  },
+  "source_PHP_83_Python_suite": {
+    "tests": 344,
+    "result": "PASS",
+    "skipped": 12
+  },
+  "mandatory_privileged_owner_fixture": {
+    "job": 115044288236,
+    "tests": 1,
+    "result": "PASS",
+    "skipped": 0,
+    "finished_UTC": "2026-10-12T22:58:47.8487466Z",
+    "owners": "33:33_code_data_and_999:1000_PG_root_999:999_child_mixed_data"
+  },
+  "test_scope": "real_temp_filesystem_copies_restores_journals_locks;Docker_SQL_HDD_external_calls_simulated",
+  "production_diagnostic_executed": false,
+  "production_upgrade_accepted": false,
+  "next_operator_mode": "diagnose-transaction_read_only_no_outage"
+}

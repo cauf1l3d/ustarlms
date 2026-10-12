@@ -694,3 +694,9 @@ Local frontend audit production dependencies0 findings,4 unit tests,clean instal
 
 Full RC exacta42672e/run38257457655 SUCCESS(all8 jobs);Apache and requested browser read smoke accepted. Production Docker/HDD/free-space/service result received12Oct16:58MSK:root60.77GiB,HDD445.34GiB,HDD rw,backup service0/success12Oct00:31:39UTC. Next pinned scheduler --status for archive identity/readback/recovery marker,then production preparation/relevant addons;no repeated stage core or inventory operations.
 Receipts:context/runtime/lab_patch_full_rc_result_20261012.json and production_patch_inventory_20261012.json. Scheduler status read scope reviewed from source;uses pinned producer and reads saved reports/systemctl only,no backup,start/stop,PHP/Moodle bootstrap or SQL. Free-space figures alone are not a production transaction capacity guarantee.
+
+
+## 12Oct17:28MSK scheduler status and production preflight
+
+Owner12Oct17:28MSK scheduler status accepted:complete/success,marker absent,no recovery errors,next13Oct03:30MSK. Correction:status has no archive identity/hash. Next production_patch_readiness --check:read-only pinned profile/code+DB/addon versions,HDD archive SHA/sidecar,aggregate usage and sizes;no Moodle bootstrap or activation. Passed stage/full RC/inventory checks not repeated.
+Helper static read-impact reviewed;11 guard tests and prior broad274/11skips PASS. Credentials/config never printed;SQL queries bounded read-only. Source/real server evidence pending. Native application/frontend bytes unchanged;full RC a42672e retained within its scope.

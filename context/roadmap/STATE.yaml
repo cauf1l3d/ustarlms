@@ -3,11 +3,11 @@ updated_at: '2026-10-12'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Full RC exacta42672e/run38257457655 SUCCESS(all8 jobs);Apache and
-  requested browser read smoke accepted. Production Docker/HDD/free-space/service
-  result received12Oct16:58MSK:root60.77GiB,HDD445.34GiB,HDD rw,backup service0/success12Oct00:31:39UTC.
-  Next pinned scheduler --status for archive identity/readback/recovery marker,then
-  production preparation/relevant addons;no repeated stage core or inventory operations.
+current_activity: Owner12Oct17:28MSK scheduler status accepted:complete/success,marker
+  absent,no recovery errors,next13Oct03:30MSK. Correction:status has no archive identity/hash.
+  Next production_patch_readiness --check:read-only pinned profile/code+DB/addon versions,HDD
+  archive SHA/sidecar,aggregate usage and sizes;no Moodle bootstrap or activation.
+  Passed stage/full RC/inventory checks not repeated.
 next_task: INF-08
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -54,7 +54,7 @@ production:
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
   cron: v3_one_worker_owner_success_20261005T102403Z
-  regular_backup: daily_HDD_timer_last_service20261012T003139UTC_success_exit0_archive_identity_status_pending
+  regular_backup: daily_HDD_last_scheduled20261012_complete_success_exit0_no_recovery_marker_next13Oct0330MSK
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
   last_core_comparison:
@@ -160,6 +160,7 @@ production:
       retained_lab_gib_rounded: 2.3
       backup_export_gib_rounded: 1.9
   latest_patch_inventory: context/runtime/production_patch_inventory_20261012.json
+  latest_backup_scheduler_receipt: context/runtime/hdd_backup_schedule_status_20261012.json
 non_goals:
 - Изменение production в этой GitHub-поставке
 - Объявление исправленных рисков по публикации плана
@@ -440,6 +441,8 @@ patch_candidate:
     run: 38257457655
     result: success
     receipt: context/runtime/lab_patch_full_rc_result_20261012.json
+  production_readonly_preflight_helper: scripts/infra/production_patch_readiness.py
+  production_readonly_preflight_server_executed: false
 storage_reorganization:
   source: context/runtime/server_map_20261006.md
   owner_output_received_at: '2026-10-05T21:45:07Z'

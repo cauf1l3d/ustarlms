@@ -1,0 +1,28 @@
+{
+  "source": "owner_terminal_stdout",
+  "received_local_time": "2026-10-12T17:28:19+03:00",
+  "calendar": "*-*-* 03:30:00 Europe/Moscow",
+  "catch_up": false,
+  "archive_deletion": false,
+  "last_scheduled_run": {
+    "started_utc": "2026-10-12T00:30:00.850350+00:00",
+    "phase": "complete",
+    "success": true,
+    "calendar": "*-*-* 03:30:00 Europe/Moscow",
+    "finished_utc": "2026-10-12T00:31:39.318788+00:00",
+    "service_result": "success",
+    "exit_code": "exited",
+    "exit_status": "0",
+    "resumed_from_marker": false,
+    "recovery_error_type": null,
+    "recovery_marker_present": false
+  },
+  "last_backup_success_utc": "2026-10-12T00:31:38.444385+00:00",
+  "recovery_marker_present": false,
+  "next_timer_utc": "2026-10-13T00:30:00Z",
+  "timer_active": true,
+  "timer_enabled": true,
+  "recovery_unit_enabled": true,
+  "archive_identity_and_hash_in_this_output": false,
+  "fresh_archive_decryption_or_restore_verified": false
+}

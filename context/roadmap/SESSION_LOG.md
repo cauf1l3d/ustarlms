@@ -463,3 +463,31 @@ Next concrete version set/private coherent shared recovery/service window comes
 from output. Console authorization already confirmed;no repeated initial question.
 Prior518 acceptance and latest53/PG17+ after OS goal preserved. Source/helper/tests/
 workflow/native/frontend unchanged;context/evidence-only PR100 continuation.
+
+### 13Oct15:04MSK — refreshed APT/boot/shared metadata; cold root recovery handoff
+
+Owner upload reviewed locally and kept private. APT catalog completed then38
+upgrades/25new/no removals/no held;147 kernel candidate,139 running and146
+installed/default. SSD62,750,203,904B/HDD475,042,938,880B free,DPKG audit silent.
+Six containers/live restore false;MariaDB root/no-password1045 gives no engine
+proof. Mail global location confirmed;ISPConfig missing-or-link not disambiguated.
+AppArmor accepted result in upload repeats prior evidence;no new repair requested.
+
+Added no-upgrade root-private cold SSD filesystem file archive helper2d1b2502,
+SHA bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd.
+HDD UUID/anchor/foreign fs/space and shared flock+POSIX APT guards;original
+active timers/sockets/services and exact six containers gracefully stopped;
+Docker policy snapshot restored,PG readiness then web/all services;failure
+or SSD marker-write error still attempts resume. Source manifest stability,
+real tar sparse/ACL/xattrs/hardlinks,readback checksum/protected hashes and
+unchanged package baseline. Private/plain archive,logs/temp/swap/virtual mounts
+excluded;not an atomic all-process disk image or tested bare-metal boot restore.
+Systemd handoff survives SSH. Resume-services is runtime resumption,not file/DB
+rollback. No unrelated cleanup or new app/role QA cycle.
+
+17 local root tests PASS and exact Ubuntu24.04 root run38398856106/job115300978352
+17/no skips PASS,log summary inspected. Context38398855981 PASS,review38398856037
+source8.2/8.3 PASS;unchanged frontend audit failed/build+HTTP+DB+rollback+fullgate
+skipped. No whole PR green. Source/public raw readback/tree matching PASS.
+Capture/install/reboot server execution still pending. Current task INF-10-OS;
+latest stable53/PG17+ isolated addon/recovery work follows OS.

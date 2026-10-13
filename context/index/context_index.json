@@ -12,8 +12,8 @@
     {
       "path": "context/agents/astra.md",
       "domain": "agents",
-      "size": 5482,
-      "sha256": "cfa7066da5e1cb3854b44e1d84c32de99961b7c1693f6ff84e45f790b3055954"
+      "size": 6111,
+      "sha256": "0d9d69c2d953e9e7fd026c7e678f75d25acfcdd6a7e188ecbc2de089dce18dd5"
     },
     {
       "path": "context/architecture/boundaries.md",
@@ -606,8 +606,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 1656,
-      "sha256": "6179693ff7c5ce654891a184f00e12c7e807b482e6c2d053ada839edf45624e9"
+      "size": 1654,
+      "sha256": "c121d56125ee3da5a87b2eb6ec8fc66b3b572d7a150483e9c246fbc66d0d4533"
     },
     {
       "path": "context/releases/ADAPTATION_RESET_20261002_RU.md",
@@ -654,8 +654,8 @@
     {
       "path": "context/roadmap/AGENT_PROTOCOL.md",
       "domain": "roadmap",
-      "size": 7374,
-      "sha256": "ed92a59ab01ae7ded46412ec5093cff0cf6a01ba0276a501387fe23773d4024a"
+      "size": 8003,
+      "sha256": "6fcde638d4200c8fad13d82effebd03706c4e7e100e8de313faa2af4f7fc5bee"
     },
     {
       "path": "context/roadmap/AUDIT_2026-09-07.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 24154,
-      "sha256": "b7969ccec31e4253b7341ec875f32ff7ebdaffc9667331d07567815f5b319c87"
+      "size": 24071,
+      "sha256": "4df4abdf434b58d8bb553a67cd60634008864b03963ce31f2f3f369e7f346efa"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 51624,
-      "sha256": "2b02537192cdc4501b4ba734245d757bd7c8be735be16d3bbf2dec89c18d7f21"
+      "size": 53483,
+      "sha256": "0a75e3dda2319c9d9a53ed058d80bed777aa1d767af4089964773f3e22fe0c3a"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 21816,
-      "sha256": "2269d97dc43fe08654d0d9276eb5c77927d38a7bd8d343b09a3e7e36162feec1"
+      "size": 22543,
+      "sha256": "fc5d7772e59ac66017dc7d00fafe5ad962ce6a6168f291612b85f130a26d24b5"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -804,14 +804,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 6477,
-      "sha256": "3bb6bc99155bcd11a6a7b5455e50a654f036d9650d7765668b2c1f0c20fd8adc"
+      "size": 7084,
+      "sha256": "46b97c5edcf68eb1a9879fc8e9081c27ff7be164861e839a919ada90e948d5c7"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 39028,
-      "sha256": "78419e3431c1663700110bc52e2cf9d3bdcfce07323d33e6e1cdd23d84a3feda"
+      "size": 39635,
+      "sha256": "5eca673256041ee8e2bf5bb22bd289e7105a9aa302cfc000d2de2ed8e8f46e9b"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -928,6 +928,18 @@
       "sha256": "fdaae05fc1bf78a9acf3fab40304a85abd5fc0c49b69d127339c6b9514a33550"
     },
     {
+      "path": "context/runtime/host_cold_recovery_20261013.md",
+      "domain": "runtime",
+      "size": 8758,
+      "sha256": "fd73356648ca04f3473ed87a57db0adc7b3d4854a8c8eb4926e5e115b8104e4a"
+    },
+    {
+      "path": "context/runtime/host_cold_recovery_validation_20261013.json",
+      "domain": "runtime",
+      "size": 1446,
+      "sha256": "9dc30eeae8f0803f420b6a3b7397d8b4041f3e170c7dfd565bdffdbca5e24880"
+    },
+    {
       "path": "context/runtime/host_os_preflight_result_20261013.json",
       "domain": "runtime",
       "size": 17786,
@@ -936,8 +948,14 @@
     {
       "path": "context/runtime/host_packages_handoff_20261013.md",
       "domain": "runtime",
-      "size": 8694,
-      "sha256": "dadcef700dda72b6665ca906a45f1ac3a8ef10bc54d205e16d3a2d3e9912cc10"
+      "size": 8910,
+      "sha256": "576222907ae688d916cf56a65136132e0f03d1746132f10d2d10d83437834049"
+    },
+    {
+      "path": "context/runtime/host_packages_result_20261013.json",
+      "domain": "runtime",
+      "size": 16855,
+      "sha256": "35493e1867ced5b59b2811283fea79858a5a961aec0929fcfb43cd7d6d624e6b"
     },
     {
       "path": "context/runtime/lab_cold_checkpoint_20261005.md",
@@ -1122,8 +1140,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 10873,
-      "sha256": "8dd1130d45df5a52dbe07dfe561eeea354f3d3df923ad3a3e7231bea0315d266"
+      "size": 11502,
+      "sha256": "7a2c8dcef2fe3c856a6719c9025f2aa9cadea8c67fbefac2399607eee2c678d0"
     },
     {
       "path": "context/tasks/backlog.yaml",

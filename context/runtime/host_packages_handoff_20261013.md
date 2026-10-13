@@ -1,3 +1,5 @@
+[Owner15:04MSK results](host_packages_result_20261013.json) received;the planning commands below completed. [Next cold recovery capture](host_cold_recovery_20261013.md). Do not repeat this metadata pass by default.
+
 # Host package/boot/shared recovery planning after AppArmor PASS
 
 [Owner14:24MSK AppArmor result](host_apparmor_result_20261013.json):exact installed

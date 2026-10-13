@@ -1,0 +1,43 @@
+{
+  "kind": "host_cold_recovery_source_validation",
+  "implementation_commit": "2d1b25029ac1949117b205aaa2d52565af0ba387",
+  "local_commit": "589f14bd0df0d1899039095857cdeef6f662f95e",
+  "source_tree": "73c1014e243e56a6765bb14d1278e9e70389d50a",
+  "helper_sha256": "bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd",
+  "remote_raw_bytes_matching": true,
+  "local_root_suite": {
+    "tests": 17,
+    "result": "PASS",
+    "skips": 0
+  },
+  "Ubuntu_24_04_root_fixture_CI": {
+    "run_id": 38398856106,
+    "job_id": 115300978352,
+    "result": "success",
+    "tests": 17,
+    "skips": 0,
+    "log_test_summary_verified": true
+  },
+  "service_control_in_tests": "simulated_no_real_Docker_or_systemd_changes",
+  "real_fixture_operations": [
+    "GNU_tar_sparse_hardlink_xattr_copy_and_restore",
+    "private_atomic_files_symlink_refusal",
+    "separate_process_POSIX_APT_lock_refusal",
+    "archive_corruption_and_missing_protected_file_refusal",
+    "capture_and_failure_service_resume_markers"
+  ],
+  "context_CI": {
+    "run_id": 38398855981,
+    "result": "success"
+  },
+  "review_CI": {
+    "run_id": 38398856037,
+    "source_PHP82_PHP83": "success",
+    "unchanged_frontend_npm_audit": "failure",
+    "frontend_build_HTTP_DB_rollback_full_gate": "skipped",
+    "whole_PR_green": false
+  },
+  "production_execution": false,
+  "full_host_boot_restore_verified": false,
+  "application_source_and_AppArmor_helper_unchanged": true
+}

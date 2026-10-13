@@ -1,5 +1,17 @@
 # Production Moodle5.1.8 paired deployment transaction
 
+[Owner production execution](production_patch_upgrade_result_20261013.json) received
+13Oct03:47MSK:installed a8caec55/helper6f87a780 PASS,finished00:27:29UTC/03:27MSK.
+Fresh HDD archive c857f79b/1,049,765,934bytes and verified cold pair5822b456 captured;
+accepted candidate activated;official CLI first/repeat PASS,core2025100608.00,
+57 addons/5151 references/HTTP200,preserved root/ID/image metadata,restart policies
+and customised/addon task flags.132 tasks enabled;existing default task flags did
+not change(the field counts changed OLD entries,not total added task definitions).
+Production restoration not executed. Core upgrade/repeat scope complete;
+[next post-switch cron,HDD and authenticated QA](production_patch_post_switch_20261013.md).
+Prior failed attempt remains historical;no repeating upgrade/diagnostic/stage work.
+
+
 [Current diagnostic](production_patch_transaction_diagnostic_result_20261013.json)
 owner13Oct02:50MSK COMPLETE at12Oct23:49:48UTC on installed a8caec55/helper6f87a780:
 current old core/57 addons/all task flags match,other PG clients0. Standard web

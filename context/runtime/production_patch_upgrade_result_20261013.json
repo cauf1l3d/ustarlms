@@ -1,0 +1,52 @@
+{
+  "kind": "owner_reported_production_patch_upgrade_acceptance",
+  "received_at": "2026-10-13T03:47:56+03:00",
+  "independently_measured": false,
+  "implementation_commit": "a8caec553996b8a1eebb85f265f9dcbdba147ffc",
+  "installed_helper_sha256": "6f87a7802e08b32e4d018bdd0ad86584fc4b56af15b7815c0e04289395b3dd15",
+  "owner_reported_checksum_verified": true,
+  "mode": "--upgrade-production --acknowledge-outage",
+  "stdout_markers": [
+    "FRESH_PRODUCTION_HDD_BACKUP=PASS; PREPARING_PAIRED_COLD_RECOVERY",
+    "FRESH_PRODUCTION_PAIRED_BASELINE=PASS; ACTIVATING_ACCEPTED_CODE",
+    "OFFICIAL_PRODUCTION_CLI_UPGRADE=1",
+    "OFFICIAL_PRODUCTION_CLI_UPGRADE=2",
+    "PRODUCTION_PATCH_UPGRADE=PASS; CORE_518; REPEAT=PASS; POST_SWITCH_QA_PENDING"
+  ],
+  "report": {
+    "addon_versions_preserved": 57,
+    "candidate_manifest_sha256": "eb6d025d458daf6b5bf9f2367b48811fa6f8c20cac95df28370d9c58a8a6b92d",
+    "cli_builtin_sendmail_path": "/bin/false",
+    "container_ids_images_bind_root_inodes_and_root_metadata_preserved": true,
+    "core_db_version": "2025100608.00",
+    "core_default_task_registry_changes": 0,
+    "enabled_scheduled_tasks": 132,
+    "file_references_verified": 5151,
+    "finished_at": "2026-10-13T00:27:29.887522+00:00",
+    "fresh_hdd_backup": {
+      "bytes": 1049765934,
+      "file": "ustar-recovery-20261013T000811Z-bd22bd58.tar.gz.age",
+      "sha256": "c857f79bb3d81c8bc4c4db230492f4080391387459aa70587098510d2a4e6cf3"
+    },
+    "full_addon_runtime_compatibility_verified": false,
+    "kind": "production_patch_upgrade_and_repeat",
+    "login_http": 200,
+    "manual_role_learning_QA": "PENDING",
+    "paired_baseline_manifest_sha256": "5822b456c0385249b505aa638fa3d1b4eb336ddc890cae97b79c025433f73500",
+    "post_switch_cron_observation": "PENDING",
+    "production_paired_restore_executed": false,
+    "restart_policies_restored": true,
+    "result": "PASS",
+    "run_directory": "/var/lib/ustar-production-patch-20261012/switch-518-o4w0cytg",
+    "scheduled_task_customizations_and_addon_flags_preserved": true,
+    "upgrade_repeat": "PASS"
+  },
+  "acceptance_scope": "production_core_upgrade_repeat_candidate_file_reference_root_policy_and_task_flag_checks",
+  "manual_production_role_learning_QA": "PENDING",
+  "post_switch_scheduled_cron_observation": "PENDING",
+  "scheduled_HDD_run_after_upgrade_at0330MSK": "NOT_OBSERVED",
+  "fresh_archive_decryption_or_restore_verified": false,
+  "production_paired_restore_executed": false,
+  "full_addon_runtime_compatibility_verified": false,
+  "raw_config_database_personnel_or_command_logs_published": false
+}

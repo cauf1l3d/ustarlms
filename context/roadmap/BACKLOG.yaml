@@ -245,12 +245,15 @@ tasks:
   - context/runtime/production_patch_stop_result_20261013.json
   - context/runtime/production_patch_stop_ci_20261013.json
   - context/runtime/production_patch_transaction_diagnostic_result_20261013.json
-  current_checkpoint: Owner13Oct0250MSK same installed a8caec55/6f87a780 read-only
-    diagnostic COMPLETE;current old core/addons/tasks match,PG clients0,old reason
-    UNRECORDED. Receipt sequence suggests failure before normal PG stop,not direct
-    exit/SQL evidence. Collector closed;next same tested installed transaction with
-    fresh recovery and exact failure recording. Strict guards unchanged;no new
-    download/install/stage cycle. Actual production upgrade/roles/learning/cron pending.
+  - context/runtime/production_patch_upgrade_result_20261013.json
+  - context/runtime/production_patch_post_switch_20261013.md
+  current_checkpoint: Owner13Oct0347MSK production518 upgrade/repeat technical PASS
+    at002729UTC;57 addons/5151 references/HTTP200/132 enabled tasks,root identities and
+    policies/custom task flags preserved. Fresh HDD c857f79b and verified cold pair
+    5822b456 retained;production restoration not executed. Upgrade closed. Next
+    read-only cron status,scheduled0330MSK HDD result and authenticated production
+    login/material/progress/tasks/team/HR smoke. No repeat upgrade/stage/install.
+    Full addon runtime and fresh encrypted-archive restoration not claimed.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

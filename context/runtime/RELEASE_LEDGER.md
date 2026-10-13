@@ -1,5 +1,18 @@
 # Реестр кода, проверок и deployment evidence
 
+## Production patch13Oct2026
+
+[Owner result](production_patch_upgrade_result_20261013.json),received03:47MSK:
+Moodle5.1.8/core2025100608.00 official upgrade/repeat technical PASS at00:27:29UTC.
+Helper a8caec553996b8a1eebb85f265f9dcbdba147ffc/SHA6f87a780;accepted candidate
+manifesteb6d025d,57 addon versions/5151 file references/HTTP200,132 enabled tasks.
+Container IDs/images/live bind roots/basic metadata and original restart policies
+preserved. Fresh HDD1,049,765,934bytes/c857f79b and verified physical cold pair
+5822b456 retained. Production restoration=false;no new application-code release.
+[Post-switch cron/HDD/authenticated QA](production_patch_post_switch_20261013.md)
+remaining;full addon runtime and fresh encrypted-archive restoration not claimed.
+
+
 Сводка Git/CI от 02.10.2026; дополнено owner runtime evidence 05.10.2026. Application source в main консолидирован на PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. История main сохранена: прежний main `99248772a91526c87c1a31f425d1a07906727152` является предком этого SHA. Полный CI #456 проверен через GitHub API: **source, frontend, rollback, prepare-rc, moodle-db, gate — success**. [Run](https://github.com/cauf1l3d/ustarlms/actions/runs/37023122306). Счётчики из описания PR76: 210 Moodle tests / 891 assertions, 60 Chromium scenarios; это CI на synthetic данных.
 
 ## Последние версии

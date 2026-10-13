@@ -834,3 +834,19 @@ it captures fresh recovery and now records exact failure phase/code if it recurs
 Strict conditions retained. Upgrade/actual paired production restore/post-switch
 business/cron acceptance remain pending. No repeat permission requested:outage and
 transaction already authorized. Source/helper/tests unchanged from exact passed CI.
+
+
+## 13Oct03:47MSK production518 upgrade/repeat technical PASS
+
+Owner same installed a8caec55/6f87a780 SHA verified;fresh HDD and cold paired
+baseline PASS,accepted candidate activated,official CLI first/repeat PASS.
+[Receipt](../runtime/production_patch_upgrade_result_20261013.json):finished00:27:29UTC,
+core2025100608.00,57 addons,5151 file references,HTTP200,132 tasks enabled,
+custom/addon flags and root/container identities/restart policies preserved.
+Fresh HDD1,049,765,934bytes/c857f79b;paired manifest5822b456/run-o4w0cytg retained.
+Production restoration=false;no full-addon runtime claim. Previous unknown guard
+not reproduced;do not invent its exact cause. Upgrade scope closed. Next existing
+read-only cron --status,scheduled0330MSK HDD result(after0327MSK upgrade finish),
+brief real production login/material/progress/tasks/team/HR read smoke;no repeat
+install/upgrade/stage cycle. Then selected OS/HTTPS plan. Source/helper unchanged
+from exact source/context/frontend CI proof;this follow-up is evidence-only.

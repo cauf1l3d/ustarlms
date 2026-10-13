@@ -273,11 +273,17 @@ tasks:
     v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  handoff: context/runtime/host_os_preflight_20261013.md
-  current_checkpoint: Initial read-only versions/kernel/reboot/service/package metadata
-    and cached APT dependency simulation prepared. Source/local quote syntax checked;
-    server output pending. No package/catalog/profile/service/reboot changes. Shared
-    recovery and restart plan follows concrete package/service observations.
+  handoff: context/runtime/host_os_apparmor_handoff_20261013.md
+  runtime_evidence:
+  - context/runtime/host_os_preflight_result_20261013.json
+  current_checkpoint: >-
+    Owner13Oct0437MSK inventory and cached APT simulation received:
+    32 updates/18 new firmware/no removals,kernel139 with reboot pending,AppArmor
+    only failed unit,production images/docker-default labels preserved. Current
+    failure cause still unconfirmed;next compile exact residual snap profile with
+    Q/K and read current consumers/selected kernel profiles/SSH socket metadata.
+    Targeted profile repair and shared package/recovery/window plan follow that
+    result. No OS installation/profile/service/reboot change executed.
 - id: INF-10
   title: SSH/firewall/MFA и политики нужных служб общего хоста
   status: planned
@@ -411,6 +417,12 @@ tasks:
 - id: PLAT-01
   title: Поддерживаемый major/LTS Moodle 5.3 с миграцией PostgreSQL17+
   status: planned
+  priority_note: Owner13Oct0449MSK confirmed latest stable Moodle5.3 LTS as next
+    platform target after current host OS work. Prepare PG17+ major migration,
+    native USTAR/theme/all-addon compatibility and coherent isolated recovery;
+    production deployment follows concrete accepted rehearsal/window. Existing
+    Moodle518 acceptance remains closed;HTTPS remains in selected work.
+  handoff: context/runtime/host_os_apparmor_handoff_20261013.md
   depends_on:
   - OPS-02
   acceptance:

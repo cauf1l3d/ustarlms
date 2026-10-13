@@ -33,7 +33,10 @@ sudo -n timeout 60s env LC_ALL=C apt-get --simulate -o Debug::NoLocking=1 -o Dir
 ```
 
 Only shell syntax and dpkg placeholder quoting were checked locally;the source and
-application trees remain unchanged. Host-specific package/service output pending.
+application trees remain unchanged. [Owner output received13Oct04:37MSK](host_os_preflight_result_20261013.json)
+records32 updates/18 new firmware packages/no removals,running kernel139/pending
+reboot,AppArmor failed and accepted container image/profile labels preserved.
+See [next targeted AppArmor observation and update order](host_os_apparmor_handoff_20261013.md).
 Do not run apt upgrade/dist-upgrade without --simulate or invoke release upgrade,
 AppArmor reload/disable,snap purge or reboot from this initial handoff.
 
@@ -52,5 +55,5 @@ Primary references checked13Oct:
 - [Ubuntu Foundations explanation](https://discourse.ubuntu.com/t/needrestart-changes-in-ubuntu-24-04-service-restarts/44671):
   list-only needrestart is not a blanket suppression of package maintainer scripts.
 
-No current package candidate,OS patch or reboot result is claimed before operator
-output. Broad SSH/MFA/firewall redesign remains deferred per owner priority.
+The receipt is a live cached-index simulation,not package installation,profile
+repair or reboot acceptance. Broad SSH/MFA/firewall redesign remains deferred.

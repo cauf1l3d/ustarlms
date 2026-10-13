@@ -884,3 +884,36 @@ behavior;no unsupported blanket no-restart promise for later installation. Share
 recovery/restart plan prepared only after package/service observations. Console
 access previously confirmed,no repeat permission question. Application/helper source
 unchanged;context follow-up only. Then selected HTTPS;broader security tasks deferred.
+
+
+## 13Oct04:49MSK OS output received; targeted AppArmor check and Moodle5.3 goal
+
+Owner terminal upload04:37MSK read locally without modification/publication.
+[Sanitized receipt](../runtime/host_os_preflight_result_20261013.json):Ubuntu24.04.4,
+running139,installed linux-generic146/reboot flag,13 unit observations,AppArmor
+only failed unit;production containers retain accepted image IDs/docker-default
+labels. Kernel profile enforcement/next boot selection/shared functional acceptance
+not inferred from these labels/unit states. Cached APT simulation32 upgraded/18 new
+firmware/no removals;index stamp12Oct10:47UTC,no catalog refresh/install. Docker/
+containerd,netplan/open-iscsi,AppArmor are among changes,so actual shared-service
+recovery/restart plan is necessary before installation. Previous05Oct stale snap
+include is a candidate,current root cause not established by failed unit metadata.
+[Next one-line handoff](../runtime/host_os_apparmor_handoff_20261013.md) uses parser
+Q/K/one job/timeouts on that exact profile and reads Snap consumers/selected loaded
+profiles/SSH socket. It neither changes profiles nor starts Snap or host services.
+Command bash syntax and primary Ubuntu flag semantics checked locally;server
+profile/consumer result pending. Targeted reversible quarantine and shared package
+plan will use that result;no global AppArmor disable/Snap purge/empty include or
+blind APT/reboot command. Existing console access reused,not requested again.
+
+Owner asked whether we would upgrade to the latest stable Moodle;clarified that
+accepted5.1.8 was the completed branch patch and current stable5.3 LTS requires
+PG17+ (production16.15),PHP8.3 minimum met. Official latest/release requirements
+checked13Oct;direct upgrade from supported4.4+ needs no intermediate5.2. Owner
+04:49MSK accepted complete OS then prepare5.3/PG/addons/isolated rehearsal and
+production window. PLAT-01 goal now explicit in STATE/ACTIVE/BACKLOG;no major DB
+or Moodle migration is executed and prior518 acceptance remains closed. HTTPS
+remains selected;broader unrelated hardening remains deferred. Source/application/
+frontend/tests/workflows/helpers unchanged;this PR99 continuation is receipts and
+operator handoff only. Actual OS executable source will use a separate updated-main
+branch rather than stacking a new feature on this prior patch branch.

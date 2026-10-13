@@ -1,3 +1,5 @@
+**Checkpoint13Oct04:49MSK:** [OS inventory/APT simulation](host_os_preflight_result_20261013.json) received04:37MSK:32 updates/18 new firmware/no removals,kernel139/reboot pending,AppArmor only failed unit,accepted Docker images/profile labels preserved. Current failure cause unconfirmed;[next bounded Snap/profile observation](host_os_apparmor_handoff_20261013.md) compiles one profile with Q/K and reads consumers/kernel profiles/SSH socket. No OS repair/install/reboot executed. Owner confirmed latest stable Moodle5.3 LTS target after OS,with PG17+ migration/addons/coherent isolated recovery before production. Accepted5.1.8 patch stays closed;HTTPS remains selected.
+
 # Реестр кода, проверок и deployment evidence
 
 [Owner browser13Oct04:14MSK](production_patch_browser_result_20261013.json):

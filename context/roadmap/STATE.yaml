@@ -3,12 +3,15 @@ updated_at: '2026-10-13'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Owner13Oct0414MSK production browser acceptance OK,SCORM opens
-  and different accounts work. Moodle518 patch scope CLOSED with upgrade/repeat,
-  cron and scheduled HDD success;no more core/stage/status/browser repeat cycle.
-  Next INF-10-OS initial read-only host packages/kernel/shared-service observation
-  and cached-index apt simulation;no package/profile/service/reboot changes yet.
-  Actual package plan/recovery/restart review follows operator output,then HTTPS.
+current_activity: >-
+  Owner13Oct0437MSK OS inventory/cached APT simulation received:
+  Ubuntu24.04.4/kernel139/pending reboot,32 upgrades/18 new firmware/no removals,
+  AppArmor only failed unit;accepted container images/docker-default labels preserved.
+  Next bounded current Snap profile compile and consumer/kernel-profile observation,
+  then targeted repair and concrete shared-host package/recovery/restart plan.
+  Owner13Oct0449MSK latest stable Moodle5.3 LTS target confirmed after OS;PG17+
+  migration/USTAR addon compatibility/isolated recovery rehearsal prepared separately.
+  Moodle518 patch acceptance stays closed;no OS repair/install/reboot or major migration yet.
 next_task: INF-10-OS
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -222,6 +225,7 @@ execution:
   - INF-07
   - INF-04
   - INF-14
+  - PLAT-01
   other_points: unrelated_hardening_product_cleanup_projects_remain_deferred
   after_github_publication: continue_selected_work_with_operator_commands
   production_changes_in_this_delivery: false
@@ -230,6 +234,8 @@ execution:
   authorized_extra_operation: 'Owner/sysadmin: overwrite, check and format only WWN0x50014ee200c1ee59
     / WD-WCAS82914317 / 500106780160 bytes, health qualification before backup use'
   latest_owner_instruction_at: '2026-10-06T00:45:07+03:00'
+  latest_platform_target_confirmed_at: '2026-10-13T04:49:29+03:00'
+  latest_platform_target_scope: after_current_OS_work_prepare_latest_stable_Moodle53_LTS_PG_major_addons_and_coherent_stage_recovery_before_production_window
   pre_stage_priority:
   - storage_inventory_and_verified_reorganization
   - server_map
@@ -254,6 +260,14 @@ audit:
     production_postgresql: '16.15'
     major_migration_executed: false
     source: https://moodledev.io/general/releases/5.3
+    latest_stable_verified_at: '2026-10-13'
+    owner_goal_confirmed_at: '2026-10-13T04:49:29+03:00'
+    preparation_order: after_current_host_OS_maintenance
+    current_patch_acceptance: closed_intermediate_checkpoint_not_upstream_required_migration_step
+    minimum_php_version: '8.3.0'
+    current_php_version: '8.3.33'
+    current_PHP_version_meets_minimum: true
+    target_compatibility_recovery_and_major_deployment: not_executed
 patch_candidate:
   tag: v5.1.8
   commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
@@ -615,9 +629,14 @@ continuation_documentation_pr: https://github.com/cauf1l3d/ustarlms/pull/98
 
 host_OS_maintenance_20261013:
   task: INF-10-OS
-  status: read_only_initial_handoff_prepared
-  handoff: context/runtime/host_os_preflight_20261013.md
+  status: owner_initial_output_received_targeted_AppArmor_observation_prepared
+  initial_handoff: context/runtime/host_os_preflight_20261013.md
+  handoff: context/runtime/host_os_apparmor_handoff_20261013.md
+  received_at: '2026-10-13T04:37:45+03:00'
   package_index_refreshed: false
   packages_or_profiles_changed: false
   services_restarted_or_host_rebooted: false
-  current_host_output: pending
+  current_host_output: context/runtime/host_os_preflight_result_20261013.json
+  initial_APT_plan: cached_32_upgrades_18_new_firmware_no_removals_last_index12Oct104708UTC
+  current_AppArmor_failure_cause: unconfirmed_historical_snap_confine_missing_include_candidate
+  next_operator_step: readonly_single_profile_Q_K_compile_and_snap_consumer_kernel_profile_SSH_socket_metadata

@@ -247,13 +247,14 @@ tasks:
   - context/runtime/production_patch_transaction_diagnostic_result_20261013.json
   - context/runtime/production_patch_upgrade_result_20261013.json
   - context/runtime/production_patch_post_switch_20261013.md
-  current_checkpoint: Owner13Oct0347MSK production518 upgrade/repeat technical PASS
-    at002729UTC;57 addons/5151 references/HTTP200/132 enabled tasks,root identities and
-    policies/custom task flags preserved. Fresh HDD c857f79b and verified cold pair
-    5822b456 retained;production restoration not executed. Upgrade closed. Next
-    read-only cron status,scheduled0330MSK HDD result and authenticated production
-    login/material/progress/tasks/team/HR smoke. No repeat upgrade/stage/install.
-    Full addon runtime and fresh encrypted-archive restoration not claimed.
+  - context/runtime/production_patch_post_switch_status_result_20261013.json
+  current_checkpoint: Production518 upgrade/repeat technical PASS plus owner13Oct0408MSK
+    post-switch scheduled cron0407MSK exit0/no new or USTAR errors and HDD0330MSK
+    complete/success/exit0/no recovery marker,next14Oct0330MSK,timer active/enabled.
+    Existing binding/schedule match,residual2 failed/17 overdue counts unchanged.
+    Only brief authenticated production browser confirmation remains. No repeat
+    server commands,upgrade/status/install/stage work;then selected OS/HTTPS plan.
+    Actual production restore/full addon runtime/fresh archive decryption not claimed.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot

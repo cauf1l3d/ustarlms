@@ -1,5 +1,13 @@
 # Реестр кода, проверок и deployment evidence
 
+[Post-switch status13Oct04:08MSK](production_patch_post_switch_status_result_20261013.json):
+scheduled cron04:07MSK exit0/no new failures/USTAR errors0;HDD03:30MSK completed
+success/exit0/no marker,timer active/enabled,next14Oct03:30MSK. Existing cron
+binding/schedule match,residual2 failed/17 overdue unchanged. Technical upgrade/
+repeat/cron/HDD acceptance complete;authenticated production browser confirmation
+still pending. No new archive identity/decryption/full-addon/restore claim.
+
+
 ## Production patch13Oct2026
 
 [Owner result](production_patch_upgrade_result_20261013.json),received03:47MSK:

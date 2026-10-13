@@ -1,5 +1,16 @@
 # Production518 post-switch acceptance
 
+[Owner cron/HDD status](production_patch_post_switch_status_result_20261013.json)
+received13Oct04:08MSK:cron scheduled04:07MSK exit0,1.175s,new_failures empty,
+USTAR error counters0,schedule/container binding match. HDD03:30MSK completed
+03:31:43MSK success/exit0,no recovery marker,timer active/enabled,next14Oct03:30MSK.
+Residual scheduled_failed2/overdue17 counts unchanged from prior baseline and
+before/after this pass;not reset. Those status checks are COMPLETE;do not repeat
+commands or expand into an unrelated disabled-task cleanup. No new archive
+identity/hash/decryption is included in scheduler status. Only browser confirmation
+below remains. No production browser response received with this status file.
+
+
 [Technical upgrade receipt](production_patch_upgrade_result_20261013.json)
 finished13Oct00:27:29UTC/03:27MSK:upgrade/repeat PASS,core2025100608.00,
 57 addons/5151 file references/HTTP200,132 tasks enabled,root/container identities

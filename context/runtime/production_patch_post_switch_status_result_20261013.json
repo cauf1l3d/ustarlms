@@ -1,0 +1,99 @@
+{
+  "kind": "owner_reported_production518_post_switch_cron_and_HDD_status",
+  "received_at": "2026-10-13T04:08:29+03:00",
+  "independently_measured": false,
+  "source": "owner_uploaded_terminal_text;only_selected_status_JSON_published",
+  "cron_helper_sha256": "66fd51d364beb59a8874a63c695c122dca5452a720e61b86d070beb0b1939852",
+  "cron_helper_checksum_verified_by_owner": true,
+  "cron_setup_version": 3,
+  "cron": {
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "last_run": {
+      "started_utc": "2026-10-13T01:07:01.331152+00:00",
+      "trigger": "scheduled",
+      "email_disabled": false,
+      "before": {
+        "last_task_log_id": 4471729,
+        "adhoc_queued": 0,
+        "adhoc_failed": 0,
+        "scheduled_overdue_10m": 17,
+        "scheduled_failed": 2,
+        "ustar_failed": 0,
+        "latest_task_utc": "2026-10-13T01:06:02Z",
+        "failures_24h": []
+      },
+      "cron_exit_code": 0,
+      "log_truncated": false,
+      "finished_utc": "2026-10-13T01:07:02.506192+00:00",
+      "elapsed_seconds": 1.175,
+      "ustar": {
+        "error_lines": 0,
+        "warning_lines": 0,
+        "worker_errors": 0,
+        "grade_errors": 0,
+        "enrolment_errors": 0,
+        "enrolment_missing_manual": 0,
+        "cancelled_login_notifications": 0
+      },
+      "after": {
+        "last_task_log_id": 4471756,
+        "adhoc_queued": 0,
+        "adhoc_failed": 0,
+        "scheduled_overdue_10m": 17,
+        "scheduled_failed": 2,
+        "ustar_failed": 0,
+        "latest_task_utc": "2026-10-13T01:07:02Z",
+        "new_failures": []
+      }
+    },
+    "current": {
+      "last_task_log_id": 4471756,
+      "adhoc_queued": 0,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 17,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-13T01:07:02Z",
+      "failures_24h": []
+    }
+  },
+  "HDD_scheduler": {
+    "calendar": "*-*-* 03:30:00 Europe/Moscow",
+    "catch_up": false,
+    "archive_deletion": false,
+    "last_scheduled_run": {
+      "started_utc": "2026-10-13T00:30:00.853715+00:00",
+      "phase": "complete",
+      "success": true,
+      "calendar": "*-*-* 03:30:00 Europe/Moscow",
+      "finished_utc": "2026-10-13T00:31:43.769108+00:00",
+      "service_result": "success",
+      "exit_code": "exited",
+      "exit_status": "0",
+      "resumed_from_marker": false,
+      "recovery_error_type": null,
+      "recovery_marker_present": false
+    },
+    "last_backup_success_utc": "2026-10-13T00:31:42.796921+00:00",
+    "recovery_marker_present": false,
+    "unit_properties": "NextElapseUSecRealtime=Wed 2026-10-14 00:30:00 UTC\nResult=success\nId=ustar-hdd-backup.timer\nLoadState=loaded\nActiveState=active\nUnitFileState=enabled\n\nResult=success\nId=ustar-hdd-backup.service\nLoadState=loaded\nActiveState=inactive\nUnitFileState=static\n\nResult=success\nId=ustar-hdd-backup-recover.service\nLoadState=loaded\nActiveState=inactive\nUnitFileState=enabled"
+  },
+  "acceptance": {
+    "scheduled_cron_after_production_upgrade": "PASS",
+    "cron_container_binding_and_existing_schedule": "PASS",
+    "new_cron_or_USTAR_failures_reported": false,
+    "residual_scheduled_failed_count": 2,
+    "residual_overdue10m_count": 17,
+    "residual_count_comparison": "same_counts_as_prior_owner_baseline_and_before_after_this_pass;not_reset",
+    "scheduled_HDD_run_after_production_upgrade": "PASS",
+    "HDD_timer_active_enabled": true,
+    "next_HDD_timer_UTC": "2026-10-14T00:30:00Z",
+    "HDD_recovery_marker_present": false,
+    "scheduled_archive_identity_hash_or_decryption_in_this_output": false,
+    "production_authenticated_browser_QA": "NOT_RECEIVED",
+    "full_addon_runtime_compatibility_verified": false,
+    "repeat_upgrade_or_new_status_collection_needed": false
+  },
+  "raw_credentials_personnel_or_private_logs_published": false
+}

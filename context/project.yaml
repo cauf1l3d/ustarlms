@@ -8,7 +8,7 @@ project:
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
-  platform: 'Moodle 5.1.8/core2025100608.00, owner production upgrade/repeat PASS 2026-10-13T00:27:29UTC; post-switch cron/role-learning QA pending'
+  platform: 'Moodle 5.1.8/core2025100608.00, owner production upgrade/repeat PASS 2026-10-13T00:27:29UTC; post-switch cron/HDD owner13Oct PASS; browser role-learning QA pending'
   language: PHP CLI8.3.33/Trixie production; PR83 source CI8.2+8.3 and pinned patch-518/PG16.15 full RC SUCCESS,
     production core518 upgrade/repeat owner13Oct PASS; isolated stage paired rollback owner12Oct PASS
   stage_platform: 'Moodle5.1.8/core2025100608.00 active12Oct10:40:14UTC, re-upgrade/repeat PASS; prior paired rollback accepted; owner12Oct14:41MSK basic SCORM/progress/login/home QA accepted; employee/manager requested smoke accepted15:25MSK; HR/addons/Apache pending'

@@ -1,5 +1,13 @@
 # Production Moodle5.1.8 paired deployment transaction
 
+[Post-switch cron/HDD](production_patch_post_switch_status_result_20261013.json)
+owner13Oct04:08MSK PASS:scheduled cron04:07MSK exit0/no new or USTAR errors,
+HDD03:30MSK complete/success/exit0/no recovery marker,next14Oct03:30MSK. Existing
+binding/schedule match;residual2 failed/17 overdue counts unchanged. Technical
+upgrade/repeat/cron/backup observations closed;only brief browser confirmation
+pending. No repeated server command,installer,upgrade or stage cycle required.
+
+
 [Owner production execution](production_patch_upgrade_result_20261013.json) received
 13Oct03:47MSK:installed a8caec55/helper6f87a780 PASS,finished00:27:29UTC/03:27MSK.
 Fresh HDD archive c857f79b/1,049,765,934bytes and verified cold pair5822b456 captured;

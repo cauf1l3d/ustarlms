@@ -850,3 +850,20 @@ read-only cron --status,scheduled0330MSK HDD result(after0327MSK upgrade finish)
 brief real production login/material/progress/tasks/team/HR read smoke;no repeat
 install/upgrade/stage cycle. Then selected OS/HTTPS plan. Source/helper unchanged
 from exact source/context/frontend CI proof;this follow-up is evidence-only.
+
+
+## 13Oct04:08MSK post-switch scheduled cron and HDD status accepted
+
+Owner uploaded terminal text read from supplied scratch copy;raw file not altered
+or published. [Selected receipt](../runtime/production_patch_post_switch_status_result_20261013.json):
+cron v3 SHA66fd51d3 verified,schedule/binding match,scheduled01:07:01..01:07:02UTC
+(04:07MSK) after core upgrade,exit0/1.175s/new_failures empty/USTAR errors0.
+Residual2 scheduled_failed/17 overdue counts same as prior owner baseline and
+before/after pass;no new error or resetting/disabled-task cleanup inferred.
+HDD scheduled00:30:00..00:31:43UTC complete/success/exit0,no recovery marker,timer
+active/enabled,next14Oct03:30MSK. Scheduler status has no new archive identity/hash
+or decryption proof. Production518 technical upgrade/repeat/cron/HDD acceptance
+closed. No browser statement/screenshots supplied;only brief real authenticated
+production UI confirmation remains. No repeat server command/status/install/upgrade/
+stage operation. Next selected OS/HTTPS work after this brief confirmation.
+Source/helper/application/frontend unchanged;context evidence-only follow-up.

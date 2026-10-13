@@ -27,8 +27,46 @@ root targets refuse,dangling/cyclic links retain link-only behavior. No entry
 skipping/file deletion or broader archive exclusion is introduced. Source
 comparison and archive readback remain mandatory. Local48 tests PASS,including
 actual pipe link/tar/readback/restore and persistent-target guards. Exact Ubuntu
-CI/publication and new server execution pending. Previous capture/resume
-command sections below are historical and must not be reused as the next step.
+CI run38485478610/job115597955732 PASS:48 file/control +2 actual isolated
+systemd tests,no skips;both summaries inspected. Context38485478396 PASS.
+Published immutable source 22d8a4e172208d029b0524c3f38e37403fa438b9,SHA256
+3f8f0c0eae0d9702216d276231f2c7151fc40635b962843a0e9fe85efae6f0c4 matches local bytes/tree.
+Broader review38485478535 is still running at this receipt;whole PR green is
+not claimed. New server execution remains pending.
+
+### Current next capture r6
+
+Run sudo authentication separately;wait for its prompt to finish. Then paste
+the full bash block. It downloads,checks and installs the pinned helper and
+starts a systemd-held capture. Any download/hash/install error stops the block.
+Selected services pause during copy and resume before archive readback.
+After one minute run the final status/journal block. Final acceptance requires
+complete,services_resumed=true,archive_readback_sha256_verified=true.
+Do not interpret an old marker as success if the new task fails before writing.
+Full diagnostic paths remain private on the server.
+
+```bash
+sudo -v
+```
+
+```bash
+bash <<'BASH'
+set -euo pipefail
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/22d8a4e172208d029b0524c3f38e37403fa438b9/scripts/infra/host_cold_recovery.py -o /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py
+printf '%s  %s\n' 3f8f0c0eae0d9702216d276231f2c7151fc40635b962843a0e9fe85efae6f0c4 /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict -
+sudo -n install -m 600 -o root -g root /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py
+sudo -n systemd-run --unit=ustar-host-recovery-20261014-r6 --service-type=exec --property=RemainAfterExit=yes --property=RuntimeMaxSec=2h --property=TimeoutStopSec=10min --property=UMask=0077 /bin/bash -c 'set -euo pipefail; printf "%s  %s\n" 3f8f0c0eae0d9702216d276231f2c7151fc40635b962843a0e9fe85efae6f0c4 /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict -; exec /usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --capture --acknowledge-shared-outage'
+BASH
+```
+
+```bash
+sudo -n python3 -I -B /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --status
+sudo -n journalctl -u ustar-host-recovery-20261014-r6.service -n 50 --no-pager -o cat | awk '/^HOST_RECOVERY_PHASE=|^HOST_RECOVERY_COPY_BYTES=|^HOST_RECOVERY_MANIFEST_RETRY=|^HOST_COLD_RECOVERY_ERROR=|^HOST_COLD_RECOVERY=/{print}'
+```
+
+Previous capture/resume command sections below are historical and must not be
+reused as the next step. Exact server link text is not claimed verified;the
+observed excluded-proc strict-resolution failure class is reproduced and fixed.
 
 ## Previous14Oct02:17MSK: r4 resumed; missing path unrecorded
 

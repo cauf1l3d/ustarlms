@@ -1,4 +1,4 @@
-# Current14Oct0232MSK: r5 /proc strict-link failure resumed;component resolver48 local PASS;exact Ubuntu CI/r6 and archive/install/reboot pending.
+# Current14Oct0232MSK: r5 /proc strict-link failure resumed;component resolver22d8a4e1 local48/Ubuntu48+2/context PASS;r6 and archive/install/reboot pending.
 schema_version: 2
 updated_at: '2026-10-06'
 canonical_branch: main

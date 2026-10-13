@@ -8,7 +8,8 @@ current_activity: >-
   strict link resolution into excluded /proc;reproduced locally with real
   pipe FD. Component resolver now applies exclusions before lookup and
   preserves link text,persistent target and source/archive checks.
-  Local48 PASS;exact Ubuntu CI and server r6 pending.
+  Local48 and exact Ubuntu48+2/no skips PASS;context PASS.
+  Source22d8a4e1/SHA3f8f0c0e ready for authorized r6;server execution pending.
   No host archive/install/reboot acceptance.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json

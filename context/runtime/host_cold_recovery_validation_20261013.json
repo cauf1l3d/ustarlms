@@ -1,27 +1,27 @@
 {
   "kind": "host_cold_recovery_source_validation",
-  "implementation_commit": "99b3e0dc40554f5769b50e338e54d748789ebf93",
-  "local_commit": "d70e339f81ba0ba2dc071647f6fbecf35f04f5ee",
-  "source_tree": "d3fef7acc8fa1fd92535e0c733a2a5d253c5912b",
-  "helper_sha256": "962a75d0c1d0f69c92efdb37fa52d8d986e81730cb39984f09d49fedc7189e40",
+  "implementation_commit": "22d8a4e172208d029b0524c3f38e37403fa438b9",
+  "local_commit": "af18ff3beec10d51f1f5062117a2e156ec45ca52",
+  "source_tree": "8d2793f7f25803521483948d13dc5290ddab877a",
+  "helper_sha256": "3f8f0c0eae0d9702216d276231f2c7151fc40635b962843a0e9fe85efae6f0c4",
   "remote_raw_bytes_matching": true,
   "local_root_suite": {
-    "tests": 41,
+    "tests": 48,
     "result": "PASS",
     "skips": 0,
     "native_systemd_not_run_locally": "scratch PID1 is not systemd"
   },
   "Ubuntu_24_04_root_fixture_CI": {
-    "run_id": 38484018659,
-    "job_id": 115593190536,
+    "run_id": 38485478610,
+    "job_id": 115597955732,
     "result": "success",
-    "file_control_model_tests": 41,
+    "file_control_model_tests": 48,
     "real_systemd_tests": 2,
-    "total_tests": 43,
+    "total_tests": 50,
     "skips": 0,
     "both_log_test_summaries_verified": true
   },
-  "service_control_in_tests": "41 file/model tests plus2 actual root sleep-only systemd unit tests in Ubuntu CI;no production services",
+  "service_control_in_tests": "48 file/model tests plus2 actual root sleep-only systemd unit tests in Ubuntu CI;no production services",
   "real_fixture_operations": [
     "GNU_tar_sparse_hardlink_xattr_copy_and_restore",
     "private_atomic_files_symlink_refusal",
@@ -32,20 +32,20 @@
     "native_systemd_SIGKILL_success_override_refused"
   ],
   "context_CI": {
-    "run_id": 38484018640,
+    "run_id": 38485478396,
     "result": "success"
   },
   "review_CI": {
-    "run_id": 38484018622,
+    "run_id": 38485478535,
     "source_PHP82_PHP83": "in_progress_at_receipt",
-    "unchanged_frontend_npm_audit": "failure",
+    "unchanged_frontend_npm_audit": "in_progress_at_receipt",
     "frontend_build_HTTP_DB_rollback_full_gate": "skipped_or_pending",
     "whole_PR_green": false
   },
   "production_execution": false,
   "full_host_boot_restore_verified": false,
   "application_source_and_AppArmor_helper_unchanged": true,
-  "supersedes_implementation_commit": "2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389",
+  "supersedes_implementation_commit": "99b3e0dc40554f5769b50e338e54d748789ebf93",
   "mount_preflight_regressions": [
     "observed_configfs_only_inside_excluded_sys",
     "configfs_other_location_refused",
@@ -89,11 +89,12 @@
     "local_tests": 48,
     "local_result": "PASS",
     "skips": 0,
-    "exact_Ubuntu_CI": "PENDING",
+    "exact_Ubuntu_CI": "PASS_48_PLUS_2_NO_SKIPS",
     "server_execution": false,
     "real_pipe_tar_and_restore_checked": true,
     "virtual_target_stat_refused_in_tests": true,
     "relative_indirect_links_and_dotdot_semantics_checked": true,
-    "persistent_foreign_and_root_targets_still_refused": true
+    "persistent_foreign_and_root_targets_still_refused": true,
+    "implementation_commit": "22d8a4e172208d029b0524c3f38e37403fa438b9"
   }
 }

@@ -497,7 +497,10 @@ class RecoveryTests(unittest.TestCase):
         wait.assert_called_once_with(1)
         self.assertEqual('lstat', marker['manifest_retry']['operation'])
         self.assertNotIn(str(vanished), output.getvalue())
-        self.assertEqual(str(vanished), cold.read_json(self.base / 'manifest-retry.private.json')['path'])
+        if os.geteuid() == 0:
+            self.assertEqual(str(vanished), cold.read_json(self.base / 'manifest-retry.private.json')['path'])
+        else:
+            self.assertFalse(marker['manifest_retry']['private_record_written'])
 
     def test_missing_required_root_is_never_skipped_or_retried(self):
         with patch.object(cold, 'manifest') as scan, patch.object(cold.time, 'sleep') as wait:
@@ -536,8 +539,12 @@ class RecoveryTests(unittest.TestCase):
             cold.save_diagnostic(marker, error, 'building_protected_manifest')
         self.assertNotIn('private-person', json.dumps(cold.summary(marker)))
         self.assertEqual('/var/vmail', marker['failure_details']['path_scope'])
-        self.assertEqual(path, cold.read_json(self.base / 'failure.private.json')['path'])
-        self.assertEqual(0o600, (self.base / 'failure.private.json').stat().st_mode & 0o777)
+        if os.geteuid() == 0:
+            self.assertEqual(path, cold.read_json(self.base / 'failure.private.json')['path'])
+            self.assertEqual(0o600, (self.base / 'failure.private.json').stat().st_mode & 0o777)
+        else:
+            self.assertFalse(marker['failure_details']['private_record_written'])
+            self.assertFalse((self.base / 'failure.private.json').exists())
 
     def test_diagnostic_write_failure_does_not_mask_original_failure(self):
         marker = {}

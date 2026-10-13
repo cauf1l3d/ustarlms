@@ -184,7 +184,7 @@ tasks:
   execution_gate: authorized_owner_point_6_after_point_7
 - id: INF-09
   title: CI на production PHP/core/PostgreSQL matrix
-  status: planned
+  status: done
   depends_on:
   - INF-01
   acceptance:
@@ -198,9 +198,13 @@ tasks:
   prepared_work: PR83 full RC37311910916 SUCCESS on exact implementation9206f844e12350b9b8ab8ee2d28ed4e63a6dd90a;
     source8.2/8.3 and historical+patch-518 matrix, historical rollback PASS. Full production addon/core rollback
     distinct.
+  completed_scope: Pinned historical and patch518 PHP8.3/PG16.15 native full gate,
+    prior actual stage paired restore and production upgrade/repeat/cron/browser
+    accepted;helper supplement exact a8caec55 source8.2/8.3/owner fixture CI PASS.
+    Full third-party addon runtime or production restoration not inferred.
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
-  status: in_progress
+  status: done
   depends_on:
   - INF-01
   - INF-09
@@ -248,17 +252,16 @@ tasks:
   - context/runtime/production_patch_upgrade_result_20261013.json
   - context/runtime/production_patch_post_switch_20261013.md
   - context/runtime/production_patch_post_switch_status_result_20261013.json
-  current_checkpoint: Production518 upgrade/repeat technical PASS plus owner13Oct0408MSK
-    post-switch scheduled cron0407MSK exit0/no new or USTAR errors and HDD0330MSK
-    complete/success/exit0/no recovery marker,next14Oct0330MSK,timer active/enabled.
-    Existing binding/schedule match,residual2 failed/17 overdue counts unchanged.
-    Only brief authenticated production browser confirmation remains. No repeat
-    server commands,upgrade/status/install/stage work;then selected OS/HTTPS plan.
-    Actual production restore/full addon runtime/fresh archive decryption not claimed.
+  - context/runtime/production_patch_browser_result_20261013.json
+  current_checkpoint: Owner13Oct0414MSK browser acceptance OK,SCORM opens,different
+    accounts work;combined production518 upgrade/repeat/cron/scheduled HDD acceptance
+    closes patch scope. No repeated upgrade/status/stage/browser checks required.
+    Full addon/write coverage,actual production restoration and fresh archive
+    decryption remain separate unclaimed scopes;proceed selected OS then HTTPS.
 
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot
-  status: planned
+  status: in_progress
   depends_on:
   - INF-01
   - INF-08
@@ -270,6 +273,11 @@ tasks:
     v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  handoff: context/runtime/host_os_preflight_20261013.md
+  current_checkpoint: Initial read-only versions/kernel/reboot/service/package metadata
+    and cached APT dependency simulation prepared. Source/local quote syntax checked;
+    server output pending. No package/catalog/profile/service/reboot changes. Shared
+    recovery and restart plan follows concrete package/service observations.
 - id: INF-10
   title: SSH/firewall/MFA и политики нужных служб общего хоста
   status: planned

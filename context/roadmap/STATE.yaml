@@ -3,14 +3,13 @@ updated_at: '2026-10-13'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: Owner13Oct0408MSK post-switch cron/HDD status PASS. Scheduled
-  cron0407MSK exit0,new failures and USTAR errors0,existing schedule/container binding
-  match. HDD0330MSK complete/success/exit0,no recovery marker,next14Oct0330MSK;
-  timer active/enabled. Production518 upgrade/repeat technical scope closed.
-  Residual2 failed/17 overdue counts unchanged from baseline;no resets. Only brief
-  authenticated production browser confirmation remains;no more server commands or
-  repeated upgrade/status/install/stage work. Then authorized OS/HTTPS planning.
-next_task: INF-08
+current_activity: Owner13Oct0414MSK production browser acceptance OK,SCORM opens
+  and different accounts work. Moodle518 patch scope CLOSED with upgrade/repeat,
+  cron and scheduled HDD success;no more core/stage/status/browser repeat cycle.
+  Next INF-10-OS initial read-only host packages/kernel/shared-service observation
+  and cached-index apt simulation;no package/profile/service/reboot changes yet.
+  Actual package plan/recovery/restart review follows operator output,then HTTPS.
+next_task: INF-10-OS
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -32,7 +31,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_production_patch518_upgrade_repeat_cron_HDD_PASS_browser_QA_pending
+  status: owner_production_patch518_upgrade_repeat_cron_HDD_browser_accepted
   observed_at: '2026-10-05T02:43:33Z'
   observed_at_scope: application_baseline_inventory
   source: context/runtime/evidence_20261005_baseline.yaml
@@ -475,11 +474,12 @@ patch_candidate:
   production_upgrade_prior_failure_reason: not_recorded_by_old_helper
   production_upgrade_diagnostic_executed: true
   production_upgrade_diagnostic_result: context/runtime/production_patch_transaction_diagnostic_result_20261013.json
-  production_upgrade_next_operator_mode: authenticated_production_browser_confirmation_only
+  production_upgrade_next_operator_mode: complete_do_not_repeat
   production_paired_switch_restore_ready: true
   production_paired_baseline_manifest_sha256: 5822b456c0385249b505aa638fa3d1b4eb336ddc890cae97b79c025433f73500
   production_paired_restore_executed: false
-  production_post_switch_role_learning_QA: pending
+  production_post_switch_role_learning_QA: PASS_owner_brief_browser_confirmation
+  production_post_switch_browser_result: context/runtime/production_patch_browser_result_20261013.json
   production_post_switch_cron_observation: PASS_owner_scheduled_after_upgrade_exit0_no_new_failures
   production_post_switch_status_result: context/runtime/production_patch_post_switch_status_result_20261013.json
   production_post_switch_HDD_scheduler_observation: PASS_owner_0330MSK_complete_success_no_marker
@@ -612,3 +612,12 @@ storage_reorganization:
   hdd_last_backup_success_utc: '2026-10-11T00:31:43.444339+00:00'
   latest_owner_storage_receipt: context/runtime/ssd_ext4_resize_result_20261011.json
 continuation_documentation_pr: https://github.com/cauf1l3d/ustarlms/pull/98
+
+host_OS_maintenance_20261013:
+  task: INF-10-OS
+  status: read_only_initial_handoff_prepared
+  handoff: context/runtime/host_os_preflight_20261013.md
+  package_index_refreshed: false
+  packages_or_profiles_changed: false
+  services_restarted_or_host_rebooted: false
+  current_host_output: pending

@@ -1,5 +1,12 @@
 # Production518 post-switch acceptance
 
+[Owner browser13Oct04:14MSK](production_patch_browser_result_20261013.json):
+acceptance OK,SCORM opens,different accounts work. Requested brief production
+browser scope accepted;combined upgrade/repeat/cron/HDD/browser patch handoff CLOSED.
+No repeat commands or browser cycle without a new error. Exact account/role IDs,
+write/full-addon/actual production-restore acceptance not inferred. Next
+[read-only host OS preparation](host_os_preflight_20261013.md),then HTTPS.
+
 [Owner cron/HDD status](production_patch_post_switch_status_result_20261013.json)
 received13Oct04:08MSK:cron scheduled04:07MSK exit0,1.175s,new_failures empty,
 USTAR error counters0,schedule/container binding match. HDD03:30MSK completed

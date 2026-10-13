@@ -867,3 +867,20 @@ closed. No browser statement/screenshots supplied;only brief real authenticated
 production UI confirmation remains. No repeat server command/status/install/upgrade/
 stage operation. Next selected OS/HTTPS work after this brief confirmation.
 Source/helper/application/frontend unchanged;context evidence-only follow-up.
+
+
+## 13Oct04:14MSK production browser accepted; patch closed,OS read-only handoff next
+
+Owner explicit browser acceptance OK,SCORM opens,different accounts work;answers
+preceding short login/home/existing content/progress/tasks/team/HR checks. [Receipt](../runtime/production_patch_browser_result_20261013.json)
+records owner scope,not exact named roles/full write/all-addon/restore coverage.
+Moodle518 acceptance closed with prior production upgrade/repeat/cron/HDD proof.
+INF-08/INF-09 accepted in the delivered patch/native matrix scopes. No repeat
+upgrade/status/stage/browser cycle. INF-10-OS starts with read-only metadata and
+cached-index APT simulation,not installation or reboot. [Handoff](../runtime/host_os_preflight_20261013.md).
+Commands syntax/dpkg placeholder quoting verified locally;actual server output
+pending. Ubuntu primary docs confirm simulation semantics and24.04 service restart
+behavior;no unsupported blanket no-restart promise for later installation. Shared
+recovery/restart plan prepared only after package/service observations. Console
+access previously confirmed,no repeat permission question. Application/helper source
+unchanged;context follow-up only. Then selected HTTPS;broader security tasks deferred.

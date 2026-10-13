@@ -1,5 +1,12 @@
 # Production Moodle5.1.8 paired deployment transaction
 
+[Owner browser13Oct04:14MSK](production_patch_browser_result_20261013.json):
+acceptance OK,SCORM opens,different accounts work. Requested brief production
+browser scope accepted;combined upgrade/repeat/cron/HDD/browser patch handoff CLOSED.
+No repeat commands or browser cycle without a new error. Exact account/role IDs,
+write/full-addon/actual production-restore acceptance not inferred. Next
+[read-only host OS preparation](host_os_preflight_20261013.md),then HTTPS.
+
 [Post-switch cron/HDD](production_patch_post_switch_status_result_20261013.json)
 owner13Oct04:08MSK PASS:scheduled cron04:07MSK exit0/no new or USTAR errors,
 HDD03:30MSK complete/success/exit0/no recovery marker,next14Oct03:30MSK. Existing

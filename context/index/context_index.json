@@ -606,8 +606,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 1919,
-      "sha256": "4edb4851cbd818776aa4da1719cfb70783ea0f6f721eb31245d0e16030e4b952"
+      "size": 1921,
+      "sha256": "09b6416af9ab27670ccb4faf2c524b76dfa4d54cec2dd27c53250b75c6095901"
     },
     {
       "path": "context/releases/ADAPTATION_RESET_20261002_RU.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 26273,
-      "sha256": "2983a33f411263032c4d20fa4a4248ede411945d262e414733cd5fda8f5b1dd5"
+      "size": 26870,
+      "sha256": "2c344076ad3d3db1ebc6b87b10a99b37ac88bd4df0ce7a4a9f4e4fd5df1ba41a"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 82631,
-      "sha256": "797a6889fdf059c6f1a94a1a8594d57978afa4c31320a171e29992ed4b078ca4"
+      "size": 83869,
+      "sha256": "60d7dc8ab5eaaad8efca9bcf03fc48c537715c8de3d6f557972255f48ce6a613"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 34801,
-      "sha256": "b2eee8993f2948f4c549dd350f9a286f13b9f5f0ac8280cf88e4031279c15a1b"
+      "size": 35118,
+      "sha256": "f4855744c92dd93d634b841aed42f38e07bd3be32a55fe63e31ac35704437fa7"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -810,8 +810,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 38946,
-      "sha256": "a97c1f36795ab7fa2512fc285b3e9b9e2954b757c421cb7a80ea206b26245d71"
+      "size": 39417,
+      "sha256": "41c01deb466a8aad9cf1df9e198d165cb0b16e038b41f4cf70a75e8ce9083903"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -908,6 +908,12 @@
       "domain": "runtime",
       "size": 12638,
       "sha256": "c671dbd56bb6834e5daf5648c971cec3c77a8940bef5d72e55a02f66c381b9d7"
+    },
+    {
+      "path": "context/runtime/host_os_preflight_20261013.md",
+      "domain": "runtime",
+      "size": 4136,
+      "sha256": "a526727f177363c8961ccc59116743306d54095466db67251d5f6290c30f6785"
     },
     {
       "path": "context/runtime/lab_cold_checkpoint_20261005.md",
@@ -1156,6 +1162,12 @@
       "sha256": "540af9e98234ada3d5d08fde7b4810c6a8646609b5b3581ee3187324c3ce8927"
     },
     {
+      "path": "context/runtime/production_patch_browser_result_20261013.json",
+      "domain": "runtime",
+      "size": 1625,
+      "sha256": "6dac2dcd1ee241fb311ec048800753b7adb83ebcd1084051c47ade005cf031f3"
+    },
+    {
       "path": "context/runtime/production_patch_candidate_20261012.md",
       "domain": "runtime",
       "size": 6716,
@@ -1188,8 +1200,8 @@
     {
       "path": "context/runtime/production_patch_post_switch_20261013.md",
       "domain": "runtime",
-      "size": 3426,
-      "sha256": "1b75e974dbe8f17e9206d9a90da891e5049566c1d96291acf9410058acd94580"
+      "size": 3897,
+      "sha256": "d32d2683111281001e2cb5a39ad12371ab1a78b01af7446687b1ec09c690c818"
     },
     {
       "path": "context/runtime/production_patch_post_switch_status_result_20261013.json",
@@ -1242,8 +1254,8 @@
     {
       "path": "context/runtime/production_patch_upgrade_20261012.md",
       "domain": "runtime",
-      "size": 10483,
-      "sha256": "e3271ff27eac4527539a0e5571b346cce0a32923d6849e15c5160c058837f813"
+      "size": 10954,
+      "sha256": "aba2df93fb346440a60e475b874ddedfe6f6d2ec313dd2236f68aac6e90e8beb"
     },
     {
       "path": "context/runtime/production_patch_upgrade_result_20261013.json",
@@ -1392,8 +1404,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 19323,
-      "sha256": "a96f19c9d8cd2f73c316155817011621d9698de76964a4dfd8b326d5e3e3b847"
+      "size": 20000,
+      "sha256": "ec37112d47a659e1cc0bd928de2cefe5249d862b1769b3c486f827fcf305b12a"
     },
     {
       "path": "context/tasks/backlog.yaml",

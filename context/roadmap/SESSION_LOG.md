@@ -555,3 +555,24 @@ No production services involved. Context38415153882 PASS;review38415153492 main
 frontend audit failed/source PHP8.2/8.3 succeeded;DB/rollback/full gate skipped,full PR green not claimed.
 Application/frontend/AppArmor helper bytes/maps unchanged. New-r3 handoff follows;
 server r3/archive/install/reboot pending,accepted AppArmor/518 stay closed.
+
+
+## 2026-10-14 — r3 resume-required incident and guarded runtime recovery fix
+
+Owner01:09:16MSK installed94488652/5d69566b hash PASS,r3 invocationd13be599.
+22:07:20.494589..25.039277UTC marker resume_required/CONTAINER_IDENTITY_DRIFT,
+unit failed/exit1/PID0. Original runtime resumption not confirmed;copy phase not
+reached by source. No package/reboot. Priority runtime recovery,not new capture.
+
+Source `2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389`,SHA `4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2` fixes a source bug in ordered mount-array
+identity comparison. Complete records/duplicates and exact IDs/images remain
+required;real differences block container operations. Failed recover now saves
+only changed-field names in SSD marker/status. Actual incident cause unknown;
+reordering is a supported hypothesis,not server evidence. Recovery starts only
+original runtime/policies and performs no archive/file/DB restore or new stop.
+34 local root fixtures and Ubuntu run38476723475/job115569100844 34 model/file
+plus2 real systemd cases/no skips PASS;log summaries read. Context38476723506 and
+source8.2/8.3 in38476723495 PASS;unchanged main frontend audit failure/full gate
+skipped. Docker recovery simulated;native units are isolated sleep-only fixtures.
+App/frontend/AppArmor bytes unchanged. Owner guarded resume execution pending;
+backup/host install/reboot remain deferred until runtime recovered.

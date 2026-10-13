@@ -10,7 +10,71 @@ no password change or disclosure is needed for this file-level cold capture.
 ISPConfig missing-or-link remains unresolved;absence does not authorize removal.
 Prior AppArmor/Moodle518/cron/HDD/browser acceptance stays closed.
 
-## Current owner diagnostic17:26MSK and accepted source correction
+## Current owner14Oct01:09MSK: r3 resume required; restore runtime first
+
+[Owner r3 receipt](host_cold_recovery_result_20261013.json):verified94488652,
+5d69566b installed,r3 invocationd13be599,22:07:20..25UTC,phase resume_required,
+failure CONTAINER_IDENTITY_DRIFT,unit failed/exit1/MainPID0. Original runtime
+resumption is unverified. Source places this failure in container metadata
+comparison before archive copy. Do not run capture or package installation.
+
+Source bug:raw mount array order was treated as identity. Corrected resume helper
+`2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389`,SHA256
+`4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2`
+compares whole mount records independent of order,retaining duplicates and
+source/destination/type/RW plus exact IDs/images/inventory. It does not waive
+real differences. Actual r3 changed fields remain unknown until new resume
+receipt. Real changes prevent container operations and persist only field names
+in `resume_identity_differences`;shared services are still attempted. Recover
+uses existing SSD marker and restores only original runtime/policies. No file,
+DB,archive restore,copy,package operation,reboot or extra service stop occurs.
+
+34 local root fixtures PASS;exact Ubuntu24.04 run38476723475/job115569100844
+passes34 file/model +2 actual systemd tests,no skips;both summaries inspected.
+Tests include reordered mounts/full original-ID resume,real mount/ID/image
+refusal and persistence of failure diagnostics with untouched data. Docker
+recovery is modeled;native systemd tests use isolated sleep-only units. Context
+38476723506 and source PHP8.2/8.3 in38476723495 PASS;unchanged frontend audit fails,
+DB/rollback/full gate skip. Previous capture commands below are historical,
+not the next action. Current urgent action is the guarded resume handoff.
+
+### Urgent original-runtime resume commands
+
+The failed capture unit has MainPID0. Execute separate commands. This recovery
+uses the existing SSD marker,shared locks and original identities/policies;
+it starts original services/containers and performs no stop,capture or data restore.
+Use a new systemd unit so SSH loss does not interrupt recovery.
+
+```bash
+sudo -v
+```
+
+```bash
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389/scripts/infra/host_cold_recovery.py -o /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py
+```
+
+```bash
+printf '%s  %s\n' 4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2 /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict - && sudo -n install -m 600 -o root -g root /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py
+```
+
+```bash
+sudo -n systemd-run --unit=ustar-host-recovery-20261014-resume-r3 --service-type=exec --property=RemainAfterExit=yes --property=RuntimeMaxSec=2h --property=TimeoutStopSec=10min --property=UMask=0077 /bin/bash -c 'set -euo pipefail; printf "%s  %s\n" 4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2 /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict -; exec /usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --resume-services'
+```
+
+```bash
+sudo -n python3 -I -B /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --status
+```
+
+```bash
+sudo -n systemctl show ustar-host-recovery-20261014-resume-r3.service -p ActiveState -p SubState -p Result -p ExecMainStatus -p MainPID --no-pager
+```
+
+Successful recovery is services_resumed=true and phase=failed_resumed,with
+service Result=success/ExecMainStatus0;the failed capture stays a failed capture.
+If resume_required persists,read resume_identity_differences and current unit
+metadata;do not restart capture or waive real identity changes.
+
+## Previous owner diagnostic17:26MSK and accepted source correction
 
 [Reviewed owner metadata](host_cold_recovery_result_20261013.json) confirms
 successful stop jobs and systemd UNIT_SUCCESS for amavis,Apache,caddy and cron.

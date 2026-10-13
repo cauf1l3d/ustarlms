@@ -61,7 +61,7 @@
     "failed_service_and_past_stop_metadata": "cron.service inferred from stop sequence;past ExecMainCode/Status not recorded",
     "next_step": "read_only_service_exit_metadata_no_new_outage_or_capture"
   },
-  "next_retry_ready": true,
+  "next_retry_ready": false,
   "initial_resume_absence_scope": "previous configfs preflight refusal only;latest attempt reports services_resumed=true",
   "service_stop_diagnostic": {
     "received_at": "2026-10-13T14:26:12+00:00",
@@ -266,5 +266,35 @@
   "next_retry_implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
   "next_retry_helper_sha256": "944886527998f428a86c835817525cd1da92511348ccf276ebf0933ce1561c54",
   "next_retry_unit": "ustar-host-recovery-20261013-r3.service",
-  "next_retry_executed": false
+  "next_retry_executed": true,
+  "r3_attempt": {
+    "received_at": "2026-10-13T22:09:16+00:00",
+    "implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
+    "helper_sha256": "944886527998f428a86c835817525cd1da92511348ccf276ebf0933ce1561c54",
+    "installed_hash_check": "PASS",
+    "unit": "ustar-host-recovery-20261013-r3.service",
+    "invocation_id": "d13be599a48b44c5acc780fb1224fd0a",
+    "phase": "resume_required",
+    "started_at": "2026-10-13T22:07:20.494589+00:00",
+    "updated_at": "2026-10-13T22:07:25.039277+00:00",
+    "run_directory": "/srv/ustar-storage/host-recovery-20261013T220720Z-bf8f14a3",
+    "failure_code": "CONTAINER_IDENTITY_DRIFT",
+    "services_resumed_verified": false,
+    "unit_result": {
+      "MainPID": 0,
+      "Result": "exit-code",
+      "ExecMainStatus": 1,
+      "ActiveState": "failed",
+      "SubState": "failed"
+    },
+    "package_install_or_reboot": false,
+    "copy_not_reached_source_phase_inference": true,
+    "actual_changed_container_fields": "UNKNOWN"
+  },
+  "next_action": "guarded_original_runtime_resumption_only_no_capture_install_or_reboot",
+  "resume_helper_implementation_commit": "2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389",
+  "resume_helper_sha256": "4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2",
+  "resume_execution_verified": false,
+  "mount_order_bug_found_in_source": true,
+  "mount_order_is_actual_r3_cause": "UNVERIFIED"
 }

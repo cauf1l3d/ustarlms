@@ -226,14 +226,13 @@ tasks:
   - context/runtime/host_packages_result_20261013.json
   - context/runtime/host_cold_recovery_result_20261013.json
   current_checkpoint: >-
-    Owner13Oct1726MSK success jobs/UNIT_SUCCESS through cron;source sequence
-    localizes r2 guard refusal to cron,past numeric status unrecorded,current14
-    units active/success. Source5d69566b distinguishes exit0/configured SIGTERM,
-    retains hard-kill/error/state/PID guards and exact failure receipt.29 local
-    plus Ubuntu29 file/model+2 actual systemd tests/no skips PASS. Updated helper
-    and new-r3 unit next;archive/install/reboot pending,AppArmor/518 accepted.
-    APT38 upgrades/25new/no removals,147 candidate/139 running/146 retained;
-    53/PG17+ follows OS.
+    Owner14Oct0109MSK r3 resume_required/CONTAINER_IDENTITY_DRIFT,unit failed/PID0,
+    original runtime resumption unverified. No capture/install/reboot;guarded
+    runtime resume first. Source2766a1a9/SHA4bf199c1 fixes mount array ordering,
+    retains actual ID/image/full-mount refusal,and persists changed-field
+    diagnostics.34 local +Ubuntu34 model/file+2 real systemd/no skips PASS.
+    Actual r3 cause unverified;AppArmor/518 remain accepted,host update deferred
+    until runtime recovered and new archive accepted.
 - id: INF-10
   title: SSH/firewall/MFA и политики нужных служб общего хоста
   status: planned

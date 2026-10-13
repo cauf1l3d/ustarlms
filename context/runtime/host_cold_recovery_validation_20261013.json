@@ -1,23 +1,23 @@
 {
   "kind": "host_cold_recovery_source_validation",
-  "implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
-  "local_commit": "72047f0450543d02809bb1ae6feebeed555411a7",
-  "source_tree": "661f7d808448b77b682ff9c16ea6f5553b2a16fc",
-  "helper_sha256": "944886527998f428a86c835817525cd1da92511348ccf276ebf0933ce1561c54",
+  "implementation_commit": "2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389",
+  "local_commit": "b9b997c00e2522d4d7b613527cfffdf8e74e9999",
+  "source_tree": "56e2df25f5c6610e884ad138659fb31c83190468",
+  "helper_sha256": "4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2",
   "remote_raw_bytes_matching": true,
   "local_root_suite": {
-    "tests": 29,
+    "tests": 34,
     "result": "PASS",
     "skips": 0,
     "native_systemd_not_run_locally": "scratch PID1 is not systemd"
   },
   "Ubuntu_24_04_root_fixture_CI": {
-    "run_id": 38415153155,
-    "job_id": 115357515006,
+    "run_id": 38476723475,
+    "job_id": 115569100844,
     "result": "success",
-    "file_control_model_tests": 29,
+    "file_control_model_tests": 34,
     "real_systemd_tests": 2,
-    "total_tests": 31,
+    "total_tests": 36,
     "skips": 0,
     "both_log_test_summaries_verified": true
   },
@@ -32,11 +32,11 @@
     "native_systemd_SIGKILL_success_override_refused"
   ],
   "context_CI": {
-    "run_id": 38415153882,
+    "run_id": 38476723506,
     "result": "success"
   },
   "review_CI": {
-    "run_id": 38415153492,
+    "run_id": 38476723495,
     "source_PHP82_PHP83": "success",
     "unchanged_frontend_npm_audit": "failure",
     "frontend_build_HTTP_DB_rollback_full_gate": "skipped",
@@ -45,7 +45,7 @@
   "production_execution": false,
   "full_host_boot_restore_verified": false,
   "application_source_and_AppArmor_helper_unchanged": true,
-  "supersedes_implementation_commit": "cf78962183a98c49eb05241e5db5913cdda10471",
+  "supersedes_implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
   "mount_preflight_regressions": [
     "observed_configfs_only_inside_excluded_sys",
     "configfs_other_location_refused",
@@ -61,5 +61,12 @@
     "command_failure_records_unit",
     "selected_metadata_no_environment_leak",
     "failure_marker_exact_unit_resume_before_copy"
+  ],
+  "mount_identity_regressions": [
+    "order_only_not_identity",
+    "whole_record_fields_and_duplicates_preserved",
+    "reordered_mounts_resume_original_IDs_and_policies",
+    "real_identity_change_blocks_replacement",
+    "failed_recovery_diagnostic_persisted_without_data_restore"
   ]
 }

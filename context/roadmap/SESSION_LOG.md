@@ -436,3 +436,30 @@ Native/app trees unchanged,current-main base c53723c maintained. Dedicated test
 uses Q/K and simulated service/Docker operations;it does not load server policies
 or prove Snap/LXD business functionality. The root-pinned --repair command is now
 ready;actual server repair/package/reboot evidence remains pending.
+
+
+## 13Oct14:24MSK actual AppArmor repair PASS; refreshed package/boot/recovery plan next
+
+Owner verified download and installed helper570986e4 from exact3a3ef0f3,then
+--repair PASS/complete. [Receipt](../runtime/host_apparmor_result_20261013.json):
+one optional include,originala308e931/root0:0/0644/dev2050/inode3151055/mtime retained
+privately,corrected93e1813e,AppArmor start/active/success and Snap parent/namespace
+helper enforce;prior kernel labels,Docker enforcement/IDs/images/restart counts
+and selected Snap unit states preserved. No package/Moodle/DB/Snap/Docker mutation
+in this repair;full Snap/LXD runtime not claimed. Targeted AppArmor acceptance
+closed,no repeated helper/status/browser/core/stage cycle.
+
+[Next handoff](../runtime/host_packages_handoff_20261013.md):refresh catalog with
+error-on-any then simulate;read boot kernel/package/GRUB selection/image paths/
+free space/selected shared recovery logical sizes and capped session-read-only
+MariaDB system/aggregate engine metadata. Read only selected Dovecot storage
+settings,Docker daemon live-restore and container name/status metadata. No package
+install/remove,reboot,boot changes,service restart or DB business data query.
+Catalog update writes APT metadata/executes existing update hooks;not falsely
+labelled filesystem-read-only. Commands bash-n and primary API/flag semantics
+checked;actual output pending. Conventional dirs/global mail templates do not
+prove all configured roots;no raw live MariaDB copy offered as coherent recovery.
+Next concrete version set/private coherent shared recovery/service window comes
+from output. Console authorization already confirmed;no repeated initial question.
+Prior518 acceptance and latest53/PG17+ after OS goal preserved. Source/helper/tests/
+workflow/native/frontend unchanged;context/evidence-only PR100 continuation.

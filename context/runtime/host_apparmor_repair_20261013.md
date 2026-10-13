@@ -1,3 +1,10 @@
+[Owner14:24MSK actual repair PASS](host_apparmor_result_20261013.json):corrected
+93e1813e,AppArmor active/success,Docker enforcement/identities/images/restart counts
+and selected Snap units preserved. Targeted repair CLOSED;no rerun without a new
+error. [Next package/boot/shared recovery planning](host_packages_handoff_20261013.md).
+Descriptions below retain source/validation/pre-execution history;server execution
+is now accepted in the stated one-profile scope. Full Snap runtime remains unclaimed.
+
 # Pinned AppArmor include repair
 
 Owner [13Oct13:18MSK observation](host_apparmor_observation_20261013.json) confirms
@@ -73,7 +80,7 @@ After separate `sudo -v`,a root shell rechecks the installed SHA256 before invok
 file. This task's reviewed helper SHA256 is
 `570986e4cd2199945b705eb280cb183339d9d6ba71d15ad788b09aca5579b225`.
 Reviewed implementation commit `3a3ef0f3c5df8355822af76feb6fa62b2553fdfc`;server execution
-of this repair is still pending. Existing host maintenance authorization covers
+of this repair passed in the owner result above. Existing host maintenance authorization covers
 the targeted reversible fix;no repeat generic permission request is needed.
 
 ## Validation and next work

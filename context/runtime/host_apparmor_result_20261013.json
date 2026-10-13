@@ -1,0 +1,40 @@
+{
+  "kind": "owner_host_AppArmor_repair_execution_result",
+  "received_at": "2026-10-13T14:24:02+03:00",
+  "measured_at": null,
+  "independently_measured_by_agent": false,
+  "implementation_commit": "3a3ef0f3c5df8355822af76feb6fa62b2553fdfc",
+  "installed_helper_sha256": "570986e4cd2199945b705eb280cb183339d9d6ba71d15ad788b09aca5579b225",
+  "download_and_installed_helper_SHA_checks": "PASS_operator_output",
+  "result": "PASS",
+  "phase": "complete",
+  "original_sha256": "a308e9311c95af4d8df14fd04491d27692dd530994c2297c276f3a76a40de86c",
+  "corrected_sha256": "93e1813e77614f3d1f60455ebf40733820fe1038eacabe14ff682a280438df9e",
+  "original_file_metadata": {
+    "uid": 0,
+    "gid": 0,
+    "mode_decimal": 420,
+    "mode_octal": "0644",
+    "device": 2050,
+    "inode": 3151055,
+    "mtime_ns": 1605804662000000000
+  },
+  "live_file_replaced": true,
+  "AppArmor_action": "start",
+  "original_profile": "/var/lib/ustar-host-apparmor-20261013/original.profile",
+  "full_Snap_LXD_runtime_verified": false,
+  "candidate_compile": "PASS",
+  "AppArmor_active_success": true,
+  "prior_kernel_profile_labels_preserved": true,
+  "docker_default_enforce": true,
+  "container_identities_images_and_restart_counts_preserved": true,
+  "selected_Snap_units_preserved": true,
+  "loaded_snap_confine_profile_names": [
+    "/usr/lib/snapd/snap-confine",
+    "/usr/lib/snapd/snap-confine//mount-namespace-capture-helper"
+  ],
+  "packages_Moodle_database_Snap_or_Docker_mutations": false,
+  "targeted_AppArmor_repair_acceptance": "CLOSED_do_not_repeat_without_new_error",
+  "package_catalog_update_install_or_reboot_in_this_result": false,
+  "next_step": "refresh_APT_catalog_then_simulate_and_read_boot_shared_storage_metadata_before_exact_recovery_restart_plan"
+}

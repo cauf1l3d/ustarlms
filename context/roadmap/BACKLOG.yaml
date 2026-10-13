@@ -219,15 +219,18 @@ tasks:
   - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  handoff: context/runtime/host_apparmor_repair_20261013.md
+  handoff: context/runtime/host_packages_handoff_20261013.md
   runtime_evidence:
   - context/runtime/host_apparmor_observation_20261013.json
+  - context/runtime/host_apparmor_result_20261013.json
   current_checkpoint: >-
-    Owner13Oct1318MSK missing Snap include confirmed;LXD socket and Snap mounts
-    retained,not unused. One conditional include helper backed by real file
-    transaction tests and mandatory isolated Ubuntu parser CI. Repair/OS install/
-    reboot not executed. Prior accepted518 receipts copied without raw config;
-    no repeat core/stage/browser cycle required.
+    Owner13Oct1424MSK AppArmor repair PASS,one conditional include and exact
+    private original retained;unit active/success,new Snap profiles enforce,
+    prior kernel labels,Docker images/IDs/restart counts and selected Snap
+    units preserved. Targeted repair closed,full Snap runtime not inferred.
+    Next fresh APT catalog/simulation and boot/shared data-path metadata to
+    prepare exact package/recovery/window plan. OS install/reboot pending;
+    accepted Moodle518/stage/browser tests not repeated.
 - id: INF-10
   title: SSH/firewall/MFA и политики нужных служб общего хоста
   status: planned

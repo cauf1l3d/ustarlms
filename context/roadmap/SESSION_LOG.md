@@ -531,3 +531,27 @@ resume. Current post-resume metadata must not be presented as past exit proof.
 Helper/application bytes unchanged;no repeated tests needed. Prior22 exact
 source fixture checks remain dated source evidence,not this server acceptance.
 INF-10-OS remains active;AppArmor/Moodle518 acceptance closed,53/PG17+ after OS.
+
+
+## 2026-10-13 — cron guard localization and native systemd shutdown coverage
+
+Uploaded17:26:12MSK terminal metadata read fully. Stop jobs done and UNIT_SUCCESS
+7ad2d189 for amavis/Apache/caddy/cron;source sequence localizes refusal to cron.
+Past numeric exit/signal status absent;current14 units active/success and cron
+simple/KillSignal15 are resume/policy evidence only. Raw upload remains private.
+The previous guard demanded ExecMainStatus0 without ExecMainCode semantics.
+
+Implementation `5d69566b19a0a85a597eafc79cda24b4851c2800`,SHA `944886527998f428a86c835817525cd1da92511348ccf276ebf0933ce1561c54`,local72047f0/tree661f7d80. Unit reads add
+main exit code/PID/type/KillSignal;stop receipts admit exit0/no-main or configured
+SIGTERM on daemon type only with inactive/dead/MainPID0/Resultsuccess. Hardkill,
+core,timeout,OOM,nonzero exit,wrong state/main PID still refuse,including Docker/
+containerd. Failures retain unit and selected metadata in SSD marker/public status;
+finally service resume persists it. No raw environment/config/command emission.
+
+29 local root tests PASS. Exact Ubuntu24.04 run38415153155/job115357515006 passes
+29 file/model plus2 actual systemd sleep-only unit cases,no skips;both summaries
+inspected. Real SIGTERM accepted;SIGKILL refused even with systemd success override.
+No production services involved. Context38415153882 PASS;review38415153492 main
+frontend audit failed/source PHP8.2/8.3 succeeded;DB/rollback/full gate skipped,full PR green not claimed.
+Application/frontend/AppArmor helper bytes/maps unchanged. New-r3 handoff follows;
+server r3/archive/install/reboot pending,accepted AppArmor/518 stay closed.

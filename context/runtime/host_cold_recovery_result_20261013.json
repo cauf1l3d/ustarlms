@@ -58,9 +58,213 @@
     "package_install_or_reboot": false,
     "archive_copy_not_started_source_phase_inference": true,
     "container_stop_phase_not_reached_source_phase_inference": true,
-    "failed_service_and_past_stop_metadata": "UNKNOWN",
+    "failed_service_and_past_stop_metadata": "cron.service inferred from stop sequence;past ExecMainCode/Status not recorded",
     "next_step": "read_only_service_exit_metadata_no_new_outage_or_capture"
   },
-  "next_retry_ready": false,
-  "initial_resume_absence_scope": "previous configfs preflight refusal only;latest attempt reports services_resumed=true"
+  "next_retry_ready": true,
+  "initial_resume_absence_scope": "previous configfs preflight refusal only;latest attempt reports services_resumed=true",
+  "service_stop_diagnostic": {
+    "received_at": "2026-10-13T14:26:12+00:00",
+    "source": "owner_uploaded_terminal_metadata",
+    "uploaded_name": "\u0412\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442(20261013-142524).txt",
+    "uploaded_sha256": "f5c681a1e0d4dbcd01fd74fd39e1cbdcd32a05f76e265dfc4b1b0ea1c96ca239",
+    "failure_code": "SERVICE_UNCLEAN_STOP",
+    "service_stop_order": [
+      "amavis.service",
+      "apache2.service",
+      "caddy.service",
+      "containerd.service",
+      "cron.service",
+      "docker.service",
+      "dovecot.service",
+      "mariadb.service",
+      "memcached.service",
+      "named.service",
+      "postfix.service",
+      "postfix@-.service",
+      "postgrey.service",
+      "spamd.service"
+    ],
+    "confirmed_successful_stop_jobs": [
+      "amavis.service",
+      "apache2.service",
+      "caddy.service",
+      "cron.service"
+    ],
+    "systemd_UNIT_SUCCESS_message_id": "7ad2d189f7e94e70a38c781354912448",
+    "success_events_for": [
+      "amavis.service",
+      "apache2.service",
+      "caddy.service",
+      "cron.service"
+    ],
+    "failed_guard_unit_inferred": "cron.service",
+    "inference_basis": "cron is last confirmed successful stop before source switches to resume;containerd/docker are skipped until after container stop",
+    "past_ExecMainCode_and_ExecMainStatus_recorded": false,
+    "past_SIGTERM_not_independently_observed": true,
+    "current_units_active_success": true,
+    "current_unit_count": 14,
+    "current_service_metadata_after_resume": [
+      {
+        "Type": "simple",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "amavis.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "forking",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "apache2.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "notify",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "caddy.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "notify",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "containerd.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "simple",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "cron.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "notify",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "docker.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "notify",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "dovecot.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "notify",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "mariadb.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "simple",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "memcached.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "notify",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "named.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "oneshot",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "1",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "postfix.service",
+        "ActiveState": "active",
+        "SubState": "exited"
+      },
+      {
+        "Type": "forking",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "postfix@-.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "simple",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "postgrey.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      {
+        "Type": "simple",
+        "SuccessExitStatus": "",
+        "Result": "success",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "KillSignal": "15",
+        "Id": "spamd.service",
+        "ActiveState": "active",
+        "SubState": "running"
+      }
+    ],
+    "current_properties_are_not_past_shutdown_proof": true,
+    "raw_MESSAGE_configuration_or_environment_emitted": false
+  },
+  "next_retry_implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
+  "next_retry_helper_sha256": "944886527998f428a86c835817525cd1da92511348ccf276ebf0933ce1561c54",
+  "next_retry_unit": "ustar-host-recovery-20261013-r3.service",
+  "next_retry_executed": false
 }

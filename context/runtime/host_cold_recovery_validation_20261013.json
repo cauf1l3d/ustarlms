@@ -1,37 +1,42 @@
 {
   "kind": "host_cold_recovery_source_validation",
-  "implementation_commit": "cf78962183a98c49eb05241e5db5913cdda10471",
-  "local_commit": "629d8973902ce9fa054688c0690381785940d1a8",
-  "source_tree": "aa7880f3529c311e245712b8860b72945ca7b7e2",
-  "helper_sha256": "00b15bc193db34cd12e06f27be5d63c512c766428de9053c0186b374a6becb7b",
+  "implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
+  "local_commit": "72047f0450543d02809bb1ae6feebeed555411a7",
+  "source_tree": "661f7d808448b77b682ff9c16ea6f5553b2a16fc",
+  "helper_sha256": "944886527998f428a86c835817525cd1da92511348ccf276ebf0933ce1561c54",
   "remote_raw_bytes_matching": true,
   "local_root_suite": {
-    "tests": 22,
+    "tests": 29,
     "result": "PASS",
-    "skips": 0
+    "skips": 0,
+    "native_systemd_not_run_locally": "scratch PID1 is not systemd"
   },
   "Ubuntu_24_04_root_fixture_CI": {
-    "run_id": 38407989890,
-    "job_id": 115332541993,
+    "run_id": 38415153155,
+    "job_id": 115357515006,
     "result": "success",
-    "tests": 22,
+    "file_control_model_tests": 29,
+    "real_systemd_tests": 2,
+    "total_tests": 31,
     "skips": 0,
-    "log_test_summary_verified": true
+    "both_log_test_summaries_verified": true
   },
-  "service_control_in_tests": "simulated_no_real_Docker_or_systemd_changes",
+  "service_control_in_tests": "29 file/model tests plus2 actual root sleep-only systemd unit tests in Ubuntu CI;no production services",
   "real_fixture_operations": [
     "GNU_tar_sparse_hardlink_xattr_copy_and_restore",
     "private_atomic_files_symlink_refusal",
     "separate_process_POSIX_APT_lock_refusal",
     "archive_corruption_and_missing_protected_file_refusal",
-    "capture_and_failure_service_resume_markers"
+    "capture_and_failure_service_resume_markers",
+    "native_systemd_SIGTERM_success_accepted",
+    "native_systemd_SIGKILL_success_override_refused"
   ],
   "context_CI": {
-    "run_id": 38407990439,
+    "run_id": 38415153882,
     "result": "success"
   },
   "review_CI": {
-    "run_id": 38407988735,
+    "run_id": 38415153492,
     "source_PHP82_PHP83": "success",
     "unchanged_frontend_npm_audit": "failure",
     "frontend_build_HTTP_DB_rollback_full_gate": "skipped",
@@ -40,7 +45,7 @@
   "production_execution": false,
   "full_host_boot_restore_verified": false,
   "application_source_and_AppArmor_helper_unchanged": true,
-  "supersedes_implementation_commit": "2d1b25029ac1949117b205aaa2d52565af0ba387",
+  "supersedes_implementation_commit": "cf78962183a98c49eb05241e5db5913cdda10471",
   "mount_preflight_regressions": [
     "observed_configfs_only_inside_excluded_sys",
     "configfs_other_location_refused",
@@ -48,5 +53,13 @@
     "persistent_child_still_traversed_and_refused",
     "additional_persistent_storage_refused"
   ],
-  "previous_owner_preflight_failure": "context/runtime/host_cold_recovery_result_20261013.json"
+  "previous_owner_preflight_failure": "context/runtime/host_cold_recovery_result_20261013.json",
+  "service_stop_regressions": [
+    "SIGTERM_signal_distinct_from_exit_code15",
+    "hard_kill_core_timeout_OOM_wrong_state_PID_refused",
+    "Docker_daemon_checks_same_clean_policy",
+    "command_failure_records_unit",
+    "selected_metadata_no_environment_leak",
+    "failure_marker_exact_unit_resume_before_copy"
+  ]
 }

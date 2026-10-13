@@ -1,0 +1,29 @@
+name: Host cold recovery files and control fixtures
+
+on:
+  pull_request:
+    paths:
+      - scripts/infra/host_cold_recovery.py
+      - tests/r16/test_host_cold_recovery.py
+      - .github/workflows/host-cold-recovery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-files-and-service-control:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Temporary root files, real tar and locks; simulated services
+        run: >-
+          sudo -n env USTAR_REQUIRE_HOST_RECOVERY_ROOT=1
+          "$(command -v python)" -B -m unittest
+          tests.r16.test_host_cold_recovery -v

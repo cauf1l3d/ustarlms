@@ -61,7 +61,7 @@
     "failed_service_and_past_stop_metadata": "cron.service inferred from stop sequence;past ExecMainCode/Status not recorded",
     "next_step": "read_only_service_exit_metadata_no_new_outage_or_capture"
   },
-  "next_retry_ready": false,
+  "next_retry_ready": true,
   "initial_resume_absence_scope": "previous configfs preflight refusal only;latest attempt reports services_resumed=true",
   "service_stop_diagnostic": {
     "received_at": "2026-10-13T14:26:12+00:00",
@@ -263,10 +263,10 @@
     "current_properties_are_not_past_shutdown_proof": true,
     "raw_MESSAGE_configuration_or_environment_emitted": false
   },
-  "next_retry_implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
-  "next_retry_helper_sha256": "944886527998f428a86c835817525cd1da92511348ccf276ebf0933ce1561c54",
-  "next_retry_unit": "ustar-host-recovery-20261013-r3.service",
-  "next_retry_executed": true,
+  "next_retry_implementation_commit": "99b3e0dc40554f5769b50e338e54d748789ebf93",
+  "next_retry_helper_sha256": "962a75d0c1d0f69c92efdb37fa52d8d986e81730cb39984f09d49fedc7189e40",
+  "next_retry_unit": "ustar-host-recovery-20261014-r5.service",
+  "next_retry_executed": false,
   "r3_attempt": {
     "received_at": "2026-10-13T22:09:16+00:00",
     "implementation_commit": "5d69566b19a0a85a597eafc79cda24b4851c2800",
@@ -291,7 +291,7 @@
     "copy_not_reached_source_phase_inference": true,
     "actual_changed_container_fields": "UNKNOWN"
   },
-  "next_action": "validate_failure_diagnostics_and_bounded_full_manifest_rescan_before_new_capture",
+  "next_action": "authorized_r5_capture_with_verified_diagnostics_helper",
   "resume_helper_implementation_commit": "2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389",
   "resume_helper_sha256": "4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2",
   "resume_execution_verified": true,

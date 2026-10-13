@@ -31,7 +31,53 @@ errors still refuse. Post-copy source equality/archive verification never
 retry or skip entries. This is bounded transient-path handling and improved
 evidence,not proof that the unknown owner failure is fixed.
 
-Local41 tests PASS. Exact Ubuntu CI/publication/new server capture pending.
+Exact implementation 99b3e0dc40554f5769b50e338e54d748789ebf93,SHA256
+962a75d0c1d0f69c92efdb37fa52d8d986e81730cb39984f09d49fedc7189e40.
+Local41 root tests PASS;Ubuntu24.04 run38484018659/job115593190536 passes
+41 file/control cases +2 actual isolated systemd cases,no skips;both summaries
+read. Context38484018640 PASS. Whole PR is not green:frontend audit fails on
+unchanged dependencies and broad PHP review is still running at this receipt.
+Initial non-root diagnostic-test assumptions were corrected;root safety checks
+remain intact. Published helper bytes and source tree match local.
+Server execution of this revision and completed archive remain pending.
+
+### Current next capture r5
+
+The owner has already authorized the maintenance/capture;original services
+are restored. Use separate commands. This will pause selected services for
+copying and resume them before archive readback. Exact failure mechanism on
+r4 is not proven;new code records it if it recurs. The one complete pre-copy
+rescan does not ignore missing required paths or weaken final integrity checks.
+
+```bash
+sudo -v
+```
+
+```bash
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/99b3e0dc40554f5769b50e338e54d748789ebf93/scripts/infra/host_cold_recovery.py -o /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py
+```
+
+```bash
+printf '%s  %s\n' 962a75d0c1d0f69c92efdb37fa52d8d986e81730cb39984f09d49fedc7189e40 /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict - && sudo -n install -m 600 -o root -g root /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py
+```
+
+```bash
+sudo -n systemd-run --unit=ustar-host-recovery-20261014-r5 --service-type=exec --property=RemainAfterExit=yes --property=RuntimeMaxSec=2h --property=TimeoutStopSec=10min --property=UMask=0077 /bin/bash -c 'set -euo pipefail; printf "%s  %s\n" 962a75d0c1d0f69c92efdb37fa52d8d986e81730cb39984f09d49fedc7189e40 /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict -; exec /usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --capture --acknowledge-shared-outage'
+```
+
+```bash
+sudo -n python3 -I -B /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --status
+```
+
+```bash
+sudo -n journalctl -u ustar-host-recovery-20261014-r5.service -n 50 --no-pager -o cat | awk '/^HOST_RECOVERY_PHASE=|^HOST_RECOVERY_COPY_BYTES=|^HOST_RECOVERY_MANIFEST_RETRY=|^HOST_COLD_RECOVERY_ERROR=|^HOST_COLD_RECOVERY=/{print}'
+```
+
+Check status and filtered journal after a minute. Accept only complete plus
+services_resumed=true and archive_readback_sha256_verified=true. If the new
+unit fails before a new marker,its journal is authoritative;an old
+failed_resumed status is not new capture success. Never rerun a failed capture
+without reading its receipt. Private diagnostic paths stay on the host.
 Previous command sections below are history;do not rerun old capture helpers.
 
 ## Previous owner14Oct01:09MSK: r3 resume required; restore runtime first

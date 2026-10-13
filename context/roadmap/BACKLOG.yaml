@@ -1,4 +1,4 @@
-# Current14Oct0217MSK: r4 resumed after pre-copy FileNotFoundError; diagnostics/full initial rescan prepared,41 local tests PASS;host archive/install/reboot pending.
+# Current14Oct0217MSK: r4 resumed after pre-copy FileNotFoundError; source99b3e0dc diagnostics/full initial rescan ready,41 local and Ubuntu41+2 PASS;host archive/install/reboot pending.
 schema_version: 2
 updated_at: '2026-10-06'
 canonical_branch: main

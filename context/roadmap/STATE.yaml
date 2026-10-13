@@ -9,7 +9,8 @@ current_activity: >-
   except Docker foreign-mount guard. Actual cold missing path unknown.
   Implemented private path/operation/step diagnostics and one full initial
   manifest retry without skipping entries.41 local tests PASS;exact Ubuntu
-  CI and new server capture pending. No host archive/install/reboot acceptance.
+  CI41+2/no skips PASS,context PASS. Source99b3e0dc/SHA962a75d0 ready for r5.
+  New server capture pending;no host archive/install/reboot acceptance.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []

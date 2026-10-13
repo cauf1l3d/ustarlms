@@ -62,3 +62,10 @@ observed `configfs` only at `/sys/kernel/config`,inside excluded `/sys`;it still
 checks nested mounts and refuses additional persistent storage.
 [Operator contract](../runtime/host_cold_recovery_20261013.md). This helper does
 not install packages,reboot,restore databases or change application source.
+
+Service-stop receipts distinguish an exited status from a signal number. A
+stopped/dead service with no main PID and Result=success accepts zero exit or
+configured SIGTERM on a daemon type;SIGKILL,core dump,timeout,OOM and nonzero
+exit still refuse,including Docker/containerd. The SSD failure marker exposes
+only the failed unit and selected stop metadata. Ubuntu CI also exercises two
+unique sleep-only systemd units;it does not operate on production services.

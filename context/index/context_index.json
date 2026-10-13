@@ -342,8 +342,8 @@
     {
       "path": "context/code_map/README.md",
       "domain": "code_map",
-      "size": 6706,
-      "sha256": "66e4883733a5399cbe92eb2bc7d3046959c583e63b9fec619dab7684dd317660"
+      "size": 7170,
+      "sha256": "475281a0abf5276aa1efabc1008e21c2fefa42851349b3bb341104f5dc5d3696"
     },
     {
       "path": "context/code_map/backend.yaml",

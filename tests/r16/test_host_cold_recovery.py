@@ -26,6 +26,7 @@ class FakeRunner:
         self.u = copy.deepcopy(marker['units'])
         self.fail_start = set()
         self.forced = set()
+        self.stop_overrides = {}
 
     def run(self, args, timeout=30):
         self.calls.append(args)
@@ -44,11 +45,14 @@ class FakeRunner:
             if args[2] == 'docker.socket':
                 self.u['docker.service']['ActiveState'] = 'inactive'
             self.u[args[2]]['ActiveState'] = 'inactive'
+            self.u[args[2]].update(SubState='dead', MainPID='0', ExecMainCode='1', ExecMainStatus='0')
+            self.u[args[2]].update(self.stop_overrides.get(args[2], {}))
             return ''
         if args[:2] == ['systemctl', 'start']:
             if args[2] in self.fail_start:
                 raise cold.RecoveryError('INJECTED_START_FAILURE')
             self.u[args[2]]['ActiveState'] = 'active'
+            self.u[args[2]].update(SubState='running', MainPID='123', ExecMainCode='0', ExecMainStatus='0')
             return ''
         if args[:2] in (['docker', 'update'], ['docker', 'stop'], ['docker', 'start']):
             name = next(n for n, c in self.c.items() if c['id'] == args[-1])
@@ -77,7 +81,9 @@ def state():
     names = services + sockets + timers
     return {'services': services, 'sockets': sockets, 'timers': timers,
             'units': {n: {'ActiveState': 'active', 'LoadState': 'loaded', 'SubState': 'running',
-                          'Result': 'success', 'ExecMainStatus': '0', 'UnitFileState': 'enabled'} for n in names},
+                          'Result': 'success', 'ExecMainStatus': '0', 'ExecMainCode': '0',
+                          'MainPID': '123', 'Type': 'simple', 'KillSignal': '15',
+                          'UnitFileState': 'enabled'} for n in names},
             'containers': {n: {'id': n + '-id', 'image': n + '-image', 'running': True, 'oom': False, 'exit': 0,
                                'policy': {'Name': 'unless-stopped', 'MaximumRetryCount': 0}, 'mounts': []}
                            for n in cold.NAMES}}
@@ -259,6 +265,72 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(cold.RecoveryError, 'UNCLEAN_STOP'):
             cold.stop(runner, marker)
 
+    def test_normal_sigterm_cron_reaches_container_stop(self):
+        marker = state()
+        runner = FakeRunner(marker)
+        runner.stop_overrides['cron.service'] = {'ExecMainCode': '2', 'ExecMainStatus': '15'}
+        with patch.object(Path, 'glob', return_value=[]):
+            cold.stop(runner, marker)
+        receipt = next(r for r in marker['service_stop_receipts'] if r['unit'] == 'cron.service')
+        self.assertEqual('15', receipt['ExecMainStatus'])
+        self.assertEqual('success', receipt['Result'])
+        self.assertTrue(any(a[:2] == ['docker', 'stop'] for a in runner.calls))
+
+    def test_exit_code_15_is_distinct_from_normal_signal_15(self):
+        marker = state()
+        runner = FakeRunner(marker)
+        runner.stop_overrides['cron.service'] = {'ExecMainCode': '1', 'ExecMainStatus': '15'}
+        with self.assertRaisesRegex(cold.RecoveryError, 'SERVICE_UNCLEAN_STOP'):
+            cold.stop_service(runner, marker, 'cron.service')
+        self.assertEqual('cron.service', marker['failed_service'])
+        self.assertEqual('1', marker['failed_service_stop']['ExecMainCode'])
+
+    def test_unsafe_or_incomplete_service_stop_remains_refused(self):
+        cases = (
+            {'ExecMainCode': '2', 'ExecMainStatus': '9', 'KillSignal': '9'},
+            {'ExecMainCode': '3', 'ExecMainStatus': '11'},
+            {'ExecMainCode': '2', 'ExecMainStatus': '15', 'Type': 'oneshot'},
+            {'ExecMainCode': '2', 'ExecMainStatus': '15', 'KillSignal': '2'},
+            {'ExecMainCode': '1', 'ExecMainStatus': '1'},
+            {'Result': 'timeout'}, {'Result': 'oom-kill'},
+            {'ActiveState': 'active'}, {'SubState': 'failed'}, {'MainPID': '456'},
+        )
+        for changed in cases:
+            with self.subTest(changed=changed):
+                marker = state()
+                runner = FakeRunner(marker)
+                runner.stop_overrides['cron.service'] = changed
+                with self.assertRaisesRegex(cold.RecoveryError, 'SERVICE_UNCLEAN_STOP'):
+                    cold.stop_service(runner, marker, 'cron.service')
+                self.assertEqual('cron.service', marker['failed_service'])
+
+    def test_stop_command_failure_records_the_unit(self):
+        marker = state()
+        runner = unittest.mock.Mock()
+        runner.run.side_effect = cold.RecoveryError('COMMAND_TIMEOUT')
+        with self.assertRaisesRegex(cold.RecoveryError, 'COMMAND_TIMEOUT'):
+            cold.stop_service(runner, marker, 'cron.service')
+        self.assertEqual('cron.service', marker['failed_service'])
+        self.assertNotIn('failed_service_stop', marker)
+
+    def test_hard_killed_docker_daemon_is_not_a_clean_cold_stop(self):
+        marker = state()
+        runner = FakeRunner(marker)
+        runner.stop_overrides['docker.service'] = {'ExecMainCode': '2', 'ExecMainStatus': '9'}
+        with self.assertRaisesRegex(cold.RecoveryError, 'SERVICE_UNCLEAN_STOP'):
+            cold.stop(runner, marker)
+        self.assertEqual('docker.service', marker['failed_service'])
+
+    def test_failure_metadata_does_not_publish_other_unit_properties(self):
+        marker = state()
+        runner = FakeRunner(marker)
+        runner.stop_overrides['cron.service'] = {'Result': 'timeout', 'Environment': 'private-sentinel'}
+        with self.assertRaises(cold.RecoveryError):
+            cold.stop_service(runner, marker, 'cron.service')
+        report = cold.summary(marker)
+        self.assertEqual('cron.service', report['failed_service'])
+        self.assertNotIn('private-sentinel', json.dumps(report))
+
     def test_resume_continues_other_services_if_mariadb_start_fails(self):
         marker = state()
         runner = FakeRunner(marker)
@@ -319,7 +391,7 @@ class RecoveryTests(unittest.TestCase):
         self.assertNotEqual(before, cold.manifest([str(directory)]))
 
     @unittest.skipUnless(os.geteuid() == 0, 'requires trusted root control fixtures')
-    def transaction(self, fail_copy=False, fail_verify=False, fail_marker=False):
+    def transaction(self, fail_copy=False, fail_verify=False, fail_marker=False, fail_stop=False):
         marker = state()
         hdd, state_dir = self.base / 'hdd', self.base / 'state'
         hdd.mkdir(mode=0o700)
@@ -355,6 +427,13 @@ class RecoveryTests(unittest.TestCase):
                 raise OSError('injected marker I/O failure')
             return original_phase(marker, value)
 
+        def stop_transaction(runner, receipt):
+            calls.append('stop')
+            if fail_stop:
+                model = FakeRunner(marker)
+                model.stop_overrides['cron.service'] = {'ExecMainCode': '1', 'ExecMainStatus': '15'}
+                cold.stop_service(model, receipt, 'cron.service')
+
         with patch.object(cold, 'HDD', hdd), patch.object(cold, 'STATE', state_dir), \
                 patch.object(cold, 'MARKER', state_dir / 'active.json'), \
                 patch.object(cold, 'Runner', Metadata), \
@@ -362,13 +441,16 @@ class RecoveryTests(unittest.TestCase):
                 patch.object(cold, 'containers', return_value=marker['containers']), \
                 patch.object(cold, 'protected_paths', return_value=[str(mysql)]), \
                 patch.object(cold, 'locks', side_effect=lambda: nullcontext()), \
-                patch.object(cold, 'stop', side_effect=lambda *_: calls.append('stop')), \
+                patch.object(cold, 'stop', side_effect=stop_transaction), \
                 patch.object(cold, 'resume', side_effect=lambda *_: calls.append('resume')), \
                 patch.object(cold, 'manifest', side_effect=mapped_manifest), \
                 patch.object(cold, 'phase', side_effect=marker_phase), \
                 patch.object(cold, 'tar_command', side_effect=lambda *_: original_tar(self.root, [])), \
                 redirect_stdout(io.StringIO()) as stdout:
-            if fail_copy:
+            if fail_stop:
+                with self.assertRaisesRegex(cold.RecoveryError, 'SERVICE_UNCLEAN_STOP'):
+                    cold.capture()
+            elif fail_copy:
                 with patch.object(cold, 'copy_archive', side_effect=cold.RecoveryError('INJECTED_COPY_FAILURE')):
                     with self.assertRaisesRegex(cold.RecoveryError, 'COPY_FAILURE'):
                         cold.capture()
@@ -384,7 +466,7 @@ class RecoveryTests(unittest.TestCase):
             result = cold.read_json(state_dir / 'active.json')
         self.assertEqual(['stop', 'resume'], calls)
         self.assertTrue(result['services_resumed'])
-        if fail_copy or fail_verify or fail_marker:
+        if fail_copy or fail_verify or fail_marker or fail_stop:
             self.assertEqual('failed_resumed', result['phase'])
             self.assertNotIn('HOST_COLD_RECOVERY=PASS', stdout.getvalue())
         else:
@@ -393,6 +475,10 @@ class RecoveryTests(unittest.TestCase):
             self.assertGreater(result['protected_members_verified'], 0)
             self.assertIn('HOST_COLD_RECOVERY=PASS', stdout.getvalue())
             self.assertFalse(result['package_install_or_reboot'])
+        if fail_stop:
+            self.assertEqual('cron.service', result['failed_service'])
+            self.assertEqual('15', result['failed_service_stop']['ExecMainStatus'])
+            self.assertFalse((hdd / result['run_directory'].split('/')[-1] / 'root.tar').exists())
 
     def test_actual_transaction_archive_and_receipts(self):
         self.transaction()
@@ -405,6 +491,9 @@ class RecoveryTests(unittest.TestCase):
 
     def test_ssd_marker_write_failure_still_resumes_services(self):
         self.transaction(fail_marker=True)
+
+    def test_stop_failure_records_exact_unit_and_resumes_before_copy(self):
+        self.transaction(fail_stop=True)
 
 
 if __name__ == '__main__':

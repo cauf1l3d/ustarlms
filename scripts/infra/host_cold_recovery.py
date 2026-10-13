@@ -129,6 +129,7 @@ class Runner:
 def unit(runner, name):
     text = runner.run(['systemctl', 'show', name, '-p', 'LoadState', '-p', 'ActiveState',
                        '-p', 'SubState', '-p', 'Result', '-p', 'ExecMainStatus',
+                       '-p', 'ExecMainCode', '-p', 'MainPID', '-p', 'Type', '-p', 'KillSignal',
                        '-p', 'UnitFileState'])
     return dict(line.split('=', 1) for line in text.splitlines() if '=' in line)
 
@@ -304,16 +305,39 @@ def manifest(paths):
     return result
 
 
+def stop_service(runner, marker, name):
+    try:
+        runner.run(['systemctl', 'stop', name], timeout=180)
+        s = unit(runner, name)
+        receipt = {'unit': name, **{k: s.get(k, '') for k in (
+            'ActiveState', 'SubState', 'Result', 'ExecMainCode', 'ExecMainStatus',
+            'MainPID', 'Type', 'KillSignal')}}
+        marker.setdefault('service_stop_receipts', []).append(receipt)
+        # ExecMainStatus is a signal number when ExecMainCode is CLD_KILLED.
+        # Accept only zero exit/no main process or the configured normal SIGTERM.
+        zero = s.get('ExecMainCode') in ('0', '1') and s.get('ExecMainStatus') == '0'
+        term = (s.get('ExecMainCode') == '2' and s.get('ExecMainStatus') == str(signal.SIGTERM)
+                and s.get('KillSignal') == str(signal.SIGTERM)
+                and s.get('Type') in ('simple', 'exec', 'forking', 'dbus', 'notify',
+                                      'notify-reload', 'idle'))
+        clean = (s.get('ActiveState') == 'inactive' and s.get('SubState') == 'dead'
+                 and s.get('Result') == 'success' and s.get('MainPID') == '0'
+                 and (zero or term))
+        if not clean:
+            marker['failed_service_stop'] = receipt
+        need(clean, 'SERVICE_UNCLEAN_STOP')
+    except BaseException:
+        marker['failed_service'] = name
+        raise
+
+
 def stop(runner, marker):
     for name in marker['timers'] + marker['sockets']:
         if name != 'docker.socket':
             runner.run(['systemctl', 'stop', name], timeout=120)
     for name in marker['services']:
         if name not in ('docker.service', 'containerd.service'):
-            runner.run(['systemctl', 'stop', name], timeout=180)
-            s = unit(runner, name)
-            need(s['ActiveState'] == 'inactive' and s.get('Result') == 'success'
-                 and s.get('ExecMainStatus', '0') == '0', 'SERVICE_UNCLEAN_STOP')
+            stop_service(runner, marker, name)
     current = containers(runner)
     same_containers(marker['containers'], current)
     for name, c in marker['containers'].items():
@@ -331,8 +355,7 @@ def stop(runner, marker):
             need(c['exit'] == 0 if name in PG else c['exit'] in (0, 143), 'CONTAINER_UNCLEAN_STOP')
     for name in ('docker.service', 'containerd.service'):
         if name in marker['services']:
-            runner.run(['systemctl', 'stop', name], timeout=180)
-            need(unit(runner, name)['ActiveState'] == 'inactive', 'DAEMON_NOT_STOPPED')
+            stop_service(runner, marker, name)
         if name == 'docker.service' and 'docker.socket' in marker['sockets']:
             runner.run(['systemctl', 'stop', 'docker.socket'], timeout=90)
     # Confirm no corresponding host DB/web/mail process survived its service.
@@ -637,6 +660,7 @@ def summary(marker):
     keys = ('kind', 'phase', 'started_at', 'updated_at', 'run_directory', 'archive',
             'archive_sha256', 'archive_bytes', 'archive_readback_sha256_verified',
             'protected_members_verified', 'services_resumed', 'failure_code',
+            'failed_service', 'failed_service_stop',
             'package_install_or_reboot', 'package_baseline_unchanged', 'encrypted',
             'full_host_boot_restore_verified')
     return {k: marker[k] for k in keys if k in marker}

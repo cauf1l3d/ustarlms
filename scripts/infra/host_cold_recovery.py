@@ -209,6 +209,9 @@ def disk(runner):
             continue
         if kind in virtual:
             continue
+        # Kernel configuration in RAM; /sys is already excluded from the archive.
+        if kind == 'configfs' and target == '/sys/kernel/config':
+            continue
         if kind == 'squashfs' and target.startswith('/snap/'):
             continue
         if kind == 'overlay' and target.startswith(('/var/lib/docker/', '/var/lib/containerd/')):

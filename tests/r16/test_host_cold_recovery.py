@@ -9,6 +9,7 @@ from pathlib import Path
 import signal
 import subprocess
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -80,6 +81,64 @@ def state():
             'containers': {n: {'id': n + '-id', 'image': n + '-image', 'running': True, 'oom': False, 'exit': 0,
                                'policy': {'Name': 'unless-stopped', 'MaximumRetryCount': 0}, 'mounts': []}
                            for n in cold.NAMES}}
+
+
+class MountPreflightTests(unittest.TestCase):
+    def preflight(self, extra):
+        root = {'target': '/', 'fstype': 'ext4', 'uuid': cold.ROOT_UUID,
+                'options': 'rw', 'children': [
+                    {'target': '/sys', 'fstype': 'sysfs', 'uuid': None,
+                     'children': [extra]}]}
+        hdd = {'target': str(cold.HDD), 'fstype': 'ext4', 'uuid': cold.HDD_UUID,
+               'options': 'rw'}
+
+        def findmnt(args, timeout=30):
+            self.assertEqual('findmnt', args[0])
+            if '--mountpoint' in args:
+                mounts = [root if args[3] == '/' else hdd]
+            else:
+                mounts = [root, hdd]
+            return json.dumps({'filesystems': mounts})
+
+        runner = unittest.mock.Mock()
+        runner.run.side_effect = findmnt
+        space = SimpleNamespace(f_blocks=1000, f_bfree=900, f_frsize=4096,
+                                f_bavail=10000000, f_favail=1000000)
+        with patch.object(cold, 'trusted'), \
+                patch.object(Path, 'stat', lambda p: SimpleNamespace(
+                    st_dev=2 if p == cold.HDD else 1)), \
+                patch.object(cold.os, 'statvfs', return_value=space):
+            return cold.disk(runner)
+
+    def test_observed_configfs_inside_excluded_sys_passes_preflight(self):
+        self.assertIn('sys', cold.EXCLUDED)
+        device, budget = self.preflight(
+            {'target': '/sys/kernel/config', 'fstype': 'configfs', 'uuid': None})
+        self.assertEqual(2, device)
+        self.assertGreater(budget, 0)
+
+    def test_configfs_at_other_location_remains_unaccounted(self):
+        with self.assertRaisesRegex(cold.RecoveryError, 'ADDITIONAL_PERSISTENT_FILESYSTEM_NOT_COVERED'):
+            self.preflight({'target': '/var/lib/config', 'fstype': 'configfs', 'uuid': None})
+
+    def test_persistent_filesystem_at_same_path_is_not_exempt(self):
+        for kind in ('ext4', 'vfat', 'nfs4'):
+            with self.subTest(kind=kind), self.assertRaisesRegex(
+                    cold.RecoveryError, 'ADDITIONAL_PERSISTENT_FILESYSTEM_NOT_COVERED'):
+                self.preflight({'target': '/sys/kernel/config', 'fstype': kind, 'uuid': 'foreign'})
+
+    def test_persistent_child_of_configfs_is_not_hidden(self):
+        mount = {'target': '/sys/kernel/config', 'fstype': 'configfs', 'uuid': None,
+                 'children': [{'target': '/sys/kernel/config/foreign',
+                               'fstype': 'ext4', 'uuid': 'foreign'}]}
+        with self.assertRaisesRegex(cold.RecoveryError, 'ADDITIONAL_PERSISTENT_FILESYSTEM_NOT_COVERED'):
+            self.preflight(mount)
+
+    def test_other_persistent_mounts_still_refuse(self):
+        for kind in ('ext4', 'vfat', 'nfs4', 'overlay'):
+            with self.subTest(kind=kind), self.assertRaisesRegex(
+                    cold.RecoveryError, 'ADDITIONAL_PERSISTENT_FILESYSTEM_NOT_COVERED'):
+                self.preflight({'target': '/mnt/foreign', 'fstype': kind, 'uuid': 'foreign'})
 
 
 class RecoveryTests(unittest.TestCase):

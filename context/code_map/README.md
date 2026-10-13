@@ -52,3 +52,13 @@ and private readback backup. Q/K compilation precedes atomic replacement;AppArmo
 only start/reload and live container/kernel/Snap-state checks determine PASS.
 [Operator/recovery contract](../runtime/host_apparmor_repair_20261013.md). Application
 source/schema maps remain the same526 files/93 tables.
+
+## Shared-host cold recovery helper
+
+[`host_cold_recovery.py`](../../scripts/infra/host_cold_recovery.py) archives the
+SSD while selected shared services and all six containers are stopped,then
+resumes their original state before HDD readback. The mount preflight allows
+observed `configfs` only at `/sys/kernel/config`,inside excluded `/sys`;it still
+checks nested mounts and refuses additional persistent storage.
+[Operator contract](../runtime/host_cold_recovery_20261013.md). This helper does
+not install packages,reboot,restore databases or change application source.

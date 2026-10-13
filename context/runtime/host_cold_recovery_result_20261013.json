@@ -1,0 +1,37 @@
+{
+  "kind": "host_cold_recovery_preflight_failure_and_mount_diagnostic",
+  "source": "owner_terminal_output_not_independent_server_access",
+  "diagnostic_received_at": "2026-10-13T13:42:57+00:00",
+  "attempted_implementation_commit": "2d1b25029ac1949117b205aaa2d52565af0ba387",
+  "attempted_helper_sha256": "bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd",
+  "unit": "ustar-host-recovery-20261013.service",
+  "unit_result": {
+    "ActiveState": "failed",
+    "SubState": "failed",
+    "Result": "exit-code",
+    "ExecMainStatus": 1,
+    "MainPID": 0,
+    "ExecMainStartTimestamp_utc": "2026-10-13T13:00:01Z",
+    "ExecMainExitTimestamp_utc": "2026-10-13T13:00:01Z"
+  },
+  "error": "ADDITIONAL_PERSISTENT_FILESYSTEM_NOT_COVERED",
+  "reported_marker_phase": "not_started",
+  "blocking_mounts": [
+    {
+      "target": "/sys/kernel/config",
+      "fstype": "configfs",
+      "uuid": null
+    }
+  ],
+  "service_pause_and_archive_not_started": true,
+  "phase_order_evidence": "initial disk() raises before anchor/run directory,transaction marker,locks,stop() or archive",
+  "service_pause_absence_is_source_phase_inference": true,
+  "resume_needed_for_this_preflight_error": false,
+  "configuration_or_file_contents_emitted": false,
+  "retry_implementation_commit": "cf78962183a98c49eb05241e5db5913cdda10471",
+  "retry_helper_sha256": "00b15bc193db34cd12e06f27be5d63c512c766428de9053c0186b374a6becb7b",
+  "retry_unit": "ustar-host-recovery-20261013-r2.service",
+  "corrected_retry_executed": false,
+  "archive_completed": false,
+  "host_package_install_or_reboot_executed": false
+}

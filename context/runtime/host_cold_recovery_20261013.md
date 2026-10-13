@@ -13,13 +13,13 @@ Prior AppArmor/Moodle518/cron/HDD/browser acceptance stays closed.
 ## Source and scope
 
 Reviewed helper `scripts/infra/host_cold_recovery.py`,immutable implementation
-`2d1b25029ac1949117b205aaa2d52565af0ba387`,SHA256
-`bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd`.
-[Validation](host_cold_recovery_validation_20261013.json):17 local root tests PASS;
-[exact Ubuntu24.04 root workflow](https://github.com/cauf1l3d/ustarlms/actions/runs/38398856106)
-job115300978352,17 tests/no skips PASS,real GNU tar/sparse/hardlink/xattr restoration
+`cf78962183a98c49eb05241e5db5913cdda10471`,SHA256
+`00b15bc193db34cd12e06f27be5d63c512c766428de9053c0186b374a6becb7b`.
+[Validation](host_cold_recovery_validation_20261013.json):22 local root tests PASS;
+[exact Ubuntu24.04 root workflow](https://github.com/cauf1l3d/ustarlms/actions/runs/38407989890)
+job115332541993,22 tests/no skips PASS,real GNU tar/sparse/hardlink/xattr restoration
 and separate-process POSIX lock exercised. Docker/systemctl are models,not a
-server rehearsal. Context CI succeeded;source PHP8.2/8.3 succeeded. Unchanged
+server rehearsal. Exact context CI38407990439 and source PHP8.2/8.3 jobs in38407988735 succeeded. Unchanged
 main frontend audit failed;build/HTTP/DB/rollback/full gate skipped. No full PR green.
 
 Capture archives the SSD root filesystem,including existing OS binaries,package
@@ -65,9 +65,26 @@ hash checks. Package inventory must match pre-capture. A resume error leaves
 timers follows their existing configuration;no blanket claim of suppressing every
 external job. The systemd task survives SSH loss;live failures remain operator evidence.
 
+## Owner preflight failure and narrow correction
+
+[Owner diagnostic16:42MSK](host_cold_recovery_result_20261013.json) identified
+only `/sys/kernel/config`,type `configfs`,UUID null. Previous implementation2d1b2502
+failed at13:00:01UTC with `ADDITIONAL_PERSISTENT_FILESYSTEM_NOT_COVERED` before the
+SSD transaction marker,service pause,archive directory or payload. Status stayed
+`not_started`,and the first systemd unit is retained as failed;no resume is needed
+for this preflight refusal. The correction allows only this type/path pair inside
+already-excluded `/sys`,still traverses children and refuses other persistent
+filesystems. It performs no mount/unmount or kernel configuration operation.
+Primary reference:[Linux configfs](https://docs.kernel.org/filesystems/configfs.html),
+an in-memory kernel configuration interface. Five added mount regression tests
+cover accepted configfs,wrong location,different persistent type,foreign nested
+mount and other external storage. The original17 recovery tests still pass.
+
 ## Operator handoff
 
-Run separate physical commands,wait for each terminal prompt. The start command
+The previous failed unit remains for diagnosis. Use the new `-r2` unit name below
+to avoid colliding with that retained transient service. Run separate physical
+commands,wait for each terminal prompt. The start command
 explicitly acknowledges web/mail/DNS/container downtime while SSD files copy.
 Total15-30min is an estimate for about50GB,not measured RTO;service pause ends after
 copy and before readback. Source hashing/metadata scans may extend that pause.
@@ -78,15 +95,15 @@ sudo -v
 ```
 
 ```bash
-curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/2d1b25029ac1949117b205aaa2d52565af0ba387/scripts/infra/host_cold_recovery.py -o /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/cf78962183a98c49eb05241e5db5913cdda10471/scripts/infra/host_cold_recovery.py -o /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py
 ```
 
 ```bash
-printf '%s  %s\n' bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict - && sudo -n install -m 600 -o root -g root /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py
+printf '%s  %s\n' 00b15bc193db34cd12e06f27be5d63c512c766428de9053c0186b374a6becb7b /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict - && sudo -n install -m 600 -o root -g root /home/aduk/USTAR_HOST_COLD_RECOVERY_20261013.py /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py
 ```
 
 ```bash
-sudo -n systemd-run --unit=ustar-host-recovery-20261013 --service-type=exec --property=RemainAfterExit=yes --property=RuntimeMaxSec=2h --property=TimeoutStopSec=10min --property=UMask=0077 /bin/bash -c 'set -euo pipefail; printf "%s  %s\n" bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict -; exec /usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --capture --acknowledge-shared-outage'
+sudo -n systemd-run --unit=ustar-host-recovery-20261013-r2 --service-type=exec --property=RemainAfterExit=yes --property=RuntimeMaxSec=2h --property=TimeoutStopSec=10min --property=UMask=0077 /bin/bash -c 'set -euo pipefail; printf "%s  %s\n" 00b15bc193db34cd12e06f27be5d63c512c766428de9053c0186b374a6becb7b /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py | sha256sum --check --strict -; exec /usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --capture --acknowledge-shared-outage'
 ```
 
 Status may be repeated safely;it does not perform capture or restart. Wait for
@@ -97,7 +114,7 @@ sudo -n python3 -I -B /usr/local/sbin/USTAR_HOST_COLD_RECOVERY_20261013.py --sta
 ```
 
 ```bash
-sudo -n systemctl show ustar-host-recovery-20261013.service -p ActiveState -p SubState -p Result -p ExecMainStatus --no-pager
+sudo -n systemctl show ustar-host-recovery-20261013-r2.service -p ActiveState -p SubState -p Result -p ExecMainStatus --no-pager
 ```
 
 Only if task has stopped and receipt says resume required,run existing helper
@@ -124,8 +141,8 @@ DPKG/kernel147/initramfs/GRUB,and reboot in the owner shared maintenance window.
 Accept the resulting kernel,required services,HDD mount,all original container
 images/mounts/policies and one cron/HDD schedule. This is post-OS-change acceptance,
 not repeating the accepted518/stage/role matrix. Latest stable Moodle53/PG17+/addon
-rehearsal follows OS;HTTPS remains selected. Package installation/reboot/server
-capture are pending until owner execution evidence is returned.
+rehearsal follows OS;HTTPS remains selected. The first server attempt refused during preflight;the corrected retry,completed
+archive,package installation and reboot are pending owner execution evidence.
 
 Primary references:[GNU tar attributes](https://www.gnu.org/software/tar/manual/html_node/Attributes.html),
 [one filesystem](https://www.gnu.org/software/tar/manual/html_node/One.html),

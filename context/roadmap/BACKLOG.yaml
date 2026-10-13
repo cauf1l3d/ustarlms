@@ -224,12 +224,15 @@ tasks:
   - context/runtime/host_apparmor_observation_20261013.json
   - context/runtime/host_apparmor_result_20261013.json
   - context/runtime/host_packages_result_20261013.json
+  - context/runtime/host_cold_recovery_result_20261013.json
   current_checkpoint: >-
-    Owner13Oct1504MSK fresh APT38 upgrades/25new/zero removals,147 candidate,
-    running139/installed146 retained,six containers/live restore false,MariaDB
-    no-password1045. Private cold SSD root file recovery source2d1b2502,17 local
-    and exact Ubuntu root tests PASS. Owner capture/install/reboot pending;
-    AppArmor/518/browser acceptance closed,53/PG17+ follows OS.
+    Owner13Oct1642MSK first cold recovery attempt refused before marker/pause/copy;
+    only configfs at /sys/kernel/config blocked mount preflight. Sourcecf789621
+    accepts only that type/path;22 local and exact Ubuntu root fixtures/no skips
+    PASS. Corrected helper/new-r2 unit retry pending;completed archive,package
+    installation and reboot pending. APT38 upgrades/25new/zero removals,
+    147 candidate/139 running/146 retained;AppArmor/518 acceptance closed.
+    53/PG17+ follows OS.
 - id: INF-10
   title: SSH/firewall/MFA и политики нужных служб общего хоста
   status: planned

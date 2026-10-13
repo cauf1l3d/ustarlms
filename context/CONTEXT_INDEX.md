@@ -1,3 +1,5 @@
+**Current13Oct / owner16:42MSK:** [Cold recovery preflight refusal](runtime/host_cold_recovery_result_20261013.json): first unit failed13:00:01UTC before marker/pause/copy;only blocking mount is configfs at `/sys/kernel/config`. [Corrected source and retry](runtime/host_cold_recovery_20261013.md) cf789621/SHA00b15bc1 accepts only that kernel type/path and still refuses foreign persistent mounts;22 local and exact Ubuntu root CI tests/no skips PASS. Install corrected helper and launch new `-r2` systemd unit;completed archive/package installation/reboot still pending. AppArmor/518 acceptance stays closed;53/PG17+ follows OS.
+
 # Индекс контекста USTAR
 
 Актуальность: 06.10.2026. **Канонический код и контекст — main.** Application SHA, dated evidence и выбранный владельцем порядок 1 → 7 → 6: [STATE](roadmap/STATE.yaml).

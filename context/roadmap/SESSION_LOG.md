@@ -491,3 +491,25 @@ source8.2/8.3 PASS;unchanged frontend audit failed/build+HTTP+DB+rollback+fullga
 skipped. No whole PR green. Source/public raw readback/tree matching PASS.
 Capture/install/reboot server execution still pending. Current task INF-10-OS;
 latest stable53/PG17+ isolated addon/recovery work follows OS.
+
+
+## 2026-10-13 — host cold recovery configfs preflight correction
+
+Owner first task exited1 at13:00:01UTC,marker `not_started`,error
+`ADDITIONAL_PERSISTENT_FILESYSTEM_NOT_COVERED`. Diagnostic received16:42MSK
+reports only `/sys/kernel/config`,configfs,UUID null. Exact source ordering puts
+this refusal before any service stop,archive directory or transaction marker;
+that no-pause conclusion is source inference,not a separate service audit.
+No resume or AppArmor/Moodle replay is needed for this preflight refusal.
+
+Implementation `cf78962183a98c49eb05241e5db5913cdda10471`,SHA `00b15bc193db34cd12e06f27be5d63c512c766428de9053c0186b374a6becb7b` adds only the observed kernel type/path
+exception inside excluded `/sys`. Foreign mount types,locations and nested
+persistent children still refuse. No mount or kernel object mutation. Original
+17 tests plus five mount regressions pass locally as root and exact Ubuntu24.04
+run38407989890/job115332541993:22/no skips;log summary inspected. Context38407990439
+PASS;review38407988735 frontend audit failed on unchanged main dependencies,
+source PHP8.2/8.3 succeeded;DB/rollback/full gate skipped,full PR green not claimed.
+Public helper bytes/git blob/tree match local. New `-r2` transient systemd unit
+avoids the retained failed first unit. Corrected server retry,accepted archive,
+package installation and reboot remain pending owner execution. Prior AppArmor/
+518/browser/cron/HDD acceptance closed;INF-10-OS remains active,53/PG17+ follows.

@@ -1,20 +1,20 @@
 {
   "kind": "host_cold_recovery_source_validation",
-  "implementation_commit": "2d1b25029ac1949117b205aaa2d52565af0ba387",
-  "local_commit": "589f14bd0df0d1899039095857cdeef6f662f95e",
-  "source_tree": "73c1014e243e56a6765bb14d1278e9e70389d50a",
-  "helper_sha256": "bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd",
+  "implementation_commit": "cf78962183a98c49eb05241e5db5913cdda10471",
+  "local_commit": "629d8973902ce9fa054688c0690381785940d1a8",
+  "source_tree": "aa7880f3529c311e245712b8860b72945ca7b7e2",
+  "helper_sha256": "00b15bc193db34cd12e06f27be5d63c512c766428de9053c0186b374a6becb7b",
   "remote_raw_bytes_matching": true,
   "local_root_suite": {
-    "tests": 17,
+    "tests": 22,
     "result": "PASS",
     "skips": 0
   },
   "Ubuntu_24_04_root_fixture_CI": {
-    "run_id": 38398856106,
-    "job_id": 115300978352,
+    "run_id": 38407989890,
+    "job_id": 115332541993,
     "result": "success",
-    "tests": 17,
+    "tests": 22,
     "skips": 0,
     "log_test_summary_verified": true
   },
@@ -27,11 +27,11 @@
     "capture_and_failure_service_resume_markers"
   ],
   "context_CI": {
-    "run_id": 38398855981,
+    "run_id": 38407990439,
     "result": "success"
   },
   "review_CI": {
-    "run_id": 38398856037,
+    "run_id": 38407988735,
     "source_PHP82_PHP83": "success",
     "unchanged_frontend_npm_audit": "failure",
     "frontend_build_HTTP_DB_rollback_full_gate": "skipped",
@@ -39,5 +39,14 @@
   },
   "production_execution": false,
   "full_host_boot_restore_verified": false,
-  "application_source_and_AppArmor_helper_unchanged": true
+  "application_source_and_AppArmor_helper_unchanged": true,
+  "supersedes_implementation_commit": "2d1b25029ac1949117b205aaa2d52565af0ba387",
+  "mount_preflight_regressions": [
+    "observed_configfs_only_inside_excluded_sys",
+    "configfs_other_location_refused",
+    "persistent_type_at_same_path_refused",
+    "persistent_child_still_traversed_and_refused",
+    "additional_persistent_storage_refused"
+  ],
+  "previous_owner_preflight_failure": "context/runtime/host_cold_recovery_result_20261013.json"
 }

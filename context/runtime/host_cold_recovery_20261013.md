@@ -10,6 +10,76 @@ no password change or disclosure is needed for this file-level cold capture.
 ISPConfig missing-or-link remains unresolved;absence does not authorize removal.
 Prior AppArmor/Moodle518/cron/HDD/browser acceptance stays closed.
 
+## Current owner result17:07MSK: r2 failed, services resumed
+
+[Latest owner receipt](host_cold_recovery_result_20261013.json):verified00b15bc1
+helper launched as r2/invocation34da76b91415422b85110a89ee50854f. The marker is
+`failed_resumed`,14:05:16.445898..14:05:17.991866UTC,`services_resumed=true`,
+`failure_code=SERVICE_UNCLEAN_STOP`,package/reboot=false;systemd exit1/failed/PID0.
+The disk guard passed. Exact failure location is the shared-service stop check,
+before Docker container stop,source manifest or archive copy;archive path is
+planned metadata,not evidence of a created payload. Service recovery already
+passed;do not call resume-services or start another capture for this receipt.
+Next:read only PID1 journal fields for the stop window and current unit exit
+policy metadata. Current properties after restart are not past shutdown proof.
+Failed unit name/past Result/ExecMainCode/ExecMainStatus remain unknown;do not
+waive the shutdown guard or claim a healthy signal termination without evidence.
+The operator capture commands below remain historical handoff,not the next step
+until the stop diagnosis is resolved. Source is unchanged;22 fixture passes do
+not demonstrate this shared host's service shutdown semantics.
+
+### Next read-only operator diagnostic
+
+Run sudo authentication separately,then this one metadata command. It reads
+only the existing SSD marker,PID1 journal fields in the recorded stop window
+and current service exit-policy properties. Raw MESSAGE/config/environment
+content is not printed. Current properties are explicitly post-resume.
+
+```bash
+sudo -n python3 -I -B - <<'PY'
+import json
+import subprocess
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+m = json.loads(Path("/var/lib/ustar-host-recovery-20261013/active.json").read_text())
+names = m["services"]
+start = datetime.fromisoformat(m["started_at"]) - timedelta(seconds=1)
+end = datetime.fromisoformat(m["updated_at"]) + timedelta(seconds=1)
+fmt = "%Y-%m-%d %H:%M:%S UTC"
+raw = subprocess.check_output(
+    ["journalctl", "_PID=1", "--since", start.astimezone(timezone.utc).strftime(fmt),
+     "--until", end.astimezone(timezone.utc).strftime(fmt),
+     "-n", "500", "--no-pager", "-o", "json"],
+    text=True, timeout=15, stderr=subprocess.DEVNULL
+)
+fields = ("__REALTIME_TIMESTAMP", "UNIT", "OBJECT_SYSTEMD_UNIT",
+          "MESSAGE_ID", "EXIT_CODE", "EXIT_STATUS", "RESULT",
+          "JOB_TYPE", "JOB_RESULT")
+events = []
+for line in raw.splitlines():
+    e = json.loads(line)
+    if e.get("UNIT") in names or e.get("OBJECT_SYSTEMD_UNIT") in names:
+        events.append({k: e[k] for k in fields if k in e})
+
+props = ("Id", "ActiveState", "SubState", "Result", "ExecMainCode",
+         "ExecMainStatus", "Type", "KillSignal", "SuccessExitStatus")
+current = subprocess.check_output(
+    ["systemctl", "show", *names, "--no-pager",
+     *["--property=" + k for k in props]],
+    text=True, timeout=15, stderr=subprocess.DEVNULL
+)
+units = [dict(line.split("=", 1) for line in block.splitlines() if "=" in line)
+         for block in current.strip().split("\n\n") if block.strip()]
+print(json.dumps({
+    "failure_code": m.get("failure_code"),
+    "service_stop_order": names,
+    "stop_window_events": events,
+    "current_service_metadata_after_resume": units
+}, indent=2))
+PY
+```
+
 ## Source and scope
 
 Reviewed helper `scripts/infra/host_cold_recovery.py`,immutable implementation

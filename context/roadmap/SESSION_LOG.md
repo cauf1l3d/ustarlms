@@ -513,3 +513,21 @@ Public helper bytes/git blob/tree match local. New `-r2` transient systemd unit
 avoids the retained failed first unit. Corrected server retry,accepted archive,
 package installation and reboot remain pending owner execution. Prior AppArmor/
 518/browser/cron/HDD acceptance closed;INF-10-OS remains active,53/PG17+ follows.
+
+
+## 2026-10-13 — owner r2 service-stop refusal and successful runtime resume
+
+Receipt received17:07:15MSK:installed00b15bc1 hash PASS,cf789621 helper,r2
+invocation34da76b91415422b85110a89ee50854f. Marker failed_resumed,
+SERVICE_UNCLEAN_STOP,services_resumed=true,14:05:16.445898..17.991866UTC;
+unit exit1/failed/MainPID0. Source phase:disk guard passed,shared-service guard
+failed before Docker policy/container stop or archive copy. Planned archive
+path does not prove a copied payload. No packages/reboot executed. Failed
+unit and its past stop properties unknown. Strict ExecMainStatus0 might
+misclassify clean signal exit;this is an unverified hypothesis,not a waiver.
+Next read-only PID1 journal metadata and current unit exit policy,without raw
+messages/configuration/log text. No new download,capture,outage or runtime
+resume. Current post-resume metadata must not be presented as past exit proof.
+Helper/application bytes unchanged;no repeated tests needed. Prior22 exact
+source fixture checks remain dated source evidence,not this server acceptance.
+INF-10-OS remains active;AppArmor/Moodle518 acceptance closed,53/PG17+ after OS.

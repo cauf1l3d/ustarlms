@@ -4,13 +4,14 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner13Oct1642MSK cold recovery attempt failed before pause/copy/marker because
-  only configfs at /sys/kernel/config was not classified. Corrected source
-  cf789621/SHA00b15bc1 accepts only this kernel type/path;22 local and exact
-  Ubuntu root fixtures/no skips PASS. New -r2 unit retry after verified helper
-  installation;completed archive/package install/reboot pending. APT plan38
-  upgrades+25new/zero removals,kernel147 candidate,139 running/146 retained.
-  AppArmor/518 acceptance closed;53/PG17+ follows OS.
+  Owner13Oct1707MSK verified helper00b15bc1 and launched r2;disk guard passed,
+  shared-service stop check refused SERVICE_UNCLEAN_STOP. Marker failed_resumed,
+  services_resumed true,14:05:16..17UTC;container stop/archive copy phase not
+  reached by source ordering. Failed unit/past shutdown metadata unknown.
+  Next read-only PID1 stop-window fields and current service exit policy;
+  no new capture/resume until diagnosis. Sourcecf789621 unchanged;22 local/exact
+  Ubuntu fixtures are not server shutdown acceptance. Archive/install/reboot
+  pending;prior AppArmor/518 acceptance closed,53/PG17+ follows OS.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []
@@ -41,7 +42,7 @@ production:
   latest_cron_HDD_source: context/runtime/production_patch_post_switch_status_result_20261013.json
   latest_browser_source: context/runtime/production_patch_browser_result_20261013.json
   previous_observations_remain_dated: true
-  status: owner_Moodle518_AppArmor_accepted_host_recovery_preflight_configfs_fix_ready_retry_pending
+  status: owner_Moodle518_AppArmor_accepted_host_recovery_r2_failed_resumed_stop_diagnosis_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false

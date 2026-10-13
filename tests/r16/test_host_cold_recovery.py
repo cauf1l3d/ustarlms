@@ -235,6 +235,94 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(cold.RecoveryError, 'IDENTITY'):
             cold.same_containers(marker['containers'], cold.containers(runner))
 
+    def mounted_state(self):
+        marker = state()
+        marker['containers']['ustar_moodle']['mounts'] = [
+            {'type': 'bind', 'source': '/fixture/code', 'destination': '/var/www/html', 'rw': True},
+            {'type': 'bind', 'source': '/fixture/data', 'destination': '/var/www/moodledata', 'rw': True}]
+        return marker
+
+    def test_mount_order_is_not_identity_and_inputs_are_not_modified(self):
+        before = self.mounted_state()['containers']
+        after = copy.deepcopy(before)
+        after['ustar_moodle']['mounts'].reverse()
+        saved = copy.deepcopy(after)
+        cold.same_containers(before, after, running=True)
+        self.assertEqual({}, cold.container_identity_differences(before, after))
+        self.assertEqual(saved, after)
+
+    def test_mount_fields_and_duplicate_count_still_refuse_drift(self):
+        before = self.mounted_state()['containers']
+        changes = [('source', '/fixture/other'), ('destination', '/elsewhere'),
+                   ('type', 'volume'), ('rw', False), ('duplicate', None)]
+        for key, value in changes:
+            with self.subTest(key=key):
+                after = copy.deepcopy(before)
+                if key == 'duplicate':
+                    after['ustar_moodle']['mounts'].append(copy.deepcopy(after['ustar_moodle']['mounts'][0]))
+                else:
+                    after['ustar_moodle']['mounts'][0][key] = value
+                with self.assertRaisesRegex(cold.RecoveryError, 'CONTAINER_IDENTITY_DRIFT'):
+                    cold.same_containers(before, after)
+                self.assertEqual({'ustar_moodle': ['mounts']},
+                                 cold.container_identity_differences(before, after))
+
+    def test_resume_with_reordered_mounts_starts_original_ids_and_restores_policies(self):
+        marker = self.mounted_state()
+        runner = FakeRunner(marker)
+        runner.c['ustar_moodle']['mounts'].reverse()
+        for c in runner.c.values():
+            c['running'] = False
+            c['policy'] = {'Name': 'no', 'MaximumRetryCount': 0}
+        response = unittest.mock.MagicMock()
+        response.__enter__.return_value.status = 200
+        with patch.object(cold.urllib.request, 'urlopen', return_value=response):
+            cold.resume(runner, marker)
+        self.assertTrue(all(c['running'] for c in runner.c.values()))
+        self.assertTrue(all(c['policy'] == marker['containers'][n]['policy'] for n, c in runner.c.items()))
+        self.assertNotIn('resume_identity_differences', marker)
+        starts = [a[-1] for a in runner.calls if a[:2] == ['docker', 'start']]
+        self.assertEqual({c['id'] for c in marker['containers'].values()}, set(starts))
+
+    def test_resume_real_identity_change_reports_fields_and_does_not_start_replacement(self):
+        marker = self.mounted_state()
+        runner = FakeRunner(marker)
+        runner.c['ustar_moodle']['id'] = 'replacement'
+        response = unittest.mock.MagicMock()
+        response.__enter__.return_value.status = 200
+        with patch.object(cold.urllib.request, 'urlopen', return_value=response):
+            with self.assertRaisesRegex(cold.RecoveryError, 'RESUME_VERIFICATION_FAILED'):
+                cold.resume(runner, marker)
+        self.assertEqual({'ustar_moodle': ['id']}, marker['resume_identity_differences'])
+        self.assertFalse(any(a[:2] in (['docker', 'start'], ['docker', 'update']) for a in runner.calls))
+        self.assertIn(['systemctl', 'start', 'apache2.service'], runner.calls)
+
+    @unittest.skipUnless(os.geteuid() == 0, 'requires trusted root control fixtures')
+    def test_failed_recovery_persists_difference_for_status_without_restoring_data(self):
+        marker = self.mounted_state()
+        marker['phase'] = 'resume_required'
+        path = self.base / 'active.json'
+        cold.write_json(path, marker)
+        payload = self.base / 'untouched-database'
+        payload.write_bytes(b'preserve current business data')
+        runner = FakeRunner(marker)
+        runner.c['ustar_moodle']['image'] = 'changed-image'
+        response = unittest.mock.MagicMock()
+        response.__enter__.return_value.status = 200
+        with patch.object(cold, 'STATE', self.base), patch.object(cold, 'MARKER', path), \
+                patch.object(cold, 'Runner', return_value=runner), \
+                patch.object(cold, 'locks', side_effect=lambda: nullcontext()), \
+                patch.object(cold.urllib.request, 'urlopen', return_value=response), \
+                redirect_stdout(io.StringIO()):
+            with self.assertRaisesRegex(cold.RecoveryError, 'RESUME_VERIFICATION_FAILED'):
+                cold.recover()
+        receipt = cold.read_json(path)
+        self.assertEqual('resume_required', receipt['phase'])
+        self.assertEqual({'ustar_moodle': ['image']},
+                         cold.summary(receipt)['resume_identity_differences'])
+        self.assertEqual(b'preserve current business data', payload.read_bytes())
+        self.assertFalse(any(a[:2] in (['docker', 'start'], ['docker', 'update']) for a in runner.calls))
+
     def test_stop_database_before_daemon_socket_and_resume_exact_policies(self):
         marker = state()
         marker['containers']['ustar_postgres']['policy'] = {'Name': 'on-failure', 'MaximumRetryCount': 3}

@@ -151,11 +151,28 @@ def containers(runner):
     } for c in raw}
 
 
-def same_containers(before, after, running=False):
-    need(set(before) == set(after), 'CONTAINER_INVENTORY_DRIFT')
+def container_identity_differences(before, after):
+    if set(before) != set(after):
+        return {'inventory': ['names']}
+    differences = {}
     for name, c in before.items():
         other = after[name]
-        need(all(c[k] == other[k] for k in ('id', 'image', 'mounts')), 'CONTAINER_IDENTITY_DRIFT')
+        changed = [k for k in ('id', 'image') if c[k] != other[k]]
+        # Mount array order is not part of a container's binding identity.
+        # Sort whole records: source/destination/type/RW and duplicates all matter.
+        mounts = lambda value: sorted(value, key=lambda m: json.dumps(m, sort_keys=True))
+        if mounts(c['mounts']) != mounts(other['mounts']):
+            changed.append('mounts')
+        if changed:
+            differences[name] = changed
+    return differences
+
+
+def same_containers(before, after, running=False):
+    need(set(before) == set(after), 'CONTAINER_INVENTORY_DRIFT')
+    need(not container_identity_differences(before, after), 'CONTAINER_IDENTITY_DRIFT')
+    for name, c in before.items():
+        other = after[name]
         if running:
             need(c['running'] == other['running'] and c['policy'] == other['policy'],
                  'CONTAINER_RESUME_MISMATCH')
@@ -389,9 +406,18 @@ def resume(runner, marker):
         attempt(['systemctl', 'start', name], timeout=180)
     try:
         current = containers(runner)
+        changed = container_identity_differences(marker['containers'], current)
+        if changed:
+            marker['resume_identity_differences'] = changed
+        else:
+            marker.pop('resume_identity_differences', None)
         same_containers(marker['containers'], current)
-    except RecoveryError:
+    except RecoveryError as error:
         current = None
+        if 'resume_identity_differences' not in marker:
+            marker['resume_identity_differences'] = {
+                'inventory' if str(error) == 'CONTAINER_INVENTORY_DRIFT' else 'inspection':
+                ['names' if str(error) == 'CONTAINER_INVENTORY_DRIFT' else 'failed']}
         errors.append('container_identity_or_daemon')
     if current is not None:
         for name in sorted(PG) + sorted(NAMES - PG):
@@ -661,6 +687,7 @@ def summary(marker):
             'archive_sha256', 'archive_bytes', 'archive_readback_sha256_verified',
             'protected_members_verified', 'services_resumed', 'failure_code',
             'failed_service', 'failed_service_stop',
+            'resume_identity_differences',
             'package_install_or_reboot', 'package_baseline_unchanged', 'encrypted',
             'full_host_boot_restore_verified')
     return {k: marker[k] for k in keys if k in marker}
@@ -672,7 +699,14 @@ def recover():
     private_dir(STATE)
     runner = Runner(STATE / 'resume.private.log')
     with locks():
-        resume(runner, marker)
+        try:
+            resume(runner, marker)
+        except BaseException:
+            try:
+                phase(marker, 'resume_required')
+            except BaseException:
+                pass
+            raise
         marker['services_resumed'] = True
         phase(marker, 'failed_resumed')
     print('HOST_SERVICE_RESUME=PASS; NO_FILE_OR_DATABASE_RESTORE', flush=True)

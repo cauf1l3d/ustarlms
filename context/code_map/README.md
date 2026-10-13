@@ -69,3 +69,9 @@ configured SIGTERM on a daemon type;SIGKILL,core dump,timeout,OOM and nonzero
 exit still refuse,including Docker/containerd. The SSD failure marker exposes
 only the failed unit and selected stop metadata. Ubuntu CI also exercises two
 unique sleep-only systemd units;it does not operate on production services.
+
+Container binding identity compares complete mount records independently of
+array order;duplicates and all source/destination/type/RW fields still matter.
+Real ID/image/mount drift refuses container operations and reports only changed
+field names in `resume_identity_differences`. Resume failures persist that
+diagnostic in the SSD marker;runtime resumption performs no file/DB restore.

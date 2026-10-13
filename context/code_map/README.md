@@ -41,3 +41,14 @@ python3 scripts/check_context.py
 [`lab_patch_preflight.py`](../../scripts/infra/lab_patch_preflight.py) проверяет retained clone без Moodle bootstrap и считает rollback budget. `trusted` сохраняет strict code/control/PostgreSQL policy; `moodledata_entry` применяется только к exact retained Moodledata tree с root0700/33:33, проверяет per-entry33:33/type/links/no-executable-files и nonwritable directories. Обычные data files с write bits только учитываются через metadata, их содержимое не открывается. Live scan повторно проверяет private root и сообщает count широких file write modes. [Owner refusal и контракт](../runtime/lab_patch_preflight_20261005.md); server planning20:44:34UTC PR86 PASS; [точный report](../runtime/lab_planning_result_20261005.json).
 
 [`lab_cold_checkpoint.py`](../../scripts/infra/lab_cold_checkpoint.py) использует SHA-pinned planning/resume/engine, отдельный module namespace и ownership guards. `cold_checkpoint` копирует согласованный комплект после lab-only web/PG stop и всегда возобновляет same source IDs; `copy_workspace` создаёт independent copy без shared inodes, `start_workspace` проверяет DB/files/bootstrap/HTTP/offline isolation. Frozen manifest не монтируется. Source chmod/chown/production exec/SQL отсутствуют; owner/mode сохраняются только на новых copies. [Контракт и deployment pending](../runtime/lab_cold_checkpoint_20261005.md).
+
+
+## Host AppArmor helper
+
+[`host_apparmor_repair.py`](../../scripts/infra/host_apparmor_repair.py) is an independent
+current-main host helper,not a Moodle mutation. The exact observed Snap profile
+receives one optional include after original hash/type/owner/device/inode checks
+and private readback backup. Q/K compilation precedes atomic replacement;AppArmor
+only start/reload and live container/kernel/Snap-state checks determine PASS.
+[Operator/recovery contract](../runtime/host_apparmor_repair_20261013.md). Application
+source/schema maps remain the same526 files/93 tables.

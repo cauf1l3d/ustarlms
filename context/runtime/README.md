@@ -1,3 +1,5 @@
+**Checkpoint13Oct13:18MSK:** [Exact profile/Snap observation](host_apparmor_observation_20261013.json):missing Snap include line11,a308e931/root0:0/0644/dev2050/inode3151055;LXD socket listens and Snap mounts remain. Keep consumers and profile;[one conditional include repair](host_apparmor_repair_20261013.md) prepared from current main c53723c,with original backup/compile before atomic replacement/AppArmor-only load/Docker enforcement checks. Repair/OS install/reboot pending. Prior owner518 upgrade/repeat/cron/HDD/browser acceptance closed;latest53 LTS after OS needs PG17+/addons/isolated recovery. Earlier entrypoint statements below are dated history,not an instruction to repeat completed storage or patch work.
+
 # Runtime и эксплуатация
 
 Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.

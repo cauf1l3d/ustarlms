@@ -1,3 +1,5 @@
+**Checkpoint13Oct13:18MSK:** [Exact profile/Snap observation](../runtime/host_apparmor_observation_20261013.json):missing Snap include line11,a308e931/root0:0/0644/dev2050/inode3151055;LXD socket listens and Snap mounts remain. Keep consumers and profile;[one conditional include repair](../runtime/host_apparmor_repair_20261013.md) prepared from current main c53723c,with original backup/compile before atomic replacement/AppArmor-only load/Docker enforcement checks. Repair/OS install/reboot pending. Prior owner518 upgrade/repeat/cron/HDD/browser acceptance closed;latest53 LTS after OS needs PG17+/addons/isolated recovery. Earlier entrypoint statements below are dated history,not an instruction to repeat completed storage or patch work.
+
 # Профиль архитектурного агента USTAR
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.

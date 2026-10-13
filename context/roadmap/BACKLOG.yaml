@@ -180,7 +180,7 @@ tasks:
   execution_gate: authorized_owner_point_6_after_point_7
 - id: INF-09
   title: CI на production PHP/core/PostgreSQL matrix
-  status: planned
+  status: done
   depends_on:
   - INF-01
   acceptance:
@@ -196,7 +196,7 @@ tasks:
     distinct.
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
-  status: planned
+  status: done
   depends_on:
   - INF-01
   - INF-09
@@ -208,17 +208,26 @@ tasks:
   execution_gate: authorized_owner_point_7_after_baseline_CI_and_stage_recovery
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot
-  status: planned
+  status: in_progress
   depends_on:
   - INF-01
   - INF-08
   execution_gate: authorized_owner_point_7_shared_service_window
   acceptance:
   - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from banner
-  - Targeted AppArmor repair preserves docker-default; Snap consumers checked before stale profile archive
+  - Targeted AppArmor repair preserves docker-default and retained Snap/LXD consumers; optional include or reviewed unused-profile archive only
   - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  handoff: context/runtime/host_apparmor_repair_20261013.md
+  runtime_evidence:
+  - context/runtime/host_apparmor_observation_20261013.json
+  current_checkpoint: >-
+    Owner13Oct1318MSK missing Snap include confirmed;LXD socket and Snap mounts
+    retained,not unused. One conditional include helper backed by real file
+    transaction tests and mandatory isolated Ubuntu parser CI. Repair/OS install/
+    reboot not executed. Prior accepted518 receipts copied without raw config;
+    no repeat core/stage/browser cycle required.
 - id: INF-10
   title: SSH/firewall/MFA и политики нужных служб общего хоста
   status: planned
@@ -348,6 +357,9 @@ tasks:
   - R15
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: PLAT-01
+  priority_note: Owner13Oct0449MSK latest stable Moodle53 LTS target confirmed after
+    OS,with PG17+ migration/addons/native theme/coherent isolated recovery before
+    production window. Current518 acceptance stays closed;HTTPS remains selected.
   title: Поддерживаемый major/LTS Moodle 5.3 с миграцией PostgreSQL17+
   status: planned
   depends_on:

@@ -1,17 +1,18 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-13'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner GPT copy received06Oct09:06:01UTC: raw PMBR/GPT/BIOS boot and native table
-  copy saved on mounted HDD in ssd-layout-20261006-06NYpg, nine hash checks OK and
-  GPT_COPY_READBACK=PASS. Sysadmin console access confirmed09:03:36UTC; rescue medium and
-  actual boot recovery not separately verified. First GPT relocation command prepared:
-  raw pre/post header/table CRC, exact partition array and boot-byte preservation guards;
-  17 regular sparse-file fixtures PASS, native sgdisk not executed locally. Server GPT write,
-  root growth, source move/deletion and stage preparation remain unexecuted.
-  Timer active/enabled from earlier evidence, first scheduled run07Oct03:30MSK pending.'
-next_task: INF-04
+current_activity: >-
+  Owner13Oct1318MSK exact Snap profile a308e931/root0:0/0644/dev2050/inode3151055
+  fails compilation at missing include line11. Retained Snap mounts and listening
+  LXD socket prevent unused-profile quarantine. Independent current-main helper
+  keeps the profile,adds one if-exists condition,backs up exact original,compiles
+  before atomic replacement,and starts/reloads only AppArmor with Docker/Snap/kernel
+  checks. Local fixtures passed;exact real-parser CI and server repair result pending.
+  Prior storage/Moodle518/cron/HDD/browser accepted receipts preserved;do not repeat
+  those deployments. Host package/reboot and Moodle53/PG17+ remain future selected work.
+next_task: INF-10-OS
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -33,6 +34,13 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
+  latest_core_patch_observed_at: '2026-10-13T00:27:29.887522+00:00'
+  latest_core_patch_source: context/runtime/production_patch_upgrade_result_20261013.json
+  platform_release: '5.1.8'
+  current_core_db_version: '2025100608.00'
+  latest_cron_HDD_source: context/runtime/production_patch_post_switch_status_result_20261013.json
+  latest_browser_source: context/runtime/production_patch_browser_result_20261013.json
+  previous_observations_remain_dated: true
   status: owner_backup_cron_http_and_retained_lab_resume_confirmed_patch_stage_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
@@ -397,3 +405,19 @@ storage_reorganization:
   rescue_boot_medium_identified: false
   actual_host_boot_recovery_tested: false
   binary_partition_table_recovery_copy_confirmed: true
+
+host_AppArmor_repair_20261013:
+  task: INF-10-OS
+  branch_base: c53723c8d669a1013c518f34abf392143d211d9d
+  observation: context/runtime/host_apparmor_observation_20261013.json
+  handoff: context/runtime/host_apparmor_repair_20261013.md
+  source: scripts/infra/host_apparmor_repair.py
+  helper_sha256: 570986e4cd2199945b705eb280cb183339d9d6ba71d15ad788b09aca5579b225
+  status: source_prepared_server_execution_pending
+  profile_quarantine: rejected_due_to_retained_LXD_socket_and_Snap_mount_consumers
+  conditional_include_preserves_existing_profile: true
+  AppArmor_repair_executed: false
+  OS_package_update_or_reboot_executed: false
+  direct_agent_server_access: false
+  prior_production_patch_acceptance: closed_in_owner_agreed_scope
+  next_platform_goal: owner13Oct0449MSK_latest_stable_Moodle53_LTS_after_OS_PG17_addons_and_coherent_isolated_recovery

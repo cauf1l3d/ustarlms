@@ -393,3 +393,31 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+
+## 13Oct13:18MSK Snap include failure confirmed; retain LXD and prepare exact repair
+
+Owner current compile exit1/missing absolute include line11 confirmed exact
+a308e931/root0:0/0644/dev2050/inode3151055 profile. Snap core18/LXD/snapd mounts
+active,enabled listening LXD socket and inactive daemon remain;Snap executable
+process count0 does not establish unused consumers. Kernel docker-default enforce
+observed,SSH socket loaded/active/enabled metadata only. [Selected receipt](../runtime/host_apparmor_observation_20261013.json).
+Quarantine would not satisfy the observed consumer scope. Retain profile and add
+only if-exists to its one literal include;conditional syntax retains future include
+semantics. New code branch from fresh current main c53723c,not stacked on PR99.
+Helper preserves verified byte/basic-metadata backup,compiles Q/K,checks baseline
+again,atomically replaces one file,starts/reloads only AppArmor and verifies old
+kernel labels,Docker identities/restart counts/enforcement and selected Snap units.
+Compile failure leaves live bytes unchanged;post-load failure retains fixed file
+plus exact original/private phase instead of restoring known broken rules or
+unloading policies. Repeat after success does not reload. Local helper and full
+Python suite PASS,actual Ubuntu parser fixture mandatory in dedicated CI. Server
+repair still pending;no packages/reboot or Snap/LXD activation/removal.
+
+Selected prior upgrade/cron/browser/OS receipts copied byte-for-byte from accepted
+PR99 source ee0b07b09b9a0dfadc70f3bfb2a80b0f4cb8be46;application/frontend remain
+main baseline. Accepted518/stage/storage work not repeated because main's older
+entrypoints describe06Oct history. INF08/09 closed in delivered patch/matrix scope;
+INF10OS current,major53/PG17+ follows OS as accepted by owner04:49MSK. This is not
+full addon/Snap/LXD/shared-host restore acceptance. CI run/implementation SHA and
+remote byte checks follow publication before the pinned operator command.

@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-13'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -8,9 +8,9 @@ project:
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
-  platform: 'Moodle 5.1.1+ (Build: 20251219), fresh disk/DB owner inventory 2026-10-05T02:43:33Z; full core pending'
+  platform: 'Moodle5.1.8/core2025100608.00 owner13Oct upgrade/repeat/cron/HDD/browser accepted; earlier dated baseline preserved'
   language: PHP CLI8.3.33/Trixie production; PR83 source CI8.2+8.3 and pinned patch-518/PG16.15 full RC SUCCESS,
-    server core upgrade not executed
+    server518 upgrade/repeat owner13Oct PASS;new AppArmor helper is separate host source
   database: PostgreSQL 16.15, dated owner evidence
   deployment: Docker on company Ubuntu 24.04.4 LTS shared host; virtualization not verified
   native_ui: PHP + Mustache + JS/AMD + SCSS
@@ -25,3 +25,5 @@ state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_points_1_7_6
+latest_core_patch_evidence: context/runtime/production_patch_upgrade_result_20261013.json
+latest_host_scope: context/runtime/host_apparmor_repair_20261013.md

@@ -1,0 +1,79 @@
+{
+  "kind": "owner_targeted_AppArmor_Snap_consumer_readonly_observation",
+  "received_at": "2026-10-13T13:18:01+03:00",
+  "measured_at": null,
+  "independently_measured": false,
+  "profile": {
+    "path": "/etc/apparmor.d/usr.lib.snapd.snap-confine.real",
+    "uid": 0,
+    "gid": 0,
+    "mode": "0644",
+    "device": 2050,
+    "inode": 3151055,
+    "sha256": "a308e9311c95af4d8df14fd04491d27692dd530994c2297c276f3a76a40de86c"
+  },
+  "compile": {
+    "kernel_load_skipped": true,
+    "cache_read_write_skipped": true,
+    "exit_code": 1,
+    "error_line": 11,
+    "reason": "absolute_include_directory_missing",
+    "include": "/var/lib/snapd/apparmor/snap-confine",
+    "include_directory_present": false
+  },
+  "Snap_mounts": [
+    {
+      "unit": "snap-core18-1880.mount",
+      "target": "/snap/core18/1880",
+      "active": true,
+      "enabled": true
+    },
+    {
+      "unit": "snap-lxd-16099.mount",
+      "target": "/snap/lxd/16099",
+      "active": true,
+      "enabled": true
+    },
+    {
+      "unit": "snap-snapd-8542.mount",
+      "target": "/snap/snapd/8542",
+      "active": true,
+      "enabled": true
+    }
+  ],
+  "LXD_service": {
+    "unit": "snap.lxd.daemon.service",
+    "load_state": "loaded",
+    "active_state": "inactive",
+    "sub_state": "dead",
+    "unit_file_state": "static"
+  },
+  "LXD_socket": {
+    "unit": "snap.lxd.daemon.unix.socket",
+    "load_state": "loaded",
+    "active_state": "active",
+    "sub_state": "listening",
+    "unit_file_state": "enabled"
+  },
+  "snapd_units_masked": true,
+  "Snap_executable_process_count": 0,
+  "selected_loaded_kernel_profiles": [
+    "docker-default (enforce)"
+  ],
+  "selected_Snap_confine_kernel_profile_printed": false,
+  "ssh_socket_properties": {
+    "load_state": "loaded",
+    "active_state": "active",
+    "sub_state": "running",
+    "unit_file_state": "enabled"
+  },
+  "SSH_boot_and_connection_test": "not_proved_by_metadata",
+  "observation_live_non_atomic": true,
+  "Snap_LXD_unused": "not_established; retained mounts and listening enabled socket are consumers",
+  "profile_quarantine_deletion_empty_include_or_global_AppArmor_disable": false,
+  "profile_or_kernel_policy_mutation_in_observation": false,
+  "AppArmor_repair_executed": false,
+  "OS_package_update_or_reboot_executed": false,
+  "chosen_repair": "retain_profile; make_only_missing_include_conditional; byte_backup_compile_before_atomic_replace; AppArmor_only_load_then_kernel_Docker_Snap_state_checks",
+  "whole_AppArmor_unit_failure_has_no_other_causes": "not_claimed_before_actual_service_load"
+}

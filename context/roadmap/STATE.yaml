@@ -4,13 +4,12 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner14Oct0109MSK r3 resume_required/CONTAINER_IDENTITY_DRIFT,22:07:20..25UTC,
-  failed unit/PID0;runtime resumption unverified. Priority restore original
-  runtime only,no capture/install/reboot. Source2766a1a9/SHA4bf199c1 compares
-  complete mount records independent of order,keeps real ID/image/mount guards
-  and persists changed-field diagnostics on failed resume.34 local and exact
-  Ubuntu34 model/file+2 real systemd/no skips PASS. Actual cause unverified;
-  guarded --resume-services next. AppArmor/518 acceptance closed.
+  Owner14Oct0217MSK: original runtime resumed; r4 later failed before copy
+  with FileNotFoundError and resumed services. Live metadata scan completed
+  except Docker foreign-mount guard. Actual cold missing path unknown.
+  Implemented private path/operation/step diagnostics and one full initial
+  manifest retry without skipping entries.41 local tests PASS;exact Ubuntu
+  CI and new server capture pending. No host archive/install/reboot acceptance.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []

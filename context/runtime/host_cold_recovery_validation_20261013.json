@@ -68,5 +68,14 @@
     "reordered_mounts_resume_original_IDs_and_policies",
     "real_identity_change_blocks_replacement",
     "failed_recovery_diagnostic_persisted_without_data_restore"
-  ]
+  ],
+  "next_manifest_diagnostics_revision": {
+    "helper_sha256": "962a75d0c1d0f69c92efdb37fa52d8d986e81730cb39984f09d49fedc7189e40",
+    "local_tests": 41,
+    "local_result": "PASS",
+    "skips": 0,
+    "exact_Ubuntu_CI": "PENDING",
+    "server_execution": false,
+    "actual_r4_cause_verified": false
+  }
 }

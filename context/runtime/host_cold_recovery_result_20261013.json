@@ -66,7 +66,7 @@
   "service_stop_diagnostic": {
     "received_at": "2026-10-13T14:26:12+00:00",
     "source": "owner_uploaded_terminal_metadata",
-    "uploaded_name": "\u0412\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442(20261013-142524).txt",
+    "uploaded_name": "Вставленный текст(20261013-142524).txt",
     "uploaded_sha256": "f5c681a1e0d4dbcd01fd74fd39e1cbdcd32a05f76e265dfc4b1b0ea1c96ca239",
     "failure_code": "SERVICE_UNCLEAN_STOP",
     "service_stop_order": [
@@ -291,10 +291,42 @@
     "copy_not_reached_source_phase_inference": true,
     "actual_changed_container_fields": "UNKNOWN"
   },
-  "next_action": "guarded_original_runtime_resumption_only_no_capture_install_or_reboot",
+  "next_action": "validate_failure_diagnostics_and_bounded_full_manifest_rescan_before_new_capture",
   "resume_helper_implementation_commit": "2766a1a9608d58ebf6f5ff28c5f2f06b90dbc389",
   "resume_helper_sha256": "4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2",
-  "resume_execution_verified": false,
+  "resume_execution_verified": true,
   "mount_order_bug_found_in_source": true,
-  "mount_order_is_actual_r3_cause": "UNVERIFIED"
+  "mount_order_is_actual_r3_cause": "UNVERIFIED",
+  "r3_recovery_result": {
+    "updated_at": "2026-10-13T23:05:54.581670+00:00",
+    "phase": "failed_resumed",
+    "services_resumed": true,
+    "Result": "success",
+    "ExecMainStatus": 0,
+    "initial_resume_attempt": "MAINTENANCE_LOCK_BUSY_NO_STOP",
+    "all_14_selected_services_active_success_observed": true,
+    "all_six_containers_running_observed": true
+  },
+  "r4_attempt": {
+    "unit": "ustar-host-recovery-20261014-r4.service",
+    "invocation_id": "2f826d4f469445de8058341fe51820ee",
+    "helper_sha256": "4bf199c14fcf69a39a2283ca93d87b304e42b881e22c16ccec1c0d5c710116b2",
+    "phase": "failed_resumed",
+    "started_at": "2026-10-13T23:08:10.960528+00:00",
+    "updated_at": "2026-10-13T23:08:40.642673+00:00",
+    "run_directory": "/srv/ustar-storage/host-recovery-20261013T230810Z-88ea1f7a",
+    "services_resumed": true,
+    "failure_code": "FileNotFoundError",
+    "selected_services_stopped_phase_reached": true,
+    "copy_phase_reached": false,
+    "actual_missing_path": "UNKNOWN_NOT_RECORDED",
+    "package_install_or_reboot": false
+  },
+  "live_metadata_scan_0217MSK": {
+    "completed": true,
+    "file_content_hashing": false,
+    "FileNotFoundError_reproduced": false,
+    "docker_root": "PROTECTED_FOREIGN_FILESYSTEM",
+    "cold_archive_verified": false
+  }
 }

@@ -75,3 +75,6 @@ array order;duplicates and all source/destination/type/RW fields still matter.
 Real ID/image/mount drift refuses container operations and reports only changed
 field names in `resume_identity_differences`. Resume failures persist that
 diagnostic in the SSD marker;runtime resumption performs no file/DB restore.
+
+
+Host cold recovery14Oct: `path_call` annotates filesystem errors; `diagnostic`/`save_diagnostic` keep full paths in root-private SSD JSON and expose only scope/hash/operation/step/stack locations. `baseline_manifest` rebuilds its entire initial map once on a missing child; missing required roots,other errors and post-copy verification never bypass guards. App code map remains unchanged.

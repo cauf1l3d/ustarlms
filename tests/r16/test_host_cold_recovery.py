@@ -1,4 +1,5 @@
 import copy
+import errno
 from contextlib import nullcontext, redirect_stdout
 import hashlib
 import importlib.util
@@ -469,6 +470,87 @@ class RecoveryTests(unittest.TestCase):
             child.wait(timeout=5)
             child.stdout.close()
 
+    def test_disappearing_child_rebuilds_whole_manifest_once(self):
+        directory = self.root / 'data'
+        directory.mkdir()
+        vanished, survivor = directory / 'vanished', directory / 'survivor'
+        vanished.write_bytes(b'transient')
+        survivor.write_bytes(b'before')
+        original = Path.iterdir
+        visited = []
+
+        def listing(path):
+            if path == directory and not visited:
+                visited.append(path)
+                vanished.unlink()
+                return iter([vanished, survivor])
+            return original(path)
+
+        marker = {}
+        with patch.object(cold, 'STATE', self.base), patch.object(Path, 'iterdir', listing), \
+                patch.object(cold.time, 'sleep', side_effect=lambda _: survivor.write_bytes(b'after')) as wait, \
+                redirect_stdout(io.StringIO()) as output:
+            result = cold.baseline_manifest([str(directory)], marker)
+        self.assertNotIn(str(vanished).lstrip('/'), result)
+        self.assertEqual(hashlib.sha256(b'after').hexdigest(),
+                         result[str(survivor).lstrip('/')]['sha256'])
+        wait.assert_called_once_with(1)
+        self.assertEqual('lstat', marker['manifest_retry']['operation'])
+        self.assertNotIn(str(vanished), output.getvalue())
+        self.assertEqual(str(vanished), cold.read_json(self.base / 'manifest-retry.private.json')['path'])
+
+    def test_missing_required_root_is_never_skipped_or_retried(self):
+        with patch.object(cold, 'manifest') as scan, patch.object(cold.time, 'sleep') as wait:
+            with self.assertRaises(FileNotFoundError) as caught:
+                cold.baseline_manifest([str(self.root / 'missing')], {})
+        self.assertEqual('required_root_lstat', caught.exception.ustar_operation)
+        scan.assert_not_called()
+        wait.assert_not_called()
+
+    def test_persistent_missing_child_refuses_after_one_full_retry(self):
+        error = FileNotFoundError(errno.ENOENT, 'fixture', str(self.root / 'child'))
+        with patch.object(cold, 'STATE', self.base), \
+                patch.object(cold, 'manifest', side_effect=error) as scan, \
+                patch.object(cold.time, 'sleep') as wait, redirect_stdout(io.StringIO()):
+            with self.assertRaises(FileNotFoundError):
+                cold.baseline_manifest([str(self.root)], {})
+        self.assertEqual(2, scan.call_count)
+        wait.assert_called_once_with(1)
+
+    def test_manifest_permission_error_preserves_path_and_does_not_retry(self):
+        f = self.root / 'protected'
+        f.write_bytes(b'data')
+        error = PermissionError(errno.EACCES, 'fixture', str(f))
+        with patch.object(Path, 'open', side_effect=error), patch.object(cold.time, 'sleep') as wait:
+            with self.assertRaises(PermissionError) as caught:
+                cold.baseline_manifest([str(f)], {})
+        self.assertEqual('open_file', caught.exception.ustar_operation)
+        self.assertEqual(str(f), caught.exception.ustar_path)
+        wait.assert_not_called()
+
+    def test_failure_diagnostic_keeps_private_path_out_of_status(self):
+        path = '/var/vmail/private-person/private-file'
+        error = FileNotFoundError(errno.ENOENT, 'fixture', path)
+        marker = {}
+        with patch.object(cold, 'STATE', self.base):
+            cold.save_diagnostic(marker, error, 'building_protected_manifest')
+        self.assertNotIn('private-person', json.dumps(cold.summary(marker)))
+        self.assertEqual('/var/vmail', marker['failure_details']['path_scope'])
+        self.assertEqual(path, cold.read_json(self.base / 'failure.private.json')['path'])
+        self.assertEqual(0o600, (self.base / 'failure.private.json').stat().st_mode & 0o777)
+
+    def test_diagnostic_write_failure_does_not_mask_original_failure(self):
+        marker = {}
+        error = FileNotFoundError(errno.ENOENT, 'fixture', '/missing')
+        with patch.object(cold, 'write_json', side_effect=OSError('disk full')):
+            cold.save_diagnostic(marker, error, 'building_protected_manifest')
+        self.assertFalse(marker['failure_details']['private_record_written'])
+        self.assertEqual('FileNotFoundError', marker['failure_details']['error_type'])
+
+    def test_persistent_manifest_failure_resumes_before_any_copy(self):
+        with patch.object(cold.time, 'sleep'):
+            self.transaction(fail_manifest=True)
+
     def test_cold_source_manifest_detects_changed_contents(self):
         directory = self.root / 'data'
         directory.mkdir()
@@ -479,7 +561,7 @@ class RecoveryTests(unittest.TestCase):
         self.assertNotEqual(before, cold.manifest([str(directory)]))
 
     @unittest.skipUnless(os.geteuid() == 0, 'requires trusted root control fixtures')
-    def transaction(self, fail_copy=False, fail_verify=False, fail_marker=False, fail_stop=False):
+    def transaction(self, fail_copy=False, fail_verify=False, fail_marker=False, fail_stop=False, fail_manifest=False):
         marker = state()
         hdd, state_dir = self.base / 'hdd', self.base / 'state'
         hdd.mkdir(mode=0o700)
@@ -507,6 +589,8 @@ class RecoveryTests(unittest.TestCase):
                 raise AssertionError(args)
 
         def mapped_manifest(paths):
+            if fail_manifest:
+                raise FileNotFoundError(errno.ENOENT, 'fixture', str(mysql / 'missing'))
             prefix = str(self.root).lstrip('/') + '/'
             return {k.removeprefix(prefix): v for k, v in original_manifest(paths).items()}
 
@@ -535,7 +619,10 @@ class RecoveryTests(unittest.TestCase):
                 patch.object(cold, 'phase', side_effect=marker_phase), \
                 patch.object(cold, 'tar_command', side_effect=lambda *_: original_tar(self.root, [])), \
                 redirect_stdout(io.StringIO()) as stdout:
-            if fail_stop:
+            if fail_manifest:
+                with self.assertRaises(FileNotFoundError):
+                    cold.capture()
+            elif fail_stop:
                 with self.assertRaisesRegex(cold.RecoveryError, 'SERVICE_UNCLEAN_STOP'):
                     cold.capture()
             elif fail_copy:
@@ -554,7 +641,11 @@ class RecoveryTests(unittest.TestCase):
             result = cold.read_json(state_dir / 'active.json')
         self.assertEqual(['stop', 'resume'], calls)
         self.assertTrue(result['services_resumed'])
-        if fail_copy or fail_verify or fail_marker or fail_stop:
+        if fail_manifest:
+            self.assertEqual('building_protected_manifest', result['failure_details']['step'])
+            self.assertFalse(any(hdd.glob('host-recovery-*/root.tar')))
+            self.assertTrue((state_dir / 'failure.private.json').is_file())
+        if fail_copy or fail_verify or fail_marker or fail_stop or fail_manifest:
             self.assertEqual('failed_resumed', result['phase'])
             self.assertNotIn('HOST_COLD_RECOVERY=PASS', stdout.getvalue())
         else:

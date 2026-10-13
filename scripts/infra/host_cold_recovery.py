@@ -20,6 +20,7 @@ import subprocess
 import tarfile
 import tempfile
 import time
+import traceback
 import urllib.request
 
 HDD = Path('/srv/ustar-storage')
@@ -279,6 +280,58 @@ def protected_paths(runner, before):
     return sorted(set(present))
 
 
+def path_call(operation, path, action):
+    try:
+        return action()
+    except OSError as error:
+        error.ustar_operation = operation
+        error.ustar_path = str(error.filename or path)
+        raise
+
+
+def diagnostic(error, step):
+    path = str(getattr(error, 'ustar_path', '') or getattr(error, 'filename', '') or '')
+    scopes = sorted(PROTECTED + ['/opt/ustar', '/var/lib/docker', '/var/lib/containerd',
+                                 '/var/lib/ustar-restore-lab', str(STATE), str(HDD), '/proc'],
+                    key=len, reverse=True)
+    scope = next((p for p in scopes if path == p or path.startswith(p + '/')), 'other')
+    frames = traceback.extract_tb(error.__traceback__)
+    safe = {'step': step, 'error_type': type(error).__name__, 'errno': getattr(error, 'errno', None),
+            'operation': getattr(error, 'ustar_operation', 'other'), 'path_scope': scope,
+            'path_sha256': hashlib.sha256(os.fsencode(path)).hexdigest() if path else None,
+            'frames': [{'function': f.name, 'line': f.lineno} for f in frames[-4:]]}
+    return safe, {'summary': safe, 'path': path}
+
+
+def save_diagnostic(marker, error, step, retry=False):
+    safe, private = diagnostic(error, step)
+    key = 'manifest_retry' if retry else 'failure_details'
+    marker[key] = safe
+    try:
+        write_json(STATE / ('manifest-retry.private.json' if retry else 'failure.private.json'), private)
+    except Exception:
+        # Diagnostic I/O must never replace the original error or prevent resume.
+        marker[key]['private_record_written'] = False
+    else:
+        marker[key]['private_record_written'] = True
+
+
+def baseline_manifest(paths, marker):
+    # Retry one complete pre-copy enumeration, never skip a missing entry and
+    # never reuse a partial manifest. Required roots and other errors fail closed.
+    for attempt in range(2):
+        for path in paths:
+            path_call('required_root_lstat', path, Path(path).lstat)
+        try:
+            return manifest(paths)
+        except FileNotFoundError as error:
+            if attempt:
+                raise
+            save_diagnostic(marker, error, 'building_protected_manifest', retry=True)
+            print('HOST_RECOVERY_MANIFEST_RETRY=1; FULL_RESCAN; NO_ENTRY_SKIPPING', flush=True)
+            time.sleep(1)
+
+
 def manifest(paths):
     result = {}
     pending = list(paths)
@@ -288,25 +341,25 @@ def manifest(paths):
         name = str(p).lstrip('/')
         if name in result:
             continue
-        s = p.lstat()
+        s = path_call('lstat', p, p.lstat)
         need(s.st_dev == rootdev, 'PROTECTED_FOREIGN_FILESYSTEM')
         entry = {'mode': stat.S_IMODE(s.st_mode), 'uid': s.st_uid, 'gid': s.st_gid,
                  'mtime_ns': s.st_mtime_ns, 'ctime_ns': s.st_ctime_ns, 'inode': s.st_ino}
         if stat.S_ISREG(s.st_mode):
             entry.update(kind='file', size=s.st_size)
-            with p.open('rb') as f:
-                entry['sha256'] = hashlib.file_digest(f, 'sha256').hexdigest()
+            with path_call('open_file', p, lambda: p.open('rb')) as f:
+                entry['sha256'] = path_call('hash_file', p, lambda: hashlib.file_digest(f, 'sha256').hexdigest())
         elif stat.S_ISDIR(s.st_mode):
             entry['kind'] = 'dir'
-            pending.extend(str(child) for child in p.iterdir())
+            pending.extend(path_call('list_directory', p, lambda: [str(child) for child in p.iterdir()]))
         elif stat.S_ISLNK(s.st_mode):
-            entry.update(kind='link', target=os.readlink(p))
+            entry.update(kind='link', target=path_call('readlink', p, lambda: os.readlink(p)))
             # Data-directory symlinks must not silently escape the copied SSD.
             if p.exists():
-                target = p.resolve(strict=True)
+                target = path_call('resolve_link', p, lambda: p.resolve(strict=True))
                 relative = str(target).lstrip('/')
                 if not any(relative == x or relative.startswith(x + '/') for x in EXCLUDED):
-                    need(target.stat().st_dev == rootdev and target != Path('/'), 'EXTERNAL_LINK_DATA')
+                    need(path_call('link_target_stat', target, target.stat).st_dev == rootdev and target != Path('/'), 'EXTERNAL_LINK_DATA')
                     pending.append(str(target))
         elif stat.S_ISFIFO(s.st_mode):
             entry['kind'] = 'fifo'
@@ -610,26 +663,34 @@ def capture():
         with locks():
             phase(marker, 'quiescing')
             failure = None
+            step = 'stopping_services'
             try:
                 stop(runner, marker)
                 disk(runner)
                 need(HDD.stat().st_dev == device, 'HDD_MOUNT_DRIFT')
                 phase(marker, 'selected_services_stopped')
-                protected = manifest(paths)
+                step = 'building_protected_manifest'
+                phase(marker, step)
+                protected = baseline_manifest(paths, marker)
+                step = 'writing_protected_manifest'
                 (run / 'protected.private.json').write_text(json.dumps(protected, sort_keys=True))
+                step = 'reading_swap_inventory'
                 swaps = []
                 for line in Path('/proc/swaps').read_text().splitlines()[1:]:
                     path = line.split()[0]
                     if path.startswith('/') and Path(path).is_file():
                         swaps.append(path.lstrip('/'))
-                phase(marker, 'copying_SSD_root')
+                step = 'copying_SSD_root'
+                phase(marker, step)
                 digest, size = copy_archive(tar_command('/', list(EXCLUDED) + swaps),
                                             run / 'root.tar', runner.log, budget)
+                step = 'verifying_cold_source'
                 need(manifest(paths) == protected, 'COLD_SOURCE_CHANGED_DURING_COPY')
                 marker.update(archive_sha256=digest, archive_bytes=size)
                 phase(marker, 'copy_complete')
             except BaseException as error:
                 failure = error
+                save_diagnostic(marker, error, step)
                 marker['failure_code'] = str(error) if isinstance(error, RecoveryError) else type(error).__name__
             finally:
                 # Finish recovery even if the copying process receives SIGTERM.
@@ -671,6 +732,7 @@ def capture():
             phase(marker, 'complete')
             write_json(run / 'receipt.private.json', marker)
         except BaseException as error:
+            save_diagnostic(marker, error, 'archive_readback')
             marker['failure_code'] = str(error) if isinstance(error, RecoveryError) else type(error).__name__
             phase(marker, 'failed_resumed')
             raise
@@ -686,7 +748,7 @@ def summary(marker):
     keys = ('kind', 'phase', 'started_at', 'updated_at', 'run_directory', 'archive',
             'archive_sha256', 'archive_bytes', 'archive_readback_sha256_verified',
             'protected_members_verified', 'services_resumed', 'failure_code',
-            'failed_service', 'failed_service_stop',
+            'failed_service', 'failed_service_stop', 'failure_details', 'manifest_retry',
             'resume_identity_differences',
             'package_install_or_reboot', 'package_baseline_unchanged', 'encrypted',
             'full_host_boot_restore_verified')

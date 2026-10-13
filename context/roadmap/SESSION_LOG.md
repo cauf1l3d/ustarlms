@@ -576,3 +576,8 @@ source8.2/8.3 in38476723495 PASS;unchanged main frontend audit failure/full gate
 skipped. Docker recovery simulated;native units are isolated sleep-only fixtures.
 App/frontend/AppArmor bytes unchanged. Owner guarded resume execution pending;
 backup/host install/reboot remain deferred until runtime recovered.
+
+
+## 2026-10-14 02:17 MSK — cold manifest failure
+
+**Current14Oct02:17MSK:** Owner r3 recovery completed at23:05:54UTC (services_resumed=true/unit exit0). Subsequent r4 reached selected_services_stopped, then FileNotFoundError before copy; finally restored services at23:08:40UTC. Live metadata-only scan completed;Docker root stopped at foreign-filesystem guard;actual cold missing path remains unknown. New source retains exact private failure path/operation/step and retries one complete initial manifest only on FileNotFoundError,never skips entries or retries post-copy verification.41 local tests PASS;exact Ubuntu CI and new server capture pending. No archive/package/reboot acceptance. See current host cold recovery contract/result.

@@ -10,7 +10,31 @@ no password change or disclosure is needed for this file-level cold capture.
 ISPConfig missing-or-link remains unresolved;absence does not authorize removal.
 Prior AppArmor/Moodle518/cron/HDD/browser acceptance stays closed.
 
-## Current owner14Oct01:09MSK: r3 resume required; restore runtime first
+## Current14Oct02:17MSK: r4 resumed; missing path unrecorded
+
+Owner confirmed successful original runtime resume at23:05:54UTC. r4 later
+reached selected_services_stopped,then FileNotFoundError before copying;
+services_resumed=true at23:08:40UTC. No archive/install/reboot acceptance.
+Live metadata-only scan completed without missing-file error;Docker root hit
+foreign-filesystem protection. This does not identify the past cold missing
+path or establish a completed full scan of Docker state.
+
+Prepared correction: filesystem calls attach operation/path to the original
+exception. Status retains failure stage,errno,operation,scope,path SHA and
+stack function/line,while the full path stays only in root600 SSD JSON
+`/var/lib/ustar-host-recovery-20261013/failure.private.json` (or
+`manifest-retry.private.json`). No file content/configuration is emitted.
+Diagnostic-write errors never replace the original failure or prevent resume.
+Only the initial pre-copy manifest may restart once after a missing child;
+every required root must exist,all partial entries are discarded,and all other
+errors still refuse. Post-copy source equality/archive verification never
+retry or skip entries. This is bounded transient-path handling and improved
+evidence,not proof that the unknown owner failure is fixed.
+
+Local41 tests PASS. Exact Ubuntu CI/publication/new server capture pending.
+Previous command sections below are history;do not rerun old capture helpers.
+
+## Previous owner14Oct01:09MSK: r3 resume required; restore runtime first
 
 [Owner r3 receipt](host_cold_recovery_result_20261013.json):verified94488652,
 5d69566b installed,r3 invocationd13be599,22:07:20..25UTC,phase resume_required,

@@ -4,13 +4,12 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner14Oct0217MSK: original runtime resumed; r4 later failed before copy
-  with FileNotFoundError and resumed services. Live metadata scan completed
-  except Docker foreign-mount guard. Actual cold missing path unknown.
-  Implemented private path/operation/step diagnostics and one full initial
-  manifest retry without skipping entries.41 local tests PASS;exact Ubuntu
-  CI41+2/no skips PASS,context PASS. Source99b3e0dc/SHA962a75d0 ready for r5.
-  New server capture pending;no host archive/install/reboot acceptance.
+  Owner14Oct0232MSK: r5 failed before copy and resumed services. Failure is
+  strict link resolution into excluded /proc;reproduced locally with real
+  pipe FD. Component resolver now applies exclusions before lookup and
+  preserves link text,persistent target and source/archive checks.
+  Local48 PASS;exact Ubuntu CI and server r6 pending.
+  No host archive/install/reboot acceptance.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []

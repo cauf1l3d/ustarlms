@@ -583,3 +583,8 @@ backup/host install/reboot remain deferred until runtime recovered.
 **Current14Oct02:17MSK:** Owner r3 recovery completed at23:05:54UTC (services_resumed=true/unit exit0). Subsequent r4 reached selected_services_stopped, then FileNotFoundError before copy; finally restored services at23:08:40UTC. Live metadata-only scan completed;Docker root stopped at foreign-filesystem guard;actual cold missing path remains unknown. New source retains exact private failure path/operation/step and retries one complete initial manifest only on FileNotFoundError,never skips entries or retries post-copy verification.41 local tests PASS;exact Ubuntu CI and new server capture pending. No archive/package/reboot acceptance. See current host cold recovery contract/result.
 
 Exact99b3e0dc/SHA962a75d0: local41/root Ubuntu41+2 no skips PASS(run38484018659/job115593190536);context38484018640 PASS. Current operator contract pins r5. Actual r4 path unknown;new server capture pending.
+
+
+## 2026-10-14 02:32 MSK — excluded proc link resolution
+
+**Current14Oct02:32MSK:** Owner r5 failed_resumed/FileNotFoundError at23:28:39..23:29:13UTC;services_resumed=true. Saved diagnosis identifies building_protected_manifest/resolve_link/errno2 under /proc,identical across both attempts. Old strict resolver follows proc magic links before exclusions;the same error class was reproduced locally with a real pipe FD. New component resolver stops at excluded trees before lookup,archives raw links,and retains persistent same-filesystem target checks.48 local tests PASS including real tar/link readback. Exact Ubuntu CI and server r6 pending. No host archive/install/reboot acceptance.

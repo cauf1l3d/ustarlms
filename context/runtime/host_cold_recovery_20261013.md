@@ -10,7 +10,27 @@ no password change or disclosure is needed for this file-level cold capture.
 ISPConfig missing-or-link remains unresolved;absence does not authorize removal.
 Prior AppArmor/Moodle518/cron/HDD/browser acceptance stays closed.
 
-## Current14Oct02:17MSK: r4 resumed; missing path unrecorded
+## Current14Oct02:32MSK: r5 proc link failure; services restored
+
+Owner r5 at23:28:39..23:29:13UTC:failed_resumed/services_resumed=true.
+Both initial manifest and its one retry failed with FileNotFoundError/errno2,
+operation resolve_link,scope /proc,path SHA c7340aa1fdce4e73fb524ece4360d1347f9836a165fecace23cb8c680242ee7d.
+No copy/install/reboot occurred. Exact server link text remains private/unread.
+Old code follows p.resolve(strict=True) before applying exclusions. A real
+/proc/self/fd pipe link reproduces the same failure locally,even though
+p.exists() returns true. Excluded proc data should never be traversed.
+
+The new component resolver checks excluded boundaries before lstat/readlink,
+preserves raw symlink targets in the manifest/tar,and handles absolute,relative
+and indirect aliases. Persistent targets still require the copied filesystem;
+root targets refuse,dangling/cyclic links retain link-only behavior. No entry
+skipping/file deletion or broader archive exclusion is introduced. Source
+comparison and archive readback remain mandatory. Local48 tests PASS,including
+actual pipe link/tar/readback/restore and persistent-target guards. Exact Ubuntu
+CI/publication and new server execution pending. Previous capture/resume
+command sections below are historical and must not be reused as the next step.
+
+## Previous14Oct02:17MSK: r4 resumed; missing path unrecorded
 
 Owner confirmed successful original runtime resume at23:05:54UTC. r4 later
 reached selected_services_stopped,then FileNotFoundError before copying;
@@ -41,7 +61,7 @@ Initial non-root diagnostic-test assumptions were corrected;root safety checks
 remain intact. Published helper bytes and source tree match local.
 Server execution of this revision and completed archive remain pending.
 
-### Current next capture r5
+### Previous capture r5 (executed; failed and resumed)
 
 The owner has already authorized the maintenance/capture;original services
 are restored. Use separate commands. This will pause selected services for

@@ -82,5 +82,18 @@
     "initial_full_retry_limit": 1,
     "required_root_missing_refused": true,
     "post_copy_verification_retry": false
+  },
+  "next_proc_link_revision": {
+    "helper_sha256": "3f8f0c0eae0d9702216d276231f2c7151fc40635b962843a0e9fe85efae6f0c4",
+    "old_real_pipe_failure_reproduced": true,
+    "local_tests": 48,
+    "local_result": "PASS",
+    "skips": 0,
+    "exact_Ubuntu_CI": "PENDING",
+    "server_execution": false,
+    "real_pipe_tar_and_restore_checked": true,
+    "virtual_target_stat_refused_in_tests": true,
+    "relative_indirect_links_and_dotdot_semantics_checked": true,
+    "persistent_foreign_and_root_targets_still_refused": true
   }
 }

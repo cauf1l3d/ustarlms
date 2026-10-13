@@ -1,4 +1,4 @@
-# Current14Oct0217MSK: r4 resumed after pre-copy FileNotFoundError; source99b3e0dc diagnostics/full initial rescan ready,41 local and Ubuntu41+2 PASS;host archive/install/reboot pending.
+# Current14Oct0232MSK: r5 /proc strict-link failure resumed;component resolver48 local PASS;exact Ubuntu CI/r6 and archive/install/reboot pending.
 schema_version: 2
 updated_at: '2026-10-06'
 canonical_branch: main

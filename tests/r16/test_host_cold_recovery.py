@@ -470,6 +470,111 @@ class RecoveryTests(unittest.TestCase):
             child.wait(timeout=5)
             child.stdout.close()
 
+    def test_real_proc_pipe_link_is_archived_without_resolving_endpoint(self):
+        directory = self.root / 'etc'
+        directory.mkdir()
+        rfd, wfd = os.pipe()
+        try:
+            link = directory / 'stdout'
+            text = '/proc/self/fd/' + str(wfd)
+            link.symlink_to(text)
+            self.assertTrue(link.exists())
+            full = cold.manifest([str(directory)])
+            self.assertEqual(text, full[str(link).lstrip('/')]['target'])
+            prefix = str(self.root).lstrip('/') + '/'
+            expected = {k.removeprefix(prefix): v for k, v in full.items()}
+            digest, _ = cold.copy_archive(cold.tar_command(self.root, []), self.payload,
+                                           self.log, 1024 * 1024)
+            self.assertEqual(len(expected), cold.verify_archive(self.payload, digest, expected))
+            restored = self.base / 'restored'
+            restored.mkdir()
+            subprocess.run(['tar', '-xf', str(self.payload), '-C', str(restored)],
+                           check=True, capture_output=True)
+            self.assertEqual(text, os.readlink(restored / 'etc/stdout'))
+        finally:
+            os.close(rfd)
+            os.close(wfd)
+
+    def test_virtual_link_targets_are_not_statted(self):
+        original = Path.lstat
+        excluded = ('/proc', '/sys', '/dev', '/run')
+
+        def checked(path, *args, **kwargs):
+            if any(str(path) == x or str(path).startswith(x + '/') for x in excluded):
+                self.fail('Traversed an excluded virtual filesystem')
+            return original(path, *args, **kwargs)
+
+        for number, target in enumerate(('/proc/self/fd/1', '/sys/missing', '/dev/stdout', '/run/missing')):
+            link = self.root / ('link' + str(number))
+            link.symlink_to(target)
+            with patch.object(Path, 'lstat', checked):
+                result = cold.manifest([str(link)])
+            self.assertEqual(target, result[str(link).lstrip('/')]['target'])
+            self.assertEqual(1, len(result))
+
+    def test_relative_and_indirect_links_into_proc_preserve_raw_targets(self):
+        a, b = self.root / 'a', self.root / 'b'
+        b.symlink_to('/proc/self/fd/1')
+        a.symlink_to('b')
+        relative = self.root / 'relative'
+        relative.symlink_to(os.path.relpath('/proc/self/fd/1', str(self.root)))
+        with patch.object(cold, 'EXCLUDED', tuple(x for x in cold.EXCLUDED if x != 'tmp')):
+            result = cold.manifest([str(a), str(relative)])
+        self.assertEqual('b', result[str(a).lstrip('/')]['target'])
+        self.assertEqual(os.readlink(relative), result[str(relative).lstrip('/')]['target'])
+        self.assertFalse(any(k.startswith('proc/') for k in result))
+
+    def test_persistent_link_resolution_obeys_symlink_before_dotdot(self):
+        deep = self.root / 'one/two'
+        deep.mkdir(parents=True)
+        data = deep.parent / 'data'
+        data.write_bytes(b'persistent target')
+        (self.root / 'dirlink').symlink_to('one/two')
+        link = self.root / 'link'
+        link.symlink_to('dirlink/../data')
+        with patch.object(cold, 'EXCLUDED', tuple(x for x in cold.EXCLUDED if x != 'tmp')):
+            result = cold.manifest([str(link)])
+        self.assertEqual(hashlib.sha256(b'persistent target').hexdigest(),
+                         result[str(data).lstrip('/')]['sha256'])
+
+    def test_dangling_and_cyclic_links_are_preserved_without_payload(self):
+        a, b, dangling = self.root / 'a', self.root / 'b', self.root / 'dangling'
+        a.symlink_to('b')
+        b.symlink_to('a')
+        dangling.symlink_to('absent/target')
+        with patch.object(cold, 'EXCLUDED', tuple(x for x in cold.EXCLUDED if x != 'tmp')):
+            result = cold.manifest([str(a), str(b), str(dangling)])
+        self.assertEqual(3, len(result))
+        self.assertTrue(all(e['kind'] == 'link' for e in result.values()))
+
+    def test_persistent_foreign_target_and_root_target_still_refused(self):
+        data = self.root / 'data'
+        data.write_bytes(b'data')
+        link = self.root / 'link'
+        link.symlink_to('data')
+        original = Path.lstat
+
+        def foreign(path, *args, **kwargs):
+            st = original(path, *args, **kwargs)
+            return SimpleNamespace(st_dev=st.st_dev + 1, st_mode=st.st_mode) if path == data else st
+
+        with patch.object(cold, 'EXCLUDED', tuple(x for x in cold.EXCLUDED if x != 'tmp')), \
+                patch.object(Path, 'lstat', foreign):
+            with self.assertRaisesRegex(cold.RecoveryError, 'EXTERNAL_LINK_DATA'):
+                cold.manifest([str(link)])
+        link.unlink()
+        link.symlink_to('/')
+        with self.assertRaisesRegex(cold.RecoveryError, 'EXTERNAL_LINK_DATA'):
+            cold.manifest([str(link)])
+
+    def test_changed_virtual_link_target_is_detected_in_source_comparison(self):
+        link = self.root / 'link'
+        link.symlink_to('/proc/self/fd/1')
+        before = cold.manifest([str(link)])
+        link.unlink()
+        link.symlink_to('/proc/self/fd/2')
+        self.assertNotEqual(before, cold.manifest([str(link)]))
+
     def test_disappearing_child_rebuilds_whole_manifest_once(self):
         directory = self.root / 'data'
         directory.mkdir()

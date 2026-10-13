@@ -6,6 +6,7 @@ marker supports resuming the original services after interruption; it does not
 restore files or databases. The archive is deliberately root-private/plaintext.
 """
 import argparse
+from collections import deque
 from contextlib import ExitStack, contextmanager
 from datetime import datetime, timezone
 import fcntl
@@ -332,6 +333,50 @@ def baseline_manifest(paths, marker):
             time.sleep(1)
 
 
+def manifest_link_target(path, linktext, rootdev):
+    # Walk components ourselves so excluded virtual trees are never traversed.
+    # strict realpath can follow /proc/self/fd/N into pipe:[inode] and fail before
+    # a caller gets a chance to apply the exclusion policy.
+    if not path.is_absolute():
+        path = Path.cwd() / path
+    target = Path(linktext) if os.path.isabs(linktext) else path.parent / linktext
+    todo = deque(target.parts[1:])
+    current, links = Path('/'), 0
+    while todo:
+        part = todo.popleft()
+        if part in ('', '.'):
+            continue
+        if part == '..':
+            current = current.parent
+            continue
+        candidate = current / part
+        relative = str(candidate).lstrip('/')
+        if any(relative == x or relative.startswith(x + '/') for x in EXCLUDED):
+            return None
+        try:
+            s = path_call('link_component_lstat', candidate, candidate.lstat)
+        except (FileNotFoundError, NotADirectoryError):
+            # A dangling link is still archived and compared as a link.
+            return None
+        need(s.st_dev == rootdev, 'EXTERNAL_LINK_DATA')
+        if stat.S_ISLNK(s.st_mode):
+            links += 1
+            if links > 40:
+                return None  # Cyclic/unresolvable link: preserve its raw target.
+            text = path_call('link_component_readlink', candidate, lambda: os.readlink(candidate))
+            parts = Path(text).parts
+            if os.path.isabs(text):
+                current = Path('/')
+                parts = parts[1:]
+            todo.extendleft(reversed(parts))
+        else:
+            if todo and not stat.S_ISDIR(s.st_mode):
+                return None
+            current = candidate
+    need(current != Path('/'), 'EXTERNAL_LINK_DATA')
+    return current
+
+
 def manifest(paths):
     result = {}
     pending = list(paths)
@@ -354,13 +399,9 @@ def manifest(paths):
             pending.extend(path_call('list_directory', p, lambda: [str(child) for child in p.iterdir()]))
         elif stat.S_ISLNK(s.st_mode):
             entry.update(kind='link', target=path_call('readlink', p, lambda: os.readlink(p)))
-            # Data-directory symlinks must not silently escape the copied SSD.
-            if p.exists():
-                target = path_call('resolve_link', p, lambda: p.resolve(strict=True))
-                relative = str(target).lstrip('/')
-                if not any(relative == x or relative.startswith(x + '/') for x in EXCLUDED):
-                    need(path_call('link_target_stat', target, target.stat).st_dev == rootdev and target != Path('/'), 'EXTERNAL_LINK_DATA')
-                    pending.append(str(target))
+            target = manifest_link_target(p, entry['target'], rootdev)
+            if target is not None:
+                pending.append(str(target))
         elif stat.S_ISFIFO(s.st_mode):
             entry['kind'] = 'fifo'
         elif stat.S_ISCHR(s.st_mode) or stat.S_ISBLK(s.st_mode):

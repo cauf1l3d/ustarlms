@@ -421,3 +421,18 @@ entrypoints describe06Oct history. INF08/09 closed in delivered patch/matrix sco
 INF10OS current,major53/PG17+ follows OS as accepted by owner04:49MSK. This is not
 full addon/Snap/LXD/shared-host restore acceptance. CI run/implementation SHA and
 remote byte checks follow publication before the pinned operator command.
+
+
+## 13Oct exact host helper parser/root CI accepted; operator apply ready
+
+Implementation3a3ef0f3c5df8355822af76feb6fa62b2553fdfc/570986e4 raw byte readback
+and tree equivalence PASS. [Validation](../runtime/host_apparmor_validation_20261013.json):
+Ubuntu fixture38386147380/job11525831959713 tests/no skips,real parser and
+root temporary file transactions PASS;context38386146947 PASS. Review38386147199
+PHP8.2/8.3 source PASS,unchanged main frontend audit failure on Next/sharp;build/
+HTTP skipped,full PR green not claimed. No unrelated dependency modification
+in this host-helper branch. Earlier PR99 dependency correction remains distinct.
+Native/app trees unchanged,current-main base c53723c maintained. Dedicated test
+uses Q/K and simulated service/Docker operations;it does not load server policies
+or prove Snap/LXD business functionality. The root-pinned --repair command is now
+ready;actual server repair/package/reboot evidence remains pending.

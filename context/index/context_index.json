@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 48823,
-      "sha256": "16c04e94995ca78a71beb828a05b9e35a76d14bea794d606d73c4cb569467a8d"
+      "size": 49781,
+      "sha256": "cf6d1321f21bab581aee68c1b383f3c3df04b213362001540366e6e85543f02f"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 21136,
-      "sha256": "45cbec34fed415689761d05fe662e9411c1ec97d6007cc93b887b02352cf5a26"
+      "size": 21433,
+      "sha256": "f2fd6b0a342f0d2a0ec9ff345f5d56250f138b2f47561151bbee3ce9b03eb2c5"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -912,8 +912,14 @@
     {
       "path": "context/runtime/host_apparmor_repair_20261013.md",
       "domain": "runtime",
-      "size": 6737,
-      "sha256": "9bf8c516caca2c7d2b4ea24ef156fb973f48abaeb9580f55e92e5ee001d2fb9f"
+      "size": 7166,
+      "sha256": "d9fcc1349f5fe83a6303d6908cd88264c83aa03b13267c33f676401368795ade"
+    },
+    {
+      "path": "context/runtime/host_apparmor_validation_20261013.json",
+      "domain": "runtime",
+      "size": 2129,
+      "sha256": "fdaae05fc1bf78a9acf3fab40304a85abd5fc0c49b69d127339c6b9514a33550"
     },
     {
       "path": "context/runtime/host_os_preflight_result_20261013.json",

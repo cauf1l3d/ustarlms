@@ -72,7 +72,7 @@ After separate `sudo -v`,a root shell rechecks the installed SHA256 before invok
 `python3 -I -B -u ... --repair`. Do not bypass a refusal or substitute an unpinned
 file. This task's reviewed helper SHA256 is
 `570986e4cd2199945b705eb280cb183339d9d6ba71d15ad788b09aca5579b225`.
-Repository commit/CI identifiers are supplied with publication;server execution
+Reviewed implementation commit `3a3ef0f3c5df8355822af76feb6fa62b2553fdfc`;server execution
 of this repair is still pending. Existing host maintenance authorization covers
 the targeted reversible fix;no repeat generic permission request is needed.
 
@@ -87,8 +87,12 @@ Python suite177 tests passes with11 skips on this main-based checkout.
 Dedicated Ubuntu24.04 CI requires real parser and root transaction fixtures;
 temporary policies use Q/K so the compiler test loads no kernel policy and writes
 no AppArmor cache. It checks missing include fails,conditional absent include
-compiles,and a restored existing include is read rather than ignored. Exact CI
-results are recorded in the PR before issuing the apply command. This does not
+compiles,and a restored existing include is read rather than ignored. [Exact source validation](host_apparmor_validation_20261013.json):Ubuntu fixture
+[38386147380](https://github.com/cauf1l3d/ustarlms/actions/runs/38386147380) PASS,
+all13 tests/no skips including real parser and root files;context38386146947 PASS.
+Review38386147199 source PHP8.2/8.3 PASS;unchanged main frontend npm audit failed
+on Next/sharp,so full PR success is not claimed. DB/rollback/full gate skipped.
+Frontend build/HTTP smoke skipped after its audit;this helper changes no frontend. This does not
 exercise the production loader or full Snap/LXD runtime;those are separately scoped.
 
 After targeted AppArmor acceptance,continue the shared-host update/recovery/window

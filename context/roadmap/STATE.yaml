@@ -9,7 +9,7 @@ current_activity: >-
   LXD socket prevent unused-profile quarantine. Independent current-main helper
   keeps the profile,adds one if-exists condition,backs up exact original,compiles
   before atomic replacement,and starts/reloads only AppArmor with Docker/Snap/kernel
-  checks. Local fixtures passed;exact real-parser CI and server repair result pending.
+  checks. Local fixtures and exact real-parser/root CI passed;server repair result pending.
   Prior storage/Moodle518/cron/HDD/browser accepted receipts preserved;do not repeat
   those deployments. Host package/reboot and Moodle53/PG17+ remain future selected work.
 next_task: INF-10-OS
@@ -413,7 +413,12 @@ host_AppArmor_repair_20261013:
   handoff: context/runtime/host_apparmor_repair_20261013.md
   source: scripts/infra/host_apparmor_repair.py
   helper_sha256: 570986e4cd2199945b705eb280cb183339d9d6ba71d15ad788b09aca5579b225
-  status: source_prepared_server_execution_pending
+  status: exact_source_and_Ubuntu_parser_fixture_passed_operator_apply_ready
+  implementation_commit: 3a3ef0f3c5df8355822af76feb6fa62b2553fdfc
+  validation: context/runtime/host_apparmor_validation_20261013.json
+  fixture_CI: 38386147380
+  source_php82_php83_CI: 38386147199
+  unrelated_main_frontend_audit: failure_no_frontend_source_changes
   profile_quarantine: rejected_due_to_retained_LXD_socket_and_Snap_mount_consumers
   conditional_include_preserves_existing_profile: true
   AppArmor_repair_executed: false

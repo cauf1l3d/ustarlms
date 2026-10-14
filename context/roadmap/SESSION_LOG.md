@@ -393,3 +393,8 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+
+## 2026-10-14 — OPS-02 one-hour restore experiment, PR102
+
+Owner19:05MSK requested latest backup restore, hour runtime and portable clean-host instructions. Fresh main c53723c8 base, no application changes. Controller/source cdf69bab822b1ecbc352018cb56f542f992e0db5 reuses exact private engine/verifier, uses independent loopback-only containers and systemd cleanup, retains data. Root33 tests and selected CI38601259566 passed; private synthetic compatibility checked. General review gate failed unchanged frontend npm audit; not full RC. [Runbook](../runtime/backup_restore_experiment_20261014.md), [validation](../runtime/backup_restore_test_validation_20261014.json). Native owner archive/DB/browser/hour/off-host pending; no direct SSH. Host/5.1.8 owner acceptance retained, Moodle53 PR101 next, route defect deferred.

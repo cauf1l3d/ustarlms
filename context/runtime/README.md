@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+**Текущий приоритет14Oct19:05MSK — OPS-02:** [отдельное восстановление последнего бэкапа на час](backup_restore_experiment_20261014.md), затем продолжить Moodle5.3/PG17 (PR101). Контроллер PR102/source `cdf69bab822b1ecbc352018cb56f542f992e0db5` и выбранный CI готовы; native запуск/браузер/час/off-host ещё pending. Host update и Moodle5.1.8 уже приняты по выводу владельца; не повторять. Ошибка маршрута отложена. Записи06Oct ниже — история, а не текущий следующий шаг.
+
 Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.

@@ -1,3 +1,5 @@
+**Owner14Oct03:32MSK:** Central mirror/catalog/download completed successfully;[receipt](host_packages_download_result_20261014.json). This stage is CLOSED;[guarded cached installation next](host_packages_install_20261014.md). Earlier download/mirror commands below are historical.
+
 # Native APT download after accepted host cold recovery
 
 ## Current14Oct03:21MSK: central HTTPS reachable; guarded mirror retry

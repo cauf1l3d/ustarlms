@@ -4,13 +4,10 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner14Oct0306MSK r6 completed at00:04:07UTC with verified43.7GB
-  archive and223777 protected members;services resumed and package baseline
-  unchanged. Cold capture acceptance closed. Native APT download-only
-  preparation failed at ru.archive.ubuntu.com:IPv4 timeout/IPv6 unreachable.
-  Package names and49 visible versions match approved plan. Next bounded
-  central archive IPv4 HTTPS observed reachable;source is ubuntu.sources
-  line2. Guarded URI-only replacement/catalog/download ready;install/reboot pending.
+  Owner14Oct0332MSK central mirror/catalog/download complete:38+25/no removals.
+  Cold archive r6 acceptance closed. New cached installer embeds exact63
+  versions,reuses accepted service control,checks cache/baseline/config/boot.
+  Local32 root tests PASS;exact Ubuntu CI/operator install/reboot pending.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []
@@ -432,8 +429,8 @@ host_AppArmor_repair_20261013:
 
 host_package_planning_20261013:
   task: INF-10-OS
-  status: owner_central_HTTPS_reachable_guarded_mirror_retry_ready
-  handoff: context/runtime/host_packages_download_20261014.md
+  status: owner_download_complete_cached_installer_local_tested_CI_pending
+  handoff: context/runtime/host_packages_install_20261014.md
   result: context/runtime/host_packages_result_20261013.json
   host_APT_catalog_refresh_executed: true
   host_metadata_and_MariaDB_session_readonly_result: metadata_received_MariaDB_1045_no_SQL_result
@@ -442,7 +439,11 @@ host_package_planning_20261013:
   download_result: context/runtime/host_packages_download_result_20261014.json
   package_names_match_approved_63: true
   displayed_download_versions_matching: 49
-  mirror_change_or_download_retry_executed: false
+  mirror_change_or_download_retry_executed: true
+  download_completed: true
+  installer_source: scripts/infra/host_package_install.py
+  installer_helper_sha256: b6e1529db98c52cadfbcf0dd956e3819ac55a42bde128694c1a12a145356bc95
+  installer_local_root_tests: 32
 
 host_cold_recovery_20261013:
   task: INF-10-OS

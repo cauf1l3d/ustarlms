@@ -4,7 +4,9 @@ on:
   pull_request:
     paths:
       - scripts/infra/host_cold_recovery.py
+      - scripts/infra/host_package_install.py
       - tests/r16/test_host_cold_recovery.py
+      - tests/r16/test_host_package_install.py
       - tests/r16/test_host_cold_recovery_systemd.py
       - .github/workflows/host-cold-recovery.yml
   workflow_dispatch:
@@ -28,6 +30,11 @@ jobs:
           sudo -n env USTAR_REQUIRE_HOST_RECOVERY_ROOT=1
           "$(command -v python)" -B -m unittest
           tests.r16.test_host_cold_recovery -v
+      - name: Cached package controller failure paths and native POSIX lock fixture
+        run: >-
+          sudo -n env USTAR_REQUIRE_HOST_RECOVERY_ROOT=1
+          "$(command -v python)" -B -m unittest
+          tests.r16.test_host_package_install -v
       - name: Actual SIGTERM and rejected SIGKILL on unique sleep-only systemd units
         run: >-
           sudo -n env USTAR_REQUIRE_HOST_RECOVERY_SYSTEMD=1

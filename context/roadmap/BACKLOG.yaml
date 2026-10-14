@@ -1,3 +1,4 @@
+# Current14Oct0332MSK: download complete;cached exact63-package installer local32 PASS/Ubuntu and operator install pending;reboot after runtime and boot checks.
 # Current14Oct0306MSK: r6 archive complete/readback PASS/services resumed;native package download-only next;installation/reboot pending.
 # Current14Oct0232MSK: r5 /proc strict-link failure resumed;component resolver22d8a4e1 local48/Ubuntu48+2/context PASS;r6 and archive/install/reboot pending.
 schema_version: 2

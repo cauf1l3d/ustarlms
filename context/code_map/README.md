@@ -80,3 +80,8 @@ diagnostic in the SSD marker;runtime resumption performs no file/DB restore.
 Host cold recovery14Oct: `path_call` annotates filesystem errors; `diagnostic`/`save_diagnostic` keep full paths in root-private SSD JSON and expose only scope/hash/operation/step/stack locations. `baseline_manifest` rebuilds its entire initial map once on a missing child; missing required roots,other errors and post-copy verification never bypass guards. App code map remains unchanged.
 
 Host cold recovery14Oct0232: `manifest_link_target` resolves symlink components only until the first EXCLUDED boundary;never stats/reads virtual targets. Absolute,relative and chained links retain raw archive targets. Persistent targets retain same-filesystem/root refusal and post-copy comparison;dangling/cyclic links retain previous link-only semantics.
+
+
+## Cached host package installer
+
+[`host_package_install.py`](../../scripts/infra/host_package_install.py) embeds63 exact package versions,reuses only the hash-pinned accepted cold service controller,and validates accepted archive metadata/package baseline/cache/plan before stopping. Native APT owns its POSIX locks;shared flock spans stop/install/resume/checks. It retains local conffiles,defers needrestart,verifies package/config/boot/runtime state,and never creates another archive or reboots. [Operator/failure contract](../runtime/host_packages_install_20261014.md).32 root tests PASS;actual Ubuntu CI/installation/reboot pending. Application map remains526/93/32.

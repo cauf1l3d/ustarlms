@@ -4,7 +4,7 @@
   "independently_measured_by_agent": false,
   "raw_upload_published": false,
   "raw_upload_sha256": "6f729747a5c19cb381e6bf08f7316f86511d364757967ffa2aa939b64594b951",
-  "phase": "download_failed_mirror_connectivity",
+  "phase": "download_complete_install_pending",
   "package_counts": {
     "upgraded": 38,
     "new": 25,
@@ -90,7 +90,7 @@
   "final_error": "Some files failed to download",
   "package_install_or_reboot": false,
   "cold_archive_acceptance_unchanged": true,
-  "next": "execute_prepared_guarded_mirror_change_catalog_refresh_and_download_only_then_review_actual_exact_candidate_plan",
+  "next": "guarded_exact_plan_cached_install_using_accepted_service_control_then_verify_before_separate_reboot",
   "mirror_followup": {
     "received_at": "2026-10-14T03:21:32+03:00",
     "owner_central_IPv4_HTTPS_probe": "UBUNTU_CENTRAL_HTTPS=OK",
@@ -101,5 +101,23 @@
     "mirror_change_executed": false,
     "new_catalog_or_download_executed": false,
     "prepared_action": "unique_root_private_backup_line2_URI_only_replacement_signed_catalog_refresh_native_download_only_no_remove"
+  },
+  "successful_retry": {
+    "received_at": "2026-10-14T03:32:53+03:00",
+    "raw_upload_published": false,
+    "raw_upload_sha256": "b7b66e17ba6f6103e674aab8f21c0c2e065d1741114808cebf2ec97125b07e0d",
+    "backup_source_path": "/root/ustar-apt-mirror-20261014.i9mk34/ubuntu.sources",
+    "mirror_changed": true,
+    "APT_catalog_refresh": "success_before_download",
+    "appstream_warnings": "two_No_origin_DEP11_warnings_not_fatal",
+    "package_names_match_approved_63": true,
+    "visible_versions_matching": 43,
+    "fetched_MB": 658,
+    "fetched_seconds": 86,
+    "archives_total_MB": 953,
+    "additional_installed_MB": 297,
+    "download_complete": true,
+    "final_line": "Download complete and in download only mode",
+    "package_install_or_reboot": false
   }
 }

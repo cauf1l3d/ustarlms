@@ -607,3 +607,10 @@ Owner native APT download-only/no-remove receipt:38+25/zero removals,no package 
 ## 2026-10-14 03:21 MSK — central mirror reachable
 
 Owner IPv4 HTTPS archive.ubuntu.com/noble-updates/InRelease probe OK;matching source is ubuntu.sources line2. Prepared guarded exact regional-to-central URI replacement with unique root-private original backup;native signed/error-on-any catalog update precedes download-only/no-remove retry. ForceIPv4 is command-scoped. Bash syntax PASS;actual source edit/catalog/download/install/reboot pending. Cold archive acceptance unchanged and closed.
+
+
+## 2026-10-14 03:32 MSK — cached package installation preparation
+
+**Current14Oct03:32MSK:** Owner central mirror replacement and signed catalog/download completed:38 upgrades+25 new/zero removals;63 names match,43 visible retry versions match,6 Docker versions matched earlier,14 cached versions require native exact simulation. Backup source /root/ustar-apt-mirror-20261014.i9mk34/ubuntu.sources. Accepted r6 cold archive/services remain closed. New guarded cached package installer embeds63 versions,reuses hash-pinned accepted service control,and verifies cache/baseline/config/boot/runtime before reboot handoff.32 local root tests PASS;exact Ubuntu CI and server install/reboot pending. No repeated capture/resume or AppArmor/Moodle518 acceptance.
+
+Root controller32 tests PASS including actual separate-process POSIX lock and sparse archive/private receipt fixtures;APT/shared service/boot commands are modeled. Source b6e1529d;dependency cold3f8f0c0e unchanged. Exact Ubuntu CI and operator delivery remain pending. No full host boot restore claim.

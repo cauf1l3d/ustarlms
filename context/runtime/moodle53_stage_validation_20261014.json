@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "kind": "Moodle53_prepare_source_and_selected_native_CI_validation",
+  "source_commit": "a675303c9fc0f918adc837730e6fe6b783f3913c",
+  "corrected_CI_commit": "3255900554c18190a31e63edfac61ba3377e85b2",
+  "helper_sha256": "3d5057573456f413645b974f3524c73bb3707a63de93e6b767ee8f20c88f061c",
+  "profile_sha256": "40ad9cdd7235807db3b3514e335683c14b5cb6fb7433d568b0e9cee071bb6fb1",
+  "local": {
+    "cases": 25,
+    "result": "PASS",
+    "fixture_only_UID_mapping": true,
+    "actual_Docker_SQL_PHP": false
+  },
+  "ci": {
+    "run": 38584832688,
+    "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/38584832688",
+    "environment": "ubuntu-24.04",
+    "conclusion": "success",
+    "root_files_package_job": 115923907120,
+    "native_root_file_cases": 25,
+    "native_UID_mapping": false,
+    "native_skips": 0,
+    "actual_official_archive_parser": "PASS",
+    "official_archive_sha256": "7e5edf110555956571f40e42acffde0eb23681ebebd212a2fec0fe7d795dd511",
+    "actual_archive_entries": 78513,
+    "actual_archive_expanded_bytes": 463270880,
+    "root_vendor_directory_present": false,
+    "public_vendor_directory_present": false,
+    "synthetic_pg_job": 115923906451,
+    "pg17_binary_version": "17.11 (Debian 17.11-1.pgdg13+2)",
+    "synthetic_pg16_to17_rows_sequences_acl_extension": "PASS",
+    "independent_PG17_redo_and_PG16_restore": "PASS",
+    "public_package_artifact_upload": "PASS",
+    "synthetic_pg_artifact_upload": "PASS",
+    "selected_job_logs_read": true
+  },
+  "context_ci": {
+    "run": 38584832741,
+    "conclusion": "success"
+  },
+  "source_remote_blob_equality": "PASS",
+  "operator_outer_and_inner_Bash_syntax": "PASS",
+  "application_tree_changed": false,
+  "actual_server_stage_preparation": "PENDING",
+  "actual_full_addon_Moodle53_upgrade_repeat_recovery_browser_acceptance": "PENDING",
+  "production_activation_executed": false,
+  "full_PR_release_gate_claimed": false,
+  "first_CI_artifact_permission_failure": {
+    "run": 38582816865,
+    "root_cases_package_and_pg_checks": "PASS",
+    "upload_error": "public_metadata_root0600_EACCES",
+    "fix": "CI_nonsecret_metadata_only0644"
+  }
+}

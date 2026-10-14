@@ -411,3 +411,13 @@ unchanged. Server preparation and actual full-addon53 migration/upgrade/recovery
 remain unexecuted. Receipt:context/runtime/moodle53_assets_result_20261014.json;
 operator handoff:context/runtime/moodle53_stage_prepare_20261014.md. Source prepared
 at a675303c9fc0f918adc837730e6fe6b783f3913c;application source stays e1d57f5/526 files.
+
+
+Exact corrected selected CI3255900554c18190a31e63edfac61ba3377e85b2/
+run38584832688 PASS:root job115923907120 has25 cases/no UID mapping/no skips;
+actual53 package78,513 entries/463,270,880 expanded bytes passes the operator parser;
+PG job115923906451 binary17.11 plus data/sequence/ACL/extension/redo/16-restore PASS.
+Both artifact uploads and selected logs inspected. Context38584832741 PASS.
+Operator download uses this CI SHA;helper/profile3d505757/40ad9cdd unchanged and
+remote blob equality/outer-inner Bash syntax checked. Server stage preparation and
+actual full-addonMoodle53 upgrade/repeat/recovery/browser acceptance remain pending.

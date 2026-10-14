@@ -365,8 +365,8 @@ tasks:
     postboot scheduled cron exit0/no new failures. New source prepares private frozen
     and independent mutable518 pairs plus stock53/all19 addon roots without SQL/PHP,
     container/service operations or production writes. Local25 file/archive cases
-    pass with fixture UID mapping;native Ubuntu25/package and synthetic PG migration
-    checks pass in first CI,public artifact permissions corrected and final run pending.
+    pass with fixture UID mapping;native Ubuntu25/no skips,actual package parser and synthetic PG16-to17/redo/16-restore
+    pass in corrected CI32559005/run38584832688;selected logs inspected.
     Actual server preparation/full-addon53 migration/upgrade/recovery/QA pending;
     OPS02 production recovery conditions retained,not silently closed.
 

@@ -666,8 +666,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 25338,
-      "sha256": "bcbd3e901c6ce1d4781062070e6620694f2897a76a98565336da0c366ce1920f"
+      "size": 25358,
+      "sha256": "6d6140cfde6aed891ac93a48da4f3129aa07012e18a5be21384ae512fff95fa2"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 48130,
-      "sha256": "66484f6bfc0231a845160b45afced58e89c9b5557b842e5bf1dc181b22ef6f04"
+      "size": 48776,
+      "sha256": "d2f07852a03747bdc4295451fd3a357b3d3dfe0878d22bdc6b2c5fc7c9c90f63"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -948,8 +948,14 @@
     {
       "path": "context/runtime/moodle53_stage_prepare_20261014.md",
       "domain": "runtime",
-      "size": 6569,
-      "sha256": "10d563d77dcf14d255b8700ca4ff3a746478464362328b911ffc4b96189a7fee"
+      "size": 6856,
+      "sha256": "89ca8521234f5ebb4263f34635d3d62581549bdfa42427e954534cbba1064dd7"
+    },
+    {
+      "path": "context/runtime/moodle53_stage_validation_20261014.json",
+      "domain": "runtime",
+      "size": 2151,
+      "sha256": "f5bb0463352c080ac288ee362d894840619bccc1722fdcdb1b19da7a18a1ee44"
     },
     {
       "path": "context/runtime/moodle53_target_20261014.json",

@@ -45,16 +45,16 @@ not involved.
 ## Operator handoff
 
 Authenticate sudo separately and wait for the prompt. The helper/profile source
-commit is a675303c9fc0f918adc837730e6fe6b783f3913c;later documentation/CI artifact
-permission changes preserve these exact source bytes. Helper SHA256:
+commit is3255900554c18190a31e63edfac61ba3377e85b2,the all-green selected CI
+commit. Original helper sourcea675303c has identical source/profile blobs. Helper SHA256:
 3d5057573456f413645b974f3524c73bb3707a63de93e6b767ee8f20c88f061c.
 Profile SHA256:40ad9cdd7235807db3b3514e335683c14b5cb6fb7433d568b0e9cee071bb6fb1.
 
 ```bash
 bash <<'BASH'
 set -euo pipefail
-curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/a675303c9fc0f918adc837730e6fe6b783f3913c/scripts/infra/moodle53_stage_prepare.py -o /home/aduk/USTAR_MOODLE53_STAGE_PREPARE_20261014.py
-curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/a675303c9fc0f918adc837730e6fe6b783f3913c/scripts/infra/moodle53_profile_20261014.json -o /home/aduk/USTAR_MOODLE53_PROFILE_20261014.json
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/3255900554c18190a31e63edfac61ba3377e85b2/scripts/infra/moodle53_stage_prepare.py -o /home/aduk/USTAR_MOODLE53_STAGE_PREPARE_20261014.py
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/3255900554c18190a31e63edfac61ba3377e85b2/scripts/infra/moodle53_profile_20261014.json -o /home/aduk/USTAR_MOODLE53_PROFILE_20261014.json
 printf '%s  %s\n' 3d5057573456f413645b974f3524c73bb3707a63de93e6b767ee8f20c88f061c /home/aduk/USTAR_MOODLE53_STAGE_PREPARE_20261014.py 40ad9cdd7235807db3b3514e335683c14b5cb6fb7433d568b0e9cee071bb6fb1 /home/aduk/USTAR_MOODLE53_PROFILE_20261014.json | sha256sum --check --strict -
 sudo -n install -m 600 -o root -g root /home/aduk/USTAR_MOODLE53_STAGE_PREPARE_20261014.py /usr/local/sbin/USTAR_MOODLE53_STAGE_PREPARE_20261014.py
 sudo -n install -m 600 -o root -g root /home/aduk/USTAR_MOODLE53_PROFILE_20261014.json /usr/local/sbin/USTAR_MOODLE53_PROFILE_20261014.json
@@ -82,12 +82,15 @@ Moodle/data/role checks and production activation remain pending.
 
 ## Validation scope
 
-25 local real-file/archive tests PASS with fixture-only UID mapping because the
-local user namespace maps UID0 only. Native Ubuntu24.04 root25 tests without
-UID mapping and the actual formal archive parser passed in first CI;artifact
-upload alone failed because the public package metadata JSON was root0600.
-The workflow now publishes that nonsecret metadata as0644 and is revalidated.
+[Validation receipt](moodle53_stage_validation_20261014.json):25 local real-file/archive
+cases PASS with fixture-only UID mapping;Ubuntu24.04 root25 cases PASS without
+UID mapping/skips. Actual formal archive parser PASS:78,513 entries/463,270,880
+expanded bytes. No root/public vendor directory is in that distribution;actual
+Moodle bootstrap/dependency compatibility is a later isolated-stage check.
 Pinned-image synthetic PG16→17 rows/sequence/ACL/extension,independent redo and
-restore into16 passed. These tests are not full-addon Moodle53 runtime or
-production/host-restore acceptance. Final exact CI evidence is recorded after
-the corrected run;server preparation is unexecuted until the owner receipt.
+restore into16 PASS. Exact selected CI32559005/run38584832688 and context38584832741
+PASS;both selected job logs and public/synthetic artifact uploads inspected.
+The first root0600 public-metadata artifact upload failure was fixed only in CI;
+operator helper/profile bytes did not change. Remote blobs equal locally checked
+ones and outer/inner Bash syntax PASS. Full PR release gate/full-addon53 runtime,
+server preparation,production activation and full host restore are not claimed.

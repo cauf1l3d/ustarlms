@@ -1,0 +1,55 @@
+name: USTAR Moodle53 preparation
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/infra/moodle53*'
+      - 'tests/r16/test_moodle53_stage_prepare.py'
+      - 'tests/stage/check_major_archive.py'
+      - 'tests/stage/major_pg_migration.sh'
+      - '.github/workflows/ustar-moodle53-prepare.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: moodle53-prepare-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  root-files-and-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Native root ownership,copies,readback and refusal boundaries
+        run: sudo -n env -u USTAR_FIXTURE_PORTABLE_UIDS python3 -m unittest discover -s tests/r16 -p test_moodle53_stage_prepare.py -v
+      - name: Actual formal archive SHA and operator catalog parser
+        run: |
+          mkdir -p artifacts/major
+          sudo -n bash <<'BASH'
+          set -euo pipefail
+          umask 077
+          ustar_ci_assets=$(mktemp -d /var/lib/ustar-m53-package-ci.XXXXXXXX)
+          curl -fL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 600 --silent --show-error https://download.moodle.org/download.php/direct/stable503/moodle-5.3.tgz -o "$ustar_ci_assets/moodle-5.3.tgz"
+          python3 tests/stage/check_major_archive.py "$ustar_ci_assets/moodle-5.3.tgz" > artifacts/major/official-package.json
+          BASH
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: major-preparation-files-package
+          path: artifacts/major/
+  synthetic-pg-migration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Exact images,16-to17 logical restore,independent redo and16 restore
+        run: bash tests/stage/major_pg_migration.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: major-preparation-synthetic-pg
+          path: artifacts/major/

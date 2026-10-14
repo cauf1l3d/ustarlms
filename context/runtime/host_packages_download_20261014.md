@@ -1,5 +1,53 @@
 # Native APT download after accepted host cold recovery
 
+## Current14Oct03:21MSK: central HTTPS reachable; guarded mirror retry
+
+Owner curl -4 probe returned UBUNTU_CENTRAL_HTTPS=OK. Matching source entry is
+/etc/apt/sources.list.d/ubuntu.sources line2. Connectivity is observed,not APT
+signature verification. Following block accepts regular non-symlink source,
+requires line2 be URIs,backs up the original via cp-a into unique root-private
+mktemp directory,changes only the exact regional URL on line2,and verifies the
+replacement. It preserves other fields/lines and Docker source. If this address
+is already set,it proceeds without overwriting the original backup. Unexpected
+line contents refuse before edits. Backup path is printed,not config content.
+Signed catalog refresh is bounded180s/error-on-any;success is required before
+native download-only/no-remove. ForceIPv4 is command-scoped and follows successful
+IPv4 HTTPS probe,not a standalone fix for failed regional IPv4. Candidate drift
+from refreshed indexes is reviewed before separate installation;no installation
+or reboot is in this block. Old metadata/package versions remain provenance.
+
+Authenticate separately with sudo-v,then paste the full block:
+
+```bash
+sudo -n bash <<'BASH'
+set -euo pipefail
+ustar_sources=/etc/apt/sources.list.d/ubuntu.sources
+test -f "$ustar_sources"
+test ! -L "$ustar_sources"
+ustar_line=$(sed -n '2p' "$ustar_sources")
+printf '%s\n' "$ustar_line" | grep -qE '^[[:space:]]*URIs:'
+if printf '%s\n' "$ustar_line" | grep -qF 'http://ru.archive.ubuntu.com/ubuntu'; then
+    ustar_backup=$(mktemp -d /root/ustar-apt-mirror-20261014.XXXXXX)
+    cp -a -- "$ustar_sources" "$ustar_backup/ubuntu.sources"
+    sed -i '2s|http://ru\.archive\.ubuntu\.com/ubuntu|https://archive.ubuntu.com/ubuntu|' "$ustar_sources"
+    printf 'APT_MIRROR_CHANGED; BACKUP=%s\n' "$ustar_backup/ubuntu.sources"
+elif printf '%s\n' "$ustar_line" | grep -qF 'https://archive.ubuntu.com/ubuntu'; then
+    printf 'APT_MIRROR_ALREADY_SET\n'
+else
+    printf 'APT_SOURCE_LINE_UNEXPECTED\n' >&2
+    exit 1
+fi
+sed -n '2p' "$ustar_sources" | grep -qF 'https://archive.ubuntu.com/ubuntu'
+timeout 180s env LC_ALL=C apt-get --error-on=any -o Acquire::ForceIPv4=true -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+env LC_ALL=C apt-get --download-only --no-remove -y -o Acquire::ForceIPv4=true -o Acquire::Retries=1 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 dist-upgrade
+BASH
+```
+
+Operator should return the source-backup line,catalog result,and download summary/
+final error lines. Actual mirror edit/catalog retry/download pending. Shell syntax
+passed;no server reachability/source-write/package acceptance is inferred locally.
+
+
 **Owner14Oct03:14MSK:** [Download receipt](host_packages_download_result_20261014.json) failed at ru.archive.ubuntu.com:IPv6 unreachable and IPv4 timeout.63 package names and49 displayed versions match approved plan;14 cached versions not emitted.6 Docker packages downloaded,102MB fetched;no installation/reboot. Cold archive remains accepted. Next bounded HTTPS probe of central archive plus exact source-entry location;do not rerun unchanged download or use ForceIPv4 alone as a claimed fix. Mirror change/retry remains pending.
 
 Owner status received14Oct03:06MSK confirms [r6 complete](host_cold_recovery_result_20261013.json):

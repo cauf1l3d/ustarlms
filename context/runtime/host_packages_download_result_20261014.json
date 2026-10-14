@@ -90,5 +90,16 @@
   "final_error": "Some files failed to download",
   "package_install_or_reboot": false,
   "cold_archive_acceptance_unchanged": true,
-  "next": "test_archive_ubuntu_com_HTTPS_from_server_and_locate_exact_active_ru_mirror_source_entries_before_guarded_mirror_change"
+  "next": "execute_prepared_guarded_mirror_change_catalog_refresh_and_download_only_then_review_actual_exact_candidate_plan",
+  "mirror_followup": {
+    "received_at": "2026-10-14T03:21:32+03:00",
+    "owner_central_IPv4_HTTPS_probe": "UBUNTU_CENTRAL_HTTPS=OK",
+    "probe_URL": "https://archive.ubuntu.com/ubuntu/dists/noble-updates/InRelease",
+    "source_file": "/etc/apt/sources.list.d/ubuntu.sources",
+    "source_line": 2,
+    "full_source_text_read": false,
+    "mirror_change_executed": false,
+    "new_catalog_or_download_executed": false,
+    "prepared_action": "unique_root_private_backup_line2_URI_only_replacement_signed_catalog_refresh_native_download_only_no_remove"
+  }
 }

@@ -602,3 +602,8 @@ Owner supplied status phase complete/readback true/223777 protected members,pack
 ## 2026-10-14 03:14 MSK — package download mirror refusal
 
 Owner native APT download-only/no-remove receipt:38+25/zero removals,no package name drift;49 visible versions match saved plan,14 cached versions not printed.6 Docker packages fetched,102MB in31s;ru.archive.ubuntu.com IPv6 network unreachable and IPv4 port80 timeout. No dpkg install/reboot. Next bounded central archive HTTPS probe and exact source-entry location,then guarded mirror change/retry. Cold archive r6 acceptance stays closed;do not repeat copy/resume or claim ForceIPv4 alone resolves observed IPv4 failure. Raw upload remains private.
+
+
+## 2026-10-14 03:21 MSK — central mirror reachable
+
+Owner IPv4 HTTPS archive.ubuntu.com/noble-updates/InRelease probe OK;matching source is ubuntu.sources line2. Prepared guarded exact regional-to-central URI replacement with unique root-private original backup;native signed/error-on-any catalog update precedes download-only/no-remove retry. ForceIPv4 is command-scoped. Bash syntax PASS;actual source edit/catalog/download/install/reboot pending. Cold archive acceptance unchanged and closed.

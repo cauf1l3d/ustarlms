@@ -9,7 +9,8 @@ current_activity: >-
   unchanged. Cold capture acceptance closed. Native APT download-only
   preparation failed at ru.archive.ubuntu.com:IPv4 timeout/IPv6 unreachable.
   Package names and49 visible versions match approved plan. Next bounded
-  central archive HTTPS probe and source-entry location;install/reboot pending.
+  central archive IPv4 HTTPS observed reachable;source is ubuntu.sources
+  line2. Guarded URI-only replacement/catalog/download ready;install/reboot pending.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []
@@ -431,7 +432,7 @@ host_AppArmor_repair_20261013:
 
 host_package_planning_20261013:
   task: INF-10-OS
-  status: owner_APT_download_failed_ru_mirror_connectivity_cold_archive_closed
+  status: owner_central_HTTPS_reachable_guarded_mirror_retry_ready
   handoff: context/runtime/host_packages_download_20261014.md
   result: context/runtime/host_packages_result_20261013.json
   host_APT_catalog_refresh_executed: true

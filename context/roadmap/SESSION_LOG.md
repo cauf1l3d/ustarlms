@@ -617,3 +617,10 @@ Root controller32 tests PASS including actual separate-process POSIX lock and sp
 
 
 Installer review adds cleanup receipt-I/O failure handling:failed receipt write must not block resume or claim PASS.33 local root tests PASS;source c753cf2e exact Ubuntu CI pending. Previous438f3da2 root32(+48+2) and context CI passed;superseded before operator handoff.
+
+
+## 2026-10-14 04:01 MSK — exact cached installer handoff
+
+**Current14Oct04:01MSK:** Owner03:32 central mirror/catalog/download completed:38+25/no removals,63 names match. Cold archive r6 remains accepted. Exact cached installer d000e800/SHA c753cf2e is ready:33 local root and Ubuntu33+48+2/no skips PASS,all log summaries read;context CI PASS,published bytes/tree match. Existing accepted service controller3f8f0c0e is reused. Guards cover plan/cache/backup/baseline/config/boot,cleanup receipt-I/O and original runtime resume. Systemd launch/status handoff prepared. Actual installation and reboot pending;do not repeat capture or accepted AppArmor/Moodle518 work.
+
+Ubuntu38493438210/job115623715462:33 installer+48 accepted-controller file/control+2 actual sleep-only systemd tests,zero skips,three summaries inspected. Context38493438435 PASS. Native package installation/maintainer scripts/Docker/shared service changes remain operator acceptance. Source byte readback matches;outer/inner shell syntax PASS. Root-private archive remains accepted;no full host boot recovery claim.

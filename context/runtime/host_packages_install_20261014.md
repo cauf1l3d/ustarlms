@@ -1,5 +1,56 @@
 # Approved cached host package installation
 
+## Verified immutable source and operator handoff
+
+Implementation `d000e80092da653cc369c2a6d37677cfcd56b1c3`,helper SHA256 `c753cf2e2b4ebdd0c7ff690614f6f2ec14435d035fdea6051cfe45d70e5947d1`.
+Published source bytes and tree match local source314688ee6576e460e7dd6fe43c356f99f091bae3.
+Exact Ubuntu24.04 run38493438210/job115623715462 SUCCESS:33 installer tests,
+48 accepted-controller file/control cases and2 actual isolated sleep-only systemd
+cases,no skips;all three log summaries inspected. Context38493438435 SUCCESS.
+Broader review38493438226 remains a separate gate;whole PR green is not claimed. Source33 guards/model tests do not establish actual
+APT maintainer-script/Docker/shared service install or full boot restoration.
+
+Authenticate separately and wait for the prompt to return:
+
+```bash
+sudo -v
+```
+
+Then paste the full block. Any download/hash/install error aborts before launch.
+This authorizes the already agreed shared service pause;the helper resumes original
+runtime afterward and issues no reboot. Do not rerun an installation unit after a
+package_install_started receipt without inspecting the actual failure.
+
+```bash
+bash <<'BASH'
+set -euo pipefail
+curl -fsSL --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/cauf1l3d/ustarlms/d000e80092da653cc369c2a6d37677cfcd56b1c3/scripts/infra/host_package_install.py -o /home/aduk/USTAR_HOST_PACKAGE_INSTALL_20261014.py
+printf '%s  %s\n' c753cf2e2b4ebdd0c7ff690614f6f2ec14435d035fdea6051cfe45d70e5947d1 /home/aduk/USTAR_HOST_PACKAGE_INSTALL_20261014.py | sha256sum --check --strict -
+sudo -n install -m 600 -o root -g root /home/aduk/USTAR_HOST_PACKAGE_INSTALL_20261014.py /usr/local/sbin/USTAR_HOST_PACKAGE_INSTALL_20261014.py
+sudo -n systemd-run --unit=ustar-host-packages-20261014 --service-type=exec --property=RemainAfterExit=yes --property=KillMode=mixed --property=RuntimeMaxSec=2h --property=TimeoutStopSec=30min --property=UMask=0077 /bin/bash -c 'set -euo pipefail; printf "%s  %s\n" c753cf2e2b4ebdd0c7ff690614f6f2ec14435d035fdea6051cfe45d70e5947d1 /usr/local/sbin/USTAR_HOST_PACKAGE_INSTALL_20261014.py | sha256sum --check --strict -; exec /usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_HOST_PACKAGE_INSTALL_20261014.py --install --acknowledge-shared-outage'
+BASH
+```
+
+After3–5 minutes read status and native unit result:
+
+```bash
+sudo -n python3 -I -B /usr/local/sbin/USTAR_HOST_PACKAGE_INSTALL_20261014.py --status
+sudo -n systemctl show ustar-host-packages-20261014.service -p ActiveState -p SubState -p Result -p ExecMainStatus -p MainPID --no-pager
+```
+
+Success:complete_reboot_pending,installed_versions_verified=63,services_resumed=true,
+new_kernel_boot_files_verified=true and native unit success/exit0. Only then prepare
+the separate authorized reboot and boot/shared-service/HDD/cron acceptance. If a
+failure occurs,return the filtered status and unit result;private package logs/config
+contents must not be pasted publicly. Journal phase/error lines can be read with:
+
+```bash
+sudo -n journalctl -u ustar-host-packages-20261014.service -n 80 --no-pager -o cat | awk '/^HOST_PACKAGES_PHASE=|^HOST_PACKAGES_ERROR=|^HOST_PACKAGES_INSTALL=|^HOST_PACKAGES_RESUME=/{print}'
+```
+
+Actual operator installation/reboot acceptance remains pending.
+
+
 Owner03:32MSK [download receipt](host_packages_download_result_20261014.json):
 mirror replaced with HTTPS archive.ubuntu.com;original source retained at
 `/root/ustar-apt-mirror-20261014.i9mk34/ubuntu.sources`. Signed catalog refresh
@@ -88,7 +139,7 @@ remain unverified. Do not overwrite live DB/mail data from the old archive while
 writers run. No archive deletion,reboot,release upgrade,Moodle upgrade or PG17
 migration is included. Latest Moodle major follows host reboot acceptance.
 
-## Validation at source preparation
+## Historical validation at source preparation
 
 33 local root tests PASS/no skips:exact plan drift/removal/missing/duplicate gates,
 cache/cold receipt/package baseline refusal,APT/stop/boot/config/resume failures,
@@ -104,3 +155,6 @@ Primary semantics checked14Oct:Ubuntu
 [systemd process control](https://www.freedesktop.org/software/systemd/man/latest/systemd.kill.html).
 Implementation SHA,CI evidence and exact operator commands will be pinned after
 publication;do not treat a draft source as server acceptance.
+
+
+[Exact source validation receipt](host_packages_install_validation_20261014.json). Operator command pins tested d000e800/c753cf2e;later documentation commits preserve these bytes.

@@ -4,13 +4,10 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner14Oct0232MSK: r5 failed before copy and resumed services. Failure is
-  strict link resolution into excluded /proc;reproduced locally with real
-  pipe FD. Component resolver now applies exclusions before lookup and
-  preserves link text,persistent target and source/archive checks.
-  Local48 and exact Ubuntu48+2/no skips PASS;context PASS.
-  Source22d8a4e1/SHA3f8f0c0e ready for authorized r6;server execution pending.
-  No host archive/install/reboot acceptance.
+  Owner14Oct0306MSK r6 completed at00:04:07UTC with verified43.7GB
+  archive and223777 protected members;services resumed and package baseline
+  unchanged. Cold capture acceptance closed. Native APT download-only
+  preparation next;exact package installation and reboot pending.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []
@@ -41,7 +38,7 @@ production:
   latest_cron_HDD_source: context/runtime/production_patch_post_switch_status_result_20261013.json
   latest_browser_source: context/runtime/production_patch_browser_result_20261013.json
   previous_observations_remain_dated: true
-  status: owner_r3_resume_required_restore_original_runtime_before_host_update
+  status: owner_r6_cold_archive_verified_services_resumed_package_install_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -432,8 +429,8 @@ host_AppArmor_repair_20261013:
 
 host_package_planning_20261013:
   task: INF-10-OS
-  status: owner_refreshed_metadata_received_cold_recovery_capture_handoff_ready
-  handoff: context/runtime/host_cold_recovery_20261013.md
+  status: owner_cold_archive_verified_native_APT_download_handoff_ready
+  handoff: context/runtime/host_packages_download_20261014.md
   result: context/runtime/host_packages_result_20261013.json
   host_APT_catalog_refresh_executed: true
   host_metadata_and_MariaDB_session_readonly_result: metadata_received_MariaDB_1045_no_SQL_result
@@ -442,15 +439,20 @@ host_package_planning_20261013:
 
 host_cold_recovery_20261013:
   task: INF-10-OS
-  status: source_and_exact_root_fixture_passed_owner_capture_pending
+  status: owner_r6_complete_archive_readback_verified_services_resumed
   handoff: context/runtime/host_cold_recovery_20261013.md
   validation: context/runtime/host_cold_recovery_validation_20261013.json
   source: scripts/infra/host_cold_recovery.py
-  implementation_commit: 2d1b25029ac1949117b205aaa2d52565af0ba387
-  helper_sha256: bcbbd378eded04b2ff0103aa2cef5d38d54f6cbfef60df67f53067bcb7a6aadd
-  root_fixture_CI: 38398856106
-  local_and_Ubuntu_root_tests: 17
-  server_capture_executed: false
+  implementation_commit: 22d8a4e172208d029b0524c3f38e37403fa438b9
+  helper_sha256: 3f8f0c0eae0d9702216d276231f2c7151fc40635b962843a0e9fe85efae6f0c4
+  root_fixture_CI: 38485478610
+  local_root_tests: 48
+  Ubuntu_root_file_and_control_tests: 48
+  Ubuntu_actual_isolated_systemd_tests: 2
+  server_capture_executed: true
+  archive_readback_sha256_verified: true
+  services_resumed: true
+  owner_result: context/runtime/host_cold_recovery_result_20261013.json
   package_install_or_reboot: false
   full_host_boot_restore_verified: false
   encrypted_archive: false

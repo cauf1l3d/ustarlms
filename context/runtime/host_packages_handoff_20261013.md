@@ -1,3 +1,5 @@
+**14Oct03:06MSK:** [Cold archive r6 accepted](host_cold_recovery_result_20261013.json). Prior metadata pass is complete;[native download-only next](host_packages_download_20261014.md). Package installation/reboot pending.
+
 [Owner15:04MSK results](host_packages_result_20261013.json) received;the planning commands below completed. [Next cold recovery capture](host_cold_recovery_20261013.md). Do not repeat this metadata pass by default.
 
 # Host package/boot/shared recovery planning after AppArmor PASS

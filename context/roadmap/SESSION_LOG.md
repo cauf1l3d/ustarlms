@@ -590,3 +590,10 @@ Exact99b3e0dc/SHA962a75d0: local41/root Ubuntu41+2 no skips PASS(run38484018659/
 **Current14Oct02:32MSK:** Owner r5 failed_resumed/FileNotFoundError at23:28:39..23:29:13UTC;services_resumed=true. Saved diagnosis identifies building_protected_manifest/resolve_link/errno2 under /proc,identical across both attempts. Old strict resolver follows proc magic links before exclusions;the same error class was reproduced locally with a real pipe FD. New component resolver stops at excluded trees before lookup,archives raw links,and retains persistent same-filesystem target checks.48 local tests PASS including real tar/link readback. Exact Ubuntu CI and server r6 pending. No host archive/install/reboot acceptance.
 
 Exact22d8a4e1/SHA3f8f0c0e: Ubuntu48+2(no skips) run38485478610/job115597955732 and context38485478396 PASS. Updated operator r6 handoff parsed successfully;server capture pending.
+
+
+## 2026-10-14 03:06 MSK — host cold archive accepted
+
+**Current14Oct03:06MSK:** Owner r6 source22d8a4e1/SHA3f8f0c0e completed at00:04:07UTC:43,704,842,240B archive,readback SHA8de2742f verified,223777 protected members,services_resumed=true,package baseline unchanged. Readback with services running began23:54:39UTC;total21m56s. Cold capture acceptance CLOSED;do not repeat capture/resume. Packages/reboot remain unexecuted. Next native APT download-only/no-remove,review exact38+25 plan before installation;retain kernels139/146. Full host boot restore/external recovery unverified. AppArmor/Moodle518 acceptance remains closed;latest major follows OS.
+
+Owner supplied status phase complete/readback true/223777 protected members,package_baseline_unchanged=true. Agent has no server connection and did not independently read archive. No full boot restore claim. Next operator native APT download-only uses cached signed catalog;download output is reviewed for63-package plan before a separate concrete installation handoff.

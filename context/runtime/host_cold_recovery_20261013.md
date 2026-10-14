@@ -1,5 +1,9 @@
 # Shared-host cold SSD file recovery before package installation
 
+**Current14Oct03:06MSK:** Owner r6 source22d8a4e1/SHA3f8f0c0e completed at00:04:07UTC:43,704,842,240B archive,readback SHA8de2742f verified,223777 protected members,services_resumed=true,package baseline unchanged. Readback with services running began23:54:39UTC;total21m56s. Cold capture acceptance CLOSED;do not repeat capture/resume. Packages/reboot remain unexecuted. Next native APT download-only/no-remove,review exact38+25 plan before installation;retain kernels139/146. Full host boot restore/external recovery unverified. AppArmor/Moodle518 acceptance remains closed;latest major follows OS.
+
+Latest acceptance: [owner r6 receipt](host_cold_recovery_result_20261013.json). Next: [native package download](host_packages_download_20261014.md). The capture/retry commands below are dated history and must not be rerun for this accepted archive.
+
 Owner [15:04MSK packet](host_packages_result_20261013.json) completed APT update and
 simulation:38 upgrades,25 new packages,no removals/held packages. New kernel147,
 Docker29.9.0/containerd2.4.1 and AppArmor/netplan/open-iscsi are in scope. Running
@@ -10,7 +14,7 @@ no password change or disclosure is needed for this file-level cold capture.
 ISPConfig missing-or-link remains unresolved;absence does not authorize removal.
 Prior AppArmor/Moodle518/cron/HDD/browser acceptance stays closed.
 
-## Current14Oct02:32MSK: r5 proc link failure; services restored
+## Historical14Oct02:32MSK: r5 proc link failure; services restored
 
 Owner r5 at23:28:39..23:29:13UTC:failed_resumed/services_resumed=true.
 Both initial manifest and its one retry failed with FileNotFoundError/errno2,
@@ -34,7 +38,7 @@ Published immutable source 22d8a4e172208d029b0524c3f38e37403fa438b9,SHA256
 Broader review38485478535 is still running at this receipt;whole PR green is
 not claimed. New server execution remains pending.
 
-### Current next capture r6
+### Historical r6 capture commands — completed
 
 Run sudo authentication separately;wait for its prompt to finish. Then paste
 the full bash block. It downloads,checks and installs the pinned helper and

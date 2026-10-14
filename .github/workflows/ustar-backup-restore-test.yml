@@ -1,0 +1,27 @@
+name: USTAR backup restore controller
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/infra/backup_restore_test.py'
+      - 'scripts/infra/ustar-restore-test-20261014.service'
+      - 'tests/r16/test_backup_restore_test.py'
+      - '.github/workflows/ustar-backup-restore-test.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: backup-restore-test-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  controller-and-service:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Real root private paths,locks,state and simulated failure/lifetime boundaries
+        run: sudo -n python3 -m unittest discover -s tests/r16 -p test_backup_restore_test.py -v
+      - name: Systemd service parser and cleanup command
+        run: systemd-analyze verify scripts/infra/ustar-restore-test-20261014.service

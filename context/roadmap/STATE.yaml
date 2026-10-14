@@ -4,10 +4,10 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner download03:32MSK complete;cold archive acceptance closed.
-  Exact cached installer d000e800/SHAc753cf2e ready:33 local root tests,
-  Ubuntu33+48+2/no skips and context PASS;logs/source bytes inspected.
-  Systemd operator install handoff ready;server install/reboot pending.
+  Owner14Oct0418MSK guarded installation completed01:12:55UTC:63 versions,
+  APT exit0,147 boot files,services/identities/policies/config preserved.
+  Native unit success/exit0/PID0;installation acceptance closed.
+  Native reboot and selected boot/runtime/HDD acceptance handoff ready;pending.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []
@@ -38,7 +38,7 @@ production:
   latest_cron_HDD_source: context/runtime/production_patch_post_switch_status_result_20261013.json
   latest_browser_source: context/runtime/production_patch_browser_result_20261013.json
   previous_observations_remain_dated: true
-  status: owner_r6_cold_archive_verified_services_resumed_package_install_pending
+  status: owner_host_packages_installed_runtime_resumed_reboot_pending
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -429,12 +429,13 @@ host_AppArmor_repair_20261013:
 
 host_package_planning_20261013:
   task: INF-10-OS
-  status: owner_download_complete_exact_cached_installer_CI_verified_operator_ready
-  handoff: context/runtime/host_packages_install_20261014.md
+  status: owner_installation_PASS_acceptance_closed_reboot_pending
+  handoff: context/runtime/host_reboot_20261014.md
   result: context/runtime/host_packages_result_20261013.json
   host_APT_catalog_refresh_executed: true
   host_metadata_and_MariaDB_session_readonly_result: metadata_received_MariaDB_1045_no_SQL_result
-  package_install_or_reboot_executed: false
+  package_install_executed: true
+  reboot_executed: false
   AppArmor_rerun_required: false
   download_result: context/runtime/host_packages_download_result_20261014.json
   package_names_match_approved_63: true
@@ -448,7 +449,9 @@ host_package_planning_20261013:
   installer_validation: context/runtime/host_packages_install_validation_20261014.json
   installer_Ubuntu_CI: 38493438210
   installer_context_CI: 38493438435
-  installer_server_execution: pending
+  installer_server_execution: owner_PASS
+  installer_server_result: context/runtime/host_packages_install_result_20261014.json
+  host_boot_acceptance: pending
 
 host_cold_recovery_20261013:
   task: INF-10-OS

@@ -1,5 +1,9 @@
 # Approved cached host package installation
 
+**Current14Oct04:18MSK:** Owner exact d000e800/c753cf2e installation PASS:01:08:25..01:12:55UTC,63 versions verified,APT exit0,147 boot files verified,services resumed,container identities/policies and critical config bytes preserved. Unit success/exit0/PID0,active/exited is RemainAfterExit. Installation acceptance CLOSED;do not rerun installer/cold capture/resume. Next native reboot behind maintenance flock and selected kernel/service/HDD checks;actual reboot/boot acceptance pending. Existing console and139/146 fallback files retained;full host boot restore/external recovery unverified. Latest Moodle major follows host acceptance.
+
+[Owner installation receipt](host_packages_install_result_20261014.json);[native reboot/post-boot handoff](host_reboot_20261014.md). The installation launch commands below are historical and must not be repeated for this accepted transaction.
+
 ## Verified immutable source and operator handoff
 
 Implementation `d000e80092da653cc369c2a6d37677cfcd56b1c3`,helper SHA256 `c753cf2e2b4ebdd0c7ff690614f6f2ec14435d035fdea6051cfe45d70e5947d1`.

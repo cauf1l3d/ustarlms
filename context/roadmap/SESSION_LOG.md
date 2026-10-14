@@ -666,3 +666,15 @@ read-only. Server cause unknown;bounded nativePython/psql read-only diagnostic
 prepared,without PHP bootstrap,credentials/personnel/log output or data mutation.
 No speculative fix/test release claimed. Prior host boot accepted;prepared53
 asset caching was not activated when this bug became current priority.
+
+
+## 2026-10-14 13:29MSK — later DB sample confirms saved version3 pass/progress
+
+[Aggregate receipt](../runtime/route_refresh_db_result_20261014.json) preserves
+owner20-row read-only sample without employee/attempt identifiers:10 learners,
+old version2 empty runtime/progress;version3 has8 passed/complete/Moodlecompletion2,
+including both23.5 scores. One zero/null result each remains incomplete;no pass
+is forced. Previous name-filtered query selected nothing;it is not a persistence
+failure. Current effective version/expiry and fresh browser render remain open.
+No speculative code/data fix;fresh reload then focused version/expiry inspection
+only if symptom persists. Prior native host boot acceptance stays closed.

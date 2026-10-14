@@ -4,12 +4,11 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner14Oct1233MSK route bug priority:material6 complete,assessment7 scored23.5/25
-  against17.5 butpending sync,next8/Continue locked. GET readonly andPOSTsync writer
-  reviewed/current-main blobs match. Actual server provider/runtime/progress and
-  eligibility cause not yet verified;one bounded read-only diagnostic prepared.
-  No speculative application patch,grade/role/reset or production schema change.
-  Prior host147/native boot acceptance stays closed;53/PG17 preparation retained.
+  Owner14Oct1329MSK point53/version3 DB sample has8 passed/complete/Moodlecompletion2,
+  including both23.5 screenshot-score candidates. Old version2 has no runtime/progress;
+  prior name-filter query selected nothing. Unsaved-pass hypothesis not supported now.
+  Fresh browser render,current effective version and progress expiry remain unobserved.
+  No source/grade/progress/reset mutation;host boot accepted;53/PG17 preparation retained.
 next_task: BUG-ROUTE-REFRESH
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 latest_host_boot_evidence: context/runtime/host_reboot_result_20261014.json
@@ -506,6 +505,9 @@ route_refresh_triage_20261014:
   handoff: context/runtime/route_refresh_triage_20261014.md
   evidence: context/runtime/route_refresh_triage_20261014.json
   exact_server_cause_verified: false
-  server_diagnostic_executed: false
+  server_diagnostic_executed: true
+  later_database_evidence: context/runtime/route_refresh_db_result_20261014.json
+  version3_pass_and_progress_already_persisted: true
+  current_browser_render_version_and_expiry: unobserved
   application_fix_or_deployment_executed: false
   no_completed_learning_or_grade_reset_authorized: true

@@ -498,10 +498,11 @@ tasks:
   execution_gate: owner14Oct1233MSK_specific_runtime_bug_priority
   handoff: context/runtime/route_refresh_triage_20261014.md
   current_checkpoint: >-
-    Screenshot23.5/25 with17.5 threshold,pending sync/6of16/current7/locked8.
-    SourceGETreadonly/POSTwriter present,current-main route/model blobs match.
-    Exact server cause unverified;bounded read-only metadata/hash diagnostic
-    prepared;no speculative source/data reset or production upgrade.
+    Owner13:29 DB sample confirms version3 passed/complete/Moodlecompletion2
+    for8 passing learners,including both23.5 score candidates. Old version2 lacks
+    progress;prior name-filter query selected nothing. Unsaved-pass hypothesis
+    not supported by this new sample. Fresh browser/current version/expiry
+    observations remain;no speculative source/grade/reset or production upgrade.
   acceptance:
   - Verified current assessment pass is persisted by authorized refresh with history intact
   - Next reachable step exposes Continue and future steps remain gated

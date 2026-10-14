@@ -1,5 +1,17 @@
 # Passed assessment does not advance the employee route
 
+**Owner14Oct13:29MSK update:** [DB evidence](route_refresh_db_result_20261014.json)
+confirms point53/version3 passed+progresscomplete+Moodlecompletion2 for all8
+passing learners in the sample,including both23.5 scores. Old version2 lacks
+runtime/progress;that is not a failure of version3. The prior name-filtered
+query selected nothing;do not infer absent results from it. A current-page
+render after this observation,current effective version and progress expiry
+are not supplied. Earlier hypothesis of an unsaved pass is not supported by
+this new sample. No score/progress mutation or source fix has been applied.
+Fresh browser reload is the first observation;only if still pending inspect
+the current version/expiry. Earlier command below is historical,do not repeat
+the unsuccessful name filter or force a completion.
+
 Owner14Oct12:33MSK screenshots were opened from the supplied scratch copies.
 [Selected triage receipt](route_refresh_triage_20261014.json) separates observed
 UI from the reviewed source and missing server evidence.

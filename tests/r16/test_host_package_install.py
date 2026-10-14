@@ -152,6 +152,18 @@ class ControlTests(unittest.TestCase):
         self.assertTrue(self.marker['services_resumed'])
         self.assertEqual(self.marker['phase'], 'failed_resumed')
 
+    def test_receipt_write_failure_cannot_prevent_service_resume_or_claim_pass(self):
+        def write(path, marker):
+            if marker['phase'] in ('resuming_original_services', 'failed_resumed'):
+                raise OSError('fixture full filesystem')
+            self.record(path, marker)
+        self.h.write_json = write
+        with self.assertRaisesRegex(packages.InstallError, 'RECEIPT_WRITE_FAILED'):
+            self.run_control()
+        self.h.resume.assert_called_once()
+        self.assertTrue(self.marker['services_resumed'])
+        self.assertEqual(self.marker['phase'], 'failed_resumed')
+
     def test_stop_requested_while_native_apt_finishes_then_resumes(self):
         self.apt_install.side_effect = lambda *a: packages.signal_requested(15, None)
         with self.assertRaisesRegex(packages.InstallError, 'STOP_REQUESTED'):

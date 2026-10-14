@@ -74,9 +74,14 @@ def dependency():
     return h
 
 
-def phase(h, marker, value):
+def phase(h, marker, value, required=True):
     marker.update(phase=value, updated_at=h.now())
-    h.write_json(MARKER, marker)
+    try:
+        h.write_json(MARKER, marker)
+    except Exception as error:
+        marker['receipt_write_error'] = type(error).__name__
+        if required:
+            raise
     print('HOST_PACKAGES_PHASE=' + value, flush=True)
 
 
@@ -272,23 +277,25 @@ def transact(h, runner, marker):
     finally:
         try:
             package_manager_idle(h)
-            phase(h, marker, 'resuming_original_services')
+            # Receipt I/O must not prevent trying to bring services back.
+            phase(h, marker, 'resuming_original_services', required=False)
             h.resume(runner, marker)
             marker['services_resumed'] = True
         except BaseException as e:
             marker['resume_error'] = str(e) if isinstance(e, (InstallError, h.RecoveryError)) else type(e).__name__
-            phase(h, marker, 'resume_required')
+            phase(h, marker, 'resume_required', required=False)
             if failure is None:
                 failure = e
     if failure is not None:
         if marker.get('services_resumed'):
-            phase(h, marker, 'failed_resumed')
+            phase(h, marker, 'failed_resumed', required=False)
         raise failure
     try:
+        need('receipt_write_error' not in marker, 'RECEIPT_WRITE_FAILED')
         resumed_check(h, marker, runner)
     except BaseException as e:
         marker['failure_code'] = str(e) if isinstance(e, (InstallError, h.RecoveryError)) else type(e).__name__
-        phase(h, marker, 'failed_resumed')
+        phase(h, marker, 'failed_resumed', required=False)
         raise
     marker.update(container_identities_and_policies_preserved=True, critical_config_bytes_preserved=True,
                   reboot_executed=False, reboot_acceptance='PENDING')
@@ -324,12 +331,14 @@ def recover(h):
         package_manager_idle(h)
         runner = h.Runner(STATE / 'resume.private.log')
         try:
-            phase(h, marker, 'resuming_original_services')
+            phase(h, marker, 'resuming_original_services', required=False)
             h.resume(runner, marker)
             marker['services_resumed'] = True
-            phase(h, marker, 'failed_resumed')
+            phase(h, marker, 'failed_resumed', required=False)
+            need('receipt_write_error' not in marker, 'RECEIPT_WRITE_FAILED')
         except BaseException:
-            phase(h, marker, 'resume_required')
+            phase(h, marker, 'failed_resumed' if marker.get('services_resumed') else 'resume_required',
+                  required=False)
             raise
 
 
@@ -338,7 +347,7 @@ def summary(marker):
             'apt_exit_status', 'installed_versions_verified', 'new_kernel_boot_files_verified',
             'services_resumed', 'failure_code', 'resume_error', 'failed_service',
             'container_identities_and_policies_preserved', 'critical_config_bytes_preserved',
-            'reboot_executed', 'reboot_acceptance')
+            'reboot_executed', 'reboot_acceptance', 'receipt_write_error')
     return {k: marker[k] for k in keys if k in marker}
 
 

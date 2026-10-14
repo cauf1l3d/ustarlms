@@ -614,3 +614,6 @@ Owner IPv4 HTTPS archive.ubuntu.com/noble-updates/InRelease probe OK;matching so
 **Current14Oct03:32MSK:** Owner central mirror replacement and signed catalog/download completed:38 upgrades+25 new/zero removals;63 names match,43 visible retry versions match,6 Docker versions matched earlier,14 cached versions require native exact simulation. Backup source /root/ustar-apt-mirror-20261014.i9mk34/ubuntu.sources. Accepted r6 cold archive/services remain closed. New guarded cached package installer embeds63 versions,reuses hash-pinned accepted service control,and verifies cache/baseline/config/boot/runtime before reboot handoff.32 local root tests PASS;exact Ubuntu CI and server install/reboot pending. No repeated capture/resume or AppArmor/Moodle518 acceptance.
 
 Root controller32 tests PASS including actual separate-process POSIX lock and sparse archive/private receipt fixtures;APT/shared service/boot commands are modeled. Source b6e1529d;dependency cold3f8f0c0e unchanged. Exact Ubuntu CI and operator delivery remain pending. No full host boot restore claim.
+
+
+Installer review adds cleanup receipt-I/O failure handling:failed receipt write must not block resume or claim PASS.33 local root tests PASS;source c753cf2e exact Ubuntu CI pending. Previous438f3da2 root32(+48+2) and context CI passed;superseded before operator handoff.

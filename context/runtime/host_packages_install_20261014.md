@@ -90,10 +90,10 @@ migration is included. Latest Moodle major follows host reboot acceptance.
 
 ## Validation at source preparation
 
-32 local root tests PASS/no skips:exact plan drift/removal/missing/duplicate gates,
+33 local root tests PASS/no skips:exact plan drift/removal/missing/duplicate gates,
 cache/cold receipt/package baseline refusal,APT/stop/boot/config/resume failures,
 cancellation waits before resume,native POSIX lock contention and temporary boot
-file fixtures. Actual APT/maintainer scripts/Docker/shared service installation
+file fixtures. Cleanup receipt I/O cannot block the service resume attempt or claim PASS. Actual APT/maintainer scripts/Docker/shared service installation
 are modeled;Ubuntu exact-source CI and operator install remain pending.
 Application/source schema map remains526 files/93 tables/32 tasks.
 

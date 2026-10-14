@@ -7,7 +7,7 @@ current_activity: >-
   Owner14Oct0332MSK central mirror/catalog/download complete:38+25/no removals.
   Cold archive r6 acceptance closed. New cached installer embeds exact63
   versions,reuses accepted service control,checks cache/baseline/config/boot.
-  Local32 root tests PASS;exact Ubuntu CI/operator install/reboot pending.
+  Local33 root tests PASS;exact Ubuntu CI/operator install/reboot pending.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []
@@ -442,8 +442,8 @@ host_package_planning_20261013:
   mirror_change_or_download_retry_executed: true
   download_completed: true
   installer_source: scripts/infra/host_package_install.py
-  installer_helper_sha256: b6e1529db98c52cadfbcf0dd956e3819ac55a42bde128694c1a12a145356bc95
-  installer_local_root_tests: 32
+  installer_helper_sha256: c753cf2e2b4ebdd0c7ff690614f6f2ec14435d035fdea6051cfe45d70e5947d1
+  installer_local_root_tests: 33
 
 host_cold_recovery_20261013:
   task: INF-10-OS

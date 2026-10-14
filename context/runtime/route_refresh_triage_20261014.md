@@ -1,5 +1,10 @@
 # Passed assessment does not advance the employee route
 
+**Deferred by owner14Oct:** continue Moodle major transition preparation instead.
+The observations and commands below are retained for later diagnosis;they are
+not the current operator step. No application fix or grade/progress mutation
+has been made.
+
 **Owner14Oct13:29MSK update:** [DB evidence](route_refresh_db_result_20261014.json)
 confirms point53/version3 passed+progresscomplete+Moodlecompletion2 for all8
 passing learners in the sample,including both23.5 scores. Old version2 lacks

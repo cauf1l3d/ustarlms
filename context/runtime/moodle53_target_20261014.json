@@ -53,5 +53,8 @@
   "stage_created": false,
   "upgrade_or_production_activation_executed": false,
   "local_validation": "PASS_operator_Bash_syntax_and_fixed_metadata_formats_no_server_execution",
-  "next": "native_download_checksum_and_image_digest_then_pin_isolated_rehearsal"
+  "next": "native_download_checksum_and_image_digest_then_pin_isolated_rehearsal",
+  "owner_current_priority": "resume_Moodle_major_preparation_route_refresh_deferred_20261014",
+  "preparation_step_3": "complete_source_metadata_and_operator_syntax_scope",
+  "operator_handoff": "context/runtime/moodle53_preparation_20261014.md"
 }

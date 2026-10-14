@@ -370,9 +370,10 @@ tasks:
   - R15
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: PLAT-01
-  priority_note: Owner13Oct0449MSK latest stable Moodle53 LTS target confirmed after
-    OS,with PG17+ migration/addons/native theme/coherent isolated recovery before
-    production window. Current518 acceptance stays closed;HTTPS remains selected.
+  priority_note: Owner14Oct explicitly resumed Moodle major preparation and deferred
+    route refresh diagnosis. Host boot acceptance is closed;next is verified
+    nonactivating asset caching,then isolated PG17 migration/full-addon recovery.
+    Current518 acceptance stays closed;HTTPS remains selected.
   title: Поддерживаемый major/LTS Moodle 5.3 с миграцией PostgreSQL17+
   status: in_progress
   depends_on:
@@ -493,12 +494,14 @@ tasks:
   reference: context/architecture/notification_delivery_20260928.md
 - id: BUG-ROUTE-REFRESH
   title: Успешная аттестация остаётся в обработке и блокирует следующий шаг
-  status: in_progress
+  status: deferred
   depends_on: []
-  execution_gate: owner14Oct1233MSK_specific_runtime_bug_priority
+  execution_gate: deferred_by_owner14Oct_resume_Moodle_major_preparation
   handoff: context/runtime/route_refresh_triage_20261014.md
   current_checkpoint: >-
-    Owner13:29 DB sample confirms version3 passed/complete/Moodlecompletion2
+    Owner14Oct explicitly deferred further diagnosis;not fixed and no application
+    or grade/progress mutation. Retain evidence for later. Owner13:29 DB sample
+    confirms version3 passed/complete/Moodlecompletion2
     for8 passing learners,including both23.5 score candidates. Old version2 lacks
     progress;prior name-filter query selected nothing. Unsaved-pass hypothesis
     not supported by this new sample. Fresh browser/current version/expiry

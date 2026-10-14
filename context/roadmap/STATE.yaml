@@ -4,12 +4,13 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner14Oct1329MSK point53/version3 DB sample has8 passed/complete/Moodlecompletion2,
-  including both23.5 screenshot-score candidates. Old version2 has no runtime/progress;
-  prior name-filter query selected nothing. Unsaved-pass hypothesis not supported now.
-  Fresh browser render,current effective version and progress expiry remain unobserved.
-  No source/grade/progress/reset mutation;host boot accepted;53/PG17 preparation retained.
-next_task: BUG-ROUTE-REFRESH
+  Owner14Oct explicitly deferred route refresh diagnosis and resumed Moodle major
+  transition preparation. Host install/native boot acceptance remains closed.
+  Step3 handoff is native Moodle5.3.0 SHA-checked asset caching and official
+  PG17.11-trixie/amd64 image digest receipt with one read-only cron status.
+  No production pause or activation;actual downloads and isolated migration
+  rehearsal remain pending operator receipts. Route bug is deferred,not fixed.
+next_task: PLAT-01
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 latest_host_boot_evidence: context/runtime/host_reboot_result_20261014.json
 latest_platform_handoff: context/runtime/moodle53_preparation_20261014.md

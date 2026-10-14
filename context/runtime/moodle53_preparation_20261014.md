@@ -1,5 +1,11 @@
 # Moodle 5.3 LTS: official assets and isolated migration preparation
 
+**Current owner priority14Oct:** route refresh diagnosis is deferred;resume this
+Moodle major transition. Step3 preparation is complete in the source/syntax scope:
+the next operator action is the download-only block below. Actual server assets,
+image digest and compatibility acceptance remain pending. Host installation and
+native boot acceptance stay closed;do not repeat that work.
+
 Owner14Oct04:41MSK [native host boot acceptance](host_reboot_result_20261014.json)
 is PASS:kernel147,Docker29.9.0,selected shared units/AppArmor/HDD healthy,login
 final200. All six container IDs/policies match the saved installation;four labs

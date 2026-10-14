@@ -678,3 +678,19 @@ is forced. Previous name-filtered query selected nothing;it is not a persistence
 failure. Current effective version/expiry and fresh browser render remain open.
 No speculative code/data fix;fresh reload then focused version/expiry inspection
 only if symptom persists. Prior native host boot acceptance stays closed.
+
+
+## 2026-10-14 — владелец вернул приоритет переходу Moodle
+
+Владелец явно отложил BUG-ROUTE-REFRESH и поручил завершить третий пункт подготовки
+перехода Moodle. PLAT-01 снова текущая задача. Приёмка пакетов, native boot ядра147,
+Docker29.9.0 и наблюдённых служб остаётся закрытой. Повторная остановка/копия/установка
+ОС/перезагрузка не требуется. Диагностика кнопки сохранена как deferred;исправление
+и изменение оценок/прогресса не выполнялись.
+
+Проверенный следующий шаг — native download-only:официальный Moodle5.3.0 LTS
+с SHA2567e5edf11 и образ PostgreSQL17.11-trixie/linux-amd64 с записью фактического
+RepoDigest;один read-only status существующего cronv3. Официальные требования,
+checksum и image definition повторно сверены14Oct. Bash syntax и context checks
+проверяются в этой поставке;серверная загрузка/стенд/миграция/совместимость/активация
+ещё не выполнены. Команды и границы:context/runtime/moodle53_preparation_20261014.md.

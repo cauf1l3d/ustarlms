@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-14'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -349,7 +349,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: PLAT-01
   title: Поддерживаемый major/LTS Moodle 5.3 с миграцией PostgreSQL17+
-  status: planned
+  status: in_progress
   depends_on:
   - OPS-02
   acceptance:
@@ -358,6 +358,18 @@ tasks:
   - Fresh/upgrade/repeat/scenarios/performance and full restore accepted
   - Exact production deployment and lifecycle deadline recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  priority_note: Owner14Oct explicitly resumed Moodle major transition after accepted host update;route diagnosis deferred.
+  handoff: context/runtime/moodle53_stage_prepare_20261014.md
+  current_checkpoint: >-
+    Formal53 archive/cache SHA and actual PG17.11/linux-amd64 digest received17:14MSK;
+    postboot scheduled cron exit0/no new failures. New source prepares private frozen
+    and independent mutable518 pairs plus stock53/all19 addon roots without SQL/PHP,
+    container/service operations or production writes. Local25 file/archive cases
+    pass with fixture UID mapping;native Ubuntu25/package and synthetic PG migration
+    checks pass in first CI,public artifact permissions corrected and final run pending.
+    Actual server preparation/full-addon53 migration/upgrade/recovery/QA pending;
+    OPS02 production recovery conditions retained,not silently closed.
+
 - id: PRIVACY-01
   title: Полный Moodle Privacy API и согласованный retention
   status: deferred
@@ -457,6 +469,26 @@ tasks:
   depends_on: []
   reason: No claim of working external delivery; separate approved contract required
   reference: context/architecture/notification_delivery_20260928.md
+- id: BUG-ROUTE-REFRESH
+  title: Успешная аттестация остаётся в обработке и блокирует следующий шаг
+  status: deferred
+  depends_on: []
+  execution_gate: deferred_by_owner14Oct_resume_Moodle_major_preparation
+  handoff: https://github.com/cauf1l3d/ustarlms/blob/d1a3b6e1f62aa00a550016fdb55a55a4c47344a3/context/runtime/route_refresh_triage_20261014.md
+  current_checkpoint: Owner14Oct explicitly deferred further diagnosis;not fixed and
+    no application or grade/progress mutation. Retain evidence for later. Owner13:29
+    DB sample confirms version3 passed/complete/Moodlecompletion2 for8 passing learners,including
+    both23.5 score candidates. Old version2 lacks progress;prior name-filter query
+    selected nothing. Unsaved-pass hypothesis not supported by this new sample. Fresh
+    browser/current version/expiry observations remain;no speculative source/grade/reset
+    or production upgrade.
+  acceptance:
+  - Verified current assessment pass is persisted by authorized refresh with history
+    intact
+  - Next reachable step exposes Continue and future steps remain gated
+  - Repeated refresh is idempotent and manual grading/failure/preview never bypasses
+    eligibility
+  - Exact focused source and runtime/release evidence recorded separately
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_1_7_6
 owner_selected_order:

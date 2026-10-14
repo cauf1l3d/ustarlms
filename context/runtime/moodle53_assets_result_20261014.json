@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "kind": "owner_Moodle53_asset_and_postboot_cron_acceptance",
+  "evidence_source": "owner_pasted_SSH_stdout_not_independent_agent_query",
+  "received_moscow": "2026-10-14T17:14:32+03:00",
+  "asset_directory": "/var/lib/ustar-moodle53-assets-20261014.GG8CJavy",
+  "moodle": {
+    "release": "5.3.0 LTS",
+    "file": "moodle-5.3.tgz",
+    "archive_sha256": "7e5edf110555956571f40e42acffde0eb23681ebebd212a2fec0fe7d795dd511",
+    "download_and_sha256_check": "PASS"
+  },
+  "postgres17": {
+    "tag": "docker.io/library/postgres:17.11-trixie",
+    "digest": "sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3",
+    "observed_image_id": "sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3",
+    "image": "docker.io/library/postgres@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3",
+    "platform": "linux/amd64",
+    "pull_completed": true
+  },
+  "cron": {
+    "helper_version": 3,
+    "helper_sha256": "66fd51d364beb59a8874a63c695c122dca5452a720e61b86d070beb0b1939852",
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "trigger": "scheduled",
+    "started_utc": "2026-10-14T13:51:01.415315+00:00",
+    "finished_utc": "2026-10-14T13:51:02.696528+00:00",
+    "exit_code": 0,
+    "elapsed_seconds": 1.281,
+    "new_failures": [],
+    "ustar_error_lines": 0,
+    "ustar_warning_lines": 0,
+    "ustar_worker_errors": 0,
+    "ustar_failed": 0,
+    "adhoc_queued": 0,
+    "adhoc_failed": 0,
+    "scheduled_failed_before_and_after": 2,
+    "scheduled_overdue_10m_before_and_after": 18,
+    "failures_24h": [],
+    "email_disabled": false,
+    "log_truncated": false,
+    "postboot_scheduled_observation": "PASS"
+  },
+  "stdout_status": "MOODLE53_ASSETS=READY; DOWNLOAD_ONLY",
+  "host_install_and_native_boot_acceptance": "already_closed_in_observed_scope_plus_postboot_cron_now_observed",
+  "host_boot_prior_evidence_url": "https://github.com/cauf1l3d/ustarlms/blob/d1a3b6e1f62aa00a550016fdb55a55a4c47344a3/context/runtime/host_reboot_result_20261014.json",
+  "preparation_helper_server_executed": false,
+  "Moodle53_upgrade_or_PG17_migration_executed": false,
+  "production_activation_executed": false,
+  "full_addon_runtime_compatibility_verified": false,
+  "notes": [
+    "Two existing scheduled failure flags remain;overdue18 unchanged within this observation,not a zero-backlog claim",
+    "No new cron failure or USTAR error;status read did not execute tasks",
+    "The next stage uses the stopped accepted5.1.8 lab snapshot,not a fresh current-production data copy",
+    "Route refresh bug explicitly deferred by owner;no source,grade or progress fix inferred"
+  ]
+}

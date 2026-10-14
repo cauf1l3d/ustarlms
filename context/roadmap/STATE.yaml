@@ -1,17 +1,18 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-14'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner GPT copy received06Oct09:06:01UTC: raw PMBR/GPT/BIOS boot and native table
-  copy saved on mounted HDD in ssd-layout-20261006-06NYpg, nine hash checks OK and
-  GPT_COPY_READBACK=PASS. Sysadmin console access confirmed09:03:36UTC; rescue medium and
-  actual boot recovery not separately verified. First GPT relocation command prepared:
-  raw pre/post header/table CRC, exact partition array and boot-byte preservation guards;
-  17 regular sparse-file fixtures PASS, native sgdisk not executed locally. Server GPT write,
-  root growth, source move/deletion and stage preparation remain unexecuted.
-  Timer active/enabled from earlier evidence, first scheduled run07Oct03:30MSK pending.'
-next_task: INF-04
+current_activity: >-
+  Owner14Oct1714MSK formal Moodle53 archive SHA and pinned PG17.11/linux-amd64
+  assets PASS;post-boot scheduled cron exit0/new failures none/USTAR errors0.
+  Host package/native boot and518 acceptance stay closed;route bug is deferred.
+  Independent full-addon stopped518 stage preparation is source-tested;actual
+  server copies,logical PG17 migration,Moodle53 upgrade/repeat and paired
+  recovery/browser acceptance remain pending. No production platform switch.
+next_task: PLAT-01
+latest_platform_asset_evidence: context/runtime/moodle53_assets_result_20261014.json
+latest_platform_handoff: context/runtime/moodle53_stage_prepare_20261014.md
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -33,7 +34,13 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
 production:
-  status: owner_backup_cron_http_and_retained_lab_resume_confirmed_patch_stage_pending
+  platform_release: '5.1.8'
+  current_core_db_version: '2025100608.00'
+  latest_platform_scope: '14Oct asset caching only;PG17 and Moodle53 not activated'
+  latest_postboot_cron_source: context/runtime/moodle53_assets_result_20261014.json
+  latest_host_boot_evidence_url: https://github.com/cauf1l3d/ustarlms/blob/d1a3b6e1f62aa00a550016fdb55a55a4c47344a3/context/runtime/host_reboot_result_20261014.json
+  earlier_fields_are_dated_history: true
+  status: owner_host_native_boot_and_postboot_cron_selected_scope_accepted
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -199,6 +206,7 @@ execution:
   - INF-08
   - INF-10-OS
   - INF-07
+  - PLAT-01
   - INF-04
   - INF-14
   other_points: unrelated_hardening_product_cleanup_projects_remain_deferred

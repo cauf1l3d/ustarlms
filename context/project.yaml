@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-14'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -25,3 +25,14 @@ state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_points_1_7_6
+
+latest_platform_scope: context/runtime/moodle53_stage_prepare_20261014.md
+latest_platform_asset_evidence: context/runtime/moodle53_assets_result_20261014.json
+latest_host_scope: owner14Oct_kernel147_Docker29.9.0_native_boot_and_postboot_cron_accepted_in_observed_scope
+
+latest_observed_runtime:
+  platform: Moodle5.1.8/core2025100608.00
+  host: Ubuntu24.04.5/kernel6.8.0-147/Docker29.9.0
+  database: PostgreSQL16.15
+  next_target: Moodle5.3.0/PostgreSQL17.11_separate_rehearsal
+  source: context/runtime/moodle53_assets_result_20261014.json

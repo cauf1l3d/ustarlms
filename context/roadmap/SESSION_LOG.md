@@ -393,3 +393,21 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+
+## 2026-10-14 — Moodle53 asset/cron acceptance and independent major stage preparation
+
+Owner17:14:32MSK returned formal53 archive SHA PASS,PG17.11/linux-amd64 digest
+2d2b8998… and scheduled13:51UTC post-boot cron exit0/new failures none/USTAR errors0.
+Download accepted;do not repeat host install/reboot/backup/caching. Route bug is deferred.
+Fresh mainc53723c branch codex/moodle53-stage-20261014/PR101 prepares private frozen
+and independent mutable518 code/data/PG16 plus stock53/all19 addon roots. No stop/start,
+SQL/PHP,production writes or activation.25 local real-file/archive tests pass using
+fixture UID mapping because local root maps only UID0. First native Ubuntu25 tests,
+actual public53 package parser and synthetic PG16→17 data/sequence/ACL/extension/redo/
+16 restore pass;root0600 public metadata artifact upload alone failed and is corrected
+in CI to0644. Corrected exact run is pending. Helper bytes3d505757 and profile40ad9cdd
+unchanged. Server preparation and actual full-addon53 migration/upgrade/recovery/QA
+remain unexecuted. Receipt:context/runtime/moodle53_assets_result_20261014.json;
+operator handoff:context/runtime/moodle53_stage_prepare_20261014.md. Source prepared
+at a675303c9fc0f918adc837730e6fe6b783f3913c;application source stays e1d57f5/526 files.

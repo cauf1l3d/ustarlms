@@ -1,3 +1,5 @@
+**Current14Oct17:14MSK:** Owner asset receipt PASS:formal Moodle5.3 archive SHA verified,PG17.11/linux-amd64 digest pinned,post-boot scheduled cron exit0/no new failures/USTAR errors0. Host packages/native boot and518 acceptance remain closed. PLAT-01 is current;route refresh bug deferred. Next:independent frozen/mutable full-addon pairs from the stopped518 lab,then PG17/Moodle53 migration,recovery and QA. Preparation controller has no stop/start,SQL/PHP or production writes. Source/tests and pending server evidence:context/runtime/moodle53_stage_prepare_20261014.md. Earlier dated storage/patch statements below are history,not instructions to repeat closed work.
+
 # Активная работа — 06.10.2026
 
 [Полная актуальная редакция аудита06Oct](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md): выполнено/частично/подготовлено/остаток и текущая точка отдельно. Последний owner result остаётся GPT_COPY_READBACK=PASS; нового server execution для GPT/root нет. First scheduled HDD run07Oct03:30MSK pending. Future Moodle5.3 LTS опубликован05Oct и требует PG17+, это отдельный PLAT-01 после выбранного patch5.1.8/OS/HTTPS.

@@ -33,6 +33,8 @@ jobs:
           ustar_ci_assets=$(mktemp -d /var/lib/ustar-m53-package-ci.XXXXXXXX)
           curl -fL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 600 --silent --show-error https://download.moodle.org/download.php/direct/stable503/moodle-5.3.tgz -o "$ustar_ci_assets/moodle-5.3.tgz"
           python3 tests/stage/check_major_archive.py "$ustar_ci_assets/moodle-5.3.tgz" > artifacts/major/official-package.json
+          cat artifacts/major/official-package.json
+          chmod 644 artifacts/major/official-package.json
           BASH
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

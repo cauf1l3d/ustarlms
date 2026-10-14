@@ -1,3 +1,5 @@
+**Current14Oct17:14MSK:** Owner asset receipt PASS:formal Moodle5.3 archive SHA verified,PG17.11/linux-amd64 digest pinned,post-boot scheduled cron exit0/no new failures/USTAR errors0. Host packages/native boot and518 acceptance remain closed. PLAT-01 is current;route refresh bug deferred. Next:independent frozen/mutable full-addon pairs from the stopped518 lab,then PG17/Moodle53 migration,recovery and QA. Preparation controller has no stop/start,SQL/PHP or production writes. Source/tests and pending server evidence:context/runtime/moodle53_stage_prepare_20261014.md. Earlier dated storage/patch statements below are history,not instructions to repeat closed work.
+
 # USTAR — инструкции агентам
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Текущая карта и следующий шаг](context/runtime/server_map_20261006.md).

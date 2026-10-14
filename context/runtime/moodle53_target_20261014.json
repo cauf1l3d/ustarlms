@@ -1,0 +1,57 @@
+{
+  "kind": "official_Moodle53_major_target_and_nonactivating_asset_handoff",
+  "verified_date": "2026-10-14",
+  "sources": {
+    "release": "https://moodledev.io/general/releases/5.3",
+    "releases": "https://moodledev.io/general/releases",
+    "latest": "https://download.moodle.org/releases/latest/",
+    "checksum": "https://packaging.moodle.org/stable503/moodle-5.3.tgz.sha256",
+    "core_metadata": "https://github.com/moodle/moodle/blob/v5.3.0/public/version.php",
+    "postgres_versioning": "https://www.postgresql.org/support/versioning/",
+    "postgres_official_image_definition": "https://github.com/docker-library/official-images/blob/master/library/postgres",
+    "postgres_official_image_versions": "https://github.com/docker-library/postgres/blob/master/versions.json"
+  },
+  "target": {
+    "moodle": "5.3.0 LTS",
+    "moodle_tag": "v5.3.0",
+    "release_date": "2026-10-05",
+    "core_version": "2026100500.00",
+    "core_branch": "503",
+    "maturity": "MATURITY_STABLE",
+    "archive_url": "https://download.moodle.org/download.php/direct/stable503/moodle-5.3.tgz",
+    "archive_sha256": "7e5edf110555956571f40e42acffde0eb23681ebebd212a2fec0fe7d795dd511"
+  },
+  "requirements": {
+    "upgrade_from_minimum": "4.4",
+    "php_minimum": "8.3.0",
+    "postgresql_minimum_major": 17,
+    "php_64_bit": true,
+    "max_input_vars_minimum": 5000,
+    "sodium_required": true
+  },
+  "observed_production": {
+    "moodle": "5.1.8",
+    "core_version": "2025100608.00",
+    "php": "8.3.33",
+    "postgresql": "16.15",
+    "addon_components": 57,
+    "addon_roots": 19,
+    "application_source_files": 526
+  },
+  "chosen_rehearsal": {
+    "postgres_image_tag": "docker.io/library/postgres:17.11-trixie",
+    "platform": "linux/amd64",
+    "official_image_source_commit": "2603e26e245e558218728ee14e0a42dcb020dc7f",
+    "image_digest": "PENDING_native_pull_receipt",
+    "migration_method": "logical_dump_restore_into_new_private_PG17_cluster",
+    "source_PG16_directory_mounted_in_PG17": false,
+    "php_image": "retain_existing_8.3.33_after_requirements_check"
+  },
+  "compatibility_verified": false,
+  "exact_package_bytes_downloaded_and_verified": false,
+  "server_asset_download_executed": false,
+  "stage_created": false,
+  "upgrade_or_production_activation_executed": false,
+  "local_validation": "PASS_operator_Bash_syntax_and_fixed_metadata_formats_no_server_execution",
+  "next": "native_download_checksum_and_image_digest_then_pin_isolated_rehearsal"
+}

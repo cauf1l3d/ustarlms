@@ -12,7 +12,7 @@ stack:
   language: PHP CLI8.3.33/Trixie production; PR83 source CI8.2+8.3 and pinned patch-518/PG16.15 full RC SUCCESS,
     server518 upgrade/repeat owner13Oct PASS;new AppArmor helper is separate host source
   database: PostgreSQL 16.15, dated owner evidence
-  deployment: Docker on company Ubuntu 24.04.4 LTS shared host; virtualization not verified
+  deployment: Docker29.9.0 on company Ubuntu24.04.5 LTS/kernel6.8.0-147 shared host,owner14Oct boot acceptance;virtualization not verified
   native_ui: PHP + Mustache + JS/AMD + SCSS
   theme: theme_ustar extends boost
   secondary_frontend: Next.js 15.5.25 / React 18; not used in production per owner
@@ -28,3 +28,5 @@ execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selecte
 latest_core_patch_evidence: context/runtime/production_patch_upgrade_result_20261013.json
 latest_host_scope: context/runtime/host_reboot_20261014.md
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
+latest_host_boot_evidence: context/runtime/host_reboot_result_20261014.json
+latest_platform_scope: context/runtime/moodle53_preparation_20261014.md

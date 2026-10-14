@@ -346,3 +346,25 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+
+## 2026-10-14 04:41MSK — native host boot accepted;Moodle53 assets next
+
+Owner terminal confirms Ubuntu24.04.5/kernel6.8.0-147 boot at01:33:42UTC,
+Docker29.9.0,zero failed units,selected shared services healthy,AppArmor Docker
+enforce,exact HDD mount/timer/no marker. Login303 without redirects then final200.
+All six container IDs/policies match installation;four labs original restart=no,
+exit0,no autostart expected. [Receipt](../runtime/host_reboot_result_20261014.json).
+Installation/native boot acceptance closed in observed scope;no installer,capture,
+resume or second reboot. Post-boot scheduled Moodle cron status remains to observe.
+No authenticated browser/shared mail-DNS end-to-end/full host restore inferred.
+
+Next PLAT-01 [nonactivating preparation](../runtime/moodle53_preparation_20261014.md):
+official5.3.0 LTS/core2026100500.00/SHA7e5edf11 and official17.11-trixie/amd64
+tag verified on14Oct;PHP8.3.33 meets minimum. Native status+download/pull only,
+new private directory,archive hash/OS-architecture/image digest receipts before
+isolated logical PG16->17 restore and full-addon upgrade/repeat/paired recovery.
+Actual asset download/digest/5.3 integration and production migration pending.
+Application baseline526 files/93 tables/32 tasks unchanged. Host docs PR100 only;
+no merge,production activation or new shared pause. Current state/entrypoints
+updated;older dated checkpoints retained as history.

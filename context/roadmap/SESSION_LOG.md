@@ -631,3 +631,38 @@ Ubuntu38493438210/job115623715462:33 installer+48 accepted-controller file/contr
 **Current14Oct04:18MSK:** Owner exact d000e800/c753cf2e installation PASS:01:08:25..01:12:55UTC,63 versions verified,APT exit0,147 boot files verified,services resumed,container identities/policies and critical config bytes preserved. Unit success/exit0/PID0,active/exited is RemainAfterExit. Installation acceptance CLOSED;do not rerun installer/cold capture/resume. Next native reboot behind maintenance flock and selected kernel/service/HDD checks;actual reboot/boot acceptance pending. Existing console and139/146 fallback files retained;full host boot restore/external recovery unverified. Latest Moodle major follows host acceptance.
 
 Owner invocation afcdde4bf53f460e810336e71a308e92,01:08:25.711288..01:12:55.066500UTC,duration269.355212s;status complete_reboot_pending and native unit success/0/PID0. No actual reboot yet. Prepared native flock/systemctl reboot and selected read-only boot/container/shared/HDD/cron metadata;bash syntax PASS. No new helper/configuration/policy write or repeat installer.
+
+
+## 2026-10-14 04:41MSK — native host boot accepted;Moodle53 assets next
+
+Owner terminal confirms Ubuntu24.04.5/kernel6.8.0-147 boot at01:33:42UTC,
+Docker29.9.0,zero failed units,selected shared services healthy,AppArmor Docker
+enforce,exact HDD mount/timer/no marker. Login303 without redirects then final200.
+All six container IDs/policies match installation;four labs original restart=no,
+exit0,no autostart expected. [Receipt](../runtime/host_reboot_result_20261014.json).
+Installation/native boot acceptance closed in observed scope;no installer,capture,
+resume or second reboot. Post-boot scheduled Moodle cron status remains to observe.
+No authenticated browser/shared mail-DNS end-to-end/full host restore inferred.
+
+Next PLAT-01 [nonactivating preparation](../runtime/moodle53_preparation_20261014.md):
+official5.3.0 LTS/core2026100500.00/SHA7e5edf11 and official17.11-trixie/amd64
+tag verified on14Oct;PHP8.3.33 meets minimum. Native status+download/pull only,
+new private directory,archive hash/OS-architecture/image digest receipts before
+isolated logical PG16->17 restore and full-addon upgrade/repeat/paired recovery.
+Actual asset download/digest/5.3 integration and production migration pending.
+Application baseline526 files/93 tables/32 tasks unchanged. Host docs PR100 only;
+no merge,production activation or new shared pause. Current state/entrypoints
+updated;older dated checkpoints retained as history.
+
+
+## 2026-10-14 12:33MSK — passed route quiz still pending;focused diagnosis
+
+Both supplied screenshots opened from scratch copies. Material6 complete;
+assessment7 numeric23.5/25 over17.5,1/3 attempts,stillpending sync;8 locked and
+noContinue,progress6/16. [Triage](../runtime/route_refresh_triage_20261014.md)
+records observed UI separately from actual DB/POST cause. Current-main
+route.php/model blobs match local source;POSTsync writer exists andGET remains
+read-only. Server cause unknown;bounded nativePython/psql read-only diagnostic
+prepared,without PHP bootstrap,credentials/personnel/log output or data mutation.
+No speculative fix/test release claimed. Prior host boot accepted;prepared53
+asset caching was not activated when this bug became current priority.

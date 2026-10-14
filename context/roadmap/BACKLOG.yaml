@@ -1,10 +1,12 @@
+# Current14Oct1233MSK: owner blocked passed-quiz route bug takes priority;readonly diagnosis prepared;host boot accepted;major assets not activated.
+# Current14Oct0441MSK: owner kernel147/native boot/runtime PASS;post-boot scheduled cron status pending;Moodle53/PG17.11 cache-only handoff prepared.
 # Current14Oct0418MSK: owner guarded install63/boot files/runtime/config PASS;installation closed;native reboot/boot acceptance next and pending.
 # Current14Oct0401MSK: exact cached installer d000e800/c753cf2e local33/Ubuntu33+48+2/context PASS;operator install handoff ready;server installation/reboot pending.
 # Current14Oct0332MSK: download complete;cached exact63-package installer local33 PASS/Ubuntu and operator install pending;reboot after runtime and boot checks.
 # Current14Oct0306MSK: r6 archive complete/readback PASS/services resumed;native package download-only next;installation/reboot pending.
 # Current14Oct0232MSK: r5 /proc strict-link failure resumed;component resolver22d8a4e1 local48/Ubuntu48+2/context PASS;r6 and archive/install/reboot pending.
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-14'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -213,7 +215,7 @@ tasks:
   execution_gate: authorized_owner_point_7_after_baseline_CI_and_stage_recovery
 - id: INF-10-OS
   title: Patch-обслуживание Ubuntu 24.04, AppArmor и required reboot
-  status: in_progress
+  status: review
   depends_on:
   - INF-01
   - INF-08
@@ -224,20 +226,21 @@ tasks:
   - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  handoff: context/runtime/host_cold_recovery_20261013.md
+  handoff: context/runtime/host_reboot_20261014.md
   runtime_evidence:
   - context/runtime/host_apparmor_observation_20261013.json
   - context/runtime/host_apparmor_result_20261013.json
   - context/runtime/host_packages_result_20261013.json
   - context/runtime/host_cold_recovery_result_20261013.json
+  - context/runtime/host_packages_install_result_20261014.json
+  - context/runtime/host_reboot_result_20261014.json
   current_checkpoint: >-
-    Owner14Oct0109MSK r3 resume_required/CONTAINER_IDENTITY_DRIFT,unit failed/PID0,
-    original runtime resumption unverified. No capture/install/reboot;guarded
-    runtime resume first. Source2766a1a9/SHA4bf199c1 fixes mount array ordering,
-    retains actual ID/image/full-mount refusal,and persists changed-field
-    diagnostics.34 local +Ubuntu34 model/file+2 real systemd/no skips PASS.
-    Actual r3 cause unverified;AppArmor/518 remain accepted,host update deferred
-    until runtime recovered and new archive accepted.
+    Owner14Oct0441MSK reboot/runtime PASS:Ubuntu24.04.5/kernel147,Docker29.9.0,
+    selected shared units healthy,no failed units,HDD exact mount/timer success,
+    Docker AppArmor enforce,login final200,six identities/policies unchanged.
+    Four labs restart=no/exit0;no startup required. Installation and selected
+    native boot acceptance closed;one post-boot scheduled cron status pending.
+    Full host restore/end-to-end shared mail/DNS acceptance remains scoped open.
 - id: INF-10
   title: SSH/firewall/MFA и политики нужных служб общего хоста
   status: planned
@@ -371,7 +374,7 @@ tasks:
     OS,with PG17+ migration/addons/native theme/coherent isolated recovery before
     production window. Current518 acceptance stays closed;HTTPS remains selected.
   title: Поддерживаемый major/LTS Moodle 5.3 с миграцией PostgreSQL17+
-  status: planned
+  status: in_progress
   depends_on:
   - OPS-02
   acceptance:
@@ -380,6 +383,15 @@ tasks:
   - Fresh/upgrade/repeat/scenarios/performance and full restore accepted
   - Exact production deployment and lifecycle deadline recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  handoff: context/runtime/moodle53_preparation_20261014.md
+  current_checkpoint: >-
+    Official14Oct target5.3.0 LTS/core2026100500.00 and package SHA verified
+    against official metadata. PHP8.3.33 meets version minimum;PG16.15 requires
+    separate PG17 logical restore rehearsal. Official17.11-trixie/amd64 tag
+    verified;actual pulled digest pending. Native cache-only/no-outage handoff
+    prepared;server downloads,full-addon runtime/recovery and production upgrade
+    unexecuted. Preparation proceeds under owner authorization;OPS02 recovery
+    conditions are retained before a production window,not silently closed.
 - id: PRIVACY-01
   title: Полный Moodle Privacy API и согласованный retention
   status: deferred
@@ -479,6 +491,22 @@ tasks:
   depends_on: []
   reason: No claim of working external delivery; separate approved contract required
   reference: context/architecture/notification_delivery_20260928.md
+- id: BUG-ROUTE-REFRESH
+  title: Успешная аттестация остаётся в обработке и блокирует следующий шаг
+  status: in_progress
+  depends_on: []
+  execution_gate: owner14Oct1233MSK_specific_runtime_bug_priority
+  handoff: context/runtime/route_refresh_triage_20261014.md
+  current_checkpoint: >-
+    Screenshot23.5/25 with17.5 threshold,pending sync/6of16/current7/locked8.
+    SourceGETreadonly/POSTwriter present,current-main route/model blobs match.
+    Exact server cause unverified;bounded read-only metadata/hash diagnostic
+    prepared;no speculative source/data reset or production upgrade.
+  acceptance:
+  - Verified current assessment pass is persisted by authorized refresh with history intact
+  - Next reachable step exposes Continue and future steps remain gated
+  - Repeated refresh is idempotent and manual grading/failure/preview never bypasses eligibility
+  - Exact focused source and runtime/release evidence recorded separately
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_1_7_6
 owner_selected_order:

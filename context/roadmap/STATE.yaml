@@ -4,12 +4,16 @@ project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
 stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
 current_activity: >-
-  Owner14Oct0418MSK guarded installation completed01:12:55UTC:63 versions,
-  APT exit0,147 boot files,services/identities/policies/config preserved.
-  Native unit success/exit0/PID0;installation acceptance closed.
-  Native reboot and selected boot/runtime/HDD acceptance handoff ready;pending.
-next_task: INF-10-OS
+  Owner14Oct1233MSK route bug priority:material6 complete,assessment7 scored23.5/25
+  against17.5 butpending sync,next8/Continue locked. GET readonly andPOSTsync writer
+  reviewed/current-main blobs match. Actual server provider/runtime/progress and
+  eligibility cause not yet verified;one bounded read-only diagnostic prepared.
+  No speculative application patch,grade/role/reset or production schema change.
+  Prior host147/native boot acceptance stays closed;53/PG17 preparation retained.
+next_task: BUG-ROUTE-REFRESH
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
+latest_host_boot_evidence: context/runtime/host_reboot_result_20261014.json
+latest_platform_handoff: context/runtime/moodle53_preparation_20261014.md
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -38,7 +42,7 @@ production:
   latest_cron_HDD_source: context/runtime/production_patch_post_switch_status_result_20261013.json
   latest_browser_source: context/runtime/production_patch_browser_result_20261013.json
   previous_observations_remain_dated: true
-  status: owner_host_packages_installed_runtime_resumed_reboot_pending
+  status: owner_host_native_boot_selected_runtime_acceptance_PASS
   observed_at: '2026-10-05T02:43:33Z'
   source: context/runtime/evidence_20261005_baseline.yaml
   independently_measured: false
@@ -61,8 +65,8 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-  cron: v3_one_worker_owner_success_20261005T102403Z
-  regular_backup: timer_installed_active_enabled_first_scheduled_run_pending
+  cron: v3_one_worker_prior13Oct_scheduled_success_post14Oct_boot_status_pending
+  regular_backup: owner14Oct_scheduled_success_timer_enabled_mount_and_no_marker_verified_post_boot
   later_observations: context/runtime/RELEASE_LEDGER.md
   recheck_before_release: true
   last_core_comparison:
@@ -429,13 +433,13 @@ host_AppArmor_repair_20261013:
 
 host_package_planning_20261013:
   task: INF-10-OS
-  status: owner_installation_PASS_acceptance_closed_reboot_pending
+  status: owner_installation_and_native_boot_PASS_scheduled_post_boot_cron_observation_pending
   handoff: context/runtime/host_reboot_20261014.md
   result: context/runtime/host_packages_result_20261013.json
   host_APT_catalog_refresh_executed: true
   host_metadata_and_MariaDB_session_readonly_result: metadata_received_MariaDB_1045_no_SQL_result
   package_install_executed: true
-  reboot_executed: false
+  reboot_executed: true
   AppArmor_rerun_required: false
   download_result: context/runtime/host_packages_download_result_20261014.json
   package_names_match_approved_63: true
@@ -451,7 +455,28 @@ host_package_planning_20261013:
   installer_context_CI: 38493438435
   installer_server_execution: owner_PASS
   installer_server_result: context/runtime/host_packages_install_result_20261014.json
-  host_boot_acceptance: pending
+  host_boot_acceptance: owner_PASS_selected_runtime_scope
+  host_boot_evidence: context/runtime/host_reboot_result_20261014.json
+  scheduled_Moodle_cron_after_reboot: pending_read_only_status_once
+  no_package_reinstall_resume_or_second_reboot_required: true
+
+platform_major_preparation_20261014:
+  task: PLAT-01
+  status: official_target_and_native_download_handoff_prepared_server_assets_pending
+  owner_authorization: latest_stable_Moodle_after_OS_with_isolated_rehearsal
+  handoff: context/runtime/moodle53_preparation_20261014.md
+  target_evidence: context/runtime/moodle53_target_20261014.json
+  target_release: Moodle_5.3.0_LTS
+  core_version: '2026100500.00'
+  PostgreSQL_image_tag: docker.io/library/postgres:17.11-trixie
+  PostgreSQL_image_digest: pending_native_owner_pull_receipt
+  PostgreSQL_major_migration_method: logical_dump_restore_to_distinct_private_PG17_cluster
+  official_archive_SHA256: 7e5edf110555956571f40e42acffde0eb23681ebebd212a2fec0fe7d795dd511
+  application_code_changed: false
+  server_asset_download_executed: false
+  full_addon_runtime_compatibility_verified: false
+  stage_or_production_upgrade_executed: false
+  OPS02_full_host_restore_acceptance: open_not_required_for_asset_caching
 
 host_cold_recovery_20261013:
   task: INF-10-OS
@@ -473,3 +498,14 @@ host_cold_recovery_20261013:
   full_host_boot_restore_verified: false
   encrypted_archive: false
   payload_access: root_private_HDD_only_never_publish
+
+route_refresh_triage_20261014:
+  task: BUG-ROUTE-REFRESH
+  owner_request_at: '2026-10-14T12:33:24+03:00'
+  screenshots_inspected: true
+  handoff: context/runtime/route_refresh_triage_20261014.md
+  evidence: context/runtime/route_refresh_triage_20261014.json
+  exact_server_cause_verified: false
+  server_diagnostic_executed: false
+  application_fix_or_deployment_executed: false
+  no_completed_learning_or_grade_reset_authorized: true

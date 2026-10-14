@@ -1,5 +1,7 @@
 # Native APT download after accepted host cold recovery
 
+**Owner14Oct03:14MSK:** [Download receipt](host_packages_download_result_20261014.json) failed at ru.archive.ubuntu.com:IPv6 unreachable and IPv4 timeout.63 package names and49 displayed versions match approved plan;14 cached versions not emitted.6 Docker packages downloaded,102MB fetched;no installation/reboot. Cold archive remains accepted. Next bounded HTTPS probe of central archive plus exact source-entry location;do not rerun unchanged download or use ForceIPv4 alone as a claimed fix. Mirror change/retry remains pending.
+
 Owner status received14Oct03:06MSK confirms [r6 complete](host_cold_recovery_result_20261013.json):
 43,704,842,240 bytes,archive SHA256
 `8de2742f3ffa303b8f4df3e53fef77fb9047768fdc50eebe696b61be96477730`,
@@ -64,3 +66,31 @@ Primary native command reference checked14Oct:
 [Ubuntu apt-get](https://manpages.ubuntu.com/manpages/noble/man8/apt-get.8.html)
 (`--download-only`,normal authentication,`--no-remove`). Local shell syntax passed;
 actual server download/installation/reboot is pending.
+
+## Bounded mirror follow-up after the03:14MSK failure
+
+HTTPS probe checks server reachability,not APT archive authentication. No source
+is modified by these commands. Exact active source-entry locations are emitted
+without full configuration lines or unrelated repository credentials. Prepare
+backup and guarded URI-only replacement after these observed results;preserve
+suites/components/signing keys/Docker sources. Refresh signed APT catalog after
+any source change and review candidate/version drift before package installation.
+
+```bash
+curl -4 -fsSL --connect-timeout 10 --max-time 25 https://archive.ubuntu.com/ubuntu/dists/noble-updates/InRelease -o /dev/null && printf 'UBUNTU_CENTRAL_HTTPS=OK\n'
+```
+
+```bash
+sudo -n python3 -I -B - <<'PY'
+from pathlib import Path
+paths = [Path('/etc/apt/sources.list')]
+paths += sorted(Path('/etc/apt/sources.list.d').glob('*.list'))
+paths += sorted(Path('/etc/apt/sources.list.d').glob('*.sources'))
+for path in paths:
+    if not path.is_file():
+        continue
+    for number, line in enumerate(path.read_text().splitlines(), 1):
+        if line.lstrip().startswith(('deb ', 'deb-src ', 'URIs:')) and 'ru.archive.ubuntu.com' in line:
+            print(f'SOURCE_FILE={path} LINE={number}')
+PY
+```

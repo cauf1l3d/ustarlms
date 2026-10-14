@@ -597,3 +597,8 @@ Exact22d8a4e1/SHA3f8f0c0e: Ubuntu48+2(no skips) run38485478610/job115597955732 a
 **Current14Oct03:06MSK:** Owner r6 source22d8a4e1/SHA3f8f0c0e completed at00:04:07UTC:43,704,842,240B archive,readback SHA8de2742f verified,223777 protected members,services_resumed=true,package baseline unchanged. Readback with services running began23:54:39UTC;total21m56s. Cold capture acceptance CLOSED;do not repeat capture/resume. Packages/reboot remain unexecuted. Next native APT download-only/no-remove,review exact38+25 plan before installation;retain kernels139/146. Full host boot restore/external recovery unverified. AppArmor/Moodle518 acceptance remains closed;latest major follows OS.
 
 Owner supplied status phase complete/readback true/223777 protected members,package_baseline_unchanged=true. Agent has no server connection and did not independently read archive. No full boot restore claim. Next operator native APT download-only uses cached signed catalog;download output is reviewed for63-package plan before a separate concrete installation handoff.
+
+
+## 2026-10-14 03:14 MSK — package download mirror refusal
+
+Owner native APT download-only/no-remove receipt:38+25/zero removals,no package name drift;49 visible versions match saved plan,14 cached versions not printed.6 Docker packages fetched,102MB in31s;ru.archive.ubuntu.com IPv6 network unreachable and IPv4 port80 timeout. No dpkg install/reboot. Next bounded central archive HTTPS probe and exact source-entry location,then guarded mirror change/retry. Cold archive r6 acceptance stays closed;do not repeat copy/resume or claim ForceIPv4 alone resolves observed IPv4 failure. Raw upload remains private.

@@ -7,7 +7,9 @@ current_activity: >-
   Owner14Oct0306MSK r6 completed at00:04:07UTC with verified43.7GB
   archive and223777 protected members;services resumed and package baseline
   unchanged. Cold capture acceptance closed. Native APT download-only
-  preparation next;exact package installation and reboot pending.
+  preparation failed at ru.archive.ubuntu.com:IPv4 timeout/IPv6 unreachable.
+  Package names and49 visible versions match approved plan. Next bounded
+  central archive HTTPS probe and source-entry location;install/reboot pending.
 next_task: INF-10-OS
 latest_host_recovery_evidence: context/runtime/host_cold_recovery_result_20261013.json
 ready_tasks: []
@@ -429,13 +431,17 @@ host_AppArmor_repair_20261013:
 
 host_package_planning_20261013:
   task: INF-10-OS
-  status: owner_cold_archive_verified_native_APT_download_handoff_ready
+  status: owner_APT_download_failed_ru_mirror_connectivity_cold_archive_closed
   handoff: context/runtime/host_packages_download_20261014.md
   result: context/runtime/host_packages_result_20261013.json
   host_APT_catalog_refresh_executed: true
   host_metadata_and_MariaDB_session_readonly_result: metadata_received_MariaDB_1045_no_SQL_result
   package_install_or_reboot_executed: false
   AppArmor_rerun_required: false
+  download_result: context/runtime/host_packages_download_result_20261014.json
+  package_names_match_approved_63: true
+  displayed_download_versions_matching: 49
+  mirror_change_or_download_retry_executed: false
 
 host_cold_recovery_20261013:
   task: INF-10-OS

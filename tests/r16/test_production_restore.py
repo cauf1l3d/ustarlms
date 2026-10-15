@@ -245,6 +245,8 @@ class Production(unittest.TestCase):
         txt = (p.CODE / 'config.php').read_text()
         self.assertIn('$CFG->cron_enabled = 1;', txt)
         self.assertIn('$CFG->noemailever = false;', txt)
+        self.assertIn('unset($CFG->maintenance_enabled);', txt)
+        self.assertNotIn('$CFG->maintenance_enabled = 0;', txt)  # Maintenance remains controllable after migration.
         self.assertEqual((p.CODE / 'config.php').stat().st_mode & 0o777, 0o640)
         with self.assertRaisesRegex(p.ProductionError, 'EXECUTABLE_CODE'):
             p.write_config(self.lab, ORIGINAL + 'exit();', 'a' * 64, ep)

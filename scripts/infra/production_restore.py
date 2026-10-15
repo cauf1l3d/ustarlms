@@ -285,11 +285,13 @@ def write_config(lab, original, password, ep, active=False):
         'lock_factory': "'\\\\core\\\\lock\\\\file_lock_factory'", 'sessioncookie': "'USTAR_ACADEMY'",
         'cookiesecure': 'true' if ep['url'].startswith('https:') else 'false', 'cookiehttponly': 'true',
         'sslproxy': 'true' if ep['behind_proxy'] and ep['url'].startswith('https:') else 'false',
-        'reverseproxy': 'false', 'maintenance_enabled': '0' if active else '1',
+        'reverseproxy': 'false',
         'noemailever': 'false' if active else 'true', 'cron_enabled': '1' if active else '0',
         'cronclionly': 'true', 'pathtophp': "'/usr/local/bin/php'", 'task_adhoc_concurrency_limit': '3',
     }
+    if not active: overrides['maintenance_enabled'] = '1'
     text = before + '\n// Environment settings for the recovered production host.\n'
+    if active: text += 'unset($CFG->maintenance_enabled);\n'
     text += ''.join('$CFG->' + k + ' = ' + v + ';\n' for k, v in overrides.items()) + setup + after
     temporary = CODE / ('.production-config-' + uuid.uuid4().hex)
     write_private(temporary, text, 0o640, 33)
@@ -477,6 +479,7 @@ def restore(args):
             exec_owned('web', state, ['php', '/var/www/html/public/admin/tool/replace/cli/replace.php', '--search=' + oldurl, '--replace=' + ep['url'], '--shorten', '--non-interactive'], user='33:33', timeout=900)
         exec_owned('web', state, ['php', '/var/www/html/public/admin/cli/purge_caches.php'], user='33:33', timeout=180)
         require(verify_database(state) == state['counts_before'], 'RESTORED_COUNTS_OR_TASK_FLAGS_CHANGED')
+        sql(state, "INSERT INTO mdl_config(name,value) VALUES ('maintenance_enabled','0') ON CONFLICT(name) DO UPDATE SET value='0';")
         write_config(lab, original, password, ep, active=True)
         effective = json.loads(exec_owned('web', state, ['php', '-r', "define('CLI_SCRIPT',true);require '/var/www/html/config.php';echo json_encode(['url'=>$CFG->wwwroot,'cron'=>(int)$CFG->cron_enabled,'mail'=>(bool)$CFG->noemailever,'maintenance'=>(bool)$CFG->maintenance_enabled]);"], user='33:33').stdout)
         require(effective == {'url': ep['url'], 'cron': 1, 'mail': False, 'maintenance': False}, 'PRODUCTION_CONFIG_NOT_EFFECTIVE')

@@ -2,8 +2,8 @@ schema_version: 2
 updated_at: '2026-10-15'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
-stage_label: Перенос рабочей Академии на чистый сервер
-current_activity: 'Owner15Oct19:02MSK: permanent production migration, four stages; source freeze/fresh backup, clean-host import, boot and cron. Native acceptance pending; panel/Moodle53 deferred.'
+stage_label: Постоянная копия прода без остановки Академии
+current_activity: 'Owner15Oct19:48MSK: prepare permanent production copy for sysadmin without stopping Academy; export latest completed HDD snapshot, separate target URL, mail and cron off, boot enabled. Native handoff/import/reboot pending.'
 next_task: OPS-02
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -443,3 +443,20 @@ production_transfer_20261015:
   native_full_archive_import: pending
   browser_SCORM_SMTP: pending
   whole_host_DNS_mail_OS: excluded
+
+production_copy_20261015:
+  runbook: context/runtime/production_copy_20261015.md
+  validation: context/runtime/production_copy_validation_20261015.json
+  source_commit: a1a0c62bfcbb04df96d8797537599db11e692f4f
+  preparation_commit: 38485343d87e91cdc8627a5aceb8c477997a068c
+  pr: 102
+  owner_instruction_utc: '2026-10-15T16:48:48+00:00'
+  source_operation: readonly_pack_latest_completed_HDD_no_backup_maintenance_or_stop
+  source_package_built: false
+  archive_time: explicit_snapshot_completed_utc_not_live_now
+  target_start: start_production_copy_different_URL
+  target_background: mail_off_cron_off_preserve_database_task_flags
+  target_auto_start: implemented_native_reboot_pending
+  native_archive_import_and_browser_SCORM: pending
+  changes_after_backup: not_synchronized
+  control_panel_and_Moodle53: deferred

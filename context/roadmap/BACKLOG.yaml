@@ -349,10 +349,11 @@ tasks:
   - R00
   - R15
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  runbook: context/runtime/production_transfer_20261015.md
-  current_scope: permanent_production_four_stage_transfer_source_freeze_boot_and_cron_prepared_native_acceptance_pending
-  implementation_commit: 99ab241e1771b850bfedb3a5cab03ad4a2122917
+  runbook: context/runtime/production_copy_20261015.md
+  current_scope: parallel_permanent_copy_no_source_stop_sysadmin_handoff_prepared_native_pending
+  implementation_commit: a1a0c62bfcbb04df96d8797537599db11e692f4f
   validation_evidence:
+  - context/runtime/production_copy_validation_20261015.json
   - context/runtime/production_transfer_validation_20261015.json
   - context/runtime/backup_transfer_validation_20261015.json
   production_execution: pending_owner

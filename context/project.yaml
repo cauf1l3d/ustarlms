@@ -28,10 +28,10 @@ execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selecte
 
 current_operator_handoff:
   task: OPS-02
-  runbook: context/runtime/production_transfer_20261015.md
-  source_commit: 99ab241e1771b850bfedb3a5cab03ad4a2122917
+  runbook: context/runtime/production_copy_20261015.md
+  source_commit: a1a0c62bfcbb04df96d8797537599db11e692f4f
   pr: 102
-  status: permanent_production_recovery_prepared_native_acceptance_pending
-  owner_instruction_utc: "2026-10-15T10:58:19.319000+00:00"
+  status: parallel_permanent_copy_without_source_stop_prepared_native_acceptance_pending
+  owner_instruction_utc: "2026-10-15T16:48:48+00:00"
   control_panel: deferred_by_owner
   dated_stack_above: historical_20261005_06_owner_accepted_Moodle518_and_host_update_later

@@ -49,3 +49,6 @@ python3 scripts/check_context.py
 
 
 [`production_restore.py`](../../scripts/infra/production_restore.py) — permanent recovery: source cron-lock/maintenance/fresh backup/web freeze and explicit abort; empty-host PG restore without task-disable/siteidentifier changes, preserved config with local DB/runtime overrides, stock URL replace, persistent owned IDs/boot unit/minute cron. `backup_transfer.py` packages v2 with this pinned worker and dispatches explicit `--start-production`; old `--start` stays isolated. [Production runbook](../runtime/production_transfer_20261015.md), code 99ab241e1771b850bfedb3a5cab03ad4a2122917. No Moodle application/schema change; native recovery/reboot/SMTP pending.
+
+
+[`prepare_production_copy.sh`](../../scripts/infra/prepare_production_copy.sh) installs pinned restore helpers and submits only read-only `--pack` from the last successful HDD backup. `backup_transfer.py --start-production-copy` passes `--parallel-copy` to the permanent worker: distinct canonical URL, same recovered business data/task flags, mail+sendmail+cron off, boot startup without cron timer. Source freeze is not called. [Current sysadmin handoff](../runtime/production_copy_20261015.md), codea1a0c62b/prepare38485343;101 selected CI checks PASS, native import/reboot pending.

@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+**Owner15Oct06:14MSK — INF-06:** [пульт](control_panel_scope_20261015.md) на server1, без отдельного поддомена; login/password, метрики/алерты/стенды с адресами и активностью/SFTP/manual backup/restore. Сначала пульт, затем часовой restore (ещё не выполнялся), затем Moodle5.3. Host/5.1.8 уже приняты по owner output. Интерактивный UI-макет подготовлен, auth/backend/deployment pending. Записи06Oct ниже исторические.
+
 Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.
 
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.

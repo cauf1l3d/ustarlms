@@ -1,5 +1,7 @@
 # USTAR — инструкции агентам
 
+**Owner15Oct06:14MSK — INF-06:** [пульт](context/runtime/control_panel_scope_20261015.md) на server1, без отдельного поддомена; login/password, метрики/алерты/стенды с адресами и активностью/SFTP/manual backup/restore. Сначала пульт, затем часовой restore (ещё не выполнялся), затем Moodle5.3. Host/5.1.8 уже приняты по owner output. Интерактивный UI-макет подготовлен, auth/backend/deployment pending. Записи06Oct ниже исторические.
+
 **Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Текущая карта и следующий шаг](context/runtime/server_map_20261006.md).
 
 Перед любой задачей читать [START_HERE.md](START_HERE.md), затем `context/project.yaml`, `context/CONTEXT_INDEX.md`, `context/architecture/`, `context/decisions/`, `context/domains/`, `context/runtime/`, `context/code_map/`, `context/tasks/ACTIVE.md`, `context/agents/astra.md` и `context/roadmap/AGENT_PROTOCOL.md`.

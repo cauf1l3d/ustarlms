@@ -393,3 +393,8 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+
+## 2026-10-15 — same-host control panel UI
+
+Owner06:14MSK chose server1/no separate subdomain, login/password, labs addresses/activity, SFTP, manual backups and restores; calm functional admin UI. New branch from fresh main c53723c8, no stack on restore branch. Standalone prototype under server-console, explicitly demo, no auth/remote calls/jobs. Existing USTAR application unchanged. [Scope](../runtime/control_panel_scope_20261015.md). Restore unexecuted/deferred; Moodle53 preparation retained. Backend/collector/session/deployment next.

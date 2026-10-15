@@ -1,17 +1,10 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-15'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
-stage_label: Хранение → карта сервера → автобэкапы HDD → стенд/Moodle/ОС/HTTPS
-current_activity: 'Owner GPT copy received06Oct09:06:01UTC: raw PMBR/GPT/BIOS boot and native table
-  copy saved on mounted HDD in ssd-layout-20261006-06NYpg, nine hash checks OK and
-  GPT_COPY_READBACK=PASS. Sysadmin console access confirmed09:03:36UTC; rescue medium and
-  actual boot recovery not separately verified. First GPT relocation command prepared:
-  raw pre/post header/table CRC, exact partition array and boot-byte preservation guards;
-  17 regular sparse-file fixtures PASS, native sgdisk not executed locally. Server GPT write,
-  root growth, source move/deletion and stage preparation remain unexecuted.
-  Timer active/enabled from earlier evidence, first scheduled run07Oct03:30MSK pending.'
-next_task: INF-04
+stage_label: Пульт на server1 → restore → Moodle5.3
+current_activity: 'INF-06: same-host server1 control panel, login/password, metrics alerts labs SFTP manual backup/restore. UI prototype prepared; backend and deployment pending. Restore experiment deferred by owner.'
+next_task: INF-06
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -397,3 +390,11 @@ storage_reorganization:
   rescue_boot_medium_identified: false
   actual_host_boot_recovery_tested: false
   binary_partition_table_recovery_copy_confirmed: true
+
+control_panel_20261015:
+  runbook: context/runtime/control_panel_scope_20261015.md
+  prototype: server-console/prototype/index.html
+  deployment_host: server1
+  separate_subdomain: false
+  live_auth_api: pending
+  native_restore: not_executed_deferred_by_owner

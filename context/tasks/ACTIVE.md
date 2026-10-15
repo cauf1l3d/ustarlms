@@ -1,5 +1,7 @@
 # Активная работа — 06.10.2026
 
+**Owner15Oct06:14MSK — INF-06:** [пульт](../runtime/control_panel_scope_20261015.md) на server1, без отдельного поддомена; login/password, метрики/алерты/стенды с адресами и активностью/SFTP/manual backup/restore. Сначала пульт, затем часовой restore (ещё не выполнялся), затем Moodle5.3. Host/5.1.8 уже приняты по owner output. Интерактивный UI-макет подготовлен, auth/backend/deployment pending. Записи06Oct ниже исторические.
+
 [Полная актуальная редакция аудита06Oct](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md): выполнено/частично/подготовлено/остаток и текущая точка отдельно. Последний owner result остаётся GPT_COPY_READBACK=PASS; нового server execution для GPT/root нет. First scheduled HDD run07Oct03:30MSK pending. Future Moodle5.3 LTS опубликован05Oct и требует PG17+, это отдельный PLAT-01 после выбранного patch5.1.8/OS/HTTPS.
 
 **INF-04 и INF-01 в работе. Новая команда владельца06Oct00:45MSK: хранение → карта сервера → автобэкапы HDD → новый стенд, затем Moodle/ОС/HTTPS.** PR87 --prepare-stage приостановлен; прежний backup-last порядок заменён.

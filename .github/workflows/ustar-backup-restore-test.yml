@@ -28,4 +28,16 @@ jobs:
       - name: Portable kit and lifetime launcher
         run: sudo -n python3 -m unittest discover -s tests/r16 -p test_backup_transfer.py -v
       - name: Systemd service parser and cleanup command
-        run: systemd-analyze verify scripts/infra/ustar-restore-test-20261014.service
+        run: |
+          systemd-analyze verify scripts/infra/ustar-restore-test-20261014.service
+          python3 - <<'PYGEN'
+          import importlib.util
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location('transfer', 'scripts/infra/backup_transfer.py')
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          for seconds in (0, 7200):
+              Path(f'/tmp/ustar-verify-{seconds}.service').write_text(module.unit_text(seconds, Path('/opt/ustar-transfer')))
+          PYGEN
+          systemd-analyze verify /tmp/ustar-verify-0.service /tmp/ustar-verify-7200.service
+          systemctl show ustar-not-installed-20261015.service -p MainPID --value

@@ -52,6 +52,7 @@ class Transfer(unittest.TestCase):
         own.chmod(0o600)
         self.stack.enter_context(mock.patch.object(t, 'SELF', own))
         self.stack.enter_context(mock.patch.object(t, 'TRANSFER_PARENT', self.base / 'transfers'))
+        self.stack.enter_context(mock.patch.object(t, 'BOOTSTRAP_LOG_ROOT', self.base / 'bootstrap'))
         self.stack.enter_context(mock.patch.object(t, 'UNIT_PATH', self.installed / t.UNIT))
         self.root = self.base / 'restore-data'
         self.selected = {'archive': str(self.archive), 'sha256': t.digest(self.archive), 'identity': str(self.key)}
@@ -256,6 +257,7 @@ class Transfer(unittest.TestCase):
                                 '--no-install-recommends', 'docker.io', 'age'])
         self.assertEqual(Path(logfile).stat().st_mode & 0o777, 0o600)
         self.assertEqual(len(run.call_args_list), 2)
+        self.assertEqual(t.BOOTSTRAP_LOG_ROOT.stat().st_mode & 0o777, 0o700)
 
     def test_duration_input(self):
         for value, seconds in [('30m', 1800), ('2h', 7200), ('0', 0), ('1d', 86400)]:

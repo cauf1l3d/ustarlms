@@ -35,6 +35,7 @@ SELF = Path(__file__).absolute()
 TRANSFER_PARENT = Path('/srv/ustar-storage/transfers')
 UNIT = 'ustar-backup-recovery-20261015.service'
 UNIT_PATH = Path('/etc/systemd/system') / UNIT
+BOOTSTRAP_LOG_ROOT = Path('/var/lib/ustar-recovery-bootstrap')
 MANAGED = '# USTAR_BACKUP_TRANSFER_V1\n'
 GIB = 1024 ** 3
 
@@ -262,8 +263,11 @@ def install_dependencies():
     if not all(shutil.which(x) for x in ('nsenter', 'findmnt')):
         packages.append('util-linux')
     if packages:
-        trusted(Path('/var/log'), directory=True)
-        fd, name = tempfile.mkstemp(prefix='ustar-recovery-bootstrap-', suffix='.log', dir='/var/log')
+        trusted(BOOTSTRAP_LOG_ROOT.parent, directory=True)
+        if not BOOTSTRAP_LOG_ROOT.exists():
+            BOOTSTRAP_LOG_ROOT.mkdir(mode=0o700)
+        trusted(BOOTSTRAP_LOG_ROOT, directory=True, private=True)
+        fd, name = tempfile.mkstemp(prefix='install-', suffix='.log', dir=BOOTSTRAP_LOG_ROOT)
         with os.fdopen(fd, 'wb') as log:
             for args in (['apt-get', '-o', 'Dpkg::Lock::Timeout=60', 'update'],
                          ['apt-get', '-o', 'Dpkg::Lock::Timeout=60', 'install', '-y', '--no-install-recommends', *packages]):

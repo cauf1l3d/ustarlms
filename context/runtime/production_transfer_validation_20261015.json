@@ -1,0 +1,86 @@
+{
+  "kind": "permanent_production_recovery_source_validation",
+  "source_code_commit": "99ab241e1771b850bfedb3a5cab03ad4a2122917",
+  "verified_utc": "2026-10-15T16:31:53.077692+00:00",
+  "worker_sha256": "3edb4de42a84e855302045d307390fb13156e7b9acabcf688fb720c743f42854",
+  "launcher_sha256": "1a075a5bd6f995ef7db2dd255470103175cde28d23a253a9cd72fb89d12cdcd8",
+  "controller_sha256": "4804c27aada3d5f431ccf19cfb174dd8deb1bc6f991d3d9793d6a89b7be9b022",
+  "local_tests": {
+    "controller": 45,
+    "transfer": 28,
+    "production": 19,
+    "total": 92,
+    "local_skips": 2,
+    "skip_reasons": [
+      "PHP CLI unavailable",
+      "native loopback enabled in CI only"
+    ]
+  },
+  "real_checks": [
+    "root private filesystem/tar/hash/locks",
+    "config output and source/target guards"
+  ],
+  "modeled_checks": [
+    "Docker",
+    "PostgreSQL pg_restore",
+    "Moodle bootstrap/API",
+    "source cutover",
+    "reboot"
+  ],
+  "initial_ci": {
+    "run": 38768367897,
+    "job": 116537424041,
+    "source_commit": "1ec3d19a52b005e640a0eb388f41ff3ccff1fca9",
+    "conclusion": "success",
+    "total_tests": 92,
+    "skips": 0,
+    "real_PHP_and_loopback_and_systemd_parser": true
+  },
+  "selected_ci": {
+    "run": 38769562812,
+    "job": 116541513212,
+    "source_commit": "99ab241e1771b850bfedb3a5cab03ad4a2122917",
+    "conclusion": "success",
+    "controller": 45,
+    "transfer": 28,
+    "production": 19,
+    "total": 92,
+    "skips": 0,
+    "logs_inspected": true,
+    "native_PHP_config": true,
+    "native_loopback_HTTP": true,
+    "native_systemd_parsers": true
+  },
+  "native_clean_host_archive_restore": false,
+  "native_reboot_acceptance": false,
+  "native_browser_roles_SCORM": false,
+  "native_SMTP_delivery": false,
+  "source_host_changed_by_agent": false,
+  "production_cutover_executed": false,
+  "invariants": [
+    "source-only fresh capture and explicit outage flag",
+    "operator declaration source-stopped before activation",
+    "no overwrite of existing target data",
+    "never disable restored task flags",
+    "preserve siteidentifier and original application settings",
+    "no core or plugin upgrade",
+    "stop owns label+ID+image+mount+network+ports",
+    "permanent boot and cron independent of kit directory",
+    "outer transfer tar includes decryption key; keep private"
+  ],
+  "context_ci": {
+    "run": 38769563102,
+    "conclusion": "success"
+  },
+  "general_review_ci": {
+    "run": 38769562123,
+    "conclusion": "failure",
+    "PHP_82_source": "success",
+    "PHP_83_source": "success",
+    "frontend_tests": "success",
+    "frontend_npm_audit": "failure_existing_next_and_sharp_dependencies",
+    "frontend_build_and_http_smoke": "skipped",
+    "moodle_db_and_rollback": "skipped",
+    "failure_job_logs_inspected": true
+  }
+}

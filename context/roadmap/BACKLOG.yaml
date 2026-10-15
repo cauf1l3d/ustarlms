@@ -349,10 +349,11 @@ tasks:
   - R00
   - R15
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  runbook: context/runtime/backup_transfer_20261015.md
-  current_scope: scripts_and_four_stage_handoff_validated_ustar_homepage_carry_fixed_native_restore_not_executed
-  implementation_commit: 1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0
+  runbook: context/runtime/production_transfer_20261015.md
+  current_scope: permanent_production_four_stage_transfer_source_freeze_boot_and_cron_prepared_native_acceptance_pending
+  implementation_commit: 99ab241e1771b850bfedb3a5cab03ad4a2122917
   validation_evidence:
+  - context/runtime/production_transfer_validation_20261015.json
   - context/runtime/backup_transfer_validation_20261015.json
   production_execution: pending_owner
 - id: PLAT-01

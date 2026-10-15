@@ -2,8 +2,8 @@ schema_version: 2
 updated_at: '2026-10-15'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
-stage_label: Скрипты переноса и выбранная длительность → проверка восстановления
-current_activity: 'Owner15Oct13:58MSK defers panel; finish chosen restore lifetime and self-contained transfer kit in four steps. Source e68c887a validated59/59 and selected CI; native restore/browser/off-host pending. Moodle518/host update already owner accepted; Moodle53 preparation retained.'
+stage_label: Перенос рабочей Академии на чистый сервер
+current_activity: 'Owner15Oct19:02MSK: permanent production migration, four stages; source freeze/fresh backup, clean-host import, boot and cron. Native acceptance pending; panel/Moodle53 deferred.'
 next_task: OPS-02
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -407,8 +407,8 @@ restore_experiment_20261014:
 control_panel_20261015:
   runbook: context/runtime/control_panel_scope_20261015.md
   task: INF-06
-  status: scope_and_sources_defined_implementation_pending
-  restore_experiment: deferred_by_owner_until_panel_ready
+  status: deferred_by_owner
+  restore_experiment: separate_from_current_production_migration
   separate_host_and_domain: not_yet_specified
 
 backup_transfer_delivery:
@@ -427,3 +427,19 @@ backup_transfer_delivery:
   clean_host_and_browser_acceptance: pending_owner
   automatic_start_after_reboot: false
   control_panel: deferred
+
+production_transfer_20261015:
+  runbook: context/runtime/production_transfer_20261015.md
+  validation: context/runtime/production_transfer_validation_20261015.json
+  source_commit: 99ab241e1771b850bfedb3a5cab03ad4a2122917
+  pr: 102
+  task: OPS-02
+  worker_sha256: 3edb4de42a84e855302045d307390fb13156e7b9acabcf688fb720c743f42854
+  launcher_sha256: 1a075a5bd6f995ef7db2dd255470103175cde28d23a253a9cd72fb89d12cdcd8
+  source_freeze: explicit_pack_production_acknowledge_outage
+  target_start: explicit_start_production_url_source_stopped
+  auto_start_after_reboot: implemented_native_reboot_pending
+  cron: one_per_minute_preserved_task_flags
+  native_full_archive_import: pending
+  browser_SCORM_SMTP: pending
+  whole_host_DNS_mail_OS: excluded

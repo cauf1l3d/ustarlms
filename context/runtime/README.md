@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+**Текущая цель владельца15Oct19:02MSK — OPS-02:** перенести рабочую production Академию на чистый сервер, не тестовый стенд. [Четыре этапа](production_transfer_20261015.md): финальная копия с заморозкой source web → WinSCP → распаковка → `--start-production --url ... --source-stopped`. Постоянные контейнеры/данные, автозапуск и cron; native перенос/reboot/SMTP ещё не принят. `--start`/`--start-lab` остаются изолированными тестами. PR102, код99ab241e. Ниже сохранены предыдущие checkpoints; пульт и Moodle5.3 пока отложены.
+
 **Текущая команда владельца15Oct13:58MSK — OPS-02:** пульт отложен; [скрипты и перенос в четыре этапа](backup_transfer_20261015.md). Стенд: `--start-lab --duration 2h` (30m/2h/1d/0); перенос: `--start`, по умолчанию без таймера. Код PR102 `d7d68f8` + правка главной USTAR:45 тестов контроллера + 23 переноса PASS; выбранный CI PASS; реальный restore, пересборка комплекта и off-host pending. Moodle5.1.8 и host update ранее приняты владельцем, не повторять; PR101/Moodle5.3 preparation сохранена, ошибка маршрута отложена. Ниже — исторические checkpoints06Oct; их pending не отменяют поздние результаты владельца.
 
 Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.

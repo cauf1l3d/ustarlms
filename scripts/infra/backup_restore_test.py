@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rehearse a completed USTAR backup in a new offline lab for one hour.
+"""Restore a completed USTAR backup with a chosen runtime or without a timer.
 
 Uses the reviewed private restore engine and bundle verifier, SHA-pinned below.
 Selects the last successful HDD manifest or an explicit copied archive/sidecar.
@@ -46,6 +46,7 @@ LABEL = 'ustar.restore.experiment'
 PORT = 18086
 URL = 'http://127.0.0.1:' + str(PORT)
 HOLD_SECONDS = 3600
+PREPARATION_SECONDS = 3600
 GIB = 1024 ** 3
 ARCHIVE_NAME = re.compile(r'ustar-recovery-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}\.tar\.gz\.age')
 
@@ -57,6 +58,33 @@ class RestoreTestError(Exception):
 def require(value, code):
     if not value:
         raise RestoreTestError(code)
+
+
+def duration_seconds(value):
+    """0 means no time limit; otherwise accept 30m, 2h or 1d (up to 30d)."""
+    if value == '0':
+        return 0
+    match = re.fullmatch(r'([1-9][0-9]{0,5})([mhd])', value)
+    if not match:
+        raise argparse.ArgumentTypeError('Use 30m, 2h, 1d or 0 (no timer)')
+    result = int(match[1]) * {'m': 60, 'h': 3600, 'd': 86400}[match[2]]
+    if result > 30 * 86400:
+        raise argparse.ArgumentTypeError('Maximum finite duration is 30d; use 0 for no timer')
+    return result
+
+
+def start_relay(lab, state, seconds):
+    """Same reviewed ownership/resource guards, lifetime follows the controller."""
+    trusted(SCRIPT)
+    lab.relay_unit_absent()
+    state['relay_requested'] = True
+    lab.save_state(state)
+    lab.command(['systemd-run', '--unit', UNIT.removesuffix('.service'), '--collect',
+                 '--property=RuntimeMaxSec=' + str(seconds + 600 if seconds else 0),
+                 '--property=MemoryMax=512M', '--property=TasksMax=128',
+                 '--property=CPUQuota=50%', '--property=KillMode=control-group',
+                 '--property=UMask=0077', '/usr/bin/python3', str(SCRIPT),
+                 '--serve-lab', '--token', state['token']])
 
 
 def now():
@@ -297,6 +325,8 @@ def verify(lab):
 
 
 def run(args):
+    hold_seconds = getattr(args, 'duration', HOLD_SECONDS)
+    require(type(hold_seconds) is int and 0 <= hold_seconds <= 30 * 86400, 'INVALID_DURATION')
     for name in ('docker', 'age', 'nsenter', 'systemd-run', 'systemctl', 'findmnt'):
         require(shutil.which(name), 'MISSING_DEPENDENCY_' + name.upper().replace('-', '_'))
     selected = selection(args)
@@ -381,35 +411,41 @@ def run(args):
         boot = json.loads(lab.lab_exec('web', state, ['php', '-r', php], user='33:33').stdout)
         require(boot == {'dbhost': '127.0.0.1', 'dbname': 'ustar_recovery_lab', 'wwwroot': URL,
                          'noemail': True, 'cron': 0, 'needs_upgrade': False}, 'MOODLE_BOOTSTRAP_MISMATCH')
-        lab.start_relay(state)
+        start_relay(lab, state, hold_seconds)
         code = http_check()
         require(production_state(lab) == before, 'PRODUCTION_IDENTITY_CHANGED')
         began = time.monotonic()
         state.update(phase='ready', ready=True, ready_at=now(),
-                     expires_at=datetime.fromtimestamp(time.time() + HOLD_SECONDS, timezone.utc).isoformat())
+                     hold_seconds=hold_seconds, unlimited=hold_seconds == 0,
+                     expires_at=(datetime.fromtimestamp(time.time() + hold_seconds, timezone.utc).isoformat()
+                                 if hold_seconds else None))
+        signal.alarm(0)  # Preparation is complete; only the chosen runtime now applies.
         lab.save_state(state)
         report = {'result': 'PASS', 'archive': selected['archive'], 'snapshot_sha256': selected['sha256'],
                   'snapshot_completed_utc': preflight['snapshot_completed_utc'], 'database_restore': 'PASS',
                   'snapshot_table_counts': counts, 'verified_file_contenthashes': references,
                   'password_secret_settings_preserved': secrets, 'image_archive_loaded': bool(missing),
                   'lab_url': URL + '/login/index.php', 'http_login': code, 'lab_network': 'loopback_only',
-                  'ready_at': state['ready_at'], 'expires_at': state['expires_at'], 'hold_seconds': HOLD_SECONDS,
+                  'ready_at': state['ready_at'], 'expires_at': state['expires_at'], 'hold_seconds': hold_seconds, 'unlimited': hold_seconds == 0,
                   'production_identities_unchanged': True, 'postgres_globals_executed': False,
                   'manual_login_roles_scorm': 'PENDING', 'clean_host_recovery': 'PENDING',
                   'whole_host_boot_restore': 'NOT_TESTED', 'lab_data_deleted': False}
         lab.write_private(ROOT / 'report.json', json.dumps(report, indent=2))
-        print('RESTORE_TEST_READY=PASS; ACTIVE_FOR_SECONDS=3600', flush=True)
+        print('RESTORE_TEST_READY=PASS; ACTIVE_FOR_SECONDS=' + (str(hold_seconds) if hold_seconds else 'UNLIMITED'), flush=True)
         print(json.dumps(report, indent=2), flush=True)
         while True:
-            remaining = HOLD_SECONDS - (time.monotonic() - began)
-            if remaining <= 0:
+            remaining = hold_seconds - (time.monotonic() - began) if hold_seconds else None
+            if remaining is not None and remaining <= 0:
                 break
-            time.sleep(min(15, remaining))
+            time.sleep(min(15, remaining) if remaining is not None else 15)
             lab.assert_offline(state)
         lab.stop_lab(state)
-        state.update(phase='stopped', stopped_at=now(), one_hour_completed=True)
+        state.update(phase='stopped', stopped_at=now(), duration_completed=True,
+                     one_hour_completed=hold_seconds == 3600)
         lab.save_state(state)
-        print('RESTORE_TEST_ONE_HOUR=COMPLETE; OWNED_LAB_STOPPED; DATA_RETAINED', flush=True)
+        print('RESTORE_TEST_DURATION=COMPLETE; OWNED_LAB_STOPPED; DATA_RETAINED', flush=True)
+        if hold_seconds == 3600:
+            print('RESTORE_TEST_ONE_HOUR=COMPLETE', flush=True)
     except BaseException as exc:
         state.update(phase='failed', failure_type=type(exc).__name__)
         lab.save_state(state)
@@ -435,6 +471,8 @@ def main():
     inputs.add_argument('--manifest', help='Explicit copied archive JSON sidecar; otherwise last successful HDD copy')
     inputs.add_argument('--input-directory', help='Root-private directory containing exactly one copied archive/sidecar pair')
     ap.add_argument('--identity', default=str(IDENTITY))
+    ap.add_argument('--duration', type=duration_seconds, default=HOLD_SECONDS,
+                    help='Runtime after readiness: 30m, 2h, 1d; 0 = no timer (default 1h)')
     ap.add_argument('--load-images', action='store_true', help='Allow checked image load only on an empty Docker host')
     ap.add_argument('--token', default='', help=argparse.SUPPRESS)
     args = ap.parse_args()
@@ -449,16 +487,17 @@ def main():
     elif args.status:
         if not STATE.exists():
             try:
-                p = lab_command(['systemctl', 'show', 'ustar-restore-test-20261014.service',
-                                 '--property=MainPID', '--value'])
-                pid = int(p.stdout.strip())
+                pid = 0
+                for unit in ('ustar-backup-recovery-20261015.service', 'ustar-restore-test-20261014.service'):
+                    p = lab_command(['systemctl', 'show', unit, '--property=MainPID', '--value'])
+                    pid = max(pid, int(p.stdout.strip() or b'0'))
             except Exception:
                 pid = 0
             print(json.dumps({'phase': 'preflight_running' if pid else 'not_started', 'main_pid': pid}))
             return
         state = read_json(STATE)
         print(json.dumps({k: state.get(k) for k in ('phase', 'ready', 'stopped', 'ready_at',
-                         'expires_at', 'stopped_at', 'one_hour_completed', 'failure_type')}, indent=2))
+                         'expires_at', 'hold_seconds', 'unlimited', 'stopped_at', 'duration_completed', 'one_hour_completed', 'failure_type')}, indent=2))
     elif args.stop_lab:
         with locked():
             stop()
@@ -471,9 +510,16 @@ def main():
             run(args)
         else:
             with locked():
-                run(args)
+                def preparation_timeout(*_):
+                    raise RestoreTestError('PREPARATION_TIMEOUT')
+                signal.signal(signal.SIGALRM, preparation_timeout)
+                signal.alarm(PREPARATION_SECONDS)
+                try:
+                    run(args)
+                finally:
+                    signal.alarm(0)
     else:
-        print('PLAN_ONLY; --restore-lab creates a new offline lab for 3600 seconds after readiness')
+        print('PLAN_ONLY; --restore-lab --duration 2h; --duration 0 disables the runtime timer')
 
 
 if __name__ == '__main__':

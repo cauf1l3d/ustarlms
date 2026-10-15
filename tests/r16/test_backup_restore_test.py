@@ -145,7 +145,7 @@ class RestoreExperiment(unittest.TestCase):
                          'sha256': hashlib.sha256(self.archive.read_bytes()).hexdigest(),
                          'readback_verified': True, 'hdd_uuid': r.HDD_UUID}
         self.write_manifests()
-        self.args = SimpleNamespace(manifest=None, input_directory=None, identity=str(r.IDENTITY), load_images=False, check=False)
+        self.args = SimpleNamespace(manifest=None, input_directory=None, identity=str(r.IDENTITY), load_images=False, check=False, duration=3600)
         self.lab = FakeLab()
         self.container_inventory = b''
         self.preflight = {'site': {'symlinks': 0, 'hardlinks': 0, 'regular_files': 2,
@@ -313,6 +313,44 @@ class RestoreExperiment(unittest.TestCase):
         touched = [a[1] for a in self.lab.actions if a[0] in ('create', 'stop_owned', 'lab_exec')]
         self.assertTrue(touched)
         self.assertTrue(set(touched).isdisjoint(self.lab.PRODUCTION))
+
+    def test_duration_parser(self):
+        for value, expected in [('30m', 1800), ('2h', 7200), ('1d', 86400), ('0', 0)]:
+            self.assertEqual(r.duration_seconds(value), expected)
+        for value in ('-1h', '0h', '1.5h', '90', '31d', '1h;id'):
+            with self.assertRaises(Exception):
+                r.duration_seconds(value)
+
+    def test_two_hours_control_loop_and_relay_share_duration(self):
+        self.args.duration = 7200
+        clock, output = self.execute()
+        self.assertEqual(sum(clock.sleeps), 7200)
+        self.assertIn('ACTIVE_FOR_SECONDS=7200', output)
+        state = json.loads(r.STATE.read_text())
+        self.assertTrue(state['duration_completed'])
+        self.assertFalse(state['one_hour_completed'])
+        relay = next(a for a in self.lab.actions if a[0] == 'systemd-run')
+        self.assertIn('--property=RuntimeMaxSec=7800', relay)
+
+    def test_unlimited_has_no_expiry_and_runs_beyond_old_two_hour_limit(self):
+        self.args.duration = 0
+        clock = Clock()
+        original_sleep = clock.sleep
+        def sleep(seconds):
+            if clock.value >= 10800:
+                state = json.loads(r.STATE.read_text())
+                self.assertIsNone(state['expires_at'])
+                self.assertTrue(state['unlimited'])
+                self.assertEqual(state['phase'], 'ready')
+                raise KeyboardInterrupt()
+            original_sleep(seconds)
+        clock.sleep = sleep
+        with self.assertRaises(KeyboardInterrupt):
+            self.execute(clock=clock)
+        self.assertEqual(clock.value, 10800)
+        relay = next(a for a in self.lab.actions if a[0] == 'systemd-run')
+        self.assertIn('--property=RuntimeMaxSec=0', relay)
+        self.assertIn(('stop_owned', r.NAMES['web']), self.lab.actions)
 
     def test_database_failure_stops_clone_and_retains_diagnostic_data(self):
         self.lab.database_failure = True

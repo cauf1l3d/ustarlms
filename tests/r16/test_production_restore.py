@@ -318,7 +318,7 @@ class Production(unittest.TestCase):
         c = self.source_fixture()
         original = self.command
         def fail(args, **kw):
-            if args and args[0] == 'python3': raise p.ProductionError('BACKUP_FAILED')
+            if args and args[0] == 'python3' and '--backup' in args: raise p.ProductionError('BACKUP_FAILED')
             return original(args, **kw)
         with mock.patch.object(p, 'checked'), mock.patch.object(p, 'command', side_effect=fail):
             with self.assertRaisesRegex(p.ProductionError, 'BACKUP_FAILED'):
@@ -326,6 +326,7 @@ class Production(unittest.TestCase):
         self.assertTrue(c['State']['Running'])
         self.assertEqual(p.read(p.SOURCE_STATE)['phase'], 'resumed')
         self.assertTrue(any('--disable' in a for a in self.calls))
+        self.assertTrue(any('--recover' in a for a in self.calls))
 
 
 class UnitContract(unittest.TestCase):

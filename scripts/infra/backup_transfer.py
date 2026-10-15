@@ -19,6 +19,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import signal
 import stat
 import subprocess
 import sys
@@ -33,7 +34,7 @@ ENGINE_SHA = '71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac'
 CHECKER = Path('/usr/local/lib/ustar-recovery/USTAR_RESTORE_PREFLIGHT_20261004.py')
 CHECKER_SHA = 'e00577aefcbcdd8ae3ebc1f30f98c899c3efd3b2b4e593b6ce0d26d09e2756da'
 PRODUCTION = Path('/usr/local/sbin/USTAR_PRODUCTION_RESTORE_20261015.py')
-PRODUCTION_SHA = 'b8191dfc6915a937740d9344a582d074dd343f57cac2eeeb9858cd7da873d2d5'
+PRODUCTION_SHA = '47ab2ced436897d8c659bf49ded93b6ecbeeb1a77c99b880bea7be5bad24f278'
 SELF = Path(__file__).absolute()
 TRANSFER_PARENT = Path('/srv/ustar-storage/transfers')
 UNIT = 'ustar-backup-recovery-20261015.service'
@@ -426,6 +427,8 @@ def main():
     require(not (args.pack or args.pack_production or args.start_production or args.resume_source) or args.duration is None, 'PRODUCTION_OR_PACK_HAS_NO_DURATION')
     require(not args.install_dependencies or args.start or args.start_production, 'BOOTSTRAP_ONLY_WITH_PORTABLE_START')
     if args.pack_production:
+        def interrupted(*_): raise KeyboardInterrupt()
+        for sig in (signal.SIGTERM, signal.SIGHUP): signal.signal(sig, interrupted)
         require(args.acknowledge_outage, 'PACK_PRODUCTION_REQUIRES_ACKNOWLEDGE_OUTAGE')
         p = production()
         with p.lock('ustar-source-transfer.lock'):

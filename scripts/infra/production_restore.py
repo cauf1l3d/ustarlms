@@ -568,6 +568,7 @@ def freeze_source():
             maintenance = source_exec(state, ['php', '-r', "define('CLI_SCRIPT',true);require '/var/www/html/config.php';echo !empty($CFG->maintenance_enabled)?'1':'0';"])
             require(maintenance.stdout.strip() == b'1', 'SOURCE_MAINTENANCE_NOT_EFFECTIVE')
             print('PRODUCTION_SOURCE_PHASE=fresh_backup_in_maintenance', flush=True)
+            state['backup_started'] = True; save(SOURCE_STATE, state)
             command(['python3', '-I', '-B', '-u', str(BACKUP), '--backup', '--acknowledge-outage'], timeout=1800)
             state['phase'] = 'freezing'; save(SOURCE_STATE, state)
             command(['docker', 'update', '--restart', 'no', c['Id']])
@@ -585,7 +586,10 @@ def freeze_source():
         except BaseException:
             # A failed backup cannot silently leave the original site in maintenance.
             if state['phase'] in ('maintenance', 'freezing'):
-                try: resume_source(True)
+                try:
+                    if state.get('backup_started'):
+                        command(['python3', '-I', '-B', '-u', str(BACKUP), '--recover'], timeout=180)
+                    resume_source(True)
                 except Exception:
                     state['phase'] = 'resume_required'; save(SOURCE_STATE, state)
             raise

@@ -234,9 +234,52 @@ def local_images(lab, preflight):
     return result
 
 
+PRESENTATION = {
+    # Production 5.1.8 keeps stock public/index.php; the USTAR entry is this
+    # config.php setting. The pinned engine regenerates config.php, so without
+    # carrying it over the copy opens the stock Moodle front page.
+    'defaulthomepage': re.compile(r'(?:[0-3]|/local/ustar/[a-z_]+\.php)'),
+    'theme': re.compile(r'[a-z][a-z0-9_]{0,48}'),
+}
+SETUP = "require_once(__DIR__ . '/lib/setup.php');\n"
+PRESENTATION_RESULT = {}
+
+
+def presentation_settings(original):
+    """Only exact, unconditional quoted literals from the backup config.
+
+    No PHP is executed and no other line (credentials, URL, mail, cron) is read.
+    Ambiguous or unexpected values are not carried and are reported by name.
+    """
+    carried, skipped = {}, []
+    for name, allowed in PRESENTATION.items():
+        found = [a or b for a, b in re.findall(
+            r"(?m)^[ \t]*\$CFG->" + name + r"\s*=\s*(?:'([^'\\\n$]*)'|\"([^\"\\\n$]*)\")\s*;[ \t]*(?://[^\n]*)?\r?$",
+            original)]
+        mentioned = sum(1 for line in original.splitlines()
+                        if re.search(r'\$CFG->' + name + r'\b', line)
+                        and not line.lstrip().startswith(('//', '#', '*', '/*')))
+        if not mentioned:
+            continue
+        if len(found) == 1 and mentioned == 1 and allowed.fullmatch(found[0]):
+            carried[name] = found[0]
+        else:
+            skipped.append(name)
+    theme = carried.get('theme')
+    if theme is not None and not any((ROOT / 'site/public' / base / 'theme' / theme / 'config.php').is_file()
+                                     for base in ('public', '.')):
+        del carried['theme']
+        skipped.append('theme')
+    return carried, sorted(skipped)
+
+
 def prepare_config(lab, password):
-    count = lab.prepare_config(password)
     path = ROOT / 'site/public/config.php'
+    # Read the extracted backup config before the engine replaces it.
+    original = path.read_text(errors='replace') if path.is_file() and not path.is_symlink() else ''
+    require(len(original) <= 128 * 1024, 'BACKUP_CONFIG_TOO_LARGE')
+    carried, skipped = presentation_settings(original)
+    count = lab.prepare_config(password)
     text = path.read_text()
     for old, new in {
         "$CFG->wwwroot = 'http://127.0.0.1:18084';": "$CFG->wwwroot = '" + URL + "';",
@@ -245,6 +288,12 @@ def prepare_config(lab, password):
     }.items():
         require(text.count(old) == 1, 'GENERATED_LAB_CONFIG_MISMATCH')
         text = text.replace(old, new)
+    require(text.endswith(SETUP) and text.count(SETUP) == 1
+            and all('$CFG->' + name not in text for name in PRESENTATION), 'GENERATED_LAB_CONFIG_MISMATCH')
+    text = (text[:-len(SETUP)] + ''.join("$CFG->%s = '%s';\n" % (k, v) for k, v in sorted(carried.items()))
+            + SETUP)
+    PRESENTATION_RESULT.clear()
+    PRESENTATION_RESULT.update(carried=carried, skipped=skipped)
     temporary = path.parent / ('test-config-' + uuid.uuid4().hex + '.tmp')
     lab.write_private(temporary, text)
     os.chown(temporary, 0, 33)
@@ -389,6 +438,7 @@ def run(args):
             state['image_archive_loaded'] = True
             lab.save_state(state)
         password = uuid.uuid4().hex + uuid.uuid4().hex
+        PRESENTATION_RESULT.clear()
         secrets = prepare_config(lab, password)
         (ROOT / 'postgres').mkdir(mode=0o700)
         lab.write_private(ROOT / 'pg.env', 'POSTGRES_USER=ustar_lab_admin\nPOSTGRES_PASSWORD='
@@ -407,10 +457,20 @@ def run(args):
                "require_once($CFG->libdir.'/upgradelib.php'); echo json_encode(["
                "'dbhost'=>$CFG->dbhost,'dbname'=>$CFG->dbname,'wwwroot'=>$CFG->wwwroot,"
                "'noemail'=>(bool)$CFG->noemailever,'cron'=>(int)$CFG->cron_enabled,"
-               "'needs_upgrade'=>moodle_needs_upgrading()]);")
+               "'needs_upgrade'=>moodle_needs_upgrading(),"
+               "'defaulthomepage'=>isset($CFG->defaulthomepage)?(string)$CFG->defaulthomepage:null,"
+               "'theme'=>isset($CFG->theme)?(string)$CFG->theme:null]);")
         boot = json.loads(lab.lab_exec('web', state, ['php', '-r', php], user='33:33').stdout)
+        carried = PRESENTATION_RESULT.get('carried', {})
+        # theme/defaulthomepage may also live in the restored database; only the
+        # values carried from the backup config.php must be effective exactly.
+        effective = {k: boot.pop(k, None) for k in PRESENTATION}
         require(boot == {'dbhost': '127.0.0.1', 'dbname': 'ustar_recovery_lab', 'wwwroot': URL,
                          'noemail': True, 'cron': 0, 'needs_upgrade': False}, 'MOODLE_BOOTSTRAP_MISMATCH')
+        require(all(effective[k] == v for k, v in carried.items()), 'PRESENTATION_SETTINGS_NOT_EFFECTIVE')
+        state['presentation'] = effective
+        lab.save_state(state)
+        print('RESTORE_TEST_PRESENTATION=' + json.dumps(effective, sort_keys=True), flush=True)
         start_relay(lab, state, hold_seconds)
         code = http_check()
         require(production_state(lab) == before, 'PRODUCTION_IDENTITY_CHANGED')
@@ -425,6 +485,10 @@ def run(args):
                   'snapshot_completed_utc': preflight['snapshot_completed_utc'], 'database_restore': 'PASS',
                   'snapshot_table_counts': counts, 'verified_file_contenthashes': references,
                   'password_secret_settings_preserved': secrets, 'image_archive_loaded': bool(missing),
+                  'presentation_settings_carried': sorted(PRESENTATION_RESULT.get('carried', {})),
+                  'presentation_settings_skipped': PRESENTATION_RESULT.get('skipped', []),
+                  'effective_theme': state['presentation']['theme'],
+                  'effective_defaulthomepage': state['presentation']['defaulthomepage'],
                   'lab_url': URL + '/login/index.php', 'http_login': code, 'lab_network': 'loopback_only',
                   'ready_at': state['ready_at'], 'expires_at': state['expires_at'], 'hold_seconds': hold_seconds, 'unlimited': hold_seconds == 0,
                   'production_identities_unchanged': True, 'postgres_globals_executed': False,
@@ -497,7 +561,7 @@ def main():
             return
         state = read_json(STATE)
         print(json.dumps({k: state.get(k) for k in ('phase', 'ready', 'stopped', 'ready_at',
-                         'expires_at', 'hold_seconds', 'unlimited', 'stopped_at', 'duration_completed', 'one_hour_completed', 'failure_type')}, indent=2))
+                         'expires_at', 'hold_seconds', 'unlimited', 'stopped_at', 'duration_completed', 'one_hour_completed', 'failure_type', 'presentation')}, indent=2))
     elif args.stop_lab:
         with locked():
             stop()

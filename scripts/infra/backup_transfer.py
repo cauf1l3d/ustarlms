@@ -26,7 +26,7 @@ import tempfile
 from types import SimpleNamespace
 
 CONTROLLER = Path('/usr/local/sbin/USTAR_BACKUP_RESTORE_TEST_20261014.py')
-CONTROLLER_SHA = '9c0d5fefa3e597c7faee275bba68222e2c126d6f768034909467a80bfeaf8f44'
+CONTROLLER_SHA = '4804c27aada3d5f431ccf19cfb174dd8deb1bc6f991d3d9793d6a89b7be9b022'
 ENGINE = Path('/usr/local/sbin/USTAR_RESTORE_LAB_20261004.py')
 ENGINE_SHA = '71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac'
 CHECKER = Path('/usr/local/lib/ustar-recovery/USTAR_RESTORE_PREFLIGHT_20261004.py')

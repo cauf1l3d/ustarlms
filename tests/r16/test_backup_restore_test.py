@@ -48,6 +48,7 @@ class FakeLab:
                            for name in self.PRODUCTION}
         self.database_failure = False
         self.unsafe_boot = False
+        self.presentation = {'defaulthomepage': None, 'theme': None}
         self._LOG = None
 
     def inspect(self, name, absent_ok=False):
@@ -99,7 +100,8 @@ class FakeLab:
         if args[1] == '-l':
             return SimpleNamespace(stdout=b'')
         boot = {'dbhost': '127.0.0.1', 'dbname': 'ustar_recovery_lab', 'wwwroot': r.URL,
-                'noemail': True, 'cron': 1 if self.unsafe_boot else 0, 'needs_upgrade': False}
+                'noemail': True, 'cron': 1 if self.unsafe_boot else 0, 'needs_upgrade': False,
+                **self.presentation}
         return SimpleNamespace(stdout=json.dumps(boot).encode())
 
     def start_relay(self, _):
@@ -168,7 +170,7 @@ class RestoreExperiment(unittest.TestCase):
             return SimpleNamespace(stdout=value)
         raise AssertionError('Unexpected host command: ' + repr(args))
 
-    def execute(self, clock=None, images=None, image_sequence=None):
+    def execute(self, clock=None, images=None, image_sequence=None, carried=None):
         clock = clock or Clock()
         old_text = Path.read_text
         def read_text(path, *args, **kwargs):
@@ -177,7 +179,8 @@ class RestoreExperiment(unittest.TestCase):
                 mock.patch.object(r, 'verify', return_value=self.preflight), \
                 mock.patch.object(r, 'local_images', return_value=images if images is not None else
                                   {'pg': 'pg-id', 'web': 'web-id'}, side_effect=image_sequence), \
-                mock.patch.object(r, 'prepare_config', return_value=2), \
+                mock.patch.object(r, 'prepare_config', side_effect=lambda *_: (
+                    r.PRESENTATION_RESULT.update(carried=dict(carried or {}), skipped=[]), 2)[1]), \
                 mock.patch.object(r, 'http_check', return_value=200), \
                 mock.patch.object(r.shutil, 'which', return_value='/fixture/bin'), \
                 mock.patch.object(r.shutil, 'disk_usage', return_value=SimpleNamespace(free=100 * r.GIB)), \
@@ -361,6 +364,24 @@ class RestoreExperiment(unittest.TestCase):
         self.assertNotIn(('create', r.NAMES['web']), self.lab.actions)
         self.assertTrue(self.archive.is_file())
 
+    def test_carried_homepage_and_theme_must_be_effective_and_are_reported(self):
+        carried = {'defaulthomepage': '/local/ustar/home.php', 'theme': 'ustar'}
+        self.lab.presentation = dict(carried)
+        self.args.duration = 1800
+        _, output = self.execute(carried=carried)
+        self.assertIn('RESTORE_TEST_PRESENTATION={"defaulthomepage": "/local/ustar/home.php", "theme": "ustar"}', output)
+        report = json.loads((r.ROOT / 'report.json').read_text())
+        self.assertEqual((report['effective_theme'], report['effective_defaulthomepage']),
+                         ('ustar', '/local/ustar/home.php'))
+        self.assertEqual(report['presentation_settings_carried'], ['defaulthomepage', 'theme'])
+
+    def test_carried_setting_not_effective_refuses_before_relay(self):
+        self.lab.presentation = {'defaulthomepage': None, 'theme': 'boost'}
+        with self.assertRaisesRegex(r.RestoreTestError, 'PRESENTATION_SETTINGS_NOT_EFFECTIVE'):
+            self.execute(carried={'defaulthomepage': '/local/ustar/home.php', 'theme': 'ustar'})
+        self.assertFalse(any(a and a[0] == 'systemd-run' for a in self.lab.actions))
+        self.assertEqual(json.loads((r.ROOT / 'state.json').read_text())['phase'], 'failed_stopped')
+
     def test_enabled_cron_bootstrap_is_refused_and_clone_stopped(self):
         self.lab.unsafe_boot = True
         with self.assertRaisesRegex(r.RestoreTestError, 'BOOTSTRAP_MISMATCH'):
@@ -465,6 +486,89 @@ class ImageIdentityTests(unittest.TestCase):
         result = SimpleNamespace(returncode=0, stdout=json.dumps([image]).encode())
         with mock.patch('subprocess.run', return_value=result), self.assertRaisesRegex(r.RestoreTestError, 'ENTRYPOINT'):
             r.local_images(None, self.preflight())
+
+
+@unittest.skipUnless(os.geteuid() == 0, 'native root path/state fixture job uses sudo')
+class PresentationCarry(unittest.TestCase):
+    """Backup config.php homepage/theme must survive the engine's config rewrite."""
+    GENERATED = ("<?php\n$CFG->wwwroot = 'http://127.0.0.1:18084';\n"
+                 "$CFG->sessioncookie = 'USTAR_RECOVERY_LAB_20261004';\n"
+                 "$CFG->noemailever = true;\n$CFG->cron_enabled = 0;\n"
+                 "require_once(__DIR__ . '/lib/setup.php');\n")
+
+    def setUp(self):
+        self.folder = tempfile.TemporaryDirectory(prefix='ustar-presentation-', dir='/var/lib')
+        self.addCleanup(self.folder.cleanup)
+        root = Path(self.folder.name) / 'run'
+        patcher = mock.patch.object(r, 'ROOT', root)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        (root / 'site/public/public/theme/ustar').mkdir(parents=True)
+        (root / 'site/public/public/theme/ustar/config.php').write_text('<?php\n')
+        (root / 'lab.ini').write_text('memory_limit=512M\nsendmail_path=/bin/false\ndisplay_errors=Off\nlog_errors=On\n')
+        self.config = root / 'site/public/config.php'
+        self.lab = FakeLab()
+        generated = self.GENERATED
+        def engine_prepare(_password):
+            self.config.write_text(generated)
+            return 2
+        self.lab.prepare_config = engine_prepare
+
+    def run_prepare(self, original):
+        self.config.write_text(original)
+        with mock.patch.object(r.os, 'chown'):
+            self.assertEqual(r.prepare_config(self.lab, 'p' * 64), 2)
+        return self.config.read_text()
+
+    def test_homepage_and_theme_are_carried_before_setup(self):
+        text = self.run_prepare("<?php\n$CFG->dbpass = 'secret';\n$CFG->wwwroot = 'http://prod';\n"
+                                "$CFG->theme = 'ustar';\n$CFG->defaulthomepage = '/local/ustar/home.php';\n"
+                                "require_once(__DIR__ . '/lib/setup.php');\n// trailing comment\n")
+        self.assertTrue(text.endswith("$CFG->defaulthomepage = '/local/ustar/home.php';\n$CFG->theme = 'ustar';\n"
+                                      "require_once(__DIR__ . '/lib/setup.php');\n"))
+        self.assertIn("$CFG->wwwroot = '" + r.URL + "';", text)
+        self.assertNotIn('secret', text)
+        self.assertNotIn('http://prod', text)
+        self.assertEqual(r.PRESENTATION_RESULT, {'carried': {'defaulthomepage': '/local/ustar/home.php',
+                                                             'theme': 'ustar'}, 'skipped': []})
+
+    def test_config_without_settings_keeps_generated_config(self):
+        text = self.run_prepare("<?php\n$CFG->dbpass = 'x';\nrequire_once(__DIR__ . '/lib/setup.php');\n")
+        self.assertEqual(text, self.GENERATED.replace('http://127.0.0.1:18084', r.URL)
+                         .replace('USTAR_RECOVERY_LAB_20261004', 'USTAR_RESTORE_TEST_20261014'))
+        self.assertEqual(r.PRESENTATION_RESULT, {'carried': {}, 'skipped': []})
+
+    def test_conditional_or_dynamic_values_are_not_carried(self):
+        text = self.run_prepare("<?php\nif ($x) { $CFG->theme = 'ustar'; }\n$CFG->theme = 'ustar';\n"
+                                "$CFG->defaulthomepage = $other;\nrequire_once(__DIR__ . '/lib/setup.php');\n")
+        self.assertNotIn('$CFG->theme', text)
+        self.assertNotIn('$CFG->defaulthomepage', text)
+        self.assertEqual(r.PRESENTATION_RESULT['skipped'], ['defaulthomepage', 'theme'])
+
+    def test_external_or_injected_homepage_is_refused(self):
+        for value in ("https://evil.example/", "/local/ustar/home.php'; $CFG->x = '1", '/admin/index.php'):
+            carried, skipped = r.presentation_settings("<?php\n$CFG->defaulthomepage = '" + value + "';\n")
+            self.assertEqual((carried, skipped), ({}, ['defaulthomepage']), value)
+
+    def test_missing_theme_directory_is_not_forced(self):
+        carried, skipped = r.presentation_settings("<?php\n$CFG->theme = 'boost_union';\n")
+        self.assertEqual((carried, skipped), ({}, ['theme']))
+
+    def test_commented_assignment_is_ignored(self):
+        carried, skipped = r.presentation_settings("<?php\n// $CFG->theme = 'boost';\n$CFG->theme = \"ustar\";\n"
+                                                   "$CFG->defaulthomepage = 1;\n")
+        self.assertEqual(carried, {'theme': 'ustar'})
+        self.assertEqual(skipped, ['defaulthomepage'])
+
+    def test_generated_config_already_setting_value_is_refused(self):
+        self.GENERATED = self.GENERATED.replace('require_once', "$CFG->theme = 'boost';\nrequire_once")
+        self.config.write_text("<?php\n")
+        def engine_prepare(_password):
+            self.config.write_text(self.GENERATED)
+            return 2
+        self.lab.prepare_config = engine_prepare
+        with self.assertRaisesRegex(r.RestoreTestError, 'GENERATED_LAB_CONFIG_MISMATCH'):
+            r.prepare_config(self.lab, 'p' * 64)
 
 
 if __name__ == '__main__':

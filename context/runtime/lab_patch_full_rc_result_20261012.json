@@ -1,0 +1,22 @@
+{
+  "source": "GitHub_Actions_connector",
+  "commit": "a42672e842b8d0c3e2c95edca72709be496eed56",
+  "run": 38257457655,
+  "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/38257457655",
+  "result": "success",
+  "jobs": {
+    "source_php83": 114839268966,
+    "source_php82": 114839269357,
+    "frontend": 114839269613,
+    "rollback": 114839269299,
+    "prepare_rc": 114840545109,
+    "moodle_db_patch518": 114840642415,
+    "moodle_db_historical": 114840642527,
+    "gate": 114844243640
+  },
+  "all_listed_jobs_result": "success",
+  "context_run": 38257222967,
+  "context_result": "success",
+  "production_deployment": false,
+  "all_preserved_third_party_runtime_acceptance": false
+}

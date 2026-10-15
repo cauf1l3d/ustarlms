@@ -1,0 +1,14 @@
+[Unit]
+Description=USTAR isolated backup restore and one-hour experiment
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=exec
+UMask=0077
+Nice=10
+KillMode=control-group
+TimeoutStopSec=180
+RuntimeMaxSec=7200
+ExecStart=/usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_BACKUP_RESTORE_TEST_20261014.py --restore-lab
+ExecStopPost=/usr/bin/python3 -I -B -u /usr/local/sbin/USTAR_BACKUP_RESTORE_TEST_20261014.py --stop-lab

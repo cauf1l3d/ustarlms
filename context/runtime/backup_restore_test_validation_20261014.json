@@ -1,0 +1,42 @@
+{
+  "source_commit": "cdf69bab822b1ecbc352018cb56f542f992e0db5",
+  "controller_sha256": "e9e206a841f7fe93e9e6551e17fe0d6569a93eb17f7c7eb80473a312fb272abf",
+  "service_sha256": "55ebea17f691ac1489cad1d9a2bca50ab42a8870818ef079b8760ba9f5be3c07",
+  "local_tests": {
+    "count": 33,
+    "result": "PASS",
+    "scope": "real root filesystem locks state; modeled Docker PostgreSQL lifecycle"
+  },
+  "original_private_engine_compatibility": {
+    "result": "PASS",
+    "scope": "synthetic nested archive verified/extracted; corruption refused; config salts URL mail cron checked; fixture chown modeled"
+  },
+  "selected_ci": {
+    "run": 38601259566,
+    "job": 115980799887,
+    "conclusion": "success",
+    "environment": "Ubuntu24.04 root",
+    "checks": [
+      "33 tests no skips",
+      "actual installed systemd Docker unit dependency parser"
+    ]
+  },
+  "context_ci": {
+    "run": 38601259400,
+    "conclusion": "success"
+  },
+  "general_review_gate": {
+    "run": 38601259526,
+    "conclusion": "failure",
+    "source_php82": "success",
+    "source_php83": "success",
+    "frontend_failure": "unchanged npm audit dependencies next and sharp; frontend not used in production per owner",
+    "full_rc": "not_executed"
+  },
+  "native_owner_archive_restore": "PENDING",
+  "one_hour_shutdown_on_server": "PENDING",
+  "browser_acceptance": "PENDING",
+  "independent_clean_server_restore": "PENDING",
+  "whole_host_boot_restore": "NOT_TESTED",
+  "production_changed_by_agent": false
+}

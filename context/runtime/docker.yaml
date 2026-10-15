@@ -1,7 +1,7 @@
 kind: dated_owner_supplied_runtime_facts
-reviewed_at: '2026-10-05'
+reviewed_at: '2026-10-16'
 measured_now: false
-source: context/runtime/evidence_20261005_baseline.yaml
+source: context/runtime/evidence_20261016.yaml
 containers:
 - name: ustar_moodle
   current_image_digest: stack-moodle@sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b
@@ -11,6 +11,10 @@ containers:
   current_image_digest: postgres@sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94
   host_port_published: false
 recheck: context/runtime/OPERATIONS.md
-logging: json-file; limits absent in supplied snapshot
-healthchecks: absent in supplied snapshot
-observed_at: '2026-10-05T02:43:33Z'
+logging: No new production-wide rotation acceptance; new-copy limits do not close INF05
+healthchecks: Production-wide readiness remains INF05
+observed_at: '2026-10-14T01:34:49Z'
+engine: 29.9.0
+live_restore: false
+ID_and_restart_policy_evidence: context/runtime/host_reboot_result_20261014.json
+retained_labs: 4 containers exited0/restart=no after boot; no automatic restart required

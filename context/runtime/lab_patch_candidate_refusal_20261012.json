@@ -1,0 +1,18 @@
+{
+  "kind": "owner_candidate_prepare_prewrite_refusal",
+  "received_utc": "2026-10-11T21:06:13Z",
+  "received_moscow": "2026-10-12T00:06:13+03:00",
+  "independently_measured_by_agent": false,
+  "helper_implementation": "9fe10fc127d2ac40fe045432719467906d160816",
+  "helper_sha256": "4850e17699ab32705b938358dc1f53ffb095daf4fe875b994298482f90e8f735",
+  "download_and_install_sha_checks": "OK",
+  "mode": "--prepare-candidate",
+  "error": "Selected overlay file collides with stock candidate core",
+  "failure_phase": "precheck_before_prepare_mkdtemp",
+  "candidate_copy_started": false,
+  "core_upgrade_executed": false,
+  "containers_mutated_by_helper": false,
+  "collision_reproduced_locally_with_pinned_official_archive": "githash.php",
+  "scope_of_unchanged_claim": "reviewed_fail_path_no_new_server_read",
+  "old_installed_helper_retained": true
+}

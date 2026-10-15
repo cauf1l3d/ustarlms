@@ -1,0 +1,34 @@
+{
+  "kind": "exact_cached_host_installer_validation",
+  "implementation_commit": "d000e80092da653cc369c2a6d37677cfcd56b1c3",
+  "local_source_commit": "314688ee6576e460e7dd6fe43c356f99f091bae3",
+  "matching_source_tree": "eb51e300edd48a0913ae1387ca42acd1bf7ece1a",
+  "helper_sha256": "c753cf2e2b4ebdd0c7ff690614f6f2ec14435d035fdea6051cfe45d70e5947d1",
+  "dependency_commit": "22d8a4e172208d029b0524c3f38e37403fa438b9",
+  "dependency_sha256": "3f8f0c0eae0d9702216d276231f2c7151fc40635b962843a0e9fe85efae6f0c4",
+  "published_bytes_match": true,
+  "local_root_tests": 33,
+  "Ubuntu_24_04_CI": {
+    "run": 38493438210,
+    "job": 115623715462,
+    "url": "https://github.com/cauf1l3d/ustarlms/actions/runs/38493438210",
+    "result": "SUCCESS",
+    "installer_tests": 33,
+    "accepted_controller_file_model_tests": 48,
+    "actual_isolated_sleep_only_systemd_tests": 2,
+    "skips": 0,
+    "all_three_summaries_read": true,
+    "finished_summaries_utc": "2026-10-14T01:01:39.5169602Z"
+  },
+  "context_CI": {
+    "run": 38493438435,
+    "job": 115623716579,
+    "result": "SUCCESS"
+  },
+  "native_APT_Docker_shared_service_installation_tested_in_CI": false,
+  "native_POSIX_contention_and_root_receipt_boot_files_fixture_tested": true,
+  "outer_and_inner_operator_bash_syntax": "PASS",
+  "package_install_or_reboot_verified_on_server": false,
+  "full_host_boot_restore_verified": false,
+  "whole_PR_green_claimed": false
+}

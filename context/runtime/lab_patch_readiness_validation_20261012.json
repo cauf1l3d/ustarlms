@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "kind": "local_readonly_candidate_platform_check_validation",
+  "helper_path": "scripts/infra/lab_patch_readiness.py",
+  "helper_sha256": "a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc",
+  "builder_dependency_sha256": "bb71ddd01566341d506a560628453bdcec045de89af7f4a80774a205f2f059c2",
+  "candidate_manifest_sha256": "07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459a",
+  "dedicated_tests": {
+    "count": 26,
+    "result": "PASS",
+    "scope": "actual_builder_filesystem_with_synthetic_private_inputs_and_mocked_lab_adapters"
+  },
+  "full_r16_suite": {
+    "count": 223,
+    "skipped": 10,
+    "result": "OK",
+    "skip_reason": "private_HDD_backup_engine_source_not_provided"
+  },
+  "python_syntax": "PASS",
+  "generated_application_map": {
+    "files": 526,
+    "tables": 93,
+    "tasks": 32,
+    "application_baseline": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+    "changed": false
+  },
+  "context_check": "PASS",
+  "diff_whitespace_check": "PASS",
+  "readiness_server_executed": false,
+  "candidate_code_server_receipt": "context/runtime/lab_patch_candidate_result_20261012.json",
+  "mocked_operations": [
+    "Docker inspect/ownership",
+    "PHP built-ins in retained stage",
+    "bounded stage READ ONLY SQL"
+  ],
+  "executed_real_operations": [
+    "synthetic candidate builder extraction/copy/hash/readback",
+    "accepted tree whole filesystem unchanged snapshot",
+    "static Composer/environment requirements parse",
+    "existing filesystem lock contention/replacement"
+  ],
+  "previous_exact_ci": {
+    "commit": "808fc0e81510e67db81dc720176b75b8faf30c61",
+    "context_run": 38175680210,
+    "context_conclusion": "success",
+    "review_run": 38175680230,
+    "source_php82": "success",
+    "source_php83": "success",
+    "frontend": "failure_at_npm_audit",
+    "rollback": "skipped",
+    "moodle_db": "skipped",
+    "prepare_rc": "skipped",
+    "gate": "skipped",
+    "full_gate_pass": false
+  },
+  "new_implementation_ci": {
+    "implementation": "2496d11fac6af3fd8f0265355ad143016423d001",
+    "context_run": 38177469124,
+    "context_conclusion": "success",
+    "review_run": 38177469099,
+    "source_php82": "success",
+    "source_php83": "success",
+    "frontend": "failure_at_npm_audit",
+    "rollback": "skipped",
+    "moodle_db": "skipped",
+    "prepare_rc": "skipped",
+    "gate": "skipped",
+    "full_gate_pass": false
+  },
+  "production_upgrade_executed": false,
+  "full_addon_runtime_compatibility_verified": false,
+  "paired_upgrade_rollback_verified": false,
+  "local_source_checks": {
+    "full_command": "blocked_by_missing_local_php_binary",
+    "with_skip_php": "PASS_js24_tables93_templates56; not_a_CI_PHP_substitute",
+    "github_php_lint": "PASS_source_PHP82_and_PHP83_at_2496d11",
+    "application_php_changed": false
+  },
+  "actual_official_archive_platform_parse": {
+    "archive_sha256": "0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c",
+    "result": "PASS",
+    "read_adapter": "local in-memory archived bytes with per-file hash checks; no installed private chain",
+    "requirements": {
+      "php_minimum": "8.2.0",
+      "postgres_minimum_major": 15,
+      "required_extensions": [
+        "ctype",
+        "curl",
+        "dom",
+        "fileinfo",
+        "filter",
+        "gd",
+        "hash",
+        "iconv",
+        "intl",
+        "json",
+        "mbstring",
+        "openssl",
+        "pcre",
+        "pgsql",
+        "simplexml",
+        "sodium",
+        "spl",
+        "xml",
+        "xmlreader",
+        "zip",
+        "zlib"
+      ],
+      "optional_extensions": [
+        "exif",
+        "soap",
+        "tokenizer"
+      ]
+    }
+  },
+  "immutable_remote_readback": {
+    "implementation": "2496d11fac6af3fd8f0265355ad143016423d001",
+    "helper_content": "identical_to_tested_local_bytes",
+    "blob": "25851ef077675c7370f31754fe3155ac5e75fe39",
+    "helper_sha256": "a45ddc705e353e0013b2b9e4b8a34fd2c94c3c58831f15a37ae30badb2a706dc",
+    "result": "PASS"
+  }
+}

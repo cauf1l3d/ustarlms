@@ -1,0 +1,56 @@
+{
+  "kind": "owner_route_pass_refresh_screenshot_triage",
+  "received_at": "2026-10-14T12:33:24+03:00",
+  "screenshots_inspected": true,
+  "screenshots": [
+    "image(10).png",
+    "image(20261014-093250).png"
+  ],
+  "observed": {
+    "route": "Торговый зал: общий маршрут",
+    "material_step_6": "complete",
+    "assessment_step_7": "Результат обрабатывается",
+    "attempts": "1/3",
+    "bestscore": "23.5/25",
+    "passscore": 17.5,
+    "next_step_8": "locked",
+    "next_step_continue_button": "absent",
+    "progress": "6/16;38%",
+    "route_rewards": "70XP;7USCOIN"
+  },
+  "code_review": {
+    "source_baseline": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+    "main_base": "c53723c8d669a1013c518f34abf392143d211d9d",
+    "route_php_blob_matches_current_main": "ce1e6b385e25110f5c09d432a78ea5ee318bca52",
+    "route_model_blob_matches_current_main": "ced5887bff8b05acf7bb427a61cb90f8f5766e9a",
+    "GET_does_not_persist_progress": true,
+    "POST_sync_handler_present": true,
+    "POST_sync_requires_sesskey_and_writable_actor": true,
+    "POST_sync_checks_learning_allowed": true,
+    "POST_sync_for_user_default_readonly": false,
+    "pending_sync_hides_launch": true,
+    "lifecycle_exceptions_currently_caught_by_route_model": true,
+    "existing_record_completion_does_not_change_noncomplete_projection_status": true,
+    "last_two_are_possible_failure_paths_not_proven_server_cause": true
+  },
+  "exact_server_cause_verified": false,
+  "source_or_database_modified": false,
+  "production_diagnostic": {
+    "PHP_bootstrap": false,
+    "SQL": "bounded_BEGIN_READ_ONLY_selected_metadata",
+    "private_data_emitted": false,
+    "server_executed": false,
+    "code_hashes": {
+      "route.php": "fdd869670e1eaaa2f208d9bbcadf190dd2e12d507b83769b83a9fe732b5fbdd0",
+      "classes/route_model.php": "75833f955a0e609f18172b50ce23aec260e89a8247f9dfb7fb1c5f5c891e6bee",
+      "classes/assessment_lifecycle.php": "27e618e18be58e5db0cd5a1a3477b5b4a12209143241cc144aaabaa4a15c544d",
+      "classes/moodle_quiz_assessment_provider.php": "5716ec20c26a69584c8dd6379a74619e0a4eedd4a17e6fd9392cfe7adf86807c",
+      "templates/route.mustache": "a97c3ce085c404a07a5fac1ef7d0db8ec31adcabd44397a29e1354dd56f11368"
+    }
+  },
+  "next": "fresh_browser_render_then_current_effective_version_and_expiry_if_still_pending",
+  "previously_accepted_host_boot": "context/runtime/host_reboot_result_20261014.json",
+  "major53_preparation": "retained_not_activated_user_bug_is_current_priority",
+  "later_database_evidence": "context/runtime/route_refresh_db_result_20261014.json",
+  "hypothesis_of_unsaved_pass": "not_supported_by_owner13_29_DB_sample"
+}

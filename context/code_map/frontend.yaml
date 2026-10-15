@@ -8,6 +8,13 @@ primary:
   styles: moodle/local/ustar/styles
 secondary:
   path: frontend
-  kind: Next.js web client
-  production_deployment: not_used_per_owner_20261005
+  kind: Legacy Next.js web client
+  production_deployment: not_used_per_owner_reconfirmed16Oct
+  CI: excluded
+  release_package: excluded
+  status: historical_source_retained
 mobile_native: planned; context/roadmap/MOBILE_CLIENT.md
+next_operations_UI:
+  branch: codex/server-console-20261015
+  prototype: server-console/prototype/index.html (PR103)
+  status: next separate control panel; not legacy frontend

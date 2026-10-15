@@ -1,0 +1,64 @@
+{
+  "kind": "owner_reported_production_transaction_readonly_diagnostic",
+  "received_at": "2026-10-13T02:50:18+03:00",
+  "independently_measured": false,
+  "implementation_commit": "a8caec553996b8a1eebb85f265f9dcbdba147ffc",
+  "installed_helper_sha256": "6f87a7802e08b32e4d018bdd0ad86584fc4b56af15b7815c0e04289395b3dd15",
+  "owner_reported_checksum_verified": true,
+  "mode": "--diagnose-transaction",
+  "stdout_marker": "PRODUCTION_TRANSACTION_DIAGNOSTIC=COMPLETE; READ_ONLY; NO_STOP_OR_BACKUP",
+  "report": {
+    "PHP_or_Moodle_bootstrap": false,
+    "SQL_scope": "bounded_BEGIN_READ_ONLY_current_sample",
+    "backup_or_container_operations": false,
+    "config_query_personnel_and_private_log_text_emitted": false,
+    "container_control_receipt_count": 10,
+    "container_control_receipt_sequence": [
+      "ustar_moodle",
+      "ustar_postgres",
+      "ustar_moodle",
+      "ustar_moodle",
+      "ustar_postgres",
+      "ustar_postgres",
+      "ustar_postgres",
+      "ustar_moodle",
+      "ustar_moodle",
+      "ustar_postgres"
+    ],
+    "container_stop_signals": {
+      "ustar_moodle": "SIGWINCH",
+      "ustar_postgres": "SIGINT"
+    },
+    "control_receipts_are_ids_only_not_command_or_exit_details": true,
+    "current_addon_versions_match_baseline": true,
+    "current_core_matches_old_version": true,
+    "current_other_database_clients": 0,
+    "current_sample_is_not_past_shutdown_evidence": true,
+    "current_task_flags_match_baseline": true,
+    "failure_code": "UNRECORDED",
+    "failure_details": {},
+    "failure_phase": "UNRECORDED",
+    "journal_or_log_written": false,
+    "kind": "restored_production_transaction_readonly_diagnostic",
+    "measured_at": "2026-10-12T23:49:48.724216+00:00",
+    "pair_directories": {
+      "code": false,
+      "moodledata": false,
+      "postgres": false
+    },
+    "pair_manifest_exists": false,
+    "read_only": true,
+    "transaction_phase": "baseline_restored"
+  },
+  "interpretation": {
+    "current_versions_and_task_flags_match": true,
+    "current_other_PG_clients": 0,
+    "past_specific_failing_guard": "UNKNOWN_NOT_RECORDED",
+    "control_order_inference": "consistent_with_web_stop_then_recovery_before_ordinary_PG_stop;not_direct_exit_or_SQL_evidence",
+    "repeat_readonly_collector_needed": false,
+    "strict_guards_unchanged": true,
+    "next_operator_action": "same_installed_hash_pinned_upgrade-production_with_acknowledge-outage;new_helper_records_exact_failure_if_repeated",
+    "production_upgrade_accepted": false,
+    "production_paired_tree_restoration_executed": false
+  }
+}

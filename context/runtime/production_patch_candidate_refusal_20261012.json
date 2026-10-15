@@ -1,0 +1,23 @@
+{
+  "kind": "owner_reported_production_candidate_precheck_refusal",
+  "received_date": "2026-10-12",
+  "independently_measured": false,
+  "implementation_commit": "57583559dd3451073620783c5e72bab3a5ec6597",
+  "installed_helper_sha256": "7ef2216bc2ab6d550acd3f889bb06462b6cfb2de71d4e561b7d1f781a2c67508",
+  "owner_reported_checksum_verified": true,
+  "mode": "--prepare-candidate",
+  "error": "PRODUCTION_CANDIDATE_ERROR=Production config needs separate homepage insertion review",
+  "candidate_start_marker_reported": false,
+  "source_review": {
+    "refusal_site": "precheck.configuration before SQL, live inventory, own_lock and prepare",
+    "candidate_created_by_this_attempt": false,
+    "candidate_namespace_created_by_this_attempt": false,
+    "production_config_data_database_services_tasks_changed_by_this_attempt": false,
+    "PHP_or_Moodle_bootstrap": false
+  },
+  "exact_failed_guard_condition": "not_yet_observed",
+  "next_step": "--diagnose-config emits fixed raw-text shape labels and counts only; no config text, SQL, Docker, archive, namespace creation or insertion approval",
+  "prior_production_readiness_receipt": "context/runtime/production_patch_readiness_result_20261012.json",
+  "production_candidate_prepared": false,
+  "production_upgrade_executed": false
+}

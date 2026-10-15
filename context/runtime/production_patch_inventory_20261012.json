@@ -1,0 +1,59 @@
+{
+  "source": "owner_terminal_stdout",
+  "owner_message_local_time": "2026-10-12T16:58:27+03:00",
+  "agent_live_server_query": false,
+  "production_containers": {
+    "ustar_moodle": {
+      "running": true,
+      "image": "sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b",
+      "started_at": "2026-10-12T00:30:45.159203771Z",
+      "mounts": {
+        "/opt/ustar/data/moodle/public": "/var/www/html",
+        "/opt/ustar/data/moodle/moodledata": "/var/www/moodledata"
+      },
+      "mounts_rw": true
+    },
+    "ustar_postgres": {
+      "running": true,
+      "image": "sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94",
+      "started_at": "2026-09-14T07:32:43.808007216Z",
+      "mounts": {
+        "/opt/ustar/data/postgres": "/var/lib/postgresql/data"
+      },
+      "mounts_rw": true
+    }
+  },
+  "hdd": {
+    "mount": "/srv/ustar-storage",
+    "source": "/dev/sdb1",
+    "fstype": "ext4",
+    "options": [
+      "rw",
+      "nosuid",
+      "nodev",
+      "noexec",
+      "relatime"
+    ],
+    "total_bytes": 491104411648,
+    "used_bytes": 7903076352,
+    "available_bytes": 478183514112
+  },
+  "system_root": {
+    "source": "/dev/sda2",
+    "total_bytes": 117815881728,
+    "used_bytes": 47210684416,
+    "available_bytes": 65250496512
+  },
+  "backup_service": {
+    "Result": "success",
+    "ExecMainStatus": 0,
+    "ExecMainExitTimestamp": "Mon 2026-10-12 00:31:39 UTC"
+  },
+  "timer_owner_output": {
+    "last": "12Oct00:30",
+    "next": "13Oct00:30",
+    "display_timezone": "not_supplied"
+  },
+  "archive_identity_hash_and_saved_run_report": "pending_scheduler_status",
+  "production_upgrade_executed": false
+}

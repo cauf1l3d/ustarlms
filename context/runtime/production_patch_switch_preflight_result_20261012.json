@@ -1,0 +1,126 @@
+{
+  "kind": "owner_reported_production_switch_preflight",
+  "received_at": "2026-10-12T23:52:10+03:00",
+  "independently_measured": false,
+  "implementation_commit": "eadee288f3450cea3f8400948bdeae7a98cc5532",
+  "installed_helper_sha256": "fd65eda0c18c758b6ed1dda33a6ec5fdbc3f9b23f3bee829d9854f06fe15e649",
+  "owner_reported_checksum_verified": true,
+  "stdout_marker": "PRODUCTION_SWITCH_PREFLIGHT=PASS; READ_ONLY; NO_OUTAGE; NO_UPGRADE",
+  "report": {
+    "PHP_or_Moodle_bootstrap": false,
+    "SQL_executed": false,
+    "accepted_candidate_config_matches_unchanged_source": true,
+    "candidate_manifest_sha256": "eb6d025d458daf6b5bf9f2367b48811fa6f8c20cac95df28370d9c58a8a6b92d",
+    "docker_conditions": {
+      "container_environment_or_inspect_text_emitted": false,
+      "other_container_production_bind_overlaps": 0,
+      "restart_policies": {
+        "ustar_moodle": {
+          "maximum_retry_count": 0,
+          "name": "unless-stopped"
+        },
+        "ustar_postgres": {
+          "maximum_retry_count": 0,
+          "name": "unless-stopped"
+        }
+      },
+      "restart_policy_preservation_required_for_switch": true
+    },
+    "existing_backup_lock_shared_acquisition": "PASS",
+    "filesystem_outputs": false,
+    "full_addon_runtime_compatibility_verified": false,
+    "full_candidate_code_rehash_required_immediately_before_switch": true,
+    "installed_backup_and_cron_helper_hashes_matching": true,
+    "kind": "production_switch_paired_recovery_readonly_preflight",
+    "live_bind_roots": {
+      "code": {
+        "device": 2050,
+        "gid": 33,
+        "inode": 920789,
+        "mode": 493,
+        "uid": 33
+      },
+      "moodledata": {
+        "device": 2050,
+        "gid": 33,
+        "inode": 925371,
+        "mode": 504,
+        "uid": 33
+      },
+      "postgres": {
+        "device": 2050,
+        "gid": 1000,
+        "inode": 917939,
+        "mode": 448,
+        "uid": 999
+      }
+    },
+    "live_metadata_estimates": {
+      "moodledata": {
+        "allocation_allowance_bytes": 712658944,
+        "directories": 6471,
+        "directory_owner_counts": {
+          "0:0": 60,
+          "33:33": 6411
+        },
+        "executable_regular_files": 4702,
+        "file_owner_counts": {
+          "0:0": 59,
+          "33:33": 8230
+        },
+        "files": 8289,
+        "group_or_other_writable_directories": 6470,
+        "group_or_other_writable_files": 8288,
+        "live_non_atomic_estimate": true,
+        "logical_file_bytes": 631118057,
+        "vanished_entries": 0
+      },
+      "postgres": {
+        "allocation_allowance_bytes": 265572352,
+        "directories": 28,
+        "directory_owner_counts": {
+          "999:1000": 1,
+          "999:999": 27
+        },
+        "executable_regular_files": 0,
+        "file_owner_counts": {
+          "999:999": 5612
+        },
+        "files": 5612,
+        "group_or_other_writable_directories": 0,
+        "group_or_other_writable_files": 0,
+        "live_non_atomic_estimate": true,
+        "logical_file_bytes": 242401130,
+        "vanished_entries": 0
+      }
+    },
+    "live_root_metadata_must_be_preserved_not_replaced_by_private_candidate_root": true,
+    "measured_at": "2026-10-12T20:51:43.192282+00:00",
+    "paired_cold_snapshot_created": false,
+    "paired_production_restore_executed": false,
+    "private_candidate_code_root": {
+      "device": 2050,
+      "gid": 0,
+      "inode": 2760814,
+      "mode": 493,
+      "uid": 0
+    },
+    "production_candidate_data_database_services_tasks_changed": false,
+    "production_upgrade_executed": false,
+    "result": "PASS",
+    "source_manifest_sha256": "e7318ecca9d49663f81ed76b75f51e416a3b33dd70860a2c9fe0378cd7b99a01",
+    "storage_plan": {
+      "available_free_bytes": 64707956736,
+      "available_free_inodes": 6343936,
+      "database_growth_allowance_bytes": 2147483648,
+      "live_volatility_allowance_bytes": 134217728,
+      "minimum_free_after_bytes": 4294967296,
+      "planning_estimate_not_capacity_guarantee": true,
+      "required_free_bytes": 12706045952,
+      "required_free_inodes": 292211
+    },
+    "switch_requires_existing_backup_lock_exclusive_for_managed_cron_and_backup": true
+  },
+  "closed_scope": "switch root ownership/modes/inodes,helper hashes,consumer/restart metadata and budget; no repeat collector needed without drift",
+  "fresh_paired_snapshot_and_upgrade_executed": false
+}

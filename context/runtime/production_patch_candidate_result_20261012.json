@@ -1,0 +1,49 @@
+{
+  "kind": "owner_reported_separate_production_patch_candidate_acceptance",
+  "received_at": "2026-10-12T23:31:05+03:00",
+  "execution_timestamp_not_printed": true,
+  "independently_measured": false,
+  "implementation_commit": "f1b68694e7623d435710cd07b91cc50c271e848d",
+  "installed_helper_sha256": "7b8ee79a1d7ac9768a72cffc9f308b01109452047ee2990a5196856d8368ed88",
+  "owner_reported_checksum_verified": true,
+  "mode": "--prepare-candidate",
+  "stdout_marker": "PRODUCTION_CANDIDATE=PASS; NOT_ACTIVATED; NO_UPGRADE",
+  "report": {
+    "PHP_or_Moodle_bootstrap": false,
+    "SQL_scope": "bounded_BEGIN_READ_ONLY_versions_only",
+    "addon_roots_preserved": 19,
+    "addon_versions_matching": 57,
+    "candidate_activated": false,
+    "candidate_directory": "/var/lib/ustar-production-patch-20261012/candidate-518-wnd475x8",
+    "candidate_entries": 44174,
+    "candidate_homepage_config_added": true,
+    "candidate_manifest_sha256": "eb6d025d458daf6b5bf9f2367b48811fa6f8c20cac95df28370d9c58a8a6b92d",
+    "full_addon_runtime_compatibility_verified": false,
+    "kind": "separate_unactivated_production_patch_candidate",
+    "preserved_original_files": 4,
+    "production_data_database_services_tasks_changed": false,
+    "production_deployment_backup_and_rollback_ready": false,
+    "production_source_readback_and_identities": "UNCHANGED",
+    "production_upgrade_executed": false,
+    "result": "PASS",
+    "source_manifest_sha256": "e7318ecca9d49663f81ed76b75f51e416a3b33dd70860a2c9fe0378cd7b99a01",
+    "stock_core_and_candidate_readback_hashes": "PASS",
+    "storage_plan": {
+      "activation_database_growth_budget_included": false,
+      "available_free_bytes": 65228779520,
+      "available_free_inodes": 6388125,
+      "candidate_copy_allowance_bytes": 634851328,
+      "minimum_free_after_bytes": 4294967296,
+      "required_free_bytes": 4929818624,
+      "required_free_inodes": 45187
+    },
+    "ustar_matching_files": 526
+  },
+  "closed_scope": "candidate creation/readback with unchanged production source and lifecycle; no repeat prepare or stage core operations without drift",
+  "remaining": [
+    "relevant addon runtime acceptance within actual usage",
+    "production switch/paired restore metadata and capacity contract",
+    "fresh coordinated pre-switch recovery set",
+    "production activation/upgrade and post-switch acceptance"
+  ]
+}

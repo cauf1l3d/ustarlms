@@ -1,0 +1,51 @@
+{
+  "kind": "parallel_permanent_production_copy_without_source_stop",
+  "source_code_commit": "a1a0c62bfcbb04df96d8797537599db11e692f4f",
+  "preparation_commit": "38485343d87e91cdc8627a5aceb8c477997a068c",
+  "sha256": {
+    "prepare": "781a73d96cff555a443dfb8fbc887871aa2f088ea0ed6d31fd8b026236c1d518",
+    "controller": "4804c27aada3d5f431ccf19cfb174dd8deb1bc6f991d3d9793d6a89b7be9b022",
+    "launcher": "369628cc4d24e4d44ffa56373cece25b38f69b30783f43770374d3bf77d4610f",
+    "worker": "b59e1e0e974138af6a9d5e3acca5c856d03ac4719c2c5a336985bb239c5c66eb"
+  },
+  "selected_ci": {
+    "run": 38773052825,
+    "job": 116553564286,
+    "conclusion": "success",
+    "controller": 45,
+    "transfer": 32,
+    "production": 24,
+    "total": 101,
+    "skips": 0,
+    "logs_inspected": true,
+    "native_PHP_config_both_modes": true,
+    "native_loopback_HTTP": true,
+    "native_systemd_production_copy_and_import_parsers": true
+  },
+  "local_tests": {
+    "total": 101,
+    "skips": 2,
+    "skip_reasons": [
+      "PHP CLI unavailable",
+      "native loopback CI only"
+    ]
+  },
+  "modeled": [
+    "Docker",
+    "PostgreSQL",
+    "Moodle import/bootstrap",
+    "source control during migration",
+    "target reboot"
+  ],
+  "source_pack_no_stop_dispatch_test": "PASS_no_source_worker_loaded_no_container_service_calls",
+  "snapshot_time": "reported_not_current_live_data",
+  "copy_mail_cron": "disabled_with_preserved_database_flags",
+  "copy_cron_manual_invocation": "refused_before_any_Docker_command",
+  "new_source_package_built": false,
+  "native_target_import": false,
+  "native_browser_SCORM_acceptance": false,
+  "native_reboot_acceptance": false,
+  "source_host_changed_by_agent": false,
+  "production_cutover_executed": false,
+  "general_review_gate": "separate_existing_frontend_npm_audit_failure_not_full_release_acceptance"
+}

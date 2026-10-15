@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "kind": "local_stage_php_diagnostic_validation",
+  "helper_path": "scripts/infra/lab_patch_readiness.py",
+  "helper_sha256": "a432e80c82ad24dc640cf765fd90b3570a1e0872a55ec104ff52fa97b6388098",
+  "dedicated_tests": {
+    "count": 35,
+    "result": "PASS",
+    "new_tests": 9
+  },
+  "full_r16_suite": {
+    "count": 232,
+    "result": "OK",
+    "skipped": 10,
+    "skip_reason": "private_HDD_backup_engine_source_not_provided"
+  },
+  "python_syntax": "PASS",
+  "code_map": {
+    "files": 526,
+    "tables": 93,
+    "tasks": 32,
+    "application_changed": false
+  },
+  "context_check": "PASS",
+  "diff_check": "PASS",
+  "server_diagnostic_executed": false,
+  "root_cause_confirmed": false,
+  "strict_readiness_memory_mail_guard_weakened": false,
+  "memory_override_fixture": "256M synthetic only, not a server observation",
+  "SQL_executed_in_diagnostic": false,
+  "new_implementation_ci": {
+    "implementation": "b90fd0d836a2f5b07af3818eccf8836c06a5992d",
+    "context_run": 38178676723,
+    "context_conclusion": "success",
+    "review_run": 38178676706,
+    "jobs": [
+      {
+        "name": "source (8.2)",
+        "status": "in_progress",
+        "conclusion": null,
+        "source_checks": "success",
+        "r16_tests": "success"
+      },
+      {
+        "name": "source (8.3)",
+        "status": "in_progress",
+        "conclusion": null,
+        "source_checks": "success",
+        "r16_tests": "success"
+      },
+      {
+        "name": "frontend",
+        "status": "completed",
+        "conclusion": "failure",
+        "source_checks": null,
+        "r16_tests": null
+      },
+      {
+        "name": "rollback",
+        "status": "completed",
+        "conclusion": "skipped",
+        "source_checks": null,
+        "r16_tests": null
+      }
+    ],
+    "full_gate_pass": false
+  },
+  "owner_original_readiness_refusal": "context/runtime/lab_patch_readiness_refusal_20261012.json",
+  "immutable_remote_readback": {
+    "implementation": "b90fd0d836a2f5b07af3818eccf8836c06a5992d",
+    "result": "PASS",
+    "blob": "36ea5e9d234c5c815f8f2a2e3a990cb6ddd5ad51",
+    "helper_content": "identical_to_tested_local_bytes"
+  }
+}

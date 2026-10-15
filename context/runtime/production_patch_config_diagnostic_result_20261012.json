@@ -1,0 +1,41 @@
+{
+  "kind": "owner_reported_production_candidate_config_diagnostic",
+  "received_at": "2026-10-12T23:06:42+03:00",
+  "execution_timestamp_not_printed": true,
+  "independently_measured": false,
+  "implementation_commit": "c092d3b6f59621c6aa27205eeb71dc924dd3da83",
+  "installed_helper_sha256": "6ea279b4e4f06dc5b237719c4dee3f881f8804dd4ea289cdb57ee36ab366dd5f",
+  "owner_reported_checksum_verified": true,
+  "mode": "--diagnose-config",
+  "stdout_marker": "PRODUCTION_CONFIG_DIAGNOSTIC=COMPLETE; READ_ONLY; NO_CONFIG_TEXT",
+  "report": {
+    "PHP_or_Moodle_bootstrap": false,
+    "SQL_executed": false,
+    "candidate_created_or_activated": false,
+    "config_text_emitted": false,
+    "exact_setup_raw_occurrences": 1,
+    "existing_insertion_guard_accepts": false,
+    "failed_guard_conditions": ["exact_setup_is_final_nonwhitespace_text"],
+    "guard_conditions": {
+      "exact_setup_is_final_nonwhitespace_text": false,
+      "exact_setup_occurs_once": true,
+      "homepage_raw_token_absent": true
+    },
+    "kind": "production_candidate_config_guard_diagnostic",
+    "known_raw_setup_spelling_counts": {
+      "cfg_dirroot_single_quote": 0,
+      "lib_compact_single_quote": 0,
+      "lib_spaced_double_quote": 0,
+      "lib_spaced_single_quote": 1,
+      "public_lib_spaced_single_quote": 0
+    },
+    "observations_scope": "raw_text_only_not_PHP_semantics_or_insertion_approval",
+    "production_config_data_database_services_tasks_changed": false,
+    "read_only": true,
+    "suffix_after_unique_exact_setup": "comments_and_whitespace",
+    "utf8_decodable": true
+  },
+  "interpretation": "Only the old final-nonwhitespace condition failed; raw suffix classified as comments/whitespace. No config text or PHP execution supplied. New builder must independently verify standalone lexical setup and strict comment-only suffix before candidate-only insertion.",
+  "production_candidate_prepared": false,
+  "production_upgrade_executed": false
+}

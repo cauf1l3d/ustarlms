@@ -1,11 +1,15 @@
-kind: git_source
-updated_at: '2026-10-05'
+kind: canonical_repository_state
+updated_at: '2026-10-16'
 canonical_branch: main
 application_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 repository: https://github.com/cauf1l3d/ustarlms
-runtime_equivalence: plugin_theme_owner_manifest_20261005_526_match_core_not_verified
 current_state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
-core_comparison: context/runtime/core_comparison_20261005.json
-core_equivalence: declared_scope_1_reviewed_redirect_23_extra_not_full_deployment_equivalence
-wrapper_contract: context/runtime/recovery_contract_20261005.md
+runtime_evidence: context/runtime/evidence_20261016.yaml
+branches: context/runtime/repository_state_20261016.json
+production_equivalence: plugin/theme526 dated05Oct; Moodle518 upgrade13Oct and host14Oct separately accepted
+active_UI:
+- moodle/local/ustar
+- moodle/theme/ustar
+legacy_client: frontend excluded from CI/release
+next_task: INF-06
+deferred: Moodle5.2/PostgreSQL17

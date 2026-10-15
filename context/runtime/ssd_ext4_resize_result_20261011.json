@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "source": "owner_terminal_output_supplied_20261011",
+  "independently_measured_by_agent": false,
+  "operation": "resize2fs /dev/sda2",
+  "operation_started_utc": "2026-10-11T15:35:13Z",
+  "operation_finished_utc": "2026-10-11T15:35:13Z",
+  "timestamps_resolution": "seconds; exact_elapsed_duration_not_measured",
+  "resize2fs_version": "1.47.0 (5-Feb-2023)",
+  "mode": "online; root remained mounted",
+  "root": {
+    "source": "/dev/sda2",
+    "fstype": "ext4",
+    "fs_uuid": "fb5cc206-93f8-4601-a415-8d418970cf31",
+    "mountpoint": "/",
+    "partition_bytes": 120032009728,
+    "old_blocks": 13106432,
+    "blocks": 29304689,
+    "block_bytes": 4096,
+    "filesystem_bytes": 120032006144,
+    "trailing_partition_bytes": 3584,
+    "old_descriptor_blocks": 7,
+    "new_descriptor_blocks": 14,
+    "mount_options": "rw,relatime,errors=remount-ro,jqfmt=vfsv0,usrjquota=quota.user,grpjquota=quota.group",
+    "mount_options_unchanged": true,
+    "quota_settings_preserved": true
+  },
+  "df": {
+    "rounded_total": "110G",
+    "rounded_used": "37G",
+    "rounded_available": "69G",
+    "use_percent": 35,
+    "size_bytes": 117815881728,
+    "used_bytes": 38711189504,
+    "available_bytes": 73749991424
+  },
+  "grown_gpt_copy": {
+    "directory": "/srv/ustar-storage/ssd-ext4-20261011-MCyX9n",
+    "payload_hash_checks": 7,
+    "results": "all_OK",
+    "raw_copy_source_readback": "PASS_by_completed_guarded_command",
+    "geometry": "grown_partition; suitable_table_geometry_for_grown_FS; not_full_filesystem_or_host_backup"
+  },
+  "checks": {
+    "ext4_before": "PASS",
+    "ext4_after": "PASS",
+    "uuid_mount_raw_primary_secondary_gpt_unchanged": "PASS",
+    "kernel_partition_bytes": "PASS_by_completed_guarded_command"
+  },
+  "kernel_messages": [
+    {
+      "utc": "2026-10-11T15:35:13Z",
+      "message": "EXT4-fs (sda2): resizing filesystem from 13106432 to 29304689 blocks"
+    },
+    {
+      "utc": "2026-10-11T15:35:13Z",
+      "message": "EXT4-fs (sda2): resized filesystem to 29304689"
+    }
+  ],
+  "kernel_error_messages_in_supplied_window": false,
+  "kernel_error_scope": "only supplied journal window since resize start; not complete historical or later host health",
+  "result": "EXT4_RESIZED=PASS; UUID_MOUNT_GPT_UNCHANGED=PASS",
+  "not_verified": [
+    "post_resize_shared_service_smoke",
+    "Academy_authenticated_file_SCORM_smoke",
+    "current_cron_status_after_resize",
+    "fresh_scheduled_archive_independent_restore",
+    "reboot_mount",
+    "full_shared_host_recovery"
+  ],
+  "next_operator_step": "read_only_host_container_HTTP_cron_checks_and_short_owner_browser_smoke_then_stage_budget_check",
+  "runbook": "context/runtime/storage_continuation_20261011.md"
+}

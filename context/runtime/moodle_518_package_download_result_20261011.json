@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "source": "owner_terminal_output_supplied_20261011",
+  "owner_message_received_at": "2026-10-11T20:14:42Z",
+  "independently_measured_on_server_by_agent": false,
+  "download_started_utc": "2026-10-11T20:09:23Z",
+  "finished_utc": null,
+  "finish_timestamp_not_printed": true,
+  "directory": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/moodle-518-package-20261011-nnixp4se",
+  "archive": "moodle-5.1.8.tgz",
+  "archive_sha256": "0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c",
+  "sha256_check": "OK",
+  "marker": "MOODLE_518_PACKAGE=PASS; NO_CORE_UPGRADE=YES",
+  "guards_implied_by_exact_command_success": [
+    "trusted_private_parent_and_checkpoint_directory",
+    "accepted_checkpoint_manifest_digest",
+    "existing_coordination_lock_identity_EX_NB_fd8_readonly",
+    "pre_download_4GiB_plus_128MiB_reserve",
+    "bounded_HTTPS_transfer_and_pinned_SHA",
+    "downloaded_file_fsync"
+  ],
+  "archive_extracted": false,
+  "candidate_assembled": false,
+  "core_upgrade_executed": false,
+  "next_step": "prepare_separate_full_addon_candidate_and_verify_copies_without_activation"
+}

@@ -15,12 +15,6 @@
   "policy": "main canonical; new work from refreshed main; old integration/codex/release/prod-sync/snapshot heads are provenance, not current deployments",
   "branches": [
     {
-      "branch": "origin",
-      "sha": "c53723c8d669a1013c518f34abf392143d211d9d",
-      "role": "historical_merged_preserved",
-      "ancestor_of_pre_reconciliation_main": true
-    },
-    {
       "branch": "codex/final-integration-rc-20260827",
       "sha": "156adb5bfc35b7cbbc89809079be2965edc3d8c1",
       "role": "historical_unmerged_preserved",
@@ -746,5 +740,11 @@
       "role": "historical_unmerged_preserved",
       "ancestor_of_pre_reconciliation_main": false
     }
-  ]
+  ],
+  "remote_branch_count_before_reconciliation_branch": 121,
+  "excluded_symbolic_ref": {
+    "ref": "origin/HEAD",
+    "target": "origin/main",
+    "sha": "c53723c8d669a1013c518f34abf392143d211d9d"
+  }
 }

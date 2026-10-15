@@ -84,7 +84,7 @@ Native PHP8.2/8.3, JS/AMD, Mustache, DOM/Playwright, XMLDB, immutable manifest, 
 3. Дальнейшие hardening/HTTPS/retention/ACL/performance — по BACKLOG без выдуманного полного закрытия аудита.
 4. PLAT-01 Moodle5.2/PG17 отложен. Исторические5.3 assets и PR101 сохраняются; перед возобновлением заново выбрать точный target и проверить требования/совместимость. Не переименовывать5.3 experiment в якобы выполненный5.2.
 
-[Все122 remote branch heads и роли](../runtime/repository_state_20261016.json): main — canonical, четыре принятые ветки — provenance консолидации, PR101 — deferred, PR103 — next prototype с базой от обновлённого main. Старые integration/release/prod-sync/snapshot/codex heads не считаются current deployment и не удаляются без отдельной необходимости.
+[121 исходная remote branch и роли](../runtime/repository_state_20261016.json): main — canonical, четыре принятые ветки — provenance консолидации, PR101 — deferred, PR103 — next prototype с базой от обновлённого main. Старые integration/release/prod-sync/snapshot/codex heads не считаются current deployment и не удаляются без отдельной необходимости.
 
 Пульт не установлен, bot token/receiver/delivery не настроены, production не переключался. Same-host бот не доказывает независимый мониторинг потери host. Для больших бэкапов предусмотрена авторизованная ссылка; ключ и незашифрованный transfer kit в Telegram не передаются.
 

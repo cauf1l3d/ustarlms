@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-15'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -25,3 +25,13 @@ state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_points_1_7_6
+
+current_operator_handoff:
+  task: OPS-02
+  runbook: context/runtime/backup_transfer_20261015.md
+  source_commit: e68c887a85d208cb47997fbb29238e712f356f44
+  pr: 102
+  status: scripts_validated_operator_execution_pending
+  owner_instruction_utc: "2026-10-15T10:58:19.319000+00:00"
+  control_panel: deferred_by_owner
+  dated_stack_above: historical_20261005_06_owner_accepted_Moodle518_and_host_update_later

@@ -2,9 +2,9 @@ schema_version: 2
 updated_at: '2026-10-15'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
-stage_label: Пульт → проверка восстановления → Moodle5.3
-current_activity: 'Owner15Oct05:47MSK: build unified control panel first; metrics alerts backup UX remote access. Restore has NOT executed and is deferred until panel readiness. Moodle53 preparation retained.'
-next_task: INF-06
+stage_label: Скрипты переноса и выбранная длительность → проверка восстановления
+current_activity: 'Owner15Oct13:58MSK defers panel; finish chosen restore lifetime and self-contained transfer kit in four steps. Source e68c887a validated59/59 and selected CI; native restore/browser/off-host pending. Moodle518/host update already owner accepted; Moodle53 preparation retained.'
+next_task: OPS-02
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -163,6 +163,8 @@ non_goals:
 - Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
 - Выбор мобильного/B2B стека без согласованного ADR
 next_agent_read:
+- context/runtime/backup_transfer_20261015.md
+- context/runtime/backup_transfer_validation_20261015.json
 - START_HERE.md
 - context/CONTEXT_INDEX.md
 - context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
@@ -408,3 +410,18 @@ control_panel_20261015:
   status: scope_and_sources_defined_implementation_pending
   restore_experiment: deferred_by_owner_until_panel_ready
   separate_host_and_domain: not_yet_specified
+
+backup_transfer_delivery:
+  source_commit: e68c887a85d208cb47997fbb29238e712f356f44
+  pr: 102
+  runbook: context/runtime/backup_transfer_20261015.md
+  validation: context/runtime/backup_transfer_validation_20261015.json
+  owner_instruction_utc: "2026-10-15T10:58:19.319000+00:00"
+  local_and_selected_ci_tests: 59
+  portable_default_duration_seconds: 0
+  lab_default_duration_seconds: 3600
+  transfer_contains_key: true
+  production_execution: pending_owner
+  clean_host_and_browser_acceptance: pending_owner
+  automatic_start_after_reboot: false
+  control_panel: deferred

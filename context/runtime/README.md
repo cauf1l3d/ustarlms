@@ -1,8 +1,6 @@
 # Runtime и эксплуатация
 
-**Приоритет владельца15Oct05:47MSK — INF-06:** сначала [единый пульт сервера и backend Академии](control_panel_scope_20261015.md) с метриками, алертами, бэкапами и защищённым доступом извне. Часовой restore ещё НЕ выполнен и отложен до готовности пульта; PR102 сохранить подготовленным, команды запуска не выполнять. Затем restore/продолжение Moodle5.3. Записи14Oct ниже — предыдущая очередь.
-
-**Текущий приоритет14Oct19:05MSK — OPS-02:** [отдельное восстановление последнего бэкапа на час](backup_restore_experiment_20261014.md), затем продолжить Moodle5.3/PG17 (PR101). Контроллер PR102/source `cdf69bab822b1ecbc352018cb56f542f992e0db5` и выбранный CI готовы; native запуск/браузер/час/off-host ещё pending. Host update и Moodle5.1.8 уже приняты по выводу владельца; не повторять. Ошибка маршрута отложена. Записи06Oct ниже — история, а не текущий следующий шаг.
+**Текущая команда владельца15Oct13:58MSK — OPS-02:** пульт отложен; [скрипты и перенос в четыре этапа](backup_transfer_20261015.md). Стенд: `--start-lab --duration 2h` (30m/2h/1d/0); перенос: `--start`, по умолчанию без таймера. Код PR102 `e68c887a85d208cb47997fbb29238e712f356f44`:59 tests/selected CI PASS; реальный restore/браузер/off-host pending. Moodle5.1.8 и host update ранее приняты владельцем, не повторять; PR101/Moodle5.3 preparation сохранена, ошибка маршрута отложена. Ниже — исторические checkpoints06Oct; их pending не отменяют поздние результаты владельца.
 
 Последний storage checkpoint: [owner GPT/boot copy09:06UTC PASS](ssd_partition_table_copy_result_20261006.json), nine hashes/source cmp и sysadmin console access подтверждены. Следующий [guarded GPT relocation](ssd_gpt_relocate_20261006.md) подготовлен; server GPT write/root growth ещё не выполнены, copy не повторять.
 

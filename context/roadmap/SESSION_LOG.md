@@ -403,3 +403,10 @@ Owner19:05MSK requested latest backup restore, hour runtime and portable clean-h
 ## 2026-10-15 05:47MSK — owner reprioritized INF-06
 
 Owner explicitly says one-hour restore not executed; defer until unified server/Academy backend control panel. Metrics, alerts, backups, remote access and clear usable UI are priorities. [Scope](../runtime/control_panel_scope_20261015.md) defines views, collectors, operations/auth boundaries, independent observer and acceptance. Existing backup/cron schemas inspected; no live-server commands or messages sent. Separate host/domain not specified. OPS-02 deferred; Moodle53 preparation retained.
+
+
+## 2026-10-15 — finish OPS-02 transfer handoff after interrupted agent
+
+Owner13:58:19MSK explicitly deferred the panel and requested duration in the script plus four actions: sudo pack → WinSCP → unpack clean server → start without timer. Shared conversation6ad0c421-5554-83ed-b6d0-b36e78fef38a read; existing code50dfcb7/e68c887a inspected rather than recreated. Source e68c887a contains chosen controller/relay/watchdog lifetime, private self-contained tar+checksum with recovery key, clean Ubuntu dependency bootstrap and generated units.59 root tests repeated locally PASS/no skips; selected Ubuntu24.04 CI38726287776 logs show36+23 and native systemd parsing PASS; context38726287799 SUCCESS. General gate38726287787 failed unchanged Next/sharp npm audit; PHP8.2/8.3 passed, DB/rollback/full RC skipped.
+
+[Four-stage runbook](../runtime/backup_transfer_20261015.md) and [validation](../runtime/backup_transfer_validation_20261015.json) finish the missing publication. Source/production/owner acceptance remain distinct; no archive/key/PII published. Current pointers now OPS-02 and panel deferred; earlier06Oct/05:47MSK entries are history. Implementation bytes are unchanged from e68c887a. Native server1 restore, copied owner archive clean-host restore/browser/lifetime acceptance remain pending; no direct SSH, merge, deployment or public network exposure. Moodle518/host update accepted earlier by owner; do not repeat; PR101 and route defect stay as previously scoped.

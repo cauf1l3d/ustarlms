@@ -1,5 +1,7 @@
 # Индекс контекста USTAR
 
+**15Oct13:58MSK: текущий [backup/restore и перенос в четыре этапа](runtime/backup_transfer_20261015.md), [проверки](runtime/backup_transfer_validation_20261015.json). PR102/source e68c887a; пульт отложен, фактический новый restore pending. Каноническая база main; до merge эти изменения находятся в PR102.**
+
 Актуальность: 06.10.2026. **Канонический код и контекст — main.** Application SHA, dated evidence и выбранный владельцем порядок 1 → 7 → 6: [STATE](roadmap/STATE.yaml).
 
 | Вопрос | Авторитетный источник |

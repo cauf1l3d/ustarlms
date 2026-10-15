@@ -1,0 +1,69 @@
+{
+  "source_code_commit": "e68c887a85d208cb47997fbb29238e712f356f44",
+  "controller_sha256": "9c0d5fefa3e597c7faee275bba68222e2c126d6f768034909467a80bfeaf8f44",
+  "launcher_sha256": "bbd8aafaab4d6a7e3f4fbcb78ff395d52e76452a9ce92bb50d42ebb3b9310708",
+  "owner_instruction_utc": "2026-10-15T10:58:19.319000+00:00",
+  "verification_utc": "2026-10-15T12:28:18.621596+00:00",
+  "local_tests": {
+    "controller": 36,
+    "transfer": 23,
+    "total": 59,
+    "skips": 0,
+    "result": "PASS",
+    "scope": "root filesystem/tar/hash/locks; Docker PostgreSQL age apt and elapsed lifetime modeled"
+  },
+  "selected_ci": {
+    "run": 38726287776,
+    "job": 116392846177,
+    "conclusion": "success",
+    "environment": "Ubuntu24.04 root",
+    "logs_inspected": true,
+    "controller_tests": 36,
+    "transfer_tests": 23,
+    "native_systemd_parser": "legacy and generated duration0/7200 units PASS"
+  },
+  "context_ci": {
+    "run": 38726287799,
+    "conclusion": "success"
+  },
+  "general_review_gate": {
+    "run": 38726287787,
+    "conclusion": "failure",
+    "frontend_job": 116392846701,
+    "logs_inspected": true,
+    "cause": "npm audit unchanged Next/sharp dependencies",
+    "source_php82": "success",
+    "source_php83": "success",
+    "moodle_db_rollback_full_rc": "not_executed"
+  },
+  "duration": {
+    "lab_default_seconds": 3600,
+    "portable_default_seconds": 0,
+    "accepted": "positive m/h/d up to30d, or0",
+    "starts_after": "Moodle login readiness",
+    "zero_disables": "controller/relay/systemd runtime stop",
+    "automatic_start_after_reboot": false
+  },
+  "transfer": {
+    "contains_decryption_key": true,
+    "requires_secret_handling": true,
+    "pack_uses": "last completed verified HDD backup",
+    "new_snapshot": false,
+    "production_stop": false,
+    "new_server": "empty Docker Ubuntu24.04 amd64; optional signed-repository dependency installation",
+    "native_apt_on_clean_machine": "not_executed; modeled in tests"
+  },
+  "native_server1_restore": "PENDING",
+  "owner_archive_clean_server_restore": "PENDING",
+  "browser_roles_scorm_acceptance": "PENDING",
+  "native_elapsed_shutdown_or_unlimited_acceptance": "PENDING",
+  "whole_host_boot_restore": "NOT_TESTED",
+  "production_changed_by_agent": false,
+  "handoff_validation": {
+    "bash_blocks_syntax": 8,
+    "source_hash_pins": "PASS",
+    "relative_runbook_links": "PASS",
+    "context_integrity": "526 source files /93 tables /32 tasks PASS",
+    "implementation_delta_from_source_code_commit": "none"
+  }
+}

@@ -1,8 +1,20 @@
 # USTAR: стенд на заданное время и перенос в четыре этапа
 
-Актуально 15.10.2026. Последняя команда владельца: пульт отложить; закончить скрипт и простую инструкцию. Предыдущая очередь «сначала пульт» отменена. PR102, ветка `codex/restore-experiment-20261014`; исходный код `e68c887a85d208cb47997fbb29238e712f356f44`.
+Актуально 15.10.2026. Последняя команда владельца: пульт отложить; закончить скрипт и простую инструкцию. Предыдущая очередь «сначала пульт» отменена. PR102, ветка `codex/restore-experiment-20261014`; исходный код `1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0`.
 
 [Сборщик/launcher](../../scripts/infra/backup_transfer.py), [контроллер](../../scripts/infra/backup_restore_test.py), [проверки](backup_transfer_validation_20261015.json). Исходники готовы; фактический запуск на server1, перенос архива владельца и браузерная приёмка нового восстановления ещё не подтверждены.
+
+## Правка 15.10: главная USTAR в восстановленной копии
+
+Владелец запустил `--start-lab --duration 2h` из пакета `20261015T124205Z-od28adph`; на `127.0.0.1:18086/` открылась штатная главная Moodle вместо USTAR.
+
+Причина: после production-обновления 5.1.8 работает штатный `public/index.php`, а вход в USTAR задаётся только строкой `$CFG->defaulthomepage = '/local/ustar/home.php';` в production `config.php`. Pinned engine пересобирает `config.php` стенда из своего шаблона и эту строку теряет. У `theme_ustar` нет layout `frontpage`, поэтому `/` рендерит родительский Boost. Данные, тема и плагины в бэкапе целы.
+
+Правка: контроллер читает `config.php` из распакованного бэкапа до перезаписи и переносит в стенд только `defaulthomepage` и `theme` — лишь если это ровно одно безусловное присваивание строкового литерала, значение в допустимом виде, а каталог темы существует в копии. Динамические, условные, закомментированные, внешние и многократные значения не переносятся и называются в отчёте. PHP не исполняется, credentials/wwwroot/mail/cron не читаются. После запуска Moodle проверяется, что перенесённые значения действительно применились; иначе `PRESENTATION_SETTINGS_NOT_EFFECTIVE` до старта relay, стенд останавливается.
+
+В отчёт добавлены `presentation_settings_carried`, `presentation_settings_skipped`, `effective_theme`, `effective_defaulthomepage`; в `--status` — `presentation`. Engine и checker не менялись. Локально: 45 тестов контроллера + 23 переноса = 68 PASS под root.
+
+Действия: текущий стенд пересоздавать не нужно — открыть `/local/ustar/home.php`; следующий стенд запускать уже с исправленными скриптами. Пакет `od28adph` содержит старый контроллер, для нового сервера комплект нужно собрать заново (`--pack`).
 
 ## Перенос в четыре этапа
 
@@ -25,12 +37,12 @@ umask 077
 for ustar_unit in ustar-backup-recovery-20261015.service ustar-restore-test-20261014.service; do
     test "$(systemctl show "$ustar_unit" -p MainPID --value)" = 0
 done
-ustar_source=https://raw.githubusercontent.com/cauf1l3d/ustarlms/e68c887a85d208cb47997fbb29238e712f356f44/scripts/infra
+ustar_source=https://raw.githubusercontent.com/cauf1l3d/ustarlms/1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0/scripts/infra
 ustar_tools=$(mktemp -d /root/ustar-transfer-tools.XXXXXXXX)
 cd "$ustar_tools"
 curl -fsSL --connect-timeout 10 --max-time 60 "$ustar_source/backup_restore_test.py" -o controller.py
 curl -fsSL --connect-timeout 10 --max-time 60 "$ustar_source/backup_transfer.py" -o transfer.py
-printf '%s  %s\n' 9c0d5fefa3e597c7faee275bba68222e2c126d6f768034909467a80bfeaf8f44 controller.py bbd8aafaab4d6a7e3f4fbcb78ff395d52e76452a9ce92bb50d42ebb3b9310708 transfer.py | sha256sum --check --strict -
+printf '%s  %s\n' 4804c27aada3d5f431ccf19cfb174dd8deb1bc6f991d3d9793d6a89b7be9b022 controller.py 6633ba331a15cb08e37b9de8d092141fa56592a79d4959003be68a10870a0c64 transfer.py | sha256sum --check --strict -
 test ! -L /usr/local/sbin/USTAR_BACKUP_RESTORE_TEST_20261014.py
 test ! -L /usr/local/sbin/USTAR_BACKUP_TRANSFER_20261015.py
 install -o root -g root -m 600 controller.py /usr/local/sbin/USTAR_BACKUP_RESTORE_TEST_20261014.py
@@ -134,8 +146,8 @@ sudo systemctl stop ustar-backup-recovery-20261015.service
 
 | Компонент | SHA256 |
 |---|---|
-| `backup_transfer.py` | `bbd8aafaab4d6a7e3f4fbcb78ff395d52e76452a9ce92bb50d42ebb3b9310708` |
-| `backup_restore_test.py` | `9c0d5fefa3e597c7faee275bba68222e2c126d6f768034909467a80bfeaf8f44` |
+| `backup_transfer.py` | `6633ba331a15cb08e37b9de8d092141fa56592a79d4959003be68a10870a0c64` |
+| `backup_restore_test.py` | `4804c27aada3d5f431ccf19cfb174dd8deb1bc6f991d3d9793d6a89b7be9b022` |
 | Private `USTAR_RESTORE_LAB_20261004.py` | `71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac` |
 | Private `USTAR_RESTORE_PREFLIGHT_20261004.py` | `e00577aefcbcdd8ae3ebc1f30f98c899c3efd3b2b4e593b6ce0d26d09e2756da` |
 

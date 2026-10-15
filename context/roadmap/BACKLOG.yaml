@@ -350,8 +350,8 @@ tasks:
   - R15
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/backup_transfer_20261015.md
-  current_scope: scripts_and_four_stage_handoff_validated_native_restore_not_executed
-  implementation_commit: e68c887a85d208cb47997fbb29238e712f356f44
+  current_scope: scripts_and_four_stage_handoff_validated_ustar_homepage_carry_fixed_native_restore_not_executed
+  implementation_commit: 1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0
   validation_evidence:
   - context/runtime/backup_transfer_validation_20261015.json
   production_execution: pending_owner

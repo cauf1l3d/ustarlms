@@ -29,9 +29,9 @@ execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selecte
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/backup_transfer_20261015.md
-  source_commit: e68c887a85d208cb47997fbb29238e712f356f44
+  source_commit: 1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0
   pr: 102
-  status: scripts_validated_operator_execution_pending
+  status: scripts_validated_presentation_carry_fixed_operator_execution_pending
   owner_instruction_utc: "2026-10-15T10:58:19.319000+00:00"
   control_panel: deferred_by_owner
   dated_stack_above: historical_20261005_06_owner_accepted_Moodle518_and_host_update_later

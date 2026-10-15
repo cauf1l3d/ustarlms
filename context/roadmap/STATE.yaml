@@ -412,15 +412,17 @@ control_panel_20261015:
   separate_host_and_domain: not_yet_specified
 
 backup_transfer_delivery:
-  source_commit: e68c887a85d208cb47997fbb29238e712f356f44
+  source_commit: 1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0
   pr: 102
   runbook: context/runtime/backup_transfer_20261015.md
   validation: context/runtime/backup_transfer_validation_20261015.json
   owner_instruction_utc: "2026-10-15T10:58:19.319000+00:00"
-  local_and_selected_ci_tests: 59
+  local_and_selected_ci_tests: 68
   portable_default_duration_seconds: 0
   lab_default_duration_seconds: 3600
   transfer_contains_key: true
+  presentation_carry: homepage_and_theme_restored_from_backup_config
+  repack_required_because_existing_package_has_old_controller: true
   production_execution: pending_owner
   clean_host_and_browser_acceptance: pending_owner
   automatic_start_after_reboot: false

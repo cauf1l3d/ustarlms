@@ -398,3 +398,8 @@ docs-only выпуска; реальные CI runs и exact implementation SHA �
 ## 2026-10-14 — OPS-02 one-hour restore experiment, PR102
 
 Owner19:05MSK requested latest backup restore, hour runtime and portable clean-host instructions. Fresh main c53723c8 base, no application changes. Controller/source cdf69bab822b1ecbc352018cb56f542f992e0db5 reuses exact private engine/verifier, uses independent loopback-only containers and systemd cleanup, retains data. Root33 tests and selected CI38601259566 passed; private synthetic compatibility checked. General review gate failed unchanged frontend npm audit; not full RC. [Runbook](../runtime/backup_restore_experiment_20261014.md), [validation](../runtime/backup_restore_test_validation_20261014.json). Native owner archive/DB/browser/hour/off-host pending; no direct SSH. Host/5.1.8 owner acceptance retained, Moodle53 PR101 next, route defect deferred.
+
+
+## 2026-10-15 05:47MSK — owner reprioritized INF-06
+
+Owner explicitly says one-hour restore not executed; defer until unified server/Academy backend control panel. Metrics, alerts, backups, remote access and clear usable UI are priorities. [Scope](../runtime/control_panel_scope_20261015.md) defines views, collectors, operations/auth boundaries, independent observer and acceptance. Existing backup/cron schemas inspected; no live-server commands or messages sent. Separate host/domain not specified. OPS-02 deferred; Moodle53 preparation retained.

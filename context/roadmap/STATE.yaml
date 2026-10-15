@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-10-14'
+updated_at: '2026-10-15'
 project: USTAR Academy
 stage: selected_infrastructure_remediation_in_progress
-stage_label: Последний бэкап → отдельный стенд на час → off-host recovery → Moodle5.3
-current_activity: 'OPS-02: one-hour latest-backup restore controller and runbook prepared; selected root CI PASS; native server and off-host acceptance pending. Prior host/5.1.8 accepted by owner; Moodle5.3 PR101 retained next.'
-next_task: OPS-02
+stage_label: Пульт → проверка восстановления → Moodle5.3
+current_activity: 'Owner15Oct05:47MSK: build unified control panel first; metrics alerts backup UX remote access. Restore has NOT executed and is deferred until panel readiness. Moodle53 preparation retained.'
+next_task: INF-06
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -401,3 +401,10 @@ restore_experiment_20261014:
   supersedes_older_next_steps: true
   previous_owner_acceptance: host_update_reboot_and_Moodle518_browser_SCORM
   following_work: Moodle53_PG17_PR101
+
+control_panel_20261015:
+  runbook: context/runtime/control_panel_scope_20261015.md
+  task: INF-06
+  status: scope_and_sources_defined_implementation_pending
+  restore_experiment: deferred_by_owner_until_panel_ready
+  separate_host_and_domain: not_yet_specified

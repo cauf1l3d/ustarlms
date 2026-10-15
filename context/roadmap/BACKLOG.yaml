@@ -158,7 +158,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-06
   title: Единый пульт, Telegram и независимый наблюдатель
-  status: planned
+  status: in_progress
   depends_on:
   - INF-05
   acceptance:
@@ -166,6 +166,8 @@ tasks:
   - Failure, NoData, recovery and delivery failure tested with real chosen recipients
   - Independent observer detects loss of host/dashboard; storage/access budgets bounded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  runbook: context/runtime/control_panel_scope_20261015.md
+  owner_priority: panel_before_restore_20261015
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned
@@ -336,7 +338,7 @@ tasks:
   - context/runtime/ssd_storage_preflight_20261006.md
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
-  status: in_progress
+  status: deferred
   depends_on:
   - INF-14
   acceptance:
@@ -348,7 +350,7 @@ tasks:
   - R15
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/backup_restore_experiment_20261014.md
-  current_scope: one_hour_latest_backup_restore_native_pending_offhost_and_host_services_remain_open
+  current_scope: not_executed_deferred_until_control_panel_ready_by_owner_20261015
 - id: PLAT-01
   title: Поддерживаемый major/LTS Moodle 5.3 с миграцией PostgreSQL17+
   status: planned

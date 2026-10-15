@@ -1,5 +1,7 @@
 # Мониторинг: требование и проект, ещё не внедрён
 
+**15Oct текущая задача INF-06:** [пульт, scope и очередь](control_panel_scope_20261015.md). HDD schedule уже работает по позднему owner evidence14Oct; историческое not_installed ниже не актуально. Общий пульт и доставка алертов ещё не внедрены. Restore отложен до их готовности.
+
 05.10.2026: владелец требует **один пульт** с важными метриками и уведомлениями, желательно Telegram. Общей установленной системы и проверенной доставки пока нет. Локальные private logs/status cron уже работают. Источник — [dated evidence](evidence_20261005.yaml), работа — INF-06 в [полном плане](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md).
 
 Предложение аудита: Grafana/Prometheus и ограниченные сборщики. Размещение, retention, роли, receiver/bot/chat и независимый наблюдатель ещё выбираются. Дашборд показывает свежесть/NoData, компоненты хоста, контейнеров, HTTP/PHP, PostgreSQL, cron/USTAR, нужной почты/DNS/ISPConfig и backup. Без personal labels, full Docker socket, cluster superuser и произвольного shell.

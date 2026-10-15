@@ -403,3 +403,8 @@ Owner06:14MSK chose server1/no separate subdomain, login/password, labs addresse
 ## 2026-10-15 13:32MSK — Linear-inspired console styling
 
 Owner requested Linear style. Updated prototype CSS across overview/navigation/tables/login/dialogs/mobile to dark graphite, compact type and violet accent. No JS/action/data changes, no source application/backend/deployment changes. Demo labels retained. Reference https://linear.app/. Native browser visual QA still pending; no optional runtime retesting for unchanged handlers.
+
+
+## 2026-10-15 13:46MSK — recovery page and portable workflow
+
+Owner deferred duration controls and requested one-command lab check plus simple clean-host transfer. Added `#recovery` local/portable four-step instructions, exact existing service start after one-time install, read-only result/status, tunnel/stop commands and clipboard fallback. Portable checklist explicitly excludes key; actual archive via SFTP, separate key and script kit required. UI reports unknown states, not simulated native PASS. JS/jsdom checks pass, native execution/browser visual pending.

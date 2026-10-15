@@ -11,3 +11,5 @@ Manual/browser QA: desktop/mobile, navigation, backup filter and empty state, SS
 Validation performed15Oct: JS syntax PASS; jsdom DOM checks PASS for all views, filters/empty, SSD impact, restore target separation and disabled login fields. Dialog API modeled in jsdom. Native Playwright could not launch because Chromium was absent; browser download failed. Desktop/mobile screenshots and real browser visual/keyboard/layout acceptance remain PENDING; no screenshot success is claimed.
 
 15Oct13:32MSK owner styling update: Linear-inspired dark graphite UI, compact navigation/tables, subtle borders and violet actions. All views/dialog/login styled; JS bytes unchanged. Prototype status and demo/no-live-backend boundaries retained.
+
+Recovery guide added15Oct13:46MSK: navigate Backups → Recovery/transfer or Stands → Verify restore. `#recovery` has local/clean-host modes, one-command start AFTER one-time installation, status/report/tunnel/stop clipboard actions and portable kit TXT checklist. No native calls, archive download, key handling or fake completion. JS/jsdom flow and clipboard fallback pass; native/visual pending.

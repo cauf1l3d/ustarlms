@@ -60,3 +60,11 @@ UI validation15Oct: JS parse и jsdom DOM/navigation/filter/empty/backup-impact/
 ## Owner15Oct13:32MSK — оформление в стиле Linear
 
 UI-прототип переоформлен: тёмный графит, нейтральные поверхности/тонкие границы, компактные sidebar/header/table, мягкий фиолетовый основной акцент, зелёный/янтарный только для статусов. Тема распространяется на overview, все вкладки, login, формы/dialog/toast и mobile breakpoints. Product reference: https://linear.app/. USTAR branding и demo labels сохранены. Script bytes и action/data contracts не изменены. Это визуальная правка прототипа, не внедрение auth/API или подключение server1. Native browser visual acceptance остаётся pending после ранее недоступного Chromium; новых runtime/deployment claims нет.
+
+## Owner15Oct13:46MSK — проверка восстановления и простой перенос
+
+Регулирование длительности отложено. Добавлен маршрут UI `#recovery` из вкладок Бэкапы/Стенды: два режима «На server1» / «На чистом сервере», по четыре шага. После однократной установки контроллера запуск одной командой `sudo -v && sudo -n systemctl start ustar-restore-test-20261014.service`. Это не bootstrap чистой ОС: подготовка зависимостей/ключа/контроллера отдельно и явно показана. Команды копируются или выделяются вручную при отсутствии Clipboard API; кнопки не выполняют их.
+
+Status/report/tunnel/stop доступны отдельно. Report вывод ограничен archive/SHA/time/DB/files/HTTP/image-load; никаких credentials/config. Результаты в UI только «Нет данных/не проверен», без fake PASS. Перенос: точный архив+sidecar, три скрипта+unit, ключ отдельно; скачивается только TXT-список, не архив. Для новой машины явно описаны empty Docker, 5GiB available RAM, private input directory и --load-images; ссылка на pinned runbook3417190 (полный commit3417190f7193e3bede7c801507e27d516e5c91d5).
+
+Validation: JS syntax and jsdom mode/routes/4-step flow/no fabricated result/exact clipboard commands/fallback PASS. Dialog API modeled; native restore and browser visual QA remain pending. Никаких команд на server1 не выполнялось.

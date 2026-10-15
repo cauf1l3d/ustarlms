@@ -57,7 +57,8 @@ class Transfer(unittest.TestCase):
         self.root = self.base / 'restore-data'
         self.selected = {'archive': str(self.archive), 'sha256': t.digest(self.archive), 'identity': str(self.key)}
         self.r = SimpleNamespace(IDENTITY=self.key, HDD=self.base, ROOT=self.root,
-                                 selection=mock.Mock(return_value=self.selected), verify=mock.Mock(), engine=mock.Mock())
+                                 selection=mock.Mock(return_value=self.selected),
+                                 verify=mock.Mock(return_value={'snapshot_completed_utc': '2026-10-15T00:31:00Z'}), engine=mock.Mock())
         self.stack.enter_context(mock.patch.object(t, 'controller', return_value=self.r))
         self.calls = []
         self.inventory = b''
@@ -97,7 +98,21 @@ class Transfer(unittest.TestCase):
         self.assertEqual((kit / 'recovery.key').read_bytes(), self.key.read_bytes())
         self.assertEqual(self.archive.read_bytes(), old)
         self.r.verify.assert_called_once()
+        self.assertEqual(data['snapshot_completed_utc'], '2026-10-15T00:31:00Z')
         self.assertFalse(self.calls)  # No Docker stop or service action in exporter.
+
+    def test_readonly_pack_dispatch_never_loads_source_freeze_worker(self):
+        with mock.patch('sys.argv', ['transfer.py', '--pack']), mock.patch.object(t, 'production') as worker, redirect_stdout(io.StringIO()) as out:
+            t.main()
+        worker.assert_not_called()
+        self.assertIn('"production_stopped": false', out.getvalue())
+        self.assertIn('"snapshot_completed_utc": "2026-10-15T00:31:00Z"', out.getvalue())
+        self.assertFalse(self.calls)
+
+    def test_readonly_pack_refuses_outage_flags_before_selection(self):
+        with mock.patch('sys.argv', ['transfer.py', '--pack', '--acknowledge-outage']):
+            with self.assertRaisesRegex(t.TransferError, 'READONLY_PACK'): t.main()
+        self.r.selection.assert_not_called()
 
     def test_modified_archive_is_rejected(self):
         kit = self.make_kit()
@@ -261,7 +276,7 @@ class Transfer(unittest.TestCase):
 
     def production_args(self):
         return SimpleNamespace(url='http://target-academy', bind='0.0.0.0', http_port=80,
-                               behind_proxy=False, source_stopped=True, install_dependencies=False)
+                               behind_proxy=False, source_stopped=True, start_production_copy=False, install_dependencies=False)
 
     def production_worker(self):
         ep = {'url': 'http://target-academy', 'bind': '0.0.0.0', 'port': 80, 'behind_proxy': False}
@@ -293,6 +308,26 @@ class Transfer(unittest.TestCase):
         with mock.patch.object(t, 'SELF', kit / 'restore.py'), mock.patch.object(t, 'production', return_value=worker), mock.patch.object(t, 'install_dependencies') as bootstrap:
             with self.assertRaisesRegex(t.TransferError, 'NO_OVERWRITE'): t.launch_production(args)
             bootstrap.assert_not_called()
+
+    def test_parallel_copy_launcher_never_declares_source_stopped(self):
+        kit = self.make_kit(); worker = self.production_worker()
+        args = self.production_args(); args.start_production_copy = True; args.source_stopped = False
+        with mock.patch.object(t, 'SELF', kit / 'restore.py'), mock.patch.object(t, 'production', return_value=worker), redirect_stdout(io.StringIO()) as out:
+            t.launch_production(args)
+        unit = (t.UNIT_PATH.parent / 'ustar-production-import-20261015.service').read_text()
+        self.assertIn('--parallel-copy', unit)
+        self.assertNotIn('--source-stopped', unit)
+        self.assertNotIn('ExecStopPost', unit)
+        self.assertNotIn('--duration', unit)
+        self.assertIn('PRODUCTION_COPY_START=SUBMITTED', out.getvalue())
+
+    def test_copy_dispatch_uses_permanent_launcher_without_source_helper(self):
+        with mock.patch('sys.argv', ['transfer.py', '--start-production-copy', '--url', 'http://target-academy']), \
+                mock.patch.object(t, 'launch_production') as launch, mock.patch.object(t, 'production') as worker:
+            t.main()
+        self.assertTrue(launch.call_args.args[0].start_production_copy)
+        self.assertFalse(launch.call_args.args[0].source_stopped)
+        worker.assert_not_called()
 
     def test_frozen_export_rejects_a_different_latest_backup(self):
         with self.assertRaisesRegex(t.TransferError, 'FROZEN_SOURCE_BACKUP_CHANGED'):

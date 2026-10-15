@@ -7,6 +7,8 @@
 Optional --install-dependencies bootstraps missing tools on clean Ubuntu24.04.
 Production migration is explicit: --pack-production freezes the source;
 --start-production restores a permanent Academy on an empty target.
+--start-production-copy restores a permanent parallel copy with mail/cron off;
+use --pack to export the latest completed backup without a new source outage.
 """
 import argparse
 from contextlib import contextmanager
@@ -34,7 +36,7 @@ ENGINE_SHA = '71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac'
 CHECKER = Path('/usr/local/lib/ustar-recovery/USTAR_RESTORE_PREFLIGHT_20261004.py')
 CHECKER_SHA = 'e00577aefcbcdd8ae3ebc1f30f98c899c3efd3b2b4e593b6ce0d26d09e2756da'
 PRODUCTION = Path('/usr/local/sbin/USTAR_PRODUCTION_RESTORE_20261015.py')
-PRODUCTION_SHA = '3edb4de42a84e855302045d307390fb13156e7b9acabcf688fb720c743f42854'
+PRODUCTION_SHA = 'b59e1e0e974138af6a9d5e3acca5c856d03ac4719c2c5a336985bb239c5c66eb'
 SELF = Path(__file__).absolute()
 TRANSFER_PARENT = Path('/srv/ustar-storage/transfers')
 UNIT = 'ustar-backup-recovery-20261015.service'
@@ -134,7 +136,7 @@ def pack(source_receipt=None):
     args = SimpleNamespace(manifest=None, input_directory=None, identity=str(r.IDENTITY))
     selected = r.selection(args)  # Exact last-success, sidecar, HDD mount/UUID.
     print('TRANSFER_PHASE=checking_archive_and_key', flush=True)
-    r.verify(r.engine(selected))  # Streaming age/auth + nested checks; no plaintext restore.
+    preflight = r.verify(r.engine(selected))  # Streaming age/auth + nested checks; no plaintext restore.
     if source_receipt is not None:
         require(source_receipt['archive_sha256'] == selected['sha256'], 'FROZEN_SOURCE_BACKUP_CHANGED')
     archive = Path(selected['archive'])
@@ -165,6 +167,7 @@ def pack(source_receipt=None):
                        for name, (path, expected) in files.items()}
             metadata = {'format': 'ustar-portable-v2', 'contains_private_recovery_key': True,
                         'archive': archive.name, 'files': records,
+                        'snapshot_completed_utc': preflight['snapshot_completed_utc'],
                         'source_frozen_for_migration': source_receipt is not None,
                         'source_frozen_utc': source_receipt.get('frozen_utc') if source_receipt else None}
             import io
@@ -181,6 +184,7 @@ def pack(source_receipt=None):
     print(json.dumps({'directory': str(folder), 'download': ['ustar-transfer.tar', 'ustar-transfer.tar.sha256'],
                       'sha256': checksum, 'bytes': target.stat().st_size,
                       'source_archive': archive.name, 'source_archive_unchanged': True,
+                      'snapshot_completed_utc': preflight['snapshot_completed_utc'],
                       'production_stopped': source_receipt is not None}, indent=2))
 
 
@@ -349,11 +353,12 @@ def production(path=PRODUCTION):
     return module
 
 
-def production_unit(ep, folder):
+def production_unit(ep, folder, parallel_copy=False):
     require(re.fullmatch(r'/[A-Za-z0-9_./-]+', str(folder)) and '..' not in folder.parts,
             'TRANSFER_PATH_NEEDS_SIMPLE_ABSOLUTE_NAME')
     args = ['--restore-production', '--kit', str(folder), '--url', ep['url'],
-            '--bind', ep['bind'], '--http-port', str(ep['port']), '--source-stopped']
+            '--bind', ep['bind'], '--http-port', str(ep['port']),
+            '--parallel-copy' if parallel_copy else '--source-stopped']
     if ep['behind_proxy']: args.append('--behind-proxy')
     return (MANAGED + '[Unit]\nDescription=USTAR production archive import\nRequires=docker.service\nAfter=docker.service\n\n'
             '[Service]\nType=exec\nUMask=0077\nRuntimeMaxSec=1h\nTimeoutStopSec=180\n'
@@ -365,7 +370,9 @@ def launch_production(args):
     validate_kit(folder)
     p = production(folder / PRODUCTION.name)
     ep = p.endpoint(args.url, args.bind, args.http_port, args.behind_proxy)
-    require(args.source_stopped, 'DECLARE_SOURCE_STOPPED_BEFORE_PRODUCTION_ACTIVATION')
+    parallel_copy = args.start_production_copy
+    require(parallel_copy or args.source_stopped, 'DECLARE_SOURCE_STOPPED_BEFORE_PRODUCTION_ACTIVATION')
+    require(not (parallel_copy and args.source_stopped), 'COPY_AND_SOURCE_STOPPED_ARE_SEPARATE_MODES')
     require(not p.ROOT.exists() and not p.ROOT.is_symlink() and not p.TARGET.exists() and not p.TARGET.is_symlink(),
             'EXISTING_PRODUCTION_DATA_NO_OVERWRITE')
     for dst, sha in ((PRODUCTION, PRODUCTION_SHA), (CONTROLLER, CONTROLLER_SHA), (ENGINE, ENGINE_SHA), (CHECKER, CHECKER_SHA)):
@@ -375,7 +382,7 @@ def launch_production(args):
     require(not unit_path.exists() and not unit_path.is_symlink(), 'PRODUCTION_IMPORT_UNIT_COLLISION')
     for name in p.units():
         require(not (UNIT_PATH.parent / name).exists() and not (UNIT_PATH.parent / name).is_symlink(), 'PRODUCTION_RUNTIME_UNIT_COLLISION')
-    text = production_unit(ep, folder)
+    text = production_unit(ep, folder, parallel_copy)
     trusted(UNIT_PATH.parent, directory=True)
     if args.install_dependencies: install_dependencies()
     require(not command(['docker', 'ps', '-aq']).strip(), 'PRODUCTION_START_REQUIRES_EMPTY_DOCKER')
@@ -388,8 +395,9 @@ def launch_production(args):
     write_new(unit_path, text, 0o644)
     command(['systemctl', 'daemon-reload'])
     command(['systemctl', 'start', unit])
-    print('PRODUCTION_START=SUBMITTED; NOT_YET_READY')
-    print(json.dumps({'unit': unit, 'url': ep['url'], 'status': 'sudo python3 -I -B ' + str(PRODUCTION) + ' --production-status'}))
+    print('PRODUCTION_COPY_START=SUBMITTED; NOT_YET_READY' if parallel_copy else 'PRODUCTION_START=SUBMITTED; NOT_YET_READY')
+    print(json.dumps({'unit': unit, 'url': ep['url'], 'parallel_copy': parallel_copy,
+                      'status': 'sudo python3 -I -B ' + str(PRODUCTION) + ' --production-status'}))
 
 
 def parse_duration(value):
@@ -408,11 +416,12 @@ def main():
     modes.add_argument('--pack', action='store_true')
     modes.add_argument('--pack-production', action='store_true', help='Fresh final backup and leave source web stopped for migration')
     modes.add_argument('--start-production', action='store_true', help='Permanent Academy on a clean target')
+    modes.add_argument('--start-production-copy', action='store_true', help='Permanent parallel copy on a clean target; mail/cron off, source keeps running')
     modes.add_argument('--resume-source', action='store_true', help='Abort migration only after the target is stopped')
     modes.add_argument('--start-lab', action='store_true')
     modes.add_argument('--start', action='store_true', help='ISOLATED TEST COPY only; use --start-production for a working Academy')
     ap.add_argument('--install-dependencies', action='store_true',
-                    help='Only with --start: install missing Docker/age/util-linux on clean Ubuntu24.04')
+                    help='With portable start modes: install missing Docker/age/util-linux on clean Ubuntu24.04')
     ap.add_argument('--acknowledge-outage', action='store_true')
     ap.add_argument('--source-stopped', action='store_true')
     ap.add_argument('--target-stopped', action='store_true')
@@ -424,8 +433,9 @@ def main():
     args = ap.parse_args()
     require(os.geteuid() == 0, 'RUN_WITH_SUDO')
     os.umask(0o077)
-    require(not (args.pack or args.pack_production or args.start_production or args.resume_source) or args.duration is None, 'PRODUCTION_OR_PACK_HAS_NO_DURATION')
-    require(not args.install_dependencies or args.start or args.start_production, 'BOOTSTRAP_ONLY_WITH_PORTABLE_START')
+    require(not (args.pack or args.pack_production or args.start_production or args.start_production_copy or args.resume_source) or args.duration is None, 'PRODUCTION_OR_PACK_HAS_NO_DURATION')
+    require(not args.install_dependencies or args.start or args.start_production or args.start_production_copy, 'BOOTSTRAP_ONLY_WITH_PORTABLE_START')
+    require(not args.pack or not (args.acknowledge_outage or args.source_stopped), 'READONLY_PACK_DOES_NOT_ACCEPT_OUTAGE_FLAGS')
     if args.pack_production:
         def interrupted(*_): raise KeyboardInterrupt()
         for sig in (signal.SIGTERM, signal.SIGHUP): signal.signal(sig, interrupted)
@@ -436,7 +446,7 @@ def main():
     elif args.resume_source:
         p = production()
         with p.lock('ustar-source-transfer.lock'): p.resume_source(args.target_stopped)
-    elif args.start_production:
+    elif args.start_production or args.start_production_copy:
         require(args.url, 'PRODUCTION_URL_REQUIRED')
         with launch_lock(): launch_production(args)
     elif args.pack:

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Permanent USTAR recovery on an empty host; source freeze is a separate mode.
 
-No core upgrade. Import authenticates the kit via pinned restore helpers;
-activation requires the operator's source-stopped declaration. Runtime commands
+No core upgrade. Import authenticates the kit via pinned restore helpers.
+Active production requires the operator's source-stopped declaration; a parallel
+copy uses a different URL, disabled mail and no cron. Runtime commands
 operate only on containers recorded with this transaction's label and IDs.
 """
 import argparse
@@ -257,7 +258,7 @@ def write_private(path, value, mode=0o600, gid=0):
         f.write(value.encode() if isinstance(value, str) else value); f.flush(); os.fsync(f.fileno())
 
 
-def write_config(lab, original, password, ep, active=False):
+def write_config(lab, original, password, ep, active=False, parallel_copy=False):
     setup = "require_once(__DIR__ . '/lib/setup.php');"
     require(len(original.encode()) <= 128 * 1024 and original.count(setup) == 1, 'UNSUPPORTED_BACKUP_CONFIG')
     before, after = original.split(setup)
@@ -268,6 +269,10 @@ def write_config(lab, original, password, ep, active=False):
     require(len(urls) == 1 and prefixes == ['mdl_'], 'CONFIG_NEEDS_ONE_STATIC_URL_AND_MDL_PREFIX')
     oldurl = urls[0].rstrip('/')
     require(re.fullmatch(r'https?://[A-Za-z0-9.:-]+(?:/[A-Za-z0-9_./-]+)?', oldurl), 'UNSUPPORTED_SOURCE_URL')
+    def location(url):
+        u = urllib.parse.urlsplit(url)
+        return (u.scheme.lower(), u.hostname.lower(), u.port or (443 if u.scheme == 'https' else 80), u.path.rstrip('/'))
+    require(not parallel_copy or location(ep['url']) != location(oldurl), 'PARALLEL_COPY_NEEDS_DIFFERENT_URL')
     # Preserve original code, salts, theme, homepage and integration settings.
     # Override only environment-bound runtime parameters before setup.php.
     overrides = {
@@ -286,7 +291,8 @@ def write_config(lab, original, password, ep, active=False):
         'cookiesecure': 'true' if ep['url'].startswith('https:') else 'false', 'cookiehttponly': 'true',
         'sslproxy': 'true' if ep['behind_proxy'] and ep['url'].startswith('https:') else 'false',
         'reverseproxy': 'false',
-        'noemailever': 'false' if active else 'true', 'cron_enabled': '1' if active else '0',
+        'noemailever': 'false' if active and not parallel_copy else 'true',
+        'cron_enabled': '1' if active and not parallel_copy else '0',
         'cronclionly': 'true', 'pathtophp': "'/usr/local/bin/php'", 'task_adhoc_concurrency_limit': '3',
     }
     if not active: overrides['maintenance_enabled'] = '1'
@@ -336,16 +342,18 @@ def health(state):
     raise ProductionError('PRODUCTION_LOGIN_HEALTH_FAILED')
 
 
-def units():
+def units(parallel_copy=False):
     runtime = MANAGED + '[Unit]\nDescription=USTAR Academy production\nRequires=docker.service\nAfter=docker.service network-online.target\nWants=network-online.target ustar-academy-cron.timer\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nTimeoutStartSec=180\nTimeoutStopSec=180\nUMask=0077\nExecStart=/usr/bin/python3 -I -B ' + str(SCRIPT) + ' --resume-production\nExecStop=/usr/bin/python3 -I -B ' + str(SCRIPT) + ' --stop-production\n\n[Install]\nWantedBy=multi-user.target\n'
+    if parallel_copy:
+        runtime = runtime.replace('Wants=network-online.target ustar-academy-cron.timer', 'Wants=network-online.target')
     cron = MANAGED + '[Unit]\nDescription=USTAR Academy cron\nPartOf=' + RUNTIME_UNIT + '\nRequires=' + RUNTIME_UNIT + '\nAfter=' + RUNTIME_UNIT + '\n\n[Service]\nType=oneshot\nUMask=0077\nTimeoutStartSec=30min\nExecStart=/usr/bin/python3 -I -B ' + str(SCRIPT) + ' --cron-production\n'
     timer = MANAGED + '[Unit]\nDescription=USTAR Academy minute schedule\nPartOf=' + RUNTIME_UNIT + '\n\n[Timer]\nOnCalendar=*-*-* *:*:00\nAccuracySec=1s\nPersistent=false\nUnit=' + CRON_UNIT + '\n\n[Install]\nWantedBy=timers.target\n'
     return {RUNTIME_UNIT: runtime, CRON_UNIT: cron, CRON_TIMER: timer}
 
 
-def install_units():
+def install_units(parallel_copy=False):
     trusted(UNIT_DIR, directory=True)
-    for name, content in units().items():
+    for name, content in units(parallel_copy).items():
         path = UNIT_DIR / name
         if path.exists() or path.is_symlink():
             trusted(path)
@@ -360,6 +368,7 @@ def load_state():
     s = read(STATE)
     require(s.get('purpose') == 'production' and re.fullmatch('[0-9a-f]{32}', s.get('token', '')),
             'NOT_PRODUCTION_STATE')
+    require(type(s.get('parallel_copy', False)) is bool, 'INVALID_COPY_MODE')
     require(endpoint(**s['endpoint']) == s['endpoint'], 'INVALID_SAVED_ENDPOINT')
     return s
 
@@ -377,6 +386,7 @@ def runtime(mode):
     global LOG
     with lock('ustar-production-cron.lock' if mode == 'cron' else 'ustar-production-runtime.lock'):
         state = load_state()
+        require(mode != 'cron' or not state.get('parallel_copy', False), 'PARALLEL_COPY_CRON_DISABLED')
         trusted(ROOT, directory=True, private=True)
         LOG = (ROOT / 'runtime-private.log').open('ab')
         try:
@@ -403,7 +413,9 @@ def runtime(mode):
 def restore(args):
     global LOG
     ep = endpoint(args.url, args.bind, args.http_port, args.behind_proxy)
-    require(args.source_stopped, 'DECLARE_SOURCE_STOPPED_BEFORE_PRODUCTION_ACTIVATION')
+    parallel_copy = bool(args.parallel_copy)
+    require(parallel_copy or args.source_stopped, 'DECLARE_SOURCE_STOPPED_BEFORE_PRODUCTION_ACTIVATION')
+    require(not (parallel_copy and args.source_stopped), 'COPY_AND_SOURCE_STOPPED_ARE_SEPARATE_MODES')
     require(not ROOT.exists() and not ROOT.is_symlink() and not TARGET.exists() and not TARGET.is_symlink(),
             'EXISTING_PRODUCTION_DATA_NO_OVERWRITE')
     require(not command(['docker', 'ps', '-aq']).stdout.strip(), 'EMPTY_DOCKER_HOST_REQUIRED')
@@ -423,7 +435,8 @@ def restore(args):
     mkdir_private(ROOT)
     LOG = (ROOT / 'restore-private.log').open('xb'); os.chmod(ROOT / 'restore-private.log', 0o600)
     lab._LOG = LOG
-    state = {'purpose': 'production', 'phase': 'extracting', 'token': uuid.uuid4().hex,
+    state = {'purpose': 'production', 'parallel_copy': parallel_copy,
+             'phase': 'extracting', 'token': uuid.uuid4().hex,
              'endpoint': ep, 'containers': {}, 'images': images, 'selection': selected,
              'preflight': preflight, 'started_utc': datetime.now(timezone.utc).isoformat()}
     save(STATE, state)
@@ -447,7 +460,7 @@ def restore(args):
         for name in ('cache', 'localcache', 'temp', 'muc', 'sessions', 'locks'):
             (runtime_dir / name).mkdir(mode=0o700); os.chown(runtime_dir / name, 33, 33)
         password = uuid.uuid4().hex + uuid.uuid4().hex
-        oldurl = write_config(lab, original, password, ep)
+        oldurl = write_config(lab, original, password, ep, parallel_copy=parallel_copy)
         # The public web entry must use exactly the rewritten root config.
         public_config = CODE / 'public/config.php'
         require(public_config.is_file() and not public_config.is_symlink(), 'PUBLIC_CONFIG_MISSING')
@@ -456,6 +469,9 @@ def restore(args):
         os.replace(temporary, public_config)
         write_private(ROOT / 'pg.env', 'POSTGRES_USER=ustar_restore_admin\nPOSTGRES_DB=postgres\nPOSTGRES_PASSWORD=' + uuid.uuid4().hex + uuid.uuid4().hex + '\nPOSTGRES_INITDB_ARGS=--auth-host=scram-sha-256\n')
         write_private(ROOT / 'production.ini', 'memory_limit=512M\nmax_input_vars=5000\ndisplay_errors=Off\nlog_errors=On\n')
+        if parallel_copy:
+            with (ROOT / 'production.ini').open('a') as ini:
+                ini.write('sendmail_path=/bin/false\n')
         write_private(ROOT / 'apache.conf', 'ServerName localhost\n<VirtualHost *:80>\nDocumentRoot /var/www/html/public\n<Directory /var/www/html/public>\nRequire all granted\nAllowOverride All\n</Directory>\nErrorLog /proc/self/fd/2\nCustomLog /proc/self/fd/1 combined\n</VirtualHost>\n')
         require(not command(['docker', 'ps', '-aq']).stdout.strip(), 'DOCKER_HOST_NO_LONGER_EMPTY')
         command(['docker', 'network', 'create', '--driver', 'bridge', '--label', LABEL + '=' + state['token'], NETWORK])
@@ -481,20 +497,30 @@ def restore(args):
         require(verify_database(state) == state['counts_before'], 'RESTORED_COUNTS_OR_TASK_FLAGS_CHANGED')
         # Moodle's API updates both the DB and its configuration cache.
         exec_owned('web', state, ['php', '-r', "define('CLI_SCRIPT',true);require '/var/www/html/config.php';set_config('maintenance_enabled',0);"], user='33:33')
-        write_config(lab, original, password, ep, active=True)
+        write_config(lab, original, password, ep, active=True, parallel_copy=parallel_copy)
         effective = json.loads(exec_owned('web', state, ['php', '-r', "define('CLI_SCRIPT',true);require '/var/www/html/config.php';echo json_encode(['url'=>$CFG->wwwroot,'cron'=>(int)$CFG->cron_enabled,'mail'=>(bool)$CFG->noemailever,'maintenance'=>(bool)$CFG->maintenance_enabled]);"], user='33:33').stdout)
-        require(effective == {'url': ep['url'], 'cron': 1, 'mail': False, 'maintenance': False}, 'PRODUCTION_CONFIG_NOT_EFFECTIVE')
+        require(effective == {'url': ep['url'], 'cron': 0 if parallel_copy else 1,
+                              'mail': parallel_copy, 'maintenance': False}, 'PRODUCTION_CONFIG_NOT_EFFECTIVE')
         health(state)
         state.update(phase='activating', old_url=oldurl, task_flags_preserved=True, core_upgrade_executed=False)
-        save(STATE, state); install_units()
-        command(['systemctl', 'enable', RUNTIME_UNIT, CRON_TIMER])
+        save(STATE, state); install_units(parallel_copy)
+        if parallel_copy:
+            command(['systemctl', 'disable', '--now', CRON_TIMER])
+            command(['systemctl', 'enable', RUNTIME_UNIT])
+        else:
+            command(['systemctl', 'enable', RUNTIME_UNIT, CRON_TIMER])
         # Import lock and runtime lock are distinct; this cannot deadlock ExecStart.
         command(['systemctl', 'start', RUNTIME_UNIT], timeout=180)
-        command(['systemctl', 'start', CRON_TIMER])
+        if not parallel_copy:
+            command(['systemctl', 'start', CRON_TIMER])
         state = read(STATE); require(state['phase'] == 'ready', 'RUNTIME_ACTIVATION_NOT_READY')
-        print('PRODUCTION_RESTORE=PASS; PERMANENT; BOOT_ENABLED; CRON_ENABLED', flush=True)
+        print('PRODUCTION_COPY=PASS; PERMANENT; BOOT_ENABLED; MAIL_OFF; CRON_OFF' if parallel_copy else
+              'PRODUCTION_RESTORE=PASS; PERMANENT; BOOT_ENABLED; CRON_ENABLED', flush=True)
         print(json.dumps({'url': ep['url'], 'file_references_verified': state['file_references_verified'],
-                          'task_flags_preserved': True, 'manual_browser_and_SMTP': 'PENDING'}))
+                          'snapshot_completed_utc': preflight['snapshot_completed_utc'],
+                          'parallel_copy': parallel_copy, 'mail_enabled': not parallel_copy,
+                          'cron_enabled': not parallel_copy,
+                          'task_flags_preserved': True, 'manual_browser_acceptance': 'PENDING'}))
     except BaseException as exc:
         state['phase'] = 'failed'; state['failure_type'] = type(exc).__name__; save(STATE, state)
         # Disable boot/cron first if activation failed part-way. Never delete recovered data.
@@ -609,12 +635,18 @@ def main():
     ap.add_argument('--kit'); ap.add_argument('--url'); ap.add_argument('--bind', default='0.0.0.0')
     ap.add_argument('--http-port', type=int, default=80); ap.add_argument('--behind-proxy', action='store_true')
     ap.add_argument('--source-stopped', action='store_true'); ap.add_argument('--target-stopped', action='store_true')
+    ap.add_argument('--parallel-copy', action='store_true', help='Permanent second copy with mail/cron disabled; source may keep running')
     args = ap.parse_args()
     require(os.geteuid() == 0, 'RUN_WITH_SUDO'); os.umask(0o077)
     if args.production_status:
         if not STATE.exists(): print(json.dumps({'phase': 'not_started'})); return
         s = load_state()
-        print(json.dumps({k: s.get(k) for k in ('phase', 'endpoint', 'task_flags_preserved', 'file_references_verified', 'last_cron_success_utc', 'failure_type')}, indent=2)); return
+        result = {k: s.get(k) for k in ('phase', 'endpoint', 'task_flags_preserved', 'file_references_verified', 'last_cron_success_utc', 'failure_type')}
+        result.update(parallel_copy=s.get('parallel_copy', False),
+                      mail_enabled=not s.get('parallel_copy', False),
+                      cron_enabled=not s.get('parallel_copy', False),
+                      snapshot_completed_utc=s['preflight']['snapshot_completed_utc'])
+        print(json.dumps(result, indent=2)); return
     def interrupted(*_): raise KeyboardInterrupt()
     for sig in (signal.SIGTERM, signal.SIGHUP): signal.signal(sig, interrupted)
     if args.restore_production:

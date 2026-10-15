@@ -57,8 +57,14 @@ jobs:
               if name == 'production_restore':
                   for filename, text in module.units().items():
                       Path('/tmp', filename).write_text(text)
+                  copydir = Path('/tmp/ustar-copy-unit-check')
+                  copydir.mkdir(exist_ok=True)
+                  for filename, text in module.units(parallel_copy=True).items():
+                      (copydir / filename).write_text(text)
               else:
                   ep = {'url': 'http://target-academy', 'bind': '0.0.0.0', 'port': 80, 'behind_proxy': False}
                   Path('/tmp/ustar-production-import.service').write_text(module.production_unit(ep, Path('/opt/ustar-transfer')))
+                  Path('/tmp/ustar-production-copy-import.service').write_text(module.production_unit(ep, Path('/opt/ustar-transfer'), parallel_copy=True))
           PYGEN
           systemd-analyze verify /tmp/ustar-academy.service /tmp/ustar-academy-cron.service /tmp/ustar-academy-cron.timer /tmp/ustar-production-import.service
+          systemd-analyze verify /tmp/ustar-copy-unit-check/ustar-academy.service /tmp/ustar-copy-unit-check/ustar-academy-cron.service /tmp/ustar-copy-unit-check/ustar-academy-cron.timer /tmp/ustar-production-copy-import.service

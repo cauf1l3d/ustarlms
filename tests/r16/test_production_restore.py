@@ -77,6 +77,7 @@ class Production(unittest.TestCase):
         self.selected = {'archive': '/fixture/backup.age', 'sha256': 'a' * 64, 'identity': '/fixture/key'}
         self.preflight = {'site': {'expanded_file_bytes': 100, 'regular_files': 10, 'directories': 8},
                           'payload_bytes': 100, 'database_dump_bytes': 100, 'images_archive_bytes': 50,
+                          'snapshot_completed_utc': '2026-10-15T00:31:00Z',
                           'application_versions': ['local_ustar=2026100204', 'theme_ustar=2026100202']}
         def payload():
             (p.ROOT / 'payload').mkdir()
@@ -97,7 +98,7 @@ class Production(unittest.TestCase):
                                  verify=mock.Mock(return_value=self.preflight), local_images=mock.Mock(return_value={'pg': 'sha256:pg', 'web': 'sha256:web'}))
         self.stack.enter_context(mock.patch.object(p, 'controller', return_value=self.r))
         self.args = SimpleNamespace(url='http://new-academy', bind='0.0.0.0', http_port=80,
-                                    behind_proxy=False, source_stopped=True, kit=str(self.base))
+                                    behind_proxy=False, source_stopped=True, parallel_copy=False, kit=str(self.base))
         self.original_runtime = p.runtime
 
     def command(self, args, data=None, source=None, timeout=60, optional=False):
@@ -155,7 +156,12 @@ class Production(unittest.TestCase):
                 php = args[-1]
                 if 'needs_upgrade' in php: out = json.dumps({'needs_upgrade': False, 'url': self.args.url}).encode()
                 elif 'maintenance_enabled' in php and 'json_encode' not in php: out = b'1' if self.maintenance else b'0'
-                else: out = json.dumps({'url': self.args.url, 'cron': 1, 'mail': False, 'maintenance': False}).encode()
+                else:
+                    config = (p.CODE / 'config.php').read_text()
+                    out = json.dumps({'url': self.args.url,
+                                      'cron': int('$CFG->cron_enabled = 1;' in config),
+                                      'mail': '$CFG->noemailever = true;' in config,
+                                      'maintenance': False}).encode()
         elif args[:2] == ['systemctl', 'start'] and args[-1] == p.RUNTIME_UNIT:
             oldlog = p.LOG
             try: self.original_runtime('resume')
@@ -192,6 +198,56 @@ class Production(unittest.TestCase):
         self.assertFalse(any(c['State']['Running'] for c in self.inventory.values()))
         self.assertFalse(any(c[:2] == ['systemctl', 'enable'] for c in self.calls))
         self.assertFalse(any(c[:2] == ['docker', 'rm'] for c in self.calls))
+
+    def test_parallel_copy_is_permanent_preserves_data_and_never_enables_background(self):
+        self.args.parallel_copy, self.args.source_stopped = True, False
+        out = self.restore()
+        state = p.read(p.STATE)
+        self.assertTrue(state['parallel_copy'])
+        self.assertEqual(state['phase'], 'ready')
+        self.assertEqual(state['counts_before'], self.counts)
+        self.assertIn('PRODUCTION_COPY=PASS', out)
+        self.assertIn('BOOT_ENABLED; MAIL_OFF; CRON_OFF', out)
+        self.assertIn(['systemctl', 'enable', p.RUNTIME_UNIT], self.calls)
+        self.assertIn(['systemctl', 'disable', '--now', p.CRON_TIMER], self.calls)
+        self.assertFalse(any(c[:2] == ['systemctl', 'enable'] and p.CRON_TIMER in c for c in self.calls))
+        self.assertNotIn(['systemctl', 'start', p.CRON_TIMER], self.calls)
+        self.assertNotIn('ustar-academy-cron.timer', (p.UNIT_DIR / p.RUNTIME_UNIT).read_text())
+        self.assertIn('sendmail_path=/bin/false', (p.ROOT / 'production.ini').read_text())
+        text = (p.CODE / 'config.php').read_text()
+        for expected in ("$CFG->noemailever = true;", "$CFG->cron_enabled = 0;", 'SALT_MUST_SURVIVE', "'/local/ustar/home.php'"):
+            self.assertIn(expected, text)
+        self.assertFalse(any('UPDATE mdl_task_scheduled' in q for q in self.db))
+        self.assertFalse(any(c[0] == 'python3' for c in self.calls))  # No source backup/freeze helper.
+
+    def test_parallel_copy_cannot_run_cron_even_by_manual_service_start(self):
+        self.args.parallel_copy, self.args.source_stopped = True, False
+        self.restore(); self.calls.clear()
+        with self.assertRaisesRegex(p.ProductionError, 'PARALLEL_COPY_CRON_DISABLED'):
+            p.runtime('cron')
+        self.assertFalse(self.calls)
+
+    def test_parallel_copy_reboot_resume_keeps_background_disabled_without_reimport(self):
+        self.args.parallel_copy, self.args.source_stopped = True, False
+        self.restore()
+        for c in self.inventory.values(): c['State']['Running'] = False
+        self.calls.clear(); p.runtime('resume')
+        self.assertTrue(p.read(p.STATE)['parallel_copy'])
+        self.assertTrue(all(c['State']['Running'] for c in self.inventory.values()))
+        self.assertFalse(any('pg_restore' in c or p.CRON_TIMER in c for c in self.calls))
+        self.assertIn('$CFG->cron_enabled = 0;', (p.CODE / 'config.php').read_text())
+
+    def test_parallel_copy_refuses_same_canonical_source_address(self):
+        p.CODE.mkdir(parents=True)
+        for url in ('http://old-academy', 'http://OLD-ACADEMY:80/'):
+            with self.assertRaisesRegex(p.ProductionError, 'DIFFERENT_URL'):
+                p.write_config(self.lab, ORIGINAL, 'a' * 64, p.endpoint(url), active=True, parallel_copy=True)
+        self.assertFalse((p.CODE / 'config.php').exists())
+
+    def test_copy_and_cutover_flags_cannot_be_mixed(self):
+        self.args.parallel_copy = True
+        with self.assertRaisesRegex(p.ProductionError, 'SEPARATE_MODES'): self.restore()
+        self.assertFalse(p.ROOT.exists())
 
     def test_resume_after_reboot_reuses_exact_ids_and_does_not_restore_again(self):
         self.restore(); ids = {k: v['Id'] for k, v in self.inventory.items()}
@@ -257,10 +313,12 @@ class Production(unittest.TestCase):
         p.CODE.mkdir(parents=True)
         (p.CODE / 'lib').mkdir()
         (p.CODE / 'lib/setup.php').write_text("<?php echo json_encode(['session'=>$CFG->session_handler_class,'db'=>$CFG->dbhost,'salt'=>$CFG->passwordsaltmain,'cron'=>$CFG->cron_enabled]);")
-        p.write_config(self.lab, ORIGINAL, 'a' * 64, p.endpoint('http://new-academy'), active=True)
-        result = subprocess.run(['php', str(p.CODE / 'config.php')], capture_output=True, check=True)
-        value = json.loads(result.stdout)
-        self.assertEqual(value, {'session': r'\core\session\file', 'db': 'ustar_postgres', 'salt': 'SALT_MUST_SURVIVE', 'cron': 1})
+        for parallel_copy in (False, True):
+            with self.subTest(parallel_copy=parallel_copy):
+                p.write_config(self.lab, ORIGINAL, 'a' * 64, p.endpoint('http://new-academy'), active=True, parallel_copy=parallel_copy)
+                result = subprocess.run(['php', str(p.CODE / 'config.php')], capture_output=True, check=True)
+                value = json.loads(result.stdout)
+                self.assertEqual(value, {'session': r'\core\session\file', 'db': 'ustar_postgres', 'salt': 'SALT_MUST_SURVIVE', 'cron': 0 if parallel_copy else 1})
 
     def test_multiple_urls_or_prefixes_refuse_without_evaluating_php(self):
         p.CODE.mkdir(parents=True)

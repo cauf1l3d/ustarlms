@@ -8,7 +8,7 @@
 | local_ustar | Организация и lifecycle сотрудника, маршруты, evidence, адаптация, грейды, рабочие задачи, лента, награды | `moodle/local/ustar` |
 | theme_ustar | Native layout, Mustache, SCSS, responsive navigation, бренд | `moodle/theme/ustar`; parent `boost` |
 | Native browser UI | PHP controllers вызывают доменные сервисы и выводят шаблоны; JS/AMD выполняет разрешённые команды | `local/ustar/*.php`, `templates/`, `amd/`, `styles/` |
-| Дополнительный web client | Next.js + React, server-side Moodle session/token adapter | `frontend/`; по ответу владельца 05.10 в production не используется |
+| Legacy web client | Исторический Next.js + React, сохранён без активной разработки | `frontend/`; исключён из active CI/release по owner16Oct |
 | Context tooling | Индексы, source/schema maps, сбор runtime evidence | `scripts/`, `harness/ustar-contextd` |
 
 ## Жизненный цикл

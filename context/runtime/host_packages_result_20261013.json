@@ -1,0 +1,438 @@
+{
+  "kind": "owner_refreshed_APT_and_boot_shared_storage_metadata",
+  "received_at": "2026-10-13T15:04:42+03:00",
+  "boot_inventory_measured_at": "2026-10-13T12:04:03Z",
+  "independently_measured_by_agent": false,
+  "raw_upload_published": false,
+  "raw_upload_sha256": "5e9fbed3d31a08123d89c6f3097ef37be8642c31f83112a561da6510ac65086c",
+  "APT": {
+    "catalog_refresh": "completed_before_simulation",
+    "appstream_warnings": "No_origin_for_existing_DEP11_files_update_continued_into_simulation",
+    "upgraded": 38,
+    "new": 25,
+    "removed": 0,
+    "not_upgraded": 0,
+    "candidate_changes": [
+      {
+        "package": "motd-news-config",
+        "installed_version": "13ubuntu10.4",
+        "candidate_version": "13ubuntu10.5",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "base-files",
+        "installed_version": "13ubuntu10.4",
+        "candidate_version": "13ubuntu10.5",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "docker-ce-cli",
+        "installed_version": "5:29.7.2-1~ubuntu.24.04~noble",
+        "candidate_version": "5:29.9.0-1~ubuntu.24.04~noble",
+        "APT_origin_and_architecture": "Docker CE:noble [amd64]"
+      },
+      {
+        "package": "containerd.io",
+        "installed_version": "2.3.4-1~ubuntu.24.04~noble",
+        "candidate_version": "2.4.1-2~ubuntu.24.04~noble",
+        "APT_origin_and_architecture": "Docker CE:noble [amd64]"
+      },
+      {
+        "package": "docker-ce",
+        "installed_version": "5:29.7.2-1~ubuntu.24.04~noble",
+        "candidate_version": "5:29.9.0-1~ubuntu.24.04~noble",
+        "APT_origin_and_architecture": "Docker CE:noble [amd64]"
+      },
+      {
+        "package": "libopeniscsiusr",
+        "installed_version": "2.1.9-3ubuntu5.4",
+        "candidate_version": "2.1.9-3ubuntu5.5",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "open-iscsi",
+        "installed_version": "2.1.9-3ubuntu5.4",
+        "candidate_version": "2.1.9-3ubuntu5.5",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "libaudit-common",
+        "installed_version": "1:3.1.2-2.1build1.1",
+        "candidate_version": "1:3.1.2-2.1ubuntu0.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "libaudit1",
+        "installed_version": "1:3.1.2-2.1build1.1",
+        "candidate_version": "1:3.1.2-2.1ubuntu0.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "krb5-locales",
+        "installed_version": "1.20.1-6ubuntu2.8",
+        "candidate_version": "1.20.1-6ubuntu2.10",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "libapparmor1",
+        "installed_version": "4.0.1really4.0.1-0ubuntu0.24.04.7",
+        "candidate_version": "4.0.1really4.0.1-0ubuntu0.24.04.8",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "libgssapi-krb5-2",
+        "installed_version": "1.20.1-6ubuntu2.8",
+        "candidate_version": "1.20.1-6ubuntu2.10",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "libkrb5-3",
+        "installed_version": "1.20.1-6ubuntu2.8",
+        "candidate_version": "1.20.1-6ubuntu2.10",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "libkrb5support0",
+        "installed_version": "1.20.1-6ubuntu2.8",
+        "candidate_version": "1.20.1-6ubuntu2.10",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "libk5crypto3",
+        "installed_version": "1.20.1-6ubuntu2.8",
+        "candidate_version": "1.20.1-6ubuntu2.10",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "netplan-generator",
+        "installed_version": "1.1.2-8ubuntu1~24.04.2",
+        "candidate_version": "1.1.2-8ubuntu1~24.04.3",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "python3-netplan",
+        "installed_version": "1.1.2-8ubuntu1~24.04.2",
+        "candidate_version": "1.1.2-8ubuntu1~24.04.3",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "netplan.io",
+        "installed_version": "1.1.2-8ubuntu1~24.04.2",
+        "candidate_version": "1.1.2-8ubuntu1~24.04.3",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "libnetplan1",
+        "installed_version": "1.1.2-8ubuntu1~24.04.2",
+        "candidate_version": "1.1.2-8ubuntu1~24.04.3",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "python-apt-common",
+        "installed_version": "2.7.7ubuntu5.2",
+        "candidate_version": "2.7.7ubuntu5.3",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "python3-apt",
+        "installed_version": "2.7.7ubuntu5.2",
+        "candidate_version": "2.7.7ubuntu5.3",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "apparmor",
+        "installed_version": "4.0.1really4.0.1-0ubuntu0.24.04.7",
+        "candidate_version": "4.0.1really4.0.1-0ubuntu0.24.04.8",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "dmidecode",
+        "installed_version": "3.5-3ubuntu0.1",
+        "candidate_version": "3.5-3ubuntu0.2",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "libx11-data",
+        "installed_version": "2:1.8.7-1build1",
+        "candidate_version": "2:1.8.7-1ubuntu0.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [all]"
+      },
+      {
+        "package": "libx11-6",
+        "installed_version": "2:1.8.7-1build1",
+        "candidate_version": "2:1.8.7-1ubuntu0.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "ubuntu-release-upgrader-core",
+        "installed_version": "1:24.04.28",
+        "candidate_version": "1:24.04.29",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "python3-distupgrade",
+        "installed_version": "1:24.04.28",
+        "candidate_version": "1:24.04.29",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "docker-buildx-plugin",
+        "installed_version": "0.36.1-1~ubuntu.24.04~noble",
+        "candidate_version": "0.38.0-1~ubuntu.24.04~noble",
+        "APT_origin_and_architecture": "Docker CE:noble [amd64]"
+      },
+      {
+        "package": "docker-ce-rootless-extras",
+        "installed_version": "5:29.7.2-1~ubuntu.24.04~noble",
+        "candidate_version": "5:29.9.0-1~ubuntu.24.04~noble",
+        "APT_origin_and_architecture": "Docker CE:noble [amd64]"
+      },
+      {
+        "package": "docker-compose-plugin",
+        "installed_version": "5.5.0-1~ubuntu.24.04~noble",
+        "candidate_version": "5.6.0-1~ubuntu.24.04~noble",
+        "APT_origin_and_architecture": "Docker CE:noble [amd64]"
+      },
+      {
+        "package": "linux-firmware",
+        "installed_version": "20240318.git3b128b60-0ubuntu2.29",
+        "candidate_version": "20240318.git3b128b60.0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-amd-graphics",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.3",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-amd-misc",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-broadcom-wireless",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-intel-graphics",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-intel-misc",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-intel-wireless",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-marvell-prestera",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-marvell-wireless",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-mediatek",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-mellanox-spectrum",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-misc",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-netronome",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-nvidia-graphics",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-qlogic",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-qualcomm-graphics",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-qualcomm-misc",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-qualcomm-wireless",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-firmware-realtek",
+        "installed_version": null,
+        "candidate_version": "20240318.git3b128b60-0ubuntu3.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [all]"
+      },
+      {
+        "package": "linux-modules-6.8.0-147-generic",
+        "installed_version": null,
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-image-6.8.0-147-generic",
+        "installed_version": null,
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-modules-extra-6.8.0-147-generic",
+        "installed_version": null,
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-generic",
+        "installed_version": "6.8.0-146.146",
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-image-generic",
+        "installed_version": "6.8.0-146.146",
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-headers-6.8.0-147",
+        "installed_version": null,
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [all]"
+      },
+      {
+        "package": "linux-headers-6.8.0-147-generic",
+        "installed_version": null,
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-headers-generic",
+        "installed_version": "6.8.0-146.146",
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-libc-dev",
+        "installed_version": "6.8.0-146.146",
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-tools-common",
+        "installed_version": "6.8.0-146.146",
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [all]"
+      },
+      {
+        "package": "linux-tools-6.8.0-147",
+        "installed_version": null,
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "linux-tools-6.8.0-147-generic",
+        "installed_version": null,
+        "candidate_version": "6.8.0-147.147",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-security [amd64]"
+      },
+      {
+        "package": "sosreport",
+        "installed_version": "4.10.2-0ubuntu0~24.04.1",
+        "candidate_version": "4.11.2-0ubuntu0~24.04.1",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      },
+      {
+        "package": "thermald",
+        "installed_version": "2.5.6-2ubuntu0.24.04.5",
+        "candidate_version": "2.5.6-2ubuntu0.24.04.6",
+        "APT_origin_and_architecture": "Ubuntu:24.04/noble-updates [amd64]"
+      }
+    ],
+    "packages_installed_in_this_command": false
+  },
+  "running_kernel": "6.8.0-139-generic",
+  "installed_kernel_fallbacks": [
+    "6.8.0-139-generic",
+    "6.8.0-146-generic"
+  ],
+  "candidate_kernel": "6.8.0-147-generic",
+  "GRUB_DEFAULT": "0",
+  "default_kernel_image": "/boot/vmlinuz-6.8.0-146-generic",
+  "DPKG_audit": "no_diagnostics_in_output",
+  "free_bytes": {
+    "SSD_root_and_boot": 62750203904,
+    "HDD": 475042938880
+  },
+  "selected_live_logical_bytes": {
+    "/etc": 5419948,
+    "/var/lib/mysql": 217780433,
+    "/var/vmail": 10135,
+    "/var/spool/postfix": 3661626,
+    "/var/lib/bind": 0,
+    "/var/www": 325196,
+    "/var/snap/lxd/common/lxd": 0
+  },
+  "ISPConfig_path_observation": "/usr/local/ispconfig_missing_or_link_not_disambiguated",
+  "MariaDB_metadata": "ACCESS_DENIED_1045_root_without_password_no_engine_or_datadir_proof",
+  "dovecot_global_mail_location": "maildir:/var/vmail/%d/%n",
+  "dovecot_global_mail_home": "empty",
+  "Docker": {
+    "version": "29.7.2",
+    "live_restore": false,
+    "running_names": [
+      "ustar_patch_stage_20261005_web",
+      "ustar_patch_stage_20261005_pg",
+      "ustar_recovery_lab_20261004_web",
+      "ustar_recovery_lab_20261004_pg",
+      "ustar_moodle",
+      "ustar_postgres"
+    ]
+  },
+  "AppArmor": "previous_PASS_repeated_in_upload_no_new_repair_required",
+  "host_package_install_or_reboot": false,
+  "next": "shared_services_cold_private_SSD_root_file_archive_before_38_plus_25_package_update_and_reboot"
+}

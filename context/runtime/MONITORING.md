@@ -1,36 +1,19 @@
-# Мониторинг: требование и проект, ещё не внедрён
+# Метрики и алерты Академии
 
-05.10.2026: владелец требует **один пульт** с важными метриками и уведомлениями, желательно Telegram. Общей установленной системы и проверенной доставки пока нет. Локальные private logs/status cron уже работают. Источник — [dated evidence](evidence_20261005.yaml), работа — INF-06 в [полном плане](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md).
+Owner16Oct выбрал [пульт с Telegram](control_panel_telegram_20261016.md) следующей задачей. Общий backend/бот/проверенная доставка пока не внедрены. Прототип PR103 показывает UI; demo values не являются метриками.
 
-Предложение аудита: Grafana/Prometheus и ограниченные сборщики. Размещение, retention, роли, receiver/bot/chat и независимый наблюдатель ещё выбираются. Дашборд показывает свежесть/NoData, компоненты хоста, контейнеров, HTTP/PHP, PostgreSQL, cron/USTAR, нужной почты/DNS/ISPConfig и backup. Без personal labels, full Docker socket, cluster superuser и произвольного shell.
-
-| Сигнал | Значение / правило |
+| Контур | Что показывать |
 |---|---|
-| Cron process | Last start/finish, exit, duration; exit 0 не заменяет task outcome |
-| Cron freshness | Предложение: >5 мин без успеха вне согласованного окна; порог ещё не утверждён |
-| Enabled task overdue | Учитывать effective-enabled/overrides/timezone и индивидуальное расписание. 17 COMPONENT_DISABLED отдельно |
-| Task failure | Новые ошибки отличаются от исторического failed24h и disabled H5P/registration; incident grouping/recovery |
-| Adhoc | Queue age/size/failed и динамика; не только total |
-| Backup pause | Причина/время начала/допустимое окно и завершение. Backup-lock не бесконечное подавление алерта |
-| Storage | Место, inode, абсолютный остаток, growth, SMART; предложения 80%/90% требуют согласования |
-| HTTP/PHP/DB | Ready/latency/error/locks/worker saturation; latency thresholds после PERF-01 |
-| Host/dashboard lost | Отдельный наблюдатель вне этого хоста и heartbeat. Same-host пульт не обнаруживает собственную полную потерю |
-| Backup | Сейчас `not_installed` для регулярности; позднее success/transfer/checksum/restore freshness по принятой политике |
+| Host | CPU/load/RAM/swap, SSD/HDD bytes+inode/growth, SMART observation age, uptime/boot |
+| Academy | HTTP readiness/latency, exact container state/identity, PHP/DB availability, selected error rate |
+| Cron | last start/finish/exit/duration, fresh success, effective-enabled overdue, adhoc age/new failures |
+| Backup | latest completed file/time/bytes/hash/mount, last run failure/resume, offsite/restore age separately |
+| Labs | URL/port/state/purpose and expiry; source prod distinct |
+| Shared services | Apache/mail/DNS/ISPConfig/MariaDB availability in measured scope |
+| Observer | heartbeat/NoData and loss of host/panel from outside this host |
 
-## Расписания USTAR для правильного смысла метрик
+Наличие process exit0 не отменяет task-level failure. Исторические17/18 overdue и2 failed/disabled H5P/registration не превращать в новые incidents и не обнулять ради зелёного UI. Snapshot age, collector age и NoData всегда видимы.
 
-Defaults PR76; production overrides и timezone проверяются отдельно.
+Пороги/retention/resource budgets фиксируются при реальном collector baseline. Failure/recovery/NoData и сбой самой Telegram доставки нужно испытать с реальным разрешённым получателем. Same-host бот/пульт не является независимым монитором потери всего host.
 
-| Класс задачи | Период |
-|---|---|
-| reconcile_competitions, process_work_tasks, submit_grade_requests | Каждые 5 мин |
-| enrich_feed_sources | Минуты 2, 7, …, 57 |
-| import_feed_sources | Каждые 15 мин |
-| sync_enrolments | Каждые 30 мин |
-| reconcile_reporting | Минута 5 часа |
-| reconcile_rewards | Минуты 10 и 40 |
-| renew_acting_assignments | 03:20 по применяемой Moodle timezone |
-
-Telegram сообщение: среда, компонент, проблема, время, ссылка на закрытый пульт. Tokens/PII/полные request URLs не отправляются. Получатели, резервный канал и подтверждение инцидента выбираются при внедрении. Наличие contact point не является доказательством доставки из корпоративной сети.
-
-**Закрывающий evidence:** controlled failure/NoData, фактическое получение, dedup и recovery; проверка независимого observer и сбоя самой доставки; бюджет хранения. Ни auto-restart, ни auto-cleanup этим проектом не разрешаются.
+Получатели Telegram и токен пока не настроены. Не отправлять PII, recovery key, config, полные DB/log output. `/backup latest` выбирает проверенный immutable encrypted archive; для крупного файла — авторизованная download-ссылка пульта, а не ложное обещание upload большого private kit через обычный Bot API.

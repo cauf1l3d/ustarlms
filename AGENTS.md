@@ -1,23 +1,29 @@
-# USTAR — инструкции агентам
+# USTAR инструкции агентам
 
-**Owner15Oct06:14MSK — INF-06:** [пульт](context/runtime/control_panel_scope_20261015.md) на server1, без отдельного поддомена; login/password, метрики/алерты/стенды с адресами и активностью/SFTP/manual backup/restore. Сначала пульт, затем часовой restore (ещё не выполнялся), затем Moodle5.3. Host/5.1.8 уже приняты по owner output. Интерактивный UI-макет подготовлен, auth/backend/deployment pending. Записи06Oct ниже исторические.
+Текущая инструкция владельца16Oct00:20MSK: актуализировать GitHub и сверить работу с06Oct с аудитом. Архив получен, инструкция передана сисадмину, результат восстановления ожидается. Следующий этап — пульт с Telegram. **Moodle5.2/PostgreSQL17 отложены.** Старые поручения запускать storage/patch/reboot или подготовку5.3 не являются текущей задачей.
 
-**Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Текущая карта и следующий шаг](context/runtime/server_map_20261006.md).
+## Перед работой
 
-Перед любой задачей читать [START_HERE.md](START_HERE.md), затем `context/project.yaml`, `context/CONTEXT_INDEX.md`, `context/architecture/`, `context/decisions/`, `context/domains/`, `context/runtime/`, `context/code_map/`, `context/tasks/ACTIVE.md`, `context/agents/astra.md` и `context/roadmap/AGENT_PROTOCOL.md`.
+Читать [START_HERE](START_HERE.md), [project](context/project.yaml), [индекс](context/CONTEXT_INDEX.md), [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md), [сверку аудита](context/audits/AUDIT_RECONCILIATION_20261016_RU.md), затем relevant architecture/decisions/domains/runtime/code_map и [протокол](context/roadmap/AGENT_PROTOCOL.md).
 
-Код и текущий контекст теперь совместно поддерживаются в **main**. Новые ветки создавать от обновлённого main; PR направлять в main. Старые integration/codex ветки и release mirrors — provenance, не актуальная база. Точный application baseline и отдельно deployment evidence — в `context/roadmap/STATE.yaml`.
+`main` содержит канонический код и контекст. Новые ветки от свежего main; PR в main. [Старые ветки](context/runtime/repository_state_20261016.json) сохраняют историю. Различать exact application baseline, repository head, core/runtime и факт deployment.
 
-Текущая инструкция владельца имеет приоритет над историческим планом. Код описывает реализацию, ADR — согласованные границы, серверные наблюдения — deployment. Не подменять один источник другим. Не объявлять missing evidence багом и не объявлять CI production-приёмкой.
+## Область продукта и тестов
 
-Сохранять Moodle core / local plugin / theme boundaries. Не вводить второй store сотрудников, completion, кошелька или чатов. Не удалять историю, не менять реальные роли по строкам должностей, не выполнять миграцию из старого персонального плана. Записи проверяют real actor, capability, current scope, sesskey/эквивалентный API contract, revision, locks и idempotency по реализации домена. View-as не предоставляет права записи.
+Рабочий UI: `moodle/local/ustar`, `moodle/theme/ustar` (theme_ustar, parent boost). `frontend/` — legacy, исключён из активного CI и release manifests/archives. Не обновлять его зависимости ради текущего gate. JS/AMD, Mustache, PHP и browser tests native UI сохраняются. Будущий server-console — отдельный operations UI, не возобновление legacy Next.js.
 
-Database changes требуют XMLDB install/upgrade parity и release gate. Source code меняется в `moodle/`, не в исторических `release/` копиях. Не публиковать config.php, токены, dumps, moodledata или персональные журналы. Не запускать CLI probe на production, пока не проверен его write impact.
+Не повторять принятые действия: SSD/GPT/ext4, Moodle5.1.8 upgrade/repeat/browser, AppArmor repair, r6 cold archive, host install/reboot. Точные границы — в STATE/аудите. Новая копия сисадмина ещё не принята; нет основания объявлять полный DR завершённым.
 
-DOC-02 завершён PR78. Владелец дал следующую команду: выполнить пункты **1 → 7 → 6**, остальные после них. Сейчас `INF-01` в работе; далее patch Moodle/CI/обслуживание ОС (`INF-09`, `INF-08`, `INF-10-OS`), затем HTTPS (`INF-07`). Историческое ожидание после DOC-02 больше не действует. Текущие границы и evidence — в STATE/ACTIVE и `context/runtime/baseline_20261005.md`. Сохранять стабильный web, нужные почту/DNS/ISPConfig, один cron v3 и историю.
+## Инварианты
 
-Читать `context/audits/AUDIT_RECONCILIATION_20261005_RU.md` вместе с оригиналом аудита. Root occupancy тестовым стендом — гипотеза владельца, не основание удалить его. Автокопии теперь настраиваются до нового стенда на HDD после проверки и настройки; SERVEREXPRESS не автоматическая цель. Exact500GB HDD overwrite/format разрешён владельцем/sysadmin: surface write/read zero errors и новый long SMART Completed without error подтверждены. SMART20:44:52UTC pending0/reallocated0/offlineUNC1; residual198 не объявлять очищенным или доказанно историческим. HDD target и producer PR91 настроены/check/fresh trial PASS; scheduler PR92 установлен: owner report received06Oct08:02UTC, timer active/enabled, first event07Oct00:30UTC/03:30MSK; first scheduled run/boot recovery pending. [Timer contract](context/runtime/hdd_backup_schedule_20261006.md). PR86 planning20:44:34UTC PASS:526 USTAR hashes/57 addon metadata, exact storage report получен. [Согласованный checkpoint и отдельный workspace](context/runtime/lab_cold_checkpoint_20261005.md) подготовлены; server execution, candidate upgrade/repeat/paired rollback впереди. [Текущий patch CI](context/runtime/patch_runtime_20261005.md). Разовые страховочные копии перед изменениями сохраняются. Mobile/Privacy/B2B — отдельные последующие проекты, не бесконечная зависимость финального backup-этапа.
+- Сохранять границы core/plugin/theme и одну модель сотрудников, completion/evidence, кошелька и сообщений. View-as и строка должности не дают прав записи.
+- Любой write проверяет реального actor, capability, current scope, sesskey/API contract, revision, locks и idempotency. Не исправлять реальные роли/историю/персональные данные по предположению.
+- XMLDB install/upgrade parity и release gate обязательны при schema changes. Не править исторические release-копии вместо `moodle/`.
+- Не публиковать config.php, токены, dumps, moodledata, private logs или ключи. Не запускать PHP/Moodle probe на проде до проверки его write impact.
+- Исходники, ADR, CI и owner receipts отвечают на разные вопросы. CI с modeled Docker/SQL не доказывает native restore. Не объявлять missing evidence багом.
+- Обновлять STATE/ACTIVE/BACKLOG/SESSION_LOG и generated inventories при поставке. Датированные оригинальные отчёты и аудит05/06Oct сохранять.
+- Уже данное пользователем разрешение действует в пределах задачи. Документы не являются причиной повторно запрашивать подтверждение. GitHub cleanup не разрешает остановку Академии или отправку бэкапа/ключа в Telegram.
 
-Каждая поставка содержит точный implementation SHA, реально выполненные проверки и отдельный deployment status. Обновлять STATE/ACTIVE/BACKLOG/SESSION_LOG и generated code map при изменении исходников. Документация не является причиной повторно запрашивать уже данное пользователем разрешение.
+## Следующая задача
 
-SSD boot/GPT copy owner06Oct09:06UTC [PASS](context/runtime/ssd_partition_table_copy_result_20261006.json), console access сисадмина подтверждён. Следующий шаг — [GPT relocation only](context/runtime/ssd_gpt_relocate_20261006.md); server write/root growth pending. Copy и console question не повторять; actual rescue medium/boot test не приписывать. First scheduled HDD run07Oct03:30MSK проверяется отдельно и не блокирует этот storage шаг.
+[INF-06 пульт и Telegram](context/runtime/control_panel_telegram_20261016.md): same-host, логин/пароль, Linear style, метрики/свежесть, адреса/сроки стендов, SFTP, ручные backup/restore, алерты и выдача последнего проверенного зашифрованного архива. Сначала защищённый read-only срез; операции — через ограниченные проверенные adapters, не произвольный shell. Runtime acceptance на настоящем сервере остаётся отдельной.

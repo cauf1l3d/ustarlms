@@ -1,5 +1,7 @@
 # USTAR Academy — инфраструктурный и архитектурный аудит
 
+**Последующее свидетельство 11.10:** [GPT relocation PASS; root partition/ext4 прежние](../runtime/storage_continuation_20261011.md). Эта ссылка дополняет полный срез06Oct; исходные датированные выводы ниже не являются live-состоянием11Oct.
+
 **Актуальная редакция:** 06.10.2026, по состоянию на 15:39 МСК / 12:39 UTC.
 
 **Объект:** [cauf1l3d/ustarlms](https://github.com/cauf1l3d/ustarlms), сервер `server1`, `192.168.1.60`. GitHub проверен до `bfe6137a6fc57dffd5d11a9a465f7e86263a2c81` — PR96. Application baseline остаётся PR76: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Последующие инфраструктурные и контекстные PR не означают обновление приложения в production.

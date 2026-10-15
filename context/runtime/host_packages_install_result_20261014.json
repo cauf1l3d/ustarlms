@@ -1,0 +1,42 @@
+{
+  "kind": "owner_guarded_cached_host_install_acceptance",
+  "received_at": "2026-10-14T04:18:01+03:00",
+  "independently_measured_by_agent": false,
+  "implementation_commit": "d000e80092da653cc369c2a6d37677cfcd56b1c3",
+  "helper_sha256": "c753cf2e2b4ebdd0c7ff690614f6f2ec14435d035fdea6051cfe45d70e5947d1",
+  "download_hash_check": "PASS",
+  "unit": "ustar-host-packages-20261014.service",
+  "invocation_id": "afcdde4bf53f460e810336e71a308e92",
+  "reported_status": {
+    "kind": "approved_cached_host_package_install",
+    "phase": "complete_reboot_pending",
+    "started_at": "2026-10-14T01:08:25.711288+00:00",
+    "updated_at": "2026-10-14T01:12:55.066500+00:00",
+    "package_install_started": true,
+    "apt_pid": 2892686,
+    "apt_exit_status": 0,
+    "installed_versions_verified": 63,
+    "new_kernel_boot_files_verified": true,
+    "services_resumed": true,
+    "container_identities_and_policies_preserved": true,
+    "critical_config_bytes_preserved": true,
+    "reboot_executed": false,
+    "reboot_acceptance": "PENDING"
+  },
+  "native_unit": {
+    "MainPID": 0,
+    "Result": "success",
+    "ExecMainStatus": 0,
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "duration_seconds": 269.355212,
+  "runtime_versions_source_guard_inference": {
+    "Docker": "29.9.0",
+    "containerd": "2.4.1",
+    "AppArmor_active_and_Docker_enforcing": true
+  },
+  "installation_acceptance": "CLOSED",
+  "host_reboot_and_boot_acceptance_verified": false,
+  "next": "native_maintenance_flock_guarded_reboot_then_selected_boot_runtime_HDD_checks"
+}

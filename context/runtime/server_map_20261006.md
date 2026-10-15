@@ -1,5 +1,11 @@
 # Карта server1 и хранение перед новым стендом
 
+**Статус16Oct:** архив получен/инструкция передана; результат restore ожидается. Следующий этап — пульт/Telegram, Moodle5.2/PG17 отложены. Текущие статусы и остаток — [сверка](../audits/AUDIT_RECONCILIATION_20261016_RU.md); прежние next-step/порядок ниже относятся к своей дате.
+
+[Owner stage result11Oct](lab_stage_prepare_result_20261011.json), [authenticated SCORM screenshot нового стенда](lab_stage_browser_result_20261011.json) и [следующая загрузка проверенного пакета5.1.8](lab_patch_package_handoff_20261011.md).
+
+**Дополнение 11.10:** [GPT/partition/ext4 PASS и текущая точка](storage_continuation_20261011.md). Partition234437519sectors/ext4 resize15:35:13UTC/29304689blocks, df110G/37used/69free/35%; UUID/mount/quota/GPT unchanged. Owner post-check15:44:55UTC получен: четыре containers running, proxy/backend login200, cron v3 exit0/no new failures; screenshot authenticated SCORM. AppArmor failed открыт в ОС части. PR87 --prepare-stage owner18:55:53..19:17:02UTC PASS: frozen checkpoint63431entries/full hashes/bootstrap PASS; новая workspace login200,526 USTAR/57 addon metadata/4910 contenthashes проверены, source lab resumed/production unchanged. CoreDB2025100601.03 прежний, upgrade=false. Owner screenshot19:53:07UTC: authenticated SCORM6/20/30percent с текстом/изображениями на18085. Это partial browser smoke; next pinned package download и full-addon candidate upgrade/repeat/paired rollback preparation. [Receipt](post_resize_checks_20261011.json). Ниже — историческая карта06Oct; её GPT/grow/resize pending заменены actual результатами11Oct.
+
 Текущая команда владельца **06.10.2026 00:45:07 MSK /05.10 21:45:07 UTC**: до нового стенда оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD. Это заменяет прежний порядок «регулярные копии в самом конце». `PR87 --prepare-stage` приостановлен. Прямого SSH у агента нет; ниже датированный вывод владельца, а не live query.
 
 ## Новый read-only проход 06Oct
@@ -141,3 +147,12 @@ Existing `/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py`, SHA0d31e694db8bee23090
 4. Проверить первый scheduled backup и boot recovery; дополнить карту путей/UUID/schedules/recovery procedure по новым результатам. Затем пересчитать budget и вернуться к стенду/Moodle/OS/HTTPS.
 
 Owner authorization покрывает этот storage/map/automatic-backup проход. Production DB hardening, массовая очистка Docker, продуктовые изменения и удаление истории не добавлены в scope. HDD GPT/ext4/mount/fstab и копирование прежнего архива **выполнены владельцем**. Producer install/check/fresh trial и timer installation/status подтверждены; source deletion, SSD expansion, boot mount/recovery verification и first scheduled run ещё без execution evidence.
+
+
+**Дополнение11Oct — scheduled/dry-run:** [owner evidence](ssd_growth_preflight_result_20261011.json): latest11Oct backup complete/success/exited0, marker=false, timer active/enabled; growpart dry-run size234437519/end234441614. [Следующий guarded partition-only шаг](storage_continuation_20261011.md), ext4 отдельно после raw/kernel PASS. Server root growth ещё не выполнен.
+
+
+**Последний owner checkpoint11Oct15:21:56UTC:** [partition growth PASS](ssd_partition_grow_result_20261011.json), root partition120032009728bytes/kernel234437519sectors, raw CRC/boot PASS. Ext4 ещё53683945472bytes/df49G; [следующий online ext4 resize](storage_continuation_20261011.md). Ранее pending partition growth в карте/дополнениях заменён этим actual результатом.
+
+
+**Последний owner checkpoint11Oct15:35:13UTC:** [online ext4 PASS](ssd_ext4_resize_result_20261011.json),29304689blocks/df110G/37used/69free/35%; UUID/mount/quota/raw GPT прежние. [Owner post-check15:44:55UTC](post_resize_checks_20261011.json): root69G/HDD447G available, containers running, login200, cron exit0/no new failures, visible authenticated SCORM. AppArmor failed и functional mail/DNS/ISPConfig acceptance отдельно открыты. PR87 prepare18:55:53..19:17:02UTC PASS; authenticated SCORM screenshot новой workspace принят в видимой области; next pinned package download и candidate upgrade/repeat/paired rollback preparation. [Receipt](lab_stage_prepare_result_20261011.json).

@@ -1,0 +1,46 @@
+{
+  "kind": "owner_route_refresh_later_readonly_database_observation",
+  "received_at": "2026-10-14T13:29:01+03:00",
+  "independently_measured_by_agent": false,
+  "source": "owner_native_psql_20_selected_rows_and_prior_name_filtered_diagnostic",
+  "aggregate_only_no_employee_identifiers": true,
+  "pointid": 53,
+  "reported_rows": 20,
+  "distinct_learners": 10,
+  "version_numbers_present": [
+    2,
+    3
+  ],
+  "version2": {
+    "rows": 10,
+    "lifecycle_rows_missing": 10,
+    "progress_rows_missing": 10,
+    "scope": "older_policy_versions_do_not_by_themselves_block_version3"
+  },
+  "version3": {
+    "rows": 10,
+    "passed_with_route_progress_complete_and_Moodle_completion_2": 8,
+    "failed_zero_score_active_without_route_progress": 1,
+    "null_score_active_zero_persisted_attempt_count_without_route_progress": 1
+  },
+  "matching_screenshot_score": {
+    "score": 23.5,
+    "passscore": 17.5,
+    "matching_learners": 2,
+    "all_version3_lifecycle_passed": true,
+    "all_version3_progress_complete": true,
+    "all_Moodle_completion_state_2": true
+  },
+  "prior_diagnostic_result": "NO_MATCHING_ATTEMPTS",
+  "prior_diagnostic_limitation": "quiz_name_filter_did_not_select_known_attempts_no_missing_attempt_or_progress_conclusion",
+  "hypothesis_of_unsaved_pass": "not_supported_by_current_DB_sample",
+  "metadata_still_missing": [
+    "current_effective_published_version",
+    "progress_expiry_for_screenshot_candidates",
+    "browser_render_after_this_DB_observation",
+    "actual_served_source_hashes"
+  ],
+  "source_code_and_grades_changed": false,
+  "exact_display_failure_cause_verified": false,
+  "next": "fresh_browser_reload_if_issue_persists_bounded_current_version_expiry_read_no_grade_reset"
+}

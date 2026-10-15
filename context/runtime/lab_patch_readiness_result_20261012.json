@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "evidence_source": "owner_pasted_SSH_stdout_not_independent_agent_query",
+  "helper_implementation": "587971b65b15b9dd07ae3a03b2a73d129c3e08b9",
+  "helper_sha256": "2942e58967980d1d8adcc63c04d996d8798d642724bfead2c66380aee32bc9f9",
+  "download_checksum": "PASS",
+  "installed_checksum": "PASS",
+  "installed_path": "/usr/local/sbin/USTAR_LAB_PATCH_READINESS_CLI_20261012.py",
+  "stdout_status": "LAB_PATCH_READINESS=PASS; NOT_ACTIVATED; NO_CORE_UPGRADE",
+  "operator_report": {
+    "PHP_execution_scope": "builtins_in_existing_stage_no_Moodle_or_candidate_bootstrap",
+    "SQL_execution_scope": "existing_stage_bounded_BEGIN_READ_ONLY_only",
+    "activation_database_growth_budget_included": false,
+    "addon_metadata_matching": 57,
+    "addon_root_composer_declarations": [
+      {
+        "addon_root": "public/admin/tool/mulib",
+        "composer_lock_preserved": false,
+        "dependency_resolution_verified": false,
+        "extension_requirement_count": 0,
+        "package_requirement_count": 2,
+        "php_requirement_declared": false,
+        "production_requirement_count": 2,
+        "vendor_directory_preserved": true
+      },
+      {
+        "addon_root": "public/admin/tool/murelation",
+        "composer_lock_preserved": false,
+        "dependency_resolution_verified": false,
+        "extension_requirement_count": 0,
+        "package_requirement_count": 3,
+        "php_requirement_declared": false,
+        "production_requirement_count": 3,
+        "vendor_directory_preserved": false
+      },
+      {
+        "addon_root": "public/blocks/xp",
+        "composer_lock_preserved": false,
+        "dependency_resolution_verified": false,
+        "extension_requirement_count": 0,
+        "package_requirement_count": 1,
+        "php_requirement_declared": false,
+        "production_requirement_count": 1,
+        "vendor_directory_preserved": false
+      },
+      {
+        "addon_root": "public/filter/filtercodes",
+        "composer_lock_preserved": false,
+        "dependency_resolution_verified": false,
+        "extension_requirement_count": 0,
+        "package_requirement_count": 1,
+        "php_requirement_declared": false,
+        "production_requirement_count": 1,
+        "vendor_directory_preserved": false
+      },
+      {
+        "addon_root": "public/mod/customcert",
+        "composer_lock_preserved": false,
+        "dependency_resolution_verified": false,
+        "extension_requirement_count": 0,
+        "package_requirement_count": 2,
+        "php_requirement_declared": false,
+        "production_requirement_count": 2,
+        "vendor_directory_preserved": false
+      }
+    ],
+    "addon_roots_preserved": 19,
+    "available_free_bytes": 70402650112,
+    "available_free_inodes": 6667273,
+    "candidate_activated": false,
+    "candidate_directory": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/patch-candidate-518-20261012-0v8ncwgu",
+    "candidate_entries": 44174,
+    "candidate_file_readback_hashes": "PASS",
+    "candidate_manifest_sha256": "07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459a",
+    "candidate_offline_config_static": "PASS",
+    "composer_executed": false,
+    "containers_mutated": false,
+    "core_platform_requirements": {
+      "optional_extensions": [
+        "exif",
+        "soap",
+        "tokenizer"
+      ],
+      "php_minimum": "8.2.0",
+      "postgres_minimum_major": 15,
+      "required_extensions": [
+        "ctype",
+        "curl",
+        "dom",
+        "fileinfo",
+        "filter",
+        "gd",
+        "hash",
+        "iconv",
+        "intl",
+        "json",
+        "mbstring",
+        "openssl",
+        "pcre",
+        "pgsql",
+        "simplexml",
+        "sodium",
+        "spl",
+        "xml",
+        "xmlreader",
+        "zip",
+        "zlib"
+      ]
+    },
+    "core_upgrade_executed": false,
+    "custom_home_runtime_verified": false,
+    "full_addon_compatibility_verified": false,
+    "kind": "accepted_candidate_readonly_platform_preflight",
+    "lab_network": "loopback_only",
+    "measured_at": "2026-10-11T22:56:35.760345+00:00",
+    "minimum_free_after_bytes": 4294967296,
+    "original_root_vendor_present_in_checkpoint": false,
+    "paired_restore_space_verified": false,
+    "patch_upgrade_rollback_verified": false,
+    "preserved_extra_file_readback_hashes": "PASS",
+    "production_containers_unchanged": true,
+    "read_only": true,
+    "result": "PASS",
+    "root_vendor_present_in_candidate": false,
+    "runtime": {
+      "apache_php_settings_verified": false,
+      "bound_lab_ini_listed_as_scanned": false,
+      "bound_lab_ini_loaded_as_main": false,
+      "bound_lab_ini_readable_by_cli_user": false,
+      "cli_process_isolation_policy": [
+        "memory_limit=512M",
+        "sendmail_path=/bin/false",
+        "display_errors=Off",
+        "log_errors=On"
+      ],
+      "cli_process_memory_and_mail_verified": true,
+      "native_cli_mail_disabled": false,
+      "native_php_cli": {
+        "int_size": 8,
+        "max_input_vars": "5000",
+        "memory_limit": "512M",
+        "sapi": "cli",
+        "scanned_ini_basenames": [
+          "docker-php-ext-gd.ini",
+          "docker-php-ext-intl.ini",
+          "docker-php-ext-opcache.ini",
+          "docker-php-ext-pdo_pgsql.ini",
+          "docker-php-ext-pgsql.ini",
+          "docker-php-ext-sodium.ini",
+          "docker-php-ext-zip.ini",
+          "moodle.ini"
+        ],
+        "sendmail_path": "/usr/sbin/sendmail -t -i",
+        "sendmail_path_matches_bin_false": false,
+        "version": "8.3.33"
+      },
+      "optional_php_extensions_missing": [
+        "exif",
+        "soap"
+      ],
+      "persistent_php_configuration_changed": false,
+      "php_cli": {
+        "int_size": 8,
+        "max_input_vars": "5000",
+        "memory_limit": "512M",
+        "sapi": "cli",
+        "scanned_ini_basenames": [
+          "docker-php-ext-gd.ini",
+          "docker-php-ext-intl.ini",
+          "docker-php-ext-opcache.ini",
+          "docker-php-ext-pdo_pgsql.ini",
+          "docker-php-ext-pgsql.ini",
+          "docker-php-ext-sodium.ini",
+          "docker-php-ext-zip.ini",
+          "moodle.ini"
+        ],
+        "sendmail_path": "/bin/false",
+        "sendmail_path_matches_bin_false": true,
+        "version": "8.3.33"
+      },
+      "postgres_version_num": "160015",
+      "required_php_extensions": "PASS",
+      "stage_enabled_tasks": 0,
+      "stage_original_core_db_and_addon_versions": "PASS"
+    },
+    "runtime_dependency_compatibility_verified": false,
+    "ustar_matching_files": 526
+  },
+  "scope_notes": [
+    "Accepted candidate files/config/overlays and original stage DB/core/addon versions passed the readonly platform preflight",
+    "CLI user cannot read the bound private INI; effective per-process settings512M/binfalse passed, native CLI sender remains unchanged",
+    "Apache settings, Composer resolution, full-addon/application acceptance and paired rollback remain unverified",
+    "No candidate activation, core upgrade or persistent configuration mutation"
+  ]
+}

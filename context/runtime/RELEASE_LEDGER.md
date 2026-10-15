@@ -332,3 +332,272 @@ audit05Oct hash и история не переписаны. Полный ост
 свидетельства включены в новую редакцию; публикация документа не закрывает риски.
 Local Markdown/link/JSON/YAML/context checks и exports проверяются для этого
 docs-only выпуска; реальные CI runs и exact implementation SHA фиксируются в PR.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — стратегии импортированы; owner GPT relocation PASS
+
+Изучен shared dialogue до final PR96 и текущий main с PR97. Владелец прислал
+результат операции started14:40:15UTC: nine copy checks OK, raw pre/post GPT
+CRC/entry array/boot/kernel geometry PASS, native verify без проблем,
+GPT_RELOCATED=PASS; ROOT_PARTITION_SIZE_UNCHANGED=PASS. Root df49G/37used/11free/78%,
+sda2 start4096/size104851456 sectors. Finish timestamp не напечатан.
+[Evidence](../runtime/ssd_gpt_relocate_result_20261011.json),
+[продолжение](../runtime/storage_continuation_20261011.md).
+
+Четыре owner strategy attachments сохранены без изменения bytes; receipt hashes
+и reconciliation показывают дату2025/источники2026, противоречие storage-first,
+непроверенные коммерческие/правовые/конкурентные выводы. Вложения не принимают
+новый ADR/очередь. STATE/ACTIVE/BACKLOG/entrypoints/index обновлены; audit05Oct
+и dated JSON сохранены. Full audit06Oct дополнен только ссылкой на новый execution
+result. Source приложения, frontend, infra helpers, workflow/harness не изменены.
+
+Следующий operator step: pinned scheduler --status и growpart -N, без partition
+write/backup capture/install/recovery. Server dry-run, scheduled acceptance, root
+growth, full-addon stage/paired rollback/production patch/OS/HTTPS ещё впереди.
+Новых серверных операций агент не выполнял. Проверки и точный implementation SHA
+для этого docs-only выпуска фиксируются в GitHub PR; CI не является server acceptance.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — последний scheduled backup и growth dry-run PASS; partition-only команда
+
+Owner прислал scheduler --status: последний11Oct00:30:00.847420..00:31:44.442026UTC
+complete/success/exited0, last backup success00:31:43.444339UTC, marker=false;
+timer active/enabled/next12Oct00:30UTC. Это один latest run, не история07–10Oct
+и не fresh restore. Actual growpart -N: start4096, old size104851456/end104855551,
+new size234437519/end234441614; GUID/sda1/root start/type/PARTUUID прежние.
+[Evidence](../runtime/ssd_growth_preflight_result_20261011.json),
+[операторская команда](../runtime/storage_continuation_20261011.md).
+
+Подготовлен только growpart с identity/raw pre/post/boot/CRC/kernel/unchanged ext4
+guards; текущая relocated таблица сначала сохраняется и читается обратно на HDD.
+Native growpart disk lock не вложен во внешний disk flock; отдельный operator
+lockfile держится на весь шаг. Exact syntax/quoting и15 sparse-file guard scenarios
+PASS, native growpart локально не выполнялся. Server partition/ext4 growth pending.
+Новых production операций агент не делал. Application/frontend/helpers/workflows
+не изменены; PR98 остаётся открытым, известный frontend npm audit failure предыдущего
+head3a3a13c13e9042f8bdc48bec04de78acb0d5ef73 не обходится и не исправляется этим docs шагом.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — actual partition growth PASS; online ext4 команда подготовлена
+
+Owner operation started15:21:56UTC; end timestamp не напечатан. Original9 иnew6
+copy checks OK; новый private snapshot `/srv/ustar-storage/ssd-grow-20261011-AiJI89`
+предшествует growth. Actual growpart CHANGED: start4096,size234437519,end234441614.
+Raw pre/post CRC, entry-array only root end, boot bytes и kernel size PASS. Ext4
+остаётся13106432x4096bytes, df49G/37used/11free/78%; native No problems found,
+2014 free sectors. Caution2048-sector end относится к некоторым encryption tools;
+current mounted root — direct ext4, не crypto mapper. [Evidence](../runtime/ssd_partition_grow_result_20261011.json).
+
+Следующий [guarded online ext4 resize](../runtime/storage_continuation_20261011.md)
+сохраняет grown GPT на HDD, old FS/kernel/identity проверяет до записи, syncfs и
+exact expected29304689 blocks/UUID/mount/raw GPT после. Kernel messages отдельно,
+marker не является full service smoke. Старые меньшие GPT snapshots после FS
+growth unsafe для table rollback. Native online resize не запускался агентом;
+Bash/Python/exact quoting и11 regular-file guard tests PASS. STATE/ACTIVE/BACKLOG/
+entrypoints/index обновлены, source/helper/workflow/frontend unchanged. PR98 open;
+CI нового SHA отделён от local checks и owner server evidence.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — online ext4 resize PASS; post-service smoke впереди
+
+Owner start/finish stamps15:35:13UTC, exact elapsed отдельно не измерен. Native
+resize2fs1.47.0 online:13106432→29304689(4k)blocks, descriptors7→14. Seven checksum
+checks нового grown GPT snapshot `/srv/ustar-storage/ssd-ext4-20261011-MCyX9n` OK,
+raw source cmp/GPT unchanged/UUID/mount/quota checks PASS. Root df110G/37used/
+69available/35%; exact df size117815881728/used38711189504/avail73749991424bytes.
+Kernel supplied window содержит только resizing/resized, no errors in that window,
+не full historic/later host health. [Exact evidence](../runtime/ssd_ext4_resize_result_20261011.json).
+
+Подготовлены readonly host/unit/container/listener/kernel inventory, pinned cron
+v3 --status и два known HTTP login probes. Browser authenticated file/SCORM и
+mail/DNS/ISPConfig acceptance отдельно впереди; затем fresh PR87 stage budget/check.
+Без service stops/reboot/cleanup/source changes. Все меньшие старые partition
+snapshots unsafe для table rollback выросшей FS; grown GPT snapshot не full host
+backup. STATE/ACTIVE/BACKLOG/entrypoints/index актуализированы. PR98 open; remote
+CI нового SHA отделяется от local checks и owner execution. Application/frontend/
+helpers/workflows unchanged. Короткий smoke не повторяет полный baseline QA.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — post-resize cron/HTTP/visible SCORM; выбор версии Moodle
+
+Owner upload: inventory15:44:55UTC, root110G/69G available, HDD458G/6.5G used/447G
+available, root inodes7%. Four production/lab containers running; required loaded
+service instances active. Kernel warning query since15:21:56UTC: No entries.
+Proxy/backend login200; pinned cron v3 SHA OK, scheduled15:44:02..15:44:03UTC
+exit0/1.135s, no new failures, USTAR counters0. Прежние17overdue/2scheduled failed
+сохранены. Screenshot показывает authenticated SCORM экран3/15; fresh login,
+completion write и полный role/SCORM QA не доказаны. Functional mail/DNS/ISPConfig
+не следует из units/listeners. AppArmor unit failed: prior audit records stale
+snap-confine include, но current failure timestamp/cause отдельно не измерены.
+[Sanitized receipt](post_resize_checks_20261011.json); raw log/image публично не размещались.
+
+Проверены официальные5.3 latest/requirements и lifecycle:5.3 LTS released05Oct,
+PHP8.3/PG17+, supported upgrade source4.4+. 5.1.8 — prepared ближайший patch,
+не обязательная ступень перед5.3;5.1 security support ends19Apr2027,5.3 —01Oct2029.
+[Обоснование](moodle_target_rationale_20261011.md). Scope1→7→6 сохранён;
+production core не обновлялся. Next fresh PR87 read-only identity/budget.
+
+Remote predecessor95666345bd04104e28462743ec32b104099a8733: Context#48
+38152494478 SUCCESS; Review gate#484 38152494499 FAILURE, sourcePHP8.2/8.3 SUCCESS,
+frontend failed npm audit; downstream rollback/moodle-db/prepare/gate skipped.
+Это не CI нового docs commit. PR98 остаётся open, audit threshold unchanged;
+application/frontend/helpers/workflows/release не менялись.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — existing lab подтверждён; fresh cold preflight PASS
+
+Owner message received18:46:12UTC/21:46:12MSK. Reviewed helper downloaded/installed,
+both SHA checks OK; --check marker LAB_COLD_CHECKPOINT_PREFLIGHT=PASS. Operation
+time не напечатано; login banner18:35:55UTC отдельно. Budget free73738452992/
+required10526347264bytes, inodes6838433/225294, reserve4294967296bytes уже включён,
+additional workspace1773512704bytes. [Receipt](lab_cold_preflight_result_20261011.json).
+
+User уточнил, что recovery lab уже установлен. Это существующий source
+ustar_recovery_lab_20261004_web/pg, не новая patch workspace. Exact helper PASS
+также означает новые checkpoint/workspace/names/relay absent и loopback18085/RAM
+guards PASS на момент check. Установка инструмента и check не создавали новую
+копию и не обновляли core. Download/install/check не повторять.
+
+[Next SHA-pinned --prepare-stage](lab_stage_check_handoff_20261011.md) prepared,
+Bash syntax PASS; server execution pending. Создаёт отдельный frozen checkpoint
+и mutable workspace; временно pauses только source lab, resumes те же IDs.
+Production inspected/continues running. Fresh guards повторяются перед записью;
+старый lab/checkpoint не переустанавливаются, partial paths не overwrite/delete.
+Current queues/entrypoints/STATE/ACTIVE/BACKLOG актуализированы, application/helper/
+frontend/workflow/release trees unchanged. Это baseline old core, не upgrade5.1.8.
+
+Docs predecessorc3251acc0cbfee48b65b9bd4944406fbae7e4f74: API returned startup_failure
+run38164755773 with no jobs. Source/context checks на этом SHA не объявлены PASS;
+причина startup failure отдельно не установлена. Historical helperPR87 source
+CI37375193949/context37375193850 SUCCESS остаются отдельным evidence. GitHub PR
+metadata update ранее403 из-за unverified email; files/ref publication состоялись.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — cold checkpoint и отдельная baseline workspace реально запущены
+
+Owner exact PR87 installed SHA OK; --prepare-stage18:55:53..19:17:02UTC PASS.
+Wrapper1269s (21min9s), helper1267.054s. Frozen checkpoint63431entries, полный
+inventory/file hashes PASS, manifest77672fd0b5b7bc5a27d1bd71d536f2bf47449455623589b53e0605005584b4c0.
+Отдельная mutable workspace restore bootstrap/login200,526 USTAR file hashes,
+57 addon metadata,4910 Moodle contenthashes checked. Source lab resumed,
+production containers unchanged. CoreDB2025100601.03 исходный, upgrade=false,
+cron=false/email disabled/loopback only. Manual login/roles/SCORM NOT_TESTED,
+full-addon compatibility/patch upgrade and paired rollback false.
+
+Storage plan free73738285056/required10526347264bytes относится к pre-copy
+планированию; fresh post-copy free этим stdout не измерено. Relay7200s, exact
+start/expiry не напечатаны. Установка/check/prepare завершены и не повторяются.
+[Owner receipt](lab_stage_prepare_result_20261011.json) и [Windows SSH tunnel/browser handoff](lab_stage_browser_handoff_20261011.md)
+опубликованы; next login/home/one SCORM smoke нового стенда. PR83 synthetic CI
+не является командой real full-addon upgrade: pinned candidate/vendor/addons/
+USTAR home contract и workspace-only upgrade/repeat/paired restore helper ещё
+предстоит подготовить. Старые lab и frozen checkpoint сохраняются. Scope1→7→6,
+OS/AppArmor/functional shared services/HTTPS и fresh archive restore остаются
+в измеренных границах. Application/frontend/helpers/workflows не менялись;
+PR98 open, публикация docs не означает server candidate acceptance или CI PASS.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — новый stage authenticated SCORM и официальный пакет5.1.8
+
+Owner screenshot received19:53:07UTC, sha256f1dd998554ba43206fdde1facc0a24e92a4814728aac7213b71fe29ca89b71e1:
+127.0.0.1:18085/mod/scorm/player.php, administrator session, «Товароведение»,
+section6/20/30percent/text/images rendered. SSH tunnel/new stage browser access
+и authenticated SCORM rendering PASS в видимой области. Fresh login/home redirect,
+completion/progress persistence/all roles/separate attachment download не доказаны.
+Raw image не опубликован; [receipt](lab_stage_browser_result_20261011.json). Original prepare report NOT_TESTED
+сохранён как исторический stdout; поздняя manual evidence отдельна.
+
+Agent downloaded exact official5.1.8 tgz locally:75466974bytes,
+SHA0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c matches primary
+Moodle checksum,39376entries/29409files/9967dirs,313711622logical file bytes.
+Four metadata Git blobs match exact upstreamcc0bf17da8b5fbd290faf95b2b14a03d64331923;
+not full-core equality. No root vendor in archive; lock0prod/68dev packages, runtime
+addon/vendor compatibility still unverified. Stock index/get_default_home_page_url
+support local path defaulthomepage; runtime USTAR home acceptance remains open.
+[Package receipt](moodle_518_package_verification_20261011.json).
+
+[Next operator handoff](lab_patch_package_handoff_20261011.md): existing shared lab lock read-only fd8/EX-NB,
+private parent/checkpoint manifest identity guards/reserve4GiB+128MiB, create new
+private directory, bounded HTTPS download and pinned SHA/fsync only. Bash syntax
+PASS; server download not run, no tar extraction/PHP/SQL/container operations.
+Full-addon candidate assembly/upgrade/repeat/paired restore helper not delivered
+by this docs step; current workspace/source lab/frozen checkpoint preserved.
+Exact source/context/application trees unchanged; queues1→7→6 maintained.
+
+
+<!-- Imported PR98 855264f4e38de4a7423b035cfd7ec746b2fce82d -->
+
+## 2026-10-11 — owner official package download PASS
+
+Owner output received20:14:42UTC; download started20:09:23UTC, finish timestamp
+not printed. New private package directory suffixnnixp4se; official5.1.8 tgz
+pinned SHA0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c OK, fsync
+and MOODLE_518_PACKAGE=PASS/NO_CORE_UPGRADE=YES. Exact parent/checkpoint/lock/reserve
+guards passed; no extraction, addon copy, PHP/SQL, container stop/create or upgrade.
+[Receipt](moodle_518_package_download_result_20261011.json). Download command
+completed, do not repeat; next separate candidate assembly/hash verification.
+
+
+<!-- Imported PR99 ee0b07b09b9a0dfadc70f3bfb2a80b0f4cb8be46 -->
+
+## Production patch13Oct2026
+
+[Owner result](production_patch_upgrade_result_20261013.json),received03:47MSK:
+Moodle5.1.8/core2025100608.00 official upgrade/repeat technical PASS at00:27:29UTC.
+Helper a8caec553996b8a1eebb85f265f9dcbdba147ffc/SHA6f87a780;accepted candidate
+manifesteb6d025d,57 addon versions/5151 file references/HTTP200,132 enabled tasks.
+Container IDs/images/live bind roots/basic metadata and original restart policies
+preserved. Fresh HDD1,049,765,934bytes/c857f79b and verified physical cold pair
+5822b456 retained. Production restoration=false;no new application-code release.
+[Post-switch cron/HDD/authenticated QA](production_patch_post_switch_20261013.md)
+remaining;full addon runtime and fresh encrypted-archive restoration not claimed.
+
+
+Сводка Git/CI от 02.10.2026; дополнено owner runtime evidence 05.10.2026. Application source в main консолидирован на PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. История main сохранена: прежний main `99248772a91526c87c1a31f425d1a07906727152` является предком этого SHA. Полный CI #456 проверен через GitHub API: **source, frontend, rollback, prepare-rc, moodle-db, gate — success**. [Run](https://github.com/cauf1l3d/ustarlms/actions/runs/37023122306). Счётчики из описания PR76: 210 Moodle tests / 891 assertions, 60 Chromium scenarios; это CI на synthetic данных.
+
+
+<!-- Imported PR100 d1a3b6e1f62aa00a550016fdb55a55a4c47344a3 -->
+
+## 2026-10-14 04:41MSK — native host boot accepted;Moodle53 assets next
+
+Owner terminal confirms Ubuntu24.04.5/kernel6.8.0-147 boot at01:33:42UTC,
+Docker29.9.0,zero failed units,selected shared services healthy,AppArmor Docker
+enforce,exact HDD mount/timer/no marker. Login303 without redirects then final200.
+All six container IDs/policies match installation;four labs original restart=no,
+exit0,no autostart expected. [Receipt](../runtime/host_reboot_result_20261014.json).
+Installation/native boot acceptance closed in observed scope;no installer,capture,
+resume or second reboot. Post-boot scheduled Moodle cron status remains to observe.
+No authenticated browser/shared mail-DNS end-to-end/full host restore inferred.
+
+Next PLAT-01 [nonactivating preparation](../runtime/moodle53_preparation_20261014.md):
+official5.3.0 LTS/core2026100500.00/SHA7e5edf11 and official17.11-trixie/amd64
+tag verified on14Oct;PHP8.3.33 meets minimum. Native status+download/pull only,
+new private directory,archive hash/OS-architecture/image digest receipts before
+isolated logical PG16->17 restore and full-addon upgrade/repeat/paired recovery.
+Actual asset download/digest/5.3 integration and production migration pending.
+Application baseline526 files/93 tables/32 tasks unchanged. Host docs PR100 only;
+no merge,production activation or new shared pause. Current state/entrypoints
+updated;older dated checkpoints retained as history.
+
+
+## 2026-10-16 — repository reconciliation and next Telegram panel
+
+Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; native clean-host result awaited. Moodle5.2/PostgreSQL17 explicitly deferred, previous5.3 rehearsal retained as history. Next INF-06 is same-host Linear-inspired panel with auth, metrics/alerts, labs/SFTP, manual operations and Telegram latest encrypted backup/control.
+
+Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.

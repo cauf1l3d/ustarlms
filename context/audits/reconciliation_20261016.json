@@ -1,0 +1,281 @@
+{
+  "kind": "audit_to_current_backlog_reconciliation",
+  "as_of": "2026-10-16",
+  "original_audit": "context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md",
+  "previous_snapshot": "context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md",
+  "tasks_total": 33,
+  "unmapped_tasks": [],
+  "tasks": [
+    {
+      "task": "DOC-01",
+      "audit_sections": "§10",
+      "status": "done",
+      "remaining_or_accepted": "Канонический main; история сохранена.",
+      "evidence": [
+        "context/runtime/context_refresh_report.md",
+        "context/archive/handoff_20261002/pr_inventory.json"
+      ]
+    },
+    {
+      "task": "DOC-02",
+      "audit_sections": "§10",
+      "status": "done",
+      "remaining_or_accepted": "Original audit/hash и harness сохранены.",
+      "evidence": [
+        "context/runtime/context_update_20261005.md"
+      ]
+    },
+    {
+      "task": "INF-01",
+      "audit_sections": "§4.1",
+      "status": "in_progress",
+      "remaining_or_accepted": "Fresh полный manifest/расширенная baseline-приёмка, provenance исключений.",
+      "evidence": [
+        "context/runtime/production_patch_readiness_result_20261012.json",
+        "context/runtime/evidence_20261016.yaml"
+      ]
+    },
+    {
+      "task": "INF-02",
+      "audit_sections": "§4.6",
+      "status": "planned",
+      "remaining_or_accepted": "Runtime DB superuser на проде не уменьшен; роль новой копии это не исправляет.",
+      "evidence": []
+    },
+    {
+      "task": "INF-03",
+      "audit_sections": "§4.6",
+      "status": "planned",
+      "remaining_or_accepted": "Prod code/config writable; key/dump access и безопасный deploy ещё не приняты.",
+      "evidence": []
+    },
+    {
+      "task": "INF-04",
+      "audit_sections": "§4.7",
+      "status": "in_progress",
+      "remaining_or_accepted": "Рост SSD закрыт; hardware reserve/power/offsite/SMART follow-up открыты.",
+      "evidence": [
+        "context/runtime/ssd_gpt_relocate_result_20261011.json",
+        "context/runtime/ssd_partition_grow_result_20261011.json",
+        "context/runtime/ssd_ext4_resize_result_20261011.json"
+      ]
+    },
+    {
+      "task": "INF-05",
+      "audit_sections": "§4.3/4.7",
+      "status": "planned",
+      "remaining_or_accepted": "Измеренная ротация/healthcheck/recreation и disk budgets на проде.",
+      "evidence": []
+    },
+    {
+      "task": "INF-06",
+      "audit_sections": "§4.3",
+      "status": "ready",
+      "remaining_or_accepted": "Следующий пульт/backend/бот; delivery/observer ещё не внедрены.",
+      "evidence": []
+    },
+    {
+      "task": "INF-07",
+      "audit_sections": "§4.5",
+      "status": "planned",
+      "remaining_or_accepted": "Доверенный HTTPS и клиентские сценарии/renewal alert.",
+      "evidence": []
+    },
+    {
+      "task": "INF-09",
+      "audit_sections": "§5.1",
+      "status": "in_progress",
+      "remaining_or_accepted": "Production8.3/518 CI есть; итоговый exact-head полный gate отдельно от native DR.",
+      "evidence": [
+        "context/runtime/lab_patch_full_rc_result_20261012.json",
+        "context/audits/AUDIT_RECONCILIATION_20261016_RU.md"
+      ]
+    },
+    {
+      "task": "INF-08",
+      "audit_sections": "§5.1",
+      "status": "done",
+      "remaining_or_accepted": "5.1.8 upgrade/repeat/browser/cron приняты; этап не повторять.",
+      "evidence": [
+        "context/runtime/production_patch_upgrade_result_20261013.json",
+        "context/runtime/production_patch_browser_result_20261013.json",
+        "context/runtime/production_patch_post_switch_status_result_20261013.json"
+      ]
+    },
+    {
+      "task": "INF-10-OS",
+      "audit_sections": "§4.4/5.1",
+      "status": "done",
+      "remaining_or_accepted": "AppArmor/63 packages/boot147/IDs/mount приняты; полный host restore отдельно.",
+      "evidence": [
+        "context/runtime/host_apparmor_result_20261013.json",
+        "context/runtime/host_packages_install_result_20261014.json",
+        "context/runtime/host_reboot_result_20261014.json"
+      ]
+    },
+    {
+      "task": "INF-10",
+      "audit_sections": "§4.4/7",
+      "status": "planned",
+      "remaining_or_accepted": "SSH/firewall/MFA/effective policies и emergency access.",
+      "evidence": []
+    },
+    {
+      "task": "INF-11",
+      "audit_sections": "§4.0",
+      "status": "planned",
+      "remaining_or_accepted": "H5P/registration exceptions, SMTP delivery/full cycle, обоснованный re-enable.",
+      "evidence": []
+    },
+    {
+      "task": "OPS-01",
+      "audit_sections": "§4.1/7",
+      "status": "in_progress",
+      "remaining_or_accepted": "Полные роли/workflows/PR76 reset отдельно; route refresh bug остаётся.",
+      "evidence": [
+        "context/runtime/production_patch_browser_result_20261013.json",
+        "context/runtime/route_refresh_triage_20261014.json",
+        "context/runtime/route_refresh_db_result_20261014.json"
+      ]
+    },
+    {
+      "task": "INF-12",
+      "audit_sections": "§7",
+      "status": "planned",
+      "remaining_or_accepted": "ACL/IDOR/files/view-as/CSRF/concurrency negative matrix.",
+      "evidence": []
+    },
+    {
+      "task": "AUDIT-01",
+      "audit_sections": "§5.5/7",
+      "status": "planned",
+      "remaining_or_accepted": "Legacy consumers/XMLDB и миграции без удаления истории.",
+      "evidence": []
+    },
+    {
+      "task": "PERF-01",
+      "audit_sections": "§6",
+      "status": "planned",
+      "remaining_or_accepted": "Passive baseline и согласованные p50/p95/p99/concurrency, без выдуманных гарантий.",
+      "evidence": []
+    },
+    {
+      "task": "INF-13",
+      "audit_sections": "§5.3",
+      "status": "planned",
+      "remaining_or_accepted": "Owners/security reporting/advisories и итоговая baseline-приёмка.",
+      "evidence": []
+    },
+    {
+      "task": "INF-14",
+      "audit_sections": "§4.2",
+      "status": "in_progress",
+      "remaining_or_accepted": "Scheduled backups приняты; retention/RPO/RTO/offsite/key custody/alerts открыты.",
+      "evidence": [
+        "context/runtime/hdd_backup_schedule_status_20261012.json",
+        "context/runtime/production_patch_post_switch_status_result_20261013.json",
+        "context/runtime/host_reboot_result_20261014.json"
+      ]
+    },
+    {
+      "task": "OPS-02",
+      "audit_sections": "§4.2",
+      "status": "waiting_external",
+      "remaining_or_accepted": "Архив передан; ждём clean-host restore/roles/SCORM/reboot. Full shared-host DR открыт.",
+      "evidence": [
+        "context/runtime/sysadmin_handoff_result_20261016.json",
+        "context/runtime/production_copy_validation_20261015.json"
+      ]
+    },
+    {
+      "task": "PLAT-01",
+      "audit_sections": "§5.1",
+      "status": "deferred",
+      "remaining_or_accepted": "Moodle5.2 + PG17 отложены;5.3 assets/PR101 только историческое исследование.",
+      "evidence": [
+        "context/runtime/moodle53_target_20261014.json",
+        "context/runtime/sysadmin_handoff_result_20261016.json"
+      ]
+    },
+    {
+      "task": "PRIVACY-01",
+      "audit_sections": "§5.2",
+      "status": "deferred",
+      "remaining_or_accepted": "Policy/export/delete/retention/provider acceptance отдельным этапом.",
+      "evidence": []
+    },
+    {
+      "task": "MOB-01",
+      "audit_sections": "§5.4/6",
+      "status": "planned",
+      "remaining_or_accepted": "API inventory и архитектурное решение.",
+      "evidence": []
+    },
+    {
+      "task": "MOB-02",
+      "audit_sections": "§5.4/6",
+      "status": "planned",
+      "remaining_or_accepted": "Полное server API/ACL/files покрытие.",
+      "evidence": []
+    },
+    {
+      "task": "MOB-03",
+      "audit_sections": "§5.4/6",
+      "status": "planned",
+      "remaining_or_accepted": "Android/iOS slice на реальных устройствах.",
+      "evidence": []
+    },
+    {
+      "task": "MOB-04",
+      "audit_sections": "§5.4/6",
+      "status": "planned",
+      "remaining_or_accepted": "Полный scope/performance/offline/push.",
+      "evidence": []
+    },
+    {
+      "task": "MOB-05",
+      "audit_sections": "§5.4/6",
+      "status": "planned",
+      "remaining_or_accepted": "Signed builds/pilot/support/update channel.",
+      "evidence": []
+    },
+    {
+      "task": "B2B-01",
+      "audit_sections": "§5.4",
+      "status": "planned",
+      "remaining_or_accepted": "Выбрать isolation/hosting/delivery/support ADR.",
+      "evidence": []
+    },
+    {
+      "task": "B2B-02",
+      "audit_sections": "§5.4",
+      "status": "planned",
+      "remaining_or_accepted": "Tenant-negative tests/per-client DR/data/license acceptance.",
+      "evidence": []
+    },
+    {
+      "task": "TECH-01",
+      "audit_sections": "§5.5",
+      "status": "planned",
+      "remaining_or_accepted": "Измеренный refactoring с контрактами и миграциями.",
+      "evidence": []
+    },
+    {
+      "task": "INTEGRATIONS-01",
+      "audit_sections": "§4.0/5.5",
+      "status": "deferred",
+      "remaining_or_accepted": "Новая Bitrix integration только по отдельным требованиям.",
+      "evidence": []
+    },
+    {
+      "task": "DOC-03",
+      "audit_sections": "§10",
+      "status": "done",
+      "remaining_or_accepted": "Новая консолидация/CI/pointers; publication evidence в PR.",
+      "evidence": [
+        "context/audits/AUDIT_RECONCILIATION_20261016_RU.md",
+        "context/runtime/repository_state_20261016.json"
+      ]
+    }
+  ]
+}

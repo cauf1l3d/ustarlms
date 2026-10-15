@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "evidence_source": "owner_pasted_SSH_stdout_not_independent_agent_query",
+  "owner_message_received_moscow": "2026-10-12T11:29:51+03:00",
+  "helper_implementation": "59b88e1ae061bfa9ca4070ec74c4ffbf1629df44",
+  "helper_sha256": "452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4",
+  "installed_path": "/usr/local/sbin/USTAR_LAB_PATCH_UPGRADE_20261012.py",
+  "download_checksum": "PASS",
+  "installed_checksum": "PASS",
+  "phase_markers": [
+    "FRESH_STAGE_PAIRED_BASELINE=PASS; NO_CORE_UPGRADE_YET",
+    "OFFICIAL_STAGE_CLI_UPGRADE=1",
+    "OFFICIAL_STAGE_CLI_UPGRADE=2"
+  ],
+  "stdout_status": "LAB_PATCH_UPGRADE=PASS; STAGE_ONLY; REPEAT=PASS; PAIRED_ROLLBACK_TEST_PENDING",
+  "operator_report": {
+    "apache_php_settings_verified": false,
+    "candidate_activated": true,
+    "candidate_manifest_sha256": "07dfa485c3118d4b72d6f47f1de4c7bbb421b22a02bb5a3f25c1f8634f7f459a",
+    "cli_mail_disabled": true,
+    "composer_executed": false,
+    "core_db_version": "2025100608.00",
+    "core_upgrade_executed": true,
+    "custom_home_runtime_verified": false,
+    "finished_at": "2026-10-12T00:04:42.290128+00:00",
+    "full_addon_compatibility_verified": false,
+    "http_login": 200,
+    "kind": "isolated_stage_patch_upgrade_and_repeat",
+    "lab_network": "loopback_only",
+    "manual_login_roles_and_scorm": "NOT_TESTED",
+    "paired_baseline": "PASS",
+    "paired_baseline_manifest_sha256": "156e468887a09992b6e6b69bc05f4733385e648546f17f3c102c98d5f50abce9",
+    "patch_upgrade_rollback_verified": false,
+    "result": "PASS",
+    "run_directory": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/patch-upgrade-518-20261012-fylkhzxl",
+    "scheduled_tasks_enabled": 0,
+    "source_and_production_containers_unchanged": true,
+    "stage_container_ids_and_bind_root_inodes_unchanged": true,
+    "storage_plan": {
+      "available_free_bytes": 70401798144,
+      "available_free_inodes": 6667271,
+      "database_growth_allowance_bytes": 2147483648,
+      "minimum_free_after_bytes": 4294967296,
+      "planning_estimate_not_capacity_guarantee": true,
+      "required_free_bytes": 13940310016,
+      "required_free_inodes": 352102
+    },
+    "upgrade_repeat": "PASS",
+    "verified_file_contenthashes": 4910
+  },
+  "scope_notes": [
+    "Finished at03:04:42 Moscow; operation start time not printed in supplied stdout",
+    "Candidate5.1.8 activated only on the owned offline patch stage; official upgrade and repeat passed",
+    "Current-stage paired cold baseline created and verified; actual paired rollback still pending",
+    "HTTP200 covers the login form, not authenticated USTAR home, roles, SCORM or full-addon compatibility",
+    "Same stage container IDs/bind-root inodes and source/production container identities/start times reported unchanged",
+    "No Composer run, enabled stage scheduled tasks or production core deployment",
+    "No new evidence for the12Oct scheduled HDD run, Apache PHP settings, host reboot or independent archive restore"
+  ]
+}

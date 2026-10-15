@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "evidence_source": "owner_pasted_SSH_stdout_not_independent_agent_query",
+  "owner_message_received_moscow": "2026-10-12T01:27:46+03:00",
+  "helper_implementation": "b90fd0d836a2f5b07af3818eccf8836c06a5992d",
+  "helper_sha256": "a432e80c82ad24dc640cf765fd90b3570a1e0872a55ec104ff52fa97b6388098",
+  "download_checksum": "PASS",
+  "installed_checksum": "PASS",
+  "installed_path": "/usr/local/sbin/USTAR_LAB_PHP_DIAGNOSTIC_20261012.py",
+  "stdout_status": "LAB_PATCH_PHP_DIAGNOSTIC=COMPLETE; NOT_ACTIVATED; NO_SQL; NO_CORE_UPGRADE",
+  "operator_report": {
+    "SQL_executed": false,
+    "adapter_review_scope": "AST literals only; not final argv/precedence; empty list does not exclude other overrides",
+    "candidate_activated": false,
+    "candidate_tree_rehashed": false,
+    "containers_mutated": false,
+    "core_upgrade_executed": false,
+    "expected_stage_ini": {
+      "memory_limit": "512M",
+      "sendmail_path": "/bin/false"
+    },
+    "kind": "offline_stage_php_settings_diagnostic",
+    "lab_exec_literal_overrides": [],
+    "measured_at": "2026-10-11T22:27:09.438042+00:00",
+    "memory_limit_matches_stage_ini": true,
+    "moodle_bootstrap_executed": false,
+    "php_observed": {
+      "int_size": 8,
+      "max_input_vars": "5000",
+      "memory_limit": "512M",
+      "sapi": "cli",
+      "scanned_ini_basenames": [
+        "docker-php-ext-gd.ini",
+        "docker-php-ext-intl.ini",
+        "docker-php-ext-opcache.ini",
+        "docker-php-ext-pdo_pgsql.ini",
+        "docker-php-ext-pgsql.ini",
+        "docker-php-ext-sodium.ini",
+        "docker-php-ext-zip.ini",
+        "moodle.ini"
+      ],
+      "sendmail_path": "/usr/sbin/sendmail -t -i",
+      "sendmail_path_matches_bin_false": false,
+      "version": "8.3.33"
+    },
+    "production_containers_unchanged": true,
+    "read_only": true,
+    "readiness_accepted": false,
+    "sendmail_path_matches_stage_ini": false,
+    "stage_ini_bind_count": 1,
+    "stage_ini_bind_listed_as_scanned": false,
+    "stage_ini_bind_read_only": true,
+    "stage_ini_matches_frozen": true
+  },
+  "confirmed_blocker": "Native stage PHP CLI sender differs from the required /bin/false; memory512M matches",
+  "underlying_ini_loading_cause_confirmed": false,
+  "scope_notes": [
+    "Mounted private INI matches frozen bytes and one readonly bind; its destination was absent from scanned list",
+    "No resolved final argv, main INI or readability observation was printed, so permission/path/later override causes remain unconfirmed",
+    "Apache PHP mail settings and authenticated business acceptance remain untested",
+    "No readiness acceptance, SQL, candidate activation, core upgrade or paired rollback"
+  ]
+}

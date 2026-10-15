@@ -1,0 +1,61 @@
+{
+  "kind": "exact_host_AppArmor_helper_source_validation",
+  "implementation_commit": "3a3ef0f3c5df8355822af76feb6fa62b2553fdfc",
+  "source_branch_base": "c53723c8d669a1013c518f34abf392143d211d9d",
+  "helper_sha256": "570986e4cd2199945b705eb280cb183339d9d6ba71d15ad788b09aca5579b225",
+  "remote_helper_blob": "15652182cedeb416c16b33831c8f93c8cc89fabb",
+  "remote_raw_byte_readback": "PASS",
+  "remote_tree_equals_local_validated_tree": true,
+  "local_helper_tests": {
+    "run": 13,
+    "passed": 12,
+    "skipped": 1,
+    "skip": "AppArmor parser absent locally"
+  },
+  "local_full_python_tests": {
+    "run": 177,
+    "result": "PASS",
+    "skipped": 11
+  },
+  "isolated_Ubuntu_parser_and_root_file_fixture": {
+    "run_id": 38386147380,
+    "job_id": 115258319597,
+    "result": "success",
+    "tests_run": 13,
+    "skipped": 0,
+    "real_parser_test": "PASS",
+    "required_parser_environment": "USTAR_REQUIRE_APPARMOR_PARSER=1",
+    "root_invocation": true,
+    "kernel_policy_load_in_compiler_fixture": false,
+    "AppArmor_cache_writes_in_compiler_fixture": false,
+    "Docker_systemctl_calls_in_transaction_tests": "simulated",
+    "filesystem_atomic_replace_backup_owner_and_mode_tests": "real_temporary_files"
+  },
+  "context_CI": {
+    "run_id": 38386146947,
+    "result": "success"
+  },
+  "review_CI": {
+    "run_id": 38386147199,
+    "source_php82": "success",
+    "source_php83": "success",
+    "frontend": "failure_at_npm_audit",
+    "frontend_unchanged_from_main": true,
+    "frontend_audit_findings": {
+      "next_range": "15.0.0 - 15.5.26",
+      "sharp_range": "<0.35.5",
+      "production_dependency_findings": {
+        "moderate": 1,
+        "high": 1
+      }
+    },
+    "frontend_build_and_HTTP_smoke": "skipped_after_audit_failure",
+    "moodle_DB_rollback_full_gate": "skipped",
+    "full_PR_green": "NOT_CLAIMED"
+  },
+  "native_application_and_frontend_changes": false,
+  "server_AppArmor_repair_executed": false,
+  "server_OS_package_update_or_reboot_executed": false,
+  "operator_source_commit": "3a3ef0f3c5df8355822af76feb6fa62b2553fdfc",
+  "operator_command_next": "pinned helper --repair only"
+}

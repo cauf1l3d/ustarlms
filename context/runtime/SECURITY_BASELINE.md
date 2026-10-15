@@ -1,22 +1,22 @@
-# Security baseline: открытые вопросы на 05.10.2026
+# Security baseline на16Oct2026
 
-Источник — [датированные серверные свидетельства](evidence_20261005.yaml), [аудит](../audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md). Полные шаги/проверки/откат — в [плане](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md). Публикация не закрывает эти риски.
+Текущее положение сведено по [owner evidence](evidence_20261016.yaml) и [аудиту](../audits/AUDIT_RECONCILIATION_20261016_RU.md), без нового live probe. Moodle5.1.8/краткая browser-приёмка13Oct, targeted AppArmor repair, host packages и native boot14Oct приняты. Эти этапы не повторять. Следующая работа — [пульт/Telegram](control_panel_telegram_20261016.md), переход Moodle5.2/PG17 отложен.
 
-Последующий [baseline 05.10](baseline_20261005.md) уточняет версии/images, cron, manifest и AppArmor. Владелец разрешил 1 → 7 → 6; broad DB/file/SSH/MFA/firewall hardening остаётся после них. AppArmor и совместимые OS patches входят в выбранную OS часть, HTTPS — следующий выбранный пункт. Риски в таблице сохраняются до фактической приёмки соответствующих задач.
-
-| Контроль | Текущее evidence | Закрывающая работа |
+| Контроль | Подтверждено и остаток | Задача |
 |---|---|---|
-| DB role | `moodle` SUPERUSER/CREATEROLE/CREATEDB/REPLICATION/BYPASSRLS, 04.10 23:57 UTC | INF-02: separate tested admin, ownership/grants, least privilege, upgrade/backup/restore |
-| Code/config | `www-data` WRITABLE config.php и plugin; тема NOT_WRITABLE | INF-03: code owner, parents/ACL, no replacement, data still writable |
-| Secrets/dumps | Ранее dump 0644 с проходными parents; полная актуальная проверка не выполнена | INF-03: local access inventory и адресное ограничение, сохранение копий/ключей |
-| Transport/cookie | LAN HTTP через Apache; Secure не найден в HTTP response при cookiesecure=1 | INF-07: trusted HTTPS, browser/File API/SCORM/cookie acceptance |
-| Core/patch | 5.1.1+ Build 20251219; полный upstream core identity не проверен | INF-01/08 и PLAT-01: exact provenance, available release, compatibility + restore |
-| Firewall/SSH/MFA | Исторические UFW/SSH/factor данные неполны, external surface не аттестована | INF-10: effective config/router/service matrix, tested recovery |
-| Docker | No healthcheck и unlimited json-file в снимке; DB host port не опубликован | INF-05: readiness/log rotation, checked recreate и cron binding |
-| Application security | Есть DML/capabilities/sesskey/locks; полного security verdict нет | INF-12: role/IDOR/files/CSRF/XSS/SQL/concurrency/retry negative tests |
-| Dependencies/reporting | Repository features/owners/private security channel не подтверждены | INF-13: real owners, advisory response, selected dependency automation |
-| Data/tenants | Privacy provider отсутствует; B2B isolation не доказана | PRIVACY-01/B2B-01/02: policy, export/delete, isolation и recovery |
+| DB role | Исторический runtime moodle — cluster superuser; уменьшение прав прода не поставлялось. Новый app role в скрипте копии не исправляет прод | INF-02 |
+| Code/config | Ранее www-data мог писать config/plugin; безопасные owners/parents/ACL и deploy ещё не приняты. RO mount новой копии не считается production fix | INF-03 |
+| Keys/dumps | Полная актуальная local-access inventory открыта. Transfer tar содержит ключ; не выдавать его через Telegram/Git | INF-03/14 |
+| HTTPS | Academy LAN HTTP через Apache; trusted TLS/cookie/SCORM acceptance открыта | INF-07 |
+| Moodle patch | 5.1.8 upgrade/repeat/brief browser/cron принят13Oct. Full addon compatibility и новый fresh exact manifest не приписываются | INF-08 закрыт в своём scope, OPS-01 открыт |
+| Host/AppArmor | Optional include repair,63 versions, kernel147/Docker29.9.0, boot/mount/ID-policy приняты. Full shared-host restore не выполнен | INF-10-OS закрыт в своём scope; OPS-02 открыт |
+| SSH/firewall/MFA | Effective policies, external surface и emergency path требуют отдельной проверки | INF-10 |
+| Docker/logs | Production-wide healthchecks/rotation/recreation/budgets ещё не приняты | INF-05 |
+| Application | ACL/IDOR/files/view-as/CSRF/XSS/SQL/concurrency negative matrix ещё не завершена; route refresh bug не исправлен | INF-12/OPS-01 |
+| Delivery/observation | SMTP/H5P exceptions, Telegram delivery/NoData/recovery и независимый observer пока не приняты | INF-06/11 |
+| Dependencies | Legacy frontend вне active release/CI и не развёрнут. Это не разрешение публиковать старый клиент и не подтверждение его безопасности | INF-13 |
+| Privacy/tenants | Полный Privacy provider и B2B isolation остаются отдельной работой | PRIVACY-01/B2B |
 
-Не выполнять слепое снижение DB прав без admin path, рекурсивные chmod/chown, отключение необходимых служб, изменение ролей по названиям должностей, clearing history или автоматические security fixes, затрагивающие регистрацию. Нет доказательства текущей компрометации; не объявлять глобально «SQL/XSS чисто». Next.js не используется и его session protections не описывают текущую Moodle HTTP-сессию.
+Не снижать DB права без проверенного admin path; не делать рекурсивный chmod/chown, не отключать нужные службы и не менять реальные роли/историю по предположению. Пульт использует ограниченные adapters, без произвольного shell/full Docker socket в web/bot. Bot token, recovery identity и private logs не коммитятся. Прямое сообщение или выдача приватного архива через Telegram в этой сверке не выполнялись.
 
-Инциденты/обновления используют ограниченные проверенные источники и runbooks; наблюдаемость — [MONITORING](MONITORING.md), recovery — [BACKUP_RESTORE](BACKUP_RESTORE.md). Любое новое действие на production требует конкретного scope и разрешённого продолжения, сейчас агент ожидает владельца.
+[BACKLOG](../roadmap/BACKLOG.yaml), [мониторинг](MONITORING.md), [backup contract](BACKUP_RESTORE.md) и [сверка](../audits/AUDIT_RECONCILIATION_20261016_RU.md) задают текущие остатки; исходные05/06Oct документы сохранены как история.

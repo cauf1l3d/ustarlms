@@ -1,15 +1,25 @@
 # USTAR Server Console
 
-Первый интерактивный UI-прототип; на сервер не установлен. [Scope](../context/runtime/control_panel_scope_20261015.md).
+Следующая задача INF-06 после консолидации GitHub: пульт на том же server1 с логином/паролем, интерфейсом в стиле Linear и интеграцией Telegram. Текущие требования — [пульт и Telegram](../context/runtime/control_panel_telegram_20261016.md), очередь — [ACTIVE](../context/tasks/ACTIVE.md).
 
-Открыть `prototype/index.html` локально в браузере. Нет build step, CDN, внешних ресурсов или runtime dependencies. Данные помечены как демонстрационные. Навигация, фильтры, копирование путей и предпросмотр операций работают локально. Результаты выполнения/метрики не имитируют живое подключение. Поля логина/пароля disabled; это layout, не механизм авторизации.
+## Что уже есть
 
-Следующая поставка: серверная аутентификация и сессии, read-only collector/API, защищённый адрес на server1, затем фиксированные audit/job adapters существующих backup/restore scripts. Отдельные proxy/auth/network решения требуют фактического listener/network inventory. Прямого доступа к server1 у агента нет. Прототип не подключать к root/Docker socket и не публиковать как защищённую админку.
+`prototype/index.html` — автономный интерактивный прототип с демонстрационными данными: обзор, сервер, Академия, стенды/адреса/активность, бэкапы, SFTP, алерты, операции и форма входа. Открывается локально без сборки, CDN и внешних запросов. Поля входа отключены; диалоги показывают план, ничего не выполняют. HTML сохранён без изменений из предыдущего прототипа PR103.
 
-Manual/browser QA: desktop/mobile, navigation, backup filter and empty state, SSD/Moodle outage distinction, restore production/test target distinction, dialog keyboard close, disabled login inputs; exact results captured in the current handoff.
+Это отдельный operations UI. Рабочий UI Академии остаётся в `moodle/local/ustar` и `moodle/theme/ustar`; `frontend/` — legacy вне текущего CI и выпуска.
 
-Validation performed15Oct: JS syntax PASS; jsdom DOM checks PASS for all views, filters/empty, SSD impact, restore target separation and disabled login fields. Dialog API modeled in jsdom. Native Playwright could not launch because Chromium was absent; browser download failed. Desktop/mobile screenshots and real browser visual/keyboard/layout acceptance remain PENDING; no screenshot success is claimed.
+## Что реализуем дальше
 
-15Oct13:32MSK owner styling update: Linear-inspired dark graphite UI, compact navigation/tables, subtle borders and violet actions. All views/dialog/login styled; JS bytes unchanged. Prototype status and demo/no-live-backend boundaries retained.
+1. Защищённый endpoint, серверные сессии/авторизация и read-only collector/API с реальными метриками, временем измерения, ошибками и NoData.
+2. Подключение UI, Telegram failure/recovery/NoData alerts и status/metrics для разрешённых операторов; внешний observer для потери самого server1.
+3. Выдача последнего completed/hash-verified зашифрованного Academy-бэкапа через авторизованную ссылку с датой snapshot, размером и SHA. Recovery key и transfer kit с ключом не передаются в Telegram.
+4. Ограниченные job adapters для manual backup, стендов/TTL, Academy maintenance/restart и подготовки restore, с планом последствий, блокировками и журналом.
+5. Реальная приёмка авторизации, доставки, метрик, download/hash и операций на сервере.
 
-Recovery guide added15Oct13:46MSK: navigate Backups → Recovery/transfer or Stands → Verify restore. `#recovery` has local/clean-host modes, one-command start AFTER one-time installation, status/report/tunnel/stop clipboard actions and portable kit TXT checklist. No native calls, archive download, key handling or fake completion. JS/jsdom flow and clipboard fallback pass; native/visual pending.
+Backend, auth, collectors, bot и доставка ещё не реализованы. Прямого подключения агента к server1 нет. Прототип не подключать к root/Docker socket и не публиковать как защищённую админку.
+
+## Инструкции и проверка
+
+Реальная инструкция текущей передачи сисадмину — [production copy](../context/runtime/production_copy_20261015.md). Владелец16Oct подтвердил получение архива и передачу инструкции; clean-host restore ожидается. Старый recovery-раздел прототипа — иллюстрация интерфейса15Oct, не актуальная инструкция выполнения переноса. Moodle5.2/PostgreSQL17 отложены.
+
+Историческая проверка15Oct: JS syntax и jsdom navigation/filter/empty/backup-impact/restore-target checks PASS; dialog API моделировался. Chromium отсутствовал, загрузка не удалась: реальные desktop/mobile screenshots, keyboard/layout и visual QA остаются PENDING. При синхронизации с обновлённым main проверены неизменность HTML и diff только этих двух файлов; UI/production acceptance этим не заявляется.

@@ -1,0 +1,31 @@
+{
+  "kind": "owner_reported_production518_browser_acceptance",
+  "received_at": "2026-10-13T04:14:35+03:00",
+  "independently_measured": false,
+  "owner_confirmation": "браузерная приемка ок, скорм открывается, с разных учеток все работает",
+  "preceding_requested_checks": [
+    "authenticated login and USTAR home",
+    "existing learning material or SCORM and prior progress",
+    "employee learning and Tasks",
+    "manager team or HR card"
+  ],
+  "accepted_scope": "owner_general_confirmation_of_preceding_brief_production_browser_checks_with_explicit_SCORM_open",
+  "production_SCORM_opens": "PASS_explicit_owner_statement",
+  "multiple_accounts_browser_smoke": "PASS_owner_statement",
+  "account_ids_or_exact_role_list_received": false,
+  "screenshots_received": false,
+  "new_completion_grade_creation_or_cross_scope_write_tests": "NOT_CLAIMED",
+  "full_addon_runtime_compatibility_verified": false,
+  "production_paired_restore_executed": false,
+  "browser_acceptance_complete": true,
+  "repeat_browser_upgrade_or_status_cycle_needed": false,
+  "Moodle_patch_acceptance": "CLOSED_in_agreed_scope",
+  "next_stage": "INF-10-OS_read_only_package_kernel_and_shared_service_baseline",
+  "source_continuity": {
+    "GitHub_compare_base": "a42672e842b8d0c3e2c95edca72709be496eed56",
+    "GitHub_compare_head": "7da615249b82c4d03d0c10780ad14d1cdcfeaa9a",
+    "complete_changed_file_list_received": true,
+    "native_frontend_stage_and_CI_payloads_changed": false,
+    "workflow_difference": "mandatory_privileged_owner_fixture_only;passed_in_exact_helper_CI"
+  }
+}

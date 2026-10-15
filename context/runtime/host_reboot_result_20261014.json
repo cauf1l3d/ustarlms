@@ -1,0 +1,144 @@
+{
+  "kind": "owner_native_host_reboot_acceptance",
+  "final_confirmation_received_at": "2026-10-14T04:41:16+03:00",
+  "independently_measured_by_agent": false,
+  "source": "owner_terminal_output_two_post_boot_observations",
+  "acceptance_scope": "native_boot_selected_service_runtime_Moodle_login_HDD_and_container_identity_policy",
+  "result": "PASS",
+  "installation_evidence": "context/runtime/host_packages_install_result_20261014.json",
+  "boot": {
+    "uptime_start_utc": "2026-10-14T01:33:42Z",
+    "banner_sample_utc": "2026-10-14T01:34:49Z",
+    "ubuntu_release": "24.04.5 LTS",
+    "running_kernel": "6.8.0-147-generic",
+    "native_reboot_observed": true
+  },
+  "docker": {
+    "version": "29.9.0",
+    "live_restore": false,
+    "all_six_ids_match_saved_installation": true,
+    "all_six_restart_policies_match_saved_installation": true
+  },
+  "containers": [
+    {
+      "name": "ustar_moodle",
+      "state": "running",
+      "restart": "unless-stopped",
+      "id_same": true,
+      "policy_same": true
+    },
+    {
+      "name": "ustar_postgres",
+      "state": "running",
+      "restart": "unless-stopped",
+      "id_same": true,
+      "policy_same": true
+    },
+    {
+      "name": "ustar_patch_stage_20261005_pg",
+      "state": "exited",
+      "exit_code": 0,
+      "restart": "no",
+      "id_same": true,
+      "policy_same": true,
+      "autostart_expected": false
+    },
+    {
+      "name": "ustar_patch_stage_20261005_web",
+      "state": "exited",
+      "exit_code": 0,
+      "restart": "no",
+      "id_same": true,
+      "policy_same": true,
+      "autostart_expected": false
+    },
+    {
+      "name": "ustar_recovery_lab_20261004_pg",
+      "state": "exited",
+      "exit_code": 0,
+      "restart": "no",
+      "id_same": true,
+      "policy_same": true,
+      "autostart_expected": false
+    },
+    {
+      "name": "ustar_recovery_lab_20261004_web",
+      "state": "exited",
+      "exit_code": 0,
+      "restart": "no",
+      "id_same": true,
+      "policy_same": true,
+      "autostart_expected": false
+    }
+  ],
+  "failed_systemd_units": 0,
+  "selected_units": {
+    "active_running": [
+      "docker.service",
+      "containerd.service",
+      "apache2.service",
+      "caddy.service",
+      "mariadb.service",
+      "dovecot.service",
+      "postfix@-.service",
+      "named.service",
+      "cron.service",
+      "amavis.service",
+      "memcached.service",
+      "postgrey.service",
+      "spamd.service",
+      "ssh.socket"
+    ],
+    "active_exited": [
+      "apparmor.service",
+      "postfix.service"
+    ],
+    "active_waiting": [
+      "ustar-hdd-backup.timer"
+    ],
+    "inactive_dead_success": [
+      "ustar-hdd-backup-recover.service"
+    ],
+    "all_reported_results": "success"
+  },
+  "apparmor_docker_default": "enforce",
+  "moodle_login": {
+    "initial_http_without_redirect_follow": 303,
+    "final_http_with_redirect_follow": 200,
+    "authenticated_business_QA_after_reboot": "not_reported",
+    "prior_518_browser_acceptance": "preserved"
+  },
+  "hdd": {
+    "target": "/srv/ustar-storage",
+    "source": "/dev/sdb1",
+    "fstype": "ext4",
+    "uuid": "359a2bae-4e79-461a-ab72-1597f605d801",
+    "mount_verified_after_reboot": true
+  },
+  "backup_scheduler": {
+    "calendar": "*-*-* 03:30:00 Europe/Moscow",
+    "catch_up": false,
+    "archive_deletion": false,
+    "last_scheduled_run": {
+      "started_utc": "2026-10-14T00:30:00.852846+00:00",
+      "finished_utc": "2026-10-14T00:31:52.825087+00:00",
+      "phase": "complete",
+      "success": true,
+      "service_result": "success",
+      "exit_status": 0,
+      "resumed_from_marker": false
+    },
+    "last_backup_success_utc": "2026-10-14T00:31:49.015571+00:00",
+    "recovery_marker_present": false,
+    "timer_active": true,
+    "timer_enabled": true,
+    "next_event_utc": "2026-10-15T00:30:00Z",
+    "latest_scheduled_run_scope": "before_reboot_scheduler_and_mount_verified_after_reboot"
+  },
+  "scheduled_Moodle_cron_after_reboot": "PENDING_read_only_status_once",
+  "package_reinstall_resume_or_second_reboot_required": false,
+  "full_host_boot_restore_verified": false,
+  "end_to_end_mail_DNS_ISPConfig_after_reboot_verified": false,
+  "Moodle53_or_PostgreSQL17_server_migration_executed": false,
+  "next": "Moodle53_official_asset_download_then_isolated_PG17_full_addon_rehearsal"
+}

@@ -1,5 +1,7 @@
 # INF-01/08: согласованный checkpoint и отдельный patch workspace
 
+**Actual11Oct:** [owner prepare18:55:53..19:17:02UTC PASS](lab_stage_prepare_result_20261011.json): frozen checkpoint/full hashes/restore bootstrap, отдельная workspace login200, source lab resumed/production unchanged. Core прежний; next [browser smoke](lab_stage_browser_handoff_20261011.md), затем full-addon upgrade/repeat/paired rollback. Ниже исходный контракт05Oct с историческими execution-статусами.
+
 Owner output получен **05.10 20:46:23 UTC / 23:46:23 MSK**. PR86 planning helper реально прошёл в **20:44:34.950875 UTC**: 526 USTAR hashes, 57 addon metadata, private Moodledata boundary и loopback isolation PASS; production containers unchanged. [Полный sanitized report](lab_planning_result_20261005.json). Это read-only planning, без Moodle bootstrap, созданного rollback или core upgrade.
 
 Свободно **11280769024 bytes / 10,51 GiB**, inodes2784282. Первый planning budget8752834560 bytes /8,15GiB учитывал одну rollback copy. Новый helper добавляет **отдельную mutable workspace copy**: предварительно10526347264 bytes /9,80GiB, включая candidate/work allowance, DB growth и4GiB reserve. Перед операцией размеры/free/inodes пересчитываются; reserve контролируется во время копирования. Не считать этот live estimate гарантией будущей ёмкости. Payload/images/archive/key не дублируются.

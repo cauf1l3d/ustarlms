@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-06'
+updated_at: '2026-10-16'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -8,20 +8,31 @@ project:
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
-  platform: 'Moodle 5.1.1+ (Build: 20251219), fresh disk/DB owner inventory 2026-10-05T02:43:33Z; full core pending'
-  language: PHP CLI8.3.33/Trixie production; PR83 source CI8.2+8.3 and pinned patch-518/PG16.15 full RC SUCCESS,
-    server core upgrade not executed
-  database: PostgreSQL 16.15, dated owner evidence
-  deployment: Docker on company Ubuntu 24.04.4 LTS shared host; virtualization not verified
+  platform: Moodle5.1.8/core2025100608.00; owner13Oct acceptance
+  language: PHP8.3.33; native plugin/theme UI
+  database: PostgreSQL16.15; production major unchanged
+  deployment: Docker29.9.0 on Ubuntu24.04.5/kernel6.8.0-147; owner14Oct boot acceptance
   native_ui: PHP + Mustache + JS/AMD + SCSS
   theme: theme_ustar extends boost
-  secondary_frontend: Next.js 15.5.25 / React 18; not used in production per owner
+  secondary_frontend: Legacy Next.js source retained, excluded from active CI and release since16Oct
 components:
   business: moodle/local/ustar
   presentation: moodle/theme/ustar
-  secondary_client: frontend
+  secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
 state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261005_baseline.yaml
+runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: authorized_storage_map_HDD_autobackups_before_stage_then_selected_points_1_7_6
+execution_gate: next_INF06_panel_and_Telegram_no_platform_upgrade
+current_operator_handoff:
+  task: OPS-02
+  runbook: context/runtime/production_copy_20261015.md
+  status: archive_obtained_instruction_transferred_waiting_sysadmin_restore
+  owner_confirmation: '2026-10-16T00:20:51+03:00'
+  control_panel: next_INF06
+  platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
+current_work:
+  task: INF-06
+  spec: context/runtime/control_panel_telegram_20261016.md
+  prototype_PR: 103
+  frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded

@@ -1,26 +1,19 @@
 # USTAR Academy
 
-**Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта server1](context/runtime/server_map_20261006.md).
+Рабочая Академия — Moodle с локальным плагином `moodle/local/ustar` и темой `moodle/theme/ustar` (parent `boost`). Каталог `frontend/` — сохранённый legacy Next.js клиент: он не используется на проде и исключён из текущего CI и релизного пакета. Native PHP, Mustache, AMD/JS и браузерные проверки темы/плагина остаются обязательными.
 
-Корпоративная академия розничной сети «Хозмагия», работающая во внутренней сети компании. Moodle отвечает за LMS, `local_ustar` — за бизнес-процессы, `theme_ustar` — за интерфейс.
+Начните с [START_HERE](START_HERE.md). [Текущий статус](context/roadmap/STATE.yaml), [очередь](context/tasks/ACTIVE.md) и [сверка с аудитом на16Oct](context/audits/AUDIT_RECONCILIATION_20261016_RU.md) определяют текущую работу. Датированные отчёты не являются live-запросами к серверу.
 
-**Код и текущая документация находятся вместе в `main`. Начните с [START_HERE.md](START_HERE.md).**
+Подтверждены: расширение SSD11Oct, Moodle5.1.8/повторный upgrade/краткая браузерная приёмка13Oct, AppArmor и host updates/reboot14Oct. Архив копии получен и инструкция передана сисадмину; результата нового восстановления ещё нет. Переход на **Moodle5.2 и PostgreSQL17 отложен**.
 
-| Что нужно | Куда идти |
-|---|---|
-| Состояние и следующий шаг | [STATE](context/roadmap/STATE.yaml), [ACTIVE](context/tasks/ACTIVE.md) |
-| Архитектура и ограничения | [Обзор](context/architecture/overview.md), [ADR](context/decisions/README.md) |
-| Найти реализацию | [Карта модулей](context/code_map/README.md) |
-| Установленный код, CI, последние SHA | [Реестр релизов](context/runtime/RELEASE_LEDGER.md) |
-| Эксплуатация, проверка prod, выпуск | [Runbook](context/runtime/OPERATIONS.md) |
-| Аудит и полный план исправлений | [Аудит](context/audits/README.md), [пошаговый план](context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) |
-| Метрики, копии, security | [Пульт](context/runtime/MONITORING.md), [backup/restore](context/runtime/BACKUP_RESTORE.md), [baseline](context/runtime/SECURITY_BASELINE.md) |
-| Последующий Android/iOS | [План мобильного клиента](context/roadmap/MOBILE_CLIENT.md) |
+Следующий этап — [пульт управления с Telegram](context/runtime/control_panel_telegram_20261016.md): метрики, алерты, выдача актуального завершённого бэкапа и управляемые операции Академии. Прототип в PR103; backend и бот пока не внедрены.
 
-На 05.10.2026 аудит/контекст/harness опубликованы PR78. Application baseline — PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`, версии `2026100204 / 2026100202`, исторический полный CI #456. Свежий owner manifest 05.10: 526 matching plugin/theme; 468 disk/DB component versions совпали; cron v3 success в 02:13 UTC. [Baseline](context/runtime/baseline_20261005.md) и [серверные факты](context/runtime/evidence_20261005_baseline.yaml) датированы, полного core/business acceptance ещё нет. Историческая ручная copy/restore есть, регулярности нет.
+## Работа с репозиторием
 
-Следующая команда владельца разрешила **1 → 7 → 6**: baseline → Moodle/CI/ОС → HTTPS, остальные пункты после них. INF-01 в работе; историческая остановка DOC-02 больше не действует. Backup-автоматизация позже на healthy HDD, не SERVEREXPRESS. Mobile/Privacy/B2B/LTS остаются отдельными проектами. Слияние в main не меняет production.
+- `main` — канонический код и контекст. Новую работу начинать от обновлённого main.
+- [Роли веток и сохранённые SHA](context/runtime/repository_state_20261016.json). Старые integration/release/prod-sync/snapshot/codex ветки — история, а не доказательство текущего deployment.
+- [Архитектура](context/architecture/overview.md), [границы](context/architecture/boundaries.md), [карта кода](context/code_map/README.md).
+- [CI и выпуск](context/runtime/CI_SCOPE_20261016.md): native source, DB/upgrade/repeat, paired rollback; legacy frontend не входит.
+- [Копия для сисадмина без остановки прода](context/runtime/production_copy_20261015.md), [статус передачи](context/runtime/sysadmin_handoff_result_20261016.json).
 
-Исторические RC, аудиты и копии исходников в `release/` сохранены для трассировки; новый код меняется в `moodle/`. Секреты, production DB, moodledata и recovery archives в Git не хранятся.
-
-Текущий infrastructure checkpoint05Oct20:44UTC: [planning PASS / exact budget](context/runtime/lab_planning_result_20261005.json), [cold rollback copy и отдельный patch workspace](context/runtime/lab_cold_checkpoint_20261005.md). Helper подготовлен, server execution/upgrade pending; HDD newest extended без ошибок, residual198=1 и target configuration остаются explicit.
+Moodle core, рабочие config.php, базы, moodledata, ключи и архивы не коммитятся. GitHub CI не является production-приёмкой. Публикация кода не запускает обновление server1.

@@ -1,6 +1,6 @@
 # Первый изменяющий шаг SSD: перенос резервной GPT
 
-Статус: **команда подготовлена и локальные guards проверены; выполнение на сервере ещё не подтверждено**.
+Статус на 11.10: **выполнено владельцем — GPT_RELOCATED=PASS; ROOT_PARTITION_SIZE_UNCHANGED=PASS**. [Результат и следующий шаг](storage_continuation_20261011.md). Ниже сохранён исходный runbook от06Oct; его изменяющую команду повторно не запускать. Дальнейшие future/pending формулировки ниже относятся к исходному срезу06Oct.
 [Исходная копия](ssd_partition_table_copy_result_20261006.json) подтверждена владельцем
 06Oct09:06:01UTC: `GPT_COPY_READBACK=PASS`, девять hash checks `OK`, каталог
 `/srv/ustar-storage/ssd-layout-20261006-06NYpg`. Время capture сохранено в private

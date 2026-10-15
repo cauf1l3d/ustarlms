@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "evidence_source": "owner_pasted_SSH_stdout_not_independent_agent_query",
+  "owner_message_received_moscow": "2026-10-12T13:02:37+03:00",
+  "helper_implementation": "59b88e1ae061bfa9ca4070ec74c4ffbf1629df44",
+  "helper_sha256": "452d8fd682bc2878fee66aaa9c121528e707d944b943d90264c2d220a48133f4",
+  "installed_path": "/usr/local/sbin/USTAR_LAB_PATCH_UPGRADE_20261012.py",
+  "installed_checksum": "PASS",
+  "started_utc": "2026-10-12T08:51:07Z",
+  "finished_utc": "2026-10-12T09:01:36Z",
+  "elapsed_seconds_between_operator_markers": 629,
+  "stdout_status": "LAB_PATCH_PAIRED_RESTORE=PASS; ORIGINAL_STAGE_BASELINE_RUNNING",
+  "operator_report": {
+    "baseline_restored": true,
+    "http_login": 200,
+    "paired_trees_restored": true,
+    "restored_core_db_version": "2025100601.03",
+    "verified_file_contenthashes": 4910
+  },
+  "production_login_checks_before_restore": {
+    "evidence_source": "owner_pasted_curl_HTTP_status_only",
+    "measured_at": null,
+    "host_header": "ustar.local",
+    "proxy_url": "http://127.0.0.1/login/index.php",
+    "proxy_http": 200,
+    "backend_url": "http://127.0.0.1:8082/login/index.php",
+    "backend_http": 200,
+    "authenticated_session_verified": false,
+    "post_restore_probe": false
+  },
+  "accepted_scope": {
+    "isolated_stage_upgrade_repeat_then_paired_rollback_verified": true,
+    "prior_upgrade_receipt": "context/runtime/lab_patch_upgrade_result_20261012.json",
+    "paired_baseline_manifest_sha256_from_prior_upgrade": "156e468887a09992b6e6b69bc05f4733385e648546f17f3c102c98d5f50abce9",
+    "prior_run_directory": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72/patch-upgrade-518-20261012-fylkhzxl",
+    "acceptance_basis": "owner prior upgrade/repeat PASS plus checksum-verified real restore with paired_trees_restored=true, original core version,4910 file hashes and login200",
+    "source_production_identity_guard": "inferred_pass_from_exact_helper_control_flow_before_PASS_not_a_printed_operator_field",
+    "current_stage_candidate_activated": false,
+    "current_stage_core_db_version": "2025100601.03",
+    "reupgrade_for_browser_QA_executed": false,
+    "production_upgrade_executed": false,
+    "production_rollback_verified": false,
+    "manual_login_roles_and_scorm": "NOT_TESTED",
+    "full_addon_compatibility_verified": false,
+    "custom_home_runtime_verified": false,
+    "apache_php_settings_verified": false
+  },
+  "scope_notes": [
+    "Restore markers11:51:07..12:01:36 Moscow; owner output was submitted13:02:37 Moscow",
+    "Code/config,Moodledata and physicalPG restored as one paired baseline before PostgreSQL start; no code-only downgrade",
+    "The prior successful5.1.8 stage upgrade remains historical evidence; the current stage is the restored original baseline",
+    "The accepted candidate and retained upgraded files remain separate; a new re-upgrade run is next",
+    "Proxy/backend HTTP200 probes ran before restore and do not prove post-restore authenticated production behavior",
+    "No new evidence for scheduled HDD runs, host reboot, independent archive recovery or production core deployment"
+  ]
+}

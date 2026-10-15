@@ -1,79 +1,46 @@
-kind: dated_owner_supplied_topology
-reviewed_at: '2026-10-06'
+kind: reconciled_dated_owner_topology
+reviewed_at: '2026-10-16'
 measured_now: false
-evidence: context/runtime/evidence_20261005_baseline.yaml
-operating_system: Ubuntu 24.04.4 LTS
-kernel: 6.8.0-139-generic
-systemd_detect_virt: none
+evidence: context/runtime/evidence_20261016.yaml
+operating_system: Ubuntu24.04.5 LTS
+kernel: 6.8.0-147-generic
+Docker: 29.9.0
+containerd: 2.4.1
+host_boot_evidence: context/runtime/host_reboot_result_20261014.json
 placement: not_verified
-network: company LAN only for Academy per owner; no external Academy access
-reverse_proxy: host Apache HTTP -> loopback 8082 -> Moodle container
-caddy: placeholder_not_academy_tls_proxy
-academy_https: not_configured_in_supplied_vhost_snapshot
+network: Academy company LAN; no newly published external endpoint
+reverse_proxy: host Apache HTTP -> 127.0.0.1:8082 -> ustar_moodle
+caddy: not_confirmed_as_Academy_TLS_proxy
+academy_https: not_accepted
 required_shared_services:
 - mail
 - DNS
 - ISPConfig
-root_storage: 49G /36G used /11G available /78%; inventory2026-10-06T08:18:26Z, owner received08:19:59Z
-root_occupancy_hypothesis: home15GiB_with_approx13GiB_snapshot_candidates_and_two_labs2.2_2.3GiB_measured_no_deletion
+root:
+  source: /dev/sda2
+  UUID: fb5cc206-93f8-4601-a415-8d418970cf31
+  filesystem_bytes: 120032006144
+  partition_bytes: 120032009728
+  df_total_bytes: 117815881728
+  acceptance: GPT_partition_ext4_grown11Oct; UUID/quota/mount preserved
+  evidence: context/runtime/ssd_ext4_resize_result_20261011.json
+HDD:
+  source: /dev/sdb1
+  fstype: ext4
+  UUID: 359a2bae-4e79-461a-ab72-1597f605d801
+  mount: /srv/ustar-storage
+  options: rw,nosuid,nodev,noexec,relatime
+  boot_mount_verified: owner14Oct
+  SMART: last accepted long test05Oct completed without error; pending0/reallocated0/offlineUNC1; no new SMART
+    invented
+backup:
+  schedule: 03:30 Europe/Moscow daily
+  catch_up: false
+  automatic_archive_deletion: false
+  initial_quota_GiB: 100
+  scheduled_acceptance: 12–14Oct success; timer and no recovery marker after boot14Oct
+  independent_copy: archive obtained and instruction passed to sysadmin16Oct; restore waiting
+current_storage_map: context/runtime/server_map_20261016.md
 runbook: context/runtime/OPERATIONS.md
-current_storage_map: context/runtime/server_map_20261006.md
-fresh_inventory_received: '2026-10-06T00:13:00+03:00'
-fresh_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
-new_storage_priority: before_new_stage_including_HDD_automatic_backups
-ssd_partition_tail: '61.79GiB confirmed sectors 104855552..234441613; GPT backup header stale; no write'
-hdd_initializer: context/runtime/hdd_initialize_20261006.md
-hdd_owner_output_received_at: '2026-10-06T00:07:20Z'
-hdd_partition: /dev/disk/by-id/wwn-0x50014ee200c1ee59-part1
-hdd_filesystem: ext4
-hdd_uuid: 359a2bae-4e79-461a-ab72-1597f605d801
-hdd_mountpoint: /srv/ustar-storage
-hdd_mount_options: rw,nosuid,nodev,noexec,relatime
-hdd_df_rounded: 458G_total_1.8G_used_451G_available_1percent
-hdd_fstab_and_copy_owner_output_received_at: '2026-10-06T00:33:41Z'
-hdd_fstab_configuration: verified_no_reboot_performed
-hdd_existing_archive_copy_hash: PASS_source_retained_on_SSD
-hdd_backup_producer: context/runtime/hdd_backup_20261006.md
-hdd_fresh_backup_trial: PASS_owner_20261006T011022_to_011202Z
-hdd_fresh_backup_trial_evidence: context/runtime/hdd_backup_trial_20261006.json
-hdd_backup_trial_pause_seconds: 24.111
-hdd_backup_trial_bytes: 957829597
-hdd_backup_trial_login_http: 200
-hdd_schedule_contract: context/runtime/hdd_backup_schedule_20261006.md
-hdd_backup_timer: installed_active_enabled_first_scheduled_run_pending
-hdd_schedule_initial_policy: owner_activated_daily_0330_Moscow_no_catchup_no_deletion_100GiB_quota
-hdd_df_timing: post_manual_trial_inventory_20261006T081826Z
-hdd_schedule_owner_output_received_at: '2026-10-06T08:02:24Z'
-hdd_schedule_install_evidence: context/runtime/hdd_backup_schedule_install_20261006.json
-hdd_schedule_next_event_utc: '2026-10-07T00:30:00Z'
-hdd_schedule_last_scheduled_run: null
-hdd_schedule_recovery_marker_present: false
-hdd_schedule_boot_recovery_verified: false
-next_readonly_preflight: context/runtime/ssd_storage_preflight_20261006.md
-latest_storage_evidence: context/runtime/ssd_storage_result_20261006.json
-latest_storage_inventory_timestamp: '2026-10-06T08:18:26Z'
-latest_storage_owner_received_at: '2026-10-06T08:19:59Z'
-root_filesystem_uuid: fb5cc206-93f8-4601-a415-8d418970cf31
-root_journaled_quota_mount_options: usrjquota=quota.user_grpjquota=quota.group_jqfmt=vfsv0
-ssd_full_identity: full_JSON_model_serial_observed_WWN_zero_not_used_as_pin
-ssd_identity_evidence: context/runtime/ssd_identity_ext4_result_20261006.json
-ssd_identity_owner_received_at: '2026-10-06T08:36:58Z'
-ssd_model: WALRAM 120GB
-ssd_serial: 2203JPDG120GB6000933
-ssd_bytes: 120034123776
-root_ext4_bytes: 53683945472
-root_ext4_bytes_equal_partition_bytes: true
-root_header_is_offline_fsck: false
-partition_table_copy_runbook: context/runtime/ssd_partition_table_copy_20261006.md
-partition_table_copy_execution: GPT_COPY_READBACK_PASS_nine_hash_checks_OK_owner_terminal_output
-partition_table_copy_result: context/runtime/ssd_partition_table_copy_result_20261006.json
-partition_table_copy_owner_received_at: '2026-10-06T09:06:01Z'
-partition_table_copy_directory: /srv/ustar-storage/ssd-layout-20261006-06NYpg
-next_ssd_write: context/runtime/ssd_gpt_relocate_20261006.md
-ssd_gpt_relocation_execution: prepared_only_server_write_not_yet_confirmed
-ssd_smart: overall_PASSED_vendor_specific_raw_decode_not_verified
-retained_lab_mount_consumers: two_running_containers_confirmed
-control_path_reference_search: partial_missing_link_errors_no_complete_clearance
-console_rescue_availability: sysadmin_console_access_confirmed_owner_20261006_received090336Z
-rescue_boot_medium: not_separately_identified
-actual_host_boot_recovery: not_tested
+current_goal: context/runtime/control_panel_telegram_20261016.md
+full_host_restore: not_verified

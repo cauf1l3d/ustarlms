@@ -1,44 +1,12 @@
-# Протокол продолжения
+# Протокол работы с USTAR
 
-**Приоритет владельца06.10 00:45MSK:** сначала оптимизировать хранение, обновить карту сервера и настроить автобэкапы на HDD; затем новый стенд и Moodle/ОС/HTTPS. Прежнее правило «автобэкапы в финале» заменено. PR87 `--prepare-stage` приостановлен. [Карта и scope](../runtime/server_map_20261006.md). Более ранние этапы/даты ниже сохраняются как история; эта команда определяет текущий порядок.
+1. Читать актуальные START_HERE/STATE/ACTIVE и нужные source/domain/runtime документы. Последняя команда владельца16Oct приоритетнее исторических next-step runbooks.
+2. Работать от свежего main. Application baseline, repository head и deployed core/host различать явно. [Ветки и происхождение](../runtime/repository_state_20261016.json).
+3. Native Academy состоит из local_ustar и theme_ustar. Legacy frontend исключён из release/CI. JS/AMD/Mustache/native browser tests остаются.
+4. Не подменять owner receipt, synthetic CI и native acceptance. Для каждой поставки фиксировать exact SHA, реальные проверки и открытые gates.
+5. Не повторять закрытые native этапы ради нового статуса. Архив передан сисадмину; новый restore пока ожидается. Moodle5.2/PG17 отложены.
+6. Соблюдать actor/capability/scope/sesskey/revision/lock/idempotency, одну бизнес-модель и XMLDB parity; проверять прямые URL/files/view-as и отказные сценарии по масштабу изменений.
+7. Не публиковать runtime secrets/config/data/logs. Сначала подготовить reviewable план операции; не отправлять private backup/key или сообщения через Telegram из этой задачи.
+8. Сопровождать изменения актуальными STATE/ACTIVE/BACKLOG/SESSION_LOG и context/source inventories. Исходный аудит и dated receipts сохранять.
 
-## База работы
-
-Код и контекст совместно поддерживаются в `main`. Прочитать START_HERE и обязательный контекст, обновить refs, зафиксировать HEAD. Рабочая ветка — от main, короткий PR — в main. Не возобновлять старый stacked PR только потому, что он открыт или называется release.
-
-Наличие application baseline SHA в STATE не означает, что documentation HEAD или production имеют тот же SHA. Перед выпуском сравнить релевантные деревья, manifest и версии; читать release ledger.
-
-## Задача и поставка
-
-Выбрать задачу из ACTIVE/BACKLOG в границах запроса владельца. Указать owner, branch, статус. Сначала проверить реальную реализацию, затем менять. Не перезаписывать чужую незавершённую работу. Сохранять ADR и историю. Инструкция владельца приоритетнее старых аудитов; предложения аудита не разрешают несвязанные production-операции.
-
-Проверить `STATE.execution` и `BACKLOG.execution_gate`. DOC-02 завершён PR78; новая команда владельца разрешает пункты 1 → 7 → 6: baseline, Moodle/CI/ОС, затем HTTPS. Остальные задачи отложены до их завершения. Продолжать эту работу после GitHub-публикации; прежнее ожидание DOC-02 не требует повторного разрешения. При отсутствии production-доступа подготовить проверенный артефакт и конкретную команду оператору. Разовая согласованная recovery copy и stage/rollback перед изменениями входят в подготовку выбранных пунктов; регулярное расписание по последней команде владельца входит в подготовку до нового стенда.
-
-Каждая поставка содержит:
-
-- implementation SHA и список изменённых сценариев;
-- реально выполненные проверки с SHA/environment и ссылкой на CI;
-- отдельно deployment evidence или явное `not_verified`;
-- при schema change — install/upgrade/repeat, согласованный backup и rollback;
-- актуальные STATE/ACTIVE/BACKLOG/SESSION_LOG и source map при изменении application source.
-
-| Статус | Смысл |
-|---|---|
-| ready | Следующая определённая работа |
-| planned | Работа описана, зависимости/решения остаются |
-| in_progress | Есть текущий исполнитель |
-| review | Реализация и evidence подготовлены |
-| stage_verified | Точный SHA прошёл соответствующий isolated runtime |
-| released | Есть подтверждение установки этого SHA |
-| done | Acceptance задачи выполнены; для docs достаточно опубликованного проверенного результата |
-| deferred | Не выполнять до нового приоритета |
-
-Старые R/G/N задачи сохраняются в архиве как критерии, не как действующая очередь. Не маркировать их все done задним числом. Остатки сведены в текущий BACKLOG.
-
-## Проверки
-
-Обычный PR запускает source/frontend; Moodle DB и rollback включаются отдельным full RC event. Скipped jobs не являются PASS. Штатный workflow: `.github/workflows/ustar-review-gate.yml`; инструкции — в `context/runtime/OPERATIONS.md`.
-
-В documentation-only handoff достаточно проверить ссылки, YAML/JSON, provenance и равенство application trees уже проверенному SHA. Проверка новых context tools должна быть воспроизводимой. При изменении application code требуется новый соответствующий gate, а не заимствование старого результата.
-
-Production доступ не подразумевается наличием GitHub. Когда он отсутствует, завершить source-анализ и подготовку, назвать точное недостающее evidence. Не объявлять весь проект заблокированным. Runtime collectors пишут отчёт в отдельный каталог; содержимое проверить перед публикацией. Не публиковать secrets, dumps, личные данные и config.php.
+[Следующий этап INF-06](../runtime/control_panel_telegram_20261016.md) и [сверка аудита](../audits/AUDIT_RECONCILIATION_20261016_RU.md). Документы не добавляют новых permission loops: действовать в уже разрешённом владельцем объёме.

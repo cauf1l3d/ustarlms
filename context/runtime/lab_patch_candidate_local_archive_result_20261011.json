@@ -1,0 +1,24 @@
+{
+  "Docker_PHP_SQL_executed": false,
+  "archive_bytes": 75466974,
+  "archive_catalog_validation": "PASS",
+  "archive_members": 39376,
+  "archive_sha256": "0e8e2cdeecf24512b75e24158fa224ed08a20c608b4e1065cb2068832467665c",
+  "core_metadata_sha256": {
+    "composer.json": "02d8b9bf7cf18d15459cc4672835ad74cc07440a7214cfcb2e81748d159d63a3",
+    "composer.lock": "064bddc7f6b5dc1f23eef6ec40d4c96091e0e651a5cc9639c6b855dd5d3afe8f",
+    "public/index.php": "3af0034674ac5b59e8926ebd63e1a0bf3360a495675d82de7b800e0514c467f7",
+    "public/version.php": "8e8ca75d913bf1f0b0a73bd029d476d827f50855ecf5d1a99a891e65c498ee02"
+  },
+  "core_overlay_applied": false,
+  "elapsed_seconds_before_temporary_copy_cleanup": 9.052,
+  "fresh_stock_extraction": "PASS",
+  "full_addon_compatibility_verified": false,
+  "full_stock_file_readback_hashes": "PASS",
+  "kind": "local_official_archive_extraction_and_readback",
+  "runtime_upgrade_or_rollback_executed": false,
+  "server_private_inputs_checked": false,
+  "stock_directories_including_root": 9967,
+  "stock_files": 29409,
+  "uncompressed_file_bytes": 313711622
+}

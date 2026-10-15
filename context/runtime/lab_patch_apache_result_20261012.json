@@ -1,0 +1,61 @@
+{
+  "source": "owner_pasted_terminal_stdout",
+  "independently_measured_on_server_by_agent": false,
+  "implementation_commit": "56251bb86e4bc7babee7822479ec4d655c85786c",
+  "script_sha256": "927a733c822be1348b77c80f8b9520bb748a02ba58840e2c549244ccd442b124",
+  "report": {
+    "PHP_scope": "builtins_in_existing_Apache_handler",
+    "SQL_scope": "bounded_BEGIN_READ_ONLY_stage_only",
+    "addon_versions_matching": 57,
+    "apache_php": {
+      "bound_lab_ini_listed_as_scanned": true,
+      "bound_lab_ini_readable_by_apache": false,
+      "int_size": 8,
+      "max_input_vars": "5000",
+      "memory_limit": "512M",
+      "sapi": "apache2handler",
+      "scanned_ini_basenames": [
+        "docker-php-ext-gd.ini",
+        "docker-php-ext-intl.ini",
+        "docker-php-ext-opcache.ini",
+        "docker-php-ext-pdo_pgsql.ini",
+        "docker-php-ext-pgsql.ini",
+        "docker-php-ext-sodium.ini",
+        "docker-php-ext-zip.ini",
+        "moodle.ini",
+        "zz-ustar-lab.ini"
+      ],
+      "sendmail_path": "/bin/false",
+      "sendmail_path_matches_bin_false": true,
+      "version": "8.3.33"
+    },
+    "apache_php_settings_verified": true,
+    "checks": {
+      "apache_sapi": true,
+      "display_errors_off": true,
+      "input_vars_5000_or_more": true,
+      "integer_64bit": true,
+      "log_errors_on": true,
+      "mail_blocked": true,
+      "memory_limit": true,
+      "no_auto_prepend_or_append": true,
+      "php_minimum_82": true,
+      "required_extensions": true
+    },
+    "container_or_service_restart": false,
+    "core_db_version": "2025100608",
+    "core_upgrade_executed": false,
+    "existing_code_config_bytes_unchanged": true,
+    "full_addon_compatibility_verified": false,
+    "kind": "upgraded_stage_apache_builtin_probe",
+    "lab_network": "loopback_only",
+    "measured_at": "2026-10-12T13:33:40.091384+00:00",
+    "probe_Moodle_bootstrap": false,
+    "relay_started_or_stopped": false,
+    "required_php_extensions_missing": [],
+    "result": "PASS",
+    "scheduled_tasks_enabled": 0,
+    "source_production_and_stage_container_identities_unchanged": true,
+    "temporary_probe_removed_and_code_rehashed": true
+  }
+}

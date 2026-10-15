@@ -1,0 +1,29 @@
+{
+  "kind": "frontend_dependency_audit_remediation",
+  "previous_ci_commit": "56251bb86e4bc7babee7822479ec4d655c85786c",
+  "previous_ci_run": 38253886782,
+  "previous_frontend_job": 114826833000,
+  "previous_findings": {
+    "next": [
+      "GHSA-4jqv-mc3x-m676",
+      "GHSA-mcj8-r9mp-w47p"
+    ],
+    "sharp": [
+      "GHSA-wq5f-xc86-pv6w"
+    ]
+  },
+  "target_dependencies": {
+    "next": "15.5.27",
+    "sharp": "0.35.5"
+  },
+  "audit_command": "npm audit --omit=dev --audit-level=moderate --json",
+  "audit_vulnerabilities_total": 0,
+  "unit_tests_passed": 4,
+  "local_clean_install": "npm ci --no-fund --ignore-scripts PASS; CI normal npm ci pending",
+  "local_build": "PASS",
+  "local_built_http_fixture": "PASS_synthetic_Moodle_upstream_only",
+  "native_Moodle_source_changed": false,
+  "stage_helpers_changed": false,
+  "production_deployed": false,
+  "full_CI": "PENDING_exact_new_commit"
+}

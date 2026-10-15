@@ -1,5 +1,7 @@
 # Карта реализации USTAR
 
+Текущая область16Oct: native local_ustar/theme_ustar,526 файлов прежнего application baseline. `frontend/` — legacy вне active CI/release. [Сверка](../audits/AUDIT_RECONCILIATION_20261016_RU.md), [следующий пульт](../runtime/control_panel_telegram_20261016.md), [CI scope](../runtime/CI_SCOPE_20261016.md). Ниже сохранены датированные сведения о реализации.
+
 Проверено по PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Карта относится к Git source, не к снимку live DB. Полный schema inventory строится из XMLDB; классы/API — из exact Git tree.
 
 | Область | Входы | Сервисы / контракт |
@@ -41,3 +43,14 @@ python3 scripts/check_context.py
 [`lab_patch_preflight.py`](../../scripts/infra/lab_patch_preflight.py) проверяет retained clone без Moodle bootstrap и считает rollback budget. `trusted` сохраняет strict code/control/PostgreSQL policy; `moodledata_entry` применяется только к exact retained Moodledata tree с root0700/33:33, проверяет per-entry33:33/type/links/no-executable-files и nonwritable directories. Обычные data files с write bits только учитываются через metadata, их содержимое не открывается. Live scan повторно проверяет private root и сообщает count широких file write modes. [Owner refusal и контракт](../runtime/lab_patch_preflight_20261005.md); server planning20:44:34UTC PR86 PASS; [точный report](../runtime/lab_planning_result_20261005.json).
 
 [`lab_cold_checkpoint.py`](../../scripts/infra/lab_cold_checkpoint.py) использует SHA-pinned planning/resume/engine, отдельный module namespace и ownership guards. `cold_checkpoint` копирует согласованный комплект после lab-only web/PG stop и всегда возобновляет same source IDs; `copy_workspace` создаёт independent copy без shared inodes, `start_workspace` проверяет DB/files/bootstrap/HTTP/offline isolation. Frozen manifest не монтируется. Source chmod/chown/production exec/SQL отсутствуют; owner/mode сохраняются только на новых copies. [Контракт и deployment pending](../runtime/lab_cold_checkpoint_20261005.md).
+
+
+[`backup_restore_test.py`](../../scripts/infra/backup_restore_test.py) selects the latest completed HDD archive or explicit copied pair, binds exact private verifier/restore engine, restores independent offline containers with a chosen duration (30m/2h/1d/0), counted after readiness. [`ustar-restore-test-20261014.service`](../../scripts/infra/ustar-restore-test-20261014.service) provides lifecycle/ExecStopPost cleanup. [Runbook](../runtime/backup_restore_experiment_20261014.md). Application manifest526/files and schema93 remain unchanged.
+
+[`backup_transfer.py`](../../scripts/infra/backup_transfer.py) packages the latest verified HDD backup, private key and exact restore helpers; starts a chosen-duration lab or portable clean-host copy (default0/no timer). New generated unit `ustar-backup-recovery-20261015.service` replaces the legacy fixed watchdog for this workflow. Optional dependency installation is restricted to clean Ubuntu24.04; no reboot autostart. [Current four-stage runbook](../runtime/backup_transfer_20261015.md). Source e68c887a/59 selected tests PASS; native owner acceptance pending.
+
+
+[`production_restore.py`](../../scripts/infra/production_restore.py) — permanent recovery: source cron-lock/maintenance/fresh backup/web freeze and explicit abort; empty-host PG restore without task-disable/siteidentifier changes, preserved config with local DB/runtime overrides, stock URL replace, persistent owned IDs/boot unit/minute cron. `backup_transfer.py` packages v2 with this pinned worker and dispatches explicit `--start-production`; old `--start` stays isolated. [Production runbook](../runtime/production_transfer_20261015.md), code 99ab241e1771b850bfedb3a5cab03ad4a2122917. No Moodle application/schema change; native recovery/reboot/SMTP pending.
+
+
+[`prepare_production_copy.sh`](../../scripts/infra/prepare_production_copy.sh) installs pinned restore helpers and submits only read-only `--pack` from the last successful HDD backup. `backup_transfer.py --start-production-copy` passes `--parallel-copy` to the permanent worker: distinct canonical URL, same recovered business data/task flags, mail+sendmail+cron off, boot startup without cron timer. Source freeze is not called. [Current sysadmin handoff](../runtime/production_copy_20261015.md), codea1a0c62b/prepare38485343;101 selected CI checks PASS, native import/reboot pending.

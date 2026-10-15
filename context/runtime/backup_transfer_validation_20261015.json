@@ -1,0 +1,111 @@
+{
+  "source_code_commit": "1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0",
+  "controller_sha256": "4804c27aada3d5f431ccf19cfb174dd8deb1bc6f991d3d9793d6a89b7be9b022",
+  "launcher_sha256": "6633ba331a15cb08e37b9de8d092141fa56592a79d4959003be68a10870a0c64",
+  "owner_instruction_utc": "2026-10-15T10:58:19.319000+00:00",
+  "verification_utc": "2026-10-15T15:54:23.820283+00:00",
+  "local_tests": {
+    "controller": 45,
+    "transfer": 23,
+    "total": 68,
+    "skips": 0,
+    "result": "PASS",
+    "scope": "root filesystem/tar/hash/locks; config presentation carry; Docker PostgreSQL age apt and elapsed lifetime modeled"
+  },
+  "duration": {
+    "lab_default_seconds": 3600,
+    "portable_default_seconds": 0,
+    "accepted": "positive m/h/d up to30d, or0",
+    "starts_after": "Moodle login readiness",
+    "zero_disables": "controller/relay/systemd runtime stop",
+    "automatic_start_after_reboot": false
+  },
+  "transfer": {
+    "contains_decryption_key": true,
+    "requires_secret_handling": true,
+    "pack_uses": "last completed verified HDD backup",
+    "new_snapshot": false,
+    "production_stop": false,
+    "new_server": "empty Docker Ubuntu24.04 amd64; optional signed-repository dependency installation",
+    "native_apt_on_clean_machine": "not_executed; modeled in tests"
+  },
+  "native_server1_restore": "owner_reported_previous_package_od28adph; fixed_controller_not_executed",
+  "owner_archive_clean_server_restore": "PENDING",
+  "browser_roles_scorm_acceptance": "PENDING",
+  "native_elapsed_shutdown_or_unlimited_acceptance": "PENDING",
+  "whole_host_boot_restore": "NOT_TESTED",
+  "production_changed_by_agent": false,
+  "handoff_validation": {
+    "bash_blocks_syntax": 8,
+    "source_hash_pins": "PASS",
+    "relative_runbook_links": "PASS",
+    "context_integrity": "526 source files /93 tables /32 tasks PASS",
+    "implementation_delta_from_source_code_commit": "none"
+  },
+  "presentation_carry": {
+    "settings": [
+      "defaulthomepage",
+      "theme"
+    ],
+    "source": "extracted backup config.php, exact unconditional quoted literals only, no PHP execution",
+    "refusal": "value not effective after engine rewrite -> PRESENTATION_SETTINGS_NOT_EFFECTIVE before relay"
+  },
+  "prior_implementation_ci": {
+    "source_commit": "e68c887a85d208cb47997fbb29238e712f356f44",
+    "selected_ci": {
+      "run": 38726287776,
+      "job": 116392846177,
+      "conclusion": "success",
+      "environment": "Ubuntu24.04 root",
+      "logs_inspected": true,
+      "controller_tests": 36,
+      "transfer_tests": 23,
+      "native_systemd_parser": "legacy and generated duration0/7200 units PASS"
+    },
+    "context_ci": {
+      "run": 38726287799,
+      "conclusion": "success"
+    },
+    "general_review_gate": {
+      "run": 38726287787,
+      "conclusion": "failure",
+      "frontend_job": 116392846701,
+      "logs_inspected": true,
+      "cause": "npm audit unchanged Next/sharp dependencies",
+      "source_php82": "success",
+      "source_php83": "success",
+      "moodle_db_rollback_full_rc": "not_executed"
+    }
+  },
+  "selected_ci": {
+    "run": 38764190030,
+    "job": 116522997784,
+    "conclusion": "success",
+    "source_commit": "1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0",
+    "environment": "Ubuntu24.04 root",
+    "logs_inspected": true,
+    "controller_tests": 45,
+    "transfer_tests": 23,
+    "native_systemd_parser": "legacy and generated duration0/7200 units PASS"
+  },
+  "context_ci": {
+    "run": 38764190057,
+    "conclusion": "success",
+    "source_commit": "1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0"
+  },
+  "publication": {
+    "owner_authorized_new_commit_SHA": true,
+    "source_code_sha": "1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0",
+    "equivalent_archive_code_commit": "45e73688c0c857d247f5088ce177c246956bbeb6",
+    "source_files_byte_identical_to_archive": true,
+    "native_deployment_of_homepage_fix": "PENDING"
+  },
+  "general_review_gate": {
+    "run": 38764190021,
+    "conclusion": "frontend_failed_source_jobs_in_progress_at_capture",
+    "frontend_job": 116522997793,
+    "logs_inspected": true,
+    "cause": "npm audit unchanged Next/sharp dependencies",
+    "moodle_db_rollback_full_rc": "not_executed"
+  }
+}

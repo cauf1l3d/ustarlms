@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "source": "owner_uploaded_terminal_output_and_browser_screenshot_20261011",
+  "independently_measured_by_agent": false,
+  "inventory_started_utc": "2026-10-11T15:44:55Z",
+  "source_receipts": {
+    "terminal_sha256": "920ebd7d9fc44ab914902cc41e617971f22ca31dbddd3363705a52b07874dff1",
+    "screenshot_sha256": "58e8051e7389ba7e138346ae38dcc7e92227519178acd2d4686f0c90f37023ac",
+    "raw_files_publicly_uploaded": false
+  },
+  "storage": {
+    "root": {"source": "/dev/sda2", "fstype": "ext4", "total": "110G", "used": "37G", "available": "69G", "use_percent": 35},
+    "hdd": {"source": "/dev/sdb1", "fstype": "ext4", "mountpoint": "/srv/ustar-storage", "total": "458G", "used": "6.5G", "available": "447G", "use_percent": 2},
+    "root_inodes": {"total": 7331840, "used": 493385, "free": 6838455, "use_percent": 7}
+  },
+  "systemd": {
+    "failed_units": ["apparmor.service"],
+    "active_running": ["amavis.service", "apache2.service", "cron.service", "docker.service", "dovecot.service", "mariadb.service", "named.service", "postfix@-.service", "postgrey.service"],
+    "active_exited": ["clamav-freshclam.service", "postfix.service", "pure-ftpd-mysql.service"],
+    "other_observed": {"clamav-daemon.service": "not-found inactive dead", "php7.4-fpm.service": "masked inactive dead"},
+    "apparmor_assessment": "prior audit records stale snap-confine include; current unit failed is observed, but this output does not establish its failure time or cause",
+    "shared_service_functional_acceptance": "not_proved_by_unit_states_or_listeners"
+  },
+  "containers": {
+    "ustar_recovery_lab_20261004_web": "Up 6 days",
+    "ustar_recovery_lab_20261004_pg": "Up 6 days",
+    "ustar_moodle": "Up 15 hours",
+    "ustar_postgres": "Up 3 weeks",
+    "exact_ids_or_mount_identity_rechecked": false
+  },
+  "kernel_warning_query": {"since_utc": "2026-10-11T15:21:56Z", "priority": "warning_and_higher", "output": "No entries", "end_timestamp_printed": false},
+  "cron": {
+    "installed_source_sha256_check": "OK",
+    "setup_version": 3,
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "last_run_started_utc": "2026-10-11T15:44:02.027331+00:00",
+    "last_run_finished_utc": "2026-10-11T15:44:03.162694+00:00",
+    "trigger": "scheduled",
+    "elapsed_seconds": 1.135,
+    "exit_code": 0,
+    "email_disabled": false,
+    "log_truncated": false,
+    "current_task_log_id": 4413419,
+    "adhoc_queued": 0,
+    "adhoc_failed": 0,
+    "scheduled_overdue_10m": 17,
+    "scheduled_failed": 2,
+    "ustar_failed": 0,
+    "ustar_error_and_warning_counters": "all_zero",
+    "new_failures": [],
+    "failures_24h": [],
+    "historical_counters_assessment": "17 overdue and 2 scheduled failed match earlier baseline; this pass introduces no new failures"
+  },
+  "http_login": {"host_apache_proxy": 200, "backend_loopback_8082": 200},
+  "browser": {
+    "visible_path": "/mod/scorm/player.php",
+    "authenticated_shell_visible": true,
+    "existing_scorm_content_rendered": true,
+    "visible_course": "Основа продаж",
+    "visible_slide": "3 / 15",
+    "fresh_login_or_completion_write_verified": false,
+    "scope": "one supplied screenshot, not full role or SCORM completion acceptance"
+  },
+  "result": "post_resize_storage_container_cron_HTTP_and_visible_SCORM_smoke_received; AppArmor_failure_open",
+  "next_step": "fresh_PR87_read_only_stage_identity_and_budget_check; AppArmor_diagnosis_and_repair_remain_in_selected_OS_work",
+  "still_open": ["authenticated_mail_DNS_ISPConfig_smoke", "fresh_scheduled_archive_independent_restore", "reboot_mount", "full_shared_host_recovery", "full_addon_candidate_upgrade_repeat_and_paired_rollback"]
+}

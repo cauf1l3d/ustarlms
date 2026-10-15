@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "source": "owner_terminal_output_supplied_20261011",
+  "independently_measured_by_agent": false,
+  "owner_message_received_at": "2026-10-11T18:46:12Z",
+  "operation_timestamp_printed": false,
+  "login_banner_utc": "2026-10-11T18:35:55Z",
+  "login_banner_is_not_operation_timestamp": true,
+  "helper": {
+    "implementation_commit": "40e7d13e197cd59321e5e89e3f477539eb265b19",
+    "installed_path": "/usr/local/sbin/USTAR_LAB_COLD_CHECKPOINT_20261005.py",
+    "sha256": "9c81abb6b30bea611f99fb7a3e336e12d0a7827d4ea462a4d3d63e6f8aec9012",
+    "downloaded_sha_check": "OK",
+    "installed_sha_check": "OK",
+    "installation_command_completed_without_reported_error": true
+  },
+  "mode": "--check",
+  "marker": "LAB_COLD_CHECKPOINT_PREFLIGHT=PASS; read-only; no container/file changes",
+  "budget": {
+    "additional_restore_workspace_bytes": 1773512704,
+    "available_free_bytes": 73738452992,
+    "available_free_inodes": 6838433,
+    "minimum_free_after_bytes": 4294967296,
+    "planning_estimate_not_capacity_guarantee": true,
+    "required_free_bytes": 10526347264,
+    "required_free_inodes": 225294
+  },
+  "guards_implied_by_success": {
+    "source_existing_running_retained_lab": "PASS",
+    "pinned_dependencies_profile_source_and_addon_metadata": "PASS",
+    "readonly_lab_SQL_and_PHP_checks": "PASS",
+    "production_containers_unchanged": "PASS",
+    "checkpoint_and_workspace_paths_absent": "PASS_at_precheck",
+    "stage_container_names_and_relay_unit_absent": "PASS_at_precheck",
+    "loopback_18085_available": "PASS_at_precheck",
+    "memory_at_least_6_GiB_available": "PASS_at_precheck",
+    "exact_memory_bytes_printed": false
+  },
+  "existing_lab": {
+    "root": "/var/lib/ustar-restore-lab/20261004T123406Z-741e3f72",
+    "web": "ustar_recovery_lab_20261004_web",
+    "pg": "ustar_recovery_lab_20261004_pg",
+    "already_installed": true
+  },
+  "planned_new_objects": {
+    "checkpoint": "patch-rollback-20261005",
+    "workspace": "patch-stage-20261005",
+    "web": "ustar_patch_stage_20261005_web",
+    "pg": "ustar_patch_stage_20261005_pg",
+    "loopback_port": 18085,
+    "created": false
+  },
+  "core_upgrade_executed": false,
+  "checkpoint_created": false,
+  "workspace_created": false,
+  "next_operator_step": "SHA_pinned_existing_helper_--prepare-stage",
+  "next_command_prepared": true,
+  "next_command_server_executed": false,
+  "runbook": "context/runtime/lab_stage_check_handoff_20261011.md"
+}

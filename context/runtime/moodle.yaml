@@ -1,23 +1,29 @@
 kind: runtime_path_contract
-reviewed_at: '2026-10-05'
+reviewed_at: '2026-10-16'
 measured_now: false
 container: ustar_moodle
 host_mount: /opt/ustar/data/moodle/public
 container_mount: /var/www/html
 host_public_root: /opt/ustar/data/moodle/public/public
 container_public_root: /var/www/html/public
-core_cli: /var/www/html/admin/cli
+core_cli: /var/www/html/public/admin/cli
 theme_source_parent: boost
-production_theme_setting: null
+production_theme_setting: ustar (source and owner UI; not a fresh SQL probe)
 production_versions:
-  moodle: '5.1.1+ (Build: 20251219)'
+  moodle: 5.1.8
   php: 8.3.33
   local_ustar: 2026100204
   theme_ustar: 2026100202
+  postgresql: '16.15'
 isolated_reference: tests/stage/runtime.json
 deployment_evidence: context/runtime/RELEASE_LEDGER.md
-versions_evidence: context/runtime/evidence_20261005_baseline.yaml
+versions_evidence: context/runtime/evidence_20261016.yaml
 versions_are_dated_not_live_query: true
 core_metadata_upstream_reference: 1cd17816c56a7df7ee796892efccaf1ed5347340
-core_metadata_equivalence: 3_hashes_match_full_core_pending
+core_metadata_equivalence: official5.1.8_candidate_verified_upgrade_and_repeat_owner13Oct
 plugin_inventory: context/runtime/plugin_inventory_20261005.json
+core_database_version: '2025100608.00'
+deferred_target:
+  moodle: '5.2'
+  postgresql: '17'
+  status: owner_deferred16Oct

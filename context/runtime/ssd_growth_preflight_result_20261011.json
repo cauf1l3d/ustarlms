@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "source": "owner_terminal_output_supplied_20261011",
+  "independently_measured_by_agent": false,
+  "command_execution_timestamp": "not_printed",
+  "scheduler_status": {
+    "calendar": "*-*-* 03:30:00 Europe/Moscow",
+    "catch_up": false,
+    "archive_deletion": false,
+    "last_scheduled_run": {
+      "started_utc": "2026-10-11T00:30:00.847420+00:00",
+      "phase": "complete",
+      "success": true,
+      "calendar": "*-*-* 03:30:00 Europe/Moscow",
+      "finished_utc": "2026-10-11T00:31:44.442026+00:00",
+      "service_result": "success",
+      "exit_code": "exited",
+      "exit_status": "0",
+      "resumed_from_marker": false,
+      "recovery_error_type": null,
+      "recovery_marker_present": false
+    },
+    "last_backup_success_utc": "2026-10-11T00:31:43.444339+00:00",
+    "recovery_marker_present": false,
+    "next_event_utc": "2026-10-12T00:30:00Z",
+    "units": {
+      "ustar-hdd-backup.timer": {
+        "load": "loaded",
+        "active": "active",
+        "enabled": "enabled",
+        "result": "success"
+      },
+      "ustar-hdd-backup.service": {
+        "load": "loaded",
+        "active": "inactive",
+        "enabled": "static",
+        "result": "success"
+      },
+      "ustar-hdd-backup-recover.service": {
+        "load": "loaded",
+        "active": "inactive",
+        "enabled": "enabled",
+        "result": "success"
+      }
+    },
+    "installed_scheduler_hash_in_this_output": "not_printed",
+    "archive_path_hash_and_restore": "not_printed_or_verified_by_this_status",
+    "intervening_nights_20261007_through_20261010": "not_verified_by_latest_status"
+  },
+  "growpart_dry_run": {
+    "command": "sudo -n timeout 30s growpart -N /dev/sda 2",
+    "result": "CHANGE",
+    "gpt_uuid": "074edcd7-fe7c-4674-9865-6425931232d7",
+    "bios_boot_unchanged": true,
+    "root_start_partuuid_and_type_unchanged": true,
+    "root_start_sector": 4096,
+    "old_root_size_sectors": 104851456,
+    "old_root_end_sector": 104855551,
+    "proposed_root_size_sectors": 234437519,
+    "proposed_root_end_sector": 234441614,
+    "proposed_root_bytes": 120032009728,
+    "growth_sectors": 129586063,
+    "partition_write_executed": false,
+    "filesystem_resize_executed": false
+  },
+  "next_operator_step": "guarded_partition_growth_only_then_return_output_before_separate_ext4_resize",
+  "runbook": "context/runtime/storage_continuation_20261011.md",
+  "prepared_command_sha256": "e4d9c27690b2820ebb6a4e540ead9119aa14e5a47b8f7c62ce679c637cfbdd39",
+  "local_validation": "Bash/Python syntax, exact quoting, 15 regular sparse-file guard scenarios PASS; native growpart not executed",
+  "partition_growth_owner_result": "not_supplied"
+}

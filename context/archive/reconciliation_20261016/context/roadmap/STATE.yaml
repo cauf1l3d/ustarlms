@@ -1,0 +1,462 @@
+schema_version: 2
+updated_at: '2026-10-15'
+project: USTAR Academy
+stage: selected_infrastructure_remediation_in_progress
+stage_label: Постоянная копия прода без остановки Академии
+current_activity: 'Owner15Oct19:48MSK: prepare permanent production copy for sysadmin without stopping Academy; export latest completed HDD snapshot, separate target URL, mail and cron off, boot enabled. Native handoff/import/reboot pending.'
+next_task: OPS-02
+ready_tasks: []
+canonical_roadmap_branch: main
+code_baseline:
+  branch: main
+  commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+  kind: application_source_full_ci_verified
+  local_ustar_version: 2026100204
+  theme_ustar_version: 2026100202
+  source_pr: 76
+  ci_run: 37023122306
+  ci_url: https://github.com/cauf1l3d/ustarlms/actions/runs/37023122306
+  ci_jobs:
+    source: success
+    frontend: success
+    rollback: success
+    prepare-rc: success
+    moodle-db: success
+    gate: success
+  production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
+  main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
+production:
+  status: owner_backup_cron_http_and_retained_lab_resume_confirmed_patch_stage_pending
+  observed_at: '2026-10-05T02:43:33Z'
+  source: context/runtime/evidence_20261005_baseline.yaml
+  independently_measured: false
+  current_source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+  current_source_commit_scope: plugin_theme_exact_manifest_20261005_not_full_core_or_fresh_deploy
+  current_versions:
+    local_ustar: 2026100204
+    theme_ustar: 2026100202
+  last_exact_source_manifest:
+    date: '2026-10-05T02:32:35.997389+00:00'
+    commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+    scope:
+    - local/ustar
+    - theme/ustar
+    matching_files: 526
+    changed: 0
+    missing: 0
+    extra: 0
+    errors: 0
+    skipped: 0
+    evidence: context/runtime/evidence_20261005_baseline.yaml
+    uncompared: 0
+  cron: v3_one_worker_owner_success_20261005T102403Z
+  regular_backup: timer_installed_active_enabled_first_scheduled_run_pending
+  later_observations: context/runtime/RELEASE_LEDGER.md
+  recheck_before_release: true
+  last_core_comparison:
+    observed_at: '2026-10-05T08:28:00.664160+00:00'
+    reference_commit: 1cd17816c56a7df7ee796892efccaf1ed5347340
+    complete_in_declared_scope: true
+    match: false
+    matching_files: 24678
+    changed_files: 1
+    extra_files: 23
+    missing_files: 0
+    errors: 0
+    reference_skipped: 0
+    source: context/runtime/core_comparison_20261005.json
+    review: context/runtime/core_review_20261005.md
+    changed_paths:
+    - public/index.php
+    index_content_review: verified_uploaded_bytes_bootstrap_then_USTAR_home_redirect
+    index_sha256: 2f509be81c989d2cf2b1ffb1e195710714fefec93e2d5d0f646a2834037ebcf1
+    index_observed_oid_verified: true
+    extra_consumers_and_content_review: pending
+    full_deployment_equivalence: false
+  wrapper_contract_review:
+    received_at: '2026-10-05T09:48:49Z'
+    source: context/runtime/recovery_contract_20261005.md
+    hashes_match_installed_observations: true
+    scope: static_uploaded_sources_and_local_offline_gates
+    next_operator_step: measure_retained_lab_export_budget_then_candidate_upgrade_rollback
+    fresh_backup_executed: true
+    fresh_backup_execution_source: owner_terminal_output_not_agent_server_access
+    fresh_archive_restore_executed: false
+    historical_isolated_restore: PASS_owner_report_and_authenticated_feed_screenshot
+  last_manual_backup:
+    archive: ustar-recovery-20261005T101659Z-7ea0ad99.tar.gz.age
+    sha256: 42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8
+    local_independent_hash: PASS_owner_sha256sum
+    moodle_running_after: 'YES'
+    stop_to_running_seconds: 24.097
+    external_copy_and_decryption: not_verified_for_new_archive
+    source: context/runtime/lab_resume_20261005.md
+  last_hdd_backup:
+    source: context/runtime/hdd_backup_trial_20261006.json
+    owner_message_received_at: '2026-10-06T01:16:21Z'
+    started_utc: '2026-10-06T01:10:22.378330+00:00'
+    finished_utc: '2026-10-06T01:12:02.767562+00:00'
+    result: HDD_BACKUP_PASS_owner_terminal_output
+    archive: /srv/ustar-storage/backups/managed/ustar-recovery-20261006T011112Z-8f332c59.tar.gz.age
+    sha256: d9352e3ce5e237a6ac0ab14c72b9da2648d6906fe7e95cd5c88bea726c965af3
+    bytes: 957829597
+    stop_to_running_seconds: 24.111
+    readback_verified: true
+    login_http: 200
+    staging_retained: false
+    external_copy_verified: false
+    restore_verified: false
+    scheduled_run: false
+  retained_lab:
+    observed_at: '2026-10-05T11:30:58Z'
+    source: context/runtime/patch_runtime_20261005.md
+    containers_absent_in_owner_docker_ps_a: false
+    database_files_state_report_retained: true
+    old_restore_acceptance: PASS_owner_report_in_declared_scope
+    resume_helper_prepared: true
+    resume_helper_server_executed: true
+    candidate_upgrade_or_rollback_executed: false
+    previous_containers_absent_observation: '2026-10-05T10:59:56Z'
+    resume_result: PASS_owner_terminal_output
+    http_login: 200
+    production_containers_unchanged: PASS_owner_terminal_output
+    relay_seconds: 7200
+  latest_storage_owner_report:
+    received_at: '2026-10-05T20:46:23Z'
+    observed_at: '2026-10-05T20:44:34.950875+00:00'
+    scope: code_Moodledata_physical_PostgreSQL_live_non_atomic_not_full_retained_payload
+    available_free_bytes: 11280769024
+    available_free_inodes: 2784282
+    planning_required_free_bytes: 8752834560
+    checkpoint_and_independent_workspace_required_free_bytes_estimate: 10526347264
+    reserve_bytes: 4294967296
+    sizes_live_non_atomic:
+      code:
+        allocated_bytes: 503570432
+        copy_budget_bytes: 503394304
+        directories: 10842
+        files: 33380
+        logical_bytes: 381790447
+      moodledata:
+        allocated_bytes: 647397376
+        copy_budget_bytes: 647258112
+        directories: 6014
+        files: 7670
+        group_or_world_writable_files: 1
+        logical_bytes: 603267766
+      postgres:
+        allocated_bytes: 214593536
+        copy_budget_bytes: 214470656
+        directories: 28
+        files: 5491
+        logical_bytes: 214286218
+    source: context/runtime/lab_planning_result_20261005.json
+    earlier_total_du:
+      observed_owner_message_at: '2026-10-05T17:11:36Z'
+      retained_lab_gib_rounded: 2.3
+      backup_export_gib_rounded: 1.9
+non_goals:
+- Изменение production в этой GitHub-поставке
+- Объявление исправленных рисков по публикации плана
+- Удаление тестовой копии или данных без измерения и отдельного решения
+- Автокопирование на SERVEREXPRESS или неисправный HDD
+- Локальные обходные изменения Moodle core, кадровые автокоррекции и удаление истории
+- Выбор мобильного/B2B стека без согласованного ADR
+next_agent_read:
+- context/runtime/backup_transfer_20261015.md
+- context/runtime/backup_transfer_validation_20261015.json
+- START_HERE.md
+- context/CONTEXT_INDEX.md
+- context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
+- context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+- context/audits/AUDIT_RECONCILIATION_20261005_RU.md
+- context/runtime/evidence_20261005_baseline.yaml
+- context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+- context/tasks/ACTIVE.md
+- context/runtime/baseline_20261005.md
+- context/runtime/core_review_20261005.md
+- context/runtime/recovery_contract_20261005.md
+- context/runtime/lab_resume_20261005.md
+- context/runtime/patch_runtime_20261005.md
+- context/runtime/lab_patch_preflight_20261005.md
+- context/runtime/server_map_20261006.md
+historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
+execution:
+  status: authorized_selected_tasks_in_progress
+  authorized_scope: owner_storage_optimization_server_map_HDD_autobackups_before_stage_then_selected_1_7_6
+  owner_selected_order:
+  - 1
+  - 7
+  - 6
+  authorized_task_ids:
+  - INF-01
+  - INF-09
+  - INF-08
+  - INF-10-OS
+  - INF-07
+  - INF-04
+  - INF-14
+  other_points: unrelated_hardening_product_cleanup_projects_remain_deferred
+  after_github_publication: continue_selected_work_with_operator_commands
+  production_changes_in_this_delivery: false
+  production_operator: owner_aduk_via_SSH
+  direct_production_connection_by_agent: false
+  authorized_extra_operation: 'Owner/sysadmin: overwrite, check and format only WWN0x50014ee200c1ee59 / WD-WCAS82914317
+    / 500106780160 bytes, health qualification before backup use'
+  latest_owner_instruction_at: '2026-10-06T00:45:07+03:00'
+  pre_stage_priority:
+  - storage_inventory_and_verified_reorganization
+  - server_map
+  - HDD_automatic_backup_setup_and_trial
+  backup_last_rule: superseded_by_owner_20261006_pre_stage_backup_request
+audit:
+  document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+  current_document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
+  current_snapshot: '2026-10-06T12:39:00Z'
+  status_summary: storage_GPT_copy_and_HDD_trial_timer_confirmed_GPT_write_root_growth_first_scheduled_and_prod_patch_pending
+  reconciliation: context/audits/AUDIT_RECONCILIATION_20261005_RU.md
+  remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  root_occupancy_hypothesis: owner_lab2.3G_total_measured13:11UTC_does_not_explain_all36G_root_usage
+  automatic_backup_target: healthy_HDD_not_SERVEREXPRESS
+  current_hdd_trusted: false
+  current_hdd_state: surface_and_newest_extended_PASS_residual_offlineUNC1_ext4_fstab_old_copy_and_fresh_HDD_trial_PASS_timer_active_first_run_pending
+  current_hdd_checkpoint: context/runtime/hdd_backup_20261006.md
+  future_lts_requirements:
+    target: Moodle_5.3_LTS
+    published: '2026-10-05'
+    minimum_postgresql_major: 17
+    production_postgresql: '16.15'
+    major_migration_executed: false
+    source: https://moodledev.io/general/releases/5.3
+patch_candidate:
+  tag: v5.1.8
+  commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
+  runtime_profile: tests/stage/patch-runtime.json
+  ci_status: full_rc_success_exact_9206f844e12350b9b8ab8ee2d28ed4e63a6dd90a
+  production_upgrade_executed: false
+  core_upgrade_rollback_verified: false
+  third_party_plugins_stage_verified: false
+  ci_run: 37311910916
+  phpunit_tests: 210
+  phpunit_assertions: 891
+  planning_helper: scripts/infra/lab_patch_preflight.py
+  planning_helper_server_executed: true
+  planning_helper_owner_message_received_at: '2026-10-05T20:46:23Z'
+  planning_helper_owner_result: PASS_operator_output_20261005T204434Z
+  planning_helper_original_sha256: d106ae44502dc6fa591853efacc34780b90301ccca451c75032cc689642daff4
+  planning_helper_diagnostic_sha256: bce3c1d79f3666cce9db77927fc9ad9762f7a2ed9bf842db16bed0f2ccfb35bf
+  planning_helper_diagnostic_server_executed: true
+  planning_helper_diagnostic_commit: a6a00cb97319ee461a3b166591dbddee53bf5000
+  planning_helper_diagnostic_pr: 85
+  planning_helper_diagnostic_owner_message_received_at: '2026-10-05T17:40:58Z'
+  planning_helper_data_policy_sha256: 075c454aa58be4209466864dae734ea140c024d7ed5b82863ebfac7e08cc3d8b
+  planning_helper_data_policy_server_executed: true
+  planning_helper_data_policy: exact_private0700_33_33_data_root_metadata_only_regular_files_no_exec_or_hardlinks
+  planning_helper_data_policy_source: context/runtime/lab_patch_preflight_20261005.md
+  planning_helper_data_policy_commit: 9646157a2b2c5e1a4ff585d5c4d33aa730db4bcd
+  planning_helper_data_policy_pr: 86
+  planning_helper_data_policy_source_ci: 37352550732
+  planning_helper_data_policy_context_ci: 37352550761
+  planning_helper_measured_at: '2026-10-05T20:44:34.950875+00:00'
+  planning_helper_server_report: context/runtime/lab_planning_result_20261005.json
+  cold_checkpoint_helper: scripts/infra/lab_cold_checkpoint.py
+  cold_checkpoint_helper_sha256: 9c81abb6b30bea611f99fb7a3e336e12d0a7827d4ea462a4d3d63e6f8aec9012
+  cold_checkpoint_helper_branch: codex/ustar-lab-cold-rollback-20261005
+  cold_checkpoint_helper_implementation: 40e7d13e197cd59321e5e89e3f477539eb265b19
+  cold_checkpoint_source: context/runtime/lab_cold_checkpoint_20261005.md
+  cold_checkpoint_and_independent_workspace_prepared: true
+  cold_checkpoint_and_independent_workspace_server_executed: false
+  core_candidate_upgrade_repeat_and_paired_rollback_server_executed: false
+  cold_checkpoint_helper_pr: 87
+  cold_checkpoint_source_ci: 37375193949
+  cold_checkpoint_context_ci: 37375193850
+  cold_checkpoint_operator_action: paused_by_owner_pending_storage_map_HDD_backups
+storage_reorganization:
+  source: context/runtime/server_map_20261006.md
+  owner_output_received_at: '2026-10-05T21:45:07Z'
+  command_execution_timestamps: not_printed
+  ssd_model: WALRAM 120GB
+  ssd_gib_rounded: 111.8
+  root_partition_gib_rounded: 50
+  root_filesystem_df: 49G total /36G used /11G available /78%
+  unallocated_tail: 61.79GiB_confirmed_sector_extents_GPT_repair_and_growth_pending
+  home_aduk_gib_rounded: 15
+  home_snapshot_candidates_gib_approx: 13.1
+  hdd_gib_rounded: 465.8
+  hdd_partitions_filesystem_mount: sdb1_ext4_UUID359a2bae-4e79-461a-ab72-1597f605d801_mounted_srv_ustar-storage
+  source_deletions_executed: false
+  storage_moves_executed: false
+  partition_or_filesystem_expansion_executed: false
+  automatic_backup_installed: true
+  next_readonly_evidence:
+  - first_HDD_scheduled_run_after_20261007T003000Z
+  - owner_post_write_GPT_CRC_layout_and_unchanged_partition_results
+  - independent_copy_and_restore_of_fresh_HDD_archive
+  fresh_server_inventory_received: 2026-10-06T00:13:00+03:00
+  fresh_server_inventory_scope: fdisk_docker_mounts_timezone_timers_listeners
+  ssd_gpt_backup_boundary_warning: 'PMBR 104857599 != disk 234441647; no write performed'
+  ssd_sda1: '2048-4095 BIOS boot'
+  ssd_sda2: '4096-104855551 ext4 root'
+  ssd_free_tail_sectors: 129586062
+  ssd_free_tail_gib: 61.79
+  hdd_initializer_published: true
+  hdd_initializer_execution: FILESYSTEM_READY_owner_output
+  hdd_initializer_sha256: ef3a5699f54384428d40e1c9b96b2707e117ad188b1f36628c95fb823be49aa2
+  hdd_filesystem_uuid: 359a2bae-4e79-461a-ab72-1597f605d801
+  hdd_mount_or_fstab_changes: true
+  hdd_mountpoint: /srv/ustar-storage
+  hdd_mounted: true
+  hdd_mount_options: rw,nosuid,nodev,noexec,relatime
+  hdd_fstab_changed: true
+  hdd_fstab_configuration_verified: true
+  hdd_fstab_backup: /etc/fstab.before-ustar-hdd-c2kb8T
+  hdd_mount_persistence_verified: false
+  hdd_mount_owner_output_received_at: '2026-10-06T00:07:20Z'
+  hdd_df_rounded: 458G_total_1.8G_used_451G_available_1percent
+  hdd_df_timing: post_manual_trial_inventory_20261006T081826Z
+  previous_pre_trial_hdd_df: 458G_total_913M_used_452G_available_1percent
+  hdd_fstab_and_copy_owner_output_received_at: '2026-10-06T00:33:41Z'
+  hdd_existing_archive_copy_verified: true
+  hdd_existing_archive_sha256: 42b87cca41623d3433943989c4ab5049b93d375cbcd5a7ddf43038d840b676a8
+  hdd_existing_archive_source_retained: true
+  hdd_producer_source: scripts/infra/hdd_backup.py
+  hdd_producer_sha256: 75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75
+  hdd_producer_installed: true
+  hdd_producer_source_pr: 91
+  hdd_producer_source_commit: d884e402948af91b5c9f2645e07fdaf1b1838e03
+  hdd_producer_context_ci: 37397150420
+  hdd_producer_source_ci: 37397150516
+  hdd_producer_local_validation: 19_boundary_and_10_exact_private_engine_fixture_tests_PASS
+  hdd_fresh_backup_trial_executed: true
+  hdd_fresh_backup_trial: context/runtime/hdd_backup_trial_20261006.json
+  hdd_trial_owner_output_received_at: '2026-10-06T01:16:21Z'
+  hdd_backup_timer: installed_active_enabled_first_scheduled_run_pending
+  hdd_schedule_source: scripts/infra/hdd_backup_schedule.py
+  hdd_schedule_source_sha256: 54533f6a629699e031a877b4a57f68401477a61cf20cab39512c79a2e0477b7d
+  hdd_schedule_contract: context/runtime/hdd_backup_schedule_20261006.md
+  hdd_schedule_local_validation: 24_tests_PASS_including_actual_systemd_calendar_and_unit_parsing
+  hdd_schedule_initial_policy: owner_activated_daily_0330_Europe_Moscow_no_catchup_no_archive_deletion_100GiB_quota
+  hdd_schedule_policy_owner_activation: PASS_owner_operator_install_command_20261006_received080224Z
+  hdd_archive_retention_deletion: not_enabled
+  hdd_schedule_server_execution: install_status_PASS_first_scheduled_run_unverified
+  hdd_schedule_source_pr: 92
+  hdd_schedule_implementation_commit: 7501440b476bf720658f5bf039efc3e4f1237d9c
+  hdd_schedule_merged_main_commit: 040c671236cb4d7f4a225700bd288ced7e6f14f3
+  hdd_schedule_source_ci: 37400747176
+  hdd_schedule_context_ci: 37400747178
+  hdd_schedule_installation_evidence: context/runtime/hdd_backup_schedule_install_20261006.json
+  hdd_schedule_owner_message_received_at: '2026-10-06T08:02:24Z'
+  hdd_schedule_timer_active: true
+  hdd_schedule_timer_enabled: true
+  hdd_schedule_next_event_utc: '2026-10-07T00:30:00Z'
+  hdd_schedule_last_scheduled_run: null
+  hdd_schedule_recovery_marker_present: false
+  hdd_schedule_boot_recovery_verified: false
+  next_ssd_preflight: context/runtime/ssd_storage_preflight_20261006.md
+  readonly_storage_result: context/runtime/ssd_storage_result_20261006.json
+  readonly_storage_inventory_timestamp: '2026-10-06T08:18:26Z'
+  readonly_storage_owner_received_at: '2026-10-06T08:19:59Z'
+  root_filesystem_uuid: fb5cc206-93f8-4601-a415-8d418970cf31
+  root_journaled_user_group_quota_mount_options_present: true
+  ssd_full_identity_verified: true
+  ssd_full_identity_source: context/runtime/ssd_identity_ext4_result_20261006.json
+  ssd_identity_owner_received_at: '2026-10-06T08:36:58Z'
+  ssd_serial: 2203JPDG120GB6000933
+  ssd_bytes: 120034123776
+  ssd_identity_limitation: zero_WWN_not_a_unique_identity
+  root_ext4_block_count: 13106432
+  root_ext4_block_bytes: 4096
+  root_ext4_bytes: 53683945472
+  root_ext4_bytes_equal_partition_bytes: true
+  mounted_header_is_offline_fsck: false
+  partition_table_copy_runbook: context/runtime/ssd_partition_table_copy_20261006.md
+  partition_table_copy_command_prepared: true
+  partition_table_copy_command_server_executed: true
+  partition_table_copy_result: context/runtime/ssd_partition_table_copy_result_20261006.json
+  partition_table_copy_owner_received_at: '2026-10-06T09:06:01Z'
+  partition_table_copy_directory: /srv/ustar-storage/ssd-layout-20261006-06NYpg
+  partition_table_copy_hash_checks: nine_payloads_OK_owner_terminal_output
+  partition_table_copy_raw_source_cmp: PASS_by_completed_guarded_command
+  partition_table_copy_capture_timestamp: stored_privately_not_printed
+  ssd_gpt_relocate_runbook: context/runtime/ssd_gpt_relocate_20261006.md
+  ssd_gpt_relocate_command_prepared: true
+  ssd_gpt_relocate_command_server_executed: false
+  ssd_gpt_relocate_local_validation: Bash_Python_syntax_and_17_regular_sparse_file_guard_scenarios_PASS_native_sgdisk_not_executed
+  ssd_smart_overall_health: PASSED_owner_H_A_only
+  ssd_vendor_specific_smart_raw_decode_verified: false
+  retained_lab_active_mount_consumers_confirmed: true
+  complete_candidate_consumer_clearance: false
+  path_reference_search_missing_link_errors: true
+  host_console_or_rescue_availability_confirmed: true
+  host_console_confirmation_scope: owner_sysadmin_console_access_declaration_20261006_received090336Z
+  rescue_boot_medium_identified: false
+  actual_host_boot_recovery_tested: false
+  binary_partition_table_recovery_copy_confirmed: true
+
+restore_experiment_20261014:
+  runbook: context/runtime/backup_restore_experiment_20261014.md
+  validation: context/runtime/backup_restore_test_validation_20261014.json
+  source_commit: cdf69bab822b1ecbc352018cb56f542f992e0db5
+  pr: 102
+  native_execution: pending
+  independent_clean_host: pending
+  supersedes_older_next_steps: true
+  previous_owner_acceptance: host_update_reboot_and_Moodle518_browser_SCORM
+  following_work: Moodle53_PG17_PR101
+
+control_panel_20261015:
+  runbook: context/runtime/control_panel_scope_20261015.md
+  task: INF-06
+  status: deferred_by_owner
+  restore_experiment: separate_from_current_production_migration
+  separate_host_and_domain: not_yet_specified
+
+backup_transfer_delivery:
+  source_commit: 1b8bfdd566eb0759f8c0b6faa8078eb27564fcb0
+  pr: 102
+  runbook: context/runtime/backup_transfer_20261015.md
+  validation: context/runtime/backup_transfer_validation_20261015.json
+  owner_instruction_utc: "2026-10-15T10:58:19.319000+00:00"
+  local_and_selected_ci_tests: 68
+  portable_default_duration_seconds: 0
+  lab_default_duration_seconds: 3600
+  transfer_contains_key: true
+  presentation_carry: homepage_and_theme_restored_from_backup_config
+  repack_required_because_existing_package_has_old_controller: true
+  production_execution: pending_owner
+  clean_host_and_browser_acceptance: pending_owner
+  automatic_start_after_reboot: false
+  control_panel: deferred
+
+production_transfer_20261015:
+  runbook: context/runtime/production_transfer_20261015.md
+  validation: context/runtime/production_transfer_validation_20261015.json
+  source_commit: 99ab241e1771b850bfedb3a5cab03ad4a2122917
+  pr: 102
+  task: OPS-02
+  worker_sha256: 3edb4de42a84e855302045d307390fb13156e7b9acabcf688fb720c743f42854
+  launcher_sha256: 1a075a5bd6f995ef7db2dd255470103175cde28d23a253a9cd72fb89d12cdcd8
+  source_freeze: explicit_pack_production_acknowledge_outage
+  target_start: explicit_start_production_url_source_stopped
+  auto_start_after_reboot: implemented_native_reboot_pending
+  cron: one_per_minute_preserved_task_flags
+  native_full_archive_import: pending
+  browser_SCORM_SMTP: pending
+  whole_host_DNS_mail_OS: excluded
+
+production_copy_20261015:
+  runbook: context/runtime/production_copy_20261015.md
+  validation: context/runtime/production_copy_validation_20261015.json
+  source_commit: a1a0c62bfcbb04df96d8797537599db11e692f4f
+  preparation_commit: 38485343d87e91cdc8627a5aceb8c477997a068c
+  pr: 102
+  owner_instruction_utc: '2026-10-15T16:48:48+00:00'
+  source_operation: readonly_pack_latest_completed_HDD_no_backup_maintenance_or_stop
+  source_package_built: false
+  archive_time: explicit_snapshot_completed_utc_not_live_now
+  target_start: start_production_copy_different_URL
+  target_background: mail_off_cron_off_preserve_database_task_flags
+  target_auto_start: implemented_native_reboot_pending
+  native_archive_import_and_browser_SCORM: pending
+  changes_after_backup: not_synchronized
+  control_panel_and_Moodle53: deferred

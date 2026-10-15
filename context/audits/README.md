@@ -1,11 +1,5 @@
-# Инфраструктурный аудит — актуальная редакция 06.10.2026
+# Аудиты USTAR
 
-- [Актуальный полный аудит](USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md) — сохранена структура; отдельно указаны сделанное, подготовленное, остаток и текущий этап. HDD/manual trial/timer/GPT-copy подтверждены; GPT relocation/root growth, первый ночной backup и обновление production ещё не выполнены.
+Текущее состояние и полный остаток: [сверка на16Oct](AUDIT_RECONCILIATION_20261016_RU.md). Исходный аудит [05Oct](USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md) сохранён byte-for-byte; [редакция06Oct](USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md) — исторический checkpoint, а не текущий next-step.
 
-- [Документ владельца](USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md) — опубликован без изменения байтов; исходный снимок выводов и источников.
-- [Сверка и уточнения](AUDIT_RECONCILIATION_20261005_RU.md) — расхождение по теме, последующее сообщение о тестовом стенде, ограничения выбора backup-target.
-- [Полный пошаговый план](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md) — все вопросы аудита, порядок, зависимости, приёмка и откат.
-- [Сводка серверных свидетельств](../runtime/evidence_20261005.yaml) — обезличенный машиночитаемый паспорт с датами и областью измерений.
-- [Свежий baseline](../runtime/baseline_20261005.md) и [новый паспорт](../runtime/evidence_20261005_baseline.yaml) — последующие результаты 05.10; исходный аудит не переписан.
-
-DOC-02 завершён PR78. Текущий порядок владельца06.10: хранение/карта/начальные HDD-автокопии → отдельный стенд → Moodle/CI/ОС → HTTPS. Правило backup-last исходного аудита/плана заменено. Статусы исполнения и application SHA — в [STATE](../roadmap/STATE.yaml). Original05Oct и исторические свидетельства не переписаны. Moodle5.3 LTS уже released05Oct; будущий PLAT-01 требует PostgreSQL17+, текущий production16.15 для этого major не подходит. Это не смена выбранного patch5.1.8.
+[Первичная reconciliation05Oct](AUDIT_RECONCILIATION_20261005_RU.md), [полный remediation plan](../roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md), [текущий BACKLOG](../roadmap/BACKLOG.yaml). Ни полученный архив, ни CI сами по себе не закрывают независимый DR/SMTP/ACL/performance.

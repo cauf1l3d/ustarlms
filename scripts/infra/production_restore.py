@@ -479,7 +479,8 @@ def restore(args):
             exec_owned('web', state, ['php', '/var/www/html/public/admin/tool/replace/cli/replace.php', '--search=' + oldurl, '--replace=' + ep['url'], '--shorten', '--non-interactive'], user='33:33', timeout=900)
         exec_owned('web', state, ['php', '/var/www/html/public/admin/cli/purge_caches.php'], user='33:33', timeout=180)
         require(verify_database(state) == state['counts_before'], 'RESTORED_COUNTS_OR_TASK_FLAGS_CHANGED')
-        sql(state, "INSERT INTO mdl_config(name,value) VALUES ('maintenance_enabled','0') ON CONFLICT(name) DO UPDATE SET value='0';")
+        # Moodle's API updates both the DB and its configuration cache.
+        exec_owned('web', state, ['php', '-r', "define('CLI_SCRIPT',true);require '/var/www/html/config.php';set_config('maintenance_enabled',0);"], user='33:33')
         write_config(lab, original, password, ep, active=True)
         effective = json.loads(exec_owned('web', state, ['php', '-r', "define('CLI_SCRIPT',true);require '/var/www/html/config.php';echo json_encode(['url'=>$CFG->wwwroot,'cron'=>(int)$CFG->cron_enabled,'mail'=>(bool)$CFG->noemailever,'maintenance'=>(bool)$CFG->maintenance_enabled]);"], user='33:33').stdout)
         require(effective == {'url': ep['url'], 'cron': 1, 'mail': False, 'maintenance': False}, 'PRODUCTION_CONFIG_NOT_EFFECTIVE')

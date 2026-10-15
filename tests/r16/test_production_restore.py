@@ -181,6 +181,7 @@ class Production(unittest.TestCase):
         self.assertIn("$CFG->theme = 'ustar'", (p.CODE / 'config.php').read_text())
         self.assertIn("$CFG->defaulthomepage = '/local/ustar/home.php'", (p.CODE / 'config.php').read_text())
         self.assertTrue(any('--search=http://old-academy' in c and '--replace=http://new-academy' in c for c in self.calls))
+        self.assertTrue(any(c[:2] == ['docker', 'exec'] and "set_config('maintenance_enabled',0)" in c[-1] for c in self.calls))
 
     def test_restore_failure_stops_owned_containers_retains_dump_and_no_boot_enable(self):
         self.fail_restore = True

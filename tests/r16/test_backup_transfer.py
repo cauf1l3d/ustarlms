@@ -29,7 +29,7 @@ class Transfer(unittest.TestCase):
         self.addCleanup(self.stack.close)
         self.installed = self.base / 'installed'
         self.installed.mkdir(mode=0o700)
-        for key in ('CONTROLLER', 'ENGINE', 'CHECKER'):
+        for key in ('CONTROLLER', 'ENGINE', 'CHECKER', 'PRODUCTION'):
             path = self.installed / getattr(t, key).name
             path.write_text('# ' + key + ' fixture\n')
             path.chmod(0o600)
@@ -259,6 +259,45 @@ class Transfer(unittest.TestCase):
         self.assertEqual(len(run.call_args_list), 2)
         self.assertEqual(t.BOOTSTRAP_LOG_ROOT.stat().st_mode & 0o777, 0o700)
 
+    def production_args(self):
+        return SimpleNamespace(url='http://target-academy', bind='0.0.0.0', http_port=80,
+                               behind_proxy=False, source_stopped=True, install_dependencies=False)
+
+    def production_worker(self):
+        ep = {'url': 'http://target-academy', 'bind': '0.0.0.0', 'port': 80, 'behind_proxy': False}
+        return SimpleNamespace(ROOT=self.base / 'production-state', TARGET=self.base / 'production-data',
+                               endpoint=mock.Mock(return_value=ep), units=mock.Mock(return_value={'ustar-academy.service': ''}))
+
+    def test_production_kit_is_v2_and_contains_pinned_worker(self):
+        kit = self.make_kit()
+        meta = t.validate_kit(kit)
+        self.assertEqual(meta['format'], 'ustar-portable-v2')
+        self.assertIn(t.PRODUCTION.name, meta['files'])
+        self.assertFalse(meta['source_frozen_for_migration'])
+
+    def test_production_start_installs_import_unit_without_lab_cleanup_or_timer(self):
+        kit = self.make_kit()
+        worker = self.production_worker()
+        with mock.patch.object(t, 'SELF', kit / 'restore.py'), mock.patch.object(t, 'production', return_value=worker), redirect_stdout(io.StringIO()) as out:
+            t.launch_production(self.production_args())
+        unit = (t.UNIT_PATH.parent / 'ustar-production-import-20261015.service').read_text()
+        self.assertIn('--restore-production', unit)
+        self.assertIn('--source-stopped', unit)
+        self.assertNotIn('--duration', unit)
+        self.assertNotIn('ExecStopPost', unit)
+        self.assertIn('NOT_YET_READY', out.getvalue())
+
+    def test_production_rejects_existing_target_before_bootstrap(self):
+        kit = self.make_kit(); worker = self.production_worker(); worker.TARGET.mkdir()
+        args = self.production_args(); args.install_dependencies = True
+        with mock.patch.object(t, 'SELF', kit / 'restore.py'), mock.patch.object(t, 'production', return_value=worker), mock.patch.object(t, 'install_dependencies') as bootstrap:
+            with self.assertRaisesRegex(t.TransferError, 'NO_OVERWRITE'): t.launch_production(args)
+            bootstrap.assert_not_called()
+
+    def test_frozen_export_rejects_a_different_latest_backup(self):
+        with self.assertRaisesRegex(t.TransferError, 'FROZEN_SOURCE_BACKUP_CHANGED'):
+            t.pack({'archive_sha256': '0' * 64})
+
     def test_duration_input(self):
         for value, seconds in [('30m', 1800), ('2h', 7200), ('0', 0), ('1d', 86400)]:
             self.assertEqual(t.parse_duration(value), seconds)
@@ -271,6 +310,10 @@ if __name__ == '__main__':
     unittest.main()
 
 class SourceBinding(unittest.TestCase):
+    def test_production_pin_matches_shipped_source(self):
+        actual = hashlib.sha256((REPO / 'scripts/infra/production_restore.py').read_bytes()).hexdigest()
+        self.assertEqual(actual, t.PRODUCTION_SHA)
+
     def test_controller_pin_matches_shipped_source(self):
         actual = hashlib.sha256((REPO / 'scripts/infra/backup_restore_test.py').read_bytes()).hexdigest()
         self.assertEqual(actual, t.CONTROLLER_SHA)

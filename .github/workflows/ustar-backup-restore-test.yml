@@ -5,9 +5,11 @@ on:
     paths:
       - 'scripts/infra/backup_restore_test.py'
       - 'scripts/infra/backup_transfer.py'
+      - 'scripts/infra/production_restore.py'
       - 'scripts/infra/ustar-restore-test-20261014.service'
       - 'tests/r16/test_backup_restore_test.py'
       - 'tests/r16/test_backup_transfer.py'
+      - 'tests/r16/test_production_restore.py'
       - '.github/workflows/ustar-backup-restore-test.yml'
   workflow_dispatch:
 permissions:
@@ -27,6 +29,8 @@ jobs:
         run: sudo -n python3 -m unittest discover -s tests/r16 -p test_backup_restore_test.py -v
       - name: Portable kit and lifetime launcher
         run: sudo -n python3 -m unittest discover -s tests/r16 -p test_backup_transfer.py -v
+      - name: Production recovery lifecycle and real loopback health
+        run: sudo -n env USTAR_NATIVE_NETWORK_TESTS=1 python3 -m unittest discover -s tests/r16 -p test_production_restore.py -v
       - name: Systemd service parser and cleanup command
         run: |
           systemd-analyze verify scripts/infra/ustar-restore-test-20261014.service
@@ -41,3 +45,20 @@ jobs:
           PYGEN
           systemd-analyze verify /tmp/ustar-verify-0.service /tmp/ustar-verify-7200.service
           systemctl show ustar-not-installed-20261015.service -p MainPID --value
+      - name: Permanent production units and import service parser
+        run: |
+          python3 - <<'PYGEN'
+          import importlib.util
+          from pathlib import Path
+          for name in ('production_restore', 'backup_transfer'):
+              spec = importlib.util.spec_from_file_location(name, 'scripts/infra/' + name + '.py')
+              module = importlib.util.module_from_spec(spec)
+              spec.loader.exec_module(module)
+              if name == 'production_restore':
+                  for filename, text in module.units().items():
+                      Path('/tmp', filename).write_text(text)
+              else:
+                  ep = {'url': 'http://target-academy', 'bind': '0.0.0.0', 'port': 80, 'behind_proxy': False}
+                  Path('/tmp/ustar-production-import.service').write_text(module.production_unit(ep, Path('/opt/ustar-transfer')))
+          PYGEN
+          systemd-analyze verify /tmp/ustar-academy.service /tmp/ustar-academy-cron.service /tmp/ustar-academy-cron.timer /tmp/ustar-production-import.service

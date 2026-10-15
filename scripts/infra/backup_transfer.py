@@ -5,7 +5,8 @@
 --start-lab --duration 2h: server1, latest completed HDD backup, chosen lifetime.
 --start --duration 0: extracted kit on an otherwise empty Docker host, no timer.
 Optional --install-dependencies bootstraps missing tools on clean Ubuntu24.04.
-No OS upgrade, production overwrite, production stop, cron or public ports.
+Production migration is explicit: --pack-production freezes the source;
+--start-production restores a permanent Academy on an empty target.
 """
 import argparse
 from contextlib import contextmanager
@@ -31,6 +32,8 @@ ENGINE = Path('/usr/local/sbin/USTAR_RESTORE_LAB_20261004.py')
 ENGINE_SHA = '71f6a1c45c25bfe97fe0be7d0a362bb5a72e742b77c167f3783f526c85950dac'
 CHECKER = Path('/usr/local/lib/ustar-recovery/USTAR_RESTORE_PREFLIGHT_20261004.py')
 CHECKER_SHA = 'e00577aefcbcdd8ae3ebc1f30f98c899c3efd3b2b4e593b6ce0d26d09e2756da'
+PRODUCTION = Path('/usr/local/sbin/USTAR_PRODUCTION_RESTORE_20261015.py')
+PRODUCTION_SHA = 'b8191dfc6915a937740d9344a582d074dd343f57cac2eeeb9858cd7da873d2d5'
 SELF = Path(__file__).absolute()
 TRANSFER_PARENT = Path('/srv/ustar-storage/transfers')
 UNIT = 'ustar-backup-recovery-20261015.service'
@@ -121,18 +124,22 @@ def add_checked(tar, path, name, expected=None):
     return {'bytes': before.st_size, 'sha256': checksum}
 
 
-def pack():
+def pack(source_receipt=None):
     r = controller()
     checked(ENGINE, ENGINE_SHA)
     checked(CHECKER, CHECKER_SHA)
     trusted(SELF)
+    checked(PRODUCTION, PRODUCTION_SHA)
     args = SimpleNamespace(manifest=None, input_directory=None, identity=str(r.IDENTITY))
     selected = r.selection(args)  # Exact last-success, sidecar, HDD mount/UUID.
     print('TRANSFER_PHASE=checking_archive_and_key', flush=True)
     r.verify(r.engine(selected))  # Streaming age/auth + nested checks; no plaintext restore.
+    if source_receipt is not None:
+        require(source_receipt['archive_sha256'] == selected['sha256'], 'FROZEN_SOURCE_BACKUP_CHANGED')
     archive = Path(selected['archive'])
     files = {
         'restore.py': (SELF, digest(SELF)),
+        PRODUCTION.name: (PRODUCTION, PRODUCTION_SHA),
         CONTROLLER.name: (CONTROLLER, CONTROLLER_SHA),
         ENGINE.name: (ENGINE, ENGINE_SHA),
         CHECKER.name: (CHECKER, CHECKER_SHA),
@@ -155,8 +162,10 @@ def pack():
         with tarfile.open(fileobj=output, mode='w', format=tarfile.PAX_FORMAT) as tar:
             records = {name: add_checked(tar, path, name, expected)
                        for name, (path, expected) in files.items()}
-            metadata = {'format': 'ustar-portable-v1', 'contains_private_recovery_key': True,
-                        'archive': archive.name, 'files': records}
+            metadata = {'format': 'ustar-portable-v2', 'contains_private_recovery_key': True,
+                        'archive': archive.name, 'files': records,
+                        'source_frozen_for_migration': source_receipt is not None,
+                        'source_frozen_utc': source_receipt.get('frozen_utc') if source_receipt else None}
             import io
             body = (json.dumps(metadata, indent=2) + '\n').encode()
             entry = tarfile.TarInfo('transfer.json')
@@ -171,7 +180,7 @@ def pack():
     print(json.dumps({'directory': str(folder), 'download': ['ustar-transfer.tar', 'ustar-transfer.tar.sha256'],
                       'sha256': checksum, 'bytes': target.stat().st_size,
                       'source_archive': archive.name, 'source_archive_unchanged': True,
-                      'production_stopped': False}, indent=2))
+                      'production_stopped': source_receipt is not None}, indent=2))
 
 
 def validate_kit(folder):
@@ -185,12 +194,12 @@ def validate_kit(folder):
             result[name] = value
         return result
     data = json.loads(metadata_path.read_bytes(), object_pairs_hook=unique)
-    require(data.get('format') == 'ustar-portable-v1' and data.get('contains_private_recovery_key') is True,
+    require(data.get('format') == 'ustar-portable-v2' and data.get('contains_private_recovery_key') is True,
             'INVALID_TRANSFER_FORMAT')
     name = data.get('archive')
     require(isinstance(name, str) and re.fullmatch(r'ustar-recovery-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}\.tar\.gz\.age', name),
             'INVALID_ARCHIVE_NAME')
-    expected = {'restore.py', CONTROLLER.name, ENGINE.name, CHECKER.name, 'recovery.key', name, name + '.json'}
+    expected = {'restore.py', PRODUCTION.name, CONTROLLER.name, ENGINE.name, CHECKER.name, 'recovery.key', name, name + '.json'}
     records = data.get('files')
     require(isinstance(records, dict) and set(records) == expected, 'TRANSFER_MEMBER_SET_MISMATCH')
     require({p.name for p in folder.iterdir()} == expected | {'transfer.json'}, 'EXTRACTED_MEMBER_SET_MISMATCH')
@@ -199,7 +208,7 @@ def validate_kit(folder):
         require(type(record.get('bytes')) is int and path.stat().st_size == record['bytes']
                 and isinstance(record.get('sha256'), str)
                 and digest(path) == record['sha256'], 'TRANSFER_MEMBER_HASH_MISMATCH')
-    for filename, sha in ((CONTROLLER.name, CONTROLLER_SHA), (ENGINE.name, ENGINE_SHA), (CHECKER.name, CHECKER_SHA)):
+    for filename, sha in ((PRODUCTION.name, PRODUCTION_SHA), (CONTROLLER.name, CONTROLLER_SHA), (ENGINE.name, ENGINE_SHA), (CHECKER.name, CHECKER_SHA)):
         checked(folder / filename, sha)
     return data
 
@@ -331,6 +340,57 @@ def launch(duration, portable=False, bootstrap=False):
                       'automatic_start_after_reboot': False}, indent=2))
 
 
+def production(path=PRODUCTION):
+    checked(path, PRODUCTION_SHA)
+    module = types.ModuleType('ustar_production_transfer_worker')
+    module.__file__ = str(path)
+    exec(compile(path.read_bytes(), str(path), 'exec'), module.__dict__)
+    return module
+
+
+def production_unit(ep, folder):
+    require(re.fullmatch(r'/[A-Za-z0-9_./-]+', str(folder)) and '..' not in folder.parts,
+            'TRANSFER_PATH_NEEDS_SIMPLE_ABSOLUTE_NAME')
+    args = ['--restore-production', '--kit', str(folder), '--url', ep['url'],
+            '--bind', ep['bind'], '--http-port', str(ep['port']), '--source-stopped']
+    if ep['behind_proxy']: args.append('--behind-proxy')
+    return (MANAGED + '[Unit]\nDescription=USTAR production archive import\nRequires=docker.service\nAfter=docker.service\n\n'
+            '[Service]\nType=exec\nUMask=0077\nRuntimeMaxSec=1h\nTimeoutStopSec=180\n'
+            'ExecStart=/usr/bin/python3 -I -B -u ' + str(PRODUCTION) + ' ' + ' '.join(args) + '\n')
+
+
+def launch_production(args):
+    folder = SELF.parent
+    validate_kit(folder)
+    p = production(folder / PRODUCTION.name)
+    ep = p.endpoint(args.url, args.bind, args.http_port, args.behind_proxy)
+    require(args.source_stopped, 'DECLARE_SOURCE_STOPPED_BEFORE_PRODUCTION_ACTIVATION')
+    require(not p.ROOT.exists() and not p.ROOT.is_symlink() and not p.TARGET.exists() and not p.TARGET.is_symlink(),
+            'EXISTING_PRODUCTION_DATA_NO_OVERWRITE')
+    for dst, sha in ((PRODUCTION, PRODUCTION_SHA), (CONTROLLER, CONTROLLER_SHA), (ENGINE, ENGINE_SHA), (CHECKER, CHECKER_SHA)):
+        if dst.exists() or dst.is_symlink(): checked(dst, sha)
+    unit = 'ustar-production-import-20261015.service'
+    unit_path = UNIT_PATH.parent / unit
+    require(not unit_path.exists() and not unit_path.is_symlink(), 'PRODUCTION_IMPORT_UNIT_COLLISION')
+    for name in p.units():
+        require(not (UNIT_PATH.parent / name).exists() and not (UNIT_PATH.parent / name).is_symlink(), 'PRODUCTION_RUNTIME_UNIT_COLLISION')
+    text = production_unit(ep, folder)
+    trusted(UNIT_PATH.parent, directory=True)
+    if args.install_dependencies: install_dependencies()
+    require(not command(['docker', 'ps', '-aq']).strip(), 'PRODUCTION_START_REQUIRES_EMPTY_DOCKER')
+    for name in ('docker', 'age', 'systemctl', 'systemd-run', 'nsenter', 'findmnt'):
+        require(shutil.which(name), 'INSTALL_REQUIRED_TOOL_' + name.upper().replace('-', '_'))
+    if not CHECKER.parent.exists():
+        trusted(CHECKER.parent.parent, directory=True); CHECKER.parent.mkdir(mode=0o700)
+    for dst, sha in ((PRODUCTION, PRODUCTION_SHA), (CONTROLLER, CONTROLLER_SHA), (ENGINE, ENGINE_SHA), (CHECKER, CHECKER_SHA)):
+        install_exact(folder / dst.name, dst, sha)
+    write_new(unit_path, text, 0o644)
+    command(['systemctl', 'daemon-reload'])
+    command(['systemctl', 'start', unit])
+    print('PRODUCTION_START=SUBMITTED; NOT_YET_READY')
+    print(json.dumps({'unit': unit, 'url': ep['url'], 'status': 'sudo python3 -I -B ' + str(PRODUCTION) + ' --production-status'}))
+
+
 def parse_duration(value):
     if value == '0':
         return 0
@@ -345,17 +405,38 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     modes = ap.add_mutually_exclusive_group(required=True)
     modes.add_argument('--pack', action='store_true')
+    modes.add_argument('--pack-production', action='store_true', help='Fresh final backup and leave source web stopped for migration')
+    modes.add_argument('--start-production', action='store_true', help='Permanent Academy on a clean target')
+    modes.add_argument('--resume-source', action='store_true', help='Abort migration only after the target is stopped')
     modes.add_argument('--start-lab', action='store_true')
-    modes.add_argument('--start', action='store_true', help='Start an extracted kit on a clean server; default no timer')
+    modes.add_argument('--start', action='store_true', help='ISOLATED TEST COPY only; use --start-production for a working Academy')
     ap.add_argument('--install-dependencies', action='store_true',
                     help='Only with --start: install missing Docker/age/util-linux on clean Ubuntu24.04')
+    ap.add_argument('--acknowledge-outage', action='store_true')
+    ap.add_argument('--source-stopped', action='store_true')
+    ap.add_argument('--target-stopped', action='store_true')
+    ap.add_argument('--url')
+    ap.add_argument('--bind', default='0.0.0.0')
+    ap.add_argument('--http-port', type=int, default=80)
+    ap.add_argument('--behind-proxy', action='store_true')
     ap.add_argument('--duration', help='30m, 2h, 1d; 0 means no timer. Lab default 1h, portable default 0.')
     args = ap.parse_args()
     require(os.geteuid() == 0, 'RUN_WITH_SUDO')
     os.umask(0o077)
-    require(not args.pack or args.duration is None, 'PACK_HAS_NO_DURATION')
-    require(not args.install_dependencies or args.start, 'BOOTSTRAP_ONLY_WITH_PORTABLE_START')
-    if args.pack:
+    require(not (args.pack or args.pack_production or args.start_production or args.resume_source) or args.duration is None, 'PRODUCTION_OR_PACK_HAS_NO_DURATION')
+    require(not args.install_dependencies or args.start or args.start_production, 'BOOTSTRAP_ONLY_WITH_PORTABLE_START')
+    if args.pack_production:
+        require(args.acknowledge_outage, 'PACK_PRODUCTION_REQUIRES_ACKNOWLEDGE_OUTAGE')
+        p = production()
+        with p.lock('ustar-source-transfer.lock'):
+            pack(p.freeze_source())
+    elif args.resume_source:
+        p = production()
+        with p.lock('ustar-source-transfer.lock'): p.resume_source(args.target_stopped)
+    elif args.start_production:
+        require(args.url, 'PRODUCTION_URL_REQUIRED')
+        with launch_lock(): launch_production(args)
+    elif args.pack:
         pack()
     else:
         duration = parse_duration(args.duration) if args.duration is not None else (0 if args.start else 3600)

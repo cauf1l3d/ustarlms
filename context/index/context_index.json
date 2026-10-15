@@ -876,8 +876,8 @@
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
       "domain": "runtime",
-      "size": 4089,
-      "sha256": "eaabb4caf1c98a82339f4c612fa8357b22b6509107e33c226e31adb3a0a20fe0"
+      "size": 3797,
+      "sha256": "db823f2161e6023f30cdc4c449a7c50995d01e0d31845e9892954abbe31e5cd2"
     },
     {
       "path": "context/runtime/backup_restore_experiment_20261014.md",
@@ -1771,7 +1771,7 @@
       "path": "context/tasks/backlog.yaml",
       "domain": "tasks",
       "size": 133,
-      "sha256": "8184dea6dc7637501066af0d8136a233afb366a01765022172ebefdbc390854f"
+      "sha256": "08efe768ed1cea63da4f638d08e5ee84357a58316cfbea1c14f0b0c4a4707045"
     }
   ]
 }

@@ -70,7 +70,7 @@ jobs:
           path: artifacts/
 
   moodle-db:
-    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc')) }}
     needs: [source, rollback, prepare-rc]
     runs-on: ubuntu-24.04
     timeout-minutes: 40
@@ -112,7 +112,7 @@ jobs:
         run: docker compose -f ${{ matrix.compose }} down --volumes
 
   rollback:
-    if: ${{ (github.event_name == 'workflow_dispatch' && (inputs.full_rc || inputs.rollback_only)) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && contains(fromJSON('["full-rc","rollback-preflight"]'), github.event.label.name)) }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && (inputs.full_rc || inputs.rollback_only)) || (github.event_name == 'pull_request' && (contains(github.event.pull_request.labels.*.name, 'full-rc') || contains(github.event.pull_request.labels.*.name, 'rollback-preflight'))) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -133,7 +133,7 @@ jobs:
         run: docker compose -f tests/stage/rollback-compose.yaml down --volumes
 
   prepare-rc:
-    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc') }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc')) }}
     needs: [source, rollback]
     runs-on: ubuntu-24.04
     steps:
@@ -155,7 +155,7 @@ jobs:
           path: artifacts/
 
   gate:
-    if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'full-rc')) }}
+    if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc'))) }}
     needs: [source, rollback, prepare-rc, moodle-db]
     runs-on: ubuntu-24.04
     steps:

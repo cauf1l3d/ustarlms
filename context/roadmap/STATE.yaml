@@ -26,7 +26,7 @@ code_baseline:
     moodle-db: success
     gate: success
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
-  main_before_consolidation: 99248772a91526c87c1a31f425d1a07906727152
+  main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
   status: owner_accepted_Moodle518_host_update_boot_and_export_restore_waiting
   observed_at: '2026-10-14T13:51:02Z'

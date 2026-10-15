@@ -398,3 +398,8 @@ docs-only выпуска; реальные CI runs и exact implementation SHA �
 ## 2026-10-15 — same-host control panel UI
 
 Owner06:14MSK chose server1/no separate subdomain, login/password, labs addresses/activity, SFTP, manual backups and restores; calm functional admin UI. New branch from fresh main c53723c8, no stack on restore branch. Standalone prototype under server-console, explicitly demo, no auth/remote calls/jobs. Existing USTAR application unchanged. [Scope](../runtime/control_panel_scope_20261015.md). Restore unexecuted/deferred; Moodle53 preparation retained. Backend/collector/session/deployment next.
+
+
+## 2026-10-15 13:32MSK — Linear-inspired console styling
+
+Owner requested Linear style. Updated prototype CSS across overview/navigation/tables/login/dialogs/mobile to dark graphite, compact type and violet accent. No JS/action/data changes, no source application/backend/deployment changes. Demo labels retained. Reference https://linear.app/. Native browser visual QA still pending; no optional runtime retesting for unchanged handlers.

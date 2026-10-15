@@ -708,8 +708,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 47384,
-      "sha256": "d73436accc7b5313a5851077d438b312c1e5fa3e3f1edc7d381603d5740cf25d"
+      "size": 47827,
+      "sha256": "9f9d976cbf1d37afa3901004eb026e9afe8c0856876865044a6035f85cc4a8d6"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -840,8 +840,8 @@
     {
       "path": "context/runtime/control_panel_scope_20261015.md",
       "domain": "runtime",
-      "size": 14316,
-      "sha256": "aea348f65492687099f5ee4013a33af86f9dac55aeb46fe8c1744199781efe3b"
+      "size": 15290,
+      "sha256": "f58bf1c4ec5d4c240828aae91cf0ab4dcf62ab1f501bc4b4f25845b1ce3d6768"
     },
     {
       "path": "context/runtime/core_comparison_20261005.json",

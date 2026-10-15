@@ -9,3 +9,5 @@
 Manual/browser QA: desktop/mobile, navigation, backup filter and empty state, SSD/Moodle outage distinction, restore production/test target distinction, dialog keyboard close, disabled login inputs; exact results captured in the current handoff.
 
 Validation performed15Oct: JS syntax PASS; jsdom DOM checks PASS for all views, filters/empty, SSD impact, restore target separation and disabled login fields. Dialog API modeled in jsdom. Native Playwright could not launch because Chromium was absent; browser download failed. Desktop/mobile screenshots and real browser visual/keyboard/layout acceptance remain PENDING; no screenshot success is claimed.
+
+15Oct13:32MSK owner styling update: Linear-inspired dark graphite UI, compact navigation/tables, subtle borders and violet actions. All views/dialog/login styled; JS bytes unchanged. Prototype status and demo/no-live-backend boundaries retained.

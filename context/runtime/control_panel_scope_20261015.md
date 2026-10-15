@@ -56,3 +56,7 @@ Backend login: server-side sessions, password hash, throttling, secure HttpOnly 
 Первый UI-прототип не является готовым серверным пультом; collector/auth/API/jobs/live sources остаются следующим implementation этапом. Архивный эксперимент не запускать до готовности пульта. Размещение server1 не равно публичной доступности по HTTP; внешний парольный вход только через проверенный зашифрованный маршрут.
 
 UI validation15Oct: JS parse и jsdom DOM/navigation/filter/empty/backup-impact/restore-target PASS; dialog API modeled. Реальный Chromium отсутствовал, download не удался; визуальная desktop/mobile приёмка в браузере PENDING. Live server/auth/ops не тестировались и не заявляются.
+
+## Owner15Oct13:32MSK — оформление в стиле Linear
+
+UI-прототип переоформлен: тёмный графит, нейтральные поверхности/тонкие границы, компактные sidebar/header/table, мягкий фиолетовый основной акцент, зелёный/янтарный только для статусов. Тема распространяется на overview, все вкладки, login, формы/dialog/toast и mobile breakpoints. Product reference: https://linear.app/. USTAR branding и demo labels сохранены. Script bytes и action/data contracts не изменены. Это визуальная правка прототипа, не внедрение auth/API или подключение server1. Native browser visual acceptance остаётся pending после ранее недоступного Chromium; новых runtime/deployment claims нет.

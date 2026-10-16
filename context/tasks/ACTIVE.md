@@ -27,3 +27,5 @@ SSD11Oct; full-addon lab upgrade/repeat/paired rollback12Oct; production5.1.8 up
 В PR103 добавлены auth/сессии/CSRF/rate limit, collector/API, реальный UI, ограниченные systemd и [установка](../../server-console/INSTALL.md). GitHub-публикация и exact-head результаты CI фиксируются в PR, server1 ещё не установлен. Следующий этап после сверки установки: Prometheus/правила/DB-cron adapters, sanitized logs, Telegram/outbox и внешний observer; затем verified download/jobs. Не объявлять весь INF-06 закрытым.
 
 16Oct после замечания владельца о мелком/нечитаемом тексте UI переработан: body16px, метрики32–35px, явные цвета таблиц, смысловые акценты, responsive Grafana-style time-series с CPU/RAM и HTTP. Synthetic ряды — только в fixtures; реальные отсутствующие источники остаются NoData. Публикация в том же PR103, server1 не менялся.
+
+Повторное UI/UX ревью16Oct: исправлены подписи11–13px и наложение полей бэкапа; интерфейсный текст16px/оси14px, адаптивные легенды без потери среднего, видимое мобильное меню, полные health-details. [Отчёт](../../server-console/UI_UX_REVIEW_20261016.md). Native приёмка и оставшиеся этапы INF-06 открыты.

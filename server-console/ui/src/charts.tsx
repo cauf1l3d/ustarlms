@@ -47,7 +47,7 @@ export function TimeChart({
   useEffect(() => {
     if (!container.current) return;
     const observer = new ResizeObserver(([entry]) =>
-      setWidth(Math.max(200, entry.contentRect.width)),
+      setWidth(Math.max(1, entry.contentRect.width)),
     );
     observer.observe(container.current);
     return () => observer.disconnect();
@@ -80,7 +80,7 @@ export function TimeChart({
     unit === "%"
       ? 100
       : Math.max(10, Math.ceil((Math.max(1, ...values) * 1.15) / 50) * 50);
-  const left = 54,
+  const left = 68,
     right = 18,
     top = 20,
     bottom = 36,
@@ -119,7 +119,7 @@ export function TimeChart({
       ? nearest[1]
       : null;
   };
-  const tickCount = width < 360 ? 3 : 5;
+  const tickCount = Math.max(2, Math.min(5, Math.floor(plotWidth / 90) + 1));
   return (
     <section className={"chart panel chart-" + tone}>
       <div className="section-title">
@@ -274,11 +274,16 @@ export function TimeChart({
             <span>
               {missing[series?.reason_code || "not_configured"] ||
                 "Нет измерений"}
-              . Нулевые значения не подставляются.
+              . График появится после получения измерений.
             </span>
           </div>
         )}
       </div>
+      {hasData && !visible.length && (
+        <p className="muted" role="status">
+          Линии скрыты. Нажмите на название метрики, чтобы вернуть её на график.
+        </p>
+      )}
       <div className="chart-legend">
         <div className="legend-header">
           <span>Метрика</span>
@@ -313,18 +318,18 @@ export function TimeChart({
                 <i className={"legend-swatch " + track.tone} />
                 {track.name}
               </button>
-              <span>
+              <span className="legend-value" data-label="Последнее">
                 {format(last)}
                 {last != null ? " " + unit : ""}
               </span>
-              <span>
+              <span className="legend-value" data-label="Среднее">
                 {format(
                   numbers.length
                     ? numbers.reduce((a, b) => a + b, 0) / numbers.length
                     : null,
                 )}
               </span>
-              <span>
+              <span className="legend-value" data-label="Максимум">
                 {format(numbers.length ? Math.max(...numbers) : null)}
               </span>
             </div>

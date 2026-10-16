@@ -3,11 +3,11 @@
   color: #f1f5fb;
   background: #101318;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.55;
   font-synthesis: none;
   color-scheme: dark;
   --text: #f1f5fb;
-  --secondary: #bdc8d8;
+  --secondary: #c9d4e3;
   --line: #333e4e;
   --surface: #191f28;
   --hover: #242e3b;
@@ -60,12 +60,12 @@ p {
 }
 h1 {
   font-size: 30px;
-  line-height: 1.2;
+  line-height: 1.3;
   font-weight: 600;
   letter-spacing: -0.65px;
 }
 h2 {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -75,7 +75,8 @@ p {
 small,
 .muted {
   color: var(--secondary);
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1.55;
 }
 label {
   display: block;
@@ -94,7 +95,7 @@ select {
   border: 1px solid #536176;
   padding: 9px 12px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
 }
 .app {
   display: grid;
@@ -137,7 +138,7 @@ aside {
 }
 .brand small {
   display: block;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 400;
   letter-spacing: 0;
   margin-top: 3px;
@@ -152,7 +153,7 @@ nav button {
   gap: 12px;
   padding: 12px;
   text-align: left;
-  font-size: 15px;
+  font-size: 16px;
   color: #c3ccda;
   border-radius: 8px;
 }
@@ -177,7 +178,7 @@ nav button[aria-current] {
   align-items: center;
   gap: 9px;
   text-align: left;
-  font-size: 14px;
+  font-size: 16px;
   color: #c4cedd;
   padding: 10px 4px;
 }
@@ -188,7 +189,7 @@ nav button[aria-current] {
   border: 1px solid #4b586b;
   border-radius: 5px;
   color: #cad4e2;
-  font-size: 12px;
+  font-size: 16px;
 }
 .workspace {
   padding: 30px 30px 24px;
@@ -207,9 +208,9 @@ header {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: 1.4px;
+  letter-spacing: 0.4px;
   color: #c5d0df;
 }
 .env {
@@ -218,8 +219,8 @@ header {
   border: 1px solid #385c4d;
   padding: 3px 7px;
   border-radius: 4px;
-  letter-spacing: 0.8px;
-  font-size: 11px;
+  letter-spacing: 0.3px;
+  font-size: 16px;
 }
 header h1 {
   margin-top: 9px;
@@ -231,8 +232,8 @@ header h1 {
 }
 .freshness {
   color: #c0cddd;
-  font-size: 13px;
-  max-width: 185px;
+  font-size: 16px;
+  max-width: 230px;
 }
 .freshness::before {
   content: "";
@@ -274,7 +275,7 @@ header h1 {
   border-top-color: #ff929b;
 }
 .health > span:first-child {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: #e2e9f2;
 }
@@ -282,7 +283,7 @@ header h1 {
   font-size: 16px;
 }
 .health small {
-  font-size: 13px;
+  font-size: 16px;
 }
 .badge {
   display: inline-flex;
@@ -290,7 +291,7 @@ header h1 {
   gap: 8px;
   white-space: nowrap;
   color: #c1ccda;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 .badge i {
@@ -347,7 +348,8 @@ header h1 {
   justify-content: space-between;
   gap: 8px;
   color: #d1dae7;
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 .metric-label svg {
   flex-shrink: 0;
@@ -365,8 +367,8 @@ header h1 {
 }
 .metric small {
   display: block;
-  min-height: 40px;
-  font-size: 13px;
+  min-height: 44px;
+  font-size: 16px;
   color: #c2ccdb;
 }
 .metric progress {
@@ -407,7 +409,7 @@ header h1 {
 }
 .section-title > span {
   color: #c1ccda;
-  font-size: 13px;
+  font-size: 16px;
 }
 .attention {
   padding: 0;
@@ -451,12 +453,12 @@ header h1 {
 }
 .check-row strong {
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
 }
 .check-row small {
   display: block;
-  font-size: 13px;
+  font-size: 16px;
   color: #c0cbd9;
   margin-top: 4px;
 }
@@ -473,6 +475,7 @@ header h1 {
 .chart {
   padding: 18px 18px 14px;
   border-top: 2px solid #55877f;
+  container-type: inline-size;
 }
 .chart-cpu {
   border-top-color: #a77e5c;
@@ -495,7 +498,7 @@ header h1 {
   background: #2a3443;
   padding: 3px 8px;
   border-radius: 4px;
-  font-size: 13px;
+  font-size: 16px;
 }
 .plot-container {
   min-width: 0;
@@ -519,7 +522,7 @@ header h1 {
 .axis-text {
   fill: #c0ccdb;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 .series-http {
@@ -572,7 +575,7 @@ header h1 {
   padding: 10px 12px;
   color: #edf3fb;
   box-shadow: 0 4px 16px #0005;
-  font-size: 13px;
+  font-size: 16px;
 }
 .chart-tooltip time {
   display: block;
@@ -596,10 +599,10 @@ header h1 {
 .legend-header,
 .legend-row {
   display: grid;
-  grid-template-columns: minmax(60px, 1fr) repeat(3, minmax(52px, 0.75fr));
+  grid-template-columns: minmax(75px, 0.9fr) repeat(3, minmax(90px, 1fr));
   gap: 8px;
   align-items: center;
-  font-size: 13px;
+  font-size: 16px;
   font-variant-numeric: tabular-nums;
 }
 .legend-header {
@@ -615,6 +618,34 @@ header h1 {
   border-top: 1px solid #2d3949;
   color: #eef4fc;
 }
+.legend-value {
+  color: var(--text);
+  white-space: nowrap;
+}
+.legend-value::before {
+  display: none;
+}
+@container (max-width: 390px) {
+  .legend-header {
+    display: none;
+  }
+  .legend-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px 0 16px;
+  }
+  .legend-value {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .legend-value::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--secondary);
+  }
+}
 .legend-toggle {
   display: inline-flex;
   align-items: center;
@@ -623,8 +654,8 @@ header h1 {
   text-align: left;
   padding: 8px 0;
   min-width: 0;
-  min-height: 40px;
-  font-size: 13px;
+  min-height: 44px;
+  font-size: 16px;
   color: #eef4fc;
 }
 .legend-toggle:hover {
@@ -647,14 +678,19 @@ header h1 {
 .legend-swatch.ram {
   background: var(--ram);
 }
-.muted-track {
-  opacity: 0.55;
+.muted-track .legend-swatch {
+  background: transparent;
+  border: 1px solid var(--secondary);
+  height: 7px;
+}
+.muted-track .legend-toggle {
+  text-decoration: line-through;
 }
 .chart-timezone {
   display: block;
   margin-top: 7px;
   color: #b8c5d7;
-  font-size: 12px;
+  font-size: 16px;
 }
 .chart-no-data {
   display: flex;
@@ -675,7 +711,7 @@ header h1 {
   font-weight: 500;
 }
 .chart-no-data > span {
-  font-size: 14px;
+  font-size: 16px;
 }
 .empty {
   padding: 26px 20px;
@@ -693,11 +729,11 @@ header h1 {
 .empty p {
   margin-bottom: 0;
   color: #c2cedd;
-  font-size: 14px;
+  font-size: 16px;
 }
 .intro {
   color: #c4cfde;
-  font-size: 15px;
+  font-size: 16px;
   margin: 0 0 24px;
   max-width: 850px;
 }
@@ -706,7 +742,7 @@ header h1 {
   align-items: center;
   gap: 7px;
   color: #a6d7ff;
-  font-size: 14px;
+  font-size: 16px;
   padding: 7px 0 7px 12px;
 }
 .table-wrap {
@@ -716,13 +752,13 @@ table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 14px;
+  font-size: 16px;
   color: #edf3fb;
 }
 th {
   font-weight: 500;
   color: #bfccde;
-  font-size: 13px;
+  font-size: 16px;
   padding: 12px 15px 12px 0;
 }
 td {
@@ -738,7 +774,7 @@ td strong {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .container-name svg {
   color: #a1c5e7;
@@ -748,11 +784,12 @@ dl {
   display: grid;
   grid-template-columns: 190px minmax(0, 1fr);
   gap: 16px;
-  font-size: 15px;
+  font-size: 16px;
   margin: 24px 0;
 }
 dt {
-  color: #c3cede;
+  color: #c9d4e3;
+  overflow-wrap: anywhere;
 }
 dd {
   margin: 0;
@@ -760,8 +797,11 @@ dd {
   overflow-wrap: anywhere;
 }
 .backup code {
-  font-size: 14px;
-  color: #cfe4ff;
+  font-size: 16px;
+  color: #e2ecfa;
+  background: #10151c;
+  padding: 4px 6px;
+  line-height: 1.6;
 }
 .data-row {
   display: flex;
@@ -770,7 +810,7 @@ dd {
   justify-content: space-between;
   border-top: 1px solid #3b4859;
   padding: 18px 0;
-  font-size: 14px;
+  font-size: 16px;
   color: #edf3fb;
 }
 .data-row:first-of-type {
@@ -788,7 +828,7 @@ footer {
   padding-top: 18px;
   border-top: 1px solid #384557;
   color: #bfccdd;
-  font-size: 13px;
+  font-size: 16px;
 }
 .connection,
 .notice {
@@ -797,7 +837,7 @@ footer {
   border: 1px solid #846a42;
   padding: 14px 18px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 18px;
 }
 .login {
@@ -822,11 +862,11 @@ footer {
 }
 .login p {
   color: #c4cfde;
-  font-size: 15px;
+  font-size: 16px;
   margin-bottom: 26px;
 }
 .login label {
-  font-size: 15px;
+  font-size: 16px;
 }
 .primary {
   border: 1px solid #a8d9ff;
@@ -843,7 +883,7 @@ footer {
 .login form > small {
   display: block;
   margin-top: 20px;
-  font-size: 13px;
+  font-size: 16px;
   color: #c2cede;
 }
 .error-text {
@@ -880,14 +920,27 @@ dialog::backdrop {
 }
 dialog p {
   color: #d4dfed;
-  font-size: 15px;
+  font-size: 16px;
 }
 dialog label {
   margin-top: 16px;
-  font-size: 15px;
+  font-size: 16px;
 }
 dialog dl {
   grid-template-columns: 110px minmax(0, 1fr);
+}
+.domain-check + .domain-check {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 20px;
+}
+.domain-check strong {
+  display: block;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.domain-check p {
+  margin: 10px 0;
 }
 .sr-only {
   position: absolute;
@@ -961,7 +1014,7 @@ dialog dl {
     grid-column: 2;
     grid-row: 1;
     display: flex;
-    gap: 20px;
+    gap: 16px;
     align-items: center;
     padding: 0;
     margin: 0;
@@ -1009,14 +1062,13 @@ dialog dl {
     display: none;
   }
   nav {
-    display: flex;
-    overflow-x: auto;
-    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
   nav button {
-    flex-shrink: 0;
-    white-space: nowrap;
-    padding: 10px 13px;
+    justify-content: center;
+    padding: 10px 6px;
   }
   .nav-icon {
     display: none;
@@ -1026,6 +1078,7 @@ dialog dl {
   }
   .sidebar-foot {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     align-items: center;
     padding: 0;
@@ -1033,12 +1086,12 @@ dialog dl {
   }
   .sidebar-foot .mode {
     margin: 0 auto 0 0;
-    font-size: 11px;
+    font-size: 16px;
     white-space: nowrap;
   }
   .sidebar-foot button {
     width: auto;
-    font-size: 13px;
+    font-size: 16px;
     padding: 8px 3px;
   }
   .sidebar-foot button svg {
@@ -1049,26 +1102,31 @@ dialog dl {
   }
   header {
     align-items: flex-start;
+    flex-direction: column;
     gap: 12px;
   }
   header h1 {
     font-size: 28px;
   }
   .toolbar {
-    max-width: 180px;
+    width: 100%;
+    max-width: none;
+    justify-content: space-between;
+    gap: 12px;
   }
   .freshness {
-    font-size: 12px;
-    text-align: right;
+    font-size: 16px;
+    text-align: left;
+    max-width: none;
   }
   .health {
     padding: 14px 12px;
   }
   .health > span:first-child {
-    font-size: 14px;
+    font-size: 16px;
   }
   .health small {
-    font-size: 13px;
+    font-size: 16px;
   }
   .metric {
     padding: 16px 13px;
@@ -1077,13 +1135,13 @@ dialog dl {
     font-size: 32px;
   }
   .metric-label {
-    font-size: 14px;
+    font-size: 16px;
   }
   .metric-label svg {
     width: 18px;
   }
   .metric small {
-    font-size: 13px;
+    font-size: 16px;
   }
   .metrics,
   .health-grid {
@@ -1102,7 +1160,7 @@ dialog dl {
     gap: 7px;
   }
   .chart h2 {
-    font-size: 16px;
+    font-size: 19px;
   }
   .chart-heading > svg {
     width: 16px;
@@ -1110,13 +1168,15 @@ dialog dl {
   .check-row {
     padding: 14px;
     gap: 9px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
   }
   .check-row > span:first-child {
     flex-basis: 65%;
   }
   .check-row .badge {
-    font-size: 13px;
+    font-size: 16px;
   }
   .chevron {
     display: none;
@@ -1126,7 +1186,7 @@ dialog dl {
     flex-wrap: wrap;
   }
   .attention .section-title > span {
-    font-size: 13px;
+    font-size: 16px;
   }
   .table-wrap {
     overflow: visible;
@@ -1152,18 +1212,18 @@ dialog dl {
     gap: 12px;
     padding: 8px 0;
     border: 0;
-    font-size: 14px;
+    font-size: 16px;
   }
   td::before {
     content: attr(data-label);
     color: #bdcadd;
-    font-size: 13px;
+    font-size: 16px;
   }
   td[data-label="Контейнер"]::before {
     content: none;
   }
   td strong {
-    font-size: 15px;
+    font-size: 16px;
   }
   .container-name {
     gap: 8px;
@@ -1172,36 +1232,38 @@ dialog dl {
     flex-wrap: wrap;
   }
   dl {
-    grid-template-columns: 105px minmax(0, 1fr);
-    gap: 14px;
-    font-size: 14px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    font-size: 16px;
+  }
+  dialog dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  dd + dt {
+    margin-top: 14px;
   }
   .data-row {
-    font-size: 14px;
+    font-size: 16px;
     gap: 16px;
     align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .data-row time {
-    font-size: 13px;
+    font-size: 16px;
     white-space: nowrap;
   }
   footer {
-    font-size: 13px;
-  }
-  .legend-header,
-  .legend-row {
-    font-size: 12px;
-    gap: 5px;
-    grid-template-columns: minmax(45px, 1fr) repeat(3, minmax(48px, 0.9fr));
-  }
-  .legend-toggle {
-    font-size: 13px;
+    font-size: 16px;
   }
   .chart-no-data > span {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 @media (max-width: 360px) {
+  nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   header {
     flex-direction: column;
   }
@@ -1220,18 +1282,58 @@ dialog dl {
     font-size: 28px;
   }
   .health .badge {
-    font-size: 15px;
+    font-size: 16px;
   }
   .metric-label svg {
     display: none;
   }
-  .legend-header > span:nth-child(3),
-  .legend-row > span:nth-child(3) {
-    display: none;
+}
+@media (max-width: 440px) {
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .legend-header,
-  .legend-row {
-    grid-template-columns: 1fr 1fr 1fr;
+  .metric {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 16px;
+  }
+  .metric-label {
+    grid-column: 1 / -1;
+  }
+  .metric > strong {
+    margin: 0;
+    font-size: 32px;
+  }
+  .metric small {
+    grid-column: 1 / -1;
+  }
+  .metric progress {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
+  .health {
+    padding: 14px 12px;
+  }
+  .sidebar-foot .mode {
+    width: 100%;
+    border: 0;
+    padding: 0;
+  }
+  .sidebar-foot button {
+    padding: 8px 0;
+  }
+  .sidebar-foot button:last-child {
+    margin-left: auto;
+  }
+  td[data-label="Автозапуск"] {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  dialog {
+    padding: 20px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

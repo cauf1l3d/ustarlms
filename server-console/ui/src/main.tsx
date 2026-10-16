@@ -369,6 +369,7 @@ function App() {
   const [series, setSeries] = useState<Record<string, Series>>({}),
     [security, setSecurity] = useState<{ at: number; event: string }[]>([]);
   const [selected, setSelected] = useState<Check | null>(null),
+    [selectedDomain, setSelectedDomain] = useState<string | null>(null),
     [profile, setProfile] = useState(false),
     [profileError, setProfileError] = useState("");
   const [tick, setTick] = useState(Date.now());
@@ -380,6 +381,7 @@ function App() {
     setSeries({});
     setSecurity([]);
     setSelected(null);
+    setSelectedDomain(null);
     setProfile(false);
     setNotice("Сессия завершилась. Войдите снова.");
   };
@@ -520,9 +522,9 @@ function App() {
     };
   }, [session?.csrf]);
   useEffect(() => {
-    if (selected || profile) dialog.current?.showModal();
+    if (selected || selectedDomain || profile) dialog.current?.showModal();
     else dialog.current?.close();
-  }, [selected, profile]);
+  }, [selected, selectedDomain, profile]);
   if (initial)
     return (
       <main className="login">
@@ -577,7 +579,14 @@ function App() {
       }}
     >
       <p>
-        {session.username} · {session.role}
+        {session.username} ·{" "}
+        {(
+          {
+            owner: "Владелец",
+            operator: "Оператор",
+            viewer: "Наблюдатель",
+          } as Record<string, string>
+        )[session.role] || session.role}
       </p>
       <label>
         Текущий пароль
@@ -679,19 +688,23 @@ function App() {
             <h1>{titles[page]}</h1>
           </div>
           <div className="toolbar">
-            <label className="sr-only" htmlFor="period">
-              Период графиков
-            </label>
-            <select
-              id="period"
-              value={period}
-              onChange={(e) => setPeriod(e.target.value)}
-            >
-              <option value="1h">Последний час</option>
-              <option value="24h">24 часа</option>
-              <option value="7d">7 дней</option>
-              <option value="15d">15 дней</option>
-            </select>
+            {["overview", "academy", "server"].includes(page) && (
+              <>
+                <label className="sr-only" htmlFor="period">
+                  Период графиков
+                </label>
+                <select
+                  id="period"
+                  value={period}
+                  onChange={(e) => setPeriod(e.target.value)}
+                >
+                  <option value="1h">Последний час</option>
+                  <option value="24h">24 часа</option>
+                  <option value="7d">7 дней</option>
+                  <option value="15d">15 дней</option>
+                </select>
+              </>
+            )}
             <span
               className={"freshness " + (stale || lost ? "old" : "")}
               role="status"
@@ -732,25 +745,17 @@ function App() {
                         "health health-" +
                         (stale ? "no_data" : data.domains[id])
                       }
-                      onClick={() =>
-                        setSelected(
-                          checks.find(
-                            (c) => c.domain === id && c.status !== "ok",
-                          ) ||
-                            checks.find((c) => c.domain === id) ||
-                            null,
-                        )
-                      }
+                      onClick={() => setSelectedDomain(id)}
                     >
                       <span>{title}</span>
                       <Badge status={stale ? "no_data" : data.domains[id]} />
                       <small>
+                        Проверок с замечаниями:{" "}
                         {
                           checks.filter(
                             (c) => c.domain === id && c.status !== "ok",
                           ).length
-                        }{" "}
-                        проверок требуют уточнения
+                        }
                       </small>
                     </button>
                   ))}
@@ -810,7 +815,7 @@ function App() {
                     <h2>Требует внимания</h2>
                     <span>
                       {problem.length
-                        ? `${problem.length} требуют внимания`
+                        ? `Проверок: ${problem.length}`
                         : "Подключение источников"}
                     </span>
                   </div>
@@ -944,12 +949,16 @@ function App() {
                 </section>
                 <section className="panel">
                   <h2>Службы</h2>
-                  {data.units?.map((row) => (
-                    <div className="data-row" key={String(row.name)}>
-                      <span>{String(row.name)}</span>
-                      <span>{stale ? "Нет данных" : String(row.state)}</span>
-                    </div>
-                  )) || <Empty>Источник ещё не подключён.</Empty>}
+                  {data.units?.length ? (
+                    data.units.map((row) => (
+                      <div className="data-row" key={String(row.name)}>
+                        <span>{String(row.name)}</span>
+                        <span>{stale ? "Нет данных" : String(row.state)}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <Empty>Состояние служб ещё не получено.</Empty>
+                  )}
                 </section>
               </>
             )}
@@ -1087,6 +1096,7 @@ function App() {
         ref={dialog}
         onClose={() => {
           setSelected(null);
+          setSelectedDomain(null);
           setProfile(false);
           setProfileError("");
         }}
@@ -1096,34 +1106,57 @@ function App() {
           <h2 id="detail-title">
             {profile
               ? "Учётная запись"
-              : labels[selected?.id || ""] || selected?.label}
+              : selectedDomain
+                ? domains[selectedDomain]
+                : labels[selected?.id || ""] || selected?.label}
           </h2>
           <button aria-label="Закрыть" onClick={() => dialog.current?.close()}>
             ×
           </button>
         </div>
-        {profile
-          ? profileBody
-          : selected && (
-              <>
-                <Badge status={selected.status} />
-                <p>{reasons[selected.reason_code] || selected.reason_code}</p>
-                <dl>
-                  <dt>Измерение</dt>
-                  <dd>{date(selected.observed_at)}</dd>
-                  <dt>Источник</dt>
-                  <dd>
-                    {selected.source === "not_configured"
-                      ? "Не подключён"
-                      : labels[selected.source] || selected.source}
-                  </dd>
-                </dl>
-                <p className="muted">
-                  Детали отражают данные на момент открытия. Правила устойчивой
-                  нагрузки и доставка алертов подключаются следующим этапом.
-                </p>
-              </>
+        {profile ? (
+          profileBody
+        ) : selectedDomain ? (
+          <div className="domain-checks">
+            {checks
+              .filter((c) => c.domain === selectedDomain)
+              .map((c) => (
+                <div className="domain-check" key={c.id}>
+                  <strong>{labels[c.id] || c.label}</strong>
+                  <Badge status={c.status} />
+                  <p>
+                    {reasons[c.reason_code] ||
+                      "Подробности проверки пока недоступны"}
+                  </p>
+                  <small>Измерение: {date(c.observed_at)}</small>
+                </div>
+              ))}
+            {!checks.some((c) => c.domain === selectedDomain) && (
+              <Empty>Проверки пока не получены.</Empty>
             )}
+          </div>
+        ) : (
+          selected && (
+            <>
+              <Badge status={selected.status} />
+              <p>{reasons[selected.reason_code] || selected.reason_code}</p>
+              <dl>
+                <dt>Измерение</dt>
+                <dd>{date(selected.observed_at)}</dd>
+                <dt>Источник</dt>
+                <dd>
+                  {selected.source === "not_configured"
+                    ? "Не подключён"
+                    : labels[selected.source] || selected.source}
+                </dd>
+              </dl>
+              <p className="muted">
+                Детали отражают данные на момент открытия. Правила устойчивой
+                нагрузки и доставка алертов подключаются следующим этапом.
+              </p>
+            </>
+          )
+        )}
       </dialog>
     </div>
   );

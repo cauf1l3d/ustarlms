@@ -1,5 +1,6 @@
 import { test, expect, Page } from "@playwright/test";
 import { graphFixture } from "./graph-fixtures";
+import { expectReadable } from "./readability";
 
 const fixture = () => ({
   version: 1,
@@ -147,7 +148,7 @@ test("stale data and missing history do not become healthy or zero", async ({
   ).toBeVisible();
   await expect(page.locator(".health-grid .ok")).toHaveCount(0);
   await expect(
-    page.getByText(/Нулевые значения не подставляются/).first(),
+    page.getByText(/График появится после получения измерений/).first(),
   ).toBeVisible();
   await page.screenshot({ path: info.outputPath("stale.png"), fullPage: true });
 });
@@ -206,7 +207,9 @@ test("bounded graphs, shared period, no console errors and screenshots", async (
   await expect(page.getByRole("dialog")).not.toBeVisible();
 });
 
-test("readable text, contrast and responsive plot labels", async ({ page }) => {
+test("all sections and dialogs keep readable text and fit compact screens", async ({
+  page,
+}) => {
   await page.route("**/api/history?*", (route) =>
     route.fulfill({
       json: graphFixture(
@@ -215,17 +218,42 @@ test("readable text, contrast and responsive plot labels", async ({ page }) => {
     }),
   );
   await login(page);
-  const sizes = await page
-    .locator(".metric-label,.check-row strong,.container-name strong")
-    .evaluateAll((nodes) =>
-      nodes.map((node) => parseFloat(getComputedStyle(node).fontSize)),
-    );
-  expect(Math.min(...sizes)).toBeGreaterThanOrEqual(14);
-  const color = await page
-    .locator(".container-name strong")
-    .first()
-    .evaluate((node) => getComputedStyle(node).color);
-  expect(color).toBe("rgb(240, 245, 252)");
+  const original = page.viewportSize()!;
+  for (const width of [...new Set([original.width, 1024, 320])]) {
+    await page.setViewportSize({ width, height: original.height });
+    for (const name of [
+      "Обзор",
+      "Академия",
+      "Сервер",
+      "Бэкапы",
+      "Стенды",
+      "События",
+    ]) {
+      await page
+        .getByRole("navigation")
+        .getByRole("button", { name, exact: true })
+        .click();
+      await expect(
+        page.getByRole("heading", { name, exact: true }),
+      ).toBeVisible();
+      await expectReadable(page);
+      if (["Бэкапы", "Стенды", "События"].includes(name))
+        await expect(page.getByLabel("Период графиков")).toHaveCount(0);
+      if (name === "Сервер")
+        await expect(
+          page.getByText("Состояние служб ещё не получено."),
+        ).toBeVisible();
+    }
+    await page
+      .getByRole("button", { name: "Учётная запись", exact: true })
+      .click();
+    await expectReadable(page);
+    await page.keyboard.press("Escape");
+  }
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Обзор", exact: true })
+    .click();
   await expect(page.locator('svg[role="img"]')).toHaveCount(2);
   const labels = await page.locator(".axis-text").evaluateAll((nodes) =>
     nodes.map((node) => ({
@@ -236,18 +264,36 @@ test("readable text, contrast and responsive plot labels", async ({ page }) => {
     })),
   );
   expect(Math.min(...labels.map((label) => label.size))).toBeGreaterThanOrEqual(
-    12,
+    14,
   );
   expect(Math.min(...labels.map((label) => label.scale))).toBeGreaterThan(0.95);
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBeTruthy();
-  await page.setViewportSize({ width: 320, height: 844 });
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBeTruthy();
+  await page.getByRole("button", { name: "RAM", exact: true }).click();
+  await expectReadable(page);
+  await expect(
+    page.locator('.legend-value[data-label="Среднее"]').last(),
+  ).toBeVisible();
+});
+
+test("health opens every check in the selected domain", async ({ page }) => {
+  const data = fixture();
+  data.checks.push({
+    id: "db",
+    label: "База данных",
+    domain: "academy",
+    status: "no_data",
+    reason_code: "not_configured",
+    source: "not_configured",
+    observed_at: new Date().toISOString(),
+  });
+  await page.route("**/api/overview", (route) => route.fulfill({ json: data }));
+  await login(page);
+  await page.locator(".health").filter({ hasText: "Академия" }).click();
+  await expect(page.getByRole("dialog").locator(".domain-check")).toHaveCount(
+    2,
+  );
+  await expectReadable(page);
+  await page.keyboard.press("Escape");
+  await expect(
+    page.locator(".health").filter({ hasText: "Академия" }),
+  ).toBeFocused();
 });

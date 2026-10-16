@@ -1202,6 +1202,17 @@ dialog dl {
   }
 }
 @media (max-width: 360px) {
+  header {
+    flex-direction: column;
+  }
+  .toolbar {
+    width: 100%;
+    max-width: none;
+    justify-content: space-between;
+  }
+  .freshness {
+    flex: 1;
+  }
   .workspace {
     padding: 20px 12px;
   }

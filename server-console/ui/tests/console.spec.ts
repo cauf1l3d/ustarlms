@@ -183,11 +183,9 @@ test("bounded graphs, shared period, no console errors and screenshots", async (
   await expect(page.locator('svg[role="img"]')).toHaveCount(2);
   await page.getByLabel("Период графиков").selectOption("24h");
   await expect(page.locator('svg[role="img"]')).toHaveCount(2);
-  const resource = page
-    .locator(".chart")
-    .filter({
-      has: page.getByRole("heading", { name: "CPU и оперативная память" }),
-    });
+  const resource = page.locator(".chart").filter({
+    has: page.getByRole("heading", { name: "CPU и оперативная память" }),
+  });
   await resource.getByRole("button", { name: "RAM", exact: true }).click();
   await expect(resource.locator(".series-ram .chart-line")).toHaveCount(0);
   await resource.getByRole("button", { name: "RAM", exact: true }).click();
@@ -229,20 +227,24 @@ test("readable text, contrast and responsive plot labels", async ({ page }) => {
     .evaluate((node) => getComputedStyle(node).color);
   expect(color).toBe("rgb(240, 245, 252)");
   await expect(page.locator('svg[role="img"]')).toHaveCount(2);
-  const labels = await page
-    .locator(".axis-text")
-    .evaluateAll((nodes) =>
-      nodes.map((node) => ({
-        size: parseFloat(getComputedStyle(node).fontSize),
-        scale:
-          node.getBoundingClientRect().width /
-          (node as SVGGraphicsElement).getBBox().width,
-      })),
-    );
+  const labels = await page.locator(".axis-text").evaluateAll((nodes) =>
+    nodes.map((node) => ({
+      size: parseFloat(getComputedStyle(node).fontSize),
+      scale:
+        node.getBoundingClientRect().width /
+        (node as SVGGraphicsElement).getBBox().width,
+    })),
+  );
   expect(Math.min(...labels.map((label) => label.size))).toBeGreaterThanOrEqual(
     12,
   );
   expect(Math.min(...labels.map((label) => label.scale))).toBeGreaterThan(0.95);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBeTruthy();
+  await page.setViewportSize({ width: 320, height: 844 });
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

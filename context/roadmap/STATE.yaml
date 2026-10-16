@@ -1,10 +1,9 @@
 schema_version: 2
 updated_at: '2026-10-16'
 project: USTAR Academy
-stage: control_panel_architecture_prepared
-stage_label: Архитектура пульта подготовлена; далее read-only реализация
-current_activity: 'Owner16Oct: panel architecture, health, metrics/alerts and Linear/Apple UI specification prepared
-  in PR103; implementation/native acceptance pending; sysadmin restore awaited; Moodle5.2/PG17 deferred'
+stage: control_panel_readonly_implementation_prepared
+stage_label: Read-only пульт реализован; установка и native приёмка впереди
+current_activity: 'PR103: auth, read-only collector/API, native UI and systemd/install prepared; server1 deployment, Telegram and native acceptance pending; sysadmin restore awaited; Moodle5.2/PG17 deferred'
 next_task: INF-06
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -108,7 +107,7 @@ next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: architecture_prepared_not_deployed
+  status: readonly_implementation_prepared_not_deployed
   architecture: server-console/ARCHITECTURE.md
   observability: server-console/OBSERVABILITY.md
   design: server-console/DESIGN.md

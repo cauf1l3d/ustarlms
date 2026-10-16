@@ -1,33 +1,25 @@
 # USTAR Server Console
 
-Следующая задача INF-06 после консолидации GitHub: пульт на том же server1 с логином/паролем, интерфейсом в стиле Linear и интеграцией Telegram. Текущие требования — [пульт и Telegram](../context/runtime/control_panel_telegram_20261016.md), очередь — [ACTIVE](../context/tasks/ACTIVE.md).
+Первый рабочий read-only срез INF-06 в PR103: отдельный FastAPI/API, серверные сессии Argon2id, фиксированный host collector, React/TypeScript UI и systemd. Это operations UI; `moodle/local/ustar` и `moodle/theme/ustar` не меняются, legacy `frontend/` не используется.
 
-## Архитектура первого выпуска
+[Установка на server1 и приёмка](INSTALL.md) · [Архитектура](ARCHITECTURE.md) · [Health/метрики](OBSERVABILITY.md) · [UI/UX](DESIGN.md).
 
-- [Как работает пульт, доступ, компоненты, данные и операции](ARCHITECTURE.md).
-- [Health, метрики, начальные пороги и доставка алертов](OBSERVABILITY.md).
-- [Структура экранов, визуальные токены и UI/UX](DESIGN.md).
+## Поставлено в исходниках
 
-16Oct подготовлена спецификация по запросу владельца: независимый от Moodle host-сервис, Prometheus/Alertmanager, внешний observer, графитовый Linear/Apple-inspired интерфейс. Пороги и ресурсные бюджеты проектные, deployment не выполнялся. Следующий срез — реализация защищённого read-only пульта.
+- Login/password, Secure/HttpOnly/SameSite cookie, CSRF/Origin, durable rate limit, idle30мин/absolute12ч, отзыв сессий при смене/локальном reset пароля. Polling не продлевает idle.
+- Отдельный сборщик15s: CPU/MemAvailable/load/SSD, точный HDD mount, два контейнера, success/attempt/recovery marker, ограниченный lab receipt. Веб-пользователь не имеет Docker/root и не запускает probes по GET.
+- API к fixed Prometheus queries CPU/RAM/external HTTP, bounded history, NoData/stale, четыре независимых health-домена. Неподключённые источники явно неизвестны.
+- Шесть разделов UI, детали/native dialogs, общие периоды, графики с разрывами, потеря сети/сессии, собственный пароль, мобильный интерфейс. Нет demo fallback.
+- Ограниченные systemd units, timer, установка из wheel/зафиксированных зависимостей с SHA256, отдельный CI, auth/data/browser/systemd fixtures.
 
-## Что уже есть
+## Границы первого этапа
 
-`prototype/index.html` — автономный интерактивный прототип с демонстрационными данными: обзор, сервер, Академия, стенды/адреса/активность, бэкапы, SFTP, алерты, операции и форма входа. Открывается локально без сборки, CDN и внешних запросов. Поля входа отключены; диалоги показывают план, ничего не выполняют. HTML сохранён без изменений из предыдущего прототипа PR103.
+**Не установлено на server1.** Gateway/VPN/cert, сопоставление метрик с CLI и измерение overhead требуют native приёмки. Prometheus/node-exporter/blackbox, Alertmanager и правила этим комплектом не устанавливаются; интеграция истории только читает выбранные local series.
 
-Это отдельный operations UI. Рабочий UI Академии остаётся в `moodle/local/ustar` и `moodle/theme/ustar`; `frontend/` — legacy вне текущего CI и выпуска.
+DB-monitor/cron adapter, raw host logs с redaction, Telegram/outbox/external observer, защищённый download, SFTP settings и host jobs — следующие этапы. Все роли пока читают одни данные; web-администрирования пользователей/TOTP нет. Копия сисадмина ожидает приёмки, Moodle5.2/PG17 отложены.
 
-## Что реализуем дальше
+`prototype/index.html` сохранён как исторический автономный demo15Oct; он не является рабочим пультом или runbook переноса. [Production copy](../context/runtime/production_copy_20261015.md) — отдельная действующая инструкция передачи.
 
-1. Защищённый endpoint, серверные сессии/авторизация и read-only collector/API с реальными метриками, временем измерения, ошибками и NoData.
-2. Подключение UI, Telegram failure/recovery/NoData alerts и status/metrics для разрешённых операторов; внешний observer для потери самого server1.
-3. Выдача последнего completed/hash-verified зашифрованного Academy-бэкапа через авторизованную ссылку с датой snapshot, размером и SHA. Recovery key и transfer kit с ключом не передаются в Telegram.
-4. Ограниченные job adapters для manual backup, стендов/TTL, Academy maintenance/restart и подготовки restore, с планом последствий, блокировками и журналом.
-5. Реальная приёмка авторизации, доставки, метрик, download/hash и операций на сервере.
+## Проверка
 
-Backend, auth, collectors, bot и доставка ещё не реализованы. Прямого подключения агента к server1 нет. Прототип не подключать к root/Docker socket и не публиковать как защищённую админку.
-
-## Инструкции и проверка
-
-Реальная инструкция текущей передачи сисадмину — [production copy](../context/runtime/production_copy_20261015.md). Владелец16Oct подтвердил получение архива и передачу инструкции; clean-host restore ожидается. Старый recovery-раздел прототипа — иллюстрация интерфейса15Oct, не актуальная инструкция выполнения переноса. Moodle5.2/PostgreSQL17 отложены.
-
-Историческая проверка15Oct: JS syntax и jsdom navigation/filter/empty/backup-impact/restore-target checks PASS; dialog API моделировался. Chromium отсутствовал, загрузка не удалась: реальные desktop/mobile screenshots, keyboard/layout и visual QA остаются PENDING. При синхронизации с обновлённым main проверены неизменность HTML и diff только этих двух файлов; UI/production acceptance этим не заявляется.
+В отдельном workflow `USTAR console` выполняются backend/auth/data tests, UI build/dependency audit, Chromium desktop1440/mobile390/tablet768 и native systemd/install на одноразовом Ubuntu runner. Browser fixtures отделены от production wheel. Успешный CI не подтверждает настройку server1, доставки Telegram или восстановления Академии.

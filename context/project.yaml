@@ -35,7 +35,7 @@ current_work:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: architecture_prepared_implementation_pending
+  status: readonly_implementation_prepared_native_acceptance_pending
   architecture: server-console/ARCHITECTURE.md
   observability: server-console/OBSERVABILITY.md
   design: server-console/DESIGN.md

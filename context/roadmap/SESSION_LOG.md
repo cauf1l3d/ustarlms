@@ -1484,3 +1484,12 @@ Consolidation brings accepted PR98/99/100/102 sources and all dated receipts int
 Owner requested architecture first: server memory/load, platform response, important logs, backups/labs/containers, polished Linear/Apple UI. Added server-console/ARCHITECTURE.md, OBSERVABILITY.md and DESIGN.md: independent host control plane, protected VPN/HTTPS/login, unprivileged API, fixed privileged adapters, Prometheus/Alertmanager, external observer and Telegram outbox; four health domains and initial thresholds, data freshness and sample limits, bounded resources, backup/download/key boundaries, job lifecycle and desktop/mobile interaction. Updated current context pointers and INF-06 in_progress.
 
 Documentation-only scope: prototype HTML and Academy source unchanged. Thresholds, stack and resource budgets are design choices, not measured native evidence; no server operations, credentials or Telegram messages. Implementation, visual QA and native acceptance pending. Sysadmin restore still awaited, Moodle5.2/PG17 still deferred. Context index/check and changed Markdown links are checked before publication in existing draft PR103.
+
+
+## 2026-10-16 — INF-06: продолжение первого read-only среза пульта
+
+Проверен PR103/head83d4b77c: удалённо была опубликована архитектура, процитированный незавершённый backend другого агента в доступных worktrees отсутствовал. Реализация продолжена от этого head без изменений Moodle/plugin/theme, legacy frontend и прежнего demo.
+
+Добавлены отдельные auth/session/API, sanitized fixed collector, React UI шести разделов, bounded Prometheus history, systemd/timer, wheel artifact и пошаговая установка. Root collector изолирован от web; браузер не исполняет probes или host actions. Stale/NoData, last-success/attempt и creation readback receipt/current hash/restore acceptance явно различаются. Password/reauth limits и session revocation проверяются отдельно. Native gateway/server1/DB-cron/log adapters/Prometheus stack/Telegram/observer/download/jobs пока не поставлены.
+
+Локальные и exact-head CI результаты фиксируются в PR103 и validation receipt. Не объявлять modeled/browser fixtures установкой на server1 или приёмкой clean-host restore. Результат сисадмина ожидается; Moodle5.2/PG17 остаются отложенными. Прод не менялся.

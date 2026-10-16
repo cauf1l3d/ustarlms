@@ -6,7 +6,7 @@
 
 - **Сделано на сервере:** SSD расширен11Oct; Moodle5.1.8 upgrade/repeat и краткая браузерная/SCORM приёмка13Oct; AppArmor,63 пакета, reboot/kernel147/Docker29.9.0 приняты14Oct. Не повторять.
 - **Ожидание:** владелец16Oct подтвердил получение архива и передачу инструкции сисадмину. Отдельная копия, её вход/SCORM/reboot и полный host DR ещё не приняты.
-- **Текущая задача:** INF-06 — [архитектура пульта](server-console/ARCHITECTURE.md), [health/алерты](server-console/OBSERVABILITY.md) и [UI/UX](server-console/DESIGN.md) подготовлены в PR103. Далее защищённый read-only backend/UI; deployment ещё не выполнен. [Границы](context/runtime/control_panel_telegram_20261016.md).
+- **Текущая задача:** INF-06 — [архитектура пульта](server-console/ARCHITECTURE.md), [health/алерты](server-console/OBSERVABILITY.md) и [UI/UX](server-console/DESIGN.md) подготовлены в PR103. Auth/collector/API/UI первого read-only среза реализованы; [установка](server-console/INSTALL.md) подготовлена, native deployment ещё не выполнен. [Границы](context/runtime/control_panel_telegram_20261016.md).
 - **Отложено:** Moodle5.2 и PostgreSQL17. Прежняя подготовка5.3/PR101 сохранена как история, не следующий запуск.
 
 ## Порядок чтения

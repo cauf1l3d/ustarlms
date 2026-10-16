@@ -6,7 +6,7 @@
 
 16Oct по новой команде владельца подготовлены [архитектура](../../server-console/ARCHITECTURE.md), [каталог health/метрик/алертов](../../server-console/OBSERVABILITY.md) и [UI/UX спецификация](../../server-console/DESIGN.md). Это проектные решения, не работающий collector или native acceptance.
 
-Следующий начальный срез: auth + read-only collector/API + реальный UI + Telegram delivery; затем job adapters и выдача backup. Работающий бот/backend/auth ещё не поставлены. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
+Следующий начальный срез: auth + read-only collector/API + реальный UI + Telegram delivery; затем job adapters и выдача backup. Бот ещё не поставлен; backend/auth/UI добавлены в текущем read-only срезе, не развёрнуты на server1. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
 
 ## Ожидание внешнего результата OPS-02
 
@@ -21,3 +21,7 @@ Moodle5.2 и PostgreSQL17 по команде16Oct. PR101/загруженные
 SSD11Oct; full-addon lab upgrade/repeat/paired rollback12Oct; production5.1.8 upgrade/repeat/brief browser/cron13Oct; AppArmor13Oct; r6 SSD archive/63 packages/native reboot/mount/ID-policy14Oct; archive handoff16Oct. Детали и ограничения — [аудит](../audits/AUDIT_RECONCILIATION_20261016_RU.md).
 
 Общий остаток, включая DB superuser, runtime code write, HTTPS, SMTP/disabled tasks, retention/offsite, ACL/Privacy/performance — [BACKLOG](../roadmap/BACKLOG.yaml). Ошибка route refresh не исправлялась и сохраняется в OPS-01.
+
+## Продолжение16Oct: первый рабочий срез
+
+В PR103 добавлены auth/сессии/CSRF/rate limit, collector/API, реальный UI, ограниченные systemd и [установка](../../server-console/INSTALL.md). GitHub-публикация и exact-head результаты CI фиксируются в PR, server1 ещё не установлен. Следующий этап после сверки установки: Prometheus/правила/DB-cron adapters, sanitized logs, Telegram/outbox и внешний observer; затем verified download/jobs. Не объявлять весь INF-06 закрытым.

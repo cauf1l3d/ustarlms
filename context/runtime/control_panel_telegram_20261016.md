@@ -1,10 +1,10 @@
 # Пульт управления и Telegram: текущий этап
 
-Задача INF-06 после GitHub-сверки16Oct. Рабочая Академия остаётся на Moodle5.1.8/PG16; Moodle5.2/PG17 отложены. UI-прототип PR103 в Linear-inspired graphite стиле сохраняется. Это дизайн, а не установленный backend/auth/бот.
+Задача INF-06 после GitHub-сверки16Oct. Рабочая Академия остаётся на Moodle5.1.8/PG16; Moodle5.2/PG17 отложены. UI-прототип PR103 в Linear-inspired graphite стиле сохраняется. Первый read-only backend/auth/UI добавлен в PR103; установленного на server1 пульта/бота пока нет.
 
 ## Архитектура подготовлена16Oct
 
-По новой команде владельца сначала спроектированы [компоненты и доступ](../../server-console/ARCHITECTURE.md), [health/метрики/алерты](../../server-console/OBSERVABILITY.md) и [UI/UX Linear/Apple](../../server-console/DESIGN.md). Host-сервисы вне Moodle, Prometheus/Alertmanager, независимый observer, четыре health-домена, защищённая выдача backup и ограниченные jobs. Пороги и бюджеты — стартовая политика для измерения; backend/auth/bot пока не реализованы.
+По новой команде владельца сначала спроектированы [компоненты и доступ](../../server-console/ARCHITECTURE.md), [health/метрики/алерты](../../server-console/OBSERVABILITY.md) и [UI/UX Linear/Apple](../../server-console/DESIGN.md). Host-сервисы вне Moodle, Prometheus/Alertmanager, независимый observer, четыре health-домена, защищённая выдача backup и ограниченные jobs. Пороги и бюджеты — стартовая политика для измерения; auth/collector/API/UI первого среза реализованы в исходниках; bot и native deployment впереди.
 
 ## Продукт
 
@@ -33,3 +33,7 @@ Telegram официально поддерживает local Bot API upload до
 Сохранять Academy identities/mounts/images, cron v3 single worker и maintenance locks. Нужные host mail/DNS/ISPConfig не останавливать общей кнопкой. Manual restore Академии, перенос и full SSD/whole-host restore — разные планы. Метрики не исправляют данные, route progress, роли или исторические task errors.
 
 Для native внедрения нужны реальные bot token/operator IDs, защищённый endpoint и независимый observer, collector budgets и права helper. Это входные настройки следующей задачи; текущая GitHub-сверка их не выдумывает. BOT/API secrets не коммитятся. Результат восстановления сисадмина остаётся OPS-02 waiting_external и не блокирует начало read-only пульта.
+
+## Реализация первого среза16Oct
+
+[Исходники и границы](../../server-console/README.md), [установка/сверка](../../server-console/INSTALL.md). Collector пишет только sanitized snapshot, веб не получает Docker/root и не выполняет host jobs. История доступна через fixed Prometheus API; stack/rules/DB/cron/external observer/log adapters ещё не подключены. Полный health не зелёный при неизвестности обязательных проверок. Исходный demo сохранён отдельно. Сервер не изменялся.

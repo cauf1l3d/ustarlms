@@ -32,7 +32,10 @@
       "snapshot_saved_to_working_context": false
     },
     "shell_syntax": "success",
-    "git_diff_whitespace": "success"
+    "git_diff_whitespace": {
+      "result": "success",
+      "scope": "maintained changed files; byte-preserved submitted originals excluded (fable has original CRLF and trailing spaces)"
+    }
   },
   "not_performed": [
     "server1 connection or collector execution",

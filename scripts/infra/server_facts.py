@@ -901,4 +901,3 @@ if __name__=='__main__':
         # No raw command output or suspicious values are ever printed to CI/terminal.
         print('FACTS_REFUSED='+type(error).__name__+(':'+str(error) if isinstance(error,Refusal) else ''),file=sys.stderr)
         raise SystemExit(2)
-

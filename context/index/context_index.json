@@ -798,8 +798,8 @@
     {
       "path": "context/reviews/20261017/validation.json",
       "domain": "reviews",
-      "size": 1546,
-      "sha256": "78df0174558e6175a8a8e42b1044b9b666861f9a31ed876adc4d2cad8dba6927"
+      "size": 1704,
+      "sha256": "fe22e2ccbdabde4b6f072bbb088f33d69260a451d85fd43517ecaa77262abeb3"
     },
     {
       "path": "context/roadmap/AGENT_PROTOCOL.md",

@@ -14,6 +14,6 @@ Owner16Oct выбрал [пульт с Telegram](control_panel_telegram_20261016
 
 Наличие process exit0 не отменяет task-level failure. Исторические17/18 overdue и2 failed/disabled H5P/registration не превращать в новые incidents и не обнулять ради зелёного UI. Snapshot age, collector age и NoData всегда видимы.
 
-Пороги/retention/resource budgets фиксируются при реальном collector baseline. Failure/recovery/NoData и сбой самой Telegram доставки нужно испытать с реальным разрешённым получателем. Same-host бот/пульт не является независимым монитором потери всего host.
+[Архитектура](../../server-console/ARCHITECTURE.md) и [подробные метрики/правила](../../server-console/OBSERVABILITY.md) подготовлены16Oct: четыре health-домена, начальные пороги/окна, NoData, дедупликация, внешнее наблюдение, бюджеты и проверка доставки. Пороги/retention/resource budgets проектные и уточняются после7дней реального collector baseline. Failure/recovery/NoData и сбой самой Telegram доставки нужно испытать с реальным разрешённым получателем. Same-host бот/пульт не является независимым монитором потери всего host.
 
 Получатели Telegram и токен пока не настроены. Не отправлять PII, recovery key, config, полные DB/log output. `/backup latest` выбирает проверенный immutable encrypted archive; для крупного файла — авторизованная download-ссылка пульта, а не ложное обещание upload большого private kit через обычный Bot API.

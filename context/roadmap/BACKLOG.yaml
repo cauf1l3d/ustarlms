@@ -98,7 +98,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии
-  status: ready
+  status: in_progress
   depends_on:
   - DOC-03
   acceptance:
@@ -113,8 +113,11 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: next_after_repository_reconciliation_20261016
-  current_summary: Прототип PR103 сохранён. Backend/auth/collectors/jobs/bot и проверенная доставка ещё не
-    внедрены; начинать с read-only среза и защищённого доступа.
+  architecture: server-console/ARCHITECTURE.md
+  observability: server-console/OBSERVABILITY.md
+  design: server-console/DESIGN.md
+  current_summary: Архитектура, health/метрики/алерты и UI/UX подготовлены16Oct в PR103; HTML prototype сохранён.
+    Следующий срез auth/read-only collector/API/UI; backend/jobs/bot и native доставка ещё не внедрены.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned

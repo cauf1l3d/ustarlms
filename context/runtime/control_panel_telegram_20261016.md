@@ -1,6 +1,10 @@
-# Следующий этап пульт управления и Telegram
+# Пульт управления и Telegram: текущий этап
 
 Задача INF-06 после GitHub-сверки16Oct. Рабочая Академия остаётся на Moodle5.1.8/PG16; Moodle5.2/PG17 отложены. UI-прототип PR103 в Linear-inspired graphite стиле сохраняется. Это дизайн, а не установленный backend/auth/бот.
+
+## Архитектура подготовлена16Oct
+
+По новой команде владельца сначала спроектированы [компоненты и доступ](../../server-console/ARCHITECTURE.md), [health/метрики/алерты](../../server-console/OBSERVABILITY.md) и [UI/UX Linear/Apple](../../server-console/DESIGN.md). Host-сервисы вне Moodle, Prometheus/Alertmanager, независимый observer, четыре health-домена, защищённая выдача backup и ограниченные jobs. Пороги и бюджеты — стартовая политика для измерения; backend/auth/bot пока не реализованы.
 
 ## Продукт
 
@@ -10,7 +14,7 @@
 
 ## Реализация по порядку
 
-1. Auth/session/CSRF и ограниченный read-only collector/API. Свести host/container/HTTP/PG/cron/HDD/backup данные и freshness/NoData без Moodle GET writes и без cluster superuser/full Docker socket в UI.
+1. Auth/session/CSRF и ограниченный read-only collector/API. Свести host/container/HTTP/PG/cron/HDD/backup данные и freshness/NoData с проверкой побочных эффектов выбранного HTTP probe и без cluster superuser/full Docker socket в UI. Обычный Moodle GET может создавать session/log записи; не объявлять его абсолютно read-only.
 2. Подключить настоящий UI вместо demo и Telegram alerting. Дедупликация failure/recovery, окно ожидаемой backup-паузы с пределом, повтор доставки и явный NoData. Отдельный внешний observer для потери server1.
 3. Telegram команды разрешённых numeric user/chat IDs: status/metrics/Academy/labs/backup latest. Ответ latest содержит время/размер/SHA и выдачу последнего completed/hash-verified зашифрованного Academy archive; не запускает новый backup.
 4. Ограниченные job adapters: manual backup, lab start/stop/TTL, Academy status/maintenance/restart и подготовка restore. Перед изменением показать цель, expected outage/data effect, lock и план; выполнение/audit/job state переживают закрытие браузера. Бот не исполняет произвольный shell.

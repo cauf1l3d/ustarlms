@@ -1,10 +1,12 @@
 # Активные задачи USTAR
 
-## Следующая работа INF-06
+## Текущая работа INF-06
 
 Реализовать [пульт управления и Telegram](../runtime/control_panel_telegram_20261016.md), опираясь на свежий main и прототип PR103. Linear-inspired UI на том же сервере, login/password и защищённый доступ; метрики/алерты, стенды/адреса/TTL, SFTP, ручные backup/restore и управляемые операции Академии. Telegram показывает статус/метрики, алертит failure/recovery/NoData и выдаёт последний проверенный зашифрованный бэкап по запросу разрешённого оператора.
 
-Начальный срез: auth + read-only collector/API + реальный UI + Telegram delivery; затем job adapters и выдача backup. Работающий бот/backend/auth ещё не поставлены. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
+16Oct по новой команде владельца подготовлены [архитектура](../../server-console/ARCHITECTURE.md), [каталог health/метрик/алертов](../../server-console/OBSERVABILITY.md) и [UI/UX спецификация](../../server-console/DESIGN.md). Это проектные решения, не работающий collector или native acceptance.
+
+Следующий начальный срез: auth + read-only collector/API + реальный UI + Telegram delivery; затем job adapters и выдача backup. Работающий бот/backend/auth ещё не поставлены. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
 
 ## Ожидание внешнего результата OPS-02
 

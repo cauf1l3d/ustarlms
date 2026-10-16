@@ -3,7 +3,7 @@
 [START_HERE](../START_HERE.md) → [project](project.yaml) → [STATE](roadmap/STATE.yaml) → [ACTIVE](tasks/ACTIVE.md).
 
 - [Выполнено с06Oct и остаток по аудиту](audits/AUDIT_RECONCILIATION_20261016_RU.md), [полный backlog](roadmap/BACKLOG.yaml).
-- [Пульт и Telegram](runtime/control_panel_telegram_20261016.md) — следующий INF-06; [передача сисадмину](runtime/sysadmin_handoff_result_20261016.json) — restore ожидается.
+- [Пульт и Telegram](runtime/control_panel_telegram_20261016.md) — текущий INF-06, [архитектура](../server-console/ARCHITECTURE.md), [health](../server-console/OBSERVABILITY.md), [дизайн](../server-console/DESIGN.md); [передача сисадмину](runtime/sysadmin_handoff_result_20261016.json) — restore ожидается.
 - [Runtime evidence](runtime/evidence_20261016.yaml), [карта сервера](runtime/server_map_20261016.md), [реестр поставок](runtime/RELEASE_LEDGER.md).
 - [CI scope](runtime/CI_SCOPE_20261016.md), [ветки](runtime/repository_state_20261016.json), [карта source](code_map/README.md).
 - [Архитектура](architecture/overview.md), [границы](architecture/boundaries.md), [решения](decisions/README.md).

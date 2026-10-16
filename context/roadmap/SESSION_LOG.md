@@ -1477,3 +1477,10 @@ Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; nativ
 Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.
 
 Полный RC теперь определяется сохранёнными метками PR на каждом synchronize/reopened, а не только событием первоначального labeled: новый коммит не может незаметно пропустить DB/rollback после добавления full-rc. Pre-merge main зафиксирован как c53723c8; исторический application baseline e1d57f5b остаётся отдельным.
+
+
+## 2026-10-16 — архитектура пульта INF-06
+
+Owner requested architecture first: server memory/load, platform response, important logs, backups/labs/containers, polished Linear/Apple UI. Added server-console/ARCHITECTURE.md, OBSERVABILITY.md and DESIGN.md: independent host control plane, protected VPN/HTTPS/login, unprivileged API, fixed privileged adapters, Prometheus/Alertmanager, external observer and Telegram outbox; four health domains and initial thresholds, data freshness and sample limits, bounded resources, backup/download/key boundaries, job lifecycle and desktop/mobile interaction. Updated current context pointers and INF-06 in_progress.
+
+Documentation-only scope: prototype HTML and Academy source unchanged. Thresholds, stack and resource budgets are design choices, not measured native evidence; no server operations, credentials or Telegram messages. Implementation, visual QA and native acceptance pending. Sysadmin restore still awaited, Moodle5.2/PG17 still deferred. Context index/check and changed Markdown links are checked before publication in existing draft PR103.

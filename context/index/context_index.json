@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 1702,
-      "sha256": "d93fe7e4b020dbac9228a2ce5c13ec31690159b9a4f214c32a5418986a9ee5a1"
+      "size": 1850,
+      "sha256": "7e6232e2bc016dbc3a72dbc970b89a258f80dbc31106a18a57242b167ed8cad5"
     },
     {
       "path": "context/agents/astra.md",
@@ -660,8 +660,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 1770,
-      "sha256": "b639fbbbdb20154e3266e87afc1cfc05317fee8ebbb7af86874686e4eb2a9656"
+      "size": 1956,
+      "sha256": "b11697682067ec1b9203aa118bd893afc2656efb5fb0cb32d444e9e9a3668150"
     },
     {
       "path": "context/releases/ADAPTATION_RESET_20261002_RU.md",
@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 21742,
-      "sha256": "4bbd2cd3e0f6baa87136df01909295daa151aa291831e67e17d1c0767cc3bb01"
+      "size": 21925,
+      "sha256": "e659c9fd55c51b1d4ac01d77285b0022453379a2dc5f54da70bd4003691c2e98"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -762,8 +762,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 136133,
-      "sha256": "4e53ea05abecb6393941f944cbed8f7e3d159d0becc56d506eadeca3407e4304"
+      "size": 137249,
+      "sha256": "6103ba1238bb143947fbb7788f796b01e884723c0054452fc31912b9dc9cc49f"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -774,8 +774,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 5121,
-      "sha256": "bef438bb13d27553846cec9af2a82b91398aeb92c04652bfbfdf2af94210dc74"
+      "size": 5324,
+      "sha256": "d30b6e0244ef95dde01f5f7b9046f18153bc92994cb79eeb755fd2c2eeb99136"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -852,8 +852,8 @@
     {
       "path": "context/runtime/MONITORING.md",
       "domain": "runtime",
-      "size": 2262,
-      "sha256": "18d71619bd9a4d6a0b33cb66b88f18867193c19736aa358db22c5af773b59ee7"
+      "size": 2684,
+      "sha256": "3f8b7f531c59f8ff122af1c11643aa103c0e554f86bacb91a5226ae5383d0195"
     },
     {
       "path": "context/runtime/OPERATIONS.md",
@@ -930,8 +930,8 @@
     {
       "path": "context/runtime/control_panel_telegram_20261016.md",
       "domain": "runtime",
-      "size": 5637,
-      "sha256": "972be958db99812d26a1791edb51261b02bbba978d7d83c11823ec7f78787155"
+      "size": 6558,
+      "sha256": "5d88b429ea2441c1d8868ec06a8a7cebf5702d068a4734fb3352671324b38ca7"
     },
     {
       "path": "context/runtime/core_comparison_20261005.json",
@@ -1764,8 +1764,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2827,
-      "sha256": "2c8aa3850b01801f69a0c7b44c6314031c2c8559739dd96c8407fde6da892d72"
+      "size": 3252,
+      "sha256": "5106cc80431d2b6cfbc0b21eb2adefc5b4fa5f7980a97c24faf3eab96701e060"
     },
     {
       "path": "context/tasks/backlog.yaml",

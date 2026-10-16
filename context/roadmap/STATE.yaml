@@ -1,13 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-16'
 project: USTAR Academy
-stage: repository_reconciled_next_control_panel
-stage_label: Следующий этап пульт управления и Telegram
-current_activity: 'Owner16Oct: handoff archive obtained, instruction passed, await sysadmin restore; repository
-  consolidation and legacy CI cleanup; next INF06; Moodle5.2/PG17 deferred'
+stage: control_panel_architecture_prepared
+stage_label: Архитектура пульта подготовлена; далее read-only реализация
+current_activity: 'Owner16Oct: panel architecture, health, metrics/alerts and Linear/Apple UI specification prepared
+  in PR103; implementation/native acceptance pending; sysadmin restore awaited; Moodle5.2/PG17 deferred'
 next_task: INF-06
-ready_tasks:
-- INF-06
+ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
@@ -109,7 +108,10 @@ next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: next_not_deployed
+  status: architecture_prepared_not_deployed
+  architecture: server-console/ARCHITECTURE.md
+  observability: server-console/OBSERVABILITY.md
+  design: server-console/DESIGN.md
   style: Linear-inspired graphite
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization

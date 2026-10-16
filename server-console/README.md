@@ -9,7 +9,7 @@
 - Login/password, Secure/HttpOnly/SameSite cookie, CSRF/Origin, durable rate limit, idle30мин/absolute12ч, отзыв сессий при смене/локальном reset пароля. Polling не продлевает idle.
 - Отдельный сборщик15s: CPU/MemAvailable/load/SSD, точный HDD mount, два контейнера, success/attempt/recovery marker, ограниченный lab receipt. Веб-пользователь не имеет Docker/root и не запускает probes по GET.
 - API к fixed Prometheus queries CPU/RAM/external HTTP, bounded history, NoData/stale, четыре независимых health-домена. Неподключённые источники явно неизвестны.
-- Шесть разделов UI, детали/native dialogs, общие периоды, графики с разрывами, потеря сети/сессии, собственный пароль, мобильный интерфейс. Нет demo fallback.
+- Шесть разделов UI, крупная контрастная типографика, цветовые акценты, временные ряды в духе Grafana (шкалы, легенды, last/mean/max, tooltip, CPU/RAM), детали/native dialogs, общие периоды, графики с разрывами, потеря сети/сессии, собственный пароль, мобильный интерфейс. Нет demo fallback.
 - Ограниченные systemd units, timer, установка из wheel/зафиксированных зависимостей с SHA256, отдельный CI, auth/data/browser/systemd fixtures.
 
 ## Границы первого этапа

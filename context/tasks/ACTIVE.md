@@ -6,7 +6,7 @@
 
 16Oct по новой команде владельца подготовлены [архитектура](../../server-console/ARCHITECTURE.md), [каталог health/метрик/алертов](../../server-console/OBSERVABILITY.md) и [UI/UX спецификация](../../server-console/DESIGN.md). Это проектные решения, не работающий collector или native acceptance.
 
-Следующий начальный срез: auth + read-only collector/API + реальный UI + Telegram delivery; затем job adapters и выдача backup. Бот ещё не поставлен; backend/auth/UI добавлены в текущем read-only срезе, не развёрнуты на server1. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
+Auth + read-only collector/API + UI реализованы в исходниках. Далее подключение native источников и Telegram delivery; затем job adapters и выдача backup. Бот ещё не поставлен; backend/auth/UI добавлены в текущем read-only срезе, не развёрнуты на server1. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
 
 ## Ожидание внешнего результата OPS-02
 
@@ -25,3 +25,5 @@ SSD11Oct; full-addon lab upgrade/repeat/paired rollback12Oct; production5.1.8 up
 ## Продолжение16Oct: первый рабочий срез
 
 В PR103 добавлены auth/сессии/CSRF/rate limit, collector/API, реальный UI, ограниченные systemd и [установка](../../server-console/INSTALL.md). GitHub-публикация и exact-head результаты CI фиксируются в PR, server1 ещё не установлен. Следующий этап после сверки установки: Prometheus/правила/DB-cron adapters, sanitized logs, Telegram/outbox и внешний observer; затем verified download/jobs. Не объявлять весь INF-06 закрытым.
+
+16Oct после замечания владельца о мелком/нечитаемом тексте UI переработан: body16px, метрики32–35px, явные цвета таблиц, смысловые акценты, responsive Grafana-style time-series с CPU/RAM и HTTP. Synthetic ряды — только в fixtures; реальные отсутствующие источники остаются NoData. Публикация в том же PR103, server1 не менялся.

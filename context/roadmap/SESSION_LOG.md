@@ -1493,3 +1493,10 @@ Documentation-only scope: prototype HTML and Academy source unchanged. Threshold
 Добавлены отдельные auth/session/API, sanitized fixed collector, React UI шести разделов, bounded Prometheus history, systemd/timer, wheel artifact и пошаговая установка. Root collector изолирован от web; браузер не исполняет probes или host actions. Stale/NoData, last-success/attempt и creation readback receipt/current hash/restore acceptance явно различаются. Password/reauth limits и session revocation проверяются отдельно. Native gateway/server1/DB-cron/log adapters/Prometheus stack/Telegram/observer/download/jobs пока не поставлены.
 
 Локальные и exact-head CI результаты фиксируются в PR103 и validation receipt. Не объявлять modeled/browser fixtures установкой на server1 или приёмкой clean-host restore. Результат сисадмина ожидается; Moodle5.2/PG17 остаются отложенными. Прод не менялся.
+
+
+## 2026-10-16 — INF-06: исправление читаемости и графиков по замечанию владельца
+
+Владелец отклонил мелкий и нечитаемый текст превью, попросил больше визуала, цветные акценты и Grafana-style графики. Изменён сам UI в PR103: body16px, числа32–35px, явный светлый текст/контраст таблиц, семантические цвета метрик и Lucide icons. Временные ряды вынесены в responsive компонент с сеткой/осями, единицами, легендой last/mean/max, CPU/RAM, tooltip и переключением линий. SVG соответствует реальным пикселям панели, поэтому подписи не уменьшаются при сужении экрана. На телефоне таблица контейнеров преобразуется в подписанные строки.
+
+Добавлены browser regression checks размеров/видимого масштаба подписей, цветов таблицы, взаимодействия с легендой и tooltip. Демонстрационные ряды существуют только в test/preview fixtures; production API, auth/collector и NoData/freshness guards сохранены. Свежая внешняя HTTP-проба используется в KPI с честной подписью источника, при её отсутствии остаётся локальный ответ. Native server1/бот/restore не выполнялись; дальнейший scope INF-06 и отсрочка5.2/PG17 сохранены.

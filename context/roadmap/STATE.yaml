@@ -111,7 +111,7 @@ next_control_panel:
   architecture: server-console/ARCHITECTURE.md
   observability: server-console/OBSERVABILITY.md
   design: server-console/DESIGN.md
-  style: Linear-inspired graphite
+  style: Graphite_Linear_shell_readable16px_Grafana_style_charts_owner_correction16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
   Telegram: alerts_metrics_latest_completed_backup_and_control

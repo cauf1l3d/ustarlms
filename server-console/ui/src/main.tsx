@@ -1,6 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
+import {
+  Activity,
+  LayoutDashboard,
+  GraduationCap,
+  Server,
+  DatabaseBackup,
+  FlaskConical,
+  Cpu,
+  MemoryStick,
+  HardDrive,
+  Clock3,
+  ArrowUpRight,
+  ShieldCheck,
+  LogOut,
+} from "lucide-react";
+import { TimeChart as Chart } from "./charts";
 
 type Check = {
   id: string;
@@ -94,7 +110,8 @@ const labels: Record<string, string> = {
 };
 const reasons: Record<string, string> = {
   measured: "Измерение получено",
-  recovery_required: "Сохранён маркер остановки Академии. Нужна проверка возобновления.",
+  recovery_required:
+    "Сохранён маркер остановки Академии. Нужна проверка возобновления.",
   not_configured: "Проверка ещё не подключена",
   stale: "Измерение устарело",
   source_unavailable: "Источник недоступен",
@@ -198,16 +215,40 @@ function Metric({
   label,
   number,
   detail,
+  kind = "cpu",
+  progress,
 }: {
   label: string;
   number: string;
   detail: string;
+  kind?: string;
+  progress?: number;
 }) {
+  const Icon =
+    kind === "ram"
+      ? MemoryStick
+      : kind === "cpu"
+        ? Cpu
+        : kind === "http"
+          ? Activity
+          : kind === "disk"
+            ? HardDrive
+            : Clock3;
   return (
-    <div className="metric">
-      <span>{label}</span>
+    <div className={"metric metric-" + kind}>
+      <div className="metric-label">
+        <span>{label}</span>
+        <Icon size={20} aria-hidden="true" />
+      </div>
       <strong>{number}</strong>
       <small>{detail}</small>
+      {progress != null && Number.isFinite(progress) && (
+        <progress
+          max={100}
+          value={Math.max(0, Math.min(100, progress))}
+          aria-label={label}
+        />
+      )}
     </div>
   );
 }
@@ -233,99 +274,6 @@ function Checks({
         </button>
       ))}
     </div>
-  );
-}
-function Chart({
-  series,
-  label,
-  unit,
-}: {
-  series?: Series;
-  label: string;
-  unit: string;
-}) {
-  const ref = useRef<SVGSVGElement>(null);
-  const [hover, setHover] = useState<[number, number | null] | null>(null);
-  const points = series?.points || [];
-  const valid = points.filter((p) => p[1] != null);
-  const max = Math.max(1, ...valid.map((p) => p[1]!)) * 1.08;
-  const start = points[0]?.[0] || 0,
-    duration = (points.at(-1)?.[0] || 1) - start || 1;
-  const x = (t: number) => 12 + ((t - start) / duration) * 676,
-    y = (n: number) => 130 - (n / max) * 112;
-  let path = "",
-    previous: number | undefined;
-  points.forEach(([t, n]) => {
-    if (n == null) {
-      previous = undefined;
-      return;
-    }
-    path +=
-      (previous === undefined ||
-      t - previous > (series?.step_seconds || 60) * 1.5
-        ? "M"
-        : "L") +
-      x(t) +
-      "," +
-      y(n) +
-      " ";
-    previous = t;
-  });
-  return (
-    <section className="chart panel">
-      <div className="section-title">
-        <h2>{label}</h2>
-        <span>{unit}</span>
-      </div>
-      {!valid.length ? (
-        <Empty>
-          {reasons[series?.reason_code || "not_configured"] ||
-            "История пока недоступна"}
-          . Нулевые значения не подставляются.
-        </Empty>
-      ) : (
-        <>
-          <svg
-            ref={ref}
-            viewBox="0 0 700 156"
-            role="img"
-            aria-label={`${label}: ${valid.length} измерений`}
-            onPointerLeave={() => setHover(null)}
-            onPointerMove={(e) => {
-              const box = ref.current!.getBoundingClientRect();
-              const t = start + ((e.clientX - box.left) / box.width) * duration;
-              setHover(
-                points.reduce((a, b) =>
-                  Math.abs(a[0] - t) < Math.abs(b[0] - t) ? a : b,
-                ),
-              );
-            }}
-          >
-            {[18, 74, 130].map((v, i) => (
-              <g key={v}>
-                <line x1="12" y1={v} x2="688" y2={v} />
-                <text x="15" y={v - 4}>
-                  {value(max * (1 - i / 2), "", 0)}
-                </text>
-              </g>
-            ))}
-            <path d={path} />
-          </svg>
-          <div className="chart-caption">
-            <span>
-              {hover
-                ? date(new Date(hover[0] * 1000).toISOString())
-                : date(new Date(start * 1000).toISOString())}
-            </span>
-            <span>
-              {hover
-                ? value(hover[1], ` ${unit}`)
-                : `${valid.length} измерений`}
-            </span>
-          </div>
-        </>
-      )}
-    </section>
   );
 }
 function LoginScreen({
@@ -597,6 +545,12 @@ function App() {
   const host = data?.host,
     backup = data?.backup,
     local = data && checks.find((c) => c.id === "http_local");
+  const externalPoint = series.http?.points.at(-1);
+  const externalFresh =
+    externalPoint &&
+    externalPoint[1] != null &&
+    tick / 1000 - externalPoint[0] <= 120 &&
+    tick / 1000 - externalPoint[0] >= -5;
   const go = (id: string) => {
     location.hash = id;
     setPage(id);
@@ -668,23 +622,33 @@ function App() {
           </span>
         </div>
         <nav aria-label="Разделы">
-          {Object.entries(titles).map(([id, title], i) => (
-            <button
-              key={id}
-              aria-current={page === id ? "page" : undefined}
-              onClick={() => go(id)}
-            >
-              <span className="nav-icon" aria-hidden="true">
-                {["◫", "◇", "▤", "▱", "▧", "≡"][i]}
-              </span>
-              {title}
-            </button>
-          ))}
+          {Object.entries(titles).map(([id, title], i) => {
+            const Icon = [
+              LayoutDashboard,
+              GraduationCap,
+              Server,
+              DatabaseBackup,
+              FlaskConical,
+              Activity,
+            ][i];
+            return (
+              <button
+                key={id}
+                aria-current={page === id ? "page" : undefined}
+                onClick={() => go(id)}
+              >
+                <span className="nav-icon" aria-hidden="true">
+                  <Icon size={21} />
+                </span>
+                {title}
+              </button>
+            );
+          })}
         </nav>
         <div className="sidebar-foot">
           <span className="mode">Только просмотр</span>
           <button onClick={() => setProfile(true)}>
-            Учётная запись <span>↗</span>
+            <ShieldCheck size={18} aria-hidden="true" /> Учётная запись
           </button>
           <button
             onClick={async () => {
@@ -702,7 +666,7 @@ function App() {
               }
             }}
           >
-            Выйти
+            <LogOut size={18} aria-hidden="true" /> Выйти
           </button>
         </div>
       </aside>
@@ -764,7 +728,10 @@ function App() {
                   {Object.entries(domains).map(([id, title]) => (
                     <button
                       key={id}
-                      className="health"
+                      className={
+                        "health health-" +
+                        (stale ? "no_data" : data.domains[id])
+                      }
                       onClick={() =>
                         setSelected(
                           checks.find(
@@ -791,32 +758,49 @@ function App() {
                 <div className="metrics">
                   <Metric
                     label="Доступно памяти"
+                    kind="ram"
+                    progress={
+                      host?.memory
+                        ? (100 * host.memory.available_bytes) /
+                          host.memory.total_bytes
+                        : undefined
+                    }
                     number={gib(host?.memory?.available_bytes)}
                     detail={`из ${gib(host?.memory?.total_bytes)}`}
                   />
                   <Metric
                     label="Загрузка CPU"
+                    kind="cpu"
+                    progress={host?.cpu_percent}
                     number={value(host?.cpu_percent, " %")}
                     detail={`${value(host?.cores, " ядер", 0)} · моментальное измерение`}
                   />
                   <Metric
                     label="Ответ Академии"
+                    kind="http"
                     number={
-                      local?.status === "ok"
-                        ? value(
-                            (
-                              data as unknown as {
-                                http_local?: { total_ms: number };
-                              }
-                            ).http_local?.total_ms,
-                            " мс",
-                          )
-                        : "—"
+                      externalFresh
+                        ? value(externalPoint![1], " мс")
+                        : local?.status === "ok"
+                          ? value(
+                              (
+                                data as unknown as {
+                                  http_local?: { total_ms: number };
+                                }
+                              ).http_local?.total_ms,
+                              " мс",
+                            )
+                          : "—"
                     }
-                    detail="локальный запрос · снаружи нет данных"
+                    detail={
+                      externalFresh
+                        ? "внешний HTTP · последнее измерение"
+                        : "локальный запрос · снаружи нет данных"
+                    }
                   />
                   <Metric
                     label="Последняя копия"
+                    kind="backup"
                     number={age(backup?.age_seconds)}
                     detail={date(backup?.completed_at)}
                   />
@@ -847,7 +831,19 @@ function App() {
                     unit="мс"
                     series={series.http}
                   />
-                  <Chart label="Загрузка CPU" unit="%" series={series.cpu} />
+                  <Chart
+                    label="CPU и оперативная память"
+                    unit="%"
+                    tone="cpu"
+                    series={series.cpu}
+                    companion={
+                      series.ram || {
+                        points: [],
+                        status: "no_data",
+                        reason_code: "not_configured",
+                      }
+                    }
+                  />
                 </div>
                 <section className="panel">
                   <div className="section-title">
@@ -856,7 +852,8 @@ function App() {
                       className="text-button"
                       onClick={() => go("server")}
                     >
-                      Открыть сервер ↗
+                      Открыть сервер{" "}
+                      <ArrowUpRight size={17} aria-hidden="true" />
                     </button>
                   </div>
                   <ContainerTable rows={data.containers} stale={stale} />
@@ -887,21 +884,38 @@ function App() {
                 <div className="metrics">
                   <Metric
                     label="Свободная RAM"
+                    kind="ram"
+                    progress={
+                      host?.memory
+                        ? (100 * host.memory.available_bytes) /
+                          host.memory.total_bytes
+                        : undefined
+                    }
                     number={gib(host?.memory?.available_bytes)}
                     detail={`всего ${gib(host?.memory?.total_bytes)}`}
                   />
                   <Metric
                     label="CPU"
+                    kind="cpu"
+                    progress={host?.cpu_percent}
                     number={value(host?.cpu_percent, " %")}
                     detail={`load 1 мин: ${value(host?.load?.[0])}`}
                   />
                   <Metric
                     label="Свободно на SSD"
+                    kind="disk"
+                    progress={
+                      host?.disk
+                        ? (100 * host.disk.available_bytes) /
+                          host.disk.total_bytes
+                        : undefined
+                    }
                     number={gib(host?.disk?.available_bytes)}
                     detail={`всего ${gib(host?.disk?.total_bytes)}`}
                   />
                   <Metric
                     label="Swap занят"
+                    kind="ram"
                     number={gib(host?.memory?.swap_used_bytes)}
                     detail="Сам по себе не означает нехватку RAM"
                   />
@@ -911,10 +925,16 @@ function App() {
                   onSelect={setSelected}
                 />
                 <div className="charts">
-                  <Chart label="CPU" unit="%" series={series.cpu} />
+                  <Chart
+                    label="Загрузка процессора"
+                    unit="%"
+                    tone="cpu"
+                    series={series.cpu}
+                  />
                   <Chart
                     label="Использование RAM"
                     unit="%"
+                    tone="ram"
                     series={series.ram}
                   />
                 </div>
@@ -1129,10 +1149,13 @@ function ContainerTable({
         <tbody>
           {rows.map((row) => (
             <tr key={String(row.name)}>
-              <td>
-                <strong>{String(row.name)}</strong>
+              <td data-label="Контейнер">
+                <span className="container-name">
+                  <Server size={18} aria-hidden="true" />
+                  <strong>{String(row.name)}</strong>
+                </span>
               </td>
-              <td>
+              <td data-label="Состояние">
                 {stale ? (
                   <Badge status="no_data" />
                 ) : row.state === "no_data" ? (
@@ -1146,8 +1169,12 @@ function ContainerTable({
                   </>
                 )}
               </td>
-              <td>{row.restarts == null ? "—" : String(row.restarts)}</td>
-              <td>{row.policy == null ? "—" : String(row.policy)}</td>
+              <td data-label="Рестарты">
+                {row.restarts == null ? "—" : String(row.restarts)}
+              </td>
+              <td data-label="Автозапуск">
+                {row.policy == null ? "—" : String(row.policy)}
+              </td>
             </tr>
           ))}
         </tbody>

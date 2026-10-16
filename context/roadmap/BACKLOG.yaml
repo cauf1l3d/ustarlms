@@ -117,7 +117,7 @@ tasks:
   observability: server-console/OBSERVABILITY.md
   design: server-console/DESIGN.md
   current_summary: Первый read-only срез auth/session/collector/API/UI/systemd/install реализован16Oct в PR103;
-    server1/native acceptance ещё впереди. UI прошёл повторное ревью — все подписи16px/оси14px, исправлены наложения на телефоне, легенды/навигация/health details; цветовые акценты и Grafana-style графики сохранены; далее rules/DB/cron/log adapters, Telegram/external observer, download/jobs. HTML demo сохранён отдельно.
+    server1/native acceptance ещё впереди. UI прошёл повторное ревью — все подписи16px/оси14px, исправлены наложения на телефоне, легенды/навигация/health details; цветовые акценты и Grafana-style графики сохранены; далее rules/DB/cron/log adapters, Telegram/external observer, download/jobs. Новый автономный HTML-прототип обновляется из UI; прежний demo15Oct сохранён в prototype/archive.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned

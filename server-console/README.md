@@ -18,7 +18,7 @@
 
 DB-monitor/cron adapter, raw host logs с redaction, Telegram/outbox/external observer, защищённый download, SFTP settings и host jobs — следующие этапы. Все роли пока читают одни данные; web-администрирования пользователей/TOTP нет. Копия сисадмина ожидает приёмки, Moodle5.2/PG17 отложены.
 
-`prototype/index.html` сохранён как исторический автономный demo15Oct; он не является рабочим пультом или runbook переноса. [Production copy](../context/runtime/production_copy_20261015.md) — отдельная действующая инструкция передачи.
+[Новый автономный прототип](prototype/index.html) отражает актуальный UI16Oct с графиками и исправлениями читаемости. Скачайте HTML и откройте в браузере; [подробности и пересборка](prototype/README.md). Прототип использует только демонстрационные данные. [Прежний макет15Oct](prototype/archive/index-20261015.html) сохранён в архиве; прототип не является работающим сервисом или runbook переноса. [Production copy](../context/runtime/production_copy_20261015.md) — отдельная действующая инструкция передачи.
 
 ## Проверка
 

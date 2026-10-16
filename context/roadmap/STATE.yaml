@@ -111,6 +111,7 @@ next_control_panel:
   architecture: server-console/ARCHITECTURE.md
   observability: server-console/OBSERVABILITY.md
   design: server-console/DESIGN.md
+  prototype: server-console/prototype/index.html
   style: Graphite_16px_all_UI_14px_axes_Grafana_charts_UX_review16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization

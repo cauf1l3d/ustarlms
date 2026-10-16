@@ -720,8 +720,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 22224,
-      "sha256": "9dd659f6c6a18950cd10b394572ea4d877f932d4268f6b9a98792a480e8fbc88"
+      "size": 22329,
+      "sha256": "694778e5488520ab574ad37d1cf66b8950ea3e53d108fd2865296493f149fef7"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -762,8 +762,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 142399,
-      "sha256": "3233e9ffb229021e880eb268965cada55f8476cce630c96c690c8953e58bf4b4"
+      "size": 143868,
+      "sha256": "9b22c27f3d7ee8e1f50808f5e25de9bfc99d7f690953d2233ee6bd5ae6c5192a"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -774,8 +774,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 5366,
-      "sha256": "6c6180d3c59fcc4ecb216971b52a29b415ed3634cc0bebb9db05ce5f2dbdd4b1"
+      "size": 5415,
+      "sha256": "1f914a46f1ea7169e743deb6a6828a231208ecce34ea8c986d795b74ba40f79d"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1764,8 +1764,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 5025,
-      "sha256": "0355902474ed5c961946b1c973a7c181d6be131a7f79a0b0bb3ffbefc23fd671"
+      "size": 5421,
+      "sha256": "146ea4a8468d379edc23a197ba07f8e82fd14823206178beb4b4878ad35d4c2c"
     },
     {
       "path": "context/tasks/backlog.yaml",

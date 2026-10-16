@@ -1,5 +1,5 @@
 domain: work
-reviewed_at: '2026-10-02'
+reviewed_at: '2026-10-17'
 source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 purpose: Рабочие задачи, checklist versions, отчёты, календарь и личная доска
 services:
@@ -32,3 +32,19 @@ entry_points:
 - moodle/local/ustar/notebook.php
 - moodle/local/ustar/board_api.php
 - moodle/local/ustar/home.php
+review_method: static source navigation; no new production scenario acceptance
+scenarios:
+- name: assigned_visibility
+  source: moodle/local/ustar/classes/task_workspace/service.php
+  behavior: can_view_record checks assigned privacy and active actor; assignee or
+    current company actor with canassign may view; notes remain private
+- name: reviewer_resolution
+  source: moodle/local/ustar/classes/task_workspace/service.php
+  behavior: current manager with canassign is preferred; no-manager fallback uses
+    eligible company creator, then HRD when reviewer is zero; review also checks visibility
+- name: policy
+  source: moodle/local/ustar/classes/task_workspace/policy.php
+  behavior: defaults Europe/Moscow, workdays 09:00-18:00; escalation uses direct/parent/HRD;
+    reports validate 1-40 check/text/number/photo fields
+coverage_limit: Selected command/read paths only; complete endpoint, file access and
+  actor/scope negative-path audit remains open

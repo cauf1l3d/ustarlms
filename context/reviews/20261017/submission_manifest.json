@@ -1,0 +1,45 @@
+{
+  "kind": "external_review_inputs_not_accepted_runtime_evidence",
+  "files": [
+    {
+      "uploaded_name": "README_server_facts.md",
+      "bytes": 6520,
+      "sha256": "7f0152e605e3434d428a639c6bf79c8c08fa0b92bb92de8a44a82fa0f7132f25"
+    },
+    {
+      "uploaded_name": "USTAR_REVIEW_20261016.md",
+      "bytes": 36673,
+      "sha256": "360516e3af7c8f0254133e9eb21ec03eed2a04c82116310944a97b369846fe6b"
+    },
+    {
+      "uploaded_name": "USTAR_Ревью_16.10.2026.pdf",
+      "bytes": 120216,
+      "sha256": "48236b453f6d6f23b06f7b460fa8d75f7f1b9304ad4e45dbf4bd032bb3b48e69"
+    },
+    {
+      "uploaded_name": "apply_server_facts.sh",
+      "bytes": 4001,
+      "sha256": "678d18a2665c0b3305b1a62742e4dbe4444e20ed64ac359d36cd1142f1ea7509"
+    },
+    {
+      "uploaded_name": "context-current.yaml",
+      "bytes": 4907,
+      "sha256": "db632daf61762c6d6a6ff939e7c72248cdac5034d3c357f7fea5084ddfb681dc"
+    },
+    {
+      "uploaded_name": "context-secrets-guard.yml",
+      "bytes": 3163,
+      "sha256": "29c8b279bbf96fbb25334fe5f0e22bd56eb59057dc060b96494bab75df50c9bc"
+    },
+    {
+      "uploaded_name": "fable.md",
+      "bytes": 68376,
+      "sha256": "d1dee1ae9656c35c45aebbe60ba5c41f8bf52ddae24cc80334d7413250f0140d"
+    },
+    {
+      "uploaded_name": "server_facts.sh",
+      "bytes": 15258,
+      "sha256": "34c0751eda1fd13e974d056c17fa88422cc41f8fce213d2a9b11894eb225fbb1"
+    }
+  ]
+}

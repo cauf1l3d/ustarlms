@@ -1,8 +1,8 @@
 # Профиль архитектурного агента USTAR
 
-Следовать [AGENTS](../../AGENTS.md), [протоколу](../roadmap/AGENT_PROTOCOL.md) и последней инструкции16Oct в [STATE](../roadmap/STATE.yaml). `main` — канонический исходный код и текущий контекст.
+Порядок входа — [START_HERE](../../START_HERE.md); правила в [AGENTS](../../AGENTS.md), [протоколе](../roadmap/AGENT_PROTOCOL.md), последняя инструкция17Oct в [STATE](../roadmap/STATE.yaml). `main` — канонический исходный код и текущий контекст.
 
-Сейчас: архив передан сисадмину, ждём restore; следующая реализация — [пульт и Telegram](../runtime/control_panel_telegram_20261016.md). Moodle5.2/PG17 отложены. Не возобновлять прежние инструкции storage/5.1.8/host reboot/5.3 preparation.
+Сейчас: проверить внешнее review/скрипты, получить свежие server facts и актуализировать контекст, затем повторный аудит владельца и [пульт/Telegram](../runtime/control_panel_telegram_20261016.md). Архив передан сисадмину, ждём restore. Moodle5.2/PG17 отложены. Не возобновлять прежние инструкции storage/5.1.8/host reboot/5.3 preparation.
 
 Перед изменением смотреть реальные entrypoints/services/readers/writers/XMLDB/ACL/tasks/тесты. Код описывает реализацию, ADR — решения, owner receipts — датированные наблюдения, CI — результат определённого runtime/synthetic scope. Не объявлять отсутствие evidence дефектом или synthetic PASS production-приёмкой.
 

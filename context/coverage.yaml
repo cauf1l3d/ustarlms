@@ -1,0 +1,48 @@
+schema_version: 1
+reviewed_at: '2026-10-17'
+scope: repository_and_submitted_review_not_live_server
+entrypoint: START_HERE.md
+claims:
+  all_context_complete: false
+  production_snapshot_received: false
+  functional_server_acceptance: false
+covered:
+- area: code_and_schema_navigation
+  evidence: context/code_map/README.md
+  boundary: baseline plugin/theme 526 files and 93 XMLDB tables; not full Moodle core
+- area: decisions_and_current_work
+  evidence: context/current.yaml
+  boundary: generated STATE/BACKLOG view; dated receipts preserved
+- area: declared_theme_tokens
+  evidence: context/design/tokens.yaml
+  boundary: source declarations and layer order, not computed styles or complete UI kit
+- area: capability_references
+  evidence: context/architecture/access_matrix.yaml
+  boundary: source definitions/literal checks; not runtime role bindings or complete authorization audit
+- area: selected_domain_scenarios
+  evidence: context/CONTEXT_INDEX.md
+  boundary: grades/routes/evidence/work/mobile source navigation enriched; domain maps are not exhaustive contracts
+- area: collector_and_import
+  evidence: scripts/infra/README_server_facts.md
+  boundary: schema, bounds, failure preservation and archive/import tests; not an executed server1 inventory
+open:
+- id: SERVER-FACTS
+  next: Owner runs pinned collector; validate archive, import immutable facts, reconcile discrepancies
+- id: SOURCE-CORE
+  next: Exact Moodle core provenance/full manifest; plugin/theme comparison alone is insufficient
+- id: AUTHORIZATION
+  next: Endpoint/command/file/view-as negative paths, effective actor/scope and runtime grants
+- id: API-CONTRACTS
+  next: Complete request/response/revision/idempotency/error contracts for external and internal endpoints
+- id: DESIGN-COMPONENTS
+  next: Buttons/forms/tables/dialog states, computed typography and native QA at 1440/1024/768/390/320
+- id: DOMAIN-SCENARIOS
+  next: Extend remaining organization/adaptation/economy/feed/messaging/learning scenarios and canonical evidence writers from source
+- id: HOST-ACCEPTANCE
+  next: HTTPS/DNS/client login/SCORM/mail, effective SSH Match, ACL replacement/negative checks and resource baseline
+- id: RECOVERY
+  next: Sysadmin clean-host restore result, reboot/roles/files/progress, measured RTO and key/offsite custody
+- id: CONSOLE-TELEGRAM
+  next: Review PR103 against refreshed facts; implement/verify bot delivery, limited jobs and external host-loss observation
+- id: PRIVACY
+  next: Export/deletion/retention provider and evidence; remains deferred owner debt, not a newly imposed migration gate

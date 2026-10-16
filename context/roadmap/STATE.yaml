@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-17'
 project: USTAR Academy
-stage: repository_reconciled_next_control_panel
-stage_label: Следующий этап пульт управления и Telegram
-current_activity: 'Owner16Oct: handoff archive obtained, instruction passed, await sysadmin restore; repository
-  consolidation and legacy CI cleanup; next INF06; Moodle5.2/PG17 deferred'
+stage: context_review_and_server_facts_before_INF06
+stage_label: Сбор фактов и повторное ревью до продолжения пульта и Telegram
+current_activity: 'Owner17Oct: audit fable and all attachments; correct collection/import/context; await fresh server1 report
+  and owner re-review; then repository, console and Telegram work'
 next_task: INF-06
 ready_tasks:
 - INF-06
@@ -51,8 +51,8 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151
-      file references, not a new whole-host manifest
+    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file references,
+      not a new whole-host manifest
   cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -72,13 +72,6 @@ audit:
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
-next_agent_read:
-- START_HERE.md
-- context/project.yaml
-- context/audits/AUDIT_RECONCILIATION_20261016_RU.md
-- context/tasks/ACTIVE.md
-- context/runtime/control_panel_telegram_20261016.md
-- context/runtime/repository_state_20261016.json
 repository:
   canonical_branch: main
   accepted_sources:
@@ -91,6 +84,11 @@ repository:
   - moodle/local/ustar
   - moodle/theme/ustar
   branch_roles: context/runtime/repository_state_20261016.json
+  latest_review:
+    date: '2026-10-17'
+    main_observed: d9655074db9a06281fe16f378dbdbe1d279104a0
+    document: context/reviews/20261017/README.md
+    scope: repository_and_submitted_files_not_live_host
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -109,12 +107,15 @@ next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: next_not_deployed
-  style: Linear-inspired graphite
+  status: auth_readonly_UI_prototype_in_open_PR_not_deployed
+  style: graphite_with_readable_type_color_accents_and_Grafana_style_charts_owner16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
   Telegram: alerts_metrics_latest_completed_backup_and_control
   independent_observer: required_for_host_loss_not_yet_deployed
+  head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0
+  continuation_gate: fresh_context_then_owner_repeat_review
+  telegram_delivery: not_implemented_or_verified
 deferred_platform:
   task: PLAT-01
   status: deferred_by_owner16Oct
@@ -124,6 +125,12 @@ deferred_platform:
   historical_target: '5.3'
   historical_downloads_preserved: true
   production_switched: false
+  external_review_recommendation:
+    status: planning_recommendation_not_owner_execution_order
+    review_by: '2027-01-15'
+    moodle_51_security_support_end: '2027-04-19'
+    source: https://moodledev.io/docs/5.1
+    note: Reassess support and migration requirements; no automatic upgrade, new lab or Privacy gate authorized
 do_not_repeat:
 - SSD_GPT_partition_ext4_growth
 - Moodle5.1.8_upgrade_repeat_and_brief_browser_acceptance
@@ -131,3 +138,11 @@ do_not_repeat:
 - host_cold_capture_r6
 - host_package_install_and_reboot
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
+entrypoint: START_HERE.md
+server_facts:
+  status: awaiting_collection
+  snapshot: null
+  observed_at: null
+  runbook: scripts/infra/README_server_facts.md
+  independently_authenticated_host: false
+  functional_acceptance: false

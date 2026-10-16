@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-17'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -46,8 +46,11 @@ tasks:
   validation_evidence:
   - context/runtime/production_patch_readiness_result_20261012.json
   - context/runtime/evidence_20261016.yaml
-  current_summary: Контекст и runtime evidence сведены; полный свежий manifest/расширенная сценарная приёмка
-    остаются отдельными.
+  - context/reviews/20261017/README.md
+  - scripts/infra/README_server_facts.md
+  - context/coverage.yaml
+  current_summary: Review17Oct проверен по исходникам/CI. Исправленный bounded collector и immutable importer готовы для свежего
+    снимка; server1 report ещё не получен. Полная native сценарная приёмка остаётся отдельной.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -105,16 +108,16 @@ tasks:
   - Linear-inspired same-host panel with password login, protected remote access and visible freshness/NoData
   - Server/Academy/cron/HDD/backup metrics, labs URL and lifetime, SFTP and manual backup/restore plans
   - Telegram allowlisted operator commands and failure/recovery alerts with verified delivery and audit
-  - Latest verified completed encrypted archive downloadable on request without starting a new backup or sharing
-    the recovery key
-  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production effects; no arbitrary
-    shell
+  - Latest verified completed encrypted archive downloadable on request without starting a new backup or sharing the recovery
+    key
+  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production effects; no arbitrary shell
   - Independent observer verifies loss of host and delivery; retention/resources bounded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
-  owner_priority: next_after_repository_reconciliation_20261016
-  current_summary: Прототип PR103 сохранён. Backend/auth/collectors/jobs/bot и проверенная доставка ещё не
-    внедрены; начинать с read-only среза и защищённого доступа.
+  owner_priority: after_context_refresh_and_owner_repeat_review_20261017
+  current_summary: В открытом PR103 на98559017 реализованы auth/read-only collector/API/UI, deploy runbook и новый прототип
+    с графиками; CI успешен. В main/production не внедрено. После обновления контекста и повторного review продолжить Telegram
+    delivery, ограниченные jobs и native acceptance.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned

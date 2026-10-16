@@ -1,10 +1,14 @@
 # Активные задачи USTAR
 
-## Следующая работа INF-06
+## Сейчас — актуализация контекста17Oct
+
+Владелец попросил сначала проверить fable и все семь связанных приложений, исправить скрипты/пути, получить свежие server facts и обновить контекст; после этого он выполнит повторный аудит. [Вердикт](../reviews/20261017/README.md), [runbook](../../scripts/infra/README_server_facts.md), [покрытие](../coverage.yaml). Скрипт подготовлен и проверяется локально; production snapshot ещё не получен, agent SSH не использовался. INF-01/P0/restore не закрываются по готовности инструмента.
+
+## После повторного review — INF-06
 
 Реализовать [пульт управления и Telegram](../runtime/control_panel_telegram_20261016.md), опираясь на свежий main и прототип PR103. Linear-inspired UI на том же сервере, login/password и защищённый доступ; метрики/алерты, стенды/адреса/TTL, SFTP, ручные backup/restore и управляемые операции Академии. Telegram показывает статус/метрики, алертит failure/recovery/NoData и выдаёт последний проверенный зашифрованный бэкап по запросу разрешённого оператора.
 
-Начальный срез: auth + read-only collector/API + реальный UI + Telegram delivery; затем job adapters и выдача backup. Работающий бот/backend/auth ещё не поставлены. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
+В [PR103](https://github.com/cauf1l3d/ustarlms/pull/103) на98559017 уже подготовлены backend/auth/read-only collector/API/UI, systemd/CI/runbook и новый standalone прототип с читаемыми подписями/графиками. Последние три CI этого SHA успешны. Это открытый PR, не установка на server1. Telegram delivery, job adapters, backup access и runtime acceptance ещё не выполнены. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
 
 ## Ожидание внешнего результата OPS-02
 

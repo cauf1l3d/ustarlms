@@ -1,3 +1,7 @@
+# Documentation only: purpose map, not a launcher or evidence of active account connections.
+# Actual transports/credentials/connections belong to the execution environment.
+kind: integration_purpose_map
+connection_status: not_measured_by_this_file
 mcp:
 
   servers:

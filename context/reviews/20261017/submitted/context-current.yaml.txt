@@ -1,0 +1,98 @@
+# context/current.yaml — единственный машиночитаемый источник «что сейчас»
+#
+# Назначение: агент, ревьюер или аудит читает ОДИН файл и получает состояние,
+# вместо сборки картины из STATE, README, START_HERE, AGENT_PROTOCOL,
+# MONITORING, SECURITY_BASELINE и .codex/checkpoints (которые расходятся).
+#
+# Правило: этот файл обновляется тем же коммитом, что меняет состояние.
+# Если значение здесь противоречит прозе в другом документе — верен этот файл.
+
+schema_version: 1
+updated_at: '2026-10-17'
+
+# --- Источники истины --------------------------------------------------------
+source_of_truth:
+  code_and_context: main
+  application_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe   # PR76, 526 файлов
+  note: >-
+    application_baseline — это baseline приложения (plugin+theme), а не head main.
+    repository_head меняется каждым docs-коммитом; deployed_core меняется апгрейдом.
+
+# --- Что где ----------------------------------------------------------------
+git:
+  repository_head: <sha>            # заполняется: git rev-parse origin/main
+  main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
+
+production:
+  deployed_core: '2025100608.00'    # Moodle core из БД, принят 13.10.2026
+  deployed_core_accepted_at: '2026-10-13'
+  deployed_plugin: 2026100204
+  deployed_theme: 2026100202
+  platform:
+    moodle: 5.1.8
+    php: 8.3.33
+    postgresql: '16.15'
+    ubuntu: 24.04.5
+    kernel: 6.8.0-147
+    docker: 29.9.0
+  exact_manifest:
+    date: '2026-10-05'
+    matching_files: 526
+    stale: true                     # after the 13.10 core upgrade
+    action: rerun production_manifest.py
+
+# --- Работа -----------------------------------------------------------------
+work:
+  next_task: INF-06
+  ready_tasks: [INF-06]
+  in_progress: [INF-01, INF-04, INF-09, INF-14, OPS-01]
+  waiting_external:
+    OPS-02: 'restore силами переданного сисадмина; результата нет'
+
+blockers_to_revenue:               # закрыть до продаж в B2B
+  - id: INF-02
+    what: роль PostgreSQL = cluster superuser
+    verify: context/runtime/server-facts/*/D1_roles.txt
+  - id: INF-03
+    what: www-data пишет в config.php и local/ustar
+    verify: context/runtime/server-facts/*/H3_ownership.txt
+  - id: INF-07
+    what: Академия доступна по HTTP без TLS
+    verify: context/runtime/server-facts/*/E1_apache_vhosts.txt
+  - id: PRIVACY-01
+    what: нет classes/privacy/provider.php
+    verify: отсутствие файла + scripts/ci/privacy_inventory.py
+
+# --- Отложено, но с датой ---------------------------------------------------
+deferred:
+  moodle_52_pg17:
+    decision: owner_2026_10_16
+    reason: 'PG17 требует pg_upgrade или dump/restore; несовместимо с текущим data directory'
+    security_support_5_1_ends: '2027-04-19'
+    hard_deadline_to_start: '2027-01-15'
+    gate_before_start: [INF-02, INF-03, INF-07, PRIVACY-01]
+    recheck_period_days: 60
+
+# --- Факты о сервере --------------------------------------------------------
+server_facts:
+  snapshot: context/runtime/server-facts/          # последний каталог с датой
+  method: read_only_script_owner_executed
+  companion: scripts/collect_runtime.py
+  freshness_rule: новый снимок перед каждой инфраструктурной операцией
+
+# --- Чего в репозитории нет (чтобы агент не искал зря) ---------------------
+known_gaps:
+  - design_tokens: отсутствует context/design/ при 21 CSS и 54 шаблонах
+  - access_matrix: права разбросаны по db/access.php и 99 PHP-файлам
+  - adr_index: нет индекса «вопрос → ADR»
+  - restore_rto: число не измерено, SLA подписать нельзя
+  - api_reference: нет описания внешних WS-функций как контракта
+
+# --- Что делать первым ------------------------------------------------------
+next_actions:
+  - run: scripts/infra/server_facts.sh
+    why: закрыть INF-02/03/07 фактом, а не пересказом
+  - run: python3 scripts/production_manifest.py --commit $(git rev-parse HEAD)
+    why: манифест от 05.10 устарел после апгрейда 13.10
+  - run: 'удалить или генерировать .codex/checkpoints/CURRENT.md'
+    why: говорит MOB-01, противоречит next_task INF-06

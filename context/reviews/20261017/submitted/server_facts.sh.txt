@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+# USTAR server facts — READ-ONLY collection that complements scripts/collect_runtime.py.
+#
+# collect_runtime.py already gathers (do NOT duplicate here):
+#   - docker inspect of ustar_moodle/ustar_postgres WITHOUT Env (image, image_id,
+#     mounts, running, status, started_at, restart_count, health, uptime)
+#   - read-only version probe: PHP, moodle_db/disk, ustar_db/disk, postgres server_version
+#   - git source state (commit/branch/dirty) and contextd units/pids
+#
+# This script adds the facts that block INF-02/03/05/07/10/11/14 and PERF-01:
+#   PostgreSQL roles/ACL/settings/sizes/queries, code and config ownership, SSH and
+#   firewall policy, TLS inventory, backup evidence, cron and scheduled-task state,
+#   SMART, packages, NTP, log and disk usage.
+#
+# Guarantees:
+#   * No writes: no apt/dpkg install, no systemctl start/stop/restart, no SQL that
+#     is not SELECT/SHOW, no docker exec that writes, no file creation outside $OUT.
+#   * Secrets are never captured: config.php is reduced to SET/- keys, docker Env is
+#     excluded, keys and certificates are listed by name only, no /etc/shadow.
+#   * A failing block does not abort the run; it records the reason in _errors.txt.
+#
+# Usage:
+#   sudo scripts/infra/server_facts.sh [/abs/output/dir]
+# Run as root only for smartctl and reading unit files; otherwise a docker-capable user is enough.
+set -uo pipefail
+
+OUT="${1:-/srv/ustar-storage/reports/server-facts-$(date -u +%Y%m%dT%H%M%SZ)}"
+if [[ "$OUT" != /* ]]; then echo "output dir must be absolute" >&2; exit 2; fi
+mkdir -p "$OUT" || { echo "cannot create $OUT" >&2; exit 2; }
+cd "$OUT" || exit 2
+
+MOODLE_CT="${USTAR_MOODLE_CT:-ustar_moodle}"
+PG_CT="${USTAR_PG_CT:-ustar_postgres}"
+DB_NAME="${USTAR_DB_NAME:-moodle}"
+DB_USER="${USTAR_DB_USER:-moodle}"
+PUBLIC_HOST_DIR="${USTAR_PUBLIC_DIR:-/opt/ustar/data/moodle/public}"
+HDD_DIR="${USTAR_HDD_DIR:-/srv/ustar-storage}"
+
+ok=0; fail=0
+run() { # run <file> <label> <cmd...>  — stderr помечается блоком, не смешивается
+  local file="$1" label="$2"; shift 2
+  local err; err="$(mktemp)"
+  if "$@" >"$file" 2>"$err"; then
+    ok=$((ok+1))
+  else
+    fail=$((fail+1))
+    printf '%-22s FAILED  %s\n' "$label" "$(head -1 "$err" 2>/dev/null | cut -c1-140)" >>_errors.txt
+    # Если команда что-то успела написать в stdout до ошибки — сохраняем.
+    [[ -s "$file" ]] || rm -f "$file"
+  fi
+  rm -f "$err"
+}
+: > _errors.txt
+
+# ---------------------------------------------------------------- A. host ----
+run A1_time.txt        time       bash -c 'date -u; echo ---; timedatectl 2>/dev/null; echo ---; cat /etc/timezone 2>/dev/null'
+run A2_os.txt          os         bash -c 'uname -a; echo ---; cat /etc/os-release'
+run A3_resources.txt   resources  bash -c 'nproc; echo ---; free -h; echo ---; cat /proc/loadavg; echo ---; uptime'
+run A5_fs.txt          fs         bash -c 'df -hT; echo "--- inode ---"; df -i'
+run A6_block.txt       block      lsblk -o NAME,SIZE,TYPE,FSTYPE,UUID,MOUNTPOINT,MODEL,SERIAL
+run A7_mounts.txt      mounts     findmnt -o TARGET,SOURCE,FSTYPE,OPTIONS
+run A8_cmdline.txt     cmdline    cat /proc/cmdline
+run A9_net.txt         net        bash -c 'ip -brief addr; echo "--- route ---"; ip route'
+run A9b_listen.txt     listen     ss -tulpn
+run A10_failed.txt     failed     systemctl --failed --no-pager
+run A11_timers.txt     timers     systemctl list-timers --all --no-pager
+run A12_reboot.txt     rebootreq  bash -c '[ -f /var/run/reboot-required ] && cat /var/run/reboot-required* || echo "no reboot required"'
+run A13_smart.txt      smart      bash -c 'for d in /dev/sda /dev/sdb; do echo "== $d"; smartctl -H -i -A "$d" 2>&1; done'
+run A14_ntp.txt        ntp        bash -c 'chronyc tracking 2>/dev/null || timedatectl show-timesync 2>/dev/null || echo "no ntp client found"'
+run A15_packages.txt   packages   bash -c "dpkg-query -W -f='\${Package} \${Version}\n' | sort"
+
+# -------------------------------------------------------------- B. docker ----
+# Container identity/versions already live in runtime.json; here only limits, logging and networks.
+run B4_limits.txt      ct_limits  bash -c "docker inspect -f 'name={{.Name}} restart={{.HostConfig.RestartPolicy.Name}} mem={{.HostConfig.Memory}} swap={{.HostConfig.MemorySwap}} cpus={{.HostConfig.NanoCpus}} pids={{.HostConfig.PidsLimit}} read_only={{.HostConfig.ReadonlyRootfs}} log_driver={{.HostConfig.LogConfig.Type}} log_opts={{.HostConfig.LogConfig.Config}} healthcheck={{if .Config.Healthcheck}}yes{{else}}no{{end}}' \$(docker ps -aq) 2>&1"
+run B5_net_vol.txt     net_vol    bash -c 'docker network ls; echo ---; docker volume ls'
+run B6_daemon.txt      daemon     bash -c 'cat /etc/docker/daemon.json 2>/dev/null || echo absent'
+
+# ----------------------------------------------------------- C. moodle/php ----
+# Version probe is in collect_runtime.py; here: modules, key ini, plugins, task tables.
+run C2_php_modules.txt php_mod    docker exec "$MOODLE_CT" php -m
+run C3_php_ini.txt     php_ini    docker exec "$MOODLE_CT" php -r 'foreach(["memory_limit","max_input_vars","upload_max_filesize","post_max_size","max_execution_time","max_input_time","opcache.enable","opcache.memory_consumption","opcache.max_accelerated_files","opcache.validate_timestamps","display_errors","error_reporting","session.gc_maxlifetime","session.save_handler","session.cookie_secure","session.cookie_httponly"] as $k) printf("%s=%s\n",$k,ini_get($k));'
+# config.php reduced to presence only; values (credentials, salts) are never printed.
+run C6_config_keys.txt config_keys docker exec "$MOODLE_CT" php -r '
+$t=@file_get_contents("/var/www/html/config.php"); if($t===false){echo "unreadable\n";exit;}
+foreach(["wwwroot","dataroot","dbtype","dbhost","dbname","dbuser","prefix","sslproxy","cookiesecure","cookiehttponly","reverseproxy","proxy","debug","maintenance","session_handler_class","cachestores","smtphosts","noemailever","passwordpolicy"] as $k)
+  printf("%s=%s\n",$k,preg_match("/\\\$CFG->".preg_quote($k,"/")."\s*=\s*[^;]+;/",$t)?"SET":"-");'
+run C4_moodle_cfg.txt  moodle_cfg docker exec "$PG_CT" psql -U "$DB_USER" -d "$DB_NAME" -Atc \
+  "select name||'='||coalesce(value,'') from mdl_config where name in ('release','version','wwwroot','maintenance','cookiesecure','cookiehttponly','debug','smtphosts','session_handler_class') order by name;"
+run C5_plugins.txt     plugins    docker exec "$PG_CT" psql -U "$DB_USER" -d "$DB_NAME" -Atc \
+  "select plugin||'='||coalesce(value,'') from mdl_config_plugins where name='version' order by plugin;"
+
+# ------------------------------------------------------------ D. postgres ----
+# Complete evidence base for INF-02 (role reduction) and PERF-01 (settings/sizes).
+run D1_roles.txt       pg_roles   docker exec "$PG_CT" psql -U postgres -Atc \
+  "select rolname||'|super='||rolsuper||'|createrole='||rolcreaterole||'|createdb='||rolcreatedb||'|login='||rolcanlogin||'|repl='||rolreplication||'|bypassrls='||rolbypassrls||'|connlimit='||rolconnlimit||'|until='||coalesce(rolvaliduntil::text,'-') from pg_roles order by rolname;"
+run D2_databases.txt   pg_dbs     docker exec "$PG_CT" psql -U postgres -Atc \
+  "select datname||'|owner='||pg_get_userbyid(datdba)||'|encoding='||pg_encoding_to_char(encoding)||'|size='||pg_size_pretty(pg_database_size(datname)) from pg_database order by datname;"
+run D3_settings.txt    pg_settings docker exec "$PG_CT" psql -U postgres -Atc \
+  "select name||'='||setting||coalesce(' '||unit,'')||' ['||source||']' from pg_settings order by name;"
+run D4_extensions.txt  pg_ext     docker exec "$PG_CT" psql -U postgres -Atc \
+  "select extname||'='||extversion from pg_extension order by extname;"
+run D5_table_owners.txt pg_owners docker exec "$PG_CT" psql -U postgres -Atc \
+  "select tableowner||'|'||schemaname||'|'||tablename from pg_tables where schemaname not in ('pg_catalog','information_schema') order by 1,2,3;"
+run D6_table_sizes.txt pg_sizes   docker exec "$PG_CT" psql -U postgres -Atc \
+  "select relname||'|rows='||coalesce(n_live_tup,0)||'|dead='||coalesce(n_dead_tup,0)||'|size='||pg_size_pretty(pg_total_relation_size(relid))||'|idx_scan='||coalesce(idx_scan,0)||'|seq_scan='||coalesce(seq_scan,0) from pg_stat_user_tables order by pg_total_relation_size(relid) desc limit 80;"
+run D7_top_queries.txt pg_queries bash -c "docker exec '$PG_CT' psql -U postgres -Atc \"select calls||'|mean='||round(mean_exec_time::numeric,2)||'ms|total='||round(total_exec_time::numeric,2)||'ms|'||left(regexp_replace(query,'\\s+',' ','g'),200) from pg_stat_statements order by total_exec_time desc limit 30;\" 2>&1 || echo 'pg_stat_statements NOT INSTALLED'"
+run D8_wal.txt         pg_wal     docker exec "$PG_CT" psql -U postgres -Atc \
+  "select name||'='||setting from pg_settings where name in ('wal_level','archive_mode','archive_command','max_wal_size','min_wal_size','checkpoint_timeout','autovacuum','autovacuum_vacuum_scale_factor','autovacuum_analyze_scale_factor','max_connections','shared_buffers','work_mem','maintenance_work_mem','effective_cache_size','random_page_cost','log_min_duration_statement');"
+run D9_activity.txt    pg_activity docker exec "$PG_CT" psql -U postgres -Atc \
+  "select coalesce(state,'-')||'='||count(*) from pg_stat_activity group by 1 order by 1;"
+run D10_connections.txt pg_conns docker exec "$PG_CT" psql -U postgres -Atc \
+  "select datname||'|'||usename||'|'||count(*)||'|max='||coalesce(greatest(max(backend_start)::text,'-')) from pg_stat_activity where datname is not null group by 1,2;"
+
+# -------------------------------------------------------- E. web / network ----
+run E1_apache_vhosts.txt apache_vhosts bash -c 'apache2ctl -S 2>&1'
+run E2_apache_mods.txt   apache_mods  bash -c 'apache2ctl -M 2>&1'
+run E3_tls_inventory.txt tls          bash -c 'ls -la /etc/apache2/sites-enabled/ 2>&1; echo "--- letsencrypt ---"; ls -la /etc/letsencrypt/live/ 2>/dev/null || echo "no letsencrypt"; echo "--- local certs (names only) ---"; ls -la /etc/ssl/private/ 2>/dev/null | head -10'
+run E4_firewall.txt      firewall     bash -c 'ufw status verbose 2>/dev/null || nft list ruleset 2>/dev/null || iptables -S 2>/dev/null || echo "no firewall tool found"'
+run E5_http_local.txt    http_local   bash -c "curl -sS -I -m 5 -o /dev/null -w 'code=%{http_code} time=%{time_total}s\n' http://127.0.0.1:8082/login/index.php 2>&1"
+run E6_http_cookie.txt   http_cookie  bash -c "curl -sS -D - -o /dev/null -m 5 http://127.0.0.1:8082/login/index.php 2>&1 | grep -iE '^(HTTP/|set-cookie|location|strict-transport)'"
+
+# ------------------------------------------------------------- F. backup ----
+run F1_backup_timer.txt  backup_timer bash -c 'systemctl list-timers --all --no-pager ustar-hdd-backup.timer 2>&1; echo "---"; systemctl show ustar-hdd-backup.service -p ActiveState -p Result -p ExecMainStatus -p ExecMainExitTimestamp -p NextElapseUSecRealtime 2>&1'
+run F2_backup_files.txt  backup_files bash -c "ls -la --time-style=long-iso '$HDD_DIR/backups/managed/' 2>&1 | tail -30"
+run F3_backup_size.txt   backup_size  bash -c "du -sh '$HDD_DIR'/* '$HDD_DIR'/backups/* 2>/dev/null | sort -h"
+run F4_backup_evid.txt   backup_evid  bash -c "ls -la --time-style=long-iso '$HDD_DIR/transfers/' 2>&1 | tail -12; echo '--- restore/readback artifacts ---'; find '$HDD_DIR' -maxdepth 4 \( -name '*restore*' -o -name '*readback*' -o -name '*.sha256' \) 2>/dev/null | head -25"
+run F5_backup_units.txt  backup_units bash -c 'cat /etc/systemd/system/ustar-hdd-backup.timer /etc/systemd/system/ustar-hdd-backup.service 2>/dev/null'
+run F6_backup_script.txt backup_script bash -c 'ls -la /usr/local/sbin/ 2>/dev/null | grep -iE "ustar" || echo "no ustar wrappers in /usr/local/sbin"'
+
+# -------------------------------------------------------- G. cron / tasks ----
+run G1_crontabs.txt      crontabs   bash -c 'for u in root www-data; do echo "== $u"; crontab -u "$u" -l 2>&1; done; echo "--- /etc/cron.d ---"; ls -la /etc/cron.d/ 2>&1'
+run G2_cron_log.txt      cron_log   bash -c 'journalctl -u cron --since "24 hours ago" --no-pager 2>/dev/null | tail -50'
+run G3_task_sched.txt    task_sched docker exec "$PG_CT" psql -U "$DB_USER" -d "$DB_NAME" -Atc \
+  "select classname||'|disabled='||disabled||'|last='||coalesce(lastruntime,0)||'|next='||coalesce(nextruntime,0)||'|faildelay='||coalesce(faildelay,0) from mdl_task_scheduled order by coalesce(lastruntime,0) asc limit 150;"
+run G4_adhoc_queue.txt   adhoc      docker exec "$PG_CT" psql -U "$DB_USER" -d "$DB_NAME" -Atc \
+  "select 'total='||count(*)||'|min_next='||coalesce(min(nextruntime),0)||'|max_next='||coalesce(max(nextruntime),0)||'|failed='||coalesce(sum(case when faildelay>0 then 1 else 0 end),0) from mdl_task_adhoc;"
+run G5_cron_state.txt    cron_state docker exec "$PG_CT" psql -U "$DB_USER" -d "$DB_NAME" -Atc \
+  "select 'lastcron='||coalesce(value,'0')||'|running='||coalesce((select value from mdl_config where name='cronrunning'),'-') from mdl_config where name='lastcron';"
+
+# ------------------------------------------------------------- H. access ----
+run H1_sshd.txt          sshd       bash -c 'sshd -T 2>/dev/null | grep -iE "^(permitrootlogin|passwordauthentication|pubkeyauthentication|permitemptypasswords|allowtcpforwarding|x11forwarding|maxauthtries|port|logingracetime|allowusers)" || echo "sshd -T unavailable"'
+run H2_users.txt         users      bash -c "getent passwd | awk -F: '(\$3>=1000||\$3==0){print \$1\"|\"\$3\"|\"\$6\"|\"\$7}'"
+run H3_ownership.txt     ownership  bash -c "for p in '$PUBLIC_HOST_DIR' '$PUBLIC_HOST_DIR/config.php' '$PUBLIC_HOST_DIR/local/ustar' '$PUBLIC_HOST_DIR/theme/ustar' '${PUBLIC_HOST_DIR%/public}/moodledata' '/opt/ustar/data/postgres'; do stat -c '%U|%G|%a|%n' \"\$p\" 2>&1; done"
+run H4_acl_ustar.txt     acl_ustar  bash -c "getfacl -R -p '$PUBLIC_HOST_DIR/local/ustar' 2>/dev/null | grep -vE '^# (owner|group):' | head -300"
+run H5_wwritable.txt     wwritable  bash -c "find '$PUBLIC_HOST_DIR' -maxdepth 4 \( -perm -o+w -o -perm -g+w \) -printf '%u|%g|%m|%p\n' 2>/dev/null | head -100"
+run H6_apparmor.txt      apparmor   bash -c 'aa-status 2>&1 | head -30'
+run H7_sudoers.txt       sudoers    bash -c 'ls -la /etc/sudoers.d/ 2>&1'
+
+# ------------------------------------------------- I. observability/space ----
+run I1_journal.txt       journal    bash -c 'journalctl --disk-usage 2>&1'
+run I2_log_sizes.txt     log_sizes  bash -c 'du -sh /var/log/* 2>/dev/null | sort -h | tail -30'
+run I3_log_files.txt     log_files  bash -c "find /var/log /opt/ustar -maxdepth 4 -name '*.log' 2>/dev/null | head -40"
+run I4_disk_hogs.txt     disk_hogs  bash -c 'du -xh --max-depth=2 / 2>/dev/null | sort -h | tail -30'
+
+# ------------------------------------------------------------- manifest ------
+{
+  echo "collected_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo "host=$(hostname)"
+  echo "kernel=$(uname -r)"
+  echo "operator=$(id -un)"
+  echo "mode=read_only"
+  echo "companion=scripts/collect_runtime.py (container identity, versions, git state)"
+  echo "blocks_ok=$ok"
+  echo "blocks_failed=$fail"
+} > _manifest.txt
+sha256sum ./*.txt > _sha256sums.txt 2>/dev/null
+
+echo "server-facts written to $OUT ($ok ok, $fail failed)"
+[[ $fail -gt 0 ]] && { echo "see $OUT/_errors.txt"; exit 1; }
+exit 0

@@ -1,0 +1,72 @@
+[
+  {
+    "block": "adhoc_tasks",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "code_access",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "code_layout",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "containers",
+    "reason": "unavailable",
+    "status": "error"
+  },
+  {
+    "block": "moodle_config",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "moodle_plugins",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "packages",
+    "reason": "invalid_data",
+    "status": "error"
+  },
+  {
+    "block": "pg_extensions",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "pg_owners",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "pg_query_stats",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "pg_tables",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "scheduled_tasks",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  },
+  {
+    "block": "smart",
+    "reason": "not_requested",
+    "status": "not_collected"
+  },
+  {
+    "block": "source_manifest",
+    "reason": "dependency_unavailable",
+    "status": "error"
+  }
+]

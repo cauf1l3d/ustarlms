@@ -261,18 +261,21 @@ next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: audit_followup_implementation_in_PR_not_deployed
+  status: LAN_implementation_in_PR_pending_owner_installation
   style: graphite_with_readable_type_color_accents_and_Grafana_style_charts_owner16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
   Telegram: alerts_metrics_latest_completed_backup_and_control
   independent_observer: required_for_host_loss_not_yet_deployed
-  continuation_gate: owner_authorized_resume_20261017T163032_MSK
-  telegram_delivery: not_implemented_or_verified
+  continuation_gate: owner_authorized_install_20261017T1703_MSK_LAN_1709
+  telegram_delivery: implemented_not_native_verified
   previous_reviewed_head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0
   implementation_resolution: Read PR103 current head; no self-referencing SHA in state
   audit_followup: server-console/AUDIT_FOLLOWUP_20261017.md
   priority_metrics: cron_last_observed_success;backup_completed_age;SSD_HDD_capacity_inodes;optional_local_HTTP_status_latency
+  lan_rollout: server-console/LAN_ROLLOUT_20261017.md
+  native_installation: pending_owner_commands_no_agent_SSH
+  history: native_15d_bounded_first_LAN_Prometheus_optional
 deferred_platform:
   task: PLAT-01
   status: deferred_by_owner16Oct

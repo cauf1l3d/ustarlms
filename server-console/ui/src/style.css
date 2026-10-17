@@ -1380,3 +1380,30 @@ dialog dl {
     transition: none !important;
   }
 }
+/* Operational controls inherit the readable form and dialog scale. */
+.operation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+.operation-actions button {
+  min-height: 44px;
+  padding: 12px 18px;
+}
+.job-list {
+  margin-top: 24px;
+}
+.job-list small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+.operations .notice {
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+.operations a {
+  color: #9acbff;
+  text-decoration: underline;
+}

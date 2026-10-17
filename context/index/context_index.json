@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 29954,
-      "sha256": "e494d13320c7dcdd0d57d12cbc598c662647535c44c0cf141f9b7f59b962d020"
+      "size": 30012,
+      "sha256": "c85dbd8830a8e43624df7cc09006dfe71c238634fd4108badbe73db2e9442540"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 150674,
-      "sha256": "5cf5b8235ed3477c8c93f6975f1f7bc3df5d318634ad11fa269ed6942dad4f16"
+      "size": 151697,
+      "sha256": "fa9446d03f0b7f85c3c884527542107d799bf6462c126ff8db99a961267d58f7"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,8 +924,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 15778,
-      "sha256": "75721e8ffad484f7e0d01de85c14776c62ebbd32327c628dae5adc02bf3e4856"
+      "size": 15966,
+      "sha256": "ef2a9a49c9d216ec6515ffc976564bf51c630b58413efbb25549350ce66d3b67"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1080,8 +1080,8 @@
     {
       "path": "context/runtime/control_panel_telegram_20261016.md",
       "domain": "runtime",
-      "size": 7560,
-      "sha256": "c29fb770357843fb278ae03768f6fa21bc840b2c8468fc8f67a536e56fcc2a46"
+      "size": 8310,
+      "sha256": "525b4229f45cba395ca5ba7cc331ad6057753df674551cc1bf42d783ddfaa9b8"
     },
     {
       "path": "context/runtime/core-facts/20261017T100015Z-edb2f12e/README.md",
@@ -2076,8 +2076,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 5348,
-      "sha256": "2a0fefb1f9eff9e1313b35012cb8167d2d8cf274783685ada60147b45d023b78"
+      "size": 5692,
+      "sha256": "5f73a378472e75f385a4deaeee4da147e77cfac827581534342bdac7592f6929"
     },
     {
       "path": "context/tasks/backlog.yaml",

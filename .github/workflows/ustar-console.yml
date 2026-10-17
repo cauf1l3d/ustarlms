@@ -26,6 +26,8 @@ jobs:
           python -m pip install --no-deps --no-build-isolation -e server-console/backend
       - name: Auth, failures, data boundaries and fixed probes
         run: python -m pytest -q server-console/tests
+      - name: Actual PostgreSQL16 monitor privileges
+        run: python server-console/tests/database_acceptance.py
       - name: Build isolated console artifact
         run: bash server-console/build-release.sh
       - name: Offline prototype matches the application

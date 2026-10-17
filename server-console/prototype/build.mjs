@@ -15,6 +15,7 @@ const entry = join(ui, "src/main.tsx");
 const source = await readFile(entry, "utf8");
 const css = await readFile(join(ui, "src/style.css"), "utf8");
 const charts = await readFile(join(ui, "src/charts.tsx"), "utf8");
+const operations = await readFile(join(ui, "src/operations.tsx"), "utf8");
 const start = source.indexOf("async function api(");
 const end = source.indexOf("function Badge(", start);
 if (start < 0 || end < 0)
@@ -58,6 +59,7 @@ try {
     .update(source)
     .update(css)
     .update(charts)
+    .update(operations)
     .digest("hex");
   const template = await readFile(join(here, "index.template.html"), "utf8");
   const html = template

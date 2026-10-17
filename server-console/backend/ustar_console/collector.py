@@ -29,7 +29,7 @@ DOCKER_FORMAT = ('{{json .State.Status}}|{{json .State.Running}}|{{json .State.O
                  '{{json .RestartCount}}|{{json .HostConfig.RestartPolicy.Name}}|{{json .State.StartedAt}}')
 
 
-def command(argv, timeout=2, limit=65536):
+def command(argv, timeout=2, limit=65536, accepted=(0,)):
     """No shell, inherited credentials, arbitrary argv, unbounded pipes or descendant processes."""
     process = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                                env={'PATH': '/usr/bin:/bin', 'LC_ALL': 'C'}, start_new_session=True)
@@ -48,7 +48,7 @@ def command(argv, timeout=2, limit=65536):
                 output.extend(chunk)
                 if len(output) > limit:
                     raise ValueError('Probe output limit')
-        if process.wait(timeout=max(.01, deadline-time.monotonic())):
+        if process.wait(timeout=max(.01, deadline-time.monotonic())) not in accepted:
             raise ValueError('Probe failed')
         return output.decode('utf-8')
     finally:
@@ -120,7 +120,8 @@ def http_probe():
     # /login/index.php may create a session/access log entry; this probe is explicitly optional.
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
     started = time.monotonic()
-    request = urllib.request.Request('http://127.0.0.1:8082/login/index.php', method='HEAD')
+    request = urllib.request.Request('http://127.0.0.1:8082/login/index.php', method='HEAD',
+                                     headers={'Host':'ustar.local','User-Agent':'USTAR-Console-Probe/1'})
     try:
         with opener.open(request, timeout=2) as response:
             code = response.status
@@ -244,19 +245,24 @@ def units():
     return rows
 
 
-def collect(local_http=False):
+def collect(local_http=False, database_probe=False):
     result = dict(version=1, observed_at=stamp(), checks=[], host={}, backup={}, cron={}, lab={}, containers=[], events=[])
     probes = {'host':host, 'containers':containers, 'hdd':mount, 'backup':backup, 'cron':collect_cron,
               'lab':lab, 'units':units, 'recovery':recovery}
+    from .hardware import clock, smart_receipt
+    probes.update(clock=clock,smart=smart_receipt)
     if local_http:
         probes['http_local'] = http_probe
+    if database_probe:
+        from .database import database
+        probes['database'] = database
     def sampled(probe):
         value = probe()
         return value, stamp()
     with ThreadPoolExecutor(max_workers=7) as pool:
         futures = {key:pool.submit(sampled, fn) for key,fn in probes.items()}
         for key, future in futures.items():
-            domain = 'data' if key in ('hdd','backup','recovery') else 'academy' if key in ('containers','http_local','cron') else 'labs' if key=='lab' else 'server'
+            domain = 'data' if key in ('hdd','backup','recovery') else 'academy' if key in ('containers','http_local','cron','database') else 'labs' if key=='lab' else 'server'
             try:
                 value, measured_at = future.result()
                 result[key] = value
@@ -271,6 +277,10 @@ def collect(local_http=False):
                     status, reason = 'no_data', 'controller_receipt_only'
                 if key == 'http_local':
                     status, reason = value['status'], 'head_local_only'
+                if key == 'database':
+                    status, reason = value['status'], 'database_aggregates'
+                if key in ('clock','smart'):
+                    status, reason = value['status'], key+'_measurement'
                 if key == 'containers':
                     status = 'no_data' if any(row['state']=='no_data' for row in value) else (
                         'critical' if any(not row['running'] or row['oom'] for row in value) else 'ok')
@@ -281,6 +291,10 @@ def collect(local_http=False):
                 item['observed_at'] = measured_at
                 if key in ('cron', 'backup'):
                     item['source_observed_at'] = value['last_attempt_at'] if key == 'cron' else value['completed_at']
+                if key=='smart':
+                    item['source_observed_at']=value['observed_at']
+                if key in ('clock','smart','database'):
+                    item['value']=value
                 additional = []
                 if key == 'host':
                     additional = capacity_checks('ssd', value['disk'], 'server', root=True)
@@ -325,7 +339,13 @@ def main():
     args = parser.parse_args()
     if os.geteuid() != 0:
         raise SystemExit('Collector must be run by its restricted root service')
-    write_snapshot(collect(args.local_http), Path('/run/ustar-console-data/snapshot.json'))
+    from .config import load
+    settings=load()
+    value=collect(args.local_http or settings.local_http,settings.database_probe)
+    write_snapshot(value, Path('/run/ustar-console-data/snapshot.json'))
+    if settings.native_history:
+        from .history_store import record
+        record(value)
 
 
 if __name__ == '__main__':

@@ -55,6 +55,7 @@ class Auth:
                   started REAL NOT NULL, blocked_until REAL NOT NULL);
                 CREATE TABLE IF NOT EXISTS audit(
                   id INTEGER PRIMARY KEY, at REAL NOT NULL, event TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS factors(username TEXT PRIMARY KEY,secret TEXT NOT NULL,counter INTEGER NOT NULL);
             ''')
 
     @contextmanager
@@ -86,7 +87,7 @@ class Auth:
             self.audit(db, 'user_updated_sessions_revoked')
             db.commit()
 
-    def login(self, username, password, peer):
+    def login(self, username, password, peer, otp=''):
         now = self.clock()
         buckets = ('user:'+digest(username), 'peer:'+digest(peer))
         with self.connection() as db:
@@ -105,6 +106,7 @@ class Auth:
                 valid = HASHER.verify(user['password'] if user else DUMMY_HASH, password)
             except VerificationError:
                 valid = False
+            valid = self.factor(db,username,otp) if valid else False
             if not valid or not user:
                 for key, row in zip(buckets, rows):
                     failures = (row['failures'] if row else 0)+1
@@ -123,6 +125,41 @@ class Auth:
             self.audit(db, 'login_succeeded')
             db.commit()
         return token
+
+    def factor(self,db,username,otp):
+        from .totp import verify
+        row=db.execute('SELECT * FROM factors WHERE username=?',(username,)).fetchone()
+        if row is None:
+            return True
+        counter=verify(row['secret'],otp,self.clock(),row['counter'])
+        if counter is None:
+            return False
+        db.execute('UPDATE factors SET counter=? WHERE username=?',(counter,username))
+        return True
+
+    def authorize(self,session,password,otp=''):
+        """Fresh credentials per privileged request; no reusable elevation token."""
+        with self.connection() as db:
+            db.execute('BEGIN IMMEDIATE')
+            key='reauth:'+digest(session['username'])
+            row=db.execute('SELECT * FROM attempts WHERE bucket=? AND started>?',(key,self.clock()-900)).fetchone()
+            if row and row['blocked_until']>self.clock():
+                raise Denied(int(row['blocked_until']-self.clock())+1)
+            user=db.execute('SELECT password FROM users WHERE username=?',(session['username'],)).fetchone()
+            try:
+                valid=bool(user) and HASHER.verify(user['password'],password)
+            except VerificationError:
+                valid=False
+            valid=self.factor(db,session['username'],otp) if valid else False
+            if not valid:
+                failures=(row['failures'] if row else 0)+1
+                delay=min(300,2**min(failures-3,9)) if failures>=4 else 0
+                db.execute('INSERT OR REPLACE INTO attempts VALUES(?,?,?,?)',
+                    (key,failures,row['started'] if row else self.clock(),self.clock()+delay))
+                self.audit(db,'reauth_failed');db.commit()
+                raise Denied()
+            db.execute('DELETE FROM attempts WHERE bucket=?',(key,))
+            self.audit(db,'privileged_request_authorized');db.commit()
 
     def session(self, token):
         if not token or len(token) > 128:
@@ -145,7 +182,7 @@ class Auth:
             db.execute('DELETE FROM sessions WHERE token=?', (session['token'],))
             self.audit(db, 'logout')
 
-    def password(self, session, current, replacement):
+    def password(self, session, current, replacement, otp=''):
         # Compare and update in one transaction; concurrent CLI resets cannot be undone.
         with self.connection() as db:
             db.execute('BEGIN IMMEDIATE')
@@ -159,6 +196,7 @@ class Auth:
                 valid = bool(row) and HASHER.verify(row['password'], current)
             except VerificationError:
                 valid = False
+            valid=self.factor(db,session['username'],otp) if valid else False
             if not valid:
                 failures=(previous['failures'] if previous else 0)+1
                 delay=min(300,2**min(failures-3,9)) if failures>=4 else 0
@@ -183,9 +221,31 @@ def main():
     parser = argparse.ArgumentParser(description='Local console user reset; revokes previous sessions')
     parser.add_argument('username')
     parser.add_argument('--role', choices=('viewer', 'operator', 'owner'), default='owner')
+    parser.add_argument('--totp',choices=('enroll','disable'))
     args = parser.parse_args()
+    auth=Auth(load())
+    if args.totp:
+        if not os.isatty(0) or not os.isatty(1):
+            raise SystemExit('TOTP setup requires a local interactive terminal')
+        with auth.connection() as db:
+            if not db.execute('SELECT 1 FROM users WHERE username=?',(args.username,)).fetchone():
+                raise SystemExit('Create the user first')
+            if args.totp=='enroll':
+                from .totp import secret, verify
+                key=secret()
+                print('Local authenticator setup key (do not paste into chat): '+key)
+                supplied=getpass.getpass('Code from authenticator: ')
+                counter=verify(key,supplied,time.time())
+                if counter is None: raise SystemExit('Code rejected; nothing changed')
+                db.execute('INSERT OR REPLACE INTO factors VALUES(?,?,?)',(args.username,key,counter))
+            else:
+                db.execute('DELETE FROM factors WHERE username=?',(args.username,))
+            db.execute('DELETE FROM sessions WHERE username=?',(args.username,))
+            auth.audit(db,'totp_updated_sessions_revoked')
+        print('TOTP updated; previous sessions revoked.')
+        return
     password = getpass.getpass('New console password (14+ characters): ')
     if not hmac.compare_digest(password, getpass.getpass('Repeat password: ')):
         raise SystemExit('Passwords differ')
-    Auth(load()).set_user(args.username, password, args.role)
+    auth.set_user(args.username, password, args.role)
     print('User updated; previous sessions revoked.')

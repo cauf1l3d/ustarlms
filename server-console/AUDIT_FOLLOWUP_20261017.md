@@ -1,5 +1,7 @@
 # Пульт: требования аудита и изменения17Oct
 
+Продолжение по owner17:03/17:09MSK: [LAN выпуск](LAN_ROLLOUT_20261017.md). Документ ниже описывает предыдущий audit follow-up; его список «Открыто» уточнён текущим LAN выпуском. Native installation/delivery не приписываются.
+
 Владелец17Oct16:30:32MSK подтвердил переход к пульту после сбора контекста. Предыдущий PR103/head98559017 содержал auth/read-only UI и исправления читаемости16Oct; после аудитов менялся контекст PR105, а не код пульта. Этот follow-up переносит приоритеты аудита в реализацию. Новый независимый audit result или установка на server1 не приписываются.
 
 Основа: [fable §7](../context/reviews/20261017/submitted/fable.md), [review §7](../context/reviews/20261017/submitted/USTAR_REVIEW_20261016.md), [проверка спорных выводов](../context/reviews/20261017/README.md), [требования владельца](../context/runtime/control_panel_telegram_20261016.md), [наблюдения17Oct](../context/reviews/20261017/gaps_reconciliation.md). Ветка пульта включает проверенный контекст PR105/02fd394f; main и production этим не переключаются.

@@ -1,8 +1,8 @@
 # USTAR Server Console
 
-Первый рабочий read-only срез INF-06 в PR103: отдельный FastAPI/API, серверные сессии Argon2id, фиксированный host collector, React/TypeScript UI и systemd. Это operations UI; `moodle/local/ustar` и `moodle/theme/ustar` не меняются, legacy `frontend/` не используется.
+LAN выпуск INF-06 в PR103: отдельный FastAPI/API, серверные сессии Argon2id, фиксированный host collector, React/TypeScript UI и systemd. Это operations UI; `moodle/local/ustar` и `moodle/theme/ustar` не меняются, legacy `frontend/` не используется.
 
-[Изменения по аудиту17Oct](AUDIT_FOLLOWUP_20261017.md) · [Установка на server1 и приёмка](INSTALL.md) · [Архитектура](ARCHITECTURE.md) · [Health/метрики](OBSERVABILITY.md) · [UI/UX](DESIGN.md).
+[Текущий LAN выпуск](LAN_ROLLOUT_20261017.md) · [Изменения по аудиту17Oct](AUDIT_FOLLOWUP_20261017.md) · [Установка на server1 и приёмка](INSTALL.md) · [Архитектура](ARCHITECTURE.md) · [Health/метрики](OBSERVABILITY.md) · [UI/UX](DESIGN.md).
 
 ## Поставлено в исходниках
 
@@ -12,11 +12,13 @@
 - Шесть разделов UI, крупная контрастная типографика, цветовые акценты, временные ряды в духе Grafana (шкалы, легенды, last/mean/max, tooltip, CPU/RAM), детали/native dialogs, общие периоды, графики с разрывами, потеря сети/сессии, собственный пароль, мобильный интерфейс. Нет demo fallback.
 - Ограниченные systemd units, timer, установка из wheel/зафиксированных зависимостей с SHA256, отдельный CI, auth/data/browser/systemd fixtures.
 
-## Границы первого этапа
+## LAN установка и границы
 
-**Не установлено на server1.** Gateway/VPN/cert, сопоставление метрик с CLI и измерение overhead требуют native приёмки. Prometheus/node-exporter/blackbox, Alertmanager и правила этим комплектом не устанавливаются; интеграция истории только читает выбранные local series.
+Добавлены native HTTPS/локальная CA/setup, отдельный aggregate-only PostgreSQL monitor, native история15дней, NTP/SMART adapters, durable alerts/outbox/Telegram с numeric allowlists, session-bound выдача encrypted .age через Unix FD broker и фиксированные jobs с планом/reauth/revision/locks/idempotency. TOTP и локальная CLI управления пользователями; root операции вынесены из web identity. Для другого LAN узла поставляется observer.pyz с отдельным token/outbox.
 
-DB-monitor, raw host logs с redaction, Telegram/outbox/external observer, защищённый download, SFTP settings и host jobs — следующие этапы. Все роли пока читают одни данные; web-администрирования пользователей/TOTP нет. Копия сисадмина ожидает приёмки, Moodle5.2/PG17 отложены.
+**Не установлено на server1.** [Установка](INSTALL.md) использует проверенный artifact CI, WinSCP и локальный wizard. Нужны trust CA на устройствах, реальные bot IDs/token, native source/role/download/receiver/overhead acceptance и отдельный observer. Бот не запускает root jobs. Target design Prometheus/Alertmanager не устанавливается первым LAN комплектом: используется bounded native history/rules; fixed Prometheus adapter остаётся опциональным.
+
+Открыты request p95/5xx, sanitized raw logs, forecast/PSI, live SFTP settings, гибкий TTL, production restore plans и web user administration. Полный INF-06 не закрыт по одному CI. Копия сисадмина ожидает native restore/RTO, Moodle5.2/PG17 отложены.
 
 [Новый автономный прототип](prototype/index.html) отражает актуальный UI17Oct: cron/копия/диск/HTTP перед графиками, с сохранёнными исправлениями читаемости16Oct. Скачайте HTML и откройте в браузере; [подробности и пересборка](prototype/README.md). Прототип использует только демонстрационные данные. [Прежний макет15Oct](prototype/archive/index-20261015.html) сохранён в архиве; прототип не является работающим сервисом или runbook переноса. [Production copy](../context/runtime/production_copy_20261015.md) — отдельная действующая инструкция передачи.
 

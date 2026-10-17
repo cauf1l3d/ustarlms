@@ -454,3 +454,95 @@ test("offline prototype preserves audit priorities without network requests", as
   }
   expect(remote).toEqual([]);
 });
+
+test("operation plan, target, credentials and idempotency on mobile", async ({
+  page,
+}, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route("**/api/operations", (route) =>
+    route.fulfill({ json: { jobs: [] } }),
+  );
+  await page.route("**/api/operations/plan", (route) =>
+    route.fulfill({
+      json: {
+        id: "a".repeat(32),
+        action: "manual_backup",
+        target: "Академия → копия на HDD",
+        effect: "Краткая остановка Академии. Почта и DNS не меняются.",
+        expires: Date.now() / 1000 + 90,
+      },
+    }),
+  );
+  const submitted: any[] = [];
+  await page.route("**/api/operations/confirm", async (route) => {
+    submitted.push(route.request().postDataJSON());
+    await route.fulfill({ json: { id: "b".repeat(32), state: "queued" } });
+  });
+  await login(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Бэкапы", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Создать копию", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toContainText("Академия → копия на HDD");
+  await expectReadable(page);
+  await page.screenshot({
+    path: info.outputPath("operation-plan-mobile.png"),
+    fullPage: true,
+  });
+  await dialog
+    .getByLabel("Для подтверждения введите manual_backup")
+    .fill("manual_backup");
+  await dialog
+    .getByLabel("Текущий пароль", { exact: true })
+    .fill("browser-fixture-password");
+  await dialog
+    .getByRole("button", { name: "Подтвердить и запустить", exact: true })
+    .click();
+  await expect(dialog).not.toBeVisible();
+  expect(submitted).toHaveLength(1);
+  expect(submitted[0].idempotency).toMatch(/^[0-9a-f-]{36}$/);
+  expect(submitted[0].confirmation).toBe("manual_backup");
+});
+
+test("archive grant does not embed a key or start a backup", async ({
+  page,
+}) => {
+  await page.route("**/api/operations", (route) =>
+    route.fulfill({ json: { jobs: [] } }),
+  );
+  const capture: any[] = [];
+  await page.route("**/api/backup/download", async (route) => {
+    capture.push(route.request().postDataJSON());
+    await route.fulfill({
+      json: {
+        token: "c".repeat(43),
+        file: "fixture.tar.gz.age",
+        sha256: "a".repeat(64),
+        expires: Date.now() / 1000 + 120,
+      },
+    });
+  });
+  await login(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Бэкапы", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Скачать зашифрованный архив", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await dialog
+    .getByLabel("Текущий пароль", { exact: true })
+    .fill("browser-fixture-password");
+  await dialog
+    .getByRole("button", { name: "Разрешить скачивание", exact: true })
+    .click();
+  await expect(
+    page.getByRole("link", { name: /Скачать · ссылка/ }),
+  ).toHaveAttribute("href", "/api/backup/archive/" + "c".repeat(43));
+  expect(capture).toHaveLength(1);
+});

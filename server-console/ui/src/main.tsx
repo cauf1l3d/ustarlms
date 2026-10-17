@@ -17,6 +17,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { TimeChart as Chart } from "./charts";
+import { Operations } from "./operations";
 
 type Check = {
   id: string;
@@ -82,6 +83,13 @@ type Snapshot = {
   units?: Record<string, unknown>[];
   lab: Record<string, unknown>;
   domains: Record<string, string>;
+  database?: Record<string, number | string>;
+  notifications?: {
+    pending: number;
+    delivery_failures: number;
+    polling: string;
+    rules: { key: string; state: string }[];
+  };
 };
 type Session = {
   username: string;
@@ -94,6 +102,7 @@ type Series = {
   status: string;
   reason_code: string;
   step_seconds?: number;
+  source?: string;
 };
 const titles: Record<string, string> = {
   overview: "Обзор",
@@ -131,6 +140,8 @@ const labels: Record<string, string> = {
   ssd_inodes: "Свободные inode SSD",
   hdd_space: "Свободное место диска бэкапов",
   hdd_inodes: "Свободные inode диска бэкапов",
+  smart: "SMART дисков",
+  clock: "Синхронизация времени",
 };
 const reasons: Record<string, string> = {
   measured: "Измерение получено",
@@ -163,6 +174,15 @@ const reasons: Record<string, string> = {
   disk_low_space: "Свободного места меньше стартового порога",
   disk_low_inodes: "Свободных inode меньше стартового порога",
   inodes_unsupported: "Файловая система не предоставила счётчик inode",
+  database_aggregates:
+    "Отдельная роль БД: только агрегаты соединений, ожиданий и размера",
+  outbox_status:
+    "Состояние очереди и связи с Telegram; получение оператором проверяется отдельно",
+  smart_measurement:
+    "SMART: текущее здоровье и выбранные счётчики. Старые ошибки и vendor wear рассматриваются отдельно",
+  clock_measurement: "Выбранный NTP peer, смещение и jitter текущего измерения",
+  sustained_rules:
+    "Оценка непрерывного окна CPU/RAM по свежим измерениям. Пропуск телеметрии сбрасывает окно",
 };
 const phase: Record<string, string> = {
   ready: "Подготовлен",
@@ -381,6 +401,16 @@ function LoginScreen({
             autoComplete="current-password"
             required
             maxLength={256}
+          />
+        </label>
+        <label>
+          Код TOTP, если подключён
+          <input
+            name="otp"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            pattern="[0-9]{6}"
           />
         </label>
         {error && (
@@ -672,6 +702,16 @@ function App() {
         От 14 символов. После смены потребуется войти заново на всех
         устройствах.
       </p>
+      <label>
+        Код TOTP, если подключён
+        <input
+          name="otp"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={6}
+          pattern="[0-9]{6}"
+        />
+      </label>
       {profileError && (
         <p role="alert" className="error-text">
           {profileError}
@@ -714,7 +754,11 @@ function App() {
           })}
         </nav>
         <div className="sidebar-foot">
-          <span className="mode">Только просмотр</span>
+          <span className="mode">
+            {session.role === "viewer"
+              ? "Только просмотр"
+              : "Действия с подтверждением"}
+          </span>
           <button onClick={() => setProfile(true)}>
             <ShieldCheck size={18} aria-hidden="true" /> Учётная запись
           </button>
@@ -907,7 +951,11 @@ function App() {
                 </section>
                 <div className="charts">
                   <Chart
-                    label="Ответ из независимой точки сети"
+                    label={
+                      series.http?.source === "native_collector"
+                        ? "Локальный ответ Академии"
+                        : "Ответ из независимой точки сети"
+                    }
                     unit="мс"
                     series={series.http}
                   />
@@ -983,7 +1031,11 @@ function App() {
                 />
                 <div className="charts">
                   <Chart
-                    label="Ответ из независимой точки сети"
+                    label={
+                      series.http?.source === "native_collector"
+                        ? "Локальный ответ Академии"
+                        : "Ответ из независимой точки сети"
+                    }
                     unit="мс"
                     series={series.http}
                   />
@@ -992,6 +1044,31 @@ function App() {
                     статистики веб-сервера. Синтетический запрос их не заменяет.
                   </Empty>
                 </div>
+                {data.database && (
+                  <section className="panel">
+                    <h2>PostgreSQL</h2>
+                    <dl>
+                      <dt>Соединений / предел</dt>
+                      <dd>
+                        {data.database.connections} /{" "}
+                        {data.database.max_connections}
+                      </dd>
+                      <dt>Активных запросов</dt>
+                      <dd>{data.database.active}</dd>
+                      <dt>Ожидают блокировку</dt>
+                      <dd>{data.database.waiting}</dd>
+                      <dt>Idle in transaction</dt>
+                      <dd>{data.database.idle_in_transaction}</dd>
+                      <dt>Старейшая транзакция</dt>
+                      <dd>
+                        {value(
+                          Number(data.database.oldest_transaction_seconds),
+                          " с",
+                        )}
+                      </dd>
+                    </dl>
+                  </section>
+                )}
               </>
             )}
             {page === "server" && (
@@ -1114,8 +1191,9 @@ function App() {
                       </dd>
                     </dl>
                     <p className="muted">
-                      Выдача архива и действия с копиями появятся после
-                      подключения защищённого скачивания.
+                      Скачивание ниже выдаёт этот зашифрованный архив. После
+                      загрузки сверьте SHA256. Приёмка восстановления
+                      учитывается отдельно.
                     </p>
                   </section>
                 ) : (
@@ -1160,7 +1238,9 @@ function App() {
                       </dd>
                     </dl>
                     <p className="muted">
-                      Управление временем и запуском пока недоступно.
+                      Новый запуск ограничен двумя часами. Существующие данные
+                      контроллер сохраняет; повторный запуск поверх них
+                      отклоняется.
                     </p>
                   </section>
                 ) : (
@@ -1189,15 +1269,53 @@ function App() {
                     </div>
                   ))}
                 </section>
+                <section className="panel">
+                  <h2>Уведомления</h2>
+                  {data.notifications ? (
+                    <>
+                      <p>
+                        В очереди: {data.notifications.pending} · Ошибок
+                        доставки: {data.notifications.delivery_failures}
+                      </p>
+                      <p>
+                        Связь с Telegram:{" "}
+                        {data.notifications.polling === "ok"
+                          ? "доступна"
+                          : "нет данных"}
+                      </p>
+                      <p className="muted">
+                        Доставка подтверждается Bot API. Получение оператором
+                        проверяется через /status. Повторы после обрыва
+                        возможны.
+                      </p>
+                    </>
+                  ) : (
+                    <p className="muted">
+                      Telegram ещё не настроен или worker не передаёт свежий
+                      статус.
+                    </p>
+                  )}
+                </section>
                 <Empty title="Логи сервера ещё не подключены">
                   Пульт не загружает сырые журналы: сначала должны быть
                   настроены источники и удаление секретов.
                 </Empty>
               </>
             )}
+            {["academy", "backups", "labs", "events"].includes(page) && (
+              <Operations
+                api={api}
+                csrf={session.csrf}
+                role={session.role}
+                page={page}
+                available={!stale && !lost}
+              />
+            )}
             <footer>
               Время — Москва · Последнее измерение {date(data.observed_at)} ·
-              Режим просмотра
+              {session.role === "viewer"
+                ? "Режим просмотра"
+                : "Действия требуют подтверждения"}
             </footer>
           </>
         )}

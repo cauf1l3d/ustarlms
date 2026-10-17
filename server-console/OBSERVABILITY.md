@@ -1,5 +1,7 @@
 # Пульт: метрики, health и алерты
 
+**Текущая реализация первого LAN запуска17Oct:** [LAN выпуск и границы](LAN_ROLLOUT_20261017.md), [установка](INSTALL.md). Ниже сохраняется полный целевой дизайн16Oct; Prometheus/Alertmanager, web user admin, расширенные rules/restore/logs не объявляются поставленными. Первая LAN версия использует native bounded history/rules и отдельный fixed-operation broker.
+
 **Реализация17Oct:** [сверка по аудиту](AUDIT_FOLLOWUP_20261017.md) — cron v3 receipt/сохранённый последний наблюдавшийся success, текущие SSD/HDD capacity+inodes и отдельная свежесть источников подключены в коде. Telegram/rules/independent observer/DB monitor ещё не поставлены; это не server1 acceptance.
 
 Спецификация16Oct2026, не live-отчёт. [Архитектура](ARCHITECTURE.md) · [UI](DESIGN.md). Ниже стартовые пороги; после7дней измерений скорректировать по нормальной нагрузке и владельцу. Не выдавать их за гарантию SLA или уже настроенные правила.

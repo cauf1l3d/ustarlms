@@ -167,13 +167,14 @@ tasks:
   - Independent observer verifies loss of host and delivery; retention/resources bounded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
-  owner_priority: owner_authorized_resume_console_20261017T163032_MSK
-  current_summary: 'PR103: previous readable UI/Grafana-style charts preserved. Audit follow-up adds cron v3 adapter/private
-    durable last observed success, disk/inode observations, per-source freshness and priority overview cards; context synchronized
-    with PR105/02fd394f. Not merged/deployed; DB monitor, Telegram/outbox/independent observer, verified download, guarded
-    jobs and native acceptance remain open.'
+  owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
+  current_summary: 'PR103 LAN code: native HTTPS/setup/CA, PG aggregate monitor, bounded history15d, NTP/SMART, TOTP, durable
+    Telegram/outbox/rules, encrypted archive FD download, fixed planned jobs and independent observer bundle. Not installed;
+    native source/role/receiver/download/overhead/host-loss acceptance pending. Request statistics/logs/SFTP/restore/flexible
+    TTL/web user administration remain open.'
   validation_evidence:
   - server-console/AUDIT_FOLLOWUP_20261017.md
+  - server-console/LAN_ROLLOUT_20261017.md
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned

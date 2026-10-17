@@ -1,5 +1,7 @@
 # Пульт управления и Telegram: текущий этап
 
+**Продолжение17Oct17:03/17:09MSK:** владелец разрешил закончить остаток и устанавливать пульт; первый запуск во внутренней корпоративной сети. [Текущий LAN комплект/границы](../../server-console/LAN_ROLLOUT_20261017.md), [owner установка](../../server-console/INSTALL.md). Native HTTPS/PG monitor/history/NTP/SMART/TOTP/alerts/Telegram/download/fixed jobs/observer добавлены в PR103; source/receiver/role/overhead/host-loss/native acceptance ещё нужны. Full request stats/logs/SFTP/restore/TTL/admin UI остаются открыты. Архивы и main/production не переключены.
+
 Задача INF-06 после GitHub-сверки16Oct. Рабочая Академия остаётся на Moodle5.1.8/PG16; Moodle5.2/PG17 отложены. UI-прототип PR103 в Linear-inspired graphite стиле сохраняется. Первый read-only backend/auth/UI добавлен в PR103; установленного на server1 пульта/бота пока нет. Владелец17Oct16:30MSK разрешил продолжить; [изменения по аудиту](../../server-console/AUDIT_FOLLOWUP_20261017.md).
 
 ## Архитектура подготовлена16Oct

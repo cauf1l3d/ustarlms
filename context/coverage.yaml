@@ -1,5 +1,5 @@
 schema_version: 1
-reviewed_at: '2026-10-17'
+reviewed_at: '2026-10-18'
 scope: repository_validated_owner_archives_and_separate_terminal_followups_not_independent_functional_acceptance
 entrypoint: START_HERE.md
 claims:
@@ -61,9 +61,13 @@ covered:
     redacted; exact probe time unknown. Not all sources/IPv6/NAT mapping/API auth or listener hardening'
 - area: console_priority_metrics_and_source_freshness_implementation
   evidence: server-console/AUDIT_FOLLOWUP_20261017.md
-  boundary: PR103 code/fixture verification only; cron v3 receipt and last observed success, disk/inode current checks, optional
-    local HEAD status and four priority cards. Not server1 deployment, native alert delivery, real HTTP p95 or independent
-    host-loss observer
+  boundary: Owner installed567e90d5 with limited TLS/units/freshness gate and browser opening. Later host rw/service ro and partial
+    SSD SMART diagnosed; fix/update in PR not yet applied. Native role/download/alert delivery/overhead, real HTTP p95 and independent
+    host-loss remain open
+- area: console_HDD_namespace_and_selected_SMART_diagnostics
+  evidence: context/runtime/console_storage_probe_20261018.json
+  boundary: Owner terminal host rw/service ro comparison, SMART oneshot0/timer active and selected measured values. No agent
+    SSH, full disk health/wear/restore proof or correlated timestamp for acceptance. New fix requires native application
 open:
 - id: SERVER-FACTS-RESIDUAL
   next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units

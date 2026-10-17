@@ -1,6 +1,8 @@
 # USTAR вход в проект
 
-## Текущий этап 17 октября 2026
+## Текущий этап 18 октября 2026
+
+**Owner00:14MSK:** [HDD/SMART диагностика](context/runtime/console_storage_probe_20261018.json) подтверждает host rw/service ro и успешный SMART oneshot с частичными SSD атрибутами. [Исправление и обновление](server-console/STORAGE_FIX_20261018.md) подготовлено с regression/native CI cases; новый owner update ещё не выполнен. Telegram/VPN запрос сохраняется; оставшиеся gates не закрыты.
 
 **Продолжение18Oct:** owner17Oct23:59MSK подтвердил открытие пульта и запросил Telegram/домашний доступ. [Receipt](context/runtime/console_browser_open_20261017.json); [Telegram и частный маршрут](server-console/REMOTE_ACCESS.md). Startup notifier argument defect исправлен с regression; installed567e90d5 ещё требует owner hotfix/receiver ACK. VPN только предложен; source diagnostics и полный browser gate не закрыты.
 

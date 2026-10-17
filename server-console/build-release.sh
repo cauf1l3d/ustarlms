@@ -14,7 +14,7 @@ ustar_console_stage=$(mktemp -d)
 trap 'rm -rf -- "$ustar_console_stage"' EXIT
 mkdir -p "$ustar_console_stage/ustar-console/deploy"
 cp dist/ustar_console-0.1.0-py3-none-any.whl requirements.lock INSTALL.md "$ustar_console_stage/ustar-console/"
-cp deploy/config.example.json deploy/database-monitor.sql deploy/install.sh deploy/ustar-console*.service deploy/ustar-console*.timer "$ustar_console_stage/ustar-console/deploy/"
+cp deploy/config.example.json deploy/database-monitor.sql deploy/install.sh deploy/update.sh deploy/ustar-console*.service deploy/ustar-console*.timer "$ustar_console_stage/ustar-console/deploy/"
 python3 - "$ustar_console_root" "$ustar_console_stage/ustar-console/observer.pyz" <<'PY'
 from pathlib import Path
 import sys, tempfile, zipapp

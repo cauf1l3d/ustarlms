@@ -9,6 +9,7 @@ import tempfile
 import time
 import grp
 import sys
+import sqlite3
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'backend'))
 from ustar_console.setup import certificate,save
 
@@ -51,6 +52,37 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
         assert any(c['id']=='hdd' and c['status']=='critical' for c in value['checks'])
         assert any(c['id']=='containers' and c['status']=='no_data' for c in value['checks'])
         assert any(c['id']=='cron' and c['status']=='no_data' for c in value['checks'])
+        # A disposable loop filesystem exercises the actual read-only namespace,
+        # PID1 mount table/UUID resolution and retained write protection together.
+        fixture_mount=Path('/run/ustar-console-mount-fixture')
+        if fixture_mount.exists(): raise AssertionError('Mount fixture already exists')
+        fixture_mount.mkdir(mode=0o700)
+        image=Path(directory)/'mount-fixture.ext4'
+        with image.open('xb') as stream: stream.truncate(64*2**20)
+        from ustar_console.collector import HDD_UUID
+        run('/usr/sbin/mkfs.ext4','-q','-U',HDD_UUID,str(image))
+        mounted=False
+        try:
+            run('/usr/bin/mount','-o','loop,nosuid,nodev,noexec',str(image),str(fixture_mount))
+            mounted=True
+            script=("from pathlib import Path; import errno,json; from ustar_console import collector as c; "
+                    "c.HDD=Path('/run/ustar-console-mount-fixture'); print(json.dumps(c.mount()))\n"
+                    "try: (c.HDD/'must-not-write').write_text('forbidden')\n"
+                    "except OSError as error: assert error.errno in (errno.EROFS,errno.EACCES,errno.EPERM)\n"
+                    "else: raise AssertionError('Read-only service wrote to host filesystem')\n")
+            argv=('systemd-run','--quiet','--wait','--pipe','--collect',
+                  '--property=ProtectSystem=strict','--property=ProtectHome=yes',
+                  '--property=Group=ustar-console',
+                  '--property=CapabilityBoundingSet=',
+                  '/opt/ustar-console/venv/bin/python','-c',script)
+            result=run(*argv)
+            assert HDD_UUID in result.stdout and not (fixture_mount/'must-not-write').exists()
+            run('/usr/bin/mount','-o','remount,ro',str(fixture_mount))
+            assert run(*argv,check=False).returncode!=0
+            print('CONSOLE_HOST_MOUNT_NAMESPACE=PASS; real UUID; host rw/local ro accepted; host ro rejected; service writes denied')
+        finally:
+            if mounted: run('/usr/bin/umount',str(fixture_mount))
+            fixture_mount.rmdir()
         # Web identity can read sanitized snapshot but cannot read the Docker socket.
         run('runuser','-u','ustar-console','--','cat',str(path))
         assert run('runuser','-u','ustar-console','--','test','-r','/run/docker.sock',check=False).returncode != 0
@@ -87,6 +119,46 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
         wrong_name=run('curl','--silent','--noproxy','*','--max-time','2','--cacert','/etc/ustar-console/ustar-console-ca.crt',
                       '--resolve','wrong.invalid:8443:127.0.0.1','https://wrong.invalid:8443/healthz',check=False)
         assert wrong_name.returncode==60
+        # Updates must refuse active jobs before stopping the web service.
+        updater=str(Path(directory)/'ustar-console/deploy/update.sh')
+        jobs='/var/lib/ustar-console-ops/jobs.sqlite3'
+        run('systemctl','stop','ustar-console-ops.service')
+        for state in ('queued','running'):
+            with sqlite3.connect(jobs) as db:
+                db.execute("INSERT INTO jobs(id,actor,action,revision,idempotency,state,created) VALUES(?,?,?,?,?,?,?)",
+                           ('update-fixture','fixture','manual_backup','fixture','fixture',state,time.time()))
+            refused=run('bash',updater,check=False)
+            assert refused.returncode!=0 and 'update refused' in refused.stdout+refused.stderr
+            assert run('systemctl','is-active','ustar-console.service').stdout.strip()=='active'
+            with sqlite3.connect(jobs) as db: db.execute("DELETE FROM jobs WHERE id='update-fixture'")
+        run('systemctl','start','ustar-console-ops.service','ustar-console-collect.timer')
+        run('runuser','-u','ustar-console','--','/opt/ustar-console/venv/bin/python','-c',
+            "from ustar_console.auth import Auth; from ustar_console.config import load; "
+            "Auth(load()).set_user('fixture','ci-only-update-password-12345','viewer')")
+        auth='/var/lib/ustar-console/auth.sqlite3'
+        with sqlite3.connect(auth) as db: before_user=db.execute("SELECT * FROM users WHERE username='fixture'").fetchone()
+        preserved=(Path('/etc/ustar-console/config.json'),Path('/etc/ustar-console/authority/ca.key'),
+                   Path('/etc/ustar-console/tls/server.crt'))
+        before={path:path.read_bytes() for path in preserved}
+        ca=Path('/etc/ustar-console/ustar-console-ca.crt');original_ca=ca.read_bytes()
+        module=Path('/opt/ustar-console/venv/lib/python3.12/site-packages/ustar_console/alerts.py')
+        old_module=module.read_bytes()+b'\n# CI rollback preservation marker\n'
+        module.write_bytes(old_module)
+        # Force the final trust check to fail after wheel replacement. Rollback
+        # must restore the exact previous installation, including local patches.
+        ca.write_text('invalid public CA fixture\n')
+        failed=run('bash',updater,check=False)
+        assert failed.returncode!=0 and 'CONSOLE_UPDATE=ROLLED_BACK' in failed.stdout
+        assert module.read_bytes()==old_module
+        ca.write_bytes(original_ca)
+        upgraded=run('bash',updater)
+        assert 'CONSOLE_UPDATE=PASS' in upgraded.stdout
+        assert b'CI rollback preservation marker' not in module.read_bytes()
+        assert all(path.read_bytes()==content for path,content in before.items()) and ca.read_bytes()==original_ca
+        with sqlite3.connect(auth) as db: assert db.execute("SELECT * FROM users WHERE username='fixture'").fetchone()==before_user
+        assert run('systemctl','is-active','ustar-console-notify.service',check=False).stdout.strip()=='inactive'
+        assert run('systemctl','is-active','ustar-console-collect.timer').stdout.strip()=='active'
+        print('CONSOLE_UPDATE=PASS; queued/running refusal; rollback preserved local patch; auth/CA/config unchanged; notifier state preserved')
         print('CONSOLE_LAN_TLS_BROKER=PASS; CA/SAN verified; peer credentials; private keys and job state denied')
         print('CONSOLE_SYSTEMD=PASS; API unprivileged; real host sample; Docker/backup unavailable distinguished')
     finally:

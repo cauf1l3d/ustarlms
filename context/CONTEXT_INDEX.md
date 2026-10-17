@@ -5,6 +5,7 @@
 - [Выполнено с06Oct и остаток по аудиту](audits/AUDIT_RECONCILIATION_20261016_RU.md), [полный backlog](roadmap/BACKLOG.yaml).
 - [Пульт и Telegram](runtime/control_panel_telegram_20261016.md) — текущий INF-06, [архитектура](../server-console/ARCHITECTURE.md), [health](../server-console/OBSERVABILITY.md), [дизайн](../server-console/DESIGN.md); [передача сисадмину](runtime/sysadmin_handoff_result_20261016.json) — restore ожидается.
 - [Установка пульта владельцем17Oct23:36MSK](runtime/console_native_install_20261017.json) — limited TLS/units/freshness gate пройден; HDD/SMART, браузер и остальные native gates открыты. TOTP/Telegram пропущены.
+- [HDD/SMART диагностика18Oct](runtime/console_storage_probe_20261018.json), [исправление/update](../server-console/STORAGE_FIX_20261018.md) — namespace fault подтверждён; новый owner update/fresh receipt ожидаются.
 - [Runtime evidence](runtime/evidence_20261016.yaml), [карта сервера](runtime/server_map_20261016.md), [реестр поставок](runtime/RELEASE_LEDGER.md).
 - [CI scope](runtime/CI_SCOPE_20261016.md), [ветки](runtime/repository_state_20261016.json), [карта source](code_map/README.md).
 - [Архитектура](architecture/overview.md), [границы](architecture/boundaries.md), [решения](decisions/README.md).

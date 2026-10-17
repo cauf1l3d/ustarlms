@@ -152,14 +152,23 @@ def containers():
 
 
 def mount():
-    data = json.loads(command(['/usr/bin/findmnt', '-J', '--mountpoint', str(HDD), '-o', 'TARGET,UUID,OPTIONS']))
-    rows = data.get('filesystems', [])
-    if len(rows) != 1:
-        raise ValueError('Mount missing')
-    row = rows[0]
-    valid = row.get('target') == str(HDD) and row.get('uuid') == HDD_UUID and 'rw' in row.get('options','').split(',')
-    if not valid:
-        raise ValueError('Wrong mount')
+    # ProtectSystem=strict makes the service's own bind mount read-only.
+    # Read PID1's mount table without joining its namespace or gaining write access.
+    argv=['/usr/bin/findmnt','-J','--mountpoint',str(HDD),'-o','TARGET,UUID,OPTIONS,MAJ:MIN']
+    views=[]
+    for extra in (['--task','1'],[]):
+        rows=json.loads(command(argv+extra)).get('filesystems',[])
+        if len(rows)!=1:
+            raise ValueError('Mount missing')
+        row=rows[0]
+        if row.get('target')!=str(HDD) or row.get('uuid')!=HDD_UUID:
+            raise ValueError('Wrong mount')
+        views.append(row)
+    host,local=views
+    device=host.get('maj:min')
+    if (not isinstance(device,str) or not re.fullmatch(r'[0-9]+:[0-9]+',device)
+            or local.get('maj:min')!=device or 'rw' not in host.get('options','').split(',')):
+        raise ValueError('Host mount read-only or namespace device mismatch')
     return dict(uuid=HDD_UUID, **filesystem(HDD))
 
 
@@ -280,7 +289,7 @@ def collect(local_http=False, database_probe=False):
                 if key == 'database':
                     status, reason = value['status'], 'database_aggregates'
                 if key in ('clock','smart'):
-                    status, reason = value['status'], key+'_measurement'
+                    status, reason = value['status'], value.get('reason_code',key+'_measurement')
                 if key == 'containers':
                     status = 'no_data' if any(row['state']=='no_data' for row in value) else (
                         'critical' if any(not row['running'] or row['oom'] for row in value) else 'ok')
@@ -291,7 +300,7 @@ def collect(local_http=False, database_probe=False):
                 item['observed_at'] = measured_at
                 if key in ('cron', 'backup'):
                     item['source_observed_at'] = value['last_attempt_at'] if key == 'cron' else value['completed_at']
-                if key=='smart':
+                if key=='smart' and value.get('observed_at'):
                     item['source_observed_at']=value['observed_at']
                 if key in ('clock','smart','database'):
                     item['value']=value

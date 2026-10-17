@@ -86,13 +86,15 @@ type Snapshot = {
   database?: Record<string, number | string>;
   clock?: { source: string; offset_ms: number; jitter_ms: number };
   smart?: {
-    observed_at: string;
+    observed_at: string | null;
     disks: {
       device: string;
       status: string;
       temperature_c?: number;
       sectors?: Record<string, number>;
       historical_error_log?: boolean;
+      health_passed?: boolean;
+      unavailable_attributes?: string[];
     }[];
   };
   notifications?: {
@@ -191,6 +193,16 @@ const reasons: Record<string, string> = {
     "Состояние очереди и связи с Telegram; получение оператором проверяется отдельно",
   smart_measurement:
     "SMART: текущее здоровье и выбранные счётчики. Старые ошибки и vendor wear рассматриваются отдельно",
+  smart_partial_attributes:
+    "SMART получен частично: диск не сообщил часть атрибутов; доступные измерения сохранены",
+  smart_not_collected: "Первый отчёт SMART ещё не получен",
+  smart_stale: "Отчёт SMART старше 16 минут; актуальное состояние неизвестно",
+  smart_clock_skew: "Время отчёта SMART находится в будущем; проверьте часы",
+  smart_receipt_invalid: "Отчёт SMART недоступен или не прошёл проверку",
+  smart_probe_failed: "SMART одного из накопителей не удалось прочитать",
+  smart_health_failed: "Накопитель сообщил отрицательную самооценку SMART",
+  smart_sector_error: "Есть ожидающие или неисправимые секторы",
+  smart_reallocated: "Есть переназначенные секторы",
   clock_measurement: "Выбранный NTP peer, смещение и jitter текущего измерения",
   sustained_rules:
     "Оценка непрерывного окна CPU/RAM по свежим измерениям. Пропуск телеметрии сбрасывает окно",
@@ -643,6 +655,12 @@ function App() {
   const sourceStatus = (id: string) =>
     checks.find((c) => c.id === id)?.status || "no_data";
   const usable = (id: string) => !stale && sourceStatus(id) !== "no_data";
+  const smartAge = data?.smart?.observed_at
+    ? tick - Date.parse(data.smart.observed_at)
+    : Infinity;
+  const smartCheck = checks.find((c) => c.id === "smart");
+  const smartFresh = !stale && !!smartCheck && smartCheck.reason_code !== "stale"
+    && smartAge >= -5000 && smartAge <= 960000;
   const diskStatus = [
     sourceStatus("ssd_space"),
     sourceStatus("ssd_inodes"),
@@ -1160,25 +1178,31 @@ function App() {
                         <h3>
                           {disk.device}{" "}
                           <Badge
-                            status={usable("smart") ? disk.status : "no_data"}
+                            status={smartFresh ? disk.status : "no_data"}
                           />
                         </h3>
                         <dl>
+                          <dt>Самооценка SMART</dt>
+                          <dd>
+                            {smartFresh && typeof disk.health_passed === "boolean"
+                              ? disk.health_passed ? "PASSED" : "FAILED"
+                              : "—"}
+                          </dd>
                           <dt>Температура</dt>
                           <dd>
-                            {usable("smart")
+                            {smartFresh
                               ? value(disk.temperature_c, " °C")
                               : "—"}
                           </dd>
                           <dt>Переназначенные секторы</dt>
                           <dd>
-                            {usable("smart")
+                            {smartFresh
                               ? value(disk.sectors?.["5"], "", 0)
                               : "—"}
                           </dd>
                           <dt>Ожидающие / неисправимые</dt>
                           <dd>
-                            {usable("smart")
+                            {smartFresh
                               ? value(disk.sectors?.["197"], "", 0) +
                                 " / " +
                                 value(disk.sectors?.["198"], "", 0)
@@ -1186,11 +1210,19 @@ function App() {
                           </dd>
                           <dt>История ошибок ATA</dt>
                           <dd>
-                            {disk.historical_error_log
-                              ? "Есть старые записи; отдельно от текущего состояния"
-                              : "Не заявлена этим чтением"}
+                            {smartFresh && typeof disk.historical_error_log === "boolean"
+                              ? disk.historical_error_log
+                                ? "Есть старые записи; отдельно от текущего состояния"
+                                : "Не заявлена этим чтением"
+                              : "—"}
                           </dd>
                         </dl>
+                        {smartFresh && !!disk.unavailable_attributes?.length && (
+                          <p className="muted">
+                            Неполные показания: диск не сообщил атрибуты {disk.unavailable_attributes.join(", ")}.
+                            Неизвестные значения показаны прочерком.
+                          </p>
+                        )}
                       </div>
                     ))}
                     <p className="muted">

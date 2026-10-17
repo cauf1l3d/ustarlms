@@ -2,6 +2,8 @@
 
 Owner17Oct23:59MSK подтвердил открытие пульта браузером. Это не приёмка входа/ролей/CA trust. TOTP остаётся пропущенным; HDD/SMART diagnostics ожидаются. Telegram и VPN пока не подключены.
 
+Продолжение18Oct: [HDD/SMART diagnosis и fix/update](STORAGE_FIX_20261018.md) подготовлены, новый artifact ещё требует применения. Owner00:27MSK ID helper получил transport_unavailable на getUpdates: ID/config/ACK не подтверждены. Запрошены tokenless DNS/direct IPv4+IPv6 проверки; блокировка/ошибочный token/конкретная сеть не установлены. Код также использует этот общий transport code для некорректного/слишком большого ответа; токен в диагностический URL не вставлять.
+
 ## Telegram
 
 Серверный worker опрашивает Bot API исходящими HTTPS запросами getUpdates; входящий webhook и публикация порта не нужны. Нужны отдельный бот и разрешённый numeric private user/chat ID, совпадающие друг с другом. Бот выдаёт статус/метрики/ссылку на последний encrypted backup; host jobs выполняются через пульт с авторизацией.

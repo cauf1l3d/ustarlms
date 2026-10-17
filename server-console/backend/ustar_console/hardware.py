@@ -42,18 +42,34 @@ def parse_smart(value):
     if any(type(n) is not int or n<0 for n in counts.values()):
         raise ValueError('Invalid SMART counters')
     critical=not passed or any(counts.get(key,0)>0 for key in ('197','198'))
-    missing=any(key not in counts for key in ('5','197','198','199'))
+    missing=[key for key in ('5','197','198','199') if key not in counts]
+    status='critical' if critical else 'warning' if missing or counts.get('5',0)>0 else 'ok'
+    reason=('smart_health_failed' if not passed else 'smart_sector_error' if critical else
+            'smart_partial_attributes' if missing else 'smart_reallocated' if counts.get('5',0)>0 else 'smart_measurement')
     return dict(health_passed=passed,temperature_c=value.get('temperature',{}).get('current'),
         sectors=counts,historical_error_log=bool(exit_code&64),selftest_history_failure=bool(exit_code&128),
-        status='critical' if critical else 'no_data' if missing else 'warning' if counts.get('5',0)>0 else 'ok',
-        vendor_wear='not_interpreted')
+        status=status,reason_code=reason,attribute_coverage='partial' if missing else 'complete',
+        unavailable_attributes=missing,vendor_wear='not_interpreted')
 
 
-def smart_receipt():
-    value=safe_json(SMART,owner=0,limit=16384)
-    if not -5<=time.time()-epoch(value['observed_at'])<=960:
-        raise ValueError('SMART receipt stale')
-    return value
+def smart_receipt(now=None):
+    now=time.time() if now is None else now
+    def unavailable(reason,observed=None):
+        return dict(observed_at=observed,status='no_data',reason_code=reason,disks=[])
+    try:
+        value=safe_json(SMART,owner=0,limit=16384)
+        measured=epoch(value['observed_at'])
+        if not math.isfinite(measured) or measured>now+5:
+            return unavailable('smart_clock_skew')
+        if now-measured>960:
+            return unavailable('smart_stale',value['observed_at'])
+        if value.get('status') not in ('ok','warning','critical','no_data') or not isinstance(value.get('disks'),list):
+            raise ValueError('Invalid SMART receipt')
+        return value
+    except FileNotFoundError:
+        return unavailable('smart_not_collected')
+    except (OSError,ValueError,KeyError,TypeError):
+        return unavailable('smart_receipt_invalid')
 
 
 def main():
@@ -66,7 +82,9 @@ def main():
                         accepted=tuple(range(256)))
             rows.append(dict(device=device,**parse_smart(json.loads(raw))))
         except (OSError,ValueError,KeyError,TypeError,TimeoutError):
-            rows.append(dict(device=device,status='no_data'))
+            rows.append(dict(device=device,status='no_data',reason_code='smart_probe_failed'))
     rank={'ok':0,'warning':1,'no_data':2,'critical':3}
-    value=dict(observed_at=stamp(),disks=rows,status=max((r['status'] for r in rows),key=rank.get))
+    status=max((r['status'] for r in rows),key=rank.get)
+    reason=next(row['reason_code'] for row in rows if row['status']==status)
+    value=dict(observed_at=stamp(),disks=rows,status=status,reason_code=reason)
     write_snapshot(value,SMART)

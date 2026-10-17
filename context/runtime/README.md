@@ -1,5 +1,9 @@
 # Runtime и эксплуатация
 
+**Owner18Oct00:27MSK:** [Telegram helper transport failure](console_telegram_transport_20261018.json), ID/persistent setup/receiver ACK не получены. DNS/direct curl IPv4+IPv6 запрошены без token; причина не установлена.
+
+**Owner18Oct00:14MSK:** [HDD/SMART probes](console_storage_probe_20261018.json): host rw/sandbox ro, SMART oneshot0/timer active, SSD PASSED50°C/197+199 absent, HDD PASSED48°C/selected counters0. Приёмка и остальные probes без timestamp; не выводить возраст из receipt time. [Fix/update](../../server-console/STORAGE_FIX_20261018.md) в PR, native application pending. Старые receipts не перезаписаны.
+
 **Продолжение18Oct:** [owner browser report17Oct23:59MSK](console_browser_open_20261017.json) подтверждает только открытие пульта; запросил Telegram/домашний доступ. Startup notifier argument defect исправлен с regression в PR, owner hotfix/receiver ACK ожидаются; [инструкция](../../server-console/REMOTE_ACCESS.md). Tailscale предложен, VPN не установлен. Старый install receipt сохраняется без изменений.
 
 **Дополнение23:36MSK17Oct:** [owner terminal receipt установки пульта](console_native_install_20261017.json), exact artifact567e90d5. Local-CA TLS, свежий snapshot, web/broker/collector timer active и web identity isolation прошли limited gate. HDD critical/probe_failed и SMART no_data/probe_failed не устранены; причина ещё не измерена. TOTP/Telegram пропущены владельцем. Browser trust/login/roles/download hash/receiver/observer/jobs/overhead/restore остаются открыты. Это pasted output, без archive checksum/независимого SSH; более ранние snapshots не менялись.

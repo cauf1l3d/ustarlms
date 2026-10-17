@@ -53,6 +53,8 @@ Import-Certificate -FilePath "$HOME\Downloads\ustar-console-ca.crt" -CertStoreLo
 
 ## Приёмка
 
+Для установленного LAN пульта новый artifact содержит [guarded update](STORAGE_FIX_20261018.md): после root staging/checksum/SOURCE_COMMIT выполнить `sudo bash /root-owned-source/ustar-console/deploy/update.sh`. Этот путь заменяет только wheel, сохраняет настройки/CA/пользователей и прежние active states, отказывается при queued/running jobs и откатывает venv при ошибке. Полный setup повторно не запускать.
+
 ```bash
 sudo /opt/ustar-console/venv/bin/ustar-console-accept
 sudo systemctl status ustar-console.service ustar-console-ops.service ustar-console-collect.timer ustar-console-smart.timer --no-pager

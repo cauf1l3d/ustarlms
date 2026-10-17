@@ -163,6 +163,50 @@ async function login(page: Page) {
     page.getByRole("heading", { name: "Обзор", exact: true }),
   ).toBeVisible();
 }
+
+for (const mode of ["partial", "unavailable", "stale"] as const) {
+  test(`SMART ${mode} preserves per-disk evidence without inventing values`, async ({ page }) => {
+    const original = fixture();
+    const state = {
+      ...original,
+      checks: [...original.checks, {
+        id: "smart", label: "SMART дисков", domain: "server", source: "smart",
+        observed_at: new Date().toISOString(),
+        status: mode === "partial" ? "warning" : "no_data",
+        reason_code: mode === "partial" ? "smart_partial_attributes" : mode === "stale" ? "smart_stale" : "smart_probe_failed",
+      }],
+      smart: {
+        observed_at: new Date(Date.now() - (mode === "stale" ? 1000000 : 0)).toISOString(),
+        disks: [
+          mode === "unavailable" ? {device: "/dev/sda", status: "no_data"} : {
+            device: "/dev/sda", status: "warning", temperature_c: 50, health_passed: true,
+            sectors: {"5": 0, "198": 0}, unavailable_attributes: ["197", "199"],
+          },
+          {device: "/dev/sdb", status: "ok", temperature_c: 48, health_passed: true,
+            sectors: {"5": 0, "197": 0, "198": 0, "199": 0}},
+        ],
+      },
+    };
+    await page.route("**/api/overview", (route) => route.fulfill({json: state}));
+    await login(page);
+    await page.getByRole("navigation").getByRole("button", {name: "Сервер", exact: true}).click();
+    const ssd = page.locator(".smart-disk").filter({hasText: "/dev/sda"});
+    const hdd = page.locator(".smart-disk").filter({hasText: "/dev/sdb"});
+    if (mode === "stale") {
+      await expect(hdd.locator(".badge")).toHaveText("Нет данных");
+      await expect(hdd.getByText("48 °C", {exact: true})).toHaveCount(0);
+    } else {
+      await expect(hdd.getByText("48 °C", {exact: true})).toBeVisible();
+      await expect(hdd.locator(".badge")).toHaveText("Норма");
+    }
+    if (mode === "partial") {
+      await expect(ssd.getByText("50 °C", {exact: true})).toBeVisible();
+      await expect(ssd.getByText(/диск не сообщил атрибуты 197, 199/)).toBeVisible();
+      await expect(ssd.getByText("— / 0", {exact: true})).toBeVisible();
+      await expect(ssd.locator(".badge")).toHaveText("Внимание");
+    }
+  });
+}
 test.beforeEach(async ({ page }) => {
   await page.route("**/api/overview", (route) =>
     route.fulfill({ json: fixture() }),

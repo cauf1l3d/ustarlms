@@ -2,7 +2,7 @@
 
 ## Текущий этап 18 октября 2026
 
-**Owner01:26MSK:** [Telegram network receipt](context/runtime/console_telegram_network_20261018.json): DNS IPv4 получен, direct TCP443 timeout до TLS/API. Причина/узел не установлены; следующий шаг — direct HTTPS control и same-endpoint TCP с корпоративного Windows. [Проверенный release3305ecc9](context/runtime/console_storage_release_20261018.json):125 backend/45 browser и namespace/rollback CI PASS, artifact передан; на server1 применение ещё не подтверждено. Этот context-only follow-up не новый исполняемый выпуск.
+**Owner01:37/01:41MSK:** [Telegram egress comparison](context/runtime/console_telegram_egress_20261018.json): server ipify/GitHub200, Telegram direct TCP443 timeout; Windows same endpointFalse; Google/Cloudflare A agree with local DNS. Need available outbound access/proxy/owner-controlled endpoint; exact failing hop unknown, credentials/config/receiver not accepted. [Release3305ecc9](context/runtime/console_storage_release_20261018.json) verified/delivered, owner application pending; context-only follow-up is not a new executable release.
 
 **Owner00:14MSK:** [HDD/SMART диагностика](context/runtime/console_storage_probe_20261018.json) подтверждает host rw/service ro и успешный SMART oneshot с частичными SSD атрибутами. [Исправление и обновление](server-console/STORAGE_FIX_20261018.md) подготовлено с regression/native CI cases; новый owner update ещё не выполнен. Telegram/VPN запрос сохраняется; оставшиеся gates не закрыты.
 

@@ -237,9 +237,11 @@ current_work:
     observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.
     Owner18Oct00:27MSK ID helper failed getUpdates with transport_unavailable. Owner01:26MSK
     tokenless diagnostics resolved IPv4, but direct TCP443 timed out before TLS; curl6
-    obtained no usable address. Failure location/cause unknown; general HTTPS control
-    and same-endpoint corporate Windows comparison next. Numeric ID, bot setup and
-    receiver ACK not obtained.
+    obtained no usable address. Failure location/cause unknown; owner01:37 controls
+    ipify/GitHub200 with Telegram timeout8002ms, Windows same endpointFalse; owner01:41
+    Google/Cloudflare A match local DNS. Need available permitted egress/corporate
+    proxy/owner-controlled remote endpoint; no endpoint provided. Exact failing hop/cause
+    unknown; numeric ID, bot setup and receiver ACK not obtained.
   next_task: INF-06
   ready_tasks: []
   task_statuses:

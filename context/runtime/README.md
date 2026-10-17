@@ -1,6 +1,6 @@
 # Runtime и эксплуатация
 
-**Owner18Oct01:26MSK:** [Telegram DNS/direct curl](console_telegram_network_20261018.json): IPv4 resolve, TCP443 timeout до TLS; IPv6 curl exit6. Endpoint failure измерен, его узел/причина не установлены, TLS=0 не успешная проверка; token/ID/config/ACK не приняты. General HTTPS и same-endpoint corporate Windows test следующие. [CI release3305ecc9](console_storage_release_20261018.json):125 backend/45 browser, native namespace/rollback и все3 workflows PASS; artifact проверен/передан, owner update не подтверждён. Последующий context-only commit не заменяет executable release.
+**Owner18Oct01:37/01:41MSK:** [Telegram egress comparison](console_telegram_egress_20261018.json): server direct controls200, Telegram TCP443 timeout; Windows same public endpointFalse; Google/Cloudflare A match local DNS. Need permitted outbound access/proxy/owner-controlled remote endpoint, exact failing hop unknown. No bot token/ID/config/receiver, home VPN or release3305ecc9 installation accepted. Previous receipts remain immutable.
 
 **Owner18Oct00:27MSK:** [Telegram helper transport failure](console_telegram_transport_20261018.json), ID/persistent setup/receiver ACK не получены. DNS/direct curl IPv4+IPv6 запрошены без token; причина не установлена.
 

@@ -70,10 +70,10 @@ covered:
     SSH, full disk health/wear/restore proof or correlated timestamp for acceptance. New fix requires native application
 open:
 - id: CONSOLE-TELEGRAM-EGRESS
-  next: IPv4 DNS returned a public endpoint but direct TCP443 timed out before TLS/API. Compare general direct HTTPS and same
-    endpoint from corporate Windows; local/perimeter/provider/proxy cause remains unknown. Curl6 exit6 is not authoritative AAAA
-    absence/global IPv6 proof. Native token/ID/config/receiver ACK and owner application of verified release3305ecc9 remain open
-  evidence: context/runtime/console_telegram_network_20261018.json
+  next: Server direct HTTPS controls200 and two public HTTPS resolver A answers agree with local DNS; Telegram direct TCP443
+    fails from server and Windows. Choose available permitted egress/corporate proxy/owner remote endpoint; exact failing hop
+    remains unknown. Native token/ID/config/receiver ACK, home VPN and release3305ecc9 application remain open
+  evidence: context/runtime/console_telegram_egress_20261018.json
 - id: SERVER-FACTS-RESIDUAL
   next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units
     and NTP/SMART trends remain open; ACL/current SSH/Caddy process metadata now received

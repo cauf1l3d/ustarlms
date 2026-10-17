@@ -2,7 +2,7 @@ schema_version: 2
 updated_at: '2026-10-18'
 project: USTAR Academy
 stage: console_installed_source_diagnostics_and_browser_acceptance_pending
-stage_label: 'Пульт установлен владельцем; HDD/SMART и браузерная приёмка требуют продолжения'
+stage_label: 'Пульт установлен; Telegram требует исходящего доступа, native приёмка продолжается'
 current_activity: >-
   Owner terminal receipt received17Oct23:36MSK confirms installation of console567e90d5,
   local-CA TLS, fresh collector snapshot, active web/broker/collector timer and web identity isolation.
@@ -16,7 +16,9 @@ current_activity: >-
   receiver, independent observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.
   Owner18Oct00:27MSK ID helper failed getUpdates with transport_unavailable. Owner01:26MSK tokenless diagnostics resolved IPv4,
   but direct TCP443 timed out before TLS; curl6 obtained no usable address. Failure location/cause unknown;
-  general HTTPS control and same-endpoint corporate Windows comparison next. Numeric ID, bot setup and receiver ACK not obtained.
+  owner01:37 controls ipify/GitHub200 with Telegram timeout8002ms, Windows same endpointFalse; owner01:41 Google/Cloudflare A match local DNS.
+  Need available permitted egress/corporate proxy/owner-controlled remote endpoint; no endpoint provided.
+  Exact failing hop/cause unknown; numeric ID, bot setup and receiver ACK not obtained.
 next_task: INF-06
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -281,6 +283,8 @@ next_control_panel:
   telegram_delivery: direct_IPv4_TCP443_timeout_before_TLS;failure_location_unknown;ID_setup_and_ACK_unconfirmed
   telegram_transport_receipt: context/runtime/console_telegram_transport_20261018.json
   telegram_network_receipt: context/runtime/console_telegram_network_20261018.json
+  telegram_egress_receipt: context/runtime/console_telegram_egress_20261018.json
+  telegram_connection_next: available_permitted_outbound_access_or_corporate_proxy_or_owner_remote_endpoint_required
   telegram_startup_hotfix: prepared_in_PR_owner_application_and_receiver_ack_pending
   telegram_hotfix_module_sha256: 94903be5412a0e48d21c8154afcda9cf8880b5bd670c0e83400b2df95d8ecd39
   previous_reviewed_head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0

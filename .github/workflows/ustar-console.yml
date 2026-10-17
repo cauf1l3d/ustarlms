@@ -28,6 +28,8 @@ jobs:
         run: python -m pytest -q server-console/tests
       - name: Build isolated console artifact
         run: bash server-console/build-release.sh
+      - name: Offline prototype matches the application
+        run: node server-console/prototype/build.mjs --check
       - name: New console dependency audit
         working-directory: server-console/ui
         run: npm audit --audit-level=high

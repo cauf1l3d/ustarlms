@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "repository_base": "d9655074db9a06281fe16f378dbdbe1d279104a0",
+  "application_baseline": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+  "environment": "isolated Python3.12 venv, mcp1.30.0/PyYAML6.0.3",
+  "checks": {
+    "r16_suite": {
+      "command": "python -m unittest discover -s tests/r16 -v",
+      "result": "success",
+      "tests_run": 572,
+      "passed": 553,
+      "skipped": 19,
+      "errors": 0,
+      "failures": 0,
+      "new_server_facts_tests": 27,
+      "skip_scope": "existing private backup engine, AppArmor/systemd/PHP/UID33/loopback and optional package native fixtures unavailable locally"
+    },
+    "mcp_stdio": "real subprocess handshake passed",
+    "context_integrity": {
+      "source_files": 526,
+      "xmldb_tables": 93,
+      "tasks": 33,
+      "result": "success"
+    },
+    "secret_guard": "success",
+    "import_integration": {
+      "result": "success",
+      "method": "synthetic partial report imported by real CLI into a separate temporary worktree with all four real generation/validation gates",
+      "production_state_preserved": true,
+      "unknown_source_match": null,
+      "snapshot_saved_to_working_context": false
+    },
+    "shell_syntax": "success",
+    "git_diff_whitespace": {
+      "result": "success",
+      "scope": "maintained changed files; byte-preserved submitted originals excluded (fable has original CRLF and trailing spaces)"
+    }
+  },
+  "not_performed": [
+    "server1 connection or collector execution",
+    "production changes",
+    "new restore or functional acceptance",
+    "Telegram delivery"
+  ],
+  "test_log_policy": "counts and methods recorded; raw fixture logs excluded"
+}

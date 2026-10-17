@@ -1,6 +1,6 @@
 # Пульт управления и Telegram: текущий этап
 
-Задача INF-06 после GitHub-сверки16Oct. Рабочая Академия остаётся на Moodle5.1.8/PG16; Moodle5.2/PG17 отложены. UI-прототип PR103 в Linear-inspired graphite стиле сохраняется. Первый read-only backend/auth/UI добавлен в PR103; установленного на server1 пульта/бота пока нет.
+Задача INF-06 после GitHub-сверки16Oct. Рабочая Академия остаётся на Moodle5.1.8/PG16; Moodle5.2/PG17 отложены. UI-прототип PR103 в Linear-inspired graphite стиле сохраняется. Первый read-only backend/auth/UI добавлен в PR103; установленного на server1 пульта/бота пока нет. Владелец17Oct16:30MSK разрешил продолжить; [изменения по аудиту](../../server-console/AUDIT_FOLLOWUP_20261017.md).
 
 ## Архитектура подготовлена16Oct
 

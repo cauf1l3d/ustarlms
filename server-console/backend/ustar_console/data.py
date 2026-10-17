@@ -63,7 +63,7 @@ def check(key, label, domain, status='no_data', reason='not_configured', source=
 
 
 REQUIRED = [
-    ('http_external', 'Академия снаружи', 'academy'),
+    ('http_external', 'HTTP из независимой точки корпоративной сети / VPN', 'academy'),
     ('database', 'PostgreSQL: отдельный мониторинг', 'academy'),
     ('cron', 'Успех фоновых заданий', 'academy'),
     ('rules', 'Правила и доставка алертов', 'monitoring'),
@@ -79,18 +79,31 @@ def snapshot(path, now=None):
         data = safe_json(path, owner=0)
         if data.get('version') != 1 or not isinstance(data.get('checks'), list):
             raise ValueError('Unsupported snapshot')
-        allowed = {'version','observed_at','checks','host','backup','lab','containers','events','hdd','units','http_local','recovery'}
+        allowed = {'version','observed_at','checks','host','backup','cron','lab','containers','events','hdd','units','http_local','recovery'}
         if set(data)-allowed or not all(isinstance(data.get(key), dict) for key in ('host','backup','lab')):
             raise ValueError('Unsupported snapshot fields')
         if not isinstance(data.get('containers'), list):
             raise ValueError('Unsupported container snapshot')
+        ids = set()
         for item in data['checks']:
             if (not isinstance(item,dict) or item.get('status') not in ('ok','warning','critical','no_data','stopped')
                     or item.get('domain') not in ('server','academy','data','monitoring','labs')
                     or not all(isinstance(item.get(key),str) and len(item[key])<=200
                                for key in ('id','label','reason_code','source','observed_at'))):
                 raise ValueError('Unsupported check schema')
-            epoch(item['observed_at'])
+            if item['id'] in ids:
+                raise ValueError('Duplicate check ID')
+            ids.add(item['id'])
+            measured = epoch(item['observed_at'])
+            if not math.isfinite(measured) or measured > now+5:
+                raise ValueError('Invalid check time')
+            if now-measured > 45:
+                item['status'], item['reason_code'] = 'no_data', 'stale'
+            if 'source_observed_at' in item:
+                source_time = epoch(item['source_observed_at'])
+                if not math.isfinite(source_time) or source_time > now+5:
+                    raise ValueError('Invalid source time')
+                item['source_age_seconds'] = max(0, round(now-source_time))
         observed = epoch(data['observed_at'])
         age = now-observed
         if not math.isfinite(age) or age < -5:
@@ -105,7 +118,8 @@ def snapshot(path, now=None):
         data = dict(version=1, observed_at=None, received_at=stamp(now), stale=True,
                     age_seconds=None, checks=[check('collector', 'Сборщик', 'monitoring', reason='source_unavailable')],
                     host={}, containers=[], backup={}, lab={}, events=[])
-    data['checks'] += [check(key, label, domain) for key, label, domain in REQUIRED]
+    present = {item['id'] for item in data['checks']}
+    data['checks'] += [check(key, label, domain) for key, label, domain in REQUIRED if key not in present]
     domains = {}
     priority = {'critical': 4, 'no_data': 3, 'warning': 2, 'ok': 1, 'stopped': 0}
     for domain in ('academy', 'server', 'data', 'monitoring'):

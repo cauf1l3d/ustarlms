@@ -339,6 +339,44 @@ header h1 {
 .metric-backup {
   --metric-color: #f0c77d;
 }
+.metric-cron {
+  --metric-color: #d2b4ff;
+}
+.priority-metrics .badge {
+  margin-bottom: 10px;
+}
+.priority-metrics .metric[data-status="no_data"] {
+  border-top-color: #72849b;
+}
+@media (max-width: 440px) {
+  .priority-metrics .metric > strong,
+  .priority-metrics .metric > .badge {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+.cron-details {
+  margin-bottom: 18px;
+}
+.cron-details dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px 24px;
+}
+.cron-details dt,
+.cron-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .cron-details dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .cron-details dd {
+    margin-bottom: 12px;
+  }
+}
 .metric-disk {
   --metric-color: var(--disk);
 }

@@ -1,6 +1,12 @@
 # Runtime и эксплуатация
 
-Текущее состояние сведено16Oct по сохранённым owner receipts, без нового доступа к server1. [Evidence](evidence_20261016.yaml), [карта сервера](server_map_20261016.md), [выполненное и остаток](../audits/AUDIT_RECONCILIATION_20261016_RU.md).
+**Дополнение14:24MSK17Oct:** [owner terminal receipt](external_network_result_20261017.json) — IPv4 выхода server1 совпал с target домашнего TCP2019 test; TcpTestSucceeded=False, отдельно ping timeout. Адреса/локальное имя не опубликованы. Один источник/маршрут, точное время probes неизвестно; NAT, другие источники/IPv6/API и listener hardening не установлены. Это отдельный terminal follow-up, не часть archive checksums.
+
+Предыдущее дополнение13:59MSK17Oct — [gaps review](../reviews/20261017/gaps_reconciliation.md), [provenance](server_gaps_received_20261017.json): ACL, текущий SSH-контекст, Caddy2019 PID, metadata/hashes23 extras и selected du. ACL экспортирован после owner install пакета acl; writable parents/code, внешняя доступность и native gates остаются открыты.
+
+Дополнительно проверены два core/extra ZIP: [разбор13:05MSK](../reviews/20261017/core_extra_reconciliation.md), [provenance](core_extra_received_20261017.json). Core24742 match/23 extras, ntpsec peer/offset, SMART attributes/history и component-skip explanations дополняют три старых snapshots, сохраняя их даты/ошибки. На момент этого более раннего среза getfacl отсутствовал; поздний gaps archive содержит ACL. Native gates открыты.
+
+Датированный срез16Oct ниже сохранён по owner receipts. Свежие selected observations17Oct получены в трёх [owner archives](server_facts_received_20261017.json), без прямого подключения агента; [сверка17Oct](../reviews/20261017/runtime_reconciliation.md). Прежние [evidence](evidence_20261016.yaml), [карта сервера](server_map_20261016.md), [выполненное и остаток](../audits/AUDIT_RECONCILIATION_20261016_RU.md) сохраняют свои даты/границы.
 
 - Moodle5.1.8, PHP8.3.33, PostgreSQL16.15; host Ubuntu24.04.5/kernel147/Docker29.9.0 приняты.
 - HDD ежедневный03:30Moscow; успешные scheduled13/14Oct и postboot mount/timer подтверждены.
@@ -8,5 +14,6 @@
 - [Пульт и Telegram](control_panel_telegram_20261016.md) — следующая задача. [Метрики](MONITORING.md), [backup contract](BACKUP_RESTORE.md).
 - Moodle5.2 и PostgreSQL17 отложены. Старые5.3 docs/PR101 не выполнять автоматически.
 - [CI](CI_SCOPE_20261016.md), [ветки](repository_state_20261016.json), [история](RELEASE_LEDGER.md), [операции](OPERATIONS.md), [security](SECURITY_BASELINE.md).
+- [Review17Oct](../reviews/20261017/README.md) проверяет новые предложения; [три fresh server facts](server-facts/README.md) импортированы, [сверка и gaps](../reviews/20261017/runtime_reconciliation.md) готовы для повторного аудита. Порядок входа — только [START_HERE](../../START_HERE.md).
 
 Dated reports05–15Oct сохраняются. Их pending/next-step относятся к своей дате; текущая очередь — STATE/ACTIVE. Не повторять SSD growth, Moodle patch, AppArmor repair или host install/reboot.

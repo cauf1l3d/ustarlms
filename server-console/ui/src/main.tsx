@@ -26,6 +26,8 @@ type Check = {
   reason_code: string;
   source: string;
   observed_at: string;
+  source_observed_at?: string;
+  source_age_seconds?: number;
   value?: unknown;
 };
 type Host = {
@@ -40,7 +42,12 @@ type Host = {
     cache_bytes: number;
     swap_used_bytes: number;
   };
-  disk?: { total_bytes: number; available_bytes: number };
+  disk?: {
+    total_bytes: number;
+    available_bytes: number;
+    used_percent?: number;
+    free_inode_percent?: number | null;
+  };
 };
 type Backup = {
   file?: string;
@@ -60,6 +67,17 @@ type Snapshot = {
   checks: Check[];
   host: Host;
   backup: Backup;
+  cron?: {
+    last_attempt_at?: string;
+    last_success_at?: string | null;
+    worker_exit_code?: number;
+    new_task_failures?: number;
+    ustar_error_lines?: number;
+    scheduled_failed?: number;
+    scheduled_overdue_10m?: number;
+    adhoc_queued?: number;
+  };
+  http_local?: { code: number | null; total_ms: number | null };
   containers: Record<string, unknown>[];
   units?: Record<string, unknown>[];
   lab: Record<string, unknown>;
@@ -107,12 +125,19 @@ const labels: Record<string, string> = {
   lab: "Стенд восстановления",
   units: "Системные службы",
   http_local: "Локальный ответ Академии",
+  http_external: "HTTP из независимой точки сети / VPN",
+  cron: "Успех фоновых заданий",
+  ssd_space: "Свободное место SSD",
+  ssd_inodes: "Свободные inode SSD",
+  hdd_space: "Свободное место диска бэкапов",
+  hdd_inodes: "Свободные inode диска бэкапов",
 };
 const reasons: Record<string, string> = {
   measured: "Измерение получено",
   recovery_required:
     "Сохранён маркер остановки Академии. Нужна проверка возобновления.",
   not_configured: "Проверка ещё не подключена",
+  disabled: "Проверка отключена в конфигурации сборщика",
   stale: "Измерение устарело",
   source_unavailable: "Источник недоступен",
   probe_failed:
@@ -124,6 +149,20 @@ const reasons: Record<string, string> = {
     "Локальный HEAD-запрос; доступность снаружи проверяется отдельно",
   no_samples: "За этот период нет измерений",
   series_missing_or_ambiguous: "Нет однозначного источника метрики",
+  cron_receipt: "Успех worker и отсутствие новых ошибок по отчёту cron",
+  cron_worker_failed: "Последний запуск cron завершился с ошибкой",
+  cron_new_errors: "В последнем запуске появились новые ошибки задач",
+  cron_success_delayed:
+    "С последнего подтверждённого успеха прошло больше 3 минут",
+  cron_success_overdue:
+    "С последнего подтверждённого успеха прошло больше 10 минут",
+  cron_result_incomplete:
+    "Вывод cron обрезан: отсутствие новых ошибок не подтверждено",
+  cron_receipt_regressed: "Дата отчёта cron старше уже наблюдавшегося успеха",
+  disk_capacity: "Текущее свободное место и inode; длительные правила отдельно",
+  disk_low_space: "Свободного места меньше стартового порога",
+  disk_low_inodes: "Свободных inode меньше стартового порога",
+  inodes_unsupported: "Файловая система не предоставила счётчик inode",
 };
 const phase: Record<string, string> = {
   ready: "Подготовлен",
@@ -217,12 +256,14 @@ function Metric({
   detail,
   kind = "cpu",
   progress,
+  status,
 }: {
   label: string;
   number: string;
   detail: string;
   kind?: string;
   progress?: number;
+  status?: string;
 }) {
   const Icon =
     kind === "ram"
@@ -235,12 +276,13 @@ function Metric({
             ? HardDrive
             : Clock3;
   return (
-    <div className={"metric metric-" + kind}>
+    <div className={"metric metric-" + kind} data-status={status}>
       <div className="metric-label">
         <span>{label}</span>
         <Icon size={20} aria-hidden="true" />
       </div>
       <strong>{number}</strong>
+      {status && <Badge status={status} />}
       <small>{detail}</small>
       {progress != null && Number.isFinite(progress) && (
         <progress
@@ -539,20 +581,37 @@ function App() {
     !data.observed_at ||
     tick - Date.parse(data.observed_at) > 45000;
   const checks = (data?.checks || []).map((c) =>
-    stale ? { ...c, status: "no_data", reason_code: "stale" } : c,
+    stale || tick - Date.parse(c.observed_at) > 45000
+      ? { ...c, status: "no_data", reason_code: "stale" }
+      : c,
   );
   const problem = checks.filter(
     (c) => c.status === "critical" || c.status === "warning",
   );
+  const selectedCheck = selected
+    ? checks.find((item) => item.id === selected.id) || {
+        ...selected,
+        status: "no_data",
+        reason_code: "source_unavailable",
+      }
+    : null;
   const host = data?.host,
     backup = data?.backup,
-    local = data && checks.find((c) => c.id === "http_local");
-  const externalPoint = series.http?.points.at(-1);
-  const externalFresh =
-    externalPoint &&
-    externalPoint[1] != null &&
-    tick / 1000 - externalPoint[0] <= 120 &&
-    tick / 1000 - externalPoint[0] >= -5;
+    cron = data?.cron,
+    local = checks.find((c) => c.id === "http_local");
+  const sourceStatus = (id: string) =>
+    checks.find((c) => c.id === id)?.status || "no_data";
+  const usable = (id: string) => !stale && sourceStatus(id) !== "no_data";
+  const diskStatus = [
+    sourceStatus("ssd_space"),
+    sourceStatus("ssd_inodes"),
+  ].sort(
+    (a, b) =>
+      ["critical", "no_data", "warning", "ok"].indexOf(a) -
+      ["critical", "no_data", "warning", "ok"].indexOf(b),
+  )[0];
+  const since = (s?: string | null) =>
+    s ? age((tick - Date.parse(s)) / 1000) : "—";
   const go = (id: string) => {
     location.hash = id;
     setPage(id);
@@ -713,7 +772,7 @@ function App() {
                 ? "Нет соединения"
                 : stale
                   ? "Данные устарели"
-                  : `Обновлено ${age(data?.observed_at ? (tick - Date.parse(data.observed_at)) / 1000 : null)} назад`}
+                  : `Данные от ${data?.observed_at ? new Date(data.observed_at).toLocaleTimeString("ru-RU", { timeZone: "Europe/Moscow" }) : "—"} МСК · ${age(data?.observed_at ? (tick - Date.parse(data.observed_at)) / 1000 : null)} назад`}
             </span>
           </div>
         </header>
@@ -737,6 +796,72 @@ function App() {
           <>
             {page === "overview" && (
               <>
+                <div
+                  className="metrics priority-metrics"
+                  aria-label="Главные показатели"
+                >
+                  <Metric
+                    label="Успех cron"
+                    kind="cron"
+                    number={usable("cron") ? since(cron?.last_success_at) : "—"}
+                    status={sourceStatus("cron")}
+                    detail={
+                      cron?.last_success_at
+                        ? `Последний успех: ${date(cron.last_success_at)}`
+                        : "Подтверждённый успех ещё не наблюдался"
+                    }
+                  />
+                  <Metric
+                    label="Последняя копия"
+                    kind="backup"
+                    number={
+                      usable("backup") ? since(backup?.completed_at) : "—"
+                    }
+                    status={sourceStatus("backup")}
+                    detail={
+                      backup?.completed_at
+                        ? `Завершена ${date(backup.completed_at)}`
+                        : "Завершённая проверенная копия не найдена"
+                    }
+                  />
+                  <Metric
+                    label="Диск SSD"
+                    kind="disk"
+                    number={
+                      usable("ssd_space")
+                        ? value(host?.disk?.used_percent, " %")
+                        : "—"
+                    }
+                    progress={
+                      usable("ssd_space") ? host?.disk?.used_percent : undefined
+                    }
+                    status={diskStatus}
+                    detail={
+                      usable("ssd_space")
+                        ? `Свободно ${gib(host?.disk?.available_bytes)} · inode: ${usable("ssd_inodes") ? value(host?.disk?.free_inode_percent, " %") : "нет данных"} свободно`
+                        : "Состояние файловой системы не получено"
+                    }
+                  />
+                  <Metric
+                    label="HTTP Академии"
+                    kind="http"
+                    number={
+                      usable("http_local")
+                        ? data.http_local?.code
+                          ? `HTTP ${data.http_local.code}`
+                          : "Нет ответа"
+                        : "—"
+                    }
+                    status={sourceStatus("http_local")}
+                    detail={
+                      usable("http_local")
+                        ? `Локальный HEAD · ${value(data.http_local?.total_ms, " мс")}`
+                        : local?.reason_code === "disabled"
+                          ? "Локальная проверка отключена"
+                          : "Локальная проверка не получена"
+                    }
+                  />
+                </div>
                 <div className="health-grid">
                   {Object.entries(domains).map(([id, title]) => (
                     <button
@@ -760,56 +885,6 @@ function App() {
                     </button>
                   ))}
                 </div>
-                <div className="metrics">
-                  <Metric
-                    label="Доступно памяти"
-                    kind="ram"
-                    progress={
-                      host?.memory
-                        ? (100 * host.memory.available_bytes) /
-                          host.memory.total_bytes
-                        : undefined
-                    }
-                    number={gib(host?.memory?.available_bytes)}
-                    detail={`из ${gib(host?.memory?.total_bytes)}`}
-                  />
-                  <Metric
-                    label="Загрузка CPU"
-                    kind="cpu"
-                    progress={host?.cpu_percent}
-                    number={value(host?.cpu_percent, " %")}
-                    detail={`${value(host?.cores, " ядер", 0)} · моментальное измерение`}
-                  />
-                  <Metric
-                    label="Ответ Академии"
-                    kind="http"
-                    number={
-                      externalFresh
-                        ? value(externalPoint![1], " мс")
-                        : local?.status === "ok"
-                          ? value(
-                              (
-                                data as unknown as {
-                                  http_local?: { total_ms: number };
-                                }
-                              ).http_local?.total_ms,
-                              " мс",
-                            )
-                          : "—"
-                    }
-                    detail={
-                      externalFresh
-                        ? "внешний HTTP · последнее измерение"
-                        : "локальный запрос · снаружи нет данных"
-                    }
-                  />
-                  <Metric
-                    label="Последняя копия"
-                    kind="backup"
-                    number={age(backup?.age_seconds)}
-                    detail={date(backup?.completed_at)}
-                  />
-                </div>
                 <section className="attention">
                   <div className="section-title">
                     <h2>Требует внимания</h2>
@@ -832,7 +907,7 @@ function App() {
                 </section>
                 <div className="charts">
                   <Chart
-                    label="Ответ Академии снаружи"
+                    label="Ответ из независимой точки сети"
                     unit="мс"
                     series={series.http}
                   />
@@ -869,14 +944,49 @@ function App() {
               <>
                 <p className="intro">
                   Доступность, зависимости и фоновые задания. Локальный ответ и
-                  доступность снаружи проверяются отдельно.
+                  доступ из корпоративной сети / VPN проверяются отдельно.
                 </p>
+                <section className="panel cron-details">
+                  <h2>Фоновые задания</h2>
+                  {cron?.last_attempt_at ? (
+                    <dl>
+                      <dt>Последний запуск</dt>
+                      <dd>{date(cron.last_attempt_at)}</dd>
+                      <dt>Последний наблюдавшийся успех</dt>
+                      <dd>{date(cron.last_success_at)}</dd>
+                      <dt>Код завершения worker</dt>
+                      <dd>{value(cron.worker_exit_code, "", 0)}</dd>
+                      <dt>Новые ошибки задач</dt>
+                      <dd>{value(cron.new_task_failures, "", 0)}</dd>
+                      <dt>Новые строки ошибок USTAR</dt>
+                      <dd>{value(cron.ustar_error_lines, "", 0)}</dd>
+                      <dt>Задачи с сохранённым faildelay</dt>
+                      <dd>{value(cron.scheduled_failed, "", 0)}</dd>
+                      <dt>Просроченные по расписанию</dt>
+                      <dd>{value(cron.scheduled_overdue_10m, "", 0)}</dd>
+                      <dt>В очереди adhoc</dt>
+                      <dd>{value(cron.adhoc_queued, "", 0)}</dd>
+                    </dl>
+                  ) : (
+                    <Empty>Отчёт cron пока не получен.</Empty>
+                  )}
+                  <p className="intro">
+                    Сохранённый faildelay и просрочка не равны новым ошибкам:
+                    задачи отключённых компонентов могут пропускаться.
+                    Фактически включённые задачи требуют отдельной проверки
+                    настроек Moodle.
+                  </p>
+                </section>
                 <Checks
                   checks={checks.filter((c) => c.domain === "academy")}
                   onSelect={setSelected}
                 />
                 <div className="charts">
-                  <Chart label="Внешний ответ" unit="мс" series={series.http} />
+                  <Chart
+                    label="Ответ из независимой точки сети"
+                    unit="мс"
+                    series={series.http}
+                  />
                   <Empty title="Скорость запросов пользователей">
                     p95, RPS и число ошибок появятся после подключения
                     статистики веб-сервера. Синтетический запрос их не заменяет.
@@ -1136,23 +1246,36 @@ function App() {
             )}
           </div>
         ) : (
-          selected && (
+          selectedCheck && (
             <>
-              <Badge status={selected.status} />
-              <p>{reasons[selected.reason_code] || selected.reason_code}</p>
+              <Badge status={selectedCheck.status} />
+              <p>
+                {reasons[selectedCheck.reason_code] ||
+                  selectedCheck.reason_code}
+              </p>
               <dl>
-                <dt>Измерение</dt>
-                <dd>{date(selected.observed_at)}</dd>
+                <dt>Время проверки</dt>
+                <dd>{date(selectedCheck.observed_at)}</dd>
+                {selectedCheck.source_observed_at && (
+                  <>
+                    <dt>Дата отчёта источника</dt>
+                    <dd>
+                      {date(selectedCheck.source_observed_at)} ·{" "}
+                      {since(selectedCheck.source_observed_at)} назад
+                    </dd>
+                  </>
+                )}
                 <dt>Источник</dt>
                 <dd>
-                  {selected.source === "not_configured"
+                  {selectedCheck.source === "not_configured"
                     ? "Не подключён"
-                    : labels[selected.source] || selected.source}
+                    : labels[selectedCheck.source] || selectedCheck.source}
                 </dd>
               </dl>
               <p className="muted">
-                Детали отражают данные на момент открытия. Правила устойчивой
-                нагрузки и доставка алертов подключаются следующим этапом.
+                Показания и свежесть обновляются вместе с обзором. Правила
+                устойчивой нагрузки и доставка алертов подключаются следующим
+                этапом.
               </p>
             </>
           )

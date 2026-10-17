@@ -1,12 +1,16 @@
 # Активные задачи USTAR
 
-## Текущая работа INF-06
+## Сейчас — INF-06: пульт после актуализации контекста17Oct
+
+Владелец16:30MSK подтвердил продолжение. В PR103 добавляются cron receipt/last observed success, SSD/HDD capacity+inodes, отдельная свежесть источников и главные карточки cron/копия/диск/HTTP. [Требования и реализация](../../server-console/AUDIT_FOLLOWUP_20261017.md). Telegram/outbox/observer/DB monitor/download/jobs и native установка остаются следующими этапами. Публичная публикация не требуется: внутренняя корпоративная сеть и выбранный защищённый LAN/VPN-доступ.
+
+Последний gaps archive13:59MSK проверен:6/6 probes, все24 checksums/CRC и output schemas согласованы. [Сверка](../reviews/20261017/gaps_reconciliation.md), [provenance](../runtime/server_gaps_received_20261017.json), [coverage](../coverage.yaml). ACL44175 code objects/seven parents: extended entries0, но4726 UID33 owner-writable и writable outer root/config/plugin/parent подтверждают незакрытый риск замены по POSIX. SSH текущего aduk-контекста получен, Caddy PID862 владеет2019 loopback/all sockets; [поздний внешний тест](../runtime/external_network_result_20261017.json) с домашнего Windows ПК дал TCP2019=False к IPv4 выхода сети. Это один источник/маршрут; NAT, другие источники/IPv6/API и listener hardening не проверены. Все23 extras получили metadata/SHA256, selected du не равен полному SSD/containerd inventory. Владелец установил acl2.3.2-1build1.1; agent SSH/production changes не было. Старые31-block snapshots/plugin526/core24742/NTP/SMART/backup receipts не менялись. SQL stats, runtime/SSH/TLS/native/DR gates и INF-01/P0 целиком не закрыты; контекст готов для повторного аудита владельца.
+
+## Согласованный полный объём INF-06
 
 Реализовать [пульт управления и Telegram](../runtime/control_panel_telegram_20261016.md), опираясь на свежий main и прототип PR103. Linear-inspired UI на том же сервере, login/password и защищённый доступ; метрики/алерты, стенды/адреса/TTL, SFTP, ручные backup/restore и управляемые операции Академии. Telegram показывает статус/метрики, алертит failure/recovery/NoData и выдаёт последний проверенный зашифрованный бэкап по запросу разрешённого оператора.
 
-16Oct по новой команде владельца подготовлены [архитектура](../../server-console/ARCHITECTURE.md), [каталог health/метрик/алертов](../../server-console/OBSERVABILITY.md) и [UI/UX спецификация](../../server-console/DESIGN.md). Это проектные решения, не работающий collector или native acceptance.
-
-Auth + read-only collector/API + UI реализованы в исходниках. Далее подключение native источников и Telegram delivery; затем job adapters и выдача backup. Бот ещё не поставлен; backend/auth/UI добавлены в текущем read-only срезе, не развёрнуты на server1. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
+В [PR103](https://github.com/cauf1l3d/ustarlms/pull/103) на98559017 уже подготовлены backend/auth/read-only collector/API/UI, systemd/CI/runbook и новый standalone прототип с читаемыми подписями/графиками. Последние три CI этого SHA успешны. Это открытый PR, не установка на server1. Telegram delivery, job adapters, backup access и runtime acceptance ещё не выполнены. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
 
 ## Ожидание внешнего результата OPS-02
 
@@ -21,13 +25,3 @@ Moodle5.2 и PostgreSQL17 по команде16Oct. PR101/загруженные
 SSD11Oct; full-addon lab upgrade/repeat/paired rollback12Oct; production5.1.8 upgrade/repeat/brief browser/cron13Oct; AppArmor13Oct; r6 SSD archive/63 packages/native reboot/mount/ID-policy14Oct; archive handoff16Oct. Детали и ограничения — [аудит](../audits/AUDIT_RECONCILIATION_20261016_RU.md).
 
 Общий остаток, включая DB superuser, runtime code write, HTTPS, SMTP/disabled tasks, retention/offsite, ACL/Privacy/performance — [BACKLOG](../roadmap/BACKLOG.yaml). Ошибка route refresh не исправлялась и сохраняется в OPS-01.
-
-## Продолжение16Oct: первый рабочий срез
-
-В PR103 добавлены auth/сессии/CSRF/rate limit, collector/API, реальный UI, ограниченные systemd и [установка](../../server-console/INSTALL.md). GitHub-публикация и exact-head результаты CI фиксируются в PR, server1 ещё не установлен. Следующий этап после сверки установки: Prometheus/правила/DB-cron adapters, sanitized logs, Telegram/outbox и внешний observer; затем verified download/jobs. Не объявлять весь INF-06 закрытым.
-
-16Oct после замечания владельца о мелком/нечитаемом тексте UI переработан: body16px, метрики32–35px, явные цвета таблиц, смысловые акценты, responsive Grafana-style time-series с CPU/RAM и HTTP. Synthetic ряды — только в fixtures; реальные отсутствующие источники остаются NoData. Публикация в том же PR103, server1 не менялся.
-
-Повторное UI/UX ревью16Oct: исправлены подписи11–13px и наложение полей бэкапа; интерфейсный текст16px/оси14px, адаптивные легенды без потери среднего, видимое мобильное меню, полные health-details. [Отчёт](../../server-console/UI_UX_REVIEW_20261016.md). Native приёмка и оставшиеся этапы INF-06 открыты.
-
-По запросу владельца новый [автономный HTML-прототип](../../server-console/prototype/index.html) добавлен в PR103: шесть разделов и графики из актуального UI, demo API без сети, повторяемая сборка и архив прежнего макета. Это не установка на server1.

@@ -15,6 +15,7 @@ import urllib.error
 import urllib.request
 
 from .data import check, epoch, safe_json, stamp, open_regular
+from .cron import collect_cron
 
 HDD = Path('/srv/ustar-storage')
 HDD_UUID = '359a2bae-4e79-461a-ab72-1597f605d801'
@@ -78,11 +79,35 @@ def host():
     second = cpu_values()
     delta = second[0]-first[0]
     cpu = 100*(1-(second[1]-first[1])/delta) if delta > 0 else None
-    fs = os.statvfs('/')
     return dict(memory=memory(Path('/proc/meminfo').read_text()), cpu_percent=cpu,
                 cores=os.cpu_count(), load=list(os.getloadavg()), uptime_seconds=float(Path('/proc/uptime').read_text().split()[0]),
-                disk=dict(total_bytes=fs.f_blocks*fs.f_frsize, available_bytes=fs.f_bavail*fs.f_frsize,
-                          free_inodes=fs.f_favail), hostname=socket.gethostname())
+                disk=filesystem(Path('/')), hostname=socket.gethostname())
+
+
+def filesystem(path):
+    fs = os.statvfs(path)
+    if fs.f_blocks <= 0 or not 0 <= fs.f_bavail <= fs.f_blocks or not 0 <= fs.f_favail <= fs.f_files:
+        raise ValueError('Invalid filesystem counters')
+    return dict(total_bytes=fs.f_blocks*fs.f_frsize, available_bytes=fs.f_bavail*fs.f_frsize,
+                used_percent=100*(1-fs.f_bavail/fs.f_blocks), free_inodes=fs.f_favail,
+                total_inodes=fs.f_files, free_inode_percent=100*fs.f_favail/fs.f_files if fs.f_files else None)
+
+
+def capacity_checks(key, value, domain, root=False):
+    available = value['available_bytes']
+    free_percent = 100*available/value['total_bytes']
+    critical = free_percent < 10 or (root and available < 4*2**30)
+    warning = free_percent < 20 or (root and available < 8*2**30)
+    space = check(key+'_space', key+'_space', domain,
+                  'critical' if critical else 'warning' if warning else 'ok',
+                  'disk_low_space' if critical or warning else 'disk_capacity', key)
+    free_inodes = value['free_inode_percent']
+    inode_status = ('no_data' if free_inodes is None else 'critical' if free_inodes < 5
+                    else 'warning' if free_inodes < 10 else 'ok')
+    inodes = check(key+'_inodes', key+'_inodes', domain, inode_status,
+                   'inodes_unsupported' if free_inodes is None else
+                   'disk_low_inodes' if inode_status != 'ok' else 'disk_capacity', key)
+    return [space, inodes]
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -101,7 +126,11 @@ def http_probe():
             code = response.status
         return dict(status='ok' if code == 200 else 'critical', code=code,
                     total_ms=round((time.monotonic()-started)*1000, 1))
-    except (OSError, urllib.error.HTTPError, urllib.error.URLError):
+    except urllib.error.HTTPError as error:
+        code = error.code
+        error.close()
+        return dict(status='critical', code=code, total_ms=round((time.monotonic()-started)*1000, 1))
+    except (OSError, urllib.error.URLError):
         return dict(status='critical', code=None, total_ms=None)
 
 
@@ -130,8 +159,7 @@ def mount():
     valid = row.get('target') == str(HDD) and row.get('uuid') == HDD_UUID and 'rw' in row.get('options','').split(',')
     if not valid:
         raise ValueError('Wrong mount')
-    fs = os.statvfs(HDD)
-    return dict(uuid=HDD_UUID, available_bytes=fs.f_bavail*fs.f_frsize, total_bytes=fs.f_blocks*fs.f_frsize)
+    return dict(uuid=HDD_UUID, **filesystem(HDD))
 
 
 def backup(now=None):
@@ -217,20 +245,26 @@ def units():
 
 
 def collect(local_http=False):
-    result = dict(version=1, observed_at=stamp(), checks=[], host={}, backup={}, lab={}, containers=[], events=[])
-    probes = {'host':host, 'containers':containers, 'hdd':mount, 'backup':backup, 'lab':lab, 'units':units, 'recovery':recovery}
+    result = dict(version=1, observed_at=stamp(), checks=[], host={}, backup={}, cron={}, lab={}, containers=[], events=[])
+    probes = {'host':host, 'containers':containers, 'hdd':mount, 'backup':backup, 'cron':collect_cron,
+              'lab':lab, 'units':units, 'recovery':recovery}
     if local_http:
         probes['http_local'] = http_probe
+    def sampled(probe):
+        value = probe()
+        return value, stamp()
     with ThreadPoolExecutor(max_workers=7) as pool:
-        futures = {key:pool.submit(fn) for key,fn in probes.items()}
+        futures = {key:pool.submit(sampled, fn) for key,fn in probes.items()}
         for key, future in futures.items():
-            domain = 'data' if key in ('hdd','backup','recovery') else 'academy' if key in ('containers','http_local') else 'labs' if key=='lab' else 'server'
+            domain = 'data' if key in ('hdd','backup','recovery') else 'academy' if key in ('containers','http_local','cron') else 'labs' if key=='lab' else 'server'
             try:
-                value = future.result()
+                value, measured_at = future.result()
                 result[key] = value
                 status, reason = 'ok', 'measured'
                 if key == 'backup':
                     status, reason = value['status'], 'backup_receipt'
+                if key == 'cron':
+                    status, reason = value['status'], value['reason_code']
                 if key == 'recovery':
                     status, reason = value['status'], 'recovery_required' if value['marker_present'] else 'measured'
                 if key == 'lab':
@@ -243,13 +277,25 @@ def collect(local_http=False):
                 if key == 'units':
                     status = 'no_data' if any(row['state']=='no_data' for row in value) else (
                         'warning' if any(row['state']=='failed' for row in value) else 'ok')
-                result['checks'].append(check(key, key, domain, status, reason, key))
+                item = check(key, key, domain, status, reason, key)
+                item['observed_at'] = measured_at
+                if key in ('cron', 'backup'):
+                    item['source_observed_at'] = value['last_attempt_at'] if key == 'cron' else value['completed_at']
+                additional = []
+                if key == 'host':
+                    additional = capacity_checks('ssd', value['disk'], 'server', root=True)
+                if key == 'hdd':
+                    additional = capacity_checks('hdd', value, 'data')
+                for capacity in additional:
+                    capacity['observed_at'] = measured_at
+                result['checks'] += [item, *additional]
             except (OSError, ValueError, KeyError, TypeError, TimeoutError, subprocess.SubprocessError):
                 # A missing/wrong HDD is a failed required check, not missing telemetry.
                 result['checks'].append(check(key,key,domain,'critical' if key=='hdd' else 'no_data',
                                               'probe_failed',key))
     if not local_http:
-        result['checks'].append(check('http_local','Академия: локальный HEAD','academy'))
+        result['checks'].append(check('http_local','Академия: локальный HEAD','academy',
+                                      reason='disabled', source='http_local'))
     result['checks'].append(check('collector','Сборщик','monitoring','ok','measured','collector'))
     result['observed_at'] = stamp()
     return result

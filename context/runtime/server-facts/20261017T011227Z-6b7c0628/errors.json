@@ -1,0 +1,17 @@
+[
+  {
+    "block": "pg_query_stats",
+    "reason": "unavailable",
+    "status": "error"
+  },
+  {
+    "block": "scheduled_tasks",
+    "reason": "unavailable",
+    "status": "error"
+  },
+  {
+    "block": "smart",
+    "reason": "not_requested",
+    "status": "not_collected"
+  }
+]

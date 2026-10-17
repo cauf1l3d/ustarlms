@@ -7,6 +7,8 @@ npm run build --prefix ui
 mkdir -p backend/ustar_console/web
 rm -rf backend/ustar_console/web/assets
 cp -a ui/dist/. backend/ustar_console/web/
+# setuptools can otherwise retain assets from an earlier local build/lib tree.
+rm -rf backend/build
 python3 -m build --wheel --no-isolation --outdir dist backend
 ustar_console_stage=$(mktemp -d)
 trap 'rm -rf -- "$ustar_console_stage"' EXIT

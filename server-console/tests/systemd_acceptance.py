@@ -40,8 +40,13 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
         assert path.is_file() and path.stat().st_uid==0 and path.stat().st_mode&0o777==0o640
         value=json.loads(path.read_text())
         assert value['host']['memory']['total_bytes']>0
+        state_directory = Path('/var/lib/ustar-console-collector')
+        assert state_directory.is_dir() and state_directory.stat().st_uid == 0
+        assert state_directory.stat().st_mode & 0o777 == 0o700
+        assert run('runuser','-u','ustar-console','--','test','-x',str(state_directory),check=False).returncode != 0
         assert any(c['id']=='hdd' and c['status']=='critical' for c in value['checks'])
         assert any(c['id']=='containers' and c['status']=='no_data' for c in value['checks'])
+        assert any(c['id']=='cron' and c['status']=='no_data' for c in value['checks'])
         # Web identity can read sanitized snapshot but cannot read the Docker socket.
         run('runuser','-u','ustar-console','--','cat',str(path))
         assert run('runuser','-u','ustar-console','--','test','-r','/run/docker.sock',check=False).returncode != 0

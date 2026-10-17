@@ -178,6 +178,15 @@ def test_installer_failed_permanent_probe_removes_only_its_new_service(tmp_path,
     config=tmp_path/'etc'/'xray.json';unit=tmp_path/'new.service'
     monkeypatch.setattr(egress,'CONFIG',config);monkeypatch.setattr(egress,'UNIT_PATH',unit)
     monkeypatch.setattr(egress.os,'geteuid',lambda:0);monkeypatch.setattr(egress.os,'isatty',lambda _:True)
+    # Model the root-owned config directory even when pytest itself runs as an unprivileged CI user.
+    real_lstat=Path.lstat
+    def root_config_stat(path,*args,**kwargs):
+        result=real_lstat(path,*args,**kwargs)
+        if path==config.parent:
+            values=list(result);values[4]=0
+            return os.stat_result(values)
+        return result
+    monkeypatch.setattr(Path,'lstat',root_config_stat)
     monkeypatch.setattr(egress,'trusted_source',lambda:None);monkeypatch.setattr(egress,'binary',lambda:None)
     monkeypatch.setattr(egress.getpass,'getpass',lambda _: 'https://novavps.app/s/private-fixture')
     monkeypatch.setattr(egress.subscription,'fetch_subscription',lambda _:json.dumps({'outbounds':[node()]}).encode())

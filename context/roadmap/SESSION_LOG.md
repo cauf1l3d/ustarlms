@@ -1605,3 +1605,5 @@ loopback18081/default blackhole/разрешение только Telegram443; �
 реальный local CONNECT принимает trusted Telegram cert и отвергает unknown CA/wrong hostname при NO_PROXY=*.
 Native systemd/Xray routing fixture добавлен в CI; здесь systemd недоступен. Build/current CI/artifact проверяются отдельно.
 Owner update/proxy install/ID/receiver ACK и домашний маршрут ожидаются; server1 не менялся агентом.
+
+CI83b2e829 выявил отличие fixture UID: unprivileged runner владеет tmp config directory, mock geteuid0 не менял её owner. Исправлен только test stat fixture; production root ownership guard сохранён.Запуск от nobody локально недоступен (container cannot set groups); unprivileged fixture повторяется в CI.

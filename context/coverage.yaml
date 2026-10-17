@@ -71,8 +71,9 @@ covered:
 open:
 - id: CONSOLE-TELEGRAM-EGRESS
   next: Server direct HTTPS controls200 and two public HTTPS resolver A answers agree with local DNS; Telegram direct TCP443
-    fails from server and Windows. Choose available permitted egress/corporate proxy/owner remote endpoint; exact failing hop
-    remains unknown. Native token/ID/config/receiver ACK, home VPN and release3305ecc9 application remain open
+    fails from server and Windows; exact failing hop unknown. Owner reports Happ/NOVAVPS masked HTTPS subscription. Run
+    checksum-pinned safe local format probe, then select compatible client/loopback proxy; actual subscription format/connection,
+    native token/ID/config/receiver ACK, home VPN and release3305ecc9 application remain open
   evidence: context/runtime/console_telegram_egress_20261018.json
 - id: SERVER-FACTS-RESIDUAL
   next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "owner_report_and_source_preparation_not_native_connection",
+  "source": "owner_request_input_Happ_reply_and_masked_HTTPS_subscription_shape",
+  "received_at_utc": "2026-10-17T22:48:53Z",
+  "owner_reports_Happ_VPN_subscription": true,
+  "subscription_host": "novavps.app",
+  "subscription_path_shape": "/s/<redacted>",
+  "owner_supplied_full_URL_or_configuration": false,
+  "subscription_fetched_by_agent": false,
+  "provider_response_format": "unknown_until_owner_local_probe",
+  "provider_contract_public_documentation_verified": false,
+  "prepared_tool": "server-console/tools/subscription_probe.py",
+  "tool_sha256": "e74d0e2674c6deb4adfb629784bf97e475cebdaa20219c76875ecf1a3fab8eb5",
+  "runbook": "server-console/VPN_SUBSCRIPTION_PROBE.md",
+  "tool_scope": "stdlib standalone unprivileged local hidden input; bounded same-origin HTTPS GET; only fixed protocol/transport metadata; no saved subscription or installed settings",
+  "local_validation": {
+    "focused_secret_origin_redirect_format_limits_cases_passed": 22,
+    "full_backend_tests_passed": 147,
+    "full_backend_seconds": 5.81,
+    "standalone_compile": "PASS"
+  },
+  "subscription_URL_node_values_credentials_exported": false,
+  "proxy_adapter_or_VPN_runtime_installed": false,
+  "Telegram_ID_setup_receiver_ACK_confirmed": false,
+  "home_access_configured": false,
+  "latest_verified_owner_executable_package": "3305ecc925716a4864de8898f9a5fbdeb49e8321",
+  "owner_package_update_confirmed": false,
+  "next_step": "owner runs exact checksum-pinned standalone probe and shares only its sanitized JSON; select compatible server client and explicit loopback Bot API proxy from observed format",
+  "scope_note": "HTTPS is the input link scheme, not evidence of a particular underlying protocol or exportability. No provider placeholder/third-party subscription was accessed. Earlier egress observations preserved; actual failing network hop remains unknown. No agent SSH, production job or network change."
+}

@@ -6,6 +6,7 @@
 - [Пульт и Telegram](runtime/control_panel_telegram_20261016.md) — текущий INF-06, [архитектура](../server-console/ARCHITECTURE.md), [health](../server-console/OBSERVABILITY.md), [дизайн](../server-console/DESIGN.md); [передача сисадмину](runtime/sysadmin_handoff_result_20261016.json) — restore ожидается.
 - [Установка пульта владельцем17Oct23:36MSK](runtime/console_native_install_20261017.json) — limited TLS/units/freshness gate пройден; HDD/SMART, браузер и остальные native gates открыты. TOTP/Telegram пропущены.
 - [HDD/SMART диагностика18Oct](runtime/console_storage_probe_20261018.json), [исправление/update](../server-console/STORAGE_FIX_20261018.md) — namespace fault подтверждён; новый owner update/fresh receipt ожидаются.
+- [Happ/NOVAVPS subscription18Oct01:48MSK](runtime/console_vpn_subscription_20261018.json), [safe local probe](../server-console/VPN_SUBSCRIPTION_PROBE.md) — masked input only, native format/connection pending.
 - [Telegram egress comparison18Oct01:37/01:41MSK](runtime/console_telegram_egress_20261018.json) — server controls200, Windows TCPFalse, two public DNS A agree; outbound path/proxy endpoint required.
 - [Telegram network18Oct01:26MSK](runtime/console_telegram_network_20261018.json) — IPv4 TCP443 timeout до TLS, причина не локализована; [проверенный release3305ecc9](runtime/console_storage_release_20261018.json) — CI/artifact готовы, owner application ожидается.
 - [Runtime evidence](runtime/evidence_20261016.yaml), [карта сервера](runtime/server_map_20261016.md), [реестр поставок](runtime/RELEASE_LEDGER.md).

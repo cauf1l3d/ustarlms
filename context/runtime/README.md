@@ -1,6 +1,6 @@
 # Runtime и эксплуатация
 
-**Owner18Oct01:37/01:41MSK:** [Telegram egress comparison](console_telegram_egress_20261018.json): server direct controls200, Telegram TCP443 timeout; Windows same public endpointFalse; Google/Cloudflare A match local DNS. Need permitted outbound access/proxy/owner-controlled remote endpoint, exact failing hop unknown. No bot token/ID/config/receiver, home VPN or release3305ecc9 installation accepted. Previous receipts remain immutable.
+**Owner18Oct01:48MSK:** [Happ/NOVAVPS subscription](console_vpn_subscription_20261018.json) — только masked HTTPS shape. [Standalone probe](../../server-console/VPN_SUBSCRIPTION_PROBE.md) готов/22 focused/147 backend PASS, exact checksum-pinned owner run ожидается. Ссылку/QR/config не запрашивать; actual format/proxy/Telegram/home access неизвестны. [Egress comparison](console_telegram_egress_20261018.json) и прежние receipts сохраняются без перезаписи.
 
 **Owner18Oct00:27MSK:** [Telegram helper transport failure](console_telegram_transport_20261018.json), ID/persistent setup/receiver ACK не получены. DNS/direct curl IPv4+IPv6 запрошены без token; причина не установлена.
 

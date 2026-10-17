@@ -17,7 +17,9 @@ current_activity: >-
   Owner18Oct00:27MSK ID helper failed getUpdates with transport_unavailable. Owner01:26MSK tokenless diagnostics resolved IPv4,
   but direct TCP443 timed out before TLS; curl6 obtained no usable address. Failure location/cause unknown;
   owner01:37 controls ipify/GitHub200 with Telegram timeout8002ms, Windows same endpointFalse; owner01:41 Google/Cloudflare A match local DNS.
-  Need available permitted egress/corporate proxy/owner-controlled remote endpoint; no endpoint provided.
+  Owner01:48MSK reports Happ subscription and supplies only masked HTTPS novavps.app/s/ shape.
+  Safe standalone local probe prepared,22 focused/147 backend PASS; hidden input and sanitized protocol/transport JSON only.
+  Actual subscription format/compatible proxy client remain unknown until owner runs the checksum-pinned probe; no secrets received.
   Exact failing hop/cause unknown; numeric ID, bot setup and receiver ACK not obtained.
 next_task: INF-06
 ready_tasks: []
@@ -284,7 +286,9 @@ next_control_panel:
   telegram_transport_receipt: context/runtime/console_telegram_transport_20261018.json
   telegram_network_receipt: context/runtime/console_telegram_network_20261018.json
   telegram_egress_receipt: context/runtime/console_telegram_egress_20261018.json
-  telegram_connection_next: available_permitted_outbound_access_or_corporate_proxy_or_owner_remote_endpoint_required
+  telegram_connection_next: owner_hidden_local_NOVAVPS_format_probe_then_compatible_client_and_loopback_Bot_API_proxy
+  telegram_subscription_receipt: context/runtime/console_vpn_subscription_20261018.json
+  telegram_subscription_probe: server-console/VPN_SUBSCRIPTION_PROBE.md
   telegram_startup_hotfix: prepared_in_PR_owner_application_and_receiver_ack_pending
   telegram_hotfix_module_sha256: 94903be5412a0e48d21c8154afcda9cf8880b5bd670c0e83400b2df95d8ecd39
   previous_reviewed_head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0

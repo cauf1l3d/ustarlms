@@ -175,7 +175,8 @@ tasks:
     release3305ecc9 passed all3 CI/125 backend/45 browser/native namespace and updater rollback; verified artifact delivered,
     native application/fresh receipt pending. Owner18Oct01:26MSK tokenless probe resolved IPv4 but direct TCP443 timed out before
     TLS; curl6 did not obtain a usable address. Later01:37 server direct controls200/Telegram timeout and Windows endpointFalse;
-    01:41 Google/Cloudflare A agree with local DNS. Need available permitted egress/proxy/owner remote endpoint; failing hop unknown;
+    01:41 Google/Cloudflare A agree with local DNS; failing hop unknown. Owner01:48 reports Happ and masked HTTPS NOVAVPS
+    subscription; safe local format probe prepared,22 focused/147 backend PASS, actual format/proxy/native receiver pending;
     TOTP/Telegram initially skipped. Browser opening reported23:59MSK; login/roles/trust still pending. Telegram startup argument
     defect fixed with regression; owner module update/receiver ACK pending. Tailscale host route proposed, not installed.
     Native source/role/receiver/download/overhead/host-loss acceptance pending. Request statistics/logs/SFTP/restore/flexible
@@ -190,6 +191,8 @@ tasks:
   - server-console/STORAGE_FIX_20261018.md
   - context/runtime/console_telegram_network_20261018.json
   - context/runtime/console_telegram_egress_20261018.json
+  - context/runtime/console_vpn_subscription_20261018.json
+  - server-console/VPN_SUBSCRIPTION_PROBE.md
   - context/runtime/console_storage_release_20261018.json
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache

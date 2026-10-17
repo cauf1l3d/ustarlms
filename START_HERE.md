@@ -2,7 +2,7 @@
 
 ## Текущий этап 18 октября 2026
 
-**Owner01:37/01:41MSK:** [Telegram egress comparison](context/runtime/console_telegram_egress_20261018.json): server ipify/GitHub200, Telegram direct TCP443 timeout; Windows same endpointFalse; Google/Cloudflare A agree with local DNS. Need available outbound access/proxy/owner-controlled endpoint; exact failing hop unknown, credentials/config/receiver not accepted. [Release3305ecc9](context/runtime/console_storage_release_20261018.json) verified/delivered, owner application pending; context-only follow-up is not a new executable release.
+**Owner01:48MSK:** [Happ/NOVAVPS masked HTTPS subscription](context/runtime/console_vpn_subscription_20261018.json); формат ответа неизвестен. [Безопасный standalone probe](server-console/VPN_SUBSCRIPTION_PROBE.md) готов: hidden local input, sanitized protocol/transport JSON,22 focused/147 backend PASS. Owner native запуск/proxy/Telegram/home access ожидаются. [Egress comparison](context/runtime/console_telegram_egress_20261018.json) и release3305ecc9 сохраняют свои границы; ссылка/QR/конфиг секретны, не присылать.
 
 **Owner00:14MSK:** [HDD/SMART диагностика](context/runtime/console_storage_probe_20261018.json) подтверждает host rw/service ro и успешный SMART oneshot с частичными SSD атрибутами. [Исправление и обновление](server-console/STORAGE_FIX_20261018.md) подготовлено с regression/native CI cases; новый owner update ещё не выполнен. Telegram/VPN запрос сохраняется; оставшиеся gates не закрыты.
 

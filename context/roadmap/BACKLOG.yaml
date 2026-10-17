@@ -55,9 +55,12 @@ tasks:
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
   - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
   - context/runtime/server_facts_followup_20261017.json
-  current_summary: 17Oct latest owner snapshot30ok/1error; plugin/theme526 совпали. Clock/scheduled/SMART измерены. Query
-    statistics, NTP source/offset, effective eligibility18 overdue, full SMART/core provenance/per-object storage и native
-    сценарии остаются открыты.
+  - context/reviews/20261017/core_extra_reconciliation.md
+  - context/runtime/core_extra_received_20261017.json
+  - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+  current_summary: 17Oct plugin/theme526 match; eligible upstream core24742 match, changed/missing0, extras23. Ntpsec peer/offset
+    and full exported SMART history observed;18 overdue have source-based component-skip explanations. ACL getfacl missing,
+    SQL stats/per-object storage/effective native acceptance remain open.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -85,13 +88,17 @@ tasks:
   - Data/cache/session remain writable; deploy and cron operate
   - Old dumps/config/keys inaccessible to unrelated local users; archives preserved
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: 17Oct www-data может писать local/ustar и config.php; config UID/GID33 mode0755. Theme/public root readonly
-    для www-data; ACL unavailable. Полная защита файлов/родителей и секретов остаётся открытой.
+  current_summary: '17Oct www-data writable plugin/config0755 remains confirmed. Both ACL probes failed: getfacl not installed.
+    Core extras23 unchanged by name since05Oct include public config/index backups, legacy handlers and PDFs; access/origin
+    not verified. No cleanup or hardening performed.'
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
   - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
   - context/runtime/server_facts_followup_20261017.json
+  - context/reviews/20261017/core_extra_reconciliation.md
+  - context/runtime/core_extra_received_20261017.json
+  - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
 - id: INF-04
   title: Расход SSD, healthy HDD и аппаратный резерв
   status: in_progress
@@ -110,9 +117,12 @@ tasks:
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
   - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
   - context/runtime/server_facts_followup_20261017.json
-  current_summary: '17Oct SMART health true/exit0: /dev/sda50°C, /dev/sdb47°C. Полные attributes/SSD wear/test history не
-    экспортированы; прежний residual HDD198=1 не перепроверен. Root/HDD free space и mount flags измерены; аппаратный резерв
-    и полный storage breakdown открыты.'
+  - context/reviews/20261017/core_extra_reconciliation.md
+  - context/runtime/core_extra_received_20261017.json
+  - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+  current_summary: '17Oct09:59:14Z full exported SMART: SSD50C/HDD49C, healthtrue, exit64 both means ATA error-log records.
+    HDD5/196/197/198/199 raw0; failed long test16359h followed by success16385h retained, no new test. SSD27/HDD17 attributes;
+    vendor wear units, per-object occupancy, hardware reserve/redundancy and trends remain open.'
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -246,14 +256,18 @@ tasks:
   - Moodle.org registration distinct from employee registration; actual test mail delivered
   - Hourly/nightly task behavior accepted with correct timezone/overrides and retained failure history
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: 17Oct01:39:03Z cron worker0/new failures0/USTAR errors0, adhoc0. Scheduled147:15 disabled,132 по DB flag
-    enabled; faildelay2 оба disabled (registration/H5P), enabled faildelay0.18 enabled-flag overdue>10min имеют last_run0;
-    component eligibility/overrides неизвестны. UTC/NTPfalse/syncedtrue; NTP source/offset, SMTP и full cycle acceptance открыты.
+  current_summary: 17Oct cron01:39:03Z worker0/new failures0; scheduled147/15disabled, both faildelay disabled registration/H5P.
+    Later DB flags plus exact upstream scheduler and30 verified source files explain18 overdue as component skips if effective
+    config matches. Ntpsec active, selected peer offset-0.2024ms; runtime overrides/cache, SMTP, exceptions and full cycle
+    acceptance open.
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
   - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
   - context/runtime/server_facts_followup_20261017.json
+  - context/reviews/20261017/core_extra_reconciliation.md
+  - context/runtime/core_extra_received_20261017.json
+  - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
 - id: OPS-01
   title: Свежая read-only сверка production и проверка PR76
   status: in_progress
@@ -321,12 +335,14 @@ tasks:
   current_summary: '17Oct owner console: pg_stat_statements available=true, installed=false, shared_preload_libraries empty,
     compute_query_id=auto, track null, pending_restart=false. Archive pg_query_stats unavailable; enabled tracking отсутствует,
     historical statistics не восстановить задним числом. Selected table counters/settings измерены, workload/p95/Web SAPI
-    baseline открыт.'
+    baseline открыт. Later checksum-bound component_flags probe confirms empty preload/default source/pending_restart=false;
+    no activation or restart.'
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
   - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
   - context/runtime/server_facts_followup_20261017.json
+  - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned

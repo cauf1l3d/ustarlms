@@ -1,10 +1,12 @@
 # Проверка приложенного review и сбора контекста — 17 октября 2026
 
+**Обновление13:05MSK:** получены и проверены дополнительные core/extra ZIP. [Новая сверка](core_extra_reconciliation.md), [validation](core_extra_validation.json), [provenance](../../runtime/core_extra_received_20261017.json): core24742 matches/23 extra names, ntpsec peer/offset, полные экспортированные SMART attributes/history и18 source-based component-skip explanations. ACL не собран из-за отсутствующего getfacl. Новые данные уточняют перечисленные ниже прежние gaps; исходные receipts/validation сохраняются по своим датам.
+
 **Обновление04:41MSK:** три server1 archives получены, проверены и импортированы; latest30ok/1error. Clock/scheduled/SMART измерены; query statistics остаются unavailable. [Свежая сверка](runtime_reconciliation.md) и [follow-up](../../runtime/server_facts_followup_20261017.json) описывают526 совпавших source files, реальные risks и точные границы наблюдений. Упоминания ожидания ниже относятся к этапу до получения архивов; [validation первого импорта](runtime_validation.json) сохранена, [follow-up validation](runtime_followup_validation.json) относится к третьему снимку.
 
 Проверены все восемь приложений: сначала `fable.md`, затем Markdown/PDF review, collector, importer, README, proposed current YAML и CI guard. [Оригиналы и SHA256](submission_manifest.json); текстовые оригиналы сохранены в [submitted](submitted/) без исправлений, shell/YAML proposals имеют суффикс `.txt` и **не являются действующими инструкциями**. PDF не дублируется в Git: его hash учтён, при экспорте обнаружены повторы, буквальные `<br/>` и ошибочный footer2025; команды брать из проверенного исходника.
 
-Проверенная база: main `d9655074db9a06281fe16f378dbdbe1d279104a0`; пульт — открытый [PR103](https://github.com/cauf1l3d/ustarlms/pull/103), head `98559017eef887d2a87955cc55ee947b5babe0a0`. Этот review — проверка исходников, датированных receipts и тестов. Нового подключения к server1 и production snapshot ещё не было.
+Проверенная база: main `d9655074db9a06281fe16f378dbdbe1d279104a0`; пульт — открытый [PR103](https://github.com/cauf1l3d/ustarlms/pull/103), head `98559017eef887d2a87955cc55ee947b5babe0a0`. Этот review — проверка исходников, датированных receipts и тестов. На исходном этапе нового подключения/snapshot ещё не было; затем owner archives приняты по обновлениям выше. Агентского SSH не было.
 
 ## Ошибки предложенных скриптов
 

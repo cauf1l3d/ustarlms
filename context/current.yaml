@@ -57,7 +57,7 @@ production:
     not_atomic: true
     scope_note: Fresh owner-executed collector17Oct, full plugin/theme526 hash comparison;
       core, database schema and functional acceptance are separate
-  cron: latest17Oct01:39:03Z_worker0_new_failures0_USTAR_errors0;147_tasks_15_disabled_2_faildelay_both_disabled_18_overdue_component_eligibility_unknown
+  cron: latest17Oct01:39:03Z_worker0_new_failures0_USTAR_errors0;147_tasks_15_disabled_2_faildelay_both_disabled;later_DB_flags_and_pinned_source_explain18_overdue_as_component_skips_if_runtime_config_matches
   regular_backup: latest17Oct00:31:32Z_success_readback_reported_archive_size_matches_HDD_timer_enabled;
     independent_restore_waiting
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -80,24 +80,81 @@ production:
     independently_authenticated_host: false
     coverage: 30ok_1error_clock_scheduled_SMART_observed_query_statistics_unavailable
   clock:
-    source: context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+    source: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
     timezone: Etc/UTC
+    timedated_can_ntp: false
     ntp_enabled: false
     ntp_synchronized: true
-    ntp_source_and_offset: unmeasured_supplement_unavailable
+    active_client: ntpsec
+    selected_peer_public_ip: 194.58.206.20
+    selected_peer_stratum: 1
+    offset_ms: -0.2024
+    jitter_ms: 0.169
+    reach_octal: '377'
+    received_at_utc: '2026-10-17T10:05:42Z'
+    probe_observed_at_utc: null
+    scope_note: Owner extra run; timedated flags coexist with active ntpsec. One peer
+      sample, not host stratum or long-term accuracy
   smart:
-    source: context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
-    scope: health_temperature_exit_status_only
+    source: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    observed_at_utc: '2026-10-17T09:59:14Z'
+    scope: all_exported_ATA_attributes_error_logs_and_self_test_history_allowlisted
     sda_health_passed: true
     sda_temperature_celsius: 50
+    sda_attribute_count: 27
     sdb_health_passed: true
-    sdb_temperature_celsius: 47
-    full_attributes_and_selftest_history: not_exported_historical_residual_not_rechecked
+    sdb_temperature_celsius: 49
+    sdb_attribute_count: 17
+    exit_status_both: 64
+    exit_bits_set_both:
+    - 6
+    exit_interpretation: ATA_error_log_records_present
+    sdb_current_pending_197: 0
+    sdb_offline_uncorrectable_198: 0
+    sdb_reallocated_5: 0
+    sdb_last_extended_test:
+      status: completed_without_error
+      lifetime_hours: 16385
+    sdb_earlier_failed_extended_test:
+      status: read_failure
+      lifetime_hours: 16359
+    new_self_test_started: false
+    vendor_SSD_wear_units_and_remaining_life: unconfirmed
+    scope_note: Current zero198 preserves historical failed test; no new self-test
+      or hardware acceptance
+  latest_core_comparison:
+    observed_at_utc: '2026-10-17T10:00:15.077511+00:00'
+    source: context/runtime/core-facts/20261017T100015Z-edb2f12e/core_comparison.json
+    review: context/reviews/20261017/core_extra_reconciliation.md
+    reference_repository: https://github.com/moodle/moodle.git
+    reference_commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
+    reference_release: 5.1.8
+    matching: 24742
+    changed: 0
+    missing: 0
+    extra: 23
+    errors: 0
+    reference_skipped: 0
+    complete: true
+    match: false
+    collector_exit: 3
+    not_atomic: true
+    scope_note: Exact eligible upstream paths after explicit exclusions; extras names
+      only. Separate from plugin/theme526 manifest
+  component_task_followup:
+    source: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    task_snapshot_utc: '2026-10-17T01:39:24Z'
+    expected_component_skip_explanations: 18
+    eligibility_source_files_verified: 30
+    condition: effective_runtime_settings_match_later_observed_database
+    effective_runtime_bootstrap_checked: false
+    different_observation_times_not_atomic: true
 current_work:
-  activity: Three owner server1 archives validated/imported17Oct; latest30ok/1error,
-    clock/scheduled/SMART observed; plugin/theme526 match; SQL statistics and NTP
-    source/component eligibility/full SMART gaps explicit for owner repeat audit before
-    repo/console/Telegram continuation
+  activity: Three immutable 31-block owner snapshots plus two validated core/extra
+    ZIPs17Oct; plugin/theme526 match and eligible upstream core24742 match with23
+    extra names. Ntpsec peer/offset, full exported SMART attributes/history and18
+    component-skip explanations recorded; ACL tool absent, SQL stats/effective native
+    acceptance gaps remain for owner repeat audit before repo/console/Telegram continuation
   next_task: INF-06
   ready_tasks:
   - INF-06
@@ -157,11 +214,21 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - NTP server/source/offset and ongoing synchronization client not determined
-  - Effective component eligibility/task overrides for18 DB-flag-enabled overdue tasks
-    not collected
-  - Full SMART attributes, SSD wear, self-test history and historical HDD residual
-    not rechecked
+  - ACL unavailable because getfacl not installed; effective file/parent/replace and
+    SSH Match/TLS remain separate
+  - 18 component skips explained by later DB flags and exact upstream source; effective
+    runtime overrides/cache not checked
+  - SSD vendor wear/TBW units, long-term NTP/SMART trends and hardware redundancy
+    not confirmed
+  - Core extras access/origin and excluded config/vendor/plugins require separate
+    review; native restore/RTO awaited
+  additional_observations:
+    provenance: context/runtime/core_extra_received_20261017.json
+    review: context/reviews/20261017/core_extra_reconciliation.md
+    core_payload: context/runtime/core-facts/20261017T100015Z-edb2f12e
+    extra_derivative: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    validation: context/reviews/20261017/core_extra_validation.json
+    does_not_replace_31_block_snapshot: true
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'

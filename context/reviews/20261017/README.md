@@ -1,5 +1,7 @@
 # Проверка приложенного review и сбора контекста — 17 октября 2026
 
+**Обновление04:16MSK:** оба server1 archives получены, проверены и импортированы. [Свежая сверка](runtime_reconciliation.md) описывает526 совпавших source files, реальные risks и остающиеся пробелы. Упоминания ожидания ниже относятся к этапу до получения архивов.
+
 Проверены все восемь приложений: сначала `fable.md`, затем Markdown/PDF review, collector, importer, README, proposed current YAML и CI guard. [Оригиналы и SHA256](submission_manifest.json); текстовые оригиналы сохранены в [submitted](submitted/) без исправлений, shell/YAML proposals имеют суффикс `.txt` и **не являются действующими инструкциями**. PDF не дублируется в Git: его hash учтён, при экспорте обнаружены повторы, буквальные `<br/>` и ошибочный footer2025; команды брать из проверенного исходника.
 
 Проверенная база: main `d9655074db9a06281fe16f378dbdbe1d279104a0`; пульт — открытый [PR103](https://github.com/cauf1l3d/ustarlms/pull/103), head `98559017eef887d2a87955cc55ee947b5babe0a0`. Этот review — проверка исходников, датированных receipts и тестов. Нового подключения к server1 и production snapshot ещё не было.

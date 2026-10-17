@@ -6,7 +6,7 @@
 
 Подтверждены: расширение SSD11Oct, Moodle5.1.8/повторный upgrade/краткая браузерная приёмка13Oct, AppArmor и host updates/reboot14Oct. Архив копии получен и инструкция передана сисадмину; результата нового восстановления ещё нет. Переход на **Moodle5.2 и PostgreSQL17 отложен**.
 
-Сейчас — [проверка приложенного review и сбор свежих фактов](context/reviews/20261017/README.md) по команде17Oct. [Collector/import runbook](scripts/infra/README_server_facts.md); server1 snapshot ещё не получен. После актуализации и повторного review владельца — [пульт управления с Telegram](context/runtime/control_panel_telegram_20261016.md). Auth/read-only API/UI и новый прототип уже подготовлены в [PR103](https://github.com/cauf1l3d/ustarlms/pull/103), ещё не внедрены в main/production; бот остаётся отдельной работой.
+Оба owner server1 snapshots17Oct [проверены и импортированы](context/reviews/20261017/runtime_reconciliation.md):526 plugin/theme files совпали; подтверждены DB/code permission risks, оставшиеся измерения явно перечислены. Контекст готов к повторному review владельца. Затем — [пульт управления с Telegram](context/runtime/control_panel_telegram_20261016.md). Auth/read-only API/UI и новый прототип уже подготовлены в [PR103](https://github.com/cauf1l3d/ustarlms/pull/103), ещё не внедрены в main/production; бот остаётся отдельной работой.
 
 ## Работа с репозиторием
 

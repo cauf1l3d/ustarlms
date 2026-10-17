@@ -1,5 +1,7 @@
 # Совместимость первого сбора — 17 октября 2026
 
+**Обновление04:16MSK:** оба archives получены и проверены; [результат](runtime_reconciliation.md). Первый containers reason=unavailable, packages=invalid_data,11 probes dependency_unavailable; второй восстановил эти блоки. Ниже сохранён ход диагностики до получения архивов.
+
 Владелец передал terminal output первого запуска cee34b13, self SHA256 check OK. [Receipt](../../runtime/server_facts_terminal_20261017.json) сохраняет только видимые статусы:17 ok,13 error, SMART not_collected. Архив `/var/tmp/ustar-server-facts-20261017T010021Z-506c32/report.tar.gz` создан, но ещё не получен агентом. Поэтому содержимое измерений и точные `reason` не утверждаются; версии/production state не обновляются из одних статусов.
 
 13 error — не13 независимых отказов сервера. `containers` и `packages` — два исходных сбоя. Остальные11 блоков зависят от containers → code_layout: manifest/access, четыре application-DB PG probes и четыре Moodle probes. PHP CLI и глобальные PG probes выполнились. В частности, `pg_query_stats: error` пока не доказывает отсутствия extension: без определённой DB запрос вообще не выполняется.

@@ -51,8 +51,10 @@ tasks:
   - context/coverage.yaml
   - context/runtime/server_facts_terminal_20261017.json
   - context/reviews/20261017/collector_compatibility.md
-  current_summary: Первый owner-run17Oct сохранил partial report17ok/13error; archive ещё не получен. Воспроизведены и исправлены
-    optional Docker template/DPKG version bugs; ожидаются исходный и повторный отчёты. Native сценарная приёмка отдельно.
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  current_summary: Свежий owner snapshot17Oct получен:28 блоков ok,2 unavailable; plugin/theme526 совпали. Core hash provenance,
+    полный per-object storage inventory, scheduled task details/clock и native сценарии остаются открыты.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -63,6 +65,11 @@ tasks:
   - Application lacks unnecessary cluster privileges; ownership and grants recorded
   - Domain writes, cron, DDL upgrade/repeat and dump/restore pass on target permissions
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: 17Oct подтверждены moodle superuser/CREATEROLE/CREATEDB/replication/bypass RLS и владение БД; отдельный
+    login admin в pg_roles не обнаружен. Сначала отдельный admin/rollback и тестовая приёмка, затем снижение прав.
+  validation_evidence:
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: INF-03
   title: Защита кода/config, dumps и ключей
   status: planned
@@ -73,6 +80,11 @@ tasks:
   - Data/cache/session remain writable; deploy and cron operate
   - Old dumps/config/keys inaccessible to unrelated local users; archives preserved
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: 17Oct www-data может писать local/ustar и config.php; config UID/GID33 mode0755. Theme/public root readonly
+    для www-data; ACL unavailable. Полная защита файлов/родителей и секретов остаётся открытой.
+  validation_evidence:
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: INF-04
   title: Расход SSD, healthy HDD и аппаратный резерв
   status: in_progress
@@ -87,8 +99,10 @@ tasks:
   - context/runtime/ssd_gpt_relocate_result_20261011.json
   - context/runtime/ssd_partition_grow_result_20261011.json
   - context/runtime/ssd_ext4_resize_result_20261011.json
-  current_summary: GPT/раздел/ext4 расширены и проверены11Oct. Полный аппаратный резерв, новая SMART-динамика
-    и защита от потери площадки остаются открыты.
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  current_summary: 17Oct root available54.3GiB/109.7GiB, HDD available394.4GiB/457.4GiB, UUID/mount flags сохранены. SMART
+    исключён; аппаратный резерв и полный storage breakdown не доказаны.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -101,6 +115,11 @@ tasks:
   - Readiness healthchecks and failure response verified
   - Exact images/mounts preserved; cron binding revalidated, one worker retained
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: 17Oct оба selected контейнера running/restart0/OOMfalse; healthchecks, per-container CPU/RAM caps и выбранные
+    log rotation options не настроены. Daemon defaults не измерены, recreate не выполнялся.
+  validation_evidence:
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии
   status: ready
@@ -131,6 +150,11 @@ tasks:
   - Real workstations/phones pass login, links, files, Quiz/SCORM/chat
   - Other vhosts and required services preserved; renewal alert verified
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: 17Oct Apache vhost inventory видит80, есть443 listener и публичный сертификат до21Dec2026; связка Academy
+    DNS/proxy/trust/client login не проверена. Не трактовать наличие443 или cert как готовый HTTPS Академии.
+  validation_evidence:
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: INF-09
   title: CI на production PHP/core/PostgreSQL matrix
   status: in_progress
@@ -193,6 +217,11 @@ tasks:
   - OS/reboot window preserves mail/DNS/ISPConfig and Docker mounts
   - Required service checks and rollback documented; no blind service removal
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: 17Oct UFW inactive; global SSH password auth/X11/forwarding enabled, Match context не измерен. TCP2019
+    имеет all-address listener; процесс, Caddy admin binding и внешняя достижимость требуют проверки с сохранением mail/DNS/ISPConfig.
+  validation_evidence:
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: INF-11
   title: H5P/registration exceptions, SMTP и полный cron cycle
   status: planned
@@ -204,6 +233,11 @@ tasks:
   - Moodle.org registration distinct from employee registration; actual test mail delivered
   - Hourly/nightly task behavior accepted with correct timezone/overrides and retained failure history
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: 17Oct cron receipt свежий:worker0/new failures0/USTAR errors0, adhoc0; aggregate failed2/overdue18. Список
+    scheduled tasks unavailable из-за SQL probe; active/disabled разбивка и SMTP acceptance открыты.
+  validation_evidence:
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: OPS-01
   title: Свежая read-only сверка production и проверка PR76
   status: in_progress
@@ -215,12 +249,14 @@ tasks:
   - Actual DNS/HTTPS/proxy/cron constraints recorded without secrets
   runbook: context/runtime/OPERATIONS.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Скромная приёмка5.1.8 принята; полные ACL/кадровые сценарии и fresh manifest отдельно. Route
-    refresh после успешной аттестации оставлен открытым, исправление не поставлялось.
+  current_summary: Fresh17Oct plugin/theme526 и версии совпали с e1d57f5b, config/public roots подтверждены. Полная ACL/HR/reset-reassign/DNS/TLS
+    приёмка остаётся открытой; route refresh не исправлялся.
   validation_evidence:
   - context/runtime/production_patch_browser_result_20261013.json
   - context/runtime/route_refresh_triage_20261014.json
   - context/runtime/route_refresh_db_result_20261014.json
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: INF-12
   title: Приёмка доменов и сценарная безопасность
   status: planned
@@ -264,6 +300,11 @@ tasks:
   - R19
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: 17Oct в application DB установлен только plpgsql, pg_stat_statements отсутствует; query stats unavailable.
+    Получены selected settings/table counters, но нет временного baseline/p95/Web SAPI и профиля нагрузки.
+  validation_evidence:
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned
@@ -293,8 +334,10 @@ tasks:
   - context/runtime/hdd_backup_schedule_status_20261012.json
   - context/runtime/production_patch_post_switch_status_result_20261013.json
   - context/runtime/host_reboot_result_20261014.json
-  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после reboot
-    mount/timer сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
+  - context/reviews/20261017/runtime_reconciliation.md
+  - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  current_summary: 17Oct03:31:32MSK scheduled HDD backup success/readback reported, file bytes match, recovery marker absent,
+    timer enabled. Нового независимого restore нет; RPO/RTO/retention/offsite/alerts остаются открыты.
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: waiting_external

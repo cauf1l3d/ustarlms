@@ -34,12 +34,12 @@ production:
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
   current_source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
-  current_source_commit_scope: dated_plugin_theme_manifest_not_whole_repository_or_core
+  current_source_commit_scope: fresh_owner_plugin_theme526_manifest_20261017_not_whole_core_or_repository
   current_versions:
     local_ustar: 2026100204
     theme_ustar: 2026100202
   last_exact_source_manifest:
-    date: '2026-10-05T02:32:35.997389+00:00'
+    date: '2026-10-17T01:12:27Z'
     commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
     scope:
     - local/ustar
@@ -50,13 +50,16 @@ production:
     extra: 0
     errors: 0
     skipped: 0
-    evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57
-      addon versions and5151 file references, not a new whole-host manifest
-  cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors;
-    residual_disabled_failures_retained
-  regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
+    evidence: context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+    comparison: context/runtime/server_facts_source_comparison_20261017T011227Z-6b7c0628.json
+    independently_measured: false
+    not_atomic: true
+    scope_note: Fresh owner-executed collector17Oct, full plugin/theme526 hash comparison;
+      core, database schema and functional acceptance are separate
+  cron: latest17Oct01:12:02Z_worker0_new_failures0_USTAR_errors0; aggregate_failed2_overdue18_task_details_unavailable
+  regular_backup: latest17Oct00:31:32Z_success_readback_reported_archive_size_matches_HDD_timer_enabled;
+    independent_restore_waiting
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
     moodle: 5.1.8
@@ -67,11 +70,19 @@ production:
     kernel: 6.8.0-147-generic
     Docker: 29.9.0
     containerd: 2.4.1
-    version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+    version_dates: Moodle13Oct/host14Oct accepted;17Oct owner snapshot confirms selected
+      core/PHP/PG/kernel and package versions, not Ubuntu point release or all host
+      packages
+  latest_inventory:
+    observed_at: '2026-10-17T01:12:27Z'
+    source: context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+    review: context/reviews/20261017/runtime_reconciliation.md
+    independently_authenticated_host: false
+    coverage: 28ok_2error_SMART_excluded_clock_values_unknown
 current_work:
-  activity: Owner17Oct first server1 collection produced partial report; terminal
-    statuses17ok/13error/SMART excluded; fix reproduced Docker template and Debian
-    version compatibility; await archives before owner repeat review
+  activity: Both owner server1 archives validated/imported17Oct; latest28ok/2error/SMART
+    excluded; plugin/theme526 match; runtime reconciliation and remaining gaps ready
+    for owner repeat audit before repository/console/Telegram continuation
   next_task: INF-06
   ready_tasks:
   - INF-06
@@ -110,15 +121,29 @@ current_work:
     PRIVACY-01: deferred
     TECH-01: planned
 server_facts:
-  status: awaiting_report_archive_and_corrected_collection
-  snapshot: null
-  observed_at: null
-  runbook: scripts/infra/README_server_facts.md
+  status: partial
+  snapshot: context/runtime/server-facts/20261017T011227Z-6b7c0628
+  observed_at: '2026-10-17T01:12:27Z'
+  method: bounded_script_owner_supplied
   independently_authenticated_host: false
+  script_sha256: 80d9f874330d49c66a3a34baf25c4f5ea41544b8f0c7c3c3f82324b920edc837
+  counts:
+    error: 2
+    not_collected: 1
+    ok: 28
+    partial: 0
   functional_acceptance: false
-  first_run_receipt: context/runtime/server_facts_terminal_20261017.json
-  archive_received: false
-  collector_compatibility_review: context/reviews/20261017/collector_compatibility.md
+  source_comparison: context/runtime/server_facts_source_comparison_20261017T011227Z-6b7c0628.json
+  application_source_matches: true
+  archives_received: 2
+  review_status: ready_for_owner_repeat_audit_with_explicit_gaps
+  review: context/reviews/20261017/runtime_reconciliation.md
+  provenance: context/runtime/server_facts_received_20261017.json
+  measurement_gaps:
+  - scheduled_tasks query failed
+  - pg_stat_statements absent in application database
+  - clock properties unknown in supplied reports
+  - SMART not requested
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'

@@ -53,8 +53,22 @@ def check():
     assert re.fullmatch('[0-9a-f]{40}',evidence['application']['reference_commit'])
     assert state['production']['last_exact_source_manifest']['commit']==evidence['application']['reference_commit']
     assert state['production']['current_source_commit']==evidence['application']['reference_commit']
-    assert state['production']['last_exact_source_manifest']['date']==evidence['application']['manifest_observed_at']
-    assert state['production']['last_exact_source_manifest']['matching_files']==evidence['application']['matching_files']
+    latest=state['production']['last_exact_source_manifest']
+    if latest.get('comparison'):
+        from infra.server_facts import read_payload, validate_payload
+        payload,metadata=validate_payload(read_payload((ROOT/latest['evidence']).parent))
+        comparison=json.loads((ROOT/latest['comparison']).read_text())
+        assert latest['date']==metadata['collected_utc']
+        assert payload['blocks']['source_manifest']['status']=='ok'
+        assert comparison['facts_snapshot']==str(Path(latest['evidence']).parent)
+        assert comparison['evidence_complete'] and comparison['baseline_commit']==latest['commit']
+        assert latest['matching_files']==comparison['matching']
+        assert latest['changed']==len(comparison['changed'])
+        assert latest['missing']==len(comparison['only_in_git'])
+        assert latest['extra']==len(comparison['only_in_snapshot'])
+    else:
+        assert latest['date']==evidence['application']['manifest_observed_at']
+        assert latest['matching_files']==evidence['application']['matching_files']
     assert state['production']['current_versions']=={
         'local_ustar':evidence['application']['local_ustar'],
         'theme_ustar':evidence['application']['theme_ustar']}
@@ -96,6 +110,7 @@ def check():
              'context/runtime/SECURITY_BASELINE.md','context/audits/README.md',
              state['audit']['reconciliation'],state['audit']['remediation_plan'],
              'context/reviews/20261017/README.md','scripts/infra/README_server_facts.md',
+             'context/reviews/20261017/runtime_reconciliation.md',
              'context/design/README.md','context/runtime/server-facts/README.md']
     for name in docs:
         p=ROOT/name

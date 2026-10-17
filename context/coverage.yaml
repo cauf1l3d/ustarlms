@@ -1,10 +1,10 @@
 schema_version: 1
 reviewed_at: '2026-10-17'
-scope: repository_and_submitted_review_not_live_server
+scope: repository_and_validated_owner_executed_server_snapshot_not_independent_functional_acceptance
 entrypoint: START_HERE.md
 claims:
   all_context_complete: false
-  production_snapshot_received: false
+  production_snapshot_received: true
   functional_server_acceptance: false
 covered:
 - area: code_and_schema_navigation
@@ -23,11 +23,13 @@ covered:
   evidence: context/CONTEXT_INDEX.md
   boundary: grades/routes/evidence/work/mobile source navigation enriched; domain maps are not exhaustive contracts
 - area: collector_and_import
-  evidence: scripts/infra/README_server_facts.md
-  boundary: schema, bounds, failure preservation and archive/import tests; not an executed server1 inventory
+  evidence: context/runtime/server_facts_received_20261017.json
+  boundary: Two actual owner server1 archives validated and imported byte-for-byte; latest28ok/2error/SMART excluded; clock
+    values remain unknown
 open:
-- id: SERVER-FACTS
-  next: Owner runs pinned collector; validate archive, import immutable facts, reconcile discrepancies
+- id: SERVER-FACTS-RESIDUAL
+  next: Scheduled task rows and clock properties unknown; query-stat extension absent; full core/ACL/HTTP/process and external
+    reachability scopes remain separate
 - id: SOURCE-CORE
   next: Exact Moodle core provenance/full manifest; plugin/theme comparison alone is insufficient
 - id: AUTHORIZATION
@@ -37,7 +39,8 @@ open:
 - id: DESIGN-COMPONENTS
   next: Buttons/forms/tables/dialog states, computed typography and native QA at 1440/1024/768/390/320
 - id: DOMAIN-SCENARIOS
-  next: Extend remaining organization/adaptation/economy/feed/messaging/learning scenarios and canonical evidence writers from source
+  next: Extend remaining organization/adaptation/economy/feed/messaging/learning scenarios and canonical evidence writers
+    from source
 - id: HOST-ACCEPTANCE
   next: HTTPS/DNS/client login/SCORM/mail, effective SSH Match, ACL replacement/negative checks and resource baseline
 - id: RECOVERY

@@ -352,7 +352,7 @@ def moodle_queries(prefix):
     return {
       'moodle_config': 'SELECT name,value FROM ' + table('config') + " WHERE name IN ('version','release','cookiesecure','cookiehttponly','maintenance_enabled') ORDER BY name",
       'moodle_plugins': 'SELECT plugin AS name,value AS version FROM ' + table('config_plugins') + " WHERE name='version' AND plugin IN ('local_ustar','theme_ustar') ORDER BY plugin",
-      'scheduled_tasks': 'SELECT classname,disabled::boolean AS disabled,coalesce(lastruntime,0) AS last_run,coalesce(nextruntime,0) AS next_run,coalesce(faildelay,0) AS fail_delay FROM ' + table('task_scheduled') + ' ORDER BY coalesce(lastruntime,0),classname LIMIT 500',
+      'scheduled_tasks': 'SELECT classname,(disabled <> 0) AS disabled,coalesce(lastruntime,0) AS last_run,coalesce(nextruntime,0) AS next_run,coalesce(faildelay,0) AS fail_delay FROM ' + table('task_scheduled') + ' ORDER BY coalesce(lastruntime,0),classname LIMIT 500',
       'adhoc_tasks': 'SELECT count(*) AS total,coalesce(sum(CASE WHEN faildelay>0 THEN 1 ELSE 0 END),0) AS failed,coalesce(min(nextruntime),0) AS oldest_next FROM ' + table('task_adhoc'),
     }
 
@@ -417,8 +417,10 @@ def filesystems():
     return {'items':items}
 
 def clock():
-    raw=text(['timedatectl','show','--property=Timezone,NTP,NTPSynchronized'])
+    raw=text(['timedatectl','show','--property=Timezone','--property=NTP','--property=NTPSynchronized'])
     values=dict(line.split('=',1) for line in raw.splitlines() if '=' in line)
+    if not values.get('Timezone'):
+        raise Refusal('invalid_data')
     return {'timezone':values.get('Timezone','unknown'),
       'ntp_enabled':{'yes':True,'no':False}.get(values.get('NTP')),
       'ntp_synchronized':{'yes':True,'no':False}.get(values.get('NTPSynchronized'))}

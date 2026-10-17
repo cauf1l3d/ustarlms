@@ -601,3 +601,8 @@ updated;older dated checkpoints retained as history.
 Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; native clean-host result awaited. Moodle5.2/PostgreSQL17 explicitly deferred, previous5.3 rehearsal retained as history. Next INF-06 is same-host Linear-inspired panel with auth, metrics/alerts, labs/SFTP, manual operations and Telegram latest encrypted backup/control.
 
 Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.
+
+
+## 17Oct — read-only owner facts, repository context only
+
+[Two actual archives](server_facts_received_20261017.json) validated/imported; [reconciliation](../reviews/20261017/runtime_reconciliation.md) separates28 collected blocks from task/clock/query-stat/SMART gaps. Fresh plugin/theme526 match e1d57f5b. DB/code privilege risks confirmed, scheduled backup/cron receipts refreshed without closing DR or task-failure acceptance. This entry is not a new application/host deployment.

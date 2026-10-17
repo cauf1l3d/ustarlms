@@ -1,0 +1,55 @@
+{
+  "kind": "validated_owner_supplied_server_facts",
+  "received_at_utc": "2026-10-17T01:16:25Z",
+  "source_host": "server1_owner_claim_not_independently_authenticated",
+  "archives": [
+    {
+      "uploaded_name": "ustar-server-facts-20261017T010021Z-506c32.zip",
+      "uploaded_bytes": 9643,
+      "uploaded_sha256": "cb20de26831fb9964862837eff4e211e3e5b452ad68c2fa00fd16f2f4a880118",
+      "snapshot": "context/runtime/server-facts/20261017T010021Z-d5152f1e",
+      "collected_utc": "2026-10-17T01:00:21Z",
+      "script_sha256": "8aeb57738e05e9b84682335feaf0fb7f7b6d004a61999a43e43d28725033e98f",
+      "counts": {
+        "error": 13,
+        "not_collected": 1,
+        "ok": 17,
+        "partial": 0
+      },
+      "zip_and_nested_tar_payload_equal": true,
+      "all_payload_checksums_valid": true,
+      "errors_preserved": true,
+      "collector_commit": "cee34b135d685bfbd638558c20870de53d61504d",
+      "collector_matches_published_source": true
+    },
+    {
+      "uploaded_name": "ustar-server-facts-20261017T011226Z-18d128.zip",
+      "uploaded_bytes": 67565,
+      "uploaded_sha256": "5e692415351e1db715d65c0c0c15a1f20af90c7aa2f67746bb07783c4e5d4204",
+      "snapshot": "context/runtime/server-facts/20261017T011227Z-6b7c0628",
+      "collected_utc": "2026-10-17T01:12:27Z",
+      "script_sha256": "80d9f874330d49c66a3a34baf25c4f5ea41544b8f0c7c3c3f82324b920edc837",
+      "counts": {
+        "error": 2,
+        "not_collected": 1,
+        "ok": 28,
+        "partial": 0
+      },
+      "zip_and_nested_tar_payload_equal": true,
+      "all_payload_checksums_valid": true,
+      "errors_preserved": true,
+      "collector_commit": "1bdabba3d768bb47b53f90a954387321f3e07fbb",
+      "collector_matches_published_source": true
+    }
+  ],
+  "source_match": {
+    "snapshot": "context/runtime/server-facts/20261017T011227Z-6b7c0628",
+    "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
+    "matching_files": 526,
+    "changed": 0,
+    "missing": 0,
+    "extra": 0,
+    "scope": "plugin_theme_only"
+  },
+  "functional_acceptance": false
+}

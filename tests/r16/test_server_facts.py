@@ -191,6 +191,15 @@ class NativeDockerTemplate(unittest.TestCase):
                 self.assertNotEqual(self.render(format,self.record()).returncode,0)
 
 class StaticDiscovery(unittest.TestCase):
+    def test_empty_clock_properties_do_not_claim_a_measurement(self):
+        with patch.object(facts,'text',return_value=''),self.assertRaisesRegex(facts.Refusal,'invalid_data'):
+            facts.clock()
+
+    def test_clock_keeps_disabled_ntp_distinct_from_unknown(self):
+        with patch.object(facts,'text',return_value='Timezone=Etc/UTC\nNTP=no\nNTPSynchronized=yes\n'):
+            value=facts.clock()
+        self.assertEqual(value,{'timezone':'Etc/UTC','ntp_enabled':False,'ntp_synchronized':True})
+
     def test_cron_worker_success_does_not_hide_task_failure(self):
         receipt={'finished_utc':'2026-10-13T18:30:00+00:00','cron_exit_code':0,
           'after':{'new_failures':[{'private':'not exported'}],'scheduled_failed':2,

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "repository_base": "1bdabba3d768bb47b53f90a954387321f3e07fbb",
+  "archive_validation": {
+    "archives": 2,
+    "zip_crc_and_member_bounds": "success",
+    "outer_and_inner_payload_bytes_equal": true,
+    "closed_schema_and_all_checksums": "success",
+    "errors_preserved": true,
+    "collector_source_hashes_match_published_commits": true,
+    "real_import_gates": "success"
+  },
+  "latest_snapshot": {
+    "path": "context/runtime/server-facts/20261017T011227Z-6b7c0628",
+    "counts": {
+      "ok": 28,
+      "error": 2,
+      "not_collected": 1
+    },
+    "plugin_theme_matching": 526,
+    "changed": 0,
+    "missing": 0,
+    "extra": 0
+  },
+  "scheduled_sql_check": {
+    "package": "@electric-sql/pglite@0.5.10",
+    "version": "PostgreSQL 18.6 (PGlite 0.5.10) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.5 (1db513782be24469589d7cb8a1f1834e9a33f271), 32-bit",
+    "results": [
+      {
+        "type": "smallint",
+        "old_cast_result": "42846",
+        "new_projection": [
+          {
+            "classname": "core_task_one",
+            "disabled": false,
+            "last_run": 1,
+            "next_run": 2,
+            "fail_delay": 0
+          },
+          {
+            "classname": "core_task_two",
+            "disabled": true,
+            "last_run": 3,
+            "next_run": 4,
+            "fail_delay": 9
+          }
+        ]
+      },
+      {
+        "type": "integer",
+        "old_cast_result": "success",
+        "new_projection": [
+          {
+            "classname": "core_task_one",
+            "disabled": false,
+            "last_run": 1,
+            "next_run": 2,
+            "fail_delay": 0
+          },
+          {
+            "classname": "core_task_two",
+            "disabled": true,
+            "last_run": 3,
+            "next_run": 4,
+            "fail_delay": 9
+          }
+        ]
+      }
+    ],
+    "scope": "isolated PostgreSQL WASM engine, not server1 or the production PG16 instance"
+  },
+  "clock_fix": {
+    "empty_output_rejected": true,
+    "repeated_property_options": true,
+    "new_server1_result": "not_collected"
+  },
+  "r16_suite": {
+    "tests": 580,
+    "passed": 561,
+    "skipped": 19,
+    "status": "success",
+    "native_go_template_tests": 3,
+    "clock_regressions": 2
+  },
+  "functional_acceptance": false,
+  "production_mutations_performed": false,
+  "source_or_schema_application_changes": false
+}

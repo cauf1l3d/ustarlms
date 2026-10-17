@@ -1,6 +1,6 @@
 # Свежие наблюдения сервера
 
-Архив снимка с server1 пока **не получен**. Первый owner-run сохранил partial report; [terminal receipt](../server_facts_terminal_20261017.json) содержит только17 ok/13 error и исключённый SMART. [Исправления Docker/DPKG](../../reviews/20261017/collector_compatibility.md) подготовлены для повторного сбора. Здесь не должно быть результатов локальной песочницы, выданных за production.
+Оба owner archives17Oct **получены и импортированы**. [Provenance](../server_facts_received_20261017.json), [сверка](../../reviews/20261017/runtime_reconciliation.md). Первый снимок01:00:21Z содержит17ok/13error, второй01:12:27Z —28ok/2error; SMART не запрашивался. Latest manifest526 совпал с baseline. Scheduled task list/query stats недоступны; clock values неизвестны. Здесь нет результатов локальной песочницы, выданных за production.
 
 [Сбор и импорт](../../../scripts/infra/README_server_facts.md), [разбор внешнего предложения](../../reviews/20261017/README.md). Последний принятый указатель — `STATE.yaml → server_facts.snapshot`; [current.yaml](../../current.yaml) генерируется из STATE.
 

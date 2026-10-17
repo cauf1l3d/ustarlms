@@ -12,3 +12,4 @@ entrypoint: START_HERE.md
 generated_current_view: context/current.yaml
 coverage: context/coverage.yaml
 latest_review: context/reviews/20261017/README.md
+latest_runtime_reconciliation: context/reviews/20261017/runtime_reconciliation.md

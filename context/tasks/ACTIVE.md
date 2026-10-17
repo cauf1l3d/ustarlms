@@ -2,7 +2,7 @@
 
 ## Сейчас — актуализация контекста17Oct
 
-Владелец попросил сначала проверить fable и все семь связанных приложений, исправить скрипты/пути, получить свежие server facts и обновить контекст; после этого он выполнит повторный аудит. [Вердикт](../reviews/20261017/README.md), [runbook](../../scripts/infra/README_server_facts.md), [покрытие](../coverage.yaml). Первый owner-run создал partial report17ok/13error; [terminal receipt](../runtime/server_facts_terminal_20261017.json) получен, archive ещё ожидается. [Docker/DPKG compatibility fixes](../reviews/20261017/collector_compatibility.md) проверены локально; agent SSH не использовался. INF-01/P0/restore не закрываются по готовности инструмента.
+Оба owner archives получены04:16MSK, проверены и импортированы без редактирования:17/13 и28/2 ok/error, SMART excluded. [Свежая сверка](../reviews/20261017/runtime_reconciliation.md), [provenance](../runtime/server_facts_received_20261017.json), [покрытие](../coverage.yaml).526 файлов совпали; роль DB superuser и writable plugin/config подтверждены. Query statistics отсутствуют, scheduled task rows и clock values неизвестны; getters исправлены, повторный live probe не выполнялся. Контекст готов к повторному аудиту владельца. INF-01/P0/restore целиком не закрываются; agent SSH не использовался.
 
 ## После повторного review — INF-06
 

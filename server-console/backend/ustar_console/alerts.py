@@ -82,7 +82,8 @@ class Queue:
                     if old:
                         db.execute('UPDATE rules SET since=? WHERE key=?',(now,key))
                     continue
-                since = old['since'] if old and old['state']==status and 0<=now-old['last']<=45 else now
+                gap=90 if data.get('scope')=='independent_observer' else 45
+                since = old['since'] if old and old['state']==status and 0<=now-old['last']<=gap else now
                 emitted = old['emitted'] if old else 'ok'
                 sequence = old['sequence'] if old else 0
                 sent=old['sent'] if old else 0
@@ -104,7 +105,7 @@ class Queue:
             # Retain incidents while pending; bound completed-message history.
             db.execute("DELETE FROM outbox WHERE status='sent' AND id NOT IN (SELECT id FROM outbox ORDER BY id DESC LIMIT 2000)")
 
-    def deliver(self, api, limit=10):
+    def deliver(self, api, limit=2):
         now = self.clock()
         with self.connect() as db:
             rows = db.execute("SELECT * FROM outbox WHERE status='pending' AND next<=? ORDER BY id LIMIT ?",(now,limit)).fetchall()

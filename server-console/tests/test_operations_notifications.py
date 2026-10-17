@@ -297,3 +297,12 @@ def test_restart_rechecks_target_while_retaining_its_own_backup_lock(tmp_path,mo
     other=os.open(path,os.O_RDWR)
     try: fcntl.flock(other,fcntl.LOCK_EX|fcntl.LOCK_NB)
     finally: os.close(other)
+
+
+def test_delivery_batch_is_bounded_to_keep_rule_sampling_alive(tmp_path):
+    queue=Queue(tmp_path/'queue.sqlite3',[123],clock=lambda:1000)
+    with queue.connect() as db:
+        for i in range(5): queue.enqueue(db,'fixture:'+str(i),'fixture')
+    sent=[]
+    queue.deliver(lambda *args:sent.append(args))
+    assert len(sent)==2 and queue.status()['pending']==3

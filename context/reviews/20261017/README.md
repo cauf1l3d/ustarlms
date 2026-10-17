@@ -1,5 +1,7 @@
 # Проверка приложенного review и сбора контекста — 17 октября 2026
 
+**Обновление14:24MSK:** [внешний сетевой receipt](../../runtime/external_network_result_20261017.json) и [сверка](gaps_reconciliation.md): owner curl подтвердил IPv4 выхода сети; домашний Windows TCP2019 к тому же адресу не установился. Один IPv4 источник/маршрут, отдельно ICMP timeout; не глобальная firewall/NAT/API приёмка. Координаты скрыты, исходные archive observations неизменны.
+
 **Обновление14:03MSK:** [gaps reconciliation](gaps_reconciliation.md), [validation](gaps_validation.json), [provenance](../../runtime/server_gaps_received_20261017.json):6/6 probes, ACL44175 объектов, текущий SSH-контекст, Caddy PID862 на2019, metadata/hashes23 extras и selected du. Getfacl теперь установлен владельцем; прежний ACL gap закрыт в области экспорта, но writable parents/code и negative/native acceptance остаются открыты. Упоминания отсутствия getfacl ниже относятся к предыдущим срезам.
 
 **Обновление13:05MSK:** получены и проверены дополнительные core/extra ZIP. [Новая сверка](core_extra_reconciliation.md), [validation](core_extra_validation.json), [provenance](../../runtime/core_extra_received_20261017.json): core24742 matches/23 extra names, ntpsec peer/offset, полные экспортированные SMART attributes/history и18 source-based component-skip explanations. ACL не собран из-за отсутствующего getfacl. Новые данные уточняют перечисленные ниже прежние gaps; исходные receipts/validation сохраняются по своим датам.

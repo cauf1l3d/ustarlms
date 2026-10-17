@@ -621,3 +621,8 @@ Consolidation brings accepted PR98/99/100/102 sources and all dated receipts int
 ## 17Oct14:03MSK — ACL/SSH/Caddy and extra hashes; no application deployment
 
 [Owner gaps archive](server_gaps_received_20261017.json) verified:6/6 probes/24 checksums, ACL44175 objects, seven parents, selected SSH context, comm caddy/PID862 on2019,23 extra metadata/hashes and four selected du sizes. UID33 owner-writable4726 objects/writable outer root and parent retain INF-03; external2019/API and full native acceptance unknown. Owner installed acl2.3.2-1build1.1 per separate terminal receipt, no package upgrades/removals; collector read-only. Previous source/core/clock/SMART/backup receipts untouched. [Review](../reviews/20261017/gaps_reconciliation.md), [validation](../reviews/20261017/gaps_validation.json); local suite successful with explicit environment/Go skips, CI reported in PR. No agent SSH, application/schema release, restore or Telegram delivery.
+
+
+## 17Oct14:24MSK — one home IPv4 TCP2019 result; no deployment
+
+[Owner terminal receipt](external_network_result_20261017.json): server egress IPv4 equals external home test target, TCP2019 not established; ping timeout separate. Single source/path, unknown exact probe time; NAT attribution/other sources/IPv6/API and local listener hardening remain unverified. Addresses redacted, no archive checksum claim. Prior listener/source/backup/restore reports preserved. Context updated for repeat owner audit; no agent host changes or application deployment.

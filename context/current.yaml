@@ -186,8 +186,10 @@ production:
     - loopback
     - all
     executable_and_endpoint_identity_not_verified: true
-    external_reachability: awaiting_owner_external_TCP_test
+    external_reachability: owner_home_IPv4_TCP_connection_failed;other_paths_and_NAT_mapping_unverified
     address_family_not_separately_exported: true
+    external_test_receipt: context/runtime/external_network_result_20261017.json
+    listener_remeasured_by_external_test: false
   storage_followup:
     source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
     method: du_allocated_bytes_selected_paths_not_atomic
@@ -206,12 +208,22 @@ production:
     upgraded_packages: 0
     removed_packages: 0
     needrestart_deferred_report_not_restart_instruction: true
+  network_followup:
+    source: context/runtime/external_network_result_20261017.json
+    scope: redacted_owner_terminal_output_not_checksum_bound_archive
+    received_at_utc: '2026-10-17T11:24:19Z'
+    probe_observed_at_utc: null
+    server_egress_IPv4_matches_home_TCP_target: true
+    home_TCP2019_succeeded: false
+    inbound_NAT_mapping_verified: false
+    Academy_access: owner_reported_local_HTTP;TLS_cookie_acceptance_not_tested
+    other_sources_and_IPv6: not_tested
 current_work:
-  activity: 'Owner gaps archive17Oct10:59:16Z validated: ACL44175 objects, current
-    SSH context, Caddy PID862 on2019,23 extra file metadata/hashes and selected du.
-    Extended ACL entries absent; UID33 owner-writable4726 objects and writable parents
-    remain INF03 risk. Core24742/plugin526/NTP/SMART prior observations preserved.
-    External TCP2019, SQL stats, runtime/native acceptance and restore remain open
+  activity: 'Owner gaps17Oct validated: ACL44175 objects/current SSH/Caddy2019/extra23
+    hashes/selected du. Later owner terminal receipt confirms the server IPv4 egress
+    matches the home TCP2019 target; connection failed from that one home network.
+    Exact addresses not exported. UID33 write/parent replacement risk, other network
+    paths/API identity, SQL stats, runtime/native acceptance and restore remain open
     for owner repeat audit before repo/console/Telegram.'
   next_task: INF-06
   ready_tasks:
@@ -274,8 +286,9 @@ server_facts:
   - pg_stat_statements available but not installed/preloaded; no query statistics
   - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
     and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; full SSH admission matrix/live
-    overrides and external TCP/API reachability not verified
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
+    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
+    overrides remain unverified
   - 18 component skips explained by DB/source; effective runtime overrides/cache and
     native full-cycle acceptance not checked
   - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
@@ -295,6 +308,7 @@ server_facts:
       review: context/reviews/20261017/gaps_reconciliation.md
       derivative: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
       validation: context/reviews/20261017/gaps_validation.json
+    external_network_receipt: context/runtime/external_network_result_20261017.json
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'

@@ -249,9 +249,10 @@ tasks:
   - Required service checks and rollback documented; no blind service removal
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   current_summary: '17Oct current owner aduk SSH tuple: password/pubkey yes, kbdinteractive no, TCP/agent/X11 forwarding yes,
-    UseDNS no, root without-password. Other contexts/live daemon overrides/login acceptance not checked.2019 sockets loopback
-    and all-address owned by comm caddy PID862; family/API identity/auth and external reachability remain unverified. UFW/global/perimeter
-    scopes remain distinct.'
+    UseDNS no, root without-password. Other contexts/live daemon overrides/login acceptance not checked.2019 loopback/all-address
+    sockets owned by comm caddy PID862. Later owner home IPv4 TCP2019 test to the server egress address failed; this covers
+    one source/path only. NAT mapping, other sources/IPv6, executable/API identity/auth remain unverified; UFW/global/perimeter
+    scopes distinct. No listener hardening or port opening performed.'
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
@@ -260,6 +261,7 @@ tasks:
   - context/reviews/20261017/gaps_reconciliation.md
   - context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
   - context/runtime/server_gaps_received_20261017.json
+  - context/runtime/external_network_result_20261017.json
 - id: INF-11
   title: H5P/registration exceptions, SMTP и полный cron cycle
   status: planned

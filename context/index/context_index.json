@@ -492,14 +492,14 @@
     {
       "path": "context/coverage.yaml",
       "domain": "root",
-      "size": 5076,
-      "sha256": "e84ca6d7eb86482f70b4c925fe2ca18b783a77b609649ab6a9d537ac373f5239"
+      "size": 5574,
+      "sha256": "56adbf2e67d8d121373f0168bdf63d1693b6cf449fa07fb7e6d3e713f2ffdfda"
     },
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 13169,
-      "sha256": "870fe2008fdda7bfb7d8eb3e5ef48b5f8951a70596a42825afa247cca0094581"
+      "size": 13965,
+      "sha256": "31a96b7006bb4d64bff92927750b258e2842beefe358c3bc7de745fd619567b5"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -744,8 +744,8 @@
     {
       "path": "context/reviews/20261017/README.md",
       "domain": "reviews",
-      "size": 18474,
-      "sha256": "35a8682d867b08396651fc4f58a2d9e67e8667eb5991ba8afe5b05fce4f5e8d1"
+      "size": 19027,
+      "sha256": "3d192c818e1668fe62c6e8d096866afffb84b4d6a8e3a75518a9ad3624cc3166"
     },
     {
       "path": "context/reviews/20261017/collector_compatibility.md",
@@ -774,8 +774,8 @@
     {
       "path": "context/reviews/20261017/gaps_reconciliation.md",
       "domain": "reviews",
-      "size": 10846,
-      "sha256": "45ee6abaa3789f62c36163c1a55714a875eae32536f5cb3fdce3cb194713e882"
+      "size": 12169,
+      "sha256": "4ba2963abcf94ad8249ef9fe7f4675012cfe8eb9c16d7388480e1ee78cf92349"
     },
     {
       "path": "context/reviews/20261017/gaps_validation.json",
@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 29667,
-      "sha256": "897b0182d9f7e830cadd8b83731e36f4f76768652a1fdad529e910e82229800f"
+      "size": 29884,
+      "sha256": "a5ee2dd523c3a21064d54b130a0a49f6168655a2a90bb754cb7bbe5601dd13a1"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 148842,
-      "sha256": "9e02b57b1ffc6cf320973a9a522ff7d450567a0bde0b1cf526f584936e32b571"
+      "size": 149682,
+      "sha256": "57e1b5801e014ff99cf986cb7e4b3dc23c75cbe8b9bdc21377a4e52d506126b0"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,8 +924,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 14423,
-      "sha256": "64e517e739b6ad1537913496d8fc32afd79991a69b8d0577921ffee9feb31047"
+      "size": 15215,
+      "sha256": "ee11220442d1276a33bbd4d3cfd5807b27bc665ef6f301c886d3838f35020630"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1014,14 +1014,14 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 3203,
-      "sha256": "e2a5d38e1034374006c256dd96b3814417a830e2e9b5262f886f497994da6f03"
+      "size": 3793,
+      "sha256": "6bcab9e0f495251b975d3007fd307f0a19a90a21b26382fb611515ae43397cdd"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 60618,
-      "sha256": "71a71608f314d295e81cc80c0661ef651720a7977658ed635fe7222cc334c87c"
+      "size": 61177,
+      "sha256": "47df161cbe9cfc77f78da4143638a52cb0cf6faf71c0d8ee8e944d3c83378fcf"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -1130,6 +1130,12 @@
       "domain": "runtime",
       "size": 2961,
       "sha256": "9f168485df1878a025a20ba7c5f84247d46b59a68450bfdd83e3d51261d4f87f"
+    },
+    {
+      "path": "context/runtime/external_network_result_20261017.json",
+      "domain": "runtime",
+      "size": 2412,
+      "sha256": "350ebaa3d72a6ef681c1b382e085ad2573991a6b13cad6e9877ada74ace7935b"
     },
     {
       "path": "context/runtime/git_state.yaml",
@@ -2070,8 +2076,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 4320,
-      "sha256": "2928d0454f7406b2c6cc0ab2b0a4d88dd55f4020e941550afe442536b9ee5453"
+      "size": 4606,
+      "sha256": "4c99c5c56e75f469829e6b55092b4dd54ff34e2172326aa4f9a9769469e5ae7b"
     },
     {
       "path": "context/tasks/backlog.yaml",

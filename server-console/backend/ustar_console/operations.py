@@ -27,6 +27,7 @@ from .collector import command, mount, backup, BACKUP, HDD
 from .data import safe_json, open_regular, stamp
 
 SOCKET=Path('/run/ustar-console-ops/broker.sock')
+BACKUP_LOCK=Path('/run/ustar-backup/lock')
 STATE=Path('/var/lib/ustar-console-ops/jobs.sqlite3')
 PRODUCER=Path('/usr/local/sbin/USTAR_HDD_BACKUP_20261006.py')
 PRODUCER_SHA='75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75'
@@ -64,7 +65,7 @@ def container_identity():
     return dict(id=identifier,running=running,started=started)
 
 
-def current(action):
+def current(action, *, lock_held=False):
     if action not in ACTIONS:
         raise Refused('unsupported_action')
     result={'action':action}
@@ -74,11 +75,12 @@ def current(action):
         result['container']=container_identity()
         if not result['container']['running']:
             raise Refused('academy_not_running')
-        fd,info=open_regular(Path('/run/ustar-backup/lock'),owner=0)
-        try:
-            fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
-        finally:
-            os.close(fd)
+        if not lock_held:
+            fd,info=open_regular(BACKUP_LOCK,owner=0)
+            try:
+                fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            finally:
+                os.close(fd)
     if action=='manual_backup':
         pinned(PRODUCER,PRODUCER_SHA)
         result['hdd_uuid']=mount()['uuid']
@@ -260,9 +262,9 @@ def run_job(identifier):
             argv=['/usr/bin/python3','-B',str(PRODUCER),'--backup','--acknowledge-outage']
         elif action=='academy_restart':
             # Existing backup EX lock excludes cron/backup while restarting only Moodle.
-            lock=os.open('/run/ustar-backup/lock',os.O_RDWR|os.O_NOFOLLOW)
+            lock=os.open(BACKUP_LOCK,os.O_RDWR|os.O_NOFOLLOW)
             fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-            value=current(action)
+            value=current(action,lock_held=True)
             if revision(value)!=row['revision']:
                 raise Refused('target_changed')
             argv=['/usr/bin/docker','restart','--time','30',value['container']['id']]

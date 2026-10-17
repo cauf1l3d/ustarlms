@@ -267,3 +267,33 @@ def test_outgoing_incidents_survive_failed_command_polling_and_full_queue(tmp_pa
     result=iteration(queue,api,[123],[123],state('critical'),'https://console.test')
     assert len(sent)==1 and queue.status()['pending']==0
     assert result['polling']=='no_data' and result['evaluation']=='queue_capacity'
+
+
+def test_restart_rechecks_target_while_retaining_its_own_backup_lock(tmp_path,monkeypatch):
+    import fcntl
+    path=tmp_path/'backup.lock';path.write_text('')
+    monkeypatch.setattr(ops,'BACKUP_LOCK',path)
+    monkeypatch.setattr(ops,'BACKUP',tmp_path)
+    identifier='a'*64
+    monkeypatch.setattr(ops,'container_identity',lambda:dict(id=identifier,running=True,started='fixed'))
+    monkeypatch.setattr(ops,'open_regular',lambda p,owner:(os.open(p,os.O_RDONLY|os.O_NOFOLLOW),p.stat()))
+    jobs=ops.Operations(tmp_path/'jobs.sqlite3')
+    plan=jobs.plan('owner','academy_restart')
+    job=jobs.confirm('owner',plan['id'],'b'*32,'academy_restart')
+    monkeypatch.setattr(ops,'Operations',lambda:jobs)
+    monkeypatch.setattr(ops.os,'geteuid',lambda:0)
+    calls=[]
+    def process(argv,**kwargs):
+        calls.append(argv)
+        other=os.open(path,os.O_RDWR)
+        try:
+            with pytest.raises(BlockingIOError): fcntl.flock(other,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        finally: os.close(other)
+        return Mock(wait=Mock(return_value=0))
+    monkeypatch.setattr(ops.subprocess,'Popen',process)
+    ops.run_job(job['id'])
+    assert jobs.status()['jobs'][0]['state']=='complete'
+    assert calls==[['/usr/bin/docker','restart','--time','30',identifier]]
+    other=os.open(path,os.O_RDWR)
+    try: fcntl.flock(other,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    finally: os.close(other)

@@ -186,19 +186,24 @@ def configuration(outbound):
 def unit_text():
     return ('[Unit]\nDescription=USTAR Telegram-only loopback egress\nAfter=network-online.target\n'
             'Wants=network-online.target\n\n[Service]\nType=simple\n'+
-            '\n'.join(PROPERTIES)+'\nLoadCredential=xray:'+str(CONFIG)+'\nExecStart='+str(BINARY)+
-            ' run -config %d/xray\nRestart=on-failure\nRestartSec=15\n\n[Install]\nWantedBy=multi-user.target\n')
+            '\n'.join(PROPERTIES)+'\nLoadCredential=xray:'+str(CONFIG)+'\nExecStart='+
+            ' '.join(xray_command('%d/xray'))+'\nRestart=on-failure\nRestartSec=15\n\n[Install]\nWantedBy=multi-user.target\n')
 
 
 def run(argv, check=True):
     return subprocess.run(argv, check=check, timeout=35, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+def xray_command(config, test=False):
+    # LoadCredential deliberately uses an extensionless name; Xray needs explicit JSON format.
+    return [str(BINARY), 'run', '-format', 'json', '-config', str(config)]+(['-test'] if test else [])
+
+
 def transient_argv(source, name):
     argv = ['systemd-run', '--quiet', '--collect', '--expand-environment=yes', '--unit='+name]
     for prop in PROPERTIES+['LoadCredential=xray:'+str(source), 'RuntimeMaxSec=25s']:
         argv.append('--property='+prop)
-    return argv+[str(BINARY), 'run', '-config', '${CREDENTIALS_DIRECTORY}/xray']
+    return argv+xray_command('${CREDENTIALS_DIRECTORY}/xray')
 
 
 def trusted_source():
@@ -256,7 +261,7 @@ def probe():
 
 
 def ready():
-    for _ in range(20):
+    for _ in range(50):
         with socket.socket() as sock:
             sock.settimeout(.1)
             if sock.connect_ex(('127.0.0.1', 18081)) == 0:

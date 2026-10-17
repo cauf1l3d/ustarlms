@@ -22,10 +22,14 @@ import telegram_egress as egress
 print('XRAY_NATIVE_OPT_METADATA='+json.dumps(dict(uid=Path('/opt').stat().st_uid,
     mode=oct(Path('/opt').stat().st_mode & 0o777))),flush=True)
 egress.BINARY=Path('/var/lib/ustar-egress-native')/egress.VERSION/'xray'
+# All parameters below are synthetic. Journal output is enabled only in this
+# disposable fixture to diagnose sandbox startup; production keeps logs disabled.
+egress.PROPERTIES=[p for p in egress.PROPERTIES if not p.startswith(('StandardOutput=','StandardError='))]
+egress.PROPERTIES+=['StandardOutput=journal','StandardError=journal']
 egress.binary()
 assert hashlib.sha256(egress.BINARY.read_bytes()).hexdigest()==egress.BINARY_SHA256
 with tempfile.TemporaryDirectory(prefix='ustar-egress-native-',dir='/run') as directory:
-    source=Path(directory)/'xray.json'
+    source=Path(directory)/'xray'
     outbound=dict(protocol='vless',settings=dict(vnext=[dict(address='1.1.1.1',port=443,
         users=[dict(id='5783a3e7-e373-51cd-8642-c83782b807c5',encryption='none')])]),
         streamSettings=dict(network='tcp',security='reality',realitySettings=dict(
@@ -37,7 +41,7 @@ with tempfile.TemporaryDirectory(prefix='ustar-egress-native-',dir='/run') as di
             if security=='tls':item['streamSettings']['tlsSettings']=dict(serverName='fixture.example',allowInsecure=False)
             source.write_text(json.dumps(egress.configuration(egress.candidate(item))))
             source.chmod(0o600)
-            subprocess.run([str(egress.BINARY),'run','-test','-config',str(source)],check=True,
+            subprocess.run(egress.xray_command(source,test=True),check=True,
                            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=10)
     print('XRAY_TCP_GRPC_REALITY_TLS_CONFIG=PASS',flush=True)
     with socket.socket() as trap:
@@ -45,7 +49,9 @@ with tempfile.TemporaryDirectory(prefix='ustar-egress-native-',dir='/run') as di
         # An operator-created loopback trap substitutes for a provider solely inside this fixture.
         item=egress.candidate(outbound)
         item['settings']['vnext'][0].update(address='127.0.0.1',port=trap.getsockname()[1])
-        source.write_text(json.dumps(egress.configuration(item)))
+        value=egress.configuration(item)
+        value['log'].update(error='',loglevel='warning')
+        source.write_text(json.dumps(value))
         name='ustar-egress-native-fixture'
         try:
             egress.run(egress.transient_argv(source,name))
@@ -76,5 +82,9 @@ with tempfile.TemporaryDirectory(prefix='ustar-egress-native-',dir='/run') as di
                 accepted,_=trap.accept();accepted.close()
             finally:connection.close()
             print('XRAY_LOADCREDENTIAL_DYNAMIC_UID_DEFAULT_DENY_TELEGRAM_ONLY=PASS',flush=True)
+        except BaseException:
+            diagnostics=subprocess.run(['journalctl','-u',name,'-n','35','--no-pager'],capture_output=True,text=True,timeout=10)
+            print(diagnostics.stdout,flush=True)
+            raise
         finally:
             egress.run(['systemctl','stop',name],check=False)

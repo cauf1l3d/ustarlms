@@ -1609,3 +1609,7 @@ Owner update/proxy install/ID/receiver ACK и домашний маршрут о
 CI83b2e829 выявил отличие fixture UID: unprivileged runner владеет tmp config directory, mock geteuid0 не менял её owner. Исправлен только test stat fixture; production root ownership guard сохранён.Запуск от nobody локально недоступен (container cannot set groups); unprivileged fixture повторяется в CI.
 
 CId398d131:175 backend/45 Chromium/PG16/console native update/sandbox PASS; Xray fixture отказал на ancestor ownership исходного /opt. Fixture binary перенесён в отдельное root-owned /var/lib дерево, default production path/ownership guard не меняются; следующий CI печатает только публичные uid/mode /opt для диагностики.
+
+CIf22c19e8 подтвердил /opt root0777 на hosted runner; trusted fixture binary hash и4 actual configs PASS. Sandbox listener не поднялся в2s. Добавлены только synthetic fixture journal diagnostics; production logs остаются отключены. Startup grace расширен до5s внутри прежнего RuntimeMaxSec25s; причина startup failure проверяется следующим CI.
+
+Причина startup воспроизведена локально: credential называется xray без extension, Xray без -format завершает23 (cannot get format), тогда как config.json проходит. Постоянная/transient команды теперь используют общий xray_command с явным -format json; реальные4 configs с extensionless credential после fix PASS. Native fixture проверяет именно этот путь.

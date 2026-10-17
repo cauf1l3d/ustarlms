@@ -3,10 +3,10 @@ updated_at: '2026-10-17'
 project: USTAR Academy
 stage: server_facts_imported_ready_for_owner_repeat_audit
 stage_label: Факты импортированы; контекст готов к повторному аудиту владельца
-current_activity: Three immutable 31-block owner snapshots plus two validated core/extra ZIPs17Oct; plugin/theme526 match
-  and eligible upstream core24742 match with23 extra names. Ntpsec peer/offset, full exported SMART attributes/history and18
-  component-skip explanations recorded; ACL tool absent, SQL stats/effective native acceptance gaps remain for owner repeat
-  audit before repo/console/Telegram continuation
+current_activity: 'Owner gaps archive17Oct10:59:16Z validated: ACL44175 objects, current SSH context, Caddy PID862 on2019,23
+  extra file metadata/hashes and selected du. Extended ACL entries absent; UID33 owner-writable4726 objects and writable parents
+  remain INF03 risk. Core24742/plugin526/NTP/SMART prior observations preserved. External TCP2019, SQL stats, runtime/native
+  acceptance and restore remain open for owner repeat audit before repo/console/Telegram.'
 next_task: INF-06
 ready_tasks:
 - INF-06
@@ -147,6 +147,63 @@ production:
     condition: effective_runtime_settings_match_later_observed_database
     effective_runtime_bootstrap_checked: false
     different_observation_times_not_atomic: true
+  latest_targeted_inventory:
+    observed_at_utc: '2026-10-17T10:59:16Z'
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    review: context/reviews/20261017/gaps_reconciliation.md
+    provenance: context/runtime/server_gaps_received_20261017.json
+    scope: ACL_SSH_listener_selected_storage_extra_metadata_only
+    independently_authenticated_host: false
+    does_not_remeasure_core_or_plugin_manifest: true
+  file_access_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    ACL_code_objects: 44175
+    named_default_mask_ACL_objects: 0
+    uid33_owner_writable_objects: 4726
+    selected_parent_records: 7
+    parent_replacement_risk: POSIX_writable_outer_root_and_parent;other_controls_and_negative_operations_not_tested
+    extra_files_metadata_and_sha256: 23
+    hardening_completed: false
+  SSH_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    context: owner_aduk_current_connection_tuple;addresses_not_exported
+    UseDNS: 'no'
+    password_authentication: 'yes'
+    kbdinteractive_authentication: 'no'
+    pubkey_authentication: 'yes'
+    allow_tcp_forwarding: 'yes'
+    allow_agent_forwarding: 'yes'
+    x11_forwarding: 'yes'
+    all_contexts_and_actual_login_acceptance: false
+  management_listener_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    port: 2019
+    process_comm: caddy
+    pid: 862
+    listener_scopes:
+    - loopback
+    - all
+    executable_and_endpoint_identity_not_verified: true
+    external_reachability: awaiting_owner_external_TCP_test
+    address_family_not_separately_exported: true
+  storage_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    method: du_allocated_bytes_selected_paths_not_atomic
+    allocated_bytes:
+      /opt/ustar/data/moodle/public: 500744192
+      /opt/ustar/data/moodle/moodledata: 758067200
+      /opt/ustar/data/postgres: 247816192
+      /var/lib/docker: 29286400
+    full_SSD_and_Docker_containerd_occupancy: not_measured
+  package_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    scope: owner_terminal_transcript_separate_from_archive_checksums
+    package: acl
+    version: 2.3.2-1build1.1
+    new_packages: 1
+    upgraded_packages: 0
+    removed_packages: 0
+    needrestart_deferred_report_not_restart_instruction: true
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261016_RU.md
@@ -170,6 +227,7 @@ repository:
     main_observed: d9655074db9a06281fe16f378dbdbe1d279104a0
     document: context/reviews/20261017/runtime_reconciliation.md
     scope: repository_plus_validated_owner_executed_snapshot_not_independent_live_host_acceptance
+    targeted_document: context/reviews/20261017/gaps_reconciliation.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -242,10 +300,13 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL unavailable because getfacl not installed; effective file/parent/replace and SSH Match/TLS remain separate
-  - 18 component skips explained by later DB flags and exact upstream source; effective runtime overrides/cache not checked
-  - SSD vendor wear/TBW units, long-term NTP/SMART trends and hardware redundancy not confirmed
-  - Core extras access/origin and excluded config/vendor/plugins require separate review; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; full SSH admission matrix/live overrides and external TCP/API
+    reachability not verified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain separate;
+    native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -253,3 +314,9 @@ server_facts:
     extra_derivative: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
     validation: context/reviews/20261017/core_extra_validation.json
     does_not_replace_31_block_snapshot: true
+    latest_review: context/reviews/20261017/gaps_reconciliation.md
+    gaps:
+      provenance: context/runtime/server_gaps_received_20261017.json
+      review: context/reviews/20261017/gaps_reconciliation.md
+      derivative: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+      validation: context/reviews/20261017/gaps_validation.json

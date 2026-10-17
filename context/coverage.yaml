@@ -42,13 +42,25 @@ covered:
   evidence: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
   boundary: 18 rows explained by later DB flags and30 exact-upstream source files; effective runtime config/cache not executed;
     observations not atomic
+- area: ACL_metadata_and_parents
+  evidence: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+  boundary: 44175 exported code objects/seven parents; no named/default/mask entries, UID33 write and POSIX parent risk remain;
+    not negative write/replace/LSM acceptance
+- area: selected_SSH_context_and_port2019_process
+  evidence: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+  boundary: Owner current SSH tuple settings/UseDNSno; listener comm caddy PID862. Other contexts, executable/API identity,
+    address family and external reachability not verified
+- area: extra23_metadata_hashes_and_selected_directory_sizes
+  evidence: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+  boundary: All23 previous extra names hashed with metadata; four allocated-directory sizes. No contents/HTTP access/provenance
+    or complete root/containerd occupancy
 open:
 - id: SERVER-FACTS-RESIDUAL
-  next: Query statistics absent; getfacl missing; effective runtime component overrides/cache, per-object storage, SSD wear
-    units and NTP/SMART trends remain open
+  next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units
+    and NTP/SMART trends remain open; ACL/current SSH/Caddy process metadata now received
 - id: SOURCE-CORE
-  next: Eligible upstream core24742 verified; review access/origin/content hashes of23 extra names and excluded config/vendor/third-party
-    plugins; whole deployment provenance is broader
+  next: Eligible upstream core24742 verified and23 extras metadata/SHA256 received; review contents/origin/access and excluded
+    config/vendor/third-party plugins; whole deployment provenance is broader
 - id: AUTHORIZATION
   next: Endpoint/command/file/view-as negative paths, effective actor/scope and runtime grants
 - id: API-CONTRACTS
@@ -59,7 +71,8 @@ open:
   next: Extend remaining organization/adaptation/economy/feed/messaging/learning scenarios and canonical evidence writers
     from source
 - id: HOST-ACCEPTANCE
-  next: HTTPS/DNS/client login/SCORM/mail, effective SSH Match, ACL replacement/negative checks and resource baseline
+  next: HTTPS/DNS/client login/SCORM/mail, broader SSH admission/live config, external2019/API checks, actor/mount/LSM/negative
+    replacement tests and resource baseline
 - id: RECOVERY
   next: Sysadmin clean-host restore result, reboot/roles/files/progress, measured RTO and key/offsite custody
 - id: CONSOLE-TELEGRAM

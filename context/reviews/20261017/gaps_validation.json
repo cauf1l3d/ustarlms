@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "repository_base": "3bc73b5ec9c732a87859b7da607262e8e41ee2f5",
+  "provenance": "context/runtime/server_gaps_received_20261017.json",
+  "archive_checks": {
+    "safe_bounded_members_CRC": "success",
+    "exact_24_payload_checksums": "success",
+    "all_probe_metadata_and_exit_statuses": "success",
+    "strict_output_fields_and_ACL_entry_parsing": "success",
+    "ACL_counts_unique_paths_and_extra_metadata_permissions_crosscheck": "success",
+    "extra_path_set_matches_previous23": "success"
+  },
+  "facts": {
+    "acl_code_objects": 44175,
+    "named_default_mask_ACL_objects": 0,
+    "uid33_owner_writable_objects": 4726,
+    "parent_records": 7,
+    "hashed_extra_files": 23,
+    "SSH_context_observed": true,
+    "UseDNS": "no",
+    "port2019_owner_comm": "caddy",
+    "external_reachability": "not_collected"
+  },
+  "context_gates": {
+    "status": "success",
+    "current_index_and_code_map_regeneration": "success",
+    "source_files": 526,
+    "schema_tables": 93,
+    "harness_tasks": 33,
+    "all_changed_and_new_Markdown_local_links": "success",
+    "secret_boundaries": "success",
+    "whitespace": "success",
+    "earlier_dated_payloads_byte_unchanged": 24
+  },
+  "r16_suite": {
+    "status": "success",
+    "discovered_cases": 580,
+    "tests_run": 577,
+    "seconds": 5.819,
+    "unittest_skip_entries": 20,
+    "local_Go_class": "three_cases_not_run_toolchain_absent",
+    "existing_individual_environment_skips": 19,
+    "real_MCP_stdio": "success",
+    "mcp": "1.30.0",
+    "PyYAML": "6.0.3",
+    "log_sha256": "3ca6b55d5467c991e4b1e21d1171c1da32d5361711b3e582bbd3bbab83d1bbc0",
+    "CI_result_recorded_in_PR": 105
+  },
+  "production_package_install": "owner_installed_acl;collection_read_only",
+  "agent_production_changes": false,
+  "native_functional_acceptance": false
+}

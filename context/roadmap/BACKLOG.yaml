@@ -58,9 +58,12 @@ tasks:
   - context/reviews/20261017/core_extra_reconciliation.md
   - context/runtime/core_extra_received_20261017.json
   - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
-  current_summary: 17Oct plugin/theme526 match; eligible upstream core24742 match, changed/missing0, extras23. Ntpsec peer/offset
-    and full exported SMART history observed;18 overdue have source-based component-skip explanations. ACL getfacl missing,
-    SQL stats/per-object storage/effective native acceptance remain open.
+  - context/reviews/20261017/gaps_reconciliation.md
+  - context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+  - context/runtime/server_gaps_received_20261017.json
+  current_summary: '17Oct10:59:16Z gaps archive6/6 successful probes validated: ACL44175 objects, SSH current context, Caddy
+    PID862,23 extra hashes and selected directory sizes. Previous core24742/plugin526 manifests preserved by date. External/perimeter/native
+    acceptance, excluded sources, SQL stats and full occupancy remain open.'
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -88,9 +91,10 @@ tasks:
   - Data/cache/session remain writable; deploy and cron operate
   - Old dumps/config/keys inaccessible to unrelated local users; archives preserved
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: '17Oct www-data writable plugin/config0755 remains confirmed. Both ACL probes failed: getfacl not installed.
-    Core extras23 unchanged by name since05Oct include public config/index backups, legacy handlers and PDFs; access/origin
-    not verified. No cleanup or hardening performed.'
+  current_summary: 'ACL44175 objects: named/default/mask entries0;4726 UID33-owned objects owner-writable. Outer code root/config/plugin
+    and Moodle parent writable by33; POSIX permissions allow subtree replacement subject to other controls. Root-owned nested
+    public/theme does not establish replacement protection.23 extra metadata/hashes collected, including public config backup0755/UID33.
+    No contents/HTTP access or negative write/rename tests, no hardening performed.'
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
@@ -99,6 +103,9 @@ tasks:
   - context/reviews/20261017/core_extra_reconciliation.md
   - context/runtime/core_extra_received_20261017.json
   - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+  - context/reviews/20261017/gaps_reconciliation.md
+  - context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+  - context/runtime/server_gaps_received_20261017.json
 - id: INF-04
   title: Расход SSD, healthy HDD и аппаратный резерв
   status: in_progress
@@ -120,9 +127,12 @@ tasks:
   - context/reviews/20261017/core_extra_reconciliation.md
   - context/runtime/core_extra_received_20261017.json
   - context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
-  current_summary: '17Oct09:59:14Z full exported SMART: SSD50C/HDD49C, healthtrue, exit64 both means ATA error-log records.
-    HDD5/196/197/198/199 raw0; failed long test16359h followed by success16385h retained, no new test. SSD27/HDD17 attributes;
-    vendor wear units, per-object occupancy, hardware reserve/redundancy and trends remain open.'
+  - context/reviews/20261017/gaps_reconciliation.md
+  - context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+  - context/runtime/server_gaps_received_20261017.json
+  current_summary: 'SMART09:59:14Z retained: healthtrue50/49C, current HDD5/196/197/198/199 raw0 with failed/newer successful
+    long-test history, no new test. Gaps10:59:16Z selected du: code500744192/data758067200/PG247816192/Docker-dir29286400
+    bytes. These do not measure full root/containerd/lab occupancy or vendor SSD wear/redundancy/trends.'
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -238,13 +248,18 @@ tasks:
   - OS/reboot window preserves mail/DNS/ISPConfig and Docker mounts
   - Required service checks and rollback documented; no blind service removal
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: 17Oct UFW inactive; global SSH password auth/X11/forwarding enabled, Match context не измерен. TCP2019
-    имеет all-address listener; процесс, Caddy admin binding и внешняя достижимость требуют проверки с сохранением mail/DNS/ISPConfig.
+  current_summary: '17Oct current owner aduk SSH tuple: password/pubkey yes, kbdinteractive no, TCP/agent/X11 forwarding yes,
+    UseDNS no, root without-password. Other contexts/live daemon overrides/login acceptance not checked.2019 sockets loopback
+    and all-address owned by comm caddy PID862; family/API identity/auth and external reachability remain unverified. UFW/global/perimeter
+    scopes remain distinct.'
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
   - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
   - context/runtime/server_facts_followup_20261017.json
+  - context/reviews/20261017/gaps_reconciliation.md
+  - context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+  - context/runtime/server_gaps_received_20261017.json
 - id: INF-11
   title: H5P/registration exceptions, SMTP и полный cron cycle
   status: planned

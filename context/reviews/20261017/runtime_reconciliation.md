@@ -1,5 +1,7 @@
 # Свежие server facts и сверка контекста — 17 октября 2026
 
+**Последнее дополнение14:03MSK:** [gaps reconciliation](gaps_reconciliation.md) уточняет прежние ACL/SSH/2019/extras/storage gaps. Getfacl установлен владельцем; raw31-block snapshots и ранние наблюдения ниже сохраняют свои даты/ограничения. [Provenance](../../runtime/server_gaps_received_20261017.json).
+
 **Дополнение13:05MSK:** [core/extra reconciliation](core_extra_reconciliation.md) и [provenance](../../runtime/core_extra_received_20261017.json) добавляют24742 core matches/23 extra names, ntpsec/offset, SMART attributes/history и объяснение18 component skips. Ниже сохранена сверка трёх31-block snapshots; отдельные новые значения помечены своим временем. [Прежняя validation](runtime_followup_validation.json) остаётся датированной, [новая](core_extra_validation.json) проверяет дополнительные архивы.
 
 Два ZIP получены от владельца04:16MSK, третий `report.tar.gz` и console supplement —04:41MSK. Проверены ZIP members/CRC для первых двух, во всех трёх — bounded tar/gzip, четыре payload-файла, schema/checksums; первые два также совпали с вложенными tar. Пакеты импортированы по времени без редактирования исходных данных. [Provenance](../../runtime/server_facts_received_20261017.json), [follow-up](../../runtime/server_facts_followup_20261017.json), [current](../../current.yaml), [остаток аудита](../../roadmap/BACKLOG.yaml). Console supplement сохранён отдельно: он не входит в checksum-bound archive и агентом не повторялся.

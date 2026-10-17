@@ -1,5 +1,7 @@
 # Свежие наблюдения сервера
 
+Дополнительный [gaps archive13:59MSK](../../reviews/20261017/gaps_reconciliation.md) принёс ACL/SSH/Caddy process/extra hashes/selected du. Он сохранён отдельно от неизменяемой31-block schema; [provenance](../server_gaps_received_20261017.json).
+
 Три owner archives17Oct **получены и импортированы**. [Provenance](../server_facts_received_20261017.json), [сверка](../../reviews/20261017/runtime_reconciliation.md), [follow-up](../server_facts_followup_20261017.json). Снимки01:00:21Z и01:12:27Z содержат17ok/13error и28ok/2error, SMART там не запрашивался. Последний01:39:24Z —30ok/1error: scheduled147, timezoneUTC/NTPfalse/syncedtrue, SMART health true при50/47°C; unavailable только pg_query_stats. Latest manifest526 совпал с baseline. Этот snapshot не экспортировал NTP source/offset, component eligibility и полный SMART. Позже два отдельных ZIP дали core/extra observations: [новая сверка](../../reviews/20261017/core_extra_reconciliation.md), [provenance](../core_extra_received_20261017.json). Они хранятся вне этой 31-block directory/schema и не переписывают snapshot. Effective runtime overrides/native acceptance остаются отдельными. Здесь нет результатов локальной песочницы, выданных за production.
 
 [Сбор и импорт](../../../scripts/infra/README_server_facts.md), [разбор внешнего предложения](../../reviews/20261017/README.md). Последний принятый указатель — `STATE.yaml → server_facts.snapshot`; [current.yaml](../../current.yaml) генерируется из STATE.

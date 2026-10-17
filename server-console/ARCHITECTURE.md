@@ -2,7 +2,7 @@
 
 **Текущая реализация первого LAN запуска17Oct:** [LAN выпуск и границы](LAN_ROLLOUT_20261017.md), [установка](INSTALL.md). Ниже сохраняется полный целевой дизайн16Oct; Prometheus/Alertmanager, web user admin, расширенные rules/restore/logs не объявляются поставленными. Первая LAN версия использует native bounded history/rules и отдельный fixed-operation broker.
 
-Проектное решение16Oct2026, INF-06, PR103. Статус: архитектура и первый read-only auth/collector/API/UI срез подготовлены в исходниках; server1 не установлен, Telegram ещё не реализован. Точные границы — [README](README.md) и [INSTALL](INSTALL.md). Это спецификация для реализации, не свидетельство состояния server1. Связанные документы: [метрики и алерты](OBSERVABILITY.md), [UI/UX](DESIGN.md), [текущий контекст](../context/runtime/control_panel_telegram_20261016.md).
+Проектное решение16Oct2026, INF-06, PR103. Схема ниже описывает целевую архитектуру. Актуальный owner receipt17Oct подтверждает установку567e90d5 и limited gate; Telegram реализован, но setup/delivery ещё не приняты, startup argument hotfix подготовлен18Oct. Точные границы — [LAN rollout](LAN_ROLLOUT_20261017.md), [README](README.md), [INSTALL](INSTALL.md), [Telegram и домашний доступ](REMOTE_ACCESS.md). Эта спецификация не заменяет runtime receipts. Связанные документы: [метрики и алерты](OBSERVABILITY.md), [UI/UX](DESIGN.md), [текущий контекст](../context/runtime/control_panel_telegram_20261016.md).
 
 ## 1. Что получает владелец
 

@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-10-17'
+updated_at: '2026-10-18'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -226,9 +226,11 @@ current_work:
     console567e90d5, local-CA TLS, fresh collector snapshot, active web/broker/collector
     timer and web identity isolation. Limited native_accepted=true is not all-source
     acceptance: HDD critical/probe_failed and SMART no_data/probe_failed require diagnosis.
-    TOTP and Telegram skipped by owner; notifier inactive. Browser trust/login/roles,
-    archive download/hash, receiver, independent observer, jobs/overhead and restore/RTO
-    remain open. No agent SSH or host operations.'
+    Owner17Oct23:59MSK reports console opens in browser; trust/login/roles not yet
+    accepted. TOTP skipped; owner now requests Telegram and home access without inbound
+    port publication. Telegram startup argument defect fixed in PR with regression;
+    owner application and delivery pending. Archive download/hash, receiver, independent
+    observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.'
   next_task: INF-06
   ready_tasks: []
   task_statuses:

@@ -2,6 +2,8 @@
 
 ## Текущий этап 17 октября 2026
 
+**Продолжение18Oct:** owner17Oct23:59MSK подтвердил открытие пульта и запросил Telegram/домашний доступ. [Receipt](context/runtime/console_browser_open_20261017.json); [Telegram и частный маршрут](server-console/REMOTE_ACCESS.md). Startup notifier argument defect исправлен с regression; installed567e90d5 ещё требует owner hotfix/receiver ACK. VPN только предложен; source diagnostics и полный browser gate не закрыты.
+
 Рабочий продукт — Moodle + `local_ustar` + `theme_ustar`, parent boost. `frontend/` — legacy Next.js, исключённый из активного CI/выпуска. Проверки native UI темы и плагина сохранены.
 
 - **Сделано на сервере:** SSD расширен11Oct; Moodle5.1.8 upgrade/repeat и краткая браузерная/SCORM приёмка13Oct; AppArmor,63 пакета, reboot/kernel147/Docker29.9.0 приняты14Oct. Не повторять.

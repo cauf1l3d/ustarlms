@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "redacted_owner_terminal_followup",
+  "source": "owner_message_in_current_dialogue",
+  "received_at_utc": "2026-10-17T20:59:22Z",
+  "probe_observed_at_utc": null,
+  "included_in_archive_checksums": false,
+  "independently_reexecuted_by_agent": false,
+  "independently_authenticated_host": false,
+  "console_opens_in_browser": "owner_reported",
+  "browser_CA_trust_accepted": false,
+  "login_role_denial_session_acceptance": false,
+  "owner_request": [
+    "connect_Telegram",
+    "home_access_without_public_inbound_ports"
+  ],
+  "Telegram_connected": false,
+  "VPN_installed": false,
+  "HDD_SMART_diagnostics_received": false,
+  "agent_production_changes": false,
+  "scope_note": "Browser opening is the complete supplied observation. No successful login, trust import, Telegram delivery or VPN setup was supplied. Earlier installation receipt is preserved by its original date."
+}

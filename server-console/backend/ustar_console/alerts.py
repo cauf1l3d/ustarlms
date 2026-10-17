@@ -268,7 +268,7 @@ def main():
     credential=Path(os.environ.get('CREDENTIALS_DIRECTORY','/nonexistent'))/'telegram'
     value=config(credential)
     api=Telegram(value['token'])
-    if api('getWebhookInfo').get('url'):
+    if api('getWebhookInfo',{}).get('url'):
         raise SystemExit('Existing webhook detected; use a dedicated bot. Nothing was changed.')
     queue=Queue(Path('/var/lib/ustar-console-notify/outbox.sqlite3'),value['chats'])
     while True:

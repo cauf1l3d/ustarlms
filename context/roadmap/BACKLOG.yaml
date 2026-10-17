@@ -171,12 +171,16 @@ tasks:
   current_summary: 'PR103 LAN code: native HTTPS/setup/CA, PG aggregate monitor, bounded history15d, NTP/SMART, TOTP, durable
     Telegram/outbox/rules, encrypted archive FD download, fixed planned jobs and independent observer bundle. Owner installed567e90d5;
     limited TLS/freshness/units/web-isolation gate passed23:36MSK. HDD critical/probe_failed, SMART no_data/probe_failed unresolved;
-    TOTP/Telegram skipped. Native browser/source/role/receiver/download/overhead/host-loss acceptance pending. Request statistics/logs/SFTP/restore/flexible
+    TOTP/Telegram initially skipped. Browser opening reported23:59MSK; login/roles/trust still pending. Telegram startup argument
+    defect fixed with regression; owner module update/receiver ACK pending. Tailscale host route proposed, not installed.
+    Native source/role/receiver/download/overhead/host-loss acceptance pending. Request statistics/logs/SFTP/restore/flexible
     TTL/web user administration remain open.'
   validation_evidence:
   - server-console/AUDIT_FOLLOWUP_20261017.md
   - server-console/LAN_ROLLOUT_20261017.md
   - context/runtime/console_native_install_20261017.json
+  - context/runtime/console_browser_open_20261017.json
+  - server-console/REMOTE_ACCESS.md
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned

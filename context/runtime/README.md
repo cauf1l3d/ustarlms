@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+**Продолжение18Oct:** [owner browser report17Oct23:59MSK](console_browser_open_20261017.json) подтверждает только открытие пульта; запросил Telegram/домашний доступ. Startup notifier argument defect исправлен с regression в PR, owner hotfix/receiver ACK ожидаются; [инструкция](../../server-console/REMOTE_ACCESS.md). Tailscale предложен, VPN не установлен. Старый install receipt сохраняется без изменений.
+
 **Дополнение23:36MSK17Oct:** [owner terminal receipt установки пульта](console_native_install_20261017.json), exact artifact567e90d5. Local-CA TLS, свежий snapshot, web/broker/collector timer active и web identity isolation прошли limited gate. HDD critical/probe_failed и SMART no_data/probe_failed не устранены; причина ещё не измерена. TOTP/Telegram пропущены владельцем. Browser trust/login/roles/download hash/receiver/observer/jobs/overhead/restore остаются открыты. Это pasted output, без archive checksum/независимого SSH; более ранние snapshots не менялись.
 
 **Дополнение14:24MSK17Oct:** [owner terminal receipt](external_network_result_20261017.json) — IPv4 выхода server1 совпал с target домашнего TCP2019 test; TcpTestSucceeded=False, отдельно ping timeout. Адреса/локальное имя не опубликованы. Один источник/маршрут, точное время probes неизвестно; NAT, другие источники/IPv6/API и listener hardening не установлены. Это отдельный terminal follow-up, не часть archive checksums.

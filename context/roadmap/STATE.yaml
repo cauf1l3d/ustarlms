@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-17'
+updated_at: '2026-10-18'
 project: USTAR Academy
 stage: console_installed_source_diagnostics_and_browser_acceptance_pending
 stage_label: 'Пульт установлен владельцем; HDD/SMART и браузерная приёмка требуют продолжения'
@@ -7,7 +7,9 @@ current_activity: >-
   Owner terminal receipt received17Oct23:36MSK confirms installation of console567e90d5,
   local-CA TLS, fresh collector snapshot, active web/broker/collector timer and web identity isolation.
   Limited native_accepted=true is not all-source acceptance: HDD critical/probe_failed and SMART no_data/probe_failed
-  require diagnosis. TOTP and Telegram skipped by owner; notifier inactive. Browser trust/login/roles, archive download/hash,
+  require diagnosis. Owner17Oct23:59MSK reports console opens in browser; trust/login/roles not yet accepted.
+  TOTP skipped; owner now requests Telegram and home access without inbound port publication. Telegram startup argument
+  defect fixed in PR with regression; owner application and delivery pending. Archive download/hash,
   receiver, independent observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.
 next_task: INF-06
 ready_tasks: []
@@ -271,6 +273,8 @@ next_control_panel:
   independent_observer: required_for_host_loss_not_yet_deployed
   continuation_gate: owner_authorized_install_20261017T1703_MSK_LAN_1709
   telegram_delivery: owner_skipped_setup_notifier_inactive
+  telegram_startup_hotfix: prepared_in_PR_owner_application_and_receiver_ack_pending
+  telegram_hotfix_module_sha256: 94903be5412a0e48d21c8154afcda9cf8880b5bd670c0e83400b2df95d8ecd39
   previous_reviewed_head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0
   implementation_resolution: Read PR103 current head; no self-referencing SHA in state
   audit_followup: server-console/AUDIT_FOLLOWUP_20261017.md
@@ -281,6 +285,8 @@ next_control_panel:
   installed_source_commit: 567e90d54d4e50acf43088a8127f80ae5c89740f
   totp: owner_skipped_first_launch
   source_diagnostics: HDD_critical_probe_failed_and_SMART_no_data_probe_failed_unresolved
+  browser_open: owner_reported_20261017T2359_MSK_not_login_or_CA_trust_acceptance
+  home_access: Tailscale_single_host_route_and_port_grant_proposed_not_installed
   history: native_15d_bounded_first_LAN_Prometheus_optional
 deferred_platform:
   task: PLAT-01

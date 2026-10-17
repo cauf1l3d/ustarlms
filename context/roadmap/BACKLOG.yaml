@@ -178,7 +178,9 @@ tasks:
     01:41 Google/Cloudflare A agree with local DNS; failing hop unknown. Owner01:48 reports Happ and masked HTTPS NOVAVPS
     subscription; safe local format probe prepared,22 focused/147 backend PASS. Latest owner launch checksum OK/no prompt;
     ordinary timeout TTY defect reproduced locally, direct Python launch corrected, script/hash unchanged. Owner retry
-    and actual format/proxy/native receiver pending;
+    succeeded02:07: JSON_outbounds35/15VLESS/10gRPC5TCP/14Reality1TLS/insecure0. Xray Telegram-only loopback, explicit CONNECT
+    transport and proxy setup/ID helper prepared;175 backend/28 focused/4 actual Xray config checks PASS. Native
+    CI/artifact/owner proxy install, bot configuration and receiver ACK pending;
     TOTP/Telegram initially skipped. Browser opening reported23:59MSK; login/roles/trust still pending. Telegram startup argument
     defect fixed with regression; owner module update/receiver ACK pending. Tailscale host route proposed, not installed.
     Native source/role/receiver/download/overhead/host-loss acceptance pending. Request statistics/logs/SFTP/restore/flexible
@@ -195,6 +197,8 @@ tasks:
   - context/runtime/console_telegram_egress_20261018.json
   - context/runtime/console_vpn_subscription_20261018.json
   - context/runtime/console_vpn_probe_tty_20261018.json
+  - context/runtime/console_vpn_format_20261018.json
+  - server-console/VPN_TELEGRAM.md
   - server-console/VPN_SUBSCRIPTION_PROBE.md
   - context/runtime/console_storage_release_20261018.json
 - id: INF-07

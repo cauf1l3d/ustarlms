@@ -6,6 +6,8 @@ Owner17Oct23:59MSK подтвердил открытие пульта брауз
 
 ## Telegram
 
+Если прямой Bot API недоступен, а локальная подписка Happ/NOVAVPS классифицирована как JSON VLESS, подготовлен [Telegram-only Xray proxy](VPN_TELEGRAM.md). Нужен новый console wheel с явным CONNECT transport и `--telegram-proxy`; переменные HTTPS_PROXY не подключают старый установленный worker. LAN access к console и маршруты сервера сохраняются. Runtime проверка узлов и receiver ACK на server1 ещё требуются.
+
 Серверный worker опрашивает Bot API исходящими HTTPS запросами getUpdates; входящий webhook и публикация порта не нужны. Нужны отдельный бот и разрешённый numeric private user/chat ID, совпадающие друг с другом. Бот выдаёт статус/метрики/ссылку на последний encrypted backup; host jobs выполняются через пульт с авторизацией.
 
 На установленном567e90d5 обнаружена startup ошибка: main вызывал getWebhookInfo без обязательного data argument. В PR исправлено на явный пустой payload; regression воспроизводит прежний TypeError и проверяет первый полный цикл/status receipt.111 backend tests PASS. Native delivery и применение owner hotfix ещё не подтверждены. Исправленный alerts.py SHA256:94903be5412a0e48d21c8154afcda9cf8880b5bd670c0e83400b2df95d8ecd39. Для точечного hotfix скачать именно файл из проверенного fix commit, скопировать в root-owned source stage, проверить этот hash и заменить только /opt/ustar-console/venv/lib/python3.12/site-packages/ustar_console/alerts.py с owner root/mode0644. Перед заменой остановить только notifier, если он уже запускался. Переустановка wheel/зависимостей и повтор полного wizard не требуются.

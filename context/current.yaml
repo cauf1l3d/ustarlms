@@ -222,7 +222,7 @@ production:
     corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
     independent_perimeter_acceptance: false
 current_work:
-  activity: Owner terminal receipt received17Oct23:36MSK confirms installation of
+  activity: 'Owner terminal receipt received17Oct23:36MSK confirms installation of
     console567e90d5, local-CA TLS, fresh collector snapshot, active web/broker/collector
     timer and web identity isolation. Limited native_accepted=true is not all-source
     acceptance. Owner18Oct00:14MSK supplied host rw/service ro comparison confirming
@@ -246,9 +246,14 @@ current_work:
     elapsed/exit were not captured. Local controlling-PTY reproduction confirms ordinary
     timeout in the heredoc prevents hidden input (exit124); corrected direct Python
     launch accepts hidden input, retaining internal30s deadline after input and printing
-    PROBE_EXIT. Script/hash unchanged; owner retry and actual subscription format/compatible
-    proxy client remain pending; no secrets received. Exact failing hop/cause unknown;
-    numeric ID, bot setup and receiver ACK not obtained.
+    PROBE_EXIT. Owner02:07MSK retry succeeded: JSON_outbounds35,15 VLESS (10gRPC/5TCP,14Reality/1TLS),
+    insecure flags0, exit0. Format known, actual node values still not received/validated.
+    Prepared pinned Xray Telegram-only loopback service, explicit CA-verified CONNECT
+    bot transport, proxy-aware setup/credential reload and private-ID challenge. Local175
+    backend/28 focused/4 real Xray config cases PASS; native CI/artifact/owner install
+    and receiver ACK pending. No host DNS/routes/firewall, console auth/CA/TOTP or
+    production services changed by agent. Exact failing hop/cause unknown; numeric
+    ID, bot setup and receiver ACK not obtained.'
   next_task: INF-06
   ready_tasks: []
   task_statuses:

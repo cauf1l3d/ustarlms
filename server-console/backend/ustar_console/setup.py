@@ -37,11 +37,11 @@ def answer(prompt,default):
     return input(prompt+' ['+default+']: ').strip() or default
 
 
-def telegram():
+def telegram(proxy=None):
     from .alerts import Telegram,DeliveryError
     token=getpass.getpass('Токен отдельного бота (Enter — настроить позже): ').strip()
     if not token: return False
-    client=Telegram(token)
+    client=Telegram(token,proxy=proxy)
     try:
         client('getMe',{})
         if client('getWebhookInfo',{}).get('url'):
@@ -53,7 +53,9 @@ def telegram():
         raise SystemExit('Нужны числовые ID без пробелов.')
     ids=[int(i) for i in raw.split(',')]
     if any(not 0<i<2**52 for i in ids): raise SystemExit('Некорректный numeric ID')
-    save(CONFIG/'telegram.json',dict(token=token,users=ids,chats=ids))
+    value=dict(token=token,users=ids,chats=ids)
+    if proxy: value['proxy']=proxy
+    save(CONFIG/'telegram.json',value)
     print('Telegram настроен. Отправьте /start своему боту с разрешённого аккаунта.')
     return True
 
@@ -95,13 +97,20 @@ def certificate(address,group):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--telegram-only',action='store_true')
+    parser.add_argument('--telegram-proxy',action='store_true',help='Use the fixed loopback Telegram proxy')
     args=parser.parse_args()
+    if args.telegram_proxy and not args.telegram_only:
+        parser.error('--telegram-proxy requires --telegram-only')
     if os.geteuid()!=0 or not os.isatty(0):
         raise SystemExit('Запустите sudo из интерактивного SSH-терминала.')
     os.umask(0o077)
     trusted_config(CONFIG/'config.json')
     if args.telegram_only:
-        if telegram(): run(['systemctl','enable','--now','ustar-console-notify.service'])
+        from .telegram_transport import PROXY
+        if telegram(PROXY if args.telegram_proxy else None):
+            run(['systemctl','enable','ustar-console-notify.service'])
+            # Reload LoadCredential even when the notifier was already active.
+            run(['systemctl','restart','ustar-console-notify.service'])
         return
     active=subprocess.run(['systemctl','is-active','--quiet','ustar-console.service'],timeout=5).returncode==0
     if active:

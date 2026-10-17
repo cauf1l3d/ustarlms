@@ -43,6 +43,8 @@ jobs:
         run: npm test
       - name: systemd sandbox and artifact installation
         run: sudo --preserve-env=PATH,GITHUB_ACTIONS python server-console/tests/systemd_acceptance.py
+      - name: Real Xray loopback routing and dynamic credentials
+        run: sudo --preserve-env=PATH,GITHUB_ACTIONS python server-console/tests/egress_acceptance.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: ustar-console-${{ github.event.pull_request.head.sha || github.sha }}

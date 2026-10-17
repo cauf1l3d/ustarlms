@@ -498,8 +498,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 16013,
-      "sha256": "b03899dbecec30b78ba5d7dcdf423a71ae4a40924fe83b81a31e82814928968e"
+      "size": 16450,
+      "sha256": "ce299ecd4a51c5dcfa418831f7882ea8a6c1c719c03a1ec9e12bfd945ed13bbd"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 31918,
-      "sha256": "6c6ac113d9319553c6ffb2c8f0a7c49110e3dc0fbed2d4ab89292e9920d421f7"
+      "size": 32274,
+      "sha256": "1f6fc4e2f370df370df50676628adb55bda73741726cbd08a73764e5ac6d7da9"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 161480,
-      "sha256": "76f949ad00b8de5361f4a9652442bc7e33add98d53e40b93d0dd5a3815a9747d"
+      "size": 163241,
+      "sha256": "de5f87138086333fa84a93963bad792f94c035d09a0b56a416f8426e126b496e"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,8 +924,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19467,
-      "sha256": "269bb8779198e043ee5d6fbbc04c5396cc34693e13dd8799519cf04a58205f86"
+      "size": 20048,
+      "sha256": "7d387e06b3c6ee9d117750f070d8c58bc64781065f79ef334397eba9d8f71113"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1014,8 +1014,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 6783,
-      "sha256": "7f5c2214f64096a7aecb2554b84f694cee11adc23743ac046e3ddc77a5719acb"
+      "size": 6647,
+      "sha256": "e6d2911e12576448d2dee9b4f43c93d76f79464b3f28f759b995ebdbf257b7f9"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -1100,6 +1100,12 @@
       "domain": "runtime",
       "size": 1349,
       "sha256": "eb625cd342ea6ac8d6b715ad3d5f88791dc112282d165078808e1b2ce74627d8"
+    },
+    {
+      "path": "context/runtime/console_vpn_format_20261018.json",
+      "domain": "runtime",
+      "size": 2156,
+      "sha256": "f866bb791a90be88b85be27b573af9eb64051e3683c819e3afa1cf2b546720fd"
     },
     {
       "path": "context/runtime/console_vpn_probe_tty_20261018.json",
@@ -2130,8 +2136,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 9748,
-      "sha256": "a947524a4eb0d0860a546af6745e7fb36225c04089188f96f061815b837e9fec"
+      "size": 8931,
+      "sha256": "d1fa88d32b73a0afb0e4c9bdbb35f263e3897333239b59823cf7467c967c5dfa"
     },
     {
       "path": "context/tasks/backlog.yaml",

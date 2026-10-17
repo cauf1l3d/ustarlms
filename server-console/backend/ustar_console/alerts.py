@@ -1,15 +1,15 @@
 """Durable transition rules and Telegram outbox, without privileged host access."""
 import json
+import http.client
 from contextlib import contextmanager
 import os
 from pathlib import Path
 import re
 import sqlite3
 import time
-import urllib.error
-import urllib.request
 
 from .data import snapshot, safe_json, stamp
+from .telegram_transport import exchange, validate_proxy
 
 WATCH = {'collector','host','containers','hdd','backup','cron','recovery','http_local','database',
          'ssd_space','ssd_inodes','hdd_space','hdd_inodes','observer','http_external','smart','clock'}
@@ -136,35 +136,27 @@ class DeliveryError(Exception):
 
 
 class Telegram:
-    def __init__(self, token):
+    def __init__(self, token, proxy=None):
         if not re.fullmatch(r'[0-9]{5,20}:[A-Za-z0-9_-]{20,100}',token):
             raise ValueError('Invalid token format')
         self.token=token
+        self.proxy=validate_proxy(proxy)
 
     def __call__(self, method, data):
         if method not in ('sendMessage','getUpdates','getWebhookInfo','getMe'):
             raise ValueError('Unsupported Bot API method')
-        from .collector import NoRedirect
-        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}),NoRedirect())
-        request=urllib.request.Request('https://api.telegram.org/bot'+self.token+'/'+method,
-                   data=json.dumps(data).encode(),headers={'Content-Type':'application/json'})
         try:
-            with opener.open(request,timeout=8) as reply:
-                raw=reply.read(262145)
-            if len(raw)>262144:
-                raise ValueError('Response too large')
-            value=json.loads(raw)
-        except urllib.error.HTTPError as error:
-            code=error.code
-            try:
-                value=json.loads(error.read(4096))
-                retry=value.get('parameters',{}).get('retry_after',0)
-            except (OSError,ValueError,TypeError):
+            status,raw=exchange('/bot'+self.token+'/'+method,json.dumps(data).encode(),self.proxy)
+            if status!=200:
                 retry=0
-            finally:
-                error.close()
-            raise DeliveryError('rate_limited' if code==429 else 'api_rejected',retry) from None
-        except (OSError,ValueError,urllib.error.URLError):
+                try:
+                    retry=json.loads(raw[:4096]).get('parameters',{}).get('retry_after',0)
+                except (ValueError,TypeError,AttributeError):
+                    pass
+                raise DeliveryError('rate_limited' if status==429 else 'api_rejected',retry)
+            value=json.loads(raw)
+            if not isinstance(value,dict): raise ValueError('Invalid response')
+        except (OSError,ValueError,http.client.HTTPException):
             # Never log token-bearing URLs or remote response bodies.
             raise DeliveryError('transport_unavailable') from None
         if value.get('ok') is not True:
@@ -232,8 +224,9 @@ def config(path):
     if not path.is_file() or path.is_symlink() or info.st_uid not in (0,os.geteuid()) or info.st_mode&0o077 or info.st_size>8192:
         raise ValueError('Untrusted Telegram credentials')
     value=json.loads(path.read_text())
-    if set(value)!={'token','users','chats'}:
+    if set(value) not in ({'token','users','chats'},{'token','users','chats','proxy'}):
         raise ValueError('Invalid Telegram configuration')
+    validate_proxy(value.get('proxy'))
     for key in ('users','chats'):
         ids=value[key]
         if not isinstance(ids,list) or not 1<=len(ids)<=10 or any(type(i) is not int or not 0<i<2**52 for i in ids):
@@ -267,7 +260,7 @@ def main():
     settings=load()
     credential=Path(os.environ.get('CREDENTIALS_DIRECTORY','/nonexistent'))/'telegram'
     value=config(credential)
-    api=Telegram(value['token'])
+    api=Telegram(value['token'],proxy=value.get('proxy'))
     if api('getWebhookInfo',{}).get('url'):
         raise SystemExit('Existing webhook detected; use a dedicated bot. Nothing was changed.')
     queue=Queue(Path('/var/lib/ustar-console-notify/outbox.sqlite3'),value['chats'])

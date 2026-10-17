@@ -1590,3 +1590,18 @@ timeout --foreground показали prompt, приняли скрытый ис
 Runbook/owner команда исправлены: без внешнего timeout, PROBE_EXIT печатается и при ошибке;
 скрипт/hash не меняются, внутренний30s начинается после ввода. Исходный4b70c936 прошёл все3 CI.
 Owner retry/формат подписки/proxy/Telegram/home access пока не приняты. Никаких host operations.
+
+
+## 2026-10-18 — INF-06: формат подписки получен, Telegram-only Xray подготовлен
+
+Owner02:07MSK: checksum OK, hidden input работает, exit0; JSON35 outbounds/15VLESS/10gRPC5TCP/14Reality1TLS/insecure0.
+[Receipt](../runtime/console_vpn_format_20261018.json) сохраняет точные counts; URL/node values не получены,
+configuration_installed=false и node_values_validated=false. Формат совместим с выбранным клиентом, соединение не принято.
+Подготовлены pinned Xrayv26.3.27 SHA ZIP/binary, строгий client-only importer, public IPv4 pin, DynamicUser/LoadCredential,
+loopback18081/default blackhole/разрешение только Telegram443; временная проверка и cleanup при неуспехе.
+Бот получил явный CONNECT transport с проверкой CA/hostname без env proxy/bypass/redirect; proxy-aware wizard
+перезапускает notifier для reload credentials, private-ID challenge вводит token только локально. Tools включены в artifact.
+Локально175 backend PASS6.70s (28 новых focused), реальные4 TCP/gRPC/Reality/TLS configs проходят официальный Xray,
+реальный local CONNECT принимает trusted Telegram cert и отвергает unknown CA/wrong hostname при NO_PROXY=*.
+Native systemd/Xray routing fixture добавлен в CI; здесь systemd недоступен. Build/current CI/artifact проверяются отдельно.
+Owner update/proxy install/ID/receiver ACK и домашний маршрут ожидаются; server1 не менялся агентом.

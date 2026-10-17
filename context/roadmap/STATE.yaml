@@ -22,7 +22,11 @@ current_activity: >-
   Latest owner run verified checksum but showed no input prompt or JSON; actual elapsed/exit were not captured.
   Local controlling-PTY reproduction confirms ordinary timeout in the heredoc prevents hidden input (exit124);
   corrected direct Python launch accepts hidden input, retaining internal30s deadline after input and printing PROBE_EXIT.
-  Script/hash unchanged; owner retry and actual subscription format/compatible proxy client remain pending; no secrets received.
+  Owner02:07MSK retry succeeded: JSON_outbounds35,15 VLESS (10gRPC/5TCP,14Reality/1TLS), insecure flags0, exit0.
+  Format known, actual node values still not received/validated. Prepared pinned Xray Telegram-only loopback service,
+  explicit CA-verified CONNECT bot transport, proxy-aware setup/credential reload and private-ID challenge.
+  Local175 backend/28 focused/4 real Xray config cases PASS; native CI/artifact/owner install and receiver ACK pending.
+  No host DNS/routes/firewall, console auth/CA/TOTP or production services changed by agent.
   Exact failing hop/cause unknown; numeric ID, bot setup and receiver ACK not obtained.
 next_task: INF-06
 ready_tasks: []
@@ -289,10 +293,12 @@ next_control_panel:
   telegram_transport_receipt: context/runtime/console_telegram_transport_20261018.json
   telegram_network_receipt: context/runtime/console_telegram_network_20261018.json
   telegram_egress_receipt: context/runtime/console_telegram_egress_20261018.json
-  telegram_connection_next: owner_hidden_local_NOVAVPS_format_probe_then_compatible_client_and_loopback_Bot_API_proxy
+  telegram_connection_next: validate_and_deliver_Xray_loopback_artifact_then_owner_install_private_ID_bot_setup_and_receiver_ACK
   telegram_subscription_receipt: context/runtime/console_vpn_subscription_20261018.json
   telegram_subscription_probe: server-console/VPN_SUBSCRIPTION_PROBE.md
   telegram_subscription_launch_receipt: context/runtime/console_vpn_probe_tty_20261018.json
+  telegram_subscription_format_receipt: context/runtime/console_vpn_format_20261018.json
+  telegram_egress_runbook: server-console/VPN_TELEGRAM.md
   telegram_startup_hotfix: prepared_in_PR_owner_application_and_receiver_ack_pending
   telegram_hotfix_module_sha256: 94903be5412a0e48d21c8154afcda9cf8880b5bd670c0e83400b2df95d8ecd39
   previous_reviewed_head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0

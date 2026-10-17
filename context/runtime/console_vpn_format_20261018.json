@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "kind": "owner_sanitized_subscription_format_result_not_connection",
+  "received_at_utc": "2026-10-17T23:07:44Z",
+  "source": "owner_terminal_output_in_current_dialogue",
+  "script_commit": "4b70c936308ac0f08dd4d1fad150235cb0bf1955",
+  "script_sha256": "e74d0e2674c6deb4adfb629784bf97e475cebdaa20219c76875ecf1a3fab8eb5",
+  "checksum_verified": true,
+  "probe_exit": 0,
+  "result": {
+    "result": "inspected",
+    "format": "JSON_outbounds",
+    "base64_wrapped": false,
+    "nodes_examined": 35,
+    "protocols": {
+      "vless": 15,
+      "freedom": 10,
+      "blackhole": 10
+    },
+    "networks": {
+      "grpc": 10,
+      "tcp": 5,
+      "unspecified": 20
+    },
+    "transport_security": {
+      "reality": 14,
+      "unspecified": 20,
+      "tls": 1
+    },
+    "nodes_with_insecure_TLS": 0,
+    "output_contains_node_values": false,
+    "node_values_validated": false,
+    "configuration_installed": false
+  },
+  "full_subscription_URL_or_profile_received_by_agent": false,
+  "client_prepared": "Xray-core v26.3.27 linux/amd64; narrowed secure VLESS client; Telegram-only loopback CONNECT",
+  "runbook": "server-console/VPN_TELEGRAM.md",
+  "local_validation": {
+    "backend_tests_passed": 175,
+    "backend_seconds": 6.7,
+    "new_focused_tests_passed": 28,
+    "official_binary_ZIP_and_extracted_SHA256": "verified",
+    "actual_Xray_TCP_GRPC_Reality_TLS_config_validation": "4_PASS",
+    "actual_local_CONNECT_Telegram_TLS_CA_and_hostname_checks": "PASS_including_unknown_CA_and_wrong_hostname_denial",
+    "NO_PROXY_star_does_not_bypass_explicit_proxy": "PASS",
+    "failed_first_install_rollback": "PASS_with_mocked_systemd",
+    "real_systemd_Xray_routing_fixture": "awaiting_GitHub_Actions_not_available_locally"
+  },
+  "server_egress_installed": false,
+  "Telegram_ID_setup_receiver_ACK_confirmed": false,
+  "home_access_configured": false,
+  "scope_note": "TTY retry succeeded and reveals format counts only. Xray binary and synthetic client configs verified locally; no real node parameters validated, no server1 network request or host change performed by agent. All dated earlier receipts remain unchanged."
+}

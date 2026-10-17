@@ -253,3 +253,17 @@ def test_independent_observer_does_not_emit_fake_local_cpu_events(tmp_path):
     assert queue.status()['pending']==1
     with queue.connect() as db:
         assert db.execute('SELECT key FROM rules').fetchall()[0][0]=='observer'
+
+
+def test_outgoing_incidents_survive_failed_command_polling_and_full_queue(tmp_path,monkeypatch):
+    from ustar_console.alerts import iteration
+    queue=Queue(tmp_path/'queue.sqlite3',[123],clock=lambda:1000)
+    queue.evaluate(state('critical'))
+    sent=[]
+    def api(method,data):
+        if method=='getUpdates': raise DeliveryError('polling_unavailable')
+        sent.append(data);return {}
+    monkeypatch.setattr(queue,'evaluate',Mock(side_effect=ValueError('capacity')))
+    result=iteration(queue,api,[123],[123],state('critical'),'https://console.test')
+    assert len(sent)==1 and queue.status()['pending']==0
+    assert result['polling']=='no_data' and result['evaluation']=='queue_capacity'

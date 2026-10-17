@@ -168,7 +168,7 @@ def create_app(settings=None):
             rule.update(status=alerts['status'] if alerts.get('polling')=='ok' else 'no_data',
                         reason_code='outbox_status',source='notification_worker',observed_at=alerts['observed_at'])
             resources=next(c for c in value['checks'] if c['id']=='resource_rules')
-            resources.update(status='ok',reason_code='sustained_rules',source='notification_worker',observed_at=alerts['observed_at'])
+            resources.update(status='ok' if alerts.get('evaluation')=='ok' else 'no_data',reason_code='sustained_rules',source='notification_worker',observed_at=alerts['observed_at'])
             for row in alerts['rules']:
                 if row['key'] in ('cpu_sustained','ram_sustained'):
                     status='no_data' if row['state']=='no_data' else row['emitted']

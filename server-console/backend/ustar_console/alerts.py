@@ -242,6 +242,25 @@ def config(path):
     return value
 
 
+def iteration(queue,api,users,chats,data,origin,maintenance=None):
+    evaluation='ok'
+    try:
+        queue.evaluate(data,maintenance)
+    except ValueError:
+        evaluation='queue_capacity'
+    # Outgoing incidents continue even if command polling fails or the queue was full.
+    queue.deliver(api)
+    try:
+        updates(queue,api,users,chats,data,origin)
+        polling='ok'
+    except (DeliveryError,ValueError):
+        polling='no_data'
+    status=queue.status()
+    status.update(polling=polling,evaluation=evaluation)
+    if evaluation!='ok': status['status']='warning'
+    return status
+
+
 def main():
     from .config import load
     settings=load()
@@ -258,20 +277,7 @@ def main():
             maintenance=operations.get('maintenance')
         except (OSError,ValueError):
             maintenance=None
-        try:
-            queue.evaluate(data,maintenance)
-        except ValueError:
-            # Preserve the full queue. No unbounded memory growth or loss of old incidents.
-            time.sleep(10)
-            continue
-        try:
-            updates(queue,api,value['users'],value['chats'],data,settings.origin)
-            queue.deliver(api)
-            transport='ok'
-        except DeliveryError:
-            transport='no_data'
-        status=queue.status()
-        status['polling']=transport
+        status=iteration(queue,api,value['users'],value['chats'],data,settings.origin,maintenance)
         target=Path('/run/ustar-console-notify/status.json')
         temporary=target.with_suffix('.tmp')
         temporary.write_text(json.dumps(status))

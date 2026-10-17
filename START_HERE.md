@@ -2,6 +2,8 @@
 
 ## Текущий этап 18 октября 2026
 
+**Последний owner запуск:** checksum probe прошёл, но запроса ссылки и JSON не было. [TTY receipt](context/runtime/console_vpn_probe_tty_20261018.json): дефект обычного timeout из heredoc воспроизведён на controlling PTY, исправлен запуском Python напрямую. Внутренний deadline30s действует после ввода; повторный server result ожидается, скрипт/hash не изменены. Это не результат подключения VPN или Telegram.
+
 **Owner01:48MSK:** [Happ/NOVAVPS masked HTTPS subscription](context/runtime/console_vpn_subscription_20261018.json); формат ответа неизвестен. [Безопасный standalone probe](server-console/VPN_SUBSCRIPTION_PROBE.md) готов: hidden local input, sanitized protocol/transport JSON,22 focused/147 backend PASS. Owner native запуск/proxy/Telegram/home access ожидаются. [Egress comparison](context/runtime/console_telegram_egress_20261018.json) и release3305ecc9 сохраняют свои границы; ссылка/QR/конфиг секретны, не присылать.
 
 **Owner00:14MSK:** [HDD/SMART диагностика](context/runtime/console_storage_probe_20261018.json) подтверждает host rw/service ro и успешный SMART oneshot с частичными SSD атрибутами. [Исправление и обновление](server-console/STORAGE_FIX_20261018.md) подготовлено с regression/native CI cases; новый owner update ещё не выполнен. Telegram/VPN запрос сохраняется; оставшиеся gates не закрыты.

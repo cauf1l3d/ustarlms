@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+**Последний owner probe launch:** [TTY failure/reproduction](console_vpn_probe_tty_20261018.json): checksum OK, без prompt/JSON; server elapsed/exit неизвестны. Локальный controlling PTY подтвердил дефект обычного timeout из heredoc. Исправлен запуск без внешнего таймера, script/hash прежние; owner retry и format/proxy/Telegram acceptance открыты.
+
 **Owner18Oct01:48MSK:** [Happ/NOVAVPS subscription](console_vpn_subscription_20261018.json) — только masked HTTPS shape. [Standalone probe](../../server-console/VPN_SUBSCRIPTION_PROBE.md) готов/22 focused/147 backend PASS, exact checksum-pinned owner run ожидается. Ссылку/QR/config не запрашивать; actual format/proxy/Telegram/home access неизвестны. [Egress comparison](console_telegram_egress_20261018.json) и прежние receipts сохраняются без перезаписи.
 
 **Owner18Oct00:27MSK:** [Telegram helper transport failure](console_telegram_transport_20261018.json), ID/persistent setup/receiver ACK не получены. DNS/direct curl IPv4+IPv6 запрошены без token; причина не установлена.

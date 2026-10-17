@@ -5,10 +5,17 @@
 `tools/subscription_probe.py` — отдельная проверка на стандартной библиотеке Python3.12. Её можно запустить обычным пользователем aduk до обновления установленного wheel. Команда с exact published commit и SHA256 публикуется в PR103 и диалоге. После проверки checksum:
 
 ```bash
-timeout --kill-after=2s 40s python3 -B /verified/path/subscription_probe.py </dev/tty
+if python3 -B /verified/path/subscription_probe.py </dev/tty; then
+  USTAR_VPN_PROBE_EXIT=0
+else
+  USTAR_VPN_PROBE_EXIT=$?
+fi
+printf 'PROBE_EXIT=%s\n' "$USTAR_VPN_PROBE_EXIT"
 ```
 
 На `Subscription URL (hidden):` владелец вводит полную ссылку локально. URL не передаётся через argv, shell history или environment. Не присылать ссылку/QR, raw subscription body или server profile в чат/GitHub.
+
+Не оборачивать этот интерактивный запуск обычным `timeout`: из bash heredoc он создаёт отдельную process group и мешает скрытому вводу через controlling TTY. Владелец получил только checksum OK без запроса/JSON. В локальном controlling-PTY воспроизведении старый запуск не показал prompt и завершился124; прямой запуск показал prompt и обработал скрытый тестовый ввод. `timeout --foreground` также позволяет ввод, но здесь внешний таймер не нужен: собственный deadline30s начинается после ввода ссылки, ожидание пользователя его не расходует. [Receipt](../context/runtime/console_vpn_probe_tty_20261018.json). На server1 старые elapsed/exit не записаны; повторный запуск ещё требуется.
 
 Проверка выполняет только HTTPS GET к novavps.app, по умолчанию напрямую с проверкой системных CA. Начальная ссылка обязана иметь HTTPS/443 и путь /s/; пользователь/пароль в authority, fragment, control characters и другой host отклоняются. Максимум три запроса с redirect только внутри того же HTTPS origin, восемь секунд на сетевую операцию, общий CLI deadline30s, максимум1MiB тела и512 просмотренных узлов. Ответы не исполняются и не сохраняются. VPN-клиент, службы, маршруты, DNS, firewall, настройки пульта и Telegram не устанавливаются этой проверкой.
 

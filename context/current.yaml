@@ -242,8 +242,12 @@ current_work:
     Google/Cloudflare A match local DNS. Owner01:48MSK reports Happ subscription and
     supplies only masked HTTPS novavps.app/s/ shape. Safe standalone local probe prepared,22
     focused/147 backend PASS; hidden input and sanitized protocol/transport JSON only.
-    Actual subscription format/compatible proxy client remain unknown until owner
-    runs the checksum-pinned probe; no secrets received. Exact failing hop/cause unknown;
+    Latest owner run verified checksum but showed no input prompt or JSON; actual
+    elapsed/exit were not captured. Local controlling-PTY reproduction confirms ordinary
+    timeout in the heredoc prevents hidden input (exit124); corrected direct Python
+    launch accepts hidden input, retaining internal30s deadline after input and printing
+    PROBE_EXIT. Script/hash unchanged; owner retry and actual subscription format/compatible
+    proxy client remain pending; no secrets received. Exact failing hop/cause unknown;
     numeric ID, bot setup and receiver ACK not obtained.
   next_task: INF-06
   ready_tasks: []

@@ -1578,3 +1578,15 @@ Owner01:26MSK supplied [tokenless date/DNS/direct curl](../runtime/console_teleg
 ## 2026-10-18 — safe local Happ/NOVAVPS format discovery
 
 Owner selected existing paid VPN in Happ and01:48MSK supplied only masked HTTPS novavps.app/s/ shape. [Receipt](../runtime/console_vpn_subscription_20261018.json) does not infer a raw protocol/provider export contract; full URL/config absent. Public root/search did not establish provider documentation, no placeholder or third-party subscription accessed. Added stdlib standalone probe/tools and22 focused privacy/origin/redirect/error/format/limits cases; full147 backend PASS5.81s, compile/whitespace checked. Hidden URL input only on owner server, bounded same-origin HTTPS GET with CA verification, fixed enum/count metadata without node/query values or raw errors; no subscription save, root/runtime/network changes. Unknown/HTML/encrypted response explicitly not compatibility/connection acceptance. [Runbook](../../server-console/VPN_SUBSCRIPTION_PROBE.md), exact published command/hash in PR103 and dialogue. Owner probe result needed before compatible client/loopback Bot API proxy. Telegram ID/config/receiver and private home route still open; verified executable package3305ecc9 remains pending owner update. Prior receipts unchanged.
+
+
+## 2026-10-18 — INF-06: исправлен интерактивный запуск VPN probe
+
+Владелец получил checksum OK без запроса ссылки/JSON. В локальном controlling PTY прежний
+обычный timeout из bash heredoc не показал prompt и завершился124; прямой Python и контрольный
+timeout --foreground показали prompt, приняли скрытый искусственный invalid input и вернули
+санитизированный invalid_subscription_URL. Сети/реальных секретов тест не использовал.
+[Receipt](../runtime/console_vpn_probe_tty_20261018.json) сохраняет неизвестные server elapsed/exit.
+Runbook/owner команда исправлены: без внешнего timeout, PROBE_EXIT печатается и при ошибке;
+скрипт/hash не меняются, внутренний30s начинается после ввода. Исходный4b70c936 прошёл все3 CI.
+Owner retry/формат подписки/proxy/Telegram/home access пока не приняты. Никаких host operations.

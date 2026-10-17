@@ -228,14 +228,18 @@ current_work:
     acceptance. Owner18Oct00:14MSK supplied host rw/service ro comparison confirming
     HDD namespace probe defect and successful SMART oneshot with partial SSD197/199
     readings. Host/local identity and SMART partial/freshness/UI fixes plus guarded
-    rollback updater prepared in PR; native application pending. Owner17Oct23:59MSK
-    reports console opens in browser; trust/login/roles not yet accepted. TOTP skipped;
-    owner now requests Telegram and home access without inbound port publication.
-    Telegram startup argument defect fixed in PR with regression; owner application
-    and delivery pending. Archive download/hash, receiver, independent observer, jobs/overhead
-    and restore/RTO remain open. No agent SSH or host operations. Owner18Oct00:27MSK
-    ID helper failed getUpdates with transport_unavailable; tokenless network diagnostics
-    requested, numeric ID, persistent bot setup and receiver ACK not obtained.
+    rollback updater in release3305ecc9 passed all3 CI, 125 backend/45 browser and
+    native namespace/rollback tests; artifact verified/delivered, native application
+    pending. Owner17Oct23:59MSK reports console opens in browser; trust/login/roles
+    not yet accepted. TOTP skipped; owner now requests Telegram and home access without
+    inbound port publication. Telegram startup argument defect fixed in PR with regression;
+    owner application and delivery pending. Archive download/hash, receiver, independent
+    observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.
+    Owner18Oct00:27MSK ID helper failed getUpdates with transport_unavailable. Owner01:26MSK
+    tokenless diagnostics resolved IPv4, but direct TCP443 timed out before TLS; curl6
+    obtained no usable address. Failure location/cause unknown; general HTTPS control
+    and same-endpoint corporate Windows comparison next. Numeric ID, bot setup and
+    receiver ACK not obtained.
   next_task: INF-06
   ready_tasks: []
   task_statuses:

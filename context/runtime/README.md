@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+**Owner18Oct01:26MSK:** [Telegram DNS/direct curl](console_telegram_network_20261018.json): IPv4 resolve, TCP443 timeout до TLS; IPv6 curl exit6. Endpoint failure измерен, его узел/причина не установлены, TLS=0 не успешная проверка; token/ID/config/ACK не приняты. General HTTPS и same-endpoint corporate Windows test следующие. [CI release3305ecc9](console_storage_release_20261018.json):125 backend/45 browser, native namespace/rollback и все3 workflows PASS; artifact проверен/передан, owner update не подтверждён. Последующий context-only commit не заменяет executable release.
+
 **Owner18Oct00:27MSK:** [Telegram helper transport failure](console_telegram_transport_20261018.json), ID/persistent setup/receiver ACK не получены. DNS/direct curl IPv4+IPv6 запрошены без token; причина не установлена.
 
 **Owner18Oct00:14MSK:** [HDD/SMART probes](console_storage_probe_20261018.json): host rw/sandbox ro, SMART oneshot0/timer active, SSD PASSED50°C/197+199 absent, HDD PASSED48°C/selected counters0. Приёмка и остальные probes без timestamp; не выводить возраст из receipt time. [Fix/update](../../server-console/STORAGE_FIX_20261018.md) в PR, native application pending. Старые receipts не перезаписаны.

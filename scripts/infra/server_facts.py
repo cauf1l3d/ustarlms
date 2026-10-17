@@ -38,6 +38,7 @@ HEX = r'[0-9a-f]{64}'
 STAMP = r'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ'
 IDENT = r'[A-Za-z_][A-Za-z0-9_.-]{0,127}'
 TOKEN = r'[A-Za-z0-9_ .:/+()=,\\@%\[\]-]{0,240}'
+PACKAGE_VERSION = r'[0-9][A-Za-z0-9.+:~-]{0,239}'
 NULL = lambda x: ('nullable', x)
 ROW = lambda fields: {'rows': [fields]}
 
@@ -99,7 +100,7 @@ SCHEMAS = {
  'firewall': {'backend': r'ufw|nft', 'active': NULL(bool), 'rules': int, 'policies': [r'accept|drop']},
  'apache': {'vhost_count': int, 'ports': [int], 'modules': [IDENT], 'tls_function_verified': bool},
  'certificates': {'items': [{'fingerprint': HEX, 'not_before': TOKEN, 'not_after': TOKEN}]},
- 'packages': ROW({'name': IDENT, 'version': TOKEN}),
+ 'packages': ROW({'name': IDENT, 'version': PACKAGE_VERSION}),
  'log_storage': {'journal_bytes': int, 'top_level_regular_log_bytes': int,
                  'recursive_usage_measured': bool},
  'smart': {'items': [{'device': r'/dev/[A-Za-z0-9_-]+', 'health_passed': NULL(bool),
@@ -310,7 +311,9 @@ def layout(containers, override=None):
                 for k in ('cookiesecure', 'cookiehttponly', 'sslproxy', 'reverseproxy')}}
 
 def containers():
-    fmt = r'''{"name":{{json .Name}},"image_id":{{json .Image}},"state":{{json .State.Status}},"running":{{json .State.Running}},"readonly_rootfs":{{json .HostConfig.ReadonlyRootfs}},"restart_policy":{{json .HostConfig.RestartPolicy.Name}},"restart_count":{{json .RestartCount}},"oom_killed":{{json .State.OOMKilled}},"health":{{if .State.Health}}{{json .State.Health.Status}}{{else}}"not_configured"{{end}},"memory_limit":{{json .HostConfig.Memory}},"nano_cpus":{{json .HostConfig.NanoCpus}},"pids_limit":{{json .HostConfig.PidsLimit}},"log_driver":{{json .HostConfig.LogConfig.Type}},"log_max_size":{{json (index .HostConfig.LogConfig.Config "max-size")}},"log_max_file":{{json (index .HostConfig.LogConfig.Config "max-file")}},"mounts":[{{range $i,$m := .Mounts}}{{if $i}},{{end}}{"source":{{json $m.Source}},"destination":{{json $m.Destination}},"rw":{{json $m.RW}}}{{end}}]}'''
+    # Docker inspect's raw fallback uses missingkey=error: .State.Health fails
+    # when the optional key is absent. index returns nil without exposing logs.
+    fmt = r'''{"name":{{json .Name}},"image_id":{{json .Image}},"state":{{json .State.Status}},"running":{{json .State.Running}},"readonly_rootfs":{{json .HostConfig.ReadonlyRootfs}},"restart_policy":{{json .HostConfig.RestartPolicy.Name}},"restart_count":{{json .RestartCount}},"oom_killed":{{json .State.OOMKilled}},"health":{{with (index .State "Health")}}{{json .Status}}{{else}}"not_configured"{{end}},"memory_limit":{{json .HostConfig.Memory}},"nano_cpus":{{json .HostConfig.NanoCpus}},"pids_limit":{{json .HostConfig.PidsLimit}},"log_driver":{{json .HostConfig.LogConfig.Type}},"log_max_size":{{with (index .HostConfig.LogConfig "Config")}}{{json (index . "max-size")}}{{else}}""{{end}},"log_max_file":{{with (index .HostConfig.LogConfig "Config")}}{{json (index . "max-file")}}{{else}}""{{end}},"mounts":[{{range $i,$m := .Mounts}}{{if $i}},{{end}}{"source":{{json $m.Source}},"destination":{{json $m.Destination}},"rw":{{json $m.RW}}}{{end}}]}'''
     rows = []
     for name in ('ustar_moodle', 'ustar_postgres'):
         row = decode(text(['docker', 'inspect', '--format', fmt, name]).encode())
@@ -587,9 +590,25 @@ def certificates():
     return {'items':rows}
 
 def packages():
-    raw=text(['dpkg-query','-W','-f=${Package}|${Version}\n',
+    raw,code=command(['dpkg-query','-W','-f=${Package}|${Version}|${db:Status-Status}\n',
               'apache2','openssl','openssh-server','python3','docker-ce','containerd.io','caddy'],accept_nonzero=True)
-    return {'rows':[{'name':a,'version':b} for line in raw.splitlines() if '|' in line for a,b in [line.split('|',1)]]}
+    # Exit1 can mean an optional selected package is not present; exit2 is a
+    # query/database failure, never a successful empty inventory.
+    if code not in (0,1):
+        raise Refusal('unavailable')
+    rows=[]
+    for line in raw.splitlines():
+        fields=line.split('|')
+        if len(fields)!=3:
+            raise Refusal('invalid_data')
+        name,version,status=fields
+        if status=='installed':
+            if not version:
+                raise Refusal('invalid_data')
+            rows.append({'name':name,'version':version})
+    if not rows:
+        raise Refusal('unavailable')
+    return {'rows':rows}
 
 def log_storage():
     raw=text(['journalctl','--disk-usage'])

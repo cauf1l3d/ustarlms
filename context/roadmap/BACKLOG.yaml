@@ -49,8 +49,10 @@ tasks:
   - context/reviews/20261017/README.md
   - scripts/infra/README_server_facts.md
   - context/coverage.yaml
-  current_summary: Review17Oct проверен по исходникам/CI. Исправленный bounded collector и immutable importer готовы для свежего
-    снимка; server1 report ещё не получен. Полная native сценарная приёмка остаётся отдельной.
+  - context/runtime/server_facts_terminal_20261017.json
+  - context/reviews/20261017/collector_compatibility.md
+  current_summary: Первый owner-run17Oct сохранил partial report17ok/13error; archive ещё не получен. Воспроизведены и исправлены
+    optional Docker template/DPKG version bugs; ожидаются исходный и повторный отчёты. Native сценарная приёмка отдельно.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned

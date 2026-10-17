@@ -69,9 +69,9 @@ production:
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
 current_work:
-  activity: 'Owner17Oct: audit fable and all attachments; correct collection/import/context;
-    await fresh server1 report and owner re-review; then repository, console and Telegram
-    work'
+  activity: Owner17Oct first server1 collection produced partial report; terminal
+    statuses17ok/13error/SMART excluded; fix reproduced Docker template and Debian
+    version compatibility; await archives before owner repeat review
   next_task: INF-06
   ready_tasks:
   - INF-06
@@ -110,12 +110,15 @@ current_work:
     PRIVACY-01: deferred
     TECH-01: planned
 server_facts:
-  status: awaiting_collection
+  status: awaiting_report_archive_and_corrected_collection
   snapshot: null
   observed_at: null
   runbook: scripts/infra/README_server_facts.md
   independently_authenticated_host: false
   functional_acceptance: false
+  first_run_receipt: context/runtime/server_facts_terminal_20261017.json
+  archive_received: false
+  collector_compatibility_review: context/reviews/20261017/collector_compatibility.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'

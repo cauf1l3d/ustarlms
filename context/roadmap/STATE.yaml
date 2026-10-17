@@ -3,8 +3,8 @@ updated_at: '2026-10-17'
 project: USTAR Academy
 stage: context_review_and_server_facts_before_INF06
 stage_label: Сбор фактов и повторное ревью до продолжения пульта и Telegram
-current_activity: 'Owner17Oct: audit fable and all attachments; correct collection/import/context; await fresh server1 report
-  and owner re-review; then repository, console and Telegram work'
+current_activity: Owner17Oct first server1 collection produced partial report; terminal statuses17ok/13error/SMART excluded;
+  fix reproduced Docker template and Debian version compatibility; await archives before owner repeat review
 next_task: INF-06
 ready_tasks:
 - INF-06
@@ -140,9 +140,12 @@ do_not_repeat:
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
 entrypoint: START_HERE.md
 server_facts:
-  status: awaiting_collection
+  status: awaiting_report_archive_and_corrected_collection
   snapshot: null
   observed_at: null
   runbook: scripts/infra/README_server_facts.md
   independently_authenticated_host: false
   functional_acceptance: false
+  first_run_receipt: context/runtime/server_facts_terminal_20261017.json
+  archive_received: false
+  collector_compatibility_review: context/reviews/20261017/collector_compatibility.md

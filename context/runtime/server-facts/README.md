@@ -1,6 +1,6 @@
 # Свежие наблюдения сервера
 
-Снимок с server1 пока **не получен**. Здесь не должно быть результатов локальной песочницы, выданных за production.
+Архив снимка с server1 пока **не получен**. Первый owner-run сохранил partial report; [terminal receipt](../server_facts_terminal_20261017.json) содержит только17 ok/13 error и исключённый SMART. [Исправления Docker/DPKG](../../reviews/20261017/collector_compatibility.md) подготовлены для повторного сбора. Здесь не должно быть результатов локальной песочницы, выданных за production.
 
 [Сбор и импорт](../../../scripts/infra/README_server_facts.md), [разбор внешнего предложения](../../reviews/20261017/README.md). Последний принятый указатель — `STATE.yaml → server_facts.snapshot`; [current.yaml](../../current.yaml) генерируется из STATE.
 

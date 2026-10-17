@@ -3,9 +3,11 @@ from datetime import datetime, timedelta, timezone
 import importlib.util
 import io
 import gzip
+from itertools import product
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tarfile
@@ -98,6 +100,95 @@ class ReadBoundary(unittest.TestCase):
             facts.command([sys.executable,'-c','print("x"*1000000)'])
         with self.assertRaisesRegex(facts.Refusal,'timeout'):
             facts.command([sys.executable,'-c','import time; time.sleep(3)'],timeout=.1)
+
+class PackageInventory(unittest.TestCase):
+    def test_debian_epoch_tilde_and_absent_optional_packages(self):
+        output='docker-ce|5:29.9.0-1~ubuntu.24.04~noble|installed\nopenssl|3.0.13-0ubuntu3.6|installed\ncaddy||not-installed\n'
+        with patch.object(facts,'command',return_value=(output,1)) as run:
+            value=facts.packages()
+        facts.shape(value,facts.SCHEMAS['packages'])
+        self.assertEqual([row['name'] for row in value['rows']],['docker-ce','openssl'])
+        self.assertEqual(value['rows'][0]['version'],'5:29.9.0-1~ubuntu.24.04~noble')
+        self.assertIn('${db:Status-Status}',run.call_args.args[0][2])
+
+    def test_query_failure_or_no_installed_packages_is_unavailable(self):
+        for output,code in [('openssl|3.0.13|installed\n',2),('caddy||not-installed\n',1),('',0)]:
+            with self.subTest(code=code),patch.object(facts,'command',return_value=(output,code)),self.assertRaisesRegex(facts.Refusal,'unavailable'):
+                facts.packages()
+
+    def test_invalid_package_output_is_rejected(self):
+        for output in ['unstructured text\n','openssl||installed\n','openssl|3.0.13|installed|extra\n']:
+            with patch.object(facts,'command',return_value=(output,0)),self.assertRaisesRegex(facts.Refusal,'invalid_data'):
+                facts.packages()
+
+class NativeDockerTemplate(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        go=shutil.which('go')
+        if not go:
+            if os.environ.get('CI'):
+                raise AssertionError('Go toolchain required for the Docker template regression in CI')
+            raise unittest.SkipTest('Native Go template fixture needs a Go toolchain')
+        cls.area=tempfile.TemporaryDirectory(prefix='ustar-inspect-template-')
+        cls.binary=Path(cls.area.name)/'inspect-template'
+        env={**os.environ,'GOTOOLCHAIN':'local','GOPROXY':'off','GO111MODULE':'off'}
+        build=subprocess.run([go,'build','-o',str(cls.binary),str(ROOT/'tests/r16/fixtures/docker_inspect_template.go')],env=env,capture_output=True,timeout=90)
+        if build.returncode:
+            cls.area.cleanup()
+            raise AssertionError('Native Go fixture build failed')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.area.cleanup()
+
+    def record(self):
+        return {'Name':'/ustar_moodle','Image':'sha256:'+'a'*64,'RestartCount':0,
+          'State':{'Status':'running','Running':True,'OOMKilled':False},
+          'Config':{'Env':['private-fixture-not-for-output']},
+          'HostConfig':{'ReadonlyRootfs':False,'RestartPolicy':{'Name':'unless-stopped'},
+            'Memory':0,'NanoCpus':0,'PidsLimit':None,'LogConfig':{'Type':'json-file','Config':None}},
+          'Mounts':[{'Source':'/opt/ustar/data/moodle/public','Destination':'/var/www/html','RW':True}]}
+
+    def render(self,format,data):
+        return subprocess.run([str(self.binary)],input=json.dumps({'Format':format,'Data':data}),text=True,capture_output=True,timeout=4)
+
+    def inventory(self,data):
+        def inspect(argv):
+            record=copy.deepcopy(data);record['Name']='/'+argv[-1]
+            result=self.render(argv[3],record)
+            self.assertEqual(result.returncode,0,result.stderr)
+            return result.stdout
+        with patch.object(facts,'text',side_effect=inspect):value=facts.containers()
+        facts.shape(value,facts.SCHEMAS['containers'])
+        self.assertNotIn('private-fixture-not-for-output',json.dumps(value))
+        return value['items'][0]
+
+    def test_optional_health_and_empty_or_missing_log_configuration(self):
+        for health,config in product(('absent',None),(None,{},'absent')):
+            with self.subTest(health=health,config=config):
+                data=self.record()
+                if health is None:data['State']['Health']=None
+                if config=='absent':data['HostConfig']['LogConfig'].pop('Config')
+                else:data['HostConfig']['LogConfig']['Config']=config
+                row=self.inventory(data)
+                self.assertEqual(row['health'],'not_configured')
+                self.assertEqual(row['log_max_size'],'not_configured')
+                self.assertEqual(row['log_max_file'],'not_configured')
+
+    def test_configured_health_and_log_limits_without_raw_health_log(self):
+        data=self.record()
+        data['State']['Health']={'Status':'healthy','Log':[{'Output':'private-health-output'}]}
+        data['HostConfig']['LogConfig']['Config']={'max-size':'10m','max-file':'3','other':'private-log-option'}
+        row=self.inventory(data)
+        self.assertEqual(row['health'],'healthy')
+        self.assertEqual((row['log_max_size'],row['log_max_file']),('10m','3'))
+        self.assertNotIn('private-health-output',json.dumps(row))
+        self.assertNotIn('private-log-option',json.dumps(row))
+
+    def test_original_optional_lookups_fail_for_valid_inspect_records(self):
+        for format in ('{{if .State.Health}}configured{{end}}','{{json (index .HostConfig.LogConfig.Config "max-size")}}'):
+            with self.subTest(format=format):
+                self.assertNotEqual(self.render(format,self.record()).returncode,0)
 
 class StaticDiscovery(unittest.TestCase):
     def test_cron_worker_success_does_not_hide_task_failure(self):

@@ -24,12 +24,12 @@ covered:
   boundary: grades/routes/evidence/work/mobile source navigation enriched; domain maps are not exhaustive contracts
 - area: collector_and_import
   evidence: context/runtime/server_facts_received_20261017.json
-  boundary: Two actual owner server1 archives validated and imported byte-for-byte; latest28ok/2error/SMART excluded; clock
-    values remain unknown
+  boundary: Three actual owner server1 archives validated/imported byte-for-byte; latest30ok/1error. Clock/scheduled/SMART
+    observed; query statistics unavailable. Console supplement separate from checksum-bound payload.
 open:
 - id: SERVER-FACTS-RESIDUAL
-  next: Scheduled task rows and clock properties unknown; query-stat extension absent; full core/ACL/HTTP/process and external
-    reachability scopes remain separate
+  next: Query-stat module available but not installed/preloaded; NTP server/offset/client, effective eligibility18 overdue
+    and detailed SMART unmeasured; full core/ACL/HTTP/process/external reachability scopes remain separate
 - id: SOURCE-CORE
   next: Exact Moodle core provenance/full manifest; plugin/theme comparison alone is insufficient
 - id: AUTHORIZATION

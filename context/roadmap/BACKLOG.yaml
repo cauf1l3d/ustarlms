@@ -53,8 +53,11 @@ tasks:
   - context/reviews/20261017/collector_compatibility.md
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
-  current_summary: Свежий owner snapshot17Oct получен:28 блоков ok,2 unavailable; plugin/theme526 совпали. Core hash provenance,
-    полный per-object storage inventory, scheduled task details/clock и native сценарии остаются открыты.
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
+  current_summary: 17Oct latest owner snapshot30ok/1error; plugin/theme526 совпали. Clock/scheduled/SMART измерены. Query
+    statistics, NTP source/offset, effective eligibility18 overdue, full SMART/core provenance/per-object storage и native
+    сценарии остаются открыты.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -70,6 +73,8 @@ tasks:
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: INF-03
   title: Защита кода/config, dumps и ключей
   status: planned
@@ -85,6 +90,8 @@ tasks:
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: INF-04
   title: Расход SSD, healthy HDD и аппаратный резерв
   status: in_progress
@@ -101,8 +108,11 @@ tasks:
   - context/runtime/ssd_ext4_resize_result_20261011.json
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
-  current_summary: 17Oct root available54.3GiB/109.7GiB, HDD available394.4GiB/457.4GiB, UUID/mount flags сохранены. SMART
-    исключён; аппаратный резерв и полный storage breakdown не доказаны.
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
+  current_summary: '17Oct SMART health true/exit0: /dev/sda50°C, /dev/sdb47°C. Полные attributes/SSD wear/test history не
+    экспортированы; прежний residual HDD198=1 не перепроверен. Root/HDD free space и mount flags измерены; аппаратный резерв
+    и полный storage breakdown открыты.'
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -120,6 +130,8 @@ tasks:
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии
   status: ready
@@ -155,6 +167,8 @@ tasks:
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: INF-09
   title: CI на production PHP/core/PostgreSQL matrix
   status: in_progress
@@ -168,9 +182,8 @@ tasks:
   validation_evidence:
   - context/runtime/lab_patch_full_rc_result_20261012.json
   - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
-  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий CI исключает legacy
-    frontend; результаты консолидации проверяются на точном новом SHA. Native clean-host DR не подменяется
-    CI.
+  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий CI исключает legacy frontend; результаты
+    консолидации проверяются на точном новом SHA. Native clean-host DR не подменяется CI.
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
   status: done
@@ -182,8 +195,7 @@ tasks:
   - Compatible stage full gate and coordinated rollback pass
   - Production core/version/digest, scoped manifest, smoke and cron evidence recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не
-    повторять обновление.
+  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не повторять обновление.
   validation_evidence:
   - context/runtime/production_patch_upgrade_result_20261013.json
   - context/runtime/production_patch_browser_result_20261013.json
@@ -197,12 +209,11 @@ tasks:
   acceptance:
   - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from banner
   - Targeted AppArmor repair preserves docker-default; Snap consumers checked before stale profile archive
-  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron
-    v3
+  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart
-    policy/HTTP и postboot cron проверены. Полный shared-host restore и сквозная почта/DNS не приписываются.
+  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart policy/HTTP и postboot
+    cron проверены. Полный shared-host restore и сквозная почта/DNS не приписываются.
   validation_evidence:
   - context/runtime/host_apparmor_result_20261013.json
   - context/runtime/host_packages_install_result_20261014.json
@@ -222,6 +233,8 @@ tasks:
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: INF-11
   title: H5P/registration exceptions, SMTP и полный cron cycle
   status: planned
@@ -233,11 +246,14 @@ tasks:
   - Moodle.org registration distinct from employee registration; actual test mail delivered
   - Hourly/nightly task behavior accepted with correct timezone/overrides and retained failure history
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: 17Oct cron receipt свежий:worker0/new failures0/USTAR errors0, adhoc0; aggregate failed2/overdue18. Список
-    scheduled tasks unavailable из-за SQL probe; active/disabled разбивка и SMTP acceptance открыты.
+  current_summary: 17Oct01:39:03Z cron worker0/new failures0/USTAR errors0, adhoc0. Scheduled147:15 disabled,132 по DB flag
+    enabled; faildelay2 оба disabled (registration/H5P), enabled faildelay0.18 enabled-flag overdue>10min имеют last_run0;
+    component eligibility/overrides неизвестны. UTC/NTPfalse/syncedtrue; NTP source/offset, SMTP и full cycle acceptance открыты.
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: OPS-01
   title: Свежая read-only сверка production и проверка PR76
   status: in_progress
@@ -257,6 +273,8 @@ tasks:
   - context/runtime/route_refresh_db_result_20261014.json
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: INF-12
   title: Приёмка доменов и сценарная безопасность
   status: planned
@@ -300,11 +318,15 @@ tasks:
   - R19
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: 17Oct в application DB установлен только plpgsql, pg_stat_statements отсутствует; query stats unavailable.
-    Получены selected settings/table counters, но нет временного baseline/p95/Web SAPI и профиля нагрузки.
+  current_summary: '17Oct owner console: pg_stat_statements available=true, installed=false, shared_preload_libraries empty,
+    compute_query_id=auto, track null, pending_restart=false. Archive pg_query_stats unavailable; enabled tracking отсутствует,
+    historical statistics не восстановить задним числом. Selected table counters/settings измерены, workload/p95/Web SAPI
+    baseline открыт.'
   validation_evidence:
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned
@@ -336,8 +358,11 @@ tasks:
   - context/runtime/host_reboot_result_20261014.json
   - context/reviews/20261017/runtime_reconciliation.md
   - context/runtime/server-facts/20261017T011227Z-6b7c0628/facts.json
-  current_summary: 17Oct03:31:32MSK scheduled HDD backup success/readback reported, file bytes match, recovery marker absent,
-    timer enabled. Нового независимого restore нет; RPO/RTO/retention/offsite/alerts остаются открыты.
+  - context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+  - context/runtime/server_facts_followup_20261017.json
+  current_summary: 17Oct03:31:32MSK scheduled HDD backup success/readback reported, archive bytes match, recovery marker absent,
+    timer enabled. Повторный receipt01:39Z подтверждает ту же копию, не новый backup/rehash/restore. RPO/RTO/retention/offsite/alerts
+    остаются открыты.
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: waiting_external
@@ -358,22 +383,21 @@ tasks:
   - context/runtime/sysadmin_handoff_result_20261016.json
   - context/runtime/production_copy_validation_20261015.json
   production_execution: archive_obtained_instruction_transferred_waiting_sysadmin_restore
-  current_summary: Владелец16Oct подтвердил получение архива и передачу инструкции сисадмину. Ожидается реальный
-    restore/вход/SCORM/reboot на чистом сервере; весь shared host не восстановлен.
+  current_summary: Владелец16Oct подтвердил получение архива и передачу инструкции сисадмину. Ожидается реальный restore/вход/SCORM/reboot
+    на чистом сервере; весь shared host не восстановлен.
 - id: PLAT-01
   title: Отложенный переход на Moodle 5.2 и PostgreSQL 17
   status: deferred
   depends_on:
   - OPS-02
   acceptance:
-  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility against official
-    primary sources
+  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility against official primary sources
   - Isolated PostgreSQL17 migration and paired code/database/data rollback pass before production
   - Fresh/upgrade/repeat/browser/SCORM/performance and independent archive restore accepted
   - Separate owner instruction and approved runtime window; historical5.3 preparation does not authorize activation
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17 и PR101
-    — историческая подготовка, не утверждённый текущий запуск.
+  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17 и PR101 — историческая
+    подготовка, не утверждённый текущий запуск.
   validation_evidence:
   - context/runtime/moodle53_target_20261014.json
   - context/runtime/sysadmin_handoff_result_20261016.json
@@ -382,8 +406,8 @@ tasks:
   status: deferred
   depends_on:
   - INF-13
-  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance
-    before first B2B production
+  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance before first
+    B2B production
   reference: context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   acceptance:
@@ -494,5 +518,5 @@ owner_selected_order:
 - DOC-03
 - INF-06
 - OPS-02_external_result_when_received
-latest_owner_priority: '16Oct00:20MSK: consolidate GitHub and audit; next INF06 panel+Telegram; OPS02 waiting
-  sysadmin; Moodle5.2/PG17 deferred'
+latest_owner_priority: '16Oct00:20MSK: consolidate GitHub and audit; next INF06 panel+Telegram; OPS02 waiting sysadmin; Moodle5.2/PG17
+  deferred'

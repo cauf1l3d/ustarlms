@@ -606,3 +606,8 @@ Consolidation brings accepted PR98/99/100/102 sources and all dated receipts int
 ## 17Oct — read-only owner facts, repository context only
 
 [Two actual archives](server_facts_received_20261017.json) validated/imported; [reconciliation](../reviews/20261017/runtime_reconciliation.md) separates28 collected blocks from task/clock/query-stat/SMART gaps. Fresh plugin/theme526 match e1d57f5b. DB/code privilege risks confirmed, scheduled backup/cron receipts refreshed without closing DR or task-failure acceptance. This entry is not a new application/host deployment.
+
+
+## 17Oct04:41MSK — third read-only report accepted, no deployment
+
+[Latest01:39:24Z](server-facts/20261017T013924Z-285497b0/manifest.json) validated/imported:30ok/1error and526 source matches. [Follow-up](server_facts_followup_20261017.json) separates archived clock/scheduled/SMART values from owner console PG/NTP diagnostics. Both faildelay tasks disabled;18 overdue eligibility unknown. UTC/NTPfalse/syncedtrue, NTP source/offset unknown. SMART healthtrue at50/47°C, detailed attributes/history/residual not rechecked. pg_stat_statements available but not installed/preloaded; no restart or activation performed. Same backup receipt preserved; no new restore inferred. [Current reconciliation](../reviews/20261017/runtime_reconciliation.md) is ready for owner repeat audit. Existing580 r16 tests pass with19environment skips.

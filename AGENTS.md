@@ -2,7 +2,7 @@
 
 Текущая инструкция владельца17Oct: сначала изучить fable и все приложения, проверить скрипты/пути, собрать свежие server facts и актуализировать репозиторий; затем повторное ревью владельца, работа по репо, пульт и Telegram. Архив передан сисадмину, результат восстановления ожидается. **Moodle5.2/PostgreSQL17 отложены.** Старые поручения запускать storage/patch/reboot или подготовку5.3 не являются текущей задачей.
 
-Оба server1 archives17Oct проверены/imported,526 source files совпали. [Свежая сверка](context/reviews/20261017/runtime_reconciliation.md) готова для повторного аудита владельца; partial/clock/task/security gaps сохранены. Подготовка инструмента и импорт не закрывают native gates и не дают основания повторять весь сбор без новой необходимости.
+Три server1 archives17Oct проверены/imported, latest01:39:24Z —30ok/1error,526 source files совпали. Clock/scheduled/SMART теперь измерены: UTC/NTPfalse/syncedtrue;147 tasks, оба faildelay относятся к disabled; SMART health true при50/47°C. [Свежая сверка](context/reviews/20261017/runtime_reconciliation.md) и [follow-up](context/runtime/server_facts_followup_20261017.json) готовы для повторного аудита владельца. Query statistics, NTP source/offset, component eligibility18 overdue и подробный SMART остаются открыты. Подготовка/импорт не закрывают native gates и не дают основания повторять весь сбор без новой необходимости.
 
 ## Перед работой
 

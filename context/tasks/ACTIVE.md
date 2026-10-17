@@ -2,7 +2,7 @@
 
 ## Сейчас — актуализация контекста17Oct
 
-Оба owner archives получены04:16MSK, проверены и импортированы без редактирования:17/13 и28/2 ok/error, SMART excluded. [Свежая сверка](../reviews/20261017/runtime_reconciliation.md), [provenance](../runtime/server_facts_received_20261017.json), [покрытие](../coverage.yaml).526 файлов совпали; роль DB superuser и writable plugin/config подтверждены. Query statistics отсутствуют, scheduled task rows и clock values неизвестны; getters исправлены, повторный live probe не выполнялся. Контекст готов к повторному аудиту владельца. INF-01/P0/restore целиком не закрываются; agent SSH не использовался.
+Три owner archives проверены и импортированы без редактирования:17/13,28/2 и30/1 ok/error. Последний01:39:24Z содержит clock/scheduled/SMART: timezoneUTC, NTPfalse/syncedtrue;147 задач,15 disabled, оба faildelay у disabled;18 overdue по DB flag без проверки активности компонентов; SMART health true при50/47°C. [Свежая сверка](../reviews/20261017/runtime_reconciliation.md), [follow-up](../runtime/server_facts_followup_20261017.json), [provenance](../runtime/server_facts_received_20261017.json), [покрытие](../coverage.yaml).526 файлов совпали; роль DB superuser и writable plugin/config подтверждены. Query statistics unavailable: owner console показывает available=true/installed=false/empty preload. Источник/offset NTP и подробные SMART attributes/test history не измерены. Контекст готов к повторному аудиту владельца. INF-01/P0/restore целиком не закрываются; agent SSH не использовался.
 
 ## После повторного review — INF-06
 

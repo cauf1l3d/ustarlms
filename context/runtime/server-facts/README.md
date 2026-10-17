@@ -1,6 +1,6 @@
 # Свежие наблюдения сервера
 
-Оба owner archives17Oct **получены и импортированы**. [Provenance](../server_facts_received_20261017.json), [сверка](../../reviews/20261017/runtime_reconciliation.md). Первый снимок01:00:21Z содержит17ok/13error, второй01:12:27Z —28ok/2error; SMART не запрашивался. Latest manifest526 совпал с baseline. Scheduled task list/query stats недоступны; clock values неизвестны. Здесь нет результатов локальной песочницы, выданных за production.
+Три owner archives17Oct **получены и импортированы**. [Provenance](../server_facts_received_20261017.json), [сверка](../../reviews/20261017/runtime_reconciliation.md), [follow-up](../server_facts_followup_20261017.json). Снимки01:00:21Z и01:12:27Z содержат17ok/13error и28ok/2error, SMART там не запрашивался. Последний01:39:24Z —30ok/1error: scheduled147, timezoneUTC/NTPfalse/syncedtrue, SMART health true при50/47°C; unavailable только pg_query_stats. Latest manifest526 совпал с baseline. NTP source/offset, component eligibility просроченных задач и полный SMART отдельно не измерены. Здесь нет результатов локальной песочницы, выданных за production.
 
 [Сбор и импорт](../../../scripts/infra/README_server_facts.md), [разбор внешнего предложения](../../reviews/20261017/README.md). Последний принятый указатель — `STATE.yaml → server_facts.snapshot`; [current.yaml](../../current.yaml) генерируется из STATE.
 

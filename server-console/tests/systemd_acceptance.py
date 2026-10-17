@@ -81,6 +81,9 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
         denied=run('runuser','-u','ustar-notify','--','/opt/ustar-console/venv/bin/python','-c',
             "from ustar_console.operations import rpc; rpc('status',actor='fixture')",check=False)
         assert denied.returncode!=0
+        root_denied=run('/opt/ustar-console/venv/bin/python','-c',
+            "from ustar_console.operations import rpc; rpc('status',actor='fixture')",check=False)
+        assert root_denied.returncode!=0
         wrong_name=run('curl','--silent','--noproxy','*','--max-time','2','--cacert','/etc/ustar-console/ustar-console-ca.crt',
                       '--resolve','wrong.invalid:8443:127.0.0.1','https://wrong.invalid:8443/healthz',check=False)
         assert wrong_name.returncode==60

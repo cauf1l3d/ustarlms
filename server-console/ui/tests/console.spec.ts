@@ -137,6 +137,19 @@ const fixture = () => ({
   ],
   lab: { phase: "stopped", ready: false, unlimited: false, expires_at: null },
   units: [],
+  clock: { source: "194.58.206.20", offset_ms: -0.2024, jitter_ms: 0.169 },
+  smart: {
+    observed_at: new Date().toISOString(),
+    disks: [
+      {
+        device: "/dev/sda",
+        status: "ok",
+        temperature_c: 50,
+        sectors: { "5": 0, "197": 0, "198": 0, "199": 0 },
+        historical_error_log: true,
+      },
+    ],
+  },
 });
 
 async function login(page: Page) {

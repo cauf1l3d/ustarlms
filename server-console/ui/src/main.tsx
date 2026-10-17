@@ -84,6 +84,17 @@ type Snapshot = {
   lab: Record<string, unknown>;
   domains: Record<string, string>;
   database?: Record<string, number | string>;
+  clock?: { source: string; offset_ms: number; jitter_ms: number };
+  smart?: {
+    observed_at: string;
+    disks: {
+      device: string;
+      status: string;
+      temperature_c?: number;
+      sectors?: Record<string, number>;
+      historical_error_log?: boolean;
+    }[];
+  };
   notifications?: {
     pending: number;
     delivery_failures: number;
@@ -1116,6 +1127,79 @@ function App() {
                   checks={checks.filter((c) => c.domain === "server")}
                   onSelect={setSelected}
                 />
+                {data.clock && (
+                  <section className="panel">
+                    <h2>Время и NTP</h2>
+                    <dl>
+                      <dt>Выбранный источник</dt>
+                      <dd>{data.clock.source}</dd>
+                      <dt>Смещение</dt>
+                      <dd>
+                        {usable("clock")
+                          ? value(data.clock.offset_ms, " мс", 4)
+                          : "—"}
+                      </dd>
+                      <dt>Jitter</dt>
+                      <dd>
+                        {usable("clock")
+                          ? value(data.clock.jitter_ms, " мс", 4)
+                          : "—"}
+                      </dd>
+                    </dl>
+                  </section>
+                )}
+                {data.smart && (
+                  <section className="panel">
+                    <h2>Диски · SMART</h2>
+                    <p className="muted">
+                      Измерено {date(data.smart.observed_at)}. Чтение раз в 15
+                      минут, без запуска теста и пробуждения диска.
+                    </p>
+                    {data.smart.disks.map((disk) => (
+                      <div className="smart-disk" key={disk.device}>
+                        <h3>
+                          {disk.device}{" "}
+                          <Badge
+                            status={usable("smart") ? disk.status : "no_data"}
+                          />
+                        </h3>
+                        <dl>
+                          <dt>Температура</dt>
+                          <dd>
+                            {usable("smart")
+                              ? value(disk.temperature_c, " °C")
+                              : "—"}
+                          </dd>
+                          <dt>Переназначенные секторы</dt>
+                          <dd>
+                            {usable("smart")
+                              ? value(disk.sectors?.["5"], "", 0)
+                              : "—"}
+                          </dd>
+                          <dt>Ожидающие / неисправимые</dt>
+                          <dd>
+                            {usable("smart")
+                              ? value(disk.sectors?.["197"], "", 0) +
+                                " / " +
+                                value(disk.sectors?.["198"], "", 0)
+                              : "—"}
+                          </dd>
+                          <dt>История ошибок ATA</dt>
+                          <dd>
+                            {disk.historical_error_log
+                              ? "Есть старые записи; отдельно от текущего состояния"
+                              : "Не заявлена этим чтением"}
+                          </dd>
+                        </dl>
+                      </div>
+                    ))}
+                    <p className="muted">
+                      Vendor wear не интерпретируется без спецификации
+                      накопителя. Старый exit64 сам по себе не означает текущую
+                      аварию.
+                    </p>
+                  </section>
+                )}
                 <div className="charts">
                   <Chart
                     label="Загрузка процессора"
@@ -1392,8 +1476,8 @@ function App() {
               </dl>
               <p className="muted">
                 Показания и свежесть обновляются вместе с обзором. Правила
-                устойчивой нагрузки и доставка алертов подключаются следующим
-                этапом.
+                устойчивой нагрузки и состояние доставки доступны в «Событиях»,
+                если notifier подключён.
               </p>
             </>
           )

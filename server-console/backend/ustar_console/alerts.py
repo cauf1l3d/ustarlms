@@ -19,7 +19,8 @@ LABELS = {'critical':'АВАРИЯ','warning':'ВНИМАНИЕ','no_data':'НЕ
 class Queue:
     def __init__(self, path, chats, clock=time.time):
         self.path, self.chats, self.clock = path, chats, clock
-        if path.exists() and (path.is_symlink() or path.stat().st_uid != os.geteuid() or path.stat().st_mode & 0o077):
+        if path.exists() and (path.is_symlink() or (os.name!='nt' and
+                (path.stat().st_uid != os.geteuid() or path.stat().st_mode & 0o077))):
             raise ValueError('Untrusted notification state')
         with self.connect() as db:
             os.chmod(path,0o600)

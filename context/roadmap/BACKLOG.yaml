@@ -169,12 +169,14 @@ tasks:
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
   current_summary: 'PR103 LAN code: native HTTPS/setup/CA, PG aggregate monitor, bounded history15d, NTP/SMART, TOTP, durable
-    Telegram/outbox/rules, encrypted archive FD download, fixed planned jobs and independent observer bundle. Not installed;
-    native source/role/receiver/download/overhead/host-loss acceptance pending. Request statistics/logs/SFTP/restore/flexible
+    Telegram/outbox/rules, encrypted archive FD download, fixed planned jobs and independent observer bundle. Owner installed567e90d5;
+    limited TLS/freshness/units/web-isolation gate passed23:36MSK. HDD critical/probe_failed, SMART no_data/probe_failed unresolved;
+    TOTP/Telegram skipped. Native browser/source/role/receiver/download/overhead/host-loss acceptance pending. Request statistics/logs/SFTP/restore/flexible
     TTL/web user administration remain open.'
   validation_evidence:
   - server-console/AUDIT_FOLLOWUP_20261017.md
   - server-console/LAN_ROLLOUT_20261017.md
+  - context/runtime/console_native_install_20261017.json
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned

@@ -1,6 +1,6 @@
 # LAN выпуск17Oct: реализация и границы приёмки
 
-Разрешение владельца17:03MSK — закончить остаток и устанавливать пульт;17:09MSK — первый запуск в корпоративной сети. Код в PR103, не утверждение установки. Академия5.1.8/PG16, исходники Moodle, старые runtime receipts и ожидаемый результат восстановления сисадмина не меняются.
+Разрешение владельца17:03MSK — закончить остаток и устанавливать пульт;17:09MSK — первый запуск в корпоративной сети. [Owner receipt23:36MSK](../context/runtime/console_native_install_20261017.json) подтверждает установку567e90d5 и limited TLS/units/freshness/web-isolation gate. HDD critical/probe_failed и SMART no_data/probe_failed требуют диагностики. TOTP/Telegram владелец пропустил; browser trust/login/roles/download hash/receiver/observer/jobs/overhead/restore открыты. Код в PR103, main не merged. Академия5.1.8/PG16, исходники Moodle, старые runtime receipts и ожидаемый результат восстановления сисадмина не меняются.
 
 | Пункт | Поставлено в коде | Что ещё нужно подтвердить |
 |---|---|---|

@@ -1,5 +1,7 @@
 # Runtime и эксплуатация
 
+**Дополнение23:36MSK17Oct:** [owner terminal receipt установки пульта](console_native_install_20261017.json), exact artifact567e90d5. Local-CA TLS, свежий snapshot, web/broker/collector timer active и web identity isolation прошли limited gate. HDD critical/probe_failed и SMART no_data/probe_failed не устранены; причина ещё не измерена. TOTP/Telegram пропущены владельцем. Browser trust/login/roles/download hash/receiver/observer/jobs/overhead/restore остаются открыты. Это pasted output, без archive checksum/независимого SSH; более ранние snapshots не менялись.
+
 **Дополнение14:24MSK17Oct:** [owner terminal receipt](external_network_result_20261017.json) — IPv4 выхода server1 совпал с target домашнего TCP2019 test; TcpTestSucceeded=False, отдельно ping timeout. Адреса/локальное имя не опубликованы. Один источник/маршрут, точное время probes неизвестно; NAT, другие источники/IPv6/API и listener hardening не установлены. Это отдельный terminal follow-up, не часть archive checksums.
 
 Предыдущее дополнение13:59MSK17Oct — [gaps review](../reviews/20261017/gaps_reconciliation.md), [provenance](server_gaps_received_20261017.json): ACL, текущий SSH-контекст, Caddy2019 PID, metadata/hashes23 extras и selected du. ACL экспортирован после owner install пакета acl; writable parents/code, внешняя доступность и native gates остаются открыты.

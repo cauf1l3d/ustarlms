@@ -222,12 +222,13 @@ production:
     corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
     independent_perimeter_acceptance: false
 current_work:
-  activity: Owner17Oct16:30MSK authorized resuming console after context collection.
-    PR103 integrates reviewed PR105 context, adds cron v3 receipt adapter with private
-    durable last observed success, current SSD/HDD capacity and inode checks, independent
-    source freshness, and cron/backup/disk/HTTP first-screen metrics. Production acceptance,
-    DB monitor, alerting/Telegram, independent observer, download and guarded jobs
-    remain open. No agent server1 changes or messages.
+  activity: 'Owner terminal receipt received17Oct23:36MSK confirms installation of
+    console567e90d5, local-CA TLS, fresh collector snapshot, active web/broker/collector
+    timer and web identity isolation. Limited native_accepted=true is not all-source
+    acceptance: HDD critical/probe_failed and SMART no_data/probe_failed require diagnosis.
+    TOTP and Telegram skipped by owner; notifier inactive. Browser trust/login/roles,
+    archive download/hash, receiver, independent observer, jobs/overhead and restore/RTO
+    remain open. No agent SSH or host operations.'
   next_task: INF-06
   ready_tasks: []
   task_statuses:

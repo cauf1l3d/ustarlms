@@ -1,12 +1,14 @@
 schema_version: 2
 updated_at: '2026-10-17'
 project: USTAR Academy
-stage: console_audit_followup_in_progress_not_deployed
-stage_label: 'Пульт: исправления по аудиту в PR103; на сервере не установлен'
-current_activity: Owner17Oct16:30MSK authorized resuming console after context collection. PR103 integrates reviewed PR105
-  context, adds cron v3 receipt adapter with private durable last observed success, current SSD/HDD capacity and inode checks,
-  independent source freshness, and cron/backup/disk/HTTP first-screen metrics. Production acceptance, DB monitor, alerting/Telegram,
-  independent observer, download and guarded jobs remain open. No agent server1 changes or messages.
+stage: console_installed_source_diagnostics_and_browser_acceptance_pending
+stage_label: 'Пульт установлен владельцем; HDD/SMART и браузерная приёмка требуют продолжения'
+current_activity: >-
+  Owner terminal receipt received17Oct23:36MSK confirms installation of console567e90d5,
+  local-CA TLS, fresh collector snapshot, active web/broker/collector timer and web identity isolation.
+  Limited native_accepted=true is not all-source acceptance: HDD critical/probe_failed and SMART no_data/probe_failed
+  require diagnosis. TOTP and Telegram skipped by owner; notifier inactive. Browser trust/login/roles, archive download/hash,
+  receiver, independent observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.
 next_task: INF-06
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -261,20 +263,24 @@ next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: LAN_implementation_in_PR_pending_owner_installation
+  status: owner_installed_limited_native_gate_passed_source_diagnostics_pending
   style: graphite_with_readable_type_color_accents_and_Grafana_style_charts_owner16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
   Telegram: alerts_metrics_latest_completed_backup_and_control
   independent_observer: required_for_host_loss_not_yet_deployed
   continuation_gate: owner_authorized_install_20261017T1703_MSK_LAN_1709
-  telegram_delivery: implemented_not_native_verified
+  telegram_delivery: owner_skipped_setup_notifier_inactive
   previous_reviewed_head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0
   implementation_resolution: Read PR103 current head; no self-referencing SHA in state
   audit_followup: server-console/AUDIT_FOLLOWUP_20261017.md
   priority_metrics: cron_last_observed_success;backup_completed_age;SSD_HDD_capacity_inodes;optional_local_HTTP_status_latency
   lan_rollout: server-console/LAN_ROLLOUT_20261017.md
-  native_installation: pending_owner_commands_no_agent_SSH
+  native_installation: owner_terminal_receipt_limited_gate_passed_20261017T2336_MSK
+  installation_receipt: context/runtime/console_native_install_20261017.json
+  installed_source_commit: 567e90d54d4e50acf43088a8127f80ae5c89740f
+  totp: owner_skipped_first_launch
+  source_diagnostics: HDD_critical_probe_failed_and_SMART_no_data_probe_failed_unresolved
   history: native_15d_bounded_first_LAN_Prometheus_optional
 deferred_platform:
   task: PLAT-01

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "repository_base": "4c524a52d44330b6756fa360ad7845064409f1fa",
+  "archive_validation": {
+    "uploaded_name": "report.tar.gz",
+    "uploaded_sha256": "a33aabd5673ae2eaf61d5d1965deed842484e0b2bf76b280e29506bb4e8e28ac",
+    "uploaded_bytes": 36240,
+    "bounded_tar_gzip_and_exact_members": "success",
+    "closed_schema_and_all_checksums": "success",
+    "original_payload_bytes_preserved": true,
+    "collector_matches_published_source": true,
+    "real_import_gates": "success"
+  },
+  "latest_snapshot": {
+    "path": "context/runtime/server-facts/20261017T013924Z-285497b0",
+    "collected_utc": "2026-10-17T01:39:24Z",
+    "counts": {
+      "error": 1,
+      "not_collected": 0,
+      "ok": 30,
+      "partial": 0
+    },
+    "plugin_theme_matching": 526,
+    "changed": 0,
+    "missing": 0,
+    "extra": 0
+  },
+  "closed_measurement_gaps": [
+    "scheduled_tasks query returned147 rows on owner production PG16.15",
+    "clock getter returned Etc/UTC,NTPfalse,NTPSynchronizedtrue",
+    "SMART requested; two health/temperature/exit-status rows"
+  ],
+  "remaining_measurement_gaps": [
+    "pg_query_stats unavailable; extension not installed/preloaded",
+    "NTP source/server/offset and ongoing client",
+    "component enablement/overrides for18 overdue DB-flag-enabled rows",
+    "full SMART attributes/test history/historical residual and SSD wear"
+  ],
+  "console_supplement_in_archive_checksums": false,
+  "independent_host_authentication": false,
+  "r16_suite": {
+    "tests": 580,
+    "passed": 561,
+    "skipped": 19,
+    "status": "success",
+    "elapsed_seconds": 6.776,
+    "native_go_template_tests": 3,
+    "real_mcp_stdio": "success",
+    "scope": "Existing full tests/r16 suite in pinned mcp1.30/PyYAML venv; not a live application or restore test"
+  },
+  "functional_acceptance": false,
+  "production_mutations_performed": false,
+  "source_or_schema_application_changes": false,
+  "context_gates": {
+    "current_index_regeneration": "success",
+    "source_schema_pointers_links": "success",
+    "secret_boundary": "success",
+    "raw_payload_immutable": "success"
+  }
+}

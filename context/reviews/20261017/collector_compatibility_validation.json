@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "base_commit": "cee34b135d685bfbd638558c20870de53d61504d",
+  "collector_sha256": "80d9f874330d49c66a3a34baf25c4f5ea41544b8f0c7c3c3f82324b920edc837",
+  "change": "Docker optional-field strict raw fallback and Debian package-version compatibility",
+  "r16_suite": {
+    "tests": 578,
+    "passed": 559,
+    "skipped": 19,
+    "result": "success",
+    "native_template_tests_executed": 3
+  },
+  "focused_suite": {
+    "tests": 33,
+    "skipped": 0,
+    "result": "success",
+    "post_full_suite_change": "additional null-Health subcases, no runtime behavior changes"
+  },
+  "native_go": "go1.27.2 standard text/template, missingkey=error, json.Number; no Docker daemon or production connection",
+  "owner_terminal_evidence": "context/runtime/server_facts_terminal_20261017.json",
+  "production_archive_received": false,
+  "cause_confirmed_for_owner_run": false,
+  "package_version_example_is_synthetic": true,
+  "sources": [
+    "https://github.com/docker/cli/blob/v29.0.0/cli/command/inspect/inspector.go",
+    "https://www.debian.org/doc/debian-policy/ch-controlfields.html#version"
+  ]
+}

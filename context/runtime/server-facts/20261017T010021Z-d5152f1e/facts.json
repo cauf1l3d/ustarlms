@@ -1,0 +1,1639 @@
+{
+  "blocks": {
+    "adhoc_tasks": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "apache": {
+      "data": {
+        "modules": [
+          "access_compat_module",
+          "actions_module",
+          "alias_module",
+          "auth_basic_module",
+          "auth_digest_module",
+          "authn_core_module",
+          "authn_file_module",
+          "authz_core_module",
+          "authz_host_module",
+          "authz_user_module",
+          "autoindex_module",
+          "cgi_module",
+          "core_module",
+          "dav_fs_module",
+          "dav_module",
+          "deflate_module",
+          "dir_module",
+          "env_module",
+          "fcgid_module",
+          "filter_module",
+          "headers_module",
+          "http_module",
+          "include_module",
+          "log_config_module",
+          "logio_module",
+          "mime_module",
+          "mpm_prefork_module",
+          "negotiation_module",
+          "perl_module",
+          "php_module",
+          "proxy_fcgi_module",
+          "proxy_http_module",
+          "proxy_module",
+          "python_module",
+          "reqtimeout_module",
+          "rewrite_module",
+          "setenvif_module",
+          "so_module",
+          "socache_shmcb_module",
+          "ssl_module",
+          "status_module",
+          "suexec_module",
+          "unixd_module",
+          "version_module",
+          "watchdog_module"
+        ],
+        "ports": [
+          80
+        ],
+        "tls_function_verified": false,
+        "vhost_count": 2
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "backup_receipt": {
+      "data": {
+        "archive_name": "ustar-recovery-20261017T003035Z-b4a1be3f.tar.gz.age",
+        "archive_sha256": "e2876c7bbf8e9e21e8718d8732382238511c7d3e9fe12b0aa61daf99ffe4bf4e",
+        "archive_stat_matches": true,
+        "attempt_finished_at": "2026-10-17T00:31:32Z",
+        "attempt_success": true,
+        "bytes": 1146734045,
+        "finished_at": "2026-10-17T00:31:32Z",
+        "present": true,
+        "readback_reported": true,
+        "recovery_marker_present": false,
+        "success_reported": true
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "certificates": {
+      "data": {
+        "items": [
+          {
+            "fingerprint": "0b42f77becf144f098755ea55de29a79dcdd9147acb7a5e148961e86a692d30d",
+            "not_after": "Dec 21 17:06:37 2026 GMT",
+            "not_before": "Sep 22 17:06:38 2026 GMT"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "clock": {
+      "data": {
+        "ntp_enabled": null,
+        "ntp_synchronized": null,
+        "timezone": "unknown"
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "code_access": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "code_layout": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "containers": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "unavailable",
+      "status": "error"
+    },
+    "cron_receipt": {
+      "data": {
+        "adhoc_queued": 0,
+        "finished_at": "2026-10-17T00:59:03Z",
+        "latest_task_at": "2026-10-17T00:59:03Z",
+        "new_task_failures": 0,
+        "present": true,
+        "scheduled_failed": 2,
+        "scheduled_overdue_10m": 18,
+        "sha256": "6d9f13d8e0f55e13c09c1a2031d7ce60220b9e45c38bea749bd4eb2401cc9178",
+        "ustar_error_lines": 0,
+        "worker_exit_code": 0
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "filesystems": {
+      "data": {
+        "items": [
+          {
+            "bytes_available": 58289983488,
+            "bytes_total": 117815881728,
+            "filesystem": "ext4",
+            "inodes_available": 6160625,
+            "inodes_total": 7331840,
+            "mount_options": [
+              "relatime",
+              "rw"
+            ],
+            "path": "/",
+            "uuid": "fb5cc206-93f8-4601-a415-8d418970cf31"
+          },
+          {
+            "bytes_available": 423438585856,
+            "bytes_total": 491104411648,
+            "filesystem": "ext4",
+            "inodes_available": 30531479,
+            "inodes_total": 30531584,
+            "mount_options": [
+              "nodev",
+              "noexec",
+              "nosuid",
+              "relatime",
+              "rw"
+            ],
+            "path": "/srv/ustar-storage",
+            "uuid": "359a2bae-4e79-461a-ab72-1597f605d801"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "firewall": {
+      "data": {
+        "active": false,
+        "backend": "ufw",
+        "policies": [],
+        "rules": 0
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "host": {
+      "data": {
+        "cores": 8,
+        "kernel": "6.8.0-147-generic",
+        "load1": 0.0,
+        "memory_total_bytes": 33585553408,
+        "os_id": "ubuntu",
+        "os_version": "24.04"
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "listeners": {
+      "data": {
+        "items": [
+          {
+            "port": 22,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 22,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 25,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 25,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "tcp",
+            "scope": "unknown"
+          },
+          {
+            "port": 80,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 110,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 110,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 143,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 143,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 443,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 587,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 587,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 783,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 783,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 953,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 993,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 993,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 995,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 995,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 2019,
+            "protocol": "tcp",
+            "scope": "all"
+          },
+          {
+            "port": 2019,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 3306,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 8082,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 10023,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 10024,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 10024,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 10025,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 10027,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 11211,
+            "protocol": "tcp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 53,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 68,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "all"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "all"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "loopback"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "private"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 123,
+            "protocol": "udp",
+            "scope": "unknown"
+          },
+          {
+            "port": 5353,
+            "protocol": "udp",
+            "scope": "all"
+          },
+          {
+            "port": 5353,
+            "protocol": "udp",
+            "scope": "all"
+          },
+          {
+            "port": 41970,
+            "protocol": "udp",
+            "scope": "all"
+          },
+          {
+            "port": 56994,
+            "protocol": "udp",
+            "scope": "all"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "log_storage": {
+      "data": {
+        "journal_bytes": 890975027,
+        "recursive_usage_measured": false,
+        "top_level_regular_log_bytes": 47690711
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "moodle_config": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "moodle_plugins": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "packages": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "invalid_data",
+      "status": "error"
+    },
+    "pg_connections": {
+      "data": {
+        "rows": [
+          {
+            "count": 1,
+            "state": "active"
+          },
+          {
+            "count": 1,
+            "state": "idle"
+          },
+          {
+            "count": 5,
+            "state": "unknown"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "pg_databases": {
+      "data": {
+        "rows": [
+          {
+            "bytes": 138451991,
+            "name": "moodle",
+            "owner": "moodle"
+          },
+          {
+            "bytes": 7699479,
+            "name": "postgres",
+            "owner": "moodle"
+          },
+          {
+            "bytes": 7765015,
+            "name": "template1",
+            "owner": "moodle"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "pg_extensions": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "pg_owners": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "pg_query_stats": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "pg_roles": {
+      "data": {
+        "rows": [
+          {
+            "bypass_rls": true,
+            "connection_limit": -1,
+            "create_db": true,
+            "create_role": true,
+            "login": true,
+            "name": "moodle",
+            "replication": true,
+            "superuser": true
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_checkpoint",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_create_subscription",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_database_owner",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_execute_server_program",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_monitor",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_read_all_data",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_read_all_settings",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_read_all_stats",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_read_server_files",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_signal_backend",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_stat_scan_tables",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_use_reserved_connections",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_write_all_data",
+            "replication": false,
+            "superuser": false
+          },
+          {
+            "bypass_rls": false,
+            "connection_limit": -1,
+            "create_db": false,
+            "create_role": false,
+            "login": false,
+            "name": "pg_write_server_files",
+            "replication": false,
+            "superuser": false
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "pg_settings": {
+      "data": {
+        "rows": [
+          {
+            "name": "archive_command",
+            "setting": "configured"
+          },
+          {
+            "name": "archive_mode",
+            "setting": "off"
+          },
+          {
+            "name": "autovacuum",
+            "setting": "on"
+          },
+          {
+            "name": "autovacuum_analyze_scale_factor",
+            "setting": "0.1"
+          },
+          {
+            "name": "autovacuum_vacuum_scale_factor",
+            "setting": "0.2"
+          },
+          {
+            "name": "checkpoint_timeout",
+            "setting": "300"
+          },
+          {
+            "name": "effective_cache_size",
+            "setting": "524288"
+          },
+          {
+            "name": "log_min_duration_statement",
+            "setting": "-1"
+          },
+          {
+            "name": "maintenance_work_mem",
+            "setting": "65536"
+          },
+          {
+            "name": "max_connections",
+            "setting": "100"
+          },
+          {
+            "name": "max_wal_size",
+            "setting": "1024"
+          },
+          {
+            "name": "min_wal_size",
+            "setting": "80"
+          },
+          {
+            "name": "server_version",
+            "setting": "16.15 (Debian 16.15-1.pgdg13+2)"
+          },
+          {
+            "name": "shared_buffers",
+            "setting": "16384"
+          },
+          {
+            "name": "wal_level",
+            "setting": "replica"
+          },
+          {
+            "name": "work_mem",
+            "setting": "4096"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "pg_tables": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "php_cli": {
+      "data": {
+        "modules": [
+          "Core",
+          "date",
+          "libxml",
+          "openssl",
+          "pcre",
+          "sqlite3",
+          "zlib",
+          "ctype",
+          "curl",
+          "dom",
+          "fileinfo",
+          "filter",
+          "hash",
+          "iconv",
+          "json",
+          "mbstring",
+          "SPL",
+          "session",
+          "PDO",
+          "pdo_sqlite",
+          "standard",
+          "posix",
+          "random",
+          "readline",
+          "Reflection",
+          "Phar",
+          "SimpleXML",
+          "tokenizer",
+          "xml",
+          "xmlreader",
+          "xmlwriter",
+          "mysqlnd",
+          "gd",
+          "intl",
+          "pdo_pgsql",
+          "pgsql",
+          "sodium",
+          "zip",
+          "Zend OPcache"
+        ],
+        "settings": [
+          {
+            "name": "memory_limit",
+            "value": "512M"
+          },
+          {
+            "name": "max_input_vars",
+            "value": "5000"
+          },
+          {
+            "name": "upload_max_filesize",
+            "value": "512M"
+          },
+          {
+            "name": "post_max_size",
+            "value": "512M"
+          },
+          {
+            "name": "max_execution_time",
+            "value": "0"
+          },
+          {
+            "name": "opcache.enable",
+            "value": "1"
+          },
+          {
+            "name": "opcache.memory_consumption",
+            "value": "256"
+          },
+          {
+            "name": "display_errors",
+            "value": "1"
+          }
+        ],
+        "version": "8.3.33"
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "scheduled_tasks": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "smart": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "not_requested",
+      "status": "not_collected"
+    },
+    "source_manifest": {
+      "data": null,
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "dependency_unavailable",
+      "status": "error"
+    },
+    "sshd_global": {
+      "data": {
+        "match_context_checked": false,
+        "settings": [
+          {
+            "name": "port",
+            "value": "22"
+          },
+          {
+            "name": "logingracetime",
+            "value": "120"
+          },
+          {
+            "name": "maxauthtries",
+            "value": "6"
+          },
+          {
+            "name": "permitrootlogin",
+            "value": "without-password"
+          },
+          {
+            "name": "pubkeyauthentication",
+            "value": "yes"
+          },
+          {
+            "name": "passwordauthentication",
+            "value": "yes"
+          },
+          {
+            "name": "x11forwarding",
+            "value": "yes"
+          },
+          {
+            "name": "strictmodes",
+            "value": "yes"
+          },
+          {
+            "name": "permitemptypasswords",
+            "value": "no"
+          },
+          {
+            "name": "allowtcpforwarding",
+            "value": "yes"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    },
+    "systemd": {
+      "data": {
+        "units": [
+          {
+            "active": "active",
+            "enabled": "enabled",
+            "exit_status": null,
+            "load": "loaded",
+            "name": "ustar-hdd-backup.timer",
+            "result": "success",
+            "sub": "waiting"
+          },
+          {
+            "active": "inactive",
+            "enabled": "static",
+            "exit_status": 0,
+            "load": "loaded",
+            "name": "ustar-hdd-backup.service",
+            "result": "success",
+            "sub": "dead"
+          },
+          {
+            "active": "inactive",
+            "enabled": "enabled",
+            "exit_status": 0,
+            "load": "loaded",
+            "name": "ustar-hdd-backup-recover.service",
+            "result": "success",
+            "sub": "dead"
+          },
+          {
+            "active": "active",
+            "enabled": "enabled",
+            "exit_status": 0,
+            "load": "loaded",
+            "name": "docker.service",
+            "result": "success",
+            "sub": "running"
+          },
+          {
+            "active": "active",
+            "enabled": "enabled",
+            "exit_status": 0,
+            "load": "loaded",
+            "name": "apache2.service",
+            "result": "success",
+            "sub": "running"
+          },
+          {
+            "active": "active",
+            "enabled": "disabled",
+            "exit_status": 0,
+            "load": "loaded",
+            "name": "ssh.service",
+            "result": "success",
+            "sub": "running"
+          }
+        ]
+      },
+      "observed_at": "2026-10-17T01:00:21Z",
+      "reason": "measured",
+      "status": "ok"
+    }
+  },
+  "collected_utc": "2026-10-17T01:00:21Z",
+  "host_alias": "server1",
+  "schema_version": 1,
+  "script_sha256": "8aeb57738e05e9b84682335feaf0fb7f7b6d004a61999a43e43d28725033e98f"
+}

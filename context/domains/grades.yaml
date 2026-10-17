@@ -1,5 +1,5 @@
 domain: grades
-reviewed_at: '2026-10-02'
+reviewed_at: '2026-10-17'
 source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 purpose: Версионированные лестницы, привязки должностей и личный грейд
 services:
@@ -23,3 +23,20 @@ rules:
 entry_points:
 - moodle/local/ustar/grades.php
 - moodle/local/ustar/route_career.php
+review_method: static source navigation; no new production scenario acceptance
+scenarios:
+- name: eligibility
+  source: moodle/local/ustar/classes/grade_promotion.php
+  behavior: current/eligibility require a recorded grade and published matching ladder/rules;
+    changed ladder needs explicit HR reconciliation
+- name: approve_or_return
+  source: moodle/local/ustar/classes/grade_promotion.php
+  behavior: decide rechecks current direct manager and rejects self-review; locked
+    transaction revalidates rule hash, position, from/to and eligibility; return needs
+    reason
+- name: commit_delivery
+  source: moodle/local/ustar/classes/grading_commit.php
+  behavior: notification failure after confirmed commit is distinct from rollback;
+    inspect grading_commit::finish before retrying writes
+coverage_limit: Selected command/read paths only; complete endpoint, file access and
+  actor/scope negative-path audit remains open

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "redacted_owner_terminal_followup",
+  "source": "owner_pasted_server1_and_home_Windows_terminal_output_in_current_dialogue",
+  "received_at_utc": "2026-10-17T11:24:19Z",
+  "probe_observed_at_utc": null,
+  "included_in_archive_checksums": false,
+  "independently_reexecuted_by_agent": false,
+  "independently_authenticated_host": false,
+  "network_coordinates_exported": false,
+  "redaction_note": "Exact LAN/WAN addresses and local Academy hostname remain in the private dialogue; this receipt preserves the relationship between the egress address and the TCP test target.",
+  "owner_network_context": {
+    "server1_SSH_local_address_scope": "RFC1918_private_LAN",
+    "Academy_access": "owner_reported_local_hostname_over_HTTP",
+    "inbound_NAT_mapping_verified": false
+  },
+  "server1_egress_probe": {
+    "command": "curl -4 -fsS --connect-timeout 5 --max-time 10 --write-out '\\n' https://api.ipify.org",
+    "address_family": "IPv4",
+    "public_address_returned": true,
+    "returned_address_matches_home_TCP_target": true,
+    "dedicated_public_address_or_inbound_server1_mapping_proven": false
+  },
+  "external_TCP_probe": {
+    "source": "owner_home_Windows_PC_outside_corporate_LAN_as_reported",
+    "command_template": "Test-NetConnection -ComputerName <same-public-IPv4> -Port 2019 | Select-Object RemoteAddress, RemotePort, TcpTestSucceeded",
+    "address_family": "IPv4",
+    "remote_port": 2019,
+    "TcpTestSucceeded": false,
+    "TCP_warning": "connect_failed",
+    "separate_ICMP_warning": "Ping_TimedOut",
+    "conclusion": "TCP_connection_not_established_from_this_home_network_to_this_target_at_test_time",
+    "blocking_layer_or_reason": "not_determined",
+    "all_external_sources_tested": false,
+    "IPv6_tested": false,
+    "server1_inbound_NAT_attribution_verified": false,
+    "HTTP_API_identity_or_authorization_tested": false
+  },
+  "earlier_local_listener_evidence": "context/runtime/server-gaps/20261017T105916Z-86133045/observations.json",
+  "earlier_local_listener_remeasured_or_reconfigured": false,
+  "scope_note": "The negative home IPv4 test does not prove global blocking, explain the cause, identify an inbound NAT destination, close the all-address Caddy listener finding, or establish Academy TLS/cookie acceptance. ICMP timeout is a separate observation; exact probe times were not supplied.",
+  "agent_production_changes": false
+}

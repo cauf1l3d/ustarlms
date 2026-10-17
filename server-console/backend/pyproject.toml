@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=78"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ustar-console"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["fastapi==0.143.2", "uvicorn==0.54.0", "argon2-cffi==25.1.0"]
+
+[project.scripts]
+ustar-console = "ustar_console.server:main"
+ustar-console-user = "ustar_console.auth:main"
+ustar-console-collect = "ustar_console.collector:main"
+ustar-console-ops = "ustar_console.operations:main"
+ustar-console-notify = "ustar_console.alerts:main"
+ustar-console-setup = "ustar_console.setup:main"
+ustar-console-accept = "ustar_console.acceptance:main"
+ustar-console-smart = "ustar_console.hardware:main"
+
+[tool.setuptools.package-data]
+ustar_console = ["web/*", "web/assets/*"]

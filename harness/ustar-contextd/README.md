@@ -1,6 +1,6 @@
 # USTAR context harness
 
-Код и контекст совместно поддерживаются в **main**. Начать с [START_HERE](../../START_HERE.md), [STATE](../../context/roadmap/STATE.yaml), [ACTIVE](../../context/tasks/ACTIVE.md), [аудита и сверки](../../context/audits/README.md), [полного плана](../../context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md). Старые integration/release mirrors — история, не текущая база.
+Код и контекст совместно поддерживаются в **main**. Единственный порядок чтения — в [START_HERE](../../START_HERE.md). Старые integration/release mirrors — история, не текущая база.
 
 ## Контракт
 
@@ -10,7 +10,7 @@
 - `get_audit_context`: исходный датированный audit + reconciliation + full plan + owner evidence. Original theme statement исправляется только в reconciliation; runtime timestamps не превращаются в live status.
 - Existing project/runtime/architecture/decisions/code-map/index/search tools остаются read-only. `get_health` сообщает присутствие context, не здоровье Академии.
 
-DOC-02 завершён PR78; последующая команда владельца — **1 → 7 → 6**. INF-01 в работе, затем Moodle/CI/ОС и HTTPS; остальные пункты после них. Runtime tools читают текущие пути из STATE/project, прежнее ожидание не hardcoded. Один установленный cron v3 сохраняется. Автокопии позже на healthy HDD, не SERVEREXPRESS/failed HDD; future mobile/B2B/Privacy/LTS отдельно.
+DOC-02 завершён PR78. Последняя команда17Oct — проверить приложения, собрать server facts, обновить контекст и передать на повторное review перед продолжением repo/пульта/Telegram. Прежний порядок1→7→6 — история; SSD/Moodle patch/ОС и HDD backup уже имеют поздние receipts. Runtime tools читают текущие пути из STATE/project. Один minute cron v3 сохраняется; Moodle5.2/PG17, native mobile/B2B/Privacy — отдельно.
 
 ## Локальная проверка
 
@@ -20,8 +20,10 @@ DOC-02 завершён PR78; последующая команда владел
 python3 -m venv /tmp/ustar-context-test-venv
 /tmp/ustar-context-test-venv/bin/pip install -r harness/ustar-contextd/requirements.txt
 /tmp/ustar-context-test-venv/bin/python -m unittest discover -s tests/r16 -v
-python3 scripts/build_context_index.py
-python3 scripts/check_context.py
+/tmp/ustar-context-test-venv/bin/python scripts/build_current_context.py --check
+/tmp/ustar-context-test-venv/bin/python scripts/build_agent_inventory.py --check
+/tmp/ustar-context-test-venv/bin/python scripts/check_context_secrets.py
+/tmp/ustar-context-test-venv/bin/python scripts/check_context.py
 ```
 
 requirements.txt pin MCP/PyYAML. Проверка SDK выполняет реальный handshake только на временном synthetic repository; сервер на production не запускается. Deployment-specific `.mcp.json` указывает `/opt/ustar/git/ustarlms`; эта поставка не подтверждает наличие virtualenv/регистрацию сервиса там и не меняет server-host cron scripts.

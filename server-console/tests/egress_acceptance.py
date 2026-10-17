@@ -17,6 +17,11 @@ if os.geteuid()!=0 or not Path('/run/systemd/system').is_dir() or not os.environ
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 import telegram_egress as egress
 
+# The hosted runner may delegate /opt to its regular user. Keep the production
+# ancestor-ownership guard intact and use a root-owned fixture tree for this binary.
+print('XRAY_NATIVE_OPT_METADATA='+json.dumps(dict(uid=Path('/opt').stat().st_uid,
+    mode=oct(Path('/opt').stat().st_mode & 0o777))),flush=True)
+egress.BINARY=Path('/var/lib/ustar-egress-native')/egress.VERSION/'xray'
 egress.binary()
 assert hashlib.sha256(egress.BINARY.read_bytes()).hexdigest()==egress.BINARY_SHA256
 with tempfile.TemporaryDirectory(prefix='ustar-egress-native-',dir='/run') as directory:

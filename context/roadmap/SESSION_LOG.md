@@ -1607,3 +1607,5 @@ Native systemd/Xray routing fixture добавлен в CI; здесь systemd �
 Owner update/proxy install/ID/receiver ACK и домашний маршрут ожидаются; server1 не менялся агентом.
 
 CI83b2e829 выявил отличие fixture UID: unprivileged runner владеет tmp config directory, mock geteuid0 не менял её owner. Исправлен только test stat fixture; production root ownership guard сохранён.Запуск от nobody локально недоступен (container cannot set groups); unprivileged fixture повторяется в CI.
+
+CId398d131:175 backend/45 Chromium/PG16/console native update/sandbox PASS; Xray fixture отказал на ancestor ownership исходного /opt. Fixture binary перенесён в отдельное root-owned /var/lib дерево, default production path/ownership guard не меняются; следующий CI печатает только публичные uid/mode /opt для диагностики.

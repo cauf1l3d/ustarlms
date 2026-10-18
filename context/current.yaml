@@ -226,32 +226,33 @@ current_work:
     partial, Xray12 candidates/first TLS verified/active/no restarts and private-ID/proxy-aware
     bot setup. Bot did not reply: notifier9 restarts/ValueError credential_guard at
     alerts225/262. Reproduced systemd0440 named-UID ACL compatibility defect; narrowed
-    FD/ACL reader prepared, 192 backend PASS; actual PID1 first-cycle CI/owner patch/receiver
-    ACK pending. Actual service inode mode/ACL not provided; no server metadata invented.
-    Owner terminal receipt received17Oct23:36MSK confirms installation of console567e90d5,
-    local-CA TLS, fresh collector snapshot, active web/broker/collector timer and
-    web identity isolation. Limited native_accepted=true is not all-source acceptance.
-    Owner18Oct00:14MSK supplied host rw/service ro comparison confirming HDD namespace
-    probe defect and successful SMART oneshot with partial SSD197/199 readings. Host/local
-    identity and SMART partial/freshness/UI fixes plus guarded rollback updater in
-    release3305ecc9 passed all3 CI, 125 backend/45 browser and native namespace/rollback
-    tests; artifact verified/delivered, native application pending. Owner17Oct23:59MSK
-    reports console opens in browser; trust/login/roles not yet accepted. TOTP skipped;
-    owner now requests Telegram and home access without inbound port publication.
-    Telegram startup argument defect fixed in PR with regression; owner application
-    and delivery pending. Archive download/hash, receiver, independent observer, jobs/overhead
-    and restore/RTO remain open. No agent SSH or host operations. Owner18Oct00:27MSK
-    ID helper failed getUpdates with transport_unavailable. Owner01:26MSK tokenless
-    diagnostics resolved IPv4, but direct TCP443 timed out before TLS; curl6 obtained
-    no usable address. Failure location/cause unknown; owner01:37 controls ipify/GitHub200
-    with Telegram timeout8002ms, Windows same endpointFalse; owner01:41 Google/Cloudflare
-    A match local DNS. Owner01:48MSK reports Happ subscription and supplies only masked
-    HTTPS novavps.app/s/ shape. Safe standalone local probe prepared,22 focused/147
-    backend PASS; hidden input and sanitized protocol/transport JSON only. Latest
-    owner run verified checksum but showed no input prompt or JSON; actual elapsed/exit
-    were not captured. Local controlling-PTY reproduction confirms ordinary timeout
-    in the heredoc prevents hidden input (exit124); corrected direct Python launch
-    accepts hidden input, retaining internal30s deadline after input and printing
+    FD/ACL reader prepared, 192 backend/45 Chromium/all3 CI PASS onfd46c383; actual
+    PID1 first cycle mode0440 accepted. Owner single-module patch and real receiver
+    ACK still pending. Actual service inode mode/ACL not provided; no server metadata
+    invented. Owner terminal receipt received17Oct23:36MSK confirms installation of
+    console567e90d5, local-CA TLS, fresh collector snapshot, active web/broker/collector
+    timer and web identity isolation. Limited native_accepted=true is not all-source
+    acceptance. Owner18Oct00:14MSK supplied host rw/service ro comparison confirming
+    HDD namespace probe defect and successful SMART oneshot with partial SSD197/199
+    readings. Host/local identity and SMART partial/freshness/UI fixes plus guarded
+    rollback updater in release3305ecc9 passed all3 CI, 125 backend/45 browser and
+    native namespace/rollback tests; artifact verified/delivered, native application
+    pending. Owner17Oct23:59MSK reports console opens in browser; trust/login/roles
+    not yet accepted. TOTP skipped; owner now requests Telegram and home access without
+    inbound port publication. Telegram startup argument defect fixed in PR with regression;
+    owner application and delivery pending. Archive download/hash, receiver, independent
+    observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.
+    Owner18Oct00:27MSK ID helper failed getUpdates with transport_unavailable. Owner01:26MSK
+    tokenless diagnostics resolved IPv4, but direct TCP443 timed out before TLS; curl6
+    obtained no usable address. Failure location/cause unknown; owner01:37 controls
+    ipify/GitHub200 with Telegram timeout8002ms, Windows same endpointFalse; owner01:41
+    Google/Cloudflare A match local DNS. Owner01:48MSK reports Happ subscription and
+    supplies only masked HTTPS novavps.app/s/ shape. Safe standalone local probe prepared,22
+    focused/147 backend PASS; hidden input and sanitized protocol/transport JSON only.
+    Latest owner run verified checksum but showed no input prompt or JSON; actual
+    elapsed/exit were not captured. Local controlling-PTY reproduction confirms ordinary
+    timeout in the heredoc prevents hidden input (exit124); corrected direct Python
+    launch accepts hidden input, retaining internal30s deadline after input and printing
     PROBE_EXIT. Owner02:07MSK retry succeeded: JSON_outbounds35,15 VLESS (10gRPC/5TCP,14Reality/1TLS),
     insecure flags0, exit0. Format known, actual node values still not received/validated.
     Prepared pinned Xray Telegram-only loopback service, explicit CA-verified CONNECT

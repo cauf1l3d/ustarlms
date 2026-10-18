@@ -31,3 +31,5 @@ Dated reports05–15Oct сохраняются. Их pending/next-step отно�
 - [Проверенный Telegram/Xray выпуск18Oct](console_telegram_release_20261018.json): CI/artifact/source verification, не server1 acceptance.
 
 - [Native update/Xray и отказ notifier credential guard18Oct](console_telegram_native_20261018.json).
+
+- [Notifier credential ACL fix/actual PID1 CI18Oct](console_notifier_credential_fix_20261018.json), [owner hotfix](../../server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md).

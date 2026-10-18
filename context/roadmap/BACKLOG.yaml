@@ -168,7 +168,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
-  current_summary: 'Latest owner18Oct03:46/03:49MSK update1f605 PASS, HDD OK/SMART partial, Xray first node TLS verified/active, private ID and proxy-aware bot setup complete. Bot no reply: notifier9 restarts/ValueError credential_guard alerts225/262. Compatible systemd0440 named-user ACL defect reproduced and fixed locally;192 backend PASS; native first-cycle CI and owner patch/receiver ACK pending. Actual service ACL metadata not supplied. PR103 LAN code: native HTTPS/setup/CA, PG aggregate monitor, bounded history15d, NTP/SMART, TOTP, durable
+  current_summary: 'Latest owner18Oct03:46/03:49MSK update1f605 PASS, HDD OK/SMART partial, Xray first node TLS verified/active, private ID and proxy-aware bot setup complete. Bot no reply: notifier9 restarts/ValueError credential_guard alerts225/262. Compatible systemd0440 named-user ACL defect reproduced and fixed locally;192 backend PASS; native first-cycle mode0440/192 backend/45 Chromium/all3 CI PASS onfd46c383; owner patch/receiver ACK pending. Actual service ACL metadata not supplied. PR103 LAN code: native HTTPS/setup/CA, PG aggregate monitor, bounded history15d, NTP/SMART, TOTP, durable
     Telegram/outbox/rules, encrypted archive FD download, fixed planned jobs and independent observer bundle. Owner installed567e90d5;
     limited TLS/freshness/units/web-isolation gate passed23:36MSK. Owner18Oct00:14 confirmed host rw/service ro HDD probe defect
     and SMART oneshot0 with partial SSD197/199 data. Dual-view mount/identity/SMART freshness/per-disk UI fix and rollback updater
@@ -204,6 +204,8 @@ tasks:
   - server-console/HOME_ACCESS_PLAN_20261018.md
   - context/runtime/console_telegram_release_20261018.json
   - context/runtime/console_telegram_native_20261018.json
+  - context/runtime/console_notifier_credential_fix_20261018.json
+  - server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md
   - server-console/VPN_SUBSCRIPTION_PROBE.md
   - context/runtime/console_storage_release_20261018.json
 - id: INF-07

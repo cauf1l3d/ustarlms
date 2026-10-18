@@ -8,7 +8,8 @@ current_activity: >-
   Xray12 candidates/first TLS verified/active/no restarts and private-ID/proxy-aware bot setup.
   Bot did not reply: notifier9 restarts/ValueError credential_guard at alerts225/262.
   Reproduced systemd0440 named-UID ACL compatibility defect; narrowed FD/ACL reader prepared,
-  192 backend PASS; actual PID1 first-cycle CI/owner patch/receiver ACK pending.
+  192 backend/45 Chromium/all3 CI PASS onfd46c383; actual PID1 first cycle mode0440 accepted.
+  Owner single-module patch and real receiver ACK still pending.
   Actual service inode mode/ACL not provided; no server metadata invented.
   Owner terminal receipt received17Oct23:36MSK confirms installation of console567e90d5,
   local-CA TLS, fresh collector snapshot, active web/broker/collector timer and web identity isolation.
@@ -313,7 +314,10 @@ next_control_panel:
   telegram_release_receipt: context/runtime/console_telegram_release_20261018.json
   telegram_release_handoff: server-console/TELEGRAM_RELEASE_20261018.md
   telegram_startup_hotfix: API_argument_fix_installed_new_credential_ACL_reader_fix_pending_owner_application
-  telegram_hotfix_module_sha256: 94903be5412a0e48d21c8154afcda9cf8880b5bd670c0e83400b2df95d8ecd39
+  telegram_hotfix_module_sha256: 33c706c01e70eae40fff864c95b4becfe3b88a11d63e6e3888093fe9812ed4a2
+  telegram_notifier_fix_source: fd46c383c9cfba3d8155275ad1e04cae423aa082
+  telegram_notifier_fix_receipt: context/runtime/console_notifier_credential_fix_20261018.json
+  telegram_notifier_fix_runbook: server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md
   previous_reviewed_head_sha: 98559017eef887d2a87955cc55ee947b5babe0a0
   implementation_resolution: Read PR103 current head; no self-referencing SHA in state
   audit_followup: server-console/AUDIT_FOLLOWUP_20261017.md

@@ -1660,3 +1660,11 @@ fixture добавлен, actual CI pending. Fresh reviewer Critical/Important0;
 Deferred minor: malformed/duplicate synthetic ACL metadata и52-byte/two-reader case не имеют отдельных tests;
 kernel-validated ACL и проверенный parser fail closed; реальный типовой ACL покрыт.
 Новый source fix требует owner применения; receiver ACK не получен. Units/token/auth/CA/network/production не менялись агентом.
+
+Exact sourcefd46c383 all3 CI SUCCESS:console39084647257/job117548560984,context39084647251,review39084647259.
+Logs inspected:192 backend5.33s/45 Chromium1.7m; CONSOLE_NOTIFIER_LOADCREDENTIAL PASS static user/first cycle/mode0o440.
+HDD namespace/update rollback remain PASS. [Fix evidence](../runtime/console_notifier_credential_fix_20261018.json).
+Published raw alerts.py readback matches SHA33c706c0/local source. [Owner command](../../server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md)
+shell+inner syntax and actual isolated file/control fixtures success/start-failure rollback/concurrent-change preservation/
+unexpected module/bad download refusal PASS. Source token/permissions and units unchanged.
+Owner application and real receiver ACK remain pending; no production operation executed by agent.

@@ -1,5 +1,7 @@
 # Telegram через подписку Happ/NOVAVPS
 
+Owner подтвердил update1f605/Xray/private ID/setup, но notifier падает на credential guard. [Проверенное точечное исправление](NOTIFIER_CREDENTIAL_FIX_20261018.md); установку и ввод секретов не повторять.
+
 Выпуск1f605e4d прошёл все3 CI; artifact/hash/SOURCE_COMMIT проверены. [Точный пакет и4 шага обновления установленного пульта](TELEGRAM_RELEASE_20261018.md). Native узлы/бот/receiver ACK ещё ожидаются.
 
 Owner18Oct02:07MSK получил `JSON_outbounds`:35 outbounds, из них15 VLESS,10 freedom,10 blackhole;10 gRPC/5 TCP,14 Reality/1 TLS, insecure flags0. Это классификация, не проверка параметров узлов или соединения. [Receipt](../context/runtime/console_vpn_format_20261018.json). URL/профили агенту не передавались.

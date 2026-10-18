@@ -63,10 +63,15 @@ class Auth:
                   id INTEGER PRIMARY KEY, at REAL NOT NULL, event TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS factors(username TEXT PRIMARY KEY,secret TEXT NOT NULL,counter INTEGER NOT NULL);
             ''')
-            # In-place migration preserves pre-existing password hashes, factors and sessions.
+            # Keep users' three-column layout compatible with the installed rollback CLI.
+            # Import the pre-release fourth column atomically, preserving account access.
             db.execute('BEGIN IMMEDIATE')
-            if 'enabled' not in {row['name'] for row in db.execute('PRAGMA table_info(users)')}:
-                db.execute('ALTER TABLE users ADD COLUMN enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1))')
+            db.execute('CREATE TABLE IF NOT EXISTS account_state('
+                       'username TEXT PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1)))')
+            if 'enabled' in {row['name'] for row in db.execute('PRAGMA table_info(users)')}:
+                db.execute('INSERT INTO account_state(username,enabled) SELECT username,enabled FROM users WHERE 1 '
+                           'ON CONFLICT(username) DO UPDATE SET enabled=excluded.enabled')
+                db.execute('ALTER TABLE users DROP COLUMN enabled')
             db.commit()
 
     @contextmanager
@@ -88,8 +93,10 @@ class Auth:
         encoded = HASHER.hash(password)
         with self.connection() as db:
             db.execute('BEGIN IMMEDIATE')
-            db.execute('INSERT INTO users(username,password,role,enabled) VALUES(?,?,?,1) ON CONFLICT(username) DO UPDATE '
-                       'SET password=excluded.password, role=excluded.role, enabled=1', (username, encoded, role))
+            db.execute('INSERT INTO users(username,password,role) VALUES(?,?,?) ON CONFLICT(username) DO UPDATE '
+                       'SET password=excluded.password, role=excluded.role', (username, encoded, role))
+            db.execute('INSERT INTO account_state(username,enabled) VALUES(?,1) '
+                       'ON CONFLICT(username) DO UPDATE SET enabled=1', (username,))
             db.execute('DELETE FROM sessions WHERE username=?', (username,))
             db.execute('DELETE FROM attempts WHERE bucket=?', ('user:'+digest(username),))
             self.audit(db, 'user_updated_sessions_revoked')
@@ -104,7 +111,8 @@ class Auth:
 
     def active_session(self, db, session):
         """Check the stored identity again inside the access-change transaction."""
-        row = db.execute('SELECT s.*,u.role,u.enabled FROM sessions s JOIN users u USING(username) '
+        row = db.execute('SELECT s.*,u.role,COALESCE(a.enabled,1) AS enabled '
+                         'FROM sessions s JOIN users u USING(username) LEFT JOIN account_state a USING(username) '
                          'WHERE s.token=? AND s.username=?',
                          (session.get('token'), session.get('username'))).fetchone()
         now = self.clock()
@@ -120,11 +128,12 @@ class Auth:
 
     def public_users(self, db, username=None):
         now = self.clock()
-        rows = db.execute('''SELECT u.username,u.role,u.enabled,
+        rows = db.execute('''SELECT u.username,u.role,COALESCE(a.enabled,1) AS enabled,
             EXISTS(SELECT 1 FROM factors f WHERE f.username=u.username) AS totp,
             (SELECT count(*) FROM sessions s WHERE s.username=u.username
              AND s.created<=? AND s.created>? AND s.seen>?) AS sessions
-            FROM users u WHERE (? IS NULL OR u.username=?) ORDER BY u.username''',
+            FROM users u LEFT JOIN account_state a USING(username)
+            WHERE (? IS NULL OR u.username=?) ORDER BY u.username''',
             (now, now-self.settings.absolute_seconds, now-self.settings.idle_seconds, username, username))
         return [dict(username=row['username'], role=row['role'], enabled=bool(row['enabled']),
                      totp=bool(row['totp']), sessions=row['sessions']) for row in rows]
@@ -143,8 +152,10 @@ class Auth:
             self.owner(db, actor)
             if db.execute('SELECT 1 FROM users WHERE username=?', (username,)).fetchone():
                 raise UserChangeError('user_exists', 'User already exists')
-            db.execute('INSERT INTO users(username,password,role,enabled) VALUES(?,?,?,1)',
+            db.execute('INSERT INTO users(username,password,role) VALUES(?,?,?)',
                        (username, encoded, role))
+            db.execute('INSERT INTO account_state(username,enabled) VALUES(?,1) '
+                       'ON CONFLICT(username) DO UPDATE SET enabled=1', (username,))
             self.audit(db, 'user_created')
             result = self.public_users(db, username)[0]
             db.commit()
@@ -165,7 +176,8 @@ class Auth:
         with self.connection() as db:
             db.execute('BEGIN IMMEDIATE')
             self.owner(db, actor)
-            target = db.execute('SELECT * FROM users WHERE username=?', (username,)).fetchone()
+            target = db.execute('SELECT u.*,COALESCE(a.enabled,1) AS enabled FROM users u '
+                                'LEFT JOIN account_state a USING(username) WHERE u.username=?', (username,)).fetchone()
             if not target:
                 raise LookupError('User not found')
             next_role = role if role is not None else target['role']
@@ -174,14 +186,17 @@ class Auth:
                 if actor['username'] == username:
                     raise UserChangeError('cannot_change_own_owner', 'Cannot demote or disable your own owner account')
                 if target['enabled'] and not db.execute(
-                        "SELECT 1 FROM users WHERE role='owner' AND enabled=1 AND username<>?", (username,)).fetchone():
+                        "SELECT 1 FROM users u LEFT JOIN account_state a USING(username) "
+                        "WHERE u.role='owner' AND COALESCE(a.enabled,1)=1 AND u.username<>?", (username,)).fetchone():
                     raise UserChangeError('last_active_owner', 'Cannot remove the last active owner')
             revoke = (next_role != target['role'] or (bool(target['enabled']) and not next_enabled)
                       or new_password is not None)
             if revoke and before_change:
                 before_change(username)
-            db.execute('UPDATE users SET role=?,enabled=?,password=? WHERE username=?',
-                       (next_role, int(next_enabled), encoded or target['password'], username))
+            db.execute('UPDATE users SET role=?,password=? WHERE username=?',
+                       (next_role, encoded or target['password'], username))
+            db.execute('INSERT INTO account_state(username,enabled) VALUES(?,?) '
+                       'ON CONFLICT(username) DO UPDATE SET enabled=excluded.enabled', (username, int(next_enabled)))
             if revoke:
                 db.execute('DELETE FROM sessions WHERE username=?', (username,))
             self.audit(db, 'user_updated_sessions_revoked' if revoke else 'user_updated')
@@ -203,7 +218,8 @@ class Auth:
             if retry:
                 db.commit()
                 raise Denied(retry)
-            user = db.execute('SELECT * FROM users WHERE username=?', (username,)).fetchone()
+            user = db.execute('SELECT u.*,COALESCE(a.enabled,1) AS enabled FROM users u '
+                              'LEFT JOIN account_state a USING(username) WHERE u.username=?', (username,)).fetchone()
             try:
                 valid = HASHER.verify(user['password'] if user else DUMMY_HASH, password)
             except VerificationError:
@@ -268,7 +284,9 @@ class Auth:
         if not token or len(token) > 128:
             raise Denied()
         with self.connection() as db:
-            row = db.execute('SELECT s.*, u.role,u.enabled FROM sessions s JOIN users u USING(username) WHERE token=?',
+            row = db.execute('SELECT s.*,u.role,COALESCE(a.enabled,1) AS enabled '
+                             'FROM sessions s JOIN users u USING(username) '
+                             'LEFT JOIN account_state a USING(username) WHERE token=?',
                              (digest(token),)).fetchone()
         now = self.clock()
         if (not row or not row['enabled'] or now < row['created'] or now-row['created'] >= self.settings.absolute_seconds

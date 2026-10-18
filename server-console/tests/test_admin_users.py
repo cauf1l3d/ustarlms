@@ -5,11 +5,59 @@ from threading import Barrier
 import pytest
 
 from conftest import PASSWORD
-from ustar_console.auth import Auth, Denied, HASHER
+from ustar_console.auth import Auth, Denied, HASHER, digest
 
 
 def owner_session(auth, username='owner'):
     return auth.session(auth.login(username, PASSWORD, 'test-peer'))
+
+
+def test_migration_preserves_legacy_three_value_user_upserts(settings):
+    auth = Auth(settings)
+    encoded = HASHER.hash(PASSWORD)
+    # Installed 1c881495 CLI writes all three values without naming columns.
+    legacy_upsert = ('INSERT INTO users VALUES(?,?,?) ON CONFLICT(username) DO UPDATE '
+                     'SET password=excluded.password, role=excluded.role')
+    with auth.connection() as db:
+        db.execute(legacy_upsert, ('legacy', encoded, 'viewer'))
+        db.execute(legacy_upsert, ('legacy', encoded, 'owner'))
+    actor = owner_session(auth, 'legacy')
+    assert actor['role'] == 'owner'
+    assert auth.list_users(actor) == [dict(
+        username='legacy', role='owner', enabled=True, totp=False, sessions=1)]
+
+
+def test_four_column_prerelease_migration_preserves_disabled_account(settings):
+    encoded = HASHER.hash(PASSWORD)
+    stored_token = digest('existing-session')
+    with sqlite3.connect(settings.database) as db:
+        db.executescript('''
+            CREATE TABLE users(username TEXT PRIMARY KEY,password TEXT NOT NULL,role TEXT NOT NULL,
+                               enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1)));
+            CREATE TABLE sessions(token TEXT PRIMARY KEY,username TEXT NOT NULL,csrf TEXT NOT NULL,
+                                  created REAL NOT NULL,seen REAL NOT NULL);
+            CREATE TABLE factors(username TEXT PRIMARY KEY,secret TEXT NOT NULL,counter INTEGER NOT NULL);
+        ''')
+        db.execute('INSERT INTO users VALUES(?,?,?,?)', ('disabled', encoded, 'owner', 0))
+        db.execute('INSERT INTO sessions VALUES(?,?,?,?,?)', (stored_token, 'disabled', 'csrf', 10, 10))
+        db.execute('INSERT INTO factors VALUES(?,?,?)', ('disabled', 'kept-secret', 1))
+    auth = Auth(settings, clock=lambda: 10)
+    with auth.connection() as db:
+        assert dict(db.execute('SELECT * FROM users').fetchone()) == dict(
+            username='disabled', password=encoded, role='owner')
+        assert db.execute('SELECT enabled FROM account_state WHERE username=?', ('disabled',)).fetchone()[0] == 0
+        assert tuple(db.execute('SELECT * FROM sessions').fetchone()) == (
+            stored_token, 'disabled', 'csrf', 10, 10)
+        assert tuple(db.execute('SELECT * FROM factors').fetchone()) == ('disabled', 'kept-secret', 1)
+        with pytest.raises(Denied):
+            auth.active_session(db, dict(username='disabled', token=stored_token))
+    with pytest.raises(Denied):
+        auth.session('existing-session')
+    with pytest.raises(Denied):
+        auth.login('disabled', PASSWORD, 'test-peer')
+    Auth(settings)  # Converted databases are repeatable and keep their disabled state.
+    with auth.connection() as db:
+        assert db.execute('SELECT enabled FROM account_state').fetchone()[0] == 0
 
 
 def test_migration_keeps_existing_users_sessions_and_totp(settings):
@@ -27,7 +75,7 @@ def test_migration_keeps_existing_users_sessions_and_totp(settings):
     auth = Auth(settings)
     with auth.connection() as db:
         user = dict(db.execute('SELECT * FROM users').fetchone())
-        assert user == dict(username='owner', password=encoded, role='owner', enabled=1)
+        assert user == dict(username='owner', password=encoded, role='owner')
         assert db.execute('SELECT token FROM sessions').fetchone()[0] == 'existing-session'
         assert db.execute('SELECT secret FROM factors').fetchone()[0] == 'kept-secret'
     Auth(settings)  # Migration is repeatable.
@@ -109,7 +157,7 @@ def test_disabled_users_cannot_login_or_use_preexisting_sessions(app):
     token = auth.login('target', PASSWORD, 'test-peer')
     stale = auth.session(token)
     with auth.connection() as db:
-        db.execute('UPDATE users SET enabled=0 WHERE username=?', ('target',))
+        db.execute('UPDATE account_state SET enabled=0 WHERE username=?', ('target',))
     with pytest.raises(Denied):
         auth.session(token)
     with pytest.raises(Denied):
@@ -152,7 +200,8 @@ def test_concurrent_owner_disable_keeps_an_active_owner(app):
         results = list(pool.map(lambda pair: disable(*pair), [(first, 'other'), (second, 'owner')]))
     assert sorted(results) == ['rejected', 'updated']
     with auth.connection() as db:
-        assert db.execute("SELECT count(*) FROM users WHERE role='owner' AND enabled=1").fetchone()[0] == 1
+        assert db.execute("SELECT count(*) FROM users u LEFT JOIN account_state a USING(username) "
+                          "WHERE role='owner' AND COALESCE(a.enabled,1)=1").fetchone()[0] == 1
 
 
 def test_cli_set_user_can_reset_and_reenable_migrated_account(app):

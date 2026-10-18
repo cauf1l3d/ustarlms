@@ -83,4 +83,4 @@ def test_configured_notifier_failure_prevents_user_disable(logged,app,tmp_path,m
     result=logged.patch('/api/admin/users/target',json=dict(enabled=False,password=PASSWORD))
     assert result.status_code==503 and 'secret' not in result.text
     with app.state.auth.connection() as db:
-        assert db.execute("SELECT enabled FROM users WHERE username='target'").fetchone()[0]==1
+        assert app.state.auth.public_users(db,'target')[0]['enabled'] is True

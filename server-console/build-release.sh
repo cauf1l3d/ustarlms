@@ -23,7 +23,7 @@ root,target=map(Path,sys.argv[1:])
 with tempfile.TemporaryDirectory() as folder:
     stage=Path(folder); package=stage/'ustar_console'; package.mkdir()
     (package/'__init__.py').write_text('')
-    for name in ('observer','alerts','collector','data','cron','hardware','config','telegram_transport'):
+    for name in ('observer','alerts','collector','data','cron','hardware','config','telegram_transport','telegram_views'):
         (package/(name+'.py')).write_bytes((root/'backend/ustar_console'/(name+'.py')).read_bytes())
     (stage/'__main__.py').write_text('from ustar_console.observer import main\nmain()\n')
     zipapp.create_archive(stage,target,interpreter='/usr/bin/env python3',compressed=True)

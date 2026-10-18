@@ -82,7 +82,7 @@ def main():
         results={'observer':probe(value['console']+'/healthz',value['ca'],method='GET'),
                  'http_external':probe(value['academy'])}
         checks=[dict(id=key,label='Пульт/server1 из независимой точки' if key=='observer' else 'Академия из независимой точки',
-                     status=row['status'],reason_code='independent_probe',observed_at=stamp()) for key,row in results.items()]
+                     status=row['status'],reason_code='independent_probe',observed_at=stamp(),value=row) for key,row in results.items()]
         queue.evaluate(dict(checks=checks,host={},containers=[],stale=False,scope='independent_observer'))
         try: queue.deliver(api)
         except DeliveryError: pass

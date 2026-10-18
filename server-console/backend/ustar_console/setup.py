@@ -98,13 +98,26 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--telegram-only',action='store_true')
     parser.add_argument('--telegram-proxy',action='store_true',help='Use the fixed loopback Telegram proxy')
+    parser.add_argument('--telegram-mini-app',choices=('on','off'),help='Opt-in native Telegram button; requires reachable trusted HTTPS on the phone')
     args=parser.parse_args()
+    if args.telegram_mini_app and (args.telegram_only or args.telegram_proxy):
+        parser.error('--telegram-mini-app is a separate operation')
     if args.telegram_proxy and not args.telegram_only:
         parser.error('--telegram-proxy requires --telegram-only')
     if os.geteuid()!=0 or not os.isatty(0):
         raise SystemExit('Запустите sudo из интерактивного SSH-терминала.')
     os.umask(0o077)
     trusted_config(CONFIG/'config.json')
+    if args.telegram_mini_app:
+        from .alerts import config
+        value=config(CONFIG/'telegram.json')
+        value['mini_app']=args.telegram_mini_app=='on'
+        save(CONFIG/'telegram.json',value)
+        run(['systemctl','restart','ustar-console-notify.service'])
+        print('Mini App '+('включён' if value['mini_app'] else 'выключен')+'. Отправьте /start боту для обновления клавиатуры.')
+        if value['mini_app']:
+            print('Телефону необходим доступ к HTTPS-адресу пульта и доверие сертификату. Вход в пульт остаётся обязательным.')
+        return
     if args.telegram_only:
         from .telegram_transport import PROXY
         if telegram(PROXY if args.telegram_proxy else None):

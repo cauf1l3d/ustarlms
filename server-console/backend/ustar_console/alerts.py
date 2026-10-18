@@ -1,6 +1,7 @@
 """Durable transition rules and Telegram outbox, without privileged host access."""
 import json
 import http.client
+import math
 from contextlib import contextmanager
 import os
 from pathlib import Path
@@ -12,10 +13,10 @@ import time
 
 from .data import snapshot, safe_json, stamp
 from .telegram_transport import exchange, validate_proxy
+from .telegram_views import reply as command_reply, keyboard, incident, source
 
 WATCH = {'collector','host','containers','hdd','backup','cron','recovery','http_local','database',
-         'ssd_space','ssd_inodes','hdd_space','hdd_inodes','observer','http_external','smart','clock'}
-LABELS = {'critical':'АВАРИЯ','warning':'ВНИМАНИЕ','no_data':'НЕТ ДАННЫХ','ok':'ВОССТАНОВЛЕНО','stopped':'ОСТАНОВЛЕНО'}
+         'ssd_space','ssd_inodes','hdd_space','hdd_inodes','observer','http_external','smart','clock','units'}
 
 
 class Queue:
@@ -55,20 +56,30 @@ class Queue:
     def evaluate(self, data, maintenance=None):
         now = self.clock()
         checks = [c.copy() for c in data['checks'] if c['id'] in WATCH and c['reason_code'] not in ('not_configured','disabled')]
-        host = data.get('host', {}) if not data.get('stale') else {}
+        host = source(data,'host')
         if host:
             cpu, memory = host.get('cpu_percent'),host.get('memory',{})
-            if cpu is not None:
+            if type(cpu) in (int,float) and math.isfinite(cpu) and 0<=cpu<=100:
                 checks.append(dict(id='cpu_sustained',label='CPU >85% в течение 10 минут',status='warning' if cpu>85 else 'ok'))
-            if memory.get('total_bytes'):
+            total,available=memory.get('total_bytes'),memory.get('available_bytes')
+            if (all(type(n) in (int,float) and math.isfinite(n) for n in (total,available))
+                    and 0<=available<=total and total>0):
                 free = memory['available_bytes']/memory['total_bytes']
                 checks.append(dict(id='ram_sustained',label='Мало свободной RAM',status='critical' if free<.08 else 'warning' if free<.15 else 'ok'))
         for key in (() if data.get('scope')=='independent_observer' else ('cpu_sustained','ram_sustained')):
             if not any(c['id']==key for c in checks):
                 checks.append(dict(id=key,label='CPU' if key.startswith('cpu') else 'RAM',status='no_data'))
-        oom=any(c.get('oom') is True for c in data.get('containers',[]))
+        container_rows=data.get('containers',[])
+        stale_containers=(data.get('stale') or any(c['id']=='containers' and c['status']=='no_data'
+                          and c.get('reason_code')!='measured' for c in data['checks']))
+        measured_containers=(bool(container_rows) and not data.get('stale') and
+                             all(type(c.get('oom')) is bool for c in container_rows) and
+                             not any(c['id']=='containers' and c['status']=='no_data' for c in data['checks']))
+        # A confirmed OOM remains an incident even if the other container could not be read.
+        # Complete fresh telemetry is required only to assert healthy/recovered.
+        oom=not stale_containers and any(c.get('oom') is True for c in container_rows)
         if data.get('scope')!='independent_observer':
-            checks.append(dict(id='container_oom',label='OOM контейнера Академии',status='critical' if oom else 'no_data' if data.get('stale') else 'ok'))
+            checks.append(dict(id='container_oom',label='OOM контейнера Академии',status='critical' if oom else 'ok' if measured_containers else 'no_data'))
         muted = set()
         if maintenance and maintenance.get('action') in ('manual_backup','academy_restart'):
             start,end = maintenance.get('started',0),maintenance.get('until',0)
@@ -99,21 +110,29 @@ class Queue:
                 repeat=status in ('critical','warning','no_data') and status==emitted and now-sent>=(1800 if status=='critical' else 14400)
                 if (status != emitted or repeat) and now-since >= hold:
                     sequence += 1
-                    self.enqueue(db,f'rule:{key}:{sequence}',
-                        f"USTAR · {LABELS.get(status,'НЕТ ДАННЫХ')}\n{check.get('label',key)}\n{stamp(now)}\nИсточник: {key}. Показания: пульт.")
+                    self.enqueue(db,f'rule:{key}:{sequence}',incident(check,data,now))
                     emitted = status
                     sent=now
                 db.execute('INSERT OR REPLACE INTO rules VALUES(?,?,?,?,?,?,?)',(key,status,since,emitted,sequence,now,sent))
             # Retain incidents while pending; bound completed-message history.
             db.execute("DELETE FROM outbox WHERE status='sent' AND id NOT IN (SELECT id FROM outbox ORDER BY id DESC LIMIT 2000)")
 
-    def deliver(self, api, limit=2):
+    def deliver(self, api, limit=2, reply_markup=None):
         now = self.clock()
         with self.connect() as db:
             rows = db.execute("SELECT * FROM outbox WHERE status='pending' AND next<=? ORDER BY id LIMIT ?",(now,limit)).fetchall()
         for row in rows:
             try:
-                api('sendMessage',dict(chat_id=row['chat'],text=row['text'],protect_content=True,link_preview_options={'is_disabled':True}))
+                payload=dict(chat_id=row['chat'],text=row['text'],protect_content=True,link_preview_options={'is_disabled':True})
+                if reply_markup is not None: payload['reply_markup']=reply_markup
+                try:
+                    api('sendMessage',payload)
+                except DeliveryError as error:
+                    # An unsupported native button must not hold the incident itself.
+                    # Retry once without markup only after a definite API rejection.
+                    if error.code!='api_rejected' or 'reply_markup' not in payload: raise
+                    payload.pop('reply_markup')
+                    api('sendMessage',payload)
                 with self.connect() as db:
                     db.execute("UPDATE outbox SET status='sent',error=NULL WHERE id=?",(row['id'],))
             except DeliveryError as error:
@@ -166,31 +185,6 @@ class Telegram:
         return value.get('result')
 
 
-def command_reply(text,data,origin):
-    command=text.strip().split('@')[0]
-    if command in ('/start','/help'):
-        return 'USTAR: /status /metrics /academy /labs /backup latest. Изменения выполняются в пульте после подтверждения.'
-    if command=='/status':
-        return 'USTAR\n'+'\n'.join(f'{k}: {LABELS.get(v,v)}' for k,v in data['domains'].items())+'\n'+origin
-    if command=='/metrics':
-        host=data.get('host',{}) if not data.get('stale') else {}
-        cpu=host.get('cpu_percent')
-        return f"CPU: {round(cpu,1) if cpu is not None else 'нет данных'}%\nДанные: {data.get('observed_at') or 'нет данных'}\n{origin}"
-    if command=='/academy':
-        return '\n'.join(f"{c['label']}: {LABELS.get(c['status'],c['status'])}" for c in data['checks'] if c['domain']=='academy')[:2500]
-    if command=='/labs':
-        lab=data.get('lab',{})
-        return f"Стенд: {lab.get('phase','нет данных')}\nTTL: {lab.get('expires_at') or 'не подтверждён'}\n{origin}/#labs"
-    if text.strip()=='/backup latest':
-        backup=data.get('backup',{})
-        if data.get('stale') or not backup.get('file'):
-            return 'Нет свежих проверенных показаний последней completed копии. '+origin+'/#backups'
-        return (f"Последняя завершённая копия: {backup.get('completed_at')}\n{backup['file']}\n"
-                f"Байт: {backup.get('bytes')}\nSHA256: {backup.get('sha256')}\n"
-                f"Зашифрованный архив: {origin}/#backups (вход оператора). Ключ передаётся отдельно.")
-    return None
-
-
 def updates(queue, api, users, chats, data, origin):
     with queue.connect() as db:
         row=db.execute("SELECT value FROM settings WHERE key='offset'").fetchone()
@@ -213,9 +207,13 @@ def updates(queue, api, users, chats, data, origin):
             db.execute('BEGIN IMMEDIATE')
             if reply:
                 previous=db.execute('SELECT value FROM settings WHERE key=?',('user:'+str(chat['id']),)).fetchone()
-                if not previous or queue.clock()-float(previous[0])>=10:
+                count=db.execute('SELECT value FROM settings WHERE key=?',('burst:'+str(chat['id']),)).fetchone()
+                fresh=not previous or not 0<=queue.clock()-float(previous[0])<10
+                used=0 if fresh else int(count[0]) if count else 1
+                if used<4:
                     queue.enqueue(db,'command:'+str(uid),reply,[chat['id']])
-                    db.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',('user:'+str(chat['id']),str(queue.clock())))
+                    if fresh: db.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',('user:'+str(chat['id']),str(queue.clock())))
+                    db.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',('burst:'+str(chat['id']),str(used+1)))
             db.execute("INSERT OR REPLACE INTO settings VALUES('offset',?)",(str(uid+1),))
         offset=uid+1
 
@@ -265,7 +263,9 @@ def config(path):
         if len(raw) > 8192:
             raise ValueError('Untrusted Telegram credentials')
     value=json.loads(raw)
-    if set(value) not in ({'token','users','chats'},{'token','users','chats','proxy'}):
+    if (not isinstance(value,dict) or not {'token','users','chats'}<=set(value)
+            or set(value)-{'token','users','chats','proxy','mini_app'}
+            or ('mini_app' in value and type(value['mini_app']) is not bool)):
         raise ValueError('Invalid Telegram configuration')
     validate_proxy(value.get('proxy'))
     for key in ('users','chats'):
@@ -277,19 +277,31 @@ def config(path):
     return value
 
 
-def iteration(queue,api,users,chats,data,origin,maintenance=None):
+def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False):
     evaluation='ok'
     try:
         queue.evaluate(data,maintenance)
     except ValueError:
         evaluation='queue_capacity'
     # Outgoing incidents continue even if command polling fails or the queue was full.
-    queue.deliver(api)
+    markup=keyboard(origin if mini_app else None)
+    queue.deliver(api,reply_markup=markup)
+    display=dict(data,notifications=queue.status())
+    display['checks']=[c.copy() for c in data['checks']]
+    for row in display['checks']:
+        if row['id'] in ('rules','resource_rules'):
+            row.update(status=display['notifications']['status'] if row['id']=='rules' else
+                       'ok' if evaluation=='ok' else 'no_data',reason_code='notification_worker')
+    for row in display['notifications']['rules']:
+        if row['key'] in ('cpu_sustained','ram_sustained','container_oom'):
+            display['checks'].append(dict(id=row['key'],label=row['key'],domain='server' if row['key']!='container_oom' else 'academy',
+                status=row['state'],reason_code='sustained_rules'))
     try:
-        updates(queue,api,users,chats,data,origin)
+        updates(queue,api,users,chats,display,origin)
         polling='ok'
     except (DeliveryError,ValueError):
         polling='no_data'
+    queue.deliver(api,reply_markup=markup)
     status=queue.status()
     status.update(polling=polling,evaluation=evaluation)
     if evaluation!='ok': status['status']='warning'
@@ -312,7 +324,7 @@ def main():
             maintenance=operations.get('maintenance')
         except (OSError,ValueError):
             maintenance=None
-        status=iteration(queue,api,value['users'],value['chats'],data,settings.origin,maintenance)
+        status=iteration(queue,api,value['users'],value['chats'],data,settings.origin,maintenance,value.get('mini_app',False))
         target=Path('/run/ustar-console-notify/status.json')
         temporary=target.with_suffix('.tmp')
         temporary.write_text(json.dumps(status))

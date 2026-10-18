@@ -17,12 +17,15 @@ import {
   LogOut,
   Terminal,
   BookOpen,
+  UsersRound,
+  Bell,
 } from "lucide-react";
 import { TimeChart as Chart } from "./charts";
 import { Operations } from "./operations";
 import { ThemeToggle } from "./theme";
 import { Knowledge } from "./knowledge";
 import { WebRequests, ServerLogs, WebObservation } from "./web-observability";
+import { Users, Notifications } from "./administration";
 
 type Check = {
   id: string;
@@ -157,6 +160,8 @@ const titles: Record<string, string> = {
   events: "События",
   scripts: "Скрипты",
   docs: "Документация",
+  notifications: "Мои уведомления",
+  users: "Пользователи",
 };
 const domains: Record<string, string> = {
   academy: "Академия",
@@ -314,6 +319,7 @@ class ApiError extends Error {
   constructor(
     public status: number,
     public retry: string | null,
+    public code?: string,
   ) {
     super("request_failed");
   }
@@ -325,9 +331,12 @@ async function api(path: string, options: RequestInit = {}) {
     signal: options.signal || AbortSignal.timeout(6500),
     headers: { "Content-Type": "application/json", ...options.headers },
   });
-  if (!response.ok)
-    throw new ApiError(response.status, response.headers.get("Retry-After"));
-  return response.json();
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    const code = typeof body.detail === "string" ? body.detail : typeof body.error === "string" ? body.error : undefined;
+    throw new ApiError(response.status, response.headers.get("Retry-After"), code);
+  }
+  return response.status === 204 ? {} : response.json();
 }
 function Badge({ status }: { status: string }) {
   return (
@@ -915,6 +924,7 @@ function App() {
         </div>
         <nav aria-label="Разделы">
           {Object.entries(titles).map(([id, title], i) => {
+            if (id === "users" && session.role !== "owner") return null;
             const Icon = [
               LayoutDashboard,
               GraduationCap,
@@ -924,6 +934,8 @@ function App() {
               Activity,
               Terminal,
               BookOpen,
+              Bell,
+              UsersRound,
             ][i];
             return (
               <button
@@ -1018,7 +1030,11 @@ function App() {
             сохранены.
           </p>
         )}
-        {!data ? (
+        {page === "users" ? (
+          session.role === "owner" ? <Users request={api} csrf={session.csrf} username={session.username} onUnauthorized={expire} /> : <Empty title="Доступ ограничен">Управление пользователями доступно только владельцу.</Empty>
+        ) : page === "notifications" ? (
+          <Notifications request={api} csrf={session.csrf} onUnauthorized={expire} />
+        ) : !data ? (
           <Empty title={lost ? "Источник недоступен" : "Получаем состояние"}>
             Пульт ждёт измерений сервера.
           </Empty>

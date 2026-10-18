@@ -11,3 +11,14 @@ test('real request counters and classified logs are visible and stale values dis
   stale=true;await page.reload();await page.getByRole('navigation').getByRole('button',{name:'Академия',exact:true}).click();
   await expect(requests).not.toContainText('842');await expect(requests).toContainText('устарели');
 });
+
+test('events availability is independent of empty or unavailable request log',async({page})=>{
+  await page.route('**/api/activity',r=>r.fulfill({json:{status:'active'}}));
+  await page.route('**/api/history?*',r=>r.fulfill({json:{status:'no_data',reason_code:'no_samples',points:[]}}));
+  await page.route('**/api/events',r=>r.fulfill({json:{events:[],incidents:[],incidents_status:'ok',incidents_observed_at:new Date().toISOString()}}));
+  let requestReason='source_empty',eventsStatus='ok';
+  await page.route('**/api/session',r=>r.fulfill({json:{username:'viewer',role:'viewer',csrf:'test',expires_at:Date.now()/1000+3600}}));
+  await page.route('**/api/overview',r=>r.fulfill({json:{observed_at:new Date().toISOString(),received_at:new Date().toISOString(),stale:false,age_seconds:0,host:{},backup:{},checks:[],containers:[],lab:{},domains:{},web_observability:{observed_at:new Date().toISOString(),status:'no_data',reason_code:requestReason,window_seconds:300,coverage_seconds:0,requests:null,rps:null,p95_ms:null,errors_5xx:null,errors_4xx:null,events_status:eventsStatus,events_reason_code:eventsStatus==='ok'?'measured':'source_unavailable',events:[]}}}));
+  await page.goto('/#events');const logs=page.getByRole('region',{name:'Журнал служб'});await expect(logs).toContainText('предупреждений и ошибок выбранных служб не получено');await expect(logs).not.toContainText('подключить минимальный журнал Apache');
+  requestReason='source_unavailable';eventsStatus='no_data';await page.reload();await expect(logs).toContainText('Источник событий служб недоступен');await expect(logs).not.toContainText('подключить минимальный журнал Apache');
+});

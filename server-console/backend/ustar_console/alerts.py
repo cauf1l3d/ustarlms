@@ -2,16 +2,18 @@
 import json
 import http.client
 import math
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 import os
 from pathlib import Path
 import re
+import secrets
 import sqlite3
 import stat
 import struct
 import time
 
 from .data import snapshot, safe_json, stamp
+from .notifier_control import Store, ControlServer, quiet
 from .telegram_transport import exchange, validate_proxy, photo_body, PHOTO_LIMIT
 from .telegram_views import reply as command_reply, keyboard, incident, source, canonical
 
@@ -20,8 +22,9 @@ WATCH = {'collector','host','containers','hdd','backup','cron','recovery','http_
 
 
 class Queue:
-    def __init__(self, path, chats, clock=time.time):
+    def __init__(self, path, chats, clock=time.time, accounts=None):
         self.path, self.chats, self.clock = path, chats, clock
+        self.accounts=accounts
         if path.exists() and (path.is_symlink() or (os.name!='nt' and
                 (path.stat().st_uid != os.geteuid() or path.stat().st_mode & 0o077))):
             raise ValueError('Untrusted notification state')
@@ -41,15 +44,18 @@ class Queue:
             columns={r[1] for r in db.execute('PRAGMA table_info(outbox)')}
             if 'photo' not in columns: db.execute('ALTER TABLE outbox ADD COLUMN photo BLOB')
             if 'photo_sent' not in columns: db.execute('ALTER TABLE outbox ADD COLUMN photo_sent INTEGER DEFAULT 0')
+            for column in ('recipient','rule_id','rule_status'):
+                if column not in columns: db.execute('ALTER TABLE outbox ADD COLUMN '+column+' TEXT')
 
     @contextmanager
     def connect(self):
-        db = sqlite3.connect(self.path,timeout=2)
-        db.row_factory = sqlite3.Row
-        try:
-            with db: yield db
-        finally:
-            db.close()
+        with self.accounts.lock if self.accounts else nullcontext():
+            db = sqlite3.connect(self.path,timeout=2)
+            db.row_factory = sqlite3.Row
+            try:
+                with db: yield db
+            finally:
+                db.close()
 
     def enqueue(self, db, key, text, chats=None, photo=None):
         if photo is not None and (type(photo) is not bytes or not photo.startswith(b'\x89PNG\r\n\x1a\n')
@@ -57,7 +63,11 @@ class Queue:
             raise ValueError('Invalid generated photo')
         if db.execute("SELECT count(*) FROM outbox WHERE status='pending'").fetchone()[0]>=5000:
             raise ValueError('Outbox capacity reached')
-        for chat in self.chats if chats is None else chats:
+        targets=self.chats if chats is None else chats
+        if chats is None and self.accounts:
+            linked={row['chat'] for row in self.accounts.recipients(db)}
+            targets=[chat for chat in targets if chat not in linked]
+        for chat in targets:
             queued=db.execute("SELECT coalesce(sum(length(photo)),0) FROM outbox WHERE status='pending'").fetchone()[0]
             image=photo if photo is not None and queued+len(photo)<=16*2**20 else None
             db.execute('INSERT OR IGNORE INTO outbox(key,chat,text,next,photo) VALUES(?,?,?,?,?)',
@@ -128,15 +138,101 @@ class Queue:
                     emitted = status
                     sent=now
                 db.execute('INSERT OR REPLACE INTO rules VALUES(?,?,?,?,?,?,?)',(key,status,since,emitted,sequence,now,sent))
+            if self.accounts:
+                self.evaluate_personal(db,checks,data,now,muted)
             # Retain incidents while pending; bound completed-message history.
             db.execute("DELETE FROM outbox WHERE status='sent' AND id NOT IN (SELECT id FROM outbox ORDER BY id DESC LIMIT 2000)")
             db.execute('DELETE FROM incidents WHERE id NOT IN (SELECT id FROM incidents ORDER BY id DESC LIMIT 1000)')
 
+    def evaluate_personal(self,db,checks,data,now,muted):
+        for recipient in self.accounts.recipients(db):
+            user,chat,prefs=recipient['username'],recipient['chat'],recipient['preferences']
+            sleeping=quiet(prefs,now)
+            if not prefs['enabled'] or sleeping:
+                # Suppressed events are discarded; the next fresh evaluation decides what is current.
+                db.execute("DELETE FROM outbox WHERE recipient=? AND status='pending'",(user,))
+                db.execute('UPDATE personal_rules SET emitted=delivered WHERE username=?',(user,))
+                if not prefs['enabled']:
+                    db.execute('DELETE FROM personal_rules WHERE username=?',(user,))
+                    continue
+            suppressed={check['id'] for check in data['checks']
+                        if check.get('reason_code') in ('disabled','not_configured')}
+            for key in suppressed.intersection(prefs['check_ids']):
+                db.execute("DELETE FROM outbox WHERE recipient=? AND rule_id=? AND status='pending'",(user,key))
+                db.execute('DELETE FROM personal_rules WHERE username=? AND key=?',(user,key))
+            personal=[dict(check) for check in checks if check['id'] in prefs['check_ids']]
+            present={check['id'] for check in personal}|suppressed
+            # A fallback snapshot may omit entire checks; omission is unknown, never retained health.
+            personal.extend(dict(id=key,label=key,status='no_data',reason_code='source_unavailable')
+                            for key in prefs['check_ids'] if key not in present)
+            host=source(data,'host')
+            for check in personal:
+                key=check['id']
+                if key=='cpu_sustained':
+                    cpu=host.get('cpu_percent')
+                    valid=type(cpu) in (int,float) and math.isfinite(cpu) and 0<=cpu<=100
+                    check.update(status='warning' if valid and cpu>prefs['cpu_percent'] else 'ok' if valid else 'no_data',
+                                 label='Нагрузка CPU',reason_code='personal_threshold')
+                elif key=='ram_sustained':
+                    memory=host.get('memory',{});total,available=memory.get('total_bytes'),memory.get('available_bytes')
+                    valid=(all(type(n) in (int,float) and math.isfinite(n) for n in (total,available))
+                           and total>0 and 0<=available<=total)
+                    check.update(status='critical' if valid and available/total*100<prefs['ram_available_percent'] else 'ok' if valid else 'no_data',
+                                 label='Свободная RAM',reason_code='personal_threshold')
+                status=check['status']
+                old=db.execute('SELECT * FROM personal_rules WHERE username=? AND key=?',(user,key)).fetchone()
+                if key in muted:
+                    if old: db.execute('UPDATE personal_rules SET since=?,emitted=delivered WHERE username=? AND key=?',(now,user,key))
+                    db.execute("DELETE FROM outbox WHERE recipient=? AND rule_id=? AND status='pending'",(user,key))
+                    continue
+                since=old['since'] if old and old['state']==status and 0<=now-old['last']<=45 else now
+                emitted=old['emitted'] if old else 'ok';delivered=old['delivered'] if old else 'ok'
+                sequence=old['sequence'] if old else 0;sent=old['sent'] if old else 0
+                interrupted=(key in ('cpu_sustained','ram_sustained') and old and not 0<=now-old['last']<=45)
+                if old and (old['state']!=status or interrupted):
+                    removed=db.execute("DELETE FROM outbox WHERE recipient=? AND rule_id=? AND status='pending'",(user,key)).rowcount
+                    if removed: emitted=delivered
+                hold=60 if status=='no_data' else 30 if status=='ok' else 0
+                if key in ('cpu_sustained','ram_sustained') and status in ('warning','critical'): hold=prefs['hold_seconds']
+                if key in ('ssd_space','ssd_inodes','hdd_space','hdd_inodes') and status in ('warning','critical'):
+                    hold=180 if status=='critical' else 600
+                if key=='http_local' and status=='critical': hold=30
+                if key in ('http_external','observer') and status in ('critical','ok'): hold=60
+                selected=(status in prefs['statuses']) or (status=='ok' and prefs['recovery'] and delivered!='ok')
+                repeat=status!='ok' and status==emitted and now-sent>=prefs['repeat_minutes']*60
+                waiting=db.execute("SELECT 1 FROM outbox WHERE recipient=? AND rule_id=? AND status='pending'",(user,key)).fetchone()
+                if not sleeping and not waiting and selected and (status!=emitted or repeat) and now-since>=hold:
+                    sequence+=1
+                    # State resets (preferences/relink/source disable) never reuse a sent event key.
+                    queue_key=f'personal:{user}:{key}:{sequence}:{secrets.token_hex(16)}'
+                    self.enqueue(db,queue_key,incident(check,data,now),[chat])
+                    db.execute('UPDATE outbox SET recipient=?,rule_id=?,rule_status=? WHERE key=?',
+                               (user,key,status,queue_key+':'+str(chat)))
+                    emitted=status;sent=now
+                # A filtered healthy state must still end the previous incident and its repeats.
+                if status=='ok' and not prefs['recovery']: emitted='ok';delivered='ok'
+                db.execute('INSERT OR REPLACE INTO personal_rules(username,key,state,since,emitted,sequence,last,sent,delivered) VALUES(?,?,?,?,?,?,?,?,?)',
+                           (user,key,status,since,emitted,sequence,now,sent,delivered))
+
     def deliver(self, api, limit=2, reply_markup=None):
+        # Keep revocation and transport serialized: a confirmed revoke cannot race a selected send.
+        with self.accounts.lock if self.accounts else nullcontext():
+            return self._deliver(api,limit,reply_markup)
+
+    def _deliver(self, api, limit, reply_markup):
         now = self.clock()
         with self.connect() as db:
             rows = db.execute("SELECT * FROM outbox WHERE status='pending' AND next<=? ORDER BY id LIMIT ?",(now,limit)).fetchall()
         for row in rows:
+            if self.accounts and row['recipient']:
+                account=self.accounts.get_account(row['recipient'])
+                if (not account['linked'] or account.get('telegram_id')!=row['chat']
+                        or not account['preferences']['enabled'] or quiet(account['preferences'],now)):
+                    with self.connect() as db:
+                        db.execute("DELETE FROM outbox WHERE id=? AND status='pending'",(row['id'],))
+                        db.execute('UPDATE personal_rules SET emitted=delivered WHERE username=? AND key=?',
+                                   (row['recipient'],row['rule_id']))
+                    continue
             try:
                 if row['photo'] is not None and not row['photo_sent']:
                     photo=dict(chat_id=row['chat'],photo=row['photo'],protect_content=True,
@@ -166,6 +262,9 @@ class Queue:
                     api('sendMessage',payload)
                 with self.connect() as db:
                     db.execute("UPDATE outbox SET status='sent',error=NULL,photo=NULL WHERE id=?",(row['id'],))
+                    if self.accounts and row['recipient']:
+                        db.execute('UPDATE personal_rules SET delivered=?,sent=? WHERE username=? AND key=?',
+                                   (row['rule_status'],self.clock(),row['recipient'],row['rule_id']))
             except DeliveryError as error:
                 attempts = row['attempts']+1
                 delay = max(error.retry_after,min(3600,5*2**min(attempts,10)))
@@ -262,13 +361,22 @@ def updates(queue, api, users, chats, data, origin, batch=None,history=None):
             continue
         message=update.get('message',{})
         actor,chat=message.get('from',{}),message.get('chat',{})
-        allowed=(actor.get('id') in users and chat.get('id') in chats and chat.get('type')=='private'
+        private=(type(actor.get('id')) is int and type(chat.get('id')) is int
+                 and 0<actor['id']<2**52 and chat.get('type')=='private'
                  and actor.get('id')==chat.get('id') and not actor.get('is_bot')
-                 and not message.get('forward_origin') and not message.get('sender_chat'))
-        reply=command_reply(message.get('text','')[:256],data,origin) if allowed and isinstance(message.get('text',''),str) else None
-        # Reply enqueue and update offset commit together: replay cannot duplicate it.
+                 and not any(key in message for key in ('forward_origin','forward_from','forward_from_chat',
+                             'forward_sender_name','forward_date','is_automatic_forward','sender_chat')))
+        text=message.get('text','');text=text[:256] if isinstance(text,str) else ''
+        # Link consumption, reply enqueue and offset commit share one transaction.
         with queue.connect() as db:
             db.execute('BEGIN IMMEDIATE')
+            reply=None
+            if private and actor.get('is_bot') is False and queue.accounts and text.startswith('/link '):
+                linked=queue.accounts.link(text[6:].strip(),chat['id'],db=db)
+                reply='Telegram связан с учётной записью пульта.' if linked else 'Код недействителен или истёк. Создайте новый код в пульте.'
+            elif private and ((actor['id'] in users and chat['id'] in chats)
+                              or (queue.accounts and queue.accounts.authorized(actor['id'],db))):
+                reply=command_reply(text,data,origin)
             if reply:
                 previous=db.execute('SELECT value FROM settings WHERE key=?',('user:'+str(chat['id']),)).fetchone()
                 count=db.execute('SELECT value FROM settings WHERE key=?',('burst:'+str(chat['id']),)).fetchone()
@@ -345,7 +453,8 @@ def config(path):
 def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False,refresh=None,refresh_maintenance=None,history=None):
     # Pending incidents leave before the long poll, even if receiving commands fails.
     markup=keyboard(origin if mini_app else None)
-    queue.deliver(api,reply_markup=markup)
+    # Personal alerts require a fresh evaluation before retrying any previously queued event.
+    if not queue.accounts: queue.deliver(api,reply_markup=markup)
     try:
         batch=poll(queue,api)
         polling='ok'
@@ -398,18 +507,21 @@ def main():
     if api('getWebhookInfo',{}).get('url'):
         raise SystemExit('Existing webhook detected; use a dedicated bot. Nothing was changed.')
     queue=Queue(Path('/var/lib/ustar-console-notify/outbox.sqlite3'),value['chats'])
+    queue.accounts=Store(queue.path)
     def history():
         if not settings.native_history: return {}
         from .history_store import read
         return {metric:read(metric,'1h') for metric in ('cpu','ram','http')}
-    while True:
-        status=iteration(queue,api,value['users'],value['chats'],None,settings.origin,mini_app=value.get('mini_app',False),
-                         refresh=lambda:snapshot(settings.snapshot),refresh_maintenance=read_maintenance,history=history)
-        target=Path('/run/ustar-console-notify/status.json')
-        temporary=target.with_suffix('.tmp')
-        temporary.write_text(json.dumps(status))
-        os.chmod(temporary,0o640)
-        os.replace(temporary,target)
-        # Successful long polls provide the idle wait. Back off when reception fails;
-        # a short yield also bounds a stream of immediate/unsupported updates.
-        time.sleep(.2 if status['polling']=='ok' else 10)
+    with ControlServer(queue.accounts):
+        while True:
+            status=iteration(queue,api,value['users'],value['chats'],None,settings.origin,mini_app=value.get('mini_app',False),
+                             refresh=lambda:snapshot(settings.snapshot),refresh_maintenance=read_maintenance,history=history)
+            queue.accounts.transport_status={key:status[key] for key in ('status','polling','delivery_failures') if key in status}
+            target=Path('/run/ustar-console-notify/status.json')
+            temporary=target.with_suffix('.tmp')
+            temporary.write_text(json.dumps(status))
+            os.chmod(temporary,0o640)
+            os.replace(temporary,target)
+            # Successful long polls provide the idle wait. Back off when reception fails;
+            # a short yield also bounds a stream of immediate/unsupported updates.
+            time.sleep(.2 if status['polling']=='ok' else 10)

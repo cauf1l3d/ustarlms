@@ -156,6 +156,42 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
         assert 'CONSOLE_NOTIFIER_LOADCREDENTIAL=PASS' in probe.stdout
         print(probe.stdout.strip())
         credential.unlink()
+        # Real cross-UID notifier control: the web user can reach only the fixed
+        # metadata protocol; the notifier still cannot read authentication state.
+        control_probe=textwrap.dedent('''
+            import time
+            from pathlib import Path
+            from ustar_console.notifier_control import ControlServer,Store
+            with ControlServer(Store(Path('/var/lib/ustar-console-notify/outbox.sqlite3'))):
+                time.sleep(45)
+        ''')
+        control_unit='ustar-console-control-fixture.service'
+        try:
+            run('systemd-run','--quiet','--collect','--unit='+control_unit,
+                '--property=User=ustar-notify','--property=Group=ustar-console',
+                '--property=UMask=0077','--property=ProtectSystem=strict',
+                '--property=NoNewPrivileges=yes','--property=CapabilityBoundingSet=',
+                '--property=StateDirectory=ustar-console-notify','--property=StateDirectoryMode=0700',
+                '--property=RuntimeDirectory=ustar-console-notify','--property=RuntimeDirectoryMode=0750',
+                '/opt/ustar-console/venv/bin/python','-c',control_probe)
+            for attempt in range(50):
+                if Path('/run/ustar-console-notify/control.sock').is_socket():break
+                time.sleep(.1)
+            else:raise AssertionError('Notifier control socket did not become ready')
+            allowed=run('runuser','-u','ustar-console','--','/opt/ustar-console/venv/bin/python','-c',
+                "from ustar_console.notifier_control import rpc; "
+                "assert rpc('get_account',username='fixture')['linked'] is False; "
+                "assert len(rpc('create_link',username='fixture')['code'])>=40; "
+                "assert rpc('revoke',username='fixture')['revoked'] is True; print('CONTROL_WEB=PASS')")
+            assert 'CONTROL_WEB=PASS' in allowed.stdout
+            denied=run('runuser','-u','ustar-notify','--','/opt/ustar-console/venv/bin/python','-c',
+                "from ustar_console.notifier_control import rpc; rpc('get_account',username='fixture')",check=False)
+            assert denied.returncode!=0
+            assert run('runuser','-u','ustar-notify','--','test','-r',
+                       '/var/lib/ustar-console/auth.sqlite3',check=False).returncode!=0
+            print('CONSOLE_NOTIFIER_CONTROL=PASS; real cross-UID web allow; wrong peer and auth DB denied')
+        finally:
+            run('systemctl','stop',control_unit,check=False)
         for private in ('/etc/ustar-console/authority/ca.key','/var/lib/ustar-console-ops/jobs.sqlite3'):
             assert run('runuser','-u','ustar-console','--','test','-r',private,check=False).returncode!=0
         reply=run('runuser','-u','ustar-console','--','/opt/ustar-console/venv/bin/python','-c',

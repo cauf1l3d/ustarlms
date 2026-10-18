@@ -1,7 +1,7 @@
 // Synthetic demo state only. No credentials, persistence or network requests.
 import { graphFixture } from "../ui/tests/graph-fixtures";
 export function createPrototypeApi(
-  ApiError: new (status: number, retry: string | null) => Error,
+  ApiError: new (status: number, retry: string | null, code?: string) => Error,
 ) {
   let previewAuthenticated = true;
   const started = Date.now() / 1000;
@@ -205,6 +205,31 @@ export function createPrototypeApi(
       previewAuthenticated = false;
       return { status: "signed_out" };
     }
+    if (path === "admin/users" && (!options.method || options.method === "GET")) return {
+      demo_read_only: true,
+      users: [
+        { username: "owner", role: "owner", enabled: true, totp: true, sessions: 1 },
+        { username: "demo-operator", role: "operator", enabled: true, totp: false, sessions: 0 },
+        { username: "demo-viewer", role: "viewer", enabled: false, totp: false, sessions: 0 },
+      ],
+    };
+    if (path === "account/telegram" && (!options.method || options.method === "GET")) return {
+      demo_read_only: true, linked: false,
+      preferences: {
+        enabled: true, check_ids: ["host", "backup", "cpu_sustained", "ram_sustained"],
+        statuses: ["warning", "critical", "no_data"], repeat_minutes: 240,
+        quiet_start: "", quiet_end: "", timezone: "Europe/Moscow", recovery: true,
+        cpu_percent: 85, ram_available_percent: 15, hold_seconds: 600,
+      },
+      catalog: [
+        { id: "host", label: "Ресурсы сервера" }, { id: "backup", label: "Последняя копия" },
+        { id: "cpu_sustained", label: "Длительная нагрузка CPU" },
+        { id: "ram_sustained", label: "Мало свободной RAM" },
+      ],
+      transport_status: { status: "no_data" },
+    };
+    if (path.startsWith("admin/users") || path.startsWith("account/"))
+      throw new ApiError(403, null, "prototype_read_only");
     if (path === "password") throw new ApiError(403, null);
     if (path === "activity") return { status: "active" };
     if (path === "knowledge") return {

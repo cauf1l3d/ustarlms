@@ -117,6 +117,11 @@ def create_app(settings=None):
         except (OSError,ValueError,TimeoutError):
             raise HTTPException(409,'operation_unavailable_or_refused') from None
 
+    from .account_api import register as register_account, before_user_change
+    from .admin_users import register as register_users
+    register_account(app,auth,identity,write_identity,elevate)
+    register_users(app,auth,identity,write_identity,elevate,before_change=before_user_change)
+
     @app.post('/api/login')
     def login(body:Login, request:Request, response:Response):
         try:

@@ -49,3 +49,6 @@ Dated reports05–15Oct сохраняются. Их pending/next-step отно�
 - [Native update/Xray и отказ notifier credential guard18Oct](console_telegram_native_20261018.json).
 
 - [Notifier credential ACL fix/actual PID1 CI18Oct](console_notifier_credential_fix_20261018.json), [owner hotfix](../../server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md).
+
+- [Последний запрос18Oct18:55 и реальное наблюдение журналов](console_accounts_request_20261018.json): текущая INF06 accounts/notifications, не старое закрытие14:42.
+- [Проверка исходников account/notification доработки](console_accounts_20261018.json), native обновление — отдельный результат.

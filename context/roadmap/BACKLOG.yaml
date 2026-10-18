@@ -158,15 +158,19 @@ tasks:
   depends_on:
   - DOC-03
   acceptance:
-  - Owner accepts the working delivered console and Telegram stage and explicitly ends console work
-  - Freshness/NoData, graphical cards, HDD figures, rules and incidents implemented and source CI verified
-  - Residual operational acceptance and optional scope explicitly tracked in INF-06-OPS and OPS-02
+  - Owner-requested1855 accounts/linking/notifications/events fixes implemented and verified by source/browser/native CI
+  - New release installed and accepted by owner in agreed scope; previous1442 closure is historical
+  - Remaining independent observer/restore-RTO and unmeasured operations tracked explicitly
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
-  current_summary: Owner18Oct17:03MSK returns console for HTTPS/Mini App/theme/zoom/script/docs/request-metrics/sanitized-log revisions.
-    Prior14:42 closure is historical only. Revision1c881495 all3 CI and artifact12139739548 verified; owner18:04 terminal update1c881495/TLS/Apache logging PASS. Owner18:38 reports certificates updated, warnings gone and office access works with Happ/NovaVPS on/off; no route exception needed. New numeric/event samples and per-client UI matrix are not supplied; full console closure is not inferred.
+  current_summary: Owner1855 expanded INF06 to browser user administration, proven personal Telegram links, configurable notification
+    conditions/repeat/schedule and host-loss design without own second server. Direct sample15:44Z requests source_empty/events
+    ok; browser discrepancy recorded. Prior1c881495 installation and1838 HTTPS/office access preserved; new account release
+    native pending.
   validation_evidence:
+  - context/runtime/console_accounts_20261018.json
+  - context/runtime/console_accounts_request_20261018.json
   - context/runtime/console_client_https_result_20261018.json
   - context/runtime/console_revisions_native_20261018.json
   - context/runtime/console_happ_access_20261018.md
@@ -214,6 +218,7 @@ tasks:
   completion_scope: owner_accepted_current_delivery_not_independent_full_operations_or_DR_acceptance
   implementation_commit: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
   deployment_evidence: context/runtime/console_owner_acceptance_20261018.json
+  revision_spec: server-console/ADMIN_ALERTS_20261018.md
 - id: INF-06-OPS
   title: Отдельная эксплуатационная приёмка и расширения после принятого пульта
   status: planned
@@ -226,8 +231,8 @@ tasks:
   - Restore/RTO evidence stays with OPS-02; a working console is not full disaster recovery
   spec: context/runtime/control_panel_telegram_20261016.md
   runbook: context/tasks/HTTPS_NEXT_20261018.md
-  current_summary: Unmeasured or optional work preserved from prior stage; INF-06 reopened17:03 and client checks remain current. Not
-    an instruction to resume console work.
+  current_summary: Unmeasured or optional work preserved from prior stage; INF-06 reopened17:03 and client checks remain current.
+    Not an instruction to resume console work.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: ready
@@ -611,7 +616,6 @@ owner_selected_order:
 - INF-06
 - INF-07
 - OPS-02_external_result_when_received
-latest_owner_priority: >-
-  18Oct14:42MSK owner reports working and closes console; update GitHub context and report next phase.
-  Resume previously selected Academy HTTPS INF-07 after completed patch_OS and later prioritized console.
-  No production TLS switch started; OPS02 waiting sysadmin; Moodle5.2/PG17 deferred.
+latest_owner_priority: 18Oct14:42MSK owner reports working and closes console; update GitHub context and report next phase.
+  Resume previously selected Academy HTTPS INF-07 after completed patch_OS and later prioritized console. No production TLS
+  switch started; OPS02 waiting sysadmin; Moodle5.2/PG17 deferred.

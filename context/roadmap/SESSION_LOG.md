@@ -1,5 +1,9 @@
 # Журнал выполнения roadmap
 
+## 2026-10-18 — продолжение запроса18:55МСК после shared chat19:06
+
+Прочитан shared chat6ad4f002, GitHub head83635d60: предыдущий агент описал начатую работу, но новый account/notification код в опубликованном head отсутствует. Текущие owner HTTPS/officeVPN confirmations сохранены. Запрос1855 и direct15:44Z source_empty/eventsok записаны отдельно без подмены measurement time датой review. Реализуются owner users/last-owner guards, proven Telegram links, private notifier RPC/preferences, independent service-event status и no-own-second-server heartbeat design. Native SSH отсутствует; network/CA/TOTP/rootbot credentials не менялись. Новая приёмка остаётся отдельной от старого установленного1c881495.
+
 ## 2026-10-18 14:42 МСК — владелец принимает пульт; следующий этап HTTPS Академии
 
 Владелец: «работает, с пультом закончили», просит обновить GitHub и назвать следующий этап. Создан отдельный immutable console_owner_acceptance_20261018.json: принимается текущий рабочий пульт/Telegram, exact installed SHA, timing и полная native/DR матрица не выдумываются. INF-06 отмечен done в принятом объёме; исходный широкий scope сохранён, эксплуатационные остатки выделены в INF-06-OPS, restore/RTO остаётся OPS-02 waiting_external. Старые install/setup/credential-crash действия убраны из текущих указателей, датированные release receipts сохранены.

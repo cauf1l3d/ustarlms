@@ -60,15 +60,20 @@ covered:
   boundary: 'Owner terminal output: public IPv4 egress equals tested target; home TCP2019 false, separate ping timeout. Coordinates
     redacted; exact probe time unknown. Not all sources/IPv6/NAT mapping/API auth or listener hardening'
 - area: console_priority_metrics_and_revision_request
-  evidence: context/runtime/console_owner_acceptance_20261018.json
-  boundary: Owner18Oct14:42MSK accepts working delivered console/Telegram and closes INF-06. Sourceb93e16af and artifact verified with312 backend/72 browser/native CI. Exact installed hash, quantified native timing and full operations/DR matrix not supplied; residuals tracked separately
+  evidence: context/runtime/console_accounts_request_20261018.json
+  boundary: Owner1838 confirms console HTTPS/office access withVPNon/off after installed1c881495. Owner1855 direct collect
+    requests=source_empty but events=ok; browser discrepancy open. Earlier1442 closure superseded. New accounts/alert release
+    requires own native acceptance.
 - area: console_HDD_namespace_and_selected_SMART_diagnostics
   evidence: context/runtime/console_storage_probe_20261018.json
-  boundary: Dated owner host-rw/service-ro and selected SMART measurements; later update1f605 fixed namespace/partial-attribute handling; owner18Oct17:03 reopened console acceptance. No fresh full disk-health or recovery claim
+  boundary: Dated owner host-rw/service-ro and selected SMART measurements; later update1f605 fixed namespace/partial-attribute
+    handling; owner18Oct17:03 reopened console acceptance. No fresh full disk-health or recovery claim
 open:
 - id: CONSOLE-OPERATIONS-FOLLOWUP
-  next: Owner18Oct17:03MSK reopens INF-06 for client TLS/Mini App, themes/zoom, scripts/docs and request metrics/classified logs. Native install/client trust/phone route unmeasured. Independent observer and restore remain separate.
-  evidence: context/runtime/console_owner_acceptance_20261018.json
+  next: 'Current owner1855 request: users UI, provenTelegram linking, per-recipient conditions/repeat/schedule and service-event
+    display. New release not yet installed. External heartbeat designed without own second server but not activated; restore/RTO
+    remains separate.'
+  evidence: context/runtime/console_accounts_request_20261018.json
 - id: SERVER-FACTS-RESIDUAL
   next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units
     and NTP/SMART trends remain open; ACL/current SSH/Caddy process metadata now received
@@ -90,7 +95,8 @@ open:
 - id: RECOVERY
   next: Sysadmin clean-host restore result, reboot/roles/files/progress, measured RTO and key/offsite custody
 - id: ACADEMY-HTTPS
-  next: INF-07 prepares trusted HTTPS for Academy on existing Apache; name/CA/client trust, proxy-wwwroot/redirects/cookies/SCORM/files and rollback require their own acceptance. Accepted HTTPS of console does not prove HTTPS of Academy
+  next: INF-07 prepares trusted HTTPS for Academy on existing Apache; name/CA/client trust, proxy-wwwroot/redirects/cookies/SCORM/files
+    and rollback require their own acceptance. Accepted HTTPS of console does not prove HTTPS of Academy
   evidence: context/tasks/HTTPS_NEXT_20261018.md
 - id: PRIVACY
   next: Export/deletion/retention provider and evidence; remains deferred owner debt, not a newly imposed migration gate

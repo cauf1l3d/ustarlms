@@ -17,6 +17,13 @@ const reasons: Record<string,string> = {
   source_stale: "Журнал давно не получал записей. Нельзя отличить отсутствие обращений от остановки записи; текущая скорость не подтверждена.",
   source_limit: "Достигнут предел чтения. Полнота журнала не подтверждена.",
 };
+const eventReasons: Record<string,string> = {
+  source_unavailable: "Источник событий служб недоступен. Проверьте службу сбора и права чтения системного журнала по диагностике обновления.",
+  source_empty: "Источник событий служб ещё не передал записей. Отсутствие предупреждений не подтверждено.",
+  source_invalid: "События служб не прошли проверку формата или прав. Проверьте диагностику на сервере.",
+  source_stale: "События служб устарели. Свежие предупреждения и ошибки не подтверждены.",
+  source_limit: "Достигнут предел чтения событий служб. Полнота этого окна не подтверждена.",
+};
 const date = (s:string) => new Date(s).toLocaleString("ru-RU",{timeZone:"Europe/Moscow"}) + " МСК";
 function fresh(value:WebObservation|undefined, available:boolean) {
   const age=value ? (Date.now()-Date.parse(value.observed_at))/1000 : Infinity;
@@ -44,7 +51,7 @@ export function ServerLogs({value,available}:{value?:WebObservation;available:bo
   return <section className="panel" role="region" aria-label="Журнал служб"><h2>Журнал служб</h2>
     <p className="muted">Последние 5 минут: Apache, резервное копирование и службы пульта. Только очищенные категории, время и число записей. Исходные сообщения, URL, IP и секреты остаются на сервере.</p>
     {!current ? <p>Измерения отсутствуют или устарели.</p> : value!.events_status!=="ok" ?
-      <p>{reasons[value!.events_reason_code] || "Журнал недоступен или не прошёл проверку."}</p> :
+      <p>{eventReasons[value!.events_reason_code] || "Источник событий служб недоступен или не прошёл проверку."}</p> :
       value!.events.length ? value!.events.map((row,i)=><div className="data-row" key={i}><span><strong>{codes[row.code] || "Событие службы"}</strong><small>{row.source} · {date(row.at)}</small></span><span>{number(row.count," записей")}</span></div>) :
       <p>За это окно предупреждений и ошибок выбранных служб не получено.</p>}
   </section>;

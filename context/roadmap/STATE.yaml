@@ -2,19 +2,21 @@ schema_version: 2
 updated_at: '2026-10-18'
 project: USTAR Academy
 stage: console_revision_HTTPS_VPN_owner_verified_data_followup_20261018
-stage_label: 'Обновление и HTTPS/VPN подтверждены владельцем; проверка новых данных пульта'
-current_activity: >-
-  Owner18Oct17:03MSK explicitly withdraws full console acceptance after14:42 closure. Resume INF-06; do not treat prior receipt as current completion.
-  Read shared dialogue6ad4c0a7 and latest PR1037f8a614a. Screenshots show Chrome certificate warning bypass for private192.168.1.60:8443, not trusted client TLS.
-  Work: light/dark/system themes and enlarged charts; versioned script/docs catalog with measured installed inventory and existing broker allowlist;
-  real Apache numeric request p95/RPS/4xx/5xx and locally classified service events; TLS public CA export/diagnosis with separate device trust/route checks.
-  No direct SSH, no host/home routes/DNS/firewall/VPN or Academy platform changes. Owner18Oct18:04MSK terminal report: update1c881495 PASS, all4 units active, TLS chain/IP SAN/live leaf PASS, Apache numeric logging configured.
-  Owner18Oct18:11MSK confirms office WiFi;18:38MSK reports certificates updated, no warnings, access works with Happ/NovaVPS on and off.
-  Client HTTPS and office connectivity issue resolved by owner report; no Happ exception or server route change needed.
-  Mini App not separately named in general working report; actual new metrics/event samples and per-client UI matrix not supplied, not claimed broken.
-  Revision source1c881495: all3 CI SUCCESS,355 backend+1skip/114 Chromium, actual systemd and Apache fixtures PASS.
-  Artifact12139739548 downloaded and hash/source verified; delivery context/runtime/console_revisions_delivery_20261018.md.
-  Existing graphical releaseb93e16af preserved. INF07 Academy HTTPS follows this console revision; independent observer and restore/RTO remain separate.
+stage_label: Обновление и HTTPS/VPN подтверждены владельцем; проверка новых данных пульта
+current_activity: 'Owner18Oct17:03MSK explicitly withdraws full console acceptance after14:42 closure. Resume INF-06; do not
+  treat prior receipt as current completion. Read shared dialogue6ad4c0a7 and latest PR1037f8a614a. Screenshots show Chrome
+  certificate warning bypass for private192.168.1.60:8443, not trusted client TLS. Work: light/dark/system themes and enlarged
+  charts; versioned script/docs catalog with measured installed inventory and existing broker allowlist; real Apache numeric
+  request p95/RPS/4xx/5xx and locally classified service events; TLS public CA export/diagnosis with separate device trust/route
+  checks. No direct SSH, no host/home routes/DNS/firewall/VPN or Academy platform changes. Owner18Oct18:04MSK terminal report:
+  update1c881495 PASS, all4 units active, TLS chain/IP SAN/live leaf PASS, Apache numeric logging configured. Owner18Oct18:11MSK
+  confirms office WiFi;18:38MSK reports certificates updated, no warnings, access works with Happ/NovaVPS on and off. Client
+  HTTPS and office connectivity issue resolved by owner report; no Happ exception or server route change needed. Mini App
+  not separately named in general working report; actual new metrics/event samples and per-client UI matrix not supplied,
+  not claimed broken. Revision source1c881495: all3 CI SUCCESS,355 backend+1skip/114 Chromium, actual systemd and Apache fixtures
+  PASS. Artifact12139739548 downloaded and hash/source verified; delivery context/runtime/console_revisions_delivery_20261018.md.
+  Existing graphical releaseb93e16af preserved. INF07 Academy HTTPS follows this console revision; independent observer and
+  restore/RTO remain separate.'
 next_task: INF-06
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -269,14 +271,14 @@ next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: revision_native_and_client_HTTPS_office_VPN_modes_confirmed_data_followup
+  status: account_and_personal_notifications_revision_1855_in_progress
   revision_receipt: context/runtime/console_revisions_20261018.json
   revision_native_receipt: context/runtime/console_revisions_native_20261018.json
   revision_client_receipt: context/runtime/console_client_https_result_20261018.json
   phone_VPN_runbook: context/runtime/console_happ_access_20261018.md
   revision_delivery: context/runtime/console_revisions_delivery_20261018.md
   owner_acceptance_receipt: context/runtime/console_owner_acceptance_20261018.json
-  acceptance_scope: prior_full_closure_superseded_1703_HTTPS_and_office_VPN_access_resolved_by_owner_1838
+  acceptance_scope: 1855_account_notification_changes_pending_native_acceptance;1838_HTTPS_office_access_preserved
   operational_followup: INF-06-OPS
   style: graphite_with_readable_type_color_accents_and_Grafana_style_charts_owner16Oct
   hosting: same_server_no_separate_subdomain
@@ -288,7 +290,7 @@ next_control_panel:
   telegram_transport_receipt: context/runtime/console_telegram_transport_20261018.json
   telegram_network_receipt: context/runtime/console_telegram_network_20261018.json
   telegram_egress_receipt: context/runtime/console_telegram_egress_20261018.json
-  telegram_connection_next: owner_HTTPS_and_office_VPN_access_working_no_route_or_CA_reconfiguration_required
+  telegram_connection_next: owner_HTTPS_office_access_confirmed;current1855_accounts_notifications_and_empty_request_log_followup
   telegram_subscription_receipt: context/runtime/console_vpn_subscription_20261018.json
   telegram_subscription_probe: server-console/VPN_SUBSCRIPTION_PROBE.md
   telegram_subscription_launch_receipt: context/runtime/console_vpn_probe_tty_20261018.json
@@ -328,6 +330,9 @@ next_control_panel:
   home_access_plan: server-console/HOME_ACCESS_PLAN_20261018.md
   home_access_old_subnet_route: superseded_by_owner_network_stability_requirement
   history: native_15d_bounded_first_LAN_Prometheus_optional
+  account_revision_spec: server-console/ADMIN_ALERTS_20261018.md
+  account_revision_receipt: context/runtime/console_accounts_request_20261018.json
+  host_loss_design: server-console/HOST_LOSS_20261018.md
 deferred_platform:
   task: PLAT-01
   status: deferred_by_owner16Oct

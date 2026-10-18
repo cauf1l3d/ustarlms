@@ -1,4 +1,5 @@
 import json
+from contextlib import nullcontext
 import os
 from pathlib import Path
 import sqlite3
@@ -202,6 +203,7 @@ def test_notification_worker_starts_and_publishes_status(tmp_path,monkeypatch,se
     (credential/'telegram').chmod(0o600)
     monkeypatch.setenv('CREDENTIALS_DIRECTORY',str(credential))
     monkeypatch.setattr(console_config,'load',lambda:settings)
+    monkeypatch.setattr(alerts,'ControlServer',lambda *args,**kwargs:nullcontext())
     real_path=Path
     mapped={
         '/var/lib/ustar-console-notify/outbox.sqlite3':tmp_path/'outbox.sqlite3',

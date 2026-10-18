@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "kind": "console_accounts_notifications_source_validation",
+  "date": "2026-10-18",
+  "request": "context/runtime/console_accounts_request_20261018.json",
+  "spec": "server-console/ADMIN_ALERTS_20261018.md",
+  "base_source": "83635d60a7eecf7c3814c4d5662eb0c48ecaae63",
+  "source_commit": "resolve_exact_commit_containing_this_implementation;CI_artifact_SOURCE_COMMIT_is_authoritative",
+  "changes": [
+    "owner_user_admin_enabled_migration_last_owner_guard_session_revocation",
+    "peer_checked_private_notifier_RPC_one_time_private_Telegram_linking",
+    "per_recipient_rules_thresholds_repeat_quiet_hours_recovery_actual_delivery_state",
+    "independent_service_event_messages_and_safe_direct_vs_snapshot_diagnostics",
+    "no_own_second_server_heartbeat_design_not_activated"
+  ],
+  "verification": {
+    "backend": {
+      "command": "python -m pytest -q server-console/tests",
+      "passed": 427,
+      "skipped": 1,
+      "skip": "local_AF_UNIX_creation_EPERM;CI_must_execute",
+      "warning": "existing_Starlette_TestClient_httpx_deprecation"
+    },
+    "context": {
+      "command": "python -m unittest discover -s tests/r16 -v",
+      "ran": 577,
+      "skipped": 20,
+      "result": "OK"
+    },
+    "build": "wheel_and_UI_typecheck_PASS",
+    "prototype": "generated_and_check_PASS",
+    "context_source_schema": "CONTEXT_OK files526 tables93 roadmap_tasks34",
+    "secret_guard": "PASS",
+    "independent_review": {
+      "critical_open": 0,
+      "important_open": 0,
+      "important_fixed": 4,
+      "targeted": "67 passed,1local_AF_UNIXskip",
+      "cases": [
+        "reset_outbox_key_collision",
+        "repeat_anchor_actual_delivery",
+        "maintenance_unsent_cancellation",
+        "missing_snapshot_cancels_old_queued_check"
+      ]
+    }
+  },
+  "CI": "pending_exact_source_commit",
+  "native_installation": "not_run;owner_previous_installed1c881495_only",
+  "native_HTTPS_office_VPN_confirmation": "preserved18:38_MSK",
+  "production_actions_by_agent": false,
+  "external_heartbeat": "design_only_no_service_account_or_secret_URL",
+  "limitations": [
+    "browser_executable_missing_locally;Chromium_desktop_mobile_tablet_in_CI",
+    "auth_broker_credentials_CA_TOTP_stay_private_and_unchanged",
+    "bootstrap_Telegram_root_allowlist_distinct_from_dynamic_UI_links",
+    "managed_heartbeat_activation_and_native_new_feature_acceptance_pending"
+  ]
+}

@@ -1726,3 +1726,128 @@ dialog dl {
     gap: 8px;
   }
 }
+
+/* Account controls use theme colors and preserve readable labels on phones. */
+.administration,
+.administration form,
+.administration td,
+.account-form-grid > label {
+  min-width: 0;
+}
+.account-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.account-fields select {
+  display: block;
+  width: 100%;
+  margin: 8px 0 18px;
+}
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+}
+.account-actions button {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+}
+.account-actions .primary {
+  width: auto;
+  border-color: var(--primary);
+}
+.administration td .account-actions {
+  margin: 0;
+}
+.administration td:first-child {
+  overflow-wrap: anywhere;
+}
+.account-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin: 8px 0;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.account-checkbox input[type="checkbox"] {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  min-height: 22px;
+  padding: 0;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.account-choices {
+  min-width: 0;
+  margin: 22px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.account-choices legend {
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.account-check-grid,
+.account-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+}
+.account-form-grid {
+  margin-top: 18px;
+}
+.telegram-link {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--field);
+  overflow-wrap: anywhere;
+}
+.telegram-link code {
+  font-size: 18px;
+  user-select: all;
+}
+@media (max-width: 800px) {
+  .administration td[data-label="Действия"] {
+    display: block;
+  }
+  .administration td[data-label="Действия"]::before {
+    display: block;
+    margin-bottom: 8px;
+  }
+}
+@media (max-width: 600px) {
+  .account-check-grid,
+  .account-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .account-choices {
+    padding: 12px;
+  }
+  .account-actions button {
+    max-width: 100%;
+  }
+}
+@media (min-width: 1101px) {
+  aside {
+    overflow-y: auto;
+  }
+}
+nav button {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

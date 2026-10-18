@@ -45,5 +45,7 @@
       "mobile",
       "tablet"
     ]
-  }
+  },
+  "numeric_log_path": "/var/lib/ustar-console-collector/requests.log",
+  "numeric_log_reason": "preserve_strict_parent_guards_on_Ubuntu_group_writable_var_log"
 }

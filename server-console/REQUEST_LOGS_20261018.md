@@ -36,7 +36,7 @@ sudo systemctl start ustar-console-collect.service
 | Путь | Назначение |
 | --- | --- |
 | `/etc/apache2/ustar-console-observability.conf` | Только числовой LogFormat/CustomLog и исключение HEAD-пробы |
-| `/var/log/apache2/ustar-console-access.log` | Новый журнал, root:adm, 0640; чтение сборщиком root |
+| `/var/lib/ustar-console-collector/requests.log` | Новый журнал в существующем StateDirectory0700, root:adm0640; чтение сборщиком root |
 | `/etc/logrotate.d/ustar-console-observability` | Еженедельная ротация, `maxsize 10M`, 2 архива, 0640 root:adm |
 | `/run/ustar-console-observability.lock` | Root-only блокировка параллельной установки |
 
@@ -111,3 +111,5 @@ Telegram не вызывают чтение журналов и не выбир�
 Fixture-тесты проверяют числа, percentile, окно, приватность, trust checks,
 ограничения, выбор vhost, идемпотентность и откат. Они не подтверждают, что новая
 конфигурация уже установлена, Apache перезагружен или logrotate сработал на server1.
+
+Числовой файл намеренно находится в приватном StateDirectory пульта: на Ubuntu общий `/var/log` может допускать групповую запись. Проверки root-owned/no-symlink/no-group-write для источника не ослабляются. Apache master открывает журнал какroot, workers используют унаследованный descriptor. При нестандартном AppArmor/Apache sandbox native helper/сбор остаются отдельной проверкой владельца.

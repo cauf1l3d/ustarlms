@@ -47,6 +47,11 @@ jobs:
         run: npm test
       - name: systemd sandbox and artifact installation
         run: sudo --preserve-env=PATH,GITHUB_ACTIONS python server-console/tests/systemd_acceptance.py
+      - name: Actual Apache numeric log and probe exclusion
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq apache2
+          sudo --preserve-env=PATH,GITHUB_ACTIONS python server-console/tests/apache_observability_acceptance.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: ustar-console-${{ github.event.pull_request.head.sha || github.sha }}

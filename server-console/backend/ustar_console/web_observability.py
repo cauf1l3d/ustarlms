@@ -17,7 +17,7 @@ import time
 
 from .data import open_regular, stamp
 
-ACCESS_LOG = Path('/var/log/apache2/ustar-console-access.log')
+ACCESS_LOG = Path('/var/lib/ustar-console-collector/requests.log')
 WINDOW_SECONDS = 300
 TAIL_LIMIT = 4*1024**2
 MAX_DURATION_US = 600_000_000

@@ -1092,8 +1092,8 @@
     {
       "path": "context/runtime/console_revisions_20261018.json",
       "domain": "runtime",
-      "size": 1402,
-      "sha256": "1f38bff97ad32b100090ef388bf9570cc53870f8d3f9a62cde2bb5953b6eb5ce"
+      "size": 1563,
+      "sha256": "d21ebc80f812b4c9843a66ccd59992dd2711cda90284d00f710e378fe6c342ae"
     },
     {
       "path": "context/runtime/console_storage_probe_20261018.json",

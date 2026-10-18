@@ -48,6 +48,11 @@ def test_old_access_log_never_becomes_fresh_zero_traffic(tmp_path,monkeypatch):
     assert value['requests'] is None and value['rps'] is None
 
 
+def test_default_numeric_log_uses_existing_private_collector_state():
+    from ustar_console import web_observability
+    assert str(web_observability.ACCESS_LOG)=='/var/lib/ustar-console-collector/requests.log'
+
+
 def test_truncated_tail_cannot_prove_full_coverage_from_a_late_old_request(tmp_path,monkeypatch):
     module,_=access(tmp_path,monkeypatch,(f'{NOW-20} 500 1000\n'*50)+f'{NOW-400} 200 400000000\n{NOW} 200 1000\n')
     monkeypatch.setattr(module,'TAIL_LIMIT',80)

@@ -2,6 +2,9 @@
 
 **Актуально18Oct17:03МСК:** владелец вернул пульт на доработку; прежняя приёмка14:42 не является текущим фактом завершения. [Новые требования](../../server-console/REVISIONS_20261018.md), [receipt запроса](console_revisions_20261018.json). INF-07 HTTPS Академии следует после пульта. Старые поставки ниже — история; настройку токена/CA не повторять автоматически.
 
+
+**Owner18Oct18:04МСК:** [native update1c881495](console_revisions_native_20261018.json) checksum/update PASS,4units active, TLS chain/IP SAN/live leaf PASS, Apache numeric logging configured. Actual p95/counts/UI/client trust/Mini App ещё не подтверждены. Телефон Happ/NovaVPS; сеть не названа. [Оставшаяся проверка маршрута](console_happ_access_20261018.md).
+
 ## История поставок и измерений
 
 Последний запрос18Oct12:40МСК из [общего диалога](https://chatgpt.com/share/6ad4957d-45f4-83eb-8db0-32e41a9137fd): читаемые графические карточки Telegram с реальными данными и заполнение пульта доступной телеметрией. Продолжение от98946c6b: PNG/графики, HDD/inode, свежие правила и история инцидентов проверены: sourceb93e16af, все3 CI SUCCESS,312 backend/72 Chromium/native fixtures PASS; artifact12133242265 скачан и сверен. На server1 ещё не установлено. Работа бота/кнопок уже принята владельцем, прежний credential crash не является текущим следующим шагом. [Receipt](console_telegram_graphics_20261018.json). [Точные команды обновления](console_telegram_graphics_delivery_20261018.md). Ниже — история предыдущих поставок.

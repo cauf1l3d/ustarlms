@@ -21,7 +21,12 @@
     "exact_TLS_error_code_not_shown": true
   },
   "native_deployment": "not_performed_by_agent",
-  "phone_network_and_vpn_app": "not_supplied",
+  "phone_network_and_vpn_app": {
+    "application": "Happ",
+    "provider": "NovaVPS",
+    "network": "not_supplied",
+    "received_at": "2026-10-18T18:04:31+03:00"
+  },
   "client_certificate_trust": "not_accepted",
   "mini_app_route": "not_accepted",
   "application_baseline_unchanged": true,
@@ -89,10 +94,11 @@
     "unsafe_members": 0
   },
   "delivery": "context/runtime/console_revisions_delivery_20261018.md",
-  "status": "source_CI_and_artifact_verified_native_and_devices_pending",
+  "status": "source_and_artifact_verified_owner_native_update_PASS_devices_and_metrics_sample_pending",
   "local_context_tests": {
     "passed_or_skipped_total": 577,
     "environment_skips": 20,
     "result": "OK"
-  }
+  },
+  "latest_native_receipt": "context/runtime/console_revisions_native_20261018.json"
 }

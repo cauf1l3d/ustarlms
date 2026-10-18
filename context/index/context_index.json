@@ -498,8 +498,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 14902,
-      "sha256": "ca2ef63c57293587135f184b6e42bd6e3dca8c0c56a6e1a68795fddd968e1c75"
+      "size": 15121,
+      "sha256": "cf05ceed5c60da2874e081cb1fba7cff6c2e5b9c413269599970ae80f15c6829"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 33363,
-      "sha256": "985257e4c50363ba98c142637a79da39bf91e2069477de56c845145d7070d645"
+      "size": 33567,
+      "sha256": "91c9301711ec61a27a83c866fae87523e9f9e00f71aaae6cadf8bb350432b6d1"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 178945,
-      "sha256": "914252c353cea020db16e73114835880755ce8ed06b37f64cf743da6354f3adc"
+      "size": 180224,
+      "sha256": "1dc7e8cb2708e0ef3a8bb6298b7faf0bb38cc91d23a6c992047c3a3688b97928"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,8 +924,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 20060,
-      "sha256": "0b7f093868d8e156a07d48765759e00a86787c9f43ef60cf468db3968f5493f1"
+      "size": 20470,
+      "sha256": "b3b5104264f51b190f4a1363d27cb6bfc7eb508ae56e83b4b7725a9ac1835cca"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1014,8 +1014,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 11136,
-      "sha256": "146876f3626fa8c0876834291ab497e2452c965bca0407521066b5605729a36c"
+      "size": 11564,
+      "sha256": "eb338895f238418564af8ce3500a7639be5a2b156ecf67231894a553bf22d808"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -1072,6 +1072,12 @@
       "sha256": "ce608467f70fb45af554b0ac06cfbe013d27b5d44373e5367b725386249e2e15"
     },
     {
+      "path": "context/runtime/console_happ_access_20261018.md",
+      "domain": "runtime",
+      "size": 5223,
+      "sha256": "9b46bd43ee932ebe0f2e2102c3987b9940762825a45aa47b20ec21493b7fffda"
+    },
+    {
       "path": "context/runtime/console_native_install_20261017.json",
       "domain": "runtime",
       "size": 4445,
@@ -1092,14 +1098,20 @@
     {
       "path": "context/runtime/console_revisions_20261018.json",
       "domain": "runtime",
-      "size": 2930,
-      "sha256": "9f60e6e2f0d04f086a545f01a920c88aaa8ea16f382405910a67ad6eec0adb67"
+      "size": 3168,
+      "sha256": "f3a328ad45b60795d9cd3467f0c6e196a531945f3451a4c13f32163da461ca5a"
     },
     {
       "path": "context/runtime/console_revisions_delivery_20261018.md",
       "domain": "runtime",
       "size": 10448,
       "sha256": "5decdd5066eec94ea2b30e0d0ac96e24eb9975c30efc5f1a25bdefd8e4ac7fe0"
+    },
+    {
+      "path": "context/runtime/console_revisions_native_20261018.json",
+      "domain": "runtime",
+      "size": 2459,
+      "sha256": "86ac070f54cab670a0b3b8f91994a05d955d0784d86b6bc947a7f3dadc40ec8a"
     },
     {
       "path": "context/runtime/console_storage_probe_20261018.json",
@@ -2202,8 +2214,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 5034,
-      "sha256": "f71d87b2a2c6596ecf98756c1b8bba7c0bbed272b842337d1705cb7cbee08cd4"
+      "size": 5339,
+      "sha256": "4ca41ccd35aafb49c7839d3124c1a67b97db771a5a4e20a6e5a02e5ad5ca6c90"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

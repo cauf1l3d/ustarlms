@@ -1705,3 +1705,15 @@ Artifact12139739548 downloaded: ZIP CRC/SHA94898041, tar513690B SHA0b7ecfa62;23 
 Прежний14:42 closure отменён17:03; INF-06 остаётся текущей. Нет SSH к server1; установка/client trust/phone VPN route не измерены.
 Пароли/token/TOTP/CA root/сеть/Academy не менялись агентом. Параметры VPN телефона не сообщены; из внешней сети private origin требует своего маршрута.
 Не объявлять Mini App исправленным до реальной проверки на устройстве; независимые observer/restore-RTO gates сохранены.
+
+
+## 2026-10-18 18:04МСК — owner native update1c881495 и Happ/NovaVPS
+
+Получен terminal output: archive checksum OK/SOURCE_COMMIT1c881495/updater PASS/pip check OK;4units active/fresh snapshot.
+TLS chain/IP SAN/live leaf PASS, существующий публичный CA экспортирован; client trust не измерен.
+Apache numeric log helper configured=true, vhostustar.conf и backup150056Z; actual request sample ещё не получен.
+[Датированный receipt](../runtime/console_revisions_native_20261018.json) сохраняет provenance/hash вложения без raw логов.
+Владелец уточнил телефон Happ/NovaVPS; текущая сеть/версия/тип профиля неизвестны.
+Официальные Happ docs проверены: DirectIp/Reconnect/JSON restrictions; [условный runbook](../runtime/console_happ_access_20261018.md).
+Одинаковая provider subscription не создаёт reverse LAN route. Новые профили/сеть/CA/production агентом не менялись.
+INF-06 остаётся текущей: UI/client trust/Mini App/numeric sample ещё не приняты; предыдущий closure не восстановлен.

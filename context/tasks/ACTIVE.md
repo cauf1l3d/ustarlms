@@ -4,7 +4,7 @@
 
 Владелец отменил полную приёмку пульта. Выполнить [новые требования](../../server-console/REVISIONS_20261018.md): HTTPS/client trust и диагностика Mini App/VPN, темы/zoom, Скрипты/Документация, request p95/RPS/ошибки и безопасные события служб. Предыдущая поставка графикиb93e16af сохраняется; повторно собирать её с нуля не нужно.
 
-Доработка source1c881495 проверена: все3 CI SUCCESS,355 backend+1skip/114 Chromium, настоящие systemd/Apache fixtures PASS; artifact12139739548 скачан и сверен. [Команды обновления и проверки клиентов](../runtime/console_revisions_delivery_20261018.md). Установка на server1, client trust и Mini App ещё не приняты; это текущий остаток INF-06.
+Доработка source1c881495 проверена: все3 CI SUCCESS,355 backend+1skip/114 Chromium, настоящие systemd/Apache fixtures PASS; artifact12139739548 скачан и сверен. [Команды обновления и проверки клиентов](../runtime/console_revisions_delivery_20261018.md). [Owner terminal18:04МСК](../runtime/console_revisions_native_20261018.json): update1c881495 PASS, службы active, server TLS и Apache logging configured. Client trust, Mini App, UI и actual metrics sample ещё не подтверждены; это текущий остаток INF-06. Телефон Happ/NovaVPS, сеть не названа; [условия маршрута](../runtime/console_happ_access_20261018.md).
 
 ## Следующий этап после доработки — INF-07: HTTPS Академии
 

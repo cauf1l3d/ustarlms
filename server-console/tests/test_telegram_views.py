@@ -1,5 +1,6 @@
 """Owner-facing cards and delivery boundaries, using real snapshot-shaped data."""
 import json
+from types import SimpleNamespace
 
 import pytest
 
@@ -181,8 +182,9 @@ def test_setup_mini_app_preserves_secrets_and_restarts_only_notifier(tmp_path,mo
     (directory/'telegram.json').write_text(json.dumps(credential));(directory/'telegram.json').chmod(0o600)
     monkeypatch.setattr(setup,'CONFIG',directory)
     monkeypatch.setattr(setup,'trusted_config',lambda path:{})
-    monkeypatch.setattr(setup.os,'isatty',lambda fd:True)
-    monkeypatch.setattr(setup.os,'geteuid',lambda:0)
+    # Simulate the CLI root gate without changing the real credential reader's UID.
+    # A process-wide os.geteuid patch makes runner-owned fixtures look untrusted in CI.
+    monkeypatch.setattr(setup,'os',SimpleNamespace(isatty=lambda fd:True,geteuid=lambda:0,umask=lambda value:None))
     monkeypatch.setattr(setup,'save',lambda path,data: path.write_text(json.dumps(data)))
     calls=[];monkeypatch.setattr(setup,'run',calls.append)
     monkeypatch.setattr('sys.argv',['ustar-console-setup','--telegram-mini-app',enabled])

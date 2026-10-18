@@ -1,5 +1,7 @@
 # Telegram через подписку Happ/NOVAVPS
 
+Выпуск1f605e4d прошёл все3 CI; artifact/hash/SOURCE_COMMIT проверены. [Точный пакет и4 шага обновления установленного пульта](TELEGRAM_RELEASE_20261018.md). Native узлы/бот/receiver ACK ещё ожидаются.
+
 Owner18Oct02:07MSK получил `JSON_outbounds`:35 outbounds, из них15 VLESS,10 freedom,10 blackhole;10 gRPC/5 TCP,14 Reality/1 TLS, insecure flags0. Это классификация, не проверка параметров узлов или соединения. [Receipt](../context/runtime/console_vpn_format_20261018.json). URL/профили агенту не передавались.
 
 Для server1 выбран Xray-core **v26.3.27 linux/amd64** из официального GitHub release. Архив SHA256 `23cd9af937744d97776ee35ecad4972cf4b2109d1e0fe6be9930467608f7c8ae`, извлечённый xray SHA256 `8255dd939c34cf966cc91517b6324dd3c8d0bcf49ffac8beca049a38c46845ed`; проверяются оба перед запуском. Это фиксированная версия, не скачивание latest при каждой установке. Дистрибутив и checksum проверены локально; не утверждать, что версия автоматически обновляется.

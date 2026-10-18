@@ -1613,3 +1613,32 @@ CId398d131:175 backend/45 Chromium/PG16/console native update/sandbox PASS; Xray
 CIf22c19e8 подтвердил /opt root0777 на hosted runner; trusted fixture binary hash и4 actual configs PASS. Sandbox listener не поднялся в2s. Добавлены только synthetic fixture journal diagnostics; production logs остаются отключены. Startup grace расширен до5s внутри прежнего RuntimeMaxSec25s; причина startup failure проверяется следующим CI.
 
 Причина startup воспроизведена локально: credential называется xray без extension, Xray без -format завершает23 (cannot get format), тогда как config.json проходит. Постоянная/transient команды теперь используют общий xray_command с явным -format json; реальные4 configs с extensionless credential после fix PASS. Native fixture проверяет именно этот путь.
+
+
+## 2026-10-18 — INF-06: проверенный Xray/Telegram выпуск передан, домашняя сеть — отдельный этап
+
+Изучен shared dialogue6ad40728 и актуальный PR103; старый незавершённый local console worktree сохранён отдельно.
+На exact1f605e4d все3 CI SUCCESS:console39079252673/context39079252684/review39079252801.
+Job117532674964 logs inspected:175 backend/45 Chromium,4 actual configs, DynamicUser/LoadCredential/Telegram-only default-deny,
+PG monitor/HDD namespace/update queued-running refusal/rollback/auth-CA-config-local-patch-notifier preservation PASS.
+Artifact12118052115 скачан: ZIP191381B SHA86fc2a81, inner tar190969B SHA377eb564,
+SOURCE_COMMIT1f605e4d/22 regular-directory members/tools verified. [Receipt](../runtime/console_telegram_release_20261018.json).
+[Handoff](../../server-console/TELEGRAM_RELEASE_20261018.md) даёт root copy-before-hash stage, update без full setup,
+отдельный interactive Xray install, private challenge ID и proxy-aware Telegram-only setup.
+Installed567e90d5 receipt не обновляется: owner update/provider connectivity/config/receiver ACK ещё не получены.
+Новый запрос владельца запрещает риск потери Internet/LAN на server1/домашнем ПК. Старый subnet route отменён как текущий план;
+[userspace/SSH candidate](../../server-console/HOME_ACCESS_PLAN_20261018.md) требует isolated Windows pilot,
+no TUN/default route/DNS/netfilter и узкие grants; нет обещания, что обычный Windows GUI не меняет сеть.
+Xray outgoing provider subscription не даёт обратный доступ; reverse требует своего внешнего endpoint.
+Ни VPN, ни update, ни production/network changes агентом не выполнялись; прямого SSH нет.
+
+Fresh-context final review:Critical/Important0. Исправлено описание prepared/installed Xray;
+ограничение ID helper первыми100 pending updates описано в handoff, код очереди не менялся.
+Deferred minor: автоматическая пагинация ID challenge не реализована; текущий путь — отдельный свежий бот.
+Решение: старый subnet route не реализовывать — противоречит последнему требованию; цена ошибки userspace feasibility —
+отложенный доступ, не молчаливая смена default route/DNS. Реальные server/provider/receiver/Windows gates открыты.
+
+Handoff verification:5 Bash blocks pass bash -n; artifact updater/tools and wheel transport/alerts/setup bytes match source.
+Context/index/current/secret guards PASS,526 source/93 tables/33 tasks unchanged.
+Local system Python initially lacked mcp; pinned harness venv then ran577 tests OK (20 environment skips).
+No runtime source changed; approved executable artifact remains exact1f605e4d.

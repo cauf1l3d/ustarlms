@@ -250,10 +250,14 @@ current_work:
     insecure flags0, exit0. Format known, actual node values still not received/validated.
     Prepared pinned Xray Telegram-only loopback service, explicit CA-verified CONNECT
     bot transport, proxy-aware setup/credential reload and private-ID challenge. Local175
-    backend/28 focused/4 real Xray config cases PASS; native CI/artifact/owner install
-    and receiver ACK pending. No host DNS/routes/firewall, console auth/CA/TOTP or
-    production services changed by agent. Exact failing hop/cause unknown; numeric
-    ID, bot setup and receiver ACK not obtained.'
+    backend/28 focused/4 real Xray config cases PASS. Release1f605e4d now passed all3
+    CI, including175 backend/45 Chromium/actual Xray DynamicUser LoadCredential default-deny/updater
+    rollback. Artifact12118052115 downloaded, ZIP/tar/SOURCE_COMMIT verified; owner
+    update/node/ID/config/receiver ACK still pending. Latest owner requires stable
+    home and server Internet/LAN; prior subnet route plan superseded by userspace/SSH
+    feasibility and isolated Windows pilot, not an installed VPN. No host DNS/routes/firewall,
+    console auth/CA/TOTP or production services changed by agent. Exact failing hop/cause
+    unknown; numeric ID, bot setup and receiver ACK not obtained.'
   next_task: INF-06
   ready_tasks: []
   task_statuses:

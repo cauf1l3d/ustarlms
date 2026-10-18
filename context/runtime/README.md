@@ -27,3 +27,5 @@ Owner18Oct02:07MSK получил [санитизированный резуль
 - [Review17Oct](../reviews/20261017/README.md) проверяет новые предложения; [три fresh server facts](server-facts/README.md) импортированы, [сверка и gaps](../reviews/20261017/runtime_reconciliation.md) готовы для повторного аудита. Порядок входа — только [START_HERE](../../START_HERE.md).
 
 Dated reports05–15Oct сохраняются. Их pending/next-step относятся к своей дате; текущая очередь — STATE/ACTIVE. Не повторять SSD growth, Moodle patch, AppArmor repair или host install/reboot.
+
+- [Проверенный Telegram/Xray выпуск18Oct](console_telegram_release_20261018.json): CI/artifact/source verification, не server1 acceptance.

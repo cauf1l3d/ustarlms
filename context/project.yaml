@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-17'
+updated_at: '2026-10-18'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -37,6 +37,8 @@ current_work:
   prototype_PR: 103
   status: owner_installed_limited_native_gate_passed_source_and_browser_acceptance_pending
   installation_receipt: context/runtime/console_native_install_20261017.json
+  telegram_release_handoff: server-console/TELEGRAM_RELEASE_20261018.md
+  home_access_plan: server-console/HOME_ACCESS_PLAN_20261018.md
   architecture: server-console/ARCHITECTURE.md
   observability: server-console/OBSERVABILITY.md
   design: server-console/DESIGN.md

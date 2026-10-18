@@ -158,11 +158,9 @@ def create_app(settings=None):
     def overview(request:Request):
         identity(request)
         value=snapshot(settings.snapshot)
-        from .data import safe_json, epoch
-        try:
-            alerts=safe_json(Path('/run/ustar-console-notify/status.json'),owner=None)
-            if not -5<=time.time()-epoch(alerts['observed_at'])<=45:
-                raise ValueError('Stale alert worker')
+        from .notification_state import read
+        alerts=read()
+        if alerts and alerts['fresh']:
             value['notifications']=alerts
             rule=next(c for c in value['checks'] if c['id']=='rules')
             rule.update(status=alerts['status'] if alerts.get('polling')=='ok' else 'no_data',
@@ -171,11 +169,9 @@ def create_app(settings=None):
             resources.update(status='ok' if alerts.get('evaluation')=='ok' else 'no_data',reason_code='sustained_rules',source='notification_worker',observed_at=alerts['observed_at'])
             for row in alerts['rules']:
                 if row['key'] in ('cpu_sustained','ram_sustained'):
-                    status='no_data' if row['state']=='no_data' else row['emitted']
+                    status='no_data' if alerts['evaluation']!='ok' or row['state']=='no_data' else row['emitted']
                     value['checks'].append(dict(id=row['key'],label='CPU: длительная нагрузка' if row['key'].startswith('cpu') else 'RAM: длительная нехватка',
                         domain='server',status=status,reason_code='sustained_rules',source='notification_worker',observed_at=alerts['observed_at']))
-        except (OSError,ValueError,KeyError,TypeError):
-            pass
         priority={'critical':4,'no_data':3,'warning':2,'ok':1,'stopped':0}
         for domain in value['domains']:
             value['domains'][domain]=max((c['status'] for c in value['checks'] if c['domain']==domain),
@@ -196,7 +192,12 @@ def create_app(settings=None):
     @app.get('/api/events')
     def events(request:Request):
         identity(request)
-        return {'events':auth.events(),'scope':'console_security_only', 'host_logs':'not_connected'}
+        from .notification_state import read
+        alerts=read()
+        return dict(events=auth.events(),scope='console_security_and_monitoring',host_logs='not_connected',
+                    incidents=alerts['incidents'] if alerts else [],
+                    incidents_status=('ok' if alerts['fresh'] else 'stale') if alerts else 'no_data',
+                    incidents_observed_at=alerts['observed_at'] if alerts else None)
 
     @app.get('/api/operations')
     def operations(request:Request):

@@ -27,7 +27,8 @@ def test_command_and_rules_use_snapshot_refreshed_after_polling(tmp_path):
     queue=Queue(tmp_path/'queue.sqlite3',[123],clock=lambda:1000);polled=[];sent=[]
     def api(method,payload):
         if method=='getUpdates': polled.append(True);return [message()]
-        sent.append(payload);return {}
+        if method=='sendMessage': sent.append(payload)
+        return {}
     def refresh():
         assert polled, 'Snapshot must be read after the long poll returns'
         return data(cpu=99)
@@ -41,7 +42,8 @@ def test_snapshot_that_expires_during_polling_is_not_presented_as_current(tmp_pa
     queue=Queue(tmp_path/'queue.sqlite3',[123],clock=lambda:1000);sent=[]
     def api(method,payload):
         if method=='getUpdates': return [message()]
-        sent.append(payload);return {}
+        if method=='sendMessage': sent.append(payload)
+        return {}
     iteration(queue,api,[123],[123],data(),ORIGIN,refresh=lambda:data(cpu=99,stale=True))
     assert '99,0%' not in sent[0]['text'] and '12,5%' not in sent[0]['text']
     assert 'устарели' in sent[0]['text']

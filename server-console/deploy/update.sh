@@ -70,6 +70,7 @@ systemctl stop ustar-console.service
 ustar_console_jobs_clear
 systemctl stop ustar-console-collect.timer ustar-console-smart.timer ustar-console-collect.service ustar-console-smart.service ustar-console-ops.service ustar-console-notify.service
 ustar_console_changed=1
+/opt/ustar-console/venv/bin/python -m pip install --require-hashes -r "$ustar_console_source/requirements.lock"
 /opt/ustar-console/venv/bin/python -m pip install --no-deps --force-reinstall "$ustar_console_source/ustar_console-0.1.0-py3-none-any.whl"
 /opt/ustar-console/venv/bin/python -m pip check
 ustar_console_resume

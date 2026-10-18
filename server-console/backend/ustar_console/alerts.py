@@ -12,8 +12,8 @@ import struct
 import time
 
 from .data import snapshot, safe_json, stamp
-from .telegram_transport import exchange, validate_proxy
-from .telegram_views import reply as command_reply, keyboard, incident, source
+from .telegram_transport import exchange, validate_proxy, photo_body, PHOTO_LIMIT
+from .telegram_views import reply as command_reply, keyboard, incident, source, canonical
 
 WATCH = {'collector','host','containers','hdd','backup','cron','recovery','http_local','database',
          'ssd_space','ssd_inodes','hdd_space','hdd_inodes','observer','http_external','smart','clock','units'}
@@ -32,10 +32,15 @@ class Queue:
                 CREATE TABLE IF NOT EXISTS outbox(id INTEGER PRIMARY KEY,key TEXT UNIQUE,chat INTEGER,text TEXT,
                     attempts INTEGER DEFAULT 0,next REAL,status TEXT DEFAULT 'pending',error TEXT);
                 CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT);
+                CREATE TABLE IF NOT EXISTS incidents(id INTEGER PRIMARY KEY,key TEXT UNIQUE,
+                    at REAL,check_id TEXT,status TEXT,reason_code TEXT);
             ''')
             columns={r[1] for r in db.execute('PRAGMA table_info(rules)')}
             for column in ('last','sent'):
                 if column not in columns: db.execute('ALTER TABLE rules ADD COLUMN '+column+' REAL DEFAULT 0')
+            columns={r[1] for r in db.execute('PRAGMA table_info(outbox)')}
+            if 'photo' not in columns: db.execute('ALTER TABLE outbox ADD COLUMN photo BLOB')
+            if 'photo_sent' not in columns: db.execute('ALTER TABLE outbox ADD COLUMN photo_sent INTEGER DEFAULT 0')
 
     @contextmanager
     def connect(self):
@@ -46,12 +51,17 @@ class Queue:
         finally:
             db.close()
 
-    def enqueue(self, db, key, text, chats=None):
+    def enqueue(self, db, key, text, chats=None, photo=None):
+        if photo is not None and (type(photo) is not bytes or not photo.startswith(b'\x89PNG\r\n\x1a\n')
+                                  or not 8<len(photo)<=PHOTO_LIMIT):
+            raise ValueError('Invalid generated photo')
         if db.execute("SELECT count(*) FROM outbox WHERE status='pending'").fetchone()[0]>=5000:
             raise ValueError('Outbox capacity reached')
         for chat in self.chats if chats is None else chats:
-            db.execute('INSERT OR IGNORE INTO outbox(key,chat,text,next) VALUES(?,?,?,?)',
-                       (key+':'+str(chat),chat,text[:3000],self.clock()))
+            queued=db.execute("SELECT coalesce(sum(length(photo)),0) FROM outbox WHERE status='pending'").fetchone()[0]
+            image=photo if photo is not None and queued+len(photo)<=16*2**20 else None
+            db.execute('INSERT OR IGNORE INTO outbox(key,chat,text,next,photo) VALUES(?,?,?,?,?)',
+                       (key+':'+str(chat),chat,text[:3000],self.clock(),image))
 
     def evaluate(self, data, maintenance=None):
         now = self.clock()
@@ -111,11 +121,16 @@ class Queue:
                 if (status != emitted or repeat) and now-since >= hold:
                     sequence += 1
                     self.enqueue(db,f'rule:{key}:{sequence}',incident(check,data,now))
+                    reason=check.get('reason_code','sustained_rules')
+                    if not re.fullmatch(r'[a-z0-9_]{1,80}',reason): reason='measured'
+                    db.execute('INSERT OR IGNORE INTO incidents(key,at,check_id,status,reason_code) VALUES(?,?,?,?,?)',
+                               (f'rule:{key}:{sequence}',now,key,status,reason))
                     emitted = status
                     sent=now
                 db.execute('INSERT OR REPLACE INTO rules VALUES(?,?,?,?,?,?,?)',(key,status,since,emitted,sequence,now,sent))
             # Retain incidents while pending; bound completed-message history.
             db.execute("DELETE FROM outbox WHERE status='sent' AND id NOT IN (SELECT id FROM outbox ORDER BY id DESC LIMIT 2000)")
+            db.execute('DELETE FROM incidents WHERE id NOT IN (SELECT id FROM incidents ORDER BY id DESC LIMIT 1000)')
 
     def deliver(self, api, limit=2, reply_markup=None):
         now = self.clock()
@@ -123,6 +138,22 @@ class Queue:
             rows = db.execute("SELECT * FROM outbox WHERE status='pending' AND next<=? ORDER BY id LIMIT ?",(now,limit)).fetchall()
         for row in rows:
             try:
+                if row['photo'] is not None and not row['photo_sent']:
+                    photo=dict(chat_id=row['chat'],photo=row['photo'],protect_content=True,
+                               caption=row['text'].split('\n',1)[0][:150]+'\nПодробности — следующим сообщением.')
+                    if reply_markup is not None: photo['reply_markup']=reply_markup
+                    try:
+                        try:
+                            api('sendPhoto',photo)
+                        except DeliveryError as error:
+                            if error.code!='api_rejected' or 'reply_markup' not in photo: raise
+                            photo.pop('reply_markup')
+                            api('sendPhoto',photo)
+                    except DeliveryError as error:
+                        if error.code!='api_rejected': raise
+                        # A definite rejection may fall back to the complete text.
+                    with self.connect() as db:
+                        db.execute('UPDATE outbox SET photo_sent=1,photo=NULL WHERE id=?',(row['id'],))
                 payload=dict(chat_id=row['chat'],text=row['text'],protect_content=True,link_preview_options={'is_disabled':True})
                 if reply_markup is not None: payload['reply_markup']=reply_markup
                 try:
@@ -134,7 +165,7 @@ class Queue:
                     payload.pop('reply_markup')
                     api('sendMessage',payload)
                 with self.connect() as db:
-                    db.execute("UPDATE outbox SET status='sent',error=NULL WHERE id=?",(row['id'],))
+                    db.execute("UPDATE outbox SET status='sent',error=NULL,photo=NULL WHERE id=?",(row['id'],))
             except DeliveryError as error:
                 attempts = row['attempts']+1
                 delay = max(error.retry_after,min(3600,5*2**min(attempts,10)))
@@ -146,9 +177,10 @@ class Queue:
         with self.connect() as db:
             pending = db.execute("SELECT count(*) FROM outbox WHERE status='pending'").fetchone()[0]
             failures = db.execute("SELECT count(*) FROM outbox WHERE status='pending' AND attempts>0").fetchone()[0]
-            rules = [dict(r) for r in db.execute('SELECT key,state,emitted FROM rules ORDER BY key')]
+            rules = [dict(r) for r in db.execute('SELECT key,state,emitted,since,last,sent FROM rules ORDER BY key')]
+            incidents = [dict(r) for r in db.execute('SELECT id,at,check_id,status,reason_code FROM incidents ORDER BY id DESC LIMIT 100')]
         return dict(pending=pending,delivery_failures=failures,rules=rules,observed_at=stamp(self.clock()),
-                    status='warning' if failures else 'ok',transport='telegram',delivery='at_least_once')
+                    incidents=incidents,status='warning' if failures else 'ok',transport='telegram',delivery='at_least_once')
 
 
 class DeliveryError(Exception):
@@ -164,24 +196,34 @@ class Telegram:
         self.proxy=validate_proxy(proxy)
 
     def __call__(self, method, data):
-        if method not in ('sendMessage','getUpdates','getWebhookInfo','getMe'):
+        if method not in ('sendMessage','sendPhoto','getUpdates','getWebhookInfo','getMe'):
             raise ValueError('Unsupported Bot API method')
+        encoded=photo_body(data) if method=='sendPhoto' else None
         try:
-            status,raw=exchange('/bot'+self.token+'/'+method,json.dumps(data).encode(),self.proxy)
+            if encoded:
+                status,raw=exchange('/bot'+self.token+'/'+method,encoded[0],self.proxy,encoded[1])
+            else:
+                status,raw=exchange('/bot'+self.token+'/'+method,json.dumps(data).encode(),self.proxy)
             if status!=200:
                 retry=0
                 try:
                     retry=json.loads(raw[:4096]).get('parameters',{}).get('retry_after',0)
                 except (ValueError,TypeError,AttributeError):
                     pass
-                raise DeliveryError('rate_limited' if status==429 else 'api_rejected',retry)
+                code=('rate_limited' if status==429 else 'transport_unavailable'
+                      if status>=500 or status==408 else 'api_rejected')
+                raise DeliveryError(code,retry)
             value=json.loads(raw)
             if not isinstance(value,dict): raise ValueError('Invalid response')
-        except (OSError,ValueError,http.client.HTTPException):
+            if value.get('ok') is not True:
+                code=value.get('error_code')
+                if value.get('ok') is False and type(code) is int and 400<=code<500 and code!=408:
+                    retry=value.get('parameters',{}).get('retry_after',0)
+                    raise DeliveryError('rate_limited' if code==429 else 'api_rejected',retry)
+                raise ValueError('Ambiguous Bot API response')
+        except (OSError,ValueError,TypeError,OverflowError,http.client.HTTPException):
             # Never log token-bearing URLs or remote response bodies.
             raise DeliveryError('transport_unavailable') from None
-        if value.get('ok') is not True:
-            raise DeliveryError('api_rejected')
         return value.get('result')
 
 
@@ -197,7 +239,19 @@ def poll(queue, api):
     return batch
 
 
-def updates(queue, api, users, chats, data, origin, batch=None):
+def card_image(text,data,history=None):
+    command=canonical(text)
+    if command not in ('/status','/metrics','/academy','/backup','/backup latest','/labs','/alerts'):
+        return None
+    try:
+        from .telegram_cards import render_card
+        return render_card(command,data,history() if callable(history) else history)
+    except (ImportError,OSError,ValueError):
+        # Rendering is optional; measurements remain available as complete text.
+        return None
+
+
+def updates(queue, api, users, chats, data, origin, batch=None,history=None):
     if batch is None: batch=poll(queue,api)
     with queue.connect() as db:
         row=db.execute("SELECT value FROM settings WHERE key='offset'").fetchone()
@@ -221,7 +275,8 @@ def updates(queue, api, users, chats, data, origin, batch=None):
                 fresh=not previous or not 0<=queue.clock()-float(previous[0])<10
                 used=0 if fresh else int(count[0]) if count else 1
                 if used<4:
-                    queue.enqueue(db,'command:'+str(uid),reply,[chat['id']])
+                    image=card_image(message['text'],data,history)
+                    queue.enqueue(db,'command:'+str(uid),reply,[chat['id']],photo=image)
                     if fresh: db.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',('user:'+str(chat['id']),str(queue.clock())))
                     db.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',('burst:'+str(chat['id']),str(used+1)))
             db.execute("INSERT OR REPLACE INTO settings VALUES('offset',?)",(str(uid+1),))
@@ -287,7 +342,7 @@ def config(path):
     return value
 
 
-def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False,refresh=None,refresh_maintenance=None):
+def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False,refresh=None,refresh_maintenance=None,history=None):
     # Pending incidents leave before the long poll, even if receiving commands fails.
     markup=keyboard(origin if mini_app else None)
     queue.deliver(api,reply_markup=markup)
@@ -317,7 +372,7 @@ def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False,
                 status=row['state'],reason_code='sustained_rules'))
     if polling=='ok':
         try:
-            updates(queue,api,users,chats,display,origin,batch=batch)
+            updates(queue,api,users,chats,display,origin,batch=batch,history=history)
         except (DeliveryError,ValueError):
             polling='no_data'
     queue.deliver(api,reply_markup=markup)
@@ -343,9 +398,13 @@ def main():
     if api('getWebhookInfo',{}).get('url'):
         raise SystemExit('Existing webhook detected; use a dedicated bot. Nothing was changed.')
     queue=Queue(Path('/var/lib/ustar-console-notify/outbox.sqlite3'),value['chats'])
+    def history():
+        if not settings.native_history: return {}
+        from .history_store import read
+        return {metric:read(metric,'1h') for metric in ('cpu','ram','http')}
     while True:
         status=iteration(queue,api,value['users'],value['chats'],None,settings.origin,mini_app=value.get('mini_app',False),
-                         refresh=lambda:snapshot(settings.snapshot),refresh_maintenance=read_maintenance)
+                         refresh=lambda:snapshot(settings.snapshot),refresh_maintenance=read_maintenance,history=history)
         target=Path('/run/ustar-console-notify/status.json')
         temporary=target.with_suffix('.tmp')
         temporary.write_text(json.dumps(status))

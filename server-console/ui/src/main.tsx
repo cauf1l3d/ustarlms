@@ -31,6 +31,12 @@ type Check = {
   source_age_seconds?: number;
   value?: unknown;
 };
+type DiskCapacity = {
+  total_bytes?: number;
+  available_bytes?: number;
+  used_percent?: number;
+  free_inode_percent?: number | null;
+};
 type Host = {
   hostname?: string;
   cores?: number;
@@ -43,12 +49,7 @@ type Host = {
     cache_bytes: number;
     swap_used_bytes: number;
   };
-  disk?: {
-    total_bytes: number;
-    available_bytes: number;
-    used_percent?: number;
-    free_inode_percent?: number | null;
-  };
+  disk?: DiskCapacity;
 };
 type Backup = {
   file?: string;
@@ -67,6 +68,7 @@ type Snapshot = {
   stale: boolean;
   checks: Check[];
   host: Host;
+  hdd?: DiskCapacity;
   backup: Backup;
   cron?: {
     last_attempt_at?: string;
@@ -101,8 +103,31 @@ type Snapshot = {
     pending: number;
     delivery_failures: number;
     polling: string;
-    rules: { key: string; state: string }[];
+    evaluation?: string;
+    status?: string;
+    observed_at?: string | null;
+    rules: {
+      key: string;
+      state: string;
+      emitted: string;
+      since: number;
+      last: number;
+      sent: number;
+    }[];
   };
+};
+type Incident = {
+  id: number;
+  at: number;
+  check_id: string;
+  status: string;
+  reason_code: string;
+};
+type EventHistory = {
+  events: { at: number; event: string }[];
+  incidents?: Incident[];
+  incidents_status?: string;
+  incidents_observed_at?: string | null;
 };
 type Session = {
   username: string;
@@ -145,6 +170,7 @@ const labels: Record<string, string> = {
   hdd: "Диск бэкапов",
   backup: "Последняя копия",
   lab: "Стенд восстановления",
+  restore: "Приёмка восстановления",
   units: "Системные службы",
   http_local: "Локальный ответ Академии",
   http_external: "HTTP из независимой точки сети / VPN",
@@ -155,6 +181,14 @@ const labels: Record<string, string> = {
   hdd_inodes: "Свободные inode диска бэкапов",
   smart: "SMART дисков",
   clock: "Синхронизация времени",
+  database: "PostgreSQL",
+  collector: "Сборщик",
+  rules: "Правила и доставка алертов",
+  resource_rules: "Правила нагрузки",
+  observer: "Независимый наблюдатель",
+  cpu_sustained: "CPU выше 85 % в течение 10 минут",
+  ram_sustained: "Мало свободной RAM",
+  container_oom: "Нехватка памяти в контейнере Академии",
 };
 const reasons: Record<string, string> = {
   measured: "Измерение получено",
@@ -234,7 +268,7 @@ const value = (n: number | undefined | null, suffix = "", decimals = 1) =>
     : n.toLocaleString("ru-RU", { maximumFractionDigits: decimals }) + suffix;
 const gib = (n?: number) => value(n == null ? n : n / 2 ** 30, " ГиБ");
 const date = (s?: string | null) =>
-  s
+  s && Number.isFinite(Date.parse(s))
     ? new Date(s).toLocaleString("ru-RU", {
         timeZone: "Europe/Moscow",
         day: "2-digit",
@@ -243,6 +277,22 @@ const date = (s?: string | null) =>
         minute: "2-digit",
       }) + " МСК"
     : "Нет данных";
+const unixDate = (s?: number) =>
+  s != null && Number.isFinite(s) && s > 0
+    ? date(new Date(s * 1000).toISOString())
+    : "Ещё не было";
+const freshAt = (
+  s: string | null | undefined,
+  now: number,
+  maximum = 45000,
+) => {
+  const measured = Date.parse(s || "");
+  return (
+    Number.isFinite(measured) &&
+    now - measured >= -5000 &&
+    now - measured <= maximum
+  );
+};
 const age = (n?: number | null) =>
   n == null
     ? "Нет данных"
@@ -361,6 +411,44 @@ function Checks({
     </div>
   );
 }
+function BackupDisk({
+  disk,
+  spaceAvailable,
+  inodesAvailable,
+  status,
+  observedAt,
+}: {
+  disk?: DiskCapacity;
+  spaceAvailable: boolean;
+  inodesAvailable: boolean;
+  status: string;
+  observedAt?: string;
+}) {
+  return (
+    <section className="panel hdd-capacity">
+      <div className="section-title">
+        <h2>Диск бэкапов · ёмкость</h2>
+        <Badge status={status} />
+      </div>
+      <dl>
+        <dt>Всего</dt>
+        <dd>{spaceAvailable ? gib(disk?.total_bytes) : "—"}</dd>
+        <dt>Свободно</dt>
+        <dd>{spaceAvailable ? gib(disk?.available_bytes) : "—"}</dd>
+        <dt>Занято</dt>
+        <dd>{spaceAvailable ? value(disk?.used_percent, " %") : "—"}</dd>
+        <dt>Свободных inode</dt>
+        <dd>{inodesAvailable ? value(disk?.free_inode_percent, " %") : "—"}</dd>
+      </dl>
+      <p className="muted">
+        {spaceAvailable || inodesAvailable
+          ? `Измерение файловой системы: ${date(observedAt)}.`
+          : "Свежие показания файловой системы не получены."}{" "}
+        Состояние архива и SMART проверяются отдельно.
+      </p>
+    </section>
+  );
+}
 function LoginScreen({
   onLogin,
   notice,
@@ -462,7 +550,8 @@ function App() {
     [lost, setLost] = useState(false),
     [period, setPeriod] = useState("1h");
   const [series, setSeries] = useState<Record<string, Series>>({}),
-    [security, setSecurity] = useState<{ at: number; event: string }[]>([]);
+    [history, setHistory] = useState<EventHistory | null>(null),
+    [historyLost, setHistoryLost] = useState(false);
   const [selected, setSelected] = useState<Check | null>(null),
     [selectedDomain, setSelectedDomain] = useState<string | null>(null),
     [profile, setProfile] = useState(false),
@@ -474,7 +563,8 @@ function App() {
     setSession(null);
     setData(null);
     setSeries({});
-    setSecurity([]);
+    setHistory(null);
+    setHistoryLost(false);
     setSelected(null);
     setSelectedDomain(null);
     setProfile(false);
@@ -585,17 +675,38 @@ function App() {
   useEffect(() => {
     if (page !== "events" || !session) return;
     let live = true;
-    void api("events")
-      .then((v) => {
-        if (live) setSecurity(v.events);
-      })
-      .catch((err) => {
-        if (err instanceof ApiError && err.status === 401) expire();
-      });
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout>;
+    const refresh = async () => {
+      try {
+        const next = await api("events", {
+          signal: AbortSignal.any([
+            controller.signal,
+            AbortSignal.timeout(6500),
+          ]),
+        });
+        if (live) {
+          setHistory(next);
+          setHistoryLost(false);
+        }
+      } catch (err) {
+        if (!live) return;
+        if (err instanceof ApiError && err.status === 401) {
+          expire();
+          return;
+        }
+        setHistoryLost(true);
+      } finally {
+        if (live) timer = setTimeout(refresh, 10000);
+      }
+    };
+    void refresh();
     return () => {
       live = false;
+      controller.abort();
+      clearTimeout(timer);
     };
-  }, [page, session?.username, data?.observed_at]);
+  }, [page, session?.username]);
   useEffect(() => {
     if (!session) return;
     const fn = () => {
@@ -628,13 +739,9 @@ function App() {
     );
   if (!session)
     return <LoginScreen onLogin={() => void getSession()} notice={notice} />;
-  const stale =
-    !data ||
-    data.stale ||
-    !data.observed_at ||
-    tick - Date.parse(data.observed_at) > 45000;
+  const stale = !data || lost || data.stale || !freshAt(data.observed_at, tick);
   const checks = (data?.checks || []).map((c) =>
-    stale || tick - Date.parse(c.observed_at) > 45000
+    stale || !freshAt(c.observed_at, tick)
       ? { ...c, status: "no_data", reason_code: "stale" }
       : c,
   );
@@ -654,13 +761,23 @@ function App() {
     local = checks.find((c) => c.id === "http_local");
   const sourceStatus = (id: string) =>
     checks.find((c) => c.id === id)?.status || "no_data";
-  const usable = (id: string) => !stale && sourceStatus(id) !== "no_data";
+  const usable = (id: string) =>
+    !stale &&
+    ["ok", "warning", "critical", "stopped"].includes(sourceStatus(id));
   const smartAge = data?.smart?.observed_at
     ? tick - Date.parse(data.smart.observed_at)
     : Infinity;
   const smartCheck = checks.find((c) => c.id === "smart");
-  const smartFresh = !stale && !!smartCheck && smartCheck.reason_code !== "stale"
-    && smartAge >= -5000 && smartAge <= 960000;
+  const smartFresh =
+    !stale &&
+    !!smartCheck &&
+    smartCheck.reason_code !== "stale" &&
+    (smartCheck.status !== "no_data" ||
+      smartCheck.reason_code === "smart_probe_failed") &&
+    smartAge >= -5000 &&
+    smartAge <= 960000;
+  const smartUsable = (disk: NonNullable<Snapshot["smart"]>["disks"][number]) =>
+    smartFresh && disk.status !== "no_data";
   const diskStatus = [
     sourceStatus("ssd_space"),
     sourceStatus("ssd_inodes"),
@@ -669,8 +786,37 @@ function App() {
       ["critical", "no_data", "warning", "ok"].indexOf(a) -
       ["critical", "no_data", "warning", "ok"].indexOf(b),
   )[0];
+  const hddSpace = usable("hdd") && usable("hdd_space");
+  const hddInodes = usable("hdd") && usable("hdd_inodes");
+  const hddStatus = !usable("hdd")
+    ? "no_data"
+    : [sourceStatus("hdd_space"), sourceStatus("hdd_inodes")].sort(
+        (a, b) =>
+          ["critical", "no_data", "warning", "stopped", "ok"].indexOf(a) -
+          ["critical", "no_data", "warning", "stopped", "ok"].indexOf(b),
+      )[0];
+  const hddPanel = (
+    <BackupDisk
+      disk={data?.hdd}
+      spaceAvailable={hddSpace}
+      inodesAvailable={hddInodes}
+      status={hddStatus}
+      observedAt={checks.find((c) => c.id === "hdd_space")?.observed_at}
+    />
+  );
+  const notifications = data?.notifications;
+  const notificationsFresh =
+    !stale &&
+    !!notifications &&
+    !["stale", "no_data"].includes(notifications.status || "no_data") &&
+    freshAt(notifications.observed_at, tick);
+  const rulesFresh = notificationsFresh && notifications?.evaluation === "ok";
   const since = (s?: string | null) =>
     s ? age((tick - Date.parse(s)) / 1000) : "—";
+  const databaseNumber = (key: string) => {
+    const number = data?.database?.[key];
+    return typeof number === "number" ? number : undefined;
+  };
   const go = (id: string) => {
     location.hash = id;
     setPage(id);
@@ -857,8 +1003,8 @@ function App() {
         )}
         {stale && data && (
           <p className="notice">
-            Значения ниже относятся к последнему измерению и не подтверждают
-            текущее состояние.
+            Текущее состояние не подтверждено. История и даты предыдущих отчётов
+            сохранены.
           </p>
         )}
         {!data ? (
@@ -1013,7 +1159,10 @@ function App() {
                       <ArrowUpRight size={17} aria-hidden="true" />
                     </button>
                   </div>
-                  <ContainerTable rows={data.containers} stale={stale} />
+                  <ContainerTable
+                    rows={data.containers}
+                    stale={!usable("containers")}
+                  />
                 </section>
               </>
             )}
@@ -1032,17 +1181,39 @@ function App() {
                       <dt>Последний наблюдавшийся успех</dt>
                       <dd>{date(cron.last_success_at)}</dd>
                       <dt>Код завершения worker</dt>
-                      <dd>{value(cron.worker_exit_code, "", 0)}</dd>
+                      <dd>
+                        {usable("cron")
+                          ? value(cron.worker_exit_code, "", 0)
+                          : "—"}
+                      </dd>
                       <dt>Новые ошибки задач</dt>
-                      <dd>{value(cron.new_task_failures, "", 0)}</dd>
+                      <dd>
+                        {usable("cron")
+                          ? value(cron.new_task_failures, "", 0)
+                          : "—"}
+                      </dd>
                       <dt>Новые строки ошибок USTAR</dt>
-                      <dd>{value(cron.ustar_error_lines, "", 0)}</dd>
+                      <dd>
+                        {usable("cron")
+                          ? value(cron.ustar_error_lines, "", 0)
+                          : "—"}
+                      </dd>
                       <dt>Задачи с сохранённым faildelay</dt>
-                      <dd>{value(cron.scheduled_failed, "", 0)}</dd>
+                      <dd>
+                        {usable("cron")
+                          ? value(cron.scheduled_failed, "", 0)
+                          : "—"}
+                      </dd>
                       <dt>Просроченные по расписанию</dt>
-                      <dd>{value(cron.scheduled_overdue_10m, "", 0)}</dd>
+                      <dd>
+                        {usable("cron")
+                          ? value(cron.scheduled_overdue_10m, "", 0)
+                          : "—"}
+                      </dd>
                       <dt>В очереди adhoc</dt>
-                      <dd>{value(cron.adhoc_queued, "", 0)}</dd>
+                      <dd>
+                        {usable("cron") ? value(cron.adhoc_queued, "", 0) : "—"}
+                      </dd>
                     </dl>
                   ) : (
                     <Empty>Отчёт cron пока не получен.</Empty>
@@ -1074,26 +1245,41 @@ function App() {
                   </Empty>
                 </div>
                 {data.database && (
-                  <section className="panel">
+                  <section className="panel database-details">
                     <h2>PostgreSQL</h2>
                     <dl>
                       <dt>Соединений / предел</dt>
                       <dd>
-                        {data.database.connections} /{" "}
-                        {data.database.max_connections}
+                        {usable("database")
+                          ? `${value(databaseNumber("connections"), "", 0)} / ${value(databaseNumber("max_connections"), "", 0)}`
+                          : "—"}
                       </dd>
                       <dt>Активных запросов</dt>
-                      <dd>{data.database.active}</dd>
+                      <dd>
+                        {usable("database")
+                          ? value(databaseNumber("active"), "", 0)
+                          : "—"}
+                      </dd>
                       <dt>Ожидают блокировку</dt>
-                      <dd>{data.database.waiting}</dd>
+                      <dd>
+                        {usable("database")
+                          ? value(databaseNumber("waiting"), "", 0)
+                          : "—"}
+                      </dd>
                       <dt>Idle in transaction</dt>
-                      <dd>{data.database.idle_in_transaction}</dd>
+                      <dd>
+                        {usable("database")
+                          ? value(databaseNumber("idle_in_transaction"), "", 0)
+                          : "—"}
+                      </dd>
                       <dt>Старейшая транзакция</dt>
                       <dd>
-                        {value(
-                          Number(data.database.oldest_transaction_seconds),
-                          " с",
-                        )}
+                        {usable("database")
+                          ? value(
+                              databaseNumber("oldest_transaction_seconds"),
+                              " с",
+                            )
+                          : "—"}
                       </dd>
                     </dl>
                   </section>
@@ -1102,45 +1288,74 @@ function App() {
             )}
             {page === "server" && (
               <>
-                <div className="metrics">
+                <div className="metrics server-metrics">
                   <Metric
                     label="Свободная RAM"
                     kind="ram"
                     progress={
-                      host?.memory
+                      usable("host") && host?.memory
                         ? (100 * host.memory.available_bytes) /
                           host.memory.total_bytes
                         : undefined
                     }
-                    number={gib(host?.memory?.available_bytes)}
-                    detail={`всего ${gib(host?.memory?.total_bytes)}`}
+                    number={
+                      usable("host") ? gib(host?.memory?.available_bytes) : "—"
+                    }
+                    detail={
+                      usable("host")
+                        ? `всего ${gib(host?.memory?.total_bytes)}`
+                        : "Свежие показания RAM не получены"
+                    }
                   />
                   <Metric
                     label="CPU"
                     kind="cpu"
-                    progress={host?.cpu_percent}
-                    number={value(host?.cpu_percent, " %")}
-                    detail={`load 1 мин: ${value(host?.load?.[0])}`}
+                    progress={usable("host") ? host?.cpu_percent : undefined}
+                    number={
+                      usable("host") ? value(host?.cpu_percent, " %") : "—"
+                    }
+                    detail={
+                      usable("host")
+                        ? `load 1 мин: ${value(host?.load?.[0])}`
+                        : "Свежие показания CPU не получены"
+                    }
                   />
                   <Metric
                     label="Свободно на SSD"
                     kind="disk"
                     progress={
-                      host?.disk
+                      usable("ssd_space") &&
+                      host?.disk?.available_bytes != null &&
+                      host.disk.total_bytes
                         ? (100 * host.disk.available_bytes) /
                           host.disk.total_bytes
                         : undefined
                     }
-                    number={gib(host?.disk?.available_bytes)}
-                    detail={`всего ${gib(host?.disk?.total_bytes)}`}
+                    number={
+                      usable("ssd_space")
+                        ? gib(host?.disk?.available_bytes)
+                        : "—"
+                    }
+                    detail={
+                      usable("ssd_space")
+                        ? `всего ${gib(host?.disk?.total_bytes)}`
+                        : "Свежие показания SSD не получены"
+                    }
                   />
                   <Metric
                     label="Swap занят"
                     kind="ram"
-                    number={gib(host?.memory?.swap_used_bytes)}
-                    detail="Сам по себе не означает нехватку RAM"
+                    number={
+                      usable("host") ? gib(host?.memory?.swap_used_bytes) : "—"
+                    }
+                    detail={
+                      usable("host")
+                        ? "Сам по себе не означает нехватку RAM"
+                        : "Свежие показания swap не получены"
+                    }
                   />
                 </div>
+                {hddPanel}
                 <Checks
                   checks={checks.filter((c) => c.domain === "server")}
                   onSelect={setSelected}
@@ -1150,7 +1365,7 @@ function App() {
                     <h2>Время и NTP</h2>
                     <dl>
                       <dt>Выбранный источник</dt>
-                      <dd>{data.clock.source}</dd>
+                      <dd>{usable("clock") ? data.clock.source : "—"}</dd>
                       <dt>Смещение</dt>
                       <dd>
                         {usable("clock")
@@ -1178,31 +1393,34 @@ function App() {
                         <h3>
                           {disk.device}{" "}
                           <Badge
-                            status={smartFresh ? disk.status : "no_data"}
+                            status={smartUsable(disk) ? disk.status : "no_data"}
                           />
                         </h3>
                         <dl>
                           <dt>Самооценка SMART</dt>
                           <dd>
-                            {smartFresh && typeof disk.health_passed === "boolean"
-                              ? disk.health_passed ? "PASSED" : "FAILED"
+                            {smartUsable(disk) &&
+                            typeof disk.health_passed === "boolean"
+                              ? disk.health_passed
+                                ? "PASSED"
+                                : "FAILED"
                               : "—"}
                           </dd>
                           <dt>Температура</dt>
                           <dd>
-                            {smartFresh
+                            {smartUsable(disk)
                               ? value(disk.temperature_c, " °C")
                               : "—"}
                           </dd>
                           <dt>Переназначенные секторы</dt>
                           <dd>
-                            {smartFresh
+                            {smartUsable(disk)
                               ? value(disk.sectors?.["5"], "", 0)
                               : "—"}
                           </dd>
                           <dt>Ожидающие / неисправимые</dt>
                           <dd>
-                            {smartFresh
+                            {smartUsable(disk)
                               ? value(disk.sectors?.["197"], "", 0) +
                                 " / " +
                                 value(disk.sectors?.["198"], "", 0)
@@ -1210,19 +1428,22 @@ function App() {
                           </dd>
                           <dt>История ошибок ATA</dt>
                           <dd>
-                            {smartFresh && typeof disk.historical_error_log === "boolean"
+                            {smartUsable(disk) &&
+                            typeof disk.historical_error_log === "boolean"
                               ? disk.historical_error_log
                                 ? "Есть старые записи; отдельно от текущего состояния"
                                 : "Не заявлена этим чтением"
                               : "—"}
                           </dd>
                         </dl>
-                        {smartFresh && !!disk.unavailable_attributes?.length && (
-                          <p className="muted">
-                            Неполные показания: диск не сообщил атрибуты {disk.unavailable_attributes.join(", ")}.
-                            Неизвестные значения показаны прочерком.
-                          </p>
-                        )}
+                        {smartUsable(disk) &&
+                          !!disk.unavailable_attributes?.length && (
+                            <p className="muted">
+                              Неполные показания: диск не сообщил атрибуты{" "}
+                              {disk.unavailable_attributes.join(", ")}.
+                              Неизвестные значения показаны прочерком.
+                            </p>
+                          )}
                       </div>
                     ))}
                     <p className="muted">
@@ -1248,7 +1469,10 @@ function App() {
                 </div>
                 <section className="panel">
                   <h2>Контейнеры</h2>
-                  <ContainerTable rows={data.containers} stale={stale} />
+                  <ContainerTable
+                    rows={data.containers}
+                    stale={!usable("containers")}
+                  />
                 </section>
                 <section className="panel">
                   <h2>Службы</h2>
@@ -1256,7 +1480,9 @@ function App() {
                     data.units.map((row) => (
                       <div className="data-row" key={String(row.name)}>
                         <span>{String(row.name)}</span>
-                        <span>{stale ? "Нет данных" : String(row.state)}</span>
+                        <span>
+                          {!usable("units") ? "Нет данных" : String(row.state)}
+                        </span>
                       </div>
                     ))
                   ) : (
@@ -1275,13 +1501,12 @@ function App() {
                   checks={checks.filter((c) => c.domain === "data")}
                   onSelect={setSelected}
                 />
+                {hddPanel}
                 {backup?.file ? (
                   <section className="panel backup">
                     <div className="section-title">
                       <h2>Последняя завершённая копия</h2>
-                      <Badge
-                        status={stale ? "no_data" : backup.status || "no_data"}
-                      />
+                      <Badge status={sourceStatus("backup")} />
                     </div>
                     <dl>
                       <dt>Архив</dt>
@@ -1318,11 +1543,20 @@ function App() {
                     отсутствие архивов на диске.
                   </Empty>
                 )}
-                <section className="panel">
-                  <h2>SFTP и передача</h2>
+                <section className="panel download-guidance">
+                  <h2>Защищённое скачивание</h2>
+                  <p>
+                    Кнопка «Скачать зашифрованный архив» ниже выдаёт последнюю
+                    завершённую копию по HTTPS. Нужна роль оператора или
+                    владельца и подтверждение текущим паролем; если подключён
+                    TOTP, введите код.
+                  </p>
                   <p className="muted">
-                    Адрес, учётная запись и отпечаток сервера ещё не настроены.
-                    Для передачи используется согласованная инструкция WinSCP.
+                    Ссылка действует ограниченное время. После загрузки сверьте
+                    SHA256 с записью копии. Ключ расшифрования передаётся
+                    отдельно согласованным способом и в архив выдачи не
+                    добавляется. Скачивание не запускает новый бэкап и не
+                    подтверждает восстановление.
                   </p>
                 </section>
               </>
@@ -1370,46 +1604,182 @@ function App() {
             {page === "events" && (
               <>
                 <p className="intro">
-                  Важные события пульта. Логи Академии, контейнеров и инциденты
-                  подключаются отдельными источниками.
+                  Входы в пульт, оценка правил и записанные инциденты
+                  мониторинга. Журналы Академии и контейнеров подключаются
+                  отдельными источниками.
                 </p>
                 <section className="panel">
                   <div className="section-title">
                     <h2>Безопасность и вход</h2>
                     <span>Последние 100 событий</span>
                   </div>
-                  {security.map((row, i) => (
+                  {(history?.events || []).map((row, i) => (
                     <div className="data-row" key={i}>
                       <span>{events[row.event] || "Событие доступа"}</span>
-                      <time>{date(new Date(row.at * 1000).toISOString())}</time>
+                      <time>{unixDate(row.at)}</time>
                     </div>
                   ))}
                 </section>
-                <section className="panel">
+                <section className="panel notifications">
                   <h2>Уведомления</h2>
-                  {data.notifications ? (
+                  <p className="notification-counts">
+                    В очереди:{" "}
+                    {notificationsFresh
+                      ? value(notifications?.pending, "", 0)
+                      : "—"}
+                    {" · "}Ошибок доставки:{" "}
+                    {notificationsFresh
+                      ? value(notifications?.delivery_failures, "", 0)
+                      : "—"}
+                  </p>
+                  {notificationsFresh ? (
                     <>
                       <p>
-                        В очереди: {data.notifications.pending} · Ошибок
-                        доставки: {data.notifications.delivery_failures}
-                      </p>
-                      <p>
                         Связь с Telegram:{" "}
-                        {data.notifications.polling === "ok"
+                        {notifications?.polling === "ok"
                           ? "доступна"
-                          : "нет данных"}
-                      </p>
-                      <p className="muted">
-                        Доставка подтверждается Bot API. Получение оператором
-                        проверяется через /status. Повторы после обрыва
-                        возможны.
+                          : "свежий успешный опрос не подтверждён"}
                       </p>
                     </>
                   ) : (
                     <p className="muted">
-                      Telegram ещё не настроен или worker не передаёт свежий
-                      статус.
+                      Telegram ещё не настроен или служба уведомлений не
+                      передаёт свежий статус.
                     </p>
+                  )}
+                  <p className="muted">
+                    Отчёт службы уведомлений: {date(notifications?.observed_at)}
+                    . Доставка подтверждается Bot API. Получение оператором
+                    проверяется через /status. Повторы после обрыва возможны.
+                  </p>
+                </section>
+                <section className="panel alert-rules">
+                  <h2>Правила алертов</h2>
+                  <p className="muted">
+                    Кандидат ждёт непрерывного окна подтверждения.
+                    Подтверждённое состояние сформировало событие; доставка
+                    учитывается отдельно. Пропуск телеметрии сбрасывает окно.
+                  </p>
+                  {rulesFresh && notifications?.rules.length ? (
+                    notifications.rules.map((rule) => {
+                      const evaluationAge = tick - rule.last * 1000;
+                      const current =
+                        Number.isFinite(evaluationAge) &&
+                        evaluationAge >= -5000 &&
+                        evaluationAge <= 45000;
+                      return (
+                        <article
+                          className="alert-rule"
+                          data-rule={rule.key}
+                          key={rule.key}
+                        >
+                          <h3>{labels[rule.key] || "Проверка мониторинга"}</h3>
+                          {current ? (
+                            <>
+                              <div className="rule-state">
+                                <Badge status={rule.state} />
+                                <strong>
+                                  {rule.state !== rule.emitted
+                                    ? "Кандидат: ожидает подтверждения"
+                                    : rule.sent > 0
+                                      ? "Подтверждено правилом"
+                                      : "Норма; события ещё не было"}
+                                </strong>
+                              </div>
+                              <dl>
+                                <dt>Состояние держится с</dt>
+                                <dd>{unixDate(rule.since)}</dd>
+                                <dt>Последняя оценка</dt>
+                                <dd>{unixDate(rule.last)}</dd>
+                                <dt>Последнее подтверждение</dt>
+                                <dd>{unixDate(rule.sent)}</dd>
+                                {rule.state !== rule.emitted && (
+                                  <>
+                                    <dt>Подтверждённое состояние</dt>
+                                    <dd>
+                                      {rule.sent > 0 ? (
+                                        <Badge status={rule.emitted} />
+                                      ) : (
+                                        "Ещё не было"
+                                      )}
+                                    </dd>
+                                  </>
+                                )}
+                              </dl>
+                            </>
+                          ) : (
+                            <>
+                              <Badge status="no_data" />
+                              <p>Нет свежей оценки этого правила</p>
+                              <p className="muted">
+                                Последняя оценка (история):{" "}
+                                {unixDate(rule.last)}
+                              </p>
+                            </>
+                          )}
+                        </article>
+                      );
+                    })
+                  ) : (
+                    <Empty
+                      title={
+                        rulesFresh
+                          ? "Оценка правил ещё не получена"
+                          : "Свежая оценка правил недоступна"
+                      }
+                    >
+                      Состояния появятся после свежего успешного цикла службы
+                      уведомлений. Старый отчёт не подтверждает норму или аварию
+                      сейчас.
+                    </Empty>
+                  )}
+                </section>
+                <section className="panel incident-history">
+                  <div className="section-title">
+                    <h2>Инциденты и восстановления</h2>
+                    <span>Последние 100 записей</span>
+                  </div>
+                  <p className="muted">
+                    Записанная история; текущее состояние проверяется отдельно.
+                    Сохранены подтверждённые переходы и повторы правил.
+                  </p>
+                  {(historyLost ||
+                    history?.incidents_status !== "ok" ||
+                    !freshAt(history?.incidents_observed_at, tick)) && (
+                    <p className="notice">
+                      Свежий источник истории недоступен. Сохранённые записи
+                      могут не включать последние события.
+                    </p>
+                  )}
+                  {history?.incidents?.length ? (
+                    history.incidents.map((row) => (
+                      <article className="incident-row" key={row.id}>
+                        <div className="incident-title">
+                          <strong>
+                            {labels[row.check_id] || "Проверка мониторинга"}
+                          </strong>
+                          <time>{unixDate(row.at)}</time>
+                        </div>
+                        <div className="rule-state">
+                          <span>
+                            {row.status === "ok"
+                              ? "Восстановление"
+                              : "Инцидент"}
+                          </span>
+                          <Badge status={row.status} />
+                        </div>
+                        <p className="muted">
+                          {reasons[row.reason_code] ||
+                            "Подробности причины не получены"}
+                        </p>
+                      </article>
+                    ))
+                  ) : (
+                    <Empty title="Записанных инцидентов нет">
+                      {history?.incidents_status === "ok"
+                        ? "Источник истории не передал записей. Текущее состояние смотрите в проверках и правилах."
+                        : "Источник истории ещё не передал доступные записи. Отсутствие записей не подтверждает отсутствие инцидентов."}
+                    </Empty>
                   )}
                 </section>
                 <Empty title="Логи сервера ещё не подключены">
@@ -1560,10 +1930,14 @@ function ContainerTable({
                 )}
               </td>
               <td data-label="Рестарты">
-                {row.restarts == null ? "—" : String(row.restarts)}
+                {stale || row.state === "no_data" || row.restarts == null
+                  ? "—"
+                  : String(row.restarts)}
               </td>
               <td data-label="Автозапуск">
-                {row.policy == null ? "—" : String(row.policy)}
+                {stale || row.state === "no_data" || row.policy == null
+                  ? "—"
+                  : String(row.policy)}
               </td>
             </tr>
           ))}

@@ -861,6 +861,61 @@ dd {
 .data-row > span:first-child {
   overflow-wrap: anywhere;
 }
+.hdd-capacity .section-title,
+.incident-history .section-title {
+  flex-wrap: wrap;
+}
+.alert-rule,
+.incident-row {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 18px;
+  min-width: 0;
+}
+.alert-rule h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+.rule-state,
+.incident-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+}
+.rule-state {
+  justify-content: flex-start;
+}
+.rule-state strong,
+.incident-title strong {
+  font-size: 16px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.incident-title {
+  margin-bottom: 12px;
+}
+.incident-title time {
+  color: var(--secondary);
+  font-size: 16px;
+}
+.alert-rule dl {
+  margin-bottom: 0;
+}
+@media (max-width: 600px) {
+  .alert-rule dl,
+  .hdd-capacity dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .alert-rule dd,
+  .hdd-capacity dd {
+    margin-bottom: 12px;
+  }
+}
 footer {
   margin-top: 28px;
   padding-top: 18px;

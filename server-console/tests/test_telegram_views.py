@@ -261,7 +261,8 @@ def test_alert_card_includes_sustained_cpu_rule_state(tmp_path):
     def api(method,payload):
         if method=='getUpdates': return [dict(update_id=1,message={'text':'/alerts','from':{'id':123},
             'chat':{'id':123,'type':'private'}})]
-        sent.append(payload);return {}
+        if method=='sendMessage': sent.append(payload)
+        return {}
     iteration(queue,api,[123],[123],data,ORIGIN)
     assert 'Длительная нагрузка CPU' in sent[0]['text']
     assert 'отклонений нет' not in sent[0]['text']

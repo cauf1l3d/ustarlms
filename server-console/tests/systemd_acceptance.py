@@ -192,16 +192,23 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
         module=Path('/opt/ustar-console/venv/lib/python3.12/site-packages/ustar_console/alerts.py')
         old_module=module.read_bytes()+b'\n# CI rollback preservation marker\n'
         module.write_bytes(old_module)
+        # Model a previously configured console before graphical cards existed.
+        # The wheel-only updater must install the new locked dependency and
+        # restore its prior absence when final validation rolls the venv back.
+        run('/opt/ustar-console/venv/bin/python','-m','pip','uninstall','-y','Pillow')
         # Force the final trust check to fail after wheel replacement. Rollback
         # must restore the exact previous installation, including local patches.
         ca.write_text('invalid public CA fixture\n')
         failed=run('bash',updater,check=False)
         assert failed.returncode!=0 and 'CONSOLE_UPDATE=ROLLED_BACK' in failed.stdout
         assert module.read_bytes()==old_module
+        run('/opt/ustar-console/venv/bin/python','-c',
+            "import importlib.util; assert importlib.util.find_spec('PIL') is None")
         ca.write_bytes(original_ca)
         upgraded=run('bash',updater)
         assert 'CONSOLE_UPDATE=PASS' in upgraded.stdout
         assert b'CI rollback preservation marker' not in module.read_bytes()
+        run('/opt/ustar-console/venv/bin/python','-c',"import PIL; assert PIL.__version__=='13.0.0'")
         assert all(path.read_bytes()==content for path,content in before.items()) and ca.read_bytes()==original_ca
         with sqlite3.connect(auth) as db: assert db.execute("SELECT * FROM users WHERE username='fixture'").fetchone()==before_user
         assert run('systemctl','is-active','ustar-console-notify.service',check=False).stdout.strip()=='inactive'

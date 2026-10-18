@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-18",
+  "request_at": "2026-10-18T12:40:18+03:00",
+  "request_source": "https://chatgpt.com/share/6ad4957d-45f4-83eb-8db0-32e41a9137fd",
+  "request": "Читаемые графические карточки с реальными данными и заполнение пульта доступными показателями",
+  "continued_from": "98946c6bfbb4f894817c2d44f2c7c5d8769e0195",
+  "status": "source_ready_CI_pending_native_not_installed",
+  "source_commit": null,
+  "changes": [
+    "six_PNG_card_sections_with_complete_text_fallback",
+    "measured_one_hour_CPU_RAM_local_HTTP_history_with_gaps",
+    "HDD_capacity_and_inodes_in_console",
+    "live_candidate_and_confirmed_alert_rules",
+    "durable_bounded_incident_recovery_history",
+    "protected_HTTPS_archive_guidance",
+    "source_and_notifier_freshness_guards",
+    "hash_locked_Pillow_and_bundled_licensed_Cyrillic_fonts",
+    "dependency_aware_venv_update_and_rollback"
+  ],
+  "existing_owner_acceptance": "bot_commands_and_buttons_working_report_18Oct04:40MSK_exact_native_SHA_not_supplied",
+  "local_validation": {
+    "baseline_backend_passed": 230,
+    "backend_passed": 312,
+    "renderer_passed": 54,
+    "delivery_and_incident_red_green": true,
+    "visual_QA": "six_cards_and_stale_metrics_synthetic_fixtures_explicitly_labelled",
+    "local_Chromium": "unavailable_corrupt_old_binary_and_CDN_HTML_response_native_CI_required",
+    "warning": "existing_Starlette_httpx_deprecation",
+    "build": "wheel_and_release_PASS",
+    "prototype": "generated_check_PASS_302266_bytes",
+    "browser_cases_discovered": 72
+  },
+  "limits": {
+    "PNG_bytes": 262144,
+    "queued_PNG_bytes": 16777216,
+    "database_incident_rows": 1000,
+    "API_incident_rows": 100,
+    "source_freshness_seconds": 45
+  },
+  "CI": {
+    "status": "pending"
+  },
+  "native_pending": [
+    "owner_install_new_release",
+    "Telegram_graphical_receiver_and_readability",
+    "actual_button_response_time",
+    "browser_source_values_roles_and_download_hash",
+    "independent_observer",
+    "restore_RTO"
+  ],
+  "unchanged": [
+    "bot_token_proxy_IDs_and_private_allowlist",
+    "password_CA_and_owner_skipped_TOTP",
+    "service_unit_permissions_and_limits",
+    "Academy_and_host_home_network",
+    "application526_schema93_tasks33"
+  ],
+  "fresh_review": {
+    "critical": 0,
+    "important_found": 1,
+    "important_fixed": "HTTP5xx408_and_ambiguous_JSON_preserve_pending_photo_RED_to_GREEN",
+    "minor": 0,
+    "focused_passed": 15,
+    "renderer_peak_RSS_KiB": 40912,
+    "native_cpu_quota_latency_not_measured": true
+  }
+}

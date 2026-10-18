@@ -126,7 +126,8 @@ def certificates(tmp_path_factory):
 
 @pytest.mark.parametrize('trusted,name,success', [(True,'api.telegram.org',True),
     (False,'api.telegram.org',False),(True,'other.example',False)])
-def test_actual_CONNECT_verifies_Telegram_TLS_even_with_NO_PROXY_star(monkeypatch,certificates,trusted,name,success):
+@pytest.mark.parametrize('method',['getMe','sendPhoto'])
+def test_actual_CONNECT_verifies_Telegram_TLS_even_with_NO_PROXY_star(monkeypatch,certificates,trusted,name,success,method):
     listener = socket.socket();listener.bind(('127.0.0.1',0));listener.listen(1);listener.settimeout(3)
     port = listener.getsockname()[1]
     observed = []
@@ -148,6 +149,7 @@ def test_actual_CONNECT_verifies_Telegram_TLS_even_with_NO_PROXY_star(monkeypatc
                         length=int(next(line.split(b':',1)[1] for line in header.split(b'\r\n')
                                         if line.lower().startswith(b'content-length:')))
                         while len(body)<length:body+=tls.recv(4096)
+                        observed.append(header+b'\r\n\r\n'+body)
                         payload=b'{"ok":true,"result":{"id":1}}'
                         tls.sendall(b'HTTP/1.1 200 OK\r\nContent-Length: '+str(len(payload)).encode()+
                                     b'\r\nConnection: close\r\n\r\n'+payload)
@@ -164,14 +166,18 @@ def test_actual_CONNECT_verifies_Telegram_TLS_even_with_NO_PROXY_star(monkeypatc
         return real_connection(host,port,**kwargs)
     monkeypatch.setattr(transport,'HTTPSConnection',local_connection)
     monkeypatch.setenv('NO_PROXY','*');monkeypatch.setenv('HTTPS_PROXY','http://outside.test')
+    data=dict(chat_id=123,photo=b'\x89PNG\r\n\x1a\nfixture',protect_content=True) if method=='sendPhoto' else {}
     try:
-        if success: assert alerts.Telegram(TOKEN,proxy=transport.PROXY)('getMe',{})=={'id':1}
+        if success: assert alerts.Telegram(TOKEN,proxy=transport.PROXY)(method,data)=={'id':1}
         else:
             with pytest.raises(alerts.DeliveryError,match='transport_unavailable'):
-                alerts.Telegram(TOKEN,proxy=transport.PROXY)('getMe',{})
+                alerts.Telegram(TOKEN,proxy=transport.PROXY)(method,data)
     finally: worker.join(4)
     assert observed and observed[0].startswith(b'CONNECT api.telegram.org:443 HTTP/')
     assert TOKEN.encode() not in observed[0]
+    if success and method=='sendPhoto':
+        assert b'Content-Type: multipart/form-data; boundary=ustar-' in observed[1]
+        assert data['photo'] in observed[1]
 
 
 def test_installer_failed_permanent_probe_removes_only_its_new_service(tmp_path,monkeypatch):

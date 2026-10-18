@@ -222,20 +222,24 @@ production:
     corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
     independent_perimeter_acceptance: false
 current_work:
-  activity: 'Owner18Oct04:40MSK reports update commands and new bot buttons working;
-    exact native module hash and numerical latency not supplied. Continuation11:49MSK:
-    source4bb34f0b removes successful10s pause via5s long poll/.2s yield, retains10s
-    error backoff. Pending incidents deliver before wait; snapshot and maintenance
-    refresh afterward; polling errors do not stop incidents. Full230 backend PASS;
-    fresh review Important maintenance-start-during-wait fixed RED-to-GREEN, no Critical/Minor;
-    all3 source CI SUCCESS,230backend/45Chromium/actual systemd fixtures; artifact12131452167
-    hashes/source/wheel/observer verified. Existing full wheel updater used, no extra
-    root patch installer. New latency release not installed by owner yet. Mini App
-    default off requires device route to private console HTTPS and trusted CA, then
-    WebView/login/role acceptance. No home VPN installed. Actor/chat allowlists,4
-    commands/10s, durable offset/outbox, transport8s/destination, credentials, units,
-    auth/CA/TOTP and host/home network unchanged. Independent observer/jobs/overhead/download/restore-RTO
-    remain open; Moodle5.2/PG17 deferred, application526/schema93/tasks33 unchanged.'
+  activity: Latest owner request18Oct12:40MSK in shared chat accepts graphical cards
+    with real readable values and asks to fill console blocks with available telemetry.
+    Continuation resumes from98946c6b; working bot/buttons already owner-accepted,
+    exact latest native SHA not supplied. Added bounded PNG cards and actual one-hour
+    CPU/RAM/HTTP curves with gaps, full durable text delivery, bundled licensed Cyrillic
+    fonts and hash-locked Pillow13. Console shows measured HDD capacity/inodes, fresh
+    rule candidate/confirmed state and persistent bounded incident/recovery history;
+    obsolete SFTP placeholder replaced by existing protected HTTPS archive guidance.
+    Global and per-source freshness preserved; stale notifier cannot assert healthy
+    rules. Independent external HTTP/observer/restore remain genuine evidence gaps.
+    Local312 backend PASS, renderer54PASS, build/prototype and PNG fixture visual
+    QA PASS; fresh review Important1 fixed RED-to-GREEN, no Critical/Minor; CI pending.
+    Local Chromium corrupt/unavailable, browser72 cases must pass actual CI before
+    delivery. Existing full-venv updater now installs locked dependencies before wheel
+    and restores previous dependency state on rollback; native CI required. No native
+    SSH/update, bot credentials/password/CA/TOTP reset, Academy or host/home network
+    change. Home-access pilot, independent observer, roles/download/jobs/overhead/restore-RTO
+    remain open. Moodle5.2/PG17 deferred, application526/schema93/tasks33 unchanged.
   next_task: INF-06
   ready_tasks: []
   task_statuses:

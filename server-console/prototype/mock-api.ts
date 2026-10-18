@@ -4,6 +4,23 @@ export function createPrototypeApi(
   ApiError: new (status: number, retry: string | null) => Error,
 ) {
   let previewAuthenticated = true;
+  const started = Date.now() / 1000;
+  const demoIncidents = [
+    {
+      id: 2,
+      at: started - 3600,
+      check_id: "hdd_space",
+      status: "ok",
+      reason_code: "disk_capacity",
+    },
+    {
+      id: 1,
+      at: started - 7200,
+      check_id: "hdd_space",
+      status: "critical",
+      reason_code: "disk_low_space",
+    },
+  ];
   const fixture = () => ({
     version: 1,
     observed_at: new Date().toISOString(),
@@ -17,7 +34,7 @@ export function createPrototypeApi(
       monitoring: "no_data",
     },
     host: {
-      cpu_percent: 12.4,
+      cpu_percent: 88.4,
       cores: 4,
       load: [0.6, 0.5, 0.5],
       memory: {
@@ -32,6 +49,12 @@ export function createPrototypeApi(
         used_percent: 44.5,
         free_inode_percent: 92.4,
       },
+    },
+    hdd: {
+      total_bytes: 1863 * 2 ** 30,
+      available_bytes: 1521 * 2 ** 30,
+      used_percent: 18.4,
+      free_inode_percent: 98.7,
     },
     cron: {
       last_attempt_at: new Date(Date.now() - 60000).toISOString(),
@@ -113,12 +136,38 @@ export function createPrototypeApi(
         id: "resource_rules",
         label: "Правила нагрузки",
         domain: "server",
-        status: "no_data",
-        reason_code: "not_configured",
-        source: "not_configured",
+        status: "ok",
+        reason_code: "sustained_rules",
+        source: "notifications",
         observed_at: new Date().toISOString(),
       },
     ],
+    notifications: {
+      pending: 1,
+      delivery_failures: 0,
+      polling: "ok",
+      evaluation: "ok",
+      status: "ok",
+      observed_at: new Date().toISOString(),
+      rules: [
+        {
+          key: "cpu_sustained",
+          state: "warning",
+          emitted: "ok",
+          since: Date.now() / 1000 - 300,
+          last: Date.now() / 1000,
+          sent: 0,
+        },
+        {
+          key: "ram_sustained",
+          state: "ok",
+          emitted: "ok",
+          since: started - 3600,
+          last: Date.now() / 1000,
+          sent: started - 3600,
+        },
+      ],
+    },
     containers: [
       {
         name: "ustar_moodle",
@@ -191,6 +240,18 @@ export function createPrototypeApi(
           source: "hdd",
           observed_at: new Date().toISOString(),
         },
+        ...["hdd_space", "hdd_inodes"].map((id) => ({
+          id,
+          label:
+            id === "hdd_space"
+              ? "Свободное место диска бэкапов"
+              : "Свободные inode диска бэкапов",
+          domain: "data",
+          status: "ok",
+          reason_code: "disk_capacity",
+          source: "hdd",
+          observed_at: new Date().toISOString(),
+        })),
         {
           id: "database",
           label: "PostgreSQL: отдельный мониторинг",
@@ -222,9 +283,9 @@ export function createPrototypeApi(
           id: "rules",
           label: "Правила и доставка алертов",
           domain: "monitoring",
-          status: "no_data",
-          reason_code: "not_configured",
-          source: "not_configured",
+          status: "ok",
+          reason_code: "outbox_status",
+          source: "notifications",
           observed_at: new Date().toISOString(),
         },
         {
@@ -242,13 +303,27 @@ export function createPrototypeApi(
     }
     if (path.startsWith("history?")) {
       const url = new URL("https://preview.local/" + path);
-      return graphFixture(
-        url.searchParams.get("metric") || "cpu",
+      const metric = url.searchParams.get("metric") || "cpu";
+      const series = graphFixture(
+        metric,
         url.searchParams.get("period") || "1h",
       );
+      if (metric === "cpu") {
+        for (const point of series.points) {
+          if (point[0] >= Date.now() / 1000 - 301) point[1] = 88.4;
+        }
+      }
+      return series;
     }
     if (path === "events")
-      return { events: [{ at: Date.now() / 1000, event: "login_succeeded" }] };
+      return {
+        events: [{ at: started, event: "login_succeeded" }],
+        scope: "console_security_and_monitoring",
+        host_logs: "not_connected",
+        incidents: demoIncidents,
+        incidents_status: "ok",
+        incidents_observed_at: new Date().toISOString(),
+      };
     throw new ApiError(404, null);
   };
 }

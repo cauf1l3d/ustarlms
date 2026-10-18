@@ -33,6 +33,12 @@ const fixture = () => ({
       free_inode_percent: 92.4,
     },
   },
+  hdd: {
+    total_bytes: 1863 * 2 ** 30,
+    available_bytes: 1521 * 2 ** 30,
+    used_percent: 18.4,
+    free_inode_percent: 98.7,
+  },
   cron: {
     last_attempt_at: new Date(Date.now() - 60000).toISOString(),
     last_success_at: new Date(Date.now() - 60000).toISOString(),
@@ -54,6 +60,15 @@ const fixture = () => ({
     attempt_phase: "complete",
   },
   checks: [
+    ...["host", "containers", "hdd", "hdd_space", "hdd_inodes"].map((id) => ({
+      id,
+      label: id,
+      domain: id.startsWith("hdd") ? "data" : "server",
+      status: "ok",
+      reason_code: "measured",
+      source: id.startsWith("hdd") ? "hdd" : id,
+      observed_at: new Date().toISOString(),
+    })),
     {
       id: "cron",
       label: "Успех фоновых заданий",
@@ -164,45 +179,405 @@ async function login(page: Page) {
   ).toBeVisible();
 }
 
-for (const mode of ["partial", "unavailable", "stale"] as const) {
-  test(`SMART ${mode} preserves per-disk evidence without inventing values`, async ({ page }) => {
+const notificationFixture = () => ({
+  pending: 7,
+  delivery_failures: 2,
+  polling: "ok",
+  evaluation: "ok",
+  status: "warning",
+  observed_at: new Date().toISOString(),
+  rules: [
+    {
+      key: "cpu_sustained",
+      state: "warning",
+      emitted: "ok",
+      since: Date.now() / 1000 - 300,
+      last: Date.now() / 1000,
+      sent: 0,
+    },
+    {
+      key: "ram_sustained",
+      state: "critical",
+      emitted: "critical",
+      since: Date.now() / 1000 - 200,
+      last: Date.now() / 1000,
+      sent: Date.now() / 1000 - 20,
+    },
+  ],
+});
+
+const incidentFixture = () => ({
+  events: [{ at: Date.now() / 1000, event: "login_succeeded" }],
+  scope: "console_security_and_monitoring",
+  host_logs: "not_connected",
+  incidents_status: "ok",
+  incidents_observed_at: new Date().toISOString(),
+  incidents: [
+    {
+      id: 2,
+      at: Date.now() / 1000 - 60,
+      check_id: "hdd_space",
+      status: "ok",
+      reason_code: "disk_capacity",
+    },
+    {
+      id: 1,
+      at: Date.now() / 1000 - 120,
+      check_id: "hdd_space",
+      status: "critical",
+      reason_code: "disk_low_space",
+    },
+  ],
+});
+
+test("backup disk capacity and inode figures use the measured source on server and backups", async ({
+  page,
+}, info) => {
+  await page.setViewportSize({
+    width: info.project.name === "desktop" ? 1440 : 375,
+    height: 950,
+  });
+  await login(page);
+  for (const name of ["Сервер", "Бэкапы"]) {
+    await page
+      .getByRole("navigation")
+      .getByRole("button", { name, exact: true })
+      .click();
+    const disk = page.locator(".hdd-capacity");
+    await expect(
+      disk.getByRole("heading", { name: "Диск бэкапов · ёмкость" }),
+    ).toBeVisible();
+    await expect(disk.locator("dd")).toHaveText([
+      "1 863 ГиБ",
+      "1 521 ГиБ",
+      "18,4 %",
+      "98,7 %",
+    ]);
+    await expect(disk.locator(".badge")).toHaveText("Норма");
+    await expectReadable(page);
+    await page.screenshot({
+      path: info.outputPath(
+        `capacity-${name === "Сервер" ? "server" : "backups"}.png`,
+      ),
+      fullPage: true,
+    });
+  }
+});
+
+for (const mode of ["no_data", "check_expired", "snapshot_expired"] as const) {
+  test(`current storage and host readings disappear when ${mode}`, async ({
+    page,
+  }) => {
     const original = fixture();
     const state = {
       ...original,
-      checks: [...original.checks, {
-        id: "smart", label: "SMART дисков", domain: "server", source: "smart",
+      stale: mode === "snapshot_expired",
+      checks: original.checks.map((check) =>
+        [
+          "host",
+          "ssd_space",
+          "ssd_inodes",
+          "hdd",
+          "hdd_space",
+          "hdd_inodes",
+        ].includes(check.id)
+          ? {
+              ...check,
+              status: mode === "no_data" ? "no_data" : check.status,
+              observed_at:
+                mode === "check_expired"
+                  ? new Date(Date.now() - 60000).toISOString()
+                  : check.observed_at,
+            }
+          : check,
+      ),
+    };
+    await page.route("**/api/overview", (route) =>
+      route.fulfill({ json: state }),
+    );
+    await login(page);
+    await page
+      .getByRole("navigation")
+      .getByRole("button", { name: "Сервер", exact: true })
+      .click();
+    await expect(page.locator(".server-metrics .metric > strong")).toHaveText([
+      "—",
+      "—",
+      "—",
+      "—",
+    ]);
+    await expect(page.locator(".server-metrics progress")).toHaveCount(0);
+    await expect(page.locator(".hdd-capacity dd")).toHaveText([
+      "—",
+      "—",
+      "—",
+      "—",
+    ]);
+    await expect(page.locator(".hdd-capacity .badge")).toHaveText("Нет данных");
+  });
+}
+
+test("alert rules show candidates, confirmed states and their observation times", async ({
+  page,
+}, info) => {
+  await page.route("**/api/overview", (route) =>
+    route.fulfill({
+      json: { ...fixture(), notifications: notificationFixture() },
+    }),
+  );
+  await page.route("**/api/events", (route) =>
+    route.fulfill({ json: incidentFixture() }),
+  );
+  await login(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "События", exact: true })
+    .click();
+  const cpu = page.locator('.alert-rule[data-rule="cpu_sustained"]');
+  const ram = page.locator('.alert-rule[data-rule="ram_sustained"]');
+  await expect(cpu).toContainText("CPU выше 85 % в течение 10 минут");
+  await expect(cpu).toContainText("Кандидат: ожидает подтверждения");
+  await expect(cpu).toContainText("Состояние держится с");
+  await expect(cpu).toContainText("Последняя оценка");
+  await expect(cpu).toContainText("Ещё не было");
+  await expect(ram).toContainText("Подтверждено правилом");
+  await expect(ram).toContainText("Последнее подтверждение");
+  await expect(page.locator(".notification-counts")).toContainText(
+    "В очереди: 7",
+  );
+  await expect(page.locator(".notification-counts")).toContainText(
+    "Ошибок доставки: 2",
+  );
+  await expectReadable(page);
+  await page.screenshot({
+    path: info.outputPath("alert-rules-and-incidents.png"),
+    fullPage: true,
+  });
+});
+
+test("notifier readings expire independently while the snapshot is still fresh", async ({
+  page,
+}) => {
+  await page.clock.install();
+  const notifications = {
+    ...notificationFixture(),
+    observed_at: new Date(Date.now() - 40000).toISOString(),
+  };
+  await page.route("**/api/overview", (route) =>
+    route.fulfill({ json: { ...fixture(), notifications } }),
+  );
+  await login(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "События", exact: true })
+    .click();
+  await expect(page.locator(".alert-rule")).toHaveCount(2);
+  await page.clock.fastForward(7000);
+  await expect(page.locator(".alert-rule")).toHaveCount(0);
+  await expect(page.locator(".notification-counts")).toHaveText(
+    "В очереди: — · Ошибок доставки: —",
+  );
+  await expect(
+    page.getByText("Свежая оценка правил недоступна", { exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".freshness")).not.toContainText("Данные устарели");
+});
+
+test("unavailable cron and database checks hide their current counts", async ({
+  page,
+}) => {
+  const original = fixture();
+  const state = {
+    ...original,
+    database: {
+      connections: 99,
+      max_connections: 100,
+      active: 11,
+      waiting: 3,
+      idle_in_transaction: 5,
+      oldest_transaction_seconds: 77,
+    },
+    checks: [
+      ...original.checks.map((check) =>
+        check.id === "cron" ? { ...check, status: "no_data" } : check,
+      ),
+      {
+        id: "database",
+        label: "PostgreSQL",
+        domain: "academy",
+        status: "no_data",
+        reason_code: "probe_failed",
+        source: "database",
         observed_at: new Date().toISOString(),
-        status: mode === "partial" ? "warning" : "no_data",
-        reason_code: mode === "partial" ? "smart_partial_attributes" : mode === "stale" ? "smart_stale" : "smart_probe_failed",
-      }],
+      },
+    ],
+  };
+  await page.route("**/api/overview", (route) =>
+    route.fulfill({ json: state }),
+  );
+  await login(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "Академия", exact: true })
+    .click();
+  await expect(page.locator(".database-details dd")).toHaveText([
+    "—",
+    "—",
+    "—",
+    "—",
+    "—",
+  ]);
+  await expect(page.locator(".cron-details dd:nth-of-type(n+3)")).toHaveText([
+    "—",
+    "—",
+    "—",
+    "—",
+    "—",
+    "—",
+  ]);
+  await expect(page.locator(".cron-details")).toContainText(
+    "Последний наблюдавшийся успех",
+  );
+});
+
+test("a fresh notifier export does not refresh an old individual rule evaluation", async ({
+  page,
+}) => {
+  const notifications = notificationFixture();
+  notifications.rules[0].last -= 60;
+  await page.route("**/api/overview", (route) =>
+    route.fulfill({ json: { ...fixture(), notifications } }),
+  );
+  await login(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "События", exact: true })
+    .click();
+  const cpu = page.locator('.alert-rule[data-rule="cpu_sustained"]');
+  await expect(cpu.locator(".badge")).toHaveText("Нет данных");
+  await expect(cpu).toContainText("Нет свежей оценки этого правила");
+  await expect(cpu).not.toContainText("Кандидат: ожидает подтверждения");
+  await expect(
+    page.locator('.alert-rule[data-rule="ram_sustained"]'),
+  ).toContainText("Подтверждено правилом");
+});
+
+test("incident history refreshes with unchanged snapshot time and stays explicitly historical after source expiry", async ({
+  page,
+}) => {
+  await page.clock.install();
+  const state = fixture();
+  let requests = 0;
+  await page.route("**/api/overview", (route) =>
+    route.fulfill({ json: state }),
+  );
+  await page.route("**/api/events", (route) => {
+    requests += 1;
+    const history = incidentFixture();
+    if (requests > 1)
+      history.incidents.unshift({
+        id: 3,
+        at: Date.now() / 1000,
+        check_id: "cron",
+        status: "warning",
+        reason_code: "cron_success_delayed",
+      });
+    return route.fulfill({ json: history });
+  });
+  await login(page);
+  await page
+    .getByRole("navigation")
+    .getByRole("button", { name: "События", exact: true })
+    .click();
+  await expect(page.locator(".incident-row")).toHaveCount(2);
+  await expect(page.locator(".incident-row").first()).toContainText(
+    "Восстановление",
+  );
+  await expect(page.locator(".incident-history")).toContainText(
+    "Записанная история; текущее состояние проверяется отдельно",
+  );
+  await page.clock.fastForward(11000);
+  await expect(page.locator(".incident-row")).toHaveCount(3);
+  expect(requests).toBeGreaterThan(1);
+  await page.clock.fastForward(46000);
+  await expect(page.locator(".freshness")).toContainText("Данные устарели");
+  await expect(page.locator(".incident-row")).toHaveCount(3);
+  await page.getByRole("button", { name: "Выйти", exact: true }).click();
+  await expect(page.locator(".incident-row")).toHaveCount(0);
+});
+
+for (const mode of ["partial", "unavailable", "stale"] as const) {
+  test(`SMART ${mode} preserves per-disk evidence without inventing values`, async ({
+    page,
+  }) => {
+    const original = fixture();
+    const state = {
+      ...original,
+      checks: [
+        ...original.checks,
+        {
+          id: "smart",
+          label: "SMART дисков",
+          domain: "server",
+          source: "smart",
+          observed_at: new Date().toISOString(),
+          status: mode === "partial" ? "warning" : "no_data",
+          reason_code:
+            mode === "partial"
+              ? "smart_partial_attributes"
+              : mode === "stale"
+                ? "smart_stale"
+                : "smart_probe_failed",
+        },
+      ],
       smart: {
-        observed_at: new Date(Date.now() - (mode === "stale" ? 1000000 : 0)).toISOString(),
+        observed_at: new Date(
+          Date.now() - (mode === "stale" ? 1000000 : 0),
+        ).toISOString(),
         disks: [
-          mode === "unavailable" ? {device: "/dev/sda", status: "no_data"} : {
-            device: "/dev/sda", status: "warning", temperature_c: 50, health_passed: true,
-            sectors: {"5": 0, "198": 0}, unavailable_attributes: ["197", "199"],
+          mode === "unavailable"
+            ? { device: "/dev/sda", status: "no_data" }
+            : {
+                device: "/dev/sda",
+                status: "warning",
+                temperature_c: 50,
+                health_passed: true,
+                sectors: { "5": 0, "198": 0 },
+                unavailable_attributes: ["197", "199"],
+              },
+          {
+            device: "/dev/sdb",
+            status: "ok",
+            temperature_c: 48,
+            health_passed: true,
+            sectors: { "5": 0, "197": 0, "198": 0, "199": 0 },
           },
-          {device: "/dev/sdb", status: "ok", temperature_c: 48, health_passed: true,
-            sectors: {"5": 0, "197": 0, "198": 0, "199": 0}},
         ],
       },
     };
-    await page.route("**/api/overview", (route) => route.fulfill({json: state}));
+    await page.route("**/api/overview", (route) =>
+      route.fulfill({ json: state }),
+    );
     await login(page);
-    await page.getByRole("navigation").getByRole("button", {name: "Сервер", exact: true}).click();
-    const ssd = page.locator(".smart-disk").filter({hasText: "/dev/sda"});
-    const hdd = page.locator(".smart-disk").filter({hasText: "/dev/sdb"});
+    await page
+      .getByRole("navigation")
+      .getByRole("button", { name: "Сервер", exact: true })
+      .click();
+    const ssd = page.locator(".smart-disk").filter({ hasText: "/dev/sda" });
+    const hdd = page.locator(".smart-disk").filter({ hasText: "/dev/sdb" });
     if (mode === "stale") {
       await expect(hdd.locator(".badge")).toHaveText("Нет данных");
-      await expect(hdd.getByText("48 °C", {exact: true})).toHaveCount(0);
+      await expect(hdd.getByText("48 °C", { exact: true })).toHaveCount(0);
     } else {
-      await expect(hdd.getByText("48 °C", {exact: true})).toBeVisible();
+      await expect(hdd.getByText("48 °C", { exact: true })).toBeVisible();
       await expect(hdd.locator(".badge")).toHaveText("Норма");
     }
     if (mode === "partial") {
-      await expect(ssd.getByText("50 °C", {exact: true})).toBeVisible();
-      await expect(ssd.getByText(/диск не сообщил атрибуты 197, 199/)).toBeVisible();
-      await expect(ssd.getByText("— / 0", {exact: true})).toBeVisible();
+      await expect(ssd.getByText("50 °C", { exact: true })).toBeVisible();
+      await expect(
+        ssd.getByText(/диск не сообщил атрибуты 197, 199/),
+      ).toBeVisible();
+      await expect(ssd.getByText("— / 0", { exact: true })).toBeVisible();
       await expect(ssd.locator(".badge")).toHaveText("Внимание");
     }
   });
@@ -273,6 +648,12 @@ test("network loss retains timestamp and session expiry returns to login", async
   await expect(page.getByRole("alert")).toContainText("Соединение потеряно", {
     timeout: 17000,
   });
+  await expect(page.locator(".priority-metrics .metric > strong")).toHaveText([
+    "—",
+    "—",
+    "—",
+    "—",
+  ]);
   await page.route("**/api/overview", (route) =>
     route.fulfill({ status: 401, json: { detail: "session_expired" } }),
   );
@@ -494,6 +875,7 @@ test("offline prototype preserves audit priorities without network requests", as
   await expect(page.locator(".priority-metrics .metric")).toHaveCount(4);
   await expect(page.locator(".metric-cron strong")).toHaveText("1 мин");
   await expect(page.locator(".metric-http strong")).toHaveText("HTTP 200");
+  await expect(page.locator(".env")).toHaveText("ДЕМО");
   await expectReadable(page);
   await page.screenshot({
     path: info.outputPath("prototype-overview.png"),
@@ -508,6 +890,21 @@ test("offline prototype preserves audit priorities without network requests", as
       page.getByRole("heading", { name, exact: true }),
     ).toBeVisible();
     await expectReadable(page);
+    if (["Сервер", "Бэкапы"].includes(name)) {
+      await expect(page.locator(".hdd-capacity dd")).toHaveText([
+        "1 863 ГиБ",
+        "1 521 ГиБ",
+        "18,4 %",
+        "98,7 %",
+      ]);
+    }
+    if (name === "События") {
+      await expect(page.locator(".alert-rule")).toHaveCount(2);
+      await expect(page.locator(".incident-row")).toHaveCount(2);
+      await expect(page.locator(".incident-history")).toContainText(
+        "Записанная история",
+      );
+    }
   }
   expect(remote).toEqual([]);
 });
@@ -540,6 +937,14 @@ test("operation plan, target, credentials and idempotency on mobile", async ({
     .getByRole("navigation")
     .getByRole("button", { name: "Бэкапы", exact: true })
     .click();
+  await expect(
+    page.getByRole("heading", { name: "Защищённое скачивание", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".download-guidance")).toContainText("HTTPS");
+  await expect(page.locator(".download-guidance")).toContainText("SHA256");
+  await expect(
+    page.getByRole("heading", { name: "SFTP и передача", exact: true }),
+  ).toHaveCount(0);
   await page
     .getByRole("button", { name: "Создать копию", exact: true })
     .click();

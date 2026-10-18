@@ -192,6 +192,11 @@ def apache_fixture(tmp_path, monkeypatch, config=None):
     monkeypatch.setattr(module, 'ROOT_UID', os.getuid())
     monkeypatch.setattr(module, 'ADM_GID', os.getgid())
     monkeypatch.setattr(module, '_parents', lambda p: None)
+    # Simulate root-only entry while retaining the fixture user's actual file
+    # ownership. The separate disposable Apache acceptance runs real uid0.
+    actual_fchown=os.fchown
+    monkeypatch.setattr(module.os,'geteuid',lambda:0)
+    monkeypatch.setattr(module.os,'fchown',lambda fd,uid,gid:actual_fchown(fd,os.getuid(),os.getgid()))
     calls = []
     def run(argv):
         calls.append(tuple(argv))

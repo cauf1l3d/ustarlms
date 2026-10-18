@@ -1,13 +1,20 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-19'
 project: USTAR Academy
-stage: repository_reconciled_next_control_panel
-stage_label: Следующий этап пульт управления и Telegram
-current_activity: 'Owner16Oct: handoff archive obtained, instruction passed, await sysadmin restore; repository
-  consolidation and legacy CI cleanup; next INF06; Moodle5.2/PG17 deferred'
-next_task: INF-06
-ready_tasks:
-- INF-06
+stage: unified_Academy_bot_architecture_design
+stage_label: Единая архитектура Telegram Bitrix WhatsApp и внешних Mini Apps
+current_activity: 'Owner19Oct00:41MSK confirms console accounts and personal Telegram link work; service journal still shows
+  old message; journal and external heartbeat explicitly deferred. This is partial acceptance, not full console acceptance
+  or an independently reported native SOURCE_COMMIT. Expected releasee5b87818/contextde4544d9 remains in unmergedPR103.
+  Owner00:49 selects INTEGRATIONS-01/CON-00 architecture: one Academy identity/capability/scope and business command/event
+  contract across Telegram/Bitrix24/WhatsApp, role-specific HRD/HR/manager/CEO/employee actions, external Mini Apps without
+  inbound office ports or unstable home/server networking. PR106 RFC and legacy notes reviewed; new detailed proposal and
+  contracts are design-only. PR105 facts02fd394f show legacy handler22630bytes/hash17Oct; current owner find confirms path/size
+  only, source not received. No subagents, merge, native operation, schema or network change. Review spec before code plan;
+  Bitrix edition, CRM owner, edge/domain and CEO terminal policy remain explicit decisions. INF07 is a separate full-LMS
+  HTTPS gate, not the current task. Sysadmin restore/RTO waiting; Moodle5.2/PG17 deferred.'
+next_task: INTEGRATIONS-01
+ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
@@ -75,6 +82,9 @@ audit:
 next_agent_read:
 - START_HERE.md
 - context/project.yaml
+- context/runtime/connect_owner_priority_20261019.json
+- context/proposals/USTAR_CONNECT_RFC_20261018.md
+- context/proposals/USTAR_CONNECT_CONTRACTS_20261019.md
 - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
 - context/tasks/ACTIVE.md
 - context/runtime/control_panel_telegram_20261016.md
@@ -104,12 +114,12 @@ sysadmin_restore:
   production_platform_upgrade_deferred:
     moodle: '5.2'
     postgresql: '17'
-  next_task: server_control_panel_with_Telegram_alerts_metrics_backup_access_and_Academy_control
+  next_task: INTEGRATIONS01_design;sysadmin_restore_still_waiting_external
 next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: next_not_deployed
+  status: owner_accounts_and_link_work;full_acceptance_not_claimed;residual_deferred19Oct
   style: Linear-inspired graphite
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization

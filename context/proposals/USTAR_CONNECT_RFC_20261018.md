@@ -1,205 +1,214 @@
-# RFC — USTAR Connect: единый внешний коммуникационный и Mini App контур
+# USTAR Connect — единый бот, роли и внешние приложения
 
-- **Статус:** PROPOSED / design-only; не ADR Accepted, не production release.
-- **Дата:** 2026-10-18.
-- **База репозитория:** main @ d9655074db9a06281fe16f378dbdbe1d279104a0.
-- **Датированная база приложения:** PR76 / e1d57f5bc28f6964afd20aeff7620345b34a80fe (526 файлов local_ustar/theme_ustar); не путать с текущим Git HEAD.
-- **Инициатива:** единые Telegram / Bitrix24 / WhatsApp каналы, SSO-привязка, персональные Mini Apps, уведомления, HR-процессы, подразделения и конечные эскалации, без открытия входящих портов на Academy server1.
-- **Реализация:** ещё НЕ начата. Настоящие токены, external gateway, trusted TLS, провайдерские аккаунты, тесты в production и операторские подтверждения отсутствуют.
-- **Связанные инициативы:** INF-06 (операторский пульт + отдельный привилегированный Telegram), INF-07 (HTTPS), INF-12 (ACL/security), MOB-01 (mobile ADR), PRIVACY-01 (privacy), OPS-01 (route refresh), PERF-01.
+Статус: **PROPOSED, редакция 2 от 19.10.2026, Europe/Moscow**. Первая редакция18Oct сохранена в истории PR106. Это проект контрактов, а не реализованный API, принятый ADR или установка. Последний запрос владельца00:49 и результаты пульта00:41: [receipt](../runtime/connect_owner_priority_20261019.json). Субагенты не запускались.
 
-## 1. Привязка к существующим решениям
+Проверены main d9655074db9a06281fe16f378dbdbe1d279104a0, application baseline e1d57f5bc28f6964afd20aeff7620345b34a80fe (526 plugin/theme файлов,93 таблицы), PR103 head de4544d97f4f77036cfbb358ab79273361e6a6e5 и PR105 head02fd394fb90b44ad299374fd678b12543e7681ab. PR103/105 не merged. Текущая работа — архитектура INTEGRATIONS-01; журнал служб пульта и внешний heartbeat отложены владельцем.
 
-1. Moodle core: canonical users/auth/capabilities, course/SCORM/Quiz completion, core_message и File API; без core patch.
-2. local_ustar: кадровый lifecycle, организация, route/scope/progress, assessment lifecycle, adaptation, task/checklist flow, workflow notifications, USTAR rewards.
-3. theme_ustar: native UI; legacy frontend/Next.js не активировать.
-4. Внешний чат не заменяет Moodle core_message и не создаёт вторую историю корпоративных сообщений.
-5. Действующие источники: context/architecture/boundaries.md, context/architecture/organization_resolution.md, context/architecture/notification_delivery_20260928.md, context/architecture/route_read_contract_20260928.md; ADR-0002, ADR-0006, ADR-0012, ADR-0010.
-6. Действующие пути/классы: moodle/local/ustar/classes/access_context.php, capabilities.php, organization_identity.php, hr_access.php, assessment_lifecycle.php, adaptation_service.php, task_workspace/worker.php, task_workspace/policy.php, workflow_notifications.php, communication.php, route_model.php. XMLDB: db/install.xml + db/upgrade.php.
-7. INF-06 — операционное управление сервером, его Telegram admin/operator bot, backup и SFTP. USTAR Connect — пользовательские учебные/HR действия. **Не объединять токены, сервисные учётки, ACL или сообщения с INF-06**, даже при совместном использовании общего инфраструктурного транспортного кода.
+## 1. Решение и альтернативы
 
-## 2. Функциональный принцип
+Рекомендуется новый Connect facade и адаптеры над существующими доменами Академии. Пользователь имеет одну Moodle-учётку, подтверждённые связи с мессенджерами и одни актуальные права. Разные каналы показывают одно бизнес-состояние.
 
-Один доменный command/event contract, несколько transport adapters:
-- Telegram bot + Telegram WebApp / Mini App.
-- Bitrix24 bot + Bitrix24 portal UI/link (точные возможности в конкретной редакции подтвердить).
-- WhatsApp Business Platform adapter: limited messages + signed actions/secure HTTPS links, не заявлять Telegram-style native Mini App там, где её нет.
-- В будущем дополнительный channel adapter без новых бизнес-таблиц и не переписывая domain handlers.
-
-**«Один бот» — одна логика, а не один provider-specific bot ID.** Физически отдельные credentials, endpoints и ограничения платформ.
-
-Общая цепочка: provider update → transport validation → provider identity mapping → canonical Moodle actor resolution → capability + active employment + current org scope → approved business query/command → domain event/notification → delivery outbox → connected channel(s) → audit.
-
-Provider metadata никогда не даёт привилегий: chat_id/phone/Bitrix ID, должность и view-as недостаточны для authorisation.
-
-## 3. Назначение компонентов (proposed)
-
-**Academy backend (изменения строго в local_ustar):**
-- connect identity/link service (mapping на Moodle user ID).
-- API command/read facade, вызывающий существующие домены, не прямой SQL для business mutation.
-- notification fan-out service поверх существующего local_ustar_notifications + local_ustar_notify_delivery, не новый независимый центр уведомлений.
-- escalation policy adapter: materialize only domain-authorized escalation events; не пересчитывать достижения/оценки при GET.
-- privacy/visibility classifier + audit.
-- Moodle scheduled tasks или проверенный bounded worker для outbox/retry; не запускать второй Moodle cron.
-
-**Transport worker (минимальные привилегии):**
-- Telegram long poll, Bitrix fetch poll; исходящий HTTPS из server1.
-- Строгий provider-specific adapter интерфейс для parse/ack/send/edit messages.
-- Никакой прямой SQL в Moodle, root, SSH shell, Docker socket, backup storage.
-- Durable offsets/idempotency receipts; подтверждение provider offset только после durable accept. Учесть доступность и provider retention.
-- При отсутствии связи worker устойчиво восстанавливается, не дублирует исполнение действий.
-
-**Public HTTPS edge (опционально в первом релизе, обязательно для Mini Apps / callback provider):**
-- Публикуется только минимальный connect API + Mini App UI, не panel/Apache admin/DB/область Moodle целиком по умолчанию.
-- Вариант: HTTPS edge на отдельном узле + исходящее соединение от server1; или outbound-only managed tunnel с access policies. Не выбирать провайдера до теста достижимости из России, DNS/TLS, организации и обработки данных.
-- Входящие порты на server1 и корпоративном маршрутизаторе не открываются. Публичный HTTPS адрес у edge/провайдера всё равно существует.
-- Если требуется полное Moodle Quiz/SCORM вне LAN: отдельный gate по trusted HTTPS, canonical wwwroot, session/cookies, File API, link integrity, CSP, WebView compatibility, proxy hardening, ACL и нагрузке; узкий Mini App API сам по себе не обещает полный native LMS browser parity.
-
-## 4. Аутентификация и привязка
-
-1. Первый bind: сотрудник проходит настоящую аутентификацию Moodle (в доверенной LAN-сессии или через принятый HTTPS auth gateway), затем подтверждает одноразовую короткоживущую challenge на конкретный provider account/device. Альтернатива — HR-инициированное приглашение со step-up-подтверждением, без выдачи секретов HR в чат.
-2. Telegram: сервер проверяет signed initData (HMAC / актуальный алгоритм Telegram), auth_date, replay nonce, ограничения TTL; не доверяет initDataUnsafe и никнейму.
-3. Bitrix24: tenant + provider user identity и проверенное событие из доверенного bot API; принадлежность порталу сама по себе не связывает Moodle actor. Для write step-up/secure web session.
-4. WhatsApp: подтверждённая привязка account/phone по независимому фактору; совпадение телефонного номера с Moodle-профилем недостаточно.
-5. Токены провайдеров — service secrets, не user auth и не Moodle sessions. Пользовательские short-lived sessions хранятся/ревокируются в доверенной auth boundary; не передавать Moodle session cookie через чат.
-6. Для каждого запроса актуально проверять moodle deleted/suspended, employment active, capabilities, scope, object ownership и view-as write refusal. При увольнении/блокировке — немедленная потеря полномочий на новых запросах; revoke linked sessions и pending actions.
-7. Для HRD / HR / критических кадровых write — step-up (MFA/reauth/explicit confirmation в доверенном UI), server CSRF и request binding.
-8. Никогда не показывать/сбрасывать/передавать действующий пароль от Академии через бот. В «Учётных данных» можно показать только безопасную информацию об учётной записи и процесс восстановления.
-
-## 5. Role-to-feature matrix (функциональный scope, не grant)
-
-| Актор | Чтение | Запись |
+| Подход | Следствие | Решение |
 |---|---|---|
-| Сотрудник | собственный маршрут, результаты, курсы, задачи, чек-листы, XP/KPI | только личные подтверждения/чек-листы/заявки по существующим правилам |
-| HR | разрешённые сотрудники/материалы, HR-аналитика, проверки | оценивание при gradeassessments/hrmanage; существующие HR-команды при отдельных capabilities |
-| HRD | HR scope + HRD-only adaptation + private development analytics при developmentanalytics | HRD decisions только при manageadaptation; approvals только при approveregistration и остальных проверках |
-| Руководитель | manager_scope через access_context / organization_model, не по строке «руководитель» | только разрешённые task/assessment/remediation операции в current subtree |
-| Генеральный директор | company aggregate при executive/company access, без автоматического открытия приватных результатов | по умолчанию read-only; только действие с отдельной явной capability |
-| Оператор INF-06 | server status/backup в отдельном операторском контуре | только INF-06 allowlisted operations — никогда не через HR/employee bot |
+| Автономный бот каждого канала со своими ролями/сроками | Расхождения и повторное выполнение | Не выбирать |
+| Новый HR/LMS backend с копией пользователей, оценок и маршрутов | Вторые writers и миграция истории | Не выбирать |
+| Новый transport/auth facade над действующей Академией | Единые данные/ACL, постепенный перенос legacy | Предлагается |
 
-**NB:** local/ustar:executive обеспечивает чтение компании, но не подразумевает HRD-решения или доступ к приватным рефлексиям. Генеральному директору направляются только terminal severity events по явно принятой политике, а не все промежуточные уведомления. Нельзя объявить, что такая terminal executive escalation уже реализована.
+«Один бот» — один продукт и бизнес-контракт. Telegram, Bitrix24 и WhatsApp технически требуют отдельных provider IDs/credentials. HRD, HR, руководители, гендиректор и сотрудники используют один бизнес-бот в каждом канале с разным разрешённым меню. Им не создаются отдельные базы или боты по ролям.
 
-## 6. Эскалации
+Существующий INF-06 бот обслуживает сервер/backup/jobs. Его локальные owner/operator accounts и Telegram links **не являются аккаунтами Академии**. Не импортировать эти связи как HR-права, не объединять bot tokens, auth DB или service credentials. Бизнес-бот не получает shell/root/Docker/backup/key. Общими могут быть протестированные транспортные утилиты и renderer, но не полномочия.
 
-Уже существует policy task_workspace/policy.php, уровни **direct → parent → hrd** (по умолчанию минуты 120/540/1080 в рабочем календаре), durable local_ustar_task_escalations и workflow_notifications. Сохранить этот state machine и не создавать второй scheduler по Telegram.
+Нынешний код Moodle/local_ustar остаётся владельцем кадрового lifecycle, организации, assessment, route progress, задач и чек-листов. Moodle core сохраняет auth/capabilities, Quiz/SCORM, completion, messages и File API. Legacy frontend/Next.js не возобновляется.
 
-Поток:
-- Бизнес-событие и сроки определяет USTAR;
-- USTAR фиксирует recipient/cycle/idempotency key;
-- connect fan-out доставляет в выбранные каналы и показывает receipt;
-- уведомления могут быть acknowledged, но provider «delivered» не означает прочтение человеком или завершение задачи;
-- при решении USTAR закрывает actionable item; при повторной доставке не возникает второго кадрового/учебного write.
+## 2. Компоненты и размещение
 
-**Конечные эскалации гендиректору** требуют новой отдельной политической спецификации: какие домены, severity, выдержка времени, HRD review, отсутствие персональных/закрытых данных и suppress/recovery. Запрещён глобальный catch-all всех просрочек или автоматическое продвижение HRD-состояний до CEO без explicit policy.
+~~~mermaid
+flowchart TD
+    C["Telegram · Bitrix24 · WhatsApp"] --> E["HTTPS edge: webhook и Mini App"]
+    B["Внешний браузер сотрудника"] --> E
+    W["Connect worker на server1"] -->|"Исходящее TLS-соединение"| E
+    W -->|"Фиксированный локальный API"| A["Connect facade в local_ustar"]
+    A --> D["Домены Moodle и USTAR"]
+    D --> Q["Канонические уведомления и outbox"]
+    Q -->|"Claim через facade"| W
+    W -->|"Polling и доставка"| C
+~~~
 
-Delivery policy: user preferences and channel opt-in, quiet hours only for noncritical classes, configurable frequency/digests, no sensitive result body in a third-party notification by default, provider retry/backoff/dead-letter/manual replay, rate limits and per-user dedup.
+Стрелка worker→edge обозначает инициатора соединения; запросы к серверу возвращаются по этому установленному каналу. Входящие порты на офисном маршрутизаторе/server1 не открываются.
 
-## 7. Domain operations, UX и MVP
-
-**Employee Mini App:** dashboard, маршрут с current point, материал/ресурс, личный результат и подтверждённое evidence, задачи/checklist quick forms, личные уведомления. «Пройти SCORM/Quiz» на первом этапе — переход на trusted full web origin; не копировать LMS evaluation logic в мессенджер.
-
-**HR/HRD:** inbox «требует проверки» и case-level secure Mini App pages; команда оценивания и решения — только существующий сервис и canonical grade/evidence/assessment flow. Сводки read-only, ограниченный selector employees, права по capability. Материалы активных маршрутов читаются по опубликованной версии и текущему scope.
-
-**Manager:** live current subtree, overdue and route coverage, task/review/checklist queue, эскалации уровня руководителя.
-
-**CEO:** company-level aggregates и только специально выбранные terminal exceptions; без произвольного drill-down в private assessment.
-
-**CRM:** в source отсутствует подтверждённый единый «CRM Академии» как отдельный домен. Определить, идёт ли речь о Bitrix24 CRM. Если да, контакт/deal/activity ownership остаётся в Bitrix24, а Connect запускает scoped actions через отдельный CRM adapter. Не создавать parallel deals/customers в Moodle без отдельного ADR и permission/data contract.
-
-Никакой автоматической отправки файлов сотрудников или оценки в обычный мессенджер. Более детальные формы — secure Mini App после аутентификации.
-
-## 8. Предлагаемые API-контракты
-
-Read API (не делать GET мутирующим):
-- connect/session/status — каналы, привязки, активная учётка;
-- connect/me/home — агрегат авторизованного пользователя;
-- connect/me/route — read-only route snapshot, не force refresh;
-- connect/me/tasks — scoped queue;
-- connect/team/overview — team/company scope;
-- connect/hr/reviews — role-filtered queue;
-- connect/notifications — статусы USTAR + Moodle, отдельно source IDs.
-
-Write API (POST, user-bound, scoped, CSRF/replay protection):
-- connect/link/issue и connect/link/confirm;
-- connect/notifications/ack;
-- connect/tasks/{id}/report;
-- connect/hr/reviews/{id}/grade;
-- connect/adaptation/{id}/decision.
-
-Строки выше — **планируемые контракты**, не существующие endpoints. Каждый должен иметь versioned request/response schema, actor, target, operation capability, status, expected revision, idempotency key, bounded output, privacy classification, audit reason и typed errors. Никакого wildcard «выполнить метод Moodle» или произвольного PHP function invocation.
-
-Outbox model references canonical notification ID + channel + provider recipient + status + attempt/backoff + provider ref. Использовать существующий local_ustar_notify_delivery как основу; миграция нужна только для доказанных недостающих полей. Inbox transport receipt references provider update ID and canonical business request ID; это дедуп transport, не второй store HR events.
-
-## 9. Connectivity matrix
-
-| Канал/функция | Без открытых портов server1 | Дополнительные условия |
+| Компонент | Ответственность | Граница доверия |
 |---|---|---|
-| Telegram bot updates | Да: Bot API getUpdates long polling, один consumer | egress до Telegram, durable offset |
-| Bitrix24 bot events | Да: imbot.v2 fetch / Event.get | конкретный Bitrix24 портал/редакция, scope imbot |
-| Telegram Mini App | Да для origin, но требуется публично доступный HTTPS endpoint edge | initData validation, session binding, domain/TLS |
-| Bitrix24 embedded view | Возможно через внешний HTTPS edge | проверить поддержку приложения/iframe/SSO данной редакцией |
-| WhatsApp Business incoming | Нужен provider-reachable публичный HTTPS webhook или внешний relay | WABA/Meta account, политика и региональная доступность |
-| Full Moodle Quiz/SCORM outside LAN | Отдельная фаза; reverse proxy/tunnel при accepted HTTPS | canonical wwwroot, cookie, files, CSP, security tests |
+| Connect facade внутри local_ustar | Link/session, actor, scope, разрешённые reads/commands, receipts | Никакого wildcard PHP/SQL вызова |
+| Существующие домены | Состояние, writers, audit, сроки и эскалации | Нет второго HR/grade/progress store |
+| Один worker с адаптерами | Provider ingest/send/edit, offsets, bounded relay, retry | Нет прямого SQL, config.php, root и доступа ко всему LAN |
+| Public HTTPS edge | TLS, статические UI assets, provider ingress, лимиты, relay к fixed connector | Не выдаёт роли, не хранит Moodle administrator token |
 
-Для server1 с Apache HTTP→127.0.0.1:8082 HTTPS Академии пока **не принят**; Caddy сейчас нельзя считать доказанным TLS gateway LMS. Cloudflare Tunnel, Tailscale Funnel, собственный edge с исходящим WireGuard/reverse tunnel — кандидаты, а не сделанные настройки. Для РФ обязательно проверить route quality, доступность провайдера, устойчивость к блокировкам, DNS, data residency и 152-ФЗ с юристом/оператором ПД.
+Начальный polling-релиз — facade + один worker. Redis/Kafka/отдельная бизнес-БД не нужны для достоверности: durable business state остаётся в PostgreSQL Академии. Допустим небольшой transport journal worker/edge для доставочных receipts; он не хранит независимые оценки/дедлайны. Внешний edge добавляется для браузера и webhook-провайдеров.
 
-WhatsApp в РФ сильно ограничен по состоянию 2026 года; это риск product viability и тестов, не просто вопрос webhook.
+Предлагаемый технический стек: facade и domain adapters — PHP внутри local_ustar; transport worker — Python3.12 в собственной venv/systemd-службе, отдельно от venv/UID пульта. Зависимости фиксируются с hashes при реализации; второй Moodle cron не запускается. Mini App — один отдельный статический TypeScript/React клиент с Vite, используя уже знакомую по пульту цепочку сборки, но со своей Academy auth. Это новый небольшой Connect entrypoint, не восстановление legacy frontend и не копия серверного пульта. Telegram/Bitrix/browser используют один bundle с тонкими platform adapters, WhatsApp открывает тот же web UI по разрешённой ссылке. Native LMS/theme остаётся полноценным учебным интерфейсом после отдельного origin gate.
 
-## 10. Threat model и operational gate
+Service authentication worker подтверждает только транспорт. Пользовательский actor разрешается по активной подтверждённой provider identity или Connect session. Поле userid в payload не выбирает исполняющего пользователя. Общий admin service token с подстановкой любого actor недопустим.
 
-- **No inbound LAN firewall** ≠ «не опубликован API»: edge публичен. Защита edge: HTTPS, narrow routing, WAF/rate limits, signed callbacks, identity/session, no host-admin URLs.
-- Revocation: увольнение, suspension, смена позиции/ACTING, роль HRD→HR, provider unlink, stolen device, token rotation, disabled provider, incident response.
-- Negative ACL matrix: employee→other person; HR→private dev results; manager→outside subtree; CEO→HRD write; suspended/pending actor→any read/write; read-only view-as→write; forged Telegram initData/Bitrix user ID/WhatsApp phone; replay/double tap; changed payload same idempotency key; stale revisions; expired challenges.
-- Delivery: provider 429/5xx/network partition; bounded retries; skip/compensate duplicates; confirmed provider offsets only after durable ingest; no fake success; unknown/NoData is not green.
-- Disclosure: avoid passwords, access tokens, full health/private development summaries, personal numbers, file URLs in notifications; narrow audit PII and retention.
-- No internet loss of employee HR records: Academy remains canonical, integrations can degrade independently; delivery queues recover from reconnection.
-- Benchmark performance and privacy; no unbounded full workforce scan on every Telegram message.
-- No simultaneous new core/PG version, no activation of legacy frontend, no interruption of existing host mail/DNS/ISPConfig.
+Для обычных bot updates worker является доверенным verifier происхождения provider event; это явная граница, не криптографическое доказательство каждого сообщения для Moodle. Компрометация worker/bot token может затронуть низкорисковые действия уже связанных пользователей этого канала. Поэтому bot assertions имеют минимальные scopes/TTL, а чтение приватных HR-ответов, оценивание и кадровые решения требуют независимой Academy web session/step-up. Incident response отзывает transport credentials, bot-linked sessions и незавершённые actions; защита не сводится к одному mTLS сертификату.
 
-## 11. Delivery slices and acceptance gates
+## 3. Внешняя связь без нарушения сети
 
-**CON-00 — reviewed ADR + product contract** (this RFC, status proposed)
-- confirm Bitrix edition/portal, WABA feasibility, public edge/provider, employee devices, requirements of CRM, data/legal policy and approved escalation thresholds.
-- freeze event taxonomy, role matrix, API contracts and data classification; security review.
+Предлагаются две реализации одной топологии:
 
-**CON-01 — core identity + Telegram MVP (internal first)**
-- bind via Moodle-confirmed one-time challenge; Telegram polling, /start, /me, /tasks, /route; minimal notifications from durable USTAR outbox.
-- denial/revocation tests, no credentials; production-like isolated test suite; no external public UI needed.
+1. **Контролируемый компанией HTTPS edge + ограниченный исходящий connector.** Предпочтителен при доступном размещении и возможности сопровождать небольшой публичный узел. Только Connect operations и фиксированный локальный API.
+2. **Managed HTTP tunnel.** Меньше собственного сопровождения; зависимость от доступности/ограничений провайдера. Cloudflare Tunnel — проверенный пример outbound-only модели, а не выбранный для компании поставщик.
 
-**CON-02 — complete notification lifecycle + Bitrix24 fetch**
-- shared dedup/outbox, retries/recovery, channel preferences; Bitrix24 bot events via imbot.v2.
-- E2E same notification/ack state across channel and Academy; no duplicate task writes.
+Только polling без edge подходит для команд Telegram и поддерживаемого Bitrix, но не закрывает внешний Mini App и WhatsApp webhook. Это первый срез, а не вся целевая система.
 
-**CON-03 — external secure Mini App & employee quick actions**
-- trusted HTTPS edge, safe auth, read-only dashboards then user-bound checklists/reports; mobile browser tests with Russian networks.
-- SCORM/Quiz only after native Moodle access/gateway and canonical URL/cookie/file audits pass.
+Connector: отдельный UID, явный endpoint/credential, TLS verification, allowlist target/operations, лимиты размера/concurrency/timeouts. Не generic CONNECT/SOCKS и не произвольный upstream URL. Не нужны TUN, exit node, subnet router, default route, изменение DNS-resolver/NAT или Happ на домашнем устройстве. Tailscale/WireGuard не входят в этот проект. Остановка/удаление connector не требует восстановления маршрутизации.
 
-**CON-04 — HR/HRD/manager dashboards and restricted actions**
-- HR grading, adaptation reviews, team control; direct object negative tests and protected result policy. Distinct business capabilities enforced for each operation.
+Цель исходящего транспорта — TLS443; конкретный managed tunnel может требовать другой порт/протокол, что проверяется до выбора. Существующий Xray разрешает Telegram-only egress; доступность Bitrix, edge и WhatsApp проверяется отдельно, без расширения proxy до общего VPN.
 
-**CON-05 — executive terminal escalations, reporting & WhatsApp gated adapter**
-- selective critical event policy, human escalation owner, acknowledgements and dashboards; WhatsApp added only if provider, regional delivery, privacy and acceptance are confirmed.
+Публичный HTTPS адрес нужен: браузер вне офиса должен куда-то обратиться. Он расположен на edge/провайдере, с доверенным сертификатом и ограниченными маршрутами. Пульт8443, SSH, Docker, ISPConfig, почта/DNS через этот edge не публикуются.
 
-**Release evidence for every slice:** exact SHA, unit/DB install+upgrade+repeat tests, ABI/contract tests, Playwright/webview where applicable, incident/retry replay, role matrix, log privacy, perf budget, runbook, migration/rollback, OPS-01/Fresh production preflight and signed owner acceptance. Context STATE/ACTIVE/BACKLOG/SESSION_LOG and code map update when an implementation is actually accepted, not upon this design PR.
+| Канал | Получение | UI/ограничения |
+|---|---|---|
+| Telegram | Сначала getUpdates long polling; позже webhook вместо него | Команды/кнопки/карточки и Mini App HTTPS; один активный consumer/token |
+| Bitrix24 | imbot.v2.Event.get FETCH при поддержке фактическим порталом; иначе callback на edge | Bot и поддерживаемый embedded UI, отдельная проверка редакции/сессии |
+| WhatsApp Business Platform | Provider-reachable HTTPS webhook на edge | Поддерживаемые сообщения/interactive формы и web links, не Telegram Mini App API |
+| Web/PWA | Edge→connector→facade | Те же данные и формы вне конкретного messenger |
 
-## 12. Open decisions requiring explicit acceptance
+Polling/webhook одного источника не включаются одновременно. При переключении сохраняются cursor/receipts и проверяются дубли; drop_pending_updates по умолчанию не применяется. Telegram не хранит неполученные updates дольше24ч: после длительного разрыва показывается gap, а бизнес-события восстанавливаются из Academy outbox. Для Bitrix используется его documented cursor contract, а не предположение о совпадении с Telegram.
 
-1. Public gateway: managed tunnel vs company-controlled reachable edge in Russia; domain and TLS trust; whether origin is allowed to serve full Moodle via secure proxy.
-2. User activation: initial bind from LAN vs secure public login; MFA/step-up policy.
-3. Which existing LMS/Bitrix/WhatsApp accounts and provider terms are available; Bitrix edition and CRM ownership.
-4. Personal data policy and approved cross-border disclosures/retention; template message content.
-5. SLA, quiet hours, thresholds, precise terminal CEO escalation graph.
-6. Development effort for full SCORM/Quiz mobile parity vs phased secure deep links.
-7. Whether minimal transport worker is managed by INF-06 operations panel for observability without inheriting its privileged operator permissions.
+## 4. Связь учёток, быстрый вход и отзыв
 
-## Official technology references
+### Первая привязка
 
-- Telegram Bot API: https://core.telegram.org/bots/api
-- Telegram Mini App validation: https://core.telegram.org/bots/webapps
-- Bitrix24 Bot v2 fetch: https://apidocs.bitrix24.ru/api-reference/chat-bots/chat-bots-v2/quick-start.html
-- Bitrix24 event delivery modes: https://apidocs.bitrix24.com/api-reference/chat-bots/chat-bots-v2/imbot.v2/events/index.html
-- Cloudflare Tunnel egress-only connectivity: https://developers.cloudflare.com/cloudflare-one/networks/connectivity-options/
-- Tailscale Funnel public reachability: https://tailscale.com/docs/features/tailscale-funnel
-- WhatsApp webhook payload/requirement via Meta Postman: https://www.postman.com/meta/whatsapp-business-platform/folder/tduohwq/webhook-payload-reference
+1. Сотрудник аутентифицируется в действительной Академии: LAN-сессия либо отдельно принятый публичный login flow. Одного доступа к messenger недостаточно.
+2. Академия выпускает challenge: случайный секрет не менее128бит, hash-at-rest, TTL10мин, конкретные channel/tenant и Moodle actor, лимит попыток.
+3. Пользователь подтверждает challenge из своего личного provider account. Группы/пересланные сообщения и подставленный user ID отклоняются. Bitrix учитывает tenant; WhatsApp phone/wa_id не связывается по совпадению номера в профиле.
+4. Академия показывает подтверждённую пару, пользователь подтверждает привязку. Перенос provider account на другого Moodle user требует отзыва прежней связи и новой проверки, не silent upsert.
+5. Worker не хранит пароль. Активный tuple (channel,tenant,subject) уникален; в первом релизе одна личная связь/user/channel.
 
-_Design-only PR: source inventory + external documentation informed RFC, no platform provisioning, secrets, runtime or schema changes._
+Первый вход сотрудника вне LAN без прежней привязки требует доверенного public auth flow Академии. Пароль не собирается в чате. HR invitation — приглашение к проверяемой активации, не доказательство личности само по себе.
+
+### Сессии
+
+Telegram initData проверяется сервером по official HMAC либо Ed25519 third-party алгоритму, bot identity, auth_date и ограниченному окну; дополнительно session challenge/replay protection. initDataUnsafe не является доказательством. Выбранный алгоритм фиксируется при реализации; third-party signature позволяет verifier не получать bot token.
+
+Проверенный provider proof + активная связь разрешаются в актуального Moodle actor. Предлагаются Connect-сессии15мин idle/8ч absolute с server-side revocation. Для web — Secure/HttpOnly cookie; SameSite/embedding отдельно проверяются в Telegram WebView и Bitrix iframe. При блокировке third-party cookies Bitrix открывает защищённую top-level форму. Секреты не хранятся в localStorage/query-string/messages/сторонней аналитике.
+
+Быстрый переход в полную Академию требует **нового отдельного auth handoff**: одноразовый ticket TTL60с, binding к browser/session nonce и относительной разрешённой цели, POST exchange в доверенном Moodle auth handler, затем обычная Moodle-сессия. State/nonce и browser binding защищают от login CSRF и пересылки билета. Не передавать Moodle cookie из worker и не применять общий admin token. Это proposed contract, не существующий endpoint.
+
+Оценивание, кадровые решения и массовые назначения требуют свежего step-up и явного подтверждения цели/значений; предлагается окно5мин с binding к команде. Наличие MFA в Академии проверяется отдельно: TOTP пульта не равен Moodle MFA. До принятого step-up такие действия ведут в существующий защищённый UI.
+
+«Учётные данные» показывают логин, имя, должность/подразделение, состояние и безопасное восстановление. Действующий пароль не читается и не отправляется. Username messenger, должность и переключение вида UI не дают capabilities.
+
+### Отзыв
+
+На каждом read/write и перед sensitive delivery: current deleted/suspended, employment, capability, scope, link/session state. При HRD→HR, увольнении, смене подразделения/ACTING, unlink и инциденте отзываются связанные сессии/pending actions. Под lock/транзакцией перед mutation проверка повторяется. Старый callback не сохраняет прежние полномочия. Transport credential не заменяет user step-up.
+
+## 5. Роли и сценарии
+
+Матрица — продуктовый scope, а не автоматический grant. Все роли сохраняют свои личные сценарии; совмещение ролей объединяет разрешённые возможности, view-as остаётся read-only.
+
+| Профиль | Чтение/уведомления | Разрешённые действия |
+|---|---|---|
+| Сотрудник | Мой маршрут/следующий шаг, результаты, задачи, чек-листы, напоминания | Свои отчёты/ответы/подтверждения; быстрый вход; нет чужих данных |
+| Руководитель | Текущее подразделение/поддерево, просрочки и проверки, собственные уровни эскалаций | Review/назначения/remediation по доменным правам; без HRD решений и выхода из scope |
+| HR | Очередь аттестаций, опубликованные материалы активных маршрутов, разрешённые профили и сводки | Ручная оценка при hr_access::can_grade; остальные команды по capability; ограничения recruiter сохранены |
+| HRD | Разрешённый HR-контур, adaptation decisions, HRD escalation inbox и company summaries | manageadaptation/approvals/private analytics только по явным правам; не Moodle superuser |
+| Гендиректор | Company dashboard и только конечные исключения | Company-read не даёт HRD write или private development answers; промежуточных reminder push нет |
+
+[Матрица реальных writers и API](USTAR_CONNECT_CONTRACTS_20261019.md). HR сегодня может иметь company-read по действующему map: не сужать/расширять его по одному ярлыку. HR/HRD материалы выдаются через content/File API с published version/cycle. Оценка относится к finished attempt и canonical grading writer, а не к баллу из messenger.
+
+Один mobile-first UI: «Сейчас», «Обучение», «Задачи/чек-листы», «Результаты», «Уведомления»; team/HR/company разделы появляются по правам. Простая команда — кнопка/подтверждение, сложная форма/график — общий защищённый web UI. ACL проверяется и по прямому API/URL. Карточки показывают source time и неизвестность данных явно. Личные HR-результаты не выводятся в общий chat.
+
+CRM предварительно означает Bitrix24 CRM: контакты/сделки/активности и ACL остаются в Bitrix, write требует проверенной Bitrix identity и provider authorization. Сервисная CRM-учётка не получает права «от имени любого сотрудника». Если имеется в виду собственный процесс Академии, до разработки назвать сущности/владельца данных; вторую CRM-БД заранее не создавать.
+
+## 6. Согласованность, команды и доставка
+
+«Синхронная архитектура» — одно каноническое состояние во всех клиентах. Reads/commands идут в Академию, mutation возвращает её receipt/revision. Доставка по внешним сетям асинхронна; распределённая транзакция с тремя провайдерами и exactly-once отправка не обещаются.
+
+Business writer/transaction → canonical notification/outbox → worker → provider receipt. Основа — local_ustar_notifications и local_ustar_notify_delivery, не новый центр уведомлений. Core Moodle notifications имеют свой namespaced source ID: одинаковые числовые ID не смешиваются.
+
+Delivery уже имеет unique (notificationid,channel), attempts, nextattempt, providerref, lasterror. Для одного endpoint/channel это основа. Нужные lease/cancellation/transport receipts добавляются после schema-delta review. Старые Bitrix pending/disabled не включать массово: сначала история legacy worker. Неактивный новый канал показывает disabled, не fake pending/delivered.
+
+Provider update: проверка происхождения → bounded parse → durable dedup (provider,tenant,event_id) → cursor confirmation. Webhook2xx подтверждает приём, не бизнес-успех. Интерактивные mutations имеют expires_at и expected_revision: просроченный запрос не выполняется молча после ночного восстановления связи.
+
+Command key связывается с actor/target/op и hash нормализованного payload. Тот же ключ с другим payload — conflict; одинаковый повтор возвращает прежний receipt. Двойное действие из разных каналов дополнительно проверяет domain revision/state под lock, поэтому разные update IDs не создают вторую оценку.
+
+Delivery worker: lease, bounded retry/backoff/jitter/Retry-After, сроки и dead-letter. Timeout после send может означать uncertain outcome и повтор видимого сообщения: это отмечается, а не объявляется exactly-once. Перед retry заново проверяются recipient, права и актуальность события.
+
+provider_accepted / delivered / read / acknowledged / business_resolved — разные факты. Telegram API success не доказывает чтение; кнопка «Принял» не закрывает бизнес-просрочку. После решения в Академии старые кнопки во всех каналах отвергаются, update/edit карточки — best effort.
+
+Preferences: основной канал/fallback, opt-in, категории, urgency, digest/repeat, quiet hours/timezone. Default — Academy inbox + выбранный основной канал, без тройного fan-out. Обязательные бизнес-уведомления и critical exceptions определяет принятая policy; выключение push не отменяет саму эскалацию.
+
+## 7. Эскалации и гендиректор
+
+Существующий task policy задаёт direct120 / parent540 / hrd1080 рабочих минут и durable task_escalations. Это defaults задач, а не универсальные сроки всех учебных/HR доменов. Assessment/adaptation сохраняют собственные lifecycle/policies. Connect не создаёт второй scheduler по Telegram.
+
+Конечный CEO-уровень — **новое расширение предметных политик**, его нет в текущем recipient enum. Предлагается:
+
+1. Normal overdue остаётся сотруднику/руководителю/HRD.
+2. После HRD-уровня case становится terminal_candidate только при открытой проблеме, истёкшем настраиваемом grace и разрешённой executive категории.
+3. HRD может решить, назначить ответственного/срок либо обоснованно отложить до ограниченного времени. Acknowledgement не закрывает case навсегда.
+4. Передача CEO автоматическая после grace либо по HRD confirmation, согласно опубликованному режиму. До выбора категорий/сроков/режима CEO delivery disabled; catch-all всех просрочек отсутствует.
+5. CEO видит масштаб/подразделение, ответственного, срок, состояние решения и защищённую ссылку. Private answers/рефлексии не включаются в chat.
+6. Dedup — object+cycle+terminal policy revision+recipient; решение создаёт recovery/update case.
+
+Transport acknowledgement/delivery общие, но business deadlines/transitions/recipients принадлежат исходному домену. Отсутствующий manager — явная HRD exception queue с audit, не адресат, угаданный по имени или строке должности.
+
+## 8. Mini App, материалы и полный LMS
+
+Первый внешний Mini App: route/results read, разрешённые файлы/видео с авторизацией и range streaming, task/checklist quick forms, HR inbox. Те же writers: «просмотрено» не становится Quiz/SCORM completion. Moodle File API проверяет actor/context/version; private file не копируется в Telegram CDN для обхода доступа.
+
+Upload — owner-bound draft area, bounded type/size/target и финализация канонической командой. Нет приватного service-worker cache, offline grading и независимой синхронизации прогресса в первом релизе.
+
+Полный Quiz/SCORM требует отдельного gate: доступный trusted Moodle HTTPS origin, auth handoff, canonical wwwroot, cookies/redirects/absolute links, pluginfile, uploads/range, CSP/iframes и WebView. Второй случайный hostname и HTML URL-rewrite не обеспечивают эту совместимость.
+
+Нужно отдельно сохранить офисную доступность при выборе общего canonical hostname: split DNS/local TLS возможен, но требует согласованного инфраструктурного плана. Если офисный DNS/origin менять нельзя, первый внешний срез остаётся узким Mini App; весь SCORM не объявляется доступным. Это часть будущего INF-07 Academy HTTPS; работающий сертификат пульта её не закрывает.
+
+## 9. Сбои, приватность и наблюдаемость
+
+| Сценарий | Обязательное поведение |
+|---|---|
+| Forged callback/initData/tenant | Отказ до actor resolution |
+| Увольнение, HRD→HR, новый отдел | Current rights и revoke, в том числе перед sensitive send |
+| Replay/double tap/lost response | Inbox dedup + command receipt + domain revision/lock |
+| Компрометация edge | Нет admin credential или generic LAN proxy; user step-up и domain ACL сохраняются |
+| Нет связи edge/provider | LAN работает; внешний UI offline/stale, outbox bounded retry, без ложного успеха |
+| Send timeout после фактической отправки | uncertain delivery; business mutation не повторяется |
+| Нагрузка/upload | Лимиты, pagination, timeouts и resource budget; сеть не блокирует Moodle cron |
+
+До activation определяются допустимые данные/обработчики, retention, opt-in и чувствительные категории. Не делать без проверки категорических региональных/правовых заявлений. Для WhatsApp фактически проверяются account/number/API eligibility, доставка, текущие шаблонные/тарифные ограничения и поддерживаемые interactions. WhatsApp Web session automation не входит в проект.
+
+Connect health: last receive/send, cursor lag/gap, outbox age/depth, retries/uncertain/dead-letter, rejected/replayed command counts, latency/error, connector state/version. Только агрегаты/request IDs/reason codes, без token/password/initData/текста личных ответов. Пульт может читать узкий health snapshot, не бизнес-права. Heartbeat и текущий journal bug отдельно deferred.
+
+## 10. Срезы поставки
+
+| Срез | Результат | Acceptance |
+|---|---|---|
+| CON-00, текущий | Review этой спецификации, contracts и legacy evidence | Определены Bitrix edition/CRM meaning/edge constraints; code не начат |
+| CON-01 | Academy link/revoke, один Telegram business bot, route/results/tasks и уведомления | Negative ACL/replay/revocation, отдельный token от INF-06, offsets recovery |
+| CON-02 | Общая доставка/preferences/ack и Bitrix adapter | Одна история из двух каналов, retry/uncertain, фактический portal API |
+| CON-03 | Public HTTPS edge и общая Mini App/PWA с быстрыми действиями | Office/home/mobile TLS/auth, никаких route/DNS изменений connector, disconnect/rollback сохраняют LAN |
+| CON-04 | HR/HRD/manager формы и native LMS handoff/полное обучение | Step-up, files/cookies/Quiz/SCORM, отдельный canonical origin/network gate |
+| CON-05 | Terminal CEO policies и WhatsApp adapter | Приняты категории/grace/режим и provider eligibility/реальная доставка |
+
+Каждый code slice: exact SHA; XMLDB fresh/upgrade/repeat; role/scope/File negative tests; concurrency/replay/network fault; browser/WebView; provider fixture и реальный receiver ACK отдельно; latency/load budget; runbook/rollback и owner receipt. Эти gates не приписываются дизайну заранее. Moodle/PG upgrade для проекта не нужен.
+
+## 11. Решения для review
+
+- Bitrix cloud/box, редакция/доступность imbot.v2 и app permissions.
+- CRM — Bitrix deals/contacts либо названный собственный процесс.
+- Edge — допустимое размещение/домен/TLS, достижимость из офиса и мобильных сетей, кто сопровождает.
+- Допустим ли будущий canonical Academy hostname/DNS/TLS план при сохранении LAN; узкий API этого не требует.
+- CEO terminal категории, grace и automatic/manual режим.
+- Безопасно полученные source/dependencies/hash legacy handler; файл не исполнять ради аудита.
+
+После review можно готовить implementation plan CON-01. Этот PR не создаёт credentials, внешние аккаунты, сервисы или таблицы.
+
+## 12. Первичные источники, проверены19Oct2026
+
+- [Telegram Bot API: polling/webhook, offsets, retention](https://core.telegram.org/bots/api#getting-updates).
+- [Telegram Mini Apps: initData и signatures](https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app).
+- [Bitrix24 Event.get: FETCH/cursor](https://apidocs.bitrix24.com/api-reference/chat-bots/chat-bots-v2/imbot.v2/events/event-get.html).
+- [Bitrix24 register и eventMode](https://apidocs.bitrix24.com/api-reference/chat-bots/chat-bots-v2/imbot.v2/bots/bot-register.html).
+- [Meta official WhatsApp collection: webhook](https://www.postman.com/meta/whatsapp-business-platform/folder/tduohwq/webhook-payload-reference).
+- [Cloudflare Tunnel: пример outbound-only connectivity](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/).

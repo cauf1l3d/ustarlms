@@ -6,7 +6,7 @@
 
 Подтверждены: расширение SSD11Oct, Moodle5.1.8/повторный upgrade/краткая браузерная приёмка13Oct, AppArmor и host updates/reboot14Oct. Архив копии получен и инструкция передана сисадмину; результата нового восстановления ещё нет. Переход на **Moodle5.2 и PostgreSQL17 отложен**.
 
-Следующий этап — [пульт управления с Telegram](context/runtime/control_panel_telegram_20261016.md): метрики, алерты, выдача актуального завершённого бэкапа и управляемые операции Академии. Прототип в PR103; backend и бот пока не внедрены.
+Текущий этап19Oct — [USTAR Connect](context/proposals/USTAR_CONNECT_RFC_20261018.md), единая архитектура бизнес-бота Telegram/Bitrix24/WhatsApp и внешних Mini Apps с правами Академии. PR106 design-only. [Владелец проверил](context/runtime/connect_owner_priority_20261019.json) учётки пульта и личную Telegram-привязку; journal/heartbeat отложены. Рабочая поставка пульта находится в unmerged PR103; это уже не только прототип. Полная приёмка и точный native source hash отдельно не заявлены.
 
 ## Работа с репозиторием
 

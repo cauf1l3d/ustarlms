@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-19'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -98,7 +98,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии
-  status: ready
+  status: deferred
   depends_on:
   - DOC-03
   acceptance:
@@ -112,9 +112,26 @@ tasks:
   - Independent observer verifies loss of host and delivery; retention/resources bounded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
-  owner_priority: next_after_repository_reconciliation_20261016
-  current_summary: Прототип PR103 сохранён. Backend/auth/collectors/jobs/bot и проверенная доставка ещё не
-    внедрены; начинать с read-only среза и защищённого доступа.
+  owner_priority: residual_explicitly_deferred19Oct0041
+  current_summary: PR103 contains verified console releasee5b87818/contextde4544d9. Owner19Oct0041 confirms accounts and
+    personal Telegram link work;journal still shows old message. Journal/heartbeat deferred,not fixed;full acceptance
+    and exact native source hash not claimed. Current work is INTEGRATIONS01 design.
+  validation_evidence:
+  - context/runtime/connect_owner_priority_20261019.json
+- id: INF-06-OPS
+  title: Отдельная эксплуатационная приёмка и расширения пульта
+  status: planned
+  depends_on:
+  - INF-06
+  acceptance:
+  - Independent host-loss observer and external probe separately selected and accepted
+  - Native role denial/download/jobs/overhead tested in their agreed scope
+  - Home access separately selected without destabilizing existing networking
+  - Restore/RTO remains OPS-02;console operation is not full disaster recovery
+  spec: context/runtime/control_panel_telegram_20261016.md
+  preserved_from_PR: 103
+  current_summary: Preserve the existing PR103 follow-up task;owner19Oct deferred journal/heartbeat.
+    No implicit restart of console work;current priority INTEGRATIONS01 design.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned
@@ -422,11 +439,22 @@ tasks:
   - Focused regression and exact release gate; maturity changes after acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INTEGRATIONS-01
-  title: Внешняя доставка Bitrix и новые интеграции
-  status: deferred
+  title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
+  status: in_progress
   depends_on: []
-  reason: No claim of working external delivery; separate approved contract required
+  phase: CON-00_design_only
+  owner_priority: explicit_request19Oct0049
+  current_summary: Expand PR106 using existing Academy domains;no subagents or product/network/schema changes.
+  acceptance:
+  - One current Academy actor/capability/scope across channels;operator console identity remains separate
+  - Role API/event/delivery/escalation and external edge contracts documented with source anchors
+  - Legacy file metadata distinguished from unread source;safe migration and old pending/consumer gates explicit
+  - Public Mini App and full Moodle origin gate distinguished;office and home routing stability preserved
+  - Owner review of proposed design before implementation plan;provider/CRM/CEO decisions explicit
+  spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
   reference: context/architecture/notification_delivery_20260928.md
+  validation_evidence:
+  - context/runtime/connect_owner_priority_20261019.json
 - id: DOC-03
   title: Сверка работ06–16Oct и консолидация GitHub
   status: done
@@ -441,10 +469,11 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: repository_consolidation_then_INF06_no_repeat_of_accepted_host_or_Moodle_patch
+execution_gate: INTEGRATIONS01_design_only_no_repeat_of_accepted_operations
 owner_selected_order:
 - DOC-03
 - INF-06
+- INTEGRATIONS-01
 - OPS-02_external_result_when_received
-latest_owner_priority: '16Oct00:20MSK: consolidate GitHub and audit; next INF06 panel+Telegram; OPS02 waiting
-  sysadmin; Moodle5.2/PG17 deferred'
+latest_owner_priority: '19Oct00:49MSK: unified Academy bot architecture in PR106;accounts/link accepted0041;
+  journal/heartbeat deferred;no subagents without agreement;OPS02 waiting;Moodle5.2/PG17 deferred'

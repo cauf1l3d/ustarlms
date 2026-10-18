@@ -1477,3 +1477,17 @@ Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; nativ
 Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.
 
 Полный RC теперь определяется сохранёнными метками PR на каждом synchronize/reopened, а не только событием первоначального labeled: новый коммит не может незаметно пропустить DB/rollback после добавления full-rc. Pre-merge main зафиксирован как c53723c8; исторический application baseline e1d57f5b остаётся отдельным.
+
+## 2026-10-19 — owner partial acceptance пульта и приоритет USTAR Connect
+
+Owner00:41МСК подтвердил учётные записи и personal Telegram link. Journal всё ещё показывает прежнее сообщение; journal/heartbeat явно отложены. Полная приёмка, все alert cases и exact native SOURCE_COMMIT из этого сообщения не следуют. Ожидаемый release из предыдущей поставкиe5b87818, contextde4544d9/PR103; предыдущие даты/receipts сохранены внешними точными ссылками.
+
+Owner00:49 поручил актуализировать GitHub и доработать архитектуру общей сетки ботов: Moodle identity/roles, HRD/HR/manager/CEO/employee scopes, notifications/escalations, внешний Mini App без входящих портов и нарушения home/server networking. Субагенты запрещены без предварительного согласования и обоснования; в этой задаче0.
+
+Прочитаны PR106/7e6fc66d RFC+legacy, PR103/de4544d9 и PR105/02fd394f; проверены реальные access_context/capabilities/hr_access, manual_grade_batch, task escalation defaults и notification schema. HR performance review не подменяет Quiz grading. PR105 содержит dated17Oct metadata legacy handler22630байт/hash12bbb142; owner find подтверждает нынешний path/size, не содержимое/hash. Handler не исполнялся, source не получен.
+
+[RFC редакция2](../proposals/USTAR_CONNECT_RFC_20261018.md), [контракты19Oct](../proposals/USTAR_CONNECT_CONTRACTS_20261019.md), [reuse](../proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md) и [receipt](../runtime/connect_owner_priority_20261019.json) обновляют INTEGRATIONS-01/CON-00. Дизайн: facade + один transport worker + узкий исходящий edge; единый business state/outbox; current actor/revocation, role matrix, command idempotency, HRD/CEO policy, полный LMS origin как отдельный gate. Bitrix edition/CRM meaning/edge placement/terminal timings остаются решениями review.
+
+Это docs-only: Moodle526/schema93, production, сеть, credentials, cron и роли не изменялись. Journal не исправлялся, heartbeat не подключался. Implementation и provisioning не начаты; текущая очередь не возвращается к устаревшему INF06-start. main не merged, PR106 остаётся draft.
+
+Сохранена уже существующая в PR103 follow-up задача INF-06-OPS: roadmap34 вместо33 в старой базе main; task не потерян при актуализации. Source/schema inventories regenerated; локально r16:545tests OK/19environment skips. Context/relative links/source anchors/secret patterns/diff проверены; это проверки документации/существующего кода, не тесты ещё не реализованных Connect features.

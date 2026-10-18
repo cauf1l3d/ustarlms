@@ -1,5 +1,9 @@
 # Реестр кода, проверок и deployment evidence
 
+## Уточнение19Oct2026 — accounts/link приняты в сообщённом объёме
+
+[Owner receipt00:41МСК](connect_owner_priority_20261019.json): учётки пульта и personal Telegram link работают, service journal показывает прежнее сообщение. Journal/heartbeat отложены. Exact native SHA, полная role/alert/restore приёмка не сообщены. Проверенный release sourcee5b87818/contextde4544d9 находится в PR103; исходники/CI не подменяют native evidence. Owner00:49 выбрал [Connect architecture/PR106](../proposals/USTAR_CONNECT_RFC_20261018.md), design-only; deployment/merge/сеть/БД агентом не менялись.
+
 Сводка Git/CI от 02.10.2026; дополнено owner runtime evidence 05.10.2026. Application source в main консолидирован на PR76 `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. История main сохранена: прежний main `99248772a91526c87c1a31f425d1a07906727152` является предком этого SHA. Полный CI #456 проверен через GitHub API: **source, frontend, rollback, prepare-rc, moodle-db, gate — success**. [Run](https://github.com/cauf1l3d/ustarlms/actions/runs/37023122306). Счётчики из описания PR76: 210 Moodle tests / 891 assertions, 60 Chromium scenarios; это CI на synthetic данных.
 
 ## Последние версии

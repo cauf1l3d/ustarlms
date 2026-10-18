@@ -1,6 +1,6 @@
 # USTAR инструкции агентам
 
-Текущая инструкция владельца16Oct00:20MSK: актуализировать GitHub и сверить работу с06Oct с аудитом. Архив получен, инструкция передана сисадмину, результат восстановления ожидается. Следующий этап — пульт с Telegram. **Moodle5.2/PostgreSQL17 отложены.** Старые поручения запускать storage/patch/reboot или подготовку5.3 не являются текущей задачей.
+Текущая инструкция владельца19Oct00:49МСК — актуализировать GitHub и доработать архитектуру единого бота Академии в PR106. [Запрос/результаты пульта](context/runtime/connect_owner_priority_20261019.json), [RFC](context/proposals/USTAR_CONNECT_RFC_20261018.md). Учётки пульта и Telegram-привязка проверены владельцем; journal остаётся неисправленным, journal/heartbeat явно отложены. Не возвращаться к ним вместо новой задачи. **Субагентов не запускать без предварительного согласования с владельцем и чёткого обоснования; в этой задаче запрещены.** Moodle5.2/PG17 и sysadmin restore сохраняют прежний статус.
 
 ## Перед работой
 
@@ -26,4 +26,4 @@
 
 ## Следующая задача
 
-[INF-06 пульт и Telegram](context/runtime/control_panel_telegram_20261016.md): same-host, логин/пароль, Linear style, метрики/свежесть, адреса/сроки стендов, SFTP, ручные backup/restore, алерты и выдача последнего проверенного зашифрованного архива. Сначала защищённый read-only срез; операции — через ограниченные проверенные adapters, не произвольный shell. Runtime acceptance на настоящем сервере остаётся отдельной.
+[INTEGRATIONS-01 / CON-00](context/proposals/USTAR_CONNECT_RFC_20261018.md): один business contract, текущая Moodle identity/capabilities/scope, transport adapters и узкий внешний edge. Сохранить существующие domain writers/эскалации; server-console accounts/token не являются Academy auth. Legacy handler найден владельцем, но его source ещё не прочитан; не выполнять его при аудите и не публиковать секреты. Пока design-only, без изменения сети, ролей, schema или production. Новый implementation plan — после review проекта.

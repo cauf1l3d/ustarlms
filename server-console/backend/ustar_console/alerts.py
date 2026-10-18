@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 import re
 import sqlite3
+import stat
+import struct
 import time
 
 from .data import snapshot, safe_json, stamp
@@ -218,12 +220,51 @@ def updates(queue, api, users, chats, data, origin):
         offset=uid+1
 
 
+def private_credential(descriptor, info):
+    mode = stat.S_IMODE(info.st_mode)
+    if mode in (0o400, 0o600):
+        return True
+    # systemd254+ grants the service UID read access through a named-user ACL.
+    # Its ACL mask appears as group-read in stat, while group:: and other:: are ---.
+    if mode != 0o440:
+        return False
+    try:
+        acl = os.getxattr(descriptor, 'system.posix_acl_access')
+    except (OSError, AttributeError):
+        return False
+    if len(acl) not in (44, 52) or struct.unpack_from('<I', acl)[0] != 2:
+        return False
+    required = {1: 4, 4: 0, 16: 4, 32: 0}
+    base, readers = {}, set()
+    for tag, permissions, principal in struct.iter_unpack('<HHI', acl[4:]):
+        if tag == 2:
+            if principal not in (0, os.geteuid()) or principal in readers or permissions != 4:
+                return False
+            readers.add(principal)
+        elif (tag not in required or tag in base or principal != 0xffffffff
+              or permissions != required[tag]):
+            return False
+        else:
+            base[tag] = permissions
+    return bool(readers) and base == required
+
+
 def config(path):
-    # LoadCredential copies a root-private token to a private per-service path.
-    info=path.lstat()
-    if not path.is_file() or path.is_symlink() or info.st_uid not in (0,os.geteuid()) or info.st_mode&0o077 or info.st_size>8192:
-        raise ValueError('Untrusted Telegram credentials')
-    value=json.loads(path.read_text())
+    # Inspect and read the same regular inode; never follow the final symlink.
+    try:
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except OSError:
+        raise ValueError('Untrusted Telegram credentials') from None
+    with os.fdopen(descriptor, 'rb') as stream:
+        info = os.fstat(stream.fileno())
+        if (not stat.S_ISREG(info.st_mode) or info.st_nlink != 1
+                or info.st_uid not in (0, os.geteuid()) or info.st_size > 8192
+                or not private_credential(stream.fileno(), info)):
+            raise ValueError('Untrusted Telegram credentials')
+        raw = stream.read(8193)
+        if len(raw) > 8192:
+            raise ValueError('Untrusted Telegram credentials')
+    value=json.loads(raw)
     if set(value) not in ({'token','users','chats'},{'token','users','chats','proxy'}):
         raise ValueError('Invalid Telegram configuration')
     validate_proxy(value.get('proxy'))

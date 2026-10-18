@@ -498,8 +498,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 16839,
-      "sha256": "953c02effcca1e4e846cc277899cad229cb0284d58c54332bd0a2b696e9786cb"
+      "size": 17365,
+      "sha256": "ca29c118b57df26f9b6bd6ef12651ffbe3d0f7830cb41dc4da982ea4d8781587"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 32674,
-      "sha256": "a5e3ffc57c9ab177aad83af9a1093fb5070e976ebe438ed7b0dad6c53a5122fe"
+      "size": 33158,
+      "sha256": "b9beecee1152adb806c2f1687defcd341e9639ac6aa9dfc59506c30a76147d24"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 168177,
-      "sha256": "6f5de1cbc9697c28f79e9d84be2669d7800d347f38fbdc3fe8f11db218a284c8"
+      "size": 170063,
+      "sha256": "1cfa916130f59abc51a45c9f1e97e2481587ae1db6e4747129515db453180652"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,8 +924,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 20790,
-      "sha256": "21e03bfec05874fc655421c3dfed6ff2ab8dcf31cfab8c8c03c518d3ad3350a0"
+      "size": 21372,
+      "sha256": "29a7e9a0139736c1a373bfc538f47e2cfe015087c884b8acefef44b6bc331481"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1014,8 +1014,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 6806,
-      "sha256": "9541e7a8308efbf49e6e30383ee3a1f31c3c2544168fae0425f76013fc49773f"
+      "size": 6915,
+      "sha256": "60d1bd985e087c1fcd3a1c61736379a963b1344e96a5d5d0a12fb1cde0ba4840"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -1088,6 +1088,12 @@
       "domain": "runtime",
       "size": 3366,
       "sha256": "c722a692b30e0d121352afd212949fbb8a2b35b816a33404903f3ae84af02e2e"
+    },
+    {
+      "path": "context/runtime/console_telegram_native_20261018.json",
+      "domain": "runtime",
+      "size": 3624,
+      "sha256": "e85a27c3854f11e7361636469fa1da15bea14cbce8fc40acf1f510b3546ed556"
     },
     {
       "path": "context/runtime/console_telegram_network_20261018.json",
@@ -2142,8 +2148,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 9919,
-      "sha256": "2d55b60f2e51ed25dfd50233c63895ee9bcf7ebee3d23746e950bd4d50ac01d6"
+      "size": 10807,
+      "sha256": "eae9ee5b05a7fdf3f9cf54658f715793bba5823c225a8641bf47072874c18eac"
     },
     {
       "path": "context/tasks/backlog.yaml",

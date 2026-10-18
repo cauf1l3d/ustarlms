@@ -10,6 +10,7 @@ import time
 import grp
 import sys
 import sqlite3
+import textwrap
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'backend'))
 from ustar_console.setup import certificate,save
 
@@ -105,6 +106,53 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
             time.sleep(.2)
         assert ready,run('journalctl','-u','ustar-console.service','-n','30','--no-pager').stdout
         assert Path('/run/ustar-console-data/history.json').is_file()
+        # Exercise real PID1 LoadCredential as the static notifier user with the
+        # shared console group. Network replies are synthetic; credentials/ACL,
+        # state directories, snapshot access and the first worker cycle are real.
+        credential=Path(directory)/'telegram-fixture.json'
+        credential.write_text(json.dumps(dict(token='123456789:'+('x'*35),users=[123],chats=[123])))
+        credential.chmod(0o600)
+        notifier_probe=textwrap.dedent('''
+            import json,os,stat
+            from pathlib import Path
+            from ustar_console import alerts
+            credential=Path(os.environ['CREDENTIALS_DIRECTORY'])/'telegram'
+            value=alerts.config(credential)
+            assert value['users']==value['chats']==[123]
+            assert os.geteuid()!=0
+            mode=stat.S_IMODE(credential.stat().st_mode)
+            assert mode in (0o400,0o440)
+            calls=[]
+            def api(self,method,data):
+                calls.append(method)
+                if method=='getWebhookInfo': return {'url':''}
+                if method=='getUpdates': return []
+                if method=='sendMessage': return {'message_id':1}
+                raise AssertionError('Unexpected fixture method')
+            alerts.Telegram.__call__=api
+            class EndCycle(Exception): pass
+            def stop(seconds): raise EndCycle
+            alerts.time.sleep=stop
+            try: alerts.main()
+            except EndCycle: pass
+            assert calls[0]=='getWebhookInfo' and 'getUpdates' in calls
+            status=json.loads(Path('/run/ustar-console-notify/status.json').read_text())
+            assert status['polling']==status['evaluation']=='ok'
+            print('CONSOLE_NOTIFIER_LOADCREDENTIAL=PASS; static service user; first cycle; mode='+oct(mode))
+        ''')
+        probe=run('systemd-run','--quiet','--wait','--pipe','--collect',
+            '--unit=ustar-console-notifier-credential-fixture',
+            '--property=User=ustar-notify','--property=Group=ustar-console',
+            '--property=LoadCredential=telegram:'+str(credential),
+            '--property=UMask=0077','--property=ProtectSystem=strict',
+            '--property=ProtectHome=yes','--property=NoNewPrivileges=yes',
+            '--property=CapabilityBoundingSet=',
+            '--property=StateDirectory=ustar-console-notify','--property=StateDirectoryMode=0700',
+            '--property=RuntimeDirectory=ustar-console-notify','--property=RuntimeDirectoryMode=0750',
+            '/opt/ustar-console/venv/bin/python','-c',notifier_probe)
+        assert 'CONSOLE_NOTIFIER_LOADCREDENTIAL=PASS' in probe.stdout
+        print(probe.stdout.strip())
+        credential.unlink()
         for private in ('/etc/ustar-console/authority/ca.key','/var/lib/ustar-console-ops/jobs.sqlite3'):
             assert run('runuser','-u','ustar-console','--','test','-r',private,check=False).returncode!=0
         reply=run('runuser','-u','ustar-console','--','/opt/ustar-console/venv/bin/python','-c',

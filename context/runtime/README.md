@@ -29,3 +29,5 @@ Owner18Oct02:07MSK получил [санитизированный резуль
 Dated reports05–15Oct сохраняются. Их pending/next-step относятся к своей дате; текущая очередь — STATE/ACTIVE. Не повторять SSD growth, Moodle patch, AppArmor repair или host install/reboot.
 
 - [Проверенный Telegram/Xray выпуск18Oct](console_telegram_release_20261018.json): CI/artifact/source verification, не server1 acceptance.
+
+- [Native update/Xray и отказ notifier credential guard18Oct](console_telegram_native_20261018.json).

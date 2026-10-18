@@ -1642,3 +1642,21 @@ Handoff verification:5 Bash blocks pass bash -n; artifact updater/tools and whee
 Context/index/current/secret guards PASS,526 source/93 tables/33 tasks unchanged.
 Local system Python initially lacked mcp; pinned harness venv then ran577 tests OK (20 environment skips).
 No runtime source changed; approved executable artifact remains exact1f605e4d.
+
+
+## 2026-10-18 — INF-06: native update/Xray приняты, credential guard блокирует notifier
+
+Owner03:46MSK update1f605 PASS/checksum/PIP/localCA/fresh snapshot: HDD/capacity/backup/cron/PG OK, SMART warning partial.
+Xray12 secure/first candidate TLS302/active, private challenge ID и proxy wizard завершены; bot no reply.
+Owner03:49 sanitized diagnostic:notify9 restarts/auto-restart/exit1, ValueError credential_guard alerts225/262;
+Xray active0 restarts, proxytrue/allowlist1/matching. [Receipt](../runtime/console_telegram_native_20261018.json).
+Actual service inode mode/ACL не присланы; не приписывать их owner observation.
+Official systemd issue29435 объясняет root0440 ACL named-user с group::---/maskr--/other---.
+Локальный реальный POSIX ACL воспроизвёл прежний отказ; positive и hardlink regression RED, затем GREEN.
+Reader проверяет один O_NOFOLLOW/NONBLOCK FD, regular/singlelink/root-or-self/max8192; owner0400/0600 либо
+только narrow read-only ACL root/currentUID с нулевыми group/other, без широкого разрешения0440. Source0600 сохраняется.
+17 new credential cases/77 focused/192 backend PASS6.55s; native first-cycle installedwheel/static notifier UID/LoadCredential
+fixture добавлен, actual CI pending. Fresh reviewer Critical/Important0; independently17 ACL tests PASS.
+Deferred minor: malformed/duplicate synthetic ACL metadata и52-byte/two-reader case не имеют отдельных tests;
+kernel-validated ACL и проверенный parser fail closed; реальный типовой ACL покрыт.
+Новый source fix требует owner применения; receiver ACK не получен. Units/token/auth/CA/network/production не менялись агентом.

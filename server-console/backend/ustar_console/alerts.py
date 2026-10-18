@@ -185,13 +185,23 @@ class Telegram:
         return value.get('result')
 
 
-def updates(queue, api, users, chats, data, origin):
+def poll(queue, api):
     with queue.connect() as db:
         row=db.execute("SELECT value FROM settings WHERE key='offset'").fetchone()
     offset=int(row[0]) if row else 0
-    batch=api('getUpdates',dict(offset=offset,limit=20,timeout=0,allowed_updates=['message']))
+    # Telegram returns immediately when a message arrives. The bounded wait is
+    # shorter than our 8s HTTP socket timeout and keeps incident evaluation frequent.
+    batch=api('getUpdates',dict(offset=offset,limit=20,timeout=5,allowed_updates=['message']))
     if not isinstance(batch,list) or len(batch)>20:
         raise DeliveryError('invalid_updates')
+    return batch
+
+
+def updates(queue, api, users, chats, data, origin, batch=None):
+    if batch is None: batch=poll(queue,api)
+    with queue.connect() as db:
+        row=db.execute("SELECT value FROM settings WHERE key='offset'").fetchone()
+    offset=int(row[0]) if row else 0
     for update in batch:
         uid=update.get('update_id')
         if type(uid) is not int or uid<offset:
@@ -277,15 +287,24 @@ def config(path):
     return value
 
 
-def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False):
+def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False,refresh=None,refresh_maintenance=None):
+    # Pending incidents leave before the long poll, even if receiving commands fails.
+    markup=keyboard(origin if mini_app else None)
+    queue.deliver(api,reply_markup=markup)
+    try:
+        batch=poll(queue,api)
+        polling='ok'
+    except (DeliveryError,ValueError):
+        batch=[]
+        polling='no_data'
+    # Read after waiting: an old pre-poll snapshot can cross its freshness limit.
+    if refresh is not None: data=refresh()
+    if refresh_maintenance is not None: maintenance=refresh_maintenance()
     evaluation='ok'
     try:
         queue.evaluate(data,maintenance)
     except ValueError:
         evaluation='queue_capacity'
-    # Outgoing incidents continue even if command polling fails or the queue was full.
-    markup=keyboard(origin if mini_app else None)
-    queue.deliver(api,reply_markup=markup)
     display=dict(data,notifications=queue.status())
     display['checks']=[c.copy() for c in data['checks']]
     for row in display['checks']:
@@ -296,16 +315,23 @@ def iteration(queue,api,users,chats,data,origin,maintenance=None,mini_app=False)
         if row['key'] in ('cpu_sustained','ram_sustained','container_oom'):
             display['checks'].append(dict(id=row['key'],label=row['key'],domain='server' if row['key']!='container_oom' else 'academy',
                 status=row['state'],reason_code='sustained_rules'))
-    try:
-        updates(queue,api,users,chats,display,origin)
-        polling='ok'
-    except (DeliveryError,ValueError):
-        polling='no_data'
+    if polling=='ok':
+        try:
+            updates(queue,api,users,chats,display,origin,batch=batch)
+        except (DeliveryError,ValueError):
+            polling='no_data'
     queue.deliver(api,reply_markup=markup)
     status=queue.status()
     status.update(polling=polling,evaluation=evaluation)
     if evaluation!='ok': status['status']='warning'
     return status
+
+
+def read_maintenance():
+    try:
+        return safe_json(Path('/run/ustar-console-ops/status.json'),owner=0).get('maintenance')
+    except (OSError,ValueError):
+        return None
 
 
 def main():
@@ -318,16 +344,13 @@ def main():
         raise SystemExit('Existing webhook detected; use a dedicated bot. Nothing was changed.')
     queue=Queue(Path('/var/lib/ustar-console-notify/outbox.sqlite3'),value['chats'])
     while True:
-        data=snapshot(settings.snapshot)
-        try:
-            operations=safe_json(Path('/run/ustar-console-ops/status.json'),owner=0)
-            maintenance=operations.get('maintenance')
-        except (OSError,ValueError):
-            maintenance=None
-        status=iteration(queue,api,value['users'],value['chats'],data,settings.origin,maintenance,value.get('mini_app',False))
+        status=iteration(queue,api,value['users'],value['chats'],None,settings.origin,mini_app=value.get('mini_app',False),
+                         refresh=lambda:snapshot(settings.snapshot),refresh_maintenance=read_maintenance)
         target=Path('/run/ustar-console-notify/status.json')
         temporary=target.with_suffix('.tmp')
         temporary.write_text(json.dumps(status))
         os.chmod(temporary,0o640)
         os.replace(temporary,target)
-        time.sleep(10)
+        # Successful long polls provide the idle wait. Back off when reception fails;
+        # a short yield also bounds a stream of immediate/unsupported updates.
+        time.sleep(.2 if status['polling']=='ok' else 10)

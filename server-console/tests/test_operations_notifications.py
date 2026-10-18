@@ -192,7 +192,8 @@ def test_backup_latest_is_metadata_link_not_new_capture():
     assert 'key' not in reply and command_reply('/shell reboot',data,'https://console.test') is None
 
 
-def test_notification_worker_starts_and_publishes_status(tmp_path,monkeypatch,settings):
+@pytest.mark.parametrize('polling_fails',[False,True])
+def test_notification_worker_starts_and_publishes_status(tmp_path,monkeypatch,settings,polling_fails):
     from ustar_console import alerts
     from ustar_console import config as console_config
     credential=tmp_path/'credentials';credential.mkdir()
@@ -212,18 +213,22 @@ def test_notification_worker_starts_and_publishes_status(tmp_path,monkeypatch,se
     def request(self,method,data):
         calls.append((method,data))
         if method=='getWebhookInfo': return {'url':''}
-        if method=='getUpdates': return []
+        if method=='getUpdates':
+            if polling_fails: raise DeliveryError('transport_unavailable')
+            return []
         if method=='sendMessage': return {'message_id':1}
         raise AssertionError('Unexpected Bot API method')
     monkeypatch.setattr(alerts.Telegram,'__call__',request)
     class EndCycle(Exception): pass
-    def stop(seconds): raise EndCycle
+    sleeps=[]
+    def stop(seconds): sleeps.append(seconds);raise EndCycle
     monkeypatch.setattr(alerts.time,'sleep',stop)
     with pytest.raises(EndCycle): alerts.main()
     assert calls[0]==('getWebhookInfo',{})
     assert any(method=='getUpdates' for method,_ in calls)
     status=json.loads((tmp_path/'status.json').read_text())
-    assert status['polling']=='ok' and status['evaluation']=='ok'
+    assert status['polling']==('no_data' if polling_fails else 'ok') and status['evaluation']=='ok'
+    assert sleeps==[10 if polling_fails else .2]
     assert token not in (tmp_path/'status.json').read_text()
 
 

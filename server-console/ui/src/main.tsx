@@ -15,9 +15,14 @@ import {
   ArrowUpRight,
   ShieldCheck,
   LogOut,
+  Terminal,
+  BookOpen,
 } from "lucide-react";
 import { TimeChart as Chart } from "./charts";
 import { Operations } from "./operations";
+import { ThemeToggle } from "./theme";
+import { Knowledge } from "./knowledge";
+import { WebRequests, ServerLogs, WebObservation } from "./web-observability";
 
 type Check = {
   id: string;
@@ -62,6 +67,7 @@ type Backup = {
   recovery_marker_present?: boolean;
 };
 type Snapshot = {
+  web_observability?: WebObservation;
   observed_at: string | null;
   received_at: string;
   age_seconds: number | null;
@@ -149,6 +155,8 @@ const titles: Record<string, string> = {
   backups: "Бэкапы",
   labs: "Стенды",
   events: "События",
+  scripts: "Скрипты",
+  docs: "Документация",
 };
 const domains: Record<string, string> = {
   academy: "Академия",
@@ -540,6 +548,7 @@ function LoginScreen({
   );
 }
 function App() {
+  const [requestedAction, setRequestedAction] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null),
     [initial, setInitial] = useState(true),
     [notice, setNotice] = useState("");
@@ -913,6 +922,8 @@ function App() {
               DatabaseBackup,
               FlaskConical,
               Activity,
+              Terminal,
+              BookOpen,
             ][i];
             return (
               <button
@@ -1013,6 +1024,8 @@ function App() {
           </Empty>
         ) : (
           <>
+            {page === "scripts" && <Knowledge kind="scripts" request={api} role={session.role} available={!stale && !lost} onAction={setRequestedAction} />}
+            {page === "docs" && <Knowledge kind="docs" request={api} role={session.role} available={!stale && !lost} onAction={setRequestedAction} />}
             {page === "overview" && (
               <>
                 <div
@@ -1239,10 +1252,7 @@ function App() {
                     unit="мс"
                     series={series.http}
                   />
-                  <Empty title="Скорость запросов пользователей">
-                    p95, RPS и число ошибок появятся после подключения
-                    статистики веб-сервера. Синтетический запрос их не заменяет.
-                  </Empty>
+                  <WebRequests value={data.web_observability} available={!stale && !lost} />
                 </div>
                 {data.database && (
                   <section className="panel database-details">
@@ -1782,19 +1792,18 @@ function App() {
                     </Empty>
                   )}
                 </section>
-                <Empty title="Логи сервера ещё не подключены">
-                  Пульт не загружает сырые журналы: сначала должны быть
-                  настроены источники и удаление секретов.
-                </Empty>
+                <ServerLogs value={data.web_observability} available={!stale && !lost} />
               </>
             )}
-            {["academy", "backups", "labs", "events"].includes(page) && (
+            {["academy", "backups", "labs", "events", "scripts"].includes(page) && (
               <Operations
                 api={api}
                 csrf={session.csrf}
                 role={session.role}
                 page={page}
                 available={!stale && !lost}
+                requestedAction={requestedAction}
+                onRequestedHandled={() => setRequestedAction(null)}
               />
             )}
             <footer>
@@ -1948,4 +1957,4 @@ function ContainerTable({
   );
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(<><div className="theme-toolbar"><ThemeToggle /></div><App /></>);

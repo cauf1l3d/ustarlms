@@ -207,6 +207,17 @@ export function createPrototypeApi(
     }
     if (path === "password") throw new ApiError(403, null);
     if (path === "activity") return { status: "active" };
+    if (path === "knowledge") return {
+      source_commit: "7f8a614aeeec62a6f1f455331b78b6f1f1d81528",
+      generated_at: "2026-10-18T14:00:00Z",
+      scripts: [{ id: "demo-backup", title: "Резервная копия · демо", category: "Бэкапы и восстановление",
+        purpose: "Пример карточки скрипта. Это автономный макет, без подключения к серверу.",
+        effects: "Действия на сервере из макета не выполняются.", success: "Пример описания успешной проверки.",
+        server_path: "", source_path: "scripts/infra/hdd_backup.py", sha256: "" }],
+      documents: [{ id: "demo-doc", title: "Документация · демо", category: "Эксплуатация",
+        summary: "В установленном пульте здесь находятся документы из проверенного выпуска.",
+        source_path: "server-console/README.md", sha256: "", content: "# Документация\n\nЭто демонстрационный экран. В установленном пульте доступен поиск по документам конкретного выпуска." }]
+    };
     if (path === "overview") {
       const state = fixture();
       state.backup.completed_at = new Date(

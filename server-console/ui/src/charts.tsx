@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Activity, ChartNoAxesCombined } from "lucide-react";
+import { Activity, ChartNoAxesCombined, Maximize2, X } from "lucide-react";
 
 export type Series = {
   points: [number, number | null][];
@@ -27,23 +27,99 @@ const missing: Record<string, string> = {
   no_samples: "За выбранный период нет измерений",
 };
 
-export function TimeChart({
-  series,
-  label,
-  unit,
-  tone = "http",
-  companion,
-}: {
+type ChartProps = {
   series?: Series;
   label: string;
   unit: string;
   tone?: Tone;
   companion?: Series;
+};
+
+export function TimeChart(props: ChartProps) {
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState<string[]>([]);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open || !dialog.current) return;
+    const element = dialog.current;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    element.showModal();
+    return () => {
+      element.close();
+      document.body.style.overflow = overflow;
+      trigger.current?.focus({ preventScroll: true });
+    };
+  }, [open]);
+  return (
+    <>
+      <ChartView
+        {...props}
+        hidden={hidden}
+        setHidden={setHidden}
+        expandButton={
+          <button
+            className="chart-expand"
+            ref={trigger}
+            aria-label={`Увеличить график: ${props.label}`}
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            onClick={() => setOpen(true)}
+          >
+            <Maximize2 size={18} aria-hidden="true" />
+            Увеличить
+          </button>
+        }
+      />
+      {open && (
+        <dialog
+          ref={dialog}
+          className="chart-dialog"
+          aria-label={props.label}
+          onCancel={(event) => {
+            event.preventDefault();
+            setOpen(false);
+          }}
+          onClose={() => setOpen(false)}
+        >
+          <div className="dialog-head">
+            <span className="muted">Увеличенный график</span>
+            <button aria-label="Закрыть" onClick={() => setOpen(false)}>
+              <X size={24} aria-hidden="true" />
+            </button>
+          </div>
+          <ChartView
+            {...props}
+            hidden={hidden}
+            setHidden={setHidden}
+            expanded
+          />
+        </dialog>
+      )}
+    </>
+  );
+}
+
+function ChartView({
+  series,
+  label,
+  unit,
+  tone = "http",
+  companion,
+  expanded = false,
+  hidden,
+  setHidden,
+  expandButton,
+}: ChartProps & {
+  expanded?: boolean;
+  hidden: string[];
+  setHidden: React.Dispatch<React.SetStateAction<string[]>>;
+  expandButton?: React.ReactNode;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(480),
     [cursor, setCursor] = useState<number | null>(null);
-  const [hidden, setHidden] = useState<string[]>([]);
   useEffect(() => {
     if (!container.current) return;
     const observer = new ResizeObserver(([entry]) =>
@@ -84,7 +160,7 @@ export function TimeChart({
     right = 18,
     top = 20,
     bottom = 36,
-    height = 250;
+    height = expanded ? 420 : 250;
   const plotWidth = Math.max(1, width - left - right),
     plotHeight = height - top - bottom;
   const x = (t: number) => left + ((t - start) / duration) * plotWidth;
@@ -121,13 +197,20 @@ export function TimeChart({
   };
   const tickCount = Math.max(2, Math.min(5, Math.floor(plotWidth / 90) + 1));
   return (
-    <section className={"chart panel chart-" + tone}>
+    <section
+      className={
+        "chart panel chart-" + tone + (expanded ? " chart-expanded" : "")
+      }
+    >
       <div className="section-title">
         <div className="chart-heading">
           <Activity size={18} aria-hidden="true" />
           <h2>{label}</h2>
         </div>
-        <span className="unit-label">{unit}</span>
+        <div className="chart-actions">
+          <span className="unit-label">{unit}</span>
+          {expandButton}
+        </div>
       </div>
       <div ref={container} className="plot-container">
         {hasData ? (
@@ -136,6 +219,7 @@ export function TimeChart({
               viewBox={`0 0 ${width} ${height}`}
               width={width}
               height={height}
+              style={{ height }}
               role="img"
               aria-label={`${label}: ${all.filter((point) => point[1] != null).length} измерений`}
               onPointerLeave={(e) => {

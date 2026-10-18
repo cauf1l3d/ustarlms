@@ -79,7 +79,7 @@ def snapshot(path, now=None):
         data = safe_json(path, owner=0)
         if data.get('version') != 1 or not isinstance(data.get('checks'), list):
             raise ValueError('Unsupported snapshot')
-        allowed = {'version','observed_at','checks','host','backup','cron','lab','containers','events','hdd','units','http_local','recovery','database','clock','smart'}
+        allowed = {'version','observed_at','checks','host','backup','cron','lab','containers','events','hdd','units','http_local','recovery','database','clock','smart','script_inventory','web_observability'}
         if set(data)-allowed or not all(isinstance(data.get(key), dict) for key in ('host','backup','lab')):
             raise ValueError('Unsupported snapshot fields')
         if not isinstance(data.get('containers'), list):

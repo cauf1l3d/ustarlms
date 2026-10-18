@@ -351,6 +351,11 @@ def main():
     from .config import load
     settings=load()
     value=collect(args.local_http or settings.local_http,settings.database_probe)
+    from .knowledge import installed_inventory
+    from .web_observability import collect as web_observability
+    value['script_inventory']=installed_inventory()
+    value['web_observability']=web_observability()
+    value['observed_at']=stamp()
     write_snapshot(value, Path('/run/ustar-console-data/snapshot.json'))
     if settings.native_history:
         from .history_store import record

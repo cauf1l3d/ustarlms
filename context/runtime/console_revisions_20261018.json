@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "received_at": "2026-10-18T17:03:58+03:00",
+  "source": "owner_request_in_current_chat",
+  "shared_dialog": "https://chatgpt.com/share/6ad4c0a7-485c-83eb-8325-db31fcc72816",
+  "repository_base": "7f8a614aeeec62a6f1f455331b78b6f1f1d81528",
+  "previous_closure_superseded": true,
+  "requested": [
+    "client_https_trust",
+    "mini_app_phone_vpn_route",
+    "light_dark_system_theme",
+    "chart_zoom",
+    "script_catalog_and_guarded_actions",
+    "versioned_documentation",
+    "real_request_metrics",
+    "sanitized_service_events"
+  ],
+  "screenshots": {
+    "origin": "https://192.168.1.60:8443",
+    "chrome_warning_bypassed": true,
+    "exact_TLS_error_code_not_shown": true
+  },
+  "native_deployment": "not_performed_by_agent",
+  "phone_network_and_vpn_app": "not_supplied",
+  "client_certificate_trust": "not_accepted",
+  "mini_app_route": "not_accepted",
+  "application_baseline_unchanged": true,
+  "review": {
+    "critical": 0,
+    "important_fixed": 2,
+    "important_fixes": [
+      "stale_access_log_no_false_zero",
+      "truncated_tail_no_full_coverage"
+    ],
+    "minor_inventory_observation_time": "addressed_with_timestamp_and_manual_refresh"
+  },
+  "local_backend_tests": 355,
+  "CI": "pending",
+  "local_browser_tests": {
+    "passed": 114,
+    "failed": 0,
+    "flaky": 0,
+    "viewports": [
+      "desktop",
+      "mobile",
+      "tablet"
+    ]
+  }
+}

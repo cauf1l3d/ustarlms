@@ -73,6 +73,16 @@ def certificate(address,group):
         if not all(path.is_file() and not path.is_symlink() and path.stat().st_uid==0 and not path.stat().st_mode&0o022 for path in paths):
             raise SystemExit('Неполный набор сертификатов; проверьте локально, автоматической замены CA нет.')
         run(['openssl','verify','-CAfile',str(ca),'-verify_ip',address,str(tls/'server.crt')])
+        public=CONFIG/'ustar-console-ca.crt'
+        if public.is_symlink() or (public.exists() and (not public.is_file() or public.stat().st_uid!=0 or public.stat().st_mode&0o022)):
+            raise SystemExit('Недоверенная публичная копия CA')
+        descriptor,temporary=tempfile.mkstemp(prefix='.public-ca-',dir=CONFIG)
+        try:
+            with os.fdopen(descriptor,'wb') as stream:
+                os.fchmod(stream.fileno(),0o644);stream.write(ca.read_bytes())
+            os.replace(temporary,public)
+        finally:
+            if os.path.exists(temporary):os.unlink(temporary)
         return
     quiet=dict(stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     run(['openssl','req','-x509','-newkey','rsa:3072','-nodes','-sha256','-days','3650',

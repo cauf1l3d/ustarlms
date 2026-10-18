@@ -29,18 +29,18 @@ current_operator_handoff:
   runbook: context/runtime/production_copy_20261015.md
   status: archive_obtained_instruction_transferred_waiting_sysadmin_restore
   owner_confirmation: '2026-10-16T00:20:51+03:00'
-  control_panel: INF06_owner_accepted_20261018
+  control_panel: INF06_reopened_by_owner_20261018T1703_MSK
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: INF-07
+  task: INF-06
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   preparation: context/tasks/HTTPS_NEXT_20261018.md
-  status: ready_for_read_only_Academy_HTTPS_preparation_and_plan
+  status: console_revisions_in_progress_no_native_changes
   deployment: not_started
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
-completed_control_panel:
+control_panel_revision:
   task: INF-06
-  status: owner_accepted_20261018T144207_MSK
+  status: reopened_by_owner_20261018T170358_MSK
   receipt: context/runtime/console_owner_acceptance_20261018.json
   verified_delivered_source: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
   exact_installed_source_commit: null

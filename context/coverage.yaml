@@ -59,15 +59,15 @@ covered:
   evidence: context/runtime/external_network_result_20261017.json
   boundary: 'Owner terminal output: public IPv4 egress equals tested target; home TCP2019 false, separate ping timeout. Coordinates
     redacted; exact probe time unknown. Not all sources/IPv6/NAT mapping/API auth or listener hardening'
-- area: console_priority_metrics_and_owner_acceptance
+- area: console_priority_metrics_and_revision_request
   evidence: context/runtime/console_owner_acceptance_20261018.json
   boundary: Owner18Oct14:42MSK accepts working delivered console/Telegram and closes INF-06. Sourceb93e16af and artifact verified with312 backend/72 browser/native CI. Exact installed hash, quantified native timing and full operations/DR matrix not supplied; residuals tracked separately
 - area: console_HDD_namespace_and_selected_SMART_diagnostics
   evidence: context/runtime/console_storage_probe_20261018.json
-  boundary: Dated owner host-rw/service-ro and selected SMART measurements; later update1f605 fixed namespace/partial-attribute handling and owner18Oct accepts delivered console. No fresh full disk-health or recovery claim
+  boundary: Dated owner host-rw/service-ro and selected SMART measurements; later update1f605 fixed namespace/partial-attribute handling; owner18Oct17:03 reopened console acceptance. No fresh full disk-health or recovery claim
 open:
 - id: CONSOLE-OPERATIONS-FOLLOWUP
-  next: INF-06 is owner-accepted and closed. Planned INF-06-OPS retains independent observer/external probe, unmeasured roles/download/jobs/overhead and optional home-access pilot; do not repeat bot egress/setup/UI. Restore-RTO remains OPS-02 waiting sysadmin
+  next: Owner18Oct17:03MSK reopens INF-06 for client TLS/Mini App, themes/zoom, scripts/docs and request metrics/classified logs. Native install/client trust/phone route unmeasured. Independent observer and restore remain separate.
   evidence: context/runtime/console_owner_acceptance_20261018.json
 - id: SERVER-FACTS-RESIDUAL
   next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units

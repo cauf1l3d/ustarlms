@@ -222,25 +222,20 @@ production:
     corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
     independent_perimeter_acceptance: false
 current_work:
-  activity: Owner18Oct14:42:07MSK reports working and explicitly closes the console
-    stage. INF-06 done in owner-accepted scope; do not resume UI, setup or installation.
-    Owner reply follows delivered b93e16af artifact; exact installed module hash/terminal
-    acceptance and numerical latency not supplied. This is owner acceptance, not independent
-    measurement. Sourceb93e16af and docsc9fddfb7 all3CI SUCCESS,312 backend/72Chromium/native
-    fixtures; artifact12133242265 verified. Dated release/failure receipts preserved.
-    Next INF-07 resumes the previously selected baseline/patch_OS/Academy_HTTPS queue.
-    Prepare read-only evidence and internal Academy HTTPS plan on existing Apache,
-    including name/CA, wwwroot/proxy, cookies, clients and rollback. Last known Academy
-    URL http://ustar.local differs from accepted console HTTPS on8443. No Academy
-    TLS switch or new host/network change is performed by this context update. Independent
-    observer, home access and unmeasured native role/download/jobs/overhead remain
-    separate planned INF-06-OPS follow-up; restore/RTO remains OPS-02 waiting sysadmin.
-    After HTTPS return to INF-02/03 minimal DB privileges and code/config protection.
-    Moodle5.2/PG17 remain deferred; application526/schema93 unchanged; roadmap tasks34
-    after the separate follow-up entry.
-  next_task: INF-07
-  ready_tasks:
-  - INF-07
+  activity: 'Owner18Oct17:03MSK explicitly withdraws full console acceptance after14:42
+    closure. Resume INF-06; do not treat prior receipt as current completion. Read
+    shared dialogue6ad4c0a7 and latest PR1037f8a614a. Screenshots show Chrome certificate
+    warning bypass for private192.168.1.60:8443, not trusted client TLS. Work: light/dark/system
+    themes and enlarged charts; versioned script/docs catalog with measured installed
+    inventory and existing broker allowlist; real Apache numeric request p95/RPS/4xx/5xx
+    and locally classified service events; TLS public CA export/diagnosis with separate
+    device trust/route checks. No direct SSH, no host/home routes/DNS/firewall/VPN
+    or Academy platform changes. Native client trust/Mini App and installation remain
+    pending owner checks. Existing graphical releaseb93e16af preserved. INF07 Academy
+    HTTPS follows this console revision; independent observer and restore/RTO remain
+    separate.'
+  next_task: INF-06
+  ready_tasks: []
   task_statuses:
     AUDIT-01: planned
     B2B-01: planned
@@ -253,7 +248,7 @@ current_work:
     INF-03: planned
     INF-04: in_progress
     INF-05: planned
-    INF-06: done
+    INF-06: in_progress
     INF-06-OPS: planned
     INF-07: ready
     INF-08: done
@@ -336,7 +331,7 @@ sysadmin_restore:
   production_platform_upgrade_deferred:
     moodle: '5.2'
     postgresql: '17'
-  next_task: Academy_internal_HTTPS_INF07_after_console_owner_acceptance
+  next_task: console_revisions_INF06_then_Academy_HTTPS_INF07
 deferred_platform:
   task: PLAT-01
   status: deferred_by_owner16Oct

@@ -1686,3 +1686,8 @@ Published raw alerts.py readback matches SHA33c706c0/local source. [Owner comman
 shell+inner syntax and actual isolated file/control fixtures success/start-failure rollback/concurrent-change preservation/
 unexpected module/bad download refusal PASS. Source token/permissions and units unchanged.
 Owner application and real receiver ACK remain pending; no production operation executed by agent.
+
+
+## 2026-10-18 17:03МСК — пульт возвращён на доработку
+
+Владелец явно отменил полную приёмку пульта; новое поручение приоритетнее14:42 closure. Диалог извлечён напрямую, PR1037f8a614a и скриншоты сверены. Сохраняется проверенный graphics sourceb93e16af; ранний локальный WIP98946c6 сохранён в git stash, не накладывается поверх опубликованного кода. Возобновлена INF-06; [границы и проверки](../../server-console/REVISIONS_20261018.md). Клиентское доверие и телефонный маршрут/приложение VPN ещё не подтверждены.

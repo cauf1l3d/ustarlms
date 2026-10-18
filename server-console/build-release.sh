@@ -2,6 +2,7 @@
 set -euo pipefail
 ustar_console_root=$(cd -- "$(dirname -- "$0")" && pwd -P)
 cd "$ustar_console_root"
+python3 tools/build_knowledge.py
 npm ci --ignore-scripts --no-fund --no-audit --prefix ui
 npm run build --prefix ui
 mkdir -p backend/ustar_console/web
@@ -13,9 +14,9 @@ python3 -m build --wheel --no-isolation --outdir dist backend
 ustar_console_stage=$(mktemp -d)
 trap 'rm -rf -- "$ustar_console_stage"' EXIT
 mkdir -p "$ustar_console_stage/ustar-console/deploy" "$ustar_console_stage/ustar-console/tools"
-cp dist/ustar_console-0.1.0-py3-none-any.whl requirements.lock INSTALL.md VPN_TELEGRAM.md "$ustar_console_stage/ustar-console/"
+cp dist/ustar_console-0.1.0-py3-none-any.whl requirements.lock INSTALL.md VPN_TELEGRAM.md REVISIONS_20261018.md REQUEST_LOGS_20261018.md ACCESS_FIX_20261018.md "$ustar_console_stage/ustar-console/"
 cp deploy/config.example.json deploy/database-monitor.sql deploy/install.sh deploy/update.sh deploy/ustar-console*.service deploy/ustar-console*.timer "$ustar_console_stage/ustar-console/deploy/"
-cp tools/subscription_probe.py tools/telegram_egress.py "$ustar_console_stage/ustar-console/tools/"
+cp tools/subscription_probe.py tools/telegram_egress.py tools/configure_observability.py tools/console_access.py "$ustar_console_stage/ustar-console/tools/"
 python3 - "$ustar_console_root" "$ustar_console_stage/ustar-console/observer.pyz" <<'PY'
 from pathlib import Path
 import sys, tempfile, zipapp

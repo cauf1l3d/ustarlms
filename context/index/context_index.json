@@ -492,14 +492,14 @@
     {
       "path": "context/coverage.yaml",
       "domain": "root",
-      "size": 6850,
-      "sha256": "aa7f7b8fa1296d2516bb616681232d8843c0c89eccbe0aa71bcfaff464e58332"
+      "size": 6826,
+      "sha256": "c2bb75975b8428a3c5a0037e6e4dac7829f71a9f2c2bfffe3464c2dae6c60e8f"
     },
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 15045,
-      "sha256": "1392d24ad0374425ab20e6a20755f40e0c8aba955ba2afd71b10321c9f8a9b85"
+      "size": 14658,
+      "sha256": "47578ffa91ab15e7f7e6885a4fdb488ce966d26afe757a24997b6236c77ddabd"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -696,8 +696,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2280,
-      "sha256": "e3d7949d4f091c299aa55b89593d4423934700f59da8e467018ca8c8524d2eac"
+      "size": 2287,
+      "sha256": "35d273e0ae65736ab404f5e9e5cd13ef670f09d613b9878f308fba82b050573e"
     },
     {
       "path": "context/releases/ADAPTATION_RESET_20261002_RU.md",
@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 33271,
-      "sha256": "cd00b8d9c78ebb2ebf84a39c18580e1e530b3ec446e892e21bee59d0a856e276"
+      "size": 33218,
+      "sha256": "4d4f69494f81b9aa470c1c4d5ef240de92311743da67fd97f0d21cc3071e3a5b"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -894,8 +894,8 @@
     {
       "path": "context/roadmap/README.md",
       "domain": "roadmap",
-      "size": 1840,
-      "sha256": "0870df4df56991bfd9fe45b27765f05757f26c58f643efa9b65a947e46fc8d2b"
+      "size": 1793,
+      "sha256": "48ca66037a9f58bbfdf9114ed5dfb2d68b4a5a14e0784ee40429d902f1c41825"
     },
     {
       "path": "context/roadmap/REWARD_CONTRACT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 176362,
-      "sha256": "cc83dff60ad4ef9ce82f4db02c127f46b2766815ac319af42c39f1f935158d5c"
+      "size": 177185,
+      "sha256": "ef1cb84641a32beb31b6ab941ee7df885e31c6ba3fecc099741e7d00fcc15db2"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,14 +924,14 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19994,
-      "sha256": "30f18641cd49076f7ed0f98af729ad9cd7e14d77e164cb6e5dff7a51574a4dbb"
+      "size": 19623,
+      "sha256": "a8a970694771bfe5dfca933774f7c9972f02439f9b92976b5ea86c573fb35fd1"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
       "domain": "roadmap",
-      "size": 68157,
-      "sha256": "f6f2653e75aeaa7b13d663625a35338c028b96ab306d0ffbe164d02ea7b2b412"
+      "size": 68034,
+      "sha256": "ba8f0f233ced5fd747e82405bb11ea90918eacbd8146c911bbd0c925f0365558"
     },
     {
       "path": "context/roadmap/USTAR_FEED_GOVERNANCE_PROPOSAL_20260927_RU.md",
@@ -1014,8 +1014,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 11140,
-      "sha256": "6af9bff5d24d58bd537d426c979664631c688791fe6beffd59eb06bb0342aa8f"
+      "size": 11136,
+      "sha256": "146876f3626fa8c0876834291ab497e2452c965bca0407521066b5605729a36c"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -1088,6 +1088,12 @@
       "domain": "runtime",
       "size": 1753,
       "sha256": "98af8a358183d19df7ce7a9f640a82d2f05cbbaa59042f1c1fb282c4c5ce99c4"
+    },
+    {
+      "path": "context/runtime/console_revisions_20261018.json",
+      "domain": "runtime",
+      "size": 1402,
+      "sha256": "1f38bff97ad32b100090ef388bf9570cc53870f8d3f9a62cde2bb5953b6eb5ce"
     },
     {
       "path": "context/runtime/console_storage_probe_20261018.json",
@@ -2190,8 +2196,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3997,
-      "sha256": "c5d0b6b9b6b743eeb6ac154b6ea09559b81bb66a64249bef83c7e4113aef3c59"
+      "size": 4480,
+      "sha256": "57fb0d6161032918796d83c6d6c1943e2f96a4b7163858c62e9f9d64078d2f95"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

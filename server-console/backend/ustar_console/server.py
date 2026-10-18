@@ -189,6 +189,16 @@ def create_app(settings=None):
         except ValueError:
             raise HTTPException(422,'unsupported_query') from None
 
+    @app.get('/api/knowledge')
+    def knowledge(request:Request):
+        identity(request)
+        from .knowledge import catalog
+        value=snapshot(settings.snapshot)
+        try:
+            return catalog(value.get('script_inventory') if not value['stale'] else None)
+        except (OSError,ValueError,KeyError):
+            raise HTTPException(503,'knowledge_unavailable') from None
+
     @app.get('/api/events')
     def events(request:Request):
         identity(request)

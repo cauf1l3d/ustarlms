@@ -69,3 +69,6 @@ harness/*/.venv/
 .stage-input/
 artifacts/
 *.tsbuildinfo
+
+# Generated from reviewed repository documents during console build.
+server-console/backend/ustar_console/knowledge/

@@ -19,4 +19,4 @@ ustar-console-accept = "ustar_console.acceptance:main"
 ustar-console-smart = "ustar_console.hardware:main"
 
 [tool.setuptools.package-data]
-ustar_console = ["web/*", "web/assets/*", "fonts/*"]
+ustar_console = ["web/*", "web/assets/*", "fonts/*", "knowledge/*.json"]

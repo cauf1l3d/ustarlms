@@ -154,7 +154,7 @@ tasks:
   - context/runtime/server_facts_followup_20261017.json
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии
-  status: done
+  status: in_progress
   depends_on:
   - DOC-03
   acceptance:
@@ -164,9 +164,8 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
-  current_summary: Owner18Oct14:42MSK reports working and closes the console stage. INF-06 done in accepted current scope;
-    no repeated UI/setup/install. Exact installed hash and numerical latency not supplied. Source and artifact evidence remain
-    dated; residual operations/observer/home access in INF-06-OPS, restore in OPS-02.
+  current_summary: Owner18Oct17:03MSK returns console for HTTPS/Mini App/theme/zoom/script/docs/request-metrics/sanitized-log revisions.
+    Prior14:42 closure is historical only. Existingb93e16af delivery preserved; native client trust/route and updated installation are not yet measured.
   validation_evidence:
   - context/runtime/console_owner_acceptance_20261018.json
   - context/runtime/console_telegram_graphics_20261018.json
@@ -601,7 +600,7 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: console_owner_accepted_then_INF07_prepare_Academy_HTTPS_no_platform_upgrade
+execution_gate: owner_reopened_INF06_revisions_then_INF07_no_platform_upgrade
 owner_selected_order:
 - DOC-03
 - INF-06

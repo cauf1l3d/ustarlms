@@ -92,6 +92,9 @@ with tempfile.TemporaryDirectory(prefix='ustar-console-install-',dir='/root') as
         run('systemctl','stop','ustar-console.service')
         group=grp.getgrnam('ustar-console').gr_gid
         certificate('127.0.0.1',group)
+        Path('/etc/ustar-console/ustar-console-ca.crt').unlink()
+        certificate('127.0.0.1',group)
+        assert Path('/etc/ustar-console/ustar-console-ca.crt').read_bytes()==Path('/etc/ustar-console/authority/ca.crt').read_bytes()
         save(Path('/etc/ustar-console/config.json'),dict(origin='https://127.0.0.1:8443',listen='127.0.0.1',port=8443,
             tls=True,native_history=True,database_probe=False,local_http=False),0o640,group)
         run('systemd-analyze','verify','/etc/systemd/system/ustar-console-ops.service',

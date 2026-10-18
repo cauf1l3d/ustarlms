@@ -30,12 +30,16 @@ export function Operations({
   role,
   page,
   available,
+  requestedAction,
+  onRequestedHandled,
 }: {
   api: Api;
   csrf: string;
   role: string;
   page: string;
   available: boolean;
+  requestedAction?: string | null;
+  onRequestedHandled?: () => void;
 }) {
   const [jobs, setJobs] = useState<any[]>([]),
     [plan, setPlan] = useState<Plan | null>(null);
@@ -71,6 +75,19 @@ export function Operations({
     const timer = setInterval(() => setTick(Date.now()), 1000);
     return () => clearInterval(timer);
   }, []);
+  useEffect(() => {
+    if (!requestedAction) return;
+    onRequestedHandled?.();
+    if (!allowed || !available || !(requestedAction in actions)) return;
+    setPending(true);
+    setError("");
+    void api("operations/plan", { method: "POST", headers: { "X-CSRF-Token": csrf },
+      body: JSON.stringify({ action: requestedAction }) }).then(value => {
+      idempotency.current = crypto.randomUUID();
+      setPlan(value);
+    }).catch(() => setError("План недоступен: проверьте состояние, блокировку и версию серверного helper. Действие не запущено."))
+      .finally(() => setPending(false));
+  }, [requestedAction]);
   if (!allowed)
     return (
       <section className="panel">

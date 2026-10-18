@@ -33,7 +33,8 @@ def main():
         if Path(path).exists():
             denied=subprocess.run(['runuser','-u','ustar-console','--','test','-r',path],timeout=3).returncode!=0
             assert denied, 'Web identity unexpectedly reads '+path
-    print(json.dumps(dict(console_tls='verified_with_local_ca',units=units,source_stale=value['stale'],checks=checks,
+    print(json.dumps(dict(console_tls='verified_with_local_ca',client_certificate_trust='not_measured',
+        acceptance_scope='installation_gate_only_not_owner_acceptance',mini_app='not_measured',units=units,source_stale=value['stale'],checks=checks,
         web_groups='console_only',native_accepted=not value['stale'] and all(units[k]=='active' for k in units if k!='ustar-console-notify'),
         remaining=['browser_login_role_denial','download_hash','telegram_receiver_ack','independent_observer','restore_RTO']),
         ensure_ascii=False,indent=2))

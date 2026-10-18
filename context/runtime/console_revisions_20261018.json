@@ -24,11 +24,12 @@
   "phone_network_and_vpn_app": {
     "application": "Happ",
     "provider": "NovaVPS",
-    "network": "not_supplied",
-    "received_at": "2026-10-18T18:04:31+03:00"
+    "network": "office_WiFi",
+    "received_at": "2026-10-18T18:04:31+03:00",
+    "network_received_at": "2026-10-18T18:11:35+03:00"
   },
-  "client_certificate_trust": "not_accepted",
-  "mini_app_route": "not_accepted",
+  "client_certificate_trust": "owner_reports_warnings_resolved_20261018T183803_MSK",
+  "mini_app_route": "owner_reports_office_access_with_VPN_on_and_off_Mini_App_not_separately_named",
   "application_baseline_unchanged": true,
   "review": {
     "critical": 0,
@@ -94,11 +95,12 @@
     "unsafe_members": 0
   },
   "delivery": "context/runtime/console_revisions_delivery_20261018.md",
-  "status": "source_and_artifact_verified_owner_native_update_PASS_devices_and_metrics_sample_pending",
+  "status": "native_update_and_client_HTTPS_office_VPN_modes_owner_confirmed_new_data_sample_pending",
   "local_context_tests": {
     "passed_or_skipped_total": 577,
     "environment_skips": 20,
     "result": "OK"
   },
-  "latest_native_receipt": "context/runtime/console_revisions_native_20261018.json"
+  "latest_native_receipt": "context/runtime/console_revisions_native_20261018.json",
+  "latest_client_receipt": "context/runtime/console_client_https_result_20261018.json"
 }

@@ -232,13 +232,16 @@ current_work:
     device trust/route checks. No direct SSH, no host/home routes/DNS/firewall/VPN
     or Academy platform changes. Owner18Oct18:04MSK terminal report: update1c881495
     PASS, all4 units active, TLS chain/IP SAN/live leaf PASS, Apache numeric logging
-    configured. Client CA trust/Mini App and actual numeric metrics sample remain
-    pending; phone Happ/NovaVPS, current network/profile type not supplied. Revision
-    source1c881495: all3 CI SUCCESS,355 backend+1skip/114 Chromium, actual systemd
-    and Apache fixtures PASS. Artifact12139739548 downloaded and hash/source verified;
-    delivery context/runtime/console_revisions_delivery_20261018.md. Existing graphical
-    releaseb93e16af preserved. INF07 Academy HTTPS follows this console revision;
-    independent observer and restore/RTO remain separate.'
+    configured. Owner18Oct18:11MSK confirms office WiFi;18:38MSK reports certificates
+    updated, no warnings, access works with Happ/NovaVPS on and off. Client HTTPS
+    and office connectivity issue resolved by owner report; no Happ exception or server
+    route change needed. Mini App not separately named in general working report;
+    actual new metrics/event samples and per-client UI matrix not supplied, not claimed
+    broken. Revision source1c881495: all3 CI SUCCESS,355 backend+1skip/114 Chromium,
+    actual systemd and Apache fixtures PASS. Artifact12139739548 downloaded and hash/source
+    verified; delivery context/runtime/console_revisions_delivery_20261018.md. Existing
+    graphical releaseb93e16af preserved. INF07 Academy HTTPS follows this console
+    revision; independent observer and restore/RTO remain separate.'
   next_task: INF-06
   ready_tasks: []
   task_statuses:

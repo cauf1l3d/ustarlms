@@ -1717,3 +1717,13 @@ Apache numeric log helper configured=true, vhostustar.conf и backup150056Z; act
 Официальные Happ docs проверены: DirectIp/Reconnect/JSON restrictions; [условный runbook](../runtime/console_happ_access_20261018.md).
 Одинаковая provider subscription не создаёт reverse LAN route. Новые профили/сеть/CA/production агентом не менялись.
 INF-06 остаётся текущей: UI/client trust/Mini App/numeric sample ещё не приняты; предыдущий closure не восстановлен.
+
+
+## 2026-10-18 18:38МСК — клиентский HTTPS и офисный доступ работают с VPN и без него
+
+Owner18:11 уточнил: телефон и пульт в офисном Wi-Fi.18:38 сообщил: сертификаты обновлены, предупреждения исчезли, всё работает с VPN и без него.
+[Датированный owner receipt](../runtime/console_client_https_result_20261018.json), без независимого SSH/устройства.
+Проблема клиентского TLS/офисного доступа закрыта в сообщённом объёме; гипотеза перехвата LAN Happ не подтверждена, исключение DirectIp не требуется.
+Mini App отдельно не назван в общем «всё работает»; не объявлять новый отказ или выдуманную client matrix.
+Исходники/server settings/CA/VPN/routes/DNS/firewall агентом не менялись. Старые terminal/request receipts сохраняют даты.
+Полная приёмка всех функций/новых p95/RPS/events не выводится из сообщения о HTTPS; INF-06 остаётся текущей для этого остатка.

@@ -165,8 +165,9 @@ tasks:
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
   current_summary: Owner18Oct17:03MSK returns console for HTTPS/Mini App/theme/zoom/script/docs/request-metrics/sanitized-log revisions.
-    Prior14:42 closure is historical only. Revision1c881495 all3 CI and artifact12139739548 verified; owner18:04 terminal update1c881495/TLS/Apache logging PASS. Client trust/phone route/UI and numeric sample are not yet measured; phone Happ/NovaVPS, network unknown.
+    Prior14:42 closure is historical only. Revision1c881495 all3 CI and artifact12139739548 verified; owner18:04 terminal update1c881495/TLS/Apache logging PASS. Owner18:38 reports certificates updated, warnings gone and office access works with Happ/NovaVPS on/off; no route exception needed. New numeric/event samples and per-client UI matrix are not supplied; full console closure is not inferred.
   validation_evidence:
+  - context/runtime/console_client_https_result_20261018.json
   - context/runtime/console_revisions_native_20261018.json
   - context/runtime/console_happ_access_20261018.md
   - context/runtime/console_revisions_20261018.json

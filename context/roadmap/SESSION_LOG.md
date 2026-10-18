@@ -1,5 +1,9 @@
 # Журнал выполнения roadmap
 
+## 2026-10-18 — Telegram owner response and presentation increment
+
+Owner reports bot now responds; raw/partial presentation is the new task. New dated receipt preserves this limited receiver evidence and the lack of native module hash/stdout. Prior failure receipts are unchanged. Implemented Russian cards/buttons, aggregate values/freshness, explanatory alerts, four-command bounded burst, same-cycle first delivery, opt-in Mini App with existing login. Private actor/chat filters, durable outbox, token/proxy/CA and network boundaries retained. Sourceb275f899 all3CI SUCCESS,223backend/45Chromium/actual systemd/rollback PASS; artifact12120404826 hashes/SOURCE_COMMIT/wheel/observer verified. Owner command pinned in TELEGRAM_OPERATOR_20261018.md. First source attempt failed only two rootless test fixtures, then corrected; review retry fixed Chromium screenshot transient without app edits. No native installation or phone Mini App acceptance claimed. Independent observer remains required for loss of server1 itself.
+
 ## 2026-09-20 — первый этап рефакторинга, R01 review
 
 Владелец: Codex. Код: `e657cda7dc29750511535b94eee85b22ca7fdb86`,

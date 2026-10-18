@@ -32,10 +32,10 @@ Files: create `server-console/backend/ustar_console/telegram_views.py` and `serv
 
 Interfaces: `command_reply(text,data,origin)` stays string-or-None. Presentation exposes `reply`, `keyboard`, `incident`; `Queue.deliver(...,reply_markup=None)` remains observer-compatible.
 
-- [ ] Write tests for resource/database/backup/lab cards, unknown/stale data, status wording, Russian buttons/command mentions, incident values/actions, burst/replay and immediate first-cycle reply.
-- [ ] Run `console-venv/bin/python -m pytest -q server-console/tests/test_telegram_views.py`; expect assertions failing on old output.
-- [ ] Implement Russian cards, units/MSK time, bounded plain text, four commands/10s, keyboard and same-cycle delivery. Render existing alert thresholds without changing host behavior.
-- [ ] Run the new tests and full `server-console/tests`; expect all PASS. Include the presentation module in observer.pyz.
+- [x] Write tests for resource/database/backup/lab cards, unknown/stale data, status wording, Russian buttons/command mentions, incident values/actions, burst/replay and immediate first-cycle reply.
+- [x] Run `console-venv/bin/python -m pytest -q server-console/tests/test_telegram_views.py`; expect assertions failing on old output.
+- [x] Implement Russian cards, units/MSK time, bounded plain text, four commands/10s, keyboard and same-cycle delivery. Render existing alert thresholds without changing host behavior.
+- [x] Run the new tests and full `server-console/tests`; expect all PASS. Include the presentation module in observer.pyz.
 
 ### Task 2: Opt-in native opening
 
@@ -43,15 +43,17 @@ Files: `alerts.py`, `setup.py`, tests and operator runbook.
 
 Interfaces: credential optional `mini_app: bool`; `ustar-console-setup --telegram-mini-app on|off` changes only that switch and reloads notifier. The keyboard uses `web_app.url=settings.origin` only when opted in.
 
-- [ ] Test opt-in parsing, private allowlist, native keyboard payload, token/proxy/ID preservation and notifier-only reload; run and observe failure.
-- [ ] Implement opt-in and normal `/panel` network/certificate guidance; keep existing console login and CSRF.
-- [ ] Run full backend suite; expect PASS. Document current LAN/local-CA constraints and separate home-access dependency.
+- [x] Test opt-in parsing, private allowlist, native keyboard payload, token/proxy/ID preservation and notifier-only reload; run and observe failure.
+- [x] Implement opt-in and normal `/panel` network/certificate guidance; keep existing console login and CSRF.
+- [x] Run full backend suite; expect PASS. Document current LAN/local-CA constraints and separate home-access dependency.
 
 ### Task 3: Review and delivery
 
-- [ ] Record owner-reported working bot as a new dated receipt; retain earlier failure receipts.
-- [ ] Update canonical context and generated indexes; run context/secret checks and full backend verification.
-- [ ] Obtain one fresh whole-change review; address material findings with RED→GREEN tests.
-- [ ] Publish source to PR103, verify exact CI/artifact, then publish pinned installation runbook and duplicate every installation command in chat.
+- [x] Record owner-reported working bot as a new dated receipt; retain earlier failure receipts.
+- [x] Update canonical context and generated indexes; run context/secret checks and full backend verification.
+- [x] Obtain one fresh whole-change review; address material findings with RED→GREEN tests.
+- [x] Publish source to PR103, verify exact CI/artifact, then publish pinned installation runbook and duplicate every installation command in chat.
 
 Execution ledger: workspace `egress-delivery/telegram-operator-progress.md` outside git. No per-task implementation agents.
+
+Verification: executable sourceb275f899 all3CI SUCCESS;223 backend/45 Chromium and native fixtures PASS. Artifact12120404826 ZIP/tar/wheel/observer verified; native owner update/Mini App acceptance remain explicit external gates.

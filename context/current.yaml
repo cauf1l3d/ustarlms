@@ -222,49 +222,20 @@ production:
     corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
     independent_perimeter_acceptance: false
 current_work:
-  activity: 'Latest owner18Oct03:46/03:49MSK confirms update1f605 PASS/HDD OK/SMART
-    partial, Xray12 candidates/first TLS verified/active/no restarts and private-ID/proxy-aware
-    bot setup. Bot did not reply: notifier9 restarts/ValueError credential_guard at
-    alerts225/262. Reproduced systemd0440 named-UID ACL compatibility defect; narrowed
-    FD/ACL reader prepared, 192 backend/45 Chromium/all3 CI PASS onfd46c383; actual
-    PID1 first cycle mode0440 accepted. Owner single-module patch and real receiver
-    ACK still pending. Actual service inode mode/ACL not provided; no server metadata
-    invented. Owner terminal receipt received17Oct23:36MSK confirms installation of
-    console567e90d5, local-CA TLS, fresh collector snapshot, active web/broker/collector
-    timer and web identity isolation. Limited native_accepted=true is not all-source
-    acceptance. Owner18Oct00:14MSK supplied host rw/service ro comparison confirming
-    HDD namespace probe defect and successful SMART oneshot with partial SSD197/199
-    readings. Host/local identity and SMART partial/freshness/UI fixes plus guarded
-    rollback updater in release3305ecc9 passed all3 CI, 125 backend/45 browser and
-    native namespace/rollback tests; artifact verified/delivered, native application
-    pending. Owner17Oct23:59MSK reports console opens in browser; trust/login/roles
-    not yet accepted. TOTP skipped; owner now requests Telegram and home access without
-    inbound port publication. Telegram startup argument defect fixed in PR with regression;
-    owner application and delivery pending. Archive download/hash, receiver, independent
-    observer, jobs/overhead and restore/RTO remain open. No agent SSH or host operations.
-    Owner18Oct00:27MSK ID helper failed getUpdates with transport_unavailable. Owner01:26MSK
-    tokenless diagnostics resolved IPv4, but direct TCP443 timed out before TLS; curl6
-    obtained no usable address. Failure location/cause unknown; owner01:37 controls
-    ipify/GitHub200 with Telegram timeout8002ms, Windows same endpointFalse; owner01:41
-    Google/Cloudflare A match local DNS. Owner01:48MSK reports Happ subscription and
-    supplies only masked HTTPS novavps.app/s/ shape. Safe standalone local probe prepared,22
-    focused/147 backend PASS; hidden input and sanitized protocol/transport JSON only.
-    Latest owner run verified checksum but showed no input prompt or JSON; actual
-    elapsed/exit were not captured. Local controlling-PTY reproduction confirms ordinary
-    timeout in the heredoc prevents hidden input (exit124); corrected direct Python
-    launch accepts hidden input, retaining internal30s deadline after input and printing
-    PROBE_EXIT. Owner02:07MSK retry succeeded: JSON_outbounds35,15 VLESS (10gRPC/5TCP,14Reality/1TLS),
-    insecure flags0, exit0. Format known, actual node values still not received/validated.
-    Prepared pinned Xray Telegram-only loopback service, explicit CA-verified CONNECT
-    bot transport, proxy-aware setup/credential reload and private-ID challenge. Local175
-    backend/28 focused/4 real Xray config cases PASS. Release1f605e4d now passed all3
-    CI, including175 backend/45 Chromium/actual Xray DynamicUser LoadCredential default-deny/updater
-    rollback. Artifact12118052115 downloaded, ZIP/tar/SOURCE_COMMIT verified; owner
-    update/node/ID/config/receiver ACK still pending. Latest owner requires stable
-    home and server Internet/LAN; prior subnet route plan superseded by userspace/SSH
-    feasibility and isolated Windows pilot, not an installed VPN. No host DNS/routes/firewall,
-    console auth/CA/TOTP or production services changed by agent. Exact failing hop/cause
-    unknown; numeric ID, bot setup and receiver ACK not obtained.'
+  activity: 'Latest owner18Oct reports bot is working; a new owner receipt preserves
+    this limited private-response acceptance. Installed full console bundle1f605e4d
+    plus subsequent notifier credential fix in session context; exact native module
+    hash and hotfix stdout not supplied. Prior systemd credential crash and fd46c383
+    all3CI/192backend/45Chromium/actual0440 first-cycle proof remain historical evidence.
+    Current request: readable Russian cards/buttons, missing aggregate metrics, important
+    autoalerts and native Telegram console opening. Presentation/outbox sourceb275f899
+    passed all3CI,223backend/45Chromium/actual systemd fixtures; artifact12120404826
+    hashes/source verified and owner commands published; optional Mini App opens the
+    existing login, default off, requiring phone access and trusted HTTPS. No host/home
+    routes/DNS/firewall, Academy services, proxy destination, credentials, console
+    auth/CA/TOTP changed by agent. Full browser/role/download/independent-observer/jobs/overhead/restore-RTO
+    gates remain open; no home VPN installed. Moodle5.2/PostgreSQL17 remain deferred;
+    application526/schema93/tasks33 unchanged.'
   next_task: INF-06
   ready_tasks: []
   task_statuses:

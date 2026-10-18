@@ -1,5 +1,7 @@
 # USTAR вход в проект
 
+Владелец18Oct сообщил: бот отвечает. [Новый receipt](context/runtime/console_bot_working_20261018.json) принимает этот факт; прежний credential crash сохранён как история. Установлен полный пакет1f605 плюс последующее исправление notifier по контексту; точный native hash/hotfix stdout не прислан. В PR103 опубликован кодb275f899: понятные русские карточки, семь кнопок, доступные агрегаты и информативные автоалерты;223 backend PASS, два material review findings исправлены через RED→GREEN, все3 CI SUCCESS и artifact12120404826 сверены; Mini App — отдельный opt-in с существующим входом и обязательной проверкой доступа/HTTPS на телефоне. Сеть/прод/токен/CA не перенастраиваются. Новый пакетb275f899 ещё не установлен владельцем. [Выдача и команды](server-console/TELEGRAM_OPERATOR_20261018.md); [source/CI/artifact receipt](context/runtime/console_telegram_operator_20261018.json).
+
 ## Текущий этап 18 октября 2026
 
 Исправление notifier [fd46c383 проверено](context/runtime/console_notifier_credential_fix_20261018.json):192 backend/45 Chromium, все3 CI SUCCESS; реальный PID1 LoadCredential/static notify UID/первый цикл PASS с mode0440. [Точечная команда](server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md) меняет только alerts.py с SHA33c706c0, сохраняет предыдущий модуль и перезапускает только notifier. Owner update1f605/Xray/setup уже приняты; применение single-module fix и фактический ответ бота ещё ожидаются. Token/auth/CA/TOTP/units/сеть не перенастраиваются.

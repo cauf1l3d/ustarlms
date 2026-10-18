@@ -34,8 +34,28 @@
     ],
     "minor_inventory_observation_time": "addressed_with_timestamp_and_manual_refresh"
   },
-  "local_backend_tests": 355,
-  "CI": "pending",
+  "local_backend_tests": 356,
+  "CI": {
+    "console": {
+      "run": 39137246420,
+      "result": "success",
+      "backend_passed": 355,
+      "backend_skipped": 1,
+      "browser_passed": 114,
+      "systemd": "pass",
+      "actual_apache_numeric_log": "pass",
+      "xray": "pass",
+      "postgres16": "pass"
+    },
+    "context": {
+      "run": 39137246453,
+      "result": "success"
+    },
+    "review": {
+      "run": 39137246419,
+      "result": "success"
+    }
+  },
   "local_browser_tests": {
     "passed": 114,
     "failed": 0,
@@ -47,5 +67,32 @@
     ]
   },
   "numeric_log_path": "/var/lib/ustar-console-collector/requests.log",
-  "numeric_log_reason": "preserve_strict_parent_guards_on_Ubuntu_group_writable_var_log"
+  "numeric_log_reason": "preserve_strict_parent_guards_on_Ubuntu_group_writable_var_log",
+  "source_commit": "1c881495ae78dd74cf37ca5a045944d1336d85ce",
+  "artifact": {
+    "source_commit": "1c881495ae78dd74cf37ca5a045944d1336d85ce",
+    "artifact_id": 12139739548,
+    "zip_bytes": 514116,
+    "zip_sha256": "94898041b6b5f4f3e62211624a0eb2f583f5fdddd317997d650201d3f11ae7a5",
+    "tar_bytes": 513690,
+    "tar_sha256": "0b7ecfa62fef556e39435125dee938467ccc96ee324392001f271598f01efaf5",
+    "direct_files": 21,
+    "wheel_python_modules": 23,
+    "font_assets": 4,
+    "compiled_web_files": 3,
+    "scripts": 27,
+    "documents": 43,
+    "observer_modules": 10,
+    "unit_files": 7,
+    "zip_crc": "pass",
+    "source_comparison": "pass",
+    "unsafe_members": 0
+  },
+  "delivery": "context/runtime/console_revisions_delivery_20261018.md",
+  "status": "source_CI_and_artifact_verified_native_and_devices_pending",
+  "local_context_tests": {
+    "passed_or_skipped_total": 577,
+    "environment_skips": 20,
+    "result": "OK"
+  }
 }

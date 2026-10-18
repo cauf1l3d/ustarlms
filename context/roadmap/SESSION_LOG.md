@@ -1691,3 +1691,17 @@ Owner application and real receiver ACK remain pending; no production operation 
 ## 2026-10-18 17:03МСК — пульт возвращён на доработку
 
 Владелец явно отменил полную приёмку пульта; новое поручение приоритетнее14:42 closure. Диалог извлечён напрямую, PR1037f8a614a и скриншоты сверены. Сохраняется проверенный graphics sourceb93e16af; ранний локальный WIP98946c6 сохранён в git stash, не накладывается поверх опубликованного кода. Возобновлена INF-06; [границы и проверки](../../server-console/REVISIONS_20261018.md). Клиентское доверие и телефонный маршрут/приложение VPN ещё не подтверждены.
+
+
+## 2026-10-18 — INF-06: доработка проверена и передана, native/client gates открыты
+
+Exact source1c881495 все3 CI SUCCESS:console39137246420/job117704158967,context39137246453,review39137246419.
+CI355 backend+1root-onlyskip/114 Chromium PASS; локально root356 backend,577context OK/20environment skips.
+Systemd TLS/mount/credentials/update rollback/Xray/PG16 и actual Apache numeric-log/probe-exclusion PASS.
+Первый CI3755236a обнаружил6 root-fixture assumptions в тестах установщика; исправлена только фикстура, guards не ослаблены.
+Artifact12139739548 downloaded: ZIP CRC/SHA94898041, tar513690B SHA0b7ecfa62;23 wheel modules/4fonts/3web assets/27scripts/43docs/10observer modules/7units source-match.
+[Receipt](../runtime/console_revisions_20261018.json), [точные owner команды](../runtime/console_revisions_delivery_20261018.md).
+Темы/zoom/каталог/документы/реальные request metrics/очищенные events и TLS public-CA diagnostic готовы к native установке.
+Прежний14:42 closure отменён17:03; INF-06 остаётся текущей. Нет SSH к server1; установка/client trust/phone VPN route не измерены.
+Пароли/token/TOTP/CA root/сеть/Academy не менялись агентом. Параметры VPN телефона не сообщены; из внешней сети private origin требует своего маршрута.
+Не объявлять Mini App исправленным до реальной проверки на устройстве; независимые observer/restore-RTO gates сохранены.

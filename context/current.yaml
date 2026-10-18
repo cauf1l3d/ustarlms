@@ -231,9 +231,11 @@ current_work:
     and locally classified service events; TLS public CA export/diagnosis with separate
     device trust/route checks. No direct SSH, no host/home routes/DNS/firewall/VPN
     or Academy platform changes. Native client trust/Mini App and installation remain
-    pending owner checks. Existing graphical releaseb93e16af preserved. INF07 Academy
-    HTTPS follows this console revision; independent observer and restore/RTO remain
-    separate.'
+    pending owner checks. Revision source1c881495: all3 CI SUCCESS,355 backend+1skip/114
+    Chromium, actual systemd and Apache fixtures PASS. Artifact12139739548 downloaded
+    and hash/source verified; delivery context/runtime/console_revisions_delivery_20261018.md.
+    Existing graphical releaseb93e16af preserved. INF07 Academy HTTPS follows this
+    console revision; independent observer and restore/RTO remain separate.'
   next_task: INF-06
   ready_tasks: []
   task_statuses:

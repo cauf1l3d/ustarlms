@@ -59,22 +59,16 @@ covered:
   evidence: context/runtime/external_network_result_20261017.json
   boundary: 'Owner terminal output: public IPv4 egress equals tested target; home TCP2019 false, separate ping timeout. Coordinates
     redacted; exact probe time unknown. Not all sources/IPv6/NAT mapping/API auth or listener hardening'
-- area: console_priority_metrics_and_source_freshness_implementation
-  evidence: server-console/AUDIT_FOLLOWUP_20261017.md
-  boundary: Owner installed567e90d5 with limited TLS/units/freshness gate and browser opening. Later host rw/service ro and partial
-    SSD SMART diagnosed; fix/update in PR not yet applied. Native role/download/alert delivery/overhead, real HTTP p95 and independent
-    host-loss remain open
+- area: console_priority_metrics_and_owner_acceptance
+  evidence: context/runtime/console_owner_acceptance_20261018.json
+  boundary: Owner18Oct14:42MSK accepts working delivered console/Telegram and closes INF-06. Sourceb93e16af and artifact verified with312 backend/72 browser/native CI. Exact installed hash, quantified native timing and full operations/DR matrix not supplied; residuals tracked separately
 - area: console_HDD_namespace_and_selected_SMART_diagnostics
   evidence: context/runtime/console_storage_probe_20261018.json
-  boundary: Owner terminal host rw/service ro comparison, SMART oneshot0/timer active and selected measured values. No agent
-    SSH, full disk health/wear/restore proof or correlated timestamp for acceptance. New fix requires native application
+  boundary: Dated owner host-rw/service-ro and selected SMART measurements; later update1f605 fixed namespace/partial-attribute handling and owner18Oct accepts delivered console. No fresh full disk-health or recovery claim
 open:
-- id: CONSOLE-TELEGRAM-EGRESS
-  next: Server direct HTTPS controls200 and two public HTTPS resolver A answers agree with local DNS; Telegram direct TCP443
-    fails from server and Windows; exact failing hop unknown. Owner reports Happ/NOVAVPS masked HTTPS subscription. Run
-    checksum-pinned safe local format probe, then select compatible client/loopback proxy; actual subscription format/connection,
-    native token/ID/config/receiver ACK, home VPN and release3305ecc9 application remain open
-  evidence: context/runtime/console_telegram_egress_20261018.json
+- id: CONSOLE-OPERATIONS-FOLLOWUP
+  next: INF-06 is owner-accepted and closed. Planned INF-06-OPS retains independent observer/external probe, unmeasured roles/download/jobs/overhead and optional home-access pilot; do not repeat bot egress/setup/UI. Restore-RTO remains OPS-02 waiting sysadmin
+  evidence: context/runtime/console_owner_acceptance_20261018.json
 - id: SERVER-FACTS-RESIDUAL
   next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units
     and NTP/SMART trends remain open; ACL/current SSH/Caddy process metadata now received
@@ -95,9 +89,8 @@ open:
     identity/auth, actor/mount/LSM/negative replacement tests and resource baseline; one home IPv4 TCP2019 test failed
 - id: RECOVERY
   next: Sysadmin clean-host restore result, reboot/roles/files/progress, measured RTO and key/offsite custody
-- id: CONSOLE-TELEGRAM
-  next: Complete DB read-only monitor, native HTTP/request statistics, bounded maintenance/incident rules, Telegram/outbox
-    and independent corporate-LAN/VPN observer, verified archive download and guarded jobs; native delivery/host acceptance
-    separate
+- id: ACADEMY-HTTPS
+  next: INF-07 prepares trusted HTTPS for Academy on existing Apache; name/CA/client trust, proxy-wwwroot/redirects/cookies/SCORM/files and rollback require their own acceptance. Accepted HTTPS of console does not prove HTTPS of Academy
+  evidence: context/tasks/HTTPS_NEXT_20261018.md
 - id: PRIVACY
   next: Export/deletion/retention provider and evidence; remains deferred owner debt, not a newly imposed migration gate

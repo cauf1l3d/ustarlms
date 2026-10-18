@@ -492,14 +492,14 @@
     {
       "path": "context/coverage.yaml",
       "domain": "root",
-      "size": 7061,
-      "sha256": "bb8c4793687471cdb00f9ba4b8794b7000a402dc606932e3af24521022f89b16"
+      "size": 6850,
+      "sha256": "aa7f7b8fa1296d2516bb616681232d8843c0c89eccbe0aa71bcfaff464e58332"
     },
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 15404,
-      "sha256": "a337ffe74e5a250ca672206db0a4d754ff08cc28ac9d378fe36273e5885979c5"
+      "size": 15045,
+      "sha256": "1392d24ad0374425ab20e6a20755f40e0c8aba955ba2afd71b10321c9f8a9b85"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -696,8 +696,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2278,
-      "sha256": "855a0209ee0b12b340a0d0b1898492aa2c4cfcf105354f9e41b8c622cd30601c"
+      "size": 2280,
+      "sha256": "e3d7949d4f091c299aa55b89593d4423934700f59da8e467018ca8c8524d2eac"
     },
     {
       "path": "context/releases/ADAPTATION_RESET_20261002_RU.md",
@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 31961,
-      "sha256": "9e50038519bc24dce09fa3b7d20db98dbaff049033922488e22b47903874cf45"
+      "size": 33271,
+      "sha256": "cd00b8d9c78ebb2ebf84a39c18580e1e530b3ec446e892e21bee59d0a856e276"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -894,8 +894,8 @@
     {
       "path": "context/roadmap/README.md",
       "domain": "roadmap",
-      "size": 1317,
-      "sha256": "c0411d313c281350fbd7be9722f29b0201c7c41f8b3bff03d34ef57fec416b3c"
+      "size": 1840,
+      "sha256": "0870df4df56991bfd9fe45b27765f05757f26c58f643efa9b65a947e46fc8d2b"
     },
     {
       "path": "context/roadmap/REWARD_CONTRACT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 174610,
-      "sha256": "e28f078d4ae0e3aacebbe07278182ca85a9618e90f534fc12307ce48259965ff"
+      "size": 176362,
+      "sha256": "cc83dff60ad4ef9ce82f4db02c127f46b2766815ac319af42c39f1f935158d5c"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,14 +924,14 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 19956,
-      "sha256": "252720ebcd94276de093572c6c473ae713f7ba1ff68c2e9013f0a1b0490bf235"
+      "size": 19994,
+      "sha256": "30f18641cd49076f7ed0f98af729ad9cd7e14d77e164cb6e5dff7a51574a4dbb"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
       "domain": "roadmap",
-      "size": 67469,
-      "sha256": "feaf7fbe9746503f1de3a346c267ab3e1a71e1a38745af47cfb3ddc53f6757c8"
+      "size": 68157,
+      "sha256": "f6f2653e75aeaa7b13d663625a35338c028b96ab306d0ffbe164d02ea7b2b412"
     },
     {
       "path": "context/roadmap/USTAR_FEED_GOVERNANCE_PROPOSAL_20260927_RU.md",
@@ -1014,8 +1014,8 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 10510,
-      "sha256": "f86d7e91fb10f9f3824b5d8dad44828d33055eaeff1f6f9989ab42c8ddc694f2"
+      "size": 11140,
+      "sha256": "6af9bff5d24d58bd537d426c979664631c688791fe6beffd59eb06bb0342aa8f"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
@@ -1082,6 +1082,12 @@
       "domain": "runtime",
       "size": 2617,
       "sha256": "60243afeaa3d190181fa5225aac266bb4224ab00647b445e1a1ee5c8efde778c"
+    },
+    {
+      "path": "context/runtime/console_owner_acceptance_20261018.json",
+      "domain": "runtime",
+      "size": 1753,
+      "sha256": "98af8a358183d19df7ce7a9f640a82d2f05cbbaa59042f1c1fb282c4c5ce99c4"
     },
     {
       "path": "context/runtime/console_storage_probe_20261018.json",
@@ -2184,8 +2190,14 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 15032,
-      "sha256": "7e9a19e160d033ccd73512f11ac37fd738ee3dff43dbfaa423098eab7bc1e731"
+      "size": 3997,
+      "sha256": "c5d0b6b9b6b743eeb6ac154b6ea09559b81bb66a64249bef83c7e4113aef3c59"
+    },
+    {
+      "path": "context/tasks/HTTPS_NEXT_20261018.md",
+      "domain": "tasks",
+      "size": 4319,
+      "sha256": "063e6b23b929a853fb816cf8572d22ba1167565250f76f8e6a7fdd0a6b094ef5"
     },
     {
       "path": "context/tasks/backlog.yaml",

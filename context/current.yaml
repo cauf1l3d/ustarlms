@@ -222,28 +222,25 @@ production:
     corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
     independent_perimeter_acceptance: false
 current_work:
-  activity: Latest owner request18Oct12:40MSK in shared chat accepts graphical cards
-    with real readable values and asks to fill console blocks with available telemetry.
-    Continuation resumes from98946c6b; working bot/buttons already owner-accepted,
-    exact latest native SHA not supplied. Added bounded PNG cards and actual one-hour
-    CPU/RAM/HTTP curves with gaps, full durable text delivery, bundled licensed Cyrillic
-    fonts and hash-locked Pillow13. Console shows measured HDD capacity/inodes, fresh
-    rule candidate/confirmed state and persistent bounded incident/recovery history;
-    obsolete SFTP placeholder replaced by existing protected HTTPS archive guidance.
-    Global and per-source freshness preserved; stale notifier cannot assert healthy
-    rules. Independent external HTTP/observer/restore remain genuine evidence gaps.
-    Local312 backend PASS, renderer54PASS, build/prototype and PNG fixture visual
-    QA PASS; fresh review Important1 fixed RED-to-GREEN, no Critical/Minor. All3 sourceb93e16af
-    CI SUCCESS,312 backend/72Chromium/native fixtures; artifact12133242265 hashes/source/wheel/fonts/observer/units
-    verified,370481B. Local Chromium unavailable; actual CI mobile screenshots visually
-    accepted. Existing full-venv updater now installs locked dependencies before wheel
-    and restores previous dependency state on rollback; native CI absent-Pillow install
-    and rollback PASS. No native SSH/update, bot credentials/password/CA/TOTP reset,
-    Academy or host/home network change. Home-access pilot, independent observer,
-    roles/download/jobs/overhead/restore-RTO remain open. Moodle5.2/PG17 deferred,
-    application526/schema93/tasks33 unchanged.
-  next_task: INF-06
-  ready_tasks: []
+  activity: Owner18Oct14:42:07MSK reports working and explicitly closes the console
+    stage. INF-06 done in owner-accepted scope; do not resume UI, setup or installation.
+    Owner reply follows delivered b93e16af artifact; exact installed module hash/terminal
+    acceptance and numerical latency not supplied. This is owner acceptance, not independent
+    measurement. Sourceb93e16af and docsc9fddfb7 all3CI SUCCESS,312 backend/72Chromium/native
+    fixtures; artifact12133242265 verified. Dated release/failure receipts preserved.
+    Next INF-07 resumes the previously selected baseline/patch_OS/Academy_HTTPS queue.
+    Prepare read-only evidence and internal Academy HTTPS plan on existing Apache,
+    including name/CA, wwwroot/proxy, cookies, clients and rollback. Last known Academy
+    URL http://ustar.local differs from accepted console HTTPS on8443. No Academy
+    TLS switch or new host/network change is performed by this context update. Independent
+    observer, home access and unmeasured native role/download/jobs/overhead remain
+    separate planned INF-06-OPS follow-up; restore/RTO remains OPS-02 waiting sysadmin.
+    After HTTPS return to INF-02/03 minimal DB privileges and code/config protection.
+    Moodle5.2/PG17 remain deferred; application526/schema93 unchanged; roadmap tasks34
+    after the separate follow-up entry.
+  next_task: INF-07
+  ready_tasks:
+  - INF-07
   task_statuses:
     AUDIT-01: planned
     B2B-01: planned
@@ -256,8 +253,9 @@ current_work:
     INF-03: planned
     INF-04: in_progress
     INF-05: planned
-    INF-06: in_progress
-    INF-07: planned
+    INF-06: done
+    INF-06-OPS: planned
+    INF-07: ready
     INF-08: done
     INF-09: in_progress
     INF-10: planned
@@ -338,7 +336,7 @@ sysadmin_restore:
   production_platform_upgrade_deferred:
     moodle: '5.2'
     postgresql: '17'
-  next_task: server_control_panel_with_Telegram_alerts_metrics_backup_access_and_Academy_control
+  next_task: Academy_internal_HTTPS_INF07_after_console_owner_acceptance
 deferred_platform:
   task: PLAT-01
   status: deferred_by_owner16Oct

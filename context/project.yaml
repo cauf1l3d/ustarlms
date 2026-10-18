@@ -23,24 +23,27 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: next_INF06_panel_and_Telegram_no_platform_upgrade
+execution_gate: INF06_owner_accepted_next_INF07_Academy_HTTPS_preparation_no_platform_upgrade
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
   status: archive_obtained_instruction_transferred_waiting_sysadmin_restore
   owner_confirmation: '2026-10-16T00:20:51+03:00'
-  control_panel: next_INF06
+  control_panel: INF06_owner_accepted_20261018
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: INF-06
-  spec: context/runtime/control_panel_telegram_20261016.md
-  prototype_PR: 103
-  status: graphical_release_source_CI_verified_owner_install_pending
-  installation_receipt: context/runtime/console_native_install_20261017.json
-  telegram_release_handoff: context/runtime/console_telegram_graphics_delivery_20261018.md
-  graphics_receipt: context/runtime/console_telegram_graphics_20261018.json
-  home_access_plan: server-console/HOME_ACCESS_PLAN_20261018.md
-  architecture: server-console/ARCHITECTURE.md
-  observability: server-console/OBSERVABILITY.md
-  design: server-console/DESIGN.md
+  task: INF-07
+  spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  preparation: context/tasks/HTTPS_NEXT_20261018.md
+  status: ready_for_read_only_Academy_HTTPS_preparation_and_plan
+  deployment: not_started
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
+completed_control_panel:
+  task: INF-06
+  status: owner_accepted_20261018T144207_MSK
+  receipt: context/runtime/console_owner_acceptance_20261018.json
+  verified_delivered_source: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
+  exact_installed_source_commit: null
+  PR: 103
+  operational_followup: INF-06-OPS
+  restore_followup: OPS-02

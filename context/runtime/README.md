@@ -1,5 +1,9 @@
 # Runtime и эксплуатация
 
+**Актуально18Oct14:42МСК:** владелец подтвердил работу и завершил этап пульта/Telegram. [Приёмка](console_owner_acceptance_20261018.json). Следующий план — [HTTPS Академии INF-07](../tasks/HTTPS_NEXT_20261018.md), без текущего переключения сервера. Остатки INF-06-OPS и OPS-02 сохранены отдельно; старые установки/hotfix ниже — история, не команды к повторному выполнению.
+
+## История поставок и измерений
+
 Последний запрос18Oct12:40МСК из [общего диалога](https://chatgpt.com/share/6ad4957d-45f4-83eb-8db0-32e41a9137fd): читаемые графические карточки Telegram с реальными данными и заполнение пульта доступной телеметрией. Продолжение от98946c6b: PNG/графики, HDD/inode, свежие правила и история инцидентов проверены: sourceb93e16af, все3 CI SUCCESS,312 backend/72 Chromium/native fixtures PASS; artifact12133242265 скачан и сверен. На server1 ещё не установлено. Работа бота/кнопок уже принята владельцем, прежний credential crash не является текущим следующим шагом. [Receipt](console_telegram_graphics_20261018.json). [Точные команды обновления](console_telegram_graphics_delivery_20261018.md). Ниже — история предыдущих поставок.
 
 Owner18Oct04:40МСК подтвердил: команды обновления и новые кнопки работают; точный native SHA и время отклика не присланы. [Receipt](console_telegram_latency_20261018.json). Продолжение11:49МСК: исправляется задержка — long polling5с, yield0,2с вместо успешной паузы10с, post-poll snapshot/maintenance;230 backend PASS, material review finding закрыт RED→GREEN, все3 CI4bb34f0b SUCCESS, artifact12131452167 скачан и сверены hash/source/wheel/observer. Mini App требует доступного с устройства частного HTTPS и доверия CA; домашний маршрут не установлен. [Проверка Mini App и обновление](../../server-console/TELEGRAM_LATENCY_20261018.md). Новый latency-пакет ещё не установлен; сеть/Академия/auth/CA не менялись. Ниже — история предыдущих поставок.

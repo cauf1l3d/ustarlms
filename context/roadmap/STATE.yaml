@@ -1,20 +1,19 @@
 schema_version: 2
 updated_at: '2026-10-18'
 project: USTAR Academy
-stage: console_graphical_release_verified_owner_install_pending
-stage_label: 'Графические карточки и реальные поля пульта проверены; пакет выдан для обновления на server1'
+stage: console_owner_accepted_next_Academy_HTTPS
+stage_label: 'Пульт и Telegram приняты владельцем; следующий этап — HTTPS Академии (INF-07)'
 current_activity: >-
-  Latest owner request18Oct12:40MSK in shared chat accepts graphical cards with real readable values and asks to fill console blocks with available telemetry.
-  Continuation resumes from98946c6b; working bot/buttons already owner-accepted, exact latest native SHA not supplied.
-  Added bounded PNG cards and actual one-hour CPU/RAM/HTTP curves with gaps, full durable text delivery, bundled licensed Cyrillic fonts and hash-locked Pillow13.
-  Console shows measured HDD capacity/inodes, fresh rule candidate/confirmed state and persistent bounded incident/recovery history; obsolete SFTP placeholder replaced by existing protected HTTPS archive guidance.
-  Global and per-source freshness preserved; stale notifier cannot assert healthy rules. Independent external HTTP/observer/restore remain genuine evidence gaps.
-  Local312 backend PASS, renderer54PASS, build/prototype and PNG fixture visual QA PASS; fresh review Important1 fixed RED-to-GREEN, no Critical/Minor. All3 sourceb93e16af CI SUCCESS,312 backend/72Chromium/native fixtures; artifact12133242265 hashes/source/wheel/fonts/observer/units verified,370481B. Local Chromium unavailable; actual CI mobile screenshots visually accepted.
-  Existing full-venv updater now installs locked dependencies before wheel and restores previous dependency state on rollback; native CI absent-Pillow install and rollback PASS.
-  No native SSH/update, bot credentials/password/CA/TOTP reset, Academy or host/home network change. Home-access pilot, independent observer, roles/download/jobs/overhead/restore-RTO remain open.
-  Moodle5.2/PG17 deferred, application526/schema93/tasks33 unchanged.
-next_task: INF-06
-ready_tasks: []
+  Owner18Oct14:42:07MSK reports working and explicitly closes the console stage. INF-06 done in owner-accepted scope; do not resume UI, setup or installation.
+  Owner reply follows delivered b93e16af artifact; exact installed module hash/terminal acceptance and numerical latency not supplied. This is owner acceptance, not independent measurement.
+  Sourceb93e16af and docsc9fddfb7 all3CI SUCCESS,312 backend/72Chromium/native fixtures; artifact12133242265 verified. Dated release/failure receipts preserved.
+  Next INF-07 resumes the previously selected baseline/patch_OS/Academy_HTTPS queue. Prepare read-only evidence and internal Academy HTTPS plan on existing Apache, including name/CA, wwwroot/proxy, cookies, clients and rollback.
+  Last known Academy URL http://ustar.local differs from accepted console HTTPS on8443. No Academy TLS switch or new host/network change is performed by this context update.
+  Independent observer, home access and unmeasured native role/download/jobs/overhead remain separate planned INF-06-OPS follow-up; restore/RTO remains OPS-02 waiting sysadmin.
+  After HTTPS return to INF-02/03 minimal DB privileges and code/config protection. Moodle5.2/PG17 remain deferred; application526/schema93 unchanged; roadmap tasks34 after the separate follow-up entry.
+next_task: INF-07
+ready_tasks:
+- INF-07
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
@@ -262,23 +261,26 @@ sysadmin_restore:
   production_platform_upgrade_deferred:
     moodle: '5.2'
     postgresql: '17'
-  next_task: server_control_panel_with_Telegram_alerts_metrics_backup_access_and_Academy_control
+  next_task: Academy_internal_HTTPS_INF07_after_console_owner_acceptance
 next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: graphical_release_verified_delivered_owner_install_and_receiver_pending
+  status: done_owner_accepted_20261018T144207_MSK
+  owner_acceptance_receipt: context/runtime/console_owner_acceptance_20261018.json
+  acceptance_scope: delivered_LAN_console_and_Telegram_stage_not_full_DR_or_all_optional_operations
+  operational_followup: INF-06-OPS
   style: graphite_with_readable_type_color_accents_and_Grafana_style_charts_owner16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
   Telegram: alerts_metrics_latest_completed_backup_and_control
   independent_observer: required_for_host_loss_not_yet_deployed
   continuation_gate: owner_authorized_install_20261017T1703_MSK_LAN_1709
-  telegram_delivery: bot_and_buttons_owner_accepted_graphical_receiver_pending
+  telegram_delivery: owner_reports_working_and_closes_current_console_stage_details_not_separately_measured
   telegram_transport_receipt: context/runtime/console_telegram_transport_20261018.json
   telegram_network_receipt: context/runtime/console_telegram_network_20261018.json
   telegram_egress_receipt: context/runtime/console_telegram_egress_20261018.json
-  telegram_connection_next: owner_install_verified_graphics_release_then_readability_and_source_checks
+  telegram_connection_next: none_console_stage_closed_do_not_repeat_setup_or_install
   telegram_subscription_receipt: context/runtime/console_vpn_subscription_20261018.json
   telegram_subscription_probe: server-console/VPN_SUBSCRIPTION_PROBE.md
   telegram_subscription_launch_receipt: context/runtime/console_vpn_probe_tty_20261018.json
@@ -288,7 +290,7 @@ next_control_panel:
   telegram_release_receipt: context/runtime/console_telegram_graphics_20261018.json
   telegram_release_handoff: context/runtime/console_telegram_graphics_delivery_20261018.md
   telegram_startup_hotfix: previous_crash_superseded_by_owner_bot_working_and_buttons_report
-  telegram_hotfix_module_sha256: 33c706c01e70eae40fff864c95b4becfe3b88a11d63e6e3888093fe9812ed4a2
+  historical_credential_fix_module_sha256: 33c706c01e70eae40fff864c95b4becfe3b88a11d63e6e3888093fe9812ed4a2
   telegram_notifier_fix_source: fd46c383c9cfba3d8155275ad1e04cae423aa082
   telegram_notifier_fix_receipt: context/runtime/console_notifier_credential_fix_20261018.json
   telegram_notifier_fix_runbook: server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md
@@ -297,11 +299,14 @@ next_control_panel:
   audit_followup: server-console/AUDIT_FOLLOWUP_20261017.md
   priority_metrics: cron_last_observed_success;backup_completed_age;SSD_HDD_capacity_inodes;optional_local_HTTP_status_latency
   lan_rollout: server-console/LAN_ROLLOUT_20261017.md
-  native_installation: owner_terminal_receipt_limited_gate_passed_20261017T2336_MSK
-  installation_receipt: context/runtime/console_native_install_20261017.json
-  installed_source_commit: 1f605e4dad9a88040146086bfbfbe48d842004d5
-  latest_native_receipt: context/runtime/console_telegram_latency_20261018.json
-  installed_source_scope: last_exact_terminal_release1f605_later_bot_buttons_accepted_exact_SHA_not_supplied
+  native_installation: owner_reports_latest_delivery_working_20261018T144207_MSK_no_fresh_terminal_report
+  installation_receipt: context/runtime/console_owner_acceptance_20261018.json
+  initial_native_installation_receipt: context/runtime/console_native_install_20261017.json
+  installed_source_commit: null
+  last_exact_terminal_installed_source_commit: 1f605e4dad9a88040146086bfbfbe48d842004d5
+  latest_delivered_release_accepted_by_context: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
+  latest_native_receipt: context/runtime/console_owner_acceptance_20261018.json
+  installed_source_scope: latest_release_working_by_owner_report_exact_native_SHA_not_supplied
   totp: owner_skipped_first_launch
   source_diagnostics: owner_update1f605_PASS_HDD_OK_SMART_warning_partial_SSD_accepted_in_receipt_scope
   source_diagnostics_receipt: context/runtime/console_storage_probe_20261018.json
@@ -310,7 +315,7 @@ next_control_panel:
   graphics_increment_runbook: server-console/TELEGRAM_GRAPHICS_20261018.md
   source_release_receipt: context/runtime/console_telegram_graphics_20261018.json
   source_fix_runbook: server-console/STORAGE_FIX_20261018.md
-  browser_open: owner_reported_20261017T2359_MSK_not_login_or_CA_trust_acceptance
+  browser_open: owner_accepts_working_console_20261018_not_exhaustive_client_or_CA_matrix
   home_access: userspace_SSH_candidate_isolated_Windows_pilot_required_not_installed
   home_access_plan: server-console/HOME_ACCESS_PLAN_20261018.md
   home_access_old_subnet_route: superseded_by_owner_network_stability_requirement

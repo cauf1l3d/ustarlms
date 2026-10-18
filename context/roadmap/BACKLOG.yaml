@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-17'
+updated_at: '2026-10-18'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -154,27 +154,21 @@ tasks:
   - context/runtime/server_facts_followup_20261017.json
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии
-  status: in_progress
+  status: done
   depends_on:
   - DOC-03
   acceptance:
-  - Linear-inspired same-host panel with password login, protected remote access and visible freshness/NoData
-  - Server/Academy/cron/HDD/backup metrics, labs URL and lifetime, SFTP and manual backup/restore plans
-  - Telegram allowlisted operator commands and failure/recovery alerts with verified delivery and audit
-  - Latest verified completed encrypted archive downloadable on request without starting a new backup or sharing the recovery
-    key
-  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production effects; no arbitrary shell
-  - Independent observer verifies loss of host and delivery; retention/resources bounded
+  - Owner accepts the working delivered console and Telegram stage and explicitly ends console work
+  - Freshness/NoData, graphical cards, HDD figures, rules and incidents implemented and source CI verified
+  - Residual operational acceptance and optional scope explicitly tracked in INF-06-OPS and OPS-02
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
-  current_summary: >-
-    Latest owner18Oct12:40MSK accepts readable graphical cards and requests available measured console data; resumed from98946c6b.
-    Bounded PNG/cards/history curves, durable image+full text delivery, HDD capacity/inodes, live rule state and persistent incident history implemented; sourceb93e16af all3CI SUCCESS,312backend/72Chromium/native fixtures PASS; artifact12133242265 verified and delivered.
-    Native installation/graphical receiver/readability/timing and browser source/role/download checks remain pending; existing bot/buttons already owner-accepted with exact new native SHA unknown.
-    Full-venv updater handles locked Pillow dependency and rollback. No credentials/CA/TOTP/network/Academy reset; TOTP remains owner-skipped.
-    Independent observer/restore-RTO and home-access pilot remain genuine gaps. Request p95/5xx/raw logs/flexible TTL/admin UI are separate sources or work.
+  current_summary: Owner18Oct14:42MSK reports working and closes the console stage. INF-06 done in accepted current scope;
+    no repeated UI/setup/install. Exact installed hash and numerical latency not supplied. Source and artifact evidence remain
+    dated; residual operations/observer/home access in INF-06-OPS, restore in OPS-02.
   validation_evidence:
+  - context/runtime/console_owner_acceptance_20261018.json
   - context/runtime/console_telegram_graphics_20261018.json
   - context/runtime/console_telegram_graphics_delivery_20261018.md
   - server-console/TELEGRAM_GRAPHICS_20261018.md
@@ -204,9 +198,35 @@ tasks:
   - server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md
   - server-console/VPN_SUBSCRIPTION_PROBE.md
   - context/runtime/console_storage_release_20261018.json
+  original_full_scope_acceptance:
+  - Linear-inspired same-host panel with password login, protected remote access and visible freshness/NoData
+  - Server/Academy/cron/HDD/backup metrics, labs URL and lifetime, SFTP and manual backup/restore plans
+  - Telegram allowlisted operator commands and failure/recovery alerts with verified delivery and audit
+  - Latest verified completed encrypted archive downloadable on request without starting a new backup or sharing the recovery
+    key
+  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production effects; no arbitrary shell
+  - Independent observer verifies loss of host and delivery; retention/resources bounded
+  completed_at: '2026-10-18T14:42:07+03:00'
+  completion_scope: owner_accepted_current_delivery_not_independent_full_operations_or_DR_acceptance
+  implementation_commit: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
+  deployment_evidence: context/runtime/console_owner_acceptance_20261018.json
+- id: INF-06-OPS
+  title: Отдельная эксплуатационная приёмка и расширения после принятого пульта
+  status: planned
+  depends_on:
+  - INF-06
+  acceptance:
+  - Independent host-loss observer and external probe accepted on another node if selected
+  - Native roles/download hash/guarded jobs and overhead tested in their own agreed scope; no repeated UI development
+  - Private home-access pilot separately selected and validated without destabilizing existing networking
+  - Restore/RTO evidence stays with OPS-02; a working console is not full disaster recovery
+  spec: context/runtime/control_panel_telegram_20261016.md
+  runbook: context/tasks/HTTPS_NEXT_20261018.md
+  current_summary: Unmeasured or optional work preserved after owner closes INF-06. Not a blocker for next INF-07 and not
+    an instruction to resume console work.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
-  status: planned
+  status: ready
   depends_on:
   - INF-08
   - INF-10-OS
@@ -215,6 +235,8 @@ tasks:
   - Real workstations/phones pass login, links, files, Quiz/SCORM/chat
   - Other vhosts and required services preserved; renewal alert verified
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  preparation_runbook: context/tasks/HTTPS_NEXT_20261018.md
+  next_scope: read_only_preparation_and_HTTPS_plan_no_automatic_production_switch
   current_summary: 17Oct Apache vhost inventory видит80, есть443 listener и публичный сертификат до21Dec2026; связка Academy
     DNS/proxy/trust/client login не проверена. Не трактовать наличие443 или cert как готовый HTTPS Академии.
   validation_evidence:
@@ -579,10 +601,13 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: repository_consolidation_then_INF06_no_repeat_of_accepted_host_or_Moodle_patch
+execution_gate: console_owner_accepted_then_INF07_prepare_Academy_HTTPS_no_platform_upgrade
 owner_selected_order:
 - DOC-03
 - INF-06
+- INF-07
 - OPS-02_external_result_when_received
-latest_owner_priority: '16Oct00:20MSK: consolidate GitHub and audit; next INF06 panel+Telegram; OPS02 waiting sysadmin; Moodle5.2/PG17
-  deferred'
+latest_owner_priority: >-
+  18Oct14:42MSK owner reports working and closes console; update GitHub context and report next phase.
+  Resume previously selected Academy HTTPS INF-07 after completed patch_OS and later prioritized console.
+  No production TLS switch started; OPS02 waiting sysadmin; Moodle5.2/PG17 deferred.

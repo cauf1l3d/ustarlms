@@ -1,18 +1,14 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: unified_Academy_bot_architecture_design
-stage_label: Единая архитектура Telegram Bitrix WhatsApp и внешних Mini Apps
-current_activity: 'Owner19Oct00:41MSK confirms console accounts and personal Telegram link work; service journal still shows
-  old message; journal and external heartbeat explicitly deferred. This is partial acceptance, not full console acceptance
-  or an independently reported native SOURCE_COMMIT. Expected releasee5b87818/contextde4544d9 remains in unmergedPR103.
-  Owner00:49 selects INTEGRATIONS-01/CON-00 architecture: one Academy identity/capability/scope and business command/event
-  contract across Telegram/Bitrix24/WhatsApp, role-specific HRD/HR/manager/CEO/employee actions, external Mini Apps without
-  inbound office ports or unstable home/server networking. PR106 RFC and legacy notes reviewed; new detailed proposal and
-  contracts are design-only. PR105 facts02fd394f show legacy handler22630bytes/hash17Oct; current owner find confirms path/size
-  only, source not received. No subagents, merge, native operation, schema or network change. Review spec before code plan;
-  Bitrix edition, CRM owner, edge/domain and CEO terminal policy remain explicit decisions. INF07 is a separate full-LMS
-  HTTPS gate, not the current task. Sysadmin restore/RTO waiting; Moodle5.2/PG17 deferred.'
+stage: connect_identity_foundation_development
+stage_label: 'Connect: review регистрации и первый код идентичности'
+current_activity: 'Owner19Oct01:28MSK уточнил CRM=задачи Академии, регистрацию первого касания через бот, approval и общую
+  привязку каналов; поручил review и начало разработки без субагентов. Review трёх документов выполнен. CON01A: Python provider
+  identity, Telegram HMAC launch proof, shared one-time code format; нет HTTP/auth endpoints, persistent consume/replay, Moodle
+  writes, schema, native deploy или network changes. HRD approval сохраняет current approveregistration+hrmanage; manager
+  не повышается автоматически. Journal/heartbeat deferred; console accounts/link previously owner-accepted. Полная registration/DB/provider
+  integration — следующий CON01B. main не merged.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -58,8 +54,8 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151
-      file references, not a new whole-host manifest
+    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file references,
+      not a new whole-host manifest
   cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -81,6 +77,7 @@ audit:
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
 - START_HERE.md
+- context/proposals/USTAR_CONNECT_REVIEW_20261019.md
 - context/project.yaml
 - context/runtime/connect_owner_priority_20261019.json
 - context/proposals/USTAR_CONNECT_RFC_20261018.md

@@ -1,6 +1,6 @@
 # USTAR инструкции агентам
 
-Текущая инструкция владельца19Oct00:49МСК — актуализировать GitHub и доработать архитектуру единого бота Академии в PR106. [Запрос/результаты пульта](context/runtime/connect_owner_priority_20261019.json), [RFC](context/proposals/USTAR_CONNECT_RFC_20261018.md). Учётки пульта и Telegram-привязка проверены владельцем; journal остаётся неисправленным, journal/heartbeat явно отложены. Не возвращаться к ним вместо новой задачи. **Субагентов не запускать без предварительного согласования с владельцем и чёткого обоснования; в этой задаче запрещены.** Moodle5.2/PG17 и sysadmin restore сохраняют прежний статус.
+Текущий запрос владельца19Oct01:28МСК: CRM означает задачи Академии; регистрация первого касания в боте с canonical pending/HRD approval, единая identity и общий одноразовый код. [Review](context/proposals/USTAR_CONNECT_REVIEW_20261019.md), [план CON01A](context/proposals/USTAR_CONNECT_CON01A_PLAN_20261019.md). Разработку после review владелец разрешил. CON01A — offline Python primitives, ещё не auth endpoint/registration integration. **Субагентов не запускать без предварительного согласования и обоснования; в этой задаче запрещены.** Journal/heartbeat явно отложены. Moodle5.2/PG17 и sysadmin restore сохраняют прежний статус.
 
 ## Перед работой
 
@@ -26,4 +26,4 @@
 
 ## Следующая задача
 
-[INTEGRATIONS-01 / CON-00](context/proposals/USTAR_CONNECT_RFC_20261018.md): один business contract, текущая Moodle identity/capabilities/scope, transport adapters и узкий внешний edge. Сохранить существующие domain writers/эскалации; server-console accounts/token не являются Academy auth. Legacy handler найден владельцем, но его source ещё не прочитан; не выполнять его при аудите и не публиковать секреты. Пока design-only, без изменения сети, ролей, schema или production. Новый implementation plan — после review проекта.
+[INTEGRATIONS-01 / CON-01A](context/proposals/USTAR_CONNECT_RFC_20261018.md): один business contract, текущая Moodle identity/capabilities/scope, transport adapters и узкий внешний edge. Сохранить существующие domain writers/эскалации; server-console accounts/token не являются Academy auth. Legacy handler найден владельцем, но его source ещё не прочитан; не выполнять его при аудите и не публиковать секреты. Review выполнен; CON01A реализует transport primitives без изменения сети, ролей, schema или production. Следующий CON01B — persistent identity/nonce/registration facade и Moodle DB tests.

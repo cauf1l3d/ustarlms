@@ -1,12 +1,10 @@
 # Активные задачи USTAR
 
-## Текущая работа INTEGRATIONS-01 / CON-00
+## Текущая работа INTEGRATIONS-01 / CON-01A
 
-По запросу19Oct00:49МСК доработать [PR106/RFC Connect](../proposals/USTAR_CONNECT_RFC_20261018.md) и [контракты](../proposals/USTAR_CONNECT_CONTRACTS_20261019.md): одна Academy identity и текущие capabilities/scope, Telegram/Bitrix24/WhatsApp adapters, роли/эскалации и внешний Mini App без входящих офисных портов. Это design-only; реализация и provisioning ещё не начаты. Субагенты запрещены владельцем без предварительного согласования и обоснования.
+Owner19Oct01:28: CRM=задачи Академии, регистрация первого касания из бота с pending/approval и общая привязка каналов; review и начало разработки разрешены. [Результаты review](../proposals/USTAR_CONNECT_REVIEW_20261019.md), [план](../proposals/USTAR_CONNECT_CON01A_PLAN_20261019.md). CON01A — Python identity, Telegram HMAC proof и формат одноразового кода, offline tests. Нет работающей регистрации/API, persistent consume/replay, schema/network/server changes. Следующий CON01B — canonical registration/HRD writer + identity/challenge/session DB и интеграционные проверки. Manager не получает hrmanage по названию роли.
 
-[Owner00:41](../runtime/connect_owner_priority_20261019.json): учётные записи пульта и личная Telegram-привязка работают; journal всё ещё показывает прежнее сообщение. Journal/heartbeat явно отложены и не исправляются в новой задаче. PR103 уже содержит проверенную поставку sourcee5b87818/contextde4544d9, а не только прототип. Полную приёмку или exact native SOURCE_COMMIT это сообщение не подтверждает. INF-07 HTTPS Академии сохраняется отдельным gate полного Quiz/SCORM; не путать с исправным HTTPS пульта.
-
-Legacy handler22630байт найден владельцем; PR105 содержит dated hash17Oct. Source ещё не получен. Стратегия — сохранить доказанные сценарии и домены, [проверить перенос](../proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md), не выполнять handler и не копировать секреты в Git. Следующий engineering шаг после review — implementation plan CON-01; требуется уточнить Bitrix edition/CRM meaning/edge constraints и terminal CEO policy.
+Без субагентов по требованию владельца. Journal/heartbeat пульта отложены; accounts/link ранее проверены владельцем, не полная приёмка. INF07/full Moodle HTTPS и внешняя onboarding Mini App остаются отдельными gates. Legacy handler source не получен; не запускать для аудита.
 
 ## Ожидание внешнего результата OPS-02
 

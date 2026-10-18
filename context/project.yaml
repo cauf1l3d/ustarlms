@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: unified_Academy_bot_architecture_design
+  stage: connect_identity_foundation_development
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -23,7 +23,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: INTEGRATIONS01_design_only_no_network_or_platform_changes
+execution_gate: CON01A_offline_primitives_no_server_or_schema_changes
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -37,3 +37,4 @@ current_work:
   design_PR: 106
   owner_receipt: context/runtime/connect_owner_priority_20261019.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
+  review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md

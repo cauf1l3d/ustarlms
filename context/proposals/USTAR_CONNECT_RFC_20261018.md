@@ -1,6 +1,6 @@
 # USTAR Connect — единый бот, роли и внешние приложения
 
-Статус: **PROPOSED, редакция 2 от 19.10.2026, Europe/Moscow**. Первая редакция18Oct сохранена в истории PR106. Это проект контрактов, а не реализованный API, принятый ADR или установка. Последний запрос владельца00:49 и результаты пульта00:41: [receipt](../runtime/connect_owner_priority_20261019.json). Субагенты не запускались.
+Статус: **PROPOSED API, редакция 3 от 19.10.2026, Europe/Moscow**. Первая редакция18Oct сохранена в истории PR106. Это проект контрактов, а не реализованный API, принятый ADR или установка. Исходный запрос владельца00:49 и результаты пульта00:41: [receipt](../runtime/connect_owner_priority_20261019.json). Субагенты не запускались.
 
 Проверены main d9655074db9a06281fe16f378dbdbe1d279104a0, application baseline e1d57f5bc28f6964afd20aeff7620345b34a80fe (526 plugin/theme файлов,93 таблицы), PR103 head de4544d97f4f77036cfbb358ab79273361e6a6e5 и PR105 head02fd394fb90b44ad299374fd678b12543e7681ab. PR103/105 не merged. Текущая работа — архитектура INTEGRATIONS-01; журнал служб пульта и внешний heartbeat отложены владельцем.
 
@@ -77,13 +77,21 @@ Polling/webhook одного источника не включаются одн
 
 ## 4. Связь учёток, быстрый вход и отзыв
 
-### Первая привязка
+### Первый контакт и регистрация
+
+По дополнению владельца19Oct01:28 регистрация доступна из бота через ограниченную HTTPS Mini App. Она использует registration_service::register: логин/email/имя/фамилия/подразделение/пароль, canonical user + employment pending + staff request. Пароль не вводится в чат. До одобрения доступны только собственная заявка и onboarding; после — текущие права роли. Доставка registration_requested не создаёт вторую заявку.
+
+Одобрение сохраняет staffing_requests::review / employment::approve_registration и требует approveregistration + hrmanage. Обычный manager не получает новые права. Manager endorsement — отдельное будущее изменение домена. Повтор после timeout/второй канал не создаёт дубль аккаунта: receipt, transaction, uniqueness и canonical writer обязательны. Existing account → login/recovery/link; совпадение имени/телефона не подтверждает владение.
+
+[Полное ревью и сценарий](USTAR_CONNECT_REVIEW_20261019.md), [план CON-01A](USTAR_CONNECT_CON01A_PLAN_20261019.md). CON-01A содержит начальную реализацию transport primitives; HTTP API/регистрация/DB/production ещё не подключены.
+
+### Привязка существующей учётки и второго канала
 
 1. Сотрудник аутентифицируется в действительной Академии: LAN-сессия либо отдельно принятый публичный login flow. Одного доступа к messenger недостаточно.
-2. Академия выпускает challenge: случайный секрет не менее128бит, hash-at-rest, TTL10мин, конкретные channel/tenant и Moodle actor, лимит попыток.
+2. Академия выпускает challenge: случайный секрет256бит в едином формате uc1_, hash-at-rest, TTL10мин, конкретные channel/tenant и Moodle actor, лимит попыток.
 3. Пользователь подтверждает challenge из своего личного provider account. Группы/пересланные сообщения и подставленный user ID отклоняются. Bitrix учитывает tenant; WhatsApp phone/wa_id не связывается по совпадению номера в профиле.
 4. Академия показывает подтверждённую пару, пользователь подтверждает привязку. Перенос provider account на другого Moodle user требует отзыва прежней связи и новой проверки, не silent upsert.
-5. Worker не хранит пароль. Активный tuple (channel,tenant,subject) уникален; в первом релизе одна личная связь/user/channel.
+5. Для каждой связи выпускается новый одноразовый код с atomic consume. «Единый токен» — общий механизм и Academy identity, не постоянный межканальный пароль. Provider credentials раздельны. Worker не хранит пароль. Активный tuple (channel,tenant,subject) уникален; в первом релизе одна личная связь/user/channel.
 
 Первый вход сотрудника вне LAN без прежней привязки требует доверенного public auth flow Академии. Пароль не собирается в чате. HR invitation — приглашение к проверяемой активации, не доказательство личности само по себе.
 
@@ -119,7 +127,7 @@ Telegram initData проверяется сервером по official HMAC л�
 
 Один mobile-first UI: «Сейчас», «Обучение», «Задачи/чек-листы», «Результаты», «Уведомления»; team/HR/company разделы появляются по правам. Простая команда — кнопка/подтверждение, сложная форма/график — общий защищённый web UI. ACL проверяется и по прямому API/URL. Карточки показывают source time и неизвестность данных явно. Личные HR-результаты не выводятся в общий chat.
 
-CRM предварительно означает Bitrix24 CRM: контакты/сделки/активности и ACL остаются в Bitrix, write требует проверенной Bitrix identity и provider authorization. Сервисная CRM-учётка не получает права «от имени любого сотрудника». Если имеется в виду собственный процесс Академии, до разработки назвать сущности/владельца данных; вторую CRM-БД заранее не создавать.
+CRM по уточнению владельца19Oct01:28 означает контур задач Академии: task_workspace и отдельно личные checklist_service. Bitrix — канал к тем же данным. Deals/contacts, второй CRM backend и /crm adapter не требуются.
 
 ## 6. Согласованность, команды и доставка
 
@@ -184,8 +192,9 @@ Connect health: last receive/send, cursor lag/gap, outbox age/depth, retries/unc
 
 | Срез | Результат | Acceptance |
 |---|---|---|
-| CON-00, текущий | Review этой спецификации, contracts и legacy evidence | Определены Bitrix edition/CRM meaning/edge constraints; code не начат |
-| CON-01 | Academy link/revoke, один Telegram business bot, route/results/tasks и уведомления | Negative ACL/replay/revocation, отдельный token от INF-06, offsets recovery |
+| CON-00 | Review выполнен, CRM уточнён | Остальные provider/edge решения не блокируют первый код |
+| CON-01A, текущий | Provider identity, Telegram launch verifier, формат кода | Offline tests; нет endpoint/session/DB writes |
+| CON-01B и остаток CON-01 | Canonical регистрация/pending/HRD approval, Academy link/revoke, один Telegram business bot, route/results/tasks и уведомления | Negative ACL/replay/revocation, отдельный token от INF-06, offsets recovery |
 | CON-02 | Общая доставка/preferences/ack и Bitrix adapter | Одна история из двух каналов, retry/uncertain, фактический portal API |
 | CON-03 | Public HTTPS edge и общая Mini App/PWA с быстрыми действиями | Office/home/mobile TLS/auth, никаких route/DNS изменений connector, disconnect/rollback сохраняют LAN |
 | CON-04 | HR/HRD/manager формы и native LMS handoff/полное обучение | Step-up, files/cookies/Quiz/SCORM, отдельный canonical origin/network gate |
@@ -196,13 +205,13 @@ Connect health: last receive/send, cursor lag/gap, outbox age/depth, retries/unc
 ## 11. Решения для review
 
 - Bitrix cloud/box, редакция/доступность imbot.v2 и app permissions.
-- CRM — Bitrix deals/contacts либо названный собственный процесс.
+- CRM определён владельцем: задачи Академии, не Bitrix deals/contacts.
 - Edge — допустимое размещение/домен/TLS, достижимость из офиса и мобильных сетей, кто сопровождает.
 - Допустим ли будущий canonical Academy hostname/DNS/TLS план при сохранении LAN; узкий API этого не требует.
 - CEO terminal категории, grace и automatic/manual режим.
 - Безопасно полученные source/dependencies/hash legacy handler; файл не исполнять ради аудита.
 
-После review можно готовить implementation plan CON-01. Этот PR не создаёт credentials, внешние аккаунты, сервисы или таблицы.
+Review и план CON-01A готовы; transport primitives реализуются. API и остальные срезы ещё не реализованы. Этот PR не создаёт credentials, внешние аккаунты, сервисы или таблицы.
 
 ## 12. Первичные источники, проверены19Oct2026
 

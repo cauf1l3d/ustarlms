@@ -1491,3 +1491,9 @@ Owner00:49 поручил актуализировать GitHub и дорабо�
 Это docs-only: Moodle526/schema93, production, сеть, credentials, cron и роли не изменялись. Journal не исправлялся, heartbeat не подключался. Implementation и provisioning не начаты; текущая очередь не возвращается к устаревшему INF06-start. main не merged, PR106 остаётся draft.
 
 Сохранена уже существующая в PR103 follow-up задача INF-06-OPS: roadmap34 вместо33 в старой базе main; task не потерян при актуализации. Source/schema inventories regenerated; локально r16:545tests OK/19environment skips. Context/relative links/source anchors/secret patterns/diff проверены; это проверки документации/существующего кода, не тесты ещё не реализованных Connect features.
+
+## 2026-10-19 — Connect review и CON01A, owner01:28МСК
+
+CRM уточнён: задачи Академии. Review RFC/contracts/legacy выявил отсутствующий onboarding bootstrap, pending access, HRD capability boundary и опасность общего постоянного bearer. Документы уточнены; реализованы offline provider identity, Telegram HMAC verifier и link-code primitives. Единый формат кода не заменяет DB atomic consume, nonce и Academy permissions. Тесты впервые дали ModuleNotFoundError на отсутствующем пакете, затем 11 behavioral tests PASS. Полный baseline545tests/19skips. Нет субагентов, отправки сообщений, native/schema/network changes, merge. Следующий срез CON01B и его DB/HTTP acceptance не выполнены.
+
+Финальная локальная проверка CON01A:556 r16 tests PASS/19environment skips, включая11новых; CONTEXT_OK526source files/93tables/34tasks. Native registration/DB/provider acceptance не выполнялась.

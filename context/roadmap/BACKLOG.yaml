@@ -442,15 +442,15 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON-00_design_only
-  owner_priority: explicit_request19Oct0049
-  current_summary: Expand PR106 using existing Academy domains;no subagents or product/network/schema changes.
+  phase: CON-01A_identity_foundation
+  owner_priority: explicit_request19Oct0128_review_then_begin
+  current_summary: Review signup and Academy tasks;offline identity/HMAC/link-code primitives;no subagents or server/schema changes.
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors
   - Legacy file metadata distinguished from unread source;safe migration and old pending/consumer gates explicit
   - Public Mini App and full Moodle origin gate distinguished;office and home routing stability preserved
-  - Owner review of proposed design before implementation plan;provider/CRM/CEO decisions explicit
+  - Owner authorizes review then development;CRM=Academy tasks;provider/edge/CEO decisions explicit
   spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
   reference: context/architecture/notification_delivery_20260928.md
   validation_evidence:
@@ -469,7 +469,7 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: INTEGRATIONS01_design_only_no_repeat_of_accepted_operations
+execution_gate: CON01A_offline_primitives_no_repeat_of_accepted_operations
 owner_selected_order:
 - DOC-03
 - INF-06

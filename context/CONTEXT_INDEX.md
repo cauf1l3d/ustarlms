@@ -3,7 +3,8 @@
 [START_HERE](../START_HERE.md) → [project](project.yaml) → [STATE](roadmap/STATE.yaml) → [ACTIVE](tasks/ACTIVE.md).
 
 - [Выполнено с06Oct и остаток по аудиту](audits/AUDIT_RECONCILIATION_20261016_RU.md), [полный backlog](roadmap/BACKLOG.yaml).
-- [Connect RFC](proposals/USTAR_CONNECT_RFC_20261018.md), [API/domain contracts](proposals/USTAR_CONNECT_CONTRACTS_20261019.md), [legacy reuse](proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md) — текущий design-only INTEGRATIONS-01/PR106.
+- [Connect RFC](proposals/USTAR_CONNECT_RFC_20261018.md), [API/domain contracts](proposals/USTAR_CONNECT_CONTRACTS_20261019.md), [legacy reuse](proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md) — текущий INTEGRATIONS-01/PR106; offline CON01A foundation.
+- [Review первого входа](proposals/USTAR_CONNECT_REVIEW_20261019.md), [план CON01A](proposals/USTAR_CONNECT_CON01A_PLAN_20261019.md).
 - [Owner19Oct](runtime/connect_owner_priority_20261019.json): accounts/Telegram link пульта работают; journal/heartbeat deferred. [Ранние границы пульта](runtime/control_panel_telegram_20261016.md) — история INF06, не следующий старт с нуля. [Передача сисадмину](runtime/sysadmin_handoff_result_20261016.json) — restore ожидается.
 - [Runtime evidence](runtime/evidence_20261016.yaml), [карта сервера](runtime/server_map_20261016.md), [реестр поставок](runtime/RELEASE_LEDGER.md).
 - [CI scope](runtime/CI_SCOPE_20261016.md), [ветки](runtime/repository_state_20261016.json), [карта source](code_map/README.md).

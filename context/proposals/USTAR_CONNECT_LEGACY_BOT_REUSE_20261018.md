@@ -69,3 +69,7 @@
 Эти шаги являются будущим планом обследования/переноса, не выполненными серверными операциями. Пока source не получен, вывод ограничен: **сценарии стоит сохранить; конкретные фрагменты кода переиспользовать можно только после проверки**.
 
 **Вывод:** не чистый greenfield бизнес-логики и не прямой перенос legacy handler; гибридная миграция через подтверждённые бизнес-контракты с новым изолированным внешним transport/auth и сохранением canonical USTAR state.
+
+## Дополнение19Oct01:28: регистрация и задачи
+
+CRM уточнён как Academy task_workspace, не Bitrix CRM. Legacy auth/signup/token logic не переносится автоматически: canonical registration_service/staffing_requests/employment сохраняют pending и HRD approval. Общий одноразовый код не заменяет provider proofs и current Academy permissions. [Review трёх документов](USTAR_CONNECT_REVIEW_20261019.md). Source handler всё ещё не получен.

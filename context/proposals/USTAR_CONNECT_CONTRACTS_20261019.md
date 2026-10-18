@@ -1,11 +1,12 @@
 # USTAR Connect — контракты и сопоставление с исходниками
 
-19.10.2026, Europe/Moscow. **PROPOSED / design-only**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Ни один путь API ниже ещё не реализован. Исходники проверены на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
+19.10.2026, Europe/Moscow. **API PROPOSED; CON-01A primitives начаты**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Ни один путь API ниже ещё не реализован. Исходники проверены на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
 
 ## 1. Канонические владельцы операций
 
 | Сценарий | Действующий источник в moodle/local/ustar | Что должен делать Connect |
 |---|---|---|
+| Регистрация/approval | classes/registration_service.php::register; staffing_requests.php::review; employment.php::approve_registration | Canonical pending user+request; HRD approveregistration + hrmanage, actual actor; no manager grant |
 | Actor/employment/организационный scope | classes/access_context.php, capabilities.php, organization_identity.php, organization_model.php | Current actor, active employment, capabilities и актуальный scope; не role string из messenger |
 | Личный маршрут | classes/route_model.php::read_only_snapshot, assessment_lifecycle.php::read_route_point | Read-only опубликованные version/cycle; не force refresh или sync на GET |
 | Материалы маршрута | classes/content.php и Moodle File API | Проверить published/access/context; файловый URL не даёт публичного доступа |
@@ -30,6 +31,10 @@
 
 | Endpoint | Результат/команда | Проверка |
 |---|---|---|
+| POST /onboarding/sessions | Ограниченная bootstrap session | Verified provider + browser nonce/replay; не employee grant |
+| POST /onboarding/registrations | Canonical user+pending request | CSRF/rate limits, canonical validation, outer transaction/lock/receipt, no duplicate user |
+| GET /onboarding/registration | Только собственная заявка | Pending onboarding session, без бизнес-данных |
+| POST /registrations/{id}/decision | Canonical approve/reject | Academy actor + step-up + approveregistration + hrmanage + state/lock |
 | GET /session | Текущий user, capability-filtered features, links, server time | Valid session, current employment |
 | POST /links/challenges | Одноразовая challenge для channel/tenant | Свежая Academy reauth, CSRF, rate limit |
 | POST /links/confirm | Подтверждённая связь | Proof обеих сторон, TTL, uniqueness, replay |
@@ -48,7 +53,7 @@
 | PUT /me/delivery-preferences | Основной канал/fallback/digest/quiet hours | Own identity/valid channels; mandatory domain policies не отключаются |
 | GET /commands/{id} | Receipt принятого запроса | Actor/permission check; никакого чужого payload |
 
-Uploads и File API не являются generic URL fetch. File token, если нужен, короткий, scoped к actor/object/version и не обходящий последующую проверку доступа. CRM имеет отдельный `/crm` adapter contract после уточнения владельца данных; generic Bitrix method endpoint не создаётся.
+Uploads и File API не являются generic URL fetch. File token, если нужен, короткий, scoped к actor/object/version и не обходящий последующую проверку доступа. CRM означает Academy task_workspace и /me/work, /tasks; отдельный Bitrix CRM adapter не нужен.
 
 ### Общая форма команды
 
@@ -97,4 +102,6 @@ Backfill не отправляет старые pending/disabled, не пере�
 - LAN работает при отключении connector/edge; before/after default route/resolver и доступ Академии совпадают; uninstall не требует ремонта сети.
 - Full LMS gate: login/logout, cookies/CSRF, Quiz save/resume/grade, SCORM progress, files/video ranges/uploads, mobile/WebView и office fallback.
 
-Эти проверки — критерии CON-01..05. В текущем design-only PR они не исполнялись и не объявляются пройденными.
+Эти проверки — критерии CON-01..05. CON-01A проверяет только offline identity/proof/code primitives. DB/registration/replay-consumption/role/provider-delivery/network acceptance ещё не выполнена.
+
+Первое касание и общий одноразовый код уточнены в [review](USTAR_CONNECT_REVIEW_20261019.md). Формат uc1_,256бит; TTL600с и atomic consume реализуются в будущем Moodle storage, не в pure hash helper.

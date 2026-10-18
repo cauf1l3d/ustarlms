@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-18",
+  "owner_report_at": "2026-10-18T04:40:36+03:00",
+  "continued_at": "2026-10-18T11:49:48+03:00",
+  "owner_report": "Команды работают отлично, кнопки тоже; плохо — задержка; как проверить Mini App и нужна ли сеть Академии.",
+  "owner_acceptance_scope": [
+    "update_commands_reported_working",
+    "Russian_bot_buttons_reported_working"
+  ],
+  "installed_release_inference": "last provided b275f899 package; exact new native module hash/stdout not supplied",
+  "native_latency_seconds": null,
+  "Mini_App_native_accepted": false,
+  "home_private_route_installed": false,
+  "root_cause": "confirmed code short polling timeout0 followed by fixed10s sleep; network component not measured",
+  "source_commit": "4bb34f0b5f7f4e84a528f729c001597e9dc77950",
+  "changes": {
+    "long_poll_seconds": 5,
+    "success_yield_seconds": 0.2,
+    "poll_error_backoff_seconds": 10,
+    "pending_incidents": "deliver_before_poll",
+    "snapshot": "refresh_after_poll",
+    "maintenance": "refresh_after_poll",
+    "new_incidents_on_poll_error": "still_evaluate_and_deliver"
+  },
+  "unchanged": [
+    "transport_socket_timeout8",
+    "private_actor_and_chat_allowlists",
+    "four_commands_per10s_burst",
+    "durable_offset_and_outbox",
+    "proxy_destination",
+    "credential_guard",
+    "units",
+    "console_auth_CA_TOTP",
+    "Academy_services",
+    "host_home_routes_DNS_firewall_TUN"
+  ],
+  "local_validation": {
+    "backend_passed": 230,
+    "red_green": "five initial targeted failures then GREEN; maintenance-start-during-poll regression RED then GREEN",
+    "warning": "existing_Starlette_httpx_deprecation"
+  },
+  "fresh_review": {
+    "critical": 0,
+    "important_found": 1,
+    "important_fixed": "refresh_maintenance_after_long_poll",
+    "independent_focused_passed": 69,
+    "minor": 0
+  },
+  "delivery": "existing_full_wheel_updater_with_rollback; no_additional_root_installer",
+  "CI": {
+    "status": "all_three_success",
+    "console_run": 39113400687,
+    "context_run": 39113400739,
+    "review_run": 39113400704,
+    "console_job": 117634112569,
+    "backend_passed": 230,
+    "Chromium_passed": 45,
+    "native_fixtures": [
+      "Xray_DynamicUser_LoadCredential_default_deny",
+      "PG16_aggregate_permissions",
+      "HDD_namespace_write_denial",
+      "notifier_LoadCredential0440_first_cycle",
+      "LAN_TLS_broker_isolation",
+      "updater_jobs_refusal_rollback_auth_CA_preservation"
+    ]
+  },
+  "alerts_source_sha256": "d5a683bc9ab2a3cf9a3ab76d920d47d1c9b69f78487647a0bd89804c1ef728c3",
+  "native_pending": [
+    "install_new_latency_release",
+    "measure_actual_button_response",
+    "device_route_and_CA_trust",
+    "Telegram_WebView_login_roles",
+    "independent_observer",
+    "restore_RTO"
+  ],
+  "artifact": {
+    "bytes": 209498,
+    "sha256": "9b81f5e4c81ef21786a9c549db0a2123426bd296454220fa31963e7f4c9f3d35",
+    "source_commit": "4bb34f0b5f7f4e84a528f729c001597e9dc77950",
+    "artifact_id": 12131452167,
+    "zip_digest_verified": true,
+    "all_python_wheel_modules_verified": true,
+    "observer_verified": true
+  }
+}

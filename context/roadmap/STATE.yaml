@@ -1,17 +1,17 @@
 schema_version: 2
 updated_at: '2026-10-18'
 project: USTAR Academy
-stage: console_updated_Xray_accepted_notifier_credential_fix_pending
-stage_label: 'Пульт обновлён, Xray работает; исправление credential guard уведомителя и ответ бота ожидаются'
+stage: console_bot_cards_owner_accepted_latency_release_verified
+stage_label: 'Команды обновления и кнопки бота приняты владельцем; исправление задержки и проверка Mini App'
 current_activity: >-
-  Latest owner18Oct reports bot is working; a new owner receipt preserves this limited private-response acceptance.
-  Installed full console bundle1f605e4d plus subsequent notifier credential fix in session context; exact native module hash and hotfix stdout not supplied.
-  Prior systemd credential crash and fd46c383 all3CI/192backend/45Chromium/actual0440 first-cycle proof remain historical evidence.
-  Current request: readable Russian cards/buttons, missing aggregate metrics, important autoalerts and native Telegram console opening.
-  Presentation/outbox sourceb275f899 passed all3CI,223backend/45Chromium/actual systemd fixtures; artifact12120404826 hashes/source verified and owner commands published; optional Mini App opens the existing login, default off, requiring phone access and trusted HTTPS.
-  No host/home routes/DNS/firewall, Academy services, proxy destination, credentials, console auth/CA/TOTP changed by agent.
-  Full browser/role/download/independent-observer/jobs/overhead/restore-RTO gates remain open; no home VPN installed.
-  Moodle5.2/PostgreSQL17 remain deferred; application526/schema93/tasks33 unchanged.
+  Owner18Oct04:40MSK reports update commands and new bot buttons working; exact native module hash and numerical latency not supplied.
+  Continuation11:49MSK: source4bb34f0b removes successful10s pause via5s long poll/.2s yield, retains10s error backoff.
+  Pending incidents deliver before wait; snapshot and maintenance refresh afterward; polling errors do not stop incidents.
+  Full230 backend PASS; fresh review Important maintenance-start-during-wait fixed RED-to-GREEN, no Critical/Minor; all3 source CI SUCCESS,230backend/45Chromium/actual systemd fixtures; artifact12131452167 hashes/source/wheel/observer verified.
+  Existing full wheel updater used, no extra root patch installer. New latency release not installed by owner yet.
+  Mini App default off requires device route to private console HTTPS and trusted CA, then WebView/login/role acceptance. No home VPN installed.
+  Actor/chat allowlists,4 commands/10s, durable offset/outbox, transport8s/destination, credentials, units, auth/CA/TOTP and host/home network unchanged.
+  Independent observer/jobs/overhead/download/restore-RTO remain open; Moodle5.2/PG17 deferred, application526/schema93/tasks33 unchanged.
 next_task: INF-06
 ready_tasks: []
 canonical_roadmap_branch: main

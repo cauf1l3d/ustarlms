@@ -169,14 +169,15 @@ tasks:
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
   current_summary: >-
-    Owner18Oct now reports working bot responses. Last full installed bundle1f605 with subsequent credential fix per session context;
-    exact native hotfix hash/stdout not supplied. fd46c383 source/actual0440 first cycle/all3CI accepted as prior implementation proof.
-    Delivered sourceb275f899: readable Russian bot cards/native buttons and CPU/RAM/SSD/HDD/SMART/HTTP/DB/cron/backup/lab values; all3CI/223backend/45Chromium/actual systemd PASS; artifact12120404826 hashes/source verified, native owner update pending. Includes
-    explicit missing/stale sources and informative sustained incident/recovery delivery. Mini App opt-in opens existing console login only;
-    actual phone reachability and certificate trust remain a native gate, no host networking changes.
-    Full browser roles/download hash/independent host-loss observer/jobs/overhead/restore-RTO and home-access pilot remain open.
-    Request p95/5xx/logs/SFTP/flexible TTL/admin UI stay outside this bounded bot increment. TOTP remains owner-skipped.
+    Owner18Oct04:40 reports update commands/buttons working; last delivered b275 package, exact native SHA and measured latency not supplied.
+    Current source4bb34f0b replaces short polling/success10s sleep with longpoll5s/yield.2s, retains error backoff10s;
+    post-poll telemetry+maintenance preserves fresh cards and planned operation suppression. Full230 backend PASS; review Important1 fixed RED-to-GREEN, no Critical/Minor; all3CI/230backend/45Chromium/native fixtures PASS, artifact12131452167 verified/delivered; owner latency update pending.
+    Existing full wheel updater reused. New owner installation/actual response timing and Mini App device route/CA/WebView/login gate pending.
+    Host/home network and Academy services unchanged. Independent observer/download/roles/jobs/overhead/restore-RTO and home-access pilot remain open.
+    Request p95/5xx/logs/SFTP/flexible TTL/admin UI stay outside this bounded bot fix. TOTP remains owner-skipped.
   validation_evidence:
+  - context/runtime/console_telegram_latency_20261018.json
+  - server-console/TELEGRAM_LATENCY_20261018.md
   - context/runtime/console_bot_working_20261018.json
   - context/runtime/console_telegram_operator_20261018.json
   - server-console/TELEGRAM_OPERATOR_20261018.md

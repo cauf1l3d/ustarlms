@@ -1,5 +1,27 @@
 # Журнал выполнения roadmap
 
+## 2026-10-18 — продолжение запроса18:55МСК после shared chat19:06
+
+Прочитан shared chat6ad4f002, GitHub head83635d60: предыдущий агент описал начатую работу, но новый account/notification код в опубликованном head отсутствует. Текущие owner HTTPS/officeVPN confirmations сохранены. Запрос1855 и direct15:44Z source_empty/eventsok записаны отдельно без подмены measurement time датой review. Реализуются owner users/last-owner guards, proven Telegram links, private notifier RPC/preferences, independent service-event status и no-own-second-server heartbeat design. Native SSH отсутствует; network/CA/TOTP/rootbot credentials не менялись. Новая приёмка остаётся отдельной от старого установленного1c881495.
+
+## 2026-10-18 14:42 МСК — владелец принимает пульт; следующий этап HTTPS Академии
+
+Владелец: «работает, с пультом закончили», просит обновить GitHub и назвать следующий этап. Создан отдельный immutable console_owner_acceptance_20261018.json: принимается текущий рабочий пульт/Telegram, exact installed SHA, timing и полная native/DR матрица не выдумываются. INF-06 отмечен done в принятом объёме; исходный широкий scope сохранён, эксплуатационные остатки выделены в INF-06-OPS, restore/RTO остаётся OPS-02 waiting_external. Старые install/setup/credential-crash действия убраны из текущих указателей, датированные release receipts сохранены.
+
+Следующий INF-07 ready: вернуться к ранее выбранному HTTPS Академии после принятых patch/ОС и более позднего приоритета пульта. Подготовка — read-only сверка Apache/proxy/wwwroot/DNS/CA, внутреннее имя/сертификат, redirects/cookies/клиенты и откат с проверкой на копии. После HTTPS остаются INF-02/03. Это актуализация контекста, не запуск TLS switch, observer или platform upgrade. main/PR не merged; приложение526/schema93 и сервер агентом не менялись; задач roadmap стало34 после отдельного follow-up.
+
+## 2026-10-18 — graphical bot cards and measured console fields
+
+Resumed from98946c6b after reading shared conversation latest user request12:40MSK. Earlier agent had announced graphics/HDD/rules/history work without publishing it. Implemented bounded local PNGs with real measurements/history gaps and full durable text replies, licensed bundled Cyrillic font, fixed multipart verified Telegram transport; source/per-probe freshness remains explicit. Added HDD capacity/inodes, live candidate/confirmed rule times, durable structured incident/recovery history and actual HTTPS download guidance in console. Bot/buttons were previously owner-accepted; stale canonical credential-crash next actions corrected without altering dated receipts. Baseline230 backend PASS, focused renderer54PASS and initial delivery/incidents14RED→GREEN. Fresh review found transient5xx/408 or malformed200 losing PNG:10 regression cases RED→GREEN, final full312 backend PASS, no Critical/Minor. Build/prototype PASS; all3 sourceb93e16af CI SUCCESS,72 Chromium/native fixtures including absent-Pillow update/rollback PASS. Artifact12133242265 ZIP/tar/source/21modules/4font-assets/10observer-modules/7units verified;370481B SHA4319f5602a83672c82e31e605d370ce5bac99ea92e5fd34fc9951a19d13b2207. Exact owner command in console_telegram_graphics_delivery_20261018.md; no native installation, credential/CA/TOTP/network/Academy changes claimed. Existing full-venv rollback updater now includes locked dependency installation, native CI passed. Local Chromium unavailable; actual CI mobile HDD/events screenshots visually inspected, owner runtime acceptance remains open. Independent observer/restore remain open.
+
+## 2026-10-18 — accepted bot buttons, bounded long polling and Mini App check
+
+Owner04:40MSK reports update commands/buttons working; exact native SHA/numerical latency not supplied. Continued11:49MSK. Source4bb34f0b removes successful10s sleep with5s long polling/.2s yield and10s error backoff. Pending incidents leave before wait; telemetry and maintenance refresh afterward. Review found maintenance-start-during-wait false alert; regression RED→GREEN, full230 PASS, no Critical/Minor. All3 source4bb34f0b CI SUCCESS,230backend/45Chromium/native fixtures PASS; artifact12131452167 ZIP/tar/source/all wheel Python/observer verified. Pinned operator command and Mini App steps in TELEGRAM_LATENCY_20261018.md. Reuse existing complete wheel updater, not an extra root patch installer. Mini App testing requires device route/private HTTPS trust and separate Telegram WebView/login/role check. No native update, home VPN or network/auth/CA change by agent; owner installation/timing/Mini App acceptance remain pending.
+
+## 2026-10-18 — Telegram owner response and presentation increment
+
+Owner reports bot now responds; raw/partial presentation is the new task. New dated receipt preserves this limited receiver evidence and the lack of native module hash/stdout. Prior failure receipts are unchanged. Implemented Russian cards/buttons, aggregate values/freshness, explanatory alerts, four-command bounded burst, same-cycle first delivery, opt-in Mini App with existing login. Private actor/chat filters, durable outbox, token/proxy/CA and network boundaries retained. Sourceb275f899 all3CI SUCCESS,223backend/45Chromium/actual systemd/rollback PASS; artifact12120404826 hashes/SOURCE_COMMIT/wheel/observer verified. Owner command pinned in TELEGRAM_OPERATOR_20261018.md. First source attempt failed only two rootless test fixtures, then corrected; review retry fixed Chromium screenshot transient without app edits. No native installation or phone Mini App acceptance claimed. Independent observer remains required for loss of server1 itself.
+
 ## 2026-09-20 — первый этап рефакторинга, R01 review
 
 Владелец: Codex. Код: `e657cda7dc29750511535b94eee85b22ca7fdb86`,
@@ -1477,3 +1499,253 @@ Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; nativ
 Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.
 
 Полный RC теперь определяется сохранёнными метками PR на каждом synchronize/reopened, а не только событием первоначального labeled: новый коммит не может незаметно пропустить DB/rollback после добавления full-rc. Pre-merge main зафиксирован как c53723c8; исторический application baseline e1d57f5b остаётся отдельным.
+
+
+## 2026-10-17 — review attachments, safe server facts and canonical context
+
+Owner requested fable first, all eight submitted files, script/path audit and fresh context before owner repeat review and continuation of repo/panel/Telegram. Read originals including PDF; source submissions and SHA256 preserved under reviews/20261017, unsafe shell/YAML proposals stored as non-executable text. Confirmed nested public/public, PG role/database and invalid GROUP BY assumptions, cookie/query/config/log disclosure risks, unbounded work, importer error deletion/redaction/checksum drift and guard false positives. Replaced with bounded stdlib collector, closed schemas, private export/handoff, immutable validated import, rollback/freshness checks and separate526 source comparison. No bootstrap/HTTP/raw SQL/log export or service operations.
+
+Verified original full discovery545 with19 environment skips and real MCP stdio; CI failure inferred from an unrelated MCP2 sandbox is not reproduced. CI now uses isolated pinned venv and retains the full suite. New full suite572:553 passed/19 existing environment skips,27 new facts tests. Real import CLI into separate temporary checkout passed current/index/context/secret gates, preserved production receipts/tasks, and kept unavailable source comparison unknown. Synthetic snapshot was not added to working context. Validation details: reviews/20261017/validation.json.
+
+START_HERE is the sole reading order; STATE/BACKLOG generate current/checkpoint. Old checkpoint preserved. Source-derived theme tokens/layer order/capability references, selected grades/routes/evidence/work/mobile scenarios and explicit coverage gaps added. PR103/head98559017 auth/read-only implementation and graph prototype acknowledged as open/not deployed; latest three CI runs successful. Fresh server1 report and sysadmin restore still awaited. Privacy and platform deferrals preserved; Jan15 planning recommendation is not an owner migration order. No server1/Telegram operations.
+
+
+## 2026-10-17 — first owner collection partial; Docker/DPKG collector compatibility
+
+Owner04:01MSK supplied successful script SHA check,31 terminal block statuses and REPORT path:17ok/13error/SMART not requested. No facts/errors/manifest archive supplied yet; recorded separate server_facts_terminal receipt, not a production snapshot. Containers/packages are independent failures;11 following probes depend on containers/code_layout. PHP/global PG command success does not establish app/backup/cron operational health.
+
+Reproduced strict Docker inspect raw fallback failure on optional Health and null log Config with actual Go text/template. Replaced optional lookups with index/with; no Env/Health.Log/custom log output. Dedicated Debian package-version pattern accepts epoch/tilde, installed status is explicit, optional missing package exit1 tolerated, fatal2/empty installed set remain unavailable. Six new regressions; full578 suite559passed/19existing environment skips; focused33/0skips includes actual Go templates and JSON numeric semantics. Sources and validation in reviews/20261017/collector_compatibility*. Corrected pinned collector prepared for repeat run in a new private directory, original report untouched. Actual root causes in this owner run await archive; no server configuration/service or Telegram operations performed.
+
+
+## 2026-10-17 — two actual server1 snapshots imported; repeat-audit context ready
+
+Owner04:16MSK supplied both ZIP folders. Validated exact member paths/CRC/size/type, closed payload schemas/checksums and byte equality with nested report.tar.gz. Collector hashes match published cee34b13/1bdabba3. Imported both unchanged in timestamp order:01:00:21Z17ok/13error and01:12:27Z28ok/2error, SMART excluded. Latest526/526 plugin/theme files match e1d57f5b, no changed/missing/extra/skipped; new last_exact_source_manifest bound to immutable facts/comparison, dated05Oct evidence preserved.
+
+Confirmed DB role moodle superuser/privileges and runtime write access to plugin/config0755, selected unbounded containers/no healthchecks/per-container log options, UFW inactive/global SSH settings and all-address2019 listener requiring process/external verification. No assumption that2019 is proven publicly reachable Caddy API or443/cert proves Academy TLS. Latest17Oct03:31MSK backup success/readback reported and archive stat matches; cron04:12MSK worker0/new errors0 but aggregate failed2/overdue18 retained, active/disabled detail unknown. Full DR/ACL/core/schema/performance scopes remain open.
+
+pg_stat_statements absent from application DB extensions explains unavailable query stats; no installation/restart. Fixed numeric scheduled flag projection and timedatectl separate-property selection; old reports immutable. Isolated PGlite PostgreSQL18.6/WASM reproduced int2 cast42846 and verified new query for int2/int4; production16 column type/new SQL results not independently probed. Clock source showed unknown/null despite ok; empty response now rejected, actual new host clock still unknown. Full580 suite561passed/19environment skips, real MCP and Go templates; archive/import/source/context/secret gates passed. Runtime reconciliation/coverage/backlog/current handoff ready for owner repeat audit before repo/panel/Telegram continuation. No production mutations or agent SSH.
+
+
+## 2026-10-17 — third owner report: scheduled/clock/SMART observations
+
+Owner04:41MSK supplied report.tar.gz plus separate PG/NTP console lines. Bounded tar/gzip/exact members/schema/checksums passed; 36,240bytes archive SHAa33aabd5 and collector SHA4abad3b6 match pinned4c524a52. Imported original payload as01:39:24Z snapshot285497b0,30ok/1error; source526/526 still matches e1d57f5b. Old snapshots/errors and prior validation remain unchanged. Console supplement is explicitly outside archive checksums, not independently reexecuted.
+
+Scheduled147:15 disabled/132 DB-flag enabled; both positive faildelay rows are disabled Moodle.org registration/H5P (60/960s), enabled faildelay0.18 overdue DB-flag-enabled rows all last_run0; upstream scheduler also checks component enablement/overrides, actual eligibility unknown. Cron01:39:03Z worker0/new failures0/USTAR errors0/adhoc0. Clock Etc/UTC,NTPfalse,NTPSynchronizedtrue; both supplemental client commands unavailable, no server/offset/ongoing-client conclusion. SMART sda/sdb healthtrue/exit0 at50/47°C; attributes/wear/self-test history/historical HDD198 residual not rechecked. Same03:31MSK backup receipt/stat, no new capture/rehash/restore.
+
+Only archive error remains pg_query_stats. Owner console: extension available, not installed, empty shared_preload_libraries, compute_query_id auto, track null, pending_restart false. No extension/config/restart/task/NTP changes. STATE/ACTIVE/BACKLOG/coverage/current/index and runtime reconciliation updated for repeat owner audit; INF-06/PR103 and platform/Privacy deferrals preserved. Full r16 suite580/561pass/19existing skips, real MCP stdio and Go templates; context/source/schema/secret gates pass. Application/core/DB schema unchanged, no agent SSH or Telegram delivery.
+
+
+## 2026-10-17 — targeted core/NTP/SMART/component follow-up
+
+Owner13:05:42MSK supplied core/extra ZIP folders and terminal transcript. Validated safe bounded ZIP members/CRC, every checksum, core nested tar equality and exact original report bytes. Core collector hash898667dd matches bddd8b94 pinned source. Official Moodle5.1.8/cc0bf17d verified;24742 matching paths exactly cover eligible reference tree, changed/missing/errors/skipped0, extras23 and exit3 retained. Extra names equal05Oct set, including public config/index backups and legacy handlers/reports requiring access/origin review. Uploaded Git config/hooks/scripts not executed; only pack/idx objects read in a fresh trusted bare repo. Whole deployment and excluded plugin/config/vendor provenance remain separate.
+
+Extra33 probe files checksum-verified; allowlisted derivative keeps NTP selected public peer, all27SSD/17HDD attributes, ATA errors/self-test history and DB flags. Serial/WWN/nonselected NTP peers/raw private outputs not published; originals unchanged. SMART09:59:14Z: healthtrue at50/49C, exit64 both is only bit6/error-log records. HDD5/196/197/198/199 raw0; failed long test16359h and newer successful16385h preserved, no new test. SSD model outside smartctl DB, vendor wear/TBW units unconfirmed. Ntpsec active/running/enabled, selected194.58.206.20 offset-0.2024ms/jitter0.1690ms, reach377octal; timedated NTPfalse/syncedtrue coexists, no long-term SLO or host-stratum inference. ACL probes failed because getfacl absent, no ACL conclusion. Empty PG preload reconfirmed; no module activation/restart.
+
+Later DB flags and30 official source files whose blob hashes match reference tree explain all18 earlier overdue records as expected component skips if effective settings match DB. Every class directly inherits scheduled_task/no run-if-disabled override; effective runtime config/cache/actual skip and full cron/SMTP acceptance not executed. Observation times remain separate/non-atomic. Previous three31-block snapshots/526 plugin manifest, backup/restore receipts and dated audit immutable; STATE/BACKLOG/coverage/current/index and entrypoints updated for owner repeat audit before repo/panel/Telegram. Native SSH/TLS/ACL/DR/RTO and existing infrastructure tasks remain open; platform/Privacy deferrals preserved.
+
+Verification: archive/source/byte-equality/changed-doc links,15 historical payloads, generated current/index, source526/schema93/harness33, secret and whitespace gates pass. Full local r16 discovery580 cases;577 ran successfully in4.915s;19 existing test environment skips plus one Go class setup skip (three cases not run locally because Go absent), real MCP stdio passed in pinned mcp1.30.0/PyYAML6.0.3 venv. CI requires native Go fixture; CI result is recorded separately in PR. No application/schema changes, production mutations, agent SSH or Telegram delivery. [Detailed review](../reviews/20261017/core_extra_reconciliation.md), [validation](../reviews/20261017/core_extra_validation.json).
+
+
+## 2026-10-17 — owner ACL/SSH/Caddy/extras follow-up
+
+Owner14:03:05MSK supplied gaps ZIP and apt/collection terminal receipt. Safe bounded ZIP26 members/284182bytes/SHA86133045, CRC and all24 hashes validated; six probes exit0/empty stderr, explicit timestamps10:59:16Z at1s resolution. No uploaded code executed. Inline source has no archived self-hash; no pinned-collector identity assertion. Raw6.4MB ACL remains private, structured derivative with original file hashes/provenance published; owner original unchanged.
+
+ACL44175 unique code objects plus seven parent/data anchors; named/default/mask entries0, owners39449root:root/4726uid33:gid33; all4726 owner-writable, group-write439/world-write0. Outer code root/config/plugin/parent writable by33 implies POSIX directory-entry replacement risk, subject to mounts/LSM/immutable/actual actor; no negative write/rename tests or hardening performed. Nested root-owned theme/public does not prove parent replacement protection.23 prior extra names all hashed/metadata collected, every permission/owner agrees with ACL; config backup/source/helpers/PDFs still need content origin and HTTP access review.
+
+Current aduk SSH tuple settings observed: password/pubkey yes, kbdinteractive no, TCP/agent/X11 forwarding yes, UseDNSno, root without-password. Input IP tuple intentionally not exported; loaded-daemon overrides/all-context admission/login not accepted. Both2019 sockets127.0.0.1 andall-address have comm caddy/PID862; executable/API identity/auth/family/external reachability not accepted. Four selected du allocated values captured, not total SSD/Docker-containerd inventory. Owner separately installed acl2.3.2-1build1.1 (new1/upgraded0/removed0); needrestart deferred list not a restart instruction. Package installation is a host change, collector reads only; agent performed no host operations.
+
+Updated STATE/BACKLOG/coverage/entrypoints/current/index preserve24 earlier dated payloads and plugin526/core24742/NTP/SMART/backup observation times. Repeat owner audit precedes repo/panel/Telegram; full ACL hardening, external2019/TLS, broader SSH/runtime, query stats, full storage/vendor provenance and restore/RTO remain open. Local580 discovered/577run successful5.819s;19 existing individual skips plus one Go class setup skip, real MCP stdio passed; Go fixture required in CI. Source526/schema93/harness33, generated views/index, checksum/shape/permission crosschecks, links/secrets/whitespace pass. [Review](../reviews/20261017/gaps_reconciliation.md), [validation](../reviews/20261017/gaps_validation.json).
+
+
+## 2026-10-17 — external network terminal follow-up14:24MSK
+
+[Separate redacted owner receipt](../runtime/external_network_result_20261017.json): server1 ipify IPv4 egress equals home Windows TCP2019 target; TcpTestSucceeded=False and separate ICMP timeout. Exact probe times not supplied. One home source/path only; inbound NAT mapping, other sources/IPv6, API identity/auth and listener hardening not verified. Owner LAN HTTP access is recorded as reported, not TLS/cookie acceptance. Network coordinates remain in private dialogue. No archive checksum/authentication claim for pasted output; earlier dated payloads unchanged. STATE/INF-10/coverage/entrypoints/current/index updated. This is a context-only follow-up; application/schema/source baseline and production configuration unchanged. Validation/CI results recorded in PR105.
+
+
+## 2026-10-17 — console audit follow-up after owner16:30MSK authorization
+
+PR103 previous head98559017 had readable UI/charts but no post-audit implementation changes. Integrated current main/reviewed PR105 context02fd394f locally, preserved application526/schema93 and immutable runtime payloads. Added existing cron v3 receipt reader with durable private last observed success; worker exit/task failures separate, historical faildelay/overdue counts not new failures. Current SSD/HDD capacity/inode checks, per-check/source receipt timestamps, no duplicate REQUIRED checks, true HTTP error codes, first-screen cron/backup/disk/HTTP cards and rebuilt offline prototype. Corporate-LAN isolation is owner-reported; independent observer needs a separate reachable LAN/VPN node, not assumed public publication. [Traceability and acceptance limits](../../server-console/AUDIT_FOLLOWUP_20261017.md). Validation/CI recorded in PR103; no agent host changes, backup/restore or Telegram delivery.
+
+
+## 2026-10-17 — first corporate-LAN console rollout preparation
+
+Owner17:03MSK authorized finish/install;17:09 selected internal corporate LAN, later continue preserves task. Added native explicit-IP HTTPS/local CA/setup, fixed read-only PG aggregate monitor, private bounded15d history, separate SMART15min/NTP, RFC6238 TOTP/replay protection, durable incident/outbox/Telegram numeric private user+chat allowlists/retry/offset, operator credential+session-bound encrypted archive FD streaming, fixed root broker jobs with pinned helpers/plans/revision/locks/idempotency/systemd persistence and standalone observer bundle for a different LAN node. Academy/core/plugin/theme,102 previous runtime payloads and production services unchanged by agent. No agent SSH, delivery/backup/restore/restart/install was performed. Native receipts and remaining p95/logs/SFTP/restore/TTL/admin UI gates explicit in [LAN rollout](../../server-console/LAN_ROLLOUT_20261017.md); local/CI verification on published SHA recorded in PR103.
+
+## 2026-10-17 — owner installed console; limited gate and source failures received23:36MSK
+
+Owner installed verified CI artifact567e90d54d4e50acf43088a8127f80ae5c89740f (tar SHA c5a1c5de0e1709a1216b781517390ab08ac65d9b0d34c9475d437dbe1ce98631). After password retry and malformed Cyrillic input in setup, ASCII `no` skipped TOTP; Telegram token was also skipped. [Sanitized terminal receipt](../runtime/console_native_install_20261017.json) preserves exact20 checks,4 unit states and source_stale=false/native_accepted=true. TLS with local CA, web/broker/collector timer and identity isolation passed the limited installer gate. HDD critical/probe_failed and SMART no_data/probe_failed remain unresolved; ProtectSystem=strict versus same-namespace mount rw check is a source-based hypothesis, not a measured host fault. SMART timer/receipt and host mount need read diagnostics. Notifier inactive is consistent with skipped Telegram; rules/resource_rules remain not configured without worker. Browser trust/login/role denial, download hash, receiver ACK, independent observer, jobs/concurrency/overhead and restore/RTO are not accepted. Exact probe time absent; receipt time is message receipt, not fabricated measurement. No raw secrets/network coordinates exported, no agent SSH/host action, no modification of earlier evidence or installed code. STATE/ACTIVE/BACKLOG/project/entrypoints/current/index updated; INF-06 remains in_progress.
+
+## 2026-10-18 — Telegram startup fix and private home-access runbook
+
+Owner17Oct23:59MSK reports console opens in browser and requests Telegram/home access without inbound port publication; [receipt](../runtime/console_browser_open_20261017.json) does not infer CA trust/login/role acceptance. During connector preparation found notifier main called Telegram.getWebhookInfo without mandatory data argument. Added worker-entrypoint regression: old code TypeError reproduced; fixed explicit empty payload, full first iteration/status publication succeeds.111 backend tests PASS8.57s; no production Telegram API calls or server changes by agent. Prepared exact-module SHA94903be5412a0e48d21c8154afcda9cf8880b5bd670c0e83400b2df95d8ecd39 for owner hotfix; installed base567e90d5 is unchanged until owner applies it. [Remote access runbook](../../server-console/REMOTE_ACCESS.md) uses dedicated BotFather token/numeric private ID/polling; Tailscale single-host route with specific8443 grant is a proposal, no network installation claimed. Official Telegram/Tailscale docs checked; outbound reachability remains required. TOTP remains skipped; HDD/SMART diagnostics and receiver/observer/restore gates open. Existing dated runtime payloads unchanged; CI recorded separately in PR103.
+
+## 2026-10-18 — native HDD namespace evidence, SMART partial telemetry and guarded update
+
+Owner00:14MSK supplied [separate terminal receipt](../runtime/console_storage_probe_20261018.json): same HDD UUID/host rw/service ro, successful SMART oneshot0/active waiting timer; SSD PASSED50°C with197/199 absent, HDD PASSED48°C/selected counters0. Timestamp SMART20:50:22UTC preserved; other probes lack time and are not ordered against that reading. Earlier install/browser receipts immutable. Fixed mount validation via PID1 read-only mountinfo plus local UUID/device agreement, retaining service read-only protection and real host-ro refusal. SMART missing/stale/future/invalid reasons separate; partial attributes warning retains known readings, no fake zero/vendor wear. UI per-disk freshness preserves healthy device data when another is unavailable; prototype rebuilt. New regressions reproduced old failures;125 backend PASS, UI build/prototype/bash/compile checked. Native CI extended with disposable loop ext4 and actual restricted service, plus updater active-job refusal/rollback/local-patch/auth/CA/state preservation. New wheel-only updater copies old venv, leaves production app/config/units untouched and restores previous active console states on failure. New artifact/native source receipt and Telegram/VPN/role/download/observer/restore remain pending. No agent SSH or production mutations. Exact CI/artifact evidence recorded in PR103.
+
+Owner00:27MSK steered active work with [Telegram ID helper traceback](../runtime/console_telegram_transport_20261018.json): local token format accepted, getUpdates transport_unavailable; ID/persistent configuration/delivery not confirmed. No token/nonce exported. Requested owner date/DNS/direct curl IPv4+IPv6 without credentials; cause (connectivity/TLS/proxy/response) remains unresolved. Storage implementation continues while waiting; no implied cancellation of Telegram/VPN objective.
+
+## 2026-10-18 — verified storage release and direct Telegram TCP timeout
+
+[Release3305ecc9 evidence](../runtime/console_storage_release_20261018.json): console39071433982/context39071433983/review39071434081 all PASS,125 backend3.58s/45 Chromium1.5m, real PG16 denials/native host-rw-local-ro/write denial/host-ro refusal and updater queued/running refusal/rollback/local-patch/auth/CA/config/notifier preservation PASS. Artifact12114394512 downloaded, ZIP SHA1ff935e2c59f4dbb2dd8defeaa7fdb1a4e7dfca8f386c5c6a5af5fb56fd1a497 and inner tar176987bytes SHA46b88e0e272b071357dfc62a34094f2ca51b79e63f0d4c4ece52d178612b4dc5 match; CRC/member paths/no links/SOURCE_COMMIT/wheel/updater checked. Delivered archive/checksum; owner update/fresh server1 receipt not received. Subsequent context-only heads are not executable release artifacts.
+
+Owner01:26MSK supplied [tokenless date/DNS/direct curl](../runtime/console_telegram_network_20261018.json), printed date17Oct22:26:10UTC: IPv4 resolution returned a public Telegram endpoint, direct TCP443 connect timed out after5002ms (curl28/HTTP000); TLS/API authentication was not reached, printed TLS0 is not verification proof. Curl6 exit6 obtained no usable address, not proof of authoritative AAAA absence or global IPv6 failure. Individual command timestamps absent; exact firewall/perimeter/provider/DNS/proxy cause not established. Next compare general HTTPS and same endpoint from corporate Windows. Token/ID/persistent configuration/receiver ACK and home VPN remain unaccepted. No credentials/server coordinates/login/password transcript exported; no agent SSH/network changes. Existing dated receipts unchanged; context-only update.
+
+
+## 2026-10-18 — Telegram comparison and matching public DNS answers
+
+[Owner01:37/01:41MSK receipt](../runtime/console_telegram_egress_20261018.json): server direct HTTPS ipify/GitHub200, Telegram curl28/8002ms HTTP000; selected route exists but gateway delivery is not proven. Uploaded Windows screenshot independently viewed: same public endpoint TCP443False; account/raw image not exported, hash retained. Google/Cloudflare HTTPS A answers both149.154.166.110, TTL206/30, Status0/ADfalse; match local DNS, no other RR types or global outage proof. Prior pasted date22:26:10UTC belongs to the earlier probe and is not a timestamp for these later tests. Need available permitted outbound access/corporate proxy or owner-controlled remote endpoint; none supplied yet. Agent did not change server/network/TLS, authenticate token/ID or accept delivery/home VPN. Prior dated receipts unchanged; release3305ecc9 remains the delivered verified executable, no new owner deployment receipt. Context-only consolidation.
+
+
+## 2026-10-18 — safe local Happ/NOVAVPS format discovery
+
+Owner selected existing paid VPN in Happ and01:48MSK supplied only masked HTTPS novavps.app/s/ shape. [Receipt](../runtime/console_vpn_subscription_20261018.json) does not infer a raw protocol/provider export contract; full URL/config absent. Public root/search did not establish provider documentation, no placeholder or third-party subscription accessed. Added stdlib standalone probe/tools and22 focused privacy/origin/redirect/error/format/limits cases; full147 backend PASS5.81s, compile/whitespace checked. Hidden URL input only on owner server, bounded same-origin HTTPS GET with CA verification, fixed enum/count metadata without node/query values or raw errors; no subscription save, root/runtime/network changes. Unknown/HTML/encrypted response explicitly not compatibility/connection acceptance. [Runbook](../../server-console/VPN_SUBSCRIPTION_PROBE.md), exact published command/hash in PR103 and dialogue. Owner probe result needed before compatible client/loopback Bot API proxy. Telegram ID/config/receiver and private home route still open; verified executable package3305ecc9 remains pending owner update. Prior receipts unchanged.
+
+
+## 2026-10-18 — INF-06: исправлен интерактивный запуск VPN probe
+
+Владелец получил checksum OK без запроса ссылки/JSON. В локальном controlling PTY прежний
+обычный timeout из bash heredoc не показал prompt и завершился124; прямой Python и контрольный
+timeout --foreground показали prompt, приняли скрытый искусственный invalid input и вернули
+санитизированный invalid_subscription_URL. Сети/реальных секретов тест не использовал.
+[Receipt](../runtime/console_vpn_probe_tty_20261018.json) сохраняет неизвестные server elapsed/exit.
+Runbook/owner команда исправлены: без внешнего timeout, PROBE_EXIT печатается и при ошибке;
+скрипт/hash не меняются, внутренний30s начинается после ввода. Исходный4b70c936 прошёл все3 CI.
+Owner retry/формат подписки/proxy/Telegram/home access пока не приняты. Никаких host operations.
+
+
+## 2026-10-18 — INF-06: формат подписки получен, Telegram-only Xray подготовлен
+
+Owner02:07MSK: checksum OK, hidden input работает, exit0; JSON35 outbounds/15VLESS/10gRPC5TCP/14Reality1TLS/insecure0.
+[Receipt](../runtime/console_vpn_format_20261018.json) сохраняет точные counts; URL/node values не получены,
+configuration_installed=false и node_values_validated=false. Формат совместим с выбранным клиентом, соединение не принято.
+Подготовлены pinned Xrayv26.3.27 SHA ZIP/binary, строгий client-only importer, public IPv4 pin, DynamicUser/LoadCredential,
+loopback18081/default blackhole/разрешение только Telegram443; временная проверка и cleanup при неуспехе.
+Бот получил явный CONNECT transport с проверкой CA/hostname без env proxy/bypass/redirect; proxy-aware wizard
+перезапускает notifier для reload credentials, private-ID challenge вводит token только локально. Tools включены в artifact.
+Локально175 backend PASS6.70s (28 новых focused), реальные4 TCP/gRPC/Reality/TLS configs проходят официальный Xray,
+реальный local CONNECT принимает trusted Telegram cert и отвергает unknown CA/wrong hostname при NO_PROXY=*.
+Native systemd/Xray routing fixture добавлен в CI; здесь systemd недоступен. Build/current CI/artifact проверяются отдельно.
+Owner update/proxy install/ID/receiver ACK и домашний маршрут ожидаются; server1 не менялся агентом.
+
+CI83b2e829 выявил отличие fixture UID: unprivileged runner владеет tmp config directory, mock geteuid0 не менял её owner. Исправлен только test stat fixture; production root ownership guard сохранён.Запуск от nobody локально недоступен (container cannot set groups); unprivileged fixture повторяется в CI.
+
+CId398d131:175 backend/45 Chromium/PG16/console native update/sandbox PASS; Xray fixture отказал на ancestor ownership исходного /opt. Fixture binary перенесён в отдельное root-owned /var/lib дерево, default production path/ownership guard не меняются; следующий CI печатает только публичные uid/mode /opt для диагностики.
+
+CIf22c19e8 подтвердил /opt root0777 на hosted runner; trusted fixture binary hash и4 actual configs PASS. Sandbox listener не поднялся в2s. Добавлены только synthetic fixture journal diagnostics; production logs остаются отключены. Startup grace расширен до5s внутри прежнего RuntimeMaxSec25s; причина startup failure проверяется следующим CI.
+
+Причина startup воспроизведена локально: credential называется xray без extension, Xray без -format завершает23 (cannot get format), тогда как config.json проходит. Постоянная/transient команды теперь используют общий xray_command с явным -format json; реальные4 configs с extensionless credential после fix PASS. Native fixture проверяет именно этот путь.
+
+
+## 2026-10-18 — INF-06: проверенный Xray/Telegram выпуск передан, домашняя сеть — отдельный этап
+
+Изучен shared dialogue6ad40728 и актуальный PR103; старый незавершённый local console worktree сохранён отдельно.
+На exact1f605e4d все3 CI SUCCESS:console39079252673/context39079252684/review39079252801.
+Job117532674964 logs inspected:175 backend/45 Chromium,4 actual configs, DynamicUser/LoadCredential/Telegram-only default-deny,
+PG monitor/HDD namespace/update queued-running refusal/rollback/auth-CA-config-local-patch-notifier preservation PASS.
+Artifact12118052115 скачан: ZIP191381B SHA86fc2a81, inner tar190969B SHA377eb564,
+SOURCE_COMMIT1f605e4d/22 regular-directory members/tools verified. [Receipt](../runtime/console_telegram_release_20261018.json).
+[Handoff](../../server-console/TELEGRAM_RELEASE_20261018.md) даёт root copy-before-hash stage, update без full setup,
+отдельный interactive Xray install, private challenge ID и proxy-aware Telegram-only setup.
+Installed567e90d5 receipt не обновляется: owner update/provider connectivity/config/receiver ACK ещё не получены.
+Новый запрос владельца запрещает риск потери Internet/LAN на server1/домашнем ПК. Старый subnet route отменён как текущий план;
+[userspace/SSH candidate](../../server-console/HOME_ACCESS_PLAN_20261018.md) требует isolated Windows pilot,
+no TUN/default route/DNS/netfilter и узкие grants; нет обещания, что обычный Windows GUI не меняет сеть.
+Xray outgoing provider subscription не даёт обратный доступ; reverse требует своего внешнего endpoint.
+Ни VPN, ни update, ни production/network changes агентом не выполнялись; прямого SSH нет.
+
+Fresh-context final review:Critical/Important0. Исправлено описание prepared/installed Xray;
+ограничение ID helper первыми100 pending updates описано в handoff, код очереди не менялся.
+Deferred minor: автоматическая пагинация ID challenge не реализована; текущий путь — отдельный свежий бот.
+Решение: старый subnet route не реализовывать — противоречит последнему требованию; цена ошибки userspace feasibility —
+отложенный доступ, не молчаливая смена default route/DNS. Реальные server/provider/receiver/Windows gates открыты.
+
+Handoff verification:5 Bash blocks pass bash -n; artifact updater/tools and wheel transport/alerts/setup bytes match source.
+Context/index/current/secret guards PASS,526 source/93 tables/33 tasks unchanged.
+Local system Python initially lacked mcp; pinned harness venv then ran577 tests OK (20 environment skips).
+No runtime source changed; approved executable artifact remains exact1f605e4d.
+
+
+## 2026-10-18 — INF-06: native update/Xray приняты, credential guard блокирует notifier
+
+Owner03:46MSK update1f605 PASS/checksum/PIP/localCA/fresh snapshot: HDD/capacity/backup/cron/PG OK, SMART warning partial.
+Xray12 secure/first candidate TLS302/active, private challenge ID и proxy wizard завершены; bot no reply.
+Owner03:49 sanitized diagnostic:notify9 restarts/auto-restart/exit1, ValueError credential_guard alerts225/262;
+Xray active0 restarts, proxytrue/allowlist1/matching. [Receipt](../runtime/console_telegram_native_20261018.json).
+Actual service inode mode/ACL не присланы; не приписывать их owner observation.
+Official systemd issue29435 объясняет root0440 ACL named-user с group::---/maskr--/other---.
+Локальный реальный POSIX ACL воспроизвёл прежний отказ; positive и hardlink regression RED, затем GREEN.
+Reader проверяет один O_NOFOLLOW/NONBLOCK FD, regular/singlelink/root-or-self/max8192; owner0400/0600 либо
+только narrow read-only ACL root/currentUID с нулевыми group/other, без широкого разрешения0440. Source0600 сохраняется.
+17 new credential cases/77 focused/192 backend PASS6.55s; native first-cycle installedwheel/static notifier UID/LoadCredential
+fixture добавлен, actual CI pending. Fresh reviewer Critical/Important0; independently17 ACL tests PASS.
+Deferred minor: malformed/duplicate synthetic ACL metadata и52-byte/two-reader case не имеют отдельных tests;
+kernel-validated ACL и проверенный parser fail closed; реальный типовой ACL покрыт.
+Новый source fix требует owner применения; receiver ACK не получен. Units/token/auth/CA/network/production не менялись агентом.
+
+Exact sourcefd46c383 all3 CI SUCCESS:console39084647257/job117548560984,context39084647251,review39084647259.
+Logs inspected:192 backend5.33s/45 Chromium1.7m; CONSOLE_NOTIFIER_LOADCREDENTIAL PASS static user/first cycle/mode0o440.
+HDD namespace/update rollback remain PASS. [Fix evidence](../runtime/console_notifier_credential_fix_20261018.json).
+Published raw alerts.py readback matches SHA33c706c0/local source. [Owner command](../../server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md)
+shell+inner syntax and actual isolated file/control fixtures success/start-failure rollback/concurrent-change preservation/
+unexpected module/bad download refusal PASS. Source token/permissions and units unchanged.
+Owner application and real receiver ACK remain pending; no production operation executed by agent.
+
+
+## 2026-10-18 17:03МСК — пульт возвращён на доработку
+
+Владелец явно отменил полную приёмку пульта; новое поручение приоритетнее14:42 closure. Диалог извлечён напрямую, PR1037f8a614a и скриншоты сверены. Сохраняется проверенный graphics sourceb93e16af; ранний локальный WIP98946c6 сохранён в git stash, не накладывается поверх опубликованного кода. Возобновлена INF-06; [границы и проверки](../../server-console/REVISIONS_20261018.md). Клиентское доверие и телефонный маршрут/приложение VPN ещё не подтверждены.
+
+
+## 2026-10-18 — INF-06: доработка проверена и передана, native/client gates открыты
+
+Exact source1c881495 все3 CI SUCCESS:console39137246420/job117704158967,context39137246453,review39137246419.
+CI355 backend+1root-onlyskip/114 Chromium PASS; локально root356 backend,577context OK/20environment skips.
+Systemd TLS/mount/credentials/update rollback/Xray/PG16 и actual Apache numeric-log/probe-exclusion PASS.
+Первый CI3755236a обнаружил6 root-fixture assumptions в тестах установщика; исправлена только фикстура, guards не ослаблены.
+Artifact12139739548 downloaded: ZIP CRC/SHA94898041, tar513690B SHA0b7ecfa62;23 wheel modules/4fonts/3web assets/27scripts/43docs/10observer modules/7units source-match.
+[Receipt](../runtime/console_revisions_20261018.json), [точные owner команды](../runtime/console_revisions_delivery_20261018.md).
+Темы/zoom/каталог/документы/реальные request metrics/очищенные events и TLS public-CA diagnostic готовы к native установке.
+Прежний14:42 closure отменён17:03; INF-06 остаётся текущей. Нет SSH к server1; установка/client trust/phone VPN route не измерены.
+Пароли/token/TOTP/CA root/сеть/Academy не менялись агентом. Параметры VPN телефона не сообщены; из внешней сети private origin требует своего маршрута.
+Не объявлять Mini App исправленным до реальной проверки на устройстве; независимые observer/restore-RTO gates сохранены.
+
+
+## 2026-10-18 18:04МСК — owner native update1c881495 и Happ/NovaVPS
+
+Получен terminal output: archive checksum OK/SOURCE_COMMIT1c881495/updater PASS/pip check OK;4units active/fresh snapshot.
+TLS chain/IP SAN/live leaf PASS, существующий публичный CA экспортирован; client trust не измерен.
+Apache numeric log helper configured=true, vhostustar.conf и backup150056Z; actual request sample ещё не получен.
+[Датированный receipt](../runtime/console_revisions_native_20261018.json) сохраняет provenance/hash вложения без raw логов.
+Владелец уточнил телефон Happ/NovaVPS; текущая сеть/версия/тип профиля неизвестны.
+Официальные Happ docs проверены: DirectIp/Reconnect/JSON restrictions; [условный runbook](../runtime/console_happ_access_20261018.md).
+Одинаковая provider subscription не создаёт reverse LAN route. Новые профили/сеть/CA/production агентом не менялись.
+INF-06 остаётся текущей: UI/client trust/Mini App/numeric sample ещё не приняты; предыдущий closure не восстановлен.
+
+
+## 2026-10-18 18:38МСК — клиентский HTTPS и офисный доступ работают с VPN и без него
+
+Owner18:11 уточнил: телефон и пульт в офисном Wi-Fi.18:38 сообщил: сертификаты обновлены, предупреждения исчезли, всё работает с VPN и без него.
+[Датированный owner receipt](../runtime/console_client_https_result_20261018.json), без независимого SSH/устройства.
+Проблема клиентского TLS/офисного доступа закрыта в сообщённом объёме; гипотеза перехвата LAN Happ не подтверждена, исключение DirectIp не требуется.
+Mini App отдельно не назван в общем «всё работает»; не объявлять новый отказ или выдуманную client matrix.
+Исходники/server settings/CA/VPN/routes/DNS/firewall агентом не менялись. Старые terminal/request receipts сохраняют даты.
+Полная приёмка всех функций/новых p95/RPS/events не выводится из сообщения о HTTPS; INF-06 остаётся текущей для этого остатка.
+
+
+## 2026-10-18 23:15МСК — продолжение последней остановки shared-агента6ad1740b
+
+Прочитана только последняя непустая реплика агента: исправить доступные подписи/контраст disabled и повторить CI.
+GitHubb473e47a уже содержит исправление, все3CI SUCCESS,427backend+1skip/147Chromium и настоящие native CI fixtures PASS.
+Продолжена именно эта реализация notifier-owned RPC, незавершённый параллельный WIP сохранён отдельно.
+При финальной проверке выявлен rollback risk: ALTER users ADD enabled ломал старый CLI INSERT VALUES с3полями.
+Sourcee5b87818 сохраняет3колонки, enabled в account_state, промежуточная4колоночная база преобразуется транзакционно.
+Регрессии RED→GREEN: legacy UPSERT и сохранение disabled/hash/TOTP/sessions;429backend+1capabilityskip PASS.
+Независимое ревью0Critical/Important,40targeted PASS; UI typecheck/build/prototype check PASS.
+Все3 exact-source CI SUCCESS:console39162268307/context39162268187/review39162268185;429backend+1root-onlyskip/147Chromium.
+Настоящие Ubuntu systemd/notifier cross-UID/TLS/update rollback/Apache/Xray/Postgres fixtures PASS.
+Artifact12149750723 скачан:ZIP551613Б SHA256f4a69fb12a813d5321628ac00abafd101eb225bb07603b9d7075564b737cbb28,
+tar551233Б SHA256accb6ba8c7cfc15535fe438b7ccb58863acc615e5344dc50451e08779ea2446d;26Python/4fonts/3web/27scripts/45docs/11observer/7units exact-source PASS.
+[Поставка и команды](../runtime/console_accounts_delivery_20261018.md) опубликованы; bash -n PASS, setup/CA/network не повторяются.
+На server1 действий не было. Прежний HTTPS/Happ не перенастраивается; новые UI/link/alerts требуют native приёмки.
+Managed heartbeat остаётся схемой без secret URLs/внешней отправки; пульт целиком принятым не объявлен.

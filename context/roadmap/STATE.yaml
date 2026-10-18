@@ -1,13 +1,23 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-18'
 project: USTAR Academy
-stage: repository_reconciled_next_control_panel
-stage_label: Следующий этап пульт управления и Telegram
-current_activity: 'Owner16Oct: handoff archive obtained, instruction passed, await sysadmin restore; repository
-  consolidation and legacy CI cleanup; next INF06; Moodle5.2/PG17 deferred'
+stage: console_accounts_alerts_release_20261018
+stage_label: Учётки и персональные алерты проверены и подготовлены; установка владельцем ожидается
+current_activity: 'INF-06 continues owner18Oct1855 user administration, confirmed personal Telegram linking, configurable alerts
+  and independent service events. Last shared-agent stop6ad1740b was label/disabled contrast CI fix; publishedb473e47a already
+  passed all3 CI with427backend+1skip,147Chromium and real systemd/cross-UID/Apache/Xray/Postgres fixtures. Continued its
+  implementation, preserving unrelated unfinished work. Final sourcee5b878185e6f9db15c595c3760292374c95eb54a additionally
+  preserves three-column users for installed1c881495 CLI recovery after wheel rollback; account_state stores enabled flags.
+  Regression429backend+1localcapabilityskip; independent rollback review0Critical/Important. Exact-source CI39162268307,
+  39162268187,39162268185 all SUCCESS:429backend+1root-onlyskip,147Chromium and real native fixtures PASS. Artifact12149750723
+  downloaded and exact-source/hash verified;tarSHA256 accb6ba8c7cfc15535fe438b7ccb58863acc615e5344dc50451e08779ea2446d.
+  Delivery context/runtime/console_accounts_delivery_20261018.md. No native SSH;
+  new account release not yet installed/accepted by owner. Previous1c881495 installation18:04 and owner18:38 HTTPS office
+  access with Happ/NovaVPS on/off preserved; do not repeat CA/setup/VPN/network changes. Empty request source is not unavailable
+  events; never synthesize RPS/p95. Managed heartbeat is design only, cannot attribute power/LAN/ISP from one missing signal.
+  INF07 Academy HTTPS follows this acceptance; observer/home access and restore/RTO remain separate.'
 next_task: INF-06
-ready_tasks:
-- INF-06
+ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
@@ -25,7 +35,7 @@ code_baseline:
     prepare-rc: success
     moodle-db: success
     gate: success
-  production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
+  production_equivalence: plugin_theme_526_match_owner_manifest_20261017_not_full_core
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
   status: owner_accepted_Moodle518_host_update_boot_and_export_restore_waiting
@@ -33,12 +43,12 @@ production:
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
   current_source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
-  current_source_commit_scope: dated_plugin_theme_manifest_not_whole_repository_or_core
+  current_source_commit_scope: fresh_owner_plugin_theme526_manifest_20261017_not_whole_core_or_repository
   current_versions:
     local_ustar: 2026100204
     theme_ustar: 2026100202
   last_exact_source_manifest:
-    date: '2026-10-05T02:32:35.997389+00:00'
+    date: '2026-10-17T01:39:24Z'
     commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
     scope:
     - local/ustar
@@ -49,12 +59,15 @@ production:
     extra: 0
     errors: 0
     skipped: 0
-    evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151
-      file references, not a new whole-host manifest
-  cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
-  regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
+    evidence: context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+    comparison: context/runtime/server_facts_source_comparison_20261017T013924Z-285497b0.json
+    independently_measured: false
+    not_atomic: true
+    scope_note: Fresh owner-executed collector17Oct, full plugin/theme526 hash comparison; core, database schema and functional
+      acceptance are separate
+  cron: latest17Oct01:39:03Z_worker0_new_failures0_USTAR_errors0;147_tasks_15_disabled_2_faildelay_both_disabled;later_DB_flags_and_pinned_source_explain18_overdue_as_component_skips_if_runtime_config_matches
+  regular_backup: latest17Oct00:31:32Z_success_readback_reported_archive_size_matches_HDD_timer_enabled; independent_restore_waiting
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
     moodle: 5.1.8
@@ -65,20 +78,161 @@ production:
     kernel: 6.8.0-147-generic
     Docker: 29.9.0
     containerd: 2.4.1
-    version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+    version_dates: Moodle13Oct/host14Oct accepted;17Oct owner snapshot confirms selected core/PHP/PG/kernel and package versions,
+      not Ubuntu point release or all host packages
+  latest_inventory:
+    observed_at: '2026-10-17T01:39:24Z'
+    source: context/runtime/server-facts/20261017T013924Z-285497b0/facts.json
+    review: context/reviews/20261017/runtime_reconciliation.md
+    independently_authenticated_host: false
+    coverage: 30ok_1error_clock_scheduled_SMART_observed_query_statistics_unavailable
+  clock:
+    source: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    timezone: Etc/UTC
+    timedated_can_ntp: false
+    ntp_enabled: false
+    ntp_synchronized: true
+    active_client: ntpsec
+    selected_peer_public_ip: 194.58.206.20
+    selected_peer_stratum: 1
+    offset_ms: -0.2024
+    jitter_ms: 0.169
+    reach_octal: '377'
+    received_at_utc: '2026-10-17T10:05:42Z'
+    probe_observed_at_utc: null
+    scope_note: Owner extra run; timedated flags coexist with active ntpsec. One peer sample, not host stratum or long-term
+      accuracy
+  smart:
+    source: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    observed_at_utc: '2026-10-17T09:59:14Z'
+    scope: all_exported_ATA_attributes_error_logs_and_self_test_history_allowlisted
+    sda_health_passed: true
+    sda_temperature_celsius: 50
+    sda_attribute_count: 27
+    sdb_health_passed: true
+    sdb_temperature_celsius: 49
+    sdb_attribute_count: 17
+    exit_status_both: 64
+    exit_bits_set_both:
+    - 6
+    exit_interpretation: ATA_error_log_records_present
+    sdb_current_pending_197: 0
+    sdb_offline_uncorrectable_198: 0
+    sdb_reallocated_5: 0
+    sdb_last_extended_test:
+      status: completed_without_error
+      lifetime_hours: 16385
+    sdb_earlier_failed_extended_test:
+      status: read_failure
+      lifetime_hours: 16359
+    new_self_test_started: false
+    vendor_SSD_wear_units_and_remaining_life: unconfirmed
+    scope_note: Current zero198 preserves historical failed test; no new self-test or hardware acceptance
+  latest_core_comparison:
+    observed_at_utc: '2026-10-17T10:00:15.077511+00:00'
+    source: context/runtime/core-facts/20261017T100015Z-edb2f12e/core_comparison.json
+    review: context/reviews/20261017/core_extra_reconciliation.md
+    reference_repository: https://github.com/moodle/moodle.git
+    reference_commit: cc0bf17da8b5fbd290faf95b2b14a03d64331923
+    reference_release: 5.1.8
+    matching: 24742
+    changed: 0
+    missing: 0
+    extra: 23
+    errors: 0
+    reference_skipped: 0
+    complete: true
+    match: false
+    collector_exit: 3
+    not_atomic: true
+    scope_note: Exact eligible upstream paths after explicit exclusions; extras names only. Separate from plugin/theme526
+      manifest
+  component_task_followup:
+    source: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    task_snapshot_utc: '2026-10-17T01:39:24Z'
+    expected_component_skip_explanations: 18
+    eligibility_source_files_verified: 30
+    condition: effective_runtime_settings_match_later_observed_database
+    effective_runtime_bootstrap_checked: false
+    different_observation_times_not_atomic: true
+  latest_targeted_inventory:
+    observed_at_utc: '2026-10-17T10:59:16Z'
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    review: context/reviews/20261017/gaps_reconciliation.md
+    provenance: context/runtime/server_gaps_received_20261017.json
+    scope: ACL_SSH_listener_selected_storage_extra_metadata_only
+    independently_authenticated_host: false
+    does_not_remeasure_core_or_plugin_manifest: true
+  file_access_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    ACL_code_objects: 44175
+    named_default_mask_ACL_objects: 0
+    uid33_owner_writable_objects: 4726
+    selected_parent_records: 7
+    parent_replacement_risk: POSIX_writable_outer_root_and_parent;other_controls_and_negative_operations_not_tested
+    extra_files_metadata_and_sha256: 23
+    hardening_completed: false
+  SSH_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    context: owner_aduk_current_connection_tuple;addresses_not_exported
+    UseDNS: 'no'
+    password_authentication: 'yes'
+    kbdinteractive_authentication: 'no'
+    pubkey_authentication: 'yes'
+    allow_tcp_forwarding: 'yes'
+    allow_agent_forwarding: 'yes'
+    x11_forwarding: 'yes'
+    all_contexts_and_actual_login_acceptance: false
+  management_listener_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    port: 2019
+    process_comm: caddy
+    pid: 862
+    listener_scopes:
+    - loopback
+    - all
+    executable_and_endpoint_identity_not_verified: true
+    external_reachability: owner_home_IPv4_TCP_connection_failed;other_paths_and_NAT_mapping_unverified
+    address_family_not_separately_exported: true
+    external_test_receipt: context/runtime/external_network_result_20261017.json
+    listener_remeasured_by_external_test: false
+  storage_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    method: du_allocated_bytes_selected_paths_not_atomic
+    allocated_bytes:
+      /opt/ustar/data/moodle/public: 500744192
+      /opt/ustar/data/moodle/moodledata: 758067200
+      /opt/ustar/data/postgres: 247816192
+      /var/lib/docker: 29286400
+    full_SSD_and_Docker_containerd_occupancy: not_measured
+  package_followup:
+    source: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+    scope: owner_terminal_transcript_separate_from_archive_checksums
+    package: acl
+    version: 2.3.2-1build1.1
+    new_packages: 1
+    upgraded_packages: 0
+    removed_packages: 0
+    needrestart_deferred_report_not_restart_instruction: true
+  network_followup:
+    source: context/runtime/external_network_result_20261017.json
+    scope: redacted_owner_terminal_output_not_checksum_bound_archive
+    received_at_utc: '2026-10-17T11:24:19Z'
+    probe_observed_at_utc: null
+    server_egress_IPv4_matches_home_TCP_target: true
+    home_TCP2019_succeeded: false
+    inbound_NAT_mapping_verified: false
+    Academy_access: owner_reported_local_HTTP;TLS_cookie_acceptance_not_tested
+    other_sources_and_IPv6: not_tested
+    corporate_network: owner_reported_isolated_corporate_LAN
+    corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
+    independent_perimeter_acceptance: false
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261016_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
-next_agent_read:
-- START_HERE.md
-- context/project.yaml
-- context/audits/AUDIT_RECONCILIATION_20261016_RU.md
-- context/tasks/ACTIVE.md
-- context/runtime/control_panel_telegram_20261016.md
-- context/runtime/repository_state_20261016.json
 repository:
   canonical_branch: main
   accepted_sources:
@@ -91,6 +245,13 @@ repository:
   - moodle/local/ustar
   - moodle/theme/ustar
   branch_roles: context/runtime/repository_state_20261016.json
+  latest_review:
+    date: '2026-10-17'
+    main_observed: d9655074db9a06281fe16f378dbdbe1d279104a0
+    document: context/reviews/20261017/runtime_reconciliation.md
+    scope: repository_plus_validated_owner_executed_snapshot_not_independent_live_host_acceptance
+    targeted_document: context/reviews/20261017/gaps_reconciliation.md
+    console_followup: server-console/AUDIT_FOLLOWUP_20261017.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -104,17 +265,73 @@ sysadmin_restore:
   production_platform_upgrade_deferred:
     moodle: '5.2'
     postgresql: '17'
-  next_task: server_control_panel_with_Telegram_alerts_metrics_backup_access_and_Academy_control
+  next_task: console_revisions_INF06_then_Academy_HTTPS_INF07
 next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: next_not_deployed
-  style: Linear-inspired graphite
+  status: account_and_personal_notifications_revision_1855_in_progress
+  revision_receipt: context/runtime/console_revisions_20261018.json
+  revision_native_receipt: context/runtime/console_revisions_native_20261018.json
+  revision_client_receipt: context/runtime/console_client_https_result_20261018.json
+  phone_VPN_runbook: context/runtime/console_happ_access_20261018.md
+  revision_delivery: context/runtime/console_revisions_delivery_20261018.md
+  owner_acceptance_receipt: context/runtime/console_owner_acceptance_20261018.json
+  acceptance_scope: 1855_account_notification_changes_pending_native_acceptance;1838_HTTPS_office_access_preserved
+  operational_followup: INF-06-OPS
+  style: graphite_with_readable_type_color_accents_and_Grafana_style_charts_owner16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
   Telegram: alerts_metrics_latest_completed_backup_and_control
   independent_observer: required_for_host_loss_not_yet_deployed
+  continuation_gate: owner_authorized_install_20261017T1703_MSK_LAN_1709
+  telegram_delivery: prior_graphical_bot_working_report_preserved_full_console_closure_superseded_1703
+  telegram_transport_receipt: context/runtime/console_telegram_transport_20261018.json
+  telegram_network_receipt: context/runtime/console_telegram_network_20261018.json
+  telegram_egress_receipt: context/runtime/console_telegram_egress_20261018.json
+  telegram_connection_next: owner_HTTPS_office_access_confirmed;current1855_accounts_notifications_and_empty_request_log_followup
+  telegram_subscription_receipt: context/runtime/console_vpn_subscription_20261018.json
+  telegram_subscription_probe: server-console/VPN_SUBSCRIPTION_PROBE.md
+  telegram_subscription_launch_receipt: context/runtime/console_vpn_probe_tty_20261018.json
+  telegram_subscription_format_receipt: context/runtime/console_vpn_format_20261018.json
+  telegram_egress_runbook: server-console/VPN_TELEGRAM.md
+  telegram_verified_release: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
+  telegram_release_receipt: context/runtime/console_telegram_graphics_20261018.json
+  telegram_release_handoff: context/runtime/console_telegram_graphics_delivery_20261018.md
+  telegram_startup_hotfix: previous_crash_superseded_by_owner_bot_working_and_buttons_report
+  historical_credential_fix_module_sha256: 33c706c01e70eae40fff864c95b4becfe3b88a11d63e6e3888093fe9812ed4a2
+  telegram_notifier_fix_source: fd46c383c9cfba3d8155275ad1e04cae423aa082
+  telegram_notifier_fix_receipt: context/runtime/console_notifier_credential_fix_20261018.json
+  telegram_notifier_fix_runbook: server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md
+  previous_reviewed_head_sha: 98946c6bfbb4f894817c2d44f2c7c5d8769e0195
+  implementation_resolution: Read PR103 current head; no self-referencing SHA in state
+  audit_followup: server-console/AUDIT_FOLLOWUP_20261017.md
+  priority_metrics: cron_last_observed_success;backup_completed_age;SSD_HDD_capacity_inodes;optional_local_HTTP_status_latency
+  lan_rollout: server-console/LAN_ROLLOUT_20261017.md
+  native_installation: owner_terminal_update1c881495_PASS_received_20261018T180431_MSK
+  installation_receipt: context/runtime/console_revisions_native_20261018.json
+  initial_native_installation_receipt: context/runtime/console_native_install_20261017.json
+  installed_source_commit: 1c881495ae78dd74cf37ca5a045944d1336d85ce
+  last_exact_terminal_installed_source_commit: 1c881495ae78dd74cf37ca5a045944d1336d85ce
+  latest_delivered_release_accepted_by_context: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
+  latest_native_receipt: context/runtime/console_revisions_native_20261018.json
+  installed_source_scope: owner_terminal_archive_checksum_SOURCE_COMMIT_and_updater_PASS_not_full_installed_manifest
+  totp: owner_skipped_first_launch
+  source_diagnostics: owner_update1f605_PASS_HDD_OK_SMART_warning_partial_SSD_accepted_in_receipt_scope
+  source_diagnostics_receipt: context/runtime/console_storage_probe_20261018.json
+  tested_source_release: 1c881495ae78dd74cf37ca5a045944d1336d85ce
+  graphics_increment_receipt: context/runtime/console_telegram_graphics_20261018.json
+  graphics_increment_runbook: server-console/TELEGRAM_GRAPHICS_20261018.md
+  source_release_receipt: context/runtime/console_telegram_graphics_20261018.json
+  source_fix_runbook: server-console/STORAGE_FIX_20261018.md
+  browser_open: owner1838_reports_certificate_warnings_gone_and_office_access_with_VPN_on_and_off_no_per_client_matrix
+  home_access: userspace_SSH_candidate_isolated_Windows_pilot_required_not_installed
+  home_access_plan: server-console/HOME_ACCESS_PLAN_20261018.md
+  home_access_old_subnet_route: superseded_by_owner_network_stability_requirement
+  history: native_15d_bounded_first_LAN_Prometheus_optional
+  account_revision_spec: server-console/ADMIN_ALERTS_20261018.md
+  account_revision_receipt: context/runtime/console_accounts_request_20261018.json
+  host_loss_design: server-console/HOST_LOSS_20261018.md
 deferred_platform:
   task: PLAT-01
   status: deferred_by_owner16Oct
@@ -124,6 +341,12 @@ deferred_platform:
   historical_target: '5.3'
   historical_downloads_preserved: true
   production_switched: false
+  external_review_recommendation:
+    status: planning_recommendation_not_owner_execution_order
+    review_by: '2027-01-15'
+    moodle_51_security_support_end: '2027-04-19'
+    source: https://moodledev.io/docs/5.1
+    note: Reassess support and migration requirements; no automatic upgrade, new lab or Privacy gate authorized
 do_not_repeat:
 - SSD_GPT_partition_ext4_growth
 - Moodle5.1.8_upgrade_repeat_and_brief_browser_acceptance
@@ -131,3 +354,47 @@ do_not_repeat:
 - host_cold_capture_r6
 - host_package_install_and_reboot
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
+entrypoint: START_HERE.md
+server_facts:
+  status: partial
+  snapshot: context/runtime/server-facts/20261017T013924Z-285497b0
+  observed_at: '2026-10-17T01:39:24Z'
+  method: bounded_script_owner_supplied
+  independently_authenticated_host: false
+  script_sha256: 4abad3b668fdd465dc9a252b0752b62540a537a72fba7f7c73d9eff32824bb9c
+  counts:
+    error: 1
+    not_collected: 0
+    ok: 30
+    partial: 0
+  functional_acceptance: false
+  source_comparison: context/runtime/server_facts_source_comparison_20261017T013924Z-285497b0.json
+  application_source_matches: true
+  archives_received: 3
+  review_status: owner_authorized_resume_console_with_explicit_gaps;no_new_independent_audit_result_claim
+  review: context/reviews/20261017/runtime_reconciliation.md
+  provenance: context/runtime/server_facts_received_20261017.json
+  followup: context/runtime/server_facts_followup_20261017.json
+  measurement_gaps:
+  - pg_stat_statements available but not installed/preloaded; no query statistics
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other external sources/IPv6/NAT/API
+    identity and full SSH admission/live overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance remain separate;
+    native restore/RTO awaited
+  additional_observations:
+    provenance: context/runtime/core_extra_received_20261017.json
+    review: context/reviews/20261017/core_extra_reconciliation.md
+    core_payload: context/runtime/core-facts/20261017T100015Z-edb2f12e
+    extra_derivative: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    validation: context/reviews/20261017/core_extra_validation.json
+    does_not_replace_31_block_snapshot: true
+    latest_review: context/reviews/20261017/gaps_reconciliation.md
+    gaps:
+      provenance: context/runtime/server_gaps_received_20261017.json
+      review: context/reviews/20261017/gaps_reconciliation.md
+      derivative: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+      validation: context/reviews/20261017/gaps_validation.json
+    external_network_receipt: context/runtime/external_network_result_20261017.json

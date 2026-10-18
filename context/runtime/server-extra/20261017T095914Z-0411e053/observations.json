@@ -1,0 +1,2760 @@
+{
+  "schema_version": 1,
+  "kind": "allowlisted_derivative_of_owner_extra_archive",
+  "received_at_utc": "2026-10-17T10:05:42Z",
+  "per_probe_observation_time_available_only_for_smart": true,
+  "provenance": "context/runtime/core_extra_received_20261017.json",
+  "raw_files_sha256": {
+    "chrony_sources.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "chrony_tracking.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "clock.out": "8bb1f7af35e9493d3165d80ab5d88d0085efc73673392dd034abb81a7e24169f",
+    "code_acl.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "component_flags.out": "f536f5a3e6b864470ead99b5394585adaaa3d15b7446a73873d170f68b04ce7d",
+    "ntp_peers.out": "6a11c5d84f573c5391e1374228816dbf65e4d6e31e669bb8462afd9f6010a772",
+    "parent_acl.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "smart_sda.out": "8f263dad4a4dcd0229da45392b3092c74eb99f2427bb0ec6bc8377577496582e",
+    "smart_sdb.out": "08000ba35af786ecfd8354e606e85a60d94c8d73fbb5f3dc9b69bacf0ddf61d2",
+    "time_services.out": "6d4dee190e674b5fc97c2845a279adedb51c86e33e1c93db8a6f93eeb83f78df",
+    "timesyncd.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "chrony_sources.err": "3f257de5725f12e742aee053f4d951ee4910d1ce1f8e26f2008734465d66a0dc",
+    "chrony_tracking.err": "3f257de5725f12e742aee053f4d951ee4910d1ce1f8e26f2008734465d66a0dc",
+    "clock.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "code_acl.err": "d7d6952d979ef5aee4dc7940529784f7252f150961f04f104f17b3b5ddbfad6a",
+    "component_flags.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ntp_peers.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "parent_acl.err": "d7d6952d979ef5aee4dc7940529784f7252f150961f04f104f17b3b5ddbfad6a",
+    "smart_sda.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "smart_sdb.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "time_services.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timesyncd.err": "50af05729267cd503b103a134009ff08413e27648eac7d3d9e9af8e06b67902e",
+    "chrony_sources.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "chrony_tracking.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "clock.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "code_acl.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "component_flags.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "ntp_peers.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "parent_acl.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "smart_sda.exit": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+    "smart_sdb.exit": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+    "time_services.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "timesyncd.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "probes": {
+    "clock": {
+      "exit": 0,
+      "stdout_bytes": 54,
+      "stderr_bytes": 0
+    },
+    "time_services": {
+      "exit": 0,
+      "stdout_bytes": 742,
+      "stderr_bytes": 0
+    },
+    "timesyncd": {
+      "exit": 1,
+      "stdout_bytes": 0,
+      "stderr_bytes": 98,
+      "reason": "timesync1_dbus_service_unavailable_for_active_ntpsec_client"
+    },
+    "chrony_tracking": {
+      "exit": 1,
+      "stdout_bytes": 0,
+      "stderr_bytes": 33,
+      "reason": "chronyc_not_installed"
+    },
+    "chrony_sources": {
+      "exit": 1,
+      "stdout_bytes": 0,
+      "stderr_bytes": 33,
+      "reason": "chronyc_not_installed"
+    },
+    "ntp_peers": {
+      "exit": 0,
+      "stdout_bytes": 1040,
+      "stderr_bytes": 0
+    },
+    "smart_sda": {
+      "exit": 64,
+      "stdout_bytes": 55671,
+      "stderr_bytes": 0
+    },
+    "smart_sdb": {
+      "exit": 64,
+      "stdout_bytes": 45324,
+      "stderr_bytes": 0
+    },
+    "code_acl": {
+      "exit": 1,
+      "stdout_bytes": 0,
+      "stderr_bytes": 33,
+      "reason": "getfacl_not_installed_no_acl_observed"
+    },
+    "parent_acl": {
+      "exit": 1,
+      "stdout_bytes": 0,
+      "stderr_bytes": 33,
+      "reason": "getfacl_not_installed_no_acl_observed"
+    },
+    "component_flags": {
+      "exit": 0,
+      "stdout_bytes": 816,
+      "stderr_bytes": 0
+    }
+  },
+  "clock": {
+    "timedated": {
+      "Timezone": "Etc/UTC",
+      "CanNTP": "no",
+      "NTP": "no",
+      "NTPSynchronized": "yes"
+    },
+    "units_deduplicated_by_identical_properties": [
+      {
+        "Id": "systemd-timesyncd.service",
+        "LoadState": "masked",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "UnitFileState": "masked"
+      },
+      {
+        "Id": "chrony.service",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "UnitFileState": ""
+      },
+      {
+        "Id": "ntpsec.service",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "UnitFileState": "enabled"
+      },
+      {
+        "Id": "openntpd.service",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "UnitFileState": ""
+      },
+      {
+        "Id": "ptp4l.service",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "UnitFileState": ""
+      },
+      {
+        "Id": "phc2sys.service",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "UnitFileState": ""
+      }
+    ],
+    "active_client": "ntpsec",
+    "selected_peer": {
+      "remote_public_ip": "194.58.206.20",
+      "peer_stratum": 1,
+      "mode": "u",
+      "last_when_seconds": 218,
+      "poll_seconds": 1024,
+      "reach_octal": "377",
+      "delay_ms": 67.972,
+      "offset_ms": -0.2024,
+      "jitter_ms": 0.169
+    },
+    "timedated_flags_do_not_override_observed_active_client": true,
+    "limit": "single observation; host stratum and long-term accuracy not established"
+  },
+  "component_database_flags": {
+    "auth": [
+      "email"
+    ],
+    "enrol_plugins_enabled": [
+      "manual",
+      "guest",
+      "self",
+      "cohort"
+    ],
+    "block_visible": {
+      "rss_client": false
+    },
+    "module_visible": {
+      "bigbluebuttonbn": false
+    },
+    "requested_repository_types": [
+      "dropbox",
+      "filesystem",
+      "onedrive"
+    ],
+    "returned_repository_rows": [],
+    "plugin_enabled": {
+      "factor_grace": false,
+      "factor_nosetup": false,
+      "tool_mfa": false
+    },
+    "compute_query_id": {
+      "setting": "auto",
+      "source": "default",
+      "pending_restart": false
+    },
+    "shared_preload_libraries": {
+      "setting": "",
+      "source": "default",
+      "pending_restart": false
+    }
+  },
+  "scheduled_task_analysis": {
+    "task_snapshot_utc": "2026-10-17T01:39:24Z",
+    "component_flags_exact_time": null,
+    "component_flags_owner_run_received_utc": "2026-10-17T10:05:42Z",
+    "different_observation_times_not_atomic": true,
+    "reference_commit": "cc0bf17da8b5fbd290faf95b2b14a03d64331923",
+    "source_evidence": [
+      {
+        "path": "public/lib/classes/task/scheduled_task.php",
+        "git_blob_sha1": "63ecbee912f34c6dbcda9175faed274b96e0547f",
+        "classes": [
+          "abstract class scheduled_task extends task_base {"
+        ],
+        "run_if_disabled_override": true,
+        "eligibility_methods": [
+          {
+            "line": 345,
+            "text": "public function get_run_if_component_disabled() {"
+          },
+          {
+            "line": 704,
+            "text": "public function is_enabled(): bool {"
+          }
+        ]
+      },
+      {
+        "path": "public/lib/classes/task/manager.php",
+        "git_blob_sha1": "2d48bb27bf528520533c661794f333c0b28b0a38",
+        "classes": [],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 1082,
+            "text": "if (($plugininfo->is_enabled() === false) && !$task->get_run_if_component_disabled()) {"
+          }
+        ]
+      },
+      {
+        "path": "public/lib/classes/plugininfo/auth.php",
+        "git_blob_sha1": "f85013d569ef31df8eb60d7eb3d039fddf502eea",
+        "classes": [
+          "class auth extends base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 53,
+            "text": "public static function get_enabled_plugins() {"
+          }
+        ]
+      },
+      {
+        "path": "public/lib/classes/plugininfo/enrol.php",
+        "git_blob_sha1": "38fe93afb2719b52cd001af6074c7b03623caffa",
+        "classes": [
+          "class enrol extends base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 44,
+            "text": "public static function get_enabled_plugins() {"
+          }
+        ]
+      },
+      {
+        "path": "public/lib/classes/plugininfo/block.php",
+        "git_blob_sha1": "2700442a745808e696740a424ba353b17cc768cb",
+        "classes": [
+          "class block extends base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 43,
+            "text": "public static function get_enabled_plugins() {"
+          }
+        ]
+      },
+      {
+        "path": "public/lib/classes/plugininfo/mod.php",
+        "git_blob_sha1": "972f5a3e2fb5b98ab05c6af9190e2761883c5e02",
+        "classes": [
+          "class mod extends base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 43,
+            "text": "public static function get_enabled_plugins() {"
+          }
+        ]
+      },
+      {
+        "path": "public/lib/classes/plugininfo/repository.php",
+        "git_blob_sha1": "9ddc2c2ef9364f9f76e11b2f20844d3deba9e80d",
+        "classes": [
+          "class repository extends base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 55,
+            "text": "public static function get_enabled_plugins() {"
+          }
+        ]
+      },
+      {
+        "path": "public/lib/classes/plugininfo/base.php",
+        "git_blob_sha1": "e67fabb8cfdcad378c48145fb91309d4566e2ccc",
+        "classes": [],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 106,
+            "text": "public static function get_enabled_plugins() {"
+          },
+          {
+            "line": 513,
+            "text": "public function is_enabled() {"
+          }
+        ]
+      },
+      {
+        "path": "public/admin/tool/mfa/classes/plugininfo/factor.php",
+        "git_blob_sha1": "d4597f00e2cbd91a3f0bce669a0ec45cc2ae7329",
+        "classes": [
+          "class factor extends \\core\\plugininfo\\base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 248,
+            "text": "public function is_enabled(): null|bool {"
+          }
+        ]
+      },
+      {
+        "path": "public/auth/oauth2/classes/task/delete_expired_confirmation_tokens.php",
+        "git_blob_sha1": "82c1e5eb60725980ccc6d75c4111a6705f70e27c",
+        "classes": [
+          "class delete_expired_confirmation_tokens extends scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/blocks/rss_client/classes/task/refreshfeeds.php",
+        "git_blob_sha1": "1416bd5ff41a86248f7bab3f838637533a7549ac",
+        "classes": [
+          "class refreshfeeds extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/category/classes/task/enrol_category_sync.php",
+        "git_blob_sha1": "cd57ed51ade19fc9b3f4c37d1db19f2b5e63f198",
+        "classes": [
+          "class enrol_category_sync extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/fee/classes/task/process_expirations.php",
+        "git_blob_sha1": "d51983d520e6be5910780626059ccaa0461e44d7",
+        "classes": [
+          "class process_expirations extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/flatfile/classes/task/flatfile_sync_task.php",
+        "git_blob_sha1": "a34da882a21e369ee13533d0ff63842933192b85",
+        "classes": [
+          "class flatfile_sync_task extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/imsenterprise/classes/task/cron_task.php",
+        "git_blob_sha1": "524a7a81fb3c574b1432681007d6ceb551a76234",
+        "classes": [
+          "class cron_task extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/lti/classes/local/ltiadvantage/task/sync_grades.php",
+        "git_blob_sha1": "71af42f35cdef01b164bb08c038dfb0af28c5293",
+        "classes": [
+          "class sync_grades extends scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/lti/classes/local/ltiadvantage/task/sync_members.php",
+        "git_blob_sha1": "124b25bccfaccb8ba5451c6796043bee9aacb149",
+        "classes": [
+          "class sync_members extends scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/lti/classes/task/sync_grades.php",
+        "git_blob_sha1": "3f2a08e220872ced4d0bbcdc0deba0df46db9f56",
+        "classes": [
+          "class sync_grades extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/lti/classes/task/sync_members.php",
+        "git_blob_sha1": "5aa77ed72b61cca8bcfb8de57f85d93026762d35",
+        "classes": [
+          "class sync_members extends scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/meta/classes/task/enrol_meta_sync.php",
+        "git_blob_sha1": "26b1f6a13035c88da5b037e5bd1e45a1b4c55fd2",
+        "classes": [
+          "class enrol_meta_sync extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/enrol/paypal/classes/task/process_expirations.php",
+        "git_blob_sha1": "0eeda0a08c8577b7d23eb6c8ba981cab0eb4b82e",
+        "classes": [
+          "class process_expirations extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/admin/tool/mfa/factor/grace/classes/task/revoke_expired_factors.php",
+        "git_blob_sha1": "83f49bbe6f45ec6c037a39414dc8d4fa3b1307ee",
+        "classes": [
+          "class revoke_expired_factors extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 61,
+            "text": "$duration = get_config('factor_grace', 'graceperiod');"
+          }
+        ]
+      },
+      {
+        "path": "public/admin/tool/mfa/factor/nosetup/classes/task/delete_unusable_factors.php",
+        "git_blob_sha1": "ac678ddf26a9235f1ff68466ecf5bcd2771cbc88",
+        "classes": [
+          "class delete_unusable_factors extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/mod/bigbluebuttonbn/classes/task/check_pending_recordings.php",
+        "git_blob_sha1": "570149fe266bea5b01f17dcc68cf838f3e0b71f7",
+        "classes": [
+          "class check_pending_recordings extends scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/repository/dropbox/classes/task/cron_task.php",
+        "git_blob_sha1": "03c07029c1390b16d69df8b95061fe57314c1d3c",
+        "classes": [
+          "class cron_task extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/repository/filesystem/classes/task/cron_task.php",
+        "git_blob_sha1": "58e52e8c1c01be7109de5295d0383802958f2048",
+        "classes": [
+          "class cron_task extends \\core\\task\\scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/repository/onedrive/classes/remove_temp_access_task.php",
+        "git_blob_sha1": "8e416574327383b2bd1f8ab10923d7dd45c4d916",
+        "classes": [
+          "class remove_temp_access_task extends scheduled_task {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      },
+      {
+        "path": "public/admin/tool/mfa/classes/local/factor/object_factor_base.php",
+        "git_blob_sha1": "1e7172f9ac64eaa00bd57b21f545208e74a864f8",
+        "classes": [],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 101,
+            "text": "public function is_enabled(): bool {"
+          },
+          {
+            "line": 102,
+            "text": "$status = get_config('factor_'.$this->name, 'enabled');"
+          },
+          {
+            "line": 118,
+            "text": "$weight = get_config('factor_'.$this->name, 'weight');"
+          }
+        ]
+      },
+      {
+        "path": "public/admin/tool/mfa/factor/grace/classes/factor.php",
+        "git_blob_sha1": "761731b640dfb1057bcdc01a2a2364920bbd61a0",
+        "classes": [
+          "class factor extends object_factor_base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": [
+          {
+            "line": 110,
+            "text": "$duration = get_config('factor_grace', 'graceperiod');"
+          },
+          {
+            "line": 117,
+            "text": "if (get_config('factor_grace', 'forcesetup') && $redirectable) {"
+          },
+          {
+            "line": 184,
+            "text": "$timeremaining = ($starttime + get_config('factor_grace', 'graceperiod')) - time();"
+          },
+          {
+            "line": 189,
+            "text": "$customwarning = get_config('factor_grace', 'customwarning');"
+          },
+          {
+            "line": 242,
+            "text": "$redirect = get_config('factor_grace', 'forcesetup');"
+          },
+          {
+            "line": 299,
+            "text": "$ignorelist = get_config('factor_grace', 'ignorelist');"
+          }
+        ]
+      },
+      {
+        "path": "public/admin/tool/mfa/factor/nosetup/classes/factor.php",
+        "git_blob_sha1": "8189c6b4a56780c8e3237ebe12d165817ceb41a7",
+        "classes": [
+          "class factor extends object_factor_base {"
+        ],
+        "run_if_disabled_override": false,
+        "eligibility_methods": []
+      }
+    ],
+    "overdue_db_flag_enabled": [
+      {
+        "classname": "\\auth_oauth2\\task\\delete_expired_confirmation_tokens",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1791878520,
+        "component": "auth_oauth2",
+        "db_component_enabled": false,
+        "basis": "auth_enabled_list_does_not_include_oauth2",
+        "task_source": "public/auth/oauth2/classes/task/delete_expired_confirmation_tokens.php",
+        "task_source_git_blob_sha1": "82c1e5eb60725980ccc6d75c4111a6705f70e27c",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\block_rss_client\\task\\refreshfeeds",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667500,
+        "component": "block_rss_client",
+        "db_component_enabled": false,
+        "basis": "mdl_block.visible=0",
+        "task_source": "public/blocks/rss_client/classes/task/refreshfeeds.php",
+        "task_source_git_blob_sha1": "1416bd5ff41a86248f7bab3f838637533a7549ac",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_category\\task\\enrol_category_sync",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320,
+        "component": "enrol_category",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_category",
+        "task_source": "public/enrol/category/classes/task/enrol_category_sync.php",
+        "task_source_git_blob_sha1": "cd57ed51ade19fc9b3f4c37d1db19f2b5e63f198",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_fee\\task\\process_expirations",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1791851220,
+        "component": "enrol_fee",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_fee",
+        "task_source": "public/enrol/fee/classes/task/process_expirations.php",
+        "task_source_git_blob_sha1": "d51983d520e6be5910780626059ccaa0461e44d7",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_flatfile\\task\\flatfile_sync_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767669300,
+        "component": "enrol_flatfile",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_flatfile",
+        "task_source": "public/enrol/flatfile/classes/task/flatfile_sync_task.php",
+        "task_source_git_blob_sha1": "a34da882a21e369ee13533d0ff63842933192b85",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_imsenterprise\\task\\cron_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767669000,
+        "component": "enrol_imsenterprise",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_imsenterprise",
+        "task_source": "public/enrol/imsenterprise/classes/task/cron_task.php",
+        "task_source_git_blob_sha1": "524a7a81fb3c574b1432681007d6ceb551a76234",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_lti\\local\\ltiadvantage\\task\\sync_grades",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400,
+        "component": "enrol_lti",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_lti",
+        "task_source": "public/enrol/lti/classes/local/ltiadvantage/task/sync_grades.php",
+        "task_source_git_blob_sha1": "71af42f35cdef01b164bb08c038dfb0af28c5293",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_lti\\local\\ltiadvantage\\task\\sync_members",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400,
+        "component": "enrol_lti",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_lti",
+        "task_source": "public/enrol/lti/classes/local/ltiadvantage/task/sync_members.php",
+        "task_source_git_blob_sha1": "124b25bccfaccb8ba5451c6796043bee9aacb149",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_lti\\task\\sync_grades",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400,
+        "component": "enrol_lti",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_lti",
+        "task_source": "public/enrol/lti/classes/task/sync_grades.php",
+        "task_source_git_blob_sha1": "3f2a08e220872ced4d0bbcdc0deba0df46db9f56",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_lti\\task\\sync_members",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400,
+        "component": "enrol_lti",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_lti",
+        "task_source": "public/enrol/lti/classes/task/sync_members.php",
+        "task_source_git_blob_sha1": "5aa77ed72b61cca8bcfb8de57f85d93026762d35",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_meta\\task\\enrol_meta_sync",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767669540,
+        "component": "enrol_meta",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_meta",
+        "task_source": "public/enrol/meta/classes/task/enrol_meta_sync.php",
+        "task_source_git_blob_sha1": "26b1f6a13035c88da5b037e5bd1e45a1b4c55fd2",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\enrol_paypal\\task\\process_expirations",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320,
+        "component": "enrol_paypal",
+        "db_component_enabled": false,
+        "basis": "enrol_enabled_list_does_not_include_paypal",
+        "task_source": "public/enrol/paypal/classes/task/process_expirations.php",
+        "task_source_git_blob_sha1": "0eeda0a08c8577b7d23eb6c8ba981cab0eb4b82e",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\factor_grace\\task\\revoke_expired_factors",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767745680,
+        "component": "factor_grace",
+        "db_component_enabled": false,
+        "basis": "factor_grace.enabled=0; object_factor_base::is_enabled",
+        "task_source": "public/admin/tool/mfa/factor/grace/classes/task/revoke_expired_factors.php",
+        "task_source_git_blob_sha1": "83f49bbe6f45ec6c037a39414dc8d4fa3b1307ee",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\factor_nosetup\\task\\delete_unusable_factors",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767745620,
+        "component": "factor_nosetup",
+        "db_component_enabled": false,
+        "basis": "factor_nosetup.enabled=0; object_factor_base::is_enabled",
+        "task_source": "public/admin/tool/mfa/factor/nosetup/classes/task/delete_unusable_factors.php",
+        "task_source_git_blob_sha1": "ac678ddf26a9235f1ff68466ecf5bcd2771cbc88",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\mod_bigbluebuttonbn\\task\\check_pending_recordings",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1791851400,
+        "component": "mod_bigbluebuttonbn",
+        "db_component_enabled": false,
+        "basis": "mdl_modules.visible=0",
+        "task_source": "public/mod/bigbluebuttonbn/classes/task/check_pending_recordings.php",
+        "task_source_git_blob_sha1": "570149fe266bea5b01f17dcc68cf838f3e0b71f7",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\repository_dropbox\\task\\cron_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320,
+        "component": "repository_dropbox",
+        "db_component_enabled": false,
+        "basis": "no_mdl_repository_row_for_requested_type",
+        "task_source": "public/repository/dropbox/classes/task/cron_task.php",
+        "task_source_git_blob_sha1": "03c07029c1390b16d69df8b95061fe57314c1d3c",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\repository_filesystem\\task\\cron_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320,
+        "component": "repository_filesystem",
+        "db_component_enabled": false,
+        "basis": "no_mdl_repository_row_for_requested_type",
+        "task_source": "public/repository/filesystem/classes/task/cron_task.php",
+        "task_source_git_blob_sha1": "58e52e8c1c01be7109de5295d0383802958f2048",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      },
+      {
+        "classname": "\\repository_onedrive\\remove_temp_access_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767917460,
+        "component": "repository_onedrive",
+        "db_component_enabled": false,
+        "basis": "no_mdl_repository_row_for_requested_type",
+        "task_source": "public/repository/onedrive/classes/remove_temp_access_task.php",
+        "task_source_git_blob_sha1": "8e416574327383b2bd1f8ab10923d7dd45c4d916",
+        "run_if_component_disabled": false,
+        "classification": "expected_component_skip_if_effective_settings_match_observed_database"
+      }
+    ],
+    "expected_component_skips": 18,
+    "effective_runtime_bootstrap_or_config_override_check_performed": false,
+    "native_functional_acceptance": false
+  },
+  "smart": {
+    "sda": {
+      "observed_at_utc": "2026-10-17T09:59:14Z",
+      "device": "/dev/sda",
+      "smartctl_version": [
+        7,
+        4
+      ],
+      "exit_status": 64,
+      "exit_bits_set": [
+        6
+      ],
+      "exit_interpretation": "ATA_error_log_records_present; no_command_failure_bit",
+      "health_passed": true,
+      "capacity_bytes": 120034123776,
+      "model_name": "WALRAM  120GB",
+      "firmware_version": "FW201105",
+      "in_smartctl_database": false,
+      "power_on_time": {
+        "hours": 26230
+      },
+      "temperature_celsius": 50,
+      "ata_attributes": [
+        {
+          "id": 1,
+          "name": "Raw_Read_Error_Rate",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 5,
+          "name": "Reallocated_Sector_Ct",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 9,
+          "name": "Power_On_Hours",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 26230
+          }
+        },
+        {
+          "id": 12,
+          "name": "Power_Cycle_Count",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 599
+          }
+        },
+        {
+          "id": 160,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 161,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 163,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 120
+          }
+        },
+        {
+          "id": 164,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 518
+          }
+        },
+        {
+          "id": 165,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 602
+          }
+        },
+        {
+          "id": 166,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 476
+          }
+        },
+        {
+          "id": 167,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 522
+          }
+        },
+        {
+          "id": 168,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 169,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 100
+          }
+        },
+        {
+          "id": 175,
+          "name": "Program_Fail_Count_Chip",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 50331648
+          }
+        },
+        {
+          "id": 176,
+          "name": "Erase_Fail_Count_Chip",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 4585089
+          }
+        },
+        {
+          "id": 177,
+          "name": "Wear_Leveling_Count",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 19581860
+          }
+        },
+        {
+          "id": 178,
+          "name": "Used_Rsvd_Blk_Cnt_Chip",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 181,
+          "name": "Program_Fail_Cnt_Total",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 182,
+          "name": "Erase_Fail_Count_Total",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 192,
+          "name": "Power-Off_Retract_Count",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 238
+          }
+        },
+        {
+          "id": 194,
+          "name": "Temperature_Celsius",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 50
+          }
+        },
+        {
+          "id": 196,
+          "name": "Reallocated_Event_Count",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 198,
+          "name": "Offline_Uncorrectable",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 232,
+          "name": "Available_Reservd_Space",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 241,
+          "name": "Total_LBAs_Written",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 280692
+          }
+        },
+        {
+          "id": 242,
+          "name": "Total_LBAs_Read",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 841655
+          }
+        },
+        {
+          "id": 249,
+          "name": "Unknown_Attribute",
+          "value": 100,
+          "worst": 100,
+          "thresh": 50,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 368495
+          }
+        }
+      ],
+      "ata_error_log": {
+        "revision": 1,
+        "sectors": 1,
+        "count": 8,
+        "logged_count": 4,
+        "table": [
+          {
+            "error_number": 8,
+            "log_index": 3,
+            "lifetime_hours": 25130,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 132,
+              "status": 64,
+              "count": 128,
+              "lba": 1056969344,
+              "device": 0,
+              "device_control": 0
+            },
+            "error_description": " at LBA = 0x3f001280 = 1056969344",
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 97,
+                  "features": 128,
+                  "count": 128,
+                  "lba": 1056969344,
+                  "device": 64,
+                  "device_control": 8
+                },
+                "powerup_milliseconds": 6674340,
+                "command_name": "WRITE FPDMA QUEUED"
+              },
+              {
+                "registers": {
+                  "command": 97,
+                  "features": 1344,
+                  "count": 120,
+                  "lba": 973083200,
+                  "device": 64,
+                  "device_control": 8
+                },
+                "powerup_milliseconds": 6674340,
+                "command_name": "WRITE FPDMA QUEUED"
+              },
+              {
+                "registers": {
+                  "command": 97,
+                  "features": 1344,
+                  "count": 112,
+                  "lba": 889197056,
+                  "device": 64,
+                  "device_control": 8
+                },
+                "powerup_milliseconds": 6674340,
+                "command_name": "WRITE FPDMA QUEUED"
+              },
+              {
+                "registers": {
+                  "command": 97,
+                  "features": 1344,
+                  "count": 104,
+                  "lba": 788533952,
+                  "device": 64,
+                  "device_control": 8
+                },
+                "powerup_milliseconds": 6674340,
+                "command_name": "WRITE FPDMA QUEUED"
+              },
+              {
+                "registers": {
+                  "command": 97,
+                  "features": 1344,
+                  "count": 96,
+                  "lba": 704647808,
+                  "device": 64,
+                  "device_control": 8
+                },
+                "powerup_milliseconds": 6674340,
+                "command_name": "WRITE FPDMA QUEUED"
+              }
+            ]
+          },
+          {
+            "error_number": 7,
+            "log_index": 2,
+            "lifetime_hours": 25127,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 4,
+              "status": 160,
+              "count": 1,
+              "lba": 37,
+              "device": 81,
+              "device_control": 0
+            },
+            "error_description": "Device Fault",
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 47,
+                  "features": 512,
+                  "count": 1,
+                  "lba": 37,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 198640,
+                "command_name": "READ LOG EXT"
+              },
+              {
+                "registers": {
+                  "command": 239,
+                  "features": 2,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 198630,
+                "command_name": "SET FEATURES [Enable write cache]"
+              },
+              {
+                "registers": {
+                  "command": 245,
+                  "features": 26112,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 198630,
+                "command_name": "SECURITY FREEZE LOCK"
+              },
+              {
+                "registers": {
+                  "command": 239,
+                  "features": 102,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 198630,
+                "command_name": "SET FEATURES [Disable revert defaults]"
+              },
+              {
+                "registers": {
+                  "command": 245,
+                  "features": 0,
+                  "count": 2048,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 198630,
+                "command_name": "SECURITY FREEZE LOCK"
+              }
+            ]
+          },
+          {
+            "error_number": 6,
+            "log_index": 1,
+            "lifetime_hours": 25099,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 4,
+              "status": 160,
+              "count": 1,
+              "lba": 37,
+              "device": 81,
+              "device_control": 0
+            },
+            "error_description": "Device Fault",
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 47,
+                  "features": 512,
+                  "count": 1,
+                  "lba": 37,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 9830,
+                "command_name": "READ LOG EXT"
+              },
+              {
+                "registers": {
+                  "command": 239,
+                  "features": 2,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 9830,
+                "command_name": "SET FEATURES [Enable write cache]"
+              },
+              {
+                "registers": {
+                  "command": 245,
+                  "features": 26112,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 9830,
+                "command_name": "SECURITY FREEZE LOCK"
+              },
+              {
+                "registers": {
+                  "command": 239,
+                  "features": 102,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 9820,
+                "command_name": "SET FEATURES [Disable revert defaults]"
+              },
+              {
+                "registers": {
+                  "command": 245,
+                  "features": 0,
+                  "count": 256,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 9820,
+                "command_name": "SECURITY FREEZE LOCK"
+              }
+            ]
+          },
+          {
+            "error_number": 5,
+            "log_index": 0,
+            "lifetime_hours": 25098,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 4,
+              "status": 160,
+              "count": 1,
+              "lba": 37,
+              "device": 81,
+              "device_control": 0
+            },
+            "error_description": "Device Fault",
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 47,
+                  "features": 512,
+                  "count": 1,
+                  "lba": 37,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 26390,
+                "command_name": "READ LOG EXT"
+              },
+              {
+                "registers": {
+                  "command": 239,
+                  "features": 2,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 26390,
+                "command_name": "SET FEATURES [Enable write cache]"
+              },
+              {
+                "registers": {
+                  "command": 245,
+                  "features": 26112,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 26390,
+                "command_name": "SECURITY FREEZE LOCK"
+              },
+              {
+                "registers": {
+                  "command": 239,
+                  "features": 102,
+                  "count": 0,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 26380,
+                "command_name": "SET FEATURES [Disable revert defaults]"
+              },
+              {
+                "registers": {
+                  "command": 245,
+                  "features": 0,
+                  "count": 256,
+                  "lba": 0,
+                  "device": 160,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 26380,
+                "command_name": "SECURITY FREEZE LOCK"
+              }
+            ]
+          }
+        ]
+      },
+      "self_test_history": {
+        "extended": {
+          "revision": 0,
+          "sectors": 1,
+          "count": 0
+        }
+      },
+      "new_self_test_started": false
+    },
+    "sdb": {
+      "observed_at_utc": "2026-10-17T09:59:14Z",
+      "device": "/dev/sdb",
+      "smartctl_version": [
+        7,
+        4
+      ],
+      "exit_status": 64,
+      "exit_bits_set": [
+        6
+      ],
+      "exit_interpretation": "ATA_error_log_records_present; no_command_failure_bit",
+      "health_passed": true,
+      "capacity_bytes": 500106780160,
+      "model_name": "WDC WD5000AAKS-00YGA0",
+      "firmware_version": "12.01C02",
+      "in_smartctl_database": true,
+      "power_on_time": {
+        "hours": 16663
+      },
+      "temperature_celsius": 49,
+      "ata_attributes": [
+        {
+          "id": 1,
+          "name": "Raw_Read_Error_Rate",
+          "value": 200,
+          "worst": 200,
+          "thresh": 51,
+          "when_failed": "",
+          "flags": {
+            "value": 15,
+            "string": "POSR-- ",
+            "prefailure": true,
+            "updated_online": true,
+            "performance": true,
+            "error_rate": true,
+            "event_count": false,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 7
+          }
+        },
+        {
+          "id": 3,
+          "name": "Spin_Up_Time",
+          "value": 174,
+          "worst": 172,
+          "thresh": 21,
+          "when_failed": "",
+          "flags": {
+            "value": 3,
+            "string": "PO---- ",
+            "prefailure": true,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": false,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 6283
+          }
+        },
+        {
+          "id": 4,
+          "name": "Start_Stop_Count",
+          "value": 98,
+          "worst": 98,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 2126
+          }
+        },
+        {
+          "id": 5,
+          "name": "Reallocated_Sector_Ct",
+          "value": 200,
+          "worst": 200,
+          "thresh": 140,
+          "when_failed": "",
+          "flags": {
+            "value": 51,
+            "string": "PO--CK ",
+            "prefailure": true,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 7,
+          "name": "Seek_Error_Rate",
+          "value": 200,
+          "worst": 200,
+          "thresh": 51,
+          "when_failed": "",
+          "flags": {
+            "value": 14,
+            "string": "-OSR-- ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": true,
+            "error_rate": true,
+            "event_count": false,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 9,
+          "name": "Power_On_Hours",
+          "value": 78,
+          "worst": 78,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 16663
+          }
+        },
+        {
+          "id": 10,
+          "name": "Spin_Retry_Count",
+          "value": 100,
+          "worst": 100,
+          "thresh": 51,
+          "when_failed": "",
+          "flags": {
+            "value": 18,
+            "string": "-O--C- ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 11,
+          "name": "Calibration_Retry_Count",
+          "value": 100,
+          "worst": 100,
+          "thresh": 51,
+          "when_failed": "",
+          "flags": {
+            "value": 18,
+            "string": "-O--C- ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 12,
+          "name": "Power_Cycle_Count",
+          "value": 98,
+          "worst": 98,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 2050
+          }
+        },
+        {
+          "id": 192,
+          "name": "Power-Off_Retract_Count",
+          "value": 200,
+          "worst": 200,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 647
+          }
+        },
+        {
+          "id": 193,
+          "name": "Load_Cycle_Count",
+          "value": 200,
+          "worst": 200,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 2267
+          }
+        },
+        {
+          "id": 194,
+          "name": "Temperature_Celsius",
+          "value": 101,
+          "worst": 85,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 34,
+            "string": "-O---K ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": false,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 49
+          }
+        },
+        {
+          "id": 196,
+          "name": "Reallocated_Event_Count",
+          "value": 200,
+          "worst": 200,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 50,
+            "string": "-O--CK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 197,
+          "name": "Current_Pending_Sector",
+          "value": 200,
+          "worst": 200,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 18,
+            "string": "-O--C- ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 198,
+          "name": "Offline_Uncorrectable",
+          "value": 200,
+          "worst": 200,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 16,
+            "string": "----C- ",
+            "prefailure": false,
+            "updated_online": false,
+            "performance": false,
+            "error_rate": false,
+            "event_count": true,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 199,
+          "name": "UDMA_CRC_Error_Count",
+          "value": 200,
+          "worst": 200,
+          "thresh": 0,
+          "when_failed": "",
+          "flags": {
+            "value": 62,
+            "string": "-OSRCK ",
+            "prefailure": false,
+            "updated_online": true,
+            "performance": true,
+            "error_rate": true,
+            "event_count": true,
+            "auto_keep": true
+          },
+          "raw": {
+            "value": 0
+          }
+        },
+        {
+          "id": 200,
+          "name": "Multi_Zone_Error_Rate",
+          "value": 200,
+          "worst": 200,
+          "thresh": 51,
+          "when_failed": "",
+          "flags": {
+            "value": 8,
+            "string": "---R-- ",
+            "prefailure": false,
+            "updated_online": false,
+            "performance": false,
+            "error_rate": true,
+            "event_count": false,
+            "auto_keep": false
+          },
+          "raw": {
+            "value": 0
+          }
+        }
+      ],
+      "ata_error_log": {
+        "revision": 1,
+        "sectors": 6,
+        "count": 9,
+        "logged_count": 9,
+        "table": [
+          {
+            "error_number": 9,
+            "log_index": 8,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 264,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 64037,
+                  "count": 62651,
+                  "lba": 1,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 247,
+                  "lba": 269354591266048,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 28424,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 1,
+                  "features": 64037,
+                  "count": 62651,
+                  "lba": 34361769985,
+                  "device": 0,
+                  "device_control": 1
+                },
+                "powerup_milliseconds": 32816122,
+                "command_name": "[RESERVED]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 1280,
+                  "count": 39,
+                  "lba": 269298773468416,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 5896,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          },
+          {
+            "error_number": 8,
+            "log_index": 7,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 376,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 34853,
+                  "count": 62622,
+                  "lba": 1,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 111,
+                  "lba": 268822013420800,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 61304,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 30501,
+                  "count": 62622,
+                  "lba": 34375925761,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 32808567,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 151,
+                  "lba": 268718934205696,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 40712,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          },
+          {
+            "error_number": 7,
+            "log_index": 6,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 376,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 8741,
+                  "count": 62585,
+                  "lba": 1,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 151,
+                  "lba": 268422579037440,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 61304,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 6181,
+                  "count": 62585,
+                  "lba": 34367012865,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 32799008,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 143,
+                  "lba": 268349564593408,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 63240,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          },
+          {
+            "error_number": 6,
+            "log_index": 5,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 264,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 49445,
+                  "count": 62555,
+                  "lba": 1,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 119,
+                  "lba": 269109771838720,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 61192,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 49445,
+                  "count": 62555,
+                  "lba": 34367012865,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 32791489,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 1280,
+                  "count": 119,
+                  "lba": 269071117133056,
+                  "device": 1,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 26376,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          },
+          {
+            "error_number": 5,
+            "log_index": 4,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 264,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2597,
+                  "count": 3267,
+                  "lba": 2,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 8704,
+                  "count": 199,
+                  "lba": 14289368917248,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 28424,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 62757,
+                  "count": 3266,
+                  "lba": 137453568002,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 34390783,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 71,
+                  "lba": 14246469580032,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 1,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          },
+          {
+            "error_number": 4,
+            "log_index": 3,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 264,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 40741,
+                  "count": 3255,
+                  "lba": 2,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 16384,
+                  "count": 167,
+                  "lba": 13842691597568,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 28424,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 38453,
+                  "count": 3255,
+                  "lba": 30072569858,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 34387863,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 71,
+                  "lba": 13838446966016,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 24448,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          },
+          {
+            "error_number": 3,
+            "log_index": 2,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 264,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 15397,
+                  "count": 3244,
+                  "lba": 2,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 768,
+                  "count": 255,
+                  "lba": 13451848856832,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 28424,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 15157,
+                  "count": 3244,
+                  "lba": 34369110018,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 34384956,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 135,
+                  "lba": 13447553889536,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 34563,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          },
+          {
+            "error_number": 2,
+            "log_index": 1,
+            "lifetime_hours": 0,
+            "device_state": {
+              "value": 0,
+              "string": "in an unknown state"
+            },
+            "completion_registers": {
+              "error": 64,
+              "status": 0,
+              "count": 264,
+              "lba": 347892408321,
+              "device": 0,
+              "device_control": 0
+            },
+            "previous_commands": [
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 60453,
+                  "count": 3231,
+                  "lba": 2,
+                  "device": 0,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 0,
+                "command_name": "NOP [Reserved subcommand] [OBS-ACS-2]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 2048,
+                  "count": 247,
+                  "lba": 14207762244864,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 28424,
+                "command_name": "NOP [Abort queued commands]"
+              },
+              {
+                "registers": {
+                  "command": 1,
+                  "features": 60453,
+                  "count": 3231,
+                  "lba": 34361769986,
+                  "device": 0,
+                  "device_control": 1
+                },
+                "powerup_milliseconds": 34381804,
+                "command_name": "[RESERVED]"
+              },
+              {
+                "registers": {
+                  "command": 0,
+                  "features": 1280,
+                  "count": 39,
+                  "lba": 14177714251008,
+                  "device": 2,
+                  "device_control": 0
+                },
+                "powerup_milliseconds": 5896,
+                "command_name": "NOP [Abort queued commands]"
+              }
+            ]
+          }
+        ]
+      },
+      "self_test_history": {
+        "extended": {
+          "revision": 1,
+          "sectors": 1,
+          "table": [
+            {
+              "type": {
+                "value": 2,
+                "string": "Extended offline"
+              },
+              "status": {
+                "value": 0,
+                "string": "Completed without error",
+                "passed": true
+              },
+              "lifetime_hours": 16385
+            },
+            {
+              "type": {
+                "value": 2,
+                "string": "Extended offline"
+              },
+              "status": {
+                "value": 121,
+                "string": "Completed: read failure",
+                "remaining_percent": 90,
+                "passed": false
+              },
+              "lifetime_hours": 16359,
+              "lba": 752045700
+            },
+            {
+              "type": {
+                "value": 1,
+                "string": "Short offline"
+              },
+              "status": {
+                "value": 25,
+                "string": "Aborted by host",
+                "remaining_percent": 90
+              },
+              "lifetime_hours": 7391
+            }
+          ],
+          "count": 3,
+          "error_count_total": 1,
+          "error_count_outdated": 1
+        }
+      },
+      "new_self_test_started": false
+    }
+  },
+  "smartctl_exit_primary_source": {
+    "repository": "smartmontools/smartmontools",
+    "path": "smartmontools/smartctl.8.in",
+    "ref": "master",
+    "git_blob_sha1": "68cbec836ad426058df3aed6f00f1f9210805ff4",
+    "url": "https://github.com/smartmontools/smartmontools/blob/master/smartmontools/smartctl.8.in"
+  },
+  "acl": {
+    "collected": false,
+    "reason": "getfacl_not_installed",
+    "no_permission_conclusion": true
+  },
+  "redaction_boundary": [
+    "raw_archive_not_published",
+    "serial_numbers_and_WWN_not_published",
+    "nonselected_NTP_peers_not_published",
+    "no_full_device_statistics_or_config_export"
+  ],
+  "independently_authenticated_host": false,
+  "agent_ssh_access": false,
+  "production_configuration_changes": false,
+  "functional_acceptance": false
+}

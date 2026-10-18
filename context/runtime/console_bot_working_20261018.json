@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-18",
+  "kind": "owner_report",
+  "source": "current_owner_conversation",
+  "owner_statement": "Бот работает; ответы сырые, нечитаемые, часть данных не показывается. Запрошены Mini App и важные автоалерты.",
+  "confirmed_scope": [
+    "owner_reports_private_bot_responses"
+  ],
+  "installation_inference": {
+    "last_full_bundle": "1f605e4dad9a88040146086bfbfbe48d842004d5",
+    "subsequent_source_fix": "fd46c383c9cfba3d8155275ad1e04cae423aa082",
+    "full_new_bundle_install_not_claimed": true,
+    "hotfix_stdout_and_native_hash_not_supplied": true
+  },
+  "not_observed": [
+    "screenshots_missing_in_workspace",
+    "exact_native_module_hash_after_hotfix",
+    "all_alert_types_receiver_acceptance",
+    "Mini_App_phone_access_and_certificate_trust",
+    "independent_host_loss_alert",
+    "restore_RTO"
+  ],
+  "requested_changes": [
+    "Russian_readable_cards_and_buttons",
+    "all_available_aggregate_metrics_with_units_and_freshness",
+    "explain_missing_sources",
+    "informative_automatic_incidents_and_recovery",
+    "optional_native_Telegram_opening_of_existing_login"
+  ],
+  "network_changes_by_agent": false,
+  "native_server_access_by_agent": false,
+  "secrets_received": false
+}

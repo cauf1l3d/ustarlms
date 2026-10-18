@@ -601,3 +601,28 @@ updated;older dated checkpoints retained as history.
 Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; native clean-host result awaited. Moodle5.2/PostgreSQL17 explicitly deferred, previous5.3 rehearsal retained as history. Next INF-06 is same-host Linear-inspired panel with auth, metrics/alerts, labs/SFTP, manual operations and Telegram latest encrypted backup/control.
 
 Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.
+
+
+## 17Oct — read-only owner facts, repository context only
+
+[Two actual archives](server_facts_received_20261017.json) validated/imported; [reconciliation](../reviews/20261017/runtime_reconciliation.md) separates28 collected blocks from task/clock/query-stat/SMART gaps. Fresh plugin/theme526 match e1d57f5b. DB/code privilege risks confirmed, scheduled backup/cron receipts refreshed without closing DR or task-failure acceptance. This entry is not a new application/host deployment.
+
+
+## 17Oct04:41MSK — third read-only report accepted, no deployment
+
+[Latest01:39:24Z](server-facts/20261017T013924Z-285497b0/manifest.json) validated/imported:30ok/1error and526 source matches. [Follow-up](server_facts_followup_20261017.json) separates archived clock/scheduled/SMART values from owner console PG/NTP diagnostics. Both faildelay tasks disabled;18 overdue eligibility unknown. UTC/NTPfalse/syncedtrue, NTP source/offset unknown. SMART healthtrue at50/47°C, detailed attributes/history/residual not rechecked. pg_stat_statements available but not installed/preloaded; no restart or activation performed. Same backup receipt preserved; no new restore inferred. [Current reconciliation](../reviews/20261017/runtime_reconciliation.md) is ready for owner repeat audit. Existing580 r16 tests pass with19environment skips.
+
+
+## 17Oct13:05MSK — targeted owner core/extra observations, no deployment
+
+[Core/extra provenance](core_extra_received_20261017.json) binds two uploaded ZIPs/checksums. [Review](../reviews/20261017/core_extra_reconciliation.md): eligible upstream core24742 match/23 extra names,0changed/missing; ntpsec peer offset-0.2024ms; full exported SMART attributes/history at50/49C with exit64/error-log records and current HDD198=0 preserving historical failed test.18 overdue have DB/source component-skip explanations, effective runtime config not executed. ACL missing because getfacl absent; PG preload still empty. Older snapshots/526 plugin manifest and backup/restore receipts unchanged. Local r16 suite successful with documented environment/Go-class skips; [validation](../reviews/20261017/core_extra_validation.json). No new application/host release, service changes, restore or Telegram operation.
+
+
+## 17Oct14:03MSK — ACL/SSH/Caddy and extra hashes; no application deployment
+
+[Owner gaps archive](server_gaps_received_20261017.json) verified:6/6 probes/24 checksums, ACL44175 objects, seven parents, selected SSH context, comm caddy/PID862 on2019,23 extra metadata/hashes and four selected du sizes. UID33 owner-writable4726 objects/writable outer root and parent retain INF-03; external2019/API and full native acceptance unknown. Owner installed acl2.3.2-1build1.1 per separate terminal receipt, no package upgrades/removals; collector read-only. Previous source/core/clock/SMART/backup receipts untouched. [Review](../reviews/20261017/gaps_reconciliation.md), [validation](../reviews/20261017/gaps_validation.json); local suite successful with explicit environment/Go skips, CI reported in PR. No agent SSH, application/schema release, restore or Telegram delivery.
+
+
+## 17Oct14:24MSK — one home IPv4 TCP2019 result; no deployment
+
+[Owner terminal receipt](external_network_result_20261017.json): server egress IPv4 equals external home test target, TCP2019 not established; ping timeout separate. Single source/path, unknown exact probe time; NAT attribution/other sources/IPv6/API and local listener hardening remain unverified. Addresses redacted, no archive checksum claim. Prior listener/source/backup/restore reports preserved. Context updated for repeat owner audit; no agent host changes or application deployment.

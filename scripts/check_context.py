@@ -35,8 +35,9 @@ def check():
         assert tasks[key]['status']=='ready', key
         assert all(tasks[d]['status']=='done' for d in tasks[key]['depends_on']), key
     project=read('context/project.yaml')
-    for path in state['next_agent_read']:
-        assert (ROOT/path).is_file(),path
+    assert state['entrypoint']=='START_HERE.md'
+    assert read('context/context_index.yaml')['entrypoint']==state['entrypoint']
+    assert 'read_order' not in read('context/context_index.yaml')
     for t in tasks.values():
         for key in ('spec','reference','runbook'):
             if key in t: assert (ROOT/t[key]).is_file(),(t['id'],key)
@@ -52,8 +53,22 @@ def check():
     assert re.fullmatch('[0-9a-f]{40}',evidence['application']['reference_commit'])
     assert state['production']['last_exact_source_manifest']['commit']==evidence['application']['reference_commit']
     assert state['production']['current_source_commit']==evidence['application']['reference_commit']
-    assert state['production']['last_exact_source_manifest']['date']==evidence['application']['manifest_observed_at']
-    assert state['production']['last_exact_source_manifest']['matching_files']==evidence['application']['matching_files']
+    latest=state['production']['last_exact_source_manifest']
+    if latest.get('comparison'):
+        from infra.server_facts import read_payload, validate_payload
+        payload,metadata=validate_payload(read_payload((ROOT/latest['evidence']).parent))
+        comparison=json.loads((ROOT/latest['comparison']).read_text())
+        assert latest['date']==metadata['collected_utc']
+        assert payload['blocks']['source_manifest']['status']=='ok'
+        assert comparison['facts_snapshot']==str(Path(latest['evidence']).parent)
+        assert comparison['evidence_complete'] and comparison['baseline_commit']==latest['commit']
+        assert latest['matching_files']==comparison['matching']
+        assert latest['changed']==len(comparison['changed'])
+        assert latest['missing']==len(comparison['only_in_git'])
+        assert latest['extra']==len(comparison['only_in_snapshot'])
+    else:
+        assert latest['date']==evidence['application']['manifest_observed_at']
+        assert latest['matching_files']==evidence['application']['matching_files']
     assert state['production']['current_versions']=={
         'local_ustar':evidence['application']['local_ustar'],
         'theme_ustar':evidence['application']['theme_ustar']}
@@ -78,6 +93,7 @@ def check():
         assert data['source_commit']==baseline,p
         assert set(data['tables']) <= tables,p
         for path in data['entry_points']+data['services']:assert (ROOT/path).is_file(),path
+        for scenario in data.get('scenarios',[]):assert (ROOT/scenario['source']).is_file(),scenario
     for p in (ROOT/'context').rglob('*'):
         if not p.is_file() or 'archive' in p.relative_to(ROOT/'context').parts:continue
         if p.suffix in ['.yaml','.yml']:yaml.safe_load(p.read_text())
@@ -92,7 +108,10 @@ def check():
     docs += ['harness/ustar-contextd/README.md','context/runtime/context_update_20261005.md',
              'context/runtime/MONITORING.md','context/runtime/BACKUP_RESTORE.md',
              'context/runtime/SECURITY_BASELINE.md','context/audits/README.md',
-             state['audit']['reconciliation'],state['audit']['remediation_plan']]
+             state['audit']['reconciliation'],state['audit']['remediation_plan'],
+             'context/reviews/20261017/README.md','scripts/infra/README_server_facts.md',
+             'context/reviews/20261017/runtime_reconciliation.md',
+             'context/design/README.md','context/runtime/server-facts/README.md']
     for name in docs:
         p=ROOT/name
         for target in re.findall(r'\]\(([^)]+)\)',p.read_text()):
@@ -107,6 +126,12 @@ def check():
     indexed={f['path'] for f in idx['files']}
     assert set(state['audit'][key] for key in ('document','reconciliation','remediation_plan')) <= indexed
     assert evidence_path in indexed
+    from build_current_context import render
+    for relative,content in render(ROOT).items():
+        assert (ROOT/relative).read_text()==content, 'Stale generated current context: '+relative
+    from build_agent_inventory import render as render_inventory
+    for relative,content in render_inventory(ROOT).items():
+        assert (ROOT/relative).read_text()==content, 'Stale generated code inventory: '+relative
     print(f'CONTEXT_OK source={baseline} files={len(paths)} tables={len(tables)} tasks={len(tasks)}')
 
 

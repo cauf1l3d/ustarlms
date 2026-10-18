@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "received_at": "2026-10-18T18:04:31+03:00",
+  "source": "owner_pasted_terminal_output_and_phone_VPN_clarification",
+  "attachment_sha256": "007384c8fdd291bb6d9c76e50a27341c13c2d7a658f4b3253369b230b4563815",
+  "independent_SSH": false,
+  "source_commit": "1c881495ae78dd74cf37ca5a045944d1336d85ce",
+  "source_attestation_scope": "owner_command_checked_archive_sha_and_SOURCE_COMMIT_then_updater_PASS_not_independent_full_installed_file_manifest",
+  "archive_sha256": "0b7ecfa62fef556e39435125dee938467ccc96ee324392001f271598f01efaf5",
+  "archive_checksum": "OK",
+  "update": "CONSOLE_UPDATE=PASS",
+  "pip_check": "No broken requirements found",
+  "rollback_venv": "/opt/ustar-console-rollback.CIJXji/venv",
+  "units": {
+    "ustar-console": "active",
+    "ustar-console-ops": "active",
+    "ustar-console-collect.timer": "active",
+    "ustar-console-notify": "active"
+  },
+  "source_stale": false,
+  "TLS": {
+    "origin": "https://192.168.1.60:8443",
+    "chain_and_IP_SAN": "pass",
+    "live_certificate": "matches_verified_leaf",
+    "public_CA_export": "repaired_without_changing_authority",
+    "ca_sha256": "cc397ba406aa58445e4f57a5e2644df20bd746273403e555f3df736694d5935f",
+    "client_trust": "not_measured",
+    "mini_app": "not_accepted"
+  },
+  "apache_numeric_logging": {
+    "check_before_install": {
+      "configured": false,
+      "changed": false
+    },
+    "installation": {
+      "configured": true,
+      "changed": true
+    },
+    "vhost": "/etc/apache2/sites-available/ustar.conf",
+    "log": "/var/lib/ustar-console-collector/requests.log",
+    "backup": "/etc/apache2/sites-available/ustar.conf.ustar-observability-backup-20261018T150056Z-010a8729",
+    "actual_counts_and_p95": "not_yet_supplied",
+    "service_event_output": "not_yet_supplied"
+  },
+  "phone": {
+    "application": "Happ",
+    "provider": "NovaVPS",
+    "same_provider_as_server_Telegram_egress": true,
+    "network": "not_supplied",
+    "app_version": "not_supplied",
+    "profile_type": "not_supplied",
+    "route": "not_measured"
+  },
+  "remaining": [
+    "client_CA_import_and_trust",
+    "phone_network_and_routing_check",
+    "Mini_App_device_open",
+    "updated_UI_owner_check",
+    "numeric_metrics_sample",
+    "browser_roles_and_download_hash",
+    "independent_observer",
+    "restore_RTO"
+  ],
+  "full_owner_acceptance": false,
+  "network_changes_by_agent": false,
+  "runbook": "context/runtime/console_happ_access_20261018.md"
+}

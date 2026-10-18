@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "received_at": "2026-10-18T18:38:03+03:00",
+  "source": "owner_report_in_current_chat",
+  "independently_measured": false,
+  "owner_report": "обновил сертификаты и предупреждения ушли все работает как с включенным vpn так и без него",
+  "network": {
+    "kind": "office_WiFi",
+    "confirmed_at": "2026-10-18T18:11:35+03:00",
+    "phone_application": "Happ",
+    "provider": "NovaVPS"
+  },
+  "client_TLS_warning": "resolved_by_owner_report_after_certificate_update",
+  "office_access_VPN_on": "working_by_owner_report",
+  "office_access_VPN_off": "working_by_owner_report",
+  "certificate_update_method": "not_separately_supplied",
+  "mini_app": "not_separately_named_in_general_working_report_no_current_failure_reported",
+  "per_device_client_matrix": "not_supplied",
+  "installed_release_receipt": "context/runtime/console_revisions_native_20261018.json",
+  "Happ_direct_exception": "not_needed_for_current_working_configuration_not_applied_by_agent",
+  "prior_VPN_interception_hypothesis": "not_confirmed_no_route_fix_required_by_current_evidence",
+  "home_or_mobile_access": "outside_this_office_check",
+  "full_console_acceptance": "not_inferred_from_TLS_and_connectivity_report",
+  "numeric_request_sample": "not_separately_supplied",
+  "service_event_sample": "not_separately_supplied",
+  "server_or_home_network_changes_by_agent": false,
+  "next": "review_actual_new_source_values_and_UI_in_existing_INF06_scope_no_repeat_install_or_CA_rotation"
+}

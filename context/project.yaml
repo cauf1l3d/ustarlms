@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-18'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -23,16 +23,27 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: next_INF06_panel_and_Telegram_no_platform_upgrade
+execution_gate: INF06_owner1855_accounts_alerts_UI_and_host_loss_design;INF07_after_console_followup
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
   status: archive_obtained_instruction_transferred_waiting_sysadmin_restore
   owner_confirmation: '2026-10-16T00:20:51+03:00'
-  control_panel: next_INF06
+  control_panel: INF06_reopened_by_owner_20261018T1703_MSK
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
   task: INF-06
-  spec: context/runtime/control_panel_telegram_20261016.md
-  prototype_PR: 103
+  spec: server-console/ADMIN_ALERTS_20261018.md
+  preparation: docs/superpowers/plans/2026-10-18-console-admin-alerts.md
+  status: accounts_and_personal_notifications_implementation
+  deployment: prior1c881495_installed;new_accounts_release_not_yet_native
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
+control_panel_revision:
+  task: INF-06
+  status: owner_expanded_scope_20261018T185523_MSK
+  receipt: context/runtime/console_accounts_request_20261018.json
+  verified_delivered_source: 1c881495ae78dd74cf37ca5a045944d1336d85ce
+  exact_installed_source_commit: 1c881495ae78dd74cf37ca5a045944d1336d85ce
+  PR: 103
+  operational_followup: INF-06-OPS
+  restore_followup: OPS-02

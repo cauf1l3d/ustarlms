@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "repository_base": "bddd8b94153f497fa51d703fdbd4c878c3258722",
+  "provenance": "context/runtime/core_extra_received_20261017.json",
+  "archive_validation": {
+    "safe_bounded_members_crc": "success",
+    "all_payload_checksums": "success",
+    "core_nested_tar_byte_equality": "success",
+    "core_original_payload_bytes_preserved": true,
+    "collector_pinned_source_match": true,
+    "matching_set_matches_exact_reference_tree": true,
+    "official_commit_looked_up_in_moodle_repository": true,
+    "upstream_eligibility_sources_blob_hashes_match_reference_tree": 30,
+    "private_smart_identifiers_excluded_from_derivative": true,
+    "uploaded_hooks_config_and_scripts_executed": false
+  },
+  "facts": {
+    "core_matching": 24742,
+    "core_changed": 0,
+    "core_missing": 0,
+    "core_extra": 23,
+    "core_comparison_exit": 3,
+    "NTP_client": "ntpsec",
+    "selected_peer_offset_ms": -0.2024,
+    "SMART_exit_status": {
+      "sda": 64,
+      "sdb": 64
+    },
+    "component_skip_explanations_from_database_and_pinned_source": 18,
+    "effective_runtime_component_eligibility": "not_executed",
+    "ACL": "getfacl_missing"
+  },
+  "context_gates": {
+    "status": "success",
+    "current_and_index_regenerated": true,
+    "agent_inventory_current": true,
+    "source_files": 526,
+    "schema_tables": 93,
+    "harness_tasks": 33,
+    "historical_payloads_byte_unchanged": 15,
+    "all_changed_and_new_markdown_local_links": "success",
+    "secrets": "success",
+    "whitespace": "success",
+    "new_core_payload_exact_uploaded_bytes": true
+  },
+  "r16_suite": {
+    "status": "success",
+    "discovered_test_cases": 580,
+    "tests_run": 577,
+    "elapsed_seconds": 4.915,
+    "unittest_result_skip_entries": 20,
+    "log_sha256": "986a05474810bd3346e390b737e9e42ae9630bfc9d2e48f336f60d846f044258",
+    "real_mcp_stdio": "success",
+    "versions": {
+      "mcp": "1.30.0",
+      "PyYAML": "6.0.3"
+    },
+    "local_native_go_fixture": "class_skipped_no_Go_toolchain_three_cases_not_run",
+    "scope": "Complete discovery executed locally;19 existing individual environment skips plus1 class setup skip for Go. Source CI requires Go; no live host/application/restore acceptance."
+  },
+  "production_mutations_performed": false,
+  "agent_ssh_access": false,
+  "functional_acceptance": false,
+  "application_source_or_schema_changes": false
+}

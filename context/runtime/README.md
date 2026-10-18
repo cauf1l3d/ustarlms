@@ -1,6 +1,38 @@
 # Runtime и эксплуатация
 
-Текущее состояние сведено16Oct по сохранённым owner receipts, без нового доступа к server1. [Evidence](evidence_20261016.yaml), [карта сервера](server_map_20261016.md), [выполненное и остаток](../audits/AUDIT_RECONCILIATION_20261016_RU.md).
+**Актуально18Oct17:03МСК:** владелец вернул пульт на доработку; прежняя приёмка14:42 не является текущим фактом завершения. [Новые требования](../../server-console/REVISIONS_20261018.md), [receipt запроса](console_revisions_20261018.json). INF-07 HTTPS Академии следует после пульта. Старые поставки ниже — история; настройку токена/CA не повторять автоматически.
+
+
+**Owner18Oct18:04МСК:** [native update1c881495](console_revisions_native_20261018.json) checksum/update PASS,4units active, TLS chain/IP SAN/live leaf PASS, Apache numeric logging configured. Actual p95/counts/UI/client trust/Mini App ещё не подтверждены. Телефон Happ/NovaVPS; сеть не названа. [Оставшаяся проверка маршрута](console_happ_access_20261018.md).
+
+
+**Owner18Oct18:38МСК:** [результат HTTPS/VPN](console_client_https_result_20261018.json): после обновления сертификатов предупреждений нет, офисный доступ работает с Happ/NovaVPS и без него. Исключение маршрута не требуется; полная приёмка всех функций/метрик этим сообщением не подменяется. Предыдущие receipts сохраняют своё время.
+
+## История поставок и измерений
+
+Последний запрос18Oct12:40МСК из [общего диалога](https://chatgpt.com/share/6ad4957d-45f4-83eb-8db0-32e41a9137fd): читаемые графические карточки Telegram с реальными данными и заполнение пульта доступной телеметрией. Продолжение от98946c6b: PNG/графики, HDD/inode, свежие правила и история инцидентов проверены: sourceb93e16af, все3 CI SUCCESS,312 backend/72 Chromium/native fixtures PASS; artifact12133242265 скачан и сверен. На server1 ещё не установлено. Работа бота/кнопок уже принята владельцем, прежний credential crash не является текущим следующим шагом. [Receipt](console_telegram_graphics_20261018.json). [Точные команды обновления](console_telegram_graphics_delivery_20261018.md). Ниже — история предыдущих поставок.
+
+Owner18Oct04:40МСК подтвердил: команды обновления и новые кнопки работают; точный native SHA и время отклика не присланы. [Receipt](console_telegram_latency_20261018.json). Продолжение11:49МСК: исправляется задержка — long polling5с, yield0,2с вместо успешной паузы10с, post-poll snapshot/maintenance;230 backend PASS, material review finding закрыт RED→GREEN, все3 CI4bb34f0b SUCCESS, artifact12131452167 скачан и сверены hash/source/wheel/observer. Mini App требует доступного с устройства частного HTTPS и доверия CA; домашний маршрут не установлен. [Проверка Mini App и обновление](../../server-console/TELEGRAM_LATENCY_20261018.md). Новый latency-пакет ещё не установлен; сеть/Академия/auth/CA не менялись. Ниже — история предыдущих поставок.
+
+Владелец18Oct сообщил: бот отвечает. [Новый receipt](console_bot_working_20261018.json) принимает этот факт; прежний credential crash сохранён как история. Установлен полный пакет1f605 плюс последующее исправление notifier по контексту; точный native hash/hotfix stdout не прислан. В PR103 опубликован кодb275f899: понятные русские карточки, семь кнопок, доступные агрегаты и информативные автоалерты;223 backend PASS, два material review findings исправлены через RED→GREEN, все3 CI SUCCESS и artifact12120404826 сверены; Mini App — отдельный opt-in с существующим входом и обязательной проверкой доступа/HTTPS на телефоне. Сеть/прод/токен/CA не перенастраиваются. Новый пакетb275f899 ещё не установлен владельцем. [Выдача и команды](../../server-console/TELEGRAM_OPERATOR_20261018.md); [source/CI/artifact receipt](console_telegram_operator_20261018.json).
+
+Owner18Oct02:07MSK получил [санитизированный результат](console_vpn_format_20261018.json): JSON_outbounds,15 VLESS (10 gRPC/5 TCP,14 Reality/1 TLS), insecure flags0, exit0. TTY retry успешен; это не проверка узлов/соединения. Подготовлены [Telegram-only Xray и явный CONNECT transport](../../server-console/VPN_TELEGRAM.md): loopback18081, только api.telegram.org:443, DynamicUser/LoadCredential, pinned binary SHA256, host routes/DNS не меняются. Локально175 backend/28 focused и реальные TCP/gRPC/Reality/TLS config checks PASS; native CI/artifact и owner install/ID/receiver ACK ожидаются. Full URL/config не получены, TOTP остаётся пропущенным; домашний доступ ещё отдельно.
+
+**Owner18Oct00:27MSK:** [Telegram helper transport failure](console_telegram_transport_20261018.json), ID/persistent setup/receiver ACK не получены. DNS/direct curl IPv4+IPv6 запрошены без token; причина не установлена.
+
+**Owner18Oct00:14MSK:** [HDD/SMART probes](console_storage_probe_20261018.json): host rw/sandbox ro, SMART oneshot0/timer active, SSD PASSED50°C/197+199 absent, HDD PASSED48°C/selected counters0. Приёмка и остальные probes без timestamp; не выводить возраст из receipt time. [Fix/update](../../server-console/STORAGE_FIX_20261018.md) в PR, native application pending. Старые receipts не перезаписаны.
+
+**Продолжение18Oct:** [owner browser report17Oct23:59MSK](console_browser_open_20261017.json) подтверждает только открытие пульта; запросил Telegram/домашний доступ. Startup notifier argument defect исправлен с regression в PR, owner hotfix/receiver ACK ожидаются; [инструкция](../../server-console/REMOTE_ACCESS.md). Tailscale предложен, VPN не установлен. Старый install receipt сохраняется без изменений.
+
+**Дополнение23:36MSK17Oct:** [owner terminal receipt установки пульта](console_native_install_20261017.json), exact artifact567e90d5. Local-CA TLS, свежий snapshot, web/broker/collector timer active и web identity isolation прошли limited gate. HDD critical/probe_failed и SMART no_data/probe_failed не устранены; причина ещё не измерена. TOTP/Telegram пропущены владельцем. Browser trust/login/roles/download hash/receiver/observer/jobs/overhead/restore остаются открыты. Это pasted output, без archive checksum/независимого SSH; более ранние snapshots не менялись.
+
+**Дополнение14:24MSK17Oct:** [owner terminal receipt](external_network_result_20261017.json) — IPv4 выхода server1 совпал с target домашнего TCP2019 test; TcpTestSucceeded=False, отдельно ping timeout. Адреса/локальное имя не опубликованы. Один источник/маршрут, точное время probes неизвестно; NAT, другие источники/IPv6/API и listener hardening не установлены. Это отдельный terminal follow-up, не часть archive checksums.
+
+Предыдущее дополнение13:59MSK17Oct — [gaps review](../reviews/20261017/gaps_reconciliation.md), [provenance](server_gaps_received_20261017.json): ACL, текущий SSH-контекст, Caddy2019 PID, metadata/hashes23 extras и selected du. ACL экспортирован после owner install пакета acl; writable parents/code, внешняя доступность и native gates остаются открыты.
+
+Дополнительно проверены два core/extra ZIP: [разбор13:05MSK](../reviews/20261017/core_extra_reconciliation.md), [provenance](core_extra_received_20261017.json). Core24742 match/23 extras, ntpsec peer/offset, SMART attributes/history и component-skip explanations дополняют три старых snapshots, сохраняя их даты/ошибки. На момент этого более раннего среза getfacl отсутствовал; поздний gaps archive содержит ACL. Native gates открыты.
+
+Датированный срез16Oct ниже сохранён по owner receipts. Свежие selected observations17Oct получены в трёх [owner archives](server_facts_received_20261017.json), без прямого подключения агента; [сверка17Oct](../reviews/20261017/runtime_reconciliation.md). Прежние [evidence](evidence_20261016.yaml), [карта сервера](server_map_20261016.md), [выполненное и остаток](../audits/AUDIT_RECONCILIATION_20261016_RU.md) сохраняют свои даты/границы.
 
 - Moodle5.1.8, PHP8.3.33, PostgreSQL16.15; host Ubuntu24.04.5/kernel147/Docker29.9.0 приняты.
 - HDD ежедневный03:30Moscow; успешные scheduled13/14Oct и postboot mount/timer подтверждены.
@@ -8,5 +40,15 @@
 - [Пульт и Telegram](control_panel_telegram_20261016.md) — следующая задача. [Метрики](MONITORING.md), [backup contract](BACKUP_RESTORE.md).
 - Moodle5.2 и PostgreSQL17 отложены. Старые5.3 docs/PR101 не выполнять автоматически.
 - [CI](CI_SCOPE_20261016.md), [ветки](repository_state_20261016.json), [история](RELEASE_LEDGER.md), [операции](OPERATIONS.md), [security](SECURITY_BASELINE.md).
+- [Review17Oct](../reviews/20261017/README.md) проверяет новые предложения; [три fresh server facts](server-facts/README.md) импортированы, [сверка и gaps](../reviews/20261017/runtime_reconciliation.md) готовы для повторного аудита. Порядок входа — только [START_HERE](../../START_HERE.md).
 
 Dated reports05–15Oct сохраняются. Их pending/next-step относятся к своей дате; текущая очередь — STATE/ACTIVE. Не повторять SSD growth, Moodle patch, AppArmor repair или host install/reboot.
+
+- [Проверенный Telegram/Xray выпуск18Oct](console_telegram_release_20261018.json): CI/artifact/source verification, не server1 acceptance.
+
+- [Native update/Xray и отказ notifier credential guard18Oct](console_telegram_native_20261018.json).
+
+- [Notifier credential ACL fix/actual PID1 CI18Oct](console_notifier_credential_fix_20261018.json), [owner hotfix](../../server-console/NOTIFIER_CREDENTIAL_FIX_20261018.md).
+
+- [Последний запрос18Oct18:55 и реальное наблюдение журналов](console_accounts_request_20261018.json): текущая INF06 accounts/notifications, не старое закрытие14:42.
+- [Проверка исходников account/notification доработки](console_accounts_20261018.json), native обновление — отдельный результат.

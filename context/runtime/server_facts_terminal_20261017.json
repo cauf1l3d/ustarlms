@@ -1,0 +1,53 @@
+{
+  "kind": "owner_terminal_status_not_facts_snapshot",
+  "owner_message_received_utc": "2026-10-17T01:01:10Z",
+  "command_supplied_commit": "cee34b135d685bfbd638558c20870de53d61504d",
+  "script_checksum_check_ok_in_terminal": true,
+  "script_path_reported": "/var/tmp/ustar-facts-code.tQUGnJ/server_facts.py",
+  "report_path_reported": "/var/tmp/ustar-server-facts-20261017T010021Z-506c32/report.tar.gz",
+  "collection_status_reported": "PARTIAL",
+  "archive_received": false,
+  "block_statuses_reported": {
+    "host": "ok",
+    "clock": "ok",
+    "filesystems": "ok",
+    "containers": "error",
+    "code_layout": "error",
+    "source_manifest": "error",
+    "code_access": "error",
+    "php_cli": "ok",
+    "pg_roles": "ok",
+    "pg_databases": "ok",
+    "pg_settings": "ok",
+    "pg_extensions": "error",
+    "pg_owners": "error",
+    "pg_tables": "error",
+    "pg_query_stats": "error",
+    "pg_connections": "ok",
+    "moodle_config": "error",
+    "moodle_plugins": "error",
+    "scheduled_tasks": "error",
+    "adhoc_tasks": "error",
+    "cron_receipt": "ok",
+    "backup_receipt": "ok",
+    "systemd": "ok",
+    "listeners": "ok",
+    "sshd_global": "ok",
+    "firewall": "ok",
+    "apache": "ok",
+    "certificates": "ok",
+    "packages": "error",
+    "log_storage": "ok",
+    "smart": "not_collected"
+  },
+  "counts": {
+    "ok": 17,
+    "error": 13,
+    "not_collected": 1
+  },
+  "limits": [
+    "No facts.json/errors.json or checksum manifest supplied yet",
+    "Block ok means a structured check completed, not that its measured condition is healthy",
+    "Root causes in this owner run not confirmed without archive; compatible collector defects reproduced locally"
+  ]
+}

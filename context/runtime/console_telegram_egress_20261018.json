@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "kind": "redacted_owner_terminal_and_screenshot_followup",
+  "source": "owner_server1_controls_route_Windows_TCP_screenshot_and_two_DoH_answers",
+  "received_at_utc": "2026-10-17T22:41:46Z",
+  "earlier_comparison_received_at_utc": "2026-10-17T22:37:34Z",
+  "individual_probe_timestamps": null,
+  "included_in_archive_checksums": false,
+  "independently_reexecuted_on_server1_by_agent": false,
+  "destination": {
+    "hostname": "api.telegram.org",
+    "IPv4": "149.154.166.110",
+    "TCP_port": 443
+  },
+  "server_direct_controls": {
+    "api.ipify.org": {
+      "HTTP": 200
+    },
+    "github.com": {
+      "HTTP": 200
+    },
+    "api.telegram.org": {
+      "curl_exit": 28,
+      "connect_timeout_ms": 8002,
+      "HTTP": "000",
+      "TLS_or_API_authentication_reached": false
+    },
+    "curlrc_disabled": true,
+    "proxy_disabled": true
+  },
+  "server_selected_route": {
+    "present_via_local_gateway_and_interface": true,
+    "server_gateway_interface_coordinates_exported": false,
+    "packet_delivery_to_gateway_proven": false
+  },
+  "Windows_comparison": {
+    "same_destination_IPv4_and_port": true,
+    "TcpTestSucceeded": false,
+    "source": "owner_uploaded_PowerShell_screenshot",
+    "screenshot_sha256": "25e253e8a6fa95dbf2c4cd909ab3ceb41696448326e706c5076a0cead6b46231",
+    "corporate_LAN_context": "requested_by_agent; independent_route_or_VPN_state_not_shown",
+    "personal_account_name_or_raw_screenshot_exported": false
+  },
+  "HTTPS_DNS_answers": {
+    "google": {
+      "Status": 0,
+      "type": "A",
+      "IPv4": [
+        "149.154.166.110"
+      ],
+      "TTL_seconds": 206,
+      "AD": false
+    },
+    "cloudflare": {
+      "Status": 0,
+      "type": "A",
+      "IPv4": [
+        "149.154.166.110"
+      ],
+      "TTL_seconds": 30,
+      "AD": false
+    },
+    "match_server_getent_address": true,
+    "no_other_record_types_checked": true
+  },
+  "assessment": "Selective direct TCP443 failure to the queried Telegram IPv4 is reproduced from server1 and Windows; ordinary server HTTPS controls succeed and two public HTTPS recursive resolver answers agree with the local IPv4 answer. The failing hop/cause remains unknown; no global Telegram outage or DNSSEC assertion is established.",
+  "bot_API_token_or_ID_authenticated": false,
+  "persistent_bot_configuration_or_receiver_ACK_confirmed": false,
+  "next_step": "select available permitted egress: network administrator restores outbound HTTPS, existing corporate HTTP CONNECT proxy, or owner-controlled remote tunnel/proxy endpoint; endpoint availability/details not yet provided",
+  "home_access_VPN_installed_or_tested": false,
+  "latest_verified_executable_release": "3305ecc925716a4864de8898f9a5fbdeb49e8321",
+  "new_release_applied_on_server1_confirmed": false,
+  "credentials_exported": false,
+  "agent_production_or_network_mutations": false,
+  "scope_note": "This consolidates two later owner messages, without overwriting previous receipts. A working route-table entry is not proof of connectivity. Public destination coordinates retained; corporate addresses, Windows account and raw screenshot omitted. Source/corporate/provider filtering and remote endpoint outage are not distinguished. Bot access cannot be configured by inventing a proxy/VPS endpoint; no public listener, global exit route or disabled TLS verification is introduced."
+}

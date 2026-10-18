@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-18",
+  "kind": "implementation_and_verification_not_native_install",
+  "source_commit": "b275f899125b3ecf294c2dde9041e185972a3f51",
+  "runtime_source_prior_commit": "e9120470fc3d2368bf3fd485f8551881c4681ea1",
+  "pr": 103,
+  "owner_bot_report": "context/runtime/console_bot_working_20261018.json",
+  "changes": [
+    "Russian_plain_text_aggregate_cards",
+    "seven_native_reply_keyboard_buttons",
+    "units_and_MSK_freshness",
+    "explicit_missing_sources",
+    "incident_values_thresholds_recommendations",
+    "four_commands_per10s_and_durable_replay",
+    "same_cycle_first_reply",
+    "opt_in_web_app_existing_login_only",
+    "observer_zipapp_dependency"
+  ],
+  "defaults": {
+    "mini_app": false,
+    "alerts": "existing_rules_enabled_with_worker",
+    "host_network_changes": false
+  },
+  "local_validation": {
+    "backend_passed": 223,
+    "new_presentation_cases": 31,
+    "observer_zipapp_import": "PASS",
+    "operator_bash_syntax_blocks": 4,
+    "context_check": "PASS",
+    "secret_guard": "PASS",
+    "application_baseline_files": 526,
+    "schema_tables": 93,
+    "roadmap_tasks": 33
+  },
+  "review": {
+    "fresh": true,
+    "critical": 0,
+    "important_found": 2,
+    "material_fixed": [
+      "partial_confirmed_OOM",
+      "stale_service_measurements"
+    ],
+    "test_evidence": "Both failed before fixes, then full223 PASS. Sustained-rule card state also RED-to-GREEN.",
+    "deferred_minors": []
+  },
+  "ci": {
+    "console_run": 39086380707,
+    "context_run": 39086380715,
+    "review_run": 39086380717,
+    "status": "all_three_success",
+    "superseded_attempt": {
+      "source": "e9120470fc3d2368bf3fd485f8551881c4681ea1",
+      "run": 39086254047,
+      "backend_passed": 221,
+      "failed": 2,
+      "cause": "test_only_global_geteuid_mock_misclassified_nonroot_runner_fixture",
+      "production_reader_unchanged": true
+    },
+    "review_retry": {
+      "reason": "PHP8.2 mobile Page.captureScreenshot protocol failure; PHP8.3 passed; no application source changes",
+      "job": 117553763099,
+      "action": "rerun_failed_jobs_only",
+      "status": "success_after_one_failed_jobs_retry"
+    },
+    "console_job": 117553725464,
+    "validated_native_fixtures": [
+      "Xray_DynamicUser_LoadCredential_destination_default_deny",
+      "PostgreSQL16_aggregate_role",
+      "HDD_host_rw_service_ro_and_write_denial",
+      "notifier_actual_LoadCredential_mode0440_first_cycle",
+      "wheel_update_jobs_refusal_rollback_auth_CA_config_preservation",
+      "LAN_TLS_broker_privilege_isolation"
+    ],
+    "backend_passed": 223,
+    "Chromium_passed": 45
+  },
+  "source_sha256": {
+    "server-console/backend/ustar_console/alerts.py": "4e758cabebb2950011ac1116cada672587f6b1689d627cef927f084fa1663bef",
+    "server-console/backend/ustar_console/telegram_views.py": "6909a243b6c9fdfe4a9fff60e18dfbfe498df7d8a0c4edfc8b79b4d3ba4603e0",
+    "server-console/backend/ustar_console/setup.py": "0a480c6c573ae0e2d06ea5e774ea10adbf8ead18b0598f38a0860b269a564ac2",
+    "server-console/backend/ustar_console/observer.py": "43245967dad584270ec5b876cd91a72e20f8c4f02b7b134a5edd8ac4061a792f"
+  },
+  "native_pending": [
+    "owner_installs_new_bundle",
+    "Russian_cards_receiver_check",
+    "all_incident_types_receiver_acceptance",
+    "phone_route_certificate_and_Telegram_WebView",
+    "independent_observer",
+    "restore_RTO"
+  ],
+  "unchanged": [
+    "host_routes_DNS_firewall",
+    "Academy_containers",
+    "proxy_destination_api.telegram.org443",
+    "console_auth_CA_TOTP",
+    "token_and_IDs"
+  ],
+  "artifact": {
+    "bytes": 208824,
+    "sha256": "592a58d1d60a6c3720e075b62e11a7cb31fe4d287eb2d159a2eed116cba1d148",
+    "source_commit": "b275f899125b3ecf294c2dde9041e185972a3f51",
+    "artifact_id": 12120404826,
+    "zip_digest_verified": true,
+    "wheel_source_verified": true,
+    "observer_dependency_verified": true
+  }
+}

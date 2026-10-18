@@ -4,8 +4,8 @@
   "request_source": "https://chatgpt.com/share/6ad4957d-45f4-83eb-8db0-32e41a9137fd",
   "request": "Читаемые графические карточки с реальными данными и заполнение пульта доступными показателями",
   "continued_from": "98946c6bfbb4f894817c2d44f2c7c5d8769e0195",
-  "status": "source_ready_CI_pending_native_not_installed",
-  "source_commit": null,
+  "status": "all_CI_verified_artifact_delivered_owner_install_pending",
+  "source_commit": "b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3",
   "changes": [
     "six_PNG_card_sections_with_complete_text_fallback",
     "measured_one_hour_CPU_RAM_local_HTTP_history_with_gaps",
@@ -38,7 +38,21 @@
     "source_freshness_seconds": 45
   },
   "CI": {
-    "status": "pending"
+    "status": "all_three_success",
+    "console_run": 39118681109,
+    "context_run": 39118681162,
+    "review_run": 39118681129,
+    "console_job": 117649624389,
+    "backend_passed": 312,
+    "Chromium_passed": 72,
+    "native_fixtures": [
+      "Xray_DynamicUser_LoadCredential_default_deny",
+      "PG16_aggregate_only_permissions",
+      "HDD_mount_namespace_write_denial",
+      "notifier_LoadCredential0440_first_cycle",
+      "LAN_TLS_broker_isolation",
+      "dependency_aware_updater_jobs_refusal_rollback_auth_CA_preservation"
+    ]
   },
   "native_pending": [
     "owner_install_new_release",
@@ -63,5 +77,27 @@
     "focused_passed": 15,
     "renderer_peak_RSS_KiB": 40912,
     "native_cpu_quota_latency_not_measured": true
-  }
+  },
+  "artifact": {
+    "source_commit": "b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3",
+    "bytes": 370481,
+    "sha256": "4319f5602a83672c82e31e605d370ce5bac99ea92e5fd34fc9951a19d13b2207",
+    "tar_members": 22,
+    "wheel_python_modules": 21,
+    "font_assets": 4,
+    "observer_modules": 10,
+    "unit_files": 7,
+    "dependency_metadata_verified": true,
+    "zip_digest_verified": true,
+    "tar_hash_verified": true,
+    "artifact_id": 12133242265,
+    "zip_sha256": "f5b04afda212c14ec4585326c9d77d47732ec79bf1fdcdad5fa1f902cfd24644",
+    "owner_filename": "ustar-console-b93e16af.tar.gz"
+  },
+  "browser_artifact": {
+    "id": 12132494445,
+    "zip_sha256": "02c767495b183aeca45e32263551cd90f1bf34bf0e04d0826b04b28adf0e8619",
+    "mobile_HDD_and_events_visual_QA": "inspected_actual_CI_synthetic_screenshots_readable_no_overlap"
+  },
+  "delivery_runbook": "context/runtime/console_telegram_graphics_delivery_20261018.md"
 }

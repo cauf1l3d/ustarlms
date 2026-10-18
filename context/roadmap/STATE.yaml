@@ -1,16 +1,16 @@
 schema_version: 2
 updated_at: '2026-10-18'
 project: USTAR Academy
-stage: console_graphical_cards_and_measured_fields_CI_pending
-stage_label: 'Читаемые графические карточки Telegram, показатели HDD и история инцидентов; проверка выпуска'
+stage: console_graphical_release_verified_owner_install_pending
+stage_label: 'Графические карточки и реальные поля пульта проверены; пакет выдан для обновления на server1'
 current_activity: >-
   Latest owner request18Oct12:40MSK in shared chat accepts graphical cards with real readable values and asks to fill console blocks with available telemetry.
   Continuation resumes from98946c6b; working bot/buttons already owner-accepted, exact latest native SHA not supplied.
   Added bounded PNG cards and actual one-hour CPU/RAM/HTTP curves with gaps, full durable text delivery, bundled licensed Cyrillic fonts and hash-locked Pillow13.
   Console shows measured HDD capacity/inodes, fresh rule candidate/confirmed state and persistent bounded incident/recovery history; obsolete SFTP placeholder replaced by existing protected HTTPS archive guidance.
   Global and per-source freshness preserved; stale notifier cannot assert healthy rules. Independent external HTTP/observer/restore remain genuine evidence gaps.
-  Local312 backend PASS, renderer54PASS, build/prototype and PNG fixture visual QA PASS; fresh review Important1 fixed RED-to-GREEN, no Critical/Minor; CI pending. Local Chromium corrupt/unavailable, browser72 cases must pass actual CI before delivery.
-  Existing full-venv updater now installs locked dependencies before wheel and restores previous dependency state on rollback; native CI required.
+  Local312 backend PASS, renderer54PASS, build/prototype and PNG fixture visual QA PASS; fresh review Important1 fixed RED-to-GREEN, no Critical/Minor. All3 sourceb93e16af CI SUCCESS,312 backend/72Chromium/native fixtures; artifact12133242265 hashes/source/wheel/fonts/observer/units verified,370481B. Local Chromium unavailable; actual CI mobile screenshots visually accepted.
+  Existing full-venv updater now installs locked dependencies before wheel and restores previous dependency state on rollback; native CI absent-Pillow install and rollback PASS.
   No native SSH/update, bot credentials/password/CA/TOTP reset, Academy or host/home network change. Home-access pilot, independent observer, roles/download/jobs/overhead/restore-RTO remain open.
   Moodle5.2/PG17 deferred, application526/schema93/tasks33 unchanged.
 next_task: INF-06
@@ -267,7 +267,7 @@ next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: LAN_installed_bot_buttons_owner_accepted_graphical_increment_in_review
+  status: graphical_release_verified_delivered_owner_install_and_receiver_pending
   style: graphite_with_readable_type_color_accents_and_Grafana_style_charts_owner16Oct
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
@@ -278,15 +278,15 @@ next_control_panel:
   telegram_transport_receipt: context/runtime/console_telegram_transport_20261018.json
   telegram_network_receipt: context/runtime/console_telegram_network_20261018.json
   telegram_egress_receipt: context/runtime/console_telegram_egress_20261018.json
-  telegram_connection_next: deliver_verified_graphics_release_then_owner_install_readability_and_source_checks
+  telegram_connection_next: owner_install_verified_graphics_release_then_readability_and_source_checks
   telegram_subscription_receipt: context/runtime/console_vpn_subscription_20261018.json
   telegram_subscription_probe: server-console/VPN_SUBSCRIPTION_PROBE.md
   telegram_subscription_launch_receipt: context/runtime/console_vpn_probe_tty_20261018.json
   telegram_subscription_format_receipt: context/runtime/console_vpn_format_20261018.json
   telegram_egress_runbook: server-console/VPN_TELEGRAM.md
-  telegram_verified_release: 1f605e4dad9a88040146086bfbfbe48d842004d5
-  telegram_release_receipt: context/runtime/console_telegram_release_20261018.json
-  telegram_release_handoff: server-console/TELEGRAM_RELEASE_20261018.md
+  telegram_verified_release: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
+  telegram_release_receipt: context/runtime/console_telegram_graphics_20261018.json
+  telegram_release_handoff: context/runtime/console_telegram_graphics_delivery_20261018.md
   telegram_startup_hotfix: previous_crash_superseded_by_owner_bot_working_and_buttons_report
   telegram_hotfix_module_sha256: 33c706c01e70eae40fff864c95b4becfe3b88a11d63e6e3888093fe9812ed4a2
   telegram_notifier_fix_source: fd46c383c9cfba3d8155275ad1e04cae423aa082
@@ -305,10 +305,10 @@ next_control_panel:
   totp: owner_skipped_first_launch
   source_diagnostics: owner_update1f605_PASS_HDD_OK_SMART_warning_partial_SSD_accepted_in_receipt_scope
   source_diagnostics_receipt: context/runtime/console_storage_probe_20261018.json
-  tested_source_release: 4bb34f0b5f7f4e84a528f729c001597e9dc77950
+  tested_source_release: b93e16afdb6fc9dac87bd116a1e42fae69e6c9e3
   graphics_increment_receipt: context/runtime/console_telegram_graphics_20261018.json
   graphics_increment_runbook: server-console/TELEGRAM_GRAPHICS_20261018.md
-  source_release_receipt: context/runtime/console_storage_release_20261018.json
+  source_release_receipt: context/runtime/console_telegram_graphics_20261018.json
   source_fix_runbook: server-console/STORAGE_FIX_20261018.md
   browser_open: owner_reported_20261017T2359_MSK_not_login_or_CA_trust_acceptance
   home_access: userspace_SSH_candidate_isolated_Windows_pilot_required_not_installed

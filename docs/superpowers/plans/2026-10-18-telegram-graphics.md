@@ -43,7 +43,7 @@ Files: `alerts.py`, `telegram_transport.py`, `notification_state.py`, `server.py
 - [x] RED: test authorized commands, image+text delivery/retry/restart/fallback and image limits; multipart bytes, rate limits, endpoint and TLS; event persistence/recovery and authenticated/freshness-safe API.
 - [x] GREEN: implement additive migrations and fixed structured exports without raw text/log/config disclosure.
 - [x] Add hash-locked Pillow dependency; updater installs locked dependencies inside the backed-up venv, then validates wheel and pip state. Native fixture exercises absent Pillow and rollback.
-- [ ] Run backend suite, actual transport fixtures and native CI installation tests.
+- [x] Run backend suite, actual transport fixtures and native CI installation tests.
 
 ### Task 3: Actual console fields
 
@@ -53,14 +53,14 @@ Files: UI main/style, browser tests, prototype fixture and generated prototype.
 - Produces: current HDD figures in server/backups, rule candidates/confirmed states/times, incident/recovery history, actual protected HTTPS download guidance replacing unconfigured SFTP text.
 - [x] RED: browser checks for HDD, event history, rule freshness, real missing external evidence, phone layout.
 - [x] GREEN: display sources and ages; hide current figures when unavailable or stale, keep historical incidents labeled.
-- [ ] Run UI build/Chromium suite, regenerate and check offline prototype.
+- [x] Run UI build/Chromium suite, regenerate and check offline prototype.
 
 ### Task 4: Review and release
 
 - [x] Review the complete diff in a fresh context; fix material findings with reproducing tests.
-- [ ] Run full applicable checks, regenerate canonical context/index and publish to the already authorized draft PR103 with a head lease.
-- [ ] Verify all GitHub checks and inspect the downloadable artifact's hash/source/wheel/font/observer.
-- [ ] Deliver exact owner update commands and list native checks still requiring server/browser/Telegram access.
+- [x] Run full applicable checks, regenerate canonical context/index and publish to the already authorized draft PR103 with a head lease.
+- [x] Verify all GitHub checks and inspect the downloadable artifact's hash/source/wheel/font/observer.
+- [x] Deliver exact owner update commands and list native checks still requiring server/browser/Telegram access.
 
 ## Review focus
 
@@ -73,3 +73,5 @@ Files: UI main/style, browser tests, prototype fixture and generated prototype.
 ## Execution evidence
 
 Baseline230 backend PASS. Renderer54PASS with actual PNG visual QA. Delivery/history tests observed RED before implementation; failed-evaluation rule health and transient Telegram5xx/408/ambiguous JSON found and corrected RED→GREEN. Fresh independent review: Critical0/Important1 fixed/Minor0. Final pre-publication backend312PASS; UI/wheel build and prototype check PASS. Local Chromium binary is corrupt and CDN returned HTML, so no local browser PASS is claimed;72 cases and native dependency/rollback fixtures are CI gates.
+
+Release evidence: executableb93e16af, all3CI SUCCESS,312backend/72Chromium and native fixtures PASS. Artifact12133242265 verified; exact owner command in context/runtime/console_telegram_graphics_delivery_20261018.md. Mobile HDD/events screenshots visually inspected. No deferred minor findings and no native deployment claimed.

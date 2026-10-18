@@ -233,13 +233,15 @@ current_work:
     Global and per-source freshness preserved; stale notifier cannot assert healthy
     rules. Independent external HTTP/observer/restore remain genuine evidence gaps.
     Local312 backend PASS, renderer54PASS, build/prototype and PNG fixture visual
-    QA PASS; fresh review Important1 fixed RED-to-GREEN, no Critical/Minor; CI pending.
-    Local Chromium corrupt/unavailable, browser72 cases must pass actual CI before
-    delivery. Existing full-venv updater now installs locked dependencies before wheel
-    and restores previous dependency state on rollback; native CI required. No native
-    SSH/update, bot credentials/password/CA/TOTP reset, Academy or host/home network
-    change. Home-access pilot, independent observer, roles/download/jobs/overhead/restore-RTO
-    remain open. Moodle5.2/PG17 deferred, application526/schema93/tasks33 unchanged.
+    QA PASS; fresh review Important1 fixed RED-to-GREEN, no Critical/Minor. All3 sourceb93e16af
+    CI SUCCESS,312 backend/72Chromium/native fixtures; artifact12133242265 hashes/source/wheel/fonts/observer/units
+    verified,370481B. Local Chromium unavailable; actual CI mobile screenshots visually
+    accepted. Existing full-venv updater now installs locked dependencies before wheel
+    and restores previous dependency state on rollback; native CI absent-Pillow install
+    and rollback PASS. No native SSH/update, bot credentials/password/CA/TOTP reset,
+    Academy or host/home network change. Home-access pilot, independent observer,
+    roles/download/jobs/overhead/restore-RTO remain open. Moodle5.2/PG17 deferred,
+    application526/schema93/tasks33 unchanged.
   next_task: INF-06
   ready_tasks: []
   task_statuses:

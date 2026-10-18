@@ -170,12 +170,13 @@ tasks:
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
   current_summary: >-
     Latest owner18Oct12:40MSK accepts readable graphical cards and requests available measured console data; resumed from98946c6b.
-    Bounded PNG/cards/history curves, durable image+full text delivery, HDD capacity/inodes, live rule state and persistent incident history implemented; fresh review/CI/release in progress.
+    Bounded PNG/cards/history curves, durable image+full text delivery, HDD capacity/inodes, live rule state and persistent incident history implemented; sourceb93e16af all3CI SUCCESS,312backend/72Chromium/native fixtures PASS; artifact12133242265 verified and delivered.
     Native installation/graphical receiver/readability/timing and browser source/role/download checks remain pending; existing bot/buttons already owner-accepted with exact new native SHA unknown.
     Full-venv updater handles locked Pillow dependency and rollback. No credentials/CA/TOTP/network/Academy reset; TOTP remains owner-skipped.
     Independent observer/restore-RTO and home-access pilot remain genuine gaps. Request p95/5xx/raw logs/flexible TTL/admin UI are separate sources or work.
   validation_evidence:
   - context/runtime/console_telegram_graphics_20261018.json
+  - context/runtime/console_telegram_graphics_delivery_20261018.md
   - server-console/TELEGRAM_GRAPHICS_20261018.md
   - context/runtime/console_telegram_latency_20261018.json
   - server-console/TELEGRAM_LATENCY_20261018.md

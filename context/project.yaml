@@ -35,9 +35,9 @@ current_work:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: bot_buttons_owner_accepted_graphical_cards_console_fields_in_review_native_update_pending
+  status: graphical_release_source_CI_verified_owner_install_pending
   installation_receipt: context/runtime/console_native_install_20261017.json
-  telegram_release_handoff: server-console/TELEGRAM_GRAPHICS_20261018.md
+  telegram_release_handoff: context/runtime/console_telegram_graphics_delivery_20261018.md
   graphics_receipt: context/runtime/console_telegram_graphics_20261018.json
   home_access_plan: server-console/HOME_ACCESS_PLAN_20261018.md
   architecture: server-console/ARCHITECTURE.md

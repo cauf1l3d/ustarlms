@@ -428,16 +428,16 @@ export function Users({
             </label>
           )}
           {action.kind !== "password" && (
-            <label>
-              Роль
-              <select name="role" defaultValue={action.user?.role || "viewer"}>
+            <>
+              <label htmlFor="account-role">Роль</label>
+              <select id="account-role" name="role" defaultValue={action.user?.role || "viewer"}>
                 {Object.entries(roles).map(([role, label]) => (
                   <option value={role} key={role}>
                     {label}
                   </option>
                 ))}
               </select>
-            </label>
+            </>
           )}
           {action.kind === "access" && (
             <label className="account-checkbox">

@@ -172,7 +172,7 @@ test("last owner refusal is clear and clears submitted secrets; password reset i
   await nav(page, "Пользователи").click();
   await page
     .getByRole("row")
-    .filter({ has: page.getByRole("cell", { name: "owner", exact: true }) })
+    .filter({ has: page.getByText("owner", { exact: true }) })
     .getByRole("button", { name: "Изменить доступ" })
     .click();
   const dialog = page.getByRole("dialog");
@@ -192,7 +192,7 @@ test("last owner refusal is clear and clears submitted secrets; password reset i
   await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
   await page
     .getByRole("row")
-    .filter({ has: page.getByRole("cell", { name: "tech", exact: true }) })
+    .filter({ has: page.getByText("tech", { exact: true }) })
     .getByRole("button", { name: "Сбросить пароль" })
     .click();
   await expect(
@@ -358,7 +358,7 @@ test("owner disables another user and separately resets their password", async (
   await nav(page, "Пользователи").click();
   const row = page
     .getByRole("row")
-    .filter({ has: page.getByRole("cell", { name: "tech", exact: true }) });
+    .filter({ has: page.getByText("tech", { exact: true }) });
   await row.getByRole("button", { name: "Изменить доступ" }).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("Роль", { exact: true }).selectOption("operator");

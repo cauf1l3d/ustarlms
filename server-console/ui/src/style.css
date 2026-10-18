@@ -1851,3 +1851,12 @@ nav button {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+
+/* Disabled account actions remain legible in the read-only preview and themes. */
+.administration button:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  color: var(--secondary);
+  background: var(--field);
+  border-style: dashed;
+}

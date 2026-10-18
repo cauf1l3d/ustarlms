@@ -54,5 +54,14 @@
     "auth_broker_credentials_CA_TOTP_stay_private_and_unchanged",
     "bootstrap_Telegram_root_allowlist_distinct_from_dynamic_UI_links",
     "managed_heartbeat_activation_and_native_new_feature_acceptance_pending"
-  ]
+  ],
+  "first_source_CI": {
+    "source": "c68002af3165b38a109cba4cca1f4cbf1fd8b23e",
+    "run": 39145855738,
+    "backend": "427 passed,1root-onlyskip;AF_UNIXran",
+    "browser": "135passed,12failed",
+    "failures": "role-select implicit label includes options; narrow table pseudo-label affects exact cell selector; disabled preview save contrast4.01",
+    "native_steps": "not_run_after_browser_failure",
+    "resolution": "explicit role label association; rendered username selector across viewports; readable disabled themed controls;new_exact_source_CI_required"
+  }
 }

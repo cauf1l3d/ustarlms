@@ -222,26 +222,24 @@ production:
     corporate_network_report_received_at_utc: '2026-10-17T11:39:14Z'
     independent_perimeter_acceptance: false
 current_work:
-  activity: 'Owner18Oct17:03MSK explicitly withdraws full console acceptance after14:42
-    closure. Resume INF-06; do not treat prior receipt as current completion. Read
-    shared dialogue6ad4c0a7 and latest PR1037f8a614a. Screenshots show Chrome certificate
-    warning bypass for private192.168.1.60:8443, not trusted client TLS. Work: light/dark/system
-    themes and enlarged charts; versioned script/docs catalog with measured installed
-    inventory and existing broker allowlist; real Apache numeric request p95/RPS/4xx/5xx
-    and locally classified service events; TLS public CA export/diagnosis with separate
-    device trust/route checks. No direct SSH, no host/home routes/DNS/firewall/VPN
-    or Academy platform changes. Owner18Oct18:04MSK terminal report: update1c881495
-    PASS, all4 units active, TLS chain/IP SAN/live leaf PASS, Apache numeric logging
-    configured. Owner18Oct18:11MSK confirms office WiFi;18:38MSK reports certificates
-    updated, no warnings, access works with Happ/NovaVPS on and off. Client HTTPS
-    and office connectivity issue resolved by owner report; no Happ exception or server
-    route change needed. Mini App not separately named in general working report;
-    actual new metrics/event samples and per-client UI matrix not supplied, not claimed
-    broken. Revision source1c881495: all3 CI SUCCESS,355 backend+1skip/114 Chromium,
-    actual systemd and Apache fixtures PASS. Artifact12139739548 downloaded and hash/source
-    verified; delivery context/runtime/console_revisions_delivery_20261018.md. Existing
-    graphical releaseb93e16af preserved. INF07 Academy HTTPS follows this console
-    revision; independent observer and restore/RTO remain separate.'
+  activity: INF-06 continues owner18Oct1855 user administration, confirmed personal
+    Telegram linking, configurable alerts and independent service events. Last shared-agent
+    stop6ad1740b was label/disabled contrast CI fix; publishedb473e47a already passed
+    all3 CI with427backend+1skip,147Chromium and real systemd/cross-UID/Apache/Xray/Postgres
+    fixtures. Continued its implementation, preserving unrelated unfinished work.
+    Final sourcee5b878185e6f9db15c595c3760292374c95eb54a additionally preserves three-column
+    users for installed1c881495 CLI recovery after wheel rollback; account_state stores
+    enabled flags. Regression429backend+1localcapabilityskip; independent rollback
+    review0Critical/Important. Exact-source CI39162268307, 39162268187,39162268185
+    all SUCCESS:429backend+1root-onlyskip,147Chromium and real native fixtures PASS.
+    Artifact12149750723 downloaded and exact-source/hash verified;tarSHA256 accb6ba8c7cfc15535fe438b7ccb58863acc615e5344dc50451e08779ea2446d.
+    Delivery context/runtime/console_accounts_delivery_20261018.md. No native SSH;
+    new account release not yet installed/accepted by owner. Previous1c881495 installation18:04
+    and owner18:38 HTTPS office access with Happ/NovaVPS on/off preserved; do not
+    repeat CA/setup/VPN/network changes. Empty request source is not unavailable events;
+    never synthesize RPS/p95. Managed heartbeat is design only, cannot attribute power/LAN/ISP
+    from one missing signal. INF07 Academy HTTPS follows this acceptance; observer/home
+    access and restore/RTO remain separate.
   next_task: INF-06
   ready_tasks: []
   task_statuses:

@@ -164,11 +164,13 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: owner_authorized_install_20261017T1703_MSK_first_corporate_LAN_1709
-  current_summary: Owner1855 expanded INF06 to browser user administration, proven personal Telegram links, configurable notification
-    conditions/repeat/schedule and host-loss design without own second server. Direct sample15:44Z requests source_empty/events
-    ok; browser discrepancy recorded. Prior1c881495 installation and1838 HTTPS/office access preserved; new account release
-    native pending.
+  current_summary: Continued shared-agent implementation after publishedb473e47a all3CI SUCCESS and147Chromium. Final sourcee5b87818
+    preserves installed legacyCLI account recovery across rollback;429backend+1localcapabilityskip,independent review0open.
+    All3 exact-source CI SUCCESS429backend+1root-onlyskip/147Chromium/real native fixtures;artifact12149750723 hash/source verified.
+    Delivery commands published; new native installation/account-link/receiver acceptance pending.
+    Prior1c881495 and1838HTTPS/Happ office confirmation preserved. Managed heartbeat design only, no new network changes.
   validation_evidence:
+  - context/runtime/console_accounts_delivery_20261018.md
   - context/runtime/console_accounts_20261018.json
   - context/runtime/console_accounts_request_20261018.json
   - context/runtime/console_client_https_result_20261018.json

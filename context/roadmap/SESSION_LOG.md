@@ -1731,3 +1731,21 @@ Owner18:11 уточнил: телефон и пульт в офисном Wi-Fi.
 Mini App отдельно не назван в общем «всё работает»; не объявлять новый отказ или выдуманную client matrix.
 Исходники/server settings/CA/VPN/routes/DNS/firewall агентом не менялись. Старые terminal/request receipts сохраняют даты.
 Полная приёмка всех функций/новых p95/RPS/events не выводится из сообщения о HTTPS; INF-06 остаётся текущей для этого остатка.
+
+
+## 2026-10-18 23:15МСК — продолжение последней остановки shared-агента6ad1740b
+
+Прочитана только последняя непустая реплика агента: исправить доступные подписи/контраст disabled и повторить CI.
+GitHubb473e47a уже содержит исправление, все3CI SUCCESS,427backend+1skip/147Chromium и настоящие native CI fixtures PASS.
+Продолжена именно эта реализация notifier-owned RPC, незавершённый параллельный WIP сохранён отдельно.
+При финальной проверке выявлен rollback risk: ALTER users ADD enabled ломал старый CLI INSERT VALUES с3полями.
+Sourcee5b87818 сохраняет3колонки, enabled в account_state, промежуточная4колоночная база преобразуется транзакционно.
+Регрессии RED→GREEN: legacy UPSERT и сохранение disabled/hash/TOTP/sessions;429backend+1capabilityskip PASS.
+Независимое ревью0Critical/Important,40targeted PASS; UI typecheck/build/prototype check PASS.
+Все3 exact-source CI SUCCESS:console39162268307/context39162268187/review39162268185;429backend+1root-onlyskip/147Chromium.
+Настоящие Ubuntu systemd/notifier cross-UID/TLS/update rollback/Apache/Xray/Postgres fixtures PASS.
+Artifact12149750723 скачан:ZIP551613Б SHA256f4a69fb12a813d5321628ac00abafd101eb225bb07603b9d7075564b737cbb28,
+tar551233Б SHA256accb6ba8c7cfc15535fe438b7ccb58863acc615e5344dc50451e08779ea2446d;26Python/4fonts/3web/27scripts/45docs/11observer/7units exact-source PASS.
+[Поставка и команды](../runtime/console_accounts_delivery_20261018.md) опубликованы; bash -n PASS, setup/CA/network не повторяются.
+На server1 действий не было. Прежний HTTPS/Happ не перенастраивается; новые UI/link/alerts требуют native приёмки.
+Managed heartbeat остаётся схемой без secret URLs/внешней отправки; пульт целиком принятым не объявлен.

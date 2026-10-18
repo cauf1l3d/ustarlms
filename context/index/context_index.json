@@ -498,8 +498,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 15397,
-      "sha256": "5e4b52fe1f1eb3bcae440276e79a13a01a0da90414224a48046c66fe58248136"
+      "size": 15270,
+      "sha256": "58a731144085d54302a4f26492a3bd575ff9eda17535ddf7a3c233b4113cb675"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -870,8 +870,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 33799,
-      "sha256": "79e672ef3d8dd25f01804217fa1923267718c63c03618a7c845b46ef963aa12a"
+      "size": 34062,
+      "sha256": "3427391ad42ea3dfd5a78031d34245c214bfd3fa15342dfe81a8d4faa152c241"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 182519,
-      "sha256": "8911ed2a7fd718f65460258d3aeb7fe76e4db9b1ce5af1b276876bc70dfe2b71"
+      "size": 184785,
+      "sha256": "dfdb8240911405773470328929a1779409bd0ad8c5912f00eb8fac431f9a9e00"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -924,8 +924,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 21095,
-      "sha256": "924deb7f0d2d4c5edbe196a31d67e96c6584ccaa9aef6533575d19977fabf860"
+      "size": 20978,
+      "sha256": "37cfec180da28c3fd60757f02f505ae8969f0d75417d02054d09281c1f8c29d3"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1062,8 +1062,14 @@
     {
       "path": "context/runtime/console_accounts_20261018.json",
       "domain": "runtime",
-      "size": 2978,
-      "sha256": "be4e1671b11a1539b2e91efb618b68ae68b52b0b20890b76406cf6f490556613"
+      "size": 6275,
+      "sha256": "9bc050e4358f83b1ec78ae77dd9bfde5a0bca65e158f03d84625f17a0d5c39d4"
+    },
+    {
+      "path": "context/runtime/console_accounts_delivery_20261018.md",
+      "domain": "runtime",
+      "size": 12895,
+      "sha256": "97826dbdef5819dcb3cd34933b310686e17db4ec792e855d3ff6dd74390d5bbe"
     },
     {
       "path": "context/runtime/console_accounts_request_20261018.json",
@@ -2232,8 +2238,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 6810,
-      "sha256": "294bf1f32af54bdcccbed536ac49c4534d77395e2f78df8c41535e7312f891f6"
+      "size": 7576,
+      "sha256": "fe8dda9c1a0002a85fd34aaf3ccc58868ab6a1f0c80398d33bb8c63c57661d79"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

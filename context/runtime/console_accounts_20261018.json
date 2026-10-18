@@ -5,7 +5,7 @@
   "request": "context/runtime/console_accounts_request_20261018.json",
   "spec": "server-console/ADMIN_ALERTS_20261018.md",
   "base_source": "83635d60a7eecf7c3814c4d5662eb0c48ecaae63",
-  "source_commit": "resolve_exact_commit_containing_this_implementation;CI_artifact_SOURCE_COMMIT_is_authoritative",
+  "source_commit": "e5b878185e6f9db15c595c3760292374c95eb54a",
   "changes": [
     "owner_user_admin_enabled_migration_last_owner_guard_session_revocation",
     "peer_checked_private_notifier_RPC_one_time_private_Telegram_linking",
@@ -16,9 +16,9 @@
   "verification": {
     "backend": {
       "command": "python -m pytest -q server-console/tests",
-      "passed": 427,
+      "passed": 429,
       "skipped": 1,
-      "skip": "local_AF_UNIX_creation_EPERM;CI_must_execute",
+      "skip": "local_AF_UNIX_capability;CI_must_execute",
       "warning": "existing_Starlette_TestClient_httpx_deprecation"
     },
     "context": {
@@ -28,7 +28,7 @@
       "result": "OK"
     },
     "build": "wheel_and_UI_typecheck_PASS",
-    "prototype": "generated_and_check_PASS",
+    "prototype": "generated_application_matches_check_PASS",
     "context_source_schema": "CONTEXT_OK files526 tables93 roadmap_tasks34",
     "secret_guard": "PASS",
     "independent_review": {
@@ -41,19 +41,47 @@
         "repeat_anchor_actual_delivery",
         "maintenance_unsent_cancellation",
         "missing_snapshot_cancels_old_queued_check"
-      ]
-    }
+      ],
+      "rollback_compatibility": {
+        "critical_open": 0,
+        "important_open": 0,
+        "targeted_passed": 40,
+        "fix": "three_column_users_with_account_state;legacy_upsert_and_prerelease_conversion_regressions"
+      }
+    },
+    "delivery_command": "bash -n PASS;fixed exact hash and SOURCE_COMMIT;no repeated setup/CA/Apache/Xray/network changes"
   },
-  "CI": "pending_exact_source_commit",
-  "native_installation": "not_run;owner_previous_installed1c881495_only",
+  "CI": {
+    "source": "e5b878185e6f9db15c595c3760292374c95eb54a",
+    "console_run": 39162268307,
+    "context_run": 39162268187,
+    "review_run": 39162268185,
+    "status": "all_SUCCESS",
+    "console_job": 117777861223,
+    "backend_passed": 429,
+    "backend_skipped": 1,
+    "browser_passed": 147,
+    "fixtures": [
+      "real_Xray_dynamic_UID_default_deny_Telegram_only",
+      "actual_Postgres16_aggregate_only_no_application_rows",
+      "host_mount_namespace_real_UUID_and_write_denial",
+      "notifier_LoadCredential_static_UID_first_cycle_0440",
+      "notifier_control_real_cross_UID_web_allow_wrong_peer_and_auth_DB_denied",
+      "update_queued_running_refusal_rollback_local_patch_and_private_state_preservation",
+      "LAN_TLS_CA_SAN_and_fixed_peer_broker",
+      "systemd_unprivileged_API_actual_host_sample",
+      "actual_Apache_numeric_log_two_requests_probe_excluded_partial_window"
+    ]
+  },
+  "native_installation": "pending_owner_commands;previous_installed1c881495_only",
   "native_HTTPS_office_VPN_confirmation": "preserved18:38_MSK",
   "production_actions_by_agent": false,
   "external_heartbeat": "design_only_no_service_account_or_secret_URL",
   "limitations": [
-    "browser_executable_missing_locally;Chromium_desktop_mobile_tablet_in_CI",
     "auth_broker_credentials_CA_TOTP_stay_private_and_unchanged",
     "bootstrap_Telegram_root_allowlist_distinct_from_dynamic_UI_links",
-    "managed_heartbeat_activation_and_native_new_feature_acceptance_pending"
+    "managed_heartbeat_activation_and_native_new_feature_acceptance_pending",
+    "old_rollback_wheel_preserves_format_but_does_not_enforce_new_disabled_state_or_dynamic_link_policies"
   ],
   "first_source_CI": {
     "source": "c68002af3165b38a109cba4cca1f4cbf1fd8b23e",
@@ -63,5 +91,55 @@
     "failures": "role-select implicit label includes options; narrow table pseudo-label affects exact cell selector; disabled preview save contrast4.01",
     "native_steps": "not_run_after_browser_failure",
     "resolution": "explicit role label association; rendered username selector across viewports; readable disabled themed controls;new_exact_source_CI_required"
-  }
+  },
+  "delivery": "context/runtime/console_accounts_delivery_20261018.md",
+  "previous_source_CI": {
+    "source": "b473e47a5cd468d4eac6b793fb7a4d1b38d0102c",
+    "console_run": 39146703835,
+    "context_run": 39146703827,
+    "review_run": 39146703968,
+    "result": "all_SUCCESS",
+    "backend_passed": 427,
+    "backend_skipped": 1,
+    "chromium_passed": 147,
+    "native_CI": "cross_UID_notifier_systemd_TLS_rollback_Apache_Xray_Postgres_PASS",
+    "artifact_id": 12143158314,
+    "artifact_delivered": false,
+    "reason": "superseded_by_legacy_auth_rollback_compatibility_fix"
+  },
+  "continuation": {
+    "owner_request": "2026-10-18T23:03:57+03:00",
+    "shared_chat": "https://chatgpt.com/share/6ad1740b-ca64-83ed-8f4d-9d00c9dc2c35",
+    "read_scope": "latest_nonempty_assistant_message_only",
+    "last_message": "fix_exact_labels_and_disabled_button_contrast_then_repeat_full_CI",
+    "published_resolution": "b473e47a_CI_already_all_SUCCESS",
+    "preserved_architecture": "notifier_owned_control_store_and_peer_checked_RPC",
+    "extra_fix": "legacy_three_value_CLI_upsert_compatible_users_schema"
+  },
+  "artifact": {
+    "source_commit": "e5b878185e6f9db15c595c3760292374c95eb54a",
+    "artifact_id": 12149750723,
+    "zip_bytes": 551613,
+    "zip_sha256": "f4a69fb12a813d5321628ac00abafd101eb225bb07603b9d7075564b737cbb28",
+    "tar_bytes": 551233,
+    "tar_sha256": "accb6ba8c7cfc15535fe438b7ccb58863acc615e5344dc50451e08779ea2446d",
+    "direct_files": 24,
+    "wheel_python_modules": 26,
+    "font_assets": 4,
+    "compiled_web_files": 3,
+    "scripts": 27,
+    "documents": 45,
+    "observer_modules": 11,
+    "unit_files": 7,
+    "zip_crc": "pass",
+    "source_comparison": "pass",
+    "unsafe_members": 0,
+    "seven_unit_files_match_installed_1c881495": true
+  },
+  "native_acceptance_required": [
+    "updated_UI_separate_events_and_requests",
+    "owner_create_role_disable_password_reset_and_viewer_denial",
+    "personal_private_Telegram_link_and_receiver_ACK",
+    "personal_notification_conditions_repeat_quiet_hours_recovery"
+  ]
 }

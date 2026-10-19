@@ -55,8 +55,8 @@ tasks:
   validation_evidence:
   - context/runtime/production_patch_readiness_result_20261012.json
   - context/runtime/evidence_20261016.yaml
-  current_summary: Контекст и runtime evidence сведены; полный свежий manifest/расширенная сценарная приёмка
-    остаются отдельными.
+  current_summary: Контекст и runtime evidence сведены; полный свежий manifest/расширенная сценарная приёмка остаются
+    отдельными.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -91,8 +91,8 @@ tasks:
   - context/runtime/ssd_gpt_relocate_result_20261011.json
   - context/runtime/ssd_partition_grow_result_20261011.json
   - context/runtime/ssd_ext4_resize_result_20261011.json
-  current_summary: GPT/раздел/ext4 расширены и проверены11Oct. Полный аппаратный резерв, новая SMART-динамика
-    и защита от потери площадки остаются открыты.
+  current_summary: GPT/раздел/ext4 расширены и проверены11Oct. Полный аппаратный резерв, новая SMART-динамика и
+    защита от потери площадки остаются открыты.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -122,8 +122,8 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: residual_explicitly_deferred19Oct0041
-  current_summary: PR103 contains verified console releasee5b87818/contextde4544d9. Owner19Oct0041 confirms accounts and
-    personal Telegram link work;journal still shows old message. Journal/heartbeat deferred,not fixed;full acceptance
+  current_summary: PR103 contains verified console releasee5b87818/contextde4544d9. Owner19Oct0041 confirms accounts
+    and personal Telegram link work;journal still shows old message. Journal/heartbeat deferred,not fixed;full acceptance
     and exact native source hash not claimed. Current work is INTEGRATIONS01 design.
   validation_evidence:
   - context/runtime/connect_owner_priority_20261019.json
@@ -139,8 +139,8 @@ tasks:
   - Restore/RTO remains OPS-02;console operation is not full disaster recovery
   spec: context/runtime/control_panel_telegram_20261016.md
   preserved_from_PR: 103
-  current_summary: Preserve the existing PR103 follow-up task;owner19Oct deferred journal/heartbeat.
-    No implicit restart of console work;current priority INTEGRATIONS01 design.
+  current_summary: Preserve the existing PR103 follow-up task;owner19Oct deferred journal/heartbeat. No implicit
+    restart of console work;current priority INTEGRATIONS01 design.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned
@@ -165,9 +165,8 @@ tasks:
   validation_evidence:
   - context/runtime/lab_patch_full_rc_result_20261012.json
   - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
-  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий CI исключает legacy
-    frontend; результаты консолидации проверяются на точном новом SHA. Native clean-host DR не подменяется
-    CI.
+  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий CI исключает legacy frontend;
+    результаты консолидации проверяются на точном новом SHA. Native clean-host DR не подменяется CI.
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
   status: done
@@ -179,8 +178,8 @@ tasks:
   - Compatible stage full gate and coordinated rollback pass
   - Production core/version/digest, scoped manifest, smoke and cron evidence recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не
-    повторять обновление.
+  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не повторять
+    обновление.
   validation_evidence:
   - context/runtime/production_patch_upgrade_result_20261013.json
   - context/runtime/production_patch_browser_result_20261013.json
@@ -194,12 +193,11 @@ tasks:
   acceptance:
   - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from banner
   - Targeted AppArmor repair preserves docker-default; Snap consumers checked before stale profile archive
-  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron
-    v3
+  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart
-    policy/HTTP и postboot cron проверены. Полный shared-host restore и сквозная почта/DNS не приписываются.
+  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart policy/HTTP
+    и postboot cron проверены. Полный shared-host restore и сквозная почта/DNS не приписываются.
   validation_evidence:
   - context/runtime/host_apparmor_result_20261013.json
   - context/runtime/host_packages_install_result_20261014.json
@@ -314,8 +312,8 @@ tasks:
   - context/runtime/hdd_backup_schedule_status_20261012.json
   - context/runtime/production_patch_post_switch_status_result_20261013.json
   - context/runtime/host_reboot_result_20261014.json
-  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после reboot
-    mount/timer сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
+  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после reboot mount/timer
+    сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: waiting_external
@@ -344,14 +342,14 @@ tasks:
   depends_on:
   - OPS-02
   acceptance:
-  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility against official
-    primary sources
+  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility against official primary
+    sources
   - Isolated PostgreSQL17 migration and paired code/database/data rollback pass before production
   - Fresh/upgrade/repeat/browser/SCORM/performance and independent archive restore accepted
   - Separate owner instruction and approved runtime window; historical5.3 preparation does not authorize activation
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17 и PR101
-    — историческая подготовка, не утверждённый текущий запуск.
+  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17 и PR101 — историческая
+    подготовка, не утверждённый текущий запуск.
   validation_evidence:
   - context/runtime/moodle53_target_20261014.json
   - context/runtime/sysadmin_handoff_result_20261016.json
@@ -360,8 +358,8 @@ tasks:
   status: deferred
   depends_on:
   - INF-13
-  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance
-    before first B2B production
+  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance before
+    first B2B production
   reference: context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   acceptance:
@@ -451,9 +449,11 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON-01C4_provider_read_session_profile
-  owner_priority: explicit_request19Oct1255_continue_independent_of_external_origin
-  current_summary: C1 exact green cdd4909d;C2 native owner links and signed Mini App claim,647local30skips;native/browser RED observed;final exact CI in PR106;full remote login/step-up/delivery and external activation pending.
+  phase: receiver_runtime_verified_owner_launch_pending
+  owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
+  current_summary: C4fd9eea80 complete; receiver-only runtime b01bd942 passes actual Ubuntu install/reinstall/update/rollback/LoadCredential/UID/SQLite.
+    Archive verified from CI12197369243. Mini App false, notification service disabled; owner server1 install/live
+    ACK pending.
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors
@@ -484,7 +484,5 @@ owner_selected_order:
 - INF-06
 - INTEGRATIONS-01
 - OPS-02_external_result_when_received
-latest_owner_priority: '19Oct00:49MSK: unified Academy bot architecture in PR106;accounts/link accepted0041;
-  journal/heartbeat deferred;no subagents without agreement;OPS02 waiting;Moodle5.2/PG17 deferred'
-
-# Owner19Oct17:44MSK: receiver-only runtime/package before Mini App HTTPS; C4 closed fd9eea80.
+latest_owner_priority: '19Oct00:49MSK: unified Academy bot architecture in PR106;accounts/link accepted0041; journal/heartbeat
+  deferred;no subagents without agreement;OPS02 waiting;Moodle5.2/PG17 deferred'

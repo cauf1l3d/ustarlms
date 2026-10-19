@@ -1,5 +1,7 @@
 # USTAR инструкции агентам
 
+Receiver-only комплект sourceb01bd942 проверен actual Ubuntu host job118145618545; archive12197369243 скачан и сверен с Git. [Команды установки](context/runtime/connect_receiver_delivery_20261019.md), [точная квитанция](context/runtime/connect_receiver_release_20261019.json). Следующее действие — owner install/configure/start и личный /start ACK; server1 ещё не установлен агентом. Общий PR native Moodle regression queued, whole PR green не заявлен; standalone пакет Академию не мигрирует.
+
 **Текущий приоритет owner19Oct17:44МСК:** Mini App откладывается до HTTPS, token business bot уже перевыпущен. Подготовить receiver-only комплект и systemd-службы, затем запуск владельцем. Последний agent остановился перед реализацией. C4 завершён наfd9eea80 (Context39259305496/Review39259305507 SUCCESS,121native/611assertions); не переоткрывать C4 или начинать native handoff вместо этого поручения. [План первого запуска](context/proposals/USTAR_CONNECT_RUNTIME_PLAN_20261019.md). Новая поставка не мигрирует Академию: onboarding=false, /start,/academy,/help сообщают о неподключённом Mini App; notify подготовлен, выключен. Субагенты запрещены. Token только private tty на server1, не запрашивать в чате.
 
 

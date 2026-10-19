@@ -10,3 +10,6 @@
 - [CI](CI_SCOPE_20261016.md), [ветки](repository_state_20261016.json), [история](RELEASE_LEDGER.md), [операции](OPERATIONS.md), [security](SECURITY_BASELINE.md).
 
 Dated reports05–15Oct сохраняются. Их pending/next-step относятся к своей дате; текущая очередь — STATE/ACTIVE. Не повторять SSD growth, Moodle patch, AppArmor repair или host install/reboot.
+
+
+Текущий runtime19Oct: [receiver-only поставка](connect_receiver_delivery_20261019.md), [квитанция](connect_receiver_release_20261019.json). Owner17:44 отложил Mini App до HTTPS, token перевыпущен. Verified package/units готовы; server1/live ACK ещё owner acceptance. Не запускать full native handoff или Academy upgrade вместо первого receiver-only запуска. Notify пока disabled.

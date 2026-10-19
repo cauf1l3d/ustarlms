@@ -1,13 +1,13 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_receiver_deployment_preparation
-stage_label: Первый запуск Telegram business bot без Mini App
-current_activity: Owner19Oct17:44MSK postponed Mini App until HTTPS and confirmed token reissued. Prepare receiver-only
-  package, private config, dedicated systemd users/credentials, explicit loopback Xray and rollback. C4 fd9eea80
-  exact CI accepted; no native handoff work now. Installer/code/native host fixture under validation; no server1
-  deployment or live Bot API by agent. Academy552/99 candidate unchanged and production526/93 unchanged; notify
-  prepared inactive.
+stage: connect_receiver_ready_for_owner_install
+stage_label: Проверенный receiver-only комплект, запуск владельцем
+current_activity: 'Receiver-only sourceb01bd942 verified: actual Ubuntu install/reinstall/update/rollback/LoadCredential
+  ACL/UID/SQLite PASS, Context39277324228 SUCCESS, source8.2/8.3 logs690r16/133skips and browsers PASS. Archive12197369243
+  downloaded/exact-source bytes verified. Global PR native Moodle regression queued; no whole-PR green/merge claim.
+  Owner installs verified single archive, privately enters renewed token and starts receiver; live server1 ACK pending.
+  Mini App deferred until HTTPS, notify disabled; Academy552/99 and production526/93 unchanged.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -152,3 +152,9 @@ development_candidate:
   task: INTEGRATIONS-01
   scope: CON01C.2 native link management and Mini App receipt; exact final CI receipt in PR106
   local_ustar_version: 2026101903
+receiver_runtime:
+  source_commit: b01bd942f7f748d9510618a79489643b42cbd690
+  receipt: context/runtime/connect_receiver_release_20261019.json
+  runbook: context/runtime/connect_receiver_delivery_20261019.md
+  server1_deployed: false
+  next: owner_install_configure_start_private_start_ACK

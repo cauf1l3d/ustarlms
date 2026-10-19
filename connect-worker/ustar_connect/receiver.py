@@ -42,6 +42,18 @@ def _command(update, username, now):
     return sender['id'], match[1]
 
 
+def verify_bot(api, bot_id, username, *, require_main_app=False):
+    me = api.get_me()
+    if (not isinstance(me,dict) or type(me.get('id')) is not int or str(me['id']) != bot_id
+            or me.get('is_bot') is not True or me.get('username','').lower() != username.lower()):
+        raise ReceiverStopped('bot_identity_mismatch')
+    webhook = api.get_webhook_info()
+    if not isinstance(webhook,dict) or webhook.get('url') != '':
+        raise ReceiverStopped('webhook_present')
+    if require_main_app and me.get('has_main_web_app') is not True:
+        raise ReceiverStopped('main_app_not_configured')
+
+
 class TelegramReceiver:
     def __init__(self, api, bridge, journal, *, bot_id, bot_username, onboarding_enabled=False, clock=time.time):
         if (not isinstance(bot_id, str) or not re.fullmatch(r'[1-9][0-9]{0,19}', bot_id)
@@ -53,15 +65,7 @@ class TelegramReceiver:
         self._ready = False
 
     def _start(self):
-        me = self._api.get_me()
-        if (not isinstance(me,dict) or type(me.get('id')) is not int or str(me['id']) != self._bot_id
-                or me.get('is_bot') is not True or me.get('username','').lower() != self._username.lower()):
-            raise ReceiverStopped('bot_identity_mismatch')
-        webhook = self._api.get_webhook_info()
-        if not isinstance(webhook,dict) or webhook.get('url') != '':
-            raise ReceiverStopped('webhook_present')
-        if self._enabled and me.get('has_main_web_app') is not True:
-            raise ReceiverStopped('main_app_not_configured')
+        verify_bot(self._api, self._bot_id, self._username, require_main_app=self._enabled)
         self._journal.recover()
         self._ready = True
 
@@ -140,7 +144,7 @@ class TelegramReceiver:
                 response = self._api.send_launch(subject,'https://t.me/'+self._username+'?startapp='+ticket)
             else:
                 self._journal.phase(uid,'sending')
-                response = self._api.send_notice(subject)
+                response = self._api.send_notice(subject, ready=self._enabled)
             chat = response.get('chat') if isinstance(response,dict) else None
             message_id = response.get('message_id') if isinstance(response,dict) else None
             if (not isinstance(chat,dict) or type(chat.get('id')) is not int or chat['id'] != subject

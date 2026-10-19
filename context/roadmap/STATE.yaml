@@ -1,9 +1,13 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_provider_read_session
-stage_label: 'Connect CON01C.4: provider-read session и реальный собственный профиль'
-current_activity: 'C4 provider-read/profile implemented candidate2026101905/552files/99tables; exact CI receipt PR106; full native handoff and role commands next; no deployment/network changes'
+stage: connect_receiver_deployment_preparation
+stage_label: Первый запуск Telegram business bot без Mini App
+current_activity: Owner19Oct17:44MSK postponed Mini App until HTTPS and confirmed token reissued. Prepare receiver-only
+  package, private config, dedicated systemd users/credentials, explicit loopback Xray and rollback. C4 fd9eea80
+  exact CI accepted; no native handoff work now. Installer/code/native host fixture under validation; no server1
+  deployment or live Bot API by agent. Academy552/99 candidate unchanged and production526/93 unchanged; notify
+  prepared inactive.
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -49,8 +53,8 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file references,
-      not a new whole-host manifest
+    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file
+      references, not a new whole-host manifest
   cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md

@@ -486,3 +486,5 @@ owner_selected_order:
 - OPS-02_external_result_when_received
 latest_owner_priority: '19Oct00:49MSK: unified Academy bot architecture in PR106;accounts/link accepted0041;
   journal/heartbeat deferred;no subagents without agreement;OPS02 waiting;Moodle5.2/PG17 deferred'
+
+# Owner19Oct17:44MSK: receiver-only runtime/package before Mini App HTTPS; C4 closed fd9eea80.

@@ -1534,3 +1534,8 @@ c4ef398d source/context CI SUCCESS; native39191922977 stopped after schema parit
 ## 19Oct15:31МСК — C3 принят в разработке, начало C4
 
 C3 exact941a853 Context39251446669/Review39251446110 SUCCESS;106native/530assertions +5concurrency/schema parity. Продолжение по явному owner request: separate provider-read sessions/current self-profile, не bypass native MFA и не full Moodle cookie. План/ledger C4 в context/proposals. Native test-only e0399367 содержит12новых actor tests; missing-class RED ещё ожидается. WSGI13новых tests: отсутствующий /activate RED→GREEN; текущая whole suite pending. Изменений main/prod/network/actual token API и субагентов нет.
+
+
+##19Oct — первый receiver runtime без Mini App
+
+Прочитан новый shared dialogue6ad62f29 до17:48МСК. Owner17:44: HTTPS/Mini App позже, token перевыпущен, готовить комплект и службы. Предыдущий агент остановился перед кодом. C4fd9eea80 context/review success подтверждены через GitHub; no new commit после него. Переключили работу с отложенного native handoff на receiver-only package. Без субагентов. Zipapps stdlib, dedicated users/LoadCredential/StateDirectory, loopback proxy, explicit probe/start, version rollback с сохранением cursor. Notify подготовлен inactive. Native host fixture/CI и поставка проверяются отдельно; ни SSH/production/update Academy, ни live API агентом не выполнялись.

@@ -8,9 +8,9 @@ import threading
 
 from .bridge import BridgeClient
 from .private_files import private_directory, read_private, trusted_certificate
-from .receiver import TelegramReceiver, ReceiverStopped
+from .receiver import TelegramReceiver, ReceiverStopped, verify_bot
 from .receiver_journal import Journal, JournalError
-from .telegram_api import TelegramClient, _unique
+from .telegram_api import TelegramClient, TelegramError, _unique
 
 
 @dataclass(repr=False)
@@ -51,11 +51,18 @@ def load_config(path):
 def main(argv=None):
     parser = argparse.ArgumentParser(description='USTAR Academy Telegram receiver; local validation unless --run.')
     parser.add_argument('--config',required=True,help='Absolute owner-private JSON configuration path')
-    parser.add_argument('--run',action='store_true',help='Explicitly allow Telegram API reads and private replies')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--run',action='store_true',help='Explicitly allow Telegram API reads and private replies')
+    mode.add_argument('--probe',action='store_true',help='Read-only getMe/webhook verification; no updates or sends')
     args = parser.parse_args(argv)
     journal = None
     try:
         config = load_config(args.config)
+        if args.probe:
+            verify_bot(config.api, config.bot_id, config.bot_username, require_main_app=config.onboarding_enabled)
+            print(json.dumps({'status':'telegram_verified','bot_username':config.bot_username,
+                              'updates_consumed':False,'onboarding_enabled':config.onboarding_enabled}))
+            return 0
         if not args.run:
             print(json.dumps({'status':'configuration_valid','network_used':False,
                               'onboarding_enabled':config.onboarding_enabled}))
@@ -81,6 +88,9 @@ def main(argv=None):
     except ReceiverStopped as error:
         print(json.dumps({'status':'stopped','reason':str(error)}),flush=True)
         return 3
+    except TelegramError as error:
+        print(json.dumps({'status':'stopped','reason':error.reason}),flush=True)
+        return 6
     except JournalError as error:
         print(json.dumps({'status':'stopped','reason':str(error)}),flush=True)
         return 4

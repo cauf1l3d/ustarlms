@@ -128,8 +128,12 @@ class TelegramClient:
             'reply_markup': {'inline_keyboard': [[{'text': 'Открыть Академию', 'url': url}]]},
             'link_preview_options': {'is_disabled': True}})
 
-    def send_notice(self, subject):
-        return self._send(subject, {'text': NOTICE})
+    def send_notice(self, subject, *, ready=True):
+        text = NOTICE if ready else ('Бот Академии USTAR подключён. Mini App пока не подключён: '
+            'для него готовится защищённый HTTPS-доступ. Регистрация, персональный профиль '
+            'и учебные действия здесь пока недоступны. Пользуйтесь привычным входом в Академию. '
+            'Пароль и другие секреты в чат не отправляйте.')
+        return self._send(subject, {'text': text})
 
     def send_notification(self, subject, category, severity, occurred_at):
         from datetime import datetime, timezone

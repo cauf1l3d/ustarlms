@@ -141,3 +141,20 @@ HRD решения и native notifications остаются staffing_requests/ta
 ```bash
 python -m unittest discover -s tests/r16 -p test_connect_signup.py -v
 ```
+
+## Первый запуск без HTTPS (owner19Oct17:44MSK)
+
+Установочный срез: receiver only, `onboarding_enabled=false`. `/start`, `/academy`, `/help` отвечают, что Mini App пока не подключён. Ни регистрации, ни доступа к профилю этот ответ не обещает. Token уже перевыпущен владельцем; ввод только через скрытый tty установочного admin. Комплект не содержит токен/ключи/копию Moodle и не меняет Академию. Python3.12 стандартная библиотека, без pip/download зависимостей.
+
+`deploy/build_release.py` строит из exact Git commit детерминированный tar: receiver.pyz,notifications.pyz,admin.pyz,3units,SOURCE_COMMIT,manifest. Standalone `install.py` проверяет внешний SHA256 и внутренние hashes/paths/types/modes до изменения host; immutable releases в /opt/ustar-connect/releases. Initial install не стартует службы. Current/previous позволяют откат worker; credentials и журнал update offsets сохраняются, backlogs не переигрываются.
+
+`ustar-connect-receiver.service` запускается отдельным пользователем, получает token/config через systemd LoadCredential и пишет только StateDirectory0700. Kernel IP policy допускает loopback; явный proxy http://127.0.0.1:18081 должен уже работать. Не менять Xray/DNS/routes. `ustar-connect-probe.service` выполняет только getMe/getWebhookInfo, не потребляет updates и не отправляет сообщения. Existing webhook/неверная identity/недоступный proxy останавливают запуск; webhook автоматически не удаляется. `start` сначала выполняет probe и только затем включает receiver. TLS сертификат Telegram проверяется.
+
+`ustar-connect-notify.service` установлен, но не enabled/started. Нет notifications.json/bridge credential: включение требует отдельного обновления Академии552/99, private HTTPS bridge и личных links. Notification key обязан иметь только notifications.* allowlist; нельзя брать key BFF/receiver. Mini App/BFF service готовится после HTTPS, публичный listener этим комплектом не создаётся.
+
+Команды разработки из checkout, не установки server1:
+```bash
+python -m unittest discover -s tests/r16 -p 'test_connect_deploy.py' -v
+python -m unittest discover -s tests/r16 -p 'test_connect_runtime_probe.py' -v
+python connect-worker/deploy/build_release.py --commit HEAD --output-dir artifacts/connect-runtime
+```

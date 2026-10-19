@@ -112,7 +112,7 @@ class FakeApi:
         self.sent.append((subject,url))
         if self.send_error: raise self.send_error
         return {'message_id':500,'chat':{'id':subject,'type':'private'}}
-    def send_notice(self,subject):
+    def send_notice(self,subject,*,ready=True):
         self.sent.append((subject,None))
         if self.send_error: raise self.send_error
         return {'message_id':501,'chat':{'id':subject,'type':'private'}}

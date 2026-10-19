@@ -1,0 +1,15 @@
+{
+  "kind": "owner_priority_and_development_record",
+  "owner_requested_at": "2026-10-19T17:44:19.418834+03:00",
+  "dialogue": "https://chatgpt.com/share/6ad62f29-f150-83eb-943b-c69068343c8f",
+  "previous_source": "fd9eea8038bb05d3a52f5ae4068c430e14fc3177",
+  "token_reissued_owner_report": true,
+  "token_received_or_used_by_agent": false,
+  "MiniApp": "deferred_until_HTTPS",
+  "current_scope": "receiver package and services with onboarding disabled",
+  "notification_service": "prepared_disabled_until_Academy_bridge_and_links",
+  "server1_deployed": false,
+  "live_provider_acceptance": "pending_owner",
+  "runtime_CI": "pending",
+  "subagents": 0
+}

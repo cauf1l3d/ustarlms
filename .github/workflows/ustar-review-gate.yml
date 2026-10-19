@@ -117,6 +117,24 @@ jobs:
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
 
+  connect-runtime:
+    needs: [source]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Build exact source receiver package without third-party dependencies
+        run: python3 connect-worker/deploy/build_release.py --commit HEAD --output-dir artifacts/connect-runtime
+      - name: Actual systemd credentials and receiver isolation with synthetic transport
+        run: sudo -n python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-receiver-runtime
+          path: artifacts/connect-runtime/
+
   moodle-db:
     if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc')) }}
     needs: [source, rollback, prepare-rc]

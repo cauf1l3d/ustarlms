@@ -1,8 +1,8 @@
 {
   "bot_token_file": "/etc/ustar-connect/telegram.token",
-  "bot_username": "replace_with_academy_bot",
+  "bot_username": "ustarcorp_bot",
   "state_directory": "/var/lib/ustar-connect/telegram",
-  "telegram_proxy": null,
+  "telegram_proxy": "http://127.0.0.1:18081",
   "onboarding_enabled": false,
   "bridge_endpoint": "https://localhost/local/ustar/connect_bridge.php",
   "bridge_key_id": "telegram-academy",

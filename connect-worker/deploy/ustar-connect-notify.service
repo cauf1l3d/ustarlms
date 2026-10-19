@@ -1,0 +1,51 @@
+# USTAR Connect managed; installed only by the verified receiver package.
+[Unit]
+Description=USTAR Connect notification sender (prepared, disabled)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+ConditionPathExists=/etc/ustar-connect/notifications.json
+[Service]
+Type=simple
+User=ustar-connect-notify
+Group=ustar-connect-notify
+UMask=0077
+LoadCredential=notifications.json:/etc/ustar-connect/notifications.json
+LoadCredential=telegram.token:/etc/ustar-connect/telegram.token
+LoadCredential=bridge.key:/etc/ustar-connect/notifications-bridge.key
+LoadCredential=bridge-ca.crt:/etc/ustar-connect/notifications-bridge-ca.crt
+ExecStart=/usr/bin/python3 -I -u /opt/ustar-connect/current/notifications.pyz --config %d/notifications.json --run
+StateDirectory=ustar-connect-notify
+StateDirectoryMode=0700
+WorkingDirectory=/
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+TasksMax=32
+MemoryMax=128M
+LimitCORE=0
+TimeoutStartSec=45
+TimeoutStopSec=45
+Restart=on-failure
+RestartSec=10
+RestartPreventExitStatus=2 3 4
+
+[Install]
+WantedBy=multi-user.target

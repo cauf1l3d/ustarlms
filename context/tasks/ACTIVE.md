@@ -1,5 +1,8 @@
 # Активные задачи USTAR
 
+**Текущий приоритет owner19Oct17:44МСК:** Mini App откладывается до HTTPS, token business bot уже перевыпущен. Подготовить receiver-only комплект и systemd-службы, затем запуск владельцем. Последний agent остановился перед реализацией. C4 завершён наfd9eea80 (Context39259305496/Review39259305507 SUCCESS,121native/611assertions); не переоткрывать C4 или начинать native handoff вместо этого поручения. [План первого запуска](../../context/proposals/USTAR_CONNECT_RUNTIME_PLAN_20261019.md). Новая поставка не мигрирует Академию: onboarding=false, /start,/academy,/help сообщают о неподключённом Mini App; notify подготовлен, выключен. Субагенты запрещены. Token только private tty на server1, не запрашивать в чате.
+
+
 **C4,19Oct:** реализованы отдельная provider-read Connect-сессия и собственный профиль Mini App, candidate2026101905/552files/99tables. Fresh linked-active proof, явная activation, idle15min/absolute8h, current user/link/password/role/org guards, native MFA/SSO/forced-password block; defaultOFF. Проверки14WSGI/full675r16/30local skips PASS; native REDa06ed50e118tests/12expected new errors и browser RED26429064 подтверждены. Exact итоговые native/browser CI и commit/tree — в актуальной квитанции [PR106](https://github.com/cauf1l3d/ustarlms/pull/106); не переносить квитанцию C3 на новый код. Продакшен/main/сеть не менялись. Далее full native handoff/recovery/MFA/step-up и role actions, затем external HTTPS/runtime acceptance.
 
 

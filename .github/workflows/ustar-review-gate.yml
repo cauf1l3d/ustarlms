@@ -222,6 +222,7 @@ jobs:
           git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle/local/ustar moodle/theme/ustar
           python3 -c 'import json,os; d=json.load(open("artifacts/release-manifest.json")); assert os.environ["CANDIDATE_SHA"] == d["source_commit"], "manifest does not identify tested SHA"'
           sha256sum artifacts/ustar-source.tar.gz artifacts/release-manifest.json
+          python3 scripts/infra/build_connect_academy_release.py --commit HEAD --output-dir artifacts/connect-academy
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: frozen-release-candidate

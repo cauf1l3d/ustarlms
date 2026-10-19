@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_receiver_owner_accepted_academy_readonly_preflight
+  stage: connect_academy_source_RC_and_paired_recovery
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: receiver_owner_accepted;Academy_readonly_preflight_before_release;MiniApp_waits_HTTPS
+execution_gate: preflight_received_privately;source_RC_paired_recovery_CI_pending;MiniApp_waits_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -39,5 +39,5 @@ current_work:
   owner_receipt: context/runtime/connect_owner_priority_20261019.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan: context/proposals/USTAR_CONNECT_RUNTIME_PLAN_20261019.md
+  plan: context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md
   runbook: context/runtime/connect_receiver_delivery_20261019.md

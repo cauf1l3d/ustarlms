@@ -1,6 +1,6 @@
 # USTAR вход в проект
 
-[Проверенный read-only bundle и команды сбора](context/runtime/connect_academy_preflight_20261019.md): sourceef9911f3,13targeted/708r16/30skips, zip/plan/help/source verified. Следующее действие — owner JSON, не migration.
+**Текущий этап19Oct:** preflight получен приватно;повторный сбор не требуется. Публикуются код/тесты и технический план без полного server report и private commits. [Source RC и paired recovery](context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md);новая native CI pending. Candidate552/99 не объявлен установленным;Mini App ждёт HTTPS. Ниже датированная история.0subagents.
 
 **Owner19Oct18:59МСК:** первый запуск @ustarcorp_bot подтверждён текстом «окей работает». Receiver-only этап принят владельцем; скриншоты не прочитаны, точные PID/uptime/ответ не выдумывать. Следом — [подготовка подключения Академии](context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md): read-only preflight текущих файлов/версий/схемы и затем отдельный выпуск candidate552/99, private bridge/links/уведомления. Mini App ждёт HTTPS; native handoff/step-up/role screens остаются отдельными gates.0subagents.
 

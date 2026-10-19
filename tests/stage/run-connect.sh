@@ -21,6 +21,20 @@ cd /stage/moodle
 install_site > /artifacts/connect-install-core.log 2>&1
 install_sources /source/.stage-input/connect-baseline/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/connect-baseline.log 2>&1
+umask 077
+SNAP=/stage/connect-snapshot
+mkdir -p "$SNAP"
+php /source/tests/stage/schema_snapshot.php > /artifacts/connect-baseline-schema.json
+php -r 'define("CLI_SCRIPT", true); require "/stage/moodle/config.php"; set_config("connect_release_marker", "baseline", "local_ustar");'
+printf 'baseline-state\n' > /stage/data/stage_/connect-baseline.marker
+php /source/tests/stage/connect_release_probe.php baseline > /artifacts/connect-pair-before.json
+# This is a disposable DB/config/data fixture, NOT a production backup tool.
+# Snapshot stays in tmpfs; only sanitized assertions/hashes become artifacts.
+pg_dump -h db -U ustar_fixture -d ustar_stage1 -Fc -f "$SNAP/database.dump"
+tar -C /stage/moodle/public -czf "$SNAP/source.tar.gz" local/ustar theme/ustar
+tar -C /stage/data -czf "$SNAP/moodledata.tar.gz" stage_
+cp /stage/moodle/config.php "$SNAP/config.php"
+sha256sum "$SNAP/database.dump" "$SNAP/source.tar.gz" "$SNAP/moodledata.tar.gz" "$SNAP/config.php" > "$SNAP/SHA256SUMS"
 install_sources /source/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/connect-upgrade.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/connect-upgraded.json
@@ -36,3 +50,33 @@ php vendor/bin/phpunit --testsuite local_ustar_testsuite --filter 'connect_(iden
     2>&1 | tee /artifacts/connect-phpunit.log
 php /source/tests/stage/connect_concurrency.php 2>&1 | tee /artifacts/connect-concurrency.log
 echo 'CONNECT_SCHEMA_UPGRADE_REPEAT_FRESH_AND_DB=PASS' | tee /artifacts/connect-result.txt
+
+# Prove restoration of the accepted baseline, not a files-only downgrade.
+php -r 'define("CLI_SCRIPT", true); require "/stage/moodle/config.php"; set_config("connect_release_marker", "candidate", "local_ustar");'
+printf 'candidate-only\n' > /stage/data/stage_/connect-candidate-only.marker
+printf '\n// Candidate-only disposable fixture marker.\n' >> /stage/moodle/config.php
+php /source/tests/stage/connect_release_probe.php candidate > /artifacts/connect-pair-candidate.json
+sha256sum --check --strict "$SNAP/SHA256SUMS" > /artifacts/connect-pair-checksums.txt
+rm -rf /stage/moodle/public/local/ustar /stage/moodle/public/theme/ustar /stage/data/stage_
+tar -C /stage/moodle/public -xzf "$SNAP/source.tar.gz"
+tar -C /stage/data -xzf "$SNAP/moodledata.tar.gz"
+cp "$SNAP/config.php" /stage/moodle/config.php
+psql -h db -U ustar_fixture -d postgres -v ON_ERROR_STOP=1 \
+    -c 'DROP DATABASE ustar_stage1 WITH (FORCE);' > /artifacts/connect-pair-drop.log 2>&1
+psql -h db -U ustar_fixture -d postgres -v ON_ERROR_STOP=1 \
+    -c 'CREATE DATABASE ustar_stage1 OWNER ustar_fixture;' > /artifacts/connect-pair-create.log 2>&1
+pg_restore -h db -U ustar_fixture -d ustar_stage1 --no-owner --exit-on-error "$SNAP/database.dump" \
+    > /artifacts/connect-pair-restore.log 2>&1
+diff -qr /stage/moodle/public/local/ustar /source/.stage-input/connect-baseline/moodle/local/ustar > /artifacts/connect-pair-plugin-diff.txt
+diff -qr /stage/moodle/public/theme/ustar /source/.stage-input/connect-baseline/moodle/theme/ustar > /artifacts/connect-pair-theme-diff.txt
+cmp "$SNAP/config.php" /stage/moodle/config.php
+grep -qx 'baseline-state' /stage/data/stage_/connect-baseline.marker
+test ! -e /stage/data/stage_/connect-candidate-only.marker
+php /source/tests/stage/connect_release_probe.php baseline > /artifacts/connect-pair-restored.json
+cmp /artifacts/connect-pair-before.json /artifacts/connect-pair-restored.json
+php /source/tests/stage/schema_snapshot.php > /artifacts/connect-pair-restored-schema.json
+cmp /artifacts/connect-baseline-schema.json /artifacts/connect-pair-restored-schema.json
+php admin/cli/upgrade.php --non-interactive > /artifacts/connect-pair-repeat.log 2>&1
+php /source/tests/stage/schema_snapshot.php > /artifacts/connect-pair-repeat-schema.json
+cmp /artifacts/connect-baseline-schema.json /artifacts/connect-pair-repeat-schema.json
+echo 'CONNECT_ACCEPTED_BASELINE_PAIRED_ROLLBACK=PASS' | tee -a /artifacts/connect-result.txt

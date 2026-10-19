@@ -1,13 +1,13 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_receiver_owner_accepted_academy_readonly_preflight
-stage_label: Бот работает; подготовка подключения учёток и уведомлений Академии
-current_activity: 'Owner19Oct1859MSK confirms receiver works. Original b01 archive remains installed;
-  tty and GC fixes are source/helper changes, not a claimed runtime upgrade. Readonly Academy preflight
-  prepares candidate552/99 against accepted526/93 without PHP bootstrap or mutation.
-  13targeted/708r16 PASS,30skips locally;exact-source zip/plan/help verified;native collection pending.
-  Mini App deferred until HTTPS;private bridge/links/notifications activation is a later gate.'
+stage: connect_academy_source_RC_and_paired_recovery
+stage_label: Подготовка source RC Академии и парного восстановления в CI
+current_activity: 'Owner preflight received privately;no repeat collection requested.
+  Owner19Oct2135MSK authorizes code/tests publication without full server report/private commits.
+  New deterministic package and accepted-baseline DB/source/data/config recovery fixture prepared.
+  Git candidate552/99 and baseline526/93 are source/fixture references,not new deployment facts.
+  Full new native CI pending. Mini App waits HTTPS;bridge/notify activation follows operator gates.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main

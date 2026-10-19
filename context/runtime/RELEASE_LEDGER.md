@@ -1,5 +1,9 @@
 # Реестр кода, проверок и deployment evidence
 
+## 19Oct21:35МСК — source RC and accepted-baseline paired recovery
+
+Owner authorizes code/tests publication without full private server report. Separate branch starts directly from remote35721073,excluding private local commits. Preflight already received privately;no repeat collection. [Plan](../proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md). Builder7tests/local715r16 PASS/30explicit skips;new native full-RC and pair pending. Public source references baselinee1d57f5b526/93 and candidate552/99 do not assert deployment. No installer/production operation;Mini App waits HTTPS.0subagents.
+
 ##19Oct18:59МСК — first receiver accepted by owner
 
 Владелец подтвердил «окей работает» после direct systemctl enable-now и личного /start шага. Точные service PID/uptime/ответ не переписаны; приложенные скриншоты недоступны агенту. [Owner receipt](connect_receiver_server1_20261019.json). На server1 runtime b01bd942, configure helperde2e482; GC fix33e31b13 пока source-level. Boot recovery и Academy integration не приняты. Следом [read-only Academy preparation](../proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md); original production526/93 не объявлен552/99.

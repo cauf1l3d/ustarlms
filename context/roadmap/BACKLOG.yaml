@@ -449,12 +449,12 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: receiver_owner_accepted_Academy_readonly_preflight
+  phase: Academy_source_RC_paired_recovery_CI
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
-  current_summary: 'Owner19Oct1859MSK confirms receiver works. Next: readonly source/schema/runtime inventory
-    before preparing existing Academy candidate552/99 vs production526/93. Delta26added/11changed/6tables.
-    13targeted/708r16 PASS,30skips;native collection pending. No Academy migration or bridge activation.
-    Mini App waits HTTPS;private bridge/scoped keys/links and notifications follow separate acceptance.'
+  current_summary: 'Preflight received privately. Owner19Oct2135MSK authorizes code/tests without full
+    server report/private ancestry. Preparing reproducible source RC and accepted-baseline paired
+    recovery in isolated CI. New native full-RC pending;Git552/99 is not a deployment receipt.
+    Mini App waits HTTPS;private bridge/links/notifications require later operator acceptance.'
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors

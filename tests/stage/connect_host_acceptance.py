@@ -110,4 +110,15 @@ else:
         assert db.execute('select next_offset from state').fetchone()[0]==103
     print('CONNECT_HOST_ACCEPTANCE=PASS install/reinstall/update/rollback/LoadCredential/UID/SQLite/offline-notice; no live Telegram')
 
-if __name__=='__main__':main(sys.argv[1])
+if __name__=='__main__':
+    if os.environ.get('USTAR_CONNECT_HOST_FIXTURE') != '1' or not Path('/home/runner/work').is_dir():
+        raise RuntimeError('DISPOSABLE_GITHUB_RUNNER_REQUIRED')
+    # Hosted runners expose /opt to the runner user. Production correctly refuses that ancestor.
+    # Establish and restore root-owned test prerequisites ONLY on this disposable CI host.
+    parent=Path('/opt');before=parent.stat()
+    print('CI_OPT_PREREQUISITE',before.st_uid,before.st_gid,oct(before.st_mode & 0o777),flush=True)
+    try:
+        os.chown(parent,0,0);parent.chmod(0o755)
+        main(sys.argv[1])
+    finally:
+        os.chown(parent,before.st_uid,before.st_gid);parent.chmod(before.st_mode & 0o777)

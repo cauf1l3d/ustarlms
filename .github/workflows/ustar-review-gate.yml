@@ -128,7 +128,7 @@ jobs:
       - name: Build exact source receiver package without third-party dependencies
         run: python3 connect-worker/deploy/build_release.py --commit HEAD --output-dir artifacts/connect-runtime
       - name: Actual systemd credentials and receiver isolation with synthetic transport
-        run: sudo -n python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
+        run: sudo -n env USTAR_CONNECT_HOST_FIXTURE=1 python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: connect-receiver-runtime

@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "07ff8bcc56253bd691eb6b232a23f097fc760388",
+    "moodle/local/ustar": "dc899a38dee4cb5bb1abc80b9e0730e276c558d5",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
@@ -11,7 +11,7 @@
     "theme_ustar": 2026100202
   },
   "counts": {
-    "files": 550,
+    "files": 551,
     "tables": 99
   },
   "files": [
@@ -1826,6 +1826,10 @@
     {
       "path": "moodle/local/ustar/tests/completion_cycle_test.php",
       "sha256": "c3912069ab28f9d3b61952eb4138862b2e0c028f844a4cf5e2914981517ffabb"
+    },
+    {
+      "path": "moodle/local/ustar/tests/connect_actor_test.php",
+      "sha256": "21f6eacc2a98caa51506c03b55353b031cb61ce267ee4fcbe4de6428c52918e2"
     },
     {
       "path": "moodle/local/ustar/tests/connect_bridge_test.php",

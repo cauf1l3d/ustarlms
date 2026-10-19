@@ -21,20 +21,24 @@ cd /stage/moodle
 install_site > /artifacts/connect-install-core.log 2>&1
 install_sources /source/.stage-input/connect-baseline/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/connect-baseline.log 2>&1
-umask 077
 SNAP=/stage/connect-snapshot
-mkdir -p "$SNAP"
 php /source/tests/stage/schema_snapshot.php > /artifacts/connect-baseline-schema.json
 php -r 'define("CLI_SCRIPT", true); require "/stage/moodle/config.php"; set_config("connect_release_marker", "baseline", "local_ustar");'
 printf 'baseline-state\n' > /stage/data/stage_/connect-baseline.marker
 php /source/tests/stage/connect_release_probe.php baseline > /artifacts/connect-pair-before.json
 # This is a disposable DB/config/data fixture, NOT a production backup tool.
 # Snapshot stays in tmpfs; only sanitized assertions/hashes become artifacts.
-pg_dump -h db -U ustar_fixture -d ustar_stage1 -Fc -f "$SNAP/database.dump"
-tar -C /stage/moodle/public -czf "$SNAP/source.tar.gz" local/ustar theme/ustar
-tar -C /stage/data -czf "$SNAP/moodledata.tar.gz" stage_
-cp /stage/moodle/config.php "$SNAP/config.php"
-sha256sum "$SNAP/database.dump" "$SNAP/source.tar.gz" "$SNAP/moodledata.tar.gz" "$SNAP/config.php" > "$SNAP/SHA256SUMS"
+(
+    # Keep only the snapshot private. Host-runner artifact upload must still
+    # read the sanitized reports created outside this subshell.
+    umask 077
+    mkdir "$SNAP"
+    pg_dump -h db -U ustar_fixture -d ustar_stage1 -Fc -f "$SNAP/database.dump"
+    tar -C /stage/moodle/public -czf "$SNAP/source.tar.gz" local/ustar theme/ustar
+    tar -C /stage/data -czf "$SNAP/moodledata.tar.gz" stage_
+    cp /stage/moodle/config.php "$SNAP/config.php"
+    sha256sum "$SNAP/database.dump" "$SNAP/source.tar.gz" "$SNAP/moodledata.tar.gz" "$SNAP/config.php" > "$SNAP/SHA256SUMS"
+)
 install_sources /source/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/connect-upgrade.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/connect-upgraded.json

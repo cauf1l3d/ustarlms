@@ -35,7 +35,7 @@ const root=path.resolve(__dirname,'../../connect-worker/web');
             if(pathname==='/api/status'){
               if(failure)return reply({ok:false,reason:mode==='revoked'?'invalid_actor':'source_unavailable'},mode==='revoked'?403:503);
               if(!active)return reply({ok:true,scope:'onboarding',account_state:'linked_active',registration:null});
-              return reply({ok:true,scope:'actor_read',expires_at:1800028800,idle_expires_at:mode==='idle'?Math.floor(Date.now()/1000)+2:1800000900,
+              return reply({ok:true,scope:'actor_read',expires_at:Math.floor(Date.now()/1000)+28800,idle_expires_at:Math.floor(Date.now()/1000)+(mode==='idle'?2:900),
                 features:['profile'],profile:{username:'employee',fullname:'<img src=x onerror=alert(1)>',
                   position:'Сотрудник','department':'Розница','account_state':'active'}});
             }

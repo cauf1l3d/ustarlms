@@ -193,8 +193,9 @@ Connect health: last receive/send, cursor lag/gap, outbox age/depth, retries/unc
 | Срез | Результат | Acceptance |
 |---|---|---|
 | CON-00 | Review выполнен, CRM уточнён | Остальные provider/edge решения не блокируют первый код |
-| CON-01A, текущий | Provider identity, Telegram launch verifier, формат кода | Offline tests; нет endpoint/session/DB writes |
-| CON-01B и остаток CON-01 | Canonical регистрация/pending/HRD approval, Academy link/revoke, один Telegram business bot, route/results/tasks и уведомления | Negative ACL/replay/revocation, отдельный token от INF-06, offsets recovery |
+| CON-01A | Provider identity, Telegram launch verifier, формат кода | Offline tests; нет endpoint/session/DB writes |
+| CON-01B.1, текущий | Internal Moodle links/challenges/proofs и отзыв | Native DB fresh/upgrade/repeat/concurrency gate; public API ещё нет |
+| Остаток CON-01B / CON-01 | Canonical регистрация/pending/HRD approval, Academy link/revoke, один Telegram business bot, route/results/tasks и уведомления | Negative ACL/replay/revocation, отдельный token от INF-06, offsets recovery |
 | CON-02 | Общая доставка/preferences/ack и Bitrix adapter | Одна история из двух каналов, retry/uncertain, фактический portal API |
 | CON-03 | Public HTTPS edge и общая Mini App/PWA с быстрыми действиями | Office/home/mobile TLS/auth, никаких route/DNS изменений connector, disconnect/rollback сохраняют LAN |
 | CON-04 | HR/HRD/manager формы и native LMS handoff/полное обучение | Step-up, files/cookies/Quiz/SCORM, отдельный canonical origin/network gate |
@@ -221,3 +222,7 @@ Review и план CON-01A готовы; transport primitives реализуют
 - [Bitrix24 register и eventMode](https://apidocs.bitrix24.com/api-reference/chat-bots/chat-bots-v2/imbot.v2/bots/bot-register.html).
 - [Meta official WhatsApp collection: webhook](https://www.postman.com/meta/whatsapp-business-platform/folder/tduohwq/webhook-payload-reference).
 - [Cloudflare Tunnel: пример outbound-only connectivity](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/).
+
+## Продолжение19Oct04:09
+
+[План CON01B.1](USTAR_CONNECT_CON01B_PLAN_20261019.md). Начальная постоянная identity реализация в Moodle candidate2026101900; baseline production не менялся. Нет trusted worker bridge/onboarding sessions/signup API/UI. Native CI и deployment — разные gates.

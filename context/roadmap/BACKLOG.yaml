@@ -442,9 +442,9 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON-01A_identity_foundation
-  owner_priority: explicit_request19Oct0128_review_then_begin
-  current_summary: Review signup and Academy tasks;offline identity/HMAC/link-code primitives;no subagents or server/schema changes.
+  phase: CON-01B1_Moodle_identity_storage
+  owner_priority: explicit_request19Oct0409_continue
+  current_summary: Internal Moodle links/challenges/proofs and candidate schema;native DB gate required;no public endpoint or deployment.
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors
@@ -469,7 +469,7 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: CON01A_offline_primitives_no_repeat_of_accepted_operations
+execution_gate: CON01B1_candidate_native_DB_gate_required_no_deploy
 owner_selected_order:
 - DOC-03
 - INF-06

@@ -4913,5 +4913,19 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026100204, 'local', 'ustar');
     }
+    if ($oldversion < 2026101900) {
+        // Metadata only: never activate channels, migrate links or send old pending.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) {
+            throw new coding_exception('Cannot load Connect identity schema');
+        }
+        foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges', 'local_ustar_conn_proofs'] as $name) {
+            $table = $schema->getStructure()->getTable($name);
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026101900, 'local', 'ustar');
+    }
 return true;
 }

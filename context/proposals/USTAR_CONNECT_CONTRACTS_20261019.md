@@ -1,6 +1,6 @@
 # USTAR Connect — контракты и сопоставление с исходниками
 
-19.10.2026, Europe/Moscow. **API PROPOSED; CON-01A primitives начаты**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Ни один путь API ниже ещё не реализован. Исходники проверены на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
+19.10.2026, Europe/Moscow. **API PROPOSED; CON-01A primitives готовы; CON01B.1 internal storage**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Ни один путь API ниже ещё не реализован. Исходники проверены на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
 
 ## 1. Канонические владельцы операций
 
@@ -105,3 +105,7 @@ Backfill не отправляет старые pending/disabled, не пере�
 Эти проверки — критерии CON-01..05. CON-01A проверяет только offline identity/proof/code primitives. DB/registration/replay-consumption/role/provider-delivery/network acceptance ещё не выполнена.
 
 Первое касание и общий одноразовый код уточнены в [review](USTAR_CONNECT_REVIEW_20261019.md). Формат uc1_,256бит; TTL600с и atomic consume реализуются в будущем Moodle storage, не в pure hash helper.
+
+## Реализация CON01B.1
+
+Внутренний classes/connect/identity_service: issue → claim_verified → confirm, revoke, resolve_active_user.3metadata tables и XMLDB candidate2026101900; [план](USTAR_CONNECT_CON01B_PLAN_20261019.md). Это не реализация публичных /links или /onboarding endpoints из таблицы выше. claim_verified требует будущей trusted transport boundary; не вызывать из browser JSON. Current capability/scope конкретных бизнес-команд проверяется их facade/domain writer, link не хранит роли.

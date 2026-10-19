@@ -609,3 +609,7 @@ Consolidation brings accepted PR98/99/100/102 sources and all dated receipts int
 ## 19Oct — CON01A development, не серверная поставка
 
 По owner01:28 review и первый код identity/HMAC/link-code в PR106. Application Moodle baseline e1d57f5b не менялся. Worker пока библиотека без службы/endpoint/installation; регистрацию в Telegram проверять на сервере ещё нельзя. [Review](../proposals/USTAR_CONNECT_REVIEW_20261019.md).
+
+## 19Oct — CON01B.1 candidate, не установка server1
+
+Внутренний PHP Connect link storage и schema candidate2026101900. Moodle core/PG production не менялись; accepted application baseline e1d57f5b/local2026100204/theme2026100202 сохранён.530source files/96tables — candidate manifest, не факт deployment. Native fresh/upgrade/repeat и concurrent requests CI pending. [План](../proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md).

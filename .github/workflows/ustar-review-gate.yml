@@ -27,6 +27,8 @@ jobs:
   source:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    outputs:
+      connect_db: ${{ steps.connect-scope.outputs.connect_db }}
     strategy:
       fail-fast: false
       matrix:
@@ -47,6 +49,16 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
       - run: python scripts/ci/source_checks.py
+      - name: Determine whether Connect schema or service requires native DB verification
+        id: connect-scope
+        env:
+          CONNECT_BASE: ${{ github.event.pull_request.base.sha || github.sha }}
+        run: |
+          if git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/tests/connect_identity_test.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php; then
+            echo 'connect_db=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'connect_db=true' >> "$GITHUB_OUTPUT"
+          fi
       - run: pip install -r tests/stage/python-requirements.txt
       - run: python -m unittest discover -s tests/r16 -v
       - name: Verify production paired copy with exact reported Unix owners
@@ -68,6 +80,33 @@ jobs:
         with:
           name: ${{ matrix.php == '8.2' && 'source-manifest' || 'source-manifest-php83' }}
           path: artifacts/
+
+  connect-db:
+    if: needs.source.outputs.connect_db == 'true'
+    needs: [source]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Export accepted application baseline for the isolated upgrade
+        run: |
+          mkdir -p .stage-input/connect-baseline artifacts
+          git archive e1d57f5bc28f6964afd20aeff7620345b34a80fe moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-baseline
+      - name: Build existing pinned Moodle 5.1.8 PostgreSQL 16 runtime
+        run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull
+      - name: Verify fresh install, upgrade, repeat, links and independent concurrent requests
+        run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml up --abort-on-container-exit --exit-code-from runner
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: connect-identity-db-evidence
+          path: artifacts/connect-*
+      - name: Dispose only the isolated Connect test project
+        if: always()
+        run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
 
   moodle-db:
     if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc')) }}

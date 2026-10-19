@@ -6,7 +6,7 @@
 
 Подтверждены: расширение SSD11Oct, Moodle5.1.8/повторный upgrade/краткая браузерная приёмка13Oct, AppArmor и host updates/reboot14Oct. Архив копии получен и инструкция передана сисадмину; результата нового восстановления ещё нет. Переход на **Moodle5.2 и PostgreSQL17 отложен**.
 
-Текущий этап19Oct — [USTAR Connect](context/proposals/USTAR_CONNECT_RFC_20261018.md), единая архитектура бизнес-бота Telegram/Bitrix24/WhatsApp и внешних Mini Apps с правами Академии. PR106: review регистрации выполнен, начаты offline identity/proof/link-code primitives; API и бот ещё не установлены. [Владелец проверил](context/runtime/connect_owner_priority_20261019.json) учётки пульта и личную Telegram-привязку; journal/heartbeat отложены. Рабочая поставка пульта находится в unmerged PR103; это уже не только прототип. Полная приёмка и точный native source hash отдельно не заявлены.
+Текущий этап19Oct — [USTAR Connect](context/proposals/USTAR_CONNECT_RFC_20261018.md), единая архитектура бизнес-бота Telegram/Bitrix24/WhatsApp и внешних Mini Apps с правами Академии. PR106: review регистрации выполнен, Python primitives и внутренний Moodle link storage CON01B.1; native DB gate и public bridge ещё требуют проверки/реализации, бот не установлен. [Владелец проверил](context/runtime/connect_owner_priority_20261019.json) учётки пульта и личную Telegram-привязку; journal/heartbeat отложены. Рабочая поставка пульта находится в unmerged PR103; это уже не только прототип. Полная приёмка и точный native source hash отдельно не заявлены.
 
 ## Работа с репозиторием
 

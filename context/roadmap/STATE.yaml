@@ -1,14 +1,15 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_identity_foundation_development
-stage_label: 'Connect: review регистрации и первый код идентичности'
-current_activity: 'Owner19Oct01:28MSK уточнил CRM=задачи Академии, регистрацию первого касания через бот, approval и общую
-  привязку каналов; поручил review и начало разработки без субагентов. Review трёх документов выполнен. CON01A: Python provider
-  identity, Telegram HMAC launch proof, shared one-time code format; нет HTTP/auth endpoints, persistent consume/replay, Moodle
-  writes, schema, native deploy или network changes. HRD approval сохраняет current approveregistration+hrmanage; manager
-  не повышается автоматически. Journal/heartbeat deferred; console accounts/link previously owner-accepted. Полная registration/DB/provider
-  integration — следующий CON01B. main не merged.'
+stage: connect_moodle_identity_storage
+stage_label: 'Connect CON01B.1: двусторонние связи и отзыв в Moodle'
+current_activity: 'Owner19Oct04:09MSK поручил продолжить после других агентов. GitHub PR106 latest a627f241; обе CI runs39173142415/39173142410
+  SUCCESS; новых PR/head изменений после этой точки не обнаружено. Реализуется CON01B.1: PHP identity/link challenge/proof
+  storage, TTL600, sesskey binding, current actor, uniqueness, revoke/relink и metadata privacy. Candidate2026101900/530files/96tables
+  не deployed; accepted baseline e1d57f5b/526files/93tables сохраняется отдельно. Локально561r16/19skips PASS; native Moodle/PostgreSQL
+  fresh/upgrade/repeat/concurrency CI ещё ожидается. Нет публичных endpoints, trusted worker bridge/onboarding sessions/signup
+  UI, provider activation, native deploy или network change. Journal/heartbeat и platform upgrades deferred. Субагенты0; main
+  не merged.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -77,6 +78,7 @@ audit:
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
 - START_HERE.md
+- context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_REVIEW_20261019.md
 - context/project.yaml
 - context/runtime/connect_owner_priority_20261019.json
@@ -138,3 +140,8 @@ do_not_repeat:
 - host_cold_capture_r6
 - host_package_install_and_reboot
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
+development_candidate:
+  manifest: context/code_map/development_source.json
+  task: INTEGRATIONS-01
+  scope: CON01B.1 Moodle identity metadata and internal service; native DB gate pending
+  local_ustar_version: 2026101900

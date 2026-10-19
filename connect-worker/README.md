@@ -16,3 +16,5 @@ python -m unittest discover -s tests/r16 -v
 ```
 
 [Результаты ревью/регистрация](../context/proposals/USTAR_CONNECT_REVIEW_20261019.md) · [план](../context/proposals/USTAR_CONNECT_CON01A_PLAN_20261019.md).
+
+Продолжение CON01B.1: внутренний PHP identity_service и3metadata tables в Moodle. [План и границы](../context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md). Worker→facade trusted transport и реальные bot endpoints ещё отсутствуют; напрямую публиковать PHP service методы запрещено.

@@ -1542,3 +1542,10 @@ C3 exact941a853 Context39251446669/Review39251446110 SUCCESS;106native/530assert
 
 
 Receiver-only поставка sourceb01bd942: actual Ubuntu host118145618545 PASS, context39277324228 SUCCESS, exact source8.2/8.3 logs690r16/133skips +60mobile/20onboarding/24link/100actor PASS. Artifact12197369243 downloaded/CRC+SHA+30module/3unit/admin source comparisons PASS,32786B tarSHA674b05ae4f418ed5caa3582c6c071a036c77d647667fce6a7f90e6b232a72332. Runbook single-archive bootstrap/всеBashblocks syntax PASS. Personalreview0subagents. Installer owns its paths only; explicit0755 survivesumask002, exact readonly systemd credential ACL support preserves rejection of ordinary0440secrets. Global native Moodle regression queued; whole PR green/merge not claimed. Owner server1 install/private renewed token/live /start ACK pending; no agent native or live API writes.
+
+##19Oct18:41МСК — owner install и исправление configure
+
+**Owner19Oct18:41МСК:** server1 install b01bd942 подтверждён, службы не запущены. configure упал до запроса токена: дефект open('/dev/tty','r+') воспроизведён и исправлен на write-only output stream.11deploy/691r16 PASS(30environment skips), реальный PTY/ECHO test RED→GREEN. Использовать [исправленную настройку](../runtime/connect_configure_tty_recovery_20261019.md); не переустанавливать пакет и не править immutable manifest. Настройка/start/live ACK ещё ожидаются. Субагенты не использовались.
+
+
+Root cause: real PTY rejects buffered r+ before getpass; original host fixture called configure directly. One-line write-only output fix retains getpass hidden input. Real PTY CLI regression reproduces operation_failed before fix and passes after (prompt/ECHO off/exact synthetic token/no echo). Original b01 artifact remains unchanged; corrected standalone admin only used for configure.691r16/30skips PASS locally;new CI pending. Owner has not confirmed configuration/start/live ACK.0subagents/no live provider calls or agent SSH.

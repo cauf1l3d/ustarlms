@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_receiver_ready_for_owner_install
+  stage: connect_receiver_installed_configure_tty_recovery
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:

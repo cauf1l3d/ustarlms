@@ -332,7 +332,7 @@ def main(argv=None):
             fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
             if args.action=='install':value={'status':'installed_services_not_started','source_commit':instance.install(args.archive,args.sha256)}
             elif args.action=='configure':
-                with open('/dev/tty','r+') as tty:
+                with open('/dev/tty','w') as tty:
                     token=getpass.getpass('Token @ustarcorp_bot (hidden): ',stream=tty)
                 instance.configure(token);token=None
                 value={'status':'configured','onboarding_enabled':False,'proxy':PROXY}

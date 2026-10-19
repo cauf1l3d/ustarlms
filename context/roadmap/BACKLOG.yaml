@@ -449,11 +449,12 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: receiver_runtime_verified_owner_launch_pending
+  phase: receiver_installed_configure_tty_recovery_pending
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
-  current_summary: C4fd9eea80 complete; receiver-only runtime b01bd942 passes actual Ubuntu install/reinstall/update/rollback/LoadCredential/UID/SQLite.
-    Archive verified from CI12197369243. Mini App false, notification service disabled; owner server1 install/live
-    ACK pending.
+  current_summary: 'Owner19Oct1841MSK server1 install b01bd942 confirmed;configure failed before token prompt.
+    TTY r+ nonseekable bug reproduced and fixed;real PTY RED→GREEN,691r16/30skips PASS.
+    Standalone corrected admin configures installed package without rewriting immutable release.
+    Private configure/start/live ACK pending;Mini App deferred;notify disabled.'
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors

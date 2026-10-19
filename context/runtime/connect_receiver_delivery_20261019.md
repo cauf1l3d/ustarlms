@@ -1,5 +1,7 @@
 # USTAR Connect: первый запуск Telegram-бота без Mini App
 
+**Поправка19Oct18:41МСК:** владелец уже установил b01bd942, но его интерактивный configure содержит дефект tty. До шага3 обязательно выполнить [восстановление настройки](connect_configure_tty_recovery_20261019.md). Прежний host fixture не проверял этот интерактивный путь; исходная квитанция ниже историческая.
+
 Source b01bd942f7f748d9510618a79489643b42cbd690. Комплект предназначен для Ubuntu24.04/Python3.12/systemd на server1. Он устанавливает отдельный receiver @ustarcorp_bot через существующий HTTP proxy127.0.0.1:18081. Mini App отключён до HTTPS; обновления Moodle, bridge и миграции БД здесь нет. Notify-служба подготовлена и выключена. C4fd9eea80 остаётся завершённой разработкой, но не native deployment.
 
 Проверено на GitHub Ubuntu24.04: actual systemd/UID/LoadCredential/SQLite и install/reinstall/update/rollback, job118145618545 PASS. Контекст39277324228 SUCCESS. Source8.2/8.3 logs подтверждают690r16/133skips и60mobile/20onboarding/24link/100actor scenarios PASS. Общий review39277324207 ждёт очереди native Moodle regression; полного PR green/merge не заявляем. Этот standalone receiver не устанавливает Academy/schema; его acceptance закрыта отдельным host job. Локально690r16 OK/30environment skips. [Artifact12197369243](https://github.com/cauf1l3d/ustarlms/actions/runs/39277324207/artifacts/12197369243) скачан: ZIP38429байт/SHA6804d5a23f946124574beff8db6fac54fc13fd0af4e854d49d392163cc42a880/CRC, tar32786байт/SHA674b05ae4f418ed5caa3582c6c071a036c77d647667fce6a7f90e6b232a72332,15Python modules в обоих zipapps +3units/admin source byte-exact Git PASS. Local и CI tar совпадают побайтно. Это синтетический provider и реальный disposable host, не приёмка server1.
@@ -38,7 +40,7 @@ USTAR_CONNECT_INSTALL
 3. Приватно ввести уже перевыпущенный токен. Команда выполняется отдельно в интерактивном SSH, без heredoc. Ввод скрыт, токен не передаётся аргументом или переменной окружения.
 
 ```bash
-sudo /usr/bin/python3 -I /opt/ustar-connect/current/admin.pyz configure
+sudo /usr/bin/python3 -I /root/ustar-connect-admin-tty.py configure
 ```
 
 На `Token @ustarcorp_bot (hidden):` вставить новый токен и Enter. Ожидается `configured`, onboarding_enabled=false, proxy127.0.0.1:18081. Токен не присылать в чат. Файлы /etc/ustar-connect root-only0700/0600; systemd передаёт их service через LoadCredential с проверенными root-owned read-only ACL.
@@ -85,4 +87,4 @@ sudo /usr/bin/python3 -I /opt/ustar-connect/current/admin.pyz rollback
 
 После HTTPS: отдельно обновить/принять Academy candidate, настроить private bridge и keys с explicit operation allowlists, Mini App/BFF и затем notification sender. Existing notification key допускает только notification.lease, notification.begin, notification.finish; credentials/CA и schema acceptance отдельные. Привязки аккаунтов пульта не являются Academy links. Включение уведомлений не должно воспроизводить прежние disabled/pending доставки без приёмки.
 
-Native server1 install, исходящий Telegram ACK и boot/restart владельцем ещё предстоят. CI подтверждает synthetic transport и изоляцию/установку на disposable Ubuntu, не сетевую доступность server1 или доставку вашему аккаунту.
+Native server1 install подтверждён владельцем19Oct18:41МСК; configure/start, исходящий Telegram ACK и boot/restart ещё предстоят. CI подтверждает synthetic transport и изоляцию/установку на disposable Ubuntu, не сетевую доступность server1 или доставку вашему аккаунту.

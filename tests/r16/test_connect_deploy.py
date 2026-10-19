@@ -1,5 +1,5 @@
 """Install contracts on real temporary files; systemd/user actions are modeled here, native fixture separate."""
-import hashlib,importlib.util,io,json,os,stat,tarfile,tempfile,unittest
+import errno,hashlib,importlib.util,io,json,os,pty,select,signal,stat,tarfile,tempfile,termios,time,unittest
 from unittest.mock import patch
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
@@ -101,3 +101,61 @@ class DeployTests(unittest.TestCase):
             installer=self.mod.Installation(self.root/'host',host);installer.install(self.tar,self.digest)
         finally:os.umask(previous)
         self.assertEqual(0o755,stat.S_IMODE((installer.current()/'units').stat().st_mode))
+
+    def test_configure_cli_reads_hidden_token_from_real_controlling_tty(self):
+        # Only root/systemd/host paths are modeled; /dev/tty and getpass are real.
+        captured=self.root/'captured';lockpath=self.root/'install.lock'
+        token='123456:synthetic-private-tty-fixture'
+        pid,master=pty.fork()
+        if pid==0:
+            class FixtureInstallation:
+                def configure(self,value):captured.write_text(value)
+            realpath=Path
+            def hostpath(value):
+                if value=='/run/systemd/system':return self.root
+                if value=='/run/ustar-connect-install.lock':return lockpath
+                return realpath(value)
+            try:
+                with patch.object(self.mod.os,'geteuid',return_value=0), \
+                        patch.object(self.mod,'Path',side_effect=hostpath), \
+                        patch.object(self.mod,'safe',side_effect=lambda path:path), \
+                        patch.object(self.mod,'Installation',FixtureInstallation):
+                    result=self.mod.main(['configure'])
+                import sys
+                sys.stdout.flush();sys.stderr.flush()
+                os._exit(result)
+            except BaseException:os._exit(99)
+        output=b'';sent=False;hidden=False;status=None
+        deadline=time.monotonic()+8
+        try:
+            while time.monotonic()<deadline:
+                readable,_,_=select.select([master],[],[],0.05)
+                if readable:
+                    try:chunk=os.read(master,4096)
+                    except OSError as error:
+                        if error.errno!=errno.EIO:raise
+                        chunk=b''
+                    if chunk:output+=chunk
+                    if not sent and b'Token @ustarcorp_bot (hidden): ' in output:
+                        hidden=not bool(termios.tcgetattr(master)[3]&termios.ECHO)
+                        os.write(master,(token+'\n').encode());sent=True
+                child,status_now=os.waitpid(pid,os.WNOHANG)
+                if child:
+                    status=status_now
+                    # Drain bytes written immediately before child exit.
+                    while select.select([master],[],[],0)[0]:
+                        try:chunk=os.read(master,4096)
+                        except OSError:break
+                        if not chunk:break
+                        output+=chunk
+                    break
+        finally:
+            if status is None:
+                os.kill(pid,signal.SIGKILL);os.waitpid(pid,0)
+            os.close(master)
+        self.assertTrue(sent,output.decode(errors='replace'))
+        self.assertTrue(hidden,'Token input must disable terminal echo')
+        self.assertEqual(0,os.waitstatus_to_exitcode(status),output.decode(errors='replace'))
+        self.assertEqual(token,captured.read_text())
+        self.assertNotIn(token.encode(),output)
+        self.assertIn(b'"status": "configured"',output)

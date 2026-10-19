@@ -1,13 +1,12 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_receiver_ready_for_owner_install
-stage_label: Проверенный receiver-only комплект, запуск владельцем
-current_activity: 'Receiver-only sourceb01bd942 verified: actual Ubuntu install/reinstall/update/rollback/LoadCredential
-  ACL/UID/SQLite PASS, Context39277324228 SUCCESS, source8.2/8.3 logs690r16/133skips and browsers PASS. Archive12197369243
-  downloaded/exact-source bytes verified. Global PR native Moodle regression queued; no whole-PR green/merge claim.
-  Owner installs verified single archive, privately enters renewed token and starts receiver; live server1 ACK pending.
-  Mini App deferred until HTTPS, notify disabled; Academy552/99 and production526/93 unchanged.'
+stage: connect_receiver_installed_configure_tty_recovery
+stage_label: Receiver установлен; исправление интерактивной настройки
+current_activity: 'Owner19Oct1841MSK confirmed server1 installed_services_not_started b01bd942.
+  Configure failed before token prompt: real PTY reproduces nonseekable r+ open failure.
+  Fixed standalone admin uses write-only tty output;11deploy/691r16 tests PASS,30environment skips.
+  Private configure/start/live ACK pending;Mini App deferred until HTTPS;notify disabled.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -156,5 +155,10 @@ receiver_runtime:
   source_commit: b01bd942f7f748d9510618a79489643b42cbd690
   receipt: context/runtime/connect_receiver_release_20261019.json
   runbook: context/runtime/connect_receiver_delivery_20261019.md
-  server1_deployed: false
-  next: owner_install_configure_start_private_start_ACK
+  server1_deployed: true
+  server1_install_receipt: owner19Oct1841MSK_installed_services_not_started
+  server1_configured: false
+  server1_started: false
+  live_ack: false
+  configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
+  next: owner_fixed_admin_private_configure_start_private_start_ACK

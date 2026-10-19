@@ -232,15 +232,16 @@ class OnboardingApp:
                 if operation != 'status':
                     raise WebError('actor_only_session')
                 try:
-                    result = actor_web.profile(self._request('actor.status',
-                        {'session': session.actor, 'browser': session.browser}), now, session.actor_absolute)
+                    reply = self._request('actor.status', {'session': session.actor, 'browser': session.browser})
+                    observed = int(self._clock())
+                    result = actor_web.profile(reply, observed, session.actor_absolute)
                 except BridgeRejected as error:
                     if error.reason in ('invalid_actor', 'native_auth_required', 'actor_unavailable'):
                         self._sessions.remove(cookie)
                         extra['Set-Cookie'] = self._set_cookie('', 0)
                     raise
                 session.expires = result['idle_expires_at']
-                extra['Set-Cookie'] = self._set_cookie(cookie, session.expires-now)
+                extra['Set-Cookie'] = self._set_cookie(cookie, session.expires-observed)
                 return 200, {'ok': True, **result}, 'application/json'
             if session.activation_uncertain:
                 raise WebError('activation_outcome_unknown', 503)
@@ -258,7 +259,9 @@ class OnboardingApp:
                 # Record uncertainty before the authority-changing private request.
                 session.activation_uncertain = True
                 try:
-                    activated = actor_web.grant(self._request('actor.open', payload), now)
+                    reply = self._request('actor.open', payload)
+                    observed = int(self._clock())
+                    activated = actor_web.grant(reply, observed)
                 except BridgeRejected:
                     session.activation_uncertain = False
                     raise
@@ -269,7 +272,7 @@ class OnboardingApp:
                 session.activation_uncertain = False
                 session.expires = activated['idle_expires_at']
                 cookie = self._sessions.rotate(cookie, session)
-                extra['Set-Cookie'] = self._set_cookie(cookie, session.expires-now)
+                extra['Set-Cookie'] = self._set_cookie(cookie, session.expires-observed)
                 return 200, {'ok': True, 'csrf': session.csrf, 'scope': 'actor_read'}, 'application/json'
             if operation == 'register':
                 payload.update(data, command=session.command)

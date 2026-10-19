@@ -119,6 +119,7 @@ final class connect_actor_test extends \advanced_testcase {
     }
     public function test_native_mfa_alternate_login_and_force_password_change_are_not_bypassed(): void {
         global $CFG;
+        set_config('expirationtime', 90, 'auth_manual');
         $entry=$this->entry();set_config('enabled',1,'tool_mfa');
         $this->denied(fn()=>$this->open($entry),'native_auth_required');
         set_config('enabled',0,'tool_mfa');$CFG->alternateloginurl='https://auth.example.invalid';
@@ -126,15 +127,15 @@ final class connect_actor_test extends \advanced_testcase {
         unset($CFG->alternateloginurl);set_user_preference('auth_forcepasswordchange',1,$this->employee->id);
         $this->denied(fn()=>$this->open($entry),'native_auth_required');
         unset_user_preference('auth_forcepasswordchange',$this->employee->id);
-        set_config('expirationtime', 1, 'auth_manual');
+        set_config('expiration', 1, 'auth_manual');
         $this->denied(fn() => $this->open($entry), 'native_auth_required');
-        set_config('expirationtime', 0, 'auth_manual');
+        set_config('expiration', 0, 'auth_manual');
         $a=$this->open($entry);set_config('enabled',1,'tool_mfa');
         $this->denied(fn()=>$this->actor_status($a),'native_auth_required');
         set_config('enabled',0,'tool_mfa');$this->denied(fn()=>$this->actor_status($a),'invalid_actor');
-        $b = $this->open(); set_config('expirationtime', 1, 'auth_manual');
+        $b = $this->open(); set_config('expiration', 1, 'auth_manual');
         $this->denied(fn() => $this->actor_status($b), 'native_auth_required');
-        set_config('expirationtime', 0, 'auth_manual');
+        set_config('expiration', 0, 'auth_manual');
         $this->denied(fn() => $this->actor_status($b), 'invalid_actor');
     }
     public function test_link_revision_and_explicit_actor_logout_revoke(): void {

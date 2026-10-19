@@ -128,7 +128,7 @@ final class actor_service {
         global $CFG, $DB;
         // Conservative until an accepted native MFA/SSO handoff exists; no credential collection here.
         if ($user->auth !== 'manual' || !empty($CFG->alternateloginurl) || get_config('tool_mfa', 'enabled')
-                || (int)get_config('auth_manual', 'expirationtime') > 0
+                || (int)get_config('auth_manual', 'expiration') === 1
                 || \core\session\manager::is_loggedinas() || \local_ustar\view_as::active()
                 || $DB->get_field('user_preferences', 'value', ['userid' => $user->id, 'name' => 'auth_forcepasswordchange'])) {
             throw new \InvalidArgumentException('native_auth_required');

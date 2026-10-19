@@ -12,7 +12,7 @@ ACTOR='ua1_'+'B'*42+'A'
 class ActorRemote(web_fixture.RemoteBoundary):
     def __init__(self,clock):
         super().__init__();self.state='linked_active';self.clock=clock;self.actor_failure=None
-        self.opened=0;self.extra={};self.open_override=None
+        self.opened=0;self.extra={};self.open_override=None;self.absolute=NOW+28800
     def request(self,op,payload):
         if not op.startswith('actor.'):
             return super().request(op,payload)
@@ -23,9 +23,10 @@ class ActorRemote(web_fixture.RemoteBoundary):
             if self.state!='linked_active':raise BridgeRejected('native_auth_required')
             self.opened+=1
             result=self.open_override or {'session':ACTOR,'scope':'actor_read','expires_at':now+28800,'idle_expires_at':now+900}
+            self.absolute=result['expires_at']
         elif op=='actor.revoke':result={'revoked':True}
         else:
-            result={'scope':'actor_read','expires_at':NOW+28800,'idle_expires_at':min(NOW+28800,now+900),
+            result={'scope':'actor_read','expires_at':self.absolute,'idle_expires_at':min(self.absolute,now+900),
                 'features':['profile'],'profile':{'username':'synthetic','fullname':'<img src=x onerror=alert(1)>',
                 'position':'Сотрудник','department':'Розница','account_state':'active'},**self.extra}
         return {'ok':True,'result':result}
@@ -104,6 +105,17 @@ class ActorWebTests(unittest.TestCase):
         self.assertEqual(403,self.call('/api/options',{})['status'])
         self.assertEqual(403,self.call('/api/activate',{})['status'])
         self.assertEqual(before,len(self.remote.calls))
+    def test_response_clock_is_sampled_after_private_transport_latency(self):
+        request=self.remote.request
+        def delayed(op,payload):
+            if op in ('actor.open','actor.status'):self.now+=2
+            return request(op,payload)
+        self.remote.request=delayed
+        self.activate()
+        result=self.call('/api/status',{})
+        self.assertEqual(200,result['status'],result['body'])
+        self.assertIn('Max-Age=900',result['headers']['Set-Cookie'])
+        self.assertEqual(NOW+2+28800,result['body']['expires_at'])
     def test_restart_discards_ram_authority_and_bridge_signer_accepts_only_named_operations(self):
         self.activate();self.app=self.module.OnboardingApp(self.app.origin,self.app._bot_token,self.remote,clock=lambda:self.now)
         self.assertFalse(self.call('/api/bootstrap')['body']['authenticated'])

@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "305b2d34e5ceffb16d8cfa69a33ddf3b5ef5811e",
+    "moodle/local/ustar": "a5bb26ec0750d7e3debf0a22691c422d3ba24350",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
@@ -269,7 +269,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/actor_service.php",
-      "sha256": "e80f956c0941ca104acaedfb92bbde7d2f57a1b342378157fd38389d4f89e138"
+      "sha256": "162827dbcf85b7e32d188dd33bf7f1935c61adddb5c4881632767a400edd5c02"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bridge_auth.php",
@@ -1097,7 +1097,7 @@
     },
     {
       "path": "moodle/local/ustar/db/install.xml",
-      "sha256": "dc7e00ff7986e1f715486c666cb288f889fdb4b65aa4a21e202d02c78950c0d7"
+      "sha256": "cea5338bd913baafa7a3ca24739f30c99cb3cb3071545d8b83abec798d20245f"
     },
     {
       "path": "moodle/local/ustar/db/services.php",
@@ -1833,7 +1833,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_actor_test.php",
-      "sha256": "c3f83d77a8a511d34ec44ce483c0ea3950645ef81b9558b63013967dd15ef246"
+      "sha256": "c4a8bcfdddbda4cb202306302d5543abbb933a3fe9e83b8adbf17ce33e5e2ccd"
     },
     {
       "path": "moodle/local/ustar/tests/connect_bridge_test.php",

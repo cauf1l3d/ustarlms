@@ -593,8 +593,8 @@
         <FIELD NAME="connexpires" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="connleaseuntil" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="connbegun" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="connleasehash" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
-        <FIELD NAME="connkeyid" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
+        <FIELD NAME="connleasehash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="connkeyid" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
       </FIELDS>
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
       <INDEXES>
@@ -1760,7 +1760,7 @@
         <FIELD NAME="parentid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
         <FIELD NAME="templateversionid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
         <FIELD NAME="seriesid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
-        <FIELD NAME="occurdate" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="" />
+        <FIELD NAME="occurdate" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10" />
         <FIELD NAME="timezone" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="64" DEFAULT="Europe/Moscow" />
         <FIELD NAME="kpiweight" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="10" />
         <FIELD NAME="requirephoto" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
@@ -1950,8 +1950,8 @@
         <FIELD NAME="provider" TYPE="char" LENGTH="16" NOTNULL="true"/>
         <FIELD NAME="tenant" TYPE="char" LENGTH="128" NOTNULL="true"/>
         <FIELD NAME="browserhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
-        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true" DEFAULT=""/>
-        <FIELD NAME="proofhash" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT=""/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="proofhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="confirmedlinkid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
@@ -2005,8 +2005,8 @@
         <FIELD NAME="authdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="actorready" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="lastseenat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="authstamp" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT=""/>
-        <FIELD NAME="scopestamp" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT=""/>
+        <FIELD NAME="authstamp" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="scopestamp" TYPE="char" LENGTH="64" NOTNULL="true"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="revokedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>

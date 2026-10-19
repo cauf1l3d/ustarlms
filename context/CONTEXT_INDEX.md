@@ -1,6 +1,7 @@
 # Индекс текущего контекста
 
-- **Текущий CON01B.4:** [browser BFF/form plan](proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [execution ledger](proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md). B3 native78/399 SUCCESS; new browser CI exact receipt PR106, no deployment.
+- **Текущий CON01C.1:** [Telegram receiver plan](proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md). B4 browser20/native78/399 SUCCESS; exact new receiver CI receipt PR106, no activation.
+- [B4 browser plan](proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md) — завершён26219dac, не pending browser gate.
 
 [START_HERE](../START_HERE.md) → [project](project.yaml) → [STATE](roadmap/STATE.yaml) → [ACTIVE](tasks/ACTIVE.md).
 

@@ -1,5 +1,9 @@
 # Реестр кода, проверок и deployment evidence
 
+## 19Oct10:33МСК — CON01C.1 polling receiver candidate
+
+Base26219dac: Context39214124458/Review39214124509 SUCCESS,20Connect browser scenarios/78native399, DB artifact12168862316. Новая поставка worker-only: TelegramClient, local transport SQLite journal, private commands/personal launch, executable opt-in runtime. [План](../proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md)/[ledger](../proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md).41new tests/full639r16/30skips PASS; source structural/context и exact final CI — PR106. Prior PHP/Chromium local gaps не подменяются fake PASS. Candidate addon2026101902/542/99 unchanged, accepted production526/93 отдельно. Нет live token/API writes/deploy/relay/main merge,0agents. Прежний B4 pre-CI snapshot ниже superseded exact SUCCESS receipt, не повод переделывать форму.
+
 ## 19Oct09:55МСК — CON01B.4 private browser BFF/form candidate
 
 Base d4f7c1bd exact B3 evidence: Context39192666105/Review39192666066 SUCCESS,78native/399assertions, fresh/upgrade/repeat +4concurrency PASS, DB artifact12160004274. Новый worker-only slice добавляет OnboardingApp, bounded RAM browser sessions, canonical safe errors и mobile6field UI. [План/границы](../proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md). Local23web tests RED→GREEN, full598r16/30skips PASS. Native PHP locally unavailable, Chromium CDN ZIP failure; exact new browser/native/source CI receipt публикуется в PR106, не подменяется старым B3. Candidate addon2026101902/542files/99tables и production526/93 unchanged. Нет deployment/relay/receiver/full login,0subagents; full-RC/deployment не заявлены.

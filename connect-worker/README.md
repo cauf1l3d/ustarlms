@@ -1,5 +1,33 @@
 # USTAR Connect — начало разработки
 
+## Текущий CON01C.1 — Telegram polling и персональная кнопка
+
+Owner19Oct10:33МСК. [План/контракт](../context/proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md), [ledger](../context/proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md). `TelegramClient` выполняет только getMe/getWebhookInfo/getUpdates/sendMessage с TLS-проверкой и без redirects/ambient proxy. Для существующего Xray допускается **явный** `telegram_proxy` вида `http://127.0.0.1:PORT` либо IPv6 loopback; это HTTP CONNECT только к фиксированному Telegram API. Маршруты/DNS и настройки сети хоста не меняются. Ошибки и CLI выводят фиксированные коды, не upstream URL с Bot API token.
+
+`TelegramReceiver.step()` проверяет bot ID/username, отсутствие webhook и при enabled-onboarding — наличие Main Mini App. Он принимает только свежие entity-marked /start, /academy, /help из личного чата, где from.id=chat.id и отправитель не бот. Группы, пересылки, guest/business/via_bot, свободный текст/аргументы и callback mutations не исполняются. Получение update через этот TLS-клиент — trusted provider boundary; данный parser нельзя подключать к непроверенному публичному webhook JSON.
+
+Для /start и /academy worker вызывает existing launch.create и отправляет URL-кнопку `https://t.me/BOT_USERNAME?startapp=ul1_...`. Это Main Mini App direct link: Telegram помещает ticket в signed initData.start_param; URL отдельного web_app с похожим query не заменяет его. Moodle по-прежнему проверяет subject, одноразовость и expiry. Launch ticket — не Moodle session и не роль. Копирование ссылки другому аккаунту не переносит доступ.
+
+**Ключи:** ticket также связан с bridge key ID. Receiver launch.create и BFF launch.exchange используют **один согласованный provider key ID/secret**. Отдельный launch-only key ID не совместим с уже реализованным exchange. Выберите явный allowlist текущего worker: launch.create,launch.exchange,entry.revoke,registration.options,registration.submit,registration.status; не ссылку на растущую OPERATIONS. Bot API token — отдельный credential; console/INF06 token и аккаунты не используются.
+
+`receiver_journal.Journal` — локальные SQLite transport receipts и cursor, не кадровая база. Private0700 directory (уже существующий),0600 DB/lock, trusted ancestor ownership, no symlink/hardlink/permission repair, exclusive flock, FULL transactions. Тот же bot tenant обязателен при restart. Receipts хранят update ID, identity hash, state/reason/time и provider message ID7дней; не сохраняют тексты, username/profile, пароль, token, URL или launch secret. Prune максимум500/poll, cap10000rows/64MiB SQLite. `forget_identity` убирает hash, сохраняя dedup. Это не общий завершённый privacy audit.
+
+Перед внешними действиями фиксируются creating/sending; terminal receipt и следующий offset записываются атомарно. После аварии незавершённое становится uncertain; **автоповтора отправки нет**. Пользователь может отправить новый /start. Definite429/403 отделены от transport/5xx uncertainty, Retry-After сохраняется через restart;401/409 останавливают receiver. `sent` здесь означает Bot API accepted, не прочтение пользователем. Доставка canonical HRD/learning notifications — следующий отдельный consumer, этот журнал её не заменяет.
+
+Polling25с/HTTP35с, batch50/response2MiB, max3launch attempts/identity/600с, команда120с/skew30 проверяется после long poll и перед каждым действием. После успешного пустого polling response следующий offset0: предыдущий offset уже подтверждён Telegram, а новые IDs после недели простоя могут быть случайными. После24ч отсутствия успешного poll offset0 и possible history gap; отрицательных offset/drop_pending нет. Пустой журнал изначально не доказывает полноту истории. Stop проверяется до poll/между событиями; текущая bounded операция может закончиться, необработанный хвост не подтверждается.
+
+`receiver_runtime` загружает **owner-private JSON** и отдельные secret files. [receiver.example.json](receiver.example.json) — шаблон с onboarding_enabled=false; он сам не является готовой secret config и не устанавливает службы. Config/token/key0400/0600; state dir0700 того же UID; custom CA должен быть trusted regular file без group/other write. Default CLI выполняет локальную валидацию без сети и без создания journal. Только явный `--run` разрешает provider reads/replies. Это режим будущей согласованной установки, не команда текущего deployment.
+
+Development commands из корня checkout (продублированы в чате):
+```bash
+python -m unittest discover -s tests/r16 -p test_connect_receiver.py -v
+python -m unittest discover -s tests/r16 -v
+PYTHONPATH=connect-worker python -m ustar_connect.receiver_runtime --help
+python scripts/check_context.py
+```
+
+До activation нужны отдельный Academy bot/token, подтверждение Main Mini App URL в BotFather, согласованные private bridge key/scopes/TLS, worker UID/state/secrets, выбранный внешний HTTPS relay и реальный private receiver ACK. getMe.has_main_web_app проверяет только наличие приложения, не верность BFF URL/сертификата. Ни BotFather/webhook, ни server1/console/network не менялись. Ниже B4 и более ранние checkpoints; B4 completed at26219dac с20browser/78native399 CI PASS, не повторять pending browser gate. Exact current source/native CI receipt — PR106.
+
 ## Текущий CON01B.4 — браузерная регистрация, без внешней установки
 
 Owner19Oct09:55МСК. [План/точный контракт](../context/proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](../context/proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md). `ustar_connect.onboarding.OnboardingApp(origin, bot_token, bridge, clock=...)` — приватный WSGI callable и allowlisted assets `web/`, **не production listener/установщик**. Не запускать через публичный wsgiref. Bot token и bridge key остаются только у private worker, не edge/браузера/репозитория. UI — отдельная небольшая dependency-free форма, legacy frontend не используется. Более ранние разделы ниже — датированные checkpoints.

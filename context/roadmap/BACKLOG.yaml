@@ -442,9 +442,9 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON-01B4_browser_onboarding
-  owner_priority: explicit_request19Oct0955_roadmap_and_next_slice
-  current_summary: B3 canonical signup verified78native399assertions;B4 private browser BFF and mobile form598local30skips;exact browser CI in PR106;no real receiver/relay/login/deployment.
+  phase: CON-01C1_telegram_polling_receiver
+  owner_priority: explicit_request19Oct1033_continue
+  current_summary: B4 verified20browser78native399;C1 polling/private launch and SQLite cursor/dedup/uncertainty639local30skips;exact CI in PR106;no live bot/relay/login/delivery/deployment.
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors
@@ -469,7 +469,7 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: CON01B4_browser_CI_external_access_actor_delivery_gates_no_deploy
+execution_gate: CON01C1_receiver_CI_live_provider_external_access_actor_delivery_gates_no_deploy
 owner_selected_order:
 - DOC-03
 - INF-06

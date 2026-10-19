@@ -1,5 +1,7 @@
 # USTAR Connect — единый бот, роли и внешние приложения
 
+Актуализация19Oct10:33МСК: [CON01C.1 polling receiver](USTAR_CONNECT_CON01C1_PLAN_20261019.md)/[ledger](USTAR_CONNECT_CON01C1_PROGRESS_20261019.md) реализует fixed TLS Bot API, durable transport-only journal/cursor/dedup/uncertainty, private fresh commands и personal Main Mini App startapp. Receiver и BFF обязаны использовать один bridge key ID для текущего launch protocol. Executable runtime opt-in; реальный token/service/relay не включены. B4 verified20browser/78native399 на26219dac. No new Academy business tables/role grants; canonical login/step-up/outbox delivery остаются следующими.
+
 Актуализация19Oct09:55МСК: canonical signup B3 d4f7c1bd verified78native/399/schema+concurrency. [B4](USTAR_CONNECT_CON01B4_PLAN_20261019.md) добавляет приватный browser BFF и узкую мобильную форму. Для6полей выбран dependency-free JS/CSS вместо предложенного React/Vite; API не меняется, legacy frontend не возобновляется. Private worker проверяет initData, edge не получает ключи; outbound relay/external origin и bot receiver не включены. Full role Mini App/native LMS и внешняя доступность остаются отдельными gates.
 
 Статус: **PROPOSED API, редакция 3 от 19.10.2026, Europe/Moscow**. Первая редакция18Oct сохранена в истории PR106. Это проект контрактов, а не реализованный API, принятый ADR или установка. Исходный запрос владельца00:49 и результаты пульта00:41: [receipt](../runtime/connect_owner_priority_20261019.json). Субагенты не запускались.

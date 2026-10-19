@@ -1,10 +1,14 @@
 # Активные задачи USTAR
 
-## Текущая работа INTEGRATIONS-01 / CON01B.4 —19Oct09:55МСК
+## Текущая работа INTEGRATIONS-01 / CON01C.1 —19Oct10:33МСК
+
+Telegram polling receiver/private startapp: [план](../proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md)/[ledger](../proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md). SQLite metadata cursor/dedup/exclusive lock, no message bodies; uncertain после interrupted external call, no automatic resend; cooldown/freshness/ownership/startup webhook checks; opt-in executable runtime.41new tests/local639r16/30skips PASS, exact new CI PR106. Prior B4 completed26219dac Context39214124458/Review39214124509 SUCCESS,20browser/78native399. Launch issue/exchange должны иметь один bridge key ID. Bot/relay/credentials/службы не активировались,0subagents, no server1/main/network changes. Следом canonical login/recovery/link/actor step-up, notification outbox leases/delivery/preferences/ACK и approved external relay/live acceptance.
+
+## Завершённый срез CON01B.4 — история09:55МСК
 
 Canonical signup CON01B.3 d4f7c1bd завершён: Context39192666105/Review39192666066 SUCCESS,78native tests/399assertions,4concurrency/schema parity PASS. Следующий срез [browser plan](../proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md)/[ledger](../proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md): private WSGI BFF, exact browser routes, Telegram verified launch, rotated HttpOnly cookie+CSRF, bounded volatile sessions, six-field mobile form, current own status, sanitized canonical validation. No new schema, candidate542/99 unchanged. Local598r16/30skips PASS; exact browser/new CI receipt PR106. Local Chromium download failed, не заявлять local browser PASS. Не включены receiver/polling/delivery, relay/external origin, remote login/step-up.0subagents/no deploy/main merge. Далее trusted receiver+outbox и внешняя доступность/actor gates; ролевые экраны и Bitrix/WhatsApp отдельными срезами. Ниже предыдущий dated checkpoint.
 
-## Текущая работа INTEGRATIONS-01 / CON-01B.3
+## Завершённый срез CON01B.3 — история
 
 Owner19Oct05:30 продолжил после81a1be76: Context39188208182/Review39188208139 SUCCESS,22native tests/87assertions и concurrent entry PASS. [План CON01B.3](../proposals/USTAR_CONNECT_CON01B3_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B3_PROGRESS_20261019.md): canonical register completion сохраняет first link/receipt/own entry в своей transaction и email lock; private options/submit/status; receipt HMAC без plaintext/быстрого password digest. Same command/form replay не создаёт дубликат, email/login collision не auto-link. Candidate2026101902/542files/99tables, не production baseline526/93. Test-only57111574 дал2expected native failures; implementation written after RED, локально575r16/19skips PASS. Новый native CI ожидается; exact final receipt в PR106. Existing HRD review/notifications сохраняются; remote HRD actor/step-up, public BFF/форма и реальный Telegram delivery ещё впереди. Endpoint disabled,0субагентов, main/network/server1 не менялись.
 

@@ -1,5 +1,7 @@
 # USTAR Connect — контракты и сопоставление с исходниками
 
+19Oct10:33МСК: [C1 receiver contract](USTAR_CONNECT_CON01C1_PLAN_20261019.md): only trusted fixed Telegram API update→private command→existing launch.create, Bot API send receipt и local transport cursor. Не public webhook handler или caller actor grant. Main Mini App direct startapp даёт signed start_param; create/exchange имеют один bridge key ID. Canonical notifications, remote HRD actor и full login этим срезом не реализуются. Exact evidence PR106.
+
 19Oct09:55МСК update: private backend B3 verified78native/399; [CON01B.4 browser contract](USTAR_CONNECT_CON01B4_PLAN_20261019.md) реализует узкие /api/bootstrap, launch, options, status, register, logout на private worker, не полный /connect/v1 API ниже. HttpOnly/CSRF-bound volatile onboarding cookie, server-owned command, no public launch.create/bridge secrets/employee capability. Real receiver/edge/deploy/actor step-up отсутствуют; exact CI receipt PR106.
 
 19.10.2026, Europe/Moscow. **Public API PROPOSED; CON01B.3 private canonical signup candidate**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Публичные пути API ниже ещё не реализованы; отдельный private endpoint описан в конце. Исходный review основан на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.

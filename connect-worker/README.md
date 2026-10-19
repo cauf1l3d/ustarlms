@@ -1,5 +1,28 @@
 # USTAR Connect — начало разработки
 
+## Текущий CON01B.4 — браузерная регистрация, без внешней установки
+
+Owner19Oct09:55МСК. [План/точный контракт](../context/proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](../context/proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md). `ustar_connect.onboarding.OnboardingApp(origin, bot_token, bridge, clock=...)` — приватный WSGI callable и allowlisted assets `web/`, **не production listener/установщик**. Не запускать через публичный wsgiref. Bot token и bridge key остаются только у private worker, не edge/браузера/репозитория. UI — отдельная небольшая dependency-free форма, legacy frontend не используется. Более ранние разделы ниже — датированные checkpoints.
+
+Форма проверяет Telegram signed initData на worker и расходует уже выданный ul1_ launch через existing bridge. Нет public launch.create/универсального proxy. Реальный bot receiver, выпускающий персональный launch, и outbound relay ещё не написаны. Поэтому кнопка настоящего бота/внешний доступ данным коммитом не включаются.
+
+`GET /api/bootstrap` выдаёт CSRF с Secure/HttpOnly/SameSite=Strict __Host-cookie; API требует X-Ustar-Connect:1, все POST — exact Origin+CSRF. HTTPS/Host проверяются по trusted WSGI metadata, forwarded headers игнорируются. POST /api/launch принимает только init_data; /api/options и /api/status — {}; /api/register — только6canonical полей; /api/logout закрывает локальную сессию даже при сбое upstream revoke. Service keys/session/browser/command не возвращаются браузеру. TTL120с до launch и максимум600с после; cookie/CSRF ротируются. Не сохраняются password/form/initData в store или web storage.
+
+Временное состояние только в ограниченной памяти одного процесса:500sessions, bootstrap30/min aggregate,60API/min/session,3launch и5submit/session,4upstream slots. Restart/expiry требует нового подтверждённого запуска; неизвестная cookie bootstrap заменяется новой preauth-cookie, не выдаёт старый access. Нет гарантии multi-process/session affinity или достаточной production ёмкости. Canonical30registration/15min не отключён. Продакшен needs отдельный capacity/abuse gate.
+
+ur1_ command выбирает сервер и сохраняет для retries. Нет automatic mutation retries. При обрыве после commit сначала свой статус; при ручном retry пароль вводится повторно, тот же command+exact form возвращает canonical receipt, изменённый payload — conflict. Форма не показывает «уведомление в TG доставлено»: canonical HRD notice и actual Telegram receiver ACK различаются. Approved status не является учебной Moodle session.
+
+Deployment gate: утверждённый внешний HTTPS origin, bounded authenticated outbound-only relay с metadata/header policy, request/body/cookie logging off, private worker UID/secrets, TLS CA checks, single-process operational model/restart, safe error telemetry и ограничения на ingress. Офисные inbound порты/default routes/DNS не меняются. Совместимость cookie в native WebView и Telegram Web iframe ещё проверяется отдельно: Strict cookie может блокироваться third-party browser policy; frame CSP alone не доказывает вход в Web Telegram. CSP разрешает официальный SDK telegram.org и frame origin web.telegram.org; никаких CORS wildcard, unsafe-inline или публичных SSH/пульта/LAN.
+
+Проверки разработки из корня checkout, **не команды установки на server1**:
+```bash
+python -m unittest discover -s tests/r16 -p test_connect_web.py -v
+python -m unittest discover -s tests/r16 -v
+node tests/mobile/connect.cjs
+python scripts/check_context.py
+```
+Browser acceptance использует реальные assets и synthetic API: это не живой Telegram, Moodle или доказательство внешней доступности. Exact CI receipt — PR106. Production addon manifest/version2026100204/theme2026100202 и candidate2026101902/542files/99tables не менялись.
+
 CON-01A: offline Python3.12 standard-library primitives, без службы/HTTP API/установщика. Это не готовый бот или работающая регистрация.
 
 - `ProviderIdentity`: стабильный tuple provider/tenant/subject, без Moodle userid/roles. Конструктор не доказывает аутентификацию.

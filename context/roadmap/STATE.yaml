@@ -1,16 +1,15 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_atomic_canonical_signup
-stage_label: 'Connect CON01B.3: регистрация pending и atomic first link/receipt'
-current_activity: 'Owner19Oct05:30MSK продолжил. Base81a1be76 проверен: Context39188208182/Review39188208139 SUCCESS,
-  native22tests/87assertions + concurrent entry PASS. Test-only57111574/run39190794829:24tests/90assertions,
-  ровно2expected failures canonical completion/rollback. Затем реализован candidate2026101902/542files/99tables:
-  private registration options/submit/status, canonical registration completion внутри email lock/transaction,
-  first provider link + durable receipt + own entry snapshot, no employee grant. Existing HRD review/notification
-  outbox не заменяются. Локально575r16/19skips PASS; новый native implementation CI ожидается, exact final receipt в PR106.
-  Accepted baseline e1d57f5b/526files/93tables неизменен. Endpoint disabled; нет HTTPS forms/public BFF/real receiver,
-  native deploy/network change/main merge. Journal/heartbeat/platform upgrades deferred. Субагенты0.'
+stage: connect_browser_onboarding
+stage_label: 'Connect CON01B.4: private browser BFF и форма регистрации'
+current_activity: 'Owner19Oct09:55MSK запросил roadmap и следующий срез. Base d4f7c1bd canonical signup завершён:
+  Context39192666105/Review39192666066 SUCCESS,78native tests/399assertions и4concurrency/schema parity PASS.
+  Worker-only BFF и6field mobile UI: HTTPS/Host/Origin/CSRF,rotated HttpOnly cookie,bounded RAM sessions,
+  safe canonical errors,stable server command,status/no fake success. Local598r16/30skips PASS; missing local PHP
+  и Chromium/CDN failure отмечены; exact new CI/browser receipt в PR106. Candidate2026101902/542files/99tables
+  и accepted e1d57f5b/526/93 unchanged. Нет реального receiver/delivery/relay/login/remote actor/deploy;
+  endpoint disabled,main/network/server1/пульт не менялись. Journal/heartbeat/platform upgrades deferred.0subagents.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -79,6 +78,8 @@ audit:
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
 - START_HERE.md
+- context/proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md
 - context/proposals/USTAR_CONNECT_CON01B3_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_CON01B3_PROGRESS_20261019.md
 - context/proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md

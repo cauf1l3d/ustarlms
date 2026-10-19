@@ -1,5 +1,9 @@
 # Реестр кода, проверок и deployment evidence
 
+## 19Oct09:55МСК — CON01B.4 private browser BFF/form candidate
+
+Base d4f7c1bd exact B3 evidence: Context39192666105/Review39192666066 SUCCESS,78native/399assertions, fresh/upgrade/repeat +4concurrency PASS, DB artifact12160004274. Новый worker-only slice добавляет OnboardingApp, bounded RAM browser sessions, canonical safe errors и mobile6field UI. [План/границы](../proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md). Local23web tests RED→GREEN, full598r16/30skips PASS. Native PHP locally unavailable, Chromium CDN ZIP failure; exact new browser/native/source CI receipt публикуется в PR106, не подменяется старым B3. Candidate addon2026101902/542files/99tables и production526/93 unchanged. Нет deployment/relay/receiver/full login,0subagents; full-RC/deployment не заявлены.
+
 ## Уточнение19Oct2026 — accounts/link приняты в сообщённом объёме
 
 [Owner receipt00:41МСК](connect_owner_priority_20261019.json): учётки пульта и personal Telegram link работают, service journal показывает прежнее сообщение. Journal/heartbeat отложены. Exact native SHA, полная role/alert/restore приёмка не сообщены. Проверенный release sourcee5b87818/contextde4544d9 находится в PR103; исходники/CI не подменяют native evidence. Owner00:49 выбрал [Connect architecture/PR106](../proposals/USTAR_CONNECT_RFC_20261018.md), design-only; deployment/merge/сеть/БД агентом не менялись.

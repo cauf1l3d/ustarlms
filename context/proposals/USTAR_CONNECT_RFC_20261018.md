@@ -1,5 +1,7 @@
 # USTAR Connect — единый бот, роли и внешние приложения
 
+Актуализация19Oct09:55МСК: canonical signup B3 d4f7c1bd verified78native/399/schema+concurrency. [B4](USTAR_CONNECT_CON01B4_PLAN_20261019.md) добавляет приватный browser BFF и узкую мобильную форму. Для6полей выбран dependency-free JS/CSS вместо предложенного React/Vite; API не меняется, legacy frontend не возобновляется. Private worker проверяет initData, edge не получает ключи; outbound relay/external origin и bot receiver не включены. Full role Mini App/native LMS и внешняя доступность остаются отдельными gates.
+
 Статус: **PROPOSED API, редакция 3 от 19.10.2026, Europe/Moscow**. Первая редакция18Oct сохранена в истории PR106. Это проект контрактов, а не реализованный API, принятый ADR или установка. Исходный запрос владельца00:49 и результаты пульта00:41: [receipt](../runtime/connect_owner_priority_20261019.json). Субагенты не запускались.
 
 Проверены main d9655074db9a06281fe16f378dbdbe1d279104a0, application baseline e1d57f5bc28f6964afd20aeff7620345b34a80fe (526 plugin/theme файлов,93 таблицы), PR103 head de4544d97f4f77036cfbb358ab79273361e6a6e5 и PR105 head02fd394fb90b44ad299374fd678b12543e7681ab. PR103/105 не merged. Текущая работа — архитектура INTEGRATIONS-01; журнал служб пульта и внешний heartbeat отложены владельцем.

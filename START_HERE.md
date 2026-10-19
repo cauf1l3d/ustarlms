@@ -2,6 +2,8 @@
 
 ## Текущий этап 19 октября 2026
 
+Обновление09:55МСК: владелец попросил остаток этапов и следующую реализацию. **CON01B.3 проверен**: d4f7c1bd, Context39192666105/Review39192666066 SUCCESS,78native tests/399assertions + schema/concurrency PASS. Текущий **CON01B.4** — приватный browser BFF и мобильная форма регистрации: [план](context/proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](context/proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md). Без нового HR store/schema, без public listener/реального бота/установки. Local598r16/30skips PASS, exact final CI receipt — PR106. Внешний HTTPS relay, canonical login/step-up, delivery/receiver и ролевой клиент ещё впереди; далее Bitrix/WhatsApp. Предыдущие строки ниже — checkpoints, не повод переоткрывать закрытые native gates.
+
 Приоритет владельца01:28МСК — **INTEGRATIONS-01**, продолжение05:30 — **CON01B.3: canonical signup/pending/first link**, [PR106/RFC](context/proposals/USTAR_CONNECT_RFC_20261018.md), [контракты](context/proposals/USTAR_CONNECT_CONTRACTS_20261019.md). В00:41 владелец подтвердил учётные записи пульта и личную Telegram-привязку; журнал всё ещё показывает прежнее сообщение. Журнал и внешний heartbeat явно отложены. [Датированный receipt](context/runtime/connect_owner_priority_20261019.json).
 
 Рабочий продукт — Moodle + `local_ustar` + `theme_ustar`, parent boost. `frontend/` — legacy Next.js, исключённый из активного CI/выпуска. Проверки native UI темы и плагина сохранены.

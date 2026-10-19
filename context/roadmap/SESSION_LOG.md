@@ -1,5 +1,9 @@
 # Журнал выполнения roadmap
 
+## 2026-10-19 09:55МСК — CON01B.4 browser onboarding
+
+Owner запросил остаток этапов и начать следующий. B3 d4f7c1bd подтверждён Context39192666105/Review39192666066 SUCCESS,78native/399assertions, schema parity и4concurrency PASS. Реализованы private worker WSGI, safe BridgeRejected, bounded ephemeral browser sessions+CSRF/cookie rotation и six-field responsive UI с theme/status/explicit unknown outcome. [План](../proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md).23web boundary tests PASS после RED, full598r16/30environment skips PASS; PHP отсутствует локально, Chromium download failed, browser acceptance awaits exact CI receipt PR106. Schema/source addon542/99 не менялись; новый public listener/relay/bot receiver/login/remote HRD actor отсутствуют. No production/network/main merge,0subagents. Дальше реальные receiver/delivery и external/actor gates, role client, Bitrix/WhatsApp.
+
 ## 2026-09-20 — первый этап рефакторинга, R01 review
 
 Владелец: Codex. Код: `e657cda7dc29750511535b94eee85b22ca7fdb86`,

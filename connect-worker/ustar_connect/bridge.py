@@ -15,6 +15,19 @@ from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler, HT
 PATH = '/local/ustar/connect_bridge.php'
 OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
               'registration.options', 'registration.submit', 'registration.status'}
+REJECTIONS = {'validation_failed', 'invalid_entry', 'revoked_entry', 'restart_required',
+              'expired_launch', 'launch_consumed', 'replayed_proof', 'launch_mismatch',
+              'idempotency_conflict', 'already_registered', 'receipt_expired', 'rate_limited'}
+FORM_FIELDS = {'username', 'password', 'email', 'firstname', 'lastname', 'departmentid'}
+
+
+class BridgeRejected(ValueError):
+    """Only fixed reason codes/field names cross the HTTP boundary."""
+    def __init__(self, reason: str, field: str | None = None):
+        if reason not in REJECTIONS or (reason == 'validation_failed' and field not in FORM_FIELDS | {'form'}):
+            raise ValueError('bridge_unavailable')
+        super().__init__(reason)
+        self.reason, self.field = reason, field if reason == 'validation_failed' else None
 
 
 def _token(value: str, prefix: str) -> str:
@@ -94,5 +107,20 @@ class BridgeClient:
             if not isinstance(value, dict):
                 raise ValueError('invalid_bridge_response')
             return value
-        except (URLError, HTTPError, OSError, ValueError):
+        except HTTPError as error:
+            rejection = None
+            try:
+                raw = error.read(16385)
+                value = json.loads(raw) if len(raw) <= 16384 else None
+                if (error.code in (403, 409, 422, 429) and isinstance(value, dict)
+                        and value.get('ok') is False):
+                    rejection = BridgeRejected(value.get('reason'), value.get('field'))
+            except (OSError, ValueError, TypeError, RecursionError):
+                pass
+            finally:
+                error.close()
+            if rejection is not None:
+                raise rejection from None
+            raise ValueError('bridge_unavailable') from None
+        except (URLError, OSError, ValueError, RecursionError):
             raise ValueError('bridge_unavailable') from None

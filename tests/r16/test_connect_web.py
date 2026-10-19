@@ -354,6 +354,7 @@ class LinkBrowserBoundary(unittest.TestCase):
         self.assertEqual(200, result['status'], result['body'])
         self.assertEqual('link_confirmation', result['body']['scope'])
         self.assertTrue(result['body']['academy_confirmation_required'])
+        self.assertEqual('8727627355', result['body']['telegram_id'])
         self.assertNotEqual(old_cookie, self.web.cookie)
         operation, payload = self.web.remote.calls[-1]
         self.assertEqual('link.claim', operation)

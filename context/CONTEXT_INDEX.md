@@ -1,5 +1,7 @@
 # Индекс текущего контекста
 
+- **Текущий C2:** [план](proposals/USTAR_CONNECT_CON01C2_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md); native owner management + Mini App link receipt. Final exact CI receipt PR106. Полный remote login/step-up/delivery ещё не реализованы.
+
 - **Текущий CON01C.1:** [Telegram receiver plan](proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md). B4 browser20/native78/399 SUCCESS; exact new receiver CI receipt PR106, no activation.
 - [B4 browser plan](proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md) — завершён26219dac, не pending browser gate.
 

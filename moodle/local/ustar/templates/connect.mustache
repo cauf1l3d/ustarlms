@@ -1,0 +1,50 @@
+<main class="u-product-page u-ux-tools">
+  <header class="u-product-head"><div><h1>Мессенджеры</h1><p>{{fullname}} · Связи вашей учётной записи Академии</p></div>
+    <a class="u-btn" href="{{profileurl}}">Личный кабинет</a></header>
+  {{#error}}<div class="alert alert-warning" role="alert">{{error}}</div>{{/error}}
+  {{#confirmed}}<div class="alert alert-success" role="status">Связь подтверждена. Отправьте боту новый /start. Права определяет ваша учётная запись Академии.</div>{{/confirmed}}
+  <section class="u-panel u-ux-form">
+    <h2>Подключить Telegram</h2>
+    <ol><li>Создайте персональную ссылку и откройте её в своём Telegram.</li>
+      <li>В приложении бота дождитесь сообщения об отправке подтверждения.</li>
+      <li>Вернитесь сюда в тот же браузер, проверьте Telegram ID и подтвердите связь.</li></ol>
+    <p>Не передавайте персональную ссылку другим людям. Она действует 10 минут. Пароль Академии в чат не отправляется.</p>
+    {{#enabled}}
+    <form method="post" action="{{url}}" autocomplete="off">
+      <input type="hidden" name="action" value="issue"><input type="hidden" name="sesskey" value="{{sesskey}}">
+      <button class="u-btn u-btn--primary" type="submit">Создать персональную ссылку</button>
+    </form>
+    {{/enabled}}
+    {{^enabled}}<p>Создание новых ссылок пока не настроено или недоступно в этой сессии. Отзыв доступен владельцу уже подключённой связи.</p>{{/enabled}}
+    {{#challenge}}
+    <section class="u-ux-question" aria-label="Подтверждение Telegram">
+      <h3>Персональная ссылка готова</h3><p>Действует до {{expires_label}}.</p>
+      {{#launch_url}}<p><a class="u-btn u-btn--primary" href="{{launch_url}}" target="_blank" rel="noopener noreferrer">Открыть бота и подтвердить Telegram</a></p>{{/launch_url}}
+      <form method="post" action="{{url}}" autocomplete="off">
+        <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="code" value="{{code}}">
+        <input type="hidden" name="action" value="preview">
+        <button class="u-btn" type="submit">Проверить подтверждение Telegram</button>
+      </form>
+      {{#claimed}}
+      <p>Подтверждён Telegram ID: <strong>{{subject}}</strong>. Сверьте его с ID, показанным при подтверждении в приложении бота. Если ID вам не принадлежит, не подтверждайте связь.</p>
+      <form method="post" action="{{url}}" autocomplete="off">
+        <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="code" value="{{code}}">
+        <input type="hidden" name="action" value="confirm">
+        <button class="u-btn u-btn--primary" type="submit">Это мой Telegram — подтвердить связь</button>
+      </form>
+      {{/claimed}}
+      {{^claimed}}<p role="status">Подтверждение Telegram ещё не получено. Связь пока не создана.</p>{{/claimed}}
+    </section>
+    {{/challenge}}
+  </section>
+  <section class="u-panel u-ux-form"><h2>Мои подключения</h2>
+    {{#links}}<article class="u-ux-question"><h3>{{providerlabel}}</h3><p>Аккаунт канала: {{subject}} · Контур: {{tenant}}</p>
+      {{#linked}}<p>Связь активна. Доступ зависит от текущего состояния учётной записи и прав Академии.</p>
+      <form method="post" action="{{url}}"><input type="hidden" name="action" value="revoke">
+        <input type="hidden" name="linkid" value="{{id}}"><input type="hidden" name="sesskey" value="{{sesskey}}">
+        <button class="u-btn" type="submit">Отозвать связь с {{providerlabel}}</button></form>{{/linked}}
+      {{^linked}}<p>Связь отозвана. Старая ссылка подтверждения её не восстановит.</p>{{/linked}}
+    </article>{{/links}}
+    {{^haslinks}}<p>Подтверждённых подключений пока нет.</p>{{/haslinks}}
+  </section>
+</main>

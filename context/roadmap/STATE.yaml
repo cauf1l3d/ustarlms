@@ -1,15 +1,9 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_telegram_polling_receiver
-stage_label: 'Connect CON01C.1: Telegram polling, durable cursor и персональный launch'
-current_activity: 'Owner19Oct10:33MSK продолжил. B4 base26219dac verified Context39214124458/Review39214124509 SUCCESS,
-  20browser scenarios,78native tests/399assertions,4concurrency/schema parity PASS. C1 добавляет fixed TLS Telegram API,
-  private fresh commands,SQLite cursor/dedup/exclusive lock/uncertainty,restart/backoff и Main Mini App startapp.
- 41new tests/local639r16/30skips PASS; exact new CI receipt PR106. Default CLI local validation, --run opt-in,
-  onboarding disabled в примере. Receiver/BFF launch используют один согласованный bridge key ID. Candidate addon
-  2026101902/542files/99tables и accepted e1d57f5b/526/93 unchanged. Нет live bot/relay/login/actor/delivery/deployment,
-  endpoint disabled,main/network/server1/пульт не менялись. Journal/heartbeat/platform upgrades deferred.0subagents.'
+stage: connect_confirmed_link_management
+stage_label: 'Connect CON01C.2: native owner management и Telegram confirmed linking'
+current_activity: 'CON01C.2: управление собственными messenger links в native Moodle и signed uc1_ claim в Mini App. Личный кабинет → Мессенджеры → персональная ссылка → Telegram → второй Academy confirm в той же сессии; owner-only revoke/list. RAM receipt не onboarding/employee grant; timeout uncertain без автоповтора. Candidate2026101903/546files/99tables, production e1d57f5b/526/93 unchanged. 8new WSGI tests,31web/full647r16 OK/30environment skips. Native RED d9114daa/39234234916: exactly6missing-class errors,78previous tests pass. Browser RED2c971f93/39235237752: missing confirmation screen; prior20onboarding/60mobile pass. Final new native/browser CI receipt — PR106; читать exact final receipt перед продолжением, не переоткрывать C2 по старой pre-CI записи. Новый business bot @ustarcorp_bot, секрет из чата не использован/не сохранён, требуется перевыпуск владельцем. CrazeDNS em2025.netcraze.pro предложен; rule/cert/availability ещё не приняты. Full canonical remote login/recovery/MFA/actor step-up, canonical notification leases/delivery/preferences/ACK и role screens — остаток.0subagents/no main merge/no prod/router/network changes.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -78,6 +72,8 @@ audit:
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
 - START_HERE.md
+- context/proposals/USTAR_CONNECT_CON01C2_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md
 - context/proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md
 - context/proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md
@@ -150,5 +146,5 @@ do_not_repeat:
 development_candidate:
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: CON01B.3 atomic canonical signup and receipt; new native implementation CI pending
-  local_ustar_version: 2026101902
+  scope: CON01C.2 native link management and Mini App receipt; exact final CI receipt in PR106
+  local_ustar_version: 2026101903

@@ -1,6 +1,12 @@
 # Активные задачи USTAR
 
-## Текущая работа INTEGRATIONS-01 / CON01C.1 —19Oct10:33МСК
+## Текущий CON01C.2 — owner19Oct12:55МСК
+
+CON01C.2: управление собственными messenger links в native Moodle и signed uc1_ claim в Mini App. Личный кабинет → Мессенджеры → персональная ссылка → Telegram → второй Academy confirm в той же сессии; owner-only revoke/list. RAM receipt не onboarding/employee grant; timeout uncertain без автоповтора. Candidate2026101903/546files/99tables, production e1d57f5b/526/93 unchanged. 8new WSGI tests,31web/full647r16 OK/30environment skips. Native RED d9114daa/39234234916: exactly6missing-class errors,78previous tests pass. Browser RED2c971f93/39235237752: missing confirmation screen; prior20onboarding/60mobile pass. Final new native/browser CI receipt — PR106; читать exact final receipt перед продолжением, не переоткрывать C2 по старой pre-CI записи. Новый business bot @ustarcorp_bot, секрет из чата не использован/не сохранён, требуется перевыпуск владельцем. CrazeDNS em2025.netcraze.pro предложен; rule/cert/availability ещё не приняты. Full canonical remote login/recovery/MFA/actor step-up, canonical notification leases/delivery/preferences/ACK и role screens — остаток.0subagents/no main merge/no prod/router/network changes.
+
+[План](../proposals/USTAR_CONNECT_CON01C2_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md).
+
+## Завершённый C1 — датированная история / CON01C.1 —19Oct10:33МСК
 
 Telegram polling receiver/private startapp: [план](../proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md)/[ledger](../proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md). SQLite metadata cursor/dedup/exclusive lock, no message bodies; uncertain после interrupted external call, no automatic resend; cooldown/freshness/ownership/startup webhook checks; opt-in executable runtime.41new tests/local639r16/30skips PASS, exact new CI PR106. Prior B4 completed26219dac Context39214124458/Review39214124509 SUCCESS,20browser/78native399. Launch issue/exchange должны иметь один bridge key ID. Bot/relay/credentials/службы не активировались,0subagents, no server1/main/network changes. Следом canonical login/recovery/link/actor step-up, notification outbox leases/delivery/preferences/ACK и approved external relay/live acceptance.
 

@@ -200,7 +200,8 @@ class OnboardingApp:
                     cookie = self._sessions.rotate(cookie, session)
                     extra['Set-Cookie'] = self._set_cookie(cookie, 600)
                     return 200, {'ok': True, 'csrf': session.csrf, 'scope': 'link_confirmation',
-                                 'academy_confirmation_required': True}, 'application/json'
+                                 'academy_confirmation_required': True,
+                                 'telegram_id': proof.identity.subject}, 'application/json'
                 reply = self._request('launch.exchange', payload)
                 entry = _token(reply.get('session'), 'ue1')
                 expiry = reply.get('expires_at')

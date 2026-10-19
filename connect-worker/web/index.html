@@ -14,7 +14,7 @@
     <header><div><span class="brand">USTAR</span><p class="eyebrow">Корпоративная Академия</p></div>
       <button id="theme" class="quiet" type="button" aria-label="Переключить тему">Тёмная тема</button></header>
     <section class="intro"><p class="eyebrow">Единая учётная запись</p><h1>Ваш вход в Академию</h1>
-      <p>Создайте аккаунт и дождитесь решения HRD. Данные и статус заявки хранятся в Академии, а не в отдельной базе бота.</p></section>
+      <p>Создайте аккаунт и дождитесь решения HRD или подключите существующий аккаунт из личного кабинета Академии → Мессенджеры.</p></section>
     <ol class="steps" aria-label="Этапы доступа"><li>Аккаунт</li><li>Одобрение HRD</li><li>Доступ</li></ol>
     <section class="card status" aria-live="polite" aria-atomic="true">
       <span id="status-badge" class="badge">Подключение</span><h2 id="status-title">Проверяем защищённый вход</h2>
@@ -34,12 +34,12 @@
       <label>Пароль Академии<input id="password" name="password" type="password" autocomplete="new-password" maxlength="4096" required></label>
       <p class="muted">Политику пароля проверяет Академия. Не отправляйте пароль сообщением боту. После отправки поле очищается.</p>
       <button id="submit" class="primary" type="submit">Отправить заявку</button>
-      <details><summary>У меня уже есть аккаунт</summary><p>Не регистрируйтесь повторно. Войдите в действующую Академию и подтвердите привязку канала. Удалённый вход и привязка из этой формы ещё не подключены.</p></details>
+      <details><summary>У меня уже есть аккаунт</summary><p>Не регистрируйтесь повторно. Войдите в Академию обычным способом, откройте личный кабинет → Мессенджеры и создайте персональную ссылку. Откройте её в своём Telegram, затем вернитесь в тот же браузер Академии, сверьте ID и подтвердите связь. Если забыли пароль, используйте восстановление на странице входа Академии или обратитесь к HRD.</p></details>
     </form>
     <nav id="session-actions" hidden aria-label="Управление сессией">
       <button id="refresh" type="button">Проверить статус</button><button id="logout" class="quiet" type="button">Закрыть сессию</button>
     </nav>
-    <footer>Только регистрация и собственный статус. Это ещё не полный учебный вход в Moodle.</footer>
+    <footer>Регистрация, собственный статус и подтверждение связи. Это ещё не полный учебный вход в Moodle.</footer>
   </main>
 </body>
 </html>

@@ -3,7 +3,7 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const form = $('registration-form');
-  let csrf = '', pending = false;
+  let csrf = '', pending = false, linkSubject = '';
   const names = {firstname:'имя', lastname:'фамилию', username:'логин', email:'email', password:'пароль', departmentid:'подразделение'};
   const expired = new Set(['session_expired','invalid_entry','revoked_entry','restart_required','expired_launch','launch_consumed','replayed_proof','launch_mismatch']);
   function showError(reason, field) {
@@ -14,12 +14,20 @@
     if (reason==='rate_limited' || reason==='busy') text = 'Слишком много запросов или операция ещё выполняется. Подождите и проверьте статус.';
     if (reason==='idempotency_conflict') text = 'Данные отличаются от уже отправленной заявки. Проверьте статус, не создавайте новый аккаунт.';
     if (reason==='already_registered' || reason==='receipt_expired') text = 'Учётная запись уже связана. Проверьте её статус, повторная регистрация не нужна.';
+    if (reason==='expired_challenge') text = 'Код привязки истёк. Создайте новую персональную ссылку в личном кабинете Академии → Мессенджеры.';
+    if (reason==='invalid_challenge' || reason==='invalid_link_code' || reason==='provider_mismatch') text = 'Ссылка привязки недействительна для этого бота. Вернитесь в Академию и создайте новую ссылку.';
+    if (reason==='claimed_challenge') text = 'Подтверждение по этой ссылке уже отправлено. Вернитесь в тот же браузер Академии и проверьте Telegram ID. Повторная регистрация не нужна.';
+    if (reason==='link_outcome_unknown') {
+      text = 'Результат привязки неизвестен. Вернитесь в тот же браузер Академии и нажмите «Проверить подтверждение Telegram». Автоматического повтора нет; если подтверждение не пришло, создайте новую персональную ссылку.';
+      $('session-actions').hidden = false; $('refresh').hidden = true;
+    }
     if (reason==='validation_failed') {
       text = names[field] ? `Проверьте ${names[field]}. Значение не прошло проверку Академии; логин или email также могут быть заняты.` : 'Проверьте данные формы.';
       if (names[field]) {$(field).setAttribute('aria-invalid','true'); $(field).focus();}
     }
     $('error').textContent = text; $('error').hidden = false;
-    if (expired.has(reason)) form.hidden = true;
+    if (expired.has(reason) || ['link_outcome_unknown','expired_challenge','invalid_challenge',
+      'invalid_link_code','provider_mismatch','claimed_challenge','link_only_session'].includes(reason)) form.hidden = true;
   }
   async function api(path, data) {
     const abort = new AbortController(), timer = setTimeout(()=>abort.abort(),12000);
@@ -35,6 +43,16 @@
     finally {clearTimeout(timer);}
   }
   function statusView(value) {
+    if (value.scope==='link_confirmation') {
+      $('status-badge').textContent = 'Telegram подтверждён';
+      $('status-title').textContent = 'Подтвердите связь в Академии';
+      const subject = linkSubject ? `Ваш Telegram ID: ${linkSubject}. ` : '';
+      $('status-detail').textContent = subject+'Связь ещё не завершена этим экраном. Вернитесь в тот же браузер Академии → Мессенджеры, нажмите «Проверить подтверждение Telegram», сверьте ID и подтвердите связь. Если уже подтвердили — отправьте боту новый /start.';
+      $('status-time').textContent = 'Этот экран подтверждает отправку Telegram. Окончательный результат показан в Академии.';
+      $('refresh').textContent = 'Показать следующие шаги';
+      form.hidden = true;
+      return;
+    }
     const state = value.registration?.status==='rejected'?'rejected':value.account_state;
     const display = {
       unlinked:['Регистрация','Заполните заявку','Укажите данные своей учётной записи. Доступ к обучению откроется только после решения HRD.'],
@@ -47,11 +65,12 @@
     const observed = new Date().toLocaleString('ru-RU');
     $('status-time').textContent = 'Проверено: '+observed;
     form.hidden = state!=='unlinked';
+    $('refresh').textContent = 'Проверить статус';
   }
   async function refresh() {
     const value = await api('status', {});
     statusView(value);
-    if (value.account_state==='unlinked') {
+    if (value.scope!=='link_confirmation' && value.account_state==='unlinked') {
       const result = await api('options', {}), select = $('departmentid'), previous = select.value;
       select.replaceChildren(new Option('Выберите подразделение',''));
       for (const item of result.departments) select.add(new Option(item.name,item.id));
@@ -78,7 +97,7 @@
   });
   $('refresh').addEventListener('click',()=>action(refresh));
   $('logout').addEventListener('click',()=>action(async()=>{
-    await api('logout',{}); csrf=''; form.reset(); form.hidden=true; $('session-actions').hidden=true;
+    await api('logout',{}); csrf=''; linkSubject=''; form.reset(); form.hidden=true; $('session-actions').hidden=true;
     $('status-title').textContent='Сессия закрыта'; $('status-detail').textContent='Для нового входа откройте приложение из бота.'; $('status-time').textContent='';
   }));
   function theme(dark) {
@@ -98,6 +117,7 @@
       }
       tg.ready(); tg.expand();
       const result = await api('launch',{init_data:tg.initData}); csrf = result.csrf;
+      if (result.scope==='link_confirmation' && /^[1-9][0-9]{0,15}$/.test(result.telegram_id||'')) linkSubject=result.telegram_id;
     }
     $('session-actions').hidden=false;
     await refresh();

@@ -157,6 +157,18 @@ final class identity_service {
         return $link && self::eligible((int)$link->userid, false) ? (int)$link->userid : 0;
     }
 
+    /** Real owner only; never expose lookup hashes or accept a caller-selected userid. */
+    public static function owned_links(): array {
+        global $DB;
+        $userid = self::actor();
+        $result = [];
+        foreach ($DB->get_records('local_ustar_conn_links', ['userid' => $userid], 'provider, id') as $link) {
+            $result[] = ['id' => (int)$link->id, 'provider' => $link->provider, 'tenant' => $link->tenant,
+                'subject' => $link->subject, 'state' => $link->state, 'revision' => (int)$link->revision];
+        }
+        return $result;
+    }
+
     /** Internal cron maintenance; bounded work, no sends or business writes. */
     public static function prune_expired(int $limit = 500): array {
         if ($limit < 1 || $limit > 500) {

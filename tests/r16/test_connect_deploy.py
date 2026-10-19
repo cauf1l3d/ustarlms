@@ -92,3 +92,12 @@ class DeployTests(unittest.TestCase):
     def test_nonroot_validation_trusts_root_owned_ancestors(self):
         with patch.object(self.mod.os,'geteuid',return_value=12345):
             self.assertEqual(Path('/'),self.mod.safe(Path('/')))
+    def test_install_sets_directory_modes_independently_of_caller_umask(self):
+        host=self.mod.Host();host.ensure_user=lambda name:None;host.active=lambda name:False;host.run=lambda args:''
+        (self.root/'host/opt').mkdir(parents=True)
+        (self.root/'host/etc/systemd/system').mkdir(parents=True)
+        previous=os.umask(0o002)
+        try:
+            installer=self.mod.Installation(self.root/'host',host);installer.install(self.tar,self.digest)
+        finally:os.umask(previous)
+        self.assertEqual(0o755,stat.S_IMODE((installer.current()/'units').stat().st_mode))

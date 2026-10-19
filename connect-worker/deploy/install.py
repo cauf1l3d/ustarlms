@@ -200,7 +200,8 @@ class Installation:
             staging=Path(tempfile.mkdtemp(prefix='.release-',dir=self.prefix/'releases'))
             try:
                 for name,value in values.items():
-                    (staging/name).parent.mkdir(parents=True,exist_ok=True)
+                    parent=(staging/name).parent
+                    if parent != staging:mkdir(parent,0o755)
                     write_file(staging/name,value)
                 write_file(staging/'manifest.json',(json.dumps(manifest,sort_keys=True)+'\n').encode())
                 staging.chmod(0o755);os.replace(staging,release)

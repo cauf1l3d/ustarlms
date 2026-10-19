@@ -150,7 +150,7 @@ python -m unittest discover -s tests/r16 -p test_connect_signup.py -v
 
 `ustar-connect-receiver.service` запускается отдельным пользователем, получает token/config через systemd LoadCredential и пишет только StateDirectory0700. Kernel IP policy допускает loopback; явный proxy http://127.0.0.1:18081 должен уже работать. Не менять Xray/DNS/routes. `ustar-connect-probe.service` выполняет только getMe/getWebhookInfo, не потребляет updates и не отправляет сообщения. Existing webhook/неверная identity/недоступный proxy останавливают запуск; webhook автоматически не удаляется. `start` сначала выполняет probe и только затем включает receiver. TLS сертификат Telegram проверяется.
 
-`ustar-connect-notify.service` установлен, но не enabled/started. Нет notifications.json/bridge credential: включение требует отдельного обновления Академии552/99, private HTTPS bridge и личных links. Notification key обязан иметь только notifications.* allowlist; нельзя брать key BFF/receiver. Mini App/BFF service готовится после HTTPS, публичный listener этим комплектом не создаётся.
+`ustar-connect-notify.service` установлен, но не enabled/started. Нет notifications.json/bridge credential: включение требует отдельного обновления Академии552/99, private HTTPS bridge и личных links. Notification key обязан иметь только notification.lease, notification.begin, notification.finish allowlist; нельзя брать key BFF/receiver. Mini App/BFF service готовится после HTTPS, публичный listener этим комплектом не создаётся.
 
 Команды разработки из checkout, не установки server1:
 ```bash

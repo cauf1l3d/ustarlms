@@ -67,7 +67,7 @@ def safe(path):
         if part.is_symlink(): raise ValueError('symlink_refused')
         if part.exists():
             info=part.stat()
-            if info.st_uid != os.geteuid() or (info.st_mode & 0o022 and not info.st_mode & stat.S_ISVTX):
+            if info.st_uid not in (0,os.geteuid()) or (info.st_mode & 0o022 and not info.st_mode & stat.S_ISVTX):
                 raise ValueError('unsafe_owner_or_permissions')
     return path
 

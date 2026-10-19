@@ -1,5 +1,6 @@
 """Install contracts on real temporary files; systemd/user actions are modeled here, native fixture separate."""
 import hashlib,importlib.util,io,json,os,stat,tarfile,tempfile,unittest
+from unittest.mock import patch
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 MODULE=ROOT/'connect-worker/deploy/install.py'
@@ -87,3 +88,7 @@ class DeployTests(unittest.TestCase):
         (path/'override.conf').write_text('[Service]\nUser=root\n')
         with self.assertRaises(ValueError):self.mod.Installation(self.root/'host',host).install(self.tar,self.digest)
         self.assertEqual([],calls)
+
+    def test_nonroot_validation_trusts_root_owned_ancestors(self):
+        with patch.object(self.mod.os,'geteuid',return_value=12345):
+            self.assertEqual(Path('/'),self.mod.safe(Path('/')))

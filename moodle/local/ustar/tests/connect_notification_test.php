@@ -52,7 +52,10 @@ final class connect_notification_test extends \advanced_testcase {
     private function grant(array $caps): int {
         $context=\context_system::instance();$role=create_role('Notification fixture','notify_'.random_string(8),'Synthetic');
         foreach ($caps as $cap) {assign_capability($cap,CAP_ALLOW,$role,$context->id);}
-        role_assign($role,$this->employee->id,$context->id);accesslib_clear_all_caches(true);return $role;
+        role_assign($role,$this->employee->id,$context->id);accesslib_clear_all_caches(true);
+        // Role changes precede the owner's next HTTP request in the real adapter.
+        $this->setUser($this->employee);
+        return $role;
     }
     public function test_default_disabled_new_only_and_legacy_bitrix_untouched(): void {
         global $DB,$CFG;
@@ -238,10 +241,18 @@ final class connect_notification_test extends \advanced_testcase {
         global $DB;
         accounts::ensure_profile_field();
         $role=$this->grant(['local/ustar:hrmanage','local/ustar:approveregistration']);
+        $this->assertTrue(has_capability('local/ustar:approveregistration',\context_system::instance(),$this->employee->id));
+        $this->assertTrue(has_capability('local/ustar:hrmanage',\context_system::instance(),$this->employee->id));
         $this->prefs(['categories'=>['registration']]);
         $uid=registration_service::register(['username'=>'notify_registered','password'=>'Fixture-Only-Qx9!2026',
             'email'=>'notify-registered@example.invalid','firstname'=>'Synthetic','lastname'=>'Register','departmentid'=>'retail']);
-        $this->assertGreaterThan(0,$uid);$l=$this->lease();$this->assertNotNull($l);
+        $this->assertGreaterThan(0,$uid);
+        $canonical=$DB->get_record('local_ustar_notifications',['userid'=>$this->employee->id,'eventtype'=>'registration_requested']);
+        $this->assertNotFalse($canonical,'Canonical HRD recipient must exist before transport');
+        $this->assertTrue(\local_ustar\connect\notification_policy::permitted($canonical),'Current canonical recipient policy');
+        $this->assertTrue($DB->record_exists('local_ustar_notify_delivery',['notificationid'=>$canonical->id,'connectversion'=>1]),'Writer must enqueue atomically');
+        // The private facade has NO_MOODLE_COOKIES, not the HRD browser session.
+        $this->setGuestUser();$l=$this->lease();$this->assertNotNull($l);
         role_unassign($role,$this->employee->id,\context_system::instance()->id);accesslib_clear_all_caches(true);
         $this->assertSame('cancelled',$this->begin($l)['status']);
     }

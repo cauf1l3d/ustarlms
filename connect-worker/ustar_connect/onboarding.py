@@ -12,7 +12,7 @@ import threading
 import time
 from urllib.parse import urlsplit
 
-from .bridge import BridgeRejected, FORM_FIELDS, _token, telegram_exchange_payload
+from .bridge import BridgeRejected, FORM_FIELDS, _token, telegram_exchange_payload, telegram_link_payload
 from .telegram import validate_init_data
 from .web_sessions import COOKIE, SessionStore, WebError
 
@@ -158,7 +158,10 @@ class OnboardingApp:
                 raise WebError('session_expired')
             if path == '/api/bootstrap':
                 self._sessions.limit(session, 'bootstrap', now)
-                return 200, {'ok': True, 'csrf': session.csrf, 'authenticated': bool(session.entry)}, 'application/json'
+                value = {'ok': True, 'csrf': session.csrf, 'authenticated': bool(session.entry or session.link_claim)}
+                if session.link_claim:
+                    value['scope'] = 'link_confirmation'
+                return 200, value, 'application/json'
             csrf = env.get('HTTP_X_CSRF_TOKEN', '')
             if not isinstance(csrf, str) or not re.fullmatch(r'[A-Za-z0-9_-]{43}', csrf) or not hmac.compare_digest(csrf, session.csrf):
                 raise WebError('invalid_csrf')
@@ -171,13 +174,33 @@ class OnboardingApp:
                 raise WebError('invalid_payload', 400)
             self._sessions.limit(session, operation, now)
             if operation == 'launch':
-                if session.entry:
+                if session.link_claim == 'uncertain':
+                    raise WebError('link_outcome_unknown', 503)
+                if session.entry or session.link_claim:
                     raise WebError('restart_required')
                 try:
                     proof = validate_init_data(data['init_data'], bot_token=self._bot_token, now=now)
-                    payload = telegram_exchange_payload(proof, session.browser)
+                    linking = isinstance(proof.start_param, str) and proof.start_param.startswith('uc1_')
+                    payload = telegram_link_payload(proof) if linking else telegram_exchange_payload(proof, session.browser)
                 except ValueError:
                     raise WebError('invalid_launch') from None
+                if linking:
+                    # Commit uncertainty before a remote mutation. Never auto-claim after timeout.
+                    session.link_claim = 'uncertain'
+                    try:
+                        reply = self._request('link.claim', payload)
+                        if reply.get('claimed') is not True or reply.get('academy_confirmation_required') is not True:
+                            raise ValueError('invalid_bridge_response')
+                    except BridgeRejected:
+                        session.link_claim = None  # A definite rejection performed no claim.
+                        raise
+                    except Exception:
+                        raise WebError('link_outcome_unknown', 503) from None
+                    session.link_claim, session.expires = 'claimed', now+600
+                    cookie = self._sessions.rotate(cookie, session)
+                    extra['Set-Cookie'] = self._set_cookie(cookie, 600)
+                    return 200, {'ok': True, 'csrf': session.csrf, 'scope': 'link_confirmation',
+                                 'academy_confirmation_required': True}, 'application/json'
                 reply = self._request('launch.exchange', payload)
                 entry = _token(reply.get('session'), 'ue1')
                 expiry = reply.get('expires_at')
@@ -187,17 +210,25 @@ class OnboardingApp:
                 cookie = self._sessions.rotate(cookie, session)
                 extra['Set-Cookie'] = self._set_cookie(cookie, session.expires-now)
                 return 200, {'ok': True, 'csrf': session.csrf, 'scope': 'onboarding'}, 'application/json'
-            if not session.entry:
-                raise WebError('launch_required')
-            payload = {'session': session.entry, 'browser': session.browser}
             if operation == 'logout':
                 self._sessions.remove(cookie)
                 extra['Set-Cookie'] = self._set_cookie('', 0)
-                try:
-                    self._request('entry.revoke', payload)
-                except Exception:
-                    pass  # Local secret gone; remote entry still expires within600s.
+                if session.entry:
+                    try:
+                        self._request('entry.revoke', {'session': session.entry, 'browser': session.browser})
+                    except Exception:
+                        pass  # Local secret gone; remote entry still expires within600s.
                 return 200, {'ok': True, 'local_session_closed': True}, 'application/json'
+            if session.link_claim:
+                if session.link_claim == 'uncertain':
+                    raise WebError('link_outcome_unknown', 503)
+                if operation != 'status':
+                    raise WebError('link_only_session')
+                return 200, {'ok': True, 'scope': 'link_confirmation',
+                             'account_state': 'academy_confirmation_required'}, 'application/json'
+            if not session.entry:
+                raise WebError('launch_required')
+            payload = {'session': session.entry, 'browser': session.browser}
             if operation == 'register':
                 payload.update(data, command=session.command)
                 if len(json.dumps(payload, ensure_ascii=True).encode()) > 15000:

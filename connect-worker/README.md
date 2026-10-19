@@ -1,5 +1,26 @@
 # USTAR Connect — начало разработки
 
+## CON01C.2 — существующая учётка и подтверждение связи
+
+19Oct2026 owner12:55МСК. [План](../context/proposals/USTAR_CONNECT_CON01C2_PLAN_20261019.md), [ledger](../context/proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md). Это продолжение существующего двухстороннего uc1_ протокола, не новый login/password endpoint. Новый business bot: **@ustarcorp_bot**. Его секрет из чата не использовался и не сохранялся; до установки владелец перевыпускает его через BotFather. em2025.netcraze.pro/CrazeDNS — только кандидат на внешний вход, доступность/сертификат/правило роутера не приняты.
+
+В действующей HTTPS Академии сотрудник открывает личный кабинет → «Мессенджеры», создаёт персональную ссылку на10минут и открывает её в своём Telegram. Подписанный Telegram start_param uc1_ идёт через существующий private link.claim. Mini App показывает только receipt и просьбу вернуться в ТОТ ЖЕ браузер Академии, проверить numeric ID и явно подтвердить. GET ничего не выпускает, code не попадает в Moodle URL/DB/session store; startapp ссылка — предусмотренный одноразовый канал передачи challenge, не пароль. Нативная страница требует HTTPS и Moodle session/sesskey, отказывает guest/service/suspended/view-as/login-as; права и принадлежность не принимаются из формы. Владелец видит/отзывает только свои связи. Отсутствие настройки нового бота не блокирует отзыв имеющейся связи.
+
+Runtime-public metadata (не команда установки): `$CFG->ustar_connect_channels = ['telegram' => ['tenant' => 'VERIFIED_BOT_ID', 'username' => 'ustarcorp_bot']];`. VERIFIED_BOT_ID заменяет оператор на фактический numeric ID проверенного нового бота; пример с placeholder намеренно не включается. Bot token туда не добавлять. Explicit worker bridge allowlist теперь7операций: launch.create,launch.exchange,entry.revoke,registration.options,registration.submit,registration.status,link.claim. Issue/exchange launch всё ещё используют один provider key ID. Новый канал/ключ/службы на prod автоматически не создаются.
+
+RAM link_confirmation receipt не содержит entry/password/code/initData/proof и не позволяет register/options/employee reads. Cookie/CSRF ротируются; reload восстанавливает только receipt. При неизвестном исходе link.claim тот же browser не повторяет mutation, предлагает проверить результат в Академии. Этот receipt не является живой проверкой завершения связи: после Academy confirm нужен новый /start. Чужой account не переносится, старое подтверждение после revoke не оживляет связь. Полноценный удалённый login/recovery/MFA/actor step-up и canonical notifications остаются отдельными частями.
+
+Проверки разработчика из корня checkout (не на production):
+
+```bash
+python -m unittest discover -s tests/r16 -p test_connect_web.py -v
+python -m unittest discover -s tests/r16 -v
+node tests/mobile/connect-link.cjs
+python scripts/check_context.py
+```
+
+Node browser check требует зависимостей tests/mobile и установленного Chromium; native Moodle tests выполняются в isolated connect-db workflow, не server1. Финальный exact-source CI receipt — PR106.
+
 ## Текущий CON01C.1 — Telegram polling и персональная кнопка
 
 Owner19Oct10:33МСК. [План/контракт](../context/proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md), [ledger](../context/proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md). `TelegramClient` выполняет только getMe/getWebhookInfo/getUpdates/sendMessage с TLS-проверкой и без redirects/ambient proxy. Для существующего Xray допускается **явный** `telegram_proxy` вида `http://127.0.0.1:PORT` либо IPv6 loopback; это HTTP CONNECT только к фиксированному Telegram API. Маршруты/DNS и настройки сети хоста не меняются. Ошибки и CLI выводят фиксированные коды, не upstream URL с Bot API token.

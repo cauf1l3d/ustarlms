@@ -17,7 +17,9 @@ OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke'
               'registration.options', 'registration.submit', 'registration.status'}
 REJECTIONS = {'validation_failed', 'invalid_entry', 'revoked_entry', 'restart_required',
               'expired_launch', 'launch_consumed', 'replayed_proof', 'launch_mismatch',
-              'idempotency_conflict', 'already_registered', 'receipt_expired', 'rate_limited'}
+              'idempotency_conflict', 'already_registered', 'receipt_expired', 'rate_limited',
+              'invalid_link_code', 'invalid_challenge', 'expired_challenge', 'claimed_challenge',
+              'provider_mismatch', 'link_conflict'}
 FORM_FIELDS = {'username', 'password', 'email', 'firstname', 'lastname', 'departmentid'}
 
 

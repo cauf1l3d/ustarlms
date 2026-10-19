@@ -323,5 +323,115 @@ class BrowserBoundary(unittest.TestCase):
             self.assertEqual(200, self.call(path)['status'])
 
 
+class LinkBrowserBoundary(unittest.TestCase):
+    """Existing-account claim uses real verifier/WSGI; only Moodle is synthetic."""
+    def setUp(self):
+        self.web = BrowserBoundary()
+        self.web.setUp()
+        original = self.web.remote.request
+        def request(operation, payload):
+            if operation != 'link.claim':
+                return original(operation, payload)
+            self.web.remote.calls.append((operation, dict(payload)))
+            if self.web.remote.failure:
+                raise self.web.remote.failure
+            return {'ok': True, 'result': {'claimed': True, 'academy_confirmation_required': True,
+                                           'userid': 99, 'private_note': 'NEVER_REFLECT'}}
+        self.web.remote.request = request
+
+    def claim(self, **changes):
+        self.web.bootstrap()
+        data = {'init_data': signed(start_param='uc1_'+'A'*43, **changes)}
+        result = self.web.call('/api/launch', data)
+        if result['status'] == 200:
+            self.web.csrf = result['body']['csrf']
+        return result
+
+    def test_signed_link_routes_only_to_existing_claim_and_rotates_browser(self):
+        self.web.bootstrap()
+        old_cookie = self.web.cookie
+        result = self.web.call('/api/launch', {'init_data': signed(start_param='uc1_'+'A'*43)})
+        self.assertEqual(200, result['status'], result['body'])
+        self.assertEqual('link_confirmation', result['body']['scope'])
+        self.assertTrue(result['body']['academy_confirmation_required'])
+        self.assertNotEqual(old_cookie, self.web.cookie)
+        operation, payload = self.web.remote.calls[-1]
+        self.assertEqual('link.claim', operation)
+        self.assertEqual('123456', payload['tenant'])
+        self.assertEqual('8727627355', payload['subject'])
+        self.assertEqual({'provider', 'tenant', 'subject', 'code', 'proof', 'auth_date'}, set(payload))
+        for private in ('uc1_', 'ue1_', 'NEVER_REFLECT', 'userid'):
+            self.assertNotIn(private, result['raw'].decode())
+
+    def test_link_receipt_cannot_register_or_query_employee_data(self):
+        result = self.claim()
+        self.assertEqual(200, result['status'], result['body'])
+        before = len(self.web.remote.calls)
+        for path, data in [('/api/register', FORM), ('/api/options', {})]:
+            result = self.web.call(path, data)
+            self.assertEqual(403, result['status'])
+            self.assertEqual('link_only_session', result['body']['reason'])
+        status = self.web.call('/api/status', {})
+        self.assertEqual('academy_confirmation_required', status['body']['account_state'])
+        self.assertEqual(before, len(self.web.remote.calls))
+
+    def test_reload_recovers_only_confirmation_receipt_and_never_claims_again(self):
+        self.assertEqual(200, self.claim()['status'])
+        before = len(self.web.remote.calls)
+        bootstrap = self.web.bootstrap()
+        self.assertTrue(bootstrap['body']['authenticated'])
+        self.assertEqual('link_confirmation', bootstrap['body']['scope'])
+        self.assertEqual(403, self.web.call('/api/launch', {'init_data': signed(start_param='uc1_'+'A'*43)})['status'])
+        self.assertEqual(before, len(self.web.remote.calls))
+
+    def test_unknown_claim_outcome_is_not_retried_in_same_browser(self):
+        self.web.remote.failure = TimeoutError('SECRET_UPSTREAM')
+        result = self.claim()
+        self.assertEqual(503, result['status'])
+        self.assertEqual('link_outcome_unknown', result['body']['reason'])
+        self.assertNotIn('SECRET_UPSTREAM', result['raw'].decode())
+        before = len(self.web.remote.calls)
+        self.web.remote.failure = None
+        result = self.web.call('/api/launch', {'init_data': signed(start_param='uc1_'+'A'*43)})
+        self.assertEqual('link_outcome_unknown', result['body']['reason'])
+        self.assertEqual(before, len(self.web.remote.calls))
+        self.assertEqual('link_outcome_unknown', self.web.call('/api/status', {})['body']['reason'])
+
+    def test_stale_forged_unsigned_or_noncanonical_claim_cannot_reach_bridge(self):
+        self.web.bootstrap()
+        for raw in (signed(start_param='uc1_'+'A'*43, auth_date=str(NOW-301)),
+                    signed(start_param='uc1_'+'A'*42+'B'),
+                    signed(start_param='uc1_'+'A'*43).replace('8727627355','8727627356'), signed()):
+            self.web.cookie = ''
+            self.web.bootstrap()
+            self.assertEqual(403, self.web.call('/api/launch', {'init_data': raw})['status'])
+        self.assertEqual([], self.web.remote.calls)
+
+    def test_rejected_claim_is_typed_without_private_details(self):
+        self.web.remote.failure = bridge.BridgeRejected('expired_challenge')
+        result = self.claim()
+        self.assertEqual(403, result['status'])
+        self.assertEqual('expired_challenge', result['body']['reason'])
+
+    def test_receipt_retains_no_code_initdata_or_proof_and_logout_is_local(self):
+        self.assertEqual(200, self.claim()['status'])
+        session = next(iter(self.web.app._sessions._items.values()))
+        for private in ('uc1_', 'query_id', 'auth_date', '8727627355'):
+            self.assertNotIn(private, str(vars(session)))
+        self.assertIsNone(session.entry)
+        before = len(self.web.remote.calls)
+        self.assertEqual(200, self.web.call('/api/logout', {})['status'])
+        self.assertEqual(before, len(self.web.remote.calls))
+        self.assertEqual(403, self.web.call('/api/status', {})['status'])
+
+    def test_malformed_claim_success_is_unknown_not_a_local_grant(self):
+        def malformed(operation, payload):
+            return {'ok': True, 'result': {'claimed': True, 'academy_confirmation_required': False}}
+        self.web.remote.request = malformed
+        self.assertEqual('link_outcome_unknown', self.claim()['body']['reason'])
+        session = next(iter(self.web.app._sessions._items.values()))
+        self.assertIsNone(session.entry)
+
+
 if __name__ == '__main__':
     unittest.main()

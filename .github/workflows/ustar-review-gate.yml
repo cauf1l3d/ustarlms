@@ -79,6 +79,8 @@ jobs:
       - run: npm test --prefix tests/mobile
       - name: Verify narrow Connect onboarding UI with synthetic API
         run: node tests/mobile/connect.cjs
+      - name: Verify two-sided Connect linking UI with synthetic API
+        run: node tests/mobile/connect-link.cjs
       - run: python scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
       - run: git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle/local/ustar moodle/theme/ustar
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

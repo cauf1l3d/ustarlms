@@ -11,3 +11,5 @@ Ruling: owner prohibits subagents; final code review will be personal. Existing 
 Task1: tests next. Native RED/implementation/CI not yet claimed. Plan and RFC read; authoritative C3 final receipt remains PR106.
 
 Task2 parallel boundary work while immutable native RED runs:13WSGI tests observed12missing /activate failures +1missing typed rejection error; implemented private actor_web validator/activation/rotation/status/logout, then13/13PASS and existing31webPASS. Test cookie jar corrected to remove Max-Age=0 cookies like a browser; no product cookie guard weakened. Whole674r16 OK/30environment skips. Browser test written before UI; pending expected missing profile button/heading in actual Chromium. Task1 PHP product not yet implemented, native test-only source e0399367.
+
+Native test fixture correction: e0399367 Review39253555166/job118063982621 stopped at PHPUnit fatal: private status helper collided with final TestCase::status. No actor assertions ran. Rename helper actor_status; temporarily defer new browser step so native tests can execute and demonstrate the missing actor service. This is not an expected product RED.

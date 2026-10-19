@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "e5dee099356d04774f8840b8788489f4901d8169",
+    "moodle/local/ustar": "7baa39852bc89ea94d66b0d35c3d551b623d93b6",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
@@ -11,7 +11,7 @@
     "theme_ustar": 2026100202
   },
   "counts": {
-    "files": 539,
+    "files": 540,
     "tables": 98
   },
   "files": [
@@ -1806,6 +1806,10 @@
     {
       "path": "moodle/local/ustar/tests/connect_identity_test.php",
       "sha256": "eb83929b006f3a5fc9863af6c152935e028080a2b88b2934e2f45eccfa864c74"
+    },
+    {
+      "path": "moodle/local/ustar/tests/connect_signup_test.php",
+      "sha256": "e2771cbad608f94422f533d50d50bb7f5569335c94e5b7b1eb5fe3f46007a0fc"
     },
     {
       "path": "moodle/local/ustar/tests/evidence_lifecycle_test.php",

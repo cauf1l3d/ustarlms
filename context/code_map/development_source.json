@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "873f277b981986459358cc62aeac8920c728a53d",
+    "moodle/local/ustar": "d86583e73bae984d13ee9f550eab9e9857b9b4ff",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
@@ -11,7 +11,7 @@
     "theme_ustar": 2026100202
   },
   "counts": {
-    "files": 542,
+    "files": 543,
     "tables": 99
   },
   "files": [
@@ -1814,6 +1814,10 @@
     {
       "path": "moodle/local/ustar/tests/connect_identity_test.php",
       "sha256": "eb83929b006f3a5fc9863af6c152935e028080a2b88b2934e2f45eccfa864c74"
+    },
+    {
+      "path": "moodle/local/ustar/tests/connect_link_management_test.php",
+      "sha256": "c3629aef1e22a09a6b071d46bedfce96f02a413543068549377d878e4fd5145c"
     },
     {
       "path": "moodle/local/ustar/tests/connect_signup_test.php",

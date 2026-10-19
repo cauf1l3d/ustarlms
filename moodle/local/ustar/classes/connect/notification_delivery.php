@@ -8,8 +8,11 @@ final class notification_delivery {
     private static function channel(): ?string {
         global $CFG;
         $value = $CFG->ustar_connect_channels['telegram'] ?? null;
-        return is_array($value) && is_string($value['tenant'] ?? null)
-            && preg_match('/\A[1-9][0-9]{0,19}\z/', $value['tenant']) ? $value['tenant'] : null;
+        if (!is_array($value)) { return null; }
+        $keys = array_keys($value); sort($keys);
+        return $keys === ['tenant', 'username'] && is_string($value['tenant']) && is_string($value['username'])
+            && preg_match('/\A[1-9][0-9]{0,19}\z/', $value['tenant'])
+            && preg_match('/\A[A-Za-z][A-Za-z0-9_]{1,28}[Bb][Oo][Tt]\z/', $value['username']) ? $value['tenant'] : null;
     }
     private static function enabled(): bool {
         global $CFG;
@@ -79,6 +82,14 @@ final class notification_delivery {
         return identity_service::atomic(function() use ($kid, $tenant, $now): ?array {
             global $DB;
             if (!self::enabled() || self::channel() !== $tenant) { return null; }
+            // A provider-wide429 must survive restarts and stop a different queued recipient too.
+            $cooldown = (int)$DB->get_field_sql('SELECT MAX(d.nextattempt) FROM {local_ustar_notify_delivery} d
+                JOIN {local_ustar_conn_links} l ON l.id = d.connlinkid
+                WHERE d.connectversion = 1 AND d.channel = :channel AND l.tenant = :tenant
+                  AND d.status = :status AND (d.lasterror = :limited OR d.lasterror = :unauthorized)',
+                ['channel' => 'telegram', 'tenant' => $tenant, 'status' => 'retry_wait',
+                    'limited' => 'rate_limited', 'unauthorized' => 'unauthorized']);
+            if ($cooldown > $now) { return null; }
             $rows = $DB->get_records_sql('SELECT d.* FROM {local_ustar_notify_delivery} d
                 JOIN {local_ustar_conn_links} l ON l.id = d.connlinkid
                 WHERE d.connectversion = 1 AND d.channel = :channel AND l.tenant = :tenant

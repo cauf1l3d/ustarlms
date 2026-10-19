@@ -16,7 +16,7 @@
 
 Явный набор canonical типов: registration_requested/approved/rejected/adaptation_ready; task_assigned/revised/reassigned/started/sent_for_review/completed/approved/returned/cancelled/reminder/escalation; feed_comment/reply; grade_request/approved/returned. Неизвестные типы остаются локальными. Проверка не создаёт новых бизнес-событий и не утверждает, что все учебные аттестации уже имеют notification writers.
 
-При enqueue и перед begin проверяются актуальные user flags/business account/employment, текущая linked связь и revision, согласие/категории/важность и domain recipient. Заявки — текущая canonical request/статус/HRD capabilities; задачи — canonical task и assignee/reviewer scope; лента — feed_access::readable; грейды — собственная заявка или текущий менеджер. Решения/изменения ролей сами не выполняются.
+При enqueue и перед begin проверяются актуальные user flags/business account/employment, текущая linked связь и revision, согласие/категории/важность и domain recipient. Заявки — текущая canonical request/статус/HRD capabilities; задачи — canonical task и assignee/reviewer scope; напоминания/эскалации также проверяют текущий cycle/trigger/lane/level и получателей; лента — feed_access::readable; грейды — собственная заявка или текущий менеджер. Решения/изменения ролей сами не выполняются.
 
 ## Очередь и воркер
 
@@ -26,7 +26,7 @@ Private bridge: notification.lease(limit='1'), notification.begin(delivery,lease
 
 Истёкший leased без begin можно забрать с новым секретом. Истёкший sending становится uncertain, не возвращается в очередь. Один получатель не имеет двух активных отправок. Временная потеря finish оставляет результат неизвестным; поздний корректный receipt той же аренды может честно записать принятое провайдером сообщение, даже если связь уже отозвана. Это не восстанавливает доступ.
 
-429 → durable retry_after1–86400сек;401 → durable retry300сек и остановка процесса;403/400 → failed;5xx/timeout/невалидный ответ → uncertain. Не более5попыток и TTL1час для feed/reminder,24часа для остальных поддержанных типов. Provider receipt никогда не вызывает acknowledge_notification. Повтор одинакового receipt идемпотентен, конфликт отклоняется.
+429 → общий для tenant durable retry_after1–86400сек;401 → durable retry300сек и остановка процесса;403/400 → failed;5xx/timeout/невалидный ответ → uncertain. Не более5попыток и TTL1час для feed/reminder,24часа для остальных поддержанных типов. Provider receipt никогда не вызывает acknowledge_notification. Повтор одинакового receipt идемпотентен, конфликт отклоняется.
 
 notification_runtime использует приватную receiver-конфигурацию. Требуется onboarding_enabled=true для загрузки bridge; это **не** включает доставку в Moodle. При отдельном runtime нужны отдельные config/key ID с allowlist ровно notification.lease,notification.begin,notification.finish; receiver/BFF key остаётся со своим явным списком. Не включать автоматически все OPERATIONS. DefaultCLI проверяет локальные файлы без сети; --run явно разрешает исходящие API-вызовы. getMe сверяет bot ID/username. Этот процесс не делает getUpdates и не забирает polling у receiver. Параллельные экземпляры защищены канонической арендой, но общий bot-wide Telegram rate limit учитывается ответами429, а не распределённым лимитером.
 

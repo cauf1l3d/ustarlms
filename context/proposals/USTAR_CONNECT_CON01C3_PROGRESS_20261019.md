@@ -26,3 +26,8 @@ python scripts/check_context.py
 ```
 
 C3 не закрывает remote actor/step-up/полный ролевой контур. Они следуют за доставкой; внешнийorigin/заменённыйtoken нужны для liveactivation, не для sourceразработки.
+
+
+Личный review: provider-wide Retry-After теперь блокирует следующие managed deliveries того же tenant после restart, не только исходную строку. Startup getMe401 останавливает,429 выдерживает паузу (workerRED→GREEN14tests). Напоминание/эскалация проверяют canonical cyclekey/trigger/lane/level/current recipients через read-only helper существующего task worker, не только view permission. Добавлены actual registration writer/HRD capability revocation, feed audience и own grade request guards; notification suite21tests +1bridge exact payload/scope. Нативные дополнительные проверки пока pending.
+
+Implementation86f47bab Context39249334337 SUCCESS; Review39249334425 source8.2/8.3 SUCCESS (actual Chromium native controls included), native118049834476 FAILED на XMLDB dependency status_next_idx при расширении varchar status16→32 до PHPUnit. Это реальная ошибка миграции кандидата, не отказ тестовой среды. Миграция исправлена: снимает зависимые status_next_idx/connect_ready_idx, меняет precision и восстанавливает оба индекса из install schema. Повторная exact native/fresh/upgrade/repeat проверка обязательна. Локальный full661r16 OK/30environment skips после pinned requirements; PHP/Chromium локально не выполнялись.

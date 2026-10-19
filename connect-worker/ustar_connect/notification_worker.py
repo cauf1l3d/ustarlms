@@ -35,6 +35,14 @@ class NotificationWorker:
                     self.stopped='bot_identity_mismatch'
                     return {'status':'stopped','reason':self.stopped}
                 self.checked=True
+            except TelegramError as error:
+                if error.reason=='unauthorized':
+                    self.stopped='unauthorized'
+                    return {'status':'stopped','reason':self.stopped}
+                if error.reason=='rate_limited':
+                    self.next_attempt=now+error.retry_after
+                    return {'status':'backoff','retry_after':error.retry_after}
+                return {'status':'unavailable'}
             except Exception:return {'status':'unavailable'}
         try:
             lease=self.request('notification.lease',{'limit':'1'})

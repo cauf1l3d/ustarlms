@@ -49,6 +49,11 @@ final class connect_notification_test extends \advanced_testcase {
     private function denied(callable $call,string $reason): void {
         try {$call();$this->fail('Expected '.$reason);}catch(\InvalidArgumentException $e){$this->assertSame($reason,$e->getMessage());}
     }
+    private function grant(array $caps): int {
+        $context=\context_system::instance();$role=create_role('Notification fixture','notify_'.random_string(8),'Synthetic');
+        foreach ($caps as $cap) {assign_capability($cap,CAP_ALLOW,$role,$context->id);}
+        role_assign($role,$this->employee->id,$context->id);accesslib_clear_all_caches(true);return $role;
+    }
     public function test_default_disabled_new_only_and_legacy_bitrix_untouched(): void {
         global $DB,$CFG;
         $this->assertFalse(notification_preferences::for_user((int)$this->employee->id)['enabled']);
@@ -213,5 +218,55 @@ final class connect_notification_test extends \advanced_testcase {
         $now=strtotime('2026-10-25 00:30 UTC');
         $next=notification_preferences::next_allowed($p,$now);
         $this->assertSame(strtotime('2026-10-25 07:00 UTC'),$next);
+    }
+    public function test_provider_cooldown_survives_a_new_queue_item_and_worker(): void {
+        $this->prefs();$this->notice();$l=$this->lease();$this->begin($l);
+        $this->finish($l,'retry_wait','','rate_limited',120);$this->notice();
+        $this->assertNull($this->lease(time()+61));
+        $this->assertNotNull($this->lease(time()+121));
+    }
+    public function test_reminder_is_bound_to_actual_current_schedule(): void {
+        global $DB;
+        $this->prefs();
+        $DB->set_field('local_ustar_learning_tasks','dueat',time()+1800,['id'=>$this->taskid]);
+        \local_ustar\task_workspace\worker::check($this->taskid);
+        $l=$this->lease();$this->assertNotNull($l);
+        $DB->set_field('local_ustar_learning_tasks','dueat',time()+7200,['id'=>$this->taskid]);
+        $this->assertSame('cancelled',$this->begin($l)['status']);
+    }
+    public function test_actual_registration_writer_and_current_hrd_capabilities(): void {
+        global $DB;
+        accounts::ensure_profile_field();
+        $role=$this->grant(['local/ustar:hrmanage','local/ustar:approveregistration']);
+        $this->prefs(['categories'=>['registration']]);
+        $uid=registration_service::register(['username'=>'notify_registered','password'=>'Fixture-Only-Qx9!2026',
+            'email'=>'notify-registered@example.invalid','firstname'=>'Synthetic','lastname'=>'Register','departmentid'=>'retail']);
+        $this->assertGreaterThan(0,$uid);$l=$this->lease();$this->assertNotNull($l);
+        role_unassign($role,$this->employee->id,\context_system::instance()->id);accesslib_clear_all_caches(true);
+        $this->assertSame('cancelled',$this->begin($l)['status']);
+    }
+    public function test_feed_audience_is_rechecked_without_exporting_post(): void {
+        global $DB;
+        $this->grant(['local/ustar:use']);$this->prefs(['categories'=>['feed']]);
+        $this->setAdminUser();$post=feed_service::create((int)get_admin()->id,'person',(string)get_admin()->id,
+            ['all'],'PRIVATE FEED BODY',true,0,[],bin2hex(random_bytes(16)));
+        $this->setUser($this->employee);
+        workflow_notifications::enqueue($this->employee->id,'feed_comment','PRIVATE','PRIVATE',
+            '/local/ustar/feed.php?postid='.$post,'feed_comment:'.$post.':'.$this->employee->id.':1');
+        $l=$this->lease();$this->assertNotNull($l);
+        $DB->delete_records('local_ustar_feed_audience',['postid'=>$post]);
+        $this->assertSame('cancelled',$this->begin($l)['status']);
+    }
+    public function test_own_grade_decision_must_still_match_canonical_request(): void {
+        global $DB;
+        $this->prefs(['categories'=>['grades']]);
+        $request=$DB->insert_record('local_ustar_grade_requests',(object)['userid'=>$this->employee->id,
+            'fromgrade'=>'G1','tograde'=>'G2','routeid'=>1,'requirementsjson'=>'{}','managerid'=>get_admin()->id,
+            'status'=>'approved','requestkey'=>'fixture-grade','requestedat'=>time(),'timecreated'=>time(),'timemodified'=>time()]);
+        workflow_notifications::enqueue($this->employee->id,'grade_approved','PRIVATE','PRIVATE',
+            '/local/ustar/grades.php','grade-decision:'.$request);
+        $l=$this->lease();$this->assertNotNull($l);
+        $DB->set_field('local_ustar_grade_requests','status','rejected',['id'=>$request]);
+        $this->assertSame('cancelled',$this->begin($l)['status']);
     }
 }

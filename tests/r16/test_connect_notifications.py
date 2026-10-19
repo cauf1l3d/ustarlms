@@ -138,5 +138,14 @@ class NotificationTests(unittest.TestCase):
             self.assertFalse(json.loads(out.getvalue())['network_used'])
         self.api.get_me.assert_not_called();self.bridge.request.assert_not_called()
 
+    def test_startup_unauthorized_stops_and_rate_limit_waits(self):
+        from ustar_connect.telegram_api import TelegramError
+        self.api.get_me.side_effect=TelegramError('rate_limited',retry_after=120)
+        self.assertEqual({'status':'backoff','retry_after':120},self.worker.step())
+        self.worker.step();self.assertEqual(1,self.api.get_me.call_count)
+        self.worker.clock=lambda:NOW+121
+        self.api.get_me.side_effect=TelegramError('unauthorized')
+        self.assertEqual({'status':'stopped','reason':'unauthorized'},self.worker.step())
+
 
 if __name__=='__main__':unittest.main()

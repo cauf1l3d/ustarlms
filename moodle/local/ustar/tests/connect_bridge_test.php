@@ -91,4 +91,17 @@ final class connect_bridge_test extends \advanced_testcase {
         $this->assertStringNotContainsString($form['password'], json_encode($result));
         $this->assertSame(1, $DB->count_records('local_ustar_conn_signups'));
     }
+    public function test_notification_scope_and_exact_payload_do_not_accept_an_actor(): void {
+        $keys=$this->keys();$keys['tg1']['operations']=['notification.lease'];
+        [$body,$headers]=$this->signed('notification.lease',['limit'=>'1']);
+        $this->assertSame(['status'=>'empty'],bridge_service::dispatch($body,$headers,$keys));
+        foreach ([['limit'=>1],['limit'=>'2'],['limit'=>'1','userid'=>'2']] as $payload) {
+            [$body,$headers]=$this->signed('notification.lease',$payload);
+            $this->denied(fn()=>bridge_service::dispatch($body,$headers,$keys),'invalid_payload');
+        }
+        [$body,$headers]=$this->signed('notification.begin',['delivery'=>'1','lease'=>'ud1_'.str_repeat('A',43)]);
+        $this->denied(fn()=>bridge_service::dispatch($body,$headers,$keys),'forbidden_operation');
+        [$body,$headers]=$this->signed('notification.begin',['delivery'=>'0','lease'=>'ud1_'.str_repeat('A',43)]);
+        $this->denied(fn()=>bridge_service::dispatch($body,$headers,$this->keys()),'invalid_delivery');
+    }
 }

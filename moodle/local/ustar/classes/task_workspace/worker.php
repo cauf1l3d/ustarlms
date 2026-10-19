@@ -136,6 +136,38 @@ final class worker {
         } finally { $lock->release(); }
     }
 
+    /** Read-only revalidation of an existing escalation/reminder. Does not generate new events. */
+    public static function notification_recipient_is_current(\stdClass $task, string $event, string $key, int $userid): bool {
+        global $DB;
+        $pattern = $event === 'task_reminder' ? '/\Atask-reminder:([0-9a-f]{64})\z/'
+            : '/\Atask-escalation:([0-9a-f]{64}):'.$userid.'\z/';
+        if (!preg_match($pattern, $key, $match)) { return false; }
+        $row = $DB->get_record('local_ustar_task_escalations', ['cyclekey' => $match[1], 'recipientid' => $userid]);
+        $meta = service::meta((int)$task->id);
+        if (!$row || !$meta || (int)$row->taskid !== (int)$task->id
+                || !service::can_view_record($task, $userid) || in_array($task->status, ['completed', 'cancelled'], true)) { return false; }
+        $p = policy::validate(json_decode($meta->policyjson, true));
+        $review = $task->status === 'in_review';
+        $trigger = $review ? (int)$meta->reviewdueat : (int)$task->dueat;
+        if ((int)$row->triggerat !== $trigger || !$trigger) { return false; }
+        if ($event === 'task_reminder') {
+            return !$review && $row->lane === 'reminder' && $userid === (int)$task->assigneeid
+                && $p['remindminutes'] > 0 && $trigger > time() && $trigger - $p['remindminutes'] * 60 <= time()
+                && hash('sha256', $task->id.':reminder:'.$trigger) === $row->cyclekey;
+        }
+        $lane = $review ? 'review' : 'execution'; $depth = 0;
+        if ($row->lane !== $lane || (int)$row->levelno < 1 || $trigger > time()) { return false; }
+        foreach ($p['levels'] as $index => $level) {
+            if ($level['recipient'] === 'direct') { $depth = 0; }
+            if ($level['recipient'] === 'parent') { $depth++; }
+            if ($index + 1 !== (int)$row->levelno) { continue; }
+            return calendar::add_minutes($trigger, (int)$level['minutes'], $p) <= time()
+                && hash('sha256', $task->id.':'.$lane.':'.$trigger.':'.$index) === $row->cyclekey
+                && in_array($userid, self::recipients($task, $level['recipient'], $review, $depth), true);
+        }
+        return false;
+    }
+
     private static function recipients(\stdClass $task, string $kind, bool $review, int $depth): array {
         $direct = $review ? org::manager_id(service::reviewer($task)) : service::reviewer($task);
         $id = $direct;

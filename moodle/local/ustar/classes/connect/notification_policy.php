@@ -76,8 +76,10 @@ final class notification_policy {
         if (!$task || !\local_ustar\task_workspace\service::can_view_record($task, $uid)) { return false; }
         if (in_array($event, ['task_reminder', 'task_escalation'], true)
                 && in_array($task->status, ['completed', 'cancelled'], true)) { return false; }
+        if (in_array($event, ['task_reminder', 'task_escalation'], true)) {
+            return \local_ustar\task_workspace\worker::notification_recipient_is_current($task, $event, $key, $uid);
+        }
         if ($event === 'task_sent_for_review') { return \local_ustar\task_workspace\service::can_review_record($task, $uid); }
-        if ($event === 'task_escalation') { return $uid !== (int)$task->assigneeid; }
         return (int)$task->assigneeid === $uid;
     }
     private static function manager(int $userid): int {

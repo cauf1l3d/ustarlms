@@ -4954,9 +4954,16 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
             $field = $definition->getField($name);
             if (!$dbman->field_exists($table, $field)) { $dbman->add_field($table, $field); }
         }
+        // XMLDB refuses precision changes with dependent indexes, even for a wider varchar.
+        foreach (['status_next_idx', 'connect_ready_idx'] as $name) {
+            $index = $definition->getIndex($name);
+            if ($dbman->index_exists($table, $index)) { $dbman->drop_index($table, $index); }
+        }
         $dbman->change_field_precision($table, $definition->getField('status'));
-        $index = $definition->getIndex('connect_ready_idx');
-        if (!$dbman->index_exists($table, $index)) { $dbman->add_index($table, $index); }
+        foreach (['status_next_idx', 'connect_ready_idx'] as $name) {
+            $index = $definition->getIndex($name);
+            if (!$dbman->index_exists($table, $index)) { $dbman->add_index($table, $index); }
+        }
         upgrade_plugin_savepoint(true, 2026101904, 'local', 'ustar');
     }
 return true;

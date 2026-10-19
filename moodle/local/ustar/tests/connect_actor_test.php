@@ -126,9 +126,16 @@ final class connect_actor_test extends \advanced_testcase {
         unset($CFG->alternateloginurl);set_user_preference('auth_forcepasswordchange',1,$this->employee->id);
         $this->denied(fn()=>$this->open($entry),'native_auth_required');
         unset_user_preference('auth_forcepasswordchange',$this->employee->id);
+        set_config('expirationtime', 1, 'auth_manual');
+        $this->denied(fn() => $this->open($entry), 'native_auth_required');
+        set_config('expirationtime', 0, 'auth_manual');
         $a=$this->open($entry);set_config('enabled',1,'tool_mfa');
         $this->denied(fn()=>$this->actor_status($a),'native_auth_required');
         set_config('enabled',0,'tool_mfa');$this->denied(fn()=>$this->actor_status($a),'invalid_actor');
+        $b = $this->open(); set_config('expirationtime', 1, 'auth_manual');
+        $this->denied(fn() => $this->actor_status($b), 'native_auth_required');
+        set_config('expirationtime', 0, 'auth_manual');
+        $this->denied(fn() => $this->actor_status($b), 'invalid_actor');
     }
     public function test_link_revision_and_explicit_actor_logout_revoke(): void {
         $a=$this->open();actor_service::revoke($a['session'],$this->browser,'tg1','telegram','123456');
@@ -153,6 +160,35 @@ final class connect_actor_test extends \advanced_testcase {
         $this->denied(fn() => $this->actor_status($actor), 'actor_unavailable');
         $CFG->ustar_connect_provider_read_enabled = true;
         $this->denied(fn() => $this->actor_status($actor), 'invalid_actor');
+    }
+
+    public function test_existing_pre_actor_entry_migration_never_promotes_old_authority(): void {
+        global $CFG, $DB;
+        $entry = $this->entry();
+        $where = ['tokenhash' => opaque_token::digest($entry['session'], 'ue1')];
+        $before = $DB->get_record('local_ustar_conn_sessions', $where, '*', MUST_EXIST);
+        $this->assertSame(1, (int)$before->actorready);
+        // Disposable PHPUnit DB only. Reproduce the actual existing C3 table shape and row.
+        $table = new \xmldb_table('local_ustar_conn_sessions');
+        foreach (['scopestamp', 'authstamp', 'lastseenat', 'actorready', 'authdate', 'scope'] as $name) {
+            $DB->get_manager()->drop_field($table, new \xmldb_field($name));
+        }
+        require_once($CFG->libdir . '/upgradelib.php');
+        require_once($CFG->dirroot . '/local/ustar/db/upgrade.php');
+        set_config('version', 2026101904, 'local_ustar');
+        $this->assertTrue(\xmldb_local_ustar_upgrade(2026101904));
+        unset_config('upgraderunning');
+        $after = $DB->get_record('local_ustar_conn_sessions', $where, '*', MUST_EXIST);
+        $this->assertSame($before->id, $after->id);
+        $this->assertSame('onboarding', $after->scope);
+        foreach (['authdate', 'actorready', 'lastseenat'] as $name) { $this->assertSame(0, (int)$after->$name); }
+        foreach (['authstamp', 'scopestamp'] as $name) { $this->assertSame('', $after->$name); }
+        $this->assertSame('linked_active', entry_service::status($entry['session'], $this->browser,
+            'tg1', 'telegram', '123456')['account_state']);
+        $this->denied(fn() => $this->open($entry), 'native_auth_required');
+        $this->assertSame('actor_read', $this->open()['scope']);
+        $this->assertTrue(\xmldb_local_ustar_upgrade(2026101905));
+        $this->assertSame(0, (int)$DB->get_field('local_ustar_conn_sessions', 'actorready', $where));
     }
 
 }

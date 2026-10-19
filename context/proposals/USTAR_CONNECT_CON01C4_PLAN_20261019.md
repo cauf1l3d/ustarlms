@@ -10,7 +10,7 @@
 ## Global Constraints
 
 - Same Academy identity/permissions; no caller userid/role, no second personnel store; no admin session or password collection by worker.
-- Provider-read activation explicit `$CFG->ustar_connect_provider_read_enabled === true`, default OFF. Only canonical manual-auth users; native tool_mfa enabled, alternate login URL, force password change or another auth plugin → native_auth_required. This deliberately does not attest MFA compatibility.
+- Provider-read activation explicit `$CFG->ustar_connect_provider_read_enabled === true`, default OFF. Only canonical manual-auth users; native tool_mfa enabled, alternate login URL, force password change, configured manual password expiration or another auth plugin → native_auth_required. This deliberately does not attest MFA compatibility.
 - Only own username/fullname/current position/department/status. Features=['profile']; no advertised role actions without an implemented permission-checked API. No email/password/HR answers/grades/files/Moodle session cookie exported.
 - Fresh verified proof<=300s AND linked-active at exchange; old/pending/onboarding-after-approval cannot silently promote. New /start required. Personal-link receipt cannot open actor.
 - ua1_256bit hash-at-rest; exact provider/tenant/key/browser/link revision; idle900s/absolute28800s. New token and cookie/CSRF rotation. No automatic retry after unknown activation outcome.

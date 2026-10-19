@@ -38,3 +38,4 @@ $string['privacy:metadata:connect:hash'] = 'A one-way lookup or confirmation has
 $string['privacy:metadata:connect:state'] = 'Connection state, revision or related confirmation identifier.';
 $string['privacy:metadata:connect:time'] = 'Creation, modification or expiry time.';
 $string['identity_busy'] = 'Identity settings are busy; retry shortly.';
+$string['taskpruneconnectidentity'] = 'Удаление истёкших подтверждений связи с мессенджерами';

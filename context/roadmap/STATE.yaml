@@ -5,11 +5,12 @@ stage: connect_moodle_identity_storage
 stage_label: 'Connect CON01B.1: двусторонние связи и отзыв в Moodle'
 current_activity: 'Owner19Oct04:09MSK поручил продолжить после других агентов. GitHub PR106 latest a627f241; обе CI runs39173142415/39173142410
   SUCCESS; новых PR/head изменений после этой точки не обнаружено. Реализуется CON01B.1: PHP identity/link challenge/proof
-  storage, TTL600, sesskey binding, current actor, uniqueness, revoke/relink и metadata privacy. Candidate2026101900/530files/96tables
-  не deployed; accepted baseline e1d57f5b/526files/93tables сохраняется отдельно. Локально561r16/19skips PASS; native Moodle/PostgreSQL
-  fresh/upgrade/repeat/concurrency CI ещё ожидается. Нет публичных endpoints, trusted worker bridge/onboarding sessions/signup
-  UI, provider activation, native deploy или network change. Journal/heartbeat и platform upgrades deferred. Субагенты0; main
-  не merged.'
+  storage, TTL600, sesskey binding, current actor, uniqueness, revoke/relink и metadata privacy. Candidate2026101900/531files/96tables
+  не deployed; accepted baseline e1d57f5b/526files/93tables сохраняется отдельно. Локально561r16/19skips PASS. Native CI7aff1a99/run39185254555
+  SUCCESS: fresh/upgrade/repeat,12tests/42assertions и independent concurrency. После этого self-review исправил privacy erase/replay
+  retention и добавил bounded cron prune; финальный head требует нового native CI. Нет публичных endpoints, trusted worker
+  bridge/onboarding sessions/signup UI, provider activation, native deploy или network change. Journal/heartbeat и platform
+  upgrades deferred. Субагенты0; main не merged.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -143,5 +144,5 @@ do_not_repeat:
 development_candidate:
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: CON01B.1 Moodle identity metadata and internal service; native DB gate pending
+  scope: CON01B.1 identity storage and bounded replay retention; final native CI pending
   local_ustar_version: 2026101900

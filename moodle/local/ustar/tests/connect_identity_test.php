@@ -185,7 +185,28 @@ final class connect_identity_test extends \advanced_testcase {
         \local_ustar\privacy\provider::delete_data_for_user($contexts);
         $this->assertFalse($DB->record_exists('local_ustar_conn_links', ['userid' => $owner->id]));
         $this->assertFalse($DB->record_exists('local_ustar_conn_challenges', ['userid' => $owner->id]));
-        $this->assertSame(1, $DB->count_records('local_ustar_conn_proofs'));
+        $this->assertSame(2, $DB->count_records('local_ustar_conn_proofs'));
+        $this->assertSame(1, $DB->count_records('local_ustar_conn_proofs', ['challengeid' => 0]));
         $this->assertSame((int)$other->id, identity_service::resolve_active_user($this->telegram('22222')));
+    }
+
+    public function test_erasure_keeps_unexpired_replay_guard_and_cleanup_is_bounded(): void {
+        global $DB, $USER;
+        $owner = clone $USER;
+        $challenge = identity_service::issue('telegram', '123456');
+        identity_service::claim_verified($challenge['code'], $this->telegram(), $this->proof('erase-replay'));
+        identity_service::confirm($challenge['code']);
+        \local_ustar\privacy\provider::delete_data_for_user(new \core_privacy\local\request\approved_contextlist(
+            $owner, 'local_ustar', [\context_system::instance()->id]));
+        $this->setUser($this->getDataGenerator()->create_user());
+        $new = identity_service::issue('telegram', '123456');
+        $this->denied(fn() => identity_service::claim_verified($new['code'], $this->telegram(),
+            $this->proof('erase-replay')), 'replayed_proof');
+        $DB->set_field('local_ustar_conn_proofs', 'expiresat', time() - 1, ['challengeid' => 0]);
+        $result = identity_service::prune_expired(1);
+        $this->assertSame(1, $result['proofs']);
+        $this->assertSame(0, $result['challenges']);
+        $this->assertTrue($DB->record_exists('local_ustar_conn_challenges',
+            ['codehash' => identity::code_hash($new['code'])]));
     }
 }

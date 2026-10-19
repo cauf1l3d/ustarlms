@@ -157,6 +157,30 @@ final class identity_service {
         return $link && self::eligible((int)$link->userid, false) ? (int)$link->userid : 0;
     }
 
+    /** Internal cron maintenance; bounded work, no sends or business writes. */
+    public static function prune_expired(int $limit = 500): array {
+        if ($limit < 1 || $limit > 500) {
+            throw new \InvalidArgumentException('invalid_cleanup_limit');
+        }
+        return self::mutate(function() use ($limit): array {
+            global $DB;
+            $now = time();
+            $challenges = array_keys($DB->get_records_select('local_ustar_conn_challenges',
+                'expiresat <= :now', ['now' => $now], 'id', 'id', 0, $limit));
+            if ($challenges) {
+                [$sql, $params] = $DB->get_in_or_equal($challenges, SQL_PARAMS_NAMED);
+                // Revocation can expire a code before its proof: preserve the
+                // proof's original expiry, only detach its personal association.
+                $DB->set_field_select('local_ustar_conn_proofs', 'challengeid', 0, 'challengeid ' . $sql, $params);
+                $DB->delete_records_list('local_ustar_conn_challenges', 'id', $challenges);
+            }
+            $proofs = array_keys($DB->get_records_select('local_ustar_conn_proofs',
+                'expiresat <= :now', ['now' => $now], 'id', 'id', 0, $limit));
+            if ($proofs) { $DB->delete_records_list('local_ustar_conn_proofs', 'id', $proofs); }
+            return ['challenges' => count($challenges), 'proofs' => count($proofs)];
+        });
+    }
+
     private static function actor(): int {
         global $USER;
         if (!isloggedin() || isguestuser() || \core\session\manager::is_loggedinas()) {

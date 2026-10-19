@@ -612,4 +612,6 @@ Consolidation brings accepted PR98/99/100/102 sources and all dated receipts int
 
 ## 19Oct — CON01B.1 candidate, не установка server1
 
-Внутренний PHP Connect link storage и schema candidate2026101900. Moodle core/PG production не менялись; accepted application baseline e1d57f5b/local2026100204/theme2026100202 сохранён.530source files/96tables — candidate manifest, не факт deployment. Native fresh/upgrade/repeat и concurrent requests CI pending. [План](../proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md).
+Внутренний PHP Connect link storage и schema candidate2026101900. Moodle core/PG production не менялись; accepted application baseline e1d57f5b/local2026100204/theme2026100202 сохранён.531source files/96tables — candidate manifest, не факт deployment. Native fresh/upgrade/repeat и concurrent requests CI pending. [План](../proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md).
+
+Native CI7aff1a99/run39185254555: schema parity и12tests/42assertions + concurrent confirm/replay PASS. Финальная erasure/replay/cron правка повторно проверяется отдельно. Все данные тестовые, не production acceptance.

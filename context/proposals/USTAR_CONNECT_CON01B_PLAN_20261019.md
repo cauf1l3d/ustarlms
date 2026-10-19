@@ -14,7 +14,7 @@
 - Moodle distributed lock сериализует редкие identity mutations. Под lock выполняется delegated transaction; исключения откатывают proof/claim/link вместе. Вызовы должны владеть транзакцией, outer transaction запрещена, чтобы lock не освобождался до commit.
 - resolve_active_user всегда заново проверяет user deleted/suspended/confirmed, business account и employment active. Pending может связать свой канал, но resolve не выдаёт employee grant. View-as/login-as не могут менять связи.
 - Proof replay фиксируется в БД unique hash; срок не позволяет восстановить свежесть старого proof. Очистка истёкших подтверждений/consumedproof ограничена batch; срок хранения link ownership не ослабляет запрет silent transfer.
-- Privacy API описывает/экспортирует metadata и удаляет challenges/proofs; при удалении user data links отзываются и обезличиваются, не оставляя прежнему proof возможность входа. Полное privacy решение проекта за пределами среза, metadata новых таблиц включается здесь.
+- Privacy API описывает/экспортирует metadata и удаляет challenges/links; unexpired proof hashes теряют challenge/user association и остаются до original expiry, чтобы erase не отменял replay guard; при удалении user data links отзываются и обезличиваются, не оставляя прежнему proof возможность входа. Полное privacy решение проекта за пределами среза, metadata новых таблиц включается здесь.
 - XMLDB fresh/upgrade/repeat parity, plugin2026101900; никаких автоматических backfill/send или изменений ролей. Откат после schema upgrade — парная DB/source copy, не downgrade файлов.
 
 ## План и доказательства
@@ -28,3 +28,7 @@
 ## Оставшийся CON01B
 
 Trusted worker→facade verifier (mTLS/assertion, bounded scopes), onboarding sessions/nonce, atomic registration receipt вокруг canonical registration_service, pending link без employee grant, HRD decision/outbox, browser формы и CSRF/rate limits. Только после этих интеграций и внешнего HTTPS bootstrap можно объявить регистрацию первого касания работающей. Нельзя заменить доказательство ручной source-проверкой.
+
+## Inline review / уточнения перед завершением
+
+Найдено: немедленное удаление live proof rows при privacy erase ослабляло replay guard. Исправлено: detach challengeid=0, immutable expiry, bounded cron prune500строк/таблицу каждые5мин. Добавлен regression DB test erasure→same proof→deny→expire→prune. Добавлен owner-only preview перед вторым подтверждением. Общий full-RC gate также должен учитывать connect-db, а manual dispatch должен запускать этот gate при наличии Connect service. Эти исправления требуют повторного native CI; прежний source tree не подменяет их проверку.

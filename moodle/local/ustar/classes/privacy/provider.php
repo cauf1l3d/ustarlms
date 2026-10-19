@@ -107,12 +107,15 @@ final class provider implements
             $transaction = $DB->start_delegated_transaction();
             try {
                 if ($userids === null) {
-                    foreach (['local_ustar_conn_proofs', 'local_ustar_conn_challenges', 'local_ustar_conn_links'] as $table) {
+                    $DB->set_field('local_ustar_conn_proofs', 'challengeid', 0);
+                    foreach (['local_ustar_conn_challenges', 'local_ustar_conn_links'] as $table) {
                         $DB->delete_records($table);
                     }
                 } else {
                     [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
-                    $DB->delete_records_select('local_ustar_conn_proofs', 'challengeid IN
+                    // Detach identity now; keep the opaque replay guard until
+                    // its original expiry so erasure cannot resurrect a proof.
+                    $DB->set_field_select('local_ustar_conn_proofs', 'challengeid', 0, 'challengeid IN
                         (SELECT id FROM {local_ustar_conn_challenges} WHERE userid ' . $insql . ')', $params);
                     $DB->delete_records_select('local_ustar_conn_challenges', 'userid ' . $insql, $params);
                     $DB->delete_records_select('local_ustar_conn_links', 'userid ' . $insql, $params);

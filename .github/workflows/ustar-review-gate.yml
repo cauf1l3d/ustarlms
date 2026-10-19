@@ -53,8 +53,11 @@ jobs:
         id: connect-scope
         env:
           CONNECT_BASE: ${{ github.event.pull_request.base.sha || github.sha }}
+          CONNECT_EVENT: ${{ github.event_name }}
         run: |
-          if git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/tests/connect_identity_test.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php; then
+          if [ "$CONNECT_EVENT" = workflow_dispatch ] && [ -f moodle/local/ustar/classes/connect/identity_service.php ]; then
+            echo 'connect_db=true' >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/tests/connect_identity_test.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php; then
             echo 'connect_db=false' >> "$GITHUB_OUTPUT"
           else
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
@@ -195,7 +198,7 @@ jobs:
 
   gate:
     if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc'))) }}
-    needs: [source, rollback, prepare-rc, moodle-db]
+    needs: [source, rollback, prepare-rc, moodle-db, connect-db]
     runs-on: ubuntu-24.04
     steps:
       - name: Require every check to pass
@@ -204,8 +207,11 @@ jobs:
           MOODLE: ${{ needs.moodle-db.result }}
           ROLLBACK: ${{ needs.rollback.result }}
           PREPARE: ${{ needs.prepare-rc.result }}
+          CONNECT: ${{ needs.connect-db.result }}
+          CONNECT_REQUIRED: ${{ needs.source.outputs.connect_db }}
         run: |
           test "$SOURCE" = success
           test "$MOODLE" = success
           test "$ROLLBACK" = success
           test "$PREPARE" = success
+          if [ "$CONNECT_REQUIRED" = true ]; then test "$CONNECT" = success; fi

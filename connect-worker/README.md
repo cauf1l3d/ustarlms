@@ -17,4 +17,13 @@ python -m unittest discover -s tests/r16 -v
 
 [Результаты ревью/регистрация](../context/proposals/USTAR_CONNECT_REVIEW_20261019.md) · [план](../context/proposals/USTAR_CONNECT_CON01A_PLAN_20261019.md).
 
-Продолжение CON01B.1: внутренний PHP identity_service и3metadata tables в Moodle. [План и границы](../context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md). Worker→facade trusted transport и реальные bot endpoints ещё отсутствуют; напрямую публиковать PHP service методы запрещено.
+CON01B.1: внутренний PHP identity_service и3metadata tables. CON01B.2: подписанный worker→facade bridge и2временные metadata tables входа. [План и границы](../context/proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md). Реальные bot receivers, signup/HRD/forms и публичный edge ещё отсутствуют.
+
+`bridge.sign_request` подписывает canonical JSON отдельным256битным service key. `BridgeClient` допускает только HTTPS fixed path `/local/ustar/connect_bridge.php`, CA+hostname verification, без redirects/ambient proxies/retries. Конфигурация создаётся только runtime, не в Git: `$CFG->ustar_connect_bridge_enabled = true`, `$CFG->ustar_connect_bridge_peers` — exact peer IPs; `$CFG->ustar_connect_bridge_keys` — map key ID → `secret` (64lowercase hex), `provider`, `tenant`, `operations` allowlist. По умолчанию endpoint выключен. Это описание контракта, не команда активации на production. Отдельный loopback/private HTTPS listener должен выставлять серверный HTTPS и exact REMOTE_ADDR; forwarded client headers не считаются доказательством TLS/IP.
+
+Не использовать bot token/Moodle admin token вместо service key и не включать global proxy. Worker service credential доверен утверждать identity своего provider/tenant, но не выбирать Moodle userid/роль. Поэтому key должен храниться private, endpoint ограничиваться private listener/peer, а будущий public backend — проверять signed initData до вызова signer. `telegram_exchange_payload` принимает только проверенный signed start_param; browser secret создаёт trusted backend, не query string. Entry token — не Moodle session:600с, только onboarding status/logout. Запуск/отправка сообщений ещё не реализованы.
+
+Дополнительная локальная проверка из корня репозитория, не из production installation:
+```bash
+python -m unittest discover -s tests/r16 -p test_connect_bridge.py -v
+```

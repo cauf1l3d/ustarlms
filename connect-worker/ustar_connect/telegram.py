@@ -20,6 +20,7 @@ class TelegramLaunch:
     identity: ProviderIdentity
     issued_at: int
     proof_id: str
+    start_param: str | None = None
 
 
 def _unique_object(pairs):
@@ -88,4 +89,7 @@ def validate_init_data(raw: str, *, bot_token: str, now: int) -> TelegramLaunch:
     identity = ProviderIdentity('telegram', bot_token.split(':', 1)[0], str(user['id']))
     # Same signed launch keeps its replay lookup key even if query order/encoding changes.
     proof_id = hashlib.sha256((identity.tenant + ':' + signature).encode()).hexdigest()
-    return TelegramLaunch(identity, issued_at, proof_id)
+    start = fields.get('start_param')
+    if start is not None and not re.fullmatch(r'[A-Za-z0-9_-]{1,64}', start):
+        raise ValueError('invalid_start_param')
+    return TelegramLaunch(identity, issued_at, proof_id, start)

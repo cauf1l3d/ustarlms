@@ -29,6 +29,13 @@ final class identity {
         return 'uc1_' . rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
     }
 
+    public function proof_hash(string $proofid): string {
+        if (!preg_match('/\A[0-9a-f]{64}\z/', $proofid)) {
+            throw new \InvalidArgumentException('invalid_proof');
+        }
+        return hash('sha256', json_encode([$this->provider, $this->tenant, $proofid]));
+    }
+
     /** Byte-compatible with CON01A worker; hash is not an access token. */
     public static function code_hash(string $code): string {
         if (!preg_match('/\Auc1_[A-Za-z0-9_-]{43}\z/', $code)) {

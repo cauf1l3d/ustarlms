@@ -1,16 +1,15 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_moodle_identity_storage
-stage_label: 'Connect CON01B.1: двусторонние связи и отзыв в Moodle'
-current_activity: 'Owner19Oct04:09MSK поручил продолжить после других агентов. GitHub PR106 latest a627f241; обе CI runs39173142415/39173142410
-  SUCCESS; новых PR/head изменений после этой точки не обнаружено. Реализуется CON01B.1: PHP identity/link challenge/proof
-  storage, TTL600, sesskey binding, current actor, uniqueness, revoke/relink и metadata privacy. Candidate2026101900/531files/96tables
-  не deployed; accepted baseline e1d57f5b/526files/93tables сохраняется отдельно. Локально561r16/19skips PASS. Native CI7aff1a99/run39185254555
-  SUCCESS: fresh/upgrade/repeat,12tests/42assertions и independent concurrency. После этого self-review исправил privacy erase/replay
-  retention и добавил bounded cron prune; финальный head требует нового native CI. Нет публичных endpoints, trusted worker
-  bridge/onboarding sessions/signup UI, provider activation, native deploy или network change. Journal/heartbeat и platform
-  upgrades deferred. Субагенты0; main не merged.'
+stage: connect_signed_bridge_entry_sessions
+stage_label: 'Connect CON01B.2: private signed bridge и одноразовый вход'
+current_activity: 'Owner19Oct04:47MSK разрешил продолжить. PR106 baseline5f9aa3fb проверен: Context39185823445/Review39185823458
+  SUCCESS, native13tests/47assertions + independent concurrency. Новый candidate2026101901/539files/98tables:
+  scoped HMAC worker bridge, disabled-by-default TLS/private-peer endpoint, durable request nonce, one-use launch,
+  browser-bound onboarding-only sessions, current link/user checks, privacy и bounded prune. Локально569r16/19skips PASS;
+  новый native CI ещё ожидается; exact final receipt будет в PR106. Accepted baseline e1d57f5b/526files/93tables не менялся.
+  Нет signup receipt/registration forms/HRD outbox, реального bot receiver, public edge, native deploy или network change.
+  Journal/heartbeat и platform upgrades deferred. Субагенты0; main не merged.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -79,6 +78,7 @@ audit:
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
 - START_HERE.md
+- context/proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_REVIEW_20261019.md
 - context/project.yaml
@@ -144,5 +144,5 @@ do_not_repeat:
 development_candidate:
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: CON01B.1 identity storage and bounded replay retention; final native CI pending
-  local_ustar_version: 2026101900
+  scope: CON01B.2 signed private bridge and onboarding-only entry sessions; native CI pending
+  local_ustar_version: 2026101901

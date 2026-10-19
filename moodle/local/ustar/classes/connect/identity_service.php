@@ -53,7 +53,7 @@ final class identity_service {
             }
             // Replay key is provider/tenant+proof, not recipient code. Cannot move
             // one proof between challenges or subject IDs by changing the JSON.
-            $proofhash = hash('sha256', json_encode([$identity->provider, $identity->tenant, $proofid]));
+            $proofhash = $identity->proof_hash($proofid);
             if ($DB->record_exists('local_ustar_conn_proofs', ['proofhash' => $proofhash])) {
                 throw new \InvalidArgumentException('replayed_proof');
             }
@@ -177,7 +177,15 @@ final class identity_service {
             $proofs = array_keys($DB->get_records_select('local_ustar_conn_proofs',
                 'expiresat <= :now', ['now' => $now], 'id', 'id', 0, $limit));
             if ($proofs) { $DB->delete_records_list('local_ustar_conn_proofs', 'id', $proofs); }
-            return ['challenges' => count($challenges), 'proofs' => count($proofs)];
+            $entry = [];
+            foreach (['local_ustar_conn_launches', 'local_ustar_conn_sessions'] as $table) {
+                $ids = array_keys($DB->get_records_select($table, 'expiresat <= :now',
+                    ['now' => $now], 'id', 'id', 0, $limit));
+                if ($ids) { $DB->delete_records_list($table, 'id', $ids); }
+                $entry[$table] = count($ids);
+            }
+            return ['challenges' => count($challenges), 'proofs' => count($proofs),
+                'launches' => $entry['local_ustar_conn_launches'], 'sessions' => $entry['local_ustar_conn_sessions']];
         });
     }
 
@@ -227,7 +235,7 @@ final class identity_service {
     }
 
     /** Low-frequency writes serialize under one cross-worker Moodle lock. */
-    private static function mutate(callable $operation) {
+    public static function atomic(callable $operation) {
         global $DB;
         if ($DB->is_transaction_started()) {
             throw new \coding_exception('Connect identity mutations must own the transaction');
@@ -248,5 +256,25 @@ final class identity_service {
         } finally {
             $lock->release();
         }
+    }
+
+    private static function mutate(callable $operation) {
+        return self::atomic($operation);
+    }
+
+    /** Internal transport replay barrier; the key is scoped and signature-verified upstream. */
+    public static function remember_transport(string $hash, int $expires): void {
+        if (!preg_match('/\A[0-9a-f]{64}\z/', $hash) || $expires <= time() || $expires > time()+90) {
+            throw new \InvalidArgumentException('invalid_transport');
+        }
+        self::atomic(function() use ($hash, $expires): void {
+            global $DB;
+            if ($DB->record_exists('local_ustar_conn_proofs', ['proofhash' => $hash])) {
+                throw new \InvalidArgumentException('replayed_transport');
+            }
+            $DB->insert_record('local_ustar_conn_proofs', (object)[
+                'proofhash' => $hash, 'challengeid' => 0, 'timecreated' => time(), 'expiresat' => $expires,
+            ]);
+        });
     }
 }

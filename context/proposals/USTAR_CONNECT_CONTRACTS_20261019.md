@@ -1,6 +1,6 @@
 # USTAR Connect — контракты и сопоставление с исходниками
 
-19.10.2026, Europe/Moscow. **API PROPOSED; CON-01A primitives готовы; CON01B.1 internal storage**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Ни один путь API ниже ещё не реализован. Исходники проверены на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
+19.10.2026, Europe/Moscow. **Public API PROPOSED; CON01B.2 private bridge/session candidate**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Публичные пути API ниже ещё не реализованы; отдельный private endpoint описан в конце. Исходный review основан на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
 
 ## 1. Канонические владельцы операций
 
@@ -109,3 +109,7 @@ Backfill не отправляет старые pending/disabled, не пере�
 ## Реализация CON01B.1
 
 Внутренний classes/connect/identity_service: issue → claim_verified → confirm, revoke, resolve_active_user.3metadata tables и XMLDB candidate2026101900; [план](USTAR_CONNECT_CON01B_PLAN_20261019.md). Это не реализация публичных /links или /onboarding endpoints из таблицы выше. claim_verified требует будущей trusted transport boundary; не вызывать из browser JSON. Current capability/scope конкретных бизнес-команд проверяется их facade/domain writer, link не хранит роли.
+
+## Реализация CON01B.2
+
+[Точный bridge/entry contract](USTAR_CONNECT_CON01B2_PLAN_20261019.md): POST `/local/ustar/connect_bridge.php`, disabled default, private peer+TLS+scoped service HMAC. Только launch.create/exchange, entry.status/revoke, link.claim. Транспортный nonce durable; launch single-use и bound к provider subject; signed initData.start_param обязателен. Browser-bound entry TTL600с со scope onboarding — не Moodle login и не business capability. Caller userid/role запрещены. Candidate2026101901/539files/98tables; privacy/cleanup для новых metadata. Canonical signup receipt/HRD approvals/outbox и public endpoints выше всё ещё не реализованы. Старые CON01B.1 строки — dated implementation checkpoint, не отсутствие нового private bridge.

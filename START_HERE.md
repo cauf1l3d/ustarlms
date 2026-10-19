@@ -2,7 +2,7 @@
 
 ## Текущий этап 19 октября 2026
 
-Приоритет владельца01:28МСК — **INTEGRATIONS-01 / CON-01B.1: связи каналов в Moodle**, [PR106/RFC](context/proposals/USTAR_CONNECT_RFC_20261018.md), [контракты](context/proposals/USTAR_CONNECT_CONTRACTS_20261019.md). В00:41 владелец подтвердил учётные записи пульта и личную Telegram-привязку; журнал всё ещё показывает прежнее сообщение. Журнал и внешний heartbeat явно отложены. [Датированный receipt](context/runtime/connect_owner_priority_20261019.json).
+Приоритет владельца01:28МСК — **INTEGRATIONS-01**, продолжение04:47 — **CON01B.2: private bridge и одноразовый вход**, [PR106/RFC](context/proposals/USTAR_CONNECT_RFC_20261018.md), [контракты](context/proposals/USTAR_CONNECT_CONTRACTS_20261019.md). В00:41 владелец подтвердил учётные записи пульта и личную Telegram-привязку; журнал всё ещё показывает прежнее сообщение. Журнал и внешний heartbeat явно отложены. [Датированный receipt](context/runtime/connect_owner_priority_20261019.json).
 
 Рабочий продукт — Moodle + `local_ustar` + `theme_ustar`, parent boost. `frontend/` — legacy Next.js, исключённый из активного CI/выпуска. Проверки native UI темы и плагина сохранены.
 
@@ -11,7 +11,7 @@
 - **Текущая задача:** проектирование USTAR Connect: Academy identity/capabilities, Telegram/Bitrix24/WhatsApp adapters, Mini Apps и внешний HTTPS edge без открытия офисных портов. Review регистрации и CRM=задачи выполнен; реализованы Python primitives и внутренний PHP link/challenge/proof service с candidate schema; публичный registration API отсутствует; INF-06 остаток отложен, INF-07 HTTPS Академии сохраняется отдельным gate полного LMS.
 - **Отложено:** Moodle5.2 и PostgreSQL17. Прежняя подготовка5.3/PR101 сохранена как история, не следующий запуск.
 
-[Review и первый вход](context/proposals/USTAR_CONNECT_REVIEW_20261019.md), [план CON01B.1](context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md).
+[Review и первый вход](context/proposals/USTAR_CONNECT_REVIEW_20261019.md), [план CON01B.2](context/proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md). Подписанный bridge и entry sessions реализованы в candidate; endpoint выключен, signup/HRD/forms ещё впереди. Exact CI receipt — в PR106, не production acceptance.
 
 ## Порядок чтения
 
@@ -30,4 +30,4 @@
 
 Нет прямого подключения агента к server1. После сверки репозитория не запускать native update/capture/reboot/restore без самостоятельного основания. [CI scope](context/runtime/CI_SCOPE_20261016.md) описывает реально выполняемые и отдельные опциональные проверки.
 
-Candidate2026101900/531source files/96tables хранится в [отдельном manifest](context/code_map/development_source.json). Это unmerged разработка, не новый production receipt. Accepted source inventory526/93 остаётся датированным baseline.
+Candidate2026101901/539source files/98tables хранится в [отдельном manifest](context/code_map/development_source.json). Это unmerged разработка, не новый production receipt. Accepted source inventory526/93 остаётся датированным baseline.

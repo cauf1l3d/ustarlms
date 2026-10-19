@@ -9,6 +9,8 @@ require_once($CFG->dirroot . '/user/lib.php');
 
 use local_ustar\connect\identity;
 use local_ustar\connect\identity_service;
+use local_ustar\connect\entry_service;
+use local_ustar\connect\opaque_token;
 
 function connect_user(int $userid): void {
     global $DB, $USER;
@@ -22,6 +24,9 @@ if (($argv[1] ?? '') === 'child') {
     try {
         if ($input['op'] === 'confirm') {
             echo json_encode(identity_service::confirm($input['code']));
+        } else if ($input['op'] === 'entry') {
+            echo json_encode(entry_service::exchange(new identity('telegram', '123456', '77777'),
+                $input['launch'], $input['proof'], $input['authdate'], $input['browser'], 'tg1'));
         } else {
             identity_service::claim_verified($input['code'], new identity('telegram', '123456', '77777'), $input['proof']);
             echo json_encode(['claimed' => true]);
@@ -81,3 +86,13 @@ if (count(array_filter($results, fn($item) => ($item['claimed'] ?? false) === tr
     throw new RuntimeException('Concurrent replay was not rejected');
 }
 echo "CONNECT_CONCURRENT_CONFIRM_AND_REPLAY=PASS\n";
+$launch = entry_service::create_launch(new identity('telegram', '123456', '77777'), 'tg1');
+$input = ['userid' => $userid, 'op' => 'entry', 'launch' => $launch['launch'],
+    'proof' => hash('sha256', 'concurrent-entry'), 'authdate' => time(), 'browser' => opaque_token::issue('ub1')];
+$results = connect_race([$input, $input]);
+if (count(array_filter($results, fn($item) => isset($item['session']))) !== 1
+        || count(array_filter($results, fn($item) => ($item['denied'] ?? '') === 'launch_consumed')) !== 1
+        || $DB->count_records('local_ustar_conn_sessions', ['userid' => $userid]) !== 1) {
+    throw new RuntimeException('Concurrent launch exchange was not single-use');
+}
+echo "CONNECT_CONCURRENT_ENTRY_EXCHANGE=PASS\n";

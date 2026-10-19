@@ -615,3 +615,7 @@ Consolidation brings accepted PR98/99/100/102 sources and all dated receipts int
 Внутренний PHP Connect link storage и schema candidate2026101900. Moodle core/PG production не менялись; accepted application baseline e1d57f5b/local2026100204/theme2026100202 сохранён.531source files/96tables — candidate manifest, не факт deployment. Native fresh/upgrade/repeat и concurrent requests CI pending. [План](../proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md).
 
 Native CI7aff1a99/run39185254555: schema parity и12tests/42assertions + concurrent confirm/replay PASS. Финальная erasure/replay/cron правка повторно проверяется отдельно. Все данные тестовые, не production acceptance.
+
+## 19Oct — CON01B.2 candidate, не установка server1
+
+5f9aa3fb завершил предыдущий native gate: Context39185823445/Review39185823458 SUCCESS,13tests/47assertions, schema parity/concurrency PASS. Новая поставка — signed private bridge и onboarding-only sessions candidate2026101901/539files/98tables. Endpoint disabled default, TLS/private peer/service-key scope, request nonce и business proof replay, one-use exchange/browser binding, privacy/cleanup. Локально569r16/19skips и PHP syntax PASS; native CI для этого candidate ожидается. Точный final SHA/run receipt публикуется в PR106 после CI; эта запись сохраняет pre-CI момент. Нет production installation/network changes или новых runtime secrets. Следом signup receipt/HRD/outbox/forms. [План](../proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md).

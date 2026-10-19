@@ -226,3 +226,7 @@ Review и план CON-01A готовы; transport primitives реализуют
 ## Продолжение19Oct04:09
 
 [План CON01B.1](USTAR_CONNECT_CON01B_PLAN_20261019.md). Начальная постоянная identity реализация в Moodle candidate2026101900; baseline production не менялся. Нет trusted worker bridge/onboarding sessions/signup API/UI. Native CI и deployment — разные gates.
+
+## Продолжение19Oct04:47
+
+[CON01B.2](USTAR_CONNECT_CON01B2_PLAN_20261019.md): private scoped HMAC bridge и одноразовые browser-bound onboarding sessions реализованы в candidate2026101901. Endpoint по умолчанию выключен; новых сетевых настроек/служб/провайдеров не включалось. Предыдущий5f9aa3fb native13tests/47assertions PASS; новый CI отдельно, exact final receipt в PR106. Signup receipt+pending link/HRD outbox/forms и external edge остаются следующим срезом. Эта запись заменяет отрицание bridge/session в предыдущем dated checkpoint, не меняет production evidence.

@@ -4927,5 +4927,14 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026101900, 'local', 'ustar');
     }
+    if ($oldversion < 2026101901) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Connect entry schema'); }
+        foreach (['local_ustar_conn_launches', 'local_ustar_conn_sessions'] as $name) {
+            $table = $schema->getStructure()->getTable($name);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        upgrade_plugin_savepoint(true, 2026101901, 'local', 'ustar');
+    }
 return true;
 }

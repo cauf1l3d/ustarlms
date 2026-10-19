@@ -79,6 +79,18 @@ class SignupValues(unittest.TestCase):
                               'field': 'email' if field == 'email' else 'form'}, result)
             self.assertNotIn(FORM['password'], json.dumps(result))
 
+    def test_native_fixture_loads_with_phpunit_final_status_contract(self):
+        # CI found a helper named status() overriding PHPUnit 11's final method.
+        # Only the framework contract is modelled; the real fixture is compiled by PHP.
+        source = ROOT/'moodle/local/ustar/tests/connect_signup_test.php'
+        script = ('define("MOODLE_INTERNAL",true); '
+                  'class advanced_testcase { final public function status() {} } '
+                  'require ' + json.dumps(str(source)) + '; echo "FIXTURE_LOAD_OK";')
+        p = subprocess.run([os.environ.get('USTAR_TEST_PHP', 'php'), '-n', '-r', script],
+                           capture_output=True, text=True)
+        self.assertEqual(0, p.returncode, p.stderr or p.stdout)
+        self.assertEqual('FIXTURE_LOAD_OK', p.stdout)
+
 
 if __name__ == '__main__':
     unittest.main()

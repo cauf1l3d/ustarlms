@@ -8,7 +8,7 @@ current_activity: 'Owner19Oct05:30MSK продолжил. Base81a1be76 пров�
   ровно2expected failures canonical completion/rollback. Затем реализован candidate2026101902/542files/99tables:
   private registration options/submit/status, canonical registration completion внутри email lock/transaction,
   first provider link + durable receipt + own entry snapshot, no employee grant. Existing HRD review/notification
-  outbox не заменяются. Локально574r16/19skips PASS; новый native implementation CI ожидается, exact final receipt в PR106.
+  outbox не заменяются. Локально575r16/19skips PASS; новый native implementation CI ожидается, exact final receipt в PR106.
   Accepted baseline e1d57f5b/526files/93tables неизменен. Endpoint disabled; нет HTTPS forms/public BFF/real receiver,
   native deploy/network change/main merge. Journal/heartbeat/platform upgrades deferred. Субагенты0.'
 next_task: INTEGRATIONS-01

@@ -33,7 +33,7 @@ final class connect_signup_test extends \advanced_testcase {
         return signup_service::submit($entry['session'], $entry['browser'], $entry['command'], $form ?? $this->form(),
             'tg1', 'telegram', '123456', str_repeat('12', 32));
     }
-    private function status(array $entry): array {
+    private function signup_status(array $entry): array {
         return signup_service::status($entry['session'], $entry['browser'], 'tg1', 'telegram', '123456');
     }
     private function denied(callable $call, string $reason): void {
@@ -95,7 +95,7 @@ final class connect_signup_test extends \advanced_testcase {
         $this->assertSame(employment::PENDING, employment::resolve((int)$user->id)['status']);
         $this->assertFalse(employment::learning_allowed((int)$user->id));
         $this->assertSame(0, identity_service::resolve_active_user(new identity('telegram', '123456', '77777')));
-        $this->assertSame('pending_approval', $this->status($entry)['account_state']);
+        $this->assertSame('pending_approval', $this->signup_status($entry)['account_state']);
         foreach (['local_ustar_conn_links', 'local_ustar_conn_signups', 'local_ustar_staff_requests'] as $table) {
             $this->assertSame(1, $DB->count_records($table));
         }
@@ -132,7 +132,7 @@ final class connect_signup_test extends \advanced_testcase {
         global $DB;
         $first = $this->entry(); $other = $this->entry();
         $this->submit($first);
-        $this->denied(fn() => $this->status($other), 'restart_required');
+        $this->denied(fn() => $this->signup_status($other), 'restart_required');
         $user = $DB->get_record('user', ['username' => 'connect_signup'], '*', MUST_EXIST);
         $this->setUser($user);
         $link = $DB->get_record('local_ustar_conn_links', ['userid' => $user->id], '*', MUST_EXIST);
@@ -148,7 +148,7 @@ final class connect_signup_test extends \advanced_testcase {
         $this->denied(fn() => $this->submit($entry), 'revoked_entry');
         $DB->set_field('user', 'suspended', 0, ['id' => $user->id]);
         $DB->set_field('local_ustar_conn_sessions', 'expiresat', time()-1);
-        $this->denied(fn() => $this->status($entry), 'invalid_entry');
+        $this->denied(fn() => $this->signup_status($entry), 'invalid_entry');
     }
     public function test_hrd_approval_is_canonical_and_hr_alone_cannot_approve(): void {
         global $DB;
@@ -163,9 +163,9 @@ final class connect_signup_test extends \advanced_testcase {
         $this->setUser($hrd);
         staffing_requests::review((int)$request->id, staffing_requests::STATUS_APPROVED, (int)$hrd->id, ['positionid' => 'retail_seller']);
         staffing_requests::review((int)$request->id, staffing_requests::STATUS_APPROVED, (int)$hrd->id, ['positionid' => 'retail_seller']);
-        $this->assertSame('approved', $this->status($entry)['registration']['status']);
-        $this->assertSame('linked_active', $this->status($entry)['account_state']);
-        $this->assertSame('onboarding', $this->status($entry)['scope']);
+        $this->assertSame('approved', $this->signup_status($entry)['registration']['status']);
+        $this->assertSame('linked_active', $this->signup_status($entry)['account_state']);
+        $this->assertSame('onboarding', $this->signup_status($entry)['scope']);
         $this->assertSame((int)$request->employeeid, identity_service::resolve_active_user(new identity('telegram', '123456', '77777')));
         $this->assertSame(1, $DB->count_records('local_ustar_notifications', [
             'userid' => $request->employeeid, 'eventtype' => 'registration_approved']));
@@ -179,7 +179,7 @@ final class connect_signup_test extends \advanced_testcase {
         $this->setUser($hrd);
         staffing_requests::review((int)$request->id, staffing_requests::STATUS_REJECTED, (int)$hrd->id,
             ['reviewcomment' => 'Synthetic rejection']);
-        $status = $this->status($entry);
+        $status = $this->signup_status($entry);
         $this->assertSame('rejected', $status['registration']['status']);
         $this->assertSame('pending_approval', $status['account_state']);
         $this->assertArrayNotHasKey('userid', $status['registration']);
@@ -200,7 +200,7 @@ final class connect_signup_test extends \advanced_testcase {
         try { $this->submit($entry); $this->fail('Late receipt collision must roll back'); }
         catch (\dml_write_exception $error) { $this->assertNotEmpty($error->errorcode); }
         foreach ($counts as $table => $count) { $this->assertSame($count, $DB->count_records($table), $table); }
-        $this->assertSame('unlinked', $this->status($entry)['account_state']);
+        $this->assertSame('unlinked', $this->signup_status($entry)['account_state']);
     }
     public function test_receipt_privacy_and_retention_do_not_reopen_signup(): void {
         global $DB;
@@ -224,6 +224,6 @@ final class connect_signup_test extends \advanced_testcase {
         $this->assertSame(0, $DB->count_records('local_ustar_conn_signups'));
         $this->assertTrue($DB->record_exists('user', ['id' => $user->id]));
         $this->assertTrue($DB->record_exists('local_ustar_staff_requests', ['employeeid' => $user->id]));
-        $this->denied(fn() => $this->status($entry), 'invalid_entry');
+        $this->denied(fn() => $this->signup_status($entry), 'invalid_entry');
     }
 }

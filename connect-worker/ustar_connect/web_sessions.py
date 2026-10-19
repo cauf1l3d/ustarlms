@@ -20,6 +20,9 @@ class Session:
     browser: str = field(default_factory=lambda: 'ub1_'+secrets.token_urlsafe(32))
     command: str = field(default_factory=lambda: 'ur1_'+secrets.token_urlsafe(32))
     entry: str | None = None
+    actor: str | None = None
+    actor_absolute: int = 0
+    activation_uncertain: bool = False
     link_claim: str | None = None  # Volatile receipt only: claimed/uncertain, never Academy auth.
     attempts: dict = field(default_factory=dict)
     window: int = 0

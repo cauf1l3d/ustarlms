@@ -15,6 +15,7 @@ from urllib.parse import urlsplit
 from .bridge import BridgeRejected, FORM_FIELDS, _token, telegram_exchange_payload, telegram_link_payload
 from .telegram import validate_init_data
 from .web_sessions import COOKIE, SessionStore, WebError
+from . import actor_web
 
 ASSETS = {'/': ('index.html', 'text/html; charset=utf-8'),
           '/onboarding.js': ('onboarding.js', 'text/javascript; charset=utf-8'),
@@ -130,7 +131,7 @@ class OnboardingApp:
                 raise WebError('method_not_allowed', 405)
             raw, kind = self._assets[path]
             return 200, raw, kind
-        routes = {'/api/bootstrap', '/api/launch', '/api/options', '/api/status', '/api/register', '/api/logout'}
+        routes = {'/api/bootstrap', '/api/launch', '/api/options', '/api/status', '/api/register', '/api/logout', '/api/activate'}
         if path not in routes:
             raise WebError('not_found', 404)
         if method != ('GET' if path == '/api/bootstrap' else 'POST'):
@@ -158,9 +159,11 @@ class OnboardingApp:
                 raise WebError('session_expired')
             if path == '/api/bootstrap':
                 self._sessions.limit(session, 'bootstrap', now)
-                value = {'ok': True, 'csrf': session.csrf, 'authenticated': bool(session.entry or session.link_claim)}
+                value = {'ok': True, 'csrf': session.csrf, 'authenticated': bool(session.entry or session.link_claim or session.actor)}
                 if session.link_claim:
                     value['scope'] = 'link_confirmation'
+                elif session.actor:
+                    value['scope'] = 'actor_read'
                 return 200, value, 'application/json'
             csrf = env.get('HTTP_X_CSRF_TOKEN', '')
             if not isinstance(csrf, str) or not re.fullmatch(r'[A-Za-z0-9_-]{43}', csrf) or not hmac.compare_digest(csrf, session.csrf):
@@ -176,7 +179,7 @@ class OnboardingApp:
             if operation == 'launch':
                 if session.link_claim == 'uncertain':
                     raise WebError('link_outcome_unknown', 503)
-                if session.entry or session.link_claim:
+                if session.entry or session.link_claim or session.actor:
                     raise WebError('restart_required')
                 try:
                     proof = validate_init_data(data['init_data'], bot_token=self._bot_token, now=now)
@@ -214,12 +217,33 @@ class OnboardingApp:
             if operation == 'logout':
                 self._sessions.remove(cookie)
                 extra['Set-Cookie'] = self._set_cookie('', 0)
-                if session.entry:
+                if session.actor:
+                    try:
+                        self._request('actor.revoke', {'session': session.actor, 'browser': session.browser})
+                    except Exception:
+                        pass
+                elif session.entry:
                     try:
                         self._request('entry.revoke', {'session': session.entry, 'browser': session.browser})
                     except Exception:
                         pass  # Local secret gone; remote entry still expires within600s.
                 return 200, {'ok': True, 'local_session_closed': True}, 'application/json'
+            if session.actor:
+                if operation != 'status':
+                    raise WebError('actor_only_session')
+                try:
+                    result = actor_web.profile(self._request('actor.status',
+                        {'session': session.actor, 'browser': session.browser}), now, session.actor_absolute)
+                except BridgeRejected as error:
+                    if error.reason in ('invalid_actor', 'native_auth_required', 'actor_unavailable'):
+                        self._sessions.remove(cookie)
+                        extra['Set-Cookie'] = self._set_cookie('', 0)
+                    raise
+                session.expires = result['idle_expires_at']
+                extra['Set-Cookie'] = self._set_cookie(cookie, session.expires-now)
+                return 200, {'ok': True, **result}, 'application/json'
+            if session.activation_uncertain:
+                raise WebError('activation_outcome_unknown', 503)
             if session.link_claim:
                 if session.link_claim == 'uncertain':
                     raise WebError('link_outcome_unknown', 503)
@@ -230,6 +254,23 @@ class OnboardingApp:
             if not session.entry:
                 raise WebError('launch_required')
             payload = {'session': session.entry, 'browser': session.browser}
+            if operation == 'activate':
+                # Record uncertainty before the authority-changing private request.
+                session.activation_uncertain = True
+                try:
+                    activated = actor_web.grant(self._request('actor.open', payload), now)
+                except BridgeRejected:
+                    session.activation_uncertain = False
+                    raise
+                except Exception:
+                    raise WebError('activation_outcome_unknown', 503) from None
+                session.actor, session.actor_absolute = activated['session'], activated['expires_at']
+                session.entry = None
+                session.activation_uncertain = False
+                session.expires = activated['idle_expires_at']
+                cookie = self._sessions.rotate(cookie, session)
+                extra['Set-Cookie'] = self._set_cookie(cookie, session.expires-now)
+                return 200, {'ok': True, 'csrf': session.csrf, 'scope': 'actor_read'}, 'application/json'
             if operation == 'register':
                 payload.update(data, command=session.command)
                 if len(json.dumps(payload, ensure_ascii=True).encode()) > 15000:

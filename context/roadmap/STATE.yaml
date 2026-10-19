@@ -1,9 +1,9 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_confirmed_link_management
-stage_label: 'Connect CON01C.2: native owner management и Telegram confirmed linking'
-current_activity: 'CON01C.2: управление собственными messenger links в native Moodle и signed uc1_ claim в Mini App. Личный кабинет → Мессенджеры → персональная ссылка → Telegram → второй Academy confirm в той же сессии; owner-only revoke/list. RAM receipt не onboarding/employee grant; timeout uncertain без автоповтора. Candidate2026101903/546files/99tables, production e1d57f5b/526/93 unchanged. 8new WSGI tests,31web/full647r16 OK/30environment skips. Native RED d9114daa/39234234916: exactly6missing-class errors,78previous tests pass. Browser RED2c971f93/39235237752: missing confirmation screen; prior20onboarding/60mobile pass. Final new native/browser CI receipt — PR106; читать exact final receipt перед продолжением, не переоткрывать C2 по старой pre-CI записи. Новый business bot @ustarcorp_bot, секрет из чата не использован/не сохранён, требуется перевыпуск владельцем. CrazeDNS em2025.netcraze.pro предложен; rule/cert/availability ещё не приняты. Full canonical remote login/recovery/MFA/actor step-up, canonical notification leases/delivery/preferences/ACK и role screens — остаток.0subagents/no main merge/no prod/router/network changes.'
+stage: connect_provider_read_session
+stage_label: 'Connect CON01C.4: provider-read session и реальный собственный профиль'
+current_activity: 'C3 complete941a853/106native530; C4 canonical actor session/profile tests in progress; no deployment or network changes'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -72,7 +72,7 @@ audit:
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
 - START_HERE.md
-- context/proposals/USTAR_CONNECT_CON01C2_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01C4_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md
 - context/proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md

@@ -9,3 +9,5 @@ Ruling: retain99tables by extending typed conn_sessions with6fields. Cost: every
 Ruling: owner prohibits subagents; final code review will be personal. Existing authorization covers continued inline source implementation; do not add repeated permission gates or request external credentials for offline work.
 
 Task1: tests next. Native RED/implementation/CI not yet claimed. Plan and RFC read; authoritative C3 final receipt remains PR106.
+
+Task2 parallel boundary work while immutable native RED runs:13WSGI tests observed12missing /activate failures +1missing typed rejection error; implemented private actor_web validator/activation/rotation/status/logout, then13/13PASS and existing31webPASS. Test cookie jar corrected to remove Max-Age=0 cookies like a browser; no product cookie guard weakened. Whole674r16 OK/30environment skips. Browser test written before UI; pending expected missing profile button/heading in actual Chromium. Task1 PHP product not yet implemented, native test-only source e0399367.

@@ -1,5 +1,8 @@
 # Индекс текущего контекста
 
+**Точка продолжения19Oct15:31МСК:** C3 завершён на941a853cbfd03eaefd691fdbdf413607d9a92aba: Context39251446669/Review39251446110 SUCCESS;106native/530assertions,5concurrency/schema parity,661r16/133CI skips,24link/20onboarding/60mobile PASS. Не переоткрывать C1/C2/C3 по датированным записям ниже. Текущий C4 — отдельная provider-read Connect-сессия и собственный реальный профиль в Mini App; [план](proposals/USTAR_CONNECT_CON01C4_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01C4_PROGRESS_20261019.md). Full Moodle handoff/recovery/MFA/step-up/role actions остаются отдельными этапами. Native MFA/forced password/alternate login блокируют provider-read; default activation OFF. Новая реализация и native/browser CI ещё pending. Продакшен e1d57f5b/526files/93tables и main не менялись.0subagents/no live provider/network operations.
+
+
 - **Текущий C2:** [план](proposals/USTAR_CONNECT_CON01C2_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md); native owner management + Mini App link receipt. Final exact CI receipt PR106. Полный remote login/step-up/delivery ещё не реализованы.
 
 - **Текущий CON01C.1:** [Telegram receiver plan](proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md), [ledger](proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md). B4 browser20/native78/399 SUCCESS; exact new receiver CI receipt PR106, no activation.

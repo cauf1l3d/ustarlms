@@ -1527,3 +1527,8 @@ Base81a1be76 verified Context39188208182/Review39188208139 SUCCESS,22native test
 c4ef398d source/context CI SUCCESS; native39191922977 stopped after schema parity but before test execution because fixture status() collides with PHPUnit11 final method. Renamed signup_status, local real-PHP fixture-load regression RED→GREEN, full575r16/19skips PASS. Business source unchanged; native suite must repeat. This is not a business-test failure masked as success.
 
 Первый native run39185254555 на7aff1a990db14c87cd0e8314e0b669f503880b7a: Context39185254548/SOURCE8.2/8.3 SUCCESS; Moodle5.1.8/PostgreSQL16 fresh/upgrade/repeat schema parity PASS,12PHPunit tests/42assertions PASS; cross-process concurrent confirm/replay PASS. После self-review удержание replay guard/cron/gate изменены: результат первого run не приписывается финальным bytes. Локальный повтор561tests/19skips PASS.
+
+
+## 19Oct15:31МСК — C3 принят в разработке, начало C4
+
+C3 exact941a853 Context39251446669/Review39251446110 SUCCESS;106native/530assertions +5concurrency/schema parity. Продолжение по явному owner request: separate provider-read sessions/current self-profile, не bypass native MFA и не full Moodle cookie. План/ledger C4 в context/proposals. Native test-only e0399367 содержит12новых actor tests; missing-class RED ещё ожидается. WSGI13новых tests: отсутствующий /activate RED→GREEN; текущая whole suite pending. Изменений main/prod/network/actual token API и субагентов нет.

@@ -15,12 +15,14 @@ from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler, HT
 PATH = '/local/ustar/connect_bridge.php'
 OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
               'registration.options', 'registration.submit', 'registration.status',
-              'notification.lease', 'notification.begin', 'notification.finish'}
+              'notification.lease', 'notification.begin', 'notification.finish',
+              'actor.open', 'actor.status', 'actor.revoke'}
 REJECTIONS = {'validation_failed', 'invalid_entry', 'revoked_entry', 'restart_required',
               'expired_launch', 'launch_consumed', 'replayed_proof', 'launch_mismatch',
               'idempotency_conflict', 'already_registered', 'receipt_expired', 'rate_limited',
               'invalid_link_code', 'invalid_challenge', 'expired_challenge', 'claimed_challenge',
-              'provider_mismatch', 'link_conflict', 'invalid_delivery', 'receipt_conflict'}
+              'provider_mismatch', 'link_conflict', 'invalid_delivery', 'receipt_conflict',
+              'actor_unavailable', 'native_auth_required', 'invalid_actor'}
 FORM_FIELDS = {'username', 'password', 'email', 'firstname', 'lastname', 'departmentid'}
 
 

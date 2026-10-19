@@ -6,7 +6,11 @@ ROOT=Path(__file__).resolve().parents[2]
 
 def call(args):
     result=subprocess.run(args,capture_output=True,text=True,timeout=90)
-    if result.returncode:raise RuntimeError('native_command_failed: '+str(args[:3])+'\n'+result.stdout+result.stderr)
+    if result.returncode:
+        evidence=''
+        if args[:2]==['systemctl','start']:
+            evidence=subprocess.run(['journalctl','-u',args[2],'--no-pager','-n','80','-o','cat'],capture_output=True,text=True,timeout=10).stdout
+        raise RuntimeError('native_command_failed: '+str(args[:3])+'\n'+result.stdout+result.stderr+evidence)
     return result.stdout
 
 def main(archive):
@@ -41,7 +45,16 @@ sys.path.insert(0,"/opt/ustar-connect/current/receiver.pyz")
 from ustar_connect.receiver_runtime import load_config,main
 from ustar_connect.receiver_journal import Journal
 from ustar_connect.receiver import TelegramReceiver
-config=load_config(sys.argv[1])
+try:config=load_config(sys.argv[1])
+except Exception:
+ import pathlib,stat
+ for text in (sys.argv[1],"/run/credentials/ustar-connect-probe.service/telegram.token","/var/lib/ustar-connect-receiver"):
+  try:
+   path=pathlib.Path(text);st=path.stat();print("FIXTURE_METADATA",text,st.st_uid,oct(stat.S_IMODE(st.st_mode)),st.st_nlink,flush=True)
+   for parent in path.parents:
+    st=parent.stat();print("FIXTURE_PARENT",str(parent),st.st_uid,oct(stat.S_IMODE(st.st_mode)),flush=True)
+  except Exception as error:print("FIXTURE_PATH_ERROR",type(error).__name__,flush=True)
+ raise
 assert os.geteuid()!=0
 assert config.onboarding_enabled is False and config.bridge is None
 assert str(config.directory)=="/var/lib/ustar-connect-receiver"

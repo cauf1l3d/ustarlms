@@ -59,9 +59,11 @@ final class provider implements
                 };
             }
             foreach ($table === 'local_ustar_conn_launches' ? ['noncehash', 'consumedat'] :
-                    ['tokenhash', 'browserhash', 'linkid', 'linkrevision', 'revokedat'] as $field) {
+                    ['tokenhash', 'browserhash', 'linkid', 'linkrevision', 'revokedat',
+                     'scope', 'authdate', 'actorready', 'lastseenat', 'authstamp', 'scopestamp'] as $field) {
                 $fields[$field] = 'privacy:metadata:connect:' .
-                    (str_ends_with($field, 'hash') ? 'hash' : 'state');
+                    (str_ends_with($field, 'hash') || str_ends_with($field, 'stamp') ? 'hash'
+                        : (in_array($field, ['authdate', 'lastseenat'], true) ? 'time' : 'state'));
             }
             $collection->add_database_table($table, $fields, 'privacy:metadata:connect');
         }
@@ -137,7 +139,7 @@ final class provider implements
         $launches = $DB->get_records('local_ustar_conn_launches', ['userid' => $userid], 'id',
             'id,provider,tenant,subject,timecreated,expiresat,consumedat');
         $sessions = $DB->get_records('local_ustar_conn_sessions', ['userid' => $userid], 'id',
-            'id,provider,tenant,subject,timecreated,expiresat,revokedat');
+            'id,provider,tenant,subject,scope,authdate,actorready,lastseenat,timecreated,expiresat,revokedat');
         $signups = $DB->get_records('local_ustar_conn_signups', ['userid' => $userid], 'id',
             'id,requestid,timecreated,expiresat');
         $deliveries = $DB->get_records_sql('SELECT d.id,d.status,d.attempts,d.providerref,d.lasterror,

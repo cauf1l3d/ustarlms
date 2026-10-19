@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026101902" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026101905" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -1988,7 +1988,7 @@
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
       <INDEXES><INDEX NAME="noncehash_uix" UNIQUE="true" FIELDS="noncehash"/><INDEX NAME="identityhash_idx" UNIQUE="false" FIELDS="identityhash"/><INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/><INDEX NAME="expiresat_idx" UNIQUE="false" FIELDS="expiresat"/></INDEXES>
     </TABLE>
-    <TABLE NAME="local_ustar_conn_sessions" COMMENT="Short-lived onboarding only; never Moodle login cookies">
+    <TABLE NAME="local_ustar_conn_sessions" COMMENT="Distinct onboarding and provider-read sessions; never Moodle login cookies">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="tokenhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
@@ -2001,6 +2001,12 @@
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="linkrevision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="scope" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="onboarding"/>
+        <FIELD NAME="authdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="actorready" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="lastseenat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="authstamp" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT=""/>
+        <FIELD NAME="scopestamp" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT=""/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
         <FIELD NAME="revokedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>

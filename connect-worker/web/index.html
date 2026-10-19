@@ -21,6 +21,17 @@
       <p id="status-detail">Приложение должно быть открыто из личного диалога с ботом Академии.</p>
       <p id="status-time" class="muted"></p>
     </section>
+    <section id="actor-profile" class="card" hidden aria-label="Профиль сотрудника">
+      <h2>Данные учётной записи</h2>
+      <dl class="profile-grid">
+        <div><dt>Сотрудник</dt><dd id="profile-fullname"></dd></div>
+        <div><dt>Логин Академии</dt><dd id="profile-username"></dd></div>
+        <div><dt>Должность</dt><dd id="profile-position"></dd></div>
+        <div><dt>Подразделение</dt><dd id="profile-department"></dd></div>
+        <div><dt>Состояние учётной записи</dt><dd id="profile-state"></dd></div>
+      </dl>
+      <p class="muted">Данные получены из Академии. Сейчас доступен собственный профиль; обучение и рабочие действия будут подключены отдельными этапами.</p>
+    </section>
     <p id="error" class="error" role="alert" hidden></p>
     <form id="registration-form" class="card" hidden>
       <h2>Новая учётная запись</h2><p class="muted">Подразделение — ваша заявка. Роль и доступ подтверждает HRD.</p>
@@ -37,9 +48,10 @@
       <details><summary>У меня уже есть аккаунт</summary><p>Не регистрируйтесь повторно. Войдите в Академию обычным способом, откройте личный кабинет → Мессенджеры и создайте персональную ссылку. Откройте её в своём Telegram, затем вернитесь в тот же браузер Академии, сверьте ID и подтвердите связь. Если забыли пароль, используйте восстановление на странице входа Академии или обратитесь к HRD.</p></details>
     </form>
     <nav id="session-actions" hidden aria-label="Управление сессией">
+      <button id="activate" class="primary" type="button" hidden>Открыть мой профиль</button>
       <button id="refresh" type="button">Проверить статус</button><button id="logout" class="quiet" type="button">Закрыть сессию</button>
     </nav>
-    <footer>Регистрация, собственный статус и подтверждение связи. Это ещё не полный учебный вход в Moodle.</footer>
+    <footer>Регистрация, собственный профиль и подтверждение связи. Это ещё не полный учебный вход в Moodle.</footer>
   </main>
 </body>
 </html>

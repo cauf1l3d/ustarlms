@@ -31,9 +31,9 @@ Files: create classes/connect/actor_service.php, tests/connect_actor_test.php; m
 
 Interfaces: actor_service::open(entry,browser,kid,provider,tenant):array → {session:ua1_,scope:actor_read,expires_at,idle_expires_at}; actor_service::status(session,browser,kid,provider,tenant):array → {scope,expires_at,idle_expires_at,profile:{username,fullname,position,department,account_state:active},features:[profile]}; actor_service::revoke(...same binding):void. No caller time/actor arguments. entry_service::require_session enforces scope onboarding. Fresh native exchange stores authdate and actorready from current active link; signup completion cannot set actorready.
 
-- [ ] Write native tests defaults/freshness/token separation/current user+link+password+roles+organization/MFA/force-password gates/idle+absolute/replay/privacy. Publish test-only snapshot and observe exact native RED before product implementation.
-- [ ] Implement service/schema/bridge after RED; open owns identity transaction, consumes entry and inserts actor together; max5live actor sessions/user. Status validates under identity lock/transaction and renews lastseen only after successful current checks. Invalidated sessions must never revive if flags/role/password later return to prior values: persist revokedat before returning fixed rejection.
-- [ ] Add independent open/old-entry race: one actor grant, one invalid_entry. Schema fresh/upgrade/repeat parity. Privacy covers new metadata; no fingerprints/secrets in export. Existing generic prune/revoke lifecycle remains authoritative.
+- [x] Write native tests defaults/freshness/token separation/current user+link+password+roles+organization/MFA/force-password gates/idle+absolute/replay/privacy. Publish test-only snapshot and observe exact native RED before product implementation.
+- [x] Implement service/schema/bridge after RED; open owns identity transaction, consumes entry and inserts actor together; max5live actor sessions/user. Status validates under identity lock/transaction and renews lastseen only after successful current checks. Invalidated sessions must never revive if flags/role/password later return to prior values: persist revokedat before returning fixed rejection.
+- [x] Add independent open/old-entry race: one actor grant, one invalid_entry. Schema fresh/upgrade/repeat parity. Privacy covers new metadata; no fingerprints/secrets in export. Existing generic prune/revoke lifecycle remains authoritative.
 - [ ] Verify exact native CI and prior C3 regression suite, commit/ledger.
 
 ## Task2 — BFF and real profile UI
@@ -42,12 +42,12 @@ Files: create connect-worker/ustar_connect/actor_web.py validator; modify onboar
 
 Interfaces: POST /api/activate {} uses only server entry+browser; /api/status on actor session calls actor.status; logout actor.revoke; no public arbitrary bridge. Exact ua1_ result stays private. Session actor/activation_uncertain/absolute expires; success extends private RAM only to canonical idle expiry, bootstrap never extends it. Own profile string fields<=256, exact schema/features; reject secret/extra fields. Signed-entry token consumed only by explicit profile button for linked_active, not automatically on GET/refresh.
 
-- [ ] Write real WSGI boundary tests; observe missing-activation RED, then implement and run complete r16.
-- [ ] Explicit profile button; loading/error/expired/MFA-required/activation-unknown instructions; real self-profile via textContent, no mock metrics, no pretend full Moodle login. /api/status failures clear displayed profile and forbid viewing stale authority. Cookie/CSRF rotate; old cookie fails. No local/session storage or auto activation retry.
+- [x] Write real WSGI boundary tests; observe missing-activation RED, then implement and run complete r16.
+- [x] Explicit profile button; loading/error/expired/MFA-required/activation-unknown instructions; real self-profile via textContent, no mock metrics, no pretend full Moodle login. /api/status failures clear displayed profile and forbid viewing stale authority. Cookie/CSRF rotate; old cookie fails. No local/session storage or auto activation retry.
 - [ ] Browser actual assets test mobile390/desktop1280 + dark/light + reload/logout/error states. Existing link/onboarding/mobile checks remain green.
 
 ## Task3 — verification and continuation
 
-- [ ] Update START_HERE/AGENTS/project/STATE/ACTIVE/BACKLOG/SESSION_LOG and context/source inventories to current C3 complete/C4 scope; retain dated originals and exact receipts.
+- [x] Update START_HERE/AGENTS/project/STATE/ACTIVE/BACKLOG/SESSION_LOG and context/source inventories to current C3 complete/C4 scope; retain dated originals and exact receipts.
 - [ ] Personal security/diff review under owner no-agent rule; fix material findings with RED→GREEN. Run source/r16/context + exact native/browser/schema/concurrency. Record exact commit/tree/artifact and limits in PR106; no main merge or installation.
 - [ ] Handoff explicitly distinguishes provider-read profile from full Moodle login, recovery/MFA/step-up, role business screens, relay/deployment gates. Duplicate development commands in chat.

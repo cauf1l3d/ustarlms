@@ -21,7 +21,7 @@ final class opaque_token {
         return hash('sha256', 'ustar-connect-' . $prefix . "-v1\0" . $bytes);
     }
     private static function prefix(string $prefix): void {
-        if (!in_array($prefix, ['ul1', 'ue1', 'ub1', 'ur1', 'ud1'], true)) {
+        if (!in_array($prefix, ['ul1', 'ue1', 'ub1', 'ur1', 'ud1', 'ua1'], true)) {
             throw new \InvalidArgumentException('invalid_token_purpose');
         }
     }

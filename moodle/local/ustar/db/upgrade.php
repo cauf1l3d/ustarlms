@@ -4966,5 +4966,17 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026101904, 'local', 'ustar');
     }
+    if ($oldversion < 2026101905) {
+        // Existing entries stay onboarding and actorready=0: no implicit authority upgrade.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Connect actor schema'); }
+        $definition = $schema->getStructure()->getTable('local_ustar_conn_sessions');
+        $table = new xmldb_table('local_ustar_conn_sessions');
+        foreach (['scope', 'authdate', 'actorready', 'lastseenat', 'authstamp', 'scopestamp'] as $name) {
+            $field = $definition->getField($name);
+            if (!$dbman->field_exists($table, $field)) { $dbman->add_field($table, $field); }
+        }
+        upgrade_plugin_savepoint(true, 2026101905, 'local', 'ustar');
+    }
 return true;
 }

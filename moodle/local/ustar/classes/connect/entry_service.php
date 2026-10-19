@@ -61,6 +61,8 @@ final class entry_service {
                 'tenant' => $sender->tenant, 'subject' => $sender->subject, 'keyid' => $keyid,
                 'userid' => (int)($link->userid ?? 0), 'linkid' => (int)($link->id ?? 0),
                 'linkrevision' => (int)($link->revision ?? 0), 'timecreated' => time(),
+                'scope' => 'onboarding', 'authdate' => $authdate,
+                'actorready' => identity_service::resolve_active_user($sender) > 0 ? 1 : 0,
                 'expiresat' => time()+self::TTL, 'revokedat' => 0,
             ]);
             $ticket->consumedat = time();
@@ -110,7 +112,7 @@ final class entry_service {
         self::keyid($keyid);
         $session = $DB->get_record('local_ustar_conn_sessions', ['tokenhash' => opaque_token::digest($token, 'ue1')]);
         $binding = opaque_token::digest($browser, 'ub1');
-        if (!$session || $session->keyid !== $keyid || $session->provider !== $provider || $session->tenant !== $tenant
+        if (!$session || $session->scope !== 'onboarding' || $session->keyid !== $keyid || $session->provider !== $provider || $session->tenant !== $tenant
                 || !hash_equals($session->browserhash, $binding) || (int)$session->expiresat <= time()
                 || (int)$session->revokedat !== 0) {
             throw new \InvalidArgumentException('invalid_entry');

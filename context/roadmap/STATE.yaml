@@ -3,7 +3,7 @@ updated_at: '2026-10-19'
 project: USTAR Academy
 stage: connect_provider_read_session
 stage_label: 'Connect CON01C.4: provider-read session и реальный собственный профиль'
-current_activity: 'C3 complete941a853/106native530; C4 canonical actor session/profile tests in progress; no deployment or network changes'
+current_activity: 'C4 provider-read/profile implemented candidate2026101905/552files/99tables; exact CI receipt PR106; full native handoff and role commands next; no deployment/network changes'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main

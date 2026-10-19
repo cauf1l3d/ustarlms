@@ -1,5 +1,7 @@
 # USTAR Connect — контракты и сопоставление с исходниками
 
+C4 implementation candidate2026101905/552files/99tables: separate ua1/provider-read own profile; defaultOFF/manual-only/native MFA+SSO+forced-password block. Exact-source final CI receipt PR106. Full native handoff/recovery/MFA/step-up and role actions remain separate.
+
 **Точка продолжения19Oct15:31МСК:** C3 завершён на941a853cbfd03eaefd691fdbdf413607d9a92aba: Context39251446669/Review39251446110 SUCCESS;106native/530assertions,5concurrency/schema parity,661r16/133CI skips,24link/20onboarding/60mobile PASS. Не переоткрывать C1/C2/C3 по датированным записям ниже. Текущий C4 — отдельная provider-read Connect-сессия и собственный реальный профиль в Mini App; [план](USTAR_CONNECT_CON01C4_PLAN_20261019.md), [ledger](USTAR_CONNECT_CON01C4_PROGRESS_20261019.md). Full Moodle handoff/recovery/MFA/step-up/role actions остаются отдельными этапами. Native MFA/forced password/alternate login блокируют provider-read; default activation OFF. Новая реализация и native/browser CI ещё pending. Продакшен e1d57f5b/526files/93tables и main не менялись.0subagents/no live provider/network operations.
 
 

@@ -3,6 +3,15 @@ updated_at: '2026-10-19'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
+current_connect_checkpoint:
+  stage: CON01C4_provider_read_profile_candidate
+  version: 2026101905
+  addons_files: 552
+  tables: 99
+  local_verification: 674r16_OK_30_environment_skips
+  exact_ci_receipt: https://github.com/cauf1l3d/ustarlms/pull/106
+  next: native_handoff_recovery_MFA_stepup_role_commands_and_external_runtime_acceptance
+  production_changed: false
 tasks:
 - id: DOC-01
   title: Консолидация main и инженерного контекста

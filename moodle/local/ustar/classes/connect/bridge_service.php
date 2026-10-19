@@ -12,7 +12,7 @@ final class bridge_service {
         $fields = match ($op) {
             'launch.create' => ['provider', 'subject', 'tenant'],
             'launch.exchange' => ['auth_date', 'browser', 'launch', 'proof', 'provider', 'subject', 'tenant'],
-            'entry.status', 'entry.revoke' => ['browser', 'session'],
+            'actor.open', 'actor.status', 'actor.revoke', 'entry.status', 'entry.revoke' => ['browser', 'session'],
             'registration.status', 'registration.options' => ['browser', 'session'],
             'registration.submit' => ['browser', 'command', 'departmentid', 'email', 'firstname', 'lastname', 'password', 'session', 'username'],
             'link.claim' => ['auth_date', 'code', 'proof', 'provider', 'subject', 'tenant'],
@@ -62,6 +62,15 @@ final class bridge_service {
         }
         if ($op === 'entry.revoke') {
             entry_service::revoke($payload['session'], $payload['browser'], $kid, $request['provider'], $request['tenant']);
+            return ['revoked' => true];
+        }
+        if ($op === 'actor.open' || $op === 'actor.status') {
+            return $op === 'actor.open'
+                ? actor_service::open($payload['session'], $payload['browser'], $kid, $request['provider'], $request['tenant'])
+                : actor_service::status($payload['session'], $payload['browser'], $kid, $request['provider'], $request['tenant']);
+        }
+        if ($op === 'actor.revoke') {
+            actor_service::revoke($payload['session'], $payload['browser'], $kid, $request['provider'], $request['tenant']);
             return ['revoked' => true];
         }
         if ($op === 'registration.submit') {

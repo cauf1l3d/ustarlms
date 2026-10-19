@@ -26,14 +26,16 @@ Files: scripts/infra/connect_readiness.py, scripts/infra/build_connect_readiness
 Interfaces: build(commit,output)->Path; check(reference,code,runner,backup_state)->dict; main(argv)->exit code. Output per-section status, baseline/candidate counts/delta, disk/DB version pairs, current table comparisons, container mount checks, SSD space, backup receipt summary and explicit deployment gates.
 - [x] Write failing real-files tests for layout/drift/no config leak; readonly SQL/prefix/errors; default no host access; deterministic offline bundle.
 - [x] Observe missing module RED, implement minimal probe and builder, verify targeted tests and full r16.
-- [ ] Review command side effects and artifact source contents; run packaged plan/help smoke, context/diff; record local vs native limits.
+- [x] Review command side effects and artifact source contents; run packaged plan/help smoke, context/diff; record local vs native limits.
 
 ## Task2: operator collection and context
 Files: context/runtime/connect_receiver_server1_20261019.json; new Academy preflight runbook/receipt; AGENTS/START_HERE/project/STATE/ACTIVE/BACKLOG/SESSION_LOG/RELEASE_LEDGER/index; PR106.
 - [x] Record owner text confirmation18:59MSK. Screenshots not read; do not invent PID/uptime/logs or boot acceptance.
-- [ ] Publish hash-pinned bundle and commands for owner --check. Installation does not begin until fresh facts, complete RC/schema/rollback and paired backup acceptance.
-- [ ] Follow-up order: candidate release/lab+backup, private bridge/scoped keys, account linking + controlled notification activation; Mini App/external HTTPS and native handoff/step-up/role screens remain explicit later gates.
+- [x] Publish hash-pinned bundle and commands for owner --check. Installation does not begin until fresh facts, complete RC/schema/rollback and paired backup acceptance.
+- [x] Follow-up order: candidate release/lab+backup, private bridge/scoped keys, account linking + controlled notification activation; Mini App/external HTTPS and native handoff/step-up/role screens remain explicit later gates.
 
 No architecture or permissions are expanded by this preparation. Working receiver remains on b01bd942; tty/GC source patches do not imply its archive was replaced. Reviews performed personally per owner no-agent rule.
 
 Task1 implementation verification:13tests PASS, full708r16 OK/30environment skips. Missing probe/builder RED and safe diagnostic-reason RED observed before code. Actual source reference validation:526/93 baseline,552/99 candidate,515matching/11changed/26new/0removed. No Moodle source/schema changes in this preparation. Exact release build/source checksum and owner collection follow publication.
+
+Delivery sourceef9911f3; exact artifact SHA/size/source comparisons in context/runtime/connect_academy_preflight_release_20261019.json. All preparation tasks complete; native owner collection remains pending, not deployment acceptance.

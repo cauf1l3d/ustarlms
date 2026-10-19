@@ -6,7 +6,7 @@ stage_label: Бот работает; подготовка подключени�
 current_activity: 'Owner19Oct1859MSK confirms receiver works. Original b01 archive remains installed;
   tty and GC fixes are source/helper changes, not a claimed runtime upgrade. Readonly Academy preflight
   prepares candidate552/99 against accepted526/93 without PHP bootstrap or mutation.
-  13targeted/708r16 PASS,30skips locally;packaged exact-source/native collection still pending.
+  13targeted/708r16 PASS,30skips locally;exact-source zip/plan/help verified;native collection pending.
   Mini App deferred until HTTPS;private bridge/links/notifications activation is a later gate.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -150,8 +150,11 @@ do_not_repeat:
 development_candidate:
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: CON01C.2 native link management and Mini App receipt; exact final CI receipt in PR106
-  local_ustar_version: 2026101903
+  scope: CON01C.4 provider-read own profile plus C3 notification delivery; defaultOFF; exact CI receipt PR106
+  local_ustar_version: 2026101905
+  theme_ustar_version: 2026100202
+  files: 552
+  tables: 99
 receiver_runtime:
   source_commit: b01bd942f7f748d9510618a79489643b42cbd690
   receipt: context/runtime/connect_receiver_release_20261019.json
@@ -177,3 +180,6 @@ connect_academy_preparation:
   bridge_enabled: false
   notifications_enabled: false
   MiniApp_enabled: false
+  preflight_source_commit: ef9911f31a57dd30554eb841bfa1bc601443dfd6
+  preflight_runbook: context/runtime/connect_academy_preflight_20261019.md
+  preflight_receipt: context/runtime/connect_academy_preflight_release_20261019.json

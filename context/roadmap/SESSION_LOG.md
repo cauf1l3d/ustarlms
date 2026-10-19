@@ -1562,3 +1562,5 @@ The old native host fixture never invoked admin probe/start. Added modeled REDâ†
 
 
 13targeted/708r16 PASS(30skips). Actual source delta515matching/11changed/26added, no removed files;tables93â†’99. Deterministic read-only preflight reuses existing collectors with exact Git reference bundle. No PHP/bootstrap/config/DB/service changes; bundle/default plan and safe output tested. Native owner collection and complete release gates required before update;no agent SSH/live provider calls.
+
+Preflight deliveryef9911f3:66561B/SHAda6a992d3cdfe60b294df0452c0fa8c1eff7ae9eaedeaf8151289f857c65becb,3Python modules/1078fingerprints/CRC/plan/help checked. Runbook Bash PASS. Owner JSON next, no further native action until actual facts and full release/rollback/backup gates.

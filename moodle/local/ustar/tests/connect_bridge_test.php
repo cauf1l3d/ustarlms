@@ -104,4 +104,37 @@ final class connect_bridge_test extends \advanced_testcase {
         [$body,$headers]=$this->signed('notification.begin',['delivery'=>'0','lease'=>'ud1_'.str_repeat('A',43)]);
         $this->denied(fn()=>bridge_service::dispatch($body,$headers,$this->keys()),'invalid_delivery');
     }
+    public function test_actor_bridge_uses_only_bound_entry_and_returns_own_profile(): void {
+        global $CFG;
+        $CFG->ustar_connect_provider_read_enabled = true;
+        $employee = $this->getDataGenerator()->create_user();
+        $this->setUser($employee);
+        $sender = new \local_ustar\connect\identity('telegram', '123456', '77777');
+        $code = \local_ustar\connect\identity_service::issue('telegram', '123456')['code'];
+        \local_ustar\connect\identity_service::claim_verified($code, $sender, hash('sha256', $code));
+        \local_ustar\connect\identity_service::confirm($code);
+        $this->setGuestUser();
+        $browser = \local_ustar\connect\opaque_token::issue('ub1');
+        $launch = \local_ustar\connect\entry_service::create_launch($sender, 'tg1');
+        $entry = \local_ustar\connect\entry_service::exchange($sender, $launch['launch'],
+            hash('sha256', $launch['launch']), time(), $browser, 'tg1');
+        $binding = ['browser' => $browser, 'session' => $entry['session']];
+        [$body, $headers] = $this->signed('actor.open', $binding + ['userid' => (string)get_admin()->id]);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'invalid_payload');
+        $keys = $this->keys(); $keys['tg1']['operations'] = ['entry.status'];
+        [$body, $headers] = $this->signed('actor.open', $binding);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $keys), 'forbidden_operation');
+        [$body, $headers] = $this->signed('actor.open', $binding);
+        $actor = bridge_service::dispatch($body, $headers, $this->keys());
+        $binding['session'] = $actor['session'];
+        [$body, $headers] = $this->signed('actor.status', $binding);
+        $view = bridge_service::dispatch($body, $headers, $this->keys());
+        $this->assertSame($employee->username, $view['profile']['username']);
+        $this->assertSame(['profile'], $view['features']);
+        [$body, $headers] = $this->signed('actor.revoke', $binding);
+        $this->assertSame(['revoked' => true], bridge_service::dispatch($body, $headers, $this->keys()));
+        [$body, $headers] = $this->signed('actor.status', $binding);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'invalid_actor');
+    }
+
 }

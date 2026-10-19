@@ -146,4 +146,13 @@ final class connect_actor_test extends \advanced_testcase {
             $this->employee,'local_ustar',[\context_system::instance()->id]));
         $this->assertSame(0,$DB->count_records('local_ustar_conn_sessions',['userid'=>$this->employee->id]));
     }
+    public function test_disabled_policy_revokes_actor_and_same_secret_never_revives(): void {
+        global $CFG;
+        $actor = $this->open();
+        $CFG->ustar_connect_provider_read_enabled = false;
+        $this->denied(fn() => $this->actor_status($actor), 'actor_unavailable');
+        $CFG->ustar_connect_provider_read_enabled = true;
+        $this->denied(fn() => $this->actor_status($actor), 'invalid_actor');
+    }
+
 }

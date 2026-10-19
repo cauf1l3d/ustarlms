@@ -1,3 +1,26 @@
+## CON01C.4 — собственный профиль через отдельную Connect-сессию
+
+Текущая разработка: [план](../context/proposals/USTAR_CONNECT_CON01C4_PLAN_20261019.md), [проверки](../context/proposals/USTAR_CONNECT_CON01C4_PROGRESS_20261019.md). C3 уведомления завершены на941a853c; этот этап добавляет provider-read, а не полноценный Moodle login или действия HRD.
+
+При новом `/start` Telegram подтверждает пользователя; одноразовый launch обменивается на onboarding-сессию. Только уже привязанный и активный на момент обмена сотрудник может явно нажать «Открыть мой профиль». Выпускается новая отдельная `actor_read`-сессия; onboarding-entry потребляется. Pending/signup после одобрения должен начать новый `/start`, чтобы старая заявка не стала пропуском. Профиль читает реальную Academy учётку: ФИО, логин, должность, подразделение, состояние. Неуказанные поля остаются неуказанными.
+
+Настройка `$CFG->ustar_connect_provider_read_enabled = true` по умолчанию отсутствует/OFF. Это описание будущего согласованного включения, не команда установки на server1. Manual-auth only; включённый native MFA, альтернативная страница входа и требование смены пароля возвращают `native_auth_required`. Такому пользователю нужен штатный вход Академии. Пароль существующего аккаунта worker не запрашивает. Полный native handoff/recovery/MFA и ролевые экраны остаются следующими задачами.
+
+BFF держит opaque actor только в приватной RAM; браузер получает Secure/HttpOnly/SameSite cookie и CSRF после ротации. Бездействие15минут, абсолютный предел8часов, максимум5живых сессий на сотрудника. Bootstrap срок не продлевает. Каждый успешный `/api/status` повторно проверяет канонические account/link/credential/role/organization условия. Обнаруженное изменение отзывает сессию; восстановление прежних флагов после отказа её не оживляет. Это проверка при запросе, а не непрерывное наблюдение всех событий. Потеря процесса BFF закрывает его RAM-сессии; remote actor истечёт самостоятельно.
+
+В ключ BFF оператор добавляет явные `actor.open`, `actor.status`, `actor.revoke` только после приёмки этой версии; не использовать весь растущий `OPERATIONS`. Их payload состоит только из `browser` и `session`, userid/роль не принимаются. Notification key остаётся отдельным. При неизвестном исходе activation повтор не выполняется: закрыть сессию и начать новый защищённый запуск. При ошибке чтения интерфейс скрывает прошлый профиль; закрытие сессии удаляет локальный секрет даже при отказе upstream.
+
+Команды разработки из корня checkout, не команды для production:
+
+```bash
+python -m unittest discover -s tests/r16 -p test_connect_actor_web.py -v
+python -m unittest discover -s tests/r16 -v
+node tests/mobile/connect-actor.cjs
+python scripts/check_context.py
+```
+
+Chromium и native Moodle/PostgreSQL проверяются в isolated CI. Exact-source результаты — PR106; наличие документа не означает установки или принятой внешней HTTPS-доступности.
+
 ## CON01C.3 — текущая работа: канонические уведомления
 
 [Контракт, настройки, состояния и проверки](../context/proposals/USTAR_CONNECT_NOTIFICATIONS_20261019.md). Расширение existing outbox, без replay старого Bitrix/pending. Личный opt-in + глобальный cutoff; lease/begin/finish, текущие права перед отправкой, readable generic text, uncertain без auto-retry. Новый private notification runtime использует отдельный scoped key и не делает getUpdates. DefaultCLI без сети; --run не включать до эксплуатационной приёмки. Exact CI receipt — PR106. Нижние разделы — датированные этапы; они не отменяют завершённые C1/C2.

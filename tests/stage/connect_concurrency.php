@@ -41,6 +41,10 @@ if (($argv[1] ?? '') === 'child') {
         } else if ($input['op'] === 'entry') {
             echo json_encode(entry_service::exchange(new identity('telegram', '123456', '77777'),
                 $input['launch'], $input['proof'], $input['authdate'], $input['browser'], 'tg1'));
+        } else if ($input['op'] === 'actor-open') {
+            $CFG->ustar_connect_provider_read_enabled = true;
+            echo json_encode(\local_ustar\connect\actor_service::open($input['session'], $input['browser'],
+                'tg1', 'telegram', '123456'));
         } else if ($input['op'] === 'signup') {
             echo json_encode(signup_service::submit($input['session'], $input['browser'], $input['command'],
                 $input['form'], 'tg1', 'telegram', '123456', str_repeat('12', 32)));
@@ -118,6 +122,27 @@ if (count(array_filter($results, fn($item) => isset($item['session']))) !== 1
     throw new RuntimeException('Concurrent launch exchange was not single-use');
 }
 echo "CONNECT_CONCURRENT_ENTRY_EXCHANGE=PASS\n";
+
+$CFG->ustar_connect_provider_read_enabled = true;
+$sender = new identity('telegram', '123456', '77777');
+$launch = entry_service::create_launch($sender, 'tg1');
+$browser = opaque_token::issue('ub1');
+$entry = entry_service::exchange($sender, $launch['launch'], hash('sha256', $launch['launch']), time(), $browser, 'tg1');
+$input = ['userid' => 1, 'op' => 'actor-open', 'session' => $entry['session'], 'browser' => $browser];
+$results = connect_race([$input, $input]);
+$actors = array_values(array_filter($results, static fn($r) => ($r['scope'] ?? '') === 'actor_read'));
+if (count($actors) !== 1
+        || count(array_filter($results, static fn($r) => ($r['denied'] ?? '') === 'invalid_entry')) !== 1
+        || $DB->count_records('local_ustar_conn_sessions', ['userid' => $userid, 'scope' => 'actor_read']) !== 1) {
+    throw new RuntimeException('Concurrent actor open did not consume exactly one bound entry');
+}
+connect_user(1);
+if (\local_ustar\connect\actor_service::status($actors[0]['session'], $browser, 'tg1', 'telegram', '123456')
+        ['profile']['account_state'] !== 'active') {
+    throw new RuntimeException('Actor profile did not resolve in private guest context');
+}
+connect_user((int)$userid);
+echo "CONNECT_CONCURRENT_ACTOR_OPEN=PASS\n";
 
 function signup_entry(string $subject): array {
     $sender = new identity('telegram', '123456', $subject);

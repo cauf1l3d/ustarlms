@@ -10,7 +10,7 @@ const root=path.resolve(__dirname,'../../connect-worker/web');
   try{
     for(const width of [390,1280]){
       for(const theme of ['light','dark']){
-        for(const mode of ['fresh','reload','mfa','unknown']){
+        for(const mode of ['fresh','reload','mfa','unknown','revoked','idle']){
           const context=await browser.newContext({viewport:{width,height:900},colorScheme:theme});
           const page=await context.newPage();const calls=[];let active=mode==='reload',failure=false;
           await page.route('https://telegram.org/**',r=>r.fulfill({contentType:'text/javascript',
@@ -33,9 +33,9 @@ const root=path.resolve(__dirname,'../../connect-worker/web');
               active=true;return reply({ok:true,scope:'actor_read',csrf:'rotated'});
             }
             if(pathname==='/api/status'){
-              if(failure)return reply({ok:false,reason:'source_unavailable'},503);
+              if(failure)return reply({ok:false,reason:mode==='revoked'?'invalid_actor':'source_unavailable'},mode==='revoked'?403:503);
               if(!active)return reply({ok:true,scope:'onboarding',account_state:'linked_active',registration:null});
-              return reply({ok:true,scope:'actor_read',expires_at:1800028800,idle_expires_at:1800000900,
+              return reply({ok:true,scope:'actor_read',expires_at:1800028800,idle_expires_at:mode==='idle'?Math.floor(Date.now()/1000)+2:1800000900,
                 features:['profile'],profile:{username:'employee',fullname:'<img src=x onerror=alert(1)>',
                   position:'Сотрудник','department':'Розница','account_state':'active'}});
             }
@@ -59,8 +59,14 @@ const root=path.resolve(__dirname,'../../connect-worker/web');
             assert.equal(0,await page.locator('#actor-profile img').count());
             assert.equal('employee',await page.locator('#profile-username').textContent());
             assert.equal(false,await page.locator('#registration-form').isVisible());scenarios++;
-            failure=true;await page.locator('#refresh').click();
-            await page.locator('#error').filter({hasText:'Связь недоступна'}).waitFor();
+            if(mode==='idle'){
+              const count=calls.filter(x=>x==='/api/status').length;
+              await page.locator('#error').filter({hasText:'Откройте приложение заново'}).waitFor();
+              assert.equal(count,calls.filter(x=>x==='/api/status').length);
+            }else{
+              failure=true;await page.locator('#refresh').click();
+              await page.locator('#error').filter({hasText:mode==='revoked'?'Откройте приложение заново':'Связь недоступна'}).waitFor();
+            }
             assert.equal(false,await page.locator('#actor-profile').isVisible());scenarios++;
             await page.locator('#logout').click();await page.getByRole('heading',{name:'Сессия закрыта'}).waitFor();
             assert.equal('',await page.locator('#profile-username').textContent());scenarios++;

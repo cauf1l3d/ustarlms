@@ -1,5 +1,7 @@
 # Активные задачи USTAR
 
+**Текущая точка22:01МСК:** RC830d3703/FullCI39305805820 и Context39305805813 SUCCESS;[receipt](../runtime/connect_academy_rc_ci_20261019.json),[handoff](../runtime/connect_academy_rc_20261019.md). Package552/99,a67a08d8...;native121/611+6concurrency+paired93→99→93;две Moodle suites288/1266 PASS. Полный RC закрыт,не повторять по прежним строкам. Остаток:guarded addon installer/recovery с fresh paired backup;private bridge и verified account link/notification. Существующий link требует Mini App;если нужен раньше public HTTPS,нужен отдельный direct-chat путь с canonical identity и вторым Academy confirm. Production/main/network не менялись,0subagents. Далее история.
+
 **Текущий этап19Oct:** preflight уже получен приватно. Owner21:35MSK разрешает code/tests без full server report/private ancestry. [Source RC и paired recovery](../proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md). Новый native full-RC pending;candidate552/99 не deployment,Mini App ждёт HTTPS. Не повторять сбор или установку receiver.0subagents.
 
 **Owner19Oct18:59МСК:** первый запуск @ustarcorp_bot подтверждён текстом «окей работает». Receiver-only этап принят владельцем; скриншоты не прочитаны, точные PID/uptime/ответ не выдумывать. Следом — [подготовка подключения Академии](../proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md): read-only preflight текущих файлов/версий/схемы и затем отдельный выпуск candidate552/99, private bridge/links/уведомления. Mini App ждёт HTTPS; native handoff/step-up/role screens остаются отдельными gates.0subagents.

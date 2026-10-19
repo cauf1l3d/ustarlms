@@ -1,13 +1,14 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_academy_source_RC_and_paired_recovery
-stage_label: Подготовка source RC Академии и парного восстановления в CI
-current_activity: 'Owner preflight received privately;no repeat collection requested.
-  Owner19Oct2135MSK authorizes code/tests publication without full server report/private commits.
-  New deterministic package and accepted-baseline DB/source/data/config recovery fixture prepared.
-  Git candidate552/99 and baseline526/93 are source/fixture references,not new deployment facts.
-  Full new native CI pending. Mini App waits HTTPS;bridge/notify activation follows operator gates.'
+stage: connect_academy_source_RC_verified_operator_upgrade_pending
+stage_label: Source RC проверен; подготовка управляемого addon update и account-link/delivery
+current_activity: 'Source830d3703/tree08a7bfdc:FullRC39305805820 all9jobs SUCCESS and Context39305805813
+  SUCCESS. Native Connect121tests/611assertions,6concurrency,paired93to99to93 and downloaded evidence verified.
+  Both Moodle suites288tests/1266assertions PASS. Reproducible source package552files/a67a08d8... matches CI.
+  Full private server report and private commits excluded. No deployment claimed.
+  Next guarded addon upgrade/recovery with fresh paired backup,private bridge and verified account link/notify.
+  Current link uses Mini App;direct-chat path before public HTTPS still needs implementation.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -75,6 +76,10 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_academy_rc_20261019.md
+- context/runtime/connect_academy_rc_ci_20261019.json
+- context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_PROGRESS_20261019.md
+- context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md
 - START_HERE.md
 - context/proposals/USTAR_CONNECT_CON01C4_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md

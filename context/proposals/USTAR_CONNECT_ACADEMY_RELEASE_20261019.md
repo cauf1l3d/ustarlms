@@ -1,5 +1,7 @@
 # Connect Academy: source RC and paired recovery
 
+Completed on830d3703:Context39305805813 and full RC39305805820 SUCCESS,all9jobs. [Exact evidence](../runtime/connect_academy_rc_ci_20261019.json),[source package and remaining operator gates](../runtime/connect_academy_rc_20261019.md). This closes source RC verification,not production installation or the complete chatbot RFC.
+
 Continuation of the approved Connect RFC and completed receiver preparation. Owner19Oct21:35MSK authorizes code/tests publication without the full server report. That report and its private local commits are excluded from this branch and its ancestry. No subagents.
 
 ## Release scope
@@ -17,4 +19,4 @@ The deterministic package contains plugin/theme sources, reference hashes/versio
 
 ## Review
 
-Review archive path safety/exclusions,source vs dirty worktree,manifest consistency,accepted-baseline identity,paired restore order,artifact scope and default-off activation. Source review is personal under owner's no-subagent instruction. Native CI remains pending until its actual result is recorded.
+Reviewed archive path safety/exclusions,source vs dirty worktree,manifest consistency,accepted-baseline identity,paired restore order,artifact scope and default-off activation. Source review is personal under owner's no-subagent instruction. Full native result and exact tested references are recorded in the CI receipt;downloaded recovery artifact was checked,including exclusion of private snapshot files.

@@ -1,5 +1,9 @@
 # Реестр кода, проверок и deployment evidence
 
+## 19Oct22:01МСК — Academy source RC verified
+
+Source830d3703/tree08a7bfdc,FullRC39305805820 all9jobs SUCCESS,Context39305805813 SUCCESS. [Exact receipt](connect_academy_rc_ci_20261019.json),[handoff](connect_academy_rc_20261019.md). Native Connect121/611+6concurrency,accepted baseline93→candidate99→restored93;downloaded26-file evidence checked,schema/metadata restored,no snapshot files. Moodle5.1.8/PHP8.3.33/PG16.15 and historical5.1.1/PHP8.2.30/PG16.10 both288/1266 PASS. CI artifact12214182488;source archive17744353B/SHAa67a08d8e5509c580043a6752e73964cb8aed72c5d1732647a9d3c2e2379113e matches local build. First upload permission issue fixed by private snapshot subshell;no checks weakened. Personal source review,0subagents. Production/main/network unchanged;source package has no installer. Current link needs Mini App,so account-link/notify activation and guarded addon update remain explicit gates. Full private server report excluded.
+
 ## 19Oct21:35МСК — source RC and accepted-baseline paired recovery
 
 Owner authorizes code/tests publication without full private server report. Separate branch starts directly from remote35721073,excluding private local commits. Preflight already received privately;no repeat collection. [Plan](../proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md). Builder7tests/local715r16 PASS/30explicit skips;new native full-RC and pair pending. Public source references baselinee1d57f5b526/93 and candidate552/99 do not assert deployment. No installer/production operation;Mini App waits HTTPS.0subagents.

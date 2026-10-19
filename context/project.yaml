@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_academy_source_RC_and_paired_recovery
+  stage: connect_academy_source_RC_verified_operator_upgrade_pending
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -20,11 +20,11 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; Python private BFF and Telegram receiver candidate, runtime activation pending
+  connect_worker: connect-worker; receiver separately owner accepted; Academy bridge/account-link/notify activation pending
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: preflight_received_privately;source_RC_paired_recovery_CI_pending;MiniApp_waits_HTTPS
+execution_gate: source_RC830d3703_full_CI_passed;guarded_addon_upgrade_fresh_backup_and_verified_link_next;MiniApp_waits_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -40,4 +40,5 @@ current_work:
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
   plan: context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md
-  runbook: context/runtime/connect_receiver_delivery_20261019.md
+  runbook: context/runtime/connect_academy_rc_20261019.md
+  CI_receipt: context/runtime/connect_academy_rc_ci_20261019.json

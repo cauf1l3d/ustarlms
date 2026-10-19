@@ -420,8 +420,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 87247,
-      "sha256": "0d6f7bd841712bbb5d9c9855ae740da93b6fd9559e4d2a88ff21d44aaa29a92d"
+      "size": 87415,
+      "sha256": "23d96cb05087ae0ba549715f518ed286e9d25d89d9450a6c4a673360f03c225b"
     },
     {
       "path": "context/code_map/frontend.yaml",
@@ -734,6 +734,18 @@
       "domain": "proposals",
       "size": 4656,
       "sha256": "ef8efbfee26ffdd0e8f7add82ab67d28ff7d9b4157e39f621a52a42f342ca2e8"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C3_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 4691,
+      "sha256": "fd2270d80dcdbee4d4bae62d35d5b8f3a43a0e49b5e39d8fb9eb4546a46217cc"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C3_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 1329,
+      "sha256": "e562f75ea3759897533660ac6f886cef9c3df15110e611c62b1f33dd736803b9"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_CONTRACTS_20261019.md",

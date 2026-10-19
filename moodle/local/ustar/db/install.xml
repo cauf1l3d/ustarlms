@@ -580,18 +580,27 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="notificationid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="channel" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" />
         <FIELD NAME="attempts" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="nextattempt" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="providerref" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="lasterror" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connectversion" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connlinkid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connrevision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connexpires" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connleaseuntil" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connbegun" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connleasehash" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
+        <FIELD NAME="connkeyid" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
       </FIELDS>
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
       <INDEXES>
         <INDEX NAME="notification_channel_uix" UNIQUE="true" FIELDS="notificationid, channel" />
         <INDEX NAME="status_next_idx" UNIQUE="false" FIELDS="status, nextattempt" />
+        <INDEX NAME="connect_ready_idx" UNIQUE="false" FIELDS="connectversion, channel, status, nextattempt" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_coin_ledger" COMMENT="USCOIN immutable transaction ledger">

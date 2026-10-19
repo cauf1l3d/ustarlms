@@ -16,6 +16,9 @@ final class bridge_service {
             'registration.status', 'registration.options' => ['browser', 'session'],
             'registration.submit' => ['browser', 'command', 'departmentid', 'email', 'firstname', 'lastname', 'password', 'session', 'username'],
             'link.claim' => ['auth_date', 'code', 'proof', 'provider', 'subject', 'tenant'],
+            'notification.lease' => ['limit'],
+            'notification.begin' => ['delivery', 'lease'],
+            'notification.finish' => ['delivery', 'lease', 'outcome', 'provider_ref', 'reason', 'retry_after'],
         };
         $actual = array_keys($payload); sort($actual);
         if ($actual !== $fields) { throw new \InvalidArgumentException('invalid_payload'); }
@@ -33,6 +36,22 @@ final class bridge_service {
         }
         identity_service::remember_transport($request['nonce_hash'], $request['nonce_expires']);
         $kid = $request['key_id'];
+        if ($op === 'notification.lease') {
+            if ($payload['limit'] !== '1') { throw new \InvalidArgumentException('invalid_payload'); }
+            return notification_delivery::lease($kid, $request['provider'], $request['tenant']) ?? ['status' => 'empty'];
+        }
+        if ($op === 'notification.begin' || $op === 'notification.finish') {
+            if (!preg_match('/\A[1-9][0-9]{0,18}\z/', $payload['delivery'])
+                    || filter_var($payload['delivery'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) === false) {
+                throw new \InvalidArgumentException('invalid_delivery');
+            }
+            if ($op === 'notification.begin') {
+                return notification_delivery::begin((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']);
+            }
+            if (!preg_match('/\A(?:0|[1-9][0-9]{0,4})\z/', $payload['retry_after'])) { throw new \InvalidArgumentException('invalid_delivery'); }
+            return notification_delivery::finish((int)$payload['delivery'], $payload['lease'], $payload['outcome'],
+                $payload['provider_ref'], $payload['reason'], (int)$payload['retry_after'], $kid, $request['provider'], $request['tenant']);
+        }
         if ($op === 'launch.create') { return entry_service::create_launch($sender, $kid); }
         if ($op === 'launch.exchange') {
             return entry_service::exchange($sender, $payload['launch'], $payload['proof'],

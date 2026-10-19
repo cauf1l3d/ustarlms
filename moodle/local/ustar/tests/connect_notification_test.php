@@ -163,4 +163,55 @@ final class connect_notification_test extends \advanced_testcase {
         $CFG->ustar_connect_notify_since=time()+100;$this->notice();
         $this->assertSame(0,$DB->count_records('local_ustar_notify_delivery',['channel'=>'telegram']));
     }
+    public function test_settings_are_owned_https_csrf_and_not_a_role_grant(): void {
+        global $DB,$USER;
+        $prefs=$this->prefs();
+        $this->denied(fn()=>\local_ustar\connect\link_management::handle('POST',true,
+            ['action'=>'preferences','sesskey'=>'wrong','preferences'=>$prefs]),'invalid_sesskey');
+        $this->denied(fn()=>\local_ustar\connect\link_management::handle('POST',false,
+            ['action'=>'preferences','sesskey'=>sesskey(),'preferences'=>$prefs]),'https_required');
+        $other=$this->getDataGenerator()->create_user();$this->setUser($other);
+        $this->denied(fn()=>\local_ustar\connect\link_management::handle('POST',true,
+            ['action'=>'preferences','sesskey'=>sesskey(),'preferences'=>$prefs+['userid'=>$this->employee->id]]),'invalid_preferences');
+        $view=\local_ustar\connect\link_management::handle('POST',true,
+            ['action'=>'preferences','sesskey'=>sesskey(),'preferences'=>array_replace($prefs,['enabled'=>false])]);
+        $this->assertTrue($view['preferences_saved']);
+        $this->assertTrue(notification_preferences::for_user((int)$this->employee->id)['enabled']);
+        $this->assertFalse(notification_preferences::for_user((int)$other->id)['enabled']);
+        employment::register_pending((int)$other->id);notification_preferences::save_own($prefs);
+        $this->assertSame(0,identity_service::resolve_active_user(new identity('telegram','123456','99999')));
+        $this->setGuestUser();$this->denied(fn()=>notification_preferences::save_own($prefs),'unauthenticated');
+    }
+    public function test_own_summary_hides_leases_and_privacy_erases_only_managed_delivery(): void {
+        global $DB;
+        $this->prefs();$id=$this->notice();$this->lease();
+        $summary=notification_delivery::own_summary();$this->assertCount(1,$summary);
+        $this->assertArrayNotHasKey('connleasehash',$summary[0]);$this->assertArrayNotHasKey('userid',$summary[0]);
+        $legacy=$DB->insert_record('local_ustar_notify_delivery',(object)['notificationid'=>$id,'channel'=>'bitrix',
+            'status'=>'pending','attempts'=>0,'timecreated'=>time(),'timemodified'=>time()]);
+        \local_ustar\privacy\provider::delete_data_for_user(new \core_privacy\local\request\approved_contextlist(
+            $this->employee,'local_ustar',[\context_system::instance()->id]));
+        $this->assertSame(0,$DB->count_records('local_ustar_notify_delivery',['connectversion'=>1]));
+        $this->assertTrue($DB->record_exists('local_ustar_notify_delivery',['id'=>$legacy]));
+        $this->assertFalse($DB->record_exists('user_preferences',['userid'=>$this->employee->id,'name'=>notification_preferences::NAME]));
+        $this->assertTrue($DB->record_exists('local_ustar_notifications',['id'=>$id]));
+    }
+    public function test_canonical_and_delivery_insert_share_business_rollback(): void {
+        global $DB;
+        $this->prefs();$tx=$DB->start_delegated_transaction();$id=$this->notice();
+        $this->assertTrue($DB->record_exists('local_ustar_notify_delivery',['notificationid'=>$id,'connectversion'=>1]));
+        try {$tx->rollback(new \RuntimeException('fixture rollback'));}catch(\RuntimeException $expected) {}
+        $this->assertFalse($DB->record_exists('local_ustar_notifications',['id'=>$id]));
+        $this->assertFalse($DB->record_exists('local_ustar_notify_delivery',['notificationid'=>$id]));
+    }
+    public function test_category_and_severity_are_rechecked_at_begin_and_dst_is_real(): void {
+        $this->prefs();$this->notice();$l=$this->lease();$this->prefs(['min_severity'=>'critical']);
+        $this->assertSame('cancelled',$this->begin($l)['status']);
+        $this->prefs();$this->notice();$l=$this->lease();$this->prefs(['categories'=>['feed']]);
+        $this->assertSame('cancelled',$this->begin($l)['status']);
+        $p=$this->prefs(['quiet_start'=>'22:00','quiet_end'=>'08:00','timezone'=>'Europe/Berlin']);
+        $now=strtotime('2026-10-25 00:30 UTC');
+        $next=notification_preferences::next_allowed($p,$now);
+        $this->assertSame(strtotime('2026-10-25 07:00 UTC'),$next);
+    }
 }

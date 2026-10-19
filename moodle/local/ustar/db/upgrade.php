@@ -4943,5 +4943,21 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
         upgrade_plugin_savepoint(true, 2026101902, 'local', 'ustar');
     }
+    if ($oldversion < 2026101904) {
+        // Extend only the existing outbox. Legacy pending rows retain connectversion=0.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Connect delivery schema'); }
+        $definition = $schema->getStructure()->getTable('local_ustar_notify_delivery');
+        $table = new xmldb_table('local_ustar_notify_delivery');
+        foreach (['connectversion', 'connlinkid', 'connrevision', 'connexpires', 'connleasehash',
+                'connleaseuntil', 'connkeyid', 'connbegun'] as $name) {
+            $field = $definition->getField($name);
+            if (!$dbman->field_exists($table, $field)) { $dbman->add_field($table, $field); }
+        }
+        $dbman->change_field_precision($table, $definition->getField('status'));
+        $index = $definition->getIndex('connect_ready_idx');
+        if (!$dbman->index_exists($table, $index)) { $dbman->add_index($table, $index); }
+        upgrade_plugin_savepoint(true, 2026101904, 'local', 'ustar');
+    }
 return true;
 }

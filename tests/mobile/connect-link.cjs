@@ -80,12 +80,20 @@ const repo = path.resolve(__dirname, '../..');
           url:'/local/ustar/connect.php',profileurl:'/local/ustar/profile.php',sesskey:'synthetic-csrf',haslinks:true,
           challenge:{code:'uc1_'+'A'.repeat(43),claimed,subject:'8727627355',expires_label:'19 октября 2026, 13:30',
             launch_url:'https://t.me/ustarcorp_bot?startapp=uc1_'+'A'.repeat(43)},
-          links:[{id:1,providerlabel:'Telegram',tenant:'123456',subject:'8727627355',linked:true}]};
+          links:[{id:1,providerlabel:'Telegram',tenant:'123456',subject:'8727627355',linked:true}],
+          preferences:{enabled:true,quiet_start:'22:00',quiet_end:'08:00',timezone:'Europe/Moscow',interval_minutes:5,
+            categories:[{value:'tasks',label:'Задачи',selected:true}],severities:[{value:'normal',label:'Все',selected:true}]},
+          deliveries:[{categorylabel:'Задачи',statuslabel:'Принято Telegram',time_label:'19 октября 2026',attempts:1}]};
         const html = Mustache.render(fs.readFileSync(path.join(repo,'moodle/local/ustar/templates/connect.mustache'),'utf8'),view);
         await page.setContent('<!doctype html><html lang="ru"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui}'+css+'</style></head><body>'+html+'</body></html>');
         assert.equal(0,await page.locator('img').count());
         assert.ok((await page.locator('h1').textContent()).includes('Мессенджеры'));
         assert.equal(claimed?1:0,await page.locator('form input[name=action][value=confirm]').count());
+        await page.getByRole('heading',{name:'Уведомления в Telegram',exact:true}).waitFor();
+        assert.equal(1,await page.locator('form input[name=action][value=preferences]').count());
+        assert.equal('Europe/Moscow',await page.locator('[name=timezone]').inputValue());
+        assert.equal(1,await page.getByText('Принято Telegram',{exact:false}).count());
+        assert.ok((await page.locator('body').textContent()).includes('не означает'));
         assert.ok(await page.locator('form').evaluateAll(forms=>forms.every(f=>f.method==='post' && f.getAttribute('action')==='/local/ustar/connect.php' && f.querySelector('[name=sesskey]'))));
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
         scenarios++; await page.close();

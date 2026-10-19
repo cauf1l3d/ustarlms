@@ -14,7 +14,8 @@ use core_privacy\local\request\writer;
 final class provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\plugin\provider,
-    \core_privacy\local\request\core_userlist_provider {
+    \core_privacy\local\request\core_userlist_provider,
+    \core_privacy\local\request\user_preference_provider {
 
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table('local_ustar_conn_links', [
@@ -71,6 +72,18 @@ final class provider implements
             'linkid' => 'privacy:metadata:connect:state', 'linkrevision' => 'privacy:metadata:connect:state',
             'timecreated' => 'privacy:metadata:connect:time', 'expiresat' => 'privacy:metadata:connect:time',
         ], 'privacy:metadata:connect');
+        $collection->add_user_preference(\local_ustar\connect\notification_preferences::NAME, 'privacy:metadata:connect:preferences');
+        $collection->add_database_table('local_ustar_notify_delivery', [
+            'notificationid' => 'privacy:metadata:connect:state', 'channel' => 'privacy:metadata:connect:provider',
+            'status' => 'privacy:metadata:connect:state', 'attempts' => 'privacy:metadata:connect:state',
+            'providerref' => 'privacy:metadata:connect:state', 'lasterror' => 'privacy:metadata:connect:state',
+            'connectversion' => 'privacy:metadata:connect:state', 'connlinkid' => 'privacy:metadata:connect:state',
+            'connrevision' => 'privacy:metadata:connect:state', 'connkeyid' => 'privacy:metadata:connect:provider',
+            'connleasehash' => 'privacy:metadata:connect:hash', 'connexpires' => 'privacy:metadata:connect:time',
+            'connleaseuntil' => 'privacy:metadata:connect:time', 'connbegun' => 'privacy:metadata:connect:time',
+            'timecreated' => 'privacy:metadata:connect:time', 'timemodified' => 'privacy:metadata:connect:time',
+            'nextattempt' => 'privacy:metadata:connect:time',
+        ], 'privacy:metadata:connect');
         return $collection;
     }
 
@@ -81,9 +94,13 @@ final class provider implements
               OR EXISTS (SELECT x.id FROM {local_ustar_conn_challenges} x WHERE x.userid = :challengeuser)
               OR EXISTS (SELECT a.id FROM {local_ustar_conn_launches} a WHERE a.userid = :launchuser)
               OR EXISTS (SELECT s.id FROM {local_ustar_conn_sessions} s WHERE s.userid = :sessionuser)
-              OR EXISTS (SELECT r.id FROM {local_ustar_conn_signups} r WHERE r.userid = :signupuser))',
+              OR EXISTS (SELECT r.id FROM {local_ustar_conn_signups} r WHERE r.userid = :signupuser)
+              OR EXISTS (SELECT p.id FROM {user_preferences} p WHERE p.userid = :prefuser AND p.name = :prefname)
+              OR EXISTS (SELECT d.id FROM {local_ustar_notify_delivery} d JOIN {local_ustar_notifications} n
+                    ON n.id = d.notificationid WHERE d.connectversion = 1 AND n.userid = :deliveryuser))',
             ['level' => CONTEXT_SYSTEM, 'linkuser' => $userid, 'challengeuser' => $userid,
-                'launchuser' => $userid, 'sessionuser' => $userid, 'signupuser' => $userid]);
+                'launchuser' => $userid, 'sessionuser' => $userid, 'signupuser' => $userid,
+                'prefuser' => $userid, 'prefname' => \local_ustar\connect\notification_preferences::NAME, 'deliveryuser' => $userid]);
         return $contexts;
     }
 
@@ -92,6 +109,20 @@ final class provider implements
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
                 'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0');
+        }
+        $userlist->add_from_sql('userid', 'SELECT userid FROM {user_preferences} WHERE name = :name',
+            ['name' => \local_ustar\connect\notification_preferences::NAME]);
+        $userlist->add_from_sql('userid', 'SELECT DISTINCT n.userid FROM {local_ustar_notify_delivery} d
+            JOIN {local_ustar_notifications} n ON n.id = d.notificationid WHERE d.connectversion = 1');
+    }
+
+    public static function export_user_preferences(int $userid): void {
+        global $DB;
+        $raw = $DB->get_field('user_preferences', 'value', ['userid' => $userid,
+            'name' => \local_ustar\connect\notification_preferences::NAME]);
+        if ($raw !== false) {
+            writer::export_user_preference('local_ustar', 'connect_notifications', $raw,
+                get_string('privacy:metadata:connect:preferences', 'local_ustar'));
         }
     }
 
@@ -109,11 +140,15 @@ final class provider implements
             'id,provider,tenant,subject,timecreated,expiresat,revokedat');
         $signups = $DB->get_records('local_ustar_conn_signups', ['userid' => $userid], 'id',
             'id,requestid,timecreated,expiresat');
+        $deliveries = $DB->get_records_sql('SELECT d.id,d.status,d.attempts,d.providerref,d.lasterror,
+                d.timecreated,d.timemodified,d.nextattempt FROM {local_ustar_notify_delivery} d
+            JOIN {local_ustar_notifications} n ON n.id = d.notificationid WHERE d.connectversion = 1 AND n.userid = :uid', ['uid' => $userid]);
         // Token/session hashes are security internals, not login credentials to export.
         writer::with_context(\context_system::instance())->export_data(['Connect'], (object)[
             'links' => array_values($links), 'confirmations' => array_values($challenges),
             'launches' => array_values($launches), 'entries' => array_values($sessions),
             'registrations' => array_values($signups),
+            'notification_deliveries' => array_values($deliveries),
         ]);
     }
 
@@ -143,6 +178,8 @@ final class provider implements
             $transaction = $DB->start_delegated_transaction();
             try {
                 if ($userids === null) {
+                    $DB->delete_records('local_ustar_notify_delivery', ['connectversion' => 1]);
+                    $DB->delete_records('user_preferences', ['name' => \local_ustar\connect\notification_preferences::NAME]);
                     $DB->set_field('local_ustar_conn_proofs', 'challengeid', 0);
                     foreach (['local_ustar_conn_signups', 'local_ustar_conn_sessions', 'local_ustar_conn_launches',
                             'local_ustar_conn_challenges', 'local_ustar_conn_links'] as $table) {
@@ -150,6 +187,10 @@ final class provider implements
                     }
                 } else {
                     [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+                    $DB->delete_records_select('local_ustar_notify_delivery', 'connectversion = 1 AND notificationid IN
+                        (SELECT id FROM {local_ustar_notifications} WHERE userid ' . $insql . ')', $params);
+                    $DB->delete_records_select('user_preferences', 'name = :prefname AND userid ' . $insql,
+                        $params + ['prefname' => \local_ustar\connect\notification_preferences::NAME]);
                     // Detach identity now; keep the opaque replay guard until
                     // its original expiry so erasure cannot resurrect a proof.
                     $DB->set_field_select('local_ustar_conn_proofs', 'challengeid', 0, 'challengeid IN

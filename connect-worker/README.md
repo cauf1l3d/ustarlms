@@ -1,3 +1,7 @@
+## CON01C.3 — текущая работа: канонические уведомления
+
+[Контракт, настройки, состояния и проверки](../context/proposals/USTAR_CONNECT_NOTIFICATIONS_20261019.md). Расширение existing outbox, без replay старого Bitrix/pending. Личный opt-in + глобальный cutoff; lease/begin/finish, текущие права перед отправкой, readable generic text, uncertain без auto-retry. Новый private notification runtime использует отдельный scoped key и не делает getUpdates. DefaultCLI без сети; --run не включать до эксплуатационной приёмки. Exact CI receipt — PR106. Нижние разделы — датированные этапы; они не отменяют завершённые C1/C2.
+
 # USTAR Connect — начало разработки
 
 ## CON01C.2 — существующая учётка и подтверждение связи

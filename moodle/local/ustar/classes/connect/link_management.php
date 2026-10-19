@@ -20,6 +20,7 @@ final class link_management {
     }
 
     public static function handle(string $method, bool $https, #[\SensitiveParameter] array $input): array {
+        global $USER;
         if (!$https) { throw new \InvalidArgumentException('https_required'); }
         if (!in_array($method, ['GET', 'POST'], true) || ($method === 'GET' && $input !== [])) {
             throw new \InvalidArgumentException('invalid_request');
@@ -27,16 +28,22 @@ final class link_management {
         // Also gates disabled/configuration views: no guest/service/view-as identity disclosure.
         $links = identity_service::owned_links();
         $channel = self::channel();
-        $view = ['enabled' => $channel !== null, 'links' => $links, 'challenge' => null, 'confirmed' => false];
+        $view = ['enabled' => $channel !== null, 'links' => $links, 'challenge' => null, 'confirmed' => false,
+            'preferences' => notification_preferences::for_user((int)$USER->id),
+            'deliveries' => notification_delivery::own_summary(), 'preferences_saved' => false];
         if ($method === 'GET') { return $view; }
         if (!is_string($input['sesskey'] ?? null) || !confirm_sesskey($input['sesskey'])) {
             throw new \InvalidArgumentException('invalid_sesskey');
         }
         $action = $input['action'] ?? '';
-        if (!in_array($action, ['issue', 'preview', 'confirm', 'revoke'], true)) {
+        if (!in_array($action, ['issue', 'preview', 'confirm', 'revoke', 'preferences'], true)) {
             throw new \InvalidArgumentException('invalid_request');
         }
-        if ($action === 'issue') {
+        if ($action === 'preferences') {
+            if (!is_array($input['preferences'] ?? null)) { throw new \InvalidArgumentException('invalid_preferences'); }
+            $view['preferences'] = notification_preferences::save_own($input['preferences']);
+            $view['preferences_saved'] = true;
+        } else if ($action === 'issue') {
             if (!$channel) { throw new \InvalidArgumentException('channel_unavailable'); }
             $challenge = identity_service::issue('telegram', $channel['tenant']);
             $view['challenge'] = $challenge + ['claimed' => false, 'subject' => '',

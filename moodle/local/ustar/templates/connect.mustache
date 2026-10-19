@@ -47,4 +47,28 @@
     </article>{{/links}}
     {{^haslinks}}<p>Подтверждённых подключений пока нет.</p>{{/haslinks}}
   </section>
+  {{#preferences}}
+  <section class="u-panel u-ux-form"><h2>Уведомления в Telegram</h2>
+    <p>Выберите новые события для подтверждённого подключения. Старые уведомления не пересылаются. Настройки не меняют ваши права в Академии.</p>
+    {{#preferences_saved}}<p role="status">Настройки сохранены.</p>{{/preferences_saved}}
+    <form method="post" action="{{url}}">
+      <input type="hidden" name="action" value="preferences"><input type="hidden" name="sesskey" value="{{sesskey}}">
+      <label><input type="checkbox" name="notify_enabled" value="1" {{#enabled}}checked{{/enabled}}> Получать уведомления в Telegram</label>
+      <fieldset><legend>События</legend>{{#categories}}<label><input type="checkbox" name="categories[]" value="{{value}}" {{#selected}}checked{{/selected}}> {{label}}</label>{{/categories}}</fieldset>
+      <label>Важность<select name="min_severity">{{#severities}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/severities}}</select></label>
+      <label>Часовой пояс IANA<input name="timezone" value="{{timezone}}" required maxlength="64" placeholder="Europe/Moscow"></label>
+      <label>Не беспокоить с<input type="time" name="quiet_start" value="{{quiet_start}}" required></label>
+      <label>Не беспокоить до<input type="time" name="quiet_end" value="{{quiet_end}}" required></label>
+      <p>Одинаковое время начала и конца отключает тихие часы. Интервал ограничивает частоту всех уведомлений вместе; отложенные события могут устареть.</p>
+      <label>Минимальный интервал, минут<input type="number" name="interval_minutes" value="{{interval_minutes}}" min="1" max="1440" required></label>
+      <button type="submit" class="u-btn u-btn--primary">Сохранить уведомления</button>
+    </form>
+    <p>Отправка начнётся после включения канала администратором. Подтверждение доставки не означает прочтение или выполнение задачи.</p>
+  </section>
+  {{/preferences}}
+  <section class="u-panel u-ux-form"><h2>Доставка моих уведомлений</h2>
+    <p>Последние 20 новых событий. Неопределённый результат не отправляется повторно автоматически.</p>
+    {{#deliveries}}<article class="u-ux-question"><h3>{{categorylabel}}</h3><p>{{statuslabel}}</p><p>{{time_label}} · Попыток: {{attempts}}</p>{{#next_label}}<p>Следующая проверка: {{next_label}}</p>{{/next_label}}</article>{{/deliveries}}
+    {{^deliveries}}<p>Доставок пока нет. Нужны подтверждённая связь, ваше согласие и включённый канал; событие должно оставаться актуальным.</p>{{/deliveries}}
+  </section>
 </main>

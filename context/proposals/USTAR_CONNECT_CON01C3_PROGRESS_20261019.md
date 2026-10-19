@@ -6,3 +6,23 @@ Pre-flight: both canonical notification writers already own their transaction an
 
 Ruling: use existing delivery table plus Moodle user preference rather than create business queue/preferences tables — preserves canonical notification IDs and existing unique notification/channel; cost: managed delivery fields and Privacy export need explicit upgrade/parity.
 Ruling: fixed generic Telegram cards, not raw canonical message/HR titles — avoids sensitive payload leaving Academy and is usable before full remote actor/step-up; cost: details require authenticated Academy access.
+
+
+## Реализация / до финальной CI приёмки
+
+Test-only source f42c1555652fd66ad9d01fd61c4649bbbba0d079, treee060a5b6bf97d4e7917b22a6292549c200f42361. Context39248117658 SUCCESS; Review39248117367 source8.2/8.3 SUCCESS; native118045737886 expected RED:96tests/436assertions,12missing notification_preferences errors,84предыдущих теста PASS. Decoded log прочитан. Test-only artifact12184303083 — evidence отказа, не готовности.
+
+Worker missing-module RED10tests →13tests PASS после реализации; review обнаружил отличие реального bridge-envelope от test double, контракт и тесты приведены к exact {ok:true,result:{...}}. Никаких provider вызовов. Native suite расширен до16notification tests с owner/CSRF/privacy/atomic rollback/DST. Добавлена независимая multi-process lease/begin/receipt гонка. Кандидат2026101904/550addonfiles/99tables; новый worker вне addoncount. Нативный UI содержит личные настройки и20безопасных delivery summaries. Публичные сырые messages/HR reasons/URL не добавлены.
+
+Локальный первый full r16:660tests/30skips,3environment import errors (mcp отсутствует). Это не PASS; declared pinned dependencies устанавливаются отдельно. PHP и Chromium локально не заявляются. Новая exact implementation CI ещё не завершена; итоговая квитанция будет в PR106.
+
+Команды разработки (продублированы в чате):
+```bash
+python -m unittest discover -s tests/r16 -p test_connect_notifications.py -v
+python -m unittest discover -s tests/r16 -v
+node tests/mobile/connect-link.cjs
+PYTHONPATH=connect-worker python -m ustar_connect.notification_runtime --help
+python scripts/check_context.py
+```
+
+C3 не закрывает remote actor/step-up/полный ролевой контур. Они следуют за доставкой; внешнийorigin/заменённыйtoken нужны для liveactivation, не для sourceразработки.

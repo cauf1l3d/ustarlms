@@ -505,6 +505,7 @@ final class target_core {
                         'timecreated' => $now, 'timemodified' => $now,
                     ]);
                 }
+                \local_ustar\connect\notification_delivery::enqueue($id);
                 $transaction->allow_commit();
                 return $id;
             } catch (\Throwable $e) {

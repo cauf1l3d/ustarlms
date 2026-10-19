@@ -130,3 +130,14 @@ class TelegramClient:
 
     def send_notice(self, subject):
         return self._send(subject, {'text': NOTICE})
+
+    def send_notification(self, subject, category, severity, occurred_at):
+        from datetime import datetime, timezone
+        titles={'registration':'Регистрация','tasks':'Задачи','feed':'Лента','grades':'Грейды'}
+        labels={'normal':'Новое событие','action':'Требуется действие','critical':'Важное событие'}
+        if category not in titles or severity not in labels or type(occurred_at) is not int or not 0<occurred_at<2**32:
+            raise ValueError('invalid_notification')
+        date=datetime.fromtimestamp(occurred_at,timezone.utc).strftime('%d.%m.%Y %H:%M UTC')
+        return self._send(subject,{'text':f'Академия USTAR · {titles[category]}\n{labels[severity]}\n{date}\n\n'
+            'Подробности доступны в Академии с учётом ваших текущих прав. Для персонального входа отправьте /start.',
+            'link_preview_options':{'is_disabled':True}})

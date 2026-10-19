@@ -1,4 +1,5 @@
 <?php
+$string['privacy:metadata:connect:preferences'] = 'Personal notification opt-in, categories, severity, quiet hours, timezone and interval.';
 defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'USTAR Workspace';
 $string['ustar:admin'] = 'Administer USTAR workspace';

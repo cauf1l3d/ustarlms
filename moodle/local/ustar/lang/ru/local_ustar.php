@@ -1,4 +1,5 @@
 <?php
+$string['privacy:metadata:connect:preferences'] = 'Личное согласие на уведомления, категории, важность, тихие часы, часовой пояс и интервал.';
 defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'USTAR Workspace';
 $string['ustar:admin'] = 'Администрирование USTAR workspace';

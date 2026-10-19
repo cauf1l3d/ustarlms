@@ -23,7 +23,20 @@ if (($argv[1] ?? '') === 'child') {
     $input = json_decode(stream_get_contents(STDIN), true, 8, JSON_THROW_ON_ERROR);
     connect_user((int)$input['userid']);
     try {
-        if ($input['op'] === 'confirm') {
+        if (in_array($input['op'], ['notification-lease', 'notification-begin', 'notification-finish'], true)) {
+            $CFG->ustar_connect_notifications_enabled = true;
+            $CFG->ustar_connect_notify_since = 1;
+            $CFG->ustar_connect_channels = ['telegram'=>['tenant'=>'123456','username'=>'ustarcorp_bot']];
+            if ($input['op'] === 'notification-lease') {
+                echo json_encode(\local_ustar\connect\notification_delivery::lease('tg_delivery','telegram','123456'));
+            } else if ($input['op'] === 'notification-begin') {
+                echo json_encode(\local_ustar\connect\notification_delivery::begin($input['delivery'],$input['lease'],
+                    'tg_delivery','telegram','123456'));
+            } else {
+                echo json_encode(\local_ustar\connect\notification_delivery::finish($input['delivery'],$input['lease'],
+                    'provider_accepted','99','',0,'tg_delivery','telegram','123456'));
+            }
+        } else if ($input['op'] === 'confirm') {
             echo json_encode(identity_service::confirm($input['code']));
         } else if ($input['op'] === 'entry') {
             echo json_encode(entry_service::exchange(new identity('telegram', '123456', '77777'),
@@ -136,3 +149,33 @@ if (count(array_filter($results, fn($r) => ($r['outcome'] ?? '') === 'registered
     throw new RuntimeException('LAN and Connect signup did not serialize the shared email through commit');
 }
 echo "CONNECT_CONCURRENT_LAN_EMAIL=PASS\n";
+
+$CFG->ustar_connect_notifications_enabled = true;
+$CFG->ustar_connect_notify_since = 1;
+$CFG->ustar_connect_channels = ['telegram'=>['tenant'=>'123456','username'=>'ustarcorp_bot']];
+connect_user((int)get_admin()->id);
+$taskid = \local_ustar\task_workspace\service::create((int)get_admin()->id,(int)$userid,
+    ['kind'=>'task','title'=>'Synthetic delivery race','date'=>gmdate('Y-m-d',time()+DAYSECS),'clock'=>'17:00',
+     'policy'=>\local_ustar\task_workspace\policy::validate(['timezone'=>'UTC','mode'=>'calendar'])]);
+connect_user((int)$userid);
+\local_ustar\connect\notification_preferences::save_own(['enabled'=>true,'categories'=>['tasks'],
+    'min_severity'=>'normal','quiet_start'=>'00:00','quiet_end'=>'00:00','timezone'=>'UTC','interval_minutes'=>1]);
+\local_ustar\workflow_notifications::enqueue((int)$userid,'task_revised','Synthetic','Synthetic',
+    '/local/ustar/tasks.php?tab=assigned','task-revised:'.$taskid.':99');
+$input = ['userid'=>$userid,'op'=>'notification-lease'];
+$results = connect_race([$input,$input]);
+$leases = array_values(array_filter($results,static fn($r)=>isset($r['delivery'])));
+if (count($leases)!==1) { throw new RuntimeException('Notification lease was not exclusive'); }
+$lease = $leases[0];
+$input = $lease + ['userid'=>$userid,'op'=>'notification-begin'];
+$results = connect_race([$input,$input]);
+if (count(array_filter($results,static fn($r)=>($r['status']??'')==='sending'))!==1
+        || count(array_filter($results,static fn($r)=>($r['denied']??'')==='invalid_delivery'))!==1) {
+    throw new RuntimeException('Notification begin allowed two send permits');
+}
+$input = $lease + ['userid'=>$userid,'op'=>'notification-finish'];
+$results = connect_race([$input,$input]);
+if ($results!==[['status'=>'provider_accepted'],['status'=>'provider_accepted']]) {
+    throw new RuntimeException('Notification receipt was not idempotent');
+}
+echo "CONNECT_CONCURRENT_NOTIFICATION_LEASE_BEGIN_RECEIPT=PASS\n";

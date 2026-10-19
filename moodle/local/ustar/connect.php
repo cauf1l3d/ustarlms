@@ -25,6 +25,19 @@ try {
         foreach (['action', 'sesskey', 'code', 'linkid'] as $name) {
             $input[$name] = optional_param($name, '', PARAM_RAW);
         }
+        if ($input['action'] === 'preferences') {
+            $enabled = optional_param('notify_enabled', '0', PARAM_RAW);
+            $interval = optional_param('interval_minutes', '', PARAM_RAW);
+            if (!in_array($enabled, ['0', '1'], true) || !preg_match('/\A[1-9][0-9]{0,3}\z/', $interval)) {
+                throw new InvalidArgumentException('invalid_preferences');
+            }
+            $input['preferences'] = ['enabled' => $enabled === '1',
+                'categories' => array_values(optional_param_array('categories', [], PARAM_RAW)),
+                'min_severity' => optional_param('min_severity', '', PARAM_RAW),
+                'quiet_start' => optional_param('quiet_start', '', PARAM_RAW),
+                'quiet_end' => optional_param('quiet_end', '', PARAM_RAW),
+                'timezone' => optional_param('timezone', '', PARAM_RAW), 'interval_minutes' => (int)$interval];
+        }
     }
     $data = \local_ustar\connect\link_management::handle($method,
         is_https() && parse_url($CFG->wwwroot, PHP_URL_SCHEME) === 'https', $input);
@@ -33,6 +46,7 @@ try {
     $error = match ($failure->getMessage()) {
         'https_required' => 'Подключение мессенджера доступно только через доверенный HTTPS-адрес Академии. Обратитесь к администратору.',
         'channel_unavailable' => 'Бот Академии пока не подключён. Новые связи временно недоступны.',
+        'invalid_preferences' => 'Проверьте настройки: категории, часовой пояс IANA, время ЧЧ:ММ и интервал от 1 до 1440 минут.',
         'expired_challenge' => 'Срок ссылки истёк. Вернитесь на эту страницу и создайте новую ссылку.',
         'unclaimed_challenge' => 'Сначала откройте персональную ссылку в своём Telegram и дождитесь подтверждения отправки.',
         'link_conflict' => 'Этот Telegram или канал уже принадлежит другой связи. Автоматический перенос запрещён; обратитесь к администратору.',
@@ -53,6 +67,26 @@ foreach ($data['links'] as &$link) {
 unset($link);
 if ($data['challenge']) {
     $data['challenge']['expires_label'] = userdate($data['challenge']['expires_at']);
+}
+$categories = ['registration' => 'Регистрация', 'tasks' => 'Задачи', 'feed' => 'Лента', 'grades' => 'Грейды'];
+if (isset($data['preferences'])) {
+    $prefs = $data['preferences'];
+    $data['preferences']['categories'] = [];
+    foreach ($categories as $key => $label) {
+        $data['preferences']['categories'][] = ['value' => $key, 'label' => $label, 'selected' => in_array($key, $prefs['categories'], true)];
+    }
+    $data['preferences']['severities'] = [];
+    foreach (['normal' => 'Все события', 'action' => 'Требуется действие и важные', 'critical' => 'Только важные'] as $key => $label) {
+        $data['preferences']['severities'][] = ['value' => $key, 'label' => $label, 'selected' => $key === $prefs['min_severity']];
+    }
+}
+foreach ($data['deliveries'] ?? [] as $i => $delivery) {
+    $data['deliveries'][$i]['categorylabel'] = $categories[$delivery['category']] ?? 'Событие';
+    $data['deliveries'][$i]['statuslabel'] = ['pending' => 'В очереди', 'leased' => 'Проверяется', 'sending' => 'Отправляется',
+        'provider_accepted' => 'Принято Telegram', 'retry_wait' => 'Ожидает повтора', 'uncertain' => 'Результат неизвестен — автоматического повтора нет',
+        'failed' => 'Не доставлено', 'cancelled' => 'Отменено: событие или доступ изменились'][$delivery['status']] ?? 'Недоступно';
+    $data['deliveries'][$i]['time_label'] = userdate($delivery['timemodified']);
+    $data['deliveries'][$i]['next_label'] = $delivery['nextattempt'] ? userdate($delivery['nextattempt']) : '';
 }
 $data += ['url' => $url->out(false), 'profileurl' => (new moodle_url('/local/ustar/profile.php'))->out(false),
     'sesskey' => sesskey(), 'fullname' => fullname($USER), 'error' => $error, 'haslinks' => (bool)$data['links']];

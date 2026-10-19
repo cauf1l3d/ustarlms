@@ -1,5 +1,7 @@
 # USTAR Connect: первый запуск Telegram-бота без Mini App
 
+**Обновление18:53МСК:** server1 настроен, Telegram probe доказан owner journal. Оригинальный b01 admin start ошибочно отвергает успешный собранный oneshot. [Исправленный standalone admin](connect_configure_tty_recovery_20261019.md) включает tty+GC fixes; ниже для configure/start используем его. Runtime archive не переписывать. Личный ACK ожидается.
+
 **Поправка19Oct18:41МСК:** владелец уже установил b01bd942, но его интерактивный configure содержит дефект tty. До шага3 обязательно выполнить [восстановление настройки](connect_configure_tty_recovery_20261019.md). Прежний host fixture не проверял этот интерактивный путь; исходная квитанция ниже историческая.
 
 Source b01bd942f7f748d9510618a79489643b42cbd690. Комплект предназначен для Ubuntu24.04/Python3.12/systemd на server1. Он устанавливает отдельный receiver @ustarcorp_bot через существующий HTTP proxy127.0.0.1:18081. Mini App отключён до HTTPS; обновления Moodle, bridge и миграции БД здесь нет. Notify-служба подготовлена и выключена. C4fd9eea80 остаётся завершённой разработкой, но не native deployment.
@@ -48,7 +50,7 @@ sudo /usr/bin/python3 -I /root/ustar-connect-admin-tty.py configure
 4. Проверить Telegram и запустить только receiver с автозапуском:
 
 ```bash
-sudo /usr/bin/python3 -I /opt/ustar-connect/current/admin.pyz start
+sudo /usr/bin/python3 -I /root/ustar-connect-admin-tty.py start
 sudo /usr/bin/python3 -I /opt/ustar-connect/current/admin.pyz status
 ```
 
@@ -68,7 +70,7 @@ sudo journalctl -u ustar-connect-probe.service -u ustar-connect-receiver.service
 Дополнительная read-only проверка без polling/send:
 
 ```bash
-sudo /usr/bin/python3 -I /opt/ustar-connect/current/admin.pyz probe
+sudo /usr/bin/python3 -I /root/ustar-connect-admin-tty.py probe
 ```
 
 Остановка с отключением автозапуска:

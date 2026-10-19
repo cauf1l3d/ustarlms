@@ -40,7 +40,7 @@ def main(archive):
     for n in ('telegram.token','receiver.json','probe.json'):
         assert (inst.config/n).stat().st_mode & 0o777==0o600
     fixture=Path('/opt/ustar-connect-native-fixture.py')
-    fixture.write_text('''import io,json,os,sys,time
+    fixture.write_text('''import io,json,os,signal,sys,time
 sys.path.insert(0,"/opt/ustar-connect/current/receiver.pyz")
 from ustar_connect.receiver_runtime import load_config,main
 from ustar_connect.receiver_journal import Journal
@@ -91,20 +91,38 @@ else:
  receiver=TelegramReceiver(config.api,None,journal,bot_id=config.bot_id,bot_username=config.bot_username,onboarding_enabled=False)
  assert receiver.step()["status"]=="polled"
  assert api.sent==3 and journal.health()["next_offset"]==103
- journal.close();print("CONNECT_NATIVE_RECEIVER=PASS")
+ journal.close();print("CONNECT_NATIVE_RECEIVER=PASS",flush=True);signal.pause()
 ''')
     fixture.chmod(0o644)
-    # Test overrides exist only in this disposable runner; managed updater refuses them.
-    for n,config in [('probe','probe'),('receiver','receiver')]:
-        drop=Path('/etc/systemd/system/ustar-connect-'+n+'.service.d');drop.mkdir()
-        (drop/'fixture.conf').write_text('[Service]\nExecStart=\nExecStart=/usr/bin/python3 -I -u '+str(fixture)+' %d/'+config+'.json\n')
-    call(['systemctl','daemon-reload'])
-    call(['systemctl','start','ustar-connect-probe.service'])
-    call(['systemctl','start','ustar-connect-receiver.service'])
+    # Install a fully manifested synthetic test release, rather than unmanaged
+    # drop-ins. Exercise the public admin CLI, including synchronous probe/start.
+    _,fixturefiles=mod.validate_archive(archive,digest);fixturecommit='e'*40
+    fixturefiles['SOURCE_COMMIT']=(fixturecommit+'\n').encode()
+    for n in ('probe','receiver'):
+        name='units/ustar-connect-'+n+'.service'
+        text=fixturefiles[name].decode()
+        lines=[('ExecStart=/usr/bin/python3 -I -u '+str(fixture)+' %d/'+n+'.json')
+               if line.startswith('ExecStart=') else line for line in text.splitlines()]
+        fixturefiles[name]=('\n'.join(lines)+'\n').encode()
+    with tempfile.TemporaryDirectory(prefix='connect-cli-native-') as td:
+        testarchive=Path(td)/'fixture.tar.gz'
+        manifest={'schema':1,'source_commit':fixturecommit,'files':{
+            n:hashlib.sha256(v).hexdigest() for n,v in fixturefiles.items()}}
+        with tarfile.open(testarchive,'w:gz') as tar:
+            for name,value in {**fixturefiles,'manifest.json':json.dumps(manifest).encode()}.items():
+                info=tarfile.TarInfo(name);info.size=len(value);info.mode=0o644
+                tar.addfile(info,io.BytesIO(value))
+        assert inst.install(testarchive,hashlib.sha256(testarchive.read_bytes()).hexdigest())==fixturecommit
+    admin=['/usr/bin/python3','-I','/opt/ustar-connect/current/admin.pyz']
+    assert json.loads(call(admin+['probe']))['status']=='probe_complete'
+    assert json.loads(call(admin+['start']))['status']=='start_complete'
+    assert inst.host.active('ustar-connect-receiver.service')
     for _ in range(50):
-        state=call(['systemctl','show','ustar-connect-receiver.service','-p','SubState','--value']).strip()
-        if state=='dead':break
+        logs=call(['journalctl','-u','ustar-connect-receiver.service','--no-pager','-o','cat'])
+        if 'CONNECT_NATIVE_RECEIVER=PASS' in logs:break
         time.sleep(.1)
+    else:raise AssertionError('receiver fixture did not finish private command checks')
+    assert json.loads(call(admin+['stop']))['status']=='stop_complete'
     logs=call(['journalctl','-u','ustar-connect-probe.service','-u','ustar-connect-receiver.service','--no-pager','-o','cat'])
     assert 'CONNECT_NATIVE_PROBE=PASS' in logs and 'CONNECT_NATIVE_RECEIVER=PASS' in logs,logs
     assert token not in logs
@@ -114,14 +132,11 @@ else:
     assert state.stat().st_mode&0o777==0o700
     with sqlite3.connect('file:'+str(state/'receiver.sqlite3')+'?mode=ro',uri=True) as db:
         assert db.execute('select next_offset from state').fetchone()[0]==103
-    for n in ('probe','receiver'):
-        (Path('/etc/systemd/system/ustar-connect-'+n+'.service.d')/'fixture.conf').unlink()
-        Path('/etc/systemd/system/ustar-connect-'+n+'.service.d').rmdir()
-    call(['systemctl','daemon-reload'])
+    assert inst.rollback()==sha
     assert inst.install(archive,digest)==sha
     with sqlite3.connect('file:'+str(state/'receiver.sqlite3')+'?mode=ro',uri=True) as db:
         assert db.execute('select next_offset from state').fetchone()[0]==103
-    print('CONNECT_HOST_ACCEPTANCE=PASS install/reinstall/update/rollback/LoadCredential/UID/SQLite/offline-notice; no live Telegram')
+    print('CONNECT_HOST_ACCEPTANCE=PASS install/reinstall/update/rollback/CLI-probe-start-stop/LoadCredential/UID/SQLite/offline-notice; no live Telegram')
 
 if __name__=='__main__':
     if os.environ.get('USTAR_CONNECT_HOST_FIXTURE') != '1' or not Path('/home/runner/work').is_dir():

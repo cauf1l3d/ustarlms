@@ -159,3 +159,50 @@ class DeployTests(unittest.TestCase):
         self.assertEqual(token,captured.read_text())
         self.assertNotIn(token.encode(),output)
         self.assertIn(b'"status": "configured"',output)
+
+    def configured_host(self):
+        host=self.mod.Host();calls=[]
+        host.ensure_user=lambda name:None;host.active=lambda name:False
+        host.run=lambda args:calls.append(args) or ''
+        installer=self.mod.Installation(self.root/'host',host)
+        installer.install(self.tar,self.digest)
+        installer.configure('123456:synthetic-private-fixture')
+        calls.clear()
+        return installer,host,calls
+
+    def test_probe_accepts_successful_verified_oneshot_after_systemd_forgets_state(self):
+        installer,host,calls=self.configured_host()
+        def unloaded(args):
+            calls.append(args)
+            if args[:2]==['systemctl','show']:
+                return 'Result=success\nExecMainStatus=0\nConditionResult=no\n'
+            return ''
+        host.run=unloaded
+        # A completed, successful oneshot can lose all status before the next query.
+        # Exact managed units plus existing private condition files must still pass.
+        installer.probe()
+        self.assertIn(['systemctl','start','ustar-connect-probe.service'],calls)
+
+    def test_probe_start_failure_still_prevents_receiver_activation(self):
+        installer,host,calls=self.configured_host()
+        def failed(args):
+            calls.append(args)
+            if args==['systemctl','start','ustar-connect-probe.service']:
+                raise RuntimeError('host_command_failed')
+            return ''
+        host.run=failed
+        with self.assertRaisesRegex(RuntimeError,'^host_command_failed$'):installer.start()
+        self.assertFalse(any('enable' in args for args in calls))
+
+    def test_probe_refuses_added_unit_conditions_before_start(self):
+        installer,host,calls=self.configured_host()
+        drop=installer.units/'ustar-connect-probe.service.d';drop.mkdir()
+        (drop/'condition.conf').write_text('[Unit]\nConditionPathExists=/not-present\n')
+        with self.assertRaisesRegex(ValueError,'^unit_dropin_requires_review$'):installer.probe()
+        self.assertEqual([],calls)
+
+    def test_probe_requires_installed_managed_units_before_start(self):
+        installer,host,calls=self.configured_host()
+        (installer.units/'ustar-connect-probe.service').unlink()
+        with self.assertRaisesRegex(ValueError,'^managed_units_required$'):installer.probe()
+        self.assertEqual([],calls)

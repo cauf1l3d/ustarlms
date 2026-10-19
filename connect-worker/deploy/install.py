@@ -254,17 +254,19 @@ class Installation:
         write_file(self.config/'probe.json',(json.dumps(probe,sort_keys=True)+'\n').encode(),0o600)
 
     def probe(self):
-        if self.current() is None: raise ValueError('not_installed')
+        current=self.current()
+        if current is None: raise ValueError('not_installed')
+        snapshots=self.check_units(self.release_files(current))
+        if any(value is None for value in snapshots.values()):raise ValueError('managed_units_required')
         for name in ('telegram.token','receiver.json','probe.json'):
             path=safe(self.config/name)
             if (not path.is_file() or path.stat().st_nlink != 1
                     or stat.S_IMODE(path.stat().st_mode) != 0o600 or path.stat().st_size > 16384):
                 raise ValueError('private_configuration_required')
+        # The exact managed oneshot has only the verified file-exists condition.
+        # Synchronous start waits for ExecStart and propagates its failure. A later
+        # show is unsafe: systemd may already have collected a successful oneshot.
         self.host.run(['systemctl','start','ustar-connect-probe.service'])
-        result=self.host.run(['systemctl','show','ustar-connect-probe.service',
-                             '--property=Result,ExecMainStatus,ConditionResult','--no-pager'])
-        if set(result.splitlines()) != {'Result=success','ExecMainStatus=0','ConditionResult=yes'}:
-            raise ValueError('telegram_probe_not_accepted')
 
     def start(self):
         self.probe()

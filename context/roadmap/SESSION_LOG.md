@@ -1549,3 +1549,9 @@ Receiver-only поставка sourceb01bd942: actual Ubuntu host118145618545 PA
 
 
 Root cause: real PTY rejects buffered r+ before getpass; original host fixture called configure directly. One-line write-only output fix retains getpass hidden input. Real PTY CLI regression reproduces operation_failed before fix and passes after (prompt/ECHO off/exact synthetic token/no echo). Original b01 artifact remains unchanged; corrected standalone admin only used for configure.691r16/30skips PASS locally;new CI pending. Owner has not confirmed configuration/start/live ACK.0subagents/no live provider calls or agent SSH.
+
+##19Oct18:53МСК — Telegram probe verified; oneshot GC false negative
+
+**Owner19Oct18:53МСК:** install/configure и read-only Telegram identity probe подтверждены на server1. Journal: telegram_verified/ustarcorp_bot, service Deactivated successfully. Ошибка admin start — ложный отказ после GC успешного oneshot, не отказ Telegram. Исправлен synchronous probe + проверка exact managed units/private conditions;15deploy/695r16 PASS(30skips), новый actual-host CLI gate pending. Владелец может выполнить systemctl enable --now ustar-connect-receiver.service после подтверждённого probe; service status и личный /start ACK ещё ожидаются. [Квитанция](../runtime/connect_receiver_server1_20261019.json).0subagents.
+
+The old native host fixture never invoked admin probe/start. Added modeled RED→GREEN cases for collected success, missing managed unit and injected condition;failed ExecStart still blocks enable. New native fixture installs manifested synthetic units (no unmanaged drop-ins), exercises actual packaged admin probe/start/stop, preserves UID/LoadCredential/SQLite cursor tests and uses no live provider. New actual-host result pending;not declared passing locally. Official systemd.unit Unit Garbage Collection documents loss of exit/condition status after successful inactive collection. No network/credentials/Academy modifications by agent.

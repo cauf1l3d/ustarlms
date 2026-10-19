@@ -1,12 +1,13 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_receiver_installed_configure_tty_recovery
-stage_label: Receiver установлен; исправление интерактивной настройки
-current_activity: 'Owner19Oct1841MSK confirmed server1 installed_services_not_started b01bd942.
-  Configure failed before token prompt: real PTY reproduces nonseekable r+ open failure.
-  Fixed standalone admin uses write-only tty output;11deploy/691r16 tests PASS,30environment skips.
-  Private configure/start/live ACK pending;Mini App deferred until HTTPS;notify disabled.'
+stage: connect_receiver_configured_probe_verified_start_ACK_pending
+stage_label: Receiver настроен, Telegram проверен; запуск и личный ACK ожидаются
+current_activity: 'Owner19Oct1853MSK confirmed b01 install, private configure and live telegram_verified probe.
+  Admin start was a false negative: successful oneshot collected before show. Source fix accepts synchronous
+  verified managed-unit execution and preserves private conditions;15deploy/695r16 PASS,30skips.
+  Actual-host CLI regression pending. Owner enable-now receiver/status/private-start ACK next.
+  Mini App deferred until HTTPS;notify disabled;Academy unchanged.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -157,8 +158,10 @@ receiver_runtime:
   runbook: context/runtime/connect_receiver_delivery_20261019.md
   server1_deployed: true
   server1_install_receipt: owner19Oct1841MSK_installed_services_not_started
-  server1_configured: false
+  server1_configured: true
+  server1_probe_verified: true
+  owner_receipt: context/runtime/connect_receiver_server1_20261019.json
   server1_started: false
   live_ack: false
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
-  next: owner_fixed_admin_private_configure_start_private_start_ACK
+  next: owner_enable_now_receiver_status_private_start_ACK

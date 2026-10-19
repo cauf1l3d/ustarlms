@@ -57,7 +57,7 @@ jobs:
         run: |
           if [ "$CONNECT_EVENT" = workflow_dispatch ] && [ -f moodle/local/ustar/classes/connect/identity_service.php ]; then
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
-          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php; then
+          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php; then
             echo 'connect_db=false' >> "$GITHUB_OUTPUT"
           else
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"

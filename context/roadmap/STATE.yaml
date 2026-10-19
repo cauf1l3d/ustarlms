@@ -1,15 +1,16 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_signed_bridge_entry_sessions
-stage_label: 'Connect CON01B.2: private signed bridge и одноразовый вход'
-current_activity: 'Owner19Oct04:47MSK разрешил продолжить. PR106 baseline5f9aa3fb проверен: Context39185823445/Review39185823458
-  SUCCESS, native13tests/47assertions + independent concurrency. Новый candidate2026101901/539files/98tables:
-  scoped HMAC worker bridge, disabled-by-default TLS/private-peer endpoint, durable request nonce, one-use launch,
-  browser-bound onboarding-only sessions, current link/user checks, privacy и bounded prune. Локально569r16/19skips PASS;
-  новый native CI ещё ожидается; exact final receipt будет в PR106. Accepted baseline e1d57f5b/526files/93tables не менялся.
-  Нет signup receipt/registration forms/HRD outbox, реального bot receiver, public edge, native deploy или network change.
-  Journal/heartbeat и platform upgrades deferred. Субагенты0; main не merged.'
+stage: connect_atomic_canonical_signup
+stage_label: 'Connect CON01B.3: регистрация pending и atomic first link/receipt'
+current_activity: 'Owner19Oct05:30MSK продолжил. Base81a1be76 проверен: Context39188208182/Review39188208139 SUCCESS,
+  native22tests/87assertions + concurrent entry PASS. Test-only57111574/run39190794829:24tests/90assertions,
+  ровно2expected failures canonical completion/rollback. Затем реализован candidate2026101902/542files/99tables:
+  private registration options/submit/status, canonical registration completion внутри email lock/transaction,
+  first provider link + durable receipt + own entry snapshot, no employee grant. Existing HRD review/notification
+  outbox не заменяются. Локально574r16/19skips PASS; новый native implementation CI ожидается, exact final receipt в PR106.
+  Accepted baseline e1d57f5b/526files/93tables неизменен. Endpoint disabled; нет HTTPS forms/public BFF/real receiver,
+  native deploy/network change/main merge. Journal/heartbeat/platform upgrades deferred. Субагенты0.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -78,6 +79,8 @@ audit:
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
 - START_HERE.md
+- context/proposals/USTAR_CONNECT_CON01B3_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B3_PROGRESS_20261019.md
 - context/proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md
 - context/proposals/USTAR_CONNECT_REVIEW_20261019.md
@@ -144,5 +147,5 @@ do_not_repeat:
 development_candidate:
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: CON01B.2 signed private bridge and onboarding-only entry sessions; native CI pending
-  local_ustar_version: 2026101901
+  scope: CON01B.3 atomic canonical signup and receipt; new native implementation CI pending
+  local_ustar_version: 2026101902

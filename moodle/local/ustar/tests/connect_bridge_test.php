@@ -63,4 +63,32 @@ final class connect_bridge_test extends \advanced_testcase {
             $this->denied(fn() => bridge_http::guard(array_replace($server, $changes), true, ['127.0.0.1']), 'invalid_request');
         }
     }
+    public function test_signed_registration_flow_uses_bound_session_and_rejects_actor_fields(): void {
+        global $DB;
+        \local_ustar\accounts::ensure_profile_field();
+        $sender = ['provider' => 'telegram', 'tenant' => '123456', 'subject' => '77777'];
+        [$body, $headers] = $this->signed('launch.create', $sender);
+        $launch = bridge_service::dispatch($body, $headers, $this->keys());
+        $browser = \local_ustar\connect\opaque_token::issue('ub1');
+        [$body, $headers] = $this->signed('launch.exchange', $sender + [
+            'launch' => $launch['launch'], 'browser' => $browser, 'proof' => hash('sha256', 'bridge-signup'), 'auth_date' => time()]);
+        $entry = bridge_service::dispatch($body, $headers, $this->keys());
+        $binding = ['browser' => $browser, 'session' => $entry['session']];
+        [$body, $headers] = $this->signed('registration.options', $binding);
+        $this->assertNotEmpty(bridge_service::dispatch($body, $headers, $this->keys())['departments']);
+        $form = ['departmentid' => 'retail', 'email' => 'bridge-signup@example.invalid', 'firstname' => 'Synthetic',
+            'lastname' => 'Bridge', 'password' => 'Fixture-Only-Qx9!2026', 'username' => 'bridge_signup'];
+        $payload = $binding + $form + ['command' => \local_ustar\connect\opaque_token::issue('ur1')];
+        [$body, $headers] = $this->signed('registration.submit', $payload + ['userid' => '2']);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'invalid_payload');
+        [$body, $headers] = $this->signed('registration.submit', $payload);
+        $this->assertSame('registered', bridge_service::dispatch($body, $headers, $this->keys())['outcome']);
+        [$body, $headers] = $this->signed('registration.submit', $payload);
+        $this->assertTrue(bridge_service::dispatch($body, $headers, $this->keys())['replayed']);
+        [$body, $headers] = $this->signed('registration.status', $binding);
+        $result = bridge_service::dispatch($body, $headers, $this->keys());
+        $this->assertSame('pending', $result['registration']['status']);
+        $this->assertStringNotContainsString($form['password'], json_encode($result));
+        $this->assertSame(1, $DB->count_records('local_ustar_conn_signups'));
+    }
 }

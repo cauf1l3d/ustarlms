@@ -64,6 +64,13 @@ final class provider implements
             }
             $collection->add_database_table($table, $fields, 'privacy:metadata:connect');
         }
+        $collection->add_database_table('local_ustar_conn_signups', [
+            'identityhash' => 'privacy:metadata:connect:hash', 'commandhash' => 'privacy:metadata:connect:hash',
+            'payloadhash' => 'privacy:metadata:connect:hash', 'keyid' => 'privacy:metadata:connect:provider',
+            'userid' => 'privacy:metadata:connect:userid', 'requestid' => 'privacy:metadata:connect:state',
+            'linkid' => 'privacy:metadata:connect:state', 'linkrevision' => 'privacy:metadata:connect:state',
+            'timecreated' => 'privacy:metadata:connect:time', 'expiresat' => 'privacy:metadata:connect:time',
+        ], 'privacy:metadata:connect');
         return $collection;
     }
 
@@ -73,16 +80,17 @@ final class provider implements
             AND (EXISTS (SELECT l.id FROM {local_ustar_conn_links} l WHERE l.userid = :linkuser)
               OR EXISTS (SELECT x.id FROM {local_ustar_conn_challenges} x WHERE x.userid = :challengeuser)
               OR EXISTS (SELECT a.id FROM {local_ustar_conn_launches} a WHERE a.userid = :launchuser)
-              OR EXISTS (SELECT s.id FROM {local_ustar_conn_sessions} s WHERE s.userid = :sessionuser))',
+              OR EXISTS (SELECT s.id FROM {local_ustar_conn_sessions} s WHERE s.userid = :sessionuser)
+              OR EXISTS (SELECT r.id FROM {local_ustar_conn_signups} r WHERE r.userid = :signupuser))',
             ['level' => CONTEXT_SYSTEM, 'linkuser' => $userid, 'challengeuser' => $userid,
-                'launchuser' => $userid, 'sessionuser' => $userid]);
+                'launchuser' => $userid, 'sessionuser' => $userid, 'signupuser' => $userid]);
         return $contexts;
     }
 
     public static function get_users_in_context(userlist $userlist): void {
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
-                'local_ustar_conn_launches', 'local_ustar_conn_sessions'] as $table) {
+                'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0');
         }
     }
@@ -99,10 +107,13 @@ final class provider implements
             'id,provider,tenant,subject,timecreated,expiresat,consumedat');
         $sessions = $DB->get_records('local_ustar_conn_sessions', ['userid' => $userid], 'id',
             'id,provider,tenant,subject,timecreated,expiresat,revokedat');
+        $signups = $DB->get_records('local_ustar_conn_signups', ['userid' => $userid], 'id',
+            'id,requestid,timecreated,expiresat');
         // Token/session hashes are security internals, not login credentials to export.
         writer::with_context(\context_system::instance())->export_data(['Connect'], (object)[
             'links' => array_values($links), 'confirmations' => array_values($challenges),
             'launches' => array_values($launches), 'entries' => array_values($sessions),
+            'registrations' => array_values($signups),
         ]);
     }
 
@@ -133,7 +144,7 @@ final class provider implements
             try {
                 if ($userids === null) {
                     $DB->set_field('local_ustar_conn_proofs', 'challengeid', 0);
-                    foreach (['local_ustar_conn_sessions', 'local_ustar_conn_launches',
+                    foreach (['local_ustar_conn_signups', 'local_ustar_conn_sessions', 'local_ustar_conn_launches',
                             'local_ustar_conn_challenges', 'local_ustar_conn_links'] as $table) {
                         $DB->delete_records($table);
                     }
@@ -144,6 +155,7 @@ final class provider implements
                     $DB->set_field_select('local_ustar_conn_proofs', 'challengeid', 0, 'challengeid IN
                         (SELECT id FROM {local_ustar_conn_challenges} WHERE userid ' . $insql . ')', $params);
                     $DB->delete_records_select('local_ustar_conn_challenges', 'userid ' . $insql, $params);
+                    $DB->delete_records_select('local_ustar_conn_signups', 'userid ' . $insql, $params);
                     // Also erase pre-link temporary entries for this verified identity.
                     foreach (['local_ustar_conn_sessions', 'local_ustar_conn_launches'] as $table) {
                         $DB->delete_records_select($table, 'identityhash IN

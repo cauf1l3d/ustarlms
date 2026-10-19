@@ -4,7 +4,8 @@ defined('MOODLE_INTERNAL') || die();
 
 /** Fixed operation router. Service credentials cannot choose Moodle actors or PHP methods. */
 final class bridge_service {
-    public static function dispatch(string $body, array $headers, array $keys): array {
+    public static function dispatch(#[\SensitiveParameter] string $body, array $headers,
+            #[\SensitiveParameter] array $keys): array {
         $request = bridge_auth::verify($body, $headers, $keys, time());
         $op = $request['operation'];
         $payload = $request['payload'];
@@ -12,6 +13,8 @@ final class bridge_service {
             'launch.create' => ['provider', 'subject', 'tenant'],
             'launch.exchange' => ['auth_date', 'browser', 'launch', 'proof', 'provider', 'subject', 'tenant'],
             'entry.status', 'entry.revoke' => ['browser', 'session'],
+            'registration.status', 'registration.options' => ['browser', 'session'],
+            'registration.submit' => ['browser', 'command', 'departmentid', 'email', 'firstname', 'lastname', 'password', 'session', 'username'],
             'link.claim' => ['auth_date', 'code', 'proof', 'provider', 'subject', 'tenant'],
         };
         $actual = array_keys($payload); sort($actual);
@@ -41,6 +44,17 @@ final class bridge_service {
         if ($op === 'entry.revoke') {
             entry_service::revoke($payload['session'], $payload['browser'], $kid, $request['provider'], $request['tenant']);
             return ['revoked' => true];
+        }
+        if ($op === 'registration.submit') {
+            $form = array_intersect_key($payload, array_flip(signup_request::FIELDS));
+            return signup_service::submit($payload['session'], $payload['browser'], $payload['command'], $form,
+                $kid, $request['provider'], $request['tenant'], $keys[$kid]['secret']);
+        }
+        if ($op === 'registration.status') {
+            return signup_service::status($payload['session'], $payload['browser'], $kid, $request['provider'], $request['tenant']);
+        }
+        if ($op === 'registration.options') {
+            return signup_service::options($payload['session'], $payload['browser'], $kid, $request['provider'], $request['tenant']);
         }
         if ($payload['auth_date'] < time()-300 || $payload['auth_date'] > time()+30) {
             throw new \InvalidArgumentException('expired_launch');

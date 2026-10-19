@@ -230,3 +230,7 @@ Review и план CON-01A готовы; transport primitives реализуют
 ## Продолжение19Oct04:47
 
 [CON01B.2](USTAR_CONNECT_CON01B2_PLAN_20261019.md): private scoped HMAC bridge и одноразовые browser-bound onboarding sessions реализованы в candidate2026101901. Endpoint по умолчанию выключен; новых сетевых настроек/служб/провайдеров не включалось. Предыдущий5f9aa3fb native13tests/47assertions PASS; новый CI отдельно, exact final receipt в PR106. Signup receipt+pending link/HRD outbox/forms и external edge остаются следующим срезом. Эта запись заменяет отрицание bridge/session в предыдущем dated checkpoint, не меняет production evidence.
+
+## Продолжение19Oct05:30
+
+Base81a1be76 завершён:22native tests/87assertions + concurrent entry PASS. [CON01B.3](USTAR_CONNECT_CON01B3_PLAN_20261019.md) добавляет private canonical signup+pending first link/receipt и own status; использует existing staffing_requests HRD approval/target_core notification outbox. Новая metadata table, version2026101902; password не хранится в receipt и не передаётся в чат. Обязательна одна transaction с canonical registration email lock до commit, а не outer Connect transaction вокруг старого register. Forms/public BFF/remote actor-step-up и реальные delivery receipts ещё отсутствуют; endpoint disabled. Test-only57111574 доказал2expected failures на missing canonical completion; implementation CI фиксируется отдельно в PR106. Production baseline/сеть не менялись,0субагентов.

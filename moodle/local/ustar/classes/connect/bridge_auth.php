@@ -6,9 +6,11 @@ defined('MOODLE_INTERNAL') || die();
 /** Pure request verifier. A successful result still needs durable nonce consumption. */
 final class bridge_auth {
     public const PATH = '/local/ustar/connect_bridge.php';
-    public const OPERATIONS = ['launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim'];
+    public const OPERATIONS = ['launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
+        'registration.options', 'registration.submit', 'registration.status'];
 
-    public static function verify(string $body, array $headers, array $keys, int $now): array {
+    public static function verify(#[\SensitiveParameter] string $body, array $headers,
+            #[\SensitiveParameter] array $keys, int $now): array {
         if (strlen($body) > 16384) { throw new \InvalidArgumentException('invalid_transport'); }
         $kid = $headers['X-Ustar-Key'] ?? '';
         $time = $headers['X-Ustar-Time'] ?? '';

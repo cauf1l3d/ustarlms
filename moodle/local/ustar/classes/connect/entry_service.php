@@ -71,7 +71,7 @@ final class entry_service {
 
     public static function status(string $token, string $browser, string $keyid, string $provider, string $tenant): array {
         global $DB;
-        $session = self::session($token, $browser, $keyid, $provider, $tenant);
+        $session = self::require_session($token, $browser, $keyid, $provider, $tenant);
         $sender = new identity($session->provider, $session->tenant, $session->subject);
         $link = self::link($sender);
         if ((int)$session->linkid) {
@@ -99,12 +99,13 @@ final class entry_service {
     public static function revoke(string $token, string $browser, string $keyid, string $provider, string $tenant): void {
         identity_service::atomic(function() use ($token, $browser, $keyid, $provider, $tenant): void {
             global $DB;
-            $session = self::session($token, $browser, $keyid, $provider, $tenant);
+            $session = self::require_session($token, $browser, $keyid, $provider, $tenant);
             $DB->set_field('local_ustar_conn_sessions', 'revokedat', time(), ['id' => $session->id]);
         });
     }
 
-    private static function session(string $token, string $browser, string $keyid, string $provider, string $tenant): \stdClass {
+    /** INTERNAL context, not a public grant. Call status as well to recheck current link/user flags. */
+    public static function require_session(string $token, string $browser, string $keyid, string $provider, string $tenant): \stdClass {
         global $DB;
         self::keyid($keyid);
         $session = $DB->get_record('local_ustar_conn_sessions', ['tokenhash' => opaque_token::digest($token, 'ue1')]);

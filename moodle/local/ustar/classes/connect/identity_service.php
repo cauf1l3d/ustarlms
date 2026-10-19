@@ -4,9 +4,9 @@ namespace local_ustar\connect;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Canonical link storage, no public route, session issuance or provider verifier.
- * claim_verified is INTERNAL: only a future authenticated verifier bridge may
- * call it after validating provider origin/freshness and browser-bound nonce.
+ * Canonical link storage. Private bridge/native callers own the authentication boundary.
+ * claim_verified is INTERNAL: the scoped verifier bridge may call it only after
+ * validating provider origin/freshness and browser-bound nonce.
  * Never export it as an anonymous AJAX/external function.
  */
 final class identity_service {
@@ -36,7 +36,7 @@ final class identity_service {
         });
     }
 
-    /** Trusted origin proof, not arbitrary userid: future bridge must authenticate caller. */
+    /** Trusted origin proof, not arbitrary userid: private bridge must authenticate caller. */
     public static function claim_verified(string $code, identity $identity, string $proofid): void {
         if (!preg_match('/\A[0-9a-f]{64}\z/', $proofid)) {
             throw new \InvalidArgumentException('invalid_proof');
@@ -178,14 +178,15 @@ final class identity_service {
                 'expiresat <= :now', ['now' => $now], 'id', 'id', 0, $limit));
             if ($proofs) { $DB->delete_records_list('local_ustar_conn_proofs', 'id', $proofs); }
             $entry = [];
-            foreach (['local_ustar_conn_launches', 'local_ustar_conn_sessions'] as $table) {
+            foreach (['local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups'] as $table) {
                 $ids = array_keys($DB->get_records_select($table, 'expiresat <= :now',
                     ['now' => $now], 'id', 'id', 0, $limit));
                 if ($ids) { $DB->delete_records_list($table, 'id', $ids); }
                 $entry[$table] = count($ids);
             }
             return ['challenges' => count($challenges), 'proofs' => count($proofs),
-                'launches' => $entry['local_ustar_conn_launches'], 'sessions' => $entry['local_ustar_conn_sessions']];
+                'launches' => $entry['local_ustar_conn_launches'], 'sessions' => $entry['local_ustar_conn_sessions'],
+                'signups' => $entry['local_ustar_conn_signups']];
         });
     }
 
@@ -234,8 +235,23 @@ final class identity_service {
             'provider' => $link->provider, 'state' => $link->state, 'revision' => (int)$link->revision];
     }
 
-    /** Low-frequency writes serialize under one cross-worker Moodle lock. */
+    /** Low-frequency writes serialize until commit under one cross-worker Moodle lock. */
     public static function atomic(callable $operation) {
+        return self::locked(function() use ($operation) {
+            global $DB;
+            $transaction = $DB->start_delegated_transaction();
+            try {
+                $result = $operation();
+                $transaction->allow_commit();
+                return $result;
+            } catch (\Throwable $error) {
+                $transaction->rollback($error);
+            }
+        });
+    }
+
+    /** INTERNAL lock-only wrapper: a canonical writer must own and commit its own transaction. */
+    public static function locked(callable $operation) {
         global $DB;
         if ($DB->is_transaction_started()) {
             throw new \coding_exception('Connect identity mutations must own the transaction');
@@ -245,14 +261,7 @@ final class identity_service {
             throw new \InvalidArgumentException('identity_busy');
         }
         try {
-            $transaction = $DB->start_delegated_transaction();
-            try {
-                $result = $operation();
-                $transaction->allow_commit();
-                return $result;
-            } catch (\Throwable $error) {
-                $transaction->rollback($error);
-            }
+            return $operation();
         } finally {
             $lock->release();
         }

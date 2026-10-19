@@ -8,4 +8,12 @@ Pre-flight interfaces:
 - Canonical notify_reviewers already writes target_core outbox; Task2 reuses it, Task3 validates single notice/approval. Ruling: no new Telegram-specific outbox/approval permissions in this slice. Cost if wrong: no actual Telegram delivery until consumer slice, explicitly not claimed.
 - User prohibits agents and repeated permission loops in already-authorized development. Inline self-review replaces delegated review; shared draft PR106 continues, no merge/deploy. Cloud skill scripts/references not executable via available provider; durable plan/ledger maintained here with project tooling.
 
-Pending: Tasks1–3. Native DB unavailable locally; only GitHub real Moodle/PostgreSQL gate may close native checks.
+Task1: RED native57111574/run39190794829/job117863375703:24tests/90assertions/2failures, exactly completion not called and rollback not participating. Five additional local values/transport/error-envelope tests observed RED then GREEN. Canonical completion implemented after native RED; input and keys annotated sensitive. Baseline574r16/19skips PASS after implementation.
+
+Task2: implementation added. Connect locked wrapper delegates transaction ownership to canonical register; link/receipt/entry write in completion. Scoped private options/submit/status, hash-only receipt30days, existing HRD review/notification policy unchanged. No remote HRD actor/public endpoint activation. New native tests written before service; their first runtime execution is the forthcoming CI, not locally claimed RED/GREEN.
+
+Task3: independent signup retry and LAN shared-email race fixtures written, native filter includes43existing organization tests because shared writer changed. Candidate manifest542files/99tables/version2026101902 generated separately from production526/93. Native implementation gates pending. Final personal review (user prohibits subagents): check no external callback dispatch, password only in HTTPS body/memory, HMAC key not DB, duplicate and late failure guard paths; no independent review claimed.
+
+Ruling: receipt uses scoped service-key HMAC rather than a second password hash or new secret service. This binds retry to the original key; key rotation may require own-status lookup instead of retry, but existing link/email guards prohibit duplicate creation. Cost if wrong: retry unavailable after rotation, never automatic account merging. Covered by input/key fingerprint tests; runtime key/throughput policy remains an activation gate.
+
+Pending: exact implementation native CI/approval/outbox/concurrency receipt and publication. Cloud helper scripts unavailable via read-only skill provider; project plan/ledger and direct commands preserve execution record.

@@ -19,6 +19,9 @@ try {
     $result = \local_ustar\connect\bridge_service::dispatch((string)$body, $headers,
         (array)($CFG->ustar_connect_bridge_keys ?? []));
     echo json_encode(['ok' => true, 'result' => $result], JSON_THROW_ON_ERROR);
+} catch (\local_ustar\registration_validation_exception $error) {
+    http_response_code(422);
+    echo json_encode(\local_ustar\connect\signup_request::validation_error($error));
 } catch (\InvalidArgumentException $error) {
     http_response_code($error->getMessage() === 'bridge_disabled' ? 404 : 403);
     // All implementation errors use fixed reason codes, not supplied payloads.

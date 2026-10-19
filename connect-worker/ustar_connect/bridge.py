@@ -13,7 +13,8 @@ from urllib.parse import urlsplit
 from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler, HTTPRedirectHandler
 
 PATH = '/local/ustar/connect_bridge.php'
-OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim'}
+OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
+              'registration.options', 'registration.submit', 'registration.status'}
 
 
 def _token(value: str, prefix: str) -> str:

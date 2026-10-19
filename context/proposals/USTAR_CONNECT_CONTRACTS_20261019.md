@@ -1,6 +1,6 @@
 # USTAR Connect — контракты и сопоставление с исходниками
 
-19.10.2026, Europe/Moscow. **Public API PROPOSED; CON01B.2 private bridge/session candidate**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Публичные пути API ниже ещё не реализованы; отдельный private endpoint описан в конце. Исходный review основан на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
+19.10.2026, Europe/Moscow. **Public API PROPOSED; CON01B.3 private canonical signup candidate**, приложение к [RFC](USTAR_CONNECT_RFC_20261018.md). Публичные пути API ниже ещё не реализованы; отдельный private endpoint описан в конце. Исходный review основан на application baseline e1d57f5b; наличие AJAX external function не доказывает готовность безопасного публичного API.
 
 ## 1. Канонические владельцы операций
 
@@ -113,3 +113,7 @@ Backfill не отправляет старые pending/disabled, не пере�
 ## Реализация CON01B.2
 
 [Точный bridge/entry contract](USTAR_CONNECT_CON01B2_PLAN_20261019.md): POST `/local/ustar/connect_bridge.php`, disabled default, private peer+TLS+scoped service HMAC. Только launch.create/exchange, entry.status/revoke, link.claim. Транспортный nonce durable; launch single-use и bound к provider subject; signed initData.start_param обязателен. Browser-bound entry TTL600с со scope onboarding — не Moodle login и не business capability. Caller userid/role запрещены. Candidate2026101901/539files/98tables; privacy/cleanup для новых metadata. Canonical signup receipt/HRD approvals/outbox и public endpoints выше всё ещё не реализованы. Старые CON01B.1 строки — dated implementation checkpoint, не отсутствие нового private bridge.
+
+## Реализация CON01B.3 —19Oct05:30
+
+[План](USTAR_CONNECT_CON01B3_PLAN_20261019.md), [ledger](USTAR_CONNECT_CON01B3_PROGRESS_20261019.md). Private bridge добавляет registration.options/submit/status. Canonical registration writer получает internal completion callback внутри собственной transaction/email lock; account/pending/request/HRD notice и Connect link/receipt/own entry фиксируются вместе. New metadata table local_ustar_conn_signups, candidate2026101902/542files/99tables, no production install. Exact typed form HMAC под private bridge key; ur1_ command и same-form replay, no automatic existing-user linking. Current request status берётся из registration_service, без копирования HR state. HRD review/уведомления переиспользованы, не новый generic remote approval API. Public forms/BFF/actor step-up/provider sends остаются следующим срезом. Эта запись заменяет прежнее отсутствие backend signup/HRD integration, не заявляет готовность бота целиком.

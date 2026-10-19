@@ -127,6 +127,14 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Build exact source receiver package without third-party dependencies
         run: python3 connect-worker/deploy/build_release.py --commit HEAD --output-dir artifacts/connect-runtime
+      - name: Build exact-source Academy readonly preflight and verify plan mode
+        run: |
+          python3 scripts/infra/build_connect_readiness.py --commit HEAD --output-dir artifacts/connect-readiness
+          python3 -I artifacts/connect-readiness/ustar-connect-preflight-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-academy-readiness
+          path: artifacts/connect-readiness/
       - name: Actual systemd credentials and receiver isolation with synthetic transport
         run: sudo -n env USTAR_CONNECT_HOST_FIXTURE=1 python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

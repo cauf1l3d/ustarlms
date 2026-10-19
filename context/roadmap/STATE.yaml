@@ -1,13 +1,13 @@
 schema_version: 2
 updated_at: '2026-10-19'
 project: USTAR Academy
-stage: connect_receiver_configured_probe_verified_start_ACK_pending
-stage_label: Receiver настроен, Telegram проверен; запуск и личный ACK ожидаются
-current_activity: 'Owner19Oct1853MSK confirmed b01 install, private configure and live telegram_verified probe.
-  Admin start was a false negative: successful oneshot collected before show. Source fix accepts synchronous
-  verified managed-unit execution and preserves private conditions;15deploy/695r16 PASS,30skips.
-  Actual-host CLI regression pending. Owner enable-now receiver/status/private-start ACK next.
-  Mini App deferred until HTTPS;notify disabled;Academy unchanged.'
+stage: connect_receiver_owner_accepted_academy_readonly_preflight
+stage_label: Бот работает; подготовка подключения учёток и уведомлений Академии
+current_activity: 'Owner19Oct1859MSK confirms receiver works. Original b01 archive remains installed;
+  tty and GC fixes are source/helper changes, not a claimed runtime upgrade. Readonly Academy preflight
+  prepares candidate552/99 against accepted526/93 without PHP bootstrap or mutation.
+  13targeted/708r16 PASS,30skips locally;packaged exact-source/native collection still pending.
+  Mini App deferred until HTTPS;private bridge/links/notifications activation is a later gate.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -161,7 +161,19 @@ receiver_runtime:
   server1_configured: true
   server1_probe_verified: true
   owner_receipt: context/runtime/connect_receiver_server1_20261019.json
-  server1_started: false
-  live_ack: false
+  server1_started: true
+  live_ack: owner_reports_working_19Oct1859MSK
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
-  next: owner_enable_now_receiver_status_private_start_ACK
+  next: owner_readonly_Academy_preflight_before_release_bridge_activation
+
+connect_academy_preparation:
+  plan: context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md
+  candidate_version: 2026101905
+  production_version: 2026100204
+  source_delta: {added: 26, changed: 11, removed: 0}
+  schema_delta: {baseline_tables: 93, candidate_tables: 99}
+  native_preflight_collected: false
+  Academy_updated: false
+  bridge_enabled: false
+  notifications_enabled: false
+  MiniApp_enabled: false

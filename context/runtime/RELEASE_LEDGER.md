@@ -1,5 +1,9 @@
 # Реестр кода, проверок и deployment evidence
 
+##19Oct18:59МСК — first receiver accepted by owner
+
+Владелец подтвердил «окей работает» после direct systemctl enable-now и личного /start шага. Точные service PID/uptime/ответ не переписаны; приложенные скриншоты недоступны агенту. [Owner receipt](connect_receiver_server1_20261019.json). На server1 runtime b01bd942, configure helperde2e482; GC fix33e31b13 пока source-level. Boot recovery и Academy integration не приняты. Следом [read-only Academy preparation](../proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md); original production526/93 не объявлен552/99.
+
 ## 19Oct12:55МСК — CON01C.2 candidate, не production
 
 CON01C.2: управление собственными messenger links в native Moodle и signed uc1_ claim в Mini App. Личный кабинет → Мессенджеры → персональная ссылка → Telegram → второй Academy confirm в той же сессии; owner-only revoke/list. RAM receipt не onboarding/employee grant; timeout uncertain без автоповтора. Candidate2026101903/546files/99tables, production e1d57f5b/526/93 unchanged. 8new WSGI tests,31web/full647r16 OK/30environment skips. Native RED d9114daa/39234234916: exactly6missing-class errors,78previous tests pass. Browser RED2c971f93/39235237752: missing confirmation screen; prior20onboarding/60mobile pass. Final new native/browser CI receipt — PR106; читать exact final receipt перед продолжением, не переоткрывать C2 по старой pre-CI записи. Новый business bot @ustarcorp_bot, секрет из чата не использован/не сохранён, требуется перевыпуск владельцем. CrazeDNS em2025.netcraze.pro предложен; rule/cert/availability ещё не приняты. Full canonical remote login/recovery/MFA/actor step-up, canonical notification leases/delivery/preferences/ACK и role screens — остаток.0subagents/no main merge/no prod/router/network changes.

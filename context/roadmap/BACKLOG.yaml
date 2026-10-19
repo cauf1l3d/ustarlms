@@ -449,12 +449,12 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: receiver_configured_probe_verified_start_ACK_pending
+  phase: receiver_owner_accepted_Academy_readonly_preflight
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
-  current_summary: 'Owner19Oct1853MSK confirmed server1 install/configure and live telegram_verified probe.
-    Admin start false negative caused by oneshot state GC;source fix uses synchronous verified-unit result.
-    15deploy/695r16 PASS,30skips;new actual-host CLI gate pending.
-    Receiver service start/status and personal ACK pending;Mini App deferred;notify disabled.'
+  current_summary: 'Owner19Oct1859MSK confirms receiver works. Next: readonly source/schema/runtime inventory
+    before preparing existing Academy candidate552/99 vs production526/93. Delta26added/11changed/6tables.
+    13targeted/708r16 PASS,30skips;native collection pending. No Academy migration or bridge activation.
+    Mini App waits HTTPS;private bridge/scoped keys/links and notifications follow separate acceptance.'
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors

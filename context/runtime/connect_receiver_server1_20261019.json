@@ -1,6 +1,6 @@
 {
   "kind": "owner_provided_server1_receiver_acceptance",
-  "reported_at": "2026-10-19T18:53:02+03:00",
+  "reported_at": "2026-10-19T18:59:33+03:00",
   "runtime_source_commit": "b01bd942f7f748d9510618a79489643b42cbd690",
   "configure_admin_source_commit": "de2e482361e249e33a06fba2c73a39652663a5b1",
   "install": {
@@ -25,12 +25,24 @@
     "reason": "telegram_probe_not_accepted",
     "cause": "successful_oneshot_collected_before_subsequent_systemctl_show"
   },
-  "receiver_started": null,
-  "private_start_ack": null,
-  "next": "owner_systemctl_enable_now_receiver_then_status_and_private_start_ACK",
+  "receiver_started": true,
+  "private_start_ack": {
+    "status": "owner_reports_working",
+    "owner_text": "окей работает давай идти дальше",
+    "exact_bot_response_not_transcribed": true
+  },
+  "next": "readonly_Academy_source_schema_runtime_preflight_before_candidate_release",
   "constraints": [
     "Agent has no SSH or token; evidence supplied by owner",
     "Native business UI and notifications not activated",
-    "Source patch tests do not prove live receiver startup"
-  ]
+    "Source patch tests do not prove live receiver startup",
+    "Owner text confirms working receiver; exact PID, uptime and bot reply not inferred from unread screenshots",
+    "Runtime remains original b01 archive; source-only admin fixes do not imply archive replacement"
+  ],
+  "screenshots": {
+    "supplied": true,
+    "read_by_agent": false,
+    "reason": "attachment_paths_unavailable"
+  },
+  "boot_recovery_test_accepted": false
 }

@@ -26,3 +26,7 @@ Limits: no Mini App/BFF service/public HTTPS until separate approved deployment.
 ## Итог scoped acceptance
 
 Sourceb01bd942, actual host job118145618545 PASS, Context39277324228 SUCCESS, source8.2/8.3 logs690r16/133skips+60mobile/20onboarding/24link/100actor PASS. Package12197369243 downloaded/CRC/SHA/source verified. Все действия этого плана для receiver-only комплекта выполнены. Общий PR review/native Moodle regression ждёт очереди, не объявлен green; C4 PHP/addon source не изменялся. Отдельная установка на server1 и live bot ACK остаются за владельцем; агент не имеет SSH/token и не отправлял Telegram-сообщения.
+
+## Owner acceptance19Oct18:59МСК
+
+Владелец подтвердил работающий receiver. Install b01, private configure helperde2e482, live telegram_verified и owner-start ACK различены в context/runtime/connect_receiver_server1_20261019.json. Два найденных CLI-дефекта (tty r+ и collected oneshot status) исправлены в source; новый runtime package не выдан как установленный. Boot acceptance не заявляется. Текущий следующий план — USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md.

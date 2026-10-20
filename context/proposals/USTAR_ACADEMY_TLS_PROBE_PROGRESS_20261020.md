@@ -47,3 +47,10 @@ for prepare. Full suite before this regression:790/31 skips PASS; final rerun pe
 Final local:20 targeted PASS (18.251s),791 r16 PASS/31 environment skips (62.425s).
 Source checks JS24/templates57/schema99 PASS;PHP not run locally. Context344 PASS.
 Personal review completed inline;no agents. Native Apache CI remains a release gate.
+
+Native CI41d6f405/Review39447176130 runtime118712067902 observed RED before
+prepare:apache_dump_invalid. Official Apache2.4 server/vhost.c uses %-22s for
+both single and name-vhost bindings;synthetic examples had one space. Added
+native-format regression first and observed RED;parser now allows binding padding.
+https://github.com/apache/httpd/blob/2.4.x/server/vhost.c
+No host bypass or weakened topology comparison. Next native rerun required.

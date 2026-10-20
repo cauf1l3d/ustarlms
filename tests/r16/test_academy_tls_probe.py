@@ -48,6 +48,12 @@ class Vhosts(unittest.TestCase):
         for raw in ('', 'malformed output', '*:443 is a NameVirtualHost\n'):
             with self.assertRaises(x.Refusal): x.parse_vhosts(raw)
 
+    def test_native_Apache_pads_binding_to_22_columns(self):
+        single = f"{'*:443':22s} other.invalid (/etc/apache2/default.conf:1)\n"
+        self.assertEqual('other.invalid', x.parse_vhosts(single)['*:443'][0]['name'])
+        padded = BASE.replace('*:443 is', f"{'*:443':22s} is").replace('*:80 is', f"{'*:80':22s} is")
+        self.assertEqual(x.parse_vhosts(BASE), x.parse_vhosts(padded))
+
     def test_new_host_must_not_become_default_or_shadow_existing_name(self):
         before = x.parse_vhosts(BASE)
         with self.assertRaises(x.Refusal):

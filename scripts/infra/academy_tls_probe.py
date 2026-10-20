@@ -106,8 +106,8 @@ def parse_vhosts(raw):
     result, defaults, binding, last = {}, {}, None, None
     for text in raw.splitlines():
         line = text.strip()
-        group = re.fullmatch(r'(\S+):(\d+) is a NameVirtualHost', line)
-        single = re.fullmatch(r'(\S+):(\d+) (\S+) \((.+):([0-9]+)\)', line)
+        group = re.fullmatch(r'(\S+):(\d+)\s+is a NameVirtualHost', line)
+        single = re.fullmatch(r'(\S+):(\d+)\s+(\S+) \((.+):([0-9]+)\)', line)
         row = re.fullmatch(r'port (\d+) namevhost (\S+) \((.+):([0-9]+)\)', line)
         alias = re.fullmatch(r'(?:wild )?alias (\S+)', line)
         default = re.fullmatch(r'default server (\S+) \((.+):([0-9]+)\)', line)

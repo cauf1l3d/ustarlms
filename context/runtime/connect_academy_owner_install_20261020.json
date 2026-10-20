@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "kind": "owner_terminal_report_connect_academy_installation",
+  "reported_at": "2026-10-20T04:36:04+03:00",
+  "reported_at_is_message_time_not_exact_job_completion": true,
+  "independently_measured_on_server": false,
+  "installer_commit": "02b0548cf4a8ac377c878aa77b546be784652e83",
+  "installed_addon_payload_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "archive_sha256_owner_check_passed": "53d9983b9e437bc9b4623bac83c72564c35a772ce3cc292b55efe8a986be1d13",
+  "owner_observed": {
+    "package_and_internal_checksums": "PASS",
+    "preflight": "ready_for_maintenance_window",
+    "cold_copy_progress": "1.1G_then_1.5G_then_success",
+    "fresh_paired_baseline": "CONNECT_FRESH_PAIRED_BASELINE=PASS",
+    "result": "CONNECT_ACADEMY_UPDATE=PASS",
+    "repeat": "UPGRADE_REPEAT=PASS",
+    "bot_activation": "PENDING",
+    "phase": "upgrade_complete",
+    "public_released": true,
+    "live_trees_modified": true,
+    "systemd_completion": "Deactivated successfully; Finished",
+    "systemd_CPU_seconds": 168.588,
+    "systemd_memory_peak_reported": "4.5G",
+    "systemd_memory_swap_peak_reported": "0B"
+  },
+  "verified_by_successful_pinned_installer_contract_not_separate_probe": {
+    "payload_files": 552,
+    "versions": {"local_ustar": 2026101905, "theme_ustar": 2026100202},
+    "local_ustar_tables": 99,
+    "core_database_version_preserved": "2025100608.00",
+    "code_outside_two_addons_and_config_preserved": true,
+    "existing_plugin_versions_and_task_flags_preserved": true,
+    "file_references_checked": true,
+    "fresh_HDD_receipt_and_cold_pair_readback": true,
+    "restart_policies_restored_and_login_HTTP200": true
+  },
+  "not_claimed": [
+    "independent_SSH_inspection",
+    "owner_browser_role_learning_QA",
+    "production_paired_restore_execution_or_RTO",
+    "post_update_scheduled_cron_backup_acceptance",
+    "business_bot_bridge_account_link_or_notification_activation",
+    "external_HTTPS_or_Mini_App_acceptance"
+  ],
+  "next": [
+    "owner_checks_browser_login_USTAR_theme_and_learning_material",
+    "prepare_private_Academy_bridge_and_scoped_keys",
+    "implement_verified_direct_chat_account_link_before_Mini_App_HTTPS",
+    "controlled_opt_in_notification_delivery_with_new_cutover"
+  ],
+  "full_private_server_report_published": false,
+  "private_backup_log_paths_and_contents_published": false,
+  "network_or_receiver_configuration_changed_by_this_installation": false,
+  "main_merged": false,
+  "subagents": 0
+}

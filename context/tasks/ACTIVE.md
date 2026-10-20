@@ -1,5 +1,12 @@
 # Активные задачи USTAR
 
+**20Oct04:36МСК: owner CLI установка завершена.** [Квитанция](../runtime/connect_academy_owner_install_20261020.json):
+cold pair/upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
+Effective payload830/552/99 по pinned installer guards;не independent SSH.
+Owner browser login/theme/material QA pending. Далее private bridge/scoped keys,
+direct-chat account link и controlled notify;BOT_ACTIVATION=PENDING,Mini App ждёт HTTPS.
+Installer/source RC/receiver не повторять;main/network/receiver unchanged,0subagents.
+
 **Текущая точка20Oct04:11МСК:** installer02b0548c проверен Context39351249166/
 Review39351249243 SUCCESS. Local743/31skips;CI743/134skips,actual UID33/root-group,
 native121/611+6concurrency+paired93→99→93 и installer SQL/schema guards PASS.

@@ -1,15 +1,15 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: connect_academy_operator_installer_verified_owner_execution_pending
-stage_label: Установщик проверен; ожидается выполнение владельцем на сервере
-current_activity: 'Installer02b0548c/tree3dcbac8d:Context39351249166 and Review39351249243 SUCCESS.
-  Local743r16/31skips;CI743r16/134skips plus actual UID33/root-group PASS.
-  Native121tests/611assertions,6concurrency,93to99to93 and installer SQL/schema guards PASS.
-  Package17978054B/SHA53d9983b... matches CI;fixed Moodle payload830 unchanged.
-  SourceRC full matrix evidence retained. Owner execution/receipt still pending;no production deployment claimed.
-  Then private bridge,verified direct-chat account link and controlled notifications;MiniApp waits HTTPS.
-  No private report,main merge,network or receiver changes;0subagents.'
+stage: connect_academy_owner_CLI_installed_browser_QA_and_bridge_link_pending
+stage_label: Owner CLI обновление завершено; browser QA и подключение бота ожидаются
+current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh paired baseline PASS,
+  upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
+  Effective addon payload830/552/99 and local2026101905/theme2026100202 follow pinned installer guards;
+  this is not an independent SSH probe. Browser QA,post-update cron/backup and production restore RTO not accepted.
+  Bot activation PENDING;next private bridge/scoped keys/direct-chat link/controlled notify.
+  Mini App waits external HTTPS. Keep cold pair;no repeat installation or silent late rollback.
+  Main/network/receiver unchanged;0subagents. Earlier source/evidence snapshots remain historical.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -32,7 +32,18 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
-  status: owner_accepted_Moodle518_host_update_boot_and_export_restore_waiting
+  effective_addon_deployment:
+    receipt: context/runtime/connect_academy_owner_install_20261020.json
+    reported_at: '2026-10-20T04:36:04+03:00'
+    status: owner_CLI_upgrade_complete_browser_QA_pending
+    installer_commit: 02b0548cf4a8ac377c878aa77b546be784652e83
+    payload_commit: 830d3703e2ffa2f9864900c0d0c58f60049cb0c2
+    versions: {local_ustar: 2026101905, theme_ustar: 2026100202}
+    files: 552
+    tables: 99
+    independent_probe: false
+  historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
+  status: owner_CLI_Connect_update_complete_browser_QA_and_bridge_link_pending_export_restore_still_waiting
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
@@ -77,6 +88,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_academy_owner_install_20261020.json
 - context/runtime/connect_academy_install_02b0548c_commands.md
 - context/runtime/connect_academy_installer_ci_20261020.json
 - context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md

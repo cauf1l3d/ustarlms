@@ -666,8 +666,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2374,
-      "sha256": "e459ffb57621598835bee628359cd00fee80938875b3e5b6ee6126c85b7e393b"
+      "size": 2369,
+      "sha256": "58b028e3a80f95e3d62b8d171e28e219ce667f50ceecd0e7b3c820ac4fe6ea73"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md",
@@ -888,8 +888,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 24425,
-      "sha256": "7c5af4118eecc769e607f86b408237c1ef57a54b7f431b3fe1671a4bbcaafb27"
+      "size": 24525,
+      "sha256": "1cb1021f920838a8c328c4c3a029899ace2ac275564624b551f58f542de65680"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -930,8 +930,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 159837,
-      "sha256": "c5d3623220744586d3b985f3e1607f3f35a37e6bc092cc520426c7bb9870af12"
+      "size": 161019,
+      "sha256": "3d08e9b424d390216d46f627d4ef097a96178113099fac9cd48d46447569866f"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -942,8 +942,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 8602,
-      "sha256": "88f1d8f28de25ab40d75c1a41b655b7a52fa22ae2a397afee880a5bd98769837"
+      "size": 9378,
+      "sha256": "77245a9a3bba052520e379265325b68812c3c7c8afa3e6b7fa0c283196ca6bfe"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1038,8 +1038,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 68185,
-      "sha256": "99fc3f7e998541c17283aad26c975893050c35373ecccc0ee6a172f4175a3cf6"
+      "size": 69046,
+      "sha256": "7f57550714458f7a3e8162ed0580747888a0238cf4d3fe8aa004486f9c8244d5"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -1094,6 +1094,12 @@
       "domain": "runtime",
       "size": 3776,
       "sha256": "ea7837663bf705894ea06f61c4f97951e2ab6f61f653be0e5760e0822e1de27c"
+    },
+    {
+      "path": "context/runtime/connect_academy_owner_install_20261020.json",
+      "domain": "runtime",
+      "size": 2478,
+      "sha256": "9149daea2ff41d6aa1412dca1c6a370335b63129a90a99054b5d069991b7c92d"
     },
     {
       "path": "context/runtime/connect_academy_preflight_20261019.md",
@@ -2010,8 +2016,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 15784,
-      "sha256": "557112065231e9774d5f9c6689df0b9d095324928b8f4b4977c4d01453f1dd3d"
+      "size": 16376,
+      "sha256": "1ed6c3163c2891056aef8c952ce22deb782d3faf60ed1691dea870ac6756f37c"
     },
     {
       "path": "context/tasks/backlog.yaml",

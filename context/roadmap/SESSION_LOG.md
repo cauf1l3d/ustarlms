@@ -1591,3 +1591,20 @@ Operator package/commands prepared;owner execution and browser receipt pending.
 No production/network/receiver operation,private report or subagents. Source RC830
 Moodle payload and full matrix evidence retained;link/bridge/notification activation
 remain separate. Documentation-only receipt update does not change tested installer.
+
+## 20Oct04:36MSK — owner reports successful Academy addon installation
+
+Owner terminal output:archive/internal SHA checks and preflight PASS;copying
+paired baseline progressed1.1G→1.5G and completed,FRESH_PAIRED_BASELINE=PASS,
+CONNECT_ACADEMY_UPDATE=PASS,UPGRADE_REPEAT=PASS,BOT_ACTIVATION=PENDING.
+Status upgrade_complete/public_released=true/live_trees_modified=true;systemd
+Deactivated successfully/Finished. CPU168.588s is not elapsed duration. This is
+owner-reported pinned installer execution,not independent SSH. Effective payload
+830d3703/local2026101905/theme2026100202/552files/99tables follows its guards.
+Published only sanitized technical receipt,no private snapshot/log paths or data.
+Historical05Oct/16Oct source evidence and pre-deployment candidate manifest remain
+unchanged;STATE effective_addon_deployment points to the latest owner receipt.
+Browser/login/theme/material QA,post-update scheduled cron/backup and production
+restore/RTO remain unaccepted. Next private bridge/scoped keys,direct-chat account
+link and controlled notification delivery;Mini App waits HTTPS. Do not repeat
+installer/receiver/source RC. Main/network/receiver unchanged;0subagents.

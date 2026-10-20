@@ -1,5 +1,18 @@
 # Реестр кода, проверок и deployment evidence
 
+## 20Oct04:36МСК — owner CLI Academy installation PASS
+
+[Owner terminal receipt](connect_academy_owner_install_20261020.json):package/internal
+checksums and preflight PASS;copy grew1.1G→1.5G then fresh paired baseline PASS,
+upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished. CPU
+168.588s is CPU time,not wall-clock duration;memory peak4.5G includes the unit's
+accounting,not an independent Python RSS measurement. Effective addon payload830/
+local2026101905/theme2026100202/552files/99tables follows pinned installer checks.
+Owner browser QA and later scheduled cron/backup observation remain pending;
+no independent probe or actual production paired restore/RTO accepted. Keep the
+private recovery pair. BOT_ACTIVATION=PENDING;private bridge/link/notify next.
+No main merge/network/receiver configuration changes or subagents.
+
 ## 20Oct04:11МСК — operator installer verified; owner execution pending
 
 Installer02b0548c/tree3dcbac8d,Context39351249166/Review39351249243 SUCCESS.

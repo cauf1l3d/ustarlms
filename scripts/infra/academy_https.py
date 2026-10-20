@@ -165,7 +165,7 @@ class Host:
         mappings = []
         for m in data['mounts']:
             source = Path(m['Source'])
-            if m['Type'] == 'bind' and m.get('RW') and path.is_relative_to(source) and path != source:
+            if m['Type'] == 'bind' and path.is_relative_to(source) and path != source:
                 target = Path(m['Destination']) / path.relative_to(source)
                 if str(target) in ('/var/www/html/config.php', '/var/www/html/public/config.php'):
                     mappings.append(str(target))
@@ -363,8 +363,9 @@ class Manager:
         for name,path in self.files().items():self.replace(path,self.read(Path(s['files'][name]['backup']),True),s['files'][name])
         self.host.test_config()
         if s['reload_attempted']:self.host.reload()
-        self.host.purge(s['runtime'])
-        require(self.host.metadata(self.host.runtime(self.p.old.config))['url']=='http://ustar.local','HTTP_config_recovery_failed')
+        current_runtime=self.host.runtime(self.p.old.config)
+        self.host.purge(current_runtime)
+        require(self.host.metadata(current_runtime)['url']=='http://ustar.local','HTTP_config_recovery_failed')
         s['phase']='rolled_back';self.save(s);return self.public(s)
     def rollback(self):
         with self.locked():return self._rollback(self.load())

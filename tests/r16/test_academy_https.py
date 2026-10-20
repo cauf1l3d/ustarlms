@@ -162,6 +162,14 @@ class Transaction(unittest.TestCase):
         self.manager.cutover();s=self.manager.load();s['phase']='preparing';self.manager.save(s)
         another=x.Manager(old.x,self.p,self.host,uid=os.geteuid(),baseline_config=x.sha(CONFIG),ca_sha='FAKE_PUBLIC_CA_FINGERPRINT')
         another.rollback();self.assert_restored()
+    def test_rollback_after_container_recreation_uses_current_verified_container(self):
+        self.manager.cutover()
+        self.host.runtime=lambda path:{'id':'recreated','config':str(path)}
+        def purge(rt):
+            self.assertEqual('recreated',rt['id'])
+        self.host.purge=purge
+        self.manager.rollback();self.assert_restored()
+
     def test_default_plan_and_outage_refusal_have_no_host_access(self):
         for args,expected in (([],0),(['--cutover'],2)):
             with patch.object(x,'Manager',side_effect=AssertionError('host access')),contextlib.redirect_stdout(io.StringIO()) as out:
@@ -193,3 +201,16 @@ class Transaction(unittest.TestCase):
         self.p.old.enabled.unlink();self.p.old.enabled.symlink_to(self.p.http)
         with self.assertRaises(x.Refusal):self.manager.renew()
         self.assertEqual(before,self.p.old.site.read_bytes())
+
+class RuntimeBoundary(unittest.TestCase):
+    def test_readonly_directory_bind_is_valid_but_file_bind_is_not(self):
+        path=Path('/opt/ustar/data/moodle/public/config.php');raw=b'fixture config'
+        data={'id':'a'*64,'running':True,'mounts':[{'Type':'bind','Source':str(path.parent),'Destination':'/var/www/html','RW':False}],
+              'ports':{'80/tcp':[{'HostIp':'127.0.0.1','HostPort':'8082'}]}}
+        def command(args):
+            return json.dumps(data).encode() if args[1]=='inspect' else x.sha(raw).encode()
+        lib=SimpleNamespace(Host=lambda:SimpleNamespace(),command=command,read_file=lambda _:raw)
+        host=x.Host(lib)
+        self.assertEqual('/var/www/html/config.php',host.runtime(path)['config'])
+        data['mounts'][0].update(Source=str(path),Destination='/var/www/html/config.php')
+        with self.assertRaises(x.Refusal):host.runtime(path)

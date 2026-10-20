@@ -70,6 +70,11 @@ jobs:
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1
           "$(command -v python)" -m unittest
           tests.r16.test_production_patch_upgrade.ProductionPairTransactionGuards.test_exact_reported_mixed_ownership_and_root_gid_survive_copy_and_restore -v
+      - name: Connect addon transaction preserves actual UID33 and root group
+        run: >-
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1
+          python3 -m unittest
+          tests.r16.test_connect_academy_installer.Transaction.test_real_uid33_and_root_gid_activation_and_restore -v
       - run: php tests/release_20260912/route_flow.php
       - run: php tests/release_20260912/career.php
       - run: npm ci --prefix tests/release_20260912
@@ -104,10 +109,13 @@ jobs:
         run: |
           mkdir -p .stage-input/connect-baseline artifacts
           git archive e1d57f5bc28f6964afd20aeff7620345b34a80fe moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-baseline
+          python3 tests/stage/connect_installer_probe.py prepare
       - name: Build existing pinned Moodle 5.1.8 PostgreSQL 16 runtime
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat, links and independent concurrent requests
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml up --abort-on-container-exit --exit-code-from runner
+      - name: Verify installer guards against native SQL migration and recovery
+        run: python3 tests/stage/connect_installer_probe.py verify
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -131,6 +139,17 @@ jobs:
         run: |
           python3 scripts/infra/build_connect_readiness.py --commit HEAD --output-dir artifacts/connect-readiness
           python3 -I artifacts/connect-readiness/ustar-connect-preflight-*.pyz
+      - name: Build exact-source Academy installer without production access
+        run: |
+          python3 scripts/infra/build_connect_academy_installer.py --commit HEAD --output-dir artifacts/connect-install
+          tar -xzf artifacts/connect-install/ustar-connect-install-*.tar.gz -C artifacts/connect-install
+          cd artifacts/connect-install
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -B update.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-academy-installer
+          path: artifacts/connect-install/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: connect-academy-readiness

@@ -1,5 +1,7 @@
 # USTAR вход в проект
 
+**20Oct: owner поручил подготовить установку.** [Operator installer plan](context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md),[команды](context/runtime/connect_academy_install_20261020.md). Immutable payload830/552/99;fresh backup/paired recovery,только2addon,без активации bot/network changes. Package/CI сейчас проверяются;production deployment не выполнен. Следом owner receipt и private bridge/direct-chat link/delivery;Mini App ждёт HTTPS.0subagents.
+
 **Актуально19Oct22:01МСК:** source RC830d3703 проверен полным CI39305805820,9jobs SUCCESS;Context39305805813 SUCCESS. [Квитанция](context/runtime/connect_academy_rc_ci_20261019.json),[комплект/следующий этап](context/runtime/connect_academy_rc_20261019.md). Native paired recovery93→99→93 и source/data/config restoration подтверждены в изолированном fixture;обе Moodle suites288/1266 PASS. Следом guarded addon upgrade/recovery и account-link/delivery,не повторный collector или receiver install. Текущий link зависит от Mini App;direct chat до HTTPS ещё нужно реализовать. Source RC не объявлен установленным. Full private report/локальная история с ним не опубликованы. Ниже предыдущие checkpoints.
 
 **Текущий этап19Oct:** preflight получен приватно;повторный сбор не требуется. Публикуются код/тесты и технический план без полного server report и private commits. [Source RC и paired recovery](context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md);новая native CI pending. Candidate552/99 не объявлен установленным;Mini App ждёт HTTPS. Ниже датированная история.0subagents.

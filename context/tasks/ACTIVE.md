@@ -57,3 +57,12 @@ Moodle5.2 и PostgreSQL17 по команде16Oct. PR101/загруженные
 SSD11Oct; full-addon lab upgrade/repeat/paired rollback12Oct; production5.1.8 upgrade/repeat/brief browser/cron13Oct; AppArmor13Oct; r6 SSD archive/63 packages/native reboot/mount/ID-policy14Oct; archive handoff16Oct. Детали и ограничения — [аудит](../audits/AUDIT_RECONCILIATION_20261016_RU.md).
 
 Общий остаток, включая DB superuser, runtime code write, HTTPS, SMTP/disabled tasks, retention/offsite, ACL/Privacy/performance — [BACKLOG](../roadmap/BACKLOG.yaml). Ошибка route refresh не исправлялась и сохраняется в OPS-01.
+# Точка продолжения20Oct: operator installer
+
+Owner поручил подготовить установку после уточнения,что source RC/checksum не
+обновляют сайт. [План](../proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md),
+[инструкция](../runtime/connect_academy_install_20261020.md). Two-addon transaction,
+fresh encrypted HDD + cold code/config/data/physicalPG pair,upgrade/repeat,
+pre-release automatic paired recovery and explicit late discard consent.
+Package/CI verification in progress;no production/main/receiver/network changes.
+No subagents. Дальше owner receipt,private bridge/direct-chat link/notify acceptance.

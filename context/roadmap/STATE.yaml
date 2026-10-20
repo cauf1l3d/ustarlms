@@ -1,8 +1,8 @@
 schema_version: 2
-updated_at: '2026-10-19'
+updated_at: '2026-10-20'
 project: USTAR Academy
-stage: connect_academy_source_RC_verified_operator_upgrade_pending
-stage_label: Source RC проверен; подготовка управляемого addon update и account-link/delivery
+stage: connect_academy_operator_installer_verification
+stage_label: Проверка управляемого addon installer; production ещё не обновлялся
 current_activity: 'Source830d3703/tree08a7bfdc:FullRC39305805820 all9jobs SUCCESS and Context39305805813
   SUCCESS. Native Connect121tests/611assertions,6concurrency,paired93to99to93 and downloaded evidence verified.
   Both Moodle suites288tests/1266assertions PASS. Reproducible source package552files/a67a08d8... matches CI.
@@ -76,6 +76,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md
+- context/runtime/connect_academy_install_20261020.md
 - context/runtime/connect_academy_rc_20261019.md
 - context/runtime/connect_academy_rc_ci_20261019.json
 - context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_PROGRESS_20261019.md

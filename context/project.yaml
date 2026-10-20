@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-10-19'
+updated_at: '2026-10-20'
 project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_academy_source_RC_verified_operator_upgrade_pending
+  stage: connect_academy_operator_installer_verification
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: source_RC830d3703_full_CI_passed;guarded_addon_upgrade_fresh_backup_and_verified_link_next;MiniApp_waits_HTTPS
+execution_gate: source_RC830_full_CI_passed;operator_installer_verification_in_progress;owner_deployment_not_executed;MiniApp_waits_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -39,6 +39,6 @@ current_work:
   owner_receipt: context/runtime/connect_owner_priority_20261019.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan: context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md
-  runbook: context/runtime/connect_academy_rc_20261019.md
+  plan: context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md
+  runbook: context/runtime/connect_academy_install_20261020.md
   CI_receipt: context/runtime/connect_academy_rc_ci_20261019.json

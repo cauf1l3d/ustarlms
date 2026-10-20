@@ -666,8 +666,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2344,
-      "sha256": "261f22e0f7a9b2e90f307f454d286c2062e017d827789248df9e8cc823167e1d"
+      "size": 2347,
+      "sha256": "134e396ae14eeff0ea69886fe8ccd0ff2e66a3bef9905fbb065d234faeb06d38"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md",
@@ -790,6 +790,12 @@
       "sha256": "8af66975f82ee7f63814cf1f7b8aa3b732d220d871db5bfed467a151d31bb48f"
     },
     {
+      "path": "context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md",
+      "domain": "proposals",
+      "size": 3207,
+      "sha256": "92c4b4fe3bdf1c53ff501386367cf4cfa759aa6c7e48d5216e571bae03aab4b7"
+    },
+    {
       "path": "context/proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md",
       "domain": "proposals",
       "size": 13560,
@@ -882,8 +888,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 24369,
-      "sha256": "8aa4059ea7ee7cf8642abcfd88de4494895b86e753977d5742aefd4931b71115"
+      "size": 24382,
+      "sha256": "9b41f2bc0ba2829a39eeba603385e30bbb12500d0e4f17361d9754ac9f9d8b79"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -924,8 +930,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 158403,
-      "sha256": "3b279cdb8d878d2cc7740ff5b8870af2fb8b11b3015630ee65d4f9d078af6a17"
+      "size": 159268,
+      "sha256": "bb952849e37e765310a15cf0072d8d74168fff5a653c26f004593e4f10daae78"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -936,8 +942,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 8323,
-      "sha256": "a2fb28bb28d45584dd09c0b56febbeb4f802d57fb2939f5c4455c1dc7f260785"
+      "size": 8417,
+      "sha256": "754c44e225112faa77eb2b15d21595b1704cba7bcfa5e4680c422910c96f3e7d"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1070,6 +1076,12 @@
       "domain": "runtime",
       "size": 11556,
       "sha256": "6cec3c0ac4f473a49af0ed3625eaad80cb2c18e8366f0d7f4659db6b24058fdf"
+    },
+    {
+      "path": "context/runtime/connect_academy_install_20261020.md",
+      "domain": "runtime",
+      "size": 8308,
+      "sha256": "3ef1ac56405752613930de0f5eab263b1d3cdca873e2c0a1cb10b6b6b879b04b"
     },
     {
       "path": "context/runtime/connect_academy_preflight_20261019.md",
@@ -1986,8 +1998,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 14089,
-      "sha256": "04dec905d8bcaa2840c24a4dc740f196b4415289445798c10c4176abe1d0f576"
+      "size": 14788,
+      "sha256": "c9e3f599274ecba60de051441a5c03c448285481eb3d89ba353e014071f44444"
     },
     {
       "path": "context/tasks/backlog.yaml",

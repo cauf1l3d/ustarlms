@@ -1572,3 +1572,15 @@ Owner approved publication of code/tests without full server report. New publica
 ## 19Oct22:01MSK — complete Academy source RC accepted in CI
 
 First6a147c82 native Connect passed121/611,six concurrency and actual paired recovery,then upload failed EACCES because umask077 leaked into sanitized report creation. Scoped private snapshot subshell,kept reports readable;fixed source830d3703/tree08a7bfdc fullRC39305805820 SUCCESS(all9jobs),Context39305805813 SUCCESS. Source715r16/133CI skips,60mobile+20signup+24link+100actor browser;Connect121/611+6concurrency+fresh/upgrade/repeat+paired93to99to93;both Moodle suites288/1266 PASS. Downloaded artifact12213114109 SHAe367d8... verified26files,baseline/restored metadata and schema identical,no private snapshots. Package830d3703 17744353B/SHAa67a08d8e5509c580043a6752e73964cb8aed72c5d1732647a9d3c2e2379113e matches CI artifact12214182488 and local555internal checksums. No private server report/local private commits published,no main/production/network changes,0agents;review personal. Full-RC label removed after success before documentation-only evidence commit. Next guarded addon upgrade/recovery,fresh paired backup,private bridge and account-link/delivery. Existing user link requires Mini App;direct-chat path before public HTTPS remains unimplemented. Exact receipt/runbook added,not a production installer or complete RFC acceptance.
+# 20Oct2026 — Connect addon operator installer preparation
+
+Owner explicitly requested an installable package after learning that the
+previous archive/checksum only verified sources. Implemented narrow controller
+with existing pure copy/fsync/container primitives; old core-upgrade entrypoint
+is never called. Fixed RC830 payload, fresh pinned HDD capture, managed EX lock,
+clean shutdown, private full cold pair, only2addon replacement, CLI upgrade/repeat,
+source/versions/task/schema checks, durable release boundaries including recovery.
+Added interruption, tampered pair, late rollback and privileged UID33 checks.
+Package tests initially RED because tool files were not in the frozen Git commit;
+next exact-source package build and CI verification pending. No production or
+network operations, no private report or subagents. Source RC830 evidence retained.

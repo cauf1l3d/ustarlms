@@ -26,6 +26,8 @@ php /source/tests/stage/schema_snapshot.php > /artifacts/connect-baseline-schema
 php -r 'define("CLI_SCRIPT", true); require "/stage/moodle/config.php"; set_config("connect_release_marker", "baseline", "local_ustar");'
 printf 'baseline-state\n' > /stage/data/stage_/connect-baseline.marker
 php /source/tests/stage/connect_release_probe.php baseline > /artifacts/connect-pair-before.json
+psql -X -q -A -t -w -h db -U ustar_fixture -d ustar_stage1 -v ON_ERROR_STOP=1 \
+    -f /source/.stage-input/connect-installer.sql > /artifacts/connect-installer-baseline.json
 # This is a disposable DB/config/data fixture, NOT a production backup tool.
 # Snapshot stays in tmpfs; only sanitized assertions/hashes become artifacts.
 (
@@ -42,8 +44,12 @@ php /source/tests/stage/connect_release_probe.php baseline > /artifacts/connect-
 install_sources /source/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/connect-upgrade.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/connect-upgraded.json
+psql -X -q -A -t -w -h db -U ustar_fixture -d ustar_stage1 -v ON_ERROR_STOP=1 \
+    -f /source/.stage-input/connect-installer.sql > /artifacts/connect-installer-candidate.json
 php admin/cli/upgrade.php --non-interactive > /artifacts/connect-repeat.log 2>&1
 php /source/tests/stage/schema_snapshot.php > /artifacts/connect-repeat.json
+psql -X -q -A -t -w -h db -U ustar_fixture -d ustar_stage1 -v ON_ERROR_STOP=1 \
+    -f /source/.stage-input/connect-installer.sql > /artifacts/connect-installer-repeat.json
 cmp /artifacts/connect-upgraded.json /artifacts/connect-repeat.json
 USTAR_STAGE_PREFIX=fresh_ install_site > /artifacts/connect-fresh.log 2>&1
 USTAR_STAGE_PREFIX=fresh_ php /source/tests/stage/schema_snapshot.php > /artifacts/connect-fresh.json
@@ -77,6 +83,8 @@ cmp "$SNAP/config.php" /stage/moodle/config.php
 grep -qx 'baseline-state' /stage/data/stage_/connect-baseline.marker
 test ! -e /stage/data/stage_/connect-candidate-only.marker
 php /source/tests/stage/connect_release_probe.php baseline > /artifacts/connect-pair-restored.json
+psql -X -q -A -t -w -h db -U ustar_fixture -d ustar_stage1 -v ON_ERROR_STOP=1 \
+    -f /source/.stage-input/connect-installer.sql > /artifacts/connect-installer-restored.json
 cmp /artifacts/connect-pair-before.json /artifacts/connect-pair-restored.json
 php /source/tests/stage/schema_snapshot.php > /artifacts/connect-pair-restored-schema.json
 cmp /artifacts/connect-baseline-schema.json /artifacts/connect-pair-restored-schema.json

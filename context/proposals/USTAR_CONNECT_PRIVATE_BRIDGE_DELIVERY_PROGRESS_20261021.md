@@ -25,13 +25,39 @@ No application update, source recollection, cron repair or HTTPS cutover is repe
 ## Verification
 
 RED observed: two runtime assertions, missing scoped-probe method, four profile tests.
-Targeted GREEN locally:19 HTTPS tests,5 runtime tests,10 bridge tests with4 PHP skips.
-Local whole suite:877tests/34skips,3errors because MCP is absent in the default runtime;
-not claimed green. Recheck with repository test dependencies and exact CI pending.
-New native fixtures exercise actual Apache/OpenSSL/PHP facade plus a separate real
-Moodle5.1.8/PG16 signed denial and unchanged six Connect tables. Their results are
-not claimed before CI. Systemd/Docker boundaries in Apache fixture remain modeled.
+Targeted GREEN locally:20 HTTPS tests,5 runtime tests,10 bridge tests with4 PHP skips;
+8 new private-delivery configuration/readiness/package tests including immutable Git,
+deterministic ZIP, plan-only mode, corruption/source/gateway/permission refusals.
+Initial default-runtime run:877tests/34skips,3MCP-import errors. Recheck in a separate
+venv with repository test dependencies:877tests/34skips PASS,exact source93122b2.
+Source5cb0d7e0: Context39512853054 SUCCESS;both PHP source jobs SUCCESS;
+actual systemd scoped credentials/ACL/UID and native Apache/OpenSSL/PHP runtime
+job118938079352 SUCCESS. Wrong key prevents start;token/SQLite bytes unchanged.
+Native profile probes pass after renew/lost ACK;public path variants and private GET denied.
+Whole Review39512852940 is NOT green:actual Moodle/PG reached124tests/629assertions
+and6concurrency PASS,then new signed HTTP scope check refused. Fixed-response-only
+diagnostics are added to the isolated fixture;this gate remains pending.
+Apache/systemd are separate fixtures:the Apache Moodle bootstrap and Docker boundary
+are modeled;the systemd API opener is synthetic. Combined actual-Moodle/TLS/service
+production acceptance is not claimed. Self-review caught missing path capture:Apache
+appended the original URI to the fixed destination;native log reproduced doubled path.
+Explicit literal capture/backreference fixes it;RequireAll enforces POST+loopback.
+The CLI PHP fixture explicitly disables opcode caching to observe config replacements;
+production Secure-cookie validation is unchanged.
 Self-review only;0subagents, no independent reviewer claim.
+
+## Narrow operator gate now prepared
+
+A separate stdlib-only check ZIP validates eight pinned transport/version files,
+current HTTPS ownership/live TLS,legacy receiver config/unit manifest and exact backend
+gateway. It checks the new root-managed include parent and refuses PHP-writable or
+foreign ancestors/existing private paths. It does not chmod/chown,generate a key,
+call Telegram,open the journal,poll updates,query SQL,launch backup/cron or activate.
+No whole552-file recollection. --check may create a normal anonymous Moodle session/cache.
+Default is PLAN_ONLY. Root-private bundle/hash and existing shared locks are required.
+This gate resolves the previously unmeasured parent protection needed for a secret
+outside the document root;do not infer it from UID33 ownership of config.php alone.
+Package factory source and exact CI/hash still need freezing before owner handoff.
 
 ## Remaining delivery gates
 

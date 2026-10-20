@@ -137,6 +137,7 @@ jobs:
           path: |
             artifacts/connect-*
             artifacts/academy-https-moodle*
+            artifacts/connect-scope-*
             artifacts/chat-link-*
       - name: Dispose only the isolated Connect test project
         if: always()
@@ -152,6 +153,14 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Build exact source receiver package without third-party dependencies
         run: python3 connect-worker/deploy/build_release.py --commit HEAD --output-dir artifacts/connect-runtime
+      - name: Build private bridge readiness package without activation
+        run: |
+          python3 scripts/infra/build_connect_private_bridge.py --commit HEAD --output-dir artifacts/private-bridge-check
+          python3 -I artifacts/private-bridge-check/ustar-private-bridge-check-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-private-bridge-check
+          path: artifacts/private-bridge-check/
       - name: Build exact-source Academy readonly preflight and verify plan mode
         run: |
           python3 scripts/infra/build_connect_readiness.py --commit HEAD --output-dir artifacts/connect-readiness

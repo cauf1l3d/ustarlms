@@ -1,5 +1,23 @@
 # Continuation after accepted cron repair: private chat-link delivery
 
+## Continuation21:31MSK:confirmed executable-permission false refusal
+
+Owner baseline21:25 already matches552files/local1905/99tables;HTTPS/transport/
+services measured. Owner metadata21:31 confirms root:root0750 single-link cron
+source with exactc5eabdce SHA;state/receipt0600 and safe parents. Reader mistakenly
+used the secret-file policy on code. No production permission change is needed.
+
+TDD:root-owned0750/0755/0644 fixtures and cron-only path fail first;then fixed.
+Keep root ownership,non-group/world-write,single-link,no-symlink and exact digest
+for code;private installation/receipt guards remain unchanged. Added `--cron-only`
+to recheck just this unresolved contract,no source/SQL/Docker/HTTPS repeat.
+19module tests PASS/1local privileged skip;full840r16 PASS/32skips. Actual exact
+private source transformed to acceptedc5eabdce,mode0750,in disposable fixture PASS;
+no worker/host commands,bytes/mode unchanged. CI/native new command still pending.
+Self-review only,0subagents. Native deployment/bridge/link/notify remain pending.
+Exact package source/hash/CI run will be pinned in PR body and owner handoff;no
+second source collection needed to establish what owner already measured.
+
 Owner20Oct20:38MSK accepted two real scheduled successes and requested continuation.
 No subagents. Existing RFC/chat-link plan remains the business design: private
 Telegram claim, link-only credential, second same Academy session confirmation,

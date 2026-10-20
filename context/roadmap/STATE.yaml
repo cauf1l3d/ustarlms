@@ -1,8 +1,8 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: connect_delivery_cron_input_metadata_pending
-stage_label: Delivery baseline and HTTPS measured; narrow cron input metadata needed
+stage: connect_delivery_cron_reader_fix_ready
+stage_label: Owner confirmed0750 false refusal; corrected cron-only reader ready
 current_activity: >-
   Owner20Oct reports Academy installer02b0548c success and general browser smoke;
   effective payload830/local2026101905/theme2026100202/552files/99tables remains installed.
@@ -28,9 +28,12 @@ current_activity: >-
   and cron/HTTPS/transport contracts with no PHP bootstrap or writes. Both source
   jobs835/135skips and actual14module/UID33 host fixture PASS. Owner2125MSK
   preflight received:552/552 baseline+99DB tables/HTTPS/transport/services measured.
-  Only cron unsafe_control_input remains;actual failing input not identified.
-  Fixture0755 reproduces overstrict private script check;next metadata-only stat/SHA,
-  not broad recollection or cron repair/reinstall. Owner receipt records exact limits.
+  Owner2131MSK confirms script0750/root/single link and exactc5eabdce SHA;
+  state0600/parents safe. Cause:new private=True code reader,false permission refusal.
+  Corrected reader retains root/nonwritable/exact hash and private JSON guards;
+  new cron-only mode reads only fixed cron files,no source/SQL/Docker/HTTPS repeat.
+  Local19module/1privileged skip and840r16/32skips PASS;new source CI pending.
+  Next corrected cron-only receipt,not permissions changes or cron reinstall.
   Do not repeat probe/receiver/Academy installation or broad fact collection.
   Next: private bridge/scoped keys, chat-link candidate delivery,
   two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.

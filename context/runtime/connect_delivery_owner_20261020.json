@@ -81,13 +81,55 @@
     "same_fixture_0600": "measured",
     "same_fixture_script_0755": "unsafe_control_input",
     "cause_in_code": "preflight applies private=True to cron script;legacy installer/release guard permits root-owned non-group/world-writable code",
-    "actual_server_input_mode_or_cause_confirmed": false,
-    "next": "metadata_only_stat_for_four_cron_inputs_and_two_distinct_parent_directories_plus_script_SHA;no_contents_or_whole_probe_repeat"
+    "actual_server_input_mode_or_cause_confirmed": true,
+    "next": "corrected_reader_preserves_root_nonwritable_code_and_private_0600_state;cron_only_recheck"
   },
   "deployment_approved": false,
   "not_atomic_snapshot": true,
   "PHP_or_Moodle_bootstrap": false,
   "Telegram_API_or_polling": false,
   "code_config_DB_or_service_changes": false,
-  "subagents": 0
+  "subagents": 0,
+  "owner_input_metadata_2131MSK": {
+    "reported_at": "2026-10-20T21:31:51+03:00",
+    "script": {
+      "mode": "0750",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1,
+      "type": "regular_file"
+    },
+    "cron_directory": {
+      "mode": "0755",
+      "uid": 0,
+      "gid": 0
+    },
+    "schedule": {
+      "mode": "0644",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1
+    },
+    "state_directory": {
+      "mode": "0700",
+      "uid": 0,
+      "gid": 0
+    },
+    "installation": {
+      "mode": "0600",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1
+    },
+    "last_run": {
+      "mode": "0600",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1
+    },
+    "script_sha256": "c5eabdceaa2f137eccd35087b03d473f61257aaeb77624f4855583ebaf353638",
+    "cause_confirmed": "preflight_private_True_on_executable_code_rejects_allowed_group_read_execute_0750",
+    "host_permission_or_source_change_needed": false,
+    "next": "corrected_exact_package_cron_only_no_Academy_Docker_SQL_HTTPS_recollection"
+  }
 }

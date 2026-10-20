@@ -1,5 +1,15 @@
 # Реестр кода, проверок и deployment evidence
 
+## 20Oct21:31MSK — confirmed0750 false refusal and cron-only reader correction
+
+Owner stat confirms exactc5eabdce root-owned0750 regular/single-link cron source;
+state/last-run0600 and safe parents. Correct preflight code policy,not host modes.
+TDD observed RED→GREEN;19module/1privileged local skip,full840/32skips PASS.
+Real exact cron-source bytes0750 fixture PASS,not production execution. New
+cron-only command performs no Academy/source/SQL/Docker/HTTPS/provider calls.
+Owner narrow recheck and new CI pending;baseline552/99/HTTPS already accepted.
+No main merge,production/permissions/worker/network changes,0subagents.
+
 ## 20Oct21:25МСК — owner delivery baseline measured,cron input metadata pending
 
 Owner exact4d70de5c preflight hash PASS:552/552 source match,local1905/theme0202,

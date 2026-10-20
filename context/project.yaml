@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_delivery_cron_input_metadata_pending
+  stage: connect_delivery_cron_reader_fix_ready
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_delivery_552_source_99DB_HTTPS_transport_services_measured;cron_input_metadata_pending;no_whole_host_recollection
+execution_gate: owner_0750_exact_cron_SHA_confirmed;reader_private_flag_fixed;cron_only_receipt_pending;source_DB_HTTPS_accepted
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md

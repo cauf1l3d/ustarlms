@@ -100,7 +100,9 @@ def https_contract(root, uid):
 
 
 def cron_contract(root, uid, now):
-    require(sha(secure_read(root, 'usr/local/sbin/USTAR_CRON_SETUP_20261005.py', uid, True))
+    # Executable code follows the existing cron installer's integrity policy.
+    # Installation state and receipts below still require private permissions.
+    require(sha(secure_read(root, 'usr/local/sbin/USTAR_CRON_SETUP_20261005.py', uid))
             == CRON_SHA, 'cron_source_changed')
     require(secure_read(root, 'etc/cron.d/ustar_moodle', uid) == CRON_TEXT, 'cron_schedule_changed')
     state = control_json(root, 'var/lib/ustar-cron/installation.json', uid)
@@ -171,9 +173,25 @@ def contracts(*, root=Path('/'), runner=command, now=None, uid=0):
     return result
 
 
-def check(reference):
+def validate_release(reference):
     require(reference['baseline_commit'] == BASELINE and reference['baseline']['versions'] == CURRENT
             and reference['candidate']['versions'] == TARGET, 'release_reference_mismatch')
+
+
+def cron_check(reference):
+    validate_release(reference)
+    try: observed = cron_contract(Path('/'), 0, datetime.now(timezone.utc))
+    except Exception as error:
+        reason = str(error) if isinstance(error, Refusal) and re.fullmatch('[a-z_]{1,80}', str(error)) else 'contract_unavailable'
+        observed = {'status':'review_required','reason':reason}
+    return {'kind':'connect_cron_contract_readonly_preflight','source_commit':reference['source_commit'],
+        'status':observed['status'],'cron':observed,'academy_source_rechecked':False,
+        'other_contracts_rechecked':False,'deployment_approved':False,'host_commands':False,
+        'php_or_moodle_bootstrap':False,'code_config_db_or_service_changes':False}
+
+
+def check(reference):
+    validate_release(reference)
     baseline = readiness.check(reference)
     observed = contracts()
     good = baseline['status'] == 'baseline_measured' and observed['status'] == 'measured'
@@ -188,19 +206,22 @@ def check(reference):
 
 
 def main(argv=None):
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--check',action='store_true')
+    parser=argparse.ArgumentParser(description=__doc__)
+    modes=parser.add_mutually_exclusive_group()
+    modes.add_argument('--check',action='store_true')
+    modes.add_argument('--cron-only',action='store_true')
     args=parser.parse_args(argv)
     try:
         reference=readiness.load_reference()
-        if not args.check:
+        if not (args.check or args.cron_only):
             print(json.dumps({'status':'plan_only','source_commit':reference['source_commit'],
-                'profile':'chat-link','host_commands':False,'next':'--check reads baseline and runtime contracts only'}));return 0
+                'profile':'chat-link','host_commands':False,'next':'--check reads baseline/contracts; --cron-only reads only fixed cron files'}));return 0
         require(os.geteuid()==0 and sys.version_info>=(3,12),'root_python312_required')
         def expired(*_):raise Deadline()
         previous=signal.signal(signal.SIGALRM,expired);signal.alarm(90)
-        try: result=check(reference)
+        try: result=cron_check(reference) if args.cron_only else check(reference)
         finally:signal.alarm(0);signal.signal(signal.SIGALRM,previous)
-        print(json.dumps(result,ensure_ascii=False,indent=2));return 0 if result['status']=='delivery_baseline_measured' else 2
+        print(json.dumps(result,ensure_ascii=False,indent=2));return 0 if result['status'] in ('delivery_baseline_measured','measured') else 2
     except (Exception, Deadline) as error:
         reason='probe_deadline' if isinstance(error,Deadline) else str(error) if isinstance(error,Refusal) and re.fullmatch('[a-z_]{1,80}',str(error)) else 'preflight_unavailable_no_changes'
         print(json.dumps({'status':'refused','reason':reason}));return 2

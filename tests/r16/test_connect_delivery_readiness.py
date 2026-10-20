@@ -115,6 +115,55 @@ class ConnectDeliveryTests(unittest.TestCase):
         self.assertEqual('measured',self.contracts()['https']['status'])
         self.assertEqual((33,0),(p.stat().st_uid,p.stat().st_gid))
 
+    def test_root_owned_readonly_cron_code_modes_are_preserved(self):
+        p=self.root/'usr/local/sbin/USTAR_CRON_SETUP_20261005.py'
+        for mode in (0o750,0o755,0o700,0o644):
+            p.chmod(mode)
+            with self.subTest(mode=oct(mode)):
+                self.assertEqual('measured',self.contracts()['cron']['status'])
+                self.assertEqual(mode,p.stat().st_mode & 0o7777)
+
+    def test_cron_private_state_stays_private_even_when_code_is_readable(self):
+        (self.root/'usr/local/sbin/USTAR_CRON_SETUP_20261005.py').chmod(0o750)
+        for name in ('installation.json','last-run.json'):
+            p=self.root/'var/lib/ustar-cron'/name;p.chmod(0o640)
+            with self.subTest(name=name):
+                self.assertEqual('unsafe_control_input',self.contracts()['cron'].get('reason'))
+            p.chmod(0o600)
+        self.assertEqual('measured',self.contracts()['cron']['status'])
+
+    def test_group_writable_symlink_or_hardlinked_cron_code_is_refused(self):
+        p=self.root/'usr/local/sbin/USTAR_CRON_SETUP_20261005.py';p.chmod(0o770)
+        self.assertEqual('unsafe_control_input',self.contracts()['cron'].get('reason'))
+        p.chmod(0o750);other=p.with_name('other.py');os.link(p,other)
+        self.assertEqual('unsafe_control_input',self.contracts()['cron'].get('reason'))
+        other.unlink();p.rename(other);p.symlink_to(other)
+        self.assertEqual('unsafe_control_input',self.contracts()['cron'].get('reason'))
+
+    def cron_reference(self):
+        return {'source_commit':'a'*40,'baseline_commit':self.m.BASELINE,
+            'baseline':{'versions':self.m.CURRENT},'candidate':{'versions':self.m.TARGET}}
+
+    def test_cron_only_cli_never_rechecks_academy_or_other_contracts(self):
+        with patch.object(self.m.readiness,'load_reference',return_value=self.cron_reference()),\
+             patch.object(self.m.os,'geteuid',return_value=0),\
+             patch.object(self.m,'cron_contract',return_value={'status':'measured'}),\
+             patch.object(self.m.readiness,'check',side_effect=AssertionError('Academy read')),\
+             patch.object(self.m,'contracts',side_effect=AssertionError('other contracts read')),\
+             contextlib.redirect_stdout(io.StringIO()) as out:
+            self.assertEqual(0,self.m.main(['--cron-only']))
+        value=json.loads(out.getvalue())
+        self.assertEqual('measured',value['status']);self.assertFalse(value['academy_source_rechecked'])
+        self.assertFalse(value['deployment_approved']);self.assertFalse(value['code_config_db_or_service_changes'])
+
+    def test_cron_only_failure_stays_blocked_and_redacts_unknown_exception(self):
+        for error,wanted in ((self.m.Refusal('cron_source_changed'),'cron_source_changed'),
+                             (RuntimeError('PRIVATE_ERROR_CANARY'),'contract_unavailable')):
+            with patch.object(self.m,'cron_contract',side_effect=error):
+                value=self.m.cron_check(self.cron_reference())
+            self.assertEqual('review_required',value['status'])
+            self.assertEqual(wanted,value['cron']['reason']);self.assertNotIn('PRIVATE_',json.dumps(value))
+
     def test_old_cron_or_unpaired_installation_cannot_look_ready(self):
         p=self.root/'usr/local/sbin/USTAR_CRON_SETUP_20261005.py'; p.write_bytes(b'legacy')
         self.assertEqual('cron_source_changed',self.contracts()['cron']['reason'])

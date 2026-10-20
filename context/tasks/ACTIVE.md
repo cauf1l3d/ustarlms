@@ -1,5 +1,16 @@
 # Активные задачи USTAR
 
+**20Oct21:31МСК — отказ preflight установлен:код cron0750.**
+[Owner metadata](../runtime/connect_delivery_owner_20261020.json):root-owned code0750,
+SHA c5eabdce exact;private installation/last-run0600 и parents безопасны.
+Ошибка reader private=True для кода,а не неисправность подтверждённого producer.
+Исправление сохраняет root/no group-world write/hash/regular-single-link guards;
+JSON остаётся private. Новый `--cron-only` не повторяет source/SQL/Docker/HTTPS.
+19targeted/1local privileged skip и840r16/32skips PASS;точные bytes c5eabdce+0750
+в read-only fixture PASS. Native cron-only receipt pending;новые CI ещё проверяются.
+Полный baseline552/99 и HTTPS уже приняты;не менятьchmod/chown,не повторять
+cron apply,старый installer или whole preflight.0subagents.
+
 **20Oct21:25МСК — owner delivery preflight получен.**
 [Квитанция](../runtime/connect_delivery_owner_20261020.json):552/552 source match,
 local1905/theme0202/core518/99tables,HTTPS owned hashes,loopback8082/gateway172.18.0.1,

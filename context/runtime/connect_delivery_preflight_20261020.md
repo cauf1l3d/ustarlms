@@ -1,5 +1,23 @@
 # Проверка контрактов следующей поставки chat-link
 
+**Текущий шаг21:31МСК:причина подтверждена и reader исправлен.**
+Owner stat:cron script0750/root:root/single link,точныйc5eabdce SHA;
+private state/last-run0600,parents безопасны. В предыдущем preflight код ошибочно
+проверялся как secret. Reader теперь следует существующему installer contract:
+root-owned,regular,single link,no group/world write,exact SHA. JSON остаётся private.
+`chmod/chown`,cron apply или повторный сбор source/DB/HTTPS не нужны.
+
+После сборки нового exact Git package выполнить только `--cron-only`.
+Он читает четыре фиксированных файла cron и их parent metadata,без SQL,Docker,
+HTTP/Telegram,PHP bootstrap,worker или конфигурационных изменений.
+Ожидается `status=measured` и `cron.status=measured`;`deployment_approved=false`.
+Результат не выдаёт повторную приёмку Академии/HTTPS:эти данные уже получены21:25.
+Exact source/filename/hash нового package будут закреплены в описании PR106 после
+сборки;не использовать старую4d70de5c pyz с новым флагом. Родной будущий installer
+обязан ещё раз проверить всё непосредственно перед upgrade под locks.
+
+Ниже датированные прежние команды,не повторять.
+
 **Текущий шаг owner20Oct21:25МСК.** Полный preflight уже получен:
 source552/552,DB99,HTTPS,transport и services measured. Повторять весь probe не нужно.
 [Owner receipt](connect_delivery_owner_20261020.json). Только cron вернул

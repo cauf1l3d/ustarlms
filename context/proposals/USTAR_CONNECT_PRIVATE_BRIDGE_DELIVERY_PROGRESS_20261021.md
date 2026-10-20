@@ -57,7 +57,18 @@ No whole552-file recollection. --check may create a normal anonymous Moodle sess
 Default is PLAN_ONLY. Root-private bundle/hash and existing shared locks are required.
 This gate resolves the previously unmeasured parent protection needed for a secret
 outside the document root;do not infer it from UID33 ownership of config.php alone.
-Package factory source and exact CI/hash still need freezing before owner handoff.
+Frozen readonly package:e4d7a154/14de548410f1cc861e9f9eae8d79018ab4f6dee67c218a4f84d29fdae95075af,
+artifact12307432021/run39514608522;downloaded CI bytes match local assembly.
+Both source jobs PASS886/136skips;runtime118943644504 PASS;whole review not green.
+Owner command delivered,JSON receipt pending. [Runbook](../runtime/connect_private_bridge_check_20261021.md).
+
+Actual e4 Moodle HTTP diagnostic isolated the refusal:HTTPS=on,peer127.0.0.1,
+config flag enabled="1" (string),404bridge_disabled. Core normalizes pre-bootstrap
+scalar flags. Delivery compiler now appends plugin-only include after setup returns;
+core HTTPS/DB settings remain before setup,strict boolean guard/application unchanged.
+New native fixture consumes that actual compiler/include and drops a PHP child to
+UID/GID33 to prove group read/no write. New compiler/native CI still pending;
+frozen readonly e4 package has no activation mode and does not call its compiler.
 
 ## Remaining delivery gates
 

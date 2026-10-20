@@ -22,11 +22,11 @@ foreach ([true, false] as $valid) {
     $at = (string)time();
     $nonce = 'rn1_' . rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
     $message = implode("\n", ['USTAR-CONNECT-BRIDGE-v1', 'POST', '/local/ustar/connect_bridge.php',
-        'tg_link', $at, $nonce, hash('sha256', $body)]);
+        'tg_link_v1', $at, $nonce, hash('sha256', $body)]);
     $signature = hash_hmac('sha256', $message, hex2bin(str_repeat($valid ? '12' : '34', 32)));
     $context = stream_context_create(['http' => ['method' => 'POST', 'content' => $body,
         'timeout' => 5, 'ignore_errors' => true, 'follow_location' => 0,
-        'header' => "Host: ustar.local\r\nContent-Type: application/json\r\nX-Ustar-Key: tg_link\r\nX-Ustar-Time: $at\r\nX-Ustar-Nonce: $nonce\r\nX-Ustar-Signature: $signature\r\n"]]);
+        'header' => "Host: ustar.local\r\nContent-Type: application/json\r\nX-Ustar-Key: tg_link_v1\r\nX-Ustar-Time: $at\r\nX-Ustar-Nonce: $nonce\r\nX-Ustar-Signature: $signature\r\n"]]);
     $response = file_get_contents('http://127.0.0.1:8087/local/ustar/connect_bridge.php', false, $context);
     $expected = '{"ok":false,"reason":"' . ($valid ? 'forbidden_operation' : 'invalid_transport') . '"}';
     if ($response !== $expected || !str_contains($http_response_header[0], ' 403 ')) {

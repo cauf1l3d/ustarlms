@@ -118,9 +118,15 @@ jobs:
           spec = importlib.util.spec_from_file_location('https_transform', 'scripts/infra/academy_https.py')
           module = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(module)
-          config = module.patch_config(Path('tests/stage/config.php').read_bytes())
-          config = config.replace(b'require_once', b"$CFG->ustar_connect_bridge_enabled=true;\n$CFG->ustar_connect_bridge_peers=['127.0.0.1'];\n$CFG->ustar_connect_bridge_keys=['tg_link'=>['secret'=>str_repeat('12',32),'provider'=>'telegram','tenant'=>'123456','operations'=>['link.claim']]];\nrequire_once")
+          spec = importlib.util.spec_from_file_location('private_transform', 'scripts/infra/connect_private_bridge.py')
+          private = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(private)
+          config = private.patch_config(module.patch_config(Path('tests/stage/config.php').read_bytes()))
           Path('.stage-input/academy-https-config.php').write_bytes(config)
+          # The disposable PHP server has an exact localhost peer. Production
+          # generator retains the measured Docker gateway172.18.0.1.
+          settings = private.php_settings('12'*32, '123456').replace(b"['172.18.0.1']", b"['127.0.0.1']")
+          Path('.stage-input/private-bridge.php').write_bytes(settings)
           PYCONFIG
       - name: Build existing pinned Moodle 5.1.8 PostgreSQL 16 runtime
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull

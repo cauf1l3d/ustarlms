@@ -50,7 +50,11 @@ def patch_config(raw):
     suffix=re.sub(rb'/\*.*?\*/|//[^\n]*|\#[^\n]*',b'',raw[at.end():],flags=re.S)
     require(not suffix.strip(),'executable_config_suffix')
     include=b"\n"+MARKER+b"\nrequire(__DIR__ . '/.ustar-connect/bridge.php');\n"
-    return raw[:at.start()]+include+raw[at.start():]
+    # Moodle normalizes scalar config.php settings during setup (true becomes
+    # string "1"). Transport activation intentionally requires boolean true.
+    # Plugin-only keys/flags therefore load after setup; core HTTPS/DB settings
+    # remain before setup, exactly as in the accepted canonical configuration.
+    return raw+include
 
 
 def php_settings(secret,bot_id):

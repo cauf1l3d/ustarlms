@@ -33,6 +33,17 @@ The installer rechecks the exact current binding and uses one exact candidate pe
 a signed round trip must establish it rather than allowlisting arbitrary peers.
 No additional owner diagnostic inventory is required merely for documentation.
 
+## Native configuration finding
+
+Actual Moodle5.1.8/PG16 HTTP receipt on e4 showed HTTPS=on and exact localhost peer,
+but a pre-bootstrap PHP boolean bridge flag became string"1" and correctly failed
+`=== true`. Keep the existing strict PHP guard and unchanged application payload.
+The plugin-only private include must execute after the core setup require returns;
+canonical HTTPS/DB settings stay before bootstrap. The native fixture now uses the
+same delivery compiler/include and tests UID33 group-read/no-write permissions.
+The frozen e4 check package has no activation mode and never invokes its compiler;
+its readonly readiness check remains valid. Future activation uses the corrected source.
+
 ## Ownership and lifetime
 
 - Extend the existing HTTPS manager with a managed bridge profile. Preserve the

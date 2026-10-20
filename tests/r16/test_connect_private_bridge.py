@@ -13,11 +13,11 @@ else:x=SimpleNamespace()
 
 
 class Configuration(unittest.TestCase):
-    def test_include_handoff_is_before_bootstrap_without_rewriting_existing_settings(self):
+    def test_plugin_flags_are_loaded_after_bootstrap_without_rewriting_core_settings(self):
         before=b"<?php\n$CFG->wwwroot='https://ustar.local';\n$CFG->sslproxy=true;\nrequire_once(__DIR__ . '/lib/setup.php');\n"
         after=x.patch_config(before)
-        self.assertIn(before.split(b'require_once')[0],after)
-        self.assertLess(after.index(b"/.ustar-connect/bridge.php"),after.index(b'/lib/setup.php'))
+        self.assertTrue(after.startswith(before))
+        self.assertGreater(after.index(b"/.ustar-connect/bridge.php"),after.index(b'/lib/setup.php'))
         self.assertNotIn(b'ustar_connect_bridge_keys',after)
         for raw in (after,before.replace(b'require_once',b'// require_once'),before+b'echo "unexpected";',
                     before.replace(b'$CFG->sslproxy',b'$CFG->ustar_connect_bridge_enabled=false;\n$CFG->sslproxy')):

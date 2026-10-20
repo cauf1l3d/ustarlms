@@ -1,5 +1,11 @@
 # Cron: отчёт источника остановился на 04:20 МСК
 
+**20:08МСК: причина подтверждена владельцем.** Cron active/schedule/binding match,
+10invocations/10min;wrapper rejects old local0204 versus installed1905. Last DB
+task log unchanged04:20,107overdue/2adhoc. Повторная диагностика ниже не нужна.
+[Точное исправление и приёмка scheduled success](cron_release_update_20261020.md).
+Ниже сохранён первоначальный разбор до получения native результата.
+
 Owner20Oct19:59МСК после принятого HTTPS сообщил тревогу пульта:
 «С последнего подтверждённого успеха прошло больше 10 минут», время проверки
 19:59, дата отчёта источника04:20МСК. Это owner UI report, не измерение через SSH.

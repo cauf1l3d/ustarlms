@@ -1,8 +1,8 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: HTTPS_owner_accepted_cron_incident_first
-stage_label: HTTPS owner accepted; stale cron receipt investigation before bridge activation
+stage: cron_exact_release_update_ready_owner_apply_pending
+stage_label: Cron version guard cause confirmed; reviewed contract update ready; scheduled success pending
 current_activity: >-
   Owner20Oct reports Academy installer02b0548c success and general browser smoke;
   effective payload830/local2026101905/theme2026100202/552files/99tables remains installed.
@@ -16,8 +16,13 @@ current_activity: >-
   Owner1959MSK confirms check/cutover/status active and HTTPS opens on computer,
   phone and VPN;leaf expires2026-11-19T16:56:28Z. No repeat HTTPS/probe installation.
   New priority: cron alarm last source receipt0420MSK versus check1959MSK.
-  Service disabled versus wrapper guard/stale receipt remains unconfirmed;
-  read-only wrapper status and schedule/service evidence required before any real pass.
+  Owner2008MSK confirms cron active,schedule/binding match,10invocations/10min;
+  wrapper explicit old application version mismatch,DB task log frozen since0420.
+  Sourcecaebe51a exact contract update prepared under old cron EX/backup SH locks;
+  original SHA66fd to reviewedc5eabd,local0204 to accepted1905;no worker launch.
+  10REDtoGREEN,local821/31skips and both source CI821/134skips plus runtime PASS.
+  Owner apply and fresh scheduled success pending;use new handoff,no repeat diagnostics.
+  Future release preflight must pin updated producer hash and pair its target version.
   Do not repeat probe/receiver/Academy installation or broad fact collection.
   After cron scheduled success acceptance: private bridge/scoped keys, chat-link candidate delivery,
   two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.
@@ -100,6 +105,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/cron_release_update_20261020.md
+- context/runtime/cron_release_update_20261020.json
 - context/runtime/cron_incident_20261020.md
 - context/runtime/connect_academy_https_20261020_commands.md
 - context/runtime/connect_academy_https_ci_20261020.json

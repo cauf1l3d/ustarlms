@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "kind": "cron_v3_exact_release_contract_update",
+  "reported_at": "2026-10-20T20:08:30+03:00",
+  "evidence": "owner_terminal_output_not_independent_SSH",
+  "owner_diagnosis": {
+    "cron_service": "active_running_enabled",
+    "console_collect_timer": "active_running_enabled",
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "managed_invocations_10min": 10,
+    "last_successful_scheduled_finished": "2026-10-20T01:20:05.495272+00:00",
+    "last_task_log_id": 4767930,
+    "current_latest_task_utc": "2026-10-20T01:20:05Z",
+    "adhoc_queued": 2,
+    "scheduled_overdue_10m": 107,
+    "scheduled_failed": 2,
+    "ustar_failed": 0,
+    "last_wrapper_error": {
+      "utc": "2026-10-20T17:07:01.788567+00:00",
+      "error": "Production application versions differ from the reviewed snapshot"
+    },
+    "cause": "cron_v3_VERSIONS_still_pins_local2026100204_after_owner_installed_local2026101905"
+  },
+  "source_commit": "caebe51a696700bf1a59e519c36b13f13ede9652",
+  "tool_sha256": "c88d6c2878f0ae126fc88adaa26fc7ad676ef30eca2f412ba7efc12c54b7e005",
+  "original_private_source": {
+    "filename": "USTAR_CRON_SETUP_20261005.py",
+    "bytes": 24095,
+    "sha256": "66fd51d364beb59a8874a63c695c122dca5452a720e61b86d070beb0b1939852",
+    "readback_digest_matches_owner": true,
+    "published": false
+  },
+  "updated_cron_sha256": "c5eabdceaa2f137eccd35087b03d473f61257aaeb77624f4855583ebaf353638",
+  "versions_before": {
+    "local_ustar": "2026100204",
+    "theme_ustar": "2026100202"
+  },
+  "versions_after": {
+    "local_ustar": "2026101905",
+    "theme_ustar": "2026100202"
+  },
+  "payload_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "verification": {
+    "TDD": "10_missing_implementation_failures_observed_then10PASS",
+    "kernel_cron_EX_backup_SH_exclusion": "PASS",
+    "transaction_failures_interruption_recovery_admin_drift_and_symlinks": "PASS",
+    "private_real_source_original_version_error_reproduced": true,
+    "private_real_source_updated_exact_version_accepted": true,
+    "AST_only_VERSIONS_assignment_differs": true,
+    "original_schedule_232bytes_identical": true,
+    "original_builtin_self_test": "PASS;real_kernel_locks_and_failure_parsers_no_host_worker",
+    "full_local_r16_tests": 821,
+    "full_local_environment_skips": 31,
+    "full_local_result": "PASS",
+    "initial_system_Python_run": "3_import_errors_missing_mcp;rerun_in_task_venv_with_harness_requirements_PASS",
+    "source_checks": "PASS;PHP_not_run_locally",
+    "independent_review": false,
+    "review": "self_review_owner_forbids_subagents"
+  },
+  "CI": {
+    "context_run": 39465174623,
+    "context_conclusion": "success",
+    "review_run": 39465174522,
+    "runtime_job": 118774577418,
+    "runtime_conclusion": "success",
+    "source_jobs": [
+      {
+        "id": 118774577737,
+        "PHP": "8.2",
+        "conclusion": "success"
+      },
+      {
+        "id": 118774577730,
+        "PHP": "8.3",
+        "conclusion": "success"
+      }
+    ],
+    "CI_r16_tests": 821,
+    "CI_environment_skips": 134,
+    "all10new_tests_in_source_log": "PASS",
+    "Connect_DB_cumulative_unchanged_Moodle_job": 118775956723,
+    "Connect_DB_status_at_handoff": "success",
+    "full_RC_claim": false,
+    "review_conclusion": "success",
+    "Connect_DB_tests": 124,
+    "Connect_DB_assertions": 629,
+    "Connect_DB_concurrency_scenarios": 6,
+    "Connect_DB_paired_recovery": "93_to_99_to_93_PASS",
+    "Connect_DB_native_SQL_and_HTTPS_bootstrap": "PASS"
+  },
+  "owner_apply_and_fresh_scheduled_success": "pending",
+  "direct_worker_launched": false,
+  "agent_server_changes": false,
+  "scope": "wrapper_VERSIONS_and_installation_versions_script_digest_only;retain_schedule_binding_locks_logs_and_business_history",
+  "future_delivery_gate": "new_installer_preflight_must_pin_updated_cron_SHA_and_target_version;historical_immutable_helpers_not_edited",
+  "subagents": 0
+}

@@ -117,5 +117,11 @@
     "cause": "not_confirmed;do_not_label_environment_flake_or_weaken_cookie_guard",
     "relationship_to_owner_cron_incident": "not_established;separate_CI_followup",
     "owner_server_result": "same pinned d1e61a3b check/cutover/status active and HTTPS desktop_phone_VPN accepted"
+  },
+  "followup_cron_source_caebe51a": {
+    "runtime_job": 118774577418,
+    "conclusion": "success",
+    "HTTPS_fixture_code_unchanged": true,
+    "prior_cookie_failure_cause": "unresolved_intermittent_fixture_behavior;not_fixed_or_guard_bypassed"
   }
 }

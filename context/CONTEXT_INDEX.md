@@ -1,5 +1,21 @@
 # Индекс текущего контекста
 
+**20Oct20:08МСК — причина cron найдена; исправление готово.**
+Cron active, schedule/binding match,10invocations/10min. Wrapper66fd51d3 отказывает:
+`Production application versions differ from the reviewed snapshot`.
+Он закреплён на local0204,при owner-installed payload830/local1905. Task log не
+рос с04:20МСК;107overdue/2adhoc,не проблема свежести одного UI.
+[Исправление и команды](runtime/cron_release_update_20261020.md),
+[квитанция](runtime/cron_release_update_20261020.json).
+Sourcecaebe51a меняет только reviewed VERSIONS+installation hash/version under
+existing locks;расписание/history/БД не правит,worker не запускает.10RED→GREEN,
+821local/31skips PASS;Context39465174623/Review39465174522 SUCCESS,
+PHP8.2/8.3 CI821/134skips,runtime и native Connect124/629+6concurrency PASS.
+Owner apply и новый scheduled success pending. Не повторять диагностику,
+HTTPS или Academy installer. Future installer должен согласовать producer hash/
+версии;старые immutable helpers не патчить. После cron — bridge/link/notify.
+HTTPS owner accepted desktop/phone/VPN;0subagents. Ниже датированная история.
+
 **20Oct19:59МСК — HTTPS принят владельцем; сначала инцидент cron.**
 Owner check/cutover/status PASS: Academy `https://ustar.local`, новый leaf до
 19Nov16:56:28UTC, компьютер/телефон/VPN открывают Академию. [Квитанция](runtime/connect_https_owner_20261020.json).

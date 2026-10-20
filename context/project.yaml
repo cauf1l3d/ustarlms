@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: HTTPS_owner_accepted_cron_incident_first
+  stage: cron_exact_release_update_ready_owner_apply_pending
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: HTTPS_owner_check_cutover_status_desktop_phone_VPN_accepted;cron_receipt_stale_since0420_cause_pending;bridge_link_notify_after_cron;MiniApp_waits_external_HTTPS
+execution_gate: cron_old_version_guard_confirmed;caebe51a_exact_update_source_runtime_verified;owner_apply_scheduled_success_pending;HTTPS_accepted;bridge_after_cron
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -40,5 +40,5 @@ current_work:
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
   plan: context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md
-  runbook: context/runtime/cron_incident_20261020.md
-  CI_receipt: context/runtime/connect_academy_https_ci_20261020.json
+  runbook: context/runtime/cron_release_update_20261020.md
+  CI_receipt: context/runtime/cron_release_update_20261020.json

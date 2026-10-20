@@ -1,24 +1,23 @@
 schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
-stage: connect_chat_link_update_owner_ready
-stage_label: Owner prepared backup HTTPS pair; check ready; guarded application update next
+stage: connect_private_bridge_delivery
+stage_label: Owner accepted application2000 and new scheduled cron; private bridge delivery next
 current_activity: >-
-  Owner21Oct reports tool6aa/e0d364ab SHA OK,backup_HTTPS_compatibility_prepared,
-  exact producer a604fbcd and scheduler a97039a8. No backup/outage or unit/calendar change
-  was started by preparation. Follow-up --check ready_for_chat_link_update,activation=false,
-  current1905/theme0202,target2000/theme0202;capacity bytes/inodes sufficient.
-  Receipt context/runtime/connect_backup_https_owner_20261021.json records exact output;
-  exact report time absent,not independent server access. Existing source552/99/HTTPS and
-  accepted cron1905 remain current;do not repeat preparation,old installer02 or broad probes.
-  Next same root-owned frozen6aa PYZ --upgrade --acknowledge-outage in maintenance window,
-  then --status,genuine scheduled cron2000 and browser login/material acceptance.
-  Fresh HDD and physical code/config/data/PG pair remain mandatory during upgrade;
-  old helper manifests immutable,HTTPS/renewal ownership and existing task flags preserved.
-  Source6aa Context39500936977/Review39500936916 SUCCESS is recorded separately;
-  source CI does not prove a real HTTPS backup,application2000 or live bot activation.
-  Then private bridge/link-only key/receiver,same-session link/revoke,separate opt-in notify.
-  External HTTPS/MiniApp remains later scope. Agent made no server/main/provider changes;0subagents.
+  Owner21Oct reports exact6aa/e0d364ab SHA OK,CHAT_LINK_UPDATE=PASS and phase upgrade_complete,
+  public_released=true,live_trees_modified=true. Effective payload1e8a8819/local2000/theme0202,
+  552files/99tables follow from fixed guarded installer,not an independent probe.
+  New genuine scheduled cron20Oct22:08:01.463377→22:08:03.506738UTC exits0,
+  task log4775692→4775719,adhoc0,new failures[],USTAR errors0. Overdue19 and2historical
+  failed retained;wrapper17:33UTC error is historical. Owner says Academy opens;
+  general browser smoke accepted,full role/learning/link QA not claimed.
+  During cold copy process D/jbd2 was observed;operation subsequently completed,no disk failure proven.
+  Receipt context/runtime/connect_chat_link_update_owner_20261021.json;no exact report time.
+  Do not repeat app upgrade,backup HTTPS preparation,TLS cutover,cron repair or broad probes.
+  Next accepted chat-link plan:private native TLS bridge,link-only key and receiver update
+  preserving token/journal/cursor;then real same-session link/revoke and separate opt-in notify.
+  Bridge/bot activation pending;external HTTPS/MiniApp remains later scope.
+  Agent has no independent server access and made no main/server/provider changes;0subagents.
 
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -43,18 +42,19 @@ code_baseline:
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/connect_cron_contract_owner_20261021.json
+  latest_cron_contract: context/runtime/connect_chat_link_update_owner_20261021.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_academy_owner_install_20261020.json
-    reported_at: '2026-10-20T04:36:04+03:00'
-    status: owner_CLI_and_general_browser_smoke_accepted
-    installer_commit: 02b0548cf4a8ac377c878aa77b546be784652e83
-    payload_commit: 830d3703e2ffa2f9864900c0d0c58f60049cb0c2
-    versions: {local_ustar: 2026101905, theme_ustar: 2026100202}
+    receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+    reported_date_msk: '2026-10-21'
+    status: owner_guarded_update_scheduled_cron_and_general_browser_accepted
+    installer_commit: 6aa83a951b3d8119db8ef2d5d5e2484383fcbce1
+    payload_commit: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
+    versions: {local_ustar: 2026102000, theme_ustar: 2026100202}
     files: 552
     tables: 99
     independent_probe: false
+    previous_receipt: context/runtime/connect_academy_owner_install_20261020.json
   historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
   status: owner_CLI_browser_HTTPS_and_cron_accepted_private_bridge_link_pending_export_restore_still_waiting
   observed_at: '2026-10-14T13:51:02Z'
@@ -81,8 +81,8 @@ production:
     uncompared: 0
     scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file
       references, not a new whole-host manifest
-  cron: v3_c5eabdce_local1905_owner20Oct_two_scheduled_successes_1736_1737UTC_adhoc0_overdue18_failed2_no_new_USTAR_errors
-  cron_current_receipt: context/runtime/cron_release_update_20261020.json
+  cron: v3_ae5fa1b0_local2000_owner_scheduled20Oct220803UTC_exit0_adhoc0_overdue19_historical_failed2_no_new_errors
+  cron_current_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
@@ -102,6 +102,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md
+- context/runtime/connect_chat_link_update_owner_20261021.json
 - context/runtime/connect_backup_https_owner_20261021.json
 - context/runtime/connect_chat_link_update_20261021.md
 - context/runtime/connect_delivery_preflight_20261020.md

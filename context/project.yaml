@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_chat_link_update_owner_ready
+  stage: connect_private_bridge_delivery
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_backup_HTTPS_pair_prepared_and_update_check_ready;next_same6aa_guarded1905to2000_then_scheduled_cron_and_browser
+execution_gate: owner_application2000_new_scheduled_cron_and_general_browser_accepted;next_private_TLS_bridge_link_only_key_receiver_and_live_link
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -36,9 +36,9 @@ current_work:
   task: INTEGRATIONS-01
   spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
   design_PR: 106
-  owner_receipt: context/runtime/connect_backup_https_owner_20261021.json
+  owner_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan: context/proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md
+  plan: context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md
   runbook: context/runtime/connect_chat_link_update_20261021.md
   CI_receipt: context/runtime/connect_chat_link_update_ci_20261021.json

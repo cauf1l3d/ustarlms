@@ -4,16 +4,17 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: owner_backup_HTTPS_pair_prepared_update_check_ready_application1905to2000_next
+  stage: owner_application2000_scheduled_cron_browser_accepted_private_bridge_delivery_next
   development_version: 2026102000
-  production_effective_payload: 830d3703e2ffa2f9864900c0d0c58f60049cb0c2
-  production_effective_version: 2026101905
+  production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
+  production_effective_version: 2026102000
   addons_files: 552
   tables: 99
   local_verification: source6aa_both_PHP869_136CI_skips_PASS;actual19_UID33_file_tests_TLS_native1905to2000_PASS
   exact_ci_receipt: context/runtime/connect_chat_link_update_ci_20261021.json
   backup_HTTPS_preparation_receipt: context/runtime/connect_backup_https_owner_20261021.json
-  next: same6aa_guarded_application_upgrade_then_scheduled_cron2000_and_browser_acceptance
+  application_update_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  next: private_TLS_bridge_link_only_key_receiver_then_live_same_session_link_revoke_and_opt_in_notify
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

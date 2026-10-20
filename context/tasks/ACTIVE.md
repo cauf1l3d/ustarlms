@@ -1,5 +1,18 @@
 # Активные задачи USTAR
 
+**21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**
+[Owner receipt](../runtime/connect_chat_link_update_owner_20261021.json):exact6aa/e0d364ab SHA OK,
+CHAT_LINK_UPDATE=PASS,upgrade_complete/public_released=true. Effective payload1e8a8819,
+local2026102000/theme2026100202/552files/99tables следуют из fixed guarded installer.
+Свежий scheduled cron20Oct22:08:01→22:08:03UTC:exit0,task log4775692→4775719,
+adhoc0,new failures[],USTAR errors0. Overdue19 и2historical failed сохранены;
+wrapper error17:33UTC — история. Owner:«завершилось академия открывается»;
+это general browser smoke,не полный role/learning/link QA. ПаузаD/jbd2 при cold copy
+завершилась успешно;disk failure не установлен. Не повторять update/backup prep/TLS/cron repair.
+Дальше private TLS bridge/link-only key и receiver update с сохранением token/journal/cursor,
+затем same-session link/revoke и отдельный opt-in notify. Bridge/bot activation pending.
+Owner terminal evidence,не independent SSH;0subagents.
+
 **21Oct — HTTPS backup preparation принята; следующий шаг application1905→2000.**
 [Owner receipt](../runtime/connect_backup_https_owner_20261021.json):pinned6aa/e0d364ab SHA OK,
 backup_HTTPS_compatibility_prepared с exact producer a604fbcd и scheduler a97039a8;

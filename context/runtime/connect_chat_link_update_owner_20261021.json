@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "kind": "owner_chat_link_update_and_scheduled_cron_acceptance",
+  "reported_date_msk": "2026-10-21",
+  "reported_at": null,
+  "evidence_source": "owner_pasted_server1_terminal_and_browser_open_confirmation",
+  "independent_server_access": false,
+  "tool_commit": "6aa83a951b3d8119db8ef2d5d5e2484383fcbce1",
+  "tool_sha256": "e0d364ab33fb01482c0bedc73833562a567dc221c0682c85009759bca58d82c3",
+  "owner_sha256_check": "OK",
+  "update_result": "CHAT_LINK_UPDATE=PASS; CRON_TARGET=2000; BRIDGE_AND_BOT_ACTIVATION=PENDING",
+  "transaction": {
+    "phase": "upgrade_complete",
+    "public_released": true,
+    "live_trees_modified": true,
+    "run_directory": "/var/lib/ustar-connect-chat-link-update/update-81n5lyu1"
+  },
+  "effective_addons": {
+    "payload_commit": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1",
+    "local_ustar": 2026102000,
+    "theme_ustar": 2026100202,
+    "files": 552,
+    "tables": 99,
+    "provenance": "fixed_tool_contract_and_successful_guarded_upgrade_not_independent_probe"
+  },
+  "browser": {
+    "owner_statement": "завершилось академия открывается",
+    "general_open_accepted": true,
+    "full_role_learning_or_link_acceptance": false
+  },
+  "cron": {
+    "setup_version": 3,
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "first_status_old_last_finished_utc": "2026-10-20T21:53:02.728085+00:00",
+    "accepted_new_scheduled_run": {
+      "started_utc": "2026-10-20T22:08:01.463377+00:00",
+      "finished_utc": "2026-10-20T22:08:03.506738+00:00",
+      "trigger": "scheduled",
+      "cron_exit_code": 0,
+      "elapsed_seconds": 2.043,
+      "log_truncated": false,
+      "email_disabled": false,
+      "last_task_log_before": 4775692,
+      "last_task_log_after": 4775719,
+      "adhoc_queued_after": 0,
+      "adhoc_failed_after": 0,
+      "scheduled_overdue_10m_after": 19,
+      "scheduled_failed_after": 2,
+      "ustar_failed_after": 0,
+      "new_failures": [],
+      "failures_24h": [],
+      "ustar": {
+        "error_lines": 0,
+        "warning_lines": 0,
+        "worker_errors": 0,
+        "grade_errors": 0,
+        "enrolment_errors": 0,
+        "enrolment_missing_manual": 0,
+        "cancelled_login_notifications": 0
+      }
+    },
+    "historical_wrapper_error": {
+      "utc": "2026-10-20T17:33:01.250048+00:00",
+      "error": "Production application versions differ from the reviewed snapshot",
+      "not_a_new_failure": true
+    }
+  },
+  "observed_during_update": {
+    "phase": "stopping_production",
+    "live_trees_modified": false,
+    "both_containers_exited_cleanly": true,
+    "updater_pid": 2874762,
+    "updater_state": "D",
+    "updater_wait_channel": "jbd2_log_wait_commit",
+    "process_elapsed_at_sample": "09:18",
+    "io_sample_and_kernel_error_report_received": false,
+    "scope_note": "Phase spans cold paired copy; wait-channel observation is not evidence of a disk failure or a persistent hang. Operation subsequently completed."
+  },
+  "bridge_link_notify_activated": false,
+  "next_action": "private_TLS_bridge_link_only_credential_receiver_update_preserve_token_journal_cursor_then_same_session_link_revoke_and_separate_opt_in_notify",
+  "do_not_repeat": [
+    "application_upgrade",
+    "backup_HTTPS_preparation",
+    "canonical_HTTPS_cutover",
+    "cron_repair",
+    "broad_preflight"
+  ],
+  "scope_note": "Fresh HDD and cold pair completion follow from guarded tool PASS. Separate backup JSON,full browser QA and a real Telegram account link were not supplied."
+}

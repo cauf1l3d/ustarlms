@@ -1,5 +1,20 @@
 # Continuation after accepted cron repair: private chat-link delivery
 
+## 21Oct owner update accepted; private bridge next
+
+**21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**
+[Owner receipt](../runtime/connect_chat_link_update_owner_20261021.json):exact6aa/e0d364ab SHA OK,
+CHAT_LINK_UPDATE=PASS,upgrade_complete/public_released=true. Effective payload1e8a8819,
+local2026102000/theme2026100202/552files/99tables следуют из fixed guarded installer.
+Свежий scheduled cron20Oct22:08:01→22:08:03UTC:exit0,task log4775692→4775719,
+adhoc0,new failures[],USTAR errors0. Overdue19 и2historical failed сохранены;
+wrapper error17:33UTC — история. Owner:«завершилось академия открывается»;
+это general browser smoke,не полный role/learning/link QA. ПаузаD/jbd2 при cold copy
+завершилась успешно;disk failure не установлен. Не повторять update/backup prep/TLS/cron repair.
+Дальше private TLS bridge/link-only key и receiver update с сохранением token/journal/cursor,
+затем same-session link/revoke и отдельный opt-in notify. Bridge/bot activation pending.
+Owner terminal evidence,не independent SSH;0subagents.
+
 ## 21Oct continuation
 
 [Native cron-only accepted](../runtime/connect_cron_contract_owner_20261021.json).
@@ -123,3 +138,13 @@ old whole-host facts. Existing HTTPS and cron acceptance are closed, not redone.
    revoke and real denial after unlink. Then separate opt-in notification lease/
    delivery acceptance with fresh cutoff; no historical queue replay.
 5. External HTTPS/Mini App and native handoff/MFA/role actions remain later gates.
+
+## 21Oct transport implementation boundary
+
+[Delivery plan](USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md) keeps the accepted
+host proxy and loopback18443 candidate. Exact core5.1.8 setuplib source and existing
+actual-Moodle fixture confirm sslproxy normalizes HTTPS after bootstrap;that flag
+alone is not a transport proof. Private TLS,public path denial,exact peer and HMAC
+must be accepted together. No container TLS/module or repeated owner diagnostic
+inventory is needed. The application payload remains current2000. Private bridge,
+scoped probe/credentials,receiver activation and live link are not yet accepted.

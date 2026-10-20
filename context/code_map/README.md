@@ -73,3 +73,11 @@ Native application/backup preparation not deployed.
 producer a604fbcd / scheduler a97039a8 and ready_for_chat_link_update. The updater
 source6aa/PYZ e0d364ab is unchanged;application1905 remains installed until separate upgrade.
 No production backup,application2000 or bot/link/notify acceptance is inferred.
+
+## 21Oct effective addon update accepted
+
+[Owner receipt](../runtime/connect_chat_link_update_owner_20261021.json):fixed tool6aa
+installed payload1e8a8819/local2000/theme0202/552files/99tables;new scheduled cron22:08UTC
+exit0 and general Academy browser-open accepted. Generated development inventory is
+source evidence and does not substitute for this deployment receipt. Private transport
+continues under [the delivery plan](../proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md).

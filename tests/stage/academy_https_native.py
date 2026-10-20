@@ -7,10 +7,14 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 
 ROOT=Path(__file__).resolve().parents[2]
+sys.path[:0]=[str(ROOT/'scripts/infra'),str(ROOT/'scripts')]
+from connect_chat_link_update import LoginProbe
+import hdd_backup
 def module(name,path):
     s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 lib=module('tls_library',ROOT/'scripts/infra/academy_tls_probe.py')
@@ -103,6 +107,12 @@ Include {p.include}
             before={name:path.read_bytes() for name,path in manager.files().items()};ca_before={q.name:q.read_bytes() for q in (p.old.ca,p.old.ca_key,p.include)}
             assert manager.check()
             assert manager.cutover()['phase']=='active'
+            update_probe=LoginProbe();update_probe.HTTPS_PORT=host.HTTPS_PORT
+            update_probe.app_check(p.old.ca,manager.load()['leaf'])
+            # Actual TLS/SNI/leaf/cookie readiness used by the HDD adapter.
+            hdd_backup.HTTPS_STATE=p.state;hdd_backup.HTTPS_CA=p.old.ca;hdd_backup.HTTPS_PORT=host.HTTPS_PORT
+            hdd_backup.parents_trusted=lambda path:None  # Disposable /tmp ancestor only.
+            assert hdd_backup.https_ready()['secure_session_cookie'] is True
             status,headers,body,peer=host.request(p.old.ca,'/login/index.php')
             assert status==200 and ('X-USTAR-Observed','fixture') in headers
             assert manager.load()['leaf']['fingerprint']==peer

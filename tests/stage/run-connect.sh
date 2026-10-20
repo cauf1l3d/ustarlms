@@ -93,3 +93,4 @@ php admin/cli/upgrade.php --non-interactive > /artifacts/connect-pair-repeat.log
 php /source/tests/stage/schema_snapshot.php > /artifacts/connect-pair-repeat-schema.json
 cmp /artifacts/connect-baseline-schema.json /artifacts/connect-pair-repeat-schema.json
 echo 'CONNECT_ACCEPTED_BASELINE_PAIRED_ROLLBACK=PASS' | tee -a /artifacts/connect-result.txt
+source /source/tests/stage/run-chat-link-update.sh

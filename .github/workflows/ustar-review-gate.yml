@@ -109,6 +109,8 @@ jobs:
         run: |
           mkdir -p .stage-input/connect-baseline artifacts
           git archive e1d57f5bc28f6964afd20aeff7620345b34a80fe moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-baseline
+          mkdir -p .stage-input/connect-current
+          git archive 830d3703e2ffa2f9864900c0d0c58f60049cb0c2 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-current
           python3 tests/stage/connect_installer_probe.py prepare
           python3 - <<'PYCONFIG'
           import importlib.util
@@ -123,7 +125,9 @@ jobs:
       - name: Verify fresh install, upgrade, repeat, links and independent concurrent requests
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml up --abort-on-container-exit --exit-code-from runner
       - name: Verify installer guards against native SQL migration and recovery
-        run: python3 tests/stage/connect_installer_probe.py verify
+        run: |
+          python3 tests/stage/connect_installer_probe.py verify
+          python3 tests/stage/chat_link_update_probe.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -131,6 +135,7 @@ jobs:
           path: |
             artifacts/connect-*
             artifacts/academy-https-moodle*
+            artifacts/chat-link-*
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
@@ -153,6 +158,15 @@ jobs:
           python3 -I artifacts/connect-delivery/ustar-connect-delivery-*.pyz
       - name: Delivery preflight preserves actual accepted UID33 config ownership
         run: sudo -n env USTAR_CONNECT_OWNERSHIP_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_delivery_readiness.py -v
+      - name: Coordinated chat-link update package and paired file recovery
+        run: |
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_chat_link_update.py -v
+          python3 scripts/infra/build_connect_chat_link_update.py --commit HEAD --output-dir artifacts/chat-link-update
+          python3 -I -B artifacts/chat-link-update/ustar-chat-link-update-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-chat-link-coordinated-update
+          path: artifacts/chat-link-update/
       - name: Build exact-source Academy installer without production access
         run: |
           python3 scripts/infra/build_connect_academy_installer.py --commit HEAD --output-dir artifacts/connect-install

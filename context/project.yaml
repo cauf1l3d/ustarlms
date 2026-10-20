@@ -1,10 +1,10 @@
 schema_version: 2
-updated_at: '2026-10-20'
+updated_at: '2026-10-21'
 project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_delivery_cron_reader_fix_ready
+  stage: connect_chat_link_coordinated_update_preparing
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_0750_exact_cron_SHA_confirmed;reader_private_flag_fixed;cron_only_receipt_pending;source_DB_HTTPS_accepted
+execution_gate: owner_cron_only_measured;coordinated_update_tests_CI_pending;no_repeat_installer02_or_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -36,9 +36,9 @@ current_work:
   task: INTEGRATIONS-01
   spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
   design_PR: 106
-  owner_receipt: context/runtime/connect_delivery_owner_20261020.json
+  owner_receipt: context/runtime/connect_cron_contract_owner_20261021.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan: context/proposals/USTAR_CONNECT_PRIVATE_DELIVERY_PROGRESS_20261020.md
-  runbook: context/runtime/connect_delivery_preflight_20261020.md
+  plan: context/proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md
+  runbook: context/runtime/connect_chat_link_update_20261021.md
   CI_receipt: context/runtime/connect_delivery_preflight_ci_20261020.json

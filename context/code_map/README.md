@@ -56,3 +56,12 @@ python3 scripts/check_context.py
 [`prepare_production_copy.sh`](../../scripts/infra/prepare_production_copy.sh) installs pinned restore helpers and submits only read-only `--pack` from the last successful HDD backup. `backup_transfer.py --start-production-copy` passes `--parallel-copy` to the permanent worker: distinct canonical URL, same recovered business data/task flags, mail+sendmail+cron off, boot startup without cron timer. Source freeze is not called. [Current sysadmin handoff](../runtime/production_copy_20261015.md), codea1a0c62b/prepare38485343;101 selected CI checks PASS, native import/reboot pending.
 
 [development_source.json](development_source.json) — отдельный unmerged candidate546files/99tables, local2026101903 (CON01C.2). Generated baseline files526/93 описывают accepted e1d57f5b; STATE.development_candidate и byte/tree validation в check_context связывают текущий код с новым manifest без подмены production evidence.
+
+
+[`connect_chat_link_update.py`](../../scripts/infra/connect_chat_link_update.py) —
+отдельный fixed830/1905→1e8/2000 application+cron controller,99schema/tasks preserved,
+HTTPS/renewal lock,paired recovery и strict HTTPS login.
+[`backup_https_prepare.py`](../../scripts/infra/backup_https_prepare.py) готовит
+согласованную producer/scheduler readiness пару перед fresh HDD;без запуска jobs
+или изменения units/calendar. [План/границы](../proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md).
+Source verification pending;native application/backup preparation not deployed.

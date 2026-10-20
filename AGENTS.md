@@ -1,5 +1,13 @@
 # USTAR инструкции агентам
 
+**21Oct — cron-only принят владельцем; готовится согласованный update1905→2000.**
+[Owner receipt](context/runtime/connect_cron_contract_owner_20261021.json):measured,exactc5eabdce/local1905,scheduled success20Oct21:07:02Z.
+18overdue/2historical failed сохранены. Source552/99/HTTPS не пересобирались.
+Следующий этап — отдельный guarded updater с fresh HDD/cold pair, matching cron2000
+и неизменным HTTPS/renewal; original installer02 не повторять.
+Новый source/tests/CI готовятся; production2000/bridge/link/notify не приняты.
+0subagents; server1 агентом не менялся.
+
 **20Oct21:31МСК — отказ preflight установлен:код cron0750.**
 [Owner metadata](context/runtime/connect_delivery_owner_20261020.json):root-owned code0750,
 SHA c5eabdce exact;private installation/last-run0600 и parents безопасны.

@@ -1764,3 +1764,22 @@ Browser/login/theme/material QA,post-update scheduled cron/backup and production
 restore/RTO remain unaccepted. Next private bridge/scoped keys,direct-chat account
 link and controlled notification delivery;Mini App waits HTTPS. Do not repeat
 installer/receiver/source RC. Main/network/receiver unchanged;0subagents.
+
+
+## 21Oct — принят cron-only; следующий application/cron release
+
+Owner report:exacte138c77f PYZ hash verified,cron measured/c5eabdce/local1905,
+scheduled finish20Oct21:07:02.555151Z,18overdue/2historical failed. No source/SQL/
+HTTPS recollection or server changes. Receipt:context/runtime/connect_cron_contract_owner_20261021.json.
+New separate updater/build/runtime plan implements fixed830→1e8/local2000,paired
+backup/recovery,exact cron source+installation update,HTTPS lock/unchanged renewal,
+HTTPS Secure-cookie login and existing-task/schema preservation. Local19targeted
+tests/1UID33 namespace skip PASS;native1905→2000/paired restore CI added;new CI pending.
+Original installer02 and old helper manifests unchanged;bridge/link/notify still
+pending. Self-review,0subagents,no main merge or production activation.
+
+Dependency review found exact75ca974f HDD producer expects plainHTTP200,now302.
+Added strict TLS/leaf/Secure-cookie readiness and matching scheduler SHA,plus
+paired helper preparation with private before-images under existing locks;no
+unit/calendar/job changes.10new file/HTTPS-routing tests PASS;actualTLS CI pending.
+This compatibility must precede fresh backup;no old manifest hash was rewritten.

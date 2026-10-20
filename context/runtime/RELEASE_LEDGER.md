@@ -825,3 +825,22 @@ Native CI7aff1a99/run39185254555: schema parity и12tests/42assertions + concurr
 81a1be76 закрыл bridge/entry CI: Context39188208182/Review39188208139 SUCCESS,22tests/87assertions + schema/concurrency PASS. Owner05:30 разрешил следующий срез. Test-first57111574 native39190794829 дал exactly2expected failures canonical completion/rollback (24tests/90assertions). После этого реализован callback внутри canonical register transaction/email lock, first provider link + HMAC receipt + bound entry, private options/submit/status. Candidate2026101902/542files/99tables, новые HR writers/outbox/roles не создаются. Локально574r16/19skips/PHP syntax PASS; new native implementation CI pending, final exact receipt в PR106. [План](../proposals/USTAR_CONNECT_CON01B3_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B3_PROGRESS_20261019.md). No production/network/merge/provider sends; forms/BFF/remote HRD commands/receiver ACK ещё не готовы.
 
 Read-only preparation sourceef9911f3 delivered: [runbook](connect_academy_preflight_20261019.md), [receipt](connect_academy_preflight_release_20261019.json). Original Academy526/93 and candidate552/99 unchanged. Native owner collection pending; source/ZIP acceptance is not production/schema/bridge activation.
+
+
+## 21Oct — принят cron-only; следующий application/cron release
+
+Owner report:exacte138c77f PYZ hash verified,cron measured/c5eabdce/local1905,
+scheduled finish20Oct21:07:02.555151Z,18overdue/2historical failed. No source/SQL/
+HTTPS recollection or server changes. Receipt:context/runtime/connect_cron_contract_owner_20261021.json.
+New separate updater/build/runtime plan implements fixed830→1e8/local2000,paired
+backup/recovery,exact cron source+installation update,HTTPS lock/unchanged renewal,
+HTTPS Secure-cookie login and existing-task/schema preservation. Local19targeted
+tests/1UID33 namespace skip PASS;native1905→2000/paired restore CI added;new CI pending.
+Original installer02 and old helper manifests unchanged;bridge/link/notify still
+pending. Self-review,0subagents,no main merge or production activation.
+
+Dependency review found exact75ca974f HDD producer expects plainHTTP200,now302.
+Added strict TLS/leaf/Secure-cookie readiness and matching scheduler SHA,plus
+paired helper preparation with private before-images under existing locks;no
+unit/calendar/job changes.10new file/HTTPS-routing tests PASS;actualTLS CI pending.
+This compatibility must precede fresh backup;no old manifest hash was rewritten.

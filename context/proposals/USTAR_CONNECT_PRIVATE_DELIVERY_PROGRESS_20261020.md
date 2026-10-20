@@ -1,5 +1,12 @@
 # Continuation after accepted cron repair: private chat-link delivery
 
+## 21Oct continuation
+
+[Native cron-only accepted](../runtime/connect_cron_contract_owner_20261021.json).
+The prior refusal is closed. Next [coordinated update plan](USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md)
+preserves HTTPS/renewal and transitions the exact app+cron pair. New source CI/native
+update acceptance pending;old installer02 is not reused.
+
 ## Continuation21:31MSK:confirmed executable-permission false refusal
 
 Owner baseline21:25 already matches552files/local1905/99tables;HTTPS/transport/

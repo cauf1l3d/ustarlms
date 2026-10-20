@@ -1,43 +1,23 @@
 schema_version: 2
-updated_at: '2026-10-20'
+updated_at: '2026-10-21'
 project: USTAR Academy
-stage: connect_delivery_cron_reader_fix_ready
-stage_label: Owner confirmed0750 false refusal; corrected cron-only reader ready
+stage: connect_chat_link_coordinated_update_preparing
+stage_label: Native cron-only accepted; coordinated addon/cron update being verified
 current_activity: >-
-  Owner20Oct reports Academy installer02b0548c success and general browser smoke;
-  effective payload830/local2026101905/theme2026100202/552files/99tables remains installed.
-  Chat-link candidate2026102000 is verified source, not deployed; old installer stays pinned830.
-  Static TLS probe3303069b is owner-applied and accepted on phone over office WiFi/VPN.
-  Owner1920MSK HTTP vhost confirms loopback8082 and exact opaque observability Include.
-  Canonical HTTPS source d1e61a3b verified: Context39459332144/Review39459332116 SUCCESS,
-  811r16/134CI skips,15targeted local; actual Apache/OpenSSL/PHP and separate native
-  Moodle5.1.8/PostgreSQL16 HTTPS bootstrap/Secure-cookie PASS. Native Connect124/629,
-  6concurrency and paired93to99to93 PASS. Full-RC jobs skipped; no full-RC claim.
-  Owner1959MSK confirms check/cutover/status active and HTTPS opens on computer,
-  phone and VPN;leaf expires2026-11-19T16:56:28Z. No repeat HTTPS/probe installation.
-  New priority: cron alarm last source receipt0420MSK versus check1959MSK.
-  Owner2008MSK confirms cron active,schedule/binding match,10invocations/10min;
-  wrapper explicit old application version mismatch,DB task log frozen since0420.
-  Sourcecaebe51a exact contract update prepared under old cron EX/backup SH locks;
-  original SHA66fd to reviewedc5eabd,local0204 to accepted1905;no worker launch.
-  10REDtoGREEN,local821/31skips and both source CI821/134skips plus runtime PASS.
-  Owner2038MSK accepted two scheduled successes1736/1737UTC,exit0/no new failures;
-  adhoc0,overdue18,2 historical failed;task log4768051. Version mismatch1733UTC historical.
-  Future release preflight must pin updated producer hash and pair its target version.
-  Exact delivery preflight4d70de5c pins installed830/local1905,checks source/SQL
-  and cron/HTTPS/transport contracts with no PHP bootstrap or writes. Both source
-  jobs835/135skips and actual14module/UID33 host fixture PASS. Owner2125MSK
-  preflight received:552/552 baseline+99DB tables/HTTPS/transport/services measured.
-  Owner2131MSK confirms script0750/root/single link and exactc5eabdce SHA;
-  state0600/parents safe. Cause:new private=True code reader,false permission refusal.
-  Corrected reader retains root/nonwritable/exact hash and private JSON guards;
-  new cron-only mode reads only fixed cron files,no source/SQL/Docker/HTTPS repeat.
-  Local19module/1privileged skip and840r16/32skips PASS;new source CI pending.
-  Next corrected cron-only receipt,not permissions changes or cron reinstall.
-  Do not repeat probe/receiver/Academy installation or broad fact collection.
-  Next: private bridge/scoped keys, chat-link candidate delivery,
-  two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.
-  No agent server/main/router/DNS/routes/Caddy/Xray/provider changes;0subagents.
+  Owner21Oct accepted exacte138c77f cron-only measured report. SHA c5eabdce,
+  local1905/theme0202,scheduled finish20Oct21:07:02.555151UTC,18overdue/2historical failed.
+  Source552/99/HTTPS not recollected; accepted830/current1905 remain installed.
+  Preparing separate fixed1e8a8819/2000 update with fresh HDD and physical code/config/data/PG
+  pair, cron source/installation before-images, renewal lock and unchanged HTTPS ownership.
+  Existing cleanup task flags and99schema/indexes must survive upgrade/repeat.
+  Confirmed exact75ca974f HDD readiness expects HTTP200 after canonical redirect.
+  First paired producer/scheduler HTTPS compatibility preparation,no job/outage;
+  old helper manifests unchanged,new updater uses explicit revised profile.
+  New filesystem tests and native1905to2000 SQL/paired rollback gate being verified;
+  no new source CI or native deployment acceptance yet. Original installer02 remains immutable.
+  Private bridge/link-only key/receiver and same-session link/revoke follow this update;
+  opt-in notify and externalHTTPS/MiniApp are separate. No server/main/provider changes;0subagents.
+
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -60,6 +40,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
+  latest_cron_contract: context/runtime/connect_cron_contract_owner_20261021.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   effective_addon_deployment:
     receipt: context/runtime/connect_academy_owner_install_20261020.json

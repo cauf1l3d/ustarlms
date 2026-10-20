@@ -66,3 +66,10 @@ HTTPS/renewal lock,paired recovery и strict HTTPS login.
 или изменения units/calendar. [План/границы](../proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md).
 Exact6aa source CI verified: [receipt](../runtime/connect_chat_link_update_ci_20261021.json).
 Native application/backup preparation not deployed.
+
+## 21Oct owner backup HTTPS preparation accepted
+
+[Exact owner receipt](../runtime/connect_backup_https_owner_20261021.json) confirms
+producer a604fbcd / scheduler a97039a8 and ready_for_chat_link_update. The updater
+source6aa/PYZ e0d364ab is unchanged;application1905 remains installed until separate upgrade.
+No production backup,application2000 or bot/link/notify acceptance is inferred.

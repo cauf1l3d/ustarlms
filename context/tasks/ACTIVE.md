@@ -1,5 +1,16 @@
 # Активные задачи USTAR
 
+**21Oct — HTTPS backup preparation принята; следующий шаг application1905→2000.**
+[Owner receipt](../runtime/connect_backup_https_owner_20261021.json):pinned6aa/e0d364ab SHA OK,
+backup_HTTPS_compatibility_prepared с exact producer a604fbcd и scheduler a97039a8;
+backup/остановка/units/расписание не запускались и не менялись этим этапом.
+Последующий --check:ready_for_chat_link_update,local1905→2000/theme0202,
+достаточные bytes/inodes,activation=false. Повторять подготовку или старые probes не нужно.
+Дальше тот же root-owned PYZ --upgrade --acknowledge-outage в окно обслуживания,
+затем --status,реальный scheduled cron2000 и browser login/material acceptance.
+Само application update/fresh backup/bridge/link/notify ещё не выполнено.
+Это owner terminal evidence,не независимый SSH;точное время отчёта не предоставлено.
+
 **21Oct — cron-only принят; source6aa83a95 проверен,следом HTTPS backup.**
 [Owner receipt](../runtime/connect_cron_contract_owner_20261021.json):exactc5eabdce/local1905,scheduled20Oct21:07:02Z,
 18overdue/2historical failed сохранены. Source552/99/HTTPS заново не собирались.

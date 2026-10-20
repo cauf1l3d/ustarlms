@@ -77,7 +77,9 @@ calendar/unit/report contracts не меняются; login_http200 остаёт
 installer02 не переписываются; новый updater имеет отдельный явный hash-profile.
 
 Переход1905→2000 отказывает до fresh backup,если эта пара не принята.
-Производственная установка compatibility/backup/upgrade ещё не выполнена.
+Owner21Oct применил compatibility pair и получил ready_for_chat_link_update;
+[receipt](../runtime/connect_backup_https_owner_20261021.json). Fresh backup/application
+upgrade/scheduled2000 и browser acceptance ещё не выполнены;подготовку не повторять.
 
 ## Итог source gate
 

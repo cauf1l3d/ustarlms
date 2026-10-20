@@ -1,5 +1,18 @@
 # Журнал выполнения roadmap
 
+## 21Oct — owner backup HTTPS pair prepared; guarded application update next
+
+Owner terminal report confirms tool6aa/e0d364ab SHA OK and exact producer a604fbcd /
+scheduler a97039a8 installed:backup_HTTPS_compatibility_prepared. No backup/outage or
+unit/calendar change started by preparation. Follow-up --check reports ready_for_chat_link_update:
+current1905/theme0202,target2000/theme0202,activation=false;required11692290048B versus
+available56452567040B,201400 versus6078040 inodes. Restart policies remain unless-stopped.
+Current app1905 is unchanged; fresh backup,app upgrade,scheduled2000 and browser acceptance
+remain pending. Next same frozen tool --upgrade --acknowledge-outage,then --status;
+bridge/link-only key/receiver/link/revoke and separate opt-in notify follow.
+No preparation/probe/installer02 repetition. Owner report,not independent SSH;exact time absent.
+[Receipt](../runtime/connect_backup_https_owner_20261021.json). Agent made no server/provider/main changes;0subagents.
+
 ## 20Oct21:31MSK — confirmed0750 false refusal and cron-only reader correction
 
 Owner stat confirms exactc5eabdce root-owned0750 regular/single-link cron source;

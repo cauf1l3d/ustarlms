@@ -1,24 +1,24 @@
 schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
-stage: connect_backup_HTTPS_preparation_ready
-stage_label: Exact6aa CI passed; next owner prepares backup HTTPS pair
+stage: connect_chat_link_update_owner_ready
+stage_label: Owner prepared backup HTTPS pair; check ready; guarded application update next
 current_activity: >-
-  Owner21Oct accepted exacte138c77f cron-only measured report. SHA c5eabdce,
-  local1905/theme0202,scheduled finish20Oct21:07:02.555151UTC,18overdue/2historical failed.
-  Source552/99/HTTPS not recollected; accepted830/current1905 remain installed.
-  Preparing separate fixed1e8a8819/2000 update with fresh HDD and physical code/config/data/PG
-  pair, cron source/installation before-images, renewal lock and unchanged HTTPS ownership.
-  Existing cleanup task flags and99schema/indexes must survive upgrade/repeat.
-  Confirmed exact75ca974f HDD readiness expects HTTP200 after canonical redirect.
-  First paired producer/scheduler HTTPS compatibility preparation,no job/outage;
-  old helper manifests unchanged,new updater uses explicit revised profile.
-  Exact6aa Context39500936977/Review39500936916 SUCCESS:869r16/136CI skips on both PHP,
-  actual19UID33/file tests,TLS,new1905to2000/repeat/paired native SQL recovery PASS.
-  Frozen PYZ SHAe0d364ab matches local/CI;native backup HTTPS pair prep/app upgrade pending.
-  Next owner--prepare-backup-https then--check,no outage/job start. Installer02 immutable.
-  Private bridge/link-only key/receiver and same-session link/revoke follow this update;
-  opt-in notify and externalHTTPS/MiniApp are separate. No server/main/provider changes;0subagents.
+  Owner21Oct reports tool6aa/e0d364ab SHA OK,backup_HTTPS_compatibility_prepared,
+  exact producer a604fbcd and scheduler a97039a8. No backup/outage or unit/calendar change
+  was started by preparation. Follow-up --check ready_for_chat_link_update,activation=false,
+  current1905/theme0202,target2000/theme0202;capacity bytes/inodes sufficient.
+  Receipt context/runtime/connect_backup_https_owner_20261021.json records exact output;
+  exact report time absent,not independent server access. Existing source552/99/HTTPS and
+  accepted cron1905 remain current;do not repeat preparation,old installer02 or broad probes.
+  Next same root-owned frozen6aa PYZ --upgrade --acknowledge-outage in maintenance window,
+  then --status,genuine scheduled cron2000 and browser login/material acceptance.
+  Fresh HDD and physical code/config/data/PG pair remain mandatory during upgrade;
+  old helper manifests immutable,HTTPS/renewal ownership and existing task flags preserved.
+  Source6aa Context39500936977/Review39500936916 SUCCESS is recorded separately;
+  source CI does not prove a real HTTPS backup,application2000 or live bot activation.
+  Then private bridge/link-only key/receiver,same-session link/revoke,separate opt-in notify.
+  External HTTPS/MiniApp remains later scope. Agent made no server/main/provider changes;0subagents.
 
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -42,6 +42,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
+  latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/connect_cron_contract_owner_20261021.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   effective_addon_deployment:
@@ -101,6 +102,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_backup_https_owner_20261021.json
+- context/runtime/connect_chat_link_update_20261021.md
 - context/runtime/connect_delivery_preflight_20261020.md
 - context/proposals/USTAR_CONNECT_PRIVATE_DELIVERY_PROGRESS_20261020.md
 - context/runtime/cron_release_update_20261020.md

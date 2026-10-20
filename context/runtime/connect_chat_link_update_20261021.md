@@ -1,5 +1,16 @@
 # Следующая поставка: application1905→2000 вместе с cron
 
+**21Oct — HTTPS backup preparation принята; следующий шаг application1905→2000.**
+[Owner receipt](connect_backup_https_owner_20261021.json):pinned6aa/e0d364ab SHA OK,
+backup_HTTPS_compatibility_prepared с exact producer a604fbcd и scheduler a97039a8;
+backup/остановка/units/расписание не запускались и не менялись этим этапом.
+Последующий --check:ready_for_chat_link_update,local1905→2000/theme0202,
+достаточные bytes/inodes,activation=false. Повторять подготовку или старые probes не нужно.
+Дальше тот же root-owned PYZ --upgrade --acknowledge-outage в окно обслуживания,
+затем --status,реальный scheduled cron2000 и browser login/material acceptance.
+Само application update/fresh backup/bridge/link/notify ещё не выполнено.
+Это owner terminal evidence,не независимый SSH;точное время отчёта не предоставлено.
+
 [План](../proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md),
 [принятая cron-only квитанция](connect_cron_contract_owner_20261021.json).
 HTTPS/cron/source baseline уже принят. Старый installer02, HTTPS cutover и
@@ -12,7 +23,7 @@ Review39500936916 SUCCESS,обе PHP869r16/136skips,actualTLS/UID33 и native190
 SHA256:e0d364ab33fb01482c0bedc73833562a567dc221c0682c85009759bca58d82c3.
 [Artifact](https://github.com/cauf1l3d/ustarlms/actions/runs/39500936916/artifacts/12300525979).
 Private root copy проверяется этим hash перед исполнением. Последующие docs heads
-не подменяют tool source. Нативное применение owner ещё pending.
+не подменяют tool source. Owner21Oct принял только backup HTTPS preparation и ready check; application update ещё pending.
 
 Новый отдельный pyz: `build_connect_chat_link_update.py --commit <exactSHA>`.
 Payload фиксирован1e8a8819,baseline830; tool SHA отличается от payload SHA.

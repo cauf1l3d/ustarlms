@@ -1,5 +1,22 @@
 # Активные задачи USTAR
 
+**20Oct18:43МСК: исправление первого TLS-хоста проверено.**
+Source3303069b964cebab111e1fa2b03b0aed01a3ccab,tree8e2277f78fbc549608e92d899a051958bd21dfb8.
+Owner подтвердил отсутствие443-vhosts и plainHTTP200/TLS SSLError на443.
+Новый explicit --first-tls-vhost требует эту topology+live protocol,не снимает
+старый guard по умолчанию. Это намеренный перевод443 с plainHTTP на TLS static
+probe;80-vhosts/Academy config/CA/прочие службы сохранены,rollback возвращаетplain443.
+Context39450474010 SUCCESS;Review39450473975 runtime118724086800 SUCCESS,
+обе source jobs118724087534/118724087832 SUCCESS:796r16/134skips,381PHP/24JS/57templates/99tables,
+browser60mobile/20onboarding/28link/100actor. Actual Apache оба режима PASS,
+включая rollback и потерю reload ACK;artifact12278386111. Local796/31skips PASS.
+[Команды](../runtime/connect_https_tls_probe_20261020_commands.md),
+[квитанция](../runtime/connect_academy_tls_probe_ci_20261020.json).
+Owner apply/browser trust ещё pending;не выдавать source CI за server acceptance.
+Connect DB cumulative unchanged-source job118725551305 ещё running;не gate TLS.
+0subagents;agent не применял изменений на server1. Старые диагностические остановки ниже закрыты.
+
+
 **20Oct18:32МСК: причина TLS refusal установлена владельцем.**
 Apache dump содержит только *:80 (default server1.local и ustar.local);443-vhosts нет.
 Live loopback443:TLS SSLError,plain HTTP200. Новый explicit `--first-tls-vhost`

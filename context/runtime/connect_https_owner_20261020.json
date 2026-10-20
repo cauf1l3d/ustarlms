@@ -77,7 +77,7 @@
     "PHP_bootstrap_or_network_service_changes": false
   },
   "interpretation": "Shared listeners cannot be replaced based on port occupancy alone. Origin parser failure is incomplete diagnostic evidence,not an Academy outage or certificate verdict. Do not assume Caddy terminates Academy TLS. Console source uses a separate8443 server and its own CA.",
-  "next": "filtered443_binding_report_before_any_TLStopology_change",
+  "next": "owner_pinned_first_TLS_check_prepare_browser_acceptance_then_separate_canonical_HTTPS_renewal_bridge",
   "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
   "tests": {
     "targeted_readiness": 12,
@@ -117,5 +117,19 @@
     "Apache_reload_or_vhost_changes": false,
     "guard_interpretation": "parsed vhost map has no wildcard443 group;does not establish specific-IP group versus no443-vhost group",
     "next": "single_filtered_readonly443_binding_type_and_SSL_module_report;no_prepare_or_guard_bypass"
+  },
+  "first_TLS_topology_followup": {
+    "reported_at": "2026-10-20T18:31:51+03:00",
+    "evidence": "owner_terminal_output_not_independent_SSH",
+    "effective_vhost_ports": [
+      80
+    ],
+    "target443_vhosts": 0,
+    "loopback443": {
+      "TLS": "SSLError",
+      "HTTP": "HTTP/1.1 200 OK"
+    },
+    "interpretation": "existing443_listener_serves_global_plain_HTTP;first_TLS_mode_is_intentional_protocol_change",
+    "new_probe_apply": "pending"
   }
 }

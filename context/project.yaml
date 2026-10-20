@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_Apache80_443_and_console8443_resolved;static_TLS_probe52a8a1ca_owner_check_refused_wildcard443;filtered_binding_report_pending;canonical_HTTPS_and_bridge_not_activated;MiniApp_waits_external_HTTPS
+execution_gate: first_TLS_probe3303069b_native_and_source_CI_PASS;owner_apply_browser_pending;canonical_HTTPS_renewal_bridge_not_activated;MiniApp_waits_external_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md

@@ -83,5 +83,67 @@
   "cumulative_unchanged_Moodle_connect_db": {
     "job": 118714944180,
     "status": "pending;source_tree_previously_verified_on1e8a8819"
+  },
+  "first_TLS_vhost_followup": {
+    "source_commit": "3303069b964cebab111e1fa2b03b0aed01a3ccab",
+    "source_tree": "8e2277f78fbc549608e92d899a051958bd21dfb8",
+    "script_sha256": "7b5fd3a62c3b9d9c72bcaf513d96777bf0a00926bcba91ec3ac1740896c78bd7",
+    "owner_observed": "Apache dump only80-vhosts;loopback443 TLS SSLError/plain HTTP200;not an IP-specific443-vhost case",
+    "authorization": "owner20Oct18:38 explicit yes to publish fix to PR106 and run CI",
+    "context_run": 39450474010,
+    "context_job": 118723626546,
+    "context_conclusion": "success",
+    "review_run": 39450473975,
+    "runtime_job": 118724086800,
+    "runtime_conclusion": "success",
+    "native_artifact": 12278386111,
+    "native_modes": [
+      "existing_default_TLS_preserved",
+      "first_TLS_with_plain443_baseline_restored_on_rollback"
+    ],
+    "live_protocol_guard": "actual_sockets_and_real_Apache_module_dump;existing_TLS_refused",
+    "native_markers": [
+      "ACADEMY_NATIVE_TLS_PROBE=PASS; first_TLS=False; SNI/HTTP/CA/rollback; isolated_fixture_only",
+      "ACADEMY_NATIVE_TLS_PROBE=PASS; first_TLS=True; SNI/HTTP/CA/rollback; isolated_fixture_only"
+    ],
+    "local_r16_tests": 796,
+    "local_environment_skips": 31,
+    "local_result": "PASS",
+    "local_initial_environment_error": "system_Python_missing_mcp;test_harness_two_tests_and_test_stdio_import_failed;rerun_in_existing_venv_PASS",
+    "source_jobs": [
+      {
+        "id": 118724087534,
+        "PHP": "8.2",
+        "conclusion": "success"
+      },
+      {
+        "id": 118724087832,
+        "PHP": "8.3",
+        "conclusion": "success"
+      }
+    ],
+    "owner_apply": "pending;only_old_check_refusal_observed;no_new_probe_apply_or_browser_acceptance",
+    "protocol_effect": "explicitly_replace_plain_HTTP443_with_TLS_static_probe;preserve_HTTP80_and_existing_vhosts",
+    "subagents": 0,
+    "source_download_blob_matches_local": true,
+    "CI_r16_tests": 796,
+    "CI_environment_skips": 134,
+    "CI_source_checks": {
+      "PHP_files": 381,
+      "JS_files": 24,
+      "templates": 57,
+      "tables": 99,
+      "result": "PASS"
+    },
+    "browser_synthetic_scenarios": {
+      "mobile": 60,
+      "onboarding": 20,
+      "link": 28,
+      "actor": 100
+    },
+    "cumulative_Connect_DB_job": {
+      "id": 118725551305,
+      "status": "in_progress;not_TLS_gate;Moodle_source_unchanged"
+    }
   }
 }

@@ -1,5 +1,62 @@
 # Stage1: проверка внутреннего HTTPS Академии
 
+## Исправленный режим первого TLS-хоста20Oct18:38МСК
+
+Owner подтвердил:effective dump содержит только *:80,на443 обычный HTTP200,
+TLS handshake — SSLError. Предыдущий helper52a8a1ca закономерно отказал;он не
+поддерживает этот случай. Новый source3303069b964cebab111e1fa2b03b0aed01a3ccab,
+SHA2567b5fd3a62c3b9d9c72bcaf513d96777bf0a00926bcba91ec3ac1740896c78bd7.
+User18:38 разрешил публикацию исправления и CI. Локальный Git commitc82cebaa
+и published3303069b имеют одинаковый tree8e2277f78fbc549608e92d899a051958bd21dfb8.
+
+CI нового source PASS:Context39450474010,Review39450473975 native runtime118724086800
+и обе source jobs118724087534/118724087832.796r16/134skips;оба native Apache режима PASS.
+Это намеренная замена global plain HTTP443 на TLS;HTTP80/Academy config и другие
+службы сохраняются. Флаг не разрешает IP-specific/wildcard443 existing hosts,
+рабочий TLS или недоступный/неожиданный live protocol. No Listen/network changes.
+
+```bash
+sudo -v
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+ustar_tls_tool=$(mktemp /root/ustar-academy-tls.XXXXXXXX.py)
+trap 'rm -f -- "$ustar_tls_tool"' EXIT
+curl -fsSL --connect-timeout 10 --max-time 60 \
+  https://raw.githubusercontent.com/cauf1l3d/ustarlms/3303069b964cebab111e1fa2b03b0aed01a3ccab/scripts/infra/academy_tls_probe.py \
+  -o "$ustar_tls_tool"
+printf '%s  %s\n' \
+  7b5fd3a62c3b9d9c72bcaf513d96777bf0a00926bcba91ec3ac1740896c78bd7 \
+  "$ustar_tls_tool" | sha256sum --check --strict -
+test ! -L /usr/local/sbin/USTAR_ACADEMY_TLS_PROBE_20261020.py
+install -o root -g root -m 600 "$ustar_tls_tool" \
+  /usr/local/sbin/USTAR_ACADEMY_TLS_PROBE_20261020.py
+python3 -I -B /usr/local/sbin/USTAR_ACADEMY_TLS_PROBE_20261020.py \
+  --check --first-tls-vhost
+ROOT
+```
+
+Только если phase=ready_for_TLS_probe:
+
+```bash
+sudo python3 -I -B /usr/local/sbin/USTAR_ACADEMY_TLS_PROBE_20261020.py \
+  --prepare --first-tls-vhost
+```
+
+Ожидается tls_probe_ready. На офисном компьютере/телефоне открыть
+https://ustar.local/__ustar_tls_probe__/ready.html без исключения сертификата.
+Остальные HTTPS paths403 ожидаемы;Академия пока на HTTP80.
+При refused прислать JSON,не редактировать Apache вручную.
+
+```bash
+sudo python3 -I -B /usr/local/sbin/USTAR_ACADEMY_TLS_PROBE_20261020.py --status
+# Только если нужно снять созданный probe:
+sudo python3 -I -B /usr/local/sbin/USTAR_ACADEMY_TLS_PROBE_20261020.py --rollback
+```
+
+Ниже — исторический handoff и диагностическая остановка,не текущие команды.
+
+
 ## Текущая остановка20Oct18:29МСК
 
 Owner --check:download SHA PASS,refused wildcard_TLS_binding_required. Это refusal

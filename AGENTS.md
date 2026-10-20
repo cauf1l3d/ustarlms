@@ -1,5 +1,13 @@
 # USTAR инструкции агентам
 
+**20Oct18:29МСК: owner --check отказал до применения.** Download hash PASS;
+`wildcard_TLS_binding_required` означает отсутствие группы `*:443` в parsed dump.
+Конкретные IP-vhosts и отсутствие443-vhosts пока не различены. Нельзя снимать guard
+или запускать prepare по прежней команде. Нужен только filtered443 binding-type/
+SSL-module report из текущего [runbook](context/runtime/connect_https_tls_probe_20261020_commands.md).
+Apache/config/HTTP/сеть не менялись;rollback не требуется.0subagents.
+
+
 **20Oct17:43МСК: narrow followup завершён.** Apache владеет80/443,пульт8443.
 wwwroot — непрямое выражение;config hash закреплён,PHP/RHS не выполнялись.
 Далее additive static TLS probe для `ustar.local`:отдельный30day leaf от console CA,

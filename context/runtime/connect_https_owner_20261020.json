@@ -8,9 +8,21 @@
   "independent_SSH_measurement": false,
   "narrow_followup": {
     "reported_at": "2026-10-20T17:43:53+03:00",
-    "listener_units": {"80": "apache2.service", "443": "apache2.service", "8443": "ustar-console.service"},
+    "listener_units": {
+      "80": "apache2.service",
+      "443": "apache2.service",
+      "8443": "ustar-console.service"
+    },
     "wwwroot_assignment_count": 1,
-    "wwwroot_features": {"uses_SERVER": false, "uses_ENV": false, "uses_getenv": false, "mentions_HTTP_HOST": false, "mentions_HTTPS": false, "contains_http_literal": false, "contains_https_literal": false},
+    "wwwroot_features": {
+      "uses_SERVER": false,
+      "uses_ENV": false,
+      "uses_getenv": false,
+      "mentions_HTTP_HOST": false,
+      "mentions_HTTPS": false,
+      "contains_http_literal": false,
+      "contains_https_literal": false
+    },
     "config_sha256": "96058835f27c21b99db7bde137677921223a5b0e013b1c6fa3a1a3415ac4361d",
     "services_changed": false,
     "interpretation": "Apache TLS owner resolved;wwwroot is an indirect expression,not evaluated. Prepare additive static TLS probe using existing console CA before any canonical origin change."
@@ -22,8 +34,21 @@
     "probe_sha256_verified": true,
     "origin_reason": "origin_expression",
     "listener_process_labels": "other_for80_443_8443_allowlist_incomplete_not_actual_process_identity",
-    "apache_Academy_vhost": {"ports": [80], "TLS_directive": false, "proxy_8082_directive": true, "certificate_directive": false, "includes_present": true},
-    "default_Caddyfile": {"academy_name_present": false, "loopback_8082_present": false, "import_present": false, "active_config_path_verified": false},
+    "apache_Academy_vhost": {
+      "ports": [
+        80
+      ],
+      "TLS_directive": false,
+      "proxy_8082_directive": true,
+      "certificate_directive": false,
+      "includes_present": true
+    },
+    "default_Caddyfile": {
+      "academy_name_present": false,
+      "loopback_8082_present": false,
+      "import_present": false,
+      "active_config_path_verified": false
+    },
     "console_CA_and_signer_protected_regular_files": true,
     "CA_or_key_contents_read": false,
     "Academy_HTTP_running_and_loopback8082_unchanged": true,
@@ -33,20 +58,36 @@
     "academy_origin_parser": "unavailable_reason_not_reported_by_original_tool",
     "owner_previously_confirmed_origin": "http://ustar.local",
     "moodle_running": true,
-    "moodle_loopback_binding": {"container_port": "80/tcp", "host_port": 8082},
+    "moodle_loopback_binding": {
+      "container_port": "80/tcp",
+      "host_port": 8082
+    },
     "other_moodle_bindings_present": false,
     "docker_network_count": 1,
     "apache2": "active",
     "caddy": "active",
-    "listening_ports": {"80": true, "443": true, "8443": true, "18443": false},
+    "listening_ports": {
+      "80": true,
+      "443": true,
+      "8443": true,
+      "18443": false
+    },
     "activation_ready": false,
     "read_only": true,
     "PHP_bootstrap_or_network_service_changes": false
   },
   "interpretation": "Shared listeners cannot be replaced based on port occupancy alone. Origin parser failure is incomplete diagnostic evidence,not an Academy outage or certificate verdict. Do not assume Caddy terminates Academy TLS. Console source uses a separate8443 server and its own CA.",
-  "next": "verified_additive_Apache_TLS_probe_prepare_and_browser_certificate_acceptance_before_origin_cutover",
+  "next": "filtered443_binding_report_before_any_TLStopology_change",
   "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
-  "tests": {"targeted_readiness": 12, "full_local_r16": 771, "explicit_environment_skips": 31, "result": "PASS", "source_checks": "PASS_PHP_not_run_locally", "new_cases_against_previous_source": "5_expected_failures_observed", "chronology": "regression_checked_against_previous_source_after_implementation_not_claimed_test_first"},
+  "tests": {
+    "targeted_readiness": 12,
+    "full_local_r16": 771,
+    "explicit_environment_skips": 31,
+    "result": "PASS",
+    "source_checks": "PASS_PHP_not_run_locally",
+    "new_cases_against_previous_source": "5_expected_failures_observed",
+    "chronology": "regression_checked_against_previous_source_after_implementation_not_claimed_test_first"
+  },
   "updated_probe_sha256": "994b5701fad01c155c13720d8d7eb16eeaf237423237ad0700c07a8c6c5dfbb2",
   "updated_probe_commit": "10fc2677ef6abf40b7330346a53a2cf1a62210e0",
   "updated_probe_CI": {
@@ -66,5 +107,15 @@
   },
   "Academy_worker_or_network_changes": false,
   "new_source_deployed": false,
-  "subagents": 0
+  "subagents": 0,
+  "TLS_probe_check": {
+    "reported_at": "2026-10-20T18:29:10+03:00",
+    "source_commit": "52a8a1ca965b12e577e0295d64420c2a3e9fcb67",
+    "download_sha256_verified": true,
+    "phase": "refused",
+    "reason": "wildcard_TLS_binding_required",
+    "Apache_reload_or_vhost_changes": false,
+    "guard_interpretation": "parsed vhost map has no wildcard443 group;does not establish specific-IP group versus no443-vhost group",
+    "next": "single_filtered_readonly443_binding_type_and_SSL_module_report;no_prepare_or_guard_bypass"
+  }
 }

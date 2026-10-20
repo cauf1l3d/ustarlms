@@ -1,5 +1,51 @@
 # Stage1: проверка внутреннего HTTPS Академии
 
+## Текущая остановка20Oct18:29МСК
+
+Owner --check:download SHA PASS,refused wildcard_TLS_binding_required. Это refusal
+до сертификата/vhost/reload,не ошибка действующего Apache. Старый --prepare ниже
+не запускать. Отсутствие wildcard443 не отличает IP-specific vhosts от отсутствия
+443-vhosts. Ограничение нельзя просто удалить:нужна проверка прежнего default.
+Один read-only report из установленного pinned helper,без raw адресов/конфигов:
+
+```bash
+sudo python3 - <<'PY'
+import fnmatch
+import importlib.util
+import ipaddress
+import json
+
+path = '/usr/local/sbin/USTAR_ACADEMY_TLS_PROBE_20261020.py'
+spec = importlib.util.spec_from_file_location('ustar_tls_readonly', path)
+m = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(m)
+rows = []
+for binding, hosts in m.Host().vhosts().items():
+    address, port = binding.rsplit(':', 1)
+    if port != '443':
+        continue
+    if address == '*':
+        kind = 'wildcard'
+    else:
+        ip = ipaddress.ip_address(address.strip('[]'))
+        kind = ('loopback_' if ip.is_loopback else 'specific_') + str(ip.version)
+    matches = lambda host: any(fnmatch.fnmatchcase('ustar.local', name)
+        for name in [host['name'], *host['aliases']])
+    rows.append({'binding_type': kind, 'vhosts': len(hosts),
+        'academy_name_matches': any(matches(host) for host in hosts),
+        'default_matches_academy': matches(hosts[0])})
+modules = m.command(['apache2ctl', '-M'], combined=True)
+print(json.dumps({'read_only': True, 'bindings_443': rows,
+    'ssl_module_loaded': b'ssl_module' in modules,
+    'configuration_changed': False}, indent=2))
+PY
+```
+
+После этого — topology-specific решение и regression/native test;не очередной
+полный preflight,не установка receiver/Academy,не смена Listener/network. Внизу
+предыдущий handoff52a8a1ca,его prepare на текущем сервере заблокирован prerequisite.
+
+
 Источник:52a8a1ca965b12e577e0295d64420c2a3e9fcb67.
 SHA256 скрипта:ff1a08f565339429367a2873bf69964aa37d5c47b40b405750cd0dbdc480d62c.
 Готов к выполнению владельцем:Context39447539405 и runtime118713514071 SUCCESS;

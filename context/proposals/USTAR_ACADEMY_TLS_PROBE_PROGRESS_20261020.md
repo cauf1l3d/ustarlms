@@ -71,3 +71,10 @@ Personal review inline,0subagents. No production/service/network action performe
 
 Final handoff context346files PASS;all operator Bash blocks syntax PASS. Only
 context/docs change after executable52a8a1ca;no product/test/workflow changes.
+
+Owner20Oct18:29 download verified,check refused wildcard_TLS_binding_required.
+No cert/vhost/reload/config operation occurred. Existing wildcard-only prerequisite
+is not satisfied;actual parsed topology (specific-IP versus absent443 groups) still
+unknown. No implementation change/guard removal justified yet. Added one narrow
+read-only binding-class/SSL-module snippet with no address/name/config text output.
+Next owner report then smallest topology-specific fix plus native regression.

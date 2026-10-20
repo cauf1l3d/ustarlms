@@ -4,7 +4,7 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: static_Academy_TLS_probe_verified_owner_prepare_pending
+  stage: static_Academy_TLS_check_refused_wildcard443
   development_version: 2026102000
   production_effective_payload: 830d3703e2ffa2f9864900c0d0c58f60049cb0c2
   production_effective_version: 2026101905
@@ -12,7 +12,7 @@ current_connect_checkpoint:
   tables: 99
   local_verification: 791r16_OK_31_environment_skips_20_targeted
   exact_ci_receipt: context/runtime/connect_academy_tls_probe_ci_20261020.json
-  next: owner_check_prepare_browser_trust_before_canonical_cutover
+  next: filtered443_binding_and_SSL_module_report_before_topology_specific_change
   TLS_probe_deployed: false
   bot_activation: pending
 tasks:

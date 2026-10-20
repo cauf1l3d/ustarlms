@@ -62,7 +62,7 @@ spl_autoload_register(function($name){$prefix='local_ustar\\\\connect\\\\';if(st
         p.include.write_text('Header always set X-USTAR-Observed fixture\nCustomLog /dev/null common\n');p.include.chmod(0o644)
         run(['openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','90','-subj','/CN=Native HTTPS fixture CA','-addext','basicConstraints=critical,CA:TRUE','-addext','keyUsage=critical,keyCertSign,cRLSign','-keyout',str(p.old.ca_key),'-out',str(p.old.ca)])
         for path in (p.old.ca,p.old.ca_key):path.chmod(0o600)
-        http=f'''<VirtualHost *:18081>
+        http_site=f'''<VirtualHost *:18081>
 ServerName ustar.local
 ProxyPreserveHost On
 ProxyPass / http://127.0.0.1:18082/
@@ -70,7 +70,7 @@ ProxyPassReverse / http://127.0.0.1:18082/
 Include {p.include}
 </VirtualHost>
 '''
-        p.http.write_text(http);p.http.chmod(0o644);p.http_enabled.symlink_to(p.http)
+        p.http.write_text(http_site);p.http.chmod(0o644);p.http_enabled.symlink_to(p.http)
         default=p.old.enabled.parent/'000-default.conf';default.write_text('<VirtualHost *:18081>\nServerName other.invalid\nDocumentRoot "'+str(login)+'"\n</VirtualHost>\n')
         conf=root/'apache.conf';pid=root/'apache.pid'
         mods=('mpm_event','authz_core','authz_host','alias','headers','dir','ssl','socache_shmcb','proxy','proxy_http')

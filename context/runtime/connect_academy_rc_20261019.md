@@ -1,5 +1,10 @@
 # Connect Academy RC: комплект и следующий этап
 
+20Oct: отдельный operator installer02b0548c подготовлен и проверен;
+[точные команды нового комплекта](connect_academy_install_02b0548c_commands.md),
+[CI-квитанция](connect_academy_installer_ci_20261020.json). Датированный source RC
+ниже сохраняется неизменным и сам по себе установщиком не является.
+
 Источник:830d3703e2ffa2f9864900c0d0c58f60049cb0c2,tree08a7bfdcdfd7b762b7f7d60a21007c9fdc0ba737. [Полный CI](https://github.com/cauf1l3d/ustarlms/actions/runs/39305805820) завершился SUCCESS,все9jobs;[context](https://github.com/cauf1l3d/ustarlms/actions/runs/39305805813) SUCCESS. [Точная квитанция](connect_academy_rc_ci_20261019.json). Native Connect121/611+6concurrency и paired93→99→93;две Moodle suites288/1266 PASS. Проверен скачанный recovery artifact:26файлов,baseline/restored metadata и schema совпадают,private snapshots отсутствуют. Локальный archive hash совпадает с CI.
 
 ## Состав

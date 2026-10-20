@@ -1,5 +1,14 @@
 # Активные задачи USTAR
 
+**Текущая точка20Oct04:11МСК:** installer02b0548c проверен Context39351249166/
+Review39351249243 SUCCESS. Local743/31skips;CI743/134skips,actual UID33/root-group,
+native121/611+6concurrency+paired93→99→93 и installer SQL/schema guards PASS.
+[Команды](../runtime/connect_academy_install_02b0548c_commands.md),
+[receipt](../runtime/connect_academy_installer_ci_20261020.json).
+Owner execution/receipt pending;после него private bridge/direct-chat account
+link/controlled notify. Prod/main/receiver/network не менялись;0subagents.
+Installer/source RC не повторять по старым checkpoints ниже.
+
 **Текущая точка22:01МСК:** RC830d3703/FullCI39305805820 и Context39305805813 SUCCESS;[receipt](../runtime/connect_academy_rc_ci_20261019.json),[handoff](../runtime/connect_academy_rc_20261019.md). Package552/99,a67a08d8...;native121/611+6concurrency+paired93→99→93;две Moodle suites288/1266 PASS. Полный RC закрыт,не повторять по прежним строкам. Остаток:guarded addon installer/recovery с fresh paired backup;private bridge и verified account link/notification. Существующий link требует Mini App;если нужен раньше public HTTPS,нужен отдельный direct-chat путь с canonical identity и вторым Academy confirm. Production/main/network не менялись,0subagents. Далее история.
 
 **Текущий этап19Oct:** preflight уже получен приватно. Owner21:35MSK разрешает code/tests без full server report/private ancestry. [Source RC и paired recovery](../proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md). Новый native full-RC pending;candidate552/99 не deployment,Mini App ждёт HTTPS. Не повторять сбор или установку receiver.0subagents.
@@ -64,5 +73,9 @@ Owner поручил подготовить установку после уто
 [инструкция](../runtime/connect_academy_install_20261020.md). Two-addon transaction,
 fresh encrypted HDD + cold code/config/data/physicalPG pair,upgrade/repeat,
 pre-release automatic paired recovery and explicit late discard consent.
-Package/CI verification in progress;no production/main/receiver/network changes.
+Installer02b0548c verified:Context39351249166/Review39351249243 SUCCESS;743r16,
+actual UID33/root-group,native121/611+6concurrency+paired93to99to93 and SQL/schema
+guards PASS. [Точные команды](../runtime/connect_academy_install_02b0548c_commands.md),
+[квитанция](../runtime/connect_academy_installer_ci_20261020.json).
+Owner execution pending;no production/main/receiver/network changes.
 No subagents. Дальше owner receipt,private bridge/direct-chat link/notify acceptance.

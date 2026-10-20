@@ -666,8 +666,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2347,
-      "sha256": "134e396ae14eeff0ea69886fe8ccd0ff2e66a3bef9905fbb065d234faeb06d38"
+      "size": 2374,
+      "sha256": "e459ffb57621598835bee628359cd00fee80938875b3e5b6ee6126c85b7e393b"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md",
@@ -792,8 +792,8 @@
     {
       "path": "context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md",
       "domain": "proposals",
-      "size": 3207,
-      "sha256": "92c4b4fe3bdf1c53ff501386367cf4cfa759aa6c7e48d5216e571bae03aab4b7"
+      "size": 3639,
+      "sha256": "48553e79c8693e0e9538d02deed15e9b8bce0a9c6a0febe74dd534db01391fec"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md",
@@ -888,8 +888,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 24382,
-      "sha256": "9b41f2bc0ba2829a39eeba603385e30bbb12500d0e4f17361d9754ac9f9d8b79"
+      "size": 24425,
+      "sha256": "7c5af4118eecc769e607f86b408237c1ef57a54b7f431b3fe1671a4bbcaafb27"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -930,8 +930,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 159268,
-      "sha256": "bb952849e37e765310a15cf0072d8d74168fff5a653c26f004593e4f10daae78"
+      "size": 159837,
+      "sha256": "c5d3623220744586d3b985f3e1607f3f35a37e6bc092cc520426c7bb9870af12"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -942,8 +942,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 8417,
-      "sha256": "754c44e225112faa77eb2b15d21595b1704cba7bcfa5e4680c422910c96f3e7d"
+      "size": 8602,
+      "sha256": "88f1d8f28de25ab40d75c1a41b655b7a52fa22ae2a397afee880a5bd98769837"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1038,8 +1038,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 67365,
-      "sha256": "3dfb25bdaa6f2c5c48776e26a640ead87ce551e6d82a69f926b7e118ec406f03"
+      "size": 68185,
+      "sha256": "99fc3f7e998541c17283aad26c975893050c35373ecccc0ee6a172f4175a3cf6"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -1078,10 +1078,22 @@
       "sha256": "6cec3c0ac4f473a49af0ed3625eaad80cb2c18e8366f0d7f4659db6b24058fdf"
     },
     {
+      "path": "context/runtime/connect_academy_install_02b0548c_commands.md",
+      "domain": "runtime",
+      "size": 3656,
+      "sha256": "ad0a152303d0e9d7b7d8928ce4f02d78039e6041c38a20405e75902df0c21da6"
+    },
+    {
       "path": "context/runtime/connect_academy_install_20261020.md",
       "domain": "runtime",
       "size": 8308,
       "sha256": "3ef1ac56405752613930de0f5eab263b1d3cdca873e2c0a1cb10b6b6b879b04b"
+    },
+    {
+      "path": "context/runtime/connect_academy_installer_ci_20261020.json",
+      "domain": "runtime",
+      "size": 3776,
+      "sha256": "ea7837663bf705894ea06f61c4f97951e2ab6f61f653be0e5760e0822e1de27c"
     },
     {
       "path": "context/runtime/connect_academy_preflight_20261019.md",
@@ -1098,8 +1110,8 @@
     {
       "path": "context/runtime/connect_academy_rc_20261019.md",
       "domain": "runtime",
-      "size": 6067,
-      "sha256": "fae0a27419667fc4d4e6a24958fe8be7ef48591ba3b9471a5af81ab6380b5d7d"
+      "size": 6503,
+      "sha256": "182b7adb139c37a047d8da84d01927ea91a00d18285320122ee10b4a861ee9be"
     },
     {
       "path": "context/runtime/connect_academy_rc_ci_20261019.json",
@@ -1998,8 +2010,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 14788,
-      "sha256": "c9e3f599274ecba60de051441a5c03c448285481eb3d89ba353e014071f44444"
+      "size": 15784,
+      "sha256": "557112065231e9774d5f9c6689df0b9d095324928b8f4b4977c4d01453f1dd3d"
     },
     {
       "path": "context/tasks/backlog.yaml",

@@ -1,5 +1,17 @@
 # Реестр кода, проверок и deployment evidence
 
+## 20Oct04:11МСК — operator installer verified; owner execution pending
+
+Installer02b0548c/tree3dcbac8d,Context39351249166/Review39351249243 SUCCESS.
+Archive17978054B/SHA53d9983b9e437bc9b4623bac83c72564c35a772ce3cc292b55efe8a986be1d13
+matches CI job118395678244;payload830 remains unchanged. Local743r16/31skips,
+CI743/134skips,actual UID33/root-group PASS;native121/611+6concurrency,93to99to93
+and installer SQL/task/column/index verification PASS. [Receipt](connect_academy_installer_ci_20261020.json),
+[exact operator commands](connect_academy_install_02b0548c_commands.md).
+Fresh HDD+cold pair and outage occur only when owner executes explicit upgrade.
+No production/network/receiver changes or main merge;0subagents. Bridge/account
+link/controlled delivery and Mini App external HTTPS remain separate gates.
+
 ## 19Oct22:01МСК — Academy source RC verified
 
 Source830d3703/tree08a7bfdc,FullRC39305805820 all9jobs SUCCESS,Context39305805813 SUCCESS. [Exact receipt](connect_academy_rc_ci_20261019.json),[handoff](connect_academy_rc_20261019.md). Native Connect121/611+6concurrency,accepted baseline93→candidate99→restored93;downloaded26-file evidence checked,schema/metadata restored,no snapshot files. Moodle5.1.8/PHP8.3.33/PG16.15 and historical5.1.1/PHP8.2.30/PG16.10 both288/1266 PASS. CI artifact12214182488;source archive17744353B/SHAa67a08d8e5509c580043a6752e73964cb8aed72c5d1732647a9d3c2e2379113e matches local build. First upload permission issue fixed by private snapshot subshell;no checks weakened. Personal source review,0subagents. Production/main/network unchanged;source package has no installer. Current link needs Mini App,so account-link/notify activation and guarded addon update remain explicit gates. Full private server report excluded.

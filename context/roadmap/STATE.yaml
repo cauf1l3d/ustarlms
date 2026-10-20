@@ -1,14 +1,15 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: connect_academy_operator_installer_verification
-stage_label: Проверка управляемого addon installer; production ещё не обновлялся
-current_activity: 'Source830d3703/tree08a7bfdc:FullRC39305805820 all9jobs SUCCESS and Context39305805813
-  SUCCESS. Native Connect121tests/611assertions,6concurrency,paired93to99to93 and downloaded evidence verified.
-  Both Moodle suites288tests/1266assertions PASS. Reproducible source package552files/a67a08d8... matches CI.
-  Full private server report and private commits excluded. No deployment claimed.
-  Next guarded addon upgrade/recovery with fresh paired backup,private bridge and verified account link/notify.
-  Current link uses Mini App;direct-chat path before public HTTPS still needs implementation.'
+stage: connect_academy_operator_installer_verified_owner_execution_pending
+stage_label: Установщик проверен; ожидается выполнение владельцем на сервере
+current_activity: 'Installer02b0548c/tree3dcbac8d:Context39351249166 and Review39351249243 SUCCESS.
+  Local743r16/31skips;CI743r16/134skips plus actual UID33/root-group PASS.
+  Native121tests/611assertions,6concurrency,93to99to93 and installer SQL/schema guards PASS.
+  Package17978054B/SHA53d9983b... matches CI;fixed Moodle payload830 unchanged.
+  SourceRC full matrix evidence retained. Owner execution/receipt still pending;no production deployment claimed.
+  Then private bridge,verified direct-chat account link and controlled notifications;MiniApp waits HTTPS.
+  No private report,main merge,network or receiver changes;0subagents.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -76,6 +77,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_academy_install_02b0548c_commands.md
+- context/runtime/connect_academy_installer_ci_20261020.json
 - context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md
 - context/runtime/connect_academy_install_20261020.md
 - context/runtime/connect_academy_rc_20261019.md

@@ -1,5 +1,11 @@
 # Connect Academy operator installer
 
+Completed02b0548c:Context39351249166/Review39351249243 SUCCESS. Local743r16/31skips,
+CI743/134skips,actual UID33/root-group,native121/611+6concurrency+93to99to93 and
+native SQL/task/column/index guard verification PASS. [Receipt](../runtime/connect_academy_installer_ci_20261020.json),
+[operator commands](../runtime/connect_academy_install_02b0548c_commands.md).
+This closes installer preparation;owner execution remains pending.
+
 Continuation of the owner-approved source RC and request to prepare installation.
 Scope: install the already verified830d3703 addon payload on the accepted e1d57f5b
 baseline. Receiver, Connect activation and external HTTPS remain separate.

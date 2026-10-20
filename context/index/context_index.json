@@ -1152,14 +1152,14 @@
     {
       "path": "context/runtime/connect_https_owner_20261020.json",
       "domain": "runtime",
-      "size": 2073,
-      "sha256": "9a881b4d7a1b12652058ebc3d4dd965ff4a70397b153f7003ec1a41ec60a12d4"
+      "size": 2722,
+      "sha256": "f40e7e59570e892fbfbf414ef92e895bbedca197b6ca7912a1d4fed4c8522b8e"
     },
     {
       "path": "context/runtime/connect_https_preparation_20261020.md",
       "domain": "runtime",
-      "size": 7657,
-      "sha256": "8dd45723e15b0c569644592a3107af5262eaf62617cd619f3e45f6e1b248f143"
+      "size": 8820,
+      "sha256": "67e9ba4bb6ddaeaef83db313820d00face3114e958ae3f8567712504636e8ce9"
     },
     {
       "path": "context/runtime/connect_owner_priority_20261019.json",

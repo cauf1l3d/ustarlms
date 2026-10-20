@@ -25,6 +25,22 @@
   "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
   "tests": {"targeted_readiness": 12, "full_local_r16": 771, "explicit_environment_skips": 31, "result": "PASS", "source_checks": "PASS_PHP_not_run_locally", "new_cases_against_previous_source": "5_expected_failures_observed", "chronology": "regression_checked_against_previous_source_after_implementation_not_claimed_test_first"},
   "updated_probe_sha256": "994b5701fad01c155c13720d8d7eb16eeaf237423237ad0700c07a8c6c5dfbb2",
+  "updated_probe_commit": "10fc2677ef6abf40b7330346a53a2cf1a62210e0",
+  "updated_probe_CI": {
+    "context_run": 39439190761,
+    "context_conclusion": "success",
+    "review_run": 39439190787,
+    "runtime_job": 118684215096,
+    "runtime_conclusion": "success",
+    "source_PHP83_job": 118684215689,
+    "source_PHP83_conclusion": "success",
+    "source_PHP82_job": 118684215798,
+    "source_PHP82_conclusion": "success",
+    "CI_r16_tests": 771,
+    "CI_explicit_environment_skips": 134,
+    "native_DB_job": 118685510635,
+    "remaining_results": "native_cumulative_PR_pipeline_pending_unchanged_Moodle_tree_previously_verified_on1e8a8819"
+  },
   "Academy_worker_or_network_changes": false,
   "new_source_deployed": false,
   "subagents": 0

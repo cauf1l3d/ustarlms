@@ -18,9 +18,30 @@ PR103 использует собственный8443 и CA в `/etc/ustar-conso
 process names/binding classes без IP/PID,static Academy virtual-host metadata,
 default Caddyfile hints и CA metadata без чтения key/cert contents. Apache/Caddy
 не запускаются для разбора;imports/env не исполняются. Это статические подсказки,
-не полный разбор effective webserver configuration. Новая точная команда будет
-закреплена после публикации helper;до неё старый блок ниже остаётся историей
-уже выполненного owner шага,не просьбой повторить прежний неполный отчёт.
+не полный разбор effective webserver configuration. Новая команда ниже использует
+source10fc2677ef6abf40b7330346a53a2cf1a62210e0 и SHA256
+994b5701fad01c155c13720d8d7eb16eeaf237423237ad0700c07a8c6c5dfbb2.
+12targeted/771local r16 PASS(31explicit skips);проверяется только расширение
+read-only инструмента,а не повторная приёмка Академии или новый TLS deployment.
+
+```bash
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+ustar_https_probe=$(mktemp /root/ustar-connect-https.XXXXXXXX.py)
+trap 'rm -f -- "$ustar_https_probe"' EXIT
+curl -fsSL --connect-timeout 10 --max-time 60 \
+  https://raw.githubusercontent.com/cauf1l3d/ustarlms/10fc2677ef6abf40b7330346a53a2cf1a62210e0/scripts/infra/connect_https_readiness.py \
+  -o "$ustar_https_probe"
+printf '%s  %s\n' 994b5701fad01c155c13720d8d7eb16eeaf237423237ad0700c07a8c6c5dfbb2 "$ustar_https_probe" | sha256sum --check --strict -
+python3 -I -B "$ustar_https_probe" --check --details
+ROOT
+```
+
+Передать только этот фильтрованный JSON. Для выбора существующего TLS listener
+нужны `listeners.owners`,для origin refusal — `academy_origin.reason_code`.
+Если статические virtual-host сведения недоступны,не разрешать изменение443 по
+догадке. Старый блок ниже — история уже выполненной первичной проверки.
 
 ## Уже готово в коде,не активировано
 
@@ -33,7 +54,7 @@ default Caddyfile hints и CA metadata без чтения key/cert contents. Ap
   Academy-сессию и подтверждает связь. Пароли в чат не вводятся.
 - Доставка уведомлений остаётся выключенной до HTTPS,связи и согласия пользователя.
 
-## Следующий серверный шаг
+## Выполненная первичная проверка
 
 Запустить только `connect_https_readiness.py --check` из source
 `1e8a8819f50785ebb4fb2640eeb9386c969d59d1`.

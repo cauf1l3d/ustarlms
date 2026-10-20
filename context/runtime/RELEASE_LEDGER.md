@@ -1,5 +1,21 @@
 # Реестр кода, проверок и deployment evidence
 
+## 2026-10-20 — private chat-link delivery preflight4d70de5c
+
+Source4d70de5c verified:Context39470413912/Review39470413976 SUCCESS.
+835r16/135CI skips on PHP8.2/8.3;local835/32skips. Actual root fixture14tests
+including UID33 config ownership PASS. Exact pyz SHA67d3d13a local/CI match,
+artifact12285519274. Chromium60mobile/20onboarding/28link/100actor PASS;
+fixed existing test race with actual-option condition wait plus250ms fixture delay,
+kept literal-XSS/no-img assertions and product JS unchanged. Initial fda8ff35
+8.3 failure retained in receipt,not declared successful. Self-review metadata
+compatibility fix compares captured HTTPS uid/gid/mode+hash,never asks chown.
+Native Connect124/629+6concurrency/paired rollback/SQL guards/HTTPS cookie PASS.
+[Exact owner command](connect_delivery_preflight_20261020.md),
+[CI receipt](connect_delivery_preflight_ci_20261020.json).
+Owner read-only delivery preflight pending. No addon/bridge/receiver activation,
+production writes,keys/token reads,live Telegram or subagents by agent.
+
 ## 2026-10-20 20:38МСК — cron native acceptance
 
 Owner confirmed two genuine scheduled completions17:36:03Z/17:37:23Z,exit0,

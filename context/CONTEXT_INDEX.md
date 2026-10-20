@@ -1,6 +1,9 @@
 # Индекс текущего контекста
 
 **20Oct20:38МСК — cron восстановлен и принят владельцем.**
+Preflight `4d70de5c` готов:835r16/135CI skips,14тестов preflight и настоящий UID33 на CI-host,
+оба source PHP8.2/8.3 и runtime SUCCESS. Owner delivery check ожидается;поставка
+chat-link/bridge ещё не применялась. Инструкция и exact hash по ссылке ниже.
 Два настоящих scheduled-прохода завершились17:36:03Z и17:37:23Z:exit0,
 без новых failures/USTAR errors. Task log4767930→4768022→4768051,adhoc2→0,
 overdue107→18;2 прежних failed сохранены. Старый wrapper error17:33Z — история,

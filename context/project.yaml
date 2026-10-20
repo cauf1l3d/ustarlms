@@ -41,4 +41,4 @@ current_work:
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
   plan: context/proposals/USTAR_CONNECT_PRIVATE_DELIVERY_PROGRESS_20261020.md
   runbook: context/runtime/connect_delivery_preflight_20261020.md
-  CI_receipt: context/runtime/cron_release_update_20261020.json
+  CI_receipt: context/runtime/connect_delivery_preflight_ci_20261020.json

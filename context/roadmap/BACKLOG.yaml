@@ -10,8 +10,8 @@ current_connect_checkpoint:
   production_effective_version: 2026101905
   addons_files: 552
   tables: 99
-  local_verification: cron821_r16_OK_31_environment_skips;new_delivery_profile_checks_pending
-  exact_ci_receipt: context/runtime/cron_release_update_20261020.json
+  local_verification: delivery835_r16_OK_32_local_skips_135_CI_skips;actual_UID33_and14module_tests_PASS
+  exact_ci_receipt: context/runtime/connect_delivery_preflight_ci_20261020.json
   next: chat_link_delivery_baseline_and_HTTPS_cron_transport_contracts_before_guarded_update
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true

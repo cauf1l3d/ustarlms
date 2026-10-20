@@ -24,6 +24,9 @@ current_activity: >-
   Owner2038MSK accepted two scheduled successes1736/1737UTC,exit0/no new failures;
   adhoc0,overdue18,2 historical failed;task log4768051. Version mismatch1733UTC historical.
   Future release preflight must pin updated producer hash and pair its target version.
+  Exact delivery preflight4d70de5c pins installed830/local1905,checks source/SQL
+  and cron/HTTPS/transport contracts with no PHP bootstrap or writes. Both source
+  jobs835/135skips and actual14module/UID33 host fixture PASS;owner check pending.
   Do not repeat probe/receiver/Academy installation or broad fact collection.
   Next: private bridge/scoped keys, chat-link candidate delivery,
   two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.

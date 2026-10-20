@@ -672,14 +672,14 @@
     {
       "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md",
       "domain": "proposals",
-      "size": 5987,
-      "sha256": "a3f85f953bcd4bd04756650ac20b9e849a58eeda8dfa3a997c508149271d522e"
+      "size": 7085,
+      "sha256": "bce80159c9c9670f68a9e4cd07f69fadd7a778456101260cad3869e7fe34bfb2"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md",
       "domain": "proposals",
-      "size": 5251,
-      "sha256": "3e7ec8f5e792d474a189e4725bf0ad57a110acacc022765668cc2567cd728216"
+      "size": 5833,
+      "sha256": "4fa4787d3be9214386852e9bca873b7273e47fb35c15403c01b6f99393e39e6c"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md",
@@ -2070,8 +2070,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 20259,
-      "sha256": "043b700441156d3aac621e888cd45cd86a6912cae4dbba92f49410c9da192567"
+      "size": 21272,
+      "sha256": "ce82f524e462a32d030410a315389d2fd5be6a8e1a814546f0d6602450c9e751"
     },
     {
       "path": "context/tasks/backlog.yaml",

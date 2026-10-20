@@ -62,6 +62,26 @@ class Vhosts(unittest.TestCase):
             x.assert_additive(before, after, '/managed/probe.conf', 443)
         with self.assertRaises(x.Refusal): x.assert_name_available(x.parse_vhosts(BASE.replace('www.other.invalid', '*.local')), 443)
 
+    def test_first_TLS_requires_explicit_mode_and_no_existing_port_bindings(self):
+        before = x.parse_vhosts(BASE.split('*:443')[0])
+        with self.assertRaises(x.Refusal): x.assert_name_available(before, 443)
+        x.assert_name_available(before, 443, first_tls=True)
+        for address in ('*', '127.0.0.1', '[::1]'):
+            occupied = x.parse_vhosts(BASE.replace('*:443', address + ':443'))
+            with self.assertRaises(x.Refusal):
+                x.assert_name_available(occupied, 443, first_tls=True)
+
+    def test_first_TLS_addition_preserves_all_HTTP_hosts_and_allows_only_one_new_binding(self):
+        before = x.parse_vhosts(BASE.split('*:443')[0])
+        added = '*:443 ustar.local (/managed/probe.conf:1)\n'
+        after = x.parse_vhosts(BASE.split('*:443')[0] + added)
+        x.assert_additive(before, after, '/managed/probe.conf', 443, first_tls=True)
+        for bad in (BASE.split('*:443')[0].replace('other.invalid', 'changed.invalid') + added,
+                    BASE.split('*:443')[0] + added.replace('ustar.local', 'other.invalid'),
+                    BASE.split('*:443')[0] + added + '*:8443 extra.invalid (/other:1)\n'):
+            with self.assertRaises(x.Refusal):
+                x.assert_additive(before, x.parse_vhosts(bad), '/managed/probe.conf', 443, first_tls=True)
+
     def test_probe_vhost_has_no_backend_HSTS_PHP_or_new_listener(self):
         paths = x.Paths(Path('/fixture'))
         text = x.render_vhost(paths, Path('/private/server.crt'), Path('/private/server.key'), 443)
@@ -125,6 +145,35 @@ class Transaction(unittest.TestCase):
         self.p.ca_key.write_text('PRIVATE_SENTINEL_CA_KEY'); self.p.ca_key.chmod(0o600)
         self.host = FakeHost(self.p)
         self.manager = x.Manager(self.p, self.host, uid=os.geteuid(), expected_config=hashlib.sha256(self.original).hexdigest())
+
+    def first_tls_fixture(self):
+        baseline = BASE.split('*:443')[0]
+        def config():
+            return x.parse_vhosts(baseline + (
+                f'*:443 ustar.local ({self.p.enabled}:1)\n' if self.p.enabled.is_symlink() else ''))
+        self.host.test_config = config
+        self.host.loaded = config()
+        self.host.first_tls_ready = lambda: True
+        self.manager.first_tls = True
+        return config()
+
+    def test_first_TLS_prepare_repeat_and_rollback(self):
+        before = self.first_tls_fixture()
+        self.assertEqual('tls_probe_ready', self.manager.prepare()['phase'])
+        self.assertTrue(self.manager.load()['first_tls'])
+        self.assertTrue(self.manager.prepare()['first_TLS_vhost'])
+        self.manager.first_tls = False  # Restarted CLI can verify/rollback from durable mode.
+        self.assertEqual('tls_probe_ready', self.manager.prepare()['phase'])
+        self.assertEqual('rolled_back', self.manager.rollback()['phase'])
+        self.assertEqual(before, self.host.loaded)
+        self.assertEqual(self.original, self.p.config.read_bytes())
+
+    def test_first_TLS_live_plain_HTTP_prerequisite_refuses_before_artifacts(self):
+        self.first_tls_fixture()
+        self.host.first_tls_ready = lambda: False
+        with self.assertRaises(x.Refusal): self.manager.prepare()
+        self.assertFalse(self.p.site.exists())
+        self.assertNotIn('reload', self.host.calls)
 
     def test_private_CLI_umask_keeps_static_probe_readable_by_Apache(self):
         previous = os.umask(0o077)

@@ -137,8 +137,12 @@ def parse_vhosts(raw):
     return result
 
 
-def assert_name_available(before, port):
-    require('*:' + str(port) in before, 'wildcard_TLS_binding_required')
+def assert_name_available(before, port, *, first_tls=False):
+    bindings = [key for key in before if key.rsplit(':', 1)[1] == str(port)]
+    if first_tls:
+        require(not bindings, 'first_TLS_requires_no_existing_vhosts')
+    else:
+        require('*:' + str(port) in before, 'wildcard_TLS_binding_required')
     for binding, rows in before.items():
         if binding.rsplit(':', 1)[1] != str(port): continue
         for row in rows:
@@ -146,10 +150,14 @@ def assert_name_available(before, port):
                     'existing_Academy_TLS_name')
 
 
-def assert_additive(before, after, source, port):
-    assert_name_available(before, port)
-    require(set(before) == set(after), 'apache_bindings_changed')
+def assert_additive(before, after, source, port, *, first_tls=False):
+    assert_name_available(before, port, first_tls=first_tls)
     target = '*:' + str(port)
+    require(set(after) == set(before) | ({target} if first_tls else set()), 'apache_bindings_changed')
+    if first_tls:
+        new = after[target]
+        require(len(new) == 1 and new[0]['name'] == 'ustar.local'
+                and new[0]['source'] == source and not new[0]['aliases'], 'unexpected_first_TLS_vhost')
     for binding, rows in before.items():
         new = after[binding]
         if binding == target:
@@ -229,6 +237,27 @@ class Host:
             connection.request('HEAD', '/login/index.php', headers={'Host': 'ustar.local', 'Connection': 'close'})
             return connection.getresponse().status
         finally: connection.close()
+    def first_tls_ready(self):
+        # A listening port without a vhost may be serving the global plain HTTP site.
+        # Refuse existing TLS, connection errors and unknown protocol responses.
+        require(b'ssl_module' in command(['apache2ctl', '-M'], combined=True), 'SSL_module_required')
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+        try:
+            with socket.create_connection(('127.0.0.1', self.HTTPS_PORT), timeout=5) as raw:
+                with context.wrap_socket(raw, server_hostname='ustar.local'):
+                    return False
+        except ssl.SSLError as error:
+            if error.reason != 'WRONG_VERSION_NUMBER':
+                return False
+        connection = http.client.HTTPConnection('127.0.0.1', self.HTTPS_PORT, timeout=5)
+        try:
+            connection.request('HEAD', '/', headers={'Host': 'ustar.local', 'Connection': 'close'})
+            return connection.getresponse().status == 200
+        finally:
+            connection.close()
+
     def authority(self, ca, key):
         command(['openssl', 'x509', '-in', str(ca), '-noout', '-checkend', str(31 * 86400)])
         text = command(['openssl', 'x509', '-in', str(ca), '-noout', '-text'])
@@ -263,9 +292,10 @@ class Host:
 
 
 class Manager:
-    def __init__(self, paths=None, host=None, *, uid=0, expected_config=EXPECTED_CONFIG):
+    def __init__(self, paths=None, host=None, *, uid=0, expected_config=EXPECTED_CONFIG, first_tls=False):
         self.p, self.host = paths or Paths(), host or Host()
         self.uid, self.expected_config = uid, expected_config
+        self.first_tls = first_tls
 
     def config(self):
         require(digest(read_file(self.p.config)) == self.expected_config, 'Academy_config_changed')
@@ -301,16 +331,18 @@ class Manager:
                     'unsafe_Apache_directory')
         units = self.host.units()
         before = self.host.test_config()
-        assert_name_available(before, self.host.HTTPS_PORT)
+        assert_name_available(before, self.host.HTTPS_PORT, first_tls=self.first_tls)
+        if self.first_tls:
+            require(self.host.first_tls_ready(), 'first_TLS_plain_HTTP_prerequisite_failed')
         require(any(row['name'] == 'ustar.local' for binding, rows in before.items()
                     if binding.rsplit(':', 1)[1] == str(self.host.HTTP_PORT) for row in rows), 'Academy_HTTP_vhost_missing')
         status = self.host.http_status()
         require(status in (200, 301, 302, 303), 'Academy_HTTP_unavailable')
         ca = self.host.authority(self.p.ca, self.p.ca_key)
-        return {'units': units, 'before': before, 'http_status': status, 'CA_fingerprint': ca}
+        return {'units': units, 'before': before, 'http_status': status, 'CA_fingerprint': ca, 'first_tls': self.first_tls}
 
     def public(self, state):
-        return {'phase': state['phase'], 'probe_url': 'https://ustar.local' + PROBE_PATH,
+        return {'phase': state['phase'], 'first_TLS_vhost': state.get('first_tls', False), 'probe_url': 'https://ustar.local' + PROBE_PATH,
                 'Academy_origin_changed': False, 'HTTP_redirect_enabled': False,
                 'network_or_other_services_changed': False,
                 **{key: state[key] for key in ('CA_fingerprint', 'leaf') if key in state}}
@@ -327,7 +359,8 @@ class Manager:
         body = read_file(self.p.health, self.uid)
         require(digest(body) == state['health_sha256'], 'owned_health_changed')
         self.config()
-        assert_additive(state['before'], self.host.vhosts(), str(self.p.enabled), self.host.HTTPS_PORT)
+        assert_additive(state['before'], self.host.vhosts(), str(self.p.enabled), self.host.HTTPS_PORT,
+                        first_tls=state.get('first_tls', False))
         require(self.host.units() == state['units'] and self.host.http_status() == state['http_status'], 'shared_services_or_HTTP_changed')
         deadline = time.monotonic() + 8
         while True:
@@ -367,7 +400,8 @@ class Manager:
                 atomic(self.p.site, text, 0o644)
                 os.symlink(str(self.p.site), self.p.enabled)
                 sync_directory(self.p.enabled.parent)
-                assert_additive(baseline['before'], self.host.test_config(), str(self.p.enabled), self.host.HTTPS_PORT)
+                assert_additive(baseline['before'], self.host.test_config(), str(self.p.enabled), self.host.HTTPS_PORT,
+                                first_tls=baseline['first_tls'])
                 self.config()
                 state['reload_attempted'] = True; self.save(state)
                 self.host.reload()
@@ -404,8 +438,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     modes = parser.add_mutually_exclusive_group()
     for mode in ('check', 'prepare', 'status', 'rollback'): modes.add_argument('--' + mode, action='store_true')
+    parser.add_argument('--first-tls-vhost', action='store_true',
+                        help='Explicitly replace plain HTTP on 443 with the first TLS vhost; requires no existing 443 vhosts')
     args = parser.parse_args(argv)
-    if not any(vars(args).values()):
+    if not any((args.check, args.prepare, args.status, args.rollback)):
         print('{"phase":"plan_only","host_access":false,"next":"--check then --prepare creates only a TLS probe"}')
         return 0
     try:
@@ -413,10 +449,10 @@ def main(argv=None):
         os.umask(0o077)
         def stop(_signal, _frame): raise KeyboardInterrupt()
         for sig in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT): signal.signal(sig, stop)
-        manager = Manager()
+        manager = Manager(first_tls=args.first_tls_vhost)
         if args.check:
             report = manager.check()
-            result = {'phase': 'ready_for_TLS_probe', 'CA_fingerprint': report['CA_fingerprint'], 'host_configuration_changed': False}
+            result = {'phase': 'ready_for_TLS_probe', 'CA_fingerprint': report['CA_fingerprint'], 'host_configuration_changed': False, 'first_TLS_vhost': report['first_tls']}
         elif args.prepare: result = manager.prepare()
         elif args.rollback: result = manager.rollback()
         else: result = manager.status()

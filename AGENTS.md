@@ -1,5 +1,17 @@
 # USTAR инструкции агентам
 
+**20Oct18:32МСК: причина TLS refusal установлена владельцем.**
+Apache dump содержит только *:80 (default server1.local и ustar.local);443-vhosts нет.
+Live loopback443:TLS SSLError,plain HTTP200. Новый explicit `--first-tls-vhost`
+разрешает только этот случай:нет никаких443-vhosts,ssl_module загружен,живой
+TLS handshake получает WRONG_VERSION_NUMBER и plain HEAD443 возвращает200.
+Это намеренный перевод443 с plain HTTP на TLS static probe;не сохранение старого
+plain443 default. Все80-vhosts/config/CA/службы сохраняются,rollback возвращает443
+к прежнему plain HTTP. Старый wildcard-only режим по умолчанию сохранён.
+Новый код/native CI ещё pending;старый52a8a1ca prepare не использовать.
+0subagents;agent не подключался к server1.
+
+
 **20Oct18:29МСК: owner --check отказал до применения.** Download hash PASS;
 `wildcard_TLS_binding_required` означает отсутствие группы `*:443` в parsed dump.
 Конкретные IP-vhosts и отсутствие443-vhosts пока не различены. Нельзя снимать guard

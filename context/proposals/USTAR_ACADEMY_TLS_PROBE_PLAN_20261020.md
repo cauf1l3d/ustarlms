@@ -90,3 +90,20 @@ Apache runtime118713514071 SUCCESS.792r16/134CI skips;21targeted local.
 [CI receipt](../runtime/connect_academy_tls_probe_ci_20261020.json),
 [pinned owner commands](../runtime/connect_https_tls_probe_20261020_commands.md).
 No owner deployment/browser acceptance yet.
+
+## Owner topology correction20Oct18:32МСК
+
+The measured server has no443 vhosts;global Apache HTTP answers200 on443 and TLS
+fails. Previous append-only prerequisite correctly refused but does not support
+this topology. Add explicit `--first-tls-vhost` mode,not an implicit guard bypass.
+It requires zero vhosts on the target port,loaded ssl_module and live plain HTTP200
+with a TLS WRONG_VERSION_NUMBER response. Any IP-specific/wildcard443 vhost or a
+working TLS handshake refuses this mode. The existing append-only default stays.
+
+The first host intentionally replaces global plain HTTP on443 with TLS. Preserve
+all old80 vhosts/defaults and require exactly one new wildcard443 host from the
+owned include,without aliases. Persist mode in the transaction receipt for repeat/
+verification/rollback;existing schema1 receipts without mode use the old behavior.
+No Listen/config.php/router/Caddy changes. Native fixture must test both topologies,
+including plain443 restoration after rollback and a lost reload ACK. Before issuing
+new operator commands require native Apache and source CI PASS.

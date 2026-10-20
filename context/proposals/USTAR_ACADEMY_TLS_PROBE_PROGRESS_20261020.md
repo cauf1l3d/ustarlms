@@ -78,3 +78,11 @@ is not satisfied;actual parsed topology (specific-IP versus absent443 groups) st
 unknown. No implementation change/guard removal justified yet. Added one narrow
 read-only binding-class/SSL-module snippet with no address/name/config text output.
 Next owner report then smallest topology-specific fix plus native regression.
+
+Owner18:30/18:31 reports resolve topology:only80-vhosts,plain443 HTTP200/TLS SSLError.
+Four new targeted tests added before implementation:three RED for missing mode API
+and old wildcard refusal;negative prerequisite already passed under old refusal.
+Implemented explicit first mode,strict absence of all target-port vhosts,live module/
+plainHTTP/TLS protocol prerequisites,durable mode,exact old-vhost preservation.
+Nine targeted tests GREEN. Native fixture extended to both topologies with actual
+Apache module dump/protocol probes and rollback restoration;execution pending CI.

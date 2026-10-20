@@ -4,7 +4,7 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: cron_accepted_private_bridge_chat_link_delivery_preflight
+  stage: owner_delivery_received_cron_input_metadata_pending
   development_version: 2026102000
   production_effective_payload: 830d3703e2ffa2f9864900c0d0c58f60049cb0c2
   production_effective_version: 2026101905
@@ -12,7 +12,7 @@ current_connect_checkpoint:
   tables: 99
   local_verification: delivery835_r16_OK_32_local_skips_135_CI_skips;actual_UID33_and14module_tests_PASS
   exact_ci_receipt: context/runtime/connect_delivery_preflight_ci_20261020.json
-  next: chat_link_delivery_baseline_and_HTTPS_cron_transport_contracts_before_guarded_update
+  next: metadata_only_cron_stat_SHA_after_owner_baseline_552_DB99_HTTPS_transport_services_measured
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

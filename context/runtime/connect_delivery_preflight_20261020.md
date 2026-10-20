@@ -1,5 +1,25 @@
 # Проверка контрактов следующей поставки chat-link
 
+**Текущий шаг owner20Oct21:25МСК.** Полный preflight уже получен:
+source552/552,DB99,HTTPS,transport и services measured. Повторять весь probe не нужно.
+[Owner receipt](connect_delivery_owner_20261020.json). Только cron вернул
+`unsafe_control_input` без пути. Это ещё не установленная причина нового сбоя worker.
+В fixture script0755 даёт такой отказ,поскольку новый reader требует private mode;
+legacy installer принимает root-owned код без group/world write. Фактические права
+на server1 ещё не получены. Не менять chmod/chown или отключать guards по предположению.
+
+Следующая команда читает только метаданные шести путей и hash текста скрипта:
+
+```bash
+sudo -v
+sudo -n stat -c '%n | type=%F | mode=%a | uid=%u gid=%g | links=%h' -- /usr/local/sbin/USTAR_CRON_SETUP_20261005.py /etc/cron.d /etc/cron.d/ustar_moodle /var/lib/ustar-cron /var/lib/ustar-cron/installation.json /var/lib/ustar-cron/last-run.json
+sudo -n sha256sum -- /usr/local/sbin/USTAR_CRON_SETUP_20261005.py
+```
+
+Без чтения/публикации содержимого private JSON/config/журналов. Ожидаемый действующий
+cron SHA:c5eabdceaa2f137eccd35087b03d473f61257aaeb77624f4855583ebaf353638.
+Ниже сохранены предыдущие exact package/source команды;сейчас их не повторять.
+
 Cron принят владельцем20Oct20:38МСК; HTTPS принят на компьютере/телефоне/VPN.
 Повторять их установку или старый installer02b0548c не нужно.
 

@@ -1,5 +1,17 @@
 # Реестр кода, проверок и deployment evidence
 
+## 20Oct21:25МСК — owner delivery baseline measured,cron input metadata pending
+
+Owner exact4d70de5c preflight hash PASS:552/552 source match,local1905/theme0202,
+core2025100608/99tables and reviewed mounts running. HTTPS active/owned hashes match;
+loopback8082,gateway172.18.0.1,free18443;cron/renew timer/receiver active,notify inactive.
+Only cron refused unsafe_control_input before usable contract output;actual path and
+mode unknown. Local same fixture0600 measured→script0755 refused,showing a stricter
+private-code assumption than the existing installer. This is not proof of server mode
+or a new worker failure. Next only six-path metadata stat plus exact script hash.
+No chmod/chown,worker/install,whole-source recollection or source/schema changes.
+Source snapshot accepted;native bridge/link/notify still pending.0subagents.
+
 ## 2026-10-20 — private chat-link delivery preflight4d70de5c
 
 Source4d70de5c verified:Context39470413912/Review39470413976 SUCCESS.

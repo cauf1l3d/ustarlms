@@ -1,8 +1,8 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: cron_accepted_connect_private_bridge_delivery
-stage_label: Cron accepted after two scheduled successes; private bridge and chat-link delivery next
+stage: connect_delivery_cron_input_metadata_pending
+stage_label: Delivery baseline and HTTPS measured; narrow cron input metadata needed
 current_activity: >-
   Owner20Oct reports Academy installer02b0548c success and general browser smoke;
   effective payload830/local2026101905/theme2026100202/552files/99tables remains installed.
@@ -26,7 +26,11 @@ current_activity: >-
   Future release preflight must pin updated producer hash and pair its target version.
   Exact delivery preflight4d70de5c pins installed830/local1905,checks source/SQL
   and cron/HTTPS/transport contracts with no PHP bootstrap or writes. Both source
-  jobs835/135skips and actual14module/UID33 host fixture PASS;owner check pending.
+  jobs835/135skips and actual14module/UID33 host fixture PASS. Owner2125MSK
+  preflight received:552/552 baseline+99DB tables/HTTPS/transport/services measured.
+  Only cron unsafe_control_input remains;actual failing input not identified.
+  Fixture0755 reproduces overstrict private script check;next metadata-only stat/SHA,
+  not broad recollection or cron repair/reinstall. Owner receipt records exact limits.
   Do not repeat probe/receiver/Academy installation or broad fact collection.
   Next: private bridge/scoped keys, chat-link candidate delivery,
   two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.
@@ -53,6 +57,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
+  latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   effective_addon_deployment:
     receipt: context/runtime/connect_academy_owner_install_20261020.json
     reported_at: '2026-10-20T04:36:04+03:00'

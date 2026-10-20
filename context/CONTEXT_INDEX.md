@@ -1,5 +1,15 @@
 # Индекс текущего контекста
 
+**20Oct21:25МСК — owner delivery preflight получен.**
+[Квитанция](runtime/connect_delivery_owner_20261020.json):552/552 source match,
+local1905/theme0202/core518/99tables,HTTPS owned hashes,loopback8082/gateway172.18.0.1,
+free18443 и service states measured. Единственный refusal:cron unsafe_control_input,
+точный файл/права не выведены. Fixture воспроизводит отказ при script0755 из-за
+лишнего private=True;actual server mode/cause ещё не подтверждены. Дальше только
+[metadata stat+SHA](runtime/connect_delivery_preflight_20261020.md);не повторять
+полный preflight,cron apply или installer. Успешный source/DB snapshot принят;
+bridge/link/notify ещё pending,private contents не запрашивать,0subagents.
+
 **20Oct20:38МСК — cron восстановлен и принят владельцем.**
 Preflight `4d70de5c` готов:835r16/135CI skips,14тестов preflight и настоящий UID33 на CI-host,
 оба source PHP8.2/8.3 и runtime SUCCESS. Owner delivery check ожидается;поставка

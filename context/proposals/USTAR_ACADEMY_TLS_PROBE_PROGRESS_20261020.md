@@ -54,3 +54,20 @@ both single and name-vhost bindings;synthetic examples had one space. Added
 native-format regression first and observed RED;parser now allows binding padding.
 https://github.com/apache/httpd/blob/2.4.x/server/vhost.c
 No host bypass or weakened topology comparison. Next native rerun required.
+
+Native rerun52a8a1ca:Context39447539405/context118713332238 SUCCESS;
+Review39447534360/runtime118713514071 SUCCESS. Actual Apache emitted
+ACADEMY_NATIVE_TLS_PROBE=PASS;artifact12277202547. All native assertions above
+passed,including umask077 and real reload followed by simulated lost ACK recovery.
+21 targeted tests PASS (19.471s). Source PHP8.2/8.3 full suites still running at
+this checkpoint;exact receipt and pinned operator commands are being prepared.
+
+Final source CI PHP8.2/8.3 jobs118713513619/118713514054 SUCCESS:792r16/134skips,
+381PHP/24JS/57templates/99tables;20onboarding/28link/100actor synthetic browser
+scenarios each. No new Moodle/worker source or schema;Connect DB cumulative repeat
+118714944180 pending at this checkpoint,not represented as TLS acceptance.
+Pinned owner commands/source hash verified against actual GitHub download.
+Personal review inline,0subagents. No production/service/network action performed.
+
+Final handoff context346files PASS;all operator Bash blocks syntax PASS. Only
+context/docs change after executable52a8a1ca;no product/test/workflow changes.

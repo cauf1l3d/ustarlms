@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "kind": "static_Academy_TLS_probe_source_verification",
+  "source_commit": "52a8a1ca965b12e577e0295d64420c2a3e9fcb67",
+  "source_tree": "1e617c43f3038fe37a8d8f01ffa0b378e46da09b",
+  "script_sha256": "ff1a08f565339429367a2873bf69964aa37d5c47b40b405750cd0dbdc480d62c",
+  "source_download_readback_matches_local": true,
+  "context_run": 39447539405,
+  "context_job": 118713332238,
+  "context_conclusion": "success",
+  "review_run": 39447534360,
+  "runtime_job": 118713514071,
+  "runtime_conclusion": "success",
+  "native_artifact": 12277202547,
+  "native_marker": "ACADEMY_NATIVE_TLS_PROBE=PASS; SNI/default/HTTP/CA/rollback; isolated_fixture_only",
+  "native_proofs": [
+    "real_Apache_OpenSSL_chain_hostname_SNI_leaf_fingerprint",
+    "previous_default_host_response_and_certificate_unchanged",
+    "HTTP_status_and_config_bytes_unchanged",
+    "CA_key_bytes_and_serial_file_unchanged",
+    "other_paths_403",
+    "CLI_umask077_static_permissions",
+    "repeat_prepare_without_reload_and_explicit_rollback",
+    "invalid_directive_recovery_before_reload",
+    "recovery_after_real_reload_with_simulated_lost_ack"
+  ],
+  "fixture_boundaries": {
+    "ports": [
+      18080,
+      18443
+    ],
+    "temporary_filesystem": true,
+    "other_service_PIDs": "modeled_in_fixture;product_checks_real_systemctl;no_live_Caddy_or_console_test_claim",
+    "production_or_live_provider_access": false
+  },
+  "source_jobs": [
+    {
+      "id": 118713513619,
+      "PHP": "8.2",
+      "conclusion": "success"
+    },
+    {
+      "id": 118713514054,
+      "PHP": "8.3",
+      "conclusion": "success"
+    }
+  ],
+  "local": {
+    "targeted_tests": 21,
+    "targeted_result": "PASS",
+    "full_before_final_padding_regression": 791,
+    "full_environment_skips": 31,
+    "context_files_before_final_handoff_docs": 344,
+    "source_checks": "PASS;PHP_not_run_locally"
+  },
+  "observed_RED": {
+    "CLI_umask": "directory_mode_mismatch_before_fix",
+    "native_padding_regression": "apache_dump_invalid_before_fix",
+    "first_runtime_job": 118712067902,
+    "first_source": "41d6f4054b0ef5c67292864344374e411318e593"
+  },
+  "scope": "static_TLS_probe_only;not_Academy_origin_cutover_or_bot_activation",
+  "owner_deployment": "not_run",
+  "browser_DNS_CA_trust_and_VPN_acceptance": "pending_owner",
+  "next": "owner_check_prepare_browser_then_separate_canonical_HTTPS_renewal_private_bridge_link_notify",
+  "production_effective_addon": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2/local2026101905",
+  "development_link_source": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1/local2026102000_not_deployed",
+  "subagents": 0,
+  "CI_r16_tests": 792,
+  "CI_environment_skips": 134,
+  "CI_source_checks": {
+    "PHP_files": 381,
+    "JS_files": 24,
+    "templates": 57,
+    "tables": 99,
+    "result": "PASS"
+  },
+  "browser_synthetic_scenarios": {
+    "onboarding": 20,
+    "link": 28,
+    "actor": 100
+  },
+  "cumulative_unchanged_Moodle_connect_db": {
+    "job": 118714944180,
+    "status": "pending;source_tree_previously_verified_on1e8a8819"
+  }
+}

@@ -60,15 +60,15 @@ substitute for this new DNS leaf acceptance by the required client population.
    safe static vhost;default plan no host access;real filesystem prepare/retry/
    rollback/partial reload/modified artifact/crash receipt;actual OpenSSL key match,
    signer unchanged and certificate DNS/purpose/expiry validation. Observe RED.
-2. [x] Implement Host/Paths/Manager and bounded sanitized CLI;20targeted tests PASS,including CLI umask077 regression.
+2. [x] Implement Host/Paths/Manager and bounded sanitized CLI;21targeted tests PASS,including CLI umask077 and native-padding regressions.
    Missing/writable/symlinked/hardlinked files,wrong baseline hash and existing
    unmanaged paths fail before reload. Certificate commands never print private
    stdout/exception args. Single writer lock and source/config rechecks are required.
-3. [ ] Native isolated Apache+OpenSSL fixture on high ports,own config/CA/default
+3. [x] Native isolated Apache+OpenSSL fixture on high ports,own config/CA/default
    host. Verify SNI leaf,403 other paths,unchanged default host certificate/HTTP,
    graceful rollback and invalid config recovery. CI may install Apache/OpenSSL
    only on disposable runner;never production dependencies. No live provider.
-4. [ ] Full r16/source/context checks,personal security review,no subagents.
+4. [x] Full r16/source/context checks,personal security review,no subagents.
    Publish exact code/CI/hash and pinned --check→--prepare→browser→--status steps,
    with --rollback available. Record owner facts separately from code/CI/deploy.
 
@@ -84,3 +84,9 @@ substitute for this new DNS leaf acceptance by the required client population.
   and no stop/restart/Docker/Moodle write operations.
 - Files/keys must stay private and command output sanitized;test unsafe file type,
   ownership/mode/link,CA key mismatch and subprocess errors containing a sentinel.
+
+Implementation52a8a1ca verified:Context39447539405,source PHP8.2/8.3 and actual
+Apache runtime118713514071 SUCCESS.792r16/134CI skips;21targeted local.
+[CI receipt](../runtime/connect_academy_tls_probe_ci_20261020.json),
+[pinned owner commands](../runtime/connect_https_tls_probe_20261020_commands.md).
+No owner deployment/browser acceptance yet.

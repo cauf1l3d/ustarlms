@@ -5,7 +5,9 @@ wwwroot — непрямое выражение;config hash закреплён,P
 Далее additive static TLS probe для `ustar.local`:отдельный30day leaf от console CA,
 только health URL,config/HTTP не меняются,только Apache graceful reload с guards/recovery.
 [План](../proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md),[progress](../proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md).
-791r16/31skips PASS,20targeted PASS;native Apache CI ещё pending.
+Source52a8a1ca:792CI/134skips на PHP8.2/8.3 PASS,21targeted local PASS.
+Context39447539405 и native runtime118713514071 SUCCESS;SNI/default/HTTP/CA/recovery actual Apache PASS.
+[Точные команды](../runtime/connect_https_tls_probe_20261020_commands.md),[CI receipt](../runtime/connect_academy_tls_probe_ci_20261020.json).
 Это stage1,не canonical HTTPS cutover/renewal/private bridge/бот activation.
 Повторных diagnostic loops,receiver/installer reinstall или сетевых изменений не требуется.
 Production effective830/1905 сохранён;new link source2000 не установлен;0subagents.

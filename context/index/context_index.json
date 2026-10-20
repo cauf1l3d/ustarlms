@@ -666,20 +666,20 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2396,
-      "sha256": "e0be82c00392e2b05d37223972654d40cd4c0da4758392fa16a285a9973f5faa"
+      "size": 2423,
+      "sha256": "dec25e8abe308b4b2a83beb380ed2d4312a0662c0b8d50e236a85d7fe739f7b3"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md",
       "domain": "proposals",
-      "size": 5619,
-      "sha256": "ab4603f5c9be2db385a71e767851cad8f8653202f24a413fb98db7a6578851d0"
+      "size": 5987,
+      "sha256": "a3f85f953bcd4bd04756650ac20b9e849a58eeda8dfa3a997c508149271d522e"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md",
       "domain": "proposals",
-      "size": 3663,
-      "sha256": "9bcaaf8da20d30e319e16529dc9e0c6b2d90b263374908618090bd49a00007cd"
+      "size": 4761,
+      "sha256": "ff4dae35a4fc3cfe508e01d9f85c17114bea503529c21453587e03b63d69e547"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md",
@@ -912,8 +912,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 25317,
-      "sha256": "a3a80d261fd1acbb1284f6dfea8ad0b71cd91731c28a8b19073cc1fd0e78fc96"
+      "size": 25304,
+      "sha256": "783251886250c1c966f4d9ab52b0a0eed73a928275a6946ed934a8cdea74cba3"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -954,8 +954,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 164485,
-      "sha256": "c43e96ea1d9b1778daea90349e0b08b22db3f3bf573ea3ce7252abbbd4e4c95c"
+      "size": 164752,
+      "sha256": "bec30c543c997326e2399c1c4273e9c61624a4f04019d3867dad567906bb1dfa"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -966,8 +966,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 10610,
-      "sha256": "c61e77eb4e6c09ce548b485eb5693d0283f3b576b150411d52b640288dd2fa64"
+      "size": 10773,
+      "sha256": "54b47e84b1da25e1362d8e0d0058f5b4d60dd353bef8e40fe661fa5863140880"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1062,8 +1062,8 @@
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 71975,
-      "sha256": "ce668e49da521eaeb752c4d7304a5a2a6f540a86cbebcae145cf6a6c1c033f07"
+      "size": 72220,
+      "sha256": "5ffaea0613fe1a078b0f1f5edc141c3f7601dc07ca2bb817ea3a0b3bda5e652f"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -1150,6 +1150,12 @@
       "sha256": "f6afd4cc4ba8f94d8d11d7140e61a788d42446b278b17fb957a37bb116fa4024"
     },
     {
+      "path": "context/runtime/connect_academy_tls_probe_ci_20261020.json",
+      "domain": "runtime",
+      "size": 3037,
+      "sha256": "1ac97714f47b5b0fbd71379e036c71a58606ebffc52d69700d9ff46d002c5d93"
+    },
+    {
       "path": "context/runtime/connect_chat_link_ci_20261020.json",
       "domain": "runtime",
       "size": 4167,
@@ -1170,8 +1176,14 @@
     {
       "path": "context/runtime/connect_https_preparation_20261020.md",
       "domain": "runtime",
-      "size": 15392,
-      "sha256": "7ef43edb53a551072d64c10803856017903fdae3f647944661653e84acf2fd7d"
+      "size": 15597,
+      "sha256": "d08e6481809d9b91a188a13996260abb29a91a527ec36efd1ddfad3ebbfbc187"
+    },
+    {
+      "path": "context/runtime/connect_https_tls_probe_20261020_commands.md",
+      "domain": "runtime",
+      "size": 5674,
+      "sha256": "ba72ff1026f22e9d2cea6818946aaf1493f4b727b24e36ae89fee7c858711fc2"
     },
     {
       "path": "context/runtime/connect_owner_priority_20261019.json",
@@ -2058,8 +2070,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 19329,
-      "sha256": "9b6bd67f6aba004f039106a8e0cde664a05fda416806fc543f9b716a71e4abc2"
+      "size": 19596,
+      "sha256": "99bd110cdebf86c49057084184a56086c03851850b91d05ad3a0811004603dd8"
     },
     {
       "path": "context/tasks/backlog.yaml",

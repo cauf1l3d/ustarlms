@@ -18,7 +18,9 @@ Narrow followup получен:80/443 — Apache,8443 — пульт. Все ф�
 `--status` читает сохранённую квитанцию,это не новая live-проверка.
 `--rollback` удаляет свой site/link/неизменённый health и делает graceful reload,
 не трогая чужие vhosts,CA,config.php или private evidence.
-В native CI ещё нужно проверить actual Apache до выдачи pinned apply command.
+Native Apache runtime118713514071 SUCCESS;обе source792/134skips и Context39447539405 SUCCESS.
+[Точная команда применения и SHA256](connect_https_tls_probe_20261020_commands.md),
+[CI receipt](connect_academy_tls_probe_ci_20261020.json). Owner prepare ещё не выполнен.
 Обычный runtime — несколько секунд;crypto/host probes имеют ограниченные timeout.
 
 URL: `https://ustar.local/__ustar_tls_probe__/ready.html`. Остальные пути нового

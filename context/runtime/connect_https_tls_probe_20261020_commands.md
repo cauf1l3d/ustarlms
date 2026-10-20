@@ -1,5 +1,35 @@
 # Stage1: проверка внутреннего HTTPS Академии
 
+## Owner20Oct19:01МСК — phone/VPN accepted; canonical HTTPS preparation
+
+Owner подтвердил открытие по локальному WiFi с телефона и с VPN. Это не проверка
+внешнего доступа/mobile data. Повторять static probe не требуется. Далее отдельная
+guarded поставка canonicalHTTPS+Moodle sslproxy+renewal;адрес config.php,Apache80
+redirect,TLS proxy и recovery должны меняться согласованно,не shell-подстановкой.
+Существующий HTTP vhost содержит Include;в runtime есть факт наличия,но не пути
+или содержимое. Сначала только безопасные строки прокси/includes для сохранения
+нынешних правил в новом TLS host,без нового общего preflight:
+
+```bash
+sudo python3 - <<'PYPROBE'
+from pathlib import Path
+import re
+p = Path('/etc/apache2/sites-enabled/ustar.conf')
+if p.stat().st_size > 131072:
+    raise SystemExit('vhost_too_large')
+pattern = re.compile(r'^\s*(?:(?:Include(?:Optional)?|ProxyPass(?:Reverse)?|ProxyPreserveHost|ServerName|ServerAlias)\b|</?VirtualHost\b)', re.I)
+for line in p.read_text().splitlines():
+    if pattern.match(line):
+        print(re.sub(r'(https?://)[^/\s@]+@', r'\1[REDACTED]@', line))
+PYPROBE
+```
+
+Прислать этот ограниченный вывод;config.php/CA keys/raw private reports не нужны.
+Agent проверил repo:готового production cutover/renewal flow ещё нет;не объявлять
+static probe постоянной HTTPS схемой. Existing production_restore.py sslproxy
+logic относится к recovery copy,не команде изменения действующей Академии.
+
+
 ## Owner20Oct18:49МСК — применение принято
 
 --check и --prepare завершились успешно,повторять их не требуется.

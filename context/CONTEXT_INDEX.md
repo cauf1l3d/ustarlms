@@ -1,5 +1,18 @@
 # Индекс текущего контекста
 
+**20Oct19:01МСК: owner подтвердил phone+VPN по локальному WiFi.**
+Static TLS browser gate принят для office WiFi/phone/VPN;не public/mobile-data acceptance.
+Сертификат leaf до19Nov2026,canonical Academy пока HTTP. Не повторять probe install/
+prepare,порты/CA проверки или browser gate. Следующий шаг — canonicalHTTPS+standard
+Moodle sslproxy+постоянное продление сертификата с guard/recovery. В прежнем HTTP
+vhost есть Include,его пути/правила ещё не прочитаны;перед proxy cutover нужен
+только узкий read-only вывод ServerName/ProxyPass/Include изustar.conf.
+[Owner receipt](runtime/connect_https_owner_20261020.json),
+[следующий шаг](runtime/connect_https_tls_probe_20261020_commands.md).
+Это подготовка существующей схемы,не новый auth/client subsystem;bridge/link/notify pending.
+0subagents;server1 агентом не менялся.
+
+
 **20Oct18:49МСК: static TLS probe применён владельцем.**
 Pinned3303069b SHA PASS;check ready_for_TLS_probe,prepare tls_probe_ready.
 CA/leaf fingerprints и expiry19Nov15:47:49UTC записаны в owner receipt.

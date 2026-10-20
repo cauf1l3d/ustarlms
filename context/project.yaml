@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: static_TLS_probe_owner_apply_desktop_render_accepted;phone_VPN_trust_pending;canonical_HTTPS_renewal_bridge_not_activated;MiniApp_waits_external_HTTPS
+execution_gate: static_TLS_owner_desktop_phone_LAN_VPN_accepted;canonical_HTTPS_sslproxy_renewal_preparation;HTTP_vhost_Include_rules_pending;bridge_not_activated;MiniApp_waits_external_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md

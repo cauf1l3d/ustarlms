@@ -77,7 +77,7 @@
     "PHP_bootstrap_or_network_service_changes": false
   },
   "interpretation": "Shared listeners cannot be replaced based on port occupancy alone. Origin parser failure is incomplete diagnostic evidence,not an Academy outage or certificate verdict. Do not assume Caddy terminates Academy TLS. Console source uses a separate8443 server and its own CA.",
-  "next": "phone_browser_trust_then_canonical_HTTPS_cutover_permanent_renewal_private_bridge_link_notify",
+  "next": "canonical_Academy_HTTPS_sslproxy_and_permanent_renewal;inspect_existing_HTTP_vhost_Includes_then_guarded_cutover;private_bridge_link_notify_separate",
   "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
   "tests": {
     "targeted_readiness": 12,
@@ -151,8 +151,14 @@
       "correct_path_result": "USTAR HTTPS check page rendered;no certificate warning visible in desktop screenshot",
       "incorrect_path": "/ustar_tls_probe/ready.html",
       "incorrect_path_result": "403 expected;only exact health path is permitted",
-      "phone_or_VPN_acceptance": "not_established_by_desktop_screenshots"
+      "phone_or_VPN_acceptance": "owner19:01 confirmed phone over local WiFi and VPN"
     },
     "next": "confirm_correct_URL_on_phone_then_canonical_HTTPS_cutover_and_permanent_renewal;private_bridge_link_notify_separate"
+  },
+  "phone_VPN_owner_acceptance": {
+    "reported_at": "2026-10-20T19:01:34+03:00",
+    "statement": "да с телефона и впн открывается с локальной сети wifi",
+    "scope": "owner_phone_over_local_office_WiFi_with_VPN;not_public_internet_or_mobile_data_acceptance",
+    "certificate_warning": "no_warning_followup_accepted_from_affirmative_answer_to_prior_question;not_independent_device_inspection"
   }
 }

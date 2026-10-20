@@ -2,7 +2,7 @@ schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
 stage: connect_chat_link_source_and_HTTPS_preparation
-stage_label: Static TLS owner prepare and desktop render accepted; phone trust and canonical HTTPS renewal next
+stage_label: Static TLS desktop and phone LAN VPN accepted; canonical HTTPS and renewal preparation
 current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh paired baseline PASS,
   upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
   Effective addon payload830/552/99 and local2026101905/theme2026100202 follow pinned installer guards;
@@ -20,7 +20,8 @@ current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh pa
   Owner1831MSK resolves absent443-vhost topology;live443 plainHTTP200 and TLS SSLError.
   First-TLS source3303069b native/runtime and both PHP source jobs PASS;owner apply/browser pending.
   Owner1849MSK check+prepare PASS;correct desktop URL renders,wrong no-underscore URL403 expected.
-  Phone/VPN trust remains unverified;canonical HTTP origin unchanged.
+  Owner1901MSK confirms phone over office WiFi with VPN;canonical HTTP origin unchanged.
+  Read existing HTTP vhost Include/proxy directives before preserving its rules in HTTPS cutover.
   Do not bypass guard or prepare until actual topology is reviewed. Previous ready handoff is superseded.
   No repeated broad diagnostics;canonical HTTPS/renewal/private bridge are separate next gates.
   Source not deployed. Mini App waits external HTTPS. Keep cold pair;no repeat installation or silent late rollback.

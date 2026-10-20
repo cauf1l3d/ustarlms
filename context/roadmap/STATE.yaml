@@ -1,8 +1,8 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: cron_exact_release_update_ready_owner_apply_pending
-stage_label: Cron version guard cause confirmed; reviewed contract update ready; scheduled success pending
+stage: cron_accepted_connect_private_bridge_delivery
+stage_label: Cron accepted after two scheduled successes; private bridge and chat-link delivery next
 current_activity: >-
   Owner20Oct reports Academy installer02b0548c success and general browser smoke;
   effective payload830/local2026101905/theme2026100202/552files/99tables remains installed.
@@ -21,10 +21,11 @@ current_activity: >-
   Sourcecaebe51a exact contract update prepared under old cron EX/backup SH locks;
   original SHA66fd to reviewedc5eabd,local0204 to accepted1905;no worker launch.
   10REDtoGREEN,local821/31skips and both source CI821/134skips plus runtime PASS.
-  Owner apply and fresh scheduled success pending;use new handoff,no repeat diagnostics.
+  Owner2038MSK accepted two scheduled successes1736/1737UTC,exit0/no new failures;
+  adhoc0,overdue18,2 historical failed;task log4768051. Version mismatch1733UTC historical.
   Future release preflight must pin updated producer hash and pair its target version.
   Do not repeat probe/receiver/Academy installation or broad fact collection.
-  After cron scheduled success acceptance: private bridge/scoped keys, chat-link candidate delivery,
+  Next: private bridge/scoped keys, chat-link candidate delivery,
   two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.
   No agent server/main/router/DNS/routes/Caddy/Xray/provider changes;0subagents.
 next_task: INTEGRATIONS-01
@@ -85,7 +86,8 @@ production:
     uncompared: 0
     scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file
       references, not a new whole-host manifest
-  cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
+  cron: v3_c5eabdce_local1905_owner20Oct_two_scheduled_successes_1736_1737UTC_adhoc0_overdue18_failed2_no_new_USTAR_errors
+  cron_current_receipt: context/runtime/cron_release_update_20261020.json
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
@@ -105,6 +107,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_delivery_preflight_20261020.md
+- context/proposals/USTAR_CONNECT_PRIVATE_DELIVERY_PROGRESS_20261020.md
 - context/runtime/cron_release_update_20261020.md
 - context/runtime/cron_release_update_20261020.json
 - context/runtime/cron_incident_20261020.md

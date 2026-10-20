@@ -89,10 +89,74 @@
     "Connect_DB_paired_recovery": "93_to_99_to_93_PASS",
     "Connect_DB_native_SQL_and_HTTPS_bootstrap": "PASS"
   },
-  "owner_apply_and_fresh_scheduled_success": "pending",
+  "owner_apply_and_fresh_scheduled_success": "accepted_two_real_scheduled_successes;owner_requested_continue",
   "direct_worker_launched": false,
   "agent_server_changes": false,
   "scope": "wrapper_VERSIONS_and_installation_versions_script_digest_only;retain_schedule_binding_locks_logs_and_business_history",
   "future_delivery_gate": "new_installer_preflight_must_pin_updated_cron_SHA_and_target_version;historical_immutable_helpers_not_edited",
-  "subagents": 0
+  "subagents": 0,
+  "owner_apply_2035MSK": {
+    "reported_at": "2026-10-20T20:35:14+03:00",
+    "phase": "applied_waiting_for_scheduled_run",
+    "script_sha256": "c5eabdceaa2f137eccd35087b03d473f61257aaeb77624f4855583ebaf353638",
+    "tasks_launched_by_update": false,
+    "schedule_changed": false,
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "last_completed_receipt_finished_utc": "2026-10-20T01:20:05.495272+00:00",
+    "current_task_log_id": 4767976,
+    "previous_task_log_id": 4767930,
+    "current_latest_task_utc": "2026-10-20T17:34:08Z",
+    "scheduled_overdue_10m": 61,
+    "adhoc_queued": 2,
+    "scheduled_failed": 2,
+    "ustar_failed": 0,
+    "last_wrapper_error_utc": "2026-10-20T17:33:01.250048+00:00",
+    "interpretation": "Processing resumed;report is written after worker exits and after-metrics finish. Current process still running versus interrupted report publication is not measured;do not claim completion."
+  },
+  "owner_acceptance_2038MSK": {
+    "reported_at": "2026-10-20T20:38:38+03:00",
+    "evidence": "owner_terminal_output_not_independent_SSH",
+    "scheduled_runs": [
+      {
+        "started_utc": "2026-10-20T17:34:01.530329+00:00",
+        "finished_utc": "2026-10-20T17:36:03.182380+00:00",
+        "elapsed_seconds": 121.652,
+        "trigger": "scheduled",
+        "cron_exit_code": 0,
+        "log_truncated": false,
+        "task_log_before": 4767930,
+        "task_log_after": 4768022,
+        "adhoc_before": 2,
+        "adhoc_after": 0,
+        "overdue_before": 107,
+        "overdue_after": 18,
+        "new_failures": [],
+        "all_USTAR_error_counters": 0
+      },
+      {
+        "started_utc": "2026-10-20T17:37:01.537783+00:00",
+        "finished_utc": "2026-10-20T17:37:23.126856+00:00",
+        "elapsed_seconds": 21.589,
+        "trigger": "scheduled",
+        "cron_exit_code": 0,
+        "log_truncated": false,
+        "task_log_before": 4768022,
+        "task_log_after": 4768051,
+        "adhoc_before": 0,
+        "adhoc_after": 0,
+        "overdue_before": 18,
+        "overdue_after": 18,
+        "new_failures": [],
+        "all_USTAR_error_counters": 0
+      }
+    ],
+    "residual_scheduled_failed": 2,
+    "residual_USTAR_failed": 0,
+    "owner_confirms_18_overdue_historical": true,
+    "locks_between_runs": "no_holders_reported;normal",
+    "historical_wrapper_error": "2026-10-20T17:33:01.250048Z;predates_success;retained",
+    "console_fresh_source_date": "not_separately_reported",
+    "next": "private_bridge_scoped_keys_chat_link_delivery_and_opt_in_notification_acceptance"
+  }
 }

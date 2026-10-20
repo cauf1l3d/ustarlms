@@ -4,13 +4,15 @@ import argparse,hashlib,io,json,re,subprocess,zipfile
 from pathlib import Path
 import xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[2]
+CHAT_LINK_BASELINE="830d3703e2ffa2f9864900c0d0c58f60049cb0c2"
 
 
-def build(commit,output,*,repo=ROOT):
+def build(commit,output,*,repo=ROOT,profile="initial"):
+    if profile not in ("initial", "chat-link"):raise ValueError("unknown_profile")
     if not re.fullmatch(r'(?:HEAD|[a-f0-9]{40})',commit):raise ValueError('exact_commit_required')
     def git(*args):return subprocess.check_output(['git','-C',str(repo),*args])
     sha=git('rev-parse','--verify',commit+'^{commit}').decode().strip()
-    baseline=json.loads(git('show',sha+':context/code_map/generated/source_manifest.json'))['source_commit']
+    baseline=CHAT_LINK_BASELINE if profile=='chat-link' else json.loads(git('show',sha+':context/code_map/generated/source_manifest.json'))['source_commit']
     if not re.fullmatch('[a-f0-9]{40}',baseline):raise ValueError('baseline_required')
     def source(ref):
         entries=git('ls-tree','-r','-z',ref,'--','moodle/local/ustar','moodle/theme/ustar')
@@ -37,8 +39,12 @@ def build(commit,output,*,repo=ROOT):
                       ('production_manifest.py','scripts/production_manifest.py'),
                       ('production_patch_readiness.py','scripts/infra/production_patch_readiness.py')]:
         files[name]=git('show',sha+':'+path)
+    if profile=='chat-link':
+        files['__main__.py']=b'from connect_delivery_readiness import main\nraise SystemExit(main())\n'
+        for name in ('connect_delivery_readiness','cron_release_update'):
+            files[name+'.py']=git('show',sha+':scripts/infra/'+name+'.py')
     output=Path(output);output.mkdir(parents=True,exist_ok=True)
-    target=output/('ustar-connect-preflight-'+sha[:8]+'.pyz')
+    target=output/('ustar-connect-'+('delivery' if profile=='chat-link' else 'preflight')+'-'+sha[:8]+'.pyz')
     stream=io.BytesIO()
     with zipfile.ZipFile(stream,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
         for name,value in sorted(files.items()):
@@ -47,7 +53,7 @@ def build(commit,output,*,repo=ROOT):
     target.write_bytes(stream.getvalue());target.chmod(0o644)
     digest=hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix('.pyz.sha256').write_text(digest+'  '+target.name+'\n')
-    target.with_suffix('.pyz.metadata.json').write_text(json.dumps({'source_commit':sha,'baseline_commit':baseline,
+    target.with_suffix('.pyz.metadata.json').write_text(json.dumps({'source_commit':sha,'baseline_commit':baseline,'profile':profile,
         'sha256':digest,'files':{name:hashlib.sha256(value).hexdigest() for name,value in files.items()},
         'counts':{name:{'files':len(data['files']),'tables':len(data['tables'])} for name,data in reference.items() if name in ('baseline','candidate')}},indent=2)+'\n')
     print(json.dumps({'archive':str(target),'sha256':digest,'source_commit':sha,'host_access':False}))
@@ -56,4 +62,5 @@ def build(commit,output,*,repo=ROOT):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--commit',default='HEAD');parser.add_argument('--output-dir',required=True)
-    args=parser.parse_args();build(args.commit,args.output_dir)
+    parser.add_argument('--profile',choices=('initial','chat-link'),default='initial')
+    args=parser.parse_args();build(args.commit,args.output_dir,profile=args.profile)

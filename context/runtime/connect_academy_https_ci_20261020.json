@@ -97,7 +97,7 @@
   "production_effective_addon": "owner_installed_payload830d3703/local2026101905/552files/99tables",
   "production_TLS": "owner_applied_canonical_HTTPS;leaf4e9aa808_expires2026-11-19T16:56:28Z",
   "owner_cutover_and_application_browser_acceptance": "owner20Oct1959 check/cutover/status active;general HTTPS open desktop_phone_VPN accepted;see connect_https_owner_20261020.json",
-  "next": "cron_incident_readonly_diagnosis_then_scheduled_success;private_bridge_link_notify_after",
+  "next": "chat_link_delivery_readonly_preflight_then_coordinated_guarded_release_and_private_bridge",
   "agent_server_changes": false,
   "subagents": 0,
   "followup_context_only_a916f478": {
@@ -123,5 +123,7 @@
     "conclusion": "success",
     "HTTPS_fixture_code_unchanged": true,
     "prior_cookie_failure_cause": "unresolved_intermittent_fixture_behavior;not_fixed_or_guard_bypassed"
-  }
+  },
+  "cron_followup": "Owner20Oct2038MSK accepted two scheduled successes;see cron_release_update_20261020.json;do not repeat repair",
+  "next_after_cron": "private_bridge_scoped_keys_and_separate_chat_link_delivery_coordinating_HTTPS_ownership_and_cron_target"
 }

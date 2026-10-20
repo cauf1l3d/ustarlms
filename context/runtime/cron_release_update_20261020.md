@@ -1,5 +1,12 @@
 # Возобновление cron после принятого релиза Academy
 
+**Закрыто owner20Oct20:38МСК.** Два scheduled success17:36:03Z/17:37:23Z,
+exit0,без новых failures/USTAR errors;adhoc0,overdue18,2 старых failed.
+Повторное применение и диагностика не нужны. Ошибка17:33Z историческая.
+[Полная санитизированная квитанция](cron_release_update_20261020.json).
+Дальше private bridge/chat-link,с согласованным cron-контрактом следующего релиза.
+Ниже сохранены причина,проверенная процедура и recovery;не инструкция повторять установку.
+
 ## Причина подтверждена владельцем20Oct20:08МСК
 
 `cron.service` active/enabled, schedule present, container binding matches,

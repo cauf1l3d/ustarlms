@@ -1,5 +1,15 @@
 # Журнал выполнения roadmap
 
+## 2026-10-20 20:38МСК — cron native acceptance
+
+Owner confirmed two genuine scheduled completions17:36:03Z/17:37:23Z,exit0,
+no new failures/USTAR errors;task log4767930→4768022→4768051,adhoc2→0,
+overdue107→18,2 prior scheduled failures retained. Historical wrapper error17:33Z
+predates success. No locks held between runs. Agent did not run a worker or SSH.
+Current exact producer is cron v3 SHA c5eabdce/local1905. Incident closed;
+continue private bridge/chat-link with HTTPS ownership and next cron contract
+coordinated,not old installer or repeated broad facts.0subagents.
+
 ## 20Oct20:08МСК — version guard root cause and guarded producer update
 
 **20Oct20:08МСК — причина cron найдена; исправление готово.**

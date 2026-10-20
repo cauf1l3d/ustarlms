@@ -149,6 +149,8 @@ jobs:
         run: |
           python3 scripts/infra/build_connect_readiness.py --commit HEAD --output-dir artifacts/connect-readiness
           python3 -I artifacts/connect-readiness/ustar-connect-preflight-*.pyz
+          python3 scripts/infra/build_connect_readiness.py --commit HEAD --profile chat-link --output-dir artifacts/connect-delivery
+          python3 -I artifacts/connect-delivery/ustar-connect-delivery-*.pyz
       - name: Build exact-source Academy installer without production access
         run: |
           python3 scripts/infra/build_connect_academy_installer.py --commit HEAD --output-dir artifacts/connect-install
@@ -164,6 +166,10 @@ jobs:
         with:
           name: connect-academy-readiness
           path: artifacts/connect-readiness/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-chat-link-delivery-readiness
+          path: artifacts/connect-delivery/
       - name: Actual systemd credentials and receiver isolation with synthetic transport
         run: sudo -n env USTAR_CONNECT_HOST_FIXTURE=1 python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
       - name: Ensure Apache binary exists only on disposable TLS test runner

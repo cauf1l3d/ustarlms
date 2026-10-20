@@ -4,16 +4,18 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: static_Academy_TLS_check_refused_wildcard443
+  stage: cron_accepted_private_bridge_chat_link_delivery_preflight
   development_version: 2026102000
   production_effective_payload: 830d3703e2ffa2f9864900c0d0c58f60049cb0c2
   production_effective_version: 2026101905
   addons_files: 552
   tables: 99
-  local_verification: 791r16_OK_31_environment_skips_20_targeted
-  exact_ci_receipt: context/runtime/connect_academy_tls_probe_ci_20261020.json
-  next: filtered443_binding_and_SSL_module_report_before_topology_specific_change
-  TLS_probe_deployed: false
+  local_verification: cron821_r16_OK_31_environment_skips;new_delivery_profile_checks_pending
+  exact_ci_receipt: context/runtime/cron_release_update_20261020.json
+  next: chat_link_delivery_baseline_and_HTTPS_cron_transport_contracts_before_guarded_update
+  TLS_probe_deployed: true
+  canonical_HTTPS_owner_accepted: true
+  cron_two_scheduled_successes_owner_accepted: true
   bot_activation: pending
 tasks:
 - id: DOC-01
@@ -457,7 +459,7 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: cron_exact_release_update_ready_owner_apply_pending
+  phase: cron_accepted_connect_private_bridge_delivery
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
   current_summary: >-
     Owner Academy install02b0548c and browser smoke accepted;effective payload830/1905/552/99.
@@ -469,9 +471,9 @@ tasks:
     Cron cause confirmed2008MSK:service active,schedule/binding match,10invocations/10min,
     legacy VERSIONS0204 refuses installed1905;task log frozen0420,107overdue/2adhoc.
     Exact paired wrapper/state updatecaebe51a tested local821/31skips,CI821/134skips
-    both source/runtime PASS;owner apply and scheduled success pending.
+    both source/runtime PASS;owner2038MSK accepted two scheduled successes,adhoc0/overdue18/failed2.
     Future release must coordinate reviewed producer hash/versions and scheduled acceptance.
-    After scheduled cron success:private bridge/scoped keys,chat-link candidate delivery,two-sided link/revoke,opt-in notify.
+    Next:private bridge/scoped keys,chat-link candidate delivery coordinated with HTTPS ownership/cron target,two-sided link/revoke,opt-in notify.
     Mini App waits external HTTPS. Do not repeat former installation/probes;0subagents.
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate

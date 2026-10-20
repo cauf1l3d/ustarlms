@@ -1,5 +1,12 @@
 # Cron: отчёт источника остановился на 04:20 МСК
 
+**Закрыто owner20Oct20:38МСК.** Два scheduled success17:36:03Z/17:37:23Z,
+exit0,без новых failures/USTAR errors;adhoc0,overdue18,2 старых failed.
+Повторное применение и диагностика не нужны. Ошибка17:33Z историческая.
+[Полная санитизированная квитанция](cron_release_update_20261020.json).
+Дальше private bridge/chat-link,с согласованным cron-контрактом следующего релиза.
+Ниже сохранены причина,проверенная процедура и recovery;не инструкция повторять установку.
+
 **20:08МСК: причина подтверждена владельцем.** Cron active/schedule/binding match,
 10invocations/10min;wrapper rejects old local0204 versus installed1905. Last DB
 task log unchanged04:20,107overdue/2adhoc. Повторная диагностика ниже не нужна.

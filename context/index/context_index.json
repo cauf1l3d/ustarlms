@@ -421,7 +421,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 88265,
-      "sha256": "e03bdaca0e8cf32b23d6dff0ffec49f60be3fab348a24adbe5286c2d695d5911"
+      "sha256": "09a5d60854093bed18f21104914ea7abc8d4e23c968f86f48cf98d9654a5ec45"
     },
     {
       "path": "context/code_map/frontend.yaml",
@@ -692,6 +692,12 @@
       "domain": "proposals",
       "size": 2833,
       "sha256": "255af0c9fc7bb529ef26e63f4d4c64f05a53c4a066deda2af9ac30e65bb55a51"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md",
+      "domain": "proposals",
+      "size": 3589,
+      "sha256": "2a050411453aa66b3b2f22fadbd58c86adcdffef4a824404bc0e3ffd78aa5deb"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_CON01A_PLAN_20261019.md",

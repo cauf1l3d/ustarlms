@@ -49,6 +49,35 @@ final class connect_link_management_test extends \advanced_testcase {
         $this->denied(fn() => $this->request('issue'), 'channel_unavailable');
     }
 
+    public function test_chat_transport_uses_private_start_and_same_canonical_confirmation(): void {
+        global $CFG;
+        $CFG->ustar_connect_link_transport = 'chat';
+        $view = $this->request('issue'); $code = $view['challenge']['code'];
+        $this->assertSame('https://t.me/ustarcorp_bot?start='.$code, $view['challenge']['launch_url']);
+        $this->assertTrue($view['chat_link']);
+        identity_service::claim_verified($code, new identity('telegram', '123456', '8727627355'),
+            hash('sha256', 'ustar-telegram-message-link-v1:fixture'));
+        $preview = $this->request('preview', ['code' => $code]);
+        $this->assertSame('https://t.me/ustarcorp_bot?start='.$code, $preview['challenge']['launch_url']);
+        $this->assertSame([], $preview['links']);
+        $this->assertTrue($preview['challenge']['claimed']);
+        $confirmed = $this->request('confirm', ['code' => $code]);
+        $this->assertTrue($confirmed['confirmed']);
+        $this->assertSame('8727627355', $confirmed['links'][0]['subject']);
+        $this->denied(fn() => $this->request('issue', [], 'POST', false), 'https_required');
+    }
+
+    public function test_link_transport_cannot_be_selected_by_browser_or_unknown_config(): void {
+        global $CFG, $DB;
+        $view = $this->request('issue', ['transport' => 'chat']);
+        $this->assertStringContainsString('?startapp=', $view['challenge']['launch_url']);
+        $count = $DB->count_records('local_ustar_conn_challenges');
+        $CFG->ustar_connect_link_transport = 'http_fallback';
+        $this->assertFalse(link_management::handle('GET', true, [])['enabled']);
+        $this->denied(fn() => $this->request('issue'), 'channel_unavailable');
+        $this->assertSame($count, $DB->count_records('local_ustar_conn_challenges'));
+    }
+
     public function test_https_csrf_methods_and_action_allowlist_fail_before_writes(): void {
         global $DB;
         $this->denied(fn() => $this->request('issue', [], 'POST', false), 'https_required');

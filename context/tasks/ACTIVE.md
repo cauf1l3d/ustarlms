@@ -1,12 +1,16 @@
 # Активные задачи USTAR
 
-**21Oct — private bridge source components in progress.**
-Signed link-scope probe and internal HTTPS bridge profile implemented with RED→GREEN
-unit tests. Shared CA SANs, public denial, renewal and durable profile recovery covered.
-Exact new native CI pending; source is not an activation package. Coordinated root
-ownership/key/credential/receiver transaction and owner live link acceptance remain.
-Application2000/cron acceptance below stays current; do not repeat upgrade or probes.
-[Implementation ledger](../proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PROGRESS_20261021.md).0subagents;server1/provider/main unchanged.
+**21Oct — private bridge source CI принят; следующий шаг — owner check.**
+Source `ec9af9e4`:[CI receipt](../runtime/connect_private_bridge_ci_20261021.json) — Context39516048080/Review39516048076 SUCCESS.
+PHP8.2/8.3:886tests/136skips;native Moodle124/629+6concurrency,scope/no-nonce-write,
+private include UID33 read/no-write,paired restore PASS. Apache TLS/public denial/
+renewal/recovery и реальные systemd credentials PASS в отдельных fixtures.
+Plugin-only include идёт после core bootstrap:иначе Moodle превращает true в строку"1".
+Application1e8a8819/2000 не менялся;live bridge/key/receiver activation ещё не выполнены.
+Следующий ограниченный шаг — [readonly check e4d7a154](../runtime/connect_private_bridge_check_20261021.md),artifact12307432021,
+SHA14de5484;owner JSON ещё не получен. Нужны данные о правах родителя private include,
+не повторять update/cron/TLS/whole inventory. Затем coordinated root activation package.
+0subagents/self-review;server1/provider/main агентом не менялись.
 
 **21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**
 [Owner receipt](../runtime/connect_chat_link_update_owner_20261021.json):exact6aa/e0d364ab SHA OK,

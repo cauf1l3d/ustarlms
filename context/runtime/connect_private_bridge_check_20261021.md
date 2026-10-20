@@ -6,9 +6,10 @@ receiver installation/configuration or a whole source inventory.
 
 This package checks only the next private-key placement/transport prerequisites.
 It does not activate a bridge or change ownership/permissions. No key is generated,
-Telegram is not called, no updates are consumed, the journal is not opened and SQL,
+Telegram is not called, no updates are consumed, the journal is not opened and direct SQL collectors,
 cron, backups and application migrations are not run. Existing HTTPS verification
-can create a normal anonymous Moodle session/cache entry and access-log records.
+uses normal Moodle bootstrap/database reads and can create an anonymous Moodle
+session/cache entry and access-log records.
 Default mode is PLAN_ONLY, with no host access. Only --check is supported.
 
 ## Exact package
@@ -64,13 +65,15 @@ production Moodle/TLS/service acceptance.
 Earlier5cb actual Moodle/PG passed124tests/629assertions and6concurrency,then the new
 HTTP signed-scope check refused. Exacte4 whole Review39514608522 FAILED at the new Moodle HTTP scope gate. Diagnostic:
 HTTPS=on/exact127.0.0.1 peer,but pre-bootstrap true was normalized to string"1";
-strict boolean guard returned404bridge_disabled. Current delivery source moves its
-plugin-only include after bootstrap and tests that actual compiler in native Moodle.
+strict boolean guard returned404bridge_disabled. Corrected sourceec9af9e4 loads its
+plugin-only include after bootstrap. Context39516048080/Review39516048076 SUCCESS:
+native124/629+6concurrency,UID33 read/no-write,signed scope/wrong key/six Connect
+counts unchanged and both paired restore gates PASS. [Exact receipt](connect_private_bridge_ci_20261021.json).
 This frozen readonly package has no activation mode and never executes that compiler;
-its check remains valid. Whole PR green is not claimed;full RC is skipped.
+its check remains valid. Sourceec9 CI is green;later documentation CI is separate. Full RC is skipped.
 Self-review only,0subagents;agent has no server1 access or provider actions.
 
-Next after the owner result and native scope gate:coordinated HTTPS tool/state
+Next after the owner result:coordinated HTTPS tool/state
 handoff,root-managed private include,independent256bit link.claim-only key scoped to
 current bot,exact LoadCredential drop-ins and one receiver switch preserving cursor.
 Then same-session link/confirm/revoke and separate opt-in notification delivery.

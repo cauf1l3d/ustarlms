@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_application2000_new_scheduled_cron_and_general_browser_accepted;next_private_TLS_bridge_link_only_key_receiver_and_live_link
+execution_gate: application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_readonly_parent_check_then_coordinated_activation_pending
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md

@@ -516,3 +516,5 @@ latest_owner_priority: '19Oct00:49MSK: unified Academy bot architecture in PR106
   deferred;no subagents without agreement;OPS02 waiting;Moodle5.2/PG17 deferred'
 
 private_bridge_source_progress: context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PROGRESS_20261021.md
+private_bridge_source_ci: context/runtime/connect_private_bridge_ci_20261021.json
+private_bridge_next_owner_check: context/runtime/connect_private_bridge_check_20261021.md

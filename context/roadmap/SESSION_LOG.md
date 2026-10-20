@@ -1832,3 +1832,16 @@ cron receipt accepted; no repeated server operations. Implemented internal HTTPS
 profile/renewal/durable recovery and worker signed scope probe. Targeted tests observed
 RED→GREEN; native/full CI pending. Coordinated root credential/ownership/receiver
 transaction remains next, no production activation package yet.0subagents/self-review.
+
+
+## 21Oct — private bridge source verification and frozen readonly handoff
+
+Sourceec9af9e4:Context39516048080/Review39516048076 SUCCESS. BothPHP886/136skips;
+actual Moodle124/629+6concurrency,post-bootstrap boolean include/UID33 read-no-write,
+signed scope and wrong-HMAC denial/six Connect counts unchanged,paired rollback and
+1905→2000 repeat/restore PASS. Real Apache/TLS/public denial/profile renewal/recovery
+and systemd credentials pass in separate fixtures,not combined production acceptance.
+Readonlye4d7a154/14de5484 artifact12307432021 frozen,CI/local bytes equal;owner command
+delivered,JSON pending. It never invokes the old pre-bootstrap compiler or activates.
+Need protected include-parent fact before coordinated root delivery. No app/source
+recollection/cron repair/TLS cutover/server or provider action;0subagents/self-review.

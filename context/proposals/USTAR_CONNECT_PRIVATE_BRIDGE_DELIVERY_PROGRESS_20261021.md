@@ -67,8 +67,19 @@ config flag enabled="1" (string),404bridge_disabled. Core normalizes pre-bootstr
 scalar flags. Delivery compiler now appends plugin-only include after setup returns;
 core HTTPS/DB settings remain before setup,strict boolean guard/application unchanged.
 New native fixture consumes that actual compiler/include and drops a PHP child to
-UID/GID33 to prove group read/no write. New compiler/native CI still pending;
+UID/GID33 to prove group read/no write. Sourceec9af9e4 Context39516048080/Review39516048076 SUCCESS;124/629+6concurrency,
+UID33 private include,signed scope/wrong key/counts and both paired restores PASS;
 frozen readonly e4 package has no activation mode and does not call its compiler.
+
+## Final verified source checkpoint
+
+[Exact receipt](../runtime/connect_private_bridge_ci_20261021.json):ec9af9e4 full source
+CI PASS,886/136skips on both PHP versions. Actual Moodle/PG now proves the corrected
+post-bootstrap private include,UID/GID33 read/no-write,signed scope denial,wrong key
+and unchanged six Connect counts. Native124/629+6concurrency and both paired restore
+gates PASS. Apache/systemd separate fixtures PASS. Full RC skipped;no live acceptance.
+Readonly e4 packet remains frozen and valid;owner parent/permission result pending.
+No full root activation package exists yet. Source components alone do not activate.
 
 ## Remaining delivery gates
 
@@ -78,8 +89,9 @@ frozen readonly e4 package has no activation mode and does not call its compiler
 2. Managed receiver/probe LoadCredential drop-ins, unchanged kernel loopback policy;
    verified release switch with one consumer stopped, token/journal/cursor untouched.
    Durable recovery must cover partial activation, administrator drift and service ACK.
-3. Real systemd credential/isolation acceptance for the scoped probe, final immutable
-   package/hash/CI and operator activation/deactivation runbook.
+3. Native acceptance of coordinated managed drop-ins and partial activation recovery
+   (the separate systemd scoped-probe fixture is already green), final immutable
+   activation package/hash/CI and operator activate/deactivate runbook.
 4. Owner same-session Academy→Telegram→confirm, replay/stale/group denial and revoke;
    then separately opt-in notifications with fresh cutoff. MiniApp remains deferred.
 

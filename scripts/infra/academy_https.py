@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import secrets
 import signal
 import socket
 import ssl
@@ -29,6 +30,8 @@ CA_SHA = 'cc397ba406aa58445e4f57a5e2644df20bd746273403e555f3df736694d5935f'
 ORIGIN = 'https://ustar.local'
 MARKER = b'// USTAR managed canonical HTTPS; rollback uses private before-image.'
 HEALTH = b'<!doctype html><meta charset="utf-8"><h1>USTAR HTTPS</h1><p>Academy HTTPS is active.</p>'
+BRIDGE_PATH = '/local/ustar/connect_bridge.php'
+BRIDGE_MATCH = r'(?i)^/+local/+ustar/+connect_bridge[.]php(?:/|$)'
 
 
 class Refusal(Exception): pass
@@ -52,7 +55,9 @@ def patch_config(raw):
     return raw[:at.start()] + overrides + raw[at.start():]
 
 
-def proxy_and_redirect(raw, paths, cert, key, http_port=80, https_port=443, backend_port=8082):
+def proxy_and_redirect(raw, paths, cert, key, http_port=80, https_port=443, backend_port=8082, bridge_port=None):
+    require(bridge_port is None or (type(bridge_port) is int and 1024 <= bridge_port <= 65535
+            and bridge_port not in (http_port, https_port, backend_port)), 'invalid_bridge_port')
     text = raw.decode('utf-8')
     groups = list(re.finditer(r'<VirtualHost\s+\*:' + str(http_port) + r'\s*>(.*?)</VirtualHost\s*>', text, re.S | re.I))
     require(len(groups) == 1, 'unsupported_HTTP_vhost')
@@ -91,6 +96,38 @@ def proxy_and_redirect(raw, paths, cert, key, http_port=80, https_port=443, back
 '''
     redirect_body = re.sub(root_reverse, '', re.sub(root_proxy, '', body))
     redirect = f'<VirtualHost *:{http_port}>\n    Redirect 302 / https://ustar.local/\n{redirect_body}\n</VirtualHost>\n'
+    if bridge_port is not None:
+        denial = f'\n    <LocationMatch "{BRIDGE_MATCH}">\n        Require all denied\n    </LocationMatch>\n'
+        proxy = proxy.replace('</VirtualHost>', denial + '</VirtualHost>')
+        # mod_alias Redirect runs before authorization. Exclude the private path
+        # from the HTTP redirect so it reaches the explicit denial instead.
+        redirect = (f'<VirtualHost *:{http_port}>\n'
+            '    RedirectMatch 302 "(?i)^/(?!/*local/+ustar/+connect_bridge[.]php(?:/|$))(.*)$" "https://ustar.local/$1"\n'
+            + redirect_body + denial + '</VirtualHost>\n')
+        proxy += f'''Listen 127.0.0.1:{bridge_port}
+<VirtualHost 127.0.0.1:{bridge_port}>
+    ServerName localhost
+    SSLEngine on
+    SSLCertificateFile "{cert}"
+    SSLCertificateKeyFile "{key}"
+    SSLProtocol -all +TLSv1.2 +TLSv1.3
+    SSLUseStapling off
+    ProxyRequests Off
+    ProxyPassInherit Off
+    ProxyAddHeaders Off
+    ProxyPreserveHost On
+    ProxyPassMatch "^/local/ustar/connect_bridge[.]php$" "http://127.0.0.1:{backend_port}{BRIDGE_PATH}"
+    <Location "/">
+        Require all denied
+    </Location>
+    <LocationMatch "^/local/ustar/connect_bridge[.]php$">
+        Require ip 127.0.0.1
+        <LimitExcept POST>
+            Require all denied
+        </LimitExcept>
+    </LocationMatch>
+</VirtualHost>
+'''
     return proxy.encode(), redirect.encode()
 
 
@@ -154,9 +191,27 @@ WantedBy=timers.target
 
 
 class Host:
-    HTTP_PORT, HTTPS_PORT, BACKEND_PORT = 80, 443, 8082
+    HTTP_PORT, HTTPS_PORT, BACKEND_PORT, BRIDGE_PORT = 80, 443, 8082, 18443
     def __init__(self, lib): self.lib, self.tls = lib, lib.Host()
     def __getattr__(self, key): return getattr(self.tls, key)
+    def certificate(self, ca, key, folder):
+        private, request, cert, extension = [folder/n for n in ('server.key','server.csr','server.crt','server.ext')]
+        self.lib.atomic(extension, b'basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=DNS:ustar.local,DNS:localhost,IP:127.0.0.1\n')
+        self.lib.command(['openssl','req','-new','-newkey','rsa:3072','-nodes','-sha256','-subj','/CN=ustar.local',
+            '-keyout',str(private),'-out',str(request)],timeout=60)
+        private.chmod(0o600)
+        self.lib.command(['openssl','x509','-req','-in',str(request),'-CA',str(ca),'-CAkey',str(key),
+            '-passin','pass:','-set_serial',str(secrets.randbits(128) or 1),'-out',str(cert),
+            '-days','30','-sha256','-extfile',str(extension)])
+        cert.chmod(0o600)
+        for flag, name in (('-verify_hostname','ustar.local'),('-verify_hostname','localhost'),('-verify_ip','127.0.0.1')):
+            self.lib.command(['openssl','verify','-CAfile',str(ca),'-purpose','sslserver',flag,name,str(cert)])
+        return {'fingerprint':sha(self.lib.command(['openssl','x509','-in',str(cert),'-outform','DER'])),
+                'not_after':self.lib.command(['openssl','x509','-in',str(cert),'-noout','-enddate']).decode().strip()}
+    def bridge_available(self):
+        with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as probe:
+            try:probe.bind(('127.0.0.1',self.BRIDGE_PORT))
+            except OSError:raise Refusal('bridge_port_unavailable') from None
     def runtime(self, path):
         # Use one JSON object and no Config/Env fields (those may contain credentials).
         data = json.loads(self.lib.command(['docker', 'inspect', '--format',
@@ -308,13 +363,13 @@ class Manager:
                 time.sleep(.2)
     def verify(self,s,transaction=False):
         self.guards(s);self.authority()
-        same_topology(s['topology'],self.host.vhosts(),{str(self.p.http_enabled),str(self.p.old.enabled)})
+        self.topology(s,self.host.vhosts())
         if transaction:require(self.host.units()==s['units'],'shared_service_PID_changed')
         rt=self.host.runtime(self.p.old.config)
         if transaction:require(rt==s['runtime'],'Moodle_container_changed')
         require(self.host.metadata(rt)=={'url':ORIGIN,'sslproxy':True,'cookiesecure':True},'Moodle_HTTPS_config_not_effective')
         self.wait_leaf(s);self.host.redirect_check();self.host.app_check(self.p.old.ca,s['leaf'])
-    def public(self,s):return {'phase':s['phase'],'academy_origin':ORIGIN if s['phase']=='active' else 'pending_or_restored','leaf':s.get('leaf'),'business_data_restored':False}
+    def public(self,s):return {'phase':s['phase'],'academy_origin':ORIGIN if s['phase']=='active' else 'pending_or_restored','leaf':s.get('leaf'),'business_data_restored':False,'bridge_transport_enabled':s.get('bridge_enabled',False)}
     def cutover(self):
         result=self._cutover_transaction()
         try:self.host.timer_probe()
@@ -354,6 +409,7 @@ class Manager:
             except BaseException:
                 self._rollback(self.load());raise
     def _rollback(self,s):
+        require(not s.get('bridge_enabled') and s['phase']!='profile_changing','deactivate_bridge_before_HTTP_rollback')
         require(s['phase']!='renewing','recover_renewal_before_rollback')
         self.guards(s,True)
         if s['timer_attempted']:self.host.timer_stop()
@@ -378,6 +434,7 @@ class Manager:
     def renew(self):
         with self.locked():
             s=self.load()
+            if s['phase']=='profile_changing':self.recover_profile(s);s=self.load()
             if s['phase']=='renewing':self.recover_renewal(s)
             require(s['phase']=='active','HTTPS_not_active');self.guards(s);self.authority()
             cert=Path(s['folder'])/'server.crt'
@@ -385,7 +442,7 @@ class Manager:
             folder=self.p.base/('renew-'+uuid.uuid4().hex);folder.mkdir(mode=0o700)
             leaf=self.host.certificate(self.p.old.ca,self.p.old.ca_key,folder);self.authority()
             original=self.read(Path(s['files']['http']['backup']),True)
-            proxy,_=proxy_and_redirect(original,self.p.old,folder/'server.crt',folder/'server.key',self.host.HTTP_PORT,self.host.HTTPS_PORT,self.host.BACKEND_PORT)
+            proxy,_=self.render(original,folder,s.get('bridge_enabled',False))
             backup=folder/'tls.before';self.lib.atomic(backup,self.read(self.p.old.site))
             s['pending']={'before':str(backup),'site_sha':sha(proxy)};s['phase']='renewing';self.save(s)
             try:
@@ -396,6 +453,71 @@ class Manager:
                 return {'phase':'renewed','leaf':leaf}
             except BaseException:
                 self.recover_renewal(s);raise
+    def render(self,original,folder,bridge_enabled):
+        return proxy_and_redirect(original,self.p.old,folder/'server.crt',folder/'server.key',
+            self.host.HTTP_PORT,self.host.HTTPS_PORT,self.host.BACKEND_PORT,
+            self.host.BRIDGE_PORT if bridge_enabled else None)
+    def topology(self,s,observed):
+        observed=dict(observed)
+        if s.get('bridge_enabled'):
+            rows=observed.pop('127.0.0.1:'+str(self.host.BRIDGE_PORT),None)
+            require(isinstance(rows,list) and len(rows)==1 and rows[0]['source']==str(self.p.old.enabled)
+                    and rows[0]['name']=='localhost','private_bridge_topology_changed')
+        same_topology(s['topology'],observed,{str(self.p.http_enabled),str(self.p.old.enabled)})
+    def recover_profile(self,s):
+        pending=s['pending_profile'];raw=self.read(Path(pending['state_before']),True)
+        require(sha(raw)==pending['state_sha'],'profile_before_image_changed')
+        previous=json.loads(raw)
+        checked=json.loads(raw)
+        # Validate every live file before restoring any file. Unknown administrator
+        # edits leave the transaction pending for explicit recovery, never overwritten.
+        for name in ('http','tls'):
+            current=sha(self.read(self.files()[name]))
+            require(current in (previous['files'][name]['after'],pending[name]['after']),'owned_'+name+'_changed')
+            checked['files'][name]['after']=current
+            require(sha(self.read(Path(pending[name]['backup']),True))==previous['files'][name]['after'],
+                    'profile_before_image_changed')
+        self.guards(checked)
+        for name in ('http','tls'):
+            self.replace(self.files()[name],self.read(Path(pending[name]['backup']),True),previous['files'][name])
+        self.host.test_config();self.host.reload();self.wait_leaf(previous)
+        self.save(previous)
+    def set_bridge_enabled(self,enabled):
+        """Internal profile transaction; deployment owns credentials and other locks.
+
+        Deliberately no CLI activation switch: the coordinated receiver installer
+        must own the source-tool handoff, scoped key and signed acceptance first.
+        """
+        require(type(enabled) is bool,'invalid_bridge_profile')
+        with self.locked():
+            s=self.load()
+            if s['phase']=='profile_changing':self.recover_profile(s);s=self.load()
+            require(s['phase']=='active','HTTPS_not_active');self.guards(s);self.authority()
+            self.topology(s,self.host.test_config())
+            if s.get('bridge_enabled',False)==enabled:return self.public(s)
+            if enabled:self.host.bridge_available()
+            folder=self.p.base/('profile-'+uuid.uuid4().hex);folder.mkdir(mode=0o700)
+            leaf=self.host.certificate(self.p.old.ca,self.p.old.ca_key,folder);self.authority()
+            original=self.read(Path(s['files']['http']['backup']),True)
+            proxy,redirect=self.render(original,folder,enabled)
+            previous=(json.dumps(s,sort_keys=True)+'\n').encode()
+            self.lib.atomic(folder/'state.before',previous)
+            pending={'state_before':str(folder/'state.before'),'state_sha':sha(previous)}
+            for name,raw in (('http',redirect),('tls',proxy)):
+                before=folder/(name+'.before');self.lib.atomic(before,self.read(self.files()[name]))
+                pending[name]={'backup':str(before),'after':sha(raw)}
+            s['pending_profile']=pending;s['phase']='profile_changing';self.save(s)
+            try:
+                for name,raw in (('http',redirect),('tls',proxy)):
+                    require(sha(self.read(self.files()[name]))==s['files'][name]['after'],'owned_'+name+'_changed')
+                    self.replace(self.files()[name],raw,s['files'][name])
+                candidate=json.loads(previous);candidate.update(bridge_enabled=enabled,folder=str(folder),leaf=leaf)
+                for name in ('http','tls'):candidate['files'][name]['after']=pending[name]['after']
+                self.topology(candidate,self.host.test_config());self.host.reload();self.wait_leaf(candidate)
+                self.guards(candidate);self.host.redirect_check()
+                self.save(candidate);return self.public(candidate)
+            except BaseException:
+                self.recover_profile(self.load());raise
     def status(self):
         if not self.p.state.exists():return {'phase':'not_prepared'}
         s=self.load()

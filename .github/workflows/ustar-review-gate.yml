@@ -118,7 +118,9 @@ jobs:
           spec = importlib.util.spec_from_file_location('https_transform', 'scripts/infra/academy_https.py')
           module = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(module)
-          Path('.stage-input/academy-https-config.php').write_bytes(module.patch_config(Path('tests/stage/config.php').read_bytes()))
+          config = module.patch_config(Path('tests/stage/config.php').read_bytes())
+          config = config.replace(b'require_once', b"$CFG->ustar_connect_bridge_enabled=true;\n$CFG->ustar_connect_bridge_peers=['127.0.0.1'];\n$CFG->ustar_connect_bridge_keys=['tg_link'=>['secret'=>str_repeat('12',32),'provider'=>'telegram','tenant'=>'123456','operations'=>['link.claim']]];\nrequire_once")
+          Path('.stage-input/academy-https-config.php').write_bytes(config)
           PYCONFIG
       - name: Build existing pinned Moodle 5.1.8 PostgreSQL 16 runtime
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull

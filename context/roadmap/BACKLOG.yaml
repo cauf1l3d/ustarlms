@@ -514,3 +514,5 @@ owner_selected_order:
 - OPS-02_external_result_when_received
 latest_owner_priority: '19Oct00:49MSK: unified Academy bot architecture in PR106;accounts/link accepted0041; journal/heartbeat
   deferred;no subagents without agreement;OPS02 waiting;Moodle5.2/PG17 deferred'
+
+private_bridge_source_progress: context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PROGRESS_20261021.md

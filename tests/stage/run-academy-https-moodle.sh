@@ -21,3 +21,4 @@ for attempt in $(seq 1 40); do
     sleep 0.2
 done
 php -r '$v=json_decode(file_get_contents("/artifacts/academy-https-moodle.json"),true,512,JSON_THROW_ON_ERROR);if($v!==["url"=>"https://ustar.local","sslproxy"=>true,"cookiesecure"=>true,"server_https"=>"on"]){throw new RuntimeException("Moodle HTTPS fixture mismatch");} $h=file_get_contents("/artifacts/academy-https-moodle-headers.txt");if(!preg_match("/Set-Cookie: MoodleSession[^\\r\\n]*;\\s*secure(?:;|\\r?$)/im",$h)){throw new RuntimeException("Secure Moodle session cookie missing");}echo "ACADEMY_MOODLE_HTTPS_BOOTSTRAP=PASS; real Moodle sslproxy and secure session\\n";'
+php /source/tests/stage/connect_scope_probe.php

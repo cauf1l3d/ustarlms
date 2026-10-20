@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import sys
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, MagicMock
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'connect-worker'))
@@ -20,6 +20,27 @@ PAYLOAD = {'provider': 'telegram', 'tenant': '123456', 'subject': '8727627355'}
 
 
 class BridgeWorkerTests(unittest.TestCase):
+    def test_link_scope_probe_accepts_only_exact_authenticated_scope_denial(self):
+        import io
+        from urllib.error import HTTPError
+        client=BridgeClient('https://localhost/local/ustar/connect_bridge.php','tg1',KEY)
+        client._opener=Mock()
+        for code,body,accepted in [(403,b'{"ok":false,"reason":"forbidden_operation"}',True),
+            (409,b'{"ok":false,"reason":"forbidden_operation"}',False),
+            (403,b'{"ok":false,"reason":"invalid_transport"}',False),
+            (404,b'{"ok":false,"reason":"bridge_disabled"}',False),
+            (403,b'<html>PRIVATE_CANARY</html>',False)]:
+            client._opener.open.side_effect=HTTPError('https://localhost',code,'fixture',{},io.BytesIO(body))
+            if accepted:self.assertIsNone(client.probe_link_scope())
+            else:
+                with self.assertRaisesRegex(ValueError,'^bridge_scope_unverified$'):client.probe_link_scope()
+            request=client._opener.open.call_args.args[0]
+            self.assertEqual({'operation':'registration.options','payload':{'probe':'link-scope-v1'}},json.loads(request.data))
+        client._opener.open.side_effect=None
+        client._opener.open.return_value=MagicMock()
+        client._opener.open.return_value.__enter__.return_value.read.return_value=b'{"ok":true,"result":{}}'
+        with self.assertRaisesRegex(ValueError,'^bridge_scope_unverified$'):client.probe_link_scope()
+
     def test_body_and_signature_are_stable_and_no_secret_in_repr(self):
         request = sign_request('launch.create', PAYLOAD, key_id='tg1', secret_hex=KEY, now=NOW, nonce=NONCE)
         self.assertEqual(json.loads(request.body), {'operation': 'launch.create', 'payload': PAYLOAD})
@@ -69,6 +90,25 @@ class BridgeWorkerTests(unittest.TestCase):
 
 @unittest.skipUnless(os.environ.get('USTAR_TEST_PHP') or shutil.which('php'), 'PHP runtime not installed')
 class BridgeCrossLanguageTests(unittest.TestCase):
+    def test_scope_probe_requires_auth_and_rejects_broad_key_before_any_database_use(self):
+        from dataclasses import replace
+        request=sign_request('registration.options',{'probe':'link-scope-v1'},key_id='tg1',secret_hex=KEY,now=NOW)
+        self.assertEqual({'denied':'forbidden_operation'},self.php_verify(request,scopes=['link.claim']))
+        altered=replace(request,headers={**request.headers,'X-Ustar-Signature':'0'*64})
+        self.assertEqual({'denied':'invalid_transport'},self.php_verify(altered,scopes=['link.claim']))
+        # Exercise actual dispatch with no Moodle or DB object. Overbroad keys
+        # must stop at field validation, before remember_transport can access DB.
+        script=('define("MOODLE_INTERNAL",true); require '+json.dumps(str(ROOT/'moodle/local/ustar/classes/connect/bridge_auth.php'))+'; '
+            'require '+json.dumps(str(ROOT/'moodle/local/ustar/classes/connect/bridge_service.php'))+'; '
+            '$x=json_decode(stream_get_contents(STDIN),true); try {'
+            '\\local_ustar\\connect\\bridge_service::dispatch($x["body"],$x["headers"],$x["keys"]);'
+            '}catch(\\InvalidArgumentException $e){echo $e->getMessage();}')
+        request=sign_request('registration.options',{'probe':'link-scope-v1'},key_id='tg1',secret_hex=KEY,now=int(__import__('time').time()))
+        data={'body':request.body.decode(),'headers':request.headers,'keys':{'tg1':{
+            'secret':KEY,'provider':'telegram','tenant':'123456','operations':['registration.options','link.claim']}}}
+        result=subprocess.run([os.environ.get('USTAR_TEST_PHP','php'),'-n','-r',script],input=json.dumps(data),text=True,capture_output=True,check=True)
+        self.assertEqual('invalid_payload',result.stdout);self.assertEqual('',result.stderr)
+
     def php_verify(self, request, *, now=NOW, scopes=None):
         source = ROOT / 'moodle/local/ustar/classes/connect/bridge_auth.php'
         data = {'body': request.body.decode(), 'headers': request.headers, 'now': now,

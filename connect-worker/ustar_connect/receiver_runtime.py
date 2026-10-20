@@ -64,9 +64,12 @@ def main(argv=None):
         config = load_config(args.config)
         if args.probe:
             verify_bot(config.api, config.bot_id, config.bot_username, require_main_app=config.onboarding_enabled)
+            if config.linking_enabled:
+                config.bridge.probe_link_scope()
             print(json.dumps({'status':'telegram_verified','bot_username':config.bot_username,
                               'updates_consumed':False,'onboarding_enabled':config.onboarding_enabled,
-                              'linking_enabled':config.linking_enabled}))
+                              'linking_enabled':config.linking_enabled,
+                              'link_scope':'verified' if config.linking_enabled else 'disabled'}))
             return 0
         if not args.run:
             print(json.dumps({'status':'configuration_valid','network_used':False,

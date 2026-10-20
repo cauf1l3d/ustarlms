@@ -4,6 +4,10 @@ if (__DIR__ !== '/source/tests/stage' || !is_dir('/stage/moodle')) {
     http_response_code(500);
     exit('isolated_fixture_required');
 }
+if (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === '/local/ustar/connect_bridge.php') {
+    require('/stage/moodle/public/local/ustar/connect_bridge.php');
+    exit;
+}
 require('/stage/moodle/config.php');
 header('Content-Type: application/json');
 echo json_encode([

@@ -1,5 +1,13 @@
 # USTAR вход в проект
 
+**21Oct — private bridge source components in progress.**
+Signed link-scope probe and internal HTTPS bridge profile implemented with RED→GREEN
+unit tests. Shared CA SANs, public denial, renewal and durable profile recovery covered.
+Exact new native CI pending; source is not an activation package. Coordinated root
+ownership/key/credential/receiver transaction and owner live link acceptance remain.
+Application2000/cron acceptance below stays current; do not repeat upgrade or probes.
+[Implementation ledger](context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PROGRESS_20261021.md).0subagents;server1/provider/main unchanged.
+
 **21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**
 [Owner receipt](context/runtime/connect_chat_link_update_owner_20261021.json):exact6aa/e0d364ab SHA OK,
 CHAT_LINK_UPDATE=PASS,upgrade_complete/public_released=true. Effective payload1e8a8819,

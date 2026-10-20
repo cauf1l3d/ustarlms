@@ -21,6 +21,21 @@ HTTP='''<VirtualHost *:80>
 '''
 
 class Transform(unittest.TestCase):
+    def test_bridge_profile_binds_only_loopback_denies_public_path_and_preserves_include(self):
+        paths=SimpleNamespace(health=Path('/srv/probe/ready.html'))
+        public,redirect=x.proxy_and_redirect(HTTP.encode(),paths,Path('/private/cert.crt'),Path('/private/key.key'),bridge_port=18443)
+        for raw in (public,redirect):
+            self.assertIn(b'connect_bridge[.]php',raw)
+            self.assertIn(b'Require all denied',raw)
+            self.assertIn(b'Include /etc/apache2/ustar-console-observability.conf',raw)
+        self.assertIn(b'Listen 127.0.0.1:18443',public)
+        self.assertIn(b'<VirtualHost 127.0.0.1:18443>',public)
+        self.assertIn(b'http://127.0.0.1:8082/local/ustar/connect_bridge.php',public)
+        self.assertIn(b'<LimitExcept POST>',public)
+        self.assertNotIn(b'Listen 0.0.0.0',public)
+        self.assertNotIn(b'X-Forwarded-Proto',public)
+        with self.assertRaises(x.Refusal):
+            x.proxy_and_redirect(HTTP.encode(),paths,Path('/private/cert.crt'),Path('/private/key.key'),bridge_port='18443\nListen 0.0.0.0:9443')
     def test_indirect_original_config_is_preserved_and_overridden_before_bootstrap(self):
         result=x.patch_config(CONFIG)
         self.assertIn(b'$CFG->wwwroot = $prepared_origin;',result)
@@ -53,7 +68,8 @@ from unittest.mock import patch
 from tests.r16 import test_academy_tls_probe as old
 
 class Host(old.FakeHost):
-    HTTP_PORT,HTTPS_PORT,BACKEND_PORT=80,443,8082
+    HTTP_PORT,HTTPS_PORT,BACKEND_PORT,BRIDGE_PORT=80,443,8082,18443
+    def bridge_available(self):pass
     def __init__(self,p,http_enabled):
         super().__init__(p);self.http_enabled=http_enabled;self.new=False;self.timer=False
         self.fail='';self.due_now=False
@@ -61,6 +77,8 @@ class Host(old.FakeHost):
         self.calls.append('configtest')
         text=old.BASE.replace('/etc/apache2/sites-enabled/academy.conf',str(self.http_enabled))
         if self.p.enabled.is_symlink():text+=f' port 443 namevhost ustar.local ({self.p.enabled}:1)\n'
+        if self.p.site.exists() and b'Listen 127.0.0.1:18443' in self.p.site.read_bytes():
+            text+=f'127.0.0.1:18443 localhost ({self.p.enabled}:50)\n'
         if self.fail=='config':self.fail='';raise x.Refusal('bad_config')
         return old.x.parse_vhosts(text)
     def certificate(self,ca,key,folder):
@@ -201,6 +219,41 @@ class Transaction(unittest.TestCase):
         self.p.old.enabled.unlink();self.p.old.enabled.symlink_to(self.p.http)
         with self.assertRaises(x.Refusal):self.manager.renew()
         self.assertEqual(before,self.p.old.site.read_bytes())
+
+    def test_bridge_profile_survives_renewal_and_blocks_HTTP_rollback_until_deactivated(self):
+        self.manager.cutover();originals={k:v.copy() for k,v in self.manager.load()['files'].items()}
+        self.assertEqual('active',self.manager.set_bridge_enabled(True)['phase'])
+        self.assertIn(b'Listen 127.0.0.1:18443',self.p.old.site.read_bytes())
+        with self.assertRaisesRegex(x.Refusal,'deactivate_bridge_before_HTTP_rollback'):self.manager.rollback()
+        self.host.due_now=True
+        self.assertEqual('renewed',self.manager.renew()['phase'])
+        self.assertIn(b'Listen 127.0.0.1:18443',self.p.old.site.read_bytes())
+        self.assertIn(b'connect_bridge[.]php',self.p.http.read_bytes())
+        self.assertEqual(originals['config'],self.manager.load()['files']['config'])
+        self.manager.set_bridge_enabled(False)
+        self.assertNotIn(b'Listen 127.0.0.1:18443',self.p.old.site.read_bytes())
+        self.manager.rollback();self.assert_restored()
+
+    def test_failed_profile_change_restores_current_TLS_HTTP_and_state_without_touching_Moodle(self):
+        self.manager.cutover();before=self.manager.load()
+        http=self.p.http.read_bytes();tls=self.p.old.site.read_bytes()
+        self.host.purge=lambda *_:(_ for _ in ()).throw(AssertionError('profile must not purge Moodle'))
+        self.host.fail='reload'
+        with self.assertRaisesRegex(x.Refusal,'lost_reload_ack'):self.manager.set_bridge_enabled(True)
+        self.assertEqual(before,self.manager.load())
+        self.assertEqual(http,self.p.http.read_bytes());self.assertEqual(tls,self.p.old.site.read_bytes())
+
+    def test_profile_recovery_does_not_overwrite_administrator_drift(self):
+        self.manager.cutover()
+        original_reload=self.host.reload
+        def changed():
+            self.p.http.write_bytes(b'ADMIN_CHANGE')
+            raise x.Refusal('lost_reload_ack')
+        self.host.reload=changed
+        with self.assertRaisesRegex(x.Refusal,'owned_http_changed'):self.manager.set_bridge_enabled(True)
+        self.assertEqual(b'ADMIN_CHANGE',self.p.http.read_bytes())
+        self.assertEqual('profile_changing',self.manager.load()['phase'])
+        self.host.reload=original_reload
 
 class RuntimeBoundary(unittest.TestCase):
     def test_readonly_directory_bind_is_valid_but_file_bind_is_not(self):

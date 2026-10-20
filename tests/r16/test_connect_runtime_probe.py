@@ -36,3 +36,26 @@ class RuntimeProbeTests(unittest.TestCase):
             with patch.object(runtime,'load_config',return_value=config),patch('sys.stdout',new_callable=io.StringIO) as out:
                 self.assertEqual(3,runtime.main(['--config','/synthetic','--probe']))
                 self.assertIn(reason,out.getvalue());self.assertNotIn('PRIVATE_CANARY',out.getvalue())
+
+    def test_link_probe_verifies_scope_before_any_journal_or_update_access(self):
+        runtime=importlib.import_module('ustar_connect.receiver_runtime')
+        config=Mock(bot_id='123456',bot_username='ustarcorp_bot',onboarding_enabled=False,linking_enabled=True)
+        config.api.get_me.return_value={'id':123456,'username':'ustarcorp_bot','is_bot':True}
+        config.api.get_webhook_info.return_value={'url':''}
+        with patch.object(runtime,'load_config',return_value=config),patch.object(runtime,'Journal') as journal,patch('sys.stdout',new_callable=io.StringIO) as out:
+            self.assertEqual(0,runtime.main(['--config','/synthetic','--probe']))
+        config.bridge.probe_link_scope.assert_called_once_with()
+        self.assertEqual('verified',json.loads(out.getvalue())['link_scope'])
+        journal.assert_not_called();config.api.get_updates.assert_not_called()
+        config.api.send_notice.assert_not_called()
+
+    def test_failed_link_scope_probe_cannot_report_telegram_verified(self):
+        runtime=importlib.import_module('ustar_connect.receiver_runtime')
+        config=Mock(bot_id='123456',bot_username='ustarcorp_bot',onboarding_enabled=False,linking_enabled=True)
+        config.api.get_me.return_value={'id':123456,'username':'ustarcorp_bot','is_bot':True}
+        config.api.get_webhook_info.return_value={'url':''}
+        config.bridge.probe_link_scope.side_effect=ValueError('PRIVATE_CANARY')
+        with patch.object(runtime,'load_config',return_value=config),patch.object(runtime,'Journal') as journal,patch('sys.stdout',new_callable=io.StringIO) as out:
+            self.assertNotEqual(0,runtime.main(['--config','/synthetic','--probe']))
+        journal.assert_not_called();self.assertNotIn('telegram_verified',out.getvalue())
+        self.assertNotIn('PRIVATE_CANARY',out.getvalue())

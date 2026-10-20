@@ -100,6 +100,36 @@ class BridgeClient:
         context = ssl.create_default_context(cafile=ca_file)
         self._opener = build_opener(ProxyHandler({}), HTTPSHandler(context=context), _NoRedirect())
 
+    def probe_link_scope(self) -> None:
+        """An existing forbidden operation proves HMAC/peer checks without consuming a nonce.
+
+        PHP authenticates the signature before checking scope; dispatch consumes its
+        nonce only after that scope check. A generic HTTP denial is not a proof.
+        This intentionally does not use a challenge, identity or business payload.
+        """
+        # Nonempty JSON object also survives PHP associative canonicalization.
+        # Deliberately invalid business fields ensure an overbroad key still fails
+        # payload validation before nonce consumption or business dispatch.
+        signed = sign_request('registration.options', {'probe':'link-scope-v1'}, key_id=self._key_id,
+                              secret_hex=self._secret, now=int(time.time()))
+        request = Request(self._endpoint, data=signed.body, headers=signed.headers, method='POST')
+        try:
+            with self._opener.open(request, timeout=10):
+                pass
+        except HTTPError as error:
+            try:
+                # Exact fixed response from the already installed PHP facade. Do not
+                # accept proxy HTML, a redirect, duplicate JSON fields or other errors.
+                if error.code == 403 and error.read(16385) == b'{"ok":false,"reason":"forbidden_operation"}':
+                    return
+            except (OSError, ValueError):
+                pass
+            finally:
+                error.close()
+        except (URLError, OSError, ValueError):
+            pass
+        raise ValueError('bridge_scope_unverified') from None
+
     def request(self, operation: str, payload: dict) -> dict:
         signed = sign_request(operation, payload, key_id=self._key_id, secret_hex=self._secret, now=int(time.time()))
         request = Request(self._endpoint, data=signed.body, headers=signed.headers, method='POST')

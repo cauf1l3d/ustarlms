@@ -1,5 +1,13 @@
 # Реестр кода, проверок и deployment evidence
 
+## 20Oct17:32МСК — owner details received,no deployment
+
+Academy Apache80/proxy8082/noTLS/Include,origin_expression,default Caddyfile without
+Academy,and protected console CA/signer metadata. `other` process labels are a
+probe allowlist limitation,not identity. Narrow cgroup/wwwroot-feature operator
+block syntax checked;no new helper/application code,server/TLS/network operation.
+[Receipt and continuation](connect_https_owner_20261020.json).
+
 ## 20Oct17:16МСК — read-only HTTPS owner report
 
 [Receipt](connect_https_owner_20261020.json):8082loopback/running,Apache/Caddy active,

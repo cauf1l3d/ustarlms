@@ -1,5 +1,11 @@
 # Активные задачи USTAR
 
+**20Oct17:32МСК:** details принят в [receipt](../runtime/connect_https_owner_20261020.json):
+Academy Apache80/noTLS/proxy8082/Include;origin_expression;default Caddyfile без
+Academy;CA/key metadata present. `other` labels скрыли kernel comm,owner443 ещё
+не установлен. [Короткий read-only блок](../runtime/connect_https_preparation_20261020.md)
+для cgroup и wwwroot features;не повторять full probe или менять динамический origin.
+
 **20Oct17:16МСК:** [HTTPS owner report](../runtime/connect_https_owner_20261020.json)
 получен:8082loopback,Apache/Caddy active,443/8443 заняты;origin parser unavailable.
 Подготовлен расширенный read-only `--check --details`,12tests PASS;нужны owner

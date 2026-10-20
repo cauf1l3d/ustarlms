@@ -5,6 +5,79 @@ Owner20Oct подтвердил работу обновлённой Академ
 Привязка аккаунта и private bridge сохраняют TLS-проверки. Чатовый путь не требует
 Main Mini App,но не разрешает передачу challenge или service credential по HTTP.
 
+## Продолжение20Oct17:32МСК
+
+Расширенный отчёт получен:Apache Academy vhost только80,proxy8082,без TLS,
+с Include;default Caddyfile не содержит Academy name/upstream. `origin_expression`
+— RHS wwwroot не literal,поэтому его нельзя выполнять или молча заменять.
+CA/signing-key files пульта присутствуют с защищёнными metadata,содержимое не читалось.
+Это не проверка срока CA,совпадения key/cert или доверия на клиенте.
+
+Процессные labels снова `other`:allowlist kernel process names слишком узок.
+Не делать из этого вывод о владельце443. Следующий короткий read-only блок
+сопоставляет kernel PID→systemd cgroup и выводит только выбранные unit labels/
+короткие kernel comm,без PID/IP/argv;из wwwroot только признаки выражения и hash.
+Он не выполняет PHP,не печатает RHS и не изменяет конфигурации. Этот шаг заменяет
+повторение уже выполненных больших probe. До определения TLS owner и review
+wwwroot нет команды изменения shared443 или canonical origin.
+
+```bash
+sudo python3 - <<'PY'
+import hashlib, json, re, subprocess
+from pathlib import Path
+result = {'read_only': True, 'services_changed': False}
+try:
+    raw = subprocess.run(['ss', '-H', '-ltnp'], capture_output=True,
+                         text=True, timeout=10, check=True).stdout
+    if len(raw) > 131072:
+        raise ValueError()
+    rows = []
+    known = {'apache2.service', 'caddy.service', 'nginx.service', 'ustar-console.service'}
+    for line in raw.splitlines():
+        fields = line.split()
+        if len(fields) < 5 or fields[3].rsplit(':', 1)[-1] not in {'80', '443', '8443'}:
+            continue
+        units = set()
+        for pid in re.findall(r'pid=([0-9]{1,10})', line):
+            try:
+                group = Path('/proc', pid, 'cgroup').read_text()
+                units.update(part for part in re.split(r'[/\n:]', group) if part in known)
+            except OSError:
+                pass
+        names = re.findall(r'\("([A-Za-z][A-Za-z0-9_.-]{0,15})",pid=', line)
+        rows.append({'port': int(fields[3].rsplit(':', 1)[-1]),
+                     'units': sorted(units), 'kernel_process_names': sorted(set(names))})
+    result['listeners'] = rows
+except Exception:
+    result['listeners'] = {'status': 'unavailable'}
+try:
+    path = Path('/opt/ustar/data/moodle/public/config.php')
+    if path.stat().st_size > 131072 or any(p.is_symlink() for p in (path, *path.parents)):
+        raise ValueError()
+    data = path.read_bytes()
+    if len(data) > 131072:
+        raise ValueError()
+    values = re.findall(rb'(?m)^\s*\$CFG->wwwroot\s*=\s*([^;\n]+);', data)
+    value = values[0] if len(values) == 1 else b''
+    result['wwwroot_features'] = {'assignment_count': len(values),
+        'uses_SERVER': b'$_SERVER' in value, 'uses_ENV': b'$_ENV' in value,
+        'uses_getenv': bool(re.search(rb'\bgetenv\s*\(', value)),
+        'mentions_HTTP_HOST': b'HTTP_HOST' in value, 'mentions_HTTPS': b'HTTPS' in value,
+        'contains_http_literal': b'http://' in value, 'contains_https_literal': b'https://' in value,
+        'config_sha256': hashlib.sha256(data).hexdigest()}
+except Exception:
+    result['wwwroot_features'] = {'status': 'unavailable'}
+print(json.dumps(result, ensure_ascii=False, indent=2))
+PY
+```
+
+Подготовка TLS должна сохранить HTTP на время проверки сертификата и клиента,
+не заменять unknown shared listener и не менять маршруты/DNS/Xray. Отдельный
+loopback18443 допустим как предварительная проверка TLS,но сам по себе не является
+HTTPS Академии или запуском бота. Реальная Academy TLS activation требует
+проверенного webserver owner,canonical origin/cookies/redirects и private bridge
+TLS contract;никаких ssl_verify=false или доверия произвольным forwarded headers.
+
 ## Продолжение20Oct17:16МСК
 
 [Owner report](connect_https_owner_20261020.json) получен:loopback8082 работает,

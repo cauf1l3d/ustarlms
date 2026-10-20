@@ -1,5 +1,14 @@
 # Журнал выполнения roadmap
 
+## 2026-10-20 17:32МСК — owner HTTPS details
+
+Owner confirms Apache Academy80/noTLS/proxy8082/Include,origin_expression,default
+Caddyfile without Academy,and protected CA/signer metadata. Listener comm allowlist
+redacted all owners as other;not a port-owner fact. Added narrow read-only cgroup/
+wwwroot-feature operator block to runbook,without raw RHS/IP/PID/argv or PHP execution.
+No product/helper code or server changes;syntax/context checked. Next actual
+listener owner/expression features then concrete TLS procedure.0subagents.
+
 ## 2026-10-20 17:16МСК — HTTPS readiness owner report
 
 [Receipt](../runtime/connect_https_owner_20261020.json):8082loopback,Apache/Caddy

@@ -449,7 +449,7 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: HTTPS_readiness_received_shared_listener_details_next
+  phase: Academy_HTTP_vhost_confirmed_dynamic_origin_and_TLS_owner_review
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
   current_summary: 'Installer02b0548c:Context39351249166/Review39351249243 SUCCESS;743r16,
     actual UID33/root-group,native121/611+6concurrency+paired93to99to93 and SQL/schema guards PASS.
@@ -459,7 +459,9 @@ tasks:
     766r16,124native629,6concurrency,paired93to99to93,28link-browser and actual-host PASS;not deployed.
     Owner confirms HTTP origin.
     Owner1716MSK HTTPS readiness received:8082loopback,Apache/Caddy active,443/8443 occupied,origin parser unavailable.
-    Next same read-only probe --check --details before staged TLS/private bridge and verified link/notify;do not repeat installation.
+    Owner1732MSK details:origin_expression,Apache80/noTLS/proxy8082/Include,default Caddyfile lacks Academy;
+    narrow cgroup/wwwroot-feature read-only command next because process allowlist labels other are incomplete.
+    Next narrow cgroup/wwwroot-feature block before staged TLS/private bridge and verified link/notify;do not repeat installation or full probes.
     Full private server report/private local ancestry excluded from publication.'
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate

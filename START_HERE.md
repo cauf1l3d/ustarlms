@@ -1,5 +1,12 @@
 # USTAR вход в проект
 
+**20Oct17:32МСК:** details уже получен:Apache Academy80/noTLS/proxy8082/Include,
+origin_expression,default Caddyfile безAcademy,CA/signer protected metadata present.
+`other` labels не идентифицируют owner443. [Следующий узкий cgroup/wwwroot-feature
+блок](context/runtime/connect_https_preparation_20261020.md) без PHP/config output;
+не повторять прежние большие probe. [Receipt](context/runtime/connect_https_owner_20261020.json).
+HTTPS/сеть/Academy не менялись.
+
 **20Oct17:16МСК:** owner выполнил HTTPS probe;[квитанция](context/runtime/connect_https_owner_20261020.json).
 Moodle loopback8082,Apache/Caddy active,443/8443 заняты;origin parser unavailable,
 не outage. Следом расширенный `--check --details` того же probe для владельцев

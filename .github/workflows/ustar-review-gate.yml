@@ -110,6 +110,14 @@ jobs:
           mkdir -p .stage-input/connect-baseline artifacts
           git archive e1d57f5bc28f6964afd20aeff7620345b34a80fe moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-baseline
           python3 tests/stage/connect_installer_probe.py prepare
+          python3 - <<'PYCONFIG'
+          import importlib.util
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location('https_transform', 'scripts/infra/academy_https.py')
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          Path('.stage-input/academy-https-config.php').write_bytes(module.patch_config(Path('tests/stage/config.php').read_bytes()))
+          PYCONFIG
       - name: Build existing pinned Moodle 5.1.8 PostgreSQL 16 runtime
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull
       - name: Verify fresh install, upgrade, repeat, links and independent concurrent requests
@@ -120,7 +128,9 @@ jobs:
         if: always()
         with:
           name: connect-identity-db-evidence
-          path: artifacts/connect-*
+          path: |
+            artifacts/connect-*
+            artifacts/academy-https-moodle*
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
@@ -162,13 +172,23 @@ jobs:
             sudo -n apt-get update -qq
             sudo -n apt-get install -y --no-install-recommends apache2-bin
           fi
+      - name: Ensure PHP CLI exists only on disposable HTTPS test runner
+        run: |
+          if ! command -v php >/dev/null; then
+            sudo -n apt-get update -qq
+            sudo -n apt-get install -y --no-install-recommends php-cli
+          fi
       - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
-        run: sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py
+        run: |
+          sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py
+          sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_https_native.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: academy-tls-probe-native
-          path: artifacts/academy-tls-*-native.json
+          path: |
+            artifacts/academy-tls-*-native.json
+            artifacts/academy-https-native.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: connect-receiver-runtime

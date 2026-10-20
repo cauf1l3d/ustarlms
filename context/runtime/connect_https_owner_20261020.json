@@ -160,5 +160,15 @@
     "statement": "да с телефона и впн открывается с локальной сети wifi",
     "scope": "owner_phone_over_local_office_WiFi_with_VPN;not_public_internet_or_mobile_data_acceptance",
     "certificate_warning": "no_warning_followup_accepted_from_affirmative_answer_to_prior_question;not_independent_device_inspection"
+  },
+  "HTTP_vhost_owner_report_1920": {
+    "reported_at": "2026-10-20T19:20:36+03:00",
+    "binding": "*:80",
+    "server_name": "ustar.local",
+    "proxy_preserve_host": true,
+    "proxy_pass": "http://127.0.0.1:8082/",
+    "proxy_pass_reverse": "http://127.0.0.1:8082/",
+    "include": "/etc/apache2/ustar-console-observability.conf",
+    "include_contents": "not_present_in_public_repo;preserve_opaque_file_and_hash_do_not_recreate"
   }
 }

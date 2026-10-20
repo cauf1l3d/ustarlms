@@ -670,6 +670,12 @@
       "sha256": "037e109a271033244bb03612019832279c8d3423f03049168bd867f1ce126d55"
     },
     {
+      "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
+      "domain": "proposals",
+      "size": 4590,
+      "sha256": "192c17726218830b714a6b2ebe3cf2f7b010b5f0e2e357b91975acd5cc4d13f9"
+    },
+    {
       "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md",
       "domain": "proposals",
       "size": 7085,
@@ -1170,8 +1176,8 @@
     {
       "path": "context/runtime/connect_https_owner_20261020.json",
       "domain": "runtime",
-      "size": 7378,
-      "sha256": "066d060d6fda65e2d5e2155ca4a1db6fd5fcc5b665fbea781647fa397d16deef"
+      "size": 7816,
+      "sha256": "6a629d495f52f433b4705e9e831bc5b4868e447bd551a5aa0babcf4a0c3b3e5e"
     },
     {
       "path": "context/runtime/connect_https_preparation_20261020.md",
@@ -2070,8 +2076,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 24857,
-      "sha256": "81c28237e592b5376b7ded410c93cd9c1f0dc47eea7ac2a6ceee782abde24d64"
+      "size": 25647,
+      "sha256": "6ee928437cb7596e15db05b18427dd44c9cd7d78d451e8ece6078b4097634837"
     },
     {
       "path": "context/tasks/backlog.yaml",

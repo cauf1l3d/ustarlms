@@ -1,5 +1,17 @@
 # USTAR инструкции агентам
 
+**20Oct: canonical HTTPS+renewal source implementation in progress.**
+Owner19:20 HTTP report resolves observability Include path;its content is not in
+public repo. Preserve this opaque file/hash in TLS proxy and HTTP302;no new probes.
+New scripts/infra/academy_https.py reuses pinned accepted TLS helper,backs up only
+configuration files,adds wwwroot/sslproxy/cookiesecure before native bootstrap,
+uses graceful reload/recovery and daily30day certificate renewal/10day threshold.
+[Plan](context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md).
+Local targeted13tests GREEN;native Apache/PHP and actual Moodle bootstrap CI pending.
+No owner cutover command until native/source gates pass;server remains accepted
+static TLS probe+HTTP Academy.0subagents;no source/schema/data deployment.
+
+
 **20Oct19:01МСК: owner подтвердил phone+VPN по локальному WiFi.**
 Static TLS browser gate принят для office WiFi/phone/VPN;не public/mobile-data acceptance.
 Сертификат leaf до19Nov2026,canonical Academy пока HTTP. Не повторять probe install/

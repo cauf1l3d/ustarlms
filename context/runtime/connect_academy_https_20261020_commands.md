@@ -1,5 +1,11 @@
 # Переключение Академии на внутренний HTTPS
 
+**Применено владельцем20Oct19:59МСК:** check/cutover/status active;HTTPS открывается
+на компьютере/телефоне/VPN. Повторно устанавливать или переключать не нужно.
+[Квитанция](connect_https_owner_20261020.json). Сейчас сначала
+[диагностика stale cron receipt](cron_incident_20261020.md),затем private bridge/link/notify.
+Ниже сохранены проверенные команды поставки и отката.
+
 Готово по результатам CI source `d1e61a3b96651ef6de724e2c14ac51a73f2e3d41`.
 [Квитанция](connect_academy_https_ci_20261020.json),
 [план](../proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md).

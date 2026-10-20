@@ -14,20 +14,53 @@
   "runtime_job": 118754488236,
   "runtime_conclusion": "success",
   "source_jobs": [
-    {"id": 118754488603, "PHP": "8.2", "conclusion": "success"},
-    {"id": 118754488652, "PHP": "8.3", "conclusion": "success"}
+    {
+      "id": 118754488603,
+      "PHP": "8.2",
+      "conclusion": "success"
+    },
+    {
+      "id": 118754488652,
+      "PHP": "8.3",
+      "conclusion": "success"
+    }
   ],
-  "source_checks": {"PHP_files": 381, "JS_files": 24, "templates": 57, "tables": 99},
-  "r16": {"tests": 811, "environment_skips": 134, "result": "PASS"},
-  "local_targeted": {"tests": 15, "command": "python3 -m unittest discover -s tests/r16 -p test_academy_https.py -v", "result": "PASS"},
-  "browser_synthetic_scenarios": {"mobile": 60, "onboarding": 20, "link": 28, "actor": 100},
+  "source_checks": {
+    "PHP_files": 381,
+    "JS_files": 24,
+    "templates": 57,
+    "tables": 99
+  },
+  "r16": {
+    "tests": 811,
+    "environment_skips": 134,
+    "result": "PASS"
+  },
+  "local_targeted": {
+    "tests": 15,
+    "command": "python3 -m unittest discover -s tests/r16 -p test_academy_https.py -v",
+    "result": "PASS"
+  },
+  "browser_synthetic_scenarios": {
+    "mobile": 60,
+    "onboarding": 20,
+    "link": 28,
+    "actor": 100
+  },
   "native_Apache_artifact": {
     "id": 12282036743,
     "archive_sha256": "2f57bd077ccdaea8457bf684c6b915895a3b8b180da3d99e8b91d74d1c575116",
     "downloaded_digest_verified": true,
     "receipt": "academy-https-native.json",
     "marker": "ACADEMY_CANONICAL_HTTPS_NATIVE=PASS; Apache/OpenSSL/PHP/proxy/redirect/renew/recovery; isolated_fixture",
-    "proofs": ["real_Apache_OpenSSL_PHP", "HTTP302_path_query_preserved", "verified_HTTPS_proxy_secure_cookie", "observability_header_and_include_unchanged", "renewal_and_failed_renewal_recovery", "cutover_repeat_rollback_lost_ack_recovery"],
+    "proofs": [
+      "real_Apache_OpenSSL_PHP",
+      "HTTP302_path_query_preserved",
+      "verified_HTTPS_proxy_secure_cookie",
+      "observability_header_and_include_unchanged",
+      "renewal_and_failed_renewal_recovery",
+      "cutover_repeat_rollback_lost_ack_recovery"
+    ],
     "systemd_and_Docker_boundaries": "modeled;production_executes_real_checks",
     "production_access": false
   },
@@ -41,7 +74,12 @@
     "downloaded_digest_verified": true,
     "marker": "ACADEMY_MOODLE_HTTPS_BOOTSTRAP=PASS; real Moodle sslproxy and secure session",
     "receipt": "academy-https-moodle.json",
-    "actual_bootstrap": {"url": "https://ustar.local", "sslproxy": true, "cookiesecure": true, "server_https": "on"},
+    "actual_bootstrap": {
+      "url": "https://ustar.local",
+      "sslproxy": true,
+      "cookiesecure": true,
+      "server_https": "on"
+    },
     "real_MoodleSession_secure_cookie_header_verified": true,
     "Connect_tests": 124,
     "Connect_assertions": 629,
@@ -50,12 +88,34 @@
     "paired_recovery_93_to_99_to_93": "PASS",
     "installer_native_SQL_versions_tasks_columns_indexes": "PASS"
   },
-  "skipped_workflow_jobs": ["rollback", "prepare-rc", "moodle-db"],
+  "skipped_workflow_jobs": [
+    "rollback",
+    "prepare-rc",
+    "moodle-db"
+  ],
   "full_RC_claim": false,
   "production_effective_addon": "owner_installed_payload830d3703/local2026101905/552files/99tables",
-  "production_TLS": "owner_accepted_static_probe3303069b_and_phone_LAN_WiFi_VPN;canonical_cutover_not_reported",
-  "owner_cutover_and_application_browser_acceptance": "pending",
-  "next": "pinned_install_and_check_then_owner_cutover_status_browser;private_bridge_link_notify_after_acceptance",
+  "production_TLS": "owner_applied_canonical_HTTPS;leaf4e9aa808_expires2026-11-19T16:56:28Z",
+  "owner_cutover_and_application_browser_acceptance": "owner20Oct1959 check/cutover/status active;general HTTPS open desktop_phone_VPN accepted;see connect_https_owner_20261020.json",
+  "next": "cron_incident_readonly_diagnosis_then_scheduled_success;private_bridge_link_notify_after",
   "agent_server_changes": false,
-  "subagents": 0
+  "subagents": 0,
+  "followup_context_only_a916f478": {
+    "source_commit": "a916f4784625ec0da1f890ae2681c66cf23ec0c2",
+    "production_and_test_code_unchanged_from_d1e61a3b": true,
+    "context_run": 39461413096,
+    "context_conclusion": "success",
+    "review_run": 39461413068,
+    "review_conclusion": "failure",
+    "source_PHP82": "success",
+    "source_PHP83": "success",
+    "connect_db": "success",
+    "failed_job": 118761541814,
+    "failed_step": "Native additive Academy TLS probe and graceful recovery on isolated high ports",
+    "observed_error": "https_manager.Refusal: session_cookie_not_secure",
+    "location": "tests/stage/academy_https_native.py initial manager.cutover; production app_check rejects synthetic backend cookie",
+    "cause": "not_confirmed;do_not_label_environment_flake_or_weaken_cookie_guard",
+    "relationship_to_owner_cron_incident": "not_established;separate_CI_followup",
+    "owner_server_result": "same pinned d1e61a3b check/cutover/status active and HTTPS desktop_phone_VPN accepted"
+  }
 }

@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+## 20Oct19:59МСК — owner HTTPS acceptance and cron incident
+
+**20Oct19:59МСК — HTTPS принят владельцем; сначала инцидент cron.**
+Owner check/cutover/status PASS: Academy `https://ustar.local`, новый leaf до
+19Nov16:56:28UTC, компьютер/телефон/VPN открывают Академию. [Квитанция](../runtime/connect_https_owner_20261020.json).
+Повторный HTTPS cutover/установка не нужны. Owner сообщает cron alarm:
+последний отчёт04:20МСК при свежей проверке19:59. Это не доказанное отключение
+cron.service. [Путь данных и read-only команды](../runtime/cron_incident_20261020.md).
+Сначала wrapper --status, schedule/service и сравнение current DB task time;
+причина и исправление ещё pending. Не запускать cron/install/rebind по догадке,
+не удалять locks и не скрывать тревогу. После свежего scheduled success — private
+bridge/scoped keys, отдельная поставка chat-link2000, двусторонний link/notify.
+Prod addon830/1905 сохранён; Mini App ждёт external HTTPS; 0 subagents.
+
 ## 20Oct — HTTPS CI gate и owner handoff
 
 **20Oct — canonical HTTPS: CI завершён, команды владельцу готовы.**

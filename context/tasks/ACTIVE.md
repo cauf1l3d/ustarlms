@@ -1,5 +1,17 @@
 # Активные задачи USTAR
 
+**20Oct19:59МСК — HTTPS принят владельцем; сначала инцидент cron.**
+Owner check/cutover/status PASS: Academy `https://ustar.local`, новый leaf до
+19Nov16:56:28UTC, компьютер/телефон/VPN открывают Академию. [Квитанция](../runtime/connect_https_owner_20261020.json).
+Повторный HTTPS cutover/установка не нужны. Owner сообщает cron alarm:
+последний отчёт04:20МСК при свежей проверке19:59. Это не доказанное отключение
+cron.service. [Путь данных и read-only команды](../runtime/cron_incident_20261020.md).
+Сначала wrapper --status, schedule/service и сравнение current DB task time;
+причина и исправление ещё pending. Не запускать cron/install/rebind по догадке,
+не удалять locks и не скрывать тревогу. После свежего scheduled success — private
+bridge/scoped keys, отдельная поставка chat-link2000, двусторонний link/notify.
+Prod addon830/1905 сохранён; Mini App ждёт external HTTPS; 0 subagents.
+
 **20Oct — canonical HTTPS: CI завершён, команды владельцу готовы.**
 Source `d1e61a3b` проверен: Context39459332144 и Review39459332116 SUCCESS.
 PHP8.2/8.3: 811 r16 tests / 134 environment skips; local HTTPS tests 15/15 PASS.

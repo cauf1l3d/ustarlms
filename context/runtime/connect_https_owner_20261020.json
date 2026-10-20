@@ -77,7 +77,7 @@
     "PHP_bootstrap_or_network_service_changes": false
   },
   "interpretation": "Shared listeners cannot be replaced based on port occupancy alone. Origin parser failure is incomplete diagnostic evidence,not an Academy outage or certificate verdict. Do not assume Caddy terminates Academy TLS. Console source uses a separate8443 server and its own CA.",
-  "next": "canonical_Academy_HTTPS_sslproxy_and_permanent_renewal;inspect_existing_HTTP_vhost_Includes_then_guarded_cutover;private_bridge_link_notify_separate",
+  "next": "cron_incident_1959MSK_readonly_status_first;then_private_bridge_scoped_keys_chat_link_notify",
   "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
   "tests": {
     "targeted_readiness": 12,
@@ -170,5 +170,22 @@
     "proxy_pass_reverse": "http://127.0.0.1:8082/",
     "include": "/etc/apache2/ustar-console-observability.conf",
     "include_contents": "not_present_in_public_repo;preserve_opaque_file_and_hash_do_not_recreate"
+  },
+  "canonical_HTTPS_owner_apply": {
+    "reported_at": "2026-10-20T19:59:48+03:00",
+    "source_commit": "d1e61a3b96651ef6de724e2c14ac51a73f2e3d41",
+    "script_SHA256_owner_verified": "42550fb1ab769dbcad7b604fe5e0619f6c7ac69fa5cbac46c624924f6895aa6e",
+    "check_phase": "ready_for_HTTPS_cutover",
+    "cutover_phase": "active",
+    "status_phase": "active",
+    "academy_origin": "https://ustar.local",
+    "leaf_fingerprint": "4e9aa808a09df8cace1393d84603c620519589ce08c3b825aa9df4ecb91fbc5e",
+    "leaf_not_after": "2026-11-19T16:56:28Z",
+    "business_data_restored": false,
+    "browser_owner_statement": "все работает, академия открывается по https c телефона и vpn и на компьютере",
+    "browser_scope": "owner_general_open_on_desktop_phone_and_VPN;exhaustive_role_Quiz_SCORM_and_public_MiniApp_acceptance_not_claimed",
+    "renewal": "timer_installation_and_initial_service_probe_verified_by_exact_cutover_contract;future_due_leaf_rotation_not_observed",
+    "independent_SSH_measurement": false,
+    "agent_server_changes": false
   }
 }

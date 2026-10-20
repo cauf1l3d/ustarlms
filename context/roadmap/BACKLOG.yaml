@@ -155,7 +155,7 @@ tasks:
   - Real workstations/phones pass login, links, files, Quiz/SCORM/chat
   - Other vhosts and required services preserved; renewal alert verified
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Static TLS accepted by owner;canonical HTTPS/renewal CI PASS on d1e61a3b;owner cutover/browser and renewal alert acceptance pending.
+  current_summary: Owner1959MSK canonical HTTPS check/cutover/status and desktop/phone/VPN opening accepted;renewal timer initial probe verified by tool contract;future renewal/alert and exhaustive browser acceptance remain distinct.
   validation_evidence:
   - context/runtime/connect_academy_https_ci_20261020.json
   - context/runtime/connect_https_owner_20261020.json
@@ -457,7 +457,7 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: canonical_HTTPS_CI_verified_owner_cutover_pending
+  phase: HTTPS_owner_accepted_cron_incident_first
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
   current_summary: >-
     Owner Academy install02b0548c and browser smoke accepted;effective payload830/1905/552/99.
@@ -465,8 +465,10 @@ tasks:
     phone LAN WiFi/VPN accepted;1920MSK vhost report resolves opaque Include and loopback8082.
     Canonical HTTPS d1e61a3b:Context39459332144/Review39459332116 SUCCESS;811r16/134skips,
     native Apache proxy/redirect/renew/recovery and actual Moodle HTTPS Secure-cookie PASS.
-    Pinned check/cutover/status/rollback ready;owner apply and application browser gate pending.
-    Then private bridge/scoped keys,chat-link candidate delivery,two-sided link/revoke,opt-in notify.
+    Owner1959MSK check/cutover/status active,HTTPS opens desktop/phone/VPN;leaf19Nov165628UTC.
+    Cron incident first:last source0420MSK versus check1959MSK,cause not yet confirmed.
+    Read-only wrapper status/schedule/service required;no manual pass or guard bypass.
+    After scheduled cron success:private bridge/scoped keys,chat-link candidate delivery,two-sided link/revoke,opt-in notify.
     Mini App waits external HTTPS. Do not repeat former installation/probes;0subagents.
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate

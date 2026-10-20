@@ -1,8 +1,8 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: connect_canonical_HTTPS_owner_cutover_pending
-stage_label: Canonical HTTPS and renewal CI passed; owner cutover and application browser acceptance pending
+stage: HTTPS_owner_accepted_cron_incident_first
+stage_label: HTTPS owner accepted; stale cron receipt investigation before bridge activation
 current_activity: >-
   Owner20Oct reports Academy installer02b0548c success and general browser smoke;
   effective payload830/local2026101905/theme2026100202/552files/99tables remains installed.
@@ -13,10 +13,13 @@ current_activity: >-
   811r16/134CI skips,15targeted local; actual Apache/OpenSSL/PHP and separate native
   Moodle5.1.8/PostgreSQL16 HTTPS bootstrap/Secure-cookie PASS. Native Connect124/629,
   6concurrency and paired93to99to93 PASS. Full-RC jobs skipped; no full-RC claim.
-  Pinned install/check/cutover/status/rollback handoff is ready. Server1 canonical
-  cutover and application browser acceptance are pending owner execution.
+  Owner1959MSK confirms check/cutover/status active and HTTPS opens on computer,
+  phone and VPN;leaf expires2026-11-19T16:56:28Z. No repeat HTTPS/probe installation.
+  New priority: cron alarm last source receipt0420MSK versus check1959MSK.
+  Service disabled versus wrapper guard/stale receipt remains unconfirmed;
+  read-only wrapper status and schedule/service evidence required before any real pass.
   Do not repeat probe/receiver/Academy installation or broad fact collection.
-  After HTTPS acceptance: private bridge/scoped keys, chat-link candidate delivery,
+  After cron scheduled success acceptance: private bridge/scoped keys, chat-link candidate delivery,
   two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.
   No agent server/main/router/DNS/routes/Caddy/Xray/provider changes;0subagents.
 next_task: INTEGRATIONS-01
@@ -97,6 +100,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/cron_incident_20261020.md
 - context/runtime/connect_academy_https_20261020_commands.md
 - context/runtime/connect_academy_https_ci_20261020.json
 - context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md

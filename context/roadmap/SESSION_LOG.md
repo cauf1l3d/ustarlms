@@ -9,7 +9,9 @@ native owner/session confirm. Новая source2026102000/552/99 не устан
 production payload830/1905 сохраняется. [План](../proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md),
 [progress](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md). Native RED
 a40ea20f:123tests/614assertions/ровно2ожидаемых новых failures;implementation после
-наблюдения RED. Финальная CI pending. HTTP blocks activation;подготовлен read-only
+наблюдения RED. Source1e8a8819:Context39361024810/Review39361024698 SUCCESS;
+766r16/124native629/6concurrency/paired93→99→93/28link-browser/actual host PASS.
+[CI-квитанция](../runtime/connect_chat_link_ci_20261020.json). HTTP blocks activation;подготовлен read-only
 HTTPS metadata tool,не bootstrap PHP и не TLS bypass. Bridge/credentials/receiver
 activation/notify ещё не выполнялись,0subagents/main merge/network changes.
 

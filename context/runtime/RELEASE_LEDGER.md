@@ -7,7 +7,9 @@ Owner04:39МСК:«Академию проверил все открываетс
 independent linking_enabled defaultOFF,second native owner/session confirm;HTTPS
 guards сохранены. [Progress](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md),
 [следующий read-only шаг](connect_https_preparation_20261020.md). Native REDa40ea20f
-наблюдался:123tests/614assertions/ровно2новых failures;финальная GREEN CI pending.
+наблюдался:123tests/614assertions/ровно2новых failures. Source1e8a8819:
+Context39361024810/Review39361024698 SUCCESS;766r16/124native629/6concurrency/
+paired93→99→93/28link-browser/actual host PASS.[CI](connect_chat_link_ci_20261020.json).
 Не установлен,production830/1905 unchanged;bridge/notify/receiver/network не менялись.
 Installer02 повторно не использовать для новой candidate.0subagents.
 

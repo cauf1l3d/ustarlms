@@ -50,8 +50,9 @@
     "external_HTTPS_or_Mini_App_acceptance"
   ],
   "next": [
-    "prepare_private_Academy_bridge_and_scoped_keys",
-    "implement_verified_direct_chat_account_link_before_Mini_App_HTTPS",
+    "read_only_HTTPS_preparation_metadata_then_staged_trusted_Academy_TLS",
+    "private_Academy_bridge_scoped_keys_and_worker_credentials_lifecycle",
+    "deploy_verified_chat_link_source_then_owner_two_sided_confirmation",
     "controlled_opt_in_notification_delivery_with_new_cutover"
   ],
   "full_private_server_report_published": false,

@@ -1,3 +1,23 @@
+## 20Oct — привязка в личном чате без Mini App
+
+Source2026102000 добавляет независимый `linking_enabled` (default false;старые
+receiver JSON совместимы). Свежий личный `/start uc1_...` вызывает только
+`link.claim` через ограниченный private bridge key,показывает настоящий Telegram ID
+и требует второго подтверждения в той же Academy-сессии. Main Mini App для этого
+не нужен;`onboarding_enabled` может оставаться false. Server-owned
+`$CFG->ustar_connect_link_transport = 'chat'` выбирает start-ссылку вместо default
+startapp. Это описание исходников,не команда включения на production.
+
+Принятая владельцем установка остаётся payload830/local2026101905;новый source
+не установлен. Owner подтвердил HTTP origin,поэтому sensitive linking пока
+недоступен:TLS/peer/native HTTPS guards сохранены. Следующий серверный шаг —
+[read-only HTTPS preparation](../context/runtime/connect_https_preparation_20261020.md),
+затем отдельные credentials/LoadCredential/lifecycle и проверка двух сторон связи.
+Старые receiver units сами не получают bridge key/CA из нового source. Notify
+остаётся выключенным до HTTPS,подтверждённой связи и controlled opt-in cutover.
+Проверки и точные refs — [chat-link progress](../context/proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md).
+Ниже датированные предыдущие этапы.
+
 ## CON01C.4 — собственный профиль через отдельную Connect-сессию
 
 Текущая разработка: [план](../context/proposals/USTAR_CONNECT_CON01C4_PLAN_20261019.md), [проверки](../context/proposals/USTAR_CONNECT_CON01C4_PROGRESS_20261019.md). C3 уведомления завершены на941a853c; этот этап добавляет provider-read, а не полноценный Moodle login или действия HRD.

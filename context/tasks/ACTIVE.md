@@ -3,8 +3,10 @@
 **20Oct, после owner04:39МСК:** general Academy browser smoke принят;полный
 role/learning QA не заявлен. Текущий canonical origin подтверждён как HTTP.
 [Новый chat-link source](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md)
-2026102000/552/99,defaultOFF,private claim и второй Academy confirm;native RED
-наблюдался,финальная GREEN CI pending. [Следующий серверный шаг](../runtime/connect_https_preparation_20261020.md)
+2026102000/552/99,defaultOFF,private claim и второй Academy confirm;source1e8a8819
+проверен Context39361024810/Review39361024698 SUCCESS:766r16/124native629/
+6concurrency/paired93→99→93/28link-browser/actual host. [CI](../runtime/connect_chat_link_ci_20261020.json).
+[Следующий серверный шаг](../runtime/connect_https_preparation_20261020.md)
 — read-only HTTPS metadata,затем staged TLS/private bridge/credentials/link acceptance.
 Не обходить HTTPS guards и не повторять installer02/receiver/source RC. Production
 effective addon830/1905 не подменять новой source candidate;сеть/main unchanged,0subagents.

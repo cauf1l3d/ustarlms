@@ -39,8 +39,23 @@ Existing probe test double gained explicit linking_enabled=false for the expande
 Configuration shape;actual legacy configs still default false. Targeted41receiver,
 16chat,7readiness and3probe cases pass. Full local r16:766tests/31explicit
 environment skips PASS;source checks JS/XML/templates PASS,PHP not run locally.
-Generated candidate inventory552/99 and context340files validate. Final
-native/Chromium/privileged-host CI pending;local checks do not replace them.
+Generated candidate inventory552/99 and context validate.
+
+## GREEN source1e8a8819
+
+Source1e8a8819f50785ebb4fb2640eeb9386c969d59d1/tree61567cb0:
+Context39361024810 and Review39361024698 SUCCESS,completed02:57:19Z.
+[Exact receipt](../runtime/connect_chat_link_ci_20261020.json).
+Both PHP8.2/8.3:766r16/134explicit environment skips,381PHP/24JS/99XMLDB/57templates;
+separate privileged UID33/root-group and production ownership checks PASS.
+Chromium60mobile/20onboarding/28link/100actor scenarios PASS using synthetic API.
+Actual-host systemd credentials/install/update/rollback/CLI-probe/UID/SQLite/offline
+notice PASS,without live Telegram. Native Moodle5.1.8/PostgreSQL16:124tests/
+629assertions,6concurrency,upgrade/repeat/fresh/schema parity,93→99→93 paired
+restore and actual SQL/version/task/column/index verifier PASS. Native evidence
+artifact12237906635 recorded;logs/probe results inspected,not downloaded locally.
+This is the changed Connect gate,not a repeat of the full historical core matrix.
+Personal review found no blocking issue in this bounded source slice;no subagents.
 
 ## Boundaries and next
 

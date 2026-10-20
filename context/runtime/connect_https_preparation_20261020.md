@@ -18,8 +18,12 @@ Main Mini App,но не разрешает передачу challenge или ser
 
 ## Следующий серверный шаг
 
-Запустить только `connect_https_readiness.py --check` из проверенного Git-коммита.
-Точный commit/hash команды фиксируются после CI. Инструмент читает literal wwwroot
+Запустить только `connect_https_readiness.py --check` из source
+`1e8a8819f50785ebb4fb2640eeb9386c969d59d1`.
+SHA256: `3678e9ac0058f9d4971aac62a7006d105f8b77962bc2c77f51b5c125f4d79ddd`.
+[CI-квитанция](connect_chat_link_ci_20261020.json):Context39361024810/
+Review39361024698 SUCCESS,766r16/124native/28link-browser;это не server acceptance.
+Инструмент читает literal wwwroot
 без PHP bootstrap,фильтрованные bind/port metadata `ustar_moodle`,состояние Apache/
 Caddy и наличие listeners80/443/8443/18443. Он не выводит config.php,пароли,private
 IP Docker,credentials,журналы или полную Docker inspect. Не выполняет SQL,запуск,
@@ -28,6 +32,27 @@ IP Docker,credentials,журналы или полную Docker inspect. Не в
 Результат `https_preparation_required` на нынешнем HTTP ожидаем. Даже обнаруженный
 HTTPS-origin ещё не считается проверенным сертификатом или готовностью активации.
 Не включать linking/onboarding/notifications по одному наличию свободного порта.
+
+Команда ниже скачивает один helper в приватный временный файл `/root`,сверяет
+точный hash,запускает только чтение и удаляет helper после выхода. Пароли и token
+не запрашиваются инструментом;sudo может попросить обычный пароль администратора.
+
+```bash
+sudo bash <<'ROOT'
+set -euo pipefail
+umask 077
+ustar_https_probe=$(mktemp /root/ustar-connect-https.XXXXXXXX.py)
+trap 'rm -f -- "$ustar_https_probe"' EXIT
+curl -fsSL --connect-timeout 10 --max-time 60 \
+  https://raw.githubusercontent.com/cauf1l3d/ustarlms/1e8a8819f50785ebb4fb2640eeb9386c969d59d1/scripts/infra/connect_https_readiness.py \
+  -o "$ustar_https_probe"
+printf '%s  %s\n' 3678e9ac0058f9d4971aac62a7006d105f8b77962bc2c77f51b5c125f4d79ddd "$ustar_https_probe" | sha256sum --check --strict -
+python3 -I -B "$ustar_https_probe" --check
+ROOT
+```
+
+Вывести сюда только этот фильтрованный JSON-отчёт. По нему выбирается следующая
+конкретная HTTPS-процедура;он не является командой установки или активации бота.
 
 ## Решение после отчёта
 

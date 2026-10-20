@@ -6,7 +6,8 @@
   <section class="u-panel u-ux-form">
     <h2>Подключить Telegram</h2>
     <ol><li>Создайте персональную ссылку и откройте её в своём Telegram.</li>
-      <li>В приложении бота дождитесь сообщения об отправке подтверждения.</li>
+      {{#chat_link}}<li>В личном чате нажмите «Запустить» и дождитесь сообщения бота с вашим Telegram ID. Mini App для этой привязки не требуется.</li>{{/chat_link}}
+      {{^chat_link}}<li>В приложении бота дождитесь сообщения об отправке подтверждения.</li>{{/chat_link}}
       <li>Вернитесь сюда в тот же браузер, проверьте Telegram ID и подтвердите связь.</li></ol>
     <p>Не передавайте персональную ссылку другим людям. Она действует 10 минут. Пароль Академии в чат не отправляется.</p>
     {{#enabled}}
@@ -26,7 +27,7 @@
         <button class="u-btn" type="submit">Проверить подтверждение Telegram</button>
       </form>
       {{#claimed}}
-      <p>Подтверждён Telegram ID: <strong>{{subject}}</strong>. Сверьте его с ID, показанным при подтверждении в приложении бота. Если ID вам не принадлежит, не подтверждайте связь.</p>
+      <p>Подтверждён Telegram ID: <strong>{{subject}}</strong>. Сверьте его с ID, показанным ботом. Если ID вам не принадлежит, не подтверждайте связь.</p>
       <form method="post" action="{{url}}" autocomplete="off">
         <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="code" value="{{code}}">
         <input type="hidden" name="action" value="confirm">

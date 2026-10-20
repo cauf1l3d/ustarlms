@@ -21,7 +21,14 @@ foreach (['local_ustar' => 'local/ustar', 'theme_ustar' => 'theme/ustar'] as $co
 }
 $tables = array_values(array_filter($DB->get_tables(), static fn($t) => str_starts_with($t, 'local_ustar_')));
 sort($tables);
-$expected = $phase === 'candidate' ? 2026101905 : 2026100204;
+$expected = 2026100204;
+if ($phase === 'candidate') {
+    $candidate = file_get_contents('/source/moodle/local/ustar/version.php');
+    if (!preg_match('/^\s*\$plugin->version\s*=\s*([0-9]{10})\s*;/m', $candidate, $match)) {
+        throw new RuntimeException('CONNECT_PAIR_CANDIDATE_VERSION_MISSING');
+    }
+    $expected = (int)$match[1];
+}
 if ($versions !== ['local_ustar' => $expected, 'theme_ustar' => 2026100202]
         || count($tables) !== ($phase === 'candidate' ? 99 : 93)
         || get_config('local_ustar', 'connect_release_marker') !== $phase

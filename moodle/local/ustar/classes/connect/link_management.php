@@ -8,6 +8,9 @@ final class link_management {
     private static function channel(): ?array {
         global $CFG;
         $channels = $CFG->ustar_connect_channels ?? [];
+        if (!in_array($CFG->ustar_connect_link_transport ?? 'miniapp', ['miniapp', 'chat'], true)) {
+            return null;
+        }
         $value = is_array($channels) ? ($channels['telegram'] ?? null) : null;
         if (!is_array($value)) { return null; }
         $keys = array_keys($value); sort($keys);
@@ -19,8 +22,14 @@ final class link_management {
         return $value;
     }
 
+    private static function launch_url(array $channel, string $code): string {
+        global $CFG;
+        $parameter = ($CFG->ustar_connect_link_transport ?? 'miniapp') === 'chat' ? 'start' : 'startapp';
+        return 'https://t.me/'.$channel['username'].'?'.$parameter.'='.$code;
+    }
+
     public static function handle(string $method, bool $https, #[\SensitiveParameter] array $input): array {
-        global $USER;
+        global $USER, $CFG;
         if (!$https) { throw new \InvalidArgumentException('https_required'); }
         if (!in_array($method, ['GET', 'POST'], true) || ($method === 'GET' && $input !== [])) {
             throw new \InvalidArgumentException('invalid_request');
@@ -28,7 +37,9 @@ final class link_management {
         // Also gates disabled/configuration views: no guest/service/view-as identity disclosure.
         $links = identity_service::owned_links();
         $channel = self::channel();
-        $view = ['enabled' => $channel !== null, 'links' => $links, 'challenge' => null, 'confirmed' => false,
+        $view = ['enabled' => $channel !== null,
+            'chat_link' => $channel !== null && ($CFG->ustar_connect_link_transport ?? 'miniapp') === 'chat',
+            'links' => $links, 'challenge' => null, 'confirmed' => false,
             'preferences' => notification_preferences::for_user((int)$USER->id),
             'deliveries' => notification_delivery::own_summary(), 'preferences_saved' => false];
         if ($method === 'GET') { return $view; }
@@ -47,7 +58,7 @@ final class link_management {
             if (!$channel) { throw new \InvalidArgumentException('channel_unavailable'); }
             $challenge = identity_service::issue('telegram', $channel['tenant']);
             $view['challenge'] = $challenge + ['claimed' => false, 'subject' => '',
-                'launch_url' => 'https://t.me/'.$channel['username'].'?startapp='.$challenge['code']];
+                'launch_url' => self::launch_url($channel, $challenge['code'])];
         } else if ($action === 'preview' || $action === 'confirm') {
             $code = $input['code'] ?? '';
             if (!is_string($code)) { throw new \InvalidArgumentException('invalid_link_code'); }
@@ -57,7 +68,7 @@ final class link_management {
             } else {
                 $preview = identity_service::preview($code);
                 $url = $channel && $channel['tenant'] === $preview['tenant']
-                    ? 'https://t.me/'.$channel['username'].'?startapp='.$code : '';
+                    ? self::launch_url($channel, $code) : '';
                 $view['challenge'] = $preview + ['code' => $code, 'launch_url' => $url];
             }
         } else {

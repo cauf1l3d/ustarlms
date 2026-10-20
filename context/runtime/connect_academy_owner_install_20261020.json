@@ -4,6 +4,13 @@
   "reported_at": "2026-10-20T04:36:04+03:00",
   "reported_at_is_message_time_not_exact_job_completion": true,
   "independently_measured_on_server": false,
+  "browser_followup": {
+    "reported_at": "2026-10-20T04:39:52+03:00",
+    "owner_statement": "Академию проверил все открывается",
+    "accepted_scope": "general_Academy_browser_smoke",
+    "exhaustive_role_learning_SSO_or_MFA_QA": false,
+    "canonical_origin_owner_confirmed_in_followup": "http://ustar.local"
+  },
   "installer_commit": "02b0548cf4a8ac377c878aa77b546be784652e83",
   "installed_addon_payload_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
   "archive_sha256_owner_check_passed": "53d9983b9e437bc9b4623bac83c72564c35a772ce3cc292b55efe8a986be1d13",
@@ -43,7 +50,6 @@
     "external_HTTPS_or_Mini_App_acceptance"
   ],
   "next": [
-    "owner_checks_browser_login_USTAR_theme_and_learning_material",
     "prepare_private_Academy_bridge_and_scoped_keys",
     "implement_verified_direct_chat_account_link_before_Mini_App_HTTPS",
     "controlled_opt_in_notification_delivery_with_new_cutover"

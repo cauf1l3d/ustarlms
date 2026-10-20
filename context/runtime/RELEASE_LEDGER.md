@@ -1,5 +1,16 @@
 # Реестр кода, проверок и deployment evidence
 
+## 20Oct — owner browser smoke принят; chat-link source и HTTPS preparation
+
+Owner04:39МСК:«Академию проверил все открывается»,не exhaustive role/learning QA.
+Подтверждён HTTP canonical origin. Новый source2026102000/552/99:private chat claim,
+independent linking_enabled defaultOFF,second native owner/session confirm;HTTPS
+guards сохранены. [Progress](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md),
+[следующий read-only шаг](connect_https_preparation_20261020.md). Native REDa40ea20f
+наблюдался:123tests/614assertions/ровно2новых failures;финальная GREEN CI pending.
+Не установлен,production830/1905 unchanged;bridge/notify/receiver/network не менялись.
+Installer02 повторно не использовать для новой candidate.0subagents.
+
 ## 20Oct04:36МСК — owner CLI Academy installation PASS
 
 [Owner terminal receipt](connect_academy_owner_install_20261020.json):package/internal

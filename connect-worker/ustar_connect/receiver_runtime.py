@@ -21,6 +21,7 @@ class Configuration:
     onboarding_enabled: bool
     api: object
     bridge: object
+    linking_enabled: bool = False
 
 
 def load_config(path):
@@ -28,7 +29,10 @@ def load_config(path):
         value = json.loads(read_private(path,16384),object_pairs_hook=_unique)
         fields = {'bot_token_file','bot_username','state_directory','telegram_proxy','onboarding_enabled',
                   'bridge_endpoint','bridge_key_id','bridge_key_file','bridge_ca_file'}
-        if not isinstance(value,dict) or set(value)!=fields:
+        if not isinstance(value,dict) or set(value) not in (fields, fields | {'linking_enabled'}):
+            raise ValueError('invalid_configuration')
+        linking = value.get('linking_enabled', False)
+        if type(linking) is not bool:
             raise ValueError('invalid_configuration')
         username = value['bot_username']
         if not isinstance(username,str) or not re.fullmatch(r'[A-Za-z0-9_]{5,32}',username) or type(value['onboarding_enabled']) is not bool:
@@ -37,13 +41,13 @@ def load_config(path):
         token = read_private(value['bot_token_file'],512).strip()
         api = TelegramClient(token,proxy=value['telegram_proxy'])
         bridge = None
-        if value['onboarding_enabled']:
+        if value['onboarding_enabled'] or linking:
             key = read_private(value['bridge_key_file'],128).strip()
             ca = value['bridge_ca_file']
             if ca is not None:
                 ca = trusted_certificate(ca)
             bridge = BridgeClient(value['bridge_endpoint'],value['bridge_key_id'],key,ca_file=ca)
-        return Configuration(token.split(':',1)[0],username,directory,value['onboarding_enabled'],api,bridge)
+        return Configuration(token.split(':',1)[0],username,directory,value['onboarding_enabled'],api,bridge,linking)
     except Exception:
         raise ValueError('configuration_invalid') from None
 
@@ -61,15 +65,17 @@ def main(argv=None):
         if args.probe:
             verify_bot(config.api, config.bot_id, config.bot_username, require_main_app=config.onboarding_enabled)
             print(json.dumps({'status':'telegram_verified','bot_username':config.bot_username,
-                              'updates_consumed':False,'onboarding_enabled':config.onboarding_enabled}))
+                              'updates_consumed':False,'onboarding_enabled':config.onboarding_enabled,
+                              'linking_enabled':config.linking_enabled}))
             return 0
         if not args.run:
             print(json.dumps({'status':'configuration_valid','network_used':False,
-                              'onboarding_enabled':config.onboarding_enabled}))
+                              'onboarding_enabled':config.onboarding_enabled,'linking_enabled':config.linking_enabled}))
             return 0
         journal = Journal(config.directory,config.bot_id)
         receiver = TelegramReceiver(config.api,config.bridge,journal,bot_id=config.bot_id,
-            bot_username=config.bot_username,onboarding_enabled=config.onboarding_enabled)
+            bot_username=config.bot_username,onboarding_enabled=config.onboarding_enabled,
+            linking_enabled=config.linking_enabled)
         stop = threading.Event()
         def requested_stop(_signal,_frame):
             stop.set()

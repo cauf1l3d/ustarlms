@@ -16,7 +16,7 @@ class RuntimeProbeTests(unittest.TestCase):
 
     def test_probe_does_not_poll_send_open_journal_or_bridge(self):
         runtime=importlib.import_module('ustar_connect.receiver_runtime')
-        config=Mock(bot_id='123456',bot_username='ustarcorp_bot',onboarding_enabled=False)
+        config=Mock(bot_id='123456',bot_username='ustarcorp_bot',onboarding_enabled=False,linking_enabled=False)
         config.api.get_me.return_value={'id':123456,'username':'ustarcorp_bot','is_bot':True}
         config.api.get_webhook_info.return_value={'url':''}
         with patch.object(runtime,'load_config',return_value=config), patch.object(runtime,'Journal') as journal, patch('sys.stdout',new_callable=io.StringIO) as out:
@@ -29,7 +29,7 @@ class RuntimeProbeTests(unittest.TestCase):
 
     def test_probe_identity_mismatch_and_webhook_refuse_without_raw_response(self):
         runtime=importlib.import_module('ustar_connect.receiver_runtime')
-        config=Mock(bot_id='123456',bot_username='ustarcorp_bot',onboarding_enabled=False)
+        config=Mock(bot_id='123456',bot_username='ustarcorp_bot',onboarding_enabled=False,linking_enabled=False)
         for me,webhook,reason in [({'id':9,'username':'ustarcorp_bot','is_bot':True},{'url':''},'bot_identity_mismatch'),
             ({'id':123456,'username':'ustarcorp_bot','is_bot':True},{'url':'https://PRIVATE_CANARY.invalid'},'webhook_present')]:
             config.api.get_me.return_value=me;config.api.get_webhook_info.return_value=webhook

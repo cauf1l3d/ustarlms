@@ -1,9 +1,10 @@
 """Single-consumer Telegram polling and bounded personal-launch orchestration."""
+import hashlib
 import re
 import secrets
 import time
 
-from .bridge import _token
+from .bridge import _token, BridgeRejected
 from .identity import ProviderIdentity
 from .telegram_api import TelegramError
 
@@ -29,17 +30,25 @@ def _command(update, username, now):
             or type(chat.get('id')) is not int or chat['id'] != sender['id']):
         return None
     date, text = message.get('date'), message.get('text')
-    if type(date) is not int or not now-120 <= date <= now+30 or not isinstance(text, str) or len(text) > 80:
+    if type(date) is not int or not now-120 <= date <= now+30 or not isinstance(text, str) or len(text) > 128:
         return None
-    match = re.fullmatch(r'/(start|academy|help)(?:@([A-Za-z0-9_]{5,32}))?', text)
-    if match is None or (match[2] is not None and match[2].lower() != username.lower()):
+    match = re.fullmatch(r'(/(start|academy|help)(?:@([A-Za-z0-9_]{5,32}))?)(?: (uc1_[A-Za-z0-9_-]{43}))?', text)
+    if match is None or (match[3] is not None and match[3].lower() != username.lower()):
         return None
+    code = match[4]
+    if code is not None:
+        if match[2] != 'start' or not _id(message.get('message_id')):
+            return None
+        try:
+            _token(code, 'uc1')
+        except ValueError:
+            return None
     entities = message.get('entities')
     if not isinstance(entities, list) or not any(isinstance(e,dict) and e.get('type')=='bot_command'
             and type(e.get('offset')) is int and e['offset']==0
-            and type(e.get('length')) is int and e['length']==len(text) for e in entities):
+            and type(e.get('length')) is int and e['length']==len(match[1]) for e in entities):
         return None
-    return sender['id'], match[1]
+    return sender['id'], 'link' if code else match[2], code
 
 
 def verify_bot(api, bot_id, username, *, require_main_app=False):
@@ -55,13 +64,15 @@ def verify_bot(api, bot_id, username, *, require_main_app=False):
 
 
 class TelegramReceiver:
-    def __init__(self, api, bridge, journal, *, bot_id, bot_username, onboarding_enabled=False, clock=time.time):
+    def __init__(self, api, bridge, journal, *, bot_id, bot_username, onboarding_enabled=False,
+                 linking_enabled=False, clock=time.time):
         if (not isinstance(bot_id, str) or not re.fullmatch(r'[1-9][0-9]{0,19}', bot_id)
                 or not isinstance(bot_username, str) or not re.fullmatch(r'[A-Za-z0-9_]{5,32}', bot_username)
-                or type(onboarding_enabled) is not bool):
+                or type(onboarding_enabled) is not bool or type(linking_enabled) is not bool):
             raise ValueError('invalid_receiver_configuration')
         self._api, self._bridge, self._journal, self._clock = api, bridge, journal, clock
         self._bot_id, self._username, self._enabled = bot_id, bot_username, onboarding_enabled
+        self._linking = linking_enabled
         self._ready = False
 
     def _start(self):
@@ -117,8 +128,11 @@ class TelegramReceiver:
         command = _command(update, self._username, now)
         subject, kind, identity = None, 'ignored', None
         if command is not None:
-            subject, verb = command
-            kind = ('launch' if self._enabled else 'disabled') if verb != 'help' else 'help'
+            subject, verb, code = command
+            if verb == 'link':
+                kind = 'link' if self._linking else 'disabled'
+            else:
+                kind = ('launch' if self._enabled else 'disabled') if verb != 'help' else 'help'
             identity = ProviderIdentity('telegram',self._bot_id,str(subject)).key()
         if not self._journal.begin(uid, identity, kind):
             return
@@ -129,7 +143,22 @@ class TelegramReceiver:
             self._journal.finish(uid,'ignored','identity_rate_limit')
             return
         try:
-            if kind == 'launch':
+            if kind == 'link':
+                self._journal.phase(uid, 'creating')
+                # Origin is the authenticated Bot API response, not a caller's
+                # ID field. The digest never includes or persists the link code.
+                event = f'{self._bot_id}:{uid}:{update["message"]["message_id"]}:{subject}'
+                proof = hashlib.sha256(('ustar-telegram-message-link-v1\0' + event).encode()).hexdigest()
+                value = self._bridge.request('link.claim', {'provider': 'telegram', 'tenant': self._bot_id,
+                    'subject': str(subject), 'code': code, 'proof': proof,
+                    'auth_date': update['message']['date']})
+                result = value.get('result') if isinstance(value, dict) and value.get('ok') is True else None
+                if (not isinstance(result, dict) or set(result) != {'claimed', 'academy_confirmation_required'}
+                        or result['claimed'] is not True or result['academy_confirmation_required'] is not True):
+                    raise ValueError('invalid_bridge_response')
+                self._journal.phase(uid, 'sending')
+                response = self._api.send_link_notice(subject, 'claimed')
+            elif kind == 'launch':
                 self._journal.phase(uid,'creating')
                 value = self._bridge.request('launch.create', {'provider':'telegram','tenant':self._bot_id,'subject':str(subject)})
                 result = value.get('result') if isinstance(value,dict) and value.get('ok') is True else None
@@ -144,16 +173,34 @@ class TelegramReceiver:
                 response = self._api.send_launch(subject,'https://t.me/'+self._username+'?startapp='+ticket)
             else:
                 self._journal.phase(uid,'sending')
-                response = self._api.send_notice(subject, ready=self._enabled)
+                response = (self._api.send_link_notice(subject, 'instructions')
+                            if self._linking else self._api.send_notice(subject, ready=self._enabled))
             chat = response.get('chat') if isinstance(response,dict) else None
             message_id = response.get('message_id') if isinstance(response,dict) else None
             if (not isinstance(chat,dict) or type(chat.get('id')) is not int or chat['id'] != subject
                     or chat.get('type') != 'private' or type(message_id) is not int or not 0 < message_id < 2**63):
                 raise TelegramError('invalid_response',uncertain=True)
             self._journal.finish(uid,'sent',message_id=message_id)
+        except BridgeRejected as error:
+            self._journal.finish(uid, 'rejected', 'link_rejected' if kind == 'link' else 'bridge_rejected')
+            if kind == 'link':
+                self._link_failure_notice(subject, 'rejected')
         except TelegramError as error:
             self._journal.finish(uid,'uncertain' if error.uncertain else 'rejected',error.reason)
             if error.retry_after or error.uncertain or error.reason in ('unauthorized','consumer_conflict'):
                 self._delay(error)
         except (ValueError, OSError):
             self._journal.finish(uid,'uncertain','bridge_unavailable')
+            if kind == 'link':
+                self._link_failure_notice(subject, 'uncertain')
+
+    def _link_failure_notice(self, subject, outcome):
+        # Claim outcome was durably recorded already. A failed informational
+        # reply must never turn an uncertain claim into a retryable command.
+        try:
+            self._api.send_link_notice(subject, outcome)
+        except TelegramError as error:
+            if error.retry_after or error.reason in ('unauthorized', 'consumer_conflict'):
+                self._delay(error)
+        except (ValueError, OSError):
+            pass

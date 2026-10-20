@@ -1,5 +1,18 @@
 # Журнал выполнения roadmap
 
+## 2026-10-20 — private-chat link после принятия Академии
+
+Owner04:39МСК подтвердил general browser smoke и следующий этап;отдельно подтвердил
+http://ustar.local. Реализован defaultOFF chat-link adapter поверх existing UC1/
+link.claim с private/fresh/provider-origin guards,metadata-only journal и вторым
+native owner/session confirm. Новая source2026102000/552/99 не установлена;effective
+production payload830/1905 сохраняется. [План](../proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md),
+[progress](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md). Native RED
+a40ea20f:123tests/614assertions/ровно2ожидаемых новых failures;implementation после
+наблюдения RED. Финальная CI pending. HTTP blocks activation;подготовлен read-only
+HTTPS metadata tool,не bootstrap PHP и не TLS bypass. Bridge/credentials/receiver
+activation/notify ещё не выполнялись,0subagents/main merge/network changes.
+
 19Oct CON01C4 implementation candidate:2026101905/552files/99tables, separate ua1/provider-read/profile with native-policy guards;13WSGI/674r16 localOK30skips. Native REDa06ed50e118tests12errors verified after PHPUnit helper collision repair; browser RED26429064 missing profile button, old20onboarding/24link pass. Implementation written only after REDs; final exact source/browser/native/schema/concurrency receipts in PR106. Personal review under owner's0subagent rule: current guest context, exact payload, persistent revocation before exception, no view-as profile, stale status/profile cleared, no unknown activation retry. No server1/main/network/live API changes.
 
 ## 2026-10-19 12:55МСК — CON01C.2, без субагентов

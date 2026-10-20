@@ -63,6 +63,26 @@ final class connect_bridge_test extends \advanced_testcase {
             $this->denied(fn() => bridge_http::guard(array_replace($server, $changes), true, ['127.0.0.1']), 'invalid_request');
         }
     }
+
+    public function test_link_only_key_claims_without_entry_or_roles_and_requires_native_confirmation(): void {
+        global $DB;
+        $this->setUser($this->getDataGenerator()->create_user());
+        $challenge = \local_ustar\connect\identity_service::issue('telegram', '123456');
+        $payload = ['provider' => 'telegram', 'tenant' => '123456', 'subject' => '8727627355',
+            'code' => $challenge['code'], 'proof' => hash('sha256', 'ustar-telegram-message-link-v1'."\0".'123456:10:10:8727627355'),
+            'auth_date' => time()];
+        $keys = $this->keys(); $keys['tg1']['operations'] = ['link.claim'];
+        [$body, $headers] = $this->signed('link.claim', $payload);
+        $this->assertSame(['claimed' => true, 'academy_confirmation_required' => true],
+            bridge_service::dispatch($body, $headers, $keys));
+        $this->assertSame(0, $DB->count_records('local_ustar_conn_links'));
+        $this->assertSame(0, $DB->count_records('local_ustar_conn_launches'));
+        $this->assertSame(0, $DB->count_records('local_ustar_conn_sessions'));
+        [$body, $headers] = $this->signed('launch.create', array_intersect_key($payload, array_flip(['provider', 'tenant', 'subject'])));
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $keys), 'forbidden_operation');
+        $confirmed = \local_ustar\connect\identity_service::confirm($challenge['code']);
+        $this->assertSame('linked', $confirmed['state']);
+    }
     public function test_signed_registration_flow_uses_bound_session_and_rejects_actor_fields(): void {
         global $DB;
         \local_ustar\accounts::ensure_profile_field();

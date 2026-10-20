@@ -6,7 +6,8 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Canonical link storage. Private bridge/native callers own the authentication boundary.
  * claim_verified is INTERNAL: the scoped verifier bridge may call it only after
- * validating provider origin/freshness and browser-bound nonce.
+ * validating provider origin/freshness. Challenge issuance and the second
+ * confirmation stay bound to the native Academy owner/browser session.
  * Never export it as an anonymous AJAX/external function.
  */
 final class identity_service {

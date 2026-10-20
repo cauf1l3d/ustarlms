@@ -449,14 +449,14 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: Academy_owner_CLI_installed_browser_QA_and_bridge_link_pending
+  phase: Academy_browser_smoke_accepted_chat_link_source_and_HTTPS_preparation
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
   current_summary: 'Installer02b0548c:Context39351249166/Review39351249243 SUCCESS;743r16,
     actual UID33/root-group,native121/611+6concurrency+paired93to99to93 and SQL/schema guards PASS.
     Owner20Oct0436 reports CLI install PASS,upgrade_complete/public_released=true,systemd Finished.
-    Effective payload830/552/99 follows pinned installer guards;browser QA still pending.
-    Next private bridge and verified link/notify;do not repeat installation.
-    Current link uses Mini App;direct-chat link before public HTTPS still needs implementation.
+    Effective production payload830/552/99;owner0439MSK accepts general browser smoke.
+    New chat-link source2026102000/552/99 in progress;not deployed. Owner confirms HTTP origin.
+    Next read-only HTTPS preparation,private bridge and verified link/notify;do not repeat installation.
     Full private server report/private local ancestry excluded from publication.'
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate

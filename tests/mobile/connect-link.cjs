@@ -74,12 +74,12 @@ const repo = path.resolve(__dirname, '../..');
       const css = sass.compileString([...lib.matchAll(/__DIR__ \. '\/scss\/([^']+)'/g)]
         .map(m=>fs.readFileSync(path.join(repo,'moodle/theme/ustar/scss',m[1]),'utf8')).join('\n'),
         {logger:sass.Logger.silent}).css + fs.readFileSync(path.join(repo,'moodle/local/ustar/styles/ux_tools.css'),'utf8');
-      for (const claimed of [false,true]) {
+      for (const chat_link of [false,true]) for (const claimed of [false,true]) {
         const page = await browser.newPage({viewport:{width,height:900}});
-        const view = {enabled:true,fullname:'Сотрудник <img src=x onerror=alert(1)>',
+        const view = {enabled:true,chat_link,fullname:'Сотрудник <img src=x onerror=alert(1)>',
           url:'/local/ustar/connect.php',profileurl:'/local/ustar/profile.php',sesskey:'synthetic-csrf',haslinks:true,
           challenge:{code:'uc1_'+'A'.repeat(43),claimed,subject:'8727627355',expires_label:'19 октября 2026, 13:30',
-            launch_url:'https://t.me/ustarcorp_bot?startapp=uc1_'+'A'.repeat(43)},
+            launch_url:'https://t.me/ustarcorp_bot?'+(chat_link?'start':'startapp')+'=uc1_'+'A'.repeat(43)},
           links:[{id:1,providerlabel:'Telegram',tenant:'123456',subject:'8727627355',linked:true}],
           preferences:{enabled:true,quiet_start:'22:00',quiet_end:'08:00',timezone:'Europe/Moscow',interval_minutes:5,
             categories:[{value:'tasks',label:'Задачи',selected:true}],severities:[{value:'normal',label:'Все',selected:true}]},
@@ -89,6 +89,9 @@ const repo = path.resolve(__dirname, '../..');
         assert.equal(0,await page.locator('img').count());
         assert.ok((await page.locator('h1').textContent()).includes('Мессенджеры'));
         assert.equal(claimed?1:0,await page.locator('form input[name=action][value=confirm]').count());
+        assert.equal(chat_link?1:0,await page.getByText('В личном чате нажмите', {exact:false}).count());
+        const launch = await page.getByRole('link',{name:'Открыть бота и подтвердить Telegram'}).getAttribute('href');
+        assert.ok(launch.includes(chat_link?'?start=uc1_':'?startapp=uc1_'));
         await page.getByRole('heading',{name:'Уведомления в Telegram',exact:true}).waitFor();
         assert.equal(1,await page.locator('form input[name=action][value=preferences]').count());
         assert.equal('Europe/Moscow',await page.locator('[name=timezone]').inputValue());

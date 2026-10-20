@@ -3,6 +3,7 @@
 import importlib.util
 from decimal import Decimal
 import json
+import re
 from pathlib import Path
 import sys
 from types import SimpleNamespace
@@ -34,9 +35,15 @@ elif sys.argv[1:] == ['verify']:
         raise RuntimeError('wrong_fixture')
     baseline_fields = fields(ROOT / '.stage-input/connect-baseline/moodle/local/ustar/db/install.xml')
     candidate_fields = fields(ROOT / 'moodle/local/ustar/db/install.xml')
+    def source_version(scope):
+        value = (ROOT / 'moodle' / scope / 'version.php').read_text()
+        matches = re.findall(r'(?m)^\s*\$plugin->version\s*=\s*([0-9]{10})\s*;', value)
+        if len(matches) != 1:
+            raise RuntimeError('candidate_version_ambiguous')
+        return int(matches[0])
     d = SimpleNamespace(reference={'baseline': {'tables': sorted(baseline_fields)},
         'candidate': {'tables': sorted(candidate_fields), 'versions': {
-            'local_ustar': 2026101905, 'theme_ustar': 2026100202}}}, schema_fields=candidate_fields)
+            'local_ustar': source_version('local/ustar'), 'theme_ustar': source_version('theme/ustar')}}}, schema_fields=candidate_fields)
     x.verify_versions(d, before, before, False)
     x.verify_versions(d, candidate, before, True)
     x.verify_versions(d, repeat, before, True)

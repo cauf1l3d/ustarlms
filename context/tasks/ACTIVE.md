@@ -1,5 +1,14 @@
 # Активные задачи USTAR
 
+**20Oct, после owner04:39МСК:** general Academy browser smoke принят;полный
+role/learning QA не заявлен. Текущий canonical origin подтверждён как HTTP.
+[Новый chat-link source](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md)
+2026102000/552/99,defaultOFF,private claim и второй Academy confirm;native RED
+наблюдался,финальная GREEN CI pending. [Следующий серверный шаг](../runtime/connect_https_preparation_20261020.md)
+— read-only HTTPS metadata,затем staged TLS/private bridge/credentials/link acceptance.
+Не обходить HTTPS guards и не повторять installer02/receiver/source RC. Production
+effective addon830/1905 не подменять новой source candidate;сеть/main unchanged,0subagents.
+
 **20Oct04:36МСК: owner CLI установка завершена.** [Квитанция](../runtime/connect_academy_owner_install_20261020.json):
 cold pair/upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
 Effective payload830/552/99 по pinned installer guards;не independent SSH.

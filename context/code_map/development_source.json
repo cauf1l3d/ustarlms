@@ -3,11 +3,11 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "748a940acd6ce70a43ee04f15e176c2e932b36ba",
+    "moodle/local/ustar": "62350b42d221afe37ab2c428da9072dcb23a53ac",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
-    "local_ustar": 2026101905,
+    "local_ustar": 2026102000,
     "theme_ustar": 2026100202
   },
   "counts": {
@@ -293,11 +293,11 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/identity_service.php",
-      "sha256": "b3cfd2284016fe315674e2cf7bb9b487422a9192716e7bb2678c1ecc52a766ed"
+      "sha256": "33084af01815df9690af8b5dd64441d9a7933ad029f500287641dd3e565dcd6b"
     },
     {
       "path": "moodle/local/ustar/classes/connect/link_management.php",
-      "sha256": "ccbeb52bbeff1e00a28190dda56028ae20602d3aeeb2d5e73ab3f8693ce53d12"
+      "sha256": "6bbcea1e01d189f7b0731232ae7b000aeea0eb1069e8455f3327c44b49b405a9"
     },
     {
       "path": "moodle/local/ustar/classes/connect/notification_delivery.php",
@@ -1653,7 +1653,7 @@
     },
     {
       "path": "moodle/local/ustar/templates/connect.mustache",
-      "sha256": "f027a2965a7ebcdb9d34049385d6f1ceeed5e1a81c56b73a44e387b24d10cbec"
+      "sha256": "87a494a14b8f7af53f3c21eae9bcb4e197b9a2f0e8fc0b5f89253bcdc8d223a5"
     },
     {
       "path": "moodle/local/ustar/templates/content_view.mustache",
@@ -1837,7 +1837,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_bridge_test.php",
-      "sha256": "521d22bedb0350aeb54342f3815e2fbc5a6ec683411e73d6bcb883024e9fea39"
+      "sha256": "20b9bf96329066209b28c309d15a46cbc43f1d56469e0c6818cbed33d1906347"
     },
     {
       "path": "moodle/local/ustar/tests/connect_entry_test.php",
@@ -1977,7 +1977,7 @@
     },
     {
       "path": "moodle/local/ustar/version.php",
-      "sha256": "4675f4e035d900d577c95ecfb693a83976eba3a9e624d8a3db12be099fe0f382"
+      "sha256": "da63620834188d6a5b5aa146894f1918f9a96426d1d508c7742639663367c3c6"
     },
     {
       "path": "moodle/local/ustar/view.php",

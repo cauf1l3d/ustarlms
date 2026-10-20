@@ -136,7 +136,93 @@ else:
     assert inst.install(archive,digest)==sha
     with sqlite3.connect('file:'+str(state/'receiver.sqlite3')+'?mode=ro',uri=True) as db:
         assert db.execute('select next_offset from state').fetchone()[0]==103
+    scoped_credentials(inst,mod,archive,digest,fixture,sha)
     print('CONNECT_HOST_ACCEPTANCE=PASS install/reinstall/update/rollback/CLI-probe-start-stop/LoadCredential/UID/SQLite/offline-notice; no live Telegram')
+
+
+def scoped_credentials(inst,mod,archive,digest,fixture,original):
+    """Actual systemd credential mounts/UID/network policy, synthetic API opener.
+
+    No production drop-in exception is added: the test release includes its exact
+    extra LoadCredential directives in its verified manifest, like the earlier fixture.
+    Native TLS/PHP signature checks are exercised separately by the Apache gate.
+    """
+    state=Path('/var/lib/ustar-connect-receiver/receiver.sqlite3')
+    cursor_before=hashlib.sha256(state.read_bytes()).hexdigest()
+    token_before=hashlib.sha256((inst.config/'telegram.token').read_bytes()).hexdigest()
+    configs={n:(inst.config/(n+'.json')).read_bytes() for n in ('receiver','probe')}
+    key=inst.config/'bridge.key';ca=inst.config/'bridge.ca'
+    mod.write_file(key,b'12'*32,0o600)
+    call(['openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','2','-subj','/CN=Disposable scoped credential fixture',
+          '-keyout',str(inst.config/'fixture-ca.key'),'-out',str(ca)])
+    ca.chmod(0o600)
+    text=fixture.read_text().replace('assert config.onboarding_enabled is False and config.bridge is None',
+        'assert config.onboarding_enabled is False')
+    text=text.replace('class Response(io.BytesIO):','''if config.linking_enabled:
+ assert config.bridge is not None
+ assert os.environ['CREDENTIALS_DIRECTORY']==os.path.dirname(sys.argv[1])
+ for source in ('/etc/ustar-connect/bridge.key','/etc/ustar-connect/bridge.ca'):
+  try:open(source).read();raise AssertionError('root bridge source readable')
+  except PermissionError:pass
+class Response(io.BytesIO):''')
+    text=text.replace('  method=request.full_url.rsplit("/",1)[-1];payload=json.loads(request.data)', '''  if request.full_url.endswith('/local/ustar/connect_bridge.php'):
+   import hashlib,hmac
+   from urllib.error import HTTPError
+   headers={k.lower():v for k,v in request.header_items()}
+   assert json.loads(request.data)=={'operation':'registration.options','payload':{'probe':'link-scope-v1'}}
+   assert headers['x-ustar-key']=='tg_link'
+   message='\\n'.join(['USTAR-CONNECT-BRIDGE-v1','POST','/local/ustar/connect_bridge.php',
+    headers['x-ustar-key'],headers['x-ustar-time'],headers['x-ustar-nonce'],hashlib.sha256(request.data).hexdigest()]).encode()
+   expected=hmac.new(bytes.fromhex('12'*32),message,hashlib.sha256).hexdigest()
+   reason='forbidden_operation' if hmac.compare_digest(expected,headers['x-ustar-signature']) else 'invalid_transport'
+   raise HTTPError(request.full_url,403,'fixture',{},io.BytesIO(('{'+'"ok":false,"reason":"'+reason+'"}').encode()))
+  method=request.full_url.rsplit("/",1)[-1];payload=json.loads(request.data)''')
+    text=text.replace('api=API();config.api._opener=api',
+        'api=API();config.api._opener=api\nif config.bridge is not None:config.bridge._opener=api')
+    text=text.replace('if "probe" in sys.argv[1]:','if config.linking_enabled or "probe" in sys.argv[1]:')
+    text=text.replace(' print("CONNECT_NATIVE_PROBE=PASS")',
+        ' print("CONNECT_NATIVE_LINK_SCOPE=PASS",flush=True)\n if "probe" not in sys.argv[1]:signal.pause()')
+    compile(text,str(fixture),'exec');fixture.write_text(text)
+    _,files=mod.validate_archive(archive,digest);commit='d'*40
+    files['SOURCE_COMMIT']=(commit+'\n').encode()
+    for n in ('receiver','probe'):
+        path='units/ustar-connect-'+n+'.service'
+        unit=files[path].decode()
+        unit=unit.replace('ExecStart=',
+            'LoadCredential=bridge.key:/etc/ustar-connect/bridge.key\nLoadCredential=bridge.ca:/etc/ustar-connect/bridge.ca\nExecStart=')
+        unit='\n'.join(('ExecStart=/usr/bin/python3 -I -u '+str(fixture)+' %d/'+n+'.json')
+            if line.startswith('ExecStart=') else line for line in unit.splitlines())+'\n'
+        files[path]=unit.encode()
+        config=json.loads(configs[n]);directory='/run/credentials/ustar-connect-'+n+'.service/'
+        config.update(linking_enabled=True,bridge_endpoint='https://127.0.0.1:18443/local/ustar/connect_bridge.php',
+            bridge_key_id='tg_link',bridge_key_file=directory+'bridge.key',bridge_ca_file=directory+'bridge.ca')
+        mod.write_file(inst.config/(n+'.json'),json.dumps(config).encode(),0o600)
+    with tempfile.TemporaryDirectory(prefix='connect-link-credentials-') as td:
+        package=Path(td)/'fixture.tar.gz'
+        manifest={'schema':1,'source_commit':commit,'files':{n:hashlib.sha256(v).hexdigest() for n,v in files.items()}}
+        with tarfile.open(package,'w:gz') as tar:
+            for name,value in {**files,'manifest.json':json.dumps(manifest).encode()}.items():
+                info=tarfile.TarInfo(name);info.size=len(value);info.mode=0o644;tar.addfile(info,io.BytesIO(value))
+        inst.install(package,hashlib.sha256(package.read_bytes()).hexdigest())
+    inst.start()
+    for _ in range(40):
+        logs=call(['journalctl','-u','ustar-connect-receiver.service','--no-pager','-o','cat'])
+        if 'CONNECT_NATIVE_LINK_SCOPE=PASS' in logs:break
+        time.sleep(.1)
+    else:raise AssertionError('receiver credential scope probe missing')
+    inst.stop()
+    mod.write_file(key,b'34'*32,0o600)
+    try:inst.start()
+    except RuntimeError:pass
+    else:raise AssertionError('WRONG_KEY_SCOPE_PROBE_ACCEPTED')
+    assert not inst.host.active('ustar-connect-receiver.service')
+    logs=call(['journalctl','-u','ustar-connect-probe.service','-u','ustar-connect-receiver.service','--no-pager','-o','cat'])
+    assert '12'*32 not in logs and '34'*32 not in logs
+    assert cursor_before==hashlib.sha256(state.read_bytes()).hexdigest()
+    assert token_before==hashlib.sha256((inst.config/'telegram.token').read_bytes()).hexdigest()
+    for n,raw in configs.items():mod.write_file(inst.config/(n+'.json'),raw,0o600)
+    assert inst.install(archive,digest)==original
+    print('CONNECT_SCOPED_CREDENTIALS=PASS real systemd mounts/ACL/UID/loopback units, signed synthetic denial, wrong key fails, token and SQLite unchanged')
 
 if __name__=='__main__':
     if os.environ.get('USTAR_CONNECT_HOST_FIXTURE') != '1' or not Path('/home/runner/work').is_dir():

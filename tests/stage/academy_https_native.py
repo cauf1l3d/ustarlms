@@ -76,7 +76,11 @@ Include {p.include}
         mods=('mpm_event','authz_core','authz_host','alias','headers','dir','ssl','socache_shmcb','proxy','proxy_http')
         conf.write_text('\n'.join([f'ServerRoot "{root}"',f'PidFile "{pid}"','ServerName other.invalid','Listen 127.0.0.1:18081','Listen 127.0.0.1:18444',*[f'LoadModule {m}_module /usr/lib/apache2/modules/mod_{m}.so' for m in mods],'User www-data','Group www-data','DirectoryIndex index.php',f'DocumentRoot "{login}"',f'<Directory "{login}">','Require all granted','</Directory>',f'ErrorLog "{root}/error.log"',f'IncludeOptional "{p.old.enabled.parent}/*.conf"'])+'\n')
         log=(root/'process.log').open('wb')
-        backend=subprocess.Popen([php,'-S','127.0.0.1:18082','-t',str(p.old.config.parent)],stdout=log,stderr=log)
+        # The fixture replaces config.php repeatedly in one long-lived CLI
+        # process. Disable its CLI opcode cache explicitly; this is not the
+        # production Apache/PHP runtime or a relaxation of Secure-cookie checks.
+        backend=subprocess.Popen([php,'-d','opcache.enable_cli=0','-d','opcache.enable=0',
+            '-S','127.0.0.1:18082','-t',str(p.old.config.parent)],stdout=log,stderr=log)
         server=subprocess.Popen([apache,'-f',str(conf),'-DFOREGROUND'],stdout=log,stderr=log)
         try:
             class NativeHost(x.Host):
@@ -200,6 +204,13 @@ Include {p.include}
             evidence={'result':'PASS','real_Apache_OpenSSL_PHP':True,'real_Moodle_bootstrap':'separate_connect_db_gate','HTTP302_path_query_preserved':True,'verified_HTTPS_proxy_secure_cookie':True,'observability_header_and_include_unchanged':True,'renewal_and_failed_renewal_recovery':True,'cutover_repeat_rollback_lost_ack_recovery':True,'systemd_and_Docker_boundaries':'modeled;production_executes_real_checks','production_access':False}
             target=ROOT/'artifacts/academy-https-native.json';target.parent.mkdir(exist_ok=True);target.write_text(json.dumps(evidence,indent=2)+'\n')
             print('ACADEMY_CANONICAL_HTTPS_NATIVE=PASS; Apache/OpenSSL/PHP/proxy/redirect/renew/recovery; isolated_fixture')
+        except BaseException:
+            # Disposable synthetic fixture only; retain actual PHP/Apache errors
+            # rather than losing all diagnostics with TemporaryDirectory cleanup.
+            target=ROOT/'artifacts';target.mkdir(exist_ok=True)
+            for name in ('process.log','error.log'):
+                if (root/name).exists():shutil.copyfile(root/name,target/('academy-https-native-'+name))
+            raise
         finally:
             for proc in (server,backend):
                 proc.terminate()

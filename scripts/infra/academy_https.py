@@ -116,6 +116,7 @@ def proxy_and_redirect(raw, paths, cert, key, http_port=80, https_port=443, back
     ProxyPassInherit Off
     ProxyAddHeaders Off
     ProxyPreserveHost On
+    RequestHeader set Host "ustar.local"
     ProxyPassMatch "^/local/ustar/connect_bridge[.]php$" "http://127.0.0.1:{backend_port}{BRIDGE_PATH}"
     <Location "/">
         Require all denied

@@ -32,6 +32,7 @@ class Transform(unittest.TestCase):
         self.assertIn(b'<VirtualHost 127.0.0.1:18443>',public)
         self.assertIn(b'http://127.0.0.1:8082/local/ustar/connect_bridge.php',public)
         self.assertIn(b'<LimitExcept POST>',public)
+        self.assertIn(b'RequestHeader set Host "ustar.local"',public)
         self.assertNotIn(b'Listen 0.0.0.0',public)
         self.assertNotIn(b'X-Forwarded-Proto',public)
         with self.assertRaises(x.Refusal):
@@ -254,6 +255,22 @@ class Transaction(unittest.TestCase):
         self.assertEqual(b'ADMIN_CHANGE',self.p.http.read_bytes())
         self.assertEqual('profile_changing',self.manager.load()['phase'])
         self.host.reload=original_reload
+
+    def test_interrupted_partial_profile_write_is_recovered_on_next_renew_without_Moodle(self):
+        self.manager.cutover();before=self.manager.load()
+        http=self.p.http.read_bytes();tls=self.p.old.site.read_bytes()
+        replace=self.manager.replace
+        def interrupted(path,raw,meta):
+            if path==self.p.old.site:raise KeyboardInterrupt()
+            return replace(path,raw,meta)
+        with patch.object(self.manager,'replace',side_effect=interrupted),patch.object(self.manager,'recover_profile',side_effect=KeyboardInterrupt):
+            with self.assertRaises(KeyboardInterrupt):self.manager.set_bridge_enabled(True)
+        self.assertEqual('profile_changing',self.manager.load()['phase'])
+        self.assertNotEqual(http,self.p.http.read_bytes());self.assertEqual(tls,self.p.old.site.read_bytes())
+        self.host.runtime=lambda *_:(_ for _ in ()).throw(AssertionError('recovery accessed Moodle'))
+        another=x.Manager(old.x,self.p,self.host,uid=os.geteuid(),baseline_config=x.sha(CONFIG),ca_sha='FAKE_PUBLIC_CA_FINGERPRINT')
+        self.assertEqual('renewal_not_due',another.renew()['phase'])
+        self.assertEqual(before,another.load());self.assertEqual(http,self.p.http.read_bytes())
 
 class RuntimeBoundary(unittest.TestCase):
     def test_readonly_directory_bind_is_valid_but_file_bind_is_not(self):

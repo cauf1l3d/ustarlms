@@ -42,7 +42,8 @@ class ConnectDeliveryTests(unittest.TestCase):
         files = {}
         for name, path in self.owned.items():
             raw = ('PRIVATE_CONFIG_CANARY' if name == 'config' else name).encode()
-            write(path, raw); files[name] = {'after': self.m.sha(raw)}
+            file=write(path, raw); info=file.stat()
+            files[name] = {'after':self.m.sha(raw),'uid':info.st_uid,'gid':info.st_gid,'mode':info.st_mode & 0o7777}
         write('usr/local/sbin/USTAR_ACADEMY_HTTPS_20261020.py', self.tool, True)
         inc = write('etc/apache2/ustar-console-observability.conf', b'PRIVATE_INCLUDE_CANARY')
         unit_hashes = {}
@@ -100,6 +101,19 @@ class ConnectDeliveryTests(unittest.TestCase):
             p.write_bytes(old)
         self.https['phase']='renewing'; self.write('var/lib/ustar-academy-https/state.json',self.https,True)
         self.assertEqual('https_not_active',self.contracts()['https']['reason'])
+
+    def test_config_metadata_must_match_accepted_https_capture(self):
+        self.https['files']['config']['uid'] += 1
+        self.write('var/lib/ustar-academy-https/state.json',self.https,True)
+        self.assertEqual('https_config_metadata_changed',self.contracts()['https'].get('reason'))
+
+    @unittest.skipUnless(os.getuid()==0 and os.environ.get('USTAR_CONNECT_OWNERSHIP_FIXTURE')=='1','actual UID33 ownership runs only on disposable privileged CI')
+    def test_accepted_uid33_config_and_code_parent_do_not_require_chown(self):
+        p=self.root/self.owned['config'];os.chown(p,33,0);os.chown(p.parent,33,0)
+        self.https['files']['config'].update(uid=33,gid=0)
+        self.write('var/lib/ustar-academy-https/state.json',self.https,True)
+        self.assertEqual('measured',self.contracts()['https']['status'])
+        self.assertEqual((33,0),(p.stat().st_uid,p.stat().st_gid))
 
     def test_old_cron_or_unpaired_installation_cannot_look_ready(self):
         p=self.root/'usr/local/sbin/USTAR_CRON_SETUP_20261005.py'; p.write_bytes(b'legacy')

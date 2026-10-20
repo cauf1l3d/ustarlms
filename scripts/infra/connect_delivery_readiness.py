@@ -72,7 +72,16 @@ def https_contract(root, uid):
     require(state.get('tool_sha') == HTTPS_SHA and sha(secure_read(root,
         'usr/local/sbin/USTAR_ACADEMY_HTTPS_20261020.py', uid, True)) == HTTPS_SHA, 'https_tool_changed')
     for name, path in OWNED.items():
-        raw = secure_read(root, path, uid)
+        if name == 'config':
+            # Config ownership belongs to the accepted HTTPS capture. The
+            # application tree can legitimately be UID33; never request chown
+            # merely to satisfy a new read-only tool. Root-private state and
+            # the exact accepted hash remain the authority, not a guessed UID.
+            raw = read_file(root/path, 2 * 1024 ** 2)
+            info = (root/path).lstat(); meta = state['files'][name]
+            require((info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode))
+                    == (meta['uid'], meta['gid'], meta['mode']), 'https_config_metadata_changed')
+        else: raw = secure_read(root, path, uid)
         require(sha(raw) == state['files'][name]['after'], 'https_owned_file_changed')
         if name == 'config':
             require(not re.search(rb'\$CFG\s*->\s*ustar_connect_[A-Za-z_]+\s*=', raw),

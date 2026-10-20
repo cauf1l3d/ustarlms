@@ -61,7 +61,7 @@ production:
     tables: 99
     independent_probe: false
   historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
-  status: owner_CLI_and_browser_smoke_accepted_HTTPS_bridge_link_pending_export_restore_still_waiting
+  status: owner_CLI_browser_HTTPS_and_cron_accepted_private_bridge_link_pending_export_restore_still_waiting
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false

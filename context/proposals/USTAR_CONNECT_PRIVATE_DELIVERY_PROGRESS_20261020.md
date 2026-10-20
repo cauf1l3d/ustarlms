@@ -43,15 +43,40 @@ old whole-host facts. Existing HTTPS and cron acceptance are closed, not redone.
 - Existing preflight builder: additive `--profile chat-link`; default initial
   profile/frozen source RC semantics preserved. Runtime plan remains no-host.
 -11 new tests observed RED with missing delivery module, then GREEN. Added
-  deadline propagation regression; targeted readiness37tests PASS.
+  deadline propagation regression; targeted readiness37tests PASS before metadata review.
 - Real temporary files and Git zipapp exercise drift, private permissions,
   symlinks, duplicate JSON, fresh scheduled receipts, redaction and deterministic
   exact-Git packaging. Docker/SQL/systemctl are modeled in these tests; they do
   not prove server1 acceptance or a live private bridge.
-- Full local r16:833tests/31environment skips PASS (task venv with harness requirements).
+- Initial full local r16:833tests/31environment skips PASS (task venv with harness requirements).
   Source structural checks PASS;PHP not run locally. Context/index checks PASS.
   Exact-source CI verification pending publication.
-- Final review: self-review; owner forbids subagents, independent review not claimed.
+- Final self-review found a compatibility error: new preflight guessed root ownership
+  for config.php instead of respecting the accepted HTTPS capture. Metadata-drift
+  regression observed RED, fixed to compare exact captured uid/gid/mode and hash.
+  Symlinks remain refused;root-private HTTPS state/tool/vhosts remain protected.
+  Read-only probe must never ask owner to chown application config/tree.
+- Added actual UID33+root-group config/parent fixture,explicitly only on disposable
+  privileged CI. Local managed filesystem rejects chown33 (EINVAL),so this one test
+  is intentionally skipped locally;not claimed native PASS before CI.
+- Post-review full local r16:835tests/32skips PASS;the extra skip is actual UID33
+  fixture awaiting privileged CI. Source/context checks PASS.
+- Intermediatefda8ff35:Context39469396286 SUCCESS,runtime118789171838 SUCCESS;
+  source8.2 success,8.3 failed at existing onboarding browser test line50.
+  Trace:statusView exposes form before awaited options fetch;test read select
+  immediately after form visibility. Preserved literal-XSS/no-img assertions;
+  now wait for the actual option to be attached,with250ms synthetic options delay.
+  No product JS change. Local browser could not run:runtime browser binary absent,
+  download returned invalid/truncated archive;not a local browser PASS claim.
+  Exact new Chromium CI and actual UID33 fixture required before final handoff.
+- Initial manual bundle inventory check incorrectly expected8members;actual exact
+  whitelist is9 (7 original+2 profile modules). Corrected inspection passed exact
+  members,552/99→552/99,1905→2000 and no-host plan;no product patch for this count.
+- Future cron2000 exact source derived privately:SHA
+  ae5fa1b075ff5f97300f5d5675d51367b95d821e0acf73c7c4458200af7e9751,
+  AST differs from acceptedc5eabdce only in VERSIONS. Not installed/not an update tool;
+  the matching lock/state/recovery transaction remains required.
+- Final review:self-review;owner forbids subagents,independent review not claimed.
 
 ## Remaining production gates
 

@@ -19,9 +19,11 @@ python3 scripts/infra/build_connect_readiness.py --commit HEAD --profile chat-li
 
 Без `--check` zipapp выводит `plan_only` и не обращается к server1.
 CI artifact `connect-chat-link-delivery-readiness` содержит pyz, SHA256 и metadata.
-Закреплённые source/hash и короткая owner-команда будут добавлены после проверки
-точной опубликованной сборки. Старый `ustar-connect-preflight-ef9911f3.pyz`
-для этого этапа не подходит: его baseline526 предшествует принятой установке.
+Финальный exact source/hash и owner-команда добавляются после проверки исправления
+metadata compatibility. Не использовать промежуточную fda8ff35-сборку: она могла
+ошибочно отказать при законном UID33 для config.php. Не менять права ради probe.
+Новый пакет будет опубликован в CI artifact `connect-chat-link-delivery-readiness`.
+Старый preflightef9911f3/installer02 повторно не запускать.
 
 `delivery_baseline_measured` означает только совпадение исходного состояния.
 Это не разрешение на deployment, не проверка живого bridge и не активация бота.

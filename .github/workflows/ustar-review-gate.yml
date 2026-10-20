@@ -151,6 +151,8 @@ jobs:
           python3 -I artifacts/connect-readiness/ustar-connect-preflight-*.pyz
           python3 scripts/infra/build_connect_readiness.py --commit HEAD --profile chat-link --output-dir artifacts/connect-delivery
           python3 -I artifacts/connect-delivery/ustar-connect-delivery-*.pyz
+      - name: Delivery preflight preserves actual accepted UID33 config ownership
+        run: sudo -n env USTAR_CONNECT_OWNERSHIP_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_delivery_readiness.py -v
       - name: Build exact-source Academy installer without production access
         run: |
           python3 scripts/infra/build_connect_academy_installer.py --commit HEAD --output-dir artifacts/connect-install

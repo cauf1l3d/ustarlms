@@ -31,7 +31,12 @@ const FORM = {firstname:'Тест',lastname:'Сотрудник',username:'synth
         if (pathname==='/api/bootstrap') return reply({ok:true,csrf:'synthetic-csrf',authenticated:false});
         assert.ok(request.headers()['x-csrf-token']);
         if (pathname==='/api/launch') return reply({ok:true,csrf:'rotated-csrf',scope:'onboarding'});
-        if (pathname==='/api/options') return reply({ok:true,departments:[{id:'retail',name:'<img src=x onerror=alert(1)>'}]});
+        if (pathname==='/api/options') {
+          // Exercise the asynchronous boundary: the form is visible before
+          // options arrive, so security assertions must wait for those options.
+          await new Promise(resolve=>setTimeout(resolve,250));
+          return reply({ok:true,departments:[{id:'retail',name:'<img src=x onerror=alert(1)>'}]});
+        }
         if (pathname==='/api/register') {
           submits++; submitted=request.postDataJSON();
           assert.deepEqual(Object.keys(submitted).sort(), ['departmentid','email','firstname','lastname','password','username']);
@@ -47,6 +52,7 @@ const FORM = {firstname:'Тест',lastname:'Сотрудник',username:'synth
       });
       await page.goto(origin);
       await page.locator('#registration-form').waitFor({state:'visible'});
+      await page.locator('#departmentid option[value="retail"]').waitFor({state:'attached'});
       assert.ok(await page.locator('#departmentid').textContent().then(t=>t.includes('<img')));
       assert.equal(0,await page.locator('#departmentid img').count()); scenarios++;
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)); scenarios++;

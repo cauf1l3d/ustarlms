@@ -5,6 +5,23 @@ Owner20Oct подтвердил работу обновлённой Академ
 Привязка аккаунта и private bridge сохраняют TLS-проверки. Чатовый путь не требует
 Main Mini App,но не разрешает передачу challenge или service credential по HTTP.
 
+## Продолжение20Oct17:16МСК
+
+[Owner report](connect_https_owner_20261020.json) получен:loopback8082 работает,
+Apache/Caddy active,80/443/8443 заняты,18443 свободен. Origin parser unavailable
+не подтверждает поломку Академии и не отменяет owner HTTP confirmation.
+Владельцы443/8443 и effective Academy TLS ещё не определены. Console source из
+PR103 использует собственный8443 и CA в `/etc/ustar-console/authority`;наличие
+файлов не доказывает действительность сертификата/доверие клиентов.
+
+Расширен тот же helper с `--check --details`:fixed parse-failure reason,allowlisted
+process names/binding classes без IP/PID,static Academy virtual-host metadata,
+default Caddyfile hints и CA metadata без чтения key/cert contents. Apache/Caddy
+не запускаются для разбора;imports/env не исполняются. Это статические подсказки,
+не полный разбор effective webserver configuration. Новая точная команда будет
+закреплена после публикации helper;до неё старый блок ниже остаётся историей
+уже выполненного owner шага,не просьбой повторить прежний неполный отчёт.
+
 ## Уже готово в коде,не активировано
 
 - Receiver принимает `/start uc1_...` только из свежего личного сообщения Telegram,

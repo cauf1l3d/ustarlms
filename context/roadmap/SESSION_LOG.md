@@ -1,5 +1,15 @@
 # Журнал выполнения roadmap
 
+## 2026-10-20 17:16МСК — HTTPS readiness owner report
+
+[Receipt](../runtime/connect_https_owner_20261020.json):8082loopback,Apache/Caddy
+active,80/443/8443 listening,18443free,origin parser unavailable. This is incomplete
+static evidence,not an Academy failure. Same helper extended with explicit --details:
+fixed parser reason,allowlisted listener processes,static Academy vhost/Caddy hints,
+CA file metadata only.12targeted cases PASS;5new cases fail against previous source,
+checked after implementation,no test-first chronology claimed. No service/network/
+Academy changes,0subagents. Next owner details then concrete staged TLS procedure.
+
 ## 2026-10-20 — private-chat link после принятия Академии
 
 Owner04:39МСК подтвердил general browser smoke и следующий этап;отдельно подтвердил

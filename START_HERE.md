@@ -1,5 +1,11 @@
 # USTAR вход в проект
 
+**20Oct17:16МСК:** owner выполнил HTTPS probe;[квитанция](context/runtime/connect_https_owner_20261020.json).
+Moodle loopback8082,Apache/Caddy active,443/8443 заняты;origin parser unavailable,
+не outage. Следом расширенный `--check --details` того же probe для владельцев
+listeners/static Academy vhosts/причины parse failure. [Команды](context/runtime/connect_https_preparation_20261020.md).
+Никаких TLS/service/network изменений ещё нет;chat source1e8a8819 не установлен.
+
 **20Oct, следующий этап после принятого browser smoke04:39МСК.** Owner подтвердил работу Академии и текущий `http://ustar.local`. [Chat-link progress](context/proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md),[CI](context/runtime/connect_chat_link_ci_20261020.json),[HTTPS команда](context/runtime/connect_https_preparation_20261020.md). Source1e8a8819/2026102000/552/99 добавляет private-chat claim без Mini App,с прежним вторым Academy confirm и defaultOFF. Context39361024810/Review39361024698 SUCCESS:766r16,124native/629assertions+6concurrency+paired93→99→93,28link-browser и actual host gates PASS. HTTP блокирует безопасную активацию. Далее read-only HTTPS readiness и отдельная staged процедура,без изменения текущего HTTP/сети. Effective production payload830/1905 остаётся;новый source не установлен,installer/receiver не повторять,0subagents. Ниже датированная история.
 
 **20Oct04:36МСК: Академия обновлена владельцем через installer02b0548c.** [Owner receipt](context/runtime/connect_academy_owner_install_20261020.json):cold pair,upgrade/repeat PASS;upgrade_complete/public_released=true,systemd Finished. Effective payload830/552/99,local2026101905/theme2026100202 — по contract pinned installer,не independent probe. Browser QA ещё pending. BOT_ACTIVATION=PENDING:далее private bridge/direct-chat link/controlled notify;Mini App ждёт HTTPS. Installer/receiver повторно не запускать;main/сеть не менялись,0subagents.

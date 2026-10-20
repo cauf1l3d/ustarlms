@@ -1,5 +1,13 @@
 # Реестр кода, проверок и deployment evidence
 
+## 20Oct17:16МСК — read-only HTTPS owner report
+
+[Receipt](connect_https_owner_20261020.json):8082loopback/running,Apache/Caddy active,
+443/8443 occupied,origin parser unavailable without reason. Same probe gains
+explicit --details for filtered owners/static-vhost hints/fixed failure reason;
+12targeted tests PASS. No deployment,TLS reload,route/DNS/proxy or Academy change.
+Static hints are not active TLS/certificate acceptance. Next owner details report.
+
 ## 20Oct — owner browser smoke принят; chat-link source и HTTPS preparation
 
 Owner04:39МСК:«Академию проверил все открывается»,не exhaustive role/learning QA.

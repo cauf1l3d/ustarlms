@@ -13,6 +13,8 @@ import sys
 from urllib.parse import urlsplit
 
 CONFIG = Path('/opt/ustar/data/moodle/public/config.php')
+ORIGIN_REASONS = {'configuration_link', 'configuration_shape', 'configuration_changed',
+                  'origin_assignment', 'origin_expression', 'origin_value'}
 
 
 class ReadinessDeadline(BaseException):
@@ -50,11 +52,108 @@ def origin(path):
             raise ValueError('origin_value')
         return {'status': 'literal_configuration', 'scheme': value.scheme,
                 'https': value.scheme == 'https', 'certificate_verified': False}
+    except Exception as error:
+        reason = str(error) if type(error) is ValueError and str(error) in ORIGIN_REASONS else 'configuration_unavailable'
+        return {'status': 'unavailable', 'https': False, 'certificate_verified': False, 'reason_code': reason}
+
+
+def protected_text(path, trusted_uid=0):
+    """Only bounded root-owned config metadata; no PHP or webserver execution."""
+    if any(p.is_symlink() for p in (path, *path.parents)):
+        raise ValueError('config_link')
+    before = path.lstat()
+    if (not stat.S_ISREG(before.st_mode) or before.st_uid != trusted_uid or before.st_nlink != 1
+            or before.st_mode & 0o022 or before.st_size > 128 * 1024):
+        raise ValueError('config_shape')
+    signature = lambda value: (value.st_dev, value.st_ino, value.st_mode, value.st_uid,
+                              value.st_gid, value.st_nlink, value.st_size, value.st_mtime_ns, value.st_ctime_ns)
+    with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK), 'rb') as stream:
+        if signature(before) != signature(os.fstat(stream.fileno())):
+            raise ValueError('config_changed')
+        raw = stream.read(128 * 1024 + 1)
+        if (len(raw) > 128 * 1024 or signature(before) != signature(os.fstat(stream.fileno()))
+                or signature(before) != signature(path.lstat())):
+            raise ValueError('config_changed')
+    return raw.decode('utf-8')
+
+
+def web_configuration(etc=Path('/etc'), trusted_uid=0):
+    result = {'apache': {'status': 'unavailable'}, 'caddy_default_file': {'status': 'unavailable'}}
+    try:
+        enabled, available = etc / 'apache2/sites-enabled', etc / 'apache2/sites-available'
+        if any(p.is_symlink() for p in (enabled, *enabled.parents)):
+            raise ValueError('enabled_link')
+        paths = sorted(enabled.iterdir())
+        if len(paths) > 128:
+            raise ValueError('too_many_files')
+        entries = []
+        for path in paths:
+            if path.is_dir():
+                continue
+            target = path.resolve(strict=True)
+            if target.parent not in (enabled, available):
+                raise ValueError('external_apache_include')
+            raw = protected_text(target, trusted_uid)
+            for address, body in re.findall(r'<VirtualHost\s+([^>]+)>(.*?)</VirtualHost\s*>', raw, re.I | re.S):
+                names = re.findall(r'(?mi)^\s*(?:ServerName|ServerAlias)\s+([^\r\n#]+)', body)
+                if not any(name.lower().split(':')[0] == 'ustar.local' for line in names for name in line.split()):
+                    continue
+                ports = sorted({int(p) for p in re.findall(r':([0-9]{1,5})(?:\s|$)', address)
+                                if 1 <= int(p) <= 65535})
+                entries.append({'ports': ports,
+                    'TLS_directive': bool(re.search(r'(?mi)^\s*SSLEngine\s+on\s*(?:#.*)?$', body)),
+                    'proxy_8082_directive': bool(re.search(r'(?mi)^\s*ProxyPass\s+/\s+http://127\.0\.0\.1:8082(?:/|\s|$)', body)),
+                    'certificate_directive': bool(re.search(r'(?mi)^\s*SSLCertificateFile\s+', body)),
+                    'includes_present': bool(re.search(r'(?mi)^\s*Include(?:Optional)?\s+', body))})
+        result['apache'] = {'status': 'static_metadata_only', 'academy_vhosts': entries,
+                            'complete_effective_configuration': False}
     except Exception:
-        return {'status': 'unavailable', 'https': False, 'certificate_verified': False}
+        pass
+    try:
+        raw = protected_text(etc / 'caddy/Caddyfile', trusted_uid)
+        # Lexical hints only: imports/env/placeholders are deliberately not evaluated.
+        active_lines = '\n'.join(line for line in raw.splitlines() if not line.lstrip().startswith('#'))
+        result['caddy_default_file'] = {'status': 'static_metadata_only',
+            'academy_name_present': bool(re.search(r'(?<![\w.-])ustar\.local(?![\w.-])', active_lines)),
+            'loopback_8082_present': bool(re.search(r'(?<![\w.-])127\.0\.0\.1:8082(?![0-9])', active_lines)),
+            'import_present': bool(re.search(r'(?m)^\s*import\s+', active_lines)),
+            'active_config_path_verified': False}
+    except Exception:
+        pass
+    result['console_CA'] = {}
+    for label, relative in (('public_certificate', 'ustar-console/authority/ca.crt'),
+                            ('signing_key_metadata_only', 'ustar-console/authority/ca.key')):
+        path = etc / relative
+        try:
+            if any(p.is_symlink() for p in (path, *path.parents)):
+                raise ValueError('CA_link')
+            info = path.lstat()
+            safe = stat.S_ISREG(info.st_mode) and info.st_uid == trusted_uid and info.st_nlink == 1 and not info.st_mode & 0o022
+            if label == 'signing_key_metadata_only':
+                safe = safe and not info.st_mode & 0o077
+            result['console_CA'][label] = {'protected_regular_file': bool(safe), 'contents_read': False}
+        except Exception:
+            result['console_CA'][label] = {'protected_regular_file': False, 'contents_read': False}
+    return result
 
 
-def check(*, config=CONFIG, runner=command):
+def listener_details(raw):
+    result = []
+    for line in raw.splitlines():
+        fields = line.split()
+        if len(fields) < 5:
+            continue
+        address, _, port = fields[3].rpartition(':')
+        if port not in ('80', '443', '8443', '18443'):
+            continue
+        names = set(re.findall(r'\("([^"\r\n]{1,64})",pid=', line))
+        result.append({'port': int(port),
+            'binding': 'loopback' if address in ('127.0.0.1', '[::1]', '::1') else 'wildcard' if address in ('*', '0.0.0.0', '[::]', '::') else 'specific_address_redacted',
+            'processes': sorted({n if n in ('apache2', 'caddy', 'nginx', 'docker-proxy', 'python3', 'gunicorn') else 'other' for n in names})})
+    return result
+
+
+def check(*, config=CONFIG, runner=command, details=False, etc=Path('/etc')):
     config = Path(config)
     academy = origin(config)
     moodle = {'status': 'unavailable'}
@@ -97,7 +196,7 @@ def check(*, config=CONFIG, runner=command):
             services[service] = {'status': 'unavailable'}
     listeners = {'status': 'unavailable'}
     try:
-        raw = runner(['ss', '-H', '-ltn'])
+        raw = runner(['ss', '-H', '-ltnp' if details else '-ltn'])
         ports = set()
         for line in raw.splitlines():
             fields = line.split()
@@ -106,21 +205,29 @@ def check(*, config=CONFIG, runner=command):
                 if token.isdecimal():
                     ports.add(int(token))
         listeners = {'status': 'measured', **{str(port): port in ports for port in (80, 443, 8443, 18443)}}
+        if details:
+            listeners['owners'] = listener_details(raw)
     except Exception:
         pass
-    return {'kind': 'connect_https_readiness', 'observed_at': datetime.now(timezone.utc).isoformat(),
+    result = {'kind': 'connect_https_readiness', 'observed_at': datetime.now(timezone.utc).isoformat(),
         'status': 'https_origin_present_acceptance_pending' if academy['https'] else 'https_preparation_required',
         'academy_origin': academy, 'moodle': moodle, 'services': services, 'listeners': listeners,
         'activation_ready': False, 'read_only': True, 'PHP_or_Moodle_bootstrap': False,
         'host_route_DNS_proxy_or_service_changes': False, 'secrets_or_raw_configuration_emitted': False,
         'remaining': ['trusted_Academy_HTTPS_origin_acceptance', 'private_bridge_TLS_peer_and_link_only_key',
                       'worker_credentials_and_lifecycle', 'two_sided_account_confirmation', 'opt_in_notifications']}
+    if details:
+        result['web_configuration'] = web_configuration(Path(etc))
+    return result
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--details', action='store_true', help='Filtered listener owners and static Academy vhost metadata')
     args = parser.parse_args(argv)
+    if args.details and not args.check:
+        parser.error('--details requires --check')
     if not args.check:
         print('{"status":"plan_only","host_access":false,"next":"--check reads HTTPS preparation metadata"}')
         return 0
@@ -132,7 +239,7 @@ def main(argv=None):
         prior = signal.signal(signal.SIGALRM, deadline)
         signal.alarm(45)
         try:
-            result = check()
+            result = check(details=args.details)
         finally:
             signal.alarm(0)
             signal.signal(signal.SIGALRM, prior)

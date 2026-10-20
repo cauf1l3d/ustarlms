@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "kind": "owner_reported_HTTPS_readiness",
+  "reported_at": "2026-10-20T17:16:25+03:00",
+  "observed_at": "2026-10-20T14:16:04.539981+00:00",
+  "source_commit": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1",
+  "script_sha256_owner_verified": "3678e9ac0058f9d4971aac62a7006d105f8b77962bc2c77f51b5c125f4d79ddd",
+  "independent_SSH_measurement": false,
+  "observations": {
+    "academy_origin_parser": "unavailable_reason_not_reported_by_original_tool",
+    "owner_previously_confirmed_origin": "http://ustar.local",
+    "moodle_running": true,
+    "moodle_loopback_binding": {"container_port": "80/tcp", "host_port": 8082},
+    "other_moodle_bindings_present": false,
+    "docker_network_count": 1,
+    "apache2": "active",
+    "caddy": "active",
+    "listening_ports": {"80": true, "443": true, "8443": true, "18443": false},
+    "activation_ready": false,
+    "read_only": true,
+    "PHP_bootstrap_or_network_service_changes": false
+  },
+  "interpretation": "Shared listeners cannot be replaced based on port occupancy alone. Origin parser failure is incomplete diagnostic evidence,not an Academy outage or certificate verdict. Do not assume Caddy terminates Academy TLS. Console source uses a separate8443 server and its own CA.",
+  "next": "same_readonly_probe_check_details_for_listener_owners_static_Academy_vhosts_and_fixed_origin_failure_reason",
+  "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
+  "tests": {"targeted_readiness": 12, "full_local_r16": 771, "explicit_environment_skips": 31, "result": "PASS", "source_checks": "PASS_PHP_not_run_locally", "new_cases_against_previous_source": "5_expected_failures_observed", "chronology": "regression_checked_against_previous_source_after_implementation_not_claimed_test_first"},
+  "updated_probe_sha256": "994b5701fad01c155c13720d8d7eb16eeaf237423237ad0700c07a8c6c5dfbb2",
+  "Academy_worker_or_network_changes": false,
+  "new_source_deployed": false,
+  "subagents": 0
+}

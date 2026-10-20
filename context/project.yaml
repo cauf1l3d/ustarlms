@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_CLI_and_general_browser_smoke_accepted;chat_link_source1e8a8819_CI_accepted;HTTP_origin_blocks_activation;HTTPS_readiness_next;MiniApp_waits_external_HTTPS
+execution_gate: chat_link_source1e8a8819_CI_accepted;owner_HTTPS_readiness_received;shared_listener_details_next;HTTP_origin_blocks_activation;MiniApp_waits_external_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md

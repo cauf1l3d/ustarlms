@@ -1,5 +1,11 @@
 # Активные задачи USTAR
 
+**20Oct17:16МСК:** [HTTPS owner report](../runtime/connect_https_owner_20261020.json)
+получен:8082loopback,Apache/Caddy active,443/8443 заняты;origin parser unavailable.
+Подготовлен расширенный read-only `--check --details`,12tests PASS;нужны owner
+listener/static-vhost facts перед TLS rollout. Не считать occupied443 свободным
+или parser refusal поломкой Академии. Production/worker/network unchanged.
+
 **20Oct, после owner04:39МСК:** general Academy browser smoke принят;полный
 role/learning QA не заявлен. Текущий canonical origin подтверждён как HTTP.
 [Новый chat-link source](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md)

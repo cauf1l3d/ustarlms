@@ -2,14 +2,16 @@ schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
 stage: connect_chat_link_source_and_HTTPS_preparation
-stage_label: Chat-link source проверен; следующий серверный шаг read-only HTTPS readiness
+stage_label: HTTPS readiness получен; уточнение shared listeners и Academy virtual host
 current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh paired baseline PASS,
   upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
   Effective addon payload830/552/99 and local2026101905/theme2026100202 follow pinned installer guards;
   this is not an independent SSH probe. Owner0439MSK confirms general browser smoke;exhaustive role QA,post-update cron/backup and restore RTO not accepted.
   Bot activation PENDING;next private bridge/scoped keys/direct-chat link/controlled notify.
   Owner confirms HTTP canonical origin;chat-link source1e8a8819/2026102000 verified Context39361024810/Review39361024698 SUCCESS,766r16/124native629/6concurrency/paired93to99to93/28link-browser/actual host.
-  Source not deployed;next read-only HTTPS readiness command. Mini App waits external HTTPS. Keep cold pair;no repeat installation or silent late rollback.
+  Owner1716MSK HTTPS probe:loopback8082,Apache+Caddy active,80/443/8443 occupied,18443 free;
+  origin parser unavailable with no reason in original tool. Next same probe --check --details,not a blind443 change.
+  Source not deployed. Mini App waits external HTTPS. Keep cold pair;no repeat installation or silent late rollback.
   Main/network/receiver unchanged;0subagents. Earlier source/evidence snapshots remain historical.'
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -89,6 +91,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_https_owner_20261020.json
 - context/runtime/connect_chat_link_ci_20261020.json
 - context/proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md
 - context/proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md

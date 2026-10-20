@@ -77,7 +77,7 @@
     "PHP_bootstrap_or_network_service_changes": false
   },
   "interpretation": "Shared listeners cannot be replaced based on port occupancy alone. Origin parser failure is incomplete diagnostic evidence,not an Academy outage or certificate verdict. Do not assume Caddy terminates Academy TLS. Console source uses a separate8443 server and its own CA.",
-  "next": "owner_pinned_first_TLS_check_prepare_browser_acceptance_then_separate_canonical_HTTPS_renewal_bridge",
+  "next": "phone_browser_trust_then_canonical_HTTPS_cutover_permanent_renewal_private_bridge_link_notify",
   "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
   "tests": {
     "targeted_readiness": 12,
@@ -131,5 +131,28 @@
     },
     "interpretation": "existing443_listener_serves_global_plain_HTTP;first_TLS_mode_is_intentional_protocol_change",
     "new_probe_apply": "pending"
+  },
+  "first_TLS_owner_apply": {
+    "reported_at": "2026-10-20T18:49:26+03:00",
+    "source_commit": "3303069b964cebab111e1fa2b03b0aed01a3ccab",
+    "script_SHA256_owner_verified": "7b5fd3a62c3b9d9c72bcaf513d96777bf0a00926bcba91ec3ac1740896c78bd7",
+    "check_phase": "ready_for_TLS_probe",
+    "prepare_phase": "tls_probe_ready",
+    "first_TLS_vhost": true,
+    "CA_fingerprint": "cc397ba406aa58445e4f57a5e2644df20bd746273403e555f3df736694d5935f",
+    "leaf_fingerprint": "98e1a8567c55866951a5ea28b5389fa5b477b4191b5cb850718e1ad600752992",
+    "leaf_not_after": "2026-11-19T15:47:49Z",
+    "Academy_origin_changed": false,
+    "HTTP_redirect_enabled": false,
+    "network_or_other_services_changed": false,
+    "evidence": "owner_terminal_output;not_independent_SSH",
+    "browser_images": {
+      "correct_path": "/__ustar_tls_probe__/ready.html",
+      "correct_path_result": "USTAR HTTPS check page rendered;no certificate warning visible in desktop screenshot",
+      "incorrect_path": "/ustar_tls_probe/ready.html",
+      "incorrect_path_result": "403 expected;only exact health path is permitted",
+      "phone_or_VPN_acceptance": "not_established_by_desktop_screenshots"
+    },
+    "next": "confirm_correct_URL_on_phone_then_canonical_HTTPS_cutover_and_permanent_renewal;private_bridge_link_notify_separate"
   }
 }

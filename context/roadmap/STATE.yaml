@@ -2,7 +2,7 @@ schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
 stage: connect_chat_link_source_and_HTTPS_preparation
-stage_label: First TLS host source and native CI accepted; owner prepare and browser trust pending
+stage_label: Static TLS owner prepare and desktop render accepted; phone trust and canonical HTTPS renewal next
 current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh paired baseline PASS,
   upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
   Effective addon payload830/552/99 and local2026101905/theme2026100202 follow pinned installer guards;
@@ -19,6 +19,8 @@ current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh pa
   Owner1829MSK check download verified but refused wildcard_TLS_binding_required before any Apache changes.
   Owner1831MSK resolves absent443-vhost topology;live443 plainHTTP200 and TLS SSLError.
   First-TLS source3303069b native/runtime and both PHP source jobs PASS;owner apply/browser pending.
+  Owner1849MSK check+prepare PASS;correct desktop URL renders,wrong no-underscore URL403 expected.
+  Phone/VPN trust remains unverified;canonical HTTP origin unchanged.
   Do not bypass guard or prepare until actual topology is reviewed. Previous ready handoff is superseded.
   No repeated broad diagnostics;canonical HTTPS/renewal/private bridge are separate next gates.
   Source not deployed. Mini App waits external HTTPS. Keep cold pair;no repeat installation or silent late rollback.

@@ -1,5 +1,18 @@
 # Активные задачи USTAR
 
+**20Oct18:49МСК: static TLS probe применён владельцем.**
+Pinned3303069b SHA PASS;check ready_for_TLS_probe,prepare tls_probe_ready.
+CA/leaf fingerprints и expiry19Nov15:47:49UTC записаны в owner receipt.
+Первый desktop screenshot показывает правильный /__ustar_tls_probe__/ready.html
+без видимого cert warning. Второй /ustar_tls_probe/ready.html без double underscores
+ожидаемо403;это не ошибкаTLS/Apache. Повторныйprepare/rollback не требуется.
+Phone/VPN acceptance не установлена desktop screenshots. Canonical Academy ещё HTTP,
+redirect false;далее phone trust и отдельный canonicalHTTPS+permanent renewal,
+затем private bridge/link/notify. Это30day probe,не завершённая постояннаяTLS схема.
+[Owner receipt](../runtime/connect_https_owner_20261020.json).
+0subagents;не independentSSH;prod effective addon830/1905 сохранён.
+
+
 **20Oct18:43МСК: исправление первого TLS-хоста проверено.**
 Source3303069b964cebab111e1fa2b03b0aed01a3ccab,tree8e2277f78fbc549608e92d899a051958bd21dfb8.
 Owner подтвердил отсутствие443-vhosts и plainHTTP200/TLS SSLError на443.

@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 8870,
-      "sha256": "3855fdd80ec3edd341ff9293dbbb05dd2deb540dae580460a8a817e61c3617e0"
+      "size": 9888,
+      "sha256": "02bc64faca7906da5b5f85d5645634214e775a63ec2e2779ca83bd2e39e0f56d"
     },
     {
       "path": "context/agents/astra.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2384,
-      "sha256": "7ff18f1b52141d2bc9e1f4e65fb9fa3f17ee1a69c2fbe1729e0aa18931fef2ce"
+      "size": 2383,
+      "sha256": "0eb1113b0c5dcbe512987dc02e7c1f532af2f6550533cf3aae1aaedc851c6326"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md",
@@ -966,8 +966,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 11095,
-      "sha256": "e17fa7a20d3b17b6f5dd478f7cb7b8af73b46ec7046ead21bac0b2c66c3c95b9"
+      "size": 11277,
+      "sha256": "321408902fedc557fb7e1f2a91819093fc5b3c18aadd6db99fe268b9f48a664f"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1152,8 +1152,8 @@
     {
       "path": "context/runtime/connect_academy_tls_probe_ci_20261020.json",
       "domain": "runtime",
-      "size": 5411,
-      "sha256": "646abe4c39723a145e888c1a0bc9b056dba7577e823c430c6f5508bf2465c449"
+      "size": 5428,
+      "sha256": "5cb0e9ff95c2bdfb37299156b8bf6ce47d6d034bfbf6e1814d156dcf3a9db324"
     },
     {
       "path": "context/runtime/connect_chat_link_ci_20261020.json",
@@ -1170,8 +1170,8 @@
     {
       "path": "context/runtime/connect_https_owner_20261020.json",
       "domain": "runtime",
-      "size": 5558,
-      "sha256": "63d50a24e9ca7f2426a2ba15ab462e73ab7c5094d8dc81e9cb09f0de387db0d8"
+      "size": 6870,
+      "sha256": "65dee7ff32feb8720738d6345cd0ef8cd367ba3f1a37bb6aaca451abbf93d499"
     },
     {
       "path": "context/runtime/connect_https_preparation_20261020.md",
@@ -1182,8 +1182,8 @@
     {
       "path": "context/runtime/connect_https_tls_probe_20261020_commands.md",
       "domain": "runtime",
-      "size": 10786,
-      "sha256": "842235e37a22b4f905188043feb949a6557a81c0c966f4b4c718a44d3d1c5487"
+      "size": 11581,
+      "sha256": "3a2737deedaaffc3c963697017008df6123701ab98f9ca3153ca65d74292afab"
     },
     {
       "path": "context/runtime/connect_owner_priority_20261019.json",
@@ -2070,8 +2070,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 22749,
-      "sha256": "5646bfefc93cdb4a0276481f99836cdd7eab02dcf0b2e25b0e5aea4d23d792e6"
+      "size": 23770,
+      "sha256": "0a59ba865beedc597838dfad6f7b42dadd74b62ab86aabab9e6aeb9ae1a673d3"
     },
     {
       "path": "context/tasks/backlog.yaml",

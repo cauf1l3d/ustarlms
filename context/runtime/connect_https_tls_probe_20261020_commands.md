@@ -1,5 +1,16 @@
 # Stage1: проверка внутреннего HTTPS Академии
 
+## Owner20Oct18:49МСК — применение принято
+
+--check и --prepare завершились успешно,повторять их не требуется.
+Правильный /__ustar_tls_probe__/ready.html открылся на desktop screenshot.
+/ustar_tls_probe/ready.html без двойных подчёркиваний ожидаемо403.
+Phone/VPN trust пока не подтверждены. Академия остаётся наHTTP80;это static30day
+probe,не canonical HTTPS/renewal. Далее проверить точную ссылку на телефоне,
+затем отдельная процедура canonical HTTPS и постоянного продления сертификата.
+[Квитанция](connect_https_owner_20261020.json).
+
+
 ## Исправленный режим первого TLS-хоста20Oct18:38МСК
 
 Owner подтвердил:effective dump содержит только *:80,на443 обычный HTTP200,

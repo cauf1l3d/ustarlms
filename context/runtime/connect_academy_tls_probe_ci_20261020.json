@@ -122,7 +122,7 @@
         "conclusion": "success"
       }
     ],
-    "owner_apply": "pending;only_old_check_refusal_observed;no_new_probe_apply_or_browser_acceptance",
+    "owner_apply": "owner20Oct18:49 check+prepare PASS;desktop correct-path render accepted;phone/VPN not established",
     "protocol_effect": "explicitly_replace_plain_HTTP443_with_TLS_static_probe;preserve_HTTP80_and_existing_vhosts",
     "subagents": 0,
     "source_download_blob_matches_local": true,

@@ -1,5 +1,12 @@
 # Stage1: проверка внутреннего HTTPS Академии
 
+## Текущий следующий шаг: canonical HTTPS
+
+Static TLS и phone LAN/VPN уже приняты; filtered HTTP vhost получен19:20МСК.
+Повторные probe/prepare/filtered inspection ниже не требуются. Выполнять
+[новый pinned handoff после успешного CI](connect_academy_https_20261020_commands.md).
+Ниже — датированная история первого TLS-хоста.
+
 ## Owner20Oct19:01МСК — phone/VPN accepted; canonical HTTPS preparation
 
 Owner подтвердил открытие по локальному WiFi с телефона и с VPN. Это не проверка

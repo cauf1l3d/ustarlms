@@ -1,31 +1,24 @@
 schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
-stage: connect_chat_link_source_and_HTTPS_preparation
-stage_label: Static TLS desktop and phone LAN VPN accepted; canonical HTTPS and renewal preparation
-current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh paired baseline PASS,
-  upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
-  Effective addon payload830/552/99 and local2026101905/theme2026100202 follow pinned installer guards;
-  this is not an independent SSH probe. Owner0439MSK confirms general browser smoke;exhaustive role QA,post-update cron/backup and restore RTO not accepted.
-  Bot activation PENDING;next private bridge/scoped keys/direct-chat link/controlled notify.
-  Owner confirms HTTP canonical origin;chat-link source1e8a8819/2026102000 verified Context39361024810/Review39361024698 SUCCESS,766r16/124native629/6concurrency/paired93to99to93/28link-browser/actual host.
-  Owner1716MSK HTTPS probe:loopback8082,Apache+Caddy active,80/443/8443 occupied,18443 free;
-  origin parser unavailable with no reason in original tool;details followup now received,not a blind443 change.
-  Owner1732MSK details resolves origin_expression and Academy Apache80/proxy8082/noTLS/Include;
-  default Caddyfile lacks Academy. Listener process labels other are an incomplete allowlist;
-  Owner1743MSK narrow followup resolves Apache80/443 and console8443;indirect wwwroot SHA pinned.
-  Static TLS probe52a8a1ca verified:30day DNS leaf,health-only SNI site,unchanged HTTP/config,guarded graceful reload/recovery.
-  Context39447539405/native118713514071 and both source jobs SUCCESS;792r16/134skips CI,21targeted local.
-  Owner1829MSK check download verified but refused wildcard_TLS_binding_required before any Apache changes.
-  Owner1831MSK resolves absent443-vhost topology;live443 plainHTTP200 and TLS SSLError.
-  First-TLS source3303069b native/runtime and both PHP source jobs PASS;owner apply/browser pending.
-  Owner1849MSK check+prepare PASS;correct desktop URL renders,wrong no-underscore URL403 expected.
-  Owner1901MSK confirms phone over office WiFi with VPN;canonical HTTP origin unchanged.
-  Read existing HTTP vhost Include/proxy directives before preserving its rules in HTTPS cutover.
-  Do not bypass guard or prepare until actual topology is reviewed. Previous ready handoff is superseded.
-  No repeated broad diagnostics;canonical HTTPS/renewal/private bridge are separate next gates.
-  Source not deployed. Mini App waits external HTTPS. Keep cold pair;no repeat installation or silent late rollback.
-  Main/network/receiver unchanged;0subagents. Earlier source/evidence snapshots remain historical.'
+stage: connect_canonical_HTTPS_owner_cutover_pending
+stage_label: Canonical HTTPS and renewal CI passed; owner cutover and application browser acceptance pending
+current_activity: >-
+  Owner20Oct reports Academy installer02b0548c success and general browser smoke;
+  effective payload830/local2026101905/theme2026100202/552files/99tables remains installed.
+  Chat-link candidate2026102000 is verified source, not deployed; old installer stays pinned830.
+  Static TLS probe3303069b is owner-applied and accepted on phone over office WiFi/VPN.
+  Owner1920MSK HTTP vhost confirms loopback8082 and exact opaque observability Include.
+  Canonical HTTPS source d1e61a3b verified: Context39459332144/Review39459332116 SUCCESS,
+  811r16/134CI skips,15targeted local; actual Apache/OpenSSL/PHP and separate native
+  Moodle5.1.8/PostgreSQL16 HTTPS bootstrap/Secure-cookie PASS. Native Connect124/629,
+  6concurrency and paired93to99to93 PASS. Full-RC jobs skipped; no full-RC claim.
+  Pinned install/check/cutover/status/rollback handoff is ready. Server1 canonical
+  cutover and application browser acceptance are pending owner execution.
+  Do not repeat probe/receiver/Academy installation or broad fact collection.
+  After HTTPS acceptance: private bridge/scoped keys, chat-link candidate delivery,
+  two-sided link/revoke and controlled opt-in notify. Mini App requires external HTTPS.
+  No agent server/main/router/DNS/routes/Caddy/Xray/provider changes;0subagents.
 next_task: INTEGRATIONS-01
 ready_tasks: []
 canonical_roadmap_branch: main
@@ -104,6 +97,9 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_academy_https_20261020_commands.md
+- context/runtime/connect_academy_https_ci_20261020.json
+- context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md
 - context/runtime/connect_https_owner_20261020.json
 - context/runtime/connect_chat_link_ci_20261020.json
 - context/proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md

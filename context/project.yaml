@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_chat_link_source_and_HTTPS_preparation
+  stage: connect_canonical_HTTPS_owner_cutover_pending
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: static_TLS_owner_desktop_phone_LAN_VPN_accepted;canonical_HTTPS_sslproxy_renewal_preparation;HTTP_vhost_Include_rules_pending;bridge_not_activated;MiniApp_waits_external_HTTPS
+execution_gate: canonical_HTTPS_d1e61a3b_CI_verified;owner_cutover_browser_pending;static_TLS_LAN_VPN_accepted;bridge_link_notify_pending;MiniApp_waits_external_HTTPS
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -39,6 +39,6 @@ current_work:
   owner_receipt: context/runtime/connect_academy_owner_install_20261020.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan: context/proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md
-  runbook: context/runtime/connect_https_preparation_20261020.md
-  CI_receipt: context/runtime/connect_chat_link_ci_20261020.json
+  plan: context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md
+  runbook: context/runtime/connect_academy_https_20261020_commands.md
+  CI_receipt: context/runtime/connect_academy_https_ci_20261020.json

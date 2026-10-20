@@ -1,5 +1,22 @@
 # Журнал выполнения roadmap
 
+## 20Oct — HTTPS CI gate и owner handoff
+
+**20Oct — canonical HTTPS: CI завершён, команды владельцу готовы.**
+Source `d1e61a3b` проверен: Context39459332144 и Review39459332116 SUCCESS.
+PHP8.2/8.3: 811 r16 tests / 134 environment skips; local HTTPS tests 15/15 PASS.
+Настоящий Apache/OpenSSL/PHP проверил proxy/HTTP302/renewal/recovery; отдельный
+Moodle5.1.8/PostgreSQL16 gate подтвердил HTTPS config и Secure session cookie.
+[CI-квитанция](../runtime/connect_academy_https_ci_20261020.json),
+[закреплённые команды check/cutover/status/rollback](../runtime/connect_academy_https_20261020_commands.md),
+[progress](../proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md).
+На server1 пока принят static TLS probe и phone LAN WiFi/VPN; canonical Academy
+cutover и browser login/material acceptance ожидают владельца. Не повторять
+probe/receiver/Academy installer или сбор старых фактов. После приёмки — private
+bridge/scoped keys, отдельная поставка chat-link candidate2000 и opt-in notify;
+Mini App ждёт внешнего HTTPS. Agent server1 не менял, main не объединён, 0 subagents.
+Ниже сохранены предыдущие датированные checkpoints.
+
 ## 20Oct18:29МСК — TLS check precondition refusal
 
 **20Oct18:29МСК: owner --check отказал до применения.** Download hash PASS;

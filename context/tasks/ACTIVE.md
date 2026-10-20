@@ -1,16 +1,19 @@
 # Активные задачи USTAR
 
-**20Oct: canonical HTTPS+renewal source implementation in progress.**
-Owner19:20 HTTP report resolves observability Include path;its content is not in
-public repo. Preserve this opaque file/hash in TLS proxy and HTTP302;no new probes.
-New scripts/infra/academy_https.py reuses pinned accepted TLS helper,backs up only
-configuration files,adds wwwroot/sslproxy/cookiesecure before native bootstrap,
-uses graceful reload/recovery and daily30day certificate renewal/10day threshold.
-[Plan](../proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md).
-Local targeted13tests GREEN;native Apache/PHP and actual Moodle bootstrap CI pending.
-No owner cutover command until native/source gates pass;server remains accepted
-static TLS probe+HTTP Academy.0subagents;no source/schema/data deployment.
-
+**20Oct — canonical HTTPS: CI завершён, команды владельцу готовы.**
+Source `d1e61a3b` проверен: Context39459332144 и Review39459332116 SUCCESS.
+PHP8.2/8.3: 811 r16 tests / 134 environment skips; local HTTPS tests 15/15 PASS.
+Настоящий Apache/OpenSSL/PHP проверил proxy/HTTP302/renewal/recovery; отдельный
+Moodle5.1.8/PostgreSQL16 gate подтвердил HTTPS config и Secure session cookie.
+[CI-квитанция](../runtime/connect_academy_https_ci_20261020.json),
+[закреплённые команды check/cutover/status/rollback](../runtime/connect_academy_https_20261020_commands.md),
+[progress](../proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md).
+На server1 пока принят static TLS probe и phone LAN WiFi/VPN; canonical Academy
+cutover и browser login/material acceptance ожидают владельца. Не повторять
+probe/receiver/Academy installer или сбор старых фактов. После приёмки — private
+bridge/scoped keys, отдельная поставка chat-link candidate2000 и opt-in notify;
+Mini App ждёт внешнего HTTPS. Agent server1 не менял, main не объединён, 0 subagents.
+Ниже сохранены предыдущие датированные checkpoints.
 
 **20Oct19:01МСК: owner подтвердил phone+VPN по локальному WiFi.**
 Static TLS browser gate принят для office WiFi/phone/VPN;не public/mobile-data acceptance.

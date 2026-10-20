@@ -21,20 +21,28 @@
 
 Files: scripts/infra/academy_https.py; tests/r16/test_academy_https.py.
 Interfaces: patch_config(raw)->bytes; proxy_and_redirect(raw,paths,cert,key,http_port=80,https_port=443,backend_port=8082)->(bytes,bytes); Manager(lib,paths,host,uid,baseline_config).check/cutover/status/rollback.
-- [ ] RED tests: indirect wwwroot preserved before managed overrides; one setup suffix only; duplicate managed block/refused trailing executable code; original proxy/Include preserved in TLS; HTTP proxy removed in redirect; unsupported vhost topology rejected.
-- [ ] Implement root-private durable snapshots, directory-bind/container hash/lint checks, exact vhost map comparison and hash/PID guards. All file mutations tracked before writes; config reload failure uses configuration-only recovery.
-- [ ] GREEN transaction tests: apply/repeat/rollback, unexpected administrator edits, reload/cache/TLS/timer failure, restart after interrupted transaction. Run full r16.
+- [x] RED tests: indirect wwwroot preserved before managed overrides; one setup suffix only; duplicate managed block/refused trailing executable code; original proxy/Include preserved in TLS; HTTP proxy removed in redirect; unsupported vhost topology rejected.
+- [x] Implement root-private durable snapshots, directory-bind/container hash/lint checks, exact vhost map comparison and hash/PID guards. All file mutations tracked before writes; config reload failure uses configuration-only recovery.
+- [x] GREEN transaction tests: apply/repeat/rollback, unexpected administrator edits, reload/cache/TLS/timer failure, restart after interrupted transaction. Run full r16.
 
 ## Task2: daily renewal lifecycle
 
 Same production file; renewal unit strings in it. No new Python dependency.
-- [ ] RED tests: default mode no host access; timer ExecStart uses fixed installed root script; no-op above10days; due renewal replaces exact leaf; failed or interrupted renewal restores prior TLS config; modified owned config is not overwritten.
-- [ ] Implement root-lock --renew with30day leaf/10day threshold, persistent daily timer, safe recovery of pending generation. New private key/cert remain0700 generation. Never restart Apache; graceful reload only.
-- [ ] GREEN root-filesystem tests and source/context checks.
+- [x] RED tests: default mode no host access; timer ExecStart uses fixed installed root script; no-op above10days; due renewal replaces exact leaf; failed or interrupted renewal restores prior TLS config; modified owned config is not overwritten.
+- [x] Implement root-lock --renew with30day leaf/10day threshold, persistent daily timer, safe recovery of pending generation. New private key/cert remain0700 generation. Never restart Apache; graceful reload only.
+- [x] GREEN root-filesystem tests and source/context checks.
 
 ## Task3: native evidence and owner handoff
 
 Files: tests/stage/academy_https_native.py; tests/stage/academy_https_moodle.php; tests/stage/run-connect.sh; .github/workflows/ustar-review-gate.yml; runtime receipt/runbook.
-- [ ] Real isolated Apache/OpenSSL/PHP backend: copy opaque observability Include, canonical HTTP redirect preserving query, verified HTTPS proxy/login/session cookie, renew and forced failures/recovery. Model only systemd/container boundaries explicitly.
-- [ ] Existing real Moodle5.1.8/PostgreSQL16 fixture: run managed config overrides before native bootstrap, verify https wwwroot/sslproxy/cookiesecure/core URL, restore original config in finally. This complements Apache fixture; neither is production browser acceptance.
-- [ ] Publish exact source, inspect native and source CI, then provide pinned download/hash --check before owner cutover. No command to apply until required gates pass.
+- [x] Real isolated Apache/OpenSSL/PHP backend: copy opaque observability Include, canonical HTTP redirect preserving query, verified HTTPS proxy/login/session cookie, renew and forced failures/recovery. Model only systemd/container boundaries explicitly.
+- [x] Existing real Moodle5.1.8/PostgreSQL16 fixture: run managed config overrides before native bootstrap, verify https wwwroot/sslproxy/cookiesecure/core URL, restore original config in finally. This complements Apache fixture; neither is production browser acceptance.
+- [x] Publish exact source, inspect native and source CI, then provide pinned download/hash --check before owner cutover. No command to apply until required gates pass.
+
+## Completion evidence
+
+Implementation tasks are verified on source d1e61a3b; source/native CI and pinned
+owner handoff are complete. [Execution record](USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md),
+[exact CI receipt](../runtime/connect_academy_https_ci_20261020.json).
+Owner production cutover and application browser acceptance remain pending.
+Plan completion is not a deployment or business-bot activation claim.

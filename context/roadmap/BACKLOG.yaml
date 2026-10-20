@@ -146,7 +146,7 @@ tasks:
     restart of console work;current priority INTEGRATIONS01 design.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
-  status: planned
+  status: in_progress
   depends_on:
   - INF-08
   - INF-10-OS
@@ -155,6 +155,11 @@ tasks:
   - Real workstations/phones pass login, links, files, Quiz/SCORM/chat
   - Other vhosts and required services preserved; renewal alert verified
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: Static TLS accepted by owner;canonical HTTPS/renewal CI PASS on d1e61a3b;owner cutover/browser and renewal alert acceptance pending.
+  validation_evidence:
+  - context/runtime/connect_academy_https_ci_20261020.json
+  - context/runtime/connect_https_owner_20261020.json
+  runbook: context/runtime/connect_academy_https_20261020_commands.md
 - id: INF-09
   title: CI на production PHP/core/PostgreSQL matrix
   status: in_progress
@@ -452,20 +457,17 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: Academy_HTTP_vhost_confirmed_dynamic_origin_and_TLS_owner_review
+  phase: canonical_HTTPS_CI_verified_owner_cutover_pending
   owner_priority: explicit19Oct1744_defer_MiniApp_until_HTTPS_token_reissued_prepare_receiver_services
-  current_summary: 'Installer02b0548c:Context39351249166/Review39351249243 SUCCESS;743r16,
-    actual UID33/root-group,native121/611+6concurrency+paired93to99to93 and SQL/schema guards PASS.
-    Owner20Oct0436 reports CLI install PASS,upgrade_complete/public_released=true,systemd Finished.
-    Effective production payload830/552/99;owner0439MSK accepts general browser smoke.
-    Chat-link source1e8a8819/2026102000/552/99 verified Context39361024810/Review39361024698 SUCCESS:
-    766r16,124native629,6concurrency,paired93to99to93,28link-browser and actual-host PASS;not deployed.
-    Owner confirms HTTP origin.
-    Owner1716MSK HTTPS readiness received:8082loopback,Apache/Caddy active,443/8443 occupied,origin parser unavailable.
-    Owner1732MSK details:origin_expression,Apache80/noTLS/proxy8082/Include,default Caddyfile lacks Academy;
-    narrow cgroup/wwwroot-feature read-only command next because process allowlist labels other are incomplete.
-    Next narrow cgroup/wwwroot-feature block before staged TLS/private bridge and verified link/notify;do not repeat installation or full probes.
-    Full private server report/private local ancestry excluded from publication.'
+  current_summary: >-
+    Owner Academy install02b0548c and browser smoke accepted;effective payload830/1905/552/99.
+    Chat-link candidate2000 verified but not deployed. Static TLS probe3303069b and
+    phone LAN WiFi/VPN accepted;1920MSK vhost report resolves opaque Include and loopback8082.
+    Canonical HTTPS d1e61a3b:Context39459332144/Review39459332116 SUCCESS;811r16/134skips,
+    native Apache proxy/redirect/renew/recovery and actual Moodle HTTPS Secure-cookie PASS.
+    Pinned check/cutover/status/rollback ready;owner apply and application browser gate pending.
+    Then private bridge/scoped keys,chat-link candidate delivery,two-sided link/revoke,opt-in notify.
+    Mini App waits external HTTPS. Do not repeat former installation/probes;0subagents.
   acceptance:
   - One current Academy actor/capability/scope across channels;operator console identity remains separate
   - Role API/event/delivery/escalation and external edge contracts documented with source anchors
@@ -477,6 +479,9 @@ tasks:
   validation_evidence:
   - context/runtime/connect_owner_priority_20261019.json
   - context/runtime/connect_chat_link_ci_20261020.json
+  - context/runtime/connect_academy_https_ci_20261020.json
+  - context/runtime/connect_https_owner_20261020.json
+  runbook: context/runtime/connect_academy_https_20261020_commands.md
 - id: DOC-03
   title: Сверка работ06–16Oct и консолидация GitHub
   status: done

@@ -1,5 +1,18 @@
 # Журнал выполнения roadmap
 
+## 20Oct17:43МСК — listener facts и реализация static TLS probe
+
+Apache владеет80/443,пульт8443.
+wwwroot — непрямое выражение;config hash закреплён,PHP/RHS не выполнялись.
+Далее additive static TLS probe для `ustar.local`:отдельный30day leaf от console CA,
+только health URL,config/HTTP не меняются,только Apache graceful reload с guards/recovery.
+[План](../proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md),[progress](../proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md).
+791r16/31skips PASS,20targeted PASS;native Apache CI ещё pending.
+Это stage1,не canonical HTTPS cutover/renewal/private bridge/бот activation.
+Повторных diagnostic loops,receiver/installer reinstall или сетевых изменений не требуется.
+Production effective830/1905 сохранён;new link source2000 не установлен;0subagents.
+
+
 ## 2026-10-20 17:32МСК — owner HTTPS details
 
 Owner confirms Apache Academy80/noTLS/proxy8082/Include,origin_expression,default

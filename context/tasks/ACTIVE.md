@@ -1,5 +1,16 @@
 # Активные задачи USTAR
 
+**20Oct17:43МСК: narrow followup завершён.** Apache владеет80/443,пульт8443.
+wwwroot — непрямое выражение;config hash закреплён,PHP/RHS не выполнялись.
+Далее additive static TLS probe для `ustar.local`:отдельный30day leaf от console CA,
+только health URL,config/HTTP не меняются,только Apache graceful reload с guards/recovery.
+[План](../proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md),[progress](../proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md).
+791r16/31skips PASS,20targeted PASS;native Apache CI ещё pending.
+Это stage1,не canonical HTTPS cutover/renewal/private bridge/бот activation.
+Повторных diagnostic loops,receiver/installer reinstall или сетевых изменений не требуется.
+Production effective830/1905 сохранён;new link source2000 не установлен;0subagents.
+
+
 **20Oct17:32МСК:** details принят в [receipt](../runtime/connect_https_owner_20261020.json):
 Academy Apache80/noTLS/proxy8082/Include;origin_expression;default Caddyfile без
 Academy;CA/key metadata present. `other` labels скрыли kernel comm,owner443 ещё

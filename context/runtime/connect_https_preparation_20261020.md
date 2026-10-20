@@ -5,6 +5,29 @@ Owner20Oct подтвердил работу обновлённой Академ
 Привязка аккаунта и private bridge сохраняют TLS-проверки. Чатовый путь не требует
 Main Mini App,но не разрешает передачу challenge или service credential по HTTP.
 
+## Текущий этап после owner17:43МСК
+
+Narrow followup получен:80/443 — Apache,8443 — пульт. Все флаги RHS wwwroot
+ложные;это непрямое выражение,не повод менять рабочий HTTP config.
+Дальше [stage1 plan](../proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md) и
+[verification ledger](../proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md):
+отдельный DNS leaf30дней,одна additive Apache443 SNI site и только static health.
+`--check` проверяет prerequisites без изменений конфигурации;делает обычный HEAD
+к текущему login URL. `--prepare` сохраняет private receipt,выпускает leaf локально,
+проверяет config/vhost/default/PIDs/HTTP/TLS и при ошибке снимает только свои изменения.
+`--status` читает сохранённую квитанцию,это не новая live-проверка.
+`--rollback` удаляет свой site/link/неизменённый health и делает graceful reload,
+не трогая чужие vhosts,CA,config.php или private evidence.
+В native CI ещё нужно проверить actual Apache до выдачи pinned apply command.
+Обычный runtime — несколько секунд;crypto/host probes имеют ограниченные timeout.
+
+URL: `https://ustar.local/__ustar_tls_probe__/ready.html`. Остальные пути нового
+SNI site403;Академия пока на HTTP. Не обходить ошибку сертификата в браузере.
+Leaf временный:renewal и production HTTPS cutover обязательны отдельным этапом;
+private bridge и bot activation ещё не выполнены. CA key остаётся на сервере,
+ни CA/key,ни serial-файлы не перезаписываются. Это внутреннее доверие,не публичный
+HTTPS для Mini App вне офиса. Следующие блоки — датированная история,не повторять.
+
 ## Продолжение20Oct17:32МСК
 
 Расширенный отчёт получен:Apache Academy vhost только80,proxy8082,без TLS,

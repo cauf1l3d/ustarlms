@@ -1,5 +1,16 @@
 # USTAR инструкции агентам
 
+**20Oct17:43МСК: narrow followup завершён.** Apache владеет80/443,пульт8443.
+wwwroot — непрямое выражение;config hash закреплён,PHP/RHS не выполнялись.
+Далее additive static TLS probe для `ustar.local`:отдельный30day leaf от console CA,
+только health URL,config/HTTP не меняются,только Apache graceful reload с guards/recovery.
+[План](context/proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md),[progress](context/proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md).
+791r16/31skips PASS,20targeted PASS;native Apache CI ещё pending.
+Это stage1,не canonical HTTPS cutover/renewal/private bridge/бот activation.
+Повторных diagnostic loops,receiver/installer reinstall или сетевых изменений не требуется.
+Production effective830/1905 сохранён;new link source2000 не установлен;0subagents.
+
+
 **20Oct17:32МСК:** details получен:origin_expression,Academy Apache80/proxy8082/noTLS/Include;default Caddyfile безAcademy,CA/signing-key protected metadata present. Все listeners labels other из-за узкой allowlist,не доказательство владельца443. [Receipt](context/runtime/connect_https_owner_20261020.json),[короткий cgroup/wwwroot-feature read-only блок](context/runtime/connect_https_preparation_20261020.md). Не повторять прежние большие probe и не заменять динамический wwwroot/unknown443 по догадке. Config RHS/CA key не публиковались;TLS и сеть не менялись,0subagents.
 
 **20Oct17:16МСК: HTTPS readiness получен.** [Owner receipt](context/runtime/connect_https_owner_20261020.json):Moodle loopback8082/running,Apache+Caddy active,80/443/8443 заняты,18443 свободен;origin parser unavailable без причины. Не считать это поломкой Академии и не занимать443 вслепую. Расширен тот же read-only probe `--check --details`:fixed reason,filtered listener owners,static Academy vhosts/Caddy hints и CA metadata без чтения ключа.12targeted tests PASS;новый source не установлен. Дальше точный details report,затем конкретная staged HTTPS процедура;не менять shared services/сеть и не обходить TLS guards. Подробнее [runbook](context/runtime/connect_https_preparation_20261020.md). Ниже проверенный chat-link source и датированная история.0subagents.

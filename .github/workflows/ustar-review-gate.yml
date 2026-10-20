@@ -156,6 +156,19 @@ jobs:
           path: artifacts/connect-readiness/
       - name: Actual systemd credentials and receiver isolation with synthetic transport
         run: sudo -n env USTAR_CONNECT_HOST_FIXTURE=1 python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
+      - name: Ensure Apache binary exists only on disposable TLS test runner
+        run: |
+          if ! command -v apache2 >/dev/null; then
+            sudo -n apt-get update -qq
+            sudo -n apt-get install -y --no-install-recommends apache2-bin
+          fi
+      - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
+        run: sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: academy-tls-probe-native
+          path: artifacts/academy-tls-probe-native.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: connect-receiver-runtime

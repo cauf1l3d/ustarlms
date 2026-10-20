@@ -2,7 +2,7 @@ schema_version: 2
 updated_at: '2026-10-20'
 project: USTAR Academy
 stage: connect_chat_link_source_and_HTTPS_preparation
-stage_label: Academy HTTP vhost подтверждён; review динамического wwwroot и TLS listener owner
+stage_label: Apache80/443 подтверждён; static TLS probe implementation и native CI
 current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh paired baseline PASS,
   upgrade/repeat PASS,upgrade_complete/public_released=true,systemd Finished.
   Effective addon payload830/552/99 and local2026101905/theme2026100202 follow pinned installer guards;
@@ -13,7 +13,9 @@ current_activity: 'Owner20Oct0436MSK reports installer02b0548c success: fresh pa
   origin parser unavailable with no reason in original tool;details followup now received,not a blind443 change.
   Owner1732MSK details resolves origin_expression and Academy Apache80/proxy8082/noTLS/Include;
   default Caddyfile lacks Academy. Listener process labels other are an incomplete allowlist;
-  next narrow cgroup plus wwwroot-feature block,not repeated large probes.
+  Owner1743MSK narrow followup resolves Apache80/443 and console8443;indirect wwwroot SHA pinned.
+  Static TLS probe helper/test implementation:30day DNS leaf,health-only SNI site,unchanged HTTP/config,guarded graceful reload/recovery;native CI pending.
+  No repeated broad diagnostics;canonical HTTPS/renewal/private bridge are separate next gates.
   Source not deployed. Mini App waits external HTTPS. Keep cold pair;no repeat installation or silent late rollback.
   Main/network/receiver unchanged;0subagents. Earlier source/evidence snapshots remain historical.'
 next_task: INTEGRATIONS-01

@@ -2,6 +2,7 @@
 import contextlib,hashlib,importlib.util,io,json,os,subprocess,sys,tempfile,unittest,zipfile
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/infra'))
 FILE=ROOT/'scripts/infra/connect_private_bridge.py'
@@ -126,7 +127,7 @@ class BuildPackage(unittest.TestCase):
             for name in ('connect_private_bridge','build_connect_private_bridge'):
                 (repo/('scripts/infra/'+name+'.py')).write_bytes((ROOT/('scripts/infra/'+name+'.py')).read_bytes())
             git('add','scripts/infra/connect_private_bridge.py','scripts/infra/build_connect_private_bridge.py')
-            git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','private check fixture')
+            git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','--allow-empty','-qm','private check fixture')
             commit=git('rev-parse','HEAD').decode().strip()
             a=builder.build(commit,root/'a',repo=repo);b=builder.build(commit,root/'b',repo=repo)
             self.assertEqual(a.read_bytes(),b.read_bytes())
@@ -139,3 +140,6 @@ class BuildPackage(unittest.TestCase):
             with zipfile.ZipFile(broken,'w') as z:
                 for name,raw in files.items():z.writestr(name,raw)
             with self.assertRaisesRegex(x.Refusal,'bundle_digest_changed'):x.bundle(broken)
+            path=repo/'scripts/infra/connect_private_bridge.py';path.write_bytes(path.read_bytes()+b'\n# local drift\n')
+            with patch.object(builder,'ROOT',repo),self.assertRaisesRegex(ValueError,'dirty_builder_dependency'):
+                builder.build(commit,root/'dirty',repo=repo)

@@ -18,6 +18,10 @@ def build(commit,output,*,repo=ROOT):
     if not re.fullmatch(r'(?:HEAD|[a-f0-9]{40})',commit):raise ValueError('exact_commit_required')
     def git(*args):return subprocess.check_output(['git','-C',str(repo),*args],stderr=subprocess.DEVNULL)
     source=git('rev-parse','--verify',commit+'^{commit}').decode().strip()
+    for name in ('build_connect_private_bridge','connect_private_bridge'):
+        path='scripts/infra/'+name+'.py'
+        if (ROOT/path).read_bytes()!=git('show',source+':'+path):
+            raise ValueError('dirty_builder_dependency')
     subprocess.check_call(['git','-C',str(repo),'diff','--quiet',bridge.PAYLOAD,source,'--',
                            'moodle/local/ustar','moodle/theme/ustar'])
     reference={'schema':1,'tool_commit':source,'payload_commit':bridge.PAYLOAD,

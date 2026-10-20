@@ -1,8 +1,8 @@
 schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
-stage: connect_chat_link_coordinated_update_preparing
-stage_label: Native cron-only accepted; coordinated addon/cron update being verified
+stage: connect_backup_HTTPS_preparation_ready
+stage_label: Exact6aa CI passed; next owner prepares backup HTTPS pair
 current_activity: >-
   Owner21Oct accepted exacte138c77f cron-only measured report. SHA c5eabdce,
   local1905/theme0202,scheduled finish20Oct21:07:02.555151UTC,18overdue/2historical failed.
@@ -13,8 +13,10 @@ current_activity: >-
   Confirmed exact75ca974f HDD readiness expects HTTP200 after canonical redirect.
   First paired producer/scheduler HTTPS compatibility preparation,no job/outage;
   old helper manifests unchanged,new updater uses explicit revised profile.
-  New filesystem tests and native1905to2000 SQL/paired rollback gate being verified;
-  no new source CI or native deployment acceptance yet. Original installer02 remains immutable.
+  Exact6aa Context39500936977/Review39500936916 SUCCESS:869r16/136CI skips on both PHP,
+  actual19UID33/file tests,TLS,new1905to2000/repeat/paired native SQL recovery PASS.
+  Frozen PYZ SHAe0d364ab matches local/CI;native backup HTTPS pair prep/app upgrade pending.
+  Next owner--prepare-backup-https then--check,no outage/job start. Installer02 immutable.
   Private bridge/link-only key/receiver and same-session link/revoke follow this update;
   opt-in notify and externalHTTPS/MiniApp are separate. No server/main/provider changes;0subagents.
 

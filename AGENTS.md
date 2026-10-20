@@ -1,12 +1,13 @@
 # USTAR инструкции агентам
 
-**21Oct — cron-only принят владельцем; готовится согласованный update1905→2000.**
-[Owner receipt](context/runtime/connect_cron_contract_owner_20261021.json):measured,exactc5eabdce/local1905,scheduled success20Oct21:07:02Z.
-18overdue/2historical failed сохранены. Source552/99/HTTPS не пересобирались.
-Следующий этап — отдельный guarded updater с fresh HDD/cold pair, matching cron2000
-и неизменным HTTPS/renewal; original installer02 не повторять.
-Новый source/tests/CI готовятся; production2000/bridge/link/notify не приняты.
-0subagents; server1 агентом не менялся.
+**21Oct — cron-only принят; source6aa83a95 проверен,следом HTTPS backup.**
+[Owner receipt](context/runtime/connect_cron_contract_owner_20261021.json):exactc5eabdce/local1905,scheduled20Oct21:07:02Z,
+18overdue/2historical failed сохранены. Source552/99/HTTPS заново не собирались.
+CI6aa:Context39500936977/Review39500936916 SUCCESS;869r16/136CI skips наPHP8.2/8.3,
+19privileged file/UID33 tests,actualTLS и native1905→2000/repeat/paired restore PASS.
+Новый пакет фиксирован6aa/e0d364ab; [CI receipt](context/runtime/connect_chat_link_update_ci_20261021.json).
+Следующий owner шаг:--prepare-backup-https,затем --check;без backup/остановки.
+Application2000/bridge/link/notify ещё не приняты;installer02 не повторять.0subagents.
 
 **20Oct21:31МСК — отказ preflight установлен:код cron0750.**
 [Owner metadata](context/runtime/connect_delivery_owner_20261020.json):root-owned code0750,

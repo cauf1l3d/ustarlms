@@ -78,3 +78,10 @@ installer02 не переписываются; новый updater имеет о�
 
 Переход1905→2000 отказывает до fresh backup,если эта пара не принята.
 Производственная установка compatibility/backup/upgrade ещё не выполнена.
+
+## Итог source gate
+
+Exact6aa проверен Context39500936977/Review39500936916,attempt1 SUCCESS.
+См.[CI receipt](../runtime/connect_chat_link_update_ci_20261021.json). Native1905→2000/
+repeat/paired restore/custom task1/1 и actualTLS helper readiness PASS в disposable CI.
+Production preparation/application update/real scheduled2000 acceptance остаются owner gates.

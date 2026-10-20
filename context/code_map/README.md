@@ -64,4 +64,5 @@ HTTPS/renewal lock,paired recovery и strict HTTPS login.
 [`backup_https_prepare.py`](../../scripts/infra/backup_https_prepare.py) готовит
 согласованную producer/scheduler readiness пару перед fresh HDD;без запуска jobs
 или изменения units/calendar. [План/границы](../proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md).
-Source verification pending;native application/backup preparation not deployed.
+Exact6aa source CI verified: [receipt](../runtime/connect_chat_link_update_ci_20261021.json).
+Native application/backup preparation not deployed.

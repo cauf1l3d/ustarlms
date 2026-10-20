@@ -5,8 +5,14 @@
 HTTPS/cron/source baseline уже принят. Старый installer02, HTTPS cutover и
 полный диагностический preflight не повторять.
 
-Точные source/hash/download будут закреплены в PR106 после CI.
-До этого документация описывает интерфейс, а не готовую production-команду.
+Проверенный tool source:**6aa83a951b3d8119db8ef2d5d5e2484383fcbce1**.
+[CI receipt](connect_chat_link_update_ci_20261021.json):Context39500936977 и
+Review39500936916 SUCCESS,обе PHP869r16/136skips,actualTLS/UID33 и native1905→2000.
+Файл:ustar-chat-link-update-6aa83a95.pyz.
+SHA256:e0d364ab33fb01482c0bedc73833562a567dc221c0682c85009759bca58d82c3.
+[Artifact](https://github.com/cauf1l3d/ustarlms/actions/runs/39500936916/artifacts/12300525979).
+Private root copy проверяется этим hash перед исполнением. Последующие docs heads
+не подменяют tool source. Нативное применение owner ещё pending.
 
 Новый отдельный pyz: `build_connect_chat_link_update.py --commit <exactSHA>`.
 Payload фиксирован1e8a8819,baseline830; tool SHA отличается от payload SHA.
@@ -17,9 +23,9 @@ metadata и существующие locks,без bootstrap/backup/операц�
 Сначала отдельная подготовка HTTPS backup,без остановки Академии:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/USTAR_CHAT_LINK_UPDATE.pyz --check-backup-https
-sudo /usr/bin/python3 -I -B /root/USTAR_CHAT_LINK_UPDATE.pyz --prepare-backup-https
-sudo /usr/bin/python3 -I -B /root/USTAR_CHAT_LINK_UPDATE.pyz --check
+sudo /usr/bin/python3 -I -B /root/ustar-chat-link-update-6aa83a95.pyz --check-backup-https
+sudo /usr/bin/python3 -I -B /root/ustar-chat-link-update-6aa83a95.pyz --prepare-backup-https
+sudo /usr/bin/python3 -I -B /root/ustar-chat-link-update-6aa83a95.pyz --check
 ```
 
 Первый результат ready_for_backup_HTTPS_compatibility,второй
@@ -32,8 +38,8 @@ unit/calendar изменений. Публичный HTTPS/readiness стано�
 работы пользователей и вызвать тот же root-owned/hash-verified pyz:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/USTAR_CHAT_LINK_UPDATE.pyz --upgrade --acknowledge-outage
-sudo /usr/bin/python3 -I -B /root/USTAR_CHAT_LINK_UPDATE.pyz --status
+sudo /usr/bin/python3 -I -B /root/ustar-chat-link-update-6aa83a95.pyz --upgrade --acknowledge-outage
+sudo /usr/bin/python3 -I -B /root/ustar-chat-link-update-6aa83a95.pyz --status
 ```
 
 Только после CLI `upgrade_complete`: штатный cron на следующей минуте должен
@@ -50,7 +56,7 @@ failed не обнуляются. Вход/материал по прежнем�
 При незавершённой до release операции использовать **тот же pyz**:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/USTAR_CHAT_LINK_UPDATE.pyz --restore --acknowledge-outage
+sudo /usr/bin/python3 -I -B /root/ustar-chat-link-update-6aa83a95.pyz --restore --acknowledge-outage
 ```
 
 После public_released=true restore требует дополнительного явного

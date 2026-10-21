@@ -1,43 +1,30 @@
 schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
-stage: connect_notification_rollout_design_review
-stage_label: Controlled Telegram group design prepared; accepted one-employee Tasks pilot preserved
+stage: connect_CON02_ack_plan_review
+stage_label: CON02 started by owner; first canonical ACK plan prepared; code pending
 current_activity: >-
-  Owner approved preparation of controlled multi-employee Telegram rollout. Written
-  design context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
-  is ready for owner review; implementation plan/product changes not started.
-  Explicit group of 1-10, personal consent, new events, separate source-bound a86
-  handoff/recovery controller; no actual participants selected or server changes.
-  Owner verified cached a86 release bytes and repaired directory access0755;
-  the same frozen a86 package completed notification_pilot_active for Moodle UID130.
-  sender_active=true, linking_preserved=true, historical_replay=false,
-  schema_upgraded=false, business_data_restored=false. Event cutoff1792583817
-  is21Oct14:56:57MSK, not measured activation completion time.
-  Receipt context/runtime/connect_notification_pilot_owner_20261021.json.
-  Do not repeat access repair, activation, app upgrade, permissions, cron, HTTPS,
-  egress refresh or account linking. Personal opt-in and Tasks already saved.
-  Owner screenshot confirms real Telegram Tasks notification, event12:10UTC,
-  native button visible. Owner then disabled, assigned a new task, observed no message.
-  Readonly repeatable-read SQL confirms revoked1/linked0 while notifications
-  remain enabled and Tasks selected. Full link revoke/no new delivery accepted.
-  Current recipient link is revoked; backend link/delivery/revoke pilot accepted.
-  Owner confirms native button/task access works;without session native login is
-  required. One-employee Tasks pilot accepted end to end. No repeat pilot tests.
-  Last readonly recipient state revoked;own same-Telegram relink can resume use.
-  Next separate work controlled multi-employee Telegram rollout release/plan,
-  then CON02 delivery/preferences/ACK and Bitrix decisions;not broadly activated.
-  New source17261061 fixes umask077 staging;sourcePHP8.2/8.3 and runtime SUCCESS,
-  actual UID33 pilot7tests/0skips PASS. Context39595204430/Review39595203810 SUCCESS.
-  The deployed worker/tool remain a86; source172 fix is not separately deployed.
-  Existing app2000/theme0202,552files/99tables and managed cron/HTTPS preserved;
-  the one-file pilot policy overlay is active, version/schema unchanged.
-  Browser/phone CA trust remains separate and unresolved;owner resumed Telegram
-  without changing ustar.local. Main unmerged;no agent SSH/provider sends;0subagents.
+  Owner explicitly started CON02 after channel delivery/preferences/ACK and Bitrix
+  explanation. Existing RFC/contract scope is the brief; source review and first
+  plan context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md are ready.
+  Source inventory context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md.
+  Canonical ACK writer/status/ackat exist, but native protected ACK flow and
+  stable concurrent receipt need implementation. First independent slice A1:
+  own native ACK; then Telegram callbacks, shared channel preferences and Bitrix.
+  No CON02 code/DB/schema/deployment/provider action; plan needs owner review.
+  Group rollout controller remains design-only, not silently completed. Group
+  live acceptance deferred to full launch by owner; automated checks retained.
+  One-employee Tasks pilot fully accepted, no repeated delivery/link/revoke/login.
+  Production worker/tool a86, personal UID130 last revoked; application2000 with
+  accepted one-file pilot policy overlay. Source172 umask fix CI passed, not
+  separately deployed. Managed cron/HTTPS and source-bound journals preserved.
+  Actual Bitrix portal/cloud-box/API/scopes and legacy consumer remain unknown.
+  Current code headb7d3e93a Context39622043988/Review39622044309 SUCCESS; not CON02 CI.
+  No agent SSH/provider sends/main merge; independent execution, no subagents.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-following_connect_stage: CON02_shared_delivery_preferences_ack_and_Bitrix_adapter
+following_connect_stage: CON02_A2_Telegram_callbacks_then_B_routing_then_C_Bitrix
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -121,6 +108,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
+- context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
 - context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
 - context/runtime/connect_notification_pilot_owner_20261021.json
 - context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md
@@ -242,7 +231,7 @@ receiver_runtime:
   server1_started: true
   live_ack: owner_reports_working_19Oct1859MSK
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
-  next: review_written_rollout_design_then_implementation_plan_then_CON02_provider_decisions
+  next: review_CON02_ACK_plan_then_independent_implementation
 
 connect_academy_preparation:
   kind: historical_19Oct_preflight_snapshot_superseded_by_current_owner_receipts

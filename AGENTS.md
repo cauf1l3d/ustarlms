@@ -1,5 +1,17 @@
 # USTAR инструкции агентам
 
+**21Oct — владелец поручил CON-02; source review и первый план готовы.**
+[Границы и очередь CON-02](context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md), [план A.1: личное подтверждение](context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md).
+Уже есть canonical inbox/delivery, Telegram lease/begin/finish и quiet/preferences;
+ACK writer/ackat тоже существуют, но нет защищённого личного flow и общего routing.
+Сначала own native ACK с сохранением первого времени/read race safety; затем
+отдельные Telegram callback, общие preferences и Bitrix adapter. Это планирование,
+не реализованный новый API/код/deployment. Для Bitrix actual portal/API ещё неизвестны.
+Группа1–10 остаётся design-only; live приёмка deferred до полного запуска.
+Принятый one-user Tasks pilot не повторять, worker/tool на сервере остаётся a86.
+Последний headb7d3e93a:Context39622043988/Review39622044309 SUCCESS, не новый CON02 CI.
+Следующий шаг — review конкретного плана, затем самостоятельная реализация без субагентов.
+
 **21Oct — подготовлен проект управляемой группы Telegram; review перед реализацией.**
 [Проект следующего выпуска](context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md): один sender и явные 1–10 Moodle UID,
 личная привязка/подписка, согласованные UID/subject списки, новые события.

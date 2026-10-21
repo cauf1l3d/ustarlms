@@ -4,9 +4,9 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: controlled_Telegram_rollout_design_review
+  stage: CON02_ACK_plan_review
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-  following_stage: CON02_shared_delivery_preferences_ack_and_Bitrix_adapter
+  following_stage: CON02_A2_Telegram_callbacks_then_B_routing_then_C_Bitrix
   development_version: 2026102000
   production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
   production_effective_version: 2026102000
@@ -19,12 +19,15 @@ current_connect_checkpoint:
   include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
   parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
   parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
+  CON02_scope: context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
+  CON02_ACK_plan: context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
+  group_implementation: design_only_not_implemented
   notification_rollout_design: context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
   notification_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: review_written_rollout_design_then_implementation_plan_then_CON02_provider_decisions
+  next: review_CON02_ACK_plan_then_independent_implementation
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
@@ -143,6 +146,8 @@ tasks:
     and personal Telegram link work;journal still shows old message. Journal/heartbeat deferred,not fixed;full acceptance
     and exact native source hash not claimed. Current work is INTEGRATIONS01 design.
   validation_evidence:
+  - context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
+  - context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
   - context/runtime/connect_owner_priority_20261019.json
 - id: INF-06-OPS
   title: Отдельная эксплуатационная приёмка и расширения пульта
@@ -471,9 +476,14 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: controlled_Telegram_rollout_design_review
-  owner_priority: controlled_group_preparation_after_accepted_pilot_keep_ustar_local_and_existing_CA
+  phase: CON02_ACK_plan_review
+  owner_priority: start_CON02_manual_group_tests_deferred_keep_ustar_local_and_existing_CA
   current_summary: >-
+    Owner started CON02. Scope inventory and first canonical native ACK plan ready
+    for owner review; no new implementation/DB/deployment. Existing ACK writer is
+    reused; follow-on callbacks/routing/Bitrix use separate plans. Group controller
+    remains design-only, group live acceptance deferred to full launch. Native
+    portal/cloud-box/API/legacy consumer unknown. Historical accepted pilot below.
     Academy2000/theme0202/552files/99tables,managed cron and HTTPS,private link bridge
     and ordinary employee link accepted. Owner repaired exact cached a86 directory
     access0755/content_changed=false; same frozen a86 package now active for UID130,

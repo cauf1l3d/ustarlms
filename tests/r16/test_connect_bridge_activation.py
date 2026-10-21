@@ -162,6 +162,8 @@ class Build(unittest.TestCase):
         b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b)
         with tempfile.TemporaryDirectory() as td:
             repo=Path(td)/'repo';subprocess.run(['git','clone','-q','--shared',str(ROOT),str(repo)],check=True)
+            # Legacy artifacts retain their reviewed2000 application, not the new release.
+            subprocess.run(['git','-C',str(repo),'checkout','--detach','-q','38d81ef8d273a3c5efc9ea10c35c7906968d78ba'],check=True)
             names=('connect_bridge_activation','build_connect_bridge_activation','connect_private_bridge')
             for name in names:(repo/('scripts/infra/'+name+'.py')).write_bytes((ROOT/('scripts/infra/'+name+'.py')).read_bytes())
             subprocess.run(['git','-C',str(repo),'add','scripts/infra'],check=True)

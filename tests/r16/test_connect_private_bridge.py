@@ -352,6 +352,8 @@ class BuildPackage(unittest.TestCase):
             root=Path(td);repo=root/'repo'
             def git(*args):return subprocess.check_output(['git','-C',str(repo),*args],stderr=subprocess.DEVNULL)
             subprocess.check_call(['git','clone','-q','--shared',str(ROOT),str(repo)])
+            # Legacy artifacts retain their reviewed2000 application, not the new release.
+            subprocess.run(['git','-C',str(repo),'checkout','--detach','-q','38d81ef8d273a3c5efc9ea10c35c7906968d78ba'],check=True)
             for name in ('connect_private_bridge','build_connect_private_bridge'):
                 (repo/('scripts/infra/'+name+'.py')).write_bytes((ROOT/('scripts/infra/'+name+'.py')).read_bytes())
             git('add','scripts/infra/connect_private_bridge.py','scripts/infra/build_connect_private_bridge.py')
@@ -368,6 +370,12 @@ class BuildPackage(unittest.TestCase):
             with zipfile.ZipFile(broken,'w') as z:
                 for name,raw in files.items():z.writestr(name,raw)
             with self.assertRaisesRegex(x.Refusal,'bundle_digest_changed'):x.bundle(broken)
+            app=repo/'moodle/local/ustar/classes/target_core.php'
+            app.write_bytes(app.read_bytes()+b'\n// Unreviewed application delta fixture\n')
+            git('add',str(app.relative_to(repo)))
+            git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','unreviewed app')
+            with self.assertRaisesRegex(builder.bridge.Refusal,'unreviewed_application_delta'):
+                builder.build('HEAD',root/'unreviewed',repo=repo)
             path=repo/'scripts/infra/connect_private_bridge.py';path.write_bytes(path.read_bytes()+b'\n# local drift\n')
             with patch.object(builder,'ROOT',repo),self.assertRaisesRegex(ValueError,'dirty_builder_dependency'):
                 builder.build(commit,root/'dirty',repo=repo)

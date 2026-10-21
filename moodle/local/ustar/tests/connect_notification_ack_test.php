@@ -6,6 +6,7 @@ use local_ustar\connect\notification_acknowledgement;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(target_core::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(communication::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(notification_acknowledgement::class)]
 final class connect_notification_ack_test extends \advanced_testcase {
     private \stdClass $employee;
     protected function setUp(): void {
@@ -72,6 +73,24 @@ final class connect_notification_ack_test extends \advanced_testcase {
             $this->denied(fn() => $this->own($id, $source));
         }
         $this->assertSame(0, $DB->count_records('local_ustar_notifications', ['status' => 'acknowledged']));
+    }
+    public function test_matching_core_and_local_ids_keep_independent_receipts(): void {
+        global $DB;
+        $id = $this->notice();
+        $coreid = $DB->insert_record('notifications', (object)[
+            'useridfrom' => get_admin()->id, 'useridto' => $this->employee->id, 'subject' => 'Synthetic core notice',
+            'fullmessage' => 'Core notification', 'fullmessageformat' => FORMAT_PLAIN, 'fullmessagehtml' => '',
+            'smallmessage' => '', 'component' => 'moodle', 'eventtype' => 'instantmessage',
+            'contexturl' => '', 'contexturlname' => '', 'timeread' => null, 'timecreated' => time()]);
+        if ((int)$coreid !== $id) {
+            $this->assertFalse($DB->record_exists('notifications', ['id' => $id]));
+            $DB->set_field('notifications', 'id', $id, ['id' => $coreid]);
+        }
+        $this->denied(fn() => $this->own($id, 'moodle'));
+        $this->assertNull($DB->get_field('notifications', 'timeread', ['id' => $id]));
+        $this->own($id);
+        $this->assertSame('acknowledged', $DB->get_field('local_ustar_notifications', 'status', ['id' => $id]));
+        $this->assertNull($DB->get_field('notifications', 'timeread', ['id' => $id]));
     }
     public function test_pending_and_terminated_employee_are_denied(): void {
         global $DB;

@@ -46,8 +46,7 @@
     }
   },
   "remaining_acceptance": [
-    "own Academy to Telegram claim and same-browser confirmation",
-    "owner revoke and optional new link",
+    "owner revoke acceptance",
     "separate notification activation"
   ],
   "no_repeat": [
@@ -55,5 +54,14 @@
     "application upgrade",
     "canonical HTTPS cutover",
     "egress refresh or bridge activation without new failure"
-  ]
+  ],
+  "personal_link_owner_report": {
+    "account": "ordinary test employee",
+    "academy_shows_linked": true,
+    "telegram_id_matches": true,
+    "subsequent_start": "generic reconnect instructions reported",
+    "exact_bot_text_provided": false,
+    "source_finding": "receiver plain /start sends instructions whenever linking=true/onboarding=false; no link status lookup; does not revoke existing link",
+    "revoke_test_reported": false
+  }
 }

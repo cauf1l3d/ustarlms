@@ -666,8 +666,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2410,
-      "sha256": "a14c269713dd86d45171dd0f6915db08330957910ecfb8aeccbeeaa341a03957"
+      "size": 2428,
+      "sha256": "5fcd0f0a50a22543ab4b6fe0abe78dcd0d69e65f6b71c6565f3cb3b5ebcd8d90"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
@@ -954,8 +954,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 26954,
-      "sha256": "f667654855695aec38a157e5129854b1eb82d9c26492605274fd84a116cb88c6"
+      "size": 26949,
+      "sha256": "d9acfe4435ac7a8282653b487552006a591514f4a9d026ce0665d5ae2166d712"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -996,8 +996,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 181627,
-      "sha256": "a48661abdd277e047801ec3ef5e6b70612cd7979cea20080949c55de7995a856"
+      "size": 182169,
+      "sha256": "fba24f47293481effb187445f39567c8345d4fb139f6f44bb96ca56c0b686a85"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1008,8 +1008,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 11105,
-      "sha256": "cf42660acf490e445278c5ba94f2be80a27bccfe625b916f19f474c91627b4e2"
+      "size": 11362,
+      "sha256": "0e55fb62136a50631ce6b2e0165afb4dbc2286683b93b0885d75f1441308033d"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1212,8 +1212,8 @@
     {
       "path": "context/runtime/connect_activation_owner_20261021.json",
       "domain": "runtime",
-      "size": 1520,
-      "sha256": "b49710f1bef3afe7ef791d01efd9ebca21a5b0508a9e5e7927d3547572280cfc"
+      "size": 1887,
+      "sha256": "8adf12bd384ca2c9c9c20a5f2728393fda5d46a5e6530d8217ce2e1311b2bf41"
     },
     {
       "path": "context/runtime/connect_backup_https_owner_20261021.json",
@@ -2238,8 +2238,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 40487,
-      "sha256": "e4f70eac3e0036a3ed995421c21454c975c585a1df99229092a22f08a799ad48"
+      "size": 41029,
+      "sha256": "19499658557e20233aa7779227013bb1148e7c9acc7e69650466c076568f3082"
     },
     {
       "path": "context/tasks/backlog.yaml",

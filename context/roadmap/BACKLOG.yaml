@@ -17,7 +17,7 @@ current_connect_checkpoint:
   include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
   parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
   parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
-  next: owner_personal_link_same_browser_confirm_and_revoke_then_separate_notify
+  next: link_start_UX_correction_and_revoke_acceptance_then_separate_notify
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

@@ -1,5 +1,14 @@
 # Активные задачи USTAR
 
+**21Oct — personal employee link accepted by owner.**
+Academy shows linked, Telegram ID matches on ordinary test employee account.
+Plain /start gives generic connection instructions: source receiver dispatch does
+not query link state in link-only mode; it does not revoke the link. Earlier agent
+request to use /start as link-status acceptance was misleading. No repeat linking
+required. UX copy/status gap recorded; revoke test and notifications still pending.
+Receipt: context/runtime/connect_activation_owner_20261021.json.0subagents.
+
+
 **21Oct — owner egress recovery and bridge activation accepted.**
 Refresh SHA4d922d29 OK:10candidates, node9TLS_VERIFIED, egress_refreshed.
 Frozen27117c8c reached scope_verified; bridge_active,receiver_active=true,

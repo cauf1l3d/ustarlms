@@ -2,8 +2,11 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_private_bridge_delivery
-stage_label: Owner bridge activation accepted; personal linking acceptance pending
+stage_label: Owner employee linking accepted; revoke and notification delivery pending
 current_activity: >-
+  Latest owner: ordinary test employee linked in Academy,Telegram ID matches.
+  Plain /start generic instructions are current receiver UX,not link-status check.
+  Personal link confirmed by owner; no repeat required. Revoke/notify pending.
   Owner21Oct confirms refresh SHA4d922d29 OK,10candidates,node9TLS_VERIFIED,
   egress_refreshed and telegram_https=verified,subscription_URL_saved=false.
   Frozen activation27117c8c completes scope_verified,bridge_active,
@@ -15,7 +18,7 @@ current_activity: >-
   and canonical HTTPS already owner accepted. Parent chain preparation accepted.
   Do not repeat upgrade,backups,cron,HTTPS,rights,egress refresh or bridge activation.
   Next own Academy /local/ustar/connect.php to Telegram claim, same-session confirm
-  and revoke; user-level end-to-end acceptance not yet reported.
+  and revoke; successful personal linking now reported, revoke still pending.
   Notifications remain off; external HTTPS/MiniApp/full native handoff later.
   Agent has no independent server access;main unmerged;0subagents.
 

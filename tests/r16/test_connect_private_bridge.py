@@ -300,7 +300,9 @@ class ParentPreparation(ReadonlyDelivery):
         operation=x.ParentPreparation(self.check);operation.prepare()
         real_chmod=os.fchmod
         def interrupted(fd,mode):
-            real_chmod(fd,mode);raise OSError('restore chmod acknowledgement lost')
+            real_chmod(fd,mode)
+            if os.path.isdir('/proc/self/fd/'+str(fd)):
+                raise OSError('restore chmod acknowledgement lost')
         with patch.object(os,'fchmod',side_effect=interrupted):
             with self.assertRaises(OSError):operation.restore()
         self.assertEqual('restoring',json.loads(operation.state.read_bytes())['phase'])

@@ -87,7 +87,7 @@ foreach ([true, false] as $legacy) {
                         PERFORM pg_advisory_xact_lock($lock);
                     END IF;
                     RETURN NEW;
-                END \$\$");
+                END; \$\$");
             ack_ddl("CREATE TRIGGER $name BEFORE UPDATE ON $table
                 FOR EACH ROW EXECUTE FUNCTION $name()");
             $DB->get_field_sql('SELECT pg_advisory_lock(:lock)', ['lock' => $lock]); $locked = true;

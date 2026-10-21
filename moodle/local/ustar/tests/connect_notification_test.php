@@ -15,6 +15,7 @@ final class connect_notification_test extends \advanced_testcase {
         $CFG->ustar_connect_channels = ['telegram'=>['tenant'=>'123456','username'=>'ustarcorp_bot']];
         $CFG->ustar_connect_notifications_enabled = true;
         $CFG->ustar_connect_notify_since = time()-1;
+        unset($CFG->ustar_connect_notify_userids);
         $this->employee = $this->getDataGenerator()->create_user();
         $this->setAdminUser();
         $this->taskid = \local_ustar\task_workspace\service::create((int)get_admin()->id,(int)$this->employee->id,
@@ -56,6 +57,33 @@ final class connect_notification_test extends \advanced_testcase {
         // Role changes precede the owner's next HTTP request in the real adapter.
         $this->setUser($this->employee);
         return $role;
+    }
+    public function test_pilot_allowlist_excludes_other_recipients_before_enqueue(): void {
+        global $CFG, $DB;
+        $this->prefs();
+        $CFG->ustar_connect_notify_userids = [(int)$this->employee->id + 1000];
+        $this->notice();
+        $this->assertSame(0, $DB->count_records('local_ustar_notify_delivery', ['channel'=>'telegram']));
+        $CFG->ustar_connect_notify_userids = [(int)$this->employee->id];
+        $this->notice();
+        $this->assertNotNull($this->lease());
+    }
+    public function test_pilot_removed_after_lease_cannot_send(): void {
+        global $CFG;
+        $this->prefs();
+        $CFG->ustar_connect_notify_userids = [(int)$this->employee->id];
+        $this->notice(); $lease = $this->lease();
+        $CFG->ustar_connect_notify_userids = [];
+        $this->assertSame(['status'=>'cancelled'], $this->begin($lease));
+    }
+    public function test_malformed_pilot_allowlist_fails_closed(): void {
+        global $CFG, $DB;
+        $this->prefs();
+        foreach ([null, false, 'all', [(string)$this->employee->id], [(int)$this->employee->id, 0]] as $value) {
+            $CFG->ustar_connect_notify_userids = $value;
+            $this->notice();
+        }
+        $this->assertSame(0, $DB->count_records('local_ustar_notify_delivery', ['channel'=>'telegram']));
     }
     public function test_default_disabled_new_only_and_legacy_bitrix_untouched(): void {
         global $DB,$CFG;

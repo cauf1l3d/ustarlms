@@ -1,5 +1,16 @@
 # Активные задачи USTAR
 
+**21Oct — подготовлен проект управляемой группы Telegram; review перед реализацией.**
+[Проект следующего выпуска](../../context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md): один sender и явные 1–10 Moodle UID,
+личная привязка/подписка, согласованные UID/subject списки, новые события.
+Отдельный controller принимает только проверенный a86 baseline; исходный журнал
+пилота сохранён, disable и возврат к пилоту различаются, сбой возвращает прежний состав.
+Код, сервер и состав получателей не изменены; план реализации ещё не написан.
+Следующий шаг — review конкретного проекта владельцем, затем план реализации.
+Принятый one-employee Tasks pilot ниже остаётся закрытым; UID130 последний раз revoked.
+Последний docs commit8338515f: Context39612526373 / Review39612526329 SUCCESS.
+0subagents; нет agent SSH/provider sends или изменений main.
+
 **21Oct — one-employee Telegram Tasks pilot fully owner accepted.**
 Owner exact a86 cache repair reports0755/content_changed=false; same frozen a86
 activation completes sender_started,notification_pilot_active,pilot_userids=[130],

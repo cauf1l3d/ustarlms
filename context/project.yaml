@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_notification_pilot_accepted
+  stage: connect_notification_rollout_design_review
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -20,11 +20,11 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee notification pilot CI accepted; owner active UID130; one-employee Tasks pilot fully accepted; recipient last revoked; controlled rollout preparation next
+  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee notification pilot CI accepted; owner active UID130; one-employee Tasks pilot fully accepted; recipient last revoked; controlled group design prepared for owner review; no implementation
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_one_employee_Tasks_pilot_accepted_controlled_Telegram_rollout_release_plan_next;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_fully_accepted_recipient_last_revoked
+execution_gate: controlled_Telegram_rollout_written_design_review_before_implementation_plan;owner_one_employee_Tasks_pilot_accepted;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_fully_accepted_recipient_last_revoked
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -34,11 +34,13 @@ current_operator_handoff:
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
   task: INTEGRATIONS-01
-  spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
+  spec: context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
+  parent_RFC: context/proposals/USTAR_CONNECT_RFC_20261018.md
   design_PR: 106
-  owner_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  owner_receipt: context/runtime/connect_notification_pilot_owner_20261021.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
+  plan_status: not_written_pending_design_review
+  accepted_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
   runbook: context/runtime/connect_notification_pilot_20261021.md
   CI_receipt: context/runtime/connect_notification_pilot_ci_20261021.json

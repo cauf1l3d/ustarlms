@@ -4,7 +4,7 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: one_employee_Tasks_notification_pilot_accepted
+  stage: controlled_Telegram_rollout_design_review
   development_version: 2026102000
   production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
   production_effective_version: 2026102000
@@ -17,11 +17,12 @@ current_connect_checkpoint:
   include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
   parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
   parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
+  notification_rollout_design: context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
   notification_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: controlled_Telegram_rollout_release_plan_then_CON02_provider_decisions
+  next: review_written_rollout_design_then_implementation_plan_then_CON02_provider_decisions
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
@@ -468,8 +469,8 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: one_employee_notification_pilot_active_delivery_acceptance
-  owner_priority: resume_Telegram_after_mDNS_recovery_keep_ustar_local_and_existing_CA
+  phase: controlled_Telegram_rollout_design_review
+  owner_priority: controlled_group_preparation_after_accepted_pilot_keep_ustar_local_and_existing_CA
   current_summary: >-
     Academy2000/theme0202/552files/99tables,managed cron and HTTPS,private link bridge
     and ordinary employee link accepted. Owner repaired exact cached a86 directory
@@ -485,7 +486,10 @@ tasks:
     preferences enabled and Tasks selected. Native button/tasks and normal login
     without a session now owner accepted. One-employee Tasks pilot accepted.
     Recipient last revoked;own same-TG relink can resume use. Next controlled
-    Telegram rollout release/plan then CON02;do not repeat accepted pilot tests.
+    Telegram rollout then CON02;do not repeat accepted pilot tests. Written design
+    context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md prepared
+    for owner review: explicit group of 1-10 participants and separate guarded a86 handoff.
+    Implementation plan/code/server/group changes not started.
     Browser CA trust is separate and open;MiniApp/native handoff/external HTTPS later.
     No agent SSH/provider sends;0subagents/main unmerged.
   acceptance:

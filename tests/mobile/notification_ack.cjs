@@ -10,15 +10,18 @@ const initial=[
   {id:1,source:'moodle',subject:'Core read, same numeric ID',message:'Core reading has no USTAR ACK',unread:false,read:true}
 ];
 function render(accepted=new Set([3])) {
-  return Mustache.render(template,{sesskey:'synthetic-session',hasnotifications:true,hasunread:true,unread:1,
+  const notifications=initial.map(row=>row.source==='local'&&accepted.has(row.id)
+      ?{...row,canack:false,unread:false,acknowledged:true,acktime:'21.10.2026 12:00'}:row);
+  const unread=notifications.filter(row=>row.unread).length;
+  return Mustache.render(template,{sesskey:'synthetic-session',hasnotifications:true,hasunread:unread>0,unread,
     acklabel:'Принял',acknowledgedlabel:'Подтверждено',readlabel:'Прочитано',
-    notifications:initial.map(row=>row.source==='local'&&accepted.has(row.id)
-      ?{...row,canack:false,unread:false,acknowledged:true,acktime:'21.10.2026 12:00'}:row)});
+    notifications});
 }
 const html=render();
 assert.strictEqual((html.match(/name="action" value="ack"/g)||[]).length,2,'Only eligible local notices expose explicit acknowledgement');
 assert(html.includes('Принял')&&html.includes('Подтверждено')&&html.includes('Прочитано'),'Read and acknowledgement labels must be readable and distinct');
 assert.strictEqual((html.match(/name="action" value="read"/g)||[]).length,1,'Read controls belong only to an unread row');
+assert(!render(new Set([1,3])).includes('name="action" value="all"'),'Acknowledging the last unread notice clears its unread counter');
 assert(!html.includes('notification.lease')&&!html.includes('bridge.key'));
 if(process.argv.includes('--render-only')) { console.log('NOTIFICATION_ACK_TEMPLATE=PASS');process.exit(0); }
 const lib=fs.readFileSync(path.join(repo,'moodle/theme/ustar/lib.php'),'utf8');
@@ -57,6 +60,7 @@ const server=http.createServer((req,res)=>{
       await button.focus();await button.press('Enter');
       await own.getByRole('status').filter({hasText:'Подтверждено'}).waitFor();
       assert.strictEqual(await own.getByRole('button',{name:'Принял',exact:true}).count(),0);
+      assert.strictEqual(await page.getByRole('button',{name:/^Прочитать всё/}).count(),0);
       assert(await page.locator('article').filter({hasText:'Local read'}).getByText('Прочитано',{exact:true}).isVisible());
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Notification controls overflow viewport');
       assert.deepStrictEqual(errors,[]);await page.screenshot({path:path.join(out,'ack-'+width+'.png'),fullPage:true});

@@ -141,10 +141,13 @@ final class connect_notification_ack_test extends \advanced_testcase {
     }
     public function test_inbox_exposes_confirmation_separately_from_read(): void {
         $id = $this->notice();
+        $unread = communication::counts($this->employee->id)['notifications'];
+        $this->assertGreaterThanOrEqual(1, $unread);
         $rows = array_column(communication::notifications($this->employee->id), null, 'id');
         $this->assertTrue($rows[$id]['canack'] ?? false);
         $this->assertFalse($rows[$id]['acknowledged'] ?? false);
         $this->own($id);
+        $this->assertSame($unread - 1, communication::counts($this->employee->id)['notifications']);
         $rows = array_column(communication::notifications($this->employee->id), null, 'id');
         $this->assertTrue($rows[$id]['acknowledged']); $this->assertFalse($rows[$id]['canack']);
         $this->assertNotEmpty($rows[$id]['acktime']);

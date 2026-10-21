@@ -83,6 +83,8 @@ jobs:
       - run: npm ci --prefix tests/mobile
       - run: cd tests/mobile && npx playwright install --with-deps chromium
       - run: npm test --prefix tests/mobile
+      - name: Native notification acknowledgement controls with synthetic UI transport
+        run: node tests/mobile/notification_ack.cjs
       - name: Verify narrow Connect onboarding UI with synthetic API
         run: node tests/mobile/connect.cjs
       - name: Verify two-sided Connect linking UI with synthetic API
@@ -110,6 +112,12 @@ jobs:
         run: |
           mkdir -p .stage-input/connect-baseline artifacts
           git archive e1d57f5bc28f6964afd20aeff7620345b34a80fe moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-baseline
+          mkdir -p .stage-input/connect-2000 .stage-input/con02-old-worker
+          git archive 38d81ef8d273a3c5efc9ea10c35c7906968d78ba moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-2000
+          git archive a86e208029b6104150e85d0e90384f84da214c22 connect-worker/ustar_connect | tar -x -C .stage-input/con02-old-worker
+          mkdir -p .stage-input/con02-ack-baseline
+          git show 38d81ef8d273a3c5efc9ea10c35c7906968d78ba:moodle/local/ustar/classes/target_core.php > .stage-input/con02-ack-baseline/target_core.php
+          git show 38d81ef8d273a3c5efc9ea10c35c7906968d78ba:moodle/local/ustar/classes/communication.php > .stage-input/con02-ack-baseline/communication.php
           mkdir -p .stage-input/connect-current
           git archive 830d3703e2ffa2f9864900c0d0c58f60049cb0c2 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-current
           python3 tests/stage/connect_installer_probe.py prepare
@@ -146,6 +154,7 @@ jobs:
             artifacts/academy-https-moodle*
             artifacts/connect-scope-*
             artifacts/chat-link-*
+            artifacts/con02-ack-*
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
@@ -200,7 +209,7 @@ jobs:
       - name: Coordinated chat-link update package and paired file recovery
         run: |
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_chat_link_update.py -v
-          python3 scripts/infra/build_connect_chat_link_update.py --commit HEAD --output-dir artifacts/chat-link-update
+          python3 .stage-input/legacy-connect-2000/scripts/infra/build_connect_chat_link_update.py --commit 38d81ef8d273a3c5efc9ea10c35c7906968d78ba --output-dir "$GITHUB_WORKSPACE/artifacts/chat-link-update"
           python3 -I -B artifacts/chat-link-update/ustar-chat-link-update-*.pyz
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
@@ -208,7 +217,7 @@ jobs:
           path: artifacts/chat-link-update/
       - name: Build exact-source Academy installer without production access
         run: |
-          python3 scripts/infra/build_connect_academy_installer.py --commit HEAD --output-dir artifacts/connect-install
+          python3 .stage-input/legacy-connect-2000/scripts/infra/build_connect_academy_installer.py --commit 38d81ef8d273a3c5efc9ea10c35c7906968d78ba --output-dir "$GITHUB_WORKSPACE/artifacts/connect-install"
           tar -xzf artifacts/connect-install/ustar-connect-install-*.tar.gz -C artifacts/connect-install
           cd artifacts/connect-install
           sha256sum --check --strict SHA256SUMS

@@ -21,7 +21,7 @@ CHAT_SNAP=/stage/chat-link-pair
   cp /stage/moodle/config.php "$CHAT_SNAP/config.php"
   sha256sum "$CHAT_SNAP/"* > "$CHAT_SNAP/SHA256SUMS"
 )
-install_sources /source/moodle
+install_sources /source/.stage-input/connect-2000/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/chat-link-upgrade.log 2>&1
 snapshot_sql candidate
 php admin/cli/upgrade.php --non-interactive > /artifacts/chat-link-repeat.log 2>&1

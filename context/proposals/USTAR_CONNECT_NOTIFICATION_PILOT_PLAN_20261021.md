@@ -127,3 +127,10 @@ sender_active=true/linking_preserved=true/historical_replay=false. Cutoff1792583
 (21Oct14:56:57MSK). No repeat activation. Actual delivery/native button/revoke remain.
 Source17261061 strict runtime7UID33 tests/0skips and both PHP source jobs SUCCESS;
 Context39595204430/Review39595203810 SUCCESS including native Connect DB.
+
+Owner positive delivery: screenshot image(20261021-122425).png shows Tasks event
+21Oct12:10UTC and native button. Subsequent statement: disabled, assigned new task,
+no Telegram message. Record observed suppression; do not infer full link revoke
+from ambiguous notification wording. Clarify preference versus link action and
+native button/task access before full acceptance or broader rollout. No repeat
+positive test, no agent API sends and no production change needed for clarification.

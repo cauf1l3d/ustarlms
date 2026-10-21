@@ -6,8 +6,11 @@ activation completes sender_started,notification_pilot_active,pilot_userids=[130
 sender_active=true,linking_preserved=true,historical_replay=false,schema_upgraded=false.
 Event cutoff21Oct14:56:57MSK is notify_since,not activation completion time.
 [Owner receipt](../../context/runtime/connect_notification_pilot_owner_20261021.json). Do not repeat access repair or activation.
-Next existing authorized UI assigns a new task to UID130,verify Telegram/native
-button,then revoke and no future delivery. Personal opt-in/Tasks already saved.
+Owner screenshot confirms Telegram Tasks notification and native button, event12:10UTC.
+Owner then reports disabling, assigning a new task, and no Telegram message. The
+wording does not distinguish notification opt-out from full link revoke; ask once.
+Native button/task access also not explicitly confirmed; do not mark full pilot
+acceptance or broad rollout complete. No repeat task/send required for observed delivery.
 Source fix17261061:both PHP jobs and runtime SUCCESS;strict UID33 pilot7/0skips PASS.
 [CI receipt](../../context/runtime/connect_notification_pilot_access_ci_20261021.json);Context39595204430/Review39595203810 SUCCESS,including native Connect DB.
 Active worker/tool remain a86;new source fix is not deployed. CA/browser trust

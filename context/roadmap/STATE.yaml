@@ -2,7 +2,7 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_notification_pilot
-stage_label: One-employee notification pilot active; actual delivery and revoke acceptance next
+stage_label: Telegram task delivered; disable observed, native access and revoke type clarification pending
 current_activity: >-
   Owner verified cached a86 release bytes and repaired directory access0755;
   the same frozen a86 package completed notification_pilot_active for Moodle UID130.
@@ -12,8 +12,11 @@ current_activity: >-
   Receipt context/runtime/connect_notification_pilot_owner_20261021.json.
   Do not repeat access repair, activation, app upgrade, permissions, cron, HTTPS,
   egress refresh or account linking. Personal opt-in and Tasks already saved.
-  Next: authorized new task after cutoff to UID130, real Telegram delivery,
-  native button with own employee session, then revoke and no future delivery.
+  Owner screenshot confirms real Telegram Tasks notification, event12:10UTC,
+  native button visible. Owner then disabled, assigned a new task, observed no message.
+  Disable wording does not prove whether preference opt-out or full link revoke.
+  Next clarify that distinction and native button/task access; do not repeat
+  already observed delivery or assume full pilot/broad rollout accepted.
   New source17261061 fixes umask077 staging;sourcePHP8.2/8.3 and runtime SUCCESS,
   actual UID33 pilot7tests/0skips PASS. Context39595204430/Review39595203810 SUCCESS.
   The deployed worker/tool remain a86; source172 fix is not separately deployed.

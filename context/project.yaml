@@ -20,11 +20,11 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee notification pilot CI accepted; owner active UID130; actual delivery/revoke pending
+  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee notification pilot CI accepted; owner active UID130; Tasks delivery and disable observed, UI/revoke type clarification pending
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_notification_pilot_active_UID130_actual_delivery_revoke_pending;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_owner_active_actual_delivery_revoke_pending
+execution_gate: owner_Telegram_task_delivered_disable_observed_native_UI_and_revoke_type_clarification_pending;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_task_delivered_disable_observed_final_clarification_pending
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md

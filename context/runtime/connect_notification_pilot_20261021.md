@@ -28,8 +28,11 @@ accounts are refused; use the ordinary employee previously linked by the owner.
 Owner repair and activation are now accepted: notification_pilot_active, UID130,
 sender_active=true, historical_replay=false, linking_preserved=true.
 [Receipt](connect_notification_pilot_owner_20261021.json). Do not repeat activation
-or directory repair. Next: Native delivery acceptance below; a real new task must
-be created after21Oct14:56:57MSK cutoff. Actual Telegram delivery/revoke are pending.
+or directory repair. Screenshot confirms a real Tasks message, event12:10UTC,
+with native button. Owner reports no message for a new task after disabling.
+The wording does not distinguish preference opt-out from full link revoke;
+clarification and native button/task access remain pending. Do not repeat the
+already observed positive delivery or call the entire pilot accepted.
 
 ## Earlier owner recovery (completed)
 

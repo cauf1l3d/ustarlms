@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 32296,
-      "sha256": "a679a4086ad64f990c8e37ecce16952acf204cb3f46c48504e6bef248ff1005d"
+      "size": 32558,
+      "sha256": "0faac9c04bfb2d92bb5369d1a8f83d0c2fc97b8f74357e70e1bd2338350b0eb1"
     },
     {
       "path": "context/agents/astra.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2604,
-      "sha256": "06cbebebf38abac8e372a7e68bc70d0f2fb65e1143f81f2cc2e5dd17802de3fe"
+      "size": 2688,
+      "sha256": "795eabae03f7632f36b3cb00992b92d34ca66ec97292812d5b7ba317c810f133"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
@@ -858,8 +858,8 @@
     {
       "path": "context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md",
       "domain": "proposals",
-      "size": 8474,
-      "sha256": "7e320e227bf331b29497fed9b78459a1c0dc910a6fcc4dcf6a5a66bbb53ea8bc"
+      "size": 8963,
+      "sha256": "14349bdc00a621e75336b8a0fbb241d383627f610fce2f49162a1ec33d44a580"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md",
@@ -960,8 +960,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 27175,
-      "sha256": "740b21027aad228893c888c9402e1dad272d7de5a25896e2bc56008e7e287936"
+      "size": 27267,
+      "sha256": "0d10d07486f1f0566eaa97237583b17e081648fbc562aaf99e322c8a74892938"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1002,8 +1002,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 187956,
-      "sha256": "3ebc1a4abcc45b84fba17178626f4d3c988925ce73c11c5f953d8f792519c30c"
+      "size": 188218,
+      "sha256": "a594ac32d5b0f121e73b7bde4ee20f63e830d32e2e11798ebacf75408208e6b8"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1014,8 +1014,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 11622,
-      "sha256": "ace5f6279004aa0ce9fa501c3cfe0ee6fad5c56b808113f43a64742bf1408230"
+      "size": 11875,
+      "sha256": "03846fefcab81ac6680d29416bcb68dc668818f3f962a107477815df33f4148c"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1320,8 +1320,8 @@
     {
       "path": "context/runtime/connect_notification_pilot_20261021.md",
       "domain": "runtime",
-      "size": 6740,
-      "sha256": "0c489b47e20ae05c2a2dcb95e08cd890fb94be6307c17686610c5cc1877b448b"
+      "size": 6950,
+      "sha256": "e283b3af9ef1ac9ef6b14838aa15d3a1674623c760c553eafcd42d04829b87e6"
     },
     {
       "path": "context/runtime/connect_notification_pilot_access_20261021.md",
@@ -1350,8 +1350,8 @@
     {
       "path": "context/runtime/connect_notification_pilot_owner_20261021.json",
       "domain": "runtime",
-      "size": 1260,
-      "sha256": "6e4c6980d0173f076378c01b0e0440fc6673e3752339e993fb8b73128b3dc79e"
+      "size": 2074,
+      "sha256": "aa8bde0b0bf613e94b617fbaffa9bb556b36a0c102ec03cb78567d4634fae495"
     },
     {
       "path": "context/runtime/connect_owner_priority_20261019.json",
@@ -2292,8 +2292,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 46816,
-      "sha256": "bd1f42d7205bc943dff94720d54e7ee1387b0e4bd2ea9a4cc4129d3ebd4d6737"
+      "size": 47078,
+      "sha256": "5c7e6f7fb231820472d4ef362f4bac7521a2f3c37c3753ede110a630a1077ac7"
     },
     {
       "path": "context/tasks/backlog.yaml",

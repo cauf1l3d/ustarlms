@@ -1,26 +1,23 @@
 schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
-stage: connect_CON02_ack_plan_review
-stage_label: CON02 started by owner; first canonical ACK plan prepared; code pending
+stage: connect_CON02_A1_source_verified
+stage_label: CON02A1 native own acknowledgement implemented and CI verified; not deployed
 current_activity: >-
-  Owner explicitly started CON02 after channel delivery/preferences/ACK and Bitrix
-  explanation. Existing RFC/contract scope is the brief; source review and first
-  plan context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md are ready.
-  Source inventory context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md.
-  Canonical ACK writer/status/ackat exist, but native protected ACK flow and
-  stable concurrent receipt need implementation. First independent slice A1:
-  own native ACK; then Telegram callbacks, shared channel preferences and Bitrix.
-  No CON02 code/DB/schema/deployment/provider action; plan needs owner review.
-  Group rollout controller remains design-only, not silently completed. Group
-  live acceptance deferred to full launch by owner; automated checks retained.
-  One-employee Tasks pilot fully accepted, no repeated delivery/link/revoke/login.
-  Production worker/tool a86, personal UID130 last revoked; application2000 with
-  accepted one-file pilot policy overlay. Source172 umask fix CI passed, not
-  separately deployed. Managed cron/HTTPS and source-bound journals preserved.
-  Actual Bitrix portal/cloud-box/API/scopes and legacy consumer remain unknown.
-  Current code headb7d3e93a Context39622043988/Review39622044309 SUCCESS; not CON02 CI.
-  No agent SSH/provider sends/main merge; independent execution, no subagents.
+  Owner approved CON02A1 plan21Oct; native personal acknowledgement implemented.
+  Own active native actor/capability/POST/sesskey/source-local checks; first ackat
+  preserved under repeats, concurrent read and ACK. No task/delivery mutation.
+  Candidate2026102100/theme2026100202/554files/99tables, no table/column delta.
+  Source4fb4cd17 Context39679569635/Review39679569515 SUCCESS;138native/685assertions.
+  Exact source/CI/native/upgrade/paired restore/frozen a86 evidence and skips:
+  context/runtime/connect_con02_ack_ci_20261021.json. Author whole-slice review,
+  no subagents or independent reviewer; no agent SSH/provider sends/main merge.
+  Server1 remains application2000 plus accepted pilot policy overlay, worker/tool
+  a86; UID130 last revoked. One-employee Tasks pilot fully accepted, do not repeat.
+  This source result is not a2100 deployment package or production acceptance.
+  Next separate A2 Telegram callback plan, then B routing/preferences and C Bitrix.
+  Actual portal/cloud-box/API/scopes/legacy consumer unknown. Group controller
+  remains design-only; manual group live acceptance deferred to full launch.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
@@ -211,6 +208,8 @@ do_not_repeat:
 - host_package_install_and_reboot
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
 development_candidate:
+  CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
+  implementation_report: context/runtime/connect_con02_ack_20261021.md
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
   scope: CON02A1 native own acknowledgement;existing private chat/C4 preserved;no new transport activation
@@ -231,7 +230,7 @@ receiver_runtime:
   server1_started: true
   live_ack: owner_reports_working_19Oct1859MSK
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
-  next: review_CON02_ACK_plan_then_independent_implementation
+  next: CON02_A2_Telegram_callback_plan
 
 connect_academy_preparation:
   kind: historical_19Oct_preflight_snapshot_superseded_by_current_owner_receipts

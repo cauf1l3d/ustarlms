@@ -12,7 +12,7 @@ def build(commit,output,*,repo=ROOT):
     for name in ('build_connect_bridge_activation','connect_bridge_activation','connect_private_bridge'):
         path='scripts/infra/'+name+'.py'
         if (ROOT/path).read_bytes()!=git('show',source+':'+path):raise ValueError('dirty_builder_dependency')
-    subprocess.run(['git','-C',str(repo),'diff','--quiet',bridge.PAYLOAD,source,'--','moodle/local/ustar','moodle/theme/ustar'],check=True)
+    bridge.verify_application_delta(repo,source)
     ref={'schema':1,'tool_commit':source,'payload_commit':bridge.PAYLOAD,'files':{
         name:hashlib.sha256(git('show',bridge.PAYLOAD+':moodle/'+name)).hexdigest() for name in bridge.SECURITY_FILES}}
     files={'__main__.py':b'from connect_bridge_activation import main\nraise SystemExit(main())\n',

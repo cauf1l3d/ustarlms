@@ -10,6 +10,7 @@ import re
 import socket
 import stat
 import struct
+import subprocess
 import sys
 import zipfile
 from contextlib import contextmanager,ExitStack
@@ -34,6 +35,18 @@ SECURITY_FILES=('local/ustar/connect_bridge.php','local/ustar/classes/connect/br
     'local/ustar/classes/connect/bridge_http.php','local/ustar/classes/connect/bridge_service.php',
     'local/ustar/classes/connect/identity_service.php','local/ustar/classes/connect/link_management.php',
     'local/ustar/version.php','theme/ustar/version.php')
+
+
+def verify_application_delta(repo, commit, overlays=None):
+    """Legacy packages still freeze PAYLOAD; permit only tests and reviewed overlays."""
+    paths=subprocess.check_output(['git','-C',str(repo),'diff','--name-only',PAYLOAD,commit,
+        '--','moodle/local/ustar','moodle/theme/ustar']).decode().splitlines()
+    for path in paths:
+        if path.startswith(('moodle/local/ustar/tests/','moodle/theme/ustar/tests/')):
+            continue
+        raw=subprocess.check_output(['git','-C',str(repo),'show',commit+':'+path])
+        require((overlays or {}).get(path)==hashlib.sha256(raw).hexdigest(),
+                'unreviewed_application_delta')
 
 
 def unique(pairs):

@@ -11,6 +11,7 @@ import tempfile
 import zipfile
 
 import build_connect_readiness
+import connect_private_bridge as bridge
 
 ROOT=Path(__file__).resolve().parents[2]
 PAYLOAD='1e8a8819f50785ebb4fb2640eeb9386c969d59d1'
@@ -25,8 +26,7 @@ def build(commit,output,*,repo=ROOT):
     def git(*args):return subprocess.check_output(['git','-C',str(repo),*args],stderr=subprocess.DEVNULL)
     tool=git('rev-parse','--verify',commit+'^{commit}').decode().strip()
     # A later tooling/docs head must not silently add an unreviewed application.
-    subprocess.check_call(['git','-C',str(repo),'diff','--quiet',PAYLOAD,tool,'--',
-                           'moodle/local/ustar','moodle/theme/ustar'])
+    bridge.verify_application_delta(repo,tool)
     if (ROOT/'scripts/infra/build_connect_readiness.py').read_bytes()!=git('show',tool+':scripts/infra/build_connect_readiness.py'):
         raise ValueError('dirty_builder_dependency')
     with tempfile.TemporaryDirectory() as temp:

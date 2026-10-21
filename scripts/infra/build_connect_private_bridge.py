@@ -22,8 +22,7 @@ def build(commit,output,*,repo=ROOT):
         path='scripts/infra/'+name+'.py'
         if (ROOT/path).read_bytes()!=git('show',source+':'+path):
             raise ValueError('dirty_builder_dependency')
-    subprocess.check_call(['git','-C',str(repo),'diff','--quiet',bridge.PAYLOAD,source,'--',
-                           'moodle/local/ustar','moodle/theme/ustar'])
+    bridge.verify_application_delta(repo,source)
     reference={'schema':1,'tool_commit':source,'payload_commit':bridge.PAYLOAD,
         'files':{name:hashlib.sha256(git('show',bridge.PAYLOAD+':moodle/'+name)).hexdigest()
                  for name in bridge.SECURITY_FILES}}

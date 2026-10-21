@@ -2,8 +2,13 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_notification_pilot
-stage_label: Notification pilot CI accepted; owner activation and task delivery next
+stage_label: Server mDNS recovered; office browser acceptance before notification pilot
 current_activity: >-
+  Owner prioritizes whole-office access without DHCP/router/per-device changes.
+  Avahi stuck REGISTERING1 after09:43MSK restart;restart recovery13:23MSK yields RUNNING2,
+  persistent ustar.local publisher established and local resolve192.168.1.60.
+  Receipt context/runtime/academy_mdns_owner_20261021.json;underlying hang trigger unknown.
+  Next office Wi-Fi phone and PC without hosts browser acceptance,then frozena86 pilot.
   Latest shared6ad87278 owner says do the next-stage notification pilot after accepted test-employee link.
   Neutral start,canonical recipient fence and worker subject fence implemented;936r16/50local skips PASS.
   Frozen a86e2080:Context39573641861/Review39573641220 SUCCESS;UID33 pilot6/nativeMoodle127/633 PASS.
@@ -49,6 +54,7 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
+  latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
   latest_cron_contract: context/runtime/connect_chat_link_update_owner_20261021.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json

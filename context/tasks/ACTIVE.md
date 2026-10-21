@@ -1,5 +1,19 @@
 # Активные задачи USTAR
 
+**21Oct13:23MSK — server mDNS publication recovered; office browser acceptance next.**
+Owner needs whole office LAN access without DHCP/router or per-device settings.
+Avahi GetState1=REGISTERING after09:43MSK restart; new persistent publisher waited.
+Only Avahi restarted;10:23:28UTC startup complete,10:23:29UTC same publisherPID
+Established under name `ustar.local`,GetState2=RUNNING,
+local resolve192.168.1.60. Root cause of the stuck state/restart remains unknown;
+no proof DNS changed today or that prior alias was temporary. avahi-utils already
+installed;unit `/etc/systemd/system/ustar-academy-mdns.service` enabled,no-reverse/no-fail.
+[Receipt](../../context/runtime/academy_mdns_owner_20261021.json),[incident/runbook](../../context/runtime/academy_mdns_incident_20261021.md).
+Server-side publication accepted,physical LAN/browser/VPN/boot stability not proven.
+Next owner tests office Wi-Fi phone and PC without hosts,then resumes frozena86 pilot.
+Do not repeat installs/rights/TLS or per-PC NRPT as whole-network solution;notify off.
+Owner terminal evidence,no agent SSH/provider calls,0subagents.
+
 **21Oct — notification pilot frozen and ready for owner activation.**
 Sourcea86e2080:Context39573641861/Review39573641220 SUCCESS. Both PHP8.2/8.3:
 936r16/152environment skips;actualUID33 pilot6tests/0skips;nativeMoodle127/633,

@@ -20,7 +20,8 @@ current_connect_checkpoint:
   notification_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
-  next: owner_pilot_activate_then_personal_opt_in_new_task_delivery_native_access_and_revoke
+  office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
+  next: owner_office_WiFi_phone_and_PC_without_hosts_browser_acceptance_then_frozen_notification_pilot
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

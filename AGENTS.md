@@ -1,5 +1,17 @@
 # USTAR инструкции агентам
 
+**21Oct — parent preparation accepted; link activation package ready.**
+Source27117c8c25b7dda28385c787f79e99636af10216: Review39530156361 and
+Context39530156402 SUCCESS. Source PHP8.2/8.3, connect-runtime/connect-db PASS;
+full RC/moodle-db/rollback jobs skipped. Activation12tests including actualUID33 pass.
+Frozen artifact12315336864, PYZ SHA256
+b7ef07134897d400903e0d0c7bc9bd35728cd51f65c47d0fe3c331b992cc2d9b.
+Owner include_parent_prepared accepted; do not repeat parent/app/cron/TLS preparation.
+Next owner --activate then personal Academy→Telegram→same-session confirm/unlink.
+Notifications off; no live activation claimed.0subagents/author self-review.
+Activation ledger: context/proposals/USTAR_CONNECT_ACTIVATION_PROGRESS_20261021.md.
+
+
 **21Oct — права родителей приняты владельцем; реализация активации.**
 Exact87fe3da7/SHA76562298:include_parent_prepared,оба UID0/GID33/0755,
 без рекурсии/config changes/restart/key/bridge. Внешние /opt/ustar и /data

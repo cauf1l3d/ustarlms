@@ -2,8 +2,11 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_private_bridge_delivery
-stage_label: Guarded include-parent preparation verified; owner apply pending
+stage_label: Parent preparation accepted; frozen link activation ready for owner
 current_activity: >-
+  Latest: owner parent chain accepted; activation source27117c8c Review39530156361 and
+  Context39530156402 SUCCESS. Artifact12315336864 frozen; activation/live link pending.
+  Supersedes earlier parent/implementation pending statements below.
   Owner21Oct reports exact6aa/e0d364ab SHA OK,CHAT_LINK_UPDATE=PASS and phase upgrade_complete,
   public_released=true,live_trees_modified=true. Effective payload1e8a8819/local2000/theme0202,
   552files/99tables follow from fixed guarded installer,not an independent probe.

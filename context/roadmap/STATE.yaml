@@ -1,23 +1,24 @@
 schema_version: 2
-updated_at: '2026-10-21'
+updated_at: '2026-10-22'
 project: USTAR Academy
-stage: connect_CON02_A1_source_verified
-stage_label: CON02A1 native own acknowledgement implemented and CI verified; not deployed
+stage: connect_CON02_A2_written_design_pending_review
+stage_label: CON02A2 conversational design approved; written design pending owner review
 current_activity: >-
-  Owner approved CON02A1 plan21Oct; native personal acknowledgement implemented.
-  Own active native actor/capability/POST/sesskey/source-local checks; first ackat
-  preserved under repeats, concurrent read and ACK. No task/delivery mutation.
-  Candidate2026102100/theme2026100202/554files/99tables, no table/column delta.
-  Source4fb4cd17 Context39679569635/Review39679569515 SUCCESS;138native/685assertions.
-  Exact source/CI/native/upgrade/paired restore/frozen a86 evidence and skips:
-  context/runtime/connect_con02_ack_ci_20261021.json. Author whole-slice review,
-  no subagents or independent reviewer; no agent SSH/provider sends/main merge.
-  Server1 remains application2000 plus accepted pilot policy overlay, worker/tool
-  a86; UID130 last revoked. One-employee Tasks pilot fully accepted, do not repeat.
-  This source result is not a2100 deployment package or production acceptance.
-  Next separate A2 Telegram callback plan, then B routing/preferences and C Bitrix.
-  Actual portal/cloud-box/API/scopes/legacy consumer unknown. Group controller
-  remains design-only; manual group live acceptance deferred to full launch.
+  Owner approved conversational CON02A2 Telegram ACK design22OctMSK. Written spec
+  context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md is ready for
+  owner review. Versioned opt-in begin_v2 plus ACK-only scope, opaque token/current
+  link revision/expiry and same receiver; typed UI answer separate from canonical
+  first acknowledgement. One proposed table/plugin2200 not implemented; current
+  candidate2100/theme0202/554files/99tables preserved. A2 code/plan/native tests not
+  started. A1 source4fb4cd17 Context39679569635/Review39679569515 SUCCESS,
+  138native/685assertions, exact receipt context/runtime/connect_con02_ack_ci_20261021.json.
+  Docs332 Context39682045417 SUCCESS. Server1 application2000 plus accepted
+  notification policy overlay and worker/tool a86; UID130 last revoked. Accepted
+  one-user Tasks pilot not repeated. Group rollout design-only; manual group live
+  tests deferred until full launch, not passed. Next written-spec owner review,
+  then separate implementation plan. B routing/preferences and C Bitrix remain
+  subsequent slices; actual portal/API/scopes/legacy consumer unknown.
+  Author self-review, no subagents/independent reviewer/agent SSH/provider sends.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
@@ -105,6 +106,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
 - context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
 - context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md

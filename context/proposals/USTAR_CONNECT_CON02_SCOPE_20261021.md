@@ -3,8 +3,10 @@
 **Актуализация после A.1:** owner approved; native «Принял» реализован и проверен
 в CI, candidate2100 не установлен. [Результат и границы](../runtime/connect_con02_ack_20261021.md),
 [точная квитанция](../runtime/connect_con02_ack_ci_20261021.json). Следующий срез
-A.2 — отдельный Telegram callback план. Source inventory ниже фиксирует состояние
-на начало этапа, а не отсутствие уже реализованного A.1.
+A.2 — [письменный проект Telegram callback](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md),
+written_design_pending_owner_review; реализация/implementation plan ещё не начаты.
+Source inventory ниже фиксирует состояние на начало этапа, а не отсутствие
+уже реализованного A.1.
 
 21.10.2026, Europe/Moscow. Владелец поручил приступить к CON-02 после пояснения
 общей доставки, настроек, подтверждений и Bitrix. Это начало нового этапа,
@@ -62,7 +64,10 @@ sesskey, реальный активный actor и отказ view-as/чужо�
 
 ### CON-02A.2 — подтверждение из Telegram
 
-Потребуется отдельный план ограниченного callback-контракта: opaque action,
+После согласования варианта A.2 в диалоге подготовлен
+[конкретный письменный проект](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md);
+он ожидает review владельца. Последующий план реализации будет опираться на
+ограниченный callback-контракт: opaque action,
 проверенный private sender, provider/tenant/current link revision, TTL и повтор
 после потери ответа. Нельзя передать произвольный Moodle userid, использовать
 send lease в качестве публичного callback token или превратить actor_read в
@@ -72,8 +77,8 @@ send lease в качестве публичного callback token или пре
 `notification.begin` сломает совместимость. Новая возможность требует явного
 versioned/opt-in контракта, default OFF, отдельного scoped credential и проверенного
 перехода. Provider acceptance и uncertain остаются транспортными фактами даже
-после человеческого ACK. Конкретные token/schema/activation решения до этого
-плана не утверждены.
+после человеческого ACK. Конкретные token/schema/activation решения теперь описаны в письменном
+проекте A.2 и ожидают review; нового API/схемы в исходниках пока нет.
 
 ### CON-02B — общие preferences и выбор канала
 

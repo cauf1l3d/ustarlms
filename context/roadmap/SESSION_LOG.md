@@ -1,5 +1,18 @@
 # Журнал выполнения roadmap
 
+**22Oct — CON-02A.2: вариант в диалоге согласован, письменный проект готов к review.**
+[Технический проект Telegram «Принял»](../proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md): отдельный permit v2,
+opaque token/TTL/current link revision, ACK-only credential и тот же receiver.
+Первое ACK сохраняется в Академии; UI callback answer и provider receipt отдельны.
+Token/table100/plugin2200 — только проект; candidate остаётся2100/554files/99tables.
+A.2 product code/implementation plan не написаны; следующий шаг — owner review
+конкретного письменного проекта, затем план самостоятельной реализации.
+A.1 source4fb4cd17 CI verified; docs332 Context39682045417 SUCCESS.
+Server1 application2000+policy overlay/worker a86 сохранены; pilot принят,
+UID130 последний раз revoked. Не повторять pilot и не включать группу.
+Manual group live acceptance deferred до полного запуска, не passed.
+Author self-review,0subagents; нет agent SSH/provider sends/main merge.
+
 **21Oct — CON-02A.1 реализован и проверен в CI; на server1 не установлен.**
 В native inbox добавлено личное «Принял»: собственный active actor, POST/sesskey,
 capability, source=local; первое время сохраняется при read/ACK races и повторах.

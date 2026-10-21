@@ -116,3 +116,18 @@ No service restart,container recreation,credential generation or app update occu
 RED:missing guarded preparation assertions observed. Local namespace cannot map UID33;
 a new mandatory sudo CI-host fixture must execute the real ownership and UID33 denial
 cases before publishing operator commands. New source CI pending.
+
+Sourcee58354d3/tree155919f1:Context39519644446 SUCCESS,both source jobs895/145skips
+and runtime118960063858 SUCCESS. Strict native parent fixture:9tests,zero skips,
+actual UID33 read/rename denial,child/config metadata+xattrs retained,interrupted
+prepare/restore resume and unknown drift/active-include restore refusal PASS.
+Local final895/43skips PASS;9new tests are native-CI-only,not local ownership evidence.
+Frozen filee58354d3/SHA20038cba/artifact12311131323 downloaded and compared byte-for-byte
+with local exact Git assembly. [Owner runbook](../runtime/connect_private_parent_prepare_20261021.md),
+[CI receipt](../runtime/connect_private_parent_prepare_ci_20261021.json).
+Owner prepare is pending;no live ownership or bridge changes have been performed.
+
+Final exact sourcee583 Context39519644446/Review39519644489 SUCCESS. NativeMoodle
+job118961045964/artifact12310023723:124/629+6concurrency,privateUID33/scoped HMAC/
+six tables unchanged and both paired restore gates PASS. Full RC skipped.
+This is source/fixture verification,not owner parent application or live linking.

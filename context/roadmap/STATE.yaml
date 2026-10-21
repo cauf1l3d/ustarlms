@@ -2,7 +2,7 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_private_bridge_delivery
-stage_label: Owner UID33 include-parent refusal recorded; guarded parent preparation CI pending
+stage_label: Guarded include-parent preparation verified; owner apply pending
 current_activity: >-
   Owner21Oct reports exact6aa/e0d364ab SHA OK,CHAT_LINK_UPDATE=PASS and phase upgrade_complete,
   public_released=true,live_trees_modified=true. Effective payload1e8a8819/local2000/theme0202,
@@ -21,7 +21,12 @@ current_activity: >-
   Owner e4d7a154/SHA14de5484 check refused unsafe_include_parent:code parent33:33/0755;no config change.
   Receipt context/runtime/connect_private_bridge_parent_owner_20261021.json;later checks not reached.
   Explicit guarded nonrecursive UID33→0 parent preparation preserves GID/mode/xattrs/children,
-  saves inode-bound before-image and supports restore only before bridge setup;new CI pending.
+  saves inode-bound before-image and supports restore only before bridge setup.
+  Sourcee58354d3 Context39519644446/Review39519644489 SUCCESS;both PHP jobs895/145skips.
+  Actual Moodle124/629+6concurrency/private scope/paired restores PASS;full RC skipped;
+  runtime118960063858 has9actual UID33 ownership/recovery/drift cases PASS,zero skips.
+  Frozen PYZ e58354d3/SHA20038cba/artifact12311131323 equals local Git bytes;owner apply pending.
+  Runbook context/runtime/connect_private_parent_prepare_20261021.md and exact CI receipt adjacent.
   No repeated upgrade/cron/TLS/inventory or manual recursive permission repair.
   Coordinated root tool/state/key/credential/receiver transaction remains pending.
   Next accepted chat-link plan:private native TLS bridge,link-only key and receiver update

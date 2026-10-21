@@ -1,6 +1,6 @@
 # USTAR инструкции агентам
 
-**21Oct — owner check отказал на UID33 parent; подготовка ограниченного исправления.**
+**21Oct — owner UID33 refusal учтён; guarded parent preparation проверена.**
 [Owner receipt](context/runtime/connect_private_bridge_parent_owner_20261021.json):frozen e4 SHA OK,
 unsafe_include_parent `/opt/ustar/data/moodle/public`,33:33/0755,configuration_changed=false.
 Это первый отказ:последующие transport/receiver/liveHTTPS checks этим запуском не приняты.
@@ -8,7 +8,12 @@ unsafe_include_parent `/opt/ustar/data/moodle/public`,33:33/0755,configuration_c
 root ancestors,затем меняет только UID этой папки33→0,сохраняя GID33/mode0755/xattrs/children.
 Durable inode-bound before-image и guarded restore;никаких рекурсивных chown/chmod,
 ключей,bridge activation,остановки/перезапуска служб или новой app/cron/backup/TLS установки.
-Source/native CI нового режима ещё pending;до него production-команды не выдавать.
+Sourcee58354d3:Context39519644446/Review39519644489 SUCCESS;895/145skips на обоих PHP.
+Runtime118960063858 и nativeMoodle124/629+6concurrency/paired restores PASS.
+9real UID33 parent/restore/drift/rename-denial tests без skips PASS.
+[Пакет и команды](context/runtime/connect_private_parent_prepare_20261021.md),
+[CI receipt](context/runtime/connect_private_parent_prepare_ci_20261021.json):artifact12311131323,
+PYZ e58354d3/SHA20038cba;CI bytes equal local exact Git build. Owner --prepare-include-parent pending.
 Default PLAN_ONLY/--check остаются без изменения прав.0subagents/self-review.
 
 **21Oct — private bridge source CI принят; следующий шаг — owner check.**

@@ -2,7 +2,7 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_private_bridge_delivery
-stage_label: Private bridge source CI passed; owner protected-parent check pending
+stage_label: Owner UID33 include-parent refusal recorded; guarded parent preparation CI pending
 current_activity: >-
   Owner21Oct reports exact6aa/e0d364ab SHA OK,CHAT_LINK_UPDATE=PASS and phase upgrade_complete,
   public_released=true,live_trees_modified=true. Effective payload1e8a8819/local2000/theme0202,
@@ -18,8 +18,11 @@ current_activity: >-
   native Moodle124/629+6concurrency,private UID33 include,scope/no-nonce-write and paired restore PASS.
   Plugin-only include must run after bootstrap;pre-bootstrap true becomes string1.
   Apache TLS and systemd credentials pass separate fixtures;production activation is not claimed.
-  Frozen readonly e4d7a154/check SHA14de5484/artifact12307432021 is ready;owner JSON pending.
-  Next new fact is protected include-parent metadata;no repeated upgrade/cron/TLS/inventory.
+  Owner e4d7a154/SHA14de5484 check refused unsafe_include_parent:code parent33:33/0755;no config change.
+  Receipt context/runtime/connect_private_bridge_parent_owner_20261021.json;later checks not reached.
+  Explicit guarded nonrecursive UID33→0 parent preparation preserves GID/mode/xattrs/children,
+  saves inode-bound before-image and supports restore only before bridge setup;new CI pending.
+  No repeated upgrade/cron/TLS/inventory or manual recursive permission repair.
   Coordinated root tool/state/key/credential/receiver transaction remains pending.
   Next accepted chat-link plan:private native TLS bridge,link-only key and receiver update
   preserving token/journal/cursor;then real same-session link/revoke and separate opt-in notify.

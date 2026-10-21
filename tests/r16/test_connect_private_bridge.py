@@ -114,6 +114,127 @@ class ReadonlyDelivery(unittest.TestCase):
         with self.assertRaisesRegex(x.Refusal,'invalid_transport_reference'):self.check.check()
 
 
+@unittest.skipUnless(os.geteuid()==0,'actual UID33 ownership fixture requires root')
+class ParentPreparation(ReadonlyDelivery):
+    def setUp(self):
+        super().setUp()
+        self.assertTrue(hasattr(x,'ParentPreparation'),'guarded parent preparation is missing')
+        self.root.chmod(0o755)
+        self.code=self.manager.p.old.config.parent
+        try:os.chown(self.code,33,33)
+        except OSError:
+            if os.environ.get('USTAR_REQUIRE_PRIVATE_PARENT_FIXTURE')=='1':raise
+            self.skipTest('runtime does not map actual UID/GID33; strict CI host fixture required')
+        config=self.code/'config.php';os.chown(config,33,0);config.chmod(0o640)
+        os.setxattr(config,'user.fixture',b'config metadata canary')
+        os.setxattr(self.code,'user.fixture',b'directory metadata canary')
+        spec=importlib.util.spec_from_file_location('parent_library',ROOT/'scripts/infra/academy_tls_probe.py')
+        lib=importlib.util.module_from_spec(spec);spec.loader.exec_module(lib)
+        self.check.lib=lib
+
+    def test_writable_or_foreign_parent_unknown_paths_and_source_drift_refuse(self):
+        # The inherited readonly cases assume a root-owned parent.
+        os.chown(self.code,0,33)
+        super().test_writable_or_foreign_parent_unknown_paths_and_source_drift_refuse()
+
+    def test_check_is_narrow_readonly_and_does_not_print_credentials(self):
+        before=self.code.stat()
+        with self.assertRaisesRegex(x.Refusal,'unsafe_include_parent'):self.check.check()
+        self.assertEqual(33,self.code.stat().st_uid)
+        self.assertEqual(before.st_ctime_ns,self.code.stat().st_ctime_ns)
+
+    def test_wrong_gateway_or_missing_security_proof_cannot_report_ready(self):
+        os.chown(self.code,0,33)
+        super().test_wrong_gateway_or_missing_security_proof_cannot_report_ready()
+
+    def test_prepare_changes_only_parent_uid_and_preserves_children_mode_and_xattrs(self):
+        before={str(p):(p.read_bytes(),p.stat().st_uid,p.stat().st_gid,p.stat().st_mode)
+                for p in self.code.rglob('*') if p.is_file()}
+        self.assertTrue(hasattr(x,'ParentPreparation'),'guarded parent preparation is missing')
+        operation=x.ParentPreparation(self.check)
+        report=operation.prepare()
+        self.assertEqual('include_parent_prepared',report['phase'])
+        self.assertEqual((0,33,0o755),(self.code.stat().st_uid,self.code.stat().st_gid,self.code.stat().st_mode&0o7777))
+        self.assertEqual(b'directory metadata canary',os.getxattr(self.code,'user.fixture'))
+        self.assertEqual(b'config metadata canary',os.getxattr(self.code/'config.php','user.fixture'))
+        self.assertEqual(before,{str(p):(p.read_bytes(),p.stat().st_uid,p.stat().st_gid,p.stat().st_mode)
+                                for p in self.code.rglob('*') if p.is_file()})
+        self.assertFalse(report['configuration_changed']);self.assertFalse(report['key_generated'])
+        self.assertEqual('ready_for_private_bridge_preparation',self.check.check()['phase'])
+        repeated=operation.prepare()
+        self.assertEqual('include_parent_prepared',repeated['phase'])
+        self.assertFalse(repeated['directory_ownership_changed'])
+        # A real UID33 process may read the future include but cannot replace it.
+        private=self.code/'.ustar-connect';private.mkdir(mode=0o750);os.chown(private,0,33)
+        include=private/'bridge.php';include.write_bytes(b'PRIVATE_SYNTHETIC_KEY');include.chmod(0o640);os.chown(include,0,33)
+        def uid33():os.setgroups([]);os.setgid(33);os.setuid(33)
+        code='from pathlib import Path; import os; p=Path(os.environ["FIXTURE_INCLUDE"]); assert p.read_bytes()==b"PRIVATE_SYNTHETIC_KEY"; os.rename(p.parent,p.parent.with_name("replaced"))'
+        result=subprocess.run(['/usr/bin/python3','-c',code],env={**os.environ,'FIXTURE_INCLUDE':str(include)},
+                              preexec_fn=uid33,capture_output=True,text=True)
+        self.assertNotEqual(0,result.returncode);self.assertIn('PermissionError',result.stderr)
+
+    def test_other_refusals_leave_original_owner_and_create_no_transaction(self):
+        self.assertTrue(hasattr(x,'ParentPreparation'),'guarded parent preparation is missing')
+        self.host.gateway=lambda rt:'172.19.0.1'
+        with self.assertRaisesRegex(x.Refusal,'backend_peer_changed'):x.ParentPreparation(self.check).prepare()
+        self.assertEqual(33,self.code.stat().st_uid)
+        self.assertFalse((self.root/'var/lib/ustar-connect-private-parent').exists())
+        self.host.gateway=lambda rt:'172.18.0.1'
+        self.code.chmod(0o775)
+        with self.assertRaisesRegex(x.Refusal,'unsafe_include_parent'):x.ParentPreparation(self.check).prepare()
+
+    def test_interrupted_chown_resumes_without_replacing_before_image(self):
+        self.assertTrue(hasattr(x,'ParentPreparation'),'guarded parent preparation is missing')
+        operation=x.ParentPreparation(self.check)
+        original=self.check.lib.atomic
+        def interrupted(path,raw,*args):
+            if json.loads(raw).get('phase')=='prepared':raise OSError('simulated acknowledgement loss')
+            return original(path,raw,*args)
+        with patch.object(self.check.lib,'atomic',side_effect=interrupted):
+            with self.assertRaises(OSError):operation.prepare()
+        self.assertEqual(0,self.code.stat().st_uid)
+        saved=operation.state.read_bytes()
+        self.assertEqual('preparing',json.loads(saved)['phase'])
+        self.assertEqual('include_parent_prepared',operation.prepare()['phase'])
+        self.assertEqual(33,json.loads(operation.state.read_bytes())['before']['uid'])
+        self.assertEqual('include_parent_restored',operation.restore()['phase'])
+        self.assertEqual((33,33,0o755),(self.code.stat().st_uid,self.code.stat().st_gid,self.code.stat().st_mode&0o7777))
+
+    def test_restore_refuses_active_include_or_administrator_drift(self):
+        self.assertTrue(hasattr(x,'ParentPreparation'),'guarded parent preparation is missing')
+        operation=x.ParentPreparation(self.check);operation.prepare()
+        marker=self.code/'.ustar-connect';marker.mkdir()
+        with self.assertRaisesRegex(x.Refusal,'existing_private_bridge_path'):operation.restore()
+        self.assertEqual(0,self.code.stat().st_uid);marker.rmdir()
+        os.setxattr(self.code,'user.fixture',b'ADMIN_CHANGE')
+        with self.assertRaisesRegex(x.Refusal,'include_parent_metadata_drift'):operation.restore()
+        self.assertEqual(0,self.code.stat().st_uid)
+
+    def test_unexpected_ancestor_and_different_uid_refuse_before_chown(self):
+        operation=x.ParentPreparation(self.check)
+        os.chown(self.code.parent,33,33)
+        with self.assertRaisesRegex(x.Refusal,'unsafe_include_parent'):operation.prepare()
+        self.assertEqual(33,self.code.stat().st_uid)
+        os.chown(self.code.parent,0,0);os.chown(self.code,34,33)
+        with self.assertRaisesRegex(x.Refusal,'unsafe_include_parent'):operation.prepare()
+        self.assertEqual(34,self.code.stat().st_uid)
+
+    def test_lost_restore_ack_resumes_and_unknown_owner_drift_is_preserved(self):
+        operation=x.ParentPreparation(self.check);operation.prepare()
+        original=self.check.lib.atomic
+        def interrupted(path,raw,*args):
+            if json.loads(raw).get('phase')=='restored':raise OSError('restore acknowledgement lost')
+            return original(path,raw,*args)
+        with patch.object(self.check.lib,'atomic',side_effect=interrupted):
+            with self.assertRaises(OSError):operation.restore()
+        self.assertEqual(33,self.code.stat().st_uid)
+        self.assertEqual('restoring',json.loads(operation.state.read_bytes())['phase'])
+        self.assertEqual('include_parent_restored',operation.restore()['phase'])
+        operation.prepare();os.chown(self.code,33,33)
+        with self.assertRaisesRegex(x.Refusal,'include_parent_unexpected_owner'):operation.prepare()
+        self.assertEqual(33,self.code.stat().st_uid)
+
+
 class BuildPackage(unittest.TestCase):
     def test_exact_git_package_is_deterministic_plan_only_and_detects_corruption(self):
         module=ROOT/'scripts/infra/build_connect_private_bridge.py'

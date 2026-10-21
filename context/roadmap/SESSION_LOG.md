@@ -1,5 +1,16 @@
 # Журнал выполнения roadmap
 
+**21Oct — owner check отказал на UID33 parent; подготовка ограниченного исправления.**
+[Owner receipt](../runtime/connect_private_bridge_parent_owner_20261021.json):frozen e4 SHA OK,
+unsafe_include_parent `/opt/ustar/data/moodle/public`,33:33/0755,configuration_changed=false.
+Это первый отказ:последующие transport/receiver/liveHTTPS checks этим запуском не приняты.
+Новая explicit --prepare-include-parent сначала проверяет все остальные prerequisites и
+root ancestors,затем меняет только UID этой папки33→0,сохраняя GID33/mode0755/xattrs/children.
+Durable inode-bound before-image и guarded restore;никаких рекурсивных chown/chmod,
+ключей,bridge activation,остановки/перезапуска служб или новой app/cron/backup/TLS установки.
+Source/native CI нового режима ещё pending;до него production-команды не выдавать.
+Default PLAN_ONLY/--check остаются без изменения прав.0subagents/self-review.
+
 ## 21Oct — native coordinated update and new scheduled cron accepted
 
 **21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**

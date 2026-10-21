@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a fixed-source private bridge readiness ZIP, never an activation package."""
+"""Build fixed-source private bridge check/parent-preparation PYZ; no activation."""
 import argparse
 import hashlib
 import io
@@ -45,7 +45,8 @@ def build(commit,output,*,repo=ROOT):
     digest=hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix('.pyz.sha256').write_text(digest+'  '+target.name+'\n')
     metadata={'source_commit':source,'payload_commit':bridge.PAYLOAD,'sha256':digest,
-        'transport_files':len(reference['files']),'configuration_changed':False,'activation_supported':False}
+        'transport_files':len(reference['files']),'configuration_changed':False,'activation_supported':False,
+        'include_parent_preparation_supported':True,'default_host_access':False,'recursive_ownership_changes':False}
     target.with_suffix('.pyz.metadata.json').write_text(json.dumps(metadata,sort_keys=True,indent=2)+'\n')
     print(json.dumps(metadata,sort_keys=True));return target
 

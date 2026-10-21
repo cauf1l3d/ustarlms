@@ -14,7 +14,8 @@ current_connect_checkpoint:
   exact_ci_receipt: context/runtime/connect_chat_link_update_ci_20261021.json
   backup_HTTPS_preparation_receipt: context/runtime/connect_backup_https_owner_20261021.json
   application_update_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
-  next: private_TLS_bridge_link_only_key_receiver_then_live_same_session_link_revoke_and_opt_in_notify
+  include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
+  next: guarded_UID33_parent_preparation_CI_then_private_bridge_key_receiver_link_revoke_and_opt_in_notify
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

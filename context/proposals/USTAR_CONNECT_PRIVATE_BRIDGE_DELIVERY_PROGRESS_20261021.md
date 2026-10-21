@@ -97,3 +97,22 @@ No full root activation package exists yet. Source components alone do not activ
 
 No new artifact is authorized as a production activation package by this ledger.
 Agent has not accessed server1, generated a live key or called Telegram.
+
+## Owner parent refusal and bounded preparation
+
+Owner21Oct e4/SHA14de5484 check refused unsafe_include_parent,exact outer code directory
+UID33/GID33/mode0755. No configuration change. This was the first guard;later transport,
+receiver and live HTTPS checks were not reached and must not be claimed accepted.
+[Owner receipt](../runtime/connect_private_bridge_parent_owner_20261021.json).
+
+The existing root-managed-include design now gets explicit --prepare-include-parent.
+It first checks all other readiness conditions and every ancestor above the exact
+reported directory,then changes only its UID33→0 with descriptor-based fchown.
+GID33,0755,xattrs and every child retain metadata/content. A root-private durable
+inode-bound before-image permits interrupted prepare/restore resume. Unknown inode,
+owner,mode or xattr drift refuses. Restore refuses any private include/key/drop-in
+or activated HTTPS bridge. Default PLAN_ONLY and --check do not change ownership.
+No service restart,container recreation,credential generation or app update occurs.
+RED:missing guarded preparation assertions observed. Local namespace cannot map UID33;
+a new mandatory sudo CI-host fixture must execute the real ownership and UID33 denial
+cases before publishing operator commands. New source CI pending.

@@ -175,6 +175,8 @@ jobs:
           python3 -I artifacts/connect-delivery/ustar-connect-delivery-*.pyz
       - name: Delivery preflight preserves actual accepted UID33 config ownership
         run: sudo -n env USTAR_CONNECT_OWNERSHIP_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_delivery_readiness.py -v
+      - name: Private include parent preparation changes only actual UID33 directory owner
+        run: sudo -n env USTAR_REQUIRE_PRIVATE_PARENT_FIXTURE=1 python3 -m unittest tests.r16.test_connect_private_bridge.ParentPreparation -v
       - name: Coordinated chat-link update package and paired file recovery
         run: |
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_chat_link_update.py -v

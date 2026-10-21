@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Private bridge readiness and fixed configuration rendering. No activation."""
+"""Private bridge readiness and guarded include-parent ownership. No activation."""
 import argparse
 import fcntl
 import hashlib
@@ -127,7 +127,7 @@ class Readiness:
         require(stat.S_ISREG(st.st_mode) and st.st_nlink==1 and st.st_uid==self.uid
             and stat.S_IMODE(st.st_mode)==0o600 and st.st_size<=limit,'unsafe_private_control')
         return self.library().read_file(path,self.uid,True,limit)
-    def check(self):
+    def check(self,allow_parent_preparation=False):
         ref=self.ref
         require(isinstance(ref,dict) and set(ref)=={'schema','tool_commit','payload_commit','files'}
             and ref['schema']==1 and re.fullmatch('[a-f0-9]{40}',ref['tool_commit'])
@@ -137,9 +137,18 @@ class Readiness:
         require(not s.get('bridge_enabled',False),'bridge_already_configured')
         self.https.guards(s)
         code=self.https.p.old.config.parent;web=code/'public'
-        # A root-owned include is not protected if PHP can rename its parent.
-        # Refuse that actual layout rather than silently changing code ownership.
-        self.secure_parent(code,'unsafe_include_parent')
+        # Default remains readonly/refusing. Only the explicit preparation mode
+        # accepts the exact owner-reported UID/GID33:33/0755 directory candidate.
+        protected=True
+        try:self.secure_parent(code,'unsafe_include_parent')
+        except Refusal:
+            if not allow_parent_preparation:raise
+            require(code==self.root/'opt/ustar/data/moodle/public','unexpected_include_parent')
+            self.secure_parent(code.parent,'unsafe_include_parent')
+            st=code.lstat()
+            require(stat.S_ISDIR(st.st_mode) and not code.is_symlink()
+                and (st.st_uid,st.st_gid,stat.S_IMODE(st.st_mode))==(33,33,0o755),'unsafe_include_parent')
+            protected=False
         new_paths=[code/'.ustar-connect',self.inst.config/'bridge.key',self.inst.config/'bridge.ca',
             *[self.inst.units/('ustar-connect-'+n+'.service.d') for n in ('receiver','probe')]]
         require(not any(os.path.lexists(p) for p in new_paths),'existing_private_bridge_path')
@@ -162,14 +171,103 @@ class Readiness:
         runtime=self.https.host.runtime(self.https.p.old.config)
         require(self.host.gateway(runtime)==PEER,'backend_peer_changed')
         require(self.host.port_free(),'private_bridge_port_occupied')
-        return {'kind':'connect_private_bridge_delivery_readiness','phase':'ready_for_private_bridge_preparation',
+        return {'kind':'connect_private_bridge_delivery_readiness','phase':
+            'ready_for_private_bridge_preparation' if protected else 'ready_for_include_parent_preparation',
             'tool_commit':ref['tool_commit'],'payload_commit':PAYLOAD,'reviewed_transport_files':len(SECURITY_FILES),
-            'include_parent_protected':True,'current_HTTPS_verified':True,'backend_peer_candidate':PEER,
+            'include_parent_protected':protected,'current_HTTPS_verified':True,'backend_peer_candidate':PEER,
             'effective_private_peer_proven':False,'port_observed_free':True,'port_reserved':False,
             'receiver_source_commit':current.name,'receiver_active':self.inst.host.active('ustar-connect-receiver.service'),
             'configuration_changed':False,'key_generated':False,'telegram_API_called':False,
             'database_version_requeried':False,'application_or_cron_or_backup_launched':False,
             'activation_package_ready':False}
+
+
+class ParentPreparation:
+    """Change only the one measured directory UID, with a durable before-image.
+
+    All readiness checks precede the mutation. No recursive chown/chmod, file
+    content writes, service operations, key generation or bridge activation.
+    Existing deployment locks serialize prepare/restore with the managed writers.
+    """
+    def __init__(self,reader):
+        self.reader=reader
+        self.code=reader.root/'opt/ustar/data/moodle/public'
+        self.base=reader.root/'var/lib/ustar-connect-private-parent'
+        self.state=self.base/'state.json'
+        self.changed=False
+    def snapshot(self,fd):
+        st=os.fstat(fd)
+        require(stat.S_ISDIR(st.st_mode),'unsafe_include_parent')
+        return {'dev':st.st_dev,'ino':st.st_ino,'uid':st.st_uid,'gid':st.st_gid,
+            'mode':stat.S_IMODE(st.st_mode),'xattrs':{
+                name:hashlib.sha256(os.getxattr(fd,name)).hexdigest() for name in os.listxattr(fd)}}
+    def save(self,state):
+        self.reader.library().atomic(self.state,(json.dumps(state,sort_keys=True)+'\n').encode())
+    def load(self):
+        value=json.loads(self.reader.read_private(self.state),object_pairs_hook=unique)
+        require(isinstance(value,dict) and set(value)=={'schema','path','before','phase'}
+            and value['schema']==1 and value['path']==str(self.code)
+            and value['phase'] in ('preparing','prepared','restoring','restored'),'invalid_parent_transaction')
+        old=value['before']
+        require(isinstance(old,dict) and set(old)=={'dev','ino','uid','gid','mode','xattrs'}
+            and all(type(old[k]) is int for k in ('dev','ino','uid','gid','mode'))
+            and (old['uid'],old['gid'],old['mode'])==(33,33,0o755)
+            and isinstance(old['xattrs'],dict)
+            and all(isinstance(k,str) and isinstance(v,str) and re.fullmatch('[a-f0-9]{64}',v)
+                    for k,v in old['xattrs'].items()),'invalid_parent_before_image')
+        return value
+    def report(self,phase,before,after):
+        return {'phase':phase,'path':str(self.code),
+            'before':{k:before[k] for k in ('uid','gid','mode')},
+            'after':{k:after[k] for k in ('uid','gid','mode')},
+            'recursive':False,'configuration_changed':False,'key_generated':False,
+            'bridge_activated':False,'services_restarted':False,
+            'directory_ownership_changed':self.changed}
+    def prepare(self):return self.run(False)
+    def restore(self):return self.run(True)
+    def run(self,restore):
+        self.changed=False
+        reader=self.reader
+        require(reader.uid==0,'root_parent_preparation_required')
+        require(reader.https.p.old.config.parent==self.code,'unexpected_include_parent')
+        # This also refuses a live include/drop-in/key or non-legacy HTTPS state.
+        # Never make a live secret's parent writable during restore.
+        reader.check(allow_parent_preparation=True)
+        reader.secure_parent(self.code.parent,'unsafe_include_parent')
+        fd=os.open(self.code,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW|os.O_CLOEXEC)
+        try:
+            current=self.snapshot(fd);path=self.code.lstat()
+            require((current['dev'],current['ino'])==(path.st_dev,path.st_ino),'include_parent_replaced')
+            if os.path.lexists(self.state):
+                state=self.load();old=state['before'];new={**old,'uid':0}
+                require(current in (old,new),'include_parent_metadata_drift')
+                allowed={'preparing':(old,new),'prepared':(new,),'restoring':(old,new),'restored':(old,)}
+                require(current in allowed[state['phase']],'include_parent_unexpected_owner')
+                require(restore or state['phase']!='restoring','resume_parent_restore_required')
+            else:
+                require(not restore,'parent_before_image_missing')
+                if current['uid']==0:return self.report('include_parent_already_protected',current,current)
+                require((current['uid'],current['gid'],current['mode'])==(33,33,0o755),'unsafe_include_parent')
+                reader.library().directory(self.base,0o700,reader.uid,reader.root)
+                require(not any(self.base.iterdir()),'unknown_parent_transaction_file')
+                old=current;new={**old,'uid':0}
+                state={'schema':1,'path':str(self.code),'before':old,'phase':'preparing'}
+            target=old if restore else new
+            # Persist intent before fchown; interrupted operations resume only
+            # with the exact inode/mode/group/xattrs and one known owner state.
+            state['phase']='restoring' if restore else 'preparing';self.save(state)
+            require(self.snapshot(fd)==current,'include_parent_metadata_drift')
+            path=self.code.lstat()
+            require((current['dev'],current['ino'])==(path.st_dev,path.st_ino),'include_parent_replaced')
+            if current!=target:
+                os.fchown(fd,target['uid'],-1);self.changed=True
+                os.fsync(fd);reader.library().sync_directory(self.code.parent)
+            after=self.snapshot(fd)
+            require(after==target,'include_parent_metadata_drift')
+            if not restore:reader.secure_parent(self.code,'unsafe_include_parent')
+            state['phase']='restored' if restore else 'prepared';self.save(state)
+            return self.report('include_parent_'+state['phase'],old,after)
+        finally:os.close(fd)
 
 
 def bundle(path):
@@ -210,10 +308,14 @@ def locks(reader):
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--check',action='store_true',help='Read only private delivery prerequisites; no activation')
+    modes=parser.add_mutually_exclusive_group()
+    modes.add_argument('--check',action='store_true',help='Read only private delivery prerequisites; no activation')
+    modes.add_argument('--prepare-include-parent',action='store_true',help='Protect only exact measured UID33 parent; no activation')
+    modes.add_argument('--restore-include-parent',action='store_true',help='Restore recorded parent UID only before bridge setup')
     args=parser.parse_args(argv)
-    if not args.check:
+    if not any((args.check,args.prepare_include_parent,args.restore_include_parent)):
         print('{"phase":"plan_only","host_access":false}');return 0
+    operation=None
     try:
         require(os.geteuid()==0 and sys.version_info>=(3,12),'root_python312_required')
         path=Path(sys.argv[0]).resolve()
@@ -226,12 +328,19 @@ def main(argv=None):
         reference=bundle(path)
         import academy_https,connect_install
         reader=Readiness(reference,academy_https.Manager(),connect_install.Installation())
-        with locks(reader):result=reader.check()
+        with locks(reader):
+            if args.check:result=reader.check()
+            else:
+                operation=ParentPreparation(reader)
+                result=operation.restore() if args.restore_include_parent else operation.prepare()
         print(json.dumps(result,sort_keys=True,indent=2));return 0
     except BaseException as error:
         known=isinstance(error,Refusal) or error.__class__.__name__=='Refusal'
         reason=str(error) if known and re.fullmatch('[A-Za-z0-9_]{1,100}',str(error)) else 'private_bridge_check_refused'
         result={'phase':'refused','reason':reason,'configuration_changed':False}
+        if operation is not None:
+            result['directory_ownership_changed_in_this_run']=operation.changed
+            result['interrupted_operation_may_require_same_command_resume']=True
         if isinstance(error,Refusal) and hasattr(error,'details'):result['details']=error.details
         print(json.dumps(result));return 2
 

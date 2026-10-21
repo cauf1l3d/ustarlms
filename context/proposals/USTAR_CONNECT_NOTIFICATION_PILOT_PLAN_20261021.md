@@ -120,3 +120,10 @@ Author self-review: single-mode fix before publication; credentials remain0600,
 old package/source-bound inactive journal retained, no recursive permission edits.
 Actual UID33 subprocess access is part of new CI, not local executor evidence.
 Owner repair and delivery/revoke remain pending.
+
+Owner resolution: cached-release repair0755/content_changed=false,then original
+a86 activation completes sender_started/notification_pilot_active UID130,
+sender_active=true/linking_preserved=true/historical_replay=false. Cutoff1792583817
+(21Oct14:56:57MSK). No repeat activation. Actual delivery/native button/revoke remain.
+Source17261061 strict runtime7UID33 tests/0skips and both PHP source jobs SUCCESS;
+Context39595204430/Review39595203810 SUCCESS including native Connect DB.

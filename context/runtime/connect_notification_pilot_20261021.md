@@ -23,15 +23,22 @@ employee status and existing private link using a read-only DB connection; it do
 not create users, links, grants or opt-in preferences. Siteadmin/service/test-type
 accounts are refused; use the ordinary employee previously linked by the owner.
 
-## Current owner recovery
+## Current owner acceptance
 
-The first a86 activation rolled back on staged-directory EACCES. Do not repeat
-activation unchanged or replace its source-bound journal. See
-[verified incident and guarded access repair](connect_notification_pilot_access_20261021.md).
-Then reuse a86 with explicit --pilot-userid 130; this avoids the interactive TTY
-path and the earlier PuTTY read/paste problem. Delivery acceptance remains pending.
+Owner repair and activation are now accepted: notification_pilot_active, UID130,
+sender_active=true, historical_replay=false, linking_preserved=true.
+[Receipt](connect_notification_pilot_owner_20261021.json). Do not repeat activation
+or directory repair. Next: Native delivery acceptance below; a real new task must
+be created after21Oct14:56:57MSK cutoff. Actual Telegram delivery/revoke are pending.
 
-## Activation
+## Earlier owner recovery (completed)
+
+The first a86 activation rolled back on staged-directory EACCES. The owner
+completed the [guarded repair](connect_notification_pilot_access_20261021.md) and
+reactivated the same a86 with explicit --pilot-userid 130. The source-bound journal
+was retained. This historical recovery is complete; delivery acceptance remains pending.
+
+## Initial activation procedure (already completed)
 
 Copy the PYZ supplied in chat to `/home/aduk/` using WinSCP. In SSH run these as
 individual commands. Installation does not repeat the Academy upgrade, cold backup,

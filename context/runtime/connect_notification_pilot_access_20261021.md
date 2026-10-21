@@ -1,6 +1,14 @@
 # Notification pilot: staged release access refusal, 21Oct2026
 
-## Owner evidence
+## Resolution
+
+Owner exact guarded repair succeeded (0755/content unchanged), then original a86
+activation reached sender_started and notification_pilot_active for UID130.
+[Receipt](connect_notification_pilot_owner_20261021.json). Do not rerun the recovery
+command below on the active pilot; its old-current guard will refuse. Only real
+new-task delivery/native access/revoke acceptance remain.
+
+## Initial owner evidence
 
 Frozen a86e2080 PYZ SHA d06b88dc081028ce860774fbbe290dadb1c7a55bef82bd1ae135de8a5bd1ad33 verified.
 Activation for numeric Moodle UID130 reached receiver_switch and refused

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "evidence": "owner_terminal_report_not_independent_agent_SSH",
+  "source_commit": "a86e208029b6104150e85d0e90384f84da214c22",
+  "source_fix_in_repository": "172610616d91539a6725d27c1ac62fa83f4e963b",
+  "source_fix_deployed": false,
+  "pilot_userids": [
+    130
+  ],
+  "repair": {
+    "phase": "staged_release_access_repaired",
+    "mode": "0755",
+    "content_changed": false
+  },
+  "activation": {
+    "phase": "notification_pilot_active",
+    "notify_since": 1792583817,
+    "notify_since_utc": "2026-10-21T11:56:57Z",
+    "notify_since_msk": "2026-10-21T14:56:57+03:00",
+    "sender_active": true,
+    "historical_replay": false,
+    "linking_preserved": true,
+    "schema_upgraded": false,
+    "business_data_restored": false
+  },
+  "timestamp_note": "notify_since is the event cutoff, not an independently measured activation completion time",
+  "remaining": [
+    "new_authorized_task_for_UID130_after_cutoff_and_opt_in",
+    "actual_Telegram_provider_delivery",
+    "native_button_access_with_employee_session",
+    "revoke_then_new_event_no_future_delivery"
+  ],
+  "browser_CA_trust": "separate_open_item_owner_resumed_Telegram_without_hostname_migration",
+  "subagents": 0,
+  "agent_provider_sends": false
+}

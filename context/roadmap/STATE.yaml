@@ -2,41 +2,25 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_notification_pilot
-stage_label: Notification activation refused on staged code permissions; guarded recovery next
+stage_label: One-employee notification pilot active; actual delivery and revoke acceptance next
 current_activity: >-
-  Owner resumed Telegram; frozen a86 UID130 activation refused at receiver_switch EACCES.
-  Old receiver restored active, notify inactive. CLI umask077 created release0700;
-  reproduction RED then safe-mkdir fix GREEN. Owner receipt and guarded cached-release
-  repair: context/runtime/connect_notification_pilot_access_20261021.md.
-  Latest plan is repair non-current exact a86 directory only then same-package retry.
-  Browser trust remains open; owner explicitly deferred it rather than changing hostname.
-  Owner prioritizes whole-office access without DHCP/router/per-device changes.
-  Avahi stuck REGISTERING1 after09:43MSK restart;restart recovery13:23MSK yields RUNNING2,
-  persistent ustar.local publisher established and local resolve192.168.1.60.
-  Receipt context/runtime/academy_mdns_owner_20261021.json;underlying hang trigger unknown.
-  Office browser/phone trust acceptance remains open; Telegram resumed at owner request.
-  Latest shared6ad87278 owner says do the next-stage notification pilot after accepted test-employee link.
-  Neutral start,canonical recipient fence and worker subject fence implemented;936r16/50local skips PASS.
-  Frozen a86e2080:Context39573641861/Review39573641220 SUCCESS;UID33 pilot6/nativeMoodle127/633 PASS.
-  No schema/version migration,no historical replay;operator selects one active linked pilot UID.
-  First owner notification activation attempted and rolled back; notify remains off.
-  Latest owner: ordinary test employee linked in Academy,Telegram ID matches.
-  Plain /start generic instructions are current receiver UX,not link-status check.
-  Personal link confirmed by owner; no repeat required. Revoke/notify pending.
-  Owner21Oct confirms refresh SHA4d922d29 OK,10candidates,node9TLS_VERIFIED,
-  egress_refreshed and telegram_https=verified,subscription_URL_saved=false.
-  Frozen activation27117c8c completes scope_verified,bridge_active,
-  receiver_active=true,linking_enabled=true,notifications_enabled=false,
-  application_upgraded=false,business_data_restored=false.
-  Receipt context/runtime/connect_activation_owner_20261021.json.
-  This supersedes earlier transport failure/rollback and owner-activation-pending notes.
-  Existing application2000/theme0202 payload1e8a8819,552files/99tables,scheduled cron
-  and canonical HTTPS already owner accepted. Parent chain preparation accepted.
-  Do not repeat upgrade,backups,cron,HTTPS,rights,egress refresh or bridge activation.
-  Next own Academy /local/ustar/connect.php to Telegram claim, same-session confirm
-  and revoke; successful personal linking now reported, revoke still pending.
-  Notifications remain off; external HTTPS/MiniApp/full native handoff later.
-  Agent has no independent server access;main unmerged;0subagents.
+  Owner verified cached a86 release bytes and repaired directory access0755;
+  the same frozen a86 package completed notification_pilot_active for Moodle UID130.
+  sender_active=true, linking_preserved=true, historical_replay=false,
+  schema_upgraded=false, business_data_restored=false. Event cutoff1792583817
+  is21Oct14:56:57MSK, not measured activation completion time.
+  Receipt context/runtime/connect_notification_pilot_owner_20261021.json.
+  Do not repeat access repair, activation, app upgrade, permissions, cron, HTTPS,
+  egress refresh or account linking. Personal opt-in and Tasks already saved.
+  Next: authorized new task after cutoff to UID130, real Telegram delivery,
+  native button with own employee session, then revoke and no future delivery.
+  New source17261061 fixes umask077 staging;sourcePHP8.2/8.3 and runtime SUCCESS,
+  actual UID33 pilot7tests/0skips PASS. Context39595204430/Review39595203810 SUCCESS.
+  The deployed worker/tool remain a86; source172 fix is not separately deployed.
+  Existing app2000/theme0202,552files/99tables and managed cron/HTTPS preserved;
+  the one-file pilot policy overlay is active, version/schema unchanged.
+  Browser/phone CA trust remains separate and unresolved;owner resumed Telegram
+  without changing ustar.local. Main unmerged;no agent SSH/provider sends;0subagents.
 
 next_task: INTEGRATIONS-01
 ready_tasks: []
@@ -76,7 +60,7 @@ production:
     independent_probe: false
     previous_receipt: context/runtime/connect_academy_owner_install_20261020.json
   historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
-  status: owner_CLI_browser_HTTPS_cron_bridge_and_employee_link_accepted_notify_pilot_owner_pending_export_restore_still_waiting
+  status: owner_CLI_HTTPS_cron_link_and_notify_pilot_active_delivery_revoke_browser_trust_export_restore_pending
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
@@ -229,9 +213,10 @@ development_candidate:
   files: 552
   tables: 99
 receiver_runtime:
-  source_commit: b01bd942f7f748d9510618a79489643b42cbd690
-  receipt: context/runtime/connect_receiver_release_20261019.json
-  runbook: context/runtime/connect_receiver_delivery_20261019.md
+  source_commit: a86e208029b6104150e85d0e90384f84da214c22
+  initial_source_commit: b01bd942f7f748d9510618a79489643b42cbd690
+  receipt: context/runtime/connect_notification_pilot_owner_20261021.json
+  runbook: context/runtime/connect_notification_pilot_20261021.md
   server1_deployed: true
   server1_install_receipt: owner19Oct1841MSK_installed_services_not_started
   server1_configured: true
@@ -240,9 +225,10 @@ receiver_runtime:
   server1_started: true
   live_ack: owner_reports_working_19Oct1859MSK
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
-  next: owner_readonly_Academy_preflight_before_release_bridge_activation
+  next: owner_new_task_UID130_Telegram_native_button_then_revoke_acceptance
 
 connect_academy_preparation:
+  kind: historical_19Oct_preflight_snapshot_superseded_by_current_owner_receipts
   plan: context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md
   candidate_version: 2026101905
   production_version: 2026100204

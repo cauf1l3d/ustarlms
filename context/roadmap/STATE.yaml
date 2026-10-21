@@ -2,18 +2,24 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_notification_pilot
-stage_label: Server mDNS recovered; office browser acceptance before notification pilot
+stage_label: Notification activation refused on staged code permissions; guarded recovery next
 current_activity: >-
+  Owner resumed Telegram; frozen a86 UID130 activation refused at receiver_switch EACCES.
+  Old receiver restored active, notify inactive. CLI umask077 created release0700;
+  reproduction RED then safe-mkdir fix GREEN. Owner receipt and guarded cached-release
+  repair: context/runtime/connect_notification_pilot_access_20261021.md.
+  Latest plan is repair non-current exact a86 directory only then same-package retry.
+  Browser trust remains open; owner explicitly deferred it rather than changing hostname.
   Owner prioritizes whole-office access without DHCP/router/per-device changes.
   Avahi stuck REGISTERING1 after09:43MSK restart;restart recovery13:23MSK yields RUNNING2,
   persistent ustar.local publisher established and local resolve192.168.1.60.
   Receipt context/runtime/academy_mdns_owner_20261021.json;underlying hang trigger unknown.
-  Next office Wi-Fi phone and PC without hosts browser acceptance,then frozena86 pilot.
+  Office browser/phone trust acceptance remains open; Telegram resumed at owner request.
   Latest shared6ad87278 owner says do the next-stage notification pilot after accepted test-employee link.
   Neutral start,canonical recipient fence and worker subject fence implemented;936r16/50local skips PASS.
   Frozen a86e2080:Context39573641861/Review39573641220 SUCCESS;UID33 pilot6/nativeMoodle127/633 PASS.
   No schema/version migration,no historical replay;operator selects one active linked pilot UID.
-  Notifications stay off on server until reviewed frozen package and explicit owner execution.
+  First owner notification activation attempted and rolled back; notify remains off.
   Latest owner: ordinary test employee linked in Academy,Telegram ID matches.
   Plain /start generic instructions are current receiver UX,not link-status check.
   Personal link confirmed by owner; no repeat required. Revoke/notify pending.

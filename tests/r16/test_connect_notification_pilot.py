@@ -50,6 +50,23 @@ class Pilot(unittest.TestCase):
         self.calls.clear()
     def engine(self):
         return x.Pilot(self.link,self.reference,self.archive,self.digest,self.policy_after,host=self.host,progress=lambda _:None)
+    def test_service_can_read_staged_release_with_private_umask(self):
+        op=self.engine();previous=os.umask(0o077)
+        try:result=op.activate(12)
+        finally:os.umask(previous)
+        self.assertEqual('notification_pilot_active',result['phase'])
+        release=self.inst.current()
+        self.assertEqual(0o755,release.stat().st_mode&0o777)
+        for name in ('receiver.pyz','notifications.pyz'):
+            self.assertEqual(0o644,(release/name).stat().st_mode&0o777)
+        if os.environ.get('USTAR_REQUIRE_ACTIVATION_OWNER')=='1':
+            import subprocess
+            result=subprocess.run(['/usr/bin/python3','-I','-c',
+                "from pathlib import Path; assert Path('receiver.pyz').read_bytes() == b'neutral start receiver'; "
+                "assert Path('notifications.pyz').read_bytes()"],cwd=release,user=33,group=33,extra_groups=[],
+                capture_output=True,text=True,check=False)
+            self.assertEqual(0,result.returncode,result.stderr)
+        self.assertEqual(0o600,(self.inst.config/'telegram.token').stat().st_mode&0o777)
     def test_activation_fences_both_sides_preserves_cursor_and_link(self):
         op=self.engine();result=op.activate(12)
         self.assertEqual('notification_pilot_active',result['phase']);self.assertTrue(self.notify_active)

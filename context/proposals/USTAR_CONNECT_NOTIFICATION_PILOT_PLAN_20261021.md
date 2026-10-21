@@ -51,6 +51,31 @@ or require repeat binding. The notifier never polls Telegram updates.
 
 ## Progress
 
+## Owner activation refusal: release traversal under umask077
+
+Owner21Oct14:35MSK: frozen a86e2080 for Moodle UID130 reached receiver_switch;
+the new probe could not open current/receiver.pyz (EACCES). Automatic recovery
+reported inactive; subsequent status proves old receiver active, notifier inactive.
+The no-poll Telegram/link-scope probe passed immediately before the handoff.
+
+Plan (same authorized inline work, no subagents):
+- [x] Reproduce staging with production umask077 and require service-readable
+  release0755, code0644, while telegram.token remains0600. On the strict UID33
+  runner, actually open receiver and notification code after dropping privilege.
+- [x] Set release mode before atomic publication using the existing safe mkdir
+  helper, run targeted transactions and the full r16 suite, then publish PR checks.
+- [x] Document a guarded repair of the exact inactive a86 cache directory only,
+  with verified bundle/release bytes and active old receiver; preserve token,
+  journal, current pointer and private file permissions. Reuse the owner's frozen
+  package after repair rather than migrating its source-bound inactive journal.
+
+Ruling: preserve the existing source-bound inactive recovery journal and frozen
+owner package. Only the non-current immutable public-code directory may become
+0755; never recursively chmod the installation or change credentials. Cost if
+wrong: refuse recovery rather than bypass unknown filesystem/state drift.
+
+## Original source pilot progress
+
 Task1 RED:existing native127tests/632assertions failed exactly3pilot assertions on
 run39564060236/job119103437342. Context39564060144 failed stale generated manifests.
 New Python RED observed4copy/fence assertions and2config/probe missing interfaces.
@@ -80,3 +105,18 @@ strict evidence. Author self-review complete;0subagents/no independent reviewer.
 Runbook `context/runtime/connect_notification_pilot_20261021.md`;source remains
 frozen while subsequent documentation records receipt. Operator activation and
 actual personal new-task delivery/revoke are the only next pilot acceptance steps.
+
+Access regression RED0755!=0700 then GREEN;9targeted tests PASS. Actual local UID33
+drop is not permitted by executor; the strict runner test is required, not claimed
+as local evidence. Frozen owner recovery command validated on exact a86 bytes: normal/idempotent,
+code drift, extra file, symlink, wrong current and writable parent cases PASS.
+Full initial system-Python suite:937tests/50skips,3MCP import errors because MCP
+was absent in executor. Recreated exact tests/stage dependency environment;
+full suite rerun pending.
+
+Full final r16 suite in exact dependency venv:937tests/50environment skips PASS.
+Context checker and diff whitespace PASS. Recovery command6fixture cases PASS.
+Author self-review: single-mode fix before publication; credentials remain0600,
+old package/source-bound inactive journal retained, no recursive permission edits.
+Actual UID33 subprocess access is part of new CI, not local executor evidence.
+Owner repair and delivery/revoke remain pending.

@@ -1,5 +1,17 @@
 # USTAR вход в проект
 
+**21Oct14:35MSK — notification activation refused; old receiver recovered.**
+Owner resumed Telegram after DNS recovery; browser CA trust remains a separate open item.
+Frozen a86/UID130 reaches receiver_switch; new probe cannot read receiver.pyz (EACCES).
+Old receiver active/polling, pilot inactive, notify off. Reproduced CLI umask077
+leaving release directory0700; safe mkdir0755 before publication fixes staging.
+Nine targeted tests and full937r16/50environment skips PASS; strict new CI pending.
+Owner recovery reuses exact a86 journal/package after verifying cached public-code
+bytes/metadata and changing only its non-current release directory to0755.
+[Incident and guarded command](context/runtime/connect_notification_pilot_access_20261021.md), [owner receipt](context/runtime/connect_notification_pilot_access_owner_20261021.json).
+Live repair/new-task delivery/revoke pending; no repeated app/rights/TLS/egress setup.
+0subagents/self-review; no agent SSH/provider sends; main unmerged.
+
 **21Oct13:23MSK — server mDNS publication recovered; office browser acceptance next.**
 Owner needs whole office LAN access without DHCP/router or per-device settings.
 Avahi GetState1=REGISTERING after09:43MSK restart; new persistent publisher waited.

@@ -108,7 +108,7 @@ class Pilot:
         if target.exists():require(self.i.release_files(target)==values,'notification_release_collision')
         else:
             with tempfile.TemporaryDirectory(prefix='.notify-stage-',dir=target.parent) as td:
-                folder=Path(td)/'release';folder.mkdir(mode=0o755)
+                folder=Path(td)/'release';connect_install.mkdir(folder)
                 for name,raw in values.items():
                     p=folder/name
                     if p.parent!=folder:connect_install.mkdir(p.parent)

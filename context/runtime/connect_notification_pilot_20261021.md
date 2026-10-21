@@ -23,6 +23,14 @@ employee status and existing private link using a read-only DB connection; it do
 not create users, links, grants or opt-in preferences. Siteadmin/service/test-type
 accounts are refused; use the ordinary employee previously linked by the owner.
 
+## Current owner recovery
+
+The first a86 activation rolled back on staged-directory EACCES. Do not repeat
+activation unchanged or replace its source-bound journal. See
+[verified incident and guarded access repair](connect_notification_pilot_access_20261021.md).
+Then reuse a86 with explicit --pilot-userid 130; this avoids the interactive TTY
+path and the earlier PuTTY read/paste problem. Delivery acceptance remains pending.
+
 ## Activation
 
 Copy the PYZ supplied in chat to `/home/aduk/` using WinSCP. In SSH run these as

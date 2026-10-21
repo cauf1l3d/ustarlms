@@ -7,10 +7,13 @@ sender_active=true,linking_preserved=true,historical_replay=false,schema_upgrade
 Event cutoff21Oct14:56:57MSK is notify_since,not activation completion time.
 [Owner receipt](../context/runtime/connect_notification_pilot_owner_20261021.json). Do not repeat access repair or activation.
 Owner screenshot confirms Telegram Tasks notification and native button, event12:10UTC.
-Owner then reports disabling, assigning a new task, and no Telegram message. The
-wording does not distinguish notification opt-out from full link revoke; ask once.
-Native button/task access also not explicitly confirmed; do not mark full pilot
-acceptance or broad rollout complete. No repeat task/send required for observed delivery.
+Owner assigned a new task after revoke and observed no new Telegram message.
+Readonly repeatable-read SQL now proves revoked1/linked0 while preferences enabled
+and Tasks selected: full link-revoke negative test accepted,not merely opt-out.
+Backend pilot link/delivery/revoke accepted; native button/task access remains open.
+Current recipient link is revoked. Resume only through the employee's normal
+same-Telegram two-sided flow if further use is desired; no root reactivation.
+No repeat accepted delivery/revoke test or broader rollout claim.
 Source fix17261061:both PHP jobs and runtime SUCCESS;strict UID33 pilot7/0skips PASS.
 [CI receipt](../context/runtime/connect_notification_pilot_access_ci_20261021.json);Context39595204430/Review39595203810 SUCCESS,including native Connect DB.
 Active worker/tool remain a86;new source fix is not deployed. CA/browser trust

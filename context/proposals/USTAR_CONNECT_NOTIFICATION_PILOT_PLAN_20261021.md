@@ -134,3 +134,11 @@ no Telegram message. Record observed suppression; do not infer full link revoke
 from ambiguous notification wording. Clarify preference versus link action and
 native button/task access before full acceptance or broader rollout. No repeat
 positive test, no agent API sends and no production change needed for clarification.
+
+Owner readonly repeatable-read SQL resolves ambiguity: UID130 Telegram links
+revoked1/linked0, notification preferences enabled=true and Tasks selected.
+Thus full link-revoke negative test accepted with owner report of new task/no
+message. Backend link/delivery/revoke pilot accepted; current recipient revoked.
+Native button/task access is the only remaining personal UI check. Resume own
+same-Telegram link if needed; no root activation or repeat delivery/revoke test.
+Broader rollout/MiniApp and browser CA trust remain separate.

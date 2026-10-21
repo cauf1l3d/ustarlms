@@ -30,9 +30,12 @@ sender_active=true, historical_replay=false, linking_preserved=true.
 [Receipt](connect_notification_pilot_owner_20261021.json). Do not repeat activation
 or directory repair. Screenshot confirms a real Tasks message, event12:10UTC,
 with native button. Owner reports no message for a new task after disabling.
-The wording does not distinguish preference opt-out from full link revoke;
-clarification and native button/task access remain pending. Do not repeat the
-already observed positive delivery or call the entire pilot accepted.
+Readonly repeatable-read SQL confirms revoked1/linked0 while enabled=true and
+Tasks selected. Full link revoke/no future new-event delivery test is accepted
+from owner observation and SQL; backend pilot accepted. Recipient currently
+revoked. Native button/task access remains pending. Resume the same Telegram
+account through native two-sided link flow if desired; do not rerun root
+activation, repair, or already accepted positive/revoke tests.
 
 ## Earlier owner recovery (completed)
 

@@ -1306,6 +1306,12 @@
       "sha256": "1d5d800171ec7af69573bc0b811b706247525a0eb9520ddfd61bdd16fd4957ab"
     },
     {
+      "path": "context/runtime/connect_private_parent_chain_20261021.md",
+      "domain": "runtime",
+      "size": 1671,
+      "sha256": "0de6c8fc80027dad47e804767efa640e4a0c8995770bfe9c6ab509bd94d8599a"
+    },
+    {
       "path": "context/runtime/connect_private_parent_prepare_20261021.md",
       "domain": "runtime",
       "size": 4211,

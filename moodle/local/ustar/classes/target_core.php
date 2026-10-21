@@ -518,12 +518,14 @@ final class target_core {
 
     public static function acknowledge_notification(int $notificationid, int $userid): void {
         global $DB;
-        $notification = $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], '*', MUST_EXIST);
-        if ((string)$notification->status !== 'acknowledged') {
-            $notification->status = 'acknowledged';
-            $notification->ackat = time();
-            $notification->timemodified = time();
-            $DB->update_record('local_ustar_notifications', $notification);
-        }
+        $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], 'id', MUST_EXIST);
+        // Re-evaluate the receipt in the UPDATE, including after a concurrent writer commits.
+        // A stale whole-record update could erase the first ACK or restore unrelated fields.
+        $now = time();
+        $DB->execute('UPDATE {local_ustar_notifications}
+            SET status = :acknowledged, ackat = COALESCE(ackat, :firsttime), timemodified = :modified
+            WHERE id = :id AND userid = :userid AND (status <> :already OR ackat IS NULL)',
+            ['acknowledged' => 'acknowledged', 'firsttime' => $now, 'modified' => $now,
+                'id' => $notificationid, 'userid' => $userid, 'already' => 'acknowledged']);
     }
 }

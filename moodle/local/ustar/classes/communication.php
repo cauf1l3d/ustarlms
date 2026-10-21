@@ -428,12 +428,12 @@ final class communication {
             if (!$DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
                 throw new \invalid_parameter_exception('Local notifications are unavailable');
             }
-            $record = $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], '*', MUST_EXIST);
-            if ((string)$record->status === 'unread') {
-                $record->status = 'read';
-                $record->timemodified = time();
-                $DB->update_record('local_ustar_notifications', $record);
-            }
+            $DB->get_record('local_ustar_notifications', ['id' => $notificationid, 'userid' => $userid], 'id', MUST_EXIST);
+            // Reading never downgrades a concurrently committed acknowledgement.
+            $DB->execute('UPDATE {local_ustar_notifications} SET status = :readstatus, timemodified = :modified
+                WHERE id = :id AND userid = :userid AND status = :unread',
+                ['readstatus' => 'read', 'modified' => time(), 'id' => $notificationid,
+                    'userid' => $userid, 'unread' => 'unread']);
             return;
         }
         $record = $DB->get_record(

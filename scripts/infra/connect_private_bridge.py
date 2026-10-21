@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import socket
 import stat
+import struct
 import sys
 import zipfile
 from contextlib import contextmanager,ExitStack
@@ -112,22 +113,28 @@ class Readiness:
             import academy_https
             self.lib=academy_https.load_helper()
         return self.lib
-    def secure_parent(self,path,reason):
+    def secure_parent(self,path,reason,allowed=None):
+        unsafe=[]
         for parent in (path,*path.parents):
             if not parent.is_relative_to(self.root):break
             st=parent.lstat()
             if not (stat.S_ISDIR(st.st_mode) and not parent.is_symlink()
                     and st.st_uid==self.uid and not st.st_mode&0o022):
-                error=Refusal(reason)
-                error.details={'path':str(parent),'uid':st.st_uid,'gid':st.st_gid,'mode':oct(stat.S_IMODE(st.st_mode))}
-                raise error
+                detail={'path':str(parent),'uid':st.st_uid,'gid':st.st_gid,'mode':oct(stat.S_IMODE(st.st_mode))}
+                accepted=stat.S_ISDIR(st.st_mode) and not parent.is_symlink() and (
+                    st.st_uid,st.st_gid,stat.S_IMODE(st.st_mode)) in (allowed or {}).get(str(parent),())
+                unsafe.append((detail,accepted))
+        if any(not accepted for _,accepted in unsafe):
+            error=Refusal(reason);error.details={**next(d for d,a in unsafe if not a),
+                'unsafe_parents':[d for d,_ in unsafe]};raise error
+        return not unsafe
     def read_private(self,path,limit=16384):
         self.secure_parent(path.parent,'unsafe_private_parent')
         st=path.lstat()
         require(stat.S_ISREG(st.st_mode) and st.st_nlink==1 and st.st_uid==self.uid
             and stat.S_IMODE(st.st_mode)==0o600 and st.st_size<=limit,'unsafe_private_control')
         return self.library().read_file(path,self.uid,True,limit)
-    def check(self,allow_parent_preparation=False):
+    def check(self,allow_parent_preparation=False,resume_parents=None):
         ref=self.ref
         require(isinstance(ref,dict) and set(ref)=={'schema','tool_commit','payload_commit','files'}
             and ref['schema']==1 and re.fullmatch('[a-f0-9]{40}',ref['tool_commit'])
@@ -139,16 +146,14 @@ class Readiness:
         code=self.https.p.old.config.parent;web=code/'public'
         # Default remains readonly/refusing. Only the explicit preparation mode
         # accepts the exact owner-reported UID/GID33:33/0755 directory candidate.
-        protected=True
-        try:self.secure_parent(code,'unsafe_include_parent')
-        except Refusal:
-            if not allow_parent_preparation:raise
+        allowed={}
+        if allow_parent_preparation:
             require(code==self.root/'opt/ustar/data/moodle/public','unexpected_include_parent')
-            self.secure_parent(code.parent,'unsafe_include_parent')
-            st=code.lstat()
-            require(stat.S_ISDIR(st.st_mode) and not code.is_symlink()
-                and (st.st_uid,st.st_gid,stat.S_IMODE(st.st_mode))==(33,33,0o755),'unsafe_include_parent')
-            protected=False
+            allowed={str(code):[(33,33,0o755)],str(code.parent):[(33,33,0o775)]}
+            for path,states in (resume_parents or {}).items():
+                require(path in allowed,'unexpected_include_parent')
+                allowed[path].extend((s['uid'],s['gid'],s['mode']) for s in states)
+        protected=self.secure_parent(code,'unsafe_include_parent',allowed)
         new_paths=[code/'.ustar-connect',self.inst.config/'bridge.key',self.inst.config/'bridge.ca',
             *[self.inst.units/('ustar-connect-'+n+'.service.d') for n in ('receiver','probe')]]
         require(not any(os.path.lexists(p) for p in new_paths),'existing_private_bridge_path')
@@ -183,10 +188,11 @@ class Readiness:
 
 
 class ParentPreparation:
-    """Change only the one measured directory UID, with a durable before-image.
+    """Protect the measured directory chain with durable inode-bound before-images.
 
     All readiness checks precede the mutation. No recursive chown/chmod, file
     content writes, service operations, key generation or bridge activation.
+    Only the measured ancestor33:33/0775 additionally loses group write.
     Existing deployment locks serialize prepare/restore with the managed writers.
     """
     def __init__(self,reader):
@@ -205,16 +211,26 @@ class ParentPreparation:
         self.reader.library().atomic(self.state,(json.dumps(state,sort_keys=True)+'\n').encode())
     def load(self):
         value=json.loads(self.reader.read_private(self.state),object_pairs_hook=unique)
-        require(isinstance(value,dict) and set(value)=={'schema','path','before','phase'}
-            and value['schema']==1 and value['path']==str(self.code)
+        require(isinstance(value,dict) and value.get('schema') in (1,2)
+            and set(value)==({'schema','path','before','phase'} if value['schema']==1 else
+                {'schema','path','before','phase','ancestor_before','ancestor_after'})
+            and value['path']==str(self.code)
             and value['phase'] in ('preparing','prepared','restoring','restored'),'invalid_parent_transaction')
-        old=value['before']
-        require(isinstance(old,dict) and set(old)=={'dev','ino','uid','gid','mode','xattrs'}
+        def valid(old,uid,mode):
+            require(isinstance(old,dict) and set(old)=={'dev','ino','uid','gid','mode','xattrs'}
             and all(type(old[k]) is int for k in ('dev','ino','uid','gid','mode'))
-            and (old['uid'],old['gid'],old['mode'])==(33,33,0o755)
+            and (old['uid'],old['gid'],old['mode'])==(uid,33,mode)
             and isinstance(old['xattrs'],dict)
             and all(isinstance(k,str) and isinstance(v,str) and re.fullmatch('[a-f0-9]{64}',v)
                     for k,v in old['xattrs'].items()),'invalid_parent_before_image')
+        valid(value['before'],33,0o755)
+        if value['schema']==2:
+            old,new=value['ancestor_before'],value['ancestor_after']
+            valid(old,33,0o775);valid(new,0,0o755)
+            require(all(new[k]==old[k] for k in ('dev','ino','gid'))
+                and set(new['xattrs'])==set(old['xattrs'])
+                and all(new['xattrs'][k]==v for k,v in old['xattrs'].items()
+                        if k!='system.posix_acl_access'),'invalid_parent_before_image')
         return value
     def report(self,phase,before,after):
         return {'phase':phase,'path':str(self.code),
@@ -225,49 +241,112 @@ class ParentPreparation:
             'directory_ownership_changed':self.changed}
     def prepare(self):return self.run(False)
     def restore(self):return self.run(True)
+    def ancestor_target(self,fd,before):
+        target={**before,'uid':0,'mode':0o755,'xattrs':dict(before['xattrs'])}
+        # chmod narrows an extended POSIX ACL's mask, preserving named entries.
+        # Project that exact metadata change before persisting transaction intent.
+        name='system.posix_acl_access'
+        if name in before['xattrs']:
+            acl=bytearray(os.getxattr(fd,name))
+            require(len(acl)>=4 and (len(acl)-4)%8==0 and struct.unpack_from('<I',acl)[0]==2,
+                'unsupported_parent_ACL')
+            tags=[struct.unpack_from('<H',acl,i)[0] for i in range(4,len(acl),8)]
+            mask=0x10 if 0x10 in tags else 0x04
+            require(tags.count(mask)==1,'unsupported_parent_ACL')
+            for i in range(4,len(acl),8):
+                if struct.unpack_from('<H',acl,i)[0]==mask:struct.pack_into('<H',acl,i+2,5)
+            target['xattrs'][name]=hashlib.sha256(acl).hexdigest()
+        return target
+    def variants(self,before,after):
+        return (before,{**before,'uid':after['uid']},after,{**before,'uid':after['uid'],'mode':before['mode']})
     def run(self,restore):
         self.changed=False
         reader=self.reader
         require(reader.uid==0,'root_parent_preparation_required')
         require(reader.https.p.old.config.parent==self.code,'unexpected_include_parent')
-        # This also refuses a live include/drop-in/key or non-legacy HTTPS state.
-        # Never make a live secret's parent writable during restore.
-        reader.check(allow_parent_preparation=True)
-        reader.secure_parent(self.code.parent,'unsafe_include_parent')
-        fd=os.open(self.code,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW|os.O_CLOEXEC)
-        try:
-            current=self.snapshot(fd);path=self.code.lstat()
-            require((current['dev'],current['ino'])==(path.st_dev,path.st_ino),'include_parent_replaced')
-            if os.path.lexists(self.state):
-                state=self.load();old=state['before'];new={**old,'uid':0}
-                require(current in (old,new),'include_parent_metadata_drift')
-                allowed={'preparing':(old,new),'prepared':(new,),'restoring':(old,new),'restored':(old,)}
-                require(current in allowed[state['phase']],'include_parent_unexpected_owner')
-                require(restore or state['phase']!='restoring','resume_parent_restore_required')
-            else:
+        state=self.load() if os.path.lexists(self.state) else None
+        resume={}
+        if state:
+            if state['schema']==2:
+                resume[str(self.code.parent)]=self.variants(state['ancestor_before'],state['ancestor_after'])
+            require(restore or state['phase']!='restoring','resume_parent_restore_required')
+        # All application/HTTPS/receiver prerequisites and the ENTIRE chain are
+        # checked before any metadata change. Unknown parents are never repaired.
+        reader.check(allow_parent_preparation=True,resume_parents=resume)
+        with ExitStack() as stack:
+            # Walk directory descriptors, refusing symlinks at every component.
+            # Retain every inode until completion to detect path replacement.
+            flags=os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW|os.O_CLOEXEC
+            fd=os.open(reader.root,flags);stack.callback(os.close,fd)
+            opened={reader.root:fd};path=reader.root
+            for part in self.code.relative_to(reader.root).parts:
+                fd=os.open(part,flags,dir_fd=fd);stack.callback(os.close,fd)
+                path=path/part;opened[path]=fd
+            def identities():
+                for path,descriptor in opened.items():
+                    a=os.fstat(descriptor);b=path.lstat()
+                    require(not path.is_symlink() and (a.st_dev,a.st_ino)==(b.st_dev,b.st_ino),
+                        'include_parent_replaced')
+            identities()
+            current=self.snapshot(opened[self.code]);ancestor=self.snapshot(opened[self.code.parent])
+            if state is None:
                 require(not restore,'parent_before_image_missing')
-                if current['uid']==0:return self.report('include_parent_already_protected',current,current)
+                if current['uid']==0:
+                    require(ancestor['uid']==0 and not ancestor['mode']&0o022,'unsafe_include_parent')
+                    return self.report('include_parent_already_protected',current,current)
                 require((current['uid'],current['gid'],current['mode'])==(33,33,0o755),'unsafe_include_parent')
+                state={'schema':1,'path':str(self.code),'before':current,'phase':'preparing'}
+                if ancestor['uid']!=0 or ancestor['mode']&0o022:
+                    require((ancestor['uid'],ancestor['gid'],ancestor['mode'])==(33,33,0o775),'unsafe_include_parent')
+                    state.update(schema=2,ancestor_before=ancestor,
+                        ancestor_after=self.ancestor_target(opened[self.code.parent],ancestor))
                 reader.library().directory(self.base,0o700,reader.uid,reader.root)
                 require(not any(self.base.iterdir()),'unknown_parent_transaction_file')
-                old=current;new={**old,'uid':0}
-                state={'schema':1,'path':str(self.code),'before':old,'phase':'preparing'}
-            target=old if restore else new
-            # Persist intent before fchown; interrupted operations resume only
-            # with the exact inode/mode/group/xattrs and one known owner state.
+            old=state['before'];new={**old,'uid':0}
+            entries=[(self.code,old,new)]
+            if state['schema']==2:entries.insert(0,(self.code.parent,state['ancestor_before'],state['ancestor_after']))
+            else:reader.secure_parent(self.code.parent,'unsafe_include_parent')
+            observed={str(p):self.snapshot(opened[p]) for p,_,_ in entries}
+            for p,before,after in entries:
+                require(observed[str(p)] in self.variants(before,after),'include_parent_metadata_drift')
+            # Accept only states reachable in the ordered forward/reverse walk.
+            def stages(reverse):
+                value={str(p):after if reverse else before for p,before,after in entries};result=[dict(value)]
+                for p,before,after in (reversed(entries) if reverse else entries):
+                    target=before if reverse else after;key=str(p)
+                    fields=('mode','uid') if reverse else ('uid','mode')
+                    for field in fields:
+                        if value[key][field]!=target[field]:
+                            value[key]={**value[key],field:target[field]}
+                            if field=='mode':value[key]['xattrs']=target['xattrs']
+                            result.append(dict(value))
+                return result
+            valid={'preparing':stages(False),'prepared':[stages(False)[-1]],
+                'restoring':stages(True),'restored':[stages(True)[-1]]}
+            require(observed in valid[state['phase']],'include_parent_unexpected_owner')
             state['phase']='restoring' if restore else 'preparing';self.save(state)
-            require(self.snapshot(fd)==current,'include_parent_metadata_drift')
-            path=self.code.lstat()
-            require((current['dev'],current['ino'])==(path.st_dev,path.st_ino),'include_parent_replaced')
-            if current!=target:
-                os.fchown(fd,target['uid'],-1);self.changed=True
-                os.fsync(fd);reader.library().sync_directory(self.code.parent)
-            after=self.snapshot(fd)
-            require(after==target,'include_parent_metadata_drift')
+            reports=[]
+            for path,before,after in (reversed(entries) if restore else entries):
+                reader.secure_parent(self.code.parent.parent,'unsafe_include_parent')
+                identities();fd=opened[path];target=before if restore else after
+                require(all(self.snapshot(opened[p])==observed[str(p)] for p,_,_ in entries),
+                    'include_parent_metadata_drift')
+                for field in (('mode','uid') if restore else ('uid','mode')):
+                    value=self.snapshot(fd)
+                    if value[field]!=target[field]:
+                        self.changed=True
+                        if field=='uid':os.fchown(fd,target['uid'],-1)
+                        else:os.fchmod(fd,target['mode'])
+                        os.fsync(fd);reader.library().sync_directory(path.parent)
+                require(self.snapshot(fd)==target,'include_parent_metadata_drift')
+                observed[str(path)]=target
+                reports.append({'path':str(path),'before':{k:before[k] for k in ('uid','gid','mode')},
+                    'after':{k:target[k] for k in ('uid','gid','mode')}})
+            identities()
             if not restore:reader.secure_parent(self.code,'unsafe_include_parent')
             state['phase']='restored' if restore else 'prepared';self.save(state)
-            return self.report('include_parent_'+state['phase'],old,after)
-        finally:os.close(fd)
+            return {**self.report('include_parent_'+state['phase'],old,old if restore else new),
+                'directories':reports}
 
 
 def bundle(path):
@@ -310,8 +389,8 @@ def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     modes=parser.add_mutually_exclusive_group()
     modes.add_argument('--check',action='store_true',help='Read only private delivery prerequisites; no activation')
-    modes.add_argument('--prepare-include-parent',action='store_true',help='Protect only exact measured UID33 parent; no activation')
-    modes.add_argument('--restore-include-parent',action='store_true',help='Restore recorded parent UID only before bridge setup')
+    modes.add_argument('--prepare-include-parent',action='store_true',help='Protect the two measured UID33 parents; no activation')
+    modes.add_argument('--restore-include-parent',action='store_true',help='Restore recorded parent ownership/mode only before bridge setup')
     args=parser.parse_args(argv)
     if not any((args.check,args.prepare_include_parent,args.restore_include_parent)):
         print('{"phase":"plan_only","host_access":false}');return 0

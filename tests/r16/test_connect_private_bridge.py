@@ -113,6 +113,16 @@ class ReadonlyDelivery(unittest.TestCase):
         self.ref['files'].pop(x.SECURITY_FILES[0])
         with self.assertRaisesRegex(x.Refusal,'invalid_transport_reference'):self.check.check()
 
+    def test_refusal_reports_entire_unsafe_chain_before_any_mutation(self):
+        code=self.manager.p.old.config.parent
+        paths=(code,code.parent,code.parent.parent)
+        for path in paths:path.chmod(0o777)
+        with self.assertRaises(x.Refusal) as caught:self.check.check()
+        details=getattr(caught.exception,'details',{})
+        self.assertIn('unsafe_parents',details)
+        self.assertEqual([str(p) for p in paths],[p['path'] for p in details['unsafe_parents']])
+        self.assertTrue(all((p.stat().st_mode&0o777)==0o777 for p in paths))
+
 
 @unittest.skipUnless(os.geteuid()==0,'actual UID33 ownership fixture requires root')
 class ParentPreparation(ReadonlyDelivery):
@@ -233,6 +243,101 @@ class ParentPreparation(ReadonlyDelivery):
         operation.prepare();os.chown(self.code,33,33)
         with self.assertRaisesRegex(x.Refusal,'include_parent_unexpected_owner'):operation.prepare()
         self.assertEqual(33,self.code.stat().st_uid)
+
+    def test_measured_ancestor_and_code_are_prepared_and_restored_together(self):
+        ancestor=self.code.parent;os.chown(ancestor,33,33);ancestor.chmod(0o775)
+        os.setxattr(ancestor,'user.fixture',b'ancestor metadata')
+        before={str(p):(p.read_bytes(),p.stat().st_uid,p.stat().st_gid,p.stat().st_mode)
+                for p in ancestor.rglob('*') if p.is_file()}
+        operation=x.ParentPreparation(self.check);report=operation.prepare()
+        self.assertEqual('include_parent_prepared',report['phase'])
+        for path in (ancestor,self.code):
+            self.assertEqual((0,33,0o755),(path.stat().st_uid,path.stat().st_gid,path.stat().st_mode&0o7777))
+        self.assertEqual(2,len(report['directories']))
+        self.assertEqual(b'ancestor metadata',os.getxattr(ancestor,'user.fixture'))
+        self.assertEqual(before,{str(p):(p.read_bytes(),p.stat().st_uid,p.stat().st_gid,p.stat().st_mode)
+                                for p in ancestor.rglob('*') if p.is_file()})
+        self.assertFalse(operation.prepare()['directory_ownership_changed'])
+        self.assertEqual('include_parent_restored',operation.restore()['phase'])
+        self.assertEqual((33,33,0o775),(ancestor.stat().st_uid,ancestor.stat().st_gid,ancestor.stat().st_mode&0o7777))
+        self.assertEqual(33,self.code.stat().st_uid)
+
+    def test_chain_resumes_after_each_ownership_and_mode_boundary(self):
+        ancestor=self.code.parent
+        for target_call in range(1,4):
+            with self.subTest(boundary=target_call):
+                os.chown(ancestor,33,33);ancestor.chmod(0o775)
+                os.chown(self.code,33,33);self.code.chmod(0o755)
+                operation=x.ParentPreparation(self.check)
+                if operation.state.exists():operation.state.unlink()
+                real_chown=os.fchown;real_chmod=os.fchmod;count=0
+                def wrapped(function):
+                    def apply(*args):
+                        nonlocal count
+                        result=function(*args);count+=1
+                        if count==target_call:raise OSError('interrupted after filesystem mutation')
+                        return result
+                    return apply
+                with patch.object(os,'fchown',side_effect=wrapped(real_chown)),patch.object(os,'fchmod',side_effect=wrapped(real_chmod)):
+                    with self.assertRaises(OSError):operation.prepare()
+                self.assertEqual('include_parent_prepared',operation.prepare()['phase'])
+                state=json.loads(operation.state.read_bytes())
+                self.assertEqual(33,state['ancestor_before']['uid'])
+                self.assertEqual(0o775,state['ancestor_before']['mode'])
+                self.assertEqual('include_parent_restored',operation.restore()['phase'])
+
+    def test_other_unsafe_ancestors_refuse_all_changes_and_report_all(self):
+        ancestor=self.code.parent;os.chown(ancestor,33,33);ancestor.chmod(0o775)
+        ancestor.parent.chmod(0o777)
+        operation=x.ParentPreparation(self.check)
+        with self.assertRaisesRegex(x.Refusal,'unsafe_include_parent') as caught:operation.prepare()
+        self.assertEqual(3,len(caught.exception.details['unsafe_parents']))
+        self.assertFalse(operation.state.exists())
+        self.assertEqual((33,33),(self.code.stat().st_uid,ancestor.stat().st_uid))
+
+    def test_chain_restore_interruption_and_ancestor_drift_are_guarded(self):
+        ancestor=self.code.parent;os.chown(ancestor,33,33);ancestor.chmod(0o775)
+        operation=x.ParentPreparation(self.check);operation.prepare()
+        real_chmod=os.fchmod
+        def interrupted(fd,mode):
+            real_chmod(fd,mode);raise OSError('restore chmod acknowledgement lost')
+        with patch.object(os,'fchmod',side_effect=interrupted):
+            with self.assertRaises(OSError):operation.restore()
+        self.assertEqual('restoring',json.loads(operation.state.read_bytes())['phase'])
+        self.assertEqual('include_parent_restored',operation.restore()['phase'])
+        operation.prepare();os.setxattr(ancestor,'user.fixture',b'ADMIN_CHANGE')
+        with self.assertRaisesRegex(x.Refusal,'include_parent_metadata_drift'):operation.restore()
+        self.assertEqual(0,ancestor.stat().st_uid)
+
+    def test_ancestor_acl_mask_is_narrowed_and_restored_without_changing_named_entries(self):
+        import struct
+        ancestor=self.code.parent;os.chown(ancestor,33,33);ancestor.chmod(0o775)
+        # An extended ACL with group-write in its mask and a named group entry.
+        raw=struct.pack('<I',2)+b''.join(struct.pack('<HHI',tag,perm,ident)
+            for tag,perm,ident in [(1,7,0xffffffff),(4,7,0xffffffff),(8,7,34),(16,7,0xffffffff),(32,5,0xffffffff)])
+        os.setxattr(ancestor,'system.posix_acl_access',raw)
+        before=os.getxattr(ancestor,'system.posix_acl_access')
+        operation=x.ParentPreparation(self.check);operation.prepare()
+        after=os.getxattr(ancestor,'system.posix_acl_access')
+        expected=bytearray(before);struct.pack_into('<H',expected,4+3*8+2,5)
+        self.assertEqual(bytes(expected),after)
+        operation.restore()
+        self.assertEqual(before,os.getxattr(ancestor,'system.posix_acl_access'))
+
+    def test_chain_inode_swap_after_intent_refuses_before_any_ownership_write(self):
+        ancestor=self.code.parent;os.chown(ancestor,33,33);ancestor.chmod(0o775)
+        operation=x.ParentPreparation(self.check);original=self.check.lib.atomic
+        displaced=ancestor.with_name('displaced-moodle')
+        def swapped(path,raw,*args):
+            result=original(path,raw,*args)
+            if not displaced.exists():
+                ancestor.rename(displaced);ancestor.mkdir(mode=0o775);os.chown(ancestor,33,33);ancestor.chmod(0o775)
+            return result
+        with patch.object(self.check.lib,'atomic',side_effect=swapped):
+            with self.assertRaisesRegex(x.Refusal,'include_parent_replaced'):operation.prepare()
+        self.assertEqual(33,ancestor.stat().st_uid)
+        self.assertEqual(33,displaced.stat().st_uid)
+        self.assertEqual(33,(displaced/'public').stat().st_uid)
 
 
 class BuildPackage(unittest.TestCase):

@@ -1,5 +1,11 @@
 # USTAR инструкции агентам
 
+**21Oct — activation rolled back; Telegram egress recovery next.**
+Owner probe transport_unavailable; recovery_state=inactive, old receiver active.
+Root cause boundary is current VPN outbound connectivity; refresh helper prepared
+with7local tests PASS, no live refresh yet. See context/runtime/connect_egress_failure_20261021.md.
+Do not repeat rights/app/TLS preparation.0subagents.
+
 **21Oct — parent preparation accepted; link activation package ready.**
 Source27117c8c25b7dda28385c787f79e99636af10216: Review39530156361 and
 Context39530156402 SUCCESS. Source PHP8.2/8.3, connect-runtime/connect-db PASS;

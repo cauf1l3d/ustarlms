@@ -2,8 +2,11 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_private_bridge_delivery
-stage_label: Parent preparation accepted; frozen link activation ready for owner
+stage_label: Activation rolled back; Telegram egress node refresh pending
 current_activity: >-
+  Latest owner activation27117c8c rolled back inactive after Telegram transport failure;
+  old receiver active. Egress refresh helper prepared,7local tests PASS; owner run pending.
+  See context/runtime/connect_egress_failure_20261021.md.
   Latest: owner parent chain accepted; activation source27117c8c Review39530156361 and
   Context39530156402 SUCCESS. Artifact12315336864 frozen; activation/live link pending.
   Supersedes earlier parent/implementation pending statements below.

@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 24143,
-      "sha256": "6f2ecdfb208e9e5fbc61729a617e35ed5ecdfac05d830205667c54f5d0954884"
+      "size": 24853,
+      "sha256": "74cbbc4a8abee8ab7df360b469f3df21bf280d28b79c58afcc20f782f0a117ff"
     },
     {
       "path": "context/agents/astra.md",
@@ -666,8 +666,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2441,
-      "sha256": "eeb160fc2ed282b7d274ba0d7a27ee1a57b70a79899f0d9eb747f7bbfccef260"
+      "size": 2378,
+      "sha256": "4c0382a49e5d23c323573ee7a50abd35002f782ef2f869fdaf93848169038686"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
@@ -716,6 +716,12 @@
       "domain": "proposals",
       "size": 2833,
       "sha256": "255af0c9fc7bb529ef26e63f4d4c64f05a53c4a066deda2af9ac30e65bb55a51"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_ACTIVATION_PROGRESS_20261021.md",
+      "domain": "proposals",
+      "size": 2273,
+      "sha256": "f54059d8dbcc4af4879f32fab91fea71db398fdb284a463709fab750625d0fb0"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md",
@@ -1308,8 +1314,8 @@
     {
       "path": "context/runtime/connect_private_parent_chain_20261021.md",
       "domain": "runtime",
-      "size": 2302,
-      "sha256": "1e75a959a2d8d13ee64931f60f68c994a33cd4c3596b692ca9a9611b0013ca28"
+      "size": 2841,
+      "sha256": "b4026a599c3852d9c9fc2d358f29fd6e89f4b86b826d6b2ff7f55d384f58c01a"
     },
     {
       "path": "context/runtime/connect_private_parent_prepare_20261021.md",
@@ -2220,8 +2226,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 38091,
-      "sha256": "cb6a12e75e64564277d65f54fdf7a998d8b342b1ca521d479fd991401958c203"
+      "size": 38804,
+      "sha256": "04e85a8db3f152fff5d9b4f7c0faaace848dbbe02a53f94ba06d1ee29275a1a4"
     },
     {
       "path": "context/tasks/backlog.yaml",

@@ -167,6 +167,15 @@ jobs:
         with:
           name: connect-private-bridge-check
           path: artifacts/private-bridge-check/
+      - name: Coordinated link activation with actual UID33 and recoverable file handoffs
+        run: |
+          sudo -n env USTAR_REQUIRE_ACTIVATION_OWNER=1 python3 -m unittest tests.r16.test_connect_bridge_activation -v
+          python3 scripts/infra/build_connect_bridge_activation.py --commit HEAD --output-dir artifacts/bridge-activation
+          python3 -I artifacts/bridge-activation/ustar-bridge-activate-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-bridge-activation
+          path: artifacts/bridge-activation/
       - name: Build exact-source Academy readonly preflight and verify plan mode
         run: |
           python3 scripts/infra/build_connect_readiness.py --commit HEAD --output-dir artifacts/connect-readiness

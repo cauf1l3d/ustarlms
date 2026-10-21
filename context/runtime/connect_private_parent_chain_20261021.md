@@ -34,3 +34,13 @@ not a whole-CI-success claim. Local readonly/config8tests PASS; full local suite
 PYZ SHA25676562298c6e5b8ac17d485a8189dfb376fb32798021da46f9b85cb1551b05428.
 Owner command: install root600, verify this SHA, run --prepare-include-parent.
 This supersedes the e583 execution instructions; activation remains pending.
+
+## Owner acceptance, 21 October 2026
+
+After the direct nonrecursive root ownership/go-w correction of /opt/ustar and
+/opt/ustar/data, owner ran exact87fe3da7/SHA76562298 successfully.
+phase=include_parent_prepared; /moodle33:33/0775→0:33/0755 and
+/moodle/public33:33/0755→0:33/0755; recursive=false; configuration_changed=false;
+services_restarted=false; key_generated=false; bridge_activated=false.
+This closes parent preparation. Do not repeat chmod/chown, diagnostic packages,
+application2000 update, HTTPS cutover or cron repair.

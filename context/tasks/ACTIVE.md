@@ -1,5 +1,13 @@
 # Активные задачи USTAR
 
+**21Oct — права родителей приняты владельцем; реализация активации.**
+Exact87fe3da7/SHA76562298:include_parent_prepared,оба UID0/GID33/0755,
+без рекурсии/config changes/restart/key/bridge. Внешние /opt/ustar и /data
+исправлены прямыми командами. Не повторять подготовку прав/upgrade/cron/HTTPS.
+Продолжается coordinated activation installer, отдельный link.claim-only key,
+managed include/credentials/receiver switch;[ledger](../proposals/USTAR_CONNECT_ACTIVATION_PROGRESS_20261021.md).
+Source/tests написаны;CI и live activation ещё pending.0subagents.
+
 **21Oct — исправление всей измеренной цепочки родителей готово к применению.**
 Owner frozen e583 отказал на `/opt/ustar/data/moodle`33:33/0775 после busy;
 изменений не было. Повторять e583 бессмысленно. Новый frozen source87fe3da7,

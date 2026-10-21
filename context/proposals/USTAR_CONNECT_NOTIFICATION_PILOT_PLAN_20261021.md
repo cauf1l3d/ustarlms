@@ -1,0 +1,70 @@
+# Telegram notification pilot after accepted employee link
+
+Authority: owner said «делай» after the next-stage plan in
+https://chatgpt.com/share/6ad87278-9c7c-83eb-93f9-2e7830686113 .
+Last meaningful agent response21Oct10:39:35MSK starts neutral /start and a separate
+notification key. Source d39dc0a has three deliberately failing native pilot tests.
+Owner activation27117c8c and ordinary test-employee link are accepted;do not repeat
+parent/app/cron/HTTPS/egress/bridge preparation. No subagents or agent SSH/provider sends.
+
+## Intended result and constraints
+
+Only a named,currently linked ordinary Academy employee may receive newly created
+opted-in canonical notifications through the existing delivery queue. First native
+exercise is tasks. Existing roles/capabilities,link revision,personal preferences,
+quiet hours,cooldown and uncertain-send semantics remain authoritative. No old queue
+backfill,bulk broadcast,MiniApp or remote Moodle login. /start must not claim unlinked
+or require repeat binding. The notifier never polls Telegram updates.
+
+## Tasks and interfaces
+
+1. Canonical recipient fence before enqueue/lease/begin;malformed/empty pilot lists
+   fail closed. Independent worker Telegram-subject fence before API send. Strict
+   pilot configuration with linking/onboarding false;read-only identity/scope probe.
+   Neutral /start and fixed trusted native section button,without raw notice content.
+2. Stdlib root transaction against accepted active bridge:one exact PHP notification
+   policy overlay,independent256bit notification-only key,existing private include,
+   per-service systemd credentials/probe and immutable receiver code handoff.
+   Require explicit pilot employee ID and read-only current employment/link lookup.
+   Save protected before-images and device/file metadata before any write;preserve
+   token/SQLite cursor,canonical HTTPS/renewal and application version2000.
+3. Default PLAN_ONLY;explicit activate/status/deactivate with old managed locks.
+   Each write is allowed only against recorded before/after states. Interrupted
+   activation restores config/receiver ownership,never business DB/journal content.
+   Disable stops sender before restoring false/default settings and removing key.
+4. Native PHP/PG pilot/revoke/access/fresh-cutoff tests;real file/UID metadata and
+   partial activation/lost-process/drift recovery;immutable package/hash and CI.
+   Owner then opts in as test employee,assigns a new task,checks Telegram and Academy,
+   revokes link and confirms no future send. No automated provider test message.
+
+## Rulings
+
+- Existing approved context/progress files remain the execution ledger;no separate
+  plan workspace is introduced. Owner forbids subagents,so review is author self-review.
+- A single file overlay without schema/version migration preserves the accepted
+  version2000 cron/HTTPS contracts. Its exact baseline and target hashes are frozen
+  separately;legacy installers do not ship this overlay. Unknown application
+  deltas still refuse. Cost if wrong:runtime compatibility;native Moodle/PG and
+  strict deployed-byte guards are required before operator delivery.
+- Notification button opens the fixed native tasks workspace,not a raw stored
+  private action URL and not provider login. Cost:one extra navigation to a task.
+
+## Progress
+
+Task1 RED:existing native127tests/632assertions failed exactly3pilot assertions on
+run39564060236/job119103437342. Context39564060144 failed stale generated manifests.
+New Python RED observed4copy/fence assertions and2config/probe missing interfaces.
+Task1 targeted GREEN:40notification/chat-link/probe tests locally. Native GREEN pending.
+Task2 transaction/package implemented below. No production changes made.
+
+Task1/2 local GREEN:936r16/50environment skips;8package/transaction cases PASS.
+Missing tempfile import in new builder test corrected;final suite is green.
+Ruling: read-only egress/scope probe runs before receiver stop; a fresh outage
+refuses before writes. Rollback restarts the previous receiver from verified bytes
+without requiring fresh network ACK;that runtime verifies identity before polling.
+Cost if wrong is delayed availability,not unverified sends. Preflight failure test
+observed RED stop/restart,then GREEN with the original receiver never stopped.
+Ruling: short bounded retries apply only to the no-nonce forbidden-scope probe
+while PHP include handoff propagates;never retry a lease/begin/send. RED→GREEN verified.
+Pilot source defaults to PLAN_ONLY;test UID is read before global locks. Source
+packet hashes/strict native CI and operator execution remain pending.

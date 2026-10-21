@@ -4,7 +4,7 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: owner_application2000_scheduled_cron_browser_accepted_private_bridge_delivery_next
+  stage: owner_employee_link_accepted_notification_pilot_verification
   development_version: 2026102000
   production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
   production_effective_version: 2026102000
@@ -17,11 +17,12 @@ current_connect_checkpoint:
   include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
   parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
   parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
-  next: link_start_UX_correction_and_revoke_acceptance_then_separate_notify
+  notification_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
+  next: strict_CI_and_frozen_one_employee_notification_pilot_then_owner_task_delivery_and_revoke
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
-  bot_activation: pending
+  bot_activation: owner_accepted_link_only_notification_pilot_pending
 tasks:
 - id: DOC-01
   title: Консолидация main и инженерного контекста

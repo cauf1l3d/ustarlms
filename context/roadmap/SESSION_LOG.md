@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+**21Oct — продолжение notification pilot после принятой привязки.**
+Shared6ad87278 прочитан до owner «делай» и agent10:39:35MSK. Не повторять
+права/установку/HTTPS/egress/bridge; обычный тестовый сотрудник уже связан.
+[План и ledger](../proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md).
+/start теперь нейтрален; сообщение даёт фиксированную кнопку native Academy.
+Canonical UID fence до enqueue/lease/begin + независимый worker TG-subject fence.
+Отдельный notification-only256bit key,новая временная отсечка,один явный pilot UID,
+личный opt-in;никакой массовой/исторической рассылки,MiniApp или provider-login.
+Root transaction сохраняет link/token/cursor/HTTPS,один точный PHP overlay без
+schema/version upgrade,managed credentials/probe/receiver handoff и durable recovery.
+Локально936r16/50environment skips PASS;8package/transaction tests PASS.
+Новый strict UID33/native Moodle/CI и frozen owner package ещё pending.
+Server1/provider агентом не менялись,notify остаётся off;0subagents/self-review.
+
 **21Oct — personal employee link accepted by owner.**
 Academy shows linked, Telegram ID matches on ordinary test employee account.
 Plain /start gives generic connection instructions: source receiver dispatch does

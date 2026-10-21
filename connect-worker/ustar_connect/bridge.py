@@ -107,10 +107,16 @@ class BridgeClient:
         nonce only after that scope check. A generic HTTP denial is not a proof.
         This intentionally does not use a challenge, identity or business payload.
         """
+        return self._probe_forbidden('registration.options','link-scope-v1')
+
+    def probe_notification_scope(self) -> None:
+        return self._probe_forbidden('link.claim','notification-scope-v1')
+
+    def _probe_forbidden(self,operation,probe):
         # Nonempty JSON object also survives PHP associative canonicalization.
         # Deliberately invalid business fields ensure an overbroad key still fails
         # payload validation before nonce consumption or business dispatch.
-        signed = sign_request('registration.options', {'probe':'link-scope-v1'}, key_id=self._key_id,
+        signed = sign_request(operation, {'probe':probe}, key_id=self._key_id,
                               secret_hex=self._secret, now=int(time.time()))
         request = Request(self._endpoint, data=signed.body, headers=signed.headers, method='POST')
         try:

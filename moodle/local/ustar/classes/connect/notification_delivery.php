@@ -22,7 +22,8 @@ final class notification_delivery {
     private static function eligible(\stdClass $notice, ?\stdClass $delivery = null): ?\stdClass {
         global $DB, $CFG;
         $tenant = self::channel();
-        if (!self::enabled() || !$tenant || (int)$notice->timecreated < $CFG->ustar_connect_notify_since
+        if (!self::enabled() || !$tenant || !self::recipient_enabled((int)$notice->userid)
+                || (int)$notice->timecreated < $CFG->ustar_connect_notify_since
                 || !notification_policy::permitted($notice)) { return null; }
         $preferences = notification_preferences::for_user((int)$notice->userid);
         if (!$preferences['enabled'] || !in_array(notification_policy::category($notice->eventtype), $preferences['categories'], true)
@@ -35,6 +36,18 @@ final class notification_delivery {
                 || ($delivery && ((int)$delivery->connlinkid !== (int)$link->id
                     || (int)$delivery->connrevision !== (int)$link->revision))) { return null; }
         return $link;
+    }
+    /** A configured pilot list is checked at enqueue, lease and again at begin. */
+    private static function recipient_enabled(int $userid): bool {
+        global $CFG;
+        if (!property_exists($CFG, 'ustar_connect_notify_userids')) { return true; }
+        $ids = $CFG->ustar_connect_notify_userids;
+        if (!is_array($ids) || !array_is_list($ids) || count($ids) > 10
+                || count(array_unique($ids, SORT_REGULAR)) !== count($ids)) { return false; }
+        foreach ($ids as $id) {
+            if (!is_int($id) || $id < 1) { return false; }
+        }
+        return in_array($userid, $ids, true);
     }
     /** Called only while the NEW canonical notification writer owns its transaction. */
     public static function enqueue(int $notificationid): void {

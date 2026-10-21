@@ -59,7 +59,7 @@ class Deployment:
         return {'sha':sha(self.lib.read_file(p)),**self.metadata(p)}
     def before(self,s,name):return s['files'][name]['before']
     def after(self,s,name):return s['files'][name]['after']
-    def guard(self,s,active=False):
+    def guard(self,s,active=False,notification_pilot=False):
         for name in self.paths:
             allowed=[self.after(s,name)] if active else [self.before(s,name),self.after(s,name)]
             require(self.current(name) in allowed,'activation_'+name+'_drift')
@@ -89,13 +89,14 @@ class Deployment:
             folder=self.i.units/(unit+'.d')
             if os.path.lexists(folder):
                 require(not folder.is_symlink() and folder.is_dir(),'receiver_override_drift')
-                allowed={'40-ustar-link.conf'} if unit in (SERVICE,PROBE) else set()
+                allowed={'40-ustar-link.conf'} if unit in (SERVICE,PROBE) else ({'50-ustar-notify-pilot.conf'} if notification_pilot else set())
                 require({p.name for p in folder.iterdir()}<=allowed,'receiver_override_drift')
         include=self.paths['include'].parent
         if os.path.lexists(include):
             require(not include.is_symlink() and include.is_dir()
                 and {p.name for p in include.iterdir()}<= {'bridge.php'},'private_include_drift')
-        require(not self.i.host.active('ustar-connect-notify.service'),'notification_activation_requires_separate_plan')
+        require(notification_pilot or not self.i.host.active('ustar-connect-notify.service'),
+            'notification_activation_requires_separate_plan')
     def bytes(self,name,side,s):
         raw=self.r.read_private(self.base/(name+'.'+side),131072)
         record=s['files'][name][side]

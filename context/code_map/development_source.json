@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "62350b42d221afe37ab2c428da9072dcb23a53ac",
+    "moodle/local/ustar": "19c05e641cbe5b0410c3af3455894db43116ba3a",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
@@ -301,7 +301,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/notification_delivery.php",
-      "sha256": "7eaee1981e5d3230e6bcb5104ceda3a16aed288a9be09876fdcbf46fd160d265"
+      "sha256": "2f6c0c8b25941ac435237fc9df4c4de738b885f467ccbab80b9988c0bb42e498"
     },
     {
       "path": "moodle/local/ustar/classes/connect/notification_policy.php",
@@ -1853,7 +1853,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_test.php",
-      "sha256": "396d720335b483f879f03bf9e0b12f6a6a13f1e0a0ff9a4c37f3521a14b717b3"
+      "sha256": "76a44391a74d500d4a1168778ef415f735b6bb0fea82ee06524f9f37b321c719"
     },
     {
       "path": "moodle/local/ustar/tests/connect_signup_test.php",

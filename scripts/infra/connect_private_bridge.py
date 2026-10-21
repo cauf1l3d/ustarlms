@@ -31,6 +31,10 @@ DROPIN=(b'# USTAR managed private chat-link credentials\n[Service]\n'
         b'LoadCredential=bridge.ca:/etc/ustar-connect/bridge.ca\n')
 LEGACY_HTTPS_SHA='42550fb1ab769dbcad7b604fe5e0619f6c7ac69fa5cbac46c624924f6895aa6e'
 PAYLOAD='1e8a8819f50785ebb4fb2640eeb9386c969d59d1'
+NOTIFICATION_POLICY='moodle/local/ustar/classes/connect/notification_delivery.php'
+# Legacy packages do not ship this overlay. The separate pilot package owns its
+# exact before/after bytes; version2000 and all bridge transport files stay frozen.
+REVIEWED_OVERLAYS={NOTIFICATION_POLICY:'2f6c0c8b25941ac435237fc9df4c4de738b885f467ccbab80b9988c0bb42e498'}
 SECURITY_FILES=('local/ustar/connect_bridge.php','local/ustar/classes/connect/bridge_auth.php',
     'local/ustar/classes/connect/bridge_http.php','local/ustar/classes/connect/bridge_service.php',
     'local/ustar/classes/connect/identity_service.php','local/ustar/classes/connect/link_management.php',
@@ -45,7 +49,7 @@ def verify_application_delta(repo, commit, overlays=None):
         if path.startswith(('moodle/local/ustar/tests/','moodle/theme/ustar/tests/')):
             continue
         raw=subprocess.check_output(['git','-C',str(repo),'show',commit+':'+path])
-        require((overlays or {}).get(path)==hashlib.sha256(raw).hexdigest(),
+        require((REVIEWED_OVERLAYS if overlays is None else overlays).get(path)==hashlib.sha256(raw).hexdigest(),
                 'unreviewed_application_delta')
 
 

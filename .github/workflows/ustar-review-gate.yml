@@ -186,6 +186,15 @@ jobs:
         run: sudo -n env USTAR_CONNECT_OWNERSHIP_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_delivery_readiness.py -v
       - name: Private include parent preparation changes only actual UID33 directory owner
         run: sudo -n env USTAR_REQUIRE_PRIVATE_PARENT_FIXTURE=1 python3 -m unittest tests.r16.test_connect_private_bridge.ParentPreparation -v
+      - name: Notification pilot preserves real UID33 policy and live link ownership
+        run: |
+          sudo -n env USTAR_REQUIRE_ACTIVATION_OWNER=1 python3 -m unittest tests.r16.test_connect_notification_pilot.Pilot -v
+          python3 scripts/infra/build_connect_notification_pilot.py --commit HEAD --output-dir artifacts/notification-pilot
+          python3 -I artifacts/notification-pilot/ustar-notify-pilot-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-notification-pilot
+          path: artifacts/notification-pilot/
       - name: Coordinated chat-link update package and paired file recovery
         run: |
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_chat_link_update.py -v

@@ -22,15 +22,26 @@ class Configuration:
     api: object
     bridge: object
     linking_enabled: bool = False
+    notification_subjects: tuple | None = None
 
 
-def load_config(path):
+def load_config(path,*,notification=False):
     try:
         value = json.loads(read_private(path,16384),object_pairs_hook=_unique)
         fields = {'bot_token_file','bot_username','state_directory','telegram_proxy','onboarding_enabled',
                   'bridge_endpoint','bridge_key_id','bridge_key_file','bridge_ca_file'}
+        if notification:fields=fields|{'notification_subjects'}
         if not isinstance(value,dict) or set(value) not in (fields, fields | {'linking_enabled'}):
             raise ValueError('invalid_configuration')
+        subjects=None
+        if notification:
+            subjects=value['notification_subjects']
+            if (not isinstance(subjects,list) or len(subjects)!=1
+                    or not isinstance(subjects[0],str) or not re.fullmatch('[1-9][0-9]{0,15}',subjects[0])
+                    or int(subjects[0])>=2**52 or value['onboarding_enabled'] is not False
+                    or value.get('linking_enabled',False) is not False):
+                raise ValueError('invalid_notification_configuration')
+            subjects=tuple(subjects)
         linking = value.get('linking_enabled', False)
         if type(linking) is not bool:
             raise ValueError('invalid_configuration')
@@ -41,13 +52,13 @@ def load_config(path):
         token = read_private(value['bot_token_file'],512).strip()
         api = TelegramClient(token,proxy=value['telegram_proxy'])
         bridge = None
-        if value['onboarding_enabled'] or linking:
+        if value['onboarding_enabled'] or linking or notification:
             key = read_private(value['bridge_key_file'],128).strip()
             ca = value['bridge_ca_file']
             if ca is not None:
                 ca = trusted_certificate(ca)
             bridge = BridgeClient(value['bridge_endpoint'],value['bridge_key_id'],key,ca_file=ca)
-        return Configuration(token.split(':',1)[0],username,directory,value['onboarding_enabled'],api,bridge,linking)
+        return Configuration(token.split(':',1)[0],username,directory,value['onboarding_enabled'],api,bridge,linking,subjects)
     except Exception:
         raise ValueError('configuration_invalid') from None
 

@@ -1,9 +1,14 @@
 schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
-stage: connect_private_bridge_delivery
-stage_label: Owner employee linking accepted; revoke and notification delivery pending
+stage: connect_notification_pilot
+stage_label: Employee link accepted; notification pilot implementation under verification
 current_activity: >-
+  Latest shared6ad87278 owner says do the next-stage notification pilot after accepted test-employee link.
+  Neutral start,canonical recipient fence and worker subject fence implemented;936r16/50local skips PASS.
+  Guarded root key/include/receiver handoff + one-file policy overlay;strict UID33/native CI pending.
+  No schema/version migration,no historical replay;operator selects one active linked pilot UID.
+  Notifications stay off on server until reviewed frozen package and explicit owner execution.
   Latest owner: ordinary test employee linked in Academy,Telegram ID matches.
   Plain /start generic instructions are current receiver UX,not link-status check.
   Personal link confirmed by owner; no repeat required. Revoke/notify pending.

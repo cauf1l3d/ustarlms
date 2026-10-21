@@ -10,8 +10,15 @@ SEVERITIES = {'normal','action','critical'}
 
 
 class NotificationWorker:
-    def __init__(self, api, bridge, *, bot_id, bot_username, clock=time.time):
+    def __init__(self, api, bridge, *, bot_id, bot_username, clock=time.time, allowed_subjects=None):
+        if allowed_subjects is not None and (not isinstance(allowed_subjects,(list,tuple))
+                or not 1<=len(allowed_subjects)<=10
+                or any(not isinstance(s,str) or not re.fullmatch('[1-9][0-9]{0,15}',s)
+                       or int(s)>=2**52 for s in allowed_subjects)
+                or len(set(allowed_subjects))!=len(allowed_subjects)):
+            raise ValueError('invalid_pilot_subjects')
         self.api,self.bridge,self.bot_id,self.bot_username,self.clock=api,bridge,bot_id,bot_username,clock
+        self.allowed_subjects=None if allowed_subjects is None else frozenset(allowed_subjects)
         self.checked=False
         self.stopped=None
         self.next_attempt=0
@@ -67,6 +74,12 @@ class NotificationWorker:
             return {'status':'unavailable'}
         outcome,ref,reason,retry='uncertain','','invalid_response',0
         self.next_attempt=now+1
+        if self.allowed_subjects is not None and permit['subject'] not in self.allowed_subjects:
+            try:
+                result=self.request('notification.finish',{**payload,'outcome':'failed','provider_ref':'',
+                    'reason':'forbidden','retry_after':'0'})
+                return {'status':'failed'} if result=={'status':'failed'} else {'status':'receipt_unconfirmed'}
+            except Exception:return {'status':'receipt_unconfirmed'}
         try:
             response=self.api.send_notification(int(permit['subject']),permit['category'],permit['severity'],permit['occurred_at'])
             chat=response.get('chat',{}) if isinstance(response,dict) else {}

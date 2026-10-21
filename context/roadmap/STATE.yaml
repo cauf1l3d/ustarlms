@@ -36,6 +36,8 @@ current_activity: >-
   without changing ustar.local. Main unmerged;no agent SSH/provider sends;0subagents.
 
 next_task: INTEGRATIONS-01
+live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
+following_connect_stage: CON02_shared_delivery_preferences_ack_and_Bitrix_adapter
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:

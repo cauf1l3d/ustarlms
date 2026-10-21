@@ -41,6 +41,8 @@ current_work:
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
   plan_status: not_written_pending_design_review
+  live_group_acceptance: deferred_by_owner_until_full_launch
+  following_stage: CON02_shared_delivery_preferences_ack_and_Bitrix_adapter
   accepted_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
   runbook: context/runtime/connect_notification_pilot_20261021.md
   CI_receipt: context/runtime/connect_notification_pilot_ci_20261021.json

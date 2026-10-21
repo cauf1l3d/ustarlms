@@ -5,6 +5,8 @@ source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
   stage: controlled_Telegram_rollout_design_review
+  live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
+  following_stage: CON02_shared_delivery_preferences_ack_and_Bitrix_adapter
   development_version: 2026102000
   production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
   production_effective_version: 2026102000

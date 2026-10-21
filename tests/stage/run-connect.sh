@@ -3,7 +3,7 @@ set -euo pipefail
 test "$PWD" = /stage
 test ! -e /stage/moodle
 test -d /source/.stage-input/connect-baseline/moodle/local/ustar
-trap 'code=$?; if [ "$code" -ne 0 ]; then tail -n 70 /artifacts/connect-*.log 2>/dev/null || true; fi; exit "$code"' EXIT
+trap 'code=$?; if [ "$code" -ne 0 ]; then tail -n 70 /artifacts/connect-*.log /artifacts/con02-ack-*.log 2>/dev/null || true; fi; exit "$code"' EXIT
 mkdir -p /artifacts /stage/data/stage_ /stage/data/fresh_ /stage/phpunitdata
 cp -a /opt/moodle /stage/moodle
 cp /source/tests/stage/config.php /stage/moodle/config.php

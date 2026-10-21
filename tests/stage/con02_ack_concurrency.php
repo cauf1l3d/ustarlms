@@ -57,6 +57,14 @@ function ack_finish_child(array $worker): void {
 
 $userid = (int)$DB->get_field('user', 'id', ['username' => 'admin'], MUST_EXIST);
 $table = $CFG->prefix.'local_ustar_notifications';
+// Moodle execute() intentionally rejects semicolons, including a PL/pgSQL body.
+// Only disposable barrier DDL uses this separate native connection; writers stay Moodle DB.
+$ddlconnection = pg_connect('host=db dbname=ustar_stage1 user=ustar_fixture', PGSQL_CONNECT_FORCE_NEW);
+if (!$ddlconnection) { throw new RuntimeException('Cannot connect disposable ACK barrier'); }
+function ack_ddl(string $sql): void {
+    global $ddlconnection;
+    if (!pg_query($ddlconnection, $sql)) { throw new RuntimeException('Cannot create/drop disposable ACK barrier'); }
+}
 $proof = [];
 foreach ([true, false] as $legacy) {
     foreach (['read', 'ack'] as $secondop) {
@@ -73,14 +81,14 @@ foreach ([true, false] as $legacy) {
         try {
             // First UPDATE holds the row while waiting for this parent-owned advisory lock.
             // The second request has read the old row before blocking on its UPDATE.
-            $DB->execute("CREATE FUNCTION $name() RETURNS trigger LANGUAGE plpgsql AS \$\$
+            ack_ddl("CREATE FUNCTION $name() RETURNS trigger LANGUAGE plpgsql AS \$\$
                 BEGIN
                     IF NEW.id = $id AND current_setting('application_name') = '$first' THEN
                         PERFORM pg_advisory_xact_lock($lock);
                     END IF;
                     RETURN NEW;
                 END \$\$");
-            $DB->execute("CREATE TRIGGER $name BEFORE UPDATE ON $table
+            ack_ddl("CREATE TRIGGER $name BEFORE UPDATE ON $table
                 FOR EACH ROW EXECUTE FUNCTION $name()");
             $DB->get_field_sql('SELECT pg_advisory_lock(:lock)', ['lock' => $lock]); $locked = true;
             $common = ['id' => $id, 'userid' => $userid, 'legacy' => $legacy];
@@ -105,11 +113,12 @@ foreach ([true, false] as $legacy) {
                 foreach ($pipes as $pipe) { if (is_resource($pipe)) { fclose($pipe); } }
                 proc_close($process);
             }
-            $DB->execute("DROP TRIGGER IF EXISTS $name ON $table");
-            $DB->execute("DROP FUNCTION IF EXISTS $name()");
+            ack_ddl("DROP TRIGGER IF EXISTS $name ON $table");
+            ack_ddl("DROP FUNCTION IF EXISTS $name()");
         }
     }
 }
+pg_close($ddlconnection);
 file_put_contents('/artifacts/con02-ack-concurrency.json', json_encode($proof, JSON_PRETTY_PRINT)."\n");
 echo "CON02_ACK_NATIVE_BASELINE_RED_CANDIDATE_GREEN=PASS cases=4\n";
 }

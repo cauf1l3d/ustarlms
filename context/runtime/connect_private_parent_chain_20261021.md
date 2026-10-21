@@ -23,3 +23,14 @@ Local runtime maps UID0 only; actual UID33 tests require the existing strict CI 
 No application/cron/HTTPS reinstall. Bridge activation remains the next deployment
 transaction; this preparation alone does not enable account linking or notifications.
 No subagents; no production changes by agent. Owner execution remains pending.
+
+## Frozen owner handoff
+
+Source87fe3da727650e5ab80db4f611088a34b1fd1c96; artifact12315050039,
+run39528533688/job118988969203. Exact16 strict actualUID33 tests PASS/0skips.
+Build and plan mode PASS. Whole run cancelled by subsequent docs-only head;
+not a whole-CI-success claim. Local readonly/config8tests PASS; full local suite
+903tests/50skips had3environment errors from missing mcp dependency.
+PYZ SHA25676562298c6e5b8ac17d485a8189dfb376fb32798021da46f9b85cb1551b05428.
+Owner command: install root600, verify this SHA, run --prepare-include-parent.
+This supersedes the e583 execution instructions; activation remains pending.

@@ -1,5 +1,19 @@
 # Индекс текущего контекста
 
+**21Oct — исправление всей измеренной цепочки родителей готово к применению.**
+Owner frozen e583 отказал на `/opt/ustar/data/moodle`33:33/0775 после busy;
+изменений не было. Повторять e583 бессмысленно. Новый frozen source87fe3da7,
+PYZ SHA76562298c6e5b8ac17d485a8189dfb376fb32798021da46f9b85cb1551b05428,
+artifact12315050039/run39528533688. Targeted strict UID33 gate16tests/0skips PASS;
+полный run отменён последующим docs-only коммитом, whole CI SUCCESS не заявлен.
+Explicit prepare обрабатывает `/moodle`33:33/0775→0:33/0755 и
+`/moodle/public`33:33/0755→0:33/0755,без рекурсии/restart/config writes.
+Все неизвестные ancestors проверяются до записи;inode-bound schema2 журнал,
+ACL/partial prepare/restore guards. Файл передан владельцу; execution pending.
+После include_parent_prepared продолжить coordinated activation installer,
+а не новый diagnostic package;его реализация ещё не завершена.
+Application2000/cron/backup/HTTPS приняты ранее и не переустанавливаются.0subagents.
+
 **21Oct — owner UID33 refusal учтён; guarded parent preparation проверена.**
 [Owner receipt](runtime/connect_private_bridge_parent_owner_20261021.json):frozen e4 SHA OK,
 unsafe_include_parent `/opt/ustar/data/moodle/public`,33:33/0755,configuration_changed=false.

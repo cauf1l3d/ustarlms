@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 22834,
-      "sha256": "10a2708efcf14e603413ea8c8f6c0e75a0349d73290b513627562f341a695fd6"
+      "size": 24143,
+      "sha256": "6f2ecdfb208e9e5fbc61729a617e35ed5ecdfac05d830205667c54f5d0954884"
     },
     {
       "path": "context/agents/astra.md",
@@ -1308,8 +1308,8 @@
     {
       "path": "context/runtime/connect_private_parent_chain_20261021.md",
       "domain": "runtime",
-      "size": 1671,
-      "sha256": "0de6c8fc80027dad47e804767efa640e4a0c8995770bfe9c6ab509bd94d8599a"
+      "size": 2302,
+      "sha256": "1e75a959a2d8d13ee64931f60f68c994a33cd4c3596b692ca9a9611b0013ca28"
     },
     {
       "path": "context/runtime/connect_private_parent_prepare_20261021.md",
@@ -2220,8 +2220,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 36782,
-      "sha256": "c7a569c61b800ffc922a345af592178b06a3203fda97b9082cfd74607d978774"
+      "size": 38091,
+      "sha256": "cb6a12e75e64564277d65f54fdf7a998d8b342b1ca521d479fd991401958c203"
     },
     {
       "path": "context/tasks/backlog.yaml",

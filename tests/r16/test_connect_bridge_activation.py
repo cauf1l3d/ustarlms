@@ -165,7 +165,7 @@ class Build(unittest.TestCase):
             names=('connect_bridge_activation','build_connect_bridge_activation','connect_private_bridge')
             for name in names:(repo/('scripts/infra/'+name+'.py')).write_bytes((ROOT/('scripts/infra/'+name+'.py')).read_bytes())
             subprocess.run(['git','-C',str(repo),'add','scripts/infra'],check=True)
-            subprocess.run(['git','-C',str(repo),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','activation fixture'],check=True)
+            subprocess.run(['git','-C',str(repo),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','--allow-empty','-qm','activation fixture'],check=True)
             a=b.build('HEAD',Path(td)/'a',repo=repo);c=b.build('HEAD',Path(td)/'b',repo=repo)
             self.assertEqual(a.read_bytes(),c.read_bytes());x.bundle(a)
             result=subprocess.run([sys.executable,'-I',str(a)],check=True,capture_output=True,text=True)

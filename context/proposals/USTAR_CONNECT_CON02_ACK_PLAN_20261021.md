@@ -119,9 +119,10 @@ docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.
 ## Проверка плана и handoff
 
 Пять Review Focus распределены по задачам1–4; schema/source compatibility явно
-отделена от live acceptance. Source review завершён; тесты/код этого плана ещё не
-написаны. Scope/план подлежат review владельцем; метод исполнения уже задан —
-самостоятельно, без субагентов. После review исполнить задачи по порядку.
+отделена от live acceptance. Владелец подтвердил план21Oct. Исполнение начато самостоятельно, без субагентов.
+Первый writer fix имеет local RED→GREEN; native own-session тесты добавлены до
+adapter implementation и должны сначала дать ожидаемый RED в CI. Остальные
+галочки и итоговая CI-квитанция обновляются только по полученным результатам.
 
 Telegram callback, новые channel preferences и Bitrix не считаются реализованными
 этим срезом. После A.1 идёт отдельный план A.2, затем B и C из scope-документа;

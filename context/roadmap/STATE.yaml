@@ -216,7 +216,7 @@ development_candidate:
   scope: direct private-chat link transport plus existing C4/C3;defaultOFF;HTTP origin blocks activation
   local_ustar_version: 2026102000
   theme_ustar_version: 2026100202
-  files: 552
+  files: 553
   tables: 99
 receiver_runtime:
   source_commit: a86e208029b6104150e85d0e90384f84da214c22

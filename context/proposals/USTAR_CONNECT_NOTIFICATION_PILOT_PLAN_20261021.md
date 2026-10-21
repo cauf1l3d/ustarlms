@@ -142,3 +142,12 @@ message. Backend link/delivery/revoke pilot accepted; current recipient revoked.
 Native button/task access is the only remaining personal UI check. Resume own
 same-Telegram link if needed; no root activation or repeat delivery/revoke test.
 Broader rollout/MiniApp and browser CA trust remain separate.
+
+Final owner acceptance: native button opened Academy and tasks;without session
+ordinary Academy login required. One-employee Tasks pilot accepted end to end:
+link,actual notification,native access,full revoke and no new-event delivery.
+Do not repeat those gates. Last readonly recipient link revoked;own same-TG
+relink can resume use. Next separate work is controlled Telegram rollout release
+and plan, then CON02 shared delivery/preferences/ACK and Bitrix provider decisions.
+Other notification categories,organization CA trust,external HTTPS/MiniApp and
+role actions are not claimed live accepted by this Tasks pilot.

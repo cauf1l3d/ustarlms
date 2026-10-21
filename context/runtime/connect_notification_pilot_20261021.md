@@ -32,10 +32,12 @@ or directory repair. Screenshot confirms a real Tasks message, event12:10UTC,
 with native button. Owner reports no message for a new task after disabling.
 Readonly repeatable-read SQL confirms revoked1/linked0 while enabled=true and
 Tasks selected. Full link revoke/no future new-event delivery test is accepted
-from owner observation and SQL; backend pilot accepted. Recipient currently
-revoked. Native button/task access remains pending. Resume the same Telegram
-account through native two-sided link flow if desired; do not rerun root
-activation, repair, or already accepted positive/revoke tests.
+from owner observation and SQL. Owner additionally confirms the native button
+opens Academy/tasks and requires ordinary native login when no session exists.
+One-employee Tasks pilot fully accepted. Recipient was revoked at last readonly
+snapshot. Resume the same Telegram through native two-sided link flow if desired;
+do not repeat root activation, repair, or accepted pilot tests. Broader rollout,
+other-category live acceptance, MiniApp and organization CA trust are separate.
 
 ## Earlier owner recovery (completed)
 

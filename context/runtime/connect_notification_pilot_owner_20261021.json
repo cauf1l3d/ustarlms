@@ -25,9 +25,7 @@
     "business_data_restored": false
   },
   "timestamp_note": "notify_since is the event cutoff, not an independently measured activation completion time",
-  "remaining": [
-    "native_button_access_with_employee_session"
-  ],
+  "remaining": [],
   "browser_CA_trust": "separate_open_item_owner_resumed_Telegram_without_hostname_migration",
   "subagents": 0,
   "agent_provider_sends": false,
@@ -38,8 +36,10 @@
     "visible_event_time_utc": "21.10.2026 12:10 UTC",
     "visible_message_ui_time": "15:11",
     "native_button_visible": true,
-    "native_button_access": "not_yet_explicitly_confirmed",
-    "screenshot_does_not_show_chat_header": true
+    "native_button_access": "owner_confirmed_Academy_and_tasks_access",
+    "screenshot_does_not_show_chat_header": true,
+    "unauthenticated_behavior": "native_Academy_login_required",
+    "native_access_owner_statement": "доступ к академии и к задачам работал, по нажатию направляла в академию, если не было логина просила войти под учетными данными"
   },
   "disable_acceptance": {
     "owner_statement": "отозвал уведомление назначил новую задачу, в телеграм не пришло уведомление",
@@ -68,7 +68,13 @@
       "interval_minutes": 1
     }
   },
-  "acceptance_status": "backend_pilot_delivery_and_full_link_revoke_accepted_native_button_pending",
-  "current_recipient_link_state": "revoked",
-  "resumption": "Employee may re-link the same Telegram account through native owner-session flow; keep a86 tool and UID130/subject fence, no root reactivation"
+  "acceptance_status": "one_employee_Tasks_pilot_accepted_link_delivery_native_login_and_full_revoke",
+  "current_recipient_link_state": "revoked_at_last_readonly_owner_snapshot",
+  "resumption": "Employee may re-link the same Telegram account through native owner-session flow; keep a86 tool and UID130/subject fence, no root reactivation",
+  "next_separate_scope": [
+    "controlled_Telegram_rollout_release_preserving_opt_in_and_revoke",
+    "organization_browser_CA_trust",
+    "CON02_delivery_preferences_ACK_and_Bitrix_provider_decisions",
+    "external_HTTPS_before_MiniApp_and_native_handoff_role_actions"
+  ]
 }

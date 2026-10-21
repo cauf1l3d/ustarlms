@@ -1,6 +1,6 @@
 # Активные задачи USTAR
 
-**21Oct — one-employee Telegram notification pilot active on server1.**
+**21Oct — one-employee Telegram Tasks pilot fully owner accepted.**
 Owner exact a86 cache repair reports0755/content_changed=false; same frozen a86
 activation completes sender_started,notification_pilot_active,pilot_userids=[130],
 sender_active=true,linking_preserved=true,historical_replay=false,schema_upgraded=false.
@@ -10,10 +10,12 @@ Owner screenshot confirms Telegram Tasks notification and native button, event12
 Owner assigned a new task after revoke and observed no new Telegram message.
 Readonly repeatable-read SQL now proves revoked1/linked0 while preferences enabled
 and Tasks selected: full link-revoke negative test accepted,not merely opt-out.
-Backend pilot link/delivery/revoke accepted; native button/task access remains open.
-Current recipient link is revoked. Resume only through the employee's normal
-same-Telegram two-sided flow if further use is desired; no root reactivation.
-No repeat accepted delivery/revoke test or broader rollout claim.
+Owner also confirms native button opens Academy/tasks and requires normal native
+login without a session. One-employee Tasks pilot is accepted end to end.
+Recipient was revoked at last readonly snapshot;personal same-Telegram re-link
+can resume use without root reactivation. Do not repeat accepted pilot tests.
+Next separate work:controlled multi-employee Telegram rollout release/plan,then
+CON02 delivery/preferences/ACK and Bitrix decisions. Broad rollout not activated.
 Source fix17261061:both PHP jobs and runtime SUCCESS;strict UID33 pilot7/0skips PASS.
 [CI receipt](../../context/runtime/connect_notification_pilot_access_ci_20261021.json);Context39595204430/Review39595203810 SUCCESS,including native Connect DB.
 Active worker/tool remain a86;new source fix is not deployed. CA/browser trust

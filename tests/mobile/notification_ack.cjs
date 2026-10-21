@@ -5,9 +5,9 @@ const repo=path.resolve(__dirname,'../..');
 const template=fs.readFileSync(path.join(repo,'moodle/local/ustar/templates/notifications.mustache'),'utf8');
 const initial=[
   {id:1,source:'local',subject:'Local unread',message:'Acknowledge without completing a task',unread:true,canack:true},
-  {id:2,source:'local',subject:'Local read',message:'Reading is a different state',read:true,canack:true},
-  {id:3,source:'local',subject:'Local acknowledged',message:'First receipt is preserved',read:true,acknowledged:true,acktime:'21.10.2026 12:00'},
-  {id:1,source:'moodle',subject:'Core read, same numeric ID',message:'Core reading has no USTAR ACK',read:true}
+  {id:2,source:'local',subject:'Local read',message:'Reading is a different state',unread:false,read:true,canack:true},
+  {id:3,source:'local',subject:'Local acknowledged',message:'First receipt is preserved',unread:false,read:true,acknowledged:true,acktime:'21.10.2026 12:00'},
+  {id:1,source:'moodle',subject:'Core read, same numeric ID',message:'Core reading has no USTAR ACK',unread:false,read:true}
 ];
 function render(accepted=new Set([3])) {
   return Mustache.render(template,{sesskey:'synthetic-session',hasnotifications:true,hasunread:true,unread:1,
@@ -18,6 +18,7 @@ function render(accepted=new Set([3])) {
 const html=render();
 assert.strictEqual((html.match(/name="action" value="ack"/g)||[]).length,2,'Only eligible local notices expose explicit acknowledgement');
 assert(html.includes('Принял')&&html.includes('Подтверждено')&&html.includes('Прочитано'),'Read and acknowledgement labels must be readable and distinct');
+assert.strictEqual((html.match(/name="action" value="read"/g)||[]).length,1,'Read controls belong only to an unread row');
 assert(!html.includes('notification.lease')&&!html.includes('bridge.key'));
 if(process.argv.includes('--render-only')) { console.log('NOTIFICATION_ACK_TEMPLATE=PASS');process.exit(0); }
 const lib=fs.readFileSync(path.join(repo,'moodle/theme/ustar/lib.php'),'utf8');
@@ -51,6 +52,7 @@ const server=http.createServer((req,res)=>{
       const own=page.locator('article').filter({hasText:'Local unread'});
       const core=page.locator('article').filter({hasText:'Core read, same numeric ID'});
       assert.strictEqual(await core.getByRole('button',{name:'Принял',exact:true}).count(),0);
+      assert.strictEqual(await core.getByRole('button',{name:'Отметить прочитанным',exact:true}).count(),0);
       const button=own.getByRole('button',{name:'Принял',exact:true});
       await button.focus();await button.press('Enter');
       await own.getByRole('status').filter({hasText:'Подтверждено'}).waitFor();

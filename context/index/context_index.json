@@ -1282,6 +1282,12 @@
       "sha256": "4257eec2bfa5eb1330ed9dd2aa3e2c980125510aca83e29ab332bde68c9f7b60"
     },
     {
+      "path": "context/runtime/connect_con02_ack_20261021.md",
+      "domain": "runtime",
+      "size": 6058,
+      "sha256": "0eeb2fc331c40ae50f935643d8300e8dee50a3811b884dc0fa31c996540b6f2a"
+    },
+    {
       "path": "context/runtime/connect_configure_tty_recovery_20261019.md",
       "domain": "runtime",
       "size": 5463,

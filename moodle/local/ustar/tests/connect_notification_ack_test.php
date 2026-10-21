@@ -104,6 +104,8 @@ final class connect_notification_ack_test extends \advanced_testcase {
     public function test_suspended_deleted_unconfirmed_and_guest_are_denied(): void {
         global $DB;
         $id = $this->notice();
+        // The inbox was already displayed: its hint must not become a cached write grant.
+        $this->assertTrue(notification_acknowledgement::available());
         foreach (['suspended' => 1, 'deleted' => 1, 'confirmed' => 0] as $field => $value) {
             $DB->set_field('user', $field, $value, ['id' => $this->employee->id]);
             $this->denied(fn() => $this->own($id));
@@ -118,6 +120,7 @@ final class connect_notification_ack_test extends \advanced_testcase {
         assign_capability('local/ustar:viewas', CAP_ALLOW, $role, \context_system::instance()->id);
         role_assign($role, $this->employee->id, \context_system::instance()->id);
         accesslib_clear_all_caches(true); $this->setUser($this->employee);
+        $this->assertTrue(notification_acknowledgement::available());
         $SESSION->ustar_view_position = 'synthetic'; $this->denied(fn() => $this->own($id));
         unset($SESSION->ustar_view_position);
         assign_capability('local/ustar:use', CAP_PROHIBIT, $role, \context_system::instance()->id);

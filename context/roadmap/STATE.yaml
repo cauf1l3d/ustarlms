@@ -2,11 +2,11 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_notification_pilot
-stage_label: Employee link accepted; notification pilot implementation under verification
+stage_label: Notification pilot CI accepted; owner activation and task delivery next
 current_activity: >-
   Latest shared6ad87278 owner says do the next-stage notification pilot after accepted test-employee link.
   Neutral start,canonical recipient fence and worker subject fence implemented;936r16/50local skips PASS.
-  Guarded root key/include/receiver handoff + one-file policy overlay;strict UID33/native CI pending.
+  Frozen a86e2080:Context39573641861/Review39573641220 SUCCESS;UID33 pilot6/nativeMoodle127/633 PASS.
   No schema/version migration,no historical replay;operator selects one active linked pilot UID.
   Notifications stay off on server until reviewed frozen package and explicit owner execution.
   Latest owner: ordinary test employee linked in Academy,Telegram ID matches.
@@ -64,7 +64,7 @@ production:
     independent_probe: false
     previous_receipt: context/runtime/connect_academy_owner_install_20261020.json
   historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
-  status: owner_CLI_browser_HTTPS_and_cron_accepted_private_bridge_link_pending_export_restore_still_waiting
+  status: owner_CLI_browser_HTTPS_cron_bridge_and_employee_link_accepted_notify_pilot_owner_pending_export_restore_still_waiting
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false

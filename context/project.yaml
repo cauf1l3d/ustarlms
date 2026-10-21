@@ -20,11 +20,11 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee notification pilot awaiting CI/operator acceptance
+  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee notification pilot CI accepted; operator activation/delivery pending
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_local936_passed_native_CI_and_owner_delivery_pending
+execution_gate: application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_CI_passed_owner_activation_delivery_pending
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -40,5 +40,5 @@ current_work:
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
   plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
-  runbook: context/runtime/connect_chat_link_update_20261021.md
-  CI_receipt: context/runtime/connect_chat_link_update_ci_20261021.json
+  runbook: context/runtime/connect_notification_pilot_20261021.md
+  CI_receipt: context/runtime/connect_notification_pilot_ci_20261021.json

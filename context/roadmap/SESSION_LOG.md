@@ -1,5 +1,20 @@
 # Журнал выполнения roadmap
 
+**21Oct — notification pilot frozen and ready for owner activation.**
+Sourcea86e2080:Context39573641861/Review39573641220 SUCCESS. Both PHP8.2/8.3:
+936r16/152environment skips;actualUID33 pilot6tests/0skips;nativeMoodle127/633,
+6concurrency,paired restores,real systemd/privateTLS separate fixtures PASS.
+Artifact12333470816 `ustar-notify-pilot-a86e2080.pyz`,SHA d06b88dc081028ce860774fbbe290dadb1c7a55bef82bd1ae135de8a5bd1ad33;
+CI bytes equal independent exact Git build. [Runbook](../../context/runtime/connect_notification_pilot_20261021.md)
+and [CI receipt](../../context/runtime/connect_notification_pilot_ci_20261021.json).
+Operator selects numeric Moodle UID of the already linked ordinary employee;
+one-user canonical fence + separate worker TG subject,personal opt-in,new events only.
+/start neutral,fixed native section button,no provider login/no raw private content.
+One exact PHP overlay preserves version2000/schema/cron/HTTPS/token/cursor/link;
+durable deactivate restores prior config/source/receiver,never business DB/journal.
+Next owner --activate,then own Tasks opt-in/new assignment/Telegram/native access/revoke.
+Server1 notify still off until owner execution;0subagents/self-review;main unmerged.
+
 **21Oct — продолжение notification pilot после принятой привязки.**
 Shared6ad87278 прочитан до owner «делай» и agent10:39:35MSK. Не повторять
 права/установку/HTTPS/egress/bridge; обычный тестовый сотрудник уже связан.

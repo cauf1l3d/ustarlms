@@ -68,3 +68,15 @@ Ruling: short bounded retries apply only to the no-nonce forbidden-scope probe
 while PHP include handoff propagates;never retry a lease/begin/send. RED→GREEN verified.
 Pilot source defaults to PLAN_ONLY;test UID is read before global locks. Source
 packet hashes/strict native CI and operator execution remain pending.
+
+Final frozen sourcea86e2080:Context39573641861 andReview39573641220 SUCCESS.
+Native GREEN127/633 resolves all three prior pilot failures. Real UID33 six pilot
+transaction tests/0skips PASS;both PHP936/152environment skips PASS. Systemd/TLS,
+6native concurrency,paired restore andbrowser regression PASS in separate fixtures.
+Artifact12333470816 downloaded and byte-for-byte equal independent exactGit build;
+PYZ SHA d06b88dc081028ce860774fbbe290dadb1c7a55bef82bd1ae135de8a5bd1ad33.
+Local strict UID33 invocation unavailable due container ownership mapping;CI is the
+strict evidence. Author self-review complete;0subagents/no independent reviewer.
+Runbook `context/runtime/connect_notification_pilot_20261021.md`;source remains
+frozen while subsequent documentation records receipt. Operator activation and
+actual personal new-task delivery/revoke are the only next pilot acceptance steps.

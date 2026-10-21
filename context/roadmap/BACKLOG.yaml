@@ -4,7 +4,7 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: owner_employee_link_accepted_notification_pilot_verification
+  stage: notification_pilot_CI_accepted_owner_activation_pending
   development_version: 2026102000
   production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
   production_effective_version: 2026102000
@@ -18,7 +18,9 @@ current_connect_checkpoint:
   parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
   parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
   notification_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
-  next: strict_CI_and_frozen_one_employee_notification_pilot_then_owner_task_delivery_and_revoke
+  notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
+  notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
+  next: owner_pilot_activate_then_personal_opt_in_new_task_delivery_native_access_and_revoke
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

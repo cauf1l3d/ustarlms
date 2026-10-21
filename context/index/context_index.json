@@ -5,7 +5,7 @@
   "files": [
     {
       "path": "context/CONTEXT_INDEX.md",
-      "domain": "CONTEXT_INDEX.md",
+      "domain": "root",
       "size": 35893,
       "sha256": "05516fc8fbeac7fd913916831d5c7d37e614770300df2927d685f1b7c30a2d0d"
     },
@@ -665,7 +665,7 @@
     },
     {
       "path": "context/project.yaml",
-      "domain": "project.yaml",
+      "domain": "root",
       "size": 3419,
       "sha256": "d9953c71a21c62fcce0750ec2fcdc781524c17c79bb84edc2f654b9b29a0f729"
     },

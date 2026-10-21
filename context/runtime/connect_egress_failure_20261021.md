@@ -34,3 +34,14 @@ failed service recovery. Real subscription/systemd refresh not executed by agent
 Source syntax compilation PASS. Owner refresh and then existing bot probe pending.
 After telegram_verified, resume frozen27117c8c --activate, then same-session link/unlink.
 Notifications remain off; main unmerged;0subagents.
+
+## Resolved by owner
+
+**21Oct — owner egress recovery and bridge activation accepted.**
+Refresh SHA4d922d29 OK:10candidates, node9TLS_VERIFIED, egress_refreshed.
+Frozen27117c8c reached scope_verified; bridge_active,receiver_active=true,
+linking_enabled=true,notifications_enabled=false; no app upgrade/business restore.
+Receipt: context/runtime/connect_activation_owner_20261021.json.
+Next: own /local/ustar/connect.php → Telegram claim → same-browser confirm → revoke.
+Do not repeat parent/app/HTTPS/egress/bridge setup.0subagents; full user flow pending.
+

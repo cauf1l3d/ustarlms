@@ -50,3 +50,14 @@ CI artifact ZIP SHA256:8801ff89721994ce9f0401b3c1ed812bca574a774c4dae42a46b10841
 Downloaded ZIP and inner SHA verified; default PLAN_ONLY confirms host_access=false.
 Local full suite had three missing-mcp dependency errors; CI completed successfully.
 Production/provider acceptance remains owner-only; fixtures are not a combined server1 deployment.
+
+## Owner activation accepted
+
+**21Oct — owner egress recovery and bridge activation accepted.**
+Refresh SHA4d922d29 OK:10candidates, node9TLS_VERIFIED, egress_refreshed.
+Frozen27117c8c reached scope_verified; bridge_active,receiver_active=true,
+linking_enabled=true,notifications_enabled=false; no app upgrade/business restore.
+Receipt: context/runtime/connect_activation_owner_20261021.json.
+Next: own /local/ustar/connect.php → Telegram claim → same-browser confirm → revoke.
+Do not repeat parent/app/HTTPS/egress/bridge setup.0subagents; full user flow pending.
+

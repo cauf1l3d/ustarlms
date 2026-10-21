@@ -2,43 +2,22 @@ schema_version: 2
 updated_at: '2026-10-21'
 project: USTAR Academy
 stage: connect_private_bridge_delivery
-stage_label: Activation rolled back; Telegram egress node refresh pending
+stage_label: Owner bridge activation accepted; personal linking acceptance pending
 current_activity: >-
-  Latest owner activation27117c8c rolled back inactive after Telegram transport failure;
-  old receiver active. Egress refresh helper prepared,7local tests PASS; owner run pending.
-  See context/runtime/connect_egress_failure_20261021.md.
-  Latest: owner parent chain accepted; activation source27117c8c Review39530156361 and
-  Context39530156402 SUCCESS. Artifact12315336864 frozen; activation/live link pending.
-  Supersedes earlier parent/implementation pending statements below.
-  Owner21Oct reports exact6aa/e0d364ab SHA OK,CHAT_LINK_UPDATE=PASS and phase upgrade_complete,
-  public_released=true,live_trees_modified=true. Effective payload1e8a8819/local2000/theme0202,
-  552files/99tables follow from fixed guarded installer,not an independent probe.
-  New genuine scheduled cron20Oct22:08:01.463377→22:08:03.506738UTC exits0,
-  task log4775692→4775719,adhoc0,new failures[],USTAR errors0. Overdue19 and2historical
-  failed retained;wrapper17:33UTC error is historical. Owner says Academy opens;
-  general browser smoke accepted,full role/learning/link QA not claimed.
-  During cold copy process D/jbd2 was observed;operation subsequently completed,no disk failure proven.
-  Receipt context/runtime/connect_chat_link_update_owner_20261021.json;no exact report time.
-  Do not repeat app upgrade,backup HTTPS preparation,TLS cutover,cron repair or broad probes.
-  Sourceec9af9e4 Context39516048080/Review39516048076 SUCCESS:886r16/136CI skips,
-  native Moodle124/629+6concurrency,private UID33 include,scope/no-nonce-write and paired restore PASS.
-  Plugin-only include must run after bootstrap;pre-bootstrap true becomes string1.
-  Apache TLS and systemd credentials pass separate fixtures;production activation is not claimed.
-  Owner e4d7a154/SHA14de5484 check refused unsafe_include_parent:code parent33:33/0755;no config change.
-  Receipt context/runtime/connect_private_bridge_parent_owner_20261021.json;later checks not reached.
-  Explicit guarded nonrecursive UID33→0 parent preparation preserves GID/mode/xattrs/children,
-  saves inode-bound before-image and supports restore only before bridge setup.
-  Sourcee58354d3 Context39519644446/Review39519644489 SUCCESS;both PHP jobs895/145skips.
-  Actual Moodle124/629+6concurrency/private scope/paired restores PASS;full RC skipped;
-  runtime118960063858 has9actual UID33 ownership/recovery/drift cases PASS,zero skips.
-  Frozen PYZ e58354d3/SHA20038cba/artifact12311131323 equals local Git bytes;owner apply pending.
-  Runbook context/runtime/connect_private_parent_prepare_20261021.md and exact CI receipt adjacent.
-  No repeated upgrade/cron/TLS/inventory or manual recursive permission repair.
-  Coordinated root tool/state/key/credential/receiver transaction remains pending.
-  Next accepted chat-link plan:private native TLS bridge,link-only key and receiver update
-  preserving token/journal/cursor;then real same-session link/revoke and separate opt-in notify.
-  Bridge/bot activation pending;external HTTPS/MiniApp remains later scope.
-  Agent has no independent server access and made no main/server/provider changes;0subagents.
+  Owner21Oct confirms refresh SHA4d922d29 OK,10candidates,node9TLS_VERIFIED,
+  egress_refreshed and telegram_https=verified,subscription_URL_saved=false.
+  Frozen activation27117c8c completes scope_verified,bridge_active,
+  receiver_active=true,linking_enabled=true,notifications_enabled=false,
+  application_upgraded=false,business_data_restored=false.
+  Receipt context/runtime/connect_activation_owner_20261021.json.
+  This supersedes earlier transport failure/rollback and owner-activation-pending notes.
+  Existing application2000/theme0202 payload1e8a8819,552files/99tables,scheduled cron
+  and canonical HTTPS already owner accepted. Parent chain preparation accepted.
+  Do not repeat upgrade,backups,cron,HTTPS,rights,egress refresh or bridge activation.
+  Next own Academy /local/ustar/connect.php to Telegram claim, same-session confirm
+  and revoke; user-level end-to-end acceptance not yet reported.
+  Notifications remain off; external HTTPS/MiniApp/full native handoff later.
+  Agent has no independent server access;main unmerged;0subagents.
 
 next_task: INTEGRATIONS-01
 ready_tasks: []

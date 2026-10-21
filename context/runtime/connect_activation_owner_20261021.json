@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "owner_terminal_receipt",
+  "reported_date": "2026-10-21",
+  "exact_operation_timestamp": null,
+  "independently_executed_by_agent": false,
+  "egress": {
+    "helper_sha256": "4d922d295a38fd5a1ed7304388684801c1b8553dcf4508d769b0242b3a32ac6d",
+    "checksum": "OK",
+    "candidates": 10,
+    "unsupported": 0,
+    "unavailable_candidates": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "verified_candidate": 9,
+    "backup_path": "/etc/ustar-console-egress/xray.before-d90f585f1b0d538d.json",
+    "phase": "egress_refreshed",
+    "telegram_https": "verified",
+    "subscription_URL_saved": false
+  },
+  "activation": {
+    "package": "ustar-bridge-activate-27117c8c.pyz",
+    "checkpoints": [
+      "receiver_stopped",
+      "tool_handoff",
+      "private_TLS",
+      "private_files",
+      "config_handoff",
+      "receiver_switch",
+      "scope_verified"
+    ],
+    "result": {
+      "application_upgraded": false,
+      "business_data_restored": false,
+      "linking_enabled": true,
+      "notifications_enabled": false,
+      "phase": "bridge_active",
+      "receiver_active": true
+    }
+  },
+  "remaining_acceptance": [
+    "own Academy to Telegram claim and same-browser confirmation",
+    "owner revoke and optional new link",
+    "separate notification activation"
+  ],
+  "no_repeat": [
+    "parent preparation",
+    "application upgrade",
+    "canonical HTTPS cutover",
+    "egress refresh or bridge activation without new failure"
+  ]
+}

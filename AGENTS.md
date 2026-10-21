@@ -1,5 +1,14 @@
 # USTAR инструкции агентам
 
+**21Oct — owner egress recovery and bridge activation accepted.**
+Refresh SHA4d922d29 OK:10candidates, node9TLS_VERIFIED, egress_refreshed.
+Frozen27117c8c reached scope_verified; bridge_active,receiver_active=true,
+linking_enabled=true,notifications_enabled=false; no app upgrade/business restore.
+Receipt: context/runtime/connect_activation_owner_20261021.json.
+Next: own /local/ustar/connect.php → Telegram claim → same-browser confirm → revoke.
+Do not repeat parent/app/HTTPS/egress/bridge setup.0subagents; full user flow pending.
+
+
 **21Oct — activation rolled back; Telegram egress recovery next.**
 Owner probe transport_unavailable; recovery_state=inactive, old receiver active.
 Root cause boundary is current VPN outbound connectivity; refresh helper prepared

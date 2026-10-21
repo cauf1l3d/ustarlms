@@ -313,9 +313,10 @@ final class communication {
     }
 
     public static function notifications(int $userid, int $limit = 100): array {
-        global $DB;
+        global $DB, $USER;
         $limit = max(1, min(200, $limit));
         $rows = [];
+        $canack = (int)($USER->id ?? 0) === $userid && connect\notification_acknowledgement::available();
         if ($DB->get_manager()->table_exists(new \xmldb_table('local_ustar_notifications'))) {
             $records = $DB->get_records(
                 'local_ustar_notifications', ['userid' => $userid], 'timecreated DESC', '*', 0, max(1, min(200, $limit))
@@ -370,6 +371,7 @@ final class communication {
                     }
                 }
                 $unread = (string)$record->status === 'unread';
+                $acknowledged = (string)$record->status === 'acknowledged';
                 $rows[] = [
                     'id' => (int)$record->id,
                     'source' => 'local',
@@ -380,6 +382,10 @@ final class communication {
                     'severity' => (string)$record->severity,
                     'unread' => $unread,
                     'read' => !$unread,
+                    'acknowledged' => $acknowledged,
+                    'canack' => $canack && in_array((string)$record->status, ['unread', 'read'], true),
+                    'acktime' => $acknowledged && (int)$record->ackat > 0
+                        ? userdate((int)$record->ackat, '%d.%m.%Y %H:%M') : '',
                     'time' => userdate((int)$record->timecreated, '%d.%m.%Y %H:%M'),
                     'hasurl' => $actionurl !== '',
                     'url' => $actionurl,
@@ -408,6 +414,9 @@ final class communication {
                 'eventlabel' => 'Уведомление Академии',
                 'unread' => empty($record->timeread),
                 'read' => !empty($record->timeread),
+                'acknowledged' => false,
+                'canack' => false,
+                'acktime' => '',
                 'time' => userdate((int)$record->timecreated, '%d.%m.%Y %H:%M'),
                 'hasurl' => $contexturl !== '',
                 'url' => $contexturl,

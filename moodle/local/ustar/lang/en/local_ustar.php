@@ -40,3 +40,7 @@ $string['privacy:metadata:connect:state'] = 'Connection state, revision or relat
 $string['privacy:metadata:connect:time'] = 'Creation, modification or expiry time.';
 $string['identity_busy'] = 'Identity settings are busy; retry shortly.';
 $string['taskpruneconnectidentity'] = 'Удаление истёкших подтверждений связи с мессенджерами';
+
+$string['notification_ack'] = 'Acknowledge';
+$string['notification_acknowledged'] = 'Acknowledged';
+$string['notification_read'] = 'Read';

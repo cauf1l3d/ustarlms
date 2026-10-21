@@ -9,7 +9,7 @@ use local_ustar\connect\notification_acknowledgement;
 final class connect_notification_ack_test extends \advanced_testcase {
     private \stdClass $employee;
     protected function setUp(): void {
-        parent::setUp(); $this->resetAfterTest(true);
+        parent::setUp(); $this->resetAfterTest(true); $this->preventResetByRollback();
         $this->employee = $this->getDataGenerator()->create_user();
         $role = $this->getDataGenerator()->create_role();
         assign_capability('local/ustar:use', CAP_ALLOW, $role, \context_system::instance()->id);

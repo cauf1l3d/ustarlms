@@ -31,3 +31,7 @@ $string['ustar:taskescalation'] = 'Контроль исключений и эс
 
 $string['ustar:gradeassessments'] = 'Проверять аттестации';
 $string['ustar:requeststaff'] = 'Подавать заявки на персонал по компании';
+
+$string['notification_ack'] = 'Принял';
+$string['notification_acknowledged'] = 'Подтверждено';
+$string['notification_read'] = 'Прочитано';

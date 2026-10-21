@@ -2,10 +2,11 @@ FROM composer:2.8.12 AS composer
 FROM php:8.3.33-cli-trixie@sha256:1714c87d55b6c3c5b47bc8d3d0a6cd7a52b6a9cc3f9f950c9174be8a2e48b3ca
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git unzip locales-all libicu-dev libzip-dev libpq-dev libpng-dev libjpeg62-turbo-dev \
-    libfreetype6-dev libxml2-dev libsodium-dev libcurl4-openssl-dev libonig-dev curl ca-certificates \
+    libfreetype6-dev libxml2-dev libsodium-dev libcurl4-openssl-dev libonig-dev curl ca-certificates python3 \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && missing_extensions="$(php -r 'foreach (["intl","zip","pgsql","gd","soap","exif","sodium","Zend OPcache","curl","mbstring","dom","xml","xmlreader"] as $ext) { if (!extension_loaded($ext)) echo ($ext === "Zend OPcache" ? "opcache" : $ext) . " "; }')" \
     && if [ -n "$missing_extensions" ]; then docker-php-ext-install -j2 $missing_extensions; fi \
+    && python3 -c 'import http.cookiejar, ssl' \
     && rm -rf /var/lib/apt/lists/*
 # Keep dump/restore client major 16, even though trixie's default is newer.
 RUN install -d /usr/share/postgresql-common/pgdg \

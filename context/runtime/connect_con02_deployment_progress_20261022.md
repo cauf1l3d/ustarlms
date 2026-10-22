@@ -11,8 +11,8 @@ UID130 last revoked; accepted pilot is not repeated.
 | 1 Fixed profile/contracts | Initial contracts/reference export implemented;7 focused tests PASS. Host integration and native gates still pending. |
 | 2 Images/locks/journal | Initial implementation;6 real filesystem/lock tests PASS,1 UID33 environment skip. |
 | 3 App+cron transaction | Initial implementation;9 real filesystem/cron tests PASS with Docker/SQL modeled. Native direct upgrade still pending. |
-| 4 v2/ACK profiles | Pending |
-| 5 Runtime transitions | Pending |
+| 4 v2/ACK profiles | Pure exact profiles and immutable stage implemented;5 tests PASS, actual credential gate pending. |
+| 5 Runtime transitions | Initial state machine;7 focused tests PASS, actual systemd/HTTPS gate pending. |
 | 6 Plain.py/CLI | Pending |
 | 7 Native direct upgrade/recovery | Pending |
 | 8 Actual systemd/HTTPS | Pending |
@@ -31,3 +31,10 @@ old copy lost user.con02 (ENODATA),then9 PASS after a private xattr-aware adapte
 Original primitives/modules remain unchanged. Combined23 tests/1 UID33 environment skip PASS.
 Direct/repeat preserves customised task [1,1]; partial cron pair restores; post-public
 recovery preserves a new write. Fresh child trace confirms only first4 locks held.
+
+Tasks4/5 TDD: profile interface7 assertion failures including subcases→5 tests PASS;
+runtime7 missing-interface assertion failures→7 PASS. Actual fork/exit after
+include_handoff resumes the same generation/cutoff/key images. Real SQLite cursor42→84
+and uncertainty survive disable/re-enable; failed v2 probe returns saved v1 runtime.
+Application/service controls in those tests are modeled; no actual systemd PASS claimed.
+Combined35 tests/1 UID33 environment skip PASS. Next plain.py/CLI, then native/actual gates.

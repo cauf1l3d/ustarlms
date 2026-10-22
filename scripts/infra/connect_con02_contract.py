@@ -375,6 +375,25 @@ class Host:
 
     def references(self, prefix): return self.ctx.engine.tx.references(self.ctx.engine, self, prefix)
 
+    def validate_units(self, values):
+        i = self.legacy().installation
+        current = i.current(); require(current is not None, 'managed_worker_required')
+        old = i.release_files(current)
+        for name in ('receiver', 'probe', 'notify'):
+            n = 'ustar-connect-' + name + '.service'
+            require(values['units/' + n] == old['units/' + n]
+                    == self.ctx.engine.p.read_file(i.units / n, 65536), 'base_unit_change_requires_review')
+
+    def application_ready(self, state):
+        require(state.get('app') is not None and state['app']['phase'] == 'app_ready', 'app_ready2200_required')
+        from connect_con02_application import Application
+        from connect_con02_state import Journal, Locks
+        Application(self.ctx, Journal(self.ctx), Locks(self.ctx)).verify(state['app'], target=True)
+
+    def validate_profiles(self, values):
+        m = self.legacy().manager
+        m.host.lint(m.host.runtime(m.p.old.config), values['include'])
+
     def login(self):
         m = self.legacy().manager
         s = m.load(); m.host.app_check(m.p.old.ca, s['leaf'])

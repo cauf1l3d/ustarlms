@@ -1338,8 +1338,8 @@
     {
       "path": "context/runtime/connect_con02_deployment_progress_20261022.md",
       "domain": "runtime",
-      "size": 2170,
-      "sha256": "5c1120efa0879e21fbdc4f6a24eee54fbc6999ae00dfc75c66b0719c0923e1a0"
+      "size": 2854,
+      "sha256": "ab464c376222c66e77a1a7c756812b9d87f9569f88cf27e24d9081749e3d53a9"
     },
     {
       "path": "context/runtime/connect_configure_tty_recovery_20261019.md",

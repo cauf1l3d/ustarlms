@@ -187,9 +187,12 @@ class Journal:
     def guard(self, scope):
         require(scope in ('app', 'runtime'), 'journal_scope')
         s = self.load(); require(s is not None and s[scope] is not None, 'journal_missing')
-        for pair in s[scope]['files'].values():
+        for name, pair in s[scope]['files'].items():
             actual = descriptor(capture(Path(pair['before']['path'])))
-            require(actual in (pair['before'], pair['after']), 'unknown_control_drift')
+            allowed = [pair['before'], pair['after']]
+            if scope == 'app' and s['app'].get('public_released') and s.get('runtime') and name in s['runtime']['files']:
+                allowed += list(s['runtime']['files'][name].values())
+            require(actual in allowed, 'unknown_control_drift')
 
     def put(self, scope, name, side):
         require(side in ('before', 'after') and scope in ('app', 'runtime'), 'image_side')

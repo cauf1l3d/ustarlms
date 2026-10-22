@@ -154,9 +154,10 @@ def make_context(bundle, *, root=Path('/'), uid=0, host=None):
     # Each operation has its own accepted helper profile. Never mutate imported constants.
     d.w = SimpleNamespace(**vars(d.w))
     d.w.HELPERS = dict(d.w.HELPERS)
-    for name, digest in [('hdd_backup', 'a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3'),
-                         ('backup_engine', 'a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c')]:
+    for name, digest in [('hdd_backup', 'a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3')]:
         if name in d.w.HELPERS: d.w.HELPERS[name] = (d.w.HELPERS[name][0], digest)
+    d.w.HELPERS['hdd_scheduler'] = (Path('/usr/local/sbin/USTAR_HDD_SCHEDULE_20261006.py'),
+        'a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c')
     d.reference, d.payload = bundle.reference, bundle.payload
     d.schema_fields = bundle.reference['candidate']['schema_fields']
     d.base = root / str(BASE).lstrip('/')
@@ -165,11 +166,52 @@ def make_context(bundle, *, root=Path('/'), uid=0, host=None):
     d.trees = {k: root / v for k, v in {'code': 'opt/ustar/data/moodle/public',
                 'moodledata': 'opt/ustar/data/moodle/moodledata', 'postgres': 'opt/ustar/data/postgres'}.items()}
     d.identities = None
+    configure_primitives(d)
     ctx = Context(bundle, root, uid, host, d)
     if host is None:
         require(root == Path('/'), 'production_root_required')
         ctx.host = Host(ctx)
     return ctx
+
+
+def configure_primitives(d):
+    """Private function globals and xattr-aware copy adapters; original helpers stay frozen."""
+    import base64
+    import os
+    from types import FunctionType, ModuleType
+    def clone(module):
+        result = ModuleType('_con02_' + module.__name__)
+        result.__dict__.update(vars(module))
+        for name, value in vars(module).items():
+            if isinstance(value, FunctionType) and value.__globals__ is vars(module):
+                function = FunctionType(value.__code__, result.__dict__, value.__name__, value.__defaults__, value.__closure__)
+                function.__kwdefaults__ = value.__kwdefaults__
+                result.__dict__[name] = function
+        return result
+    for name in ('cold', 'c', 'tx', 'u'): setattr(d, name, clone(getattr(d, name)))
+    d.cold.reserve = lambda: d.tx.reserve(d.p)
+    d.c.reserve = lambda: d.tx.reserve(d.p)
+    original_inventory = d.tx.inventory
+    original_copy = d.u.copy_contents
+    def attrs(path):
+        return {k: base64.b64encode(os.getxattr(path, k)).decode() for k in sorted(os.listxattr(path))}
+    def inventory(engine, root):
+        result = original_inventory(engine, root)
+        for key, item in result.items(): item['xattrs'] = attrs(root / key)
+        return result
+    def copy_contents(cold, source, dest, entries):
+        for key, item in entries.items(): require(attrs(source / key) == item['xattrs'], 'copy_source_xattrs_changed')
+        plain = {k: {n: v for n, v in item.items() if n != 'xattrs'} for k, item in entries.items()}
+        original_copy(cold, source, dest, plain)
+        for key, item in entries.items():
+            path = dest / key
+            for attr in os.listxattr(path):
+                if attr not in item['xattrs']: os.removexattr(path, attr)
+            for attr, value in item['xattrs'].items(): os.setxattr(path, attr, base64.b64decode(value, validate=True))
+            require(attrs(path) == item['xattrs'] and attrs(source / key) == item['xattrs'], 'copy_xattrs_readback')
+            if item['type'] == 'directory': cold.sync_directory(path)
+    d.tx.inventory = inventory
+    d.u.copy_contents = copy_contents
 
 
 def check(ctx):
@@ -220,7 +262,7 @@ class Host:
         require(result.returncode == 0, 'host_command_failed')
 
     def legacy(self):
-        if not hasattr(self, '_legacy'):
+        if '_legacy' not in self.__dict__:
             modules = frozen_legacy(self.ctx.bundle)
             https, install = modules['academy_https'], modules['connect_install']
             m = https.Manager()
@@ -310,12 +352,33 @@ class Host:
         d.p.mount(); self.delegate()
         require(not (d.p.DATA / 'climaintenance.html').exists()
                 and not (d.p.STATE / 'moodle-was-running.json').exists(), 'pending_host_recovery')
-        for name in ('hdd_backup', 'backup_engine'):
+        for name in ('hdd_backup', 'hdd_scheduler', 'backup_engine'):
             path, digest = d.w.HELPERS[name]
             d.p.root_input(path)
             require(d.p.read_file(path, 1048576, True) == digest, 'accepted_backup_helper_changed')
         return {'restart_policies': d.w.docker_conditions(d.p, d.identities)['restart_policies'],
                 'capacity': d.addon.capacity(d), 'roots': d.tx.roots(d), 'identities': d.identities}
+
+    def fresh_backup(self, marker):
+        return self.ctx.engine.addon.fresh_hdd(self.ctx.engine, marker, self)
+
+    def recover_backup(self):
+        d = self.ctx.engine
+        if (d.p.STATE / 'moodle-was-running.json').exists():
+            path, digest = d.w.HELPERS['hdd_backup']
+            d.p.root_input(path)
+            require(d.p.read_file(path, 1048576, True) == digest, 'accepted_backup_helper_changed')
+            self.action(['python3', '-I', '-B', str(path), '--recover'], timeout=120)
+        require(not (d.p.STATE / 'moodle-was-running.json').exists(), 'backup_recovery_pending')
+
+    def capacity(self, cold=False): return self.ctx.engine.addon.capacity(self.ctx.engine, cold)
+
+    def references(self, prefix): return self.ctx.engine.tx.references(self.ctx.engine, self, prefix)
+
+    def login(self):
+        m = self.legacy().manager
+        s = m.load(); m.host.app_check(m.p.old.ca, s['leaf'])
+        return 200
 
     def prefix(self):
         d = self.ctx.engine

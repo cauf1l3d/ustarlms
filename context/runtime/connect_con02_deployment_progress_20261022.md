@@ -14,7 +14,7 @@ UID130 last revoked; accepted pilot is not repeated.
 | 4 v2/ACK profiles | Pure exact profiles and immutable stage implemented;5 tests PASS, actual credential gate pending. |
 | 5 Runtime transitions | Initial state machine;7 focused tests PASS, actual systemd/HTTPS gate pending. |
 | 6 Plain.py/CLI | Initial plain.py/strict CLI implemented;7 package tests PASS. Final exact-source artifact/host gates pending. |
-| 7 Native direct upgrade/recovery | Pending |
+| 7 Native direct upgrade/recovery | Runner/export/SQL differential/wiring implemented;local wiring10/10 PASS. Actual native CI pending. |
 | 8 Actual systemd/HTTPS | Pending |
 | 9 Regression/artifact/handoff | Pending |
 
@@ -45,3 +45,10 @@ imports; invalid inventory/base64/tamper/dirty builder and combined flags deny.
 Default works with python -I -B and with malicious neighboring module files present;
 it emits PLAN_ONLY without managed-host/network access. Combined42tests/1skip PASS;
 check_context and diff --check PASS. No final deployable tool SHA/hash is handed off yet.
+
+Task7 RED: missing direct-upgrade runner wiring assertion failed;then10 application/wiring
+tests PASS. New runner restores the private synthetic2000 pair, installs exact1e8+overlay,
+seeds revoke/custom task/history, upgrades directly to fixed534/repeats, compares fresh
+and restores2000. Four actual transaction-scoped SQL mutations feed the new validator.
+Only sanitized SQL metadata/results become artifacts. Local PHP/Docker are unavailable;
+PHP syntax and native lifecycle are CI gates, not claimed passed here.

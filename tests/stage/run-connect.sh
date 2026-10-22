@@ -101,3 +101,5 @@ source /source/tests/stage/run-chat-link-update.sh
 bash /source/tests/stage/run-con02-ack.sh
 
 bash /source/tests/stage/run-con02-callback.sh
+
+bash /source/tests/stage/run-con02-update.sh

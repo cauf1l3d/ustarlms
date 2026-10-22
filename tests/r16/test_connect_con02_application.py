@@ -168,5 +168,14 @@ class Application(unittest.TestCase):
         self.assertEqual('baseline_restored', op.upgrade()['phase'])
         self.assertEqual(b'accepted-metadata', os.getxattr(p, 'user.con02'))
 
+    def test_native_direct_upgrade_gate_is_wired(self):
+        runner = ROOT/'tests/stage/run-con02-update.sh'
+        self.assertTrue(runner.is_file(), 'direct2000→2200 native runner is required')
+        self.assertIn('run-con02-update.sh', (ROOT/'tests/stage/run-connect.sh').read_text())
+        workflow = (ROOT/'.github/workflows/ustar-review-gate.yml').read_text()
+        self.assertIn('con02_update_native.py prepare', workflow)
+        self.assertIn('con02_update_native.py verify', workflow)
+        self.assertIn('artifacts/con02-update-*', workflow)
+
 
 if __name__ == '__main__': unittest.main()

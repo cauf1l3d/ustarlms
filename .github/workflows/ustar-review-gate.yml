@@ -58,7 +58,7 @@ jobs:
         run: |
           if [ "$CONNECT_EVENT" = workflow_dispatch ] && [ -f moodle/local/ustar/classes/connect/identity_service.php ]; then
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
-          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php; then
+          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh; then
             echo 'connect_db=false' >> "$GITHUB_OUTPUT"
           else
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
@@ -124,6 +124,11 @@ jobs:
           mkdir -p .stage-input/connect-current
           git archive 830d3703e2ffa2f9864900c0d0c58f60049cb0c2 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-current
           python3 tests/stage/connect_installer_probe.py prepare
+          mkdir -p .stage-input/con02-update-baseline .stage-input/con02-update-target
+          git archive 1e8a8819f50785ebb4fb2640eeb9386c969d59d1 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/con02-update-baseline
+          git show a86e208029b6104150e85d0e90384f84da214c22:moodle/local/ustar/classes/connect/notification_delivery.php > .stage-input/con02-update-baseline/moodle/local/ustar/classes/connect/notification_delivery.php
+          git archive 534764821c4f65437ab50b3c7f25578d538e9504 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/con02-update-target
+          python3 tests/stage/con02_update_native.py prepare
           python3 - <<'PYCONFIG'
           import importlib.util
           from pathlib import Path
@@ -148,6 +153,7 @@ jobs:
         run: |
           python3 tests/stage/connect_installer_probe.py verify
           python3 tests/stage/chat_link_update_probe.py
+          python3 tests/stage/con02_update_native.py verify
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -159,6 +165,7 @@ jobs:
             artifacts/chat-link-*
             artifacts/con02-ack-*
             artifacts/con02-callback-*
+            artifacts/con02-update-*
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes

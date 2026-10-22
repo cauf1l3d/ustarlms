@@ -158,6 +158,7 @@ jobs:
             artifacts/connect-scope-*
             artifacts/chat-link-*
             artifacts/con02-ack-*
+            artifacts/con02-callback-*
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
@@ -239,6 +240,13 @@ jobs:
           path: artifacts/connect-delivery/
       - name: Actual systemd credentials and receiver isolation with synthetic transport
         run: sudo -n env USTAR_CONNECT_HOST_FIXTURE=1 python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
+      - name: Personal callback old-new-disabled-a86 handoff with actual UID33 credentials and private TLS
+        run: sudo -n env USTAR_CONNECT_ACK_FIXTURE=1 python3 tests/stage/con02_callback_native.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: con02-callback-runtime
+          path: artifacts/con02-callback-runtime.json
       - name: Ensure Apache binary exists only on disposable TLS test runner
         run: |
           if ! command -v apache2 >/dev/null; then

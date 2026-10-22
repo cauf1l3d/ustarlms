@@ -99,6 +99,7 @@ final class connect_notification_action_test extends \advanced_testcase {
         $this->assertSame(47, strlen($action['action']));
         $row = $DB->get_record('local_ustar_conn_acktokens', ['userid' => $f['uid']], '*', MUST_EXIST);
         $this->assertSame(64, strlen($row->tokenhash));
+        $this->assertNotSame(\local_ustar\connect\opaque_token::digest($action['action'],'ua1'),$row->tokenhash);
         $this->assertStringNotContainsString($action['action'], json_encode($row));
         $wrong = $f; $wrong['sender'] = new identity('telegram','123456','99999');
         $this->unavailable(fn() => $this->ack($wrong, $action['action']));
@@ -106,6 +107,19 @@ final class connect_notification_action_test extends \advanced_testcase {
         $this->unavailable(fn() => $this->ack($wrong, $action['action']));
         $this->unavailable(fn() => $this->ack($f, 'ua1_'.str_repeat('B',43)));
         $this->assertNull($DB->get_field('local_ustar_notifications','ackat',['id'=>$f['notice']->id]));
+    }
+    public function test_actor_read_and_ack_tokens_are_not_interchangeable(): void {
+        global $CFG;
+        $f=$this->delivery_fixture();$action=$this->action($f);
+        $CFG->ustar_connect_provider_read_enabled=true;
+        $browser=\local_ustar\connect\opaque_token::issue('ub1');
+        $launch=\local_ustar\connect\entry_service::create_launch($f['sender'],'actor_key');
+        $entry=\local_ustar\connect\entry_service::exchange($f['sender'],$launch['launch'],hash('sha256',$launch['launch']),time(),$browser,'actor_key');
+        $actor=\local_ustar\connect\actor_service::open($entry['session'],$browser,'actor_key','telegram','123456');
+        $this->unavailable(fn()=>$this->ack($f,$actor['session']));
+        $this->unavailable(fn()=>\local_ustar\connect\actor_service::status($action['action'],$browser,'actor_key','telegram','123456'),'invalid_actor');
+        $this->assertSame('acknowledged',$this->ack($f,$action['action'])['status']);
+        $this->assertSame('actor_read',\local_ustar\connect\actor_service::status($actor['session'],$browser,'actor_key','telegram','123456')['scope']);
     }
     public function test_read_repeat_and_callback_before_finish_keep_first_ack(): void {
         global $DB;

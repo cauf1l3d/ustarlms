@@ -328,4 +328,16 @@ final class connect_notification_test extends \advanced_testcase {
         $this->assertSame('unread',$DB->get_field('local_ustar_notifications','status',['id'=>$row->notificationid]));
     }
 
+    public function test_v2_cutoff_has_null_action_without_changing_v1_permit(): void {
+        global $CFG,$DB;
+        $this->assertTrue(method_exists(notification_delivery::class,'begin_v2'),'Versioned begin is missing');
+        $this->grant(['local/ustar:use']);$this->prefs();$this->notice();$lease=$this->lease();
+        $CFG->ustar_connect_ack_enabled=true;$CFG->ustar_connect_ack_since=time()+60;
+        $CFG->ustar_connect_notify_userids=[(int)$this->employee->id];
+        $permit=notification_delivery::begin_v2($lease['delivery'],$lease['lease'],'tg_delivery','telegram','123456');
+        $this->assertSame('sending',$permit['status']);$this->assertSame(2,$permit['version']);$this->assertNull($permit['ack']);
+        $this->assertSame(0,$DB->count_records('local_ustar_conn_acktokens'));
+        $this->denied(fn()=>notification_delivery::begin_v2($lease['delivery'],$lease['lease'],'tg_delivery','telegram','123456'),'invalid_delivery');
+    }
+
 }

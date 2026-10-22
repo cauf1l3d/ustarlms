@@ -4978,5 +4978,13 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026101905, 'local', 'ustar');
     }
+    if ($oldversion < 2026102200) {
+        // Metadata only: no token issuance, queue replay or activation during upgrade.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load notification action schema'); }
+        $table = $schema->getStructure()->getTable('local_ustar_conn_acktokens');
+        if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        upgrade_plugin_savepoint(true, 2026102200, 'local', 'ustar');
+    }
 return true;
 }

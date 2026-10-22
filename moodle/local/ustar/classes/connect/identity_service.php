@@ -197,6 +197,9 @@ final class identity_service {
                 if ($ids) { $DB->delete_records_list($table, 'id', $ids); }
                 $entry[$table] = count($ids);
             }
+            $actions = array_keys($DB->get_records_select('local_ustar_conn_acktokens',
+                'expires <= :cutoff', ['cutoff' => $now - 7 * DAYSECS], 'id', 'id', 0, $limit));
+            if ($actions) { $DB->delete_records_list('local_ustar_conn_acktokens', 'id', $actions); }
             return ['challenges' => count($challenges), 'proofs' => count($proofs),
                 'launches' => $entry['local_ustar_conn_launches'], 'sessions' => $entry['local_ustar_conn_sessions'],
                 'signups' => $entry['local_ustar_conn_signups']];

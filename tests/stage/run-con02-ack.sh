@@ -25,7 +25,7 @@ CON02_PAIR=/stage/con02-ack-pair
   cp /stage/moodle/config.php "$CON02_PAIR/config.php"
   sha256sum "$CON02_PAIR/"* > "$CON02_PAIR/SHA256SUMS"
 )
-con02_install_sources /source/moodle
+con02_install_sources /source/.stage-input/con02-a1/moodle
 php admin/cli/upgrade.php --non-interactive > /artifacts/con02-ack-upgrade.log 2>&1
 php /source/tests/stage/con02_ack_probe.php verify
 php /source/tests/stage/schema_snapshot.php > /artifacts/con02-ack-after-schema.json

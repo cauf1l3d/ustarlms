@@ -22,6 +22,8 @@ foreach (['local_ustar' => 'local/ustar', 'theme_ustar' => 'theme/ustar'] as $co
 $tables = array_values(array_filter($DB->get_tables(), static fn($t) => str_starts_with($t, 'local_ustar_')));
 sort($tables);
 $expected = 2026100204;
+$candidatexml = simplexml_load_file('/source/moodle/local/ustar/db/install.xml');
+$candidatetables = count($candidatexml->TABLES->TABLE);
 if ($phase === 'candidate') {
     $candidate = file_get_contents('/source/moodle/local/ustar/version.php');
     if (!preg_match('/^\s*\$plugin->version\s*=\s*([0-9]{10})\s*;/m', $candidate, $match)) {
@@ -30,7 +32,7 @@ if ($phase === 'candidate') {
     $expected = (int)$match[1];
 }
 if ($versions !== ['local_ustar' => $expected, 'theme_ustar' => 2026100202]
-        || count($tables) !== ($phase === 'candidate' ? 99 : 93)
+        || count($tables) !== ($phase === 'candidate' ? $candidatetables : 93)
         || get_config('local_ustar', 'connect_release_marker') !== $phase
         || ($CFG->ustar_connect_provider_read_enabled ?? false)
         || ($CFG->ustar_connect_notifications_enabled ?? false)) {

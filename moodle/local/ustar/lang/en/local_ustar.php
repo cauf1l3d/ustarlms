@@ -44,3 +44,5 @@ $string['taskpruneconnectidentity'] = 'Удаление истёкших под�
 $string['notification_ack'] = 'Acknowledge';
 $string['notification_acknowledged'] = 'Acknowledged';
 $string['notification_read'] = 'Read';
+
+$string['privacy:metadata:connect:acktokens'] = 'Hashed actions for personal notification acknowledgement; no raw action credentials.';

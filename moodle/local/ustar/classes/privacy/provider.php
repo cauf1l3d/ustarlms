@@ -74,6 +74,14 @@ final class provider implements
             'linkid' => 'privacy:metadata:connect:state', 'linkrevision' => 'privacy:metadata:connect:state',
             'timecreated' => 'privacy:metadata:connect:time', 'expiresat' => 'privacy:metadata:connect:time',
         ], 'privacy:metadata:connect');
+        $collection->add_database_table('local_ustar_conn_acktokens', [
+            'tokenhash' => 'privacy:metadata:connect:hash', 'userid' => 'privacy:metadata:connect:userid',
+            'notificationid' => 'privacy:metadata:connect:state', 'deliveryid' => 'privacy:metadata:connect:state',
+            'attempt' => 'privacy:metadata:connect:state', 'provider' => 'privacy:metadata:connect:provider',
+            'tenant' => 'privacy:metadata:connect:provider', 'subject' => 'privacy:metadata:connect:subject',
+            'linkid' => 'privacy:metadata:connect:state', 'linkrevision' => 'privacy:metadata:connect:state',
+            'timecreated' => 'privacy:metadata:connect:time', 'expires' => 'privacy:metadata:connect:time',
+        ], 'privacy:metadata:connect:acktokens');
         $collection->add_user_preference(\local_ustar\connect\notification_preferences::NAME, 'privacy:metadata:connect:preferences');
         $collection->add_database_table('local_ustar_notify_delivery', [
             'notificationid' => 'privacy:metadata:connect:state', 'channel' => 'privacy:metadata:connect:provider',
@@ -97,19 +105,20 @@ final class provider implements
               OR EXISTS (SELECT a.id FROM {local_ustar_conn_launches} a WHERE a.userid = :launchuser)
               OR EXISTS (SELECT s.id FROM {local_ustar_conn_sessions} s WHERE s.userid = :sessionuser)
               OR EXISTS (SELECT r.id FROM {local_ustar_conn_signups} r WHERE r.userid = :signupuser)
+              OR EXISTS (SELECT a.id FROM {local_ustar_conn_acktokens} a WHERE a.userid = :actionuser)
               OR EXISTS (SELECT p.id FROM {user_preferences} p WHERE p.userid = :prefuser AND p.name = :prefname)
               OR EXISTS (SELECT d.id FROM {local_ustar_notify_delivery} d JOIN {local_ustar_notifications} n
                     ON n.id = d.notificationid WHERE d.connectversion = 1 AND n.userid = :deliveryuser))',
             ['level' => CONTEXT_SYSTEM, 'linkuser' => $userid, 'challengeuser' => $userid,
                 'launchuser' => $userid, 'sessionuser' => $userid, 'signupuser' => $userid,
-                'prefuser' => $userid, 'prefname' => \local_ustar\connect\notification_preferences::NAME, 'deliveryuser' => $userid]);
+                'actionuser' => $userid, 'prefuser' => $userid, 'prefname' => \local_ustar\connect\notification_preferences::NAME, 'deliveryuser' => $userid]);
         return $contexts;
     }
 
     public static function get_users_in_context(userlist $userlist): void {
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
-                'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups'] as $table) {
+                'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens'] as $table) {
             $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0');
         }
         $userlist->add_from_sql('userid', 'SELECT userid FROM {user_preferences} WHERE name = :name',
@@ -145,12 +154,15 @@ final class provider implements
         $deliveries = $DB->get_records_sql('SELECT d.id,d.status,d.attempts,d.providerref,d.lasterror,
                 d.timecreated,d.timemodified,d.nextattempt FROM {local_ustar_notify_delivery} d
             JOIN {local_ustar_notifications} n ON n.id = d.notificationid WHERE d.connectversion = 1 AND n.userid = :uid', ['uid' => $userid]);
+        $actions = $DB->get_records('local_ustar_conn_acktokens', ['userid' => $userid], 'id',
+            'id,notificationid,deliveryid,attempt,provider,tenant,subject,linkid,linkrevision,timecreated,expires');
         // Token/session hashes are security internals, not login credentials to export.
         writer::with_context(\context_system::instance())->export_data(['Connect'], (object)[
             'links' => array_values($links), 'confirmations' => array_values($challenges),
             'launches' => array_values($launches), 'entries' => array_values($sessions),
             'registrations' => array_values($signups),
             'notification_deliveries' => array_values($deliveries),
+            'notification_actions' => array_values($actions),
         ]);
     }
 
@@ -180,6 +192,7 @@ final class provider implements
             $transaction = $DB->start_delegated_transaction();
             try {
                 if ($userids === null) {
+                    $DB->delete_records('local_ustar_conn_acktokens');
                     $DB->delete_records('local_ustar_notify_delivery', ['connectversion' => 1]);
                     $DB->delete_records('user_preferences', ['name' => \local_ustar\connect\notification_preferences::NAME]);
                     $DB->set_field('local_ustar_conn_proofs', 'challengeid', 0);
@@ -189,6 +202,7 @@ final class provider implements
                     }
                 } else {
                     [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+                    $DB->delete_records_select('local_ustar_conn_acktokens', 'userid ' . $insql, $params);
                     $DB->delete_records_select('local_ustar_notify_delivery', 'connectversion = 1 AND notificationid IN
                         (SELECT id FROM {local_ustar_notifications} WHERE userid ' . $insql . ')', $params);
                     $DB->delete_records_select('user_preferences', 'name = :prefname AND userid ' . $insql,

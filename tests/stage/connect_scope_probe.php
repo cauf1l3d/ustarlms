@@ -13,7 +13,11 @@ $counts = static function() use ($DB): array {
         }
     }
     ksort($result);
-    if (count($result) !== 6) { throw new RuntimeException('connect_schema_missing'); }
+    $expected = 0;
+    foreach (simplexml_load_file('/source/moodle/local/ustar/db/install.xml')->TABLES->TABLE as $t) {
+        if (str_starts_with((string)$t['NAME'], 'local_ustar_conn_')) { $expected++; }
+    }
+    if (count($result) !== $expected) { throw new RuntimeException('connect_schema_missing'); }
     return $result;
 };
 $before = $counts();

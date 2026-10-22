@@ -80,4 +80,101 @@ final class connect_notification_action_test extends \advanced_testcase {
         $this->assertTrue($DB->record_exists('local_ustar_conn_acktokens', ['id' => $fresh]));
         $this->assertEquals($before, $DB->get_record('local_ustar_notifications', ['id' => $f['notice']->id]));
     }
+    private function action(array $f): array {
+        $class = '\\local_ustar\\connect\\notification_action';
+        $this->assertTrue(class_exists($class), 'Notification action service missing');
+        return identity_service::atomic(fn() => $class::issue($f['notice'], $f['delivery'], $f['link'], time()));
+    }
+    private function ack(array $f, string $action, string $mid = '991', ?int $now = null): array {
+        return \local_ustar\connect\notification_action::acknowledge($action, $f['sender'], $mid, $now ?? time());
+    }
+    private function unavailable(callable $call, string $reason = 'ack_unavailable'): void {
+        try { $call(); $this->fail('Expected callback denial'); }
+        catch (\InvalidArgumentException $error) { $this->assertSame($reason, $error->getMessage()); }
+    }
+    public function test_action_is_hashed_and_recipient_bound(): void {
+        global $DB;
+        $f = $this->delivery_fixture(); $action = $this->action($f);
+        $this->assertSame(['action','expires'], array_keys($action));
+        $this->assertSame(47, strlen($action['action']));
+        $row = $DB->get_record('local_ustar_conn_acktokens', ['userid' => $f['uid']], '*', MUST_EXIST);
+        $this->assertSame(64, strlen($row->tokenhash));
+        $this->assertStringNotContainsString($action['action'], json_encode($row));
+        $wrong = $f; $wrong['sender'] = new identity('telegram','123456','99999');
+        $this->unavailable(fn() => $this->ack($wrong, $action['action']));
+        $wrong['sender'] = new identity('telegram','999999',$f['link']->subject);
+        $this->unavailable(fn() => $this->ack($wrong, $action['action']));
+        $this->unavailable(fn() => $this->ack($f, 'ua1_'.str_repeat('B',43)));
+        $this->assertNull($DB->get_field('local_ustar_notifications','ackat',['id'=>$f['notice']->id]));
+    }
+    public function test_read_repeat_and_callback_before_finish_keep_first_ack(): void {
+        global $DB;
+        $f=$this->delivery_fixture(); $action=$this->action($f);
+        communication::mark_notification($f['uid'], (int)$f['notice']->id);
+        $before=$DB->get_record('local_ustar_notify_delivery',['id'=>$f['delivery']->id]);
+        $first=$this->ack($f,$action['action']);
+        $this->assertSame(['status'=>'acknowledged','acknowledged_at'=>$first['acknowledged_at'],'category'=>'tasks'],$first);
+        $this->assertSame($first,$this->ack($f,$action['action']));
+        $this->assertSame($first['acknowledged_at'],\local_ustar\connect\notification_acknowledgement::own((int)$f['notice']->id)['acknowledged_at']);
+        $this->assertEquals($before,$DB->get_record('local_ustar_notify_delivery',['id'=>$f['delivery']->id]));
+        $DB->set_field('local_ustar_notify_delivery','status','uncertain',['id'=>$before->id]);
+        $this->assertSame($first,$this->ack($f,$action['action']));
+    }
+    public function test_current_link_attempt_and_message_fences(): void {
+        global $DB;
+        $f=$this->delivery_fixture();$action=$this->action($f);
+        foreach (['failed','retry_wait','cancelled'] as $state) {
+            $DB->set_field('local_ustar_notify_delivery','status',$state,['id'=>$f['delivery']->id]);
+            $this->unavailable(fn()=>$this->ack($f,$action['action']));
+        }
+        $DB->set_field('local_ustar_notify_delivery','status','sending',['id'=>$f['delivery']->id]);
+        $DB->set_field('local_ustar_notify_delivery','attempts',2,['id'=>$f['delivery']->id]);
+        $this->unavailable(fn()=>$this->ack($f,$action['action']));
+        $DB->set_field('local_ustar_notify_delivery','attempts',1,['id'=>$f['delivery']->id]);
+        $DB->set_field('local_ustar_notify_delivery','providerref','991',['id'=>$f['delivery']->id]);
+        $this->unavailable(fn()=>$this->ack($f,$action['action'],'992'));
+        $DB->set_field('local_ustar_conn_links','revision',(int)$f['link']->revision+1,['id'=>$f['link']->id]);
+        $this->unavailable(fn()=>$this->ack($f,$action['action']));
+        $DB->set_field('local_ustar_conn_links','revision',$f['link']->revision,['id'=>$f['link']->id]);
+        $DB->set_field('local_ustar_conn_links','state','revoked',['id'=>$f['link']->id]);
+        $this->unavailable(fn()=>$this->ack($f,$action['action']));
+        $this->assertNull($DB->get_field('local_ustar_notifications','ackat',['id'=>$f['notice']->id]));
+    }
+    public function test_optout_is_not_revoke_and_expiry_is_strict(): void {
+        global $DB;
+        $f=$this->delivery_fixture();$action=$this->action($f);
+        set_user_preference('local_ustar_connect_notify_v1',json_encode(['enabled'=>false]),$f['uid']);
+        $this->unavailable(fn()=>$this->ack($f,$action['action'],'991',$action['expires']));
+        $this->assertSame('acknowledged',$this->ack($f,$action['action'])['status']);
+        $DB->set_field('local_ustar_conn_links','state','revoked',['id'=>$f['link']->id]);
+        $this->unavailable(fn()=>$this->ack($f,$action['action']));
+    }
+    public function test_account_capability_fence_and_kill_switch_are_current(): void {
+        global $DB,$CFG;
+        $f=$this->delivery_fixture();$action=$this->action($f);
+        foreach (['deleted'=>1,'suspended'=>1,'confirmed'=>0] as $field=>$value) {
+            $DB->set_field('user',$field,$value,['id'=>$f['uid']]);
+            $this->unavailable(fn()=>$this->ack($f,$action['action']));
+            $DB->set_field('user',$field,1-$value,['id'=>$f['uid']]);
+        }
+        $CFG->ustar_connect_notify_userids=[];
+        $this->unavailable(fn()=>$this->ack($f,$action['action']));
+        $CFG->ustar_connect_notify_userids=[$f['uid']];
+        unassign_capability('local/ustar:use',$f['role']);accesslib_clear_all_caches_for_unit_testing();
+        $this->unavailable(fn()=>$this->ack($f,$action['action']));
+        $CFG->ustar_connect_ack_enabled=false;
+        $this->unavailable(fn()=>$this->ack($f,$action['action']),'ack_disabled');
+        $this->assertNull($DB->get_field('local_ustar_notifications','ackat',['id'=>$f['notice']->id]));
+    }
+    public function test_cutoff_and_pending_actor_do_not_issue_button(): void {
+        global $CFG;
+        $f=$this->delivery_fixture();$class='\\local_ustar\\connect\\notification_action';
+        $this->assertTrue(class_exists($class));
+        $CFG->ustar_connect_ack_since=time()+1;
+        $this->assertNull(identity_service::atomic(fn()=>$class::issue($f['notice'],$f['delivery'],$f['link'],time())));
+        $CFG->ustar_connect_ack_since=time()-60;
+        employment::register_pending($f['uid']);
+        $this->assertNull(identity_service::atomic(fn()=>$class::issue($f['notice'],$f['delivery'],$f['link'],time())));
+    }
+
 }

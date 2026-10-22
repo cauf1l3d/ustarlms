@@ -35,3 +35,5 @@ $string['ustar:requeststaff'] = 'Подавать заявки на персон
 $string['notification_ack'] = 'Принял';
 $string['notification_acknowledged'] = 'Подтверждено';
 $string['notification_read'] = 'Прочитано';
+
+$string['privacy:metadata:connect:acktokens'] = 'Хеши персональных кнопок подтверждения уведомлений; без исходных токенов действий.';

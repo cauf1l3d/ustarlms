@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026101905" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026102200" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -2030,6 +2030,36 @@
       </FIELDS>
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/><KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/></KEYS>
       <INDEXES><INDEX NAME="identityhash_uix" UNIQUE="true" FIELDS="identityhash"/><INDEX NAME="commandhash_uix" UNIQUE="true" FIELDS="commandhash"/><INDEX NAME="expiresat_idx" UNIQUE="false" FIELDS="expiresat"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_acktokens" COMMENT="Hashed recipient-bound notification acknowledgement actions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="tokenhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="notificationid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="deliveryid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="attempt" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="provider" TYPE="char" LENGTH="16" NOTNULL="true"/>
+        <FIELD NAME="tenant" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="linkrevision" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="expires" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="notificationid_fk" TYPE="foreign" FIELDS="notificationid" REFTABLE="local_ustar_notifications" REFFIELDS="id"/>
+        <KEY NAME="deliveryid_fk" TYPE="foreign" FIELDS="deliveryid" REFTABLE="local_ustar_notify_delivery" REFFIELDS="id"/>
+        <KEY NAME="linkid_fk" TYPE="foreign" FIELDS="linkid" REFTABLE="local_ustar_conn_links" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="tokenhash_uix" UNIQUE="true" FIELDS="tokenhash"/>
+        <INDEX NAME="delivery_attempt_uix" UNIQUE="true" FIELDS="deliveryid,attempt"/>
+        <INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="expires_idx" UNIQUE="false" FIELDS="expires"/>
+      </INDEXES>
     </TABLE>
 </TABLES>
 </XMLDB>

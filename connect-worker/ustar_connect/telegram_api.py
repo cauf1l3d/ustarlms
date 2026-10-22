@@ -59,7 +59,8 @@ class TelegramClient:
         self._opener = build_opener(ProxyHandler(proxies), HTTPSHandler(context=ssl.create_default_context()), _NoRedirect())
 
     def _call(self, method, payload):
-        if method not in ('getMe', 'getWebhookInfo', 'getUpdates', 'sendMessage'):
+        if method not in ('getMe', 'getWebhookInfo', 'getUpdates', 'sendMessage',
+                          'answerCallbackQuery', 'editMessageReplyMarkup'):
             raise ValueError('invalid_api_method')
         sending = method == 'sendMessage'
         body = json.dumps(payload, separators=(',', ':'), allow_nan=False).encode()
@@ -68,7 +69,8 @@ class TelegramClient:
         request = Request('https://api.telegram.org/bot'+self._token+'/'+method, data=body,
                           headers={'Content-Type': 'application/json'}, method='POST')
         try:
-            with self._opener.open(request, timeout=35 if method == 'getUpdates' else 10) as response:
+            timeout = 35 if method == 'getUpdates' else (3 if method in ('answerCallbackQuery', 'editMessageReplyMarkup') else 10)
+            with self._opener.open(request, timeout=timeout) as response:
                 raw = response.read(2097153)
         except HTTPError as error:
             code, parameters = error.code, None
@@ -96,7 +98,8 @@ class TelegramClient:
                     raise ValueError('invalid_response')
                 raise _error(code, value.get('parameters'), sending)
             result = value.get('result')
-            if not isinstance(result, list if method == 'getUpdates' else dict):
+            valid = result is True if method == 'answerCallbackQuery' else isinstance(result, list if method == 'getUpdates' else dict)
+            if not valid:
                 raise ValueError('invalid_result')
             return result
         except (ValueError, RecursionError):
@@ -108,10 +111,11 @@ class TelegramClient:
     def get_webhook_info(self):
         return self._call('getWebhookInfo', {})
 
-    def get_updates(self, offset):
-        if type(offset) is not int or not 0 <= offset < 2**63:
+    def get_updates(self, offset, *, acknowledgements_enabled=False):
+        if type(offset) is not int or not 0 <= offset < 2**63 or type(acknowledgements_enabled) is not bool:
             raise ValueError('invalid_offset')
-        return self._call('getUpdates', {'offset': offset, 'limit': 50, 'timeout': 25, 'allowed_updates': ['message']})
+        updates = ['message', 'callback_query'] if acknowledgements_enabled else ['message']
+        return self._call('getUpdates', {'offset': offset, 'limit': 50, 'timeout': 25, 'allowed_updates': updates})
 
     def _send(self, subject, payload):
         if type(subject) is not int or not 0 < subject < 2**52:
@@ -158,16 +162,59 @@ class TelegramClient:
             raise ValueError('invalid_link_outcome')
         return self._send(subject, {'text': texts[outcome], 'link_preview_options': {'is_disabled': True}})
 
-    def send_notification(self, subject, category, severity, occurred_at):
+    def send_notification(self, subject, category, severity, occurred_at, *, ack=None):
         from datetime import datetime, timezone
         titles={'registration':'Регистрация','tasks':'Задачи','feed':'Лента','grades':'Грейды'}
         labels={'normal':'Новое событие','action':'Требуется действие','critical':'Важное событие'}
         if category not in titles or severity not in labels or type(occurred_at) is not int or not 0<occurred_at<2**32:
             raise ValueError('invalid_notification')
+        if ack is not None:
+            if (not isinstance(ack, dict) or set(ack) != {'action', 'expires'}
+                    or type(ack['expires']) is not int or not 0 < ack['expires'] < 2**32):
+                raise ValueError('invalid_notification_action')
+            _token(ack['action'], 'ua1')
         date=datetime.fromtimestamp(occurred_at,timezone.utc).strftime('%d.%m.%Y %H:%M UTC')
-        paths={'registration':'profile.php','tasks':'tasks.php','feed':'feed.php','grades':'profile.php'}
+        keyboard = self._notification_keyboard(category)
+        if ack is not None:
+            keyboard.insert(0, [{'text': 'Принял', 'callback_data': ack['action']}])
         return self._send(subject,{'text':f'Академия USTAR · {titles[category]}\n{labels[severity]}\n{date}\n\n'
             'Подробности доступны в Академии с учётом ваших текущих прав. Откройте её в браузере и войдите своей учётной записью.',
-            'reply_markup':{'inline_keyboard':[[{'text':'Открыть в Академии',
-                'url':'https://ustar.local/local/ustar/'+paths[category]}]]},
+            'reply_markup':{'inline_keyboard':keyboard},
             'link_preview_options':{'is_disabled':True}})
+
+    @staticmethod
+    def _notification_keyboard(category):
+        paths = {'registration':'profile.php','tasks':'tasks.php','feed':'feed.php','grades':'profile.php'}
+        if not isinstance(category, str) or category not in paths:
+            raise ValueError('invalid_notification_category')
+        return [[{'text':'Открыть в Академии','url':'https://ustar.local/local/ustar/'+paths[category]}]]
+
+    def answer_notification_ack(self, query_id, outcome, acknowledged_at=0):
+        from datetime import datetime, timezone
+        if not isinstance(query_id, str) or not re.fullmatch(r'[!-~]{1,256}', query_id):
+            raise ValueError('invalid_callback_query')
+        if outcome == 'acknowledged':
+            if type(acknowledged_at) is not int or not 0 < acknowledged_at < 2**32:
+                raise ValueError('invalid_acknowledgement')
+            text = 'Подтверждено · '+datetime.fromtimestamp(acknowledged_at, timezone.utc).strftime('%d.%m.%Y %H:%M UTC')
+        elif outcome == 'unavailable':
+            text = 'Не удалось подтвердить. Откройте Академию'
+        elif outcome == 'uncertain':
+            text = 'Результат пока неизвестен. Проверьте уведомление в Академии или нажмите ещё раз'
+        else:
+            raise ValueError('invalid_acknowledgement')
+        return self._call('answerCallbackQuery', {'callback_query_id':query_id, 'text':text,
+                                                'show_alert':False, 'cache_time':0})
+
+    def edit_notification_ack(self, subject, message_id, category):
+        if (type(subject) is not int or not 0 < subject < 2**52
+                or type(message_id) is not int or not 0 < message_id < 2**63):
+            raise ValueError('invalid_message_reference')
+        result = self._call('editMessageReplyMarkup', {'chat_id':subject, 'message_id':message_id,
+            'reply_markup':{'inline_keyboard':self._notification_keyboard(category)}})
+        chat = result.get('chat')
+        if (type(result.get('message_id')) is not int or result['message_id'] != message_id
+                or not isinstance(chat, dict) or chat.get('type') != 'private'
+                or type(chat.get('id')) is not int or chat['id'] != subject):
+            raise TelegramError('invalid_response')
+        return result

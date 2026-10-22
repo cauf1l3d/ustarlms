@@ -58,3 +58,19 @@ messages. No guarded2100/2200 deployment installer exists in this source slice.
 Next after final source acceptance: separate guarded deployment preserving fresh pair,
 cron target and HTTPS ownership/renewal; product B routing/preferences then C Bitrix
 (actual portal/API unknown). MiniApp/SSO/role actions remain separate.
+
+## Resume from shared chat and PR head —22Oct
+
+Shared chat6ada0312 read through its last messages, including local974/35skips and
+actual systemd success. PR f8c12767 source8.2/source8.3/runtime SUCCESS, context
+SUCCESS; native154tests/796assertions had exactly one failure in the capability
+revocation test. The last agent stopped before seeing this failure.
+
+Root cause confirmed against pinned Moodle cc0bf17d public/lib/accesslib.php:
+accesslib_clear_all_caches resets ACCESSLIB_PRIVATE but explicitly leaves USER
+unchanged. The callback test retained recipient USER->access after CAP_PROHIBIT.
+A fresh cookieless worker request now setsUser(null) and explicitly asserts current
+has_capability is false before asserting ACK denial. Production guard unchanged.
+Source496b79ea under CI; generated inventory update follows in the same resume.
+Author-only continuation,0subagents. No repeated owner pilot/group tests or server
+changes; native/privacy/lifecycle/wire/races final GREEN still pending.

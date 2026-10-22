@@ -421,7 +421,7 @@
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
       "size": 89132,
-      "sha256": "c927ed644826eef585a20c6e994040931fe24804e566c32dd4bded696f3bac37"
+      "sha256": "ef42b0fa3a8a18613fe7d1e6a8a130cb76ea789fa1f4ec87377299334ee9a83e"
     },
     {
       "path": "context/code_map/frontend.yaml",
@@ -1308,8 +1308,8 @@
     {
       "path": "context/runtime/connect_con02_callback_progress_20261022.md",
       "domain": "runtime",
-      "size": 4397,
-      "sha256": "bb47810ac71a16487d8ba8dde55f28c7902047e4e5b279ec8c5bf89ab6734e37"
+      "size": 5398,
+      "sha256": "e4a88b54743fdf47e51429a856dd4eb41b017581e3fa6ec8d56c96fc8da07487"
     },
     {
       "path": "context/runtime/connect_configure_tty_recovery_20261019.md",

@@ -122,5 +122,20 @@ class Contract(unittest.TestCase):
             with self.assertRaises(c.Refusal): c.check(c.Context(None, root, 1234, None, None))
             self.assertEqual([], list(root.iterdir()))
 
+    def test_recovery_binds_saved_containers_while_stopped(self):
+        c,_=self.modules()
+        self.assertTrue(hasattr(c.Host,'bind_identities'),'recovery must not adopt a running-only inventory')
+        from types import SimpleNamespace
+        from unittest.mock import Mock
+        images={'ustar_moodle':'sha256:'+'1'*64,'ustar_postgres':'sha256:'+'2'*64}
+        identities={n:{'Id':str(i)*64,'Image':image} for i,(n,image) in enumerate(images.items(),1)}
+        class Control:
+            def __init__(self,d,identities,log):self.identities=identities
+            def inspect(self):return {n:{'State':{'Running':False}} for n in self.identities}
+        p=SimpleNamespace(IMAGES=images,containers=Mock(side_effect=AssertionError('running-only inventory called')))
+        ctx=c.Context(None,Path('/'),0,None,SimpleNamespace(p=p,tx=SimpleNamespace(Host=Control)))
+        host=c.Host(ctx);host.bind_identities(identities)
+        self.assertFalse(any(r['State']['Running'] for r in host.inspect().values()));p.containers.assert_not_called()
+
 
 if __name__ == '__main__': unittest.main()

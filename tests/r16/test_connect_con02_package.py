@@ -103,5 +103,24 @@ class Package(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td, self.assertRaises(c.Refusal):
             builder.build('7f833626f687a8baa8e98efaba7e4d3293b1b47a',Path(td))
 
+    def test_status_reports_interruption_when_database_stopped(self):
+        cli=self.module()
+        import connect_con02_state as state
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            class Host:
+                def prefix(self):return 'mdl_'
+                def database(self,prefix):raise c.Refusal('database_stopped')
+                def service_active(self,n):return False
+                def service_enabled(self,n):return False
+            ctx=c.Context(SimpleNamespace(reference={'tool_commit':'a'*40}),root,os.getuid(),Host(),SimpleNamespace(base=root/'state'))
+            j=state.Journal(ctx);j.begin('app',{'files':{}},{'files':{}},generation='d'*32)
+            locks=state.Locks(ctx)
+            for p in locks.paths[1:]:p.parent.mkdir(parents=True,exist_ok=True);p.touch(mode=0o600)
+            result=cli.status(ctx)
+            self.assertEqual('prepared',result['app']['phase'])
+            self.assertIsNone(result['versions']);self.assertFalse(result['database_available'])
+
 
 if __name__=='__main__':unittest.main()

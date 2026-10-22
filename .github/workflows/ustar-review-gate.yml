@@ -299,6 +299,7 @@ jobs:
             artifacts/con02-update-command/
             artifacts/con02-update-runtime.json
             artifacts/con02-update-https-owner.json
+            artifacts/con02-update-*-failure.log
       - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
         run: |
           sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py

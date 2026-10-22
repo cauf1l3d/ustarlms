@@ -315,6 +315,24 @@ class Host:
             self._control = Control(d, d.identities, self.log)
         return self._control
 
+    def bind_identities(self, identities):
+        d=self.ctx.engine
+        require(isinstance(identities,dict) and set(identities)==set(d.p.IMAGES), 'recorded_container_inventory')
+        for name,image in d.p.IMAGES.items():
+            row=identities[name]
+            require(isinstance(row,dict) and row.get('Image')==image
+                    and re.fullmatch('[a-f0-9]{64}',row.get('Id','')), 'recorded_container_identity')
+        if self._control is None:
+            owner=self
+            class Control(d.tx.Host):
+                def action(self,argv,timeout=90):return owner.action(argv,timeout)
+            d.identities=identities
+            self._control=Control(d,identities,self.log)
+        else:
+            require({n:(r['Id'],r['Image']) for n,r in self._control.identities.items()}
+                    == {n:(r['Id'],r['Image']) for n,r in identities.items()}, 'recorded_container_identity')
+        self._control.inspect()  # Same pinned IDs/images/binds, including stopped containers.
+
     def __getattr__(self, name): return getattr(self.delegate(), name)
 
     def database(self, prefix, addons=None):

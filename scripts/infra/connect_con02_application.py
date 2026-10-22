@@ -62,7 +62,9 @@ class Application:
     def bind(self, row):
         run = self.journal.folder(row)
         self.d.marker = run / 'primitive.json'
-        return copy.deepcopy(row['primitive'])
+        marker=copy.deepcopy(row['primitive'])
+        if hasattr(self.host,'bind_identities'):self.host.bind_identities(marker['identities'])
+        return marker
 
     def step(self, phase, **fields):
         row = self.journal.checkpoint('app', phase, **fields)
@@ -105,6 +107,8 @@ class Application:
                         https_snapshot(self.ctx)
                         return {'phase': 'app_ready', 'verify_only': True}
                 if row['phase'] != 'baseline_restored':
+                    self.journal.guard('app');self.host.controls(previous)
+                    self.step(row['phase'],https=https_snapshot(self.ctx))
                     result = self._recover()
                     return {**result, 'recovered_previous_run': True, 'new_upgrade_started': False}
             prefix = self.host.prefix()
@@ -213,6 +217,8 @@ class Application:
 
     def _recover(self):
         row = self.row()
+        self.bind(row)
+        require(not (row['public_released'] and row.get('restore_started')), 'explicit_restore_resume_required')
         if row['phase'] == 'baseline_restored':
             self.verify(row, target=False); return {'phase': 'baseline_restored'}
         if not row['switch_started']:
@@ -240,11 +246,17 @@ class Application:
         if row['live_trees_modified']:
             pair = self.d.tx.read_pair(self.d, marker)
             self.host.capacity(cold=True)
+            self.step('recovery_required',restore_started=True)
             stash = self.journal.folder(row) / ('retained-before-restore-' + uuid.uuid4().hex)
             stash.mkdir(mode=0o700)
+            # config.php and the private include are unchanged by an app upgrade.
+            # Keep them at their live paths even if physical recovery is killed.
+            self.restore_code(row,pair,stash,marker)
             for name, live in self.d.trees.items():
+                if name=='code':continue
                 self.d.u.move_children(self.d.cold, live, stash / name, marker['roots'][name][:2])
             for name, live in self.d.trees.items():
+                if name=='code':continue
                 self.d.u.copy_contents(self.d.cold, self.journal.folder(row) / 'baseline' / name, live, pair['trees'][name])
                 self.d.tx.verify_tree(self.d, live, pair['trees'][name])
         # Matching cron/control images are restored before any public release.
@@ -256,13 +268,35 @@ class Application:
         require(self.host.login() == 200, 'restored_login_failed')
         self.host.restore_policies(row['restart_policies'])
         restore_workers(self.host, row['service_states'])
-        self.step('baseline_restored', live_trees_modified=False)
+        self.step('baseline_restored', live_trees_modified=False,restore_started=False)
         return {'phase': 'baseline_restored'}
+
+    def restore_code(self,row,pair,stash,marker):
+        live=self.d.trees['code'];expected=pair['trees']['code']
+        protected={'config.php','.ustar-connect'}
+        wanted=lambda tree:{k:v for k,v in tree.items() if k.split('/',1)[0] in protected}
+        require(wanted(self.d.tx.inventory(self.d,live))==wanted(expected), 'recovery_owned_config_drift')
+        staging=self.journal.folder(row)/('restore-code-'+uuid.uuid4().hex)
+        staging.mkdir(mode=0o700)
+        self.d.u.copy_contents(self.d.cold,self.journal.folder(row)/'baseline/code',staging,expected)
+        self.d.tx.verify_tree(self.d,staging,expected)
+        retained=stash/'code';retained.mkdir(mode=0o700)
+        for child in sorted(live.iterdir()):
+            if child.name in protected:continue
+            require(self.d.tx.root_id(live)==marker['roots']['code'],'restore_roots_changed')
+            os.rename(child,retained/child.name)
+        for child in sorted(staging.iterdir()):
+            if child.name in protected:continue
+            require(self.d.tx.root_id(live)==marker['roots']['code'],'restore_roots_changed')
+            os.rename(child,live/child.name)
+        for path in (retained,staging,live):self.d.cold.sync_directory(path)
+        self.d.tx.verify_tree(self.d,live,expected)
 
     def recover(self):
         with self.locks.prebackup():
             # A new operation may follow a legitimate renewal by the HTTPS owner.
             # Freeze its verified state afresh; never rewrite any TLS-owned file.
+            self.journal.guard('app');self.host.controls(self.journal.load())
             owner = https_snapshot(self.ctx)
             self.step(self.row()['phase'], https=owner)
             return self._recover()
@@ -273,5 +307,6 @@ class Application:
         with self.locks.prebackup():
             require(not self.journal.load().get('runtime') or self.journal.load()['runtime']['phase'] == 'runtime_disabled',
                     'disable_ack_before_application_restore')
+            self.journal.guard('app');self.host.controls(self.journal.load())
             self.step(row['phase'], https=https_snapshot(self.ctx))
             with self.locks.cold(): return self._restore_cold(self.row())

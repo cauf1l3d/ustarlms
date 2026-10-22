@@ -153,7 +153,7 @@ c=load_config(profile,notification=sender)
 ack=getattr(c,'acknowledgements_enabled',False)
 for source in ('telegram.token','ack-bridge.key','notifications-bridge.key'):
  try:open('/etc/ustar-connect/'+source).read();raise AssertionError('root source readable')
- except PermissionError:pass
+ except (PermissionError,FileNotFoundError):pass
 foreign='/run/credentials/ustar-connect-receiver.service/ack-bridge.key' if sender else '/run/credentials/ustar-connect-notify.service/bridge.key'
 try:open(foreign).read();raise AssertionError('foreign credential readable')
 except (PermissionError,FileNotFoundError):pass
@@ -321,6 +321,17 @@ def main():
             'application_source':c.APP_COMMIT,'application_SQL':'modeled here; actual native lifecycle in separate Task7 gate',
             'provider_and_bridge_store':'synthetic only; no external API request'}
         out=ROOT/'artifacts/con02-update-runtime.json';out.write_text(json.dumps(evidence,indent=2)+'\n');print('CON02_UPDATE_RUNTIME=PASS')
+    except BaseException:
+        import re
+        logs=[]
+        for unit in (*c.SERVICES,'ustar-connect-probe.service'):
+            logs.append(unit+'\n'+run(['journalctl','-u',unit,'--since','5 minutes ago','-n','60','--no-pager','-o','cat'],check=False).stdout)
+        text='\n'.join(logs)
+        text=re.sub(r'\b[0-9a-fA-F]{64}\b','[hash-or-key-redacted]',text)
+        text=re.sub(r'\b[0-9]{5,20}:[A-Za-z0-9_-]{20,256}\b','[token-redacted]',text)
+        (ROOT/'artifacts/con02-update-systemd-failure.log').write_text(text)
+        print(text[-8000:])
+        raise
     finally:
         for n in (*c.SERVICES,'ustar-connect-probe.service'):run(['systemctl','stop',n],check=False)
         for p in overrides:p.unlink(missing_ok=True)

@@ -177,5 +177,32 @@ class Application(unittest.TestCase):
         self.assertIn('con02_update_native.py verify', workflow)
         self.assertIn('artifacts/con02-update-*', workflow)
 
+    def test_recovery_drift_refuses_before_journal_write_or_stop(self):
+        op=self.operation();op.upgrade();self.d.actions.clear()
+        self.cron.write_bytes(b'administrator drift')
+        inode=op.journal.path.stat().st_ino
+        with self.assertRaises(c.Refusal):op.recover()
+        self.assertEqual(inode,op.journal.path.stat().st_ino)
+        self.assertEqual([],self.d.actions)
+
+    def test_restore_process_loss_keeps_owned_config_and_resumes_same_run(self):
+        op=self.operation();self.d.fail_at=1
+        marker=self.root/'restore-config-observed'
+        pid=os.fork()
+        if pid==0:
+            original=self.d.u.copy_contents
+            def crash(cold,source,dest,entries):
+                if Path(source).name=='code' and Path(source).parent.name=='baseline':
+                    marker.write_bytes(b'1' if (self.d.p.CODE/'config.php').exists() else b'0')
+                    original(cold,source,dest,entries);os._exit(73)
+                return original(cold,source,dest,entries)
+            self.d.u.copy_contents=crash
+            op.upgrade();os._exit(74)
+        _,status=os.waitpid(pid,0);self.assertEqual(73,os.waitstatus_to_exitcode(status))
+        self.assertEqual(b'1',marker.read_bytes(),'owned config must remain available throughout cold recovery')
+        generation=op.row()['generation']
+        self.assertEqual('baseline_restored',op.recover()['phase'])
+        self.assertEqual(generation,op.row()['generation']);self.assert_restored()
+
 
 if __name__ == '__main__': unittest.main()

@@ -68,8 +68,15 @@ def status(ctx):
     from connect_con02_application import service_snapshot
     with Locks(ctx).check():
         result = Journal(ctx).public()
-        db = ctx.host.database(ctx.host.prefix())
-        return {**result, 'versions': {k: db['addons'].get(k) for k in ('local_ustar', 'theme_ustar')},
+        try:
+            db = ctx.host.database(ctx.host.prefix())
+            import re
+            versions = {k: (db['addons'].get(k) if isinstance(db['addons'].get(k),str)
+                        and re.fullmatch('[0-9]{10}',db['addons'][k]) else 'unexpected')
+                        for k in ('local_ustar', 'theme_ustar')}
+        except Exception:
+            versions = None
+        return {**result, 'versions': versions, 'database_available': versions is not None,
                 'services': service_snapshot(ctx.host), 'host_changes': False}
 
 

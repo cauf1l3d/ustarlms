@@ -199,6 +199,7 @@ class Journal:
         self.guard(scope)
         row = self.load()[scope]; require(name in row['files'], 'unknown_image')
         item = row['files'][name][side]; path = Path(item['path'])
+        if descriptor(capture(path)) == item: return
         if item['kind'] == 'absent':
             if os.path.lexists(path): path.unlink(); sync(path.parent)
         else:

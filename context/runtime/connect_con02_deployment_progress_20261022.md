@@ -77,3 +77,12 @@ Additional native-derived export checks: index field whitespace and XMLDB
 foreign-unique semantics observed RED→GREEN; contract11/11 PASS. Fixed product
 source remains534; only deployment profile/tool/tests changed. All actual gates
 must rerun on the new commit; prior runtime success does not prove these new fixtures.
+
+Task9 crash review RED→GREEN: unchanged images retain inode; status reports an
+interrupted run while DB is stopped; unknown cron drift refuses before journal writes;
+recorded container identities bind while stopped; interrupted physical code restore
+keeps config.php/private include present and resumes the same generation. Combined
+53 tests/1 local UID33 namespace skip PASS. ca3 actual root state7/7 and old gates
+passed; new systemd fixture failed before transition because the initial v1 wrapper
+read a not-yet-created ACK credential. ENOENT is now treated as absent; sanitized
+fixture journal collection added. New actual runtime/native rerun required.

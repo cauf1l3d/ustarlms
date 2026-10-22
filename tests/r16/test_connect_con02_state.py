@@ -47,6 +47,12 @@ class State(unittest.TestCase):
         with self.assertRaises(c.Refusal): j.put('app', 'control', 'before')
         self.assertEqual(b'administrator edit', p.read_bytes())
 
+    def test_unchanged_image_preserves_inode(self):
+        s = self.module(); p,before,_ = self.setup_files(s)
+        j=s.Journal(self.ctx);j.begin('app',before,{'files':before['files']},generation='e'*32)
+        inode=p.stat().st_ino;j.put('app','control','after')
+        self.assertEqual(inode,p.stat().st_ino)
+
     def test_metadata_uid33_root_gid_acl(self):
         s = self.module(); p, before, after = self.setup_files(s)
         if os.getuid() != 0:

@@ -267,5 +267,20 @@
   "next_product_slices": [
     "B_routing_preferences",
     "C_Bitrix_after_actual_portal_API_discovery"
-  ]
+  ],
+  "final_documentation": {
+    "commit": "34e185f032d72625c0a6b978dd8d9e5a0ae576d7",
+    "context_run": 39786095318,
+    "context_result": "success",
+    "review_run": 39786095327,
+    "review_result": "success",
+    "native_job": 119853663827,
+    "source_jobs": {
+      "8.2": 119849584769,
+      "8.3": 119849584411
+    },
+    "runtime_job": 119849584657,
+    "product_tree_unchanged_from_source_commit": true,
+    "historical_FullRC_jobs": "skipped_not_passed"
+  }
 }

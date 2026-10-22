@@ -1,5 +1,18 @@
 # USTAR инструкции агентам
 
+**22Oct — следующий этап: письменный проект согласованной поставки CON-02.**
+Owner: «Переходи к следующему». [Проект](context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md)
+готов к review: один controller, отдельные app upgrade и ACK enable/disable;
+direct2000+overlay→2200/repeat с fresh pair/cron2200, v1 сохранён до enable.
+HTTPS owner/config/vhosts/renewal сохраняются побайтно; legacy journals не переписывать.
+Поставка обычным.py/короткими командами; прежний UID/subject fence/revoke/cursor
+сохраняются, pilot/group tests не повторять. Новый controller/его план ещё не написаны;
+следующий gate — review именно письменного проекта, затем план самостоятельной реализации.
+A.2 завершён: финальный34e185f0 Context39786095318/Review39786095327 SUCCESS,
+source8.2/8.3/runtime/native PASS; FullRC skipped, не passed. Server1 application2000+
+policy overlay/worker a86 сохранён.0subagents/no SSH/provider sends/main merge.
+Ниже — завершённые этапы и датированная история.
+
 **22Oct — CON-02A.2 реализован и проверен в CI; на server1 не установлен.**
 Telegram «Принял» сохраняет первое личное ACK через тот же receiver и отдельный
 ACK-only ключ; v1/a86 совместимость и default-off сохранены. Candidate2200/theme0202,

@@ -4,7 +4,10 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: CON02_A2_source_CI_verified_not_deployed
+  deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
+  deployment_design_status: written_ready_for_owner_review
+  deployment_controller: not_implemented
+  stage: CON02_deployment_written_design_review
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
   development_version: 2026102200
@@ -34,7 +37,7 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: guarded_A1_A2_installer_fresh_pair_cron_HTTPS_handoff
+  next: review_written_deployment_design_then_self_implementation_plan
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
@@ -483,9 +486,16 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON02_A2_source_CI_verified_not_deployed
+  phase: CON02_deployment_written_design_review
   owner_priority: start_CON02_manual_group_tests_deferred_keep_ustar_local_and_existing_CA
   current_summary: >-
+    Owner22Oct ordered next deployment slice. Written design ready for review:
+    context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md.
+    One controller with direct2000+overlay-to2200/fresh pair/cron2200 upgrade and
+    separate ACK enable/disable; unchanged HTTPS owner, plain.py delivery,
+    exact old recipients/revoke/cursor preserved. Implementation plan/controller
+    not written; written-design review then self plan, no subagents. Final A2
+    docs34e185f0 Context39786095318/Review39786095327 SUCCESS, FullRC skipped.
     Owner-approved9-task A2 source slice complete; author self-review/no subagents.
     Source53476482 Context39782650830/Review39782650814 SUCCESS;154native/800assertions,
     3callback PG races, v1/v2 wire, actual2100-to2200/repeat/paired restore and

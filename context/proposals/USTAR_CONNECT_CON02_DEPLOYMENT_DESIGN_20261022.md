@@ -280,12 +280,15 @@ Runbook/CI receipt/STATE/ACTIVE/BACKLOG/SESSION_LOG/index сопровождаю
 app/runtime recovery boundaries; unchanged HTTPS owner; phased locks без вложенного
 backup self-deadlock; fixed recipients/revoke/notify cutoff; private credential split;
 отсутствие journal rewind и auto late DB rollback; обычный.py вместо user archive.
-Авторский self-review, независимого reviewer/субагентов нет. Реализация и все новые
-gates ещё не выполнены; ни этот проект, ни старый A.2 CI не являются installer PASS.
-
-Письменный проект принят владельцем22Oct. Следующий шаг — review конкретного
-[плана реализации](USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md), затем
-самостоятельное выполнение в текущем PR без нового выбора метода. Предложение выпуска
-уже разрешено фразой «Переходи к следующему»; повторного выбора проекта/получателей/
-агентов нет. Remote deployment/остановку сервера выполняет оператор по готовым
-проверенным командам отдельным явным запуском.
+Авторский self-review, независимого reviewer/субагентов нет. Проект и
+[план реализации](USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md) приняты22Oct;
+реализация и source/handoff завершены23Oct (МСК),9задач/45шагов.
+Toolb971bc38: Context39844480447/Review39844480386 SUCCESS, обе PHP1040/153skips,
+strictroot11/11, native154/800+direct2000→2200/repeat/restore и actual runtime/HTTPS PASS.
+Это новый controller evidence, отдельный от старого A.2 CI. FullRC skipped, не passed.
+Exact ordinary.py/557payload/worker/legacy hashes проверены;
+[runbook и recovery](../runtime/connect_con02_deployment_20261023.md),
+[CI-квитанция и границы](../runtime/connect_con02_deployment_ci_20261023.json).
+Далее owner readonly --check, отдельный upgrade/outage и enable-ack.
+Production2000+overlay/a86 сохранён; deployment/остановку выполняет оператор.
+Принятый pilot не повторять, live group deferred, повторного согласования плана нет.

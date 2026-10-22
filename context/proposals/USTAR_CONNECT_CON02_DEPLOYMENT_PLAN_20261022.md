@@ -95,7 +95,7 @@ tests/r16/test_connect_con02_contract.py. Read accepted installer/HTTPS/cron pri
 `https_snapshot(ctx:Context)->dict`. Check uses existing locks/read-only SQL, no PHP bootstrap,
 signed nonce/provider call/state init. Missing journal permits only exact2000+overlay baseline.
 
-- [ ] **Step 1 — RED tests.** Add named tests frozen_counts_and_hashes, revoked_pilot_is_valid_baseline,
+- [x] **Step 1 — RED tests.** Add named tests frozen_counts_and_hashes, revoked_pilot_is_valid_baseline,
   readonly_has_no_business_or_nonce_writes, unknown2200_is_not_adopted,
   authorized_renewal_between_operations, target_preserves_old99_and_custom_tasks.
   ```python
@@ -106,17 +106,17 @@ signed nonce/provider call/state init. Missing journal permits only exact2000+ov
   ```
   Assert wrong overlay/extra file, prefix injection, wrong tool/CA/peer/units,
   old99 column/index mutation, missing/new extra table all refuse before effects.
-- [ ] **Step 2 — Run RED.** Run contract test pattern; expect missing new interface assertions/import,
+- [x] **Step 2 — Run RED.** Run contract test pattern; expect missing new interface assertions/import,
   not missing historical Git objects. Record exact RED command/source; use full-history CI if needed.
-- [ ] **Step 3 — Implement contracts.** Export baseline with the one exact overlay, target557/100 from534,
+- [x] **Step 3 — Implement contracts.** Export baseline with the one exact overlay, target557/100 from534,
   worker separately534 and frozen a86/legacy refs. Derive XMLDB table/field/index contract;
   current table99 metadata must remain exact, new table must match fresh-target normalized metadata.
   Compare full addon registry/core/tasks; do not reuse legacy task-reset/version assumptions.
   Each operation accepts current verified HTTPS owner state then freezes it under its lock,
   rather than pinning a previous leaf forever. No global helper hash/profile monkeypatch.
-- [ ] **Step 4 — GREEN.** Contract pattern passes; read-only effects counters all zero, no root state
+- [x] **Step 4 — GREEN.** Contract pattern passes; read-only effects counters all zero, no root state
   initialized, revoked fixture retained. Existing installer/HTTPS/cron tests unchanged.
-- [ ] **Step 5 — Commit** `feat: define fixed CON-02 deployment contracts`; progress ledger and generated index reflect only observed results.
+- [x] **Step 5 — Commit** `feat: define fixed CON-02 deployment contracts`; progress ledger and generated index reflect only observed results.
 
 ### Task 2: Durable images, phased locks and recovery journal
 
@@ -131,7 +131,7 @@ signed nonce/provider call/state init. Missing journal permits only exact2000+ov
 `Locks(ctx).check()` acquires existing shared controls, creates nothing.
 scope exactly app/runtime, side exactly before/after; unknown shapes reject.
 
-- [ ] **Step 1 — RED tests.** Add durable_partial_pair, replaced_lock_inode,
+- [x] **Step 1 — RED tests.** Add durable_partial_pair, replaced_lock_inode,
   backup_not_held_in_prebackup, metadata_uid33_root_gid_acl, unknown_admin_drift,
   check_status_create_nothing. Test root-required branch under USTAR_REQUIRE_CON02_OWNER=1.
   ```python
@@ -140,16 +140,16 @@ scope exactly app/runtime, side exactly before/after; unknown shapes reject.
   self.assertEqual([], host.mutations_after_drift)
   ```
   Use real file locks/atomic replacements and actual UID33 in required CI; modeled SQL is labelled.
-- [ ] **Step 2 — Run RED.** State pattern fails for missing Journal/Locks; actual-owner gate is a
+- [x] **Step 2 — Run RED.** State pattern fails for missing Journal/Locks; actual-owner gate is a
   reported skip locally unless root, and mandatory failure if its CI environment cannot run it.
-- [ ] **Step 3 — Implement journal/locks.** Root0700 state,0600 images; preserve uid/gid/mode/xattrs.
+- [x] **Step 3 — Implement journal/locks.** Root0700 state,0600 images; preserve uid/gid/mode/xattrs.
   Reuse accepted secure-read/atomic/replace/fsync primitives. Validate all live entries against
   known before/after before any recovery write; record source IDs/pointer/service states.
   Original app2000 baseline and last runtime generation are distinct; secrets only in images.
   Bounded busy refusal, never unlink locks. New lock directory created only by mutating mode.
-- [ ] **Step 4 — GREEN.** Real filesystem/crash/lock tests and strict root owner fixture pass;
+- [x] **Step 4 — GREEN.** Real filesystem/crash/lock tests and strict root owner fixture pass;
   status excludes keys,subjects,private messages and tracebacks. Scope mismatch never writes.
-- [ ] **Step 5 — Commit** `feat: journal CON-02 deployment and phased control locks`.
+- [x] **Step 5 — Commit** `feat: journal CON-02 deployment and phased control locks`.
 
 ### Task 3: Direct application upgrade and matched cron transaction
 
@@ -161,7 +161,7 @@ scope exactly app/runtime, side exactly before/after; unknown shapes reject.
 Phases: prepared,fresh_backup_complete,workers_stopped,pair_complete,source_activated,
 upgrade_1,upgrade_2,cron_written,public_release_committed,app_ready,baseline_restored,recovery_required.
 
-- [ ] **Step 1 — RED tests.** Add fresh_backup_child_before_cold_locks,
+- [x] **Step 1 — RED tests.** Add fresh_backup_child_before_cold_locks,
   direct_upgrade_repeat_preserves_custom_task, partial_cron_pair_recovers,
   before_public_restore_exact_pair, after_public_keeps_new_writes,
   interrupted_run_recovers_before_new_upgrade, sender_disabled_stays_disabled, readonly_check_never_stops.
@@ -171,9 +171,9 @@ upgrade_1,upgrade_2,cron_written,public_release_committed,app_ready,baseline_res
   self.assertEqual(0, host.db_restore_calls_after_public)
   ```
   Fail backup/readback/clean stop/other DB clients/capacity/SQL/source guard independently.
-- [ ] **Step 2 — Run RED.** Application pattern must fail at missing transaction/cron interface;
+- [x] **Step 2 — Run RED.** Application pattern must fail at missing transaction/cron interface;
   source/reference tests from Task1 remain GREEN. No host operation uses server1.
-- [ ] **Step 3 — Implement transaction.** Reuse accepted fresh_hdd/paired_copy/activate/reference checks
+- [x] **Step 3 — Implement transaction.** Reuse accepted fresh_hdd/paired_copy/activate/reference checks
   and physical tree copy primitives through Context. Own restore sequence uses tx.read_pair,
   roots/inventory/verify_tree plus u.move_children/copy_contents, then new verify_database;
   it never invokes the fixed-OLD_CORE restore_pair/recover entrypoints. Root Journal records
@@ -191,10 +191,10 @@ upgrade_1,upgrade_2,cron_written,public_release_committed,app_ready,baseline_res
   Repeated successful upgrade is verify-only; an interrupted pre-public run is recovered
   under its original ID to terminal baseline_restored before a later explicit new upgrade.
   An unfinished run is never silently replaced with a new backup/run or runtime generation.
-- [ ] **Step 4 — GREEN.** Transaction/root-UID33/partial-write cases pass; full trace confirms no
+- [x] **Step 4 — GREEN.** Transaction/root-UID33/partial-write cases pass; full trace confirms no
   DB restore after public commit, no cursor/lease reset and no fresh HDD under backup lock.
   Metadata/file tests model Docker/SQL explicitly; native direct-upgrade proof is Task7.
-- [ ] **Step 5 — Commit** `feat: upgrade Academy and cron to2200 as a recoverable pair`.
+- [x] **Step 5 — Commit** `feat: upgrade Academy and cron to2200 as a recoverable pair`.
 
 ### Task 4: Exact v2/ACK profiles and immutable worker stage
 
@@ -205,7 +205,7 @@ prepare stage helper in connect_con02_runtime.py without starting services.
 secrets exactly64lowercase hex ASCII bytes; key IDs tg_notify_v2/tg_ack_v1.
 `stage_worker(ctx:Context)->Path` validates fixed534 archive/unit bytes and publishes immutable0755/0644 root-owned release.
 
-- [ ] **Step 1 — RED tests.** Add preserves_revoked_uid_subject_and_notify_cutoff,
+- [x] **Step 1 — RED tests.** Add preserves_revoked_uid_subject_and_notify_cutoff,
   keys_are_distinct_from_link_and_each_other, separate_mount_paths,
   new_release_access_under_umask077, rejects_release_collision_and_unknown_override.
   ```python
@@ -215,17 +215,17 @@ secrets exactly64lowercase hex ASCII bytes; key IDs tg_notify_v2/tg_ack_v1.
   self.assertNotIn('ack_bridge_key_file', sender_cfg)
   ```
   Actual-private credential tests include hardlink/symlink/ACL and readonly service UID access.
-- [ ] **Step 2 — Run RED.** Profiles pattern fails on missing functions; frozen old runtime config
+- [x] **Step 2 — Run RED.** Profiles pattern fails on missing functions; frozen old runtime config
   tests remain GREEN. No network, DB or service writes from pure profiles function.
-- [ ] **Step 3 — Implement profiles/stage.** Append only exact scoped ACK/v2 settings to accepted
+- [x] **Step 3 — Implement profiles/stage.** Append only exact scoped ACK/v2 settings to accepted
   owned include, preserve old v1 key and all notify fence/cutoff/flags. Receiver/probe get
   their own credential paths and ACK key; sender only v2 key. Include root:GID33/0640,
   root-private secrets/config0600, public drop-ins0644/dirs0755. Validate/lint before switch;
   candidate units byte-identical to existing managed units. Unknown settings/overrides reject.
   No relink/recipient lookup requiring a currently linked UID130 and no key regeneration on resume.
-- [ ] **Step 4 — GREEN.** Profiles/stage/root metadata tests pass, exact old config loading still
+- [x] **Step 4 — GREEN.** Profiles/stage/root metadata tests pass, exact old config loading still
   works and sender cannot load ACK credential. Snapshot comparison proves prior fields unchanged.
-- [ ] **Step 5 — Commit** `feat: prepare isolated CON-02 callback runtime profiles`.
+- [x] **Step 5 — Commit** `feat: prepare isolated CON-02 callback runtime profiles`.
 
 ### Task 5: Runtime enable, disable and safe recovery
 
@@ -236,7 +236,7 @@ secrets exactly64lowercase hex ASCII bytes; key IDs tg_notify_v2/tg_ack_v1.
 Phases: prepared,workers_stopped,private_files,include_handoff,pointer_switched,probed,
 runtime_active,runtime_disabled,recovery_required. App must already be app_ready2200.
 
-- [ ] **Step 1 — RED tests.** Add enable_does_not_touch_business_pair,
+- [x] **Step 1 — RED tests.** Add enable_does_not_touch_business_pair,
   generation_cutoff_and_keys_survive_process_loss, fallback_restores_previous_runtime,
   disabled_sender_not_enabled, polling_cursor_never_rewinds,
   probe_failure_does_not_claim_active, revoked_recipient_unchanged.
@@ -246,19 +246,19 @@ runtime_active,runtime_disabled,recovery_required. App must already be app_ready
   self.assertGreaterEqual(cursor_after_recover, cursor_before_switch)
   ```
   Cover loss after each durable boundary, startup/egress failures and unknown drift before recovery.
-- [ ] **Step 2 — Run RED.** Runtime pattern fails on missing transitions; profiles and Application
+- [x] **Step 2 — Run RED.** Runtime pattern fails on missing transitions; profiles and Application
   tests stay GREEN. No direct provider message is sent by the controller in any test trace.
-- [ ] **Step 3 — Implement runtime operations.** Verify app/cron/HTTPS/exact fence; pre-stop no-poll
+- [x] **Step 3 — Implement runtime operations.** Verify app/cron/HTTPS/exact fence; pre-stop no-poll
   identity/scope probes, stage worker and persist one generation/cutoff=now+1 and key images.
   Ordered locks, sender→receiver stop, apply private profile/include/pointer, daemon-reload,
   no-poll candidate probes, restart only prior enabled/active services. Preserve SQLite schema1/
   cursor and delivery uncertainty. Disable restores saved v1 profile/a86 on app2200;
   next enable gets a new generation, not a DB/token-table cleanup. Failure restores prior
   runtime only; outage preventing restart reports recovery_required. Never rewrite legacy journals.
-- [ ] **Step 4 — GREEN.** Fault matrix proves no app rollback/cursor rewind/widened fence,
+- [x] **Step 4 — GREEN.** Fault matrix proves no app rollback/cursor rewind/widened fence,
   stable resume generation, explicit unsuccessful recovery and no controller send/positive lease.
   Existing receiver/callback/notification tests pass unchanged; actual systemd proof is Task8.
-- [ ] **Step 5 — Commit** `feat: switch callback runtime with guarded v1 fallback`.
+- [x] **Step 5 — Commit** `feat: switch callback runtime with guarded v1 fallback`.
 
 ### Task 6: Plain Python artifact and strict CLI
 
@@ -272,7 +272,7 @@ ustar-con02-update-<tool_sha8>.py plus.sha256/.metadata.json.
 Artifact<=128MiB, decoded total<=256MiB, entries<=1024, embedded module count<=64;
 all paths canonical/unique, no traversal or imports from neighboring files.
 
-- [ ] **Step 1 — RED tests.** Add default_no_root_no_host_no_network,
+- [x] **Step 1 — RED tests.** Add default_no_root_no_host_no_network,
   exact_commits_and_reproducible_plain_bytes, tamper_and_inventory_denial,
   no_adjacent_module_import, invalid_combined_modes_before_host,
   recover_and_restore_flags_respect_public_boundary.
@@ -283,9 +283,9 @@ all paths canonical/unique, no traversal or imports from neighboring files.
   self.assertEqual(0, late_restore_without_consent_writes)
   ```
   Decode bombs/duplicate entries/noncanonical base64/mismatched refs/dirty builder dependencies refuse.
-- [ ] **Step 2 — Run RED.** Package pattern fails at missing plain artifact/CLI modes, not an
+- [x] **Step 2 — Run RED.** Package pattern fails at missing plain artifact/CLI modes, not an
   intentionally corrupt PHP/bootstrap fixture. Prior Tasks1–5 remain GREEN.
-- [ ] **Step 3 — Implement builder/CLI.** Immutable Git export only; UTF-8 module literals and
+- [x] **Step 3 — Implement builder/CLI.** Immutable Git export only; UTF-8 module literals and
   base64 binary assets with sorted SHA manifest, bounded decode and all digests checked before
   embedded module compile/import. Manifest JSON rejects duplicate keys before typed load_embedded;
   source/assets namespaces are disjoint. Default PLAN_ONLY exits before any host/root/network check.
@@ -295,10 +295,10 @@ all paths canonical/unique, no traversal or imports from neighboring files.
   delegate Task1/2 read-only contracts. SIGTERM/INT/HUP use durable recoverable transitions;
   only fixed public errors, private traceback log. No PYZ/ZIP user deliverable or runtime installer
   embedded CLI execution bypass; reuse only reviewed helpers behind the new controller.
-- [ ] **Step 4 — GREEN.** Real `python3 -I -B artifact.py` default emits PLAN_ONLY/no host access;
+- [x] **Step 4 — GREEN.** Real `python3 -I -B artifact.py` default emits PLAN_ONLY/no host access;
   clean fixed-revision build reproduces SHA, malicious sibling ignored, all CLI refusal tests pass.
   Verify full557 payload/worker bytes against534 and frozen helpers unchanged.
-- [ ] **Step 5 — Commit** `feat: package CON-02 deployment as a verified plain Python command`.
+- [x] **Step 5 — Commit** `feat: package CON-02 deployment as a verified plain Python command`.
 
 ### Task 7: Native direct2000→2200 lifecycle and paired recovery
 
@@ -312,23 +312,23 @@ result CON02_UPDATE_NATIVE=PASS. Python probe calls Task1/3 validators on actual
 SQL snapshots. Logical DB restore inside disposable runner is labelled logical; root file
 tests cover physical-tree copy primitive. No claim of complete remote physical-PG restore.
 
-- [ ] **Step 1 — RED tests.** Add test_native_direct_upgrade_gate_is_wired asserting workflow/run-connect
+- [x] **Step 1 — RED tests.** Add test_native_direct_upgrade_gate_is_wired asserting workflow/run-connect
   invoke the new runner and upload con02-update-* evidence. Define native seeded rows:
   existing task [1,1], marker/history/ACK/provider receipt, old99 schema, revoked link and preferences.
   Expected target100/repeat/fresh exact, same rows/task flags; paired restore to exact2000/99.
-- [ ] **Step 2 — Run RED.** Wiring test must fail before adding invocation. Record exact RED;
+- [x] **Step 2 — Run RED.** Wiring test must fail before adding invocation. Record exact RED;
   absence of a callback/update marker is not silently accepted as whole source PASS. Full-history
   CI supplies frozen sources; missing Git history locally is an environment limit, not native RED.
-- [ ] **Step 3 — Implement native fixture.** Install actual baseline2000 with accepted overlay,
+- [x] **Step 3 — Implement native fixture.** Install actual baseline2000 with accepted overlay,
   snapshot private source/config/data/DB, upgrade directly to2200/repeat and compare fresh100.
   Feed native snapshots through new validators; actual mutation of old column/index/task must deny.
   Preserve old A.1/A.2 runners byte-for-byte and invoke new runner separately. Verify actual native
   history/fence/revoke and matched cron transformation with synthetic host cron paths; restore
   exact2000/source/config/data/DB and compare99. Only sanitized evidence, never dumps/config/secrets.
-- [ ] **Step 4 — GREEN.** Required connect-db reports CON02_UPDATE_NATIVE=PASS plus all earlier
+- [x] **Step 4 — GREEN.** Required connect-db reports CON02_UPDATE_NATIVE=PASS plus all earlier
   native/wire/race markers; exact versions/99→100→100→99/history/task assertions verified from
   artifact JSON. Distinguish actual Moodle/PG, logical pair and modeled host controls in receipt.
-- [ ] **Step 5 — Commit** `test: verify direct CON-02 upgrade and native paired recovery`.
+- [x] **Step 5 — Commit** `test: verify direct CON-02 upgrade and native paired recovery`.
 
 ### Task 8: Actual credentials, private TLS, legacy rejection and HTTPS ownership
 
@@ -340,14 +340,14 @@ and no pre-existing production /opt/ustar/data. Build packages before sudo. Real
 LoadCredential and local synthetic provider/store; actual Moodle dispatch remains Task7/A.2 native.
 Results CON02_UPDATE_RUNTIME=PASS and CON02_UPDATE_HTTPS_OWNER=PASS, artifact con02-update-runtime.
 
-- [ ] **Step 1 — RED tests.** Add test_runtime_and_https_gates_required: workflow must call both
+- [x] **Step 1 — RED tests.** Add test_runtime_and_https_gates_required: workflow must call both
   fixtures and upload results. Fixture assertions cover app-ready/v1→ACK→disable→re-enable,
   stable cursor, failed service restart, wrong CA/peer/HMAC and credentials inaccessible outside
   their service. Add frozen CLI rejection cases requiring expected ownership/policy drift, not
   missing file/helper/refusal unrelated to handoff; assert no stop/write/DB effect.
-- [ ] **Step 2 — Run RED.** Wiring assertions fail before new steps are added; run actual probes in
+- [x] **Step 2 — Run RED.** Wiring assertions fail before new steps are added; run actual probes in
   disposable CI once implemented. A mocked systemctl or missing systemd does not count as PASS.
-- [ ] **Step 3 — Implement actual fixtures.** Reuse current callback/Apache fixture techniques without
+- [x] **Step 3 — Implement actual fixtures.** Reuse current callback/Apache fixture techniques without
   weakening production checks. Exercise new controller handoff on actual systemd/UID33 and private
   TLS, same journal/schema1/cursor; synthetic Telegram only. Execute exact frozen a86 pilot/link
   CLI against guarded disposable inputs and require expected early drift refusal before effects.
@@ -355,15 +355,15 @@ Results CON02_UPDATE_RUNTIME=PASS and CON02_UPDATE_HTTPS_OWNER=PASS, artifact co
   authorized renewal between app-ready and ACK enable; accept its new verified owner snapshot.
   Concurrent renewal is serialized, reload/renewal failure recovers through existing HTTPS owner.
   New controller never writes TLS-owned state/vhost/tool. Keep fixture roots/logs private and cleanup exact.
-- [ ] **Step 4 — GREEN.** Both required markers pass with downloaded JSON/hash review; separate actual
+- [x] **Step 4 — GREEN.** Both required markers pass with downloaded JSON/hash review; separate actual
   systemd/TLS/Apache, synthetic provider/store and actual native PHP dispatch. Prior callback
   runtime/HTTPS tests remain GREEN. No production CA/token, provider message or group acceptance.
-- [ ] **Step 5 — Commit** `test: prove CON-02 runtime ownership and HTTPS-compatible recovery`.
+- [x] **Step 5 — Commit** `test: prove CON-02 runtime ownership and HTTPS-compatible recovery`.
 
 ### Task 9: Regression, exact artifact, owner commands and continuation
 
-**Files:** Update this plan/design; create context/runtime/connect_con02_deployment_20261022.md
-and connect_con02_deployment_ci_20261022.json; update AGENTS/START_HERE/context index/project/
+**Files:** Update this plan/design; create context/runtime/connect_con02_deployment_20261023.md
+and connect_con02_deployment_ci_20261023.json; update AGENTS/START_HERE/context index/project/
 ACTIVE/STATE/BACKLOG/SESSION_LOG and PR106. Add final plain artifact build/upload to workflow.
 
 **Interfaces:** Receipt distinguishes fixed app/worker534 from final tool SHA; exact artifact SHA,
@@ -371,22 +371,22 @@ all completed jobs/skips/fixture types, known guards and recovery commands. Runb
 the actual ordinary.py install/root SHA check, readonly --check, controlled --upgrade/outage,
 status and separate enable/disable/recover/late restore. No commands with guessed hashes.
 
-- [ ] **Step 1 — Self-review evidence gaps.** Map spec§1–9 and Review Focus1–5 to Tasks1–8 assertions;
+- [x] **Step 1 — Self-review evidence gaps.** Map spec§1–9 and Review Focus1–5 to Tasks1–8 assertions;
   missing direct native lifecycle/legacy refusal/HTTPS owner/phased backup/actual credentials
   blocks delivery. An actual uncovered behavior gets focused RED/GREEN before final publication.
-- [ ] **Step 2 — Verify regression.** Run focused new suite then existing affected infra/runtime tests,
+- [x] **Step 2 — Verify regression.** Run focused new suite then existing affected infra/runtime tests,
   required real-UID/native/systemd/Apache jobs, both PHP source/browser gates and whole r16 once
   at final source. Repeat only after changes/failures. Regenerate development manifest from staged
   tree, context index, check_context and diff --check. Record unavailable local environments honestly.
-- [ ] **Step 3 — Author review final diff.** Confirm source534 product unchanged, no global guard
+- [x] **Step 3 — Author review final diff.** Confirm source534 product unchanged, no global guard
   weakening/legacy journal edit/secret log/unapproved recipient/nonce bypass, one consumer,
   deterministic generation and no public-write DB/cursor rollback.0subagents/author-only review;
   no independent reviewer claim. Fix findings with affected checks.
-- [ ] **Step 4 — Publish and inspect exact CI/artifact.** Expected-head lease, local/published tree match,
+- [x] **Step 4 — Publish and inspect exact CI/artifact.** Expected-head lease, local/published tree match,
   exact plain.py rebuild/hash and all557 addon/worker hashes. Download required sanitized evidence;
   completed required jobs only PASS, skipped FullRC explicitly skipped. Stop if artifact/tool/app
   source differ or installer paths remain unverified; old successful A.2 is not installer acceptance.
-- [ ] **Step 5 — Commit/publish final handoff.** Mark actual steps complete; publish reviewed operator
+- [x] **Step 5 — Commit/publish final handoff.** Mark actual steps complete; publish reviewed operator
   commands/recovery and exact receipts. Production remains2000+a86 until owner executes the
   reviewed upgrade; ACK activation is separate. Do not repeat accepted pilot/revoke or request
   live group tests. Then record actual owner output separately; B/C remain subsequent product slices.
@@ -402,7 +402,13 @@ IDs stay distinct, package bounds/default/flag order explicit. Actual native log
 physical file-tree primitive and synthetic controls are labelled separately. No new product
 feature/dependency, full-snapshot collection or user/group action is hidden in implementation.
 
-Owner approved this plan and implementation22Oct. Tasks1–8 source is implemented;
-Task9 author recovery review fixes pass focused tests. Required final native/systemd/HTTPS
-and exact artifact acceptance are still pending. Execution method remains self implementation,
-no subagents. Continue from the progress ledger; do not ask for repeated plan approval.
+Owner approved this plan and implementation22Oct. Completed23Oct (MSK): all9tasks/45steps
+as source and handoff, self implementation/author review,0subagents. Toolb971bc38 required
+CI SUCCESS: Context39844480447/Review39844480386; source8.2/8.3 each1040/153skips,
+strictroot11/11, actualruntime/HTTPS and native154/800+direct2000→2200/repeat/restore PASS.
+Exact CI/local ordinary.py, all557payload/worker/legacy assets and downloaded native metadata
+verified. Commands/limits/rulings in [final handoff](../runtime/connect_con02_deployment_20261023.md)
+and [CI receipt](../runtime/connect_con02_deployment_ci_20261023.json). Task1/2 foundations
+share one checkpoint because their interfaces depend on Journal; this ruling and cost recorded.
+Owner execution/production acceptance is subsequent, not claimed complete. Production2000+
+policy overlay/a86 unchanged, pilot not repeated/group deferred. No new approval loop.

@@ -1,17 +1,18 @@
 # Журнал выполнения roadmap
 
-**22Oct — CON-02 controller implemented; final required CI remains pending.**
-Owner: «ок приступай к реализации план потверждаю». Self implementation,0subagents.
-Fixed app/worker534, separate app+cron/runtime journals, plain.py and native/systemd/HTTPS
-fixtures implemented. Author crash review fixes verified:66 focused tests/1 local UID33
-namespace skip; actual root state7/7 passed on ca3. Final native/runtime/HTTPS gates and
-exact operator artifact remain pending. No operator-ready or production-deployed claim.
-Server1 application2000+overlay/worker a86 unchanged;UID130 last revoked. Accepted pilot
-not repeated, group deferred. No SSH/provider sends/main merge. Continue required gates
-without another permission loop.
-Progress: [progress](../runtime/connect_con02_deployment_progress_20261022.md).
-Ниже — датированная история предыдущих состояний.
-
+**23Oct — CON-02 controller проверен; обычный.py готов для owner --check.**
+План22Oct закрыт:9задач/45шагов, self implementation/author review,0subagents.
+Tool b971bc38: Context39844480447/Review39844480386 SUCCESS. PHP8.2/8.3 каждый
+1040r16/153environment skips; strict root state11/11 без skips, native154/800,
+actual systemd/UID33/private TLS и HTTPS-owner PASS. Direct2000→2200/repeat/restore,
+9 fresh indexes/4 SQL denials проверены по скачанным JSON. FullRC skipped, не passed.
+Файл `ustar-con02-update-b971bc38.py`, SHA `692de510d7864e723885f6764ec8363d6ba70ebbee2f26021f361a4c9a89a484`;
+CI bytes = exact Git build, fixed app/worker534,557files/100tables.
+[Команды и recovery](../runtime/connect_con02_deployment_20261023.md); точная CI-квитанция рядом с runbook.
+Дальше owner --check, затем отдельные upgrade/outage и enable-ack. На server1 остаются
+application2000+overlay/worker a86;UID130 last revoked. Pilot не повторять, группа deferred.
+No SSH/provider sends/main merge; независимого reviewer не было. Minor: generic readonly
+legacy-guard refusal diagnostic deferred. Ниже — датированная история предыдущих состояний.
 
 **22Oct — письменный проект поставки принят; план реализации готов к review.**
 Owner: «потверждаю». [План](../proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md):

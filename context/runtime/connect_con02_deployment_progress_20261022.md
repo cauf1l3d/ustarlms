@@ -6,17 +6,20 @@ Self implementation and author review,0subagents. PR106 remains unmerged.
 No SSH, production changes or provider messages. Production2000+overlay/a86,
 UID130 last revoked; accepted pilot is not repeated.
 
-| Task | Observed state |
+| Task | Final observed state —23Oct2026 MSK |
 |---|---|
-| 1 Fixed profile/contracts | Initial contracts/reference export implemented;7 focused tests PASS. Host integration and native gates still pending. |
-| 2 Images/locks/journal | Initial implementation;6 real filesystem/lock tests PASS,1 UID33 environment skip. |
-| 3 App+cron transaction | Initial implementation;9 real filesystem/cron tests PASS with Docker/SQL modeled. Native direct upgrade still pending. |
-| 4 v2/ACK profiles | Pure exact profiles and immutable stage implemented;5 tests PASS, actual credential gate pending. |
-| 5 Runtime transitions | Initial state machine;7 focused tests PASS, actual systemd/HTTPS gate pending. |
-| 6 Plain.py/CLI | Initial plain.py/strict CLI implemented;7 package tests PASS. Final exact-source artifact/host gates pending. |
-| 7 Native direct upgrade/recovery | Runner/export/SQL differential/wiring implemented;local wiring10/10 PASS. Actual native CI pending. |
-| 8 Actual systemd/HTTPS | New controller fixtures/wiring implemented;8 runtime tests PASS. Required actual CI pending. |
-| 9 Regression/artifact/handoff | Pending |
+| 1 Fixed profile/contracts | Complete; frozen baseline/target/full XMLDB/default/index contracts, native revalidated. |
+| 2 Images/locks/journal | Complete; strict actual root/GID33 state11/11, durable images/ACL/xattrs/inodes/locks. |
+| 3 App+cron transaction | Complete; direct2000→2200/repeat/paired restore, public-write recovery, cold IDs/custom tasks preserved. |
+| 4 v2/ACK profiles | Complete; exact immutable534 worker, old UID/subject/cutoffs/revoke preserved, distinct ACK credential. |
+| 5 Runtime transitions | Complete; actual systemd/UID33/private TLS, disable/re-enable/failure fallback, cursor/uncertainty preserved. |
+| 6 Plain.py/CLI | Complete; b971 ordinary.py verified against CI/exact Git, default PLAN_ONLY, strict flags/tamper denials. |
+| 7 Native direct upgrade/recovery | Complete; native154/800 plus new direct lifecycle, fresh9indexes,4SQLmutations denied. |
+| 8 Actual systemd/HTTPS | Complete; both downloaded PASS reports, HTTPS unchanged per operation/authorized renewal/serialized owner recovery. |
+| 9 Regression/artifact/handoff | Complete as source/handoff; both PHP1040/153skips, final CI green, exact artifact delivered; owner execution next. |
+
+Final [runbook](connect_con02_deployment_20261023.md) and [receipt](connect_con02_deployment_ci_20261023.json).
+Below is dated execution history; earlier pending states are superseded by this table.
 
 TDD: contract pattern initially7 assertion failures for missing interface, then7 PASS.
 State pattern initially7 assertion failures for missing interface; now6 PASS/1skip.

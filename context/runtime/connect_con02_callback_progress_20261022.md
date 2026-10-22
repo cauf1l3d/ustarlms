@@ -74,3 +74,13 @@ has_capability is false before asserting ACK denial. Production guard unchanged.
 Source496b79ea under CI; generated inventory update follows in the same resume.
 Author-only continuation,0subagents. No repeated owner pilot/group tests or server
 changes; native/privacy/lifecycle/wire/races final GREEN still pending.
+
+Native737e483c/job119833914164 remained154tests/796assertions with one failure, now
+at the explicit has_capability premise. This exposed the full setup cause:
+Moodle assign_capability defaults overwrite=false, and this fixture role already
+has CAP_ALLOW. CAP_PROHIBIT therefore was never written. The corrected test passes
+overwrite=true, asserts the DB permission is CAP_PROHIBIT, then uses a fresh
+cookieless worker and asserts has_capability=false before ACK denial. Production
+checks are unchanged. The earlier cache-only diagnosis was incomplete.
+Source PHP8.2/8.3 each974/152skips, Chromium5ACK widths and actual callback systemd
+fixture passed737; native integration remains blocked until the corrected run.

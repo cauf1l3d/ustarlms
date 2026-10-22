@@ -193,7 +193,11 @@ final class connect_notification_action_test extends \advanced_testcase {
         unset($CFG->ustar_connect_notify_userids);
         $this->unavailable(fn()=>$this->ack($f,$action['action']));
         $CFG->ustar_connect_notify_userids=[$f['uid']];
-        assign_capability('local/ustar:use',CAP_PROHIBIT,$f['role'],\context_system::instance()->id);
+        // This fixture role already grants the same capability. Moodle's
+        // default overwrite=false would leave CAP_ALLOW unchanged.
+        assign_capability('local/ustar:use',CAP_PROHIBIT,$f['role'],\context_system::instance()->id,true);
+        $this->assertSame(CAP_PROHIBIT,(int)$DB->get_field('role_capabilities','permission',[
+            'roleid'=>$f['role'],'contextid'=>\context_system::instance()->id,'capability'=>'local/ustar:use']));
         accesslib_clear_all_caches(true);
         // The worker facade has NO_MOODLE_COOKIES: the next callback is not
         // the recipient's existing $USER with its cached access array.

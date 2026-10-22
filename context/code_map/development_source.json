@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "c45c1b0f5f4c97eba8852ca9884c635e794d855d",
+    "moodle/local/ustar": "cb8c996080d295669a97222ef35ec94356e4a648",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
@@ -273,7 +273,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bridge_auth.php",
-      "sha256": "f3ca7784e8ac92c67f0c0df121e8ca6e576bfa68e8d87d03dc08c9df9939c704"
+      "sha256": "d1fe8b29d96957316298b7bf1eb9fa7adc11422b2ec3b617bba5ee6380e55155"
     },
     {
       "path": "moodle/local/ustar/classes/connect/bridge_http.php",
@@ -281,7 +281,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/bridge_service.php",
-      "sha256": "3af9975874bd92ad6d928d86e26606dda08a9ed464344001d1670356b9278faa"
+      "sha256": "f595369d2b880cf6e228ecdbe0b8d807020c46c40b25fa2b79f1efa731ed91cf"
     },
     {
       "path": "moodle/local/ustar/classes/connect/entry_service.php",
@@ -309,7 +309,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/connect/notification_delivery.php",
-      "sha256": "7afe0e9263caeea69f633e86f0c938b56b64eca3da5f11a1d2c489d86789e5a9"
+      "sha256": "c4379f043393b20ca282566ae827f4667ff3ca91f627109d903346fb5b43e885"
     },
     {
       "path": "moodle/local/ustar/classes/connect/notification_policy.php",
@@ -1869,11 +1869,11 @@
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_action_test.php",
-      "sha256": "a6bbf52c87b192ee9c82d9d915fa295ad388d33066a7b71033cbfb9fe4f3a6f3"
+      "sha256": "bd691bc8f861a47be717ee274ef60c500697c08dbc2556ac24e7e0dc347a4584"
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_test.php",
-      "sha256": "e1fa1d44fb45ee20d5b073936b6e71cc76bacb2410053ad08c443a4544871146"
+      "sha256": "7bc76dd23af0a67a2e78a895ea9e88d781ecf967bf4d863fc07f0f5277ff1bf5"
     },
     {
       "path": "moodle/local/ustar/tests/connect_signup_test.php",

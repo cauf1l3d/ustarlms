@@ -133,11 +133,16 @@ def main():
     PREFIX.mkdir(mode=0o755);private=PREFIX/'private';private.mkdir(mode=0o700)
     def write(path,data,mode=0o600):
         path.write_bytes(data if isinstance(data,bytes) else data.encode());path.chmod(mode)
-    spec=importlib.util.spec_from_file_location('callback_builder',ROOT/'connect-worker/deploy/build_release.py')
-    builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
-    for phase,ref in [('old','a86e208029b6104150e85d0e90384f84da214c22'),('new','HEAD')]:
-        archive=builder.build(ref,private/phase)
-        with tarfile.open(archive,'r:gz') as t:write(PREFIX/(phase+'.pyz'),t.extractfile('receiver.pyz').read(),0o644)
+    # Build under the checkout owner before sudo; root only validates immutable package bytes.
+    spec=importlib.util.spec_from_file_location('callback_archive',ROOT/'connect-worker/deploy/install.py')
+    installer=importlib.util.module_from_spec(spec);spec.loader.exec_module(installer)
+    if len(sys.argv)!=3:raise RuntimeError('current_and_frozen_archives_required')
+    for phase,arg in [('new',sys.argv[1]),('old',sys.argv[2])]:
+        archive=Path(arg).resolve();digest=archive.with_name(archive.name+'.sha256').read_text().split()[0]
+        source_commit,files=installer.validate_archive(archive,digest)
+        if phase=='old' and source_commit!='a86e208029b6104150e85d0e90384f84da214c22':
+            raise RuntimeError('wrong_frozen_receiver')
+        write(PREFIX/(phase+'.pyz'),files['receiver.pyz'],0o644)
     write(PREFIX/'wrapper.py',WRAPPER,0o644)
     for name in ('ca','wrong'):
         call(['openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','2','-subj','/CN=Disposable ACK '+name,
@@ -217,7 +222,7 @@ def main():
         data='[Unit]\nConditionPathExists=\n[Service]\nUser='+('ustar-connect-notify' if sender else 'www-data')+'\nGroup='+('ustar-connect-notify' if sender else 'www-data')+'\nLoadCredential=\n'
         data+=''.join('LoadCredential='+n+':'+str(p)+'\n' for n,p in sources.items())
         data+='StateDirectory=\nStateDirectory='+Path(c['state_directory']).name+'\nExecStart=\nExecStart=/usr/bin/python3 -I -u '+str(PREFIX/'wrapper.py')+' '+str(pyz)+' '+phase+' %d/profile.json '+str(PREFIX/'wrong-ca.crt')+'\nRestart=no\n'
-        write(dropin,data,0o644);call(['systemctl','daemon-reload']);call(['systemctl','reset-failed',unit]);call(['systemctl','start',unit])
+        write(dropin,data,0o644);call(['systemctl','daemon-reload']);call(['systemctl','start',unit])
         marker='CALLBACK_SENDER_CREDENTIAL_TLS=PASS' if sender else 'CALLBACK_PHASE_'+phase.upper()+'=PASS'
         end=time.monotonic()+20
         while time.monotonic()<end:

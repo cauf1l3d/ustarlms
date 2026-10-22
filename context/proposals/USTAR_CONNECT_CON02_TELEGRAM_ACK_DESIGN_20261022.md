@@ -1,10 +1,12 @@
 # CON-02A.2: личное «Принял» в Telegram
 
-22.10.2026, Europe/Moscow. Статус: **written_design_pending_owner_review**.
+22.10.2026, Europe/Moscow. Статус: **owner_approved_implementation_plan_pending_review**.
 Владелец подтвердил в диалоге пятишаговый вариант A.2: кнопка в новом личном
 уведомлении, проверка Академией, сохранение первого ACK, безопасный повтор и
 отдельный opt-in контракт с одним receiver. Этот документ конкретизирует вариант;
-его письменный review и план реализации ещё не завершены. Продуктовый код A.2
+Письменный проект принят22Oct ответом «переходи к реализации».
+[Конкретный план реализации](USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md)
+подготовлен после этого ответа и ожидает review. Продуктовый код A.2
 не написан, сервер не изменён. Работа самостоятельно, без субагентов.
 
 ## 1. Результат для сотрудника и границы
@@ -303,9 +305,10 @@ permit и потеря canonical receipt при UI ошибке. В проект
 attempt/revision, callback-before-finish, scope, schema, отключение и границы
 native/production evidence. Независимого reviewer и субагентов не было.
 
-Следующий шаг — review **этого письменного проекта** владельцем, затем отдельный
-план реализации с точными файлами/проверками и способом самостоятельного выполнения.
-Контекст остаётся `written_design_pending_owner_review`, пока review не получен.
+Письменный проект принят владельцем22Oct. Следующий шаг — review
+[конкретного implementation plan](USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md).
+Способ самостоятельного выполнения без субагентов уже сохранён. Статус текущего
+этапа — `implementation_plan_pending_owner_review`; продуктовый код ещё не изменён.
 
 Официальная база протокола, сверена22OctMSK: [CallbackQuery](https://core.telegram.org/bots/api#callbackquery),
 [InlineKeyboardButton](https://core.telegram.org/bots/api#inlinekeyboardbutton),

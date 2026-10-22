@@ -4,7 +4,8 @@
 в CI, candidate2100 не установлен. [Результат и границы](../runtime/connect_con02_ack_20261021.md),
 [точная квитанция](../runtime/connect_con02_ack_ci_20261021.json). Следующий срез
 A.2 — [письменный проект Telegram callback](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md),
-written_design_pending_owner_review; реализация/implementation plan ещё не начаты.
+[план реализации](USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md).
+Written design owner-approved22Oct, implementation_plan_pending_owner_review; код ещё не написан.
 Source inventory ниже фиксирует состояние на начало этапа, а не отсутствие
 уже реализованного A.1.
 
@@ -66,7 +67,8 @@ sesskey, реальный активный actor и отказ view-as/чужо�
 
 После согласования варианта A.2 в диалоге подготовлен
 [конкретный письменный проект](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md);
-он ожидает review владельца. Последующий план реализации будет опираться на
+он принят владельцем22Oct. [Конкретный план реализации](USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md)
+ожидает review и опирается на
 ограниченный callback-контракт: opaque action,
 проверенный private sender, provider/tenant/current link revision, TTL и повтор
 после потери ответа. Нельзя передать произвольный Moodle userid, использовать
@@ -78,7 +80,7 @@ send lease в качестве публичного callback token или пре
 versioned/opt-in контракта, default OFF, отдельного scoped credential и проверенного
 перехода. Provider acceptance и uncertain остаются транспортными фактами даже
 после человеческого ACK. Конкретные token/schema/activation решения теперь описаны в письменном
-проекте A.2 и ожидают review; нового API/схемы в исходниках пока нет.
+проекте A.2, принятом владельцем; нового API/схемы в исходниках пока нет.
 
 ### CON-02B — общие preferences и выбор канала
 

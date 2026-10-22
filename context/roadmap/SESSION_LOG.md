@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+**22Oct — письменный проект A.2 принят; конкретный план реализации готов к review.**
+Owner: «переходи к реализации». [План A.2](../proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md):
+9 задач/45 проверяемых шагов; schema/lifecycle, current-recipient ACK, v2 bridge,
+Telegram transport/sender/callback, отдельные credentials и native recovery/CI.
+Способ выполнения уже выбран: самостоятельно,0subagents, текущий PR106 checkout.
+По writing-plans следующий gate — review именно письменного плана, затем выполнение.
+Код A.2 ещё не написан; candidate2100/554files/99tables сохранён.
+Docs1211fe6e: Context39694294801/Review39694294751 SUCCESS;
+941 context tests/152environment skips, runtime/source8.2+8.3/connect-db SUCCESS.
+Старые FullRC jobs skipped по существующим conditions, не passed.
+Server1 application2000+policy overlay/worker a86; принятый pilot не повторять,
+UID130 last revoked; manual group tests deferred до полного запуска.
+Нет agent SSH/provider sends/main merge; author self-review, независимого reviewer не было.
+
 **22Oct — CON-02A.2: вариант в диалоге согласован, письменный проект готов к review.**
 [Технический проект Telegram «Принял»](../proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md): отдельный permit v2,
 opaque token/TTL/current link revision, ACK-only credential и тот же receiver.

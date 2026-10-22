@@ -1,24 +1,23 @@
 schema_version: 2
 updated_at: '2026-10-22'
 project: USTAR Academy
-stage: connect_CON02_A2_written_design_pending_review
-stage_label: CON02A2 conversational design approved; written design pending owner review
+stage: connect_CON02_A2_implementation_plan_pending_review
+stage_label: CON02A2 written design approved; implementation plan pending owner review
 current_activity: >-
-  Owner approved conversational CON02A2 Telegram ACK design22OctMSK. Written spec
-  context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md is ready for
-  owner review. Versioned opt-in begin_v2 plus ACK-only scope, opaque token/current
-  link revision/expiry and same receiver; typed UI answer separate from canonical
-  first acknowledgement. One proposed table/plugin2200 not implemented; current
-  candidate2100/theme0202/554files/99tables preserved. A2 code/plan/native tests not
-  started. A1 source4fb4cd17 Context39679569635/Review39679569515 SUCCESS,
-  138native/685assertions, exact receipt context/runtime/connect_con02_ack_ci_20261021.json.
-  Docs332 Context39682045417 SUCCESS. Server1 application2000 plus accepted
-  notification policy overlay and worker/tool a86; UID130 last revoked. Accepted
-  one-user Tasks pilot not repeated. Group rollout design-only; manual group live
-  tests deferred until full launch, not passed. Next written-spec owner review,
-  then separate implementation plan. B routing/preferences and C Bitrix remain
-  subsequent slices; actual portal/API/scopes/legacy consumer unknown.
-  Author self-review, no subagents/independent reviewer/agent SSH/provider sends.
+  Owner22Oct accepted written A2 design: proceed to implementation. Concrete plan
+  context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md is now written and
+  self-reviewed:9tasks/45steps. Next gate is owner review of this exact written
+  plan, then executing-plans with preserved self implementation/no subagents.
+  No A2 product code or dependencies installed. Candidate2100/theme0202/554files/
+  99tables remains; proposed2200/100tables is not implemented or deployed.
+  Exact docs1211fe6e Context39694294801/Review39694294751 SUCCESS; source/runtime/
+  connect-db green, context941tests/152environment skips. Historical FullRC jobs
+  skipped by existing conditions, not passed. A1 source4fb4cd17 evidence remains
+  context/runtime/connect_con02_ack_ci_20261021.json. Server1 application2000 plus
+  accepted policy overlay/worker a86 preserved; UID130 last revoked. Accepted
+  pilot not repeated; live group tests deferred until full launch, not passed.
+  B routing/preferences and C Bitrix follow separately; actual portal/API unknown.
+  Author self-review, no independent reviewer/subagents/agent SSH/provider sends.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
@@ -106,6 +105,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
 - context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md

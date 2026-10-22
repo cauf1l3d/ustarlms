@@ -231,7 +231,7 @@ def main():
         pyz=PREFIX/('old.pyz' if phase in ('old','rollback') else 'new.pyz')
         data='[Unit]\nConditionPathExists=\n[Service]\nUser='+('ustar-connect-notify' if sender else 'www-data')+'\nGroup='+('ustar-connect-notify' if sender else 'www-data')+'\nLoadCredential=\n'
         data+=''.join('LoadCredential='+n+':'+str(p)+'\n' for n,p in sources.items())
-        data+='StateDirectory=\nStateDirectory='+Path(c['state_directory']).name+'\nExecStart=\nExecStart=/usr/bin/python3 -I -u '+str(PREFIX/'wrapper.py')+' '+str(pyz)+' '+phase+' %d/profile.json '+str(PREFIX/'wrong-ca.crt')+'\nRestart=no\n'
+        data+='StateDirectory=\nStateDirectory='+Path(c['state_directory']).name+'\nStateDirectoryMode=0700\nExecStart=\nExecStart=/usr/bin/python3 -I -u '+str(PREFIX/'wrapper.py')+' '+str(pyz)+' '+phase+' %d/profile.json '+str(PREFIX/'wrong-ca.crt')+'\nRestart=no\n'
         write(dropin,data,0o644);call(['systemctl','daemon-reload']);call(['systemctl','start',unit])
         marker='CALLBACK_SENDER_CREDENTIAL_TLS=PASS' if sender else 'CALLBACK_PHASE_'+phase.upper()+'=PASS'
         end=time.monotonic()+20

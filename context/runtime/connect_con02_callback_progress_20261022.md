@@ -1,37 +1,60 @@
 # CON-02A.2 implementation progress —22Oct
 
-Owner approved written design, then plan, then explicitly ordered «начинай выполнение».
-No further approval gate between tasks. Self implementation/no subagents; PR106.
+Owner approved design, then the written9-task plan, then «начинай выполнение».
+Self implementation/author review,0subagents. All product source is written;
+**final native/runtime GREEN is still pending**, not production acceptance.
+Current inventory: local_ustar2026102200/theme0202,557files/100tables.
 
-- Task4 transport6 RED→GREEN; old receiver41/notification20 passed; full947/54env skips.
-- Task5 sender5 new RED→GREEN; full952/54env skips; v1 exact packets remain distinct.
-- Task6 parser/journal/handler12 RED→GREEN; full968/54env skips.
-- Task7 private config5 RED→GREEN; full973/54env skips; no default activation.
-- Native schema RED: f02e5bba784802ac5b44eb8ebebacd0f74043a62,
-  Review39754622367/job119744993678:140tests/687assertions exactly2 failures
-  «ACK action table missing»;138 prior tests passed.
-- Metadata/schema candidate2200/100tables implemented. Native schema/lifecycle GREEN
-  and new missing-service RED pending on eb720b1b31ddfabe0b79902e5c88d661cda2aeea,
-  Review39756708252. Source8.2/8.3/runtime/Context39756708568 passed.
-- Canonical action service implemented after native missing-service RED; PHP v2 router
-  RED tests written, router not implemented yet. Actual runtime scopes,
-  new paired2200 recovery/concurrency/wire acceptance and final source receipt pending.
+- Task4 typed transport6RED→GREEN; Task5 sender5RED→GREEN;
+  Task6 parser/journal/handler12RED→GREEN; Task7 config5RED→GREEN.
+  Whole local974r16/54environment skips PASS before PHP became available.
+- Native schema RED f02e5bba/job119744993678:140tests/687assertions,
+  exactly2 missing-table failures;138 old tests passed. New DDL then implemented.
+- Service RED eb720b1b/job119752033195:146tests/704assertions,
+  six missing-service failures, plus two test assumptions corrected: driver
+  context IDs need integer comparison; repeat migration must pass actual DB version.
+- Router RED987f6828/job119764694424:150tests/756assertions; missing begin_v2,
+  two forbidden ACK routes, and one capability test removing a redundant grant.
+  Explicit CAP_PROHIBIT now proves current denial, like A.1; authenticated-user
+  default permission is not silently removed by unassign_capability.
+  New scoped routes and shared transactional v2 begin implemented after that RED.
+- Source987f6828 Context39760456252/sourcePHP8.2+8.3/old runtime SUCCESS.
+  Earlier36b source guard correctly rejected new policy copied into a frozen
+  legacy package fixture. Positive fixture now uses exact reviewed38 policy;
+  new negative retains rejection of2200. No frozen hash/guard weakened.
+- Actual2100→2200/repeat/history/paired restore, PHP↔Python v1/v2/HMAC wire,
+  callback/native/read/revoke barriers, and actual UID33/systemd/LoadCredential/
+  private TLS/same-journal old→new→disabled→a86 fixtures integrated. Still pending
+  completed GREEN; synthetic Telegram is separate from actual Moodle dispatch.
+- New host fixture refusals were test setup: sudo did not preserve CI guard,
+  reset-failed named an unloaded service, then frozen profile validation refused.
+  Explicit CI environment/direct start added. Metadata-only cdff diagnosis proves
+  profile/token valid, state UID33/GID33 but mode0755; fixture now explicitly sets
+  StateDirectoryMode0700. Private-file guard is preserved.
+  Archive construction moved before sudo; root only validates exact package bytes.
+- Author review found an existing privacy user discovery API mismatch extended by
+  the new table: two add_from_sql calls omitted the required array parameter.
+  New native user discovery/bulk/context erase regression written before fix.
+  Pinned official Moodle cc0bf17d userlist/base + actual isolated PHP8.3.6 reproduce
+  ArgumentCountError255, then PASS after adding empty parameter arrays; DB adapter
+  in that local contract is synthetic, not native PostgreSQL. Actual native
+  discovery/erase regression remains a final CI gate.
+- Local isolated PHP CLI downloaded from official Ubuntu security index, SHA checked,
+  extracted without a host package install. Product/fixture PHP syntax PASS.
+  First full PHP-enabled974/35skips run found4 missing-PDO environment failures;
+  private PDO/sqlite dependency setup and repeat are pending. No PHP unit PASS claim.
 
-Source candidate is unmerged/not deployed. Server1 remains application2000 plus
-accepted policy overlay, worker/tool a86; UID130 last revoked. Accepted pilot not
-repeated; manual live group tests deferred to full launch. No agent SSH/provider sends.
-Local test dependencies installed in private task environment; no product dependency.
-PHP/PG/Docker unavailable locally; native tests run in actual isolated CI, never mocks.
-A local PHP package download attempt failed503; no server or host package change.
+Decisions: reuse existing dedicated checkout by repo rule; unavailable skill helper
+scripts replaced by equivalent private briefs/ledger. Independent Python tasks ran
+while native RED ran. ua1 already names actor-read: ACK has its own hash domain/table,
+with real cross-purpose denial tests. Explicit per-service probe config paths added.
+A native migration repeat test now uses DB version without removing downgrade guard.
+Author-only review follows repository no-subagents instruction; no independent review.
 
-Decisions: isolated feature checkout reused by repository instruction; unavailable
-skill helper scripts replaced by equivalent private ledger/briefs. Independent Python
-Tasks4–7 executed while actual native RED ran. ua1 already names actor-read tokens:
-ACK uses a separate hash domain/table, never the actor-token digest. Probe gets a
-separate JSON example so credential paths refer to its own systemd mount.
-
-Native service RED eb720b1b/job119752033195:146tests/704assertions, six expected
-missing-service failures plus a privacy context-ID type assertion and an old repeat
-migration passing stale1905 after2200. Test fixes normalize driver-returned IDs and
-repeat the actual DB version; downgrade guard preserved. Metadata prune passed.
-Current source has557files/100tables; canonical service/native GREEN still pending.
+Server1 unchanged: application2000 plus accepted single-file policy overlay and worker
+/tool a86. UID130 last revoked; accepted one-user Tasks pilot not repeated. Manual
+live group acceptance deferred until full launch, not passed. No agent SSH or provider
+messages. No guarded2100/2200 deployment installer exists in this source slice.
+Next after final source acceptance: separate guarded deployment preserving fresh pair,
+cron target and HTTPS ownership/renewal; product B routing/preferences then C Bitrix
+(actual portal/API unknown). MiniApp/SSO/role actions remain separate.

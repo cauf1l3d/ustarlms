@@ -1308,8 +1308,8 @@
     {
       "path": "context/runtime/connect_con02_callback_progress_20261022.md",
       "domain": "runtime",
-      "size": 2575,
-      "sha256": "84b252deb2767332334679a6ee5cbf157f54636815ac75633ca77d7bf676c62e"
+      "size": 4397,
+      "sha256": "bb47810ac71a16487d8ba8dde55f28c7902047e4e5b279ec8c5bf89ab6734e37"
     },
     {
       "path": "context/runtime/connect_configure_tty_recovery_20261019.md",

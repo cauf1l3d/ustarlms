@@ -58,7 +58,7 @@ php public/admin/tool/phpunit/cli/init.php --disable-composer > /artifacts/conne
 php vendor/bin/phpunit --testsuite local_ustar_testsuite --filter 'connect_notification_ack_test::test_(first_ack_timestamp|mark_all_read)' \
     --fail-on-notice --display-notices > /artifacts/con02-ack-writer-phpunit.log 2>&1
 php /source/tests/stage/con02_ack_concurrency.php 2>&1 | tee /artifacts/con02-ack-concurrency.log
-php vendor/bin/phpunit --testsuite local_ustar_testsuite --filter 'connect_(identity|entry|bridge|signup|link_management|notification|notification_ack|actor)_test|organization_identity_test' \
+php vendor/bin/phpunit --testsuite local_ustar_testsuite --filter 'connect_(identity|entry|bridge|signup|link_management|notification|notification_ack|notification_action|actor)_test|organization_identity_test' \
     --fail-on-notice --display-notices --log-junit /artifacts/connect-phpunit.xml \
     2>&1 | tee /artifacts/connect-phpunit.log
 php /source/tests/stage/connect_concurrency.php 2>&1 | tee /artifacts/connect-concurrency.log

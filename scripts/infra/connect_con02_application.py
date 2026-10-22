@@ -64,7 +64,10 @@ class Application:
         self.d.marker = run / 'primitive.json'
         return copy.deepcopy(row['primitive'])
 
-    def step(self, phase, **fields): return self.journal.checkpoint('app', phase, **fields)
+    def step(self, phase, **fields):
+        row = self.journal.checkpoint('app', phase, **fields)
+        if hasattr(self.ctx, 'progress'): self.ctx.progress(phase)
+        return row
 
     def cron_images(self):
         root = self.ctx.root

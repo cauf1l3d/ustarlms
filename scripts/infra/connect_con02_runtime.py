@@ -77,11 +77,15 @@ class Runtime:
         require(state is not None and state.get('runtime') is not None, 'runtime_generation_required')
         return state['runtime']
 
-    def step(self, phase, **fields): return self.journal.checkpoint('runtime', phase, **fields)
+    def step(self, phase, **fields):
+        row = self.journal.checkpoint('runtime', phase, **fields)
+        if hasattr(self.ctx, 'progress'): self.ctx.progress(phase)
+        return row
 
     def ready(self):
         state = self.journal.load()
-        require(state is not None and state.get('app', {}).get('phase') == 'app_ready', 'app_ready2200_required')
+        require(state is not None and isinstance(state.get('app'), dict)
+                and state['app']['phase'] == 'app_ready', 'app_ready2200_required')
         self.host.application_ready(state)
         return state
 
@@ -161,7 +165,7 @@ class Runtime:
             try: return {**self.fallback(), 'enable_succeeded': False}
             except BaseException:
                 self.step('recovery_required')
-                return {'phase': 'recovery_required', 'ack_enabled': False}
+                return {'phase': 'recovery_required', 'ack_state': 'unverified'}
 
     def fallback(self):
         from connect_con02_contract import require_https_unchanged
@@ -195,7 +199,7 @@ class Runtime:
             try: return self.fallback()
             except BaseException:
                 self.step('recovery_required')
-                return {'phase': 'recovery_required', 'ack_enabled': False}
+                return {'phase': 'recovery_required', 'ack_state': 'unverified'}
 
     def recover(self):
         # Explicit recovery returns to the preceding v1 runtime only. A repeated

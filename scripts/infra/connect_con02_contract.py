@@ -17,6 +17,11 @@ CORE = '2025100608.00'
 BASE = Path('/var/lib/ustar-connect-con02-update')
 SCOPES = ('local/ustar', 'theme/ustar')
 SERVICES = ('ustar-connect-notify.service', 'ustar-connect-receiver.service')
+MODULES = ('connect_con02_contract', 'connect_con02_state', 'connect_con02_application',
+           'connect_con02_profiles', 'connect_con02_runtime', 'connect_con02_update',
+           'connect_academy_installer', 'connect_readiness', 'production_patch_readiness',
+           'production_patch_upgrade', 'production_patch_switch_preflight', 'lab_cold_checkpoint',
+           'lab_patch_upgrade', 'lab_patch_candidate', 'cron_release_update', 'production_manifest')
 
 
 class Refusal(ValueError):
@@ -28,6 +33,52 @@ def require(value, reason):
 
 
 def sha(raw): return hashlib.sha256(raw).hexdigest()
+
+
+def decode_envelope(manifest, sources, assets):
+    """Also copied verbatim into the standalone bootstrap, before embedded imports."""
+    import base64
+    import hashlib
+    from pathlib import PurePosixPath
+    import re
+    require(isinstance(manifest, dict) and set(manifest) == {'schema', 'tool_commit', 'app_commit',
+        'worker_commit', 'sources', 'assets'} and manifest['schema'] == 1
+        and re.fullmatch('[a-f0-9]{40}', manifest.get('tool_commit', ''))
+        and manifest['app_commit'] == '534764821c4f65437ab50b3c7f25578d538e9504'
+        and manifest['worker_commit'] == manifest['app_commit'], 'embedded_manifest')
+    require(isinstance(sources, dict) and isinstance(assets, dict) and 1 <= len(sources) <= 64
+            and len(sources) + len(assets) <= 1024 and not set(sources) & set(assets)
+            and set(manifest['sources']) == set(sources) and set(manifest['assets']) == set(assets), 'embedded_inventory')
+    total = 0
+    for group in ('sources', 'assets'):
+        for name, spec in manifest[group].items():
+            require(isinstance(name, str) and name and '\\' not in name
+                    and not name.startswith('/') and '..' not in PurePosixPath(name).parts
+                    and str(PurePosixPath(name)) == name and not name.endswith('/'), 'embedded_path')
+            if group == 'sources': require(re.fullmatch('[a-z][a-z0-9_]*[.]py', name), 'embedded_module_name')
+            require(isinstance(spec, dict) and set(spec) == {'sha256', 'bytes'}
+                    and type(spec['bytes']) is int and 0 <= spec['bytes'] <= 128 * 1024**2
+                    and re.fullmatch('[a-f0-9]{64}', spec['sha256']), 'embedded_size_or_hash')
+            total += spec['bytes']
+    require(total <= 256 * 1024**2, 'embedded_total_size')
+    result = []
+    for group, contents in [('sources', sources), ('assets', assets)]:
+        decoded = {}
+        for name, value in contents.items():
+            spec = manifest[group][name]
+            require(isinstance(value, str), 'embedded_encoding')
+            if group == 'sources':
+                require(len(value) <= spec['bytes'], 'embedded_size')
+                raw = value.encode('utf-8')
+            else:
+                require(len(value) == 4 * ((spec['bytes'] + 2) // 3), 'embedded_base64_size')
+                try: raw = base64.b64decode(value, validate=True)
+                except (ValueError, UnicodeError): raise Refusal('embedded_base64') from None
+                require(base64.b64encode(raw).decode() == value, 'embedded_noncanonical_base64')
+            require(len(raw) == spec['bytes'] and hashlib.sha256(raw).hexdigest() == spec['sha256'], 'embedded_digest')
+            decoded[name] = raw
+        result.append(decoded)
+    return tuple(result)
 
 
 @dataclass(frozen=True)

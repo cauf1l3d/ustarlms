@@ -13,7 +13,7 @@ UID130 last revoked; accepted pilot is not repeated.
 | 3 App+cron transaction | Initial implementation;9 real filesystem/cron tests PASS with Docker/SQL modeled. Native direct upgrade still pending. |
 | 4 v2/ACK profiles | Pure exact profiles and immutable stage implemented;5 tests PASS, actual credential gate pending. |
 | 5 Runtime transitions | Initial state machine;7 focused tests PASS, actual systemd/HTTPS gate pending. |
-| 6 Plain.py/CLI | Pending |
+| 6 Plain.py/CLI | Initial plain.py/strict CLI implemented;7 package tests PASS. Final exact-source artifact/host gates pending. |
 | 7 Native direct upgrade/recovery | Pending |
 | 8 Actual systemd/HTTPS | Pending |
 | 9 Regression/artifact/handoff | Pending |
@@ -38,3 +38,10 @@ include_handoff resumes the same generation/cutoff/key images. Real SQLite curso
 and uncertainty survive disable/re-enable; failed v2 probe returns saved v1 runtime.
 Application/service controls in those tests are modeled; no actual systemd PASS claimed.
 Combined35 tests/1 UID33 environment skip PASS. Next plain.py/CLI, then native/actual gates.
+
+Task6 TDD7 missing-interface assertions→7 package tests PASS. Two exact Git builds
+produce identical ordinary.py bytes. Every asset/module is checked before embedded
+imports; invalid inventory/base64/tamper/dirty builder and combined flags deny.
+Default works with python -I -B and with malicious neighboring module files present;
+it emits PLAN_ONLY without managed-host/network access. Combined42tests/1skip PASS;
+check_context and diff --check PASS. No final deployable tool SHA/hash is handed off yet.

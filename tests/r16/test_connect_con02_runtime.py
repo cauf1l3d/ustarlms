@@ -127,5 +127,15 @@ class Runtime(unittest.TestCase):
         self.assertEqual(fence, self.fence)
         self.assertEqual('revoked', self.fence['last_link_state'])
 
+    def test_runtime_and_https_gates_required(self):
+        for name in ('con02_update_systemd.py','con02_update_https.py'):
+            self.assertTrue((ROOT/'tests/stage'/name).is_file(), 'actual controller fixture required: '+name)
+        workflow = (ROOT/'.github/workflows/ustar-review-gate.yml').read_text()
+        self.assertIn('USTAR_REQUIRE_CON02_OWNER=1',workflow)
+        self.assertIn('python3 tests/stage/con02_update_systemd.py',workflow)
+        self.assertIn('python3 tests/stage/con02_update_https.py',workflow)
+        self.assertIn('artifacts/con02-update-runtime.json',workflow)
+        self.assertIn('artifacts/con02-update-https-owner.json',workflow)
+
 
 if __name__ == '__main__': unittest.main()

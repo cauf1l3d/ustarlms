@@ -15,7 +15,7 @@ UID130 last revoked; accepted pilot is not repeated.
 | 5 Runtime transitions | Initial state machine;7 focused tests PASS, actual systemd/HTTPS gate pending. |
 | 6 Plain.py/CLI | Initial plain.py/strict CLI implemented;7 package tests PASS. Final exact-source artifact/host gates pending. |
 | 7 Native direct upgrade/recovery | Runner/export/SQL differential/wiring implemented;local wiring10/10 PASS. Actual native CI pending. |
-| 8 Actual systemd/HTTPS | Pending |
+| 8 Actual systemd/HTTPS | New controller fixtures/wiring implemented;8 runtime tests PASS. Required actual CI pending. |
 | 9 Regression/artifact/handoff | Pending |
 
 TDD: contract pattern initially7 assertion failures for missing interface, then7 PASS.
@@ -52,3 +52,28 @@ seeds revoke/custom task/history, upgrades directly to fixed534/repeats, compare
 and restores2000. Four actual transaction-scoped SQL mutations feed the new validator.
 Only sanitized SQL metadata/results become artifacts. Local PHP/Docker are unavailable;
 PHP syntax and native lifecycle are CI gates, not claimed passed here.
+
+Task7 actual CI950: source8.2/source8.3/connect-runtime SUCCESS; connect-db FAILED
+(job120014562880). Direct2000→2200 and repeat/history/revoke checks passed, then
+fresh_ SQL failed: prior paired restores intentionally removed that schema.
+Fixed fixture to install a fresh2200 reference anew. Downloaded native ZIP SHA
+bf641ed795acb4e178e18d1e74e08103550f18549d5392c32937364185be0064 verified.
+Native PG metadata also exposed prefixed pg_indexes.tablename and9 ACK indexes
+(including foreign-key indexes, two userid entries). New focused REDs observed;
+contract9/9 GREEN after normalization and full XMLDB index export. New validator
+passes verified downloaded99→100 snapshots. Complete native rerun still pending.
+
+Task8 RED: missing actual fixtures wiring assertion;then8 runtime/wiring tests PASS.
+Added new Runtime on actual systemd/UID33/LoadCredential/private TLS, actual frozen
+CLI handoff refusals and separate actual HTTPS owner callback in the existing
+Apache fixture. SQL/systemd boundaries are labelled per fixture. No actual PASS claimed yet.
+
+Before Task8 publication: combined47tests/1local UID33 namespace skip PASS;
+Python/wrapper/YAML/bash syntax and diff --check PASS. Fresh reinstall/PG index
+normalization and whitespace fixes are source-tested; actual required CI rerun next.
+No completed actual Task8 marker has been received yet.
+
+Additional native-derived export checks: index field whitespace and XMLDB
+foreign-unique semantics observed RED→GREEN; contract11/11 PASS. Fixed product
+source remains534; only deployment profile/tool/tests changed. All actual gates
+must rerun on the new commit; prior runtime success does not prove these new fixtures.

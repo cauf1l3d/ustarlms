@@ -39,10 +39,9 @@ def reference_from_git(repo, tool_commit):
             name = table.attrib['NAME']
             fields[name] = {f.attrib['NAME']: {'type': f.attrib['TYPE'], 'length': f.attrib.get('LENGTH'),
                 'notnull': f.attrib.get('NOTNULL') == 'true'} for f in table.findall('./FIELDS/FIELD')}
-            indexes[name] = [{'fields': k.attrib['FIELDS'].split(','),
-                'unique': k.attrib.get('TYPE') in ('primary', 'unique') or k.attrib.get('UNIQUE') == 'true'}
-                for k in [*table.findall('./KEYS/KEY'), *table.findall('./INDEXES/INDEX')]
-                if k.attrib.get('TYPE') != 'foreign']
+            indexes[name] = [{'fields': [f.strip() for f in k.attrib['FIELDS'].split(',')],
+                'unique': k.attrib.get('TYPE') in ('primary', 'unique', 'foreign-unique') or k.attrib.get('UNIQUE') == 'true'}
+                for k in [*table.findall('./KEYS/KEY'), *table.findall('./INDEXES/INDEX')]]
         versions = {}
         for key, scope in [('local_ustar', 'local/ustar'), ('theme_ustar', 'theme/ustar')]:
             found = re.findall(rb'(?m)^\s*\$plugin->version\s*=\s*([0-9]{10})\s*;', raw[scope + '/version.php'])

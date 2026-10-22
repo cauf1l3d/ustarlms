@@ -40,7 +40,9 @@ def main():
     c.verify_database(baseline,baseline,reference,target=False)
     for n in ('target','repeat'): c.verify_database(phases[n],baseline,reference,target=True)
     c.verify_database(phases['restored'],baseline,reference,target=False)
-    c.require(phases['target']==phases['repeat'],'native_repeat_drift')
+    stable=lambda v:{k:item for k,item in v.items() if k!='other_clients'}
+    c.require(stable(phases['target'])==stable(phases['repeat']),'native_repeat_drift')
+    c.require(stable(phases['baseline'])==stable(phases['restored']),'native_restore_drift')
     table = 'local_ustar_conn_acktokens'
     def new_schema(value, prefix):
         return ([[(v.replace(prefix,'PREFIX_') if isinstance(v,str) else v) for v in row]

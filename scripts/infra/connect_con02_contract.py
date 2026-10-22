@@ -157,8 +157,23 @@ def verify_database(current, baseline, reference, *, target):
     require(current['tables'] == wanted['tables'], 'database_table_inventory')
     require(current['tasks'] == baseline['tasks'], 'scheduled_task_flags')
     old = set(reference['baseline']['tables'])
-    for key in ('schema', 'indexes'):
-        require([r for r in current[key] if r[0] in old] == baseline[key], 'old_' + key + '_changed')
+    # information_schema query strips the Moodle prefix; pg_indexes.tablename
+    # retains it. Normalize table identity, retaining full index definitions.
+    def index_rows(rows):
+        result=[];prefixes=set()
+        for table, definition in rows:
+            matches=[t for t in reference['candidate']['tables'] if table.endswith(t)]
+            require(matches, 'database_index_table')
+            name=max(matches,key=len);prefix=table[:-len(name)]
+            if prefix: validate_prefix(prefix)
+            prefixes.add(prefix);result.append([name,definition])
+        require(len(prefixes)<=1,'database_index_prefix')
+        return result, prefixes
+    old_indexes, old_prefix=index_rows(baseline['indexes'])
+    current_indexes, current_prefix=index_rows(current['indexes'])
+    require(current_prefix == old_prefix, 'database_index_prefix')
+    require([r for r in current['schema'] if r[0] in old] == baseline['schema'], 'old_schema_changed')
+    require([r for r in current_indexes if r[0] in old] == old_indexes, 'old_indexes_changed')
     if not target:
         require(current['schema'] == baseline['schema'] and current['indexes'] == baseline['indexes'], 'restored_schema')
         return
@@ -174,7 +189,7 @@ def verify_database(current, baseline, reference, *, target):
         if spec['type'] == 'char': require(row[4] == int(spec['length']), 'new_schema_column_length')
     for table in new:
         indexes = []
-        for name, definition in current['indexes']:
+        for name, definition in current_indexes:
             if name != table: continue
             m = re.fullmatch(r'CREATE (UNIQUE )?INDEX \S+ ON (?:public\.)?\S+ USING btree \(([a-z0-9_, ]+)\)', definition)
             require(m is not None, 'new_schema_index_shape')

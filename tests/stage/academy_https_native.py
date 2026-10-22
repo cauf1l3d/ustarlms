@@ -29,7 +29,7 @@ def run(args,raw=None):
     if p.returncode:raise RuntimeError('NATIVE_COMMAND_FAILED: '+p.stderr.decode(errors='replace')[-2000:])
     return p.stdout+p.stderr
 
-def main():
+def main(verification=None):
     if os.geteuid()!=0 or os.environ.get('USTAR_ACADEMY_TLS_FIXTURE')!='1' or Path('/opt/ustar').exists():raise RuntimeError('ISOLATED_ROOT_FIXTURE_REQUIRED')
     apache=shutil.which('apache2');php=shutil.which('php')
     if not apache or not php:raise RuntimeError('APACHE_AND_PHP_REQUIRED')
@@ -190,6 +190,7 @@ Include {p.include}
             except x.Refusal:pass
             else:raise AssertionError('LOST_BRIDGE_RENEW_ACK_ACCEPTED')
             assert manager.load()['leaf']==current['leaf'];private_acceptance()
+            if verification is not None:verification(manager,host,root)
             manager.set_bridge_enabled(False)
             assert manager.rollback()['phase']=='rolled_back'
             for name,path in manager.files().items():assert path.read_bytes()==before[name]

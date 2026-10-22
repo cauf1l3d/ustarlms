@@ -32,6 +32,24 @@ class Contract(unittest.TestCase):
         self.assertEqual(set(t['files']), set(bundle.payload))
         self.assertTrue(bundle.worker_archive)
 
+    def test_native_PG_foreign_key_index_inventory(self):
+        _, bundle = self.reference()
+        indexes = bundle.reference['candidate']['schema_indexes']['local_ustar_conn_acktokens']
+        # Observed native PG16 output from job120014562880 includes both the
+        # foreign-key userid index and its explicit XMLDB index (two entries).
+        self.assertEqual(9, len(indexes))
+        self.assertEqual(2, sum(i['fields']==['userid'] and not i['unique'] for i in indexes))
+
+    def test_XMLDB_index_field_whitespace_is_canonical(self):
+        _,bundle=self.reference()
+        self.assertTrue(all(f==f.strip() for table in bundle.reference['baseline']['schema_indexes'].values()
+                            for index in table for f in index['fields']))
+
+    def test_XMLDB_foreign_unique_indexes_are_unique(self):
+        _,bundle=self.reference()
+        index=next(i for i in bundle.reference['baseline']['schema_indexes']['local_ustar_employment'] if i['fields']==['userid'])
+        self.assertTrue(index['unique'])
+
     def test_target_preserves_old99_and_custom_tasks(self):
         c, _ = self.modules()
         ref = {'baseline': {'tables': ['local_ustar_old'], 'versions': {'local_ustar': 2026102000}},
@@ -57,6 +75,20 @@ class Contract(unittest.TestCase):
     def test_prefix_injection_refused(self):
         c, _ = self.modules()
         with self.assertRaises(c.Refusal): c.validate_prefix('mdl_; DROP TABLE x')
+
+    def test_pg_catalog_index_table_prefix(self):
+        c, _ = self.modules()
+        ref = {'baseline': {'tables':['local_ustar_old'],'versions':{'local_ustar':2026102000}},
+               'candidate': {'tables':['local_ustar_new','local_ustar_old'],'versions':{'local_ustar':2026102200},
+                'schema_fields':{'local_ustar_new':{'id':{'type':'int','length':'10','notnull':True}}},
+                'schema_indexes':{'local_ustar_new':[{'fields':['id'],'unique':True}]}}}
+        before={'core':c.CORE,'addons':{'local_ustar':'2026102000'},'tasks':{'prune':[1,1]},
+                'tables':['local_ustar_old'],'schema':[['local_ustar_old','id','bigint','int8',None,64,0,'NO',None]],
+                'indexes':[['mdl_local_ustar_old','CREATE UNIQUE INDEX old ON public.mdl_local_ustar_old USING btree (id)']]}
+        after=copy.deepcopy(before);after['addons']['local_ustar']='2026102200';after['tables']=ref['candidate']['tables']
+        after['schema'].append(['local_ustar_new','id','bigint','int8',None,64,0,'NO',None])
+        after['indexes'].append(['mdl_local_ustar_new','CREATE UNIQUE INDEX new ON public.mdl_local_ustar_new USING btree (id)'])
+        c.verify_database(after,before,ref,target=True)
 
     def test_revoked_pilot_is_valid_baseline(self):
         c, _ = self.modules()

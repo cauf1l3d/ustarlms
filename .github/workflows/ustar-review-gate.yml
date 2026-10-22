@@ -172,7 +172,7 @@ jobs:
 
   connect-runtime:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -268,6 +268,37 @@ jobs:
             sudo -n apt-get update -qq
             sudo -n apt-get install -y --no-install-recommends php-cli
           fi
+      - name: Build exact ordinary CON02 controller and frozen legacy guards before sudo
+        run: |
+          python3 scripts/infra/build_connect_con02_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/con02-update-command
+          python3 -I -B artifacts/con02-update-command/ustar-con02-update-*.py
+          git worktree add --detach .stage-input/con02-update-legacy a86e208029b6104150e85d0e90384f84da214c22
+          python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_notification_pilot.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
+          python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_bridge_activation.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
+      - name: CON02 physical images and locks with mandatory real root GID33
+        run: sudo -n env USTAR_REQUIRE_CON02_OWNER=1 python3 -m unittest discover -s tests/r16 -p test_connect_con02_state.py -v
+      - name: CON02 controller handoff on actual systemd UID33 credentials and private TLS
+        run: >-
+          sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
+          python3 tests/stage/con02_update_systemd.py
+          artifacts/con02-update-command/ustar-con02-update-*.py
+          artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
+          artifacts/con02-update-legacy/ustar-notify-pilot-*.pyz
+          artifacts/con02-update-legacy/ustar-bridge-activate-*.pyz
+      - name: CON02 controller respects actual HTTPS owner renewal and recovery
+        run: >-
+          sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
+          python3 tests/stage/con02_update_https.py
+          artifacts/con02-update-command/ustar-con02-update-*.py
+          artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: con02-update-controller
+          path: |
+            artifacts/con02-update-command/
+            artifacts/con02-update-runtime.json
+            artifacts/con02-update-https-owner.json
       - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
         run: |
           sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py

@@ -8,7 +8,7 @@
 
 **Tech Stack:** Moodle5.1.8/PHP8.3.33/PostgreSQL16.15, Python stdlib/SQLite journal schema1, существующие PHPUnit/r16/Chromium/systemd/TLS fixtures; без новых продуктовых зависимостей.
 
-**Spec:** [Согласованный письменный проект A.2](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md). Owner22Oct: «переходи к реализации» — written spec accepted. План принят22Oct ответом «начинай выполнение». Выполнение идёт самостоятельно без субагентов; текущие результаты и открытые native gates — в [progress](../runtime/connect_con02_callback_progress_20261022.md).
+**Spec:** [Согласованный письменный проект A.2](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md). Owner22Oct: «переходи к реализации» — written spec accepted. План принят22Oct ответом «начинай выполнение». Все9 задач исходного среза выполнены самостоятельно без субагентов; точные результаты — в [progress](../runtime/connect_con02_callback_progress_20261022.md).
 
 ## Global Constraints
 
@@ -20,7 +20,7 @@
 - Callback ACK разрешён для собственных unread/read/acknowledged и sending/provider_accepted/uncertain, отказ для failed/retry_wait/cancelled. Текущее account/employment ACTIVE/capability обязательно. Первый ackat и task/delivery не меняются при повторе.
 - Default `ustar_connect_ack_enabled=false`; при true нужен positive integer `ustar_connect_ack_since`. Tokens выдаются новым событиям с timecreated>=cutoff. Личный opt-out прекращает отправки, но не собственный ACK уже доставленного уведомления.
 - SQLite user_version1/lock/cursor/terminal states сохраняются; новый kind ack, лимит10/identity/60с. Bridge ACK timeout5с; Telegram UI methods3с; без retry одного update. Raw action/query body/private text не сохраняются в журнале.
-- Candidate после кода: local_ustar2026102200/theme2026100202/100tables; file count вычисляется manifest. Сейчас candidate2100/554files/99tables. На server1 application2000+принятый policy overlay и worker/tool a86, UID130 last revoked.
+- Candidate после кода: local_ustar2026102200/theme2026100202/100tables; file count вычисляется manifest. Исходная точка до A.2: candidate2100/554files/99tables; итог2200/557files/100tables. На server1 application2000+принятый policy overlay и worker/tool a86, UID130 last revoked.
 - Работа в PR #106 `design/ustar-connect-20261018`, main не сливать. Нет agent SSH/provider sends/production activation. Guarded2000→2200 installer и coordinated cron/HTTPS ownership — следующий deployment срез, не скрытая часть этой реализации.
 
 ## Review Focus
@@ -69,7 +69,7 @@ Native test helper `delivery_fixture(string $state='sending', int $attempt=1): a
 produces notice/delivery/link/uid for an ACTIVE business employee with local:use,
 canonical task notice and explicitly configured one-user fence; credentials synthetic.
 
-- [ ] **Step 1 — RED tests.** Add `test_schema_and_metadata_lifecycle` and
+- [x] **Step 1 — RED tests.** Add `test_schema_and_metadata_lifecycle` and
   `test_prune_limits_and_preserves_canonical_receipt`: insert501 expired+one fresh
   synthetic token rows, assert500 removed/one old+fresh retained; export includes
   safe metadata, not tokenhash/raw; erase removes user's tokens before FK parents,
@@ -78,8 +78,8 @@ canonical task notice and explicitly configured one-user fence; credentials synt
   $this->assertTrue($DB->get_manager()->table_exists('local_ustar_conn_acktokens'));
   $this->assertSame(100, count(array_filter($DB->get_tables(), fn($t) => str_starts_with($t, 'local_ustar_'))));
   ```
-- [ ] **Step 2 — Run RED.** Native `php vendor/bin/phpunit --testsuite local_ustar_testsuite --filter connect_notification_action_test`; expect missing table assertions, not an unrelated bootstrap error.
-- [ ] **Step 3 — Implement schema/lifecycle.** Savepoint2200 loads the one definition
+- [x] **Step 2 — Run RED.** Native `php vendor/bin/phpunit --testsuite local_ustar_testsuite --filter connect_notification_action_test`; expect missing table assertions, not an unrelated bootstrap error.
+- [x] **Step 3 — Implement schema/lifecycle.** Savepoint2200 loads the one definition
   from install.xml and creates only if absent. Privacy context/user discovery,
   export and all three erase paths include acktokens; existing prune transaction
   deletes <=500 rows with expires<=now-7days. Preserve old prune result shape.
@@ -93,10 +93,10 @@ canonical task notice and explicitly configured one-user fence; credentials synt
   install.xml; baseline93 and frozen historical99 expectations stay explicit.
   Include connect_notification_action_test in the native PHPUnit filter now,
   so Task1/2 RED and GREEN execute the new tests rather than merely collecting files.
-- [ ] **Step 4 — GREEN.** Run native tests plus old connect_identity/privacy tests;
+- [x] **Step 4 — GREEN.** Run native tests plus old connect_identity/privacy tests;
   verify actual fresh/repeat100 and old A.1 no-schema-delta99 separately in CI.
   `python scripts/ci/source_checks.py` and `git diff --check` pass.
-- [ ] **Step 5 — Commit** `feat: add bounded notification action metadata lifecycle`;
+- [x] **Step 5 — Commit** `feat: add bounded notification action metadata lifecycle`;
   regenerate development manifest/index with new source tree at the checkpoint.
 
 ### Task 2: Current-recipient token issue and canonical callback acknowledgement
@@ -115,7 +115,7 @@ owns identity atomic lock+transaction and returns exact status/acknowledged_at/c
 `notification_delivery::recipient_enabled(int $userid): bool` becomes documented
 internal shared predicate; existing body/HTTP exposure unchanged.
 
-- [ ] **Step 1 — RED tests.** Add `test_action_is_hashed_and_recipient_bound`,
+- [x] **Step 1 — RED tests.** Add `test_action_is_hashed_and_recipient_bound`,
   `test_current_link_attempt_and_message_fences`, `test_optout_is_not_revoke`,
   `test_read_repeat_and_callback_before_finish_keep_first_ack`.
   ```php
@@ -127,8 +127,8 @@ internal shared predicate; existing body/HTTP exposure unchanged.
   revoked/relinked same ID, expires==now, inactive/unconfirmed/capability loss,
   outside pilot, failed/retry_wait/cancelled, malformed/noncanonical action and
   boolean/nonnumeric message id at the route. One fixed ack_unavailable reason.
-- [ ] **Step 2 — Run RED.** Native filter `connect_notification_action_test|connect_notification_ack_test`; missing new class is expected RED.
-- [ ] **Step 3 — Implement interfaces.** Hash domain-separated raw token; issue only
+- [x] **Step 2 — Run RED.** Native filter `connect_notification_action_test|connect_notification_ack_test`; missing new class is expected RED.
+- [x] **Step 3 — Implement interfaces.** Hash domain-separated raw token; issue only
   inside sending transaction and after configured cutoff/current native eligibility.
   Acknowledgement resolves UID from token/current link and validates every fence
   in spec§6 before canonical writer. Allow read/repeat/current opt-out, no unread-only
@@ -136,10 +136,10 @@ internal shared predicate; existing body/HTTP exposure unchanged.
   require message_id match. No delivery/attempt/task update or synthetic `$USER`.
   Reject a no-longer-allowlisted category before the writer; do not commit ACK
   and then return an invalid category packet.
-- [ ] **Step 4 — GREEN.** Native matrix/A.1 regression pass; raw action absent from
+- [x] **Step 4 — GREEN.** Native matrix/A.1 regression pass; raw action absent from
   DB-export/log/journal fixtures, first ackat stable; caller lacking transaction
   cannot issue. Old own native ACK still works without a messenger link.
-- [ ] **Step 5 — Commit** `feat: bind Telegram acknowledgement actions to current recipients`.
+- [x] **Step 5 — Commit** `feat: bind Telegram acknowledgement actions to current recipients`.
 
 ### Task 3: Versioned begin and narrow bridge operations
 
@@ -155,7 +155,7 @@ stays exact. BridgeClient.request adds keyword-only `timeout=10`, allowing
 literal5/10 seconds (bool rejected); existing calls retain10, ACK uses5.
 Python rejection allowlist gains only ack_disabled/ack_unavailable.
 
-- [ ] **Step 1 — RED tests.** Add `test_v1_keys_unchanged_and_v2_optin_is_exact`,
+- [x] **Step 1 — RED tests.** Add `test_v1_keys_unchanged_and_v2_optin_is_exact`,
   `test_ack_key_cannot_lease_link_or_open_actor`, `test_disabled_ack_has_no_business_writes`,
   `test_ack_payload_has_no_userid_or_unknown_fields`.
   ```php
@@ -163,19 +163,19 @@ Python rejection allowlist gains only ack_disabled/ack_unavailable.
   $this->assertSame(2, $v2['version']);
   $this->assertSame(['action','expires'], array_keys($v2['ack']));
   ```
-- [ ] **Step 2 — Run RED.** Native bridge/action filters and
+- [x] **Step 2 — Run RED.** Native bridge/action filters and
   `python -m unittest discover -s tests/r16 -p test_connect_bridge.py -v`;
   unknown new operation/missing begin_v2 is expected failure.
-- [ ] **Step 3 — Implement routing/scopes.** Keep existing envelope, nonce and
+- [x] **Step 3 — Implement routing/scopes.** Keep existing envelope, nonce and
   sorted exact fields; old sender/link/actor keys cannot ACK or begin_v2. ACK key
   has only notification.ack; new sender key lease/begin_v2/finish only. Disabled
   A.2 returns ack_disabled before delivery/action/ACK writes; transport replay
   guard remains separate. v2 shares lease/finish, five attempts, cooldown/quiet,
   recipient fence and uncertain handling. Lost begin never regenerates raw action.
-- [ ] **Step 4 — GREEN.** Native positive/negative scope matrix, nonce replay,
+- [x] **Step 4 — GREEN.** Native positive/negative scope matrix, nonce replay,
   message-id bounds and existing notification DB tests pass; v1 packets match frozen
   a86 exact parser. No fallback send after malformed/unknown v2 begin.
-- [ ] **Step 5 — Commit** `feat: add scoped versioned notification acknowledgement bridge`.
+- [x] **Step 5 — Commit** `feat: add scoped versioned notification acknowledgement bridge`.
 
 ### Task 4: Typed Telegram callback transport and fixed keyboard
 
@@ -325,15 +325,19 @@ verifies old rows and pairs DB+source+config+moodledata restore to2100/99.
 New callback filter `connect_notification_action_test` is explicitly included.
 Artifacts prefix con02-callback; sanitized assertions/counts only, no SQL dump/secrets.
 
-- [ ] **Step 1 — RED tests.** Native differential races callback/native ACK,
+- [x] **Step 1 — RED tests.** Native differential races callback/native ACK,
   callback/read and callback/revoke: first committed ackat stable, serialized revoke
   denies a later callback. Add actual2200 new table/index/fresh/repeat/privacy/prune
   and same-schema a86 worker handback tests. Snapshot canonical history/providerref
   before/after. Treat missing2200 runtime path or omitted test filter as failure.
-- [ ] **Step 2 — Run RED.** Execute disposable connect compose workflow before
-  adding the new lifecycle invocation; explicit callback result/evidence is absent,
-  not silently accepted as source-only PASS. Record exact RED SHA/job.
-- [ ] **Step 3 — Implement fixtures.** Run old A.1 lifecycle on its pinned source
+- [x] **Step 2 — RED evidence.** Native prerequisite REDs are recorded at
+  f02e5bba/job119744993678, eb720b1b/job119752033195 and
+  987f6828/job119764694424. A separate intentionally missing-result-marker run
+  was not performed; this is an execution deviation from the proposed sequence.
+  Callback lifecycle/runtime evidence stayed explicitly pending until final
+  job119842668543 and runtime119841056647 both passed, rather than treating
+  source-only PASS as callback acceptance.
+- [x] **Step 3 — Implement fixtures.** Run old A.1 lifecycle on its pinned source
   and then new callback lifecycle separately. Feed actual PHP v1/v2 packets through
   frozen/current Python parsers and signed ACK back into native bridge_service;
   malformed/scope/nonce/disabled cases deny without business writes. Add isolated
@@ -341,12 +345,12 @@ Artifacts prefix con02-callback; sanitized assertions/counts only, no SQL dump/s
   scoped positive/negative operations and actual old→new→disabled/a86 service
   handoff on same journal/cursor/link/preferences. No second receiver during switch,
   no drop_pending/reset/replay; known in-flight lease settles/expires.
-- [ ] **Step 4 — GREEN.** New lifecycle reports CON02_CALLBACK_UPGRADE_RECOVERY=PASS
+- [x] **Step 4 — GREEN.** New lifecycle reports CON02_CALLBACK_UPGRADE_RECOVERY=PASS
   and CON02_CALLBACK_RUNTIME=PASS with schema/count assertions; native writer races,
   actual private TLS/peer denial, scope and credentials all pass. Distinguish actual
   Moodle service dispatch from synthetic provider and separate TLS fixture;
   no fabricated forwarded-TLS or remote-production acceptance claim.
-- [ ] **Step 5 — Commit** `test: verify callback upgrade races and compatible worker handoff`.
+- [x] **Step 5 — Commit** `test: verify callback upgrade races and compatible worker handoff`.
 
 ### Task 9: Whole-slice regression, exact evidence and reviewable delivery
 
@@ -360,23 +364,23 @@ Update PR #106 title/body around final implemented behavior and exact limits.
 file/tree/hash inventory. Receipt separates local/CI/native/synthetic/owner/live
 and records exact SHAs/jobs/skips; no fake installer or new production state.
 
-- [ ] **Step 1 — Review evidence gaps.** Check Tasks1–8 against every spec section;
+- [x] **Step 1 — Review evidence gaps.** Check Tasks1–8 against every spec section;
   absence of denied sender, stable ACK race, v1 compatibility, paired recovery or
   actual credential/TLS result blocks completion. Write a failing test for each
   actual uncovered behavior before changing product code; do not add mirror tests.
-- [ ] **Step 2 — Run checks.** Python r16, current PHP8.2/8.3 source checks,
+- [x] **Step 2 — Run checks.** Python r16, current PHP8.2/8.3 source checks,
   existing native/Chromium/actual-host jobs, new callbacks and prior ACK/link tests.
   Context regeneration/check and git diff --check pass. Local absent PHP/Docker/MCP
   dependencies are recorded honestly and resolved by exact CI, not counted as PASS.
-- [ ] **Step 3 — Self-review final diff.** Verify no scope/actor bypass, global
+- [x] **Step 3 — Self-review final diff.** Verify no scope/actor bypass, global
   exception suppression, raw token persistence, repeated send, source-bound frozen
   helper edit or hidden activation. Record author-only review,0subagents, no
   independent reviewer. Fix findings with focused RED/GREEN and rerun affected checks.
-- [ ] **Step 4 — Publish exact source and inspect CI.** Preserve expected-head lease,
+- [x] **Step 4 — Publish exact source and inspect CI.** Preserve expected-head lease,
   compare published/local trees, verify completed jobs/artifacts and declared skips;
   evidence must cover final source tree, not an earlier helper build. Review/Context
   success alone does not label skipped historical FullRC jobs passed.
-- [ ] **Step 5 — Commit/publish final evidence and handoff.** Update actual candidate
+- [x] **Step 5 — Commit/publish final evidence and handoff.** Update actual candidate
   manifest and next state; no server commands until separate guarded installation
   package/fresh pair/cron+HTTPS handoff is prepared. Next product slices remain
   B routing/preferences then C Bitrix(actual portal/API unknown).
@@ -386,11 +390,13 @@ and records exact SHAs/jobs/skips; no fake installer or new production state.
 Coverage: spec§1–3→Tasks2/4/6; §4→Tasks3/5; §5→Tasks1/2; §6→Tasks2/3/8;
 §7–8→Tasks4/6; §9→Tasks7/8 and separate deployment boundary; §10→Tasks8/9.
 Review Focus1–5 each has named assertions above. Method signatures/typed payloads,
-fixed timeouts/cutoffs and statuses agree across tasks. Tasks4–7 completed local
-RED/GREEN; native lifecycle/service gates remain in the progress receipt. Checkboxes
-track actual execution; skipped environments are not native acceptance.
+fixed timeouts/cutoffs and statuses agree across tasks. Tasks1–9 complete for source53476482: native154/800, wire/races, actual paired lifecycle
+and separate actual systemd/TLS gates PASS. Exact counts/SHAs/artifacts and skipped
+environments are in the final report/JSON receipt. Proposed checkpoint commit titles
+above describe logical tasks; published commits sometimes combine related tasks.
+Checkboxes track completed work, not production activation.
 
 Owner22Oct approved the written plan and explicitly ordered execution. Method:
 **self implementation in this session, no subagents**. No further owner gate
-between tasks; continue executing-plans/TDD until the source slice and evidence
-are complete. Do not repeat pilot tests or ask to choose agents.
+between tasks. The source slice and evidence are complete; next is the separate
+guarded deployment, not a new pilot test or agent choice.

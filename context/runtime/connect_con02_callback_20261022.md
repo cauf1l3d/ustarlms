@@ -35,9 +35,25 @@ Production access checks were unchanged.
 
 Current continuation focused suite:93 tests PASS, no skips. Historical local
 974/35environment skips belong to the prior agent environment, not re-executed here.
-Whole final CI/native/privacy/lifecycle/wire/race evidence is in the adjacent JSON
-receipt once completed. Source references and synthetic-vs-native boundaries stay
-explicit. Author-only review covered token/recipient fences, first-time writer,
+Source534764821c4f65437ab50b3c7f25578d538e9504 is now CI verified:
+Context39782650830 and Review39782650814 SUCCESS. The exact
+[JSON receipt](connect_con02_callback_ci_20261022.json) separates native, synthetic,
+local and owner evidence. PHP8.2/8.3 each ran974r16 with152 explicit environment
+skips; Chromium ACK5/mobile60/onboarding20/link28/actor100 scenarios each PASS.
+Native job119842668543 on Moodle5.1.8/PHP8.3.33/PG16.15 passed154tests/800assertions,
+including current-capability denial and privacy discovery/export/erase/prune.
+Actual2100→2200/repeat preserves history; schema99→100→100 and paired restore99
+are exact. PHP↔Python v1/v2/HMAC wire and3 native callback/native/read/revoke races
+PASS. Prior A.1 HTTP/CSRF/recipient/history/paired recovery and frozen a86 gates pass.
+Separate runtime119841056647 proves actual UID33/systemd/LoadCredential/private
+TLS/peer/key isolation and same schema1/cursor handback with synthetic provider
+and bridge store; it is not actual Telegram or remote production acceptance.
+Source artifact12427453205 SHA256 and all557 addon file hashes were verified;
+native12428312678 and runtime12427960385 ZIP hashes and JSON were also verified.
+The unrelated mobile image readiness failure passed a failed-jobs-only rerun on
+unchanged source. Historical FullRC jobs were skipped by label condition, not passed.
+Final evidence commits change documentation only; validated product trees remain
+those in the receipt. Source references and synthetic-vs-native boundaries stay explicit. Author-only review covered token/recipient fences, first-time writer,
 exact packet fields, credential split, journal uncertainty, privacy cleanup, v1
 handback and default-off profiles. No independent reviewer or subagents used.
 

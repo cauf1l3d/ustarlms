@@ -1,5 +1,21 @@
 # USTAR вход в проект
 
+**22Oct — CON-02A.2 реализован и проверен в CI; на server1 не установлен.**
+Telegram «Принял» сохраняет первое личное ACK через тот же receiver и отдельный
+ACK-only ключ; v1/a86 совместимость и default-off сохранены. Candidate2200/theme0202,
+557files/100tables. Source53476482: Context39782650830/Review39782650814 SUCCESS;
+154native/800assertions,3callback PG races,v1/v2 wire,2100→2200/repeat/paired restore
+и отдельный actual UID33/systemd/credentials/private TLS handback PASS. PHP8.2/8.3
+каждый974r16/152environment skips; Chromium ACK5widths и прежние UI gates PASS.
+[Отчёт](context/runtime/connect_con02_callback_20261022.md), [точная квитанция](context/runtime/connect_con02_callback_ci_20261022.json).
+Все9 задач принятого плана закрыты как source slice; author self-review,0subagents.
+Следующий шаг — отдельный guarded2000+overlay→2100→2200 installer/fresh pair и
+cron+HTTPS ownership handoff, затем B routing/preferences и C Bitrix. Установщика
+этого обновления пока нет. Server1 application2000+policy overlay/worker a86 сохранён;
+UID130 last revoked, принятый Tasks pilot не повторять. Live group tests deferred
+до полного запуска, не passed; FullRC jobs skipped, не passed. Нет agent SSH,
+provider sends или main merge. Ниже — датированная история, не текущие инструкции.
+
 **22Oct — A.2 implementation explicitly approved and running; no new permission loop.**
 Owner: «начинай выполнение». [Progress](context/runtime/connect_con02_callback_progress_20261022.md).
 Transport/sender/callback/private config RED→GREEN; full local973tests/54env skips.

@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "date": "2026-10-22",
+  "slice": "CON-02A.2_Telegram_personal_notification_acknowledgement",
+  "status": "source_CI_verified_not_deployed",
+  "plan": "context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md",
+  "plan_approved_by_owner": true,
+  "shared_chat_resume": "6ada0312-619c-83ed-8a01-1ab9edb9a8e8",
+  "source_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+  "source_tree": "2d9e94324c90067f8cfaaeffadfd92339ee6884b",
+  "candidate": {
+    "local_ustar": 2026102200,
+    "theme_ustar": 2026100202,
+    "files": 557,
+    "tables": 100,
+    "new_tables": [
+      "local_ustar_conn_acktokens"
+    ],
+    "development_manifest_sha256": "7f64dd622de7a182ba7e24c34ac809faf200c6b708d351749808737cb556c6d7",
+    "component_tree_ids": {
+      "moodle/local/ustar": "742ded4143ee30db6e3018f382d6fcc9550e1ea2",
+      "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
+    },
+    "deployed": false
+  },
+  "local_continuation": {
+    "focused_Python_tests": 93,
+    "skips": 0,
+    "result": "pass",
+    "PHP_and_Docker": "unavailable_in_continuation_environment_native_verification_in_CI",
+    "previous_agent_full_local_tests": 974,
+    "previous_agent_environment_skips": 35,
+    "previous_agent_run_repeated_here": false,
+    "remote_worker_stage_workflow_files_compared": 84,
+    "remote_file_mismatches": 0
+  },
+  "CI": {
+    "context_run": 39782650830,
+    "context_result": "success",
+    "review_run": 39782650814,
+    "review_result": "success",
+    "source_jobs": {
+      "8.2": 119841055292,
+      "8.3": 119841057246
+    },
+    "source_results": "both_success",
+    "r16_each": {
+      "tests": 974,
+      "environment_skips": 152,
+      "result": "pass"
+    },
+    "browser_each": {
+      "ACK": 5,
+      "mobile": 60,
+      "onboarding": 20,
+      "links": 28,
+      "actor": 100,
+      "widths": [
+        320,
+        390,
+        768,
+        1366,
+        1920
+      ],
+      "result": "pass",
+      "API_transport": "synthetic_not_live_Telegram"
+    },
+    "runtime_job": 119841056647,
+    "runtime_result": "success",
+    "callback_runtime": {
+      "result": "CON02_CALLBACK_RUNTIME=PASS",
+      "receiver_uid": 33,
+      "schema": 1,
+      "cursor": 104,
+      "handoff": [
+        "a86",
+        "v2_sender",
+        "candidate_ACK",
+        "disabled",
+        "a86"
+      ],
+      "private_TLS_verified": true,
+      "wrong_CA_denied": true,
+      "wrong_peer_and_HMAC_denied": true,
+      "separate_credentials": true,
+      "single_journal_lock": true,
+      "root_credentials_unreadable": true,
+      "ACK_calls": 1,
+      "sender_begin_v2": 1,
+      "sender_finish": 1,
+      "provider": "synthetic_only",
+      "bridge_store": "synthetic_actual_Moodle_dispatch_is_separate_native_DB_job"
+    },
+    "native_job": 119842668543,
+    "native_result": "success",
+    "full_RC_moodle_db_rollback_prepare_gate": "skipped_by_existing_workflow_label_condition_not_claimed_passed",
+    "source_artifact": {
+      "id": 12427453205,
+      "zip_sha256": "0bdd831cc6792db68c7d259e36563c072f632e62fe102793cb4d611c4c5ff2f5",
+      "download_hash_verified": true,
+      "addon_tar_files_hash_verified": 557
+    },
+    "runtime_artifact": {
+      "id": 12427960385,
+      "zip_sha256": "f275ee729ca573bb3c02678e7363809902ad825aa2fdb929c2ef61c1765efa87",
+      "download_hash_verified": true,
+      "JSON_verified": true
+    },
+    "native_runtime": {
+      "Moodle": "5.1.8",
+      "PHP": "8.3.33",
+      "PostgreSQL": "16.15",
+      "PHPUnit": "11.5.55"
+    },
+    "native_PHPUnit": {
+      "tests": 154,
+      "assertions": 800,
+      "result": "pass"
+    },
+    "native_pass_markers": [
+      "CON02_ACK_NATIVE_BASELINE_RED_CANDIDATE_GREEN",
+      "CONNECT_CONCURRENT_CONFIRM_AND_REPLAY",
+      "CONNECT_CONCURRENT_ENTRY_EXCHANGE",
+      "CONNECT_CONCURRENT_ACTOR_OPEN",
+      "CONNECT_CONCURRENT_SIGNUP_AND_RETRY",
+      "CONNECT_CONCURRENT_LAN_EMAIL",
+      "CONNECT_CONCURRENT_NOTIFICATION_LEASE_BEGIN_RECEIPT",
+      "CONNECT_SCHEMA_UPGRADE_REPEAT_FRESH_AND_DB",
+      "CONNECT_ACCEPTED_BASELINE_PAIRED_ROLLBACK",
+      "CHAT_LINK_1905_TO_2000_UPGRADE_REPEAT_PAIRED_RESTORE",
+      "CON02_ACK_BASELINE_SEEDED",
+      "CON02_ACK_UPGRADE_HISTORY_SCOPE_SCHEMA",
+      "CON02_ACK_NATIVE_V1_LEASE_BEGIN_FINISH",
+      "CON02_FROZEN_A86_NATIVE_PACKET_COMPAT",
+      "CON02_ACK_NATIVE_HTTP_POST_CSRF_SOURCE_RECIPIENT_REPEAT",
+      "CON02_ACK_PAIRED_RESTORE",
+      "CON02_ACK_COMPAT",
+      "CON02_CALLBACK_WIRE_V1",
+      "CON02_CALLBACK_WIRE_V2",
+      "CON02_CALLBACK_NATIVE_RACES",
+      "CON02_CALLBACK_UPGRADE_RECOVERY",
+      "CONNECT_INSTALLER_NATIVE_SQL_VERSIONS_TASKS_COLUMNS_INDEXES",
+      "CHAT_LINK_NATIVE_SQL_CURRENT1905_TARGET2000_CUSTOM_TASK_SCHEMA_PAIRED_RESTORE"
+    ],
+    "callback_native_races": {
+      "cases": 3,
+      "callback_native_first_time_stable": true,
+      "callback_read_first_time_stable": true,
+      "revoke_denies_later_callback": true
+    },
+    "schema_counts": {
+      "A1_before": 99,
+      "A2_after": 100,
+      "A2_repeat": 100,
+      "A1_restored": 99
+    },
+    "repeat_schema_exact": true,
+    "restored_schema_exact": true,
+    "native_artifact": {
+      "id": 12428312678,
+      "zip_sha256": "37e6e5cec4396295a76117b4fe1a10431b2d8215cf19c26420a0b944eaa88768",
+      "download_hash_verified": true,
+      "callback_schema_repeat_restore_and_races_JSON_verified": true
+    }
+  },
+  "RED_evidence": {
+    "schema": {
+      "source": "f02e5bba",
+      "job": 119744993678,
+      "tests": 140,
+      "assertions": 687,
+      "expected_missing_table_failures": 2
+    },
+    "service": {
+      "source": "eb720b1b",
+      "job": 119752033195,
+      "tests": 146,
+      "assertions": 704,
+      "expected_missing_service_failures": 6
+    },
+    "router": {
+      "source": "987f6828",
+      "job": 119764694424,
+      "tests": 150,
+      "assertions": 756
+    },
+    "typed_transport_red_tests": 6,
+    "v2_sender_red_tests": 5,
+    "callback_handler_red_tests": 12,
+    "configuration_red_tests": 5
+  },
+  "continuation_findings": [
+    {
+      "source": "f8c127678b2c82a2ac9cac24aad172f1621e1394",
+      "native_job": 119780558034,
+      "tests": 154,
+      "assertions": 796,
+      "failures": 1,
+      "finding": "capability_revocation_test_did_not_establish_current_denial"
+    },
+    {
+      "source": "737e483c0f4ad96b5e308cfed11b0e8faf96742e",
+      "native_job": 119833914164,
+      "tests": 154,
+      "assertions": 796,
+      "failures": 1,
+      "finding": "fresh_cookieless_USER_alone_does_not_replace_prior_CAP_ALLOW",
+      "root_cause": "Moodle_assign_capability_overwrite_defaults_false",
+      "fix": "explicit_overwrite_true_assert_DB_CAP_PROHIBIT_then_fresh_worker_has_capability_false_before_ACK_denial",
+      "production_guards_changed": false
+    },
+    {
+      "job": 119837572635,
+      "finding": "unchanged_mobile_fixture_profile_picture_not_ready_after_fixed_100ms_wait",
+      "retry": "failed_jobs_only_same_source",
+      "retry_source_8_2_result": "success",
+      "product_or_fixture_changes": false
+    }
+  ],
+  "compatibility": {
+    "accepted_A1_source": "4fb4cd17dc4fa9a73c659950cfeaa64aa11d4551",
+    "frozen_worker": "a86e208029b6104150e85d0e90384f84da214c22",
+    "permit_v1_fields_changed": false,
+    "journal_schema": 1,
+    "second_polling_consumer": false,
+    "default_ack_enabled": false,
+    "helper_hash_guards_relaxed": false
+  },
+  "review": {
+    "method": "author_self_review",
+    "subagents": 0,
+    "independent_reviewer": false,
+    "areas": [
+      "current_recipient_and_scope",
+      "first_ACK_writer",
+      "typed_exact_wire",
+      "private_credentials_and_TLS",
+      "journal_uncertainty",
+      "privacy_and_bounded_prune",
+      "frozen_v1_and_handback",
+      "default_off_and_no_hidden_activation"
+    ]
+  },
+  "production": {
+    "application_version": 2026102000,
+    "accepted_policy_overlay_preserved": true,
+    "worker_tool": "a86e208029b6104150e85d0e90384f84da214c22",
+    "accepted_one_user_Tasks_pilot_repeated": false,
+    "UID130_last_reported_state": "revoked",
+    "live_group_acceptance": "deferred_by_owner_until_full_launch_not_passed",
+    "agent_SSH_or_provider_messages": false,
+    "A2_installed": false,
+    "guarded_2000_overlay_to2100_to2200_installer": "not_implemented_next_deployment_slice",
+    "next_requirements": [
+      "fresh_DB_source_config_data_pair",
+      "existing_lock_and_ownership_handoff",
+      "cron_version_contract",
+      "canonical_HTTPS_and_renewal",
+      "coordinated_receiver_sender_scoped_credentials"
+    ]
+  },
+  "PR": {
+    "number": 106,
+    "draft": true,
+    "main_merged": false
+  },
+  "next_product_slices": [
+    "B_routing_preferences",
+    "C_Bitrix_after_actual_portal_API_discovery"
+  ]
+}

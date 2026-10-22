@@ -4,15 +4,16 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: CON02_A2_implementation_in_progress
+  stage: CON02_A2_source_CI_verified_not_deployed
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-  following_stage: CON02_A2_Telegram_callbacks_then_B_routing_then_C_Bitrix
+  following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
   development_version: 2026102200
   development_files: 557
   CON02_A2_design: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
   CON02_A2_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
-  CON02_A2_plan_status: owner_approved_executing
-  CON02_A2_code: partial_source_native_GREEN_router_pending
+  CON02_A2_plan_status: implemented_source_CI_verified_not_deployed
+  CON02_A2_code: source53476482_CI_verified_not_deployed
+  CON02_A2_CI_receipt: context/runtime/connect_con02_callback_ci_20261022.json
   CON02_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
   production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
   production_effective_version: 2026102000
@@ -33,7 +34,7 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: finish_canonical_ACK_native_CI_and_paired_recovery
+  next: guarded_A1_A2_installer_fresh_pair_cron_HTTPS_handoff
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
@@ -482,25 +483,27 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON02_A2_implementation_in_progress
+  phase: CON02_A2_source_CI_verified_not_deployed
   owner_priority: start_CON02_manual_group_tests_deferred_keep_ustar_local_and_existing_CA
   current_summary: >-
-    Owner22Oct approved the concrete plan and explicitly ordered execution.
-    Self implementation in progress, no subagents. Source progress:
-    context/runtime/connect_con02_callback_progress_20261022.md.
-    Local transport/sender/callback/config passed973tests/54env skips; native
-    schema RED140tests/687assertions has exactly2 expected missing-table failures.
-    Metadata2200/100table source written; native GREEN/service RED pending.
-    Canonical PHP ACK/router/final native runtime and recovery gates remain.
-    The following A1 source and accepted pilot receipts remain valid history.
+    Owner-approved9-task A2 source slice complete; author self-review/no subagents.
+    Source53476482 Context39782650830/Review39782650814 SUCCESS;154native/800assertions,
+    3callback PG races, v1/v2 wire, actual2100-to2200/repeat/paired restore and
+    separate actual UID33/systemd/credentials/private TLS handback PASS. PHP8.2/8.3
+    each974tests/152env skips; candidate2200/theme0202/557files/100tables not deployed.
+    Exact evidence context/runtime/connect_con02_callback_ci_20261022.json.
+    Next separate guarded installer/fresh DB-source-config-data pair/cron and HTTPS
+    ownership handoff, then B routing/preferences and C Bitrix after portal discovery.
+    Server1 application2000+accepted policy overlay/worker a86 unchanged; UID130
+    last revoked; pilot not repeated; group live tests deferred, not passed.
+    Historical A1 and accepted pilot evidence follows.
     Owner approved CON02A1 plan21Oct. Native own acknowledgement implemented and
     CI verified; first ackat survives repeats/read/ACK races; real active owner,
     capability, POST/sesskey and source-local. Canonical task/delivery preserved.
     Candidate2100/theme0202/554files/99tables without schema delta; not deployed.
     Source4fb4cd17 Context39679569635/Review39679569515 SUCCESS;138native/685assertions.
     Exact evidence: context/runtime/connect_con02_ack_ci_20261021.json.
-    Next A2 implementation-plan review then execution, then B routing/preferences and C
-    Bitrix. Actual portal/API/legacy consumer unknown. Group controller remains
+    A2 is now source-CI verified above; after guarded deployment follow B/C. Actual portal/API/legacy consumer unknown. Group controller remains
     design-only; live group tests deferred to full launch, not passed.
     Historical accepted pilot below; do not repeat it.
     Academy2000/theme0202/552files/99tables,managed cron and HTTPS,private link bridge

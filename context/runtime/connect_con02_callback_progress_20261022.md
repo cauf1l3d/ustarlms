@@ -1,5 +1,12 @@
 # CON-02A.2 implementation progress —22Oct
 
+**Final source checkpoint —22Oct:** A.2 source534764821c4f65437ab50b3c7f25578d538e9504
+is CI verified, not deployed. Context39782650830/Review39782650814 SUCCESS;
+154native/800assertions,3callback races, actual2100→2200/repeat/paired restore,
+v1/v2 wire and UID33/systemd/private TLS handback PASS. Exact final evidence:
+[report](connect_con02_callback_20261022.md), [receipt](connect_con02_callback_ci_20261022.json).
+The entries below are dated execution history; earlier pending/RED states are superseded.
+
 Owner approved design, then the written9-task plan, then «начинай выполнение».
 Self implementation/author review,0subagents. All product source is written;
 **final native/runtime GREEN is still pending**, not production acceptance.
@@ -84,3 +91,29 @@ cookieless worker and asserts has_capability=false before ACK denial. Production
 checks are unchanged. The earlier cache-only diagnosis was incomplete.
 Source PHP8.2/8.3 each974/152skips, Chromium5ACK widths and actual callback systemd
 fixture passed737; native integration remains blocked until the corrected run.
+
+## Final acceptance evidence —22Oct
+
+Corrected source53476482 now passes154native/800assertions on actual
+Moodle5.1.8/PHP8.3.33/PostgreSQL16.15, job119842668543. Capability loss is established
+by stored CAP_PROHIBIT and a fresh worker's current permission check before ACK denial.
+No production guard was weakened. Privacy discovery/erase/prune regressions pass.
+New callback wire v1/v2,3 PG races and2100→2200/repeat/paired restore PASS;
+actual schemas99→100→100→99 verified from downloaded JSON. Prior native A.1 and
+frozen a86 gates remain green. Actual runtime UID33/systemd/credentials/private TLS
+handoff PASS separately with synthetic provider/store, schema1/cursor104.
+
+PHP8.2/source job119841055292 and PHP8.3/source119841057246 each974tests/152explicit
+environment skips; mobile60/ACK5/onboarding20/link28/actor100 Chromium scenarios PASS.
+The first8.2 mobile profile-image readiness check failed after its fixed100ms wait;
+failed-jobs-only rerun on exact same source passed. No product/fixture edit for that.
+Context39782650830 and Review39782650814 SUCCESS; historical FullRC jobs skipped by
+label condition, not passed. Source ZIP12427453205 and557 addon hashes, runtime
+ZIP12427960385 and native ZIP12428312678 verified.84 local worker/stage/workflow
+files match the published source. This continuation also passed93 focused Python
+checks/0skips; the prior agent's974/35skips local run was not rerun in this environment.
+
+All9 plan tasks are complete as a source slice. Final documentation commits preserve
+validated product trees. No server deployment, live Telegram/group test, new recipient,
+agent SSH or main merge. Next is the separate guarded release/fresh pair/cron+HTTPS
+ownership handoff; accepted pilot stays closed, UID130 last revoked. Then B/C as scoped.

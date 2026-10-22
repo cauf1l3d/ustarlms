@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_CON02_A2_implementation_in_progress
+  stage: connect_CON02_A2_source_CI_verified_not_deployed
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -20,11 +20,11 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee notification pilot CI accepted; owner active UID130; one-employee Tasks pilot fully accepted; recipient last revoked; CON02A1 native ACK source CI verified; application2100 not deployed; group design only
+  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee Tasks pilot fully owner accepted; UID130 last revoked; CON02A1 and A2 native/Telegram ACK source CI verified; application2200 not deployed; guarded deployment next; group design only
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_CON02A2_plan_approved_self_implementation_in_progress;owner_CON02A1_plan_approved_source_CI_verified_not_deployed;owner_one_employee_Tasks_pilot_accepted;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_fully_accepted_recipient_last_revoked
+execution_gate: owner_CON02A2_plan_implemented_source_CI_verified_not_deployed;owner_CON02A1_plan_approved_source_CI_verified_not_deployed;owner_one_employee_Tasks_pilot_accepted;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_fully_accepted_recipient_last_revoked
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -49,11 +49,12 @@ current_work:
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
   plan_scope: CON02_A2_Telegram_callbacks
-  plan_status: owner_approved_executing
+  plan_status: implemented_source_CI_verified_not_deployed
   live_group_acceptance: deferred_by_owner_until_full_launch
-  following_stage: CON02_A2_Telegram_callbacks_then_B_routing_then_C_Bitrix
+  following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
   accepted_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
   runbook: context/runtime/connect_notification_pilot_20261021.md
-  CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
-  implementation_report: context/runtime/connect_con02_ack_20261021.md
+  CI_receipt: context/runtime/connect_con02_callback_ci_20261022.json
+  accepted_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
+  implementation_report: context/runtime/connect_con02_callback_20261022.md
   accepted_pilot_CI_receipt: context/runtime/connect_notification_pilot_ci_20261021.json

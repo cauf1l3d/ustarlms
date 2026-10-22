@@ -188,7 +188,7 @@ final class connect_actor_test extends \advanced_testcase {
             'tg1', 'telegram', '123456')['account_state']);
         $this->denied(fn() => $this->open($entry), 'native_auth_required');
         $this->assertSame('actor_read', $this->open()['scope']);
-        $this->assertTrue(\xmldb_local_ustar_upgrade(2026101905));
+        $this->assertTrue(\xmldb_local_ustar_upgrade((int)get_config('local_ustar', 'version')));
         $this->assertSame(0, (int)$DB->get_field('local_ustar_conn_sessions', 'actorready', $where));
     }
 

@@ -106,6 +106,7 @@ final class connect_notification_test extends \advanced_testcase {
         $row=$DB->get_record('local_ustar_notify_delivery',['id'=>$lease['delivery']]);
         $this->assertStringNotContainsString($lease['lease'],json_encode($row));
         $packet=$this->begin($lease);
+        $this->assertSame(['status','subject','category','severity','occurred_at','send_before'],array_keys($packet));
         $this->assertSame('77777',$packet['subject']);$this->assertSame('tasks',$packet['category']);
         $this->assertStringNotContainsString('PRIVATE',json_encode($packet));
         $this->assertArrayNotHasKey('userid',$packet);$this->assertArrayNotHasKey('message',$packet);
@@ -308,4 +309,23 @@ final class connect_notification_test extends \advanced_testcase {
         $DB->set_field('local_ustar_grade_requests','status','rejected',['id'=>$request]);
         $this->assertSame('cancelled',$this->begin($l)['status']);
     }
+    public function test_v1_keys_unchanged_and_v2_optin_is_exact(): void {
+        global $CFG,$DB;
+        $this->assertTrue(method_exists(notification_delivery::class,'begin_v2'),'Versioned begin is missing');
+        $this->grant(['local/ustar:use']);$this->prefs();$this->notice();$lease=$this->lease();
+        $before=$DB->get_record('local_ustar_notify_delivery',['id'=>$lease['delivery']]);
+        $CFG->ustar_connect_ack_enabled=false;
+        $this->denied(fn()=>notification_delivery::begin_v2($lease['delivery'],$lease['lease'],
+            'tg_delivery','telegram','123456'),'ack_disabled');
+        $this->assertEquals($before,$DB->get_record('local_ustar_notify_delivery',['id'=>$lease['delivery']]));
+        $CFG->ustar_connect_ack_enabled=true;$CFG->ustar_connect_ack_since=time()-60;
+        $CFG->ustar_connect_notify_userids=[(int)$this->employee->id];
+        $packet=notification_delivery::begin_v2($lease['delivery'],$lease['lease'],'tg_delivery','telegram','123456');
+        $this->assertSame(['status','subject','category','severity','occurred_at','send_before','version','ack'],array_keys($packet));
+        $this->assertSame(2,$packet['version']);$this->assertSame(['action','expires'],array_keys($packet['ack']));
+        $row=$DB->get_record('local_ustar_conn_acktokens',['deliveryid'=>$lease['delivery']],'*',MUST_EXIST);
+        $this->assertStringNotContainsString($packet['ack']['action'],json_encode($row));
+        $this->assertSame('unread',$DB->get_field('local_ustar_notifications','status',['id'=>$row->notificationid]));
+    }
+
 }

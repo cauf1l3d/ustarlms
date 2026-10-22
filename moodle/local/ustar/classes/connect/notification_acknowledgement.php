@@ -10,10 +10,7 @@ final class notification_acknowledgement {
         // It also allows pending link owners, so acknowledgement checks ACTIVE separately.
         identity_service::owned_links();
         $userid = (int)$USER->id;
-        if (!\local_ustar\employment::is_active($userid)) {
-            throw new \InvalidArgumentException('inactive_actor');
-        }
-        require_capability('local/ustar:use', \context_system::instance(), $userid);
+        receipt_actor::require_active($userid);
         return $userid;
     }
 

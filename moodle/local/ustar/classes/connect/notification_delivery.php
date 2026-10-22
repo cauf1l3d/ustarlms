@@ -38,7 +38,7 @@ final class notification_delivery {
         return $link;
     }
     /** A configured pilot list is checked at enqueue, lease and again at begin. */
-    private static function recipient_enabled(int $userid): bool {
+    public static function recipient_enabled(int $userid): bool {
         global $CFG;
         if (!property_exists($CFG, 'ustar_connect_notify_userids')) { return true; }
         $ids = $CFG->ustar_connect_notify_userids;

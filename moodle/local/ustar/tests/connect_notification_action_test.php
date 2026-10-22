@@ -56,7 +56,7 @@ final class connect_notification_action_test extends \advanced_testcase {
         $this->token_row($f, time()+3600); $this->token_row($other, time()+3600);
         $provider = \local_ustar\privacy\provider::class;
         $contexts = $provider::get_contexts_for_userid($f['uid']);
-        $this->assertContains(\context_system::instance()->id, $contexts->get_contextids());
+        $this->assertContains((int)\context_system::instance()->id, array_map('intval', $contexts->get_contextids()));
         $approved = new \core_privacy\local\request\approved_contextlist(
             $DB->get_record('user', ['id' => $f['uid']]), 'local_ustar', [\context_system::instance()->id]);
         $provider::export_user_data($approved);
@@ -159,8 +159,10 @@ final class connect_notification_action_test extends \advanced_testcase {
         }
         $CFG->ustar_connect_notify_userids=[];
         $this->unavailable(fn()=>$this->ack($f,$action['action']));
+        unset($CFG->ustar_connect_notify_userids);
+        $this->unavailable(fn()=>$this->ack($f,$action['action']));
         $CFG->ustar_connect_notify_userids=[$f['uid']];
-        unassign_capability('local/ustar:use',$f['role']);accesslib_clear_all_caches_for_unit_testing();
+        unassign_capability('local/ustar:use',$f['role']);accesslib_clear_all_caches(true);
         $this->unavailable(fn()=>$this->ack($f,$action['action']));
         $CFG->ustar_connect_ack_enabled=false;
         $this->unavailable(fn()=>$this->ack($f,$action['action']),'ack_disabled');
@@ -175,6 +177,38 @@ final class connect_notification_action_test extends \advanced_testcase {
         $CFG->ustar_connect_ack_since=time()-60;
         employment::register_pending($f['uid']);
         $this->assertNull(identity_service::atomic(fn()=>$class::issue($f['notice'],$f['delivery'],$f['link'],time())));
+    }
+
+    private function dispatch(string $op, array $payload, string $kid = 'tg_ack'): array {
+        $key = ['tg_ack' => ['secret' => str_repeat('ab',32), 'operations' => ['notification.ack'], 'provider'=>'telegram','tenant'=>'123456']];
+        ksort($payload); $body=json_encode(['operation'=>$op,'payload'=>$payload],JSON_UNESCAPED_SLASHES);
+        $at=(string)time();$nonce='rn1_'.rtrim(strtr(base64_encode(random_bytes(32)),'+/','-_'),'=');
+        $sig=hash_hmac('sha256',implode("\n",['USTAR-CONNECT-BRIDGE-v1','POST','/local/ustar/connect_bridge.php',
+            $kid,$at,$nonce,hash('sha256',$body)]),hex2bin(str_repeat('ab',32)));
+        return \local_ustar\connect\bridge_service::dispatch($body,['X-Ustar-Key'=>$kid,'X-Ustar-Time'=>$at,
+            'X-Ustar-Nonce'=>$nonce,'X-Ustar-Signature'=>$sig],$key);
+    }
+    public function test_ack_key_cannot_lease_link_or_open_actor(): void {
+        foreach (['notification.lease','notification.begin','notification.begin_v2','notification.finish','link.claim','actor.open'] as $op) {
+            $this->unavailable(fn()=>$this->dispatch($op,['probe'=>'fixed']),'forbidden_operation');
+        }
+    }
+    public function test_scoped_ack_route_and_exact_payload(): void {
+        $f=$this->delivery_fixture();$action=$this->action($f);
+        $payload=['action'=>$action['action'],'message_id'=>'991','provider'=>'telegram','subject'=>$f['link']->subject,'tenant'=>'123456'];
+        $this->assertSame('acknowledged',$this->dispatch('notification.ack',$payload)['status']);
+        $this->unavailable(fn()=>$this->dispatch('notification.ack',$payload+['userid'=>(string)$f['uid']]),'invalid_payload');
+        $bad=$payload;$bad['message_id']=true;
+        $this->unavailable(fn()=>$this->dispatch('notification.ack',$bad),'invalid_payload');
+    }
+    public function test_disabled_ack_has_no_business_writes(): void {
+        global $CFG,$DB;
+        $f=$this->delivery_fixture();$action=$this->action($f);$before=$DB->get_record('local_ustar_notifications',['id'=>$f['notice']->id]);
+        $CFG->ustar_connect_ack_enabled=false;
+        $payload=['action'=>$action['action'],'message_id'=>'991','provider'=>'telegram','subject'=>$f['link']->subject,'tenant'=>'123456'];
+        $this->unavailable(fn()=>$this->dispatch('notification.ack',$payload),'ack_disabled');
+        $this->assertEquals($before,$DB->get_record('local_ustar_notifications',['id'=>$f['notice']->id]));
+        $this->assertSame(1,$DB->count_records('local_ustar_conn_acktokens'));
     }
 
 }

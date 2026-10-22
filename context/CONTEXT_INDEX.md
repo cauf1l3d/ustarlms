@@ -3,7 +3,7 @@
 **22Oct — CON-02 controller implemented; final required CI remains pending.**
 Owner: «ок приступай к реализации план потверждаю». Self implementation,0subagents.
 Fixed app/worker534, separate app+cron/runtime journals, plain.py and native/systemd/HTTPS
-fixtures implemented. Author crash review fixes verified:64 focused tests/1 local UID33
+fixtures implemented. Author crash review fixes verified:65 focused tests/1 local UID33
 namespace skip; actual root state7/7 passed on ca3. Final native/runtime/HTTPS gates and
 exact operator artifact remain pending. No operator-ready or production-deployed claim.
 Server1 application2000+overlay/worker a86 unchanged;UID130 last revoked. Accepted pilot

@@ -90,6 +90,7 @@ class Application:
         return images, desired
 
     def verify(self, row, *, target):
+        self.bind(row)
         self.host.source(target=target)
         verify_database(self.host.database(row['prefix']), row['database'], self.ctx.bundle.reference, target=target)
         self.host.controls(self.journal.load())

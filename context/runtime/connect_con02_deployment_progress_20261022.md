@@ -128,3 +128,12 @@ Actual CI attribution remains pending; public release-file metadata diagnostics 
 Added real fork/exit after public commit and successful explicit late restore only with
 both outage/discard flags:16 app tests PASS. Combined64tests/1local UID33 skip PASS.
 Final CI rerun required; source/worker534 and production2000/a86 unchanged.
+
+B4 actual runtime passes immutable staging, ACK credential/probe and repeated receiver
+handoffs after the ACL correction. The next fixture refusal is unsafe_activation_parent
+before the intended frozen legacy drift check. The disposable parent normalization now
+also covers the synthetic /usr/local fixture/tool ancestors and restores originals.
+Author review added recorded-ID binding for completed app rechecks/runtime readiness
+and readonly check; a replaced-container RED now refuses before journal/service changes.
+Combined65tests/1local UID33 skip PASS. Final required actual/runtime/HTTPS/native/source
+checks remain pending; artifact not released.

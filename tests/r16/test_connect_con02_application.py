@@ -220,6 +220,14 @@ class Application(unittest.TestCase):
         self.assertIn('con02_update_native.py verify', workflow)
         self.assertIn('artifacts/con02-update-*', workflow)
 
+    def test_ready_recheck_binds_original_container_identity(self):
+        op=self.operation();op.upgrade();self.d.actions.clear()
+        def replaced(identities):raise c.Refusal('recorded_container_identity')
+        op.host.bind_identities=replaced
+        inode=op.journal.path.stat().st_ino
+        with self.assertRaises(c.Refusal):op.upgrade()
+        self.assertEqual(inode,op.journal.path.stat().st_ino);self.assertEqual([],self.d.actions)
+
     def test_recovery_drift_refuses_before_journal_write_or_stop(self):
         op=self.operation();op.upgrade();self.d.actions.clear()
         self.cron.write_bytes(b'administrator drift')

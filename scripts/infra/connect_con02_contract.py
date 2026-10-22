@@ -314,6 +314,8 @@ def check(ctx):
     journal = Journal(ctx)
     with Locks(ctx).check():
         s = journal.load()
+        if s and s.get('app') and hasattr(ctx.host,'bind_identities'):
+            ctx.host.bind_identities(s['app']['primitive']['identities'])
         database = ctx.host.database(ctx.host.prefix())
         target = select_target(s, database['addons'])
         baseline = s['app']['database'] if s and s.get('app') else database

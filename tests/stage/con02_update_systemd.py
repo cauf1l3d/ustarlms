@@ -104,6 +104,22 @@ class FileHost:
         assert b'ustar_connect_ack_enabled=true' in values['include']
 
 
+
+def protect_fixture_parents(host, paths, root):
+    # Runner tool directories may be0777. Keep the production guards strict and
+    # restore every changed disposable-runner ancestor in the fixture's finally.
+    host.fixture_parent_modes=getattr(host,'fixture_parent_modes',{})
+    for path in paths:
+        for folder in (path,*path.parents):
+            if not folder.is_relative_to(root):break
+            info=folder.lstat()
+            c.require(info.st_uid==0 and folder.is_dir() and not folder.is_symlink(), 'fixture_parent_owner')
+            if info.st_mode & 0o022:
+                host.fixture_parent_modes.setdefault(folder,info.st_mode & 0o7777)
+                print('CON02_FIXTURE_PARENT='+json.dumps({'path':str(folder),'uid':info.st_uid,'mode':oct(info.st_mode & 0o7777)}))
+                folder.chmod((info.st_mode & 0o7777) & ~0o022)
+
+
 def populate(bundle,root,host,old_values,ca):
     root=Path(root);paths=host.control_paths();files=baseline_profiles(bundle)
     files.update(link_ca=ca,notify_ca=ca)
@@ -115,19 +131,7 @@ def populate(bundle,root,host,old_values,ca):
         path=root/'opt/ustar/data/moodle/public/public'/name
         write(path,raw,0o644,33);os.chown(path,33,33)
     parent=root/'opt/ustar-connect/releases';parent.mkdir(parents=True,exist_ok=True);parent.chmod(0o755)
-    # GitHub runner /opt may be writable for tool installation. The production
-    # guard must stay strict; the disposable fixture installs under root-only
-    # ancestors and restores their original modes after stopping its services.
-    host.fixture_parent_modes=getattr(host,'fixture_parent_modes',{})
-    for folder in (parent,*parent.parents):
-        if not folder.is_relative_to(root):break
-        info=folder.lstat()
-        c.require(info.st_uid==0 and not folder.is_symlink(),'fixture_release_parent_owner')
-        if info.st_mode & 0o022:
-            host.fixture_parent_modes.setdefault(folder,info.st_mode & 0o7777)
-            print('CON02_FIXTURE_PARENT='+json.dumps({'path':str(folder),'uid':info.st_uid,'mode':oct(info.st_mode & 0o7777)}))
-            folder.chmod((info.st_mode & 0o7777) & ~0o022)
-
+    protect_fixture_parents(host,[parent],root)
     old=parent/c.LEGACY_COMMIT
     if not old.exists():
         old.mkdir(mode=0o755)
@@ -257,6 +261,7 @@ def main():
     for p in state_dirs:
         if p.exists():q=p.with_name(p.name+'-con02-fixture-saved');assert not q.exists();p.rename(q);moved[p]=q
     try:
+        protect_fixture_parents(host,[PREFIX],Path('/'))
         for n in ('ca','wrong'):
             run(['openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','2','-subj','/CN=CON02 fixture '+n,
                  '-addext','subjectAltName=IP:127.0.0.1','-keyout',str(private/(n+'.key')),'-out',str(private/(n+'.crt'))])
@@ -394,6 +399,7 @@ def legacy_denials(bundle,host,bundles):
     lpaths={'tool':Path('/usr/local/sbin/USTAR_ACADEMY_HTTPS_20261020.py'),'config':Path('/opt/ustar/data/moodle/public/config.php'),
         'receiver':paths['receiver'],'probe':paths['probe'],'key':paths['link_key'],'ca':paths['link_ca'],'include':paths['include'],
         'receiver_dropin':paths['receiver_link_dropin'],'probe_dropin':paths['probe_link_dropin']}
+    protect_fixture_parents(host,[path.parent for path in lpaths.values()],Path('/'))
     baseline=baseline_profiles(bundle)
     files={n:{'before':record(p),'after':record(p)} for n,p in lpaths.items()}
     for n in ('receiver','probe'):

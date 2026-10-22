@@ -41,6 +41,7 @@ class Host(fixture.Host):
         return {'sha256': 'b' * 64}
     def recover_backup(self): pass
     def capacity(self, cold=False): pass
+    def restore_capacity(self, pair): pass
     def references(self, prefix): return 1
     def cli_upgrade(self):
         self.d.attempt += 1
@@ -74,6 +75,8 @@ class Application(unittest.TestCase):
         db['indexes'] = [['local_ustar_old', 'CREATE UNIQUE INDEX old ON mdl_local_ustar_old USING btree (id)']]
         self.d.target_schema = db['schema'] + [['local_ustar_new', 'id', 'bigint', 'int8', None, 64, 0, 'NO', None]]
         self.d.target_indexes = db['indexes'] + [['local_ustar_new', 'CREATE UNIQUE INDEX new ON mdl_local_ustar_new USING btree (id)']]
+        self.d.reference['baseline'].update(schema_fields={'local_ustar_old':{'id':{'type':'int','length':'10','notnull':True}}},
+            schema_indexes={'local_ustar_old':[{'fields':['id'],'unique':True}]})
         self.d.reference['candidate'].update(schema_fields={'local_ustar_new': {'id': {'type': 'int', 'length': '10', 'notnull': True}}},
             schema_indexes={'local_ustar_new': [{'fields': ['id'], 'unique': True}]})
         (self.d.p.PGDATA / 'db.json').write_text(json.dumps(db))
@@ -121,9 +124,26 @@ class Application(unittest.TestCase):
         self.assertEqual('2026102200', json.loads(self.install.read_bytes())['versions']['local_ustar'])
         op.upgrade(); self.assertEqual(2, self.d.attempt)
 
+    def test_recovered_failure_is_recorded_only_in_private_log(self):
+        op=self.operation();self.d.fail_at=1
+        op.host.log=io.BytesIO()
+        self.assertEqual('baseline_restored',op.upgrade()['phase'])
+        self.assertIn(b'upgrade_failed',op.host.log.getvalue())
+
     def test_before_public_restore_exact_pair(self):
         op = self.operation(); self.d.fail_at = 2
         self.assertEqual('baseline_restored', op.upgrade()['phase']); self.assert_restored()
+
+    def test_restore_capacity_uses_remaining_copy_budget(self):
+        op=self.operation();self.d.fail_at=1
+        checks=[]
+        def capacity(cold=False):
+            checks.append('upgrade')
+            if op.row().get('live_trees_modified'):raise c.Refusal('upgrade_budget_no_longer_available')
+        op.host.capacity=capacity
+        op.host.restore_capacity=lambda pair:checks.append('restore_remaining_copy')
+        self.assertEqual('baseline_restored',op.upgrade()['phase'])
+        self.assertIn('restore_remaining_copy',checks);self.assert_restored()
 
     def test_partial_cron_pair_recovers(self):
         op = self.operation(); original = op.journal.put

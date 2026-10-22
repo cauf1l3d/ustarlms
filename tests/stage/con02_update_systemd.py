@@ -22,7 +22,7 @@ import time
 from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0,str(ROOT/'scripts/infra'))
+sys.path[:0]=[str(ROOT/'scripts/infra'),str(ROOT/'scripts')]
 import connect_con02_contract as c
 import connect_con02_state as state
 from connect_con02_runtime import Runtime, worker_files

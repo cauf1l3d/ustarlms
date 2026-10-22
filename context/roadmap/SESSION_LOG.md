@@ -1,12 +1,14 @@
 # Журнал выполнения roadmap
 
-**22Oct — план реализации подтверждён, самостоятельная реализация идёт.**
-Owner: «ок приступай к реализации план потверждаю».0subagents/no SSH/provider sends.
-Fixed contracts/reference export и durable journal/phased locks начаты;
-14 focused tests/1 UID33 environment skip. Host/native/systemd/HTTPS gates pending,
-installer пока не готов. Server1 application2000+overlay/worker a86 сохранён;
-UID130 last revoked, pilot/group tests не повторять. Следом app+cron transaction,
-v2/ACK profiles/runtime, plain.py и новые native/actual gates; повторного разрешения не требуется.
+**22Oct — CON-02 controller implemented; final required CI remains pending.**
+Owner: «ок приступай к реализации план потверждаю». Self implementation,0subagents.
+Fixed app/worker534, separate app+cron/runtime journals, plain.py and native/systemd/HTTPS
+fixtures implemented. Author crash review fixes verified:61 focused tests/1 local UID33
+namespace skip; actual root state7/7 passed on ca3. Final native/runtime/HTTPS gates and
+exact operator artifact remain pending. No operator-ready or production-deployed claim.
+Server1 application2000+overlay/worker a86 unchanged;UID130 last revoked. Accepted pilot
+not repeated, group deferred. No SSH/provider sends/main merge. Continue required gates
+without another permission loop.
 Progress: [progress](../runtime/connect_con02_deployment_progress_20261022.md).
 Ниже — датированная история предыдущих состояний.
 

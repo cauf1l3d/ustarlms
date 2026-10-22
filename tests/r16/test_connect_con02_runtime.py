@@ -105,21 +105,26 @@ class Runtime(unittest.TestCase):
 
     def test_generation_cutoff_and_keys_survive_process_loss(self):
         op = self.operation()
-        pid = os.fork()
-        if pid == 0:
-            original = self.journal.checkpoint
-            def crash(scope, phase, **fields):
-                row = original(scope, phase, **fields)
-                if phase == 'include_handoff': os._exit(73)
-                return row
-            self.journal.checkpoint = crash
-            op.enable(); os._exit(74)
-        _, status = os.waitpid(pid, 0); self.assertEqual(73, os.waitstatus_to_exitcode(status))
-        before = self.journal.load()['runtime']
-        self.assertEqual('runtime_active', op.enable()['phase'])
-        after = self.journal.load()['runtime']
-        self.assertEqual(before['generation'], after['generation']); self.assertEqual(before['cutoff'], after['cutoff'])
-        self.assertEqual(before['files']['ack_key'], after['files']['ack_key'])
+        for boundary in ('prepared','workers_stopped','private_files','include_handoff','pointer_switched','probed','runtime_active'):
+            with self.subTest(boundary=boundary):
+                pid = os.fork()
+                if pid == 0:
+                    original = self.journal.begin if boundary=='prepared' else self.journal.checkpoint
+                    def crash(scope,*args,**fields):
+                        row = original(scope,*args,**fields)
+                        if boundary=='prepared' or args[0]==boundary: os._exit(73)
+                        return row
+                    if boundary=='prepared':self.journal.begin=crash
+                    else:self.journal.checkpoint=crash
+                    op.enable(); os._exit(74)
+                _, status = os.waitpid(pid, 0); self.assertEqual(73, os.waitstatus_to_exitcode(status))
+                before = self.journal.load()['runtime']
+                self.assertEqual('runtime_active', op.enable()['phase'])
+                after = self.journal.load()['runtime']
+                self.assertEqual(before['generation'], after['generation']); self.assertEqual(before['cutoff'], after['cutoff'])
+                self.assertEqual(before['files']['ack_key'], after['files']['ack_key'])
+                self.assertEqual(before['files']['notify_key'], after['files']['notify_key'])
+                op.disable()
 
     def test_revoked_recipient_and_authorized_renewal_unchanged(self):
         fence = dict(self.fence); self.host.leaf = 'new-authorized-leaf'

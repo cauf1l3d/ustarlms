@@ -145,6 +145,50 @@ def select_target(journal, addons):
     return True
 
 
+def private_failure(ctx):
+    """Keep command exceptions in the existing private log while recovery proceeds."""
+    import os
+    import traceback
+    try:
+        log = ctx.host.log
+        log.write(traceback.format_exc().encode()); log.flush()
+        try: os.fsync(log.fileno())
+        except (AttributeError, OSError, ValueError): pass
+    except (AttributeError, OSError, ValueError): pass
+
+
+def verify_schema_profile(snapshot, indexes, profile, tables, prefix):
+    fields = profile['schema_fields']
+    rows = [r for r in snapshot['schema'] if r[0] in tables]
+    require(all(len(r) == 9 for r in rows), 'schema_column_shape')
+    actual = {(r[0], r[1]): r for r in rows}
+    expected = {(t, f) for t in tables for f in fields[t]}
+    require(len(actual) == len(rows) and set(actual) == expected, 'schema_column_inventory')
+    for (table, field), row in actual.items():
+        spec = fields[table][field]
+        if spec['type'] == 'int':
+            length = int(spec['length'])
+            kind = 'int2' if length <= 4 else 'int4' if length <= 9 else 'int8'
+        else: kind = {'char':'varchar', 'text':'text'}[spec['type']]
+        require(row[3] == kind and (row[7] == 'NO') == spec['notnull'], 'schema_column_type')
+        if spec['type'] == 'char': require(row[4] == int(spec['length']), 'schema_column_length')
+        default = spec.get('default')
+        if spec.get('sequence'):
+            default = "nextval('" + prefix + table + '_' + field + "_seq'::regclass)"
+        elif spec['type'] == 'char' and (default is not None or spec['notnull']):
+            default = "'" + (default or '').replace("'", "''") + "'::character varying"
+        require(row[8] == default, 'schema_column_default')
+    for table in tables:
+        found = []
+        for name, definition in indexes:
+            if name != table: continue
+            match = re.fullmatch(r'CREATE (UNIQUE )?INDEX \S+ ON (?:public\.)?\S+ USING btree \(([a-z0-9_, ]+)\)', definition)
+            require(match is not None, 'schema_index_shape')
+            found.append((tuple(f.strip() for f in match[2].split(',')), bool(match[1])))
+        expected_indexes = [(tuple(s['fields']), s['unique']) for s in profile['schema_indexes'][table]]
+        require(sorted(found) == sorted(expected_indexes), 'schema_indexes')
+
+
 def verify_database(current, baseline, reference, *, target):
     require(isinstance(current, dict) and isinstance(baseline, dict), 'database_shape')
     wanted = reference['candidate' if target else 'baseline']
@@ -172,30 +216,14 @@ def verify_database(current, baseline, reference, *, target):
     old_indexes, old_prefix=index_rows(baseline['indexes'])
     current_indexes, current_prefix=index_rows(current['indexes'])
     require(current_prefix == old_prefix, 'database_index_prefix')
+    verify_schema_profile(baseline, old_indexes, reference['baseline'], old, next(iter(old_prefix), ''))
     require([r for r in current['schema'] if r[0] in old] == baseline['schema'], 'old_schema_changed')
     require([r for r in current_indexes if r[0] in old] == old_indexes, 'old_indexes_changed')
     if not target:
         require(current['schema'] == baseline['schema'] and current['indexes'] == baseline['indexes'], 'restored_schema')
         return
     new = set(wanted['tables']) - old
-    actual = {(r[0], r[1]): r for r in current['schema'] if r[0] in new}
-    fields = wanted['schema_fields']
-    require(set(actual) == {(t, f) for t in new for f in fields[t]}, 'new_schema_column_inventory')
-    types = {'int': ('int2', 'int4', 'int8'), 'char': ('varchar',), 'text': ('text',),
-             'number': ('numeric',), 'binary': ('bytea',)}
-    for (table, field), row in actual.items():
-        spec = fields[table][field]
-        require(row[3] in types[spec['type']] and (row[7] == 'NO') == spec['notnull'], 'new_schema_column_type')
-        if spec['type'] == 'char': require(row[4] == int(spec['length']), 'new_schema_column_length')
-    for table in new:
-        indexes = []
-        for name, definition in current_indexes:
-            if name != table: continue
-            m = re.fullmatch(r'CREATE (UNIQUE )?INDEX \S+ ON (?:public\.)?\S+ USING btree \(([a-z0-9_, ]+)\)', definition)
-            require(m is not None, 'new_schema_index_shape')
-            indexes.append((tuple(f.strip() for f in m[2].split(',')), bool(m[1])))
-        expected_indexes = [(tuple(s['fields']), s['unique']) for s in wanted['schema_indexes'][table]]
-        require(sorted(indexes) == sorted(expected_indexes), 'new_schema_indexes')
+    verify_schema_profile(current, current_indexes, wanted, new, next(iter(current_prefix), ''))
 
 
 def https_snapshot(ctx):
@@ -391,6 +419,19 @@ class Host:
             else: files['notify_dropin'] = stem.with_name(stem.name + '.d') / '50-ustar-notify-pilot.conf'
         return files
 
+    def validate_journal(self, journal):
+        for scope in ('app','runtime'):
+            row=journal.get(scope)
+            if row is None:continue
+            paths=self.control_paths()
+            if scope=='app':
+                paths.update(cron_script=self.ctx.root/'usr/local/sbin/USTAR_CRON_SETUP_20261005.py',
+                    cron_installation=self.ctx.root/'var/lib/ustar-cron/installation.json',
+                    cron_schedule=self.ctx.root/'etc/cron.d/ustar_moodle')
+            require(set(row['files'])==set(paths), 'journal_control_inventory')
+            require(all(pair[side]['path']==str(paths[name]) for name,pair in row['files'].items()
+                        for side in ('before','after')), 'journal_control_path')
+
     def controls(self, journal):
         import json
         from connect_con02_state import capture, descriptor
@@ -456,6 +497,20 @@ class Host:
         require(not (d.p.STATE / 'moodle-was-running.json').exists(), 'backup_recovery_pending')
 
     def capacity(self, cold=False): return self.ctx.engine.addon.capacity(self.ctx.engine, cold)
+
+    def restore_capacity(self, pair):
+        # The baseline pair and the current live trees are already allocated.
+        # Recovery needs one more complete copy, not the original three-copy budget.
+        import os
+        d=self.ctx.engine
+        require(set(pair['trees'])==set(d.trees), 'restore_tree_inventory')
+        estimates=[d.w.tree_estimate(d.p,d.marker.parent/'baseline'/name) for name in d.trees]
+        require(all(e['vanished_entries']==0 for e in estimates), 'restore_capacity_changed')
+        total=sum(e['allocation_allowance_bytes'] for e in estimates)
+        entries=sum(e['files']+e['directories'] for e in estimates)
+        fs=os.statvfs(d.p.CODE)
+        require(fs.f_bavail*fs.f_frsize>=6*1024**3+total and fs.f_favail>=entries+10000,
+                'restore_copy_capacity')
 
     def references(self, prefix): return self.ctx.engine.tx.references(self.ctx.engine, self, prefix)
 

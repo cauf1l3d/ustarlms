@@ -52,7 +52,9 @@ class Contract(unittest.TestCase):
 
     def test_target_preserves_old99_and_custom_tasks(self):
         c, _ = self.modules()
-        ref = {'baseline': {'tables': ['local_ustar_old'], 'versions': {'local_ustar': 2026102000}},
+        ref = {'baseline': {'tables': ['local_ustar_old'], 'versions': {'local_ustar': 2026102000},
+                'schema_fields':{'local_ustar_old':{'id':{'type':'int','length':'10','notnull':True}}},
+                'schema_indexes':{'local_ustar_old':[{'fields':['id'],'unique':True}]}},
                'candidate': {'tables': ['local_ustar_new', 'local_ustar_old'], 'versions': {'local_ustar': 2026102200},
                              'schema_fields': {'local_ustar_new': {'id': {'type': 'int', 'length': '10', 'notnull': True}}},
                              'schema_indexes': {'local_ustar_new': [{'fields': ['id'], 'unique': True}]}}}
@@ -72,13 +74,57 @@ class Contract(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises(c.Refusal):
                 c.verify_database(bad, before, ref, target=True)
 
+    def test_initial_baseline_schema_is_not_self_adopted(self):
+        c,_=self.modules()
+        fields={'local_ustar_old':{'id':{'type':'int','length':'10','notnull':True,'sequence':False,'default':None}}}
+        indexes={'local_ustar_old':[{'fields':['id'],'unique':True}]}
+        profile={'tables':['local_ustar_old'],'versions':{'local_ustar':2026102000},'schema_fields':fields,'schema_indexes':indexes}
+        ref={'baseline':profile,'candidate':copy.deepcopy(profile)}
+        baseline={'core':c.CORE,'addons':{'local_ustar':'2026102000'},'tasks':{'prune':[1,1]},'tables':profile['tables'],
+                  'schema':[['local_ustar_old','id','bigint','int8',None,64,0,'NO',None]],
+                  'indexes':[['mdl_local_ustar_old','CREATE UNIQUE INDEX old ON mdl_local_ustar_old USING btree (id)']]}
+        c.verify_database(baseline,baseline,ref,target=False)
+        for field,value in ((1,'unknown'),(3,'int2'),(7,'YES'),(8,'1')):
+            changed=copy.deepcopy(baseline);changed['schema'][0][field]=value
+            with self.subTest(field=field),self.assertRaises(c.Refusal):c.verify_database(changed,changed,ref,target=False)
+        changed=copy.deepcopy(baseline);changed['indexes'].append(['mdl_local_ustar_old','CREATE INDEX unknown ON mdl_local_ustar_old USING btree (id)'])
+        with self.assertRaises(c.Refusal):c.verify_database(changed,changed,ref,target=False)
+
+    def test_fresh_index_parity_includes_prefixed_catalog_tables(self):
+        self.modules()
+        spec=importlib.util.spec_from_file_location('con02_native_fixture',ROOT/'tests/stage/con02_update_native.py')
+        native=importlib.util.module_from_spec(spec);spec.loader.exec_module(native)
+        self.assertTrue(hasattr(native,'new_schema'),'fresh parity needs explicit index identity normalization')
+        table='local_ustar_conn_acktokens'
+        target={'schema':[], 'indexes':[['stage_'+table,'CREATE UNIQUE INDEX stage_ack ON stage_'+table+' USING btree (id)']]}
+        fresh={'schema':[], 'indexes':[['fresh_'+table,'CREATE UNIQUE INDEX fresh_ack ON fresh_'+table+' USING btree (id)']]}
+        self.assertEqual(native.new_schema(target,'stage_'),native.new_schema(fresh,'fresh_'))
+        fresh['indexes']=[]
+        self.assertNotEqual(native.new_schema(target,'stage_'),native.new_schema(fresh,'fresh_'))
+
+    def test_production_journal_rejects_unknown_or_retargeted_images(self):
+        c,_=self.modules()
+        self.assertTrue(hasattr(c.Host,'validate_journal'),'production recovery must bind a fixed path inventory')
+        host=c.Host(c.Context(None,Path('/'),0,None,None))
+        paths=host.control_paths()
+        paths.update(cron_script=Path('/usr/local/sbin/USTAR_CRON_SETUP_20261005.py'),
+                     cron_installation=Path('/var/lib/ustar-cron/installation.json'),cron_schedule=Path('/etc/cron.d/ustar_moodle'))
+        row={'files':{n:{side:{'path':str(path)} for side in ('before','after')} for n,path in paths.items()}}
+        host.validate_journal({'app':row,'runtime':None})
+        bad=copy.deepcopy(row);bad['files']['include']['after']['path']='/etc/another-root-file'
+        with self.assertRaises(c.Refusal):host.validate_journal({'app':bad,'runtime':None})
+        bad=copy.deepcopy(row);bad['files'].pop('token')
+        with self.assertRaises(c.Refusal):host.validate_journal({'app':bad,'runtime':None})
+
     def test_prefix_injection_refused(self):
         c, _ = self.modules()
         with self.assertRaises(c.Refusal): c.validate_prefix('mdl_; DROP TABLE x')
 
     def test_pg_catalog_index_table_prefix(self):
         c, _ = self.modules()
-        ref = {'baseline': {'tables':['local_ustar_old'],'versions':{'local_ustar':2026102000}},
+        ref = {'baseline': {'tables':['local_ustar_old'],'versions':{'local_ustar':2026102000},
+                'schema_fields':{'local_ustar_old':{'id':{'type':'int','length':'10','notnull':True}}},
+                'schema_indexes':{'local_ustar_old':[{'fields':['id'],'unique':True}]}},
                'candidate': {'tables':['local_ustar_new','local_ustar_old'],'versions':{'local_ustar':2026102200},
                 'schema_fields':{'local_ustar_new':{'id':{'type':'int','length':'10','notnull':True}}},
                 'schema_indexes':{'local_ustar_new':[{'fields':['id'],'unique':True}]}}}
@@ -121,6 +167,35 @@ class Contract(unittest.TestCase):
             root = Path(td)
             with self.assertRaises(c.Refusal): c.check(c.Context(None, root, 1234, None, None))
             self.assertEqual([], list(root.iterdir()))
+
+    def test_positive_readonly_check_uses_only_read_adapters_and_existing_locks(self):
+        c,_=self.modules()
+        import os,tempfile
+        from types import SimpleNamespace
+        import connect_con02_state as state
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);fields={'local_ustar_old':{'id':{'type':'int','length':'10','notnull':True}}}
+            profile={'tables':['local_ustar_old'],'versions':{'local_ustar':2026102000},
+                     'schema_fields':fields,'schema_indexes':{'local_ustar_old':[{'fields':['id'],'unique':True}]},'files':{'local/ustar/version.php':'a'*64}}
+            ref={'baseline':profile,'candidate':copy.deepcopy(profile),'tool_commit':'a'*40}
+            db={'core':c.CORE,'addons':{'local_ustar':'2026102000'},'tasks':{'prune':[1,1]},'tables':profile['tables'],
+                'schema':[['local_ustar_old','id','bigint','int8',None,64,0,'NO',None]],
+                'indexes':[['mdl_local_ustar_old','CREATE UNIQUE INDEX old ON mdl_local_ustar_old USING btree (id)']]}
+            calls=[]
+            class ReadHost:
+                def prefix(self):calls.append('prefix');return 'mdl_'
+                def database(self,prefix):calls.append('SQL_readonly');return db
+                def source(self,*,target):calls.append('source_read')
+                def controls(self,journal):calls.append('controls_read')
+                def https_snapshot(self):calls.append('HTTPS_owner_read');return {'verified':True}
+            ctx=c.Context(SimpleNamespace(reference=ref),root,os.getuid(),ReadHost(),SimpleNamespace(base=root/'new-state'))
+            for path in state.Locks(ctx).paths[1:]:
+                path.parent.mkdir(parents=True,exist_ok=True);path.touch(mode=0o600)
+            inventory=lambda:{str(p.relative_to(root)):(p.stat().st_ino,p.stat().st_mode,p.read_bytes()) for p in root.rglob('*') if p.is_file()}
+            before=inventory();result=c.check(ctx)
+            self.assertEqual('baseline_ready',result['phase']);self.assertFalse(result['host_changes'])
+            self.assertEqual(before,inventory());self.assertFalse(ctx.engine.base.exists())
+            self.assertEqual(['prefix','SQL_readonly','source_read','controls_read','HTTPS_owner_read'],calls)
 
     def test_recovery_binds_saved_containers_while_stopped(self):
         c,_=self.modules()

@@ -86,3 +86,29 @@ keeps config.php/private include present and resumes the same generation. Combin
 passed; new systemd fixture failed before transition because the initial v1 wrapper
 read a not-yet-created ACK credential. ENOENT is now treated as absent; sanitized
 fixture journal collection added. New actual runtime/native rerun required.
+
+Task9 additional RED→GREEN: initial baseline cannot adopt unknown columns/type/nullability/
+default/indexes; production journal binds exact control inventory and paths; interrupted
+symlink publication resumes only the matching saved target/metadata; foreign collision
+is preserved/refused; restore checks remaining one-copy budget instead of the already-used
+three-copy upgrade budget. Recovered exceptions now go to private logs. Actual downloaded
+PG99→100 snapshots pass the complete fixed XMLDB/default/index profile. Fresh-index parity
+now includes prefixed pg_catalog tables instead of comparing two empty index lists. Positive
+readonly check preserves all files/inodes and creates no state/locks; actual fork/exit at all
+7 runtime durable phases preserves generation/cutoff/keys. Combined61tests/1local skip PASS.
+20eb source8.2/8.3 SUCCESS; new runtime fixture failed on missing production_manifest import
+path, fixed and lazy Context construction smoke-tested. Context20eb failed only because the
+progress index was not regenerated; regenerate before publication. Native20eb in progress.
+Full r16 running; syntax and unchanged fixed534 product component trees verified.
+
+Whole local r16:1035 tests,55 environment skips,6 errors limited to three historical
+package tests missing local38d Git objects and three harness imports missing MCP dependency.
+No product assertion failures; this is not a local full PASS. Required CI with complete Git
+and pinned dependencies must provide the full regression result. Context regeneration,
+development557files/100tables and check_context PASS; fixed534 component trees unchanged.
+
+20eb native job120032854820 SUCCESS: CON02_UPDATE_NATIVE=PASS. Artifact12453170173
+ZIP SHA b890a73f2d468f5eb56a968137cb3af6e625b9e337da042da64fa4de37a937ec verified;
+current strengthened full XMLDB/default/index validator accepts actual baseline/target/
+repeat/restored snapshots and denies4 native mutations. Fresh parity contains all9
+actual ACK indexes. Final source CI rerun remains required, including new systemd/HTTPS.

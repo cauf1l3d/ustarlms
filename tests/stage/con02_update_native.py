@@ -13,6 +13,12 @@ from build_connect_con02_update import reference_from_git
 from connect_academy_installer import db_query
 
 
+def new_schema(value, prefix):
+    table = 'local_ustar_conn_acktokens'
+    return ([[(v.replace(prefix,'PREFIX_') if isinstance(v,str) else v) for v in row]
+             for row in value['schema'] if row[0]==table],
+            [[table,row[1].replace(prefix,'PREFIX_')] for row in value['indexes'] if row[0]==prefix+table])
+
 def main():
     mode = sys.argv[1:]
     inputs = ROOT/'.stage-input'; outputs = ROOT/'artifacts'
@@ -44,10 +50,6 @@ def main():
     c.require(stable(phases['target'])==stable(phases['repeat']),'native_repeat_drift')
     c.require(stable(phases['baseline'])==stable(phases['restored']),'native_restore_drift')
     table = 'local_ustar_conn_acktokens'
-    def new_schema(value, prefix):
-        return ([[(v.replace(prefix,'PREFIX_') if isinstance(v,str) else v) for v in row]
-                 for row in value['schema'] if row[0]==table],
-                [[row[0],row[1].replace(prefix,'PREFIX_')] for row in value['indexes'] if row[0]==table])
     c.require(new_schema(phases['target'],'stage_') == new_schema(phases['fresh'],'fresh_'),'native_new_table_not_fresh')
     for name in ('column','index','task','extra'):
         mutated = json.loads((outputs/('con02-update-mutated-'+name+'.json')).read_text())

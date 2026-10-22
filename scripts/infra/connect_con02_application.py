@@ -6,7 +6,7 @@ import json
 import os
 from pathlib import Path
 import uuid
-from connect_con02_contract import (SERVICES, Refusal, require, sha, verify_database,
+from connect_con02_contract import (private_failure, SERVICES, Refusal, require, sha, verify_database,
                                     https_snapshot, require_https_unchanged)
 from connect_con02_state import capture, descriptor, sync
 
@@ -187,8 +187,10 @@ class Application:
                     self.d.tx.remove_maintenance(self.d)
                     return self._finish()
             except BaseException:
+                private_failure(self.ctx)
                 try: return {**self._recover(), 'upgrade_succeeded': False}
                 except BaseException:
+                    private_failure(self.ctx)
                     self.step('recovery_required')
                     return {'phase': 'recovery_required', 'public_released': self.row()['public_released']}
 
@@ -245,7 +247,7 @@ class Application:
         require(self.d.tx.roots(self.d) == marker['roots'], 'restore_roots_changed')
         if row['live_trees_modified']:
             pair = self.d.tx.read_pair(self.d, marker)
-            self.host.capacity(cold=True)
+            self.host.restore_capacity(pair)
             self.step('recovery_required',restore_started=True)
             stash = self.journal.folder(row) / ('retained-before-restore-' + uuid.uuid4().hex)
             stash.mkdir(mode=0o700)

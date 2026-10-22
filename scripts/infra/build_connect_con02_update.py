@@ -38,7 +38,8 @@ def reference_from_git(repo, tool_commit):
         for table in ET.fromstring(raw['local/ustar/db/install.xml']).findall('.//TABLE'):
             name = table.attrib['NAME']
             fields[name] = {f.attrib['NAME']: {'type': f.attrib['TYPE'], 'length': f.attrib.get('LENGTH'),
-                'notnull': f.attrib.get('NOTNULL') == 'true'} for f in table.findall('./FIELDS/FIELD')}
+                'notnull': f.attrib.get('NOTNULL') == 'true', 'default': f.attrib.get('DEFAULT'),
+                'sequence': f.attrib.get('SEQUENCE') == 'true'} for f in table.findall('./FIELDS/FIELD')}
             indexes[name] = [{'fields': [f.strip() for f in k.attrib['FIELDS'].split(',')],
                 'unique': k.attrib.get('TYPE') in ('primary', 'unique', 'foreign-unique') or k.attrib.get('UNIQUE') == 'true'}
                 for k in [*table.findall('./KEYS/KEY'), *table.findall('./INDEXES/INDEX')]]

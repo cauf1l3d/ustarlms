@@ -139,6 +139,8 @@ class Journal:
                         require(re.fullmatch('[a-f0-9]{64}', item.get('sha256', '')), 'journal_image_hash')
                         require(sha(self.read_private(self.folder(row) / (name + '.' + side))) == item['sha256'],
                                 'saved_image_changed')
+        if self.ctx.host is not None and hasattr(self.ctx.host,'validate_journal'):
+            self.ctx.host.validate_journal(s)
         return s
 
     def folder(self, row): return self.base / (row['scope'] + '-' + row['generation'])
@@ -206,9 +208,14 @@ class Journal:
             raw = self.read_private(self.folder(row) / (name + '.' + side))
             if item['kind'] == 'symlink':
                 tmp = path.with_name('.con02-pointer-' + row['generation'])
-                require(not os.path.lexists(tmp), 'pointer_temporary_collision')
-                os.symlink(raw.decode(), tmp)
-                os.chown(tmp, item['metadata']['uid'], item['metadata']['gid'], follow_symlinks=False)
+                if os.path.lexists(tmp):
+                    info = tmp.lstat()
+                    require(stat.S_ISLNK(info.st_mode) and info.st_nlink == 1
+                            and os.readlink(tmp).encode() == raw and metadata(tmp) == item['metadata'],
+                            'pointer_temporary_collision')
+                else:
+                    os.symlink(raw.decode(), tmp)
+                    os.chown(tmp, item['metadata']['uid'], item['metadata']['gid'], follow_symlinks=False)
                 os.replace(tmp, path); sync(path.parent)
             else: replace(path, raw, item['metadata'])
         require(descriptor(capture(path)) == item, 'image_write_not_effective')

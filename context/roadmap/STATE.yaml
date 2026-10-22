@@ -2,15 +2,14 @@ schema_version: 2
 updated_at: '2026-10-22'
 project: USTAR Academy
 stage: connect_CON02_deployment_implementation
-stage_label: CON02 deployment plan approved; contracts and durable state implementation running
+stage_label: CON02 controller implemented; final required CI and artifact acceptance pending
 current_activity: >-
-  Owner22Oct approved execution with «ок приступай к реализации план потверждаю».
-  Self implementation/no subagents continues all nine approved tasks without another
-  permission gate. Fixed profile/reference and journal/phased locks foundations:
-  14 focused tests,1 environment skip because local root namespace has no GID33 mapping.
-  Host/native/systemd/HTTPS and final artifact gates remain pending; controller not ready
-  for operator use. Production2000+overlay/a86 unchanged,UID130 last revoked;
-  accepted pilot not repeated. Progress context/runtime/connect_con02_deployment_progress_20261022.md.
+  Owner approved implementation; continue without another permission gate. Self implementation,
+  0subagents. App+cron transaction, v2/ACK runtime, plain.py and native/systemd/HTTPS fixtures
+  implemented. Author recovery review fixes verified by61 focused tests/1 local UID33 skip;
+  strict root state7/7 passed on ca3. Final required native/runtime/HTTPS jobs and exact artifact
+  remain pending. Production2000+overlay/a86 unchanged;UID130 last revoked. Accepted pilot
+  not repeated, group deferred. Progress context/runtime/connect_con02_deployment_progress_20261022.md.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed

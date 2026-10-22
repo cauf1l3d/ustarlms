@@ -7,7 +7,7 @@ import sys
 from types import SimpleNamespace
 
 ROOT=Path(__file__).resolve().parents[2]
-sys.path[:0]=[str(ROOT/'tests/stage'),str(ROOT/'scripts/infra')]
+sys.path[:0]=[str(ROOT/'tests/stage'),str(ROOT/'scripts/infra'),str(ROOT/'scripts')]
 import connect_con02_contract as c
 from connect_con02_runtime import Runtime
 from con02_update_systemd import artifact_bundle,FileHost,populate,fixture_context

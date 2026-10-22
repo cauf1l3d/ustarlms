@@ -8,7 +8,7 @@ import shutil
 import stat
 import tarfile
 import tempfile
-from connect_con02_contract import APP_COMMIT, require, sha
+from connect_con02_contract import private_failure, APP_COMMIT, require, sha
 from connect_con02_state import capture, replace, sync, unique
 
 
@@ -162,8 +162,10 @@ class Runtime:
             self.step('runtime_active')
             return {'phase': 'runtime_active', 'ack_enabled': True, 'generation': row['generation']}
         except BaseException:
+            private_failure(self.ctx)
             try: return {**self.fallback(), 'enable_succeeded': False}
             except BaseException:
+                private_failure(self.ctx)
                 self.step('recovery_required')
                 return {'phase': 'recovery_required', 'ack_state': 'unverified'}
 
@@ -198,6 +200,7 @@ class Runtime:
                 self.exact('before'); return {'phase': 'runtime_disabled', 'verify_only': True}
             try: return self.fallback()
             except BaseException:
+                private_failure(self.ctx)
                 self.step('recovery_required')
                 return {'phase': 'recovery_required', 'ack_state': 'unverified'}
 

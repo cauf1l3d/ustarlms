@@ -402,7 +402,7 @@ IDs stay distinct, package bounds/default/flag order explicit. Actual native log
 physical file-tree primitive and synthetic controls are labelled separately. No new product
 feature/dependency, full-snapshot collection or user/group action is hidden in implementation.
 
-Written spec approved22Oct. This9-task/45-step plan is now ready for owner review;
-implementation has not begun. Execution method already fixed: **self implementation in
-this session, no subagents**. After plan review use executing-plans, track exact RED/GREEN
-and publish checkpoints. Do not ask the owner to choose agents or reapprove the written spec.
+Owner approved this plan and implementation22Oct. Tasks1–8 source is implemented;
+Task9 author recovery review fixes pass focused tests. Required final native/systemd/HTTPS
+and exact artifact acceptance are still pending. Execution method remains self implementation,
+no subagents. Continue from the progress ledger; do not ask for repeated plan approval.

@@ -53,6 +53,35 @@ class State(unittest.TestCase):
         inode=p.stat().st_ino;j.put('app','control','after')
         self.assertEqual(inode,p.stat().st_ino)
 
+    def test_interrupted_pointer_temporary_resumes_exact_saved_image(self):
+        s=self.module()
+        from unittest.mock import patch
+        pointer=self.root/'current';pointer.symlink_to('/old-release')
+        before={'files':{'pointer':s.capture(pointer)}}
+        after={'files':{'pointer':{**before['files']['pointer'],'raw':b'/new-release'}}}
+        j=s.Journal(self.ctx);j.begin('runtime',before,after,generation='f'*32)
+        pid=os.fork()
+        if pid==0:
+            original=s.os.replace
+            def crash(source,dest):
+                if Path(dest)==pointer:os._exit(73)
+                return original(source,dest)
+            with patch.object(s.os,'replace',crash):j.put('runtime','pointer','after')
+            os._exit(74)
+        _,status=os.waitpid(pid,0);self.assertEqual(73,os.waitstatus_to_exitcode(status))
+        j.put('runtime','pointer','after')
+        self.assertEqual('/new-release',os.readlink(pointer))
+        self.assertFalse(os.path.lexists(pointer.with_name('.con02-pointer-'+'f'*32)))
+
+    def test_foreign_pointer_temporary_is_preserved_and_refused(self):
+        s=self.module();pointer=self.root/'current';pointer.symlink_to('/old-release')
+        before={'files':{'pointer':s.capture(pointer)}}
+        after={'files':{'pointer':{**before['files']['pointer'],'raw':b'/new-release'}}}
+        j=s.Journal(self.ctx);j.begin('runtime',before,after,generation='f'*32)
+        temporary=pointer.with_name('.con02-pointer-'+'f'*32);temporary.symlink_to('/foreign')
+        with self.assertRaises(c.Refusal):j.put('runtime','pointer','after')
+        self.assertEqual('/foreign',os.readlink(temporary));self.assertEqual('/old-release',os.readlink(pointer))
+
     def test_metadata_uid33_root_gid_acl(self):
         s = self.module(); p, before, after = self.setup_files(s)
         if os.getuid() != 0:

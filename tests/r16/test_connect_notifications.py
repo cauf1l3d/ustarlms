@@ -221,3 +221,62 @@ class PilotConfiguration(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+class VersionTwoNotifications(unittest.TestCase):
+    replies = NotificationTests.replies
+
+    def setUp(self):
+        NotificationTests.setUp(self)
+        self.action = {'action': 'ua1_'+'A'*43, 'expires': NOW+3600}
+        self.v2 = {**self.permit, 'version': 2, 'ack': self.action}
+
+    def v2_worker(self):
+        import inspect
+        self.assertIn('notification_contract', inspect.signature(self.module.NotificationWorker).parameters)
+        return self.module.NotificationWorker(self.api, self.bridge, bot_id='123456',
+            bot_username='synthetic_academy_bot', clock=lambda: NOW, notification_contract=2)
+
+    def test_v2_requires_exact_permit_and_fresh_action(self):
+        worker = self.v2_worker(); self.replies(self.lease, self.v2, {'status':'provider_accepted'})
+        self.assertEqual('provider_accepted', worker.step()['status'])
+        self.assertEqual('notification.begin_v2', self.bridge.request.call_args_list[1].args[0])
+        self.assertEqual(self.action, self.api.send_notification.call_args.kwargs['ack'])
+        self.assertEqual('notification.finish', self.bridge.request.call_args_list[2].args[0])
+
+    def test_null_ack_keeps_url_and_never_synthesizes_token(self):
+        worker = self.v2_worker(); self.replies(self.lease, {**self.v2,'ack':None}, {'status':'provider_accepted'})
+        self.assertEqual('provider_accepted', worker.step()['status'])
+        self.assertIsNone(self.api.send_notification.call_args.kwargs['ack'])
+
+    def test_v2_bad_begin_never_downgrades_or_sends(self):
+        bads = [self.permit, {**self.v2,'version':True}, {**self.v2,'userid':13},
+                {**self.v2,'ack':{}}, {**self.v2,'ack':{**self.action,'expires':NOW}},
+                {**self.v2,'ack':{**self.action,'expires':NOW+86401}},
+                {**self.v2,'ack':{**self.action,'expires':True}},
+                {**self.v2,'ack':{**self.action,'action':'ua1_'+'B'*43}},
+                {**self.v2,'ack':{**self.action,'body':'private'}}]
+        for bad in bads:
+            with self.subTest(bad=bad):
+                self.api.send_notification.reset_mock(); self.bridge.request.reset_mock()
+                self.replies(self.lease,bad)
+                self.assertEqual('unavailable',self.v2_worker().step()['status'])
+                self.api.send_notification.assert_not_called()
+                self.assertNotIn('notification.begin',[c.args[0] for c in self.bridge.request.call_args_list])
+
+    def test_v2_timeout_is_uncertain_without_resend(self):
+        from ustar_connect.telegram_api import TelegramError
+        self.api.send_notification.side_effect=TelegramError('transport_unavailable',uncertain=True)
+        worker=self.v2_worker();self.replies(self.lease,self.v2,{'status':'uncertain'})
+        self.assertEqual('uncertain',worker.step()['status'])
+        self.assertEqual(1,self.api.send_notification.call_count)
+        self.assertEqual('uncertain',self.bridge.request.call_args.args[1]['outcome'])
+
+    def test_v1_does_not_negotiate_v2_and_contract_is_strict(self):
+        self.v2_worker()
+        self.replies(self.lease,self.v2)
+        self.assertEqual('unavailable',self.worker.step()['status'])
+        self.api.send_notification.assert_not_called()
+        for invalid in (True,False,0,3,'2',None):
+            with self.assertRaises(ValueError):
+                self.module.NotificationWorker(self.api,self.bridge,bot_id='123456',
+                    bot_username='synthetic_academy_bot',notification_contract=invalid)

@@ -420,8 +420,8 @@
     {
       "path": "context/code_map/development_source.json",
       "domain": "code_map",
-      "size": 88618,
-      "sha256": "fe90840ac223fbc5cc8a40d4ab4fe4394523359e8d85811ef5b7d61bbf1e6987"
+      "size": 88793,
+      "sha256": "95ea016ed290af8bd80b0b6e1b919f988e1601c1c402d6ee4abde5ddda41c852"
     },
     {
       "path": "context/code_map/frontend.yaml",

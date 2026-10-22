@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
   "component_tree_ids": {
-    "moodle/local/ustar": "89acb403bc1d4f1acc7a13c2d28bd9ed818b2239",
+    "moodle/local/ustar": "70c7c408754cfdd35431b07f3678e7334095ba7d",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "versions": {
@@ -11,7 +11,7 @@
     "theme_ustar": 2026100202
   },
   "counts": {
-    "files": 554,
+    "files": 555,
     "tables": 99
   },
   "files": [
@@ -1858,6 +1858,10 @@
     {
       "path": "moodle/local/ustar/tests/connect_notification_ack_test.php",
       "sha256": "4fd6b5ebfb130ed8f9e693834a499e7c588fb79788a22457ca76e2aa249f015b"
+    },
+    {
+      "path": "moodle/local/ustar/tests/connect_notification_action_test.php",
+      "sha256": "504c636783d8961888c38844569a3523cf55589338c911c4be7539df3d1cf2fa"
     },
     {
       "path": "moodle/local/ustar/tests/connect_notification_test.php",

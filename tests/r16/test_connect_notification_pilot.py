@@ -1,5 +1,5 @@
 """Pilot transaction on real files; host/provider modeled, no employee writes."""
-import importlib.util,io,json,os,sys,tarfile,tempfile,unittest
+import hashlib,importlib.util,io,json,os,sys,tarfile,tempfile,unittest
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch

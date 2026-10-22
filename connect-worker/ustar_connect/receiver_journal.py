@@ -10,7 +10,7 @@ from .private_files import private_directory
 
 TERMINAL = {'sent', 'ignored', 'rejected', 'uncertain'}
 PHASES = {'received', 'creating', 'sending'} | TERMINAL
-KINDS = {'launch', 'link', 'help', 'disabled', 'ignored'}
+KINDS = {'launch', 'link', 'help', 'disabled', 'ignored', 'ack'}
 
 
 class JournalError(Exception):
@@ -125,7 +125,7 @@ class Journal:
             return True
 
     def allowed(self, identityhash, kind):
-        window, limit = (600, 3) if kind in ('launch', 'link') else (60, 1)
+        window, limit = (600, 3) if kind in ('launch', 'link') else ((60, 10) if kind == 'ack' else (60, 1))
         count = self._db.execute("SELECT COUNT(*) FROM events WHERE identityhash=? AND kind=? AND createdat>? "
                                 "AND state IN ('creating','sending','sent','uncertain','rejected')",
                                 (identityhash, kind, int(self._clock())-window)).fetchone()[0]

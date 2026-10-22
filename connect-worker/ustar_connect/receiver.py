@@ -7,6 +7,7 @@ import time
 from .bridge import _token, BridgeRejected
 from .identity import ProviderIdentity
 from .telegram_api import TelegramError
+from .notification_callback import AcknowledgementHandler, parse_callback
 
 
 class ReceiverStopped(Exception):
@@ -65,14 +66,18 @@ def verify_bot(api, bot_id, username, *, require_main_app=False):
 
 class TelegramReceiver:
     def __init__(self, api, bridge, journal, *, bot_id, bot_username, onboarding_enabled=False,
-                 linking_enabled=False, clock=time.time):
+                 linking_enabled=False, clock=time.time, acknowledgements_enabled=False, ack_bridge=None):
         if (not isinstance(bot_id, str) or not re.fullmatch(r'[1-9][0-9]{0,19}', bot_id)
                 or not isinstance(bot_username, str) or not re.fullmatch(r'[A-Za-z0-9_]{5,32}', bot_username)
-                or type(onboarding_enabled) is not bool or type(linking_enabled) is not bool):
+                or type(onboarding_enabled) is not bool or type(linking_enabled) is not bool
+                or type(acknowledgements_enabled) is not bool
+                or (acknowledgements_enabled and (ack_bridge is None or ack_bridge is bridge))):
             raise ValueError('invalid_receiver_configuration')
         self._api, self._bridge, self._journal, self._clock = api, bridge, journal, clock
         self._bot_id, self._username, self._enabled = bot_id, bot_username, onboarding_enabled
         self._linking = linking_enabled
+        self._ack = (AcknowledgementHandler(api, ack_bridge, journal, tenant=bot_id, clock=clock)
+                     if acknowledgements_enabled else None)
         self._ready = False
 
     def _start(self):
@@ -100,7 +105,8 @@ class TelegramReceiver:
             if stop is not None and stop.is_set():
                 return {'status':'stopping'}
             health = self._journal.prepare_poll()
-            updates = self._api.get_updates(health['next_offset'])
+            kwargs = {'acknowledgements_enabled': True} if self._ack is not None else {}
+            updates = self._api.get_updates(health['next_offset'], **kwargs)
             if not isinstance(updates,list) or len(updates)>50:
                 raise TelegramError('invalid_response')
             previous = -1
@@ -124,6 +130,11 @@ class TelegramReceiver:
             return {'status':'backoff','reason':error.reason}
 
     def _process(self, update, now):
+        if self._ack is not None and 'callback_query' in update:
+            query = parse_callback(update, bot_id=self._bot_id, now=now)
+            if query is not None:
+                self._ack.handle(query)
+                return
         uid = update['update_id']
         command = _command(update, self._username, now)
         subject, kind, identity = None, 'ignored', None

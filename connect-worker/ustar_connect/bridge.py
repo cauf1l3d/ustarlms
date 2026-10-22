@@ -15,14 +15,14 @@ from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler, HT
 PATH = '/local/ustar/connect_bridge.php'
 OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
               'registration.options', 'registration.submit', 'registration.status',
-              'notification.lease', 'notification.begin', 'notification.finish',
+              'notification.lease', 'notification.begin', 'notification.begin_v2', 'notification.finish', 'notification.ack',
               'actor.open', 'actor.status', 'actor.revoke'}
 REJECTIONS = {'validation_failed', 'invalid_entry', 'revoked_entry', 'restart_required',
               'expired_launch', 'launch_consumed', 'replayed_proof', 'launch_mismatch',
               'idempotency_conflict', 'already_registered', 'receipt_expired', 'rate_limited',
               'invalid_link_code', 'invalid_challenge', 'expired_challenge', 'claimed_challenge',
               'provider_mismatch', 'link_conflict', 'invalid_delivery', 'receipt_conflict',
-              'actor_unavailable', 'native_auth_required', 'invalid_actor'}
+              'actor_unavailable', 'native_auth_required', 'invalid_actor', 'ack_unavailable', 'ack_disabled'}
 FORM_FIELDS = {'username', 'password', 'email', 'firstname', 'lastname', 'departmentid'}
 
 
@@ -109,8 +109,16 @@ class BridgeClient:
         """
         return self._probe_forbidden('registration.options','link-scope-v1')
 
-    def probe_notification_scope(self) -> None:
-        return self._probe_forbidden('link.claim','notification-scope-v1')
+    def probe_notification_scope(self, notification_contract=1) -> None:
+        if type(notification_contract) is not int or notification_contract not in (1, 2):
+            raise ValueError('invalid_notification_contract')
+        self._probe_forbidden('link.claim','notification-scope-v1')
+        if notification_contract == 2:
+            self._probe_forbidden('notification.begin','notification-scope-v2')
+
+    def probe_ack_scope(self) -> None:
+        self._probe_forbidden('link.claim', 'ack-scope-v1')
+        self._probe_forbidden('notification.lease', 'ack-scope-v1')
 
     def _probe_forbidden(self,operation,probe):
         # Nonempty JSON object also survives PHP associative canonicalization.
@@ -136,11 +144,13 @@ class BridgeClient:
             pass
         raise ValueError('bridge_scope_unverified') from None
 
-    def request(self, operation: str, payload: dict) -> dict:
+    def request(self, operation: str, payload: dict, *, timeout=10) -> dict:
+        if type(timeout) is not int or timeout not in (5, 10):
+            raise ValueError('invalid_bridge_timeout')
         signed = sign_request(operation, payload, key_id=self._key_id, secret_hex=self._secret, now=int(time.time()))
         request = Request(self._endpoint, data=signed.body, headers=signed.headers, method='POST')
         try:
-            with self._opener.open(request, timeout=10) as response:
+            with self._opener.open(request, timeout=timeout) as response:
                 raw = response.read(16385)
             if len(raw) > 16384:
                 raise ValueError('bridge_response_too_large')

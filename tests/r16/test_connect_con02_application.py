@@ -211,6 +211,17 @@ class Application(unittest.TestCase):
         self.assertEqual('baseline_restored', op.upgrade()['phase'])
         self.assertEqual(b'accepted-metadata', os.getxattr(p, 'user.con02'))
 
+    def test_activation_does_not_add_inherited_ACL_to_existing_file(self):
+        import struct
+        op=self.operation();scope=self.d.web/'local/ustar';file=scope/'version.php'
+        self.assertNotIn('system.posix_acl_access',os.listxattr(file))
+        acl=struct.pack('<I',2)+b''.join(struct.pack('<HHI',tag,perm,uid) for tag,perm,uid in (
+            (1,7,0xffffffff),(2,4,os.getuid()),(4,5,0xffffffff),(16,5,0xffffffff),(32,5,0xffffffff)))
+        os.setxattr(scope,'system.posix_acl_default',acl)
+        self.assertEqual('app_ready',op.upgrade()['phase'])
+        self.assertNotIn('system.posix_acl_access',os.listxattr(file))
+        self.assertEqual(acl,os.getxattr(scope,'system.posix_acl_default'))
+
     def test_native_direct_upgrade_gate_is_wired(self):
         runner = ROOT/'tests/stage/run-con02-update.sh'
         self.assertTrue(runner.is_file(), 'direct2000→2200 native runner is required')

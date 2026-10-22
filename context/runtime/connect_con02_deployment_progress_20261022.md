@@ -137,3 +137,12 @@ Author review added recorded-ID binding for completed app rechecks/runtime readi
 and readonly check; a replaced-container RED now refuses before journal/service changes.
 Combined65tests/1local UID33 skip PASS. Final required actual/runtime/HTTPS/native/source
 checks remain pending; artifact not released.
+
+0821 Context39841829745 and Review39841829756 SUCCESS, both source1039tests/153skips,
+actual root state11/11, new runtime/HTTPS markers and native154tests/800assertions PASS.
+Native artifact12454232125 SHA35a01df89423fba6ed79afdbec88132298b0bd9e5cd711abacbc6b1dc090bcf1
+verified. Final author ACL audit found one further activation case: an existing app file
+without an access ACL inherited its directory's default ACL during replacement. Actual
+filesystem RED reproduced; adapter now removes extras and verifies the exact saved xattrs
+for existing paths.66focused/1local UID33 skip GREEN. This final implementation must rerun
+required CI before its ordinary command is handed off. Product534/production2000+a86 unchanged.

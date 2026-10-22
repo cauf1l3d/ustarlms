@@ -201,8 +201,13 @@ class Application:
             if not path.exists(): continue
             # activate() already retains uid/gid/mode. Extended metadata is reapplied
             # to existing paths, including ACLs, and then checked by inventory.
-            for key, value in prior.get('xattrs', {}).items():
+            wanted = prior.get('xattrs', {})
+            for key in os.listxattr(path):
+                if key not in wanted: os.removexattr(path, key)
+            for key, value in wanted.items():
                 os.setxattr(path, key, base64.b64decode(value, validate=True))
+            require({key:base64.b64encode(os.getxattr(path,key)).decode() for key in os.listxattr(path)}
+                    == wanted, 'activated_metadata_changed')
 
     def _finish(self):
         row = self.row()

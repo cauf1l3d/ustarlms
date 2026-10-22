@@ -112,3 +112,9 @@ ZIP SHA b890a73f2d468f5eb56a968137cb3af6e625b9e337da042da64fa4de37a937ec verifie
 current strengthened full XMLDB/default/index validator accepts actual baseline/target/
 repeat/restored snapshots and denies4 native mutations. Fresh parity contains all9
 actual ACK indexes. Final source CI rerun remains required, including new systemd/HTTPS.
+
+7c Context39839664092 SUCCESS. Actual runtime reached immutable staging and correctly
+refused unsafe_release_parent in the disposable runner. Fixture now records writable
+root-owned ancestors, temporarily removes group/other write bits, and restores original
+modes in cleanup. Production stage guard remains unchanged. Final actual runtime/native
+and both source gates must rerun;7c ordinary file is not released for owner use.

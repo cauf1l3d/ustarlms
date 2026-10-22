@@ -115,6 +115,19 @@ def populate(bundle,root,host,old_values,ca):
         path=root/'opt/ustar/data/moodle/public/public'/name
         write(path,raw,0o644,33);os.chown(path,33,33)
     parent=root/'opt/ustar-connect/releases';parent.mkdir(parents=True,exist_ok=True);parent.chmod(0o755)
+    # GitHub runner /opt may be writable for tool installation. The production
+    # guard must stay strict; the disposable fixture installs under root-only
+    # ancestors and restores their original modes after stopping its services.
+    host.fixture_parent_modes=getattr(host,'fixture_parent_modes',{})
+    for folder in (parent,*parent.parents):
+        if not folder.is_relative_to(root):break
+        info=folder.lstat()
+        c.require(info.st_uid==0 and not folder.is_symlink(),'fixture_release_parent_owner')
+        if info.st_mode & 0o022:
+            host.fixture_parent_modes.setdefault(folder,info.st_mode & 0o7777)
+            print('CON02_FIXTURE_PARENT='+json.dumps({'path':str(folder),'uid':info.st_uid,'mode':oct(info.st_mode & 0o7777)}))
+            folder.chmod((info.st_mode & 0o7777) & ~0o022)
+
     old=parent/c.LEGACY_COMMIT
     if not old.exists():
         old.mkdir(mode=0o755)
@@ -355,6 +368,8 @@ def main():
         if server:server.shutdown();server.server_close()
         for p in (PREFIX,c.BASE,Path('/opt/ustar'),Path('/var/lib/ustar-connect-bridge'),Path('/var/lib/ustar-connect-notify-pilot')):
             shutil.rmtree(p,ignore_errors=True)
+        for folder,mode in getattr(host,'fixture_parent_modes',{}).items():
+            if folder.exists():folder.chmod(mode)
 
 
 def legacy_denials(bundle,host,bundles):

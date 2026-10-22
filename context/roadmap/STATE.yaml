@@ -1,20 +1,16 @@
 schema_version: 2
 updated_at: '2026-10-22'
 project: USTAR Academy
-stage: connect_CON02_deployment_implementation_plan_review
-stage_label: CON02 deployment written design approved; implementation plan ready for review
+stage: connect_CON02_deployment_implementation
+stage_label: CON02 deployment plan approved; contracts and durable state implementation running
 current_activity: >-
-  Owner22Oct approved written deployment design with «потверждаю».
-  Implementation plan ready for review:
-  context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md.
-  Nine tasks/45steps: fixed contracts, durable journal/phased locks, direct2000+overlay
-  to2200 with fresh pair/cron2200, isolated v2/ACK runtime, plain.py CLI and native/
-  actual systemd/HTTPS evidence. Method self implementation/no subagents already
-  fixed; controller not implemented. Next plan review then executing-plans;
-  no repeated spec/method selection. Designf0c00d5e Context39789336484 and
-  Review39789336561 SUCCESS; historical FullRC jobs skipped. Validated app/worker534
-  source unchanged; production2000+policy overlay/a86 preserved, UID130 last revoked.
-  Accepted pilot not repeated; live group tests deferred until full launch.
+  Owner22Oct approved execution with «ок приступай к реализации план потверждаю».
+  Self implementation/no subagents continues all nine approved tasks without another
+  permission gate. Fixed profile/reference and journal/phased locks foundations:
+  14 focused tests,1 environment skip because local root namespace has no GID33 mapping.
+  Host/native/systemd/HTTPS and final artifact gates remain pending; controller not ready
+  for operator use. Production2000+overlay/a86 unchanged,UID130 last revoked;
+  accepted pilot not repeated. Progress context/runtime/connect_con02_deployment_progress_20261022.md.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed

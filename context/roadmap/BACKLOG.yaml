@@ -6,10 +6,10 @@ historical_backlog: context/archive/handoff_20261002/previous_entrypoints/contex
 current_connect_checkpoint:
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
   deployment_design_status: owner_approved_22Oct
-  deployment_controller: not_implemented
+  deployment_controller: implementation_running_not_operator_ready
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
-  deployment_plan_status: written_ready_for_owner_review
-  stage: CON02_deployment_implementation_plan_review
+  deployment_plan_status: owner_approved_execution_22Oct
+  stage: CON02_deployment_implementation
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
   development_version: 2026102200
@@ -39,7 +39,7 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: review_written_implementation_plan_then_self_execution
+  next: implement_all_nine_tasks_then_exact_native_systemd_HTTPS_gates
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

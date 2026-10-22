@@ -1,0 +1,366 @@
+#!/usr/bin/env python3
+"""Fixed CON-02 release contracts. No bootstrap, nonce or provider call in check."""
+from dataclasses import dataclass
+from decimal import Decimal
+import hashlib
+import importlib
+import io
+from pathlib import Path
+import re
+from types import SimpleNamespace
+
+APP_COMMIT = '534764821c4f65437ab50b3c7f25578d538e9504'
+BASELINE_COMMIT = '1e8a8819f50785ebb4fb2640eeb9386c969d59d1'
+LEGACY_COMMIT = 'a86e208029b6104150e85d0e90384f84da214c22'
+OVERLAY_SHA = '2f6c0c8b25941ac435237fc9df4c4de738b885f467ccbab80b9988c0bb42e498'
+CORE = '2025100608.00'
+BASE = Path('/var/lib/ustar-connect-con02-update')
+SCOPES = ('local/ustar', 'theme/ustar')
+SERVICES = ('ustar-connect-notify.service', 'ustar-connect-receiver.service')
+
+
+class Refusal(ValueError):
+    """Public error codes only; never include host values in exception text."""
+
+
+def require(value, reason):
+    if not value: raise Refusal(reason)
+
+
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+
+
+@dataclass(frozen=True)
+class EmbeddedBundle:
+    reference: dict
+    modules: dict[str, bytes]
+    payload: dict[str, bytes]
+    worker_archive: bytes
+    legacy: dict[str, bytes]
+
+
+@dataclass
+class Context:
+    bundle: EmbeddedBundle
+    root: Path
+    uid: int
+    host: object
+    engine: SimpleNamespace
+
+
+def validate_prefix(value):
+    require(isinstance(value, str) and re.fullmatch('[A-Za-z][A-Za-z0-9_]{0,31}', value), 'database_prefix')
+    return value
+
+
+def validate_fence(value):
+    require(isinstance(value, dict), 'notification_fence_shape')
+    ids = value.get('notification_pilot_userids')
+    subjects = value.get('notification_subjects')
+    require(isinstance(ids, list) and len(ids) == 1 and type(ids[0]) is int and 0 < ids[0] < 2**31,
+            'notification_fence_changed')
+    require(isinstance(subjects, list) and len(subjects) == 1 and isinstance(subjects[0], str)
+            and re.fullmatch('[1-9][0-9]{0,15}', subjects[0]) and int(subjects[0]) < 2**52,
+            'notification_subject_fence_changed')
+    require(type(value.get('notify_since')) is int and value['notify_since'] > 0
+            and type(value.get('notifications_enabled')) is bool
+            and value.get('linking_enabled') is True, 'notification_cutoff_or_flags_changed')
+    # Current employee link state intentionally is not an activation prerequisite.
+    return value
+
+
+def read_fence(include, sender, receiver=None):
+    require(isinstance(include, bytes) and isinstance(sender, dict), 'notification_fence_shape')
+    ids = re.findall(rb'(?m)^\$CFG->ustar_connect_notify_userids=\[([0-9]+)\];$', include)
+    cutoff = re.findall(rb'(?m)^\$CFG->ustar_connect_notify_since=([0-9]+);$', include)
+    flags = re.findall(rb'(?m)^\$CFG->ustar_connect_notifications_enabled=(true|false);$', include)
+    require(len(ids) == len(cutoff) == len(flags) == 1, 'notification_fence_changed')
+    require(receiver is None or receiver.get('linking_enabled') is True, 'linking_flag_changed')
+    return validate_fence({'notification_pilot_userids': [int(ids[0])],
+        'notification_subjects': sender.get('notification_subjects'), 'notify_since': int(cutoff[0]),
+        'notifications_enabled': flags[0] == b'true', 'linking_enabled': True})
+
+
+def select_target(journal, addons):
+    require(isinstance(addons, dict), 'database_versions')
+    if journal is None:
+        require(addons.get('local_ustar') == '2026102000', 'unowned_target_release')
+        return False
+    app = journal.get('app')
+    require(isinstance(app, dict), 'application_transaction_required')
+    if app['phase'] == 'baseline_restored': return False
+    require(app['phase'] == 'app_ready', 'application_recovery_required')
+    require(addons.get('local_ustar') == '2026102200', 'database_versions')
+    return True
+
+
+def verify_database(current, baseline, reference, *, target):
+    require(isinstance(current, dict) and isinstance(baseline, dict), 'database_shape')
+    wanted = reference['candidate' if target else 'baseline']
+    expected = dict(baseline['addons'])
+    if target: expected.update({k: str(v) for k, v in wanted['versions'].items()})
+    require(Decimal(current['core']) == Decimal(CORE) and current['core'] == baseline['core']
+            and current['addons'] == expected, 'database_versions')
+    require({k: baseline['addons'].get(k) for k in reference['baseline']['versions']}
+            == {k: str(v) for k, v in reference['baseline']['versions'].items()}, 'baseline_versions')
+    require(current['tables'] == wanted['tables'], 'database_table_inventory')
+    require(current['tasks'] == baseline['tasks'], 'scheduled_task_flags')
+    old = set(reference['baseline']['tables'])
+    for key in ('schema', 'indexes'):
+        require([r for r in current[key] if r[0] in old] == baseline[key], 'old_' + key + '_changed')
+    if not target:
+        require(current['schema'] == baseline['schema'] and current['indexes'] == baseline['indexes'], 'restored_schema')
+        return
+    new = set(wanted['tables']) - old
+    actual = {(r[0], r[1]): r for r in current['schema'] if r[0] in new}
+    fields = wanted['schema_fields']
+    require(set(actual) == {(t, f) for t in new for f in fields[t]}, 'new_schema_column_inventory')
+    types = {'int': ('int2', 'int4', 'int8'), 'char': ('varchar',), 'text': ('text',),
+             'number': ('numeric',), 'binary': ('bytea',)}
+    for (table, field), row in actual.items():
+        spec = fields[table][field]
+        require(row[3] in types[spec['type']] and (row[7] == 'NO') == spec['notnull'], 'new_schema_column_type')
+        if spec['type'] == 'char': require(row[4] == int(spec['length']), 'new_schema_column_length')
+    for table in new:
+        indexes = []
+        for name, definition in current['indexes']:
+            if name != table: continue
+            m = re.fullmatch(r'CREATE (UNIQUE )?INDEX \S+ ON (?:public\.)?\S+ USING btree \(([a-z0-9_, ]+)\)', definition)
+            require(m is not None, 'new_schema_index_shape')
+            indexes.append((tuple(f.strip() for f in m[2].split(',')), bool(m[1])))
+        expected_indexes = [(tuple(s['fields']), s['unique']) for s in wanted['schema_indexes'][table]]
+        require(sorted(indexes) == sorted(expected_indexes), 'new_schema_indexes')
+
+
+def https_snapshot(ctx):
+    require(ctx.host is not None, 'host_context_required')
+    value = ctx.host.https_snapshot()
+    require(isinstance(value, dict) and value.get('verified') is True, 'HTTPS_owner_not_verified')
+    return value
+
+
+def require_https_unchanged(ctx, before):
+    require(https_snapshot(ctx) == before, 'HTTPS_owner_changed_during_operation')
+
+
+def make_context(bundle, *, root=Path('/'), uid=0, host=None):
+    require(bundle.reference['app_commit'] == APP_COMMIT and bundle.reference['worker_commit'] == APP_COMMIT
+            and bundle.reference['baseline_commit'] == BASELINE_COMMIT, 'fixed_release_required')
+    root = Path(root)
+    names = {'p': 'production_patch_readiness', 'cold': 'lab_cold_checkpoint', 'u': 'lab_patch_upgrade',
+             'c': 'lab_patch_candidate', 'tx': 'production_patch_upgrade', 'w': 'production_patch_switch_preflight',
+             'probe': 'connect_readiness', 'addon': 'connect_academy_installer'}
+    d = SimpleNamespace(**{k: importlib.import_module(v) for k, v in names.items()})
+    # Each operation has its own accepted helper profile. Never mutate imported constants.
+    d.w = SimpleNamespace(**vars(d.w))
+    d.w.HELPERS = dict(d.w.HELPERS)
+    for name, digest in [('hdd_backup', 'a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3'),
+                         ('backup_engine', 'a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c')]:
+        if name in d.w.HELPERS: d.w.HELPERS[name] = (d.w.HELPERS[name][0], digest)
+    d.reference, d.payload = bundle.reference, bundle.payload
+    d.schema_fields = bundle.reference['candidate']['schema_fields']
+    d.base = root / str(BASE).lstrip('/')
+    d.marker = d.base / 'uninitialized-primitive.json'
+    d.web = root / 'opt/ustar/data/moodle/public/public'
+    d.trees = {k: root / v for k, v in {'code': 'opt/ustar/data/moodle/public',
+                'moodledata': 'opt/ustar/data/moodle/moodledata', 'postgres': 'opt/ustar/data/postgres'}.items()}
+    d.identities = None
+    ctx = Context(bundle, root, uid, host, d)
+    if host is None:
+        require(root == Path('/'), 'production_root_required')
+        ctx.host = Host(ctx)
+    return ctx
+
+
+def check(ctx):
+    require(ctx.host is not None and ctx.engine is not None, 'host_context_required')
+    from connect_con02_state import Journal, Locks
+    journal = Journal(ctx)
+    with Locks(ctx).check():
+        s = journal.load()
+        database = ctx.host.database(ctx.host.prefix())
+        target = select_target(s, database['addons'])
+        baseline = s['app']['database'] if s and s.get('app') else database
+        verify_database(database, baseline, ctx.bundle.reference, target=target)
+        ctx.host.source(target=target)
+        ctx.host.controls(s)
+        https_snapshot(ctx)
+        return {'phase': 'app_ready' if target else 'baseline_ready', 'configuration_changed': False,
+                'host_changes': False, 'provider_called': False, 'source_files': len(ctx.bundle.reference[
+                    'candidate' if target else 'baseline']['files']), 'local_ustar': database['addons']['local_ustar']}
+
+
+class Host:
+    """Production primitives are bound lazily; construction does not access the host."""
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.log = io.BytesIO()
+        self._control = None
+
+    def delegate(self):
+        if self._control is None:
+            d = self.ctx.engine
+            d.identities = d.p.containers()
+            owner = self
+            class Control(d.tx.Host):
+                def action(self, argv, timeout=90): return owner.action(argv, timeout)
+            self._control = Control(d, d.identities, self.log)
+        return self._control
+
+    def __getattr__(self, name): return getattr(self.delegate(), name)
+
+    def database(self, prefix, addons=None):
+        validate_prefix(prefix)
+        return self.delegate().sql(self.ctx.engine.addon.db_query(prefix))
+
+    def action(self, argv, timeout=90):
+        import subprocess
+        result = subprocess.run(argv, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=timeout)
+        self.log.write(result.stdout); self.log.flush()
+        require(result.returncode == 0, 'host_command_failed')
+
+    def legacy(self):
+        if not hasattr(self, '_legacy'):
+            modules = frozen_legacy(self.ctx.bundle)
+            https, install = modules['academy_https'], modules['connect_install']
+            m = https.Manager()
+            i = install.Installation()
+            bridge = modules['connect_private_bridge']
+            ref = {'schema': 1, 'tool_commit': LEGACY_COMMIT, 'payload_commit': BASELINE_COMMIT,
+                   'files': {n: self.ctx.bundle.reference['baseline']['files'][n] for n in bridge.SECURITY_FILES}}
+            reader = bridge.Readiness(ref, m, i)
+            link = modules['connect_bridge_activation'].Deployment(reader,
+                self.ctx.bundle.legacy['scripts/infra/academy_https.py'], Path('/not-used-by-readonly'), '')
+            self._legacy = SimpleNamespace(modules=modules, manager=m, installation=i, reader=reader, link=link)
+        return self._legacy
+
+    def https_snapshot(self):
+        from connect_con02_state import capture, descriptor
+        m = self.legacy().manager; s = m.load()
+        require(s.get('phase') == 'active' and s.get('bridge_enabled') is True, 'active_private_HTTPS_required')
+        # These owner checks use files, OpenSSL, Apache topology and the static TLS
+        # health endpoint. Deliberately exclude metadata()/app_check() PHP bootstrap.
+        m.guards(s); m.authority(); m.topology(s, m.host.vhosts()); m.leaf_ready(s)
+        files = {**m.files(), 'tool': m.p.tool, 'state': m.p.state, 'observability': m.p.include,
+                 'service': m.p.service, 'timer': m.p.timer, 'ca': m.p.old.ca, 'ca_key': m.p.old.ca_key,
+                 'cert': Path(s['folder']) / 'server.crt', 'leaf_key': Path(s['folder']) / 'server.key'}
+        return {'verified': True, 'owner': 'ustar-academy-https',
+                'files': {k: descriptor(capture(v)) for k, v in files.items()}, 'leaf': s['leaf']}
+
+    def control_paths(self):
+        r = self.ctx.root
+        files = {n: r / ('etc/ustar-connect/' + f) for n, f in {
+            'receiver': 'receiver.json', 'probe': 'probe.json', 'notifications': 'notifications.json',
+            'link_key': 'bridge.key', 'link_ca': 'bridge.ca', 'token': 'telegram.token',
+            'notify_key': 'notifications-bridge.key', 'notify_ca': 'notifications-bridge-ca.crt',
+            'ack_key': 'ack-bridge.key'}.items()}
+        files['include'] = r / 'opt/ustar/data/moodle/public/.ustar-connect/bridge.php'
+        files['pointer'] = r / 'opt/ustar-connect/current'
+        for n in ('receiver', 'probe', 'notify'):
+            stem = r / ('etc/systemd/system/ustar-connect-' + n + '.service')
+            files[n + '_unit'] = stem
+            if n != 'notify':
+                files[n + '_link_dropin'] = stem.with_name(stem.name + '.d') / '40-ustar-link.conf'
+                files[n + '_ack_dropin'] = stem.with_name(stem.name + '.d') / '60-ustar-con02-ack.conf'
+            else: files['notify_dropin'] = stem.with_name(stem.name + '.d') / '50-ustar-notify-pilot.conf'
+        return files
+
+    def controls(self, journal):
+        import json
+        from connect_con02_state import capture, descriptor
+        paths = self.control_paths()
+        if journal is None:
+            old = self.legacy(); modules = old.modules
+            pilot = modules['connect_notification_pilot'].Pilot(old.link, {'tool_commit': LEGACY_COMMIT},
+                Path('/not-used-by-readonly'), '', b'')
+            s = pilot.load(); require(s['phase'] == 'active' and s['new_release'] == LEGACY_COMMIT, 'accepted_pilot_required')
+            pilot.guard(s, active=True)
+            require(self.legacy().installation.current().name == LEGACY_COMMIT, 'accepted_worker_required')
+        else:
+            app = journal.get('app'); require(app is not None, 'application_transaction_required')
+            initial = app['controls']
+            runtime = journal.get('runtime')
+            for name, path in paths.items():
+                allowed = [initial[name]]
+                if runtime and name in runtime['files']:
+                    allowed += list(runtime['files'][name].values())
+                require(descriptor(capture(path)) in allowed, 'runtime_control_drift')
+        # Detect additional overrides, including vendor/runtime directories.
+        allowed = {'receiver': {'40-ustar-link.conf'}, 'probe': {'40-ustar-link.conf'},
+                   'notify': {'50-ustar-notify-pilot.conf'}}
+        if journal and journal.get('runtime'):
+            for n in ('receiver', 'probe'): allowed[n].add('60-ustar-con02-ack.conf')
+        import os
+        for n, names in allowed.items():
+            unit = 'ustar-connect-' + n + '.service'
+            for base in ('run/systemd/system', 'usr/lib/systemd/system', 'lib/systemd/system'):
+                p = self.ctx.root / base / unit
+                require(not os.path.lexists(p) and not os.path.lexists(p.with_name(unit + '.d')), 'unknown_runtime_override')
+            folder = self.ctx.root / 'etc/systemd/system' / (unit + '.d')
+            require(folder.is_dir() and not folder.is_symlink()
+                    and {p.name for p in folder.iterdir()} <= names, 'unknown_runtime_override')
+        images = {k: capture(v) for k, v in paths.items()}
+        fence = read_fence(images['include']['raw'], json.loads(images['notifications']['raw']),
+                           json.loads(images['receiver']['raw']))
+        validate_fence(fence)
+        return {'files': images, 'fence': fence}
+
+    def preflight(self):
+        d = self.ctx.engine
+        d.p.mount(); self.delegate()
+        require(not (d.p.DATA / 'climaintenance.html').exists()
+                and not (d.p.STATE / 'moodle-was-running.json').exists(), 'pending_host_recovery')
+        for name in ('hdd_backup', 'backup_engine'):
+            path, digest = d.w.HELPERS[name]
+            d.p.root_input(path)
+            require(d.p.read_file(path, 1048576, True) == digest, 'accepted_backup_helper_changed')
+        return {'restart_policies': d.w.docker_conditions(d.p, d.identities)['restart_policies'],
+                'capacity': d.addon.capacity(d), 'roots': d.tx.roots(d), 'identities': d.identities}
+
+    def prefix(self):
+        d = self.ctx.engine
+        return validate_prefix(d.p.parse_prefix(d.p.read_file(d.p.CODE / 'config.php', 131072).decode()))
+
+    def source(self, *, target): self.ctx.engine.addon.source(self.ctx.engine, target)
+
+    def service_active(self, unit):
+        import subprocess
+        r = subprocess.run(['systemctl', 'is-active', unit], capture_output=True, timeout=15)
+        require(r.returncode in (0, 3), 'service_state_unavailable')
+        return r.stdout.strip() == b'active'
+
+    def service_enabled(self, unit):
+        import subprocess
+        r = subprocess.run(['systemctl', 'is-enabled', unit], capture_output=True, timeout=15)
+        require(r.stdout.strip() in (b'enabled', b'disabled'), 'service_enabled_state_unavailable')
+        return r.stdout.strip() == b'enabled'
+
+    def service(self, action, unit):
+        require(action in ('start', 'stop', 'enable', 'disable', 'daemon-reload'), 'service_action')
+        self.action(['systemctl', action] + ([unit] if unit else []), timeout=60)
+
+    def probe(self, profile):
+        require(profile in ('v1', 'v2'), 'probe_profile')
+        self.service('start', 'ustar-connect-probe.service')
+
+
+def frozen_legacy(bundle):
+    """Keep frozen guard imports private; do not replace process-global modules."""
+    import builtins
+    from types import ModuleType
+    sources = {Path(k).stem: v for k, v in bundle.legacy.items()}
+    sources['connect_install'] = sources.pop('install')
+    result = {}
+    def load(name):
+        if name in result: return result[name]
+        module = ModuleType('_con02_frozen_' + name)
+        result[name] = module
+        module.__file__ = '<frozen-a86/' + name + '.py>'
+        def scoped_import(target, globals=None, locals=None, fromlist=(), level=0):
+            if level == 0 and target in sources: return load(target)
+            return builtins.__import__(target, globals, locals, fromlist, level)
+        module.__dict__['__builtins__'] = {**vars(builtins), '__import__': scoped_import}
+        exec(compile(sources[name], module.__file__, 'exec'), module.__dict__)
+        return module
+    for name in sources: load(name)
+    return result

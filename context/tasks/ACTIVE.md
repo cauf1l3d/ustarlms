@@ -1,5 +1,16 @@
 # Активные задачи USTAR
 
+**22Oct — план реализации подтверждён, самостоятельная реализация идёт.**
+Owner: «ок приступай к реализации план потверждаю».0subagents/no SSH/provider sends.
+Fixed contracts/reference export и durable journal/phased locks начаты;
+14 focused tests/1 UID33 environment skip. Host/native/systemd/HTTPS gates pending,
+installer пока не готов. Server1 application2000+overlay/worker a86 сохранён;
+UID130 last revoked, pilot/group tests не повторять. Следом app+cron transaction,
+v2/ACK profiles/runtime, plain.py и новые native/actual gates; повторного разрешения не требуется.
+Progress: [../runtime/connect_con02_deployment_progress_20261022.md](../runtime/connect_con02_deployment_progress_20261022.md).
+Ниже — датированная история предыдущих состояний.
+
+
 **22Oct — письменный проект поставки принят; план реализации готов к review.**
 Owner: «потверждаю». [План](../proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md):
 9 задач/45 шагов — fixed contracts, durable images/phased locks, app+cron transaction,

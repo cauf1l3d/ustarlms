@@ -8,7 +8,7 @@ final class bridge_auth {
     public const PATH = '/local/ustar/connect_bridge.php';
     public const OPERATIONS = ['launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
         'registration.options', 'registration.submit', 'registration.status',
-        'notification.lease', 'notification.begin', 'notification.finish',
+        'notification.lease', 'notification.begin', 'notification.begin_v2', 'notification.finish', 'notification.ack',
         'actor.open', 'actor.status', 'actor.revoke'];
 
     public static function verify(#[\SensitiveParameter] string $body, array $headers,

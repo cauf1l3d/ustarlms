@@ -176,7 +176,7 @@ final class connect_notification_action_test extends \advanced_testcase {
         unset($CFG->ustar_connect_notify_userids);
         $this->unavailable(fn()=>$this->ack($f,$action['action']));
         $CFG->ustar_connect_notify_userids=[$f['uid']];
-        unassign_capability('local/ustar:use',$f['role']);accesslib_clear_all_caches(true);
+        assign_capability('local/ustar:use',CAP_PROHIBIT,$f['role'],\context_system::instance()->id);accesslib_clear_all_caches(true);
         $this->unavailable(fn()=>$this->ack($f,$action['action']));
         $CFG->ustar_connect_ack_enabled=false;
         $this->unavailable(fn()=>$this->ack($f,$action['action']),'ack_disabled');

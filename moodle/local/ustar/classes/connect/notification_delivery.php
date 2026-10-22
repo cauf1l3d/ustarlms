@@ -139,8 +139,19 @@ final class notification_delivery {
         return $row;
     }
     public static function begin(int $id, #[\SensitiveParameter] string $lease, string $kid, string $provider, string $tenant, ?int $now = null): array {
+        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, false);
+    }
+    /** Explicit v2 only: v1 keys and permission boundary stay unchanged. */
+    public static function begin_v2(int $id, #[\SensitiveParameter] string $lease, string $kid,
+            string $provider, string $tenant, ?int $now = null): array {
+        notification_action::require_enabled();
+        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, true);
+    }
+    private static function begin_permit(int $id, #[\SensitiveParameter] string $lease, string $kid,
+            string $provider, string $tenant, ?int $now, bool $versiontwo): array {
         $now ??= time();
-        return identity_service::atomic(function() use ($id, $lease, $kid, $provider, $tenant, $now): array {
+        return identity_service::atomic(function() use ($id, $lease, $kid, $provider, $tenant, $now, $versiontwo): array {
+            if ($versiontwo) { notification_action::require_enabled(); }
             global $DB;
             $row = self::fenced($id, $lease, $kid, $provider, $tenant);
             if ($row->status !== 'leased' || (int)$row->connleaseuntil <= $now) { throw new \InvalidArgumentException('invalid_delivery'); }
@@ -153,9 +164,14 @@ final class notification_delivery {
             $row->attempts = (int)$row->attempts + 1; $row->connbegun = $now;
             // This transaction commits before the private worker receives any permission to send.
             self::state($row, 'sending', $now);
-            return ['status' => 'sending', 'subject' => $link->subject,
+            $permit = ['status' => 'sending', 'subject' => $link->subject,
                 'category' => notification_policy::category($notice->eventtype), 'severity' => $notice->severity,
                 'occurred_at' => (int)$notice->timecreated, 'send_before' => $now + 10];
+            if ($versiontwo) {
+                $permit['version'] = 2;
+                $permit['ack'] = notification_action::issue($notice, $row, $link, $now);
+            }
+            return $permit;
         });
     }
     public static function finish(int $id, #[\SensitiveParameter] string $lease, string $outcome,

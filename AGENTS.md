@@ -1,5 +1,16 @@
 # USTAR инструкции агентам
 
+**22Oct — письменный проект поставки принят; план реализации готов к review.**
+Owner: «потверждаю». [План](context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md):
+9 задач/45 шагов — fixed contracts, durable images/phased locks, app+cron transaction,
+v2/ACK profiles/runtime recovery, plain.py/CLI, native direct upgrade и actual TLS/systemd.
+Метод уже выбран: самостоятельно,0subagents. Новый controller ещё не написан;
+следующий gate — review только плана, без повторного согласования проекта/метода.
+Designf0c00d5e Context39789336484/Review39789336561 SUCCESS; FullRC skipped.
+App/worker534 и source2200/557files/100tables сохранены. Server1 application2000+
+policy overlay/worker a86 unchanged; pilot/group tests не повторять. No SSH/provider sends.
+Ниже — датированная история предыдущих состояний.
+
 **22Oct — следующий этап: письменный проект согласованной поставки CON-02.**
 Owner: «Переходи к следующему». [Проект](context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md)
 готов к review: один controller, отдельные app upgrade и ACK enable/disable;

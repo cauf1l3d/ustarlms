@@ -5,9 +5,11 @@ source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
-  deployment_design_status: written_ready_for_owner_review
+  deployment_design_status: owner_approved_22Oct
   deployment_controller: not_implemented
-  stage: CON02_deployment_written_design_review
+  deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
+  deployment_plan_status: written_ready_for_owner_review
+  stage: CON02_deployment_implementation_plan_review
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
   development_version: 2026102200
@@ -37,7 +39,7 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: review_written_deployment_design_then_self_implementation_plan
+  next: review_written_implementation_plan_then_self_execution
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
@@ -486,10 +488,16 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON02_deployment_written_design_review
+  phase: CON02_deployment_implementation_plan_review
   owner_priority: start_CON02_manual_group_tests_deferred_keep_ustar_local_and_existing_CA
   current_summary: >-
-    Owner22Oct ordered next deployment slice. Written design ready for review:
+    Owner22Oct approved written deployment design («потверждаю»). Nine-task/45-step
+    implementation plan ready for review:
+    context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md.
+    Self implementation/no subagents already fixed; controller not written.
+    Next review this plan then executing-plans; no repeated spec/method choice.
+    Designf0c00d5e Context39789336484/Review39789336561 SUCCESS; FullRC skipped.
+    Historical design preparation follows. Owner22Oct ordered next deployment slice. Written design ready for review:
     context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md.
     One controller with direct2000+overlay-to2200/fresh pair/cron2200 upgrade and
     separate ACK enable/disable; unchanged HTTPS owner, plain.py delivery,

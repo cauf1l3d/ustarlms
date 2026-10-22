@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_CON02_deployment_written_design_review
+  stage: connect_CON02_deployment_implementation_plan_review
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -24,7 +24,7 @@ components:
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: owner_next_deployment_requested_written_design_review_then_plan;owner_CON02A2_plan_implemented_source_CI_verified_not_deployed;owner_CON02A1_plan_approved_source_CI_verified_not_deployed;owner_one_employee_Tasks_pilot_accepted;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_fully_accepted_recipient_last_revoked
+execution_gate: owner_deployment_design_approved_implementation_plan_review;owner_CON02A2_plan_implemented_source_CI_verified_not_deployed;owner_CON02A1_plan_approved_source_CI_verified_not_deployed;owner_one_employee_Tasks_pilot_accepted;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_fully_accepted_recipient_last_revoked
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -34,9 +34,10 @@ current_operator_handoff:
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
-  deployment_design_status: written_ready_for_owner_review
+  deployment_design_status: owner_approved_22Oct
   deployment_controller: not_implemented
-  deployment_plan: not_written
+  deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
+  deployment_plan_status: written_ready_for_owner_review
   task: INTEGRATIONS-01
   spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
   A2_design: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
@@ -44,7 +45,8 @@ current_work:
   A2_progress: context/runtime/connect_con02_callback_progress_20261022.md
   A2_implementation_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
   CON02_scope: context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
-  plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
+  plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
+  accepted_A2_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
   accepted_A1_plan: context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
   group_design: context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
   parent_RFC: context/proposals/USTAR_CONNECT_RFC_20261018.md
@@ -52,8 +54,8 @@ current_work:
   owner_receipt: context/runtime/connect_notification_pilot_owner_20261021.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan_scope: CON02_A2_completed_deployment_design_next
-  plan_status: A2_complete_deployment_written_design_review_then_plan
+  plan_scope: CON02_deployment_implementation_plan
+  plan_status: deployment_design_approved_plan_ready_for_review
   live_group_acceptance: deferred_by_owner_until_full_launch
   following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
   accepted_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md

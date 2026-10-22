@@ -1,20 +1,20 @@
 schema_version: 2
 updated_at: '2026-10-22'
 project: USTAR Academy
-stage: connect_CON02_deployment_written_design_review
-stage_label: CON02 coordinated deployment written design ready for owner review
+stage: connect_CON02_deployment_implementation_plan_review
+stage_label: CON02 deployment written design approved; implementation plan ready for review
 current_activity: >-
-  Owner22Oct ordered the next guarded deployment slice. Written design ready:
-  context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md.
-  One controller/two operations: direct2000+accepted-overlay to2200 with fresh pair
-  and cron2200 while v1 remains, then explicit scoped ACK enable/disable.
-  Existing HTTPS owner/config/vhosts/renewal bytes preserved; new ownership journal
-  does not rewrite frozen a86 state. Plain.py delivery; exact prior recipient fence,
-  revoke/preferences and schema1/cursor preserved. Controller/implementation plan
-  not written; next written-design review then self implementation plan.0subagents.
-  A2 final34e185f0 Context39786095318/Review39786095327 SUCCESS, native119853663827
-  and both source/runtime passed. Production remains2000+policy overlay/worker a86;
-  UID130 last revoked. Accepted pilot not repeated; live group tests deferred.
+  Owner22Oct approved written deployment design with «потверждаю».
+  Implementation plan ready for review:
+  context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md.
+  Nine tasks/45steps: fixed contracts, durable journal/phased locks, direct2000+overlay
+  to2200 with fresh pair/cron2200, isolated v2/ACK runtime, plain.py CLI and native/
+  actual systemd/HTTPS evidence. Method self implementation/no subagents already
+  fixed; controller not implemented. Next plan review then executing-plans;
+  no repeated spec/method selection. Designf0c00d5e Context39789336484 and
+  Review39789336561 SUCCESS; historical FullRC jobs skipped. Validated app/worker534
+  source unchanged; production2000+policy overlay/a86 preserved, UID130 last revoked.
+  Accepted pilot not repeated; live group tests deferred until full launch.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
@@ -102,6 +102,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
 - context/runtime/connect_con02_callback_20261022.md
 - context/runtime/connect_con02_callback_ci_20261022.json

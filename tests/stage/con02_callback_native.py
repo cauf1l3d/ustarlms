@@ -47,7 +47,17 @@ from ustar_connect.receiver_journal import Journal,JournalError
 from ustar_connect.receiver import TelegramReceiver,verify_bot
 phase,profile=sys.argv[2:4]
 sender=phase=='sender'
-c=load_config(profile,notification=sender)
+try:c=load_config(profile,notification=sender)
+except ValueError:
+ from ustar_connect.private_files import read_private,private_directory
+ v=json.loads(read_private(profile,16384))
+ for label,path,check in [('profile',profile,lambda p:read_private(p,16384)),
+                         ('state',v['state_directory'],private_directory),
+                         ('token',v['bot_token_file'],lambda p:read_private(p,512))]:
+  try:check(path);print('CALLBACK_CONFIG_CHECK',label,'pass',flush=True)
+  except (ValueError,OSError) as e:
+   st=Path(path).stat();print('CALLBACK_CONFIG_CHECK',label,type(e).__name__,str(e),st.st_uid,st.st_gid,oct(st.st_mode&0o777),flush=True)
+ raise
 assert os.geteuid() != 0
 assert os.geteuid()==33 if not sender else os.geteuid()!=33
 for source in ('telegram.token','ack.key','sender.key'):

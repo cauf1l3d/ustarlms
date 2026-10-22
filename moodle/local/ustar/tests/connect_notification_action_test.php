@@ -68,6 +68,23 @@ final class connect_notification_action_test extends \advanced_testcase {
         $this->assertSame(1, $DB->count_records('local_ustar_conn_acktokens', ['userid' => $other['uid']]));
         $this->assertTrue($DB->record_exists('local_ustar_notifications', ['id' => $f['notice']->id]));
     }
+    public function test_user_discovery_bulk_and_context_erasure_preserve_history(): void {
+        global $DB;
+        $f=$this->delivery_fixture();$other=$this->delivery_fixture();
+        $this->token_row($f,time()+3600);$this->token_row($other,time()+3600);
+        $users=new \core_privacy\local\request\userlist(\context_system::instance(),'local_ustar');
+        $provider=\local_ustar\privacy\provider::class;$provider::get_users_in_context($users);
+        $this->assertContains($f['uid'],array_map('intval',$users->get_userids()));
+        $this->assertContains($other['uid'],array_map('intval',$users->get_userids()));
+        $approved=new \core_privacy\local\request\approved_userlist(\context_system::instance(),'local_ustar',[$f['uid']]);
+        $provider::delete_data_for_users($approved);
+        $this->assertSame(0,$DB->count_records('local_ustar_conn_acktokens',['userid'=>$f['uid']]));
+        $this->assertSame(1,$DB->count_records('local_ustar_conn_acktokens',['userid'=>$other['uid']]));
+        $provider::delete_data_for_all_users_in_context(\context_system::instance());
+        $this->assertSame(0,$DB->count_records('local_ustar_conn_acktokens'));
+        $this->assertTrue($DB->record_exists('local_ustar_notifications',['id'=>$f['notice']->id]));
+        $this->assertTrue($DB->record_exists('local_ustar_notifications',['id'=>$other['notice']->id]));
+    }
     public function test_prune_limits_and_preserves_canonical_receipt(): void {
         global $DB;
         $f = $this->delivery_fixture();

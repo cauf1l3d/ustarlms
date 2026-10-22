@@ -119,12 +119,12 @@ final class provider implements
         if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) { return; }
         foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges',
                 'local_ustar_conn_launches', 'local_ustar_conn_sessions', 'local_ustar_conn_signups', 'local_ustar_conn_acktokens'] as $table) {
-            $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0');
+            $userlist->add_from_sql('userid', 'SELECT DISTINCT userid FROM {' . $table . '} WHERE userid > 0', []);
         }
         $userlist->add_from_sql('userid', 'SELECT userid FROM {user_preferences} WHERE name = :name',
             ['name' => \local_ustar\connect\notification_preferences::NAME]);
         $userlist->add_from_sql('userid', 'SELECT DISTINCT n.userid FROM {local_ustar_notify_delivery} d
-            JOIN {local_ustar_notifications} n ON n.id = d.notificationid WHERE d.connectversion = 1');
+            JOIN {local_ustar_notifications} n ON n.id = d.notificationid WHERE d.connectversion = 1', []);
     }
 
     public static function export_user_preferences(int $userid): void {

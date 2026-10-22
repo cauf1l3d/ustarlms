@@ -148,7 +148,12 @@ class Build(unittest.TestCase):
             subprocess.run(['git','-C',str(repo),'checkout','--detach','-q','38d81ef8d273a3c5efc9ea10c35c7906968d78ba'],check=True)
             names=('connect_notification_pilot','build_connect_notification_pilot','connect_bridge_activation','connect_private_bridge')
             for name in names:(repo/('scripts/infra/'+name+'.py')).write_bytes((ROOT/('scripts/infra/'+name+'.py')).read_bytes())
-            path=base.bridge.NOTIFICATION_POLICY;(repo/path).write_bytes((ROOT/path).read_bytes())
+            path=base.bridge.NOTIFICATION_POLICY
+            # The legacy positive fixture must ship its reviewed policy, never a new release overlay.
+            reviewed=subprocess.check_output(['git','-C',str(ROOT),'show',
+                '38d81ef8d273a3c5efc9ea10c35c7906968d78ba:'+path])
+            self.assertEqual(base.bridge.REVIEWED_OVERLAYS[path],hashlib.sha256(reviewed).hexdigest())
+            (repo/path).write_bytes(reviewed)
             subprocess.run(['git','-C',str(repo),'add','.'],check=True)
             subprocess.run(['git','-C',str(repo),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid',
                 'commit','--allow-empty','-qm','pilot fixture'],check=True)
@@ -162,3 +167,11 @@ class Build(unittest.TestCase):
             with zipfile.ZipFile(bad,'w') as z:
                 for n,raw in files.items():z.writestr(n,raw)
             with self.assertRaisesRegex(base.bridge.Refusal,'bundle_digest_changed'):x.bundle(bad)
+
+    def test_legacy_bundle_refuses_current_release_policy(self):
+        module=ROOT/'scripts/infra/build_connect_notification_pilot.py'
+        spec=importlib.util.spec_from_file_location('pilot_rejection_builder',module)
+        builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
+        with tempfile.TemporaryDirectory() as td:
+            with self.assertRaisesRegex(base.bridge.Refusal,'unreviewed_application_delta'):
+                builder.build('HEAD',Path(td),repo=ROOT)

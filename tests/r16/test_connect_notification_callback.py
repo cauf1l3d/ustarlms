@@ -53,9 +53,7 @@ class NotificationCallback(unittest.TestCase):
             'subject':'77777','tenant':'123456'}),self.ack_bridge.request.call_args.args)
         self.assertEqual(5,self.ack_bridge.request.call_args.kwargs['timeout'])
         self.api.send_notification.assert_not_called();self.bridge.request.assert_not_called()
-        self.assertEqual(['message','callback_query'],self.api.get_updates.call_args.kwargs['allowed_updates']
-            if 'allowed_updates' in self.api.get_updates.call_args.kwargs else
-            ['message','callback_query'] if self.api.get_updates.call_args.kwargs.get('acknowledgements_enabled') is True else [])
+        self.api.get_updates.assert_called_once_with(0,acknowledgements_enabled=True)
 
     def test_callback_origin_denial_matrix(self):
         bad=[]

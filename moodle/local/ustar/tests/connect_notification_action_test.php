@@ -194,7 +194,13 @@ final class connect_notification_action_test extends \advanced_testcase {
     }
 
     private function dispatch(string $op, array $payload, string $kid = 'tg_ack'): array {
-        $key = ['tg_ack' => ['secret' => str_repeat('ab',32), 'operations' => ['notification.ack'], 'provider'=>'telegram','tenant'=>'123456']];
+        $key = [];
+        foreach (['tg_ack'=>['notification.ack'],
+                'tg_v1'=>['notification.lease','notification.begin','notification.finish'],
+                'tg_v2'=>['notification.lease','notification.begin_v2','notification.finish'],
+                'tg_link'=>['link.claim'],'tg_actor'=>['actor.open','actor.status','actor.revoke']] as $id=>$ops) {
+            $key[$id]=['secret'=>str_repeat('ab',32),'operations'=>$ops,'provider'=>'telegram','tenant'=>'123456'];
+        }
         ksort($payload); $body=json_encode(['operation'=>$op,'payload'=>$payload],JSON_UNESCAPED_SLASHES);
         $at=(string)time();$nonce='rn1_'.rtrim(strtr(base64_encode(random_bytes(32)),'+/','-_'),'=');
         $sig=hash_hmac('sha256',implode("\n",['USTAR-CONNECT-BRIDGE-v1','POST','/local/ustar/connect_bridge.php',
@@ -206,6 +212,13 @@ final class connect_notification_action_test extends \advanced_testcase {
         foreach (['notification.lease','notification.begin','notification.begin_v2','notification.finish','link.claim','actor.open'] as $op) {
             $this->unavailable(fn()=>$this->dispatch($op,['probe'=>'fixed']),'forbidden_operation');
         }
+    }
+    public function test_old_sender_link_and_actor_keys_cannot_ack_or_negotiate(): void {
+        foreach (['tg_v1','tg_v2','tg_link','tg_actor'] as $kid) {
+            $this->unavailable(fn()=>$this->dispatch('notification.ack',['probe'=>'fixed'],$kid),'forbidden_operation');
+        }
+        $this->unavailable(fn()=>$this->dispatch('notification.begin',['probe'=>'fixed'],'tg_v2'),'forbidden_operation');
+        $this->unavailable(fn()=>$this->dispatch('notification.begin_v2',['probe'=>'fixed'],'tg_v1'),'forbidden_operation');
     }
     public function test_scoped_ack_route_and_exact_payload(): void {
         $f=$this->delivery_fixture();$action=$this->action($f);

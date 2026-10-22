@@ -23,7 +23,7 @@ import threading
 import time
 
 ROOT=Path(__file__).resolve().parents[2]
-PREFIX=Path('/opt/ustar-connect-ack-fixture')
+PREFIX=Path('/usr/local/lib/ustar-connect-ack-fixture')
 STATE=Path('/var/lib/ustar-connect-ack-fixture')
 ACTION='ua1_'+'A'*43
 KEYS={'tg_ack':('33'*32,{'notification.ack'}),'tg_v2':('22'*32,{'notification.lease','notification.begin_v2','notification.finish'})}
@@ -51,7 +51,7 @@ c=load_config(profile,notification=sender)
 assert os.geteuid() != 0
 assert os.geteuid()==33 if not sender else os.geteuid()!=33
 for source in ('telegram.token','ack.key','sender.key'):
- try:open('/opt/ustar-connect-ack-fixture/private/'+source).read();raise AssertionError('root credential readable')
+ try:open('/usr/local/lib/ustar-connect-ack-fixture/private/'+source).read();raise AssertionError('root credential readable')
  except PermissionError:pass
 foreign='/run/credentials/ustar-connect-receiver.service/ack-bridge.key' if sender else '/run/credentials/ustar-connect-notify.service/bridge.key'
 try:open(foreign).read();raise AssertionError('foreign credential readable')

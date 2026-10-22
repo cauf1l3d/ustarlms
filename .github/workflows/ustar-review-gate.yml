@@ -241,7 +241,7 @@ jobs:
       - name: Actual systemd credentials and receiver isolation with synthetic transport
         run: sudo -n env USTAR_CONNECT_HOST_FIXTURE=1 python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
       - name: Personal callback old-new-disabled-a86 handoff with actual UID33 credentials and private TLS
-        run: sudo -n env USTAR_CONNECT_ACK_FIXTURE=1 python3 tests/stage/con02_callback_native.py
+        run: sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_ACK_FIXTURE=1 python3 tests/stage/con02_callback_native.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

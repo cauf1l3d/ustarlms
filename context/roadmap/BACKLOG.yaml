@@ -4,15 +4,15 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
-  stage: CON02_A2_implementation_plan_pending_review
+  stage: CON02_A2_implementation_in_progress
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: CON02_A2_Telegram_callbacks_then_B_routing_then_C_Bitrix
-  development_version: 2026102100
-  development_files: 554
+  development_version: 2026102200
+  development_files: 557
   CON02_A2_design: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
   CON02_A2_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
-  CON02_A2_plan_status: implementation_plan_pending_owner_review
-  CON02_A2_code: not_implemented
+  CON02_A2_plan_status: owner_approved_executing
+  CON02_A2_code: partial_source_native_GREEN_router_pending
   CON02_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
   production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
   production_effective_version: 2026102000
@@ -33,7 +33,7 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: owner_review_concrete_A2_implementation_plan_then_self_execution
+  next: finish_canonical_ACK_native_CI_and_paired_recovery
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
@@ -482,14 +482,16 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON02_A2_implementation_plan_pending_review
+  phase: CON02_A2_implementation_in_progress
   owner_priority: start_CON02_manual_group_tests_deferred_keep_ustar_local_and_existing_CA
   current_summary: >-
-    Owner22Oct accepted written A2 design and requested implementation. Concrete
-    plan context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md prepared:
-    9tasks/45steps, author self-reviewed, awaiting owner review before execution.
-    Self implementation/no subagents already selected. No A2 code/dependencies,
-    proposed2200/100tables not yet implemented; candidate2100/554/99 preserved.
+    Owner22Oct approved the concrete plan and explicitly ordered execution.
+    Self implementation in progress, no subagents. Source progress:
+    context/runtime/connect_con02_callback_progress_20261022.md.
+    Local transport/sender/callback/config passed973tests/54env skips; native
+    schema RED140tests/687assertions has exactly2 expected missing-table failures.
+    Metadata2200/100table source written; native GREEN/service RED pending.
+    Canonical PHP ACK/router/final native runtime and recovery gates remain.
     The following A1 source and accepted pilot receipts remain valid history.
     Owner approved CON02A1 plan21Oct. Native own acknowledgement implemented and
     CI verified; first ackat survives repeats/read/ACK races; real active owner,

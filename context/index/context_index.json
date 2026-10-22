@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 39219,
-      "sha256": "d87cd1224bc4a05585d797dc6ed04892b922233ee6c697fbaf295bdce57d4ada"
+      "size": 39258,
+      "sha256": "3792bec05021464b29963b4e9c9b7adf74a7a64345c7537cc9b96a662ebb8d65"
     },
     {
       "path": "context/agents/astra.md",
@@ -840,8 +840,8 @@
     {
       "path": "context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md",
       "domain": "proposals",
-      "size": 29783,
-      "sha256": "cdc42bc75b4084b660f0695658ca4aea59692b4a45cbd2a280dd1a03ba3b6373"
+      "size": 29827,
+      "sha256": "71c4afc030fbd0ba415a3d43e56076a53c583e7bdbec5648348f0c068011b27f"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md",
@@ -990,8 +990,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 29878,
-      "sha256": "3da30c6f38bcd2335e43c045776b0fb611b1a1dc7c1fd3f21c47f250a143e43d"
+      "size": 29883,
+      "sha256": "ab14bb9389bcfe78647b235142bb735e8369acb9d8f720ee95c373ebe27e218c"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1032,8 +1032,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 195802,
-      "sha256": "49d25f03885f2050b2024b9c12050c5232ab51f17873b6151bd629c7677e5192"
+      "size": 195841,
+      "sha256": "2caf26ef32d4309f4a8e159513420bdfd0ce462567dcf157460dae625d9df00c"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1045,7 +1045,7 @@
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
       "size": 11794,
-      "sha256": "f243567dbad6dd652322c1e4cf21600923d02b91653324f2a0d2da80632a089a"
+      "sha256": "31939afb80d1ee8eb9dd30bf2f65d3bf8d618e77daa0ad3b6136da9a30c3ffda"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1308,8 +1308,8 @@
     {
       "path": "context/runtime/connect_con02_callback_progress_20261022.md",
       "domain": "runtime",
-      "size": 2087,
-      "sha256": "f486ad9c0a960f2382a9220decfe3773892acf17da57d772369d1af11392d8d6"
+      "size": 2575,
+      "sha256": "84b252deb2767332334679a6ee5cbf157f54636815ac75633ca77d7bf676c62e"
     },
     {
       "path": "context/runtime/connect_configure_tty_recovery_20261019.md",
@@ -2340,8 +2340,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 54662,
-      "sha256": "31f2d2120b5437431783c0f3d369c9e8143163f86fb5496ac13225516492513e"
+      "size": 54701,
+      "sha256": "cf9764d896d256f4e5568c669a2a7ac5b8fa9fbc6ab8eae866ee7984f6874f6f"
     },
     {
       "path": "context/tasks/backlog.yaml",

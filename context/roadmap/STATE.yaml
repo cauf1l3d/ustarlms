@@ -1,23 +1,19 @@
 schema_version: 2
 updated_at: '2026-10-22'
 project: USTAR Academy
-stage: connect_CON02_A2_implementation_plan_pending_review
-stage_label: CON02A2 written design approved; implementation plan pending owner review
+stage: connect_CON02_A2_implementation_in_progress
+stage_label: CON02A2 plan approved; self implementation with native CI gates in progress
 current_activity: >-
-  Owner22Oct accepted written A2 design: proceed to implementation. Concrete plan
-  context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md is now written and
-  self-reviewed:9tasks/45steps. Next gate is owner review of this exact written
-  plan, then executing-plans with preserved self implementation/no subagents.
-  No A2 product code or dependencies installed. Candidate2100/theme0202/554files/
-  99tables remains; proposed2200/100tables is not implemented or deployed.
-  Exact docs1211fe6e Context39694294801/Review39694294751 SUCCESS; source/runtime/
-  connect-db green, context941tests/152environment skips. Historical FullRC jobs
-  skipped by existing conditions, not passed. A1 source4fb4cd17 evidence remains
-  context/runtime/connect_con02_ack_ci_20261021.json. Server1 application2000 plus
-  accepted policy overlay/worker a86 preserved; UID130 last revoked. Accepted
-  pilot not repeated; live group tests deferred until full launch, not passed.
-  B routing/preferences and C Bitrix follow separately; actual portal/API unknown.
-  Author self-review, no independent reviewer/subagents/agent SSH/provider sends.
+  Owner22Oct explicitly approved execution of written A2 plan. No further gate
+  between tasks; self implementation/no subagents. Current exact progress:
+  context/runtime/connect_con02_callback_progress_20261022.md. Transport/sender/
+  callback/config RED to GREEN, full local973tests/54environment skips. Actual
+  native schema RED verified f02e5bba/job119744993678:140tests/687assertions exactly
+  2 missing-table failures;138 prior tests pass. Candidate2200/100table metadata and canonical PHP ACK implemented; actual native
+  service RED observed, GREEN pending. PHP router, scoped runtime/paired recovery
+  and final CI still pending.
+  Server1 remains2000 plus accepted policy overlay/worker a86; UID130 last revoked.
+  Accepted pilot not repeated; group live tests deferred until full launch.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
@@ -105,6 +101,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_con02_callback_progress_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
@@ -210,15 +207,15 @@ do_not_repeat:
 - host_package_install_and_reboot
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
 development_candidate:
-  CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
-  implementation_report: context/runtime/connect_con02_ack_20261021.md
+  accepted_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
+  accepted_A1_report: context/runtime/connect_con02_ack_20261021.md
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: CON02A1 native own acknowledgement;existing private chat/C4 preserved;no new transport activation
-  local_ustar_version: 2026102100
+  scope: CON02A2_in_progress;native_service_and_final_CI_pending;not_deployed
+  local_ustar_version: 2026102200
   theme_ustar_version: 2026100202
-  files: 554
-  tables: 99
+  files: 557
+  tables: 100
 receiver_runtime:
   source_commit: a86e208029b6104150e85d0e90384f84da214c22
   initial_source_commit: b01bd942f7f748d9510618a79489643b42cbd690

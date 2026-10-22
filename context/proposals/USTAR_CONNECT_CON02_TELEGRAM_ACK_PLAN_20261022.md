@@ -8,7 +8,7 @@
 
 **Tech Stack:** Moodle5.1.8/PHP8.3.33/PostgreSQL16.15, Python stdlib/SQLite journal schema1, существующие PHPUnit/r16/Chromium/systemd/TLS fixtures; без новых продуктовых зависимостей.
 
-**Spec:** [Согласованный письменный проект A.2](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md). Owner22Oct: «переходи к реализации» — written spec accepted. Этот конкретный implementation plan подготовлен после ответа и ожидает отдельного review; выполнение задач ещё не начато.
+**Spec:** [Согласованный письменный проект A.2](USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md). Owner22Oct: «переходи к реализации» — written spec accepted. План принят22Oct ответом «начинай выполнение». Выполнение идёт самостоятельно без субагентов; текущие результаты и открытые native gates — в [progress](../runtime/connect_con02_callback_progress_20261022.md).
 
 ## Global Constraints
 
@@ -188,7 +188,7 @@ keeps URL-only default. Add `answer_notification_ack(query_id,outcome,acknowledg
 and `edit_notification_ack(subject,message_id,category)`; outcome is acknowledged,
 unavailable or uncertain. Private `_call` fixes new-method timeout3 and method-specific result types.
 
-- [ ] **Step 1 — RED tests.** Named tests `test_poll_filter_optin_and_original_defaults`,
+- [x] **Step 1 — RED tests.** Named tests `test_poll_filter_optin_and_original_defaults`,
   `test_callback_true_is_not_a_message_dict`, `test_private_edit_requires_matching_message`,
   `test_keyboard_keeps_fixed_url_and_hides_private_content`.
   ```python
@@ -196,16 +196,16 @@ unavailable or uncertain. Private `_call` fixes new-method timeout3 and method-s
   self.assertEqual(['message', 'callback_query'], poll_payload['allowed_updates'])
   self.assertEqual(0, answer_payload['cache_time'])
   ```
-- [ ] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_callback_transport.py -v`; missing methods/opt-in signature expected.
-- [ ] **Step 3 — Implement exact methods.** Add only answerCallbackQuery and
+- [x] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_callback_transport.py -v`; missing methods/opt-in signature expected.
+- [x] **Step 3 — Implement exact methods.** Add only answerCallbackQuery and
   editMessageReplyMarkup to method allowlist; strict true vs private Message,
   retain old dict/list validations. Validate47-byte canonical action and expiry,
   preserve protect_content and fixed native category URLs, no raw titles/body.
   UI copy/time UTC from spec§1/8, cache_time0, no URL redirect/extra sendMessage.
-- [ ] **Step 4 — GREEN.** Test bool-vs-int IDs, duplicate/oversized JSON, wrong
+- [x] **Step 4 — GREEN.** Test bool-vs-int IDs, duplicate/oversized JSON, wrong
   edit chat/message, timeout/400/401/429/5xx and no disabled TLS/redirect/ambient proxy;
   run existing test_connect_receiver.py and test_connect_notifications.py too.
-- [ ] **Step 5 — Commit** `feat: add typed Telegram acknowledgement buttons and replies`.
+- [x] **Step 5 — Commit** `feat: add typed Telegram acknowledgement buttons and replies`.
 
 ### Task 5: Explicit v2 sender without v1 negotiation or resend
 
@@ -216,23 +216,23 @@ expand `tests/r16/test_connect_notifications.py`.
 not bool. V1 calls notification.begin and old four-argument API exactly as before;
 v2 calls notification.begin_v2 and passes validated ack as keyword. Same lease/finish.
 
-- [ ] **Step 1 — RED tests.** Add `test_v2_requires_exact_permit_and_fresh_action`,
+- [x] **Step 1 — RED tests.** Add `test_v2_requires_exact_permit_and_fresh_action`,
   `test_null_ack_keeps_url_and_never_synthesizes_token`, `test_v2_bad_begin_never_downgrades_or_sends`.
   ```python
   self.assertEqual('notification.begin_v2', bridge.request.call_args_list[1].args[0])
   self.assertEqual(action, api.send_notification.call_args.kwargs['ack'])
   self.assertEqual(1, api.send_notification.call_count)
   ```
-- [ ] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_notifications.py -v`; constructor/new branch unavailable expected.
-- [ ] **Step 3 — Implement branch.** Exact set/type/TTL validation for v2,
+- [x] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_notifications.py -v`; constructor/new branch unavailable expected.
+- [x] **Step 3 — Implement branch.** Exact set/type/TTL validation for v2,
   expires>current time and no later than occurred_at+24h, with begin send_before<=10с;
   per-category server TTL remains authoritative. ack:null still sends safely.
   Keep subject fence, startup identity, durable retry/429/uncertain/max-attempt semantics;
   missing/malformed v2 cannot call v1 or create a second send.
-- [ ] **Step 4 — GREEN.** Both contracts pass success/cancelled/retry_wait,
+- [x] **Step 4 — GREEN.** Both contracts pass success/cancelled/retry_wait,
   lost begin/send/finish, wrong recipient and authorization failures; frozen a86
   positive compatibility stays separate from current sender tests.
-- [ ] **Step 5 — Commit** `feat: opt notification sender into the v2 action permit`.
+- [x] **Step 5 — Commit** `feat: opt notification sender into the v2 action permit`.
 
 ### Task 6: Callback parser, durable handler and existing receiver loop
 
@@ -247,7 +247,7 @@ after recording terminal so receiver uses existing `_delay`. `TelegramReceiver`
 adds optional acknowledgements_enabled=False and ack_bridge=None, requires separate
 bridge when enabled; existing command dispatch unchanged.
 
-- [ ] **Step 1 — RED tests.** Add `test_old_message_is_not_an_old_click`,
+- [x] **Step 1 — RED tests.** Add `test_old_message_is_not_an_old_click`,
   `test_callback_origin_denial_matrix`, `test_commit_then_lost_ui_keeps_receipt`,
   `test_duplicate_restart_and_rate_limit_do_not_repeat_bridge`.
   ```python
@@ -255,8 +255,8 @@ bridge when enabled; existing command dispatch unchanged.
   self.assertEqual(1, ack_bridge.request.call_count)
   self.assertEqual(1, journal._db.execute('PRAGMA user_version').fetchone()[0])
   ```
-- [ ] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_notification_callback.py -v`; missing parser/handler expected.
-- [ ] **Step 3 — Implement parser/handler.** Exact update envelope, printable
+- [x] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_notification_callback.py -v`; missing parser/handler expected.
+- [x] **Step 3 — Implement parser/handler.** Exact update envelope, printable
   ASCII query id1–256, human/private/same chat, verified bot-origin, positive typed
   IDs/date, canonical ua1. Deny forwarding/inline/game/business/guest/topic/inaccessible.
   Use ProviderIdentity hash, kind ack10/60, durable received→creating→sending and
@@ -266,12 +266,12 @@ bridge when enabled; existing command dispatch unchanged.
   The bridge call is `ack_bridge.request('notification.ack', payload, timeout=5)`;
   expected actor/token denials are normalized to ack_unavailable in the native
   service, not leaked capability exception text or success from a malformed envelope.
-- [ ] **Step 4 — GREEN.** Crash/recover in every phase, duplicate batch/current
+- [x] **Step 4 — GREEN.** Crash/recover in every phase, duplicate batch/current
   offset, original old date/future31с, bool IDs, attempted foreign sender,
   answer400/timeout/429, edit failure after success, shutdown and unprocessed batch
   leave no duplicate ACK/send. Preserve old command freshness and all old limits.
   Frozen a86 opens schema1 with ack rows and safely ignores queued callbacks.
-- [ ] **Step 5 — Commit** `feat: process personal acknowledgement callbacks in the existing receiver`.
+- [x] **Step 5 — Commit** `feat: process personal acknowledgement callbacks in the existing receiver`.
 
 ### Task 7: Strict runtime opt-in and separate credential profiles
 
@@ -290,7 +290,7 @@ notification.lease without consuming business payload; new sender probe addition
 proves notification.begin v1 denied. Positive scope is tested on actual synthetic
 native actions in Task8, not inferred from a denial probe.
 
-- [ ] **Step 1 — RED tests.** Add `test_old_profiles_load_with_network_unused`,
+- [x] **Step 1 — RED tests.** Add `test_old_profiles_load_with_network_unused`,
   `test_ack_requires_distinct_private_key_pair`, `test_sender_never_loads_ack_key`,
   `test_probe_does_not_poll_lease_send_or_ack`.
   ```python
@@ -298,8 +298,8 @@ native actions in Task8, not inferred from a denial probe.
   self.assertEqual(2, load_config(new_sender, notification=True).notification_contract)
   api.get_updates.assert_not_called(); bridge.request.assert_not_called()
   ```
-- [ ] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_ack_configuration.py -v`.
-- [ ] **Step 3 — Implement loading/runtime wiring.** Read credentials with existing
+- [x] **Step 2 — Run RED.** `python -m unittest discover -s tests/r16 -p test_connect_ack_configuration.py -v`.
+- [x] **Step 3 — Implement loading/runtime wiring.** Read credentials with existing
   private_files/systemd ACL checks; receiver constructs separate ACK client
   (Task6 sets request timeout5). When a link bridge is also loaded, reject equal
   key ids or equal secret bytes; do not read the sender's private credential.
@@ -307,11 +307,11 @@ native actions in Task8, not inferred from a denial probe.
   New example drop-ins load ack-bridge.key separately into same receiver/probe
   services; existing base units/install configure and default example profiles
   remain v1 and do not require missing credentials. No auto-enable/network in CLI default.
-- [ ] **Step 4 — GREEN.** Verify malformed/reused key id, missing file, unsafe
+- [x] **Step 4 — GREEN.** Verify malformed/reused key id, missing file, unsafe
   file/ACL, repeated secret under another link key id, disabled extra secrets,
   bool contract, wrong private CA and no credential
   rendering. Existing configure/notification pilot/package tests remain green.
-- [ ] **Step 5 — Commit** `feat: configure acknowledgement callbacks with isolated scoped credentials`.
+- [x] **Step 5 — Commit** `feat: configure acknowledgement callbacks with isolated scoped credentials`.
 
 ### Task 8: Native2200 lifecycle, races and actual systemd/private TLS evidence
 
@@ -386,11 +386,11 @@ and records exact SHAs/jobs/skips; no fake installer or new production state.
 Coverage: spec§1–3→Tasks2/4/6; §4→Tasks3/5; §5→Tasks1/2; §6→Tasks2/3/8;
 §7–8→Tasks4/6; §9→Tasks7/8 and separate deployment boundary; §10→Tasks8/9.
 Review Focus1–5 each has named assertions above. Method signatures/typed payloads,
-fixed timeouts/cutoffs and statuses agree across tasks. No implementation results
-are claimed; all45 execution steps are unchecked. Plan is a decision map, not
-product-code scaffolding. Author self-review only, no subagent dispatch.
+fixed timeouts/cutoffs and statuses agree across tasks. Tasks4–7 completed local
+RED/GREEN; native lifecycle/service gates remain in the progress receipt. Checkboxes
+track actual execution; skipped environments are not native acceptance.
 
-Owner's written-design approval is recorded. Execution method is already fixed:
-**self implementation in this session, no subagents**. Next required gate is owner
-review of this written implementation plan; then superpowers:executing-plans and
-the normal test-driven workflow. Do not ask to choose agents or repeat pilot tests.
+Owner22Oct approved the written plan and explicitly ordered execution. Method:
+**self implementation in this session, no subagents**. No further owner gate
+between tasks; continue executing-plans/TDD until the source slice and evidence
+are complete. Do not repeat pilot tests or ask to choose agents.

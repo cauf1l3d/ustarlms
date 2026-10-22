@@ -1,5 +1,15 @@
 # USTAR инструкции агентам
 
+**22Oct — A.2 implementation explicitly approved and running; no new permission loop.**
+Owner: «начинай выполнение». [Progress](context/runtime/connect_con02_callback_progress_20261022.md).
+Transport/sender/callback/private config RED→GREEN; full local973tests/54env skips.
+Native schema RED verified:140tests/687assertions, exactly2 missing-table failures;
+138 prior tests pass. Source2200/100table metadata implemented; native lifecycle
+GREEN/service RED observed; canonical PHP ACK implemented, native GREEN pending.
+PHP v2 router and final acceptance remain.
+0subagents/self implementation; server1 application2000+policy overlay/a86 unchanged.
+Accepted pilot not repeated, live group tests deferred. No agent SSH/provider sends.
+
 **22Oct — письменный проект A.2 принят; конкретный план реализации готов к review.**
 Owner: «переходи к реализации». [План A.2](context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md):
 9 задач/45 проверяемых шагов; schema/lifecycle, current-recipient ACK, v2 bridge,

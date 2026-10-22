@@ -1,13 +1,13 @@
 # CON-02A.2: личное «Принял» в Telegram
 
-22.10.2026, Europe/Moscow. Статус: **owner_approved_implementation_plan_pending_review**.
+22.10.2026, Europe/Moscow. Статус: **owner_approved_execution_in_progress**.
 Владелец подтвердил в диалоге пятишаговый вариант A.2: кнопка в новом личном
 уведомлении, проверка Академией, сохранение первого ACK, безопасный повтор и
 отдельный opt-in контракт с одним receiver. Этот документ конкретизирует вариант;
 Письменный проект принят22Oct ответом «переходи к реализации».
 [Конкретный план реализации](USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md)
-подготовлен после этого ответа и ожидает review. Продуктовый код A.2
-не написан, сервер не изменён. Работа самостоятельно, без субагентов.
+принят ответом «начинай выполнение»; выполнение идёт по плану,
+[точный progress](../runtime/connect_con02_callback_progress_20261022.md). Сервер не изменён. Работа самостоятельно, без субагентов.
 
 ## 1. Результат для сотрудника и границы
 
@@ -308,7 +308,7 @@ native/production evidence. Независимого reviewer и субаген�
 Письменный проект принят владельцем22Oct. Следующий шаг — review
 [конкретного implementation plan](USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md).
 Способ самостоятельного выполнения без субагентов уже сохранён. Статус текущего
-этапа — `implementation_plan_pending_owner_review`; продуктовый код ещё не изменён.
+этапа — `implementation_in_progress`; завершение определяется actual source/native CI.
 
 Официальная база протокола, сверена22OctMSK: [CallbackQuery](https://core.telegram.org/bots/api#callbackquery),
 [InlineKeyboardButton](https://core.telegram.org/bots/api#inlinekeyboardbutton),

@@ -164,6 +164,29 @@ class Application(unittest.TestCase):
         self.assertEqual('2026102200', self.ctx.host.database('mdl_')['addons']['local_ustar'])
         with self.assertRaises(c.Refusal): op.restore()
 
+    def test_actual_process_loss_after_public_commit_keeps_new_writes(self):
+        op=self.operation();pid=os.fork()
+        if pid==0:
+            original=op.journal.checkpoint
+            def crash(scope,phase,**fields):
+                row=original(scope,phase,**fields)
+                if phase=='public_release_committed':os._exit(73)
+                return row
+            op.journal.checkpoint=crash;op.upgrade();os._exit(74)
+        _,status=os.waitpid(pid,0);self.assertEqual(73,os.waitstatus_to_exitcode(status))
+        generation=op.row()['generation'];p=self.d.p.DATA/'new_public_write';p.write_bytes(b'after-public-release')
+        self.assertEqual('app_ready',op.recover()['phase'])
+        self.assertEqual(generation,op.row()['generation']);self.assertEqual(b'after-public-release',p.read_bytes())
+        self.assertEqual('2026102200',op.host.database('mdl_')['addons']['local_ustar'])
+
+    def test_explicit_late_restore_discards_only_with_both_flags(self):
+        op=self.operation();op.upgrade()
+        (self.d.p.DATA/'new_public_write').write_bytes(b'accepted-discard')
+        for flags in ({},{'outage':True},{'discard':True}):
+            with self.subTest(flags=flags),self.assertRaises(c.Refusal):op.restore(**flags)
+        self.assertEqual('baseline_restored',op.restore(outage=True,discard=True)['phase'])
+        self.assertFalse((self.d.p.DATA/'new_public_write').exists());self.assert_restored()
+
     def test_sender_disabled_stays_disabled(self):
         op = self.operation(); self.d.services[c.SERVICES[0]] = {'active': False, 'enabled': False}
         op.upgrade(); self.assertEqual({'active': False, 'enabled': False}, self.d.services[c.SERVICES[0]])

@@ -82,6 +82,20 @@ class State(unittest.TestCase):
         with self.assertRaises(c.Refusal):j.put('runtime','pointer','after')
         self.assertEqual('/foreign',os.readlink(temporary));self.assertEqual('/old-release',os.readlink(pointer))
 
+    def test_replace_removes_inherited_default_ACL_not_in_saved_image(self):
+        s=self.module()
+        import errno,struct
+        acl=struct.pack('<I',2)+b''.join(struct.pack('<HHI',tag,perm,uid) for tag,perm,uid in (
+            (1,7,0xffffffff),(2,4,os.getuid()),(4,5,0xffffffff),(16,5,0xffffffff),(32,5,0xffffffff)))
+        try:os.setxattr(self.root,'system.posix_acl_default',acl)
+        except OSError as error:
+            if error.errno not in (errno.ENOTSUP,errno.EOPNOTSUPP):raise
+            if os.getenv('USTAR_REQUIRE_CON02_OWNER')=='1':raise
+            self.skipTest('filesystem does not support POSIX default ACL')
+        p=self.root/'control'
+        s.replace(p,b'public worker bytes',{'uid':os.getuid(),'gid':os.getgid(),'mode':0o644,'xattrs':{}})
+        self.assertEqual({},s.capture(p)['metadata']['xattrs'])
+
     def test_metadata_uid33_root_gid_acl(self):
         s = self.module(); p, before, after = self.setup_files(s)
         if os.getuid() != 0:

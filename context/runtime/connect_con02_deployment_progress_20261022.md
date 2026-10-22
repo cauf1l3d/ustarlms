@@ -118,3 +118,13 @@ refused unsafe_release_parent in the disposable runner. Fixture now records writ
 root-owned ancestors, temporarily removes group/other write bits, and restores original
 modes in cleanup. Production stage guard remains unchanged. Final actual runtime/native
 and both source gates must rerun;7c ordinary file is not released for owner use.
+
+C533 Context39840142807 SUCCESS. Runner confirms /opt root-owned0777; fixture temporarily
+protects it and restores original mode. Staging then refused strict worker metadata.
+A real default-POSIX-ACL test reproduced replace() retaining an inherited access ACL
+absent from the desired image (RED); replace now removes inherited extras before restoring
+saved xattrs (GREEN). This preserves exact metadata; production guards are not weakened.
+Actual CI attribution remains pending; public release-file metadata diagnostics added.
+Added real fork/exit after public commit and successful explicit late restore only with
+both outage/discard flags:16 app tests PASS. Combined64tests/1local UID33 skip PASS.
+Final CI rerun required; source/worker534 and production2000/a86 unchanged.

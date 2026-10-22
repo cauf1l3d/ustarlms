@@ -95,6 +95,8 @@ def replace(path, raw, meta):
     try:
         with os.fdopen(fd, 'wb') as out:
             os.fchown(out.fileno(), meta['uid'], meta['gid']); os.fchmod(out.fileno(), meta['mode'])
+            for key in os.listxattr(out.fileno()):
+                if key not in meta['xattrs']: os.removexattr(out.fileno(), key)
             for key, value in meta['xattrs'].items(): os.setxattr(out.fileno(), key, base64.b64decode(value, validate=True))
             out.write(raw); out.flush(); os.fsync(out.fileno())
         os.replace(name, path); sync(path.parent)

@@ -337,6 +337,14 @@ def main():
     except BaseException:
         import re
         logs=[]
+        release=Path('/opt/ustar-connect/releases')/c.APP_COMMIT
+        if release.is_dir():
+            for path in sorted(release.rglob('*')):
+                if path.is_file() and not path.is_symlink():
+                    image=state.capture(path);meta=image['metadata']
+                    logs.append('PUBLIC_RELEASE_METADATA '+json.dumps({'name':str(path.relative_to(release)),
+                        'uid':meta['uid'],'gid':meta['gid'],'mode':oct(meta['mode']),
+                        'xattrs':sorted(meta['xattrs']),'sha256':c.sha(image['raw'])}))
         for unit in (*c.SERVICES,'ustar-connect-probe.service'):
             logs.append(unit+'\n'+run(['journalctl','-u',unit,'--since','5 minutes ago','-n','60','--no-pager','-o','cat'],check=False).stdout)
         text='\n'.join(logs)

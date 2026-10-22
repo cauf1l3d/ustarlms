@@ -26,7 +26,12 @@ def main(argv=None):
             # Retry only this no-nonce/no-delivery denial proof, never lease/send.
             deadline=time.monotonic()+8
             while True:
-                try:config.bridge.probe_notification_scope();break
+                try:
+                    if config.notification_contract == 2:
+                        config.bridge.probe_notification_scope(2)
+                    else:
+                        config.bridge.probe_notification_scope()
+                    break
                 except ValueError:
                     if time.monotonic()>=deadline:raise
                     time.sleep(.25)
@@ -36,7 +41,7 @@ def main(argv=None):
             print('{"status":"configuration_valid","network_used":false}')
             return 0
         worker=NotificationWorker(config.api,config.bridge,bot_id=config.bot_id,bot_username=config.bot_username,
-            allowed_subjects=config.notification_subjects)
+            allowed_subjects=config.notification_subjects,notification_contract=config.notification_contract)
         stop=threading.Event()
         def shutdown(_signal,_frame):stop.set()
         signal.signal(signal.SIGINT,shutdown);signal.signal(signal.SIGTERM,shutdown)

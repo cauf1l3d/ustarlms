@@ -1,5 +1,6 @@
 """Explicit opt-in runtime. Default CLI validates local configuration without network."""
 import argparse
+import hmac
 from dataclasses import dataclass
 import json
 import re
@@ -23,6 +24,9 @@ class Configuration:
     bridge: object
     linking_enabled: bool = False
     notification_subjects: tuple | None = None
+    acknowledgements_enabled: bool = False
+    ack_bridge: object = None
+    notification_contract: int = 1
 
 
 def load_config(path,*,notification=False):
@@ -31,7 +35,15 @@ def load_config(path,*,notification=False):
         fields = {'bot_token_file','bot_username','state_directory','telegram_proxy','onboarding_enabled',
                   'bridge_endpoint','bridge_key_id','bridge_key_file','bridge_ca_file'}
         if notification:fields=fields|{'notification_subjects'}
-        if not isinstance(value,dict) or set(value) not in (fields, fields | {'linking_enabled'}):
+        optional = {'linking_enabled'} | ({'notification_contract'} if notification else
+            {'acknowledgements_enabled', 'ack_bridge_key_id', 'ack_bridge_key_file'})
+        if not isinstance(value,dict) or not fields <= set(value) or not set(value) <= fields | optional:
+            raise ValueError('invalid_configuration')
+        ack_enabled = value.get('acknowledgements_enabled', False)
+        contract = value.get('notification_contract', 1)
+        if (type(ack_enabled) is not bool or type(contract) is not int or contract not in (1, 2)
+                or (ack_enabled and not {'ack_bridge_key_id', 'ack_bridge_key_file'} <= set(value))
+                or (not ack_enabled and {'ack_bridge_key_id', 'ack_bridge_key_file'}.intersection(value))):
             raise ValueError('invalid_configuration')
         subjects=None
         if notification:
@@ -51,14 +63,21 @@ def load_config(path,*,notification=False):
         directory = private_directory(value['state_directory'])
         token = read_private(value['bot_token_file'],512).strip()
         api = TelegramClient(token,proxy=value['telegram_proxy'])
-        bridge = None
+        bridge, key, ack_bridge = None, None, None
+        ca = value['bridge_ca_file']
+        if (value['onboarding_enabled'] or linking or notification or ack_enabled) and ca is not None:
+            ca = trusted_certificate(ca)
         if value['onboarding_enabled'] or linking or notification:
             key = read_private(value['bridge_key_file'],128).strip()
-            ca = value['bridge_ca_file']
-            if ca is not None:
-                ca = trusted_certificate(ca)
             bridge = BridgeClient(value['bridge_endpoint'],value['bridge_key_id'],key,ca_file=ca)
-        return Configuration(token.split(':',1)[0],username,directory,value['onboarding_enabled'],api,bridge,linking,subjects)
+        if ack_enabled:
+            ack_key = read_private(value['ack_bridge_key_file'],128).strip()
+            if (value['ack_bridge_key_id'] == value['bridge_key_id']
+                    or (key is not None and hmac.compare_digest(key, ack_key))):
+                raise ValueError('invalid_ack_configuration')
+            ack_bridge = BridgeClient(value['bridge_endpoint'],value['ack_bridge_key_id'],ack_key,ca_file=ca)
+        return Configuration(token.split(':',1)[0],username,directory,value['onboarding_enabled'],api,bridge,
+                             linking,subjects,ack_enabled,ack_bridge,contract)
     except Exception:
         raise ValueError('configuration_invalid') from None
 
@@ -77,6 +96,8 @@ def main(argv=None):
             verify_bot(config.api, config.bot_id, config.bot_username, require_main_app=config.onboarding_enabled)
             if config.linking_enabled:
                 config.bridge.probe_link_scope()
+            if config.acknowledgements_enabled:
+                config.ack_bridge.probe_ack_scope()
             print(json.dumps({'status':'telegram_verified','bot_username':config.bot_username,
                               'updates_consumed':False,'onboarding_enabled':config.onboarding_enabled,
                               'linking_enabled':config.linking_enabled,
@@ -89,7 +110,8 @@ def main(argv=None):
         journal = Journal(config.directory,config.bot_id)
         receiver = TelegramReceiver(config.api,config.bridge,journal,bot_id=config.bot_id,
             bot_username=config.bot_username,onboarding_enabled=config.onboarding_enabled,
-            linking_enabled=config.linking_enabled)
+            linking_enabled=config.linking_enabled,acknowledgements_enabled=config.acknowledgements_enabled,
+            ack_bridge=config.ack_bridge)
         stop = threading.Event()
         def requested_stop(_signal,_frame):
             stop.set()

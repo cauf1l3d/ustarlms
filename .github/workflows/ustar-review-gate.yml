@@ -58,7 +58,7 @@ jobs:
         run: |
           if [ "$CONNECT_EVENT" = workflow_dispatch ] && [ -f moodle/local/ustar/classes/connect/identity_service.php ]; then
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
-          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh; then
+          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh 'scripts/infra/connect_telegram*' scripts/infra/build_connect_telegram_update.py 'tests/stage/telegram*' tests/stage/run-telegram-presentation.sh; then
             echo 'connect_db=false' >> "$GITHUB_OUTPUT"
           else
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
@@ -166,6 +166,7 @@ jobs:
             artifacts/con02-ack-*
             artifacts/con02-callback-*
             artifacts/con02-update-*
+            artifacts/telegram-presentation-*
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
@@ -272,6 +273,8 @@ jobs:
         run: |
           python3 scripts/infra/build_connect_con02_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/con02-update-command
           python3 -I -B artifacts/con02-update-command/ustar-con02-update-*.py
+          python3 scripts/infra/build_connect_telegram_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/telegram-update-command
+          python3 -I -B artifacts/telegram-update-command/ustar-telegram-update-*.py
           git worktree add --detach .stage-input/con02-update-legacy a86e208029b6104150e85d0e90384f84da214c22
           python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_notification_pilot.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
           python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_bridge_activation.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
@@ -285,12 +288,14 @@ jobs:
           artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
           artifacts/con02-update-legacy/ustar-notify-pilot-*.pyz
           artifacts/con02-update-legacy/ustar-bridge-activate-*.pyz
+          artifacts/telegram-update-command/ustar-telegram-update-*.py
       - name: CON02 controller respects actual HTTPS owner renewal and recovery
         run: >-
           sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
           python3 tests/stage/con02_update_https.py
           artifacts/con02-update-command/ustar-con02-update-*.py
           artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
+          artifacts/telegram-update-command/ustar-telegram-update-*.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -300,6 +305,9 @@ jobs:
             artifacts/con02-update-runtime.json
             artifacts/con02-update-https-owner.json
             artifacts/con02-update-*-failure.log
+            artifacts/telegram-update-command/
+            artifacts/telegram-update-runtime.json
+            artifacts/telegram-update-https-owner.json
       - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
         run: |
           sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py

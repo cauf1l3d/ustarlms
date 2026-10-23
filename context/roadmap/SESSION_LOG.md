@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+
+## 23Oct — Telegram successor implementation, CI still pending
+
+Exact6c56 application/worker2300 is pinned separately from the accepted4394/534
+production release. New ordinary.py builder/controller uses a new journal namespace;
+old CON02 state is read only. App+cron2300 uses fresh pair/public-write recovery;
+explicit v3 sender enable/disable preserves ACK key/cutoffs, personal fence, cursor
+and existing preferences. Local successor20 tests and old53/1GIDskip PASS; Docker/SQL
+modeled in transaction unit tests, not production acceptance. Actual UID33/systemd/
+privateTLS and HTTPS-owner/extra AutoReport topology gates integrated, pending new CI.
+Source9984 native158/830 no assertion failures but strict ambiguous get_record notice
+fixed6c56. Its PHP8.3/runtime PASS; PHP8.2 apt/Chromium timed out, native skipped.
+No new file delivered or server change. Reserve/routing deferred;0subagents.
+
 **23Oct — owner: резерв позже, сначала завершить Telegram.**
 [Суженный проект](../proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md),
 [план самостоятельной реализации](../proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md).

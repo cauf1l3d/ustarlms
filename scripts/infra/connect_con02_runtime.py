@@ -13,6 +13,7 @@ from connect_con02_state import capture, replace, sync, unique
 
 
 def worker_files(bundle):
+    commit = bundle.reference['worker_commit']
     with tarfile.open(fileobj=io.BytesIO(bundle.worker_archive), mode='r:gz') as archive:
         members = archive.getmembers()
         require(len(members) == 8 and len({m.name for m in members}) == 8
@@ -27,8 +28,8 @@ def worker_files(bundle):
     expected = {'SOURCE_COMMIT', 'receiver.pyz', 'notifications.pyz', 'admin.pyz'} | {
                 'units/ustar-connect-' + n + '.service' for n in ('receiver', 'probe', 'notify')}
     require(set(values) == expected and set(manifest) == {'schema', 'source_commit', 'files'}
-            and manifest['schema'] == 1 and manifest['source_commit'] == APP_COMMIT
-            and values['SOURCE_COMMIT'] == (APP_COMMIT + '\n').encode()
+            and manifest['schema'] == 1 and manifest['source_commit'] == commit
+            and values['SOURCE_COMMIT'] == (commit + '\n').encode()
             and manifest['files'] == {n: sha(v) for n, v in values.items()}, 'fixed_worker_required')
     return values
 
@@ -41,8 +42,9 @@ def stage_worker(ctx):
         if not p.is_relative_to(ctx.root): break
         st = p.lstat()
         require(stat.S_ISDIR(st.st_mode) and st.st_uid == ctx.uid and not st.st_mode & 0o022, 'unsafe_release_parent')
-    target = parent / APP_COMMIT
-    manifest = (json.dumps({'schema': 1, 'source_commit': APP_COMMIT,
+    commit = ctx.bundle.reference['worker_commit']
+    target = parent / commit
+    manifest = (json.dumps({'schema': 1, 'source_commit': commit,
                 'files': {n: sha(v) for n, v in sorted(values.items())}}, sort_keys=True, indent=2) + '\n').encode()
     expected = {**values, 'manifest.json': manifest}
     def verify():
@@ -120,7 +122,7 @@ class Runtime:
             self.host.probe('v1')
             release = stage_worker(self.ctx)
             generation, cutoff = uuid.uuid4().hex, int(time.time()) + 1
-            values = profiles(self.ctx, before, generation=generation, cutoff=cutoff,
+            values = getattr(self.ctx, 'profiles', profiles)(self.ctx, before, generation=generation, cutoff=cutoff,
                               notify_secret=secrets.token_hex(32).encode(), ack_secret=secrets.token_hex(32).encode())
             self.host.validate_profiles(values)
             desired = copy.deepcopy(before['files'])
@@ -184,7 +186,8 @@ class Runtime:
         restore_workers(self.host, row['service_states'], profile='v1')
         self.exact('before'); require_https_unchanged(self.ctx, row['https'])
         self.step('runtime_disabled')
-        return {'phase': 'runtime_disabled', 'ack_enabled': False, 'application_restored': False}
+        return {'phase': 'runtime_disabled', 'ack_enabled': getattr(self.ctx, 'baseline_ack_enabled', False),
+                'application_restored': False}
 
     def disable(self):
         from connect_con02_contract import https_snapshot

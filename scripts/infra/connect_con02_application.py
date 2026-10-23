@@ -55,6 +55,10 @@ class Application:
         self.ctx, self.journal, self.locks = ctx, journal, locks
         self.d, self.host = ctx.engine, ctx.host
 
+    def database_matches(self, current, baseline, *, target):
+        return getattr(self.ctx, 'verify_database', verify_database)(
+            current, baseline, self.ctx.bundle.reference, target=target)
+
     def row(self):
         s = self.journal.load(); require(s is not None and s.get('app') is not None, 'application_transaction_required')
         return s['app']
@@ -83,7 +87,7 @@ class Application:
         from cron_release_update import CRON_TEXT
         require(images['cron_schedule']['raw'] == CRON_TEXT, 'cron_schedule_changed')
         installation = json.loads(images['cron_installation']['raw'])
-        new, new_install = patch_cron(images['cron_script']['raw'], installation)
+        new, new_install = getattr(self.ctx, 'patch_cron', patch_cron)(images['cron_script']['raw'], installation)
         desired = copy.deepcopy(images)
         desired['cron_script']['raw'] = new
         desired['cron_installation']['raw'] = (json.dumps(new_install, sort_keys=True) + '\n').encode()
@@ -92,7 +96,7 @@ class Application:
     def verify(self, row, *, target):
         self.bind(row)
         self.host.source(target=target)
-        verify_database(self.host.database(row['prefix']), row['database'], self.ctx.bundle.reference, target=target)
+        self.database_matches(self.host.database(row['prefix']), row['database'], target=target)
         self.host.controls(self.journal.load())
         self.journal.guard('app')
         return row
@@ -114,7 +118,7 @@ class Application:
                     return {**result, 'recovered_previous_run': True, 'new_upgrade_started': False}
             prefix = self.host.prefix()
             baseline = self.host.database(prefix)
-            verify_database(baseline, baseline, self.ctx.bundle.reference, target=False)
+            self.database_matches(baseline, baseline, target=False)
             self.host.source(target=False)
             controls = self.host.controls(None)
             owner = https_snapshot(self.ctx)
@@ -145,7 +149,7 @@ class Application:
                     stop_workers(self.host)
                     self.host.policy('no'); self.host.stop_web(clean=True)
                     frozen = self.host.database(prefix)
-                    verify_database(frozen, baseline, self.ctx.bundle.reference, target=False)
+                    self.database_matches(frozen, baseline, target=False)
                     require(frozen['other_clients'] == 0, 'other_database_clients')
                     self.host.stop(clean=True)
                     require(not any(r['State']['Running'] for r in self.host.inspect().values()), 'cold_stop_not_confirmed')
@@ -170,7 +174,7 @@ class Application:
                         self.step('upgrade_' + str(number))
                         self.host.cli_upgrade()
                         db = self.host.database(prefix)
-                        verify_database(db, baseline, self.ctx.bundle.reference, target=True)
+                        self.database_matches(db, baseline, target=True)
                         current = (db['schema'], db['indexes'])
                         require(schema is None or schema == current, 'repeat_schema_drift'); schema = current
                         require(self.d.p.read_file(self.d.tx.maintenance_path(self.d), 4096) == self.d.tx.MAINTENANCE,
@@ -221,7 +225,9 @@ class Application:
         self.host.restore_policies(row['restart_policies'])
         restore_workers(self.host, row['service_states'])
         self.step('app_ready')
-        return {'phase': 'app_ready', 'local_ustar': '2026102200', 'ack_enabled': False}
+        return {'phase': 'app_ready',
+                'local_ustar': str(self.ctx.bundle.reference['candidate']['versions']['local_ustar']),
+                'ack_enabled': getattr(self.ctx, 'baseline_ack_enabled', False)}
 
     def _recover(self):
         row = self.row()

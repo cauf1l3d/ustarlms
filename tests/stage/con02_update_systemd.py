@@ -189,7 +189,7 @@ class API:
   return Response(json.dumps({'ok':True,'result':v}).encode())
 c.api._opener=API();verify_bot(c.api,c.bot_id,c.bot_username)
 if sender:
- if getattr(c,'notification_contract',1)==2:c.bridge.probe_notification_scope(2)
+ if getattr(c,'notification_contract',1) in (2,3):c.bridge.probe_notification_scope(c.notification_contract)
  else:c.bridge.probe_notification_scope()
 else:
  c.bridge.probe_link_scope()
@@ -243,9 +243,10 @@ class SystemdHost(FileHost):
 def main():
     if (os.environ.get('GITHUB_ACTIONS')!='true' or os.environ.get('USTAR_CONNECT_CON02_FIXTURE')!='1'
             or os.geteuid()!=0 or not Path('/run/systemd/system').is_dir() or Path('/opt/ustar').exists()
-            or PREFIX.exists() or c.BASE.exists() or Path('/var/lib/ustar-connect-bridge').exists()
+            or PREFIX.exists() or c.BASE.exists() or Path('/var/lib/ustar-connect-telegram-update').exists()
+            or Path('/var/lib/ustar-connect-bridge').exists()
             or Path('/var/lib/ustar-connect-notify-pilot').exists()):raise RuntimeError('disposable_ci_only')
-    if len(sys.argv)!=5:raise RuntimeError('plain_artifact_old_archive_pilot_and_link_bundles_required')
+    if len(sys.argv) not in (5,6):raise RuntimeError('plain_artifact_old_archive_pilot_and_link_bundles_required')
     bundle=artifact_bundle(sys.argv[1]);legacy=c.frozen_legacy(bundle)
     old_archive=Path(sys.argv[2]);old_commit,old_values=legacy['connect_install'].validate_archive(old_archive,c.sha(old_archive.read_bytes()))
     assert old_commit==c.LEGACY_COMMIT
@@ -277,7 +278,9 @@ def main():
                     raw=self.rfile.read(int(self.headers['Content-Length']));assert len(raw)<=16384
                     kid=self.headers['X-Ustar-Key'];stamp=self.headers['X-Ustar-Time'];nonce=self.headers['X-Ustar-Nonce']
                     names={'tg_link_v1':('link_key',{'link.claim'}),'tg_notify_pilot_v1':(None,{'notification.lease','notification.begin','notification.finish'}),
-                           'tg_notify_v2':('notify_key',{'notification.lease','notification.begin_v2','notification.finish'}),'tg_ack_v1':('ack_key',{'notification.ack'})}
+                           'tg_notify_v2':('notify_key',{'notification.lease','notification.begin_v2','notification.finish'}),
+                           'tg_notify_v3':('notify_key',{'notification.lease','notification.begin_v3','notification.finish'}),
+                           'tg_ack_v1':('ack_key',{'notification.ack'})}
                     name,ops=names[kid];key=paths[name].read_text().strip() if name else '22'*32
                     msg='\n'.join(['USTAR-CONNECT-BRIDGE-v1','POST',self.path,kid,stamp,nonce,hashlib.sha256(raw).hexdigest()]).encode()
                     assert abs(int(stamp)-int(time.time()))<=30 and hmac.compare_digest(hmac.new(bytes.fromhex(key),msg,hashlib.sha256).hexdigest(),self.headers['X-Ustar-Signature'])
@@ -339,6 +342,9 @@ def main():
             'application_source':c.APP_COMMIT,'application_SQL':'modeled here; actual native lifecycle in separate Task7 gate',
             'provider_and_bridge_store':'synthetic only; no external API request'}
         out=ROOT/'artifacts/con02-update-runtime.json';out.write_text(json.dumps(evidence,indent=2)+'\n');print('CON02_UPDATE_RUNTIME=PASS')
+        if len(sys.argv)==6:
+            from telegram_update_runtime import artifact_bundle as successor_bundle, verify as verify_successor
+            verify_successor(successor_bundle(sys.argv[5]),ctx,journal,locks,host,cursor=cursor,actual_services=True)
     except BaseException:
         import re
         logs=[]
@@ -379,7 +385,7 @@ def main():
         for n,enabled in previous_enabled.items():run(['systemctl','enable' if enabled else 'disable',n],check=False)
         run(['systemctl','daemon-reload'],check=False)
         if server:server.shutdown();server.server_close()
-        for p in (PREFIX,c.BASE,Path('/opt/ustar'),Path('/var/lib/ustar-connect-bridge'),Path('/var/lib/ustar-connect-notify-pilot')):
+        for p in (PREFIX,c.BASE,Path('/var/lib/ustar-connect-telegram-update'),Path('/opt/ustar'),Path('/var/lib/ustar-connect-bridge'),Path('/var/lib/ustar-connect-notify-pilot')):
             shutil.rmtree(p,ignore_errors=True)
         for folder,mode in getattr(host,'fixture_parent_modes',{}).items():
             if folder.exists():folder.chmod(mode)

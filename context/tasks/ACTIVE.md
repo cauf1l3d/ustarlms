@@ -8,7 +8,12 @@ bounded event labels в explicit v3 без изменения v1/v2, лична�
 существующих preferences, native/runtime CI и отдельная coordinated successor поставка.
 Task1 visible ACK19tests PASS; v3/enum/config/history реализованы,57focused PASS.
 Native RED c7fe216:157tests/805assertions, ровно3новых отказа; прежние154PASS.
-Candidate2300/557files/100tables; новая native/runtime GREEN ещё pending.
+Candidate2300/557files/100tables. Source9984 both PHP/runtime PASS; native158/830
+без assertion failures, strict notice в новом test query исправлен source6c56.
+6c56 PHP8.3/runtime PASS, PHP8.2 timeout на apt/Chromium; native gate skipped, не passed.
+Successor controller/builder написаны: exact534/4394→2300, новый journal, ACK key/cutoff
+и cursor сохранены; disable-presentation возвращает v2 с ACK on. Local successor20tests
+и legacy53tests/1local GID skip PASS; actual systemd/HTTPS owner новый gate pending.
 Код ещё не поставлен: server1 app/worker534/local2200, ACK active/два owner ACK подтверждены.
 0subagents/no agent SSH/provider sends/main merge; прежний pilot не повторять, группа deferred.
 Ниже датированные checkpoint; B1 design-review больше не текущая задача.

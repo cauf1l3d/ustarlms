@@ -14,7 +14,7 @@ current_connect_checkpoint:
   deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   deployment_plan_status: completed_source_handoff_23Oct
-  stage: Telegram_completion_implementation
+  stage: Telegram_successor_controller_actual_CI_pending
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: Telegram_completion_then_group_and_Bitrix_reserve_later
   development_version: 2026102300

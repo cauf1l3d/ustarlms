@@ -122,7 +122,8 @@ class Journal:
         s = json.loads(self.read_private(self.path), object_pairs_hook=unique)
         require(isinstance(s, dict) and set(s) == {'schema', 'tool_commit', 'app_commit', 'app', 'runtime', 'history'}
                 and s['schema'] == 1 and s['tool_commit'] == self.ctx.bundle.reference['tool_commit']
-                and s['app_commit'] == APP_COMMIT and isinstance(s['history'], list), 'journal_identity')
+                and s['app_commit'] == self.ctx.bundle.reference.get('app_commit', APP_COMMIT)
+                and isinstance(s['history'], list), 'journal_identity')
         for scope in ('app', 'runtime'):
             row = s[scope]
             if row is None: continue
@@ -162,7 +163,8 @@ class Journal:
                     and descriptor(capture(p)) == descriptor(item), 'before_image_changed')
             require(desired['files'][name]['path'] == str(p), 'after_path_changed')
         s = self.load() or {'schema': 1, 'tool_commit': self.ctx.bundle.reference['tool_commit'],
-                           'app_commit': APP_COMMIT, 'app': None, 'runtime': None, 'history': []}
+                           'app_commit': self.ctx.bundle.reference.get('app_commit', APP_COMMIT),
+                           'app': None, 'runtime': None, 'history': []}
         previous = s[scope]
         require(previous is None or previous['phase'] in ('baseline_restored', 'runtime_disabled'), 'unfinished_generation')
         if previous: s['history'].append({'scope': scope, 'generation': previous['generation'], 'phase': previous['phase']})

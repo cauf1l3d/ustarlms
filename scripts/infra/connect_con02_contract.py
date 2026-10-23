@@ -35,7 +35,7 @@ def require(value, reason):
 def sha(raw): return hashlib.sha256(raw).hexdigest()
 
 
-def decode_envelope(manifest, sources, assets):
+def decode_envelope(manifest, sources, assets, *, app_commit='534764821c4f65437ab50b3c7f25578d538e9504'):
     """Also copied verbatim into the standalone bootstrap, before embedded imports."""
     import base64
     import hashlib
@@ -44,7 +44,7 @@ def decode_envelope(manifest, sources, assets):
     require(isinstance(manifest, dict) and set(manifest) == {'schema', 'tool_commit', 'app_commit',
         'worker_commit', 'sources', 'assets'} and manifest['schema'] == 1
         and re.fullmatch('[a-f0-9]{40}', manifest.get('tool_commit', ''))
-        and manifest['app_commit'] == '534764821c4f65437ab50b3c7f25578d538e9504'
+        and manifest['app_commit'] == app_commit
         and manifest['worker_commit'] == manifest['app_commit'], 'embedded_manifest')
     require(isinstance(sources, dict) and isinstance(assets, dict) and 1 <= len(sources) <= 64
             and len(sources) + len(assets) <= 1024 and not set(sources) & set(assets)
@@ -157,7 +157,8 @@ def private_failure(ctx):
     except (AttributeError, OSError, ValueError): pass
 
 
-def verify_schema_profile(snapshot, indexes, profile, tables, prefix, *, allow_historical=False):
+def verify_schema_profile(snapshot, indexes, profile, tables, prefix, *, allow_historical=False,
+                          historical_version=2026102000):
     fields = profile['schema_fields']
     rows = [r for r in snapshot['schema'] if r[0] in tables]
     require(all(len(r) == 9 for r in rows), 'schema_column_shape')
@@ -196,7 +197,7 @@ def verify_schema_profile(snapshot, indexes, profile, tables, prefix, *, allow_h
     # writers. This is a fixed alternate baseline, never arbitrary adoption or
     # an index repair. Every remaining index/column/default still must match.
     require(allow_historical and profile.get('versions') == {
-        'local_ustar': 2026102000, 'theme_ustar': 2026100202}, 'schema_indexes')
+        'local_ustar': historical_version, 'theme_ustar': 2026100202}, 'schema_indexes')
     historical = {t: list(v) for t, v in expected_indexes.items()}
     for table, field in (('local_ustar_coin_accounts', 'userid'),
                          ('local_ustar_test_results', 'attemptid')):
@@ -207,7 +208,7 @@ def verify_schema_profile(snapshot, indexes, profile, tables, prefix, *, allow_h
     return 'server1_legacy_indexes_20261023'
 
 
-def verify_database(current, baseline, reference, *, target):
+def verify_database(current, baseline, reference, *, target, historical_version=2026102000):
     require(isinstance(current, dict) and isinstance(baseline, dict), 'database_shape')
     wanted = reference['candidate' if target else 'baseline']
     expected = dict(baseline['addons'])
@@ -235,7 +236,8 @@ def verify_database(current, baseline, reference, *, target):
     current_indexes, current_prefix=index_rows(current['indexes'])
     require(current_prefix == old_prefix, 'database_index_prefix')
     index_profile = verify_schema_profile(baseline, old_indexes, reference['baseline'], old,
-                                         next(iter(old_prefix), ''), allow_historical=True)
+                                         next(iter(old_prefix), ''), allow_historical=True,
+                                         historical_version=historical_version)
     require([r for r in current['schema'] if r[0] in old] == baseline['schema'], 'old_schema_changed')
     require([r for r in current_indexes if r[0] in old] == old_indexes, 'old_indexes_changed')
     if not target:
@@ -478,7 +480,7 @@ class Host:
         # Detect additional overrides, including vendor/runtime directories.
         allowed = {'receiver': {'40-ustar-link.conf'}, 'probe': {'40-ustar-link.conf'},
                    'notify': {'50-ustar-notify-pilot.conf'}}
-        if journal and journal.get('runtime'):
+        if journal and (journal.get('runtime') or getattr(self.ctx, 'baseline_ack_enabled', False)):
             for n in ('receiver', 'probe'): allowed[n].add('60-ustar-con02-ack.conf')
         import os
         for n, names in allowed.items():

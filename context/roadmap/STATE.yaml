@@ -228,7 +228,7 @@ development_candidate:
   accepted_A1_report: context/runtime/connect_con02_ack_20261021.md
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: Telegram_presentation2300_implementation_native_GREEN_pending_production2200_unchanged
+  scope: Telegram2300_successor_implemented_actual_CI_pending_production2200_unchanged
   owner_deployment_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   manifest_deployed_false_meaning: unmerged_source_inventory_marker_owner_deployment_is_recorded_separately
   local_ustar_version: 2026102300

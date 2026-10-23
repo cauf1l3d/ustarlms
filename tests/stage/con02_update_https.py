@@ -17,7 +17,7 @@ def main():
     if (os.geteuid()!=0 or os.environ.get('GITHUB_ACTIONS')!='true'
             or os.environ.get('USTAR_CONNECT_CON02_FIXTURE')!='1' or Path('/opt/ustar').exists()):
         raise RuntimeError('disposable_ci_only')
-    if len(sys.argv)!=3:raise RuntimeError('plain_artifact_and_frozen_worker_required')
+    if len(sys.argv) not in (3,4):raise RuntimeError('plain_artifact_and_frozen_worker_required')
     bundle=artifact_bundle(sys.argv[1]);archive=Path(sys.argv[2])
     legacy=c.frozen_legacy(bundle)
     commit,values=legacy['connect_install'].validate_archive(archive,c.sha(archive.read_bytes()));assert commit==c.LEGACY_COMMIT
@@ -69,6 +69,22 @@ def main():
             'provider_requests':False,'production_access':False}
         (ROOT/'artifacts/con02-update-https-owner.json').write_text(json.dumps(report,indent=2)+'\n')
         print('CON02_UPDATE_HTTPS_OWNER=PASS')
+        if len(sys.argv)==4:
+            # An owner-registered independent virtual host, as with AutoReport,
+            # remains part of the exact topology during the successor handoff.
+            from telegram_update_runtime import artifact_bundle as successor_bundle, verify as verify_successor
+            site=manager.p.old.enabled.parent/'ustar-autoreport.conf'
+            site.write_text('Listen 127.0.0.1:19443\n<VirtualHost 127.0.0.1:19443>\nServerName autoreport.invalid\nDocumentRoot /var/www/html\n</VirtualHost>\n')
+            site.chmod(0o644)
+            owner.test_config();owner.reload()
+            saved=manager.load();observed=owner.vhosts()
+            binding='127.0.0.1:19443'
+            assert observed[binding][0]['name']=='autoreport.invalid'
+            saved['topology'][binding]=observed[binding]
+            manager.topology(saved,observed);manager.save(saved)
+            before_site=site.read_bytes()
+            verify_successor(successor_bundle(sys.argv[3]),ctx,journal,locks,host)
+            assert site.read_bytes()==before_site and owner.vhosts()[binding]==observed[binding]
     os.environ['USTAR_ACADEMY_TLS_FIXTURE']='1'
     native.main(verification=verification)
 

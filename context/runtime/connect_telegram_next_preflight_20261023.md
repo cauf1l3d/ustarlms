@@ -47,3 +47,25 @@ https://core.telegram.org/bots/webapps (официальная документ�
 BotFather настройка выполняется владельцем после рабочего HTTPS; секреты остаются
 в приватной конфигурации сервера. Reserve/Bitrix/новые CEO policies остаются вне
 текущего Telegram-приоритета.0subagents; нет agent SSH/provider sends/main merge.
+
+## Owner screenshot: KeenDNS foundation23Oct
+
+Owner supplied a router screenshot: registered `em2025.netcraze.pro`, selected
+«Прямой доступ», displayed «С сертификатом SSL» and enabled Internet access.
+The photo capture time was not established. This confirms the displayed configuration,
+not WAN public-IP/IPv4/IPv6 health, certificate coverage for an application hostname,
+port mapping or an externally usable Academy/Mini App endpoint.
+
+An agent public web fetch of `https://em2025.netcraze.pro/` returned only
+«not accessible via this tool»; no HTTP/TLS/DNS result was obtained. Do not turn this
+retrieval limitation into a production outage diagnosis. The screenshot answers the
+question of an existing domain; proceed with this company ingress as the candidate.
+No need to ask again whether the owner has a domain or to assume a new VPS is required.
+
+Official Keenetic docs verified23Oct describe separate fourth-level application names
+and per-device target ports, with the router holding its own certificate/private key:
+https://support.keenetic.com/sprinter/kn-3710/en/15884-remote-access-to-home-network-resources-with-keendns.html
+A separate application name/rule is a candidate; no router configuration was changed.
+Preserve the existing router management and services. Remaining evidence: current app
+rules below the screenshot, hostname DNS/HTTPS response and an off-LAN phone check.
+An on-server request may exercise NAT loopback and cannot replace the mobile check.

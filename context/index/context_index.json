@@ -1578,8 +1578,8 @@
     {
       "path": "context/runtime/connect_telegram_next_preflight_20261023.md",
       "domain": "runtime",
-      "size": 6062,
-      "sha256": "3eaaa860c7aab6a8825b842833a8708320ad8ea40e512e1cd1ddcb055d8550f8"
+      "size": 7576,
+      "sha256": "752ea73e3f1897dd83ab8f0753c0cd97a23d6f9ba5423f091c85b9e6e0dcc80d"
     },
     {
       "path": "context/runtime/context_refresh_report.md",

@@ -6,7 +6,9 @@
 B1 primary/fallback/новый route store отложены. Текущий scope: видимый ACK/точное время,
 bounded event labels в explicit v3 без изменения v1/v2, личная история и сохранение
 существующих preferences, native/runtime CI и отдельная coordinated successor поставка.
-Task1 two RED→GREEN,19callback/transport PASS; native presentation/history RED gate pending.
+Task1 visible ACK19tests PASS; v3/enum/config/history реализованы,57focused PASS.
+Native RED c7fe216:157tests/805assertions, ровно3новых отказа; прежние154PASS.
+Candidate2300/557files/100tables; новая native/runtime GREEN ещё pending.
 Код ещё не поставлен: server1 app/worker534/local2200, ACK active/два owner ACK подтверждены.
 0subagents/no agent SSH/provider sends/main merge; прежний pilot не повторять, группа deferred.
 Ниже датированные checkpoint; B1 design-review больше не текущая задача.

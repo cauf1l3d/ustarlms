@@ -103,3 +103,5 @@ bash /source/tests/stage/run-con02-ack.sh
 bash /source/tests/stage/run-con02-callback.sh
 
 bash /source/tests/stage/run-con02-update.sh
+
+bash /source/tests/stage/run-telegram-presentation.sh

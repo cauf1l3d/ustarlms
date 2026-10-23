@@ -15,15 +15,23 @@ from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler, HT
 PATH = '/local/ustar/connect_bridge.php'
 OPERATIONS = {'launch.create', 'launch.exchange', 'entry.status', 'entry.revoke', 'link.claim',
               'registration.options', 'registration.submit', 'registration.status',
-              'notification.lease', 'notification.begin', 'notification.begin_v2', 'notification.finish', 'notification.ack',
+              'notification.lease', 'notification.begin', 'notification.begin_v2', 'notification.begin_v3', 'notification.finish', 'notification.ack',
               'actor.open', 'actor.status', 'actor.revoke'}
 REJECTIONS = {'validation_failed', 'invalid_entry', 'revoked_entry', 'restart_required',
               'expired_launch', 'launch_consumed', 'replayed_proof', 'launch_mismatch',
               'idempotency_conflict', 'already_registered', 'receipt_expired', 'rate_limited',
               'invalid_link_code', 'invalid_challenge', 'expired_challenge', 'claimed_challenge',
               'provider_mismatch', 'link_conflict', 'invalid_delivery', 'receipt_conflict',
-              'actor_unavailable', 'native_auth_required', 'invalid_actor', 'ack_unavailable', 'ack_disabled'}
+              'actor_unavailable', 'native_auth_required', 'invalid_actor', 'ack_unavailable', 'ack_disabled', 'presentation_disabled'}
 FORM_FIELDS = {'username', 'password', 'email', 'firstname', 'lastname', 'departmentid'}
+
+
+def _unique(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result: raise ValueError('duplicate_bridge_field')
+        result[key] = value
+    return result
 
 
 class BridgeRejected(ValueError):
@@ -110,11 +118,13 @@ class BridgeClient:
         return self._probe_forbidden('registration.options','link-scope-v1')
 
     def probe_notification_scope(self, notification_contract=1) -> None:
-        if type(notification_contract) is not int or notification_contract not in (1, 2):
+        if type(notification_contract) is not int or notification_contract not in (1, 2, 3):
             raise ValueError('invalid_notification_contract')
         self._probe_forbidden('link.claim','notification-scope-v1')
-        if notification_contract == 2:
+        if notification_contract in (2, 3):
             self._probe_forbidden('notification.begin','notification-scope-v2')
+        if notification_contract == 3:
+            self._probe_forbidden('notification.begin_v2','notification-scope-v3')
 
     def probe_ack_scope(self) -> None:
         self._probe_forbidden('link.claim', 'ack-scope-v1')
@@ -154,7 +164,7 @@ class BridgeClient:
                 raw = response.read(16385)
             if len(raw) > 16384:
                 raise ValueError('bridge_response_too_large')
-            value = json.loads(raw)
+            value = json.loads(raw, object_pairs_hook=_unique)
             if not isinstance(value, dict):
                 raise ValueError('invalid_bridge_response')
             return value
@@ -162,7 +172,7 @@ class BridgeClient:
             rejection = None
             try:
                 raw = error.read(16385)
-                value = json.loads(raw) if len(raw) <= 16384 else None
+                value = json.loads(raw, object_pairs_hook=_unique) if len(raw) <= 16384 else None
                 if (error.code in (403, 409, 422, 429) and isinstance(value, dict)
                         and value.get('ok') is False):
                     rejection = BridgeRejected(value.get('reason'), value.get('field'))

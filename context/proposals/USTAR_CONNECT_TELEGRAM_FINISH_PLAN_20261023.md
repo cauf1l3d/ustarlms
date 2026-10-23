@@ -32,9 +32,9 @@ test_connect_notification_callback.py; tests/stage/con02_callback_wire.py.
 **Interfaces:** edit_notification_ack(subject:int,message_id:int,category:str,*,acknowledged_at:int|None=None)
 использует существующий editMessageReplyMarkup; optional None сохраняет старый internal caller.
 - [x] Add failing serialization+callback timestamp assertions; run2tests →2expected failures.
-- [ ] Pass canonical acknowledged_at to edit and add fixed-URL visible timestamp row; validate int/time.
-- [ ] Run full callback/transport tests; preserve unknown UI and canonical receipt semantics.
-- [ ] Commit source+tests checkpoint after diff review.
+- [x] Pass canonical acknowledged_at to edit and add fixed-URL visible timestamp row; validate int/time.
+- [x] Run full callback/transport tests; preserve unknown UI and canonical receipt semantics.
+- [x] Commit source+tests checkpoint after diff review.
 
 ### Task2: bounded event presentation v3
 **Files:** classes/connect/{notification_delivery,notification_policy,bridge_auth,bridge_service}.php;
@@ -42,9 +42,9 @@ ustar_connect/{notification_worker,telegram_api,bridge,receiver_runtime,notifica
 native connect_notification_action_test.php; new tests/r16/test_connect_telegram_presentation.py.
 **Interfaces:** begin_v3(id,lease,kid,provider,tenant,?now):array → v2 permit with version3/event enum;
 worker contract3 validates exact keys/category/event before API send_notification(...,event=event).
-- [ ] RED tests exact v1/v2 absence of event, v3 enum matching/category/type/flag/key denial.
-- [ ] Add atomic v3 begin path without changing v1/v2 dictionaries, separate feature check and scope.
-- [ ] Add sender rendering for all current bounded event labels; config/probe explicit3, v1 default.
+- [x] RED tests exact v1/v2 absence of event, v3 enum matching/category/type/flag/key denial.
+- [x] Add atomic v3 begin path without changing v1/v2 dictionaries, separate feature check and scope.
+- [x] Add sender rendering for all current bounded event labels; config/probe explicit3, v1 default.
 - [ ] Run real worker/serialization tests and native scoped dispatch, no send for malformed permit.
 - [ ] Commit feature checkpoint; app version2300, schema remains100tables, repeat savepoint idempotent.
 
@@ -53,15 +53,15 @@ worker contract3 validates exact keys/category/event before API send_notificatio
 native connect_notification_test.php; tests/mobile/connect-link.cjs.
 **Interfaces:** own_summary():array retains fields and adds event,notification_status,acknowledged_at;
 all metadata bounded/own-only. Current preference JSON keys/types unchanged.
-- [ ] Native RED assertions notice ACK and provider acceptance separate, own-only, no sensitive fields.
-- [ ] Show event label, canonical ACK+time, no task completion implication; keep current preference form.
+- [x] Native RED assertions notice ACK and provider acceptance separate, own-only, no sensitive fields.
+- [x] Show event label, canonical ACK+time, no task completion implication; keep current preference form.
 - [ ] Native tests/Chromium mobile check real Mustache/CSS at existing5widths, no view-as/CSRF regression.
 - [ ] Commit UI/history checkpoint.
 
 ### Task4: native upgrade, wire, runtime and regression acceptance
 **Files:** tests/stage/con02_callback_probe.php,con02_callback_wire.py,run-con02-callback.sh;
 run-connect.sh; .github/workflows/ustar-review-gate.yml as needed.
-- [ ] Extend actual native wire for v3 and two bounded event labels, v1/v2 regression retained.
+- [x] Extend actual native wire for v3 and two bounded event labels, v1/v2 regression retained.
 - [ ] Check2200→2300/repeat/paired restore2200, legacy99/profile retained and table100unchanged.
 - [ ] Run full r16 suite, exact-source PHP8.2/8.3/native/browser/UID33/systemd/privateTLS CI.
 - [ ] Download relevant artifacts, verify exact source/archive identities, report skips/limits honestly.

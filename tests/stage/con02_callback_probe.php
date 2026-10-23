@@ -25,6 +25,7 @@ function cb_config(array $s): void {
     global $CFG;
     $CFG->ustar_connect_channels=['telegram'=>['tenant'=>'123456','username'=>'ustarcorp_bot']];
     $CFG->ustar_connect_ack_enabled=true;$CFG->ustar_connect_ack_since=time()-60;
+    $CFG->ustar_connect_notification_presentation_enabled=true;
     $CFG->ustar_connect_notifications_enabled=true;$CFG->ustar_connect_notify_since=time()-60;
     $CFG->ustar_connect_notify_userids=[$s['uid']];
 }
@@ -57,7 +58,7 @@ if ($phase==='seed') {
     $state['notice']=cb_notice($state,'baseline');$state['snapshot']=cb_snapshot($state);cb_save($state);
     echo "CALLBACK_BASELINE_SEEDED\n";
 } else if ($phase==='verify'||$phase==='restored') {
-    $s=cb_state();$version=$phase==='verify'?2026102200:2026102100;
+    $s=cb_state();$version=$phase==='verify'?2026102300:2026102100;
     $count=count(array_filter($DB->get_tables(),fn($t)=>str_starts_with($t,'local_ustar_')));
     if ((int)get_config('local_ustar','version')!==$version||$count!==($phase==='verify'?100:99)
             || cb_snapshot($s)!==$s['snapshot'] || ($CFG->ustar_connect_ack_enabled??false)!==false) {
@@ -82,6 +83,27 @@ if ($phase==='seed') {
     file_put_contents(CALLBACK_WIRE,json_encode(['v1'=>['lease'=>$v1lease,'permit'=>$v1,'now'=>$now],
         'v2'=>['lease'=>$v2lease,'permit'=>$v2,'now'=>$v2now]],JSON_THROW_ON_ERROR));chmod(CALLBACK_WIRE,0600);
     echo "CALLBACK_PRIVATE_WIRE_READY\n";
+} else if ($phase==='wire_v3') {
+    $s=cb_state();cb_config($s);\core\session\manager::set_user(get_complete_user_data('id',$s['uid']));
+    $id=cb_notice($s,'v3');$now=time()+122;
+    $lease=notification_delivery::lease('tg_v3','telegram','123456',$now);
+    if (!$lease) { throw new RuntimeException('PRESENTATION_V3_LEASE_MISSING'); }
+    $permit=notification_delivery::begin_v3($lease['delivery'],$lease['lease'],'tg_v3','telegram','123456',$now);
+    if (($permit['version']??null)!==3||($permit['event']??null)!=='task_revised'||!$permit['ack']) {
+        throw new RuntimeException('PRESENTATION_V3_PERMIT_CHANGED');
+    }
+    $labels=[];
+    foreach (['registration_requested','registration_approved','registration_rejected','registration_adaptation_ready',
+        'task_assigned','task_revised','task_reassigned','task_started','task_sent_for_review','task_completed',
+        'task_approved','task_returned','task_cancelled','task_reminder','task_escalation',
+        'feed_comment','feed_reply','grade_request','grade_approved','grade_returned'] as $event) {
+        $labels[$event]=[\local_ustar\connect\notification_policy::category($event),\local_ustar\connect\notification_policy::label($event)];
+    }
+    $s['wire_notice']=$id;$s['wire_delivery']=$lease['delivery'];cb_save($s);
+    $wire=json_decode(file_get_contents(CALLBACK_WIRE),true,512,JSON_THROW_ON_ERROR);
+    $wire['v3']=['lease'=>$lease,'permit'=>$permit,'now'=>$now,'labels'=>$labels];
+    file_put_contents(CALLBACK_WIRE,json_encode($wire,JSON_THROW_ON_ERROR));chmod(CALLBACK_WIRE,0600);
+    echo "PRESENTATION_PRIVATE_WIRE_READY\n";
 } else if ($phase==='dispatch') {
     $s=cb_state();cb_config($s);
     // No native user session: only authenticated provider adapter may resolve the recipient.
@@ -89,6 +111,7 @@ if ($phase==='seed') {
     $keys=[];
     foreach (['tg_v1'=>['11',['notification.lease','notification.begin','notification.finish']],
               'tg_v2'=>['22',['notification.lease','notification.begin_v2','notification.finish']],
+              'tg_v3'=>['44',['notification.lease','notification.begin_v3','notification.finish']],
               'tg_ack'=>['33',['notification.ack']]] as $id=>[$secret,$ops]) {
         $keys[$id]=['secret'=>str_repeat($secret,32),'operations'=>$ops,'provider'=>'telegram','tenant'=>'123456'];
     }

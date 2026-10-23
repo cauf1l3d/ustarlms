@@ -224,6 +224,7 @@ final class connect_notification_action_test extends \advanced_testcase {
         foreach (['tg_ack'=>['notification.ack'],
                 'tg_v1'=>['notification.lease','notification.begin','notification.finish'],
                 'tg_v2'=>['notification.lease','notification.begin_v2','notification.finish'],
+                'tg_v3'=>['notification.lease','notification.begin_v3','notification.finish'],
                 'tg_link'=>['link.claim'],'tg_actor'=>['actor.open','actor.status','actor.revoke']] as $id=>$ops) {
             $key[$id]=['secret'=>str_repeat('ab',32),'operations'=>$ops,'provider'=>'telegram','tenant'=>'123456'];
         }
@@ -237,6 +238,15 @@ final class connect_notification_action_test extends \advanced_testcase {
     public function test_ack_key_cannot_lease_link_or_open_actor(): void {
         foreach (['notification.lease','notification.begin','notification.begin_v2','notification.finish','link.claim','actor.open'] as $op) {
             $this->unavailable(fn()=>$this->dispatch($op,['probe'=>'fixed']),'forbidden_operation');
+        }
+    }
+    public function test_presentation_sender_scope_cannot_downgrade_or_ack(): void {
+        foreach (['tg_v1','tg_v2','tg_link','tg_ack','tg_actor'] as $kid) {
+            $this->unavailable(fn()=>$this->dispatch('notification.begin_v3', ['delivery'=>'1','lease'=>'ud1_'.str_repeat('A',43)], $kid),
+                'forbidden_operation');
+        }
+        foreach (['notification.begin','notification.begin_v2','notification.ack','link.claim'] as $op) {
+            $this->unavailable(fn()=>$this->dispatch($op, [], 'tg_v3'), 'forbidden_operation');
         }
     }
     public function test_old_sender_link_and_actor_keys_cannot_ack_or_negotiate(): void {

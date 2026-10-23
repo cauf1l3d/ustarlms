@@ -35,6 +35,8 @@ cmp /artifacts/con02-callback-after-schema.json /artifacts/con02-callback-repeat
 php /source/tests/stage/con02_callback_probe.php wire
 python3 /source/tests/stage/con02_callback_wire.py v1
 python3 /source/tests/stage/con02_callback_wire.py v2
+php /source/tests/stage/con02_callback_probe.php wire_v3
+python3 /source/tests/stage/con02_callback_wire.py v3
 rm -f /stage/con02-callback-wire.json
 php /source/tests/stage/con02_callback_concurrency.php 2>&1 | tee /artifacts/con02-callback-concurrency.log
 sha256sum --check --strict "$CB_PAIR/SHA256SUMS" > /artifacts/con02-callback-pair-checksums.txt

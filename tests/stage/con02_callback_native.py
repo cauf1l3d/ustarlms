@@ -26,7 +26,7 @@ ROOT=Path(__file__).resolve().parents[2]
 PREFIX=Path('/usr/local/lib/ustar-connect-ack-fixture')
 STATE=Path('/var/lib/ustar-connect-ack-fixture')
 ACTION='ua1_'+'A'*43
-KEYS={'tg_ack':('33'*32,{'notification.ack'}),'tg_v2':('22'*32,{'notification.lease','notification.begin_v2','notification.finish'})}
+KEYS={'tg_ack':('33'*32,{'notification.ack'}),'tg_v2':('22'*32,{'notification.lease','notification.begin_v2','notification.finish'}),'tg_v3':('44'*32,{'notification.lease','notification.begin_v3','notification.finish'})}
 
 
 def call(args):
@@ -46,7 +46,7 @@ from ustar_connect.receiver_runtime import load_config
 from ustar_connect.receiver_journal import Journal,JournalError
 from ustar_connect.receiver import TelegramReceiver,verify_bot
 phase,profile=sys.argv[2:4]
-sender=phase=='sender'
+sender=phase in ('sender','sender3')
 try:c=load_config(profile,notification=sender)
 except ValueError:
  from ustar_connect.private_files import read_private,private_directory
@@ -92,13 +92,16 @@ class API:
     rows=p['reply_markup']['inline_keyboard'];assert rows[0][0]['callback_data']=='ua1_'+'A'*43
     assert rows[1][0]['url']=='https://ustar.local/local/ustar/tasks.php'
     assert 'PRIVATE' not in p['text']
+    if phase=='sender3':assert 'Назначена задача' in p['text']
    value={'message_id':992,'chat':{'id':p['chat_id'],'type':'private'}}
   elif method=='answerCallbackQuery':
    assert phase=='candidate' and timeout==3 and p['cache_time']==0
    assert p['text'].startswith('Подтверждено · ') and p['text'].endswith(' UTC');self.answers+=1;value=True
   elif method=='editMessageReplyMarkup':
    assert phase=='candidate' and timeout==3 and p['chat_id']==77777 and p['message_id']==992
-   rows=p['reply_markup']['inline_keyboard'];assert len(rows)==1 and 'url' in rows[0][0]
+   rows=p['reply_markup']['inline_keyboard'];assert len(rows)==2
+   assert rows[0][0]['text'].startswith('✓ Принято · ') and rows[0][0]['text'].endswith(' UTC')
+   assert all(row[0]['url']=='https://ustar.local/local/ustar/tasks.php' and 'callback_data' not in row[0] for row in rows)
    self.edits+=1;value={'message_id':992,'chat':{'id':77777,'type':'private'}}
   else:raise AssertionError('unexpected provider method')
   return Response(json.dumps({'ok':True,'result':value}).encode())
@@ -106,11 +109,11 @@ api=API();c.api._opener=api
 verify_bot(c.api,c.bot_id,c.bot_username)
 if sender:
  from ustar_connect.notification_worker import NotificationWorker
- c.bridge.probe_notification_scope(2)
+ c.bridge.probe_notification_scope(c.notification_contract)
  w=NotificationWorker(c.api,c.bridge,bot_id=c.bot_id,bot_username=c.bot_username,
   allowed_subjects=c.notification_subjects,notification_contract=c.notification_contract)
  assert w.step()=={'status':'provider_accepted'} and api.sent==1
- print('CALLBACK_SENDER_CREDENTIAL_TLS=PASS',flush=True)
+ print('CALLBACK_SENDER_CREDENTIAL_TLS_V3=PASS' if phase=='sender3' else 'CALLBACK_SENDER_CREDENTIAL_TLS=PASS',flush=True)
 else:
  if phase=='candidate':
   c.ack_bridge.probe_ack_scope()
@@ -159,8 +162,8 @@ def main():
               '-addext','subjectAltName=IP:127.0.0.1','-keyout',str(private/(name+'.key')),'-out',str(private/(name+'.crt'))])
     write(PREFIX/'wrong-ca.crt',(private/'wrong.crt').read_bytes(),0o644)
     write(private/'telegram.token','123456:synthetic-fixture-not-a-real-token')
-    write(private/'ack.key','33'*32);write(private/'sender.key','22'*32)
-    record={'ackat':0,'acks':0,'begins':0,'finishes':0,'nonces':set(),'peers':set()}
+    write(private/'ack.key','33'*32);write(private/'sender.key','22'*32);write(private/'sender3.key','44'*32)
+    record={'ackat':0,'acks':0,'begins':0,'finishes':0,'v3_begins':0,'nonces':set(),'peers':set()}
     class Handler(BaseHTTPRequestHandler):
         def log_message(self,*args):pass
         def do_POST(self):
@@ -178,10 +181,11 @@ def main():
                 else:
                     assert nonce not in record['nonces'];record['nonces'].add(nonce)
                     if op=='notification.lease':result={'delivery':1,'lease':'ud1_'+'A'*43,'expires':int(time.time())+60}
-                    elif op=='notification.begin_v2':
+                    elif op in ('notification.begin_v2','notification.begin_v3'):
                         record['begins']+=1;now=int(time.time())
                         result={'status':'sending','subject':'77777','category':'tasks','severity':'normal','occurred_at':now,
                                 'send_before':now+10,'version':2,'ack':{'action':ACTION,'expires':now+3600}}
+                        if op=='notification.begin_v3':result.update(version=3,event='task_assigned');record['v3_begins']+=1
                     elif op=='notification.finish':
                         assert p['outcome']=='provider_accepted' and p['provider_ref']=='992'
                         record['finishes']+=1;result={'status':'provider_accepted'}
@@ -212,17 +216,17 @@ def main():
         conn.close()
     units=['ustar-connect-receiver.service' ,'ustar-connect-notify.service'];dropins=[]
     def configure(phase):
-        sender=phase=='sender';unit=units[1 if sender else 0];mount='/run/credentials/'+unit+'/'
+        sender=phase in ('sender','sender3');unit=units[1 if sender else 0];mount='/run/credentials/'+unit+'/'
         c={'bot_token_file':mount+'telegram.token','bot_username':'ustarcorp_bot',
            'state_directory':'/var/lib/ustar-connect-ack-sender-fixture' if sender else str(STATE),
            'telegram_proxy':'http://127.0.0.1:18081','onboarding_enabled':False,'linking_enabled':False,
-           'bridge_endpoint':endpoint,'bridge_key_id':'tg_v2' if sender else 'tg_link_unused',
+           'bridge_endpoint':endpoint,'bridge_key_id':('tg_v3' if phase=='sender3' else 'tg_v2') if sender else 'tg_link_unused',
            'bridge_key_file':mount+'bridge.key','bridge_ca_file':mount+'bridge-ca.crt'}
-        if sender:c.update(notification_subjects=['77777'],notification_contract=2)
+        if sender:c.update(notification_subjects=['77777'],notification_contract=3 if phase=='sender3' else 2)
         if phase=='candidate':c.update(acknowledgements_enabled=True,ack_bridge_key_id='tg_ack',ack_bridge_key_file=mount+'ack-bridge.key')
         profile=private/(phase+'.json');write(profile,json.dumps(c))
         sources={'profile.json':profile,'telegram.token':private/'telegram.token','bridge-ca.crt':private/'ca.crt'}
-        if sender:sources['bridge.key']=private/'sender.key'
+        if sender:sources['bridge.key']=private/('sender3.key' if phase=='sender3' else 'sender.key')
         if phase=='candidate':sources['ack-bridge.key']=private/'ack.key'
         dropin=Path('/etc/systemd/system')/(unit+'.d')/'99-con02-ack-fixture.conf'
         if dropin not in dropins:
@@ -233,7 +237,7 @@ def main():
         data+=''.join('LoadCredential='+n+':'+str(p)+'\n' for n,p in sources.items())
         data+='StateDirectory=\nStateDirectory='+Path(c['state_directory']).name+'\nStateDirectoryMode=0700\nExecStart=\nExecStart=/usr/bin/python3 -I -u '+str(PREFIX/'wrapper.py')+' '+str(pyz)+' '+phase+' %d/profile.json '+str(PREFIX/'wrong-ca.crt')+'\nRestart=no\n'
         write(dropin,data,0o644);call(['systemctl','daemon-reload']);call(['systemctl','start',unit])
-        marker='CALLBACK_SENDER_CREDENTIAL_TLS=PASS' if sender else 'CALLBACK_PHASE_'+phase.upper()+'=PASS'
+        marker=('CALLBACK_SENDER_CREDENTIAL_TLS_V3=PASS' if phase=='sender3' else 'CALLBACK_SENDER_CREDENTIAL_TLS=PASS') if sender else 'CALLBACK_PHASE_'+phase.upper()+'=PASS'
         end=time.monotonic()+20
         while time.monotonic()<end:
             logs=call(['journalctl','-u',unit,'--no-pager','-o','cat'])
@@ -246,19 +250,19 @@ def main():
         assert ACTION not in logs and '33'*32 not in logs and 'synthetic-fixture-not-a-real-token' not in logs
     try:
         for unit in units:call(['systemctl','stop',unit])
-        configure('old');configure('sender');configure('candidate');configure('disabled');configure('rollback')
+        configure('old');configure('sender');configure('sender3');configure('candidate');configure('disabled');configure('rollback')
         with sqlite3.connect('file:'+str(STATE/'receiver.sqlite3')+'?mode=ro',uri=True) as db:
             assert db.execute('PRAGMA user_version').fetchone()[0]==1
             assert db.execute('SELECT next_offset FROM state').fetchone()[0]==104
             rows=db.execute('SELECT update_id,kind,state FROM events ORDER BY update_id').fetchall()
             assert len(rows)==4 and rows[1]==(101,'ack','sent')
         assert STATE.stat().st_uid==33 and STATE.stat().st_mode&0o777==0o700
-        assert record['acks']==record['begins']==record['finishes']==1 and record['peers']=={'127.0.0.1'}
+        assert record['acks']==record['v3_begins']==1 and record['begins']==record['finishes']==2 and record['peers']=={'127.0.0.1'}
         evidence={'result':'CON02_CALLBACK_RUNTIME=PASS','receiver_uid':33,'schema':1,'cursor':104,
-                  'handoff':['a86','v2_sender','candidate_ACK','disabled','a86'],
+                  'handoff':['a86','v2_sender','v3_sender','candidate_ACK','disabled','a86'],
                   'private_TLS_verified':True,'wrong_CA_denied':True,'wrong_peer_and_HMAC_denied':True,'separate_credentials':True,
                   'single_journal_lock':True,'provider':'synthetic_only','bridge_store':'synthetic; actual Moodle in separate DB job',
-                  'ACK_calls':1,'sender_begin_v2':1,'sender_finish':1,'root_credentials_unreadable':True}
+                  'ACK_calls':1,'sender_begin_v2':1,'sender_begin_v3':1,'sender_finish':2,'root_credentials_unreadable':True}
         out=ROOT/'artifacts/con02-callback-runtime.json';out.parent.mkdir(exist_ok=True);out.write_text(json.dumps(evidence,indent=2)+'\n')
         print('CON02_CALLBACK_RUNTIME=PASS')
     finally:

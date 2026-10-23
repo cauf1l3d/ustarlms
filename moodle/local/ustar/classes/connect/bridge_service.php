@@ -17,7 +17,7 @@ final class bridge_service {
             'registration.submit' => ['browser', 'command', 'departmentid', 'email', 'firstname', 'lastname', 'password', 'session', 'username'],
             'link.claim' => ['auth_date', 'code', 'proof', 'provider', 'subject', 'tenant'],
             'notification.lease' => ['limit'],
-            'notification.begin', 'notification.begin_v2' => ['delivery', 'lease'],
+            'notification.begin', 'notification.begin_v2', 'notification.begin_v3' => ['delivery', 'lease'],
             'notification.ack' => ['action', 'message_id', 'provider', 'subject', 'tenant'],
             'notification.finish' => ['delivery', 'lease', 'outcome', 'provider_ref', 'reason', 'retry_after'],
         };
@@ -44,15 +44,17 @@ final class bridge_service {
         if ($op === 'notification.ack') {
             return notification_action::acknowledge($payload['action'], $sender, $payload['message_id'], time());
         }
-        if ($op === 'notification.begin' || $op === 'notification.begin_v2' || $op === 'notification.finish') {
+        if (in_array($op, ['notification.begin','notification.begin_v2','notification.begin_v3','notification.finish'], true)) {
             if (!preg_match('/\A[1-9][0-9]{0,18}\z/', $payload['delivery'])
                     || filter_var($payload['delivery'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) === false) {
                 throw new \InvalidArgumentException('invalid_delivery');
             }
-            if ($op === 'notification.begin' || $op === 'notification.begin_v2') {
-                return $op === 'notification.begin_v2'
-                    ? notification_delivery::begin_v2((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant'])
-                    : notification_delivery::begin((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']);
+            if ($op !== 'notification.finish') {
+                return match ($op) {
+                    'notification.begin_v3' => notification_delivery::begin_v3((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']),
+                    'notification.begin_v2' => notification_delivery::begin_v2((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']),
+                    default => notification_delivery::begin((int)$payload['delivery'], $payload['lease'], $kid, $request['provider'], $request['tenant']),
+                };
             }
             if (!preg_match('/\A(?:0|[1-9][0-9]{0,4})\z/', $payload['retry_after'])) { throw new \InvalidArgumentException('invalid_delivery'); }
             return notification_delivery::finish((int)$payload['delivery'], $payload['lease'], $payload['outcome'],

@@ -7,6 +7,7 @@ from urllib.parse import urlsplit
 from urllib.request import Request, build_opener, HTTPSHandler, ProxyHandler
 
 from .bridge import _NoRedirect, _token
+from .notification_events import event_label
 
 REASONS = {'transport_unavailable', 'invalid_response', 'unauthorized', 'consumer_conflict',
            'rate_limited', 'forbidden', 'api_rejected'}
@@ -162,12 +163,13 @@ class TelegramClient:
             raise ValueError('invalid_link_outcome')
         return self._send(subject, {'text': texts[outcome], 'link_preview_options': {'is_disabled': True}})
 
-    def send_notification(self, subject, category, severity, occurred_at, *, ack=None):
+    def send_notification(self, subject, category, severity, occurred_at, *, ack=None, event=None):
         from datetime import datetime, timezone
         titles={'registration':'Регистрация','tasks':'Задачи','feed':'Лента','grades':'Грейды'}
         labels={'normal':'Новое событие','action':'Требуется действие','critical':'Важное событие'}
         if category not in titles or severity not in labels or type(occurred_at) is not int or not 0<occurred_at<2**32:
             raise ValueError('invalid_notification')
+        heading = event_label(category, event)+'\n'+labels[severity] if event is not None else labels[severity]
         if ack is not None:
             if (not isinstance(ack, dict) or set(ack) != {'action', 'expires'}
                     or type(ack['expires']) is not int or not 0 < ack['expires'] < 2**32):
@@ -177,7 +179,7 @@ class TelegramClient:
         keyboard = self._notification_keyboard(category)
         if ack is not None:
             keyboard.insert(0, [{'text': 'Принял', 'callback_data': ack['action']}])
-        return self._send(subject,{'text':f'Академия USTAR · {titles[category]}\n{labels[severity]}\n{date}\n\n'
+        return self._send(subject,{'text':f'Академия USTAR · {titles[category]}\n{heading}\n{date}\n\n'
             'Подробности доступны в Академии с учётом ваших текущих прав. Откройте её в браузере и войдите своей учётной записью.',
             'reply_markup':{'inline_keyboard':keyboard},
             'link_preview_options':{'is_disabled':True}})

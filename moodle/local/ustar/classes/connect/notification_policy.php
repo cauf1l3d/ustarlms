@@ -15,6 +15,23 @@ final class notification_policy {
         'grade_request' => 'grades', 'grade_approved' => 'grades', 'grade_returned' => 'grades',
     ];
     public static function category(string $event): ?string { return self::EVENTS[$event] ?? null; }
+    public static function label(string $event): string {
+        return match ($event) {
+            'registration_requested' => 'Новая заявка на регистрацию',
+            'registration_approved' => 'Регистрация одобрена',
+            'registration_rejected' => 'Решение по регистрации',
+            'registration_adaptation_ready' => 'Адаптация сотрудника готова',
+            'task_assigned' => 'Назначена задача', 'task_revised' => 'Задача изменена',
+            'task_reassigned' => 'Исполнитель задачи изменён', 'task_started' => 'Работа над задачей начата',
+            'task_sent_for_review' => 'Задача отправлена на проверку', 'task_completed' => 'Задача выполнена',
+            'task_approved' => 'Результат задачи принят', 'task_returned' => 'Задача возвращена на доработку',
+            'task_cancelled' => 'Задача отменена', 'task_reminder' => 'Напоминание о задаче',
+            'task_escalation' => 'Требуется внимание к задаче',
+            'feed_comment' => 'Новый комментарий', 'feed_reply' => 'Новый ответ на комментарий',
+            'grade_request' => 'Новая заявка на грейд', 'grade_approved' => 'Грейд подтверждён',
+            'grade_returned' => 'Заявка на грейд возвращена', default => 'Событие',
+        };
+    }
     public static function ttl(string $event): int {
         return in_array($event, ['task_reminder', 'feed_comment', 'feed_reply'], true) ? HOURSECS : DAYSECS;
     }

@@ -276,7 +276,7 @@ class VersionTwoNotifications(unittest.TestCase):
         self.replies(self.lease,self.v2)
         self.assertEqual('unavailable',self.worker.step()['status'])
         self.api.send_notification.assert_not_called()
-        for invalid in (True,False,0,3,'2',None):
+        for invalid in (True,False,0,4,'2',None):
             with self.assertRaises(ValueError):
                 self.module.NotificationWorker(self.api,self.bridge,bot_id='123456',
                     bot_username='synthetic_academy_bot',notification_contract=invalid)

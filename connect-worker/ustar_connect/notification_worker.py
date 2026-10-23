@@ -4,6 +4,7 @@ import time
 
 from .bridge import _token
 from .telegram_api import TelegramError
+from .notification_events import event_label
 
 CATEGORIES = {'registration','tasks','feed','grades'}
 SEVERITIES = {'normal','action','critical'}
@@ -12,7 +13,7 @@ SEVERITIES = {'normal','action','critical'}
 class NotificationWorker:
     def __init__(self, api, bridge, *, bot_id, bot_username, clock=time.time, allowed_subjects=None,
                  notification_contract=1):
-        if type(notification_contract) is not int or notification_contract not in (1, 2):
+        if type(notification_contract) is not int or notification_contract not in (1, 2, 3):
             raise ValueError('invalid_notification_contract')
         self.notification_contract = notification_contract
         if allowed_subjects is not None and (not isinstance(allowed_subjects,(list,tuple))
@@ -64,23 +65,25 @@ class NotificationWorker:
                 return {'status':'unavailable'}
             _token(lease['lease'],'ud1')
             payload={'delivery':str(lease['delivery']),'lease':lease['lease']}
-            operation = 'notification.begin_v2' if self.notification_contract == 2 else 'notification.begin'
+            operation = {1: 'notification.begin', 2: 'notification.begin_v2', 3: 'notification.begin_v3'}[self.notification_contract]
             permit=self.request(operation,payload)
         except Exception:return {'status':'unavailable'}
         if permit in ({'status':'cancelled'},{'status':'retry_wait'}):return permit
         # A lost or malformed begin must not authorize a send. Server retires sending as uncertain.
         fields = {'status','subject','category','severity','occurred_at','send_before'}
-        if self.notification_contract == 2: fields |= {'version', 'ack'}
+        if self.notification_contract in (2, 3): fields |= {'version', 'ack'}
+        if self.notification_contract == 3: fields.add('event')
         if (not isinstance(permit,dict) or set(permit)!=fields
                 or permit['status']!='sending' or not isinstance(permit['subject'],str)
                 or not re.fullmatch(r'[1-9][0-9]{0,15}',permit['subject'])
-                or not 0<int(permit['subject'])<2**52 or permit['category'] not in CATEGORIES
+                or not 0<int(permit['subject'])<2**52 or not isinstance(permit['category'], str)
+                or permit['category'] not in CATEGORIES or not isinstance(permit['severity'], str)
                 or permit['severity'] not in SEVERITIES or type(permit['occurred_at']) is not int
                 or not 0<permit['occurred_at']<=now+30 or type(permit['send_before']) is not int
                 or not int(self.clock())<permit['send_before']<=now+10):
             return {'status':'unavailable'}
-        if self.notification_contract == 2:
-            if type(permit['version']) is not int or permit['version'] != 2:
+        if self.notification_contract in (2, 3):
+            if type(permit['version']) is not int or permit['version'] != self.notification_contract:
                 return {'status':'unavailable'}
             ack = permit['ack']
             if ack is not None:
@@ -90,6 +93,9 @@ class NotificationWorker:
                     return {'status':'unavailable'}
                 try: _token(ack['action'], 'ua1')
                 except ValueError: return {'status':'unavailable'}
+        if self.notification_contract == 3:
+            try: event_label(permit['category'], permit['event'])
+            except ValueError: return {'status':'unavailable'}
         outcome,ref,reason,retry='uncertain','','invalid_response',0
         self.next_attempt=now+1
         if self.allowed_subjects is not None and permit['subject'] not in self.allowed_subjects:
@@ -99,7 +105,8 @@ class NotificationWorker:
                 return {'status':'failed'} if result=={'status':'failed'} else {'status':'receipt_unconfirmed'}
             except Exception:return {'status':'receipt_unconfirmed'}
         try:
-            kwargs = {'ack': permit['ack']} if self.notification_contract == 2 else {}
+            kwargs = {'ack': permit['ack']} if self.notification_contract in (2, 3) else {}
+            if self.notification_contract == 3: kwargs['event'] = permit['event']
             response=self.api.send_notification(int(permit['subject']),permit['category'],permit['severity'],permit['occurred_at'],**kwargs)
             chat=response.get('chat',{}) if isinstance(response,dict) else {}
             if (type(response.get('message_id')) is int and 0<response['message_id']<2**63

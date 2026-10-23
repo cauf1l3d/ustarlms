@@ -27,8 +27,8 @@ def main(argv=None):
             deadline=time.monotonic()+8
             while True:
                 try:
-                    if config.notification_contract == 2:
-                        config.bridge.probe_notification_scope(2)
+                    if config.notification_contract in (2, 3):
+                        config.bridge.probe_notification_scope(config.notification_contract)
                     else:
                         config.bridge.probe_notification_scope()
                     break

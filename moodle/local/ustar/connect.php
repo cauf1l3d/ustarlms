@@ -82,6 +82,9 @@ if (isset($data['preferences'])) {
 }
 foreach ($data['deliveries'] ?? [] as $i => $delivery) {
     $data['deliveries'][$i]['categorylabel'] = $categories[$delivery['category']] ?? 'Событие';
+    $data['deliveries'][$i]['eventlabel'] = \local_ustar\connect\notification_policy::label($delivery['event'] ?? '');
+    $data['deliveries'][$i]['acknowledged'] = $delivery['notification_status'] === 'acknowledged' && $delivery['acknowledged_at'] > 0;
+    $data['deliveries'][$i]['ack_label'] = $delivery['acknowledged_at'] ? userdate($delivery['acknowledged_at']) : '';
     $data['deliveries'][$i]['statuslabel'] = ['pending' => 'В очереди', 'leased' => 'Проверяется', 'sending' => 'Отправляется',
         'provider_accepted' => 'Принято Telegram', 'retry_wait' => 'Ожидает повтора', 'uncertain' => 'Результат неизвестен — автоматического повтора нет',
         'failed' => 'Не доставлено', 'cancelled' => 'Отменено: событие или доступ изменились'][$delivery['status']] ?? 'Недоступно';

@@ -64,12 +64,12 @@
       <label>Минимальный интервал, минут<input type="number" name="interval_minutes" value="{{interval_minutes}}" min="1" max="1440" required></label>
       <button type="submit" class="u-btn u-btn--primary">Сохранить уведомления</button>
     </form>
-    <p>Отправка начнётся после включения канала администратором. Подтверждение доставки не означает прочтение или выполнение задачи.</p>
+    <p>Отправка начнётся после включения канала администратором. «Принял» подтверждает получение уведомления и не означает выполнение задачи. Будущие напоминания о незавершённой задаче сохраняются.</p>
   </section>
   {{/preferences}}
   <section class="u-panel u-ux-form"><h2>Доставка моих уведомлений</h2>
     <p>Последние 20 новых событий. Неопределённый результат не отправляется повторно автоматически.</p>
-    {{#deliveries}}<article class="u-ux-question"><h3>{{categorylabel}}</h3><p>{{statuslabel}}</p><p>{{time_label}} · Попыток: {{attempts}}</p>{{#next_label}}<p>Следующая проверка: {{next_label}}</p>{{/next_label}}</article>{{/deliveries}}
+    {{#deliveries}}<article class="u-ux-question"><h3>{{eventlabel}}</h3><p>{{categorylabel}} · {{statuslabel}}</p><p>{{time_label}} · Попыток: {{attempts}}</p>{{#acknowledged}}<p role="status">✓ Принято · {{ack_label}}</p>{{/acknowledged}}{{^acknowledged}}<p>Личное подтверждение ещё не получено.</p>{{/acknowledged}}{{#next_label}}<p>Следующая проверка: {{next_label}}</p>{{/next_label}}</article>{{/deliveries}}
     {{^deliveries}}<p>Доставок пока нет. Нужны подтверждённая связь, ваше согласие и включённый канал; событие должно оставаться актуальным.</p>{{/deliveries}}
   </section>
 </main>

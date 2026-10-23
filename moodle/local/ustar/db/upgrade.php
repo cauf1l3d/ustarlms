@@ -4986,5 +4986,9 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
         upgrade_plugin_savepoint(true, 2026102200, 'local', 'ustar');
     }
+    if ($oldversion < 2026102300) {
+        // Presentation only: retain links, v1 preferences, queues and ACK facts; no activation/replay.
+        upgrade_plugin_savepoint(true, 2026102300, 'local', 'ustar');
+    }
 return true;
 }

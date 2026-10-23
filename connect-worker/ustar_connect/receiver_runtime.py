@@ -41,7 +41,7 @@ def load_config(path,*,notification=False):
             raise ValueError('invalid_configuration')
         ack_enabled = value.get('acknowledgements_enabled', False)
         contract = value.get('notification_contract', 1)
-        if (type(ack_enabled) is not bool or type(contract) is not int or contract not in (1, 2)
+        if (type(ack_enabled) is not bool or type(contract) is not int or contract not in (1, 2, 3)
                 or (ack_enabled and not {'ack_bridge_key_id', 'ack_bridge_key_file'} <= set(value))
                 or (not ack_enabled and {'ack_bridge_key_id', 'ack_bridge_key_file'}.intersection(value))):
             raise ValueError('invalid_configuration')

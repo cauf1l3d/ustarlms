@@ -54,7 +54,9 @@ class AckConfiguration(unittest.TestCase):
         value={**self.value,'notification_subjects':['77777'],'linking_enabled':False,'notification_contract':2}
         parsed=self.load(value,notification=True)
         self.assertEqual(2,parsed.notification_contract);self.assertIsNone(parsed.ack_bridge)
-        for bad in ({**value,'notification_contract':True},{**value,'notification_contract':3},
+        parsed=self.load({**value,'notification_contract':3},notification=True)
+        self.assertEqual(3,parsed.notification_contract);self.assertIsNone(parsed.ack_bridge)
+        for bad in ({**value,'notification_contract':True},{**value,'notification_contract':4},
                     {**value,'acknowledgements_enabled':False},{**value,'ack_bridge_key_file':str(self.root/'ack')}):
             with self.assertRaises(ValueError):self.load(bad,notification=True)
 

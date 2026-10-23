@@ -139,19 +139,33 @@ final class notification_delivery {
         return $row;
     }
     public static function begin(int $id, #[\SensitiveParameter] string $lease, string $kid, string $provider, string $tenant, ?int $now = null): array {
-        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, false);
+        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, 1);
     }
     /** Explicit v2 only: v1 keys and permission boundary stay unchanged. */
     public static function begin_v2(int $id, #[\SensitiveParameter] string $lease, string $kid,
             string $provider, string $tenant, ?int $now = null): array {
         notification_action::require_enabled();
-        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, true);
+        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, 2);
+    }
+    /** Version3 is a separate scope, never an extra field in an old permit. */
+    public static function begin_v3(int $id, #[\SensitiveParameter] string $lease, string $kid,
+            string $provider, string $tenant, ?int $now = null): array {
+        self::presentation_enabled();
+        return self::begin_permit($id, $lease, $kid, $provider, $tenant, $now, 3);
+    }
+    private static function presentation_enabled(): void {
+        global $CFG;
+        if (($CFG->ustar_connect_notification_presentation_enabled ?? false) !== true) {
+            throw new \InvalidArgumentException('presentation_disabled');
+        }
+        notification_action::require_enabled();
     }
     private static function begin_permit(int $id, #[\SensitiveParameter] string $lease, string $kid,
-            string $provider, string $tenant, ?int $now, bool $versiontwo): array {
+            string $provider, string $tenant, ?int $now, int $version): array {
         $now ??= time();
-        return identity_service::atomic(function() use ($id, $lease, $kid, $provider, $tenant, $now, $versiontwo): array {
-            if ($versiontwo) { notification_action::require_enabled(); }
+        return identity_service::atomic(function() use ($id, $lease, $kid, $provider, $tenant, $now, $version): array {
+            if ($version === 3) { self::presentation_enabled(); }
+            else if ($version === 2) { notification_action::require_enabled(); }
             global $DB;
             $row = self::fenced($id, $lease, $kid, $provider, $tenant);
             if ($row->status !== 'leased' || (int)$row->connleaseuntil <= $now) { throw new \InvalidArgumentException('invalid_delivery'); }
@@ -167,10 +181,11 @@ final class notification_delivery {
             $permit = ['status' => 'sending', 'subject' => $link->subject,
                 'category' => notification_policy::category($notice->eventtype), 'severity' => $notice->severity,
                 'occurred_at' => (int)$notice->timecreated, 'send_before' => $now + 10];
-            if ($versiontwo) {
-                $permit['version'] = 2;
+            if ($version >= 2) {
+                $permit['version'] = $version;
                 $permit['ack'] = notification_action::issue($notice, $row, $link, $now);
             }
+            if ($version === 3) { $permit['event'] = (string)$notice->eventtype; }
             return $permit;
         });
     }
@@ -204,12 +219,17 @@ final class notification_delivery {
     public static function own_summary(): array {
         global $DB, $USER;
         identity_service::owned_links();
-        $rows = $DB->get_records_sql('SELECT d.id,d.status,d.attempts,d.nextattempt,d.timemodified,n.eventtype
+        $rows = $DB->get_records_sql('SELECT d.id,d.status,d.attempts,d.nextattempt,d.timemodified,n.eventtype,
+                n.status AS notification_status,n.ackat
             FROM {local_ustar_notify_delivery} d JOIN {local_ustar_notifications} n ON n.id = d.notificationid
             WHERE d.connectversion = 1 AND d.channel = :channel AND n.userid = :uid ORDER BY d.id DESC',
             ['channel' => 'telegram', 'uid' => (int)$USER->id], 0, 20);
         return array_map(static fn($r) => ['category' => notification_policy::category($r->eventtype),
             'status' => $r->status, 'attempts' => (int)$r->attempts, 'nextattempt' => (int)$r->nextattempt,
-            'timemodified' => (int)$r->timemodified], array_values($rows));
+            'timemodified' => (int)$r->timemodified,
+            'event' => notification_policy::category($r->eventtype) ? $r->eventtype : null,
+            'notification_status' => in_array($r->notification_status, ['unread','read','acknowledged'], true)
+                ? $r->notification_status : 'unavailable',
+            'acknowledged_at' => $r->notification_status === 'acknowledged' ? max(0,(int)$r->ackat) : 0], array_values($rows));
     }
 }

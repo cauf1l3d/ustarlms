@@ -65,10 +65,10 @@ final class connect_notification_test extends \advanced_testcase {
         $CFG->ustar_connect_ack_enabled = true; $CFG->ustar_connect_ack_since = time()-60;
         $CFG->ustar_connect_notify_userids = [(int)$this->employee->id];
         $id = $this->notice(); $lease = $this->lease();
-        $before = $DB->get_record('local_ustar_notify_delivery', ['notificationid'=>$id]);
+        $before = $DB->get_record('local_ustar_notify_delivery', ['id'=>$lease['delivery']], '*', MUST_EXIST);
         $this->denied(fn()=>notification_delivery::begin_v3($lease['delivery'], $lease['lease'],
             'tg_delivery', 'telegram', '123456'), 'presentation_disabled');
-        $this->assertEquals($before, $DB->get_record('local_ustar_notify_delivery', ['notificationid'=>$id]));
+        $this->assertEquals($before, $DB->get_record('local_ustar_notify_delivery', ['id'=>$lease['delivery']], '*', MUST_EXIST));
         $CFG->ustar_connect_notification_presentation_enabled = true;
         $permit = notification_delivery::begin_v3($lease['delivery'], $lease['lease'], 'tg_delivery', 'telegram', '123456');
         $this->assertSame(3, $permit['version']); $this->assertSame('task_revised', $permit['event']);

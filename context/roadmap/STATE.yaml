@@ -2,16 +2,16 @@ schema_version: 2
 updated_at: '2026-10-23'
 project: USTAR Academy
 stage: connect_CON02_deployment_owner_check
-stage_label: CON02 controller source CI verified; ordinary.py ready for owner readonly check
+stage_label: CON02 historical index compatibility fix implemented; required CI pending
 current_activity: >-
-  Completed approved plan9tasks/45steps as source and handoff,0subagents/author review.
-  Toolb971bc38 Context39844480447/Review39844480386 SUCCESS; PHP8.2/8.3 each1040tests/
-  153environment skips, strictroot11/11, native154/800+direct2000to2200/repeat/restore,
-  actual systemd/UID33/private TLS and HTTPS-owner PASS. Exact CI/plain.py and all557
-  payload/worker/legacy Git bytes verified. Owner --check then separate upgrade/outage
-  and enable-ack per context/runtime/connect_con02_deployment_20261023.md. Production
-  2000+overlay/a86 unchanged;UID130 last revoked. Accepted pilot not repeated/group deferred.
-  FullRC skipped, not passed. No SSH/provider sends/main merge/independent reviewer.
+  Owner23Oct exact b971 artifact SHA verified, --check refused schema_indexes. Readonly
+  99table differential shows only unique coin_accounts(userid)/test_results(attemptid)
+  absent; all other index signatures match. No production changes. Controller fix
+  accepts strict XMLDB OR exactly observed paired omissions on frozen2000, preserving
+  old99 indexes through upgrade/recovery; no schema repair.74focused/1local UID33 skip
+  PASS. Required strict+historical native/runtime/HTTPS/source CI and new artifact pending.
+  See context/runtime/connect_con02_index_compat_20261023.md. Production2000+overlay/a86,
+  UID130 last revoked;0subagents/no SSH/provider/main merge; pilot/group tests not repeated.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed

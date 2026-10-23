@@ -157,7 +157,7 @@ def private_failure(ctx):
     except (AttributeError, OSError, ValueError): pass
 
 
-def verify_schema_profile(snapshot, indexes, profile, tables, prefix):
+def verify_schema_profile(snapshot, indexes, profile, tables, prefix, *, allow_historical=False):
     fields = profile['schema_fields']
     rows = [r for r in snapshot['schema'] if r[0] in tables]
     require(all(len(r) == 9 for r in rows), 'schema_column_shape')
@@ -178,6 +178,7 @@ def verify_schema_profile(snapshot, indexes, profile, tables, prefix):
         elif spec['type'] == 'char' and (default is not None or spec['notnull']):
             default = "'" + (default or '').replace("'", "''") + "'::character varying"
         require(row[8] == default, 'schema_column_default')
+    actual_indexes, expected_indexes = {}, {}
     for table in tables:
         found = []
         for name, definition in indexes:
@@ -185,8 +186,25 @@ def verify_schema_profile(snapshot, indexes, profile, tables, prefix):
             match = re.fullmatch(r'CREATE (UNIQUE )?INDEX \S+ ON (?:public\.)?\S+ USING btree \(([a-z0-9_, ]+)\)', definition)
             require(match is not None, 'schema_index_shape')
             found.append((tuple(f.strip() for f in match[2].split(',')), bool(match[1])))
-        expected_indexes = [(tuple(s['fields']), s['unique']) for s in profile['schema_indexes'][table]]
-        require(sorted(found) == sorted(expected_indexes), 'schema_indexes')
+        actual_indexes[table] = sorted(found)
+        expected_indexes[table] = sorted((tuple(s['fields']), s['unique'])
+                                         for s in profile['schema_indexes'][table])
+    if actual_indexes == expected_indexes:
+        return 'xml_install_indexes'
+    # Owner23Oct verified exactly this paired omission on the accepted2000
+    # database. Both tables are retained legacy history, not active Connect
+    # writers. This is a fixed alternate baseline, never arbitrary adoption or
+    # an index repair. Every remaining index/column/default still must match.
+    require(allow_historical and profile.get('versions') == {
+        'local_ustar': 2026102000, 'theme_ustar': 2026100202}, 'schema_indexes')
+    historical = {t: list(v) for t, v in expected_indexes.items()}
+    for table, field in (('local_ustar_coin_accounts', 'userid'),
+                         ('local_ustar_test_results', 'attemptid')):
+        missing = ((field,), True)
+        require(table in historical and historical[table].count(missing) == 1, 'schema_indexes')
+        historical[table].remove(missing)
+    require(actual_indexes == historical, 'schema_indexes')
+    return 'server1_legacy_indexes_20261023'
 
 
 def verify_database(current, baseline, reference, *, target):
@@ -216,14 +234,16 @@ def verify_database(current, baseline, reference, *, target):
     old_indexes, old_prefix=index_rows(baseline['indexes'])
     current_indexes, current_prefix=index_rows(current['indexes'])
     require(current_prefix == old_prefix, 'database_index_prefix')
-    verify_schema_profile(baseline, old_indexes, reference['baseline'], old, next(iter(old_prefix), ''))
+    index_profile = verify_schema_profile(baseline, old_indexes, reference['baseline'], old,
+                                         next(iter(old_prefix), ''), allow_historical=True)
     require([r for r in current['schema'] if r[0] in old] == baseline['schema'], 'old_schema_changed')
     require([r for r in current_indexes if r[0] in old] == old_indexes, 'old_indexes_changed')
     if not target:
         require(current['schema'] == baseline['schema'] and current['indexes'] == baseline['indexes'], 'restored_schema')
-        return
+        return index_profile
     new = set(wanted['tables']) - old
     verify_schema_profile(current, current_indexes, wanted, new, next(iter(current_prefix), ''))
+    return index_profile
 
 
 def https_snapshot(ctx):
@@ -319,13 +339,14 @@ def check(ctx):
         database = ctx.host.database(ctx.host.prefix())
         target = select_target(s, database['addons'])
         baseline = s['app']['database'] if s and s.get('app') else database
-        verify_database(database, baseline, ctx.bundle.reference, target=target)
+        index_profile = verify_database(database, baseline, ctx.bundle.reference, target=target)
         ctx.host.source(target=target)
         ctx.host.controls(s)
         https_snapshot(ctx)
         return {'phase': 'app_ready' if target else 'baseline_ready', 'configuration_changed': False,
                 'host_changes': False, 'provider_called': False, 'source_files': len(ctx.bundle.reference[
-                    'candidate' if target else 'baseline']['files']), 'local_ustar': database['addons']['local_ustar']}
+                    'candidate' if target else 'baseline']['files']), 'local_ustar': database['addons']['local_ustar'],
+                'baseline_index_profile': index_profile}
 
 
 class Host:

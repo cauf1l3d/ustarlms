@@ -9,13 +9,18 @@ if ($CFG->dbhost !== 'db' || $CFG->dbname !== 'ustar_stage1' || $CFG->prefix !==
 const UPDATE_STATE = '/stage/con02-update-state.json';
 function update_history(array $s): string {
     global $DB;
-    return hash('sha256', json_encode([
+    $history = [
         $DB->get_records_list('local_ustar_notifications', 'id', $s['notices'], 'id'),
         $DB->get_records_list('local_ustar_notify_delivery', 'notificationid', $s['notices'], 'id'),
         $DB->get_records('local_ustar_learning_tasks', ['id'=>$s['task']], 'id'),
         $DB->get_records('user_preferences', ['userid'=>$s['userid']], 'id'),
         $DB->get_records('local_ustar_conn_links', ['userid'=>$s['userid']], 'id'),
-    ], JSON_THROW_ON_ERROR));
+    ];
+    if (isset($s['legacy_coin'], $s['legacy_results'])) {
+        $history[] = $DB->get_records_list('local_ustar_coin_accounts', 'id', $s['legacy_coin'], 'id');
+        $history[] = $DB->get_records_list('local_ustar_test_results', 'id', $s['legacy_results'], 'id');
+    }
+    return hash('sha256', json_encode($history, JSON_THROW_ON_ERROR));
 }
 $phase = $argv[1] ?? '';
 if ($phase === 'seed') {
@@ -43,6 +48,28 @@ if ($phase === 'seed') {
     $s['snapshot'] = update_history($s);
     file_put_contents(UPDATE_STATE,json_encode($s,JSON_THROW_ON_ERROR));chmod(UPDATE_STATE,0600);
     echo "CON02_UPDATE_BASELINE_SEEDED=PASS\n";
+} else if ($phase === 'legacy_seed') {
+    if ((int)get_config('local_ustar','version') !== 2026102000 || !file_exists(UPDATE_STATE)) {
+        throw new RuntimeException('INVALID_HISTORICAL_UPDATE_BASELINE');
+    }
+    $s = json_decode(file_get_contents(UPDATE_STATE), true, 64, JSON_THROW_ON_ERROR);
+    if (isset($s['legacy_coin'])) { throw new RuntimeException('HISTORICAL_UPDATE_ALREADY_SEEDED'); }
+    $s['legacy_coin'] = [];
+    $s['legacy_results'] = [];
+    // Disposable duplicate legacy keys prove that upgrade never repairs these
+    // retained history tables or tries to add the absent unique constraints.
+    foreach ([1,2] as $n) {
+        $s['legacy_coin'][] = $DB->insert_record('local_ustar_coin_accounts', (object)[
+            'userid'=>$s['userid'], 'balance'=>$n, 'status'=>'archived',
+        ]);
+        $s['legacy_results'][] = $DB->insert_record('local_ustar_test_results', (object)[
+            'attemptid'=>1234567890, 'userid'=>$s['userid'], 'testcode'=>'con02-legacy-fixture',
+            'primarydimension'=>'fixture', 'dimensionsjson'=>'{}',
+        ]);
+    }
+    $s['snapshot'] = update_history($s);
+    file_put_contents(UPDATE_STATE,json_encode($s,JSON_THROW_ON_ERROR));chmod(UPDATE_STATE,0600);
+    echo "CON02_UPDATE_HISTORICAL_DUPLICATE_KEYS_SEEDED=PASS\n";
 } else if (in_array($phase,['baseline','target','restored'],true)) {
     $s = json_decode(file_get_contents(UPDATE_STATE),true,64,JSON_THROW_ON_ERROR);
     $target = $phase === 'target';

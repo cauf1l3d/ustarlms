@@ -72,3 +72,59 @@ grep -qx 'preserved-private-data' /stage/data/stage_/con02-update-business.marke
 php /source/tests/stage/con02_update_probe.php restored
 cu_sql /source/.stage-input/con02-update-stage.sql /artifacts/con02-update-restored.json
 echo 'CON02_UPDATE_NATIVE_LIFECYCLE=PASS' | tee /artifacts/con02-update-lifecycle.txt
+
+# Reproduce only the two owner-observed omissions in this isolated DB. The
+# strict fresh profile above remains independently exercised and unchanged.
+psql -X -q -w -h db -U ustar_fixture -d ustar_stage1 -v ON_ERROR_STOP=1 <<'LEGACY_SQL'
+BEGIN;
+DO $legacy$
+DECLARE item record; removed integer := 0;
+BEGIN
+  FOR item IN SELECT schemaname,indexname FROM pg_catalog.pg_indexes
+    WHERE schemaname='public' AND (
+      (tablename='stage_local_ustar_coin_accounts' AND indexdef ~ '^CREATE UNIQUE INDEX .* USING btree \(userid\)$') OR
+      (tablename='stage_local_ustar_test_results' AND indexdef ~ '^CREATE UNIQUE INDEX .* USING btree \(attemptid\)$'))
+  LOOP
+    EXECUTE format('DROP INDEX %I.%I', item.schemaname, item.indexname);
+    removed := removed + 1;
+  END LOOP;
+  IF removed <> 2 THEN RAISE EXCEPTION 'unexpected historical fixture index count'; END IF;
+END $legacy$;
+COMMIT;
+LEGACY_SQL
+php /source/tests/stage/con02_update_probe.php legacy_seed
+php /source/tests/stage/con02_update_probe.php baseline
+cu_sql /source/.stage-input/con02-update-stage.sql /artifacts/con02-update-historical-baseline.json
+CU_HIST_PAIR=/stage/con02-update-historical-pair
+(
+  umask 077
+  mkdir "$CU_HIST_PAIR"
+  pg_dump -h db -U ustar_fixture -d ustar_stage1 -Fc -f "$CU_HIST_PAIR/database.dump"
+  tar -C /stage/moodle/public -czf "$CU_HIST_PAIR/source.tar.gz" local/ustar theme/ustar
+  tar -C /stage/data -czf "$CU_HIST_PAIR/moodledata.tar.gz" stage_
+  cp config.php "$CU_HIST_PAIR/config.php"
+  sha256sum "$CU_HIST_PAIR/"* > "$CU_HIST_PAIR/SHA256SUMS"
+)
+cu_sources /source/.stage-input/con02-update-target/moodle
+php admin/cli/upgrade.php --non-interactive > /artifacts/con02-update-historical-direct-upgrade.log 2>&1
+php /source/tests/stage/con02_update_probe.php target
+cu_sql /source/.stage-input/con02-update-stage.sql /artifacts/con02-update-historical-target.json
+php admin/cli/upgrade.php --non-interactive > /artifacts/con02-update-historical-repeat.log 2>&1
+php /source/tests/stage/con02_update_probe.php target
+cu_sql /source/.stage-input/con02-update-stage.sql /artifacts/con02-update-historical-repeat.json
+for mutation in column index task extra; do
+  cu_sql "/source/.stage-input/con02-update-${mutation}.sql" "/artifacts/con02-update-historical-mutated-${mutation}.json"
+done
+sha256sum --check --strict "$CU_HIST_PAIR/SHA256SUMS" > /artifacts/con02-update-historical-private-pair-verified.txt
+rm -rf public/local/ustar public/theme/ustar /stage/data/stage_
+tar -C public -xzf "$CU_HIST_PAIR/source.tar.gz"
+tar -C /stage/data -xzf "$CU_HIST_PAIR/moodledata.tar.gz"
+cp "$CU_HIST_PAIR/config.php" config.php
+cu_restore_db "$CU_HIST_PAIR/database.dump"
+diff -qr public/local/ustar /source/.stage-input/con02-update-baseline/moodle/local/ustar > /artifacts/con02-update-historical-source-restored.txt
+diff -qr public/theme/ustar /source/.stage-input/con02-update-baseline/moodle/theme/ustar > /artifacts/con02-update-historical-theme-restored.txt
+cmp config.php "$CU_HIST_PAIR/config.php"
+grep -qx 'preserved-private-data' /stage/data/stage_/con02-update-business.marker
+php /source/tests/stage/con02_update_probe.php restored
+cu_sql /source/.stage-input/con02-update-stage.sql /artifacts/con02-update-historical-restored.json
+echo 'CON02_UPDATE_HISTORICAL_NATIVE_LIFECYCLE=PASS' | tee /artifacts/con02-update-historical-lifecycle.txt

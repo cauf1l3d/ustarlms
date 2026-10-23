@@ -6,7 +6,7 @@ if (__DIR__ !== '/source/tests/stage' || getenv('USTAR_DB_PRIVILEGE_FIXTURE') !=
 }
 define('CLI_SCRIPT', true);
 require '/stage/moodle/config.php';
-if ($CFG->dbhost !== 'db' || $CFG->dbname !== 'ustar_stage1' || $CFG->dbuser !== 'ustar_fixture'
+if ($CFG->dbhost !== 'db' || $CFG->dbname !== 'ustar_stage1' || $CFG->dbuser !== 'ustar_app'
         || $CFG->prefix !== 'stage_' || $CFG->dataroot !== '/stage/data/stage_'
         || empty($CFG->noemailever)) {
     throw new RuntimeException('REFUSING_NON_ISOLATED_PRIVILEGE_DATABASE');
@@ -14,7 +14,7 @@ if ($CFG->dbhost !== 'db' || $CFG->dbname !== 'ustar_stage1' || $CFG->dbuser !==
 
 function privilege_role(): array {
     global $DB;
-    $row = (array)$DB->get_record_sql("SELECT session_user AS login_role, current_user AS effective_role,
+    $row = (array)$DB->get_record_sql("SELECT session_user AS login_role, current_user AS effective_role, r.oid::int AS role_oid,
         r.rolsuper::int AS superuser, r.rolcreaterole::int AS createrole,
         r.rolcreatedb::int AS createdb, r.rolreplication::int AS replication,
         r.rolbypassrls::int AS bypassrls,
@@ -22,7 +22,7 @@ function privilege_role(): array {
         (current_setting('server_version_num')::int / 10000) AS postgres_major
         FROM pg_catalog.pg_roles r JOIN pg_catalog.pg_database d ON d.datname = current_database()
         WHERE r.rolname = current_user", [], MUST_EXIST);
-    foreach (['superuser', 'createrole', 'createdb', 'replication', 'bypassrls', 'database_owner'] as $key) {
+    foreach (['role_oid', 'superuser', 'createrole', 'createdb', 'replication', 'bypassrls', 'database_owner'] as $key) {
         $row[$key] = (int)$row[$key];
     }
     $row['dangerous_memberships'] = (int)$DB->get_field_sql("SELECT count(*) FROM pg_catalog.pg_roles r
@@ -31,7 +31,7 @@ function privilege_role(): array {
           OR r.rolname IN ('pg_read_server_files', 'pg_write_server_files', 'pg_execute_server_program'))
         AND pg_has_role(current_user, r.oid, 'MEMBER')");
     file_put_contents('/artifacts/db-privileges-role.json', json_encode($row, JSON_THROW_ON_ERROR));
-    if ($row['login_role'] !== 'ustar_fixture' || $row['effective_role'] !== 'ustar_fixture'
+    if ($row['login_role'] !== 'ustar_app' || $row['effective_role'] !== 'ustar_app' || $row['role_oid'] <= 10
             || $row['database_owner'] !== 1 || $row['dangerous_memberships'] !== 0
             || array_sum(array_intersect_key($row, array_flip([
                 'superuser', 'createrole', 'createdb', 'replication', 'bypassrls']))) !== 0) {
@@ -141,8 +141,8 @@ if ($mode === 'role') {
     }
     echo 'DB_PRIVILEGES_' . strtoupper($mode) . "=PASS\n";
 } else if ($mode === 'denials') {
-    $connection = pg_connect('host=db dbname=ustar_stage1 user=ustar_fixture '
-        . "password=fixture-only-not-a-production-secret connect_timeout=5 options='-c statement_timeout=5000'",
+    $connection = pg_connect('host=db dbname=ustar_stage1 user=ustar_app '
+        . "password=fixture-app-only-not-production-secret connect_timeout=5 options='-c statement_timeout=5000'",
         PGSQL_CONNECT_FORCE_NEW);
     if (!$connection) { throw new RuntimeException('PRIVILEGE_DENIAL_CONNECTION_FAILED'); }
     $states = [];

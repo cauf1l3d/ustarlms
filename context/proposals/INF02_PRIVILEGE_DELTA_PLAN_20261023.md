@@ -7,8 +7,10 @@
 зависимости existing backup/upgrade consumers до изменения production роли.
 **Spec:** infra_readonly_baseline_20261023.md + INF02 remediation05Oct.
 **Architecture:** дополнить существующий Connect PG16.15/Moodle518 fixture после
-его принятого2200 paired restore. App остаётся DB/object owner ustar_fixture;
-отдельный fixture admin занимается cluster setup/restore/globals. Не создавать
+его принятого2200 paired restore. После native bootstrap refusal20:36UTC профиль исправлен: OID10 ustar_fixture остаётся
+административным, отдельная обычная ustar_app получает DB/public app objects и CFG
+connection; independent fixture admin занимается setup/restore/globals. System
+catalogs не передавать, bootstrap не демотировать. Это CI, не production apply. Не создавать
 owner/server1 стенд и не менять приложение, frozen installers, secrets/HBA/production.
 
 ## Задачи и интерфейсы
@@ -19,18 +21,21 @@ owner/server1 стенд и не менять приложение, frozen insta
    Hook into existing runner/workflow scope/artifact list. Native existing fixture
    must fail `APP_ROLE_HAS_CLUSTER_PRIVILEGES`, not environment/setup errors.
 2. **Новый профиль и native assertions, GREEN.** Create `run-db-privileges.sh`:
-   separate fixture admin, demote app, role/DDL/domain/file writes, current2200→2300/
+   separate fixture admin, bootstrap-safe public ownership + synthetic CFG handoff
+   to ordinary ustar_app, role/DDL/domain/file writes, current2200→2300/
    repeat, selected scheduled task, actual app pg_dump/restore with admin cluster
    actions, five SQLSTATE42501 denials. Prove old globals app dump refused and admin
-   succeeds privately. Keep synthetic dumps/globals under /stage tmpfs, sanitized
+   succeeds privately. Unchanged legacy POSTGRES_USER remains admin and must also
+   capture globals privately; no backup helper rewrite required. Keep dumps/globals
+   under /stage tmpfs, sanitized
    JSON/logs only under artifacts. Native gate uses exact current source, no provider.
    Refuse temporary CREATEDB-role membership despite zero app flags; revoke it and
    retain sanitized negative-control metadata before positive app operations.
 3. **Evidence verifier, consumer report, checks.** Create host JSON verifier and
    focused r16 tests: reject elevated flags/admin masquerade/wrong denial/absent
    upgrade or restore proof; RED→GREEN. Review exact pinned original backup source
-   privately, record required admin globals handoff. Full app permission reduction
-   remains blocked pending coordinated backup successor/host acceptance.
+   privately, record administrative backup caller retention. Full production change
+   requires separate app credential/config/ownership handoff and HTTPS state acceptance.
 
 ## Review focus
 
@@ -47,10 +52,15 @@ owner/server1 стенд и не менять приложение, frozen insta
 - [x] Native role assertion RED on current superuser fixture: df3ee0ef,
       Review40012838091/connect-db120619281630, APP_ROLE_HAS_CLUSTER_PRIVILEGES
       after the previous158tests/830assertions and presentation recovery passed.
-- [ ] Focused verifier RED→GREEN, Bash/Python/PHP syntax + context checks.
+- [ ] Focused verifier8tests RED→GREEN and Bash/Python checks pass; native PHP/SQL
+      execution pending for revised bootstrap-safe profile.
 - [ ] Native limited-role gate GREEN in existing pinned CI, inspect artifacts/logs.
 - [ ] Record exact commit/run/result and consumer limitation; no server1 mutation.
 
 User/AGENTS rules override reviewer dispatch/pause instructions: author-only review,
 no main merge/provider sends/SSH. Existing general CI gates remain intact; no new
 manual server1 full-cycle request. Original private backup source is not committed.
+
+Native incident80b/Review40017305504/job120640978099 proved bootstrap cannot be
+demoted. First architecture assumed this was possible; corrected route above supersedes
+in-place NOSUPERUSER. Owner server1 OID query requested read-only, no production change.

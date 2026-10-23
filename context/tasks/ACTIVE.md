@@ -1,5 +1,15 @@
 # Активные задачи USTAR
 
+**23Oct — INF02: bootstrap не демотировать; CI проверяет отдельную app role.**
+Native80b/Review40017305504 прошёл старые158/830 и presentation recovery, затем PG16
+отказал ALTER ROLE OID10 NOSUPERUSER. Первое предположение об in-place demotion неверно.
+Исправленный CI оставляет bootstrap/POSTGRES_USER администратором, переносит public
+app objects/CFG на ordinary ustar_app; pg_catalog не передаёт. Host verifier8tests
+RED→GREEN; новый native результат pending. Server1 OID query запрошен read-only.
+Backup engine0d31e694/13689B и producer/scheduler pins сохраняются; прежний globals
+caller остаётся административным. На server1 роли/config/ownership не менялись.
+[Разбор](../runtime/infra_db_privilege_consumers_20261023.md), [квитанция](../runtime/infra_db_privilege_ci_20261023.json). Existing owner stands reuse;0subagents.
+
 **23Oct — прежние стенды засчитываются; следующий scope — только DB privilege delta.**
 Нового owner/server1 стенда/full restore/repackage/UI круга по умолчанию не нужно.
 Проверить DB consumers и дополнить существующий CI недостающими сценариями прав.

@@ -4,6 +4,13 @@ Owner accepted ustar_pg_admin with two required-SCRAM sessions9976/9995. Product
 moodle flags remain unchanged. Scope is reuse of accepted stages plus missing
 privilege checks in existing CI, not a new owner/server1 stand.
 
+**Bootstrap correction20:36UTC:** native80b refused ALTER ROLE ustar_fixture
+NOSUPERUSER: The bootstrap user must have the SUPERUSER attribute. PG16 cannot
+demote OID10. Do not give production demotion commands before checking server1 OID.
+Revised route: keep bootstrap/POSTGRES_USER administrative; create ordinary ustar_app,
+move application public objects and CFG dbuser to it, preserve system catalogs.
+CI models that route; real credential/config/ownership handoff is still future work.
+
 ## Exact backup source recovered and verified
 
 Earlier supplied `USTAR_BACKUP_SFTP_20261004.py` recovered privately and reconstructed
@@ -17,8 +24,8 @@ agent host query. Full private source/inspect/dumps/role hashes are not committe
 |---|---|---|
 | Backup db_sql | BEGIN READ ONLY, count pg_stat_activity for moodle and own plugin versions; POSTGRES_USER fallback postgres | Owner app can retain ordinary DB reads; native delta checks own DB operation |
 | Backup database.dump | PGOPTIONS default_transaction_read_only=on; pg_dump -w -U POSTGRES_USER -d moodle --format=custom | App owns observed tables/sequences; actual ordinary-owner dump/restore must pass native gate |
-| Backup postgres-globals-private.sql | pg_dumpall -w -U POSTGRES_USER --globals-only, no --no-role-passwords | **Blocker:** full roles/password capture reads pg_authid; pass this command to separate backup admin before production demotion |
-| HDD adapter/schedule | SHA-pinned engine; guarded execute wrapper preserves its DB/globals commands | Merely creating admin does not change backup's effective role; coordinated successor/guard handoff required |
+| Backup postgres-globals-private.sql | pg_dumpall -w -U POSTGRES_USER --globals-only, no --no-role-passwords | Full roles/password capture reads pg_authid. Keep existing POSTGRES_USER administrative while application moves to a different ordinary role; exact old command gets a private positive control |
+| HDD adapter/schedule | SHA-pinned engine; guarded execute wrapper preserves its DB/globals commands | Creating admin alone does not change backup role. New app connection leaves existing administrative POSTGRES_USER and helper pins intact |
 | production_patch_readiness/upgrade and Connect contract | SQL via POSTGRES_USER; current read-only versions/schema/index metadata and application-owned records; upgrade is native PHP app connection | No new cluster writer introduced by reviewed wrappers; test app DDL/upgrade/repeat separately from admin harness |
 | production_restore.py | ustar_restore_admin creates DB owned by ordinary ustar_app; pg_restore --role=ustar_app --no-owner/--no-acl | Existing role separation reused; source/older modeled proof not relabeled a fresh production restore |
 | Cron | Reviewed repo handoffs preserve original helper and patch version line; PHP runs under CFG dbuser; selected native scheduled task tested in delta | Historical original v3 SHA66fd51 differs from available23776B Library v2 source; do not use that older file as exact current-v3 source evidence |
@@ -26,8 +33,25 @@ agent host query. Full private source/inspect/dumps/role hashes are not committe
 The ordinary app must not receive SELECT on pg_authid/read-server-files or a privileged
 role merely to preserve globals capture. Dropping role passwords with
 `--no-role-passwords` changes recovery content and is not the accepted fix.
-Both backup entrypoints and frozen controller preflight/helper hashes need a coherent
-handoff; do not patch one service's environment and assume manual captures also work.
+The initial in-place demotion proposal would have broken globals capture. The revised
+bootstrap-safe route retains the existing administrative POSTGRES_USER for every
+backup entrypoint, so no backup helper/source/profile mutation is planned. Actual
+application credential/config/public ownership handoff still requires a guarded tool.
+
+Static entrypoint/guard map (source evidence, not a fresh host hash probe):
+
+- `ustar-hdd-backup.timer` → service →
+  `/usr/local/sbin/USTAR_HDD_SCHEDULE_20261006.py --run` → producer `--backup`.
+  Manual/current-update fresh captures call the producer; recovery uses `--recover`.
+- Current HTTPS-compatible producer pin is
+  `a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3`;
+  scheduler pin is `a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c`.
+  Producer loads the original engine at the exact SHA above.
+- `connect_con02_contract.Host.preflight` validates all three helpers;
+  `backup_https_prepare` also records the producer/scheduler pair and before-images.
+  Changing producer SQL routing alone would trigger accepted_backup_helper_changed
+  or backup_helper_drift in existing profiles. Revised role separation preserves
+  these helpers and frozen journals; do not change their SQL merely for app separation.
 
 Primary PostgreSQL16 behavior reviewed:
 https://www.postgresql.org/docs/16/app-pg-dumpall.html (`--globals-only`, `--no-role-passwords`)
@@ -41,24 +65,35 @@ assertion in the existing PG16.15/Moodle518 fixture. Review run40012838091,
 connect-db120619281630 failed as intended: previous158tests/830assertions and
 TELEGRAM_PRESENTATION_UPGRADE_RECOVERY passed, then new assertion refused with
 APP_ROLE_HAS_CLUSTER_PRIVILEGES. Source PHP8.2/8.3 and runtime jobs succeeded.
-GREEN reduced-role implementation is prepared; native result remains pending.
-Host evidence verifier6 focused tests already observed RED missing verifier → GREEN.
-This does not substitute for native DB assertions.
+Candidate80b3ccfb/Review40017305504 native120640978099 passed old158/830 and
+presentation recovery but failed at bootstrap demotion before app delta. This is an
+implementation assumption error, not target-app qualification. Both source PHP jobs
+and runtime passed; source83 required one unchanged-code retry after15min timeout
+caused by Chromium install. New bootstrap-safe profile is prepared; native GREEN
+remains pending. Host verifier8tests passed, including observed RED→GREEN for missing
+bootstrap/system-catalog/scoped-ownership evidence.
 
-New gate must demonstrate actual app session/all five flags0, no membership in roles
-with any cluster attribute or server-file/program access. A temporary CREATEDB
-membership must be refused with the expected guard before admin revokes/drops it.
-Then owner DDL and business/file operations, selected scheduled task,
-2200→2300/repeat, actual app dump and admin restore SET ROLE app, record/schema equality,
-SQLSTATE42501 cluster denials, failed old globals capture as app and successful private
-globals capture as admin. Synthetic dumps/globals remain /stage tmpfs; only selected
-sanitized JSON/logs are eligible for artifacts.
+New gate keeps bootstrap OID10 SUPERUSER, creates ordinary ustar_app, transfers only
+public app relations (tables/views/sequences and automatic index ownership) and switches
+synthetic CFG. It must prove equal public relation ownership counts and zero app-owned
+pg_catalog relations, actual app session/all five flags0, membership refusal/revoke,
+owner XMLDB/domain/FileAPI writes, selected scheduled task,2200→2300/repeat, app dump
+and admin restore SET ROLE app, selected record and100USTAR-schema equality, five42501
+cluster denials. Globals capture as app must fail; both separate admin and unchanged
+legacy POSTGRES_USER must succeed privately. SQL/globals/dumps stay in /stage tmpfs;
+only selected sanitized JSON/logs are eligible for artifacts.
+
+Primary bootstrap sources:
+https://www.postgresql.org/message-id/20230915205301.GB2005906@nathanxps13
+https://www.postgresql.org/docs/16/glossary.html (bootstrap owns system catalogs)
 
 ## Production gate remains closed
 
-No production ALTER ROLE/chmod/chown/HBA/service/container action in this CI change.
-Before owner demotion: qualified native result, coordinated backup globals/admin
-handoff for all entrypoints and exact guards, current consumer/source acceptance and
-reviewable bounded apply/rollback via already verified ustar_pg_admin. Code/config
-permissions remain separate with HTTPS saved-metadata handoff. Existing restore/UI
-acceptance is reused and not restarted as a generic prerequisite.
+No production role/config/ownership/HBA/service/container action in this CI change.
+Before real apply: owner OID query, independent admin already accepted, separate private
+app credential, exact app-object ownership/grant inventory and guarded config/owner
+handoff preserving HTTPS controls/metadata and rollback. Never use broad REASSIGN OWNED
+from bootstrap: it owns system catalogs and shared cluster objects. Retained backup
+POSTGRES_USER remains administrative and old helper pins unchanged. Full INF02/03
+remain open; existing owner restore/UI acceptance is reused. Current cron-v3 original
+source is not inferred from the older v2 Library copy.

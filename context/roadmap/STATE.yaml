@@ -8,6 +8,10 @@ current_activity: >-
   operational. One-time reminder24Oct15:00Europe/Moscow created for KeenDNS app rules
   and an off-LAN mobile check. Current work is INF-02: review installed DB consumers
   and add only missing privilege checks to existing CI, reusing accepted stages.
+  Native80b revealed bootstrap OID10 cannot be demoted; corrected CI transfers only
+  public application ownership/config to ordinary ustar_app and preserves bootstrap
+  admin/POSTGRES_USER/system catalogs. Host8tests pass, revised native pending.
+  Real new-app credential/config/ownership plus HTTPS handoff still required.
   No new owner/server1 lab or full restore repeat by default. Then DB/code/config/key
   hardening. Owner created only ustar_pg_admin; no service stop or public ingress change.
   Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
@@ -26,7 +30,10 @@ infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_2026102
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open
 infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
 infrastructure_admin_status: owner_created_ustar_pg_admin_two_required_SCRAM_sessions_accepted_do_not_repeat_creation
-infrastructure_DB_privilege_status: moodle_unchanged_missing_privilege_delta_and_installed_consumer_compatibility_pending
+infrastructure_DB_privilege_status: moodle_unchanged_bootstrap_safe_new_app_role_native_pending_config_ownership_handoff_required
+infrastructure_bootstrap_status: CI_OID10_confirmed_server1_owner_OID_query_pending_do_not_demote_bootstrap
+infrastructure_DB_privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
+infrastructure_DB_consumers: context/runtime/infra_db_privilege_consumers_20261023.md
 infrastructure_retest_scope: reuse_accepted_stages_existing_CI_only_missing_DB_privilege_delta_no_new_owner_stand_or_full_restore_repeat
 infrastructure_file_status: primary_config_and_plugin_writable_HTTPS_metadata_handoff_and_copy_rehearsal_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained

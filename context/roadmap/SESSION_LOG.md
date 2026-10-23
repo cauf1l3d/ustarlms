@@ -1,5 +1,40 @@
 # Журнал выполнения roadmap
 
+## 23Oct20:36UTC — PostgreSQL bootstrap refusal changes INF02 route
+
+Native80b job120640978099 passed old158/830 and presentation recovery, then refused
+ALTER ROLE ustar_fixture NOSUPERUSER: bootstrap user must have SUPERUSER. Agent's
+in-place-demotion assumption was wrong; PG16 primary source/mail confirms invariant.
+Corrected same-fixture route retains OID10/admin and existing POSTGRES_USER for backup,
+creates ordinary ustar_app, transfers only public app relations and synthetic CFG,
+keeps pg_catalog bootstrap-owned. No broad REASSIGN OWNED from bootstrap. Existing
+backup engine/helper pins need no rewrite in this route; initial globals-handoff
+blocker is superseded by app credential/config/public ownership + HTTPS handoff.
+Host evidence test missing-bootstrap proof observed RED, then8tests GREEN, including
+wrong role OID/ownership counts/catalog owners and membership evidence. Revised native
+still pending. Server1 OID query requested read-only; no production role/file/service
+change and no agent SSH. Prior accepted stands reused,0subagents, no main merge.
+
+## 23Oct — INF02 missing-privilege delta implemented; native CI pending
+
+Owner approved narrowed scope, previous stands reused,0subagents. Existing native
+RED df3ee0ef/Review40012838091/connect-db120619281630 passed old158tests/830assertions
+and presentation paired recovery, then refused APP_ROLE_HAS_CLUSTER_PRIVILEGES.
+Downloaded/hash-verified sanitized role receipt proves all five flags1. New ordinary
+app/admin profile80b3ccfb is in Review40017305504/Context40017305503, still pending.
+Real XMLDB/domain/FileAPI/selected scheduled task/2200→2300/repeat/app dump/admin
+SET ROLE restore, five42501 denials and private globals control added to same fixture.
+Author review added CREATEDB membership/refusal/revoke control, checking all cluster
+attribute memberships; seventh host evidence test observed RED4subcases→GREEN7tests.
+First ad6 source8.2 succeeded, source8.3 had unchanged Chromium captureScreenshot
+failure after1083r16/153skips; native skipped, not passed. No assertions softened.
+Exact private backup source13689B/SHA0d31e694 verified against installed pin: globals-only
+uses POSTGRES_USER=moodle and requires coordinated separate-admin handoff across
+all backup entrypoints/frozen preflight guards before demotion. Older cron v2 Library
+copy is not exact current v3 source. [Consumer report](../runtime/infra_db_privilege_consumers_20261023.md),
+[CI receipt](../runtime/infra_db_privilege_ci_20261023.json). No server1 mutation/SSH/
+provider send/main merge; app/frozen installers/Telegram accepted runtime unchanged.
+
 ## 23Oct — reuse accepted stages; narrow INF02 to missing privilege checks in existing CI
 
 Owner challenged repeating completed stands. Previous broad next-step wording overstated

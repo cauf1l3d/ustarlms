@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "INF02_missing_privilege_delta_in_existing_pinned_fixture",
-  "status": "native_GREEN_pending",
+  "status": "bootstrap_safe_native_GREEN_pending",
   "author_review_only": true,
   "subagents": 0,
   "native_RED": {
@@ -34,7 +34,52 @@
       "dangerous_memberships": 3
     }
   },
-  "candidate": {
+  "backup_engine_source": {
+    "name": "USTAR_BACKUP_SFTP_20261004.py",
+    "bytes": 13689,
+    "sha256": "0d31e694db8bee2309072bd00dee2423022f35e18ad2c11ea1cf788fc63ef47f",
+    "exact_original_private_source_reviewed": true,
+    "source_committed": false,
+    "blocker": "in_place_demotion_would_break_globals; revised_new_app_route_preserves_administrative_POSTGRES_USER_and_existing_helpers",
+    "related_profile_pins": {
+      "producer": "a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3",
+      "scheduler": "a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c",
+      "evidence_kind": "reviewed_static_current2300_profile_not_new_host_probe"
+    }
+  },
+  "production": {
+    "owner_admin_created": "ustar_pg_admin",
+    "owner_required_SCRAM_sessions": [
+      9976,
+      9995
+    ],
+    "moodle_flags_changed": false,
+    "HBA_changed": false,
+    "files_changed": false,
+    "services_restarted": false,
+    "backup_entrypoints_changed": false,
+    "new_owner_stand_requested": false,
+    "provider_called": false,
+    "agent_SSH": false
+  },
+  "limits": [
+    "No production demotion or complete INF02 closure",
+    "Exact current cron v3 source not inferred from older Library v2 copy",
+    "Selected native scheduled task does not prove every installed helper",
+    "Schema equality covers100USTAR tables; retained data checks selected synthetic core/domain/FileAPI records",
+    "Existing owner stand/UI/paired restore acceptance reused; no new full production DR claim",
+    "Previous158PHPUnit tests run before demotion; new reduced-role proof consists of selected real app operations and denials",
+    "Server1 OID not yet owner-confirmed; production new-app credential/config/public ownership and HTTPS handoff not implemented"
+  ],
+  "membership_review": {
+    "ordinary_role_attributes_can_be_gained_via_SET_ROLE": true,
+    "source": "https://www.postgresql.org/docs/16/role-membership.html",
+    "change": "guard all five cluster attributes and retain a real CREATEDB-membership negative control",
+    "focused_tests": 7,
+    "focused_negative_control_test_RED_then_GREEN": true,
+    "native_result": "pending_next_code_commit"
+  },
+  "initial_candidate": {
     "commit": "ad6ea0eebc4b1e89a12f83be8be8a4a55038cb31",
     "review_run": 40015359368,
     "context_run": 40015359367,
@@ -60,44 +105,66 @@
       "result": "skipped_due_source83_browser_failure_not_DB_pass"
     }
   },
-  "backup_engine_source": {
-    "name": "USTAR_BACKUP_SFTP_20261004.py",
-    "bytes": 13689,
-    "sha256": "0d31e694db8bee2309072bd00dee2423022f35e18ad2c11ea1cf788fc63ef47f",
-    "exact_original_private_source_reviewed": true,
-    "source_committed": false,
-    "blocker": "pg_dumpall_globals_only_currently_uses_POSTGRES_USER_moodle_needs_separate_admin_handoff"
+  "qualification": {
+    "commit": "80b3ccfbe58612ff401c789c20c9301844a3b5d5",
+    "review_run": 40017305504,
+    "context_run": 40017305503,
+    "status": "failed_bootstrap_demotion_before_app_qualification",
+    "first_source83": {
+      "job": 120632578200,
+      "result": "cancelled_at_overall15min_limit_after_slow_Chromium_install",
+      "python_tests": 1084,
+      "environment_skips": 153,
+      "python_result": "success",
+      "actor_UI": "PASS100scenarios_before_cancellation",
+      "native_job": 120639321953,
+      "native_result": "skipped_not_passed",
+      "retry": "only_source83_same_commit_requested"
+    },
+    "source82": {
+      "job": 120632578161,
+      "result": "success",
+      "python_tests": 1084,
+      "environment_skips": 153,
+      "UI": "success"
+    },
+    "source83": {
+      "job": 120639673901,
+      "result": "success",
+      "python_tests": 1084,
+      "environment_skips": 153,
+      "UI": "success",
+      "selected_same_commit_retry": true
+    },
+    "runtime": {
+      "job": 120632577942,
+      "result": "success"
+    },
+    "context": {
+      "job": 120632577350,
+      "result": "success"
+    },
+    "native": {
+      "job": 120640978099,
+      "result": "failure",
+      "at": "2026-10-23T20:36:06Z",
+      "reason": "The bootstrap user must have the SUPERUSER attribute",
+      "previous_phpunit_tests": 158,
+      "previous_phpunit_assertions": 830,
+      "previous_presentation_recovery": "PASS",
+      "artifact_id": 12529698170,
+      "artifact_metadata_sha256": "019834af7bd4a25f1699f4810ce92aec09cfcbbb6919b1ee94a016934f7c7fb8",
+      "artifact_downloaded": false
+    }
   },
-  "production": {
-    "owner_admin_created": "ustar_pg_admin",
-    "owner_required_SCRAM_sessions": [
-      9976,
-      9995
-    ],
-    "moodle_flags_changed": false,
-    "HBA_changed": false,
-    "files_changed": false,
-    "services_restarted": false,
-    "backup_entrypoints_changed": false,
-    "new_owner_stand_requested": false,
-    "provider_called": false,
-    "agent_SSH": false
-  },
-  "limits": [
-    "No production demotion or complete INF02 closure",
-    "Exact current cron v3 source not inferred from older Library v2 copy",
-    "Selected native scheduled task does not prove every installed helper",
-    "Globals/admin handoff for every backup entrypoint and frozen preflight guards still required",
-    "Schema equality covers100USTAR tables; retained data checks selected synthetic core/domain/FileAPI records",
-    "Existing owner stand/UI/paired restore acceptance reused; no new full production DR claim",
-    "Previous158PHPUnit tests run before demotion; new reduced-role proof consists of selected real app operations and denials"
-  ],
-  "membership_review": {
-    "ordinary_role_attributes_can_be_gained_via_SET_ROLE": true,
-    "source": "https://www.postgresql.org/docs/16/role-membership.html",
-    "change": "guard all five cluster attributes and retain a real CREATEDB-membership negative control",
-    "focused_tests": 7,
-    "focused_negative_control_test_RED_then_GREEN": true,
-    "native_result": "pending_next_code_commit"
+  "bootstrap_correction": {
+    "cause": "OID10 cannot lose SUPERUSER in PostgreSQL16",
+    "server1_bootstrap_OID": "owner_readonly_query_pending",
+    "strategy": "retain bootstrap admin and POSTGRES_USER; move app to ordinary ustar_app with public ownership and CFG handoff",
+    "system_catalogs": "remain_bootstrap_owned_no_broad_REASSIGN_OWNED",
+    "backup_helpers_changed": false,
+    "focused_tests": 8,
+    "new_bootstrap_acceptance_test_observed_RED_then_GREEN": true,
+    "native": "pending_next_commit"
   }
 }

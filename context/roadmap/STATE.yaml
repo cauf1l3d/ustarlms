@@ -6,20 +6,25 @@ stage_label: Owner paused Connect development and resumes infrastructure normali
 current_activity: >-
   Owner23Oct pauses further Telegram/Mini App development; accepted2300 runtime remains
   operational. One-time reminder24Oct15:00Europe/Moscow created for KeenDNS app rules
-  and an off-LAN mobile check. Current work is INF-01 read-only refresh and infrastructure
-  residual triage, then recommended P0 INF-02/03 DB privileges/admin and code/config/key
+  and an off-LAN mobile check. Current work is INF-02 additive admin preparation after
+  the first INF-01 metadata slice, then P0 DB privileges and code/config/key
   hardening. No new production mutation, service stop or public ingress change performed.
   Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
   Production payload/worker6c56/local2300 remains in the owner receipt below.
   Owner metadata23Oct18:08UTC confirms one superuser moodle and writable local_ustar
-  code under www-data. Fresh scheduled cron and HDD backup succeeded. Docker metadata
-  and primary config identifiers remain pending narrow corrected probes; no demotion.
+  code under www-data. Fresh scheduled cron and HDD backup succeeded. Owner followup
+  confirms primary config33:33/0755 writable with static dbuser=moodle; both containers
+  running/restarts0/OOMfalse, no healthcheck or json-file limits. New admin creation
+  and two required-SCRAM sessions are concrete commands pending owner execution.
+  No role reduction or config ownership handoff performed; complete INF01 remains open.
   0subagents/no agent SSH/provider sends/main merge; shared Apache/AutoReport retained.
-next_task: INF-01
+next_task: INF-02
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
-infrastructure_baseline_status: owner_partial_measured_P0_DB_code_findings_narrow_followup_pending
+infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open
 infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
+infrastructure_admin_status: additive_creation_and_two_SCRAM_session_commands_ready_not_executed
+infrastructure_file_status: primary_config_and_plugin_writable_HTTPS_metadata_handoff_and_copy_rehearsal_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
 connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
 

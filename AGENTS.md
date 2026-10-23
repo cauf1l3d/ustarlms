@@ -1,5 +1,14 @@
 # USTAR инструкции агентам
 
+**23Oct — Docker/config follow-up получен; INF02 additive admin — следующий write.**
+[Та же receipt](context/runtime/infra_readonly_owner_20261023.json), поле owner_followup:
+primary config33:33/0755 writable, static dbuser=moodle; оба containers running/restarts0/
+OOMfalse, accepted images, без healthcheck/json-file limits. Повторять probes не нужно.
+[Runbook](context/runtime/infra_readonly_baseline_20261023.md) даёт createuser с private tty
+и два отдельных required-SCRAM login; owner execution ещё pending. Demotion/permissions
+не применялись. HTTPS capture сохраняет metadata config; будущий hardening требует
+coordinated state handoff, copy/deploy/restore proof. Полные INF01/02/03 открыты.
+
 **23Oct21:08МСК — INF-01 owner metadata получены частично.**
 [Receipt](context/runtime/infra_readonly_owner_20261023.json): единственный найденный
 superuser moodle; local_ustar и version.php writable под www-data33. Свежие scheduled

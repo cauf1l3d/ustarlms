@@ -1,5 +1,26 @@
 # Журнал выполнения roadmap
 
+## 23Oct — owner corrected Docker/config probes received; independent admin commands ready
+
+Corrected optional Health lookup executed natively by owner: both containers running,
+restarts0/OOMfalse, health not configured, json-file max-size/max-file absent, rootfs RW.
+IDs/images retained in owner_followup in the existing infra receipt; image hashes match
+reviewed HDD adapter constants. Primary config33:33/0755 no symlink, www-data read/write;
+static literals moodle/moodle/mdl_, no PHP bootstrap/effective-runtime claim.
+Prepared ordinary inline createuser --pwprompt followed by two separate psql sessions
+to the discovered internal container IP with require_auth=scram-sha-256. Password stays
+in owner tty/password manager; no automatic reset/reuse, role reduction, HBA/config
+change, outage or restart. Owner native creation/auth output pending. Only additive
+INF02 step2 is prepared; full INF01 and target-role copy acceptance remain open.
+Source review found HTTPS captured uid/gid/mode/xattrs restored by replace and consumed
+by readiness; plain config chmod/chown would leave stale ownership metadata. Later
+file hardening requires a coordinated owner-state handoff and deploy/restore tests.
+No log defaults rewrite, log truncation or container recreation. Qualified app/tool
+code unchanged;0subagents/author review/no agent SSH/provider sends/main merge.
+Verification: receipt JSON and exact image hashes versus HDD constants, both runbook
+Bash blocks/embedded Python syntax, context413files/check_context and diff whitespace
+PASS. Actual createuser/two SCRAM sessions remain owner-native pending, not local PASS.
+
 ## 23Oct — owner INF-01 metadata received; P0 DB/code findings, narrow collector fix
 
 Exact5765B SHA4382ed9e artifact verified by owner; measured18:08:18UTC/21:08MSK.

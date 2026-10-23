@@ -3,7 +3,7 @@
   "kind": "owner_terminal_receipt_not_independent_agent_probe",
   "measured_at_utc": "2026-10-23T18:08:18Z",
   "measured_at_moscow": "2026-10-23T21:08:18+03:00",
-  "baseline_status": "partial_measured_two_P0_findings_followup_pending",
+  "baseline_status": "partial_measured_primary_config_and_Docker_followup_received_admin_creation_next",
   "operator_artifact": {
     "name": "readonly_baseline_20261023.sh",
     "bytes": 5765,
@@ -144,10 +144,65 @@
     "fresh_decryption_or_clean_host_restore_verified": false
   },
   "next": [
-    "narrow Docker metadata rerun and primary config identifier/permission read",
-    "prepare independent PostgreSQL admin path before role privilege reduction",
-    "review upgrade_backup_restore consumers and full code_ACL inventory before permission changes"
+    "create and verify independent PostgreSQL admin with two required_SCRAM sessions before role privilege reduction",
+    "rehearse application privileges and upgrade_backup_restore consumers on a copy before demotion",
+    "coordinate config ownership with HTTPS captured metadata and inventory full code_ACL before file permission changes",
+    "plan explicit container log rotation and healthchecks with guarded recreation later"
   ],
+  "owner_followup": {
+    "received_date_moscow": "2026-10-23",
+    "exact_measurement_time": null,
+    "kind": "pasted_terminal_output_corrected_Docker_and_primary_config_probes",
+    "primary_config": {
+      "host_path": "/opt/ustar/data/moodle/public/config.php",
+      "container_path": "/var/www/html/config.php",
+      "uid": 33,
+      "gid": 33,
+      "mode": "0755",
+      "symlink": false,
+      "www_data_readable": true,
+      "www_data_writable": true,
+      "static_literals": {"dbuser": "moodle", "dbname": "moodle", "prefix": "mdl_"},
+      "effective_PHP_runtime_bootstrapped": false,
+      "HTTPS_saved_metadata_handoff_required": true
+    },
+    "docker": {
+      "corrected_optional_Health_lookup": "native_owner_execution_succeeded",
+      "containers": [
+        {
+          "name": "ustar_moodle",
+          "id": "64130d6157efbad3a290a39a64eaad29796b67c10004773e419cfa5ce4f0ecfc",
+          "image": "sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b",
+          "state": "running",
+          "restart_count": 0,
+          "oom_killed": false,
+          "healthcheck": "not_configured",
+          "log_driver": "json-file",
+          "log_max_size": null,
+          "log_max_file": null,
+          "readonly_rootfs": false
+        },
+        {
+          "name": "ustar_postgres",
+          "id": "0d4d016c8f3f46e3278613daa02846a1833f470b326a9833f79f9ec7a331b7b6",
+          "image": "sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94",
+          "state": "running",
+          "restart_count": 0,
+          "oom_killed": false,
+          "healthcheck": "not_configured",
+          "log_driver": "json-file",
+          "log_max_size": null,
+          "log_max_file": null,
+          "readonly_rootfs": false
+        }
+      ],
+      "images_match_reviewed_hdd_adapter_constants": true,
+      "new_independent_HTTP_DB_application_health_check": false,
+      "log_sizes_measured": false,
+      "container_recreation_performed": false
+    },
+    "admin_creation_or_hardening_executed": false
+  },
   "production_mutations_performed": false,
   "connect_development_paused": true,
   "subagents": 0

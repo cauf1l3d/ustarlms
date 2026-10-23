@@ -5,12 +5,12 @@ source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_infrastructure_checkpoint:
   date_msk: '2026-10-23'
-  status: owner_partial_measured_P0_DB_code_findings_narrow_followup_pending
+  status: owner_followup_received_additive_admin_commands_ready_not_executed
   report: context/runtime/infra_normalization_resume_20261023.md
   baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
   baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
-  findings: one_superuser_moodle_www_data_writable_local_ustar_scheduled_cron_backup_success
-  next: narrow_Docker_primary_config_followup_then_prepare_independent_DB_admin_and_code_permissions
+  findings: one_superuser_moodle_primary_config33_mode755_and_local_ustar_writable_no_container_healthcheck_or_log_limits
+  next: additive_admin_creation_and_two_required_SCRAM_sessions_then_copy_privileges_and_HTTPS_config_metadata_handoff
   production_mutations_performed: false
   accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300
 current_connect_checkpoint:
@@ -117,7 +117,9 @@ tasks:
     отдельными.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
-  status: planned
+  status: in_progress
+  current_summary: Owner roles/config/Docker metadata получены; additive admin creation и два SCRAM-входа подготовлены, ещё не выполнены. Full baseline, copy rehearsal и demotion acceptance остаются открыты.
+  evidence: context/runtime/infra_readonly_owner_20261023.json
   depends_on:
   - INF-01
   acceptance:

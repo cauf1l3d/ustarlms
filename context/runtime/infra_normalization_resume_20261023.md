@@ -68,4 +68,10 @@ superuser `moodle`, code local_ustar writable под www-data33; scheduled cron1
 exit0 и HDD03:30МСК success,48G свободно. Docker metadata не получены из-за ошибки
 шаблона Health; primary config уровнем выше ещё не прочитан. В runbook — исправленный
 узкий follow-up, без повторного SQL/cron/backup. Не демотировать единственный admin.
-Runtime не менялся; native Docker проверка исправленного шаблона pending owner.
+Runtime не менялся. Поздний owner follow-up выполнил исправленный шаблон: оба containers
+running/restarts0/OOMfalse, exact accepted images; healthchecks и json-file limits нет.
+Primary config33:33/0755 readable+writable под www-data, static dbuser=moodle/DBmoodle/
+prefixmdl_. [Тот же runbook](infra_readonly_baseline_20261023.md) теперь содержит первый
+адресный write: создание ustar_pg_admin и два отдельных обязательных SCRAM-входа;
+это команды, не состоявшаяся установка. Далее copy rehearsal и HTTPS config metadata
+handoff перед demotion/file hardening. Full INF01/02/03 ещё не закрыты.

@@ -103,7 +103,8 @@ SHA256 `4382ed9e1c2e08223b61b4dc9c4bdfd47d5b4c7d21e41939031428eb7cdf5ad0`.
 Идентификаторы config читаются статически, содержимое и пароли не печатаются.
 Нет PHP bootstrap, повторного SQL/cron/backup запуска или изменения services/прав.
 Docker Go-template correction локально проверена по первичной документации
-https://pkg.go.dev/text/template#hdr-Functions (`index`), native результат ожидается.
+https://pkg.go.dev/text/template#hdr-Functions (`index`). Owner выполнил команды ниже:
+native Docker correction и основной config metadata/literals получены; повтор не нужен.
 
 ```bash
 sudo -v
@@ -146,3 +147,97 @@ PY
 PostgreSQL с проверенным login/recovery и разбором upgrade/backup consumers, затем
 минимизация elevated flags и code write access. Нельзя демотировать единственный
 admin сейчас, менять HBA целиком или рекурсивно chmod/chown data/core по sample.
+
+## Follow-up получен: переход к INF-02, шаг2
+
+Owner output23Oct: оба контейнера running/restarts0/OOMfalse, exact images совпадают
+с accepted HDD adapter. Healthcheck отсутствует; json-file без max-size/max-file;
+это не healthy verdict и не измерение текущего размера logs. Реальные container IDs
+сохранены в `owner_followup` [той же квитанции](infra_readonly_owner_20261023.json).
+Основной config.php —33:33/0755, regular/no symlink, readable+writable под www-data.
+Статические dbuser/dbname/prefix=`moodle/moodle/mdl_`; PHP не исполнялся, includes/
+environment overrides этим не исключены. Начальный18:08UTC receipt сохранён отдельно
+от follow-up без придуманного measurement timestamp.
+
+Первый адресный write — **добавить** `ustar_pg_admin` с private tty password и проверить
+его в двух отдельных новых DB sessions. Никакой demotion/HBA/restart/config write в
+этом блоке. Пароль выбирает owner и сохраняет в своём password manager; агент его не
+получает, plaintext/verifier не печатается. Используются существующие createuser/psql
+в production PostgreSQL image, без установки новых packages.
+
+Сначала отдельный `sudo -v`, дождаться prompt. Затем Bash block:
+
+```bash
+(
+  set -euo pipefail
+  ustar_pg_ip=$(sudo -n docker inspect --format \
+    '{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' \
+    ustar_postgres | awk 'NF {print; exit}')
+  if [[ ! "$ustar_pg_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ || \
+        "$ustar_pg_ip" == 127.* || "$ustar_pg_ip" == 0.0.0.0 ]]; then
+    printf '%s\n' 'POSTGRES_INTERNAL_IP_NOT_FOUND' >&2
+    exit 1
+  fi
+
+  sudo -n docker exec -it ustar_postgres env \
+    PGCONNECT_TIMEOUT=5 \
+    PGOPTIONS='-c password_encryption=scram-sha-256 -c search_path=pg_catalog -c statement_timeout=15s -c lock_timeout=3s' \
+    createuser --username=moodle --maintenance-db=moodle \
+    --superuser --pwprompt ustar_pg_admin
+
+  for ustar_admin_session in 1 2; do
+    printf 'ADMIN_SESSION=%s\n' "$ustar_admin_session"
+    sudo -n docker exec -it ustar_postgres psql -X -W \
+      -P pager=off -v ON_ERROR_STOP=1 \
+      "host=$ustar_pg_ip dbname=moodle user=ustar_pg_admin connect_timeout=5 require_auth=scram-sha-256 passfile=/dev/null" \
+      -c "BEGIN READ ONLY; SET LOCAL statement_timeout = '15s'; SET LOCAL lock_timeout = '3s'; SET LOCAL search_path = pg_catalog; SELECT session_user AS login_role, current_user AS effective_role, pg_backend_pid() AS backend_pid, rolcanlogin, rolsuper FROM pg_catalog.pg_roles WHERE rolname = current_user; ROLLBACK;"
+  done
+)
+```
+
+Creation prompts twice for the new password; the two login probes each prompt once
+more. Expect `ustar_pg_admin`/`ustar_pg_admin`, distinct backend PIDs, rolcanlogin=t
+and rolsuper=t in both sessions. Required SCRAM prevents a local-trust login from
+being mistaken for password verification. Container IP is discovered locally before
+creation; no external socket/port/router binding added. Connection5s, SQL15s/lock3s;
+interactive typing is deliberately not killed by a whole-command timeout.
+
+Existing name → createuser refuses and the subshell stops, no silent password reset
+or reuse. Failed verification → leave `moodle` privileges untouched, collect error
+and repair only the new admin path. No DROP/reassignment/CASCADE occurs automatically.
+If cancelling this additive step before any ownership/use of the new role, owner may
+run `sudo docker exec -it ustar_postgres dropuser --username=moodle --maintenance-db=moodle ustar_pg_admin`;
+ordinary drop refuses dependencies. Old backups retain the previous admin path;
+backup coverage of new credentials/roles is not claimed by this creation step.
+
+## Следующие writes и совместимость
+
+INF-02 steps3–5 require copy rehearsal: domain writes/File API/cron, XMLDB upgrade/
+repeat, dump/restore and cluster-operation denials under target flags. Source
+`production_restore.py` already separates `ustar_restore_admin` and `ustar_app` in
+its isolated restore, but that is not this live role's acceptance. Old release
+scripts and readiness SQL use POSTGRES_USER; the installed backup engine is a
+separate hash-pinned delegate. All consumers must be checked before demoting moodle.
+
+INF-03 target candidate for primary config is root:33/0640 with unchanged bytes,
+root-owned non-writable parents and effective www-data read/no-write/no-replace.
+Before applying: full ACL/xattrs/links sample and copy test, private recovery image,
+and coordinated metadata handoff in HTTPS owner state. `academy_https.Manager.capture`
+saves uid/gid/mode/xattrs, `replace` reapplies them; readiness checks accepted metadata.
+Plain chmod/chown alone would leave a stale captured owner/mode and a future restore
+could reinstate the old permissions. Current Connect2300 successor snapshots include
+HTTPS controls, so full handoff/rollback must also preserve their contracts. Source
+local_ustar must be root-managed as a release tree; do not recursively change moodledata.
+
+INF-05: later explicit max-size/max-file and healthchecks need exact container recreate
+preview and preservation of mounts/IDs in consumers; changing daemon defaults alone
+does not retrofit running containers. No log truncate/prune or Docker restart now.
+
+Primary references checked23Oct2026:
+https://www.postgresql.org/docs/16/app-createuser.html
+https://www.postgresql.org/docs/16/libpq-connect.html (`require_auth`)
+https://www.postgresql.org/docs/16/auth-trust.html
+https://docs.docker.com/engine/logging/drivers/json-file/
+
+Local Bash syntax/author review can qualify these commands, not prove actual role
+creation or successful SCRAM sessions. Both owner outputs remain required.

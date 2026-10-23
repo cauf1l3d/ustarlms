@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+## 23Oct — INF-01 first operator metadata batch ready; native output pending
+
+Owner approved starting the resumed plan. New plain shell script5765B SHA4382ed9e…
+uses bounded psql BEGIN READ ONLY/ROLLBACK, explicit pg_catalog search_path, role/owner/
+HBA metadata without password/options/query fields; two plugin version rows only.
+Selected static config literals are not effective runtime proof. Host parents and
+www-data stat/test-w sample reveal write/replace candidates without creating files.
+Selected inspect fields omit Env; cron/HDD helpers status only. No Moodle bootstrap,
+ALTER ROLE/chmod/chown/restart/backup capture. Bash/embedded sh/Python syntax PASS,
+author metadata-only review PASS. Actual PostgreSQL/Docker unavailable locally;
+SQL/permissions/status measurements pending owner execution, full INF01 not complete.
+Runbook: context/runtime/infra_readonly_baseline_20261023.md. Accepted2300 and paused
+Telegram development preserved;0subagents/no agent SSH/provider sends/main merge.
+
 ## 23Oct — owner pauses Connect and resumes infrastructure normalization
 
 One-time automation successfully created for24Oct2026 15:00Europe/Moscow: review existing

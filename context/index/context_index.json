@@ -1020,8 +1020,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 34592,
-      "sha256": "682373240f8d3756e855089fad4cd490af1fc69dfe2534b906cef1d333244944"
+      "size": 34680,
+      "sha256": "0c2e4d6b9e54158f46e292b27201ee85dede7ccc1b1c29350e524c6eb6876613"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1062,8 +1062,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 210501,
-      "sha256": "359ddc0770107c7e873579143b7857c0990cd12f7c896b412787ac1318510359"
+      "size": 211507,
+      "sha256": "aaa153b44801d7cec8f7859cc3afc01a956de00d34679ce8ce3c8ae160430218"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1074,8 +1074,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 15275,
-      "sha256": "fe7226bdf626d678e9123895414927a7dc7f81977bae2047a968a94d896f15db"
+      "size": 15489,
+      "sha256": "6dc3a4ec4b9b98358020c156acaabf673661ddc79d43d766a9af07d8afcf37dd"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1818,8 +1818,14 @@
     {
       "path": "context/runtime/infra_normalization_resume_20261023.md",
       "domain": "runtime",
-      "size": 6793,
-      "sha256": "7b1dd4fcfda0629efc0456af45b6dfa4a0ea7bc23453f0d2abd2595df3f537e9"
+      "size": 7394,
+      "sha256": "96e5f8a31d4c6544bae03a057e122685d38ddb847a7134b37f5311e9b453262d"
+    },
+    {
+      "path": "context/runtime/infra_readonly_baseline_20261023.md",
+      "domain": "runtime",
+      "size": 6303,
+      "sha256": "dfa726a2bc854270c0119587448d0e60611a4c32168432600b2471bdc5d2ef28"
     },
     {
       "path": "context/runtime/lab_cold_checkpoint_20261005.md",

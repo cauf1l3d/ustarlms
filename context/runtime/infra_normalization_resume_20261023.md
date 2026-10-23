@@ -57,3 +57,11 @@ backup/recovery. Это рекомендация порядка по P0 исхо
 PLAT-01 Moodle5.2/PG17, новый mobile/B2B, новый внешний Telegram вход и reserve routing
 не включены в текущее возобновление. Source/raw host archives и работающие сервисы
 не менялись; no agent SSH/provider sends/main merge,0subagents.
+
+## Начало выполнения одобрено владельцем23Oct
+
+Owner: «хорошо начнем тогда по этому плану». Подготовлен первый
+[read-only operator batch](infra_readonly_baseline_20261023.md) для P0 DB/file triage,
+с logging/health/mount/cron/backup metadata. Commands ready, owner output pending;
+INF-01 целиком не закрыт. Проверен синтаксис Bash/embedded sh/Python и выполнен author
+safety review, native SQL/containers локально недоступны. Runtime не менялся.

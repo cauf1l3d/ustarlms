@@ -14,6 +14,8 @@ current_activity: >-
   0subagents/no agent SSH/provider sends/main merge; shared Apache/AutoReport retained.
 next_task: INF-01
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
+infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
+infrastructure_baseline_status: commands_ready_owner_native_output_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
 connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
 
@@ -108,6 +110,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/infra_readonly_baseline_20261023.md
 - context/runtime/infra_normalization_resume_20261023.md
 - context/runtime/connect_telegram_next_preflight_20261023.md
 - context/runtime/connect_telegram_finish_owner_20261023.json

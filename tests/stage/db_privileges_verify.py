@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 FLAGS = ('superuser', 'createrole', 'createdb', 'replication', 'bypassrls')
-CHECKS = ('xmldb_ddl', 'domain_writes', 'file_api', 'scheduled_task', 'pg_dump_app',
+CHECKS = ('privileged_membership_denied', 'xmldb_ddl', 'domain_writes', 'file_api', 'scheduled_task', 'pg_dump_app',
           'pg_restore_admin_set_app_role', 'schema_equal_after_restore',
           'data_equal_after_restore', 'globals_app_denied', 'globals_admin_private',
           'globals_not_uploaded')
@@ -31,6 +31,12 @@ def validate(value):
                 for k in (*FLAGS, 'dangerous_memberships')), 'cluster_privileges_retained')
     require(admin.get('role') == 'ustar_privilege_admin' and admin.get('superuser') == 1,
             'separate_admin_required')
+    member = value.get('membership_refusal')
+    require(isinstance(member, dict) and member.get('login_role') == member.get('effective_role') == 'ustar_fixture'
+            and member.get('database_owner') == 1 and type(member.get('dangerous_memberships')) is int
+            and member['dangerous_memberships'] > 0
+            and all(type(member.get(k)) is int and member[k] == 0 for k in FLAGS),
+            'actual_privileged_membership_negative_control_required')
     checks = value.get('checks')
     require(isinstance(checks, dict) and all(checks.get(k) is True for k in CHECKS),
             'incomplete_native_operation_proof')

@@ -26,7 +26,8 @@ function privilege_role(): array {
         $row[$key] = (int)$row[$key];
     }
     $row['dangerous_memberships'] = (int)$DB->get_field_sql("SELECT count(*) FROM pg_catalog.pg_roles r
-        WHERE r.rolname <> current_user AND (r.rolsuper OR r.rolbypassrls
+        WHERE r.rolname <> current_user AND (r.rolsuper OR r.rolcreaterole
+          OR r.rolcreatedb OR r.rolreplication OR r.rolbypassrls
           OR r.rolname IN ('pg_read_server_files', 'pg_write_server_files', 'pg_execute_server_program'))
         AND pg_has_role(current_user, r.oid, 'MEMBER')");
     file_put_contents('/artifacts/db-privileges-role.json', json_encode($row, JSON_THROW_ON_ERROR));

@@ -45,8 +45,10 @@ GREEN reduced-role implementation is prepared; native result remains pending.
 Host evidence verifier6 focused tests already observed RED missing verifier → GREEN.
 This does not substitute for native DB assertions.
 
-New gate must demonstrate actual app session/all five flags0, no privileged inherited
-memberships, owner DDL and business/file operations, selected scheduled task,
+New gate must demonstrate actual app session/all five flags0, no membership in roles
+with any cluster attribute or server-file/program access. A temporary CREATEDB
+membership must be refused with the expected guard before admin revokes/drops it.
+Then owner DDL and business/file operations, selected scheduled task,
 2200→2300/repeat, actual app dump and admin restore SET ROLE app, record/schema equality,
 SQLSTATE42501 cluster denials, failed old globals capture as app and successful private
 globals capture as admin. Synthetic dumps/globals remain /stage tmpfs; only selected

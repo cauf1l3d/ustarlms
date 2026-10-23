@@ -24,6 +24,8 @@ owner/server1 стенд и не менять приложение, frozen insta
    actions, five SQLSTATE42501 denials. Prove old globals app dump refused and admin
    succeeds privately. Keep synthetic dumps/globals under /stage tmpfs, sanitized
    JSON/logs only under artifacts. Native gate uses exact current source, no provider.
+   Refuse temporary CREATEDB-role membership despite zero app flags; revoke it and
+   retain sanitized negative-control metadata before positive app operations.
 3. **Evidence verifier, consumer report, checks.** Create host JSON verifier and
    focused r16 tests: reject elevated flags/admin masquerade/wrong denial/absent
    upgrade or restore proof; RED→GREEN. Review exact pinned original backup source

@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "scope": "INF02_missing_privilege_delta_in_existing_pinned_fixture",
+  "status": "native_GREEN_pending",
+  "author_review_only": true,
+  "subagents": 0,
+  "native_RED": {
+    "commit": "df3ee0ef8498c0ff3b0163cdcf10fce15454d20f",
+    "review_run": 40012838091,
+    "job": 120619281630,
+    "conclusion": "expected_failure",
+    "reason": "APP_ROLE_HAS_CLUSTER_PRIVILEGES",
+    "previous_phpunit": {
+      "tests": 158,
+      "assertions": 830,
+      "passed": true
+    },
+    "previous_presentation_recovery": "PASS",
+    "artifact": {
+      "id": 12527033759,
+      "name": "connect-identity-db-evidence",
+      "sha256": "09106d4c705df30aaafce6a6cac71435c0d0f0c646a0ab138103137baff10252",
+      "downloaded_and_hash_verified": true
+    },
+    "actual_role": {
+      "login_role": "ustar_fixture",
+      "effective_role": "ustar_fixture",
+      "superuser": 1,
+      "createrole": 1,
+      "createdb": 1,
+      "replication": 1,
+      "bypassrls": 1,
+      "database_owner": 1,
+      "dangerous_memberships": 3
+    }
+  },
+  "candidate": {
+    "commit": "ad6ea0eebc4b1e89a12f83be8be8a4a55038cb31",
+    "review_run": 40015359368,
+    "context_run": 40015359367,
+    "context": "success",
+    "first_source83": {
+      "job": 120625924421,
+      "python_tests": 1083,
+      "environment_skips": 153,
+      "python_result": "success",
+      "job_result": "failure",
+      "reason": "unchanged_visual.cjs:100 Page.captureScreenshot Unable to capture screenshot"
+    },
+    "runtime": {
+      "job": 120625923967,
+      "result": "success"
+    },
+    "first_source82": {
+      "job": 120625924348,
+      "result": "success"
+    },
+    "native_job": {
+      "job": 120631577453,
+      "result": "skipped_due_source83_browser_failure_not_DB_pass"
+    }
+  },
+  "backup_engine_source": {
+    "name": "USTAR_BACKUP_SFTP_20261004.py",
+    "bytes": 13689,
+    "sha256": "0d31e694db8bee2309072bd00dee2423022f35e18ad2c11ea1cf788fc63ef47f",
+    "exact_original_private_source_reviewed": true,
+    "source_committed": false,
+    "blocker": "pg_dumpall_globals_only_currently_uses_POSTGRES_USER_moodle_needs_separate_admin_handoff"
+  },
+  "production": {
+    "owner_admin_created": "ustar_pg_admin",
+    "owner_required_SCRAM_sessions": [
+      9976,
+      9995
+    ],
+    "moodle_flags_changed": false,
+    "HBA_changed": false,
+    "files_changed": false,
+    "services_restarted": false,
+    "backup_entrypoints_changed": false,
+    "new_owner_stand_requested": false,
+    "provider_called": false,
+    "agent_SSH": false
+  },
+  "limits": [
+    "No production demotion or complete INF02 closure",
+    "Exact current cron v3 source not inferred from older Library v2 copy",
+    "Selected native scheduled task does not prove every installed helper",
+    "Globals/admin handoff for every backup entrypoint and frozen preflight guards still required",
+    "Schema equality covers100USTAR tables; retained data checks selected synthetic core/domain/FileAPI records",
+    "Existing owner stand/UI/paired restore acceptance reused; no new full production DR claim",
+    "Previous158PHPUnit tests run before demotion; new reduced-role proof consists of selected real app operations and denials"
+  ],
+  "membership_review": {
+    "ordinary_role_attributes_can_be_gained_via_SET_ROLE": true,
+    "source": "https://www.postgresql.org/docs/16/role-membership.html",
+    "change": "guard all five cluster attributes and retain a real CREATEDB-membership negative control",
+    "focused_tests": 7,
+    "focused_negative_control_test_RED_then_GREEN": true,
+    "native_result": "pending_next_code_commit"
+  }
+}

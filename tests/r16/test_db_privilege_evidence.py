@@ -23,7 +23,10 @@ class Evidence(unittest.TestCase):
                     'database_owner': 1, 'dangerous_memberships': 0,
                     **dict.fromkeys(['superuser', 'createrole', 'createdb', 'replication', 'bypassrls'], 0)},
             'admin': {'role': 'ustar_privilege_admin', 'superuser': 1},
-            'checks': dict.fromkeys(['xmldb_ddl', 'domain_writes', 'file_api', 'scheduled_task',
+            'membership_refusal': {'login_role': 'ustar_fixture', 'effective_role': 'ustar_fixture',
+                'database_owner': 1, 'dangerous_memberships': 1,
+                **dict.fromkeys(['superuser', 'createrole', 'createdb', 'replication', 'bypassrls'], 0)},
+            'checks': dict.fromkeys(['privileged_membership_denied', 'xmldb_ddl', 'domain_writes', 'file_api', 'scheduled_task',
                 'pg_dump_app', 'pg_restore_admin_set_app_role', 'schema_equal_after_restore',
                 'data_equal_after_restore', 'globals_app_denied', 'globals_admin_private',
                 'globals_not_uploaded'], True),
@@ -55,6 +58,16 @@ class Evidence(unittest.TestCase):
         for bad in ['25006', '08006', None]:
             value = self.evidence(); value['denied_sqlstates']['create_role'] = bad
             with self.assertRaises(ValueError): module.validate(value)
+
+    def test_requires_zero_flag_app_rejected_for_privileged_membership(self):
+        module = self.module()
+        for key, bad in [('dangerous_memberships', 0), ('superuser', 1),
+                         ('login_role', 'ustar_privilege_admin')]:
+            with self.subTest(key=key):
+                value = self.evidence(); value['membership_refusal'][key] = bad
+                with self.assertRaises(ValueError): module.validate(value)
+        value = self.evidence(); del value['membership_refusal']
+        with self.assertRaises(ValueError): module.validate(value)
 
     def test_rejects_missing_globals_restore_or_task_proof(self):
         module = self.module()

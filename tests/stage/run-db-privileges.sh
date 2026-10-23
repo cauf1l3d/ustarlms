@@ -28,6 +28,19 @@ psql -X -w -h db -U ustar_privilege_admin -d ustar_stage1 -v ON_ERROR_STOP=1 \
 psql -X -w -qAt -h db -U ustar_privilege_admin -d postgres -v ON_ERROR_STOP=1 \
   -c "SELECT json_build_object('role',current_user,'superuser',rolsuper::int) FROM pg_roles WHERE rolname=current_user;" \
   > /artifacts/db-privileges-admin.json
+# Negative control: zero own flags must not hide SET ROLE access to CREATEDB.
+psql -X -w -h db -U ustar_privilege_admin -d postgres -v ON_ERROR_STOP=1 \
+  -c 'CREATE ROLE ustar_privilege_holder NOLOGIN CREATEDB; GRANT ustar_privilege_holder TO ustar_fixture;' \
+  > "$DBP/membership-grant.log" 2>&1
+if php "$probe" role > "$DBP/membership-refused.log" 2>&1; then
+    echo 'UNEXPECTED_PRIVILEGED_MEMBERSHIP_ACCEPTED' >&2
+    exit 1
+fi
+grep -q 'APP_ROLE_HAS_CLUSTER_PRIVILEGES' "$DBP/membership-refused.log"
+cp /artifacts/db-privileges-role.json /artifacts/db-privileges-member-refused.json
+psql -X -w -h db -U ustar_privilege_admin -d postgres -v ON_ERROR_STOP=1 \
+  -c 'REVOKE ustar_privilege_holder FROM ustar_fixture; DROP ROLE ustar_privilege_holder;' \
+  > "$DBP/membership-revoke.log" 2>&1
 php "$probe" role
 baseline=$(php "$probe" version)
 
@@ -88,7 +101,8 @@ proof = {
     'result': 'DB_PRIVILEGES_NATIVE=PASS', 'postgres_major': int(app['postgres_major']),
     'application_versions': [int(v) for v in sys.argv[1:]], 'app': app,
     'admin': json.loads((out/'db-privileges-admin.json').read_text()),
-    'checks': dict.fromkeys(['xmldb_ddl', 'domain_writes', 'file_api', 'scheduled_task',
+    'membership_refusal': json.loads((out/'db-privileges-member-refused.json').read_text()),
+    'checks': dict.fromkeys(['privileged_membership_denied', 'xmldb_ddl', 'domain_writes', 'file_api', 'scheduled_task',
         'pg_dump_app', 'pg_restore_admin_set_app_role', 'schema_equal_after_restore',
         'data_equal_after_restore', 'globals_app_denied', 'globals_admin_private',
         'globals_not_uploaded'], True),

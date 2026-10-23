@@ -672,8 +672,8 @@
     {
       "path": "context/proposals/INF02_PRIVILEGE_DELTA_PLAN_20261023.md",
       "domain": "proposals",
-      "size": 3500,
-      "sha256": "d01ada40861e13b4ce3d22918314bf4ce6ee573c7f8f245b066b86fcea1d6049"
+      "size": 3671,
+      "sha256": "1b358f03f1b46d90c5d39aecc7de0d45e5981368e514da227e37c0ac17da2e80"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
@@ -1820,6 +1820,12 @@
       "domain": "runtime",
       "size": 4307,
       "sha256": "df39ce785a34f05951dbc32322d2ae1dfbaa785be6890a797a0c2e41ec74f07d"
+    },
+    {
+      "path": "context/runtime/infra_db_privilege_consumers_20261023.md",
+      "domain": "runtime",
+      "size": 4999,
+      "sha256": "55e16ca753e8158b79108fb3756f52ba986b7b662c97efd1bc193eb128501b7c"
     },
     {
       "path": "context/runtime/infra_normalization_resume_20261023.md",

@@ -21,7 +21,7 @@ owner/server1 стенд и не менять приложение, frozen insta
 2. **Новый профиль и native assertions, GREEN.** Create `run-db-privileges.sh`:
    separate fixture admin, demote app, role/DDL/domain/file writes, current2200→2300/
    repeat, selected scheduled task, actual app pg_dump/restore with admin cluster
-   actions, four SQLSTATE42501 denials. Prove old globals app dump refused and admin
+   actions, five SQLSTATE42501 denials. Prove old globals app dump refused and admin
    succeeds privately. Keep synthetic dumps/globals under /stage tmpfs, sanitized
    JSON/logs only under artifacts. Native gate uses exact current source, no provider.
 3. **Evidence verifier, consumer report, checks.** Create host JSON verifier and
@@ -42,7 +42,9 @@ owner/server1 стенд и не менять приложение, frozen insta
 
 ## Verification / progress
 
-- [ ] Native role assertion RED on current superuser fixture.
+- [x] Native role assertion RED on current superuser fixture: df3ee0ef,
+      Review40012838091/connect-db120619281630, APP_ROLE_HAS_CLUSTER_PRIVILEGES
+      after the previous158tests/830assertions and presentation recovery passed.
 - [ ] Focused verifier RED→GREEN, Bash/Python/PHP syntax + context checks.
 - [ ] Native limited-role gate GREEN in existing pinned CI, inspect artifacts/logs.
 - [ ] Record exact commit/run/result and consumer limitation; no server1 mutation.

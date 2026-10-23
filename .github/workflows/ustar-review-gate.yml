@@ -154,6 +154,7 @@ jobs:
           python3 tests/stage/connect_installer_probe.py verify
           python3 tests/stage/chat_link_update_probe.py
           python3 tests/stage/con02_update_native.py verify
+          python3 tests/stage/db_privileges_verify.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

@@ -76,3 +76,10 @@ prefixmdl_. [Тот же runbook](infra_readonly_baseline_20261023.md) тепе�
 Owner corrected retry уже создал ustar_pg_admin: два required-SCRAM входа9976/9995,
 session/current role совпали, login/superuser=t. Создание не повторять. Далее copy rehearsal и HTTPS config metadata
 handoff перед demotion/file hardening. Full INF01/02/03 ещё не закрыты.
+
+Owner напомнил о пройденных стендах: прежняя формулировка полного повтора была
+слишком широкой. Засчитать принятую историю patch/upgrade/recovery и Connect CI;
+следующий scope — DB consumers и только недостающие reduced-role проверки в
+существующем CI. Новый owner-стенд/full restore/repackage/UI круг по умолчанию не
+нужны. Latest fixture admin ustar_fixture и restore code ordinary ustar_app покрывают
+разные условия; [разбор](infra_readonly_baseline_20261023.md) фиксирует точный пробел.

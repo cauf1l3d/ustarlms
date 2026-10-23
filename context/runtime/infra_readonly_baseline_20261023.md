@@ -8,6 +8,30 @@ INF02 step2 login acceptance принята; **createuser больше не вы
 config/services не менялись; copy rehearsal/backup/recovery и полная INF02 ещё pending.
 [Та же квитанция](infra_readonly_owner_20261023.json), поле admin_creation_success.
 
+**Уточнение после вопроса owner23Oct о повторении стендов:** прежние принятые
+patch/upgrade/repeat/paired recovery и Connect native158/830 сохраняют силу.
+Новый owner/server1 стенд, полная переупаковка/restore и ручной UI круг по умолчанию
+не нужны. Следующий scope — DB consumers и недостающий privilege-delta gate в
+существующем CI. Предыдущая формулировка полного цикла была слишком широкой.
+
+Source reconciliation: `tests/stage/compose.yaml` и `patch-compose.yaml` задают
+POSTGRES_USER=ustar_fixture, `tests/stage/config.php` использует этого app dbuser.
+Official postgres image создаёт POSTGRES_USER superuser: это вывод из source/image
+contract, не новая выборка pg_roles из старого запуска. Latest Connect receipt не
+содержит отдельного PASS после снятия cluster flags. Вместе с тем
+`production_restore.py` уже создаёт обычную ustar_app (NOSUPERUSER/NOCREATEDB/
+NOCREATEROLE) и отдельного admin. Это существующий код, а modeled production-copy
+validation/off-host pending не равны полному native2300 подтверждению этой модели.
+Не утверждать, что все прежние стенды использовали superuser.
+
+Засчитать уже пройденное, проверить зависимости установленного backup delegate/
+upgrade SQL и добавить только недостающие проверки прав в имеющийся isolated CI.
+Административный fixture setup/restore должен быть отделён от app execution:
+старые scripts DROP/CREATE DATABASE под ustar_fixture, поэтому его простая demotion
+посреди старого сценария проверяла бы harness. Прежние результаты не обнуляются,
+недостающая квитанция не объявляется поломкой. Production demotion ещё не выполнялась.
+Image reference: https://hub.docker.com/_/postgres (POSTGRES_USER).
+
 Owner одобрил начало [плана возврата](infra_normalization_resume_20261023.md).
 Первый конкретный результат — проверяемые команды
 [`readonly_baseline_20261023.sh`](../../scripts/infra/readonly_baseline_20261023.sh).

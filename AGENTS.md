@@ -1,5 +1,11 @@
 # USTAR инструкции агентам
 
+**23Oct — прежние стенды засчитываются; следующий scope — только DB privilege delta.**
+Нового owner/server1 стенда/full restore/repackage/UI круга по умолчанию не нужно.
+Проверить DB consumers и дополнить существующий CI недостающими сценариями прав.
+Latest fixture admin ustar_fixture и restore code ordinary ustar_app имеют разные
+границы доказательств. [Разбор](context/runtime/infra_readonly_baseline_20261023.md).
+
 **23Oct — отдельный PostgreSQL admin создан, два SCRAM-входа приняты.**
 Owner corrected retry: ustar_pg_admin, PID9976/9995, session/current role match,
 login/superuser=t. [Receipt](context/runtime/infra_readonly_owner_20261023.json), admin_creation_success.

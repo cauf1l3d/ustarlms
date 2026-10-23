@@ -144,7 +144,7 @@
     "fresh_decryption_or_clean_host_restore_verified": false
   },
   "next": [
-    "rehearse application privileges and upgrade_backup_restore consumers on a copy before demotion",
+    "reuse accepted stages and review installed consumers; add only missing reduced-role checks to existing CI before demotion, no new owner stand or full restore repeat by default",
     "coordinate config ownership with HTTPS captured metadata and inventory full code_ACL before file permission changes",
     "plan explicit container log rotation and healthchecks with guarded recreation later"
   ],

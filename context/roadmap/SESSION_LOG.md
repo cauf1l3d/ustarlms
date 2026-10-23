@@ -1,5 +1,18 @@
 # Журнал выполнения roadmap
 
+## 23Oct — reuse accepted stages; narrow INF02 to missing privilege checks in existing CI
+
+Owner challenged repeating completed stands. Previous broad next-step wording overstated
+scope. Keep accepted patch/Connect upgrade/repeat/paired recovery. Current stage/patch
+compose initializes POSTGRES_USER=ustar_fixture and PHP uses it, hence superuser by
+documented official image contract (source inference, not new historical pg_roles query).
+Restore code already separates ordinary ustar_app/admin, while production-copy modeled/
+off-host pending receipt does not prove all current2300 consumers under reduced flags.
+Next: inspect installed consumers and add only missing privilege-delta checks to existing
+isolated CI, separating admin setup/restore from app execution. No new owner/server1
+stand or full restore/repackage/manual UI cycle by default; do not claim every old stand
+used superuser. This clarification changes docs, no code/tests/server operations.
+
 ## 23Oct — owner created independent PostgreSQL admin and verified two SCRAM sessions
 
 Corrected createuser succeeded with hidden new-password prompts. Two new connections

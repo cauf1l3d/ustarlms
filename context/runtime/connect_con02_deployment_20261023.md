@@ -2,8 +2,8 @@
 
 Поставка завершена23Oct2026 (МСК); план принят22Oct. Все9задач/45шагов закрыты как source/handoff.
 
-Инструмент: `b971bc3835f1a369779e1b2b344cc43b3a374df6`. Приложение и worker: `534764821c4f65437ab50b3c7f25578d538e9504`.
-Один обычный файл `ustar-con02-update-b971bc38.py`, SHA256 `692de510d7864e723885f6764ec8363d6ba70ebbee2f26021f361a4c9a89a484`; архив и ручная распаковка не требуются.
+Инструмент: `4394b99475f469b061010a1ea4aa77b9d984c40f`. Приложение и worker: `534764821c4f65437ab50b3c7f25578d538e9504`.
+Один обычный файл `ustar-con02-update-4394b994.py`, SHA256 `331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b`; архив и ручная распаковка не требуются.
 Код инструмента проверен отдельно от последующего коммита документации.
 
 На server1 по последнему принятому выводу остаются application2000 с policy overlay и worker a86.
@@ -11,32 +11,43 @@
 UID130 последним был revoked; исходные UID/Telegram subject/notify_since/preferences сохраняются.
 Принятый pilot повторять не требуется; группа не включается.
 
+## Исторические индексы
+
+Предыдущий b971 --check отказал schema_indexes. Owner read-only differential подтвердил
+отсутствие только UNIQUE coin_accounts(userid) и test_results(attemptid) при сохранении
+обычных индексов и остальных97таблиц. Новый controller принимает либо полный XMLDB,
+либо точно эту пару на baseline2000. Никакие индексы/legacy записи на сервере не
+исправляются; исходное отсутствие UNIQUE остаётся документированной исторической
+разницей. Все остальные проверки и сохранение old99 при upgrade/recovery обязательны.
+[Наблюдение и границы исправления](connect_con02_index_compat_20261023.md).
+
 ## Проверка и обновление
 
 Сохранить прикреплённый `.py` в `/home/aduk`, затем:
 
 ```bash
 sudo -v
-sudo -n install -o root -g root -m 600 /home/aduk/ustar-con02-update-b971bc38.py /root/ustar-con02-update-b971bc38.py &&
-printf '%s  %s\n' 692de510d7864e723885f6764ec8363d6ba70ebbee2f26021f361a4c9a89a484 /root/ustar-con02-update-b971bc38.py |
+sudo -n install -o root -g root -m 600 /home/aduk/ustar-con02-update-4394b994.py /root/ustar-con02-update-4394b994.py &&
+printf '%s  %s\n' 331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b /root/ustar-con02-update-4394b994.py |
 sudo -n sha256sum --check --strict - &&
-sudo -n /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --check
+sudo -n /usr/bin/python3 -I -B /root/ustar-con02-update-4394b994.py --check
 ```
 
-Ожидается `baseline_ready`. Проверка читает текущие файлы/SQL, не создаёт state/locks,
+Ожидается `baseline_ready` и `baseline_index_profile: server1_legacy_indexes_20261023`
+для показанной владельцем схемы. Строгая fresh схема показывает `xml_install_indexes`. Проверка читает текущие файлы/SQL, не создаёт state/locks,
 не запускает Moodle bootstrap и не вызывает Telegram/bridge nonce.
 
 Обновление создаёт свежий HDD backup и matching cold pair, с паузой Академии:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --upgrade --acknowledge-outage
+sudo /usr/bin/python3 -I -B /root/ustar-con02-update-4394b994.py --upgrade --acknowledge-outage
 ```
 
 Ожидается `app_ready`,local2026102200,ACK выключен. Копирование может занимать несколько минут;
 команда рассчитана на один запуск без90-секундного timeout. Статус:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --status
+sudo /usr/bin/python3 -I -B /root/ustar-con02-update-4394b994.py --status
 ```
 
 При `baseline_restored` предыдущая попытка восстановлена; новая установка ещё не началась.
@@ -48,7 +59,7 @@ sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --status
 После `app_ready` ACK включается отдельно:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --enable-ack
+sudo /usr/bin/python3 -I -B /root/ustar-con02-update-4394b994.py --enable-ack
 ```
 
 Ожидается `runtime_active`. Новый sender v2 и отдельный ACK-only credential не расширяют
@@ -58,13 +69,13 @@ notify cutoff остаётся. Revoked сотрудник не становит
 Для отдельного возврата к прежнему runtime с сохранением приложения2200:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --disable-ack
+sudo /usr/bin/python3 -I -B /root/ustar-con02-update-4394b994.py --disable-ack
 ```
 
 Для восстановления прерванной операции:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --recover
+sudo /usr/bin/python3 -I -B /root/ustar-con02-update-4394b994.py --recover
 ```
 
 Эти действия выбираются по ситуации:
@@ -81,7 +92,7 @@ sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --recover
 Сначала требуется `--disable-ack`. Только для явно выбранного позднего restore:
 
 ```bash
-sudo /usr/bin/python3 -I -B /root/ustar-con02-update-b971bc38.py --restore --acknowledge-outage --discard-writes-since-snapshot
+sudo /usr/bin/python3 -I -B /root/ustar-con02-update-4394b994.py --restore --acknowledge-outage --discard-writes-since-snapshot
 ```
 
 После прерывания такого restore повторяется именно эта команда с обоими флагами;
@@ -94,18 +105,18 @@ HTTPS owner/config/vhosts/health/observability/tool/units/state/CA/leaf сохр
 
 ## Проверки и границы
 
-Точная квитанция: [connect_con02_deployment_ci_20261023.json](connect_con02_deployment_ci_20261023.json).
-Tool `b971bc38`: Context [39844480447](https://github.com/cauf1l3d/ustarlms/actions/runs/39844480447)
-и Review [39844480386](https://github.com/cauf1l3d/ustarlms/actions/runs/39844480386) SUCCESS.
-PHP8.2 job120062110392 и PHP8.3 job120062108434: каждый1040tests/153environment skips PASS,
-включая browser gates. Runtime120062191053 и native120063830037 SUCCESS.
+Точная квитанция: [connect_con02_index_compat_ci_20261023.json](connect_con02_index_compat_ci_20261023.json).
+Tool `4394b994`: Context [39947880072](https://github.com/cauf1l3d/ustarlms/actions/runs/39947880072)
+и Review [39947880106](https://github.com/cauf1l3d/ustarlms/actions/runs/39947880106) SUCCESS.
+PHP8.2 job120394897070 и PHP8.3 job120394896737: каждый1048tests/153environment skips PASS,
+включая browser gates. Runtime120394896695 и native120399836924 SUCCESS.
 Строгий root/GID33 state11/11 без skips; actual systemd и HTTPS-owner PASS.
 Native154tests/800assertions, direct2000→2200/repeat/restored2000,9 fresh ACK indexes,
 4 SQL mutations denied, custom task[1,1]/history/preferences/revoke PASS.
 Скачанные JSON и ZIP digests проверены; обычный.py совпадает с независимой exact-Git
-сборкой и всеми557 payload/worker/frozen-legacy файлами. PHP8.3 в первой попытке был
-отменён по15-минутному deadline после медленной установки Chromium; повтор прошёл без изменений кода.
-Локально66focused/1UID33namespace skip; прежний whole r16 имел6environment errors и
+сборкой и всеми557 payload/worker/frozen-legacy файлами. Новый native gate проверяет и strict fresh, и исторический профиль
+с отсутствием ровно двух UNIQUE; synthetic duplicate legacy rows сохранены при upgrade/repeat/restore.
+Локально74focused/1UID33namespace skip; прежний whole r16 имел6environment errors и
 не заявлен PASS. Полный regression подтверждён указанными CI jobs.
 
 Native restore проверен как logical PostgreSQL плюс реальные source/config/moodledata в disposable CI.

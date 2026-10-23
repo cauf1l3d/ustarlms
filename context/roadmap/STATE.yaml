@@ -2,16 +2,15 @@ schema_version: 2
 updated_at: '2026-10-23'
 project: USTAR Academy
 stage: connect_CON02_deployment_owner_check
-stage_label: CON02 historical index compatibility fix implemented; required CI pending
+stage_label: CON02 historical index compatibility source CI verified; owner recheck ready
 current_activity: >-
-  Owner23Oct exact b971 artifact SHA verified, --check refused schema_indexes. Readonly
-  99table differential shows only unique coin_accounts(userid)/test_results(attemptid)
-  absent; all other index signatures match. No production changes. Controller fix
-  accepts strict XMLDB OR exactly observed paired omissions on frozen2000, preserving
-  old99 indexes through upgrade/recovery; no schema repair.74focused/1local UID33 skip
-  PASS. Required strict+historical native/runtime/HTTPS/source CI and new artifact pending.
-  See context/runtime/connect_con02_index_compat_20261023.md. Production2000+overlay/a86,
-  UID130 last revoked;0subagents/no SSH/provider/main merge; pilot/group tests not repeated.
+  Owner b971 --check refused two missing legacy UNIQUE indexes on99table baseline.
+  Fix4394b994 accepts strict XMLDB OR exactly observed paired omissions on frozen2000;
+  no production index/data repair. Context39947880072/Review39947880106 SUCCESS,
+  both PHP1048/153skips,strictroot11/11,actual runtime/HTTPS and native154/800 plus
+  strict AND historical direct2000to2200/repeat/paired restore/duplicate legacy rows PASS.
+  New ordinary.py exact CI/Git verified; owner --check next per current runbook.
+  Production2000+overlay/a86,UID130 last revoked;0subagents/pilot not repeated/group deferred.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
@@ -209,9 +208,9 @@ do_not_repeat:
 - host_package_install_and_reboot
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
 development_candidate:
-  deployment_tool_commit: b971bc3835f1a369779e1b2b344cc43b3a374df6
+  deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_runbook: context/runtime/connect_con02_deployment_20261023.md
-  deployment_CI_receipt: context/runtime/connect_con02_deployment_ci_20261023.json
+  deployment_CI_receipt: context/runtime/connect_con02_index_compat_ci_20261023.json
   source_commit: 534764821c4f65437ab50b3c7f25578d538e9504
   CI_receipt: context/runtime/connect_con02_callback_ci_20261022.json
   report: context/runtime/connect_con02_callback_20261022.md

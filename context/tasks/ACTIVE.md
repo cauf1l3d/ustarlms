@@ -1,15 +1,17 @@
 # Активные задачи USTAR
 
-**23Oct — owner --check refused schema_indexes; compatibility fix in required CI.**
-Exact b971 SHA owner verified;99table readonly differential shows only UNIQUE
-coin_accounts(userid) and test_results(attemptid) absent. Existing ordinary indexes
-and all other signatures match. No upgrade/ACK/config/data changes; production2000+
-overlay/a86 unchanged. [Incident/guard scope](../runtime/connect_con02_index_compat_20261023.md).
-Fix accepts strict fresh OR exactly this historical pair on frozen2000; all remaining
-columns/indexes strict, saved old99 unchanged across upgrade/recovery. No index repair.
-74focused/1local UID33 skip PASS. Actual strict+historical native/required CI and new
-ordinary.py still pending. Old b971 is superseded for this owner baseline; do not bypass
-guards or run index DDL.0subagents; pilot not repeated/group deferred. Below dated history.
+**23Oct — historical index compatibility verified; new owner --check ready.**
+Owner b971 --check refused schema_indexes;99table diagnostic identified only missing
+UNIQUE coin_accounts(userid)/test_results(attemptid). Fix accepts strict XMLDB OR
+exact paired historical omissions on frozen2000; no production index/data repair.
+Tool4394b994: Context39947880072/Review39947880106 SUCCESS; both PHP1048/153skips,
+strictroot11/11, actual runtime/HTTPS and native154/800+strict AND historical direct
+2000→2200/repeat/paired restore PASS, duplicate legacy rows preserved, new9ACKindexes.
+Exact CI ordinary.py/30512272bytes SHA331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b;557payload/worker/legacy/16modules
+match Git. [Incident and current runbook](../runtime/connect_con02_index_compat_20261023.md). Owner --check next;
+production2000+overlay/a86 unchanged;UID130 last revoked.0subagents/author review,
+pilot not repeated/group deferred,FullRC skipped/no SSH/provider sends/main merge.
+Below dated prior handoffs; b971 ordinary.py superseded for this baseline.
 
 **23Oct — CON-02 controller проверен; обычный.py готов для owner --check.**
 План22Oct закрыт:9задач/45шагов, self implementation/author review,0subagents.

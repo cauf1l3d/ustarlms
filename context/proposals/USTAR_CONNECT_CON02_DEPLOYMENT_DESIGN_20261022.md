@@ -1,5 +1,14 @@
 # CON-02: согласованная поставка Академии2200 и Telegram ACK
 
+**23Oct compatibility correction after owner preflight:** accepted production2000 has
+exactly two absent legacy UNIQUE indexes (coin_accounts.userid/test_results.attemptid)
+while ordinary indexes/all other signatures match. Controller4394b994 accepts strict
+fresh XMLDB OR this exact paired historical profile, preserving saved old99 definitions
+and legacy rows through upgrade/repeat/restore. No index repair/unknown schema adoption.
+Both actual native profiles and all required source/runtime/HTTPS CI verified:
+Context39947880072/Review39947880106 SUCCESS. [Incident and current handoff](../runtime/connect_con02_index_compat_20261023.md).
+Original cause of absent constraints unknown; source534/worker534 and schema2200 unchanged.
+
 22.10.2026, UTC/Europe-Moscow. Статус: **owner_approved_implementation_plan_review**.
 Владелец после закрытия A.2: «Переходи к следующему». Следующий этап из принятого
 handoff — подготовка guarded installer, свежей пары и согласование cron/HTTPS/worker.

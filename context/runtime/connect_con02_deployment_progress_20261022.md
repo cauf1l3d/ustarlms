@@ -1,5 +1,15 @@
 # CON-02 deployment implementation progress — 22Oct2026
 
+**23Oct owner continuation:** b971 readonly preflight refused exactly two absent legacy
+UNIQUE indexes. Fix4394b994 accepts strict XMLDB or the exact observed pair on frozen2000;
+no DB index/data repair. New source Context39947880072/Review39947880106 SUCCESS:
+both PHP1048/153skips, strictroot11/11, actual runtime/HTTPS, native154/800 plus strict
+AND historical direct2000→2200/repeat/restore, duplicate legacy rows preserved.
+[Incident/current handoff](connect_con02_index_compat_20261023.md),
+[new CI receipt](connect_con02_index_compat_ci_20261023.json).74focused/1local skip PASS.
+Owner recheck next; production2000+overlay/a86 unchanged. Older table/history below
+records the first handoff and is superseded by this continuation.
+
 Owner: «ок приступай к реализации план потверждаю». Approved plan:
 [9 tasks/45 steps](../proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md).
 Self implementation and author review,0subagents. PR106 remains unmerged.

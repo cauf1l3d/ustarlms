@@ -1,5 +1,14 @@
 # CON-02 coordinated deployment Implementation Plan
 
+**23Oct compatibility correction after owner preflight:** accepted production2000 has
+exactly two absent legacy UNIQUE indexes (coin_accounts.userid/test_results.attemptid)
+while ordinary indexes/all other signatures match. Controller4394b994 accepts strict
+fresh XMLDB OR this exact paired historical profile, preserving saved old99 definitions
+and legacy rows through upgrade/repeat/restore. No index repair/unknown schema adoption.
+Both actual native profiles and all required source/runtime/HTTPS CI verified:
+Context39947880072/Review39947880106 SUCCESS. [Incident and current handoff](../runtime/connect_con02_index_compat_20261023.md).
+Original cause of absent constraints unknown; source534/worker534 and schema2200 unchanged.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Owner forbids subagents; implementation and author review stay in this session/current isolated feature checkout.
 
 **Goal:** Дать оператору проверенный обычный.py: direct2000+accepted-overlay→2200 с fresh pair/cron2200, затем отдельный управляемый Telegram ACK enable/disable без расширения получателей.

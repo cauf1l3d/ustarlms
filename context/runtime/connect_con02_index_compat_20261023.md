@@ -1,7 +1,9 @@
 # CON-02: совместимость с историческими индексами server1
 
 23Oct2026, Europe/Moscow. [Owner receipt](connect_con02_index_owner_20261023.json).
-Статус: исправление source реализовано; новая required CI/native и artifact acceptance pending.
+Статус: исправление source проверено в required CI; новый обычный.py готов для owner --check.
+Tool `4394b99475f469b061010a1ea4aa77b9d984c40f`, SHA256 `331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b`.
+[Команды](connect_con02_deployment_20261023.md), [точная CI-квитанция](connect_con02_index_compat_ci_20261023.json).
 
 ## Наблюдение и причина отказа
 
@@ -45,7 +47,13 @@ Native runner дополнен вторым настоящим2000→2200/repeat
 на disposable PostgreSQL: удаляются только два указанных unique indexes, добавляются
 синтетические duplicate legacy keys, проверяется сохранение их строк и индексов.
 Первый strict fresh lifecycle остаётся. Оба сравниваются с fresh ACK table и
-получают4native SQL mutations (column/index/task/extra). Actual gates ещё pending.
+получают4native SQL mutations (column/index/task/extra). Оба actual native lifecycle PASS; их JSON и ZIP digest скачаны и проверены.
+Context39947880072/Review39947880106 SUCCESS; PHP8.2/8.3 каждый1048tests/153skips,
+strictroot11/11 без skips, actual runtime/HTTPS PASS. Native154tests/800assertions
+и оба controller lifecycle сохраняют97прочих таблиц/оба legacy набора/новую ACK table,
+custom task[1,1], preferences/revoke/history и synthetic duplicate legacy rows.
+Новая ACK table совпадает с fresh по9indexes,4SQLmutations отказаны в каждом профиле.
+CI .py = независимая exact-Git сборка,557payload/7worker/5legacy/16modules сверены.
 
 0subagents/author review; нет agent SSH/provider sends/main merge. Production2000+
 policy overlay/a86 сохранён; UID130 last revoked, принятый pilot не повторять.

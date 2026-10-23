@@ -6,10 +6,12 @@
 Один обычный файл `ustar-con02-update-4394b994.py`, SHA256 `331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b`; архив и ручная распаковка не требуются.
 Код инструмента проверен отдельно от последующего коммита документации.
 
-На server1 по последнему принятому выводу остаются application2000 с policy overlay и worker a86.
-Агент сервер не менял. Новый target: local2026102200/theme2026100202,557файлов/100таблиц.
-UID130 последним был revoked; исходные UID/Telegram subject/notify_since/preferences сохраняются.
-Принятый pilot повторять не требуется; группа не включается.
+На server1 владелец23Oct завершил --upgrade (app_ready/local2200), затем --enable-ack
+(runtime_active). Receiver/notify active+enabled, DB доступна. Application/worker534,
+557файлов/100таблиц по fixed payload; агент SSH не выполнял. UID130 подтвердил два
+различных события179/180, по1delivery attempt; прежний revoked checkpoint исторический.
+[Owner receipt](connect_con02_server1_owner_20261023.json), [результат и границы](connect_con02_server1_20261023.md).
+Команды ниже — сохранённый runbook, повторять deploy/pilot ради нового checkpoint не нужно.
 
 ## Исторические индексы
 
@@ -143,5 +145,5 @@ post-public process loss и7 runtime durable boundaries без rewind generation
 - Foundations Tasks1/2 опубликованы одним checkpoint, поскольку check/host controls используют Journal.
   Цена ошибки — этот foundation приходится откатывать совместно; product/legacy код не менялся.
 
-Дальше — вывод owner `--check`, затем отдельное выполнение upgrade/ACK по этим командам.
-Следующие продуктовые срезы B routing/preferences и C Bitrix остаются отдельными задачами.
+Следом — [проект B.1 routing/preferences](../proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md),
+затем отдельный implementation plan/source/CI/поставка. CON-02C Bitrix и live группа остаются отдельными задачами.

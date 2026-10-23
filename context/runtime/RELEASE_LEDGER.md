@@ -1,5 +1,20 @@
 # Реестр кода, проверок и deployment evidence
 
+## 23Oct — CON-02 application2200 и ACK runtime приняты на server1
+
+[Owner receipt](connect_con02_server1_owner_20261023.json), [границы](connect_con02_server1_20261023.md).
+Exact ordinary tool4394b994 SHA verified, historical index baseline accepted; owner upgrade
+app_ready/local2200 после fresh backup/cold pair/двух upgrade/cron/public release.
+Отдельный enable-ack runtime_active; receiver/notify active+enabled, DB available,
+theme0202. Fixed application/worker53476482,557files/100tables — payload inventory,
+не новый whole-host manifest. AutoReport9443 принят в HTTPS owner state отдельной
+узкой guarded reconciliation без редактирования Apache config или перезапуска.
+UID130 notices179 assigned/180 reminder оба acknowledged, по1delivery attempt;
+разные события, не повторная доставка. Last revoked21Oct исторический. Live повтор
+первого timestamp и task completion отдельно не проверены, early reminder причина
+не установлена. B1 routing/preferences design готов к review; новый код не написан.
+FullRC/native DR/live group не объявлены пройденными;0subagents/no agent SSH/provider sends/main merge.
+
 ## 21Oct — native coordinated update and new scheduled cron accepted
 
 **21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**

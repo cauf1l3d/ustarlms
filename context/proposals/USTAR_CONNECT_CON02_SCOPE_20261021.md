@@ -1,5 +1,11 @@
 # CON-02: исходное состояние и последовательность работ
 
+**Продолжение23Oct:** A.1/A.2 установлены владельцем: application2200, runtime_active,
+два личных ACK в canonical DB подтверждены. [Квитанция](../runtime/connect_con02_server1_owner_20261023.json).
+Следующий срез — [конкретный проект B.1](USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md),
+готов к review; новый routing code ещё не написан. Более ранние статусы «не установлен»
+и UID130 revoked ниже относятся к датированному исходному состоянию.
+
 **Актуализация после A.1:** owner approved; native «Принял» реализован и проверен
 в CI, candidate2100 не установлен. [Результат и границы](../runtime/connect_con02_ack_20261021.md),
 [точная квитанция](../runtime/connect_con02_ack_ci_20261021.json). Следующий срез

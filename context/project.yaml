@@ -4,7 +4,7 @@ project:
   name: USTAR Academy
   organization: Хозмагия
   purpose: Внутренняя корпоративная академия и рабочие процессы сотрудников
-  stage: connect_CON02_deployment_owner_check
+  stage: connect_CON02B_design_review
   repository: https://github.com/cauf1l3d/ustarlms
   canonical_branch: main
 stack:
@@ -20,11 +20,12 @@ components:
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
-  connect_worker: connect-worker; link bridge and ordinary employee link owner accepted; one-employee Tasks pilot fully owner accepted; UID130 last revoked; CON02A1 and A2 native/Telegram ACK source CI verified; application2200 not deployed; guarded deployment next; group design only
+  connect_worker: connect-worker; owner23Oct application_and_worker534/local2200 deployed; ACK runtime active; UID130 two live ACKs verified; previous revoked checkpoint historical; B1 routing design ready for review; live group deferred
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: CON02_controller_source_CI_verified_owner_check_then_upgrade_ACK;owner_CON02A2_plan_implemented_source_CI_verified_not_deployed;owner_CON02A1_plan_approved_source_CI_verified_not_deployed;owner_one_employee_Tasks_pilot_accepted;application2000_and_cron_accepted;private_bridge_source_ec9_CI_passed;owner_parent_chain_accepted;coordinated_activation_27117c8c_owner_accepted_personal_link_accepted;notification_pilot_a86e2080_fully_accepted_recipient_last_revoked
+execution_gate: CON02_application2200_and_ACK_runtime_owner_deployed_two_live_ACKs_verified;B1_design_ready_for_review_no_new_routing_code
+latest_connect_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -35,7 +36,7 @@ current_operator_handoff:
 current_work:
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
   deployment_design_status: owner_approved_22Oct
-  deployment_controller: historical_index_compat_source_CI_verified_owner_recheck_ready
+  deployment_controller: owner_deployed_application2200_and_ACK_runtime_verified
   index_compat_incident: context/runtime/connect_con02_index_compat_20261023.md
   index_owner_receipt: context/runtime/connect_con02_index_owner_20261023.json
   deployment_runbook: context/runtime/connect_con02_deployment_20261023.md
@@ -50,19 +51,21 @@ current_work:
   A2_progress: context/runtime/connect_con02_callback_progress_20261022.md
   A2_implementation_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
   CON02_scope: context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
-  plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
+  plan: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
+  B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
+  accepted_deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   accepted_A2_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
   accepted_A1_plan: context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
   group_design: context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
   parent_RFC: context/proposals/USTAR_CONNECT_RFC_20261018.md
   design_PR: 106
-  owner_receipt: context/runtime/connect_notification_pilot_owner_20261021.json
+  owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
   review: context/proposals/USTAR_CONNECT_REVIEW_20261019.md
-  plan_scope: CON02_deployment_implementation_plan
-  plan_status: completed_source_handoff_owner_execution_next
+  plan_scope: CON02B1_routing_preferences_design
+  plan_status: B1_design_ready_for_review_no_new_routing_code
   live_group_acceptance: deferred_by_owner_until_full_launch
-  following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
+  following_stage: B1_design_then_routing_preferences_then_C_Bitrix
   accepted_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
   runbook: context/runtime/connect_con02_deployment_20261023.md
   accepted_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md

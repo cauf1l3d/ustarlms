@@ -6,7 +6,7 @@ historical_backlog: context/archive/handoff_20261002/previous_entrypoints/contex
 current_connect_checkpoint:
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
   deployment_design_status: owner_approved_22Oct
-  deployment_controller: historical_index_compat_source_CI_verified_owner_recheck_ready
+  deployment_controller: owner_deployed_application2200_and_ACK_runtime_verified
   index_compat_incident: context/runtime/connect_con02_index_compat_20261023.md
   index_owner_receipt: context/runtime/connect_con02_index_owner_20261023.json
   deployment_runbook: context/runtime/connect_con02_deployment_20261023.md
@@ -14,25 +14,26 @@ current_connect_checkpoint:
   deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   deployment_plan_status: completed_source_handoff_23Oct
-  stage: CON02_deployment_owner_check
+  stage: CON02B1_design_review
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-  following_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
+  following_stage: B1_design_then_routing_preferences_then_C_Bitrix
   development_version: 2026102200
   development_files: 557
   CON02_A2_design: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
   CON02_A2_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
-  CON02_A2_plan_status: implemented_source_CI_verified_not_deployed
-  CON02_A2_code: source53476482_CI_verified_not_deployed
+  CON02_A2_plan_status: owner_deployed_two_live_ACKs_verified23Oct
+  CON02_A2_code: source53476482_owner_deployed_and_ACK_verified23Oct
   CON02_A2_CI_receipt: context/runtime/connect_con02_callback_ci_20261022.json
   CON02_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
-  production_effective_payload: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
-  production_effective_version: 2026102000
-  addons_files: 552
-  tables: 99
+  production_effective_payload: 534764821c4f65437ab50b3c7f25578d538e9504
+  production_effective_version: 2026102200
+  addons_files: 557
+  tables: 100
   local_verification: source6aa_both_PHP869_136CI_skips_PASS;actual19_UID33_file_tests_TLS_native1905to2000_PASS
   exact_ci_receipt: context/runtime/connect_chat_link_update_ci_20261021.json
   backup_HTTPS_preparation_receipt: context/runtime/connect_backup_https_owner_20261021.json
-  application_update_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  application_update_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
   include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
   parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
   parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
@@ -44,11 +45,11 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: implement_all_nine_tasks_then_exact_native_systemd_HTTPS_gates
+  next: B1_design_review_then_implementation_plan
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
-  bot_activation: one_employee_Tasks_pilot_fully_owner_accepted_recipient_last_revoked
+  bot_activation: owner_CON02_ACK_runtime_active_UID130_two_live_ACKs_verified
 tasks:
 - id: DOC-01
   title: Консолидация main и инженерного контекста

@@ -1,7 +1,8 @@
 # CON-02: совместимость с историческими индексами server1
 
 23Oct2026, Europe/Moscow. [Owner receipt](connect_con02_index_owner_20261023.json).
-Статус: исправление source проверено в required CI; новый обычный.py готов для owner --check.
+Статус: source/CI проверены; owner --check, upgrade2200 и ACK runtime завершены23Oct.
+[Последующий owner checkpoint](connect_con02_server1_owner_20261023.json). Диагноз ниже датирован до обновления.
 Tool `4394b99475f469b061010a1ea4aa77b9d984c40f`, SHA256 `331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b`.
 [Команды](connect_con02_deployment_20261023.md), [точная CI-квитанция](connect_con02_index_compat_ci_20261023.json).
 
@@ -55,5 +56,6 @@ custom task[1,1], preferences/revoke/history и synthetic duplicate legacy rows.
 Новая ACK table совпадает с fresh по9indexes,4SQLmutations отказаны в каждом профиле.
 CI .py = независимая exact-Git сборка,557payload/7worker/5legacy/16modules сверены.
 
-0subagents/author review; нет agent SSH/provider sends/main merge. Production2000+
-policy overlay/a86 сохранён; UID130 last revoked, принятый pilot не повторять.
+Исторический pre-deploy checkpoint: production2000+overlay/a86 и UID130 last revoked.
+Позднейший owner deployment2200/ACK и два живых ACK supersede это состояние; см. квитанцию выше.
+0subagents/author review; нет agent SSH/provider sends/main merge; принятый pilot не повторять.

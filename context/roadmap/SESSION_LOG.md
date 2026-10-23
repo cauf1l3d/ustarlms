@@ -1,5 +1,21 @@
 # Журнал выполнения roadmap
 
+**23Oct — server1 обновлён до2200, ACK runtime и два живых ACK подтверждены владельцем.**
+Exact controller4394/проверенный SHA: --check baseline_ready (historical indexes),
+--upgrade app_ready после fresh backup/cold pair/двух миграций/cron/public release;
+--enable-ack runtime_active, receiver+notify active/enabled, DB available.
+Application/worker53476482, local2200/theme0202,557files/100tables по fixed payload.
+UID130 notices179(task_assigned)/180(task_reminder) оба acknowledged, по1попытке;
+это разные события, не повторная доставка. Last-revoked21Oct теперь история.
+Отдельный AutoReport192.168.1.60:9443 принят узкой HTTPS owner-state reconciliation;
+Apache config/CA/private bridge сохранены. [Owner receipt](../runtime/connect_con02_server1_owner_20261023.json),
+[результат и границы](../runtime/connect_con02_server1_20261023.md).
+Далее [проект B.1 primary/fallback/preferences](../proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md)
+готов к review; новый routing/presentation код ещё не написан. Видимая ACK отметка/
+различение assigned/reminder включены в проект; причина раннего reminder не доказана.
+0subagents/no agent SSH/provider sends/main merge; old pilot не повторять/group deferred.
+Ниже датированные предыдущие checkpoint, не текущие команды повторного deploy.
+
 **23Oct — historical index compatibility verified; new owner --check ready.**
 Owner b971 --check refused schema_indexes;99table diagnostic identified only missing
 UNIQUE coin_accounts(userid)/test_results(attemptid). Fix accepts strict XMLDB OR

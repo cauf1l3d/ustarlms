@@ -1,20 +1,20 @@
 schema_version: 2
 updated_at: '2026-10-23'
 project: USTAR Academy
-stage: connect_CON02_deployment_owner_check
-stage_label: CON02 historical index compatibility source CI verified; owner recheck ready
+stage: connect_CON02B_design_review
+stage_label: CON02 deployed and two owner live ACKs verified; B1 routing design ready
 current_activity: >-
-  Owner b971 --check refused two missing legacy UNIQUE indexes on99table baseline.
-  Fix4394b994 accepts strict XMLDB OR exactly observed paired omissions on frozen2000;
-  no production index/data repair. Context39947880072/Review39947880106 SUCCESS,
-  both PHP1048/153skips,strictroot11/11,actual runtime/HTTPS and native154/800 plus
-  strict AND historical direct2000to2200/repeat/paired restore/duplicate legacy rows PASS.
-  New ordinary.py exact CI/Git verified; owner --check next per current runbook.
-  Production2000+overlay/a86,UID130 last revoked;0subagents/pilot not repeated/group deferred.
+  Owner deployed fixed tool4394/application_and_worker534/local2200/theme0202.
+  App app_ready; runtime runtime_active with ACK enabled; receiver/notify active+enabled,
+  database available. UID130 notices179(task_assigned) and180(task_reminder) both
+  acknowledged, one delivery attempt each; not duplicate delivery. Last revoked21Oct
+  is historical. Exact AutoReport9443 addition reconciled in HTTPS owner state before
+  successful baseline check. B1 design ready for review; no new routing code yet.
+  0subagents/no agent SSH/provider sends/main merge; live group deferred.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-following_connect_stage: guarded_A1_A2_deployment_then_B_routing_then_C_Bitrix
+following_connect_stage: B1_design_then_routing_preferences_then_C_Bitrix
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -38,21 +38,24 @@ code_baseline:
 production:
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/connect_chat_link_update_owner_20261021.json
+  latest_cron_contract: context/runtime/connect_con02_server1_owner_20261023.json
+  previous_scheduled_cron_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
+  latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_chat_link_update_owner_20261021.json
-    reported_date_msk: '2026-10-21'
-    status: owner_guarded_update_scheduled_cron_and_general_browser_accepted
-    installer_commit: 6aa83a951b3d8119db8ef2d5d5e2484383fcbce1
-    payload_commit: 1e8a8819f50785ebb4fb2640eeb9386c969d59d1
-    versions: {local_ustar: 2026102000, theme_ustar: 2026100202}
-    files: 552
-    tables: 99
+    receipt: context/runtime/connect_con02_server1_owner_20261023.json
+    reported_date_msk: '2026-10-23'
+    status: owner_controller_upgrade_ACK_runtime_and_two_live_ACKs_verified
+    installer_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
+    payload_commit: 534764821c4f65437ab50b3c7f25578d538e9504
+    versions: {local_ustar: 2026102200, theme_ustar: 2026100202}
+    files: 557
+    tables: 100
+    counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    previous_receipt: context/runtime/connect_academy_owner_install_20261020.json
+    previous_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
   historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
-  status: owner_CLI_HTTPS_cron_link_and_notify_pilot_active_delivery_revoke_browser_trust_export_restore_pending
+  status: owner_CON02_application2200_runtime_ACK_active_two_live_ACKs_verified_export_restore_pending
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
@@ -77,8 +80,8 @@ production:
     uncompared: 0
     scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file
       references, not a new whole-host manifest
-  cron: v3_ae5fa1b0_local2000_owner_scheduled20Oct220803UTC_exit0_adhoc0_overdue19_historical_failed2_no_new_errors
-  cron_current_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  cron: controller4394_cron_written2200_owner23Oct_upgrade_completed_scheduled_post_update_receipt_not_collected
+  cron_current_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
@@ -98,6 +101,9 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_con02_server1_owner_20261023.json
+- context/runtime/connect_con02_server1_20261023.md
+- context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
 - context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
 - context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
 - context/runtime/connect_con02_callback_20261022.md
@@ -218,16 +224,19 @@ development_candidate:
   accepted_A1_report: context/runtime/connect_con02_ack_20261021.md
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: CON02A2_and_controller_source_CI_verified;not_deployed;owner_check_next
+  scope: CON02A2_payload_owner_deployed2200_and_ACK_verified_B1_design_pending_review
+  owner_deployment_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  manifest_deployed_false_meaning: unmerged_source_inventory_marker_owner_deployment_is_recorded_separately
   local_ustar_version: 2026102200
   theme_ustar_version: 2026100202
   files: 557
   tables: 100
 receiver_runtime:
-  source_commit: a86e208029b6104150e85d0e90384f84da214c22
+  source_commit: 534764821c4f65437ab50b3c7f25578d538e9504
   initial_source_commit: b01bd942f7f748d9510618a79489643b42cbd690
-  receipt: context/runtime/connect_notification_pilot_owner_20261021.json
-  runbook: context/runtime/connect_notification_pilot_20261021.md
+  receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  runbook: context/runtime/connect_con02_deployment_20261023.md
+  previous_runbook: context/runtime/connect_notification_pilot_20261021.md
   server1_deployed: true
   server1_install_receipt: owner19Oct1841MSK_installed_services_not_started
   server1_configured: true
@@ -236,7 +245,10 @@ receiver_runtime:
   server1_started: true
   live_ack: owner_reports_working_19Oct1859MSK
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
-  next: owner_CON02_controller_check_then_guarded_upgrade_and_separate_ACK
+  ACK_runtime_active: true
+  live_ACK_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  next: B1_routing_preferences_design_review_then_implementation_plan
+  B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
 
 connect_academy_preparation:
   kind: historical_19Oct_preflight_snapshot_superseded_by_current_owner_receipts

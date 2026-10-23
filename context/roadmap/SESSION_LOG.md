@@ -1,5 +1,21 @@
 # Журнал выполнения roadmap
 
+## 23Oct — owner deployed Telegram2300 and presentation runtime
+
+Exact3d ordinary.py SHA OK; --check baseline_ready2200/ACKon/host_changes=false/provider_called=false.
+Owner --upgrade completed fresh_backup, stopped workers, cold pair, source, two CLI
+upgrades, cron_written, public_release_committed, app_ready/local2300/theme0202.
+--enable-presentation completed runtime_active/ACKon/presentationon; app generation
+94d379904f7f4f7f8795b43e68421d89, runtime54bb0b7e4ba746928a639279ea729415.
+Final --status: database available, notify+receiver active/enabled. Fixed app/worker6c56.
+Receipt: context/runtime/connect_telegram_finish_owner_20261023.json. New-message visual
+ACK/time/heading/history acceptance not yet reported; old two canonical ACKs are2200 evidence.
+The preceding conversational scope was clarified: notification presentation is a narrow
+slice, not the full Telegram product. Next functional stage is the existing CON03
+Mini App own task/checklist scenario with external HTTPS and Academy auth. No new
+implementation or live group acceptance claimed. Reserve/group deferred; pilot not
+reopened, no agent SSH/provider sends/main merge; qualified product bytes unchanged.
+
 
 ## 23Oct — Telegram source/release handoff verified
 

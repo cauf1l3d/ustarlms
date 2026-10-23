@@ -1,6 +1,25 @@
 # Telegram: завершение уведомлений и личного подтверждения, 23Oct2026
 
-Status: **source/runtime/native CI accepted; ordinary.py ready for owner execution**.
+Status: **owner deployed application2300 and ACK/presentation runtime; visual acceptance pending**.
+
+## Owner deployment23Oct
+
+[Owner terminal receipt](connect_telegram_finish_owner_20261023.json): exact file SHA OK,
+baseline_ready2200, all upgrade phases through app_ready/local2300/theme0202,
+then runtime_active with ack_enabled=true and presentation_enabled=true.
+App generation94d379904f7f4f7f8795b43e68421d89;
+runtime54bb0b7e4ba746928a639279ea729415. Both services active/enabled; database available.
+The owner output establishes installation/activation, not a post-update visual ACK or
+new scheduled cron/restore receipt. Check a new event heading, click «Принял», and
+observe persistent «✓ Принято»/first time and the corresponding own Academy history.
+Do not repeat the accepted pilot or relink the employee. The earlier two canonical
+ACKs remain historical2200 evidence. No deployment rerun is required by this output.
+
+This completes the installation of the notification/ACK presentation slice, not the
+whole Telegram product. The next functional stage is CON03 Mini App with external
+HTTPS, Academy auth and own task/checklist actions, as scoped in the existing RFC.
+Group live acceptance/reserve remain deferred. Commands below are retained as the
+installation/recovery runbook; the reported2300 installation has already completed.
 
 Context39978015123 and Review39978015139 SUCCESS (one source job retry).
 
@@ -9,7 +28,8 @@ Context39978015123 and Review39978015139 SUCCESS (one source job retry).
 Source application/worker `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`, controller
 `3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134`; local_ustar2300/theme0202,
 557files/100tables. Tool/application/worker component trees are checked equal by
-the builder. Production remains accepted534/local2200 with ACK active until owner execution.
+the builder. Production is owner-reported6c56/local2300 with ACK and presentation active;
+the prior534/local2200 deployment is retained in its separate historical receipt.
 The accepted one-person fence, current opt-in/preferences, notify_since/ack_since,
 link/ACK keys, receiver cursor and uncertain events remain unchanged. No fallback,
 new routing store, digest, Bitrix or automatic group expansion.

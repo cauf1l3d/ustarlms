@@ -7,7 +7,8 @@ current_connect_checkpoint:
   Telegram_successor: context/runtime/connect_telegram_finish_20261023.md
   Telegram_successor_CI: context/runtime/connect_telegram_finish_ci_20261023.json
   Telegram_tool: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
-  Telegram_plan_status: completed_source_handoff_20focused_tests_and_native_verified
+  Telegram_plan_status: owner_deployed_ACK_presentation_active_visual_acceptance_pending
+  Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
   deployment_design_status: owner_approved_22Oct
   deployment_controller: owner_deployed_application2200_and_ACK_runtime_verified
@@ -18,9 +19,9 @@ current_connect_checkpoint:
   deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   deployment_plan_status: completed_source_handoff_23Oct
-  stage: Telegram2300_source_handoff_verified_owner_execution_pending
+  stage: Telegram2300_owner_deployed_visual_acceptance_pending_CON03_next
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-  following_stage: Telegram_completion_then_group_and_Bitrix_reserve_later
+  following_stage: CON03_Mini_App_own_tasks_checklists_external_HTTPS_auth_reserve_later
   development_version: 2026102300
   development_files: 557
   CON02_A2_design: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
@@ -29,14 +30,15 @@ current_connect_checkpoint:
   CON02_A2_code: source53476482_owner_deployed_and_ACK_verified23Oct
   CON02_A2_CI_receipt: context/runtime/connect_con02_callback_ci_20261022.json
   CON02_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
-  production_effective_payload: 534764821c4f65437ab50b3c7f25578d538e9504
-  production_effective_version: 2026102200
+  production_effective_payload: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  production_effective_version: 2026102300
   addons_files: 557
   tables: 100
   local_verification: source6aa_both_PHP869_136CI_skips_PASS;actual19_UID33_file_tests_TLS_native1905to2000_PASS
   exact_ci_receipt: context/runtime/connect_chat_link_update_ci_20261021.json
   backup_HTTPS_preparation_receipt: context/runtime/connect_backup_https_owner_20261021.json
-  application_update_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  application_update_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  previous_application_update_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
   B1_status: deferred_by_owner_reserve_later
   Telegram_design: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
@@ -52,11 +54,11 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: Telegram_completion_implementation_native_gate_then_successor_delivery
+  next: CON03_Mini_App_task_checklist_scenario_external_HTTPS_and_Academy_auth
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
-  bot_activation: owner_CON02_ACK_runtime_active_UID130_two_live_ACKs_verified
+  bot_activation: owner_Telegram2300_ACK_presentation_runtime_active_visual_acceptance_pending
 tasks:
 - id: DOC-01
   title: Консолидация main и инженерного контекста
@@ -501,9 +503,18 @@ tasks:
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: in_progress
   depends_on: []
-  phase: CON02_deployment_implementation_plan_review
-  owner_priority: start_CON02_manual_group_tests_deferred_keep_ustar_local_and_existing_CA
+  phase: Telegram2300_owner_deployed_CON03_Mini_App_next
+  owner_priority: complete_Telegram_employee_scenario_reserve_and_live_group_deferred
   current_summary: >-
+    Current23Oct: owner deployed exact tool3d/app-worker6c56/local2300/theme0202;
+    app_ready and runtime_active with ACK/presentation enabled, both services
+    active/enabled and database available. Receipt:
+    context/runtime/connect_telegram_finish_owner_20261023.json.
+    Post-update visible ACK/time/heading/history acceptance remains pending.
+    This is a narrow notification slice; next CON03 is the existing Mini App
+    own task/checklist scenario with external HTTPS and Academy auth, not yet delivered.
+    Reserve and live group acceptance remain deferred; accepted pilot is not reopened.
+    The deployment-design/source checkpoints that follow are dated history.
     Owner22Oct approved written deployment design («потверждаю»). Nine-task/45-step
     implementation plan ready for review:
     context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md.

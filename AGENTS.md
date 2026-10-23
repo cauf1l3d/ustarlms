@@ -1,5 +1,18 @@
 # USTAR инструкции агентам
 
+**23Oct — owner установил Telegram2300; ACK и presentation runtime активны.**
+[Новая owner receipt](context/runtime/connect_telegram_finish_owner_20261023.json):
+проверенный SHA tool3d1938ae, baseline_ready2200, upgrade app_ready2300,
+enable-presentation runtime_active/ACKon/presentationon; notify+receiver active/enabled,
+DB available. App generation94d379904f7f4f7f8795b43e68421d89,
+runtime54bb0b7e4ba746928a639279ea729415. Payload/worker6c56; theme0202.
+Видимый ACK/heading/history после обновления пока не приняты владельцем.
+Два прежних canonical ACK остаются доказательством2200, не новой визуальной приёмкой.
+Это выпуск уведомлений/ACK; весь Telegram-контур не завершён. Следующий функциональный
+этап — CON03 Mini App: личные задачи/чек-листы и canonical actions, external HTTPS/auth.
+Старый пилот не повторять; group/reserve deferred;0subagents/no SSH/provider sends/main merge.
+Ниже — история предыдущих checkpoint, а не текущий production status.
+
 **23Oct — Telegram source/release handoff готов; owner execution следующий.**
 Tool3d1938ae/app+worker6c56/local2300/theme0202,557files/100tables.
 Context39978015123/Review39978015139 SUCCESS: обе PHP1077r16/153skips,

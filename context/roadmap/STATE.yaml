@@ -1,20 +1,22 @@
 schema_version: 2
 updated_at: '2026-10-23'
 project: USTAR Academy
-stage: connect_Telegram_completion_implementation
-stage_label: Owner defers reserve; Telegram completion implementing from deployed2200
+stage: connect_Telegram2300_deployed_CON03_preparation
+stage_label: Owner deployed Telegram notification presentation; full Mini App remains next
 current_activity: >-
-  Owner deployed fixed tool4394/application_and_worker534/local2200/theme0202.
-  App app_ready; runtime runtime_active with ACK enabled; receiver/notify active+enabled,
-  database available. UID130 notices179(task_assigned) and180(task_reminder) both
-  acknowledged, one delivery attempt each; not duplicate delivery. Last revoked21Oct
-  is historical. Exact AutoReport9443 addition reconciled in HTTPS owner state before
-  successful baseline check. Owner defers B1 reserve and chooses Telegram completion; visible ACK/v3/history implemented,57focused PASS; native157/805 RED confirmed exactly3new failures, GREEN pending.
-  0subagents/no agent SSH/provider sends/main merge; live group deferred.
+  Owner verified tool3d1938ae SHA, baseline_ready2200, upgraded fixed app/worker6c56
+  to local2300/theme0202 and enabled ACK/presentation runtime. App generation
+  94d379904f7f4f7f8795b43e68421d89; runtime54bb0b7e4ba746928a639279ea729415.
+  Both services active/enabled and database available. Post-update visible ACK/time,
+  event heading and Academy history acceptance remain pending; two previous UID130
+  canonical ACKs are separate2200 evidence. This narrow notification release does not
+  complete the Telegram product; next functional stage CON03 Mini App needs external
+  HTTPS, Academy auth and own task/checklist actions. No new implementation claimed.
+  0subagents/no agent SSH/provider sends/main merge; reserve/live group deferred.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-following_connect_stage: Telegram_completion_then_group_and_Bitrix_reserve_later
+following_connect_stage: CON03_Telegram_Mini_App_own_tasks_checklists_external_HTTPS_auth_reserve_later
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -38,24 +40,27 @@ code_baseline:
 production:
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/connect_con02_server1_owner_20261023.json
+  latest_cron_contract: context/runtime/connect_telegram_finish_owner_20261023.json
   previous_scheduled_cron_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_con02_server1_owner_20261023.json
+    receipt: context/runtime/connect_telegram_finish_owner_20261023.json
     reported_date_msk: '2026-10-23'
-    status: owner_controller_upgrade_ACK_runtime_and_two_live_ACKs_verified
-    installer_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
-    payload_commit: 534764821c4f65437ab50b3c7f25578d538e9504
-    versions: {local_ustar: 2026102200, theme_ustar: 2026100202}
+    status: owner_upgrade_ACK_presentation_runtime_verified_visual_acceptance_pending
+    installer_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
+    payload_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    versions: {local_ustar: 2026102300, theme_ustar: 2026100202}
+    application_generation: 94d379904f7f4f7f8795b43e68421d89
+    runtime_generation: 54bb0b7e4ba746928a639279ea729415
     files: 557
     tables: 100
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    previous_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+    previous_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
-  status: owner_CON02_application2200_runtime_ACK_active_two_live_ACKs_verified_export_restore_pending
+  status: owner_Telegram_application2300_ACK_presentation_active_visual_acceptance_and_export_restore_pending
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
@@ -80,8 +85,8 @@ production:
     uncompared: 0
     scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file
       references, not a new whole-host manifest
-  cron: controller4394_cron_written2200_owner23Oct_upgrade_completed_scheduled_post_update_receipt_not_collected
-  cron_current_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  cron: controller3d1938ae_cron_written2300_owner23Oct_upgrade_completed_scheduled_post_update_receipt_not_collected
+  cron_current_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
@@ -101,6 +106,10 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_telegram_finish_owner_20261023.json
+- context/runtime/connect_telegram_finish_20261023.md
+- context/runtime/connect_telegram_finish_ci_20261023.json
+- context/proposals/USTAR_CONNECT_RFC_20261018.md
 - context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
 - context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md
 - context/runtime/connect_con02_server1_owner_20261023.json
@@ -218,7 +227,7 @@ do_not_repeat:
 development_candidate:
   Telegram_successor_tool_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
   Telegram_successor_runbook: context/runtime/connect_telegram_finish_20261023.md
-  Telegram_successor_status: verified_file_handed_off_owner_execution_pending
+  Telegram_successor_status: owner_deployed_ACK_presentation_active_visual_acceptance_pending
   previous_deployed_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_tool_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
   previous_deployment_runbook: context/runtime/connect_con02_deployment_20261023.md
@@ -234,19 +243,19 @@ development_candidate:
   accepted_A1_report: context/runtime/connect_con02_ack_20261021.md
   manifest: context/code_map/development_source.json
   task: INTEGRATIONS-01
-  scope: Telegram2300_verified_successor_ready_owner_execution_pending_production2200_unchanged
-  owner_deployment_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  scope: Telegram2300_owner_deployed_notification_presentation_not_full_Mini_App
+  owner_deployment_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   manifest_deployed_false_meaning: unmerged_source_inventory_marker_owner_deployment_is_recorded_separately
   local_ustar_version: 2026102300
   theme_ustar_version: 2026100202
   files: 557
   tables: 100
 receiver_runtime:
-  source_commit: 534764821c4f65437ab50b3c7f25578d538e9504
+  source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
   initial_source_commit: b01bd942f7f748d9510618a79489643b42cbd690
-  receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  runbook: context/runtime/connect_con02_deployment_20261023.md
-  previous_runbook: context/runtime/connect_notification_pilot_20261021.md
+  receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  runbook: context/runtime/connect_telegram_finish_20261023.md
+  previous_runbook: context/runtime/connect_con02_deployment_20261023.md
   server1_deployed: true
   server1_install_receipt: owner19Oct1841MSK_installed_services_not_started
   server1_configured: true
@@ -256,8 +265,11 @@ receiver_runtime:
   live_ack: owner_reports_working_19Oct1859MSK
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
   ACK_runtime_active: true
+  presentation_runtime_active: true
+  generation: 54bb0b7e4ba746928a639279ea729415
+  post_update_visual_acceptance: pending_owner_observation
   live_ACK_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  next: Telegram_completion_implementation_native_gate_then_successor_delivery
+  next: CON03_Mini_App_task_checklist_scenario_external_HTTPS_and_Academy_auth
   B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
   B1_status: deferred_by_owner_reserve_later
   Telegram_design: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md

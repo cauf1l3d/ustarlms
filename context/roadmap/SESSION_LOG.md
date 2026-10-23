@@ -1,6 +1,22 @@
 # Журнал выполнения roadmap
 
 
+## 23Oct — Telegram source/release handoff verified
+
+Exact tool3d1938ae/app+worker6c56: Context39978015123/Review39978015139 SUCCESS.
+BothPHP1077r16/153skips,root11zero-skips; actual systemd UID33/credentials/TLS/exit77
+and Apache owner/registered extra vhost preserved; native158/830,v1/v2/v3/all20labels,
+2200→2300/repeat/paired restore2200,100schema unchanged/history+prefs retained PASS.
+One Chromium captureScreenshot protocol failure retried once; final source gates pass.
+Ordinary.py31153214B SHA6f7729459e1ef25271fd86324e441c823a6d39763c7fec84baf7cf640a41eb31
+saved for owner; exact CI bytes equal independent Git build,557archive source files
+match Git and7old worker files match accepted4394 receipt.5tasks complete as source
+handoff,20focused successor tests; author-only review/0subagents. Server1 unchanged
+534/local2200/ACK active; new owner --check/upgrade/presentation enable still pending.
+Runbook/limits: context/runtime/connect_telegram_finish_20261023.md. No main merge,
+SSH/provider sends/group expansion. FullRC skipped, not passed; no full DR claim.
+
+
 ## 23Oct — Telegram successor implementation, CI still pending
 
 Exact6c56 application/worker2300 is pinned separately from the accepted4394/534

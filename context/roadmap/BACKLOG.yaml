@@ -4,6 +4,10 @@ canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_connect_checkpoint:
+  Telegram_successor: context/runtime/connect_telegram_finish_20261023.md
+  Telegram_successor_CI: context/runtime/connect_telegram_finish_ci_20261023.json
+  Telegram_tool: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
+  Telegram_plan_status: completed_source_handoff_20focused_tests_and_native_verified
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
   deployment_design_status: owner_approved_22Oct
   deployment_controller: owner_deployed_application2200_and_ACK_runtime_verified
@@ -14,7 +18,7 @@ current_connect_checkpoint:
   deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   deployment_plan_status: completed_source_handoff_23Oct
-  stage: Telegram_successor_controller_actual_CI_pending
+  stage: Telegram2300_source_handoff_verified_owner_execution_pending
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: Telegram_completion_then_group_and_Bitrix_reserve_later
   development_version: 2026102300

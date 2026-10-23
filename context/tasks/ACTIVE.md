@@ -1,5 +1,17 @@
 # Активные задачи USTAR
 
+**23Oct — Telegram source/release handoff готов; owner execution следующий.**
+Tool3d1938ae/app+worker6c56/local2300/theme0202,557files/100tables.
+Context39978015123/Review39978015139 SUCCESS: обе PHP1077r16/153skips,
+strictroot11zero-skips, actual UID33/systemd/privateTLS и Apache owner/extra AutoReport,
+native158/830, v1/v2/v3/all20labels,2200→2300/repeat/paired restore2200 PASS.
+Ordinary.py31153214B SHA6f772945… сверен побайтно CI/Git; [команды и recovery](../runtime/connect_telegram_finish_20261023.md).
+План5tasks закрыт как source handoff; server1 ещё534/local2200/ACK active.
+Новый файл сохраняет fence/keys/cutoffs/cursor/preferences/старые journals; disable возвращаетv2/ACKon.
+0subagents/author review, main unmerged; резерв/group live acceptance deferred.
+Ниже — датированные checkpoint предыдущих стадий, не текущие команды развёртывания.
+
+
 **23Oct — owner: резерв позже, сначала завершить Telegram.**
 [Суженный проект](../proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md),
 [план самостоятельной реализации](../proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md).

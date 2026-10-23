@@ -273,7 +273,7 @@ jobs:
         run: |
           python3 scripts/infra/build_connect_con02_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/con02-update-command
           python3 -I -B artifacts/con02-update-command/ustar-con02-update-*.py
-          python3 scripts/infra/build_connect_telegram_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/telegram-update-command
+          python3 scripts/infra/build_connect_telegram_update.py --commit 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134 --output-dir artifacts/telegram-update-command
           python3 -I -B artifacts/telegram-update-command/ustar-telegram-update-*.py
           git worktree add --detach .stage-input/con02-update-legacy a86e208029b6104150e85d0e90384f84da214c22
           python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_notification_pilot.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"

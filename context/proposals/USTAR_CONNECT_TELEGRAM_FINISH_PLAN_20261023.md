@@ -45,8 +45,8 @@ worker contract3 validates exact keys/category/event before API send_notificatio
 - [x] RED tests exact v1/v2 absence of event, v3 enum matching/category/type/flag/key denial.
 - [x] Add atomic v3 begin path without changing v1/v2 dictionaries, separate feature check and scope.
 - [x] Add sender rendering for all current bounded event labels; config/probe explicit3, v1 default.
-- [ ] Run real worker/serialization tests and native scoped dispatch, no send for malformed permit.
-- [ ] Commit feature checkpoint; app version2300, schema remains100tables, repeat savepoint idempotent.
+- [x] Run real worker/serialization tests and native scoped dispatch, no send for malformed permit.
+- [x] Commit feature checkpoint; app version2300, schema remains100tables, repeat savepoint idempotent.
 
 ### Task3: личные настройки и история
 **Files:** classes/connect/notification_delivery.php own_summary; connect.php; templates/connect.mustache;
@@ -55,27 +55,41 @@ native connect_notification_test.php; tests/mobile/connect-link.cjs.
 all metadata bounded/own-only. Current preference JSON keys/types unchanged.
 - [x] Native RED assertions notice ACK and provider acceptance separate, own-only, no sensitive fields.
 - [x] Show event label, canonical ACK+time, no task completion implication; keep current preference form.
-- [ ] Native tests/Chromium mobile check real Mustache/CSS at existing5widths, no view-as/CSRF regression.
-- [ ] Commit UI/history checkpoint.
+- [x] Native tests/Chromium mobile check real Mustache/CSS at existing5widths, no view-as/CSRF regression.
+- [x] Commit UI/history checkpoint.
 
 ### Task4: native upgrade, wire, runtime and regression acceptance
 **Files:** tests/stage/con02_callback_probe.php,con02_callback_wire.py,run-con02-callback.sh;
 run-connect.sh; .github/workflows/ustar-review-gate.yml as needed.
 - [x] Extend actual native wire for v3 and two bounded event labels, v1/v2 regression retained.
-- [ ] Check2200→2300/repeat/paired restore2200, legacy99/profile retained and table100unchanged.
-- [ ] Run full r16 suite, exact-source PHP8.2/8.3/native/browser/UID33/systemd/privateTLS CI.
-- [ ] Download relevant artifacts, verify exact source/archive identities, report skips/limits honestly.
+- [x] Check2200→2300/repeat/paired restore2200, legacy99/profile retained and table100unchanged.
+- [x] Run full r16 suite, exact-source PHP8.2/8.3/native/browser/UID33/systemd/privateTLS CI.
+- [x] Download relevant artifacts, verify exact source/archive identities, report skips/limits honestly.
 
 ### Task5: coordinated successor delivery and handoff
 **Files:** separate versioned successor controller/builder and focused transaction tests; existing4394
 embedded release remains frozen. Final exact files/interfaces follow Task4 immutable source identity.
-- [ ] Bind exact deployed534/local2200 and current CON02 journals as predecessor; reject unrelated profiles.
-- [ ] Capture fresh pair/managed control before-images; new app/cron and explicit v3 runtime generation;
+- [x] Bind exact deployed534/local2200 and current CON02 journals as predecessor; reject unrelated profiles.
+- [x] Capture fresh pair/managed control before-images; new app/cron and explicit v3 runtime generation;
   operator check/status/activate/recover/disable with original fence/cutoffs/ACK keys/cursor retained.
-- [ ] Prove interrupted pre/post-public recovery, actual owner metadata/HTTPS AutoReport, v2 fallback safe.
-- [ ] Build ordinary.py from exact Git after tests, verify SHA/embedded files; provide owner commands.
-- [ ] Update STATE/ACTIVE/BACKLOG/SESSION_LOG/index/PR receipts. Group deferred, no automatic expansion.
+- [x] Prove interrupted pre/post-public recovery, actual owner metadata/HTTPS AutoReport, v2 fallback safe.
+- [x] Build ordinary.py from exact Git after tests, verify SHA/embedded files; provide owner commands.
+- [x] Update STATE/ACTIVE/BACKLOG/SESSION_LOG/index/PR receipts. Group deferred, no automatic expansion.
 
 Task5 is a deployment gate, not satisfied by mocked CLI or Task1-4 success. No claim of full production
 completion until owner executes the new controller and reports expected status. New routing/digest/Bitrix
 remain deferred. Plan follows existing self execution method; no new execution-mode permission question.
+
+
+## Source handoff accepted23Oct
+
+All5tasks completed as source/release handoff,0subagents/author review. Exact tool3d1938ae
+Context39978015123/Review39978015139 SUCCESS: bothPHP1077/153skips,root11zero-skips,
+actual runtime/HTTPS owner and native158/830, v1/v2/v3 wire/all20labels,2200→2300/repeat/
+paired restore2200 PASS. All100schema snapshots unchanged; preferences/history retained.
+Ordinary.py31153214B SHA6f772945… CI bytes equal exact Git; file ready for owner.
+[Receipt](../runtime/connect_telegram_finish_ci_20261023.json),
+[commands and recovery](../runtime/connect_telegram_finish_20261023.md).
+Production remains534/local2200/ACK active until owner runs the new commands. Task5 capture/
+restore is proven in CI fixtures as documented, not a claim of executing the production upgrade.
+No main merge; worktree retained for owner execution/PR follow-up. Group deferred.

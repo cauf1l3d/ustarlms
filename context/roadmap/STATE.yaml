@@ -1,20 +1,20 @@
 schema_version: 2
 updated_at: '2026-10-23'
 project: USTAR Academy
-stage: connect_CON02B_design_review
-stage_label: CON02 deployed and two owner live ACKs verified; B1 routing design ready
+stage: connect_Telegram_completion_implementation
+stage_label: Owner defers reserve; Telegram completion implementing from deployed2200
 current_activity: >-
   Owner deployed fixed tool4394/application_and_worker534/local2200/theme0202.
   App app_ready; runtime runtime_active with ACK enabled; receiver/notify active+enabled,
   database available. UID130 notices179(task_assigned) and180(task_reminder) both
   acknowledged, one delivery attempt each; not duplicate delivery. Last revoked21Oct
   is historical. Exact AutoReport9443 addition reconciled in HTTPS owner state before
-  successful baseline check. B1 design ready for review; no new routing code yet.
+  successful baseline check. Owner defers B1 reserve and chooses Telegram completion; Task1 visible ACK verified19tests, native RED gate pending.
   0subagents/no agent SSH/provider sends/main merge; live group deferred.
 
 next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-following_connect_stage: B1_design_then_routing_preferences_then_C_Bitrix
+following_connect_stage: Telegram_completion_then_group_and_Bitrix_reserve_later
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -101,6 +101,8 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
+- context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md
 - context/runtime/connect_con02_server1_owner_20261023.json
 - context/runtime/connect_con02_server1_20261023.md
 - context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
@@ -247,8 +249,11 @@ receiver_runtime:
   configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
   ACK_runtime_active: true
   live_ACK_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  next: B1_routing_preferences_design_review_then_implementation_plan
+  next: Telegram_completion_implementation_native_gate_then_successor_delivery
   B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
+  B1_status: deferred_by_owner_reserve_later
+  Telegram_design: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
+  Telegram_plan: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md
 
 connect_academy_preparation:
   kind: historical_19Oct_preflight_snapshot_superseded_by_current_owner_receipts

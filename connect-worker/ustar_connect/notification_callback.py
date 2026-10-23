@@ -95,7 +95,8 @@ class AcknowledgementHandler:
             return
         if outcome == 'acknowledged':
             try:
-                self.api.edit_notification_ack(query.subject, query.message_id, category)
+                self.api.edit_notification_ack(query.subject, query.message_id, category,
+                                               acknowledged_at=acknowledged_at)
             except (TelegramError, ValueError, OSError) as error:
                 self.journal.finish(query.update_id, 'sent', 'ui_edit_unconfirmed', query.message_id)
                 self._backoff(error)

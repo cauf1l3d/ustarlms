@@ -1,5 +1,16 @@
 # USTAR инструкции агентам
 
+**23Oct — owner: резерв позже, сначала завершить Telegram.**
+[Суженный проект](context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md),
+[план самостоятельной реализации](context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md).
+B1 primary/fallback/новый route store отложены. Текущий scope: видимый ACK/точное время,
+bounded event labels в explicit v3 без изменения v1/v2, личная история и сохранение
+существующих preferences, native/runtime CI и отдельная coordinated successor поставка.
+Task1 two RED→GREEN,19callback/transport PASS; native presentation/history RED gate pending.
+Код ещё не поставлен: server1 app/worker534/local2200, ACK active/два owner ACK подтверждены.
+0subagents/no agent SSH/provider sends/main merge; прежний pilot не повторять, группа deferred.
+Ниже датированные checkpoint; B1 design-review больше не текущая задача.
+
 **23Oct — server1 обновлён до2200, ACK runtime и два живых ACK подтверждены владельцем.**
 Exact controller4394/проверенный SHA: --check baseline_ready (historical indexes),
 --upgrade app_ready после fresh backup/cold pair/двух миграций/cron/public release;

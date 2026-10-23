@@ -54,6 +54,7 @@ class NotificationCallback(unittest.TestCase):
         self.assertEqual(5,self.ack_bridge.request.call_args.kwargs['timeout'])
         self.api.send_notification.assert_not_called();self.bridge.request.assert_not_called()
         self.api.get_updates.assert_called_once_with(0,acknowledgements_enabled=True)
+        self.assertEqual(NOW-60, self.api.edit_notification_ack.call_args.kwargs.get('acknowledged_at'))
 
     def test_callback_origin_denial_matrix(self):
         bad=[]

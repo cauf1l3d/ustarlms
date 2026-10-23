@@ -14,9 +14,9 @@ current_connect_checkpoint:
   deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   deployment_plan_status: completed_source_handoff_23Oct
-  stage: CON02B1_design_review
+  stage: Telegram_completion_implementation
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
-  following_stage: B1_design_then_routing_preferences_then_C_Bitrix
+  following_stage: Telegram_completion_then_group_and_Bitrix_reserve_later
   development_version: 2026102200
   development_files: 557
   CON02_A2_design: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
@@ -34,6 +34,9 @@ current_connect_checkpoint:
   backup_HTTPS_preparation_receipt: context/runtime/connect_backup_https_owner_20261021.json
   application_update_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
+  B1_status: deferred_by_owner_reserve_later
+  Telegram_design: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
+  Telegram_plan: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md
   include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
   parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
   parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
@@ -45,7 +48,7 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: B1_design_review_then_implementation_plan
+  next: Telegram_completion_implementation_native_gate_then_successor_delivery
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true

@@ -206,12 +206,19 @@ class TelegramClient:
         return self._call('answerCallbackQuery', {'callback_query_id':query_id, 'text':text,
                                                 'show_alert':False, 'cache_time':0})
 
-    def edit_notification_ack(self, subject, message_id, category):
+    def edit_notification_ack(self, subject, message_id, category, *, acknowledged_at=None):
         if (type(subject) is not int or not 0 < subject < 2**52
                 or type(message_id) is not int or not 0 < message_id < 2**63):
             raise ValueError('invalid_message_reference')
+        keyboard = self._notification_keyboard(category)
+        if acknowledged_at is not None:
+            from datetime import datetime, timezone
+            if type(acknowledged_at) is not int or not 0 < acknowledged_at < 2**32:
+                raise ValueError('invalid_acknowledgement')
+            label = datetime.fromtimestamp(acknowledged_at, timezone.utc).strftime('%d.%m.%Y %H:%M UTC')
+            keyboard.insert(0, [{'text': '✓ Принято · '+label, 'url': keyboard[0][0]['url']}])
         result = self._call('editMessageReplyMarkup', {'chat_id':subject, 'message_id':message_id,
-            'reply_markup':{'inline_keyboard':self._notification_keyboard(category)}})
+            'reply_markup':{'inline_keyboard':keyboard}})
         chat = result.get('chat')
         if (type(result.get('message_id')) is not int or result['message_id'] != message_id
                 or not isinstance(chat, dict) or chat.get('type') != 'private'

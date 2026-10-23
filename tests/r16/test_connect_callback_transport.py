@@ -104,5 +104,23 @@ class CallbackTransport(unittest.TestCase):
         for call in (self.api.get_me,self.api.get_webhook_info,lambda:self.api.get_updates(0)):
             with self.assertRaises(TelegramError): call()
 
+    def test_success_keeps_visible_first_ack_time_with_only_fixed_Academy_links(self):
+        # Losing the canonical timestamp or deleting all confirmation is the break.
+        self.result = {'message_id': 991, 'chat': {'type': 'private', 'id': 77777}}
+        self.assertIn('acknowledged_at', __import__('inspect').signature(self.api.edit_notification_ack).parameters)
+        self.api.edit_notification_ack(77777, 991, 'tasks', acknowledged_at=NOW)
+        method, payload, _ = self.requests[-1]
+        self.assertEqual('editMessageReplyMarkup', method)
+        buttons = sum(payload['reply_markup']['inline_keyboard'], [])
+        self.assertTrue(any(b['text'].startswith('✓ Принято · ') and 'UTC' in b['text'] for b in buttons))
+        self.assertEqual({'https://ustar.local/local/ustar/tasks.php'}, {b['url'] for b in buttons})
+        self.assertFalse(any('callback_data' in b for b in buttons))
+        first = buttons[0]['text']
+        self.api.edit_notification_ack(77777, 991, 'tasks', acknowledged_at=NOW)
+        self.assertEqual(first, self.requests[-1][1]['reply_markup']['inline_keyboard'][0][0]['text'])
+        for bad in (True, 0, -1, '1800000000', 2**32):
+            with self.assertRaises(ValueError):
+                self.api.edit_notification_ack(77777, 991, 'tasks', acknowledged_at=bad)
+
 
 if __name__=='__main__': unittest.main()

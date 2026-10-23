@@ -58,6 +58,50 @@ final class connect_notification_test extends \advanced_testcase {
         $this->setUser($this->employee);
         return $role;
     }
+    public function test_v3_presentation_is_explicit_and_does_not_change_old_permits(): void {
+        global $CFG, $DB;
+        $this->assertTrue(method_exists(notification_delivery::class, 'begin_v3'), 'Explicit presentation contract missing');
+        $this->grant(['local/ustar:use']); $this->prefs();
+        $CFG->ustar_connect_ack_enabled = true; $CFG->ustar_connect_ack_since = time()-60;
+        $CFG->ustar_connect_notify_userids = [(int)$this->employee->id];
+        $id = $this->notice(); $lease = $this->lease();
+        $before = $DB->get_record('local_ustar_notify_delivery', ['notificationid'=>$id]);
+        $this->denied(fn()=>notification_delivery::begin_v3($lease['delivery'], $lease['lease'],
+            'tg_delivery', 'telegram', '123456'), 'presentation_disabled');
+        $this->assertEquals($before, $DB->get_record('local_ustar_notify_delivery', ['notificationid'=>$id]));
+        $CFG->ustar_connect_notification_presentation_enabled = true;
+        $permit = notification_delivery::begin_v3($lease['delivery'], $lease['lease'], 'tg_delivery', 'telegram', '123456');
+        $this->assertSame(3, $permit['version']); $this->assertSame('task_revised', $permit['event']);
+        $this->assertSame('tasks', $permit['category']); $this->assertNotNull($permit['ack']);
+        $this->assertSame(['status','subject','category','severity','occurred_at','send_before','version','ack','event'], array_keys($permit));
+        $wire = json_encode($permit);
+        foreach (['PRIVATE', 'userid', 'metadata', 'actionurl'] as $private) { $this->assertStringNotContainsString($private, $wire); }
+    }
+    public function test_v3_revalidates_optout_before_sending(): void {
+        global $CFG;
+        $this->assertTrue(method_exists(notification_delivery::class, 'begin_v3'), 'Explicit presentation contract missing');
+        $this->prefs(); $this->notice(); $lease = $this->lease();
+        $CFG->ustar_connect_ack_enabled = true; $CFG->ustar_connect_ack_since = time()-60;
+        $CFG->ustar_connect_notification_presentation_enabled = true;
+        $this->prefs(['enabled'=>false]);
+        $this->assertSame(['status'=>'cancelled'], notification_delivery::begin_v3($lease['delivery'],
+            $lease['lease'], 'tg_delivery', 'telegram', '123456'));
+    }
+    public function test_own_history_separates_personal_ack_from_provider_receipt(): void {
+        global $DB;
+        $this->grant(['local/ustar:use']); $this->prefs(); $id = $this->notice();
+        $lease = $this->lease(); $this->begin($lease); $this->finish($lease);
+        target_core::acknowledge_notification($id, (int)$this->employee->id);
+        $summary = notification_delivery::own_summary();
+        $this->assertCount(1, $summary);
+        $this->assertSame('provider_accepted', $summary[0]['status']);
+        $this->assertSame('acknowledged', $summary[0]['notification_status'] ?? null);
+        $this->assertSame('task_revised', $summary[0]['event'] ?? null);
+        $this->assertSame((int)$DB->get_field('local_ustar_notifications', 'ackat', ['id'=>$id]), $summary[0]['acknowledged_at'] ?? null);
+        $this->assertGreaterThan(0, $summary[0]['acknowledged_at']);
+        $other = $this->getDataGenerator()->create_user(); $this->setUser($other);
+        $this->assertSame([], notification_delivery::own_summary());
+    }
     public function test_pilot_allowlist_excludes_other_recipients_before_enqueue(): void {
         global $CFG, $DB;
         $this->prefs();

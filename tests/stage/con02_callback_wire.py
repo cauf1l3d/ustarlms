@@ -58,7 +58,7 @@ if mode=='v2':
         def answer_notification_ack(self,query,outcome,at=0):
             if outcome!='acknowledged':raise RuntimeError('native_callback_not_acknowledged')
             self.receipts.append(at);return True
-        def edit_notification_ack(self,subject,mid,category):
+        def edit_notification_ack(self,subject,mid,category,*,acknowledged_at=None):
             if (subject,mid,category)!=(77777,992,'tasks'):raise RuntimeError('unsafe_markup_target')
     class AckBridge:
         def request(self,op,payload,*,timeout=10):

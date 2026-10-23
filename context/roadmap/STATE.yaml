@@ -1,21 +1,22 @@
 schema_version: 2
 updated_at: '2026-10-23'
 project: USTAR Academy
-stage: connect_Telegram2300_owner_accepted_CON03_preflight
-stage_label: Owner accepted Telegram notification presentation; full Mini App preflight next
+stage: infrastructure_normalization_resume_20261023
+stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  Owner verified tool3d1938ae SHA, baseline_ready2200, upgraded fixed app/worker6c56
-  to local2300/theme0202 and enabled ACK/presentation runtime. App generation
-  94d379904f7f4f7f8795b43e68421d89; runtime54bb0b7e4ba746928a639279ea729415.
-  Both services active/enabled and database available. Owner confirmed a new task
-  notification, persistent ACK/time and correct own Academy history; this visual
-  acceptance is closed. Event heading not separately transcribed; two previous UID130
-  canonical ACKs are separate2200 evidence. This narrow notification release does not
-  complete the Telegram product; next functional stage CON03 Mini App needs external
-  HTTPS, Academy auth and own task/checklist actions. No new implementation claimed.
-  0subagents/no agent SSH/provider sends/main merge; reserve/live group deferred.
+  Owner23Oct pauses further Telegram/Mini App development; accepted2300 runtime remains
+  operational. One-time reminder24Oct15:00Europe/Moscow created for KeenDNS app rules
+  and an off-LAN mobile check. Current work is INF-01 read-only refresh and infrastructure
+  residual triage, then recommended P0 INF-02/03 DB privileges/admin and code/config/key
+  hardening. No new production mutation, service stop or public ingress change performed.
+  Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
+  Production payload/worker6c56/local2300 remains in the owner receipt below.
+  0subagents/no agent SSH/provider sends/main merge; shared Apache/AutoReport retained.
+next_task: INF-01
+infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
+connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
+connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
 
-next_task: INTEGRATIONS-01
 live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
 following_connect_stage: CON03_Telegram_Mini_App_own_tasks_checklists_external_HTTPS_auth_reserve_later
 ready_tasks: []
@@ -107,6 +108,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/infra_normalization_resume_20261023.md
 - context/runtime/connect_telegram_next_preflight_20261023.md
 - context/runtime/connect_telegram_finish_owner_20261023.json
 - context/runtime/connect_telegram_finish_20261023.md

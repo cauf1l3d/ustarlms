@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+## 23Oct — owner pauses Connect and resumes infrastructure normalization
+
+One-time automation successfully created for24Oct2026 15:00Europe/Moscow: review existing
+KeenDNS app rules and check public domain from mobile data. This is a reminder to the
+owner, not automatic development/activation. Accepted Telegram2300 delivery/ACK/time/
+history preserved; no service stop, router modification or provider send.
+Current priority moved to INF-01 read-only refresh; original-plan P0 INF-02/03 DB
+privileges/admin and code/config/key permissions are the recommended next changes.
+Reconciled remaining logging/health/storage/SSH/firewall/SMTP/cron/backup/restore/
+monitoring/ACL/performance work against BACKLOG and16Oct reconciliation plus later
+HTTPS/cron/Connect receipts. No newer completion of those hardening areas was found.
+Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not repeated; OPS02 sysadmin
+clean-host restore remains waiting_external. Report: context/runtime/infra_normalization_resume_20261023.md.
+PR106 stays draft/unmerged; qualified application/controller code unchanged;0subagents.
 
 ## 23Oct — owner accepted new Telegram ACK/time and Academy history; full-scope preflight
 

@@ -1,5 +1,15 @@
 # USTAR инструкции агентам
 
+**23Oct — текущий приоритет: инфраструктурная нормализация; Connect на паузе.**
+Owner просит вернуться к server1 hardening. [Остаток и точка продолжения](context/runtime/infra_normalization_resume_20261023.md).
+Первый срез — INF-01 read-only refresh, затем конкретная подготовка P0 INF-02/03:
+DB admin/runtime privileges и полные code/config/key permissions. Не повторять принятые
+SSD growth, Moodle518/OS patch/reboot/LAN HTTPS/backup schedule/Connect2300.
+Telegram delivery/ACK/history уже owner accepted; действующие workers не останавливались.
+Напоминание24Oct15:00Europe/Moscow создано: KeenDNS rules + mobile off-LAN check.
+Это не автоматическое возобновление/публикация. PR106 остаётся draft/unmerged;
+0subagents/no agent SSH/provider sends. Ниже — предыдущие датированные checkpoint.
+
 **23Oct — owner принял Telegram2300: доставка, видимый ACK/время и история работают.**
 [Owner receipt](context/runtime/connect_telegram_finish_owner_20261023.json): tool3d1938ae/app+worker6c56/local2300/theme0202;
 ACK/presentation active, notify+receiver active/enabled, DB available. Owner подтвердил

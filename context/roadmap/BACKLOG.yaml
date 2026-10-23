@@ -3,6 +3,13 @@ updated_at: '2026-10-23'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
+current_infrastructure_checkpoint:
+  date_msk: '2026-10-23'
+  status: owner_resumes_normalization_Connect_development_paused
+  report: context/runtime/infra_normalization_resume_20261023.md
+  next: INF01_readonly_refresh_then_prepare_P0_INF02_INF03
+  production_mutations_performed: false
+  accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300
 current_connect_checkpoint:
   Telegram_successor: context/runtime/connect_telegram_finish_20261023.md
   Telegram_successor_CI: context/runtime/connect_telegram_finish_ci_20261023.json
@@ -20,7 +27,7 @@ current_connect_checkpoint:
   deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   deployment_plan_status: completed_source_handoff_23Oct
-  stage: Telegram2300_owner_visual_accepted_CON03_preflight_next
+  stage: owner_paused_after_accepted2300_notification_release
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: CON03_Mini_App_own_tasks_checklists_external_HTTPS_auth_reserve_later
   development_version: 2026102300
@@ -55,7 +62,7 @@ current_connect_checkpoint:
   notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
   notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
   office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
-  next: CON03_Mini_App_task_checklist_scenario_external_HTTPS_and_Academy_auth
+  next: paused_owner_reminder24Oct1500MSK_then_explicit_return_to_CON03_preflight
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
@@ -502,11 +509,15 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INTEGRATIONS-01
   title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
-  status: in_progress
+  status: deferred
   depends_on: []
-  phase: Telegram2300_owner_deployed_CON03_Mini_App_next
-  owner_priority: complete_Telegram_employee_scenario_reserve_and_live_group_deferred
+  phase: owner_paused_23Oct_accepted2300_runtime_retained
+  owner_priority: infrastructure_normalization_now_Connect_on_pause
   current_summary: >-
+    Latest23Oct owner pauses further Telegram development and resumes infrastructure
+    normalization. Reminder24Oct15:00Europe/Moscow created for KeenDNS rules and mobile
+    off-LAN check; not an automatic resume. Accepted2300 services remain operational.
+    The following source/deployment/Mini App checkpoints are historical until return.
     Current23Oct: owner deployed exact tool3d/app-worker6c56/local2300/theme0202;
     app_ready and runtime_active with ACK/presentation enabled, both services
     active/enabled and database available. Receipt:
@@ -598,14 +609,21 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: CON01C4_provider_read_session_native_auth_and_live_access_gates_no_deploy
+execution_gate: infrastructure_readonly_refresh_before_concrete_INF02_INF03_change_no_production_mutation
 owner_selected_order:
+- INF-01
+- OPS-02_external_result_when_received
+recommended_infrastructure_followup:
+- INF-02
+- INF-03
+- INF-04
+- INF-05
+previous_owner_selected_order_19Oct:
 - DOC-03
 - INF-06
 - INTEGRATIONS-01
 - OPS-02_external_result_when_received
-latest_owner_priority: '19Oct00:49MSK: unified Academy bot architecture in PR106;accounts/link accepted0041; journal/heartbeat
-  deferred;no subagents without agreement;OPS02 waiting;Moodle5.2/PG17 deferred'
+latest_owner_priority: '23Oct: pause Connect development; resume infrastructure normalization; reminder24Oct15:00Europe/Moscow; accepted2300 runtime retained;0subagents;OPS02 still waiting'
 
 private_bridge_source_progress: context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PROGRESS_20261021.md
 private_bridge_source_ci: context/runtime/connect_private_bridge_ci_20261021.json

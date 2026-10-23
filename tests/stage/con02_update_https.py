@@ -74,17 +74,25 @@ def main():
             # remains part of the exact topology during the successor handoff.
             from telegram_update_runtime import artifact_bundle as successor_bundle, verify as verify_successor
             site=manager.p.old.enabled.parent/'ustar-autoreport.conf'
+            assert not site.exists()
+            prior_owner=manager.load()
             site.write_text('Listen 127.0.0.1:19443\n<VirtualHost 127.0.0.1:19443>\nServerName autoreport.invalid\nDocumentRoot /var/www/html\n</VirtualHost>\n')
             site.chmod(0o644)
-            owner.test_config();owner.reload()
-            saved=manager.load();observed=owner.vhosts()
-            binding='127.0.0.1:19443'
-            assert observed[binding][0]['name']=='autoreport.invalid'
-            saved['topology'][binding]=observed[binding]
-            manager.topology(saved,observed);manager.save(saved)
-            before_site=site.read_bytes()
-            verify_successor(successor_bundle(sys.argv[3]),ctx,journal,locks,host)
-            assert site.read_bytes()==before_site and owner.vhosts()[binding]==observed[binding]
+            try:
+                owner.test_config();owner.reload()
+                saved=manager.load();observed=owner.vhosts()
+                binding='127.0.0.1:19443'
+                assert observed[binding][0]['name']=='autoreport.invalid'
+                saved['topology'][binding]=observed[binding]
+                manager.topology(saved,observed);manager.save(saved)
+                before_site=site.read_bytes()
+                verify_successor(successor_bundle(sys.argv[3]),ctx,journal,locks,host)
+                assert site.read_bytes()==before_site and owner.vhosts()[binding]==observed[binding]
+            finally:
+                # Only this fixture-created site is removed. The outer native
+                # drill next reuses its original pre-cutover probe topology.
+                site.unlink();owner.test_config();owner.reload()
+                manager.topology(prior_owner,owner.vhosts());manager.save(prior_owner)
     os.environ['USTAR_ACADEMY_TLS_FIXTURE']='1'
     native.main(verification=verification)
 

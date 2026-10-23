@@ -1,5 +1,10 @@
 # Активные задачи USTAR
 
+**23Oct — первый admin createuser отказал до создания роли; команды исправлены.**
+`--maintenance-db` отсутствует в createuser/dropuser PostgreSQL16. В
+[runbook](../runtime/infra_readonly_baseline_20261023.md) параметр удалён из creation/
+rollback; native retry + два SCRAM-входа ещё pending. Роль/права/config не менялись.
+
 **23Oct — Docker/config follow-up получен; INF02 additive admin — следующий write.**
 [Та же receipt](../runtime/infra_readonly_owner_20261023.json), поле owner_followup:
 primary config33:33/0755 writable, static dbuser=moodle; оба containers running/restarts0/

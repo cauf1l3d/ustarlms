@@ -1,5 +1,20 @@
 # Журнал выполнения roadmap
 
+## 23Oct — correct unsupported PostgreSQL16 createuser option before owner retry
+
+Owner first admin block failed at argument parsing: --maintenance-db=moodle unsupported.
+Agent command error; no password prompt/DB connection/role creation, two SCRAM probes
+not reached. Root cause verified against full PG16 docs and REL_16_STABLE createuser
+option table plus fe_utils/connect_utils.c. Minimal fix removes that flag from creation
+and dropuser rollback; built-in postgres/template1 maintenance selection retained,
+not -d/PGDATABASE substitution. Role is cluster-wide, moodle privileges unchanged.
+One-off upstream-option check rejects old invocation and accepts corrected flags;
+Bash syntax/context checks qualify source only. Native corrected retry pending owner.
+Same receipt extended, no new installer/archive, service stop or app/controller change.
+Verification GREEN: creation flags username/superuser/pwprompt accepted by independent
+upstream PG16 option table; both Bash blocks parse, rollback flag removed, receipt JSON
+valid, context413files/check_context and diff whitespace PASS. Native retry still pending.
+
 ## 23Oct — owner corrected Docker/config probes received; independent admin commands ready
 
 Corrected optional Health lookup executed natively by owner: both containers running,

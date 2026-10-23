@@ -203,6 +203,19 @@
     },
     "admin_creation_or_hardening_executed": false
   },
+  "admin_creation_attempt": {
+    "reported_date_moscow": "2026-10-23",
+    "phase": "CLI_refused_before_connection_and_role_creation",
+    "client_major_version": 16,
+    "program": "createuser",
+    "error": "unrecognized option '--maintenance-db=moodle'",
+    "cause": "agent_supplied_unsupported_createuser_option",
+    "role_created_in_this_attempt": false,
+    "password_prompt_reached": false,
+    "two_SCRAM_sessions_attempted": false,
+    "correction": "remove unsupported option from creation and dropuser rollback; use built-in maintenance DB selection",
+    "corrected_native_retry": "pending_owner"
+  },
   "production_mutations_performed": false,
   "connect_development_paused": true,
   "subagents": 0

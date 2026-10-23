@@ -182,7 +182,7 @@ environment overrides этим не исключены. Начальный18:08U
   sudo -n docker exec -it ustar_postgres env \
     PGCONNECT_TIMEOUT=5 \
     PGOPTIONS='-c password_encryption=scram-sha-256 -c search_path=pg_catalog -c statement_timeout=15s -c lock_timeout=3s' \
-    createuser --username=moodle --maintenance-db=moodle \
+    createuser --username=moodle \
     --superuser --pwprompt ustar_pg_admin
 
   for ustar_admin_session in 1 2; do
@@ -206,7 +206,7 @@ Existing name → createuser refuses and the subshell stops, no silent password 
 or reuse. Failed verification → leave `moodle` privileges untouched, collect error
 and repair only the new admin path. No DROP/reassignment/CASCADE occurs automatically.
 If cancelling this additive step before any ownership/use of the new role, owner may
-run `sudo docker exec -it ustar_postgres dropuser --username=moodle --maintenance-db=moodle ustar_pg_admin`;
+run `sudo docker exec -it ustar_postgres dropuser --username=moodle ustar_pg_admin`;
 ordinary drop refuses dependencies. Old backups retain the previous admin path;
 backup coverage of new credentials/roles is not claimed by this creation step.
 
@@ -241,3 +241,25 @@ https://docs.docker.com/engine/logging/drivers/json-file/
 
 Local Bash syntax/author review can qualify these commands, not prove actual role
 creation or successful SCRAM sessions. Both owner outputs remain required.
+
+## Исправление CLI23Oct: unsupported --maintenance-db
+
+Owner выполнил первую версию блока; PostgreSQL16 createuser отказал на неизвестном
+`--maintenance-db=moodle`. Это ошибка наших команд: Bash syntax проверялся, но перечень
+опций createuser был проверен недостаточно. По owner output и upstream argument parsing
+отказ произошёл до password prompt/DB connection/CREATE ROLE; оба SCRAM-входа не запускались.
+Новую роль этим запуском не создали, права moodle и конфигурацию не меняли.
+
+Минимальное исправление — удалить неподдержанный параметр из createuser и dropuser
+rollback выше. Не подменять его на `-d` (это CREATEDB) или PGDATABASE: createuser16
+задаёт cparams.dbname=NULL, а connectMaintenanceDatabase выбирает postgres/fallback
+template1. Роль кластерная; подключение к бизнес-БД moodle для создания не требуется.
+Остальная команда/парольный поток и два required-SCRAM подключения к moodle сохранены.
+
+Проверены полная PG16 документация createuser/dropuser и REL_16_STABLE source:
+https://github.com/postgres/postgres/blob/REL_16_STABLE/src/bin/scripts/createuser.c
+https://github.com/postgres/postgres/blob/REL_16_STABLE/src/fe_utils/connect_utils.c
+https://www.postgresql.org/docs/16/app-dropuser.html
+Одноразовая static option check против независимого upstream long_options сначала
+отклоняет старый --maintenance-db; исправленный набор принимается. Это source/CLI
+compatibility check, не native выполнение createuser; owner retry ещё требуется.

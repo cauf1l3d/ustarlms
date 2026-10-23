@@ -62,6 +62,10 @@ PLAT-01 Moodle5.2/PG17, новый mobile/B2B, новый внешний Telegra
 
 Owner: «хорошо начнем тогда по этому плану». Подготовлен первый
 [read-only operator batch](infra_readonly_baseline_20261023.md) для P0 DB/file triage,
-с logging/health/mount/cron/backup metadata. Commands ready, owner output pending;
-INF-01 целиком не закрыт. Проверен синтаксис Bash/embedded sh/Python и выполнен author
-safety review, native SQL/containers локально недоступны. Runtime не менялся.
+с logging/health/mount/cron/backup metadata. Owner output получен23Oct21:08МСК;
+INF-01 целиком не закрыт. [Квитанция](infra_readonly_owner_20261023.json): только один
+superuser `moodle`, code local_ustar writable под www-data33; scheduled cron18:08UTC
+exit0 и HDD03:30МСК success,48G свободно. Docker metadata не получены из-за ошибки
+шаблона Health; primary config уровнем выше ещё не прочитан. В runbook — исправленный
+узкий follow-up, без повторного SQL/cron/backup. Не демотировать единственный admin.
+Runtime не менялся; native Docker проверка исправленного шаблона pending owner.

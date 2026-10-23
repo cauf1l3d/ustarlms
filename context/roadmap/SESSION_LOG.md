@@ -1,5 +1,24 @@
 # Журнал выполнения roadmap
 
+## 23Oct — owner INF-01 metadata received; P0 DB/code findings, narrow collector fix
+
+Exact5765B SHA4382ed9e artifact verified by owner; measured18:08:18UTC/21:08MSK.
+Only observed superuser moodle has all elevated flags, owns657tables/656sequences;
+no independent admin login verified. Effective application role still unknown:
+collector read public/public/config.php instead of installer-owned public/config.php.
+www-data33 can write local/ustar directory and version.php; selected parents/core/theme
+not writable. Data/cache sample writable as expected, no global chmod/chown performed.
+Scheduled cron18:08UTC exit0/1.222s/no new failures;19overdue/2failed need task review,
+20Oct wrapper error is historical. HDD23Oct03:30MSK complete/success/exit0, active timer,
+no marker; latest-any-backup16:18UTC not mislabeled scheduled. Root55%/48G available.
+Mounts measured; two Docker inspect calls failed on optional missing Health key.
+Corrected with index lookup and primary config path; targeted followup in existing
+runbook, no whole baseline repeat. Receipt: context/runtime/infra_readonly_owner_20261023.json.
+Local baseline/followup Bash/embedded sh/Python syntax, receipt JSON, diff whitespace
+and context validation PASS; generated context index413files. Author metadata-only review;
+native Docker corrected-template result pending. No role/HBA/file/service mutations,
+full INF01/02/03 still open; Telegram remains paused and operating,0subagents.
+
 ## 23Oct — INF-01 first operator metadata batch ready; native output pending
 
 Owner approved starting the resumed plan. New plain shell script5765B SHA4382ed9e…

@@ -55,7 +55,7 @@ SQL
 sudo -n timeout --kill-after=3s 12s /usr/bin/python3 -I -B - <<'PY'
 import json, re, stat
 from pathlib import Path
-p = Path('/opt/ustar/data/moodle/public/public/config.php')
+p = Path('/opt/ustar/data/moodle/public/config.php')
 for path in [*reversed(p.parents), p]:
     try:
         s = path.lstat()
@@ -83,7 +83,7 @@ PY
 
 sudo -n timeout --kill-after=3s 15s docker exec -i -u www-data ustar_moodle sh <<'SH'
 id
-for p in /var/www/html /var/www/html/public /var/www/html/public/config.php \
+for p in /var/www/html /var/www/html/config.php /var/www/html/public /var/www/html/public/config.php \
   /var/www/html/public/version.php /var/www/html/admin /var/www/html/public/lib \
   /var/www/html/public/local /var/www/html/public/local/ustar \
   /var/www/html/public/local/ustar/version.php /var/www/html/public/theme \
@@ -101,7 +101,7 @@ done
 SH
 
 sudo -n timeout --kill-after=3s 10s docker inspect --format \
-  '{{.Name}} id={{.Id}} image={{.Image}} state={{.State.Status}} restarts={{.RestartCount}} oom={{.State.OOMKilled}} health={{if .State.Health}}{{.State.Health.Status}}{{else}}not_configured{{end}} log_driver={{.HostConfig.LogConfig.Type}} {{with .HostConfig.LogConfig.Config}}max_size={{index . "max-size"}} max_file={{index . "max-file"}}{{else}}log_limits_not_configured{{end}} log_path={{.LogPath}} readonly_rootfs={{.HostConfig.ReadonlyRootfs}} userns={{.HostConfig.UsernsMode}}' \
+  '{{.Name}} id={{.Id}} image={{.Image}} state={{.State.Status}} restarts={{.RestartCount}} oom={{.State.OOMKilled}} health={{with index .State "Health"}}{{.Status}}{{else}}not_configured{{end}} log_driver={{.HostConfig.LogConfig.Type}} {{with .HostConfig.LogConfig.Config}}max_size={{index . "max-size"}} max_file={{index . "max-file"}}{{else}}log_limits_not_configured{{end}} log_path={{.LogPath}} readonly_rootfs={{.HostConfig.ReadonlyRootfs}} userns={{.HostConfig.UsernsMode}}' \
   ustar_moodle ustar_postgres
 sudo -n timeout --kill-after=3s 10s docker inspect --format \
   '{{.Name}} mounts={{json .Mounts}}' ustar_moodle ustar_postgres

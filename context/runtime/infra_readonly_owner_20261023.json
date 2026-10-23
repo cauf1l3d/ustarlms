@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "kind": "owner_terminal_receipt_not_independent_agent_probe",
+  "measured_at_utc": "2026-10-23T18:08:18Z",
+  "measured_at_moscow": "2026-10-23T21:08:18+03:00",
+  "baseline_status": "partial_measured_two_P0_findings_followup_pending",
+  "operator_artifact": {
+    "name": "readonly_baseline_20261023.sh",
+    "bytes": 5765,
+    "sha256": "4382ed9e1c2e08223b61b4dc9c4bdfd47d5b4c7d21e41939031428eb7cdf5ad0",
+    "owner_sha_check": "OK",
+    "later_source_correction_is_not_the_executed_artifact": true
+  },
+  "host": {
+    "kernel": "6.8.0-147-generic",
+    "root_filesystem": {"type": "ext4", "size": "110G", "used": "58G", "available": "48G", "used_percent": 55}
+  },
+  "postgres": {
+    "version": "16.15 (Debian 16.15-1.pgdg13+2)",
+    "transaction_read_only": true,
+    "database": "moodle",
+    "probe_role": "moodle",
+    "effective_application_role": "not_established_primary_config_followup_pending",
+    "configuration_loaded_at_utc": "2026-10-23T16:30:01.188707+00:00",
+    "non_builtin_roles": [
+      {"name": "moodle", "login": true, "superuser": true, "create_role": true, "create_db": true, "replication": true, "bypass_rls": true, "inherit": true},
+      {"name": "ustar_console_monitor", "login": true, "superuser": false, "create_role": false, "create_db": false, "replication": false, "bypass_rls": false, "inherit": false},
+      {"name": "ustar_console_stats", "login": false, "superuser": false, "create_role": false, "create_db": false, "replication": false, "bypass_rls": false, "inherit": true}
+    ],
+    "memberships": [
+      {"member": "pg_monitor", "role": "pg_read_all_settings", "admin_option": false},
+      {"member": "pg_monitor", "role": "pg_read_all_stats", "admin_option": false},
+      {"member": "pg_monitor", "role": "pg_stat_scan_tables", "admin_option": false},
+      {"member": "ustar_console_stats", "role": "pg_read_all_stats", "admin_option": false}
+    ],
+    "observed_superuser_roles": ["moodle"],
+    "independent_admin_login_verified": false,
+    "database_owner": "moodle",
+    "database_acl": "{=Tc/moodle,moodle=CTc/moodle,ustar_console_monitor=c/moodle}",
+    "public_schema_owner": "pg_database_owner",
+    "public_schema_acl": "{pg_database_owner=UC/pg_database_owner,=U/pg_database_owner}",
+    "public_object_owners": [
+      {"kind": "sequence", "owner": "moodle", "count": 656},
+      {"kind": "index", "owner": "moodle", "count": 2166},
+      {"kind": "table", "owner": "moodle", "count": 657}
+    ],
+    "extensions": [{"name": "plpgsql", "owner": "moodle"}],
+    "default_acl_rows": 0,
+    "connection_sample": [{"role": "moodle", "type": "client backend", "state": "active", "count": 1}],
+    "hba_file": {
+      "scope": "file_contents_not_proof_of_last_loaded_rules",
+      "parse_errors": false,
+      "rules": [
+        {"type": "local", "database": "all", "user": "all", "auth": "trust"},
+        {"type": "host", "database": "all", "user": "all", "address": "127.0.0.1/32", "auth": "trust"},
+        {"type": "host", "database": "all", "user": "all", "address": "::1/128", "auth": "trust"},
+        {"type": "local", "database": "replication", "user": "all", "auth": "trust"},
+        {"type": "host", "database": "replication", "user": "all", "address": "127.0.0.1/32", "auth": "trust"},
+        {"type": "host", "database": "replication", "user": "all", "address": "::1/128", "auth": "trust"},
+        {"type": "host", "database": "all", "user": "all", "address": "all", "auth": "scram-sha-256"}
+      ]
+    },
+    "addon_versions": {"local_ustar": "2026102300", "theme_ustar": "2026100202"}
+  },
+  "file_sample": {
+    "recursive_or_complete_ACL_audit": false,
+    "host_parents": [
+      {"path": "/", "uid": 0, "gid": 0, "mode": "0755", "symlink": false},
+      {"path": "/opt", "uid": 0, "gid": 0, "mode": "0755", "symlink": false},
+      {"path": "/opt/ustar", "uid": 0, "gid": 1000, "mode": "0755", "symlink": false},
+      {"path": "/opt/ustar/data", "uid": 0, "gid": 1000, "mode": "0755", "symlink": false},
+      {"path": "/opt/ustar/data/moodle", "uid": 0, "gid": 33, "mode": "0755", "symlink": false},
+      {"path": "/opt/ustar/data/moodle/public", "uid": 0, "gid": 33, "mode": "0755", "symlink": false},
+      {"path": "/opt/ustar/data/moodle/public/public", "uid": 0, "gid": 0, "mode": "0755", "symlink": false},
+      {"path": "/opt/ustar/data/moodle/public/public/config.php", "uid": 0, "gid": 0, "mode": "0644", "symlink": false}
+    ],
+    "public_config_literals": {"dbuser": "not_one_supported_literal", "dbname": "not_one_supported_literal", "prefix": "not_one_supported_literal"},
+    "primary_config": {"host_path": "/opt/ustar/data/moodle/public/config.php", "container_path": "/var/www/html/config.php", "measurement": "pending_corrected_followup", "path_source": "scripts/infra/connect_delivery_readiness.py OWNED.config"},
+    "container_probe_identity": {"uid": 33, "gid": 33, "groups": [33]},
+    "code_writable_by_probe": [
+      {"path": "/var/www/html/public/local/ustar", "uid": 33, "gid": 33, "mode": "0755"},
+      {"path": "/var/www/html/public/local/ustar/version.php", "uid": 33, "gid": 33, "mode": "0644"}
+    ],
+    "code_not_writable_by_probe": [
+      "/var/www/html", "/var/www/html/public", "/var/www/html/public/config.php",
+      "/var/www/html/public/version.php", "/var/www/html/admin", "/var/www/html/public/lib",
+      "/var/www/html/public/local", "/var/www/html/public/theme",
+      "/var/www/html/public/theme/ustar", "/var/www/html/public/theme/ustar/version.php"
+    ],
+    "data_writable_by_probe": [
+      {"path": "/var/www/moodledata", "uid": 33, "gid": 33, "mode": "0770"},
+      {"path": "/var/www/moodledata/cache", "uid": 0, "gid": 0, "mode": "0777"},
+      {"path": "/var/www/moodledata/localcache", "uid": 0, "gid": 0, "mode": "0777"},
+      {"path": "/var/www/moodledata/sessions", "uid": 33, "gid": 33, "mode": "0777"},
+      {"path": "/var/www/moodledata/temp", "uid": 0, "gid": 0, "mode": "0777"}
+    ]
+  },
+  "docker": {
+    "container_metadata": "uncollected_due_to_collector_template_failure",
+    "collector_error": "map has no entry for key Health",
+    "correction": "use with index .State Health for optional map member; native rerun pending",
+    "mounts": [
+      {"container": "ustar_moodle", "source": "/opt/ustar/data/moodle/public", "destination": "/var/www/html", "type": "bind", "rw": true},
+      {"container": "ustar_moodle", "source": "/opt/ustar/data/moodle/moodledata", "destination": "/var/www/moodledata", "type": "bind", "rw": true},
+      {"container": "ustar_postgres", "source": "/opt/ustar/data/postgres", "destination": "/var/lib/postgresql/data", "type": "bind", "rw": true}
+    ]
+  },
+  "cron": {
+    "setup_version": 3,
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "last_scheduled_start_utc": "2026-10-23T18:08:01.491140+00:00",
+    "last_scheduled_finish_utc": "2026-10-23T18:08:02.713476+00:00",
+    "elapsed_seconds": 1.222,
+    "exit_code": 0,
+    "new_failures": [],
+    "adhoc_queued": 0,
+    "adhoc_failed": 0,
+    "ustar_failed": 0,
+    "ustar_error_lines": 0,
+    "ustar_warning_lines": 0,
+    "scheduled_overdue_10m": 19,
+    "scheduled_failed": 2,
+    "overdue_failed_effective_state": "requires_task_level_followup_not_proof_of_new_failures",
+    "historical_wrapper_error": {"at_utc": "2026-10-20T17:33:01.250048+00:00", "reason": "Production application versions differ from the reviewed snapshot", "is_current_failure": false}
+  },
+  "backup": {
+    "calendar": "*-*-* 03:30:00 Europe/Moscow",
+    "catch_up": false,
+    "archive_deletion": false,
+    "last_scheduled_start_utc": "2026-10-23T00:30:00.411706+00:00",
+    "last_scheduled_finish_utc": "2026-10-23T00:31:51.548966+00:00",
+    "last_scheduled_phase": "complete",
+    "last_scheduled_success": true,
+    "last_scheduled_service_result": "success",
+    "last_scheduled_exit_status": 0,
+    "last_backup_success_utc": "2026-10-23T16:18:53.538546+00:00",
+    "later_success_trigger": "not_established_not_labeled_as_scheduled",
+    "recovery_marker_present": false,
+    "timer_active_enabled": true,
+    "next_scheduled_utc": "2026-10-24T00:30:00Z",
+    "backup_service": "inactive_static_result_success",
+    "recovery_service": "inactive_enabled_result_success",
+    "fresh_decryption_or_clean_host_restore_verified": false
+  },
+  "next": [
+    "narrow Docker metadata rerun and primary config identifier/permission read",
+    "prepare independent PostgreSQL admin path before role privilege reduction",
+    "review upgrade_backup_restore consumers and full code_ACL inventory before permission changes"
+  ],
+  "production_mutations_performed": false,
+  "connect_development_paused": true,
+  "subagents": 0
+}

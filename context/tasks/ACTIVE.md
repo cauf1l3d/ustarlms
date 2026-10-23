@@ -1,5 +1,14 @@
 # Активные задачи USTAR
 
+**23Oct21:08МСК — INF-01 owner metadata получены частично.**
+[Receipt](../runtime/infra_readonly_owner_20261023.json): единственный найденный
+superuser moodle; local_ustar и version.php writable под www-data33. Свежие scheduled
+cron/HDD backup успешны,48G свободно. Docker inspect потерян на missing Health key,
+primary config.php уровнем выше ещё не измерен. Исправленный узкий follow-up в
+[runbook](../runtime/infra_readonly_baseline_20261023.md); весь baseline не повторять.
+Никакого hardening ещё не выполнено. Не демотировать единственный admin до отдельного
+проверенного входа и проверки upgrade/backup; полные INF01/02/03 остаются открыты.
+
 **23Oct — текущий приоритет: инфраструктурная нормализация; Connect на паузе.**
 Owner просит вернуться к server1 hardening. [Остаток и точка продолжения](../runtime/infra_normalization_resume_20261023.md).
 Первый срез — INF-01 read-only refresh, затем конкретная подготовка P0 INF-02/03:

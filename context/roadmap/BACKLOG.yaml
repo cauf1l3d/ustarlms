@@ -5,10 +5,12 @@ source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_infrastructure_checkpoint:
   date_msk: '2026-10-23'
-  status: owner_approved_execution_readonly_commands_ready_native_output_pending
+  status: owner_partial_measured_P0_DB_code_findings_narrow_followup_pending
   report: context/runtime/infra_normalization_resume_20261023.md
   baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
-  next: INF01_readonly_refresh_then_prepare_P0_INF02_INF03
+  baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
+  findings: one_superuser_moodle_www_data_writable_local_ustar_scheduled_cron_backup_success
+  next: narrow_Docker_primary_config_followup_then_prepare_independent_DB_admin_and_code_permissions
   production_mutations_performed: false
   accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300
 current_connect_checkpoint:

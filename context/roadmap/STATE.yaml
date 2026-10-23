@@ -11,11 +11,15 @@ current_activity: >-
   hardening. No new production mutation, service stop or public ingress change performed.
   Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
   Production payload/worker6c56/local2300 remains in the owner receipt below.
+  Owner metadata23Oct18:08UTC confirms one superuser moodle and writable local_ustar
+  code under www-data. Fresh scheduled cron and HDD backup succeeded. Docker metadata
+  and primary config identifiers remain pending narrow corrected probes; no demotion.
   0subagents/no agent SSH/provider sends/main merge; shared Apache/AutoReport retained.
 next_task: INF-01
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
-infrastructure_baseline_status: commands_ready_owner_native_output_pending
+infrastructure_baseline_status: owner_partial_measured_P0_DB_code_findings_narrow_followup_pending
+infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
 connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
 
@@ -89,9 +93,10 @@ production:
     uncompared: 0
     scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file
       references, not a new whole-host manifest
-  cron: controller3d1938ae_cron_written2300_owner23Oct_upgrade_completed_scheduled_post_update_receipt_not_collected
-  cron_current_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
-  regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
+  cron: owner23Oct18_08UTC_scheduled_exit0_1_222seconds_no_new_failures_19overdue_2failed_need_task_review
+  cron_current_receipt: context/runtime/infra_readonly_owner_20261023.json
+  regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
+  regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
     moodle: 5.1.8
@@ -110,6 +115,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/infra_readonly_owner_20261023.json
 - context/runtime/infra_readonly_baseline_20261023.md
 - context/runtime/infra_normalization_resume_20261023.md
 - context/runtime/connect_telegram_next_preflight_20261023.md

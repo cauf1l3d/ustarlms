@@ -670,6 +670,12 @@
       "sha256": "a464f2f671566e619afc38f2b4cb769a67d4d33888fdd2d9e60608d539c6ec02"
     },
     {
+      "path": "context/proposals/INF02_PRIVILEGE_DELTA_PLAN_20261023.md",
+      "domain": "proposals",
+      "size": 3500,
+      "sha256": "d01ada40861e13b4ce3d22918314bf4ce6ee573c7f8f245b066b86fcea1d6049"
+    },
+    {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
       "domain": "proposals",
       "size": 5012,

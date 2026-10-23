@@ -105,3 +105,6 @@ bash /source/tests/stage/run-con02-callback.sh
 bash /source/tests/stage/run-con02-update.sh
 
 bash /source/tests/stage/run-telegram-presentation.sh
+
+# RED first: existing app fixture must prove it does not retain cluster privileges.
+USTAR_DB_PRIVILEGE_FIXTURE=1 php /source/tests/stage/db_privileges_probe.php role

@@ -58,7 +58,7 @@ jobs:
         run: |
           if [ "$CONNECT_EVENT" = workflow_dispatch ] && [ -f moodle/local/ustar/classes/connect/identity_service.php ]; then
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
-          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh 'scripts/infra/connect_telegram*' scripts/infra/build_connect_telegram_update.py 'tests/stage/telegram*' tests/stage/run-telegram-presentation.sh; then
+          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh 'scripts/infra/connect_telegram*' scripts/infra/build_connect_telegram_update.py 'tests/stage/telegram*' tests/stage/run-telegram-presentation.sh 'tests/stage/db_privileges*' tests/stage/run-db-privileges.sh; then
             echo 'connect_db=false' >> "$GITHUB_OUTPUT"
           else
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
@@ -167,6 +167,7 @@ jobs:
             artifacts/con02-callback-*
             artifacts/con02-update-*
             artifacts/telegram-presentation-*
+            artifacts/db-privileges-*
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes

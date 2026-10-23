@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+
+## 23Oct — owner accepted new Telegram ACK/time and Academy history; full-scope preflight
+
+Owner confirmed a new task with button in the bot, persistent accepted/time after click,
+and then correct personal Academy delivery history. Updated the existing2300 receipt;
+installation/this visual acceptance are closed. No fresh SQL, repeat-click stability,
+all-event label parity, scheduled cron or production restore inferred from that observation.
+Owner asks to proceed and finish the full Telegram contour in one coherent release.
+Read current bridge/actor/BFF/UI and existing RFC: actor_read exposes only profile,
+no task/checklist bridge writes; public origin/edge not accepted. A source-grounded
+preflight lists CON03 versus full native-learning/role handoff and missing hosting/origin
+input. It is not an implementation design or a deployed public service. Product code
+and frozen3d remain unchanged;0subagents/no SSH/provider sends/main merge.
+
 ## 23Oct — owner deployed Telegram2300 and presentation runtime
 
 Exact3d ordinary.py SHA OK; --check baseline_ready2200/ACKon/host_changes=false/provider_called=false.

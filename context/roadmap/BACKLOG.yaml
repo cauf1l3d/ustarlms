@@ -7,8 +7,9 @@ current_connect_checkpoint:
   Telegram_successor: context/runtime/connect_telegram_finish_20261023.md
   Telegram_successor_CI: context/runtime/connect_telegram_finish_ci_20261023.json
   Telegram_tool: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
-  Telegram_plan_status: owner_deployed_ACK_presentation_active_visual_acceptance_pending
+  Telegram_plan_status: owner_deployed_ACK_presentation_and_visual_acceptance_verified
   Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  Telegram_next_preflight: context/runtime/connect_telegram_next_preflight_20261023.md
   deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
   deployment_design_status: owner_approved_22Oct
   deployment_controller: owner_deployed_application2200_and_ACK_runtime_verified
@@ -19,7 +20,7 @@ current_connect_checkpoint:
   deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
   deployment_plan_status: completed_source_handoff_23Oct
-  stage: Telegram2300_owner_deployed_visual_acceptance_pending_CON03_next
+  stage: Telegram2300_owner_visual_accepted_CON03_preflight_next
   live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
   following_stage: CON03_Mini_App_own_tasks_checklists_external_HTTPS_auth_reserve_later
   development_version: 2026102300
@@ -58,7 +59,7 @@ current_connect_checkpoint:
   TLS_probe_deployed: true
   canonical_HTTPS_owner_accepted: true
   cron_two_scheduled_successes_owner_accepted: true
-  bot_activation: owner_Telegram2300_ACK_presentation_runtime_active_visual_acceptance_pending
+  bot_activation: owner_Telegram2300_ACK_presentation_runtime_and_visual_accepted
 tasks:
 - id: DOC-01
   title: Консолидация main и инженерного контекста
@@ -510,7 +511,8 @@ tasks:
     app_ready and runtime_active with ACK/presentation enabled, both services
     active/enabled and database available. Receipt:
     context/runtime/connect_telegram_finish_owner_20261023.json.
-    Post-update visible ACK/time/heading/history acceptance remains pending.
+    Owner confirmed new task delivery, persistent ACK/time and correct own Academy
+    history; visual acceptance closed. Event heading not separately transcribed.
     This is a narrow notification slice; next CON03 is the existing Mini App
     own task/checklist scenario with external HTTPS and Academy auth, not yet delivered.
     Reserve and live group acceptance remain deferred; accepted pilot is not reopened.

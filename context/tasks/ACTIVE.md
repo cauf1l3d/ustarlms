@@ -1,17 +1,16 @@
 # Активные задачи USTAR
 
-**23Oct — Telegram2300 установлен владельцем; визуальная приёмка остаётся открытой.**
-[Owner receipt](../runtime/connect_telegram_finish_owner_20261023.json): tool3d1938ae
-SHA OK, baseline_ready2200, app_ready2300/theme0202 и runtime_active,
-ACK/presentation включены; notify+receiver active/enabled, database available.
-App94d379904f7f4f7f8795b43e68421d89/runtime54bb0b7e4ba746928a639279ea729415.
-Нужна только новая визуальная проверка heading/«✓ Принято»/времени/личной истории;
-старый пилот и две принятые canonical ACK не повторять.
-Следующий функциональный этап — CON03 Mini App: открыть свою задачу/чек-лист,
-выполнить разрешённое действие и увидеть canonical результат. External HTTPS/auth ещё
-предстоит реализовать/принять; этот выпуск не завершает весь Telegram-контур.
-Group live acceptance и reserve отложены;0subagents/no agent SSH/provider sends/main merge.
-Ниже датированная история; owner execution2300 больше не pending.
+**23Oct — owner принял Telegram2300: доставка, видимый ACK/время и история работают.**
+[Owner receipt](../runtime/connect_telegram_finish_owner_20261023.json): tool3d1938ae/app+worker6c56/local2300/theme0202;
+ACK/presentation active, notify+receiver active/enabled, DB available. Owner подтвердил
+новую задачу в боте, постоянное «Принято» с временем и правильную историю в Академии.
+Установка и эта визуальная приёмка закрыты; старый пилот не повторять.
+Полный Telegram-продукт ещё не готов. Owner просит следующий законченный выпуск;
+CON03/04 требуют Mini App/actions, Academy auth, external HTTPS и native LMS handoff.
+Current source проверен: actor_read даёт только профиль, задач/чек-листов в bridge нет;
+рабочий внешний origin/edge пока не подтверждён. Preflight: context/runtime/
+connect_telegram_next_preflight_20261023.md. Reserve/group deferred;0subagents,
+no agent SSH/provider sends/main merge. Ниже датированная история, не current status.
 
 **23Oct — Telegram source/release handoff готов; owner execution следующий.**
 Tool3d1938ae/app+worker6c56/local2300/theme0202,557files/100tables.

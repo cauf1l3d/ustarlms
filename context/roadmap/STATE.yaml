@@ -1,14 +1,15 @@
 schema_version: 2
 updated_at: '2026-10-23'
 project: USTAR Academy
-stage: connect_Telegram2300_deployed_CON03_preparation
-stage_label: Owner deployed Telegram notification presentation; full Mini App remains next
+stage: connect_Telegram2300_owner_accepted_CON03_preflight
+stage_label: Owner accepted Telegram notification presentation; full Mini App preflight next
 current_activity: >-
   Owner verified tool3d1938ae SHA, baseline_ready2200, upgraded fixed app/worker6c56
   to local2300/theme0202 and enabled ACK/presentation runtime. App generation
   94d379904f7f4f7f8795b43e68421d89; runtime54bb0b7e4ba746928a639279ea729415.
-  Both services active/enabled and database available. Post-update visible ACK/time,
-  event heading and Academy history acceptance remain pending; two previous UID130
+  Both services active/enabled and database available. Owner confirmed a new task
+  notification, persistent ACK/time and correct own Academy history; this visual
+  acceptance is closed. Event heading not separately transcribed; two previous UID130
   canonical ACKs are separate2200 evidence. This narrow notification release does not
   complete the Telegram product; next functional stage CON03 Mini App needs external
   HTTPS, Academy auth and own task/checklist actions. No new implementation claimed.
@@ -48,7 +49,7 @@ production:
   effective_addon_deployment:
     receipt: context/runtime/connect_telegram_finish_owner_20261023.json
     reported_date_msk: '2026-10-23'
-    status: owner_upgrade_ACK_presentation_runtime_verified_visual_acceptance_pending
+    status: owner_upgrade_ACK_presentation_runtime_and_visual_acceptance_verified
     installer_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
     payload_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
     versions: {local_ustar: 2026102300, theme_ustar: 2026100202}
@@ -60,7 +61,7 @@ production:
     independent_probe: false
     previous_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
-  status: owner_Telegram_application2300_ACK_presentation_active_visual_acceptance_and_export_restore_pending
+  status: owner_Telegram_application2300_ACK_presentation_and_visual_accepted_export_restore_pending
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
@@ -106,6 +107,7 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/connect_telegram_next_preflight_20261023.md
 - context/runtime/connect_telegram_finish_owner_20261023.json
 - context/runtime/connect_telegram_finish_20261023.md
 - context/runtime/connect_telegram_finish_ci_20261023.json
@@ -227,7 +229,7 @@ do_not_repeat:
 development_candidate:
   Telegram_successor_tool_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
   Telegram_successor_runbook: context/runtime/connect_telegram_finish_20261023.md
-  Telegram_successor_status: owner_deployed_ACK_presentation_active_visual_acceptance_pending
+  Telegram_successor_status: owner_deployed_ACK_presentation_and_visual_acceptance_verified
   previous_deployed_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
   deployment_tool_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
   previous_deployment_runbook: context/runtime/connect_con02_deployment_20261023.md
@@ -267,7 +269,7 @@ receiver_runtime:
   ACK_runtime_active: true
   presentation_runtime_active: true
   generation: 54bb0b7e4ba746928a639279ea729415
-  post_update_visual_acceptance: pending_owner_observation
+  post_update_visual_acceptance: owner_new_task_ACK_time_and_history_verified
   live_ACK_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   next: CON03_Mini_App_task_checklist_scenario_external_HTTPS_and_Academy_auth
   B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md

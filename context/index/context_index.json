@@ -954,8 +954,8 @@
     {
       "path": "context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md",
       "domain": "proposals",
-      "size": 7801,
-      "sha256": "5a74cb7fc856273214f2174dab7236fcbce83c53e45166183782d94afac6b7fa"
+      "size": 7906,
+      "sha256": "c19a3d02440f8136b19d5a3f74da3d50699abd8a2481a9a89c40c469ba5dd993"
     },
     {
       "path": "context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md",
@@ -1020,8 +1020,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 33567,
-      "sha256": "28b9c37078172b4956222e71f00819e725a7e6df44c37a8f762699da77ee89a7"
+      "size": 33717,
+      "sha256": "b7955fa1e148754db6944406cb4b707b8eb4eee357c55e133bd1f16bf11ad9da"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1062,8 +1062,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 208436,
-      "sha256": "5755824916c2bee26278683ced46349966fe6eb8af6419ba2d962579a6e275d6"
+      "size": 209387,
+      "sha256": "2ec3192f46d3083b514901fee7909aa45f5c8746fc7ba30a890a07f2509cfadf"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1074,8 +1074,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 14951,
-      "sha256": "57631a15b32ca6c45d7b038bc9277c39ccf5162186124aa5fdce03d7555843df"
+      "size": 15104,
+      "sha256": "f43cac0a1af12d0a8bdd510e8d9a245ee62da05d7ba68d81b725d2282863cfc1"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1560,8 +1560,8 @@
     {
       "path": "context/runtime/connect_telegram_finish_20261023.md",
       "domain": "runtime",
-      "size": 8196,
-      "sha256": "a751e684f3a170315089e3db45f889087a8ed8da35df97fea113cdecbde87136"
+      "size": 8217,
+      "sha256": "f7be9b91ed6e123a8833582428e08ff0dfa9be140e22debe3505e7a8ae0923ae"
     },
     {
       "path": "context/runtime/connect_telegram_finish_ci_20261023.json",
@@ -1572,8 +1572,14 @@
     {
       "path": "context/runtime/connect_telegram_finish_owner_20261023.json",
       "domain": "runtime",
-      "size": 3553,
-      "sha256": "b2cfeccf3573d21b51ebba47f70acd21072041ffb54ded8a1a595bd708033852"
+      "size": 4247,
+      "sha256": "a6f9f7a97e1afa5d01860878d7fba5d849919e469a3e84be84f75fcc0c25f079"
+    },
+    {
+      "path": "context/runtime/connect_telegram_next_preflight_20261023.md",
+      "domain": "runtime",
+      "size": 6062,
+      "sha256": "3eaaa860c7aab6a8825b842833a8708320ad8ea40e512e1cd1ddcb055d8550f8"
     },
     {
       "path": "context/runtime/context_refresh_report.md",
@@ -2448,8 +2454,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 66943,
-      "sha256": "e748bfbcd9d29a92ed06e30f3ae331a93f2452ead65275a6d9e84112d37125d0"
+      "size": 66942,
+      "sha256": "23461b8a60e659e055f6fb28e5e911a5d2cafda402d882ec23ea90f588db644d"
     },
     {
       "path": "context/tasks/backlog.yaml",

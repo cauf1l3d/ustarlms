@@ -1,6 +1,6 @@
 # Telegram: завершение уведомлений и личного подтверждения, 23Oct2026
 
-Status: **owner deployed application2300 and ACK/presentation runtime; visual acceptance pending**.
+Status: **owner deployed application2300/ACK/presentation and accepted new Telegram ACK/time and own Academy history**.
 
 ## Owner deployment23Oct
 
@@ -9,11 +9,11 @@ baseline_ready2200, all upgrade phases through app_ready/local2300/theme0202,
 then runtime_active with ack_enabled=true and presentation_enabled=true.
 App generation94d379904f7f4f7f8795b43e68421d89;
 runtime54bb0b7e4ba746928a639279ea729415. Both services active/enabled; database available.
-The owner output establishes installation/activation, not a post-update visual ACK or
-new scheduled cron/restore receipt. Check a new event heading, click «Принял», and
-observe persistent «✓ Принято»/first time and the corresponding own Academy history.
-Do not repeat the accepted pilot or relink the employee. The earlier two canonical
-ACKs remain historical2200 evidence. No deployment rerun is required by this output.
+The owner subsequently confirmed a new task notification, persistent «Принято» with
+time after clicking, and correct own Academy delivery history. This closes installation
+and that visual acceptance. It does not supply a scheduled cron/restore receipt or
+a repeated-click timestamp measurement. Do not repeat the accepted pilot, relink the
+employee or rerun deployment. The earlier two canonical ACKs remain historical2200 evidence.
 
 This completes the installation of the notification/ACK presentation slice, not the
 whole Telegram product. The next functional stage is CON03 Mini App with external

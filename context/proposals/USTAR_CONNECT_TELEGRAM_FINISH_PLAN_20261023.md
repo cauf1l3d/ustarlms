@@ -5,8 +5,9 @@
 
 **Owner deployment23Oct completed:** [terminal receipt](../runtime/connect_telegram_finish_owner_20261023.json)
 records app_ready2300 and runtime_active with ACK/presentation enabled, both services
-active/enabled and database available. Visible new-message ACK/time/heading/history
-acceptance remains pending. This plan covers notification/ACK presentation; the full
+active/enabled and database available. Owner subsequently confirmed a new task message,
+persistent ACK/time and correct Academy history; this visual acceptance is closed.
+Event heading was not separately transcribed. This plan covers notification/ACK presentation; the full
 Telegram Mini App/task-action scenario is the next functional stage, not delivered here.
 The source-handoff checkpoint below is historical; owner execution is no longer pending.
 

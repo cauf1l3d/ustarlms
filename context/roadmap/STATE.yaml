@@ -6,16 +6,17 @@ stage_label: Owner paused Connect development and resumes infrastructure normali
 current_activity: >-
   Owner23Oct pauses further Telegram/Mini App development; accepted2300 runtime remains
   operational. One-time reminder24Oct15:00Europe/Moscow created for KeenDNS app rules
-  and an off-LAN mobile check. Current work is INF-02 additive admin preparation after
-  the first INF-01 metadata slice, then P0 DB privileges and code/config/key
-  hardening. No new production mutation, service stop or public ingress change performed.
+  and an off-LAN mobile check. Current work is INF-02 target-role rehearsal after
+  the first INF-01 metadata slice and accepted independent admin, then DB/code/config/key
+  hardening. Owner created only ustar_pg_admin; no service stop or public ingress change.
   Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
   Production payload/worker6c56/local2300 remains in the owner receipt below.
   Owner metadata23Oct18:08UTC confirms one superuser moodle and writable local_ustar
   code under www-data. Fresh scheduled cron and HDD backup succeeded. Owner followup
   confirms primary config33:33/0755 writable with static dbuser=moodle; both containers
-  running/restarts0/OOMfalse, no healthcheck or json-file limits. New admin creation
-  and two required-SCRAM sessions are concrete commands pending owner execution.
+  running/restarts0/OOMfalse, no healthcheck or json-file limits. Owner created
+  ustar_pg_admin and verified two required-SCRAM sessions, backend PIDs9976/9995,
+  session/current role match and login/superuser true. Do not repeat creation.
   No role reduction or config ownership handoff performed; complete INF01 remains open.
   0subagents/no agent SSH/provider sends/main merge; shared Apache/AutoReport retained.
 next_task: INF-02
@@ -23,7 +24,8 @@ infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open
 infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
-infrastructure_admin_status: first_attempt_CLI_refused_before_role_creation_corrected_commands_owner_retry_pending
+infrastructure_admin_status: owner_created_ustar_pg_admin_two_required_SCRAM_sessions_accepted_do_not_repeat_creation
+infrastructure_DB_privilege_status: moodle_unchanged_copy_rehearsal_and_recovery_acceptance_before_demotion_pending
 infrastructure_file_status: primary_config_and_plugin_writable_HTTPS_metadata_handoff_and_copy_rehearsal_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
 connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}

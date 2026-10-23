@@ -1,5 +1,11 @@
 # Активные задачи USTAR
 
+**23Oct — отдельный PostgreSQL admin создан, два SCRAM-входа приняты.**
+Owner corrected retry: ustar_pg_admin, PID9976/9995, session/current role match,
+login/superuser=t. [Receipt](../runtime/infra_readonly_owner_20261023.json), admin_creation_success.
+Создание больше не повторять. moodle пока не демотирован; далее copy rehearsal
+privileges/upgrade/backup/restore, затем согласованный DB/file hardening.
+
 **23Oct — первый admin createuser отказал до создания роли; команды исправлены.**
 `--maintenance-db` отсутствует в createuser/dropuser PostgreSQL16. В
 [runbook](../runtime/infra_readonly_baseline_20261023.md) параметр удалён из creation/

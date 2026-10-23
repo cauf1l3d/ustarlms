@@ -3,7 +3,7 @@
   "kind": "owner_terminal_receipt_not_independent_agent_probe",
   "measured_at_utc": "2026-10-23T18:08:18Z",
   "measured_at_moscow": "2026-10-23T21:08:18+03:00",
-  "baseline_status": "partial_measured_primary_config_and_Docker_followup_received_admin_creation_next",
+  "baseline_status": "partial_measured_independent_admin_verified_full_INF01_and_role_hardening_pending",
   "operator_artifact": {
     "name": "readonly_baseline_20261023.sh",
     "bytes": 5765,
@@ -144,7 +144,6 @@
     "fresh_decryption_or_clean_host_restore_verified": false
   },
   "next": [
-    "create and verify independent PostgreSQL admin with two required_SCRAM sessions before role privilege reduction",
     "rehearse application privileges and upgrade_backup_restore consumers on a copy before demotion",
     "coordinate config ownership with HTTPS captured metadata and inventory full code_ACL before file permission changes",
     "plan explicit container log rotation and healthchecks with guarded recreation later"
@@ -214,9 +213,32 @@
     "password_prompt_reached": false,
     "two_SCRAM_sessions_attempted": false,
     "correction": "remove unsupported option from creation and dropuser rollback; use built-in maintenance DB selection",
-    "corrected_native_retry": "pending_owner"
+    "corrected_native_retry": "owner_success_two_required_SCRAM_sessions_verified"
   },
-  "production_mutations_performed": false,
+  "admin_creation_success": {
+    "reported_date_moscow": "2026-10-23",
+    "exact_measurement_time": null,
+    "kind": "owner_pasted_native_terminal_output",
+    "role": "ustar_pg_admin",
+    "creation_command": "createuser --username=moodle --superuser --pwprompt ustar_pg_admin",
+    "new_password_prompts_completed": true,
+    "password_received_or_stored_by_agent": false,
+    "password_manager_storage_independently_verified": false,
+    "required_authentication": "scram-sha-256",
+    "two_fresh_sessions": [
+      {"session": 1, "login_role": "ustar_pg_admin", "effective_role": "ustar_pg_admin", "backend_pid": 9976, "can_login": true, "superuser": true, "transaction": "READ ONLY, ROLLBACK"},
+      {"session": 2, "login_role": "ustar_pg_admin", "effective_role": "ustar_pg_admin", "backend_pid": 9995, "can_login": true, "superuser": true, "transaction": "READ ONLY, ROLLBACK"}
+    ],
+    "independent_admin_login_verified": true,
+    "moodle_privilege_reduction_performed": false,
+    "HBA_or_application_config_changed": false,
+    "service_restart_or_outage_performed": false,
+    "full_admin_restore_or_backup_coverage_proved": false,
+    "INF02_step2_native_login_acceptance": "accepted_do_not_repeat_creation",
+    "full_INF02_acceptance": "pending_copy_rehearsal_role_reduction_and_recovery"
+  },
+  "production_mutations_performed": true,
+  "production_mutation_scope": "owner_created_only_the_new_PostgreSQL_admin_role",
   "connect_development_paused": true,
   "subagents": 0
 }

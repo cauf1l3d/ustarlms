@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+## 23Oct — owner created independent PostgreSQL admin and verified two SCRAM sessions
+
+Corrected createuser succeeded with hidden new-password prompts. Two new connections
+required scram-sha-256 and returned session/current role ustar_pg_admin, canlogin/superuser
+true, distinct native backend PIDs9976/9995, both READ ONLY/ROLLBACK. INF02 step2 login
+acceptance verified by owner output; do not repeat creation or reset its password.
+Agent has not received/stored the password; password-manager storage not independently
+verified. Only the new cluster admin role was added; moodle flags/ownership, HBA,
+application config and services unchanged by this block. No full recovery/backup
+coverage or target app-role acceptance inferred. Next copy rehearsal must verify domain
+writes/cron/upgrade/repeat/dump/restore and cluster-operation denials before demotion;
+config hardening still needs HTTPS saved-metadata handoff. Earlier failed CLI attempt
+remains historical in the same receipt. No agent SSH/provider sends/main merge,0subagents.
+
 ## 23Oct — correct unsupported PostgreSQL16 createuser option before owner retry
 
 Owner first admin block failed at argument parsing: --maintenance-db=moodle unsupported.

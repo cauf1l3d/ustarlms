@@ -5,13 +5,14 @@ source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_infrastructure_checkpoint:
   date_msk: '2026-10-23'
-  status: admin_first_attempt_unsupported_option_refused_before_creation_corrected_retry_pending
+  status: owner_admin_creation_and_two_required_SCRAM_sessions_accepted_target_privileges_pending
   report: context/runtime/infra_normalization_resume_20261023.md
   baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
   baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
   findings: one_superuser_moodle_primary_config33_mode755_and_local_ustar_writable_no_container_healthcheck_or_log_limits
-  next: additive_admin_creation_and_two_required_SCRAM_sessions_then_copy_privileges_and_HTTPS_config_metadata_handoff
-  production_mutations_performed: false
+  next: copy_privileges_upgrade_backup_restore_rehearsal_then_role_reduction_and_HTTPS_config_metadata_handoff
+  production_mutations_performed: true
+  production_mutation_scope: owner_added_only_ustar_pg_admin_role
   accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300
 current_connect_checkpoint:
   Telegram_successor: context/runtime/connect_telegram_finish_20261023.md
@@ -118,7 +119,7 @@ tasks:
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: in_progress
-  current_summary: Первый owner createuser отказал до создания роли на нашей ошибочной опции --maintenance-db; удалена из creation/rollback, retry и два SCRAM-входа ещё pending. Full baseline/copy/demotion остаются открыты.
+  current_summary: Исправленный owner createuser создал ustar_pg_admin; два required-SCRAM входа с PID9976/9995 login/superuser=t приняты. Создание не повторять. moodle пока не демотирован; copy/upgrade/backup/recovery acceptance остаются открыты.
   evidence: context/runtime/infra_readonly_owner_20261023.json
   depends_on:
   - INF-01

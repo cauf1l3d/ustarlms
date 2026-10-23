@@ -1020,8 +1020,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 35324,
-      "sha256": "98cd573452ed8e11deb18d6c0669d2ec0395e53496d734970fb11b441090d888"
+      "size": 35407,
+      "sha256": "79f873542b343a8f5cf293788dffacd9a49991c189843d4729d4d1bb4457b191"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1062,8 +1062,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 215714,
-      "sha256": "46bc2e2c382cbb8f28559e0ccb516ed864fa0e4c4f628c8823d64f128a7cd540"
+      "size": 216754,
+      "sha256": "341f88deee97f80d15f19dea3953a959f40f459bbf1e3b138a84f0fe427ecc51"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1074,8 +1074,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 16475,
-      "sha256": "f739593880104a2c2f190679c0058c989db9a8b3f2ce3286fda83f563a37a9b9"
+      "size": 16677,
+      "sha256": "a7fe17456e726df1e62569f5ae46e6131598073037d09218dd62f7cb953815ed"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1818,20 +1818,20 @@
     {
       "path": "context/runtime/infra_normalization_resume_20261023.md",
       "domain": "runtime",
-      "size": 8525,
-      "sha256": "c530e8c7aee747258f027cba0acbd283c4242546b9534b4b6b06361f8b4366a5"
+      "size": 8651,
+      "sha256": "b89085cca792f7456230227be17b4a502330e61ce519f4b10245c29d2ba4b799"
     },
     {
       "path": "context/runtime/infra_readonly_baseline_20261023.md",
       "domain": "runtime",
-      "size": 19643,
-      "sha256": "ed4e8ea91ba8a71bcb89ccec45ec09ccec0bc97e62eecf060058df81f4b07c96"
+      "size": 20398,
+      "sha256": "947052a252083cb1c9cb0cbb960734855fda0938771d79bcc950282a796c8dd5"
     },
     {
       "path": "context/runtime/infra_readonly_owner_20261023.json",
       "domain": "runtime",
-      "size": 11594,
-      "sha256": "a0c3a04f6f133fae95be9695eced9950d49ff695a425dc613b22d9276847a7e3"
+      "size": 12910,
+      "sha256": "dbfbf7d090c20535eb101a7386ea67ff3c6950183bbd6fde9993e0544b29faf0"
     },
     {
       "path": "context/runtime/lab_cold_checkpoint_20261005.md",
@@ -2472,8 +2472,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 70140,
-      "sha256": "9c129cb7e9da1be8033c436c7dba6c19d65fec6c849daf2c6b833b27834853af"
+      "size": 70645,
+      "sha256": "da6c2c4948d494271dc79183a4968c5a579985cb2042445349c5b5982889f1c5"
     },
     {
       "path": "context/tasks/backlog.yaml",

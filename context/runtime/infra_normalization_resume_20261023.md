@@ -73,5 +73,6 @@ running/restarts0/OOMfalse, exact accepted images; healthchecks и json-file lim
 Primary config33:33/0755 readable+writable под www-data, static dbuser=moodle/DBmoodle/
 prefixmdl_. [Тот же runbook](infra_readonly_baseline_20261023.md) теперь содержит первый
 адресный write: создание ustar_pg_admin и два отдельных обязательных SCRAM-входа;
-это команды, не состоявшаяся установка. Далее copy rehearsal и HTTPS config metadata
+Owner corrected retry уже создал ustar_pg_admin: два required-SCRAM входа9976/9995,
+session/current role совпали, login/superuser=t. Создание не повторять. Далее copy rehearsal и HTTPS config metadata
 handoff перед demotion/file hardening. Full INF01/02/03 ещё не закрыты.

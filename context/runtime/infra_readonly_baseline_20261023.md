@@ -1,5 +1,13 @@
 # INF-01: первый read-only блок23Oct2026
 
+**Текущее состояние23Oct: отдельный PostgreSQL admin уже создан и проверен.**
+Owner corrected retry: ustar_pg_admin, две обязательные SCRAM-сессии9976/9995,
+login_role/effective_role совпали, rolcanlogin=t/rolsuper=t, оба READ ONLY/ROLLBACK.
+INF02 step2 login acceptance принята; **createuser больше не выполнять**.
+Ниже сохранена датированная история команд и исправления. moodle privileges/HBA/
+config/services не менялись; copy rehearsal/backup/recovery и полная INF02 ещё pending.
+[Та же квитанция](infra_readonly_owner_20261023.json), поле admin_creation_success.
+
 Owner одобрил начало [плана возврата](infra_normalization_resume_20261023.md).
 Первый конкретный результат — проверяемые команды
 [`readonly_baseline_20261023.sh`](../../scripts/infra/readonly_baseline_20261023.sh).

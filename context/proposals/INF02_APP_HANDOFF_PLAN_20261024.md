@@ -63,8 +63,8 @@ hardening and HBA/container changes remain separate INF03/05 work.
 
 - [x] Accept ordinary app creation/SCRAM OID110395 receipt without inventing a timestamp.
 - [x] Prepare one bounded read-only operator batch; Bash syntax/source review required.
-- [ ] Receive native output; classify public non-application objects and custom definers.
-- [ ] Record exact allowed scope or a specific unresolved dependency, without repeating old stands.
+- [x] Receive native output:3479mdl_/moodle relations; sole monitor definer non-superuser, app USAGE0/EXECUTE0.
+- [x] Record allowed scope: public mdl_ tables/sequences/indexes only; monitor schema/function unchanged. Automated apply guards cover remaining exact ACL/type/extension/schema metadata.
 
 ### Task2: implement recoverable coordinator and compatibility
 
@@ -96,5 +96,27 @@ current context/proof/PR106, plus one ordinary operator .py build if embedding i
 - [ ] Update context/PR/runbook with apply/recover/undo commands; no archive or new full owner stand.
 - [ ] Owner apply/status/effective PHP app-role acceptance remains a distinct deployment receipt.
 
-Current status: ordinary-role creation accepted; task1 native preflight pending.
+Current status: task1 complete, owner preflight accepted24Oct; do not repeat it.
+Task2 coordinator implemented,23focused tests/1local UID33 namespace skip. Actual
+SQL/UID33 qualification in existing CI pending; no production apply command yet.
 Coordinator implementation/native release qualification and production cutover are not complete.
+
+## Implementation rulings24Oct
+
+- HTTPS `files.config.uid/gid/mode/before/backup` describe its original HTTP before-image.
+  Preserve those values; change only current `after` digest. Current hardened metadata
+  is validated from the real file and the coordinator's own private images. Rewriting
+  historical metadata would alter the meaning of HTTPS rollback.
+- Preserve frozen controller and old journals during cutover; do not replace them with
+  a blocking wrapper. Coordinated runtime delegates validate the exact real before/after
+  HTTPS owner snapshot before exposing its original snapshot as a comparison view.
+  Original controller runtime commands still validate the canonical owner's actual
+  current hash; never call its application restore before metadata undo. The old
+  source cannot enforce a new external marker; instructions are explicit about this.
+- Any subsequent unrecognized TLS renewal/config/ACL/catalog drift refuses recovery
+  before stopping services; it is not silently adopted. A reviewed refresh is needed
+  if controls legitimately change after this fixed transition.
+- The new CI SQL test is a real generated-transaction roundtrip and selected retained
+  data/schema proof, plus refusal controls. It is not a full production coordinator
+  run. File/orchestration interruptions use local real files with a doubled PG/systemd
+  boundary; actual UID33 permissions are a separate mandatory CI test.

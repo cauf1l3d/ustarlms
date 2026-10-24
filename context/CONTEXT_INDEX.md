@@ -1,5 +1,14 @@
 # Индекс текущего контекста
 
+**24Oct — локальный handoff подготовлен; публикация требует явного разрешения.**
+Автоматическая проверка дважды отклонила git push в существующую ветку PR106,
+несмотря на сверку GitHub profile/repo/head и отсутствие production secrets в diff.
+Не обходить отказ другим API. Source/rollback/owner preflight сохранены локально;
+23новых tests:22PASS/1local UID33 skip, combined31/1skip. Native CI не запускался.
+[Квитанция](runtime/infra_app_handoff_local_checks_20261024.json) содержит5ошибок окружения общего r16 прогона.
+Дальше явное разрешение на публикацию в design/ustar-connect-20261018, затем CI;
+на server1 app/config/ownership не переключались. Ручные preflight/создание ролей не повторять.
+
 **23Oct — owner: резерв позже, сначала завершить Telegram.**
 [Суженный проект](proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md),
 [план самостоятельной реализации](proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md).

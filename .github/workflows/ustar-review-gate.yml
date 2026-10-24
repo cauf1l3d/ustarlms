@@ -58,7 +58,7 @@ jobs:
         run: |
           if [ "$CONNECT_EVENT" = workflow_dispatch ] && [ -f moodle/local/ustar/classes/connect/identity_service.php ]; then
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
-          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh 'scripts/infra/connect_telegram*' scripts/infra/build_connect_telegram_update.py 'tests/stage/telegram*' tests/stage/run-telegram-presentation.sh 'tests/stage/db_privileges*' tests/stage/run-db-privileges.sh; then
+          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh 'scripts/infra/connect_telegram*' scripts/infra/build_connect_telegram_update.py 'tests/stage/telegram*' tests/stage/run-telegram-presentation.sh 'tests/stage/db_privileges*' tests/stage/run-db-privileges.sh scripts/infra/postgres_app_handoff.py tests/stage/db_app_handoff_native.py; then
             echo 'connect_db=false' >> "$GITHUB_OUTPUT"
           else
             echo 'connect_db=true' >> "$GITHUB_OUTPUT"
@@ -169,6 +169,7 @@ jobs:
             artifacts/con02-update-*
             artifacts/telegram-presentation-*
             artifacts/db-privileges-*
+            artifacts/db-app-handoff-native.json
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
@@ -282,6 +283,8 @@ jobs:
           python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_bridge_activation.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
       - name: CON02 physical images and locks with mandatory real root GID33
         run: sudo -n env USTAR_REQUIRE_CON02_OWNER=1 python3 -m unittest discover -s tests/r16 -p test_connect_con02_state.py -v
+      - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
+        run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: CON02 controller handoff on actual systemd UID33 credentials and private TLS
         run: >-
           sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1

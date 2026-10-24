@@ -1,0 +1,64 @@
+{
+  "reported_date_moscow": "2026-10-24",
+  "production_modified": false,
+  "operator_source_sha256": "228804a6f6816ea1febc7d235170801f2ebfad965dec30fea4a089085d972b2c",
+  "new_tests": {
+    "run": 23,
+    "passed": 22,
+    "skipped": 1,
+    "reason": "only UID/GID0 mapped locally; mandatory strict UID33 fixture added to existing CI"
+  },
+  "focused_including_old_verifier": {
+    "run": 31,
+    "passed": 30,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0
+  },
+  "full_r16_before_final_2_recovery_tests": {
+    "run": 1106,
+    "errors": 5,
+    "skipped": 56,
+    "passed": 1045,
+    "command": "python3 -m unittest discover -s tests/r16 -q",
+    "errors_detail": [
+      {
+        "test": "test_connect_bridge_activation.Build.test_exact_bundle_is_repeatable_plan_only_and_rejects_tampering",
+        "reason": "legacy shared clone commit failed: missing promisor blob objects, reproduced in isolated retry"
+      },
+      {
+        "test": "test_connect_private_bridge.BuildPackage.test_exact_git_package_is_deterministic_plan_only_and_detects_corruption",
+        "reason": "legacy shared clone commit failed: missing promisor blob objects, reproduced in isolated retry"
+      },
+      {
+        "test": "test_harness.Boundary.test_all_tools_use_reader",
+        "reason": "ModuleNotFoundError: No module named mcp"
+      },
+      {
+        "test": "test_harness.Boundary.test_audit_pointer_cannot_escape_boundary",
+        "reason": "ModuleNotFoundError: No module named mcp"
+      },
+      {
+        "test": "unittest.loader._FailedTest.test_stdio",
+        "reason": "ModuleNotFoundError: No module named mcp"
+      }
+    ]
+  },
+  "native_SQL_and_UID33_CI": {
+    "status": "not_run_new_commit_not_published",
+    "full_production_coordinator_executed": false
+  },
+  "publication": {
+    "status": "twice_rejected_by_automatic_approval_review",
+    "destination": "cauf1l3d/ustarlms",
+    "branch": "design/ustar-connect-20261018",
+    "pull_request": 106,
+    "last_verified_remote_head": "3958939bafd765fae4cd252a7a97a4e28c4cdc9f",
+    "verified_authenticated_account_matches_PR_owner": true,
+    "secret_signature_scan": "none; synthetic fixtures only; no production password received",
+    "rejection_summary": "repository ownership/trust and destination authorization not considered established by trusted user text; risk of sensitive project publication",
+    "required_next": "explicit owner permission to publish prepared commits to existing PR106 branch, then run native CI; do not bypass via another write path"
+  },
+  "review": "author-only; no subagents per owner instructions",
+  "unresolved_release_gate": "no production apply handoff before targeted native SQL/UID33 evidence"
+}

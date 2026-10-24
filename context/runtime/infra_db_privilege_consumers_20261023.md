@@ -16,7 +16,7 @@ bootstrap_role_confirmation. Owner also created ustar_app/OID110395 and verified
 required-SCRAM login: five flags false/login true/no membership/no DB ownership.
 app_login_preparation_success in the same receipt is accepted; do not recreate roles.
 [Next read-only block](infra_readonly_baseline_20261023.md#app-handoff-preflight-24oct)
-checks current controller and SQL definer/ownership metadata before a guarded apply.
+has passed: controller2300/ACK ready, all3479public relations mdl_/moodle; monitor definer app USAGE0/EXECUTE0. Do not repeat the manual batch.
 
 ## Exact backup source recovered and verified
 
@@ -135,8 +135,7 @@ source is not inferred from the older v2 Library copy.
 ## Guarded production handoff
 
 [Implementation plan24Oct](../proposals/INF02_APP_HANDOFF_PLAN_20261024.md) follows
-accepted role creation. Read-only --check/inventory output is pending; code is not
-yet an operator-ready apply tool. Preserve old Connect journals during the handoff.
+accepted role creation and native owner preflight24Oct. Coordinator source is implemented; generated SQL/strict UID33 CI qualification is pending, so apply is not yet an operator-ready handoff. Preserve old Connect journals during the handoff.
 Canonical HTTPS state requires an explicit config hash/metadata acceptance update
 with private before-images. A compatibility view for frozen runtime recovery must
 verify the exact post-handoff state before returning original accepted descriptors;

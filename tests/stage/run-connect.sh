@@ -108,3 +108,4 @@ bash /source/tests/stage/run-telegram-presentation.sh
 
 # Reuse this same DB/runtime for the previously missing ordinary-owner privilege delta.
 USTAR_DB_PRIVILEGE_FIXTURE=1 bash /source/tests/stage/run-db-privileges.sh
+USTAR_DB_PRIVILEGE_FIXTURE=1 python3 /source/tests/stage/db_app_handoff_native.py

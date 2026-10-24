@@ -1,5 +1,40 @@
 # Журнал выполнения roadmap
 
+## 24Oct — local handoff complete for review; publication blocked by automatic review
+
+Source9d36813 followed by guarded PG-start recovery fix (new regression RED→GREEN).
+Final focused31:30PASS/1local UID33 namespace skip; new handoff23:22PASS/1skip.
+Full local1106:5errors/56skips;3missing-MCP imports and2missing promisor-object shared
+clone commit errors, exact names and limits in infra_app_handoff_local_checks_20261024.json.
+Author review performed; no independent reviewer/subagents per owner instruction.
+
+Two git push attempts were rejected by automatic approval review. Read-only checks
+proved profile232103065 equals PR106 owner, repo matches user's Github.txt, destination
+is existing draft design/ustar-connect-20261018 at3958939b, direct-child source commit
+and no real secrets in diff. Reviewer still requires trusted explicit user permission.
+No connector/API workaround attempted; no remote write or new CI run claimed. Ask for
+explicit publication permission after presenting this reviewable local result. No
+server1 config/ownership/services changed; do not repeat accepted roles/preflight.
+
+## 24Oct — INF02 owner controller/ownership/definer preflight accepted
+
+Owner pasted pinned3d1938ae checksum OK and application_ready2300/ACKon; no host
+changes/provider calls. All3479public relations:657tables,656sequences,2166indexes,
+mdl_ prefix/moodle owner. Sole custom routine ustar_console.sample() is SECURITY
+DEFINER under non-superuser ustar_console_stats, app USAGE0/EXECUTE0, fixed
+search_path pg_catalog,pg_temp. Keep monitor untouched; metadata is not a function-body
+audit. No further manual repetition of role/OID/login/preflight. Receipt appended to
+infra_readonly_owner_20261023.json without inventing measurement time.
+
+Existing linked worktree reconciled to GitHub3958939b; prior docs restored, source
+unchanged before this implementation. Task1 complete. Coordinator implemented with
+exact frozen loader, real private files, guarded SQL/config/HTTPS handoff, metadata-only
+undo/recover and runtime delegates.21focused:20PASS/1local UID33 namespace skip;
+strict mandatory UID33 and generated PG16 SQL delta qualification pending in existing CI.
+TDD observed missing module/API RED then GREEN; retry archive-collision regression
+RED→GREEN; interruption after SQL/rename before checkpoint covered. No production
+config/ownership/service action.0subagents/author review/no SSH/provider sends/main merge.
+
 ## 24Oct — ordinary app role OID110395 created and SCRAM login accepted
 
 Owner hidden-password createuser and required-SCRAM TCP login succeeded.
@@ -26,13 +61,6 @@ an exploit proof. Primary PG16 CREATE FUNCTION/privilege docs verified. Bash4blo
 8read-only SQL statements, JSON/YAML/source review PASS; actual native metadata
 query still pending owner, not represented as local PostgreSQL execution. Existing
 933497e0 qualification remains selected14operation checks, not a complete security audit.
-
-Execution workspace disconnected after local Bash/context417/JSON/YAML/diff checks.
-Publication is reconstructed from immutable Git b82fc5ac through the GitHub connector;
-fetched baseline files are hash/size-checked against its generated context index.
-No implementation/source files are part of this checkpoint; native metadata output
-and the coordinator implementation remain pending. Reconcile the local docs checkout
-with the published commit after the workspace reconnects.
 
 ## 24Oct — owner confirms bootstrap moodle OID10; separate app-login preparation ready
 

@@ -1,9 +1,27 @@
 # USTAR инструкции агентам
 
+**24Oct — локальный handoff подготовлен; публикация требует явного разрешения.**
+Автоматическая проверка дважды отклонила git push в существующую ветку PR106,
+несмотря на сверку GitHub profile/repo/head и отсутствие production secrets в diff.
+Не обходить отказ другим API. Source/rollback/owner preflight сохранены локально;
+23новых tests:22PASS/1local UID33 skip, combined31/1skip. Native CI не запускался.
+[Квитанция](context/runtime/infra_app_handoff_local_checks_20261024.json) содержит5ошибок окружения общего r16 прогона.
+Дальше явное разрешение на публикацию в design/ustar-connect-20261018, затем CI;
+на server1 app/config/ownership не переключались. Ручные preflight/создание ролей не повторять.
+
+**24Oct — INF02 owner preflight принят; coordinator в проверке.**
+Pinned3d1938ae `--check`: application_ready/local2300/ACKon, host_changes=false.
+Public3479 =657tables+656sequences+2166indexes, все mdl_/moodle. Единственный
+custom definer ustar_console.sample(): owner_stats/superuser0, app USAGE0/EXECUTE0,
+search_path pg_catalog,pg_temp. Функцию/схему не менять. [Receipt](context/runtime/infra_readonly_owner_20261023.json).
+Роли/OID/login/этот ручной preflight не повторять. Следующий шаг — qualification
+`scripts/infra/postgres_app_handoff.py`: scoped ownership transaction + config/HTTPS
+hash handoff, metadata-only undo/recover, frozen journals и backup admin сохранены.
+23focused tests:22PASS/1local UID33 namespace skip; strict UID33 и generated SQL в
+существующем CI ещё pending. На server1 cutover не выполнен; production команды
+apply пока не выдавать.0subagents/author review/no SSH/provider sends/main merge.
+
 **24Oct — INF02: отдельная app role проверена в CI; production handoff следующий.**
-Workspace24Oct disconnected after checks; this docs checkpoint is published via GitHub.
-Before resuming local edits reconcile the old b82fc5ac docs checkout with this commit;
-no implementation/source change was lost or applied to server1.
 Code933497e0/Review40043036549/connect-db120719333841 и Context40043036469 SUCCESS.
 Обе PHP1085r16/153skips, runtime/browser PASS; старые158native/830assertions идут до
 role handoff. Новый delta: ordinary ustar_app/five flags0,3159public objects/0pg_catalog,

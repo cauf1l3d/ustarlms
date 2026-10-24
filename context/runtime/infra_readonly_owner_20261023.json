@@ -144,7 +144,7 @@
     "fresh_decryption_or_clean_host_restore_verified": false
   },
   "next": [
-    "guarded config/public ownership/HTTPS state handoff; accepted app login OID110395 must not be recreated; next bounded read-only owner/controller and SQL definer inventory",
+    "qualify guarded DB/config/HTTPS metadata coordinator in existing CI; owner preflight accepted; no further manual role/inventory repetition",
     "coordinate config ownership with HTTPS captured metadata and inventory full code_ACL before file permission changes",
     "plan explicit container log rotation and healthchecks with guarded recreation later"
   ],
@@ -289,5 +289,68 @@
     "app_config_or_public_object_ownership_changed": false,
     "service_restart_or_outage_performed": false,
     "acceptance": "ordinary_role_created_and_SCRAM_login_verified_do_not_repeat_creation"
+  },
+  "app_handoff_preflight_success": {
+    "reported_date_moscow": "2026-10-24",
+    "exact_measurement_time": null,
+    "kind": "owner_pasted_native_terminal_metadata_READ_ONLY_and_pinned_controller_check",
+    "controller": {
+      "path": "/root/ustar-telegram-update-3d1938ae.py",
+      "sha256": "6f7729459e1ef25271fd86324e441c823a6d39763c7fec84baf7cf640a41eb31",
+      "checksum_verified": true,
+      "result": {
+        "ack_enabled": true,
+        "host_changes": false,
+        "local_ustar": "2026102300",
+        "phase": "application_ready",
+        "provider_called": false
+      }
+    },
+    "public_relations": [
+      {
+        "kind": "S",
+        "owner": "moodle",
+        "moodle_prefix": true,
+        "objects": 656
+      },
+      {
+        "kind": "i",
+        "owner": "moodle",
+        "moodle_prefix": true,
+        "objects": 2166
+      },
+      {
+        "kind": "r",
+        "owner": "moodle",
+        "moodle_prefix": true,
+        "objects": 657
+      }
+    ],
+    "total_public_relations": 3479,
+    "custom_routines": [
+      {
+        "schema": "ustar_console",
+        "kind": "f",
+        "security_definer": true,
+        "owner": "ustar_console_stats",
+        "routines": 1
+      }
+    ],
+    "definers": [
+      {
+        "routine": "ustar_console.sample()",
+        "owner": "ustar_console_stats",
+        "owner_superuser": false,
+        "app_schema_usage": false,
+        "app_execute": false,
+        "fixed_search_path": "search_path=pg_catalog, pg_temp"
+      }
+    ],
+    "interpretation": "public contains only observed mdl_ tables/sequences/indexes owned by moodle; observed monitoring definer is inaccessible to app and remains untouched",
+    "function_bodies_read_or_functions_executed": false,
+    "config_ownership_or_connection_switched": false,
+    "transaction": "BEGIN READ ONLY, ROLLBACK",
+    "acceptance": "accepted_do_not_repeat_manual_preflight",
+    "remaining_automated_guards": "exact OIDs/ACLs/public-schema ownership/extensions/custom types/default ACLs/password isolation and config parents, immediately before a guarded write"
   }
 }

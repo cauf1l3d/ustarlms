@@ -10,6 +10,10 @@ demote OID10. Do not give production demotion commands before checking server1 O
 Revised route: keep bootstrap/POSTGRES_USER administrative; create ordinary ustar_app,
 move application public objects and CFG dbuser to it, preserve system catalogs.
 CI models that route; real credential/config/ownership handoff is still future work.
+Owner24Oct confirmed moodle/OID10/superuser and ustar_pg_admin/OID109344/superuser.
+OID query is accepted and must not repeat; [owner receipt](infra_readonly_owner_20261023.json),
+bootstrap_role_confirmation. Separate ordinary app-login/SCRAM
+[operator block](infra_readonly_baseline_20261023.md#app-login-24oct) is ready, owner execution pending.
 
 ## Exact backup source recovered and verified
 
@@ -117,8 +121,8 @@ https://www.postgresql.org/docs/16/glossary.html (bootstrap owns system catalogs
 ## Production gate remains closed
 
 No production role/config/ownership/HBA/service/container action in this CI change.
-Before real apply: owner OID query, independent admin already accepted, separate private
-app credential, exact app-object ownership/grant inventory and guarded config/owner
+Owner OID query and independent admin login already accepted. Before real apply:
+separate private app credential, exact app-object ownership/grant inventory and guarded config/owner
 handoff preserving HTTPS controls/metadata and rollback. Never use broad REASSIGN OWNED
 from bootstrap: it owns system catalogs and shared cluster objects. Retained backup
 POSTGRES_USER remains administrative and old helper pins unchanged. Full INF02/03

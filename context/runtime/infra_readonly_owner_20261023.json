@@ -144,7 +144,7 @@
     "fresh_decryption_or_clean_host_restore_verified": false
   },
   "next": [
-    "reuse accepted stages and review installed consumers; add only missing reduced-role checks to existing CI before demotion, no new owner stand or full restore repeat by default",
+    "create separate ordinary app login with hidden distinct password and required-SCRAM check; native privilege CI933497e0 already accepted, no new owner stand",
     "coordinate config ownership with HTTPS captured metadata and inventory full code_ACL before file permission changes",
     "plan explicit container log rotation and healthchecks with guarded recreation later"
   ],
@@ -240,5 +240,29 @@
   "production_mutations_performed": true,
   "production_mutation_scope": "owner_created_only_the_new_PostgreSQL_admin_role",
   "connect_development_paused": true,
-  "subagents": 0
+  "subagents": 0,
+  "bootstrap_role_confirmation": {
+    "reported_date_moscow": "2026-10-24",
+    "exact_measurement_time": null,
+    "kind": "owner_pasted_native_terminal_READ_ONLY_query",
+    "transaction": "BEGIN READ ONLY; SET LOCAL statement_timeout=15s; SELECT pg_roles; ROLLBACK",
+    "roles": [
+      {
+        "name": "moodle",
+        "oid": 10,
+        "superuser": true,
+        "bootstrap_role": true
+      },
+      {
+        "name": "ustar_pg_admin",
+        "oid": 109344,
+        "superuser": true,
+        "bootstrap_role": false
+      }
+    ],
+    "independent_admin_SCRAM_proof": "admin_creation_success_two_prior_sessions_9976_9995",
+    "application_runtime_connection_reproved": false,
+    "new_app_role_creation_or_config_ownership_handoff_performed": false,
+    "moodle_demotion": "not_performed_do_not_demote_OID10"
+  }
 }

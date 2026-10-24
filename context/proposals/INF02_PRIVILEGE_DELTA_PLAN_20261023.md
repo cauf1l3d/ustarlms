@@ -66,7 +66,8 @@ manual server1 full-cycle request. Original private backup source is not committ
 
 Native incident80b/Review40017305504/job120640978099 proved bootstrap cannot be
 demoted. First architecture assumed this was possible; corrected route above supersedes
-in-place NOSUPERUSER. Owner server1 OID query requested read-only, no production change.
+in-place NOSUPERUSER. Owner24Oct read-only result confirms server1 moodle/OID10 and
+ustar_pg_admin/OID109344, both superuser; no new production change. Query is accepted.
 
 This narrowed CI/consumer-review plan is complete24Oct. Full INF02/03 remain open:
 production needs a distinct private app credential and guarded config/public ownership

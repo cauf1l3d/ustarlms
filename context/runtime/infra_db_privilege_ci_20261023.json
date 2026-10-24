@@ -60,7 +60,14 @@
     "backup_entrypoints_changed": false,
     "new_owner_stand_requested": false,
     "provider_called": false,
-    "agent_SSH": false
+    "agent_SSH": false,
+    "owner_role_OIDs": {
+      "moodle": 10,
+      "ustar_pg_admin": 109344
+    },
+    "owner_bootstrap_query_received_date_moscow": "2026-10-24",
+    "new_app_role_created": false,
+    "new_app_login_preparation": "operator_block_ready_native_owner_execution_pending"
   },
   "limits": [
     "No production app credential/config/ownership handoff or complete INF02 closure",
@@ -69,7 +76,7 @@
     "Schema equality covers100USTAR tables; retained data checks selected synthetic core/domain/FileAPI records",
     "Existing owner stand/UI/paired restore acceptance reused; no new full production DR claim",
     "Previous158PHPUnit tests run before role handoff; new reduced-role proof consists of selected real app operations and denials",
-    "Server1 OID not yet owner-confirmed; production new-app credential/config/public ownership and HTTPS handoff not implemented"
+    "Server1 moodle OID10 owner-confirmed24Oct; production new-app credential/config/public ownership and HTTPS handoff not implemented"
   ],
   "membership_review": {
     "ordinary_role_attributes_can_be_gained_via_SET_ROLE": true,
@@ -159,7 +166,7 @@
   },
   "bootstrap_correction": {
     "cause": "OID10 cannot lose SUPERUSER in PostgreSQL16",
-    "server1_bootstrap_OID": "owner_readonly_query_pending",
+    "server1_bootstrap_OID": "owner_confirmed_moodle_OID10_superuser_20261024",
     "strategy": "retain bootstrap admin and POSTGRES_USER; move app to ordinary ustar_app with public ownership and CFG handoff",
     "system_catalogs": "remain_bootstrap_owned_no_broad_REASSIGN_OWNED",
     "backup_helpers_changed": false,
@@ -379,5 +386,13 @@
     "full_RC_jobs": "skipped_not_passed"
   },
   "verified_at_utc": "2026-10-24T00:18:13Z",
-  "verified_date_msk": "2026-10-24"
+  "verified_date_msk": "2026-10-24",
+  "documentation_checkpoint": {
+    "commit": "cb0efc885e5d6c63f7df0796c0e72e0eddfb9232",
+    "context_run": 40044404543,
+    "review_run": 40044404573,
+    "context_result": "success",
+    "review_result": "success",
+    "code_qualification_remains": "933497e033448feb8a7aac9e29ece351f06600ac"
+  }
 }

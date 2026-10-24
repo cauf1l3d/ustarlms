@@ -1,5 +1,23 @@
 # Журнал выполнения roadmap
 
+## 24Oct — owner confirms bootstrap moodle OID10; separate app-login preparation ready
+
+Owner READ ONLY terminal query returned moodle/OID10/superuser=t/bootstrap=t and
+ustar_pg_admin/OID109344/superuser=t/bootstrap=f. Exact measurement time not supplied,
+not invented. Accepted in infra_readonly_owner_20261023.json/bootstrap_role_confirmation.
+Do not repeat OID/admin-creation probes or attempt bootstrap demotion. Existing
+independent admin SCRAM sessions9976/9995 remain the login proof; this OID query
+is not a fresh PHP effective-role or credential proof. Prior docs commitcb0efc88
+Context40044404543/Review40044404573 SUCCESS; code qualification remains933497e0.
+
+Prepared next additive operator block: create ordinary ustar_app with distinct hidden
+password/all five cluster flags false/no memberships, then required-SCRAM TCP login
+and READ ONLY role metadata. No grants/public ownership/CFG/HBA/service change in
+this block; native owner execution pending. PostgreSQL16 primary createuser/libpq
+docs checked; no unsupported maintenance-db option. Guarded production config/public
+ownership/HTTPS state handoff remains future work; backup POSTGRES_USER/admin/helpers
+preserved. Existing owner stands reused,0subagents/no agent SSH/send/main merge.
+
 ## 24Oct — INF02 ordinary-role CI qualified; production handoff remains open
 
 Code933497e033448feb8a7aac9e29ece351f06600ac, Review40043036549 and

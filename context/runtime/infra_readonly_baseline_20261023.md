@@ -1,9 +1,17 @@
 # INF-01: первый read-only блок23Oct2026
 
+**Текущий checkpoint24Oct: server1 bootstrap OID подтверждён.**
+Owner READ ONLY query вернул moodle/OID10/superuser=t/bootstrap=t и
+ustar_pg_admin/OID109344/superuser=t/bootstrap=f. Исходную moodle не демотировать.
+Новый ordinary-role CI933497e0/Review40043036549 принят; backup POSTGRES_USER остаётся
+административным. Следующий operator block — [подготовить app login](#app-login-24oct).
+Это добавление обычной роли и один required-SCRAM вход, без app config/ownership
+switch. Native owner execution ещё не получен. Старое создание admin ниже не повторять.
+
 **Текущее состояние23Oct: отдельный PostgreSQL admin уже создан и проверен.**
 Owner corrected retry: ustar_pg_admin, две обязательные SCRAM-сессии9976/9995,
 login_role/effective_role совпали, rolcanlogin=t/rolsuper=t, оба READ ONLY/ROLLBACK.
-INF02 step2 login acceptance принята; **createuser больше не выполнять**.
+INF02 step2 login acceptance принята; **createuser для ustar_pg_admin больше не выполнять**.
 Ниже сохранена датированная история команд и исправления. moodle privileges/HBA/
 config/services не менялись; copy rehearsal/backup/recovery и полная INF02 ещё pending.
 [Та же квитанция](infra_readonly_owner_20261023.json), поле admin_creation_success.
@@ -244,12 +252,13 @@ backup coverage of new credentials/roles is not claimed by this creation step.
 
 ## Следующие writes и совместимость
 
-INF-02 steps3–5 require copy rehearsal: domain writes/File API/cron, XMLDB upgrade/
-repeat, dump/restore and cluster-operation denials under target flags. Source
-`production_restore.py` already separates `ustar_restore_admin` and `ustar_app` in
-its isolated restore, but that is not this live role's acceptance. Old release
-scripts and readiness SQL use POSTGRES_USER; the installed backup engine is a
-separate hash-pinned delegate. All consumers must be checked before demoting moodle.
+INF-02 privilege delta completed in existing CI933497e0/Review40043036549:
+domain/File API/selected cron/XMLDB DDL/2200→2300/repeat/app dump/admin SET ROLE restore,
+five42501 denials and private globals controls passed. Source/CI proof is recorded
+in [receipt](infra_db_privilege_ci_20261023.json). Production moodle is OID10 and must
+remain superuser. New app role receives only the application public objects and CFG
+connection through a guarded handoff, preserving administrative POSTGRES_USER and
+the installed backup helpers. Full INF02/03 remains open until that owner handoff.
 
 INF-03 target candidate for primary config is root:33/0640 with unchanged bytes,
 root-owned non-writable parents and effective www-data read/no-write/no-replace.
@@ -295,3 +304,71 @@ https://www.postgresql.org/docs/16/app-dropuser.html
 Одноразовая static option check против независимого upstream long_options сначала
 отклоняет старый --maintenance-db; исправленный набор принимается. Это source/CLI
 compatibility check, не native выполнение createuser; owner retry ещё требуется.
+
+<a id="app-login-24oct"></a>
+## 24Oct: подготовка отдельного app login
+
+Owner OID receipt принят; отдельный admin уже проверен двумя SCRAM-входами.
+Блок ниже создаёт только обычную `ustar_app` с пятью запрещёнными cluster flags,
+без memberships/ownership transfer/grants/config writes. Создание через локальный
+admin connection использует уже принятый путь; пароль новой роли задаётся скрыто и
+не передаётся агенту. Выбрать отдельный пароль, отличающийся от административных.
+Один новый TCP вход на внутренний IP контейнера требует SCRAM и этот пароль.
+Сначала `sudo -v`, дождаться prompt, затем весь блок:
+
+```bash
+(
+  set -euo pipefail
+
+  ustar_pg_ip=$(sudo -n docker inspect --format \
+    '{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' \
+    ustar_postgres | awk 'NF {print; exit}')
+  if [[ ! "$ustar_pg_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ || \
+        "$ustar_pg_ip" == 127.* || "$ustar_pg_ip" == 0.0.0.0 ]]; then
+    printf '%s\n' 'POSTGRES_INTERNAL_IP_NOT_FOUND' >&2
+    exit 1
+  fi
+
+  sudo -n docker exec -it ustar_postgres env \
+    PGCONNECT_TIMEOUT=5 \
+    PGOPTIONS='-c password_encryption=scram-sha-256 -c search_path=pg_catalog -c statement_timeout=15s -c lock_timeout=3s' \
+    createuser --username=ustar_pg_admin --login \
+      --no-superuser --no-createrole --no-createdb \
+      --no-replication --no-bypassrls --pwprompt ustar_app
+
+  sudo -n docker exec -it ustar_postgres psql -X -W \
+    -P pager=off -v ON_ERROR_STOP=1 \
+    "host=$ustar_pg_ip dbname=moodle user=ustar_app connect_timeout=5 require_auth=scram-sha-256 passfile=/dev/null" \
+    -c "BEGIN READ ONLY;
+        SET LOCAL statement_timeout = '15s';
+        SET LOCAL lock_timeout = '3s';
+        SET LOCAL search_path = pg_catalog;
+        SELECT session_user AS login_role, current_user AS effective_role,
+               r.oid, r.rolcanlogin, r.rolsuper, r.rolcreaterole,
+               r.rolcreatedb, r.rolreplication, r.rolbypassrls,
+               (pg_get_userbyid(d.datdba) = current_user) AS database_owner,
+               EXISTS (SELECT 1 FROM pg_auth_members m
+                       WHERE m.member = r.oid) AS has_memberships
+        FROM pg_roles r JOIN pg_database d ON d.datname = current_database()
+        WHERE r.rolname = current_user;
+        ROLLBACK;"
+)
+```
+
+Expect login_role/effective_role=ustar_app, rolcanlogin=t; five cluster flags,
+database_owner and has_memberships all f. This preparation issues no table grants;
+existing PUBLIC table privileges are outside the login-metadata check. The distinct
+password is an owner instruction here, not a machine-verified bootstrap-auth denial.
+Application still uses its old connection;
+no stop/restart/maintenance/outage is part of this block. Two new-password prompts,
+then Password for the same new app password at the login check. No --echo/--maintenance-db,
+password variables/files or command-line password. Existing role name makes createuser
+refuse and the subshell stop, with no automatic reset/reuse/drop. Failed login leaves
+only the newly created ordinary role for explicit diagnosis; no application switch.
+
+Command options verified against PostgreSQL16 createuser documentation24Oct;
+require_auth uses the same already accepted owner TCP authentication pattern.
+Local Bash syntax/source review does not substitute for native owner success.
+After acceptance, prepare a guarded config/public-object ownership/HTTPS state handoff,
+retaining administrative backup caller and recovery metadata; do not apply plain
+chmod/chown/config replacement or broad REASSIGN OWNED as the next manual shortcut.

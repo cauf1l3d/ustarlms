@@ -12,7 +12,7 @@ current_infrastructure_checkpoint:
   privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
   consumers: context/runtime/infra_db_privilege_consumers_20261023.md
   findings: runtime_moodle_superuser_primary_config33_mode755_and_local_ustar_writable_no_container_healthcheck_or_log_limits
-  next: guarded_private_app_credential_config_public_ownership_HTTPS_handoff_preserving_backup_admin
+  next: ordinary_app_login_creation_SCRAM_then_guarded_config_public_ownership_HTTPS_handoff_preserving_backup_admin
   retest_scope: no_new_owner_stand_or_full_restore_repeat_without_a_specific_uncovered_failure_mode
   production_mutations_performed: true
   production_mutation_scope: owner_added_only_ustar_pg_admin_role
@@ -122,7 +122,7 @@ tasks:
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: in_progress
-  current_summary: ustar_pg_admin и два required-SCRAM входа9976/9995 приняты; создание не повторять. CI933497e0/Review40043036549 SUCCESS для ordinary app role с public objects+CFG;14checks/five42501/100USTAR-schema equality, artifact hash verified. Bootstrap/backup POSTGRES_USER сохранены admin. moodle unchanged; owner OID reply и production private app credential/config/public ownership/HTTPS handoff ещё нужны. Полный INF02/03 открыт.
+  current_summary: ustar_pg_admin и два required-SCRAM входа9976/9995 приняты; создание не повторять. CI933497e0/Review40043036549 SUCCESS для ordinary app role с public objects+CFG;14checks/five42501/100USTAR-schema equality, artifact hash verified. Bootstrap/backup POSTGRES_USER сохранены admin. Owner24Oct подтвердил moodle OID10/admin OID109344. New ordinary app login/SCRAM block ready, owner execution pending; production config/public ownership/HTTPS handoff ещё нужен. Полный INF02/03 открыт.
   validation_scope: Засчитать прежние стенды; существующий CI для недостающей проверки снятых cluster flags и зависимости установленных helpers. Новый owner-стенд и полный restore/regression круг не планируются по умолчанию.
   evidence: context/runtime/infra_readonly_owner_20261023.json
   depends_on:

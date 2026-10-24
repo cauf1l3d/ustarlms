@@ -8,8 +8,10 @@ role handoff. Новый delta: ordinary ustar_app/five flags0,3159public object
 SET ROLE restore/100USTAR-schema и selected data equality PASS. Artifact12540597495
 скачан/hash-verified; SQL/dumps/env не опубликованы. Bootstrap/POSTGRES_USER сохранены
 административными; existing backup engine/helper pins не менять. [Разбор](../runtime/infra_db_privilege_consumers_20261023.md),
-[квитанция](../runtime/infra_db_privilege_ci_20261023.json). Server1 OID reply ещё ожидается; private app credential и guarded
-config/public ownership/HTTPS handoff не реализованы. Полный INF02/03 открыт,
+[квитанция](../runtime/infra_db_privilege_ci_20261023.json). Owner24Oct подтвердил server1 moodle/OID10/superuser и независимый admin/OID109344.
+Следующий [operator block](../runtime/infra_readonly_baseline_20261023.md#app-login-24oct) создаёт только
+ordinary app login и проверяет SCRAM; native owner result ещё pending. App credential/config/
+public ownership/HTTPS handoff ещё не выполнен. Полный INF02/03 открыт,
 на server1 этим CI ничего не меняли. Existing owner stands reuse;0subagents.
 
 **23Oct — прежние стенды засчитываются; следующий scope — только DB privilege delta.**

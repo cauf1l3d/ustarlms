@@ -29,7 +29,10 @@ def pg(query,*,role='ustar_privilege_admin',password=None,allow_failure=False):
     return result
 
 
-oids=json.loads(pg("BEGIN READ ONLY; SELECT json_object_agg(rolname,oid) FROM pg_roles "
+wire=json.loads(pg("BEGIN READ ONLY; SELECT json_build_object('oid',jsonb_typeof(to_jsonb(oid)),"
+    "'bigint',jsonb_typeof(to_jsonb(oid::bigint))) FROM pg_roles WHERE rolname='ustar_fixture'; ROLLBACK;").stdout)
+assert wire=={'oid':'string','bigint':'number'},'unexpected_PostgreSQL_OID_JSON_wire_type'
+oids=json.loads(pg("BEGIN READ ONLY; SELECT json_object_agg(rolname,oid::bigint) FROM pg_roles "
     "WHERE rolname IN ('ustar_fixture','ustar_privilege_admin','ustar_app'); ROLLBACK;").stdout)
 profile=h.Profile(database='ustar_stage1',bootstrap='ustar_fixture',admin='ustar_privilege_admin',
     app='ustar_app',bootstrap_oid=oids['ustar_fixture'],admin_oid=oids['ustar_privilege_admin'],
@@ -113,6 +116,7 @@ assert json.loads(subprocess.check_output(['php',str(php)]))==[True,True]
 major=int(pg("BEGIN READ ONLY; SELECT current_setting('server_version_num')::int/10000; ROLLBACK;").stdout)
 assert major==16
 evidence={'result':'DB_APP_HANDOFF_NATIVE=PASS','postgres_major':major,'objects':counts,
+    'OID_JSON_wire_types':wire,
     'checks':dict.fromkeys(['generated_SQL_roundtrip','exact_inventory_drift_refused','inaccessible_monitor_preserved',
         'exposed_definer_refused','membership_refused','schema_equal','selected_business_data_retained',
         'real_PHP_special_character_password','app_access_denied_while_bootstrap_owns_tables'],True),

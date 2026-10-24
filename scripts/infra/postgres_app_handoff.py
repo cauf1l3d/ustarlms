@@ -152,23 +152,23 @@ def sql_string(value):
 
 def inventory_expression(profile=PRODUCTION):
     def acl(expr):
-        return "(SELECT jsonb_agg(jsonb_build_object('grantor',a.grantor,'grantee',a.grantee," \
+        return "(SELECT jsonb_agg(jsonb_build_object('grantor',a.grantor::bigint,'grantee',a.grantee::bigint," \
             "'privilege',a.privilege_type,'grantable',a.is_grantable) ORDER BY a.grantor,a.grantee,a.privilege_type) " \
             "FROM aclexplode(" + expr + ") a)"
     role_names = ','.join(sql_string(n) for n in (profile.bootstrap,profile.admin,profile.app))
     return """jsonb_build_object(
-      'database',(SELECT jsonb_build_object('name',d.datname,'owner',d.datdba,'acl',DBACL)
+      'database',(SELECT jsonb_build_object('name',d.datname,'owner',d.datdba::bigint,'acl',DBACL)
                     FROM pg_database d WHERE d.datname=current_database()),
-      'roles',(SELECT jsonb_agg(jsonb_build_object('name',r.rolname,'oid',r.oid,'login',r.rolcanlogin,
+      'roles',(SELECT jsonb_agg(jsonb_build_object('name',r.rolname,'oid',r.oid::bigint,'login',r.rolcanlogin,
                 'super',r.rolsuper,'create_role',r.rolcreaterole,'create_db',r.rolcreatedb,
                 'replication',r.rolreplication,'bypass',r.rolbypassrls,
-                'memberships',COALESCE((SELECT jsonb_agg(m.roleid ORDER BY m.roleid)
+                'memberships',COALESCE((SELECT jsonb_agg(m.roleid::bigint ORDER BY m.roleid)
                                         FROM pg_auth_members m WHERE m.member=r.oid),'[]'::jsonb))
                 ORDER BY r.rolname) FROM pg_roles r WHERE r.rolname IN (ROLENAMES)),
-      'public_schema',(SELECT jsonb_build_object('owner',n.nspowner,'acl',NSPACL)
+      'public_schema',(SELECT jsonb_build_object('owner',n.nspowner::bigint,'acl',NSPACL)
                          FROM pg_namespace n WHERE n.nspname='public'),
-      'relations',COALESCE((SELECT jsonb_agg(jsonb_build_object('oid',c.oid,'name',c.relname,
-                    'kind',c.relkind,'owner',c.relowner,'acl',RELACL,
+      'relations',COALESCE((SELECT jsonb_agg(jsonb_build_object('oid',c.oid::bigint,'name',c.relname,
+                    'kind',c.relkind,'owner',c.relowner::bigint,'acl',RELACL,
                     'extension',EXISTS(SELECT 1 FROM pg_depend e WHERE e.classid='pg_class'::regclass
                        AND e.objid=c.oid AND e.deptype='e')) ORDER BY c.oid)
                    FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
@@ -642,7 +642,7 @@ class ProductionHost:
             return self.run(['docker','exec','-i',self.ids['ustar_postgres'],'sh','-eu','-c',shell,'sh',conn],
                             raw=password.encode()+b'\n'+query.encode(),allow_failure=True)
         query="BEGIN READ ONLY; SET LOCAL statement_timeout='15s'; SELECT json_build_object('login',session_user," \
-              "'effective',current_user,'oid',oid) FROM pg_roles WHERE rolname=current_user; ROLLBACK;"
+              "'effective',current_user,'oid',oid::bigint) FROM pg_roles WHERE rolname=current_user; ROLLBACK;"
         positive=attempt('ustar_app',query)
         require(positive.returncode==0,'app_SCRAM_login_failed')
         row=json.loads(positive.stdout)

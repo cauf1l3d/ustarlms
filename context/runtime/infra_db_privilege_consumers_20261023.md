@@ -69,8 +69,8 @@ Candidate80b3ccfb/Review40017305504 native120640978099 passed old158/830 and
 presentation recovery but failed at bootstrap demotion before app delta. This is an
 implementation assumption error, not target-app qualification. Both source PHP jobs
 and runtime passed; source83 required one unchanged-code retry after15min timeout
-caused by Chromium install. New bootstrap-safe profile is prepared; native GREEN
-remains pending. Host verifier8tests passed, including observed RED→GREEN for missing
+caused by Chromium install. At that checkpoint the bootstrap-safe profile still
+awaited native GREEN. Host verifier8tests passed, including observed RED→GREEN for missing
 bootstrap/system-catalog/scoped-ownership evidence.
 
 Native e59d partial result24Oct: all3159 public relations transferred to ustar_app,
@@ -79,12 +79,30 @@ Actual app OID126161/all five flags0/DBowner1/membership0; temporary CREATEDB
 membership produced1 and was refused/revoked. Distinct app password rejected for
 bootstrap; upgrade/repeat passed. Then enrolment probe failed an API argument:
 Moodle enrol_user expects an existing stdClass instance; add_instance returned null
-because create_course already installed it. Probe now fetches that record. Remaining
-scheduled task/denials/dump/restore not reached; full native GREEN still pending.
+because create_course already installed it. Probe now fetches that record. That failed
+attempt did not reach scheduled task/denials/dump/restore; it remains partial evidence.
 
-New gate keeps bootstrap OID10 SUPERUSER, creates ordinary ustar_app, transfers only
+**Qualified24Oct:** corrected code933497e033448feb8a7aac9e29ece351f06600ac,
+Review40043036549/connect-db120719333841 and Context40043036469 SUCCESS.
+Both PHP8.2/8.3 source jobs passed1085r16/153environment skips and browser scenarios;
+runtime passed. Old158native tests/830assertions and presentation recovery passed
+before the new handoff. The new ordinary-role delta then passed all14operation checks:
+actual app OID126144/five flags0/DBowner1/no dangerous membership;3159public relations
+transferred, no app-owned pg_catalog; privileged membership refusal/revoke; distinct
+app password cannot authenticate bootstrap; XMLDB/domain/FileAPI writes, selected
+scheduled task,2200→2300/repeat, app pg_dump and admin restore SET ROLE app with selected
+records/file and100USTAR-schema equality. Five cluster denials returned exactly42501.
+App globals capture was denied; independent admin and unchanged legacy POSTGRES_USER
+both captured globals privately. Artifact12540597495,771349B, SHA256
+`342249e89d786f742f2ad87364fc09c012c07fd356a517ff572615d2d641a20a`
+was downloaded/hash-verified and its individual JSON records cross-checked. No SQL,
+dumps, environment files or private directory were uploaded. Full proof and seven
+qualified code-file hashes are in the [receipt](infra_db_privilege_ci_20261023.json).
+This is selected reduced-role coverage, not a claim that the old158tests ran under it.
+
+The qualified gate keeps bootstrap OID10 SUPERUSER, creates ordinary ustar_app, transfers only
 public app relations (tables/views/sequences and automatic index ownership) and switches
-synthetic CFG. It must prove equal public relation ownership counts and zero app-owned
+synthetic CFG. It proves equal public relation ownership counts and zero app-owned
 pg_catalog relations, actual app session/all five flags0, membership refusal/revoke,
 owner XMLDB/domain/FileAPI writes, selected scheduled task,2200→2300/repeat, app dump
 and admin restore SET ROLE app, selected record and100USTAR-schema equality, five42501

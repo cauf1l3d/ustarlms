@@ -1,5 +1,30 @@
 # Журнал выполнения roadmap
 
+## 24Oct — INF02 ordinary-role CI qualified; production handoff remains open
+
+Code933497e033448feb8a7aac9e29ece351f06600ac, Review40043036549 and
+Context40043036469 SUCCESS. Both PHP8.2/8.3 jobs1085r16/153environment skips and
+browser scenarios passed; actual runtime/systemd/HTTPS owner fixture passed.
+Native120719333841 passed old158tests/830assertions/presentation recovery before
+handoff, then the selected new app-role delta: OID126144/five flags0/DBowner1,
+3159public relations transferred/0app pg_catalog, CREATEDB membership refusal/revoke,
+wrong bootstrap credential refusal, XMLDB/domain/FileAPI, selected scheduled task,
+2200→2300/repeat, app dump/admin SET ROLE restore, selected data/file and100USTAR
+schema equality, five exact42501 denials. Both independent and retained bootstrap
+admin globals succeeded privately; ordinary app globals refused pg_authid.
+All14checks PASS. Artifact12540597495/771349B/SHA342249e89d786f742f2ad87364fc09c012c07fd356a517ff572615d2d641a20a
+downloaded/hash-verified; individual JSON metadata cross-checked, SQL/dumps/env/private
+paths absent. Qualified code files match immutable commit. Earlier e59d failure was
+our enrol_user probe argument, fixed by retrieving the existing manual instance.
+[Receipt](../runtime/infra_db_privilege_ci_20261023.json),
+[consumer report](../runtime/infra_db_privilege_consumers_20261023.md).
+
+Narrow CI/consumer review plan complete; full INF02/03 not closed. Server1 OID reply
+still pending, real private app credential/config/public ownership + HTTPS state
+handoff remains future work. Bootstrap/POSTGRES_USER and installed backup pins stay
+administrative/unchanged; no broad REASSIGN OWNED. No production change, new owner
+stand, provider send, SSH, main merge or subagent. Full RC jobs skipped, not passed.
+
 ## 23Oct20:36UTC — PostgreSQL bootstrap refusal changes INF02 route
 
 Native80b job120640978099 passed old158/830 and presentation recovery, then refused

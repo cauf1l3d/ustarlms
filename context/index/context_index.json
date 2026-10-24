@@ -672,8 +672,8 @@
     {
       "path": "context/proposals/INF02_PRIVILEGE_DELTA_PLAN_20261023.md",
       "domain": "proposals",
-      "size": 4665,
-      "sha256": "3228dac42e8b0cc5c817052f00d0a62f83aaa74b21a7aa87d4e16fca310b0aa6"
+      "size": 5208,
+      "sha256": "219ef28051f20a19676508ac5f908bc4f5a77090cd978ac54d7f31a0d355b194"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
@@ -1026,8 +1026,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 36219,
-      "sha256": "01bc1d656ef48decbb5a13b67751512e17fab840aaa99549184b803c3f2c6275"
+      "size": 36175,
+      "sha256": "9f971b69af4b4e48fae7e115433333879836f7ae60c8ab7c010eee00eec346ce"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1068,8 +1068,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 220339,
-      "sha256": "ba76b734811c2aa87b24cb937f0f3b945575ca4c1d4f21d092eb28cf4fef7606"
+      "size": 222133,
+      "sha256": "86178a205c9090d19c4d2ab800ab89af874d181a6115dfb3ea0f3f570a8f2cc0"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1080,8 +1080,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 17512,
-      "sha256": "b0c5f941d7ecff4e3ac4956cf74a50dcaa670114e7e59646c55f38855069075b"
+      "size": 17705,
+      "sha256": "c5df0147db092583ce2d5a409ff7b372cca5f344fe4587f1cfda659ffd780895"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1824,14 +1824,14 @@
     {
       "path": "context/runtime/infra_db_privilege_ci_20261023.json",
       "domain": "runtime",
-      "size": 8707,
-      "sha256": "e0d60504c1c4b15ddddf35b372e27a776755958054d0d9b478550915b3a15bac"
+      "size": 13440,
+      "sha256": "412aa771aa84c718d8e84243cb528d5acd15fa60644af40b0f759cfbf641f826"
     },
     {
       "path": "context/runtime/infra_db_privilege_consumers_20261023.md",
       "domain": "runtime",
-      "size": 8322,
-      "sha256": "7acfb2d4f0e8f0142837319bd0e8dd2c3aa004f4bb1e33befe0de49a3e71a20e"
+      "size": 9737,
+      "sha256": "aeef8312c128b1428d986532c8aa6c9d490ec91eaae4915ce453a20f6cac6352"
     },
     {
       "path": "context/runtime/infra_normalization_resume_20261023.md",
@@ -2490,8 +2490,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 72304,
-      "sha256": "137f042e74dd081dc56d604cfb13e46b3a9445db88f47d8ff3a47fba6bcd131e"
+      "size": 72426,
+      "sha256": "b3cf14e038916884e99f6832d32dfcbe793a31b529a3104d2f669fd1a3735ab2"
     },
     {
       "path": "context/tasks/backlog.yaml",

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "INF02_missing_privilege_delta_in_existing_pinned_fixture",
-  "status": "bootstrap_safe_native_GREEN_pending",
+  "status": "native_GREEN_verified_no_production_apply",
   "author_review_only": true,
   "subagents": 0,
   "native_RED": {
@@ -63,12 +63,12 @@
     "agent_SSH": false
   },
   "limits": [
-    "No production demotion or complete INF02 closure",
+    "No production app credential/config/ownership handoff or complete INF02 closure",
     "Exact current cron v3 source not inferred from older Library v2 copy",
     "Selected native scheduled task does not prove every installed helper",
     "Schema equality covers100USTAR tables; retained data checks selected synthetic core/domain/FileAPI records",
     "Existing owner stand/UI/paired restore acceptance reused; no new full production DR claim",
-    "Previous158PHPUnit tests run before demotion; new reduced-role proof consists of selected real app operations and denials",
+    "Previous158PHPUnit tests run before role handoff; new reduced-role proof consists of selected real app operations and denials",
     "Server1 OID not yet owner-confirmed; production new-app credential/config/public ownership and HTTPS handoff not implemented"
   ],
   "membership_review": {
@@ -77,7 +77,7 @@
     "change": "guard all five cluster attributes and retain a real CREATEDB-membership negative control",
     "focused_tests": 7,
     "focused_negative_control_test_RED_then_GREEN": true,
-    "native_result": "pending_next_code_commit"
+    "native_result": "PASS_current_qualification"
   },
   "initial_candidate": {
     "commit": "ad6ea0eebc4b1e89a12f83be8be8a4a55038cb31",
@@ -165,7 +165,7 @@
     "backup_helpers_changed": false,
     "focused_tests": 8,
     "new_bootstrap_acceptance_test_observed_RED_then_GREEN": true,
-    "native": "pending_e59d9af2",
+    "native": "PASS_933497e0_current_qualification",
     "app_credential_isolation": "distinct_synthetic_app_password_and_failed_bootstrap_auth_control_required"
   },
   "revised_qualification": {
@@ -245,5 +245,139 @@
       "upgrade_and_repeat_passed_before_exercise": true,
       "full_privilege_GATE": "not_passed"
     }
-  }
+  },
+  "current_qualification": {
+    "commit": "933497e033448feb8a7aac9e29ece351f06600ac",
+    "review_run": 40043036549,
+    "context_run": 40043036469,
+    "status": "success",
+    "change": "probe retrieves existing manual-enrol stdClass record; production code unchanged",
+    "source82": {
+      "job": 120718278924,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153,
+      "UI": "success"
+    },
+    "source83": {
+      "job": 120718279176,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153,
+      "UI": "success"
+    },
+    "runtime": {
+      "job": 120718279158,
+      "result": "success"
+    },
+    "context": {
+      "run": 40043036469,
+      "result": "success"
+    },
+    "native": {
+      "job": 120719333841,
+      "result": "success",
+      "proof_completed_at_utc": "2026-10-24T00:15:50Z",
+      "previous_phpunit_tests": 158,
+      "previous_phpunit_assertions": 830,
+      "previous_presentation_recovery": "PASS",
+      "artifact": {
+        "id": 12540597495,
+        "name": "connect-identity-db-evidence",
+        "sha256": "342249e89d786f742f2ad87364fc09c012c07fd356a517ff572615d2d641a20a",
+        "bytes": 771349,
+        "downloaded_and_hash_verified": true,
+        "private_sql_dumps_and_env_absent": true,
+        "json_entries_cross_checked": true
+      },
+      "proof": {
+        "admin": {
+          "role": "ustar_privilege_admin",
+          "superuser": 1
+        },
+        "app": {
+          "bypassrls": 0,
+          "createdb": 0,
+          "createrole": 0,
+          "dangerous_memberships": 0,
+          "database_owner": 1,
+          "effective_role": "ustar_app",
+          "login_role": "ustar_app",
+          "postgres_major": "16",
+          "replication": 0,
+          "role_oid": 126144,
+          "superuser": 0
+        },
+        "application_versions": [
+          2026102200,
+          2026102300,
+          2026102300
+        ],
+        "checks": {
+          "app_credential_cannot_auth_bootstrap": true,
+          "data_equal_after_restore": true,
+          "domain_writes": true,
+          "file_api": true,
+          "globals_admin_private": true,
+          "globals_app_denied": true,
+          "globals_legacy_POSTGRES_USER_private": true,
+          "globals_not_uploaded": true,
+          "pg_dump_app": true,
+          "pg_restore_admin_set_app_role": true,
+          "privileged_membership_denied": true,
+          "scheduled_task": true,
+          "schema_equal_after_restore": true,
+          "xmldb_ddl": true
+        },
+        "denied_sqlstates": {
+          "create_database": "42501",
+          "create_role": "42501",
+          "role_password_catalog": "42501",
+          "server_file": "42501",
+          "server_program": "42501"
+        },
+        "external_provider_called": false,
+        "membership_refusal": {
+          "bypassrls": 0,
+          "createdb": 0,
+          "createrole": 0,
+          "dangerous_memberships": 1,
+          "database_owner": 1,
+          "effective_role": "ustar_app",
+          "login_role": "ustar_app",
+          "postgres_major": "16",
+          "replication": 0,
+          "role_oid": 126144,
+          "superuser": 0
+        },
+        "postgres_major": 16,
+        "result": "DB_PRIVILEGES_NATIVE=PASS",
+        "role_handoff": {
+          "app_system_catalogs": 0,
+          "bootstrap_oid": 10,
+          "bootstrap_role": "ustar_fixture",
+          "bootstrap_superuser": 1,
+          "public_app_after": 3159,
+          "public_before": 3159,
+          "public_bootstrap_after": 0
+        }
+      }
+    },
+    "review_result": "success",
+    "context_result": "success",
+    "focused_tests": 8,
+    "qualification_code_sha256": {
+      ".github/workflows/ustar-review-gate.yml": "06caa08626ff8448529c5af421b61f160618f49a9e5cb3e7318a47b05a413840",
+      "tests/stage/run-connect.sh": "34f21c27549d778c97d8ba186331e7c3986f05862e9e9a88b3e90566f22d11d7",
+      "tests/stage/run-db-privileges.sh": "aba6433e57e0013eceaae018732ddb5f1a85d9b94f10baba2d200ac639db7109",
+      "tests/stage/db_privileges_handoff.sql": "5a30807fa4b9a7d97b8b040f4e5b4102a60b61b03d7712df2103f1136bc0d6f3",
+      "tests/stage/db_privileges_probe.php": "82a1f06f99f4bce014bbd0f0369163f4fe4b82dd19c655c4fba496d7f41dcaa5",
+      "tests/stage/db_privileges_verify.py": "29e5d7e0cf8e505480ec509be6c12e968f62a5cabffff025a871a71bcafbb944",
+      "tests/r16/test_db_privilege_evidence.py": "05a68a399ac516145e18b46331964d092f22d4a442dfcf677dbebd069931322f"
+    },
+    "production_changes": false,
+    "full_RC_jobs": "skipped_not_passed"
+  },
+  "verified_at_utc": "2026-10-24T00:18:13Z",
+  "verified_date_msk": "2026-10-24"
 }

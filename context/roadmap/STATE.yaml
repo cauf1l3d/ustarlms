@@ -10,8 +10,10 @@ current_activity: >-
   and add only missing privilege checks to existing CI, reusing accepted stages.
   Native80b revealed bootstrap OID10 cannot be demoted; corrected CI transfers only
   public application ownership/config to ordinary ustar_app and preserves bootstrap
-  admin/POSTGRES_USER/system catalogs. Host8tests pass, revised native pending.
-  Real new-app credential/config/ownership plus HTTPS handoff still required.
+  admin/POSTGRES_USER/system catalogs. Code933497e0/Review40043036549 native GREEN:
+  14operation checks/five42501 denials/100USTAR-schema equality; artifact hash verified.
+  Host8tests, both PHP1085r16/153skips, runtime/browser/context pass. Narrow CI/consumer
+  review complete; real new-app credential/config/ownership plus HTTPS handoff required.
   No new owner/server1 lab or full restore repeat by default. Then DB/code/config/key
   hardening. Owner created only ustar_pg_admin; no service stop or public ingress change.
   Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
@@ -30,7 +32,7 @@ infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_2026102
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open
 infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
 infrastructure_admin_status: owner_created_ustar_pg_admin_two_required_SCRAM_sessions_accepted_do_not_repeat_creation
-infrastructure_DB_privilege_status: moodle_unchanged_bootstrap_safe_new_app_role_native_pending_config_ownership_handoff_required
+infrastructure_DB_privilege_status: CI_qualified_933497e0_moodle_unchanged_production_app_config_ownership_HTTPS_handoff_required
 infrastructure_bootstrap_status: CI_OID10_confirmed_server1_owner_OID_query_pending_do_not_demote_bootstrap
 infrastructure_DB_privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
 infrastructure_DB_consumers: context/runtime/infra_db_privilege_consumers_20261023.md

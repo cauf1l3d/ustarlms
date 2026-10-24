@@ -1,14 +1,16 @@
 # USTAR инструкции агентам
 
-**24Oct — INF02: bootstrap не демотировать; CI проверяет отдельную app role.**
-Native80b/Review40017305504 прошёл старые158/830 и presentation recovery, затем PG16
-отказал ALTER ROLE OID10 NOSUPERUSER. Первое предположение об in-place demotion неверно.
-Исправленный CI оставляет bootstrap/POSTGRES_USER администратором, переносит public
-app objects/CFG на ordinary ustar_app; pg_catalog не передаёт. Host verifier8tests
-RED→GREEN; e59d9af2/Review40041621643 native pending. Server1 OID query запрошен read-only.
-Backup engine0d31e694/13689B и producer/scheduler pins сохраняются; прежний globals
-caller остаётся административным. На server1 роли/config/ownership не менялись.
-[Разбор](context/runtime/infra_db_privilege_consumers_20261023.md), [квитанция](context/runtime/infra_db_privilege_ci_20261023.json). Existing owner stands reuse;0subagents.
+**24Oct — INF02: отдельная app role проверена в CI; production handoff следующий.**
+Code933497e0/Review40043036549/connect-db120719333841 и Context40043036469 SUCCESS.
+Обе PHP1085r16/153skips, runtime/browser PASS; старые158native/830assertions идут до
+role handoff. Новый delta: ordinary ustar_app/five flags0,3159public objects/0pg_catalog,
+14operation checks, five42501 denials,2200→2300/repeat, selected cron/app dump/admin
+SET ROLE restore/100USTAR-schema и selected data equality PASS. Artifact12540597495
+скачан/hash-verified; SQL/dumps/env не опубликованы. Bootstrap/POSTGRES_USER сохранены
+административными; existing backup engine/helper pins не менять. [Разбор](context/runtime/infra_db_privilege_consumers_20261023.md),
+[квитанция](context/runtime/infra_db_privilege_ci_20261023.json). Server1 OID reply ещё ожидается; private app credential и guarded
+config/public ownership/HTTPS handoff не реализованы. Полный INF02/03 открыт,
+на server1 этим CI ничего не меняли. Existing owner stands reuse;0subagents.
 
 **23Oct — прежние стенды засчитываются; следующий scope — только DB privilege delta.**
 Нового owner/server1 стенда/full restore/repackage/UI круга по умолчанию не нужно.

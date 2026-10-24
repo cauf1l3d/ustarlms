@@ -52,10 +52,13 @@ owner/server1 стенд и не менять приложение, frozen insta
 - [x] Native role assertion RED on current superuser fixture: df3ee0ef,
       Review40012838091/connect-db120619281630, APP_ROLE_HAS_CLUSTER_PRIVILEGES
       after the previous158tests/830assertions and presentation recovery passed.
-- [ ] Focused verifier8tests RED→GREEN and Bash/Python checks pass; native PHP/SQL
-      execution pending for revised bootstrap-safe profile.
-- [ ] Native limited-role gate GREEN in existing pinned CI, inspect artifacts/logs.
-- [ ] Record exact commit/run/result and consumer limitation; no server1 mutation.
+- [x] Focused verifier8tests RED→GREEN and Bash/Python checks pass; revised native
+      PHP/SQL profile executed successfully on PostgreSQL16.15/Moodle5.1.8.
+- [x] Native limited-role gate GREEN: code933497e0, Review40043036549,
+      connect-db120719333841. Artifact12540597495 downloaded/hash-verified;
+     14operation checks, five42501 denials and100USTAR-schema equality passed.
+- [x] Exact code/run/proof and consumer limitations recorded in
+      infra_db_privilege_ci_20261023.json; no server1 mutation in this CI work.
 
 User/AGENTS rules override reviewer dispatch/pause instructions: author-only review,
 no main merge/provider sends/SSH. Existing general CI gates remain intact; no new
@@ -64,3 +67,8 @@ manual server1 full-cycle request. Original private backup source is not committ
 Native incident80b/Review40017305504/job120640978099 proved bootstrap cannot be
 demoted. First architecture assumed this was possible; corrected route above supersedes
 in-place NOSUPERUSER. Owner server1 OID query requested read-only, no production change.
+
+This narrowed CI/consumer-review plan is complete24Oct. Full INF02/03 remain open:
+production needs a distinct private app credential and guarded config/public ownership
+handoff preserving HTTPS state and the administrative backup caller. Existing owner
+stands remain accepted; no new manual full-cycle stand is requested.

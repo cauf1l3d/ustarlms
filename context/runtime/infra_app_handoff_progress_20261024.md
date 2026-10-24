@@ -101,3 +101,14 @@ env/private images. Exact new and old JSON verified; qualified operator blob8906
 matches fetched immutable GitHub source and delivered fe7c7d9b SHA256.
 Task2/source and Task3/targeted qualification complete; owner --check/deployment pending.
 Author review,0subagents; full production coordinator execution is NOT claimed.
+
+
+## 24Oct — owner tty failure and targeted correction
+
+Owner accepted ready_for_app_handoff: 3479 relations/657 tables/656 sequences/2166 indexes; host_changes=false. Initial apply refused before password entry. Sanitized traceback: main803 -> prompt_password746 -> tty_not_seekable. Journal status uninitialized; preparation/backup/ownership switch not reached. No recovery required for this attempt.
+
+Root cause: Python text open('/dev/tty','w+') requires a seekable stream. Corrected to write-only 'w'; getpass retains its own terminal input and warning-as-error guard against echoed fallback. Real controlling PTY regression failed on original source with the same UnsupportedOperation, then passed with fix. It verifies secret input, no echo, restored ECHO. Separate detached-session test refuses piped input. Focused handoff suite:25 tests,24 pass,1 existing local UID namespace skip. Previous SQL/native qualification applies to unchanged ownership/backup logic; new CI not yet accepted.
+
+Corrected operator filename: ustar-db-app-handoff-7e35795f-ttyfix.py
+SHA256: 976afa0d2dffd58bf260dde4cb90cb5297f73d3f78fb9df10c2f9dc4b60ecf5e
+Production retry pending; do not claim cutover completed.

@@ -743,7 +743,7 @@ def prompt_password():
     import getpass
     import warnings
     # Never allow getpass to fall back to visible stdin or a pipe.
-    with open('/dev/tty','w+') as tty,warnings.catch_warnings():
+    with open('/dev/tty','w') as tty,warnings.catch_warnings():
         warnings.simplefilter('error',getpass.GetPassWarning)
         return getpass.getpass('Пароль ранее созданной роли ustar_app: ',stream=tty)
 

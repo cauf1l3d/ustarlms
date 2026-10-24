@@ -6,12 +6,12 @@ parents protected, moodledata writable. Owner explicitly says old handlers/repor
 but needed for possible USTAR Connect reuse. Preserve private bytes/path/metadata; no
 public source upload. scripts/infra/code_hardening.py implements guarded archive+metadata
 transaction with DB app role retained, existing backup/locks and metadata-only undo.
-14focused tests:13PASS/1local UID33 namespace skip; strict UID33 runtime CI added.
+20focused tests:18PASS/2local UID33 namespace skips; strict UID33 runtime CI added.
 Check only until CI and owner --check accepted. No code permissions changed on server.
 Frozen app/DB/physical recovery requires code-hardening undo first; source drift refuses,
 not silent rebaseline. Full INF03 keys/dumps scope still open.0subagents/main unmerged.
 
-Operator SHA256: 6c2da4d1766f563070a245a68a4c9685a39524b60b5a36224a4f562061b492b7
+Operator SHA256: 6447d5d642c136ef5352690be19076636463a49a91cd0b9acb384440721a30d5
 
 Standalone builder embeds pinned ttyfixed DB coordinator and code coordinator.
 Use root:root0600 operator. Default PLAN_ONLY; --check is read-only and avoids PHP
@@ -27,3 +27,26 @@ legacy-file restoration, never DB/data restore. Code undo precedes DB undo and o
 physical/app restore. Default does not overwrite/reuse completed generation.
 Checks cover real filesystem transactions; service tests use doubles, not server
 acceptance. Native UID33 check runs under sudo in existing runtime CI. No agent SSH.
+
+
+## Current operator check
+
+Extract ustar-code-hardening-20261025.py from delivered ZIP to /home/aduk/.
+Install as root:root0600 in /root and verify the SHA256 above. Run Python3 -I -B
+with --check only. Expected ready_for_code_hardening; no password prompt and no
+service outage for check. The complete code tree is hashed; allow several minutes.
+After an accepted check, --apply --acknowledge-outage performs fresh HDD backup,
+stops existing writers and web, archives allowlisted extras, protects metadata,
+checks app role/HTTPS and restores original service policies/states.
+Success code_hardened. On interruption use same operator --recover
+--acknowledge-outage. Explicit rollback --undo --acknowledge-outage. No external
+timeout for writes. Never use an old physical/app/DB undo before code undo.
+
+Archive manifest retains original file mtime, mode, UID/GID and SHA256; private
+archive copies are root:root0600 under root0700 parents. Original content stays
+in private state for metadata-only restoration. No business rows/data restoration.
+After a legitimate source deployment the old full-tree state requires review:
+new source is not silently accepted by old undo. The real installer-copy fixture
+shows root ownership survives both existing-file and newly-created-file activation;
+its DB/service boundary remains modeled. Future full-core upgrade/restore still
+requires corresponding source/profile qualification.

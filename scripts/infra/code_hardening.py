@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 """Guarded INF-03 code ownership and private legacy archive."""
-import base64
-import copy
 import hashlib
 import os
 from pathlib import Path, PurePosixPath
@@ -42,6 +40,8 @@ def snapshot(root):
             require(not attrs,'unreviewed_extended_attributes')
             row={'kind':'directory' if directory_entry else 'file','uid':st.st_uid,'gid':st.st_gid,
                  'mode':stat.S_IMODE(st.st_mode)}
+            if directory_entry or name not in EXTRAS:
+                row.update(device=st.st_dev,inode=st.st_ino)
             if not directory_entry:
                 digest=hashlib.sha256()
                 fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
@@ -77,6 +77,8 @@ class Transaction:
     def load(self):
         value=self.store.load();require(value is not None,'hardening_state_required')
         require(value.get('root')==str(self.root) and value.get('operation')=='code_hardening_v1','hardening_state_identity')
+        require(value.get('phase') in {'prepared','applying','hardened','active','restoring',
+                'baseline_restored','recovery_required'},'unknown_hardening_phase')
         before=value['before'];require(value['after']==desired(before),'saved_policy_drift')
         for name in before:
             p=PurePosixPath(name)
@@ -97,6 +99,8 @@ class Transaction:
         state={'schema':1,'operation':'code_hardening_v1','root':str(self.root),'phase':'prepared',
                'before':before,'after':after,'extras':extras,'runtime':runtime}
         require(snapshot(self.root)==before,'tree_changed_during_preparation')
+        import json
+        require(len(json.dumps(state,sort_keys=True).encode())<=48*1024**2,'private_state_size_limit')
         self.store.save(state);self.load();return state
 
     def save_phase(self,phase):
@@ -128,6 +132,10 @@ class Transaction:
             if name in state['extras']:expected['mtime_ns']=row['mtime_ns']
             require(row==expected and row['uid'] in (b['uid'],a['uid']) and row['mode'] in (b['mode'],a['mode']),
                     'tree_content_or_metadata_drift')
+        if state['phase'] in ('hardened','active'):
+            require(actual==state['after'],'completed_hardening_drift')
+        if state['phase']=='baseline_restored':
+            require(actual==state['before'],'restored_baseline_drift')
         self.verify_archive(state)
         for name in set(state['before'])-set(actual):
             require(self.archive_path(name).is_file(),'removed_extra_without_archive')
@@ -150,6 +158,8 @@ class Transaction:
         # Root/parents first removes UID33 rename rights before changing children.
         for name,row in sorted(rows.items(),key=lambda item:(len(PurePosixPath(item[0]).parts),item[0])):
             p=self.root/name;st=p.lstat()
+            if 'inode' in row:
+                require((st.st_dev,st.st_ino)==(row['device'],row['inode']),'entry_identity_drift')
             if (st.st_uid,st.st_gid,stat.S_IMODE(st.st_mode))==(row['uid'],row['gid'],row['mode']):continue
             flags=os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK
             if row['kind']=='directory':flags|=os.O_DIRECTORY
@@ -205,7 +215,9 @@ class Coordinator:
             runtime=state['runtime'];require(isinstance(runtime,dict),'missing_service_snapshot')
             require(h.capture(self.dbstore.path)['sha256']==runtime['db_state_sha'],'DB_handoff_journal_drift')
             require(self.host.legacy_images()==runtime['legacy_images'],'legacy_journal_drift')
-        if recovery:self.host.ensure_pg()
+        if recovery:
+            self.host.recover_backup()
+            self.host.ensure_pg()
         self.db.guard();self.host.verify_live('after',saved)
         return saved
 
@@ -223,16 +235,16 @@ class Coordinator:
         self.controls()
         runtime={'services':self.host.services(),'policies':self.host.policies(),
                  'db_state_sha':h.capture(self.dbstore.path)['sha256'],'legacy_images':self.host.legacy_images()}
-        state=self.tx.prepare(runtime)
+        state=self.tx.prepare(runtime);self.tx.progress('prepared')
         try:
             run=self.tx.store.base/'backup';run.mkdir(mode=0o700);h.sync(run.parent)
             receipt=self.host.backup(run)
-            state=self.tx.load();state['fresh_backup']=receipt;self.tx.store.save(state)
+            state=self.tx.load();state['fresh_backup']=receipt;self.tx.store.save(state);self.tx.progress('backup_complete')
             with self.host.cold():
                 self.tx.guard();self.controls(self.tx.load())
-                self.host.stop();self.tx.save_phase('applying')
+                self.host.stop();self.tx.save_phase('applying');self.tx.progress('writers_stopped')
                 self.tx.apply()
-                self.host.start_web();self.verify()
+                self.host.start_web();self.verify();self.tx.progress('web_verified')
                 self.host.resume(runtime['services'],runtime['policies'])
                 self.tx.guard();self.verify();self.tx.save_phase('active')
             return {'phase':'code_hardened','archived_files':len(state['extras']),
@@ -250,7 +262,6 @@ class Coordinator:
             self.verify();return {'phase':'code_hardened','verify_only':True}
         # Code and private control guards precede any restart after a reboot.
         self.controls(state,recovery=True)
-        self.host.recover_backup()
         runtime=state['runtime']
         if undo and state['phase']=='active':
             runtime={**runtime,'services':self.host.services(),'policies':self.host.policies()}
@@ -271,6 +282,7 @@ def main(argv=None):
     parser.add_argument('--acknowledge-outage',action='store_true');args=parser.parse_args(argv)
     write=args.apply or args.recover or args.undo
     if write and not args.acknowledge_outage:parser.error('outage acknowledgement required')
+    if args.acknowledge_outage and not write:parser.error('outage flag requires apply, recover or undo')
     if not any((args.check,args.status,write)):
         print(json.dumps({'phase':'PLAN_ONLY','host_changes':False}));return 0
     log=None
@@ -278,7 +290,7 @@ def main(argv=None):
         require(os.geteuid()==0,'root_required')
         tx=Transaction('/opt/ustar/data/moodle/public','/var/lib/ustar-code-hardening')
         if args.status:
-            state=tx.store.load();print(json.dumps({'phase':state['phase'] if state else 'uninitialized','observation':'journal_only'}));return 0
+            state=tx.load() if tx.store.load() is not None else None;print(json.dumps({'phase':state['phase'] if state else 'uninitialized','observation':'journal_only'}));return 0
         if write:
             own=h.capture(Path(sys.argv[0]));require(own['metadata']=={'uid':0,'gid':0,'mode':0o600,'xattrs':{}},'unsafe_operator_file')
             tx.store.directory(create=True);log=(tx.store.base/('private-'+uuid.uuid4().hex+'.log')).open('xb')
@@ -297,7 +309,9 @@ def main(argv=None):
                     state=tx.store.load()
                     if state:
                         tx.guard();coordinator.controls(state)
-                        result={'phase':'code_hardened' if state['phase']=='active' else 'recovery_required', 'saved_phase':state['phase']}
+                        result={'phase':('code_hardened' if state['phase']=='active' else
+                                         'baseline_restored' if state['phase']=='baseline_restored' else 'recovery_required'),
+                                'saved_phase':state['phase']}
                     else:
                         coordinator.controls();before=snapshot(tx.root);after=desired(before)
                         result={'phase':'ready_for_code_hardening','entries':len(before),
@@ -312,7 +326,9 @@ def main(argv=None):
             import traceback
             log.write(traceback.format_exc().encode());log.flush()
         import re
-        reason=str(error) if isinstance(error,Refusal) and re.fullmatch('[A-Za-z][A-Za-z0-9_]{0,100}',str(error)) else 'private_diagnostic_required'
+        reason=(str(error) if type(error).__name__=='Refusal'
+                and re.fullmatch('[A-Za-z][A-Za-z0-9_]{0,100}',str(error))
+                else 'host_exception_'+type(error).__name__)
         print(json.dumps({'phase':'refused','reason':reason}));return 2
     finally:
         if log is not None:log.close()

@@ -29,7 +29,7 @@ Do not infer secrets or HTTP accessibility from names. Never publish contents.
 - [x] Integrate pinned ttyfixed DB controller; require app_role_active and verified
   current controls. Ordered own/DB/prebackup/cold locks, unchanged HDD backup,
   stop writers, apply, verify app/HTTPS/read-no-write, restore service policies.
-- [ ] Test native Unix access, archive privacy, failure/recovery checkpoints,
+- [x] Test native Unix access, archive privacy, failure/recovery checkpoints,
   wrong source/private state drift, future plugin creation inherits root owner.
 - [ ] Publish source and receipts; operator --check first, then apply. No new
   full server lab/physical restore; reuse accepted qualification, targeted delta.
@@ -38,3 +38,14 @@ Old full restore can reintroduce legacy and writable code: metadata undo must
 precede frozen physical restore. New deployments require exact source/profile
 qualification; never silently rebaseline changed code. Full INF03 includes key
 and dump permissions outside this code slice, and remains open until accepted.
+
+
+Self-review follow-up before operator delivery: first candidate7ace868b passed
+Review40136758903 and Context40136758899, including14/14 root runtime tests.
+Final refinement requires backup recovery before PG restart; strict exact after
+identity in active/hardened phases; directory and retained code device/inode
+identity checks; actual UID33 open/write/create/unlink/archive-read denials;
+existing installer activation preserves root ownership for existing/new files.
+Three new guard regressions failed on previous code, then passed after correction.
+Final local20tests:18PASS/2UID33 mapping skips; final CI pending. No independent
+reviewer/subagents; author review only. Operator --check before any production apply.

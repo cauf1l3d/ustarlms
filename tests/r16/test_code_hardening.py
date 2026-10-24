@@ -60,9 +60,24 @@ class Filesystem(unittest.TestCase):
 
 class RecoveryBoundaries(unittest.TestCase):
     setUp=Filesystem.setUp
+    def test_interruption_between_real_chown_and_chmod_restores_uid33(self):
+        try:os.chown(self.root/'public/plugin.php',33,33)
+        except OSError:
+            if os.environ.get('USTAR_REQUIRE_ROOT_OWNER_FIXTURE')=='1':raise
+            self.skipTest('local namespace cannot map UID33')
+        before=c.snapshot(self.root);self.tx.prepare()
+        def interrupt(point):
+            if point=='ownership':raise KeyboardInterrupt()
+        self.tx.progress=interrupt
+        with self.assertRaises(KeyboardInterrupt):self.tx.apply()
+        self.assertEqual((self.root/'public/plugin.php').stat().st_uid,0)
+        self.tx.progress=lambda _:None
+        self.tx.undo();self.assertEqual(c.snapshot(self.root),before)
+
     def test_partial_restore_before_timestamp_is_recoverable(self):
         before=c.snapshot(self.root);self.tx.prepare();self.tx.apply()
         state=self.tx.load()
+        self.tx.save_phase('restoring')
         c.h.replace_image(state['extras']['gradehelper.php'])
         self.tx.undo();self.assertEqual(c.snapshot(self.root),before)
 
@@ -78,10 +93,18 @@ class RecoveryBoundaries(unittest.TestCase):
         if pid==0:
             try:
                 os.close(readfd);os.setgroups([33]);os.setgid(33);os.setuid(33)
-                checks=[os.access(self.root/'public/plugin.php',os.R_OK),
-                        not os.access(self.root/'public/plugin.php',os.W_OK),
-                        not os.access(self.root/'public',os.W_OK),
-                        not os.access(self.base/'private/archive/gradehelper.php',os.R_OK)]
+                def denied(action):
+                    try:
+                        fd=action()
+                        if isinstance(fd,int):os.close(fd)
+                        return False
+                    except PermissionError:return True
+                code=self.root/'public/plugin.php'
+                checks=[os.access(code,os.R_OK),
+                        denied(lambda:os.open(code,os.O_WRONLY)),
+                        denied(lambda:os.open(self.root/'public/new.php',os.O_WRONLY|os.O_CREAT,0o600)),
+                        denied(lambda:os.unlink(code)),
+                        denied(lambda:os.open(self.base/'private/archive/gradehelper.php',os.O_RDONLY))]
                 os.write(writefd,b'OK' if all(checks) else b'FAIL')
             finally:os._exit(0)
         os.close(writefd)
@@ -149,5 +172,63 @@ class Packaging(unittest.TestCase):
             result=subprocess.run([sys.executable,'-I','-B',str(script),'--apply'],capture_output=True,timeout=5)
             self.assertEqual(result.returncode,2)
             self.assertIn(b'outage acknowledgement required',result.stderr)
+
+
+class GuardReview(unittest.TestCase):
+    setUp=Filesystem.setUp
+    def test_completed_state_rejects_return_to_writable_modes(self):
+        self.tx.prepare();self.tx.apply();self.tx.save_phase('active')
+        (self.root/'public/plugin.php').chmod(0o775)
+        with self.assertRaises(c.Refusal):self.tx.guard()
+    def test_replaced_code_inode_with_same_bytes_and_mtime_refused(self):
+        self.tx.prepare();p=self.root/'public/plugin.php';st=p.stat()
+        replacement=self.root/'replacement';replacement.write_bytes(p.read_bytes())
+        replacement.chmod(st.st_mode&0o777)
+        os.utime(replacement,ns=(st.st_mtime_ns,st.st_mtime_ns));os.replace(replacement,p)
+        with self.assertRaises(c.Refusal):self.tx.apply()
+    def test_replaced_directory_inode_refused(self):
+        self.tx.prepare();old=self.base/'retained';(self.root/'public').rename(old)
+        (self.root/'public').mkdir();(old/'plugin.php').rename(self.root/'public/plugin.php')
+        with self.assertRaises(c.Refusal):self.tx.apply()
+    def test_backup_recovery_precedes_postgres_start_and_catalogue(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        calls=[];p=self.root/'config.php';p.write_bytes(b'fixture config')
+        dbfile=self.base/'db-state';dbfile.write_bytes(b'private fixture state');dbfile.chmod(0o600)
+        class DB:
+            def load(self):return {'phase':'app_role_active'}
+            def guard_files(self):calls.append('file_guards')
+            def guard(self):calls.append('catalogue_guard')
+        class Host:
+            def config_metadata(self,image):calls.append('parent_guards')
+            def legacy_images(self):return []
+            def recover_backup(self):calls.append('backup_recovery')
+            def ensure_pg(self):calls.append('pg_start')
+            def verify_live(self,*args):calls.append('live_guard')
+        op=c.Coordinator(self.tx,Host(),SimpleNamespace(path=dbfile));op.db=DB()
+        state={'runtime':{'db_state_sha':c.h.capture(dbfile)['sha256'],'legacy_images':[]}}
+        with patch.object(c.h,'CONFIG',p):op.controls(state,recovery=True)
+        self.assertEqual(calls,['file_guards','parent_guards','backup_recovery','pg_start','catalogue_guard','live_guard'])
+
+
+class DeploymentCompatibility(unittest.TestCase):
+    def test_existing_installer_preserves_root_owner_for_existing_and_new_files(self):
+        if os.geteuid()!=0:self.skipTest('root fixture runs in mandatory runtime CI')
+        import hashlib
+        from tests.r16 import test_connect_academy_installer as fixture
+        f=fixture.Transaction('test_success_changes_only_addons_and_migrates_twice')
+        try:
+            f.setUp()
+            plugin=f.d.web/'local/ustar'
+            plugin.chmod(0o775);(plugin/'version.php').chmod(0o775)
+            tx=c.Transaction(f.d.p.CODE,f.root/'hardening')
+            tx.prepare();tx.apply()
+            f.payload['local/ustar/new/sub/file.php']=b'new release content'
+            f.d.reference['candidate']['files']={k:hashlib.sha256(v).hexdigest() for k,v in f.payload.items()}
+            self.assertEqual(f.run_update(),0)
+            for p in (plugin,plugin/'version.php',plugin/'new',plugin/'new/sub/file.php'):
+                self.assertEqual(p.stat().st_uid,0)
+                self.assertFalse(p.stat().st_mode&0o022)
+        finally:f.doCleanups()
 
 if __name__=='__main__':unittest.main()

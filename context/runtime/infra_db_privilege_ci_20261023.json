@@ -63,11 +63,26 @@
     "agent_SSH": false,
     "owner_role_OIDs": {
       "moodle": 10,
-      "ustar_pg_admin": 109344
+      "ustar_pg_admin": 109344,
+      "ustar_app": 110395
     },
     "owner_bootstrap_query_received_date_moscow": "2026-10-24",
-    "new_app_role_created": false,
-    "new_app_login_preparation": "operator_block_ready_native_owner_execution_pending"
+    "new_app_role_created": true,
+    "new_app_login_preparation": "owner_created_ordinary_role_and_required_SCRAM_login_accepted_20261024",
+    "owner_app_login_metadata": {
+      "oid": 110395,
+      "login_role": "ustar_app",
+      "effective_role": "ustar_app",
+      "can_login": true,
+      "superuser": false,
+      "create_role": false,
+      "create_db": false,
+      "replication": false,
+      "bypass_rls": false,
+      "database_owner": false,
+      "has_memberships": false
+    },
+    "app_config_or_ownership_handoff_performed": false
   },
   "limits": [
     "No production app credential/config/ownership handoff or complete INF02 closure",
@@ -76,7 +91,7 @@
     "Schema equality covers100USTAR tables; retained data checks selected synthetic core/domain/FileAPI records",
     "Existing owner stand/UI/paired restore acceptance reused; no new full production DR claim",
     "Previous158PHPUnit tests run before role handoff; new reduced-role proof consists of selected real app operations and denials",
-    "Server1 moodle OID10 owner-confirmed24Oct; production new-app credential/config/public ownership and HTTPS handoff not implemented"
+    "Server1 moodle OID10 owner-confirmed24Oct; ordinary app login OID110395 now accepted; production config/public ownership and HTTPS handoff not implemented"
   ],
   "membership_review": {
     "ordinary_role_attributes_can_be_gained_via_SET_ROLE": true,

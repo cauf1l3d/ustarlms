@@ -1,5 +1,39 @@
 # Журнал выполнения roadmap
 
+## 24Oct — ordinary app role OID110395 created and SCRAM login accepted
+
+Owner hidden-password createuser and required-SCRAM TCP login succeeded.
+Session/current role=ustar_app, OID110395, rolcanlogin=t; rolsuper/rolcreaterole/
+rolcreatedb/rolreplication/rolbypassrls/database_owner/has_memberships all f.
+READ ONLY metadata transaction rolled back. No exact measurement time or password
+received; distinctness from bootstrap password is not independently verified.
+Receipt: infra_readonly_owner_20261023.json/app_login_preparation_success. Do not
+repeat either admin/app role creation or accepted login/OID probes. No application
+config/public ownership/HTTPS state/service cutover has occurred.
+
+Source review: HTTPS guards bind current config bytes; frozen runtime recovery also
+binds an exact HTTPS snapshot. A bare config edit can break these contracts.
+[Handoff plan](../proposals/INF02_APP_HANDOFF_PLAN_20261024.md) preserves old journals
+and uses exact before/after private acceptance plus a verified compatibility view;
+implementation/release remains pending. Owner authorization for normalization and
+self implementation continues;0subagents/no agent SSH/provider sends/main merge.
+
+Prepared one bounded read-only batch: exact frozen2300 SHA/--check, public ownership
+and custom routine/SECURITY DEFINER metadata, app USAGE/EXECUTE and fixed search_path.
+No function bodies, passwords, business rows or function invocation. Ordinary flags0
+alone do not rule out delegated function privileges; mere function existence is not
+an exploit proof. Primary PG16 CREATE FUNCTION/privilege docs verified. Bash4blocks,
+8read-only SQL statements, JSON/YAML/source review PASS; actual native metadata
+query still pending owner, not represented as local PostgreSQL execution. Existing
+933497e0 qualification remains selected14operation checks, not a complete security audit.
+
+Execution workspace disconnected after local Bash/context417/JSON/YAML/diff checks.
+Publication is reconstructed from immutable Git b82fc5ac through the GitHub connector;
+fetched baseline files are hash/size-checked against its generated context index.
+No implementation/source files are part of this checkpoint; native metadata output
+and the coordinator implementation remain pending. Reconcile the local docs checkout
+with the published commit after the workspace reconnects.
+
 ## 24Oct — owner confirms bootstrap moodle OID10; separate app-login preparation ready
 
 Owner READ ONLY terminal query returned moodle/OID10/superuser=t/bootstrap=t and

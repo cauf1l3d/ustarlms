@@ -1,6 +1,9 @@
 # USTAR инструкции агентам
 
 **24Oct — INF02: отдельная app role проверена в CI; production handoff следующий.**
+Workspace24Oct disconnected after checks; this docs checkpoint is published via GitHub.
+Before resuming local edits reconcile the old b82fc5ac docs checkout with this commit;
+no implementation/source change was lost or applied to server1.
 Code933497e0/Review40043036549/connect-db120719333841 и Context40043036469 SUCCESS.
 Обе PHP1085r16/153skips, runtime/browser PASS; старые158native/830assertions идут до
 role handoff. Новый delta: ordinary ustar_app/five flags0,3159public objects/0pg_catalog,
@@ -9,9 +12,11 @@ SET ROLE restore/100USTAR-schema и selected data equality PASS. Artifact1254059
 скачан/hash-verified; SQL/dumps/env не опубликованы. Bootstrap/POSTGRES_USER сохранены
 административными; existing backup engine/helper pins не менять. [Разбор](context/runtime/infra_db_privilege_consumers_20261023.md),
 [квитанция](context/runtime/infra_db_privilege_ci_20261023.json). Owner24Oct подтвердил server1 moodle/OID10/superuser и независимый admin/OID109344.
-Следующий [operator block](context/runtime/infra_readonly_baseline_20261023.md#app-login-24oct) создаёт только
-ordinary app login и проверяет SCRAM; native owner result ещё pending. App credential/config/
-public ownership/HTTPS handoff ещё не выполнен. Полный INF02/03 открыт,
+Owner создал ordinary ustar_app/OID110395: required-SCRAM login
+прошёл, five flags0/login1/owner0/memberships0. Создание обеих ролей больше не повторять.
+Следующий [read-only block](context/runtime/infra_readonly_baseline_20261023.md#app-handoff-preflight-24oct) проверяет
+current controller и SQL definer/ownership inventory; config/public ownership/HTTPS
+handoff ещё не выполнен. Полный INF02/03 открыт,
 на server1 этим CI ничего не меняли. Existing owner stands reuse;0subagents.
 
 **23Oct — прежние стенды засчитываются; следующий scope — только DB privilege delta.**

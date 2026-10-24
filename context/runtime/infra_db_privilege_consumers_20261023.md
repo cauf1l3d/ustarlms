@@ -12,8 +12,11 @@ move application public objects and CFG dbuser to it, preserve system catalogs.
 CI models that route; real credential/config/ownership handoff is still future work.
 Owner24Oct confirmed moodle/OID10/superuser and ustar_pg_admin/OID109344/superuser.
 OID query is accepted and must not repeat; [owner receipt](infra_readonly_owner_20261023.json),
-bootstrap_role_confirmation. Separate ordinary app-login/SCRAM
-[operator block](infra_readonly_baseline_20261023.md#app-login-24oct) is ready, owner execution pending.
+bootstrap_role_confirmation. Owner also created ustar_app/OID110395 and verified its
+required-SCRAM login: five flags false/login true/no membership/no DB ownership.
+app_login_preparation_success in the same receipt is accepted; do not recreate roles.
+[Next read-only block](infra_readonly_baseline_20261023.md#app-handoff-preflight-24oct)
+checks current controller and SQL definer/ownership metadata before a guarded apply.
 
 ## Exact backup source recovered and verified
 
@@ -122,9 +125,27 @@ https://www.postgresql.org/docs/16/glossary.html (bootstrap owns system catalogs
 
 No production role/config/ownership/HBA/service/container action in this CI change.
 Owner OID query and independent admin login already accepted. Before real apply:
-separate private app credential, exact app-object ownership/grant inventory and guarded config/owner
+app credential isolation against bootstrap, exact app-object ownership/grant/definer inventory and guarded config/owner
 handoff preserving HTTPS controls/metadata and rollback. Never use broad REASSIGN OWNED
 from bootstrap: it owns system catalogs and shared cluster objects. Retained backup
 POSTGRES_USER remains administrative and old helper pins unchanged. Full INF02/03
 remain open; existing owner restore/UI acceptance is reused. Current cron-v3 original
 source is not inferred from the older v2 Library copy.
+
+## Guarded production handoff
+
+[Implementation plan24Oct](../proposals/INF02_APP_HANDOFF_PLAN_20261024.md) follows
+accepted role creation. Read-only --check/inventory output is pending; code is not
+yet an operator-ready apply tool. Preserve old Connect journals during the handoff.
+Canonical HTTPS state requires an explicit config hash/metadata acceptance update
+with private before-images. A compatibility view for frozen runtime recovery must
+verify the exact post-handoff state before returning original accepted descriptors;
+never normalize unknown drift or rewrite the old snapshots to make a guard pass.
+
+Public custom routines and SECURITY DEFINER grants/search_path need classification
+before object transfer. The role metadata/login proves flags/memberships only; native
+fixture14checks do not prove absence of arbitrary production delegation. Metadata
+query prints no routine body or unrelated GUC, and executes no custom function.
+No blanket REVOKE/GRANT/ALTER FUNCTION is authorized merely by a nonempty result.
+Primary references: https://www.postgresql.org/docs/16/sql-createfunction.html and
+https://www.postgresql.org/docs/16/ddl-priv.html.

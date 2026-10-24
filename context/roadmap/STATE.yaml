@@ -14,10 +14,12 @@ current_activity: >-
   14operation checks/five42501 denials/100USTAR-schema equality; artifact hash verified.
   Host8tests, both PHP1085r16/153skips, runtime/browser/context pass. Narrow CI/consumer
   review complete. Owner24Oct confirms moodle OID10/bootstrap and ustar_pg_admin OID109344.
-  Separate ordinary app-login creation/SCRAM operator block prepared, owner execution
-  pending; real app credential/config/ownership plus HTTPS handoff required.
+  Owner created ordinary ustar_app/OID110395 and verified required-SCRAM login with
+  all five flags false, no memberships, no DB ownership. Do not repeat role creation.
+  Bounded controller/SQL definer preflight ready; guarded config/ownership/HTTPS handoff required.
   No new owner/server1 lab or full restore repeat by default. Then DB/code/config/key
-  hardening. Owner created only ustar_pg_admin; no service stop or public ingress change.
+  hardening. Owner created only ustar_pg_admin and ordinary ustar_app; app config unchanged,
+  no service stop or public ingress change.
   Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
   Production payload/worker6c56/local2300 remains in the owner receipt below.
   Owner metadata23Oct18:08UTC confirms one superuser moodle and writable local_ustar
@@ -36,9 +38,10 @@ infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.j
 infrastructure_admin_status: owner_created_ustar_pg_admin_two_required_SCRAM_sessions_accepted_do_not_repeat_creation
 infrastructure_DB_privilege_status: CI_qualified_933497e0_moodle_unchanged_production_app_config_ownership_HTTPS_handoff_required
 infrastructure_bootstrap_status: owner_confirmed_moodle_OID10_admin_OID109344_do_not_demote_bootstrap
-infrastructure_app_login_status: ordinary_ustar_app_creation_and_SCRAM_operator_block_ready_owner_execution_pending
+infrastructure_app_login_status: owner_created_ustar_app_OID110395_required_SCRAM_five_flags_false_no_membership_no_DB_ownership
 infrastructure_DB_privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
 infrastructure_DB_consumers: context/runtime/infra_db_privilege_consumers_20261023.md
+infrastructure_app_handoff_plan: context/proposals/INF02_APP_HANDOFF_PLAN_20261024.md
 infrastructure_retest_scope: reuse_accepted_stages_existing_CI_only_missing_DB_privilege_delta_no_new_owner_stand_or_full_restore_repeat
 infrastructure_file_status: primary_config_and_plugin_writable_HTTPS_metadata_handoff_and_copy_rehearsal_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained

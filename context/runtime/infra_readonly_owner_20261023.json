@@ -144,7 +144,7 @@
     "fresh_decryption_or_clean_host_restore_verified": false
   },
   "next": [
-    "create separate ordinary app login with hidden distinct password and required-SCRAM check; native privilege CI933497e0 already accepted, no new owner stand",
+    "guarded config/public ownership/HTTPS state handoff; accepted app login OID110395 must not be recreated; next bounded read-only owner/controller and SQL definer inventory",
     "coordinate config ownership with HTTPS captured metadata and inventory full code_ACL before file permission changes",
     "plan explicit container log rotation and healthchecks with guarded recreation later"
   ],
@@ -238,7 +238,7 @@
     "full_INF02_acceptance": "pending_copy_rehearsal_role_reduction_and_recovery"
   },
   "production_mutations_performed": true,
-  "production_mutation_scope": "owner_created_only_the_new_PostgreSQL_admin_role",
+  "production_mutation_scope": "owner_created_independent_PostgreSQL_admin_and_separate_ordinary_app_role_only",
   "connect_development_paused": true,
   "subagents": 0,
   "bootstrap_role_confirmation": {
@@ -264,5 +264,30 @@
     "application_runtime_connection_reproved": false,
     "new_app_role_creation_or_config_ownership_handoff_performed": false,
     "moodle_demotion": "not_performed_do_not_demote_OID10"
+  },
+  "app_login_preparation_success": {
+    "reported_date_moscow": "2026-10-24",
+    "exact_measurement_time": null,
+    "kind": "owner_pasted_native_terminal_role_creation_and_required_SCRAM_login",
+    "role": "ustar_app",
+    "oid": 110395,
+    "login_role": "ustar_app",
+    "effective_role": "ustar_app",
+    "can_login": true,
+    "superuser": false,
+    "create_role": false,
+    "create_db": false,
+    "replication": false,
+    "bypass_rls": false,
+    "database_owner": false,
+    "has_memberships": false,
+    "required_authentication": "scram-sha-256",
+    "transaction": "BEGIN READ ONLY; SET LOCAL timeouts and search_path; SELECT role metadata; ROLLBACK",
+    "password_prompts_completed": true,
+    "password_received_or_stored_by_agent": false,
+    "distinct_password_or_wrong_bootstrap_auth_independently_verified": false,
+    "app_config_or_public_object_ownership_changed": false,
+    "service_restart_or_outage_performed": false,
+    "acceptance": "ordinary_role_created_and_SCRAM_login_verified_do_not_repeat_creation"
   }
 }

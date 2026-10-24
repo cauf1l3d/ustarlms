@@ -4,9 +4,11 @@
 Owner READ ONLY query вернул moodle/OID10/superuser=t/bootstrap=t и
 ustar_pg_admin/OID109344/superuser=t/bootstrap=f. Исходную moodle не демотировать.
 Новый ordinary-role CI933497e0/Review40043036549 принят; backup POSTGRES_USER остаётся
-административным. Следующий operator block — [подготовить app login](#app-login-24oct).
-Это добавление обычной роли и один required-SCRAM вход, без app config/ownership
-switch. Native owner execution ещё не получен. Старое создание admin ниже не повторять.
+административным. Owner создал ordinary ustar_app/OID110395: required-SCRAM login
+прошёл, login=true, five flags/DB ownership/membership=false. Создание обеих ролей
+повторять не нужно. Следующий [read-only block](#app-handoff-preflight-24oct) проверяет
+current controller и SQL definer/ownership metadata перед guarded config/public
+ownership/HTTPS handoff. Переключения приложения ещё не было.
 
 **Текущее состояние23Oct: отдельный PostgreSQL admin уже создан и проверен.**
 Owner corrected retry: ustar_pg_admin, две обязательные SCRAM-сессии9976/9995,
@@ -308,6 +310,13 @@ compatibility check, не native выполнение createuser; owner retry е
 <a id="app-login-24oct"></a>
 ## 24Oct: подготовка отдельного app login
 
+**Owner execution accepted24Oct: повторно этот блок не выполнять.**
+ustar_app/OID110395, session/current role match, login=t, all five cluster flags=f,
+database_owner=f, has_memberships=f. Hidden-password prompts and required-SCRAM
+connection completed. No new app config/ownership/service action occurred.
+Exact time/password distinctness were not independently established. Receipt:
+infra_readonly_owner_20261023.json/app_login_preparation_success.
+
 Owner OID receipt принят; отдельный admin уже проверен двумя SCRAM-входами.
 Блок ниже создаёт только обычную `ustar_app` с пятью запрещёнными cluster flags,
 без memberships/ownership transfer/grants/config writes. Создание через локальный
@@ -372,3 +381,78 @@ Local Bash syntax/source review does not substitute for native owner success.
 After acceptance, prepare a guarded config/public-object ownership/HTTPS state handoff,
 retaining administrative backup caller and recovery metadata; do not apply plain
 chmod/chown/config replacement or broad REASSIGN OWNED as the next manual shortcut.
+
+<a id="app-handoff-preflight-24oct"></a>
+## 24Oct: адресный read-only preflight перед переключением
+
+Both roles/login are accepted; no repeat creation/password query or full stand.
+The existing frozen controller verifies current557files/100tables, runtime controls
+and static private HTTPS ownership with shared locks; --check does not bootstrap
+Moodle, change files/roles/services or call the live provider. Timeout bounds this
+existing verification; --check refusal requires its exact safe reason, no guard bypass.
+
+Catalog reads establish the public object scope and any custom SECURITY DEFINER
+functions before changing DB ownership. A function may execute with its owner's
+privileges even when the app's role flags are zero. Do not infer an exploit from
+mere existence: inspect schema usage, EXECUTE grants, owner and fixed search_path.
+No function body/password/business rows or full inspect are printed; no listed
+function is invoked. Only search_path items from proconfig are included.
+
+```bash
+sudo -v
+
+printf '%s  %s\n' \
+  6f7729459e1ef25271fd86324e441c823a6d39763c7fec84baf7cf640a41eb31 \
+  /root/ustar-telegram-update-3d1938ae.py | \
+sudo -n sha256sum --check --strict - &&
+sudo -n timeout --kill-after=3s 90s /usr/bin/python3 -I -B \
+  /root/ustar-telegram-update-3d1938ae.py --check
+
+sudo -n timeout --kill-after=3s 30s docker exec -i ustar_postgres sh -c \
+  'exec psql -X -q -P pager=off -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' <<'SQL'
+BEGIN READ ONLY;
+SET LOCAL statement_timeout = '15s';
+SET LOCAL lock_timeout = '3s';
+SET LOCAL search_path = pg_catalog;
+
+SELECT c.relkind, c.relowner::regrole AS owner,
+       (left(c.relname, 4) = 'mdl_') AS moodle_prefix, count(*) AS objects
+FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname = 'public'
+GROUP BY c.relkind, c.relowner, (left(c.relname, 4) = 'mdl_')
+ORDER BY c.relkind, owner, moodle_prefix;
+
+SELECT n.nspname AS schema, p.prokind, p.prosecdef,
+       p.proowner::regrole AS owner, count(*) AS routines
+FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
+WHERE n.nspname NOT IN ('pg_catalog', 'information_schema')
+  AND n.nspname NOT LIKE 'pg_toast%' AND n.nspname NOT LIKE 'pg_temp_%'
+GROUP BY n.nspname, p.prokind, p.prosecdef, p.proowner
+ORDER BY n.nspname, p.prokind, p.prosecdef, owner;
+
+SELECT p.oid::regprocedure AS routine, r.rolname AS owner,
+       r.rolsuper AS owner_superuser,
+       has_schema_privilege('ustar_app', n.oid, 'USAGE') AS app_schema_usage,
+       has_function_privilege('ustar_app', p.oid, 'EXECUTE') AS app_execute,
+       (SELECT string_agg(cfg.setting, ', ')
+        FROM unnest(p.proconfig) AS cfg(setting)
+        WHERE cfg.setting LIKE 'search_path=%') AS fixed_search_path
+FROM pg_proc p
+JOIN pg_namespace n ON n.oid = p.pronamespace
+JOIN pg_roles r ON r.oid = p.proowner
+WHERE p.prosecdef
+  AND n.nspname NOT IN ('pg_catalog', 'information_schema')
+  AND n.nspname NOT LIKE 'pg_toast%' AND n.nspname NOT LIKE 'pg_temp_%'
+ORDER BY (p.oid::regprocedure)::text;
+
+ROLLBACK;
+SQL
+```
+
+Owner output pending. This is no application-role/ownership cutover, password request,
+restore/UI reacceptance or separate stand. The final SQL statement returns metadata
+even for a definer inaccessible to app; existence alone is not a failure. Unknown
+custom functions must be classified before transferring application objects; no
+blanket REVOKE/GRANT/ALTER FUNCTION. Primary PostgreSQL16 references checked24Oct:
+https://www.postgresql.org/docs/16/sql-createfunction.html
+https://www.postgresql.org/docs/16/ddl-priv.html

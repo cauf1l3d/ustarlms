@@ -57,3 +57,47 @@ second review still required trusted user authorization. Do not bypass by a conn
 proxy or alternate write path. No remote update/new CI run is claimed. Ask for explicit
 permission to publish prepared commits to existing design/ustar-connect-20261018 only.
 Production commands remain gated on targeted native/UID33 CI qualification.
+
+
+## 24Oct — owner explicit publication approval and connected GitHub publication
+
+Owner replied «да разрешаю» to the exact existing-branch publication/CI question.
+Git push then reached the technical credential error (could not read Username), not
+an approval rejection. Connected GitHub published e634672c with tree db013f8978a008f5eceb033735c6575e2bc417eb,
+identical to prepared94d68e4. Ref moved from3958939b with an expected-head lease;
+no force/main merge. Historical rejection instructions no longer block this authorized write.
+Review40105702762: both PHP1108tests/155environment skips, browser/runtime PASS;
+mandatory root UID33 test passed1/1 without skips. Context40105702723 PASS.
+Native120907521149 still executing; no new SQL PASS or production release claim yet.
+
+
+## 24Oct — first native RED and OID JSON boundary fix published
+
+Review40105702762 native120907521149 passed prior158/830 and all14ordinary-role
+checks, then new script refused profile_role_OIDs before custom monitor setup or
+new ownership changes. oid serializes as JSON string; local integer fixture hid the
+wire-format mismatch. Added explicit bigint casts in SQL metadata/ACLs/memberships,
+SCRAM receipt and native role query. Added native raw_oid:string/cast_bigint:number
+characterization; do not weaken strict identity checks by guessing conversions.
+Native RED observed;31focused tests/1local skip remain GREEN.
+
+Published fix7e35795f (tree1c26d77e matches local1c2586e), parent e634672c, leased ref.
+Review40107134974/Context40107134982; latter SUCCESS. Native retry pending.
+Failed-run artifact12564911695/769547B downloaded and SHA2c595380 verified; selected
+14check proof PASS, no new handoff receipt yet, no SQL/dumps/env in uploaded inventory.
+Production unchanged; no role/OID/manual stand repetition or new permission loop.
+
+
+## 24Oct — qualification GREEN and sanitized evidence verified
+
+Code7e35795f, Review40107134974/Context40107134982 SUCCESS. Both PHP1108/155skips,
+browser/runtime and actual UID33 read/no-write/no-unlink1/1 PASS. Native120912015950:
+158/830 before role handoff, then old14privilege checks and new9handoff checks PASS.
+Generated SQL app→bootstrap→app, exposed-definer/member/stale-inventory refusals,
+100USTAR-schema/selected data retention and actual PHP literal decoding verified.
+Raw OID JSON:string vs explicit bigint:number assertion confirms root cause and fix.
+Artifact12565387807/771320B/SHA63a89d62 downloaded/hash-verified;133files, no SQL/dumps/
+env/private images. Exact new and old JSON verified; qualified operator blob8906e373
+matches fetched immutable GitHub source and delivered fe7c7d9b SHA256.
+Task2/source and Task3/targeted qualification complete; owner --check/deployment pending.
+Author review,0subagents; full production coordinator execution is NOT claimed.

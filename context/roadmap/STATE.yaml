@@ -16,12 +16,14 @@ current_activity: >-
   review complete. Owner24Oct confirms moodle OID10/bootstrap and ustar_pg_admin OID109344.
   Owner created ordinary ustar_app/OID110395 and verified required-SCRAM login with
   all five flags false, no memberships, no DB ownership. Do not repeat role creation.
-  Owner controller/definer preflight accepted: ready2300/ACKon, all3479 public objects
-  mdl_/moodle; monitor definer non-superuser/app USAGE0/EXECUTE0. Do not repeat manual
-  preflight. Guarded postgres_app_handoff.py implemented;23focused/1local UID33 skip,
-  generated SQL/strict UID33 CI pending. Publication to existing PR106 was rejected
-  twice by automatic review; explicit owner publish permission required, no API bypass.
-  New CI not started. Production config/ownership/HTTPS unchanged.
+  Owner controller/definer preflight accepted: ready2300/ACKon,3479public mdl_/moodle
+  objects and monitor app USAGE0/EXECUTE0. Coordinator7e35795f qualified:
+  Review40107134974/Context40107134982 SUCCESS, both PHP1108/155skips/browser/runtime,
+  actual UID33 permissions1/1, prior14privilege +new9handoff native checks PASS;
+  artifact12565387807 downloaded/hash-verified. OID JSON boundary fixed with explicit
+  bigint casts, native wire types verified. Full production coordinator not run in CI.
+  Owner explicitly authorized publication; no further publication approval loop.
+  Next guarded owner --check, then cutover/effective PHP receipt; config/ownership unchanged.
   No new owner/server1 lab or full restore repeat by default. Then DB/code/config/key
   hardening. Owner created only ustar_pg_admin and ordinary ustar_app; app config unchanged,
   no service stop or public ingress change.
@@ -41,14 +43,15 @@ infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_2026102
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open
 infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
 infrastructure_admin_status: owner_created_ustar_pg_admin_two_required_SCRAM_sessions_accepted_do_not_repeat_creation
-infrastructure_DB_privilege_status: CI_qualified_933497e0_moodle_unchanged_production_app_config_ownership_HTTPS_handoff_required
+infrastructure_DB_privilege_status: coordinator_7e35795f_qualified_moodle_unchanged_owner_config_ownership_HTTPS_cutover_pending
 infrastructure_bootstrap_status: owner_confirmed_moodle_OID10_admin_OID109344_do_not_demote_bootstrap
 infrastructure_app_login_status: owner_created_ustar_app_OID110395_required_SCRAM_five_flags_false_no_membership_no_DB_ownership
 infrastructure_DB_privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
 infrastructure_DB_consumers: context/runtime/infra_db_privilege_consumers_20261023.md
 infrastructure_app_handoff_plan: context/proposals/INF02_APP_HANDOFF_PLAN_20261024.md
-infrastructure_app_handoff_status: owner_preflight_accepted_local_coordinator_publication_auto_review_rejected_await_explicit_owner_permission_then_CI
+infrastructure_app_handoff_status: coordinator_7e35795f_targeted_native_UID33_qualified_owner_readonly_check_next
 infrastructure_app_handoff_runbook: context/runtime/infra_app_handoff_20261024.md
+infrastructure_app_handoff_CI: context/runtime/infra_app_handoff_ci_20261024.json
 infrastructure_retest_scope: reuse_accepted_stages_existing_CI_only_missing_DB_privilege_delta_no_new_owner_stand_or_full_restore_repeat
 infrastructure_file_status: primary_config_and_plugin_writable_HTTPS_metadata_handoff_and_copy_rehearsal_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained

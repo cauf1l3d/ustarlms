@@ -1,13 +1,17 @@
 # Активные задачи USTAR
 
-**24Oct — локальный handoff подготовлен; публикация требует явного разрешения.**
-Автоматическая проверка дважды отклонила git push в существующую ветку PR106,
-несмотря на сверку GitHub profile/repo/head и отсутствие production secrets в diff.
-Не обходить отказ другим API. Source/rollback/owner preflight сохранены локально;
-23новых tests:22PASS/1local UID33 skip, combined31/1skip. Native CI не запускался.
-[Квитанция](../runtime/infra_app_handoff_local_checks_20261024.json) содержит5ошибок окружения общего r16 прогона.
-Дальше явное разрешение на публикацию в design/ustar-connect-20261018, затем CI;
-на server1 app/config/ownership не переключались. Ручные preflight/создание ролей не повторять.
+**24Oct — INF02 coordinator7e35795f квалифицирован; далее owner --check.**
+Owner явно разрешил публикацию; Review40107134974 и Context40107134982 SUCCESS.
+Обе PHP1108/155skips/browser/runtime PASS; actual UID33 read/no-write/no-unlink1/1.
+Прежние158native/830assertions — до role handoff;14privilege checks и9новых handoff
+checks PASS. Generated SQL app→bootstrap→app, definer/member/drift refusals, schema/
+selected-data retention и PHP password escaping проверены. OID JSON:string/int cast
+исправлен и подтверждён native wire check. Artifact12565387807/771320B скачан/SHA проверен;
+133файла, SQL/dumps/env/private images отсутствуют. [Квитанция](../runtime/infra_app_handoff_ci_20261024.json).
+Это targeted components proof; полный production coordinator в CI не выполнялся.
+[Команды нового --check](../runtime/infra_app_handoff_20261024.md); root/app roles и принятый ручной preflight не повторять.
+На server1 config/ownership не переключались. Полные INF02/03 открыты.0subagents,
+author review/no agent SSH/provider sends/main merge; повторное разрешение на публикацию не нужно.
 
 **24Oct — INF02 owner preflight принят; coordinator в проверке.**
 Pinned3d1938ae `--check`: application_ready/local2300/ACKon, host_changes=false.

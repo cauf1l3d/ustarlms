@@ -71,17 +71,18 @@ hardening and HBA/container changes remain separate INF03/05 work.
 **Files:** create scripts/infra/postgres_app_handoff.py and tests/r16/test_postgres_app_handoff.py.
 **Consumes:** task1 accepted scope, frozen controller/role identities and existing ordered locks.
 **Produces:** ordinary-file CLI --check/--apply/--recover/--undo/--status and coordinated runtime
-enable/disable; check(ctx) -> sanitized dict, apply(ctx) -> dict, recover(ctx) -> dict.
+enable/disable; check(host, store) -> sanitized dict, Session.apply(password),
+Session.recover() and Session.undo() -> dict; ProductionHost owns the PG/systemd boundary.
 
-- [ ] Observe RED for wrong/elevated/member role, definer exposure, unknown object, drift and unsafe parent.
-- [ ] Implement strict frozen loading, private capture/readback and original/desired config parsing.
-- [ ] Add private app credential/SCRAM and wrong-bootstrap-auth controls before outage or ownership writes.
-- [ ] Implement scoped public ownership transaction, retaining ACLs and bootstrap/system catalogs.
-- [ ] Add durable before/after DB/config/HTTPS journal and exact before/after recovery/undo.
-- [ ] Add root:33/0640 config acceptance with explicit ACL handling/read-no-write check; leave code trees unchanged.
-- [ ] Add verified HTTPS compatibility view and runtime delegates; old journal images remain immutable.
-- [ ] Prove interruption at every boundary, unknown drift refusal, no business-data rollback and no secret output.
-- [ ] Run focused tests and commit; do not present model-only tests as native production proof.
+- [x] Observe RED for wrong/elevated/member role, definer exposure, unknown object, drift and unsafe parent.
+- [x] Implement strict frozen loading, private capture/readback and original/desired config parsing.
+- [x] Add private app credential/SCRAM and wrong-bootstrap-auth controls before outage or ownership writes.
+- [x] Implement scoped public ownership transaction, retaining ACLs and bootstrap/system catalogs.
+- [x] Add durable before/after DB/config/HTTPS journal and exact before/after recovery/undo.
+- [x] Add root:33/0640 config acceptance with explicit ACL handling/read-no-write check; leave code trees unchanged.
+- [x] Add verified HTTPS compatibility view and runtime delegates; old journal images remain immutable.
+- [x] Prove interruption at every boundary, unknown drift refusal, no business-data rollback and no secret output.
+- [x] Run focused tests and commit; do not present model-only tests as native production proof.
 
 ### Task3: qualify targeted native changes in existing CI and deliver
 
@@ -90,16 +91,17 @@ current context/proof/PR106, plus one ordinary operator .py build if embedding i
 **Consumes:** coordinator from task2 and accepted existing PG16/Moodle518/runtime fixtures.
 **Produces:** immutable code/run/artifact receipts and guarded owner commands.
 
-- [ ] Add missing SQL/definer/ownership and config/HTTPS/rollback scenarios to the existing fixtures.
-- [ ] Verify real app connection, unchanged admin globals command, selected cron and current native owner guards.
-- [ ] Inspect/download only sanitized evidence and byte-match the delivered ordinary script to qualified Git.
-- [ ] Update context/PR/runbook with apply/recover/undo commands; no archive or new full owner stand.
+- [x] Add missing SQL/definer/ownership and config/HTTPS/rollback scenarios to the existing fixtures.
+- [x] Verify real app connection, unchanged admin globals command, selected cron and current native owner guards.
+- [x] Inspect/download only sanitized evidence and byte-match the delivered ordinary script to qualified Git.
+- [x] Update context/PR/runbook with apply/recover/undo commands; no archive or new full owner stand.
 - [ ] Owner apply/status/effective PHP app-role acceptance remains a distinct deployment receipt.
 
-Current status: task1 complete, owner preflight accepted24Oct; do not repeat it.
-Task2 coordinator implemented,23focused tests/1local UID33 namespace skip. Actual
-SQL/UID33 qualification in existing CI pending; no production apply command yet.
-Coordinator implementation/native release qualification and production cutover are not complete.
+Current status: task1 complete; task2 implemented and task3 targeted source/native
+qualification complete for7e35795f. Review40107134974/Context40107134982 SUCCESS;
+14prior privilege checks +9new handoff checks and actual UID33 test PASS. Artifact
+12565387807 downloaded/hash-verified. Full production coordinator execution is NOT
+claimed. Owner --check/cutover/effective PHP receipt remain pending; no new manual stand.
 
 ## Implementation rulings24Oct
 

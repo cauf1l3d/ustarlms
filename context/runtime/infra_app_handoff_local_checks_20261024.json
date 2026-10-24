@@ -1,7 +1,7 @@
 {
   "reported_date_moscow": "2026-10-24",
   "production_modified": false,
-  "operator_source_sha256": "228804a6f6816ea1febc7d235170801f2ebfad965dec30fea4a089085d972b2c",
+  "operator_source_sha256": "fe7c7d9bbaf6a33578533bcea114506c2736c39b57616f5e1c05b469ef969da8",
   "new_tests": {
     "run": 23,
     "passed": 22,
@@ -45,10 +45,23 @@
     ]
   },
   "native_SQL_and_UID33_CI": {
-    "status": "not_run_new_commit_not_published",
+    "status": "success",
+    "review_run": 40107134974,
+    "context_run": 40107134982,
+    "proof": "context/runtime/infra_app_handoff_ci_20261024.json",
     "full_production_coordinator_executed": false
   },
   "publication": {
+    "status": "owner_explicitly_authorized_and_published",
+    "owner_text": "да разрешаю",
+    "code_commit": "7e35795f91554adca2f973fbd2b75651be16359b",
+    "branch": "design/ustar-connect-20261018",
+    "transport": "connected_GitHub"
+  },
+  "review": "author-only; no subagents per owner instructions",
+  "unresolved_release_gate": "owner_guarded_check_then_production_cutover_and_effective_PHP_receipt",
+  "original_operator_source_sha256": "228804a6f6816ea1febc7d235170801f2ebfad965dec30fea4a089085d972b2c",
+  "initial_publication_block": {
     "status": "twice_rejected_by_automatic_approval_review",
     "destination": "cauf1l3d/ustarlms",
     "branch": "design/ustar-connect-20261018",
@@ -58,7 +71,5 @@
     "secret_signature_scan": "none; synthetic fixtures only; no production password received",
     "rejection_summary": "repository ownership/trust and destination authorization not considered established by trusted user text; risk of sensitive project publication",
     "required_next": "explicit owner permission to publish prepared commits to existing PR106 branch, then run native CI; do not bypass via another write path"
-  },
-  "review": "author-only; no subagents per owner instructions",
-  "unresolved_release_gate": "no production apply handoff before targeted native SQL/UID33 evidence"
+  }
 }

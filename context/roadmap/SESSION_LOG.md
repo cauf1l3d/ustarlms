@@ -1,5 +1,34 @@
 # Журнал выполнения roadmap
 
+## 24Oct — guarded DB role coordinator7e35795f qualified; owner --check next
+
+Review40107134974/Context40107134982 SUCCESS. Both PHP1108/155skips/browser/runtime,
+actual UID33 permissions1/1 PASS. Native120912015950: old158/830 before role switch,
+14ordinary-role operations +9new generated SQL/definer/member/drift/retention checks PASS.
+First e634 native refused OID JSON string/int mismatch before new ownership changes;
+explicit bigint casts fixed all metadata/ACL/membership/auth receipts. Native wire check
+confirms oid:string/bigint:number. No weakened identity or security checks.
+
+Artifact12565387807/771320B/SHA63a89d626615c9d5c01be86d785c042b4820064d7176b8c2c0939e1dd4125225
+is downloaded/hash-verified;133files with no SQL/dumps/env/private images. JSON proofs
+cross-checked, new9/old14checks and five42501 denials verified. Delivered ordinary.py
+matches qualified Git blob8906e373 and SHAfe7c7d9b. New runbook gives --check and scoped
+apply/recover/undo; new role/password creation and old manual preflight not repeated.
+Owner authorized publication «да разрешаю»; current branch only, no main merge.
+Full production coordinator not run in CI, no server1 cutover; final owner receipt pending.
+0subagents/author review/no agent SSH/provider sends; old owner stands reused.
+
+## 24Oct — owner explicitly authorizes PR106 publication; e634672c CI in progress
+
+Owner: «да разрешаю». Ordinary Git transport lacks credentials, so connected GitHub
+published the exact prepared tree db013f8978a008f5eceb033735c6575e2bc417eb as e634672c,
+parent3958939b; matches local94d68e4 byte-for-byte. Existing branch ref moved with
+expected-head lease; no main merge. Previous approval block is historical/resolved.
+Review40105702762: both PHP1108tests/155skips and browser PASS; runtime120906827635
+PASS including mandatory actual UID33 read/no-write/no-unlink1/1. Context40105702723
+PASS. The five local environment errors did not recur in CI. Native DB120907521149
+still running; result/evidence capture pending. Owner server1 unchanged,0subagents.
+
 ## 24Oct — local handoff complete for review; publication blocked by automatic review
 
 Source9d36813 followed by guarded PG-start recovery fix (new regression RED→GREEN).

@@ -1,11 +1,12 @@
 # INF02: отдельное DB-подключение Академии,24Oct2026
 
-**Статус: source реализован локально; публикация отклонена автоматической проверкой.**
-Нужно явное разрешение владельца на запись в существующую ветку PR106; обходить отказ
-через другой API нельзя. Новый SQL/UID33 delta CI не запущен. [Локальная квитанция](infra_app_handoff_local_checks_20261024.json).
-Команду production apply до подтверждённого результата не выдавать. Это не квитанция
-о переключении server1. Owner уже создал обе роли и принял текущий preflight;
-повторные ручные login/OID/inventory и новый серверный стенд не нужны.
+**Код7e35795f квалифицирован; следующий шаг — owner --check готового файла.**
+Review40107134974/Context40107134982 SUCCESS: обе PHP1108/155skips/browser/runtime,
+actual UID33 permissions1/1, прежние14privilege и9новых handoff native checks PASS.
+Artifact12565387807 скачан и проверен по SHA256. [CI-квитанция](infra_app_handoff_ci_20261024.json).
+Полный production coordinator не запускался в CI; server1 config/ownership не переключены.
+Владелец24Oct явно разрешил публикацию; старый approval block снят. Уже принятые
+роли/login/OID/metadata и прежние owner stands повторять не нужно.
 
 ## Принятый состав
 
@@ -82,4 +83,41 @@ code-tree hardening, HBA, Docker logs/healthchecks остаются отдель
   реальная PHP-проверка password escaping. Это отдельный targeted delta после прежних
   14native privilege checks, а не новый полный серверный стенд.
 - Strict actual UID33 read/no-write/no-unlink проверяется отдельно в existing runtime CI.
-- Новый CI result/immutable commit/run/artifact и production acceptance пока pending.
+- Qualified code7e35795f, Review40107134974/Context40107134982 SUCCESS; artifact12565387807,
+  771320B/SHA256 63a89d626615c9d5c01be86d785c042b4820064d7176b8c2c0939e1dd4125225 verified.
+  New9checks и prior14checks PASS. OID native:string / cast bigint:number подтверждены.
+- Owner deployment/effective PHP role acceptance pending; это не production PASS.
+
+## Готовый файл и owner --check
+
+Файл `ustar-db-app-handoff-7e35795f.py` — точная копия qualified
+`scripts/infra/postgres_app_handoff.py`, blob8906e3738135f33e45e067f89ad0f43d730eb70b,
+SHA256 `fe7c7d9bbaf6a33578533bcea114506c2736c39b57616f5e1c05b469ef969da8`.
+Сохранить файл на server1 в `/home/aduk/ustar-db-app-handoff-7e35795f.py`.
+Сначала `sudo -v`, затем:
+
+```bash
+sudo -n install -o root -g root -m 600   /home/aduk/ustar-db-app-handoff-7e35795f.py   /root/ustar-db-app-handoff-7e35795f.py
+
+printf '%s  %s\n'   fe7c7d9bbaf6a33578533bcea114506c2736c39b57616f5e1c05b469ef969da8   /root/ustar-db-app-handoff-7e35795f.py |
+sudo -n sha256sum --check --strict - &&
+sudo -n timeout --kill-after=3s 90s /usr/bin/python3 -I -B   /root/ustar-db-app-handoff-7e35795f.py --check
+```
+
+Ожидаемый phase: `ready_for_app_handoff`, host_changes=false/provider_called=false,
+objects3479/657tables/656sequences/2166indexes. Новый пароль не создаётся и для --check
+не требуется. Не выполнять apply после refusal или recovery_required; сначала разобрать
+код отказа. Это не повтор прежних ручных OID/login probes: готовый инструмент сам
+проверяет точные ACL/schema/objects/control parents и текущие authoritative snapshots.
+
+После принятого --check операторская операция в выбранное окно недоступности:
+
+```bash
+sudo /usr/bin/python3 -I -B /root/ustar-db-app-handoff-7e35795f.py   --apply --acknowledge-outage
+```
+
+Пароль ранее созданной ustar_app вводится скрыто в tty. Финал — app_role_active либо
+baseline_restored/apply_succeeded=false; recovery_required требует явного восстановления.
+При прерывании: тот же файл `--recover --acknowledge-outage`; явный metadata-only возврат
+после успеха: `--undo --acknowledge-outage`. История/учебные данные не откатываются.
+`--status` отражает journal_only; свежий guarded --check проверяет текущие controls.

@@ -135,7 +135,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-03
   title: Защита кода/config, dumps и ключей
-  status: planned
+  status: in_progress
   depends_on:
   - INF-01
   acceptance:

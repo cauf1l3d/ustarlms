@@ -1,5 +1,17 @@
 # Журнал выполнения roadmap
 
+**25Oct — INF03 code/archive coordinator prepared; production check pending.**
+Owner metadata complete: UID33 owns849dirs/3908files, no ACL/hardlinks; config0:33/0640,
+parents protected, moodledata writable. Owner explicitly says old handlers/reports unused
+but needed for possible USTAR Connect reuse. Preserve private bytes/path/metadata; no
+public source upload. scripts/infra/code_hardening.py implements guarded archive+metadata
+transaction with DB app role retained, existing backup/locks and metadata-only undo.
+14focused tests:13PASS/1local UID33 namespace skip; strict UID33 runtime CI added.
+Check only until CI and owner --check accepted. No code permissions changed on server.
+Frozen app/DB/physical recovery requires code-hardening undo first; source drift refuses,
+not silent rebaseline. Full INF03 keys/dumps scope still open.0subagents/main unmerged.
+
+
 ## 24Oct — guarded DB role coordinator7e35795f qualified; owner --check next
 
 Review40107134974/Context40107134982 SUCCESS. Both PHP1108/155skips/browser/runtime,

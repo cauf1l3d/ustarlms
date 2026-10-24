@@ -1,5 +1,19 @@
 # Индекс текущего контекста
 
+**25Oct — owner accepted DB app handoff; INF-03 metadata inventory next.**
+Server1 ttyfix SHA256 976afa0d2dffd58bf260dde4cb90cb5297f73d3f78fb9df10c2f9dc4b60ecf5e:
+prepared/backup_complete/writers_stopped/ownership_committed/config_written/https_written/
+web_verified/app_role_active. Ordinary ustar_app owns3479 public objects (657tables,
+656sequences,2166indexes); bootstrap_admin_retained=true, business_rows_restored=false.
+Owner confirmed login and course opening. Prior SCRAM refusals no longer reproduce;
+root cause unproven, password not changed. Do not repeat apply/role creation/old stands.
+Review40130463638 on6590bde6 SUCCESS; Context40130463630 failed solely on two stale
+context-index hashes (confirmed logs); index regenerated in this checkpoint.
+Next INF-03: read-only code/parent/ACL inventory before guarded permission changes.
+Existing deploy preserves metadata and old recovery checks snapshots: no blanket chmod.
+Full INF-03 and broader infrastructure acceptance remain open.0subagents/no SSH/main merge.
+
+
 **24Oct — INF02 coordinator7e35795f квалифицирован; далее owner --check.**
 Owner явно разрешил публикацию; Review40107134974 и Context40107134982 SUCCESS.
 Обе PHP1108/155skips/browser/runtime PASS; actual UID33 read/no-write/no-unlink1/1.

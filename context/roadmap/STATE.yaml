@@ -1,43 +1,22 @@
 schema_version: 2
-updated_at: '2026-10-24'
+updated_at: '2026-10-25'
 project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  Owner23Oct pauses further Telegram/Mini App development; accepted2300 runtime remains
-  operational. One-time reminder24Oct15:00Europe/Moscow created for KeenDNS app rules
-  and an off-LAN mobile check. Current work is INF-02: review installed DB consumers
-  and add only missing privilege checks to existing CI, reusing accepted stages.
-  Native80b revealed bootstrap OID10 cannot be demoted; corrected CI transfers only
-  public application ownership/config to ordinary ustar_app and preserves bootstrap
-  admin/POSTGRES_USER/system catalogs. Code933497e0/Review40043036549 native GREEN:
-  14operation checks/five42501 denials/100USTAR-schema equality; artifact hash verified.
-  Host8tests, both PHP1085r16/153skips, runtime/browser/context pass. Narrow CI/consumer
-  review complete. Owner24Oct confirms moodle OID10/bootstrap and ustar_pg_admin OID109344.
-  Owner created ordinary ustar_app/OID110395 and verified required-SCRAM login with
-  all five flags false, no memberships, no DB ownership. Do not repeat role creation.
-  Owner controller/definer preflight accepted: ready2300/ACKon,3479public mdl_/moodle
-  objects and monitor app USAGE0/EXECUTE0. Coordinator7e35795f qualified:
-  Review40107134974/Context40107134982 SUCCESS, both PHP1108/155skips/browser/runtime,
-  actual UID33 permissions1/1, prior14privilege +new9handoff native checks PASS;
-  artifact12565387807 downloaded/hash-verified. OID JSON boundary fixed with explicit
-  bigint casts, native wire types verified. Full production coordinator not run in CI.
-  Owner explicitly authorized publication; no further publication approval loop.
-  Next guarded owner --check, then cutover/effective PHP receipt; config/ownership unchanged.
-  No new owner/server1 lab or full restore repeat by default. Then DB/code/config/key
-  hardening. Owner created only ustar_pg_admin and ordinary ustar_app; app config unchanged,
-  no service stop or public ingress change.
-  Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
-  Production payload/worker6c56/local2300 remains in the owner receipt below.
-  Owner metadata23Oct18:08UTC confirms one superuser moodle and writable local_ustar
-  code under www-data. Fresh scheduled cron and HDD backup succeeded. Owner followup
-  confirms primary config33:33/0755 writable with static dbuser=moodle; both containers
-  running/restarts0/OOMfalse, no healthcheck or json-file limits. Owner created
-  ustar_pg_admin and verified two required-SCRAM sessions, backend PIDs9976/9995,
-  session/current role match and login/superuser true. Do not repeat creation.
-  No role reduction or config ownership handoff performed; complete INF01 remains open.
-  0subagents/no agent SSH/provider sends/main merge; shared Apache/AutoReport retained.
-next_task: INF-02
+  25Oct — owner accepted DB app handoff; INF-03 metadata inventory next.
+  Server1 ttyfix SHA256 976afa0d2dffd58bf260dde4cb90cb5297f73d3f78fb9df10c2f9dc4b60ecf5e:
+  prepared/backup_complete/writers_stopped/ownership_committed/config_written/https_written/
+  web_verified/app_role_active. Ordinary ustar_app owns3479 public objects (657tables,
+  656sequences,2166indexes); bootstrap_admin_retained=true, business_rows_restored=false.
+  Owner confirmed login and course opening. Prior SCRAM refusals no longer reproduce;
+  root cause unproven, password not changed. Do not repeat apply/role creation/old stands.
+  Review40130463638 on6590bde6 SUCCESS; Context40130463630 failed solely on two stale
+  context-index hashes (confirmed logs); index regenerated in this checkpoint.
+  Next INF-03: read-only code/parent/ACL inventory before guarded permission changes.
+  Existing deploy preserves metadata and old recovery checks snapshots: no blanket chmod.
+  Full INF-03 and broader infrastructure acceptance remain open.0subagents/no SSH/main merge.
+next_task: INF-03
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open

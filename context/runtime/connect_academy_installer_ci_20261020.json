@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "kind": "connect_academy_operator_installer_evidence",
+  "tool_commit": "02b0548cf4a8ac377c878aa77b546be784652e83",
+  "tool_tree": "3dcbac8ddde496e18543bc2e6dd301c1db855514",
+  "payload_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "payload_unchanged_from_full_RC": true,
+  "archive": {
+    "filename": "ustar-connect-install-02b0548c.tar.gz",
+    "bytes": 17978054,
+    "sha256": "53d9983b9e437bc9b4623bac83c72564c35a772ce3cc292b55efe8a986be1d13",
+    "update_pyz_sha256": "252dc655677eb84244eb325a2655561bf0fa2b9517d1c46e163902b0d1064de4",
+    "outer_regular_files": 5,
+    "embedded_files": 564,
+    "payload_files": 552,
+    "schema_tables": 99,
+    "local_matches_CI_build_log": true,
+    "original_source_RC_sha256": "a67a08d8e5509c580043a6752e73964cb8aed72c5d1732647a9d3c2e2379113e"
+  },
+  "tests": {
+    "local_r16": {"tests": 743, "result": "PASS", "explicit_environment_skips": 31},
+    "source_CI_r16_each_PHP": {"tests": 743, "result": "PASS", "explicit_environment_skips": 134},
+    "new_installer_and_package_tests": 28,
+    "existing_production_upgrade_tests": 31,
+    "actual_UID33_and_root_group": "PASS_separate_privileged_CI_step",
+    "source_structural": "PASS_PHP381_JS24_XMLDB99_templates57_in_CI",
+    "browser_scenarios": {"mobile": 60, "onboarding": 20, "link": 24, "actor": 100, "provider": "synthetic"},
+    "embedded_dependencies_load_without_host_access": "PASS",
+    "native_SQL_versions_tasks_columns_indexes": "PASS",
+    "native_Connect_migration_and_recovery": "PASS_121tests_611assertions_6concurrency_93to99to93"
+  },
+  "CI": {
+    "context": {"run": 39351249166, "conclusion": "success"},
+    "review": {"run": 39351249243, "conclusion": "success", "completed_at": "2026-10-20T01:11:18Z"},
+    "jobs": {
+      "source_PHP82": {"id": 118395678544, "conclusion": "success"},
+      "source_PHP83": {"id": 118395678598, "conclusion": "success"},
+      "connect_runtime_and_installer_package": {"id": 118395678244, "conclusion": "success"},
+      "connect_DB": {"id": 118396488562, "conclusion": "success"}
+    },
+    "artifacts": {
+      "connect-academy-installer": {"id": 12233750013, "zip_digest": "sha256:852eedd5e74d1b27fbc1c39c25c098d17a8992df5a8f3fc0fbd3900269d52f1c"},
+      "connect-identity-db-evidence": {"id": 12233975008, "zip_digest": "sha256:91ec3a12010420bfcbbdc95197125bf04c8f9fa0c5927e0479b2fd5e27a1fd0a"}
+    },
+    "unchanged_payload_full_RC": "https://github.com/cauf1l3d/ustarlms/actions/runs/39305805820",
+    "matrix_not_repeated": "Core/historical/rollback full-RC unchanged; immutable Moodle payload already verified on830d3703. New installer native SQL adapter gate runs in Connect DB."
+  },
+  "review": {
+    "method": "personal_review_no_subagents_per_owner_instruction",
+    "checked": ["exact_Git_payload_and_all_embedded_hashes", "default_plan_no_host_access", "fixed_roots_images_and_helpers", "fresh_backup_receipt_and_cold_pair_readback", "failed_stop_prevents_recovery_writes", "interrupted_activation_can_restore_without_version_file", "durable_public_boundary_on_upgrade_and_recovery", "late_rollback_requires_discard_consent", "only_two_addons_changed", "existing_plugin_versions_and_task_flags_preserved", "config_secrets_and_snapshots_never_published"]
+  },
+  "limitations": ["Docker_SQL_are_modeled_in_local_transaction_tests", "native_SQL_adapter_verified_separately_against_isolated_Moodle_PostgreSQL", "production_backup_restore_RTO_and_browser_QA_require_owner_execution", "receiver_remains_information_only_until_private_bridge_and_verified_account_link", "Mini_App_waits_external_HTTPS"],
+  "production_operations_executed": false,
+  "main_merged": false,
+  "network_configuration_changed": false,
+  "full_private_server_report_published": false,
+  "subagents": 0
+}

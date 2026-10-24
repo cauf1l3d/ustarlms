@@ -23,8 +23,9 @@ jobs:
         run: |
           SOURCE_SHA=$(python -c "import yaml; print(yaml.safe_load(open('context/roadmap/STATE.yaml'))['code_baseline']['commit'])")
           bash scripts/build_code_map.sh "$SOURCE_SHA"
+          python scripts/build_development_manifest.py
           python scripts/build_context_index.py
-          git diff --exit-code -- context/code_map/generated context/index/context_index.json
+          git diff --exit-code -- context/code_map/generated context/code_map/development_source.json context/index/context_index.json
       - name: Validate source, schema, pointers and links
         run: python scripts/check_context.py
       - name: Check context boundaries and local MCP protocol

@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "reported_date_moscow": "2026-10-24",
+  "status": "qualified_selected_native_components_and_runtime",
+  "code_commit": "7e35795f91554adca2f973fbd2b75651be16359b",
+  "code_tree": "1c26d77e342e6df7e8a29013341f1ed4725539a2",
+  "prepared_local_commits": [
+    "9d36813cd067e54f9a43ea4ac7fab7bb53d48a8c",
+    "94d68e4eec19b845ab746f8bcc294e09745cbc87"
+  ],
+  "publication": {
+    "explicit_owner_text": "да разрешаю",
+    "scope": "publish existing PR106 branch and run CI",
+    "repo": "cauf1l3d/ustarlms",
+    "branch": "design/ustar-connect-20261018",
+    "transport": "connected_GitHub",
+    "ordinary_Git_result": "could not read Username; no credentials",
+    "parent": "3958939bafd765fae4cd252a7a97a4e28c4cdc9f",
+    "exact_tree_match": true,
+    "expected_head_lease_used": true,
+    "force_used": false
+  },
+  "review_run": 40107134974,
+  "context_run": 40107134982,
+  "context": {
+    "result": "success"
+  },
+  "source_jobs": [
+    {
+      "job": 120911048593,
+      "php": "8.2",
+      "tests": 1108,
+      "skips": 155,
+      "result": "success"
+    },
+    {
+      "job": 120911048610,
+      "php": "8.3",
+      "tests": 1108,
+      "skips": 155,
+      "result": "success"
+    }
+  ],
+  "runtime": {
+    "job": 120911048302,
+    "result": "success",
+    "strict_actual_UID33_read_no_write_no_unlink": {
+      "tests": 1,
+      "skips": 0,
+      "result": "success"
+    }
+  },
+  "native": {
+    "job": 120912015950,
+    "result": "success",
+    "old_PHPUnit_before_role_handoff": {
+      "tests": 158,
+      "assertions": 830
+    },
+    "previous_14_privilege_checks": {
+      "admin": {
+        "role": "ustar_privilege_admin",
+        "superuser": 1
+      },
+      "app": {
+        "bypassrls": 0,
+        "createdb": 0,
+        "createrole": 0,
+        "dangerous_memberships": 0,
+        "database_owner": 1,
+        "effective_role": "ustar_app",
+        "login_role": "ustar_app",
+        "postgres_major": "16",
+        "replication": 0,
+        "role_oid": 126161,
+        "superuser": 0
+      },
+      "application_versions": [
+        2026102200,
+        2026102300,
+        2026102300
+      ],
+      "checks": {
+        "app_credential_cannot_auth_bootstrap": true,
+        "data_equal_after_restore": true,
+        "domain_writes": true,
+        "file_api": true,
+        "globals_admin_private": true,
+        "globals_app_denied": true,
+        "globals_legacy_POSTGRES_USER_private": true,
+        "globals_not_uploaded": true,
+        "pg_dump_app": true,
+        "pg_restore_admin_set_app_role": true,
+        "privileged_membership_denied": true,
+        "scheduled_task": true,
+        "schema_equal_after_restore": true,
+        "xmldb_ddl": true
+      },
+      "denied_sqlstates": {
+        "create_database": "42501",
+        "create_role": "42501",
+        "role_password_catalog": "42501",
+        "server_file": "42501",
+        "server_program": "42501"
+      },
+      "external_provider_called": false,
+      "membership_refusal": {
+        "bypassrls": 0,
+        "createdb": 0,
+        "createrole": 0,
+        "dangerous_memberships": 1,
+        "database_owner": 1,
+        "effective_role": "ustar_app",
+        "login_role": "ustar_app",
+        "postgres_major": "16",
+        "replication": 0,
+        "role_oid": 126161,
+        "superuser": 0
+      },
+      "postgres_major": 16,
+      "result": "DB_PRIVILEGES_NATIVE=PASS",
+      "role_handoff": {
+        "app_system_catalogs": 0,
+        "bootstrap_oid": 10,
+        "bootstrap_role": "ustar_fixture",
+        "bootstrap_superuser": 1,
+        "public_app_after": 3159,
+        "public_before": 3159,
+        "public_bootstrap_after": 0
+      }
+    },
+    "new_handoff_checks": {
+      "OID_JSON_wire_types": {
+        "bigint": "number",
+        "oid": "string"
+      },
+      "business_database_restored": false,
+      "checks": {
+        "app_access_denied_while_bootstrap_owns_tables": true,
+        "exact_inventory_drift_refused": true,
+        "exposed_definer_refused": true,
+        "generated_SQL_roundtrip": true,
+        "inaccessible_monitor_preserved": true,
+        "membership_refused": true,
+        "real_PHP_special_character_password": true,
+        "schema_equal": true,
+        "selected_business_data_retained": true
+      },
+      "external_provider_called": false,
+      "full_production_coordinator_executed": false,
+      "objects": {
+        "indexes": 1982,
+        "relations": 3159,
+        "sequences": 588,
+        "tables": 589
+      },
+      "postgres_major": 16,
+      "production_access": false,
+      "result": "DB_APP_HANDOFF_NATIVE=PASS"
+    },
+    "sanitized_proof_verified": true,
+    "artifact": {
+      "id": 12565387807,
+      "bytes": 771320,
+      "sha256": "63a89d626615c9d5c01be86d785c042b4820064d7176b8c2c0939e1dd4125225",
+      "downloaded_hash_verified": true,
+      "files": 133,
+      "SQL_dumps_env_private_images_uploaded": false
+    },
+    "evidence_files_sha256": {
+      "db-app-handoff-native.json": "c3a6a747baf6b2ee14df688cac27d162a8e7a104864fa2a7972c7f8424f49ea5",
+      "db-privileges-native.json": "6956ebc4717946e458e80d2c487d88dd30d2a5aba0d357219f3c34e6f67ad7cb"
+    }
+  },
+  "files_sha256": {
+    "scripts/infra/postgres_app_handoff.py": "fe7c7d9bbaf6a33578533bcea114506c2736c39b57616f5e1c05b469ef969da8",
+    "tests/r16/test_postgres_app_handoff.py": "a07991b107b3daf9de12114837eff8bd70816069305cd4951c08a38428b7ae03",
+    "tests/stage/db_app_handoff_native.py": "110ce44a57813883a1a73b0d375c52f71da0a4e2321608bb0d4ea3b04eeda38a",
+    "tests/stage/run-connect.sh": "8b844bfe1a9499e9acb51673c394bb1c4d322e9bc3ce4e9e42064a057e203726",
+    ".github/workflows/ustar-review-gate.yml": "90b167ae9604328ecb08e2f35aedeaa291c50520c84763c142aff4f7542a8ac6"
+  },
+  "scope": {
+    "full_production_coordinator_executed": false,
+    "production_cutover_performed": false,
+    "new_owner_stand_requested": false,
+    "main_merged": false,
+    "subagents": 0
+  },
+  "prior_privilege_qualification": "933497e033448feb8a7aac9e29ece351f06600ac; Review40043036549;14checks/five42501/100USTAR-schema equality",
+  "attempts": [
+    {
+      "code_commit": "e634672c31ec26882ffb22a9d1f58f2e2b6b4d6f",
+      "code_tree": "db013f8978a008f5eceb033735c6575e2bc417eb",
+      "review_run": 40105702762,
+      "context_run": 40105702723,
+      "context": {
+        "job": 120906827110,
+        "result": "success"
+      },
+      "source_jobs": [
+        {
+          "job": 120906827458,
+          "php": "8.2",
+          "tests": 1108,
+          "skips": 155,
+          "result": "success"
+        },
+        {
+          "job": 120906827739,
+          "php": "8.3",
+          "tests": 1108,
+          "skips": 155,
+          "result": "success"
+        }
+      ],
+      "runtime": {
+        "job": 120906827635,
+        "result": "success",
+        "strict_actual_UID33_read_no_write_no_unlink": {
+          "tests": 1,
+          "skips": 0,
+          "result": "success"
+        }
+      },
+      "native": {
+        "job": 120907521149,
+        "result": "failure",
+        "previous_14_privilege_checks": "PASS",
+        "new_handoff_exercise": "refused_before_monitor_setup_or_ownership_changes",
+        "reason": "profile_role_OIDs",
+        "root_cause": "PostgreSQL oid JSON values are strings; profile and guarded snapshots expected integer identifiers",
+        "artifact": {
+          "id": 12564911695,
+          "bytes": 769547,
+          "sha256": "2c595380a03c7d6c556fc10eadf1ac6d01e966bca57c6b72294c4dcc7ca4f808",
+          "downloaded_hash_verified": true,
+          "new_handoff_receipt_present": false
+        }
+      }
+    }
+  ],
+  "fix": "Explicit bigint casts for role/relation/database/schema owners, ACL principals, memberships and SCRAM identity; native raw-oid versus cast-bigint wire-type assertion",
+  "operator_blob": "8906e3738135f33e45e067f89ad0f43d730eb70b"
+}

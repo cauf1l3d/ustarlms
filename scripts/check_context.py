@@ -63,16 +63,38 @@ def check():
     assert project['next_stage']==backlog['remediation_plan']==state['audit']['remediation_plan']
     manifest=json.loads((ROOT/'context/code_map/generated/source_manifest.json').read_text())
     assert manifest['source_commit']==baseline
-    for f in manifest['files']:
+    effective=manifest
+    candidate=state.get('development_candidate')
+    if candidate:
+        # Keep accepted source/deployment evidence immutable. A candidate is
+        # explicit, byte-checked and tree-addressed, never a new native receipt.
+        effective=json.loads((ROOT/candidate['manifest']).read_text())
+        assert effective['kind']=='unmerged_development_source' and effective['deployed'] is False
+        assert effective['baseline_commit']==baseline
+        assert len(effective['files'])==len({f['path'] for f in effective['files']})==effective['counts']['files']
+        treepaths=set()
+        for scope, tree in effective['component_tree_ids'].items():
+            assert scope in ('moodle/local/ustar','moodle/theme/ustar')
+            assert re.fullmatch('[0-9a-f]{40}',tree)
+            names=subprocess.check_output(['git','ls-tree','-r','--name-only',tree],cwd=ROOT,text=True).splitlines()
+            for name in names:
+                path=scope+'/'+name
+                expected=next(f['sha256'] for f in effective['files'] if f['path']==path)
+                blob=subprocess.check_output(['git','show',tree+':'+name],cwd=ROOT)
+                assert hashlib.sha256(blob).hexdigest()==expected,path
+                treepaths.add(path)
+        assert treepaths=={f['path'] for f in effective['files']}
+    for f in effective['files']:
         path=ROOT/f['path']
         assert path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest()==f['sha256'], f['path']
     paths={p for p in subprocess.check_output(['git','ls-files','--','moodle/local/ustar','moodle/theme/ustar'],cwd=ROOT,text=True).splitlines()}
-    assert paths=={f['path'] for f in manifest['files']}, 'Source inventory missing/extra files'
+    assert paths=={f['path'] for f in effective['files']}, 'Source inventory missing/extra files'
     for component,key in [('local/ustar','local_ustar_version'),('theme/ustar','theme_ustar_version')]:
         v=int(re.search(r'\$plugin->version\s*=\s*(\d+)',(ROOT/'moodle'/component/'version.php').read_text())[1])
-        assert state['code_baseline'][key]==v
+        assert (effective['versions'][key.removesuffix('_version')] if candidate else state['code_baseline'][key])==v
     tables={t.attrib['NAME'] for t in ET.parse(ROOT/'moodle/local/ustar/db/install.xml').findall('.//TABLE')}
-    assert len(tables)==manifest['counts']['tables']==read('context/code_map/database.yaml')['table_count']
+    assert len(tables)==effective['counts']['tables']
+    assert manifest['counts']['tables']==read('context/code_map/database.yaml')['table_count']
     for p in (ROOT/'context/domains').glob('*.yaml'):
         data=yaml.safe_load(p.read_text())
         assert data['source_commit']==baseline,p
@@ -107,7 +129,8 @@ def check():
     indexed={f['path'] for f in idx['files']}
     assert set(state['audit'][key] for key in ('document','reconciliation','remediation_plan')) <= indexed
     assert evidence_path in indexed
-    print(f'CONTEXT_OK source={baseline} files={len(paths)} tables={len(tables)} tasks={len(tasks)}')
+    print(f'CONTEXT_OK source={baseline} files={len(paths)} tables={len(tables)} tasks={len(tasks)}'
+          + ('; DEVELOPMENT_CANDIDATE_NOT_DEPLOYED' if candidate else ''))
 
 
 if __name__=='__main__':check()

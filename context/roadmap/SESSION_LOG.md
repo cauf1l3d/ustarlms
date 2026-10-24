@@ -1,5 +1,838 @@
 # Журнал выполнения roadmap
 
+## 24Oct — guarded DB role coordinator7e35795f qualified; owner --check next
+
+Review40107134974/Context40107134982 SUCCESS. Both PHP1108/155skips/browser/runtime,
+actual UID33 permissions1/1 PASS. Native120912015950: old158/830 before role switch,
+14ordinary-role operations +9new generated SQL/definer/member/drift/retention checks PASS.
+First e634 native refused OID JSON string/int mismatch before new ownership changes;
+explicit bigint casts fixed all metadata/ACL/membership/auth receipts. Native wire check
+confirms oid:string/bigint:number. No weakened identity or security checks.
+
+Artifact12565387807/771320B/SHA63a89d626615c9d5c01be86d785c042b4820064d7176b8c2c0939e1dd4125225
+is downloaded/hash-verified;133files with no SQL/dumps/env/private images. JSON proofs
+cross-checked, new9/old14checks and five42501 denials verified. Delivered ordinary.py
+matches qualified Git blob8906e373 and SHAfe7c7d9b. New runbook gives --check and scoped
+apply/recover/undo; new role/password creation and old manual preflight not repeated.
+Owner authorized publication «да разрешаю»; current branch only, no main merge.
+Full production coordinator not run in CI, no server1 cutover; final owner receipt pending.
+0subagents/author review/no agent SSH/provider sends; old owner stands reused.
+
+## 24Oct — owner explicitly authorizes PR106 publication; e634672c CI in progress
+
+Owner: «да разрешаю». Ordinary Git transport lacks credentials, so connected GitHub
+published the exact prepared tree db013f8978a008f5eceb033735c6575e2bc417eb as e634672c,
+parent3958939b; matches local94d68e4 byte-for-byte. Existing branch ref moved with
+expected-head lease; no main merge. Previous approval block is historical/resolved.
+Review40105702762: both PHP1108tests/155skips and browser PASS; runtime120906827635
+PASS including mandatory actual UID33 read/no-write/no-unlink1/1. Context40105702723
+PASS. The five local environment errors did not recur in CI. Native DB120907521149
+still running; result/evidence capture pending. Owner server1 unchanged,0subagents.
+
+## 24Oct — local handoff complete for review; publication blocked by automatic review
+
+Source9d36813 followed by guarded PG-start recovery fix (new regression RED→GREEN).
+Final focused31:30PASS/1local UID33 namespace skip; new handoff23:22PASS/1skip.
+Full local1106:5errors/56skips;3missing-MCP imports and2missing promisor-object shared
+clone commit errors, exact names and limits in infra_app_handoff_local_checks_20261024.json.
+Author review performed; no independent reviewer/subagents per owner instruction.
+
+Two git push attempts were rejected by automatic approval review. Read-only checks
+proved profile232103065 equals PR106 owner, repo matches user's Github.txt, destination
+is existing draft design/ustar-connect-20261018 at3958939b, direct-child source commit
+and no real secrets in diff. Reviewer still requires trusted explicit user permission.
+No connector/API workaround attempted; no remote write or new CI run claimed. Ask for
+explicit publication permission after presenting this reviewable local result. No
+server1 config/ownership/services changed; do not repeat accepted roles/preflight.
+
+## 24Oct — INF02 owner controller/ownership/definer preflight accepted
+
+Owner pasted pinned3d1938ae checksum OK and application_ready2300/ACKon; no host
+changes/provider calls. All3479public relations:657tables,656sequences,2166indexes,
+mdl_ prefix/moodle owner. Sole custom routine ustar_console.sample() is SECURITY
+DEFINER under non-superuser ustar_console_stats, app USAGE0/EXECUTE0, fixed
+search_path pg_catalog,pg_temp. Keep monitor untouched; metadata is not a function-body
+audit. No further manual repetition of role/OID/login/preflight. Receipt appended to
+infra_readonly_owner_20261023.json without inventing measurement time.
+
+Existing linked worktree reconciled to GitHub3958939b; prior docs restored, source
+unchanged before this implementation. Task1 complete. Coordinator implemented with
+exact frozen loader, real private files, guarded SQL/config/HTTPS handoff, metadata-only
+undo/recover and runtime delegates.21focused:20PASS/1local UID33 namespace skip;
+strict mandatory UID33 and generated PG16 SQL delta qualification pending in existing CI.
+TDD observed missing module/API RED then GREEN; retry archive-collision regression
+RED→GREEN; interruption after SQL/rename before checkpoint covered. No production
+config/ownership/service action.0subagents/author review/no SSH/provider sends/main merge.
+
+## 24Oct — ordinary app role OID110395 created and SCRAM login accepted
+
+Owner hidden-password createuser and required-SCRAM TCP login succeeded.
+Session/current role=ustar_app, OID110395, rolcanlogin=t; rolsuper/rolcreaterole/
+rolcreatedb/rolreplication/rolbypassrls/database_owner/has_memberships all f.
+READ ONLY metadata transaction rolled back. No exact measurement time or password
+received; distinctness from bootstrap password is not independently verified.
+Receipt: infra_readonly_owner_20261023.json/app_login_preparation_success. Do not
+repeat either admin/app role creation or accepted login/OID probes. No application
+config/public ownership/HTTPS state/service cutover has occurred.
+
+Source review: HTTPS guards bind current config bytes; frozen runtime recovery also
+binds an exact HTTPS snapshot. A bare config edit can break these contracts.
+[Handoff plan](../proposals/INF02_APP_HANDOFF_PLAN_20261024.md) preserves old journals
+and uses exact before/after private acceptance plus a verified compatibility view;
+implementation/release remains pending. Owner authorization for normalization and
+self implementation continues;0subagents/no agent SSH/provider sends/main merge.
+
+Prepared one bounded read-only batch: exact frozen2300 SHA/--check, public ownership
+and custom routine/SECURITY DEFINER metadata, app USAGE/EXECUTE and fixed search_path.
+No function bodies, passwords, business rows or function invocation. Ordinary flags0
+alone do not rule out delegated function privileges; mere function existence is not
+an exploit proof. Primary PG16 CREATE FUNCTION/privilege docs verified. Bash4blocks,
+8read-only SQL statements, JSON/YAML/source review PASS; actual native metadata
+query still pending owner, not represented as local PostgreSQL execution. Existing
+933497e0 qualification remains selected14operation checks, not a complete security audit.
+
+## 24Oct — owner confirms bootstrap moodle OID10; separate app-login preparation ready
+
+Owner READ ONLY terminal query returned moodle/OID10/superuser=t/bootstrap=t and
+ustar_pg_admin/OID109344/superuser=t/bootstrap=f. Exact measurement time not supplied,
+not invented. Accepted in infra_readonly_owner_20261023.json/bootstrap_role_confirmation.
+Do not repeat OID/admin-creation probes or attempt bootstrap demotion. Existing
+independent admin SCRAM sessions9976/9995 remain the login proof; this OID query
+is not a fresh PHP effective-role or credential proof. Prior docs commitcb0efc88
+Context40044404543/Review40044404573 SUCCESS; code qualification remains933497e0.
+
+Prepared next additive operator block: create ordinary ustar_app with distinct hidden
+password/all five cluster flags false/no memberships, then required-SCRAM TCP login
+and READ ONLY role metadata. No grants/public ownership/CFG/HBA/service change in
+this block; native owner execution pending. PostgreSQL16 primary createuser/libpq
+docs checked; no unsupported maintenance-db option. Guarded production config/public
+ownership/HTTPS state handoff remains future work; backup POSTGRES_USER/admin/helpers
+preserved. Existing owner stands reused,0subagents/no agent SSH/send/main merge.
+
+## 24Oct — INF02 ordinary-role CI qualified; production handoff remains open
+
+Code933497e033448feb8a7aac9e29ece351f06600ac, Review40043036549 and
+Context40043036469 SUCCESS. Both PHP8.2/8.3 jobs1085r16/153environment skips and
+browser scenarios passed; actual runtime/systemd/HTTPS owner fixture passed.
+Native120719333841 passed old158tests/830assertions/presentation recovery before
+handoff, then the selected new app-role delta: OID126144/five flags0/DBowner1,
+3159public relations transferred/0app pg_catalog, CREATEDB membership refusal/revoke,
+wrong bootstrap credential refusal, XMLDB/domain/FileAPI, selected scheduled task,
+2200→2300/repeat, app dump/admin SET ROLE restore, selected data/file and100USTAR
+schema equality, five exact42501 denials. Both independent and retained bootstrap
+admin globals succeeded privately; ordinary app globals refused pg_authid.
+All14checks PASS. Artifact12540597495/771349B/SHA342249e89d786f742f2ad87364fc09c012c07fd356a517ff572615d2d641a20a
+downloaded/hash-verified; individual JSON metadata cross-checked, SQL/dumps/env/private
+paths absent. Qualified code files match immutable commit. Earlier e59d failure was
+our enrol_user probe argument, fixed by retrieving the existing manual instance.
+[Receipt](../runtime/infra_db_privilege_ci_20261023.json),
+[consumer report](../runtime/infra_db_privilege_consumers_20261023.md).
+
+Narrow CI/consumer review plan complete; full INF02/03 not closed. Server1 OID reply
+still pending, real private app credential/config/public ownership + HTTPS state
+handoff remains future work. Bootstrap/POSTGRES_USER and installed backup pins stay
+administrative/unchanged; no broad REASSIGN OWNED. No production change, new owner
+stand, provider send, SSH, main merge or subagent. Full RC jobs skipped, not passed.
+
+## 23Oct20:36UTC — PostgreSQL bootstrap refusal changes INF02 route
+
+Native80b job120640978099 passed old158/830 and presentation recovery, then refused
+ALTER ROLE ustar_fixture NOSUPERUSER: bootstrap user must have SUPERUSER. Agent's
+in-place-demotion assumption was wrong; PG16 primary source/mail confirms invariant.
+Corrected same-fixture route retains OID10/admin and existing POSTGRES_USER for backup,
+creates ordinary ustar_app, transfers only public app relations and synthetic CFG,
+keeps pg_catalog bootstrap-owned. No broad REASSIGN OWNED from bootstrap. Existing
+backup engine/helper pins need no rewrite in this route; initial globals-handoff
+blocker is superseded by app credential/config/public ownership + HTTPS handoff.
+Host evidence test missing-bootstrap proof observed RED, then8tests GREEN, including
+wrong role OID/ownership counts/catalog owners and membership evidence. Revised native
+still pending. Server1 OID query requested read-only; no production role/file/service
+change and no agent SSH. Prior accepted stands reused,0subagents, no main merge.
+
+## 23Oct — INF02 missing-privilege delta implemented; native CI pending
+
+Owner approved narrowed scope, previous stands reused,0subagents. Existing native
+RED df3ee0ef/Review40012838091/connect-db120619281630 passed old158tests/830assertions
+and presentation paired recovery, then refused APP_ROLE_HAS_CLUSTER_PRIVILEGES.
+Downloaded/hash-verified sanitized role receipt proves all five flags1. New ordinary
+app/admin profile80b3ccfb is in Review40017305504/Context40017305503, still pending.
+Real XMLDB/domain/FileAPI/selected scheduled task/2200→2300/repeat/app dump/admin
+SET ROLE restore, five42501 denials and private globals control added to same fixture.
+Author review added CREATEDB membership/refusal/revoke control, checking all cluster
+attribute memberships; seventh host evidence test observed RED4subcases→GREEN7tests.
+First ad6 source8.2 succeeded, source8.3 had unchanged Chromium captureScreenshot
+failure after1083r16/153skips; native skipped, not passed. No assertions softened.
+Exact private backup source13689B/SHA0d31e694 verified against installed pin: globals-only
+uses POSTGRES_USER=moodle and requires coordinated separate-admin handoff across
+all backup entrypoints/frozen preflight guards before demotion. Older cron v2 Library
+copy is not exact current v3 source. [Consumer report](../runtime/infra_db_privilege_consumers_20261023.md),
+[CI receipt](../runtime/infra_db_privilege_ci_20261023.json). No server1 mutation/SSH/
+provider send/main merge; app/frozen installers/Telegram accepted runtime unchanged.
+
+## 23Oct — reuse accepted stages; narrow INF02 to missing privilege checks in existing CI
+
+Owner challenged repeating completed stands. Previous broad next-step wording overstated
+scope. Keep accepted patch/Connect upgrade/repeat/paired recovery. Current stage/patch
+compose initializes POSTGRES_USER=ustar_fixture and PHP uses it, hence superuser by
+documented official image contract (source inference, not new historical pg_roles query).
+Restore code already separates ordinary ustar_app/admin, while production-copy modeled/
+off-host pending receipt does not prove all current2300 consumers under reduced flags.
+Next: inspect installed consumers and add only missing privilege-delta checks to existing
+isolated CI, separating admin setup/restore from app execution. No new owner/server1
+stand or full restore/repackage/manual UI cycle by default; do not claim every old stand
+used superuser. This clarification changes docs, no code/tests/server operations.
+
+## 23Oct — owner created independent PostgreSQL admin and verified two SCRAM sessions
+
+Corrected createuser succeeded with hidden new-password prompts. Two new connections
+required scram-sha-256 and returned session/current role ustar_pg_admin, canlogin/superuser
+true, distinct native backend PIDs9976/9995, both READ ONLY/ROLLBACK. INF02 step2 login
+acceptance verified by owner output; do not repeat creation or reset its password.
+Agent has not received/stored the password; password-manager storage not independently
+verified. Only the new cluster admin role was added; moodle flags/ownership, HBA,
+application config and services unchanged by this block. No full recovery/backup
+coverage or target app-role acceptance inferred. Next copy rehearsal must verify domain
+writes/cron/upgrade/repeat/dump/restore and cluster-operation denials before demotion;
+config hardening still needs HTTPS saved-metadata handoff. Earlier failed CLI attempt
+remains historical in the same receipt. No agent SSH/provider sends/main merge,0subagents.
+
+## 23Oct — correct unsupported PostgreSQL16 createuser option before owner retry
+
+Owner first admin block failed at argument parsing: --maintenance-db=moodle unsupported.
+Agent command error; no password prompt/DB connection/role creation, two SCRAM probes
+not reached. Root cause verified against full PG16 docs and REL_16_STABLE createuser
+option table plus fe_utils/connect_utils.c. Minimal fix removes that flag from creation
+and dropuser rollback; built-in postgres/template1 maintenance selection retained,
+not -d/PGDATABASE substitution. Role is cluster-wide, moodle privileges unchanged.
+One-off upstream-option check rejects old invocation and accepts corrected flags;
+Bash syntax/context checks qualify source only. Native corrected retry pending owner.
+Same receipt extended, no new installer/archive, service stop or app/controller change.
+Verification GREEN: creation flags username/superuser/pwprompt accepted by independent
+upstream PG16 option table; both Bash blocks parse, rollback flag removed, receipt JSON
+valid, context413files/check_context and diff whitespace PASS. Native retry still pending.
+
+## 23Oct — owner corrected Docker/config probes received; independent admin commands ready
+
+Corrected optional Health lookup executed natively by owner: both containers running,
+restarts0/OOMfalse, health not configured, json-file max-size/max-file absent, rootfs RW.
+IDs/images retained in owner_followup in the existing infra receipt; image hashes match
+reviewed HDD adapter constants. Primary config33:33/0755 no symlink, www-data read/write;
+static literals moodle/moodle/mdl_, no PHP bootstrap/effective-runtime claim.
+Prepared ordinary inline createuser --pwprompt followed by two separate psql sessions
+to the discovered internal container IP with require_auth=scram-sha-256. Password stays
+in owner tty/password manager; no automatic reset/reuse, role reduction, HBA/config
+change, outage or restart. Owner native creation/auth output pending. Only additive
+INF02 step2 is prepared; full INF01 and target-role copy acceptance remain open.
+Source review found HTTPS captured uid/gid/mode/xattrs restored by replace and consumed
+by readiness; plain config chmod/chown would leave stale ownership metadata. Later
+file hardening requires a coordinated owner-state handoff and deploy/restore tests.
+No log defaults rewrite, log truncation or container recreation. Qualified app/tool
+code unchanged;0subagents/author review/no agent SSH/provider sends/main merge.
+Verification: receipt JSON and exact image hashes versus HDD constants, both runbook
+Bash blocks/embedded Python syntax, context413files/check_context and diff whitespace
+PASS. Actual createuser/two SCRAM sessions remain owner-native pending, not local PASS.
+
+## 23Oct — owner INF-01 metadata received; P0 DB/code findings, narrow collector fix
+
+Exact5765B SHA4382ed9e artifact verified by owner; measured18:08:18UTC/21:08MSK.
+Only observed superuser moodle has all elevated flags, owns657tables/656sequences;
+no independent admin login verified. Effective application role still unknown:
+collector read public/public/config.php instead of installer-owned public/config.php.
+www-data33 can write local/ustar directory and version.php; selected parents/core/theme
+not writable. Data/cache sample writable as expected, no global chmod/chown performed.
+Scheduled cron18:08UTC exit0/1.222s/no new failures;19overdue/2failed need task review,
+20Oct wrapper error is historical. HDD23Oct03:30MSK complete/success/exit0, active timer,
+no marker; latest-any-backup16:18UTC not mislabeled scheduled. Root55%/48G available.
+Mounts measured; two Docker inspect calls failed on optional missing Health key.
+Corrected with index lookup and primary config path; targeted followup in existing
+runbook, no whole baseline repeat. Receipt: context/runtime/infra_readonly_owner_20261023.json.
+Local baseline/followup Bash/embedded sh/Python syntax, receipt JSON, diff whitespace
+and context validation PASS; generated context index413files. Author metadata-only review;
+native Docker corrected-template result pending. No role/HBA/file/service mutations,
+full INF01/02/03 still open; Telegram remains paused and operating,0subagents.
+
+## 23Oct — INF-01 first operator metadata batch ready; native output pending
+
+Owner approved starting the resumed plan. New plain shell script5765B SHA4382ed9e…
+uses bounded psql BEGIN READ ONLY/ROLLBACK, explicit pg_catalog search_path, role/owner/
+HBA metadata without password/options/query fields; two plugin version rows only.
+Selected static config literals are not effective runtime proof. Host parents and
+www-data stat/test-w sample reveal write/replace candidates without creating files.
+Selected inspect fields omit Env; cron/HDD helpers status only. No Moodle bootstrap,
+ALTER ROLE/chmod/chown/restart/backup capture. Bash/embedded sh/Python syntax PASS,
+author metadata-only review PASS. Actual PostgreSQL/Docker unavailable locally;
+SQL/permissions/status measurements pending owner execution, full INF01 not complete.
+Runbook: context/runtime/infra_readonly_baseline_20261023.md. Accepted2300 and paused
+Telegram development preserved;0subagents/no agent SSH/provider sends/main merge.
+
+## 23Oct — owner pauses Connect and resumes infrastructure normalization
+
+One-time automation successfully created for24Oct2026 15:00Europe/Moscow: review existing
+KeenDNS app rules and check public domain from mobile data. This is a reminder to the
+owner, not automatic development/activation. Accepted Telegram2300 delivery/ACK/time/
+history preserved; no service stop, router modification or provider send.
+Current priority moved to INF-01 read-only refresh; original-plan P0 INF-02/03 DB
+privileges/admin and code/config/key permissions are the recommended next changes.
+Reconciled remaining logging/health/storage/SSH/firewall/SMTP/cron/backup/restore/
+monitoring/ACL/performance work against BACKLOG and16Oct reconciliation plus later
+HTTPS/cron/Connect receipts. No newer completion of those hardening areas was found.
+Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not repeated; OPS02 sysadmin
+clean-host restore remains waiting_external. Report: context/runtime/infra_normalization_resume_20261023.md.
+PR106 stays draft/unmerged; qualified application/controller code unchanged;0subagents.
+
+## 23Oct — owner accepted new Telegram ACK/time and Academy history; full-scope preflight
+
+Owner confirmed a new task with button in the bot, persistent accepted/time after click,
+and then correct personal Academy delivery history. Updated the existing2300 receipt;
+installation/this visual acceptance are closed. No fresh SQL, repeat-click stability,
+all-event label parity, scheduled cron or production restore inferred from that observation.
+Owner asks to proceed and finish the full Telegram contour in one coherent release.
+Read current bridge/actor/BFF/UI and existing RFC: actor_read exposes only profile,
+no task/checklist bridge writes; public origin/edge not accepted. A source-grounded
+preflight lists CON03 versus full native-learning/role handoff and missing hosting/origin
+input. It is not an implementation design or a deployed public service. Product code
+and frozen3d remain unchanged;0subagents/no SSH/provider sends/main merge.
+
+## 23Oct — owner deployed Telegram2300 and presentation runtime
+
+Exact3d ordinary.py SHA OK; --check baseline_ready2200/ACKon/host_changes=false/provider_called=false.
+Owner --upgrade completed fresh_backup, stopped workers, cold pair, source, two CLI
+upgrades, cron_written, public_release_committed, app_ready/local2300/theme0202.
+--enable-presentation completed runtime_active/ACKon/presentationon; app generation
+94d379904f7f4f7f8795b43e68421d89, runtime54bb0b7e4ba746928a639279ea729415.
+Final --status: database available, notify+receiver active/enabled. Fixed app/worker6c56.
+Receipt: context/runtime/connect_telegram_finish_owner_20261023.json. New-message visual
+ACK/time/heading/history acceptance not yet reported; old two canonical ACKs are2200 evidence.
+The preceding conversational scope was clarified: notification presentation is a narrow
+slice, not the full Telegram product. Next functional stage is the existing CON03
+Mini App own task/checklist scenario with external HTTPS and Academy auth. No new
+implementation or live group acceptance claimed. Reserve/group deferred; pilot not
+reopened, no agent SSH/provider sends/main merge; qualified product bytes unchanged.
+
+
+## 23Oct — Telegram source/release handoff verified
+
+Exact tool3d1938ae/app+worker6c56: Context39978015123/Review39978015139 SUCCESS.
+BothPHP1077r16/153skips,root11zero-skips; actual systemd UID33/credentials/TLS/exit77
+and Apache owner/registered extra vhost preserved; native158/830,v1/v2/v3/all20labels,
+2200→2300/repeat/paired restore2200,100schema unchanged/history+prefs retained PASS.
+One Chromium captureScreenshot protocol failure retried once; final source gates pass.
+Ordinary.py31153214B SHA6f7729459e1ef25271fd86324e441c823a6d39763c7fec84baf7cf640a41eb31
+saved for owner; exact CI bytes equal independent Git build,557archive source files
+match Git and7old worker files match accepted4394 receipt.5tasks complete as source
+handoff,20focused successor tests; author-only review/0subagents. Server1 unchanged
+534/local2200/ACK active; new owner --check/upgrade/presentation enable still pending.
+Runbook/limits: context/runtime/connect_telegram_finish_20261023.md. No main merge,
+SSH/provider sends/group expansion. FullRC skipped, not passed; no full DR claim.
+
+
+## 23Oct — Telegram successor implementation, CI still pending
+
+Exact6c56 application/worker2300 is pinned separately from the accepted4394/534
+production release. New ordinary.py builder/controller uses a new journal namespace;
+old CON02 state is read only. App+cron2300 uses fresh pair/public-write recovery;
+explicit v3 sender enable/disable preserves ACK key/cutoffs, personal fence, cursor
+and existing preferences. Local successor20 tests and old53/1GIDskip PASS; Docker/SQL
+modeled in transaction unit tests, not production acceptance. Actual UID33/systemd/
+privateTLS and HTTPS-owner/extra AutoReport topology gates integrated, pending new CI.
+Source9984 native158/830 no assertion failures but strict ambiguous get_record notice
+fixed6c56. Its PHP8.3/runtime PASS; PHP8.2 apt/Chromium timed out, native skipped.
+No new file delivered or server change. Reserve/routing deferred;0subagents.
+
+**23Oct — owner: резерв позже, сначала завершить Telegram.**
+[Суженный проект](../proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md),
+[план самостоятельной реализации](../proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md).
+B1 primary/fallback/новый route store отложены. Текущий scope: видимый ACK/точное время,
+bounded event labels в explicit v3 без изменения v1/v2, личная история и сохранение
+существующих preferences, native/runtime CI и отдельная coordinated successor поставка.
+Task1 visible ACK19tests PASS; v3/enum/config/history реализованы,57focused PASS.
+Native RED c7fe216:157tests/805assertions, ровно3новых отказа; прежние154PASS.
+Candidate2300/557files/100tables; новая native/runtime GREEN ещё pending.
+Код ещё не поставлен: server1 app/worker534/local2200, ACK active/два owner ACK подтверждены.
+0subagents/no agent SSH/provider sends/main merge; прежний pilot не повторять, группа deferred.
+Ниже датированные checkpoint; B1 design-review больше не текущая задача.
+
+**23Oct — server1 обновлён до2200, ACK runtime и два живых ACK подтверждены владельцем.**
+Exact controller4394/проверенный SHA: --check baseline_ready (historical indexes),
+--upgrade app_ready после fresh backup/cold pair/двух миграций/cron/public release;
+--enable-ack runtime_active, receiver+notify active/enabled, DB available.
+Application/worker53476482, local2200/theme0202,557files/100tables по fixed payload.
+UID130 notices179(task_assigned)/180(task_reminder) оба acknowledged, по1попытке;
+это разные события, не повторная доставка. Last-revoked21Oct теперь история.
+Отдельный AutoReport192.168.1.60:9443 принят узкой HTTPS owner-state reconciliation;
+Apache config/CA/private bridge сохранены. [Owner receipt](../runtime/connect_con02_server1_owner_20261023.json),
+[результат и границы](../runtime/connect_con02_server1_20261023.md).
+Далее [проект B.1 primary/fallback/preferences](../proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md)
+готов к review; новый routing/presentation код ещё не написан. Видимая ACK отметка/
+различение assigned/reminder включены в проект; причина раннего reminder не доказана.
+0subagents/no agent SSH/provider sends/main merge; old pilot не повторять/group deferred.
+Ниже датированные предыдущие checkpoint, не текущие команды повторного deploy.
+
+**23Oct — historical index compatibility verified; new owner --check ready.**
+Owner b971 --check refused schema_indexes;99table diagnostic identified only missing
+UNIQUE coin_accounts(userid)/test_results(attemptid). Fix accepts strict XMLDB OR
+exact paired historical omissions on frozen2000; no production index/data repair.
+Tool4394b994: Context39947880072/Review39947880106 SUCCESS; both PHP1048/153skips,
+strictroot11/11, actual runtime/HTTPS and native154/800+strict AND historical direct
+2000→2200/repeat/paired restore PASS, duplicate legacy rows preserved, new9ACKindexes.
+Exact CI ordinary.py/30512272bytes SHA331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b;557payload/worker/legacy/16modules
+match Git. [Incident and current runbook](../runtime/connect_con02_index_compat_20261023.md). Owner --check next;
+production2000+overlay/a86 unchanged;UID130 last revoked.0subagents/author review,
+pilot not repeated/group deferred,FullRC skipped/no SSH/provider sends/main merge.
+Below dated prior handoffs; b971 ordinary.py superseded for this baseline.
+
+**23Oct — CON-02 controller проверен; обычный.py готов для owner --check.**
+План22Oct закрыт:9задач/45шагов, self implementation/author review,0subagents.
+Tool b971bc38: Context39844480447/Review39844480386 SUCCESS. PHP8.2/8.3 каждый
+1040r16/153environment skips; strict root state11/11 без skips, native154/800,
+actual systemd/UID33/private TLS и HTTPS-owner PASS. Direct2000→2200/repeat/restore,
+9 fresh indexes/4 SQL denials проверены по скачанным JSON. FullRC skipped, не passed.
+Файл `ustar-con02-update-b971bc38.py`, SHA `692de510d7864e723885f6764ec8363d6ba70ebbee2f26021f361a4c9a89a484`;
+CI bytes = exact Git build, fixed app/worker534,557files/100tables.
+[Команды и recovery](../runtime/connect_con02_deployment_20261023.md); точная CI-квитанция рядом с runbook.
+Дальше owner --check, затем отдельные upgrade/outage и enable-ack. На server1 остаются
+application2000+overlay/worker a86;UID130 last revoked. Pilot не повторять, группа deferred.
+No SSH/provider sends/main merge; независимого reviewer не было. Minor: generic readonly
+legacy-guard refusal diagnostic deferred. Ниже — датированная история предыдущих состояний.
+
+**22Oct — письменный проект поставки принят; план реализации готов к review.**
+Owner: «потверждаю». [План](../proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md):
+9 задач/45 шагов — fixed contracts, durable images/phased locks, app+cron transaction,
+v2/ACK profiles/runtime recovery, plain.py/CLI, native direct upgrade и actual TLS/systemd.
+Метод уже выбран: самостоятельно,0subagents. Новый controller ещё не написан;
+следующий gate — review только плана, без повторного согласования проекта/метода.
+Designf0c00d5e Context39789336484/Review39789336561 SUCCESS; FullRC skipped.
+App/worker534 и source2200/557files/100tables сохранены. Server1 application2000+
+policy overlay/worker a86 unchanged; pilot/group tests не повторять. No SSH/provider sends.
+Ниже — датированная история предыдущих состояний.
+
+**22Oct — следующий этап: письменный проект согласованной поставки CON-02.**
+Owner: «Переходи к следующему». [Проект](../proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md)
+готов к review: один controller, отдельные app upgrade и ACK enable/disable;
+direct2000+overlay→2200/repeat с fresh pair/cron2200, v1 сохранён до enable.
+HTTPS owner/config/vhosts/renewal сохраняются побайтно; legacy journals не переписывать.
+Поставка обычным.py/короткими командами; прежний UID/subject fence/revoke/cursor
+сохраняются, pilot/group tests не повторять. Новый controller/его план ещё не написаны;
+следующий gate — review именно письменного проекта, затем план самостоятельной реализации.
+A.2 завершён: финальный34e185f0 Context39786095318/Review39786095327 SUCCESS,
+source8.2/8.3/runtime/native PASS; FullRC skipped, не passed. Server1 application2000+
+policy overlay/worker a86 сохранён.0subagents/no SSH/provider sends/main merge.
+Ниже — завершённые этапы и датированная история.
+
+**22Oct — CON-02A.2 реализован и проверен в CI; на server1 не установлен.**
+Telegram «Принял» сохраняет первое личное ACK через тот же receiver и отдельный
+ACK-only ключ; v1/a86 совместимость и default-off сохранены. Candidate2200/theme0202,
+557files/100tables. Source53476482: Context39782650830/Review39782650814 SUCCESS;
+154native/800assertions,3callback PG races,v1/v2 wire,2100→2200/repeat/paired restore
+и отдельный actual UID33/systemd/credentials/private TLS handback PASS. PHP8.2/8.3
+каждый974r16/152environment skips; Chromium ACK5widths и прежние UI gates PASS.
+[Отчёт](../runtime/connect_con02_callback_20261022.md), [точная квитанция](../runtime/connect_con02_callback_ci_20261022.json).
+Все9 задач принятого плана закрыты как source slice; author self-review,0subagents.
+Следующий шаг — отдельный guarded2000+overlay→2100→2200 installer/fresh pair и
+cron+HTTPS ownership handoff, затем B routing/preferences и C Bitrix. Установщика
+этого обновления пока нет. Server1 application2000+policy overlay/worker a86 сохранён;
+UID130 last revoked, принятый Tasks pilot не повторять. Live group tests deferred
+до полного запуска, не passed; FullRC jobs skipped, не passed. Нет agent SSH,
+provider sends или main merge. Ниже — датированная история, не текущие инструкции.
+
+**22Oct — A.2 implementation explicitly approved and running; no new permission loop.**
+Owner: «начинай выполнение». [Progress](../runtime/connect_con02_callback_progress_20261022.md).
+Transport/sender/callback/private config RED→GREEN; full local973tests/54env skips.
+Native schema RED verified:140tests/687assertions, exactly2 missing-table failures;
+138 prior tests pass. Source2200/100table metadata implemented; native lifecycle
+GREEN/service RED observed; canonical PHP ACK implemented, native GREEN pending.
+PHP v2 router and final acceptance remain.
+0subagents/self implementation; server1 application2000+policy overlay/a86 unchanged.
+Accepted pilot not repeated, live group tests deferred. No agent SSH/provider sends.
+
+**22Oct — письменный проект A.2 принят; конкретный план реализации готов к review.**
+Owner: «переходи к реализации». [План A.2](../proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md):
+9 задач/45 проверяемых шагов; schema/lifecycle, current-recipient ACK, v2 bridge,
+Telegram transport/sender/callback, отдельные credentials и native recovery/CI.
+Способ выполнения уже выбран: самостоятельно,0subagents, текущий PR106 checkout.
+По writing-plans следующий gate — review именно письменного плана, затем выполнение.
+Код A.2 ещё не написан; candidate2100/554files/99tables сохранён.
+Docs1211fe6e: Context39694294801/Review39694294751 SUCCESS;
+941 context tests/152environment skips, runtime/source8.2+8.3/connect-db SUCCESS.
+Старые FullRC jobs skipped по существующим conditions, не passed.
+Server1 application2000+policy overlay/worker a86; принятый pilot не повторять,
+UID130 last revoked; manual group tests deferred до полного запуска.
+Нет agent SSH/provider sends/main merge; author self-review, независимого reviewer не было.
+
+**22Oct — CON-02A.2: вариант в диалоге согласован, письменный проект готов к review.**
+[Технический проект Telegram «Принял»](../proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md): отдельный permit v2,
+opaque token/TTL/current link revision, ACK-only credential и тот же receiver.
+Первое ACK сохраняется в Академии; UI callback answer и provider receipt отдельны.
+Token/table100/plugin2200 — только проект; candidate остаётся2100/554files/99tables.
+A.2 product code/implementation plan не написаны; следующий шаг — owner review
+конкретного письменного проекта, затем план самостоятельной реализации.
+A.1 source4fb4cd17 CI verified; docs332 Context39682045417 SUCCESS.
+Server1 application2000+policy overlay/worker a86 сохранены; pilot принят,
+UID130 последний раз revoked. Не повторять pilot и не включать группу.
+Manual group live acceptance deferred до полного запуска, не passed.
+Author self-review,0subagents; нет agent SSH/provider sends/main merge.
+
+**21Oct — CON-02A.1 реализован и проверен в CI; на server1 не установлен.**
+В native inbox добавлено личное «Принял»: собственный active actor, POST/sesskey,
+capability, source=local; первое время сохраняется при read/ACK races и повторах.
+Прочитано, подтверждено, provider receipt и выполнение задачи различаются.
+[Поведение, review и решения](../runtime/connect_con02_ack_20261021.md), [точная CI-квитанция](../runtime/connect_con02_ack_ci_20261021.json).
+План подтверждён владельцем; candidate2100/theme0202/554files/99tables, без новой схемы.
+Source4fb4cd17: Context39679569635/Review39679569515 SUCCESS;138native/685assertions,
+4differential races,actual2000→2100/repeat/HTTP/paired restore,frozen a86 packets PASS.
+PHP8.2/8.3:941r16/152env skips;ACK Chromium5 widths each. Exact limits in receipt.
+Author self-review,0subagents; независимого reviewer не было;main unmerged.
+Production application2000 с принятым policy overlay и worker/tool a86 сохранены.
+Принятый one-user Tasks pilot не повторять; UID130 последний раз revoked.
+Следующий срез — отдельный CON-02A.2 Telegram callback, затем B routing/preferences
+и C Bitrix после проверки фактического portal/API. Группа1–10 design-only;
+ручные live tests deferred до полного запуска, не passed. Нет agent SSH/provider sends.
+
+**21Oct — live-приёмка группы перенесена владельцем на полный запуск.**
+Новые назначения/личные привязки/отзывы для проверки двух сотрудников сейчас
+не запрашивать. Статус deferred, не passed; принятый пилот одного сотрудника закрыт.
+Автоматические проверки будущей реализации сохраняются. Реализация группы ещё
+не начата. Следующий срез RFC после группы — CON02: общая delivery/preferences/ACK
+и Bitrix adapter с проверкой фактического portal/API; далее CON03 MiniApp/PWA/HTTPS,
+CON04 ролевые формы/native LMS, CON05 terminal CEO/WhatsApp. Код/сервер не менялись.
+
+**21Oct — подготовлен проект управляемой группы Telegram; review перед реализацией.**
+[Проект следующего выпуска](../../context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md): один sender и явные 1–10 Moodle UID,
+личная привязка/подписка, согласованные UID/subject списки, новые события.
+Отдельный controller принимает только проверенный a86 baseline; исходный журнал
+пилота сохранён, disable и возврат к пилоту различаются, сбой возвращает прежний состав.
+Код, сервер и состав получателей не изменены; план реализации ещё не написан.
+Следующий шаг — review конкретного проекта владельцем, затем план реализации.
+Принятый one-employee Tasks pilot ниже остаётся закрытым; UID130 последний раз revoked.
+Последний docs commit8338515f: Context39612526373 / Review39612526329 SUCCESS.
+0subagents; нет agent SSH/provider sends или изменений main.
+
+**21Oct — one-employee Telegram Tasks pilot fully owner accepted.**
+Owner exact a86 cache repair reports0755/content_changed=false; same frozen a86
+activation completes sender_started,notification_pilot_active,pilot_userids=[130],
+sender_active=true,linking_preserved=true,historical_replay=false,schema_upgraded=false.
+Event cutoff21Oct14:56:57MSK is notify_since,not activation completion time.
+[Owner receipt](../../context/runtime/connect_notification_pilot_owner_20261021.json). Do not repeat access repair or activation.
+Owner screenshot confirms Telegram Tasks notification and native button, event12:10UTC.
+Owner assigned a new task after revoke and observed no new Telegram message.
+Readonly repeatable-read SQL now proves revoked1/linked0 while preferences enabled
+and Tasks selected: full link-revoke negative test accepted,not merely opt-out.
+Owner also confirms native button opens Academy/tasks and requires normal native
+login without a session. One-employee Tasks pilot is accepted end to end.
+Recipient was revoked at last readonly snapshot;personal same-Telegram re-link
+can resume use without root reactivation. Do not repeat accepted pilot tests.
+Next separate work:controlled multi-employee Telegram rollout release/plan,then
+CON02 delivery/preferences/ACK and Bitrix decisions. Broad rollout not activated.
+Source fix17261061:both PHP jobs and runtime SUCCESS;strict UID33 pilot7/0skips PASS.
+[CI receipt](../../context/runtime/connect_notification_pilot_access_ci_20261021.json);Context39595204430/Review39595203810 SUCCESS,including native Connect DB.
+Active worker/tool remain a86;new source fix is not deployed. CA/browser trust
+remains a separate open item;no hostname change.0subagents/no agent provider sends.
+
+**21Oct14:35MSK — notification activation refused; old receiver recovered.**
+Owner resumed Telegram after DNS recovery; browser CA trust remains a separate open item.
+Frozen a86/UID130 reaches receiver_switch; new probe cannot read receiver.pyz (EACCES).
+Old receiver active/polling, pilot inactive, notify off. Reproduced CLI umask077
+leaving release directory0700; safe mkdir0755 before publication fixes staging.
+Nine targeted tests and full937r16/50environment skips PASS; strict new CI pending.
+Owner recovery reuses exact a86 journal/package after verifying cached public-code
+bytes/metadata and changing only its non-current release directory to0755.
+[Incident and guarded command](../../context/runtime/connect_notification_pilot_access_20261021.md), [owner receipt](../../context/runtime/connect_notification_pilot_access_owner_20261021.json).
+Live repair/new-task delivery/revoke pending; no repeated app/rights/TLS/egress setup.
+0subagents/self-review; no agent SSH/provider sends; main unmerged.
+
+**21Oct13:23MSK — server mDNS publication recovered; office browser acceptance next.**
+Owner needs whole office LAN access without DHCP/router or per-device settings.
+Avahi GetState1=REGISTERING after09:43MSK restart; new persistent publisher waited.
+Only Avahi restarted;10:23:28UTC startup complete,10:23:29UTC same publisherPID
+Established under name `ustar.local`,GetState2=RUNNING,
+local resolve192.168.1.60. Root cause of the stuck state/restart remains unknown;
+no proof DNS changed today or that prior alias was temporary. avahi-utils already
+installed;unit `/etc/systemd/system/ustar-academy-mdns.service` enabled,no-reverse/no-fail.
+[Receipt](../../context/runtime/academy_mdns_owner_20261021.json),[incident/runbook](../../context/runtime/academy_mdns_incident_20261021.md).
+Server-side publication accepted,physical LAN/browser/VPN/boot stability not proven.
+Next owner tests office Wi-Fi phone and PC without hosts,then resumes frozena86 pilot.
+Do not repeat installs/rights/TLS or per-PC NRPT as whole-network solution;notify off.
+Owner terminal evidence,no agent SSH/provider calls,0subagents.
+
+**21Oct — notification pilot frozen and ready for owner activation.**
+Sourcea86e2080:Context39573641861/Review39573641220 SUCCESS. Both PHP8.2/8.3:
+936r16/152environment skips;actualUID33 pilot6tests/0skips;nativeMoodle127/633,
+6concurrency,paired restores,real systemd/privateTLS separate fixtures PASS.
+Artifact12333470816 `ustar-notify-pilot-a86e2080.pyz`,SHA d06b88dc081028ce860774fbbe290dadb1c7a55bef82bd1ae135de8a5bd1ad33;
+CI bytes equal independent exact Git build. [Runbook](../../context/runtime/connect_notification_pilot_20261021.md)
+and [CI receipt](../../context/runtime/connect_notification_pilot_ci_20261021.json).
+Operator selects numeric Moodle UID of the already linked ordinary employee;
+one-user canonical fence + separate worker TG subject,personal opt-in,new events only.
+/start neutral,fixed native section button,no provider login/no raw private content.
+One exact PHP overlay preserves version2000/schema/cron/HTTPS/token/cursor/link;
+durable deactivate restores prior config/source/receiver,never business DB/journal.
+Next owner --activate,then own Tasks opt-in/new assignment/Telegram/native access/revoke.
+Server1 notify still off until owner execution;0subagents/self-review;main unmerged.
+
+**21Oct — продолжение notification pilot после принятой привязки.**
+Shared6ad87278 прочитан до owner «делай» и agent10:39:35MSK. Не повторять
+права/установку/HTTPS/egress/bridge; обычный тестовый сотрудник уже связан.
+[План и ledger](../proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md).
+/start теперь нейтрален; сообщение даёт фиксированную кнопку native Academy.
+Canonical UID fence до enqueue/lease/begin + независимый worker TG-subject fence.
+Отдельный notification-only256bit key,новая временная отсечка,один явный pilot UID,
+личный opt-in;никакой массовой/исторической рассылки,MiniApp или provider-login.
+Root transaction сохраняет link/token/cursor/HTTPS,один точный PHP overlay без
+schema/version upgrade,managed credentials/probe/receiver handoff и durable recovery.
+Локально936r16/50environment skips PASS;8package/transaction tests PASS.
+Новый strict UID33/native Moodle/CI и frozen owner package ещё pending.
+Server1/provider агентом не менялись,notify остаётся off;0subagents/self-review.
+
+**21Oct — personal employee link accepted by owner.**
+Academy shows linked, Telegram ID matches on ordinary test employee account.
+Plain /start gives generic connection instructions: source receiver dispatch does
+not query link state in link-only mode; it does not revoke the link. Earlier agent
+request to use /start as link-status acceptance was misleading. No repeat linking
+required. UX copy/status gap recorded; revoke test and notifications still pending.
+Receipt: context/runtime/connect_activation_owner_20261021.json.0subagents.
+
+
+**21Oct — owner egress recovery and bridge activation accepted.**
+Refresh SHA4d922d29 OK:10candidates, node9TLS_VERIFIED, egress_refreshed.
+Frozen27117c8c reached scope_verified; bridge_active,receiver_active=true,
+linking_enabled=true,notifications_enabled=false; no app upgrade/business restore.
+Receipt: context/runtime/connect_activation_owner_20261021.json.
+Next: own /local/ustar/connect.php → Telegram claim → same-browser confirm → revoke.
+Do not repeat parent/app/HTTPS/egress/bridge setup.0subagents; full user flow pending.
+
+
+**21Oct — activation rolled back; Telegram egress recovery next.**
+Owner probe transport_unavailable; recovery_state=inactive, old receiver active.
+Root cause boundary is current VPN outbound connectivity; refresh helper prepared
+with7local tests PASS, no live refresh yet. See context/runtime/connect_egress_failure_20261021.md.
+Do not repeat rights/app/TLS preparation.0subagents.
+
+**21Oct — parent preparation accepted; link activation package ready.**
+Source27117c8c25b7dda28385c787f79e99636af10216: Review39530156361 and
+Context39530156402 SUCCESS. Source PHP8.2/8.3, connect-runtime/connect-db PASS;
+full RC/moodle-db/rollback jobs skipped. Activation12tests including actualUID33 pass.
+Frozen artifact12315336864, PYZ SHA256
+b7ef07134897d400903e0d0c7bc9bd35728cd51f65c47d0fe3c331b992cc2d9b.
+Owner include_parent_prepared accepted; do not repeat parent/app/cron/TLS preparation.
+Next owner --activate then personal Academy→Telegram→same-session confirm/unlink.
+Notifications off; no live activation claimed.0subagents/author self-review.
+Activation ledger: context/proposals/USTAR_CONNECT_ACTIVATION_PROGRESS_20261021.md.
+
+
+**21Oct — owner UID33 refusal учтён; guarded parent preparation проверена.**
+[Owner receipt](../runtime/connect_private_bridge_parent_owner_20261021.json):frozen e4 SHA OK,
+unsafe_include_parent `/opt/ustar/data/moodle/public`,33:33/0755,configuration_changed=false.
+Это первый отказ:последующие transport/receiver/liveHTTPS checks этим запуском не приняты.
+Новая explicit --prepare-include-parent сначала проверяет все остальные prerequisites и
+root ancestors,затем меняет только UID этой папки33→0,сохраняя GID33/mode0755/xattrs/children.
+Durable inode-bound before-image и guarded restore;никаких рекурсивных chown/chmod,
+ключей,bridge activation,остановки/перезапуска служб или новой app/cron/backup/TLS установки.
+Sourcee58354d3:Context39519644446/Review39519644489 SUCCESS;895/145skips на обоих PHP.
+Runtime118960063858 и nativeMoodle124/629+6concurrency/paired restores PASS.
+9real UID33 parent/restore/drift/rename-denial tests без skips PASS.
+[Пакет и команды](../runtime/connect_private_parent_prepare_20261021.md),
+[CI receipt](../runtime/connect_private_parent_prepare_ci_20261021.json):artifact12311131323,
+PYZ e58354d3/SHA20038cba;CI bytes equal local exact Git build. Owner --prepare-include-parent pending.
+Default PLAN_ONLY/--check остаются без изменения прав.0subagents/self-review.
+
+## 21Oct — native coordinated update and new scheduled cron accepted
+
+**21Oct — application2000 установлен; новый scheduled cron и browser smoke приняты.**
+[Owner receipt](../runtime/connect_chat_link_update_owner_20261021.json):exact6aa/e0d364ab SHA OK,
+CHAT_LINK_UPDATE=PASS,upgrade_complete/public_released=true. Effective payload1e8a8819,
+local2026102000/theme2026100202/552files/99tables следуют из fixed guarded installer.
+Свежий scheduled cron20Oct22:08:01→22:08:03UTC:exit0,task log4775692→4775719,
+adhoc0,new failures[],USTAR errors0. Overdue19 и2historical failed сохранены;
+wrapper error17:33UTC — история. Owner:«завершилось академия открывается»;
+это general browser smoke,не полный role/learning/link QA. ПаузаD/jbd2 при cold copy
+завершилась успешно;disk failure не установлен. Не повторять update/backup prep/TLS/cron repair.
+Дальше private TLS bridge/link-only key и receiver update с сохранением token/journal/cursor,
+затем same-session link/revoke и отдельный opt-in notify. Bridge/bot activation pending.
+Owner terminal evidence,не independent SSH;0subagents.
+
+## 21Oct — owner backup HTTPS pair prepared; guarded application update next
+
+Owner terminal report confirms tool6aa/e0d364ab SHA OK and exact producer a604fbcd /
+scheduler a97039a8 installed:backup_HTTPS_compatibility_prepared. No backup/outage or
+unit/calendar change started by preparation. Follow-up --check reports ready_for_chat_link_update:
+current1905/theme0202,target2000/theme0202,activation=false;required11692290048B versus
+available56452567040B,201400 versus6078040 inodes. Restart policies remain unless-stopped.
+Current app1905 is unchanged; fresh backup,app upgrade,scheduled2000 and browser acceptance
+remain pending. Next same frozen tool --upgrade --acknowledge-outage,then --status;
+bridge/link-only key/receiver/link/revoke and separate opt-in notify follow.
+No preparation/probe/installer02 repetition. Owner report,not independent SSH;exact time absent.
+[Receipt](../runtime/connect_backup_https_owner_20261021.json). Agent made no server/provider/main changes;0subagents.
+
+## 20Oct21:31MSK — confirmed0750 false refusal and cron-only reader correction
+
+Owner stat confirms exactc5eabdce root-owned0750 regular/single-link cron source;
+state/last-run0600 and safe parents. Correct preflight code policy,not host modes.
+TDD observed RED→GREEN;19module/1privileged local skip,full840/32skips PASS.
+Real exact cron-source bytes0750 fixture PASS,not production execution. New
+cron-only command performs no Academy/source/SQL/Docker/HTTPS/provider calls.
+Owner narrow recheck and new CI pending;baseline552/99/HTTPS already accepted.
+No main merge,production/permissions/worker/network changes,0subagents.
+
+## 20Oct21:25МСК — owner delivery baseline measured,cron input metadata pending
+
+Owner exact4d70de5c preflight hash PASS:552/552 source match,local1905/theme0202,
+core2025100608/99tables and reviewed mounts running. HTTPS active/owned hashes match;
+loopback8082,gateway172.18.0.1,free18443;cron/renew timer/receiver active,notify inactive.
+Only cron refused unsafe_control_input before usable contract output;actual path and
+mode unknown. Local same fixture0600 measured→script0755 refused,showing a stricter
+private-code assumption than the existing installer. This is not proof of server mode
+or a new worker failure. Next only six-path metadata stat plus exact script hash.
+No chmod/chown,worker/install,whole-source recollection or source/schema changes.
+Source snapshot accepted;native bridge/link/notify still pending.0subagents.
+
+## 2026-10-20 — private chat-link delivery preflight4d70de5c
+
+Source4d70de5c verified:Context39470413912/Review39470413976 SUCCESS.
+835r16/135CI skips on PHP8.2/8.3;local835/32skips. Actual root fixture14tests
+including UID33 config ownership PASS. Exact pyz SHA67d3d13a local/CI match,
+artifact12285519274. Chromium60mobile/20onboarding/28link/100actor PASS;
+fixed existing test race with actual-option condition wait plus250ms fixture delay,
+kept literal-XSS/no-img assertions and product JS unchanged. Initial fda8ff35
+8.3 failure retained in receipt,not declared successful. Self-review metadata
+compatibility fix compares captured HTTPS uid/gid/mode+hash,never asks chown.
+Native Connect124/629+6concurrency/paired rollback/SQL guards/HTTPS cookie PASS.
+[Exact owner command](../runtime/connect_delivery_preflight_20261020.md),
+[CI receipt](../runtime/connect_delivery_preflight_ci_20261020.json).
+Owner read-only delivery preflight pending. No addon/bridge/receiver activation,
+production writes,keys/token reads,live Telegram or subagents by agent.
+
+## 2026-10-20 20:38МСК — cron native acceptance
+
+Owner confirmed two genuine scheduled completions17:36:03Z/17:37:23Z,exit0,
+no new failures/USTAR errors;task log4767930→4768022→4768051,adhoc2→0,
+overdue107→18,2 prior scheduled failures retained. Historical wrapper error17:33Z
+predates success. No locks held between runs. Agent did not run a worker or SSH.
+Current exact producer is cron v3 SHA c5eabdce/local1905. Incident closed;
+continue private bridge/chat-link with HTTPS ownership and next cron contract
+coordinated,not old installer or repeated broad facts.0subagents.
+
+## 20Oct20:08МСК — version guard root cause and guarded producer update
+
+**20Oct20:08МСК — причина cron найдена; исправление готово.**
+Cron active, schedule/binding match,10invocations/10min. Wrapper66fd51d3 отказывает:
+`Production application versions differ from the reviewed snapshot`.
+Он закреплён на local0204,при owner-installed payload830/local1905. Task log не
+рос с04:20МСК;107overdue/2adhoc,не проблема свежести одного UI.
+[Исправление и команды](../runtime/cron_release_update_20261020.md),
+[квитанция](../runtime/cron_release_update_20261020.json).
+Sourcecaebe51a меняет только reviewed VERSIONS+installation hash/version under
+existing locks;расписание/history/БД не правит,worker не запускает.10RED→GREEN,
+821local/31skips PASS;Context39465174623/Review39465174522 SUCCESS,
+PHP8.2/8.3 CI821/134skips,runtime и native Connect124/629+6concurrency PASS.
+Owner apply и новый scheduled success pending. Не повторять диагностику,
+HTTPS или Academy installer. Future installer должен согласовать producer hash/
+версии;старые immutable helpers не патчить. После cron — bridge/link/notify.
+HTTPS owner accepted desktop/phone/VPN;0subagents. Ниже датированная история.
+
+## 20Oct19:59МСК — owner HTTPS acceptance and cron incident
+
+**20Oct19:59МСК — HTTPS принят владельцем; сначала инцидент cron.**
+Owner check/cutover/status PASS: Academy `https://ustar.local`, новый leaf до
+19Nov16:56:28UTC, компьютер/телефон/VPN открывают Академию. [Квитанция](../runtime/connect_https_owner_20261020.json).
+Повторный HTTPS cutover/установка не нужны. Owner сообщает cron alarm:
+последний отчёт04:20МСК при свежей проверке19:59. Это не доказанное отключение
+cron.service. [Путь данных и read-only команды](../runtime/cron_incident_20261020.md).
+Сначала wrapper --status, schedule/service и сравнение current DB task time;
+причина и исправление ещё pending. Не запускать cron/install/rebind по догадке,
+не удалять locks и не скрывать тревогу. После свежего scheduled success — private
+bridge/scoped keys, отдельная поставка chat-link2000, двусторонний link/notify.
+Prod addon830/1905 сохранён; Mini App ждёт external HTTPS; 0 subagents.
+
+## 20Oct — HTTPS CI gate и owner handoff
+
+**20Oct — canonical HTTPS: CI завершён, команды владельцу готовы.**
+Source `d1e61a3b` проверен: Context39459332144 и Review39459332116 SUCCESS.
+PHP8.2/8.3: 811 r16 tests / 134 environment skips; local HTTPS tests 15/15 PASS.
+Настоящий Apache/OpenSSL/PHP проверил proxy/HTTP302/renewal/recovery; отдельный
+Moodle5.1.8/PostgreSQL16 gate подтвердил HTTPS config и Secure session cookie.
+[CI-квитанция](../runtime/connect_academy_https_ci_20261020.json),
+[закреплённые команды check/cutover/status/rollback](../runtime/connect_academy_https_20261020_commands.md),
+[progress](../proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md).
+На server1 пока принят static TLS probe и phone LAN WiFi/VPN; canonical Academy
+cutover и browser login/material acceptance ожидают владельца. Не повторять
+probe/receiver/Academy installer или сбор старых фактов. После приёмки — private
+bridge/scoped keys, отдельная поставка chat-link candidate2000 и opt-in notify;
+Mini App ждёт внешнего HTTPS. Agent server1 не менял, main не объединён, 0 subagents.
+Ниже сохранены предыдущие датированные checkpoints.
+
+## 20Oct18:29МСК — TLS check precondition refusal
+
+**20Oct18:29МСК: owner --check отказал до применения.** Download hash PASS;
+`wildcard_TLS_binding_required` означает отсутствие группы `*:443` в parsed dump.
+Конкретные IP-vhosts и отсутствие443-vhosts пока не различены. Нельзя снимать guard
+или запускать prepare по прежней команде. Нужен только filtered443 binding-type/
+SSL-module report из текущего [runbook](../runtime/connect_https_tls_probe_20261020_commands.md).
+Apache/config/HTTP/сеть не менялись;rollback не требуется.0subagents.
+
+
+## 20Oct17:43МСК — listener facts и реализация static TLS probe
+
+Apache владеет80/443,пульт8443.
+wwwroot — непрямое выражение;config hash закреплён,PHP/RHS не выполнялись.
+Далее additive static TLS probe для `ustar.local`:отдельный30day leaf от console CA,
+только health URL,config/HTTP не меняются,только Apache graceful reload с guards/recovery.
+[План](../proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md),[progress](../proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md).
+Source52a8a1ca:792CI/134skips на PHP8.2/8.3 PASS,21targeted local PASS.
+Context39447539405 и native runtime118713514071 SUCCESS;SNI/default/HTTP/CA/recovery actual Apache PASS.
+[Точные команды](../runtime/connect_https_tls_probe_20261020_commands.md),[CI receipt](../runtime/connect_academy_tls_probe_ci_20261020.json).
+Это stage1,не canonical HTTPS cutover/renewal/private bridge/бот activation.
+Повторных diagnostic loops,receiver/installer reinstall или сетевых изменений не требуется.
+Production effective830/1905 сохранён;new link source2000 не установлен;0subagents.
+
+
+## 2026-10-20 17:32МСК — owner HTTPS details
+
+Owner confirms Apache Academy80/noTLS/proxy8082/Include,origin_expression,default
+Caddyfile without Academy,and protected CA/signer metadata. Listener comm allowlist
+redacted all owners as other;not a port-owner fact. Added narrow read-only cgroup/
+wwwroot-feature operator block to runbook,without raw RHS/IP/PID/argv or PHP execution.
+No product/helper code or server changes;syntax/context checked. Next actual
+listener owner/expression features then concrete TLS procedure.0subagents.
+
+## 2026-10-20 17:16МСК — HTTPS readiness owner report
+
+[Receipt](../runtime/connect_https_owner_20261020.json):8082loopback,Apache/Caddy
+active,80/443/8443 listening,18443free,origin parser unavailable. This is incomplete
+static evidence,not an Academy failure. Same helper extended with explicit --details:
+fixed parser reason,allowlisted listener processes,static Academy vhost/Caddy hints,
+CA file metadata only.12targeted cases PASS;5new cases fail against previous source,
+checked after implementation,no test-first chronology claimed. No service/network/
+Academy changes,0subagents. Next owner details then concrete staged TLS procedure.
+
+## 2026-10-20 — private-chat link после принятия Академии
+
+Owner04:39МСК подтвердил general browser smoke и следующий этап;отдельно подтвердил
+http://ustar.local. Реализован defaultOFF chat-link adapter поверх existing UC1/
+link.claim с private/fresh/provider-origin guards,metadata-only journal и вторым
+native owner/session confirm. Новая source2026102000/552/99 не установлена;effective
+production payload830/1905 сохраняется. [План](../proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md),
+[progress](../proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md). Native RED
+a40ea20f:123tests/614assertions/ровно2ожидаемых новых failures;implementation после
+наблюдения RED. Source1e8a8819:Context39361024810/Review39361024698 SUCCESS;
+766r16/124native629/6concurrency/paired93→99→93/28link-browser/actual host PASS.
+[CI-квитанция](../runtime/connect_chat_link_ci_20261020.json). HTTP blocks activation;подготовлен read-only
+HTTPS metadata tool,не bootstrap PHP и не TLS bypass. Bridge/credentials/receiver
+activation/notify ещё не выполнялись,0subagents/main merge/network changes.
+
+19Oct CON01C4 implementation candidate:2026101905/552files/99tables, separate ua1/provider-read/profile with native-policy guards;13WSGI/674r16 localOK30skips. Native REDa06ed50e118tests12errors verified after PHPUnit helper collision repair; browser RED26429064 missing profile button, old20onboarding/24link pass. Implementation written only after REDs; final exact source/browser/native/schema/concurrency receipts in PR106. Personal review under owner's0subagent rule: current guest context, exact payload, persistent revocation before exception, no view-as profile, stale status/profile cleared, no unknown activation retry. No server1/main/network/live API changes.
+
+## 2026-10-19 12:55МСК — CON01C.2, без субагентов
+
+CON01C.2: управление собственными messenger links в native Moodle и signed uc1_ claim в Mini App. Личный кабинет → Мессенджеры → персональная ссылка → Telegram → второй Academy confirm в той же сессии; owner-only revoke/list. RAM receipt не onboarding/employee grant; timeout uncertain без автоповтора. Candidate2026101903/546files/99tables, production e1d57f5b/526/93 unchanged. 8new WSGI tests,31web/full647r16 OK/30environment skips. Native RED d9114daa/39234234916: exactly6missing-class errors,78previous tests pass. Browser RED2c971f93/39235237752: missing confirmation screen; prior20onboarding/60mobile pass. Final new native/browser CI receipt — PR106; читать exact final receipt перед продолжением, не переоткрывать C2 по старой pre-CI записи. Новый business bot @ustarcorp_bot, секрет из чата не использован/не сохранён, требуется перевыпуск владельцем. CrazeDNS em2025.netcraze.pro предложен; rule/cert/availability ещё не приняты. Full canonical remote login/recovery/MFA/actor step-up, canonical notification leases/delivery/preferences/ACK и role screens — остаток.0subagents/no main merge/no prod/router/network changes.
+
+## 2026-10-19 10:33МСК — CON01C.1 Telegram receiver
+
+Продолжение владельца после B4:26219dac Context39214124458/Review39214124509 SUCCESS,20browser+78native/399 и schema/concurrency PASS. Реализованы narrow Bot API TLS transport, durable local transport-only SQLite journal/cursor/dedup/uncertainty, private120s commands и Main Mini App startapp с existing launch.create; opt-in runtime/private configuration. [План](../proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md).41targeted tests PASS после initialRED/guard regressions; full639r16/30environment skips PASS. Case actual send→SystemExit→restart не повторяет send; WSGI signed launch integration с synthetic remote boundary PASS. Exact new CI receipt PR106. Key ID issuance/exchange shared, no new Academy actor/roles/business schema. Main/production/network/console не менялись,0subagents. Live Telegram ACK, external relay и canonical login/step-up/delivery ещё впереди.
+
+## 2026-10-19 09:55МСК — CON01B.4 browser onboarding
+
+Owner запросил остаток этапов и начать следующий. B3 d4f7c1bd подтверждён Context39192666105/Review39192666066 SUCCESS,78native/399assertions, schema parity и4concurrency PASS. Реализованы private worker WSGI, safe BridgeRejected, bounded ephemeral browser sessions+CSRF/cookie rotation и six-field responsive UI с theme/status/explicit unknown outcome. [План](../proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md), [ledger](../proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md).23web boundary tests PASS после RED, full598r16/30environment skips PASS; PHP отсутствует локально, Chromium download failed, browser acceptance awaits exact CI receipt PR106. Schema/source addon542/99 не менялись; новый public listener/relay/bot receiver/login/remote HRD actor отсутствуют. No production/network/main merge,0subagents. Дальше реальные receiver/delivery и external/actor gates, role client, Bitrix/WhatsApp.
+
 ## 2026-09-20 — первый этап рефакторинга, R01 review
 
 Владелец: Codex. Код: `e657cda7dc29750511535b94eee85b22ca7fdb86`,
@@ -1477,3 +2310,173 @@ Owner00:20:51MSK confirms archive obtained/instruction passed to sysadmin; nativ
 Consolidation brings accepted PR98/99/100/102 sources and all dated receipts into canonical main without application526/schema93 changes. Legacy Next frontend removed from required workflow graph/manifest/archive; native PHP/JS/Mustache/browser checks and DB/rollback gate retained. CLI test umask isolated and optional package fixture made explicit; production helper guards unchanged. All former entrypoint snapshots and branch heads retained. Full audit residuals and current evidence are in AUDIT_RECONCILIATION_20261016_RU.md; Git/CI publication is not a native host operation or a restore acceptance.
 
 Полный RC теперь определяется сохранёнными метками PR на каждом synchronize/reopened, а не только событием первоначального labeled: новый коммит не может незаметно пропустить DB/rollback после добавления full-rc. Pre-merge main зафиксирован как c53723c8; исторический application baseline e1d57f5b остаётся отдельным.
+
+## 2026-10-19 — owner partial acceptance пульта и приоритет USTAR Connect
+
+Owner00:41МСК подтвердил учётные записи и personal Telegram link. Journal всё ещё показывает прежнее сообщение; journal/heartbeat явно отложены. Полная приёмка, все alert cases и exact native SOURCE_COMMIT из этого сообщения не следуют. Ожидаемый release из предыдущей поставкиe5b87818, contextde4544d9/PR103; предыдущие даты/receipts сохранены внешними точными ссылками.
+
+Owner00:49 поручил актуализировать GitHub и доработать архитектуру общей сетки ботов: Moodle identity/roles, HRD/HR/manager/CEO/employee scopes, notifications/escalations, внешний Mini App без входящих портов и нарушения home/server networking. Субагенты запрещены без предварительного согласования и обоснования; в этой задаче0.
+
+Прочитаны PR106/7e6fc66d RFC+legacy, PR103/de4544d9 и PR105/02fd394f; проверены реальные access_context/capabilities/hr_access, manual_grade_batch, task escalation defaults и notification schema. HR performance review не подменяет Quiz grading. PR105 содержит dated17Oct metadata legacy handler22630байт/hash12bbb142; owner find подтверждает нынешний path/size, не содержимое/hash. Handler не исполнялся, source не получен.
+
+[RFC редакция2](../proposals/USTAR_CONNECT_RFC_20261018.md), [контракты19Oct](../proposals/USTAR_CONNECT_CONTRACTS_20261019.md), [reuse](../proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md) и [receipt](../runtime/connect_owner_priority_20261019.json) обновляют INTEGRATIONS-01/CON-00. Дизайн: facade + один transport worker + узкий исходящий edge; единый business state/outbox; current actor/revocation, role matrix, command idempotency, HRD/CEO policy, полный LMS origin как отдельный gate. Bitrix edition/CRM meaning/edge placement/terminal timings остаются решениями review.
+
+Это docs-only: Moodle526/schema93, production, сеть, credentials, cron и роли не изменялись. Journal не исправлялся, heartbeat не подключался. Implementation и provisioning не начаты; текущая очередь не возвращается к устаревшему INF06-start. main не merged, PR106 остаётся draft.
+
+Сохранена уже существующая в PR103 follow-up задача INF-06-OPS: roadmap34 вместо33 в старой базе main; task не потерян при актуализации. Source/schema inventories regenerated; локально r16:545tests OK/19environment skips. Context/relative links/source anchors/secret patterns/diff проверены; это проверки документации/существующего кода, не тесты ещё не реализованных Connect features.
+
+## 2026-10-19 — Connect review и CON01A, owner01:28МСК
+
+CRM уточнён: задачи Академии. Review RFC/contracts/legacy выявил отсутствующий onboarding bootstrap, pending access, HRD capability boundary и опасность общего постоянного bearer. Документы уточнены; реализованы offline provider identity, Telegram HMAC verifier и link-code primitives. Единый формат кода не заменяет DB atomic consume, nonce и Academy permissions. Тесты впервые дали ModuleNotFoundError на отсутствующем пакете, затем 11 behavioral tests PASS. Полный baseline545tests/19skips. Нет субагентов, отправки сообщений, native/schema/network changes, merge. Следующий срез CON01B и его DB/HTTP acceptance не выполнены.
+
+Финальная локальная проверка CON01A:556 r16 tests PASS/19environment skips, включая11новых; CONTEXT_OK526source files/93tables/34tasks. Native registration/DB/provider acceptance не выполнялась.
+
+## 2026-10-19 — CON01B.1, owner04:09МСК
+
+Продолжение после a627f241 (Context39173142415/Review39173142410 SUCCESS). Реализованы внутренние PHP identity service,3metadata tables и XMLDB upgrade/fresh parity definitions, private hash/browser binding, pending denial на actor resolution, replay/uniqueness/revoke, privacy metadata/export/erase для новых таблиц. Отдельный development manifest530files/96tables/candidate2026101900 сохраняет accepted/deployed evidence526/93 неизменным. RED: missing service; затем PHP value contract5checks PASS, полный r16 561tests/19skips PASS после установки недостающего MCP test dependency. Native DB/cross-process concurrency проверяется новым CI job; до результата не считается пройденным. Public bridge/onboarding/session/signup UI не реализованы. Без субагентов/merge/native/network.
+
+CON01B.1 inline review: privacy erase сохраняет только непривязанный live replay hash до original expiry; bounded prune500/таблицу каждые5мин через существующий Moodle cron. DB regression добавлен. Full-RC gate учитывает connect-db/manual dispatch. Новый source531files/96tables не deployed; native CI повторяется после исправления.
+
+## 2026-10-19 — CON01B.2, owner04:47МСК
+
+Baseline5f9aa3fb: Context39185823445/Review39185823458 SUCCESS, native13tests/47assertions и concurrency PASS. Продолжено лично,0субагентов. Python/PHP HMAC verifier+HTTPS fixed-path client; private endpoint disabled default, exact peer/TLS, scoped provider/tenant/op и durable request nonce. One-use launch ul1_, signed Telegram start_param, browser-bound ue1_ onboarding-only TTL600с. No Moodle login/role grant. Current flags/revision/revoke, expiry, shared provider replay guard;2metadata tables, privacy/export/erase и bounded cron cleanup. Candidate2026101901/539files/98tables отдельно от production526/93. RED missing bridge module затем5bridge tests PASS; full r16 569tests/19skips PASS, PHP syntax PASS. Native fresh/upgrade/repeat и concurrent exchange ожидают новый CI; exact final receipt в PR106. Signup receipt/pending provider link/HRD outbox/forms/public edge остаются следующим этапом. Нет native deployment/network/service activation/main merge.
+
+## 2026-10-19 — CON01B.3, owner05:30МСК
+
+Base81a1be76 verified Context39188208182/Review39188208139 SUCCESS,22native tests/87assertions + concurrency. Test-only57111574 опубликован раньше canonical completion: native39190794829/job117863375703 FAIL exactly2tests of24/assertions90 (callback not called/rollback ignored);22existing tests не сломались. Затем реализация: canonical register internal completion до commit/release email lock, Connect lock-only wrapper, single transaction first link/receipt/own entry; private registration options/submit/status. HRD/staffing/target_core не заменяются. ur1_ command+HMAC exact form/no password in receipt; collision/replay/current flags/privacy/retention. Candidate2026101902/542files/99tables, accepted baseline526/93 unchanged. Five local signup value/transport tests RED→GREEN; full574r16/19skips PASS. Native implementation +43existing organization tests/concurrent signup/LAN email race pending exact new CI; final receipt в PR106. Без субагентов/merge/native/network. Forms/BFF/remote actor-step-up/TG delivery не включены.
+
+c4ef398d source/context CI SUCCESS; native39191922977 stopped after schema parity but before test execution because fixture status() collides with PHPUnit11 final method. Renamed signup_status, local real-PHP fixture-load regression RED→GREEN, full575r16/19skips PASS. Business source unchanged; native suite must repeat. This is not a business-test failure masked as success.
+
+Первый native run39185254555 на7aff1a990db14c87cd0e8314e0b669f503880b7a: Context39185254548/SOURCE8.2/8.3 SUCCESS; Moodle5.1.8/PostgreSQL16 fresh/upgrade/repeat schema parity PASS,12PHPunit tests/42assertions PASS; cross-process concurrent confirm/replay PASS. После self-review удержание replay guard/cron/gate изменены: результат первого run не приписывается финальным bytes. Локальный повтор561tests/19skips PASS.
+
+
+## 19Oct15:31МСК — C3 принят в разработке, начало C4
+
+C3 exact941a853 Context39251446669/Review39251446110 SUCCESS;106native/530assertions +5concurrency/schema parity. Продолжение по явному owner request: separate provider-read sessions/current self-profile, не bypass native MFA и не full Moodle cookie. План/ledger C4 в context/proposals. Native test-only e0399367 содержит12новых actor tests; missing-class RED ещё ожидается. WSGI13новых tests: отсутствующий /activate RED→GREEN; текущая whole suite pending. Изменений main/prod/network/actual token API и субагентов нет.
+
+
+##19Oct — первый receiver runtime без Mini App
+
+Прочитан новый shared dialogue6ad62f29 до17:48МСК. Owner17:44: HTTPS/Mini App позже, token перевыпущен, готовить комплект и службы. Предыдущий агент остановился перед кодом. C4fd9eea80 context/review success подтверждены через GitHub; no new commit после него. Переключили работу с отложенного native handoff на receiver-only package. Без субагентов. Zipapps stdlib, dedicated users/LoadCredential/StateDirectory, loopback proxy, explicit probe/start, version rollback с сохранением cursor. Notify подготовлен inactive. Native host fixture/CI и поставка проверяются отдельно; ни SSH/production/update Academy, ни live API агентом не выполнялись.
+
+
+Receiver-only поставка sourceb01bd942: actual Ubuntu host118145618545 PASS, context39277324228 SUCCESS, exact source8.2/8.3 logs690r16/133skips +60mobile/20onboarding/24link/100actor PASS. Artifact12197369243 downloaded/CRC+SHA+30module/3unit/admin source comparisons PASS,32786B tarSHA674b05ae4f418ed5caa3582c6c071a036c77d647667fce6a7f90e6b232a72332. Runbook single-archive bootstrap/всеBashblocks syntax PASS. Personalreview0subagents. Installer owns its paths only; explicit0755 survivesumask002, exact readonly systemd credential ACL support preserves rejection of ordinary0440secrets. Global native Moodle regression queued; whole PR green/merge not claimed. Owner server1 install/private renewed token/live /start ACK pending; no agent native or live API writes.
+
+##19Oct18:41МСК — owner install и исправление configure
+
+**Owner19Oct18:41МСК:** server1 install b01bd942 подтверждён, службы не запущены. configure упал до запроса токена: дефект open('/dev/tty','r+') воспроизведён и исправлен на write-only output stream.11deploy/691r16 PASS(30environment skips), реальный PTY/ECHO test RED→GREEN. Использовать [исправленную настройку](../runtime/connect_configure_tty_recovery_20261019.md); не переустанавливать пакет и не править immutable manifest. Настройка/start/live ACK ещё ожидаются. Субагенты не использовались.
+
+
+Root cause: real PTY rejects buffered r+ before getpass; original host fixture called configure directly. One-line write-only output fix retains getpass hidden input. Real PTY CLI regression reproduces operation_failed before fix and passes after (prompt/ECHO off/exact synthetic token/no echo). Original b01 artifact remains unchanged; corrected standalone admin only used for configure.691r16/30skips PASS locally;new CI pending. Owner has not confirmed configuration/start/live ACK.0subagents/no live provider calls or agent SSH.
+
+##19Oct18:53МСК — Telegram probe verified; oneshot GC false negative
+
+**Owner19Oct18:53МСК:** install/configure и read-only Telegram identity probe подтверждены на server1. Journal: telegram_verified/ustarcorp_bot, service Deactivated successfully. Ошибка admin start — ложный отказ после GC успешного oneshot, не отказ Telegram. Исправлен synchronous probe + проверка exact managed units/private conditions;15deploy/695r16 PASS(30skips), новый actual-host CLI gate pending. Владелец может выполнить systemctl enable --now ustar-connect-receiver.service после подтверждённого probe; service status и личный /start ACK ещё ожидаются. [Квитанция](../runtime/connect_receiver_server1_20261019.json).0subagents.
+
+The old native host fixture never invoked admin probe/start. Added modeled RED→GREEN cases for collected success, missing managed unit and injected condition;failed ExecStart still blocks enable. New native fixture installs manifested synthetic units (no unmanaged drop-ins), exercises actual packaged admin probe/start/stop, preserves UID/LoadCredential/SQLite cursor tests and uses no live provider. New actual-host result pending;not declared passing locally. Official systemd.unit Unit Garbage Collection documents loss of exit/condition status after successful inactive collection. No network/credentials/Academy modifications by agent.
+
+##19Oct18:59МСК — owner receiver accepted; Academy preparation
+
+**Owner19Oct18:59МСК:** первый запуск @ustarcorp_bot подтверждён текстом «окей работает». Receiver-only этап принят владельцем; скриншоты не прочитаны, точные PID/uptime/ответ не выдумывать. Следом — [подготовка подключения Академии](../proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md): read-only preflight текущих файлов/версий/схемы и затем отдельный выпуск candidate552/99, private bridge/links/уведомления. Mini App ждёт HTTPS; native handoff/step-up/role screens остаются отдельными gates.0subagents.
+
+
+13targeted/708r16 PASS(30skips). Actual source delta515matching/11changed/26added, no removed files;tables93→99. Deterministic read-only preflight reuses existing collectors with exact Git reference bundle. No PHP/bootstrap/config/DB/service changes; bundle/default plan and safe output tested. Native owner collection and complete release gates required before update;no agent SSH/live provider calls.
+
+Preflight deliveryef9911f3:66561B/SHAda6a992d3cdfe60b294df0452c0fa8c1eff7ae9eaedeaf8151289f857c65becb,3Python modules/1078fingerprints/CRC/plan/help checked. Runbook Bash PASS. Owner JSON next, no further native action until actual facts and full release/rollback/backup gates.
+
+## 19Oct21:35MSK — code/tests publication authorized; private report excluded
+
+Owner approved publication of code/tests without full server report. New publication branch starts directly at remote35721073 and does not inherit the two private local commits. Preflight received privately;no repeated collection. Source-only builder7 meaningful tests RED→GREEN;previous full local715r16 PASS/30explicit environment skips. Added native accepted-baseline DB/source/moodledata/config snapshot/restore assertions after candidate upgrade/repeat/fresh/unit/concurrency checks,and RC packaging in full gate. New exact commit native CI remains pending. No main merge/production or network operation,0subagents;Mini App waits HTTPS. Full private server JSON is not included or linked in this public source publication.
+
+## 19Oct22:01MSK — complete Academy source RC accepted in CI
+
+First6a147c82 native Connect passed121/611,six concurrency and actual paired recovery,then upload failed EACCES because umask077 leaked into sanitized report creation. Scoped private snapshot subshell,kept reports readable;fixed source830d3703/tree08a7bfdc fullRC39305805820 SUCCESS(all9jobs),Context39305805813 SUCCESS. Source715r16/133CI skips,60mobile+20signup+24link+100actor browser;Connect121/611+6concurrency+fresh/upgrade/repeat+paired93to99to93;both Moodle suites288/1266 PASS. Downloaded artifact12213114109 SHAe367d8... verified26files,baseline/restored metadata and schema identical,no private snapshots. Package830d3703 17744353B/SHAa67a08d8e5509c580043a6752e73964cb8aed72c5d1732647a9d3c2e2379113e matches CI artifact12214182488 and local555internal checksums. No private server report/local private commits published,no main/production/network changes,0agents;review personal. Full-RC label removed after success before documentation-only evidence commit. Next guarded addon upgrade/recovery,fresh paired backup,private bridge and account-link/delivery. Existing user link requires Mini App;direct-chat path before public HTTPS remains unimplemented. Exact receipt/runbook added,not a production installer or complete RFC acceptance.
+# 20Oct2026 — Connect addon operator installer preparation
+
+Owner explicitly requested an installable package after learning that the
+previous archive/checksum only verified sources. Implemented narrow controller
+with existing pure copy/fsync/container primitives; old core-upgrade entrypoint
+is never called. Fixed RC830 payload, fresh pinned HDD capture, managed EX lock,
+clean shutdown, private full cold pair, only2addon replacement, CLI upgrade/repeat,
+source/versions/task/schema checks, durable release boundaries including recovery.
+Added interruption, tampered pair, late rollback and privileged UID33 checks.
+Package tests initially RED because tool files were not in the frozen Git commit;
+Exact installer02b0548c now verified:Context39351249166 and Review39351249243
+SUCCESS. Local743r16/31explicit skips;CI743/134skips plus real UID33/root-group
+step PASS. Native121tests/611assertions,six concurrency,93to99to93 recovery and
+installer SQL/version/task/column/index guards PASS. Archive17978054B/SHA53d9983b...
+matches CI job118395678244;embedded dependencies load without host access.
+Operator package/commands prepared;owner execution and browser receipt pending.
+No production/network/receiver operation,private report or subagents. Source RC830
+Moodle payload and full matrix evidence retained;link/bridge/notification activation
+remain separate. Documentation-only receipt update does not change tested installer.
+
+## 20Oct04:36MSK — owner reports successful Academy addon installation
+
+Owner terminal output:archive/internal SHA checks and preflight PASS;copying
+paired baseline progressed1.1G→1.5G and completed,FRESH_PAIRED_BASELINE=PASS,
+CONNECT_ACADEMY_UPDATE=PASS,UPGRADE_REPEAT=PASS,BOT_ACTIVATION=PENDING.
+Status upgrade_complete/public_released=true/live_trees_modified=true;systemd
+Deactivated successfully/Finished. CPU168.588s is not elapsed duration. This is
+owner-reported pinned installer execution,not independent SSH. Effective payload
+830d3703/local2026101905/theme2026100202/552files/99tables follows its guards.
+Published only sanitized technical receipt,no private snapshot/log paths or data.
+Historical05Oct/16Oct source evidence and pre-deployment candidate manifest remain
+unchanged;STATE effective_addon_deployment points to the latest owner receipt.
+Browser/login/theme/material QA,post-update scheduled cron/backup and production
+restore/RTO remain unaccepted. Next private bridge/scoped keys,direct-chat account
+link and controlled notification delivery;Mini App waits HTTPS. Do not repeat
+installer/receiver/source RC. Main/network/receiver unchanged;0subagents.
+
+
+## 21Oct — принят cron-only; следующий application/cron release
+
+Owner report:exacte138c77f PYZ hash verified,cron measured/c5eabdce/local1905,
+scheduled finish20Oct21:07:02.555151Z,18overdue/2historical failed. No source/SQL/
+HTTPS recollection or server changes. Receipt:context/runtime/connect_cron_contract_owner_20261021.json.
+New separate updater/build/runtime plan implements fixed830→1e8/local2000,paired
+backup/recovery,exact cron source+installation update,HTTPS lock/unchanged renewal,
+HTTPS Secure-cookie login and existing-task/schema preservation. Local19targeted
+tests/1UID33 namespace skip PASS;native1905→2000/paired restore CI added;new CI pending.
+Original installer02 and old helper manifests unchanged;bridge/link/notify still
+pending. Self-review,0subagents,no main merge or production activation.
+
+Dependency review found exact75ca974f HDD producer expects plainHTTP200,now302.
+Added strict TLS/leaf/Secure-cookie readiness and matching scheduler SHA,plus
+paired helper preparation with private before-images under existing locks;no
+unit/calendar/job changes.10new file/HTTPS-routing tests PASS;actualTLS CI pending.
+This compatibility must precede fresh backup;no old manifest hash was rewritten.
+
+### 21Oct exact6aa verification and next operator gate
+
+Source6aa83a95/treeb1219d51:Context39500936977/Review39500936916 attempt1 SUCCESS.
+BothPHP869r16/136CI skips;381PHP/24JS/57templates/99tables;Chromium60/20/28/100.
+Actual19file/UID33 tests and ApacheTLS/update+HDD readiness PASS. NativeConnect124/629,
+6concurrency,accepted baseline rollback and new1905→2000/custom-task1/1/repeat/paired
+restore PASS. FullRC skipped. Local/CI package SHAe0d364ab matches;bundle corruption
+refused offline. Local869 had one target-only MCP child import environment error;
+isolatedvenv realstdio1testPASS,whole local suite green not claimed.
+Next owner prepares HTTPS backup helper pair then--check. No production action,
+new app/bridge/link/notify acceptance or main merge. Artifact12300525979.
+
+
+## 21Oct — private transport/scoped probe source continuation
+
+Read latest shared chat through c95 stop. Existing application2000 and actual scheduled
+cron receipt accepted; no repeated server operations. Implemented internal HTTPS bridge
+profile/renewal/durable recovery and worker signed scope probe. Targeted tests observed
+RED→GREEN; native/full CI pending. Coordinated root credential/ownership/receiver
+transaction remains next, no production activation package yet.0subagents/self-review.
+
+
+## 21Oct — private bridge source verification and frozen readonly handoff
+
+Sourceec9af9e4:Context39516048080/Review39516048076 SUCCESS. BothPHP886/136skips;
+actual Moodle124/629+6concurrency,post-bootstrap boolean include/UID33 read-no-write,
+signed scope and wrong-HMAC denial/six Connect counts unchanged,paired rollback and
+1905→2000 repeat/restore PASS. Real Apache/TLS/public denial/profile renewal/recovery
+and systemd credentials pass in separate fixtures,not combined production acceptance.
+Readonlye4d7a154/14de5484 artifact12307432021 frozen,CI/local bytes equal;owner command
+delivered,JSON pending. It never invokes the old pre-bootstrap compiler or activates.
+Need protected include-parent fact before coordinated root delivery. No app/source
+recollection/cron repair/TLS cutover/server or provider action;0subagents/self-review.

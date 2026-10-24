@@ -27,6 +27,8 @@ jobs:
   source:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    outputs:
+      connect_db: ${{ steps.connect-scope.outputs.connect_db }}
     strategy:
       fail-fast: false
       matrix:
@@ -45,8 +47,22 @@ jobs:
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
         with:
           php-version: ${{ matrix.php }}
+          extensions: pdo_sqlite
           coverage: none
       - run: python scripts/ci/source_checks.py
+      - name: Determine whether Connect schema or service requires native DB verification
+        id: connect-scope
+        env:
+          CONNECT_BASE: ${{ github.event.pull_request.base.sha || github.sha }}
+          CONNECT_EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$CONNECT_EVENT" = workflow_dispatch ] && [ -f moodle/local/ustar/classes/connect/identity_service.php ]; then
+            echo 'connect_db=true' >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$CONNECT_BASE" HEAD -- moodle/local/ustar/classes/connect moodle/local/ustar/classes/privacy moodle/local/ustar/classes/registration_service.php 'moodle/local/ustar/tests/connect_*_test.php' moodle/local/ustar/tests/organization_identity_test.php moodle/local/ustar/connect_bridge.php moodle/local/ustar/db/install.xml moodle/local/ustar/db/upgrade.php 'scripts/infra/connect_con02*' scripts/infra/build_connect_con02_update.py 'tests/stage/con02_update*' tests/stage/run-con02-update.sh 'scripts/infra/connect_telegram*' scripts/infra/build_connect_telegram_update.py 'tests/stage/telegram*' tests/stage/run-telegram-presentation.sh 'tests/stage/db_privileges*' tests/stage/run-db-privileges.sh scripts/infra/postgres_app_handoff.py tests/stage/db_app_handoff_native.py; then
+            echo 'connect_db=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'connect_db=true' >> "$GITHUB_OUTPUT"
+          fi
       - run: pip install -r tests/stage/python-requirements.txt
       - run: python -m unittest discover -s tests/r16 -v
       - name: Verify production paired copy with exact reported Unix owners
@@ -55,6 +71,11 @@ jobs:
           sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1
           "$(command -v python)" -m unittest
           tests.r16.test_production_patch_upgrade.ProductionPairTransactionGuards.test_exact_reported_mixed_ownership_and_root_gid_survive_copy_and_restore -v
+      - name: Connect addon transaction preserves actual UID33 and root group
+        run: >-
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1
+          python3 -m unittest
+          tests.r16.test_connect_academy_installer.Transaction.test_real_uid33_and_root_gid_activation_and_restore -v
       - run: php tests/release_20260912/route_flow.php
       - run: php tests/release_20260912/career.php
       - run: npm ci --prefix tests/release_20260912
@@ -62,12 +83,252 @@ jobs:
       - run: npm ci --prefix tests/mobile
       - run: cd tests/mobile && npx playwright install --with-deps chromium
       - run: npm test --prefix tests/mobile
+      - name: Native notification acknowledgement controls with synthetic UI transport
+        run: node tests/mobile/notification_ack.cjs
+      - name: Verify narrow Connect onboarding UI with synthetic API
+        run: node tests/mobile/connect.cjs
+      - name: Verify two-sided Connect linking UI with synthetic API
+        run: node tests/mobile/connect-link.cjs
+      - name: Verify current Connect actor profile UI with synthetic API
+        run: node tests/mobile/connect-actor.cjs
       - run: python scripts/ci/release_manifest.py --commit HEAD --output artifacts/release-manifest.json
       - run: git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle/local/ustar moodle/theme/ustar
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: ${{ matrix.php == '8.2' && 'source-manifest' || 'source-manifest-php83' }}
           path: artifacts/
+
+  connect-db:
+    if: needs.source.outputs.connect_db == 'true'
+    needs: [source]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Export accepted application baseline for the isolated upgrade
+        run: |
+          mkdir -p .stage-input/connect-baseline artifacts
+          git archive e1d57f5bc28f6964afd20aeff7620345b34a80fe moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-baseline
+          mkdir -p .stage-input/connect-2000 .stage-input/con02-old-worker
+          git archive 38d81ef8d273a3c5efc9ea10c35c7906968d78ba moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-2000
+          git archive a86e208029b6104150e85d0e90384f84da214c22 connect-worker/ustar_connect | tar -x -C .stage-input/con02-old-worker
+          mkdir -p .stage-input/con02-a1
+          git archive 4fb4cd17dc4fa9a73c659950cfeaa64aa11d4551 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/con02-a1
+          git diff --exit-code 4fb4cd17dc4fa9a73c659950cfeaa64aa11d4551 -- tests/stage/con02_ack_probe.php tests/stage/con02_ack_http.py tests/stage/con02_ack_wire.py
+          mkdir -p .stage-input/con02-ack-baseline
+          git show 38d81ef8d273a3c5efc9ea10c35c7906968d78ba:moodle/local/ustar/classes/target_core.php > .stage-input/con02-ack-baseline/target_core.php
+          git show 38d81ef8d273a3c5efc9ea10c35c7906968d78ba:moodle/local/ustar/classes/communication.php > .stage-input/con02-ack-baseline/communication.php
+          mkdir -p .stage-input/connect-current
+          git archive 830d3703e2ffa2f9864900c0d0c58f60049cb0c2 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/connect-current
+          python3 tests/stage/connect_installer_probe.py prepare
+          mkdir -p .stage-input/con02-update-baseline .stage-input/con02-update-target
+          git archive 1e8a8819f50785ebb4fb2640eeb9386c969d59d1 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/con02-update-baseline
+          git show a86e208029b6104150e85d0e90384f84da214c22:moodle/local/ustar/classes/connect/notification_delivery.php > .stage-input/con02-update-baseline/moodle/local/ustar/classes/connect/notification_delivery.php
+          git archive 534764821c4f65437ab50b3c7f25578d538e9504 moodle/local/ustar moodle/theme/ustar | tar -x -C .stage-input/con02-update-target
+          python3 tests/stage/con02_update_native.py prepare
+          python3 - <<'PYCONFIG'
+          import importlib.util
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location('https_transform', 'scripts/infra/academy_https.py')
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          spec = importlib.util.spec_from_file_location('private_transform', 'scripts/infra/connect_private_bridge.py')
+          private = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(private)
+          config = private.patch_config(module.patch_config(Path('tests/stage/config.php').read_bytes()))
+          Path('.stage-input/academy-https-config.php').write_bytes(config)
+          # The disposable PHP server has an exact localhost peer. Production
+          # generator retains the measured Docker gateway172.18.0.1.
+          settings = private.php_settings('12'*32, '123456').replace(b"['172.18.0.1']", b"['127.0.0.1']")
+          Path('.stage-input/private-bridge.php').write_bytes(settings)
+          PYCONFIG
+      - name: Build existing pinned Moodle 5.1.8 PostgreSQL 16 runtime
+        run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull
+      - name: Verify fresh install, upgrade, repeat, links and independent concurrent requests
+        run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml up --abort-on-container-exit --exit-code-from runner
+      - name: Verify installer guards against native SQL migration and recovery
+        run: |
+          python3 tests/stage/connect_installer_probe.py verify
+          python3 tests/stage/chat_link_update_probe.py
+          python3 tests/stage/con02_update_native.py verify
+          python3 tests/stage/db_privileges_verify.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: connect-identity-db-evidence
+          path: |
+            artifacts/connect-*
+            artifacts/academy-https-moodle*
+            artifacts/connect-scope-*
+            artifacts/chat-link-*
+            artifacts/con02-ack-*
+            artifacts/con02-callback-*
+            artifacts/con02-update-*
+            artifacts/telegram-presentation-*
+            artifacts/db-privileges-*
+            artifacts/db-app-handoff-native.json
+      - name: Dispose only the isolated Connect test project
+        if: always()
+        run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
+
+  connect-runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Build exact source receiver package without third-party dependencies
+        run: python3 connect-worker/deploy/build_release.py --commit HEAD --output-dir artifacts/connect-runtime
+      - name: Build private bridge readiness package without activation
+        run: |
+          git worktree add --detach .stage-input/legacy-connect-2000 38d81ef8d273a3c5efc9ea10c35c7906968d78ba
+          python3 .stage-input/legacy-connect-2000/scripts/infra/build_connect_private_bridge.py --commit 38d81ef8d273a3c5efc9ea10c35c7906968d78ba --output-dir "$GITHUB_WORKSPACE/artifacts/private-bridge-check"
+          python3 -I artifacts/private-bridge-check/ustar-private-bridge-check-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-private-bridge-check
+          path: artifacts/private-bridge-check/
+      - name: Coordinated link activation with actual UID33 and recoverable file handoffs
+        run: |
+          sudo -n env USTAR_REQUIRE_ACTIVATION_OWNER=1 python3 -m unittest tests.r16.test_connect_bridge_activation -v
+          python3 .stage-input/legacy-connect-2000/scripts/infra/build_connect_bridge_activation.py --commit 38d81ef8d273a3c5efc9ea10c35c7906968d78ba --output-dir "$GITHUB_WORKSPACE/artifacts/bridge-activation"
+          python3 -I artifacts/bridge-activation/ustar-bridge-activate-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-bridge-activation
+          path: artifacts/bridge-activation/
+      - name: Build exact-source Academy readonly preflight and verify plan mode
+        run: |
+          python3 scripts/infra/build_connect_readiness.py --commit HEAD --output-dir artifacts/connect-readiness
+          python3 -I artifacts/connect-readiness/ustar-connect-preflight-*.pyz
+          python3 scripts/infra/build_connect_readiness.py --commit HEAD --profile chat-link --output-dir artifacts/connect-delivery
+          python3 -I artifacts/connect-delivery/ustar-connect-delivery-*.pyz
+      - name: Delivery preflight preserves actual accepted UID33 config ownership
+        run: sudo -n env USTAR_CONNECT_OWNERSHIP_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_delivery_readiness.py -v
+      - name: Private include parent preparation changes only actual UID33 directory owner
+        run: sudo -n env USTAR_REQUIRE_PRIVATE_PARENT_FIXTURE=1 python3 -m unittest tests.r16.test_connect_private_bridge.ParentPreparation -v
+      - name: Notification pilot preserves real UID33 policy and live link ownership
+        run: |
+          sudo -n env USTAR_REQUIRE_ACTIVATION_OWNER=1 python3 -m unittest tests.r16.test_connect_notification_pilot.Pilot -v
+          python3 .stage-input/legacy-connect-2000/scripts/infra/build_connect_notification_pilot.py --commit 38d81ef8d273a3c5efc9ea10c35c7906968d78ba --output-dir "$GITHUB_WORKSPACE/artifacts/notification-pilot"
+          python3 -I artifacts/notification-pilot/ustar-notify-pilot-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-notification-pilot
+          path: artifacts/notification-pilot/
+      - name: Coordinated chat-link update package and paired file recovery
+        run: |
+          sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_connect_chat_link_update.py -v
+          python3 .stage-input/legacy-connect-2000/scripts/infra/build_connect_chat_link_update.py --commit 38d81ef8d273a3c5efc9ea10c35c7906968d78ba --output-dir "$GITHUB_WORKSPACE/artifacts/chat-link-update"
+          python3 -I -B artifacts/chat-link-update/ustar-chat-link-update-*.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-chat-link-coordinated-update
+          path: artifacts/chat-link-update/
+      - name: Build exact-source Academy installer without production access
+        run: |
+          python3 .stage-input/legacy-connect-2000/scripts/infra/build_connect_academy_installer.py --commit 38d81ef8d273a3c5efc9ea10c35c7906968d78ba --output-dir "$GITHUB_WORKSPACE/artifacts/connect-install"
+          tar -xzf artifacts/connect-install/ustar-connect-install-*.tar.gz -C artifacts/connect-install
+          cd artifacts/connect-install
+          sha256sum --check --strict SHA256SUMS
+          python3 -I -B update.pyz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-academy-installer
+          path: artifacts/connect-install/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-academy-readiness
+          path: artifacts/connect-readiness/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-chat-link-delivery-readiness
+          path: artifacts/connect-delivery/
+      - name: Actual systemd credentials and receiver isolation with synthetic transport
+        run: sudo -n env USTAR_CONNECT_HOST_FIXTURE=1 python3 tests/stage/connect_host_acceptance.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz
+      - name: Personal callback old-new-disabled-a86 handoff with actual UID33 credentials and private TLS
+        run: |
+          python3 connect-worker/deploy/build_release.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir artifacts/con02-callback-old-worker
+          sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_ACK_FIXTURE=1 python3 tests/stage/con02_callback_native.py artifacts/connect-runtime/ustar-connect-receiver-*.tar.gz artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: con02-callback-runtime
+          path: artifacts/con02-callback-runtime.json
+      - name: Ensure Apache binary exists only on disposable TLS test runner
+        run: |
+          if ! command -v apache2 >/dev/null; then
+            sudo -n apt-get update -qq
+            sudo -n apt-get install -y --no-install-recommends apache2-bin
+          fi
+      - name: Ensure PHP CLI exists only on disposable HTTPS test runner
+        run: |
+          if ! command -v php >/dev/null; then
+            sudo -n apt-get update -qq
+            sudo -n apt-get install -y --no-install-recommends php-cli
+          fi
+      - name: Build exact ordinary CON02 controller and frozen legacy guards before sudo
+        run: |
+          python3 scripts/infra/build_connect_con02_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/con02-update-command
+          python3 -I -B artifacts/con02-update-command/ustar-con02-update-*.py
+          python3 scripts/infra/build_connect_telegram_update.py --commit 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134 --output-dir artifacts/telegram-update-command
+          python3 -I -B artifacts/telegram-update-command/ustar-telegram-update-*.py
+          git worktree add --detach .stage-input/con02-update-legacy a86e208029b6104150e85d0e90384f84da214c22
+          python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_notification_pilot.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
+          python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_bridge_activation.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
+      - name: CON02 physical images and locks with mandatory real root GID33
+        run: sudo -n env USTAR_REQUIRE_CON02_OWNER=1 python3 -m unittest discover -s tests/r16 -p test_connect_con02_state.py -v
+      - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
+        run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
+      - name: CON02 controller handoff on actual systemd UID33 credentials and private TLS
+        run: >-
+          sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
+          python3 tests/stage/con02_update_systemd.py
+          artifacts/con02-update-command/ustar-con02-update-*.py
+          artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
+          artifacts/con02-update-legacy/ustar-notify-pilot-*.pyz
+          artifacts/con02-update-legacy/ustar-bridge-activate-*.pyz
+          artifacts/telegram-update-command/ustar-telegram-update-*.py
+      - name: CON02 controller respects actual HTTPS owner renewal and recovery
+        run: >-
+          sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1
+          python3 tests/stage/con02_update_https.py
+          artifacts/con02-update-command/ustar-con02-update-*.py
+          artifacts/con02-callback-old-worker/ustar-connect-receiver-*.tar.gz
+          artifacts/telegram-update-command/ustar-telegram-update-*.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: con02-update-controller
+          path: |
+            artifacts/con02-update-command/
+            artifacts/con02-update-runtime.json
+            artifacts/con02-update-https-owner.json
+            artifacts/con02-update-*-failure.log
+            artifacts/telegram-update-command/
+            artifacts/telegram-update-runtime.json
+            artifacts/telegram-update-https-owner.json
+      - name: Native additive Academy TLS probe and graceful recovery on isolated high ports
+        run: |
+          sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_tls_probe_native.py
+          sudo -n env USTAR_ACADEMY_TLS_FIXTURE=1 python3 tests/stage/academy_https_native.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: academy-tls-probe-native
+          path: |
+            artifacts/academy-tls-*-native.json
+            artifacts/academy-https-native.json
+            artifacts/academy-https-native-*.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: connect-receiver-runtime
+          path: artifacts/connect-runtime/
 
   moodle-db:
     if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc')) }}
@@ -149,6 +410,7 @@ jobs:
           git archive --format=tar.gz --output=artifacts/ustar-source.tar.gz HEAD moodle/local/ustar moodle/theme/ustar
           python3 -c 'import json,os; d=json.load(open("artifacts/release-manifest.json")); assert os.environ["CANDIDATE_SHA"] == d["source_commit"], "manifest does not identify tested SHA"'
           sha256sum artifacts/ustar-source.tar.gz artifacts/release-manifest.json
+          python3 scripts/infra/build_connect_academy_release.py --commit HEAD --output-dir artifacts/connect-academy
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: frozen-release-candidate
@@ -156,7 +418,7 @@ jobs:
 
   gate:
     if: ${{ always() && ((github.event_name == 'workflow_dispatch' && inputs.full_rc) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'full-rc'))) }}
-    needs: [source, rollback, prepare-rc, moodle-db]
+    needs: [source, rollback, prepare-rc, moodle-db, connect-db]
     runs-on: ubuntu-24.04
     steps:
       - name: Require every check to pass
@@ -165,8 +427,11 @@ jobs:
           MOODLE: ${{ needs.moodle-db.result }}
           ROLLBACK: ${{ needs.rollback.result }}
           PREPARE: ${{ needs.prepare-rc.result }}
+          CONNECT: ${{ needs.connect-db.result }}
+          CONNECT_REQUIRED: ${{ needs.source.outputs.connect_db }}
         run: |
           test "$SOURCE" = success
           test "$MOODLE" = success
           test "$ROLLBACK" = success
           test "$PREPARE" = success
+          if [ "$CONNECT_REQUIRED" = true ]; then test "$CONNECT" = success; fi

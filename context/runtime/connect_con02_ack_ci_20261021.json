@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "slice": "CON-02A.1_native_own_notification_acknowledgement",
+  "plan": "context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md",
+  "plan_approved_by_owner": true,
+  "approved_base": "38d81ef8d273a3c5efc9ea10c35c7906968d78ba",
+  "source_commit": "4fb4cd17dc4fa9a73c659950cfeaa64aa11d4551",
+  "source_tree": "26a56ff60a848b12c7656d4de620d7c7c88f7e1f",
+  "candidate": {
+    "local_ustar": 2026102100,
+    "theme_ustar": 2026100202,
+    "files": 554,
+    "tables": 99,
+    "schema_delta": false,
+    "development_manifest_sha256": "fe90840ac223fbc5cc8a40d4ab4fe4394523359e8d85811ef5b7d61bbf1e6987"
+  },
+  "local": {
+    "full_r16": {
+      "tests": 941,
+      "environment_skips": 35,
+      "result": "pass",
+      "observed_source_commit": "41f304fc2ca0f47b815ce736172b3cb366f22754",
+      "runtime": "pinned_tests_stage_requirements_and_isolated_PHP8.3.6"
+    },
+    "real_PHP_SQLite": {
+      "red_tests": 4,
+      "red_failures": 2,
+      "green_tests": 4,
+      "native_Moodle_or_PG": false
+    },
+    "chromium": "unavailable_locally_empty_truncated_CDN_verified_in_CI"
+  },
+  "CI": {
+    "context_run": 39679569635,
+    "context_result": "success",
+    "review_run": 39679569515,
+    "review_result": "success",
+    "source_jobs": {
+      "8.2": 119498749224,
+      "8.3": 119498749153
+    },
+    "source_results": "both_success",
+    "r16_each": {
+      "tests": 941,
+      "environment_skips": 152,
+      "result": "pass"
+    },
+    "browser_each": {
+      "ACK": 5,
+      "mobile": 60,
+      "onboarding": 20,
+      "links": 28,
+      "actor": 100,
+      "widths": [
+        320,
+        390,
+        768,
+        1366,
+        1920
+      ],
+      "result": "pass",
+      "API_transport": "synthetic"
+    },
+    "runtime_job": 119498748644,
+    "runtime_result": "success",
+    "UID33_notification_pilot": {
+      "tests": 7,
+      "skips": 0,
+      "result": "pass"
+    },
+    "native_job": 119500046129,
+    "native_result": "success",
+    "native_runtime": {
+      "Moodle": "5.1.8",
+      "PHP": "8.3.33",
+      "PostgreSQL": "16.15"
+    },
+    "native_phpunit": {
+      "tests": 138,
+      "assertions": 685,
+      "result": "pass"
+    },
+    "writer_phpunit": {
+      "tests": 2,
+      "assertions": 6,
+      "result": "pass"
+    },
+    "differential_PG_races": 4,
+    "previous_concurrency_scenarios": 6,
+    "native_pass_markers": [
+      "CON02_ACK_NATIVE_BASELINE_RED_CANDIDATE_GREEN",
+      "CONNECT_SCHEMA_UPGRADE_REPEAT_FRESH_AND_DB",
+      "CONNECT_ACCEPTED_BASELINE_PAIRED_ROLLBACK",
+      "CHAT_LINK_1905_TO_2000_UPGRADE_REPEAT_PAIRED_RESTORE",
+      "CON02_ACK_UPGRADE_HISTORY_SCOPE_SCHEMA",
+      "CON02_ACK_NATIVE_V1_LEASE_BEGIN_FINISH",
+      "CON02_FROZEN_A86_NATIVE_PACKET_COMPAT",
+      "CON02_ACK_NATIVE_HTTP_POST_CSRF_SOURCE_RECIPIENT_REPEAT",
+      "CON02_ACK_PAIRED_RESTORE",
+      "CON02_ACK_COMPAT",
+      "CONNECT_INSTALLER_NATIVE_SQL_VERSIONS_TASKS_COLUMNS_INDEXES",
+      "CHAT_LINK_NATIVE_SQL_CURRENT1905_TARGET2000_CUSTOM_TASK_SCHEMA_PAIRED_RESTORE"
+    ],
+    "full_RC_moodle_db_rollback_prepare_gate": "skipped_by_existing_workflow_label_condition_not_claimed_passed",
+    "source_browser_artifact": {
+      "id": 12383672236,
+      "zip_sha256": "d68af2cde7cbb84d5dfa5bacd63d328c8311caa5e95f6677117684c9de290ad3",
+      "download_hash_verified": true,
+      "author_visual_review_widths": [
+        320,
+        1366
+      ]
+    },
+    "native_artifact": {
+      "id": 12383746849,
+      "zip_sha256_from_GitHub": "e2d6033e433f42af26749baa759beace6dfd77b19e556099a89c24c2a0b8bc61",
+      "evidence_verified": "completed_job_logs_and_GitHub_metadata",
+      "download_hash_verified": false
+    }
+  },
+  "red_native_adapter": {
+    "source_commit": "0e320a89a93cbc945d1bf81b4b56df8121b5e16a",
+    "review_run": 39673728501,
+    "job": 119479626791,
+    "tests": 137,
+    "assertions": 647,
+    "expected_failures": 8,
+    "prior_tests_passed": 129,
+    "reason": "missing_own_adapter_and_presentation"
+  },
+  "fixture_incidents": [
+    {
+      "source_commit": "41f304fc2ca0f47b815ce736172b3cb366f22754",
+      "run": 39676199940,
+      "native_job": 119488037929,
+      "artifact": 12382861312,
+      "writer": {
+        "tests": 2,
+        "assertions": 6,
+        "result": "pass"
+      },
+      "failure": "Moodle_execute_rejects_PLpgSQL_semicolons",
+      "fix": "guarded_native_PG_connection_for_barrier_DDL_only"
+    },
+    {
+      "run": 39677504950,
+      "reason": "generated_index_contained_untracked_report_draft",
+      "fix": "draft_moved_outside_indexed_context_and_index_regenerated"
+    },
+    {
+      "run": 39677635535,
+      "source_commit": "78d743286f1321d5dfea92ec3d9cb388e82a60f6",
+      "native_job": 119493256207,
+      "artifact": 12383235897,
+      "native_tests_passed": 138,
+      "native_assertions_passed": 680,
+      "other_passes": [
+        "4_PG_races",
+        "2000_to2100_history_repeat",
+        "native_v1_lease_begin_finish"
+      ],
+      "failure": "python3_missing_from_PHP_fixture_image",
+      "fix": "stdlib_Python_in_disposable_image"
+    },
+    {
+      "fixture": "synthetic_browser_read_rows_and_counter",
+      "red": [
+        "3_read_forms_instead_of1",
+        "counter_remains1_after_last_unread_ACK"
+      ],
+      "fix": "explicit_unread_booleans_and_counter_from_row_state",
+      "production_code_changed": false
+    }
+  ],
+  "frozen_compatibility": {
+    "application2000_export": "38d81ef8d273a3c5efc9ea10c35c7906968d78ba",
+    "installed_pilot_overlay": "moodle/local/ustar/classes/connect/notification_delivery.php",
+    "installed_pilot_overlay_sha256": "2f6c0c8b25941ac435237fc9df4c4de738b885f467ccbab80b9988c0bb42e498",
+    "worker": "a86e208029b6104150e85d0e90384f84da214c22",
+    "v1_wire_fields_or_scopes_changed": false,
+    "helper_hash_guards_relaxed": false,
+    "positive_helpers_use_reviewed_export": true,
+    "old_artifacts_are_2100_installers": false
+  },
+  "production": {
+    "CON02_A1_deployed": false,
+    "new_production_installer_created": false,
+    "effective_application_version": 2026102000,
+    "worker_tool": "a86e208029b6104150e85d0e90384f84da214c22",
+    "accepted_pilot_not_repeated": true,
+    "last_recipient_link_state": "revoked_owner_snapshot_UID130"
+  },
+  "review": {
+    "method": "separate_author_whole_slice_self_review",
+    "independent_reviewer": false,
+    "subagents": 0,
+    "limitation": "weaker_than_independent_review_no_main_merge"
+  },
+  "live_group_acceptance": "deferred_by_owner_until_full_launch_not_passed",
+  "agent_SSH": false,
+  "agent_provider_sends": false,
+  "main_merged": false,
+  "documentation_publication": {
+    "method": "GitHub_API_after_executor_environment_offline",
+    "retrieved_file_hashes_verified_against_index": true,
+    "new_index_sha256_recomputed": true,
+    "final_CI_validation": "required_before_completion",
+    "product_or_fixture_code_changed_after_tested_source": false
+  },
+  "remaining_scope": [
+    "CON02A2_Telegram_callback_plan_and_versioned_opt_in",
+    "CON02B_channel_preferences_routing",
+    "CON02C_actual_Bitrix_portal_contract",
+    "controlled_group_rollout_design_only",
+    "manual_live_group_tests_deferred",
+    "2100_guarded_release_with_cron_and_HTTPS_handoff_not_in_this_plan"
+  ]
+}

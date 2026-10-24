@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-23",
+  "evidence_kind": "owner_terminal_output_and_owner_visual_observations_not_agent_SSH",
+  "status": "application2300_ACK_presentation_and_owner_visual_acceptance_verified",
+  "previous_owner_receipt": "context/runtime/connect_con02_server1_owner_20261023.json",
+  "tool": {
+    "commit": "3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134",
+    "filename": "ustar-telegram-update-3d1938ae.py",
+    "sha256": "6f7729459e1ef25271fd86324e441c823a6d39763c7fec84baf7cf640a41eb31",
+    "owner_sha256_check": "OK"
+  },
+  "baseline_check": {
+    "phase": "baseline_ready",
+    "local_ustar": "2026102200",
+    "ack_enabled": true,
+    "host_changes": false,
+    "provider_called": false
+  },
+  "application": {
+    "payload_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "local_ustar": "2026102300",
+    "theme_ustar": "2026100202",
+    "phase": "app_ready",
+    "generation": "94d379904f7f4f7f8795b43e68421d89",
+    "ack_enabled": true,
+    "payload_files": 557,
+    "tables": 100,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "reported_phases": [
+      "fresh_backup_complete",
+      "workers_stopped",
+      "pair_complete",
+      "source_activated",
+      "upgrade_1",
+      "upgrade_2",
+      "cron_written",
+      "public_release_committed",
+      "app_ready"
+    ]
+  },
+  "runtime": {
+    "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "phase": "runtime_active",
+    "generation": "54bb0b7e4ba746928a639279ea729415",
+    "ack_enabled": true,
+    "presentation_enabled": true,
+    "reported_phases": [
+      "workers_stopped",
+      "private_files",
+      "include_handoff",
+      "pointer_switched",
+      "probed",
+      "runtime_active"
+    ],
+    "services": {
+      "ustar-connect-notify.service": {
+        "active": true,
+        "enabled": true
+      },
+      "ustar-connect-receiver.service": {
+        "active": true,
+        "enabled": true
+      }
+    },
+    "database_available": true,
+    "status_command_host_changes": false
+  },
+  "acceptance": {
+    "owner_upgrade_and_activation": "passed",
+    "post_update_visible_ACK_timestamp": "owner_confirmed_persistent_accepted_with_time_after_click",
+    "post_update_event_heading": "not_separately_transcribed_by_owner",
+    "post_update_Academy_history": "owner_confirmed_correct_in_Messengers_delivery_history",
+    "previous_two_canonical_ACKs": "retained_as_historical_owner_evidence_in_previous_receipt_not_retested_here",
+    "group_live_acceptance": "deferred_until_full_launch_not_passed",
+    "owner_observations": [
+      "Да задача с кнопкой падает в бота,после нажатия появляется время с принято",
+      "да там все показывает правильно"
+    ],
+    "repeat_click_first_timestamp_stability_live_checked": false
+  },
+  "limits": [
+    "The baseline check and final status report host_changes=false only for those read-only commands; the intervening upgrade and activation changed application/runtime configuration.",
+    "No independently measured production manifest, post-update scheduled cron result or production restore is proved. Post-update receipt, visible ACK/time and own Academy history are accepted from owner observations; no fresh native SQL or screenshot was supplied.",
+    "Existing fence, keys, cutoffs, cursor, preferences and HTTPS/AutoReport preservation are the qualified controller contract; no new independent live inventory was provided.",
+    "This release covers notification event labels, visible personal ACK and Academy history. The full Telegram Mini App/task-action scenario remains future work.",
+    "No accepted one-user pilot restart, recipient expansion, reserve activation, agent SSH/provider send or main merge."
+  ],
+  "CI_receipt": "context/runtime/connect_telegram_finish_ci_20261023.json",
+  "runbook": "context/runtime/connect_telegram_finish_20261023.md",
+  "next_functional_stage": "CON03_Telegram_Mini_App_task_and_checklist_scenario_with_external_HTTPS_and_Academy_auth",
+  "next_stage_reference": "context/proposals/USTAR_CONNECT_RFC_20261018.md",
+  "next_stage_preflight": "context/runtime/connect_telegram_next_preflight_20261023.md"
+}

@@ -1,8 +1,80 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-24'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
+current_infrastructure_checkpoint:
+  date_msk: '2026-10-24'
+  status: separate_app_role_CI_qualified_production_public_ownership_config_HTTPS_handoff_required
+  report: context/runtime/infra_normalization_resume_20261023.md
+  baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
+  baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
+  privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
+  consumers: context/runtime/infra_db_privilege_consumers_20261023.md
+  handoff_plan: context/proposals/INF02_APP_HANDOFF_PLAN_20261024.md
+  findings: runtime_moodle_superuser_primary_config33_mode755_and_local_ustar_writable_no_container_healthcheck_or_log_limits
+  next: coordinator_7e35795f_qualified_owner_readonly_check_then_guarded_cutover
+  retest_scope: no_new_owner_stand_or_full_restore_repeat_without_a_specific_uncovered_failure_mode
+  production_mutations_performed: true
+  production_mutation_scope: owner_added_only_ustar_pg_admin_and_ordinary_ustar_app_roles
+  accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300
+current_connect_checkpoint:
+  Telegram_successor: context/runtime/connect_telegram_finish_20261023.md
+  Telegram_successor_CI: context/runtime/connect_telegram_finish_ci_20261023.json
+  Telegram_tool: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
+  Telegram_plan_status: owner_deployed_ACK_presentation_and_visual_acceptance_verified
+  Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  Telegram_next_preflight: context/runtime/connect_telegram_next_preflight_20261023.md
+  deployment_design: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
+  deployment_design_status: owner_approved_22Oct
+  deployment_controller: owner_deployed_application2200_and_ACK_runtime_verified
+  index_compat_incident: context/runtime/connect_con02_index_compat_20261023.md
+  index_owner_receipt: context/runtime/connect_con02_index_owner_20261023.json
+  deployment_runbook: context/runtime/connect_con02_deployment_20261023.md
+  deployment_CI_receipt: context/runtime/connect_con02_index_compat_ci_20261023.json
+  deployment_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
+  deployment_plan: context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
+  deployment_plan_status: completed_source_handoff_23Oct
+  stage: owner_paused_after_accepted2300_notification_release
+  live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
+  following_stage: CON03_Mini_App_own_tasks_checklists_external_HTTPS_auth_reserve_later
+  development_version: 2026102300
+  development_files: 557
+  CON02_A2_design: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
+  CON02_A2_plan: context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
+  CON02_A2_plan_status: owner_deployed_two_live_ACKs_verified23Oct
+  CON02_A2_code: source53476482_owner_deployed_and_ACK_verified23Oct
+  CON02_A2_CI_receipt: context/runtime/connect_con02_callback_ci_20261022.json
+  CON02_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
+  production_effective_payload: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  production_effective_version: 2026102300
+  addons_files: 557
+  tables: 100
+  local_verification: source6aa_both_PHP869_136CI_skips_PASS;actual19_UID33_file_tests_TLS_native1905to2000_PASS
+  exact_ci_receipt: context/runtime/connect_chat_link_update_ci_20261021.json
+  backup_HTTPS_preparation_receipt: context/runtime/connect_backup_https_owner_20261021.json
+  application_update_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  previous_application_update_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
+  B1_status: deferred_by_owner_reserve_later
+  Telegram_design: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
+  Telegram_plan: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md
+  include_parent_owner_receipt: context/runtime/connect_private_bridge_parent_owner_20261021.json
+  parent_preparation_package: context/runtime/connect_private_parent_prepare_20261021.md
+  parent_preparation_ci: context/runtime/connect_private_parent_prepare_ci_20261021.json
+  CON02_scope: context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
+  CON02_ACK_plan: context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
+  group_implementation: design_only_not_implemented
+  notification_rollout_design: context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
+  notification_pilot_plan: context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md
+  notification_pilot_CI: context/runtime/connect_notification_pilot_ci_20261021.json
+  notification_pilot_runbook: context/runtime/connect_notification_pilot_20261021.md
+  office_mDNS_recovery: context/runtime/academy_mdns_owner_20261021.json
+  next: paused_owner_reminder24Oct1500MSK_then_explicit_return_to_CON03_preflight
+  TLS_probe_deployed: true
+  canonical_HTTPS_owner_accepted: true
+  cron_two_scheduled_successes_owner_accepted: true
+  bot_activation: owner_Telegram2300_ACK_presentation_runtime_and_visual_accepted
 tasks:
 - id: DOC-01
   title: Консолидация main и инженерного контекста
@@ -46,11 +118,14 @@ tasks:
   validation_evidence:
   - context/runtime/production_patch_readiness_result_20261012.json
   - context/runtime/evidence_20261016.yaml
-  current_summary: Контекст и runtime evidence сведены; полный свежий manifest/расширенная сценарная приёмка
-    остаются отдельными.
+  current_summary: Контекст и runtime evidence сведены; полный свежий manifest/расширенная сценарная приёмка остаются
+    отдельными.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
-  status: planned
+  status: in_progress
+  current_summary: ustar_pg_admin и два required-SCRAM входа9976/9995 приняты; создание не повторять. CI933497e0/Review40043036549 SUCCESS для ordinary app role с public objects+CFG;14checks/five42501/100USTAR-schema equality, artifact hash verified. Bootstrap/backup POSTGRES_USER сохранены admin. Owner24Oct подтвердил moodle OID10/admin OID109344. Owner создал ustar_app/OID110395, SCRAM login/five flags0/owner0/memberships0 приняты; создание не повторять. Owner controller/SQL definer preflight принят:3479mdl_/moodle objects, monitor definer app USAGE0/EXECUTE0. Coordinator7e35795f квалифицирован:Review40107134974 SUCCESS,14prior+9new native checks, actual UID33 permissions, proof downloaded/hash-verified. Далее owner --check готового файла. Production config/public ownership/HTTPS handoff ещё не выполнен. Полный INF02/03 открыт.
+  validation_scope: Засчитать прежние стенды; существующий CI для недостающей проверки снятых cluster flags и зависимости установленных helpers. Новый owner-стенд и полный restore/regression круг не планируются по умолчанию.
+  evidence: context/runtime/infra_readonly_owner_20261023.json
   depends_on:
   - INF-01
   acceptance:
@@ -82,8 +157,8 @@ tasks:
   - context/runtime/ssd_gpt_relocate_result_20261011.json
   - context/runtime/ssd_partition_grow_result_20261011.json
   - context/runtime/ssd_ext4_resize_result_20261011.json
-  current_summary: GPT/раздел/ext4 расширены и проверены11Oct. Полный аппаратный резерв, новая SMART-динамика
-    и защита от потери площадки остаются открыты.
+  current_summary: GPT/раздел/ext4 расширены и проверены11Oct. Полный аппаратный резерв, новая SMART-динамика и
+    защита от потери площадки остаются открыты.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -98,7 +173,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии
-  status: ready
+  status: deferred
   depends_on:
   - DOC-03
   acceptance:
@@ -112,12 +187,31 @@ tasks:
   - Independent observer verifies loss of host and delivery; retention/resources bounded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
-  owner_priority: next_after_repository_reconciliation_20261016
-  current_summary: Прототип PR103 сохранён. Backend/auth/collectors/jobs/bot и проверенная доставка ещё не
-    внедрены; начинать с read-only среза и защищённого доступа.
+  owner_priority: residual_explicitly_deferred19Oct0041
+  current_summary: PR103 contains verified console releasee5b87818/contextde4544d9. Owner19Oct0041 confirms accounts
+    and personal Telegram link work;journal still shows old message. Journal/heartbeat deferred,not fixed;full acceptance
+    and exact native source hash not claimed. Current work is INTEGRATIONS01 design.
+  validation_evidence:
+  - context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
+  - context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
+  - context/runtime/connect_owner_priority_20261019.json
+- id: INF-06-OPS
+  title: Отдельная эксплуатационная приёмка и расширения пульта
+  status: planned
+  depends_on:
+  - INF-06
+  acceptance:
+  - Independent host-loss observer and external probe separately selected and accepted
+  - Native role denial/download/jobs/overhead tested in their agreed scope
+  - Home access separately selected without destabilizing existing networking
+  - Restore/RTO remains OPS-02;console operation is not full disaster recovery
+  spec: context/runtime/control_panel_telegram_20261016.md
+  preserved_from_PR: 103
+  current_summary: Preserve the existing PR103 follow-up task;owner19Oct deferred journal/heartbeat. No implicit
+    restart of console work;current priority INTEGRATIONS01 design.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
-  status: planned
+  status: in_progress
   depends_on:
   - INF-08
   - INF-10-OS
@@ -126,6 +220,11 @@ tasks:
   - Real workstations/phones pass login, links, files, Quiz/SCORM/chat
   - Other vhosts and required services preserved; renewal alert verified
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
+  current_summary: Owner1959MSK canonical HTTPS check/cutover/status and desktop/phone/VPN opening accepted;renewal timer initial probe verified by tool contract;future renewal/alert and exhaustive browser acceptance remain distinct.
+  validation_evidence:
+  - context/runtime/connect_academy_https_ci_20261020.json
+  - context/runtime/connect_https_owner_20261020.json
+  runbook: context/runtime/connect_academy_https_20261020_commands.md
 - id: INF-09
   title: CI на production PHP/core/PostgreSQL matrix
   status: in_progress
@@ -139,9 +238,8 @@ tasks:
   validation_evidence:
   - context/runtime/lab_patch_full_rc_result_20261012.json
   - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
-  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий CI исключает legacy
-    frontend; результаты консолидации проверяются на точном новом SHA. Native clean-host DR не подменяется
-    CI.
+  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий CI исключает legacy frontend;
+    результаты консолидации проверяются на точном новом SHA. Native clean-host DR не подменяется CI.
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
   status: done
@@ -153,8 +251,8 @@ tasks:
   - Compatible stage full gate and coordinated rollback pass
   - Production core/version/digest, scoped manifest, smoke and cron evidence recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не
-    повторять обновление.
+  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не повторять
+    обновление.
   validation_evidence:
   - context/runtime/production_patch_upgrade_result_20261013.json
   - context/runtime/production_patch_browser_result_20261013.json
@@ -168,12 +266,11 @@ tasks:
   acceptance:
   - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from banner
   - Targeted AppArmor repair preserves docker-default; Snap consumers checked before stale profile archive
-  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron
-    v3
+  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart
-    policy/HTTP и postboot cron проверены. Полный shared-host restore и сквозная почта/DNS не приписываются.
+  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart policy/HTTP
+    и postboot cron проверены. Полный shared-host restore и сквозная почта/DNS не приписываются.
   validation_evidence:
   - context/runtime/host_apparmor_result_20261013.json
   - context/runtime/host_packages_install_result_20261014.json
@@ -288,8 +385,8 @@ tasks:
   - context/runtime/hdd_backup_schedule_status_20261012.json
   - context/runtime/production_patch_post_switch_status_result_20261013.json
   - context/runtime/host_reboot_result_20261014.json
-  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после reboot
-    mount/timer сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
+  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после reboot mount/timer
+    сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: waiting_external
@@ -318,14 +415,14 @@ tasks:
   depends_on:
   - OPS-02
   acceptance:
-  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility against official
-    primary sources
+  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility against official primary
+    sources
   - Isolated PostgreSQL17 migration and paired code/database/data rollback pass before production
   - Fresh/upgrade/repeat/browser/SCORM/performance and independent archive restore accepted
   - Separate owner instruction and approved runtime window; historical5.3 preparation does not authorize activation
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17 и PR101
-    — историческая подготовка, не утверждённый текущий запуск.
+  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17 и PR101 — историческая
+    подготовка, не утверждённый текущий запуск.
   validation_evidence:
   - context/runtime/moodle53_target_20261014.json
   - context/runtime/sysadmin_handoff_result_20261016.json
@@ -334,8 +431,8 @@ tasks:
   status: deferred
   depends_on:
   - INF-13
-  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance
-    before first B2B production
+  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance before
+    first B2B production
   reference: context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   acceptance:
@@ -422,11 +519,93 @@ tasks:
   - Focused regression and exact release gate; maturity changes after acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INTEGRATIONS-01
-  title: Внешняя доставка Bitrix и новые интеграции
+  title: USTAR Connect единая архитектура бота Academy identity и внешних Mini Apps
   status: deferred
   depends_on: []
-  reason: No claim of working external delivery; separate approved contract required
+  phase: owner_paused_23Oct_accepted2300_runtime_retained
+  owner_priority: infrastructure_normalization_now_Connect_on_pause
+  current_summary: >-
+    Latest23Oct owner pauses further Telegram development and resumes infrastructure
+    normalization. Reminder24Oct15:00Europe/Moscow created for KeenDNS rules and mobile
+    off-LAN check; not an automatic resume. Accepted2300 services remain operational.
+    The following source/deployment/Mini App checkpoints are historical until return.
+    Current23Oct: owner deployed exact tool3d/app-worker6c56/local2300/theme0202;
+    app_ready and runtime_active with ACK/presentation enabled, both services
+    active/enabled and database available. Receipt:
+    context/runtime/connect_telegram_finish_owner_20261023.json.
+    Owner confirmed new task delivery, persistent ACK/time and correct own Academy
+    history; visual acceptance closed. Event heading not separately transcribed.
+    This is a narrow notification slice; next CON03 is the existing Mini App
+    own task/checklist scenario with external HTTPS and Academy auth, not yet delivered.
+    Reserve and live group acceptance remain deferred; accepted pilot is not reopened.
+    The deployment-design/source checkpoints that follow are dated history.
+    Owner22Oct approved written deployment design («потверждаю»). Nine-task/45-step
+    implementation plan ready for review:
+    context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md.
+    Self implementation/no subagents already fixed; controller not written.
+    Next review this plan then executing-plans; no repeated spec/method choice.
+    Designf0c00d5e Context39789336484/Review39789336561 SUCCESS; FullRC skipped.
+    Historical design preparation follows. Owner22Oct ordered next deployment slice. Written design ready for review:
+    context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md.
+    One controller with direct2000+overlay-to2200/fresh pair/cron2200 upgrade and
+    separate ACK enable/disable; unchanged HTTPS owner, plain.py delivery,
+    exact old recipients/revoke/cursor preserved. Implementation plan/controller
+    not written; written-design review then self plan, no subagents. Final A2
+    docs34e185f0 Context39786095318/Review39786095327 SUCCESS, FullRC skipped.
+    Owner-approved9-task A2 source slice complete; author self-review/no subagents.
+    Source53476482 Context39782650830/Review39782650814 SUCCESS;154native/800assertions,
+    3callback PG races, v1/v2 wire, actual2100-to2200/repeat/paired restore and
+    separate actual UID33/systemd/credentials/private TLS handback PASS. PHP8.2/8.3
+    each974tests/152env skips; candidate2200/theme0202/557files/100tables not deployed.
+    Exact evidence context/runtime/connect_con02_callback_ci_20261022.json.
+    Next separate guarded installer/fresh DB-source-config-data pair/cron and HTTPS
+    ownership handoff, then B routing/preferences and C Bitrix after portal discovery.
+    Server1 application2000+accepted policy overlay/worker a86 unchanged; UID130
+    last revoked; pilot not repeated; group live tests deferred, not passed.
+    Historical A1 and accepted pilot evidence follows.
+    Owner approved CON02A1 plan21Oct. Native own acknowledgement implemented and
+    CI verified; first ackat survives repeats/read/ACK races; real active owner,
+    capability, POST/sesskey and source-local. Canonical task/delivery preserved.
+    Candidate2100/theme0202/554files/99tables without schema delta; not deployed.
+    Source4fb4cd17 Context39679569635/Review39679569515 SUCCESS;138native/685assertions.
+    Exact evidence: context/runtime/connect_con02_ack_ci_20261021.json.
+    A2 is now source-CI verified above; after guarded deployment follow B/C. Actual portal/API/legacy consumer unknown. Group controller remains
+    design-only; live group tests deferred to full launch, not passed.
+    Historical accepted pilot below; do not repeat it.
+    Academy2000/theme0202/552files/99tables,managed cron and HTTPS,private link bridge
+    and ordinary employee link accepted. Owner repaired exact cached a86 directory
+    access0755/content_changed=false; same frozen a86 package now active for UID130,
+    sender_active=true/linking_preserved=true/historical_replay=false/schema_upgraded=false.
+    Event cutoff21Oct14:56:57MSK;personal Tasks opt-in already saved. Receipt:
+    context/runtime/connect_notification_pilot_owner_20261021.json.
+    Source fix17261061 uses safe mkdir before publication under umask077;
+    Context39595204430/Review39595203810 SUCCESS,actual UID33 pilot7/0skips PASS.
+    New source fix is not deployed; active worker/tool remain a86 plus repaired directory.
+    Owner screenshot confirms real Telegram Tasks notification; new task after reported
+    revoke produces no message. Readonly SQL confirms revoked1/linked0 while
+    preferences enabled and Tasks selected. Native button/tasks and normal login
+    without a session now owner accepted. One-employee Tasks pilot accepted.
+    Recipient last revoked;own same-TG relink can resume use. Written group design
+    context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md prepared
+    for owner review: explicit group of 1-10 participants and separate guarded a86 handoff.
+    Implementation plan/code/server/group changes not started.
+    Browser CA trust is separate and open;MiniApp/native handoff/external HTTPS later.
+    No agent SSH/provider sends;0subagents/main unmerged.
+  acceptance:
+  - One current Academy actor/capability/scope across channels;operator console identity remains separate
+  - Role API/event/delivery/escalation and external edge contracts documented with source anchors
+  - Legacy file metadata distinguished from unread source;safe migration and old pending/consumer gates explicit
+  - Public Mini App and full Moodle origin gate distinguished;office and home routing stability preserved
+  - Owner authorizes review then development;CRM=Academy tasks;provider/edge/CEO decisions explicit
+  spec: context/proposals/USTAR_CONNECT_RFC_20261018.md
   reference: context/architecture/notification_delivery_20260928.md
+  validation_evidence:
+  - context/runtime/connect_owner_priority_20261019.json
+  - context/runtime/connect_chat_link_ci_20261020.json
+  - context/runtime/connect_academy_https_ci_20261020.json
+  - context/runtime/connect_https_owner_20261020.json
+  - context/runtime/cron_release_update_20261020.json
+  runbook: context/runtime/cron_release_update_20261020.md
 - id: DOC-03
   title: Сверка работ06–16Oct и консолидация GitHub
   status: done
@@ -441,10 +620,22 @@ tasks:
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-execution_gate: repository_consolidation_then_INF06_no_repeat_of_accepted_host_or_Moodle_patch
+execution_gate: infrastructure_readonly_refresh_before_concrete_INF02_INF03_change_no_production_mutation
 owner_selected_order:
+- INF-01
+- OPS-02_external_result_when_received
+recommended_infrastructure_followup:
+- INF-02
+- INF-03
+- INF-04
+- INF-05
+previous_owner_selected_order_19Oct:
 - DOC-03
 - INF-06
+- INTEGRATIONS-01
 - OPS-02_external_result_when_received
-latest_owner_priority: '16Oct00:20MSK: consolidate GitHub and audit; next INF06 panel+Telegram; OPS02 waiting
-  sysadmin; Moodle5.2/PG17 deferred'
+latest_owner_priority: '23Oct: pause Connect development; resume infrastructure normalization; reminder24Oct15:00Europe/Moscow; accepted2300 runtime retained;0subagents;OPS02 still waiting'
+
+private_bridge_source_progress: context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PROGRESS_20261021.md
+private_bridge_source_ci: context/runtime/connect_private_bridge_ci_20261021.json
+private_bridge_next_owner_check: context/runtime/connect_private_bridge_check_20261021.md

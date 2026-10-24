@@ -1,13 +1,65 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-24'
 project: USTAR Academy
-stage: repository_reconciled_next_control_panel
-stage_label: Следующий этап пульт управления и Telegram
-current_activity: 'Owner16Oct: handoff archive obtained, instruction passed, await sysadmin restore; repository
-  consolidation and legacy CI cleanup; next INF06; Moodle5.2/PG17 deferred'
-next_task: INF-06
-ready_tasks:
-- INF-06
+stage: infrastructure_normalization_resume_20261023
+stage_label: Owner paused Connect development and resumes infrastructure normalization
+current_activity: >-
+  Owner23Oct pauses further Telegram/Mini App development; accepted2300 runtime remains
+  operational. One-time reminder24Oct15:00Europe/Moscow created for KeenDNS app rules
+  and an off-LAN mobile check. Current work is INF-02: review installed DB consumers
+  and add only missing privilege checks to existing CI, reusing accepted stages.
+  Native80b revealed bootstrap OID10 cannot be demoted; corrected CI transfers only
+  public application ownership/config to ordinary ustar_app and preserves bootstrap
+  admin/POSTGRES_USER/system catalogs. Code933497e0/Review40043036549 native GREEN:
+  14operation checks/five42501 denials/100USTAR-schema equality; artifact hash verified.
+  Host8tests, both PHP1085r16/153skips, runtime/browser/context pass. Narrow CI/consumer
+  review complete. Owner24Oct confirms moodle OID10/bootstrap and ustar_pg_admin OID109344.
+  Owner created ordinary ustar_app/OID110395 and verified required-SCRAM login with
+  all five flags false, no memberships, no DB ownership. Do not repeat role creation.
+  Owner controller/definer preflight accepted: ready2300/ACKon,3479public mdl_/moodle
+  objects and monitor app USAGE0/EXECUTE0. Coordinator7e35795f qualified:
+  Review40107134974/Context40107134982 SUCCESS, both PHP1108/155skips/browser/runtime,
+  actual UID33 permissions1/1, prior14privilege +new9handoff native checks PASS;
+  artifact12565387807 downloaded/hash-verified. OID JSON boundary fixed with explicit
+  bigint casts, native wire types verified. Full production coordinator not run in CI.
+  Owner explicitly authorized publication; no further publication approval loop.
+  Next guarded owner --check, then cutover/effective PHP receipt; config/ownership unchanged.
+  No new owner/server1 lab or full restore repeat by default. Then DB/code/config/key
+  hardening. Owner created only ustar_pg_admin and ordinary ustar_app; app config unchanged,
+  no service stop or public ingress change.
+  Accepted SSD/Moodle/OS/reboot/LAN HTTPS/backup schedule are not reopened.
+  Production payload/worker6c56/local2300 remains in the owner receipt below.
+  Owner metadata23Oct18:08UTC confirms one superuser moodle and writable local_ustar
+  code under www-data. Fresh scheduled cron and HDD backup succeeded. Owner followup
+  confirms primary config33:33/0755 writable with static dbuser=moodle; both containers
+  running/restarts0/OOMfalse, no healthcheck or json-file limits. Owner created
+  ustar_pg_admin and verified two required-SCRAM sessions, backend PIDs9976/9995,
+  session/current role match and login/superuser true. Do not repeat creation.
+  No role reduction or config ownership handoff performed; complete INF01 remains open.
+  0subagents/no agent SSH/provider sends/main merge; shared Apache/AutoReport retained.
+next_task: INF-02
+infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
+infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
+infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open
+infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
+infrastructure_admin_status: owner_created_ustar_pg_admin_two_required_SCRAM_sessions_accepted_do_not_repeat_creation
+infrastructure_DB_privilege_status: coordinator_7e35795f_qualified_moodle_unchanged_owner_config_ownership_HTTPS_cutover_pending
+infrastructure_bootstrap_status: owner_confirmed_moodle_OID10_admin_OID109344_do_not_demote_bootstrap
+infrastructure_app_login_status: owner_created_ustar_app_OID110395_required_SCRAM_five_flags_false_no_membership_no_DB_ownership
+infrastructure_DB_privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
+infrastructure_DB_consumers: context/runtime/infra_db_privilege_consumers_20261023.md
+infrastructure_app_handoff_plan: context/proposals/INF02_APP_HANDOFF_PLAN_20261024.md
+infrastructure_app_handoff_status: coordinator_7e35795f_targeted_native_UID33_qualified_owner_readonly_check_next
+infrastructure_app_handoff_runbook: context/runtime/infra_app_handoff_20261024.md
+infrastructure_app_handoff_CI: context/runtime/infra_app_handoff_ci_20261024.json
+infrastructure_retest_scope: reuse_accepted_stages_existing_CI_only_missing_DB_privilege_delta_no_new_owner_stand_or_full_restore_repeat
+infrastructure_file_status: primary_config_and_plugin_writable_HTTPS_metadata_handoff_and_copy_rehearsal_pending
+connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
+connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
+
+live_group_acceptance: deferred_by_owner_until_full_launch_not_passed
+following_connect_stage: CON03_Telegram_Mini_App_own_tasks_checklists_external_HTTPS_auth_reserve_later
+ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
@@ -28,7 +80,29 @@ code_baseline:
   production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
   main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
 production:
-  status: owner_accepted_Moodle518_host_update_boot_and_export_restore_waiting
+  latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
+  latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
+  latest_cron_contract: context/runtime/connect_telegram_finish_owner_20261023.json
+  previous_scheduled_cron_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
+  latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  effective_addon_deployment:
+    receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+    reported_date_msk: '2026-10-23'
+    status: owner_upgrade_ACK_presentation_runtime_and_visual_acceptance_verified
+    installer_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
+    payload_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    versions: {local_ustar: 2026102300, theme_ustar: 2026100202}
+    application_generation: 94d379904f7f4f7f8795b43e68421d89
+    runtime_generation: 54bb0b7e4ba746928a639279ea729415
+    files: 557
+    tables: 100
+    counts_basis: fixed_controller_payload_not_new_whole_host_manifest
+    independent_probe: false
+    previous_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  historical_field_scope: current_source_commit_current_versions_and_last_exact_source_manifest_below_are_dated05Oct_reference_use_effective_addon_deployment_for_latest_owner_CLI_state
+  status: owner_Telegram_application2300_ACK_presentation_and_visual_accepted_export_restore_pending
   observed_at: '2026-10-14T13:51:02Z'
   source: context/runtime/evidence_20261016.yaml
   independently_measured: false
@@ -51,10 +125,12 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151
-      file references, not a new whole-host manifest
-  cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
-  regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
+    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151 file
+      references, not a new whole-host manifest
+  cron: owner23Oct18_08UTC_scheduled_exit0_1_222seconds_no_new_failures_19overdue_2failed_need_task_review
+  cron_current_receipt: context/runtime/infra_readonly_owner_20261023.json
+  regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
+  regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
     moodle: 5.1.8
@@ -73,8 +149,72 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
 next_agent_read:
+- context/runtime/infra_readonly_owner_20261023.json
+- context/runtime/infra_readonly_baseline_20261023.md
+- context/runtime/infra_normalization_resume_20261023.md
+- context/runtime/connect_telegram_next_preflight_20261023.md
+- context/runtime/connect_telegram_finish_owner_20261023.json
+- context/runtime/connect_telegram_finish_20261023.md
+- context/runtime/connect_telegram_finish_ci_20261023.json
+- context/proposals/USTAR_CONNECT_RFC_20261018.md
+- context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
+- context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md
+- context/runtime/connect_con02_server1_owner_20261023.json
+- context/runtime/connect_con02_server1_20261023.md
+- context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
+- context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md
+- context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md
+- context/runtime/connect_con02_callback_20261022.md
+- context/runtime/connect_con02_callback_ci_20261022.json
+- context/runtime/connect_con02_callback_progress_20261022.md
+- context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md
+- context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md
+- context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md
+- context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md
+- context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md
+- context/runtime/connect_notification_pilot_owner_20261021.json
+- context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md
+- context/runtime/connect_chat_link_update_owner_20261021.json
+- context/runtime/connect_backup_https_owner_20261021.json
+- context/runtime/connect_chat_link_update_20261021.md
+- context/runtime/connect_delivery_preflight_20261020.md
+- context/proposals/USTAR_CONNECT_PRIVATE_DELIVERY_PROGRESS_20261020.md
+- context/runtime/cron_release_update_20261020.md
+- context/runtime/cron_release_update_20261020.json
+- context/runtime/cron_incident_20261020.md
+- context/runtime/connect_academy_https_20261020_commands.md
+- context/runtime/connect_academy_https_ci_20261020.json
+- context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md
+- context/runtime/connect_https_owner_20261020.json
+- context/runtime/connect_chat_link_ci_20261020.json
+- context/proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md
+- context/proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md
+- context/runtime/connect_https_preparation_20261020.md
+- context/runtime/connect_academy_owner_install_20261020.json
+- context/runtime/connect_academy_install_02b0548c_commands.md
+- context/runtime/connect_academy_installer_ci_20261020.json
+- context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md
+- context/runtime/connect_academy_install_20261020.md
+- context/runtime/connect_academy_rc_20261019.md
+- context/runtime/connect_academy_rc_ci_20261019.json
+- context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_PROGRESS_20261019.md
+- context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md
 - START_HERE.md
+- context/proposals/USTAR_CONNECT_CON01C4_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md
+- context/proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B3_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B3_PROGRESS_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md
+- context/proposals/USTAR_CONNECT_REVIEW_20261019.md
 - context/project.yaml
+- context/runtime/connect_owner_priority_20261019.json
+- context/proposals/USTAR_CONNECT_RFC_20261018.md
+- context/proposals/USTAR_CONNECT_CONTRACTS_20261019.md
 - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
 - context/tasks/ACTIVE.md
 - context/runtime/control_panel_telegram_20261016.md
@@ -104,12 +244,12 @@ sysadmin_restore:
   production_platform_upgrade_deferred:
     moodle: '5.2'
     postgresql: '17'
-  next_task: server_control_panel_with_Telegram_alerts_metrics_backup_access_and_Academy_control
+  next_task: INTEGRATIONS01_design;sysadmin_restore_still_waiting_external
 next_control_panel:
   task: INF-06
   spec: context/runtime/control_panel_telegram_20261016.md
   prototype_PR: 103
-  status: next_not_deployed
+  status: owner_accounts_and_link_work;full_acceptance_not_claimed;residual_deferred19Oct
   style: Linear-inspired graphite
   hosting: same_server_no_separate_subdomain
   authentication: login_password_plus_operator_authorization
@@ -131,3 +271,69 @@ do_not_repeat:
 - host_cold_capture_r6
 - host_package_install_and_reboot
 - source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
+development_candidate:
+  Telegram_successor_tool_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
+  Telegram_successor_runbook: context/runtime/connect_telegram_finish_20261023.md
+  Telegram_successor_status: owner_deployed_ACK_presentation_and_visual_acceptance_verified
+  previous_deployed_tool_commit: 4394b99475f469b061010a1ea4aa77b9d984c40f
+  deployment_tool_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
+  previous_deployment_runbook: context/runtime/connect_con02_deployment_20261023.md
+  deployment_runbook: context/runtime/connect_telegram_finish_20261023.md
+  previous_deployment_CI_receipt: context/runtime/connect_con02_index_compat_ci_20261023.json
+  deployment_CI_receipt: context/runtime/connect_telegram_finish_ci_20261023.json
+  source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  previous_accepted_source_commit: 534764821c4f65437ab50b3c7f25578d538e9504
+  CI_receipt: context/runtime/connect_telegram_finish_ci_20261023.json
+  previous_accepted_CI_receipt: context/runtime/connect_con02_callback_ci_20261022.json
+  report: context/runtime/connect_telegram_finish_20261023.md
+  accepted_A1_CI_receipt: context/runtime/connect_con02_ack_ci_20261021.json
+  accepted_A1_report: context/runtime/connect_con02_ack_20261021.md
+  manifest: context/code_map/development_source.json
+  task: INTEGRATIONS-01
+  scope: Telegram2300_owner_deployed_notification_presentation_not_full_Mini_App
+  owner_deployment_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  manifest_deployed_false_meaning: unmerged_source_inventory_marker_owner_deployment_is_recorded_separately
+  local_ustar_version: 2026102300
+  theme_ustar_version: 2026100202
+  files: 557
+  tables: 100
+receiver_runtime:
+  source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  initial_source_commit: b01bd942f7f748d9510618a79489643b42cbd690
+  receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  runbook: context/runtime/connect_telegram_finish_20261023.md
+  previous_runbook: context/runtime/connect_con02_deployment_20261023.md
+  server1_deployed: true
+  server1_install_receipt: owner19Oct1841MSK_installed_services_not_started
+  server1_configured: true
+  server1_probe_verified: true
+  owner_receipt: context/runtime/connect_receiver_server1_20261019.json
+  server1_started: true
+  live_ack: owner_reports_working_19Oct1859MSK
+  configure_recovery: context/runtime/connect_configure_tty_recovery_20261019.md
+  ACK_runtime_active: true
+  presentation_runtime_active: true
+  generation: 54bb0b7e4ba746928a639279ea729415
+  post_update_visual_acceptance: owner_new_task_ACK_time_and_history_verified
+  live_ACK_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  next: CON03_Mini_App_task_checklist_scenario_external_HTTPS_and_Academy_auth
+  B1_design: context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md
+  B1_status: deferred_by_owner_reserve_later
+  Telegram_design: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md
+  Telegram_plan: context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md
+
+connect_academy_preparation:
+  kind: historical_19Oct_preflight_snapshot_superseded_by_current_owner_receipts
+  plan: context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md
+  candidate_version: 2026101905
+  production_version: 2026100204
+  source_delta: {added: 26, changed: 11, removed: 0}
+  schema_delta: {baseline_tables: 93, candidate_tables: 99}
+  native_preflight_collected: false
+  Academy_updated: false
+  bridge_enabled: false
+  notifications_enabled: false
+  MiniApp_enabled: false
+  preflight_source_commit: ef9911f31a57dd30554eb841bfa1bc601443dfd6
+  preflight_runbook: context/runtime/connect_academy_preflight_20261019.md
+  preflight_receipt: context/runtime/connect_academy_preflight_release_20261019.json

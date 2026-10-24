@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "kind": "coordinated_chat_link_and_backup_TLS_source_verification",
+  "verified_date_Moscow": "2026-10-21",
+  "source_commit": "6aa83a951b3d8119db8ef2d5d5e2484383fcbce1",
+  "source_tree": "b1219d51f346ab434ce0f9be02333bf9af48a0fc",
+  "payload_commit": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1",
+  "baseline_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "application": {
+    "from": 2026101905,
+    "to": 2026102000,
+    "files": 552,
+    "tables": 99,
+    "delta_files": 6,
+    "deployed": false
+  },
+  "archive": "ustar-chat-link-update-6aa83a95.pyz",
+  "archive_sha256": "e0d364ab33fb01482c0bedc73833562a567dc221c0682c85009759bca58d82c3",
+  "CI": {
+    "review_run": 39500936916,
+    "context_run": 39500936977,
+    "review_conclusion": "success",
+    "context_conclusion": "success",
+    "source_jobs": [
+      118897954357,
+      118897953753
+    ],
+    "PHP": [
+      "8.2",
+      "8.3"
+    ],
+    "r16": 869,
+    "environment_skips": 136,
+    "browser": {
+      "mobile": 60,
+      "onboarding": 20,
+      "link": 28,
+      "actor": 100
+    },
+    "runtime_job": 118897954326,
+    "paired_file_tests": 19,
+    "paired_file_skips": 0,
+    "actual_UID33": "PASS",
+    "actual_Apache_OpenSSL_PHP": "PASS;new_update_login_and_HDD_HTTPS_readiness_exercised",
+    "DB_job": 118899287465,
+    "native_Connect_tests": 124,
+    "native_assertions": 629,
+    "concurrency": 6,
+    "native_1905_to_2000_upgrade_repeat_paired_restore": "PASS",
+    "native_current_task_customised_disabled_1_1_preserved": "PASS",
+    "full_RC_jobs": "skipped;not_claimed",
+    "artifact_id": 12300525979
+  },
+  "local": {
+    "targeted_update_tests": 19,
+    "UID33_skipped": 1,
+    "backup_TLS_pair_routing_tests": 10,
+    "HDD_related_tests": 69,
+    "HDD_skips": 10,
+    "bundle_and_corruption_check": "PASS",
+    "package_SHA_equals_independent_CI_build": true,
+    "PHP": "not_installed",
+    "full_r16": {
+      "tests": 869,
+      "skips": 33,
+      "errors": 1,
+      "error": "MCP_stdio_child_missing_target_only_dependency_path"
+    },
+    "isolated_venv_MCP_stdio_recheck": {
+      "tests": 1,
+      "result": "PASS"
+    },
+    "whole_local_suite_green_claim": false
+  },
+  "backup_https_pair": {
+    "before_producer": "75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75",
+    "before_scheduler": "54533f6a629699e031a877b4a57f68401477a61cf20cab39512c79a2e0477b7d",
+    "after_producer": "a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3",
+    "after_scheduler": "a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c",
+    "deployed": false,
+    "before_hashes_are_expected_contract_not_new_native_measurement": true
+  },
+  "operator_next": "prepare_backup_HTTPS_pair_no_job_or_outage_then_installer_readonly_check",
+  "native_backup_preparation_or_application_update_accepted": false,
+  "bridge_link_notify_activated": false,
+  "production_changed_by_agent": false,
+  "main_merged": false,
+  "subagents": 0,
+  "review": "self_review;independent_review_not_claimed"
+}

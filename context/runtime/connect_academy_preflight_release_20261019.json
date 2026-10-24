@@ -1,0 +1,41 @@
+{
+  "kind": "verified_readonly_Academy_preflight_delivery",
+  "source_commit": "ef9911f31a57dd30554eb841bfa1bc601443dfd6",
+  "artifact": {
+    "name": "ustar-connect-preflight-ef9911f3.pyz",
+    "bytes": 66561,
+    "sha256": "da6a992d3cdfe60b294df0452c0fa8c1eff7ae9eaedeaf8151289f857c65becb"
+  },
+  "baseline": {
+    "files": 526,
+    "tables": 93,
+    "version": 2026100204
+  },
+  "candidate": {
+    "files": 552,
+    "tables": 99,
+    "version": 2026101905
+  },
+  "delta": {
+    "matching": 515,
+    "changed": 11,
+    "added": 26,
+    "removed": 0
+  },
+  "verification": {
+    "targeted_tests": 13,
+    "full_r16": 708,
+    "local_environment_skips": 30,
+    "zip_crc": true,
+    "exact_python_modules": 3,
+    "source_file_references": 1078,
+    "packaged_plan_and_help": true,
+    "operator_bash_syntax": true,
+    "native_Docker_SQL_collected": false,
+    "full_PR_CI": "queued_last_observed"
+  },
+  "operator_runbook": "context/runtime/connect_academy_preflight_20261019.md",
+  "scope": "read_only;no_PHP_or_Moodle_bootstrap;no_migration;no_service_or_network_changes",
+  "native_receiver": "owner_reports_working;original_b01_archive",
+  "remaining": "owner_preflight_JSON_then_full_candidate_release_backup_rollback_private_bridge;MiniApp_and_first_links_notifications_wait_HTTPS"
+}

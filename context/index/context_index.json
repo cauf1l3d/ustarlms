@@ -6,8 +6,8 @@
     {
       "path": "context/CONTEXT_INDEX.md",
       "domain": "root",
-      "size": 1702,
-      "sha256": "d93fe7e4b020dbac9228a2ce5c13ec31690159b9a4f214c32a5418986a9ee5a1"
+      "size": 49995,
+      "sha256": "7ac64644deb01e4969761a1d90674f1b755c663dadfc2f62fd8f3e45917a1f97"
     },
     {
       "path": "context/agents/astra.md",
@@ -48,8 +48,8 @@
     {
       "path": "context/architecture/overview.md",
       "domain": "architecture",
-      "size": 5291,
-      "sha256": "934a3b2a6edbb03dc7a3b50beeb0ac8d0cec6d94399c50f3a25fa0c7f80a1700"
+      "size": 5770,
+      "sha256": "c72ab785a6acdc705e713c651c6603602c9b7dfce41a1cf44ee5ff9833df0ce5"
     },
     {
       "path": "context/architecture/refactor_20260920.md",
@@ -396,8 +396,8 @@
     {
       "path": "context/code_map/README.md",
       "domain": "code_map",
-      "size": 8379,
-      "sha256": "9f64d9311b2d548a4c83c0c7fd14572c705df43d993c96925d9c836e589dd26c"
+      "size": 10377,
+      "sha256": "543d10c18c85c3e2e5d021c6bdcfd927f10bc6d60abdc37ef093cfc26d0b6d48"
     },
     {
       "path": "context/code_map/backend.yaml",
@@ -416,6 +416,12 @@
       "domain": "code_map",
       "size": 774,
       "sha256": "552f2235672602f3ace5f1097327074e90767c3915a3af3f5988307ee79e2af0"
+    },
+    {
+      "path": "context/code_map/development_source.json",
+      "domain": "code_map",
+      "size": 89132,
+      "sha256": "be0d34986b9499eb5f1e24823eb26b79a2b3c29647dd50bb87d2d51300e5e627"
     },
     {
       "path": "context/code_map/frontend.yaml",
@@ -660,8 +666,314 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 1770,
-      "sha256": "b639fbbbdb20154e3266e87afc1cfc05317fee8ebbb7af86874686e4eb2a9656"
+      "size": 5227,
+      "sha256": "a464f2f671566e619afc38f2b4cb769a67d4d33888fdd2d9e60608d539c6ec02"
+    },
+    {
+      "path": "context/proposals/INF02_APP_HANDOFF_PLAN_20261024.md",
+      "domain": "proposals",
+      "size": 8814,
+      "sha256": "7b1f01d845e52511363d01ab089c1d632eb5339ea63d84a730a65d969afd1e3d"
+    },
+    {
+      "path": "context/proposals/INF02_PRIVILEGE_DELTA_PLAN_20261023.md",
+      "domain": "proposals",
+      "size": 5290,
+      "sha256": "65eb01e2d2110e84001840b6657e0a261d363acbf97e2cfda002ca72182d7145"
+    },
+    {
+      "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
+      "domain": "proposals",
+      "size": 5012,
+      "sha256": "04804b4b6cd97ebdde5c8e0ee00de382d56d34c14242e57969745f61f19dc6e0"
+    },
+    {
+      "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PROGRESS_20261020.md",
+      "domain": "proposals",
+      "size": 2399,
+      "sha256": "4adaa55e05e13d39b4206db409b0cf8ab050b2e1299e0895358b6304c5437e8c"
+    },
+    {
+      "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PLAN_20261020.md",
+      "domain": "proposals",
+      "size": 7085,
+      "sha256": "bce80159c9c9670f68a9e4cd07f69fadd7a778456101260cad3869e7fe34bfb2"
+    },
+    {
+      "path": "context/proposals/USTAR_ACADEMY_TLS_PROBE_PROGRESS_20261020.md",
+      "domain": "proposals",
+      "size": 6708,
+      "sha256": "e01cd23436dc524d9321d4a52ca369435d969957164f33f7ec1e5d808750bc11"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_20261019.md",
+      "domain": "proposals",
+      "size": 5380,
+      "sha256": "e57443182c53e77ac54bc2a343d790d55357ab61de6c9ee78b2962ec2f31c47e"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_ACADEMY_PREPARATION_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 2823,
+      "sha256": "3af7e2125a51a978fe4e006b52c3938a7e151ae89e93885c491dd48bb68a682b"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_20261019.md",
+      "domain": "proposals",
+      "size": 3225,
+      "sha256": "bcbede58e48b3bf35492a2859b1f4ab0e96fdcd7d75febe794d18dd1dce571ac"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_ACADEMY_RELEASE_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 2833,
+      "sha256": "255af0c9fc7bb529ef26e63f4d4c64f05a53c4a066deda2af9ac30e65bb55a51"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_ACTIVATION_PROGRESS_20261021.md",
+      "domain": "proposals",
+      "size": 3978,
+      "sha256": "7573b656a831a3ab61a2c551c1923900d779fc5982b3d7c0803544fe790c2af7"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CHAT_LINK_PLAN_20261020.md",
+      "domain": "proposals",
+      "size": 3589,
+      "sha256": "2a050411453aa66b3b2f22fadbd58c86adcdffef4a824404bc0e3ffd78aa5deb"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CHAT_LINK_PROGRESS_20261020.md",
+      "domain": "proposals",
+      "size": 4184,
+      "sha256": "442c3e9565235ca0b73f9d2f6a59356d95231b4133d39999c157cb616be04f88"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01A_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 5879,
+      "sha256": "4b3f61c9fa6fe956de0a51f579f5ccc3fb031bf6bda4eb61679f2644b8076f9e"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01B2_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 6234,
+      "sha256": "53ccc56e431f17d80f66170f16c0545e28cda32bad975e333cb610c1f70e5316"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01B3_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 11122,
+      "sha256": "808eee97f93128bfa8a88e49a22b15a35994209ee64316afda8cf484581ff0a2"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01B3_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 4370,
+      "sha256": "08bb3d55d2c280f5252d00b1d6a0dd209a750cbce5ec319a4d01b33c3e710a72"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01B4_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 8660,
+      "sha256": "d6a042dcc762d0a8be979893f490f6c79e3546e4bf940732c420f2d732981d67"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01B4_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 3966,
+      "sha256": "0ff676381969b7d05fffa65ee4cfc7589016c0738a47da4812c9610c929ae46b"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01B_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 7098,
+      "sha256": "719406a651ac07bae12b8740f2bca2aec45e8cb73f678d661c4134c55eb0016a"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C1_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 7667,
+      "sha256": "e0c2a1da3aef8519cd69697bf6da0bf097701fd516476e36910beef93bc8febd"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C1_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 4369,
+      "sha256": "750f3f3600ee1914557f8953d4cb9c5cf47152ae20d6677b01fc64e00e57450f"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C2_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 4094,
+      "sha256": "b97cc04a948c98cff607130cd18f0cf1f08a4dd50a7fa90c789cd6cd254683e7"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C2_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 4656,
+      "sha256": "ef8efbfee26ffdd0e8f7add82ab67d28ff7d9b4157e39f621a52a42f342ca2e8"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C3_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 4691,
+      "sha256": "fd2270d80dcdbee4d4bae62d35d5b8f3a43a0e49b5e39d8fb9eb4546a46217cc"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C3_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 6121,
+      "sha256": "50663f1e49f177259682cbe0f2c262dde487b20a3ad86a404b3b43c445dbd3ae"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C4_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 7625,
+      "sha256": "7d4c7cf5e92150932dd0db07f904c243172d447c7801fd194b8e56022a521c2b"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON01C4_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 9276,
+      "sha256": "8b89d2f719e4ae2cec3a90f7c940601f7ffd3531e9b00a53b45e843260b29d0d"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md",
+      "domain": "proposals",
+      "size": 14154,
+      "sha256": "bb53af423f5b5d88040edebd6125a5913030c8fe85b29f3d3fe99dacf13c590a"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON02_ACK_PLAN_20261021.md",
+      "domain": "proposals",
+      "size": 16995,
+      "sha256": "2a71d762951c90c823ae31452163298a7c8dd41756a609d093134d244336cfc3"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_DESIGN_20261022.md",
+      "domain": "proposals",
+      "size": 27820,
+      "sha256": "af2ded0e8518c1ea79600a9a6d6b2839f937ccf599b23d5f13a2518bc7f0e821"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md",
+      "domain": "proposals",
+      "size": 36155,
+      "sha256": "ef7f070e4dc14234112a72cc92aac3004c27d9fde51d2a60940841076ac717c0"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON02_SCOPE_20261021.md",
+      "domain": "proposals",
+      "size": 13602,
+      "sha256": "32607424e9b5aa83848247c3cafa625d82d86048001a38e9cd060d46442cb77e"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_DESIGN_20261022.md",
+      "domain": "proposals",
+      "size": 30033,
+      "sha256": "af3d4569409fd27f307daf5fee558ee54f438428b91fc451dec69463c6f3117d"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CON02_TELEGRAM_ACK_PLAN_20261022.md",
+      "domain": "proposals",
+      "size": 31942,
+      "sha256": "4c79949ff10104112187332c782b06777646a8bc6783d18c5b76092abb59f0e9"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_CONTRACTS_20261019.md",
+      "domain": "proposals",
+      "size": 23369,
+      "sha256": "8af66975f82ee7f63814cf1f7b8aa3b732d220d871db5bfed467a151d31bb48f"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md",
+      "domain": "proposals",
+      "size": 7244,
+      "sha256": "ba31476cc4beaae5089e64cfac4979434aed481d7432591c5018b0c9cee6e2ad"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_INSTALLER_PLAN_20261020.md",
+      "domain": "proposals",
+      "size": 3639,
+      "sha256": "48553e79c8693e0e9538d02deed15e9b8bce0a9c6a0febe74dd534db01391fec"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_LEGACY_BOT_REUSE_20261018.md",
+      "domain": "proposals",
+      "size": 13560,
+      "sha256": "5ac31e9b65bba2adee10dac0c451a92df17730c86db5ca838236758a225aa5fb"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_NOTIFICATIONS_20261019.md",
+      "domain": "proposals",
+      "size": 10100,
+      "sha256": "978fc0ec6e2e235c5b3c29fdacba802aa7c470b997ff174c5c89a61fc6f98ea3"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_NOTIFICATION_PILOT_PLAN_20261021.md",
+      "domain": "proposals",
+      "size": 10118,
+      "sha256": "898d64f8b0ac8cc43baae314db215846f2c496e08a4af3496834fe9ea4cee615"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md",
+      "domain": "proposals",
+      "size": 6253,
+      "sha256": "e9f5abd8e28a2e198d6efbfa19fad1a9b561efc07455b24a0b8292e99983d905"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PROGRESS_20261021.md",
+      "domain": "proposals",
+      "size": 9321,
+      "sha256": "c4b8c3617c1285dd5120bf09f599ca4ae98417e31543858f1a381bef8e686b63"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_PRIVATE_DELIVERY_PROGRESS_20261020.md",
+      "domain": "proposals",
+      "size": 10350,
+      "sha256": "53dbc6f2a2c7152b14214fa97b5566ff65252ae82acc6abc39fe15f1f7b16a09"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_REVIEW_20261019.md",
+      "domain": "proposals",
+      "size": 9282,
+      "sha256": "04eb4d4fece8079f26e3310ecf4c601ef2f1c53ef25e221cda0e4b227396480a"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_RFC_20261018.md",
+      "domain": "proposals",
+      "size": 41386,
+      "sha256": "6fbbe59654884a62176fd575ba8c5a6c42fe31762d496844ae0e643be823c7b7"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_RUNTIME_PLAN_20261019.md",
+      "domain": "proposals",
+      "size": 5114,
+      "sha256": "8ca5e4d9ec76df4b3e56e6b3be72c2f0d9ea6d012d45afe5231c96432d87eef7"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_RUNTIME_PROGRESS_20261019.md",
+      "domain": "proposals",
+      "size": 6143,
+      "sha256": "d44f85649689787b40550a68a8f3e9c31d79466a28f1dcecf3dbcbda1eab1213"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md",
+      "domain": "proposals",
+      "size": 5166,
+      "sha256": "06ebd3687bcb8c44dab6083dc6a19206f149953ec3e26e384d4783aa7c773809"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md",
+      "domain": "proposals",
+      "size": 7906,
+      "sha256": "c19a3d02440f8136b19d5a3f74da3d50699abd8a2481a9a89c40c469ba5dd993"
+    },
+    {
+      "path": "context/proposals/USTAR_CONNECT_TELEGRAM_ROLLOUT_DESIGN_20261021.md",
+      "domain": "proposals",
+      "size": 21501,
+      "sha256": "fe042f478c1129834134358df5fe855360e1e7faca6abd8bc1434d01f8577c70"
     },
     {
       "path": "context/releases/ADAPTATION_RESET_20261002_RU.md",
@@ -720,8 +1032,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 21742,
-      "sha256": "4bbd2cd3e0f6baa87136df01909295daa151aa291831e67e17d1c0767cc3bb01"
+      "size": 36732,
+      "sha256": "5bd4d66277fa8980ec0b38b2cf80abfafb2509b0384b7c2f63a262a5ba22fbfb"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -744,8 +1056,8 @@
     {
       "path": "context/roadmap/README.md",
       "domain": "roadmap",
-      "size": 1045,
-      "sha256": "76682a0f020691131271f21232f6a7cd3e0e33a1f9e7bfd9a86a2bfed2280d79"
+      "size": 1200,
+      "sha256": "904ea6cca3f9cd7eccd099b7d0cde4627d40913a67697d7ccdb621d669f15580"
     },
     {
       "path": "context/roadmap/REWARD_CONTRACT.md",
@@ -762,8 +1074,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 136133,
-      "sha256": "4e53ea05abecb6393941f944cbed8f7e3d159d0becc56d506eadeca3407e4304"
+      "size": 229782,
+      "sha256": "6e8ce786bc1925b3b0ba9d17f06dbac6da9657f6258696cf969127181893d5ed"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -774,8 +1086,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 5121,
-      "sha256": "bef438bb13d27553846cec9af2a82b91398aeb92c04652bfbfdf2af94210dc74"
+      "size": 19087,
+      "sha256": "038c8a5a1415df930331b6489bd2a6f8fd8f7a8914dade35d1dd93a8a33d117b"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -864,20 +1176,32 @@
     {
       "path": "context/runtime/README.md",
       "domain": "runtime",
-      "size": 1541,
-      "sha256": "acb6080ff91ce69a4fe7323de36554effb8bfa7198d5d626fe951f5df2e6c75f"
+      "size": 2439,
+      "sha256": "d4acc9753112a64057e247b7fb6bee59d61072edc14a5594ec868f532b388aad"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 57516,
-      "sha256": "0bb0957db2380c7dcda075e9f68d6d9177b8da2d9d1bee26cadd272ccc978eda"
+      "size": 85843,
+      "sha256": "8f5147c802927a1f247e043a9b3a71a9b79ed1ede2f33cf5b724a602be91f50f"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
       "domain": "runtime",
       "size": 3797,
       "sha256": "db823f2161e6023f30cdc4c449a7c50995d01e0d31845e9892954abbe31e5cd2"
+    },
+    {
+      "path": "context/runtime/academy_mdns_incident_20261021.md",
+      "domain": "runtime",
+      "size": 4345,
+      "sha256": "fa67f8ef64c6c81eb5fb12ce2082add19f18c1cf14aca1821af5bfd9b8d28d5c"
+    },
+    {
+      "path": "context/runtime/academy_mdns_owner_20261021.json",
+      "domain": "runtime",
+      "size": 2698,
+      "sha256": "790573b5e10385238b071fe6c2b4ca9ee6858e59ba7bf1069af3b755cd3f9d0d"
     },
     {
       "path": "context/runtime/backup_restore_experiment_20261014.md",
@@ -908,6 +1232,366 @@
       "domain": "runtime",
       "size": 11556,
       "sha256": "6cec3c0ac4f473a49af0ed3625eaad80cb2c18e8366f0d7f4659db6b24058fdf"
+    },
+    {
+      "path": "context/runtime/connect_academy_https_20261020_commands.md",
+      "domain": "runtime",
+      "size": 8211,
+      "sha256": "d3f00179c180d8cccb9d1807a4a2a83f5c2ad0282e276ec87a626b9b5d257898"
+    },
+    {
+      "path": "context/runtime/connect_academy_https_ci_20261020.json",
+      "domain": "runtime",
+      "size": 5175,
+      "sha256": "b97bb6a62196577f8bb1e4a303ebd552a0b20e75c1dd39c9e11b6ff4feed5b47"
+    },
+    {
+      "path": "context/runtime/connect_academy_install_02b0548c_commands.md",
+      "domain": "runtime",
+      "size": 3656,
+      "sha256": "ad0a152303d0e9d7b7d8928ce4f02d78039e6041c38a20405e75902df0c21da6"
+    },
+    {
+      "path": "context/runtime/connect_academy_install_20261020.md",
+      "domain": "runtime",
+      "size": 8308,
+      "sha256": "3ef1ac56405752613930de0f5eab263b1d3cdca873e2c0a1cb10b6b6b879b04b"
+    },
+    {
+      "path": "context/runtime/connect_academy_installer_ci_20261020.json",
+      "domain": "runtime",
+      "size": 3776,
+      "sha256": "ea7837663bf705894ea06f61c4f97951e2ab6f61f653be0e5760e0822e1de27c"
+    },
+    {
+      "path": "context/runtime/connect_academy_owner_install_20261020.json",
+      "domain": "runtime",
+      "size": 2856,
+      "sha256": "59f1b3a76782c87222c2f54449ea52a59e3e2c6533da7459cfd45d58e37e6073"
+    },
+    {
+      "path": "context/runtime/connect_academy_preflight_20261019.md",
+      "domain": "runtime",
+      "size": 7082,
+      "sha256": "5564a81798feb112208c6fe2f49ab92aeabad8b27f7d7b1e1eb2dabc923f347b"
+    },
+    {
+      "path": "context/runtime/connect_academy_preflight_release_20261019.json",
+      "domain": "runtime",
+      "size": 1292,
+      "sha256": "4837975aaf37eb951ec2a8c08cbf768aedc7127e64beb8b0e419b79055b6cf28"
+    },
+    {
+      "path": "context/runtime/connect_academy_rc_20261019.md",
+      "domain": "runtime",
+      "size": 6503,
+      "sha256": "182b7adb139c37a047d8da84d01927ea91a00d18285320122ee10b4a861ee9be"
+    },
+    {
+      "path": "context/runtime/connect_academy_rc_ci_20261019.json",
+      "domain": "runtime",
+      "size": 6525,
+      "sha256": "f6afd4cc4ba8f94d8d11d7140e61a788d42446b278b17fb957a37bb116fa4024"
+    },
+    {
+      "path": "context/runtime/connect_academy_tls_probe_ci_20261020.json",
+      "domain": "runtime",
+      "size": 5434,
+      "sha256": "a9e41b078f9b1203abe760c12f6966cbb4f38ee30dce708679085e68c2961f04"
+    },
+    {
+      "path": "context/runtime/connect_activation_owner_20261021.json",
+      "domain": "runtime",
+      "size": 1887,
+      "sha256": "8adf12bd384ca2c9c9c20a5f2728393fda5d46a5e6530d8217ce2e1311b2bf41"
+    },
+    {
+      "path": "context/runtime/connect_backup_https_owner_20261021.json",
+      "domain": "runtime",
+      "size": 2143,
+      "sha256": "f68c98fbc2540f20fa41b9bc0f30957099eb555c7cdb78ff99af3b2acdb9cde5"
+    },
+    {
+      "path": "context/runtime/connect_chat_link_ci_20261020.json",
+      "domain": "runtime",
+      "size": 4167,
+      "sha256": "2789842c9151c18e8086f51806437976b334f4670ff59878980efd91d1612645"
+    },
+    {
+      "path": "context/runtime/connect_chat_link_update_20261021.md",
+      "domain": "runtime",
+      "size": 6743,
+      "sha256": "1bcddd420754b213cf919d23afb67cba57468cd96eac43ca184aed6703a5ca3d"
+    },
+    {
+      "path": "context/runtime/connect_chat_link_update_ci_20261021.json",
+      "domain": "runtime",
+      "size": 3027,
+      "sha256": "f964ab08b0573d25eeb427b245acf75dbd1be589326d20f1175c0913887d30e3"
+    },
+    {
+      "path": "context/runtime/connect_chat_link_update_owner_20261021.json",
+      "domain": "runtime",
+      "size": 3530,
+      "sha256": "4257eec2bfa5eb1330ed9dd2aa3e2c980125510aca83e29ab332bde68c9f7b60"
+    },
+    {
+      "path": "context/runtime/connect_con02_ack_20261021.md",
+      "domain": "runtime",
+      "size": 8642,
+      "sha256": "b0949477bed97e8193dd3c0a4ca544fc5fccd7b0e443d903484565fe0271788c"
+    },
+    {
+      "path": "context/runtime/connect_con02_ack_ci_20261021.json",
+      "domain": "runtime",
+      "size": 7248,
+      "sha256": "75c2d7e8b9e150a5a150fe785867aae46b01e771ecaa4f123ffd572940bea1c9"
+    },
+    {
+      "path": "context/runtime/connect_con02_callback_20261022.md",
+      "domain": "runtime",
+      "size": 5750,
+      "sha256": "d5028c5e39c16e3c5a917dd76ba158af77470b9b17c557bd9fb0e8a2d24ac791"
+    },
+    {
+      "path": "context/runtime/connect_con02_callback_ci_20261022.json",
+      "domain": "runtime",
+      "size": 9202,
+      "sha256": "81ed6d6e2f2902f0b57dc598ffd70d02b977da55e9caddc61d34c7dcbe6cfec2"
+    },
+    {
+      "path": "context/runtime/connect_con02_callback_progress_20261022.md",
+      "domain": "runtime",
+      "size": 8421,
+      "sha256": "c4fddbf2900eded1ec2dfe126dd0e7e72f2c6216170cb2efbf5d3eb439315ba5"
+    },
+    {
+      "path": "context/runtime/connect_con02_deployment_20261023.md",
+      "domain": "runtime",
+      "size": 11624,
+      "sha256": "4bdd5411b7ff23876a8dba0d172aca880666e1651cf164757db60613f8d4c50e"
+    },
+    {
+      "path": "context/runtime/connect_con02_deployment_ci_20261023.json",
+      "domain": "runtime",
+      "size": 12903,
+      "sha256": "9cfae1d0a1ad5be6cab1ac15fe6af939fdbe74f4ecfd21ee2f6621acb8684140"
+    },
+    {
+      "path": "context/runtime/connect_con02_deployment_progress_20261022.md",
+      "domain": "runtime",
+      "size": 12222,
+      "sha256": "11230bc9a00a249a181383327a67ccfef3661e6af3ab5ed28f895be8beb75cdd"
+    },
+    {
+      "path": "context/runtime/connect_con02_index_compat_20261023.md",
+      "domain": "runtime",
+      "size": 5794,
+      "sha256": "82a951952c8b12c4f1ec2fce0ecf4b48e33fb36400191e8bf84e3fb735ac3a11"
+    },
+    {
+      "path": "context/runtime/connect_con02_index_compat_ci_20261023.json",
+      "domain": "runtime",
+      "size": 10098,
+      "sha256": "2cb0a935de65548234b0fa10fcbeafab37e9c53d2915e8f20583a50d9c23362f"
+    },
+    {
+      "path": "context/runtime/connect_con02_index_owner_20261023.json",
+      "domain": "runtime",
+      "size": 1228,
+      "sha256": "15d514ad95bc03a5ed65f5b47e3d1834fea56c91772bf6e5ca87a0c4108b6efe"
+    },
+    {
+      "path": "context/runtime/connect_con02_server1_20261023.md",
+      "domain": "runtime",
+      "size": 4896,
+      "sha256": "219fb587fab4bc314b0f231f3bf3e2d17298752c14aacd8ecaed31e915b0bc94"
+    },
+    {
+      "path": "context/runtime/connect_con02_server1_owner_20261023.json",
+      "domain": "runtime",
+      "size": 4491,
+      "sha256": "d8b5d9bf3fc283e9a85e15d4fd7d87f4d7865d7eefeb7a5ab411979febd71c47"
+    },
+    {
+      "path": "context/runtime/connect_configure_tty_recovery_20261019.md",
+      "domain": "runtime",
+      "size": 5463,
+      "sha256": "626e63ab6fbb4f64f4401ca89267fa6664e40491c14cff5ba8a8758f7760ae98"
+    },
+    {
+      "path": "context/runtime/connect_cron_contract_owner_20261021.json",
+      "domain": "runtime",
+      "size": 1168,
+      "sha256": "c40b34e9222ad67f1ad251be43c06417d61b9e2865343d270fdec1c44936e144"
+    },
+    {
+      "path": "context/runtime/connect_delivery_owner_20261020.json",
+      "domain": "runtime",
+      "size": 4119,
+      "sha256": "75a0f5bc2e2a6edad040732bfaec192af81f6e2461b2b446574f62b05e0a2334"
+    },
+    {
+      "path": "context/runtime/connect_delivery_preflight_20261020.md",
+      "domain": "runtime",
+      "size": 7753,
+      "sha256": "8f32f61d7a737f745b9f839ef12a724f978e013bffee47efe9ac5435d07672e1"
+    },
+    {
+      "path": "context/runtime/connect_delivery_preflight_ci_20261020.json",
+      "domain": "runtime",
+      "size": 4370,
+      "sha256": "04107b27b5077dad9ff3ca2e32b7a7ca7dbbfbcef9095e59d63f0b2d40eaa04f"
+    },
+    {
+      "path": "context/runtime/connect_egress_failure_20261021.md",
+      "domain": "runtime",
+      "size": 3034,
+      "sha256": "4297a9370462c2d5deefc88abe998121340beaed396d29c2165d69e3241d70d8"
+    },
+    {
+      "path": "context/runtime/connect_https_owner_20261020.json",
+      "domain": "runtime",
+      "size": 9115,
+      "sha256": "65c94f398ec58f23bee6446256de6cdedb260c02804fbec5d9485bc562bd2e7b"
+    },
+    {
+      "path": "context/runtime/connect_https_preparation_20261020.md",
+      "domain": "runtime",
+      "size": 15597,
+      "sha256": "d08e6481809d9b91a188a13996260abb29a91a527ec36efd1ddfad3ebbfbc187"
+    },
+    {
+      "path": "context/runtime/connect_https_tls_probe_20261020_commands.md",
+      "domain": "runtime",
+      "size": 13903,
+      "sha256": "3eb414d3618ec35ed23582aa80d9eedb32b4e79eec7f89a4975cf5b643226bdc"
+    },
+    {
+      "path": "context/runtime/connect_notification_pilot_20261021.md",
+      "domain": "runtime",
+      "size": 7364,
+      "sha256": "2d71fb958cde89dcddb75ca995ad6edcd5be1be5930dbaf9b1aa710438c8036b"
+    },
+    {
+      "path": "context/runtime/connect_notification_pilot_access_20261021.md",
+      "domain": "runtime",
+      "size": 6393,
+      "sha256": "4d492166ea4ba27f6043aab034a951221ad650460c43e29e2867708908bc4dc8"
+    },
+    {
+      "path": "context/runtime/connect_notification_pilot_access_ci_20261021.json",
+      "domain": "runtime",
+      "size": 756,
+      "sha256": "fbb4a91a4a4f3e1838a31abe9b811f516e0e9bf42498f9f0f6b12d8c95052913"
+    },
+    {
+      "path": "context/runtime/connect_notification_pilot_access_owner_20261021.json",
+      "domain": "runtime",
+      "size": 1348,
+      "sha256": "9cc8ae0701fa28c577da55821ca23b8ad02805c26a47dadec6ac8f45859a0b1d"
+    },
+    {
+      "path": "context/runtime/connect_notification_pilot_ci_20261021.json",
+      "domain": "runtime",
+      "size": 2109,
+      "sha256": "6c74c01adc8b56c4d8f5d01298f87a57743e5be6759f1f2ca3ba4e3d22b6b7bd"
+    },
+    {
+      "path": "context/runtime/connect_notification_pilot_owner_20261021.json",
+      "domain": "runtime",
+      "size": 3376,
+      "sha256": "cc037b725031a92096fc010110eeb7ad87b2a8abdf4e6c04e31cc7216da9592c"
+    },
+    {
+      "path": "context/runtime/connect_owner_priority_20261019.json",
+      "domain": "runtime",
+      "size": 3129,
+      "sha256": "f47e2658badc554001133d13985012caaba1320e4a02e98c56070c0dc486cc91"
+    },
+    {
+      "path": "context/runtime/connect_private_bridge_check_20261021.md",
+      "domain": "runtime",
+      "size": 5108,
+      "sha256": "b6ca935957dcfe11c51dc52c35d466b3bb3c10691d40f1e9d9ec8dc9769e93f7"
+    },
+    {
+      "path": "context/runtime/connect_private_bridge_ci_20261021.json",
+      "domain": "runtime",
+      "size": 3309,
+      "sha256": "503ce761a7b3b9fc59f13204c69ac26d32afc6855027a80117e00831d5d5234d"
+    },
+    {
+      "path": "context/runtime/connect_private_bridge_parent_owner_20261021.json",
+      "domain": "runtime",
+      "size": 1262,
+      "sha256": "1d5d800171ec7af69573bc0b811b706247525a0eb9520ddfd61bdd16fd4957ab"
+    },
+    {
+      "path": "context/runtime/connect_private_parent_chain_20261021.md",
+      "domain": "runtime",
+      "size": 2841,
+      "sha256": "b4026a599c3852d9c9fc2d358f29fd6e89f4b86b826d6b2ff7f55d384f58c01a"
+    },
+    {
+      "path": "context/runtime/connect_private_parent_prepare_20261021.md",
+      "domain": "runtime",
+      "size": 4211,
+      "sha256": "ce53add2af572bc35115f7c6fecf4f9a24b21313f5cc5fa069a8611d55d1eeeb"
+    },
+    {
+      "path": "context/runtime/connect_private_parent_prepare_ci_20261021.json",
+      "domain": "runtime",
+      "size": 2968,
+      "sha256": "4cb734d5656db2d7984aaf6a629873f5b0fb79c9b18f8aa1bdae029b127104b4"
+    },
+    {
+      "path": "context/runtime/connect_receiver_delivery_20261019.md",
+      "domain": "runtime",
+      "size": 9558,
+      "sha256": "f8c2d4a984c5a19277f66d8e4f7ccaa983c57d3b9cfa3cd25ec42de55cb5fdc9"
+    },
+    {
+      "path": "context/runtime/connect_receiver_preparation_20261019.json",
+      "domain": "runtime",
+      "size": 655,
+      "sha256": "95e29dd652d11fcb6ae9bf20d3fceec69158cf053082745f7f6c6a45dc4509db"
+    },
+    {
+      "path": "context/runtime/connect_receiver_release_20261019.json",
+      "domain": "runtime",
+      "size": 2334,
+      "sha256": "acdf656a79f261e3b8f414f740cff4467fed86ed9868cfd9c39f5b5b6e0c1966"
+    },
+    {
+      "path": "context/runtime/connect_receiver_server1_20261019.json",
+      "domain": "runtime",
+      "size": 1838,
+      "sha256": "4b4ff9fef1c04a36115914d3f54c955a80ca722bd55a5191a3ba99a81443f529"
+    },
+    {
+      "path": "context/runtime/connect_telegram_finish_20261023.md",
+      "domain": "runtime",
+      "size": 8217,
+      "sha256": "f7be9b91ed6e123a8833582428e08ff0dfa9be140e22debe3505e7a8ae0923ae"
+    },
+    {
+      "path": "context/runtime/connect_telegram_finish_ci_20261023.json",
+      "domain": "runtime",
+      "size": 6670,
+      "sha256": "1a61c6e8c82b960e50ab9ab6c0d1df02d6eb469de8d5461912cd2fb34046a6cd"
+    },
+    {
+      "path": "context/runtime/connect_telegram_finish_owner_20261023.json",
+      "domain": "runtime",
+      "size": 4247,
+      "sha256": "a6f9f7a97e1afa5d01860878d7fba5d849919e469a3e84be84f75fcc0c25f079"
+    },
+    {
+      "path": "context/runtime/connect_telegram_next_preflight_20261023.md",
+      "domain": "runtime",
+      "size": 7576,
+      "sha256": "752ea73e3f1897dd83ab8f0753c0cd97a23d6f9ba5423f091c85b9e6e0dcc80d"
     },
     {
       "path": "context/runtime/context_refresh_report.md",
@@ -944,6 +1628,24 @@
       "domain": "runtime",
       "size": 7712,
       "sha256": "a25754e35880ae9df4a6270b1e88699884e0d4d5c4397c1e693d772bb37d4885"
+    },
+    {
+      "path": "context/runtime/cron_incident_20261020.md",
+      "domain": "runtime",
+      "size": 6419,
+      "sha256": "b15a9a9652d1e0cb115cd7f02c785b688415c6cb36daaae4b0d56164e2d67935"
+    },
+    {
+      "path": "context/runtime/cron_release_update_20261020.json",
+      "domain": "runtime",
+      "size": 6550,
+      "sha256": "a56954cd6b1fd6b5599f8a282cd4b28d4ddc6fe99a23fabe32a1e6d8eb454f59"
+    },
+    {
+      "path": "context/runtime/cron_release_update_20261020.md",
+      "domain": "runtime",
+      "size": 8031,
+      "sha256": "56a5a05746c879576efdc2ff858ab5fa4fc6316ea85ba37094e13feaf68c8493"
     },
     {
       "path": "context/runtime/docker.yaml",
@@ -1124,6 +1826,60 @@
       "domain": "runtime",
       "size": 4307,
       "sha256": "df39ce785a34f05951dbc32322d2ae1dfbaa785be6890a797a0c2e41ec74f07d"
+    },
+    {
+      "path": "context/runtime/infra_app_handoff_20261024.md",
+      "domain": "runtime",
+      "size": 10366,
+      "sha256": "74f3b1f7ba019d93f7a23ed76029ea34ebf3c7500a208bd50683dc3abb2b08d7"
+    },
+    {
+      "path": "context/runtime/infra_app_handoff_ci_20261024.json",
+      "domain": "runtime",
+      "size": 7855,
+      "sha256": "4c9b15b3ef072d89b8f1366cbefaf284a7ca8376121d4fc8d744642b0e8500ef"
+    },
+    {
+      "path": "context/runtime/infra_app_handoff_local_checks_20261024.json",
+      "domain": "runtime",
+      "size": 3205,
+      "sha256": "dbb859e7891bdbb0d8265c678d416551f54f5c98759102130c7a195f460e5804"
+    },
+    {
+      "path": "context/runtime/infra_app_handoff_progress_20261024.md",
+      "domain": "runtime",
+      "size": 6775,
+      "sha256": "174be335a4452ed5870441ac6826fce73cd5af6035cd796c36e16d88644d9ac9"
+    },
+    {
+      "path": "context/runtime/infra_db_privilege_ci_20261023.json",
+      "domain": "runtime",
+      "size": 14514,
+      "sha256": "d12e762cd9a23223e2f5ca4cbcc2ed5a09a9ac4fb883e72010d2df16e4c7f68e"
+    },
+    {
+      "path": "context/runtime/infra_db_privilege_consumers_20261023.md",
+      "domain": "runtime",
+      "size": 11756,
+      "sha256": "2dd37ac507a17173b1e6792be956ea7fc882cc0ab9050bf765539f27aeaef048"
+    },
+    {
+      "path": "context/runtime/infra_normalization_resume_20261023.md",
+      "domain": "runtime",
+      "size": 9377,
+      "sha256": "4f8909b98017df289ec04e25a0853dc5ff66bab67fb6fdf6a20939faafcf7051"
+    },
+    {
+      "path": "context/runtime/infra_readonly_baseline_20261023.md",
+      "domain": "runtime",
+      "size": 31775,
+      "sha256": "ef734dbc07e846224bf1011653eeaf0043bcd63b8ee25ab3c2574f3be832178e"
+    },
+    {
+      "path": "context/runtime/infra_readonly_owner_20261023.json",
+      "domain": "runtime",
+      "size": 16959,
+      "sha256": "f9694731e76dff2058f4fdcff505a9bf4647d4981d741a4a5f21efc9f8136fc8"
     },
     {
       "path": "context/runtime/lab_cold_checkpoint_20261005.md",
@@ -1554,8 +2310,8 @@
     {
       "path": "context/runtime/recovery_contract_20261005.md",
       "domain": "runtime",
-      "size": 10334,
-      "sha256": "16f30e34d42e5ae09f444924819c8dc4f7a7272839bb1741f4c354b7e4f95a6b"
+      "size": 11239,
+      "sha256": "dc662a5322e7fd5006e8e8742ebdf608b1601060ceca2b19ac3df633565d0ff7"
     },
     {
       "path": "context/runtime/repository_state_20261016.json",
@@ -1764,8 +2520,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 2827,
-      "sha256": "2c8aa3850b01801f69a0c7b44c6314031c2c8559739dd96c8407fde6da892d72"
+      "size": 75264,
+      "sha256": "673b338cdbc2f73b2369697b6e3a53781c7cc0f3c4865ced963f0b03966420d1"
     },
     {
       "path": "context/tasks/backlog.yaml",

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>USTAR — вход в Академию</title>
+  <link rel="stylesheet" href="/onboarding.css">
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+  <script src="/onboarding.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><div><span class="brand">USTAR</span><p class="eyebrow">Корпоративная Академия</p></div>
+      <button id="theme" class="quiet" type="button" aria-label="Переключить тему">Тёмная тема</button></header>
+    <section class="intro"><p class="eyebrow">Единая учётная запись</p><h1>Ваш вход в Академию</h1>
+      <p>Создайте аккаунт и дождитесь решения HRD или подключите существующий аккаунт из личного кабинета Академии → Мессенджеры.</p></section>
+    <ol class="steps" aria-label="Этапы доступа"><li>Аккаунт</li><li>Одобрение HRD</li><li>Доступ</li></ol>
+    <section class="card status" aria-live="polite" aria-atomic="true">
+      <span id="status-badge" class="badge">Подключение</span><h2 id="status-title">Проверяем защищённый вход</h2>
+      <p id="status-detail">Приложение должно быть открыто из личного диалога с ботом Академии.</p>
+      <p id="status-time" class="muted"></p>
+    </section>
+    <section id="actor-profile" class="card" hidden aria-label="Профиль сотрудника">
+      <h2>Данные учётной записи</h2>
+      <dl class="profile-grid">
+        <div><dt>Сотрудник</dt><dd id="profile-fullname"></dd></div>
+        <div><dt>Логин Академии</dt><dd id="profile-username"></dd></div>
+        <div><dt>Должность</dt><dd id="profile-position"></dd></div>
+        <div><dt>Подразделение</dt><dd id="profile-department"></dd></div>
+        <div><dt>Состояние учётной записи</dt><dd id="profile-state"></dd></div>
+      </dl>
+      <p class="muted">Данные получены из Академии. Сейчас доступен собственный профиль; обучение и рабочие действия будут подключены отдельными этапами.</p>
+    </section>
+    <p id="error" class="error" role="alert" hidden></p>
+    <form id="registration-form" class="card" hidden>
+      <h2>Новая учётная запись</h2><p class="muted">Подразделение — ваша заявка. Роль и доступ подтверждает HRD.</p>
+      <div class="grid">
+        <label>Имя<input id="firstname" name="firstname" autocomplete="given-name" maxlength="100" required></label>
+        <label>Фамилия<input id="lastname" name="lastname" autocomplete="family-name" maxlength="100" required></label>
+        <label>Логин<input id="username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="100" required></label>
+        <label>Email<input id="email" name="email" type="email" autocomplete="email" maxlength="100" required></label>
+      </div>
+      <label>Подразделение<select id="departmentid" name="departmentid" required><option value="">Выберите подразделение</option></select></label>
+      <label>Пароль Академии<input id="password" name="password" type="password" autocomplete="new-password" maxlength="4096" required></label>
+      <p class="muted">Политику пароля проверяет Академия. Не отправляйте пароль сообщением боту. После отправки поле очищается.</p>
+      <button id="submit" class="primary" type="submit">Отправить заявку</button>
+      <details><summary>У меня уже есть аккаунт</summary><p>Не регистрируйтесь повторно. Войдите в Академию обычным способом, откройте личный кабинет → Мессенджеры и создайте персональную ссылку. Откройте её в своём Telegram, затем вернитесь в тот же браузер Академии, сверьте ID и подтвердите связь. Если забыли пароль, используйте восстановление на странице входа Академии или обратитесь к HRD.</p></details>
+    </form>
+    <nav id="session-actions" hidden aria-label="Управление сессией">
+      <button id="activate" class="primary" type="button" hidden>Открыть мой профиль</button>
+      <button id="refresh" type="button">Проверить статус</button><button id="logout" class="quiet" type="button">Закрыть сессию</button>
+    </nav>
+    <footer>Регистрация, собственный профиль и подтверждение связи. Это ещё не полный учебный вход в Moodle.</footer>
+  </main>
+</body>
+</html>

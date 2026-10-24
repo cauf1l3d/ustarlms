@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "kind": "Connect_chat_link_delivery_owner_preflight",
+  "reported_at": "2026-10-20T21:25:34+03:00",
+  "measured_at": "2026-10-20T18:25:07.719417+00:00",
+  "evidence": "owner_terminal_output_not_independent_SSH",
+  "source_commit": "4d70de5cfe881458cb065ef066cc1ddcc88e214d",
+  "archive_sha256_verified": "67d3d13acb0d800e7031e5f09550d7c73e6cc553305f0f71963d0674295b56b8",
+  "status": "review_required",
+  "baseline_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "web_root": "/opt/ustar/data/moodle/public/public",
+  "source": {
+    "complete": true,
+    "matching": 552,
+    "changed": 0,
+    "production_only": 0,
+    "git_only": 0,
+    "errors": 0,
+    "skipped": 0,
+    "versions": {
+      "local_ustar": 2026101905,
+      "theme_ustar": 2026100202
+    },
+    "candidate_changed_files": [
+      "local/ustar/classes/connect/identity_service.php",
+      "local/ustar/classes/connect/link_management.php",
+      "local/ustar/templates/connect.mustache",
+      "local/ustar/tests/connect_bridge_test.php",
+      "local/ustar/tests/connect_link_management_test.php",
+      "local/ustar/version.php"
+    ],
+    "candidate_matching": 546
+  },
+  "database": {
+    "transaction_read_only": true,
+    "core_version": "2025100608",
+    "baseline_versions_and_disk_match": true,
+    "tables": 99,
+    "missing_or_extra_baseline_tables": 0,
+    "candidate_missing_tables": 0
+  },
+  "containers": "both_running_reviewed_bind_matches",
+  "backup": {
+    "status": "recorded_success",
+    "finished_at": "2026-10-20T01:22:38.864946+00:00",
+    "archive_or_restore_verified": false
+  },
+  "ssd": {
+    "available_bytes": 56512294912,
+    "available_inodes": 6078066
+  },
+  "HTTPS": {
+    "phase": "active",
+    "owned_hashes_match": true,
+    "effective_TLS_request_performed": false
+  },
+  "cron": {
+    "status": "review_required",
+    "reason": "unsafe_control_input",
+    "failing_path_not_reported": true,
+    "source_SHA_not_yet_measured_by_this_probe": true
+  },
+  "transport": {
+    "backend": "127.0.0.1:8082",
+    "proposed_bridge": "127.0.0.1:18443",
+    "port_observed_free": true,
+    "port_reserved": false,
+    "gateway_candidates": [
+      "172.18.0.1"
+    ],
+    "effective_peer_proven": false,
+    "public_bridge_denial_still_required": true
+  },
+  "services": {
+    "cron.service": "active",
+    "ustar-academy-cert-renew.timer": "active",
+    "ustar-connect-receiver.service": "active",
+    "ustar-connect-notify.service": "inactive"
+  },
+  "local_diagnosis": {
+    "same_fixture_0600": "measured",
+    "same_fixture_script_0755": "unsafe_control_input",
+    "cause_in_code": "preflight applies private=True to cron script;legacy installer/release guard permits root-owned non-group/world-writable code",
+    "actual_server_input_mode_or_cause_confirmed": true,
+    "next": "corrected_reader_preserves_root_nonwritable_code_and_private_0600_state;cron_only_recheck"
+  },
+  "deployment_approved": false,
+  "not_atomic_snapshot": true,
+  "PHP_or_Moodle_bootstrap": false,
+  "Telegram_API_or_polling": false,
+  "code_config_DB_or_service_changes": false,
+  "subagents": 0,
+  "owner_input_metadata_2131MSK": {
+    "reported_at": "2026-10-20T21:31:51+03:00",
+    "script": {
+      "mode": "0750",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1,
+      "type": "regular_file"
+    },
+    "cron_directory": {
+      "mode": "0755",
+      "uid": 0,
+      "gid": 0
+    },
+    "schedule": {
+      "mode": "0644",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1
+    },
+    "state_directory": {
+      "mode": "0700",
+      "uid": 0,
+      "gid": 0
+    },
+    "installation": {
+      "mode": "0600",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1
+    },
+    "last_run": {
+      "mode": "0600",
+      "uid": 0,
+      "gid": 0,
+      "nlink": 1
+    },
+    "script_sha256": "c5eabdceaa2f137eccd35087b03d473f61257aaeb77624f4855583ebaf353638",
+    "cause_confirmed": "preflight_private_True_on_executable_code_rejects_allowed_group_read_execute_0750",
+    "host_permission_or_source_change_needed": false,
+    "next": "corrected_exact_package_cron_only_no_Academy_Docker_SQL_HTTPS_recollection"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "kind": "connect_private_bridge_owner_readonly_check",
+  "reported_date": "2026-10-21",
+  "measured_at": null,
+  "source": "owner_terminal_in_current_conversation",
+  "independent_server_access": false,
+  "package": {
+    "source_commit": "e4d7a154028ccf04b2198e951bf9631e5ef5a32f",
+    "filename": "ustar-private-bridge-check-e4d7a154.pyz",
+    "sha256": "14de548410f1cc861e9f9eae8d79018ab4f6dee67c218a4f84d29fdae95075af",
+    "checksum_result": "OK"
+  },
+  "result": {
+    "phase": "refused",
+    "reason": "unsafe_include_parent",
+    "configuration_changed": false,
+    "details": {
+      "path": "/opt/ustar/data/moodle/public",
+      "uid": 33,
+      "gid": 33,
+      "mode": "0o755"
+    }
+  },
+  "scope": "First refusal only; later transport/receiver/live HTTPS checks were not reached. Ancestor ownership above this path is not independently established.",
+  "next": "Guarded nonrecursive parent preparation, after all remaining readiness checks; preserve GID/mode/xattrs/children and save inode-bound before-image.",
+  "not_repeated": [
+    "application_upgrade",
+    "cold_copy",
+    "backup_preparation",
+    "HTTPS_cutover",
+    "cron_repair",
+    "whole_source_inventory"
+  ],
+  "live_bridge_activated": false,
+  "subagents": 0
+}

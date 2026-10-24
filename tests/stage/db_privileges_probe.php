@@ -99,9 +99,12 @@ if ($mode === 'role') {
     $course = create_course((object)['fullname' => 'Synthetic privilege course',
         'shortname' => 'privilege-course', 'category' => $category->id]);
     $manual = enrol_get_plugin('manual');
-    $instance = $manual->add_instance($course, ['status' => ENROL_INSTANCE_ENABLED]);
+    // create_course already installs the default manual instance. enrol_user needs
+    // its record, whereas add_instance may return null when one already exists.
+    $enrolinstance = $DB->get_record('enrol', ['courseid' => $course->id, 'enrol' => 'manual'], '*', MUST_EXIST);
+    $instance = (int)$enrolinstance->id;
     $student = $DB->get_field('role', 'id', ['shortname' => 'student'], MUST_EXIST);
-    $manual->enrol_user($instance, $uid, $student);
+    $manual->enrol_user($enrolinstance, $uid, $student);
     $task = \local_ustar\task_workspace\service::create((int)get_admin()->id, $uid,
         ['kind' => 'task', 'title' => 'Synthetic privilege task',
          'date' => gmdate('Y-m-d', time() + DAYSECS), 'clock' => '17:00',

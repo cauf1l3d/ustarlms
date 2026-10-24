@@ -165,6 +165,85 @@
     "backup_helpers_changed": false,
     "focused_tests": 8,
     "new_bootstrap_acceptance_test_observed_RED_then_GREEN": true,
-    "native": "pending_next_commit"
+    "native": "pending_e59d9af2",
+    "app_credential_isolation": "distinct_synthetic_app_password_and_failed_bootstrap_auth_control_required"
+  },
+  "revised_qualification": {
+    "commit": "e59d9af2e76af558dbeab12f02f5302b542af8c0",
+    "review_run": 40041621643,
+    "context_run": 40041621634,
+    "status": "partial_native_handoff_passed_enrol_probe_API_failure",
+    "focused_tests": 8,
+    "production_changed": false,
+    "source83": {
+      "job": 120713783872,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153
+    },
+    "source82": {
+      "job": 120713783893,
+      "result": "success",
+      "python_tests": 1085,
+      "environment_skips": 153
+    },
+    "runtime": {
+      "job": 120713783548,
+      "result": "success"
+    },
+    "native": {
+      "job": 120714895766,
+      "result": "failure",
+      "reason": "new probe passed null instead of stdClass enrol instance",
+      "artifact_id": 12539967179,
+      "artifact_sha256": "150a6177b59f630e9283e6ba7d9fc2727e06e2c82ef5f7cf42c17e0bcf104b7e",
+      "artifact_downloaded_and_verified": true,
+      "partial_metadata": {
+        "db-privileges-role.json": {
+          "login_role": "ustar_app",
+          "effective_role": "ustar_app",
+          "role_oid": 126161,
+          "superuser": 0,
+          "createrole": 0,
+          "createdb": 0,
+          "replication": 0,
+          "bypassrls": 0,
+          "database_owner": 1,
+          "postgres_major": "16",
+          "dangerous_memberships": 0
+        },
+        "db-privileges-handoff.json": {
+          "bootstrap_role": "ustar_fixture",
+          "bootstrap_oid": 10,
+          "bootstrap_superuser": 1,
+          "public_before": 3159,
+          "public_app_after": 3159,
+          "public_bootstrap_after": 0,
+          "app_system_catalogs": 0
+        },
+        "db-privileges-member-refused.json": {
+          "login_role": "ustar_app",
+          "effective_role": "ustar_app",
+          "role_oid": 126161,
+          "superuser": 0,
+          "createrole": 0,
+          "createdb": 0,
+          "replication": 0,
+          "bypassrls": 0,
+          "database_owner": 1,
+          "postgres_major": "16",
+          "dangerous_memberships": 1
+        },
+        "db-privileges-admin.json": {
+          "role": "ustar_privilege_admin",
+          "superuser": 1
+        }
+      },
+      "previous_native_tests": 158,
+      "previous_native_assertions": 830,
+      "bootstrap_auth_refusal_and_membership_control_passed": true,
+      "upgrade_and_repeat_passed_before_exercise": true,
+      "full_privilege_GATE": "not_passed"
+    }
   }
 }

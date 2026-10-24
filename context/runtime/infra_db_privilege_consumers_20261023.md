@@ -73,6 +73,15 @@ caused by Chromium install. New bootstrap-safe profile is prepared; native GREEN
 remains pending. Host verifier8tests passed, including observed RED→GREEN for missing
 bootstrap/system-catalog/scoped-ownership evidence.
 
+Native e59d partial result24Oct: all3159 public relations transferred to ustar_app,
+zero public relations left bootstrap-owned, zero app-owned pg_catalog relations.
+Actual app OID126161/all five flags0/DBowner1/membership0; temporary CREATEDB
+membership produced1 and was refused/revoked. Distinct app password rejected for
+bootstrap; upgrade/repeat passed. Then enrolment probe failed an API argument:
+Moodle enrol_user expects an existing stdClass instance; add_instance returned null
+because create_course already installed it. Probe now fetches that record. Remaining
+scheduled task/denials/dump/restore not reached; full native GREEN still pending.
+
 New gate keeps bootstrap OID10 SUPERUSER, creates ordinary ustar_app, transfers only
 public app relations (tables/views/sequences and automatic index ownership) and switches
 synthetic CFG. It must prove equal public relation ownership counts and zero app-owned

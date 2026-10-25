@@ -5,7 +5,8 @@
 SHA256da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f.
 Timer active; journal measured/actionnone; containers unchanged, no business restore
 or provider sends. [Owner receipt](infra_one_pass_owner_20261025.json#accepted_apply).
-**--apply больше не запускать.** Следующий [read-only follow-up](infra_closure_followup_20261025.md).
+**--apply больше не запускать.** Follow-up подтверждён: UPS есть, старые retry задачи disabled; external restore
+result явно unknown/copies handed over. Следующий [Caddy metadata-only срез](infra_caddy_listener_metadata_20261025.md).
 All8 not complete; separate scheduled tick/external DR/access/power/observer/SLO facts
 remain open. Original physical pairs and standard HDD backup remain required.
 

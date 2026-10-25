@@ -11,23 +11,26 @@ provider not called. Старые DB/code/SSD/Moodle/OS/HTTPS/backup/Connect sta
 |---|---|---|
 | Права | Root-owned code/config и private legacy22 archive приняты ранее;69 выбранных USTAR exports закрыты от group/other | www-data/caddy supplementary-group trust boundary и общий host access policy требуют отдельного разбора. Не объявляется глобальный аудит всех файлов/других проектов. |
 | Docker/SSD | Existing accepted IDs/images сохранены; рестарт/пересоздание этим batch не выполнялось; прежний root/HDD free-space/SMART stand засчитан | json-file rotation/health lifecycle требует coordinated frozen-ID/recovery handoff. Старые лаборатории/логи/архивы не удалять. |
-| Доступ | Новый список69deduplicated endpoints без truncation; SSH/mail/DNS/web bindings видны | На *:2019 и127.0.0.1:2019 разные binding entries; owner/purpose ещё неизвестны, внешняя доступность не доказана. Далее PID/unit/published-port metadata, затем проверенный key/emergency access/shared-host allowlist. UFW/password/forwarding не менять вслепую. |
-| Копии/DR | New control companion261files/33.4MiB encrypted/readback; timer active. Physical trees/recovery.key исключены. Fresh standard HDD/pre-hardening archive ранее приняты | Первый scheduled companion tick ещё не наблюдался. Companion не whole-host/atomic DB pair; physical manifests не заменяют их байты. Сохранить SSD physical pairs и standard DB/CODE/DATA HDD archive. Clean-host restore от сисадмина/offsite/separate key custody/RPO/RTO/retention и qualified generation pairing открыты. |
+| Доступ | Новый список69deduplicated endpoints без truncation; SSH/mail/DNS/web bindings видны | Обе2019записи принадлежат caddyPID862; назначение wildcard socket ещё неизвестно, внешняя доступность не доказана. Далее filtered live-admin/HTTP-server metadata и недостающий unit/published-port output, затем key/emergency/shared-host allowlist. UFW/password/forwarding не менять вслепую. |
+| Копии/DR | New control companion261files/33.4MiB encrypted/readback; timer active. Physical trees/recovery.key исключены. Fresh standard HDD/pre-hardening archive ранее приняты | Первый scheduled companion tick ещё не наблюдался. Companion не whole-host/atomic DB pair; physical manifests не заменяют их байты. Сохранить SSD physical pairs и standard DB/CODE/DATA HDD archive. Копии переданы по owner confirmation; external restore result owner явно оставляет unknown. Не повторять запрос/stand и не блокировать local work. Offsite/latest-generation identity/separate key custody/RPO/RTO/retention и qualified generation pairing открыты. |
 | Наблюдение | Journal уже fresh measured/categories0; actionnone — настройки не менялись. Numeric HTTP log принят ранее | Причина прежнего no_data не установлена, нулевые categories относятся к выбранному окну/классификатору. Независимый host-loss observer и проверенная доставка всё ещё открыты. |
-| Железо/питание | Ранее owner SMART health PASSED и текущие5/197/198/199=0 засчитаны | Исторический риск HDD не отменён; физический UPS/контролируемый shutdown и независимость копий требуют фактов. Не повторять long-test без отдельной необходимости. |
-| Регламент | Cron receipt fresh17:49, adhoc queued/failed0; scheduled_failed2/overdue19 согласуются с прежними остаточными counts. Active Academy TLS verified, expiry20Nov2026 10:07:37MSK | Exit0 текущего cron не выведен этим sanitized receipt; count2 не объявлять новой ошибкой. Далее retry/disabled task metadata без выполнения/сброса задач. SMTP delivery с согласованным адресатом, future TLS-renewal→frozen recovery compatibility открыты. |
+| Железо/питание | Ранее owner SMART health PASSED и текущие5/197/198/199=0 засчитаны | UPS есть по owner confirmation. Автоматический shutdown не проверен, модель не запрашивалась; power-loss stand не нужен по умолчанию. Исторический риск HDD/независимость копий сохраняют отдельные ограничения. |
+| Регламент | Cron receipt fresh17:49, adhoc queued/failed0; scheduled_failed2/overdue19 согласуются с прежними остаточными counts. Active Academy TLS verified, expiry20Nov2026 10:07:37MSK | Direct SQL подтвердил обе retry строки disabled1, last runs1Sep/28Aug, enabled retries0; это старый отключённый остаток. Не выполнять/включать/сбрасывать задачи и не повторять SQL/cron stand. Exit0 текущего cron не выводился sanitized receipt. SMTP delivery с согласованным адресатом, future TLS-renewal→frozen recovery compatibility открыты. |
 | Приёмка | Все предыдущие функциональные owner stands сохранены; текущий batch завершил свои guards и readback | Representative SLO/RPO/RTO и внешние свидетельства по строкам выше нужны для полной приёмки. Новый default UI/full restore/load-test круг не требуется. |
 
 ## Следующий срез
 
-[Один read-only follow-up](infra_closure_followup_20261025.md) определяет owner2019
-и current scheduled-task retry metadata. Не перезапускает cron/tasks/services,
+[Owner follow-up](infra_closure_followup_owner_20261025.json) подтвердил UPS, две
+отключённые retry задачи и caddyPID862. [Текущий read-only срез](infra_caddy_listener_metadata_20261025.md)
+уточняет role wildcard2019 и недостающие unit/container-port metadata. Не перезапускает cron/tasks/services,
 не меняет firewall/SSH/Caddy/Docker/DB. SQL READ ONLY под ordinary ustar_app;
 не выводит config/Env/credentials/raw task logs.
 
-Для внешних пунктов нужны реальные факты: результат clean-host restore от сисадмина,
+Owner просит external restore result оставить unknown: copies handed over, не
+переспрашивать и не повторять stand. UPS presence подтверждён. Для оставшихся
+внешних пунктов нужны реальные факты:
 независимая текущая копия и отдельный ключ, проверенный альтернативный key login/
-аварийный доступ, policy общего хоста/маршрутизатора, UPS, выбранный независимый
+аварийный доступ, policy общего хоста/маршрутизатора, выбранный независимый
 observer и адресат проверки доставки, бизнес RPO/RTO/SLO. Эти пункты не закрываются
 фактом same-host backup или одиночного HTTP request/p95.
 

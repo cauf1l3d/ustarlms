@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "kind": "infra_closure_readonly_owner_followup",
+  "recorded_at_utc": "2026-10-25T15:32:02.316826+00:00",
+  "source": "owner console reply; observation timestamp not supplied",
+  "UPS": {
+    "presence_confirmed_by_owner": true,
+    "model": null,
+    "automatic_shutdown_verified": false,
+    "new_power_loss_test_requested": false
+  },
+  "external_restore": {
+    "copies_delivered_owner_confirmed": true,
+    "archive_identities_not_supplied": true,
+    "result": "unknown",
+    "owner_instruction": "leave result under question; copies handed over",
+    "policy": "do not invent restore PASS, do not repeat request/restore stand or block independent local work"
+  },
+  "port2019": {
+    "program": "caddy",
+    "pid": 862,
+    "sockets": [
+      {
+        "local": "127.0.0.1:2019",
+        "fd": 3
+      },
+      {
+        "local": "*:2019",
+        "fd": 7
+      }
+    ],
+    "socket_families_not_disambiguated": true,
+    "unit_identity_not_received": true,
+    "configuration_role": "unknown",
+    "external_reachability": "not tested"
+  },
+  "paste": {
+    "unit_output_received": false,
+    "docker_ports_output_received": false,
+    "observed_error": "--format: command not found",
+    "interpretation": "format option ran without its docker ps command; not evidence of Docker service failure",
+    "next_command": "one compound heredoc before sudo prompt; child stdin DEVNULL"
+  },
+  "scheduled_task_retry_rows": [
+    {
+      "classname": "\\core\\task\\h5p_get_content_types_task",
+      "disabled": 1,
+      "faildelay_seconds": 960,
+      "last_run_msk": "2026-09-01T00:52:03+03:00",
+      "next_run_msk": "2026-10-05T02:17:02+03:00"
+    },
+    {
+      "classname": "\\core\\task\\registration_cron_task",
+      "disabled": 1,
+      "faildelay_seconds": 60,
+      "last_run_msk": "2026-08-28T23:31:04+03:00",
+      "next_run_msk": "2026-10-09T23:31:00+03:00"
+    }
+  ],
+  "scheduled_retry_interpretation": {
+    "rows_returned": 2,
+    "query_limit": 20,
+    "enabled_retry_rows": 0,
+    "disabled_retry_rows": 2,
+    "classification": "old disabled residual retries; no active scheduled retry incident shown",
+    "task_execution_or_reset_performed": false,
+    "repeat_query_needed": false
+  },
+  "next": "metadata-only Caddy unit/config address/HTTP-server role projection and missing container ports; no service mutation"
+}

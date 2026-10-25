@@ -4,24 +4,27 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct17:49MSK — owner local_batch_applied accepted; no repeat apply/old stands.
-  Pinned scopefix5067163f/source1c5152bd protected69exports, verified encrypted261-file
-  control companion35039995B/SHAda701618, timer active, original containers unchanged,
-  business_rows_restored/provider_calledfalse. Finished14:49:36Z/17:49:36MSK. Physical
-  copies/recovery.key excluded; not whole-host/offsite/atomic DB pair; scheduled tick
-  not yet observed. Journal fresh measured/categories0/actionnone: no policy tweak or
-  cause claim for earlier no_data. TLS verified, active leaf expires20Nov10:07MSK.
-  Cron receipt fresh17:49/adhoc0,2failed/19overdue consistent with accepted residual
-  counts20/21Oct; no restart/reset/new incident from counts alone.69listener endpoints,
-  not truncated; wildcard2019 owner/purpose unknown. Next narrow read-only PID/unit/
-  container-port metadata and task retry/disabled fields. Do not run tasks or touch
-  SSH/firewall/containers blindly. All8 still incomplete: Docker frozen-ID lifecycle,
-  key/emergency/shared-host policy,www-data/caddy boundary,external restore/offsite/
-  key custody/UPS/independent observer/delivery/SMTP/SLO/TLS-renewal recovery. Existing
-  DB/code/SSD/Moodle/OS/HTTPS/backup/Connect acceptance retained;0agents/SSH/sends/main
-  merge. Current receipt: context/runtime/infra_one_pass_owner_20261025.json#accepted_apply.
-  Next: context/runtime/infra_closure_followup_20261025.md.
+  25Oct18:32MSK — owner confirms UPS; external restore result explicitly unknown.
+  Copies handed over, archive identities/result not supplied. Keep waiting_external/
+  unknown, do not claim PASS or repeat request/full restore stand; local work continues.
+  Both faildelay>0 tasks disabled1: h5p_get_content_types_task960(last1Sep),
+  registration_cron_task60(last28Aug),2rows<limit20,enabled retry0. Old disabled residue,
+  not new cron failure; no reset/enable/task run/cron recovery or repeat SQL required.
+  Both2019TCP bindings (127.0.0.1,*) belong to caddyPID862/fd3,7; purpose not established,
+  no external reachability proof. Unit/docker metadata lost in paste (--format alone),
+  not Docker failure. Next one compound heredoc: family-specific sockets,filtered unit/
+  config path,container ports,loopback GET config projected to listeners/handler types/
+  proxy addresses only. No raw config/auth/Env/stderr,write/reload/providers. Syntax and
+  synthetic secret-sentinel projection checked; no local real service request.
+  Owner local_batch_applied5067163f/69exports/261controls/SHAda701618/timer/measured
+  journal remains accepted; no repeat --apply/old DB/code/SSD/Moodle/OS/backup/Connect
+  stands.0agents/SSH/sends/main merge. Receipt context/runtime/infra_closure_followup_owner_20261025.json;
+  next context/runtime/infra_caddy_listener_metadata_20261025.md.
 next_task: INF-03
+infrastructure_UPS_status: owner_confirms_present_shutdown_not_verified
+infrastructure_external_restore_status: copies_delivered_result_unknown_owner_explicitly_deferred_no_repeat_prompt
+infrastructure_task_retry_status: two_old_disabled_rows_enabled_retry_zero_no_reset_or_repeat_query
+infrastructure_caddy2019_status: owner_caddy_PID862_confirmed_purpose_unknown_metadata_next
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open

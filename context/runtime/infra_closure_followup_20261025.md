@@ -1,5 +1,14 @@
 # Следующий read-only срез25Oct после local_batch_applied
 
+**Owner follow-up принят:** UPS есть; external restore copies delivered/result
+explicitly unknown. Не переспрашивать результат и не повторять restore stand.
+Две retry задачи disabled1, last runs1Sep/28Aug, enabled retries0; их не запускать/
+сбрасывать, SQL ниже повторять не нужно. Обе2019записи принадлежат caddyPID862,
+но service unit/config role ещё неизвестны. Unit/docker команды не выполнились
+при вставке (--format отдельно), это не Docker failure. [Receipt](infra_closure_followup_owner_20261025.json).
+**Current next:** [один Caddy metadata heredoc](infra_caddy_listener_metadata_20261025.md).
+Предыдущая команда ниже — история, не текущий повторный diagnostic stand.
+
 Owner success17:49MSK принят; --apply не повторять. [Acceptance](infra_one_pass_owner_20261025.json#accepted_apply).
 Далее определить service owner/purpose wildcard2019 и current task retry/disabled
 metadata. Это не новый full survey и не повтор прежнего cron recovery/upgrade stand.

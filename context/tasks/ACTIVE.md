@@ -1,5 +1,22 @@
 # Активные задачи USTAR
 
+**25Oct18:32MSK — owner confirms UPS; external restore result explicitly unknown.**
+Copies handed over, archive identities/result not supplied. Keep waiting_external/
+unknown, do not claim PASS or repeat request/full restore stand; local work continues.
+Both faildelay>0 tasks disabled1: h5p_get_content_types_task960(last1Sep),
+registration_cron_task60(last28Aug),2rows<limit20,enabled retry0. Old disabled residue,
+not new cron failure; no reset/enable/task run/cron recovery or repeat SQL required.
+Both2019TCP bindings (127.0.0.1,*) belong to caddyPID862/fd3,7; purpose not established,
+no external reachability proof. Unit/docker metadata lost in paste (--format alone),
+not Docker failure. Next one compound heredoc: family-specific sockets,filtered unit/
+config path,container ports,loopback GET config projected to listeners/handler types/
+proxy addresses only. No raw config/auth/Env/stderr,write/reload/providers. Syntax and
+synthetic secret-sentinel projection checked; no local real service request.
+Owner local_batch_applied5067163f/69exports/261controls/SHAda701618/timer/measured
+journal remains accepted; no repeat --apply/old DB/code/SSD/Moodle/OS/backup/Connect
+stands.0agents/SSH/sends/main merge. Receipt context/runtime/infra_closure_followup_owner_20261025.json;
+next context/runtime/infra_caddy_listener_metadata_20261025.md.
+
 **25Oct17:49MSK — owner local_batch_applied accepted; no repeat apply/old stands.**
 Pinned scopefix5067163f/source1c5152bd protected69exports, verified encrypted261-file
 control companion35039995B/SHAda701618, timer active, original containers unchanged,

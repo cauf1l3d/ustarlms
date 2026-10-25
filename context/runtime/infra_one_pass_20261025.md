@@ -1,82 +1,92 @@
-# Единый локальный инфраструктурный пакет25Oct2026
+# Локальный инфраструктурный пакет25Oct2026: исправление выборки
 
-Текущий state-size fix SHA256
-`b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19` (40792B).
-Source e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f: Review40197352367/Context40197352371
-SUCCESS. Both PHP1183/207environment skips/browser PASS; root runtime 121180966531: 37/37, no skips,
-actualUID1000 predecessor retry and restricted-service real age readback of synthetic
-21665285B state PASS. PG16 job 121181832305: 158 tests/830 assertions + privilege/handoff/survey PASS.
-Первый apply SHA1bb1f693 отказал `unsafe_root_json`: hardening journal21665285B,
-DB809387B, own15657B; все root0:0/0600. Это несовпадение16MiB читателя с accepted
-48MiB producer/64MiB capture. Reader64MiB, per-file64MiB и aggregate192MiB bounded;
-права/владелец/link/xattrs guards сохранены. [Квитанция](infra_one_pass_owner_20261025.json).
-Old source87941fd9 had Review40187026858/Context40187026890 SUCCESS and existing
-PG16 job121150743119 PASS, but its fixture did not cover the observed journal size.
-Исправленная версия допускает ровно predecessor1bb1f693 только после полной
-metadata_restored с прежними exports before images/scope и отсутствием всех своих
-managed files. Old/new SHA сохраняются в private state. Журналы не удалять/не менять.
-Qualification завершена; следующий шаг — guarded owner retry, пакет ещё не принят на production.
-[Qualification/limits](infra_one_pass_qualification_20261025.json).
+Текущий candidate `ustar-infra-one-pass-20261025-scopefix.py`,42892B/SHA256
+`5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5`; CI pending.
+[Owner receipt](infra_one_pass_owner_20261025.json), [qualification](infra_one_pass_qualification_20261025.json).
+Owner подтверждает `metadata_restored` и sourceb9c0bee6 после второго отказа
+unsafe_payload_directory. Первый отказ1bb1f693 был лимитом16MiB для21665285B journal;
+исправленный64MiB reader сохранён. Прошлый e15c696c Review40197352367/Context40197352371
+SUCCESS покрывал размер журнала, но synthetic fixture не имел физических baseline.
+Новый success на production не заявлен. DB/code hardening и старые stands не повторять.
 
-Пакет защищает архивы/дампы USTAR с сохранением owner/bytes и metadata-only undo,
-сохраняет отдельный encrypted control companion до/после и ставит timer около
-04:00–04:02МСК. Journal исправляется только по воспроизведённому timeout/permission
-reason и measured fresh service snapshot; иначе explicit unresolved/rollback.
-Проверяются cron receipt, deduplicated listeners и TLS leaf. Academy не останавливается.
-[Матрица всех8](infra_closure_matrix_20261025.md). Default operator PLAN_ONLY.
+## Исправленный scope
 
-Скачать исправленный текущий ZIP на свой компьютер, извлечь и перенести в
-`/home/aduk` только `ustar-infra-one-pass-20261025-statefix.py`. Существующие ZIP/дампы
-на сервере оставить с исходными bytes/metadata: exact retry guard проверяет scope и
-before images; новая/заменённая ZIP копия внутри home изменила бы эту выборку.
-Выполнить один блок:
+В четырёх `/var/lib/ustar-connect-{telegram,con02,academy,chat-link}-update`
+physical trees сохраняют исходные UID33/999/0777 и гигабайты данных. Companion
+исключает до обхода только дочерние `baseline`, `retained-original-addons`,
+`retained-original-code`, `retained-before-restore-<32hex>`, `restore-code-<32hex>`
+в известных `app-<32hex>` / `update-<8lowercase_or_digit_or_underscore>` generations.
+Не меняет/не удаляет эти деревья. Другие каталоги продолжают строгую проверку.
+Generation control images, primitive/transaction journals, baseline-manifest.json и
+cron control images включаются; lock/private-*/commands-private.log исключены.
+Manifest/receipt явно `physical_recovery_trees_included=false`.
+
+Полный metadata-only pass по выбранным controls выполняется до подготовки
+транзакции. Проверяет owner/write/link/xattr/file/count/aggregate bounds без чтения
+содержимого. Actual capture повторяет guards под existing writer locks. При отказе
+добавляется безопасный относительный `path`, если доступен; raw stderr/values нет.
+64MiB/file,192MiB aggregate,10000files; recovery.key исключён. Новая попытка принимает
+только known1bb1f693/b9c0bee6 или same source, exact metadata_restored, прежние export
+before images/scope и отсутствие всех созданных managed files. Source history
+сохраняется; journals не удалять/редактировать, метаданные вручную не менять.
+
+## Один повтор после qualification
+
+Скачать исправленный ZIP на компьютер, извлечь и перенести в `/home/aduk` только
+`ustar-infra-one-pass-20261025-scopefix.py`. ZIP/дампы на сервере оставить с исходными
+bytes/metadata: их замена/добавление в scanned home scope изменит guarded retry.
+Qualification pending; owner command ниже подготовлен, до квалификации не выполнять.
 
 ```bash
 sudo -v
 (
   set -euo pipefail
   sudo -n install -o root -g root -m 600 \
-    /home/aduk/ustar-infra-one-pass-20261025-statefix.py \
-    /root/ustar-infra-one-pass-20261025-statefix.py
+    /home/aduk/ustar-infra-one-pass-20261025-scopefix.py \
+    /root/ustar-infra-one-pass-20261025-scopefix.py
   printf '%s  %s\n' \
-    b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19 \
-    /root/ustar-infra-one-pass-20261025-statefix.py |
+    5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5 \
+    /root/ustar-infra-one-pass-20261025-scopefix.py |
   sudo -n sha256sum --check --strict -
   ustar_closure_report=$(mktemp --suffix=.json /home/aduk/ustar-infra-closure-result.XXXXXX)
   sudo -n timeout --kill-after=5s 300s /usr/bin/python3 -I -B \
-    /root/ustar-infra-one-pass-20261025-statefix.py --apply | tee "$ustar_closure_report"
+    /root/ustar-infra-one-pass-20261025-scopefix.py --apply | tee "$ustar_closure_report"
   printf '\nREPORT_FILE=%s\n' "$ustar_closure_report"
 )
 ```
 
-Ожидается `phase=local_batch_applied`, `control_backup.readback_verified=true`,
-`companion_timer_active=true`; journal может остаться unresolved — это не PASS.
-`infrastructure_complete=false` сохраняется: Docker lifecycle/shared-host access/
-external DR/offsite/key custody/UPS/observer/delivery/SLO не закрываются догадкой.
-Вернуть итог JSON, не private `/var/lib` state/keys/raw logs.
+Ожидается local_batch_applied, control_backup.readback_verified=true,
+companion_timer_active=true. Журнал может быть unresolved; это не measured PASS.
+При refusal вернуть sanitized JSON/path, без private journal/keys/passwords.
+--check читает guards/metadata/status, default полностью offline PLAN_ONLY.
+--undo/--recover возвращают metadata/свои units, не бизнес-строки; encrypted copies
+сохраняются. После active не повторять --apply.
 
-`--check` читает текущее состояние. После успешного active не повторять --apply.
-`--recover`/`--undo` возвращают прежние metadata/свои units и сохраняют encrypted
-copies; business rows не восстанавливаются. Unknown bytes/inode/size/mtime drift
-refuse. После полного metadata_restored тот же operator или исправленный successor для
-одного pinned predecessor может повторить --apply только при прежних before
-images/scope и отсутствии его созданных файлов. При refusal вернуть reason; не
-стирать/редактировать private state и не менять права исходных журналов вручную.
+## Границы результата
 
-State `/var/lib/ustar-infra-one-pass` root-only. Companion
-`/srv/ustar-storage/backups/host-state`, quota5GiB/reserve8GiB, без удаления;
-`recovery.key` исключён. Standard DB/CODE/DATA backup и pre-hardening archive
-`ustar-recovery-20261025T003520Z-b6dfed1e.tar.gz.age` сохранить. Companion не whole-host
-backup или atomic recovery pair; сверка generation/identity и clean-host restore
-остаются обязательны до DR acceptance. Новые ручные exports создавать с `umask 077`.
+Пакет ограничивает доступ group/other к выбранным USTAR exports, сохраняет encrypted
+control companion до/после, ставит timer04:00–04:02МСК, диагностирует journal только
+в sandbox actual collector, сохраняет adjustment только с fresh measured snapshot.
+Возвращает cron receipt/listeners/verified active TLS leaf; Academy не останавливает.
+Companion target `/srv/ustar-storage/backups/host-state`, root0700, quota5GiB,
+reserve8GiB, без удаления. Private state `/var/lib/ustar-infra-one-pass` root0700.
 
-Предыдущий survey0d5d05fc уже принят; повторно его не запускать по умолчанию.
-[Сводка owner report](infra_survey_owner_20261025.json), original private report SHA
-344965014f7cbee76c9588e61cb83433a3ff6f623002aaa2361d74deb63385b8.
+Companion не whole-host backup или atomic pair с DB/CODE/DATA и не переносит старые
+physical recovery trees. Их manifests в companion не заменяют их байты. Сохранять
+исходные SSD pairs и standard encrypted HDD backup, включая pre-hardening archive
+ustar-recovery-20261025T003520Z-b6dfed1e.tar.gz.age. Generation/identity pairing,
+qualified clean-host restore/offsite/key custody остаются открыты. [All8 matrix](infra_closure_matrix_20261025.md).
+Docker lifecycle, alternative SSH/shared-host policy/www-data trust boundary,
+physical UPS/independent observer/delivery/SMTP/SLO и TLS-renewal recovery требуют
+отдельных реальных подтверждений. Полные8 не закрыты; повторять прежние owner stands
+и survey0d5d05fc по умолчанию не нужно.
 
-Historical delivery v2 ZIP15324B/SHA88beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af
-passed download/CRC/default checks but contained the incompatible16MiB reader.
-Current delivery v3 ZIP14319B/SHA256
-0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e:
-CRC/member hashes/extracted script SHA/default PLAN_ONLY и saved download readback PASS.
-Version2 superseded. Production success still requires local_batch_applied receipt.
+## Проверки
+
+43focused tests41PASS/2local age/UID namespace skips. Native CI должен без пропусков
+проверить actualUID33/999 physical copies/0777 cache/FIFO/91677698B sparse media,
+передачу controls в real restricted-service age archive,21MiB journal и b9 retry.
+Source/runtime/native CI и saved ZIP download readback текущей версии pending.
+Ранее v3 ZIP14319B/SHA0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e
+прошёл byte/CRC/default download checks, но содержит слишком широкий physical scope;
+это historical qualification, не текущий apply пакет.

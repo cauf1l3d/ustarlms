@@ -43,7 +43,9 @@ SNAPSHOT=Path('/run/ustar-console-data/snapshot.json')
 KEY=Path('/etc/ustar-backup/recovery.key')
 RECIPIENTS=Path('/etc/ustar-backup/recipients.txt')
 LIMIT=192*1024**2
-PREDECESSOR_OPERATOR_SHA256='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+PREDECESSOR_OPERATOR_SHA256S=(
+ '1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18',
+ 'b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19')
 LOCKS=('var/lib/ustar-code-hardening/lock','var/lib/ustar-postgres-app-handoff/lock',
  'var/lib/ustar-connect-telegram-update/lock','var/lib/ustar-connect-academy-update/lock',
  'var/lib/ustar-connect-chat-link-update/lock','var/lib/ustar-academy-https/lock',
@@ -52,9 +54,9 @@ CONTROLLERS={
  'root/ustar-telegram-update-3d1938ae.py':'6f7729459e1ef25271fd86324e441c823a6d39763c7fec84baf7cf640a41eb31',
  'root/ustar-db-app-handoff-7e35795f-ttyfix.py':'976afa0d2dffd58bf260dde4cb90cb5297f73d3f78fb9df10c2f9dc4b60ecf5e',
  'root/ustar-code-hardening-20261025.py':'6447d5d642c136ef5352690be19076636463a49a91cd0b9acb384440721a30d5'}
-SCOPE=('var/lib/ustar-code-hardening','var/lib/ustar-postgres-app-handoff',
- 'var/lib/ustar-connect-telegram-update','var/lib/ustar-connect-con02-update',
- 'var/lib/ustar-connect-academy-update','var/lib/ustar-connect-chat-link-update',
+LEGACY_PAIR_ROOTS=('var/lib/ustar-connect-telegram-update','var/lib/ustar-connect-con02-update',
+ 'var/lib/ustar-connect-academy-update','var/lib/ustar-connect-chat-link-update')
+SCOPE=('var/lib/ustar-code-hardening','var/lib/ustar-postgres-app-handoff')+LEGACY_PAIR_ROOTS+(
  'var/lib/ustar-academy-https','etc/ustar-backup','etc/ustar-connect',
  'etc/ustar-console','etc/ustar-console-egress')+tuple(CONTROLLERS)
 REMAINING=['Docker log rotation/health lifecycle with frozen IDs',
@@ -64,8 +66,11 @@ REMAINING=['Docker log rotation/health lifecycle with frozen IDs',
  'approved SMTP delivery test or existing receipt','representative performance/SLO decision']
 
 class Refusal(ValueError):pass
-def require(value,reason):
-    if not value:raise Refusal(reason)
+def require(value,reason,*,path=None):
+    if not value:
+        error=Refusal(reason)
+        if path is not None:error.path=str(path)
+        raise error
 def digest(raw):return hashlib.sha256(raw).hexdigest()
 def utc():return datetime.now(timezone.utc).isoformat()
 def public_error(error):
@@ -221,54 +226,76 @@ class Exports:
         state=self.guard()
         require(state['phase']=='metadata_restored' and state['exports']==plan['rows'],'retry_scope_or_baseline_drift')
         previous=state.get('operator_sha256')
-        require(previous==operator_sha256 or previous==PREDECESSOR_OPERATOR_SHA256,'retry_operator_changed')
+        require(previous==operator_sha256 or previous in PREDECESSOR_OPERATOR_SHA256S,'retry_operator_changed')
         for row in state['managed']:
             require(Managed(self.store).current(Path(row['path'])) is None,'retry_managed_path_reappeared')
-        if previous!=operator_sha256:state['predecessor_operator_sha256']=previous
+        if previous!=operator_sha256:
+            history=state.setdefault('operator_history',[])
+            for sha in (state.get('predecessor_operator_sha256'),previous):
+                if sha is not None and sha not in history:history.append(sha)
+            state['predecessor_operator_sha256']=previous
         state['operator_sha256']=operator_sha256
         state.update(phase='prepared',retry_utc=utc(),attempt=int(state.get('attempt',1))+1)
         self.store.save(state)
 
-def payload(root,scope):
+def physical_recovery_tree(relative):
+    parts=Path(relative).parts
+    if len(parts)<5 or '/'.join(parts[:3]) not in LEGACY_PAIR_ROOTS:return False
+    generation=parts[3];name=parts[4]
+    return bool(re.fullmatch(r'app-[a-f0-9]{32}|update-[a-z0-9_]{8}',generation)
+        and (name in ('baseline','retained-original-addons','retained-original-code')
+             or re.fullmatch(r'(?:retained-before-restore|restore-code)-[a-f0-9]{32}',name)))
+
+def payload(root,scope,*,metadata_only=False):
     """Take bounded in-memory images while existing writer locks are held."""
     result={};total=0;root=Path(root)
     for relative in scope:
         require(not Path(relative).is_absolute() and '..' not in Path(relative).parts,'unsafe_payload_scope')
+        if physical_recovery_tree(relative):continue
         base=root/relative
         if not os.path.lexists(base):continue
         if base.is_symlink():raise Refusal('payload_symlink_refused')
         for directory in ([base] if base.is_dir() else [])+list(base.parents):
             if not directory.is_relative_to(root):break
             st=directory.lstat()
-            require(stat.S_ISDIR(st.st_mode) and st.st_uid==0 and not st.st_mode&0o022,'unsafe_payload_parent')
+            require(stat.S_ISDIR(st.st_mode) and st.st_uid==0 and not st.st_mode&0o022,'unsafe_payload_parent',path=directory.relative_to(root))
             if directory==root:break
         paths=[]
         if base.is_dir():
             for directory,dirs,files in os.walk(base,followlinks=False):
+                # Physical snapshots preserve UID33/999 and can be gigabytes.
+                # Prune before inspecting/following children; keep nearby controls.
+                dirs[:]=[n for n in dirs if not physical_recovery_tree((Path(directory)/n).relative_to(root))]
                 for name in dirs:
                     p=Path(directory)/name
-                    st=p.lstat();require(stat.S_ISDIR(st.st_mode) and st.st_uid==0 and not st.st_mode&0o022,'unsafe_payload_directory')
-                paths.extend(Path(directory)/n for n in files if n!='lock' and not n.startswith('private-'))
+                    st=p.lstat();require(stat.S_ISDIR(st.st_mode) and st.st_uid==0 and not st.st_mode&0o022,'unsafe_payload_directory',path=p.relative_to(root))
+                paths.extend(Path(directory)/n for n in files if n not in ('lock','commands-private.log') and not n.startswith('private-'))
         else:paths=[base]
         for path in sorted(paths):
             name=path.relative_to(root).as_posix()
             if name=='etc/ustar-backup/recovery.key':continue
             if name in result:continue
-            require(len(result)<10000,'payload_entry_bound')
-            require(stat.S_ISREG(path.lstat().st_mode),'payload_special_file_refused')
-            with opened(path) as fd:
-                before=description(fd)
-                require(before['uid']==0 and not before['mode']&0o022 and before['bytes']<=64*1024**2,'unsafe_payload_file')
-                total+=before['bytes'];require(total<=LIMIT,'payload_byte_bound')
-                with os.fdopen(os.dup(fd),'rb') as stream:raw=stream.read(before['bytes']+1)
-                require(len(raw)==before['bytes'] and description(fd)==before,'payload_changed')
+            require(len(result)<10000,'payload_entry_bound',path=name)
+            require(stat.S_ISREG(path.lstat().st_mode),'payload_special_file_refused',path=name)
+            try:
+                with opened(path) as fd:
+                    before=description(fd)
+                    require(before['uid']==0 and not before['mode']&0o022 and before['bytes']<=64*1024**2,'unsafe_payload_file')
+                    total+=before['bytes'];require(total<=LIMIT,'payload_byte_bound')
+                    if metadata_only:
+                        result[name]=before;continue
+                    with os.fdopen(os.dup(fd),'rb') as stream:raw=stream.read(before['bytes']+1)
+                    require(len(raw)==before['bytes'] and description(fd)==before,'payload_changed')
+            except Refusal as error:
+                error.path=name;raise
             if name in CONTROLLERS:require(digest(raw)==CONTROLLERS[name],'frozen_controller_drift')
             result[name]=dict(raw=raw,sha256=digest(raw),**{k:before[k] for k in ('uid','gid','mode','bytes','mtime_ns')})
     return result
 
 def manifest(data):
     return dict(schema=1,kind='ustar_config_control_companion',whole_host_backup=False,
-        recovery_key_included=False,files=[dict(path=name,**{k:v for k,v in row.items() if k!='raw'}) for name,row in sorted(data.items())])
+        recovery_key_included=False,physical_recovery_trees_included=False,
+        files=[dict(path=name,**{k:v for k,v in row.items() if k!='raw'}) for name,row in sorted(data.items())])
 
 def write_tar(stream,data):
     with tarfile.open(fileobj=stream,mode='w|gz',format=tarfile.PAX_FORMAT) as archive:
@@ -530,6 +557,10 @@ def hdd_target(host):
     require(used+LIMIT<5*1024**3,'companion_quota_no_deletion_performed')
     disk=os.statvfs(TARGET);require(disk.f_bavail*disk.f_frsize>=HDD_RESERVE+LIMIT,'HDD_free_space_reserve')
 
+def control_scope(store):
+    return SCOPE+(str(OPERATOR).lstrip('/'),str(store.path).lstrip('/'),
+        'etc/systemd/system/'+BACKUP_SERVICE,'etc/systemd/system/'+BACKUP_TIMER,str(DROPIN).lstrip('/'))
+
 def backup_controls(store,host):
     hdd_target(host)
     read_private(KEY,8192);recipients=read_private(RECIPIENTS,8192)
@@ -541,9 +572,7 @@ def backup_controls(store,host):
     with recovery_locks():
         require(root_json('/var/lib/ustar-code-hardening/state.json').get('phase')=='active','code_hardening_not_active')
         require(root_json('/var/lib/ustar-postgres-app-handoff/state.json').get('phase')=='app_role_active','DB_handoff_not_active')
-        scope=SCOPE+(str(OPERATOR).lstrip('/'),str(store.path).lstrip('/'),
-            'etc/systemd/system/'+BACKUP_SERVICE,'etc/systemd/system/'+BACKUP_TIMER,str(DROPIN).lstrip('/'))
-        data=payload(Path('/'),scope)
+        data=payload(Path('/'),control_scope(store))
         require(all(name in data for name in CONTROLLERS),'missing_recovery_controller')
     identifier=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')+'-'+uuid.uuid4().hex[:8]
     partial=TARGET/('ustar-control-'+identifier+'.partial.age')
@@ -556,7 +585,7 @@ def backup_controls(store,host):
     receipt=dict(schema=1,kind='ustar_config_control_companion',phase='complete',success=True,
         started_utc=started,finished_utc=utc(),archive=str(archive),bytes=archive.stat().st_size,
         sha256=sha.hexdigest(),files=len(data),readback_verified=True,recovery_key_included=False,
-        whole_host_backup=False,archive_deletion=False)
+        whole_host_backup=False,physical_recovery_trees_included=False,archive_deletion=False)
     raw=(json.dumps(receipt,sort_keys=True)+'\n').encode()
     atomic(archive.with_suffix('.json'),raw);atomic(store.base/'last-success.json',raw)
     return receipt
@@ -624,7 +653,11 @@ def preflight(store,host):
         # No unknown existing units are adopted, even if their file is elsewhere.
         value=host.command(['/usr/bin/systemctl','show',unit,'-p','LoadState','--value']).stdout.strip()
         require(value==b'not-found' or any(Path(v['path']).name==unit for v in (store.load() or {}).get('managed',[])),'backup_unit_already_exists')
-    return export_plan()
+    controls=payload(Path('/'),control_scope(store),metadata_only=True)
+    plan=export_plan()
+    plan['control_preflight']=dict(files=len(controls),bytes=sum(v['bytes'] for v in controls.values()),
+        physical_recovery_trees_included=False)
+    return plan
 
 def undo_batch(store,host):
     state=store.load();require(state is not None,'missing_batch_state')
@@ -694,7 +727,10 @@ def host_main(args):
                     raise
         print(json.dumps(result,sort_keys=True));return 0
     except BaseException as error:
-        print(json.dumps(dict(phase='refused',reason=public_error(error),business_rows_restored=False,provider_called=False)));return 2
+        result=dict(phase='refused',reason=public_error(error),business_rows_restored=False,provider_called=False)
+        path=getattr(error,'path',None)
+        if isinstance(error,Refusal) and isinstance(path,str) and re.fullmatch(r'[A-Za-z0-9_./-]{1,512}',path):result['path']=path
+        print(json.dumps(result));return 2
     finally:signal.alarm(0)
 
 def main(argv=None):

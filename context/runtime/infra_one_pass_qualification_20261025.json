@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "kind": "infra_one_pass_component_qualification",
-  "status": "qualified_state_size_fix_owner_retry_pending",
+  "status": "physical_scope_fix_CI_pending_owner_retry_pending",
   "owner_apply_performed": false,
   "author_review": true,
   "subagents": 0,
@@ -268,5 +268,71 @@
         "PHP": "not installed locally; verified in CI source matrix"
       }
     }
+  },
+  "scope_fix": {
+    "status": "CI_pending",
+    "operator_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+    "operator_bytes": 42892,
+    "known_predecessors": [
+      "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+      "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19"
+    ],
+    "observed_owner_state": "metadata_restored; sourceb9c0bee6",
+    "physical_exclusion": {
+      "roots": [
+        "ustar-connect-telegram-update",
+        "ustar-connect-con02-update",
+        "ustar-connect-academy-update",
+        "ustar-connect-chat-link-update"
+      ],
+      "generation": "app-[a-f0-9]{32} or update-[a-z0-9_]{8}",
+      "subtrees": [
+        "baseline",
+        "retained-original-addons",
+        "retained-original-code",
+        "retained-before-restore-<32hex>",
+        "restore-code-<32hex>"
+      ],
+      "before_or_after_metadata": "prune before descendant lstat/open; never follow physical copies"
+    },
+    "retained_controls": [
+      "generation before/after images",
+      "primitive/transaction journals",
+      "baseline-manifest.json",
+      "cron control images",
+      "current root journals and private legacy archive"
+    ],
+    "excluded_logs": [
+      "lock",
+      "private-*",
+      "commands-private.log"
+    ],
+    "preflight": "bounded metadata-only pass over entire selected control scope before transaction preparation; actual encrypted capture revalidates under existing locks",
+    "bounds": {
+      "root_json_bytes": 67108864,
+      "per_file_bytes": 67108864,
+      "aggregate_bytes": 201326592,
+      "files": 10000
+    },
+    "local": {
+      "tests": 43,
+      "passed": 41,
+      "skipped": 2,
+      "skips": [
+        "real age absent locally",
+        "UID1000 unavailable in local namespace"
+      ]
+    },
+    "RED": [
+      "legacy baseline traversed -> unsafe_payload_directory",
+      "commands-private.log incorrectly included -> unsafe_payload_file",
+      "known sourceb9c0bee6 retry -> retry_operator_changed"
+    ],
+    "native_delta": "real UID33/999 preserved physical tree,0777 cache,FIFO,91677698B sparse media; actual restricted-service age snapshot includes controls only",
+    "limits": [
+      "No owner retry yet",
+      "No agent SSH or production execution",
+      "Synthetic CI namespace and keys; existing external DR/physical power/observer boundaries remain open"
+    ]
   }
 }

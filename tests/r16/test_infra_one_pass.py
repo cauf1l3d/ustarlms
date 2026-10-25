@@ -124,6 +124,20 @@ class ExportBoundaries(unittest.TestCase):
         self.assertEqual(self.tx.store.path.read_bytes(),before)
         self.assertEqual(self.dump.stat().st_mode&0o777,0o664)
 
+    def test_scope_fix_retries_observed_undone_statefix_and_retains_source_history(self):
+        plan=self.plan();state=self.tx.prepare(plan)
+        state['operator_sha256']='b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19'
+        state['predecessor_operator_sha256']='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+        self.tx.store.save(state);self.tx.undo()
+        try:self.tx.resume(plan,'a'*64)
+        except self.m.Refusal as error:self.fail('observed undone statefix cannot resume: '+str(error))
+        saved=self.tx.store.load()
+        self.assertEqual(saved['operator_history'],[
+            '1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18',
+            'b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19'])
+        self.assertEqual(saved['operator_sha256'],'a'*64)
+        self.assertEqual(saved['exports'],plan['rows'])
+
     def test_successor_refuses_active_predecessor_without_rewriting_journal(self):
         plan=self.plan();state=self.tx.prepare(plan)
         state['operator_sha256']='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
@@ -217,7 +231,83 @@ class PayloadBoundaries(unittest.TestCase):
             self.assertEqual(row['mode'],0o600);self.assertEqual(row['bytes'],12)
             self.assertNotIn('raw',row)
 
+    def test_legacy_physical_copies_are_pruned_but_generation_controls_are_retained(self):
+        roots=('var/lib/ustar-connect-telegram-update','var/lib/ustar-connect-con02-update',
+               'var/lib/ustar-connect-academy-update','var/lib/ustar-connect-chat-link-update')
+        physical=[];wanted=set()
+        for index,relative in enumerate(roots):
+            generation='app-'+'a'*32 if index<2 else 'update-y9yssexj'
+            folder=self.root/relative/generation;folder.mkdir(parents=True)
+            for name in ('primitive.json','baseline-manifest.json','cron-script.before'):
+                path=folder/name;path.write_bytes(b'control');path.chmod(0o600)
+                wanted.add(path.relative_to(self.root).as_posix())
+            for name in ('baseline','retained-original-addons','retained-before-restore-'+'b'*32,'restore-code-'+'c'*32):
+                tree=folder/name;tree.mkdir();tree.chmod(0o777)
+                os.mkfifo(tree/'must-not-open')
+                physical.append((tree,tree.stat()))
+        try:data=self.m.payload(self.root,roots)
+        except self.m.Refusal as error:self.fail('physical copies incorrectly included: '+str(error))
+        self.assertEqual(set(data),wanted)
+        self.assertFalse(self.m.manifest(data)['physical_recovery_trees_included'])
+        for path,before in physical:
+            after=path.stat()
+            self.assertEqual((after.st_ino,after.st_mode,after.st_mtime_ns),
+                             (before.st_ino,before.st_mode,before.st_mtime_ns))
+
+    def test_exclusion_does_not_hide_unknown_directories_or_same_names_in_configuration(self):
+        for relative in ('etc/ustar-console/baseline',
+                         'var/lib/ustar-connect-telegram-update/app-unknown/baseline',
+                         'var/lib/ustar-connect-con02-update/app-'+'a'*32+'/unknown-control'):
+            with self.subTest(path=relative):
+                path=self.root/relative;path.mkdir(parents=True);path.chmod(0o777)
+                with self.assertRaises(self.m.Refusal):self.m.payload(self.root,(relative.rsplit('/',1)[0],))
+
+    def test_private_command_logs_are_not_control_payload(self):
+        folder=self.root/'var/lib/ustar-connect-academy-update/update-y9yssexj'
+        folder.mkdir(parents=True)
+        with (folder/'commands-private.log').open('wb') as output:output.truncate(64*1024**2+1)
+        (folder/'commands-private.log').chmod(0o600)
+        marker=folder/'transaction.json';marker.write_bytes(b'control');marker.chmod(0o600)
+        try:data=self.m.payload(self.root,('var/lib/ustar-connect-academy-update',))
+        except self.m.Refusal as error:self.fail('private log incorrectly included: '+str(error))
+        self.assertEqual(set(data),{marker.relative_to(self.root).as_posix()})
+
+    def test_metadata_plan_checks_size_and_permissions_without_reading_content(self):
+        from unittest.mock import patch
+        scope=('var/lib/ustar-code-hardening',)
+        with patch.object(self.m.os,'fdopen',side_effect=AssertionError('metadata preflight read content')):
+            data=self.m.payload(self.root,scope,metadata_only=True)
+        row=data['var/lib/ustar-code-hardening/archive/old.php']
+        self.assertEqual(row['bytes'],12);self.assertNotIn('raw',row)
+        bad=self.root/'var/lib/ustar-code-hardening/archive/bad';bad.mkdir();bad.chmod(0o777)
+        with self.assertRaises(self.m.Refusal) as raised:self.m.payload(self.root,scope,metadata_only=True)
+        self.assertEqual(raised.exception.path,'var/lib/ustar-code-hardening/archive/bad')
+
 class DiagnosisAndDefault(unittest.TestCase):
+    @unittest.skipUnless(os.geteuid()==0,'root CLI refusal fixture runs in mandatory runtime CI')
+    def test_payload_refusal_exposes_only_sanitized_path_and_creates_no_transaction(self):
+        import argparse,contextlib,io,signal
+        from unittest.mock import patch
+        m=module(self)
+        with tempfile.TemporaryDirectory() as directory:
+            base=Path(directory);operator=base/'operator.py';operator.write_bytes(b'fixture');operator.chmod(0o600)
+            args=argparse.Namespace(internal_journal_probe=False,check=False,undo=False,recover=False,backup_host_state=False)
+            handlers={sig:signal.getsignal(sig) for sig in (signal.SIGTERM,signal.SIGHUP,signal.SIGINT,signal.SIGALRM)}
+            try:
+                for path,expected in [('etc/ustar-console/authority/bad','etc/ustar-console/authority/bad'),
+                                      ('unsafe\nPRIVATE_VALUE',None)]:
+                    error=m.Refusal('unsafe_payload_directory');error.path=path;output=io.StringIO()
+                    with patch.object(m,'BASE',base/'private'),patch.object(m.sys,'argv',[str(operator)]), \
+                         patch.object(m,'preflight',side_effect=error),contextlib.redirect_stdout(output):
+                        self.assertEqual(m.host_main(args),2)
+                    result=json.loads(output.getvalue())
+                    self.assertEqual(result.get('path'),expected)
+                    self.assertEqual(result['reason'],'unsafe_payload_directory')
+                    self.assertNotIn('PRIVATE_VALUE',output.getvalue())
+                    self.assertFalse((base/'private/state.json').exists())
+            finally:
+                for sig,handler in handlers.items():signal.signal(sig,handler)
+
     def test_default_operator_does_not_touch_host(self):
         self.assertTrue(SOURCE.exists(),'one-pass operator is not implemented')
         r=subprocess.run([sys.executable,'-I','-B',str(SOURCE)],capture_output=True,timeout=5)

@@ -4,21 +4,20 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct16:34MSK — state-size fix e15c696c qualified; guarded owner retry next.
-  Owner SHA1bb1f693 apply refused unsafe_root_json; code journal21665285B/DB809387B/
-  own15657B, all root0:0/0600. Reader corrected16→64MiB matching accepted capture;
-  original journals untouched. Source e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f,
-  Review40197352367/Context40197352371 SUCCESS. Both PHP1183/207skips/browser PASS;
-  root runtime 121180966531: 37/37, no skips, real age/flock/HDD namespaces, actualUID1000
-  predecessor retry and restricted-service encrypted readback of synthetic21665285B
-  state PASS. PG16 job 121181832305: 158 tests/830 assertions + DB privilege/handoff/survey/native PASS.
-  Operator SHAb9c0bee6: only same source/pinned1bb1f693 may retry exact complete
-  metadata_restored, unchanged exports before images/scope, all managed paths absent.
-  ZIP v3/hash/CRC/member hashes/extracted default and saved download verified. Transfer
-  only statefix.py, leave server ZIP/dumps unchanged for retry guards. Owner retry and
-  local_batch_applied still pending; all8 not closed. Old DB/code/SSD/Moodle/OS/HTTPS/
-  backup/Connect stands reused;0agents/SSH/provider sends/main merge. Runbook/receipt:
-  context/runtime/infra_one_pass_20261025.md and infra_one_pass_owner_20261025.json.
+  25Oct17:23MSK — owner metadata_restored confirmed; physical companion scope fix in CI.
+  Sourceb9c0bee6 apply refused unsafe_payload_directory. Three complete legacy scans
+  contain ~1.4GiB physical baselines each, legitimate UID33/999,0777 cache and91MBmedia;
+  chat-link scan partial and HTTPS/etc tail uninspected after diagnostic deadline.
+  Do not chmod/delete these retained physical copies. Companion prunes only known
+  physical subtrees of app/update generations in four legacy control roots, preserves
+  regular control images/journals/manifests, excludes commands-private.log. Full scoped
+  metadata preflight precedes preparation; sanitized relative refusal path supported.
+  Known predecessor1bb1f693/b9c0bee6 retry only exact complete metadata_restored; original
+  export before images/scope and absent managed files required; source history retained.
+  Candidate SHA5067163f,43focused tests41PASS/2local age/UID namespace skips; mandatory
+  root/native CI pending. No new owner apply; all8 still open. Accepted DB/code/SSD/
+  Moodle/OS/HTTPS/backup/Connect stands reused,0agents/SSH/provider sends/main merge.
+  See context/runtime/infra_one_pass_owner_20261025.json and qualification/runbook.
 next_task: INF-03
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
@@ -35,7 +34,7 @@ infrastructure_app_handoff_status: owner_app_role_active_login_course_opening_ac
 infrastructure_app_handoff_runbook: context/runtime/infra_app_handoff_20261024.md
 infrastructure_app_handoff_CI: context/runtime/infra_app_handoff_ci_20261024.json
 infrastructure_retest_scope: reuse_accepted_stages_existing_CI_only_missing_DB_privilege_delta_no_new_owner_stand_or_full_restore_repeat
-infrastructure_file_status: owner_code_hardened_exports_batch_refused_size_fix_qualified_retry_pending
+infrastructure_file_status: owner_code_hardened_local_batch_metadata_restored_physical_scope_fix_CI_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
 connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
 

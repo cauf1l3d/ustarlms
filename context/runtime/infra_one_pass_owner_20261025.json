@@ -40,5 +40,87 @@
   "rollback_evidence": "Normal refusal rather than recovery_required implies auto-undo returned; successor must verify metadata_restored and all original before images itself",
   "production_batch_complete": false,
   "all_eight_complete": false,
-  "private_state_contents_collected": false
+  "private_state_contents_collected": false,
+  "scope_refusal": {
+    "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "apply_result": {
+      "phase": "refused",
+      "reason": "unsafe_payload_directory",
+      "business_rows_restored": false,
+      "provider_called": false
+    },
+    "batch_phase_observed": "metadata_restored",
+    "operator_sha256_observed": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "scan": [
+      {
+        "root": "/var/lib/ustar-code-hardening",
+        "directories": 4,
+        "files": 24,
+        "regular_bytes": 22276749,
+        "complete": true,
+        "unsafe_entries_observed": false
+      },
+      {
+        "root": "/var/lib/ustar-postgres-app-handoff",
+        "directories": 1,
+        "files": 2,
+        "regular_bytes": 809611,
+        "complete": true,
+        "unsafe_entries_observed": false
+      },
+      {
+        "root": "/var/lib/ustar-connect-telegram-update",
+        "directories": 17207,
+        "files": 47424,
+        "regular_bytes": 1473137045,
+        "complete": true
+      },
+      {
+        "root": "/var/lib/ustar-connect-con02-update",
+        "directories": 17586,
+        "files": 48229,
+        "regular_bytes": 1477044758,
+        "complete": true
+      },
+      {
+        "root": "/var/lib/ustar-connect-academy-update",
+        "directories": 17315,
+        "files": 47729,
+        "regular_bytes": 1402368506,
+        "complete": true
+      },
+      {
+        "root": "/var/lib/ustar-connect-chat-link-update",
+        "directories": 2136,
+        "files": 2343,
+        "regular_bytes": 213493572,
+        "complete": false,
+        "reason": "diagnostic_deadline"
+      }
+    ],
+    "observed_physical_subtrees": {
+      "moodledata": {
+        "uid": 33,
+        "gid": 33,
+        "mode": "0770"
+      },
+      "postgres": {
+        "uid": 999,
+        "gid": 1000,
+        "mode": "0700"
+      },
+      "cache_mode": "0777",
+      "single_media_bytes": 91677698
+    },
+    "tail_not_inspected_due_shared_diagnostic_deadline": [
+      "/var/lib/ustar-academy-https",
+      "/etc/ustar-backup",
+      "/etc/ustar-connect",
+      "/etc/ustar-console",
+      "/etc/ustar-console-egress"
+    ],
+    "cause": "recursive companion selection entered intentional legacy physical baseline trees; those original UID/modes and business bytes must remain unchanged",
+    "contents_collected": false,
+    "new_owner_apply_success": false
+  }
 }

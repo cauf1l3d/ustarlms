@@ -1,5 +1,20 @@
 # Журнал выполнения roadmap
 
+**25Oct17:23MSK — owner metadata_restored confirmed; physical companion scope fix in CI.**
+Sourceb9c0bee6 apply refused unsafe_payload_directory. Three complete legacy scans
+contain ~1.4GiB physical baselines each, legitimate UID33/999,0777 cache and91MBmedia;
+chat-link scan partial and HTTPS/etc tail uninspected after diagnostic deadline.
+Do not chmod/delete these retained physical copies. Companion prunes only known
+physical subtrees of app/update generations in four legacy control roots, preserves
+regular control images/journals/manifests, excludes commands-private.log. Full scoped
+metadata preflight precedes preparation; sanitized relative refusal path supported.
+Known predecessor1bb1f693/b9c0bee6 retry only exact complete metadata_restored; original
+export before images/scope and absent managed files required; source history retained.
+Candidate SHA5067163f,43focused tests41PASS/2local age/UID namespace skips; mandatory
+root/native CI pending. No new owner apply; all8 still open. Accepted DB/code/SSD/
+Moodle/OS/HTTPS/backup/Connect stands reused,0agents/SSH/provider sends/main merge.
+See context/runtime/infra_one_pass_owner_20261025.json and qualification/runbook.
+
 **25Oct16:34MSK — state-size fix e15c696c qualified; guarded owner retry next.**
 Owner SHA1bb1f693 apply refused unsafe_root_json; code journal21665285B/DB809387B/
 own15657B, all root0:0/0600. Reader corrected16→64MiB matching accepted capture;

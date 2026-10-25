@@ -1,5 +1,15 @@
 # Remaining infrastructure — consolidated pass25Oct2026
 
+Current scope correction25Oct: owner confirms metadata_restored/sourceb9c0bee6.
+Companion must exclude original physical baselines/retained/restoration trees under
+known app/update generation paths of the four legacy control roots. Keep their
+control images, primitive/transaction and baseline manifests; exclude raw private
+command logs. Do not change/delete original UID33/999/data bytes. Metadata-only
+preflight must check entire selected scope before preparation and report a safe
+relative path on refusal. Preserve64MiB/file,192MiB aggregate,10000files. Accept
+only exact known predecessor retry after full metadata undo; retain source history.
+43focused41PASS/2local environment skips; root/native qualification pending.
+
 25Oct owner delta: original apply refused unsafe_root_json. Metadata confirms
 21665285B/root0600 hardening journal. Align reader with existing64MiB capture/per-file
 bound; retain192MiB aggregate. Support one pinned predecessor only after exact complete

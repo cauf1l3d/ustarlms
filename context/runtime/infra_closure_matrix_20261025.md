@@ -1,5 +1,11 @@
 # Остаток инфраструктуры по фактическому отчёту25Oct
 
+Current25Oct: statefixb9c0bee6 refused unsafe_payload_directory; owner confirms
+metadata_restored. Broad companion traversal entered physical baselines with
+UID33/999 and multi-GiB bytes. Scope fix in qualification excludes known physical
+generation trees without changing them; control images/journals/manifests retained.
+Earlier qualification below is historical; no local_batch_applied receipt yet.
+
 25Oct: owner batch1bb1f693 refused `unsafe_root_json`; no acceptance of this batch.
 Hardening state21665285B/root0600 exceeded reader16MiB. Corrected64MiB reader and
 guarded pinned predecessor retry qualified on e15c696c: Review40197352367/Context40197352371

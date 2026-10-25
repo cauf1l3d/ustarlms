@@ -4,27 +4,30 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct18:32MSK — owner confirms UPS; external restore result explicitly unknown.
-  Copies handed over, archive identities/result not supplied. Keep waiting_external/
-  unknown, do not claim PASS or repeat request/full restore stand; local work continues.
-  Both faildelay>0 tasks disabled1: h5p_get_content_types_task960(last1Sep),
-  registration_cron_task60(last28Aug),2rows<limit20,enabled retry0. Old disabled residue,
-  not new cron failure; no reset/enable/task run/cron recovery or repeat SQL required.
-  Both2019TCP bindings (127.0.0.1,*) belong to caddyPID862/fd3,7; purpose not established,
-  no external reachability proof. Unit/docker metadata lost in paste (--format alone),
-  not Docker failure. Next one compound heredoc: family-specific sockets,filtered unit/
-  config path,container ports,loopback GET config projected to listeners/handler types/
-  proxy addresses only. No raw config/auth/Env/stderr,write/reload/providers. Syntax and
-  synthetic secret-sentinel projection checked; no local real service request.
-  Owner local_batch_applied5067163f/69exports/261controls/SHAda701618/timer/measured
-  journal remains accepted; no repeat --apply/old DB/code/SSD/Moodle/OS/backup/Connect
-  stands.0agents/SSH/sends/main merge. Receipt context/runtime/infra_closure_followup_owner_20261025.json;
-  next context/runtime/infra_caddy_listener_metadata_20261025.md.
+  25Oct — Caddy listener metadata received; separate workstation SSH-key login next.
+  Owner family-specific ss: IPv4 127.0.0.1:2019/fd3, IPv6 *:2019/fd7, both caddyPID862.
+  Loopback GET config succeeds; no explicit admin.listen/remote.listen, one observed
+  HTTP server :2019/static_response/no proxy dials. caddy.service User/Groupcaddy,
+  config /etc/caddy/Caddyfile, no --resume. Moodle only127.0.0.1:8082; PG5432 not published.
+  Wildcard HTTP response is not evidence of externally exposed admin API; no Caddy
+  bind/stop/reload/firewall change merely from port number. Source/consumers/policy of
+  static endpoint and other local callers remain unverified; no external reachability
+  claim. Metadata probe already accepted, do not repeat it or disabled-task SQL.
+  Next owner workstation publickey-only fresh connection (multiplex reuse disabled),
+  not server self-login; current session retained. No keys/passwords/config changed.
+  UPS present, copies delivered, external restore explicitly unknown/deferred; no repeat
+  request/stand. Prior local_batch_applied/DB/code/old owner/native acceptance retained,
+  Docker frozen-ID lifecycle/shared-host/emergency/observer/delivery/SLO still open.
+  0agents/no agent SSH/provider sends/main merge. Receipt:
+  context/runtime/infra_closure_followup_owner_20261025.json; next:
+  context/runtime/infra_ssh_key_access_20261025.md.
 next_task: INF-03
 infrastructure_UPS_status: owner_confirms_present_shutdown_not_verified
 infrastructure_external_restore_status: copies_delivered_result_unknown_owner_explicitly_deferred_no_repeat_prompt
 infrastructure_task_retry_status: two_old_disabled_rows_enabled_retry_zero_no_reset_or_repeat_query
-infrastructure_caddy2019_status: owner_caddy_PID862_confirmed_purpose_unknown_metadata_next
+infrastructure_caddy2019_status: owner_local_admin_and_separate_IPv6_HTTP_static_listener_classified_no_blind_change
+infrastructure_next_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
+infrastructure_workstation_key_login: pending_owner_fresh_publickey_connection_no_multiplex_reuse
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open

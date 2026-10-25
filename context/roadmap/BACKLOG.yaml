@@ -17,7 +17,9 @@ current_infrastructure_checkpoint:
   external_restore_result: copies_delivered_unknown_owner_explicitly_deferred_no_repeat_prompt
   closure_matrix: context/runtime/infra_closure_matrix_20261025.md
   one_pass_plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md
-  next: read_only_Caddy_admin_vs_HTTP_role_and_missing_unit_ports_metadata_then_Docker_access
+  Caddy2019: local_admin_API_and_separate_IPv6_HTTP_static_listener_classified
+  access_runbook: context/runtime/infra_ssh_key_access_20261025.md
+  next: owner_fresh_publickey_workstation_login_no_multiplex_reuse_then_shared_host_policy_and_Docker_lifecycle
   retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
   production_mutation_scope: owner DB app_role_active/code_hardened/legacy22 archive and local_batch_applied69export modes,261file encrypted controls,timer; no new journal policy

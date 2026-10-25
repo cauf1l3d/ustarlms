@@ -29,17 +29,82 @@
         "fd": 7
       }
     ],
-    "socket_families_not_disambiguated": true,
-    "unit_identity_not_received": true,
-    "configuration_role": "unknown",
-    "external_reachability": "not tested"
+    "socket_families_not_disambiguated": false,
+    "unit_identity_not_received": false,
+    "configuration_role": "loopback config API and separate IPv6 wildcard HTTP static_response listener; no proxy dials in received projection",
+    "external_reachability": "not tested",
+    "metadata_followup": {
+      "recorded_at_utc": "2026-10-25T15:57:12.994224+00:00",
+      "source": "owner console reply to infra_caddy_listener_metadata_20261025.md; observation timestamp not supplied",
+      "sockets_ipv4": {
+        "local": "127.0.0.1:2019",
+        "program": "caddy",
+        "pid": 862,
+        "fd": 3,
+        "returncode": 0
+      },
+      "sockets_ipv6": {
+        "local": "*:2019",
+        "program": "caddy",
+        "pid": 862,
+        "fd": 7,
+        "returncode": 0
+      },
+      "unit": {
+        "MainPID": "862",
+        "User": "caddy",
+        "Group": "caddy",
+        "SupplementaryGroups": "",
+        "FragmentPath": "/usr/lib/systemd/system/caddy.service",
+        "WorkingDirectory": "",
+        "ControlGroup": "/system.slice/caddy.service",
+        "config_file_arg": "/etc/caddy/Caddyfile",
+        "resume_arg_present": false
+      },
+      "unit_returncode": 0,
+      "container_ports": [
+        "ustar_moodle\t127.0.0.1:8082->80/tcp",
+        "ustar_postgres\t5432/tcp"
+      ],
+      "container_ports_returncode": 0,
+      "live_config_metadata": {
+        "admin_listen": null,
+        "admin_listen_explicit": false,
+        "remote_admin_listen": null,
+        "servers": [
+          {
+            "app": "http",
+            "listen": [
+              ":2019"
+            ],
+            "handlers": [
+              "static_response"
+            ],
+            "proxy_dials": []
+          }
+        ]
+      },
+      "interpretation": "IPv4 loopback GET/config succeeds; separate observed IPv6 wildcard HTTP static responder, not evidence of network-exposed admin API; Caddy source and static endpoint consumers not inspected",
+      "configuration_mutated": false,
+      "external_reachability_tested": false,
+      "raw_config_published": false,
+      "do_not_repeat_probe": true,
+      "boundaries": [
+        "projection omits arbitrary auth and other application settings; not a full configuration audit",
+        "implicit admin.listen is not a numeric bind guarantee on its own; socket/loopback API evidence used together",
+        "static endpoint source, intended consumers and policy remain unverified",
+        "local same-host access to admin API is a separate trust boundary",
+        "no port closure/service stop/reload justified solely by port number"
+      ]
+    }
   },
   "paste": {
     "unit_output_received": false,
     "docker_ports_output_received": false,
     "observed_error": "--format: command not found",
     "interpretation": "format option ran without its docker ps command; not evidence of Docker service failure",
-    "next_command": "one compound heredoc before sudo prompt; child stdin DEVNULL"
+    "next_command": "one compound heredoc before sudo prompt; child stdin DEVNULL",
+    "resolved_by_metadata_followup": true
   },
   "scheduled_task_retry_rows": [
     {
@@ -66,5 +131,15 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "metadata-only Caddy unit/config address/HTTP-server role projection and missing container ports; no service mutation"
+  "next": "owner workstation fresh publickey-only SSH login; no server SSH/firewall mutation; external restore explicitly deferred",
+  "workstation_key_login": {
+    "status": "pending_owner",
+    "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
+    "fresh_connection_required": true,
+    "multiplex_reuse_disabled": true,
+    "publickey_only": true,
+    "server_self_login_accepted_as_proof": false,
+    "server_policy_changed": false,
+    "emergency_console_verified": false
+  }
 }

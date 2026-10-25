@@ -1,5 +1,23 @@
 # Активные задачи USTAR
 
+**25Oct — Caddy listener metadata received; separate workstation SSH-key login next.**
+Owner family-specific ss: IPv4 127.0.0.1:2019/fd3, IPv6 *:2019/fd7, both caddyPID862.
+Loopback GET config succeeds; no explicit admin.listen/remote.listen, one observed
+HTTP server :2019/static_response/no proxy dials. caddy.service User/Groupcaddy,
+config /etc/caddy/Caddyfile, no --resume. Moodle only127.0.0.1:8082; PG5432 not published.
+Wildcard HTTP response is not evidence of externally exposed admin API; no Caddy
+bind/stop/reload/firewall change merely from port number. Source/consumers/policy of
+static endpoint and other local callers remain unverified; no external reachability
+claim. Metadata probe already accepted, do not repeat it or disabled-task SQL.
+Next owner workstation publickey-only fresh connection (multiplex reuse disabled),
+not server self-login; current session retained. No keys/passwords/config changed.
+UPS present, copies delivered, external restore explicitly unknown/deferred; no repeat
+request/stand. Prior local_batch_applied/DB/code/old owner/native acceptance retained,
+Docker frozen-ID lifecycle/shared-host/emergency/observer/delivery/SLO still open.
+0agents/no agent SSH/provider sends/main merge. Receipt:
+context/runtime/infra_closure_followup_owner_20261025.json; next:
+context/runtime/infra_ssh_key_access_20261025.md.
+
 **25Oct18:32MSK — owner confirms UPS; external restore result explicitly unknown.**
 Copies handed over, archive identities/result not supplied. Keep waiting_external/
 unknown, do not claim PASS or repeat request/full restore stand; local work continues.

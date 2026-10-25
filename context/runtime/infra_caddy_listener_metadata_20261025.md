@@ -1,5 +1,12 @@
 # Caddy2019: следующий metadata-only срез25Oct2026
 
+**Owner output accepted25Oct; do not repeat this command.** IPv4 loopback API and
+separate IPv6 wildcard HTTP static_response classified, caddy.service/config path
+and container ports received. [Receipt](infra_closure_followup_owner_20261025.json#port2019).
+No evidence of externally exposed admin API from this listener. No Caddy change
+applied. Next: [fresh workstation SSH-key connection](infra_ssh_key_access_20261025.md).
+The rationale and command below are preserved history.
+
 Owner подтверждает обе TCP записи2019 за caddy/PID862. Назначение wildcard socket
 ещё не установлено: admin endpoint, отдельный HTTP/layer4 server или remote admin.
 Предыдущие unit/docker команды потерялись при вставке; standalone --format failed,

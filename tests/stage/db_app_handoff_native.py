@@ -132,6 +132,8 @@ class SurveyRunner:
         assert argv[:4]==['docker','exec','-i','ustar_postgres']
         query=raw.decode()
         assert query.startswith('BEGIN READ ONLY;') and query.endswith('ROLLBACK;')
+        assert 'SET LOCAL search_path=pg_catalog;' in query
+        if 'task_columns' not in query:assert 'SET LOCAL ROLE ustar_app;' in query
         return json.loads(pg(query).stdout)
 summary=survey.postgres_survey(SurveyRunner(),prefix='stage_')
 assert summary['database_bytes']>0 and summary['stats']['numbackends']>=1

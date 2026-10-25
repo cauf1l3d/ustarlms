@@ -89,6 +89,8 @@ class Review(unittest.TestCase):
         r=FakeRunner();s.postgres_survey(r)
         self.assertTrue(all(q.startswith('BEGIN READ ONLY;') and q.endswith('ROLLBACK;') for q in r.queries))
         self.assertIn('disabled',r.queries[-1])
+        self.assertTrue(all('SET LOCAL search_path=pg_catalog;' in q for q in r.queries))
+        self.assertIn('SET LOCAL ROLE ustar_app;',r.queries[-1])
         self.assertNotIn('mdl_user',r.queries[-1])
 
 class SQLInput(unittest.TestCase):

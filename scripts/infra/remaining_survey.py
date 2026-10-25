@@ -420,7 +420,7 @@ ROLLBACK;"""
                            "'retry_backoff_enabled',count(*) FILTER(WHERE faildelay>0 AND "+enabled+"),"+
                            "'overdue_enabled_10m',count(*) FILTER(WHERE nextruntime>0 AND nextruntime<extract(epoch from now())-600 AND "+enabled+")) FROM public."+table+")")
     if selects:
-        query="BEGIN READ ONLY; SET LOCAL statement_timeout='8s'; SELECT json_build_object("+','.join(selects)+"); ROLLBACK;"
+        query="BEGIN READ ONLY; SET LOCAL statement_timeout='8s'; SET LOCAL search_path=pg_catalog; SET LOCAL ROLE ustar_app; SELECT json_build_object("+','.join(selects)+"); ROLLBACK;"
         result['tasks']=runner.parsed(argv,raw=query.encode(),timeout=15)
     return result
 

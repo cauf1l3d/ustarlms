@@ -13,7 +13,7 @@ and external restore/power/custody/observer evidence remain explicit blockers,
 not automatic acceptance. No business Connect feature work or main merge.0agents.
 Plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md.
 
-Source/operator SHA256: d3d872a06516eee234590acef541f1de28af17b7bcc47aeb78129f9e44f6d1eb
+Source/operator SHA256: 0d5d05fcc8d21583fe82e3247cca185bbd9a32b3e5927ff818d88472945afee3
 
 Default PLAN_ONLY; root --collect performs the bounded local survey. Current SSH
 connection may be supplied as --ssh-context from the user's shell. Output is a
@@ -30,3 +30,11 @@ close tasks. Further changes are prepared from actual results in one coordinated
 package with rollback; no unsafe automatic policy choices. External clean-host
 restore/offsite/key custody/UPS and approved notification recipient cannot be
 inferred from a same-host report. Prior accepted work is reused.
+
+
+Review refinement: both SQL connections pin search_path=pg_catalog; task aggregates
+switch to existing ordinary ustar_app within the readonly transaction. This avoids
+executing application-schema overloads as the bootstrap administrative role. The
+new guard regression was RED before correction and GREEN afterwards. Original
+aggregate SQL native fixture passed on82e75718/Review40150686747; final guard source
+requires its own qualification. No server data/configuration changes.

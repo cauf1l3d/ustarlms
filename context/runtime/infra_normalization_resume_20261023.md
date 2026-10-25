@@ -1,5 +1,21 @@
 # Инфраструктурная нормализация: возврат23Oct2026
 
+**25Oct — INF03 code hardening applied by owner; keys/dumps slice next.**
+Operator SHA6447d5d6: prepared/backup_complete/writers_stopped/archive_ready,
+22removed/web_verified -> code_hardened, archived_files22, app_roleustar_app,
+business_rows_restored=false. Coordinator verified protected retained tree,
+private archive, effective app role/HTTPS and resumed original services/policies.
+Owner precheck was44210entries/22archive/4785planned metadata changes; not a new
+independent post-apply census. Browser acceptance after hardening still pending.
+Review40141745333/Context40141745326 SUCCESS on e573cd8e; both1130/174skips/browser,
+20/20root runtime and existing DB fixture121015572073 PASS. Do not repeat apply.
+Legacy extras unused per owner, preserved for future USTAR Connect. Before old
+app/DB/physical restore undo code hardening first; source drift requires review.
+Next INF03 config/keys/dumps/backup access outside code, metadata-only inventory.
+New /var/lib journals/archive remain outside standard backup scope: preserve exact
+fresh pre-hardening HDD backup. Full INF03/DR still open.0subagents/main unmerged.
+
+
 ## Решение владельца
 
 23Oct владелец поставил дальнейшую разработку Telegram/Connect на паузу и попросил

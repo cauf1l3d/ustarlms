@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "reported_date": "2026-10-25",
+  "timezone": "Europe/Moscow",
+  "exact_execution_time_not_supplied": true,
+  "source": "owner terminal output",
+  "operator": {
+    "filename": "ustar-code-hardening-20261025.py",
+    "sha256": "6447d5d642c136ef5352690be19076636463a49a91cd0b9acb384440721a30d5",
+    "code_commit": "e573cd8e829fad89c49c50628080344a38b29284"
+  },
+  "pre_apply_check": {
+    "phase": "ready_for_code_hardening",
+    "entries": 44210,
+    "archived_files": 22,
+    "changed_permissions": 4785,
+    "host_changes": false,
+    "provider_called": false
+  },
+  "reported_phases": [
+    "prepared",
+    "backup_complete",
+    "writers_stopped",
+    "archive_ready",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "removed",
+    "web_verified"
+  ],
+  "result": {
+    "app_role": "ustar_app",
+    "archived_files": 22,
+    "business_rows_restored": false,
+    "phase": "code_hardened"
+  },
+  "coordinator_verified": {
+    "retained_tree_matches_protected_metadata": true,
+    "private_archive_before_original_removal": true,
+    "web_and_effective_app_role": true,
+    "service_states_and_restart_policies_restored": true
+  },
+  "private_archive": "/var/lib/ustar-code-hardening/archive",
+  "private_state": "/var/lib/ustar-code-hardening/state.json",
+  "backup_receipt_in_stdout": false,
+  "fresh_HDD_backup_phase_reported": true,
+  "post_apply_browser_acceptance": "pending",
+  "full_INF03_closed": false,
+  "next": "INF03 metadata-only access survey of config/keys/dumps/backup paths outside protected code; no blanket permission changes"
+}

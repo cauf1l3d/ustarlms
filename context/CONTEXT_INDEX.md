@@ -1,5 +1,31 @@
 # Индекс текущего контекста
 
+**25Oct — INF03 code hardening applied by owner; keys/dumps slice next.**
+Operator SHA6447d5d6: prepared/backup_complete/writers_stopped/archive_ready,
+22removed/web_verified -> code_hardened, archived_files22, app_roleustar_app,
+business_rows_restored=false. Coordinator verified protected retained tree,
+private archive, effective app role/HTTPS and resumed original services/policies.
+Owner precheck was44210entries/22archive/4785planned metadata changes; not a new
+independent post-apply census. Browser acceptance after hardening still pending.
+Review40141745333/Context40141745326 SUCCESS on e573cd8e; both1130/174skips/browser,
+20/20root runtime and existing DB fixture121015572073 PASS. Do not repeat apply.
+Legacy extras unused per owner, preserved for future USTAR Connect. Before old
+app/DB/physical restore undo code hardening first; source drift requires review.
+Next INF03 config/keys/dumps/backup access outside code, metadata-only inventory.
+New /var/lib journals/archive remain outside standard backup scope: preserve exact
+fresh pre-hardening HDD backup. Full INF03/DR still open.0subagents/main unmerged.
+
+
+
+**Targeted qualification25Oct:** codee573cd8e, Context40141745326 SUCCESS;
+both source jobs121014745523/121014745350 SUCCESS (1130tests/174environment skips
+each, browser pass). Runtime121014745480 SUCCESS; all20 targeted tests PASS with
+zero skips, including actual UID33 open/write/create/unlink/archive denial and
+interrupted chown recovery. Whole Review40141745333 still running inherited
+connect-db121015572073 at this documentation checkpoint. Operator --check only
+until accepted server receipt; no file hardening applied to production.
+
+
 **25Oct — INF03 code/archive coordinator prepared; production check pending.**
 Owner metadata complete: UID33 owns849dirs/3908files, no ACL/hardlinks; config0:33/0640,
 parents protected, moodledata writable. Owner explicitly says old handlers/reports unused

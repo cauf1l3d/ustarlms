@@ -136,6 +136,7 @@ tasks:
 - id: INF-03
   title: Защита кода/config, dumps и ключей
   status: in_progress
+  progress_20261025: Owner applied code_hardened; config and code protected; legacy22 privately preserved; post-apply browser and outside-code keys/dumps acceptance pending
   depends_on:
   - INF-01
   acceptance:

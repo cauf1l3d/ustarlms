@@ -22,6 +22,21 @@
     "moodledata_write": true
   },
   "legacy_owner_decision": "currently unused; retain privately for future USTAR Connect reuse",
-  "production_hardening_applied": false,
-  "full_INF03_closed": false
+  "production_hardening_applied": true,
+  "full_INF03_closed": false,
+  "operator_check": {
+    "phase": "ready_for_code_hardening",
+    "entries": 44210,
+    "archived_files": 22,
+    "changed_permissions": 4785,
+    "host_changes": false,
+    "provider_called": false
+  },
+  "operator_apply": {
+    "app_role": "ustar_app",
+    "archived_files": 22,
+    "business_rows_restored": false,
+    "phase": "code_hardened"
+  },
+  "post_apply_browser_acceptance": "pending"
 }

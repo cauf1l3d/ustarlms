@@ -31,7 +31,7 @@ Do not infer secrets or HTTP accessibility from names. Never publish contents.
   stop writers, apply, verify app/HTTPS/read-no-write, restore service policies.
 - [x] Test native Unix access, archive privacy, failure/recovery checkpoints,
   wrong source/private state drift, future plugin creation inherits root owner.
-- [ ] Publish source and receipts; operator --check first, then apply. No new
+- [x] Publish source and receipts; operator --check and apply accepted. No new
   full server lab/physical restore; reuse accepted qualification, targeted delta.
 
 Old full restore can reintroduce legacy and writable code: metadata undo must
@@ -49,3 +49,9 @@ existing installer activation preserves root ownership for existing/new files.
 Three new guard regressions failed on previous code, then passed after correction.
 Final local20tests:18PASS/2UID33 mapping skips; final CI pending. No independent
 reviewer/subagents; author review only. Operator --check before any production apply.
+
+
+25Oct final owner apply receipt: code_hardened/archived_files22/app_roleustar_app/
+business_rows_restoredfalse after fresh backup and web_verified. Code slice applied;
+post-apply browser acceptance pending. Full INF03 includes outside-code secrets,
+keys/dumps/backup access and is not closed by this code slice.

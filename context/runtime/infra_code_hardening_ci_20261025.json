@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "reported_date": "2026-10-25",
+  "timezone": "Europe/Moscow",
+  "code_commit": "e573cd8e829fad89c49c50628080344a38b29284",
+  "code_tree": "1cbad536456632efc219fabf6a008f6c1770a162",
+  "operator": {
+    "filename": "ustar-code-hardening-20261025.py",
+    "sha256": "6447d5d642c136ef5352690be19076636463a49a91cd0b9acb384440721a30d5",
+    "bytes": 67868,
+    "zip_sha256": "8c3bcf678c5be9a034b68d36247fee3fddd362f12aff01ec6788cfc17834ecfe",
+    "zip_bytes": 18297,
+    "db_module_sha256": "976afa0d2dffd58bf260dde4cb90cb5297f73d3f78fb9df10c2f9dc4b60ecf5e"
+  },
+  "qualification": {
+    "review_run": 40141745333,
+    "review_status": "success",
+    "context_run": 40141745326,
+    "context_conclusion": "success",
+    "source_jobs": [
+      121014745523,
+      121014745350
+    ],
+    "source_conclusion": "success",
+    "source_tests_each": 1130,
+    "source_environment_skips_each": 174,
+    "runtime_job": 121014745480,
+    "runtime_conclusion": "success",
+    "targeted_tests": 20,
+    "targeted_skips": 0,
+    "targeted_conclusion": "success",
+    "connect_db_job": 121015572073,
+    "connect_db_status": "success",
+    "full_rc_conditional_jobs": "skipped",
+    "connect_db_markers": [
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS"
+    ]
+  },
+  "local": {
+    "tests": 20,
+    "passed": 18,
+    "skipped_uid33_mapping": 2,
+    "previous_db_handoff_tests": 25,
+    "previous_db_passed": 24,
+    "previous_db_uid33_skip": 1,
+    "context_check": "success",
+    "diff_check": "success"
+  },
+  "coverage": [
+    "private archive and metadata roundtrip on real files",
+    "unknown content/path/ACL/link/mount/metadata identities refuse",
+    "exact completed-state guard and same-content inode replacements refuse",
+    "real UID33 code read and write/create/unlink denials; archive read denial",
+    "real UID33 recovery between chown and chmod",
+    "partial legacy restore before timestamp recovered",
+    "backup recovery ordered before PG restart and catalogue guards (modeled)",
+    "backup and health failures restore code and service boundary (modeled)",
+    "existing real installer-copy function preserves root owners for retained and new files (DB/service boundary modeled)",
+    "deterministic standalone build and default offline/outage acknowledgement"
+  ],
+  "author_review": {
+    "independent_review": false,
+    "subagents": 0,
+    "regressions_before_fix": 3,
+    "baseline_before_guard_fix": "7ace868ba488ad5331501484aa2f75d78c3ef313"
+  },
+  "scope": {
+    "production_coordinator_executed_in_ci": false,
+    "production_access": false,
+    "provider_called": false,
+    "business_database_restored": false,
+    "production_hardening_applied": true,
+    "owner_check": "accepted",
+    "full_INF03_closed": false,
+    "owner_apply": "code_hardened",
+    "post_apply_browser_acceptance": "pending",
+    "retained_code_content_changed": false,
+    "legacy_extra_files_removed_after_private_preservation": 22
+  },
+  "recovery_limit": "Frozen app/DB/physical restores require code-hardening undo first. Legitimate source changes require review; no automatic rebaseline.",
+  "preservation_limit": "Standard accepted backup covers CODE and moodledata, not new /var/lib hardening state. Fresh pre-hardening encrypted HDD backup contains all legacy bytes; retain its receipt/archive. Broader host-state and clean-host DR remain separate.",
+  "owner_receipt": "context/runtime/infra_code_hardening_owner_20261025.json"
+}

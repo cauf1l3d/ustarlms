@@ -1,5 +1,12 @@
 # Remaining infrastructure — consolidated pass25Oct2026
 
+Owner25Oct17:49MSK accepted local_batch_applied:69exports,261control files,35039995B
+readback-verified encrypted companion/SHAda701618;timer active; journal already
+fresh measured/actionnone. No new container/data/provider mutation. No repeat apply.
+All8 incomplete; followup port2019 owner and current task retry metadata, then
+remaining frozen-ID Docker lifecycle/access/external acceptance. Receipt/runbook
+are current; qualification/retry notes below are history.
+
 Current scope correction25Oct: owner confirms metadata_restored/sourceb9c0bee6.
 Companion must exclude original physical baselines/retained/restoration trees under
 known app/update generation paths of the four legacy control roots. Keep their

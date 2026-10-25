@@ -1,16 +1,25 @@
 # Локальный инфраструктурный пакет25Oct2026: исправление выборки
 
+**Применён владельцем25Oct17:49МСК: local_batch_applied.**
+69exports protected; control companion261files/35039995B, readback verified,
+SHA256da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f.
+Timer active; journal measured/actionnone; containers unchanged, no business restore
+or provider sends. [Owner receipt](infra_one_pass_owner_20261025.json#accepted_apply).
+**--apply больше не запускать.** Следующий [read-only follow-up](infra_closure_followup_20261025.md).
+All8 not complete; separate scheduled tick/external DR/access/power/observer/SLO facts
+remain open. Original physical pairs and standard HDD backup remain required.
+
 Текущий квалифицированный пакет `ustar-infra-one-pass-20261025-scopefix.py`,42892B/SHA256
 `5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5`.
 Source1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5; Review40202157683/Context40202157658
 SUCCESS. Runtime job121195410529:43/43/no skips; both source1189/213environment skips
 and browser PASS. PG16 job121196267679:158tests/830assertions+native guards PASS.
 [Owner receipt](infra_one_pass_owner_20261025.json), [qualification](infra_one_pass_qualification_20261025.json).
-Owner подтверждает `metadata_restored` и sourceb9c0bee6 после второго отказа
+История: owner подтвердил `metadata_restored` и sourceb9c0bee6 после второго отказа
 unsafe_payload_directory. Первый отказ1bb1f693 был лимитом16MiB для21665285B journal;
 исправленный64MiB reader сохранён. Прошлый e15c696c Review40197352367/Context40197352371
 SUCCESS покрывал размер журнала, но synthetic fixture не имел физических baseline.
-Новый success на production не заявлен. DB/code hardening и старые stands не повторять.
+Scopefix теперь принят по owner local_batch_applied; DB/code hardening и старые stands не повторять.
 
 ## Исправленный scope
 
@@ -33,12 +42,12 @@ Manifest/receipt явно `physical_recovery_trees_included=false`.
 before images/scope и отсутствие всех созданных managed files. Source history
 сохраняется; journals не удалять/редактировать, метаданные вручную не менять.
 
-## Один guarded повтор
+## История выполненной команды
 
 Скачать исправленный ZIP на компьютер, извлечь и перенести в `/home/aduk` только
 `ustar-infra-one-pass-20261025-scopefix.py`. ZIP/дампы на сервере оставить с исходными
 bytes/metadata: их замена/добавление в scanned home scope изменит guarded retry.
-Qualification завершена; owner retry ещё не выполнен. Выполнить один блок:
+Qualification завершена; команда ниже уже выполнена владельцем17:49МСК. Не повторять --apply:
 
 ```bash
 sudo -v
@@ -95,7 +104,7 @@ Current saved ZIPv4,15501B/SHA256
 full hash/CRC/member hashes/extracted script SHA/default PLAN_ONLY and downloaded
 saved copy verified. Full production coordinator not executed in CI; fixtures use
 synthetic controls/keys and isolated namespaces; journal boundary modeled plus
-production self-verification. Owner local_batch_applied receipt is still required.
+production self-verification. Owner local_batch_applied receipt accepted25Oct17:49MSK; no repeat apply.
 Ранее v3 ZIP14319B/SHA0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e
 прошёл byte/CRC/default download checks, но содержит слишком широкий physical scope;
 это historical qualification, не текущий apply пакет.

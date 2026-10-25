@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "kind": "infra_one_pass_component_qualification",
-  "status": "qualified_physical_scope_fix_owner_retry_pending",
-  "owner_apply_performed": false,
+  "status": "qualified_physical_scope_fix_owner_local_batch_applied",
+  "owner_apply_performed": true,
   "author_review": true,
   "subagents": 0,
   "first_candidate": {
@@ -274,7 +274,7 @@
     }
   },
   "scope_fix": {
-    "status": "qualified_owner_retry_pending",
+    "status": "owner_local_batch_applied",
     "operator_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
     "operator_bytes": 42892,
     "known_predecessors": [
@@ -334,7 +334,6 @@
     ],
     "native_delta": "real UID33/999 preserved physical tree,0777 cache,FIFO,91677698B sparse media; actual restricted-service age snapshot includes controls only",
     "limits": [
-      "No owner retry yet",
       "No agent SSH or production execution",
       "Synthetic CI namespace and keys; existing external DR/physical power/observer boundaries remain open"
     ],
@@ -393,7 +392,19 @@
       "DB_APP_HANDOFF_NATIVE=PASS",
       "INFRA_REMAINING_SURVEY_NATIVE=PASS",
       "CON02_UPDATE_NATIVE=PASS"
-    ]
+    ],
+    "owner_acceptance": {
+      "finished_utc": "2026-10-25T14:49:36.417826+00:00",
+      "exports_restricted": 69,
+      "control_files": 261,
+      "cipher_bytes": 35039995,
+      "cipher_sha256": "da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f",
+      "readback_verified": true,
+      "companion_timer_active": true,
+      "journal_action": "none",
+      "journal_status": "measured",
+      "infrastructure_complete": false
+    }
   },
   "state_size_qualification": {
     "source_commit": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
@@ -466,5 +477,6 @@
       "full_source_suite": "Both source jobs run1183/207environment skips; success",
       "previous_local_full_suite_errors": "Preserved by name in predecessor_qualification.local.full_suite; not a current CI failure"
     }
-  }
+  },
+  "owner_apply_success_receipt": "context/runtime/infra_one_pass_owner_20261025.json#accepted_apply"
 }

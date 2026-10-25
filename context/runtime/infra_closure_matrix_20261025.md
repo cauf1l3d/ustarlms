@@ -1,78 +1,56 @@
-# Остаток инфраструктуры по фактическому отчёту25Oct
+# Остаток инфраструктуры после owner apply25Oct17:49МСК
 
-Current25Oct: statefixb9c0bee6 refused unsafe_payload_directory; owner confirms
-metadata_restored. Broad companion traversal entered physical baselines with
-UID33/999 and multi-GiB bytes. Scope fix1c5152bd qualified (Review40202157683/Context40202157658 SUCCESS, root43/43/no skips)
-excludes known physical
-generation trees without changing them; control images/journals/manifests retained.
-Earlier qualification below is historical; no local_batch_applied receipt yet.
+Owner `local_batch_applied` принят: operator5067163f/source1c5152bd. [Receipt](infra_one_pass_owner_20261025.json#accepted_apply).
+69export files restricted; encrypted261-file controls companion35039995B,
+SHA256da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f,
+readback verified, timer active. Business rows not restored, containers unchanged,
+provider not called. Старые DB/code/SSD/Moodle/OS/HTTPS/backup/Connect stands засчитываются.
+--apply не повторять; full infrastructure_complete=false остаётся корректным.
 
-25Oct: owner batch1bb1f693 refused `unsafe_root_json`; no acceptance of this batch.
-Hardening state21665285B/root0600 exceeded reader16MiB. Corrected64MiB reader and
-guarded pinned predecessor retry qualified on e15c696c: Review40197352367/Context40197352371
-SUCCESS, root37/37/no skips and real restricted-service encrypted readback of the
-observed synthetic byte count. Owner retry pending. [Owner receipt](infra_one_pass_owner_20261025.json).
-
-Отчёт01:50:08–01:50:21UTC принят; collector SHA0d5d05fc совпал. Его exact-source
-Review40151717494/Context40151717558 SUCCESS, existing PG16 native121045127545
-INFRA_REMAINING_SURVEY_NATIVE=PASS. Агент не подключался к серверу. Предыдущие
-SSD/Moodle518/ОС/reboot/HTTPS/DB-role/code/Connect проверки засчитываются.
-
-| Этап | Что подтверждено | Что осталось |
+| Этап | Подтверждено | Осталось |
 |---|---|---|
-| Права | config/ключи/новые private state защищены; data root0770 | Видны как минимум63 обычных экспорта с group/other доступом. Новый пакет закрывает доступ к подходящим файлам на глубине2. Общая группа www-data содержит caddy: это отдельная граница доверия, не независимая изоляция служб. |
-| Docker/SSD | Оба контейнера running, restarts0/OOM0; root≈47.5GiB/HDD≈378.7GiB available; PG не опубликован, Moodle localhost8082 | json-file без ротации, Moodle≈62MiB; healthcheck отсутствует. Нужен согласованный lifecycle с переносом frozen ID guards; daemon defaults не исправят существующие контейнеры. Лаборатория не удаляется. |
-| Доступ | SSH key и пароль включены; root без пароля; UFW inactive/INPUT ACCEPT | Нужны проверенный отдельный key login, аварийный доступ и allowlist общего хоста/внешнего маршрутизатора. До этого blind firewall/password disable не выполняется. |
-| Копии/DR | HDD success00:36:21Z, encrypted SHA39c0986f/readback; timer active/enabled | Новые role/code journals пока вне стандартного архива. Пакет добавляет отдельный companion. Clean-host restore у сисадмина, независимый экземпляр, отдельное хранение ключа, RPO/RTO/retention требуют реальных подтверждений. |
-| Наблюдение | Numeric HTTP log работает; свежий snapshot | Journal root direct measured, service no_data. Пакет диагностирует в sandbox и сохраняет только проверенное изменение. Внешний host-loss observer/проверка доставки не подтверждены. |
-| Железо/питание | Свежий SMART health PASSED; HDD5/197/198/199=0 | Это не long-test или подтверждение замены диска, не отмена исторического риска HDD и не UPS/shutdown acceptance. Нужны физические сведения. |
-| Регламент | Daily Academy cert-renew timer уже установлен, success; adhoc0/retry_enabled0 |19overdue не доказывают новый cron сбой. Исправить чтение квитанции, подтвердить актуальный scheduled tick/active cert, SMTP delivery с согласованным адресатом. Учесть qualified recovery после законного TLS renewal. |
-| Приёмка | Вход/открытие работают по сообщению владельца, предыдущие профильные стенды приняты | Один HTTP request/p95 не является нагрузочным SLO. Финальный статус возможен только по строкам выше; все8 сейчас не закрыты. |
+| Права | Root-owned code/config и private legacy22 archive приняты ранее;69 выбранных USTAR exports закрыты от group/other | www-data/caddy supplementary-group trust boundary и общий host access policy требуют отдельного разбора. Не объявляется глобальный аудит всех файлов/других проектов. |
+| Docker/SSD | Existing accepted IDs/images сохранены; рестарт/пересоздание этим batch не выполнялось; прежний root/HDD free-space/SMART stand засчитан | json-file rotation/health lifecycle требует coordinated frozen-ID/recovery handoff. Старые лаборатории/логи/архивы не удалять. |
+| Доступ | Новый список69deduplicated endpoints без truncation; SSH/mail/DNS/web bindings видны | На *:2019 и127.0.0.1:2019 разные binding entries; owner/purpose ещё неизвестны, внешняя доступность не доказана. Далее PID/unit/published-port metadata, затем проверенный key/emergency access/shared-host allowlist. UFW/password/forwarding не менять вслепую. |
+| Копии/DR | New control companion261files/33.4MiB encrypted/readback; timer active. Physical trees/recovery.key исключены. Fresh standard HDD/pre-hardening archive ранее приняты | Первый scheduled companion tick ещё не наблюдался. Companion не whole-host/atomic DB pair; physical manifests не заменяют их байты. Сохранить SSD physical pairs и standard DB/CODE/DATA HDD archive. Clean-host restore от сисадмина/offsite/separate key custody/RPO/RTO/retention и qualified generation pairing открыты. |
+| Наблюдение | Journal уже fresh measured/categories0; actionnone — настройки не менялись. Numeric HTTP log принят ранее | Причина прежнего no_data не установлена, нулевые categories относятся к выбранному окну/классификатору. Независимый host-loss observer и проверенная доставка всё ещё открыты. |
+| Железо/питание | Ранее owner SMART health PASSED и текущие5/197/198/199=0 засчитаны | Исторический риск HDD не отменён; физический UPS/контролируемый shutdown и независимость копий требуют фактов. Не повторять long-test без отдельной необходимости. |
+| Регламент | Cron receipt fresh17:49, adhoc queued/failed0; scheduled_failed2/overdue19 согласуются с прежними остаточными counts. Active Academy TLS verified, expiry20Nov2026 10:07:37MSK | Exit0 текущего cron не выведен этим sanitized receipt; count2 не объявлять новой ошибкой. Далее retry/disabled task metadata без выполнения/сброса задач. SMTP delivery с согласованным адресатом, future TLS-renewal→frozen recovery compatibility открыты. |
+| Приёмка | Все предыдущие функциональные owner stands сохранены; текущий batch завершил свои guards и readback | Representative SLO/RPO/RTO и внешние свидетельства по строкам выше нужны для полной приёмки. Новый default UI/full restore/load-test круг не требуется. |
 
-Частичный survey: du restore-lab timeout, cron helper не дал JSON; home scan capped,
-listeners capped, active leaf не выбран. Эти ограничения не маскируются как PASS.
-Первая home выборка содержит и исходники/установщики, и настоящие plaintext dumps;
-не каждый архив объявляется утечкой БД. Ничего не удаляется и не отправляется.
+## Следующий срез
 
-## Единый локальный пакет
+[Один read-only follow-up](infra_closure_followup_20261025.md) определяет owner2019
+и current scheduled-task retry metadata. Не перезапускает cron/tasks/services,
+не меняет firewall/SSH/Caddy/Docker/DB. SQL READ ONLY под ordinary ustar_app;
+не выводит config/Env/credentials/raw task logs.
 
-`scripts/infra/infra_one_pass.py` standalone, default PLAN_ONLY. `--apply` сам
-выполняет preflight, фиксирует metadata-only undo, сохраняет две проверенные
-encrypted control snapshots (до и после), закрывает group/other доступ к
-выбранным старым файлам, ставит companion timer01:00UTC+0–120s (04:00MSK), возвращает
-санитизированный итог. DB/code/data/CA/shared firewall/SSH/container IDs не меняет.
-Остановки Академии нет; collector timer кратко приостанавливается для диагностики.
-Quota5GiB и reserve8GiB у companion; при заполнении отказ без удаления. Нужна
-отдельная политика retention; прежние backup archives не ротируются.
+Для внешних пунктов нужны реальные факты: результат clean-host restore от сисадмина,
+независимая текущая копия и отдельный ключ, проверенный альтернативный key login/
+аварийный доступ, policy общего хоста/маршрутизатора, UPS, выбранный независимый
+observer и адресат проверки доставки, бизнес RPO/RTO/SLO. Эти пункты не закрываются
+фактом same-host backup или одиночного HTTP request/p95.
 
-Companion содержит root controllers, новые journals/private legacy archive,
-существующие deployment/HTTPS control roots и USTAR `/etc` configs/keys.
-`recovery.key` исключён. Crypto authentication и manifest/file hashes проверяются
-потоковым расшифрованием в памяти; plaintext на диск не распаковывается. Это не
-whole-host backup: console auth/notify SQLite, ОС, DNS/mail data и бизнес-данные
-полностью сюда не входят. Стандартный согласованный DB/CODE/DATA архив обязателен.
-Архив00:35:20Z-b6dfed1e сохранить: в нём ещё есть оригинальные legacy bytes.
+## Сохранённый recovery scope
 
-Journal: временный ExecStartPost в реальной collect.service возвращает только
-reason/elapsed/exit metadata. Только timeout допускает CPUQuota100%; только
-permission_denied — SupplementaryGroups=systemd-journal. Без measured fresh
-service snapshot изменение убирается, journal остаётся unresolved. Сырая journal
-выдача, токены, provider сообщения и широкие capabilities не добавляются.
+Current companion включает root controllers, role/code journals/private archive,
+known generation control images/journals/manifests и USTAR/etc configs/keys, own
+operator/state/units. Только known physical baseline/retained/restoration trees
+под app/update generations четырёх legacy recovery roots исключаются до обхода;
+владельцы33/999/0777 и бизнес-байты в них остаются исходными. Raw private logs и
+recovery.key исключены.64MiB/file,192MiB aggregate,10000files,5GiB quota/8GiB reserve,
+никакого автоматического удаления. Full scoped metadata preflight до preparation;
+actual capture проверяет снова под существующими locks. Manifest/receipt явно
+physical_recovery_trees_included=false и whole_host_backup=false.
 
-`--check` читает текущие guards/status; `--undo` и `--recover` восстанавливают
-metadata/свои units, не бизнес-строки; encrypted copies сохраняются. Unknown bytes,
-inode/size/mtime drift или foreign unit запрещают перезапись/откат. После успешного
-шага нельзя молча принимать before/probe metadata вместо конечного состояния.
-Свежий upload этого пакета — не доказательство production apply: нужен итог JSON.
+Standard pre-hardening archive20261025T003520Z-b6dfed1e сохранять. Сверять capture
+release/generation/ownership/code modes/phase/container IDs перед recovery: companion
+и DB/CODE/DATA имеют независимые capture times, их простая распаковка поверх live
+production не является поддержанной процедурой. New host requires qualified profile.
+При возврате к старому app/DB/physical baseline сначала учитывать текущий active
+metadata hardening и его guarded undo; unknown drift не перезаписывать.
 
-Для полного закрытия нужны одним ответом: подтверждение отдельного SSH key login и
-сетевого allowlist; результат restore от сисадмина и место независимой копии/ключа;
-модель/подключение ИБП; выбранный независимый observer и адресат проверки доставки;
-бизнес-требования к RPO/RTO/SLO. Секреты, приватные ключи и токены не присылать.
-
-Companion и DB/CODE/DATA архив имеют независимые capture times. Они не объявляются
-атомарной recovery pair. При восстановлении сверить release/generation, ownership/
-code modes, phase и container identities; новая машина требует квалифицированного
-profile. Извлечение двух архивов поверх live production не является поддержанной
-процедурой. Generation pairing/clean-host restore остаются частью открытого DR.
-[Docker: существующим контейнерам требуется recreation для нового log config](https://docs.docker.com/engine/logging/configure/).
+Historical survey0d5d05fc принят; прежние capped listeners/cron parsing limitations
+теперь дополнены owner receipt. Частичный du restore-lab не доказывает размер/право
+удаления; home exports scope не равен всем файлам хоста. Source qualification43root/
+0skips и1189/213source skips: [receipt](infra_one_pass_qualification_20261025.json).

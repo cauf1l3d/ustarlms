@@ -5,7 +5,7 @@ source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_infrastructure_checkpoint:
   date_msk: '2026-10-25'
-  status: physical_scope_fix1c5152bd_qualified_owner_retry_pending
+  status: owner_local_batch_applied_69exports261controls
   report: context/runtime/infra_normalization_resume_20261023.md
   baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
   app_role_owner_receipt: context/runtime/infra_app_handoff_owner_20261025.json
@@ -14,10 +14,10 @@ current_infrastructure_checkpoint:
   one_pass_owner_refusal: context/runtime/infra_one_pass_owner_20261025.json
   closure_matrix: context/runtime/infra_closure_matrix_20261025.md
   one_pass_plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md
-  next: guarded_owner_retry_then_remaining_local_and_external_acceptance
+  next: read_only2019_owner_and_cron_retry_metadata_then_remaining_Docker_access_external_acceptance
   retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
-  production_mutation_scope: owner DB ownership/config/HTTPS app_role_active and code_hardened; legacy22 private archive
+  production_mutation_scope: owner DB app_role_active/code_hardened/legacy22 archive and local_batch_applied69export modes,261file encrypted controls,timer; no new journal policy
   accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300_DB_app_role_code_hardening
 current_connect_checkpoint:
   Telegram_successor: context/runtime/connect_telegram_finish_20261023.md

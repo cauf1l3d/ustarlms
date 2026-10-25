@@ -1,5 +1,23 @@
 # Активные задачи USTAR
 
+**25Oct17:49MSK — owner local_batch_applied accepted; no repeat apply/old stands.**
+Pinned scopefix5067163f/source1c5152bd protected69exports, verified encrypted261-file
+control companion35039995B/SHAda701618, timer active, original containers unchanged,
+business_rows_restored/provider_calledfalse. Finished14:49:36Z/17:49:36MSK. Physical
+copies/recovery.key excluded; not whole-host/offsite/atomic DB pair; scheduled tick
+not yet observed. Journal fresh measured/categories0/actionnone: no policy tweak or
+cause claim for earlier no_data. TLS verified, active leaf expires20Nov10:07MSK.
+Cron receipt fresh17:49/adhoc0,2failed/19overdue consistent with accepted residual
+counts20/21Oct; no restart/reset/new incident from counts alone.69listener endpoints,
+not truncated; wildcard2019 owner/purpose unknown. Next narrow read-only PID/unit/
+container-port metadata and task retry/disabled fields. Do not run tasks or touch
+SSH/firewall/containers blindly. All8 still incomplete: Docker frozen-ID lifecycle,
+key/emergency/shared-host policy,www-data/caddy boundary,external restore/offsite/
+key custody/UPS/independent observer/delivery/SMTP/SLO/TLS-renewal recovery. Existing
+DB/code/SSD/Moodle/OS/HTTPS/backup/Connect acceptance retained;0agents/SSH/sends/main
+merge. Current receipt: context/runtime/infra_one_pass_owner_20261025.json#accepted_apply.
+Next: context/runtime/infra_closure_followup_20261025.md.
+
 **25Oct17:41MSK — physical companion scope fix1c5152bd qualified; owner retry next.**
 Owner b9c0bee6 apply refused unsafe_payload_directory; metadata_restored/b9 confirmed.
 Known legacy physical baseline/retained/restore trees (UID33/999/0777,GiB data) pruned

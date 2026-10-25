@@ -85,10 +85,16 @@ class ExportBoundaries(unittest.TestCase):
         self.assertEqual(self.dump.stat().st_mode&0o777,0o600)
     def test_retry_refuses_a_new_export_instead_of_silently_extending_scope(self):
         self.tx.prepare(self.plan());self.tx.apply();self.tx.undo()
-        new=self.home/'new.dump';new.write_text('new');new.chmod(0o664)
+        new=self.home/'ustar-new.dump';new.write_text('new');new.chmod(0o664)
         self.assertTrue(hasattr(self.tx,'resume'),'known complete metadata rollback cannot be retried')
         with self.assertRaises(self.m.Refusal):self.tx.resume(self.plan())
         self.assertEqual(new.stat().st_mode&0o777,0o664)
+    def test_live_env_keys_and_unrelated_app_sql_are_outside_export_scope(self):
+        env=self.home/'.env';env.write_text('PRIVATE_ENV');env.chmod(0o664)
+        key=self.home/'ustar-service.key';key.write_text('PRIVATE_KEY');key.chmod(0o664)
+        app=self.home/'other-app';app.mkdir();sql=app/'schema.sql';sql.write_text('SELECT 1');sql.chmod(0o644)
+        self.tx.prepare(self.plan());self.tx.apply()
+        self.assertEqual([p.stat().st_mode&0o777 for p in (env,key,sql)],[0o664,0o664,0o644])
 
 @unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class PayloadBoundaries(unittest.TestCase):

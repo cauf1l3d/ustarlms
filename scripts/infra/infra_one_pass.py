@@ -145,8 +145,12 @@ class Store:
             yield
 
 def candidate(name):
-    return bool(name.lower().endswith(('.sql','.dump','.age','.key')) or name=='.env' or
+    return bool(name.lower().endswith(('.sql','.dump','.age')) or
         re.fullmatch(r'(?i)(ustar|moodle|backup|recovery|snapshot|academy|dr)[-_].*\.(zip|tgz|tar|tar\.gz)',name))
+
+def export_name(name):
+    return bool(re.match(r'(?i)(ustar|moodle|backup|recovery|snapshot|academy|dr)[-_]',name)
+                or name.lower()=='backups')
 
 def export_plan(root=Path('/'),limit=10000):
     root=Path(root);rows=[];skipped=[];visited=0
@@ -166,11 +170,11 @@ def export_plan(root=Path('/'),limit=10000):
                         if candidate(name) or depth==0:skipped.append(str(p))
                         continue
                     if stat.S_ISDIR(st.st_mode):
-                        if depth==0 and name not in ('data','node_modules') and st.st_dev==info.st_dev:
+                        if depth==0 and export_name(name) and st.st_dev==info.st_dev:
                             require(st.st_uid in (0,1000) and not st.st_mode&0o002
                                     and (not st.st_mode&0o020 or st.st_gid in (0,1000)),'unsafe_export_parent')
                             walk(p,1)
-                    elif candidate(name):
+                    elif candidate(name) and (depth>0 or export_name(name)):
                         with opened(p) as fd:
                             row=description(fd)
                             require(row['uid'] in (0,1000) and not row['mode']&0o7111,'unsafe_export_owner_or_mode')

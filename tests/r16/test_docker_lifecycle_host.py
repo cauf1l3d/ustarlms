@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -20,6 +21,32 @@ def module(case):
     return value
 
 class GuardContract(unittest.TestCase):
+    def test_recovery_quiesces_units_without_reading_or_rewriting_inflight_files(self):
+        h=module(self);seen=[]
+        with tempfile.TemporaryDirectory() as td:
+            store=SimpleNamespace(core=object(),base=Path(td),
+                load=lambda:(_ for _ in ()).throw(AssertionError('inflight files must be restored first')))
+            controls=h.Controls(store,None,SimpleNamespace(log=None),{},
+                SimpleNamespace(quiesce=lambda units:seen.append(units)))
+            controls.quiesce({'before':{'units':{}}},recovery=True)
+            self.assertEqual(seen,[{}])
+
+    def test_predecessor_journal_needs_only_its_actual_id_image_pair(self):
+        from tests.r16.test_docker_lifecycle import row
+        h=module(self);profile=h.production_profile();rows={n:row(n) for n in profile['predecessors']}
+        frozen={}
+        for name,values in profile['predecessors'].items():
+            rows[name].update(Id=values['id'],Image=values['image'],State={'Running':True})
+            rows[name]['HostConfig']['AutoRemove']=False
+            frozen[name]={'Id':values['id'],'Image':values['image']}
+        saved={'app':{'phase':'app_ready','primitive':{'identities':frozen}},'runtime':{'phase':'runtime_active'}}
+        seen=[];host=SimpleNamespace(bind_identities=lambda values:seen.append(values),
+            delegate=lambda:SimpleNamespace(inspect=lambda:rows))
+        guard=h.ProductionGuards.__new__(h.ProductionGuards)
+        guard.journal=SimpleNamespace(load=lambda:saved);guard.ctx=SimpleNamespace(host=host)
+        self.assertEqual(guard.identities(rows),saved)
+        self.assertEqual(seen,[frozen])
+
     def test_production_profile_uses_accepted_source_images_and_local_daemon(self):
         h=module(self);p=h.production_profile()
         self.assertEqual(p['source'],Path('/opt/ustar/apps/stack/docker-compose.yml'))

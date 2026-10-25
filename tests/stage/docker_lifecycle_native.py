@@ -30,6 +30,7 @@ tmp=tempfile.TemporaryDirectory(prefix='ustar-docker-delta-');root=Path(tmp.name
 run=h.Commands(root/'private-command.log');api=l.DockerAPI();owned=[];generation=uuid.uuid4().hex
 network='ustar-lifecycle-'+generation;label='org.ustar.fixture.run='+generation
 proof={}
+stage='starting_fixture'
 
 def command(*args,**kw):return run(h.docker(*args),**kw).stdout
 def sql(text):
@@ -114,8 +115,9 @@ echo 'fixture-ready';
         ids['moodle'],'-S','0.0.0.0:80','-t','/work')
     owned.append('ustar_moodle')
     until=time.monotonic()+60
-    while run(h.docker('exec','ustar_postgres','pg_isready','-q','-U','fixture_runtime','-d','moodle'),check=False).returncode:
+    while run(h.docker('exec','ustar_postgres','pg_isready','-q','-h','127.0.0.1','-U','fixture_runtime','-d','moodle'),check=False).returncode:
         assert time.monotonic()<until;time.sleep(.2)
+    stage='initial_SQL'
     sql('CREATE TABLE business_evidence(id integer PRIMARY KEY, note text); INSERT INTO business_evidence VALUES(1,\'before\');')
     command('exec','ustar_moodle','sh','-eu','-c',
         "printf 'preserve actual writable bytes\\n' > /usr/share/ustar-fixture-proof; "
@@ -149,6 +151,7 @@ echo 'fixture-ready';
     recipients.write_bytes(run(['/usr/bin/age-keygen','-y',str(key)]).stdout);recipients.chmod(0o600)
     target=root/'hdd';target.mkdir(mode=0o700)
 
+    stage='native_apply'
     tx,host,store,controls=make_transaction();result=tx.apply();assert result['phase']=='runtime_active'
     state=store.load();assert state['runtime_archive']['readback_verified']
     successor_ids={n:api.inspect(n)['Id'] for n in l.SERVICES}
@@ -160,6 +163,7 @@ echo 'fixture-ready';
     sql("INSERT INTO business_evidence VALUES(2,'after successor released');")
     (moodledata/'after-release.txt').write_text('new learner file')
     old_logs={n:Path(api.inspect(identity)['LogPath']).stat() for n,identity in predecessors.items()}
+    stage='actual_log_rotation'
     current=api.inspect('ustar_moodle');port=current['NetworkSettings']['Ports']['80/tcp'][0]['HostPort']
     with urllib.request.urlopen('http://127.0.0.1:'+port+'/noise',timeout=60) as response:assert response.read()==b'fixture-ready'
     log=Path(current['LogPath']);until=time.monotonic()+40
@@ -178,6 +182,7 @@ echo 'fixture-ready';
         assert loader.returncode==0 and decrypt.wait(timeout=10)==0
     assert all(api.image(value)['Id']==value for value in state['images'].values())
     proof['encrypted_snapshot_save_readback_load']=True
+    stage='native_recovery'
     tx.recover();assert store.load()['phase']=='recovered'
     assert {n:api.inspect(n)['Id'] for n in l.SERVICES}==predecessors
     assert sql('SELECT count(*) FROM business_evidence;')==b'2'
@@ -187,6 +192,7 @@ echo 'fixture-ready';
 
     failures=[]
     for point in ('retained','created','consumers_written'):
+        stage='failure_'+point
         tx,host,store,controls=make_transaction(archive=False);phase=host.phase
         def injected(name,state):
             result=phase(name,state)
@@ -205,6 +211,16 @@ echo 'fixture-ready';
         business_rows_restored=False,production_access=False,provider_called=False)
     output=ROOT/'artifacts/docker-lifecycle-native.json';output.write_text(json.dumps(proof,indent=2)+'\n')
     print('DOCKER_RUNTIME_SUCCESSOR_NATIVE=PASS')
+except BaseException as error:
+    failure={'stage':stage,'type':type(error).__name__,'reason':h.public_error(error),'production_access':False}
+    if run.log and run.log.exists():
+        raw=run.log.read_bytes()[-32768:]
+        if b'.s.PGSQL.' in raw and (b'No such file' in raw or b'Connection refused' in raw):
+            failure['diagnostic']='postgres_socket_unavailable'
+        elif b'database system is shutting down' in raw:failure['diagnostic']='postgres_shutting_down'
+    out=ROOT/'artifacts/docker-lifecycle-native-failure.json'
+    out.write_text(json.dumps(failure,indent=2)+'\n');print(json.dumps(failure),flush=True)
+    raise
 finally:
     # Disposal is restricted to this CI fixture's exact run label, never production.
     result=run(h.docker('ps','-aq','--filter','label='+label),check=False)

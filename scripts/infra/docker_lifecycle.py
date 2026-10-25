@@ -308,6 +308,7 @@ class ManagedFiles:
             self.original(key,row)
             os.replace(candidate,path.name,src_dir_fd=parent,dst_dir_fd=parent);os.fsync(parent)
             require(self.parent(path.parent)==row['parent'] and self.matches(path,image),'control_install_readback')
+            self.core.atomic(self.store.base/'bytes'/(key+'.after'),raw)
             row['accepted'].append(image);row.pop('pending',None);self.store.save(state)
         return image
 
@@ -592,7 +593,9 @@ class RuntimeArchive:
                 require(stat.S_ISREG(row.st_mode) and row.st_uid==0 and stat.S_IMODE(row.st_mode)==0o600,
                     'unsafe_runtime_archive_entry');used+=row.st_size
             free=os.fstatvfs(directory)
-            require(used<self.limit and free.f_bavail*free.f_frsize>=self.reserve+self.limit,
+            budget=state.get('before',{}).get('archive_budget_bytes',self.limit)
+            require(type(budget) is int and 0<budget<=self.limit and used+budget<=self.limit
+                and free.f_bavail*free.f_frsize>=self.reserve+budget,
                 'runtime_archive_capacity_no_deletion')
             digest,image=self.encrypt(directory,prefix+'.images.docker.tar.age',save,
                 lambda stream,result:stream_digest(stream,expected=result,limit=self.limit))
@@ -705,7 +708,8 @@ class RuntimeHost:
                 require(service not in current or current[service]['Id']==parked['Id'],'duplicate_successor_runtime')
                 current[service]=parked
         if current:self.save(new_containers={**state.get('new_containers',{}),**{n:v['Id'] for n,v in current.items()}})
-        self.controls.cold();self.controls.quiesce(state)
+        if hasattr(self.controls,'recover_backup'):self.controls.recover_backup(state)
+        self.controls.cold();self.controls.quiesce(state,recovery=True)
         for service,live in current.items():
             self.api.policy(live['Id'],{'Name':'no','MaximumRetryCount':0});self.api.stop(live['Id'])
             self.api.rename(live['Id'],self.retained(state,service,successor=True));self.api.disconnect(live['Id'])
@@ -783,13 +787,26 @@ class Transaction:
         return {'phase':'predecessor_restored','business_rows_restored':False}
 
 
-def main(argv=None):
+def main(argv=None,*,operator_path=None):
     import sys
     args=sys.argv[1:] if argv is None else argv
     if not args:
         print(json.dumps({'phase':'PLAN_ONLY','configuration_changes':False,'provider_called':False}));return 0
-    print(json.dumps({'phase':'refused','reason':'runtime_transition_not_qualified',
-        'configuration_changes':False,'provider_called':False}));return 2
+    try:import docker_lifecycle_host as host
+    except ImportError:
+        print(json.dumps({'phase':'refused','reason':'operator_bundle_required',
+            'business_rows_restored':False,'provider_called':False}));return 2
+    try:
+        allowed={'--check','--apply','--recover','--status','--acknowledge-outage'}
+        require(len(args)==len(set(args)) and set(args)<=allowed,'unsupported_runtime_arguments')
+        actions=[value[2:] for value in args if value!='--acknowledge-outage']
+        require(len(actions)==1,'single_runtime_action_required')
+        host.emit(host.entry(actions[0],operator_path or Path(__file__),acknowledge='--acknowledge-outage' in args))
+        return 0
+    except BaseException as error:
+        host.emit({'phase':'refused','reason':host.public_error(error),
+            'business_rows_restored':False,'provider_called':False})
+        return 2
 
 if __name__=='__main__':
     import sys

@@ -546,7 +546,7 @@ class RuntimeEdges(unittest.TestCase):
             def reconnect(self,before):events.append(('reconnect',before['Id']))
             def start(self,identity):objects[identity]['State']['Running']=True
         class Controls:
-            def quiesce(self,state):pass
+            def quiesce(self,state,**kw):pass
             def cold(self):pass
             def restore_files(self,state):pass
             def ready(self,*args):pass

@@ -1,5 +1,17 @@
 # Индекс текущего контекста
 
+**25Oct — classification accepted; Docker runtime successor implemented, qualification pending.**
+Moodle85491712B/2663paths accepted; no more metadata probes. Runtime snapshots,
+private source/consumer handoff and recover/status are implemented; original objects
+retained, no business restore.53focused tests/6local environment skips. Initial
+98ffdd9c CI full PASS; later82f8 native delta failed first fresh-PG SQL, final Docker
+rotation/recovery qualification pending. No owner artifact/apply until final proof.
+Plan: context/proposals/DOCKER_RUNTIME_SUCCESSOR_PLAN_20261025.md; ledger:
+context/runtime/docker_runtime_successor_progress_20261025.md. Original frozen
+manual tools remain predecessor evidence; successor check/recovery owns new IDs.
+Source0600/264-file companion accepted; SSH deferred,UPS present,copies handed over/
+external restore unknown.0agents/no agent SSH/provider sends/main merge.
+
 **25Oct — owner layer classification accepted; runtime successor engineering underway.**
 Moodle writable85491712B (81.53MiB),2663paths; system13/library6/shared2432/package45,
 runtime141/config13/usr1/var9/root3. Known IDs/images unchanged. Prefix zeros are

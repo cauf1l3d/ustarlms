@@ -82,3 +82,35 @@ Production frozen guard and CLI orchestration remain unfinished; actions still r
 The encrypted runtime recovery set uses two authenticated files (Docker-save stream
 plus private control tar) with one receipt; this avoids plaintext images or a custom
 chunk/reassembly archive format. Core companion later captures final control state.
+
+Checkpoint98ffdd9c full Review40241333815 completed SUCCESS, including native
+Connect/PG16. Later82f8db43 Context40242747014SUCCESS/both source SUCCESS. Its
+runtime job121317872541 failed an unchanged callback sender assertion before new
+infrastructure steps; first rerun request403(run still active), then single failed-job
+rerun accepted after completion. Possible fixture10s clock-boundary race inferred
+from source, not proven; no Connect business code/test waiver. Native Docker job
+121318736241 reached the new delta after existing app checks and failed first SQL
+on newly initialized PG; private stderr was not retained as a public artifact.
+Do not claim a proven cause. Fresh-fixture readiness now waits TCP127.0.0.1 to avoid
+the entrypoint's temporary Unix-only server. Production PG uses existing bind data.
+New native failure output is bounded stage/type/reason codes, no private commands.
+
+Production adapter now reuses exact installed6447code guard/976a DB reader/6f77
+frozen bundle and verifieda604HDD hardware reader. Original primitive journal has
+only Id/Image(+runtime metadata), not Mounts: regression RED→GREEN, use its actual
+frozen bind reader instead of inventing a missing field. Interrupted control-write
+recovery RED→GREEN, acquires cold lock and pauses units without rereading transient
+files before restoring them. Current49boundary tests +4builder tests=53/6local skips.
+Ordinary.py builder4RED→GREEN; exact module hashes, default offline, tamper refusal,
+no-ack and non-echoing argument guards. Fixed production check/apply/recover/status
+implemented; source is STILL unqualified and no owner artifact/delivery yet.
+Native encrypted image pair, true rotation and actual data-preserving recovery must
+pass on the final source before delivery. Private current control after-bytes are
+captured under the same child scope so the existing companion includes actual
+successor Compose/cron/HDD/installation contents as well as original inodes/bytes.
+
+Single old runtime-job rerun121321578281 failed the same v2 sender assertion. No
+additional blind rerun. Added only bounded phase/status/provider-call diagnostic to
+the existing callback fixture assertion; its behavior/expected result and worker/
+provider/business code stay unchanged. This is for determining the failure, not
+claiming its cause or weakening it.53local focused tests/6environment skips retained.

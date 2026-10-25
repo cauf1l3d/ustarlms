@@ -41,7 +41,7 @@ Interfaces: Journal/private before images and Transaction.check/apply/recover wi
 
 ## Task3 — production host boundary
 
-Files: same module/test; scripts/infra/build_docker_lifecycle.py if packaging needs a separate builder.
+Files: scripts/infra/docker_lifecycle_host.py; tests/r16/test_docker_lifecycle_host.py; scripts/infra/build_docker_lifecycle.py; tests/r16/test_build_docker_lifecycle.py; same core module/test.
 Interfaces: fixed production Host; local Docker/Compose only, existing backup/cron/HTTPS bindings.
 - [ ] Failing tests for source/helper/source-image guards, stdout sanitization, archive authenticated readback and root/UID1000 ownership, separate-key/no-delete scope.
 - [ ] Implement native snapshot/retention/compose/start/consumer handoff and idempotent current check/recover.

@@ -112,7 +112,9 @@ if sender:
  c.bridge.probe_notification_scope(c.notification_contract)
  w=NotificationWorker(c.api,c.bridge,bot_id=c.bot_id,bot_username=c.bot_username,
   allowed_subjects=c.notification_subjects,notification_contract=c.notification_contract)
- assert w.step()=={'status':'provider_accepted'} and api.sent==1
+ result=w.step()
+ assert result=={'status':'provider_accepted'} and api.sent==1,json.dumps({
+  'phase':phase,'status':result.get('status'),'provider_calls':api.sent})
  print('CALLBACK_SENDER_CREDENTIAL_TLS_V3=PASS' if phase=='sender3' else 'CALLBACK_SENDER_CREDENTIAL_TLS=PASS',flush=True)
 else:
  if phase=='candidate':

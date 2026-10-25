@@ -178,7 +178,7 @@ jobs:
             artifacts/db-privileges-*
             artifacts/db-app-handoff-native.json
             artifacts/infra-remaining-survey-native.json
-            artifacts/docker-lifecycle-native.json
+            artifacts/docker-lifecycle-native*.json
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes
@@ -297,14 +297,24 @@ jobs:
       - name: Code hardening archive and actual UID33 isolation
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest discover -s tests/r16 -p test_code_hardening.py -v
       - name: Additional infrastructure metadata recovery and authenticated encrypted readback
+        if: ${{ !cancelled() }}
         run: |
+          mkdir -p artifacts/docker-lifecycle-command
+          python3 scripts/infra/build_docker_lifecycle.py artifacts/docker-lifecycle-command/ustar-docker-runtime-20261025.py
+          python3 -I -B artifacts/docker-lifecycle-command/ustar-docker-runtime-20261025.py
           sudo -n apt-get update -qq
           sudo -n apt-get install -y age
           sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_infra_one_pass -v
           sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_compose_source_privacy -v
           sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_docker_lifecycle -v
           sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_docker_lifecycle_host -v
+          sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_build_docker_lifecycle -v
           sudo -n env GITHUB_ACTIONS=true python3 tests/stage/infra_one_pass_native.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ !cancelled() }}
+        with:
+          name: docker-runtime-successor-command
+          path: artifacts/docker-lifecycle-command/
       - name: CON02 controller handoff on actual systemd UID33 credentials and private TLS
         run: >-
           sudo -n env GITHUB_ACTIONS=true USTAR_CONNECT_CON02_FIXTURE=1

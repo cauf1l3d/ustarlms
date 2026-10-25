@@ -4,20 +4,23 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct17:23MSK — owner metadata_restored confirmed; physical companion scope fix in CI.
-  Sourceb9c0bee6 apply refused unsafe_payload_directory. Three complete legacy scans
-  contain ~1.4GiB physical baselines each, legitimate UID33/999,0777 cache and91MBmedia;
-  chat-link scan partial and HTTPS/etc tail uninspected after diagnostic deadline.
-  Do not chmod/delete these retained physical copies. Companion prunes only known
-  physical subtrees of app/update generations in four legacy control roots, preserves
-  regular control images/journals/manifests, excludes commands-private.log. Full scoped
-  metadata preflight precedes preparation; sanitized relative refusal path supported.
-  Known predecessor1bb1f693/b9c0bee6 retry only exact complete metadata_restored; original
-  export before images/scope and absent managed files required; source history retained.
-  Candidate SHA5067163f,43focused tests41PASS/2local age/UID namespace skips; mandatory
-  root/native CI pending. No new owner apply; all8 still open. Accepted DB/code/SSD/
-  Moodle/OS/HTTPS/backup/Connect stands reused,0agents/SSH/provider sends/main merge.
-  See context/runtime/infra_one_pass_owner_20261025.json and qualification/runbook.
+  25Oct17:41MSK — physical companion scope fix1c5152bd qualified; owner retry next.
+  Owner b9c0bee6 apply refused unsafe_payload_directory; metadata_restored/b9 confirmed.
+  Known legacy physical baseline/retained/restore trees (UID33/999/0777,GiB data) pruned
+  before descendant traversal; originals unchanged. Control images/journals/manifests
+  retained, private command logs excluded. Full selected metadata preflight before
+  prepare; safe relative refusal path.64MiB/file,192MiB aggregate/10000files preserved.
+  Source1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5; Review40202157683 and Context40202157658
+  SUCCESS. Both PHP1189/213environment skips/browser PASS. Root job121195410529:
+  43/43/no skips, real restricted-service age/readback,21665285B journal, actualUID33/
+  999 physical exclusion/0777/FIFO/91677698B media unchanged, actualUID1000 b9 retry and
+  HDD namespace PASS. PG16 job121196267679:158tests/830assertions and privilege/handoff/
+  survey/native PASS. Operator SHA5067163f,42892B; ZIPv4 saved/downloaded/hash/CRC/member
+  hash/extracted default verified. Transfer ONLY scopefix.py; server ZIP/dumps unchanged.
+  Retry only known1bb/b9/same source, exact metadata_restored, original export before
+  images/scope and absent managed files; source history retained. No new owner apply;
+  all8 remain open. No repeat accepted stands,0agents/SSH/provider sends/main merge.
+  Runbook context/runtime/infra_one_pass_20261025.md; owner receipt/qualification nearby.
 next_task: INF-03
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
@@ -34,7 +37,7 @@ infrastructure_app_handoff_status: owner_app_role_active_login_course_opening_ac
 infrastructure_app_handoff_runbook: context/runtime/infra_app_handoff_20261024.md
 infrastructure_app_handoff_CI: context/runtime/infra_app_handoff_ci_20261024.json
 infrastructure_retest_scope: reuse_accepted_stages_existing_CI_only_missing_DB_privilege_delta_no_new_owner_stand_or_full_restore_repeat
-infrastructure_file_status: owner_code_hardened_local_batch_metadata_restored_physical_scope_fix_CI_pending
+infrastructure_file_status: owner_code_hardened_local_batch_metadata_restored_physical_scope_fix_qualified_retry_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
 connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
 

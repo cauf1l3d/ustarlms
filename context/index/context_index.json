@@ -690,8 +690,8 @@
     {
       "path": "context/proposals/INFRA_ONE_PASS_PLAN_20261025.md",
       "domain": "proposals",
-      "size": 9066,
-      "sha256": "3c92d250e6e7988e5ddbd5beb6dc44b7d699b9261eb5ad5875f292e53208f396"
+      "size": 9258,
+      "sha256": "5a1673f73704738413002efb2a2aa7b55f08b7af2d3023563eb5238d0424fa65"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
@@ -1044,8 +1044,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 36424,
-      "sha256": "874f208583515192d10603684930ca46fc24b8400651d888af879f8db46000fb"
+      "size": 36405,
+      "sha256": "ef38aee2041c50f86e7e3e497bf3c7077139de246ad3bf019857d02e081571c7"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1086,8 +1086,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 235840,
-      "sha256": "30cdf19717b6b58fac1ca1b248f8c58a1b070c49ae2e2ad20af4b765f7f93f7d"
+      "size": 236106,
+      "sha256": "928324dcfcbc050621316a234c7eb99b5fcb0238e302cfa6c59c9ffae4df3267"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1098,8 +1098,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 18217,
-      "sha256": "30bb8a5db6feea928d47a078a85f44a0db5f10944c7e1ba1d85cdf66661e10c4"
+      "size": 18502,
+      "sha256": "06b9497e1151a67c395ccba2d6ea1d5ef2053a2aac65223f5825fb01ff2ff039"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1872,8 +1872,8 @@
     {
       "path": "context/runtime/infra_closure_matrix_20261025.md",
       "domain": "runtime",
-      "size": 9373,
-      "sha256": "08d09a74a2c0ecf46d4d7b20c9f9585c25cf59321dc99da1b7be090e2b0a49f8"
+      "size": 9441,
+      "sha256": "42bdfbdd486850a308c333010ad8a0f20bede8da3622eb57061d0d33ab68ade3"
     },
     {
       "path": "context/runtime/infra_code_hardening_20261025.md",
@@ -1926,8 +1926,8 @@
     {
       "path": "context/runtime/infra_one_pass_20261025.md",
       "domain": "runtime",
-      "size": 6847,
-      "sha256": "6433dda9b44120aa9d6c4f5830b8d4dd62a219a454b0ee18d00ec4020d7318fb"
+      "size": 7483,
+      "sha256": "81e546e4c77009dd033a52d3c064f106fadeaf3a0a342eccc3d076cb82c1e562"
     },
     {
       "path": "context/runtime/infra_one_pass_owner_20261025.json",
@@ -1938,8 +1938,8 @@
     {
       "path": "context/runtime/infra_one_pass_qualification_20261025.json",
       "domain": "runtime",
-      "size": 12591,
-      "sha256": "06ca4ae36ab6a107b5bde77673435216b54c37a18b00fb09ab99b3f6eadcd0d6"
+      "size": 17218,
+      "sha256": "ab97cbde1dceff9258bf745ddc2dcd5ab14b031a7841926a86c23d681c378b01"
     },
     {
       "path": "context/runtime/infra_readonly_baseline_20261023.md",
@@ -2598,8 +2598,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 82351,
-      "sha256": "d35a8d95ab5b2a5262fa73a6d01532587609df7c4565c31dba3a59c2e09e193d"
+      "size": 82617,
+      "sha256": "338d1a6fbf05a817657efc09dedcdb4eab5cb76b469babab0e44f657e2d9de8b"
     },
     {
       "path": "context/tasks/backlog.yaml",

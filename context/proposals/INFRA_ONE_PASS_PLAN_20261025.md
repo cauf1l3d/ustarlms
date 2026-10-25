@@ -8,7 +8,9 @@ command logs. Do not change/delete original UID33/999/data bytes. Metadata-only
 preflight must check entire selected scope before preparation and report a safe
 relative path on refusal. Preserve64MiB/file,192MiB aggregate,10000files. Accept
 only exact known predecessor retry after full metadata undo; retain source history.
-43focused41PASS/2local environment skips; root/native qualification pending.
+Source1c5152bd Review40202157683/Context40202157658 SUCCESS; both1189/213skips;
+root43/43/no skips, actualUID33/999 physical exclusion/control readback and b9 retry PASS.
+Existing PG16 job 121196267679: 158 tests/830 assertions+native checks PASS. Owner retry pending.
 
 25Oct owner delta: original apply refused unsafe_root_json. Metadata confirms
 21665285B/root0600 hardening journal. Align reader with existing64MiB capture/per-file

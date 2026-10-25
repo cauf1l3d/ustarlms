@@ -2,7 +2,8 @@
 
 Current25Oct: statefixb9c0bee6 refused unsafe_payload_directory; owner confirms
 metadata_restored. Broad companion traversal entered physical baselines with
-UID33/999 and multi-GiB bytes. Scope fix in qualification excludes known physical
+UID33/999 and multi-GiB bytes. Scope fix1c5152bd qualified (Review40202157683/Context40202157658 SUCCESS, root43/43/no skips)
+excludes known physical
 generation trees without changing them; control images/journals/manifests retained.
 Earlier qualification below is historical; no local_batch_applied receipt yet.
 

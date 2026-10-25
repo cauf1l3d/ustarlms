@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "kind": "infra_one_pass_component_qualification",
-  "status": "physical_scope_fix_CI_pending_owner_retry_pending",
+  "status": "qualified_physical_scope_fix_owner_retry_pending",
   "owner_apply_performed": false,
   "author_review": true,
   "subagents": 0,
@@ -16,16 +16,16 @@
     ]
   },
   "local": {
-    "targeted_tests": 37,
-    "passed": 35,
+    "targeted_tests": 43,
+    "passed": 41,
     "skipped": 2,
     "skips": [
-      "age unavailable locally; mandatory runtime CI must not skip",
-      "UID1000 not mapped locally; mandatory runtime CI must not skip"
+      "real age unavailable locally",
+      "UID1000 not mapped locally; mandatory root CI covers both without skips"
     ],
     "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
-    "full_source_suite": "Both source jobs run1183/207environment skips; success",
-    "previous_local_full_suite_errors": "Preserved by name in predecessor_qualification.local.full_suite; not a current CI failure"
+    "operator_command_bash_syntax": true,
+    "full_source_suite": "Both source jobs1189/213environment skips SUCCESS; no current CI failure"
   },
   "limits": [
     "No production SSH or live coordinator execution",
@@ -34,41 +34,42 @@
     "No independent review agent; author review only",
     "Control companion and standard business-data backup have independent capture times; generation/identity compatibility and clean-host restore remain unqualified"
   ],
-  "source_commit": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
-  "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+  "source_commit": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+  "operator_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
   "qualification": {
-    "review_run": 40197352367,
+    "review_run": 40202157683,
     "review_conclusion": "success",
-    "context_run": 40197352371,
+    "context_run": 40202157658,
     "context_conclusion": "success",
     "source_jobs": [
       {
-        "id": 121180966348,
+        "id": 121195410262,
         "PHP": "8.3",
         "conclusion": "success",
-        "python_tests": 1183,
-        "skips": 207
+        "python_tests": 1189,
+        "skips": 213
       },
       {
-        "id": 121180966439,
+        "id": 121195410490,
         "PHP": "8.2",
         "conclusion": "success",
-        "python_tests": 1183,
-        "skips": 207
+        "python_tests": 1189,
+        "skips": 213
       }
     ],
-    "runtime_job": 121180966531,
+    "runtime_job": 121195410529,
     "runtime_conclusion": "success",
-    "targeted_tests": 37,
+    "targeted_tests": 43,
     "targeted_skips": 0,
     "native_markers": [
       "INFRA_EXPORT_ACTUAL_UID=PASS",
       "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
-      "INFRA_COMPANION_SERVICE=PASS; synthetic21665285B state included",
+      "INFRA_COMPANION_SERVICE=PASS",
+      "INFRA_PHYSICAL_PAIR_EXCLUSION=PASS",
       "INFRA_HDD_NAMESPACE=PASS",
       "INFRA_ONE_PASS_NATIVE=PASS"
     ],
-    "DB_job": 121181832305,
+    "DB_job": 121196267679,
     "DB_conclusion": "success",
     "DB_markers": [
       "OK (158 tests, 830 assertions)",
@@ -79,25 +80,28 @@
     ]
   },
   "delivery": {
-    "source": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
-    "script_name": "ustar-infra-one-pass-20261025-statefix.py",
-    "script_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
-    "script_bytes": 40792,
-    "zip_sha256": "0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e",
-    "zip_bytes": 14319,
+    "source": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+    "script_name": "ustar-infra-one-pass-20261025-scopefix.py",
+    "script_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+    "script_bytes": 42892,
+    "zip_sha256": "3eacbd653fe4a21a1fcee44dde3a28c64f776111172c02e9404041b804e6f104",
+    "zip_bytes": 15501,
     "CRC": true,
     "member_hashes": true,
     "extracted_default": true,
     "CI_status": "success",
     "saved_download_readback_verified": true,
-    "downloaded_version": 3
+    "downloaded_version": 4
   },
   "review_regressions": [
     "Completed state rejects original world-readable metadata or missing/old probe managed files",
     "Same-source retry requires exact complete undo and unchanged scope/before images",
     "Only USTAR exports are modified; .env/.key/unrelated app SQL excluded",
     "Protected21665285B state accepted without mutation; >64MiB/unsafe owner/write permissions refused",
-    "Exact pinned predecessor may retry only after complete undo with unchanged scope/before images and absent managed files"
+    "Exact pinned predecessor may retry only after complete undo with unchanged scope/before images and absent managed files",
+    "Legacy physical baseline/retained/restore trees are pruned only within known roots/generations; other directories remain strict",
+    "Metadata-only plan validates selected controls before transaction; sanitized refusal path contains no raw values",
+    "Sourceb9c0bee6 confirmed metadata_restored can retry with original exports unchanged and source history retained"
   ],
   "owner_apply_attempted": true,
   "owner_refusal_receipt": "context/runtime/infra_one_pass_owner_20261025.json",
@@ -270,7 +274,7 @@
     }
   },
   "scope_fix": {
-    "status": "CI_pending",
+    "status": "qualified_owner_retry_pending",
     "operator_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
     "operator_bytes": 42892,
     "known_predecessors": [
@@ -333,6 +337,134 @@
       "No owner retry yet",
       "No agent SSH or production execution",
       "Synthetic CI namespace and keys; existing external DR/physical power/observer boundaries remain open"
+    ],
+    "source_commit": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+    "review_run": 40202157683,
+    "review_conclusion": "success",
+    "context_run": 40202157658,
+    "context_conclusion": "success",
+    "runtime_job": 121195410529,
+    "runtime_conclusion": "success",
+    "targeted_tests": 43,
+    "targeted_skips": 0,
+    "source_jobs": [
+      {
+        "id": 121195410262,
+        "PHP": "8.3",
+        "conclusion": "success",
+        "python_tests": 1189,
+        "skips": 213
+      },
+      {
+        "id": 121195410490,
+        "PHP": "8.2",
+        "conclusion": "success",
+        "python_tests": 1189,
+        "skips": 213
+      }
+    ],
+    "native_markers": [
+      "INFRA_EXPORT_ACTUAL_UID=PASS",
+      "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+      "INFRA_COMPANION_SERVICE=PASS",
+      "INFRA_PHYSICAL_PAIR_EXCLUSION=PASS",
+      "INFRA_HDD_NAMESPACE=PASS",
+      "INFRA_ONE_PASS_NATIVE=PASS"
+    ],
+    "DB_job": 121196267679,
+    "DB_conclusion": "success",
+    "delivery": {
+      "source": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+      "script_name": "ustar-infra-one-pass-20261025-scopefix.py",
+      "script_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+      "script_bytes": 42892,
+      "zip_sha256": "3eacbd653fe4a21a1fcee44dde3a28c64f776111172c02e9404041b804e6f104",
+      "zip_bytes": 15501,
+      "CRC": true,
+      "member_hashes": true,
+      "extracted_default": true,
+      "CI_status": "success",
+      "saved_download_readback_verified": true,
+      "downloaded_version": 4
+    },
+    "DB_markers": [
+      "OK (158 tests, 830 assertions)",
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS",
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+      "CON02_UPDATE_NATIVE=PASS"
     ]
+  },
+  "state_size_qualification": {
+    "source_commit": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+    "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "qualification": {
+      "review_run": 40197352367,
+      "review_conclusion": "success",
+      "context_run": 40197352371,
+      "context_conclusion": "success",
+      "source_jobs": [
+        {
+          "id": 121180966348,
+          "PHP": "8.3",
+          "conclusion": "success",
+          "python_tests": 1183,
+          "skips": 207
+        },
+        {
+          "id": 121180966439,
+          "PHP": "8.2",
+          "conclusion": "success",
+          "python_tests": 1183,
+          "skips": 207
+        }
+      ],
+      "runtime_job": 121180966531,
+      "runtime_conclusion": "success",
+      "targeted_tests": 37,
+      "targeted_skips": 0,
+      "native_markers": [
+        "INFRA_EXPORT_ACTUAL_UID=PASS",
+        "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+        "INFRA_COMPANION_SERVICE=PASS; synthetic21665285B state included",
+        "INFRA_HDD_NAMESPACE=PASS",
+        "INFRA_ONE_PASS_NATIVE=PASS"
+      ],
+      "DB_job": 121181832305,
+      "DB_conclusion": "success",
+      "DB_markers": [
+        "OK (158 tests, 830 assertions)",
+        "DB_PRIVILEGES_NATIVE=PASS",
+        "DB_APP_HANDOFF_NATIVE=PASS",
+        "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+        "CON02_UPDATE_NATIVE=PASS"
+      ]
+    },
+    "delivery": {
+      "source": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+      "script_name": "ustar-infra-one-pass-20261025-statefix.py",
+      "script_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+      "script_bytes": 40792,
+      "zip_sha256": "0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e",
+      "zip_bytes": 14319,
+      "CRC": true,
+      "member_hashes": true,
+      "extracted_default": true,
+      "CI_status": "success",
+      "saved_download_readback_verified": true,
+      "downloaded_version": 3
+    },
+    "local": {
+      "targeted_tests": 37,
+      "passed": 35,
+      "skipped": 2,
+      "skips": [
+        "age unavailable locally; mandatory runtime CI must not skip",
+        "UID1000 not mapped locally; mandatory runtime CI must not skip"
+      ],
+      "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
+      "full_source_suite": "Both source jobs run1183/207environment skips; success",
+      "previous_local_full_suite_errors": "Preserved by name in predecessor_qualification.local.full_suite; not a current CI failure"
+    }
   }
 }

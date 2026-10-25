@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "kind": "compose_source_privacy_qualification",
+  "status": "local_pass_native_UID_CI_pending_not_delivered_not_applied",
+  "source_sha256": "20d282e9b24dcc141691271e6477ddc1f24a17979f27c87f94e0294294d70fdb",
+  "source_bytes": 7874,
+  "core_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+  "observed_source_sha256": "41de2ed318ffb7697d92c575d1fc35ab3e6b1d16900e725aca843642d1cb7a09",
+  "observed_source_bytes": 904,
+  "scope": "one file0644_to0600,UID/GID1000 preserved; no source-content/Docker/DB/provider mutation",
+  "local_tests": {
+    "adapter_tests": 15,
+    "passed": 14,
+    "skipped": 1,
+    "skip": "UID1000 unmapped in local namespace",
+    "combined_adapter_and_core": 58,
+    "combined_passed": 55,
+    "combined_skipped": 3,
+    "combined_skip_reasons": [
+      "new UID1000 case unmapped",
+      "core UID1000 ownership unmapped",
+      "age tools absent"
+    ]
+  },
+  "TDD": {
+    "initial_RED": "13 expected missing-adapter assertion failures before implementation",
+    "initial_GREEN": "13 tests/1 native UID skip",
+    "later_core_loader_guard_tests": 2,
+    "test_first_claim_scope": "initial13 only; two pinned-loader guard checks added afterward"
+  },
+  "CI": {
+    "status": "pending",
+    "strict_native_environment": "USTAR_REQUIRE_INFRA_NATIVE=1",
+    "required_marker": "COMPOSE_SOURCE_UID_BOUNDARY=PASS",
+    "existing_runtime_job_extended": true,
+    "production_access": false
+  },
+  "owner_apply_performed": false,
+  "active_logging_rotation_claimed": false,
+  "author_self_review": true,
+  "subagents": 0
+}

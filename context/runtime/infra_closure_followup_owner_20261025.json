@@ -131,7 +131,7 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "owner bounded actual Compose source metadata and offline secret-filtered profile projection; no recreation; SSH hardening and external restore remain deferred",
+  "next": "qualify Compose source privacy adapter, then owner check/apply and existing encrypted companion; no Docker/SSH mutation",
   "workstation_key_login": {
     "status": "explicitly_deferred_by_owner_until_external_access_preparation",
     "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
@@ -214,5 +214,98 @@
     "previous_survey_scope_limitation": "did not establish metadata/content/backup coverage of actual Compose source",
     "next_runbook": "context/runtime/infra_docker_profile_metadata_20261025.md",
     "production_mutations_performed": false
+  },
+  "Docker_Compose_profile": {
+    "recorded_at_utc": "2026-10-25T17:35:21.760086+00:00",
+    "source": "owner console JSON; observation timestamp/exit code not supplied",
+    "source_metadata": [
+      {
+        "path": "/opt",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o755",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar",
+        "uid": 0,
+        "gid": 1000,
+        "mode": "0o755",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar/apps",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o755",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar/apps/stack",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o775",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar/apps/stack/docker-compose.yml",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o644",
+        "bytes": 904,
+        "kind": "regular"
+      },
+      {
+        "path": "/opt/ustar/apps/stack/.env",
+        "kind": "missing"
+      }
+    ],
+    "compose_profile": {
+      "service_count": 2,
+      "expected_services": {
+        "moodle": {
+          "present": true,
+          "image_field_present": true,
+          "build_present": true,
+          "logging_present": false,
+          "log_driver": null,
+          "log_options": {},
+          "other_log_option_count": 0,
+          "healthcheck_present": false,
+          "healthcheck_disabled": false,
+          "environment_count": 0,
+          "env_file_count": 0,
+          "volume_count": 2,
+          "port_count": 1
+        },
+        "postgres": {
+          "present": true,
+          "image_field_present": true,
+          "build_present": false,
+          "logging_present": false,
+          "log_driver": null,
+          "log_options": {},
+          "other_log_option_count": 0,
+          "healthcheck_present": false,
+          "healthcheck_disabled": false,
+          "environment_count": 3,
+          "env_file_count": 0,
+          "volume_count": 1,
+          "port_count": 0
+        }
+      },
+      "status": "metadata_rendered_without_environment_resolution",
+      "source_sha256": "41de2ed318ffb7697d92c575d1fc35ab3e6b1d16900e725aca843642d1cb7a09",
+      "live_equivalence_verified": false
+    },
+    "repeat_profile_probe_needed": false,
+    "plain_environment_values_not_supplied": true,
+    "specific_secret_literal_or_leak_not_established": true,
+    "owner_permission_apply_performed": false,
+    "next": "targeted source0644_to0600 preserving UID/GID1000 and bytes; qualification pending; actual log recreation lifecycle remains separate"
   }
 }

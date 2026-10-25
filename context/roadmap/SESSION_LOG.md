@@ -1,5 +1,23 @@
 # Журнал выполнения roadmap
 
+**25Oct — actual Compose profile received; targeted source read privacy prepared.**
+Source904B/SHA41de2ed3,UID/GID1000:1000/mode0644; .env absent. Both services have no
+source logging/healthcheck; Moodle build+image,PG3environment entries (values not
+supplied; no claim specific password literal/leak). Current source/live equivalence
+still unverified. Profile probes complete; do not repeat. New small adapter reuses
+pinned5067163f Exports/Store to restrict only Compose0644→0600, preserving owner/
+bytes/inode/mtime/parents. Child controls under code-hardening/compose-source include
+private original source+adapter for existing encrypted companion. No Docker/DB/
+controller/active-batch mutation. Check/apply/metadata undo/idempotence/drift guards.
+15adapter local14PASS/1UID1000 skip; combined58/3skips; strict actualUID CI pending.
+Do not deliver/apply until qualification/download integrity confirmed. Actual log
+rotation/health lifecycle still open; build must not run during later recreation.
+SSH/key/firewall deferred,current LAN login/password accepted; UPS present/copies
+handed over/external restore explicitly unknown. No old stands/repeated request.
+0agents/no agent SSH/provider sends/main merge. Plan:
+context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md; qualification:
+context/runtime/compose_source_privacy_qualification_20261025.json.
+
 **25Oct — owner confirms both Docker origins: stack/apps/stack/docker-compose.yml.**
 Project stack, services moodle/postgres, workdir /opt/ustar/apps/stack; single source
 /opt/ustar/apps/stack/docker-compose.yml. Labels received, do not repeat origin probe.

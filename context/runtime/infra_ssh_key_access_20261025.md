@@ -1,5 +1,35 @@
 # Следующий шаг: отдельное подключение по SSH-ключу
 
+**Owner25Oct: первый workstation publickey-only вызов отказал.** Windows CMD
+C:\Users\User>, ответ: `aduk@192.168.1.60: Permission denied (publickey,password).`
+Exit code владелец не сообщил. SSH endpoint отвечает, но offered identity/client
+agent/server-side authorization из этой строки не видны. Не считать, что ключа нет,
+что сервер отклонил конкретный ключ или что пароль был испробован этой командой.
+Текущий server1 session сохраняется; политика сервера не менялась.
+
+## Текущий следующий шаг — в том же Windows CMD
+
+Первый обычный вызов ниже сохранён как история, повторять его без verbose не надо.
+Выполнить две команды: первая выводит только имена файлов в клиентском .ssh,
+вторая — диагностические строки одного нового key-only соединения. Ключи/config
+не читать и не присылать; файлы не создаются и не перезаписываются. Если ключ
+находится в другом клиенте/каталоге или имеет нестандартное имя, это ещё не ошибка
+его регистрации на сервере. `-v`/выбранные строки нужны, чтобы отличить отсутствие
+предложенного identity от отказа сервера или ошибки локального signing agent.
+
+```cmd
+dir /b "%USERPROFILE%\.ssh"
+ssh -v -o ControlPath=none -o ControlMaster=no -o ClearAllForwardings=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no aduk@192.168.1.60 whoami 2>&1 | findstr /I /C:"identity file" /C:"Will attempt key" /C:"Offering public key" /C:"Server accepts key" /C:"Trying private key" /C:"agent" /C:"Load key" /C:"sign_and_send_pubkey" /C:"signature algorithm" /C:"no such identity" /C:"Permission denied" /C:"Authenticated to"
+```
+
+Вернуть вывод обеих команд. Full debug/keys/authorized_keys contents не запрашиваются.
+Windows CMD/findstr native runtime агенту не доступен; фильтр проверен по Microsoft
+syntax, OpenSSH argv/options отдельно offline. Ни одного agent SSH connection.
+
+Primary references: [OpenSSH verbose mode](https://man.openbsd.org/ssh.1),
+[Windows findstr](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/findstr),
+[Windows key management](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement).
+
 Caddy metadata от владельца уже получены. На IPv4 127.0.0.1:2019 отвечает
 локальный config API; отдельный HTTP server слушает :2019 (observed IPv6 wildcard),
 в проекции только static_response, proxy_dials пуст. Unit caddy.service/PID862,

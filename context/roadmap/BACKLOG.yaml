@@ -19,7 +19,8 @@ current_infrastructure_checkpoint:
   one_pass_plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md
   Caddy2019: local_admin_API_and_separate_IPv6_HTTP_static_listener_classified
   access_runbook: context/runtime/infra_ssh_key_access_20261025.md
-  next: owner_fresh_publickey_workstation_login_no_multiplex_reuse_then_shared_host_policy_and_Docker_lifecycle
+  workstation_key_login: owner_attempt_failed_cause_unclassified
+  next: owner_Windows_CMD_filename_listing_and_filtered_verbose_identity_agent_diagnostic
   retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
   production_mutation_scope: owner DB app_role_active/code_hardened/legacy22 archive and local_batch_applied69export modes,261file encrypted controls,timer; no new journal policy

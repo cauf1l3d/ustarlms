@@ -1,5 +1,16 @@
 # Индекс текущего контекста
 
+**25Oct — owner Windows key-only SSH attempt failed; cause not classified.**
+Permission denied(publickey,password) proves no successful key login, not missing
+keys or rejection of a particular offered identity. Next same-workstation CMD:
+filename-only .ssh listing and filtered ssh -v for one fresh key-only connection.
+No key generation/import/authorized_keys/server authentication/firewall changes.
+Existing owner server session kept; agent SSH/agents/provider sends/main merge0.
+Caddy metadata and all previous local batch/DB/code/old stands remain accepted;
+UPS present, copies handed over/external restore explicitly unknown, no repeat ask.
+Receipt context/runtime/infra_closure_followup_owner_20261025.json; current command:
+context/runtime/infra_ssh_key_access_20261025.md. Do not repeat uninstrumented login.
+
 **25Oct — Caddy listener metadata received; separate workstation SSH-key login next.**
 Owner family-specific ss: IPv4 127.0.0.1:2019/fd3, IPv6 *:2019/fd7, both caddyPID862.
 Loopback GET config succeeds; no explicit admin.listen/remote.listen, one observed

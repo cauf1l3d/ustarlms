@@ -131,15 +131,32 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "owner workstation fresh publickey-only SSH login; no server SSH/firewall mutation; external restore explicitly deferred",
+  "next": "owner Windows CMD client identity/agent diagnostic; no server authentication changes; external restore explicitly deferred",
   "workstation_key_login": {
-    "status": "pending_owner",
+    "status": "owner_publickey_only_attempt_failed_cause_unclassified",
     "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
     "fresh_connection_required": true,
     "multiplex_reuse_disabled": true,
     "publickey_only": true,
     "server_self_login_accepted_as_proof": false,
     "server_policy_changed": false,
-    "emergency_console_verified": false
+    "emergency_console_verified": false,
+    "attempts": [
+      {
+        "recorded_at_utc": "2026-10-25T16:06:36.163105+00:00",
+        "observation_time_not_supplied": true,
+        "source": "owner Windows CMD output",
+        "client_prompt": "C:\\Users\\User>",
+        "command": "ssh -o ControlPath=none -o ControlMaster=no -o ClearAllForwardings=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no aduk@192.168.1.60 whoami",
+        "output": "aduk@192.168.1.60: Permission denied (publickey,password).",
+        "exit_code_not_supplied": true,
+        "publickey_login_succeeded": false,
+        "offered_key_identity_not_observed": true,
+        "server_policy_changed": false
+      }
+    ],
+    "interpretation": "SSH authentication endpoint responded; key-only authentication not completed; no evidence yet of absent client key, offered identity, agent status or server-side rejection reason",
+    "next": "Windows CMD filename-only .ssh listing plus filtered ssh -v for the same key-only fresh connection",
+    "diagnostic_cmd": "ssh -v -o ControlPath=none -o ControlMaster=no -o ClearAllForwardings=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no aduk@192.168.1.60 whoami 2>&1 | findstr /I /C:\"identity file\" /C:\"Will attempt key\" /C:\"Offering public key\" /C:\"Server accepts key\" /C:\"Trying private key\" /C:\"agent\" /C:\"Load key\" /C:\"sign_and_send_pubkey\" /C:\"signature algorithm\" /C:\"no such identity\" /C:\"Permission denied\" /C:\"Authenticated to\""
   }
 }

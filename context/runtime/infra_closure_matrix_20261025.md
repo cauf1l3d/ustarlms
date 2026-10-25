@@ -11,7 +11,7 @@ provider not called. Старые DB/code/SSD/Moodle/OS/HTTPS/backup/Connect sta
 |---|---|---|
 | Права | Root-owned code/config и private legacy22 archive приняты ранее;69 выбранных USTAR exports закрыты от group/other | www-data/caddy supplementary-group trust boundary и общий host access policy требуют отдельного разбора. Не объявляется глобальный аудит всех файлов/других проектов. |
 | Docker/SSD | Existing accepted IDs/images сохранены; рестарт/пересоздание этим batch не выполнялось; прежний root/HDD free-space/SMART stand засчитан | json-file rotation/health lifecycle требует coordinated frozen-ID/recovery handoff. Старые лаборатории/логи/архивы не удалять. |
-| Доступ | Новый список69deduplicated endpoints без truncation. Owner Caddy metadata: IPv4 local config API; отдельный IPv6 wildcard HTTP static_response, без proxy dials в проекции; caddy.service/PID862/config path получены. Moodle127.0.0.1:8082; PG5432 не опубликован | Wildcard2019 не доказательство открытого наружу admin API; source/consumers статического endpoint и policy отдельно не проверены. Далее отдельный workstation key login/emergency/shared-host allowlist и local admin trust boundary. UFW/password/forwarding/Caddy не менять вслепую. |
+| Доступ | Новый список69deduplicated endpoints без truncation. Owner Caddy metadata: IPv4 local config API; отдельный IPv6 wildcard HTTP static_response, без proxy dials в проекции; caddy.service/PID862/config path получены. Moodle127.0.0.1:8082; PG5432 не опубликован | Wildcard2019 не доказательство открытого наружу admin API; source/consumers статического endpoint и policy отдельно не проверены. Workstation key-only attempt отказал Permission denied; client identity/agent ещё не измерены. Далее filtered CMD diagnostic, затем key login/emergency/shared-host allowlist и local admin trust boundary. UFW/password/forwarding/Caddy не менять вслепую. |
 | Копии/DR | New control companion261files/33.4MiB encrypted/readback; timer active. Physical trees/recovery.key исключены. Fresh standard HDD/pre-hardening archive ранее приняты | Первый scheduled companion tick ещё не наблюдался. Companion не whole-host/atomic DB pair; physical manifests не заменяют их байты. Сохранить SSD physical pairs и standard DB/CODE/DATA HDD archive. Копии переданы по owner confirmation; external restore result owner явно оставляет unknown. Не повторять запрос/stand и не блокировать local work. Offsite/latest-generation identity/separate key custody/RPO/RTO/retention и qualified generation pairing открыты. |
 | Наблюдение | Journal уже fresh measured/categories0; actionnone — настройки не менялись. Numeric HTTP log принят ранее | Причина прежнего no_data не установлена, нулевые categories относятся к выбранному окну/классификатору. Независимый host-loss observer и проверенная доставка всё ещё открыты. |
 | Железо/питание | Ранее owner SMART health PASSED и текущие5/197/198/199=0 засчитаны | UPS есть по owner confirmation. Автоматический shutdown не проверен, модель не запрашивалась; power-loss stand не нужен по умолчанию. Исторический риск HDD/независимость копий сохраняют отдельные ограничения. |
@@ -24,8 +24,9 @@ provider not called. Старые DB/code/SSD/Moodle/OS/HTTPS/backup/Connect sta
 отключённые retry задачи и затем Caddy service/config metadata. Caddy2019
 классифицирован: loopback API и отдельный IPv6 wildcard static HTTP response;
 внешняя reachability не проверена. Предыдущие Caddy/SQL probes больше не повторять.
-[Следующее действие](infra_ssh_key_access_20261025.md): новый publickey-only login
-с рабочего компьютера владельца, без multiplex reuse и без изменения сервера.
+[Следующее действие](infra_ssh_key_access_20261025.md): первый key-only login с Windows
+отказал; теперь filename-only listing и filtered verbose client identity/agent output.
+Сервер отвечает, конкретный предложенный ключ/причина отказа пока неизвестны.
 Он не заменяет emergency console/shared-host policy или Docker frozen-ID lifecycle.
 
 Owner просит external restore result оставить unknown: copies handed over, не

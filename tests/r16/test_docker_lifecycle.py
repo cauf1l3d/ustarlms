@@ -58,6 +58,15 @@ def snapshot(name):
 
 
 class Pins(unittest.TestCase):
+    def test_scheduler_tracks_only_the_changed_producer_digest(self):
+        m=module(self);self.assertTrue(hasattr(m,'patch_producer_binding'),'scheduled producer handoff missing')
+        raw=(ROOT/'scripts/infra/hdd_backup_schedule.py').read_bytes()
+        before='a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3';after='c'*64
+        changed=m.patch_producer_binding(raw,before,after)
+        self.assertEqual(changed,raw.replace(("'"+before+"'").encode(),("'"+after+"'").encode(),1))
+        with self.assertRaises(m.Refusal):m.patch_producer_binding(raw,'d'*64,after)
+        with self.assertRaises(m.Refusal):m.patch_producer_binding(raw+b'\nPRODUCER_SHA="duplicate"\n',before,after)
+
     def source(self):
         return ("# UTF-8: сохранённый оператор\nIMAGES = {\n"
             " 'ustar_moodle': '"+PARENTS['ustar_moodle']+"',\n"
@@ -215,6 +224,21 @@ class Files(unittest.TestCase):
         self.files.replace('compose',self.source,b'active\n')
         self.assertEqual((self.base/'originals'/'compose').stat().st_ino,first)
         self.files.restore();self.assertEqual(self.source.stat().st_ino,first)
+
+    def test_interrupted_retention_move_is_finished_with_private_metadata_on_retry(self):
+        self.source.chmod(0o644);before=self.source.stat().st_ino
+        self.files.replace('cron',self.source,b'SUCCESSOR\n');rename=os.rename
+        def moved_then_interrupted(src,dst,*args,**kw):
+            value=rename(src,dst,*args,**kw)
+            if str(dst).startswith('cron-'):raise OSError('after retained move before metadata')
+            return value
+        with patch('os.rename',side_effect=moved_then_interrupted):
+            with self.assertRaises(OSError):self.files.restore()
+        self.m.ManagedFiles(self.m.PrivateStore(self.base,pinned_core)).restore()
+        self.assertEqual(self.source.stat().st_ino,before)
+        retained=list((self.base/'retained').iterdir());self.assertEqual(len(retained),1)
+        self.assertEqual(retained[0].read_bytes(),b'SUCCESSOR\n')
+        self.assertEqual((retained[0].stat().st_uid,retained[0].stat().st_gid,retained[0].stat().st_mode&0o777),(0,0,0o600))
 
     def test_parent_replacement_is_refused_without_overwriting_foreign_file(self):
         self.files.replace('compose',self.source,b'SUCCESSOR\n')
@@ -477,6 +501,18 @@ class DeployerBoundary(unittest.TestCase):
 
 
 class RuntimeEdges(unittest.TestCase):
+    def test_clean_stop_accepts_only_success_or_the_configured_signal_exit(self):
+        m=module(self);api=m.DockerAPI();events=[]
+        running={'Config':{'StopSignal':'SIGINT'},'State':{'Running':True,'ExitCode':0,'OOMKilled':False}}
+        stopped=copy.deepcopy(running);stopped['State'].update(Running=False,ExitCode=130)
+        responses=iter([running,stopped]);api.inspect=lambda value:next(responses)
+        api.call=lambda *args,**kw:events.append(args)
+        api.stop('1'*64);self.assertEqual(len(events),1)
+        for code,oom in ((137,False),(139,False),(130,True)):
+            stopped['State'].update(ExitCode=code,OOMKilled=oom)
+            responses=iter([running,copy.deepcopy(stopped)]);api.inspect=lambda value:next(responses)
+            with self.subTest(code=code,oom=oom),self.assertRaises(m.Refusal):api.stop('1'*64)
+
     def test_staged_successor_requires_restart_no_and_active_requires_original_policy(self):
         m=module(self);old=row('ustar_moodle');new=Compose().successor()
         new['HostConfig']['RestartPolicy']={'Name':'no','MaximumRetryCount':0}

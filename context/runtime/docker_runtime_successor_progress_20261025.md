@@ -114,3 +114,30 @@ additional blind rerun. Added only bounded phase/status/provider-call diagnostic
 the existing callback fixture assertion; its behavior/expected result and worker/
 provider/business code stay unchanged. This is for determining the failure, not
 claiming its cause or weakening it.53local focused tests/6environment skips retained.
+
+Checkpointc1f194b2: Context40244874320SUCCESS; runtime121324212553 SUCCESS,
+42+7+4=53/no skips, real age readback/corruption and Unix/UID boundaries PASS; both
+source jobs SUCCESS. Callback fixture passed with the added diagnostic, no prior
+failure cause proved and no worker changes. Native121325094130 progressed past
+fresh PG SQL and refused runtime_clean_stop_failed. Treat configured StopSignal,
+not a hard-coded SIGTERM exit: regression130/SIGINT RED→GREEN, forced kill137,
+segfault139 and OOM still refuse. Native now preserves bounded stop metadata.
+Existing full app checks preceded that delta and passed; no actual rotation PASS yet.
+
+Author review found and tested three concrete compatibility gaps before delivery:
+retained-file rename interrupted before chown/chmod RED→GREEN (persist target intent,
+finish exact inode/hash private metadata on retry); legitimate later HTTPS renewal
+before explicit runtime recovery RED→GREEN (verify current owner/authority and bind
+static controls, allow its authenticated leaf/vhost/state generation); HDD scheduler
+also pins producer SHA. Exact scheduler sourcea97039a8/root loader tests2RED→GREEN,
+patch only PRODUCER_SHA to the new producer digest, verify loader and runtime pins.
+Include scheduler source and its recovery service in this handoff/policy restoration.
+Plan's original two-image-only consumer assumption was incomplete; now explicit.
+No production artifact had been delivered, no production state changed.
+
+Current local58tests/6environment skips. Native also calls the actual a604 producer
+validate_live against successor metadata, and uses the actual scheduler loader.
+Moved this isolated Docker delta directly after the same job's image build/pinned PG
+pull, before the unchanged full app checks: faster failure feedback without a new
+stand or waiving the final app gates. Uses documented Compose local project-service
+build tag when no image field is present. Final native qualification still pending.

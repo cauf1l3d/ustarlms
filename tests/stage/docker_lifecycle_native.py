@@ -26,11 +26,20 @@ import infra_one_pass as core
 
 COMPOSE=['/usr/bin/docker','--host','unix:///var/run/docker.sock','compose',
     '-f',str(ROOT/'tests/stage/patch-compose.yaml'),'-f',str(ROOT/'tests/stage/connect-compose.yaml')]
-tmp=tempfile.TemporaryDirectory(prefix='ustar-docker-delta-');root=Path(tmp.name);root.chmod(0o711)
+tmp=tempfile.TemporaryDirectory(prefix='ustar-docker-delta-',dir='/var/lib');root=Path(tmp.name);root.chmod(0o711)
 run=h.Commands(root/'private-command.log');api=l.DockerAPI();owned=[];generation=uuid.uuid4().hex
 network='ustar-lifecycle-'+generation;label='org.ustar.fixture.run='+generation
 proof={}
 stage='starting_fixture'
+real_stop=api.stop
+def stop_with_metadata(identity):
+    try:return real_stop(identity)
+    except BaseException:
+        row=api.inspect(identity)
+        proof['failed_stop']={k:row['State'].get(k) for k in ('Running','ExitCode','OOMKilled')}
+        proof['failed_stop']['configured_signal']=row['Config'].get('StopSignal')
+        raise
+api.stop=stop_with_metadata
 
 def command(*args,**kw):return run(h.docker(*args),**kw).stdout
 def sql(text):
@@ -87,10 +96,12 @@ def make_transaction(*,archive=True):
 try:
     assert all(api.inspect(n,missing=True) is None for n in l.SERVICES),'fixture_names_already_present'
     ids={}
+    model=json.loads(run(COMPOSE+['config','--format','json']).stdout)
     for service,keyname in (('moodle','runner'),('postgres','db')):
-        values=run(COMPOSE+['images','-q',keyname]).stdout.decode().split()
-        assert len(set(values))==1 and values,'existing_CI_image_missing'
-        ids[service]=api.image(values[0])['Id']
+        item=model['services'][keyname]
+        # Compose's documented local build tag when image is omitted.
+        image=item.get('image') or model['name']+'-'+keyname
+        ids[service]=api.image(image)['Id']
     command('network','create','--internal','--label',label,network)
     data=root/'postgres';data.mkdir();code=root/'code';code.mkdir(mode=0o755)
     moodledata=root/'moodledata';moodledata.mkdir(mode=0o770)
@@ -134,13 +145,15 @@ echo 'fixture-ready';
         'postgres':{'image':parents['ustar_postgres'],'container_name':'ustar_postgres'}}}))
     source.chmod(0o600);os.chown(source,1000,1000)
     helpers=root/'helpers';helpers.mkdir(mode=0o700)
-    paths={'compose':source,**{k:helpers/k for k in ('hdd_script','cron_script','cron_installation','cron_schedule')}}
+    paths={'compose':source,**{k:helpers/k for k in ('hdd_script','hdd_scheduler','cron_script','cron_installation','cron_schedule')}}
     helper=('import json,subprocess\nIMAGES = '+repr(parents)+'''\ndef identity(name):
     row=json.loads(subprocess.check_output(['/usr/bin/docker','--host','unix:///var/run/docker.sock','inspect',name]))[0]
     if row['Image']!=IMAGES[name] or not row['State']['Running']: raise ValueError('fixture_identity_changed')
     return {'id':row['Id'],'image':row['Image']}
 ''').encode()
     paths['hdd_script'].write_bytes(helper);paths['cron_script'].write_bytes(helper)
+    scheduler=(ROOT/'scripts/infra/hdd_backup_schedule.py').read_bytes()
+    paths['hdd_scheduler'].write_bytes(l.patch_producer_binding(scheduler,h.HDD_SHA,l.sha(helper)))
     paths['cron_installation'].write_text(json.dumps({'schema':1,'script_sha256':l.sha(helper),
         'containers':{n:{'id':predecessors[n],'image':parents[n]} for n in l.SERVICES},
         'versions':{'local_ustar':'2026102300','theme_ustar':'2026100202'},'created_utc':'retained-fixture'}))
@@ -157,6 +170,13 @@ echo 'fixture-ready';
     successor_ids={n:api.inspect(n)['Id'] for n in l.SERVICES}
     assert successor_ids!=predecessors
     assert all(api.inspect(n)['Image']==state['images'][n] for n in l.SERVICES)
+    from types import SimpleNamespace
+    actual=(ROOT/'scripts/infra/hdd_backup.py').read_bytes()
+    pinned={n:v['image'] for n,v in h.production_profile()['predecessors'].items()}
+    actual=h.definition(l.patch_images(actual,pinned,state['images']),'_native_actual_HDD_producer',h.HDD)
+    checked=actual.validate_live(SimpleNamespace(MOODLE='ustar_moodle',POSTGRES='ustar_postgres',inspect=api.inspect))
+    assert {n:v['Id'] for n,v in zip(l.SERVICES,checked)}==state['new_containers']
+    proof['actual_HDD_image_guard_and_scheduler_loader_accept_successor']=True
     before_source_inode=state['before']['source_inode'];assert source.stat().st_ino!=before_source_inode
     assert (source.stat().st_uid,source.stat().st_gid,stat.S_IMODE(source.stat().st_mode))==(1000,1000,0o600)
     tx.apply();assert {n:api.inspect(n)['Id'] for n in l.SERVICES}==successor_ids
@@ -213,6 +233,8 @@ echo 'fixture-ready';
     print('DOCKER_RUNTIME_SUCCESSOR_NATIVE=PASS')
 except BaseException as error:
     failure={'stage':stage,'type':type(error).__name__,'reason':h.public_error(error),'production_access':False}
+    if 'failed_stop' in proof:failure['stop']=proof['failed_stop']
+    if 'store' in globals() and store.load() is not None:failure['journal_phase']=store.load()['phase']
     if run.log and run.log.exists():
         raw=run.log.read_bytes()[-32768:]
         if b'.s.PGSQL.' in raw and (b'No such file' in raw or b'Connection refused' in raw):

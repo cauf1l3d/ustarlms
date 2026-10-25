@@ -146,7 +146,16 @@ jobs:
           Path('.stage-input/private-bridge.php').write_bytes(settings)
           PYCONFIG
       - name: Build existing pinned Moodle 5.1.8 PostgreSQL 16 runtime
-        run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull
+        run: |
+          docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml build --pull
+          docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml pull db
+      - name: Preserve actual Docker layers, bounded logs and business writes across recovery
+        run: |
+          if ! command -v age >/dev/null; then
+            sudo -n apt-get update -qq
+            sudo -n apt-get install -y age
+          fi
+          sudo -n env GITHUB_ACTIONS=true USTAR_DOCKER_LIFECYCLE_FIXTURE=1 python3 tests/stage/docker_lifecycle_native.py
       - name: Verify fresh install, upgrade, repeat, links and independent concurrent requests
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml up --abort-on-container-exit --exit-code-from runner
       - name: Verify installer guards against native SQL migration and recovery
@@ -155,13 +164,6 @@ jobs:
           python3 tests/stage/chat_link_update_probe.py
           python3 tests/stage/con02_update_native.py verify
           python3 tests/stage/db_privileges_verify.py
-      - name: Preserve actual Docker layers, bounded logs and business writes across recovery
-        run: |
-          if ! command -v age >/dev/null; then
-            sudo -n apt-get update -qq
-            sudo -n apt-get install -y age
-          fi
-          sudo -n env GITHUB_ACTIONS=true USTAR_DOCKER_LIFECYCLE_FIXTURE=1 python3 tests/stage/docker_lifecycle_native.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

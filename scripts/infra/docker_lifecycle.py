@@ -48,6 +48,22 @@ def patch_images(raw,before,after):
     except SyntaxError:raise Refusal('helper_patch_syntax') from None
     return result
 
+def patch_producer_binding(raw,before,after):
+    require(all(isinstance(v,str) and re.fullmatch('[a-f0-9]{64}',v) for v in (before,after))
+        and before!=after and isinstance(raw,bytes) and len(raw)<=1024**2,'scheduler_binding_shape')
+    try:tree=ast.parse(raw)
+    except (SyntaxError,UnicodeError):raise Refusal('scheduler_source_syntax') from None
+    nodes=[n for n in tree.body if isinstance(n,ast.Assign)
+        and any(isinstance(t,ast.Name) and t.id=='PRODUCER_SHA' for t in n.targets)]
+    require(len(nodes)==1 and len(nodes[0].targets)==1 and isinstance(nodes[0].value,ast.Constant)
+        and nodes[0].value.value==before,'scheduler_producer_pin_drift')
+    value=nodes[0].value;lines=raw.splitlines(keepends=True)
+    first=sum(map(len,lines[:value.lineno-1]))+value.col_offset
+    last=sum(map(len,lines[:value.end_lineno-1]))+value.end_col_offset
+    result=raw[:first]+repr(after).encode('ascii')+raw[last:]
+    compile(result,'<verified-runtime-scheduler>','exec')
+    return result
+
 def environment(value):
     require(value is None or isinstance(value,list),'environment_shape')
     result={}
@@ -315,23 +331,21 @@ class ManagedFiles:
     def restore(self):
         state=self.store.load();require(state is not None,'runtime_state_missing')
         for key,row in reversed(list(state['managed'].items())):
-            if row.get('restored'):continue
             path=Path(row['path']);parked=self.store.base/'originals'/key
             with self.anchored(row) as (parent,originals):
+                self.finish_retentions(state,row,parent)
+                if row.get('restored'):continue
                 if not os.path.lexists(parked):
                     require(self.matches(path,row['before']),'control_original_missing')
                 else:
                     self.original(key,row)
                     if os.path.lexists(path):
                         accepted=row['accepted']+([row['pending']['image']] if row.get('pending') else [])
-                        require(any(self.matches(path,v) for v in accepted),'control_live_drift')
-                        target=self.store.base/'retained'/(key+'-'+uuid.uuid4().hex)
+                        image=next((v for v in accepted if self.matches(path,v)),None)
+                        require(image is not None,'control_live_drift')
                         require(self.parent(path.parent)==row['parent'],'control_parent_changed')
-                        with self.core.opened(target.parent,os.O_RDONLY|os.O_DIRECTORY) as retained:
-                            os.rename(path.name,target.name,src_dir_fd=parent,dst_dir_fd=retained)
-                            os.chown(target.name,0,0,dir_fd=retained,follow_symlinks=False)
-                            os.chmod(target.name,0o600,dir_fd=retained,follow_symlinks=False)
-                            os.fsync(retained)
+                        row.setdefault('retentions',[]).append({'name':key+'-'+uuid.uuid4().hex,'image':image})
+                        self.store.save(state);self.finish_retentions(state,row,parent)
                     old=row['before']['metadata']
                     os.chown(key,old['uid'],old['gid'],dir_fd=originals,follow_symlinks=False)
                     os.chmod(key,old['mode'],dir_fd=originals,follow_symlinks=False)
@@ -339,6 +353,25 @@ class ManagedFiles:
                     os.fsync(originals);os.fsync(parent)
                     require(self.matches(path,row['before']),'control_recovery_readback')
                 row['restored']=True;row.pop('pending',None);self.store.save(state)
+
+    def finish_retentions(self,state,row,parent):
+        path=Path(row['path'])
+        with self.core.opened(self.store.base/'retained',os.O_RDONLY|os.O_DIRECTORY) as retained:
+            for item in row.get('retentions',[]):
+                require(re.fullmatch('[a-z][a-z0-9_]{0,40}-[a-f0-9]{32}',item['name']),
+                    'retention_record_shape')
+                target=self.store.base/'retained'/item['name'];expected=item['image']
+                if not os.path.lexists(target):
+                    require(self.matches(path,expected) and self.parent(path.parent)==row['parent'],
+                        'retention_source_drift')
+                    os.rename(path.name,target.name,src_dir_fd=parent,dst_dir_fd=retained)
+                image,_=self.image(target);old=expected['metadata'];now=image['metadata']
+                require(image['sha256']==expected['sha256'] and all(now[k]==old[k]
+                    for k in ('device','inode','bytes','mtime_ns'))
+                    and now['uid'] in (0,old['uid']) and now['gid'] in (0,old['gid'])
+                    and now['mode'] in (0o600,old['mode']),'retained_control_drift')
+                os.chown(target.name,0,0,dir_fd=retained,follow_symlinks=False)
+                os.chmod(target.name,0o600,dir_fd=retained,follow_symlinks=False);os.fsync(retained)
 
 
 def compose_bytes(model):
@@ -412,11 +445,16 @@ class DockerAPI:
         self.call('POST','/containers/'+quote(identity,safe='')+'/update',{'RestartPolicy':policy})
 
     def stop(self,identity):
+        import signal
         row=self.inspect(identity)
+        configured=row.get('Config',{}).get('StopSignal') or 'SIGTERM'
+        require(isinstance(configured,str),'runtime_stop_signal_shape')
+        number=int(configured) if configured.isdigit() else int(getattr(signal,configured,0))
+        require(1<=number<=64 and number!=int(signal.SIGKILL),'unsupported_runtime_stop_signal')
         if row['State']['Running']:self.call('POST','/containers/'+quote(identity,safe='')+'/stop?t=45',timeout=55)
         row=self.inspect(identity)
         require(not row['State']['Running'] and not row['State'].get('OOMKilled')
-            and row['State'].get('ExitCode',0) in (0,143),'runtime_clean_stop_failed')
+            and row['State'].get('ExitCode',0) in (0,128+number),'runtime_clean_stop_failed')
 
     def start(self,identity):
         if not self.inspect(identity)['State']['Running']:

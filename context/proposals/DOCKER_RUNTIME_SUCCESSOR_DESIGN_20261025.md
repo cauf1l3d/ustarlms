@@ -32,7 +32,7 @@ No application or DB schema/content migration and no business-row restore occurs
 
 The current HDD producer source matches repo a604fbcd; its dependency engine has been
 materialized privately and byte-verified0d31e694. Engine preflight/save use actual
-inspected image IDs dynamically. Change only the producer's two typed IMAGES literals.
+inspected image IDs dynamically. Change the producer's two typed IMAGES literals and the scheduler's one typed PRODUCER_SHA literal; validate its real loader against the new producer.
 Current cron source must match the accepted app journal after-image; require a literal
 two-service IMAGES map, patch only those literals and rebuild its installation binding
 using the exact current helper identity function. Do not infer cronv3 from the saved

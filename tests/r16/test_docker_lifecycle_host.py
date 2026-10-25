@@ -21,6 +21,46 @@ def module(case):
     return value
 
 class GuardContract(unittest.TestCase):
+    @unittest.skipUnless(os.geteuid()==0,'real scheduler Unix ownership boundary')
+    def test_actual_scheduler_accepts_the_changed_producer_and_rejects_tampering(self):
+        h=module(self)
+        self.assertTrue(hasattr(h.l,'patch_producer_binding'),'scheduled producer handoff missing')
+        source=(ROOT/'scripts/infra/hdd_backup.py').read_bytes()
+        scheduler=(ROOT/'scripts/infra/hdd_backup_schedule.py').read_bytes()
+        old=h.production_profile()['predecessors'];before={n:v['image'] for n,v in old.items()}
+        after={'ustar_moodle':'sha256:'+'a'*64,'ustar_postgres':'sha256:'+'b'*64}
+        producer=h.l.patch_images(source,before,after)
+        with tempfile.TemporaryDirectory(prefix='ustar-scheduler-delta-',dir='/root') as td:
+            path=Path(td)/'producer.py';path.write_bytes(producer);path.chmod(0o600)
+            original=h.definition(scheduler,'_unmodified_scheduler_fixture',ROOT/'scripts/infra/hdd_backup_schedule.py')
+            original.PRODUCER=path
+            with self.assertRaises(RuntimeError):original.load_producer()
+            changed=h.l.patch_producer_binding(scheduler,h.l.sha(source),h.l.sha(producer))
+            current=h.definition(changed,'_current_scheduler_fixture',ROOT/'scripts/infra/hdd_backup_schedule.py')
+            current.PRODUCER=path;self.assertEqual(current.load_producer().IMAGES,after)
+            path.write_bytes(producer+b'\n# unrelated change\n')
+            with self.assertRaises(RuntimeError):current.load_producer()
+
+    def test_later_verified_certificate_renewal_does_not_block_runtime_recovery(self):
+        import copy
+        h=module(self)
+        before={'verified':True,'owner':'ustar-academy-https','leaf':{'fingerprint':'old'},
+            'files':{'config':{'sha256':'app'},'ca':{'sha256':'authority'},'tool':{'sha256':'owner'},
+                'tls':{'sha256':'old-vhost'},'state':{'sha256':'old-state'},
+                'cert':{'path':'old-leaf'},'leaf_key':{'path':'old-key'}}}
+        current=copy.deepcopy(before);current['leaf']={'fingerprint':'renewed'}
+        for key in ('tls','state','cert','leaf_key'):current['files'][key]={'generation':'renewed'}
+        guard=h.ProductionGuards.__new__(h.ProductionGuards)
+        guard.locks=SimpleNamespace(check=lambda:None);guard.code_and_database=lambda:None;guard.worker=lambda:None
+        guard.pg=SimpleNamespace(capture=lambda path:{'sha256':'legacy'})
+        guard.journal=SimpleNamespace(path='/journal');guard.owner=lambda:current
+        guard.hdd=SimpleNamespace(https_ready=lambda:None)
+        state={'phase':'recovering','recover_from':'active',
+            'before':{'https_owner':before,'legacy_app_sha256':'legacy'}}
+        guard.verify(state,recovery=True)
+        current['files']['config']={'sha256':'unrelated-config'}
+        with self.assertRaises(h.l.Refusal):guard.verify(state,recovery=True)
+
     def test_recovery_quiesces_units_without_reading_or_rewriting_inflight_files(self):
         h=module(self);seen=[]
         with tempfile.TemporaryDirectory() as td:

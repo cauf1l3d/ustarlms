@@ -678,8 +678,8 @@
     {
       "path": "context/proposals/DOCKER_RUNTIME_SUCCESSOR_DESIGN_20261025.md",
       "domain": "proposals",
-      "size": 6224,
-      "sha256": "ef076be411a900e58ee5519d5fc3d865156c444839be3b71493ee0b9c086eb94"
+      "size": 6321,
+      "sha256": "eca58c00795105289073b9837be27520c8e2213b98868334edaadd2e5f42c459"
     },
     {
       "path": "context/proposals/DOCKER_RUNTIME_SUCCESSOR_PLAN_20261025.md",
@@ -1704,8 +1704,8 @@
     {
       "path": "context/runtime/docker_runtime_successor_progress_20261025.md",
       "domain": "runtime",
-      "size": 8525,
-      "sha256": "98848d69848c14187e95a7055da37a25bb84158568b871e82370a58e4ea83a25"
+      "size": 10506,
+      "sha256": "fb78212f290f9936ba8d89801a02639773dddb08c83e46570add1b275563db6a"
     },
     {
       "path": "context/runtime/evidence_20261005.yaml",

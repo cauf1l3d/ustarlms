@@ -21,16 +21,18 @@ CORE_SHA='5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5'
 BASE=Path('/var/lib/ustar-code-hardening/docker-runtime')
 SOURCE=Path('/opt/ustar/apps/stack/docker-compose.yml')
 HDD=Path('/usr/local/sbin/USTAR_HDD_BACKUP_20261006.py')
+HDD_SCHEDULER=Path('/usr/local/sbin/USTAR_HDD_SCHEDULE_20261006.py')
 CRON=Path('/usr/local/sbin/USTAR_CRON_SETUP_20261005.py')
 INSTALLATION=Path('/var/lib/ustar-cron/installation.json')
 SCHEDULE=Path('/etc/cron.d/ustar_moodle')
 HDD_SHA='a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3'
+HDD_SCHEDULER_SHA='a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c'
 SOURCE_SHA='41de2ed318ffb7697d92c575d1fc35ab3e6b1d16900e725aca843642d1cb7a09'
 UNITS=('ustar-connect-receiver.service','ustar-connect-notify.service','ustar-connect-probe.service',
     'ustar-hdd-backup.timer','ustar-academy-cert-renew.timer',
     'ustar-console-host-state-backup.timer','ustar-console-collect.timer',
     'ustar-academy-cert-renew.service','ustar-console-collect.service',
-    'ustar-hdd-backup.service','ustar-console-host-state-backup.service')
+    'ustar-hdd-backup.service','ustar-console-host-state-backup.service','ustar-hdd-backup-recover.service')
 
 def production_profile():
     return {'source':SOURCE,'source_sha256':SOURCE_SHA,'core':CORE,'core_sha256':CORE_SHA,
@@ -172,7 +174,13 @@ class Controls:
         old_images={n:v['image'] for n,v in old.items()}
         hdd=l.patch_images(self.original(state,'hdd_script'),old_images,state['images'])
         cron=l.patch_images(self.original(state,'cron_script'),old_images,state['images'])
-        self.write('hdd_script',hdd);self.write('cron_script',cron)
+        scheduler=l.patch_producer_binding(self.original(state,'hdd_scheduler'),
+            l.sha(self.original(state,'hdd_script')),l.sha(hdd))
+        self.write('hdd_script',hdd);self.write('hdd_scheduler',scheduler)
+        scheduled=definition(scheduler,'_ustar_current_runtime_scheduler',self.paths['hdd_scheduler'])
+        scheduled.PRODUCER=self.paths['hdd_script']
+        l.require(scheduled.load_producer().IMAGES==state['images'],'new_scheduled_producer_binding_drift')
+        self.write('cron_script',cron)
         current=definition(cron,'_ustar_current_runtime_cron',self.paths['cron_script'])
         if hasattr(current,'command'):
             def local_command(argv,data=None,timeout=45):
@@ -357,6 +365,7 @@ class ProductionGuards:
             if key!='compose':l.require(row['image']['metadata']['uid']==0
                 and not row['image']['metadata']['mode']&0o022,'unsafe_runtime_control_source')
         l.require(l.sha(base64.b64decode(controls['hdd_script']['raw'],validate=True))==HDD_SHA,'accepted_HDD_source_drift')
+        l.require(controls['hdd_scheduler']['image']['sha256']==HDD_SCHEDULER_SHA,'accepted_HDD_scheduler_drift')
         journal=self.journal.load()
         for key in ('cron_script','cron_installation','cron_schedule'):
             l.require(self.loaded.state.descriptor(self.loaded.state.capture({
@@ -382,7 +391,8 @@ class ProductionGuards:
     def units(self):
         values={n:self.unit(n) for n in UNITS}
         l.require(all(not values[n]['active'] for n in ('ustar-hdd-backup.service',
-            'ustar-console-host-state-backup.service','ustar-academy-cert-renew.service','ustar-connect-probe.service')),
+            'ustar-console-host-state-backup.service','ustar-academy-cert-renew.service','ustar-connect-probe.service',
+            'ustar-hdd-backup-recover.service')),
             'managed_operation_busy_retry_later')
         return values
 
@@ -442,7 +452,19 @@ class ProductionGuards:
         l.require(self.pg.capture(self.journal.path)['sha256']==state['before']['legacy_app_sha256'],
             'legacy_journal_changed')
         owner=self.owner()
-        if state['phase']!='active':l.require(owner==state['before']['https_owner'],'HTTPS_changed_during_runtime_transition')
+        previous=state['before']['https_owner']
+        l.require(owner.get('verified') is True and owner.get('owner')=='ustar-academy-https'
+            and set(owner.get('files',{}))==set(previous['files']),'HTTPS_owner_identity_drift')
+        allow_renewal=state['phase'] in ('active','recovered') or state.get('recover_from') in (
+            'active','recovering','recovery_required','recovered')
+        if not allow_renewal:
+            l.require(owner==previous,'HTTPS_changed_during_runtime_transition')
+        else:
+            # The established HTTPS owner authenticates a new leaf and rewrites
+            # its TLS vhost/state. Unrelated controls remain byte/metadata-bound.
+            dynamic={'tls','state','cert','leaf_key'}
+            l.require(all(value==previous['files'][key] for key,value in owner['files'].items()
+                if key not in dynamic),'HTTPS_static_control_drift')
         # Existing ordinary renewal remains the owner of future valid leaf changes.
         self.hdd.https_ready()
 
@@ -509,7 +531,7 @@ def entry(action,operator_path,*,acknowledge=False):
         l.require(state is None or state['operator_sha256']==l.sha(raw),'current_operator_source_drift')
         try:
             guards=ProductionGuards(store,api,run,locks)
-            controls=Controls(store,api,run,{'compose':SOURCE,'hdd_script':HDD,'cron_script':CRON,
+            controls=Controls(store,api,run,{'compose':SOURCE,'hdd_script':HDD,'hdd_scheduler':HDD_SCHEDULER,'cron_script':CRON,
                 'cron_installation':INSTALLATION,'cron_schedule':SCHEDULE},guards)
             archive=l.RuntimeArchive(store,core,Path('/srv/ustar-storage/backups/runtime'),
                 Path('/etc/ustar-backup/recipients.txt'),Path('/etc/ustar-backup/recovery.key'),

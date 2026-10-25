@@ -212,6 +212,13 @@ class Exports:
                 require({**got,'mode':row['before']['mode']}==row['before'] and got['mode'] in (row['before']['mode'],row['after_mode']),'export_identity_or_content_drift')
                 os.fchmod(fd,row['before']['mode']);os.fsync(fd)
         state['phase']='metadata_restored';self.store.save(state)
+    def resume(self,plan):
+        state=self.guard()
+        require(state['phase']=='metadata_restored' and state['exports']==plan['rows'],'retry_scope_or_baseline_drift')
+        for row in state['managed']:
+            require(Managed(self.store).current(Path(row['path'])) is None,'retry_managed_path_reappeared')
+        state.update(phase='prepared',retry_utc=utc(),attempt=int(state.get('attempt',1))+1)
+        self.store.save(state)
 
 def payload(root,scope):
     """Take bounded in-memory images while existing writer locks are held."""
@@ -647,8 +654,14 @@ def host_main(args):
                     journal=host.snapshot(),maintenance=maintenance_metadata(host),
                     configuration_changes=False,provider_called=False,remaining=REMAINING)
             else:
-                require(store.load() is None,'existing_batch_use_check_or_recover')
-                plan=preflight(store,host);Exports(store.base).prepare(plan)
+                current=store.load()
+                require(current is None or current['phase']=='metadata_restored','existing_batch_use_check_or_recover')
+                plan=preflight(store,host)
+                if current is None:
+                    state=Exports(store.base).prepare(plan);state['operator_sha256']=digest(raw);store.save(state)
+                else:
+                    require(current.get('operator_sha256')==digest(raw),'retry_operator_changed')
+                    Exports(store.base).resume(plan)
                 manager=Managed(store)
                 try:
                     manager.write(OPERATOR,raw)

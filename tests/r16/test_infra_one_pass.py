@@ -77,6 +77,18 @@ class ExportBoundaries(unittest.TestCase):
         state=self.tx.store.load();state['phase']='active';self.tx.store.save(state)
         self.dump.chmod(0o664)
         with self.assertRaises(self.m.Refusal):self.tx.guard()
+    def test_fully_undone_attempt_can_resume_without_changing_before_images(self):
+        plan=self.plan();self.tx.prepare(plan);self.tx.apply();self.tx.undo()
+        self.assertTrue(hasattr(self.tx,'resume'),'known complete metadata rollback cannot be retried')
+        before=self.tx.store.load()['exports'];self.tx.resume(plan);self.tx.apply()
+        self.assertEqual(self.tx.store.load()['exports'],before)
+        self.assertEqual(self.dump.stat().st_mode&0o777,0o600)
+    def test_retry_refuses_a_new_export_instead_of_silently_extending_scope(self):
+        self.tx.prepare(self.plan());self.tx.apply();self.tx.undo()
+        new=self.home/'new.dump';new.write_text('new');new.chmod(0o664)
+        self.assertTrue(hasattr(self.tx,'resume'),'known complete metadata rollback cannot be retried')
+        with self.assertRaises(self.m.Refusal):self.tx.resume(self.plan())
+        self.assertEqual(new.stat().st_mode&0o777,0o664)
 
 @unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class PayloadBoundaries(unittest.TestCase):

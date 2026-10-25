@@ -56,3 +56,10 @@ inode/size/mtime drift или foreign unit запрещают перезапис
 сетевого allowlist; результат restore от сисадмина и место независимой копии/ключа;
 модель/подключение ИБП; выбранный независимый observer и адресат проверки доставки;
 бизнес-требования к RPO/RTO/SLO. Секреты, приватные ключи и токены не присылать.
+
+Companion и DB/CODE/DATA архив имеют независимые capture times. Они не объявляются
+атомарной recovery pair. При восстановлении сверить release/generation, ownership/
+code modes, phase и container identities; новая машина требует квалифицированного
+profile. Извлечение двух архивов поверх live production не является поддержанной
+процедурой. Generation pairing/clean-host restore остаются частью открытого DR.
+[Docker: существующим контейнерам требуется recreation для нового log config](https://docs.docker.com/engine/logging/configure/).

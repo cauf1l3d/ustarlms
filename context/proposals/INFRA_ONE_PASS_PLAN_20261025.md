@@ -76,7 +76,7 @@ never silently accepted. Time budget300s/output bound; safe partial report.
 - [x] Survey ZIP: CRC/extraction/script/default/download-readback verified.
   Deliver persistent file and download/readback-verify bytes before user link.
 - [x] Owner report received25Oct01:50UTC; reviewed summary and closure matrix recorded.
-- [ ] Based on actual report, prepare one tested coordinated apply/recovery package
+- [x] Based on actual report, prepare one tested coordinated apply/recovery package
   for all safely actionable server changes; consolidate outstanding physical,
   external restore, custody, SMTP recipient and access-policy confirmations.
 - [ ] Final acceptance retains any remaining external blocker explicitly. Existing
@@ -96,3 +96,9 @@ reverse-hostname Match is not established. Partial/missing probes are explicit.
 Legacy exports in selected home/opt roots are metadata only, bounded depth/entry
 counts. No full recursive home or moodledata scan. New SQL is also executed in the
 existing PG16 stage with its actual stage_ prefix; no additional stand created.
+
+Final operator87941fd9: archive/dump scope is restricted to USTAR names/dirs; live
+.env/.key and unrelated application SQL are excluded. All63 initially observed
+qualifying exports remain in scope, but a live preflight determines actual count.
+Exact metadata rollback permits same-source/same-scope retry without a rebaseline.
+Review40187026858/Context40187026890 SUCCESS; both source1175/199skips, root29/29/no skips and existing PG16 PASS. Owner apply remains pending.

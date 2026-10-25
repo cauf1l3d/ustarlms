@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "kind": "infra_one_pass_component_qualification",
-  "status": "final_CI_pending",
+  "status": "qualified_owner_apply_pending",
   "owner_apply_performed": false,
   "author_review": true,
   "subagents": 0,
@@ -16,8 +16,8 @@
     ]
   },
   "local": {
-    "targeted_tests": 26,
-    "passed": 25,
+    "targeted_tests": 29,
+    "passed": 28,
     "skipped": 1,
     "skip": "real age unavailable locally; mandatory runtime CI must not skip",
     "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
@@ -43,6 +43,67 @@
     "No production SSH or live coordinator execution",
     "conditional journal adjustment uses modeled unit boundary plus production self-verification",
     "Native fixtures use synthetic keys/controllers/phase markers and isolated paths, never live user data",
-    "No independent review agent; author review only"
+    "No independent review agent; author review only",
+    "Control companion and standard business-data backup have independent capture times; generation/identity compatibility and clean-host restore remain unqualified"
+  ],
+  "source_commit": "87941fd918aad464f75f6829f705a20b0b2dfc36",
+  "operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+  "qualification": {
+    "review_run": 40187026858,
+    "review_conclusion": "success",
+    "context_run": 40187026890,
+    "context_conclusion": "success",
+    "source_jobs": [
+      {
+        "id": 121149903771,
+        "PHP": "8.3",
+        "conclusion": "success",
+        "python_tests": 1175,
+        "skips": 199
+      },
+      {
+        "id": 121149903829,
+        "PHP": "8.2",
+        "conclusion": "success",
+        "python_tests": 1175,
+        "skips": 199
+      }
+    ],
+    "runtime_job": 121149903686,
+    "runtime_conclusion": "success",
+    "targeted_tests": 29,
+    "targeted_skips": 0,
+    "native_markers": [
+      "INFRA_EXPORT_ACTUAL_UID=PASS",
+      "INFRA_COMPANION_SERVICE=PASS",
+      "INFRA_HDD_NAMESPACE=PASS",
+      "INFRA_ONE_PASS_NATIVE=PASS"
+    ],
+    "DB_job": 121150743119,
+    "DB_conclusion": "success",
+    "DB_markers": [
+      "OK (158 tests, 830 assertions)",
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS",
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS"
+    ]
+  },
+  "delivery": {
+    "source": "87941fd918aad464f75f6829f705a20b0b2dfc36",
+    "script_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+    "script_bytes": 40316,
+    "zip_sha256": "88beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af",
+    "zip_bytes": 15324,
+    "CRC": true,
+    "extracted_default": true,
+    "saved_download_readback_verified": true,
+    "ZIP_CRC_verified": true,
+    "extracted_default_offline_verified": true,
+    "downloaded_version": 2
+  },
+  "review_regressions": [
+    "Completed state rejects original world-readable metadata or missing/old probe managed files",
+    "Same-source retry requires exact complete undo and unchanged scope/before images",
+    "Only USTAR exports are modified; .env/.key/unrelated app SQL excluded"
   ]
 }

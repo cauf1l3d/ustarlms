@@ -4,18 +4,19 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct — consolidated owner survey received; local batch prepared, not applied.
-  Collector0d5d05fc on server101:50UTC is accepted; exact-source9d4e5c2c
-  Review40151717494/Context40151717558 SUCCESS; existing PG16 native121045127545 PASS.
-  No repeat owner stand. Known config/keys protected; >=63 observed exports remain
-  readable, scan capped; new role/code journals outside standard backup. HDD fresh
-  00:36Z encrypted/readback success, cert-renew timer already active. Docker unrotated
-  logs/health lifecycle, key access/network policy, journal service sandbox, external
-  DR/offsite/key custody/UPS/observer/SMTP/SLO remain explicit. infra_one_pass.py adds
-  scoped export metadata undo, authenticated encrypted control companion/timer and
-  conditional sandbox diagnosis; local26 tests25PASS/1age-environment skip; new CI
-  pending. No new production mutation, agents, provider sends, main merge or Connect
-  feature work. See context/runtime/infra_closure_matrix_20261025.md and owner receipt.
+  25Oct — local infrastructure batch87941fd9 prepared; owner apply pending.
+  Owner survey01:50UTC/SHA0d5d05fc accepted; old DB/code/SSD/Moodle/OS/HTTPS/backup/
+  Connect owner stands count and are not repeated. Both new source jobs1175tests/
+  199environment skips PASS; root runtime121149903686:29/29/no skips and real UID/
+  flock/age/restricted-service/HDD namespace PASS; Context40187026890 SUCCESS.
+  Review40187026858 SUCCESS; existing PG16 job121150743119 PASS. No owner apply.
+  Operator SHA1bb1f693 restricts USTAR archives/dumps, preserves original metadata,
+  adds encrypted control companion/nightly timer and conditional collector diagnosis.
+  Retry only after exact complete undo with same operator/scope. Saved ZIP download,
+  CRC/extraction/script/default launch checked. No new provider sends/agents/SSH/
+  main merge/Connect feature work. Full eight categories remain open as itemized in
+  context/runtime/infra_closure_matrix_20261025.md; external proof is not invented.
+  Qualification: context/runtime/infra_one_pass_qualification_20261025.json.
 next_task: INF-03
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
@@ -324,3 +325,8 @@ infrastructure_consolidated_plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025
 
 infrastructure_consolidated_receipt: context/runtime/infra_survey_owner_20261025.json
 infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261025.md
+
+infrastructure_local_batch_source: 87941fd918aad464f75f6829f705a20b0b2dfc36
+infrastructure_local_batch_operator_sha256: 1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18
+infrastructure_local_batch_CI: context/runtime/infra_one_pass_qualification_20261025.json
+infrastructure_local_batch_status: qualified_owner_apply_pending

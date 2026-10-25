@@ -1,5 +1,9 @@
 # Локальный инфраструктурный пакет25Oct2026: исправление выборки
 
+**Текущее решение25Oct:** SSH hardening/key diagnostics отложены владельцем до
+внешнего доступа; LAN login/password принят. Следующий [Docker origin metadata](infra_docker_origin_20261025.md).
+Прежние next-step ссылки ниже — история; не повторять SSH/Caddy/task probes или apply.
+
 **Применён владельцем25Oct17:49МСК: local_batch_applied.**
 69exports protected; control companion261files/35039995B, readback verified,
 SHA256da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f.

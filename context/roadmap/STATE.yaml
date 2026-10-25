@@ -4,23 +4,29 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct — owner Windows key-only SSH attempt failed; cause not classified.
-  Permission denied(publickey,password) proves no successful key login, not missing
-  keys or rejection of a particular offered identity. Next same-workstation CMD:
-  filename-only .ssh listing and filtered ssh -v for one fresh key-only connection.
-  No key generation/import/authorized_keys/server authentication/firewall changes.
-  Existing owner server session kept; agent SSH/agents/provider sends/main merge0.
-  Caddy metadata and all previous local batch/DB/code/old stands remain accepted;
-  UPS present, copies handed over/external restore explicitly unknown, no repeat ask.
-  Receipt context/runtime/infra_closure_followup_owner_20261025.json; current command:
-  context/runtime/infra_ssh_key_access_20261025.md. Do not repeat uninstrumented login.
+  25Oct — owner defers SSH hardening until external-access preparation.
+  Current aduk LAN login/password access works and is accepted by owner. Stop key/
+  agent/Windows diagnostics, key provisioning and SSH/firewall hardening now; no
+  prerequisite for independent local infrastructure work. Historical publickey-only
+  refusal preserved, cause unclassified, not an active incident or external-ready PASS.
+  Next Docker origin labels only: known log options/IDs/ports/old stands reused; Compose
+  creation source missing. Frozen consumers require coordinated identity/recovery
+  handoff before any recreation; no daemon restart/compose up/log truncation now.
+  Installed operator5067163f/controllers remain unchanged. Its original remaining list
+  is a dated categories report, not authorization to reopen explicitly deferred work.
+  UPS present, copies handed over, external restore explicitly unknown; no repeat ask.
+  0agents/no agent SSH/provider sends/main merge. Receipt:
+  context/runtime/infra_closure_followup_owner_20261025.json; next:
+  context/runtime/infra_docker_origin_20261025.md.
 next_task: INF-03
 infrastructure_UPS_status: owner_confirms_present_shutdown_not_verified
 infrastructure_external_restore_status: copies_delivered_result_unknown_owner_explicitly_deferred_no_repeat_prompt
 infrastructure_task_retry_status: two_old_disabled_rows_enabled_retry_zero_no_reset_or_repeat_query
 infrastructure_caddy2019_status: owner_local_admin_and_separate_IPv6_HTTP_static_listener_classified_no_blind_change
-infrastructure_next_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
-infrastructure_workstation_key_login: owner_attempt_failed_cause_unclassified_CMD_filtered_verbose_identity_next
+infrastructure_deferred_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
+infrastructure_access_scope: LAN_login_password_accepted_SSH_key_firewall_hardening_deferred_until_external_access
+infrastructure_next_local_runbook: context/runtime/infra_docker_origin_20261025.md
+infrastructure_workstation_key_login: deferred_by_owner_no_further_diagnostics_now
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open

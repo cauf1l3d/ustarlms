@@ -131,9 +131,9 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "owner Windows CMD client identity/agent diagnostic; no server authentication changes; external restore explicitly deferred",
+  "next": "owner read-only Docker Compose origin labels; SSH hardening deferred; external restore explicitly unknown",
   "workstation_key_login": {
-    "status": "owner_publickey_only_attempt_failed_cause_unclassified",
+    "status": "explicitly_deferred_by_owner_until_external_access_preparation",
     "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
     "fresh_connection_required": true,
     "multiplex_reuse_disabled": true,
@@ -156,7 +156,26 @@
       }
     ],
     "interpretation": "SSH authentication endpoint responded; key-only authentication not completed; no evidence yet of absent client key, offered identity, agent status or server-side rejection reason",
-    "next": "Windows CMD filename-only .ssh listing plus filtered ssh -v for the same key-only fresh connection",
-    "diagnostic_cmd": "ssh -v -o ControlPath=none -o ControlMaster=no -o ClearAllForwardings=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no aduk@192.168.1.60 whoami 2>&1 | findstr /I /C:\"identity file\" /C:\"Will attempt key\" /C:\"Offering public key\" /C:\"Server accepts key\" /C:\"Trying private key\" /C:\"agent\" /C:\"Load key\" /C:\"sign_and_send_pubkey\" /C:\"signature algorithm\" /C:\"no such identity\" /C:\"Permission denied\" /C:\"Authenticated to\""
+    "next": null,
+    "diagnostic_cmd": "ssh -v -o ControlPath=none -o ControlMaster=no -o ClearAllForwardings=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no aduk@192.168.1.60 whoami 2>&1 | findstr /I /C:\"identity file\" /C:\"Will attempt key\" /C:\"Offering public key\" /C:\"Server accepts key\" /C:\"Trying private key\" /C:\"agent\" /C:\"Load key\" /C:\"sign_and_send_pubkey\" /C:\"signature algorithm\" /C:\"no such identity\" /C:\"Permission denied\" /C:\"Authenticated to\"",
+    "diagnostic_cmd_status": "historical_not_to_be_run_now",
+    "successful_key_login_claimed": false
+  },
+  "access_scope_decision": {
+    "recorded_at_utc": "2026-10-25T16:36:42.393351+00:00",
+    "observation_time_not_supplied": true,
+    "source": "explicit owner instruction in chat",
+    "owner_instruction": "вход не надо усилять, этим займемся потом, сейчас вход работает внутри локальной сети и по логин паролю, это сделаем когда откроем порты и академию наружу",
+    "current_access": {
+      "network": "LAN",
+      "method": "login_password",
+      "working_owner_confirmed": true
+    },
+    "SSH_key_agent_diagnostics_required_now": false,
+    "key_provisioning_required_now": false,
+    "SSH_firewall_hardening": "deferred_until_external_access_preparation",
+    "external_access_ready_claimed": false,
+    "local_work_blocked_on_key_login": false,
+    "installed_operator_remaining_categories": "dated receipt; do not edit frozen operator or treat deferred SSH as an active prerequisite"
   }
 }

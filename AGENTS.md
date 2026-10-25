@@ -1,5 +1,20 @@
 # USTAR инструкции агентам
 
+**25Oct — owner defers SSH hardening until external-access preparation.**
+Current aduk LAN login/password access works and is accepted by owner. Stop key/
+agent/Windows diagnostics, key provisioning and SSH/firewall hardening now; no
+prerequisite for independent local infrastructure work. Historical publickey-only
+refusal preserved, cause unclassified, not an active incident or external-ready PASS.
+Next Docker origin labels only: known log options/IDs/ports/old stands reused; Compose
+creation source missing. Frozen consumers require coordinated identity/recovery
+handoff before any recreation; no daemon restart/compose up/log truncation now.
+Installed operator5067163f/controllers remain unchanged. Its original remaining list
+is a dated categories report, not authorization to reopen explicitly deferred work.
+UPS present, copies handed over, external restore explicitly unknown; no repeat ask.
+0agents/no agent SSH/provider sends/main merge. Receipt:
+context/runtime/infra_closure_followup_owner_20261025.json; next:
+context/runtime/infra_docker_origin_20261025.md.
+
 **25Oct — owner Windows key-only SSH attempt failed; cause not classified.**
 Permission denied(publickey,password) proves no successful key login, not missing
 keys or rejection of a particular offered identity. Next same-workstation CMD:

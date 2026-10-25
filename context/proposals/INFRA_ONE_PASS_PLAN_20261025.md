@@ -1,5 +1,11 @@
 # Remaining infrastructure — consolidated pass25Oct2026
 
+**Owner scope update25Oct:** LAN login/password работает; SSH/key/firewall hardening
+отложен до подготовки внешнего доступа и не блокирует local work. External restore
+явно unknown/copies handed over. Следующий Docker-only metadata step:
+[creation origin labels](../runtime/infra_docker_origin_20261025.md). Original plan
+requirements ниже читаются с этим explicit deferral; installed operator не менять.
+
 Owner25Oct17:49MSK accepted local_batch_applied:69exports,261control files,35039995B
 readback-verified encrypted companion/SHAda701618;timer active; journal already
 fresh measured/actionnone. No new container/data/provider mutation. No repeat apply.

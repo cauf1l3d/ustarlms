@@ -1,5 +1,9 @@
 # Caddy2019: следующий metadata-only срез25Oct2026
 
+**Текущее решение25Oct:** SSH hardening/key diagnostics отложены владельцем до
+внешнего доступа; LAN login/password принят. Следующий [Docker origin metadata](infra_docker_origin_20261025.md).
+Прежние next-step ссылки ниже — история; не повторять SSH/Caddy/task probes или apply.
+
 **Owner output accepted25Oct; do not repeat this command.** IPv4 loopback API and
 separate IPv6 wildcard HTTP static_response classified, caddy.service/config path
 and container ports received. [Receipt](infra_closure_followup_owner_20261025.json#port2019).

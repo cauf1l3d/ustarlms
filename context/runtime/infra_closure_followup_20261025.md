@@ -1,5 +1,9 @@
 # Следующий read-only срез25Oct после local_batch_applied
 
+**Текущее решение25Oct:** SSH hardening/key diagnostics отложены владельцем до
+внешнего доступа; LAN login/password принят. Следующий [Docker origin metadata](infra_docker_origin_20261025.md).
+Прежние next-step ссылки ниже — история; не повторять SSH/Caddy/task probes или apply.
+
 **Current25Oct:** Caddy metadata received: IPv4 local config API, separate IPv6
 HTTP static_response wildcard; unit/config path/container ports accepted. No bind
 change or external reachability claim. [Receipt](infra_closure_followup_owner_20261025.json#port2019).

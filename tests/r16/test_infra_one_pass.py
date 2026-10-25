@@ -78,16 +78,18 @@ class ExportBoundaries(unittest.TestCase):
         self.dump.chmod(0o664)
         with self.assertRaises(self.m.Refusal):self.tx.guard()
     def test_fully_undone_attempt_can_resume_without_changing_before_images(self):
-        plan=self.plan();self.tx.prepare(plan);self.tx.apply();self.tx.undo()
+        plan=self.plan();state=self.tx.prepare(plan);state['operator_sha256']='a'*64
+        self.tx.store.save(state);self.tx.apply();self.tx.undo()
         self.assertTrue(hasattr(self.tx,'resume'),'known complete metadata rollback cannot be retried')
-        before=self.tx.store.load()['exports'];self.tx.resume(plan);self.tx.apply()
+        before=self.tx.store.load()['exports'];self.tx.resume(plan,'a'*64);self.tx.apply()
         self.assertEqual(self.tx.store.load()['exports'],before)
         self.assertEqual(self.dump.stat().st_mode&0o777,0o600)
     def test_retry_refuses_a_new_export_instead_of_silently_extending_scope(self):
-        self.tx.prepare(self.plan());self.tx.apply();self.tx.undo()
+        state=self.tx.prepare(self.plan());state['operator_sha256']='a'*64
+        self.tx.store.save(state);self.tx.apply();self.tx.undo()
         new=self.home/'ustar-new.dump';new.write_text('new');new.chmod(0o664)
         self.assertTrue(hasattr(self.tx,'resume'),'known complete metadata rollback cannot be retried')
-        with self.assertRaises(self.m.Refusal):self.tx.resume(self.plan())
+        with self.assertRaises(self.m.Refusal):self.tx.resume(self.plan(),'a'*64)
         self.assertEqual(new.stat().st_mode&0o777,0o664)
     def test_live_env_keys_and_unrelated_app_sql_are_outside_export_scope(self):
         env=self.home/'.env';env.write_text('PRIVATE_ENV');env.chmod(0o664)
@@ -95,6 +97,91 @@ class ExportBoundaries(unittest.TestCase):
         app=self.home/'other-app';app.mkdir();sql=app/'schema.sql';sql.write_text('SELECT 1');sql.chmod(0o644)
         self.tx.prepare(self.plan());self.tx.apply()
         self.assertEqual([p.stat().st_mode&0o777 for p in (env,key,sql)],[0o664,0o664,0o644])
+
+    def test_successor_retries_only_the_known_fully_undone_operator(self):
+        plan=self.plan();state=self.tx.prepare(plan)
+        state['operator_sha256']='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+        self.tx.store.save(state)
+        managed=self.root/'installed.py';self.m.Managed(self.tx.store).write(managed,b'old operator')
+        self.tx.apply();self.m.Managed(self.tx.store).restore();self.tx.undo()
+        before=self.tx.store.load()['exports']
+        try:self.tx.resume(plan,operator_sha256='a'*64)
+        except (TypeError,self.m.Refusal) as error:self.fail('known undone predecessor cannot resume: '+str(error))
+        saved=self.tx.store.load()
+        self.assertEqual(saved['operator_sha256'],'a'*64)
+        self.assertEqual(saved['predecessor_operator_sha256'],'1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18')
+        self.assertEqual(saved['exports'],before)
+        self.assertEqual(self.dump.stat().st_mode&0o777,0o664)
+        self.assertFalse(managed.exists())
+        self.tx.apply();self.tx.undo()
+        self.tx.resume(plan,operator_sha256='a'*64)
+        self.assertEqual(self.tx.store.load()['operator_sha256'],'a'*64)
+
+    def test_successor_refuses_unknown_operator_without_rewriting_journal(self):
+        plan=self.plan();state=self.tx.prepare(plan);state['operator_sha256']='b'*64
+        self.tx.store.save(state);self.tx.undo();before=self.tx.store.path.read_bytes()
+        with self.assertRaises(self.m.Refusal):self.tx.resume(plan,operator_sha256='a'*64)
+        self.assertEqual(self.tx.store.path.read_bytes(),before)
+        self.assertEqual(self.dump.stat().st_mode&0o777,0o664)
+
+    def test_successor_refuses_active_predecessor_without_rewriting_journal(self):
+        plan=self.plan();state=self.tx.prepare(plan)
+        state['operator_sha256']='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+        self.tx.store.save(state);self.tx.apply()
+        state=self.tx.store.load();state['phase']='active';self.tx.store.save(state)
+        before=self.tx.store.path.read_bytes()
+        with self.assertRaises(self.m.Refusal):self.tx.resume(plan,operator_sha256='a'*64)
+        self.assertEqual(self.tx.store.path.read_bytes(),before)
+        self.assertEqual(self.dump.stat().st_mode&0o777,0o600)
+
+    def test_successor_refuses_reappeared_managed_file_without_rewriting_journal(self):
+        plan=self.plan();state=self.tx.prepare(plan)
+        state['operator_sha256']='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+        self.tx.store.save(state)
+        managed=self.root/'installed.py';self.m.Managed(self.tx.store).write(managed,b'old operator')
+        self.m.Managed(self.tx.store).restore();self.tx.undo()
+        managed.write_bytes(b'foreign operator');before=self.tx.store.path.read_bytes()
+        with self.assertRaises(self.m.Refusal):self.tx.resume(plan,operator_sha256='a'*64)
+        self.assertEqual(self.tx.store.path.read_bytes(),before)
+        self.assertEqual(managed.read_bytes(),b'foreign operator')
+
+@unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
+class ControlStateSize(unittest.TestCase):
+    def setUp(self):
+        self.m=module(self);self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name)/'state.json'
+
+    def test_observed_21665285_byte_hardening_journal_is_read_without_modification(self):
+        # Exact production byte count; synthetic content, no production journal.
+        prefix=b'{"phase":"active","synthetic_padding":"'
+        raw=prefix+b'x'*(21665285-len(prefix)-2)+b'"}'
+        self.path.write_bytes(raw);self.path.chmod(0o600)
+        before=self.path.stat()
+        try:value=self.m.root_json(self.path)
+        except self.m.Refusal as error:self.fail('accepted hardening journal size refused: '+str(error))
+        self.assertEqual(value['phase'],'active')
+        self.assertEqual(len(value['synthetic_padding']),21665285-len(prefix)-2)
+        self.assertEqual(self.path.stat().st_mtime_ns,before.st_mtime_ns)
+        self.assertEqual(self.path.stat().st_mode&0o777,0o600)
+
+    def test_state_larger_than_existing_64MiB_control_boundary_is_refused(self):
+        with self.path.open('wb') as stream:stream.truncate(64*1024**2+1)
+        self.path.chmod(0o600)
+        with self.assertRaises(self.m.Refusal):self.m.root_json(self.path)
+
+    def test_larger_size_does_not_relax_write_permission_guards(self):
+        self.path.write_text('{"phase":"active"}');self.path.chmod(0o620)
+        with self.assertRaises(self.m.Refusal):self.m.root_json(self.path)
+        self.path.chmod(0o602)
+        with self.assertRaises(self.m.Refusal):self.m.root_json(self.path)
+
+    def test_nonroot_control_owner_is_still_refused(self):
+        self.path.write_text('{"phase":"active"}');self.path.chmod(0o600)
+        try:os.chown(self.path,1000,1000)
+        except OSError:
+            if os.environ.get('USTAR_REQUIRE_INFRA_NATIVE')=='1':self.fail('native UID1000 required')
+            self.skipTest('UID1000 unavailable locally; mandatory runtime CI covers actual ownership')
+        with self.assertRaises(self.m.Refusal):self.m.root_json(self.path)
 
 @unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class PayloadBoundaries(unittest.TestCase):

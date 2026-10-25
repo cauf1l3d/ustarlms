@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "kind": "infra_one_pass_owner_refusal",
+  "recorded_at_utc": "2026-10-25T13:20:48.961822+00:00",
+  "operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+  "apply_result": {
+    "phase": "refused",
+    "reason": "unsafe_root_json",
+    "business_rows_restored": false,
+    "provider_called": false
+  },
+  "metadata": [
+    {
+      "path": "/var/lib/ustar-code-hardening/state.json",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0600",
+      "bytes": 21665285,
+      "kind": "regular"
+    },
+    {
+      "path": "/var/lib/ustar-postgres-app-handoff/state.json",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0600",
+      "bytes": 809387,
+      "kind": "regular"
+    },
+    {
+      "path": "/var/lib/ustar-infra-one-pass/state.json",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0600",
+      "bytes": 15657,
+      "kind": "regular"
+    }
+  ],
+  "root_cause": "consumer root_json default16MiB rejects existing hardening journal21665285B; original producer permits48MiB preparation and64MiB capture",
+  "rollback_phase_independently_observed": false,
+  "rollback_evidence": "Normal refusal rather than recovery_required implies auto-undo returned; successor must verify metadata_restored and all original before images itself",
+  "production_batch_complete": false,
+  "all_eight_complete": false,
+  "private_state_contents_collected": false
+}

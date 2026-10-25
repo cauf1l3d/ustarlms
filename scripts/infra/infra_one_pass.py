@@ -43,6 +43,7 @@ SNAPSHOT=Path('/run/ustar-console-data/snapshot.json')
 KEY=Path('/etc/ustar-backup/recovery.key')
 RECIPIENTS=Path('/etc/ustar-backup/recipients.txt')
 LIMIT=192*1024**2
+PREDECESSOR_OPERATOR_SHA256='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
 LOCKS=('var/lib/ustar-code-hardening/lock','var/lib/ustar-postgres-app-handoff/lock',
  'var/lib/ustar-connect-telegram-update/lock','var/lib/ustar-connect-academy-update/lock',
  'var/lib/ustar-connect-chat-link-update/lock','var/lib/ustar-academy-https/lock',
@@ -216,11 +217,15 @@ class Exports:
                 require({**got,'mode':row['before']['mode']}==row['before'] and got['mode'] in (row['before']['mode'],row['after_mode']),'export_identity_or_content_drift')
                 os.fchmod(fd,row['before']['mode']);os.fsync(fd)
         state['phase']='metadata_restored';self.store.save(state)
-    def resume(self,plan):
+    def resume(self,plan,operator_sha256):
         state=self.guard()
         require(state['phase']=='metadata_restored' and state['exports']==plan['rows'],'retry_scope_or_baseline_drift')
+        previous=state.get('operator_sha256')
+        require(previous==operator_sha256 or previous==PREDECESSOR_OPERATOR_SHA256,'retry_operator_changed')
         for row in state['managed']:
             require(Managed(self.store).current(Path(row['path'])) is None,'retry_managed_path_reappeared')
+        if previous!=operator_sha256:state['predecessor_operator_sha256']=previous
+        state['operator_sha256']=operator_sha256
         state.update(phase='prepared',retry_utc=utc(),attempt=int(state.get('attempt',1))+1)
         self.store.save(state)
 
@@ -499,7 +504,9 @@ def recovery_locks(root=Path('/')):
             except BlockingIOError:raise Refusal('managed_operation_busy_retry_later') from None
         yield
 
-def root_json(path,maximum=16*1024**2):
+def root_json(path,maximum=64*1024**2):
+    # Match the accepted controllers' capture/Store and companion per-file bound.
+    # The code-hardening journal stores both inventories (observed 21,665,285 B).
     with opened(path) as fd:
         row=description(fd);require(row['uid']==0 and not row['mode']&0o022 and row['bytes']<=maximum,'unsafe_root_json')
         with os.fdopen(os.dup(fd),'rb') as stream:value=json.load(stream)
@@ -664,8 +671,7 @@ def host_main(args):
                 if current is None:
                     state=Exports(store.base).prepare(plan);state['operator_sha256']=digest(raw);store.save(state)
                 else:
-                    require(current.get('operator_sha256')==digest(raw),'retry_operator_changed')
-                    Exports(store.base).resume(plan)
+                    Exports(store.base).resume(plan,digest(raw))
                 manager=Managed(store)
                 try:
                     manager.write(OPERATOR,raw)

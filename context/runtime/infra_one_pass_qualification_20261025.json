@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "kind": "infra_one_pass_component_qualification",
-  "status": "qualified_owner_apply_pending",
+  "status": "state_size_fix_CI_pending_owner_retry_pending",
   "owner_apply_performed": false,
   "author_review": true,
   "subagents": 0,
@@ -105,5 +105,39 @@
     "Completed state rejects original world-readable metadata or missing/old probe managed files",
     "Same-source retry requires exact complete undo and unchanged scope/before images",
     "Only USTAR exports are modified; .env/.key/unrelated app SQL excluded"
-  ]
+  ],
+  "owner_apply_attempted": true,
+  "owner_refusal_receipt": "context/runtime/infra_one_pass_owner_20261025.json",
+  "state_size_fix": {
+    "status": "CI_pending",
+    "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "operator_bytes": 40792,
+    "root_JSON_max_bytes": 67108864,
+    "per_payload_file_max_bytes": 67108864,
+    "predecessor_operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+    "retry_guards": [
+      "metadata_restored only",
+      "exact original exports scope and before images",
+      "every recorded managed path absent",
+      "same source or one pinned predecessor only",
+      "predecessor and successor SHA retained in private journal"
+    ],
+    "local_targeted_tests": 37,
+    "local_passed": 35,
+    "local_skipped": 2,
+    "local_skips": [
+      "age unavailable locally; mandatory runtime CI must not skip",
+      "UID1000 not mapped locally; mandatory runtime CI must not skip"
+    ],
+    "regression_RED": [
+      "21665285B protected synthetic journal rejected unsafe_root_json",
+      "prior resume API could not perform a pinned successor transition"
+    ],
+    "native_fixture_delta": "synthetic21665285B hardening state included in real restricted-service encrypted readback; actualUID1000 retry",
+    "limits": [
+      "No production coordinator run by agent",
+      "No production journal content received",
+      "Owner retry pending"
+    ]
+  }
 }

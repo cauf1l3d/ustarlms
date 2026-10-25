@@ -1,11 +1,18 @@
 # Единый локальный инфраструктурный пакет25Oct2026
 
-Source87941fd918aad464f75f6829f705a20b0b2dfc36; script SHA256
-`1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18` (40316B).
-Review40187026858/Context40187026890 SUCCESS; existing PG16 job121150743119 PASS. Source1175/199skips на обеих
-PHP PASS; root runtime121149903686:29/29/no skips и native markers PASS.
+Текущий state-size fix SHA256
+`b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19` (40792B), CI pending.
+Первый apply SHA1bb1f693 отказал `unsafe_root_json`: hardening journal21665285B,
+DB809387B, own15657B; все root0:0/0600. Это несовпадение16MiB читателя с accepted
+48MiB producer/64MiB capture. Reader64MiB, per-file64MiB и aggregate192MiB bounded;
+права/владелец/link/xattrs guards сохранены. [Квитанция](infra_one_pass_owner_20261025.json).
+Old source87941fd9 had Review40187026858/Context40187026890 SUCCESS and existing
+PG16 job121150743119 PASS, but its fixture did not cover the observed journal size.
+Исправленная версия допускает ровно predecessor1bb1f693 только после полной
+metadata_restored с прежними exports before images/scope и отсутствием всех своих
+managed files. Old/new SHA сохраняются в private state. Журналы не удалять/не менять.
+Следующий owner retry разрешён после qualification; текущий пакет ещё не применён.
 [Qualification/limits](infra_one_pass_qualification_20261025.json).
-Новый пакет на сервере ещё не выполнялся; DB/code hardening уже приняты, не повторять.
 
 Пакет защищает архивы/дампы USTAR с сохранением owner/bytes и metadata-only undo,
 сохраняет отдельный encrypted control companion до/после и ставит timer около
@@ -14,22 +21,26 @@ reason и measured fresh service snapshot; иначе explicit unresolved/rollba
 Проверяются cron receipt, deduplicated listeners и TLS leaf. Academy не останавливается.
 [Матрица всех8](infra_closure_matrix_20261025.md). Default operator PLAN_ONLY.
 
-Распаковать текущий ZIP, положить .py в /home/aduk, выполнить один блок:
+После qualification скачать текущий ZIP на свой компьютер, извлечь и перенести в
+`/home/aduk` только `ustar-infra-one-pass-20261025-statefix.py`. Существующие ZIP/дампы
+на сервере оставить с исходными bytes/metadata: exact retry guard проверяет scope и
+before images; новая/заменённая ZIP копия внутри home изменила бы эту выборку.
+Выполнить один блок:
 
 ```bash
 sudo -v
 (
   set -euo pipefail
   sudo -n install -o root -g root -m 600 \
-    /home/aduk/ustar-infra-one-pass-20261025.py \
-    /root/ustar-infra-one-pass-20261025.py
+    /home/aduk/ustar-infra-one-pass-20261025-statefix.py \
+    /root/ustar-infra-one-pass-20261025-statefix.py
   printf '%s  %s\n' \
-    1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18 \
-    /root/ustar-infra-one-pass-20261025.py |
+    b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19 \
+    /root/ustar-infra-one-pass-20261025-statefix.py |
   sudo -n sha256sum --check --strict -
   ustar_closure_report=$(mktemp --suffix=.json /home/aduk/ustar-infra-closure-result.XXXXXX)
   sudo -n timeout --kill-after=5s 300s /usr/bin/python3 -I -B \
-    /root/ustar-infra-one-pass-20261025.py --apply | tee "$ustar_closure_report"
+    /root/ustar-infra-one-pass-20261025-statefix.py --apply | tee "$ustar_closure_report"
   printf '\nREPORT_FILE=%s\n' "$ustar_closure_report"
 )
 ```
@@ -43,8 +54,10 @@ external DR/offsite/key custody/UPS/observer/delivery/SLO не закрываю�
 `--check` читает текущее состояние. После успешного active не повторять --apply.
 `--recover`/`--undo` возвращают прежние metadata/свои units и сохраняют encrypted
 copies; business rows не восстанавливаются. Unknown bytes/inode/size/mtime drift
-refuse. После полного metadata_restored тот же operator может повторить --apply
-только при прежних before images/scope и отсутствии его созданных файлов.
+refuse. После полного metadata_restored тот же operator или исправленный successor для
+одного pinned predecessor может повторить --apply только при прежних before
+images/scope и отсутствии его созданных файлов. При refusal вернуть reason; не
+стирать/редактировать private state и не менять права исходных журналов вручную.
 
 State `/var/lib/ustar-infra-one-pass` root-only. Companion
 `/srv/ustar-storage/backups/host-state`, quota5GiB/reserve8GiB, без удаления;
@@ -57,5 +70,6 @@ backup или atomic recovery pair; сверка generation/identity и clean-ho
 [Сводка owner report](infra_survey_owner_20261025.json), original private report SHA
 344965014f7cbee76c9588e61cb83433a3ff6f623002aaa2361d74deb63385b8.
 
-Delivery ZIP15324B/SHA25688beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af:
-CRC, extracted script/default PLAN_ONLY и downloaded saved version2 readback PASS.
+Historical delivery v2 ZIP15324B/SHA88beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af
+passed download/CRC/default checks but contained the incompatible16MiB reader.
+Updated delivery/readback qualification pending; v2 is superseded, not a retry fix.

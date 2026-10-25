@@ -1,5 +1,18 @@
 # Активные задачи USTAR
 
+**25Oct16:20MSK — owner local batch refused unsafe_root_json; size fix in qualification.**
+Owner metadata: code journal21665285B, DB809387B, own15657B; all root0:0/0600.
+Cause confirmed: reader16MiB versus accepted producer48/64MiB bounds. Old source879
+CI success did not exercise production-sized state. Corrected reader64MiB retains
+owner/write/link/xattr guards and192MiB aggregate bound. Pinned predecessor1bb1f693
+may retry only complete metadata_restored with exact before images/scope and no
+remaining managed files; no journal deletion/rebaseline. Local37tests35PASS/2local
+age/UID namespace skips; mandatory root/native CI pending, no new apply command yet.
+Owner refusal is not local_batch_applied; all8 remain open per closure matrix.
+Old DB/code/SSD/Moodle/OS/HTTPS/backup/Connect acceptance reused, 0agents/SSH/sends/
+main merge. Receipt context/runtime/infra_one_pass_owner_20261025.json; qualification
+context/runtime/infra_one_pass_qualification_20261025.json.
+
 **25Oct — local infrastructure batch87941fd9 prepared; owner apply pending.**
 Owner survey01:50UTC/SHA0d5d05fc accepted; old DB/code/SSD/Moodle/OS/HTTPS/backup/
 Connect owner stands count and are not repeated. Both new source jobs1175tests/

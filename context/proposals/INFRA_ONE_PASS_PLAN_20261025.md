@@ -1,5 +1,13 @@
 # Remaining infrastructure — consolidated pass25Oct2026
 
+25Oct owner delta: original apply refused unsafe_root_json. Metadata confirms
+21665285B/root0600 hardening journal. Align reader with existing64MiB capture/per-file
+bound; retain192MiB aggregate. Support one pinned predecessor only after exact complete
+undo; preserve prior/successor SHA, exports and before images. Do not delete journals
+or alter original hardening/DB state. Real root service fixture must read/encrypt
+a synthetic journal of the observed size, and actualUID1000 must survive retry/undo.
+37focused cases35PASS/2local environment skips; root/native CI pending.
+
 Owner: application appears to work after code_hardened; asks to close the eight
 remaining infrastructure categories quickly in one pass. Native author execution,
 0subagents. This approves consolidated preparation, not destructive retention,

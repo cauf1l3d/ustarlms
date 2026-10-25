@@ -1,5 +1,9 @@
 # Остаток инфраструктуры по фактическому отчёту25Oct
 
+25Oct: owner batch1bb1f693 refused `unsafe_root_json`; no acceptance of this batch.
+Hardening state21665285B/root0600 exceeded reader16MiB. Corrected64MiB reader and
+guarded pinned predecessor retry are in qualification. [Owner receipt](infra_one_pass_owner_20261025.json).
+
 Отчёт01:50:08–01:50:21UTC принят; collector SHA0d5d05fc совпал. Его exact-source
 Review40151717494/Context40151717558 SUCCESS, existing PG16 native121045127545
 INFRA_REMAINING_SURVEY_NATIVE=PASS. Агент не подключался к серверу. Предыдущие

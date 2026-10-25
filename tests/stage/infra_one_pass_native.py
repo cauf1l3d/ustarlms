@@ -28,10 +28,19 @@ with tempfile.TemporaryDirectory(prefix='ustar-infra-native-') as directory:
         return run(['setpriv','--reuid=65534','--regid=65534','--clear-groups','/usr/bin/python3','-c',
                     'import pathlib,sys;pathlib.Path(sys.argv[1]).read_bytes()',str(dump)],check=False).returncode
     assert outsider()==0
-    tx=m.Exports(base/'private');tx.prepare(m.export_plan(base));tx.apply()
+    tx=m.Exports(base/'private');state=tx.prepare(m.export_plan(base))
+    state['operator_sha256']='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+    tx.store.save(state);tx.apply()
     assert outsider()!=0 and dump.stat().st_uid==1000 and dump.read_bytes()==b'synthetic-private-dump'
     tx.undo();assert outsider()==0 and dump.stat().st_mode&0o777==0o664
     print('INFRA_EXPORT_ACTUAL_UID=PASS; unrelated UID65534 denied; original UID1000 retained; undo verified')
+    operator_sha=m.digest((ROOT/'scripts/infra/infra_one_pass.py').read_bytes())
+    tx.resume(m.export_plan(base),operator_sha)
+    assert tx.store.load()['operator_sha256']==operator_sha
+    assert tx.store.load()['predecessor_operator_sha256']=='1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18'
+    tx.apply();assert outsider()!=0
+    tx.undo();assert outsider()==0 and dump.stat().st_mode&0o777==0o664
+    print('INFRA_KNOWN_PREDECESSOR_RETRY=PASS; exact undo; actual UID1000; before images retained')
 
     mount=Path('/run/ustar-infra-hdd-fixture-'+uuid.uuid4().hex[:8]);mount.mkdir(mode=0o700)
     image=base/'hdd.ext4'
@@ -65,13 +74,18 @@ with tempfile.TemporaryDirectory(prefix='ustar-infra-native-') as directory:
             statebase=inputs/'state';statebase.mkdir(mode=0o700)
             for dirname,phase in (('/var/lib/ustar-code-hardening','active'),('/var/lib/ustar-postgres-app-handoff','app_role_active')):
                 path=Path(dirname);assert not path.exists();path.mkdir(mode=0o700);created.append(path)
-                state=path/'state.json';state.write_text(json.dumps({'phase':phase}));state.chmod(0o600)
+                state=path/'state.json'
+                raw=json.dumps({'phase':phase}).encode()
+                if phase=='active':
+                    prefix=b'{"phase":"active","synthetic_padding":"'
+                    raw=prefix+b'x'*(21665285-len(prefix)-2)+b'"}'
+                state.write_bytes(raw);state.chmod(0o600)
             import hashlib
             producer=('import sys,json;from pathlib import Path;sys.path.insert(0,'+repr(str(ROOT/'scripts/infra'))+');'
                 'import infra_one_pass as m;m.MOUNT=Path('+repr(str(mount))+');m.TARGET=Path('+repr(str(target))+');'
-                'm.HDD_UUID='+repr(identity)+';m.HDD_RESERVE=2*1024**2;m.LIMIT=2*1024**2;'
+                'm.HDD_UUID='+repr(identity)+';m.HDD_RESERVE=2*1024**2;m.LIMIT=32*1024**2;'
                 'm.KEY=Path('+repr(str(key))+');m.RECIPIENTS=Path('+repr(str(recipients))+');'
-                'm.LOCKS=('+repr(str(lock).lstrip('/'))+',);m.SCOPE=('+repr(str(source).lstrip('/'))+',);'
+                'm.LOCKS=('+repr(str(lock).lstrip('/'))+',);m.SCOPE=('+repr(str(source).lstrip('/'))+',"var/lib/ustar-code-hardening/state.json");'
                 'm.CONTROLLERS={'+repr(str(source).lstrip('/'))+':'+repr(hashlib.sha256(source.read_bytes()).hexdigest())+'};'
                 'store=m.Store(Path('+repr(str(statebase))+'));print(json.dumps(m.backup_controls(store,m.Host(store))))')
             producer_argv=['systemd-run','--quiet','--wait','--pipe','--collect',
@@ -81,9 +95,9 @@ with tempfile.TemporaryDirectory(prefix='ustar-infra-native-') as directory:
                 '--property=ReadWritePaths='+str(target)+' '+str(statebase),
                 '/usr/bin/python3','-I','-B','-c',producer]
             receipt=json.loads(run(producer_argv).stdout)
-            assert receipt['readback_verified'] and receipt['phase']=='complete' and receipt['files']==1
+            assert receipt['readback_verified'] and receipt['phase']=='complete' and receipt['files']==2
             assert Path(receipt['archive']).stat().st_mode&0o777==0o600
-            print('INFRA_COMPANION_SERVICE=PASS; real restricted systemd service; real flock/age/manifest/readback')
+            print('INFRA_COMPANION_SERVICE=PASS; real restricted systemd service; real flock/age/manifest/readback; synthetic 21665285-byte hardening state included')
         finally:
             for path in reversed(created):(path/'state.json').unlink();path.rmdir()
             import shutil

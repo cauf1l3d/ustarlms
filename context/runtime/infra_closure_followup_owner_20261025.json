@@ -131,7 +131,7 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "qualify Compose source privacy adapter, then owner check/apply and existing encrypted companion; no Docker/SSH mutation",
+  "next": "owner qualified source-only privacy check/apply/companion readback; actual Docker recreation lifecycle remains open; no SSH or repeated profile probes",
   "workstation_key_login": {
     "status": "explicitly_deferred_by_owner_until_external_access_preparation",
     "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
@@ -306,6 +306,7 @@
     "plain_environment_values_not_supplied": true,
     "specific_secret_literal_or_leak_not_established": true,
     "owner_permission_apply_performed": false,
-    "next": "targeted source0644_to0600 preserving UID/GID1000 and bytes; qualification pending; actual log recreation lifecycle remains separate"
+    "next": "qualified source privacy adapter20d282e9 owner check/apply, then existing encrypted companion; owner apply not yet received",
+    "qualification": "context/runtime/compose_source_privacy_qualification_20261025.json"
   }
 }

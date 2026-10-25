@@ -20,13 +20,13 @@ current_infrastructure_checkpoint:
   Caddy2019: local_admin_API_and_separate_IPv6_HTTP_static_listener_classified
   deferred_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
   access_scope: owner_accepts_LAN_login_password_defers_SSH_hardening_until_external_access
-  next_local_runbook: context/runtime/infra_docker_profile_metadata_20261025.md
+  next_local_runbook: context/runtime/compose_source_privacy_20261025.md
   compose_origin: owner_project_stack_services_moodle_postgres_source_opt_ustar_apps_stack
   source_model_equivalence: actual_profile_received_live_equivalence_unverified
   compose_privacy_plan: context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md
-  compose_privacy_status: local_pass_native_UID_CI_pending_not_applied
+  compose_privacy_status: qualified15_native_saved_download_verified_owner_apply_pending
   workstation_key_login: explicitly_deferred_no_probes_now
-  next: qualify_source_privacy_adapter_then_owner_mode_only_apply_and_existing_companion_capture
+  next: owner_qualified_source_mode_only_apply_and_existing_companion_capture_then_Docker_identity_lifecycle
   retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
   production_mutation_scope: owner DB app_role_active/code_hardened/legacy22 archive and local_batch_applied69export modes,261file encrypted controls,timer; no new journal policy

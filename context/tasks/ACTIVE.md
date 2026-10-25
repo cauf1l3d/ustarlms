@@ -1,5 +1,23 @@
 # Активные задачи USTAR
 
+**25Oct — source privacy adapter qualified; verified package/owner apply next.**
+Adapter20d282e9(7874B),source dbee1d31: Review40217322352/Context40217322350 SUCCESS.
+Actual UID1000/33 runtime121241183532:15/15/no skips,read/deployer/denial/private copy
+and recovery guards PASS. Core43/43/no skips; both source1204/227environment skips/
+browser PASS; PG16 job121243404387 native guards PASS. Saved ZIP4778B/SHAd4a5350e,
+CRC/member hashes/extraction/compile/default and saved-download readback verified.
+New owner action only actual Compose904B/SHA41de2ed3/UID1000:0644→0600, preserving
+owner/bytes/inode/mtime/parents. Private source+adapter+single-row metadata under
+code-hardening/compose-source auto included by existing encrypted companion; call
+its backup-host-state only, never repeat old apply. No owner apply receipt yet.
+Actual log rotation/health/frozen-ID lifecycle still open; Moodle source has build.
+Source-copy generation is fixed, not continuous tracking of future source edits;
+no whole-host/offsite/external restore claim. Installed5067163f/controllers unchanged.
+SSH/key/firewall deferred,current LAN login/password accepted,UPS present,copies
+handed over/external restore explicitly unknown; no repeat prompts or old stands.
+0agents/no agent SSH/provider sends/main merge. Next:
+context/runtime/compose_source_privacy_20261025.md; qualification nearby.
+
 **25Oct — actual Compose profile received; targeted source read privacy prepared.**
 Source904B/SHA41de2ed3,UID/GID1000:1000/mode0644; .env absent. Both services have no
 source logging/healthcheck; Moodle build+image,PG3environment entries (values not

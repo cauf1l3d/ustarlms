@@ -50,7 +50,9 @@ class Privacy(unittest.TestCase):
         result = self.run_action('check')
         self.assertEqual(result['phase'], 'ready_for_compose_source_privacy')
         self.assertFalse(self.base.exists())
-        self.assertEqual(self.path.stat(), before)
+        after = self.path.stat()
+        fields = ('st_dev', 'st_ino', 'st_uid', 'st_gid', 'st_mode', 'st_size', 'st_mtime_ns')
+        self.assertEqual(tuple(getattr(after, k) for k in fields), tuple(getattr(before, k) for k in fields))
 
     def test_apply_preserves_bytes_inode_owner_mtime_and_parent_permissions(self):
         before = self.path.stat()

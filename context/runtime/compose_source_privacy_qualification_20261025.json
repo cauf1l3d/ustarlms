@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "kind": "compose_source_privacy_qualification",
-  "status": "local_pass_native_UID_CI_pending_not_delivered_not_applied",
+  "status": "qualified_targeted_native_and_full_review_saved_download_verified_owner_apply_next",
   "source_sha256": "20d282e9b24dcc141691271e6477ddc1f24a17979f27c87f94e0294294d70fdb",
   "source_bytes": 7874,
   "core_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
@@ -29,14 +29,61 @@
     "test_first_claim_scope": "initial13 only; two pinned-loader guard checks added afterward"
   },
   "CI": {
-    "status": "pending",
+    "source_commit": "dbee1d31d5e268299d292c663adb4c7c5d567307",
+    "review_run": 40217322352,
+    "review_conclusion": "success",
+    "context_run": 40217322350,
+    "context_conclusion": "success",
+    "runtime_job": 121241183532,
+    "runtime_conclusion": "success",
     "strict_native_environment": "USTAR_REQUIRE_INFRA_NATIVE=1",
+    "adapter_tests": 15,
+    "adapter_skips": 0,
     "required_marker": "COMPOSE_SOURCE_UID_BOUNDARY=PASS",
-    "existing_runtime_job_extended": true,
-    "production_access": false
+    "core_tests": 43,
+    "core_skips": 0,
+    "source_jobs": {
+      "PHP8.2": 121241183625,
+      "PHP8.3": 121241183710
+    },
+    "source_conclusions": "success",
+    "both_source_tests": 1204,
+    "both_source_environment_skips": 227,
+    "source_checks": {
+      "PHP": 386,
+      "JS": 24,
+      "tables": 100,
+      "templates": 57
+    },
+    "browser": "success_both_source_jobs",
+    "PG16_job": 121243404387,
+    "PG16_conclusion": "success",
+    "PG16_native_markers": [
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS",
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+      "CON02_UPDATE_NATIVE=PASS"
+    ],
+    "production_access": false,
+    "tests_scope": "synthetic source and controls/real Unix UID1000 and33, not owner production execution"
   },
   "owner_apply_performed": false,
   "active_logging_rotation_claimed": false,
   "author_self_review": true,
-  "subagents": 0
+  "subagents": 0,
+  "source_commit": "dbee1d31d5e268299d292c663adb4c7c5d567307",
+  "qualified_at_utc": "2026-10-25T17:59:09.002260+00:00",
+  "delivery": {
+    "library_file_id": "libfile_da976d82c120819188728a03a9485cf6",
+    "file_id": "file_000000002be0821183119947df65e483",
+    "file_name": "ustar-compose-source-privacy-20261025.zip",
+    "version": 0,
+    "archive_sha256": "d4a5350e84b9a809f8571da92a6369836cf616421fc9a87db9bd6729b4ab368a",
+    "archive_bytes": 4778,
+    "script_sha256": "20d282e9b24dcc141691271e6477ddc1f24a17979f27c87f94e0294294d70fdb",
+    "script_bytes": 7874,
+    "saved_download_verified": true
+  },
+  "post_qualification_test_only_refinement": "read-only stat comparison excludes access time (reads can update atime); executable bytes unchanged; local15tests/1UID namespace skip PASS",
+  "backup_limit": "private copy of accepted41de2ed3 generation; future live source edits are not automatically tracked; no whole-host/offsite claim"
 }

@@ -4,8 +4,8 @@
 SHA41de2ed3,owner1000:1000/0644, .env absent. Both source logging/healthcheck absent;
 Moodle image+build, PG3 environment entries, values not supplied. [Receipt](infra_closure_followup_owner_20261025.json#Docker_Compose_profile).
 Следующий [targeted source privacy plan](../proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md)
-и [qualification](compose_source_privacy_qualification_20261025.json): native CI пока pending,
-не применять до готового verified package. Ни Docker recreation, ни source logging change.
+и [qualification](compose_source_privacy_qualification_20261025.json):15native/no skips PASS;
+[готовый verified package/owner block](compose_source_privacy_20261025.md). Ни Docker recreation, ни source logging change.
 Команда и прежний next-step wording ниже — история.
 
 Owner labels подтверждают creation origin обоих контейнеров: project stack,

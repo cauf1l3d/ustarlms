@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "kind": "infra_one_pass_component_qualification",
-  "status": "state_size_fix_CI_pending_owner_retry_pending",
+  "status": "qualified_state_size_fix_owner_retry_pending",
   "owner_apply_performed": false,
   "author_review": true,
   "subagents": 0,
@@ -16,28 +16,16 @@
     ]
   },
   "local": {
-    "targeted_tests": 29,
-    "passed": 28,
-    "skipped": 1,
-    "skip": "real age unavailable locally; mandatory runtime CI must not skip",
+    "targeted_tests": 37,
+    "passed": 35,
+    "skipped": 2,
+    "skips": [
+      "age unavailable locally; mandatory runtime CI must not skip",
+      "UID1000 not mapped locally; mandatory runtime CI must not skip"
+    ],
     "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
-    "full_suite": {
-      "tests": 1171,
-      "errors": 5,
-      "skipped": 59,
-      "failure_names": [
-        "test_connect_bridge_activation.Build.test_exact_bundle_is_repeatable_plan_only_and_rejects_tampering",
-        "test_connect_private_bridge.BuildPackage.test_exact_git_package_is_deterministic_plan_only_and_detects_corruption",
-        "test_harness.Boundary.test_all_tools_use_reader",
-        "test_harness.Boundary.test_audit_pointer_cannot_escape_boundary",
-        "test_stdio import"
-      ],
-      "environment_causes": [
-        "fixture Git objects unavailable in local worktree",
-        "mcp package unavailable locally"
-      ],
-      "PHP": "not installed locally; verified in CI source matrix"
-    }
+    "full_source_suite": "Both source jobs run1183/207environment skips; success",
+    "previous_local_full_suite_errors": "Preserved by name in predecessor_qualification.local.full_suite; not a current CI failure"
   },
   "limits": [
     "No production SSH or live coordinator execution",
@@ -46,70 +34,75 @@
     "No independent review agent; author review only",
     "Control companion and standard business-data backup have independent capture times; generation/identity compatibility and clean-host restore remain unqualified"
   ],
-  "source_commit": "87941fd918aad464f75f6829f705a20b0b2dfc36",
-  "operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+  "source_commit": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+  "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
   "qualification": {
-    "review_run": 40187026858,
+    "review_run": 40197352367,
     "review_conclusion": "success",
-    "context_run": 40187026890,
+    "context_run": 40197352371,
     "context_conclusion": "success",
     "source_jobs": [
       {
-        "id": 121149903771,
+        "id": 121180966348,
         "PHP": "8.3",
         "conclusion": "success",
-        "python_tests": 1175,
-        "skips": 199
+        "python_tests": 1183,
+        "skips": 207
       },
       {
-        "id": 121149903829,
+        "id": 121180966439,
         "PHP": "8.2",
         "conclusion": "success",
-        "python_tests": 1175,
-        "skips": 199
+        "python_tests": 1183,
+        "skips": 207
       }
     ],
-    "runtime_job": 121149903686,
+    "runtime_job": 121180966531,
     "runtime_conclusion": "success",
-    "targeted_tests": 29,
+    "targeted_tests": 37,
     "targeted_skips": 0,
     "native_markers": [
       "INFRA_EXPORT_ACTUAL_UID=PASS",
-      "INFRA_COMPANION_SERVICE=PASS",
+      "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+      "INFRA_COMPANION_SERVICE=PASS; synthetic21665285B state included",
       "INFRA_HDD_NAMESPACE=PASS",
       "INFRA_ONE_PASS_NATIVE=PASS"
     ],
-    "DB_job": 121150743119,
+    "DB_job": 121181832305,
     "DB_conclusion": "success",
     "DB_markers": [
       "OK (158 tests, 830 assertions)",
       "DB_PRIVILEGES_NATIVE=PASS",
       "DB_APP_HANDOFF_NATIVE=PASS",
-      "INFRA_REMAINING_SURVEY_NATIVE=PASS"
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+      "CON02_UPDATE_NATIVE=PASS"
     ]
   },
   "delivery": {
-    "source": "87941fd918aad464f75f6829f705a20b0b2dfc36",
-    "script_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
-    "script_bytes": 40316,
-    "zip_sha256": "88beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af",
-    "zip_bytes": 15324,
+    "source": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+    "script_name": "ustar-infra-one-pass-20261025-statefix.py",
+    "script_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "script_bytes": 40792,
+    "zip_sha256": "0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e",
+    "zip_bytes": 14319,
     "CRC": true,
+    "member_hashes": true,
     "extracted_default": true,
+    "CI_status": "success",
     "saved_download_readback_verified": true,
-    "ZIP_CRC_verified": true,
-    "extracted_default_offline_verified": true,
-    "downloaded_version": 2
+    "downloaded_version": 3
   },
   "review_regressions": [
     "Completed state rejects original world-readable metadata or missing/old probe managed files",
     "Same-source retry requires exact complete undo and unchanged scope/before images",
-    "Only USTAR exports are modified; .env/.key/unrelated app SQL excluded"
+    "Only USTAR exports are modified; .env/.key/unrelated app SQL excluded",
+    "Protected21665285B state accepted without mutation; >64MiB/unsafe owner/write permissions refused",
+    "Exact pinned predecessor may retry only after complete undo with unchanged scope/before images and absent managed files"
   ],
   "owner_apply_attempted": true,
   "owner_refusal_receipt": "context/runtime/infra_one_pass_owner_20261025.json",
   "state_size_fix": {
-    "status": "CI_pending",
+    "status": "qualified_owner_retry_pending",
     "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
     "operator_bytes": 40792,
     "root_JSON_max_bytes": 67108864,
@@ -138,6 +131,142 @@
       "No production coordinator run by agent",
       "No production journal content received",
       "Owner retry pending"
+    ],
+    "source_commit": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+    "review_run": 40197352367,
+    "review_conclusion": "success",
+    "context_run": 40197352371,
+    "context_conclusion": "success",
+    "runtime_job": 121180966531,
+    "runtime_conclusion": "success",
+    "targeted_tests": 37,
+    "targeted_skips": 0,
+    "source_jobs": [
+      {
+        "id": 121180966348,
+        "PHP": "8.3",
+        "conclusion": "success",
+        "python_tests": 1183,
+        "skips": 207
+      },
+      {
+        "id": 121180966439,
+        "PHP": "8.2",
+        "conclusion": "success",
+        "python_tests": 1183,
+        "skips": 207
+      }
+    ],
+    "native_markers": [
+      "INFRA_EXPORT_ACTUAL_UID=PASS",
+      "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+      "INFRA_COMPANION_SERVICE=PASS; synthetic21665285B state included",
+      "INFRA_HDD_NAMESPACE=PASS",
+      "INFRA_ONE_PASS_NATIVE=PASS"
+    ],
+    "DB_job": 121181832305,
+    "DB_conclusion": "success",
+    "delivery": {
+      "source": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+      "script_name": "ustar-infra-one-pass-20261025-statefix.py",
+      "script_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+      "script_bytes": 40792,
+      "zip_sha256": "0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e",
+      "zip_bytes": 14319,
+      "CRC": true,
+      "member_hashes": true,
+      "extracted_default": true,
+      "CI_status": "success",
+      "saved_download_readback_verified": true,
+      "downloaded_version": 3
+    },
+    "DB_markers": [
+      "OK (158 tests, 830 assertions)",
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS",
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+      "CON02_UPDATE_NATIVE=PASS"
     ]
+  },
+  "predecessor_qualification": {
+    "source_commit": "87941fd918aad464f75f6829f705a20b0b2dfc36",
+    "operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+    "qualification": {
+      "review_run": 40187026858,
+      "review_conclusion": "success",
+      "context_run": 40187026890,
+      "context_conclusion": "success",
+      "source_jobs": [
+        {
+          "id": 121149903771,
+          "PHP": "8.3",
+          "conclusion": "success",
+          "python_tests": 1175,
+          "skips": 199
+        },
+        {
+          "id": 121149903829,
+          "PHP": "8.2",
+          "conclusion": "success",
+          "python_tests": 1175,
+          "skips": 199
+        }
+      ],
+      "runtime_job": 121149903686,
+      "runtime_conclusion": "success",
+      "targeted_tests": 29,
+      "targeted_skips": 0,
+      "native_markers": [
+        "INFRA_EXPORT_ACTUAL_UID=PASS",
+        "INFRA_COMPANION_SERVICE=PASS",
+        "INFRA_HDD_NAMESPACE=PASS",
+        "INFRA_ONE_PASS_NATIVE=PASS"
+      ],
+      "DB_job": 121150743119,
+      "DB_conclusion": "success",
+      "DB_markers": [
+        "OK (158 tests, 830 assertions)",
+        "DB_PRIVILEGES_NATIVE=PASS",
+        "DB_APP_HANDOFF_NATIVE=PASS",
+        "INFRA_REMAINING_SURVEY_NATIVE=PASS"
+      ]
+    },
+    "delivery": {
+      "source": "87941fd918aad464f75f6829f705a20b0b2dfc36",
+      "script_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+      "script_bytes": 40316,
+      "zip_sha256": "88beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af",
+      "zip_bytes": 15324,
+      "CRC": true,
+      "extracted_default": true,
+      "saved_download_readback_verified": true,
+      "ZIP_CRC_verified": true,
+      "extracted_default_offline_verified": true,
+      "downloaded_version": 2
+    },
+    "local": {
+      "targeted_tests": 29,
+      "passed": 28,
+      "skipped": 1,
+      "skip": "real age unavailable locally; mandatory runtime CI must not skip",
+      "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
+      "full_suite": {
+        "tests": 1171,
+        "errors": 5,
+        "skipped": 59,
+        "failure_names": [
+          "test_connect_bridge_activation.Build.test_exact_bundle_is_repeatable_plan_only_and_rejects_tampering",
+          "test_connect_private_bridge.BuildPackage.test_exact_git_package_is_deterministic_plan_only_and_detects_corruption",
+          "test_harness.Boundary.test_all_tools_use_reader",
+          "test_harness.Boundary.test_audit_pointer_cannot_escape_boundary",
+          "test_stdio import"
+        ],
+        "environment_causes": [
+          "fixture Git objects unavailable in local worktree",
+          "mcp package unavailable locally"
+        ],
+        "PHP": "not installed locally; verified in CI source matrix"
+      }
+    }
   }
 }

@@ -2,7 +2,9 @@
 
 25Oct: owner batch1bb1f693 refused `unsafe_root_json`; no acceptance of this batch.
 Hardening state21665285B/root0600 exceeded reader16MiB. Corrected64MiB reader and
-guarded pinned predecessor retry are in qualification. [Owner receipt](infra_one_pass_owner_20261025.json).
+guarded pinned predecessor retry qualified on e15c696c: Review40197352367/Context40197352371
+SUCCESS, root37/37/no skips and real restricted-service encrypted readback of the
+observed synthetic byte count. Owner retry pending. [Owner receipt](infra_one_pass_owner_20261025.json).
 
 Отчёт01:50:08–01:50:21UTC принят; collector SHA0d5d05fc совпал. Его exact-source
 Review40151717494/Context40151717558 SUCCESS, existing PG16 native121045127545

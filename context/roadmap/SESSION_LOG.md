@@ -1,17 +1,20 @@
 # Журнал выполнения roadmap
 
-**25Oct16:20MSK — owner local batch refused unsafe_root_json; size fix in qualification.**
-Owner metadata: code journal21665285B, DB809387B, own15657B; all root0:0/0600.
-Cause confirmed: reader16MiB versus accepted producer48/64MiB bounds. Old source879
-CI success did not exercise production-sized state. Corrected reader64MiB retains
-owner/write/link/xattr guards and192MiB aggregate bound. Pinned predecessor1bb1f693
-may retry only complete metadata_restored with exact before images/scope and no
-remaining managed files; no journal deletion/rebaseline. Local37tests35PASS/2local
-age/UID namespace skips; mandatory root/native CI pending, no new apply command yet.
-Owner refusal is not local_batch_applied; all8 remain open per closure matrix.
-Old DB/code/SSD/Moodle/OS/HTTPS/backup/Connect acceptance reused, 0agents/SSH/sends/
-main merge. Receipt context/runtime/infra_one_pass_owner_20261025.json; qualification
-context/runtime/infra_one_pass_qualification_20261025.json.
+**25Oct16:34MSK — state-size fix e15c696c qualified; guarded owner retry next.**
+Owner SHA1bb1f693 apply refused unsafe_root_json; code journal21665285B/DB809387B/
+own15657B, all root0:0/0600. Reader corrected16→64MiB matching accepted capture;
+original journals untouched. Source e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f,
+Review40197352367/Context40197352371 SUCCESS. Both PHP1183/207skips/browser PASS;
+root runtime 121180966531: 37/37, no skips, real age/flock/HDD namespaces, actualUID1000
+predecessor retry and restricted-service encrypted readback of synthetic21665285B
+state PASS. PG16 job 121181832305: 158 tests/830 assertions + DB privilege/handoff/survey/native PASS.
+Operator SHAb9c0bee6: only same source/pinned1bb1f693 may retry exact complete
+metadata_restored, unchanged exports before images/scope, all managed paths absent.
+ZIP v3/hash/CRC/member hashes/extracted default and saved download verified. Transfer
+only statefix.py, leave server ZIP/dumps unchanged for retry guards. Owner retry and
+local_batch_applied still pending; all8 not closed. Old DB/code/SSD/Moodle/OS/HTTPS/
+backup/Connect stands reused;0agents/SSH/provider sends/main merge. Runbook/receipt:
+context/runtime/infra_one_pass_20261025.md and infra_one_pass_owner_20261025.json.
 
 **25Oct — local infrastructure batch87941fd9 prepared; owner apply pending.**
 Owner survey01:50UTC/SHA0d5d05fc accepted; old DB/code/SSD/Moodle/OS/HTTPS/backup/

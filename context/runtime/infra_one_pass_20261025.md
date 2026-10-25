@@ -1,7 +1,11 @@
 # Единый локальный инфраструктурный пакет25Oct2026
 
 Текущий state-size fix SHA256
-`b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19` (40792B), CI pending.
+`b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19` (40792B).
+Source e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f: Review40197352367/Context40197352371
+SUCCESS. Both PHP1183/207environment skips/browser PASS; root runtime 121180966531: 37/37, no skips,
+actualUID1000 predecessor retry and restricted-service real age readback of synthetic
+21665285B state PASS. PG16 job 121181832305: 158 tests/830 assertions + privilege/handoff/survey PASS.
 Первый apply SHA1bb1f693 отказал `unsafe_root_json`: hardening journal21665285B,
 DB809387B, own15657B; все root0:0/0600. Это несовпадение16MiB читателя с accepted
 48MiB producer/64MiB capture. Reader64MiB, per-file64MiB и aggregate192MiB bounded;
@@ -11,7 +15,7 @@ PG16 job121150743119 PASS, but its fixture did not cover the observed journal si
 Исправленная версия допускает ровно predecessor1bb1f693 только после полной
 metadata_restored с прежними exports before images/scope и отсутствием всех своих
 managed files. Old/new SHA сохраняются в private state. Журналы не удалять/не менять.
-Следующий owner retry разрешён после qualification; текущий пакет ещё не применён.
+Qualification завершена; следующий шаг — guarded owner retry, пакет ещё не принят на production.
 [Qualification/limits](infra_one_pass_qualification_20261025.json).
 
 Пакет защищает архивы/дампы USTAR с сохранением owner/bytes и metadata-only undo,
@@ -21,7 +25,7 @@ reason и measured fresh service snapshot; иначе explicit unresolved/rollba
 Проверяются cron receipt, deduplicated listeners и TLS leaf. Academy не останавливается.
 [Матрица всех8](infra_closure_matrix_20261025.md). Default operator PLAN_ONLY.
 
-После qualification скачать текущий ZIP на свой компьютер, извлечь и перенести в
+Скачать исправленный текущий ZIP на свой компьютер, извлечь и перенести в
 `/home/aduk` только `ustar-infra-one-pass-20261025-statefix.py`. Существующие ZIP/дампы
 на сервере оставить с исходными bytes/metadata: exact retry guard проверяет scope и
 before images; новая/заменённая ZIP копия внутри home изменила бы эту выборку.
@@ -72,4 +76,7 @@ backup или atomic recovery pair; сверка generation/identity и clean-ho
 
 Historical delivery v2 ZIP15324B/SHA88beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af
 passed download/CRC/default checks but contained the incompatible16MiB reader.
-Updated delivery/readback qualification pending; v2 is superseded, not a retry fix.
+Current delivery v3 ZIP14319B/SHA256
+0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e:
+CRC/member hashes/extracted script SHA/default PLAN_ONLY и saved download readback PASS.
+Version2 superseded. Production success still requires local_batch_applied receipt.

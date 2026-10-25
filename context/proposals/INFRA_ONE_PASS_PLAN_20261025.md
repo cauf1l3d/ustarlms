@@ -6,7 +6,9 @@ bound; retain192MiB aggregate. Support one pinned predecessor only after exact c
 undo; preserve prior/successor SHA, exports and before images. Do not delete journals
 or alter original hardening/DB state. Real root service fixture must read/encrypt
 a synthetic journal of the observed size, and actualUID1000 must survive retry/undo.
-37focused cases35PASS/2local environment skips; root/native CI pending.
+Source e15c696c Review40197352367/Context40197352371 SUCCESS; both1183/207skips;
+37/37 mandatory root/no skips, actualUID1000 retry and restricted-service real age
+readback of synthetic21665285B state PASS. Owner guarded retry pending.
 
 Owner: application appears to work after code_hardened; asks to close the eight
 remaining infrastructure categories quickly in one pass. Native author execution,

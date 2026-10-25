@@ -474,3 +474,131 @@ class DeployerBoundary(unittest.TestCase):
             self.assertEqual(read_as(1000,source),0)
             self.assertEqual(source.read_bytes(),b'PRIVATE_ORIGINAL\n')
             print('DOCKER_RUNTIME_DEPLOYER_BOUNDARY=PASS')
+
+
+class RuntimeEdges(unittest.TestCase):
+    def test_staged_successor_requires_restart_no_and_active_requires_original_policy(self):
+        m=module(self);old=row('ustar_moodle');new=Compose().successor()
+        new['HostConfig']['RestartPolicy']={'Name':'no','MaximumRetryCount':0}
+        m.verify_successor(old,new,CHILDREN,PROJECT,GEN,staged=True)
+        with self.assertRaises(m.Refusal):m.verify_successor(old,new,CHILDREN,PROJECT,GEN)
+        new['HostConfig']['RestartPolicy']={'Name':'always','MaximumRetryCount':0}
+        with self.assertRaises(m.Refusal):m.verify_successor(old,new,CHILDREN,PROJECT,GEN,staged=True)
+
+    def test_snapshot_api_refuses_running_source_and_checks_returned_layer_lineage(self):
+        m=module(self);self.assertTrue(hasattr(m.DockerAPI,'snapshot'),'stopped runtime snapshot missing')
+        api=m.DockerAPI();parent,child,old=snapshot('ustar_moodle');old['State']={'Running':False}
+        seen=[]
+        def call(method,path,data=None,**kw):
+            seen.append((method,path,copy.deepcopy(data)))
+            if method=='POST':return {'Id':CHILDREN['ustar_moodle']}
+            raise AssertionError('unexpected request')
+        api.call=call;api.inspect=lambda name:copy.deepcopy(old)
+        api.image=lambda image,**kw: (None if kw.get('missing') else parent) if image!=CHILDREN['ustar_moodle'] else child
+        self.assertEqual(api.snapshot(old,'ustar_moodle',GEN),CHILDREN['ustar_moodle'])
+        self.assertEqual(len(seen),1)
+        self.assertIn('/commit?',seen[0][1]);self.assertEqual(seen[0][2]['Env'],old['Config']['Env'])
+        old['State']['Running']=True;seen.clear()
+        with self.assertRaises(m.Refusal):api.snapshot(old,'ustar_moodle',GEN)
+        self.assertEqual(seen,[])
+
+    def test_current_cron_binding_keeps_unrelated_state_and_rejects_changed_old_identity(self):
+        m=module(self);self.assertTrue(hasattr(m,'cron_binding'),'typed cron handoff missing')
+        source=Pins().source();old={n:{'id':row(n)['Id'],'image':PARENTS[n]} for n in PARENTS}
+        new={n:{'id':('3' if n=='ustar_moodle' else '4')*64,'image':CHILDREN[n]} for n in PARENTS}
+        state={'schema':1,'script_sha256':m.sha(source),'versions':{'local_ustar':'2026102300'},
+            'containers':copy.deepcopy(old),'created_utc':'retained-owner-receipt','other_field':'PRESERVED'}
+        updated=m.cron_binding(source,m.patch_images(source,PARENTS,CHILDREN),state,old,new)
+        self.assertEqual(updated['containers'],new);self.assertEqual(updated['other_field'],'PRESERVED')
+        self.assertEqual(updated['created_utc'],state['created_utc'])
+        state['containers']['ustar_moodle']['id']='9'*64
+        with self.assertRaises(m.Refusal):m.cron_binding(source,source,state,old,new)
+
+    def test_unowned_current_container_refuses_before_recovery_mutates_anything(self):
+        m=module(self);self.assertTrue(hasattr(m,'RuntimeHost'),'runtime host boundary missing')
+        rows={n:row(n) for n in PARENTS}
+        foreign=Compose().successor();foreign['Config']['Labels']['org.ustar.runtime.generation']='9'*32
+        class API:
+            def inspect(self,name,**kw):return foreign if name=='ustar_moodle' else rows['ustar_postgres']
+            def call(self,*args,**kw):raise AssertionError('must refuse before mutation')
+        class Controls:
+            def quiesce(self,state):raise AssertionError('must validate objects first')
+        host=m.RuntimeHost(None,API(),Controls(),None)
+        with self.assertRaises(m.Refusal):host.recover({'generation':GEN,'before':{'containers':rows},'images':CHILDREN})
+
+    def test_recovery_disconnects_a_successor_parked_before_an_interrupted_response(self):
+        m=module(self);rows={n:row(n) for n in PARENTS};events=[]
+        old=copy.deepcopy(rows);new=Compose().successor()
+        for n,v in old.items():v['Name']='/'+m.RuntimeHost.retained({'generation':GEN},n);v['State']={'Running':False}
+        new['Name']='/'+m.RuntimeHost.retained({'generation':GEN},'ustar_moodle',successor=True)
+        new['State']={'Running':False};new['Config']['Labels'].update({
+            'com.docker.compose.service':'moodle','org.ustar.runtime.source-container':rows['ustar_moodle']['Id']})
+        objects={v['Id']:v for v in list(old.values())+[new]}
+        class API:
+            def inspect(self,name,*,missing=False):
+                found=next((v for k,v in objects.items() if k==name or v['Name']=='/'+name),None)
+                if found is None and not missing:raise AssertionError('required object missing')
+                return copy.deepcopy(found)
+            def policy(self,identity,policy):objects[identity]['HostConfig']['RestartPolicy']=policy
+            def stop(self,identity):objects[identity]['State']['Running']=False
+            def rename(self,identity,name):objects[identity]['Name']='/'+name
+            def disconnect(self,identity):events.append(('disconnect',identity));objects[identity]['NetworkSettings']['Networks']={}
+            def reconnect(self,before):events.append(('reconnect',before['Id']))
+            def start(self,identity):objects[identity]['State']['Running']=True
+        class Controls:
+            def quiesce(self,state):pass
+            def cold(self):pass
+            def restore_files(self,state):pass
+            def ready(self,*args):pass
+            def verify(self,*args,**kw):pass
+            def resume(self,*args,**kw):pass
+        class Store:
+            def load(self):return copy.deepcopy(state)
+            def save(self,value):state.update(value)
+        state={'generation':GEN,'before':{'containers':rows},'images':CHILDREN,
+            'new_containers':{'ustar_moodle':new['Id']}}
+        host=m.RuntimeHost(Store(),API(),Controls(),None);host.recover(state)
+        self.assertIn(('disconnect',new['Id']),events)
+        self.assertLess(events.index(('disconnect',new['Id'])),events.index(('reconnect',rows['ustar_postgres']['Id'])))
+        self.assertTrue(all(objects[v['Id']]['State']['Running'] for v in rows.values()))
+
+
+class ArchiveContract(unittest.TestCase):
+    def test_image_archive_boundary_exists_without_enabling_the_cli(self):
+        m=module(self);self.assertTrue(hasattr(m,'RuntimeArchive'),'encrypted snapshot archive missing')
+
+    def test_bounded_stream_readback_rejects_changed_payload_and_excess_size(self):
+        import io
+        m=module(self);self.assertTrue(hasattr(m,'stream_digest'),'bounded image stream verifier missing')
+        payload=b'PRIVATE_IMAGE_BYTES'*17000
+        expected=m.stream_digest(io.BytesIO(payload),limit=len(payload))
+        self.assertEqual(expected,{'bytes':len(payload),'sha256':m.sha(payload)})
+        with self.assertRaises(m.Refusal):m.stream_digest(io.BytesIO(payload),limit=len(payload)-1)
+        with self.assertRaises(m.Refusal):m.stream_digest(io.BytesIO(payload+b'x'),expected=expected,limit=len(payload)+1)
+
+    def test_actual_age_readback_controls_and_cipher_corruption(self):
+        import shutil,subprocess
+        m=module(self);self.assertTrue(hasattr(m,'RuntimeArchive'),'encrypted snapshot archive missing')
+        if not shutil.which('age') or not shutil.which('age-keygen'):
+            if os.environ.get('USTAR_REQUIRE_INFRA_NATIVE')=='1':self.fail('actual age required')
+            self.skipTest('actual age is required in the existing strict runtime CI')
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);key=root/'recovery.key';recipients=root/'recipients.txt'
+            subprocess.run(['age-keygen','-o',str(key)],check=True,capture_output=True)
+            recipients.write_bytes(subprocess.check_output(['age-keygen','-y',str(key)]));recipients.chmod(0o600)
+            base=root/'private';base.mkdir(mode=0o700)
+            store=m.PrivateStore(base,pinned_core);store.create(GEN,b'PRIVATE_OPERATOR',{})
+            target=root/'hdd';target.mkdir(mode=0o700)
+            save=lambda value:[sys.executable,'-I','-B','-c',"import sys;sys.stdout.buffer.write(b'PRIVATE_SNAPSHOT'*20000)"]
+            archive=m.RuntimeArchive(store,pinned_core,target,recipients,key,save,limit=4*1024**2,reserve=0)
+            state=store.load();state.update(images=CHILDREN)
+            receipt=archive.write(state)
+            self.assertTrue(receipt['readback_verified']);self.assertFalse(receipt['recovery_key_included'])
+            self.assertEqual(set(receipt['files']),{'images','controls'})
+            self.assertEqual(list(base.glob('*.tar')),[])
+            image=target/receipt['files']['images']['name']
+            raw=image.read_bytes();image.write_bytes(raw[:-1]+bytes([raw[-1]^1]))
+            with self.assertRaises(m.Refusal):archive.verify_image(image,receipt['image_stream'])
+            self.assertTrue(image.exists(),'corrupt evidence must be retained')
+            self.assertNotIn('PRIVATE',json.dumps(receipt))
+            print('DOCKER_RUNTIME_AGE_READBACK=PASS')

@@ -148,7 +148,7 @@ def compose_model(containers,children,project,generation,source_model):
         result['services'][short]=item
     return result
 
-def verify_successor(before,after,children,project,generation):
+def verify_successor(before,after,children,project,generation,*,staged=False):
     images(children)
     service=next((n for n,v in children.items() if v==after.get('Image')),None)
     require(service is not None and before.get('Name')==after.get('Name') and before.get('Id')!=after.get('Id'),
@@ -170,7 +170,9 @@ def verify_successor(before,after,children,project,generation):
             for m in row['Mounts']),key=lambda m:m['Destination'])
     require(mounts(before)==mounts(after),'successor_bind_changed')
     require(bindings(before)==bindings(after),'successor_ports_changed')
-    ignored={'LogConfig','Binds','Mounts','PortBindings'}
+    if staged:
+        require(after['HostConfig'].get('RestartPolicy')=={'Name':'no','MaximumRetryCount':0},'successor_staging_policy')
+    ignored={'LogConfig','Binds','Mounts','PortBindings'}|({'RestartPolicy'} if staged else set())
     def host(row):return {k:v for k,v in row['HostConfig'].items() if k not in ignored}
     require(host(before)==host(after),'successor_host_configuration_changed')
     require(before.get('Path')==after.get('Path') and before.get('Args')==after.get('Args'),'successor_execution_changed')
@@ -386,6 +388,62 @@ class DockerAPI:
 
     def image(self,name,*,missing=False):return self.call('GET','/images/'+quote(name,safe='')+'/json',missing=missing)
 
+    def snapshot(self,before,service,generation):
+        now=self.inspect(before['Id'])
+        require(now.get('Id')==before['Id'] and now.get('Image')==before['Image']
+            and now.get('State',{}).get('Running') is False,'snapshot_source_not_stopped')
+        require(process(now['Config'])==process(before['Config']),'snapshot_source_process_drift')
+        tag='ustar-runtime-snapshot:'+generation+'-'+service
+        child=self.image(tag,missing=True)
+        if child is None:
+            config=copy.deepcopy(before['Config']);labels=config.get('Labels') or {}
+            labels.update({SNAPSHOT_PREFIX+k:v for k,v in {'generation':generation,
+                'source-container':before['Id'],'source-image':before['Image'],'service':service}.items()})
+            config['Labels']=labels
+            query=urlencode({'container':before['Id'],'repo':'ustar-runtime-snapshot',
+                'tag':generation+'-'+service,'pause':'false'})
+            response=self.call('POST','/commit?'+query,config,timeout=240)
+            require(re.fullmatch('sha256:[a-f0-9]{64}',response.get('Id','')),'snapshot_response_identity')
+            child=self.image(response['Id'])
+        return snapshot_lineage(self.image(before['Image']),child,before,generation,service)
+
+    def policy(self,identity,policy):
+        self.call('POST','/containers/'+quote(identity,safe='')+'/update',{'RestartPolicy':policy})
+
+    def stop(self,identity):
+        row=self.inspect(identity)
+        if row['State']['Running']:self.call('POST','/containers/'+quote(identity,safe='')+'/stop?t=45',timeout=55)
+        row=self.inspect(identity)
+        require(not row['State']['Running'] and not row['State'].get('OOMKilled')
+            and row['State'].get('ExitCode',0) in (0,143),'runtime_clean_stop_failed')
+
+    def start(self,identity):
+        if not self.inspect(identity)['State']['Running']:
+            self.call('POST','/containers/'+quote(identity,safe='')+'/start',timeout=60)
+
+    def rename(self,identity,name):
+        if self.inspect(identity)['Name']!='/'+name:
+            require(self.inspect(name,missing=True) is None,'runtime_name_occupied')
+            self.call('POST','/containers/'+quote(identity,safe='')+'/rename?'+urlencode({'name':name}))
+
+    def disconnect(self,identity):
+        for network in list(self.inspect(identity)['NetworkSettings']['Networks']):
+            self.call('POST','/networks/'+quote(network,safe='')+'/disconnect',{'Container':identity,'Force':False})
+
+    def reconnect(self,before):
+        for network,old in before['NetworkSettings']['Networks'].items():
+            current=self.inspect(before['Id'])['NetworkSettings']['Networks']
+            if network in current:
+                require(current[network].get('NetworkID')==old.get('NetworkID'),'predecessor_network_drift')
+                continue
+            config={k:copy.deepcopy(old[k]) for k in ('Links','DriverOpts','GwPriority') if old.get(k) is not None}
+            config['Aliases']=[v for v in old.get('Aliases') or [] if v not in (before['Id'],before['Id'][:12])]
+            ipam=copy.deepcopy(old.get('IPAMConfig') or {})
+            if old.get('IPAddress'):ipam['IPv4Address']=old['IPAddress']
+            if old.get('GlobalIPv6Address'):ipam['IPv6Address']=old['GlobalIPv6Address']
+            if ipam:config['IPAMConfig']=ipam
+            self.call('POST','/networks/'+quote(network,safe='')+'/connect',{'Container':before['Id'],'EndpointConfig':config})
+
     def clone(self,before,image,service,project,generation,compose_labels):
         require(service in SERVICES and re.fullmatch('sha256:[a-f0-9]{64}',image or '')
             and image!=before.get('Image') and re.fullmatch('[a-f0-9]{32}',generation or '')
@@ -401,7 +459,8 @@ class DockerAPI:
         labels=cfg.get('Labels') or {};labels.update(compose_labels)
         labels.update({'com.docker.compose.project':project,
             'com.docker.compose.service':'moodle' if service=='ustar_moodle' else 'postgres',
-            'com.docker.compose.image':image,'org.ustar.runtime.generation':generation})
+            'com.docker.compose.image':image,'org.ustar.runtime.generation':generation,
+            'org.ustar.runtime.source-container':before['Id']})
         cfg['Labels']=labels;endpoints={}
         for network,old in before['NetworkSettings']['Networks'].items():
             endpoint={k:copy.deepcopy(old[k]) for k in ('IPAMConfig','Links','DriverOpts','GwPriority') if old.get(k) is not None}
@@ -416,6 +475,262 @@ class DockerAPI:
         response=self.call('POST','/containers/create?'+urlencode({'name':before['Name'].removeprefix('/')}),cfg,timeout=120)
         require(isinstance(response,dict) and re.fullmatch('[a-f0-9]{64}',response.get('Id','')),'docker_create_identity')
         return response['Id']
+
+
+def cron_binding(before_raw,after_raw,installation,before,after):
+    require(isinstance(installation,dict) and installation.get('schema')==1
+        and installation.get('script_sha256')==sha(before_raw)
+        and installation.get('containers')==before,'cron_installation_identity_drift')
+    require(set(before)==set(after)==set(SERVICES),'cron_container_inventory')
+    for identities in (before,after):
+        require(all(isinstance(v,dict) and set(v)=={'id','image'}
+            and re.fullmatch('[a-f0-9]{64}',v.get('id',''))
+            and re.fullmatch('sha256:[a-f0-9]{64}',v.get('image','')) for v in identities.values()),
+            'cron_identity_shape')
+    require(after_raw==patch_images(before_raw,{n:v['image'] for n,v in before.items()},
+        {n:v['image'] for n,v in after.items()}),'cron_source_transition_drift')
+    return {**copy.deepcopy(installation),'script_sha256':sha(after_raw),'containers':copy.deepcopy(after)}
+
+
+import subprocess
+
+def stream_digest(source,*,target=None,expected=None,limit=12*1024**3):
+    total=0;digest=hashlib.sha256()
+    while chunk:=source.read(1024**2):
+        total+=len(chunk);require(total<=limit,'runtime_archive_stream_limit')
+        digest.update(chunk)
+        if target is not None:target.write(chunk)
+    result={'bytes':total,'sha256':digest.hexdigest()}
+    require(expected is None or result==expected,'runtime_archive_stream_readback')
+    return result
+
+class RuntimeArchive:
+    """Two authenticated encrypted streams; images are never staged as plaintext."""
+    def __init__(self,store,core,target,recipients,key,save_command,*,anchor=None,
+                 limit=8*1024**3,reserve=8*1024**3):
+        self.store,self.core,self.target=store,core,Path(target)
+        self.recipients,self.key=Path(recipients),Path(key)
+        self.save_command,self.anchor=save_command,anchor
+        self.limit,self.reserve=limit,reserve
+
+    @contextmanager
+    def directory(self):
+        if self.anchor is not None:
+            with self.anchor() as fd:yield fd
+        else:
+            self.core.private_dir(self.target)
+            with self.core.opened(self.target,os.O_RDONLY|os.O_DIRECTORY) as fd:yield fd
+
+    def decrypt(self,fd,verify):
+        os.lseek(fd,0,os.SEEK_SET)
+        process=subprocess.Popen(['/usr/bin/age','--decrypt','--identity',str(self.key)],
+            stdin=fd,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,start_new_session=True,
+            env={'PATH':'/usr/bin:/bin','LC_ALL':'C'})
+        try:
+            result=verify(process.stdout)
+            trailing=0
+            while chunk:=process.stdout.read(4096):
+                trailing+=len(chunk);require(trailing<65536,'runtime_archive_trailing_bytes')
+            require(process.wait(timeout=30)==0,'runtime_archive_authentication_failed')
+            return result
+        except (OSError,EOFError,subprocess.SubprocessError):
+            raise Refusal('runtime_archive_readback_failed') from None
+        finally:
+            self.core.reap(process);process.stdout.close()
+
+    def verify_image(self,path,expected):
+        with self.core.opened(path) as fd:
+            self.core.description(fd)
+            return self.decrypt(fd,lambda stream:stream_digest(stream,expected=expected,limit=self.limit))
+
+    def encrypt(self,directory,name,writer,verify):
+        fd=os.open(name,os.O_RDWR|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=directory)
+        try:
+            process=subprocess.Popen(['/usr/bin/age','--encrypt','--recipients-file',str(self.recipients)],
+                stdin=subprocess.PIPE,stdout=fd,stderr=subprocess.DEVNULL,start_new_session=True,
+                env={'PATH':'/usr/bin:/bin','LC_ALL':'C'})
+            try:
+                result=writer(process.stdin);process.stdin.close()
+                require(process.wait(timeout=90)==0,'runtime_archive_encryption_failed');os.fsync(fd)
+            finally:
+                self.core.reap(process)
+                if not process.stdin.closed:process.stdin.close()
+            self.decrypt(fd,lambda stream:verify(stream,result))
+            os.lseek(fd,0,os.SEEK_SET)
+            with os.fdopen(os.dup(fd),'rb') as stream:cipher=stream_digest(stream,limit=self.limit)
+            require(os.fstat(fd).st_nlink==1,'runtime_archive_link_drift')
+            os.fsync(directory)
+            return result,{'name':name,**cipher}
+        finally:os.close(fd)
+
+    def write(self,state):
+        images(state['images']);generation=state['generation']
+        require(re.fullmatch('[a-f0-9]{32}',generation or ''),'runtime_archive_generation')
+        self.core.read_private(self.key,8192);self.core.read_private(self.recipients,8192)
+        # Private controls contain exact predecessor process/Env and original file
+        # before-images. No business volume, old physical pair or recovery key.
+        payload={}
+        raw=(json.dumps(state,sort_keys=True)+'\n').encode()
+        operator=self.core.read_private(self.store.base/'operator.py',4*1024**2)
+        for name,value in {'state.json':raw,'operator.py':operator}.items():
+            payload[name]={'raw':value,'sha256':sha(value),'bytes':len(value),
+                'uid':0,'gid':0,'mode':0o600,'mtime_ns':0}
+        def save(stream):
+            process=subprocess.Popen(self.save_command(state['images']),stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,start_new_session=True,
+                env={'PATH':'/usr/bin:/bin','LANG':'C','LC_ALL':'C'})
+            try:
+                result=stream_digest(process.stdout,target=stream,limit=self.limit)
+                require(result['bytes']>0 and process.wait(timeout=45)==0,'runtime_image_save_failed')
+                return result
+            finally:self.core.reap(process);process.stdout.close()
+        prefix='ustar-runtime-'+generation
+        with self.directory() as directory:
+            used=0
+            for name in os.listdir(directory):
+                row=os.stat(name,dir_fd=directory,follow_symlinks=False)
+                require(stat.S_ISREG(row.st_mode) and row.st_uid==0 and stat.S_IMODE(row.st_mode)==0o600,
+                    'unsafe_runtime_archive_entry');used+=row.st_size
+            free=os.fstatvfs(directory)
+            require(used<self.limit and free.f_bavail*free.f_frsize>=self.reserve+self.limit,
+                'runtime_archive_capacity_no_deletion')
+            digest,image=self.encrypt(directory,prefix+'.images.docker.tar.age',save,
+                lambda stream,result:stream_digest(stream,expected=result,limit=self.limit))
+            _,controls=self.encrypt(directory,prefix+'.controls.tar.gz.age',
+                lambda stream:self.core.write_tar(stream,payload),
+                lambda stream,result:self.core.verify_tar(stream,payload))
+        return {'kind':'ustar_runtime_recovery_pair_v1','generation':generation,
+            'images':state['images'],'image_stream':digest,'files':{'images':image,'controls':controls},
+            'readback_verified':True,'recovery_key_included':False,'business_volumes_included':False,
+            'whole_host_backup':False,'archive_deletion':False}
+
+
+class RuntimeHost:
+    """Native mutation sequence; controls own fixed-profile validation and file IO."""
+    def __init__(self,store,api,controls,archive):
+        self.store,self.api,self.controls,self.archive=store,api,controls,archive
+
+    @staticmethod
+    def project(state):return 'ustar_runtime_'+state['generation'][:8]
+
+    @staticmethod
+    def retained(state,service,*,successor=False):
+        return service+'-retained-'+('new-' if successor else 'old-')+state['generation']
+
+    def prepare(self):
+        rows={n:self.api.inspect(n) for n in SERVICES}
+        return {'containers':rows,**self.controls.prepare(rows)}
+
+    def save(self,**fields):
+        state=self.store.load();state.update(fields);self.store.save(state)
+
+    def phase(self,phase,state):
+        rows=state['before']['containers'];generation=state['generation'];project=self.project(state)
+        if phase=='writers_quiesced':self.controls.quiesce(state)
+        elif phase=='backup_complete':
+            result=self.controls.backup(state);self.controls.cold()
+            return {'logical_backup':result}
+        elif phase=='old_stopped':
+            for service in SERVICES:
+                self.api.policy(rows[service]['Id'],{'Name':'no','MaximumRetryCount':0})
+                self.api.stop(rows[service]['Id'])
+                if service=='ustar_moodle':self.controls.no_clients(state)
+        elif phase=='images_captured':
+            snapshots={}
+            for service in SERVICES:
+                snapshots[service]=self.api.snapshot(rows[service],service,generation)
+                self.save(images=snapshots)
+            return {'images':images(snapshots)}
+        elif phase=='archive_verified':return {'runtime_archive':self.archive.write(state)}
+        elif phase=='retained':
+            for service in SERVICES:
+                identity=rows[service]['Id'];self.api.rename(identity,self.retained(state,service));self.api.disconnect(identity)
+        elif phase=='compose_written':
+            model=compose_model(rows,state['images'],project,generation,state['before']['source_model'])
+            return {'compose_labels':self.controls.compose(state,model,compose_bytes(model))}
+        elif phase=='created':
+            identities={}
+            for service in ('ustar_postgres','ustar_moodle'):
+                require(self.api.inspect(service,missing=True) is None,'runtime_name_occupied')
+                identity=self.api.clone(rows[service],state['images'][service],service,project,generation,state['compose_labels'][service])
+                identities[service]=identity;self.save(new_containers=identities)
+                verify_successor(rows[service],self.api.inspect(identity),state['images'],project,generation,staged=True)
+            return {'new_containers':identities}
+        elif phase=='new_running':
+            for service in ('ustar_postgres','ustar_moodle'):
+                identity=state['new_containers'][service];self.api.start(identity);self.controls.ready(service,identity)
+                verify_successor(rows[service],self.api.inspect(identity),state['images'],project,generation,staged=True)
+        elif phase=='consumers_written':self.controls.consumers(state)
+        elif phase=='web_verified':self.controls.verify(state)
+        elif phase=='released':
+            for service in ('ustar_postgres','ustar_moodle'):
+                self.api.policy(state['new_containers'][service],rows[service]['HostConfig']['RestartPolicy'])
+            self.controls.resume(state)
+        else:raise Refusal('unknown_runtime_stage')
+
+    def owned_successor(self,state,service,current):
+        before=state['before']['containers'][service];labels=current.get('Config',{}).get('Labels') or {}
+        require(current.get('Image')==state.get('images',{}).get(service)
+            and labels.get('org.ustar.runtime.generation')==state['generation']
+            and labels.get('com.docker.compose.project')==self.project(state)
+            and labels.get('com.docker.compose.service')==('moodle' if service=='ustar_moodle' else 'postgres')
+            and labels.get('org.ustar.runtime.source-container')==before['Id'],'unowned_current_runtime')
+        if service in state.get('new_containers',{}):
+            require(current['Id']==state['new_containers'][service],'successor_container_id_drift')
+
+    def recover(self,state):
+        rows=state['before']['containers'];current={}
+        # Resolve all public names and all predecessor objects before any stop/file mutation.
+        for service,before in rows.items():
+            original=self.api.inspect(before['Id'])
+            require(original.get('Id')==before['Id'] and original.get('Image')==before['Image']
+                and original.get('Name') in (before['Name'],'/'+self.retained(state,service)),'predecessor_object_drift')
+            require(process(original['Config'])==process(before['Config'])
+                and original['Config'].get('Labels')==before['Config'].get('Labels')
+                and original['Mounts']==before['Mounts'],'predecessor_configuration_drift')
+            old_host={k:v for k,v in before['HostConfig'].items() if k!='RestartPolicy'}
+            live_host={k:v for k,v in original['HostConfig'].items() if k!='RestartPolicy'}
+            require(live_host==old_host and original['HostConfig'].get('RestartPolicy') in (
+                before['HostConfig']['RestartPolicy'],{'Name':'no','MaximumRetryCount':0}),
+                'predecessor_host_configuration_drift')
+            live=self.api.inspect(service,missing=True)
+            if live is not None and live['Id']!=before['Id']:
+                self.owned_successor(state,service,live);current[service]=live
+            parked=self.api.inspect(state.get('new_containers',{}).get(service)
+                or self.retained(state,service,successor=True),missing=True)
+            if parked is not None:
+                self.owned_successor(state,service,parked)
+                require(parked['Name'] in (before['Name'],'/'+self.retained(state,service,successor=True)),
+                    'successor_name_drift')
+                require(service not in current or current[service]['Id']==parked['Id'],'duplicate_successor_runtime')
+                current[service]=parked
+        if current:self.save(new_containers={**state.get('new_containers',{}),**{n:v['Id'] for n,v in current.items()}})
+        self.controls.cold();self.controls.quiesce(state)
+        for service,live in current.items():
+            self.api.policy(live['Id'],{'Name':'no','MaximumRetryCount':0});self.api.stop(live['Id'])
+            self.api.rename(live['Id'],self.retained(state,service,successor=True));self.api.disconnect(live['Id'])
+        self.controls.restore_files(state)
+        for service,before in rows.items():
+            self.api.rename(before['Id'],service);self.api.reconnect(before)
+        for service in ('ustar_postgres','ustar_moodle'):
+            before=rows[service];self.api.start(before['Id']);self.controls.ready(service,before['Id'])
+            self.api.policy(before['Id'],before['HostConfig']['RestartPolicy'])
+        self.controls.verify(state,recovery=True);self.controls.resume(state,recovery=True)
+        return {'old_containers_restored':True}
+
+    def verify(self,state):
+        for service,before in state['before']['containers'].items():
+            current=self.api.inspect(service);self.owned_successor(state,service,current)
+            verify_successor(before,current,state['images'],self.project(state),state['generation'])
+            require(current['State']['Running'] and current['State'].get('Health',{}).get('Status')=='healthy',
+                'successor_not_healthy')
+            old=self.api.inspect(before['Id'])
+            require(not old['State']['Running'] and old['HostConfig']['RestartPolicy']['Name']=='no'
+                and old['Name']=='/'+self.retained(state,service),'retained_predecessor_drift')
+        self.controls.verify(state)
+        return {'phase':'runtime_active','generation':state['generation'],
+            'containers':{n:{'id':state['new_containers'][n],'image':state['images'][n]} for n in SERVICES},
+            'logging':LOGGING,'predecessors_retained':True,'business_rows_restored':False,'provider_called':False}
 
 
 TRANSITION=('writers_quiesced','backup_complete','old_stopped','images_captured',

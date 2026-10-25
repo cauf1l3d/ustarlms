@@ -62,7 +62,7 @@ qualified current-profile handoff; no automatic old whole-host restore is introd
 4. Stop the exact old containers, retain restart policies, commit both snapshots and
    verify parent layer prefix, snapshot ownership labels and process configuration.
    Save snapshots plus exact private runtime controls to a readback-verified encrypted
-   HDD archive. Key remains separate. No archive/image/container/log pruning.
+   HDD recovery set (encrypted Docker stream and encrypted private control tar). Key remains separate. No archive/image/container/log pruning.
 5. Park/disconnect predecessor containers, install the new private Compose model,
    create with no build/pull, and refuse any unexpected process/HostConfig/bind delta.
 6. Start PG then Moodle, verify readiness and unchanged role/source/HTTPS facts; patch

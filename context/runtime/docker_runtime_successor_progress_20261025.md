@@ -66,3 +66,19 @@ active repeat verifies only, interrupted intent requires recovery, failed recove
 retains recovery_required/intent. Combined34tests/5local environment skips. Production
 host and real Docker transition are still pending, not covered by this fake boundary.
 Existing strict root infrastructure CI now includes UnixAPI and UID1000/33 contracts.
+
+Checkpoint98ffdd9c: Context40241333813SUCCESS; Review40241333815 still running.
+Actual root job121313568098:34/34/no skips, Unix API server/realUID1000+33 PASS.
+Both source jobs121313568177/121313568303 SUCCESS; local missing SDK/Git blobs did
+not recur in complete CI. Native Docker transition was not part of that checkpoint.
+
+Further missing runtime API/staging/cron binding tests4RED→GREEN; parked-successor
+recovery regression RED→GREEN. Image archive3RED→GREEN (actual age locally skipped);
+stream has authenticated readback, no plaintext image staging, original key excluded.
+Current local42lifecycle tests/6environment skips; fixed host command/profile boundary
+5RED→5GREEN. New controls/native fixture uses the already-built PHP/PG16 images and
+adds runtime-only checks, no production/owner full stand. Native Docker pending.
+Production frozen guard and CLI orchestration remain unfinished; actions still refuse.
+The encrypted runtime recovery set uses two authenticated files (Docker-save stream
+plus private control tar) with one receipt; this avoids plaintext images or a custom
+chunk/reassembly archive format. Core companion later captures final control state.

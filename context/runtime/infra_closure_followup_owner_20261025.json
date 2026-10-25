@@ -131,7 +131,7 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "readonly writable-layer metadata for two frozen containers; privacy and companion complete, no busy diagnostics/repeats",
+  "next": "Moodle writable-layer fixed dependency/config buckets and SizeRw; accepted first counts not repeated; actual frozen-ID recreation open",
   "workstation_key_login": {
     "status": "explicitly_deferred_by_owner_until_external_access_preparation",
     "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
@@ -315,9 +315,11 @@
   "Docker_writable_layer_followup": {
     "runbook": "context/runtime/infra_docker_writable_layer_20261025.md",
     "scope": "missing writable layer A/C/D counts and fixed path groups only; no arbitrary paths/Env/config values",
-    "owner_output_received": false,
+    "owner_output_received": true,
     "local_qualification": "shell/Python syntax, synthetic counts, secret-sentinel, before/after ID drift, stderr/timeout/malformed/oversize refusal PASS",
     "production_access": false,
-    "recreation_performed": false
+    "recreation_performed": false,
+    "owner_receipt": "context/runtime/infra_docker_writable_layer_owner_20261025.json",
+    "next_runbook": "context/runtime/infra_docker_layer_classification_20261025.md"
   }
 }

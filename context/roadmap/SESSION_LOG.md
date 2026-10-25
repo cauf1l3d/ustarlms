@@ -1,5 +1,19 @@
 # Журнал выполнения roadmap
 
+**25Oct — owner writable-layer counts received; classify Moodle changes next.**
+Moodle2618A/45C/0D=2663paths:2452/usr,13/etc,61/var,131/tmp,3/run,3/root.
+PG6A/3C/0D=9paths:4/run,4/root,1other. Before/after known ID/image checks passed;
+counts include directories, not log size/dependency identity. Specific packages,
+config/bytes unknown; no source or file contents read. Do not repeat first counts/
+origin/profile. Next fixed dependency/config buckets + SizeRw for Moodle only:
+context/runtime/infra_docker_layer_classification_20261025.md.
+Syntax/22prefix and9refusal/sentinel cases PASS with simulated Docker; no native
+recreation/log rotation yet. Frozen cron/HTTPS/recovery handoff remains open.
+Source0600/264-file companion readback21:39MSK retained; old stands count.
+SSH/key/firewall deferred,UPS present,copies handed over/external restore unknown.
+0agents/no agent SSH/provider sends/main merge. Receipt:
+context/runtime/infra_docker_writable_layer_owner_20261025.json.
+
 **25Oct21:39MSK — owner companion retry complete; source privacy closed locally.**
 Source0600/UID1000/SHA41de2ed3 retained; new encrypted control companion264files/
 35043569B/SHA083bbfda, readback true, finished18:39:16Z/21:39:16MSK. Physical trees/

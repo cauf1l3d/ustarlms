@@ -11,7 +11,8 @@ readback_verified=true, finished21:39:16MSK. Original archive261files/SHAda70161
 
 ## Следующий шаг
 
-[Missing Docker writable-layer metadata](infra_docker_writable_layer_20261025.md).
+[Moodle writable-layer classification](infra_docker_layer_classification_20261025.md):
+общие counts уже [получены](infra_docker_writable_layer_owner_20261025.json).
 Source check/apply/companion повторять не требуется. Origin/profile и старые owner
 stands приняты. Actual log rotation/coordinated frozen-ID lifecycle ещё открыты.
 

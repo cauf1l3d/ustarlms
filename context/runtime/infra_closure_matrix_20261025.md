@@ -10,7 +10,7 @@ provider not called. Старые DB/code/SSD/Moodle/OS/HTTPS/backup/Connect sta
 | Этап | Подтверждено | Осталось |
 |---|---|---|
 | Права | Root-owned code/config и private legacy22 archive приняты ранее;69 выбранных USTAR exports закрыты от group/other | www-data/caddy supplementary-group trust boundary и общий host access policy требуют отдельного разбора. Не объявляется глобальный аудит всех файлов/других проектов. |
-| Docker/SSD | Existing accepted IDs/images сохранены; прежний root/HDD free-space/SMART stand засчитан. Owner origins: project stack, services moodle/postgres, source /opt/ustar/apps/stack/docker-compose.yml | Actual profile получен: source904B/SHA41de2ed3,UID1000/0644,.env absent; logging/healthcheck отсутствуют,Moodle build present. Mode-only0644→0600 owner применён:UID/GID1000/contents unchanged;15native/no skips qualified, saved download verified. Новый companion264files/35043569B/SHA083bbfda complete/readback true,21:39MSK. Live equivalence и json-file rotation/health/coordinated frozen-ID handoff открыты. Старые лаборатории/логи/архивы не удалять. |
+| Docker/SSD | Existing accepted IDs/images сохранены; прежний root/HDD free-space/SMART stand засчитан. Owner origins: project stack, services moodle/postgres, source /opt/ustar/apps/stack/docker-compose.yml | Actual profile получен: source904B/SHA41de2ed3,UID1000/0644,.env absent; logging/healthcheck отсутствуют,Moodle build present. Mode-only0644→0600 owner применён:UID/GID1000/contents unchanged;15native/no skips qualified, saved download verified. Новый companion264files/35043569B/SHA083bbfda complete/readback true,21:39MSK. Owner layer counts: Moodle2663paths/usr2452/etc13,PG9; конкретные dependencies/bytes ещё неизвестны. Live equivalence и json-file rotation/health/coordinated frozen-ID handoff открыты. Старые лаборатории/логи/архивы не удалять. |
 | Доступ | Новый список69deduplicated endpoints без truncation. Owner Caddy metadata: IPv4 local config API; отдельный IPv6 wildcard HTTP static_response, без proxy dials в проекции; caddy.service/PID862/config path получены. Moodle127.0.0.1:8082; PG5432 не опубликован | Wildcard2019 не доказательство открытого наружу admin API; source/consumers статического endpoint и policy отдельно не проверены. Owner принимает текущий LAN login/password; SSH/key/firewall hardening и диагностику явно откладывает до подготовки внешнего доступа. Не blocker локального Docker этапа и не external-ready PASS. Shared-host/public access policy остаётся в отложенном scope. |
 | Копии/DR | Latest owner control companion264files/35043569B/SHA083bbfda encrypted/readback21:39MSK; prior261-file generation retained; timer previously accepted active. Physical trees/recovery.key исключены. Fresh standard HDD/pre-hardening archive ранее приняты | Первый scheduled companion tick ещё не наблюдался. Companion не whole-host/atomic DB pair; physical manifests не заменяют их байты. Сохранить SSD physical pairs и standard DB/CODE/DATA HDD archive. Копии переданы по owner confirmation; external restore result owner явно оставляет unknown. Не повторять запрос/stand и не блокировать local work. Offsite/latest-generation identity/separate key custody/RPO/RTO/retention и qualified generation pairing открыты. |
 | Наблюдение | Journal уже fresh measured/categories0; actionnone — настройки не менялись. Numeric HTTP log принят ранее | Причина прежнего no_data не установлена, нулевые categories относятся к выбранному окну/классификатору. Независимый host-loss observer и проверенная доставка всё ещё открыты. |
@@ -28,9 +28,13 @@ metadata приняты; не повторять. [Targeted Compose source priva
 0644→0600, UID/GID1000 и SHA41de2ed3 сохранены. [Owner receipt](compose_source_privacy_owner_20261025.json).
 Последующий companion retry завершён:264files/35043569B/SHA083bbfda/readback true,
 21:39:16MSK. Первоначальный busy остался историей; никаких новых lock probes/
-повторных apply/backup не нужно. Новый [read-only Docker writable-layer шаг](infra_docker_writable_layer_20261025.md)
-показывает только missing A/C/D counts и fixed path groups, guarded known IDs/images
-до/после. Origin/profile не повторяются, file contents/Env/paths не публикуются.
+повторных apply/backup не нужно. [Owner writable-layer metadata](infra_docker_writable_layer_owner_20261025.json) получены:
+Moodle2663paths (2452/usr,13/etc),PG9; known IDs/images unchanged. Counts включают
+files/directories; не размер логов и не доказательство конкретных dependencies.
+Первый count/origin/profile блок не повторять. Следующий [Moodle fixed buckets + SizeRw](infra_docker_layer_classification_20261025.md)
+читает только metadata для подготовки сохранения runtime. PostgreSQL9paths ещё
+не классифицированы как disposable. Никакого Docker build/pull/commit/recreate,
+controller SHA/journal rebaseline по этим counts.
 Нулевой diff не разрешает recreate сам по себе. Actual log/health lifecycle требует
 сохранения live configuration/mounts/images/writers и coordinated frozen-ID/recovery/
 cron/HTTPS handoff; daemon defaults не исправят existing container logs.

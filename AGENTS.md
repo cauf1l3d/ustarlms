@@ -1,19 +1,18 @@
 # USTAR инструкции агентам
 
-**25Oct21:39MSK — owner companion retry complete; source privacy closed locally.**
-Source0600/UID1000/SHA41de2ed3 retained; new encrypted control companion264files/
-35043569B/SHA083bbfda, readback true, finished18:39:16Z/21:39:16MSK. Physical trees/
-recovery.key excluded, whole_host_backup=false; earlier archives retained. Single
-retry resolved prior busy; holder unobserved, no new lock investigation/repeat backup
-or apply needed. Receipt: context/runtime/compose_source_privacy_owner_20261025.json.
-Next missing Docker delta only: writable-layer A/C/D counts/fixed path groups under
-known IDs/images before/after guards. Existing origin/profile accepted, not repeated.
-Shell/Python syntax, simulated sentinel/counts/drift/error/timeout/size cases PASS;
-no actual Docker probe/recreation yet. Frozen cron/HTTPS/recovery identity lifecycle
-still open; no blind compose/build/pull. Existing owner/native stands retained.
-SSH/key/firewall deferred, UPS present,copies handed over/external restore unknown.
-0agents/no agent SSH/provider sends/main merge. Current read-only command:
-context/runtime/infra_docker_writable_layer_20261025.md.
+**25Oct — owner writable-layer counts received; classify Moodle changes next.**
+Moodle2618A/45C/0D=2663paths:2452/usr,13/etc,61/var,131/tmp,3/run,3/root.
+PG6A/3C/0D=9paths:4/run,4/root,1other. Before/after known ID/image checks passed;
+counts include directories, not log size/dependency identity. Specific packages,
+config/bytes unknown; no source or file contents read. Do not repeat first counts/
+origin/profile. Next fixed dependency/config buckets + SizeRw for Moodle only:
+context/runtime/infra_docker_layer_classification_20261025.md.
+Syntax/22prefix and9refusal/sentinel cases PASS with simulated Docker; no native
+recreation/log rotation yet. Frozen cron/HTTPS/recovery handoff remains open.
+Source0600/264-file companion readback21:39MSK retained; old stands count.
+SSH/key/firewall deferred,UPS present,copies handed over/external restore unknown.
+0agents/no agent SSH/provider sends/main merge. Receipt:
+context/runtime/infra_docker_writable_layer_owner_20261025.json.
 
 **25Oct — owner Compose privacy applied; companion busy, retry backup only.**
 Owner checksum20d282e9/core5067163f OK; check0644→apply0600, UID/GID1000 and

@@ -5,7 +5,8 @@ SHA41de2ed3,owner1000:1000/0644, .env absent. Both source logging/healthcheck ab
 Moodle image+build, PG3 environment entries, values not supplied. [Receipt](infra_closure_followup_owner_20261025.json#Docker_Compose_profile).
 Source privacy0600/UID1000/hash retained и264-file encrypted companion complete
 приняты: [owner receipt](compose_source_privacy_owner_20261025.json). Следующий
-[missing writable-layer metadata](infra_docker_writable_layer_20261025.md);
+[Moodle writable-layer classification](infra_docker_layer_classification_20261025.md);
+первый общий [count receipt](infra_docker_writable_layer_owner_20261025.json) уже получен;
 ни Docker recreation, ни source logging change ещё не выполнялись.
 Команда и прежний next-step wording ниже — история.
 

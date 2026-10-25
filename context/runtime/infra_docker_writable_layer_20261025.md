@@ -1,6 +1,10 @@
 # Docker writable layer: недостающие метаданные25Oct2026
 
-**Текущий следующий read-only шаг; новый Docker lifecycle ещё не реализован.**
+**Owner output accepted; этот общий count блок не повторять.**
+Moodle2663paths (2452/usr,13/etc), PG9; known identities unchanged.
+[Receipt](infra_docker_writable_layer_owner_20261025.json). Следующий только
+[dependency buckets + SizeRw](infra_docker_layer_classification_20261025.md).
+Docker lifecycle/rotation ещё не реализованы; команда ниже — история.
 Source/privacy/companion приняты: [owner receipt](compose_source_privacy_owner_20261025.json).
 Новый companion264files/35043569B/SHA083bbfda завершён21:39:16MSK, readback true.
 Origin/profile/SSH/DB/cron/старые owner stands не повторять.
@@ -8,8 +12,9 @@ Origin/profile/SSH/DB/cron/старые owner stands не повторять.
 Для ротации live logs требуется recreation, потому что изменение daemon defaults
 не меняет уже созданные контейнеры. В этом проекте frozen recovery/cron/HTTPS
 consumers требуют coordinated identity handoff, а source Moodle имеет build.
-Дополнительно не измерены изменения writable layer после создания контейнеров:
-образ и Compose-файл не являются копией этого слоя. Проверить только этот пробел.
+Owner counts подтвердили изменения writable layer после создания контейнеров;
+образ и Compose-файл не являются копией этого слоя. Назначение и bytes пока не
+определены; новый следующий блок указан выше.
 
 ## Один блок на server1
 

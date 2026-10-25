@@ -20,14 +20,16 @@ current_infrastructure_checkpoint:
   Caddy2019: local_admin_API_and_separate_IPv6_HTTP_static_listener_classified
   deferred_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
   access_scope: owner_accepts_LAN_login_password_defers_SSH_hardening_until_external_access
-  next_local_runbook: context/runtime/infra_docker_writable_layer_20261025.md
+  next_local_runbook: context/runtime/infra_docker_layer_classification_20261025.md
+  docker_layer_owner_receipt: context/runtime/infra_docker_writable_layer_owner_20261025.json
+  docker_layer_status: owner_counts_received_Moodle2663_PG9_specific_dependencies_and_bytes_unknown
   compose_origin: owner_project_stack_services_moodle_postgres_source_opt_ustar_apps_stack
   source_model_equivalence: actual_profile_received_live_equivalence_unverified
   compose_privacy_plan: context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md
   compose_privacy_status: owner_applied0600_contents_owner_unchanged_companion264_complete_readback_verified
   compose_privacy_owner_receipt: context/runtime/compose_source_privacy_owner_20261025.json
   workstation_key_login: explicitly_deferred_no_probes_now
-  next: missing_Docker_writable_layer_metadata_then_coordinated_identity_lifecycle
+  next: classify_Moodle_writable_dependencies_and_SizeRw_then_coordinated_identity_lifecycle
   retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
   production_mutation_scope: owner DB app_role_active/code_hardened/legacy22 archive and local_batch_applied69export modes,261file encrypted controls,timer; actual Compose source0600 owner1000/hash unchanged; new264file companion complete/readback true
@@ -176,7 +178,7 @@ tasks:
     защита от потери площадки остаются открыты.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
-  status: planned
+  status: in_progress
   depends_on:
   - INF-02
   - INF-03
@@ -185,6 +187,10 @@ tasks:
   - Existing container logs actually rotate within measured budget
   - Readiness healthchecks and failure response verified
   - Exact images/mounts preserved; cron binding revalidated, one worker retained
+  current_summary: Owner writable-layer counts accepted;Moodle2663paths/usr2452/etc13 require fixed dependency buckets and SizeRw;actual rotation/readiness/ID handoff not yet applied.
+  validation_evidence:
+  - context/runtime/infra_docker_writable_layer_owner_20261025.json
+  - context/runtime/infra_docker_layer_classification_20261025.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-06
   title: Пульт управления и Telegram бот для метрик алертов бэкапов и Академии

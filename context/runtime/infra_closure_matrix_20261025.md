@@ -10,7 +10,7 @@ provider not called. Старые DB/code/SSD/Moodle/OS/HTTPS/backup/Connect sta
 | Этап | Подтверждено | Осталось |
 |---|---|---|
 | Права | Root-owned code/config и private legacy22 archive приняты ранее;69 выбранных USTAR exports закрыты от group/other | www-data/caddy supplementary-group trust boundary и общий host access policy требуют отдельного разбора. Не объявляется глобальный аудит всех файлов/других проектов. |
-| Docker/SSD | Existing accepted IDs/images сохранены; рестарт/пересоздание этим batch не выполнялось; прежний root/HDD free-space/SMART stand засчитан | json-file rotation/health lifecycle требует coordinated frozen-ID/recovery handoff. Старые лаборатории/логи/архивы не удалять. |
+| Docker/SSD | Existing accepted IDs/images сохранены; прежний root/HDD free-space/SMART stand засчитан. Owner origins: project stack, services moodle/postgres, source /opt/ustar/apps/stack/docker-compose.yml | Actual Compose file metadata/current contents/live equivalence ещё не получены; prior fixed-path survey не покрывал этот source. Далее bounded private profile projection, затем json-file rotation/health lifecycle и coordinated frozen-ID/recovery handoff. Старые лаборатории/логи/архивы не удалять. |
 | Доступ | Новый список69deduplicated endpoints без truncation. Owner Caddy metadata: IPv4 local config API; отдельный IPv6 wildcard HTTP static_response, без proxy dials в проекции; caddy.service/PID862/config path получены. Moodle127.0.0.1:8082; PG5432 не опубликован | Wildcard2019 не доказательство открытого наружу admin API; source/consumers статического endpoint и policy отдельно не проверены. Owner принимает текущий LAN login/password; SSH/key/firewall hardening и диагностику явно откладывает до подготовки внешнего доступа. Не blocker локального Docker этапа и не external-ready PASS. Shared-host/public access policy остаётся в отложенном scope. |
 | Копии/DR | New control companion261files/33.4MiB encrypted/readback; timer active. Physical trees/recovery.key исключены. Fresh standard HDD/pre-hardening archive ранее приняты | Первый scheduled companion tick ещё не наблюдался. Companion не whole-host/atomic DB pair; physical manifests не заменяют их байты. Сохранить SSD physical pairs и standard DB/CODE/DATA HDD archive. Копии переданы по owner confirmation; external restore result owner явно оставляет unknown. Не повторять запрос/stand и не блокировать local work. Offsite/latest-generation identity/separate key custody/RPO/RTO/retention и qualified generation pairing открыты. |
 | Наблюдение | Journal уже fresh measured/categories0; actionnone — настройки не менялись. Numeric HTTP log принят ранее | Причина прежнего no_data не установлена, нулевые categories относятся к выбранному окну/классификатору. Независимый host-loss observer и проверенная доставка всё ещё открыты. |
@@ -24,8 +24,9 @@ Owner откладывает SSH hardening до подготовки внешн�
 login/password работает по его подтверждению; key/agent probes больше не нужны.
 [Owner receipt](infra_closure_followup_owner_20261025.json) сохраняет неуспешный
 publickey-only вызов как историю, не как новый обязательный blocker. Caddy/SQL
-metadata приняты; не повторять. Следующий [Docker Compose origin metadata](infra_docker_origin_20261025.md)
-уточняет недостающие creation-source labels. Ни daemon/container restart, ни
+metadata приняты; не повторять. Следующий [actual Compose source metadata/profile projection](infra_docker_profile_metadata_20261025.md)
+уточняет права/source hash и выбранные настройки файла в apps/stack. Origin labels
+уже получены, их не повторять; current file/live equivalence ими не доказывается. Ни daemon/container restart, ни
 recreation этим read-only шагом не выполняется. Current log/health lifecycle
 требует coordinated frozen-ID/recovery handoff; daemon defaults не исправят live logs.
 

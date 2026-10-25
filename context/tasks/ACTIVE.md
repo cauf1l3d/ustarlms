@@ -1,5 +1,22 @@
 # Активные задачи USTAR
 
+**25Oct — owner confirms both Docker origins: stack/apps/stack/docker-compose.yml.**
+Project stack, services moodle/postgres, workdir /opt/ustar/apps/stack; single source
+/opt/ustar/apps/stack/docker-compose.yml. Labels received, do not repeat origin probe.
+Current file/live equivalence not verified. Earlier fixed survey path was
+/opt/ustar/docker-compose.yml, so actual Compose metadata/content/backup scope is
+unmeasured. Next metadata + bounded private Compose config projection, network
+namespace/dummy daemon socket, no env interpolation/service env-file resolution;
+only allowlisted log options and boolean/count summary, no raw values/commands.
+Syntax and synthetic exact/secret-sentinel projection PASS; no native host call.
+Existing frozen controller/identity guards retained; no daemon/container recreation,
+log truncation or rebaseline. Installed operator5067163f unchanged. SSH/key/firewall
+hardening deferred by owner; current LAN login/password accepted. UPS present,
+copies handed over/external restore explicitly unknown, no repeat request/old stands.
+0agents/no agent SSH/provider sends/main merge. Receipt:
+context/runtime/infra_closure_followup_owner_20261025.json; next:
+context/runtime/infra_docker_profile_metadata_20261025.md.
+
 **25Oct — owner defers SSH hardening until external-access preparation.**
 Current aduk LAN login/password access works and is accepted by owner. Stop key/
 agent/Windows diagnostics, key provisioning and SSH/firewall hardening now; no

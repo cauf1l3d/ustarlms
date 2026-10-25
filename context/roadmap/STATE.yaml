@@ -4,20 +4,22 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct — owner defers SSH hardening until external-access preparation.
-  Current aduk LAN login/password access works and is accepted by owner. Stop key/
-  agent/Windows diagnostics, key provisioning and SSH/firewall hardening now; no
-  prerequisite for independent local infrastructure work. Historical publickey-only
-  refusal preserved, cause unclassified, not an active incident or external-ready PASS.
-  Next Docker origin labels only: known log options/IDs/ports/old stands reused; Compose
-  creation source missing. Frozen consumers require coordinated identity/recovery
-  handoff before any recreation; no daemon restart/compose up/log truncation now.
-  Installed operator5067163f/controllers remain unchanged. Its original remaining list
-  is a dated categories report, not authorization to reopen explicitly deferred work.
-  UPS present, copies handed over, external restore explicitly unknown; no repeat ask.
+  25Oct — owner confirms both Docker origins: stack/apps/stack/docker-compose.yml.
+  Project stack, services moodle/postgres, workdir /opt/ustar/apps/stack; single source
+  /opt/ustar/apps/stack/docker-compose.yml. Labels received, do not repeat origin probe.
+  Current file/live equivalence not verified. Earlier fixed survey path was
+  /opt/ustar/docker-compose.yml, so actual Compose metadata/content/backup scope is
+  unmeasured. Next metadata + bounded private Compose config projection, network
+  namespace/dummy daemon socket, no env interpolation/service env-file resolution;
+  only allowlisted log options and boolean/count summary, no raw values/commands.
+  Syntax and synthetic exact/secret-sentinel projection PASS; no native host call.
+  Existing frozen controller/identity guards retained; no daemon/container recreation,
+  log truncation or rebaseline. Installed operator5067163f unchanged. SSH/key/firewall
+  hardening deferred by owner; current LAN login/password accepted. UPS present,
+  copies handed over/external restore explicitly unknown, no repeat request/old stands.
   0agents/no agent SSH/provider sends/main merge. Receipt:
   context/runtime/infra_closure_followup_owner_20261025.json; next:
-  context/runtime/infra_docker_origin_20261025.md.
+  context/runtime/infra_docker_profile_metadata_20261025.md.
 next_task: INF-03
 infrastructure_UPS_status: owner_confirms_present_shutdown_not_verified
 infrastructure_external_restore_status: copies_delivered_result_unknown_owner_explicitly_deferred_no_repeat_prompt
@@ -25,7 +27,10 @@ infrastructure_task_retry_status: two_old_disabled_rows_enabled_retry_zero_no_re
 infrastructure_caddy2019_status: owner_local_admin_and_separate_IPv6_HTTP_static_listener_classified_no_blind_change
 infrastructure_deferred_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
 infrastructure_access_scope: LAN_login_password_accepted_SSH_key_firewall_hardening_deferred_until_external_access
-infrastructure_next_local_runbook: context/runtime/infra_docker_origin_20261025.md
+infrastructure_next_local_runbook: context/runtime/infra_docker_profile_metadata_20261025.md
+infrastructure_compose_origin: project_stack_services_moodle_postgres_workdir_opt_ustar_apps_stack
+infrastructure_compose_source: /opt/ustar/apps/stack/docker-compose.yml
+infrastructure_compose_equivalence: not_verified_source_metadata_profile_projection_next
 infrastructure_workstation_key_login: deferred_by_owner_no_further_diagnostics_now
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md

@@ -1,5 +1,13 @@
 # Docker: происхождение действующих контейнеров перед ротацией логов
 
+**Owner output accepted25Oct; origin command не повторять.** Оба контейнера:
+project stack, services moodle/postgres, workdir /opt/ustar/apps/stack, файл
+/opt/ustar/apps/stack/docker-compose.yml. Текущее содержимое/live equivalence ещё
+не проверены. Старый survey смотрел /opt/ustar/docker-compose.yml; его данные не
+аттестуют фактический source. [Receipt](infra_closure_followup_owner_20261025.json#Docker_Compose_origin).
+Следующий [actual source metadata/profile projection](infra_docker_profile_metadata_20261025.md).
+Команда и прежний next-step wording ниже — история.
+
 Owner25Oct отложил SSH/key/firewall hardening до подготовки внешнего доступа.
 Текущий административный вход aduk по логину/паролю внутри LAN принят владельцем.
 Не запрашивать Windows key/agent probes и не возвращать SSH как prerequisite этой

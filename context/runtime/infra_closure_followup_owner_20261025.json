@@ -131,7 +131,7 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "owner read-only Docker Compose origin labels; SSH hardening deferred; external restore explicitly unknown",
+  "next": "owner bounded actual Compose source metadata and offline secret-filtered profile projection; no recreation; SSH hardening and external restore remain deferred",
   "workstation_key_login": {
     "status": "explicitly_deferred_by_owner_until_external_access_preparation",
     "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
@@ -177,5 +177,42 @@
     "external_access_ready_claimed": false,
     "local_work_blocked_on_key_login": false,
     "installed_operator_remaining_categories": "dated receipt; do not edit frozen operator or treat deferred SSH as an active prerequisite"
+  },
+  "Docker_Compose_origin": {
+    "recorded_at_utc": "2026-10-25T16:56:53.274732+00:00",
+    "source": "owner server1 docker inspect output; observation timestamp/exit code not supplied",
+    "rows": [
+      {
+        "name": "/ustar_moodle",
+        "compose_project": "stack",
+        "compose_service": "moodle",
+        "compose_working_dir": "/opt/ustar/apps/stack",
+        "compose_config_files": "/opt/ustar/apps/stack/docker-compose.yml"
+      },
+      {
+        "name": "/ustar_postgres",
+        "compose_project": "stack",
+        "compose_service": "postgres",
+        "compose_working_dir": "/opt/ustar/apps/stack",
+        "compose_config_files": "/opt/ustar/apps/stack/docker-compose.yml"
+      }
+    ],
+    "project": "stack",
+    "services": [
+      "moodle",
+      "postgres"
+    ],
+    "working_directory": "/opt/ustar/apps/stack",
+    "config_files": [
+      "/opt/ustar/apps/stack/docker-compose.yml"
+    ],
+    "origin_labels_received": true,
+    "repeat_origin_probe_needed": false,
+    "live_source_equivalence_verified": false,
+    "source_metadata_and_content_not_received": true,
+    "previous_survey_fixed_path": "/opt/ustar/docker-compose.yml",
+    "previous_survey_scope_limitation": "did not establish metadata/content/backup coverage of actual Compose source",
+    "next_runbook": "context/runtime/infra_docker_profile_metadata_20261025.md",
+    "production_mutations_performed": false
   }
 }

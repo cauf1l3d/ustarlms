@@ -17,6 +17,8 @@ import os
 from pathlib import Path
 import re
 import signal
+import socket
+import ssl
 import stat
 import subprocess
 import sys
@@ -528,7 +530,7 @@ def backup_controls(store,host):
     identifier=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')+'-'+uuid.uuid4().hex[:8]
     partial=TARGET/('ustar-control-'+identifier+'.partial.age')
     archive=TARGET/('ustar-control-'+identifier+'.tar.gz.age')
-    started=utc();encrypted_copy(partial,data)
+    started=utc();encrypted_copy(partial,data,recipients=RECIPIENTS,key=KEY)
     sha=hashlib.sha256()
     with partial.open('rb') as source:
         while chunk:=source.read(1024**2):sha.update(chunk)
@@ -556,6 +558,13 @@ def service_files():
     return {Path('/etc/systemd/system')/BACKUP_SERVICE:service.encode(),
             Path('/etc/systemd/system')/BACKUP_TIMER:timer.encode()}
 
+def active_leaf(ca=Path('/etc/ustar-console/authority/ca.crt'),address=('192.168.1.60',443)):
+    context=ssl.create_default_context(cafile=str(ca))
+    with socket.create_connection(address,timeout=4) as connection:
+        with context.wrap_socket(connection,server_hostname='ustar.local') as tls:
+            return dict(verified=True,not_after=tls.getpeercert()['notAfter'],
+                        sha256=digest(tls.getpeercert(binary_form=True)))
+
 def maintenance_metadata(host):
     result={}
     try:
@@ -578,6 +587,8 @@ def maintenance_metadata(host):
         endpoints=sorted(set(' '.join([row.split()[0],row.split()[4]]) for row in p.stdout.decode().splitlines() if len(row.split())>=5))
         result['listeners']=dict(endpoints=endpoints[:500],truncated=len(endpoints)>500)
     except (OSError,ValueError,subprocess.SubprocessError) as error:result['listeners']={'reason':public_error(error)}
+    try:result['active_certificate']=active_leaf()
+    except (OSError,ValueError,KeyError) as error:result['active_certificate']={'verified':False,'reason':public_error(error)}
     return result
 
 def preflight(store,host):

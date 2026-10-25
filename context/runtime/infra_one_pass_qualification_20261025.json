@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "kind": "infra_one_pass_component_qualification",
+  "status": "final_CI_pending",
+  "owner_apply_performed": false,
+  "author_review": true,
+  "subagents": 0,
+  "first_candidate": {
+    "source": "b4703c9bea82a88eb1149399624539a4815ca61a",
+    "review_run": 40154267162,
+    "result": "failure",
+    "root_checks": "25/25 PASS; real age authentication/corruption and actual UID isolation PASS",
+    "failures": [
+      "non-root source jobs incorrectly attempted root-only filesystem fixtures",
+      "restricted-service producer fixture failed; known explicit identity path correction under requalification"
+    ]
+  },
+  "local": {
+    "targeted_tests": 26,
+    "passed": 25,
+    "skipped": 1,
+    "skip": "real age unavailable locally; mandatory runtime CI must not skip",
+    "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
+    "full_suite": {
+      "tests": 1171,
+      "errors": 5,
+      "skipped": 59,
+      "failure_names": [
+        "test_connect_bridge_activation.Build.test_exact_bundle_is_repeatable_plan_only_and_rejects_tampering",
+        "test_connect_private_bridge.BuildPackage.test_exact_git_package_is_deterministic_plan_only_and_detects_corruption",
+        "test_harness.Boundary.test_all_tools_use_reader",
+        "test_harness.Boundary.test_audit_pointer_cannot_escape_boundary",
+        "test_stdio import"
+      ],
+      "environment_causes": [
+        "fixture Git objects unavailable in local worktree",
+        "mcp package unavailable locally"
+      ],
+      "PHP": "not installed locally; verified in CI source matrix"
+    }
+  },
+  "limits": [
+    "No production SSH or live coordinator execution",
+    "conditional journal adjustment uses modeled unit boundary plus production self-verification",
+    "Native fixtures use synthetic keys/controllers/phase markers and isolated paths, never live user data",
+    "No independent review agent; author review only"
+  ]
+}

@@ -18,6 +18,7 @@ def module(case):
     value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value)
     return value
 
+@unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class ExportBoundaries(unittest.TestCase):
     def setUp(self):
         self.m=module(self)
@@ -77,6 +78,7 @@ class ExportBoundaries(unittest.TestCase):
         self.dump.chmod(0o664)
         with self.assertRaises(self.m.Refusal):self.tx.guard()
 
+@unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class PayloadBoundaries(unittest.TestCase):
     def setUp(self):
         self.m=module(self);self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
@@ -126,6 +128,7 @@ class DiagnosisAndDefault(unittest.TestCase):
         self.assertEqual(m.journal_adjustment({'reason':'timeout'}),'CPUQuota=100%\n')
         self.assertEqual(m.journal_adjustment({'reason':'permission_denied'}),'SupplementaryGroups=systemd-journal\n')
 
+@unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class ManagedBoundaries(unittest.TestCase):
     def setUp(self):
         self.m=module(self);self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
@@ -157,6 +160,7 @@ class ManagedBoundaries(unittest.TestCase):
         path.unlink()
         with self.assertRaises(self.m.Refusal):manager.guard(path)
 
+@unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class JournalTransaction(unittest.TestCase):
     def setUp(self):
         self.m=module(self);self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
@@ -190,6 +194,7 @@ class JournalTransaction(unittest.TestCase):
         self.assertEqual(result['status'],'measured');self.assertIn(b'SupplementaryGroups=systemd-journal',self.dropin.read_bytes())
         self.assertNotIn(b'ExecStartPost',self.dropin.read_bytes())
 
+@unittest.skipUnless(os.geteuid()==0,'real encrypted root snapshots run in mandatory runtime CI')
 class CipherBoundary(unittest.TestCase):
     def test_real_age_roundtrip_and_corruption_is_rejected(self):
         import shutil
@@ -211,6 +216,7 @@ class CipherBoundary(unittest.TestCase):
             raw=bytearray(archive.read_bytes());raw[-1]^=1;archive.write_bytes(raw)
             with self.assertRaises(m.Refusal):m.verify_encrypted(archive,data,key)
 
+@unittest.skipUnless(os.geteuid()==0,'filesystem root checks run in mandatory runtime CI')
 class MountNamespace(unittest.TestCase):
     def test_host_readwrite_and_target_readwrite_are_checked_separately(self):
         from unittest.mock import patch
@@ -228,5 +234,30 @@ class MountNamespace(unittest.TestCase):
                     return type('Result',(),{'stdout':json.dumps({'filesystems':[row]}).encode()})()
             self.assertTrue(hasattr(m,'MOUNT'),'host/target namespace distinction is missing')
             with patch.object(m,'TARGET',target):m.hdd_target(Host())
+
+class ActiveCertificate(unittest.TestCase):
+    def test_live_leaf_is_verified_for_the_academy_hostname(self):
+        import shutil,socket,ssl,threading
+        m=module(self)
+        self.assertTrue(hasattr(m,'active_leaf'),'active TLS connection metadata is missing')
+        if not shutil.which('openssl'):self.skipTest('openssl fixture unavailable')
+        with tempfile.TemporaryDirectory() as directory:
+            base=Path(directory);key=base/'key.pem';cert=base/'cert.pem'
+            subprocess.run(['openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','1',
+                '-subj','/CN=ustar.local','-addext','subjectAltName=DNS:ustar.local',
+                '-keyout',str(key),'-out',str(cert)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            context=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER);context.load_cert_chain(cert,key)
+            with socket.socket() as listener:
+                listener.bind(('127.0.0.1',0));listener.listen();listener.settimeout(5)
+                def serve():
+                    try:
+                        connection,_=listener.accept()
+                        with context.wrap_socket(connection,server_side=True):pass
+                    except ssl.SSLError:pass
+                thread=threading.Thread(target=serve);thread.start()
+                try:result=m.active_leaf(cert,listener.getsockname())
+                finally:thread.join(6)
+                self.assertFalse(thread.is_alive());self.assertTrue(result['verified'])
+                self.assertRegex(result['sha256'],'^[0-9a-f]{64}$');self.assertIn('not_after',result)
 
 if __name__=='__main__':unittest.main()

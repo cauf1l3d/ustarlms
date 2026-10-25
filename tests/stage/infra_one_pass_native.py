@@ -11,7 +11,10 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/infra'))
 import infra_one_pass as m
 
-def run(argv,check=True):return subprocess.run(argv,check=check,capture_output=True,text=True,timeout=90)
+def run(argv,check=True):
+    result=subprocess.run(argv,capture_output=True,text=True,timeout=90)
+    if check and result.returncode:raise RuntimeError('synthetic fixture command failed: '+result.stderr[-6000:])
+    return result
 
 if os.geteuid()!=0 or not os.environ.get('GITHUB_ACTIONS') or not Path('/run/systemd/system').is_dir():
     raise SystemExit('Requires disposable root systemd GitHub runner; no production or skip fallback')

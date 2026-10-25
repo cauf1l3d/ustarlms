@@ -9,7 +9,7 @@ readable, scan capped; new role/code journals outside standard backup. HDD fresh
 logs/health lifecycle, key access/network policy, journal service sandbox, external
 DR/offsite/key custody/UPS/observer/SMTP/SLO remain explicit. infra_one_pass.py adds
 scoped export metadata undo, authenticated encrypted control companion/timer and
-conditional sandbox diagnosis; local25 tests24PASS/1age-environment skip; new CI
+conditional sandbox diagnosis; local26 tests25PASS/1age-environment skip; new CI
 pending. No new production mutation, agents, provider sends, main merge or Connect
 feature work. See context/runtime/infra_closure_matrix_20261025.md and owner receipt.
 

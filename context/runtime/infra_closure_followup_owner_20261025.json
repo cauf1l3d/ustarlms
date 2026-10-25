@@ -131,7 +131,7 @@
     "task_execution_or_reset_performed": false,
     "repeat_query_needed": false
   },
-  "next": "owner qualified source-only privacy check/apply/companion readback; actual Docker recreation lifecycle remains open; no SSH or repeated profile probes",
+  "next": "one retry existing companion --backup-host-state only; source privacy already applied; actual Docker lifecycle remains open",
   "workstation_key_login": {
     "status": "explicitly_deferred_by_owner_until_external_access_preparation",
     "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
@@ -305,8 +305,10 @@
     "repeat_profile_probe_needed": false,
     "plain_environment_values_not_supplied": true,
     "specific_secret_literal_or_leak_not_established": true,
-    "owner_permission_apply_performed": false,
-    "next": "qualified source privacy adapter20d282e9 owner check/apply, then existing encrypted companion; owner apply not yet received",
-    "qualification": "context/runtime/compose_source_privacy_qualification_20261025.json"
+    "owner_permission_apply_performed": true,
+    "next": "retry existing companion only; no repeated source/origin/profile or SSH probes",
+    "qualification": "context/runtime/compose_source_privacy_qualification_20261025.json",
+    "owner_permission_apply_receipt": "context/runtime/compose_source_privacy_owner_20261025.json",
+    "current_observed_mode": "0o600"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "kind": "compose_source_privacy_qualification",
-  "status": "qualified_targeted_native_and_full_review_saved_download_verified_owner_apply_next",
+  "status": "qualified_owner_applied_source_private_new_companion_busy_retry_pending",
   "source_sha256": "20d282e9b24dcc141691271e6477ddc1f24a17979f27c87f94e0294294d70fdb",
   "source_bytes": 7874,
   "core_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
@@ -67,7 +67,7 @@
     "production_access": false,
     "tests_scope": "synthetic source and controls/real Unix UID1000 and33, not owner production execution"
   },
-  "owner_apply_performed": false,
+  "owner_apply_performed": true,
   "active_logging_rotation_claimed": false,
   "author_self_review": true,
   "subagents": 0,
@@ -85,5 +85,15 @@
     "saved_download_verified": true
   },
   "post_qualification_test_only_refinement": "read-only stat comparison excludes access time (reads can update atime); executable bytes unchanged; local15tests/1UID namespace skip PASS",
-  "backup_limit": "private copy of accepted41de2ed3 generation; future live source edits are not automatically tracked; no whole-host/offsite claim"
+  "backup_limit": "private copy of accepted41de2ed3 generation; future live source edits are not automatically tracked; no whole-host/offsite claim",
+  "owner_receipt": "context/runtime/compose_source_privacy_owner_20261025.json",
+  "new_companion_complete": false,
+  "post_qualification_receipt_head_CI": {
+    "commit": "f48a2b6238192b08ae28764d5d849060a3a2c7fd",
+    "review_run": 40219353579,
+    "review_conclusion": "success",
+    "context_run": 40219353511,
+    "context_conclusion": "success",
+    "executable_bytes_unchanged": true
+  }
 }

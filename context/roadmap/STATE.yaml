@@ -4,23 +4,20 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct — source privacy adapter qualified; verified package/owner apply next.
-  Adapter20d282e9(7874B),source dbee1d31: Review40217322352/Context40217322350 SUCCESS.
-  Actual UID1000/33 runtime121241183532:15/15/no skips,read/deployer/denial/private copy
-  and recovery guards PASS. Core43/43/no skips; both source1204/227environment skips/
-  browser PASS; PG16 job121243404387 native guards PASS. Saved ZIP4778B/SHAd4a5350e,
-  CRC/member hashes/extraction/compile/default and saved-download readback verified.
-  New owner action only actual Compose904B/SHA41de2ed3/UID1000:0644→0600, preserving
-  owner/bytes/inode/mtime/parents. Private source+adapter+single-row metadata under
-  code-hardening/compose-source auto included by existing encrypted companion; call
-  its backup-host-state only, never repeat old apply. No owner apply receipt yet.
-  Actual log rotation/health/frozen-ID lifecycle still open; Moodle source has build.
-  Source-copy generation is fixed, not continuous tracking of future source edits;
-  no whole-host/offsite/external restore claim. Installed5067163f/controllers unchanged.
-  SSH/key/firewall deferred,current LAN login/password accepted,UPS present,copies
-  handed over/external restore explicitly unknown; no repeat prompts or old stands.
-  0agents/no agent SSH/provider sends/main merge. Next:
-  context/runtime/compose_source_privacy_20261025.md; qualification nearby.
+  25Oct — owner Compose privacy applied; companion busy, retry backup only.
+  Owner checksum20d282e9/core5067163f OK; check0644→apply0600, UID/GID1000 and
+  contents SHA41de2ed3 unchanged, container_configuration_changed=false. Applied
+  source protection remains accepted. Existing --backup-host-state then refused
+  managed_operation_busy_retry_later before archive creation; no new readback receipt.
+  Pinned recovery_locks reason reproduced with synthetic exclusive holder/released
+  lock; production lock/holder unobserved, do not guess cron identity. Adapter closes
+  its hardening fd before exit; no guard bypass/delete/kill or repeat --apply needed.
+  Next one retry of existing companion only; inspect holder metadata if busy repeats.
+  Prior261-file archive/timer/DB/code/old owner stands retained. Actual Docker log/
+  health frozen-ID lifecycle still open. SSH/key/firewall deferred, UPS present,
+  copies handed over/external restore unknown.0agents/no agent SSH/sends/main merge.
+  Receipt: context/runtime/compose_source_privacy_owner_20261025.json;
+  current command: context/runtime/compose_source_privacy_20261025.md.
 next_task: INF-03
 infrastructure_UPS_status: owner_confirms_present_shutdown_not_verified
 infrastructure_external_restore_status: copies_delivered_result_unknown_owner_explicitly_deferred_no_repeat_prompt
@@ -34,7 +31,8 @@ infrastructure_compose_source: /opt/ustar/apps/stack/docker-compose.yml
 infrastructure_compose_equivalence: profile_received_live_equivalence_unverified
 infrastructure_compose_privacy_plan: context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md
 infrastructure_compose_privacy_qualification: context/runtime/compose_source_privacy_qualification_20261025.json
-infrastructure_compose_privacy_status: qualified15_native_saved_download_verified_owner_apply_pending
+infrastructure_compose_privacy_status: owner_applied0600_contents_owner_unchanged_companion_busy_retry_only
+infrastructure_compose_privacy_owner_receipt: context/runtime/compose_source_privacy_owner_20261025.json
 infrastructure_workstation_key_login: deferred_by_owner_no_further_diagnostics_now
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md

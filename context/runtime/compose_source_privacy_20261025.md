@@ -1,6 +1,28 @@
 # Compose source privacy: квалифицированный блок25Oct2026
 
-**Готов к owner execution; ещё не применён на server1.**
+**Владелец применил: Compose0600, UID/GID1000 и содержимое сохранены.**
+[Owner receipt](compose_source_privacy_owner_20261025.json). Последующий companion
+отказал managed_operation_busy_retry_later: нового complete/readback receipt нет.
+Старый принятый companion261files/35039995B/SHAda701618 сохраняется.
+
+## Текущий шаг: повторить только companion
+
+Однократно выполнить существующий backup command:
+
+```bash
+sudo -v && sudo -n timeout --kill-after=5s 180s /usr/bin/python3 -I -B \
+  /usr/local/sbin/USTAR_INFRA_ONE_PASS_20261025.py --backup-host-state
+```
+
+Ожидается phase=complete,success=true,readback_verified=true. При повторном busy
+собрать read-only metadata конкретного держателя lock; не удалять lock и не
+останавливать процессы по предположению. Исходный check/apply не повторять.
+Pinned recovery_locks возвращает этот reason при занятом shared lock; точный
+production lock/holder в public JSON не назван. Adapter закрывает свой hardening
+fd до завершения CLI. Synthetic exclusive holder/released-lock reproduction PASS,
+но оно не определяет процесс на server1. Ни code/DB undo, ни новый файл не нужен.
+
+## Квалификация исходного кода
 Review40217322352/Context40217322350 SUCCESS на dbee1d31d5e268299d292c663adb4c7c5d567307.
 Runtime121241183532:15new tests/no skips, actual UID1000 retains read/UID33 denied,
 private source copy denied to UID1000. Source jobs1204tests/227environment skips each,
@@ -18,7 +40,7 @@ UID1000 directories не становятся root-owned; полный shared-ho
 writes/SSH changes. Фактическая ротация логов и health lifecycle остаются отдельным
 coordinated frozen-ID/recovery handoff; источник Moodle имеет build.
 
-## Пакет и запуск
+## Проверенный пакет и первоначальный запуск (история)
 
 [ustar-compose-source-privacy-20261025.zip](https://chatgpt.com/library?file_id=libfile_da976d82c120819188728a03a9485cf6&account_id=personal) —4778B,
 SHA256d4a5350e84b9a809f8571da92a6369836cf616421fc9a87db9bd6729b4ab368a.
@@ -26,7 +48,8 @@ Script7874B/SHA25620d282e9b24dcc141691271e6477ddc1f24a17979f27c87f94e0294294d70f
 Три members: script,README-compose-source.txt,SHA256SUMS.txt. CRC/member hashes/
 extraction/compile/default PLAN_ONLY и saved download readback проверены.
 
-Распаковать на компьютере, перенести ТОЛЬКО .py в /home/aduk. На server1 один блок:
+Ниже первоначальный блок, уже выполненный владельцем; не запускать заново.
+Ранее: распаковать на компьютере, перенести ТОЛЬКО .py в /home/aduk:
 
 ```bash
 sudo -v && (
@@ -49,7 +72,7 @@ sudo -v && (
 )
 ```
 
-Вернуть public JSON output. Ожидается ready_for_compose_source_privacy →
+В первоначальном блоке ожидался ready_for_compose_source_privacy →
 compose_source_private(uid/gid1000,mode0o600,contents_unchanged=true), затем existing
 companion complete/readback_verified. Guard refusal не обходить chmod/delete/rebaseline.
 Если encrypted capture откажет после mode change, private before images остаются;

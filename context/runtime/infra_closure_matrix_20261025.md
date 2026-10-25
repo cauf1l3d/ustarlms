@@ -10,7 +10,7 @@ provider not called. Старые DB/code/SSD/Moodle/OS/HTTPS/backup/Connect sta
 | Этап | Подтверждено | Осталось |
 |---|---|---|
 | Права | Root-owned code/config и private legacy22 archive приняты ранее;69 выбранных USTAR exports закрыты от group/other | www-data/caddy supplementary-group trust boundary и общий host access policy требуют отдельного разбора. Не объявляется глобальный аудит всех файлов/других проектов. |
-| Docker/SSD | Existing accepted IDs/images сохранены; прежний root/HDD free-space/SMART stand засчитан. Owner origins: project stack, services moodle/postgres, source /opt/ustar/apps/stack/docker-compose.yml | Actual profile получен: source904B/SHA41de2ed3,UID1000/0644,.env absent; logging/healthcheck отсутствуют,Moodle build present. Mode-only0644→0600 adapter15native/no skips qualified, saved download verified; owner apply ещё не получен. Live equivalence и json-file rotation/health/coordinated frozen-ID handoff открыты. Старые лаборатории/логи/архивы не удалять. |
+| Docker/SSD | Existing accepted IDs/images сохранены; прежний root/HDD free-space/SMART stand засчитан. Owner origins: project stack, services moodle/postgres, source /opt/ustar/apps/stack/docker-compose.yml | Actual profile получен: source904B/SHA41de2ed3,UID1000/0644,.env absent; logging/healthcheck отсутствуют,Moodle build present. Mode-only0644→0600 owner применён:UID/GID1000/contents unchanged;15native/no skips qualified, saved download verified. Новый companion отказал busy, complete/readback ещё нет. Live equivalence и json-file rotation/health/coordinated frozen-ID handoff открыты. Старые лаборатории/логи/архивы не удалять. |
 | Доступ | Новый список69deduplicated endpoints без truncation. Owner Caddy metadata: IPv4 local config API; отдельный IPv6 wildcard HTTP static_response, без proxy dials в проекции; caddy.service/PID862/config path получены. Moodle127.0.0.1:8082; PG5432 не опубликован | Wildcard2019 не доказательство открытого наружу admin API; source/consumers статического endpoint и policy отдельно не проверены. Owner принимает текущий LAN login/password; SSH/key/firewall hardening и диагностику явно откладывает до подготовки внешнего доступа. Не blocker локального Docker этапа и не external-ready PASS. Shared-host/public access policy остаётся в отложенном scope. |
 | Копии/DR | New control companion261files/33.4MiB encrypted/readback; timer active. Physical trees/recovery.key исключены. Fresh standard HDD/pre-hardening archive ранее приняты | Первый scheduled companion tick ещё не наблюдался. Companion не whole-host/atomic DB pair; physical manifests не заменяют их байты. Сохранить SSD physical pairs и standard DB/CODE/DATA HDD archive. Копии переданы по owner confirmation; external restore result owner явно оставляет unknown. Не повторять запрос/stand и не блокировать local work. Offsite/latest-generation identity/separate key custody/RPO/RTO/retention и qualified generation pairing открыты. |
 | Наблюдение | Journal уже fresh measured/categories0; actionnone — настройки не менялись. Numeric HTTP log принят ранее | Причина прежнего no_data не установлена, нулевые categories относятся к выбранному окну/классификатору. Независимый host-loss observer и проверенная доставка всё ещё открыты. |
@@ -24,13 +24,15 @@ Owner откладывает SSH hardening до подготовки внешн�
 login/password работает по его подтверждению; key/agent probes больше не нужны.
 [Owner receipt](infra_closure_followup_owner_20261025.json) сохраняет неуспешный
 publickey-only вызов как историю, не как новый обязательный blocker. Caddy/SQL
-metadata приняты; не повторять. Следующий [targeted Compose source privacy](../proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md)
-готовит только0644→0600 с сохранением UID1000/bytes/parents и private before images
-в existing companion scope;15native/no skips и saved package readback PASS.
-[Готовый owner block](compose_source_privacy_20261025.md), apply receipt ещё не получен. Origin/profile уже получены,
-их не повторять. Active Docker rotation этим не закрывается. Ни daemon/container restart, ни
-recreation этим read-only шагом не выполняется. Current log/health lifecycle
-требует coordinated frozen-ID/recovery handoff; daemon defaults не исправят live logs.
+metadata приняты; не повторять. [Targeted Compose source privacy](compose_source_privacy_20261025.md) уже применён:
+0644→0600, UID/GID1000 и SHA41de2ed3 сохранены. [Owner receipt](compose_source_privacy_owner_20261025.json).
+Последующий encrypted companion refused managed_operation_busy_retry_later до
+создания архива; текущая защита файла остаётся, старый принятый companion сохранён.
+Следующий шаг — один повтор только existing --backup-host-state. Если busy повторится,
+выяснить read-only metadata holder; не обходить guard/удалять lock/останавливать
+процессы по догадке. Origin/profile не повторять. Active Docker rotation этим не
+закрывается; current log/health lifecycle требует coordinated frozen-ID/recovery
+handoff. Daemon defaults не исправят live logs.
 
 Owner просит external restore result оставить unknown: copies handed over, не
 переспрашивать и не повторять stand. UPS presence подтверждён. Для оставшихся

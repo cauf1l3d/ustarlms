@@ -2,8 +2,9 @@
 
 **Qualified source dbee1d31/adapter20d282e9:** Review40217322352/Context40217322350 SUCCESS;
 15native/no skips/actual UID boundary PASS; saved download SHA/CRC/compile/default
-verified. [Owner runbook](../runtime/compose_source_privacy_20261025.md). Owner apply
-not yet received; actual Docker rotation remains open.
+verified. [Owner runbook](../runtime/compose_source_privacy_20261025.md). Owner applied0600/UID1000/hash unchanged; companion refused managed-operation
+contention, so retry only existing backup. [Owner receipt](../runtime/compose_source_privacy_owner_20261025.json).
+Actual Docker rotation remains open.
 
 Owner actual profile: /opt/ustar/apps/stack/docker-compose.yml,904B/SHA41de2ed318ffb7697d92c575d1fc35ab3e6b1d16900e725aca843642d1cb7a09,
 UID/GID1000:1000,0644. No .env; postgres has3 environment entries (values not read

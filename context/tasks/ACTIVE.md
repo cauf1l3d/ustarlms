@@ -1,5 +1,20 @@
 # Активные задачи USTAR
 
+**25Oct — owner Compose privacy applied; companion busy, retry backup only.**
+Owner checksum20d282e9/core5067163f OK; check0644→apply0600, UID/GID1000 and
+contents SHA41de2ed3 unchanged, container_configuration_changed=false. Applied
+source protection remains accepted. Existing --backup-host-state then refused
+managed_operation_busy_retry_later before archive creation; no new readback receipt.
+Pinned recovery_locks reason reproduced with synthetic exclusive holder/released
+lock; production lock/holder unobserved, do not guess cron identity. Adapter closes
+its hardening fd before exit; no guard bypass/delete/kill or repeat --apply needed.
+Next one retry of existing companion only; inspect holder metadata if busy repeats.
+Prior261-file archive/timer/DB/code/old owner stands retained. Actual Docker log/
+health frozen-ID lifecycle still open. SSH/key/firewall deferred, UPS present,
+copies handed over/external restore unknown.0agents/no agent SSH/sends/main merge.
+Receipt: context/runtime/compose_source_privacy_owner_20261025.json;
+current command: context/runtime/compose_source_privacy_20261025.md.
+
 **25Oct — source privacy adapter qualified; verified package/owner apply next.**
 Adapter20d282e9(7874B),source dbee1d31: Review40217322352/Context40217322350 SUCCESS.
 Actual UID1000/33 runtime121241183532:15/15/no skips,read/deployer/denial/private copy

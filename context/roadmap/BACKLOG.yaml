@@ -5,13 +5,15 @@ source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_infrastructure_checkpoint:
   date_msk: '2026-10-25'
-  status: owner_DB_and_code_hardening_accepted_consolidated_remaining_survey_pending
+  status: owner_survey_accepted_consolidated_local_batch_CI_pending
   report: context/runtime/infra_normalization_resume_20261023.md
   baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
   app_role_owner_receipt: context/runtime/infra_app_handoff_owner_20261025.json
   code_owner_receipt: context/runtime/infra_code_hardening_owner_20261025.json
+  consolidated_owner_receipt: context/runtime/infra_survey_owner_20261025.json
+  closure_matrix: context/runtime/infra_closure_matrix_20261025.md
   one_pass_plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md
-  next: one_owner_metadata_report_then_coordinated_remaining_changes
+  next: qualify_local_batch_then_one_apply_and_external_acceptance
   retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
   production_mutation_scope: owner DB ownership/config/HTTPS app_role_active and code_hardened; legacy22 private archive

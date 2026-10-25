@@ -4,35 +4,35 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct — owner reports hardening works; eight stages consolidated into one pass.
-  Owner asks to close the remaining infrastructure quickly in one pass. Accepted
-  DB app role/code_hardened/functional work and earlier SSD/Moodle/OS/HTTPS/backup/
-  Connect evidence count; do not repeat old owner stands. One bounded local survey
-  remaining_survey.py gathers only missing metadata into eight sections, then one
-  coordinated reviewed apply package is prepared from the actual report. No server
-  collection has run yet.16local tests PASS; existing PG16 fixture adds readonly
-  aggregate SQL/disabled-task check; CI pending for new source. No new permissions,
-  SSH/firewall/container/retention/provider changes or test messages. Missing tools
-  and external restore/power/custody/observer evidence remain explicit blockers,
-  not automatic acceptance. No business Connect feature work or main merge.0agents.
-  Plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md.
+  25Oct — consolidated owner survey received; local batch prepared, not applied.
+  Collector0d5d05fc on server101:50UTC is accepted; exact-source9d4e5c2c
+  Review40151717494/Context40151717558 SUCCESS; existing PG16 native121045127545 PASS.
+  No repeat owner stand. Known config/keys protected; >=63 observed exports remain
+  readable, scan capped; new role/code journals outside standard backup. HDD fresh
+  00:36Z encrypted/readback success, cert-renew timer already active. Docker unrotated
+  logs/health lifecycle, key access/network policy, journal service sandbox, external
+  DR/offsite/key custody/UPS/observer/SMTP/SLO remain explicit. infra_one_pass.py adds
+  scoped export metadata undo, authenticated encrypted control companion/timer and
+  conditional sandbox diagnosis; local25 tests24PASS/1age-environment skip; new CI
+  pending. No new production mutation, agents, provider sends, main merge or Connect
+  feature work. See context/runtime/infra_closure_matrix_20261025.md and owner receipt.
 next_task: INF-03
 infrastructure_resume: context/runtime/infra_normalization_resume_20261023.md
 infrastructure_baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
 infrastructure_baseline_status: owner_initial_and_followup_metadata_received_full_INF01_still_open
 infrastructure_baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
 infrastructure_admin_status: owner_created_ustar_pg_admin_two_required_SCRAM_sessions_accepted_do_not_repeat_creation
-infrastructure_DB_privilege_status: coordinator_7e35795f_qualified_moodle_unchanged_owner_config_ownership_HTTPS_cutover_pending
+infrastructure_DB_privilege_status: owner_applied_ordinary_app_role_ustar_app_public3479
 infrastructure_bootstrap_status: owner_confirmed_moodle_OID10_admin_OID109344_do_not_demote_bootstrap
-infrastructure_app_login_status: owner_created_ustar_app_OID110395_required_SCRAM_five_flags_false_no_membership_no_DB_ownership
+infrastructure_app_login_status: owner_required_SCRAM_and_effective_role_accepted_ustar_app_owner3479
 infrastructure_DB_privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
 infrastructure_DB_consumers: context/runtime/infra_db_privilege_consumers_20261023.md
 infrastructure_app_handoff_plan: context/proposals/INF02_APP_HANDOFF_PLAN_20261024.md
-infrastructure_app_handoff_status: coordinator_7e35795f_targeted_native_UID33_qualified_owner_readonly_check_next
+infrastructure_app_handoff_status: owner_app_role_active_login_course_opening_accepted
 infrastructure_app_handoff_runbook: context/runtime/infra_app_handoff_20261024.md
 infrastructure_app_handoff_CI: context/runtime/infra_app_handoff_ci_20261024.json
 infrastructure_retest_scope: reuse_accepted_stages_existing_CI_only_missing_DB_privilege_delta_no_new_owner_stand_or_full_restore_repeat
-infrastructure_file_status: primary_config_and_plugin_writable_HTTPS_metadata_handoff_and_copy_rehearsal_pending
+infrastructure_file_status: owner_code_hardened_legacy22_private_archive_outside_code_exports_batch_pending
 connect_development_status: owner_paused_23Oct_accepted2300_runtime_retained
 connect_reminder: {date: '2026-10-24', time: '15:00', timezone: Europe/Moscow, kind: owner_reminder_not_automatic_resume}
 
@@ -321,3 +321,6 @@ infrastructure_code_hardening_status: owner_applied_code_hardened_owner_reports_
 infrastructure_code_hardening_receipt: context/runtime/infra_code_hardening_owner_20261025.json
 
 infrastructure_consolidated_plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md
+
+infrastructure_consolidated_receipt: context/runtime/infra_survey_owner_20261025.json
+infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261025.md

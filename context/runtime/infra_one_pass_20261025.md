@@ -1,17 +1,17 @@
 # One-pass remaining infrastructure survey25Oct2026
 
-**25Oct — owner reports hardening works; eight stages consolidated into one pass.**
-Owner asks to close the remaining infrastructure quickly in one pass. Accepted
-DB app role/code_hardened/functional work and earlier SSD/Moodle/OS/HTTPS/backup/
-Connect evidence count; do not repeat old owner stands. One bounded local survey
-remaining_survey.py gathers only missing metadata into eight sections, then one
-coordinated reviewed apply package is prepared from the actual report. No server
-collection has run yet.15local tests PASS; existing PG16 fixture adds readonly
-aggregate SQL/disabled-task check; CI pending for new source. No new permissions,
-SSH/firewall/container/retention/provider changes or test messages. Missing tools
-and external restore/power/custody/observer evidence remain explicit blockers,
-not automatic acceptance. No business Connect feature work or main merge.0agents.
-Plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md.
+**25Oct — consolidated owner survey received; local batch prepared, not applied.**
+Collector0d5d05fc on server101:50UTC is accepted; exact-source9d4e5c2c
+Review40151717494/Context40151717558 SUCCESS; existing PG16 native121045127545 PASS.
+No repeat owner stand. Known config/keys protected; >=63 observed exports remain
+readable, scan capped; new role/code journals outside standard backup. HDD fresh
+00:36Z encrypted/readback success, cert-renew timer already active. Docker unrotated
+logs/health lifecycle, key access/network policy, journal service sandbox, external
+DR/offsite/key custody/UPS/observer/SMTP/SLO remain explicit. infra_one_pass.py adds
+scoped export metadata undo, authenticated encrypted control companion/timer and
+conditional sandbox diagnosis; local25 tests24PASS/1age-environment skip; new CI
+pending. No new production mutation, agents, provider sends, main merge or Connect
+feature work. See context/runtime/infra_closure_matrix_20261025.md and owner receipt.
 
 Source/operator SHA256: 0d5d05fcc8d21583fe82e3247cca185bbd9a32b3e5927ff818d88472945afee3
 

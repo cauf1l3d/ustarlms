@@ -6,6 +6,38 @@ remaining infrastructure categories quickly in one pass. Native author execution
 blind SSH/firewall changes, third-party subscriptions, or invented external proof.
 No more repeated owner role/upgrade/full-restore/UI stands by default.
 
+## Actual survey received25Oct01:50UTC
+
+Collector0d5d05fc matches the delivered script. Review40151717494 and
+Context40151717558 both SUCCESS. The private report is not committed. Its partial
+flag includes a restore-lab du timeout and cron --status output parsing failure;
+neither establishes an Academy failure. The home export scan hit its candidate
+limit, and the listener list was capped: do not claim complete exposure coverage.
+
+Actionable batch: restrict readable regular legacy exports in the narrowly defined
+USTAR home/opt scope, preserve bytes/ownership and private rollback metadata; add
+an encrypted, readback-verified HDD companion for the two new recovery journals,
+their legacy archive and exact root controllers, with its own nightly timer and
+explicit restore manifest. This is additional scope, not a whole-host backup or
+external restore proof. Coordinate existing locks; exclude recovery.key; no delete.
+
+Journal diagnosis must run inside the actual collector service sandbox. Temporarily
+append a bounded ExecStartPost probe, record only classified failure/timing/exit
+metadata, then remove it. A CPU quota change is allowed only for a reproduced
+timeout; journal supplementary membership only for a reproduced permission error.
+Keep either adjustment only when a fresh actual collector snapshot reports measured
+events; otherwise revert. Unknown causes remain explicitly unresolved. Do not
+modify console code, auth/notifier state or grant broad capabilities.
+
+The same command returns complete deduplicated listener metadata, recent cron
+receipt scalars and active certificate metadata without another full survey.
+No blind SSH/firewall change: password access is enabled, UFW inactive, and there
+is no verified alternative key login/network allowlist. No Docker recreation:
+current log rotation/healthchecks remain a coordinated identity-lifecycle delta.
+No automatic deletion of labs/old backups, no extra load/restore stand or provider
+messages. SMART success is a point-in-time observation, not redundancy/UPS proof.
+External restore, offsite/key custody, UPS and independent observer remain open.
+
 ## Accepted inputs
 
 SSD growth, Moodle518 upgrade/repeat/SCORM, OS patch/reboot, LAN HTTPS, scheduled
@@ -40,10 +72,10 @@ never silently accepted. Time budget300s/output bound; safe partial report.
   handling; JSON whitelist; SMART and SSH-context validation; default no host access.
 - [x] Implement scripts/infra/remaining_survey.py; use only stdlib and known tools.
   Runner accepts bounded argv/stdin and records sanitized reason codes; no raw errors.
-- [ ] Publish script+tests+updated accepted state and matrix in PR106, run appropriate CI.
-- [ ] Build one ZIP; verify CRC, extraction, script SHA and default PLAN_ONLY.
+- [x] Survey script/source/native qualified on9d4e5c2c/Review40151717494/Context40151717558.
+- [x] Survey ZIP: CRC/extraction/script/default/download-readback verified.
   Deliver persistent file and download/readback-verify bytes before user link.
-- [ ] Owner runs one collection command and returns one sanitized report.
+- [x] Owner report received25Oct01:50UTC; reviewed summary and closure matrix recorded.
 - [ ] Based on actual report, prepare one tested coordinated apply/recovery package
   for all safely actionable server changes; consolidate outstanding physical,
   external restore, custody, SMTP recipient and access-policy confirmations.

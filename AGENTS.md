@@ -1,5 +1,20 @@
 # USTAR инструкции агентам
 
+**25Oct21:39MSK — owner companion retry complete; source privacy closed locally.**
+Source0600/UID1000/SHA41de2ed3 retained; new encrypted control companion264files/
+35043569B/SHA083bbfda, readback true, finished18:39:16Z/21:39:16MSK. Physical trees/
+recovery.key excluded, whole_host_backup=false; earlier archives retained. Single
+retry resolved prior busy; holder unobserved, no new lock investigation/repeat backup
+or apply needed. Receipt: context/runtime/compose_source_privacy_owner_20261025.json.
+Next missing Docker delta only: writable-layer A/C/D counts/fixed path groups under
+known IDs/images before/after guards. Existing origin/profile accepted, not repeated.
+Shell/Python syntax, simulated sentinel/counts/drift/error/timeout/size cases PASS;
+no actual Docker probe/recreation yet. Frozen cron/HTTPS/recovery identity lifecycle
+still open; no blind compose/build/pull. Existing owner/native stands retained.
+SSH/key/firewall deferred, UPS present,copies handed over/external restore unknown.
+0agents/no agent SSH/provider sends/main merge. Current read-only command:
+context/runtime/infra_docker_writable_layer_20261025.md.
+
 **25Oct — owner Compose privacy applied; companion busy, retry backup only.**
 Owner checksum20d282e9/core5067163f OK; check0644→apply0600, UID/GID1000 and
 contents SHA41de2ed3 unchanged, container_configuration_changed=false. Applied

@@ -20,17 +20,17 @@ current_infrastructure_checkpoint:
   Caddy2019: local_admin_API_and_separate_IPv6_HTTP_static_listener_classified
   deferred_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
   access_scope: owner_accepts_LAN_login_password_defers_SSH_hardening_until_external_access
-  next_local_runbook: context/runtime/compose_source_privacy_20261025.md
+  next_local_runbook: context/runtime/infra_docker_writable_layer_20261025.md
   compose_origin: owner_project_stack_services_moodle_postgres_source_opt_ustar_apps_stack
   source_model_equivalence: actual_profile_received_live_equivalence_unverified
   compose_privacy_plan: context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md
-  compose_privacy_status: owner_applied0600_contents_owner_unchanged_companion_busy_retry_only
+  compose_privacy_status: owner_applied0600_contents_owner_unchanged_companion264_complete_readback_verified
   compose_privacy_owner_receipt: context/runtime/compose_source_privacy_owner_20261025.json
   workstation_key_login: explicitly_deferred_no_probes_now
-  next: retry_existing_companion_only_then_Docker_identity_lifecycle
+  next: missing_Docker_writable_layer_metadata_then_coordinated_identity_lifecycle
   retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
-  production_mutation_scope: owner DB app_role_active/code_hardened/legacy22 archive and local_batch_applied69export modes,261file encrypted controls,timer; actual Compose source0600 owner1000/hash unchanged; new companion busy not complete
+  production_mutation_scope: owner DB app_role_active/code_hardened/legacy22 archive and local_batch_applied69export modes,261file encrypted controls,timer; actual Compose source0600 owner1000/hash unchanged; new264file companion complete/readback true
   accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300_DB_app_role_code_hardening
 current_connect_checkpoint:
   Telegram_successor: context/runtime/connect_telegram_finish_20261023.md

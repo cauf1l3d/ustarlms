@@ -1,26 +1,19 @@
 # Compose source privacy: квалифицированный блок25Oct2026
 
-**Владелец применил: Compose0600, UID/GID1000 и содержимое сохранены.**
-[Owner receipt](compose_source_privacy_owner_20261025.json). Последующий companion
-отказал managed_operation_busy_retry_later: нового complete/readback receipt нет.
-Старый принятый companion261files/35039995B/SHAda701618 сохраняется.
+**Владелец применил Compose0600, UID/GID1000 и содержимое сохранены; companion завершён.**
+[Owner receipt](compose_source_privacy_owner_20261025.json). После первоначального
+busy один retry успешно создал264-file/35043569B encrypted control archive:
+`ustar-control-20261025T183912Z-d7f6f8e3.tar.gz.age`,
+SHA256083bbfda3d26e85caca74393af76c4006e03c3278e0016a718829929b370c2f4,
+readback_verified=true, finished21:39:16MSK. Original archive261files/SHAda701618
+сохранён. Local source privacy + companion step закрыт; whole-host/offsite/DR не
+утверждается. Конкретный прежний busy holder не определён, диагностика не нужна.
 
-## Текущий шаг: повторить только companion
+## Следующий шаг
 
-Однократно выполнить существующий backup command:
-
-```bash
-sudo -v && sudo -n timeout --kill-after=5s 180s /usr/bin/python3 -I -B \
-  /usr/local/sbin/USTAR_INFRA_ONE_PASS_20261025.py --backup-host-state
-```
-
-Ожидается phase=complete,success=true,readback_verified=true. При повторном busy
-собрать read-only metadata конкретного держателя lock; не удалять lock и не
-останавливать процессы по предположению. Исходный check/apply не повторять.
-Pinned recovery_locks возвращает этот reason при занятом shared lock; точный
-production lock/holder в public JSON не назван. Adapter закрывает свой hardening
-fd до завершения CLI. Synthetic exclusive holder/released-lock reproduction PASS,
-но оно не определяет процесс на server1. Ни code/DB undo, ни новый файл не нужен.
+[Missing Docker writable-layer metadata](infra_docker_writable_layer_20261025.md).
+Source check/apply/companion повторять не требуется. Origin/profile и старые owner
+stands приняты. Actual log rotation/coordinated frozen-ID lifecycle ещё открыты.
 
 ## Квалификация исходного кода
 Review40217322352/Context40217322350 SUCCESS на dbee1d31d5e268299d292c663adb4c7c5d567307.

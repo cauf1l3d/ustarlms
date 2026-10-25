@@ -71,10 +71,12 @@
   "next": {
     "runbook": "context/runtime/infra_docker_layer_classification_20261025.md",
     "scope": "Moodle fixed dependency/config directory buckets and Docker SizeRw only; retain accepted first counts, no repeated origin/profile/SSH probes",
-    "owner_output_received": false,
+    "owner_output_received": true,
     "local_qualification": "exact shell/Python syntax;22 prefix boundaries/precedence/Python version cases;9 public refusal cases;secret sentinel projection PASS",
     "production_access": false,
-    "shell_sha256": "563e6ef2cf6c1ddb61e8e99bac5eb7ed8e5e4beebc2b8bcd525aa8f6072f1f7d"
+    "shell_sha256": "563e6ef2cf6c1ddb61e8e99bac5eb7ed8e5e4beebc2b8bcd525aa8f6072f1f7d",
+    "status": "metadata accepted; audit pinned recurring/recovery consumers before implementing lifecycle",
+    "next_owner_metadata_probe": null
   },
   "boundaries": {
     "subagents": 0,
@@ -85,5 +87,41 @@
     "UPS": "owner confirms present",
     "external_restore": "copies handed over/result explicitly unknown; no repeat request/stand",
     "accepted_older_owner_native_stands_retained": true
+  },
+  "classification": {
+    "recorded_at_utc": "2026-10-25T21:07:15.230407+00:00",
+    "source": "owner server1 console reply; command paste echo visually corrupted but valid public JSON reports completion; observation timestamp not supplied",
+    "output": {
+      "phase": "moodle_layer_classified",
+      "identity_unchanged": true,
+      "writable_bytes": 85491712,
+      "path_groups": {
+        "python_libraries": 0,
+        "php_extensions": 0,
+        "php_headers": 0,
+        "php_config": 0,
+        "apache_config": 0,
+        "certificates": 0,
+        "node_libraries": 0,
+        "local_binaries": 0,
+        "system_binaries": 13,
+        "other_headers": 0,
+        "system_libraries": 6,
+        "shared_assets": 2432,
+        "package_metadata": 45,
+        "runtime_temp_logs": 141,
+        "other_config": 13,
+        "other_usr": 1,
+        "other_var": 9,
+        "root_home": 3,
+        "other": 0
+      },
+      "configuration_changes": false,
+      "provider_called": false
+    },
+    "writable_MiB": 81.53125,
+    "interpretation": "matches fixed prefix groups only; does not identify packages or prove contents/metadata unchanged in every PHP/certificate path",
+    "no_more_grouping_probes_needed": true,
+    "production_recreation_performed": false
   }
 }

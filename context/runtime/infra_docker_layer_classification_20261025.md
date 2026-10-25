@@ -1,5 +1,9 @@
 # Moodle writable layer: классификация для подготовки ротации25Oct2026
 
+**Historical command — owner result received, do not repeat.**
+85491712B/2663paths, identity unchanged; see [receipt](infra_docker_writable_layer_owner_20261025.json).
+Next [successor plan](../proposals/DOCKER_RUNTIME_SUCCESSOR_PLAN_20261025.md).
+
 Owner counts приняты: [receipt](infra_docker_writable_layer_owner_20261025.json).
 Moodle2618A/45C/0D=2663paths:2452/usr,13/etc,61/var,131/tmp,3/run,3/root.
 PostgreSQL6A/3C/0D=9paths:4/run,4/root,1other. Known IDs/images unchanged.

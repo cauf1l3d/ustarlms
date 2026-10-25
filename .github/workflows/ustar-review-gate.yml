@@ -294,6 +294,7 @@ jobs:
           sudo -n apt-get install -y age
           sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_infra_one_pass -v
           sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_compose_source_privacy -v
+          sudo -n env USTAR_REQUIRE_INFRA_NATIVE=1 python3 -m unittest tests.r16.test_docker_lifecycle -v
           sudo -n env GITHUB_ACTIONS=true python3 tests/stage/infra_one_pass_native.py
       - name: CON02 controller handoff on actual systemd UID33 credentials and private TLS
         run: >-

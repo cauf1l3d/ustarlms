@@ -1,5 +1,14 @@
 # USTAR вход в проект
 
+**25Oct — infrastructure remains current; Docker successor preparation, no apply yet.**
+Owner classification85491712B/2663paths accepted; no repeated metadata probes.
+[Plan](context/proposals/DOCKER_RUNTIME_SUCCESSOR_PLAN_20261025.md),
+[ledger](context/runtime/docker_runtime_successor_progress_20261025.md).
+34contract tests/5local environment skips; production/native handoff not qualified.
+Default PLAN_ONLY/actions refuse. Previous owner DB/code/source privacy/264-file
+companion accepted;0agents/no SSH/provider sends/main merge. SSH deferred,UPS present,
+copies delivered/external restore unknown. Connect development remains paused.
+
 **23Oct — owner: резерв позже, сначала завершить Telegram.**
 [Суженный проект](context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_DESIGN_20261023.md),
 [план самостоятельной реализации](context/proposals/USTAR_CONNECT_TELEGRAM_FINISH_PLAN_20261023.md).

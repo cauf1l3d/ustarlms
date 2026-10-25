@@ -1,5 +1,19 @@
 # Активные задачи USTAR
 
+**25Oct — owner layer classification accepted; runtime successor engineering underway.**
+Moodle writable85491712B (81.53MiB),2663paths; system13/library6/shared2432/package45,
+runtime141/config13/usr1/var9/root3. Known IDs/images unchanged. Prefix zeros are
+not a complete dependency/content proof. No more classification/origin/profile probes.
+Chosen transition snapshots stopped runtimes into local images, retains predecessors,
+preserves process/binds/addresses and advances only typed recurring image bindings.
+Design/plan: context/proposals/DOCKER_RUNTIME_SUCCESSOR_PLAN_20261025.md; ledger:
+context/runtime/docker_runtime_successor_progress_20261025.md. Pure/file/transaction
+contracts34tests/5local environment skips; actual UnixAPI/UID and Docker CI pending.
+Default PLAN_ONLY; every CLI action still refuses runtime_transition_not_qualified.
+Production host/archive/full handoff not implemented or qualified; no owner apply.
+Source0600/264-file companion21:39MSK retained. Old stands count; SSH deferred,
+UPS present,copies handed over/external restore unknown.0agents/no agent SSH/sends/main merge.
+
 **25Oct — owner writable-layer counts received; classify Moodle changes next.**
 Moodle2618A/45C/0D=2663paths:2452/usr,13/etc,61/var,131/tmp,3/run,3/root.
 PG6A/3C/0D=9paths:4/run,4/root,1other. Before/after known ID/image checks passed;

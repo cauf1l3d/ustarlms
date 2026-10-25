@@ -4,19 +4,12 @@ project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  25Oct — owner writable-layer counts received; classify Moodle changes next.
-  Moodle2618A/45C/0D=2663paths:2452/usr,13/etc,61/var,131/tmp,3/run,3/root.
-  PG6A/3C/0D=9paths:4/run,4/root,1other. Before/after known ID/image checks passed;
-  counts include directories, not log size/dependency identity. Specific packages,
-  config/bytes unknown; no source or file contents read. Do not repeat first counts/
-  origin/profile. Next fixed dependency/config buckets + SizeRw for Moodle only:
-  context/runtime/infra_docker_layer_classification_20261025.md.
-  Syntax/22prefix and9refusal/sentinel cases PASS with simulated Docker; no native
-  recreation/log rotation yet. Frozen cron/HTTPS/recovery handoff remains open.
-  Source0600/264-file companion readback21:39MSK retained; old stands count.
-  SSH/key/firewall deferred,UPS present,copies handed over/external restore unknown.
-  0agents/no agent SSH/provider sends/main merge. Receipt:
-  context/runtime/infra_docker_writable_layer_owner_20261025.json.
+  Owner Moodle layer classification85491712B/2663paths accepted, no repeated probes.
+  Docker successor design/plan and pure/file/transaction boundaries in progress;
+  34contract tests/5local environment skips. Native host/archive/recurring handoff
+  not qualified; default PLAN_ONLY and CLI actions refused, no owner apply.
+  Existing DB/code/source0600/264-file companion accepted; SSH deferred,UPS present,
+  copies delivered/external restore unknown.0agents/no agent SSH/sends/main merge.
 next_task: INF-05
 infrastructure_UPS_status: owner_confirms_present_shutdown_not_verified
 infrastructure_external_restore_status: copies_delivered_result_unknown_owner_explicitly_deferred_no_repeat_prompt
@@ -24,9 +17,9 @@ infrastructure_task_retry_status: two_old_disabled_rows_enabled_retry_zero_no_re
 infrastructure_caddy2019_status: owner_local_admin_and_separate_IPv6_HTTP_static_listener_classified_no_blind_change
 infrastructure_deferred_access_runbook: context/runtime/infra_ssh_key_access_20261025.md
 infrastructure_access_scope: LAN_login_password_accepted_SSH_key_firewall_hardening_deferred_until_external_access
-infrastructure_next_local_runbook: context/runtime/infra_docker_layer_classification_20261025.md
+infrastructure_next_local_runbook: context/proposals/DOCKER_RUNTIME_SUCCESSOR_PLAN_20261025.md
 infrastructure_docker_layer_owner_receipt: context/runtime/infra_docker_writable_layer_owner_20261025.json
-infrastructure_docker_layer_status: counts_received_Moodle2663_PG9_fixed_dependency_groups_and_SizeRw_next
+infrastructure_docker_layer_status: owner_classification_85491712B_2663paths_accepted_successor_engineering_no_apply
 infrastructure_compose_origin: project_stack_services_moodle_postgres_workdir_opt_ustar_apps_stack
 infrastructure_compose_source: /opt/ustar/apps/stack/docker-compose.yml
 infrastructure_compose_equivalence: profile_received_live_equivalence_unverified

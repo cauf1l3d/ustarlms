@@ -124,3 +124,26 @@ evidence={'result':'DB_APP_HANDOFF_NATIVE=PASS','postgres_major':major,'objects'
     'external_provider_called':False,'production_access':False}
 Path('/artifacts/db-app-handoff-native.json').write_text(json.dumps(evidence,sort_keys=True)+'\n')
 print('DB_APP_HANDOFF_NATIVE=PASS')
+
+# Same disposable fixture: validate the consolidated readonly survey SQL, no new stand.
+import remaining_survey as survey
+class SurveyRunner:
+    def parsed(self,argv,*,raw,**kwargs):
+        assert argv[:4]==['docker','exec','-i','ustar_postgres']
+        query=raw.decode()
+        assert query.startswith('BEGIN READ ONLY;') and query.endswith('ROLLBACK;')
+        return json.loads(pg(query).stdout)
+summary=survey.postgres_survey(SurveyRunner(),prefix='stage_')
+assert summary['database_bytes']>0 and summary['stats']['numbackends']>=1
+assert set(summary['tasks'])=={'stage_task_scheduled','stage_task_adhoc'}
+expected=json.loads(pg("BEGIN READ ONLY; SELECT json_build_object('count',count(*),"
+    "'enabled',count(*) FILTER(WHERE disabled=0)) FROM public.stage_task_scheduled; ROLLBACK;").stdout)
+assert summary['tasks']['stage_task_scheduled']['count']==expected['count']
+assert summary['tasks']['stage_task_scheduled']['enabled']==expected['enabled']
+assert observe()==ordinary
+Path('/artifacts/infra-remaining-survey-native.json').write_text(json.dumps({
+    'result':'INFRA_REMAINING_SURVEY_NATIVE=PASS','read_only_transactions':True,
+    'scheduled_task_count':expected['count'],'scheduled_enabled':expected['enabled'],
+    'disabled_tasks_excluded':True,'original_ownership_inventory_retained':True,
+    'production_access':False,'provider_called':False,'full_live_host_survey_executed':False},sort_keys=True)+'\n')
+print('INFRA_REMAINING_SURVEY_NATIVE=PASS')

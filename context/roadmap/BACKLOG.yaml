@@ -1,23 +1,21 @@
 schema_version: 2
-updated_at: '2026-10-24'
+updated_at: '2026-10-25'
 canonical_branch: main
 source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 current_infrastructure_checkpoint:
-  date_msk: '2026-10-24'
-  status: separate_app_role_CI_qualified_production_public_ownership_config_HTTPS_handoff_required
+  date_msk: '2026-10-25'
+  status: owner_DB_and_code_hardening_accepted_consolidated_remaining_survey_pending
   report: context/runtime/infra_normalization_resume_20261023.md
-  baseline_runbook: context/runtime/infra_readonly_baseline_20261023.md
   baseline_receipt: context/runtime/infra_readonly_owner_20261023.json
-  privilege_CI: context/runtime/infra_db_privilege_ci_20261023.json
-  consumers: context/runtime/infra_db_privilege_consumers_20261023.md
-  handoff_plan: context/proposals/INF02_APP_HANDOFF_PLAN_20261024.md
-  findings: runtime_moodle_superuser_primary_config33_mode755_and_local_ustar_writable_no_container_healthcheck_or_log_limits
-  next: coordinator_7e35795f_qualified_owner_readonly_check_then_guarded_cutover
-  retest_scope: no_new_owner_stand_or_full_restore_repeat_without_a_specific_uncovered_failure_mode
+  app_role_owner_receipt: context/runtime/infra_app_handoff_owner_20261025.json
+  code_owner_receipt: context/runtime/infra_code_hardening_owner_20261025.json
+  one_pass_plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md
+  next: one_owner_metadata_report_then_coordinated_remaining_changes
+  retest_scope: reuse accepted owner/native stands; no default full restore/repackage/UI repeat
   production_mutations_performed: true
-  production_mutation_scope: owner_added_only_ustar_pg_admin_and_ordinary_ustar_app_roles
-  accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300
+  production_mutation_scope: owner DB ownership/config/HTTPS app_role_active and code_hardened; legacy22 private archive
+  accepted_work_not_reopened: SSD_growth_Moodle518_OS_patch_reboot_LAN_HTTPS_backup_schedule_Connect2300_DB_app_role_code_hardening
 current_connect_checkpoint:
   Telegram_successor: context/runtime/connect_telegram_finish_20261023.md
   Telegram_successor_CI: context/runtime/connect_telegram_finish_ci_20261023.json
@@ -122,10 +120,10 @@ tasks:
     отдельными.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
-  status: in_progress
-  current_summary: ustar_pg_admin и два required-SCRAM входа9976/9995 приняты; создание не повторять. CI933497e0/Review40043036549 SUCCESS для ordinary app role с public objects+CFG;14checks/five42501/100USTAR-schema equality, artifact hash verified. Bootstrap/backup POSTGRES_USER сохранены admin. Owner24Oct подтвердил moodle OID10/admin OID109344. Owner создал ustar_app/OID110395, SCRAM login/five flags0/owner0/memberships0 приняты; создание не повторять. Owner controller/SQL definer preflight принят:3479mdl_/moodle objects, monitor definer app USAGE0/EXECUTE0. Coordinator7e35795f квалифицирован:Review40107134974 SUCCESS,14prior+9new native checks, actual UID33 permissions, proof downloaded/hash-verified. Далее owner --check готового файла. Production config/public ownership/HTTPS handoff ещё не выполнен. Полный INF02/03 открыт.
+  status: done
+  current_summary: Owner accepted ordinary ustar_app live handoff and browser use;3479 scoped relations, independent admin SCRAM sessions, runtime five flags0 and no memberships. Existing native positive/negative/upgrade/dump/restore delta accepted. Bootstrap OID10 remains administrative for backup. Broader host authentication/access remains INF10.
   validation_scope: Засчитать прежние стенды; существующий CI для недостающей проверки снятых cluster flags и зависимости установленных helpers. Новый owner-стенд и полный restore/regression круг не планируются по умолчанию.
-  evidence: context/runtime/infra_readonly_owner_20261023.json
+  evidence: context/runtime/infra_app_handoff_owner_20261025.json
   depends_on:
   - INF-01
   acceptance:
@@ -136,7 +134,7 @@ tasks:
 - id: INF-03
   title: Защита кода/config, dumps и ключей
   status: in_progress
-  progress_20261025: Owner applied code_hardened; config and code protected; legacy22 privately preserved; post-apply browser and outside-code keys/dumps acceptance pending
+  progress_20261025: Owner applied code_hardened; config and code protected; legacy22 privately preserved; owner reports browser works; outside-code keys/dumps acceptance pending
   depends_on:
   - INF-01
   acceptance:

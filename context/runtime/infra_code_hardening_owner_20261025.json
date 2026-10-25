@@ -62,7 +62,12 @@
   "private_state": "/var/lib/ustar-code-hardening/state.json",
   "backup_receipt_in_stdout": false,
   "fresh_HDD_backup_phase_reported": true,
-  "post_apply_browser_acceptance": "pending",
+  "post_apply_browser_acceptance": {
+    "status": "owner_reports_works",
+    "reported_date": "2026-10-25",
+    "wording": "да вроде все работает",
+    "individual_flows_separately_enumerated": false
+  },
   "full_INF03_closed": false,
   "next": "INF03 metadata-only access survey of config/keys/dumps/backup paths outside protected code; no blanket permission changes"
 }

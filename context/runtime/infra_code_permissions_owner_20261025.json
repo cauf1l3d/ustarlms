@@ -38,5 +38,5 @@
     "business_rows_restored": false,
     "phase": "code_hardened"
   },
-  "post_apply_browser_acceptance": "pending"
+  "post_apply_browser_acceptance": "owner_reports_works_25Oct"
 }

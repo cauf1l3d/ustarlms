@@ -74,7 +74,7 @@
     "owner_check": "accepted",
     "full_INF03_closed": false,
     "owner_apply": "code_hardened",
-    "post_apply_browser_acceptance": "pending",
+    "post_apply_browser_acceptance": "owner_reports_works_25Oct",
     "retained_code_content_changed": false,
     "legacy_extra_files_removed_after_private_preservation": 22
   },

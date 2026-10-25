@@ -1,5 +1,19 @@
 # Инфраструктурная нормализация: возврат23Oct2026
 
+**25Oct — owner reports hardening works; eight stages consolidated into one pass.**
+Owner asks to close the remaining infrastructure quickly in one pass. Accepted
+DB app role/code_hardened/functional work and earlier SSD/Moodle/OS/HTTPS/backup/
+Connect evidence count; do not repeat old owner stands. One bounded local survey
+remaining_survey.py gathers only missing metadata into eight sections, then one
+coordinated reviewed apply package is prepared from the actual report. No server
+collection has run yet.16local tests PASS; existing PG16 fixture adds readonly
+aggregate SQL/disabled-task check; CI pending for new source. No new permissions,
+SSH/firewall/container/retention/provider changes or test messages. Missing tools
+and external restore/power/custody/observer evidence remain explicit blockers,
+not automatic acceptance. No business Connect feature work or main merge.0agents.
+Plan: context/proposals/INFRA_ONE_PASS_PLAN_20261025.md.
+
+
 **25Oct — INF03 code hardening applied by owner; keys/dumps slice next.**
 Operator SHA6447d5d6: prepared/backup_complete/writers_stopped/archive_ready,
 22removed/web_verified -> code_hardened, archived_files22, app_roleustar_app,

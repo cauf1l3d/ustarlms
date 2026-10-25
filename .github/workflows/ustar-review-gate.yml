@@ -170,6 +170,7 @@ jobs:
             artifacts/telegram-presentation-*
             artifacts/db-privileges-*
             artifacts/db-app-handoff-native.json
+            artifacts/infra-remaining-survey-native.json
       - name: Dispose only the isolated Connect test project
         if: always()
         run: docker compose -f tests/stage/patch-compose.yaml -f tests/stage/connect-compose.yaml down --volumes

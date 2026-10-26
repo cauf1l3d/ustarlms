@@ -18,6 +18,10 @@ application_baseline:
   theme_ustar_version: 2026100202
   source_pr: 106
   ci_receipt: context/runtime/connect_telegram_finish_ci_20261023.json
+  integration_qualification:
+    commit: 40fb81d75c42ac6b4ff1f6f54f9e25f54b3fa149
+    full_RC_run: 40337002920
+    receipt: context/runtime/repository_reconciliation_20261026.json
 production:
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
@@ -74,8 +78,8 @@ production:
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
 current_work:
-  activity: Integrate PR105/103/106; verify reviews, compact handoff, defer Docker
-    rotation to planned Moodle upgrade.
+  activity: PR105/103/106 merged through PR108; audits verified; full RC, infra, console
+    and context passed. Next PERF-01 baseline and verified backlog; no server mutation.
   next_task: PERF-01
   ready_tasks: []
   task_statuses:

@@ -1,5 +1,7 @@
 # Реестр кода, проверок и deployment evidence
 
+26.10.2026 — PR108 merged atc0e22e556220cc50f522a3e6b65189fd8abffa73. PR105/103/106 history preserved; application equals accepted6c56a5b6/local2300. Full RC and independent infra/console/context passed. Repository reconciliation only; no server deploy. [Receipt](repository_reconciliation_20261026.json).
+
 ## 23Oct — CON-02 application2200 и ACK runtime приняты на server1
 
 [Owner receipt](connect_con02_server1_owner_20261023.json), [границы](connect_con02_server1_20261023.md).

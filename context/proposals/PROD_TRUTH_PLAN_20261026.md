@@ -17,8 +17,8 @@ belongs to the next planned Moodle/PHP platform window. PR107 stays independent.
 - [x] Add ADR0015–18, compact entrypoints, current source/evidence and accepted risks.
 - [x] Combine context validators/generators; enforce entrypoint byte limits and risk schema.
 - [x] Move privileged infrastructure job to path-filtered ustar-infra workflow; retain app gates.
-- [ ] Run source/context/local tests and full RC on the exact integration commit.
-- [ ] Merge qualified integration to main, verify resulting tree/status and reconcile original PRs.
+- [x] Run source/context/local tests and full RC on the exact integration commit.
+- [x] Merge qualified integration to main, verify resulting tree/status and reconcile original PRs.
 
 Review focus: do not regress PR105 provenance guards; do not call2300 a fresh whole-host
 manifest; no test bypass to hide Docker failures; accepted risks require owner/date/
@@ -33,3 +33,5 @@ business refactoring. False findings and unsafe example patches will not be appl
 Local verification: context/source-tree equality, secret guard and35tests pass/1Go environment skip. PHP CLI unavailable locally; source/full RC delegated to actual CI. No owner server action.
 
 Integration PR108 owns exact-head CI and merge receipt. Publication status resolves from that PR; plan preparation is not a claim of server deployment.
+
+Completion: PR108 merged; context/runtime/repository_reconciliation_20261026.json contains exact checks. Author self-review under owner0agents constraint. No server deployment.

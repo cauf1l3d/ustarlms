@@ -1,10 +1,11 @@
 schema_version: 2
 updated_at: '2026-10-26'
 project: USTAR Academy
-stage: repository_reconciled_audit_verified
-stage_label: Accepted production source and current audit verification
-current_activity: Integrate PR105/103/106; verify reviews, compact handoff, defer
-  Docker rotation to planned Moodle upgrade.
+stage: repository_reconciliation_complete
+stage_label: Accepted production source and verified current review in main
+current_activity: PR105/103/106 merged through PR108; audits verified; full RC, infra,
+  console and context passed. Next PERF-01 baseline and verified backlog; no server
+  mutation.
 entrypoint: START_HERE.md
 next_task: PERF-01
 ready_tasks: []
@@ -17,6 +18,10 @@ code_baseline:
   theme_ustar_version: 2026100202
   source_pr: 106
   ci_receipt: context/runtime/connect_telegram_finish_ci_20261023.json
+  integration_qualification:
+    commit: 40fb81d75c42ac6b4ff1f6f54f9e25f54b3fa149
+    full_RC_run: 40337002920
+    receipt: context/runtime/repository_reconciliation_20261026.json
 production:
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
@@ -157,3 +162,4 @@ server_facts:
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
 repository_reconciliation: context/runtime/repository_reconciliation_20261026.json
+infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md

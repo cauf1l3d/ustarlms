@@ -1704,8 +1704,8 @@
     {
       "path": "context/runtime/docker_runtime_successor_progress_20261025.md",
       "domain": "runtime",
-      "size": 10506,
-      "sha256": "fb78212f290f9936ba8d89801a02639773dddb08c83e46570add1b275563db6a"
+      "size": 10953,
+      "sha256": "b4985e8807434150761318fdfa7b1454befedf840345b600896e288eb0758f5c"
     },
     {
       "path": "context/runtime/evidence_20261005.yaml",

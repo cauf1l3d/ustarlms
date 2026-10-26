@@ -122,7 +122,7 @@ echo 'fixture-ready';
     command('run','-d','--pull=never','--name','ustar_moodle','--label',label,
         '--network',network,'--network-alias','moodle','--restart','unless-stopped',
         '-v',str(code)+':/work:rw','-v',str(moodledata)+':/var/www/moodledata:rw',
-        '-e','FIXTURE_LITERAL=private-$same${literal}','--entrypoint','php','-p','127.0.0.1::80',
+        '-e','FIXTURE_LITERAL=private-$same${literal}','--init','--entrypoint','php','-p','127.0.0.1::80',
         ids['moodle'],'-S','0.0.0.0:80','-t','/work')
     owned.append('ustar_moodle')
     until=time.monotonic()+60

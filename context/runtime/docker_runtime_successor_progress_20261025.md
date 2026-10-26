@@ -141,3 +141,5 @@ Moved this isolated Docker delta directly after the same job's image build/pinne
 pull, before the unchanged full app checks: faster failure feedback without a new
 stand or waiving the final app gates. Uses documented Compose local project-service
 build tag when no image field is present. Final native qualification still pending.
+
+26Oct native checkpoint: head3ae31378 root/source/context passed; native job121330283196 refused forced exit137 after45s in PHP CLI fixture and recovery predecessor_configuration_drift. Fixture now uses Docker init to forward signals/reap PID1; production clean-stop guard unchanged. Recovery reason split into process/labels/mounts without relaxing equality.58 local tests pass/6environment skips. Qualification remains pending; no owner apply.

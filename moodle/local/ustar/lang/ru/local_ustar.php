@@ -30,3 +30,5 @@ $string['ustar:taskescalation'] = 'Контроль исключений и эс
 
 $string['ustar:gradeassessments'] = 'Проверять аттестации';
 $string['ustar:requeststaff'] = 'Подавать заявки на персонал по компании';
+
+$string['coursestudioconflict'] = 'Проект или его настройки уже изменены. Сохраните обе редакции или обновите проект.';

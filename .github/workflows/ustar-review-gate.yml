@@ -57,6 +57,7 @@ jobs:
           tests.r16.test_production_patch_upgrade.ProductionPairTransactionGuards.test_exact_reported_mixed_ownership_and_root_gid_survive_copy_and_restore -v
       - run: php tests/release_20260912/route_flow.php
       - run: php tests/release_20260912/career.php
+      - run: php tests/release_20260912/course_studio_codec.php
       - run: npm ci --prefix tests/release_20260912
       - run: npm test --prefix tests/release_20260912
       - run: npm ci --prefix tests/mobile

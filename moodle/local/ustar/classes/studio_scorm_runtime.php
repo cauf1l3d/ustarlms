@@ -7,7 +7,7 @@ defined('MOODLE_INTERNAL') || die();
 final class studio_scorm_runtime {
     /** Import one validated archive into a new Moodle activity and pin its source version. */
     public static function import(int $contentid, int $actorid, string $path, string $filename,
-            int $expectedsourceversion): array {
+            int $expectedsourceversion, ?int $expectedmodified = null): array {
         global $CFG, $DB, $USER;
         if (!material_studio::can_manage($actorid)
                 || (!(defined('CLI_SCRIPT') && CLI_SCRIPT) && (int)($USER->id ?? 0) !== $actorid)) {
@@ -33,6 +33,24 @@ final class studio_scorm_runtime {
             $blueprint = $DB->get_record_sql(
                 'SELECT * FROM {local_ustar_content_blueprints} WHERE contentid = :id FOR UPDATE',
                 ['id' => $contentid], MUST_EXIST);
+            $packagehash = hash_file('sha256', $path);
+            $events = $DB->get_records('local_ustar_workflow_events', [
+                'entitytype'=>'studio_scorm_runtime','entityid'=>$contentid,'eventtype'=>'scorm_runtime_created',
+            ], 'id DESC', '*', 0, 1);
+            if ($events) {
+                $prior = json_decode(reset($events)->detailsjson, true);
+                if ((int)($prior['sourceversion'] ?? 0) === $expectedsourceversion
+                        && isset($prior['packagehash'])) {
+                    if (!hash_equals($prior['packagehash'], $packagehash)) {
+                        throw new \invalid_parameter_exception('Для этой редакции уже собран другой пакет. Сохраните новую редакцию.');
+                    }
+                    $tx->allow_commit();
+                    return ['cmid'=>(int)$prior['cmid'],'courseid'=>(int)$prior['courseid']];
+                }
+            }
+            if ($expectedmodified !== null && (int)$content->timemodified !== $expectedmodified) {
+                throw new course_studio_conflict();
+            }
             if ((string)$content->status !== content::STATUS_DRAFT
                     || (string)$blueprint->kind !== material_studio::KIND_SCORM
                     || (int)$blueprint->sourceversion !== $expectedsourceversion) {
@@ -131,7 +149,7 @@ final class studio_scorm_runtime {
                 'eventtype' => 'scorm_runtime_created', 'actorid' => $actorid,
                 'reason' => null,
                 'detailsjson' => json_encode([
-                    'sourceversion' => $expectedsourceversion, 'cmid' => (int)$module->coursemodule,
+                    'packagehash' => $packagehash, 'sourceversion' => $expectedsourceversion, 'cmid' => (int)$module->coursemodule,
                     'courseid' => (int)$course->id, 'filename' => $filename,
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'timecreated' => time(),

@@ -30,3 +30,5 @@ $string['ustar:taskescalation'] = 'Handle work-task exceptions and escalations';
 
 $string['ustar:gradeassessments'] = 'Проверять аттестации';
 $string['ustar:requeststaff'] = 'Подавать заявки на персонал по компании';
+
+$string['coursestudioconflict'] = 'The project or its settings changed. Keep both revisions or reload the project.';

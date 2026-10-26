@@ -137,6 +137,9 @@ final class material_studio {
                     'SELECT * FROM {local_ustar_content_blueprints} WHERE contentid = :id FOR UPDATE',
                     ['id' => $contentid], MUST_EXIST
                 );
+                if (isset(json_decode((string)$blueprint->sourcejson)->visualproject)) {
+                    throw new \invalid_parameter_exception('Откройте этот материал в общей Студии курсов.');
+                }
                 if ((string)$content->status === content::STATUS_PUBLISHED) {
                     throw new \moodle_exception(
                         'Опубликованный материал нельзя менять на лету. '

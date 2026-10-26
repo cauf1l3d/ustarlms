@@ -2155,7 +2155,7 @@ $output =
 
 $data = [
     'assessmentstudiourl' => (new moodle_url('/local/ustar/assessment_studio.php'))->out(false),
-    'studiourl' => (new moodle_url('/local/ustar/materials_studio.php'))->out(false),
+    'studiourl' => (new moodle_url('/local/ustar/course_studio.php'))->out(false),
 
     'canmanage' =>
         $canmanage,

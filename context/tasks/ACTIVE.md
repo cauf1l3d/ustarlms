@@ -1,5 +1,12 @@
 # Активные задачи USTAR
 
+**26Oct — Docker runtime qualification in progress; no production apply.**
+58focused tests pass locally/6environment skips;3ae rootCI58/no skips.
+Native fixture stop137 exposed PID1 signal handling; fixture init added. Recovery
+mount-order regression reproduced and fixed without omitting mount fields.
+Current evidence: context/runtime/docker_runtime_successor_progress_20261025.md.
+No repeated owner probes/SSH/agents; external restore remains unknown.
+
 **25Oct — classification accepted; Docker runtime successor implemented, qualification pending.**
 Moodle85491712B/2663paths accepted; no more metadata probes. Runtime snapshots,
 private source/consumer handoff and recover/status are implemented; original objects

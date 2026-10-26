@@ -728,7 +728,9 @@ class RuntimeHost:
                 and original.get('Name') in (before['Name'],'/'+self.retained(state,service)),'predecessor_object_drift')
             require(process(original['Config'])==process(before['Config']),'predecessor_process_drift')
             require(original['Config'].get('Labels')==before['Config'].get('Labels'),'predecessor_labels_drift')
-            require(original['Mounts']==before['Mounts'],'predecessor_mounts_drift')
+            require(sorted(original['Mounts'],key=lambda m:json.dumps(m,sort_keys=True))
+                ==sorted(before['Mounts'],key=lambda m:json.dumps(m,sort_keys=True)),
+                'predecessor_mounts_drift')
             old_host={k:v for k,v in before['HostConfig'].items() if k!='RestartPolicy'}
             live_host={k:v for k,v in original['HostConfig'].items() if k!='RestartPolicy'}
             require(live_host==old_host and original['HostConfig'].get('RestartPolicy') in (

@@ -564,7 +564,8 @@ class RuntimeEdges(unittest.TestCase):
 
     def test_recovery_disconnects_a_successor_parked_before_an_interrupted_response(self):
         m=module(self);rows={n:row(n) for n in PARENTS};events=[]
-        old=copy.deepcopy(rows);new=Compose().successor()
+        rows['ustar_moodle']['Mounts'].append(dict(rows['ustar_moodle']['Mounts'][0],Destination='/second'))
+        old=copy.deepcopy(rows);old['ustar_moodle']['Mounts'].reverse();new=Compose().successor()
         for n,v in old.items():v['Name']='/'+m.RuntimeHost.retained({'generation':GEN},n);v['State']={'Running':False}
         new['Name']='/'+m.RuntimeHost.retained({'generation':GEN},'ustar_moodle',successor=True)
         new['State']={'Running':False};new['Config']['Labels'].update({
@@ -597,6 +598,9 @@ class RuntimeEdges(unittest.TestCase):
         self.assertIn(('disconnect',new['Id']),events)
         self.assertLess(events.index(('disconnect',new['Id'])),events.index(('reconnect',rows['ustar_postgres']['Id'])))
         self.assertTrue(all(objects[v['Id']]['State']['Running'] for v in rows.values()))
+        objects[rows['ustar_moodle']['Id']]['Mounts'][0]['Source']='/foreign-source'
+        with self.assertRaises(m.Refusal) as caught:host.recover(state)
+        self.assertEqual(str(caught.exception),'predecessor_mounts_drift')
 
 
 class ArchiveContract(unittest.TestCase):

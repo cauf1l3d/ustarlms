@@ -1,16 +1,14 @@
 schema_version: 2
-updated_at: '2026-10-25'
+updated_at: '2026-10-26'
 project: USTAR Academy
 stage: infrastructure_normalization_resume_20261023
 stage_label: Owner paused Connect development and resumes infrastructure normalization
 current_activity: >-
-  Owner Moodle classification85491712B/2663paths accepted, no repeated probes.
-  Docker successor/runtime snapshots/private control handoff/recovery implemented;
-  53focused tests/6local skips. First complete CI98ffdd9c PASS; later native delta
-  failed first fresh-PG SQL. Final actual Docker rotation/recovery proof pending;
-  no owner artifact or apply yet. Existing DB/code/source0600/264-file companion
-  accepted; SSH deferred,UPS present,copies delivered/external restore unknown.
-  0agents/no agent SSH/provider sends/main merge.
+  Docker runtime successor qualification ongoing;58local tests/6environment skips,
+  latest root CI58/no skips. Native fixture stop137 exposed PID1 signal handling;
+  fixture init added. Reordered-mount recovery regression reproduced and fixed.
+  No owner runtime apply or qualified artifact yet. Accepted DB/code/source privacy
+  and backup receipts retained. SSH deferred; external restore unknown;0agents.
 next_task: INF-05
 infrastructure_UPS_status: owner_confirms_present_shutdown_not_verified
 infrastructure_external_restore_status: copies_delivered_result_unknown_owner_explicitly_deferred_no_repeat_prompt

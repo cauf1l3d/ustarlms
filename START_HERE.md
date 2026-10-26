@@ -1,5 +1,12 @@
 # USTAR вход в проект
 
+**26Oct — Docker runtime qualification in progress; no production apply.**
+58focused tests pass locally/6environment skips;3ae rootCI58/no skips.
+Native fixture stop137 exposed PID1 signal handling; fixture init added. Recovery
+mount-order regression reproduced and fixed without omitting mount fields.
+Current evidence: context/runtime/docker_runtime_successor_progress_20261025.md.
+No repeated owner probes/SSH/agents; external restore remains unknown.
+
 **25Oct — infrastructure remains current; Docker successor preparation, no apply yet.**
 Owner classification85491712B/2663paths accepted; no repeated metadata probes.
 [Plan](context/proposals/DOCKER_RUNTIME_SUCCESSOR_PLAN_20261025.md),

@@ -143,3 +143,5 @@ stand or waiving the final app gates. Uses documented Compose local project-serv
 build tag when no image field is present. Final native qualification still pending.
 
 26Oct native checkpoint: head3ae31378 root/source/context passed; native job121330283196 refused forced exit137 after45s in PHP CLI fixture and recovery predecessor_configuration_drift. Fixture now uses Docker init to forward signals/reap PID1; production clean-stop guard unchanged. Recovery reason split into process/labels/mounts without relaxing equality.58 local tests pass/6environment skips. Qualification remains pending; no owner apply.
+
+26Oct recovery equality regression: reordered two identical bind records reproduced predecessor_mounts_drift locally (RED); canonical comparison of full records passes and changed Source still refuses (GREEN). No fields omitted. Latest58tests/6local skips;3ae rootCI58/no skips including real age, UnixAPI and UID1000/33. Native qualification pending.

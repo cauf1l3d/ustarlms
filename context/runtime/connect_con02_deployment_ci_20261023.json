@@ -1,0 +1,339 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "timezone": "Europe/Moscow",
+  "slice": "CON02_coordinated_deployment_controller",
+  "status": "required_source_CI_verified_owner_check_ready_not_deployed",
+  "plan": "context/proposals/USTAR_CONNECT_CON02_DEPLOYMENT_PLAN_20261022.md",
+  "plan_approved_by_owner": true,
+  "completed_tasks": 9,
+  "completed_steps": 45,
+  "tool_commit": "b971bc3835f1a369779e1b2b344cc43b3a374df6",
+  "application_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+  "worker_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+  "component_tree_ids": {
+    "moodle/local/ustar": "742ded4143ee30db6e3018f382d6fcc9550e1ea2",
+    "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
+  },
+  "development_manifest_sha256": "7f64dd622de7a182ba7e24c34ac809faf200c6b708d351749808737cb556c6d7",
+  "target": {
+    "local_ustar": 2026102200,
+    "theme_ustar": 2026100202,
+    "files": 557,
+    "tables": 100,
+    "new_table": "local_ustar_conn_acktokens",
+    "deployed": false
+  },
+  "accepted_production": {
+    "payload_commit": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1",
+    "local_ustar": 2026102000,
+    "theme_ustar": 2026100202,
+    "files": 552,
+    "tables": 99,
+    "notification_policy_overlay_sha256": "2f6c0c8b25941ac435237fc9df4c4de738b885f467ccbab80b9988c0bb42e498",
+    "worker_commit": "a86e208029b6104150e85d0e90384f84da214c22",
+    "recipient_last_state": "UID130_revoked",
+    "agent_changes": false
+  },
+  "preserved_contracts": {
+    "cron_sha256": "ae5fa1b075ff5f97300f5d5675d51367b95d821e0acf73c7c4458200af7e9751",
+    "cron_change": "one version line plus installation hash/version pair; schedule/history/custom task flags preserved",
+    "HDD_backup_producer_sha256": "a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3",
+    "HDD_backup_scheduler_sha256": "a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c",
+    "HTTPS": "owner/config/vhosts/health/observability/tool/units/state/CA/leaf unchanged within operation; legitimate verified leaf renewal between operations accepted",
+    "locks": [
+      "controller",
+      "Academy_update",
+      "chat_link",
+      "HTTPS",
+      "cron",
+      "backup",
+      "install"
+    ],
+    "fresh_HDD_child": "before final cron/backup/install locks",
+    "journals": "separate application+cron and runtime generations",
+    "public_boundary": "no automatic business DB restore after durable public release",
+    "late_restore": "requires outage and discard-writes flags; ACK disabled first",
+    "runtime_fallback": "previous v1/a86 on application2200; no SQLite cursor or uncertainty reset"
+  },
+  "artifact": {
+    "CI_and_local_plain_bytes_identical": true,
+    "all_payload_worker_and_legacy_match_exact_Git": true,
+    "app_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "bytes": 30510906,
+    "embedded_modules": 16,
+    "legacy_files": {
+      "connect-worker/deploy/install.py": "e12038549f29355a8730692205c4b911fc4362a4b24ff813dadc9685d1cf1cb7",
+      "scripts/infra/academy_https.py": "e7f92fb976f0d30637b96c47af1c94ec78ee49af1a9f7e28d1f3bdc079f2d199",
+      "scripts/infra/connect_bridge_activation.py": "b66558169b4200eb8203529fe24e95ff69538135da78a22354589f13e6a8238f",
+      "scripts/infra/connect_notification_pilot.py": "1b786c67ff752826fc9ffebc4715533bda4dc0a939766aed2d3c56edfd3af181",
+      "scripts/infra/connect_private_bridge.py": "e6ba6d97de147162f9a7aeadf09c24558668007d29f755f15fbafcbeec27d488"
+    },
+    "payload_files": 557,
+    "plain_file": "ustar-con02-update-b971bc38.py",
+    "sha256": "692de510d7864e723885f6764ec8363d6ba70ebbee2f26021f361a4c9a89a484",
+    "tool_commit": "b971bc3835f1a369779e1b2b344cc43b3a374df6",
+    "worker_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "worker_files": {
+      "SOURCE_COMMIT": "39ae3f6f1f7a221074e01306793253f66c1d3a422dee1672682ad2181b8bf47b",
+      "admin.pyz": "443a477f716ddba0e3d1278bb8f21dbac321524e8678ad6eb26314575a77db40",
+      "notifications.pyz": "6b342da46135aa1e07e18318c2a07d666909442d2f6e82abc806c3691715f356",
+      "receiver.pyz": "4b05638fbb6857b47125dc04cd29b46ad20bd21d9913792e39cf738f332c2d3e",
+      "units/ustar-connect-notify.service": "4f6119b0c0e22e79d3c81ac03966e5aa143b2645247ec58693feada5a9ccf718",
+      "units/ustar-connect-probe.service": "7ae0578d7a102fe3b5fffa6d439eb0441c442ae3423c2d0bc56b1d1f7b8be9d3",
+      "units/ustar-connect-receiver.service": "34f966220f63860506c7da2cdd3c2c617720c12464d3dedbb7da36fb6a4cfe8b"
+    }
+  },
+  "CI": {
+    "runs": [
+      {
+        "id": 39844480447,
+        "name": "USTAR context integrity",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 333,
+        "jobs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39844480447/jobs",
+        "logs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39844480447/logs",
+        "workflow_id": 373408608
+      },
+      {
+        "id": 39844480386,
+        "name": "USTAR review gate",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 772,
+        "jobs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39844480386/jobs",
+        "logs_url": "https://api.github.com/repos/cauf1l3d/ustarlms/actions/runs/39844480386/logs",
+        "workflow_id": 340504053
+      }
+    ],
+    "jobs": [
+      {
+        "id": 120062108434,
+        "name": "source (8.3)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120062110392,
+        "name": "source (8.2)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120062111120,
+        "name": "rollback",
+        "status": "completed",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 120062191053,
+        "name": "connect-runtime",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120063830037,
+        "name": "connect-db",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 120063831932,
+        "name": "prepare-rc",
+        "status": "completed",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 120063833771,
+        "name": "moodle-db",
+        "status": "completed",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 120068367756,
+        "name": "gate",
+        "status": "completed",
+        "conclusion": "skipped"
+      }
+    ],
+    "source_each": {
+      "tests": 1040,
+      "environment_skips": 153,
+      "result": "pass",
+      "PHP": [
+        "8.2",
+        "8.3"
+      ]
+    },
+    "strict_root_state": {
+      "tests": 11,
+      "skips": 0,
+      "result": "pass",
+      "actual_UID33_root_GID": true
+    },
+    "native_Moodle": {
+      "tests": 154,
+      "assertions": 800,
+      "result": "pass"
+    },
+    "runtime": {
+      "result": "CON02_UPDATE_RUNTIME=PASS",
+      "controller": "new Runtime enable/disable/re-enable/fallback",
+      "receiver_uid": 33,
+      "systemd_LoadCredential": true,
+      "cursor": [
+        43,
+        44,
+        45
+      ],
+      "schema": 1,
+      "uncertain_preserved": true,
+      "disabled_sender_preserved": true,
+      "actual_service_exit77_recovered": true,
+      "private_TLS_and_scopes": true,
+      "wrong_CA_denied": true,
+      "root_and_foreign_credentials_denied": true,
+      "single_consumer_lock": true,
+      "wrong_peer_and_HMAC_denied": true,
+      "active_sender_credentials_and_v2_scope": true,
+      "legacy_refusals": [
+        "notification_policy_drift",
+        "activation_receiver_drift"
+      ],
+      "application_source": "534764821c4f65437ab50b3c7f25578d538e9504",
+      "application_SQL": "modeled here; actual native lifecycle in separate Task7 gate",
+      "provider_and_bridge_store": "synthetic only; no external API request"
+    },
+    "HTTPS_owner": {
+      "result": "CON02_UPDATE_HTTPS_OWNER=PASS",
+      "actual_Apache_OpenSSL_PHP": true,
+      "new_controller_enable_disable_generations": true,
+      "all_HTTPS_owned_bytes_unchanged_within_operations": true,
+      "authorized_leaf_renewal_between_operations_accepted": true,
+      "concurrent_owner_serialized": true,
+      "failed_owner_reload_restores_previous_leaf": true,
+      "systemd_and_application_SQL": "modeled here; separate actual runtime/native DB gates",
+      "provider_requests": false,
+      "production_access": false
+    },
+    "native": {
+      "result": "CON02_UPDATE_NATIVE=PASS",
+      "application_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+      "direct_versions": [
+        2026102000,
+        2026102200,
+        2026102200,
+        2026102000
+      ],
+      "tables": [
+        99,
+        100,
+        100,
+        99
+      ],
+      "official_CLI_upgrade_and_repeat": true,
+      "fresh_new_table_parity": true,
+      "old99_schema_and_indexes_preserved": true,
+      "custom_task": [
+        1,
+        1
+      ],
+      "native_SQL_mutations_denied": [
+        "column",
+        "index",
+        "task",
+        "extra"
+      ],
+      "history_ACK_provider_receipt_preferences_revoked_link_preserved": true,
+      "restore": "logical PG dump plus actual source/config/moodledata in disposable runner",
+      "physical_copy": "separate real-filesystem CON02 transaction tests; not full remote PG restore",
+      "production_or_provider_access": false
+    },
+    "downloaded_native_revalidation": {
+      "result": "pass",
+      "five_phases": true,
+      "fresh_ACK_indexes": 9,
+      "actual_SQL_mutations_denied": [
+        "column",
+        "index",
+        "task",
+        "extra"
+      ]
+    },
+    "artifacts": [
+      {
+        "id": 12456376602,
+        "name": "connect-identity-db-evidence",
+        "size_in_bytes": 548427,
+        "digest": "sha256:fd1b80f3c10f3090e225d2a9eaffcf9deb803082383d205d793da6c4c3f5e1db"
+      },
+      {
+        "id": 12454552360,
+        "name": "con02-update-controller",
+        "size_in_bytes": 18711519,
+        "digest": "sha256:e706e98c981a324cc266e63aa5649e4974548e41fb60a02b1752a97c91efdd4a"
+      }
+    ],
+    "archive_digests_verified": true,
+    "first_attempt": {
+      "PHP83_job": 120054016872,
+      "result": "cancelled_at_15_minute_job_deadline_after_slow_Chromium_install",
+      "rerun_job": 120062108434,
+      "rerun_result": "success",
+      "code_changes_for_rerun": false
+    },
+    "FullRC": "rollback_prepare-rc_moodle-db_gate_skipped_not_passed"
+  },
+  "local_verification": {
+    "focused_tests": 66,
+    "environment_skips": 1,
+    "result": "pass",
+    "skip_reason": "local root user namespace cannot map GID33; mandatory actual owner CI11/11 has no skips",
+    "previous_whole_r16": {
+      "tests": 1035,
+      "skips": 55,
+      "environment_errors": 6,
+      "reasons": [
+        "3 missing historical Git objects",
+        "3 missing MCP dependencies"
+      ],
+      "result": "not_full_pass",
+      "superseded_by": "complete Git/pinned dependency CI1040tests/153skips in both PHP jobs"
+    },
+    "default_plain_file": "PLAN_ONLY; host_access=false; network_used=false"
+  },
+  "evidence_limits": [
+    "Native restore uses logical PostgreSQL dump plus actual source/config/moodledata in disposable CI. Physical copy/crash behavior is verified separately on real file trees.",
+    "Systemd/UID33/LoadCredential/private TLS are actual; Telegram API and bridge store synthetic.",
+    "HTTPS Apache/OpenSSL/PHP actual; SQL and worker service states modeled there, verified separately in native/runtime gates.",
+    "No production deployment, real provider send, live group acceptance, full disaster recovery or main merge."
+  ],
+  "review": {
+    "kind": "author_self_review",
+    "subagents": 0,
+    "independent_reviewer": false,
+    "rulings": [
+      {
+        "decision": "Cloud helper scripts/adjunct resource skill unavailable; equivalent private briefs/ledger and core TDD workflow used.",
+        "reason": "Preserve the approved self implementation workflow without missing cloud-only helpers.",
+        "cost_if_wrong": "Additional manual evidence-completeness verification."
+      },
+      {
+        "decision": "Tasks1/2 foundations published as one checkpoint.",
+        "reason": "Readonly check/host controls consume Journal.",
+        "cost_if_wrong": "Combined foundation backout; product and frozen legacy code unchanged."
+      }
+    ],
+    "deferred_minors": [
+      "Readonly --check may emit generic controller_operation_failed for a frozen legacy guard exception; safe refusal without changes. Diagnostic expansion deferred."
+    ]
+  },
+  "next_owner_step": "Save the one ordinary .py, install root0600, verify SHA256, run --check. Upgrade/outage and ACK activation are separate runbook commands.",
+  "following_product_slices": [
+    "B_routing_preferences",
+    "C_Bitrix"
+  ],
+  "accepted_pilot_repeated": false,
+  "live_group_acceptance": "deferred_by_owner_until_full_launch_not_passed"
+}

@@ -1,6 +1,6 @@
 domain: organization
 reviewed_at: '2026-10-02'
-source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
 purpose: Каталог организации, PRIMARY/ACTING, reporting scope
 services:
 - moodle/local/ustar/classes/organization_identity.php

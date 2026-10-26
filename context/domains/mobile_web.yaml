@@ -1,6 +1,6 @@
 domain: mobile_web
-reviewed_at: '2026-10-02'
-source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+reviewed_at: '2026-10-17'
+source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
 purpose: Responsive shell, PWA manifest/icon и offline notice
 services:
 - moodle/local/ustar/classes/mobile_app.php
@@ -15,3 +15,11 @@ entry_points:
 - moodle/local/ustar/app_icon.php
 - moodle/local/ustar/app_worker.php
 - moodle/local/ustar/app_offline.php
+review_method: static source navigation; no new production scenario acceptance
+scenarios:
+- name: public_offline_only
+  source: moodle/local/ustar/classes/mobile_app.php
+  behavior: manifest/worker expose public offline notice and icons; private learning
+    data is not cached; this is not an accepted native mobile client
+coverage_limit: Selected command/read paths only; complete endpoint, file access and
+  actor/scope negative-path audit remains open

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-26",
+  "status": "prequalification_record_resolve_current_CI_and_merge_from_PR108",
+  "production_mutations": false,
+  "owner_authorized_main_merge": true,
+  "PRs": {
+    "105": "02fd394fb90b44ad299374fd678b12543e7681ab",
+    "103": "de4544d97f4f77036cfbb358ab79273361e6a6e5",
+    "106": "80870f7dd0e6b37d994f4af10ea5c53e7b1da64a"
+  },
+  "frozen_Docker_branch": "infra/docker-successor-frozen",
+  "production_source": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "application_tree_equal_to_production_payload": true,
+  "local_governance_tests": {
+    "tests": 4,
+    "passed": 4
+  },
+  "local_source_checks": "not_run_to_completion_php_unavailable_use_CI",
+  "full_RC": "pending",
+  "infra_CI": "pending",
+  "main_merge": "pending",
+  "integration_PR": 108,
+  "validation_and_merge_authority": "https://github.com/cauf1l3d/ustarlms/pull/108",
+  "integration_fix": "Console knowledge explicitly covers new reviewed sources; no UI execution actions added",
+  "integration_test_fix": "Runtime gate contract follows the moved infra workflow, same mandatory UID/HTTPS fixtures retained"
+}

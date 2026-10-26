@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "date_msk": "2026-10-23",
+  "evidence_kind": "owner_terminal_output_and_owner_readonly_SQL_not_agent_SSH",
+  "status": "application_and_ACK_runtime_deployed_two_live_ACKs_verified",
+  "tool": {
+    "commit": "4394b99475f469b061010a1ea4aa77b9d984c40f",
+    "filename": "ustar-con02-update-4394b994.py",
+    "sha256": "331c5c54eb605e142c401d6b84cbda02a1ba468be40b2ffc1da768b9429d322b"
+  },
+  "application": {
+    "payload_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "local_ustar": "2026102200",
+    "theme_ustar": "2026100202",
+    "phase": "app_ready",
+    "generation": "a3cf90a15a1a4877b4dd75653a330944",
+    "payload_files": 557,
+    "tables": 100,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "reported_phases": ["fresh_backup_complete", "workers_stopped", "pair_complete", "source_activated", "upgrade_1", "upgrade_2", "cron_written", "public_release_committed", "app_ready"],
+    "baseline_index_profile": "server1_legacy_indexes_20261023",
+    "legacy_unique_indexes_repaired": false
+  },
+  "runtime": {
+    "worker_commit": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "phase": "runtime_active",
+    "generation": "19fcd6af68cf43018f57cc99343ff4b9",
+    "ack_enabled": true,
+    "reported_phases": ["workers_stopped", "private_files", "include_handoff", "pointer_switched", "probed", "runtime_active"],
+    "services": {
+      "ustar-connect-notify.service": {"active": true, "enabled": true},
+      "ustar-connect-receiver.service": {"active": true, "enabled": true}
+    },
+    "database_available": true
+  },
+  "HTTPS_topology_reconciliation": {
+    "initial_guard": "apache_bindings_changed",
+    "cause": "separate_AutoReport_vhost_added_after_saved_Academy_topology",
+    "accepted_addition": {"binding": "192.168.1.60:9443", "name": "192.168.1.60", "source": "/etc/apache2/sites-enabled/ustar-autoreport.conf", "line": 3, "aliases": []},
+    "owner_result": "HTTPS_AUTOREPORT_TOPOLOGY_REGISTERED",
+    "previous_state_backup": "/var/lib/ustar-academy-https/state.before-autoreport-0ae5a3798d7d4e71bc52d0adb79c078c.json",
+    "checks_before_state_save": ["pinned_HTTPS_tool_SHA", "exact_AutoReport_row", "no_pending_HTTPS_transaction", "Apache_config_test", "managed_files_and_units", "accepted_CA", "all_other_vhosts", "live_TLS_leaf_health", "state_and_topology_readback"],
+    "Apache_configuration_modified_by_reconciliation": false,
+    "services_restarted_by_reconciliation": false,
+    "legacy_journals_other_than_HTTPS_owner_state_modified": false
+  },
+  "live_ACK": {
+    "userid": 130,
+    "prior_revoked_checkpoint_superseded": true,
+    "current_link_inference": "successful_scoped_ACK_for_UID130_is_evidence_of_current_eligible_link_at_those_operations_not_a_fresh_link_inventory",
+    "SQL_database_read_only": true,
+    "records": [
+      {"notification_id": 179, "eventtype": "task_assigned", "created_UTC": "2026-10-23T13:13:23Z", "acknowledged_UTC": "2026-10-23T13:13:44Z", "notification_status": "acknowledged", "delivery_id": 176, "delivery_status": "provider_accepted", "attempts": 1},
+      {"notification_id": 180, "eventtype": "task_reminder", "created_UTC": "2026-10-23T13:15:26Z", "acknowledged_UTC": "2026-10-23T13:15:42Z", "notification_status": "acknowledged", "delivery_id": 178, "delivery_status": "provider_accepted", "attempts": 1}
+    ],
+    "conclusion": "two_distinct_events_each_one_attempt_both_canonical_ACKs_saved_not_duplicate_delivery",
+    "UI_observation": "ACK_button_disappears_and_confirmation_is_transient_two_events_have_same_generic_category_text",
+    "task_business_state_after_ACK_independently_checked": false,
+    "repeated_click_first_timestamp_stability_live_checked": false,
+    "early_reminder_timing_root_cause": "not_established_without_task_due_and_policy_metadata"
+  },
+  "limits": [
+    "No agent SSH or independent production measurement.",
+    "The original accepted one-user pilot is not reopened; this is owner-initiated ACK verification after deployment.",
+    "No live group acceptance or recipient expansion; group remains deferred until full launch.",
+    "No production restore or full remote DR proved by these outputs.",
+    "No main merge or live provider operation performed by the agent."
+  ],
+  "CI_receipt": "context/runtime/connect_con02_index_compat_ci_20261023.json",
+  "runbook": "context/runtime/connect_con02_deployment_20261023.md",
+  "next_design": "context/proposals/USTAR_CONNECT_CON02B_ROUTING_DESIGN_20261023.md"
+}

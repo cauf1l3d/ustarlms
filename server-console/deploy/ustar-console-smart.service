@@ -1,0 +1,26 @@
+[Unit]
+Description=USTAR read-only SMART health (no tests, no wakeup)
+
+[Service]
+Type=oneshot
+User=root
+Group=ustar-console
+UMask=0027
+RuntimeDirectory=ustar-console-smart
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=yes
+ExecStart=/opt/ustar-console/venv/bin/ustar-console-smart
+TimeoutStartSec=12
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_SYS_RAWIO
+DevicePolicy=closed
+DeviceAllow=/dev/sda r
+DeviceAllow=/dev/sdb r
+RestrictAddressFamilies=AF_UNIX
+ReadWritePaths=/run/ustar-console-smart
+MemoryMax=64M
+CPUQuota=10%
+TasksMax=8

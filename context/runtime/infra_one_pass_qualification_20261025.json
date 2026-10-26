@@ -1,0 +1,482 @@
+{
+  "schema": 1,
+  "kind": "infra_one_pass_component_qualification",
+  "status": "qualified_physical_scope_fix_owner_local_batch_applied",
+  "owner_apply_performed": true,
+  "author_review": true,
+  "subagents": 0,
+  "first_candidate": {
+    "source": "b4703c9bea82a88eb1149399624539a4815ca61a",
+    "review_run": 40154267162,
+    "result": "failure",
+    "root_checks": "25/25 PASS; real age authentication/corruption and actual UID isolation PASS",
+    "failures": [
+      "non-root source jobs incorrectly attempted root-only filesystem fixtures",
+      "restricted-service producer fixture failed; known explicit identity path correction under requalification"
+    ]
+  },
+  "local": {
+    "targeted_tests": 43,
+    "passed": 41,
+    "skipped": 2,
+    "skips": [
+      "real age unavailable locally",
+      "UID1000 not mapped locally; mandatory root CI covers both without skips"
+    ],
+    "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
+    "operator_command_bash_syntax": true,
+    "full_source_suite": "Both source jobs1189/213environment skips SUCCESS; no current CI failure"
+  },
+  "limits": [
+    "No production SSH or live coordinator execution",
+    "conditional journal adjustment uses modeled unit boundary plus production self-verification",
+    "Native fixtures use synthetic keys/controllers/phase markers and isolated paths, never live user data",
+    "No independent review agent; author review only",
+    "Control companion and standard business-data backup have independent capture times; generation/identity compatibility and clean-host restore remain unqualified"
+  ],
+  "source_commit": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+  "operator_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+  "qualification": {
+    "review_run": 40202157683,
+    "review_conclusion": "success",
+    "context_run": 40202157658,
+    "context_conclusion": "success",
+    "source_jobs": [
+      {
+        "id": 121195410262,
+        "PHP": "8.3",
+        "conclusion": "success",
+        "python_tests": 1189,
+        "skips": 213
+      },
+      {
+        "id": 121195410490,
+        "PHP": "8.2",
+        "conclusion": "success",
+        "python_tests": 1189,
+        "skips": 213
+      }
+    ],
+    "runtime_job": 121195410529,
+    "runtime_conclusion": "success",
+    "targeted_tests": 43,
+    "targeted_skips": 0,
+    "native_markers": [
+      "INFRA_EXPORT_ACTUAL_UID=PASS",
+      "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+      "INFRA_COMPANION_SERVICE=PASS",
+      "INFRA_PHYSICAL_PAIR_EXCLUSION=PASS",
+      "INFRA_HDD_NAMESPACE=PASS",
+      "INFRA_ONE_PASS_NATIVE=PASS"
+    ],
+    "DB_job": 121196267679,
+    "DB_conclusion": "success",
+    "DB_markers": [
+      "OK (158 tests, 830 assertions)",
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS",
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+      "CON02_UPDATE_NATIVE=PASS"
+    ]
+  },
+  "delivery": {
+    "source": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+    "script_name": "ustar-infra-one-pass-20261025-scopefix.py",
+    "script_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+    "script_bytes": 42892,
+    "zip_sha256": "3eacbd653fe4a21a1fcee44dde3a28c64f776111172c02e9404041b804e6f104",
+    "zip_bytes": 15501,
+    "CRC": true,
+    "member_hashes": true,
+    "extracted_default": true,
+    "CI_status": "success",
+    "saved_download_readback_verified": true,
+    "downloaded_version": 4
+  },
+  "review_regressions": [
+    "Completed state rejects original world-readable metadata or missing/old probe managed files",
+    "Same-source retry requires exact complete undo and unchanged scope/before images",
+    "Only USTAR exports are modified; .env/.key/unrelated app SQL excluded",
+    "Protected21665285B state accepted without mutation; >64MiB/unsafe owner/write permissions refused",
+    "Exact pinned predecessor may retry only after complete undo with unchanged scope/before images and absent managed files",
+    "Legacy physical baseline/retained/restore trees are pruned only within known roots/generations; other directories remain strict",
+    "Metadata-only plan validates selected controls before transaction; sanitized refusal path contains no raw values",
+    "Sourceb9c0bee6 confirmed metadata_restored can retry with original exports unchanged and source history retained"
+  ],
+  "owner_apply_attempted": true,
+  "owner_refusal_receipt": "context/runtime/infra_one_pass_owner_20261025.json",
+  "state_size_fix": {
+    "status": "qualified_owner_retry_pending",
+    "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "operator_bytes": 40792,
+    "root_JSON_max_bytes": 67108864,
+    "per_payload_file_max_bytes": 67108864,
+    "predecessor_operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+    "retry_guards": [
+      "metadata_restored only",
+      "exact original exports scope and before images",
+      "every recorded managed path absent",
+      "same source or one pinned predecessor only",
+      "predecessor and successor SHA retained in private journal"
+    ],
+    "local_targeted_tests": 37,
+    "local_passed": 35,
+    "local_skipped": 2,
+    "local_skips": [
+      "age unavailable locally; mandatory runtime CI must not skip",
+      "UID1000 not mapped locally; mandatory runtime CI must not skip"
+    ],
+    "regression_RED": [
+      "21665285B protected synthetic journal rejected unsafe_root_json",
+      "prior resume API could not perform a pinned successor transition"
+    ],
+    "native_fixture_delta": "synthetic21665285B hardening state included in real restricted-service encrypted readback; actualUID1000 retry",
+    "limits": [
+      "No production coordinator run by agent",
+      "No production journal content received",
+      "Owner retry pending"
+    ],
+    "source_commit": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+    "review_run": 40197352367,
+    "review_conclusion": "success",
+    "context_run": 40197352371,
+    "context_conclusion": "success",
+    "runtime_job": 121180966531,
+    "runtime_conclusion": "success",
+    "targeted_tests": 37,
+    "targeted_skips": 0,
+    "source_jobs": [
+      {
+        "id": 121180966348,
+        "PHP": "8.3",
+        "conclusion": "success",
+        "python_tests": 1183,
+        "skips": 207
+      },
+      {
+        "id": 121180966439,
+        "PHP": "8.2",
+        "conclusion": "success",
+        "python_tests": 1183,
+        "skips": 207
+      }
+    ],
+    "native_markers": [
+      "INFRA_EXPORT_ACTUAL_UID=PASS",
+      "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+      "INFRA_COMPANION_SERVICE=PASS; synthetic21665285B state included",
+      "INFRA_HDD_NAMESPACE=PASS",
+      "INFRA_ONE_PASS_NATIVE=PASS"
+    ],
+    "DB_job": 121181832305,
+    "DB_conclusion": "success",
+    "delivery": {
+      "source": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+      "script_name": "ustar-infra-one-pass-20261025-statefix.py",
+      "script_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+      "script_bytes": 40792,
+      "zip_sha256": "0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e",
+      "zip_bytes": 14319,
+      "CRC": true,
+      "member_hashes": true,
+      "extracted_default": true,
+      "CI_status": "success",
+      "saved_download_readback_verified": true,
+      "downloaded_version": 3
+    },
+    "DB_markers": [
+      "OK (158 tests, 830 assertions)",
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS",
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+      "CON02_UPDATE_NATIVE=PASS"
+    ]
+  },
+  "predecessor_qualification": {
+    "source_commit": "87941fd918aad464f75f6829f705a20b0b2dfc36",
+    "operator_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+    "qualification": {
+      "review_run": 40187026858,
+      "review_conclusion": "success",
+      "context_run": 40187026890,
+      "context_conclusion": "success",
+      "source_jobs": [
+        {
+          "id": 121149903771,
+          "PHP": "8.3",
+          "conclusion": "success",
+          "python_tests": 1175,
+          "skips": 199
+        },
+        {
+          "id": 121149903829,
+          "PHP": "8.2",
+          "conclusion": "success",
+          "python_tests": 1175,
+          "skips": 199
+        }
+      ],
+      "runtime_job": 121149903686,
+      "runtime_conclusion": "success",
+      "targeted_tests": 29,
+      "targeted_skips": 0,
+      "native_markers": [
+        "INFRA_EXPORT_ACTUAL_UID=PASS",
+        "INFRA_COMPANION_SERVICE=PASS",
+        "INFRA_HDD_NAMESPACE=PASS",
+        "INFRA_ONE_PASS_NATIVE=PASS"
+      ],
+      "DB_job": 121150743119,
+      "DB_conclusion": "success",
+      "DB_markers": [
+        "OK (158 tests, 830 assertions)",
+        "DB_PRIVILEGES_NATIVE=PASS",
+        "DB_APP_HANDOFF_NATIVE=PASS",
+        "INFRA_REMAINING_SURVEY_NATIVE=PASS"
+      ]
+    },
+    "delivery": {
+      "source": "87941fd918aad464f75f6829f705a20b0b2dfc36",
+      "script_sha256": "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+      "script_bytes": 40316,
+      "zip_sha256": "88beee438291c06ad52e14544d769c4246c098a21e5318e6f0573093da4049af",
+      "zip_bytes": 15324,
+      "CRC": true,
+      "extracted_default": true,
+      "saved_download_readback_verified": true,
+      "ZIP_CRC_verified": true,
+      "extracted_default_offline_verified": true,
+      "downloaded_version": 2
+    },
+    "local": {
+      "targeted_tests": 29,
+      "passed": 28,
+      "skipped": 1,
+      "skip": "real age unavailable locally; mandatory runtime CI must not skip",
+      "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
+      "full_suite": {
+        "tests": 1171,
+        "errors": 5,
+        "skipped": 59,
+        "failure_names": [
+          "test_connect_bridge_activation.Build.test_exact_bundle_is_repeatable_plan_only_and_rejects_tampering",
+          "test_connect_private_bridge.BuildPackage.test_exact_git_package_is_deterministic_plan_only_and_detects_corruption",
+          "test_harness.Boundary.test_all_tools_use_reader",
+          "test_harness.Boundary.test_audit_pointer_cannot_escape_boundary",
+          "test_stdio import"
+        ],
+        "environment_causes": [
+          "fixture Git objects unavailable in local worktree",
+          "mcp package unavailable locally"
+        ],
+        "PHP": "not installed locally; verified in CI source matrix"
+      }
+    }
+  },
+  "scope_fix": {
+    "status": "owner_local_batch_applied",
+    "operator_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+    "operator_bytes": 42892,
+    "known_predecessors": [
+      "1bb1f6938e709f0361e83d88bb82ec738afce65059e1e0d3a217a93abc71df18",
+      "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19"
+    ],
+    "observed_owner_state": "metadata_restored; sourceb9c0bee6",
+    "physical_exclusion": {
+      "roots": [
+        "ustar-connect-telegram-update",
+        "ustar-connect-con02-update",
+        "ustar-connect-academy-update",
+        "ustar-connect-chat-link-update"
+      ],
+      "generation": "app-[a-f0-9]{32} or update-[a-z0-9_]{8}",
+      "subtrees": [
+        "baseline",
+        "retained-original-addons",
+        "retained-original-code",
+        "retained-before-restore-<32hex>",
+        "restore-code-<32hex>"
+      ],
+      "before_or_after_metadata": "prune before descendant lstat/open; never follow physical copies"
+    },
+    "retained_controls": [
+      "generation before/after images",
+      "primitive/transaction journals",
+      "baseline-manifest.json",
+      "cron control images",
+      "current root journals and private legacy archive"
+    ],
+    "excluded_logs": [
+      "lock",
+      "private-*",
+      "commands-private.log"
+    ],
+    "preflight": "bounded metadata-only pass over entire selected control scope before transaction preparation; actual encrypted capture revalidates under existing locks",
+    "bounds": {
+      "root_json_bytes": 67108864,
+      "per_file_bytes": 67108864,
+      "aggregate_bytes": 201326592,
+      "files": 10000
+    },
+    "local": {
+      "tests": 43,
+      "passed": 41,
+      "skipped": 2,
+      "skips": [
+        "real age absent locally",
+        "UID1000 unavailable in local namespace"
+      ]
+    },
+    "RED": [
+      "legacy baseline traversed -> unsafe_payload_directory",
+      "commands-private.log incorrectly included -> unsafe_payload_file",
+      "known sourceb9c0bee6 retry -> retry_operator_changed"
+    ],
+    "native_delta": "real UID33/999 preserved physical tree,0777 cache,FIFO,91677698B sparse media; actual restricted-service age snapshot includes controls only",
+    "limits": [
+      "No agent SSH or production execution",
+      "Synthetic CI namespace and keys; existing external DR/physical power/observer boundaries remain open"
+    ],
+    "source_commit": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+    "review_run": 40202157683,
+    "review_conclusion": "success",
+    "context_run": 40202157658,
+    "context_conclusion": "success",
+    "runtime_job": 121195410529,
+    "runtime_conclusion": "success",
+    "targeted_tests": 43,
+    "targeted_skips": 0,
+    "source_jobs": [
+      {
+        "id": 121195410262,
+        "PHP": "8.3",
+        "conclusion": "success",
+        "python_tests": 1189,
+        "skips": 213
+      },
+      {
+        "id": 121195410490,
+        "PHP": "8.2",
+        "conclusion": "success",
+        "python_tests": 1189,
+        "skips": 213
+      }
+    ],
+    "native_markers": [
+      "INFRA_EXPORT_ACTUAL_UID=PASS",
+      "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+      "INFRA_COMPANION_SERVICE=PASS",
+      "INFRA_PHYSICAL_PAIR_EXCLUSION=PASS",
+      "INFRA_HDD_NAMESPACE=PASS",
+      "INFRA_ONE_PASS_NATIVE=PASS"
+    ],
+    "DB_job": 121196267679,
+    "DB_conclusion": "success",
+    "delivery": {
+      "source": "1c5152bdbeb67c6d06ab3f4bc00bd642a8b22be5",
+      "script_name": "ustar-infra-one-pass-20261025-scopefix.py",
+      "script_sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+      "script_bytes": 42892,
+      "zip_sha256": "3eacbd653fe4a21a1fcee44dde3a28c64f776111172c02e9404041b804e6f104",
+      "zip_bytes": 15501,
+      "CRC": true,
+      "member_hashes": true,
+      "extracted_default": true,
+      "CI_status": "success",
+      "saved_download_readback_verified": true,
+      "downloaded_version": 4
+    },
+    "DB_markers": [
+      "OK (158 tests, 830 assertions)",
+      "DB_PRIVILEGES_NATIVE=PASS",
+      "DB_APP_HANDOFF_NATIVE=PASS",
+      "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+      "CON02_UPDATE_NATIVE=PASS"
+    ],
+    "owner_acceptance": {
+      "finished_utc": "2026-10-25T14:49:36.417826+00:00",
+      "exports_restricted": 69,
+      "control_files": 261,
+      "cipher_bytes": 35039995,
+      "cipher_sha256": "da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f",
+      "readback_verified": true,
+      "companion_timer_active": true,
+      "journal_action": "none",
+      "journal_status": "measured",
+      "infrastructure_complete": false
+    }
+  },
+  "state_size_qualification": {
+    "source_commit": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+    "operator_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+    "qualification": {
+      "review_run": 40197352367,
+      "review_conclusion": "success",
+      "context_run": 40197352371,
+      "context_conclusion": "success",
+      "source_jobs": [
+        {
+          "id": 121180966348,
+          "PHP": "8.3",
+          "conclusion": "success",
+          "python_tests": 1183,
+          "skips": 207
+        },
+        {
+          "id": 121180966439,
+          "PHP": "8.2",
+          "conclusion": "success",
+          "python_tests": 1183,
+          "skips": 207
+        }
+      ],
+      "runtime_job": 121180966531,
+      "runtime_conclusion": "success",
+      "targeted_tests": 37,
+      "targeted_skips": 0,
+      "native_markers": [
+        "INFRA_EXPORT_ACTUAL_UID=PASS",
+        "INFRA_KNOWN_PREDECESSOR_RETRY=PASS",
+        "INFRA_COMPANION_SERVICE=PASS; synthetic21665285B state included",
+        "INFRA_HDD_NAMESPACE=PASS",
+        "INFRA_ONE_PASS_NATIVE=PASS"
+      ],
+      "DB_job": 121181832305,
+      "DB_conclusion": "success",
+      "DB_markers": [
+        "OK (158 tests, 830 assertions)",
+        "DB_PRIVILEGES_NATIVE=PASS",
+        "DB_APP_HANDOFF_NATIVE=PASS",
+        "INFRA_REMAINING_SURVEY_NATIVE=PASS",
+        "CON02_UPDATE_NATIVE=PASS"
+      ]
+    },
+    "delivery": {
+      "source": "e15c696c3b4d96eeb8a4fa8922c1fe487b9cce5f",
+      "script_name": "ustar-infra-one-pass-20261025-statefix.py",
+      "script_sha256": "b9c0bee69e2f6cf2d0508ae24cbdacffdc07904249d00afb555de6fa2a5b1a19",
+      "script_bytes": 40792,
+      "zip_sha256": "0e401b609f77eedfeedd9ca1fa85a79526d68e75e4c39fcda3328aabf9fbc86e",
+      "zip_bytes": 14319,
+      "CRC": true,
+      "member_hashes": true,
+      "extracted_default": true,
+      "CI_status": "success",
+      "saved_download_readback_verified": true,
+      "downloaded_version": 3
+    },
+    "local": {
+      "targeted_tests": 37,
+      "passed": 35,
+      "skipped": 2,
+      "skips": [
+        "age unavailable locally; mandatory runtime CI must not skip",
+        "UID1000 not mapped locally; mandatory runtime CI must not skip"
+      ],
+      "source_checks": "CURRENT_SOURCE_OK php=not_run js=24 tables=100 templates=57",
+      "full_source_suite": "Both source jobs run1183/207environment skips; success",
+      "previous_local_full_suite_errors": "Preserved by name in predecessor_qualification.local.full_suite; not a current CI failure"
+    }
+  },
+  "owner_apply_success_receipt": "context/runtime/infra_one_pass_owner_20261025.json#accepted_apply"
+}

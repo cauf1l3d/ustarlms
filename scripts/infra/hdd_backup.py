@@ -12,18 +12,22 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
 import hashlib
+import http.client
 import json
 import os
 from pathlib import Path
 import re
 import shutil
 import signal
+import socket
+import ssl
 import stat
 import subprocess
 import sys
 import tempfile
 import time
 import types
+from urllib.parse import urljoin, urlsplit
 
 ENGINE = Path('/usr/local/sbin/USTAR_BACKUP_SFTP_20261004.py')
 ENGINE_SHA = '0d31e694db8bee2309072bd00dee2423022f35e18ad2c11ea1cf788fc63ef47f'
@@ -41,6 +45,9 @@ STAGING = Path('backups/.staging')
 GIB = 1024 ** 3
 EXPORT_LIMIT = 100 * GIB
 TIMER = Path('/etc/systemd/system/ustar-hdd-backup.timer')
+HTTPS_STATE = Path('/var/lib/ustar-academy-https/state.json')
+HTTPS_CA = Path('/etc/ustar-console/authority/ca.crt')
+HTTPS_PORT = 443
 IMAGES = {
     'ustar_moodle': 'sha256:6d46230275ffc8b324afaff814979479cd0afc28bcac89c6fc380b8a0ed4ed8b',
     'ustar_postgres': 'sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94',
@@ -285,7 +292,44 @@ def resume_safely(engine):
             signal.signal(sig, handler)
 
 
+def https_ready():
+    parents_trusted(HTTPS_STATE)
+    state=read_json(HTTPS_STATE)
+    require(state.get('schema')==1 and state.get('phase')=='active', 'Canonical HTTPS is not active')
+    leaf=state.get('leaf',{}).get('fingerprint','')
+    require(re.fullmatch('[a-f0-9]{64}',leaf), 'Canonical HTTPS leaf is invalid')
+    parents_trusted(HTTPS_CA);trusted(HTTPS_CA)
+    ctx=ssl.create_default_context(cafile=str(HTTPS_CA));path='/login/index.php'
+    for _ in range(4):
+        with socket.create_connection(('127.0.0.1',HTTPS_PORT),timeout=10) as sock:
+            with ctx.wrap_socket(sock,server_hostname='ustar.local') as stream:
+                require(hashlib.sha256(stream.getpeercert(binary_form=True)).hexdigest()==leaf,
+                        'Unexpected canonical HTTPS leaf')
+                stream.sendall(('GET '+path+' HTTP/1.1\r\nHost: ustar.local\r\nConnection: close\r\n\r\n').encode())
+                response=http.client.HTTPResponse(stream);response.begin()
+                headers=response.getheaders();body=response.read(2*1024*1024+1)
+                require(len(body)<=2*1024*1024, 'HTTPS readiness response too large')
+                if response.status==200:
+                    cookies=[v for k,v in headers if k.lower()=='set-cookie' and v.lower().startswith('moodlesession')]
+                    require(cookies and all(re.search(r';\s*secure(?:;|$)',v,re.I) for v in cookies),
+                            'HTTPS session cookie is not Secure')
+                    return {'login_http':200,'transport':'https','TLS_leaf_verified':True,
+                            'secure_session_cookie':True,'authenticated_business_acceptance':False}
+                require(response.status in (301,302,303), 'HTTPS login readiness failed')
+                location=dict((k.lower(),v) for k,v in headers).get('location','')
+                dest=urlsplit(urljoin('https://ustar.local'+path,location))
+                require(dest.scheme=='https' and dest.netloc=='ustar.local', 'Unexpected HTTPS redirect')
+                path=dest.path+('?' + dest.query if dest.query else '')
+    raise Refusal('HTTPS readiness redirect loop')
+
+
 def http_ready():
+    if HTTPS_STATE.exists() or HTTPS_STATE.is_symlink():
+        for attempt in range(15):
+            try:return https_ready()
+            except (Refusal,OSError):
+                if attempt<14:time.sleep(1)
+        raise Refusal('Canonical HTTPS login readiness not accepted; no HTTP fallback')
     for attempt in range(15):
         try:
             code = command(['curl', '--silent', '--show-error', '--noproxy', '*',

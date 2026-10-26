@@ -1,60 +1,66 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-26'
 project: USTAR Academy
-stage: repository_reconciled_next_control_panel
-stage_label: Следующий этап пульт управления и Telegram
-current_activity: 'Owner16Oct: handoff archive obtained, instruction passed, await sysadmin restore; repository
-  consolidation and legacy CI cleanup; next INF06; Moodle5.2/PG17 deferred'
-next_task: INF-06
-ready_tasks:
-- INF-06
+stage: repository_reconciled_audit_verified
+stage_label: Accepted production source and current audit verification
+current_activity: Integrate PR105/103/106; verify reviews, compact handoff, defer
+  Docker rotation to planned Moodle upgrade.
+entrypoint: START_HERE.md
+next_task: PERF-01
+ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
-  commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
-  kind: application_source_full_ci_verified
-  local_ustar_version: 2026100204
+  commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  kind: accepted_owner_payload_git_source
+  local_ustar_version: 2026102300
   theme_ustar_version: 2026100202
-  source_pr: 76
-  ci_run: 37023122306
-  ci_url: https://github.com/cauf1l3d/ustarlms/actions/runs/37023122306
-  ci_jobs:
-    source: success
-    frontend: success
-    rollback: success
-    prepare-rc: success
-    moodle-db: success
-    gate: success
-  production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
-  main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
+  source_pr: 106
+  ci_receipt: context/runtime/connect_telegram_finish_ci_20261023.json
 production:
-  status: owner_accepted_Moodle518_host_update_boot_and_export_restore_waiting
-  observed_at: '2026-10-14T13:51:02Z'
-  source: context/runtime/evidence_20261016.yaml
+  latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
+  latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
+  latest_cron_contract: context/runtime/connect_telegram_finish_owner_20261023.json
+  previous_scheduled_cron_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
+  latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  effective_addon_deployment:
+    receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+    reported_date_msk: '2026-10-23'
+    status: owner_upgrade_ACK_presentation_runtime_and_visual_acceptance_verified
+    installer_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
+    payload_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    versions:
+      local_ustar: 2026102300
+      theme_ustar: 2026100202
+    application_generation: 94d379904f7f4f7f8795b43e68421d89
+    runtime_generation: 54bb0b7e4ba746928a639279ea729415
+    files: 557
+    tables: 100
+    counts_basis: fixed_controller_payload_not_new_whole_host_manifest
+    independent_probe: false
+    previous_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+  status: owner_Telegram_application2300_ACK_presentation_and_visual_accepted_export_restore_pending
+  observed_at: '2026-10-23'
+  source: context/runtime/evidence_20261026.yaml
   independently_measured: false
-  current_source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
-  current_source_commit_scope: dated_plugin_theme_manifest_not_whole_repository_or_core
+  current_source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
+    host filesystem census
   current_versions:
-    local_ustar: 2026100204
+    local_ustar: 2026102300
     theme_ustar: 2026100202
   last_exact_source_manifest:
-    date: '2026-10-05T02:32:35.997389+00:00'
-    commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
-    scope:
-    - local/ustar
-    - theme/ustar
-    matching_files: 526
-    changed: 0
-    missing: 0
-    extra: 0
-    errors: 0
-    skipped: 0
-    evidence: context/runtime/evidence_20261005_baseline.yaml
-    uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151
-      file references, not a new whole-host manifest
-  cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
-  regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
+    commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    date: '2026-10-23'
+    matching_files: 557
+    kind: owner_verified_controller_payload_not_fresh_manifest
+    evidence: context/runtime/connect_telegram_finish_owner_20261023.json
+  cron: owner23Oct18_08UTC_scheduled_exit0_1_222seconds_no_new_failures_19overdue_2failed_need_task_review
+  cron_current_receipt: context/runtime/infra_readonly_owner_20261023.json
+  regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
+  regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
     moodle: 5.1.8
@@ -68,29 +74,14 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
-  reconciliation: context/audits/AUDIT_RECONCILIATION_20261016_RU.md
+  reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
-  scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
+  scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
-- START_HERE.md
-- context/project.yaml
-- context/audits/AUDIT_RECONCILIATION_20261016_RU.md
-- context/tasks/ACTIVE.md
-- context/runtime/control_panel_telegram_20261016.md
-- context/runtime/repository_state_20261016.json
-repository:
-  canonical_branch: main
-  accepted_sources:
-    98: 855264f4e38de4a7423b035cfd7ec746b2fce82d
-    99: ee0b07b09b9a0dfadc70f3bfb2a80b0f4cb8be46
-    100: d1a3b6e1f62aa00a550016fdb55a55a4c47344a3
-    102: 7f29c9367aed623d68ddc9bdb79c701f6dfba9f6
-  legacy_frontend: archived_source_excluded_from_active_CI_and_release
-  production_components:
-  - moodle/local/ustar
-  - moodle/theme/ustar
-  branch_roles: context/runtime/repository_state_20261016.json
+- context/reviews/20261026/VERIFIED_REVIEW_RU.md
+- context/roadmap/ACCEPTED_RISKS.yaml
+- context/runtime/evidence_20261026.yaml
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -104,17 +95,8 @@ sysadmin_restore:
   production_platform_upgrade_deferred:
     moodle: '5.2'
     postgresql: '17'
-  next_task: server_control_panel_with_Telegram_alerts_metrics_backup_access_and_Academy_control
-next_control_panel:
-  task: INF-06
-  spec: context/runtime/control_panel_telegram_20261016.md
-  prototype_PR: 103
-  status: next_not_deployed
-  style: Linear-inspired graphite
-  hosting: same_server_no_separate_subdomain
-  authentication: login_password_plus_operator_authorization
-  Telegram: alerts_metrics_latest_completed_backup_and_control
-  independent_observer: required_for_host_loss_not_yet_deployed
+  next_task: INTEGRATIONS01_design;sysadmin_restore_still_waiting_external
+  status: copies_handed_over_external_result_unknown_owner_deferred
 deferred_platform:
   task: PLAT-01
   status: deferred_by_owner16Oct
@@ -124,10 +106,54 @@ deferred_platform:
   historical_target: '5.3'
   historical_downloads_preserved: true
   production_switched: false
-do_not_repeat:
-- SSD_GPT_partition_ext4_growth
-- Moodle5.1.8_upgrade_repeat_and_brief_browser_acceptance
-- AppArmor_optional_include_repair
-- host_cold_capture_r6
-- host_package_install_and_reboot
-- source_archive_pack_and_sysadmin_instruction_handoff_without_new_need
+  php: separate_lab_qualification_required
+server_facts:
+  status: partial
+  snapshot: context/runtime/server-facts/20261017T013924Z-285497b0
+  observed_at: '2026-10-17T01:39:24Z'
+  method: bounded_script_owner_supplied
+  independently_authenticated_host: false
+  script_sha256: 4abad3b668fdd465dc9a252b0752b62540a537a72fba7f7c73d9eff32824bb9c
+  counts:
+    error: 1
+    not_collected: 0
+    ok: 30
+    partial: 0
+  functional_acceptance: false
+  source_comparison: context/runtime/server_facts_source_comparison_20261017T013924Z-285497b0.json
+  application_source_matches: true
+  archives_received: 3
+  review_status: ready_for_owner_repeat_audit_with_explicit_gaps
+  review: context/reviews/20261017/runtime_reconciliation.md
+  provenance: context/runtime/server_facts_received_20261017.json
+  followup: context/runtime/server_facts_followup_20261017.json
+  measurement_gaps:
+  - pg_stat_statements available but not installed/preloaded; no query statistics
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
+    and hardening still separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
+    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
+    overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and
+    native full-cycle acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
+    redundancy not confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
+    plugin/vendor provenance remain separate; native restore/RTO awaited
+  additional_observations:
+    provenance: context/runtime/core_extra_received_20261017.json
+    review: context/reviews/20261017/core_extra_reconciliation.md
+    core_payload: context/runtime/core-facts/20261017T100015Z-edb2f12e
+    extra_derivative: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
+    validation: context/reviews/20261017/core_extra_validation.json
+    does_not_replace_31_block_snapshot: true
+    latest_review: context/reviews/20261017/gaps_reconciliation.md
+    gaps:
+      provenance: context/runtime/server_gaps_received_20261017.json
+      review: context/reviews/20261017/gaps_reconciliation.md
+      derivative: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
+      validation: context/reviews/20261017/gaps_validation.json
+    external_network_receipt: context/runtime/external_network_result_20261017.json
+current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
+accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
+repository_reconciliation: context/runtime/repository_reconciliation_20261026.json

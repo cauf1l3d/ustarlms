@@ -1,0 +1,41 @@
+[Unit]
+Description=USTAR incident rules and Telegram durable outbox
+After=network-online.target ustar-console-collect.service
+Wants=network-online.target
+ConditionPathExists=/etc/ustar-console/telegram.json
+
+[Service]
+Type=simple
+User=ustar-notify
+Group=ustar-console
+UMask=0077
+LoadCredential=telegram:/etc/ustar-console/telegram.json
+Environment=USTAR_CONSOLE_CONFIG=/etc/ustar-console/config.json
+StateDirectory=ustar-console-notify
+StateDirectoryMode=0700
+RuntimeDirectory=ustar-console-notify
+RuntimeDirectoryMode=0750
+ExecStart=/opt/ustar-console/venv/bin/ustar-console-notify
+Restart=on-failure
+RestartSec=30
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/ustar-console-notify /run/ustar-console-notify
+InaccessiblePaths=-/run/docker.sock -/srv/ustar-storage -/opt/ustar/data -/var/lib/ustar-backup -/var/lib/ustar-console
+MemoryMax=96M
+CPUQuota=10%
+TasksMax=16
+LimitNOFILE=128
+
+[Install]
+WantedBy=multi-user.target

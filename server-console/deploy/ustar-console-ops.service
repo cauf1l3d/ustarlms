@@ -1,0 +1,30 @@
+[Unit]
+Description=USTAR fixed-operation broker (no generic shell)
+After=network.target docker.service
+
+[Service]
+Type=simple
+User=root
+Group=ustar-console
+UMask=0077
+RuntimeDirectory=ustar-console-ops
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=yes
+StateDirectory=ustar-console-ops
+StateDirectoryMode=0700
+ExecStart=/opt/ustar-console/venv/bin/ustar-console-ops
+Restart=on-failure
+RestartSec=5
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+RestrictAddressFamilies=AF_UNIX
+ReadWritePaths=/run/ustar-console-ops /var/lib/ustar-console-ops
+MemoryMax=128M
+CPUQuota=20%
+TasksMax=32
+LimitNOFILE=128
+
+[Install]
+WantedBy=multi-user.target

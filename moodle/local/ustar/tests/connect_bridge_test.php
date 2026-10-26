@@ -1,0 +1,160 @@
+<?php
+namespace local_ustar;
+defined('MOODLE_INTERNAL') || die();
+
+use local_ustar\connect\{bridge_auth, bridge_http, bridge_service};
+
+#[\PHPUnit\Framework\Attributes\CoversClass(bridge_service::class)]
+final class connect_bridge_test extends \advanced_testcase {
+    protected function setUp(): void {
+        parent::setUp(); $this->resetAfterTest(true); $this->preventResetByRollback();
+    }
+    private function keys(): array {
+        return ['tg1' => ['secret' => str_repeat('12', 32), 'provider' => 'telegram',
+            'tenant' => '123456', 'operations' => bridge_auth::OPERATIONS]];
+    }
+    private function signed(string $op, array $payload): array {
+        ksort($payload);
+        $body = json_encode(['operation' => $op, 'payload' => $payload], JSON_UNESCAPED_SLASHES);
+        $headers = ['X-Ustar-Key' => 'tg1', 'X-Ustar-Time' => (string)time(),
+            'X-Ustar-Nonce' => 'rn1_' . rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=')];
+        $headers['X-Ustar-Signature'] = hash_hmac('sha256', implode("\n", [
+            'USTAR-CONNECT-BRIDGE-v1', 'POST', bridge_auth::PATH, 'tg1', $headers['X-Ustar-Time'],
+            $headers['X-Ustar-Nonce'], hash('sha256', $body)]), hex2bin(str_repeat('12', 32)));
+        return [$body, $headers];
+    }
+    private function denied(callable $call, string $reason): void {
+        try { $call(); $this->fail('Expected ' . $reason); }
+        catch (\InvalidArgumentException $error) { $this->assertSame($reason, $error->getMessage()); }
+    }
+    public function test_transport_nonce_is_durable_and_one_request_is_not_replayed(): void {
+        global $DB;
+        [$body, $headers] = $this->signed('launch.create',
+            ['provider' => 'telegram', 'tenant' => '123456', 'subject' => '77777']);
+        $this->assertArrayHasKey('launch', bridge_service::dispatch($body, $headers, $this->keys()));
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'replayed_transport');
+        $this->assertSame(1, $DB->count_records('local_ustar_conn_launches'));
+        $this->assertSame(1, $DB->count_records('local_ustar_conn_proofs', ['challengeid' => 0]));
+    }
+    public function test_key_scope_unknown_actor_fields_and_unknown_operations_fail_closed(): void {
+        $payload = ['provider' => 'telegram', 'tenant' => '123456', 'subject' => '77777'];
+        [$body, $headers] = $this->signed('launch.create', $payload + ['userid' => '2']);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'invalid_payload');
+        $payload['tenant'] = '654321';
+        [$body, $headers] = $this->signed('launch.create', $payload);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'provider_mismatch');
+        [$body, $headers] = $this->signed('hr.approve', $payload);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'forbidden_operation');
+        [$body, $headers] = $this->signed('launch.create', $payload);
+        $keys = $this->keys(); $keys['tg1']['operations'] = ['entry.status'];
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $keys), 'forbidden_operation');
+    }
+    public function test_http_is_disabled_by_default_and_forwarded_headers_cannot_bypass_peer_or_tls(): void {
+        $server = ['REMOTE_ADDR' => '127.0.0.1', 'HTTPS' => 'on', 'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => bridge_auth::PATH, 'CONTENT_TYPE' => 'application/json', 'CONTENT_LENGTH' => '100'];
+        $this->denied(fn() => bridge_http::guard($server, false, ['127.0.0.1']), 'bridge_disabled');
+        bridge_http::guard($server, true, ['127.0.0.1']);
+        foreach ([['REMOTE_ADDR' => '192.0.2.1', 'HTTP_X_FORWARDED_FOR' => '127.0.0.1'],
+                ['HTTPS' => '', 'HTTP_X_FORWARDED_PROTO' => 'https']] as $changes) {
+            $this->denied(fn() => bridge_http::guard(array_replace($server, $changes), true, ['127.0.0.1']), 'invalid_transport');
+        }
+        foreach ([['REQUEST_METHOD' => 'GET'], ['QUERY_STRING' => 'x=1'], ['REQUEST_URI' => '/other'],
+                ['CONTENT_LENGTH' => '16385'], ['CONTENT_TYPE' => 'text/plain']] as $changes) {
+            $this->denied(fn() => bridge_http::guard(array_replace($server, $changes), true, ['127.0.0.1']), 'invalid_request');
+        }
+    }
+
+    public function test_link_only_key_claims_without_entry_or_roles_and_requires_native_confirmation(): void {
+        global $DB;
+        $this->setUser($this->getDataGenerator()->create_user());
+        $challenge = \local_ustar\connect\identity_service::issue('telegram', '123456');
+        $payload = ['provider' => 'telegram', 'tenant' => '123456', 'subject' => '8727627355',
+            'code' => $challenge['code'], 'proof' => hash('sha256', 'ustar-telegram-message-link-v1'."\0".'123456:10:10:8727627355'),
+            'auth_date' => time()];
+        $keys = $this->keys(); $keys['tg1']['operations'] = ['link.claim'];
+        [$body, $headers] = $this->signed('link.claim', $payload);
+        $this->assertSame(['claimed' => true, 'academy_confirmation_required' => true],
+            bridge_service::dispatch($body, $headers, $keys));
+        $this->assertSame(0, $DB->count_records('local_ustar_conn_links'));
+        $this->assertSame(0, $DB->count_records('local_ustar_conn_launches'));
+        $this->assertSame(0, $DB->count_records('local_ustar_conn_sessions'));
+        [$body, $headers] = $this->signed('launch.create', array_intersect_key($payload, array_flip(['provider', 'tenant', 'subject'])));
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $keys), 'forbidden_operation');
+        $confirmed = \local_ustar\connect\identity_service::confirm($challenge['code']);
+        $this->assertSame('linked', $confirmed['state']);
+    }
+    public function test_signed_registration_flow_uses_bound_session_and_rejects_actor_fields(): void {
+        global $DB;
+        \local_ustar\accounts::ensure_profile_field();
+        $sender = ['provider' => 'telegram', 'tenant' => '123456', 'subject' => '77777'];
+        [$body, $headers] = $this->signed('launch.create', $sender);
+        $launch = bridge_service::dispatch($body, $headers, $this->keys());
+        $browser = \local_ustar\connect\opaque_token::issue('ub1');
+        [$body, $headers] = $this->signed('launch.exchange', $sender + [
+            'launch' => $launch['launch'], 'browser' => $browser, 'proof' => hash('sha256', 'bridge-signup'), 'auth_date' => time()]);
+        $entry = bridge_service::dispatch($body, $headers, $this->keys());
+        $binding = ['browser' => $browser, 'session' => $entry['session']];
+        [$body, $headers] = $this->signed('registration.options', $binding);
+        $this->assertNotEmpty(bridge_service::dispatch($body, $headers, $this->keys())['departments']);
+        $form = ['departmentid' => 'retail', 'email' => 'bridge-signup@example.invalid', 'firstname' => 'Synthetic',
+            'lastname' => 'Bridge', 'password' => 'Fixture-Only-Qx9!2026', 'username' => 'bridge_signup'];
+        $payload = $binding + $form + ['command' => \local_ustar\connect\opaque_token::issue('ur1')];
+        [$body, $headers] = $this->signed('registration.submit', $payload + ['userid' => '2']);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'invalid_payload');
+        [$body, $headers] = $this->signed('registration.submit', $payload);
+        $this->assertSame('registered', bridge_service::dispatch($body, $headers, $this->keys())['outcome']);
+        [$body, $headers] = $this->signed('registration.submit', $payload);
+        $this->assertTrue(bridge_service::dispatch($body, $headers, $this->keys())['replayed']);
+        [$body, $headers] = $this->signed('registration.status', $binding);
+        $result = bridge_service::dispatch($body, $headers, $this->keys());
+        $this->assertSame('pending', $result['registration']['status']);
+        $this->assertStringNotContainsString($form['password'], json_encode($result));
+        $this->assertSame(1, $DB->count_records('local_ustar_conn_signups'));
+    }
+    public function test_notification_scope_and_exact_payload_do_not_accept_an_actor(): void {
+        $keys=$this->keys();$keys['tg1']['operations']=['notification.lease'];
+        [$body,$headers]=$this->signed('notification.lease',['limit'=>'1']);
+        $this->assertSame(['status'=>'empty'],bridge_service::dispatch($body,$headers,$keys));
+        foreach ([['limit'=>1],['limit'=>'2'],['limit'=>'1','userid'=>'2']] as $payload) {
+            [$body,$headers]=$this->signed('notification.lease',$payload);
+            $this->denied(fn()=>bridge_service::dispatch($body,$headers,$keys),'invalid_payload');
+        }
+        [$body,$headers]=$this->signed('notification.begin',['delivery'=>'1','lease'=>'ud1_'.str_repeat('A',43)]);
+        $this->denied(fn()=>bridge_service::dispatch($body,$headers,$keys),'forbidden_operation');
+        [$body,$headers]=$this->signed('notification.begin',['delivery'=>'0','lease'=>'ud1_'.str_repeat('A',43)]);
+        $this->denied(fn()=>bridge_service::dispatch($body,$headers,$this->keys()),'invalid_delivery');
+    }
+    public function test_actor_bridge_uses_only_bound_entry_and_returns_own_profile(): void {
+        global $CFG;
+        $CFG->ustar_connect_provider_read_enabled = true;
+        $employee = $this->getDataGenerator()->create_user();
+        $this->setUser($employee);
+        $sender = new \local_ustar\connect\identity('telegram', '123456', '77777');
+        $code = \local_ustar\connect\identity_service::issue('telegram', '123456')['code'];
+        \local_ustar\connect\identity_service::claim_verified($code, $sender, hash('sha256', $code));
+        \local_ustar\connect\identity_service::confirm($code);
+        $this->setGuestUser();
+        $browser = \local_ustar\connect\opaque_token::issue('ub1');
+        $launch = \local_ustar\connect\entry_service::create_launch($sender, 'tg1');
+        $entry = \local_ustar\connect\entry_service::exchange($sender, $launch['launch'],
+            hash('sha256', $launch['launch']), time(), $browser, 'tg1');
+        $binding = ['browser' => $browser, 'session' => $entry['session']];
+        [$body, $headers] = $this->signed('actor.open', $binding + ['userid' => (string)get_admin()->id]);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'invalid_payload');
+        $keys = $this->keys(); $keys['tg1']['operations'] = ['entry.status'];
+        [$body, $headers] = $this->signed('actor.open', $binding);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $keys), 'forbidden_operation');
+        [$body, $headers] = $this->signed('actor.open', $binding);
+        $actor = bridge_service::dispatch($body, $headers, $this->keys());
+        $binding['session'] = $actor['session'];
+        [$body, $headers] = $this->signed('actor.status', $binding);
+        $view = bridge_service::dispatch($body, $headers, $this->keys());
+        $this->assertSame($employee->username, $view['profile']['username']);
+        $this->assertSame(['profile'], $view['features']);
+        [$body, $headers] = $this->signed('actor.revoke', $binding);
+        $this->assertSame(['revoked' => true], bridge_service::dispatch($body, $headers, $this->keys()));
+        [$body, $headers] = $this->signed('actor.status', $binding);
+        $this->denied(fn() => bridge_service::dispatch($body, $headers, $this->keys()), 'invalid_actor');
+    }
+
+}

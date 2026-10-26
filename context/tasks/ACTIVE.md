@@ -1,21 +1,29 @@
-# Активные задачи USTAR
+# Активная работа —26.10.2026
 
-## Следующая работа INF-06
+## Сейчас
 
-Реализовать [пульт управления и Telegram](../runtime/control_panel_telegram_20261016.md), опираясь на свежий main и прототип PR103. Linear-inspired UI на том же сервере, login/password и защищённый доступ; метрики/алерты, стенды/адреса/TTL, SFTP, ручные backup/restore и управляемые операции Академии. Telegram показывает статус/метрики, алертит failure/recovery/NoData и выдаёт последний проверенный зашифрованный бэкап по запросу разрешённого оператора.
+Верификация аудитов и интеграция PR105/103/106 в main. Код Академии должен побайтно
+совпасть с принятым payload6c56a5b6/local2300; изменения этого блока — Git/CI/контекст.
+[План](../proposals/PROD_TRUTH_PLAN_20261026.md),
+[проверенные выводы](../reviews/20261026/VERIFIED_REVIEW_RU.md).
 
-Начальный срез: auth + read-only collector/API + реальный UI + Telegram delivery; затем job adapters и выдача backup. Работающий бот/backend/auth ещё не поставлены. Зависимости INF-02/03/05/07 остаются отдельными рисками; не создавать для пульта неограниченный root/Docker socket ради обхода.
+## После интеграции
 
-## Ожидание внешнего результата OPS-02
+1. PERF-01: пассивный baseline горячих пользовательских сценариев; затем batch-запросы
+   для подтверждённых feed/competition N+1, с проверкой видимости и полного результата.
+2. INF-12/качество: отрицательные actor/scope/upload/CSRF сценарии, реестр публичных
+   входов и опасных CLI, общий интерфейс истории доменных действий. Сначала проверить
+   существующие guards/историю, не добавлять их дубль.
+3. UX: проверить путь сотрудника от «Мой день» до результата обучения на телефоне.
+   Не считать URL отдельным экраном и не сливать HR-authorize с self-service launch.
+4. Архитектура: извлекать presenters/readers из изменяемых крупных классов с сохранением
+   API; большой разбор route_model без задачи и тестов не начинать.
 
-Владелец16Oct подтвердил: архив получен, инструкция передана сисадмину. [Receipt](../runtime/sysadmin_handoff_result_20261016.json). Ожидаются clean-host import, вход разными ролями, файлы/SCORM, сохранение прогресса и reboot копии. Не повторять упаковку без новой необходимости, не считать успешную передачу доказанным restore.
+## Отложено
 
-## Отложено PLAT-01
+Docker rotation/health/recreate — следующее плановое обновление Moodle/PHP.
+SSH/firewall — подготовка внешнего доступа по команде владельца.
+Внешний restore — unknown, не переспрашивать; notification reserve и группы deferred.
+PR107 Studio остаётся отдельным PR, не включать в production-baseline автоматически.
 
-Moodle5.2 и PostgreSQL17 по команде16Oct. PR101/загруженные5.3 assets — история исследований, не согласованная текущая версия для запуска. Не создавать новый стенд и не переключать production платформу в рамках пульта.
-
-## Принятые этапы
-
-SSD11Oct; full-addon lab upgrade/repeat/paired rollback12Oct; production5.1.8 upgrade/repeat/brief browser/cron13Oct; AppArmor13Oct; r6 SSD archive/63 packages/native reboot/mount/ID-policy14Oct; archive handoff16Oct. Детали и ограничения — [аудит](../audits/AUDIT_RECONCILIATION_20261016_RU.md).
-
-Общий остаток, включая DB superuser, runtime code write, HTTPS, SMTP/disabled tasks, retention/offsite, ACL/Privacy/performance — [BACKLOG](../roadmap/BACKLOG.yaml). Ошибка route refresh не исправлялась и сохраняется в OPS-01.
+Ни эта очередь, ни успешный CI не означают применение новых изменений на server1.

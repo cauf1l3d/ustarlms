@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "kind": "compose_source_privacy_owner_receipt",
+  "recorded_at_utc": "2026-10-25T18:36:44.536572+00:00",
+  "source": "owner pasted server1 terminal output; observation timestamp not supplied",
+  "observation_time_not_supplied": true,
+  "independent_agent_server_access": false,
+  "checksum_checks": [
+    {
+      "path": "/root/ustar-compose-source-privacy-20261025.py",
+      "sha256": "20d282e9b24dcc141691271e6477ddc1f24a17979f27c87f94e0294294d70fdb",
+      "output": "OK"
+    },
+    {
+      "path": "/usr/local/sbin/USTAR_INFRA_ONE_PASS_20261025.py",
+      "sha256": "5067163fbfa6f0b4dd345c0d48b064cbd63fed377cc8446282ef46cf681f57e5",
+      "output": "OK"
+    }
+  ],
+  "check": {
+    "business_rows_restored": false,
+    "provider_called": false,
+    "configuration_changes": false,
+    "container_configuration_changed": false,
+    "contents_unchanged": true,
+    "gid": 1000,
+    "mode": "0o644",
+    "phase": "ready_for_compose_source_privacy",
+    "source_sha256": "41de2ed318ffb7697d92c575d1fc35ab3e6b1d16900e725aca843642d1cb7a09",
+    "uid": 1000
+  },
+  "apply": {
+    "business_rows_restored": false,
+    "provider_called": false,
+    "configuration_changes": true,
+    "container_configuration_changed": false,
+    "contents_unchanged": true,
+    "gid": 1000,
+    "mode": "0o600",
+    "phase": "compose_source_private",
+    "source_sha256": "41de2ed318ffb7697d92c575d1fc35ab3e6b1d16900e725aca843642d1cb7a09",
+    "uid": 1000
+  },
+  "companion_attempt": {
+    "business_rows_restored": false,
+    "provider_called": false,
+    "phase": "refused",
+    "reason": "managed_operation_busy_retry_later"
+  },
+  "interpretation": {
+    "source_privacy_applied": true,
+    "existing_earlier_companion_acceptance_retained": true,
+    "new_companion_complete": true,
+    "new_companion_archive_or_hash_not_reported": false,
+    "source_mode_automatically_undone": false,
+    "busy_reason_source": "pinned core recovery_locks raises when a managed LOCK_SH|LOCK_NB acquisition sees an exclusive holder",
+    "specific_lock_and_holder": "not reported; do not assert cron/backup identity",
+    "archive_creation_for_this_attempt": "original attempt refused before archive creation; subsequent owner retry completed archive d7f6f8e3 with authenticated readback",
+    "adapter_code_lock_release": "main exits opened context before printing result; its descriptor is closed before subsequent shell command",
+    "diagnostic_reproduction": "exact pinned core with synthetic existing private lock files: exclusive cron-path holder reproduces same reason; releasing permits acquisition. Does not identify production holder",
+    "code_change_required_by_current_evidence": false,
+    "busy_status": "resolved_on_single_retry_holder_not_identified_no_lock_diagnostics_needed",
+    "latest_companion_finish_msk": "2026-10-25T21:39:16.874604+03:00"
+  },
+  "next": {
+    "action": "readonly writable-layer metadata for two frozen containers; no repeat privacy apply/backup/origin/profile/SSH probes",
+    "runbook": "context/runtime/infra_docker_writable_layer_20261025.md",
+    "Docker_lifecycle_implemented": false
+  },
+  "boundaries": [
+    "Docker logging/health/frozen-ID lifecycle remains open",
+    "no whole-host/offsite/external restore claim",
+    "SSH/key/firewall explicitly deferred; current LAN access accepted",
+    "UPS present; copies handed over; external restore explicitly unknown; no repeat stand"
+  ],
+  "subagents": 0,
+  "provider_sends": 0,
+  "main_merge": false,
+  "companion_retry": {
+    "archive": "/srv/ustar-storage/backups/host-state/ustar-control-20261025T183912Z-d7f6f8e3.tar.gz.age",
+    "archive_deletion": false,
+    "bytes": 35043569,
+    "files": 264,
+    "finished_utc": "2026-10-25T18:39:16.874604+00:00",
+    "kind": "ustar_config_control_companion",
+    "phase": "complete",
+    "physical_recovery_trees_included": false,
+    "readback_verified": true,
+    "recovery_key_included": false,
+    "schema": 1,
+    "sha256": "083bbfda3d26e85caca74393af76c4006e03c3278e0016a718829929b370c2f4",
+    "started_utc": "2026-10-25T18:39:12.095828+00:00",
+    "success": true,
+    "whole_host_backup": false
+  },
+  "companion_retry_recorded_at_utc": "2026-10-25T18:45:37.182714+00:00",
+  "companion_retry_source": "owner pasted successful retry output; engine capture timestamps reported",
+  "previous_next": {
+    "action": "retry existing --backup-host-state only once; inspect holder metadata if contention repeats",
+    "command": "sudo -v && sudo -n timeout --kill-after=5s 180s /usr/bin/python3 -I -B \\\n  /usr/local/sbin/USTAR_INFRA_ONE_PASS_20261025.py --backup-host-state",
+    "repeat_privacy_apply": false,
+    "unlock_delete_or_kill": false,
+    "success_receipt_required": [
+      "phase=complete",
+      "success=true",
+      "readback_verified=true"
+    ]
+  }
+}

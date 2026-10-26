@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "originals": "user-supplied Library attachments26Oct; originals remain unchanged",
+  "files": [
+    {
+      "file": "USTAR_AUDIT_CONSOLIDATED_20261024.md",
+      "original_sha256": "08c161a1ef11f4726fe8a47d135f25b79effddb6688bdef838d3a5885e3bb02b",
+      "repository_sha256": "08c161a1ef11f4726fe8a47d135f25b79effddb6688bdef838d3a5885e3bb02b",
+      "normalization": "byte-identical"
+    },
+    {
+      "file": "USTAR_CODE_SECURITY_AUDIT_20261017.md",
+      "original_sha256": "acc620d98b1f5aee1112f30ac2d8796d10fe7ffc4d70827f0fe2c89f3d832a85",
+      "repository_sha256": "7d28dd41f4151251363c8292e2190d9ce49895062dc222635df2bb68b5aa3cc6",
+      "normalization": "one illustrative private-key header replaced; no key body present"
+    },
+    {
+      "file": "Вставленный текст(20261026-133144).txt",
+      "original_sha256": "3b466c19700777233f38130eb0c1f3ac9df4d704c768322333a4c40c70206919",
+      "repository_sha256": "3b466c19700777233f38130eb0c1f3ac9df4d704c768322333a4c40c70206919",
+      "normalization": "byte-identical"
+    }
+  ]
+}

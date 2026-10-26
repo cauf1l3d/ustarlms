@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "kind": "redacted_owner_terminal_followup",
+  "received_installation_at_utc": "2026-10-18T00:46:58Z",
+  "received_failure_diagnostic_at_utc": "2026-10-18T00:49:53Z",
+  "probe_observed_at_utc": null,
+  "independently_reexecuted_by_agent": false,
+  "installed_release": {
+    "source_commit": "1f605e4dad9a88040146086bfbfbe48d842004d5",
+    "archive_sha256": "377eb5640d8c362b7aa8aab299d39ae30780c659f13deb0bde3e62d6934fc109",
+    "owner_checksum": "OK",
+    "update": "PASS",
+    "pip_check": "no_broken_requirements",
+    "previous_venv_retained": true
+  },
+  "console_acceptance": {
+    "console_tls": "verified_with_local_ca",
+    "source_stale": false,
+    "native_accepted": true,
+    "scope": "limited_installation_gate_not_all_native_acceptance",
+    "web_groups": "console_only",
+    "web_ops_collector_active": true,
+    "HDD_and_capacity_inodes": "ok",
+    "backup": "ok",
+    "cron": "ok",
+    "clock": "ok",
+    "local_HEAD": "ok",
+    "database_aggregates": "ok",
+    "SMART": "warning/smart_partial_attributes",
+    "remaining": [
+      "browser_login_role_denial",
+      "download_hash",
+      "telegram_receiver_ack",
+      "independent_observer",
+      "restore_RTO"
+    ]
+  },
+  "Xray": {
+    "binary_sha256": "OK",
+    "secure_candidates": 12,
+    "unsupported_skipped": 0,
+    "selected_candidate_number": 1,
+    "candidate_TLS": "VERIFIED",
+    "telegram_https": "verified",
+    "HTTP_status": 302,
+    "proxy": "loopback_CONNECT",
+    "token_used_in_root_probe": false,
+    "host_routes_changed_reported": false,
+    "configuration_installed": true,
+    "subscription_URL_saved": false,
+    "service": "active/running",
+    "NRestarts": 0
+  },
+  "Telegram_setup": {
+    "private_challenge_ID_received": true,
+    "numeric_ID_exported": false,
+    "token_exported": false,
+    "wizard_completed": true,
+    "proxy_is_loopback": true,
+    "users_count": 1,
+    "users_match_chats": true,
+    "notifier_enabled": true,
+    "owner_received_bot_reply": false
+  },
+  "notifier_diagnostic": {
+    "Result": "exit-code",
+    "NRestarts": 9,
+    "ExecMainCode": 1,
+    "ExecMainStatus": 1,
+    "ActiveState": "activating",
+    "SubState": "auto-restart",
+    "journal_records_examined": 100,
+    "exception_classes": [
+      "ValueError"
+    ],
+    "known_causes": [
+      "credential_guard"
+    ],
+    "alerts_source_lines": [
+      225,
+      262
+    ]
+  },
+  "diagnosis": {
+    "confirmed_failure": "credential_metadata_guard_before_Bot_API_calls",
+    "actual_service_credential_mode_and_ACL_collected": false,
+    "reproduced_compatibility_defect": "systemd254plus root-owned0440 named-service-UID ACL rejected by old mode077 guard",
+    "official_source": "https://github.com/systemd/systemd/issues/29435",
+    "local_actual_ACL_regression": "RED_before_fix_GREEN_after",
+    "root_private_source_file_permissions_changed": false
+  },
+  "prepared_fix": {
+    "scope": "alerts.py private credential reader only; systemd units/network/token/config unchanged",
+    "local_backend_tests": 192,
+    "local_focused_tests": 77,
+    "native_PID1_first_worker_cycle_fixture": "added_pending_CI",
+    "receiver_ack": "pending_after_owner_patch"
+  },
+  "agent_changed_server1": false,
+  "home_VPN_installed": false,
+  "scope_note": "Update/Xray/setup are owner reports, not direct agent SSH measurements. Existing dated receipts remain intact. No actual service inode mode/ACL was supplied, so exact server metadata is not invented; the compatible systemd ACL defect was independently reproduced locally. Raw token, subscription profile, numeric private ID and private logs are omitted."
+}

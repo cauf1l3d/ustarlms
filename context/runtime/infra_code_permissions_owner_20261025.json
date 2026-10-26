@@ -1,0 +1,42 @@
+{
+  "reported_date": "2026-10-25",
+  "source": "owner metadata-only terminal output; exact run timestamp unavailable",
+  "complete": true,
+  "acl_entries": 0,
+  "hardlinked_files": 0,
+  "pruned_directories": 0,
+  "uid33": {
+    "directories": 849,
+    "files": 3908
+  },
+  "config": {
+    "uid": 0,
+    "gid": 33,
+    "mode": "0640",
+    "web_read": true,
+    "web_write": false
+  },
+  "web_access": {
+    "local_ustar_write": true,
+    "theme_ustar_write": false,
+    "moodledata_write": true
+  },
+  "legacy_owner_decision": "currently unused; retain privately for future USTAR Connect reuse",
+  "production_hardening_applied": true,
+  "full_INF03_closed": false,
+  "operator_check": {
+    "phase": "ready_for_code_hardening",
+    "entries": 44210,
+    "archived_files": 22,
+    "changed_permissions": 4785,
+    "host_changes": false,
+    "provider_called": false
+  },
+  "operator_apply": {
+    "app_role": "ustar_app",
+    "archived_files": 22,
+    "business_rows_restored": false,
+    "phase": "code_hardened"
+  },
+  "post_apply_browser_acceptance": "owner_reports_works_25Oct"
+}

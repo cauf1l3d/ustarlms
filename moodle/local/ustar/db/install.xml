@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XMLDB PATH="local/ustar/db" VERSION="2026100204" COMMENT="USTAR Academy tables">
+<XMLDB PATH="local/ustar/db" VERSION="2026102200" COMMENT="USTAR Academy tables">
   <TABLES>
     <TABLE NAME="local_ustar_structure" COMMENT="Versioned org structure / skills / matrix JSON">
       <FIELDS>
@@ -580,18 +580,27 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="notificationid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="channel" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" />
         <FIELD NAME="attempts" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="nextattempt" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="providerref" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="lasterror" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connectversion" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connlinkid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connrevision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connexpires" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connleaseuntil" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connbegun" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="connleasehash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="connkeyid" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" />
       </FIELDS>
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id" /></KEYS>
       <INDEXES>
         <INDEX NAME="notification_channel_uix" UNIQUE="true" FIELDS="notificationid, channel" />
         <INDEX NAME="status_next_idx" UNIQUE="false" FIELDS="status, nextattempt" />
+        <INDEX NAME="connect_ready_idx" UNIQUE="false" FIELDS="connectversion, channel, status, nextattempt" />
       </INDEXES>
     </TABLE>
     <TABLE NAME="local_ustar_coin_ledger" COMMENT="USCOIN immutable transaction ledger">
@@ -1751,7 +1760,7 @@
         <FIELD NAME="parentid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
         <FIELD NAME="templateversionid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
         <FIELD NAME="seriesid" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
-        <FIELD NAME="occurdate" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="" />
+        <FIELD NAME="occurdate" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="10" />
         <FIELD NAME="timezone" TYPE="char" NOTNULL="true" SEQUENCE="false" LENGTH="64" DEFAULT="Europe/Moscow" />
         <FIELD NAME="kpiweight" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="10" />
         <FIELD NAME="requirephoto" TYPE="int" NOTNULL="true" SEQUENCE="false" LENGTH="10" DEFAULT="0" />
@@ -1915,6 +1924,142 @@
       </FIELDS>
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/><KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/></KEYS>
       <INDEXES><INDEX NAME="token" UNIQUE="true" FIELDS="token"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_links" COMMENT="Connect identity metadata; no role grants">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="identityhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="userchannelhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="provider" TYPE="char" LENGTH="16" NOTNULL="true"/>
+        <FIELD NAME="tenant" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="linked"/>
+        <FIELD NAME="revision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/><KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="identityhash_uix" UNIQUE="true" FIELDS="identityhash"/><INDEX NAME="userchannelhash_uix" UNIQUE="true" FIELDS="userchannelhash"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_challenges" COMMENT="Hashed browser-bound single-use link challenges">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="codehash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="provider" TYPE="char" LENGTH="16" NOTNULL="true"/>
+        <FIELD NAME="tenant" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="browserhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="proofhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="confirmedlinkid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="confirmedrevision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/><KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="codehash_uix" UNIQUE="true" FIELDS="codehash"/><INDEX NAME="expiresat_idx" UNIQUE="false" FIELDS="expiresat"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_proofs" COMMENT="Consumed proof hashes; not provider credentials">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="proofhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="challengeid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="proofhash_uix" UNIQUE="true" FIELDS="proofhash"/><INDEX NAME="expiresat_idx" UNIQUE="false" FIELDS="expiresat"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_launches" COMMENT="One-use provider-bound entry tickets">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="noncehash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="identityhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="provider" TYPE="char" LENGTH="16" NOTNULL="true"/>
+        <FIELD NAME="tenant" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="keyid" TYPE="char" LENGTH="32" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="consumedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="noncehash_uix" UNIQUE="true" FIELDS="noncehash"/><INDEX NAME="identityhash_idx" UNIQUE="false" FIELDS="identityhash"/><INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/><INDEX NAME="expiresat_idx" UNIQUE="false" FIELDS="expiresat"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_sessions" COMMENT="Distinct onboarding and provider-read sessions; never Moodle login cookies">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="tokenhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="browserhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="identityhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="provider" TYPE="char" LENGTH="16" NOTNULL="true"/>
+        <FIELD NAME="tenant" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="keyid" TYPE="char" LENGTH="32" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="linkrevision" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="scope" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="onboarding"/>
+        <FIELD NAME="authdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="actorready" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="lastseenat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="authstamp" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="scopestamp" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="revokedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="tokenhash_uix" UNIQUE="true" FIELDS="tokenhash"/><INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/><INDEX NAME="expiresat_idx" UNIQUE="false" FIELDS="expiresat"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_signups" COMMENT="Signup receipts only; canonical account and HR request remain elsewhere">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="identityhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="commandhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="payloadhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="keyid" TYPE="char" LENGTH="32" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="requestid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="linkrevision" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="expiresat" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/><KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/></KEYS>
+      <INDEXES><INDEX NAME="identityhash_uix" UNIQUE="true" FIELDS="identityhash"/><INDEX NAME="commandhash_uix" UNIQUE="true" FIELDS="commandhash"/><INDEX NAME="expiresat_idx" UNIQUE="false" FIELDS="expiresat"/></INDEXES>
+    </TABLE>
+    <TABLE NAME="local_ustar_conn_acktokens" COMMENT="Hashed recipient-bound notification acknowledgement actions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="tokenhash" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="notificationid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="deliveryid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="attempt" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="provider" TYPE="char" LENGTH="16" NOTNULL="true"/>
+        <FIELD NAME="tenant" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="linkrevision" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="expires" TYPE="int" LENGTH="10" NOTNULL="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="notificationid_fk" TYPE="foreign" FIELDS="notificationid" REFTABLE="local_ustar_notifications" REFFIELDS="id"/>
+        <KEY NAME="deliveryid_fk" TYPE="foreign" FIELDS="deliveryid" REFTABLE="local_ustar_notify_delivery" REFFIELDS="id"/>
+        <KEY NAME="linkid_fk" TYPE="foreign" FIELDS="linkid" REFTABLE="local_ustar_conn_links" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="tokenhash_uix" UNIQUE="true" FIELDS="tokenhash"/>
+        <INDEX NAME="delivery_attempt_uix" UNIQUE="true" FIELDS="deliveryid,attempt"/>
+        <INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="expires_idx" UNIQUE="false" FIELDS="expires"/>
+      </INDEXES>
     </TABLE>
 </TABLES>
 </XMLDB>

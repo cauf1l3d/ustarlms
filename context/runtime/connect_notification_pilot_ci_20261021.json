@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "source_commit": "a86e208029b6104150e85d0e90384f84da214c22",
+  "source_tree": "6d82e64bbfa9900bfd112f0452e62ef9f78cdb3c",
+  "verified_at": "2026-10-21",
+  "pull_request": 106,
+  "review": "author_self_review_no_independent_reviewer",
+  "context": {
+    "run": 39573641861,
+    "conclusion": "success"
+  },
+  "checks": {
+    "local_r16": {
+      "tests": 936,
+      "environment_skips": 50,
+      "result": "pass"
+    },
+    "ci_r16_each_php": {
+      "tests": 936,
+      "environment_skips": 152,
+      "result": "pass"
+    },
+    "actual_uid33_pilot_transaction": {
+      "tests": 6,
+      "skips": 0,
+      "result": "pass"
+    },
+    "native_moodle_pg": {
+      "tests": 127,
+      "assertions": 633,
+      "result": "pass"
+    },
+    "native_concurrency": {
+      "scenarios": 6,
+      "result": "pass"
+    },
+    "browser": {
+      "mobile": 60,
+      "onboarding": 20,
+      "link": 28,
+      "actor": 100,
+      "provider": "synthetic"
+    },
+    "systemd_credentials_and_private_tls": "pass_separate_isolated_fixtures",
+    "paired_restore_and_schema": "pass_isolated_fixtures"
+  },
+  "artifact": {
+    "id": 12333470816,
+    "name": "connect-notification-pilot",
+    "file": "ustar-notify-pilot-a86e2080.pyz",
+    "bytes": 77422,
+    "sha256": "d06b88dc081028ce860774fbbe290dadb1c7a55bef82bd1ae135de8a5bd1ad33",
+    "independent_exact_git_build_equal": true,
+    "default_plan_host_access": false
+  },
+  "policy": {
+    "path": "/opt/ustar/data/moodle/public/public/local/ustar/classes/connect/notification_delivery.php",
+    "before": "7eaee1981e5d3230e6bcb5104ceda3a16aed288a9be09876fdcbf46fd160d265",
+    "after": "2f6c0c8b25941ac435237fc9df4c4de738b885f467ccbab80b9988c0bb42e498",
+    "schema_or_version_migration": false
+  },
+  "limitations": [
+    "Separate native fixtures are not combined server1/provider acceptance",
+    "Local filesystem cannot map actual UID33; strict ownership gate passed on GitHub runner",
+    "Operator activation, personal opt-in, actual new-task delivery and revoke remain pending"
+  ],
+  "subagents": 0,
+  "production_changed_by_agent": false
+}

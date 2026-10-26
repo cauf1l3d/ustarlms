@@ -11,6 +11,24 @@ import yaml
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def check_governance(root,tasks):
+    from datetime import date
+    for name,maximum in {'AGENTS.md':6144,'START_HERE.md':4096,'context/tasks/ACTIVE.md':4096}.items():
+        assert (root/name).stat().st_size<=maximum, 'entrypoint_size: '+name
+    rows=yaml.safe_load((root/'context/roadmap/ACCEPTED_RISKS.yaml').read_text())['risks']
+    risks={row['id']:row for row in rows}
+    assert len(rows)==len(risks), 'duplicate_risk_id'
+    for row in rows:
+        assert all(isinstance(row.get(k),str) and row[k].strip() for k in
+                   ('id','owner','accepted_on','review_trigger','evidence','scope')), 'incomplete_accepted_risk'
+        assert row.get('status')=='accepted_risk', 'risk_status'
+        try:date.fromisoformat(row['accepted_on'])
+        except ValueError:raise AssertionError('risk_date') from None
+        assert (root/row['evidence']).is_file(), 'risk_evidence_missing'
+    for task in tasks.values():
+        if task['status']=='accepted_risk':assert task.get('risk_id') in risks, 'task_risk_reference'
+
+
 def check():
     def read(path): return yaml.safe_load((ROOT/path).read_text())
     state=read('context/roadmap/STATE.yaml'); backlog=read('context/roadmap/BACKLOG.yaml')
@@ -20,6 +38,7 @@ def check():
     assert backlog['source_baseline']==baseline
     tasks={t['id']:t for t in backlog['tasks']}
     assert len(tasks)==len(backlog['tasks']), 'Duplicate task IDs'
+    check_governance(ROOT,tasks)
     assert state['next_task'] in tasks
     for t in tasks.values():
         assert set(t['depends_on']) <= tasks.keys(), t['id']
@@ -35,6 +54,8 @@ def check():
         assert tasks[key]['status']=='ready', key
         assert all(tasks[d]['status']=='done' for d in tasks[key]['depends_on']), key
     project=read('context/project.yaml')
+    assert state['entrypoint']=='START_HERE.md'
+    assert read('context/context_index.yaml')['entrypoint']==state['entrypoint']
     for path in state['next_agent_read']:
         assert (ROOT/path).is_file(),path
     for t in tasks.values():
@@ -52,6 +73,24 @@ def check():
     assert re.fullmatch('[0-9a-f]{40}',evidence['application']['reference_commit'])
     assert state['production']['last_exact_source_manifest']['commit']==evidence['application']['reference_commit']
     assert state['production']['current_source_commit']==evidence['application']['reference_commit']
+    latest=state['production']['last_exact_source_manifest']
+    if latest.get('kind')=='owner_verified_controller_payload_not_fresh_manifest':
+        receipt=read(latest['evidence'])['application']
+        assert receipt['payload_commit']==latest['commit']
+        assert receipt['payload_files']==latest['matching_files']
+        assert receipt['counts_basis']=='fixed_controller_payload_not_a_new_whole_host_manifest'
+    elif latest.get('comparison'):
+        from infra.server_facts import read_payload, validate_payload
+        payload,metadata=validate_payload(read_payload((ROOT/latest['evidence']).parent))
+        comparison=json.loads((ROOT/latest['comparison']).read_text())
+        assert latest['date']==metadata['collected_utc']
+        assert payload['blocks']['source_manifest']['status']=='ok'
+        assert comparison['facts_snapshot']==str(Path(latest['evidence']).parent)
+        assert comparison['evidence_complete'] and comparison['baseline_commit']==latest['commit']
+        assert latest['matching_files']==comparison['matching']
+        assert latest['changed']==len(comparison['changed'])
+        assert latest['missing']==len(comparison['only_in_git'])
+        assert latest['extra']==len(comparison['only_in_snapshot'])
     assert state['production']['last_exact_source_manifest']['date']==evidence['application']['manifest_observed_at']
     assert state['production']['last_exact_source_manifest']['matching_files']==evidence['application']['matching_files']
     assert state['production']['current_versions']=={
@@ -63,21 +102,44 @@ def check():
     assert project['next_stage']==backlog['remediation_plan']==state['audit']['remediation_plan']
     manifest=json.loads((ROOT/'context/code_map/generated/source_manifest.json').read_text())
     assert manifest['source_commit']==baseline
-    for f in manifest['files']:
+    effective=manifest
+    candidate=state.get('development_candidate')
+    if candidate:
+        # Keep accepted source/deployment evidence immutable. A candidate is
+        # explicit, byte-checked and tree-addressed, never a new native receipt.
+        effective=json.loads((ROOT/candidate['manifest']).read_text())
+        assert effective['kind']=='unmerged_development_source' and effective['deployed'] is False
+        assert effective['baseline_commit']==baseline
+        assert len(effective['files'])==len({f['path'] for f in effective['files']})==effective['counts']['files']
+        treepaths=set()
+        for scope, tree in effective['component_tree_ids'].items():
+            assert scope in ('moodle/local/ustar','moodle/theme/ustar')
+            assert re.fullmatch('[0-9a-f]{40}',tree)
+            names=subprocess.check_output(['git','ls-tree','-r','--name-only',tree],cwd=ROOT,text=True).splitlines()
+            for name in names:
+                path=scope+'/'+name
+                expected=next(f['sha256'] for f in effective['files'] if f['path']==path)
+                blob=subprocess.check_output(['git','show',tree+':'+name],cwd=ROOT)
+                assert hashlib.sha256(blob).hexdigest()==expected,path
+                treepaths.add(path)
+        assert treepaths=={f['path'] for f in effective['files']}
+    for f in effective['files']:
         path=ROOT/f['path']
         assert path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest()==f['sha256'], f['path']
     paths={p for p in subprocess.check_output(['git','ls-files','--','moodle/local/ustar','moodle/theme/ustar'],cwd=ROOT,text=True).splitlines()}
-    assert paths=={f['path'] for f in manifest['files']}, 'Source inventory missing/extra files'
+    assert paths=={f['path'] for f in effective['files']}, 'Source inventory missing/extra files'
     for component,key in [('local/ustar','local_ustar_version'),('theme/ustar','theme_ustar_version')]:
         v=int(re.search(r'\$plugin->version\s*=\s*(\d+)',(ROOT/'moodle'/component/'version.php').read_text())[1])
-        assert state['code_baseline'][key]==v
+        assert (effective['versions'][key.removesuffix('_version')] if candidate else state['code_baseline'][key])==v
     tables={t.attrib['NAME'] for t in ET.parse(ROOT/'moodle/local/ustar/db/install.xml').findall('.//TABLE')}
-    assert len(tables)==manifest['counts']['tables']==read('context/code_map/database.yaml')['table_count']
+    assert len(tables)==effective['counts']['tables']
+    assert manifest['counts']['tables']==read('context/code_map/database.yaml')['table_count']
     for p in (ROOT/'context/domains').glob('*.yaml'):
         data=yaml.safe_load(p.read_text())
         assert data['source_commit']==baseline,p
         assert set(data['tables']) <= tables,p
         for path in data['entry_points']+data['services']:assert (ROOT/path).is_file(),path
+        for scenario in data.get('scenarios',[]):assert (ROOT/scenario['source']).is_file(),scenario
     for p in (ROOT/'context').rglob('*'):
         if not p.is_file() or 'archive' in p.relative_to(ROOT/'context').parts:continue
         if p.suffix in ['.yaml','.yml']:yaml.safe_load(p.read_text())
@@ -107,7 +169,12 @@ def check():
     indexed={f['path'] for f in idx['files']}
     assert set(state['audit'][key] for key in ('document','reconciliation','remediation_plan')) <= indexed
     assert evidence_path in indexed
-    print(f'CONTEXT_OK source={baseline} files={len(paths)} tables={len(tables)} tasks={len(tasks)}')
+    from build_current_context import render
+    from build_agent_inventory import render as render_inventory
+    for relative,content in {**render(ROOT),**render_inventory(ROOT)}.items():
+        assert (ROOT/relative).read_text()==content, 'Stale generated context: '+relative
+    print(f'CONTEXT_OK source={baseline} files={len(paths)} tables={len(tables)} tasks={len(tasks)}'
+          + ('; DEVELOPMENT_CANDIDATE_NOT_DEPLOYED' if candidate else ''))
 
 
 if __name__=='__main__':check()

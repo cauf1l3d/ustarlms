@@ -1,0 +1,325 @@
+{
+  "schema": 1,
+  "kind": "infra_closure_readonly_owner_followup",
+  "recorded_at_utc": "2026-10-25T15:32:02.316826+00:00",
+  "source": "owner console reply; observation timestamp not supplied",
+  "UPS": {
+    "presence_confirmed_by_owner": true,
+    "model": null,
+    "automatic_shutdown_verified": false,
+    "new_power_loss_test_requested": false
+  },
+  "external_restore": {
+    "copies_delivered_owner_confirmed": true,
+    "archive_identities_not_supplied": true,
+    "result": "unknown",
+    "owner_instruction": "leave result under question; copies handed over",
+    "policy": "do not invent restore PASS, do not repeat request/restore stand or block independent local work"
+  },
+  "port2019": {
+    "program": "caddy",
+    "pid": 862,
+    "sockets": [
+      {
+        "local": "127.0.0.1:2019",
+        "fd": 3
+      },
+      {
+        "local": "*:2019",
+        "fd": 7
+      }
+    ],
+    "socket_families_not_disambiguated": false,
+    "unit_identity_not_received": false,
+    "configuration_role": "loopback config API and separate IPv6 wildcard HTTP static_response listener; no proxy dials in received projection",
+    "external_reachability": "not tested",
+    "metadata_followup": {
+      "recorded_at_utc": "2026-10-25T15:57:12.994224+00:00",
+      "source": "owner console reply to infra_caddy_listener_metadata_20261025.md; observation timestamp not supplied",
+      "sockets_ipv4": {
+        "local": "127.0.0.1:2019",
+        "program": "caddy",
+        "pid": 862,
+        "fd": 3,
+        "returncode": 0
+      },
+      "sockets_ipv6": {
+        "local": "*:2019",
+        "program": "caddy",
+        "pid": 862,
+        "fd": 7,
+        "returncode": 0
+      },
+      "unit": {
+        "MainPID": "862",
+        "User": "caddy",
+        "Group": "caddy",
+        "SupplementaryGroups": "",
+        "FragmentPath": "/usr/lib/systemd/system/caddy.service",
+        "WorkingDirectory": "",
+        "ControlGroup": "/system.slice/caddy.service",
+        "config_file_arg": "/etc/caddy/Caddyfile",
+        "resume_arg_present": false
+      },
+      "unit_returncode": 0,
+      "container_ports": [
+        "ustar_moodle\t127.0.0.1:8082->80/tcp",
+        "ustar_postgres\t5432/tcp"
+      ],
+      "container_ports_returncode": 0,
+      "live_config_metadata": {
+        "admin_listen": null,
+        "admin_listen_explicit": false,
+        "remote_admin_listen": null,
+        "servers": [
+          {
+            "app": "http",
+            "listen": [
+              ":2019"
+            ],
+            "handlers": [
+              "static_response"
+            ],
+            "proxy_dials": []
+          }
+        ]
+      },
+      "interpretation": "IPv4 loopback GET/config succeeds; separate observed IPv6 wildcard HTTP static responder, not evidence of network-exposed admin API; Caddy source and static endpoint consumers not inspected",
+      "configuration_mutated": false,
+      "external_reachability_tested": false,
+      "raw_config_published": false,
+      "do_not_repeat_probe": true,
+      "boundaries": [
+        "projection omits arbitrary auth and other application settings; not a full configuration audit",
+        "implicit admin.listen is not a numeric bind guarantee on its own; socket/loopback API evidence used together",
+        "static endpoint source, intended consumers and policy remain unverified",
+        "local same-host access to admin API is a separate trust boundary",
+        "no port closure/service stop/reload justified solely by port number"
+      ]
+    }
+  },
+  "paste": {
+    "unit_output_received": false,
+    "docker_ports_output_received": false,
+    "observed_error": "--format: command not found",
+    "interpretation": "format option ran without its docker ps command; not evidence of Docker service failure",
+    "next_command": "one compound heredoc before sudo prompt; child stdin DEVNULL",
+    "resolved_by_metadata_followup": true
+  },
+  "scheduled_task_retry_rows": [
+    {
+      "classname": "\\core\\task\\h5p_get_content_types_task",
+      "disabled": 1,
+      "faildelay_seconds": 960,
+      "last_run_msk": "2026-09-01T00:52:03+03:00",
+      "next_run_msk": "2026-10-05T02:17:02+03:00"
+    },
+    {
+      "classname": "\\core\\task\\registration_cron_task",
+      "disabled": 1,
+      "faildelay_seconds": 60,
+      "last_run_msk": "2026-08-28T23:31:04+03:00",
+      "next_run_msk": "2026-10-09T23:31:00+03:00"
+    }
+  ],
+  "scheduled_retry_interpretation": {
+    "rows_returned": 2,
+    "query_limit": 20,
+    "enabled_retry_rows": 0,
+    "disabled_retry_rows": 2,
+    "classification": "old disabled residual retries; no active scheduled retry incident shown",
+    "task_execution_or_reset_performed": false,
+    "repeat_query_needed": false
+  },
+  "next": "Moodle writable-layer fixed dependency/config buckets and SizeRw; accepted first counts not repeated; actual frozen-ID recreation open",
+  "workstation_key_login": {
+    "status": "explicitly_deferred_by_owner_until_external_access_preparation",
+    "runbook": "context/runtime/infra_ssh_key_access_20261025.md",
+    "fresh_connection_required": true,
+    "multiplex_reuse_disabled": true,
+    "publickey_only": true,
+    "server_self_login_accepted_as_proof": false,
+    "server_policy_changed": false,
+    "emergency_console_verified": false,
+    "attempts": [
+      {
+        "recorded_at_utc": "2026-10-25T16:06:36.163105+00:00",
+        "observation_time_not_supplied": true,
+        "source": "owner Windows CMD output",
+        "client_prompt": "C:\\Users\\User>",
+        "command": "ssh -o ControlPath=none -o ControlMaster=no -o ClearAllForwardings=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no aduk@192.168.1.60 whoami",
+        "output": "aduk@192.168.1.60: Permission denied (publickey,password).",
+        "exit_code_not_supplied": true,
+        "publickey_login_succeeded": false,
+        "offered_key_identity_not_observed": true,
+        "server_policy_changed": false
+      }
+    ],
+    "interpretation": "SSH authentication endpoint responded; key-only authentication not completed; no evidence yet of absent client key, offered identity, agent status or server-side rejection reason",
+    "next": null,
+    "diagnostic_cmd": "ssh -v -o ControlPath=none -o ControlMaster=no -o ClearAllForwardings=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no aduk@192.168.1.60 whoami 2>&1 | findstr /I /C:\"identity file\" /C:\"Will attempt key\" /C:\"Offering public key\" /C:\"Server accepts key\" /C:\"Trying private key\" /C:\"agent\" /C:\"Load key\" /C:\"sign_and_send_pubkey\" /C:\"signature algorithm\" /C:\"no such identity\" /C:\"Permission denied\" /C:\"Authenticated to\"",
+    "diagnostic_cmd_status": "historical_not_to_be_run_now",
+    "successful_key_login_claimed": false
+  },
+  "access_scope_decision": {
+    "recorded_at_utc": "2026-10-25T16:36:42.393351+00:00",
+    "observation_time_not_supplied": true,
+    "source": "explicit owner instruction in chat",
+    "owner_instruction": "вход не надо усилять, этим займемся потом, сейчас вход работает внутри локальной сети и по логин паролю, это сделаем когда откроем порты и академию наружу",
+    "current_access": {
+      "network": "LAN",
+      "method": "login_password",
+      "working_owner_confirmed": true
+    },
+    "SSH_key_agent_diagnostics_required_now": false,
+    "key_provisioning_required_now": false,
+    "SSH_firewall_hardening": "deferred_until_external_access_preparation",
+    "external_access_ready_claimed": false,
+    "local_work_blocked_on_key_login": false,
+    "installed_operator_remaining_categories": "dated receipt; do not edit frozen operator or treat deferred SSH as an active prerequisite"
+  },
+  "Docker_Compose_origin": {
+    "recorded_at_utc": "2026-10-25T16:56:53.274732+00:00",
+    "source": "owner server1 docker inspect output; observation timestamp/exit code not supplied",
+    "rows": [
+      {
+        "name": "/ustar_moodle",
+        "compose_project": "stack",
+        "compose_service": "moodle",
+        "compose_working_dir": "/opt/ustar/apps/stack",
+        "compose_config_files": "/opt/ustar/apps/stack/docker-compose.yml"
+      },
+      {
+        "name": "/ustar_postgres",
+        "compose_project": "stack",
+        "compose_service": "postgres",
+        "compose_working_dir": "/opt/ustar/apps/stack",
+        "compose_config_files": "/opt/ustar/apps/stack/docker-compose.yml"
+      }
+    ],
+    "project": "stack",
+    "services": [
+      "moodle",
+      "postgres"
+    ],
+    "working_directory": "/opt/ustar/apps/stack",
+    "config_files": [
+      "/opt/ustar/apps/stack/docker-compose.yml"
+    ],
+    "origin_labels_received": true,
+    "repeat_origin_probe_needed": false,
+    "live_source_equivalence_verified": false,
+    "source_metadata_and_content_not_received": true,
+    "previous_survey_fixed_path": "/opt/ustar/docker-compose.yml",
+    "previous_survey_scope_limitation": "did not establish metadata/content/backup coverage of actual Compose source",
+    "next_runbook": "context/runtime/infra_docker_profile_metadata_20261025.md",
+    "production_mutations_performed": false
+  },
+  "Docker_Compose_profile": {
+    "recorded_at_utc": "2026-10-25T17:35:21.760086+00:00",
+    "source": "owner console JSON; observation timestamp/exit code not supplied",
+    "source_metadata": [
+      {
+        "path": "/opt",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o755",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar",
+        "uid": 0,
+        "gid": 1000,
+        "mode": "0o755",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar/apps",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o755",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar/apps/stack",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o775",
+        "bytes": 4096,
+        "kind": "directory"
+      },
+      {
+        "path": "/opt/ustar/apps/stack/docker-compose.yml",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o644",
+        "bytes": 904,
+        "kind": "regular"
+      },
+      {
+        "path": "/opt/ustar/apps/stack/.env",
+        "kind": "missing"
+      }
+    ],
+    "compose_profile": {
+      "service_count": 2,
+      "expected_services": {
+        "moodle": {
+          "present": true,
+          "image_field_present": true,
+          "build_present": true,
+          "logging_present": false,
+          "log_driver": null,
+          "log_options": {},
+          "other_log_option_count": 0,
+          "healthcheck_present": false,
+          "healthcheck_disabled": false,
+          "environment_count": 0,
+          "env_file_count": 0,
+          "volume_count": 2,
+          "port_count": 1
+        },
+        "postgres": {
+          "present": true,
+          "image_field_present": true,
+          "build_present": false,
+          "logging_present": false,
+          "log_driver": null,
+          "log_options": {},
+          "other_log_option_count": 0,
+          "healthcheck_present": false,
+          "healthcheck_disabled": false,
+          "environment_count": 3,
+          "env_file_count": 0,
+          "volume_count": 1,
+          "port_count": 0
+        }
+      },
+      "status": "metadata_rendered_without_environment_resolution",
+      "source_sha256": "41de2ed318ffb7697d92c575d1fc35ab3e6b1d16900e725aca843642d1cb7a09",
+      "live_equivalence_verified": false
+    },
+    "repeat_profile_probe_needed": false,
+    "plain_environment_values_not_supplied": true,
+    "specific_secret_literal_or_leak_not_established": true,
+    "owner_permission_apply_performed": true,
+    "next": "writable-layer metadata; actual Docker recreation/frozen identity lifecycle remains open",
+    "qualification": "context/runtime/compose_source_privacy_qualification_20261025.json",
+    "owner_permission_apply_receipt": "context/runtime/compose_source_privacy_owner_20261025.json",
+    "current_observed_mode": "0o600",
+    "companion_capture_complete": true
+  },
+  "Docker_writable_layer_followup": {
+    "runbook": "context/runtime/infra_docker_writable_layer_20261025.md",
+    "scope": "missing writable layer A/C/D counts and fixed path groups only; no arbitrary paths/Env/config values",
+    "owner_output_received": true,
+    "local_qualification": "shell/Python syntax, synthetic counts, secret-sentinel, before/after ID drift, stderr/timeout/malformed/oversize refusal PASS",
+    "production_access": false,
+    "recreation_performed": false,
+    "owner_receipt": "context/runtime/infra_docker_writable_layer_owner_20261025.json",
+    "next_runbook": "context/runtime/infra_docker_layer_classification_20261025.md"
+  }
+}

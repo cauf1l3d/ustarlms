@@ -1,9 +1,9 @@
-source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
 engine: PostgreSQL 16
 schema: moodle/local/ustar/db/install.xml
 upgrade: moodle/local/ustar/db/upgrade.php
 inventory: context/code_map/generated/database_tables.md
-table_count: 93
+table_count: 100
 prefix_note: Names are XMLDB logical names. Physical Moodle prefix is runtime config,
   commonly mdl_.
 canonical_evidence: local_ustar_evidence_rec

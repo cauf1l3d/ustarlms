@@ -1,0 +1,14 @@
+schema_version: 1
+reviewed_at: '2026-10-26'
+entrypoint: START_HERE.md
+scope: source_and_dated_owner_receipts_not_full_functional_or_host_acceptance
+claims:
+  all_context_complete: false
+  independent_production_probe: false
+application_source:
+  commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  files: 557
+  tables: 100
+current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
+accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
+historical_coverage: context/archive/reconciliation_20261026/PR106_context_coverage.yaml

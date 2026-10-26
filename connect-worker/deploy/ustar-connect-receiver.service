@@ -1,0 +1,49 @@
+# USTAR Connect managed; installed only by the verified receiver package.
+[Unit]
+Description=USTAR Connect Telegram receiver (Mini App off)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+ConditionPathExists=/etc/ustar-connect/receiver.json
+[Service]
+Type=simple
+User=ustar-connect
+Group=ustar-connect
+UMask=0077
+LoadCredential=receiver.json:/etc/ustar-connect/receiver.json
+LoadCredential=telegram.token:/etc/ustar-connect/telegram.token
+ExecStart=/usr/bin/python3 -I -u /opt/ustar-connect/current/receiver.pyz --config %d/receiver.json --run
+StateDirectory=ustar-connect-receiver
+StateDirectoryMode=0700
+WorkingDirectory=/
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+TasksMax=32
+MemoryMax=128M
+LimitCORE=0
+TimeoutStartSec=45
+TimeoutStopSec=45
+Restart=on-failure
+RestartSec=10
+RestartPreventExitStatus=2 3 4
+
+[Install]
+WantedBy=multi-user.target

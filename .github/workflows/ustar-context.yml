@@ -19,12 +19,17 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r harness/ustar-contextd/requirements.txt
+      - name: Check secret boundaries
+        run: python scripts/check_context_secrets.py
       - name: Regenerate source and content inventories
         run: |
           SOURCE_SHA=$(python -c "import yaml; print(yaml.safe_load(open('context/roadmap/STATE.yaml'))['code_baseline']['commit'])")
           bash scripts/build_code_map.sh "$SOURCE_SHA"
+          python scripts/build_development_manifest.py
+          python scripts/build_current_context.py
+          python scripts/build_agent_inventory.py
           python scripts/build_context_index.py
-          git diff --exit-code -- context/code_map/generated context/index/context_index.json
+          git diff --exit-code -- context/code_map/generated context/code_map/development_source.json context/current.yaml .codex/checkpoints/CURRENT.md context/design/tokens.yaml context/architecture/access_matrix.yaml context/index/context_index.json
       - name: Validate source, schema, pointers and links
         run: python scripts/check_context.py
       - name: Check context boundaries and local MCP protocol

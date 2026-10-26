@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "kind": "agent_verified_github_actions_release_not_native_server_acceptance",
+  "date_moscow": "2026-10-18",
+  "source_commit": "1f605e4dad9a88040146086bfbfbe48d842004d5",
+  "pull_request": 103,
+  "workflow_runs": {
+    "console": {"id": 39079252673, "conclusion": "success", "job_id": 117532674964},
+    "context": {"id": 39079252684, "conclusion": "success"},
+    "review": {"id": 39079252801, "conclusion": "success"}
+  },
+  "inspected_console_job_evidence": {
+    "backend_tests_passed": 175,
+    "chromium_scenarios_passed": 45,
+    "xray_config_variants": 4,
+    "actual_systemd_dynamic_user_loadcredential_default_deny": "PASS",
+    "actual_postgresql16_monitor_privileges": "PASS",
+    "hdd_host_rw_sandbox_ro_namespace_fixture": "PASS",
+    "update_queued_running_refusal_and_failure_rollback": "PASS",
+    "update_preserved_auth_CA_config_local_patch_and_notifier_state": "PASS"
+  },
+  "artifact": {
+    "id": 12118052115,
+    "name": "ustar-console-1f605e4dad9a88040146086bfbfbe48d842004d5",
+    "zip_bytes": 191381,
+    "zip_sha256": "86fc2a81dee56397f2d6492d49e1fd880ac62e04eb8aa2aca3f127318c311757",
+    "inner_archive_delivered_as": "ustar-console-1f605e4d.tar.gz",
+    "inner_archive_bytes": 190969,
+    "inner_archive_sha256": "377eb5640d8c362b7aa8aab299d39ae30780c659f13deb0bde3e62d6934fc109",
+    "downloaded_and_both_digests_verified": true,
+    "source_commit_verified": true,
+    "members": 22,
+    "links_or_special_members": 0,
+    "telegram_tools_and_wheel_present": true
+  },
+  "operator_runbook": "server-console/TELEGRAM_RELEASE_20261018.md",
+  "installed_source_still_last_confirmed": "567e90d54d4e50acf43088a8127f80ae5c89740f",
+  "new_release_applied_on_server1_confirmed": false,
+  "actual_subscription_node_connectivity": "pending_owner_install",
+  "bot_configuration_and_receiver_ack": "pending",
+  "network_requirement": "home_and_server_Internet_and_LAN_stability_no_default_route_DNS_or_corporate_port_changes",
+  "home_access_plan": "server-console/HOME_ACCESS_PLAN_20261018.md",
+  "previous_subnet_route_plan_superseded": true,
+  "tailscale_or_home_access_installed": false,
+  "agent_has_server1_ssh": false,
+  "agent_changed_server1_or_home_network": false,
+  "production_application_changed": false,
+  "scope_note": "CI validates synthetic endpoints and isolated systemd fixtures. It does not prove availability of the owner's provider nodes, Bot API authorization, receiver delivery, home connectivity or complete DR. No secrets/provider profiles were obtained. Existing owner receipts remain unchanged."
+}

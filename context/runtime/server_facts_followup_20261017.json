@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "kind": "owner_report_followup_and_derived_analysis",
+  "received_at_utc": "2026-10-17T01:41:25Z",
+  "snapshot": "context/runtime/server-facts/20261017T013924Z-285497b0",
+  "archive_sha256": "a33aabd5673ae2eaf61d5d1965deed842484e0b2bf76b280e29506bb4e8e28ac",
+  "collector_commit": "4c524a52d44330b6756fa360ad7845064409f1fa",
+  "collector_sha256": "4abad3b668fdd465dc9a252b0752b62540a537a72fba7f7c73d9eff32824bb9c",
+  "console_supplement": {
+    "source": "owner_pasted_console_in_current_dialogue",
+    "included_in_archive_checksums": false,
+    "independently_reexecuted": false,
+    "values": {
+      "pg_stat_statements": {
+        "database": "moodle",
+        "installed": false,
+        "available": true,
+        "shared_preload_libraries": "",
+        "compute_query_id": "auto",
+        "tracking": null,
+        "preload_pending_restart": false
+      },
+      "ntp_timesyncd": "unavailable",
+      "ntp_chrony": "unavailable"
+    }
+  },
+  "clock": {
+    "evidence": "context/runtime/server-facts/20261017T013924Z-285497b0/facts.json#blocks.clock",
+    "ntp_enabled": false,
+    "ntp_synchronized": true,
+    "timezone": "Etc/UTC",
+    "ntp_server_measured": false,
+    "offset_measured": false,
+    "ongoing_ntp_service_verified": false,
+    "note": "Preserve NTP=false and NTPSynchronized=true together; an active source, accuracy and absence of another client cannot be inferred from unavailable supplement commands."
+  },
+  "scheduled_tasks": {
+    "evidence": "context/runtime/server-facts/20261017T013924Z-285497b0/facts.json#blocks.scheduled_tasks",
+    "rows": 147,
+    "db_flag_disabled": 15,
+    "db_flag_enabled": 132,
+    "fail_delay_positive": 2,
+    "db_flag_enabled_fail_delay_positive": 0,
+    "disabled_with_fail_delay": [
+      {
+        "classname": "\\core\\task\\registration_cron_task",
+        "disabled": true,
+        "fail_delay": 60,
+        "last_run": 1787949064,
+        "next_run": 1791577860
+      },
+      {
+        "classname": "\\core\\task\\h5p_get_content_types_task",
+        "disabled": true,
+        "fail_delay": 960,
+        "last_run": 1788213123,
+        "next_run": 1791155822
+      }
+    ],
+    "overdue_rule": "disabled=false AND next_run>0 AND next_run<collected_utc-600 seconds",
+    "overdue_reference_utc": "2026-10-17T01:39:24Z",
+    "overdue_db_flag_enabled": [
+      {
+        "classname": "\\auth_oauth2\\task\\delete_expired_confirmation_tokens",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1791878520
+      },
+      {
+        "classname": "\\block_rss_client\\task\\refreshfeeds",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667500
+      },
+      {
+        "classname": "\\enrol_category\\task\\enrol_category_sync",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320
+      },
+      {
+        "classname": "\\enrol_fee\\task\\process_expirations",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1791851220
+      },
+      {
+        "classname": "\\enrol_flatfile\\task\\flatfile_sync_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767669300
+      },
+      {
+        "classname": "\\enrol_imsenterprise\\task\\cron_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767669000
+      },
+      {
+        "classname": "\\enrol_lti\\local\\ltiadvantage\\task\\sync_grades",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400
+      },
+      {
+        "classname": "\\enrol_lti\\local\\ltiadvantage\\task\\sync_members",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400
+      },
+      {
+        "classname": "\\enrol_lti\\task\\sync_grades",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400
+      },
+      {
+        "classname": "\\enrol_lti\\task\\sync_members",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767668400
+      },
+      {
+        "classname": "\\enrol_meta\\task\\enrol_meta_sync",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767669540
+      },
+      {
+        "classname": "\\enrol_paypal\\task\\process_expirations",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320
+      },
+      {
+        "classname": "\\factor_grace\\task\\revoke_expired_factors",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767745680
+      },
+      {
+        "classname": "\\factor_nosetup\\task\\delete_unusable_factors",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767745620
+      },
+      {
+        "classname": "\\mod_bigbluebuttonbn\\task\\check_pending_recordings",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1791851400
+      },
+      {
+        "classname": "\\repository_dropbox\\task\\cron_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320
+      },
+      {
+        "classname": "\\repository_filesystem\\task\\cron_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767667320
+      },
+      {
+        "classname": "\\repository_onedrive\\remove_temp_access_task",
+        "disabled": false,
+        "fail_delay": 0,
+        "last_run": 0,
+        "next_run": 1767917460
+      }
+    ],
+    "overdue_never_run": 18,
+    "db_flag_enabled_never_run": 19,
+    "effective_component_eligibility_verified": false,
+    "upstream_scheduler_source": "https://github.com/moodle/moodle/blob/MOODLE_501_STABLE/public/lib/classes/task/manager.php",
+    "note": "Moodle skips a disabled component unless get_run_if_component_disabled permits execution. Actual plugin enablement and task-specific overrides were not collected; overdue rows are not18 proven executing failures."
+  },
+  "smart": {
+    "evidence": "context/runtime/server-facts/20261017T013924Z-285497b0/facts.json#blocks.smart",
+    "items": [
+      {
+        "device": "/dev/sda",
+        "exit_status": 0,
+        "health_passed": true,
+        "temperature": 50
+      },
+      {
+        "device": "/dev/sdb",
+        "exit_status": 0,
+        "health_passed": true,
+        "temperature": 47
+      }
+    ],
+    "full_attributes_exported": false,
+    "self_test_history_exported": false,
+    "new_self_test_started": false,
+    "residual_hdd_198_rechecked": false,
+    "hardware_redundancy_accepted": false
+  },
+  "cron_receipt": {
+    "adhoc_queued": 0,
+    "finished_at": "2026-10-17T01:39:03Z",
+    "latest_task_at": "2026-10-17T01:39:03Z",
+    "new_task_failures": 0,
+    "present": true,
+    "scheduled_failed": 2,
+    "scheduled_overdue_10m": 18,
+    "sha256": "9b5d582176f5901eb6abcbacd5b93079c23180cd66b04f48785f47efb0a39b25",
+    "ustar_error_lines": 0,
+    "worker_exit_code": 0
+  },
+  "backup_receipt": {
+    "archive_name": "ustar-recovery-20261017T003035Z-b4a1be3f.tar.gz.age",
+    "archive_sha256": "e2876c7bbf8e9e21e8718d8732382238511c7d3e9fe12b0aa61daf99ffe4bf4e",
+    "archive_stat_matches": true,
+    "attempt_finished_at": "2026-10-17T00:31:32Z",
+    "attempt_success": true,
+    "bytes": 1146734045,
+    "finished_at": "2026-10-17T00:31:32Z",
+    "present": true,
+    "readback_reported": true,
+    "recovery_marker_present": false,
+    "success_reported": true
+  },
+  "source_comparison": "context/runtime/server_facts_source_comparison_20261017T013924Z-285497b0.json",
+  "functional_acceptance": false,
+  "production_configuration_changes": false,
+  "agent_ssh_access": false
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "received_at": "2026-10-18T17:03:58+03:00",
+  "source": "owner_request_in_current_chat",
+  "shared_dialog": "https://chatgpt.com/share/6ad4c0a7-485c-83eb-8325-db31fcc72816",
+  "repository_base": "7f8a614aeeec62a6f1f455331b78b6f1f1d81528",
+  "previous_closure_superseded": true,
+  "requested": [
+    "client_https_trust",
+    "mini_app_phone_vpn_route",
+    "light_dark_system_theme",
+    "chart_zoom",
+    "script_catalog_and_guarded_actions",
+    "versioned_documentation",
+    "real_request_metrics",
+    "sanitized_service_events"
+  ],
+  "screenshots": {
+    "origin": "https://192.168.1.60:8443",
+    "chrome_warning_bypassed": true,
+    "exact_TLS_error_code_not_shown": true
+  },
+  "native_deployment": "not_performed_by_agent",
+  "phone_network_and_vpn_app": {
+    "application": "Happ",
+    "provider": "NovaVPS",
+    "network": "office_WiFi",
+    "received_at": "2026-10-18T18:04:31+03:00",
+    "network_received_at": "2026-10-18T18:11:35+03:00"
+  },
+  "client_certificate_trust": "owner_reports_warnings_resolved_20261018T183803_MSK",
+  "mini_app_route": "owner_reports_office_access_with_VPN_on_and_off_Mini_App_not_separately_named",
+  "application_baseline_unchanged": true,
+  "review": {
+    "critical": 0,
+    "important_fixed": 2,
+    "important_fixes": [
+      "stale_access_log_no_false_zero",
+      "truncated_tail_no_full_coverage"
+    ],
+    "minor_inventory_observation_time": "addressed_with_timestamp_and_manual_refresh"
+  },
+  "local_backend_tests": 356,
+  "CI": {
+    "console": {
+      "run": 39137246420,
+      "result": "success",
+      "backend_passed": 355,
+      "backend_skipped": 1,
+      "browser_passed": 114,
+      "systemd": "pass",
+      "actual_apache_numeric_log": "pass",
+      "xray": "pass",
+      "postgres16": "pass"
+    },
+    "context": {
+      "run": 39137246453,
+      "result": "success"
+    },
+    "review": {
+      "run": 39137246419,
+      "result": "success"
+    }
+  },
+  "local_browser_tests": {
+    "passed": 114,
+    "failed": 0,
+    "flaky": 0,
+    "viewports": [
+      "desktop",
+      "mobile",
+      "tablet"
+    ]
+  },
+  "numeric_log_path": "/var/lib/ustar-console-collector/requests.log",
+  "numeric_log_reason": "preserve_strict_parent_guards_on_Ubuntu_group_writable_var_log",
+  "source_commit": "1c881495ae78dd74cf37ca5a045944d1336d85ce",
+  "artifact": {
+    "source_commit": "1c881495ae78dd74cf37ca5a045944d1336d85ce",
+    "artifact_id": 12139739548,
+    "zip_bytes": 514116,
+    "zip_sha256": "94898041b6b5f4f3e62211624a0eb2f583f5fdddd317997d650201d3f11ae7a5",
+    "tar_bytes": 513690,
+    "tar_sha256": "0b7ecfa62fef556e39435125dee938467ccc96ee324392001f271598f01efaf5",
+    "direct_files": 21,
+    "wheel_python_modules": 23,
+    "font_assets": 4,
+    "compiled_web_files": 3,
+    "scripts": 27,
+    "documents": 43,
+    "observer_modules": 10,
+    "unit_files": 7,
+    "zip_crc": "pass",
+    "source_comparison": "pass",
+    "unsafe_members": 0
+  },
+  "delivery": "context/runtime/console_revisions_delivery_20261018.md",
+  "status": "native_update_and_client_HTTPS_office_VPN_modes_owner_confirmed_new_data_sample_pending",
+  "local_context_tests": {
+    "passed_or_skipped_total": 577,
+    "environment_skips": 20,
+    "result": "OK"
+  },
+  "latest_native_receipt": "context/runtime/console_revisions_native_20261018.json",
+  "latest_client_receipt": "context/runtime/console_client_https_result_20261018.json"
+}

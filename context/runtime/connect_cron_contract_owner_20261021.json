@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "kind": "connect_cron_contract_owner_acceptance",
+  "received_date_Moscow": "2026-10-21",
+  "evidence": "owner_terminal_output_not_independent_SSH",
+  "source_commit": "e138c77fbdfcade59e768c070cfbc905ab42847f",
+  "download_sha256_verified": "95d3dea652eb59d7c361d6a053bfa3cb7033b034238b736f1fb3ddf694caa130",
+  "status": "measured",
+  "cron": {
+    "status": "measured",
+    "script_sha256": "c5eabdceaa2f137eccd35087b03d473f61257aaeb77624f4855583ebaf353638",
+    "versions": {"local_ustar": 2026101905, "theme_ustar": 2026100202},
+    "last_scheduled_finished_utc": "2026-10-20T21:07:02.555151+00:00",
+    "residual_overdue": 18,
+    "residual_scheduled_failed": 2,
+    "target_version_update_required": true
+  },
+  "academy_source_rechecked": false,
+  "other_contracts_rechecked": false,
+  "deployment_approved": false,
+  "host_commands": false,
+  "php_or_moodle_bootstrap": false,
+  "code_config_db_or_service_changes": false,
+  "current_installed_payload": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "candidate_2000_installed": false,
+  "next": "guarded_coordinated_1905_to_2000_application_cron_update_preserving_HTTPS",
+  "subagents": 0
+}

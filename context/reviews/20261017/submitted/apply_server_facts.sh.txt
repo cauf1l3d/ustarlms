@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# apply_server_facts.sh — внести снимок фактов в контекст и обновить указатели.
+# Не коммитит и не пушит: только правит файлы, показывает diff.
+#
+# Usage: scripts/infra/apply_server_facts.sh context/runtime/server-facts/YYYYMMDD
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+SNAP="${1:?usage: apply_server_facts.sh context/runtime/server-facts/YYYYMMDD}"
+[[ -d "$SNAP" ]] || { echo "snapshot dir not found: $SNAP" >&2; exit 2; }
+[[ -f "$SNAP/_manifest.txt" ]] || { echo "missing _manifest.txt: not a server-facts snapshot" >&2; exit 2; }
+
+# --- 1. Защита: секреты и внутренние адреса ---------------------------------
+if grep -rqE '(password|secret|token|apikey|BEGIN [A-Z ]*PRIVATE KEY)' "$SNAP" \
+     --include='*.txt' --include='*.json' 2>/dev/null; then
+  echo "ERROR: возможный секрет в $SNAP — очистите перед коммитом" >&2
+  grep -rnE '(password|secret|token|apikey)' "$SNAP" --include='*.txt' | head >&2
+  exit 3
+fi
+if grep -rqE '\b(10|172\.(1[6-9]|2[0-9]|3[01])|192\.168)\.[0-9]+\.[0-9]+\b' "$SNAP" 2>/dev/null; then
+  echo "WARN: найдены внутренние адреса — заменяю на <internal>" >&2
+  sed -i -E 's/\b(10|172\.(1[6-9]|2[0-9]|3[01])|192\.168)\.[0-9]+\.[0-9]+\b/<internal>/g' \
+    $(find "$SNAP" -name '*.txt' -o -name '*.json')
+fi
+rm -f "$SNAP/_review_secrets.txt" "$SNAP/_errors.txt"
+
+# --- 2. README снимка --------------------------------------------------------
+{
+  echo "# Серверные факты — read-only снимок"
+  echo
+  grep -E '^(collected_utc|host|kernel|operator|blocks_ok|blocks_failed)=' "$SNAP/_manifest.txt"
+  echo
+  echo "Только чтение. Секретов нет: config.php — ключи SET/-, docker Env исключён."
+  echo "Внутренние адреса заменены на <internal>. Запускается вместе с"
+  echo "scripts/collect_runtime.py (контейнеры, версии, git state)."
+} > "$SNAP/README.md"
+
+# --- 3. Ссылка в точке входа -------------------------------------------------
+if ! grep -q 'server-facts' context/CONTEXT_INDEX.md; then
+  python3 - <<'PY'
+import pathlib, re
+p = pathlib.Path('context/CONTEXT_INDEX.md')
+t = p.read_text(encoding='utf-8')
+line = ("- [Серверные факты (read-only снимок)](runtime/server-facts/) — "
+        "роли PG, права, TLS/SSH, копии, cron, PERF-01.\n")
+marker = "## Domain maps"
+if marker in t:
+    t = t.replace(marker, line + "\n" + marker, 1)
+else:
+    t = t.rstrip() + "\n" + line
+p.write_text(t, encoding='utf-8')
+print('CONTEXT_INDEX.md updated')
+PY
+fi
+
+# --- 4. STATE.yaml: зафиксировать источник факта -----------------------------
+python3 - "$SNAP" <<'PY'
+import sys, pathlib, yaml
+snap = sys.argv[1]
+p = pathlib.Path('context/roadmap/STATE.yaml')
+d = yaml.safe_load(p.read_text(encoding='utf-8')) or {}
+d['server_facts'] = {
+    'snapshot': snap,
+    'method': 'read_only_script_owner_executed',
+    'companion': 'scripts/collect_runtime.py',
+    'covers': ['INF-01','INF-02','INF-03','INF-04','INF-05','INF-07',
+               'INF-10','INF-11','INF-14','PERF-01'],
+    'note': 'Показывает состояние сервера; не доказывает работу функций приложения.',
+}
+d['updated_at'] = snap.rstrip('/').split('/')[-1]
+p.write_text(yaml.safe_dump(d, allow_unicode=True, sort_keys=False), encoding='utf-8')
+print('STATE.yaml updated')
+PY
+
+# --- 5. Индекс и проверка ----------------------------------------------------
+python3 scripts/build_context_index.py
+python3 scripts/check_context.py
+echo
+echo "Готово. Дальше:"
+echo "  git add $SNAP context/CONTEXT_INDEX.md context/index/context_index.json context/roadmap/STATE.yaml"
+echo "  git diff --cached --stat"

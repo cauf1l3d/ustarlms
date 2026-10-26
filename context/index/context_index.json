@@ -427,43 +427,43 @@
       "path": "context/code_map/generated/classes.md",
       "domain": "code_map",
       "size": 15976,
-      "sha256": "d8fba822148fdf80b8f7af476b65f43c1c2a51469a7dfbe297860d2273cf0ee6"
+      "sha256": "80162cf9470a7b79780ab4955af5d8d0e885877e077483d1775319688741968a"
     },
     {
       "path": "context/code_map/generated/database_tables.md",
       "domain": "code_map",
       "size": 30961,
-      "sha256": "f30f414194c74f34cef0d0d18e3afa70989ecd7a9c2124d1a65c895d724c370e"
+      "sha256": "a3d46f1ccc785841894eb7e1a59ae1ca879e4be41cbe1a3a211ec121f0e1b137"
     },
     {
       "path": "context/code_map/generated/generated_at.txt",
       "domain": "code_map",
       "size": 103,
-      "sha256": "a664673b6e7a60254a4ca0d803177544cccf82ea938e41517a2318868b4464c8"
+      "sha256": "2364cfcb6c62d142cf0a54234e31ad6b4e1d96e21ac299e131fd5e9c414eea31"
     },
     {
       "path": "context/code_map/generated/git_commit.txt",
       "domain": "code_map",
       "size": 41,
-      "sha256": "2fa889871929353547f60588c2e7b5ef79bb5694fbd661adc2afc408fd90ccef"
+      "sha256": "7d933163bc3c9b959df07a94d4e4481b00eeb1ea2e15d655a168120c371851d8"
     },
     {
       "path": "context/code_map/generated/php_files.md",
       "domain": "code_map",
       "size": 18030,
-      "sha256": "34b220900e33ae7971fd79d747c0dc91054182734da5cd35a46c83cbb19b3385"
+      "sha256": "c81be6c9a367ecf8f7346f4d7b696d24c5b31f2a7895da62753ea0ef8855e7c1"
     },
     {
       "path": "context/code_map/generated/source_manifest.json",
       "domain": "code_map",
       "size": 87254,
-      "sha256": "2b845992bf49fb172516e86c35c9d939e7def97d4342404a58620f9595e7c23c"
+      "sha256": "8094ee3dadcdf628344fedc27cc5b5142373b9e38f791e487f7a35bf968bc26d"
     },
     {
       "path": "context/code_map/generated/web_services.md",
       "domain": "code_map",
       "size": 3493,
-      "sha256": "922e25080e5acb4d9844a9426f7b3a19def94e8e50951ca0b47b9a8b3d4cd4ed"
+      "sha256": "f39e3bac57e3a5cfe20632d6e07562ca295e483fd1807ec8a29ab189b77ac663"
     },
     {
       "path": "context/constraints.yaml",
@@ -571,73 +571,73 @@
       "path": "context/domains/adaptation.yaml",
       "domain": "domains",
       "size": 789,
-      "sha256": "a2c3f24e54f94757e1f16bcc6f3684646c8c8eca9ece657d5b1ae71099666ad6"
+      "sha256": "b45d6c2c9992c5a580e99528d41b1239a0a76cda19fde32bf4e941e7c7a2f079"
     },
     {
       "path": "context/domains/economy.yaml",
       "domain": "domains",
       "size": 1183,
-      "sha256": "43c3e780f2f3a3c0327f063125067a38518f0a008717ef845c4842ccc6d0ed5f"
+      "sha256": "b1eb6b643a33e62ac103c8318778e121c941caf1cefdca0e3a802a007df1987d"
     },
     {
       "path": "context/domains/evidence.yaml",
       "domain": "domains",
       "size": 913,
-      "sha256": "9e0a3c0fa93a491b26c6380bcaf99207937e572e8901b508553ba4b0f67ca3f3"
+      "sha256": "ea09057c9d1906441bca10c8c9cf7b732e2f3e332577a94656038276477102c2"
     },
     {
       "path": "context/domains/feed.yaml",
       "domain": "domains",
       "size": 1186,
-      "sha256": "40ad0de4818bc4f2f35909b923e89dc3ad041d790aa27124ade6b5c1ce59253c"
+      "sha256": "0f588f3c810ca722720d0d0d94b7d5301533ac36007531784f898b8b111d220f"
     },
     {
       "path": "context/domains/grades.yaml",
       "domain": "domains",
       "size": 1038,
-      "sha256": "a7fcc40093b35300461e52032f45355f945a64a3197d94ab31ba4c28a9477179"
+      "sha256": "13901d80d6708f4e309ff8c59a8817964118258e9fba46359aa8e1abfa594c00"
     },
     {
       "path": "context/domains/learning.yaml",
       "domain": "domains",
       "size": 1451,
-      "sha256": "78d56fe0349596e32b292f76c18356d138dcd825904a929c39ffdbf37fe65f3c"
+      "sha256": "9605f1cd503a5d037571f27306308728b97399f6504f8d91036cfe35074eb2fc"
     },
     {
       "path": "context/domains/messaging.yaml",
       "domain": "domains",
       "size": 863,
-      "sha256": "3ebf8eea4feaedc445ad3b981fc24ea9d36603f5c351420f2c22e24841cbc199"
+      "sha256": "7e63567fcae116fcc62f1b804b71ded5463dccc408ff83b24a563f4f25beb0b3"
     },
     {
       "path": "context/domains/mobile_web.yaml",
       "domain": "domains",
       "size": 595,
-      "sha256": "fa96aa7d5ebffecbb734927b348eb67ccbbaaf3ed19e237befcf7ff9b0d0b0ab"
+      "sha256": "25170e6b1e193670ab5dec726a5aa08f1db098f3f92419a42059434e443bd230"
     },
     {
       "path": "context/domains/organization.yaml",
       "domain": "domains",
       "size": 1006,
-      "sha256": "f5cfe17a83e22e88861e9bc15bcfb9de3e4e4add91297271704d5250a5ab1995"
+      "sha256": "573d699a1248ef04af5c5a9877b6e063c4ea81b27d41550d741aa2e179a6ac02"
     },
     {
       "path": "context/domains/registration.yaml",
       "domain": "domains",
       "size": 709,
-      "sha256": "3233d57b4bdb8ad315d3d089e9fcf32ec6fc2035f18c4152abffba240b2ee2ab"
+      "sha256": "4d8753769549c5bab9d6b943c20f7c2e5a308d892255b42cb0214941d22311ae"
     },
     {
       "path": "context/domains/routes.yaml",
       "domain": "domains",
       "size": 1152,
-      "sha256": "f1ecb8b7f0f6d1d3bc539bcd5cb6efb2f1b4388cc30e9160e26b4d177ebadc16"
+      "sha256": "2f092e7a28388f9a0e9c427853b329bcc48a4abdb2c6a9755903d2bf9f88baec"
     },
     {
       "path": "context/domains/work.yaml",
       "domain": "domains",
       "size": 1372,
-      "sha256": "c8348bd3907c316da90b70365c438273268b5caf349db100cb17c5aa205c2a33"
+      "sha256": "27382e8cbf576dbf017e99db2883ff4b37e800139d86326b2aaeae93089ab907"
     },
     {
       "path": "context/memory/decisions.log.md",
@@ -721,7 +721,7 @@
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
       "size": 22217,
-      "sha256": "6bd681d2307187e0e490e475fd66e46b1fadf435b80789136f47f778bfb83211"
+      "sha256": "0b35d90b481ef5c6281f667527576c5417496a3fd75dc61441b614400989d407"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -762,8 +762,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 138444,
-      "sha256": "91e82ec146bceb1642c166926a997f56df2c8e4b85f8dbedd958711154056fbf"
+      "size": 138913,
+      "sha256": "e60886811fb5e0e10ad8c157272f31cc6a8716bcbce4119da5542de9c3461487"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -775,7 +775,7 @@
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
       "size": 4809,
-      "sha256": "46fa53d6ff1681a4cd59104a80a3d0eec92082c0b52d5760bf79acb00c75e580"
+      "sha256": "e0e744c4ba9264f987d7050b4bb9619458c1926cecd93274874ca38e19c09c83"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",

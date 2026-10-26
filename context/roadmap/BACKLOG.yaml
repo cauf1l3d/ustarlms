@@ -1,7 +1,7 @@
 schema_version: 2
 updated_at: '2026-10-26'
 canonical_branch: main
-source_baseline: 299cd153f5b8a536de7be274af6ee458c0118f51
+source_baseline: 8ebca5caf0acd2086f4ee0e7598518d2e2e62233
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 tasks:
 - id: DOC-01

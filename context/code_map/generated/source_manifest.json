@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "kind": "git_source",
-  "source_commit": "299cd153f5b8a536de7be274af6ee458c0118f51",
-  "source_commit_date": "2026-10-26T16:23:37+03:00",
+  "source_commit": "8ebca5caf0acd2086f4ee0e7598518d2e2e62233",
+  "source_commit_date": "2026-10-26T16:46:31+03:00",
   "scopes": [
     "moodle/local/ustar",
     "moodle/theme/ustar"
   ],
   "tree_ids": {
-    "moodle/local/ustar": "3d5e7116ac4dd429e930d76d266f2f437841788c",
+    "moodle/local/ustar": "b2cdd80734c4bf21edfe4405801cbce0d8259ac9",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "counts": {
@@ -1069,7 +1069,7 @@
     },
     {
       "path": "moodle/local/ustar/course_studio_api.php",
-      "sha256": "b6f8fdef82219bafba1019a996f0176cbb0fac3e29f74105305b17fe5d1aee8c"
+      "sha256": "3f9d7d825e9d8a7f5fe818043bcb2c9f2a7fd7f82382b5953c3a121e311f279f"
     },
     {
       "path": "moodle/local/ustar/data/consultant_grades.json",

@@ -403,7 +403,10 @@ class DockerAPI:
             response=connection.getresponse();body=response.read(32*1024**2+1)
             require(len(body)<=32*1024**2,'docker_api_response_size')
             if missing and response.status==404:return None
-            require(response.status in (200,201,204,304),'docker_api_http_error')
+            if response.status not in (200,201,204,304):
+                if b'user configured subnets' in body:
+                    raise Refusal('docker_network_explicit_subnet_required')
+                raise Refusal('docker_api_http_'+str(response.status))
             if not body:return {}
             try:return json.loads(body)
             except ValueError:raise Refusal('docker_api_response_shape') from None

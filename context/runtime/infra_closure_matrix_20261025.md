@@ -1,5 +1,12 @@
 # Остаток инфраструктуры после owner apply25Oct17:49МСК
 
+**26Oct current delta:** owner fixed-bucket classification85491712B/2663paths is
+accepted; do not repeat the dated next-probe instructions below. Snapshot-based
+Docker runtime successor is implemented but native qualification remains pending.
+No production runtime handoff receipt exists. Current ledger:
+[docker_runtime_successor_progress_20261025.md](docker_runtime_successor_progress_20261025.md).
+SSH deferred; external restore unknown; prior owner receipts remain accepted.
+
 Owner `local_batch_applied` принят: operator5067163f/source1c5152bd. [Receipt](infra_one_pass_owner_20261025.json#accepted_apply).
 69export files restricted; encrypted261-file controls companion35039995B,
 SHA256da7016184c1133299f07e998a15731c76725764a50a7ec421aba8b596a03d35f,

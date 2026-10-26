@@ -36,16 +36,16 @@ compose_model(containers,images,project,generation,source_model), verify_success
 
 Files: same module/test; progress ledger below.
 Interfaces: Journal/private before images and Transaction.check/apply/recover with injected host boundary.
-- [ ] Failing real-file tests: source inode parking/recovery, drift refusal, interrupted intent, policy preservation, no business-row/file restore, owned object recovery after each Docker mutation.
-- [ ] Implement journal/transaction on pinned private primitives; verify red→green and meaningful failure matrix.
+- [x] Failing real-file tests: source inode parking/recovery, drift refusal, interrupted intent, policy preservation, no business-row/file restore, owned object recovery after each Docker mutation.
+- [x] Implement journal/transaction on pinned private primitives; verify red→green and meaningful failure matrix.
 
 ## Task3 — production host boundary
 
 Files: scripts/infra/docker_lifecycle_host.py; tests/r16/test_docker_lifecycle_host.py; scripts/infra/build_docker_lifecycle.py; tests/r16/test_build_docker_lifecycle.py; same core module/test.
 Interfaces: fixed production Host; local Docker/Compose only, existing backup/cron/HTTPS bindings.
-- [ ] Failing tests for source/helper/source-image guards, stdout sanitization, archive authenticated readback and root/UID1000 ownership, separate-key/no-delete scope.
-- [ ] Implement native snapshot/retention/compose/start/consumer handoff and idempotent current check/recover.
-- [ ] Default PLAN_ONLY performs no host access. Check is read-only, no standby containers or extra owner stand.
+- [x] Failing tests for source/helper/source-image guards, stdout sanitization, archive authenticated readback and root/UID1000 ownership, separate-key/no-delete scope.
+- [x] Implement native snapshot/retention/compose/start/consumer handoff and idempotent current check/recover.
+- [x] Default PLAN_ONLY performs no host access. Check is read-only, no standby containers or extra owner stand.
 
 ## Task4 — existing native CI delta
 

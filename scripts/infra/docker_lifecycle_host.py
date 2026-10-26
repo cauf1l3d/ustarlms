@@ -158,7 +158,8 @@ class Controls:
             values=rendered['services'][short]
             l.require(l.environment(values.get('environment') if isinstance(values.get('environment'),list)
                 else [k+'='+str(v) for k,v in (values.get('environment') or {}).items()])
-                ==l.environment(state['before']['containers'][service]['Config'].get('Env')),
+                =={k:v.replace('$','$$') for k,v in l.environment(
+                    state['before']['containers'][service]['Config'].get('Env')).items()},
                 'compose_environment_interpolation_changed')
             hashes=self.run(self.compose_command('config','--hash',short)).stdout.decode().split()
             l.require(len(hashes)==2 and hashes[0]==short and re.fullmatch('[a-f0-9]{64}',hashes[1]),
@@ -292,7 +293,9 @@ class ProductionGuards:
         frozen_rows=self.ctx.host.delegate().inspect()
         for n,row in rows.items():
             l.require(row['Id']==frozen[n]['Id'] and row['Image']==frozen[n]['Image']
-                and row['Mounts']==frozen_rows[n]['Mounts'],'accepted_bind_identity_drift')
+                and sorted(row['Mounts'],key=lambda m:json.dumps(m,sort_keys=True))
+                ==sorted(frozen_rows[n]['Mounts'],key=lambda m:json.dumps(m,sort_keys=True)),
+                'accepted_bind_identity_drift')
             l.require(row['HostConfig'].get('AutoRemove') is False
                 and row['HostConfig'].get('LogConfig')=={'Type':'json-file','Config':{}}
                 and not row['Config'].get('Healthcheck'),'unexpected_predecessor_lifecycle')

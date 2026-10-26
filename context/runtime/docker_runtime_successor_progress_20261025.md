@@ -145,3 +145,18 @@ build tag when no image field is present. Final native qualification still pendi
 26Oct native checkpoint: head3ae31378 root/source/context passed; native job121330283196 refused forced exit137 after45s in PHP CLI fixture and recovery predecessor_configuration_drift. Fixture now uses Docker init to forward signals/reap PID1; production clean-stop guard unchanged. Recovery reason split into process/labels/mounts without relaxing equality.58 local tests pass/6environment skips. Qualification remains pending; no owner apply.
 
 26Oct recovery equality regression: reordered two identical bind records reproduced predecessor_mounts_drift locally (RED); canonical comparison of full records passes and changed Source still refuses (GREEN). No fields omitted. Latest58tests/6local skips;3ae rootCI58/no skips including real age, UnixAPI and UID1000/33. Native qualification pending.
+
+26Oct checkpoint4a3738cd: Context and both source PHP8.2/8.3 and root runtime
+passed (Review40259358327). Native121369810235 passed clean stop/snapshots/archive,
+then refused compose_environment_interpolation_changed; automatic recovery reached
+network reconnect and refused generic Docker HTTP. No production access. Dollar
+comparison now accounts for Compose canonical $$ encoding; RED→GREEN fixture
+preserves literal single/double dollars and rejects changes. Same mount-order fix
+applied to production preflight, RED→GREEN with altered Source refusal. API errors
+now expose bounded HTTP status/explicit-subnet code without body values.60focused
+local tests pass/6environment skips. These changes need native qualification.
+Production network/IPAM/version metadata is missing and needed to choose a safe
+network handoff; do not assume stand refusal is a production incident, or create/
+replace a production network to make the test pass. No deliverable/apply until
+network handoff and recovery are proved. Existing user source/DB/code receipts
+remain accepted. Draft owner runbook explicitly NOT QUALIFIED.

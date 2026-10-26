@@ -501,6 +501,16 @@ class DeployerBoundary(unittest.TestCase):
 
 
 class RuntimeEdges(unittest.TestCase):
+    def test_api_failure_classifies_subnet_refusal_without_echoing_message(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        m=module(self);api=m.DockerAPI()
+        response=SimpleNamespace(status=400,read=lambda size:b'{"message":"PRIVATE_SENTINEL user specified IP address is supported only when connecting to networks with user configured subnets"}')
+        connection=SimpleNamespace(request=lambda *a,**k:None,getresponse=lambda:response,close=lambda:None)
+        with patch.object(m,'_UnixHTTP',return_value=connection),self.assertRaises(m.Refusal) as caught:
+            api._http('POST','/fixture')
+        self.assertEqual(str(caught.exception),'docker_network_explicit_subnet_required')
+
     def test_clean_stop_accepts_only_success_or_the_configured_signal_exit(self):
         m=module(self);api=m.DockerAPI();events=[]
         running={'Config':{'StopSignal':'SIGINT'},'State':{'Running':True,'ExitCode':0,'OOMKilled':False}}

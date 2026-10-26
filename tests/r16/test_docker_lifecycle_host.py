@@ -80,12 +80,32 @@ class GuardContract(unittest.TestCase):
             rows[name]['HostConfig']['AutoRemove']=False
             frozen[name]={'Id':values['id'],'Image':values['image']}
         saved={'app':{'phase':'app_ready','primitive':{'identities':frozen}},'runtime':{'phase':'runtime_active'}}
+        import copy
+        rows['ustar_moodle']['Mounts'].append(dict(rows['ustar_moodle']['Mounts'][0],Destination='/second'))
+        inspected=copy.deepcopy(rows);inspected['ustar_moodle']['Mounts'].reverse()
         seen=[];host=SimpleNamespace(bind_identities=lambda values:seen.append(values),
-            delegate=lambda:SimpleNamespace(inspect=lambda:rows))
+            delegate=lambda:SimpleNamespace(inspect=lambda:inspected))
         guard=h.ProductionGuards.__new__(h.ProductionGuards)
         guard.journal=SimpleNamespace(load=lambda:saved);guard.ctx=SimpleNamespace(host=host)
         self.assertEqual(guard.identities(rows),saved)
         self.assertEqual(seen,[frozen])
+        inspected['ustar_moodle']['Mounts'][0]['Source']='/foreign-source'
+        with self.assertRaises(h.l.Refusal):guard.identities(rows)
+
+    def test_compose_rendered_literal_dollars_preserve_runtime_values(self):
+        h=module(self);values={'LITERAL':'one-$x-${y}-$$two'}
+        rendered={'services':{n:{'environment':{k:v.replace('$','$$') for k,v in values.items()}}
+                    for n in ('moodle','postgres')}}
+        def run(argv):
+            raw=(argv[-1]+' '+'a'*64).encode() if '--hash' in argv else json.dumps(rendered).encode()
+            return SimpleNamespace(stdout=raw)
+        control=h.Controls(SimpleNamespace(core=None),None,run,{'compose':Path('/fixture/compose.json')},None)
+        control.write=lambda key,raw:None
+        state={'before':{'containers':{n:{'Config':{'Env':[k+'='+v for k,v in values.items()]}}
+                    for n in h.l.SERVICES}}}
+        self.assertEqual(set(control.compose(state,{},b'{}')),set(h.l.SERVICES))
+        rendered['services']['moodle']['environment']['LITERAL']='changed'
+        with self.assertRaises(h.l.Refusal):control.compose(state,{},b'{}')
 
     def test_production_profile_uses_accepted_source_images_and_local_daemon(self):
         h=module(self);p=h.production_profile()

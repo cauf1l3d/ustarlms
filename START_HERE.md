@@ -1,5 +1,12 @@
 # USTAR вход в проект
 
+**26Oct current blocker — Docker network handoff needs qualification.**
+4a3738cd source/root/context pass; native121369810235 reached snapshots/archive,
+then Compose dollar comparison and network reconnect refused. Dollar/mount-order
+fixes have60local tests/6skips; bounded API diagnostic added. Production network
+metadata not yet supplied; read-only metadata next, no runtime apply or download.
+See context/runtime/docker_runtime_successor_progress_20261025.md.0agents/no SSH.
+
 **26Oct — Docker runtime qualification in progress; no production apply.**
 58focused tests pass locally/6environment skips;3ae rootCI58/no skips.
 Native fixture stop137 exposed PID1 signal handling; fixture init added. Recovery

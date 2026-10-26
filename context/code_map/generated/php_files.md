@@ -1,6 +1,6 @@
 # PHP files
 
-Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live database snapshot.
+Source: `6c56a5b6ab830b97b706a5d7028b49cfae31e7a4`. Git source only; not a live database snapshot.
 
 - `moodle/local/ustar/achievements.php`
 - `moodle/local/ustar/activity_launch.php`
@@ -52,6 +52,23 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/classes/competition.php`
 - `moodle/local/ustar/classes/completion_cycle.php`
 - `moodle/local/ustar/classes/compliance.php`
+- `moodle/local/ustar/classes/connect/actor_service.php`
+- `moodle/local/ustar/classes/connect/bridge_auth.php`
+- `moodle/local/ustar/classes/connect/bridge_http.php`
+- `moodle/local/ustar/classes/connect/bridge_service.php`
+- `moodle/local/ustar/classes/connect/entry_service.php`
+- `moodle/local/ustar/classes/connect/identity.php`
+- `moodle/local/ustar/classes/connect/identity_service.php`
+- `moodle/local/ustar/classes/connect/link_management.php`
+- `moodle/local/ustar/classes/connect/notification_acknowledgement.php`
+- `moodle/local/ustar/classes/connect/notification_action.php`
+- `moodle/local/ustar/classes/connect/notification_delivery.php`
+- `moodle/local/ustar/classes/connect/notification_policy.php`
+- `moodle/local/ustar/classes/connect/notification_preferences.php`
+- `moodle/local/ustar/classes/connect/opaque_token.php`
+- `moodle/local/ustar/classes/connect/receipt_actor.php`
+- `moodle/local/ustar/classes/connect/signup_request.php`
+- `moodle/local/ustar/classes/connect/signup_service.php`
 - `moodle/local/ustar/classes/consultant_career.php`
 - `moodle/local/ustar/classes/content.php`
 - `moodle/local/ustar/classes/content_ack_report.php`
@@ -144,6 +161,7 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/classes/position_application.php`
 - `moodle/local/ustar/classes/position_catalog.php`
 - `moodle/local/ustar/classes/position_model.php`
+- `moodle/local/ustar/classes/privacy/provider.php`
 - `moodle/local/ustar/classes/product_quiz.php`
 - `moodle/local/ustar/classes/registration_service.php`
 - `moodle/local/ustar/classes/registration_validation_exception.php`
@@ -171,6 +189,7 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/classes/task/enrich_feed_sources.php`
 - `moodle/local/ustar/classes/task/import_feed_sources.php`
 - `moodle/local/ustar/classes/task/process_work_tasks.php`
+- `moodle/local/ustar/classes/task/prune_connect_identity.php`
 - `moodle/local/ustar/classes/task/reconcile_competitions.php`
 - `moodle/local/ustar/classes/task/reconcile_reporting.php`
 - `moodle/local/ustar/classes/task/reconcile_rewards.php`
@@ -230,6 +249,8 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/cli/validate_2725.php`
 - `moodle/local/ustar/cli/validate_2726.php`
 - `moodle/local/ustar/competition_studio.php`
+- `moodle/local/ustar/connect.php`
+- `moodle/local/ustar/connect_bridge.php`
 - `moodle/local/ustar/continue.php`
 - `moodle/local/ustar/course_launch.php`
 - `moodle/local/ustar/db/access.php`
@@ -317,6 +338,15 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/tests/communication_test.php`
 - `moodle/local/ustar/tests/competition_studio_test.php`
 - `moodle/local/ustar/tests/completion_cycle_test.php`
+- `moodle/local/ustar/tests/connect_actor_test.php`
+- `moodle/local/ustar/tests/connect_bridge_test.php`
+- `moodle/local/ustar/tests/connect_entry_test.php`
+- `moodle/local/ustar/tests/connect_identity_test.php`
+- `moodle/local/ustar/tests/connect_link_management_test.php`
+- `moodle/local/ustar/tests/connect_notification_ack_test.php`
+- `moodle/local/ustar/tests/connect_notification_action_test.php`
+- `moodle/local/ustar/tests/connect_notification_test.php`
+- `moodle/local/ustar/tests/connect_signup_test.php`
 - `moodle/local/ustar/tests/evidence_lifecycle_test.php`
 - `moodle/local/ustar/tests/feed_article_resolver_test.php`
 - `moodle/local/ustar/tests/feed_external_content_test.php`

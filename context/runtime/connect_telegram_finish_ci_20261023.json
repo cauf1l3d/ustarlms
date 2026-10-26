@@ -1,0 +1,177 @@
+{
+  "app_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "artifact": {
+    "CI_artifact_id": 12511469548,
+    "CI_bytes_equal_independent_exact_Git_build": true,
+    "CI_zip_sha256": "6ec8c31e7d29f364152c072da143424b757fa691f29109c73aaa6947ccebe329",
+    "bytes": 31153214,
+    "default_offline_plan_only": true,
+    "name": "ustar-telegram-update-3d1938ae.py",
+    "saved_for_user": true,
+    "sha256": "6f7729459e1ef25271fd86324e441c823a6d39763c7fec84baf7cf640a41eb31"
+  },
+  "component_tree_ids": {
+    "connect-worker": "99b03449bada030722046c16c999f9050a46b380",
+    "moodle/local/ustar": "f267b21dcf67a7be7fce5afb5fcf9ac3e01c49b7",
+    "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
+  },
+  "date": "2026-10-23",
+  "limits": [
+    "No SSH or external provider sends",
+    "Native SQL and actual systemd/Apache are separate fixtures, not a combined production drill",
+    "Physical transaction unit tests model Docker/SQL; native gate uses actual PG logical paired restore",
+    "FullRC/moodle-db/rollback skipped, not passed; no full DR claim",
+    "Live group acceptance deferred by owner; no automatic fence expansion",
+    "Existing already-acknowledged Telegram messages are not mass edited",
+    "ACK does not resolve a task or change reminder schedule"
+  ],
+  "local_full_run": {
+    "details": "Three missing38d81Git checkout errors, three missingMCP errors, one corrected old-test-definition/new-module mismatch during concurrent edits; stable final CI1077 passes",
+    "errors": 7,
+    "skips": 55,
+    "tests": 1072,
+    "whole_suite_pass": false
+  },
+  "native": {
+    "ACK_native_races": 4,
+    "Moodle": "5.1.8",
+    "PHP": "8.3.33",
+    "PostgreSQL": "16.15",
+    "all_4_schema_snapshots_equal": true,
+    "artifact_id": 12512909250,
+    "assertions": 830,
+    "bounded_event_labels_native_Python_parity": 20,
+    "callback_native_races": 3,
+    "history_preferences_ACK_provider_receipts_retained": true,
+    "job": 120507273094,
+    "result": "success",
+    "schema_snapshot_sha256": "f88eea0f1d97a1eccefe7068ebcf91bcb1bf1f3220843d0eac2ecb50ff9d5e12",
+    "tables": 100,
+    "tests": 158,
+    "versions": [
+      2026102200,
+      2026102300,
+      2026102300,
+      2026102200
+    ],
+    "wire_versions": [
+      1,
+      2,
+      3
+    ],
+    "zip_sha256": "31d4b7312b078f7d2653a4901e8ed55f041f64caf808142ff011c2e8b3d4f158"
+  },
+  "new_owner_commands_ready": true,
+  "new_successor_focused_tests": 20,
+  "predecessor_worker": {
+    "matches_deployed_4394_CI_receipt": true,
+    "worker_files": {
+      "SOURCE_COMMIT": "39ae3f6f1f7a221074e01306793253f66c1d3a422dee1672682ad2181b8bf47b",
+      "admin.pyz": "443a477f716ddba0e3d1278bb8f21dbac321524e8678ad6eb26314575a77db40",
+      "notifications.pyz": "6b342da46135aa1e07e18318c2a07d666909442d2f6e82abc806c3691715f356",
+      "receiver.pyz": "4b05638fbb6857b47125dc04cd29b46ad20bd21d9913792e39cf738f332c2d3e",
+      "units/ustar-connect-notify.service": "4f6119b0c0e22e79d3c81ac03966e5aa143b2645247ec58693feada5a9ccf718",
+      "units/ustar-connect-probe.service": "7ae0578d7a102fe3b5fffa6d439eb0441c442ae3423c2d0bc56b1d1f7b8be9d3",
+      "units/ustar-connect-receiver.service": "34f966220f63860506c7da2cdd3c2c617720c12464d3dedbb7da36fb6a4cfe8b"
+    }
+  },
+  "production": {
+    "ACK_active": true,
+    "agent_changed": false,
+    "new_owner_execution": "pending",
+    "owner_receipt": "context/runtime/connect_con02_server1_owner_20261023.json",
+    "still_app_worker": "534764821c4f65437ab50b3c7f25578d538e9504",
+    "still_local_ustar": 2026102200
+  },
+  "review": {
+    "remaining_important": null,
+    "resolved_admission_gaps": [
+      "effective cron after-images required",
+      "handback executable bytes pinned even if manifest rewritten"
+    ],
+    "subagents": 0,
+    "type": "author_only_owner_forbids_subagents"
+  },
+  "runtime": {
+    "telegram-update-https-owner": {
+      "HTTPS_owned_bytes_unchanged": true,
+      "actual_start_failure_recovers": false,
+      "actual_systemd_UID33_LoadCredential": false,
+      "app_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+      "application_SQL": "separate native lifecycle gate",
+      "cursor_after": null,
+      "cursor_before": null,
+      "external_provider_requests": false,
+      "production_access": false,
+      "result": "TELEGRAM_UPDATE_HTTPS_OWNER=PASS",
+      "tool_commit": "3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134",
+      "v2_handback_ACK_key_cutoff_fence_and_old_journal_preserved": true,
+      "v3_scoped_sender": true
+    },
+    "telegram-update-runtime": {
+      "HTTPS_owned_bytes_unchanged": true,
+      "actual_start_failure_recovers": true,
+      "actual_systemd_UID33_LoadCredential": true,
+      "app_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+      "application_SQL": "separate native lifecycle gate",
+      "cursor_after": 57,
+      "cursor_before": 52,
+      "external_provider_requests": false,
+      "production_access": false,
+      "result": "TELEGRAM_UPDATE_RUNTIME=PASS",
+      "tool_commit": "3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134",
+      "v2_handback_ACK_key_cutoff_fence_and_old_journal_preserved": true,
+      "v3_scoped_sender": true
+    }
+  },
+  "schema": 1,
+  "scope": "Telegram presentation and own ACK completion; reserve deferred",
+  "source": {
+    "connect_link_scenarios_each": 28,
+    "mobile_scenarios_each": 60,
+    "own_ACK_history_widths": 5,
+    "php82": {
+      "environment_skips": 153,
+      "job": 120498353886,
+      "r16_tests": 1077,
+      "result": "success"
+    },
+    "php83": {
+      "environment_skips": 153,
+      "job": 120500673768,
+      "r16_tests": 1077,
+      "result": "success_after_one_Chromium_screenshot_protocol_retry"
+    },
+    "php_lint_files": 386
+  },
+  "source_archive": {
+    "all_files_match_exact_Git": true,
+    "archive_sha256": "a0d332585093fb68cbf8b41fc79d1a23734ac09a756aa228e49bab6058810951",
+    "artifact_id": 12511584820,
+    "source_commit": "3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134",
+    "source_files": 557,
+    "zip_sha256": "cf2a66d734461ab6e241ada21cdf37edc4f07464fe4f28f6277c19001b87bade"
+  },
+  "source_components_equal_app_commit_and_CI_checkout": true,
+  "source_files": 557,
+  "strict_root_state": {
+    "result": "success",
+    "skips": 0,
+    "tests": 11
+  },
+  "tables": 100,
+  "tool_commit": "3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134",
+  "versions": {
+    "local_ustar": 2026102300,
+    "theme_ustar": 2026100202
+  },
+  "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "workflow": {
+    "attempt": 2,
+    "context_result": "success",
+    "context_run": 39978015123,
+    "native_status": "success",
+    "review_result": "success",
+    "review_run": 39978015139
+  }
+}

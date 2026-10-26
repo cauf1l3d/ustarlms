@@ -39,6 +39,7 @@ final class workflow_notifications {
                     'providerref' => null, 'lasterror' => null,
                     'timecreated' => $now, 'timemodified' => $now,
                 ]);
+                \local_ustar\connect\notification_delivery::enqueue($notificationid);
                 $transaction->allow_commit();
             } catch (\Throwable $e) {
                 $transaction->rollback($e);

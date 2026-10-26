@@ -1,5 +1,7 @@
 # Полный пошаговый план устранения вопросов аудита USTAR
 
+**Статус18Oct17:03МСК:** владелец вернул INF-06 на доработку. Прежняя приёмка14:42 сохранена как история; текущие требования — [HTTPS/Mini App, темы/zoom, Скрипты/Документация, request metrics/очищенные журналы](../../server-console/REVISIONS_20261018.md). INF-07 HTTPS Академии — после этой доработки. Независимый observer/restore-RTO не подтверждены; Moodle5.2/PG17 отложены.
+
 **Статус16Oct:** архив получен/инструкция передана; результат restore ожидается. Следующий этап — пульт/Telegram, Moodle5.2/PG17 отложены. Текущие статусы и остаток — [сверка](../audits/AUDIT_RECONCILIATION_20261016_RU.md); прежние next-step/порядок ниже относятся к своей дате.
 
 **Точка продолжения 11.10:** [owner GPT/partition/ext4 PASS](../runtime/storage_continuation_20261011.md): ext4 resize15:35:13UTC,29304689blocks, df110G/37used/69free/35%; UUID/mount/quota/GPT preserved. Последний scheduled11Oct backup complete/success/exited0, marker=false, timer active/enabled. Следующий readonly host/container/HTTP/cron/browser smoke, затем fresh PR87 stage budget. Стратегии — предложения; согласованная очередь сохранена. Более ранние execution-статусы ниже — датированная история.

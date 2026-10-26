@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "timezone": "Europe/Moscow",
+  "source": "owner_terminal_output_not_independent_SSH",
+  "artifact": "ustar-con02-update-b971bc38.py",
+  "artifact_SHA256": "692de510d7864e723885f6764ec8363d6ba70ebbee2f26021f361a4c9a89a484",
+  "artifact_hash_verified_by_owner": true,
+  "check": {
+    "phase": "refused",
+    "reason": "schema_indexes"
+  },
+  "diagnostic": {
+    "checked_tables": 99,
+    "mismatched_tables": 2,
+    "database_read_only": true,
+    "observed_missing_unique_indexes": {
+      "local_ustar_coin_accounts": [
+        "userid"
+      ],
+      "local_ustar_test_results": [
+        "attemptid"
+      ]
+    },
+    "ordinary_indexes_on_those_fields_present": true,
+    "all_other_index_signatures_match_frozen_baseline": true
+  },
+  "production_changes": false,
+  "upgrade_started": false,
+  "ACK_enabled_by_this_run": false,
+  "production_effective_version": 2026102000,
+  "worker_commit": "a86e208029b6104150e85d0e90384f84da214c22",
+  "original_cause_of_missing_unique_indexes": "not_proven",
+  "controller_refusal_cause": "fresh_XMLDB_index_profile_assumed_for_retained_legacy_history",
+  "repair_of_production_indexes": "not_performed_or_required_by_CON02_controller_fix"
+}

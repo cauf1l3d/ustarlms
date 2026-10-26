@@ -71,4 +71,9 @@ $tasks = [
         'blocking' => 0, 'minute' => '*/5', 'hour' => '*',
         'day' => '*', 'month' => '*', 'dayofweek' => '*',
     ],
+    [
+        'classname' => 'local_ustar\\task\\prune_connect_identity',
+        'blocking' => 0, 'minute' => '*/5', 'hour' => '*',
+        'day' => '*', 'month' => '*', 'dayofweek' => '*',
+    ],
 ];

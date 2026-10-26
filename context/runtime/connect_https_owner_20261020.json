@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "kind": "owner_reported_HTTPS_readiness",
+  "reported_at": "2026-10-20T17:16:25+03:00",
+  "observed_at": "2026-10-20T14:16:04.539981+00:00",
+  "source_commit": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1",
+  "script_sha256_owner_verified": "3678e9ac0058f9d4971aac62a7006d105f8b77962bc2c77f51b5c125f4d79ddd",
+  "independent_SSH_measurement": false,
+  "narrow_followup": {
+    "reported_at": "2026-10-20T17:43:53+03:00",
+    "listener_units": {
+      "80": "apache2.service",
+      "443": "apache2.service",
+      "8443": "ustar-console.service"
+    },
+    "wwwroot_assignment_count": 1,
+    "wwwroot_features": {
+      "uses_SERVER": false,
+      "uses_ENV": false,
+      "uses_getenv": false,
+      "mentions_HTTP_HOST": false,
+      "mentions_HTTPS": false,
+      "contains_http_literal": false,
+      "contains_https_literal": false
+    },
+    "config_sha256": "96058835f27c21b99db7bde137677921223a5b0e013b1c6fa3a1a3415ac4361d",
+    "services_changed": false,
+    "interpretation": "Apache TLS owner resolved;wwwroot is an indirect expression,not evaluated. Prepare additive static TLS probe using existing console CA before any canonical origin change."
+  },
+  "details_followup": {
+    "reported_at": "2026-10-20T17:32:35+03:00",
+    "observed_at": "2026-10-20T14:32:09.353779+00:00",
+    "probe_commit": "10fc2677ef6abf40b7330346a53a2cf1a62210e0",
+    "probe_sha256_verified": true,
+    "origin_reason": "origin_expression",
+    "listener_process_labels": "other_for80_443_8443_allowlist_incomplete_not_actual_process_identity",
+    "apache_Academy_vhost": {
+      "ports": [
+        80
+      ],
+      "TLS_directive": false,
+      "proxy_8082_directive": true,
+      "certificate_directive": false,
+      "includes_present": true
+    },
+    "default_Caddyfile": {
+      "academy_name_present": false,
+      "loopback_8082_present": false,
+      "import_present": false,
+      "active_config_path_verified": false
+    },
+    "console_CA_and_signer_protected_regular_files": true,
+    "CA_or_key_contents_read": false,
+    "Academy_HTTP_running_and_loopback8082_unchanged": true,
+    "activation_ready": false
+  },
+  "observations": {
+    "academy_origin_parser": "unavailable_reason_not_reported_by_original_tool",
+    "owner_previously_confirmed_origin": "http://ustar.local",
+    "moodle_running": true,
+    "moodle_loopback_binding": {
+      "container_port": "80/tcp",
+      "host_port": 8082
+    },
+    "other_moodle_bindings_present": false,
+    "docker_network_count": 1,
+    "apache2": "active",
+    "caddy": "active",
+    "listening_ports": {
+      "80": true,
+      "443": true,
+      "8443": true,
+      "18443": false
+    },
+    "activation_ready": false,
+    "read_only": true,
+    "PHP_bootstrap_or_network_service_changes": false
+  },
+  "interpretation": "Shared listeners cannot be replaced based on port occupancy alone. Origin parser failure is incomplete diagnostic evidence,not an Academy outage or certificate verdict. Do not assume Caddy terminates Academy TLS. Console source uses a separate8443 server and its own CA.",
+  "next": "chat_link_delivery_readonly_preflight_then_coordinated_guarded_release_and_private_bridge",
+  "details_scope": "No raw config,other sites,IPs,PIDs,CA private contents or PHP execution. Static file hints do not prove active configuration,valid certificate or client trust.",
+  "tests": {
+    "targeted_readiness": 12,
+    "full_local_r16": 771,
+    "explicit_environment_skips": 31,
+    "result": "PASS",
+    "source_checks": "PASS_PHP_not_run_locally",
+    "new_cases_against_previous_source": "5_expected_failures_observed",
+    "chronology": "regression_checked_against_previous_source_after_implementation_not_claimed_test_first"
+  },
+  "updated_probe_sha256": "994b5701fad01c155c13720d8d7eb16eeaf237423237ad0700c07a8c6c5dfbb2",
+  "updated_probe_commit": "10fc2677ef6abf40b7330346a53a2cf1a62210e0",
+  "updated_probe_CI": {
+    "context_run": 39439190761,
+    "context_conclusion": "success",
+    "review_run": 39439190787,
+    "runtime_job": 118684215096,
+    "runtime_conclusion": "success",
+    "source_PHP83_job": 118684215689,
+    "source_PHP83_conclusion": "success",
+    "source_PHP82_job": 118684215798,
+    "source_PHP82_conclusion": "success",
+    "CI_r16_tests": 771,
+    "CI_explicit_environment_skips": 134,
+    "native_DB_job": 118685510635,
+    "remaining_results": "native_cumulative_PR_pipeline_pending_unchanged_Moodle_tree_previously_verified_on1e8a8819"
+  },
+  "Academy_worker_or_network_changes": false,
+  "new_source_deployed": false,
+  "subagents": 0,
+  "TLS_probe_check": {
+    "reported_at": "2026-10-20T18:29:10+03:00",
+    "source_commit": "52a8a1ca965b12e577e0295d64420c2a3e9fcb67",
+    "download_sha256_verified": true,
+    "phase": "refused",
+    "reason": "wildcard_TLS_binding_required",
+    "Apache_reload_or_vhost_changes": false,
+    "guard_interpretation": "parsed vhost map has no wildcard443 group;does not establish specific-IP group versus no443-vhost group",
+    "next": "single_filtered_readonly443_binding_type_and_SSL_module_report;no_prepare_or_guard_bypass"
+  },
+  "first_TLS_topology_followup": {
+    "reported_at": "2026-10-20T18:31:51+03:00",
+    "evidence": "owner_terminal_output_not_independent_SSH",
+    "effective_vhost_ports": [
+      80
+    ],
+    "target443_vhosts": 0,
+    "loopback443": {
+      "TLS": "SSLError",
+      "HTTP": "HTTP/1.1 200 OK"
+    },
+    "interpretation": "existing443_listener_serves_global_plain_HTTP;first_TLS_mode_is_intentional_protocol_change",
+    "new_probe_apply": "pending"
+  },
+  "first_TLS_owner_apply": {
+    "reported_at": "2026-10-20T18:49:26+03:00",
+    "source_commit": "3303069b964cebab111e1fa2b03b0aed01a3ccab",
+    "script_SHA256_owner_verified": "7b5fd3a62c3b9d9c72bcaf513d96777bf0a00926bcba91ec3ac1740896c78bd7",
+    "check_phase": "ready_for_TLS_probe",
+    "prepare_phase": "tls_probe_ready",
+    "first_TLS_vhost": true,
+    "CA_fingerprint": "cc397ba406aa58445e4f57a5e2644df20bd746273403e555f3df736694d5935f",
+    "leaf_fingerprint": "98e1a8567c55866951a5ea28b5389fa5b477b4191b5cb850718e1ad600752992",
+    "leaf_not_after": "2026-11-19T15:47:49Z",
+    "Academy_origin_changed": false,
+    "HTTP_redirect_enabled": false,
+    "network_or_other_services_changed": false,
+    "evidence": "owner_terminal_output;not_independent_SSH",
+    "browser_images": {
+      "correct_path": "/__ustar_tls_probe__/ready.html",
+      "correct_path_result": "USTAR HTTPS check page rendered;no certificate warning visible in desktop screenshot",
+      "incorrect_path": "/ustar_tls_probe/ready.html",
+      "incorrect_path_result": "403 expected;only exact health path is permitted",
+      "phone_or_VPN_acceptance": "owner19:01 confirmed phone over local WiFi and VPN"
+    },
+    "next": "confirm_correct_URL_on_phone_then_canonical_HTTPS_cutover_and_permanent_renewal;private_bridge_link_notify_separate"
+  },
+  "phone_VPN_owner_acceptance": {
+    "reported_at": "2026-10-20T19:01:34+03:00",
+    "statement": "да с телефона и впн открывается с локальной сети wifi",
+    "scope": "owner_phone_over_local_office_WiFi_with_VPN;not_public_internet_or_mobile_data_acceptance",
+    "certificate_warning": "no_warning_followup_accepted_from_affirmative_answer_to_prior_question;not_independent_device_inspection"
+  },
+  "HTTP_vhost_owner_report_1920": {
+    "reported_at": "2026-10-20T19:20:36+03:00",
+    "binding": "*:80",
+    "server_name": "ustar.local",
+    "proxy_preserve_host": true,
+    "proxy_pass": "http://127.0.0.1:8082/",
+    "proxy_pass_reverse": "http://127.0.0.1:8082/",
+    "include": "/etc/apache2/ustar-console-observability.conf",
+    "include_contents": "not_present_in_public_repo;preserve_opaque_file_and_hash_do_not_recreate"
+  },
+  "canonical_HTTPS_owner_apply": {
+    "reported_at": "2026-10-20T19:59:48+03:00",
+    "source_commit": "d1e61a3b96651ef6de724e2c14ac51a73f2e3d41",
+    "script_SHA256_owner_verified": "42550fb1ab769dbcad7b604fe5e0619f6c7ac69fa5cbac46c624924f6895aa6e",
+    "check_phase": "ready_for_HTTPS_cutover",
+    "cutover_phase": "active",
+    "status_phase": "active",
+    "academy_origin": "https://ustar.local",
+    "leaf_fingerprint": "4e9aa808a09df8cace1393d84603c620519589ce08c3b825aa9df4ecb91fbc5e",
+    "leaf_not_after": "2026-11-19T16:56:28Z",
+    "business_data_restored": false,
+    "browser_owner_statement": "все работает, академия открывается по https c телефона и vpn и на компьютере",
+    "browser_scope": "owner_general_open_on_desktop_phone_and_VPN;exhaustive_role_Quiz_SCORM_and_public_MiniApp_acceptance_not_claimed",
+    "renewal": "timer_installation_and_initial_service_probe_verified_by_exact_cutover_contract;future_due_leaf_rotation_not_observed",
+    "independent_SSH_measurement": false,
+    "agent_server_changes": false
+  },
+  "cron_followup": "Owner20Oct2038MSK accepted two scheduled successes;see cron_release_update_20261020.json;do not repeat repair",
+  "next_after_cron": "private_bridge_scoped_keys_and_separate_chat_link_delivery_coordinating_HTTPS_ownership_and_cron_target"
+}

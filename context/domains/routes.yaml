@@ -1,6 +1,6 @@
 domain: routes
-reviewed_at: '2026-10-02'
-source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+reviewed_at: '2026-10-17'
+source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
 purpose: Семейства маршрутов, scope, immutable publication и launch
 services:
 - moodle/local/ustar/classes/route_model.php
@@ -28,3 +28,16 @@ entry_points:
 - moodle/local/ustar/route_studio.php
 - moodle/local/ustar/activity_launch.php
 - moodle/local/ustar/forced_retraining.php
+review_method: static source navigation; no new production scenario acceptance
+scenarios:
+- name: publish_version
+  source: moodle/local/ustar/classes/route_commands.php
+  behavior: publish_version validates positive identifiers and expectedmodified, then
+    delegates to route_model; endpoint/service capability and scope checks require
+    separate review
+- name: family_scope
+  source: moodle/local/ustar/classes/route_scope.php
+  behavior: resolve family/physical point/position scope with ADR-0004; published
+    version, progress and completion cycle remain distinct
+coverage_limit: Selected command/read paths only; complete endpoint, file access and
+  actor/scope negative-path audit remains open

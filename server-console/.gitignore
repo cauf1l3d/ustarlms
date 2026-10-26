@@ -1,0 +1,11 @@
+ui/node_modules/
+ui/dist/
+ui/test-results/
+ui/playwright-report/
+backend/*.egg-info/
+backend/build/
+backend/ustar_console/web/
+*.sqlite3*
+__pycache__/
+.pytest_cache/
+dist/

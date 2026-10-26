@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "kind": "Connect_chat_link_delivery_readonly_preflight_source_verification",
+  "source_commit": "4d70de5cfe881458cb065ef066cc1ddcc88e214d",
+  "source_tree": "4d44556e86c3de615a4249bf06e45babbb8f703e",
+  "profile": "chat-link",
+  "baseline_commit": "830d3703e2ffa2f9864900c0d0c58f60049cb0c2",
+  "baseline_versions": {
+    "local_ustar": 2026101905,
+    "theme_ustar": 2026100202
+  },
+  "candidate_versions": {
+    "local_ustar": 2026102000,
+    "theme_ustar": 2026100202
+  },
+  "baseline_files": 552,
+  "candidate_files": 552,
+  "baseline_tables": 99,
+  "candidate_tables": 99,
+  "archive": "ustar-connect-delivery-4d70de5c.pyz",
+  "archive_sha256": "67d3d13acb0d800e7031e5f09550d7c73e6cc553305f0f71963d0674295b56b8",
+  "zip_members": 9,
+  "local_plan_without_host_commands": "PASS",
+  "local_verification": {
+    "r16_tests": 835,
+    "skipped": 32,
+    "result": "PASS",
+    "module_tests": 14,
+    "module_privileged_test_skipped_locally": 1,
+    "TDD": "11 initial missing implementation errors then GREEN;metadata mismatch assertion RED then GREEN",
+    "source_structural": "PASS;PHP_not_run_locally",
+    "context_index": "PASS",
+    "local_browser": "not_run;missing binary;download invalid archive",
+    "actual_UID33_local": "not_run;managed_fs_chown33_EINVAL;explicit_disposable_CI_only",
+    "review": "self_review;owner_forbids_subagents;independent_review_false"
+  },
+  "CI": {
+    "context_run": 39470413912,
+    "review_run": 39470413976,
+    "status": "completed",
+    "context_conclusion": "success",
+    "runtime_job": 118792670114,
+    "runtime_conclusion": "success",
+    "actual_UID33_and_all14_module_tests": "PASS",
+    "archive_SHA_matches_local_and_CI": true,
+    "artifact_id": 12285519274,
+    "receiver_isolation": "PASS;synthetic_transport_not_live_Telegram",
+    "HTTPS_fixture": "PASS;actual_Apache_OpenSSL_PHP_proxy_redirect_renew_recovery_isolated_fixture",
+    "source_jobs": [
+      {
+        "id": 118792669812,
+        "PHP": "8.2",
+        "conclusion": "success"
+      },
+      {
+        "id": 118792670033,
+        "PHP": "8.3",
+        "conclusion": "success"
+      }
+    ],
+    "r16_tests": 835,
+    "CI_skipped": 135,
+    "source_checks": {
+      "PHP": 381,
+      "JS": 24,
+      "templates": 57,
+      "tables": 99
+    },
+    "Chromium_scenarios": {
+      "mobile": 60,
+      "onboarding": 20,
+      "link": 28,
+      "actor": 100
+    },
+    "browser_race_regression": "PASS_with250ms_options_delay_and_attached_option_wait_on_both_PHP_jobs",
+    "Connect_DB_job": 118794127361,
+    "Connect_DB_status": "success",
+    "full_RC_claim": false,
+    "review_conclusion": "success",
+    "Connect_DB_tests": 124,
+    "Connect_DB_assertions": 629,
+    "Connect_DB_concurrency_scenarios": 6,
+    "Connect_DB_paired_rollback": "accepted_baseline_code_config_data_DB_PAIR_PASS",
+    "Connect_DB_SQL_versions_tasks_columns_indexes": "PASS",
+    "Connect_DB_actual_Moodle_HTTPS_secure_cookie": "PASS",
+    "full_RC_jobs": "skipped;not_claimed"
+  },
+  "intermediate_source": {
+    "commit": "fda8ff35a6664f1ff136e8b299ac15f1a3e734d4",
+    "context_run": 39469396286,
+    "context_result": "success",
+    "review_run": 39469396189,
+    "review_result": "failure",
+    "runtime_job": 118789171838,
+    "runtime_result": "success",
+    "failure_job": 118789171619,
+    "failure": "unchanged_onboarding_test_read_options_before_async_fetch_completed;tests/mobile/connect.cjs:50",
+    "correction": "wait_for_actual_option_attached;250ms_synthetic_options_delay;literal_XSS_and_no_img_assertions_kept;no_product_JS_change",
+    "do_not_use_intermediate_bundle": "may_refuse_accepted_nonroot_config_owner"
+  },
+  "runtime_contracts": {
+    "HTTPS_tool_sha256": "42550fb1ab769dbcad7b604fe5e0619f6c7ac69fa5cbac46c624924f6895aa6e",
+    "cron_current_sha256": "c5eabdceaa2f137eccd35087b03d473f61257aaeb77624f4855583ebaf353638",
+    "cron_future_2000_sha256_derived_not_installed": "ae5fa1b075ff5f97300f5d5675d51367b95d821e0acf73c7c4458200af7e9751",
+    "future_AST_change": "VERSIONS_only;private_source_not_published"
+  },
+  "owner_delivery_preflight": "pending",
+  "production_changed_by_agent": false,
+  "Telegram_API_or_polling": false,
+  "keys_or_tokens_read": false,
+  "PHP_or_Moodle_bootstrap": false,
+  "deployment_or_activation_approved_by_probe": false,
+  "native_private_bridge_acceptance": false,
+  "subagents": 0
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=USTAR SMART every 15 minutes
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=15min
+AccuracySec=15s
+Persistent=no
+
+[Install]
+WantedBy=timers.target

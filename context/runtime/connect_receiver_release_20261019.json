@@ -1,0 +1,76 @@
+{
+  "kind": "verified_receiver_only_release",
+  "source_commit": "b01bd942f7f748d9510618a79489643b42cbd690",
+  "source_tree": "65b7bc0046225d82d5955614646287f6c1ed4ab8",
+  "artifact": {
+    "run": 39277324207,
+    "id": 12197369243,
+    "zip_bytes": 38429,
+    "zip_sha256": "6804d5a23f946124574beff8db6fac54fc13fd0af4e854d49d392163cc42a880",
+    "downloaded": true,
+    "CRC_verified": true,
+    "source_bytes_verified": true
+  },
+  "archive": {
+    "filename": "ustar-connect-receiver-b01bd942.tar.gz",
+    "bytes": 32786,
+    "sha256": "674b05ae4f418ed5caa3582c6c071a036c77d647667fce6a7f90e6b232a72332",
+    "module_comparisons": 30,
+    "units": 3,
+    "admin_source_exact": true
+  },
+  "standalone_installer_sha256": "d81b1e7c8c958650df76eb9726976087bfc92279d5cf314091a2332dd82dc997",
+  "CI": {
+    "context": {
+      "run": 39277324228,
+      "conclusion": "success"
+    },
+    "review": {
+      "run": 39277324207,
+      "conclusion": "in_progress_native_db_queue"
+    },
+    "host": {
+      "job": 118145618545,
+      "conclusion": "success",
+      "actual_systemd": true,
+      "actual_UID_credentials_SQLite": true,
+      "install_reinstall_update_rollback": true,
+      "provider": "synthetic_no_live_API"
+    },
+    "source": {
+      "php82_job": 118145619458,
+      "php83_job": 118145619328,
+      "completed_logs_verified": true,
+      "r16": 690,
+      "environment_skips": 133,
+      "browser": {
+        "mobile": 60,
+        "onboarding": 20,
+        "link": 24,
+        "actor": 100
+      }
+    },
+    "native_Moodle_regression": {
+      "job": 118147414538,
+      "status": "queued_last_observed",
+      "existing_C4_reference": "fd9eea8038bb05d3a52f5ae4068c430e14fc3177",
+      "scope": "package_does_not_install_or_migrate_Moodle"
+    }
+  },
+  "local": {
+    "r16_tests": 690,
+    "environment_skips": 30,
+    "errors": 0,
+    "systemd_analyze_verify": "pass",
+    "single_archive_bootstrap_bash_syntax": "pass"
+  },
+  "onboarding_enabled": false,
+  "notification_service": "prepared_disabled",
+  "server1_installed_by_agent": false,
+  "owner_live_ACK": "pending",
+  "Moodle_changes": false,
+  "network_changes": false,
+  "subagents": 0,
+  "review": "author_self_review_owner_forbids_subagents",
+  "readiness": "receiver_only_package_accepted;owner_server1_install_and_live_ACK_pending;whole_PR_not_accepted"
+}

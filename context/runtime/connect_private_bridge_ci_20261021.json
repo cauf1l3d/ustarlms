@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "kind": "private_bridge_source_ci",
+  "source_commit": "ec9af9e4fc50df5219e70c4fbd9b57bae5984b61",
+  "tree": "36502e49dce0e61526165622169a0373a375b882",
+  "application_payload": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1",
+  "application_payload_unchanged": true,
+  "workflows": {
+    "context": {
+      "id": 39516048080,
+      "conclusion": "success"
+    },
+    "review": {
+      "id": 39516048076,
+      "conclusion": "success"
+    }
+  },
+  "source_jobs": {
+    "php82": 118948324775,
+    "php83": 118948324818,
+    "result": "success",
+    "tests_each": 886,
+    "environment_skips_each": 136,
+    "php_files": 381,
+    "js_files": 24,
+    "templates": 57,
+    "tables": 99,
+    "partial_profile_write_recovery": "real temporary files;modeled host;PASS"
+  },
+  "native_runtime": {
+    "job": 118948324367,
+    "result": "success",
+    "real_Apache_OpenSSL_PHP": true,
+    "public_denial_and_private_POST_only": true,
+    "IP_SAN_CA_validation_and_signed_scope": true,
+    "Apache_Moodle_bootstrap_and_Docker_boundary": "modeled",
+    "systemd_credentials_UID_ACL": "real",
+    "systemd_API_opener": "synthetic",
+    "wrong_key_blocks_receiver_start": true,
+    "token_and_SQLite_bytes_unchanged": true,
+    "renewal_and_lost_ack_recovery": true
+  },
+  "native_Moodle": {
+    "job": 118949364327,
+    "artifact": 12308008588,
+    "result": "success",
+    "Moodle": "5.1.8",
+    "PostgreSQL": "16",
+    "tests": 124,
+    "assertions": 629,
+    "concurrency_cases": 6,
+    "private_include_UID_GID33_group_read_no_write": true,
+    "post_bootstrap_boolean_activation": true,
+    "signed_scope_denial_and_wrong_HMAC_denial": true,
+    "unchanged_Connect_table_counts": 6,
+    "accepted_baseline_paired_restore": true,
+    "current1905_to_target2000_upgrade_repeat_paired_restore_and_task_flags": true,
+    "fixture_only_no_production_access": true
+  },
+  "local_full_suite": {
+    "source_commit": "e4d7a154028ccf04b2198e951bf9631e5ef5a32f",
+    "tests": 886,
+    "environment_skips": 34,
+    "result": "pass",
+    "environment": "separate venv with repository test dependencies"
+  },
+  "local_current_targeted": {
+    "configuration_readiness_package_tests": 8,
+    "result": "pass"
+  },
+  "frozen_readonly_operator_package": {
+    "source_commit": "e4d7a154028ccf04b2198e951bf9631e5ef5a32f",
+    "filename": "ustar-private-bridge-check-e4d7a154.pyz",
+    "sha256": "14de548410f1cc861e9f9eae8d79018ab4f6dee67c218a4f84d29fdae95075af",
+    "workflow": 39514608522,
+    "artifact": 12307432021,
+    "downloaded_CI_bytes_equal_local_assembly": true,
+    "activation_supported": false,
+    "compiler_not_invoked_by_readonly_check": true,
+    "runbook": "context/runtime/connect_private_bridge_check_20261021.md",
+    "owner_result": "pending"
+  },
+  "review": "author_self_review;0subagents;independent_review_not_claimed",
+  "full_RC": "skipped",
+  "production_or_main_changes": false,
+  "live_Telegram_calls": false,
+  "remaining": [
+    "owner_protected_include_parent_readiness",
+    "coordinated_root_tool_state_key_credential_receiver_transaction",
+    "immutable_activation_package_and_native_recovery",
+    "owner_same_session_link_confirm_replay_stale_group_denial_revoke",
+    "separate_opt_in_notification_delivery",
+    "external_HTTPS_MiniApp_native_handoff_and_role_actions"
+  ]
+}

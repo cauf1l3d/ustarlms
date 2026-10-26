@@ -19,7 +19,7 @@ import types
 from zoneinfo import ZoneInfo
 
 PRODUCER = Path('/usr/local/sbin/USTAR_HDD_BACKUP_20261006.py')
-PRODUCER_SHA = '75ca974f1d763f6fc84281501a99936894f1b487c1cc4d0c1d71697e67c79d75'
+PRODUCER_SHA = 'a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3'
 HELPER = '/usr/local/sbin/USTAR_HDD_SCHEDULE_20261006.py'
 UNITS = Path('/etc/systemd/system')
 SERVICE = 'ustar-hdd-backup.service'

@@ -76,7 +76,9 @@ class WorkflowScope(unittest.TestCase):
         self.assertNotIn('frontend', jobs)
         for job in jobs.values():
             self.assertLessEqual(set(job.get('needs', [])), set(jobs))
-        self.assertEqual(set(jobs['gate']['needs']), {'source', 'rollback', 'prepare-rc', 'moodle-db'})
+        self.assertEqual(set(jobs['gate']['needs']), {'source', 'rollback', 'prepare-rc', 'moodle-db', 'connect-db'})
+        self.assertEqual(jobs['connect-db']['needs'], ['source'])
+        self.assertEqual(jobs['gate']['steps'][0]['env']['CONNECT'], '${{ needs.connect-db.result }}')
         self.assertIn('moodle-db', jobs)
         self.assertIn('rollback', jobs)
         for name in ('source', 'prepare-rc'):

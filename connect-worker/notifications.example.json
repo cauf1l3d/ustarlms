@@ -1,0 +1,15 @@
+{
+  "bot_token_file": "/run/credentials/ustar-connect-notify.service/telegram.token",
+  "bot_username": "ustarcorp_bot",
+  "state_directory": "/var/lib/ustar-connect-notify",
+  "telegram_proxy": "http://127.0.0.1:18081",
+  "onboarding_enabled": false,
+  "bridge_endpoint": "https://127.0.0.1:18443/local/ustar/connect_bridge.php",
+  "bridge_key_id": "tg_notify_pilot_v1",
+  "bridge_key_file": "/run/credentials/ustar-connect-notify.service/bridge.key",
+  "bridge_ca_file": "/run/credentials/ustar-connect-notify.service/bridge-ca.crt",
+  "linking_enabled": false,
+  "notification_subjects": [
+    "77777"
+  ]
+}

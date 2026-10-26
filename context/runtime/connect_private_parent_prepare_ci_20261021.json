@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "kind": "private_include_parent_preparation_ci",
+  "source_commit": "e58354d3638e0a058b9ff20e53615de13c2e13e2",
+  "tree": "155919f1c2fd922cc65f7faf5ac09963ce06207d",
+  "application_payload": "1e8a8819f50785ebb4fb2640eeb9386c969d59d1",
+  "application_payload_unchanged": true,
+  "owner_refusal": "context/runtime/connect_private_bridge_parent_owner_20261021.json",
+  "workflows": {
+    "context": {
+      "id": 39519644446,
+      "conclusion": "success"
+    },
+    "review": {
+      "id": 39519644489,
+      "conclusion": "success"
+    }
+  },
+  "source_jobs": {
+    "php82": 118960063851,
+    "php83": 118960063715,
+    "result": "success",
+    "tests_each": 895,
+    "environment_skips_each": 145,
+    "php_files": 381,
+    "js_files": 24,
+    "templates": 57,
+    "tables": 99
+  },
+  "native_parent": {
+    "job": 118960063858,
+    "strict_environment": "USTAR_REQUIRE_PRIVATE_PARENT_FIXTURE=1",
+    "real_UID_GID33": true,
+    "tests": 9,
+    "skips": 0,
+    "result": "success",
+    "directory_UID_only_change": true,
+    "GID_mode_xattrs_and_all_children_preserved": true,
+    "config_UID33_root_group_and_xattrs_preserved": true,
+    "actual_UID33_read_and_rename_denial": true,
+    "prepare_and_restore_interruption_resume": true,
+    "unknown_ancestor_owner_mode_xattr_drift_denial": true,
+    "restore_with_private_include_denied": true,
+    "host_network_HTTPS_and_receiver_prerequisites_in_parent_fixture": "modeled;separate preexisting runtime fixtures also pass"
+  },
+  "local_full_suite": {
+    "tests": 895,
+    "skips": 43,
+    "result": "pass",
+    "actual_UID33_not_mapped": "9 new tests require privileged CI;not represented as local success"
+  },
+  "package": {
+    "filename": "ustar-private-bridge-check-e58354d3.pyz",
+    "sha256": "20038cba4bcb0e50e9af965c9c9bf66fd9a85f00b2c64e01532d3bee21cb38ae",
+    "artifact": 12311131323,
+    "workflow": 39519644489,
+    "CI_download_bytes_equal_local_exact_Git_build": true,
+    "default_mode": "plan_only",
+    "explicit_prepare_supported": true,
+    "nonrecursive": true,
+    "activation_supported": false
+  },
+  "native_Moodle_current_run": {
+    "job": 118961045964,
+    "artifact": 12310023723,
+    "result": "success",
+    "tests": 124,
+    "assertions": 629,
+    "concurrency_cases": 6,
+    "private_include_UID33": true,
+    "signed_scope_wrong_HMAC_and_six_unchanged_tables": true,
+    "accepted_baseline_paired_rollback": true,
+    "current1905_to2000_repeat_paired_restore_and_custom_task_flags": true,
+    "fixture_only_no_server_access": true
+  },
+  "full_RC": "skipped",
+  "review": "author_self_review;0subagents;independent_review_not_claimed",
+  "server1_or_provider_actions": false,
+  "live_keys_generated": false,
+  "remaining": [
+    "owner_guarded_parent_preparation_result",
+    "coordinated_root_HTTPS_key_credential_receiver_activation_transaction",
+    "owner_same_session_link_confirm_replay_stale_group_denial_and_revoke",
+    "separate_opt_in_notify"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "owner_probe_launch_failure_and_local_TTY_reproduction",
+  "source": "owner_terminal_output_in_current_dialogue",
+  "owner_observation": {
+    "checksum_verified": true,
+    "tool_commit": "4b70c936308ac0f08dd4d1fad150235cb0bf1955",
+    "tool_sha256": "e74d0e2674c6deb4adfb629784bf97e475cebdaa20219c76875ecf1a3fab8eb5",
+    "subscription_prompt_reported_absent": true,
+    "JSON_result_received": false,
+    "shell_prompt_returned": true,
+    "elapsed_seconds": null,
+    "process_exit": null
+  },
+  "local_validation": {
+    "method": "pty.fork controlling terminal; bash heredoc; synthetic invalid input only, no network request or subscription",
+    "ordinary_timeout_shortened_to_seconds": 2,
+    "ordinary_timeout_prompt_seen": false,
+    "ordinary_timeout_command_exit": 124,
+    "direct_python_prompt_seen": true,
+    "direct_python_hidden_input_processed": true,
+    "direct_python_result_reason": "invalid_subscription_URL",
+    "foreground_timeout_control_prompt_seen": true,
+    "foreground_timeout_control_input_processed": true
+  },
+  "correction": "remove external timeout from interactive Python launch; keep script internal 30-second deadline after input and print PROBE_EXIT even on failure",
+  "script_bytes_changed": false,
+  "runbook": "server-console/VPN_SUBSCRIPTION_PROBE.md",
+  "subscription_URL_or_node_values_received": false,
+  "provider_response_format": "unknown",
+  "VPN_proxy_Telegram_or_home_access_configured": false,
+  "native_retry_result": "pending",
+  "scope_note": "Local reproduction explains the supplied launcher's TTY defect; actual server duration/exit and child signal were not captured. Earlier receipts remain unchanged. No agent SSH, production change or secret-bearing request."
+}

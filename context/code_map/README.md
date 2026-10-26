@@ -54,3 +54,30 @@ python3 scripts/check_context.py
 
 
 [`prepare_production_copy.sh`](../../scripts/infra/prepare_production_copy.sh) installs pinned restore helpers and submits only read-only `--pack` from the last successful HDD backup. `backup_transfer.py --start-production-copy` passes `--parallel-copy` to the permanent worker: distinct canonical URL, same recovered business data/task flags, mail+sendmail+cron off, boot startup without cron timer. Source freeze is not called. [Current sysadmin handoff](../runtime/production_copy_20261015.md), codea1a0c62b/prepare38485343;101 selected CI checks PASS, native import/reboot pending.
+
+[development_source.json](development_source.json) — отдельный unmerged candidate546files/99tables, local2026101903 (CON01C.2). Generated baseline files526/93 описывают accepted e1d57f5b; STATE.development_candidate и byte/tree validation в check_context связывают текущий код с новым manifest без подмены production evidence.
+
+
+[`connect_chat_link_update.py`](../../scripts/infra/connect_chat_link_update.py) —
+отдельный fixed830/1905→1e8/2000 application+cron controller,99schema/tasks preserved,
+HTTPS/renewal lock,paired recovery и strict HTTPS login.
+[`backup_https_prepare.py`](../../scripts/infra/backup_https_prepare.py) готовит
+согласованную producer/scheduler readiness пару перед fresh HDD;без запуска jobs
+или изменения units/calendar. [План/границы](../proposals/USTAR_CONNECT_COORDINATED_UPDATE_PLAN_20261021.md).
+Exact6aa source CI verified: [receipt](../runtime/connect_chat_link_update_ci_20261021.json).
+Native application/backup preparation not deployed.
+
+## 21Oct owner backup HTTPS preparation accepted
+
+[Exact owner receipt](../runtime/connect_backup_https_owner_20261021.json) confirms
+producer a604fbcd / scheduler a97039a8 and ready_for_chat_link_update. The updater
+source6aa/PYZ e0d364ab is unchanged;application1905 remains installed until separate upgrade.
+No production backup,application2000 or bot/link/notify acceptance is inferred.
+
+## 21Oct effective addon update accepted
+
+[Owner receipt](../runtime/connect_chat_link_update_owner_20261021.json):fixed tool6aa
+installed payload1e8a8819/local2000/theme0202/552files/99tables;new scheduled cron22:08UTC
+exit0 and general Academy browser-open accepted. Generated development inventory is
+source evidence and does not substitute for this deployment receipt. Private transport
+continues under [the delivery plan](../proposals/USTAR_CONNECT_PRIVATE_BRIDGE_DELIVERY_PLAN_20261021.md).

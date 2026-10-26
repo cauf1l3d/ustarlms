@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "kind": "owner_backup_https_preparation_and_chat_link_update_preflight",
+  "reported_date_msk": "2026-10-21",
+  "reported_at": null,
+  "evidence_source": "owner_pasted_server1_terminal_output",
+  "independent_server_access": false,
+  "tool_commit": "6aa83a951b3d8119db8ef2d5d5e2484383fcbce1",
+  "tool_file": "ustar-chat-link-update-6aa83a95.pyz",
+  "tool_sha256": "e0d364ab33fb01482c0bedc73833562a567dc221c0682c85009759bca58d82c3",
+  "owner_sha256_check": "OK",
+  "preparation": {
+    "phase": "backup_HTTPS_compatibility_prepared",
+    "producer_sha256": "a604fbcd6a0733d29142bb3130dc4bea2e7da1797c6995699d9d5516f21b05c3",
+    "scheduler_sha256": "a97039a8111dfa4d68fa0a851e17dec9a82d8f1096b7b61b8a71609859134e8c",
+    "backup_or_outage_started": false,
+    "units_or_schedule_changed": false
+  },
+  "preflight": {
+    "status": "ready_for_chat_link_update",
+    "capacity": {
+      "required_bytes": 11692290048,
+      "available_bytes": 56452567040,
+      "required_inodes": 201400,
+      "available_inodes": 6078040
+    },
+    "restart_policies": {
+      "ustar_moodle": {
+        "name": "unless-stopped",
+        "maximum_retry_count": 0
+      },
+      "ustar_postgres": {
+        "name": "unless-stopped",
+        "maximum_retry_count": 0
+      }
+    },
+    "https": {
+      "state_sha256": "c7d9c90dd719201ea5009ae938576c6eadb733bd8d3d5c85c66b4ec619bd2fa2"
+    },
+    "current": {
+      "local_ustar": 2026101905,
+      "theme_ustar": 2026100202
+    },
+    "target": {
+      "local_ustar": 2026102000,
+      "theme_ustar": 2026100202
+    },
+    "activation": false
+  },
+  "application_upgrade_executed": false,
+  "fresh_backup_executed_by_this_preparation": false,
+  "scheduled_cron_2000_accepted": false,
+  "bridge_link_notify_activated": false,
+  "next_action": "same_hash_verified_root_owned_tool_upgrade_acknowledge_outage_then_status_scheduled_cron2000_and_browser_acceptance",
+  "scope_note": "Preparation changes only the matched backup helper scripts. This receipt does not prove an actual HTTPS backup, application upgrade, live link or notification delivery. Exact report time was not supplied."
+}

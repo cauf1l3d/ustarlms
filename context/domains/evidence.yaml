@@ -1,6 +1,6 @@
 domain: evidence
-reviewed_at: '2026-10-02'
-source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+reviewed_at: '2026-10-17'
+source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
 purpose: Подтверждённые результаты, gates и completion cycles
 services:
 - moodle/local/ustar/classes/target_core.php
@@ -22,3 +22,17 @@ rules:
 entry_points:
 - moodle/local/ustar/route.php
 - moodle/local/ustar/achievements.php
+review_method: static source navigation; not new production acceptance
+scenarios:
+- name: learning_vs_assessment
+  source: moodle/local/ustar/classes/evidence.php
+  behavior: evaluate_definition implements learning/assessment only; other labels
+    return unsupported_type. Completion state1 satisfies learning but leaves assessment
+    completed_ungraded; course-level assessment is unsupported_source
+- name: fresh_remediation
+  source: moodle/local/ustar/classes/route_point_evidence_provider.php
+  behavior: state pins point/version to the same route and current position scope;
+    all required evidence must be configured and fresh after failure cutoff. Later
+    route versions do not silently replace pinned runtime
+coverage_limit: Selected evaluators only; canonical evidence event writers, endpoint
+  access and legacy bridges require separate audit

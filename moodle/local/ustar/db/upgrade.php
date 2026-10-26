@@ -4913,5 +4913,82 @@ function xmldb_local_ustar_upgrade($oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026100204, 'local', 'ustar');
     }
+    if ($oldversion < 2026101900) {
+        // Metadata only: never activate channels, migrate links or send old pending.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) {
+            throw new coding_exception('Cannot load Connect identity schema');
+        }
+        foreach (['local_ustar_conn_links', 'local_ustar_conn_challenges', 'local_ustar_conn_proofs'] as $name) {
+            $table = $schema->getStructure()->getTable($name);
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026101900, 'local', 'ustar');
+    }
+    if ($oldversion < 2026101901) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Connect entry schema'); }
+        foreach (['local_ustar_conn_launches', 'local_ustar_conn_sessions'] as $name) {
+            $table = $schema->getStructure()->getTable($name);
+            if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        }
+        upgrade_plugin_savepoint(true, 2026101901, 'local', 'ustar');
+    }
+    if ($oldversion < 2026101902) {
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Connect signup schema'); }
+        $table = $schema->getStructure()->getTable('local_ustar_conn_signups');
+        if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        upgrade_plugin_savepoint(true, 2026101902, 'local', 'ustar');
+    }
+    if ($oldversion < 2026101904) {
+        // Extend only the existing outbox. Legacy pending rows retain connectversion=0.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Connect delivery schema'); }
+        $definition = $schema->getStructure()->getTable('local_ustar_notify_delivery');
+        $table = new xmldb_table('local_ustar_notify_delivery');
+        foreach (['connectversion', 'connlinkid', 'connrevision', 'connexpires', 'connleasehash',
+                'connleaseuntil', 'connkeyid', 'connbegun'] as $name) {
+            $field = $definition->getField($name);
+            if (!$dbman->field_exists($table, $field)) { $dbman->add_field($table, $field); }
+        }
+        // XMLDB refuses precision changes with dependent indexes, even for a wider varchar.
+        foreach (['status_next_idx', 'connect_ready_idx'] as $name) {
+            $index = $definition->getIndex($name);
+            if ($dbman->index_exists($table, $index)) { $dbman->drop_index($table, $index); }
+        }
+        $dbman->change_field_precision($table, $definition->getField('status'));
+        foreach (['status_next_idx', 'connect_ready_idx'] as $name) {
+            $index = $definition->getIndex($name);
+            if (!$dbman->index_exists($table, $index)) { $dbman->add_index($table, $index); }
+        }
+        upgrade_plugin_savepoint(true, 2026101904, 'local', 'ustar');
+    }
+    if ($oldversion < 2026101905) {
+        // Existing entries stay onboarding and actorready=0: no implicit authority upgrade.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load Connect actor schema'); }
+        $definition = $schema->getStructure()->getTable('local_ustar_conn_sessions');
+        $table = new xmldb_table('local_ustar_conn_sessions');
+        foreach (['scope', 'authdate', 'actorready', 'lastseenat', 'authstamp', 'scopestamp'] as $name) {
+            $field = $definition->getField($name);
+            if (!$dbman->field_exists($table, $field)) { $dbman->add_field($table, $field); }
+        }
+        upgrade_plugin_savepoint(true, 2026101905, 'local', 'ustar');
+    }
+    if ($oldversion < 2026102200) {
+        // Metadata only: no token issuance, queue replay or activation during upgrade.
+        $schema = new xmldb_file(__DIR__ . '/install.xml');
+        if (!$schema->loadXMLStructure()) { throw new coding_exception('Cannot load notification action schema'); }
+        $table = $schema->getStructure()->getTable('local_ustar_conn_acktokens');
+        if (!$dbman->table_exists($table)) { $dbman->create_table($table); }
+        upgrade_plugin_savepoint(true, 2026102200, 'local', 'ustar');
+    }
+    if ($oldversion < 2026102300) {
+        // Presentation only: retain links, v1 preferences, queues and ACK facts; no activation/replay.
+        upgrade_plugin_savepoint(true, 2026102300, 'local', 'ustar');
+    }
 return true;
 }

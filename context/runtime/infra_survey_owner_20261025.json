@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "kind": "owner_uploaded_consolidated_infrastructure_survey",
+  "received_date": "2026-10-25",
+  "source": "owner report; not agent SSH",
+  "report_sha256": "344965014f7cbee76c9588e61cb83433a3ff6f623002aaa2361d74deb63385b8",
+  "collector_sha256": "0d5d05fcc8d21583fe82e3247cca185bbd9a32b3e5927ff818d88472945afee3",
+  "started_utc": "2026-10-25T01:50:08.145268+00:00",
+  "finished_utc": "2026-10-25T01:50:21.732547+00:00",
+  "phase": "survey_partial",
+  "configuration_changes": false,
+  "provider_called": false,
+  "qualification": {
+    "source": "9d4e5c2c814789d99076d4fab6ecd90c8250a52f",
+    "review_run": 40151717494,
+    "context_run": 40151717558,
+    "both_conclusion": "success",
+    "native_job": 121045127545,
+    "native_marker": "INFRA_REMAINING_SURVEY_NATIVE=PASS"
+  },
+  "scope_limits": [
+    "restore-lab du timed out; no deletion or actual size inferred",
+    "cron status helper output was not JSON; no cron failure established",
+    "home export scan capped at80 candidates; not a complete home inventory",
+    "listener list capped at100 rows; absence of a listener is not established",
+    "active TLS certificate was not identified by generation-path summary",
+    "no new self-test, load test, external delivery or clean-host restore"
+  ],
+  "permissions": {
+    "known_config_keys_and_private_recovery_roots_protected": true,
+    "observed_regular_export_files_with_group_or_other_access": 63,
+    "exports_scope_complete": false,
+    "home_mode": "0755",
+    "moodledata_root_mode": "0770",
+    "www_data_supplementary_members": ["caddy"],
+    "shared_group_trust_boundary_review_required": true
+  },
+  "containers": {
+    "both_running": true,
+    "OOM": false,
+    "restart_counts": [0, 0],
+    "log_driver": "json-file",
+    "log_options_empty": true,
+    "healthchecks_configured": false,
+    "moodle_log_bytes": 64966050,
+    "postgres_log_bytes": 3483063,
+    "moodle_port": "127.0.0.1:8082",
+    "postgres_port_published": false,
+    "recreation_performed": false
+  },
+  "storage_available_bytes": {"root": 51037700096, "HDD": 406661984256},
+  "backup": {
+    "latest_success_finished_utc": "2026-10-25T00:36:21.736759+00:00",
+    "archive_basename": "ustar-recovery-20261025T003520Z-b6dfed1e.tar.gz.age",
+    "sha256": "39c0986f0cf7f3698c0951a894bacc8022fa82f711abf4d79c2de805b5f1f195",
+    "bytes": 1229681360,
+    "readback_verified": true,
+    "scheduled_timer_active_enabled": true,
+    "latest_manifest_is_not_proof_it_was_a_scheduled_capture": true,
+    "new_private_journals_in_standard_backup": false,
+    "preserve_pre_hardening_archive": true,
+    "external_clean_host_restore": "waiting_external"
+  },
+  "access": {
+    "password_authentication": true,
+    "pubkey_authentication": true,
+    "root_login": "without-password",
+    "UFW": "inactive",
+    "host_filter_INPUT_policy": "ACCEPT",
+    "alternative_key_login_verified": false,
+    "upstream_policy_known": false
+  },
+  "observability": {
+    "requests": "measured",
+    "window_seconds": 300,
+    "requests_count": 1,
+    "p95_ms": 22.491,
+    "errors_4xx": 0,
+    "errors_5xx": 0,
+    "performance_acceptance": false,
+    "direct_root_journal": "measured",
+    "fresh_service_snapshot_journal": "no_data/source_unavailable",
+    "independent_host_loss_observer": "not established"
+  },
+  "maintenance": {
+    "Academy_certificate_renewal_timer": "active/enabled; last service success",
+    "adhoc_tasks": 0,
+    "enabled_scheduled_tasks": 133,
+    "enabled_tasks_overdue_10m": 19,
+    "enabled_retry_backoff": 0,
+    "overdue_aggregate_is_not_a_new_cron_incident": true,
+    "SMTP_delivery_accepted": false
+  },
+  "hardware": {
+    "SMART_health": "SSD and HDD passed at observation time",
+    "HDD_counters_5_197_198_199": [0, 0, 0, 0],
+    "historical_HDD_risk_erased": false,
+    "UPS_and_shutdown_confirmed": false
+  },
+  "production_changes_from_this_receipt": false,
+  "all_eight_closed": false,
+  "next": "qualified single local batch; consolidate external access/DR/power/observer decisions"
+}

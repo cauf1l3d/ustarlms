@@ -1,0 +1,17 @@
+{
+  "collected_utc": "2026-10-17T01:39:24Z",
+  "counts": {
+    "error": 1,
+    "not_collected": 0,
+    "ok": 30,
+    "partial": 0
+  },
+  "files": {
+    "README.md": "e852eda65cb3c75c9313d9ad3f868324b619960aa219bb16c3f1141b6d8b88de",
+    "errors.json": "fb9e9c56e3a53119634bd805c3209d152240a19dfd5469ff4b9d632f133039c4",
+    "facts.json": "285497b07ff4b2f6bde79f5f27da81b5ada542784afa9959987bd21da6855d6c"
+  },
+  "schema_version": 1,
+  "script_sha256": "4abad3b668fdd465dc9a252b0752b62540a537a72fba7f7c73d9eff32824bb9c",
+  "status": "partial"
+}

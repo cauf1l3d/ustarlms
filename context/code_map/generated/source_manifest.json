@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
   "kind": "git_source",
-  "source_commit": "e1d57f5bc28f6964afd20aeff7620345b34a80fe",
-  "source_commit_date": "2026-10-02T17:53:01+03:00",
+  "source_commit": "299cd153f5b8a536de7be274af6ee458c0118f51",
+  "source_commit_date": "2026-10-26T16:23:37+03:00",
   "scopes": [
     "moodle/local/ustar",
     "moodle/theme/ustar"
   ],
   "tree_ids": {
-    "moodle/local/ustar": "7f29f26c09edbf6fb0f9f2f5cd3d5295c338baa5",
+    "moodle/local/ustar": "3d5e7116ac4dd429e930d76d266f2f437841788c",
     "moodle/theme/ustar": "b13f62cce245ecd111e10523598e7a55b513f029"
   },
   "counts": {
-    "files": 526,
-    "php": 356,
-    "symbols": 172,
+    "files": 546,
+    "php": 364,
+    "symbols": 176,
     "tables": 93,
     "ustar_external_functions": 30
   },
@@ -286,6 +286,22 @@
     {
       "path": "moodle/local/ustar/classes/content_admin.php",
       "sha256": "629389c653cda73c20617deed74d1473ed46c6b91385e80ea4bb215c1cbec514"
+    },
+    {
+      "path": "moodle/local/ustar/classes/course_studio.php",
+      "sha256": "6d80f767823aa9db40a36042ae201aaf9f8de7c3ce660ddc9dd5b060ce194379"
+    },
+    {
+      "path": "moodle/local/ustar/classes/course_studio_conflict.php",
+      "sha256": "dbb116a2dd4371c3bb56d5c50097a5f5b2897f8df2d5b90edb37a506131f4535"
+    },
+    {
+      "path": "moodle/local/ustar/classes/course_studio_package.php",
+      "sha256": "2778cd6f7b3167029f142621dc4c04c8860957341d18b71917f7ecd90231c43b"
+    },
+    {
+      "path": "moodle/local/ustar/classes/course_studio_project.php",
+      "sha256": "393d96cf1b99853c5cee8952b6b0fdedb02c60ceae6646c5186e3895fefb2f8b"
     },
     {
       "path": "moodle/local/ustar/classes/department_learning.php",
@@ -565,7 +581,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/material_studio.php",
-      "sha256": "d96cc072116036ff2bd01c3b6ee61cc74d42a4f8d65b41c5dc7f4e5ce076a866"
+      "sha256": "1513db6401041cfd64247df4b5e46851e2ad672dcc9e3ac693e0da8e4db9fc28"
     },
     {
       "path": "moodle/local/ustar/classes/mobile_app.php",
@@ -725,7 +741,7 @@
     },
     {
       "path": "moodle/local/ustar/classes/studio_scorm_runtime.php",
-      "sha256": "57790efe505b08ecb1ac22c835ba72c67ab469b6b66a76af53f1aedbbdf0ce38"
+      "sha256": "667aeea4371b5683889425787192c038b27e48d3a3cec42b32c3526847cfb64f"
     },
     {
       "path": "moodle/local/ustar/classes/target_core.php",
@@ -1000,6 +1016,62 @@
       "sha256": "c1427d8608839a6781d70769bf8320f50f41dfb4c856666ec9a263c118610f8b"
     },
     {
+      "path": "moodle/local/ustar/course_studio.php",
+      "sha256": "00a35f369be2b897ffde50ad83f419561f3c1e9d4db64e207e427fdc6abba570"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/app.js",
+      "sha256": "ce9c22659d8f9a084c4f5699b858de2a36d9ea61474993c459a28a5426f35dae"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/cloud.js",
+      "sha256": "485bfbfcc46919e75b2ba10fbee42316ae204d3320ed161b18934bf94050369c"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/editor.html",
+      "sha256": "b8c2c4b2936474e2a659c27182eedaac7215274133a00275438d89edddcc08bf"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/model.js",
+      "sha256": "785deb2b25349f81b42d0946af727ffdddd5ebdc5539f47f31dba74c864becd8"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/player.css",
+      "sha256": "0eb00bbb73305b320506a7a5b83d4cab5e41a700b4b7c9ea967dd7ddeba9721b"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/player.html",
+      "sha256": "b5e5ad521f11ba924b82fe02ad307f4549d078a5910d9d6baa5b27d5cce89aa4"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/player.js",
+      "sha256": "1239c9d56b8af771e1c7c261acfe34489f98a8429e820c865ec3ee2a26616ac9"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/rich.js",
+      "sha256": "e08ecbe3177cbed7adf715e23b1ff46989a257c0b61e77194ebfe6ea55f9c917"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/runtime.js",
+      "sha256": "0b18aa3033819e80333661a0aa48d3798c94b592035d38628159eb67c98722ef"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/style.css",
+      "sha256": "735d7a01091beb7fb09874c6473baad5c25f980c5e619766433c28d3fda597d8"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/vendor/JSZIP-LICENSE.md",
+      "sha256": "566c953c6090b1218ca6217dd7359d45dde46581968586dc607d59a78af6a9c4"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio/vendor/jszip.min.js",
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    },
+    {
+      "path": "moodle/local/ustar/course_studio_api.php",
+      "sha256": "b6f8fdef82219bafba1019a996f0176cbb0fac3e29f74105305b17fe5d1aee8c"
+    },
+    {
       "path": "moodle/local/ustar/data/consultant_grades.json",
       "sha256": "276ed6fb7c5da6dd31a8e59a02db04495e9b90c6742859a8e0f5f1cc6bbbc224"
     },
@@ -1153,11 +1225,11 @@
     },
     {
       "path": "moodle/local/ustar/lang/en/local_ustar.php",
-      "sha256": "ce540083805f7ed51879e6457213a1c36512c3f160a0462728b6c9604c3ff5aa"
+      "sha256": "22ac4306373f608befe98eb1c1e07ace766e0bd5cee66bf0b8352e1f78cb65a4"
     },
     {
       "path": "moodle/local/ustar/lang/ru/local_ustar.php",
-      "sha256": "45583429ef45ac463437cf2034e1d4d6b0c17af9a6785ac364a9f84fb0a4561f"
+      "sha256": "61e2f769a9355fa02466f6ea577e8a7a9a7a53fb60a08bed8f3e6da2031b0b3f"
     },
     {
       "path": "moodle/local/ustar/learning.php",
@@ -1205,7 +1277,7 @@
     },
     {
       "path": "moodle/local/ustar/materials.php",
-      "sha256": "37e9da3f309f505d90c278d2494b18fe0151fa925d4ad92c1573f0a1dccc64c4"
+      "sha256": "5bdf4f5e43e4f2b51097b0dcb068ce29b91b8f2c70a28aeeab9e3d3a034696d9"
     },
     {
       "path": "moodle/local/ustar/materials_fullwidth.css",
@@ -1213,7 +1285,7 @@
     },
     {
       "path": "moodle/local/ustar/materials_studio.php",
-      "sha256": "41ebfeb4e6674a197e8afd6f6c11e9720b750068a17d6a8559211a10f1accd34"
+      "sha256": "53ac06d4fc1599a99b9e4c062fa17b3898ecdb9a3a0c0d0a6c91d885f89745f5"
     },
     {
       "path": "moodle/local/ustar/messages.js",
@@ -1649,7 +1721,7 @@
     },
     {
       "path": "moodle/local/ustar/templates/materials.mustache",
-      "sha256": "3dae9d81a31aefc02fed5e3f9f8317294b59549673228c661321ae4af5d0bc77"
+      "sha256": "aa7eec87d2275a4d667ace7580f8a518d5b315369dbee1307aafc7e4f24b7cbc"
     },
     {
       "path": "moodle/local/ustar/templates/messages.mustache",
@@ -1758,6 +1830,14 @@
     {
       "path": "moodle/local/ustar/tests/completion_cycle_test.php",
       "sha256": "c3912069ab28f9d3b61952eb4138862b2e0c028f844a4cf5e2914981517ffabb"
+    },
+    {
+      "path": "moodle/local/ustar/tests/course_studio_project_test.php",
+      "sha256": "d0876e38eaedbc724aa5a14731ff35151f660d39513ae20211354618024ea31e"
+    },
+    {
+      "path": "moodle/local/ustar/tests/course_studio_test.php",
+      "sha256": "3a4b88faa24534391cb5f010200932f9b3b4e7f58c988cd3ab628aeb5dcb5213"
     },
     {
       "path": "moodle/local/ustar/tests/evidence_lifecycle_test.php",
@@ -1877,7 +1957,7 @@
     },
     {
       "path": "moodle/local/ustar/version.php",
-      "sha256": "0ef15d38ec9918b1e5a9b256b445669060cd4ef1f288f332f30100202c2f6dc7"
+      "sha256": "603f000a9de34555823ddabf9007e12806e4842f65aef857e1beb9df5ce1c442"
     },
     {
       "path": "moodle/local/ustar/view.php",

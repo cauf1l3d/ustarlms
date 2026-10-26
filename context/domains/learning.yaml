@@ -1,6 +1,6 @@
 domain: learning
-reviewed_at: '2026-10-02'
-source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+reviewed_at: '2026-10-26'
+source_commit: 299cd153f5b8a536de7be274af6ee458c0118f51
 purpose: Материалы, нативное обучение, SCORM/Quiz, аттестации
 services:
 - moodle/local/ustar/classes/content.php
@@ -10,6 +10,9 @@ services:
 - moodle/local/ustar/classes/studio_scorm_runtime.php
 - moodle/local/ustar/classes/assessment_lifecycle.php
 - moodle/local/ustar/classes/development_assessment.php
+- moodle/local/ustar/classes/course_studio.php
+- moodle/local/ustar/classes/course_studio_project.php
+- moodle/local/ustar/classes/course_studio_package.php
 tables:
 - local_ustar_content
 - local_ustar_content_versions
@@ -30,3 +33,5 @@ entry_points:
 - moodle/local/ustar/catalog.php
 - moodle/local/ustar/assessment_studio.php
 - moodle/local/ustar/development_assessment.php
+- moodle/local/ustar/course_studio.php
+- moodle/local/ustar/course_studio_api.php

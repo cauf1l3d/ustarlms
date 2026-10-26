@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-26'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -14,12 +14,14 @@ stack:
   deployment: Docker29.9.0 on Ubuntu24.04.5/kernel6.8.0-147; owner14Oct boot acceptance
   native_ui: PHP + Mustache + JS/AMD + SCSS
   theme: theme_ustar extends boost
-  secondary_frontend: Legacy Next.js source retained, excluded from active CI and release since16Oct
+  secondary_frontend: Legacy Next.js source retained, excluded from active CI and
+    release since16Oct
 components:
   business: moodle/local/ustar
   presentation: moodle/theme/ustar
   secondary_client: frontend (legacy, inactive)
-  context_harness: harness/ustar-contextd; local stdio tested; production/session installation unverified
+  context_harness: harness/ustar-contextd; local stdio tested; production/session
+    installation unverified
 state: context/roadmap/STATE.yaml
 runtime_evidence: context/runtime/evidence_20261016.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
@@ -32,7 +34,8 @@ current_operator_handoff:
   control_panel: next_INF06
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: INF-06
-  spec: context/runtime/control_panel_telegram_20261016.md
-  prototype_PR: 103
-  frontend_scope: native_theme_ustar_and_local_ustar; legacy frontend excluded
+  task: STUDIO-01
+  spec: docs/superpowers/specs/2026-10-26-course-studio-design.md
+  PR: 107
+  status: review_candidate_not_deployed
+  frontend_scope: native local_ustar; current author access preserved

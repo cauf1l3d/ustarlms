@@ -1,6 +1,6 @@
 # XMLDB tables
 
-Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live database snapshot.
+Source: `299cd153f5b8a536de7be274af6ee458c0118f51`. Git source only; not a live database snapshot.
 
 
 | Logical table | Fields | Indexes / keys |

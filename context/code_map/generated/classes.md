@@ -1,6 +1,6 @@
 # Classes, interfaces and traits
 
-Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live database snapshot.
+Source: `299cd153f5b8a536de7be274af6ee458c0118f51`. Git source only; not a live database snapshot.
 
 | Symbol | File |
 |---|---|
@@ -38,6 +38,10 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 | `local_ustar\content` | `moodle/local/ustar/classes/content.php` |
 | `local_ustar\content_ack_report` | `moodle/local/ustar/classes/content_ack_report.php` |
 | `local_ustar\content_admin` | `moodle/local/ustar/classes/content_admin.php` |
+| `local_ustar\course_studio` | `moodle/local/ustar/classes/course_studio.php` |
+| `local_ustar\course_studio_conflict` | `moodle/local/ustar/classes/course_studio_conflict.php` |
+| `local_ustar\course_studio_package` | `moodle/local/ustar/classes/course_studio_package.php` |
+| `local_ustar\course_studio_project` | `moodle/local/ustar/classes/course_studio_project.php` |
 | `local_ustar\department_learning` | `moodle/local/ustar/classes/department_learning.php` |
 | `local_ustar\development_assessment` | `moodle/local/ustar/classes/development_assessment.php` |
 | `local_ustar\economy` | `moodle/local/ustar/classes/economy.php` |

@@ -1,32 +1,23 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-26'
 project: USTAR Academy
 stage: repository_reconciled_next_control_panel
 stage_label: Следующий этап пульт управления и Telegram
-current_activity: 'Owner16Oct: handoff archive obtained, instruction passed, await sysadmin restore; repository
-  consolidation and legacy CI cleanup; next INF06; Moodle5.2/PG17 deferred'
-next_task: INF-06
+current_activity: Owner-approved shared course studio integration; PR107 candidate,
+  full runtime CI pending; production unchanged
+next_task: STUDIO-01
 ready_tasks:
 - INF-06
 canonical_roadmap_branch: main
 code_baseline:
   branch: main
-  commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
-  kind: application_source_full_ci_verified
-  local_ustar_version: 2026100204
+  commit: 299cd153f5b8a536de7be274af6ee458c0118f51
+  kind: review_candidate_not_deployed
+  local_ustar_version: 2026102600
   theme_ustar_version: 2026100202
-  source_pr: 76
-  ci_run: 37023122306
-  ci_url: https://github.com/cauf1l3d/ustarlms/actions/runs/37023122306
-  ci_jobs:
-    source: success
-    frontend: success
-    rollback: success
-    prepare-rc: success
-    moodle-db: success
-    gate: success
-  production_equivalence: plugin_theme_526_match_owner_manifest_20261005_not_full_core
-  main_before_consolidation: c53723c8d669a1013c518f34abf392143d211d9d
+  source_pr: 107
+  ci_status: pending_for_corrected_candidate
+  production_equivalence: not_claimed; production evidence remains separately dated
 production:
   status: owner_accepted_Moodle518_host_update_boot_and_export_restore_waiting
   observed_at: '2026-10-14T13:51:02Z'
@@ -51,9 +42,10 @@ production:
     skipped: 0
     evidence: context/runtime/evidence_20261005_baseline.yaml
     uncompared: 0
-    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57 addon versions and5151
-      file references, not a new whole-host manifest
-  cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors; residual_disabled_failures_retained
+    scope_note: Dated05Oct plugin/theme526 manifest; later Moodle518 upgrade verifies57
+      addon versions and5151 file references, not a new whole-host manifest
+  cron: v3_one_minute_one_worker_owner13Oct_and_postboot14Oct_success_no_new_USTAR_errors;
+    residual_disabled_failures_retained
   regular_backup: scheduled_success_owner12_13_14Oct_mount_and_timer_after_boot_PASS
   later_observations: context/runtime/RELEASE_LEDGER.md
   platform:
@@ -71,7 +63,8 @@ audit:
   reconciliation: context/audits/AUDIT_RECONCILIATION_20261016_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
-  scope: Original audit remains immutable; current findings and remaining work in reconciliation16Oct
+  scope: Original audit remains immutable; current findings and remaining work in
+    reconciliation16Oct
 next_agent_read:
 - START_HERE.md
 - context/project.yaml

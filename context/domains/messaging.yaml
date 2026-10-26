@@ -1,6 +1,6 @@
 domain: messaging
 reviewed_at: '2026-10-02'
-source_commit: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+source_commit: 299cd153f5b8a536de7be274af6ee458c0118f51
 purpose: Личные/групповые чаты, media и уведомления
 services:
 - moodle/local/ustar/classes/communication.php

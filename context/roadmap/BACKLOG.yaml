@@ -1,7 +1,7 @@
 schema_version: 2
-updated_at: '2026-10-16'
+updated_at: '2026-10-26'
 canonical_branch: main
-source_baseline: e1d57f5bc28f6964afd20aeff7620345b34a80fe
+source_baseline: 299cd153f5b8a536de7be274af6ee458c0118f51
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
 tasks:
 - id: DOC-01
@@ -25,7 +25,8 @@ tasks:
   - Owner audit published byte-for-byte with reconciliation notes
   - Complete remediation plan covers every audit area and finite backup-last sequence
   - Source/context integrity and local MCP handshake checked; application unchanged
-  - Published through PR78 to main; original stop superseded by later owner order 1 → 7 → 6
+  - Published through PR78 to main; original stop superseded by later owner order
+    1 → 7 → 6
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   implementation_commit: b265a7aabd6205065b4fc6458d7fa40a99974d3d
   validation_evidence:
@@ -39,15 +40,17 @@ tasks:
   depends_on:
   - DOC-02
   acceptance:
-  - Dated versions, scoped exact manifest, roles, storage, containers, proxy and cron verified
-  - Full test copy occupancy hypothesis measured; required shared services and isolated stage documented
+  - Dated versions, scoped exact manifest, roles, storage, containers, proxy and cron
+    verified
+  - Full test copy occupancy hypothesis measured; required shared services and isolated
+    stage documented
   - Fresh manual recovery point and rollback path checked before mutations
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   validation_evidence:
   - context/runtime/production_patch_readiness_result_20261012.json
   - context/runtime/evidence_20261016.yaml
-  current_summary: Контекст и runtime evidence сведены; полный свежий manifest/расширенная сценарная приёмка
-    остаются отдельными.
+  current_summary: Контекст и runtime evidence сведены; полный свежий manifest/расширенная
+    сценарная приёмка остаются отдельными.
 - id: INF-02
   title: Минимальные права PostgreSQL и независимый admin
   status: planned
@@ -76,14 +79,15 @@ tasks:
   acceptance:
   - Per-object storage inventory confirms or rejects full-test-copy hypothesis
   - Any cleanup/transfer or partition work has measured scope and recoverable copy
-  - HDD test evidence, residual SMART risks, backup redundancy and power/shutdown decisions recorded
+  - HDD test evidence, residual SMART risks, backup redundancy and power/shutdown
+    decisions recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   validation_evidence:
   - context/runtime/ssd_gpt_relocate_result_20261011.json
   - context/runtime/ssd_partition_grow_result_20261011.json
   - context/runtime/ssd_ext4_resize_result_20261011.json
-  current_summary: GPT/раздел/ext4 расширены и проверены11Oct. Полный аппаратный резерв, новая SMART-динамика
-    и защита от потери площадки остаются открыты.
+  current_summary: GPT/раздел/ext4 расширены и проверены11Oct. Полный аппаратный резерв,
+    новая SMART-динамика и защита от потери площадки остаются открыты.
 - id: INF-05
   title: Ротация логов, readiness и безопасное пересоздание
   status: planned
@@ -102,19 +106,22 @@ tasks:
   depends_on:
   - DOC-03
   acceptance:
-  - Linear-inspired same-host panel with password login, protected remote access and visible freshness/NoData
-  - Server/Academy/cron/HDD/backup metrics, labs URL and lifetime, SFTP and manual backup/restore plans
-  - Telegram allowlisted operator commands and failure/recovery alerts with verified delivery and audit
-  - Latest verified completed encrypted archive downloadable on request without starting a new backup or sharing
-    the recovery key
-  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production effects; no arbitrary
-    shell
+  - Linear-inspired same-host panel with password login, protected remote access and
+    visible freshness/NoData
+  - Server/Academy/cron/HDD/backup metrics, labs URL and lifetime, SFTP and manual
+    backup/restore plans
+  - Telegram allowlisted operator commands and failure/recovery alerts with verified
+    delivery and audit
+  - Latest verified completed encrypted archive downloadable on request without starting
+    a new backup or sharing the recovery key
+  - Controlled Academy jobs preserve identity, maintenance locks and distinct test/production
+    effects; no arbitrary shell
   - Independent observer verifies loss of host and delivery; retention/resources bounded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   runbook: context/runtime/control_panel_telegram_20261016.md
   owner_priority: next_after_repository_reconciliation_20261016
-  current_summary: Прототип PR103 сохранён. Backend/auth/collectors/jobs/bot и проверенная доставка ещё не
-    внедрены; начинать с read-only среза и защищённого доступа.
+  current_summary: Прототип PR103 сохранён. Backend/auth/collectors/jobs/bot и проверенная
+    доставка ещё не внедрены; начинать с read-only среза и защищённого доступа.
 - id: INF-07
   title: Доверенный HTTPS на действующем Apache
   status: planned
@@ -139,9 +146,9 @@ tasks:
   validation_evidence:
   - context/runtime/lab_patch_full_rc_result_20261012.json
   - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
-  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий CI исключает legacy
-    frontend; результаты консолидации проверяются на точном новом SHA. Native clean-host DR не подменяется
-    CI.
+  current_summary: Production PHP8.3/patch518 и прежний полный RC подтверждены. Текущий
+    CI исключает legacy frontend; результаты консолидации проверяются на точном новом
+    SHA. Native clean-host DR не подменяется CI.
 - id: INF-08
   title: Актуальный patch Moodle текущей ветки
   status: done
@@ -153,8 +160,8 @@ tasks:
   - Compatible stage full gate and coordinated rollback pass
   - Production core/version/digest, scoped manifest, smoke and cron evidence recorded
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron приняты владельцем. Не
-    повторять обновление.
+  current_summary: Moodle5.1.8 upgrade/repeat13Oct, браузер/SCORM и последующий cron
+    приняты владельцем. Не повторять обновление.
   validation_evidence:
   - context/runtime/production_patch_upgrade_result_20261013.json
   - context/runtime/production_patch_browser_result_20261013.json
@@ -166,14 +173,17 @@ tasks:
   - INF-01
   - INF-08
   acceptance:
-  - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade inferred from banner
-  - Targeted AppArmor repair preserves docker-default; Snap consumers checked before stale profile archive
-  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes and exactly one cron
-    v3
+  - Fresh package/kernel/image baseline and manual recovery verified; no release upgrade
+    inferred from banner
+  - Targeted AppArmor repair preserves docker-default; Snap consumers checked before
+    stale profile archive
+  - Ubuntu/Docker patch and reboot preserve Apache/mail/DNS/ISPConfig/MariaDB, volumes
+    and exactly one cron v3
   - Fresh post-reboot service/cron evidence recorded; failed service prevents acceptance
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared units/mount/ID/restart
-    policy/HTTP и postboot cron проверены. Полный shared-host restore и сквозная почта/DNS не приписываются.
+  current_summary: AppArmor,63 пакета и boot kernel147/Docker29.9.0 приняты; shared
+    units/mount/ID/restart policy/HTTP и postboot cron проверены. Полный shared-host
+    restore и сквозная почта/DNS не приписываются.
   validation_evidence:
   - context/runtime/host_apparmor_result_20261013.json
   - context/runtime/host_packages_install_result_20261014.json
@@ -195,9 +205,12 @@ tasks:
   - INF-05
   - INF-06
   acceptance:
-  - H5P complete response and existing content checked, re-enable or time-bound exception recorded
-  - Moodle.org registration distinct from employee registration; actual test mail delivered
-  - Hourly/nightly task behavior accepted with correct timezone/overrides and retained failure history
+  - H5P complete response and existing content checked, re-enable or time-bound exception
+    recorded
+  - Moodle.org registration distinct from employee registration; actual test mail
+    delivered
+  - Hourly/nightly task behavior accepted with correct timezone/overrides and retained
+    failure history
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: OPS-01
   title: Свежая read-only сверка production и проверка PR76
@@ -206,12 +219,14 @@ tasks:
   - INF-08
   acceptance:
   - Fresh exact plugin/theme manifest and versions checked before next release
-  - PR76 reset/reassign accepted separately under allowed actors, retained history and new cycle
+  - PR76 reset/reassign accepted separately under allowed actors, retained history
+    and new cycle
   - Actual DNS/HTTPS/proxy/cron constraints recorded without secrets
   runbook: context/runtime/OPERATIONS.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Скромная приёмка5.1.8 принята; полные ACL/кадровые сценарии и fresh manifest отдельно. Route
-    refresh после успешной аттестации оставлен открытым, исправление не поставлялось.
+  current_summary: Скромная приёмка5.1.8 принята; полные ACL/кадровые сценарии и fresh
+    manifest отдельно. Route refresh после успешной аттестации оставлен открытым,
+    исправление не поставлялось.
   validation_evidence:
   - context/runtime/production_patch_browser_result_20261013.json
   - context/runtime/route_refresh_triage_20261014.json
@@ -235,7 +250,8 @@ tasks:
   acceptance:
   - Read-only account types, legacy consumers and schema constraints inventory
   - Protected service account and real roles/history preserved
-  - Actual defects receive explicit previewed migration with install/upgrade/repeat and rollback
+  - Actual defects receive explicit previewed migration with install/upgrade/repeat
+    and rollback
   legacy_refs:
   - R10
   - R12
@@ -254,7 +270,8 @@ tasks:
   acceptance:
   - Real-workday passive baseline and agreed concurrency/SLO recorded
   - Web SAPI OPcache/workers/MUC/session/DB and shared services measured
-  - Isolated cold/warm scenario p50/p95/p99 and invariants compared before and after tuning
+  - Isolated cold/warm scenario p50/p95/p99 and invariants compared before and after
+    tuning
   legacy_refs:
   - R19
   - G07
@@ -269,8 +286,10 @@ tasks:
   - PERF-01
   acceptance:
   - Actual owners/private reporting/advisories and repository settings verified
-  - Platform/mobile/privacy/B2B requirements and open decisions recorded with review dates
-  - Finite infrastructure readiness to final backup stage; full future products do not block it
+  - Platform/mobile/privacy/B2B requirements and open decisions recorded with review
+    dates
+  - Finite infrastructure readiness to final backup stage; full future products do
+    not block it
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: INF-14
   title: Регулярные согласованные копии на HDD — до нового стенда
@@ -279,17 +298,21 @@ tasks:
   - INF-04
   acceptance:
   - Agreed RPO/RTO/retention and healthy HDD; no SERVEREXPRESS automatic target
-  - Mount fails closed, consistent encrypted snapshot, independent copy decision and key access verified
-  - Cron/backup locks, negative failure cases, scheduled runs and delivery/integrity alerts pass
+  - Mount fails closed, consistent encrypted snapshot, independent copy decision and
+    key access verified
+  - Cron/backup locks, negative failure cases, scheduled runs and delivery/integrity
+    alerts pass
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   priority: P0_owner_moved_before_stage_20261006
-  initial_schedule_policy: daily0330_Europe_Moscow_no_catchup_no_deletion_100GiB_quota; owner_selected06Oct
+  initial_schedule_policy: daily0330_Europe_Moscow_no_catchup_no_deletion_100GiB_quota;
+    owner_selected06Oct
   validation_evidence:
   - context/runtime/hdd_backup_schedule_status_20261012.json
   - context/runtime/production_patch_post_switch_status_result_20261013.json
   - context/runtime/host_reboot_result_20261014.json
-  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct подтверждены, после reboot
-    mount/timer сохранены. Политика retention/RPO/RTO, независимость и alerts остаются открыты.
+  current_summary: Ежедневный03:30Moscow backup и успешные scheduled runs12–14Oct
+    подтверждены, после reboot mount/timer сохранены. Политика retention/RPO/RTO,
+    независимость и alerts остаются открыты.
 - id: OPS-02
   title: Fresh scheduled restore и аварийное восстановление общего хоста
   status: waiting_external
@@ -297,7 +320,8 @@ tasks:
   - INF-14
   acceptance:
   - Restore fresh scheduled copy from selected independent instance and separate key
-  - DB/code/config/moodledata/images, roles/files/SCORM/cron accepted with measured recovery scope
+  - DB/code/config/moodledata/images, roles/files/SCORM/cron accepted with measured
+    recovery scope
   - Required mail/DNS/ISPConfig host recovery rehearsed or explicitly retained open
   legacy_refs:
   - R00
@@ -310,22 +334,26 @@ tasks:
   - context/runtime/sysadmin_handoff_result_20261016.json
   - context/runtime/production_copy_validation_20261015.json
   production_execution: archive_obtained_instruction_transferred_waiting_sysadmin_restore
-  current_summary: Владелец16Oct подтвердил получение архива и передачу инструкции сисадмину. Ожидается реальный
-    restore/вход/SCORM/reboot на чистом сервере; весь shared host не восстановлен.
+  current_summary: Владелец16Oct подтвердил получение архива и передачу инструкции
+    сисадмину. Ожидается реальный restore/вход/SCORM/reboot на чистом сервере; весь
+    shared host не восстановлен.
 - id: PLAT-01
   title: Отложенный переход на Moodle 5.2 и PostgreSQL 17
   status: deferred
   depends_on:
   - OPS-02
   acceptance:
-  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility against official
-    primary sources
-  - Isolated PostgreSQL17 migration and paired code/database/data rollback pass before production
-  - Fresh/upgrade/repeat/browser/SCORM/performance and independent archive restore accepted
-  - Separate owner instruction and approved runtime window; historical5.3 preparation does not authorize activation
+  - Before resuming, verify the exact Moodle5.2 target, support and full-addon compatibility
+    against official primary sources
+  - Isolated PostgreSQL17 migration and paired code/database/data rollback pass before
+    production
+  - Fresh/upgrade/repeat/browser/SCORM/performance and independent archive restore
+    accepted
+  - Separate owner instruction and approved runtime window; historical5.3 preparation
+    does not authorize activation
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17 и PR101
-    — историческая подготовка, не утверждённый текущий запуск.
+  current_summary: Owner16Oct отложил переход на Moodle5.2 и PostgreSQL17. Ранее скачанные5.3/PG17
+    и PR101 — историческая подготовка, не утверждённый текущий запуск.
   validation_evidence:
   - context/runtime/moodle53_target_20261014.json
   - context/runtime/sysadmin_handoff_result_20261016.json
@@ -334,8 +362,8 @@ tasks:
   status: deferred
   depends_on:
   - INF-13
-  reason: Owner previously deferred as non-blocking for internal launch; mandatory policy/provider acceptance
-    before first B2B production
+  reason: Owner previously deferred as non-blocking for internal launch; mandatory
+    policy/provider acceptance before first B2B production
   reference: context/roadmap/USTAR_PRIVACY_INVENTORY_20260928_RU.md
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   acceptance:
@@ -349,7 +377,8 @@ tasks:
   - INF-13
   acceptance:
   - Every native scenario mapped to API/service/ACL/files/retry
-  - Client stack, network access, auth, distribution and offline scope explicitly decided
+  - Client stack, network access, auth, distribution and offline scope explicitly
+    decided
   spec: context/roadmap/MOBILE_CLIENT.md
 - id: MOB-02
   title: Версионированный API для полного мобильного покрытия
@@ -405,8 +434,10 @@ tasks:
   - B2B-01
   - PRIVACY-01
   acceptance:
-  - Two-company API/files/cache/queues/tokens/exports negative tests and per-client restore
-  - Versioned install/upgrade/compatibility, monitored audited support and measured load
+  - Two-company API/files/cache/queues/tokens/exports negative tests and per-client
+    restore
+  - Versioned install/upgrade/compatibility, monitored audited support and measured
+    load
   - Data-processing/license/distribution requirements accepted before customer production
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: TECH-01
@@ -440,11 +471,20 @@ tasks:
   - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
+- id: STUDIO-01
+  title: Общая визуальная студия курсов в Материалах
+  status: in_progress
+  depends_on: []
+  spec: docs/superpowers/specs/2026-10-26-course-studio-design.md
+  runbook: docs/COURSE_STUDIO_RU.md
+  validation_evidence:
+  - 'PR107: corrected candidate CI pending'
+  deployment_evidence: not_deployed
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_consolidation_then_INF06_no_repeat_of_accepted_host_or_Moodle_patch
 owner_selected_order:
 - DOC-03
 - INF-06
 - OPS-02_external_result_when_received
-latest_owner_priority: '16Oct00:20MSK: consolidate GitHub and audit; next INF06 panel+Telegram; OPS02 waiting
-  sysadmin; Moodle5.2/PG17 deferred'
+latest_owner_priority: '16Oct00:20MSK: consolidate GitHub and audit; next INF06 panel+Telegram;
+  OPS02 waiting sysadmin; Moodle5.2/PG17 deferred'

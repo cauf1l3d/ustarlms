@@ -1,6 +1,6 @@
 # PHP files
 
-Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live database snapshot.
+Source: `299cd153f5b8a536de7be274af6ee458c0118f51`. Git source only; not a live database snapshot.
 
 - `moodle/local/ustar/achievements.php`
 - `moodle/local/ustar/activity_launch.php`
@@ -56,6 +56,10 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/classes/content.php`
 - `moodle/local/ustar/classes/content_ack_report.php`
 - `moodle/local/ustar/classes/content_admin.php`
+- `moodle/local/ustar/classes/course_studio.php`
+- `moodle/local/ustar/classes/course_studio_conflict.php`
+- `moodle/local/ustar/classes/course_studio_package.php`
+- `moodle/local/ustar/classes/course_studio_project.php`
 - `moodle/local/ustar/classes/department_learning.php`
 - `moodle/local/ustar/classes/development_assessment.php`
 - `moodle/local/ustar/classes/economy.php`
@@ -232,6 +236,8 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/competition_studio.php`
 - `moodle/local/ustar/continue.php`
 - `moodle/local/ustar/course_launch.php`
+- `moodle/local/ustar/course_studio.php`
+- `moodle/local/ustar/course_studio_api.php`
 - `moodle/local/ustar/db/access.php`
 - `moodle/local/ustar/db/caches.php`
 - `moodle/local/ustar/db/events.php`
@@ -317,6 +323,8 @@ Source: `e1d57f5bc28f6964afd20aeff7620345b34a80fe`. Git source only; not a live 
 - `moodle/local/ustar/tests/communication_test.php`
 - `moodle/local/ustar/tests/competition_studio_test.php`
 - `moodle/local/ustar/tests/completion_cycle_test.php`
+- `moodle/local/ustar/tests/course_studio_project_test.php`
+- `moodle/local/ustar/tests/course_studio_test.php`
 - `moodle/local/ustar/tests/evidence_lifecycle_test.php`
 - `moodle/local/ustar/tests/feed_article_resolver_test.php`
 - `moodle/local/ustar/tests/feed_external_content_test.php`

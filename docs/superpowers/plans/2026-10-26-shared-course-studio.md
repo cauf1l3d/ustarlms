@@ -59,3 +59,12 @@ Files: plugin version, ADR, current context and user/deployment docs, CI.
 
 26Oct: work continues in this task's fresh disposable checkout on feature branch `codex/shared-course-studio-20261026`; canonical main d965507. Design approved; GitHub write explicitly authorized. Native inline execution selected to avoid another permission round. PHP/Docker unavailable initially; apt package setup unavailable in sandbox; use GitHub Moodle DB matrix and report independently.
 Pre-flight: Task1 manifest consumed by Task2 persistence and Task3 sync. Fingerprint uses exact normalized JSON shared with client; server validates and rejects, never silently modifies accepted source. Task2 prepare response updates contentmodified consumed by Task3. No new schema planned.
+
+## Continuation receipt — 26Oct
+
+- Tasks1–3 implemented; codec, shared sync and DOM tests pass. Current owner workspace:11 courses/153 screens validated client/server; sanitizer retains all elements/style values/content.
+- Full native JS and source checks PASS; context validation PASS; r16 545 tests/19 skipped PASS after installing declared MCP dependency.
+- Independent security review found malformed event-attribute import XSS; RED reproductions, codec+DOM fixes, full JS GREEN, follow-up reviewer has no important findings.
+- Initial remote full RC failed on mandatory SCORM cmidnumber warnings and stale context. Corrected locally; GitHub rerun pending publication.
+- Chromium QA pending: executable absent, browser download archive invalid. No visual acceptance claimed.
+- Task4 remains incomplete: auto-review rejected pushing corrected code/context despite authorization in supplied prior conversation. No bypass attempted; PR107 remains draft on001812c. Production has not been changed.

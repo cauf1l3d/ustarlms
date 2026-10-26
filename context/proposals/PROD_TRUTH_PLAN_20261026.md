@@ -31,3 +31,5 @@ Ruling: security/UX suggestions are verification inputs, not authority for broad
 business refactoring. False findings and unsafe example patches will not be applied.
 
 Local verification: context/source-tree equality, secret guard and35tests pass/1Go environment skip. PHP CLI unavailable locally; source/full RC delegated to actual CI. No owner server action.
+
+Integration PR108 owns exact-head CI and merge receipt. Publication status resolves from that PR; plan preparation is not a claim of server deployment.

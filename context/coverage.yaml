@@ -1,86 +1,14 @@
 schema_version: 1
-reviewed_at: '2026-10-17'
-scope: repository_validated_owner_archives_and_separate_terminal_followups_not_independent_functional_acceptance
+reviewed_at: '2026-10-26'
 entrypoint: START_HERE.md
+scope: source_and_dated_owner_receipts_not_full_functional_or_host_acceptance
 claims:
   all_context_complete: false
-  production_snapshot_received: true
-  functional_server_acceptance: false
-covered:
-- area: code_and_schema_navigation
-  evidence: context/code_map/README.md
-  boundary: baseline plugin/theme 526 files and 93 XMLDB tables; not full Moodle core
-- area: decisions_and_current_work
-  evidence: context/current.yaml
-  boundary: generated STATE/BACKLOG view; dated receipts preserved
-- area: declared_theme_tokens
-  evidence: context/design/tokens.yaml
-  boundary: source declarations and layer order, not computed styles or complete UI kit
-- area: capability_references
-  evidence: context/architecture/access_matrix.yaml
-  boundary: source definitions/literal checks; not runtime role bindings or complete authorization audit
-- area: selected_domain_scenarios
-  evidence: context/CONTEXT_INDEX.md
-  boundary: grades/routes/evidence/work/mobile source navigation enriched; domain maps are not exhaustive contracts
-- area: collector_and_import
-  evidence: context/runtime/server_facts_received_20261017.json
-  boundary: Three actual owner server1 archives validated/imported byte-for-byte; latest30ok/1error. Clock/scheduled/SMART
-    observed; query statistics unavailable. Console supplement separate from checksum-bound payload.
-- area: eligible_upstream_core
-  evidence: context/runtime/core-facts/20261017T100015Z-edb2f12e/core_comparison.json
-  boundary: 24742 exact upstream paths match after explicit exclusions;23 extra names only; not all deployment files or functional
-    acceptance
-- area: NTP_client_peer_and_offset
-  evidence: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
-  boundary: ntpsec active, selected public peer and offset/jitter observed once; timedated flags preserved; no long-term accuracy
-    claim
-- area: exported_SMART_attributes_and_history
-  evidence: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
-  boundary: SSD27/HDD17 attributes and error/self-test logs; current HDD198=0 preserves older failed test; no new test or
-    vendor SSD life estimate
-- area: overdue_component_skip_explanations
-  evidence: context/runtime/server-extra/20261017T095914Z-0411e053/observations.json
-  boundary: 18 rows explained by later DB flags and30 exact-upstream source files; effective runtime config/cache not executed;
-    observations not atomic
-- area: ACL_metadata_and_parents
-  evidence: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
-  boundary: 44175 exported code objects/seven parents; no named/default/mask entries, UID33 write and POSIX parent risk remain;
-    not negative write/replace/LSM acceptance
-- area: selected_SSH_context_and_port2019_process
-  evidence: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
-  boundary: Owner current SSH tuple settings/UseDNSno; listener comm caddy PID862. Archive alone does not measure external
-    reachability; later home IPv4 TCP test is a separate receipt. Other contexts, executable/API identity and address family
-    remain unverified
-- area: extra23_metadata_hashes_and_selected_directory_sizes
-  evidence: context/runtime/server-gaps/20261017T105916Z-86133045/observations.json
-  boundary: All23 previous extra names hashed with metadata; four allocated-directory sizes. No contents/HTTP access/provenance
-    or complete root/containerd occupancy
-- area: one_home_IPv4_TCP2019_test_and_server_egress
-  evidence: context/runtime/external_network_result_20261017.json
-  boundary: 'Owner terminal output: public IPv4 egress equals tested target; home TCP2019 false, separate ping timeout. Coordinates
-    redacted; exact probe time unknown. Not all sources/IPv6/NAT mapping/API auth or listener hardening'
-open:
-- id: SERVER-FACTS-RESIDUAL
-  next: Query statistics, effective runtime component overrides/cache, full root/containerd/lab occupancy, SSD wear units
-    and NTP/SMART trends remain open; ACL/current SSH/Caddy process metadata now received
-- id: SOURCE-CORE
-  next: Eligible upstream core24742 verified and23 extras metadata/SHA256 received; review contents/origin/access and excluded
-    config/vendor/third-party plugins; whole deployment provenance is broader
-- id: AUTHORIZATION
-  next: Endpoint/command/file/view-as negative paths, effective actor/scope and runtime grants
-- id: API-CONTRACTS
-  next: Complete request/response/revision/idempotency/error contracts for external and internal endpoints
-- id: DESIGN-COMPONENTS
-  next: Buttons/forms/tables/dialog states, computed typography and native QA at 1440/1024/768/390/320
-- id: DOMAIN-SCENARIOS
-  next: Extend remaining organization/adaptation/economy/feed/messaging/learning scenarios and canonical evidence writers
-    from source
-- id: HOST-ACCEPTANCE
-  next: HTTPS/DNS/client login/SCORM/mail, broader SSH admission/live config, other external sources/IPv6/NAT and2019 API
-    identity/auth, actor/mount/LSM/negative replacement tests and resource baseline; one home IPv4 TCP2019 test failed
-- id: RECOVERY
-  next: Sysadmin clean-host restore result, reboot/roles/files/progress, measured RTO and key/offsite custody
-- id: CONSOLE-TELEGRAM
-  next: Review PR103 against refreshed facts; implement/verify bot delivery, limited jobs and external host-loss observation
-- id: PRIVACY
-  next: Export/deletion/retention provider and evidence; remains deferred owner debt, not a newly imposed migration gate
+  independent_production_probe: false
+application_source:
+  commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  files: 557
+  tables: 100
+current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
+accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
+historical_coverage: context/archive/reconciliation_20261026/PR106_context_coverage.yaml

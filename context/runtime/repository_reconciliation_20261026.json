@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date_msk": "2026-10-26",
-  "status": "integration_prepared_validation_pending",
+  "status": "prequalification_record_resolve_current_CI_and_merge_from_PR108",
   "production_mutations": false,
   "owner_authorized_main_merge": true,
   "PRs": {
@@ -13,11 +13,14 @@
   "production_source": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
   "application_tree_equal_to_production_payload": true,
   "local_governance_tests": {
-    "tests": 3,
-    "passed": 3
+    "tests": 4,
+    "passed": 4
   },
   "local_source_checks": "not_run_to_completion_php_unavailable_use_CI",
   "full_RC": "pending",
   "infra_CI": "pending",
-  "main_merge": "pending"
+  "main_merge": "pending",
+  "integration_PR": 108,
+  "validation_and_merge_authority": "https://github.com/cauf1l3d/ustarlms/pull/108",
+  "integration_fix": "Console knowledge explicitly covers new reviewed sources; no UI execution actions added"
 }

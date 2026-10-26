@@ -54,8 +54,8 @@
     {
       "path": "context/architecture/overview.md",
       "domain": "architecture",
-      "size": 5770,
-      "sha256": "c72ab785a6acdc705e713c651c6603602c9b7dfce41a1cf44ee5ff9833df0ce5"
+      "size": 1445,
+      "sha256": "3f51e01989ae8df0ddd1fb29e93a2ee42be5bd54baaeec8c7024d0825c403fc1"
     },
     {
       "path": "context/architecture/refactor_20260920.md",
@@ -448,6 +448,24 @@
       "sha256": "8e7fc280304d44ac09ac7286ea81167fed898621361fd1ec55fd1e278d261766"
     },
     {
+      "path": "context/archive/reconciliation_20261026/PR106_context_architecture_overview.md",
+      "domain": "archive",
+      "size": 5770,
+      "sha256": "c72ab785a6acdc705e713c651c6603602c9b7dfce41a1cf44ee5ff9833df0ce5"
+    },
+    {
+      "path": "context/archive/reconciliation_20261026/PR106_context_code_map_README.md",
+      "domain": "archive",
+      "size": 10377,
+      "sha256": "543d10c18c85c3e2e5d021c6bdcfd927f10bc6d60abdc37ef093cfc26d0b6d48"
+    },
+    {
+      "path": "context/archive/reconciliation_20261026/PR106_context_coverage.yaml",
+      "domain": "archive",
+      "size": 5574,
+      "sha256": "56adbf2e67d8d121373f0168bdf63d1693b6cf449fa07fb7e6d3e713f2ffdfda"
+    },
+    {
       "path": "context/archive/reconciliation_20261026/PR106_context_roadmap_BACKLOG.yaml",
       "domain": "archive",
       "size": 38347,
@@ -458,6 +476,12 @@
       "domain": "archive",
       "size": 19148,
       "sha256": "998b6d2a5799da200b5cea317b23c86aba7053695cd6eafc29a747ef71c7c865"
+    },
+    {
+      "path": "context/archive/reconciliation_20261026/PR106_context_runtime_OPERATIONS.md",
+      "domain": "archive",
+      "size": 14609,
+      "sha256": "1da3f40c865b7482fe304eeccca974f1ae4449e00b9a775683255dcdb27d5053"
     },
     {
       "path": "context/archive/reconciliation_20261026/PR106_context_runtime_RELEASE_LEDGER.md",
@@ -504,8 +528,8 @@
     {
       "path": "context/code_map/README.md",
       "domain": "code_map",
-      "size": 10377,
-      "sha256": "543d10c18c85c3e2e5d021c6bdcfd927f10bc6d60abdc37ef093cfc26d0b6d48"
+      "size": 1107,
+      "sha256": "2f481ebbdb3d5a694fac055679781c8b62f9c21cb692dceb4c6fd7391726002c"
     },
     {
       "path": "context/code_map/backend.yaml",
@@ -594,8 +618,8 @@
     {
       "path": "context/coverage.yaml",
       "domain": "root",
-      "size": 5574,
-      "sha256": "56adbf2e67d8d121373f0168bdf63d1693b6cf449fa07fb7e6d3e713f2ffdfda"
+      "size": 526,
+      "sha256": "26ba23f67e544a59ad7caf6f55d52f2a7276bfc2b47bbec9631d15ba235267dc"
     },
     {
       "path": "context/current.yaml",
@@ -870,8 +894,8 @@
     {
       "path": "context/proposals/PROD_TRUTH_PLAN_20261026.md",
       "domain": "proposals",
-      "size": 2368,
-      "sha256": "f34fa006c58cb35ff17898729f27b5d805ae3cfec14e62c4c4f5eb5434ad653d"
+      "size": 2521,
+      "sha256": "cc16eb3e07b4c8bf142ef679a318f42988cdceaa151c7ec9aaf677eab4050897"
     },
     {
       "path": "context/proposals/USTAR_ACADEMY_HTTPS_CUTOVER_PLAN_20261020.md",
@@ -1512,8 +1536,8 @@
     {
       "path": "context/runtime/OPERATIONS.md",
       "domain": "runtime",
-      "size": 14609,
-      "sha256": "1da3f40c865b7482fe304eeccca974f1ae4449e00b9a775683255dcdb27d5053"
+      "size": 1333,
+      "sha256": "d3d70af72928977b218a8a9aa6394c635c76fb3ad8b27875dea469442317a69f"
     },
     {
       "path": "context/runtime/README.md",
@@ -2994,8 +3018,8 @@
     {
       "path": "context/runtime/repository_reconciliation_20261026.json",
       "domain": "runtime",
-      "size": 751,
-      "sha256": "05d61792785b59eb78a5a7e3fa83484e6cef8399aeae3e60c54a51ec414c0dbf"
+      "size": 997,
+      "sha256": "eff9d60c620d0ad2a910088cdf6c01ecce8fb9d867b8554cc7cebe312667a0a5"
     },
     {
       "path": "context/runtime/repository_state_20261016.json",

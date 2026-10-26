@@ -11,7 +11,9 @@ try {
     \local_ustar\course_studio::require_author($actor);
     $route=optional_param('route','session',PARAM_RAW_TRIMMED);
     $method=$_SERVER['REQUEST_METHOD'];$write=$method!=='GET';
-    if ($write && !confirm_sesskey($_SERVER['HTTP_X_MOODLE_SESSKEY'] ?? '')) {
+    $requestkey=$_SERVER['HTTP_X_MOODLE_SESSKEY'] ?? '';
+    // Moodle treats an empty argument as a request-param lookup, which can throw.
+    if ($write && (!is_string($requestkey) || empty($requestkey) || !confirm_sesskey($requestkey))) {
         http_response_code(403); echo json_encode(['code'=>'session','error'=>'Сессия истекла. Обновите страницу.']); exit;
     }
     if ($write) { \local_ustar\course_studio::require_author($actor,true); }

@@ -1,10 +1,13 @@
 {
   "private": true,
   "scripts": {
-    "test": "node career-dom.cjs && node scorm.cjs && node route_studio_dom.cjs && node task_workspace_dom.cjs && node notebook_dom.cjs && node home_layout_dom.cjs && node reward_control_dom.cjs && node palette_dom.cjs && node messages_dom.cjs && node course_studio.cjs && node course_studio_sync.cjs"
+    "test": "node career-dom.cjs && node scorm.cjs && node route_studio_dom.cjs && node task_workspace_dom.cjs && node notebook_dom.cjs && node home_layout_dom.cjs && node reward_control_dom.cjs && node palette_dom.cjs && node messages_dom.cjs && node course_studio.cjs && node course_studio_sync.cjs && node course_studio_dom.cjs"
   },
   "dependencies": {
     "jsdom": "30.0.1",
     "mustache": "4.2.0"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "6.2.4"
   }
 }

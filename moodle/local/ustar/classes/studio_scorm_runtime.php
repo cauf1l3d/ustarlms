@@ -96,7 +96,7 @@ final class studio_scorm_runtime {
             $module = (object)[
                 'modulename' => 'scorm',
                 'module' => $DB->get_field('modules', 'id', ['name' => 'scorm'], MUST_EXIST),
-                'course' => (int)$course->id, 'section' => 1,
+                'course' => (int)$course->id, 'section' => 1, 'groupingid' => 0, 'cmidnumber' => '',
                 'name' => (string)$content->title, 'intro' => (string)($content->summary ?? ''),
                 'introformat' => FORMAT_PLAIN, 'visible' => 1, 'visibleoncoursepage' => 1,
                 'scormtype' => SCORM_TYPE_LOCAL, 'packagefile' => $draftid,

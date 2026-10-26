@@ -81,14 +81,14 @@ final class course_studio_project {
         finally { libxml_clear_errors(); libxml_use_internal_errors($previous); }
         $tags = ['html','body','p','div','span','section','article','button','img','br','li','figure','figcaption',
             'h1','h2','h3','h4','h5','h6','details','summary','strong','b','i','em','u','s','strike','del','sub','sup',
-            'ul','ol','a','blockquote','pre','code','table','thead','tbody','tfoot','tr','th','td','hr','font'];
+            'mark','small','ul','ol','a','blockquote','pre','code','table','thead','tbody','tfoot','tr','th','td','hr','font'];
         foreach ($dom->getElementsByTagName('*') as $el) {
             if (!in_array(strtolower($el->tagName), $tags, true)) { self::reject('Запрещённый HTML-тег: ' . $el->tagName); }
             foreach ($el->attributes as $attr) {
                 $name = strtolower($attr->name); $v = $attr->value;
                 if (!in_array($name, ['class','style','src','data-image','data-source-id','alt','loading','type',
                         'aria-label','href','target','rel','title','colspan','rowspan','align','width','height',
-                        'face','color','size','open'], true)) { self::reject('Запрещённый атрибут: ' . $name); }
+                        'face','color','size','open','start'], true)) { self::reject('Запрещённый атрибут: ' . $name); }
                 if (in_array($name, ['src','data-image'], true) && (!self::path($v) || !isset($p->assets->$v))) {
                     self::reject('Изображение отсутствует в локальных ресурсах.');
                 }
@@ -107,7 +107,7 @@ final class course_studio_project {
                             'margin','margin-left','margin-right','margin-top','margin-bottom','padding','padding-left',
                             'padding-right','padding-top','padding-bottom','border','border-left','border-right',
                             'border-top','border-bottom','border-color','border-width','border-style','border-radius',
-                            'flex','display','object-fit','float','clear','box-sizing','letter-spacing','word-break'], true)) {
+                            'flex','flex-basis','flex-grow','flex-shrink','display','object-fit','float','clear','box-sizing','letter-spacing','word-break'], true)) {
                             self::reject('Неподдерживаемое свойство стиля: ' . $property);
                         }
                     }

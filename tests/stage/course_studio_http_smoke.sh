@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Author session/API acceptance only on the disposable stage runtime.
+set -Eeuo pipefail
+test "$PWD" = /stage/moodle
+test "${USTAR_STAGE_PREFIX:-}" = stage_
+BASE=http://127.0.0.1:8087/local/ustar
+COOKIE=/artifacts/shell-cookies.txt
+code=$(curl -sS --max-time 30 -b "$COOKIE" -o /artifacts/studio.html -w '%{http_code}' "$BASE/course_studio.php")
+test "$code" = 200
+php -r '$s=file_get_contents("/artifacts/studio.html");if(!preg_match("/window.COURSE_STUDIO=(.*?);window.RC_HOSTED_SYNC/s",$s,$m)||preg_match("/Debug info:|Stack trace:|ChatGPT/",$s))exit(1);$d=json_decode($m[1],true,512,JSON_THROW_ON_ERROR);file_put_contents("/artifacts/studio-sesskey",$d["sesskey"]);file_put_contents("/artifacts/studio-user",$d["userId"]);'
+sesskey=$(cat /artifacts/studio-sesskey)
+actor=$(cat /artifacts/studio-user)
+trap 'rm -f /artifacts/studio-sesskey /artifacts/studio-user' EXIT
+php -r '$p=json_decode("{\"data\":{\"code\":\"HTTP-01\",\"title\":\"HTTP course\",\"version\":\"1.0\",\"pages\":[{\"id\":\"1\",\"title\":\"Start\",\"html\":\"<p>Lesson</p>\"}]},\"assets\":{},\"fonts\":[],\"theme\":{\"font\":\"Arial\",\"headingFont\":\"Arial\",\"fontSize\":17,\"headingSize\":34,\"lineHeight\":1.65,\"ink\":\"#2b2b2b\",\"accent\":\"#ebc500\",\"paper\":\"#ffffff\",\"background\":\"#ededed\"},\"catalogue\":{},\"revision\":0}");echo json_encode(["course"=>$p,"baseRevision"=>0,"contentmodified"=>0,"mutationId"=>"http-create-1"]);' > /artifacts/studio-input.json
+code=$(curl -sS --max-time 30 -b "$COOKIE" -H 'Content-Type: application/json' --data-binary @/artifacts/studio-input.json -o /artifacts/studio-no-csrf.json -w '%{http_code}' "$BASE/course_studio_api.php?route=courses%2FHTTP-01")
+test "$code" = 403
+for repeat in 1 2; do
+    code=$(curl -sS --max-time 60 -b "$COOKIE" -H 'Content-Type: application/json' -H "X-Moodle-Sesskey: $sesskey" -H "X-RC-Owner: $actor" --data-binary @/artifacts/studio-input.json -o "/artifacts/studio-save-$repeat.json" -w '%{http_code}' "$BASE/course_studio_api.php?route=courses%2FHTTP-01")
+    test "$code" = 200 || { cat "/artifacts/studio-save-$repeat.json"; exit 1; }
+done
+php -r '$a=json_decode(file_get_contents("/artifacts/studio-save-1.json"),true,512,JSON_THROW_ON_ERROR);$b=json_decode(file_get_contents("/artifacts/studio-save-2.json"),true,512,JSON_THROW_ON_ERROR);if($a["contentid"]!==$b["contentid"]||$a["revision"]!==$b["revision"])exit(1);file_put_contents("/artifacts/studio-prepare.json",json_encode(["code"=>"HTTP-01","revision"=>$a["revision"],"contentmodified"=>$a["contentmodified"]]));'
+for repeat in 1 2; do
+    code=$(curl -sS --max-time 90 -b "$COOKIE" -H 'Content-Type: application/json' -H "X-Moodle-Sesskey: $sesskey" -H "X-RC-Owner: $actor" --data-binary @/artifacts/studio-prepare.json -o "/artifacts/studio-ready-$repeat.json" -w '%{http_code}' "$BASE/course_studio_api.php?route=prepare")
+    test "$code" = 200 || { cat "/artifacts/studio-ready-$repeat.json"; exit 1; }
+done
+php -r '$a=json_decode(file_get_contents("/artifacts/studio-ready-1.json"),true,512,JSON_THROW_ON_ERROR);$b=json_decode(file_get_contents("/artifacts/studio-ready-2.json"),true,512,JSON_THROW_ON_ERROR);if($a["cmid"]<=0||$a["cmid"]!==$b["cmid"]||$a["status"]!=="draft")exit(1);'
+code=$(curl -sS --max-time 30 -b "$COOKIE" -H 'X-RC-Owner: other-user' -o /artifacts/studio-wrong-user.json -w '%{http_code}' "$BASE/course_studio_api.php?route=courses")
+test "$code" = 409
+echo 'COURSE_STUDIO_AUTHENTICATED_HTTP=PASS csrf shared-create retry prepare actor'

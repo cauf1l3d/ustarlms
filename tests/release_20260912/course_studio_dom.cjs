@@ -1,0 +1,30 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const {JSDOM,VirtualConsole}=require('jsdom');const {indexedDB}=require('fake-indexeddb');
+const dir=path.resolve(__dirname,'../../moodle/local/ustar/course_studio');
+let html=fs.readFileSync(dir+'/editor.html','utf8').replaceAll('__USTAR_ASSETS__','/assets').replace('__USTAR_CONFIG__',JSON.stringify({api:'/api',sesskey:'csrf-token',cache:'fixture-user-2',userId:'2',material:'/material.php'}));
+html=html.replace(/<script src="[^"]+"><\/script>/g,'');
+const virtual=new VirtualConsole(),errors=[];virtual.on('jsdomError',e=>{if(!String(e).includes('Not implemented'))errors.push(String(e))});
+const calls=[];const dom=new JSDOM(html,{url:'https://academy.example/studio',runScripts:'outside-only',pretendToBeVisual:true,virtualConsole:virtual});
+const w=dom.window;Object.defineProperty(w,'indexedDB',{value:indexedDB});w.TextEncoder=TextEncoder;w.TextDecoder=TextDecoder;w.AbortSignal=AbortSignal;
+Object.defineProperty(w.crypto,'subtle',{value:crypto.subtle});w.URL.createObjectURL=()=> 'blob:https://academy.example/fixture';w.URL.revokeObjectURL=()=>{};
+w.HTMLElement.prototype.scrollIntoView=()=>{};w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};
+w.fetch=async(url,init={})=>{const route=new URL(url,w.location).searchParams.get('route');calls.push([route,init]);if(route==='session')return Response.json({authenticated:true,userId:'2'});if(route==='courses')return Response.json({courses:[]});if(route.startsWith('courses/')&&init.method){const p=JSON.parse(init.body);return Response.json({revision:1,contentmodified:101,fingerprint:Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(p.course)))).toString('hex')});}if(route==='prepare')return Response.json({contentid:42,contentmodified:102,revision:1});throw Error('Unexpected '+route)};
+for(const script of w.document.querySelectorAll('script:not([src])'))w.eval(script.textContent);
+for(const name of ['vendor/jszip.min.js','runtime.js','model.js','rich.js','cloud.js','app.js'])w.eval(fs.readFileSync(dir+'/'+name,'utf8'));
+async function until(predicate){for(let i=0;i<150;i++){if(predicate())return;await new Promise(r=>setTimeout(r,10));}throw Error('DOM condition timed out: '+w.document.querySelector('#toast')?.textContent)}
+(async()=>{
+ await until(()=>w.document.querySelector('.workspace').inert===false);
+ assert.equal(w.document.querySelector('#course-select').options.length,1);
+ const input=w.document.querySelector('#editor-content');input.innerHTML='<p>Содержимое нового курса</p>';input.dispatchEvent(new w.Event('input',{bubbles:true}));
+ w.document.querySelector('#prepare-material').click();await until(()=>w.document.querySelector('#material-result-dialog').open);
+ assert.equal(w.document.querySelector('#material-result-link').getAttribute('href'),'/material.php?id=42');
+ assert(calls.some(([route,init])=>route==='prepare'&&init.headers['X-Moodle-Sesskey']==='csrf-token'));
+ assert.equal(w.document.querySelector('#preview-frame').getAttribute('sandbox'),'allow-scripts');assert(!w.document.body.textContent.includes('ChatGPT'));
+ const title=w.document.createElement('div'),body=w.document.createElement('div');w.document.body.append(title,body);
+ const rich=new w.RCRich.RichEditor(title,body);rich.setCourse({assets:{}});
+ rich.load({title:'Safety',titleHTML:'<span /onclick="window.pwned=true">Safe</span>',html:'<img src="assets/x.png" /onerror="window.pwned=true"><p>Lesson</p>'});
+ assert.equal(body.querySelector('img')?.hasAttribute('onerror'),false,'parsed body handlers must be removed before insertion');
+ assert.equal(title.querySelector('span')?.hasAttribute('onclick'),false,'parsed title handlers must be removed before insertion');
+ assert.equal(body.querySelector('p').textContent,'Lesson');
+ assert.deepEqual(errors,[]);dom.window.close();console.log('COURSE_STUDIO_DOM_OK boot edit shared-save prepare canonical-link sandbox');
+})().catch(e=>{dom.window.close();console.error(e);process.exitCode=1});

@@ -9,6 +9,10 @@ const course = () => M.normalizeCourse({data:{code:'SALES-01',title:'Прода�
  const c=course();
  const evil=course(); evil.data.pages[0].html='<p><a href="jav&#97;script:alert(1)">Ссылка</a></p>';
  assert(M.validateCourse(evil).length, 'encoded script link must be rejected before rendering');
+ const media=course();media.data.pages[0].html='<video src="https://example.org/leak"></video>';assert(M.validateCourse(media).length,'active external media must fail before rendering');
+ const foreign=course();foreign.data.pages[0].html='<math><mtext>unexpected</mtext></math>';assert(M.validateCourse(foreign).length,'foreign HTML namespace must fail before rendering');
+ const folded=course();folded.data.pages[0].html='<a href="java&#10;script:alert(1)">bad</a>';assert(M.validateCourse(folded).length,'folded script URL must fail before rendering');
+ const slash=course();slash.assets["assets/x.png"]={type:"image/png",data:"AAAA"};slash.data.pages[0].html='<img src="assets/x.png" /onerror="window.pwned=true">';assert(M.validateCourse(slash).length,'slash-separated event attribute must be rejected before rendering');
  const css=course();css.data.pages[0].titleStyle={backgroundImage:'url(https://example.org/leak)'};
  assert(M.validateCourse(css).length, 'title style must not introduce external requests');
  const shape=course();shape.theme.fontSize='1; background:url(https://example.org)';

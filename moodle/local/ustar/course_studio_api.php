@@ -58,6 +58,16 @@ try {
 } catch (required_capability_exception $e) {
     http_response_code(403); echo json_encode(['code'=>'forbidden','error'=>'Нет доступа к студии.']);
 } catch (\Throwable $e) {
+    // Log locations only: exception messages/arguments can contain SQL or user content.
+    if (!($e instanceof invalid_parameter_exception) && !($e instanceof \JsonException)) {
+        $locations = array_map(static function(array $frame): string {
+            return basename($frame['file'] ?? '') . ':' . ($frame['line'] ?? 0)
+                . ' ' . ($frame['class'] ?? '') . ($frame['type'] ?? '') . ($frame['function'] ?? '');
+        }, $e->getTrace());
+        error_log('USTAR_STUDIO_FAILURE ' . get_class($e) . ' '
+            . ($e instanceof moodle_exception ? $e->errorcode : '') . ' '
+            . basename($e->getFile()) . ':' . $e->getLine() . ' ' . implode(' <- ', $locations));
+    }
     http_response_code($e instanceof invalid_parameter_exception || $e instanceof \JsonException ? 400 : 500);
     // Do not expose stack traces, SQL or private filesystem paths in API responses.
     $message=$e instanceof invalid_parameter_exception ? ($e->debuginfo ?: 'Некорректные данные проекта.') : 'Операция не выполнена. Сохраните проект и повторите запрос.';

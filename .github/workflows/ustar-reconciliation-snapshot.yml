@@ -1,0 +1,25 @@
+name: Repository reconciliation snapshot
+on:
+  push:
+    branches: [release/prod-truth-20261026]
+    paths: [.github/workflows/ustar-reconciliation-snapshot.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Export repository history for local reconciliation
+        run: |
+          git fetch origin codex/context-facts-20261017 codex/server-console-20261015 design/ustar-connect-20261018 codex/shared-course-studio-20261026
+          mkdir -p snapshot
+          git bundle create snapshot/ustarlms.bundle --all
+          sha256sum snapshot/ustarlms.bundle > snapshot/SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: repository-reconciliation-snapshot
+          path: snapshot/
+          retention-days: 2

@@ -4,7 +4,7 @@ independently_measured_on_server: false
 sources:
   audit: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   audit_sha256: aa8b717719f3f1a3b4131e5c56590667a5731186be4025d00151f94bc8c380e4
-  reconciliation: context/audits/AUDIT_RECONCILIATION_20261016_RU.md
+  reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
   previous_evidence: context/runtime/evidence_20261016.yaml
   source_PR_heads:
     98: 855264f4e38de4a7423b035cfd7ec746b2fce82d

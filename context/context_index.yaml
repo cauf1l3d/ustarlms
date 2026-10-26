@@ -1,5 +1,5 @@
 schema_version: 3
-updated_at: '2026-10-17'
+updated_at: '2026-10-26'
 project: USTAR Academy
 canonical_branch: main
 current_state: context/roadmap/STATE.yaml
@@ -11,6 +11,6 @@ rules:
 entrypoint: START_HERE.md
 generated_current_view: context/current.yaml
 coverage: context/coverage.yaml
-latest_review: context/reviews/20261017/README.md
-latest_runtime_reconciliation: context/reviews/20261017/runtime_reconciliation.md
-latest_targeted_runtime_reconciliation: context/reviews/20261017/gaps_reconciliation.md
+latest_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
+latest_runtime_reconciliation: context/runtime/evidence_20261026.yaml
+latest_targeted_runtime_reconciliation: context/runtime/repository_reconciliation_20261026.json

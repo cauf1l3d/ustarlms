@@ -74,7 +74,7 @@ production:
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
-  reconciliation: context/audits/AUDIT_RECONCILIATION_20261016_RU.md
+  reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
   remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md

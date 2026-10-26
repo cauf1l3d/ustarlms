@@ -135,7 +135,8 @@ class Runtime(unittest.TestCase):
     def test_runtime_and_https_gates_required(self):
         for name in ('con02_update_systemd.py','con02_update_https.py'):
             self.assertTrue((ROOT/'tests/stage'/name).is_file(), 'actual controller fixture required: '+name)
-        workflow = (ROOT/'.github/workflows/ustar-review-gate.yml').read_text()
+        workflow = (ROOT/'.github/workflows/ustar-infra.yml').read_text()
+        self.assertIn("'scripts/infra/**'",workflow)
         self.assertIn('USTAR_REQUIRE_CON02_OWNER=1',workflow)
         self.assertIn('python3 tests/stage/con02_update_systemd.py',workflow)
         self.assertIn('python3 tests/stage/con02_update_https.py',workflow)

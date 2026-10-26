@@ -22,5 +22,6 @@
   "main_merge": "pending",
   "integration_PR": 108,
   "validation_and_merge_authority": "https://github.com/cauf1l3d/ustarlms/pull/108",
-  "integration_fix": "Console knowledge explicitly covers new reviewed sources; no UI execution actions added"
+  "integration_fix": "Console knowledge explicitly covers new reviewed sources; no UI execution actions added",
+  "integration_test_fix": "Runtime gate contract follows the moved infra workflow, same mandatory UID/HTTPS fixtures retained"
 }

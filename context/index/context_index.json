@@ -612,8 +612,8 @@
     {
       "path": "context/context_index.yaml",
       "domain": "root",
-      "size": 661,
-      "sha256": "f27fbd7975f79d86b2b1de3cc7acaa1bd9216d271825db44a7d3050ca694b4b7"
+      "size": 669,
+      "sha256": "9564226e1ac822948a05ea38e9714c306ce4f8e8721a5e603c3adf357c968297"
     },
     {
       "path": "context/coverage.yaml",
@@ -1452,8 +1452,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 7664,
-      "sha256": "eabaa27baebef41103567edf4d0ec8840728f4e986cc2a5c73232a1ab05ba34e"
+      "size": 7660,
+      "sha256": "c7aed8f6e2956a8921fb0c0f5d15d4e5b039b7a7a9738631e95f2fa99057d691"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2244,8 +2244,8 @@
     {
       "path": "context/runtime/evidence_20261026.yaml",
       "domain": "runtime",
-      "size": 2943,
-      "sha256": "4e88b5ace671818d7884d0832531da97b54aa931a1a87f76d7cca96357506067"
+      "size": 2939,
+      "sha256": "eeaf18c3d8a44c7916f0299c7303b1458d0fda6e4efb6f7e5e723c4bcf17b15a"
     },
     {
       "path": "context/runtime/external_network_result_20261017.json",
@@ -3018,8 +3018,8 @@
     {
       "path": "context/runtime/repository_reconciliation_20261026.json",
       "domain": "runtime",
-      "size": 997,
-      "sha256": "eff9d60c620d0ad2a910088cdf6c01ecce8fb9d867b8554cc7cebe312667a0a5"
+      "size": 1125,
+      "sha256": "43dbee8f498fff7f4078932e85f908255a17ec4f0d9de956d8e5f35bcda41cd5"
     },
     {
       "path": "context/runtime/repository_state_20261016.json",

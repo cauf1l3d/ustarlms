@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/infra/**'
       - 'connect-worker/**'
+      - 'moodle/local/ustar/classes/connect/**'
+      - 'moodle/local/ustar/connect_bridge.php'
       - 'server-console/**'
       - 'tests/stage/**'
       - 'tests/r16/**'

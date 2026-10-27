@@ -1,6 +1,6 @@
 {
   "date_msk": "2026-10-27",
-  "evidence_kind": "owner_instruction_not_deployment_receipt",
+  "evidence_kind": "owner_instruction_with_followup_deployment_receipt",
   "instruction": "будем принимать на проде, дай команды и архив для деплоя",
   "production_acceptance_authorized": true,
   "agent_SSH": false,
@@ -14,8 +14,8 @@
     "local_ustar": 2026102600,
     "theme_ustar": 2026100202
   },
-  "operator_package": "prepared_pending_CI_qualification",
-  "deployment_executed": false,
+  "operator_package": "CI_qualified_delivered_owner_applied",
+  "deployment_executed": true,
   "scope": "Existing paired application/cron update. Existing worker, keys, SQLite journal, fence and HTTPS unchanged. No Docker recreate.",
   "tool_commit": "62b0da2020bc27569c0bd4f8ac96b676f29b7490",
   "archive": {
@@ -29,9 +29,23 @@
     "r16_tests": 1254,
     "r16_skips": 64,
     "result": "pass",
-    "actual_UID33": "pending_mandatory_CI;local_GID33_mapping_unavailable",
+    "actual_UID33": "PASS mandatory native CI40441818514",
     "model_limits": "Actual file copies/cron/public boundary tested;Docker and SQL are modeled in transaction unit fixtures",
     "offline_package": "PLAN_ONLY;no host access"
   },
-  "runbook": "docs/COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md"
+  "runbook": "docs/COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md",
+  "deployment_receipt": "context/runtime/course_studio_owner_deploy_20261027.json",
+  "CI_qualification": {
+    "commit": "e9ffe6b56d4e030b7ff70c092dbfdd68d0664308",
+    "review_full_RC": 40441818519,
+    "context": 40441818592,
+    "infrastructure": 40441818514,
+    "console": 40441818488,
+    "all": "success",
+    "Moodle_tests_per_matrix": 335,
+    "Moodle_assertions_per_matrix": 1500,
+    "authenticated_Studio_HTTP": "PASS",
+    "mandatory_actual_UID33": "PASS",
+    "artifact_id": 12706875666
+  }
 }

@@ -901,3 +901,13 @@ refused offline. Local869 had one target-only MCP child import environment error
 isolatedvenv realstdio1testPASS,whole local suite green not claimed.
 Next owner prepares HTTPS backup helper pair then--check. No production action,
 new app/bridge/link/notify acceptance or main merge. Artifact12300525979.
+
+
+## 27Oct — Studio2600 установлен владельцем; ручная приёмка ожидается
+
+[Квитанция](course_studio_owner_deploy_20261027.json): archive/inner hashes OK,
+precheck2300 ready, upgrade1/2, cron_written, public release, app_ready/local2600;
+systemd Finished successfully. Operator62b0da20, app2d95137a,582files/100tables
+по фиксированному payload; worker6c56 без rollout. CI e9ffe6b5 полностью SUCCESS.
+Это owner console transcript, не независимый опрос хоста. Post-deploy status,
+scheduled cron2600 и ручная приёмка UI/PDF/shared-save/SCORM ожидаются. PR107 открыт.

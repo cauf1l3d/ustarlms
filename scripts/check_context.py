@@ -174,7 +174,7 @@ def check():
     for relative,content in {**render(ROOT),**render_inventory(ROOT)}.items():
         assert (ROOT/relative).read_text()==content, 'Stale generated context: '+relative
     print(f'CONTEXT_OK source={baseline} files={len(paths)} tables={len(tables)} tasks={len(tasks)}'
-          + ('; DEVELOPMENT_CANDIDATE_NOT_DEPLOYED' if candidate else ''))
+          + ('; UNMERGED_SOURCE_ARTIFACT; DEPLOYMENT_STATUS_IN_OWNER_RECEIPT' if candidate else ''))
 
 
 if __name__=='__main__':check()

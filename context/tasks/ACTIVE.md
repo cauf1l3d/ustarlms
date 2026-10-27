@@ -4,14 +4,16 @@
 
 По поручению владельца: исправление подготовки SCORM, академическое оформление,
 удобство автора, импорт PDF в редактируемый текст и печатный экспорт PDF. Ветка
-объединена с main ad939373; accepted source/prod2300 сохранён отдельно от candidate2600.
+объединена с main ad939373; предыдущая принятая основа2300 сохранена; Studio2600 установлен владельцем отдельно от main.
 [Инструкция](../../docs/COURSE_STUDIO_RU.md),
 [проект](../../docs/superpowers/specs/2026-10-26-studio-readiness-design.md).
-Full RC40433022865 на c4250205 пройден: обе Moodle матрицы335tests/1500assertions,
-HTTP save/retry/prepare/actor PASS. Context40433022926 и infra40433023023 зелёные.
-Владелец27Oct выбрал приёмку на production и запросил архив/команды. Подготовлен
-фиксированный2300→2600 updater на существующем paired engine; агент не подключается
-к серверу. Состояние production не изменено; запуск выполняет владелец.
+Full RC40441818519 на e9ffe6b5 пройден: обе Moodle матрицы335tests/1500assertions,
+HTTP save/retry/prepare/actor PASS. Context40441818592, infra40441818514 и console
+40441818488 зелёные; mandatory root/UID33 PASS. Владелец27Oct проверил SHA256 и
+установил2d95137a через operator62b0da20: upgrade1/2, cron_written, public release,
+app_ready/local2600; systemd Finished successfully. [Квитанция](../runtime/course_studio_owner_deploy_20261027.json).
+Нужны post-deploy status, scheduled cron2600 и ручная приёмка PDF/shared save/SCORM.
+Агент не подключался к серверу; PR107 остаётся открытым.
 [Команды и архив](../../docs/COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md).
 
 ## Принятая основа
@@ -39,6 +41,6 @@ console CI прошли; точные SHA — в ../runtime/repository_reconcili
 Docker rotation/health/recreate — следующее плановое обновление Moodle/PHP.
 SSH/firewall — подготовка внешнего доступа по команде владельца.
 Внешний restore — unknown, не переспрашивать; notification reserve и группы deferred.
-PR107 Studio остаётся отдельным PR, не включать в production-baseline автоматически.
+PR107 Studio установлен владельцем, но не слит; не подменять ручную приёмку успешной установкой.
 
 Ни эта очередь, ни успешный CI не означают применение новых изменений на server1.

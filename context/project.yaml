@@ -22,14 +22,13 @@ components:
   secondary_client: frontend (legacy, inactive)
   context_harness: harness/ustar-contextd; local stdio tested; production/session
     installation unverified
-  connect_worker: connect-worker; owner23Oct application_and_worker534/local2200 deployed;
-    ACK runtime active; UID130 two live ACKs verified; previous revoked checkpoint
-    historical; B1 routing design ready for review; live group deferred
+  connect_worker: connect-worker; accepted worker6c56/local2300 from23Oct remains
+    unchanged during Studio2600 owner deployment; no worker rollout27Oct
 state: context/roadmap/STATE.yaml
-runtime_evidence: context/runtime/evidence_20261026.yaml
+runtime_evidence: context/runtime/evidence_20261027.yaml
 next_stage: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_no_server_mutation_Docker_deferred
-latest_connect_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
+latest_connect_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
 current_operator_handoff:
   task: OPS-02
   runbook: context/runtime/production_copy_20261015.md
@@ -41,6 +40,7 @@ current_work:
   task: STUDIO-01
   spec: docs/superpowers/specs/2026-10-26-studio-readiness-design.md
   PR: 107
-  status: production_deployment_package_in_preparation
+  status: owner_installed_manual_acceptance_pending
   frontend_scope: native local_ustar; author rights and shared revisions preserved
   next_after_studio: PERF-01 and verified backlog
+  deployment_receipt: context/runtime/course_studio_owner_deploy_20261027.json

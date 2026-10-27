@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально26.10.2026. Это вход в текущий проект; история находится в архиве.
+Актуально27.10.2026. Это вход в текущий проект; история находится в архиве.
 
 1. [STATE](context/roadmap/STATE.yaml) — версии, SHA, уверенность и квитанции.
 2. [ACTIVE](context/tasks/ACTIVE.md) — текущая работа и её границы.
@@ -11,10 +11,12 @@
 
 ## Подтверждённый production
 
-Moodle5.1.8 / PHP8.3.33 / PostgreSQL16.15. local_ustar2026102300,
-theme_ustar2026100202; payload/worker6c56a5b6ab830b97b706a5d7028b49cfae31e7a4.
-[Основание](context/runtime/evidence_20261026.yaml): квитанции владельца23–26Oct;
-557файлов/100таблиц относятся к фиксированному payload. Это не новая инвентаризация хоста.
+Moodle5.1.8 / PHP8.3.33 / PostgreSQL16.15. Владелец27Oct установил
+Studio payload2d95137a/local_ustar2026102600, theme_ustar2026100202; app_ready.
+Worker6c56a5b6 не обновлялся. [Основание](context/runtime/evidence_20261027.yaml),
+[квитанция установки](context/runtime/course_studio_owner_deploy_20261027.json).
+582файла/100таблиц — фиксированный payload, не новая инвентаризация хоста.
+Post-deploy status, scheduled cron2600 и ручная приёмка Studio ожидаются.
 Приложение использует обычную роль ustar_app; права кода/config и Compose0600 применены.
 Connect ACK/presentation и вход/открытие Академии подтверждены владельцем.
 
@@ -28,7 +30,8 @@ successor заморожен и на сервер не поставлен. SSH/f
 ## Репозиторий и поставка
 
 PR105 — факты server1; PR103 — пульт; PR106 — принятый Connect и инфраструктура.
-Их интеграция не является новым deploy. PR107 — отдельная неподтверждённая студия.
+Main пока содержит принятую основу6c56/local2300; PR107 установлен владельцем,
+но ещё не слит и не принят вручную. Установка Studio не означает её функциональную приёмку.
 Исходники Академии: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
 [Индекс](context/CONTEXT_INDEX.md) помогает выбрать нужный домен.
 [История прежних входов](context/archive/reconciliation_20261026) сохранена целиком.

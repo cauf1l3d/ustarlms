@@ -630,8 +630,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8101,
-      "sha256": "84996c9beff1e8f6852913473cabaed7245b2ef1be91c526b8803049a845c96b"
+      "size": 8175,
+      "sha256": "2664a08725842ce0acfe9f6ba2ddeefbe79ad7bf69db02ce162011c82b9f13cd"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -852,8 +852,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2266,
-      "sha256": "5d3b9d47798aae494e16544b683ad5b79e8b58371cd6d14f8ee568b6fb748c12"
+      "size": 2253,
+      "sha256": "032b1560350637092b5514c8b9033d9ab83938c98a61c7b14d204dd2cfd71f9f"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1404,8 +1404,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 31958,
-      "sha256": "b5ae97c6a7411214323092347cf688abf1b2e28bfb331db1685cba3f563386e5"
+      "size": 32095,
+      "sha256": "b0cbbeb946d5542823561b104f017077e0d5ecdac3674b416931c29e92b5b9f8"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1446,8 +1446,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 3177,
-      "sha256": "93706953da8d455e4d6adb1d79f3dd93a806de2228746cca0d4168c893703129"
+      "size": 3952,
+      "sha256": "e7f1e3150b12a76ed2618c65d438592e8dc78e0241ff4076a54cbe8316152e69"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 8654,
-      "sha256": "ecc1117425294a28cb1c424e9fa9578b4106517080bbebbf4a56cd6d431155f1"
+      "size": 9013,
+      "sha256": "d6eadf290d511e3fbacf7984f26258899c3d1679df2b8a3171e807d2a5fe50b0"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -1549,13 +1549,13 @@
       "path": "context/runtime/README.md",
       "domain": "runtime",
       "size": 506,
-      "sha256": "807b8cb70acf57b99693c2ddbb6aa513405d0abba9fa86094023346ee2da1365"
+      "sha256": "917731c1bbc6e887582c9daddda23ef7cbe0dc2e6a0dc0b2c875a0b18be9dcdb"
     },
     {
       "path": "context/runtime/RELEASE_LEDGER.md",
       "domain": "runtime",
-      "size": 86152,
-      "sha256": "fdf8c8c70e022487553cb1c2882cc5450f9be2de15cbed4c672925ec5cbed9ea"
+      "size": 86850,
+      "sha256": "6e2c77a5974dee385f7b426ffd955fe5f41c92cbba59843fced2b902408a4c5e"
     },
     {
       "path": "context/runtime/SECURITY_BASELINE.md",
@@ -2200,10 +2200,16 @@
       "sha256": "a25754e35880ae9df4a6270b1e88699884e0d4d5c4397c1e693d772bb37d4885"
     },
     {
+      "path": "context/runtime/course_studio_owner_deploy_20261027.json",
+      "domain": "runtime",
+      "size": 3039,
+      "sha256": "396ccd263618ad8efaf5886137dda99a230322abd15c019e83815da5b9a2ec70"
+    },
+    {
       "path": "context/runtime/course_studio_production_intent_20261027.json",
       "domain": "runtime",
-      "size": 1598,
-      "sha256": "66643dd3bd38ad6680aebbe9daf97223e1f00835ddeb834a25f7270586ffb8a3"
+      "size": 2100,
+      "sha256": "f228ab186d565b0acfcafe670f7505dec42e882ed0146ec4764b6ad1c097aa31"
     },
     {
       "path": "context/runtime/course_studio_readiness_20261027.json",
@@ -2270,6 +2276,12 @@
       "domain": "runtime",
       "size": 2939,
       "sha256": "eeaf18c3d8a44c7916f0299c7303b1458d0fda6e4efb6f7e5e723c4bcf17b15a"
+    },
+    {
+      "path": "context/runtime/evidence_20261027.yaml",
+      "domain": "runtime",
+      "size": 3302,
+      "sha256": "aaf1a24b1517a9bb49b17b9dee75420c8258f0b26be946143c3a28b9c4ccba51"
     },
     {
       "path": "context/runtime/external_network_result_20261017.json",
@@ -2851,7 +2863,7 @@
       "path": "context/runtime/moodle.yaml",
       "domain": "runtime",
       "size": 1134,
-      "sha256": "7171bd4961898f7f69e2a475a05f02c799de1d9f6b4964d960cfe605e0735c3f"
+      "sha256": "97284c96c489c5a4623c112cf76ba62c14f22ec42bb508e0977feb40cf3f5b7f"
     },
     {
       "path": "context/runtime/moodle53_preparation_20261014.md",
@@ -3402,8 +3414,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3657,
-      "sha256": "574aaef182759b252d414cf244400319a1e407c83896f79a5313e85c9ff75bc0"
+      "size": 3910,
+      "sha256": "7deb3f8d47bc512ab1e29dad921c3f3402d34dc0df3c840eacde581b1ad822c9"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

@@ -611,14 +611,16 @@ tasks:
   runbook: docs/COURSE_STUDIO_RU.md
   validation_evidence:
   - context/runtime/course_studio_readiness_20261027.json
-  deployment_evidence: not_deployed; test-copy acceptance required
+  - context/runtime/course_studio_owner_deploy_20261027.json
+  deployment_evidence: context/runtime/course_studio_owner_deploy_20261027.json
   acceptance:
   - Native Moodle author access, shared revisions and conflicts without lost drafts
   - Editable PDF text import into a separate course; browser PDF export
   - Prepare twice without duplicate Moodle SCORM; retain published attempt history
   - Full RC and context on the integrated exact candidate SHA
-  qualification_commit: c4250205c1a9c79e68bf1809b361abefc61ca522
-  full_RC_run: 40433022865
+  qualification_commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
+  full_RC_run: 40441818519
+  deployment_status: owner_installed_manual_acceptance_pending
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

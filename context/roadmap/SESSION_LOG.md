@@ -44,3 +44,16 @@ worker6c56 remain immutable. Local1254tests/64environment skips passed; actual
 UID33 permission qualification is required in CI. Package plan/CRC/hashes and
 no adjacent imports tested. No agent SSH/server/provider mutation. Operator/check/
 upgrade/status/recover instructions: docs/COURSE_STUDIO_PROD_DEPLOY_20261027_RU.md.
+
+
+## 27Oct — owner installed Studio2600, manual acceptance pending
+
+Owner supplied archive/inner SHA256 OK, precheck2300 ready and successful
+upgrade1/2 → cron_written → public_release_committed → app_ready/local2600,
+systemd Finished/Deactivated successfully. Fixed operator62b0da20/app2d95137a;
+worker6c56 unchanged by this operation. CI on e9ffe6b5: review40441818519,
+context40441818592, infra40441818514, console40441818488 all SUCCESS.
+Receipt: context/runtime/course_studio_owner_deploy_20261027.json. No agent SSH.
+Post-deploy status, new scheduled cron2600, browser/PDF/shared-save/employee
+acceptance and PR107 main integration remain pending. Source baseline in main
+remains6c56; production owner receipt now records2d95137a. Historical receipts retained.

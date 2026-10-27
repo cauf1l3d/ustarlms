@@ -1,10 +1,11 @@
 schema_version: 2
 updated_at: '2026-10-27'
 project: USTAR Academy
-stage: repository_reconciliation_complete
-stage_label: Accepted production source and verified current review in main
-current_activity: Owner27Oct chooses Studio acceptance on production; prepared fixed
-  2300-to-2600 operator62b0da20 and commands, CI qualification pending; no agent server mutation.
+stage: studio_production_manual_acceptance
+stage_label: Studio2600 owner-installed; browser and post-deploy acceptance pending
+current_activity: Owner27Oct verified archive and reported Studio app_ready/local2600;
+  fixed application2d95137a installed by operator62b0da20. Await status, scheduled
+  cron2600 and browser acceptance; PR107 unmerged.
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -12,7 +13,7 @@ canonical_roadmap_branch: main
 code_baseline:
   branch: main
   commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-  kind: accepted_owner_payload_git_source
+  kind: integrated_main_source_before_Studio_owner_deployment
   local_ustar_version: 2026102300
   theme_ustar_version: 2026100202
   source_pr: 106
@@ -21,48 +22,50 @@ code_baseline:
     commit: 40fb81d75c42ac6b4ff1f6f54f9e25f54b3fa149
     full_RC_run: 40337002920
     receipt: context/runtime/repository_reconciliation_20261026.json
+  scope_note: Main source baseline remains6c56 until PR107 integration; current production
+    is separately recorded below.
 production:
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/connect_telegram_finish_owner_20261023.json
-  previous_scheduled_cron_receipt: context/runtime/connect_chat_link_update_owner_20261021.json
+  latest_cron_contract: context/runtime/course_studio_owner_deploy_20261027.json
+  previous_scheduled_cron_receipt: context/runtime/infra_readonly_owner_20261023.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_telegram_finish_owner_20261023.json
-    reported_date_msk: '2026-10-23'
-    status: owner_upgrade_ACK_presentation_runtime_and_visual_acceptance_verified
-    installer_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
-    payload_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    receipt: context/runtime/course_studio_owner_deploy_20261027.json
+    reported_date_msk: '2026-10-27'
+    status: owner_controller_installation_success_manual_acceptance_pending
+    installer_commit: 62b0da2020bc27569c0bd4f8ac96b676f29b7490
+    payload_commit: 2d95137ac85a09ad4c513edae8a792152153c840
     versions:
-      local_ustar: 2026102300
+      local_ustar: 2026102600
       theme_ustar: 2026100202
-    application_generation: 94d379904f7f4f7f8795b43e68421d89
-    runtime_generation: 54bb0b7e4ba746928a639279ea729415
-    files: 557
+    files: 582
     tables: 100
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    previous_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  status: owner_Telegram_application2300_ACK_presentation_and_visual_accepted_export_restore_pending
-  observed_at: '2026-10-23'
-  source: context/runtime/evidence_20261026.yaml
+    worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+    worker_rollout: false
+    previous_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
+  status: owner_Studio2600_installed_post_deploy_and_manual_acceptance_pending
+  observed_at: '2026-10-27'
+  source: context/runtime/evidence_20261027.yaml
   independently_measured: false
-  current_source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  current_source_commit: 2d95137ac85a09ad4c513edae8a792152153c840
   current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
     host filesystem census
   current_versions:
-    local_ustar: 2026102300
+    local_ustar: 2026102600
     theme_ustar: 2026100202
   last_exact_source_manifest:
-    commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-    date: '2026-10-23'
-    matching_files: 557
+    commit: 2d95137ac85a09ad4c513edae8a792152153c840
+    date: '2026-10-27'
+    matching_files: 582
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/connect_telegram_finish_owner_20261023.json
-  cron: owner23Oct18_08UTC_scheduled_exit0_1_222seconds_no_new_failures_19overdue_2failed_need_task_review
-  cron_current_receipt: context/runtime/infra_readonly_owner_20261023.json
+    evidence: context/runtime/course_studio_owner_deploy_20261027.json
+  cron: owner27Oct_controller_wrote2600; new_scheduled_run_pending
+  cron_current_receipt: context/runtime/course_studio_owner_deploy_20261027.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
   regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -162,21 +165,23 @@ current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
 repository_reconciliation: context/runtime/repository_reconciliation_20261026.json
 infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
-
 development_candidate:
   task: STUDIO-01
   branch: codex/shared-course-studio-20261026
-  application_commit: 7eb1a3f61dd109d4cfbd1ff67a9ff99d36fc6ab2
+  application_commit: 2d95137ac85a09ad4c513edae8a792152153c840
   base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
   manifest: context/code_map/generated/course_studio_candidate.json
   local_ustar_version: 2026102600
   theme_ustar_version: 2026100202
   PR: 107
-  status: production_deployment_package_in_preparation
-  deployed: false
-  qualification_commit: c4250205c1a9c79e68bf1809b361abefc61ca522
-  full_RC_run: 40433022865
-  context_run: 40433022926
-  infrastructure_run: 40433023023
-
+  status: owner_installed_manual_acceptance_pending
+  deployed: true
+  qualification_commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
+  full_RC_run: 40441818519
+  context_run: 40441818592
+  infrastructure_run: 40441818514
+  deployment_receipt: context/runtime/course_studio_owner_deploy_20261027.json
+  source_manifest_scope: Immutable unmerged source artifact at creation; deployment
+    truth comes from owner receipt
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
+studio_latest_owner_receipt: context/runtime/course_studio_owner_deploy_20261027.json

@@ -1,13 +1,12 @@
 schema_version: 2
-updated_at: '2026-10-26'
+updated_at: '2026-10-27'
 project: USTAR Academy
 stage: repository_reconciliation_complete
 stage_label: Accepted production source and verified current review in main
-current_activity: PR105/103/106 merged through PR108; audits verified; full RC, infra,
-  console and context passed. Next PERF-01 baseline and verified backlog; no server
-  mutation.
+current_activity: STUDIO-01 academic studio and PDF; integrated with accepted main;
+  full RC qualification pending; no server mutation.
 entrypoint: START_HERE.md
-next_task: PERF-01
+next_task: STUDIO-01
 ready_tasks: []
 canonical_roadmap_branch: main
 code_baseline:
@@ -163,3 +162,15 @@ current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
 repository_reconciliation: context/runtime/repository_reconciliation_20261026.json
 infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
+
+development_candidate:
+  task: STUDIO-01
+  branch: codex/shared-course-studio-20261026
+  application_commit: 7eb1a3f61dd109d4cfbd1ff67a9ff99d36fc6ab2
+  base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
+  manifest: context/code_map/generated/course_studio_candidate.json
+  local_ustar_version: 2026102600
+  theme_ustar_version: 2026100202
+  PR: 107
+  status: qualification_pending
+  deployed: false

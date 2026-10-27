@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-10-26'
+updated_at: '2026-10-27'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -78,9 +78,9 @@ production:
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
 current_work:
-  activity: PR105/103/106 merged through PR108; audits verified; full RC, infra, console
-    and context passed. Next PERF-01 baseline and verified backlog; no server mutation.
-  next_task: PERF-01
+  activity: STUDIO-01 academic studio and PDF; integrated with accepted main; full
+    RC qualification pending; no server mutation.
+  next_task: STUDIO-01
   ready_tasks: []
   task_statuses:
     AUDIT-01: planned
@@ -116,6 +116,7 @@ current_work:
     PERF-01: planned
     PLAT-01: deferred
     PRIVACY-01: deferred
+    STUDIO-01: in_progress
     TECH-01: planned
 server_facts:
   status: partial

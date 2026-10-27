@@ -1,0 +1,44 @@
+{
+  "kind": "development_qualification_not_deployed",
+  "date_msk": "2026-10-27",
+  "PR": 107,
+  "branch": "codex/shared-course-studio-20261026",
+  "application_commit": "7eb1a3f61dd109d4cfbd1ff67a9ff99d36fc6ab2",
+  "integrated_main": "ad939373d89604119d3fd741c555deaf1ebd4ed7",
+  "accepted_production_payload": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "studio_version": 2026102600,
+  "schema_tables": 100,
+  "candidate_files": 582,
+  "server_mutation": false,
+  "changes": [
+    "Initialize Moodle PAGE context before AJAX module creation; retain session during preparation",
+    "Academic shell, readiness review, reading metrics and focus mode",
+    "Local PDF.js6.4.299 text import; separate course after preview",
+    "Print export with cover, contents, images and sources; browser Save as PDF",
+    "Keep immutable Connect package tests pinned to their accepted application release"
+  ],
+  "verification": {
+    "source": "PASS php394 js31 tables100 templates57",
+    "php_controller_regression": "PASS CSRF, PAGE context and preparation session retained",
+    "php_codec": "PASS",
+    "javascript_suite": "PASS after integration",
+    "browser": "PASS actual2page Cyrillic PDF import/edit/print, malformed PDF preserves course, desktop/mobile no overflow",
+    "pdf_visual": "PASS inspected A4 output;3pages including cover;Cyrillic present;no document JavaScript",
+    "python_suite": "PASS1240tests;63native/environment skips;89.200s",
+    "full_RC": "pending on final integrated PR head",
+    "test_copy_acceptance": "not_performed",
+    "context": "PASS source accepted6c56a5b6;development candidate582files/100tables",
+    "secret_guard": "PASS"
+  },
+  "prior_CI": {
+    "run": 40333673961,
+    "commit": "11c632839c54594393465fb95b764189e5274962",
+    "result": "failed HTTP prepare500; PHPUnit220tests906assertions passed on older base",
+    "root_cause_evidence": "Moodlev5.1.8 modlib.php535 reads PAGE context; pagelib.php572 throws in AJAX developer mode when context unset; controller regression reproduced missing PAGE context"
+  },
+  "limitations": [
+    "PDF text import requires a text layer; no OCR/images/table layout extraction",
+    "PDF export uses browser print dialog; interactivity remains SCORM-only",
+    "Full RC and test-copy acceptance required before deployment"
+  ]
+}

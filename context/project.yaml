@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-26'
+updated_at: '2026-10-27'
 project:
   name: USTAR Academy
   organization: Хозмагия
@@ -38,6 +38,9 @@ current_operator_handoff:
   control_panel: owner_accounts_link_accepted_journal_heartbeat_deferred_19Oct
   platform_upgrade: Moodle5.2_and_PostgreSQL17_deferred
 current_work:
-  task: PERF-01
-  spec: context/reviews/20261026/VERIFIED_REVIEW_RU.md
-  status: verified_backlog_no_product_refactor_in_this_merge
+  task: STUDIO-01
+  spec: docs/superpowers/specs/2026-10-26-studio-readiness-design.md
+  PR: 107
+  status: development_candidate_not_deployed
+  frontend_scope: native local_ustar; author rights and shared revisions preserved
+  next_after_studio: PERF-01 and verified backlog

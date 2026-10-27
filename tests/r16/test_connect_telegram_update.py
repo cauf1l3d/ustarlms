@@ -149,7 +149,9 @@ class Package(unittest.TestCase):
                  'GIT_AUTHOR_NAME':'Telegram fixture','GIT_AUTHOR_EMAIL':'fixture@example.invalid',
                  'GIT_COMMITTER_NAME':'Telegram fixture','GIT_COMMITTER_EMAIL':'fixture@example.invalid'}
             def git(*args):return subprocess.check_output(['git','-C',str(ROOT),*args],env=env,stderr=subprocess.DEVNULL).decode().strip()
-            git('read-tree','HEAD')
+            # This historical operator package must keep its accepted release trees.
+            # Later Academy candidates (e.g. Studio) are qualified by their own gate.
+            git('read-tree',t.APP_COMMIT)
             git('add','scripts/infra/build_connect_telegram_update.py','scripts/infra/build_connect_con02_update.py',
                 *['scripts/infra/'+n+'.py' for n in t.MODULES if n!='production_manifest'])
             cls.commit=git('commit-tree',git('write-tree'),'-p','HEAD','-m','Telegram package private verification snapshot')

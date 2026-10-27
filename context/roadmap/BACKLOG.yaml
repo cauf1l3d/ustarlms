@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-26'
+updated_at: '2026-10-27'
 canonical_branch: main
 source_baseline: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -602,6 +602,21 @@ tasks:
   - context/audits/AUDIT_RECONCILIATION_20261016_RU.md
   - context/runtime/repository_state_20261016.json
   deployment_evidence: repository_only_no_native_host_operation
+- id: STUDIO-01
+  title: Общая академическая студия курсов с PDF
+  status: in_progress
+  depends_on: []
+  PR: 107
+  spec: docs/superpowers/specs/2026-10-26-studio-readiness-design.md
+  runbook: docs/COURSE_STUDIO_RU.md
+  validation_evidence:
+  - context/runtime/course_studio_readiness_20261027.json
+  deployment_evidence: not_deployed; full RC and test-copy acceptance required
+  acceptance:
+  - Native Moodle author access, shared revisions and conflicts without lost drafts
+  - Editable PDF text import into a separate course; browser PDF export
+  - Prepare twice without duplicate Moodle SCORM; retain published attempt history
+  - Full RC and context on the integrated exact candidate SHA
 remediation_plan: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 execution_gate: repository_merge_authorized_Docker_runtime_deferred_to_Moodle_upgrade
 current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md

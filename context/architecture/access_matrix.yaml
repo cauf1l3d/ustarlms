@@ -207,6 +207,7 @@ capabilities:
   - moodle/local/ustar/classes/communication.php
   - moodle/local/ustar/classes/connect/notification_policy.php
   - moodle/local/ustar/classes/content_admin.php
+  - moodle/local/ustar/classes/course_studio.php
   - moodle/local/ustar/classes/employment.php
   - moodle/local/ustar/classes/external/get_workspace.php
   - moodle/local/ustar/classes/external/hr_bulk_assign_positions.php
@@ -307,6 +308,7 @@ capabilities:
   - moodle/local/ustar/classes/communication.php
   - moodle/local/ustar/classes/connect/notification_policy.php
   - moodle/local/ustar/classes/content_admin.php
+  - moodle/local/ustar/classes/course_studio.php
   - moodle/local/ustar/classes/employment.php
   - moodle/local/ustar/classes/external/get_workspace.php
   - moodle/local/ustar/classes/external/hr_bulk_assign_positions.php

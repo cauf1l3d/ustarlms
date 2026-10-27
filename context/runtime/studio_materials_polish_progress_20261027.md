@@ -93,3 +93,13 @@ while historical baseline0202 remains fixed. Code source uploaded as exact tree
 First R16 run1254/45skips had only3 missing-local-MCP errors; environment dependency
 installed, complete rerun in progress. Source/context/secrets pass locally.
 No branch merge or production mutation; remote PR qualification follows.
+
+Self-review: fixed native generated packages becoming uneditable after catalogue-only
+title changes. RED reproduced with a real ZIP; GREEN accepts exact generated pages
+under renamed metadata and rejects changed/stale/active package bodies. Additional
+native File API regression added. Candidate source now d569644ac3d364732f6b41141a047cf7e3b75957;
+old intermediate Git source259d remains history, not production.
+
+Final source correction: existing native course/assessment types now remain effective
+filters instead of falling back to all. Reviewed application commit2aac8c49d4cf1278734ce0cded770c06c8cfa2d1;
+production2d95137a and frozen operator62b0 remain unchanged. Full PR107 gate pending.

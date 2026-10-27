@@ -169,7 +169,7 @@ infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
 development_candidate:
   task: STUDIO-01
   branch: codex/shared-course-studio-20261026
-  application_commit: 259d9d1b65d904b67aa3852b96ff92ed9fe234ee
+  application_commit: 2aac8c49d4cf1278734ce0cded770c06c8cfa2d1
   base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
   manifest: context/code_map/generated/course_studio_candidate.json
   local_ustar_version: 2026102700

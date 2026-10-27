@@ -1,11 +1,11 @@
 schema_version: 2
-updated_at: '2026-10-26'
+updated_at: '2026-10-27'
 project: USTAR Academy
-stage: repository_reconciliation_complete
+stage: performance_query_batch_candidate
 stage_label: Accepted production source and verified current review in main
-current_activity: PR105/103/106 merged through PR108; audits verified; full RC, infra,
-  console and context passed. Next PERF-01 baseline and verified backlog; no server
-  mutation.
+current_activity: PERF owner aggregate measured; RSS/operator query batching source
+  prepared, standalone SQL fixtures PASS; native Moodle and Studio integration pending.
+  No agent server changes.
 entrypoint: START_HERE.md
 next_task: PERF-01
 ready_tasks: []
@@ -31,37 +31,32 @@ production:
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
   latest_Telegram_owner_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
   effective_addon_deployment:
-    receipt: context/runtime/connect_telegram_finish_owner_20261023.json
-    reported_date_msk: '2026-10-23'
-    status: owner_upgrade_ACK_presentation_runtime_and_visual_acceptance_verified
-    installer_commit: 3d1938ae0f2997e79ebbd3e4c3c1c6aa9cd7c134
-    payload_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-    versions:
-      local_ustar: 2026102300
+    receipt: context/runtime/course_studio_owner_deploy_20261027.json
+    reported_date_msk: '2026-10-27'
+    status: owner_reported_app_ready_not_full_browser_acceptance
+    payload_commit: 2d95137ac85a09ad4c513edae8a792152153c840
+    installer_commit: 62b0da2020bc27569c0bd4f8ac96b676f29b7490
+    versions: &id001
+      local_ustar: 2026102600
       theme_ustar: 2026100202
-    application_generation: 94d379904f7f4f7f8795b43e68421d89
-    runtime_generation: 54bb0b7e4ba746928a639279ea729415
-    files: 557
+    files: 582
     tables: 100
     counts_basis: fixed_controller_payload_not_new_whole_host_manifest
     independent_probe: false
-    previous_receipt: context/runtime/connect_con02_server1_owner_20261023.json
-  status: owner_Telegram_application2300_ACK_presentation_and_visual_accepted_export_restore_pending
-  observed_at: '2026-10-23'
-  source: context/runtime/evidence_20261026.yaml
+  status: owner_Studio_app_ready2600_PERF_observed_manual_Studio_acceptance_separate
+  observed_at: '2026-10-27'
+  source: context/runtime/evidence_20261027.yaml
   independently_measured: false
-  current_source_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  current_source_commit: 2d95137ac85a09ad4c513edae8a792152153c840
   current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
     host filesystem census
-  current_versions:
-    local_ustar: 2026102300
-    theme_ustar: 2026100202
+  current_versions: *id001
   last_exact_source_manifest:
-    commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
-    date: '2026-10-23'
-    matching_files: 557
+    commit: 2d95137ac85a09ad4c513edae8a792152153c840
+    date: '2026-10-27'
+    matching_files: 582
     kind: owner_verified_controller_payload_not_fresh_manifest
-    evidence: context/runtime/connect_telegram_finish_owner_20261023.json
+    evidence: context/runtime/course_studio_owner_deploy_20261027.json
   cron: owner23Oct18_08UTC_scheduled_exit0_1_222seconds_no_new_failures_19overdue_2failed_need_task_review
   cron_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
@@ -77,6 +72,7 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+  latest_performance_observation: context/runtime/perf-20261027/observation.json
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -84,9 +80,9 @@ audit:
   previous_snapshot: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261006_RU.md
   scope: Original infrastructure audit immutable; current verification in context/reviews/20261026/VERIFIED_REVIEW_RU.md
 next_agent_read:
-- context/reviews/20261026/VERIFIED_REVIEW_RU.md
-- context/roadmap/ACCEPTED_RISKS.yaml
-- context/runtime/evidence_20261026.yaml
+- context/proposals/PERF_QUERY_BATCHING_PLAN_20261027.md
+- context/runtime/perf-20261027/observation.json
+- context/tasks/ACTIVE.md
 sysadmin_restore:
   kind: owner_confirmed_sysadmin_handoff
   received_at: '2026-10-16T00:20:51+03:00'
@@ -163,3 +159,11 @@ current_review: context/reviews/20261026/VERIFIED_REVIEW_RU.md
 accepted_risks: context/roadmap/ACCEPTED_RISKS.yaml
 repository_reconciliation: context/runtime/repository_reconciliation_20261026.json
 infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
+development_candidate:
+  task: PERF-01
+  manifest: context/code_map/perf_development_source.json
+  scope: RSS statistics and operator name hydration only; source based on main2300;
+    NOT a deployable replacement for Studio2600
+  deployed: false
+  Studio_integration_required_before_release: true
+  native_Moodle_gate: pending

@@ -1,0 +1,527 @@
+{
+  "schema": 1,
+  "kind": "owner_reported_readonly_performance_observation",
+  "agent_SSH": false,
+  "raw_transcript": "context/runtime/perf-20261027/owner_2031.txt",
+  "raw_sha256": "c5c3bb9278bfd3fb6931be44fff530230d8f296cc69eb8b85172b485c71ef3c1",
+  "started_utc": "2026-10-27T20:31:15Z",
+  "finished_utc": "2026-10-27T20:31:27Z",
+  "source_script_sha256": "1a149e275dc934ea7bc32b29cea7adbd133fb249a19208e827f12401f0dc07b6",
+  "observations": [
+    {
+      "kind": "host",
+      "cpu_count": 8,
+      "load_average_1_5_15m": [
+        0.39,
+        0.25,
+        0.33
+      ],
+      "memory": {
+        "MemTotal_KiB": 32798392,
+        "MemAvailable_KiB": 30726764,
+        "SwapTotal_KiB": 4194300,
+        "SwapFree_KiB": 4193788,
+        "Dirty_KiB": 1844,
+        "Writeback_KiB": 0
+      }
+    },
+    {
+      "kind": "existing_web_metrics",
+      "data": {
+        "status": "ok",
+        "snapshot_fresh": true,
+        "observed_at": "2026-10-27T20:31:14.312322+00:00",
+        "reason_code": "measured",
+        "window_seconds": 300,
+        "coverage_seconds": 300,
+        "requests": 314,
+        "rps": 1.0466666666666666,
+        "p95_ms": 200.508,
+        "errors_4xx": 0,
+        "errors_5xx": 0
+      }
+    },
+    {
+      "kind": "limits",
+      "full_workday_baseline": false,
+      "authenticated_page_timings": "not_collected",
+      "sql_per_page": "not_collected",
+      "web_sapi_opcache": "not_collected",
+      "database_observer_transactions_included": true
+    },
+    {
+      "kind": "postgres_sample",
+      "observed_at": "2026-10-27T20:31:15.136039+00:00",
+      "server_started_at": "2026-10-27T19:58:50.711153+00:00",
+      "counters": {
+        "numbackends": 1,
+        "xact_commit": 66446301,
+        "xact_rollback": 108,
+        "blks_read": 137514,
+        "blks_hit": 1114377044,
+        "tup_returned": 8755218458,
+        "tup_fetched": 444985174,
+        "tup_inserted": 1390639,
+        "tup_updated": 2534748,
+        "tup_deleted": 1193233,
+        "temp_files": 20,
+        "temp_bytes": 5881856,
+        "deadlocks": 0,
+        "blk_read_time": 0,
+        "blk_write_time": 0,
+        "stats_reset": null
+      },
+      "activity": []
+    },
+    {
+      "kind": "postgres_sample",
+      "observed_at": "2026-10-27T20:31:27.294457+00:00",
+      "server_started_at": "2026-10-27T19:58:50.711153+00:00",
+      "counters": {
+        "numbackends": 1,
+        "xact_commit": 66446326,
+        "xact_rollback": 109,
+        "blks_read": 137520,
+        "blks_hit": 1114381164,
+        "tup_returned": 8755221555,
+        "tup_fetched": 444987577,
+        "tup_inserted": 1390642,
+        "tup_updated": 2534748,
+        "tup_deleted": 1193233,
+        "temp_files": 20,
+        "temp_bytes": 5881856,
+        "deadlocks": 0,
+        "blk_read_time": 0,
+        "blk_write_time": 0,
+        "stats_reset": null
+      },
+      "activity": []
+    },
+    {
+      "kind": "postgres_settings",
+      "settings": [
+        {
+          "name": "autovacuum",
+          "setting": "on",
+          "unit": null
+        },
+        {
+          "name": "autovacuum_analyze_scale_factor",
+          "setting": "0.1",
+          "unit": null
+        },
+        {
+          "name": "autovacuum_vacuum_scale_factor",
+          "setting": "0.2",
+          "unit": null
+        },
+        {
+          "name": "effective_cache_size",
+          "setting": "524288",
+          "unit": "8kB"
+        },
+        {
+          "name": "max_connections",
+          "setting": "100",
+          "unit": null
+        },
+        {
+          "name": "max_parallel_workers_per_gather",
+          "setting": "2",
+          "unit": null
+        },
+        {
+          "name": "shared_buffers",
+          "setting": "16384",
+          "unit": "8kB"
+        },
+        {
+          "name": "track_activity_query_size",
+          "setting": "1024",
+          "unit": "B"
+        },
+        {
+          "name": "track_io_timing",
+          "setting": "off",
+          "unit": null
+        },
+        {
+          "name": "work_mem",
+          "setting": "4096",
+          "unit": "kB"
+        }
+      ]
+    },
+    {
+      "kind": "pg_stat_statements_availability",
+      "extension_installed": false,
+      "preload_setting_contains_name": false,
+      "query_text_exported": false,
+      "enabled_by_this_observation": false
+    },
+    {
+      "kind": "table_stats_cumulative",
+      "rows": [
+        {
+          "relname": "mdl_local_ustar_staff_places",
+          "n_live_tup": 97,
+          "n_dead_tup": 0,
+          "seq_scan": 31877301,
+          "idx_scan": 38,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-09-30T07:41:15.051137+00:00"
+        },
+        {
+          "relname": "mdl_local_ustar_assignments",
+          "n_live_tup": 152,
+          "n_dead_tup": 1,
+          "seq_scan": 12931902,
+          "idx_scan": 8200220,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-09-30T07:41:14.968356+00:00"
+        },
+        {
+          "relname": "mdl_user_info_field",
+          "n_live_tup": 2,
+          "n_dead_tup": 0,
+          "seq_scan": 9241479,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_local_ustar_employment",
+          "n_live_tup": 19,
+          "n_dead_tup": 9,
+          "seq_scan": 8923903,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_user_info_data",
+          "n_live_tup": 123,
+          "n_dead_tup": 11,
+          "seq_scan": 8629820,
+          "idx_scan": 102,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-09-30T07:41:16.297214+00:00"
+        },
+        {
+          "relname": "mdl_local_ustar_structure",
+          "n_live_tup": 3,
+          "n_dead_tup": 2,
+          "seq_scan": 5449436,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_task_scheduled",
+          "n_live_tup": 148,
+          "n_dead_tup": 85,
+          "seq_scan": 4929126,
+          "idx_scan": 1548566,
+          "last_autovacuum": "2026-10-27T20:29:31.321603+00:00",
+          "last_autoanalyze": "2026-10-27T20:29:31.326255+00:00"
+        },
+        {
+          "relname": "mdl_modules",
+          "n_live_tup": 26,
+          "n_dead_tup": 0,
+          "seq_scan": 3096347,
+          "idx_scan": 11,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_cache_flags",
+          "n_live_tup": 6,
+          "n_dead_tup": 5,
+          "seq_scan": 1511030,
+          "idx_scan": 0,
+          "last_autovacuum": "2026-10-27T18:00:43.514249+00:00",
+          "last_autoanalyze": "2026-10-24T00:32:49.815801+00:00"
+        },
+        {
+          "relname": "mdl_context",
+          "n_live_tup": 270,
+          "n_dead_tup": 36,
+          "seq_scan": 1125879,
+          "idx_scan": 574201,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-09-30T07:41:14.8461+00:00"
+        },
+        {
+          "relname": "mdl_local_ustar_competitions",
+          "n_live_tup": 3,
+          "n_dead_tup": 3,
+          "seq_scan": 756264,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_local_ustar_route_points",
+          "n_live_tup": 68,
+          "n_dead_tup": 18,
+          "seq_scan": 691999,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-09-30T07:41:15.031921+00:00"
+        },
+        {
+          "relname": "mdl_local_ustar_reward_grants",
+          "n_live_tup": 232,
+          "n_dead_tup": 0,
+          "seq_scan": 458632,
+          "idx_scan": 2679,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-10-14T09:18:55.349089+00:00"
+        },
+        {
+          "relname": "mdl_course",
+          "n_live_tup": 17,
+          "n_dead_tup": 40,
+          "seq_scan": 457665,
+          "idx_scan": 300789,
+          "last_autovacuum": "2026-10-02T13:01:13.086731+00:00",
+          "last_autoanalyze": "2026-10-27T19:59:10.819737+00:00"
+        },
+        {
+          "relname": "mdl_role",
+          "n_live_tup": 21,
+          "n_dead_tup": 0,
+          "seq_scan": 409604,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_local_ustar_task_escalations",
+          "n_live_tup": 106,
+          "n_dead_tup": 0,
+          "seq_scan": 407108,
+          "idx_scan": 7796,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-10-06T14:00:37.114802+00:00"
+        },
+        {
+          "relname": "mdl_local_ustar_comp_rules",
+          "n_live_tup": 3,
+          "n_dead_tup": 2,
+          "seq_scan": 381292,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_local_ustar_comp_participants",
+          "n_live_tup": 46,
+          "n_dead_tup": 0,
+          "seq_scan": 375002,
+          "idx_scan": 0,
+          "last_autovacuum": null,
+          "last_autoanalyze": null
+        },
+        {
+          "relname": "mdl_task_adhoc",
+          "n_live_tup": 0,
+          "n_dead_tup": 44,
+          "seq_scan": 316938,
+          "idx_scan": 4592,
+          "last_autovacuum": "2026-10-27T18:40:44.222465+00:00",
+          "last_autoanalyze": "2026-10-27T20:20:31.160375+00:00"
+        },
+        {
+          "relname": "mdl_local_ustar_comp_score_events",
+          "n_live_tup": 61,
+          "n_dead_tup": 0,
+          "seq_scan": 291507,
+          "idx_scan": 11164,
+          "last_autovacuum": null,
+          "last_autoanalyze": "2026-10-06T10:46:33.567971+00:00"
+        }
+      ]
+    },
+    {
+      "kind": "cron_enabled_only",
+      "scheduled": {
+        "enabled": 133,
+        "enabled_with_backoff": 0,
+        "enabled_overdue_10m": 19,
+        "disabled_with_historical_backoff": 2
+      },
+      "adhoc": {
+        "queued": 0,
+        "with_backoff": 0
+      }
+    }
+  ],
+  "file_hashes": {
+    "/var/www/html/public/local/ustar/version.php": "760769b29b5eebf97268296ccaaa3bd3d0b18511bb7f4d46e18316510d4b5d7c",
+    "/var/www/html/public/theme/ustar/version.php": "b577440df7c6c5b5bb8b26c454caf7b38eb39670f43056f8d8666daf5ddd68e3",
+    "/var/www/html/public/local/ustar/feed_admin.php": "e160604a31bd0e75cc32674b42c3272782dbe3bc971a86b25b376eeb84f95b54",
+    "/var/www/html/public/local/ustar/classes/competition.php": "399223ab1a031e375848b6df31e4b517be215a89f406f63df06eb86abb47bca7"
+  },
+  "cron_overdue_rows": [
+    {
+      "classname": "\\enrol_category\\task\\enrol_category_sync",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 05:42:00+03",
+      "overdue_minutes": 424430,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_paypal\\task\\process_expirations",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 05:42:00+03",
+      "overdue_minutes": 424430,
+      "customised": 0
+    },
+    {
+      "classname": "\\repository_dropbox\\task\\cron_task",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 05:42:00+03",
+      "overdue_minutes": 424430,
+      "customised": 0
+    },
+    {
+      "classname": "\\repository_filesystem\\task\\cron_task",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 05:42:00+03",
+      "overdue_minutes": 424430,
+      "customised": 0
+    },
+    {
+      "classname": "\\block_rss_client\\task\\refreshfeeds",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 05:45:00+03",
+      "overdue_minutes": 424427,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_lti\\local\\ltiadvantage\\task\\sync_grades",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 06:00:00+03",
+      "overdue_minutes": 424412,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_lti\\local\\ltiadvantage\\task\\sync_members",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 06:00:00+03",
+      "overdue_minutes": 424412,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_lti\\task\\sync_grades",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 06:00:00+03",
+      "overdue_minutes": 424412,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_lti\\task\\sync_members",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 06:00:00+03",
+      "overdue_minutes": 424412,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_imsenterprise\\task\\cron_task",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 06:10:00+03",
+      "overdue_minutes": 424402,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_flatfile\\task\\flatfile_sync_task",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 06:15:00+03",
+      "overdue_minutes": 424397,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_meta\\task\\enrol_meta_sync",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-06 06:19:00+03",
+      "overdue_minutes": 424393,
+      "customised": 0
+    },
+    {
+      "classname": "\\factor_nosetup\\task\\delete_unusable_factors",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-07 03:27:00+03",
+      "overdue_minutes": 423125,
+      "customised": 0
+    },
+    {
+      "classname": "\\factor_grace\\task\\revoke_expired_factors",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-07 03:28:00+03",
+      "overdue_minutes": 423124,
+      "customised": 0
+    },
+    {
+      "classname": "\\repository_onedrive\\remove_temp_access_task",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-01-09 03:11:00+03",
+      "overdue_minutes": 420261,
+      "customised": 0
+    },
+    {
+      "classname": "\\enrol_fee\\task\\process_expirations",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-10-13 03:27:00+03",
+      "overdue_minutes": 21365,
+      "customised": 0
+    },
+    {
+      "classname": "\\mod_bigbluebuttonbn\\task\\check_pending_recordings",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-10-13 03:30:00+03",
+      "overdue_minutes": 21362,
+      "customised": 0
+    },
+    {
+      "classname": "\\auth_oauth2\\task\\delete_expired_confirmation_tokens",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-10-13 11:02:00+03",
+      "overdue_minutes": 20910,
+      "customised": 0
+    },
+    {
+      "classname": "\\mod_bigbluebuttonbn\\task\\check_dismissed_recordings",
+      "faildelay": 0,
+      "last_run": null,
+      "next_run_msk": "2026-10-21 00:00:00+03",
+      "overdue_minutes": 10052,
+      "customised": 0
+    }
+  ],
+  "limits": [
+    "Apache aggregate including assets, not per authenticated page latency or full-day SLO",
+    "Raw disabled=0 SQL does not account for component enabled/deprecation/config overrides",
+    "Postmaster start changed between observations; no cross-restart workload-rate inference",
+    "Studio version changed; candidate is not a full production update artifact"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "reported_date_msk": "2026-10-27",
+  "source": "owner_console_transcript_in_current_dialogue",
+  "evidence_kind": "owner_reported_fixed_controller_installation_not_independent_host_probe",
+  "agent_SSH": false,
+  "independently_measured_on_server": false,
+  "application": {
+    "installer_commit": "62b0da2020bc27569c0bd4f8ac96b676f29b7490",
+    "payload_commit": "2d95137ac85a09ad4c513edae8a792152153c840",
+    "previous_payload_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "payload_files": 582,
+    "tables": 100,
+    "counts_basis": "fixed_controller_payload_not_a_new_whole_host_manifest",
+    "versions": {
+      "local_ustar": 2026102600,
+      "theme_ustar": 2026100202
+    },
+    "versions_basis": "local2600 printed by owner; both target versions verified by fixed controller app_ready contract",
+    "worker_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+    "worker_rollout": false
+  },
+  "package": {
+    "name": "ustar-studio-install-62b0da20.tar.gz",
+    "sha256": "98f486fe525b3abdcb5ef899d0948ab9083712317ff392e7c8fa0f4aa05ec9cf",
+    "owner_reported_checks": {
+      "package.tar.gz": "OK",
+      "INSTALL.json": "OK",
+      "README.txt": "OK",
+      "update.py": "OK"
+    }
+  },
+  "precheck": {
+    "host_changes": false,
+    "local_ustar": "2026102300",
+    "phase": "ready_for_studio_update",
+    "provider_called": false
+  },
+  "reported_phases": [
+    "source_activated",
+    "upgrade_1",
+    "upgrade_2",
+    "cron_written",
+    "public_release_committed",
+    "app_ready"
+  ],
+  "result": {
+    "ack_enabled": true,
+    "local_ustar": "2026102600",
+    "phase": "app_ready"
+  },
+  "systemd": {
+    "unit": "ustar-studio-update-62b0da20.service",
+    "reported_result": "Deactivated successfully; Finished",
+    "reported_CPU_time": "3min 1.259s",
+    "wall_time_not_reported": true
+  },
+  "CI_qualification": {
+    "commit": "e9ffe6b56d4e030b7ff70c092dbfdd68d0664308",
+    "review_full_RC": 40441818519,
+    "context": 40441818592,
+    "infrastructure": 40441818514,
+    "console": 40441818488,
+    "all": "success",
+    "Moodle_tests_per_matrix": 335,
+    "Moodle_assertions_per_matrix": 1500,
+    "authenticated_Studio_HTTP": "PASS",
+    "mandatory_actual_UID33": "PASS",
+    "artifact_id": 12706875666
+  },
+  "acceptance": {
+    "installation": "owner_reported_success",
+    "post_deploy_status": "pending_owner_output",
+    "scheduled_cron2600": "pending_owner_output",
+    "browser_author_employee": "pending_owner",
+    "PDF_import_export": "pending_owner",
+    "two_browser_shared_save": "pending_owner",
+    "main_integration": "PR107_open_not_merged"
+  },
+  "boundaries": [
+    "No fresh whole-host source census or new platform measurement",
+    "No manual Studio functional acceptance in this transcript",
+    "Existing Connect worker acceptance remains historical; no new provider sends tested",
+    "Previous restore and infrastructure risk decisions unchanged"
+  ],
+  "previous_deployment_receipt": "context/runtime/connect_telegram_finish_owner_20261023.json"
+}

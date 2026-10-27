@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-10-26'
+updated_at: '2026-10-27'
 canonical_branch: main
 source_baseline: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
 historical_backlog: context/archive/handoff_20261002/previous_entrypoints/context/roadmap/BACKLOG.yaml
@@ -313,7 +313,7 @@ tasks:
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
 - id: PERF-01
   title: Измерение latency, SQL, cron lag и нагрузки
-  status: planned
+  status: in_progress
   depends_on:
   - INF-08
   acceptance:
@@ -325,8 +325,13 @@ tasks:
   - R19
   - G07
   spec: context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md
-  current_summary: Passive workday baseline first; confirmed feed/competition query
-    batching candidates; no latency claim without measurements.
+  current_summary: Owner27Oct aggregate314 requests/300s,p95=200.508ms,no4xx/5xx;
+    no resource saturation in sampled window. Batching source+standalone SQL fixtures
+    ready; native Moodle/Studio integration and representative page/workday baseline
+    remain open.
+  validation_evidence:
+  - context/runtime/perf-20261027/observation.json
+  implementation_plan: context/proposals/PERF_QUERY_BATCHING_PLAN_20261027.md
 - id: INF-13
   title: Security сопровождение, ADR и закрытие базовой приёмки
   status: planned

@@ -106,6 +106,8 @@ $typelabels = [
     'folder' => 'Папка',
     'document' => 'Документ',
     'article' => 'Статья',
+    'course' => 'Курс',
+    'assessment' => 'Аттестация',
     'quiz' => 'Тест',
     'scorm' => 'SCORM',
     'lesson' => 'Урок',
@@ -116,6 +118,8 @@ $typelabels = [
     'assignment' => 'Задание',
     'interactive' => 'Интерактив',
     'activity' => 'Материал',
+    'video' => 'Видео',
+    'audio' => 'Аудио',
 ];
 
 
@@ -485,7 +489,7 @@ foreach ($DB->get_records_sql($sql) as $row) {
 /* The reader bounds the catalogue and loads a selected detail independently. */
 $pageno=max(0,optional_param('page',0,PARAM_INT));
 $listing=\local_ustar\material_catalog::read([
-    'q'=>$q,'type'=>isset($typelabels[$type])?$type:'all',
+    'q'=>$q,'type'=>$type,
     'status'=>$status,'parent'=>$parentid,
 ],$pageno,$detailpage?$contentid:0);
 $records=$listing['records'];$pageno=$listing['page'];$filteredtotal=$listing['total'];

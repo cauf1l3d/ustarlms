@@ -571,7 +571,7 @@
       "path": "context/code_map/generated/course_studio_candidate.json",
       "domain": "code_map",
       "size": 94295,
-      "sha256": "886a795206c38b75f042cbcf1d67bfd0f7421a78b63ccb9a18e5c669f59a7979"
+      "sha256": "ec033d1de7fc7a0d72369c5311ebec758d542bf420a3148eb997e26b9b203416"
     },
     {
       "path": "context/code_map/generated/database_tables.md",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 9167,
-      "sha256": "6ec9212a26ea03d9f52d9b541bb1221c1f24880c1dd55d1b960219738d84a7e3"
+      "size": 9187,
+      "sha256": "4ba4c8b15686178eb29756846b56d68678b88dec3db8d46dc24d83ff577a9275"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -3354,8 +3354,8 @@
     {
       "path": "context/runtime/studio_materials_polish_progress_20261027.md",
       "domain": "runtime",
-      "size": 7220,
-      "sha256": "24aa28b9dfb601fe2c02ec5c4c02d222027203e057280475d9f06bb3bfee2af6"
+      "size": 8662,
+      "sha256": "e731bc7649f68c5ed9714af25f83bec1c74dfd37e5e6a4b134cc33b69bd4fef3"
     },
     {
       "path": "context/runtime/sysadmin_handoff_result_20261016.json",

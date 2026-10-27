@@ -3,7 +3,7 @@
   "deployed": false,
   "baseline_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
   "component_tree_ids": {
-    "moodle/local/ustar": "b50026ba53cd833ac726ddd1c5644619999de42a",
+    "moodle/local/ustar": "43e259c4c0537d78923e0684cac581476ec331cb",
     "moodle/theme/ustar": "c60e0657cb957288c914fa46444d2d692012cb7e"
   },
   "versions": {
@@ -1397,7 +1397,7 @@
     },
     {
       "path": "moodle/local/ustar/materials.php",
-      "sha256": "5fd7924af5166c55a24dafeb8d25b2817e62aa546889638334c0079fabeab19e"
+      "sha256": "a3e37332f79efdc360915d5b949966ad4012f272e39cf392b74e7b3b0c81435f"
     },
     {
       "path": "moodle/local/ustar/materials_fullwidth.css",
@@ -1993,7 +1993,7 @@
     },
     {
       "path": "moodle/local/ustar/tests/course_studio_material_test.php",
-      "sha256": "25e9fd528b8d380c2e142790bae9457fc36f293a6e0280691f60e0a03a47c23f"
+      "sha256": "b3e678db2aa20a6a75752cba1dca17c721e602338c61a8e875ed7c54129937d6"
     },
     {
       "path": "moodle/local/ustar/tests/course_studio_project_test.php",

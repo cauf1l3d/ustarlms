@@ -103,3 +103,21 @@ old intermediate Git source259d remains history, not production.
 Final source correction: existing native course/assessment types now remain effective
 filters instead of falling back to all. Reviewed application commit2aac8c49d4cf1278734ce0cded770c06c8cfa2d1;
 production2d95137a and frozen operator62b0 remain unchanged. Full PR107 gate pending.
+
+CI attempt3421a280 / review40600516703: source8.2+8.3, rollback, context, infra and
+console PASS. Both native matrices ran347tests/1663assertions with2 fixture errors:
+text-column reason compared through get_records conditions; retry after explicit
+rollback remained inside PHPUnit's disposed enclosing transaction. Corrected assertion
+with sql_compare_text and used Moodle preventResetByRollback before the multi-request
+fixture, preserving every original/audience/token/retry assertion. Official Moodle
+advanced_testcase implementation and existing Connect fixtures confirmed the cause.
+HTTP artifact also exposed pre-existing late PAGE context in material detail before
+format_string (developer-mode500); context now established immediately after login.
+Added actual-browser short phone/footer scenario; unchanged UI passes.
+Local stable-head R16:1254tests/45environment skips PASS228.145s; previous reproducible
+archive comparison failure was caused by moving HEAD between its two builds, not a
+product change. CI source runs1257/228skips (environment-dependent discovery).
+New reviewed source20ed966e146378a21016c085d31ce4defaa809a8; native repeat pending.
+Historical source artifact12777873527 ZIP CRC/SHA and589member hashes verified, exact
+local git archive match (source tar SHA621e4aa68c90474586b1a80a6b22f7fdb4c26a6049e583eb7836a0571c3aac2f).
+That artifact belongs to the failed attempt; do not deliver it as a qualified release.

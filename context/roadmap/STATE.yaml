@@ -169,13 +169,13 @@ infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
 development_candidate:
   task: STUDIO-01
   branch: codex/shared-course-studio-20261026
-  application_commit: 2aac8c49d4cf1278734ce0cded770c06c8cfa2d1
+  application_commit: 20ed966e146378a21016c085d31ce4defaa809a8
   base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
   manifest: context/code_map/generated/course_studio_candidate.json
   local_ustar_version: 2026102700
   theme_ustar_version: 2026102700
   PR: 107
-  status: local_verified_native_CI_pending
+  status: native_CI_retry_after_fixture_and_HTTP_context_fixes
   deployed: false
   production_predecessor_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   source_manifest_scope: Unmerged2700 application tree; actual production stays2d95137a/local2600/theme0202

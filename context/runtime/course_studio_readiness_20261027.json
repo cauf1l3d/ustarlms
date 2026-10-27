@@ -28,7 +28,9 @@
     "full_RC": "pending on final integrated PR head",
     "test_copy_acceptance": "not_performed",
     "context": "PASS source accepted6c56a5b6;development candidate582files/100tables",
-    "secret_guard": "PASS"
+    "secret_guard": "PASS",
+    "browser_CSP_and_scan": "PASS actual entrypoint CSP; full-text PDF flow and scan rejection preserve active course",
+    "mobile_template_delay": "PASS60scenarios with450ms synthetic image delay; old100ms assertion reproduced failure"
   },
   "prior_CI": {
     "run": 40333673961,
@@ -40,5 +42,17 @@
     "PDF text import requires a text layer; no OCR/images/table layout extraction",
     "PDF export uses browser print dialog; interactivity remains SCORM-only",
     "Full RC and test-copy acceptance required before deployment"
+  ],
+  "ci_attempts": [
+    {
+      "commit": "3d13ddcd162dfddd5c3bcff4dc844ffab79ff726",
+      "review_run": 40432247264,
+      "result": "source8.3 failed legacy mobile lazy-image race before Moodle DB; source8.2 and rollback passed",
+      "context_run": 40432247276,
+      "context_result": "success",
+      "infra_run": 40432247349,
+      "infra_result": "success",
+      "correction": "Wait for actual lazy image load/decode in visual test; same failure reproduced with450ms delay, corrected60scenarios passed"
+    }
   ]
 }

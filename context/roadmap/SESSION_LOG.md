@@ -22,3 +22,8 @@ package fixture now pins accepted release trees while retaining immutable packag
 guards. Python1240tests/63environment skips passed; full RC qualification pending; no server mutation.
 Evidence: context/runtime/course_studio_readiness_20261027.json; author/deployment
 runbook: docs/COURSE_STUDIO_RU.md.
+
+CI40432247264: source8.2/rollback passed; source8.3 stopped at the legacy
+profile lazy-image100ms race. Reproduced with450ms synthetic image delay; image
+load/decode wait passes all60mobile scenarios. Context40432247276 and native
+infra40432247349 passed. Full Moodle DB path remains pending on corrected head.

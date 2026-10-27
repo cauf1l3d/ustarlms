@@ -1446,8 +1446,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 1830,
-      "sha256": "6368059ddc4b3e7c531a9f05778e4d642bbdc509b12d7d7c6fd65b0ddbb5659d"
+      "size": 2142,
+      "sha256": "6ca40905604e2dd5debfb72a64f1248ae0aaee0de4227af2408f69e2ffb2be13"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -2202,8 +2202,8 @@
     {
       "path": "context/runtime/course_studio_readiness_20261027.json",
       "domain": "runtime",
-      "size": 2310,
-      "sha256": "b6a74587ff2bdc18f1f25536d007f90a21b3d7b65db81bbddbe7c54009f0b5de"
+      "size": 3072,
+      "sha256": "8597e64592525a3bdbc102a1a3bf60fb2e409ddce2fcdf00181625b83269ce63"
     },
     {
       "path": "context/runtime/cron_incident_20261020.md",

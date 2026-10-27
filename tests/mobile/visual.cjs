@@ -92,7 +92,13 @@ const server=http.createServer((req,res)=>{
         if(name==='achievements') {
           assert.strictEqual(await page.locator('.u-leaderboard-avatar img').count(),2);
           assert.strictEqual(await page.locator('.u-leaderboard-avatar span').count(),2);
-          assert(await page.locator('.u-leaderboard-avatar img').first().evaluate(el=>el.complete&&el.naturalWidth>0),'Broken profile picture');
+          const picture=page.locator('.u-leaderboard-avatar img').first();
+          // Lazy/async images do not block page load; wait for the actual asset.
+          await picture.scrollIntoViewIfNeeded();
+          await page.waitForFunction(el=>el.complete&&el.naturalWidth>0,
+            await picture.elementHandle(),{timeout:5000});
+          await picture.evaluate(el=>el.decode());
+          assert(await picture.evaluate(el=>el.complete&&el.naturalWidth>0),`Broken profile picture ${width} ${theme}`);
           assert.strictEqual(await page.locator('.u-leaderboard-avatar').first().evaluate(el=>getComputedStyle(el,'::after').content),'none');
           assert.notStrictEqual(await page.locator('.u-leaderboard-avatar span').first().evaluate(el=>getComputedStyle(el.parentElement).fontSize),'0px');
         }

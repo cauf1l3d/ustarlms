@@ -127,6 +127,16 @@ jobs:
           python3 .stage-input/con02-update-legacy/scripts/infra/build_connect_bridge_activation.py --commit a86e208029b6104150e85d0e90384f84da214c22 --output-dir "$GITHUB_WORKSPACE/artifacts/con02-update-legacy"
       - name: CON02 physical images and locks with mandatory real root GID33
         run: sudo -n env USTAR_REQUIRE_CON02_OWNER=1 python3 -m unittest discover -s tests/r16 -p test_connect_con02_state.py -v
+      - name: Build fixed Studio production updater without host access
+        run: |
+          python3 scripts/infra/build_course_studio_update.py --commit "$(git rev-parse HEAD)" --output-dir artifacts/studio-production-deploy
+          python3 -I -B artifacts/studio-production-deploy/ustar-studio-update-*.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-production-deploy
+          path: artifacts/studio-production-deploy/
+      - name: Studio source keeps actual root ownership and denies UID33 writes
+        run: sudo -n env USTAR_REQUIRE_STUDIO_UID33=1 python3 -m unittest tests.r16.test_course_studio_update.ActualCodePermissions -v
       - name: PostgreSQL handoff config is readable but cannot be overwritten by actual UID33
         run: sudo -n env USTAR_REQUIRE_ROOT_OWNER_FIXTURE=1 python3 -m unittest tests.r16.test_postgres_app_handoff.ActualUnixPermissions -v
       - name: Code hardening archive and actual UID33 isolation

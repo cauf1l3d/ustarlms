@@ -1,0 +1,20 @@
+{
+  "date_msk": "2026-10-27",
+  "evidence_kind": "owner_instruction_not_deployment_receipt",
+  "instruction": "будем принимать на проде, дай команды и архив для деплоя",
+  "production_acceptance_authorized": true,
+  "agent_SSH": false,
+  "baseline_app_commit": "6c56a5b6ab830b97b706a5d7028b49cfae31e7a4",
+  "target_app_commit": "2d95137ac85a09ad4c513edae8a792152153c840",
+  "accepted_versions": {
+    "local_ustar": 2026102300,
+    "theme_ustar": 2026100202
+  },
+  "target_versions": {
+    "local_ustar": 2026102600,
+    "theme_ustar": 2026100202
+  },
+  "operator_package": "in_preparation",
+  "deployment_executed": false,
+  "scope": "Existing paired application/cron update. Existing worker, keys, SQLite journal, fence and HTTPS unchanged. No Docker recreate."
+}

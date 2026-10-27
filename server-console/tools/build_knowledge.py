@@ -186,6 +186,7 @@ METADATA={'backup_restore_test': ('Стенд восстановления',
 
 # Explicit reviewed sources; never turn a new file into an executable UI action.
 SOURCE_ONLY = frozenset(['build_code_hardening', 'build_connect_academy_installer', 'build_connect_academy_release', 'build_connect_bridge_activation', 'build_connect_chat_link_update', 'build_connect_con02_update', 'build_connect_notification_pilot', 'build_connect_private_bridge', 'build_connect_readiness', 'build_connect_telegram_update', 'connect_con02_application', 'connect_con02_contract', 'connect_con02_profiles', 'connect_con02_runtime', 'connect_con02_state'])
+SOURCE_ONLY = SOURCE_ONLY | {'course_studio_update', 'build_course_studio_update'}
 METADATA.update({'academy_https': ('Владелец HTTPS Академии',
                    'Исходники проверенных поставок',
                    'Справка об исходнике; конкретная версия и режим указаны в dated runtime-квитанции.',

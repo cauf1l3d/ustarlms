@@ -7,6 +7,7 @@ require_login();
 global $DB, $USER;
 
 $context = context_system::instance();
+$PAGE->set_context($context);
 
 $detailpage =
     defined('USTAR_MATERIAL_DETAIL_PAGE')
@@ -1638,10 +1639,6 @@ if ($parentid > 0) {
  * PAGE
  * ------------------------------------------------------------
  */
-
-$PAGE->set_context(
-    $context
-);
 
 $PAGE->set_url(
     $detailpage

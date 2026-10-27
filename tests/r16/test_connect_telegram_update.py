@@ -149,7 +149,8 @@ class Package(unittest.TestCase):
                  'GIT_AUTHOR_NAME':'Telegram fixture','GIT_AUTHOR_EMAIL':'fixture@example.invalid',
                  'GIT_COMMITTER_NAME':'Telegram fixture','GIT_COMMITTER_EMAIL':'fixture@example.invalid'}
             def git(*args):return subprocess.check_output(['git','-C',str(ROOT),*args],env=env,stderr=subprocess.DEVNULL).decode().strip()
-            git('read-tree','HEAD')
+            # This is the frozen Telegram2300 package fixture, not a successor app release.
+            git('read-tree',t.APP_COMMIT)
             git('add','scripts/infra/build_connect_telegram_update.py','scripts/infra/build_connect_con02_update.py',
                 *['scripts/infra/'+n+'.py' for n in t.MODULES if n!='production_manifest'])
             cls.commit=git('commit-tree',git('write-tree'),'-p','HEAD','-m','Telegram package private verification snapshot')
@@ -162,6 +163,24 @@ class Package(unittest.TestCase):
         result=subprocess.run([sys.executable,'-B',str(artifact)],cwd=artifact.parent,capture_output=True,text=True,timeout=45)
         self.assertEqual(0,result.returncode,result.stderr)
         self.assertEqual({'phase':'PLAN_ONLY','host_access':False,'network_used':False},json.loads(result.stdout))
+
+    def test_changed_application_tree_is_still_denied(self):
+        self.package()
+        with tempfile.TemporaryDirectory() as td:
+            env={**os.environ,'GIT_INDEX_FILE':str(Path(td)/'index'),
+                 'GIT_AUTHOR_NAME':'Telegram fixture','GIT_AUTHOR_EMAIL':'fixture@example.invalid',
+                 'GIT_COMMITTER_NAME':'Telegram fixture','GIT_COMMITTER_EMAIL':'fixture@example.invalid'}
+            def git(*args,raw=None):
+                return subprocess.check_output(['git','-C',str(ROOT),*args],input=raw,env=env,
+                    stderr=subprocess.DEVNULL).decode().strip()
+            git('read-tree',self.commit)
+            path='moodle/local/ustar/version.php'
+            original=subprocess.check_output(['git','-C',str(ROOT),'show',self.commit+':'+path])
+            blob=git('hash-object','-w','--stdin',raw=original+b'\n// package fixture drift\n')
+            git('update-index','--cacheinfo','100644',blob,path)
+            changed=git('commit-tree',git('write-tree'),'-p',self.commit,'-m','Private changed-app negative fixture')
+            with self.assertRaisesRegex(c.Refusal,'tool_release_component_mismatch'):
+                self.builder().build(changed,Path(td)/'refused')
 
     def test_ordinary_file_reproducible_and_changed_payload_denied(self):
         import ast

@@ -53,7 +53,7 @@ Moodle first-column key не теряет группы source+status; пусто
 ## Выполнение27Oct
 
 Задачи1–2: production PHP+SQLite9cases; до правки7ожидаемых RED, после9GREEN.
-Задача3: source checks и полный localr16 1241/44skips PASS; context/secret PASS.
+Задача3: source checks и полный localr16 после historical Package fixture fix1242/44skips PASS; context/secret PASS.
 Native Moodle/PG PHPUnit добавлен и пока не выполнен. Это блокер выпуска, не
 причина маркировать старый baseline2600 как неизвестный или повторять его деплой.
 Final review: авторская отдельная проверка по Review focus,0субагентов по решению

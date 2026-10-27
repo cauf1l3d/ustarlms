@@ -42,10 +42,19 @@ block_rss/BigBlueButton/auth_oauth2, ни одной local_ustar. Moodle v5.1.8 
 query_batching_test добавлен для групп source+status/empty/one read и20closed
 participants/result shape/read budget. Native gate пока не выполнен.
 
-Полный локальный r16:1241tests,44environment skips,1197исполненных PASS;93.312s.
+Полный локальный r16 после fixture fix:1242tests,44environment skips,1198исполненных PASS;94.155s.
 Source checks:387PHP/24JS/100tables/57templates PASS. Context/source candidate
 558files и secret guard PASS. PHPCLI8.3.6 извлечён из Ubuntu snapshot в отдельный
 scratch runtime; это не productionPHP8.3.33 и не обновление системных пакетов.
+
+CI первого candidate767c8c8 выявил два errors в историческом Telegram Package
+fixture: snapshot делал read-tree HEAD и после commit нового приложения нарушал
+неизменный APP_COMMIT guard. Локально воспроизведены те же2errors. Fixture теперь
+берёт замороженный application tree t.APP_COMMIT, поверх оставляет проверяемые
+operator modules. Builder/runtime guards не менялись. Новый отдельный negative
+создаёт изменённый version.php tree и требует tool_release_component_mismatch.
+Пять Package tests RED→GREEN. Первый local PASS относился к run до app commit;
+он не доказывал упаковку нового HEAD. После fix полный suite1242/44skips PASS.
 
 Авторский review,0субагентов: recordset close/finally, unknown statuses, IN params,
 scope/guard-before-query, open account filtering, closed missing user/type/order,

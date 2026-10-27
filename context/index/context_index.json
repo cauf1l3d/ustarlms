@@ -900,8 +900,8 @@
     {
       "path": "context/proposals/PERF_QUERY_BATCHING_PLAN_20261027.md",
       "domain": "proposals",
-      "size": 5755,
-      "sha256": "55a6d159e7bbc204d4045b7b51672eb8a6538def1421ffcd3166375e91918947"
+      "size": 5796,
+      "sha256": "48b615a45f886d43a3a48a8c20c5cabe7b935f3f3c516c586051d445a19157ed"
     },
     {
       "path": "context/proposals/PROD_TRUTH_PLAN_20261026.md",
@@ -2910,8 +2910,8 @@
     {
       "path": "context/runtime/perf_query_batching_20261027.md",
       "domain": "runtime",
-      "size": 4956,
-      "sha256": "c440eaca5ddaf375729a4d0b251c9b6901505e2107a8cdc4f52ef9252ffb99e5"
+      "size": 5874,
+      "sha256": "438f62a2c27f9efb427b4da651924059ce404df369e27e17b7ad8373034e8e02"
     },
     {
       "path": "context/runtime/plugin_inventory_20261005.json",

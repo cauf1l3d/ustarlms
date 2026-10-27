@@ -27,3 +27,10 @@ CI40432247264: source8.2/rollback passed; source8.3 stopped at the legacy
 profile lazy-image100ms race. Reproduced with450ms synthetic image delay; image
 load/decode wait passes all60mobile scenarios. Context40432247276 and native
 infra40432247349 passed. Full Moodle DB path remains pending on corrected head.
+
+Full RC40433022865 on c4250205 passed: PHP8.2/8.3,rollback,prepare RC and both
+Moodle DB matrices335tests/1500assertions each. Actual Studio HTTP CSRF/shared-save/
+retry/prepare/actor PASS, no closed-session mutation warning or preparation500.
+Context40433022926 and native infra40433023023 passed. Downloaded release artifact
+12702982632 CRC/digest verified; PDF dependencies present. Candidate qualified for
+test-copy acceptance; source7eb1a3f6 unchanged. Production not deployed.

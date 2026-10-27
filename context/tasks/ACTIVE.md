@@ -7,8 +7,9 @@
 объединена с main ad939373; accepted source/prod2300 сохранён отдельно от candidate2600.
 [Инструкция](../../docs/COURSE_STUDIO_RU.md),
 [проект](../../docs/superpowers/specs/2026-10-26-studio-readiness-design.md).
-Локальные проверки и browser PDF smoke пройдены; полный RC объединённой ветки
-требуется перед поставкой. Сервер не изменён.
+Full RC40433022865 на c4250205 пройден: обе Moodle матрицы335tests/1500assertions,
+HTTP save/retry/prepare/actor PASS. Context40433022926 и infra40433023023 зелёные.
+Следующий шаг — приёмка на тестовой копии по инструкции. Сервер не изменён.
 
 ## Принятая основа
 

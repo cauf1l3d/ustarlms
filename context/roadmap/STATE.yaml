@@ -3,8 +3,8 @@ updated_at: '2026-10-27'
 project: USTAR Academy
 stage: repository_reconciliation_complete
 stage_label: Accepted production source and verified current review in main
-current_activity: STUDIO-01 academic studio and PDF; integrated with accepted main;
-  full RC qualification pending; no server mutation.
+current_activity: STUDIO-01 academic studio and PDF qualified by full RC40433022865;
+  test-copy acceptance next; no server mutation.
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -172,5 +172,9 @@ development_candidate:
   local_ustar_version: 2026102600
   theme_ustar_version: 2026100202
   PR: 107
-  status: qualification_pending
+  status: qualified_for_test_copy_acceptance
   deployed: false
+  qualification_commit: c4250205c1a9c79e68bf1809b361abefc61ca522
+  full_RC_run: 40433022865
+  context_run: 40433022926
+  infrastructure_run: 40433023023

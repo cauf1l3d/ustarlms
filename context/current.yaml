@@ -78,8 +78,8 @@ production:
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
 current_work:
-  activity: STUDIO-01 academic studio and PDF; integrated with accepted main; full
-    RC qualification pending; no server mutation.
+  activity: STUDIO-01 academic studio and PDF qualified by full RC40433022865; test-copy
+    acceptance next; no server mutation.
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:

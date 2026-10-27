@@ -630,8 +630,8 @@
     {
       "path": "context/current.yaml",
       "domain": "root",
-      "size": 8055,
-      "sha256": "487de125c6a8d6051832a49c5d4ff3d45764547a0c6b1281e44d3fb86e0c0a2a"
+      "size": 8052,
+      "sha256": "c53ca4e7d9336cb3852cbfce41a8a34a6520b65a7fe615c69fe820c17d1dde3d"
     },
     {
       "path": "context/decisions/0009-task-workspace.md",
@@ -852,8 +852,8 @@
     {
       "path": "context/project.yaml",
       "domain": "root",
-      "size": 2256,
-      "sha256": "d55dca47d85662a539f4c527f949be67e964e16e828cf5354ecc7706f8cb1d6b"
+      "size": 2254,
+      "sha256": "f3faa59f706cd938dc91127c72885527a9a26e19670753bb324dbbd6336d0bcf"
     },
     {
       "path": "context/proposals/COMPOSE_SOURCE_PRIVACY_PLAN_20261025.md",
@@ -1404,8 +1404,8 @@
     {
       "path": "context/roadmap/BACKLOG.yaml",
       "domain": "roadmap",
-      "size": 31878,
-      "sha256": "550b533e4c5132c08487f13c5e434ee76dfda51d8850008404900f0144c77290"
+      "size": 31958,
+      "sha256": "b5ae97c6a7411214323092347cf688abf1b2e28bfb331db1685cba3f563386e5"
     },
     {
       "path": "context/roadmap/MOBILE_CLIENT.md",
@@ -1446,8 +1446,8 @@
     {
       "path": "context/roadmap/SESSION_LOG.md",
       "domain": "roadmap",
-      "size": 2142,
-      "sha256": "6ca40905604e2dd5debfb72a64f1248ae0aaee0de4227af2408f69e2ffb2be13"
+      "size": 2626,
+      "sha256": "6dc6c430d121cd3dc35e0651b247b26c04a6703ea1389e9a98076bc7def11c10"
     },
     {
       "path": "context/roadmap/SOURCES.json",
@@ -1458,8 +1458,8 @@
     {
       "path": "context/roadmap/STATE.yaml",
       "domain": "roadmap",
-      "size": 8343,
-      "sha256": "a62fe9d14a9b6ca2a148af5d4ee4ffa671fb66dd708b79c45d47619698095b4c"
+      "size": 8506,
+      "sha256": "3cee405bfb4f661016edfc75a417290292f47bf7af81906f33f304721f3a6cd4"
     },
     {
       "path": "context/roadmap/USTAR_AUDIT_REMEDIATION_PLAN_20261005_RU.md",
@@ -2202,8 +2202,8 @@
     {
       "path": "context/runtime/course_studio_readiness_20261027.json",
       "domain": "runtime",
-      "size": 3072,
-      "sha256": "8597e64592525a3bdbc102a1a3bf60fb2e409ddce2fcdf00181625b83269ce63"
+      "size": 4718,
+      "sha256": "19ef2e7c14e9f60b734dd73b5e3f6ab7ac58da5c4f5acb6b64bbb0146b085ce4"
     },
     {
       "path": "context/runtime/cron_incident_20261020.md",
@@ -3396,8 +3396,8 @@
     {
       "path": "context/tasks/ACTIVE.md",
       "domain": "tasks",
-      "size": 3200,
-      "sha256": "37bdbcb614358da9fd2d9392715af59684f8bebefdaa9e5ab92267d3b5460dee"
+      "size": 3321,
+      "sha256": "92df342884d1c1b56f06ad293fbb8c4ede95481dc0a7af61e802e19ef7113491"
     },
     {
       "path": "context/tasks/HTTPS_NEXT_20261018.md",

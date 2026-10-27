@@ -20,8 +20,8 @@
 - SCORM HTTP отличается от PHPUnit: настоящая сессия, PAGE и повторная подготовка.
 
 ## Tasks
-- [ ] API: получить exception class/code/location из CI; воспроизвести дефект в controller/HTTP тесте, исправить root cause, повторить обе Moodle DB матрицы.
+- [x] API: получить exception class/code/location из CI; воспроизвести дефект в controller/HTTP тесте, исправить root cause, повторить обе Moodle DB матрицы.
 - [x] PDF: tests/release_20260912/course_studio_pdf.cjs проверяет page-to-text, escaping, лимиты и print HTML; затем course_studio/pdf.js с importFile(file), textLines(items), printHTML(course,assetURL). Реальный PDF browser test проверяет кириллицу/пустые/повреждённые файлы и экспорт.
 - [x] UI: editor.html/style.css/app.js — академическая оболочка, PDF dialog, проверка готовности, статистика и focus mode. DOM тесты проверяют переходы/ошибки/сохранение; browser desktop/mobile screenshots и PDF render.
-- [ ] Проверки: npm test --prefix tests/release_20260912, PHP regressions, scripts/ci/source_checks.py, контекст. Независимое ревью, исправления, push и полный CI.
-- [ ] Поставка: обновить COURSE_STUDIO_RU/STATE/ACTIVE/BACKLOG/SESSION_LOG, построить inventory от фактического application commit, PR107 с инструкцией внедрения и границами приёмки.
+- [x] Проверки: npm test --prefix tests/release_20260912, PHP regressions, scripts/ci/source_checks.py, контекст. Независимое ревью, исправления, push и полный CI.
+- [x] Поставка: обновить COURSE_STUDIO_RU/STATE/ACTIVE/BACKLOG/SESSION_LOG, построить inventory от фактического application commit, PR107 с инструкцией внедрения и границами приёмки.

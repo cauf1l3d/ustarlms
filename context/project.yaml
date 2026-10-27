@@ -41,6 +41,6 @@ current_work:
   task: STUDIO-01
   spec: docs/superpowers/specs/2026-10-26-studio-readiness-design.md
   PR: 107
-  status: development_candidate_not_deployed
+  status: qualified_candidate_not_deployed
   frontend_scope: native local_ustar; author rights and shared revisions preserved
   next_after_studio: PERF-01 and verified backlog

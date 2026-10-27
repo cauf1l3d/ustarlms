@@ -1,5 +1,7 @@
 # Реестр кода, проверок и deployment evidence
 
+28.10.2026 — Владелец подтвердил Studio2600 app_ready, DB available, receiver/notify active+enabled. Scheduled27Oct20:22UTC:exit0/1.452s, task5069143→5069170, new failures[], USTAR errors0; overdue19/failed2 неизменны, wrapper20Oct исторический. Студия открывается, базовая работа и импорт другой студии подтверждены словами владельца; отдельные PDF/conflict/employee сценарии не заявлены. [Квитанция](course_studio_post_deploy_owner_20261028.json). Новый Academy UI/Word/каталог2700 — отдельный неустановленный кандидат PR107.
+
 26.10.2026 — PR108 merged atc0e22e556220cc50f522a3e6b65189fd8abffa73. PR105/103/106 history preserved; application equals accepted6c56a5b6/local2300. Full RC and independent infra/console/context passed. Repository reconciliation only; no server deploy. [Receipt](repository_reconciliation_20261026.json).
 
 ## 23Oct — CON-02 application2200 и ACK runtime приняты на server1

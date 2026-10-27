@@ -1,6 +1,6 @@
 # USTAR Academy — начало работы
 
-Актуально27.10.2026. Это вход в текущий проект; история находится в архиве.
+Актуально28.10.2026. Это вход в текущий проект; история находится в архиве.
 
 1. [STATE](context/roadmap/STATE.yaml) — версии, SHA, уверенность и квитанции.
 2. [ACTIVE](context/tasks/ACTIVE.md) — текущая работа и её границы.
@@ -16,7 +16,10 @@ Studio payload2d95137a/local_ustar2026102600, theme_ustar2026100202; app_ready.
 Worker6c56a5b6 не обновлялся. [Основание](context/runtime/evidence_20261027.yaml),
 [квитанция установки](context/runtime/course_studio_owner_deploy_20261027.json).
 582файла/100таблиц — фиксированный payload, не новая инвентаризация хоста.
-Post-deploy status, scheduled cron2600 и ручная приёмка Studio ожидаются.
+Post-deploy status: app_ready/DB available, receiver+notify active/enabled. Scheduled
+cron27Oct20:22UTC:exit0, без новых ошибок. Владелец подтвердил открытие студии,
+базовую работу и импорт из другой студии; отдельные PDF/conflict/employee кейсы не заявлены.
+[Квитанция](context/runtime/course_studio_post_deploy_owner_20261028.json).
 Приложение использует обычную роль ustar_app; права кода/config и Compose0600 применены.
 Connect ACK/presentation и вход/открытие Академии подтверждены владельцем.
 
@@ -31,7 +34,10 @@ successor заморожен и на сервер не поставлен. SSH/f
 
 PR105 — факты server1; PR103 — пульт; PR106 — принятый Connect и инфраструктура.
 Main пока содержит принятую основу6c56/local2300; PR107 установлен владельцем,
-но ещё не слит и не принят вручную. Установка Studio не означает её функциональную приёмку.
+но ещё не слит. По новому поручению подготовлен отдельный кандидат2700: штатная
+оболочка Академии, открытие материалов как редактируемых черновиков, Word и три вида
+каталога. Кандидат не установлен; native CI ожидается. Не повторять установку2600
+или диагностику старой ошибки cron20Oct. Границы ручной приёмки указаны в квитанции.
 Исходники Академии: moodle/local/ustar и moodle/theme/ustar; frontend — legacy.
 [Индекс](context/CONTEXT_INDEX.md) помогает выбрать нужный домен.
 [История прежних входов](context/archive/reconciliation_20261026) сохранена целиком.

@@ -79,3 +79,17 @@ GREEN: full npm including reader/author view/drag/keyboard/storage tests; real S
 fixture checks paging/current files/mainfile/duplicates. Actual Chromium checks all
 3views at390/768/1440, menu bounds and phone folder creation, no horizontal overflow.
 Four native Moodle reader/File API/query-count cases added; CI remains pending.
+
+## Task5 — Integration qualification in progress
+
+Owner's post-deploy status and scheduled cron recorded separately from the immutable
+installation receipt; production remains2600/theme0202 and worker6c56. Basic browser
+opening/operation/import reported; individual PDF/conflict/employee checks not invented.
+Candidate local/theme2700 contains589files/100tables. Accepted2600 operator remains
+frozen; its package fixture now pins62b0 instead of inheriting future HEAD application.
+Native Connect pair probe now checks candidate theme version against exact source,
+while historical baseline0202 remains fixed. Code source uploaded as exact tree
+3f258df670dbb180971bd19847a05ffa1d35194e / commit259d9d1b65d904b67aa3852b96ff92ed9fe234ee.
+First R16 run1254/45skips had only3 missing-local-MCP errors; environment dependency
+installed, complete rerun in progress. Source/context/secrets pass locally.
+No branch merge or production mutation; remote PR qualification follows.

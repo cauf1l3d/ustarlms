@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "reported_date_msk": "2026-10-28",
+  "source": "owner_console_transcript_and_browser_report_in_current_dialogue",
+  "evidence_kind": "owner_reported_post_deploy_status_not_independent_host_probe",
+  "agent_SSH": false,
+  "independently_measured_on_server": false,
+  "installation_receipt": "context/runtime/course_studio_owner_deploy_20261027.json",
+  "status": {
+    "app": {
+      "generation": "acaed15a80f84b788a904468f46cc070",
+      "phase": "app_ready"
+    },
+    "database_available": true,
+    "host_changes": false,
+    "runtime": null,
+    "services": {
+      "ustar-connect-notify.service": {
+        "active": true,
+        "enabled": true
+      },
+      "ustar-connect-receiver.service": {
+        "active": true,
+        "enabled": true
+      }
+    },
+    "versions": {
+      "local_ustar": "2026102600",
+      "theme_ustar": "2026100202"
+    }
+  },
+  "scheduled_cron": {
+    "CRON_SETUP_VERSION": 3,
+    "schedule_present": true,
+    "containers_match_installation": true,
+    "started_utc": "2026-10-27T20:22:01.662517+00:00",
+    "finished_utc": "2026-10-27T20:22:03.114806+00:00",
+    "elapsed_seconds": 1.452,
+    "trigger": "scheduled",
+    "email_disabled": false,
+    "cron_exit_code": 0,
+    "log_truncated": false,
+    "before": {
+      "last_task_log_id": 5069143,
+      "adhoc_queued": 0,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 19,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-27T20:21:03Z",
+      "failures_24h": []
+    },
+    "after": {
+      "last_task_log_id": 5069170,
+      "adhoc_queued": 0,
+      "adhoc_failed": 0,
+      "scheduled_overdue_10m": 19,
+      "scheduled_failed": 2,
+      "ustar_failed": 0,
+      "latest_task_utc": "2026-10-27T20:22:03Z",
+      "new_failures": []
+    },
+    "ustar": {
+      "error_lines": 0,
+      "warning_lines": 0,
+      "worker_errors": 0,
+      "grade_errors": 0,
+      "enrolment_errors": 0,
+      "enrolment_missing_manual": 0,
+      "cancelled_login_notifications": 0
+    },
+    "last_wrapper_error": {
+      "utc": "2026-10-20T17:33:01.250048+00:00",
+      "error": "Production application versions differ from the reviewed snapshot"
+    },
+    "interpretation": "successful scheduled run; unchanged overdue19/failed2 and old20Oct wrapper error are not new Studio failures"
+  },
+  "browser": {
+    "owner_report": "Сама студия открывается, все работает, файлы из другой студии тоже подгружается",
+    "accepted_observations": [
+      "Studio opens",
+      "owner reports basic operation works",
+      "files from another Studio import"
+    ],
+    "not_individually_reported": [
+      "PDF import/export edge cases",
+      "two-browser shared-save conflict",
+      "employee SCORM progress",
+      "prepare twice idempotence"
+    ]
+  },
+  "production_source": {
+    "payload_commit": "2d95137ac85a09ad4c513edae8a792152153c840",
+    "basis": "context/runtime/course_studio_owner_deploy_20261027.json",
+    "fresh_whole_host_manifest": false,
+    "worker_rollout": false
+  },
+  "next_work": {
+    "task": "STUDIO-01",
+    "request": [
+      "native Academy Studio design",
+      "open catalogue source in editable Studio",
+      "Word import/export",
+      "Materials list/blocks/cards and UX/refactor"
+    ],
+    "candidate_versions": {
+      "local_ustar": 2026102700,
+      "theme_ustar": 2026102700
+    },
+    "candidate_deployed": false
+  }
+}

@@ -1,11 +1,12 @@
 schema_version: 2
-updated_at: '2026-10-27'
+updated_at: '2026-10-28'
 project: USTAR Academy
-stage: studio_production_manual_acceptance
-stage_label: Studio2600 owner-installed; browser and post-deploy acceptance pending
-current_activity: Owner27Oct verified archive and reported Studio app_ready/local2600;
-  fixed application2d95137a installed by operator62b0da20. Await status, scheduled
-  cron2600 and browser acceptance; PR107 unmerged.
+stage: studio_materials_polish_qualification
+stage_label: Studio2600 owner status and basic import accepted; Academy materials/Word2700 candidate under
+  qualification
+current_activity: Owner status confirms app_ready/DB/services and scheduled cron exit0, no new failures;
+  basic Studio opening/import works. Implemented Academy shell, editable material bridge, Word and catalogue
+  views; qualify exact2700 candidate in PR107, no production mutation or merge.
 entrypoint: START_HERE.md
 next_task: STUDIO-01
 ready_tasks: []
@@ -22,12 +23,12 @@ code_baseline:
     commit: 40fb81d75c42ac6b4ff1f6f54f9e25f54b3fa149
     full_RC_run: 40337002920
     receipt: context/runtime/repository_reconciliation_20261026.json
-  scope_note: Main source baseline remains6c56 until PR107 integration; current production
-    is separately recorded below.
+  scope_note: Main source baseline remains6c56 until PR107 integration; current production is separately
+    recorded below.
 production:
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/course_studio_owner_deploy_20261027.json
+  latest_cron_contract: context/runtime/course_studio_post_deploy_owner_20261028.json
   previous_scheduled_cron_receipt: context/runtime/infra_readonly_owner_20261023.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
@@ -35,7 +36,7 @@ production:
   effective_addon_deployment:
     receipt: context/runtime/course_studio_owner_deploy_20261027.json
     reported_date_msk: '2026-10-27'
-    status: owner_controller_installation_success_manual_acceptance_pending
+    status: owner_installed_status_and_basic_browser_confirmed_detailed_acceptance_separate
     installer_commit: 62b0da2020bc27569c0bd4f8ac96b676f29b7490
     payload_commit: 2d95137ac85a09ad4c513edae8a792152153c840
     versions:
@@ -48,13 +49,13 @@ production:
     worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
     worker_rollout: false
     previous_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
-  status: owner_Studio2600_installed_post_deploy_and_manual_acceptance_pending
-  observed_at: '2026-10-27'
-  source: context/runtime/evidence_20261027.yaml
+    post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  status: owner_Studio2600_post_deploy_status_and_basic_browser_reported
+  observed_at: '2026-10-28'
+  source: context/runtime/evidence_20261028.yaml
   independently_measured: false
   current_source_commit: 2d95137ac85a09ad4c513edae8a792152153c840
-  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
-    host filesystem census
+  current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh host filesystem census
   current_versions:
     local_ustar: 2026102600
     theme_ustar: 2026100202
@@ -64,8 +65,8 @@ production:
     matching_files: 582
     kind: owner_verified_controller_payload_not_fresh_manifest
     evidence: context/runtime/course_studio_owner_deploy_20261027.json
-  cron: owner27Oct_controller_wrote2600; new_scheduled_run_pending
-  cron_current_receipt: context/runtime/course_studio_owner_deploy_20261027.json
+  cron: owner_scheduled27Oct20_22UTC_exit0_no_new_failures_ustar_errors0
+  cron_current_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
   regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -79,6 +80,7 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+  post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 audit:
   document: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
   reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
@@ -136,17 +138,16 @@ server_facts:
   followup: context/runtime/server_facts_followup_20261017.json
   measurement_gaps:
   - pg_stat_statements available but not installed/preloaded; no query statistics
-  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance
-    and hardening still separate
-  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019
-    test failed. Other external sources/IPv6/NAT/API identity and full SSH admission/live
-    overrides remain unverified
-  - 18 component skips explained by DB/source; effective runtime overrides/cache and
-    native full-cycle acceptance not checked
-  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware
-    redundancy not confirmed
-  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded
-    plugin/vendor provenance remain separate; native restore/RTO awaited
+  - ACL export received; actor/mount/LSM/immutable/negative replacement acceptance and hardening still
+    separate
+  - Selected aduk SSH context and Caddy2019 owner observed; one owner home IPv4 TCP2019 test failed. Other
+    external sources/IPv6/NAT/API identity and full SSH admission/live overrides remain unverified
+  - 18 component skips explained by DB/source; effective runtime overrides/cache and native full-cycle
+    acceptance not checked
+  - SSD vendor wear/TBW units, trends, full root/containerd/lab occupancy and hardware redundancy not
+    confirmed
+  - 23 extras metadata/hashes received; content origin and HTTP access plus excluded plugin/vendor provenance
+    remain separate; native restore/RTO awaited
   additional_observations:
     provenance: context/runtime/core_extra_received_20261017.json
     review: context/reviews/20261017/core_extra_reconciliation.md
@@ -168,20 +169,15 @@ infrastructure_closure_matrix: context/runtime/infra_closure_matrix_20261026.md
 development_candidate:
   task: STUDIO-01
   branch: codex/shared-course-studio-20261026
-  application_commit: 2d95137ac85a09ad4c513edae8a792152153c840
+  application_commit: 259d9d1b65d904b67aa3852b96ff92ed9fe234ee
   base_main_commit: ad939373d89604119d3fd741c555deaf1ebd4ed7
   manifest: context/code_map/generated/course_studio_candidate.json
-  local_ustar_version: 2026102600
-  theme_ustar_version: 2026100202
+  local_ustar_version: 2026102700
+  theme_ustar_version: 2026102700
   PR: 107
-  status: owner_installed_manual_acceptance_pending
-  deployed: true
-  qualification_commit: e9ffe6b56d4e030b7ff70c092dbfdd68d0664308
-  full_RC_run: 40441818519
-  context_run: 40441818592
-  infrastructure_run: 40441818514
-  deployment_receipt: context/runtime/course_studio_owner_deploy_20261027.json
-  source_manifest_scope: Immutable unmerged source artifact at creation; deployment
-    truth comes from owner receipt
+  status: local_verified_native_CI_pending
+  deployed: false
+  production_predecessor_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  source_manifest_scope: Unmerged2700 application tree; actual production stays2d95137a/local2600/theme0202
 studio_production_intent: context/runtime/course_studio_production_intent_20261027.json
-studio_latest_owner_receipt: context/runtime/course_studio_owner_deploy_20261027.json
+studio_latest_owner_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json

@@ -1,0 +1,66 @@
+kind: owner_Studio_post_deploy_and_basic_browser_plus_preserved_prior_receipts
+published_at: '2026-10-28'
+independently_measured_on_server: false
+sources:
+  audit: context/audits/USTAR_INFRASTRUCTURE_AUDIT_20261005_RU.md
+  audit_sha256: aa8b717719f3f1a3b4131e5c56590667a5731186be4025d00151f94bc8c380e4
+  reconciliation: context/reviews/20261026/VERIFIED_REVIEW_RU.md
+  previous_evidence: context/runtime/evidence_20261027.yaml
+  source_PR_heads:
+    98: 855264f4e38de4a7423b035cfd7ec746b2fce82d
+    99: ee0b07b09b9a0dfadc70f3bfb2a80b0f4cb8be46
+    100: d1a3b6e1f62aa00a550016fdb55a55a4c47344a3
+    102: 7f29c9367aed623d68ddc9bdb79c701f6dfba9f6
+application:
+  reference_commit: 2d95137ac85a09ad4c513edae8a792152153c840
+  manifest_observed_at: '2026-10-27'
+  matching_files: 582
+  counts_basis: fixed_verified_controller_payload_not_new_whole_host_manifest
+  local_ustar: 2026102600
+  theme_ustar: 2026100202
+  tables: 100
+  receipt: context/runtime/course_studio_owner_deploy_20261027.json
+  independent_probe: false
+  functional_acceptance: owner_basic_open_operation_import_only; detailed_cases_separate
+  worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
+  post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  generation: acaed15a80f84b788a904468f46cc070
+platform:
+  moodle: 5.1.8
+  core_database_version: '2025100608.00'
+  PHP: 8.3.33
+  PostgreSQL: '16.15'
+  Ubuntu: 24.04.5 LTS
+  kernel: 6.8.0-147-generic
+  Docker: 29.9.0
+  containerd: 2.4.1
+  version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+accepted:
+  SSD_GPT_partition_ext4_growth: context/runtime/ssd_ext4_resize_result_20261011.json
+  post_resize: context/runtime/post_resize_checks_20261011.json
+  Moodle_upgrade_repeat: context/runtime/production_patch_upgrade_result_20261013.json
+  Moodle_browser_SCORM: context/runtime/production_patch_browser_result_20261013.json
+  post_switch_cron_and_scheduled_HDD: context/runtime/production_patch_post_switch_status_result_20261013.json
+  AppArmor_repair: context/runtime/host_apparmor_result_20261013.json
+  cold_SSD_archive: context/runtime/host_cold_recovery_result_20261013.json
+  package_install: context/runtime/host_packages_install_result_20261014.json
+  host_boot_mount_ID_policy: context/runtime/host_reboot_result_20261014.json
+  archive_and_instruction_handoff: context/runtime/sysadmin_handoff_result_20261016.json
+  DB_application_role: context/runtime/infra_app_handoff_owner_20261025.json
+  code_hardening: context/runtime/infra_code_hardening_owner_20261025.json
+  compose_privacy_and_control_backup: context/runtime/compose_source_privacy_owner_20261025.json
+  HTTPS_and_cron: context/runtime/connect_backup_https_owner_20261021.json
+  Connect: context/runtime/connect_telegram_finish_owner_20261023.json
+  console_accounts: context/runtime/console_accounts_20261018.json
+  Studio_controller_installation: context/runtime/course_studio_owner_deploy_20261027.json
+  Studio_post_deploy_status_and_scheduled_cron: context/runtime/course_studio_post_deploy_owner_20261028.json
+open:
+  clean_host_restore: owner_explicit_unknown_no_repeat_prompt
+  whole_host_restore: not_verified
+  SSH_firewall: accepted_risk_until_external_access_preparation
+  Docker_rotation: deferred_to_planned_Moodle_upgrade
+  SMTP_delivery: not_verified
+  performance_SLO: not_measured
+  independent_host_loss_observer: not_verified
+  UPS_auto_shutdown: presence_confirmed_shutdown_unverified
+  Studio_functional_acceptance: detailed_PDF_shared_save_employee_cases_not_individually_reported

@@ -1,13 +1,14 @@
 # USTAR — инструкции агентам
 
-Актуально27.10.2026. Начать с [START_HERE](START_HERE.md), затем читать только
+Актуально28.10.2026. Начать с [START_HERE](START_HERE.md), затем читать только
 документы текущего домена. Канонический код и контекст — main.
 
 ## Текущая задача и разрешения
 
 Владелец разрешил push и слияние проверенных PR105/103/106 для актуализации main.
-PR107 (студия курсов) — установлен владельцем27Oct/local2600; ручная приёмка
-и post-deploy status ожидаются. PR107 пока не слит.
+PR107: Studio2600 установлен владельцем27Oct; status/DB/services/cron и базовый
+browser/import подтверждены. Новый Academy UI/Word/Materials2700 — неустановленный
+кандидат, native CI ожидается. PR107 пока не слит; автоматическое слияние не разрешено.
 Ротация логов, healthcheck и пересоздание контейнеров отложены до планового обновления
 Moodle/PHP. Эксперимент сохранён в infra/docker-successor-frozen и не поставлен.
 Субагенты запрещены. Агент не подключается по SSH к production, не отправляет
@@ -37,7 +38,8 @@ frontend — legacy, не включать в релизы или активны
 Различать Git source, CI, квитанцию владельца и свежую проверку сервера.
 Prod Studio payload2d95137a/local2600: owner27Oct app_ready;
 [квитанция](context/runtime/course_studio_owner_deploy_20261027.json). Worker6c56 не обновлялся.
-Ручная приёмка ожидается; это не свежий manifest всего хоста.
+Post-deploy и базовый импорт: [квитанция](context/runtime/course_studio_post_deploy_owner_20261028.json).
+Отдельные PDF/conflict/employee сценарии не заявлены; это не свежий manifest всего хоста.
 Принятые SSD/Moodle5.1.8/OS/reboot/DB-role/code/HTTPS/Connect проверки не повторять.
 SSH/firewall — только при подготовке внешнего доступа. Копии переданы; внешний restore
 остаётся unknown по решению владельца. Наличие ИБП не доказывает автоматический shutdown.

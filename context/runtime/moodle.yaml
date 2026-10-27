@@ -17,7 +17,7 @@ production_versions:
   postgresql: '16.15'
 isolated_reference: tests/stage/runtime.json
 deployment_evidence: context/runtime/RELEASE_LEDGER.md
-versions_evidence: context/runtime/evidence_20261027.yaml
+versions_evidence: context/runtime/evidence_20261028.yaml
 versions_are_dated_not_live_query: true
 core_metadata_upstream_reference: 1cd17816c56a7df7ee796892efccaf1ed5347340
 core_metadata_equivalence: official5.1.8_candidate_verified_upgrade_and_repeat_owner13Oct

@@ -38,6 +38,16 @@ final class course_studio_material_test extends \advanced_testcase {
         $this->assertSame($saved['contentid'],$opened['contentid']);$this->assertSame('DRAFT-OPEN',$opened['code']);
         $this->assertSame(1,$DB->count_records('local_ustar_content'));
     }
+    public function test_renamed_native_package_still_opens_the_exact_editable_source(): void {
+        global $DB,$USER;
+        $item=$this->native();material_studio::build_scorm($item['id'],$USER->id);
+        $DB->set_field('local_ustar_content','title','Обновлённое название',['id'=>$item['id']]);
+        $opened=course_studio_material::open($item['id'],$USER->id);
+        $this->assertSame('project',$opened['kind']);
+        $project=course_studio::get($opened['code'],$USER->id)['course'];
+        $this->assertSame('Обновлённое название',$project->data->title);
+        $this->assertStringContainsString('Учебный материал',$project->data->pages[0]->html);
+    }
     public function test_published_visual_source_and_runtime_remain_unchanged(): void {
         global $USER,$DB;
         $p=course_studio_source::from_pages('Курс','PUBLISHED-OPEN',[['title'=>'Экран','body'=>'Материал']],static fn()=>[]);

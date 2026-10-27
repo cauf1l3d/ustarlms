@@ -79,6 +79,7 @@ jobs:
       - run: php tests/release_20260912/route_flow.php
       - run: php tests/release_20260912/career.php
       - run: php tests/release_20260912/course_studio_source.php
+      - run: php tests/release_20260912/course_studio_native_package.php
       - run: php tests/release_20260912/material_catalog.php
       - run: php tests/release_20260912/course_studio_codec.php
       - run: php tests/release_20260912/course_studio_csrf.php

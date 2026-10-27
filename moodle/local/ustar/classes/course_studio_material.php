@@ -151,8 +151,13 @@ final class course_studio_material {
             if ($zip->open($path)!==true) { return false; }
             try {
                 $stat=$zip->statName('index.html');
-                return $stat && (int)$stat['size']<=8*1024*1024
-                    && $zip->getFromName('index.html')===studio_scorm_package::html(['title'=>$source->title,'pages'=>$pages]);
+                if (!$stat || (int)$stat['size']>8*1024*1024) { return false; }
+                $html=$zip->getFromName('index.html');
+                // Catalogue metadata may have been renamed after the package was built.
+                // Still require the entire file to match our generator and exact pages.
+                $title=is_string($html) && preg_match('~<title>([^<]*)</title>~s',$html,$match)
+                    ? html_entity_decode($match[1],ENT_QUOTES|ENT_HTML5,'UTF-8') : $source->title;
+                return $html===studio_scorm_package::html(['title'=>$title,'pages'=>$pages]);
             } finally { $zip->close(); }
         } finally { if ($path) { @unlink($path); } }
     }

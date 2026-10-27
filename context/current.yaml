@@ -5,7 +5,7 @@ sources:
 - context/roadmap/STATE.yaml
 - context/roadmap/BACKLOG.yaml
 entrypoint: START_HERE.md
-updated_at: '2026-10-27'
+updated_at: '2026-10-28'
 canonical_branch: main
 repository_head:
   resolution: git rev-parse HEAD; git rev-parse origin/main
@@ -27,7 +27,7 @@ application_baseline:
 production:
   latest_mDNS_receipt: context/runtime/academy_mdns_owner_20261021.json
   latest_backup_HTTPS_preparation: context/runtime/connect_backup_https_owner_20261021.json
-  latest_cron_contract: context/runtime/course_studio_owner_deploy_20261027.json
+  latest_cron_contract: context/runtime/course_studio_post_deploy_owner_20261028.json
   previous_scheduled_cron_receipt: context/runtime/infra_readonly_owner_20261023.json
   latest_addon_preflight: context/runtime/connect_delivery_owner_20261020.json
   latest_CON02_owner_receipt: context/runtime/connect_con02_server1_owner_20261023.json
@@ -35,7 +35,7 @@ production:
   effective_addon_deployment:
     receipt: context/runtime/course_studio_owner_deploy_20261027.json
     reported_date_msk: '2026-10-27'
-    status: owner_controller_installation_success_manual_acceptance_pending
+    status: owner_installed_status_and_basic_browser_confirmed_detailed_acceptance_separate
     installer_commit: 62b0da2020bc27569c0bd4f8ac96b676f29b7490
     payload_commit: 2d95137ac85a09ad4c513edae8a792152153c840
     versions:
@@ -48,9 +48,10 @@ production:
     worker_commit: 6c56a5b6ab830b97b706a5d7028b49cfae31e7a4
     worker_rollout: false
     previous_receipt: context/runtime/connect_telegram_finish_owner_20261023.json
-  status: owner_Studio2600_installed_post_deploy_and_manual_acceptance_pending
-  observed_at: '2026-10-27'
-  source: context/runtime/evidence_20261027.yaml
+    post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
+  status: owner_Studio2600_post_deploy_status_and_basic_browser_reported
+  observed_at: '2026-10-28'
+  source: context/runtime/evidence_20261028.yaml
   independently_measured: false
   current_source_commit: 2d95137ac85a09ad4c513edae8a792152153c840
   current_source_commit_scope: owner-applied fixed plugin/theme payload; not a fresh
@@ -64,8 +65,8 @@ production:
     matching_files: 582
     kind: owner_verified_controller_payload_not_fresh_manifest
     evidence: context/runtime/course_studio_owner_deploy_20261027.json
-  cron: owner27Oct_controller_wrote2600; new_scheduled_run_pending
-  cron_current_receipt: context/runtime/course_studio_owner_deploy_20261027.json
+  cron: owner_scheduled27Oct20_22UTC_exit0_no_new_failures_ustar_errors0
+  cron_current_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
   regular_backup: owner23Oct03_30MSK_scheduled_complete_success_exit0_timer_active_enabled_no_marker_restore_not_proved
   regular_backup_current_receipt: context/runtime/infra_readonly_owner_20261023.json
   later_observations: context/runtime/RELEASE_LEDGER.md
@@ -79,10 +80,12 @@ production:
     Docker: 29.9.0
     containerd: 2.4.1
     version_dates: Moodle13Oct, host14Oct; not a live16Oct inventory
+  post_deploy_receipt: context/runtime/course_studio_post_deploy_owner_20261028.json
 current_work:
-  activity: Owner27Oct verified archive and reported Studio app_ready/local2600; fixed
-    application2d95137a installed by operator62b0da20. Await status, scheduled cron2600
-    and browser acceptance; PR107 unmerged.
+  activity: Owner status confirms app_ready/DB/services and scheduled cron exit0,
+    no new failures; basic Studio opening/import works. Implemented Academy shell,
+    editable material bridge, Word and catalogue views; qualify exact2700 candidate
+    in PR107, no production mutation or merge.
   next_task: STUDIO-01
   ready_tasks: []
   task_statuses:
